@@ -36,5 +36,5 @@ UPDATES
 - Learner progress remains in the phone/browser profile and is not replaced by application files.
 
 CURRENT RELEASE
-Android shell: 2026.08.22.1
+Android shell: 2026.08.22.2
 Learning content: 2026.08.21.1
