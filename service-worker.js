@@ -1,4 +1,4 @@
-const CACHE_VERSION = "2026.08.22.1";
+const CACHE_VERSION = "2026.08.22.2";
 const STATIC_CACHE = `mouldmaster-static-${CACHE_VERSION}`;
 const CORE = [
   "./index.html",
