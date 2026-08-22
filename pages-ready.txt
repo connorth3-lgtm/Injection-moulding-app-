@@ -1,0 +1,2 @@
+MouldMaster GitHub Pages publication trigger.
+Android release: 2026.08.22.2
