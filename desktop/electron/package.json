@@ -1,0 +1,78 @@
+{
+  "name": "mouldmaster-academy-desktop",
+  "version": "2026.8.24",
+  "description": "Open-source Windows desktop wrapper for MouldMaster Academy.",
+  "author": "MouldMaster Academy contributors",
+  "license": "Apache-2.0",
+  "private": true,
+  "main": "src/main.cjs",
+  "scripts": {
+    "integrity": "node scripts/generate-integrity.cjs",
+    "qa": "node scripts/qa.cjs",
+    "start": "npm run integrity && npm run qa && electron .",
+    "dist:portable": "npm run integrity && npm run qa && electron-builder --win portable",
+    "dist:nsis": "npm run integrity && npm run qa && electron-builder --win nsis",
+    "dist:msix": "npm run integrity && npm run qa && electron-builder --win msix"
+  },
+  "devDependencies": {
+    "electron": "43.4.1",
+    "electron-builder": "26.15.7"
+  },
+  "build": {
+    "appId": "org.mouldmaster.academy",
+    "productName": "MouldMaster Academy",
+    "asar": true,
+    "directories": {
+      "output": "dist"
+    },
+    "files": [
+      "src/**/*",
+      "generated/integrity.json",
+      "package.json",
+      "README.md"
+    ],
+    "extraResources": [
+      {"from": "../../index.html", "to": "mouldmaster/index.html"},
+      {"from": "../../MouldMaster_Core_App.html", "to": "mouldmaster/MouldMaster_Core_App.html"},
+      {"from": "../../manifest.webmanifest", "to": "mouldmaster/manifest.webmanifest"},
+      {"from": "../../mouldmaster-192.png", "to": "mouldmaster/mouldmaster-192.png"},
+      {"from": "../../mouldmaster-512.png", "to": "mouldmaster/mouldmaster-512.png"},
+      {"from": "../../version.json", "to": "mouldmaster/version.json"},
+      {"from": "../../reading-patch.css", "to": "mouldmaster/reading-patch.css"},
+      {"from": "../../reading-patch.js", "to": "mouldmaster/reading-patch.js"},
+      {"from": "../../training-upgrade.js", "to": "mouldmaster/training-upgrade.js"},
+      {"from": "../../training-qa-fix.js", "to": "mouldmaster/training-qa-fix.js"},
+      {"from": "../../pwa-shell.js", "to": "mouldmaster/pwa-shell.js"},
+      {"from": "../../source-library.js", "to": "mouldmaster/source-library.js"},
+      {"from": "../../service-worker.js", "to": "mouldmaster/service-worker.js"},
+      {"from": "../../privacy.html", "to": "mouldmaster/privacy.html"},
+      {"from": "../../support.html", "to": "mouldmaster/support.html"},
+      {"from": "../../LICENSE", "to": "LICENSE"},
+      {"from": "../../THIRD_PARTY_NOTICES.md", "to": "THIRD_PARTY_NOTICES.md"},
+      {"from": "generated/integrity.json", "to": "mouldmaster/integrity.json"}
+    ],
+    "win": {
+      "icon": "../../mouldmaster-512.png",
+      "artifactName": "MouldMaster-Academy-${version}-${arch}.${ext}"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true
+    },
+    "toolsets": {
+      "winCodeSign": "1.1.0"
+    },
+    "msix": {
+      "applicationId": "MouldMasterAcademy",
+      "identityName": "MouldMasterAcademy",
+      "publisherDisplayName": "MouldMaster Academy",
+      "displayName": "MouldMaster Academy",
+      "createMsixupload": true,
+      "enforcePackageIntegrity": true,
+      "minVersion": "10.0.19041.0",
+      "languages": ["en-US"]
+    }
+  }
+}
