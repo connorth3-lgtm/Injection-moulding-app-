@@ -1,4 +1,4 @@
-/* MouldMaster lesson-reading enhancement — 2026.08.23.4 */
+/* MouldMaster lesson-reading enhancement — 2026.08.23.5 */
 (function(){
   'use strict';
   function norm(s){return String(s||'').replace(/\s+/g,' ').trim().toLowerCase();}
@@ -34,6 +34,16 @@
     marker(points,'3','MAIN POINTS');
     marker(exercise,'4','DO THIS AFTER READING');
     exercise?.classList.add('lesson-read-task');
+    const teaching=article.querySelector('#mmTeaching');
+    if(teaching&&!teaching.parentElement?.classList.contains('mm-extra-help')){
+      const details=document.createElement('details');
+      details.className='mm-extra-help';
+      details.innerHTML='<summary><span>Extra help</span><b>Show examples and explanations</b></summary>';
+      teaching.before(details);
+      details.appendChild(teaching);
+    }
+    const next=article.querySelector('.lesson-actions-sticky .primary');
+    if(next&&/^complete\s*&\s*continue/i.test(next.textContent||''))next.textContent='Finished reading — next lesson →';
     article.dataset.readEnhanced='1';
   }
   const run=()=>enhanceLesson();
