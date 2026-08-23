@@ -10,6 +10,7 @@ on:
       - 'service-worker.js'
       - 'version.json'
       - 'latest.json'
+      - 'reading-patch.css'
       - 'reading-patch.js'
       - 'training-upgrade.js'
       - 'training-qa-fix.js'
@@ -48,8 +49,11 @@ jobs:
           win=Path('MouldMaster_Academy_App.html').read_bytes()
           assert hashlib.sha256(win).hexdigest()==latest['sha256'], 'latest.json Windows content hash mismatch'
 
+          index=Path('index.html').read_text()
+          assert 'const CORE_URL="./MouldMaster_Core_App.html"' in index, 'Android bootstrap must load preserved core directly'
+
           sw=Path('service-worker.js').read_text()
-          for marker in ['2026.08.23.6','MouldMaster_Academy_App.html','training-upgrade.js','training-qa-fix.js','pwa-shell.js']:
+          for marker in ['2026.08.23.6','MouldMaster_Core_App.html','MouldMaster_Academy_App.html','training-upgrade.js','training-qa-fix.js','pwa-shell.js']:
               assert marker in sw, f'missing service-worker marker: {marker}'
 
           core=Path('MouldMaster_Core_App.html').read_text()
