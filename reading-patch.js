@@ -1,23 +1,39 @@
-/* MouldMaster lesson-reading enhancement — 2026.08.23.3 */
+/* MouldMaster lesson-reading enhancement — 2026.08.23.4 */
 (function(){
   'use strict';
   function norm(s){return String(s||'').replace(/\s+/g,' ').trim().toLowerCase();}
+  function marker(el,step,label,primary){
+    if(!el)return;
+    el.classList.add('lesson-read-block');
+    if(primary)el.classList.add('lesson-read-primary');
+    if(el.querySelector(':scope > .mm-read-marker'))return;
+    const m=document.createElement('div');
+    m.className='mm-read-marker';
+    m.innerHTML=`<b>${step}</b><span>${label}</span>`;
+    el.prepend(m);
+  }
   function enhanceLesson(){
     const article=document.querySelector('#lesson article.lesson-body');
-    if(!article||article.dataset.readEnhanced)return;
-    const hs=[...article.querySelectorAll('h3')];
-    const wrap=(heading,cls,label,title)=>{
-      const h=hs.find(x=>norm(x.textContent)===norm(heading));if(!h)return;
-      const nodes=[];let n=h.nextSibling;
-      while(n&&!(n.nodeType===1&&n.tagName==='H3')){const next=n.nextSibling;nodes.push(n);n=next;}
-      const sec=document.createElement('section');sec.className=`lesson-read-block ${cls}`;sec.innerHTML=`<span class="eyebrow">${label}</span><h3>${title}</h3>`;
-      nodes.forEach(x=>sec.appendChild(x));h.replaceWith(sec);
-    };
-    const firstP=[...article.children].find(x=>x.tagName==='P');
-    if(firstP){const d=document.createElement('div');d.className='lesson-read-block lesson-intro';d.innerHTML='<span class="eyebrow">Introduction</span>';firstP.replaceWith(d);d.appendChild(firstP);}
-    wrap('Learning objectives','lesson-objectives','Learning objectives','By the end of this lesson');
-    wrap('Key engineering points','lesson-points','Key engineering points','What to remember');
-    wrap('Shop-floor exercise','lesson-exercise','Shop-floor exercise','Apply the idea');
+    if(!article)return;
+    if(!article.querySelector(':scope > .mm-reading-guide')){
+      const guide=document.createElement('div');
+      guide.className='mm-reading-guide';
+      guide.setAttribute('role','note');
+      guide.innerHTML='<span>START HERE</span><div><strong>Read boxes 1, 2 and 3 in order.</strong><p>Then do the yellow box marked 4. The smaller example boxes underneath are extra help.</p></div>';
+      const progress=article.querySelector(':scope > .mm-lesson-progress');
+      progress?progress.after(guide):article.prepend(guide);
+    }
+    const blocks=[...article.children].filter(x=>x.classList?.contains('content-block'));
+    const findBlock=(pattern)=>blocks.find(x=>pattern.test(norm(x.querySelector('h3')?.textContent)));
+    const intro=findBlock(/^why this matters$/)||blocks[0];
+    const objectives=findBlock(/^by the end of this lesson|^learning objectives/);
+    const points=findBlock(/^key points$|^key engineering points|^what to remember/);
+    const exercise=[...article.children].find(x=>x.classList?.contains('callout'));
+    marker(intro,'1','READ THIS FIRST',true);
+    marker(objectives,'2','READ NEXT');
+    marker(points,'3','MAIN POINTS');
+    marker(exercise,'4','DO THIS AFTER READING');
+    exercise?.classList.add('lesson-read-task');
     article.dataset.readEnhanced='1';
   }
   const run=()=>enhanceLesson();
