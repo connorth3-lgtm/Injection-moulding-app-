@@ -1,0 +1,74 @@
+name: Open Desktop Build
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'desktop/electron/**'
+      - 'index.html'
+      - 'MouldMaster_Core_App.html'
+      - 'manifest.webmanifest'
+      - 'mouldmaster-192.png'
+      - 'mouldmaster-512.png'
+      - 'version.json'
+      - 'reading-patch.css'
+      - 'reading-patch.js'
+      - 'training-upgrade.js'
+      - 'training-qa-fix.js'
+      - 'pwa-shell.js'
+      - 'source-library.js'
+      - 'service-worker.js'
+      - 'privacy.html'
+      - 'support.html'
+      - 'LICENSE'
+      - 'THIRD_PARTY_NOTICES.md'
+      - '.github/workflows/open-desktop-build.yml'
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build-windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Require committed dependency lock
+        shell: pwsh
+        run: |
+          if (-not (Test-Path 'desktop/electron/package-lock.json')) {
+            Write-Error 'desktop/electron/package-lock.json is missing. Let Desktop Dependency Lock finish first.'
+          }
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+          cache-dependency-path: desktop/electron/package-lock.json
+      - name: Install exact locked dependencies
+        working-directory: desktop/electron
+        run: npm ci --no-audit --fund=false
+      - name: Generate asset integrity manifest
+        working-directory: desktop/electron
+        run: npm run integrity
+      - name: Desktop security QA
+        working-directory: desktop/electron
+        run: npm run qa
+      - name: Build unsigned portable Windows package
+        working-directory: desktop/electron
+        run: npm run dist:portable
+      - name: Record release hashes
+        shell: pwsh
+        run: |
+          Get-ChildItem 'desktop/electron/dist' -File | Get-FileHash -Algorithm SHA256 | ForEach-Object { "$($_.Hash.ToLower())  $($_.Path | Split-Path -Leaf)" } | Set-Content 'desktop/electron/dist/SHA256SUMS.txt'
+          git rev-parse HEAD | Set-Content 'desktop/electron/dist/SOURCE_COMMIT.txt'
+      - uses: actions/upload-artifact@v4
+        with:
+          name: mouldmaster-open-desktop-windows
+          path: |
+            desktop/electron/dist/*.exe
+            desktop/electron/dist/SHA256SUMS.txt
+            desktop/electron/dist/SOURCE_COMMIT.txt
+            desktop/electron/generated/integrity.json
+          if-no-files-found: error
