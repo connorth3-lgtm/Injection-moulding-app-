@@ -1,10 +1,10 @@
 {
-  "version": "2026.08.23.6",
-  "app_url": "https://raw.githubusercontent.com/connorth3-lgtm/Injection-moulding-app-/76561aca96415095ecc1fcc2ff0acda032092442/MouldMaster_Academy_App.html",
-  "sha256": "7f1a8ba45b8af7701ba35df2b6700f03f8e9b8f4f729e5c8d967d91757c307cc",
+  "version": "2026.08.23.5",
+  "app_url": "https://raw.githubusercontent.com/connorth3-lgtm/Injection-moulding-app-/a79664b18775eb633c08f0b07bf880b3675879f0/MouldMaster_Academy_App.html",
+  "sha256": "8c64ea0f0f897e2667b09aad82ce9e2f3474661abcdce467559b77a39895bd8d",
   "launcher_version": "2026.08.21.2",
   "launcher_url": "https://raw.githubusercontent.com/connorth3-lgtm/Injection-moulding-app-/main/MouldMasterAcademy.exe",
   "launcher_sha256": "db7abc4da613a6d1409fdb129cb788b8ac396e5ac2d161963521c844d0ee771c",
   "published": "2026-08-24",
-  "notes": "Windows content feed reliability release. The content loader URL is pinned to an immutable Git commit and verifies each training asset against the audited 2026.08.23.5 release hashes, preventing moving-main cache races from causing false verification failures. Audited question bank and safety-critical certification rules are unchanged."
+  "notes": "Windows content 2026.08.23.5 compatibility repair: the verified loader is padded into the installed launcher's accepted payload-size class and pinned to an immutable commit. Training content, audited question bank and safety-critical certification logic are unchanged."
 }
