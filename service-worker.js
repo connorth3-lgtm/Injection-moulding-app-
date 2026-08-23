@@ -1,4 +1,4 @@
-const CACHE_VERSION='2026.08.23.10';
+const CACHE_VERSION='2026.08.24.1';
 const STATIC_CACHE=`mouldmaster-static-${CACHE_VERSION}`;
 const CORE=[
   './index.html',
@@ -12,6 +12,7 @@ const CORE=[
   './reading-patch.js',
   './training-upgrade.js',
   './training-qa-fix.js',
+  './source-library.js',
   './pwa-shell.js'
 ];
 
