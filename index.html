@@ -31,11 +31,12 @@
       '<link rel="stylesheet" href="./reading-patch.css">',
       '<meta name="mm-shell-release" content="'+SHELL_RELEASE+'">'
     ].join("\n");
+    const closeScript='</scr'+'ipt>';
     const bodyAdd=[
-      '<script src="./reading-patch.js"><\\/script>',
-      '<script src="./training-upgrade.js"><\\/script>',
-      '<script src="./training-qa-fix.js"><\\/script>',
-      '<script src="./pwa-shell.js"><\\/script>'
+      '<script src="./reading-patch.js">'+closeScript,
+      '<script src="./training-upgrade.js">'+closeScript,
+      '<script src="./training-qa-fix.js">'+closeScript,
+      '<script src="./pwa-shell.js">'+closeScript
     ].join("\n");
     function assemble(html){
       let out=String(html||"");
@@ -49,7 +50,7 @@
         if(r&&r.ok)return await r.text();
       }catch(_){ }
       if("caches" in window){
-        const c=await caches.match(CORE_URL);
+        const c=await caches.match(CORE_URL,{ignoreSearch:true});
         if(c)return await c.text();
       }
       throw new Error("Core training content is unavailable");
