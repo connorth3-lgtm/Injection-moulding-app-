@@ -46,8 +46,8 @@ DATA / ASSESSMENT HARDENING
 - Existing audited answer keys, the >=80% overall threshold and the zero-wrong safety-critical regional gate are unchanged.
 
 VERSIONING
-Android shell: 2026.08.23.9
-Training content: 2026.08.23.4
+Android shell: 2026.08.23.10
+Training content: 2026.08.23.5
 Audited core question bank: 2026.08.21.1
 
 The separate versions are intentional: visual/runtime shell changes, training/lesson changes and the audited assessment bank are tracked independently.
