@@ -1,4 +1,4 @@
-const CACHE_VERSION = "2026.08.23.2";
+const CACHE_VERSION = "2026.08.23.3";
 const STATIC_CACHE = `mouldmaster-static-${CACHE_VERSION}`;
 const CORE = [
   "./index.html",
@@ -7,13 +7,15 @@ const CORE = [
   "./mouldmaster-512.png",
   "./version.json",
   "./reading-patch.css",
-  "./reading-patch.js"
+  "./reading-patch.js",
+  "./training-upgrade.js"
 ];
 
 function enhanceHTML(text){
-  let out=text.replaceAll('2026.08.22.2','2026.08.23.2').replaceAll('2026.08.23.1','2026.08.23.2');
-  if(!out.includes('reading-patch.css')) out=out.replace('</head>','  <link rel="stylesheet" href="./reading-patch.css?v=2026.08.23.2">\n</head>');
-  if(!out.includes('reading-patch.js')) out=out.replace('</body>','  <script src="./reading-patch.js?v=2026.08.23.2"></script>\n</body>');
+  let out=text.replaceAll('2026.08.22.2','2026.08.23.3').replaceAll('2026.08.23.1','2026.08.23.3').replaceAll('2026.08.23.2','2026.08.23.3');
+  if(!out.includes('reading-patch.css')) out=out.replace('</head>','  <link rel="stylesheet" href="./reading-patch.css?v=2026.08.23.3">\n</head>');
+  if(!out.includes('reading-patch.js')) out=out.replace('</body>','  <script src="./reading-patch.js?v=2026.08.23.3"></script>\n</body>');
+  if(!out.includes('training-upgrade.js')) out=out.replace('</body>','  <script src="./training-upgrade.js?v=2026.08.23.3"></script>\n</body>');
   return out;
 }
 
