@@ -18,13 +18,23 @@ DOI, PubMed, PMC and publisher links point to external research. MouldMaster doe
 
 Manufacturer guides and white papers remain the property of their publishers. They are used as technical references only and must not be treated as universally applicable resin/process specifications.
 
-## Software dependencies
+## Open desktop software dependencies
 
-The current web/PWA source does not intentionally bundle a third-party CDN framework. If third-party packages are introduced later, their package name, version, licence and source URL should be recorded here before release.
+The preferred open Windows desktop replacement under `desktop/electron/` uses:
 
-## Windows launcher
+- **Electron** — MIT-licensed project; bundles Chromium and Node.js and therefore also includes their respective open-source components/licences. Exact version is pinned in `desktop/electron/package.json` and the full dependency graph/integrity metadata is locked in `desktop/electron/package-lock.json`.
+- **electron-builder** — MIT-licensed packaging project. Exact version and transitive dependency graph are locked in the same npm lockfile.
+- Build tooling downloaded by those packages can include additional open-source components. Release builds must retain the dependency lock and must generate/retain the applicable third-party licence files produced by the packaging toolchain where available.
 
-`MouldMasterAcademy.exe` is a legacy compiled launcher currently stored in the repository. Its corresponding preferred source/build recipe is not presently available in the repository. Do not represent that binary as fully open source until its source and build instructions are published under a compatible open-source licence or it is replaced by an openly buildable launcher/PWA package.
+The npm lockfile is the machine-readable source-of-truth for exact package versions and registry integrity hashes. It is not a substitute for individual upstream licence texts; redistribution must comply with those licences.
+
+The current web/PWA source does not intentionally bundle a third-party CDN framework. New runtime packages must be documented here before release.
+
+## Windows launcher transition
+
+`MouldMasterAcademy.exe` remains in the repository as the **legacy recovery launcher**. Its corresponding preferred source/build recipe has not been located, so that binary is not represented as fully open source.
+
+The preferred replacement is now the public `desktop/electron/` implementation, which has source, security checks, build instructions, exact direct dependency versions, an npm dependency lock and GitHub Actions build automation. The legacy binary should be removed from normal distribution only after the open replacement has passed Windows hardware testing and the public release/update path has been migrated safely.
 
 ## Trademarks
 
