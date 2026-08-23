@@ -17,6 +17,7 @@ window.exportData=function(){try{const p=JSON.parse(JSON.stringify(db));p.backup
 /* Best-effort atomic import: validate and serialise first, then roll back every store if a write fails. */
 window.importData=function(file){
  if(!file)return;
+ if(file.size>10*1024*1024){alert('That backup is too large to import safely. No existing data was changed.');return}
  const r=new FileReader();
  r.onload=()=>{
   let committed=false;
@@ -27,6 +28,8 @@ window.importData=function(file){
    const users={};
    for(const [id,u] of Object.entries(x.users).slice(0,500)){
     const sid=String(id).slice(0,160),clean=normaliseImportedUser(u,id);
+    if(!sid||users[sid])throw new Error('Invalid or duplicate learner identifier');
+    clean.id=sid;
     clean.certificates=[];clean.certificateMeta={};clean.examPassStatus={};
     users[sid]=clean;
    }
@@ -57,7 +60,7 @@ window.importData=function(file){
 };
 
 /* Confirmed reset clears every MouldMaster-owned training store. */
-const baseReset=window.resetData;if(typeof baseReset==='function')window.resetData=function(){const before=localStorage.getItem('mouldmasterProDB');const r=baseReset.apply(this,arguments);setTimeout(()=>{const after=localStorage.getItem('mouldmasterProDB');if(before!==after){localStorage.removeItem(REVIEW_KEY);localStorage.removeItem(LEGACY_REVIEW);localStorage.removeItem(SIGN_KEY);window.activeExam=null}},0);return r};
+const baseReset=window.resetData;if(typeof baseReset==='function')window.resetData=function(){const beforeDb=typeof db==='undefined'?null:db,r=baseReset.apply(this,arguments);setTimeout(()=>{if(typeof db!=='undefined'&&db!==beforeDb){localStorage.removeItem(REVIEW_KEY);localStorage.removeItem(LEGACY_REVIEW);localStorage.removeItem(SIGN_KEY);window.activeExam=null}},0);return r};
 
 /* One-time migration: legacy text-keyed review records are intentionally not guessed into stable IDs. */
 try{if(!localStorage.getItem(REVIEW_KEY)&&localStorage.getItem(LEGACY_REVIEW))localStorage.setItem(REVIEW_KEY,JSON.stringify({items:{}}))}catch(_){}
