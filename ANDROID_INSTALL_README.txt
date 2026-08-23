@@ -8,6 +8,8 @@ https://github.com/connorth3-lgtm/Injection-moulding-app-
   manifest.webmanifest
   service-worker.js
   version.json
+  reading-patch.css
+  reading-patch.js
   mouldmaster-192.png
   mouldmaster-512.png
   .nojekyll
@@ -34,7 +36,8 @@ UPDATES
 - New versions are cached and used on the next reopen.
 - Navigation is network-first when online, with the saved last-known-good page used offline.
 - Learner progress remains in the phone/browser profile and is not replaced by application files.
+- The 2026.08.23.2 shell adds clearer lesson/question cards and visible question references without changing answer keys or certification gates.
 
 CURRENT RELEASE
-Android shell: 2026.08.22.2
+Android shell: 2026.08.23.2
 Learning content: 2026.08.21.1
