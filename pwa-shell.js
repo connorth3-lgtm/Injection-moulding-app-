@@ -1,7 +1,7 @@
-/* MouldMaster PWA shell controller — 2026.08.23.10 */
+/* MouldMaster PWA shell controller — 2026.08.24.1 */
 (function(){
 'use strict';
-const RELEASE='2026.08.23.10';
+const RELEASE='2026.08.24.1';
 const CONTENT='2026.08.23.5';
 function syncLabels(){
   document.querySelectorAll('[data-mm-android-pwa] .tiny.muted').forEach(p=>{
