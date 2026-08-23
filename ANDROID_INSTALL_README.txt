@@ -10,6 +10,7 @@ https://github.com/connorth3-lgtm/Injection-moulding-app-
   version.json
   reading-patch.css
   reading-patch.js
+  training-upgrade.js
   mouldmaster-192.png
   mouldmaster-512.png
   .nojekyll
@@ -36,8 +37,10 @@ UPDATES
 - New versions are cached and used on the next reopen.
 - Navigation is network-first when online, with the saved last-known-good page used offline.
 - Learner progress remains in the phone/browser profile and is not replaced by application files.
-- The 2026.08.23.2 shell adds clearer lesson/question cards and visible question references without changing answer keys or certification gates.
+- 2026.08.23.2 added clearer lesson/question cards and visible question references.
+- 2026.08.23.3 adds topic-specific lesson teaching, plain-English examples, evidence checks, richer answer debriefs, difficulty labels, 16 extra troubleshooting scenarios, spaced repetition, confidence tracking, improved mobile lesson navigation and practical supervisor sign-off.
+- Existing technical answer keys, the 80% pass mark and the safety-critical regional certification gate are unchanged.
 
 CURRENT RELEASE
-Android shell: 2026.08.23.2
+Android shell: 2026.08.23.3
 Learning content: 2026.08.21.1
