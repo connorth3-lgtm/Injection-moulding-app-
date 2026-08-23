@@ -1,0 +1,182 @@
+name: Improve lesson reading and sources
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/reading-sources-patch.yml
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Improve reading layout and lesson sources
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import json
+
+          p = Path('index.html')
+          s = p.read_text(encoding='utf-8')
+
+          css = r'''
+/* Reading clarity patch — 23 Aug 2026 */
+.lesson-body{max-width:980px;background:linear-gradient(180deg,#13233a 0%,#0d1b2f 100%);border-color:#39577b}
+.lesson-body>h2{font-size:clamp(28px,4vw,38px);line-height:1.15;margin-bottom:18px;color:#fff}
+.lesson-read-block{margin:18px 0;padding:18px 20px;border:1px solid #345273;border-radius:14px;background:#0b192b;box-shadow:0 8px 22px rgba(0,0,0,.15)}
+.lesson-read-block h3{margin:5px 0 10px;font-size:18px;color:#fff}
+.lesson-read-block p,.lesson-read-block li{color:#d7e4f3;line-height:1.78;font-size:15px}
+.lesson-read-block ul{margin:8px 0 0;padding-left:22px;display:grid;gap:8px}
+.lesson-intro{border-left:5px solid var(--accent2);background:linear-gradient(135deg,#10243d,#0c1a2d)}
+.lesson-objectives{border-left:5px solid #7ce6a3}
+.lesson-points{border-left:5px solid #69a8ff}
+.lesson-exercise{border-left:5px solid #ffd166;background:linear-gradient(135deg,#282417,#151d29)}
+.lesson-source-box{margin:22px 0;padding:20px;border:1px solid #466d95;border-radius:15px;background:linear-gradient(145deg,#10243a,#0b1727)}
+.lesson-source-box h3{margin:5px 0 7px;color:#fff}
+.lesson-source-box>p{color:#b9cce2;line-height:1.6;margin:0 0 14px}
+.lesson-source-list{display:grid;gap:9px}
+.lesson-source-link{display:grid;grid-template-columns:1fr auto;gap:12px;align-items:center;padding:11px 13px;border:1px solid #355474;border-radius:10px;background:#0d1d31;color:#eaf4ff;text-decoration:none}
+.lesson-source-link:hover{background:#16304d;border-color:#69a8ff}
+.lesson-source-link small{display:block;color:#91a9c5;margin-top:3px;line-height:1.4}
+.lesson-source-link span:last-child{color:var(--accent);font-weight:800}
+.lesson-source-note{margin-top:12px!important;font-size:12px;color:#91a9c5!important}
+.lesson-body .callout{font-size:15px;line-height:1.65;border:1px solid #2d665f;border-left:5px solid var(--accent);background:#102a31}
+.lesson-body .note-area{min-height:130px;font-size:15px;line-height:1.55;background:#081522;border-color:#46617f}
+@media(max-width:700px){.lesson-body{padding:18px}.lesson-read-block,.lesson-source-box{padding:15px}.lesson-source-link{grid-template-columns:1fr}.lesson-source-link span:last-child{display:none}}
+'''
+          if '/* Reading clarity patch — 23 Aug 2026 */' not in s:
+              s = s.replace('</style>', css + '\n</style>', 1)
+
+          source_fn = r'''
+function lessonSourceBox(l){
+  const S={
+    1:[
+      ["ISO 20430:2020","Injection moulding machine safety requirements and safe-use information.","https://www.iso.org/standard/68000.html"],
+      ["OSHA Injection Molding eTool","Guarding and safe access around horizontal injection molding machines.","https://www.osha.gov/etools/machine-guarding/plastics-machinery/horizontal-injection-molding-machines"],
+      ["WorkSafe NZ — Injection and blow moulding","Machine hazards, guarding and safety expectations for plastics machinery.","https://www.worksafe.govt.nz/topic-and-industry/machinery/working-safely-with-plastic-production-machinery/injection-blow-moulding/"]
+    ],
+    2:[
+      ["ISO 20430:2020","International injection moulding machine safety standard.","https://www.iso.org/standard/68000.html"],
+      ["HSE — Safety at injection moulding machines","UK practical machinery-safeguarding guidance.","https://www.hse.gov.uk/pubns/plasindx.htm"],
+      ["OSHA 29 CFR 1910.212","Federal US machine-guarding requirements.","https://www.osha.gov/laws-regs/regulations/standardnumber/1910/1910.212"]
+    ],
+    3:[
+      ["Trotta et al. (2021), Polymer Testing","Processing-specific injection-moulding rheology and shear-thinning behaviour.","https://doi.org/10.1016/j.polymertesting.2021.107068"],
+      ["ISO 1133-1:2022","MFR/MVR testing under defined conditions and limits of correlation to processing.","https://www.iso.org/standard/83905.html"],
+      ["ASTM D1238","Standard test method for melt flow rates of thermoplastics.","https://store.astm.org/standards/d1238"]
+    ],
+    4:[
+      ["Autodesk Moldflow — Cooling stage","Reference on heat removal and cooling-stage behaviour.","https://help.autodesk.com/cloudhelp/2023/ENU/MoldflowInsight-CLC-Ref-Materials/files/glossary-of-terminology/MoldflowInsight_CLC_Ref_Materials_glossary_of_terminology_Cooling_stage_html.html"],
+      ["ISO 20430:2020","Safety requirements relevant to moulding-machine/tool interaction.","https://www.iso.org/standard/68000.html"],
+      ["Warpage / fibre-orientation study","Experimental work linking fibre orientation, anisotropy and warpage.","https://www.jstage.jst.go.jp/article/seikeikakou1989/16/7/16_7_467/_article/-char/en"]
+    ],
+    5:[
+      ["Autodesk Moldflow — Packing guidance","Background on packing, gate freeze and pressure transmission.","https://help.autodesk.com/view/MOLDFLOW/2013/ENU/caas.html?url=caas%2Fvhelp%2Fhelp-dev-autodesk-com%2Fv%2FSimulation-Moldflow%2Fenu%2F2013%2FHelp%2F3Insight-360%2F3927-Process-3927%2F3933-Profiles3933%2F3945-Packing-3945.html"],
+      ["OSHA Injection Molding eTool","Safety controls to retain while carrying out setup and process work.","https://www.osha.gov/etools/machine-guarding/plastics-machinery/horizontal-injection-molding-machines"],
+      ["ISO 20430:2020","Machine safety requirements and safe-use information.","https://www.iso.org/standard/68000.html"]
+    ],
+    6:[
+      ["Autodesk Moldflow — Cooling stage","Thermal background relevant to cooling, shrinkage and distortion.","https://help.autodesk.com/cloudhelp/2023/ENU/MoldflowInsight-CLC-Ref-Materials/files/glossary-of-terminology/MoldflowInsight_CLC_Ref_Materials_glossary_of_terminology_Cooling_stage_html.html"],
+      ["Trotta et al. (2021), Polymer Testing","Rheology evidence relevant to flow and viscosity-based troubleshooting.","https://doi.org/10.1016/j.polymertesting.2021.107068"],
+      ["Hu et al. (2022), Polymers","Cooling-rate/crystallisation evidence relevant to morphology and shrinkage.","https://doi.org/10.3390/polym14173646"]
+    ],
+    7:[
+      ["Autodesk Moldflow — Packing guidance","Gate-freeze and packing behaviour used in scientific-moulding reasoning.","https://help.autodesk.com/view/MOLDFLOW/2013/ENU/caas.html?url=caas%2Fvhelp%2Fhelp-dev-autodesk-com%2Fv%2FSimulation-Moldflow%2Fenu%2F2013%2FHelp%2F3Insight-360%2F3927-Process-3927%2F3933-Profiles3933%2F3945-Packing-3945.html"],
+      ["Trotta et al. (2021), Polymer Testing","High-shear rheology relevant to relative-viscosity studies.","https://doi.org/10.1016/j.polymertesting.2021.107068"],
+      ["NIST — Experimental design principles","General experimental discipline for controlled engineering studies.","https://www.itl.nist.gov/div898/handbook/pri/section1/pri13.htm"]
+    ],
+    8:[
+      ["NIST — Process capability","Cp/Cpk concepts, assumptions and interpretation.","https://www.itl.nist.gov/div898/handbook/pmc/section1/pmc16.htm"],
+      ["NIST — Engineering Statistics Handbook","Measurement, process monitoring and statistical engineering reference.","https://www.itl.nist.gov/div898/handbook/"],
+      ["NIST — Confirmation runs","Why predicted conditions should be verified with confirmation evidence.","https://www.itl.nist.gov/div898/handbook/pri/section4/pri46.htm"]
+    ],
+    9:[
+      ["NIST — Design of experiments","Main effects, interactions, randomisation and experimental structure.","https://www.itl.nist.gov/div898/handbook/pri/section1/pri13.htm"],
+      ["NIST — Confirmation runs","Independent confirmation of selected experimental conditions.","https://www.itl.nist.gov/div898/handbook/pri/section4/pri46.htm"],
+      ["NIST — Engineering Statistics Handbook","Broader statistical-engineering reference.","https://www.itl.nist.gov/div898/handbook/"]
+    ],
+    10:[
+      ["OSHA Injection Molding eTool","Integrated machine/robot guarding and safe-access principles.","https://www.osha.gov/etools/machine-guarding/plastics-machinery/horizontal-injection-molding-machines"],
+      ["WorkSafe — Safe use of machinery","Risk management for integrated machinery and controls.","https://www.worksafe.govt.nz/topic-and-industry/machinery/safe-use-of-machinery/"],
+      ["ISO 20430:2020","Injection moulding machine safety requirements.","https://www.iso.org/standard/68000.html"]
+    ],
+    11:[
+      ["Autodesk Moldflow — Cooling stage","CAE reference for thermal/cooling interpretation.","https://help.autodesk.com/cloudhelp/2023/ENU/MoldflowInsight-CLC-Ref-Materials/files/glossary-of-terminology/MoldflowInsight_CLC_Ref_Materials_glossary_of_terminology_Cooling_stage_html.html"],
+      ["Warpage / fibre-orientation study","Experimental evidence linking local orientation to anisotropic shrinkage and warpage.","https://www.jstage.jst.go.jp/article/seikeikakou1989/16/7/16_7_467/_article/-char/en"],
+      ["Hu et al. (2022), Polymers","Cooling-rate effects on crystallisation behaviour.","https://doi.org/10.3390/polym14173646"]
+    ],
+    12:[
+      ["NIST — Engineering Statistics Handbook","Process evidence, measurement and statistical engineering reference.","https://www.itl.nist.gov/div898/handbook/"],
+      ["ISO 20430:2020","Machine-safety baseline when expert process work interacts with equipment.","https://www.iso.org/standard/68000.html"],
+      ["NIST — Design of experiments","Structured learning, interactions and confirmation for process improvement.","https://www.itl.nist.gov/div898/handbook/pri/section1/pri13.htm"]
+    ]
+  };
+  const items=S[l.course]||S[1];
+  return `<section class="lesson-source-box"><span class="eyebrow">Sources & further reading</span><h3>Check the evidence behind this lesson</h3><p>Use these as supporting references. For production settings, material limits and legal duties, always use the current source that applies to the actual resin, machine, site and jurisdiction.</p><div class="lesson-source-list">${items.map(x=>`<a class="lesson-source-link" href="${x[2]}" target="_blank" rel="noopener"><span><b>${esc(x[0])}</b><small>${esc(x[1])}</small></span><span>Open ↗</span></a>`).join("")}</div><p class="lesson-source-note">Source links are for learning and verification; they do not replace approved site procedures, current supplier TDS/SDS, machine documentation or applicable law.</p></section>`;
+}
+'''
+          marker = 'function renderLesson(){\n  const l=currentLesson(), c=D.courses.find(x=>x.id===l.course), p=courseProgress(c);'
+          if 'function lessonSourceBox(l)' not in s and marker in s:
+              s = s.replace(marker, source_fn + '\n' + marker, 1)
+
+          replacements = {
+            '<p>${esc(l.intro)}</p>': '<div class="lesson-read-block lesson-intro"><span class="eyebrow">Introduction</span><p>${esc(l.intro)}</p></div>',
+            '<h3>Learning objectives</h3><ul>${l.objectives.map(x=>`<li>${esc(x)}</li>`).join("")}</ul>': '<section class="lesson-read-block lesson-objectives"><span class="eyebrow">Learning objectives</span><h3>By the end of this lesson</h3><ul>${l.objectives.map(x=>`<li>${esc(x)}</li>`).join("")}</ul></section>',
+            '<h3>Key engineering points</h3><ul>${l.keypoints.map(x=>`<li>${esc(x)}</li>`).join("")}</ul>': '<section class="lesson-read-block lesson-points"><span class="eyebrow">Key engineering points</span><h3>What to remember</h3><ul>${l.keypoints.map(x=>`<li>${esc(x)}</li>`).join("")}</ul></section>',
+            '<h3>Shop-floor exercise</h3><p>${esc(l.exercise)}</p>': '<section class="lesson-read-block lesson-exercise"><span class="eyebrow">Shop-floor exercise</span><h3>Apply the idea</h3><p>${esc(l.exercise)}</p></section>',
+            '<div class="callout"><b>Evidence habit:</b> Record the starting condition, the change, the measured response and your conclusion. This makes troubleshooting transferable to other machines, moulds and shifts.</div>': '<div class="callout"><b>Evidence habit:</b> Record the starting condition, the change, the measured response and your conclusion. This makes troubleshooting transferable to other machines, moulds and shifts.</div>\n      ${lessonSourceBox(l)}'
+          }
+          for old,new in replacements.items():
+              s = s.replace(old,new)
+
+          s = s.replace('const ANDROID_RELEASE = "2026.08.22.2";', 'const ANDROID_RELEASE = "2026.08.23.1";')
+          p.write_text(s, encoding='utf-8')
+
+          sw = Path('service-worker.js')
+          if sw.exists():
+              t=sw.read_text(encoding='utf-8').replace('const CACHE_VERSION = "2026.08.22.2";', 'const CACHE_VERSION = "2026.08.23.1";')
+              sw.write_text(t, encoding='utf-8')
+
+          vf=Path('version.json')
+          if vf.exists():
+              data=json.loads(vf.read_text(encoding='utf-8'))
+              data['android_release']='2026.08.23.1'
+              data['published']='2026-08-23'
+              vf.write_text(json.dumps(data,indent=2)+'\n',encoding='utf-8')
+
+          rf=Path('ANDROID_INSTALL_README.txt')
+          if rf.exists():
+              t=rf.read_text(encoding='utf-8')
+              t=t.replace('Android shell: 2026.08.22.2','Android shell: 2026.08.23.1')
+              rf.write_text(t,encoding='utf-8')
+          PY
+
+          node --check service-worker.js
+          python - <<'PY'
+          from pathlib import Path
+          import re, subprocess, tempfile
+          s=Path('index.html').read_text(encoding='utf-8')
+          scripts=re.findall(r'<script(?:\s[^>]*)?>(.*?)</script>',s,flags=re.S|re.I)
+          for i,script in enumerate(scripts,1):
+              with tempfile.NamedTemporaryFile('w',suffix='.js',delete=False,encoding='utf-8') as f:
+                  f.write(script); name=f.name
+              r=subprocess.run(['node','--check',name],capture_output=True,text=True)
+              Path(name).unlink(missing_ok=True)
+              if r.returncode:
+                  raise SystemExit(f'inline script {i} failed: {r.stderr}')
+          print(f'validated {len(scripts)} inline scripts')
+          PY
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html service-worker.js version.json ANDROID_INSTALL_README.txt
+          if ! git diff --cached --quiet; then
+            git commit -m "Improve lesson readability and add sources"
+            git push
+          fi
