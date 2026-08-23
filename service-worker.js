@@ -1,4 +1,4 @@
-const CACHE_VERSION = "2026.08.23.1";
+const CACHE_VERSION = "2026.08.23.2";
 const STATIC_CACHE = `mouldmaster-static-${CACHE_VERSION}`;
 const CORE = [
   "./index.html",
@@ -10,28 +10,30 @@ const CORE = [
   "./reading-patch.js"
 ];
 
-function injectReadingPatch(html){
-  if(!html.includes('reading-patch.css')){
-    html=html.replace('</head>','<link rel="stylesheet" href="./reading-patch.css"></head>');
-  }
-  if(!html.includes('reading-patch.js')){
-    html=html.replace('</body>','<script src="./reading-patch.js"></script></body>');
-  }
-  return html;
+function enhanceHTML(text){
+  let out=text.replaceAll('2026.08.22.2','2026.08.23.2').replaceAll('2026.08.23.1','2026.08.23.2');
+  if(!out.includes('reading-patch.css')) out=out.replace('</head>','  <link rel="stylesheet" href="./reading-patch.css?v=2026.08.23.2">\n</head>');
+  if(!out.includes('reading-patch.js')) out=out.replace('</body>','  <script src="./reading-patch.js?v=2026.08.23.2"></script>\n</body>');
+  return out;
 }
 
-async function patchedHtmlResponse(response){
+async function enhancedNavigationResponse(response){
   const text=await response.text();
   const headers=new Headers(response.headers);
-  headers.set('content-type','text/html; charset=utf-8');
-  return new Response(injectReadingPatch(text),{status:response.status,statusText:response.statusText,headers});
+  headers.set('Content-Type','text/html; charset=utf-8');
+  headers.delete('Content-Length');
+  return new Response(enhanceHTML(text),{status:response.status,statusText:response.statusText,headers});
 }
 
 self.addEventListener("install", event => {
   event.waitUntil((async () => {
     const cache = await caches.open(STATIC_CACHE);
-    await Promise.all(CORE.map(async url => {
-      try { await cache.add(new Request(url, {cache:"reload"})); } catch (_) {}
+    try{
+      const raw=await fetch(new Request("./index.html",{cache:"reload"}));
+      if(raw&&raw.ok) await cache.put("./index.html",await enhancedNavigationResponse(raw.clone()));
+    }catch(_){}
+    await Promise.all(CORE.filter(x=>x!=="./index.html").map(async url=>{
+      try{await cache.add(new Request(url,{cache:"reload"}));}catch(_){}
     }));
     await self.skipWaiting();
   })());
@@ -40,9 +42,7 @@ self.addEventListener("install", event => {
 self.addEventListener("activate", event => {
   event.waitUntil((async () => {
     const keys = await caches.keys();
-    await Promise.all(
-      keys.filter(key => key.startsWith("mouldmaster-static-") && key !== STATIC_CACHE).map(key => caches.delete(key))
-    );
+    await Promise.all(keys.filter(key => key.startsWith("mouldmaster-static-") && key !== STATIC_CACHE).map(key => caches.delete(key)));
     await self.clients.claim();
   })());
 });
@@ -55,21 +55,17 @@ self.addEventListener("fetch", event => {
   if(event.request.mode === "navigate"){
     event.respondWith((async () => {
       try{
-        const response = await fetch(event.request, {cache:"no-store"});
-        if(response && response.ok){
-          const patched=await patchedHtmlResponse(response.clone());
+        const raw = await fetch(event.request,{cache:"no-store"});
+        if(raw && raw.ok){
+          const response=await enhancedNavigationResponse(raw.clone());
           const cache=await caches.open(STATIC_CACHE);
-          await cache.put("./index.html",patched.clone());
-          return patched;
+          await cache.put("./index.html",response.clone());
+          return response;
         }
-        return response;
+        return raw;
       }catch(_){
-        const cached = await caches.match("./index.html");
-        if(cached){
-          const ct=cached.headers.get('content-type')||'';
-          if(ct.includes('text/html')) return patchedHtmlResponse(cached.clone());
-          return cached;
-        }
+        const cached=await caches.match("./index.html");
+        if(cached) return cached;
         return new Response("<h1>MouldMaster is offline</h1><p>Reconnect once to finish installing the offline copy.</p>",{status:503,headers:{"Content-Type":"text/html; charset=utf-8"}});
       }
     })());
@@ -77,16 +73,15 @@ self.addEventListener("fetch", event => {
   }
 
   event.respondWith((async () => {
-    const cached = await caches.match(event.request);
-    const network = fetch(event.request, {cache:"no-store"}).then(async response => {
-      if(response && response.ok){
-        const cache = await caches.open(STATIC_CACHE);
-        await cache.put(event.request, response.clone());
+    const cached=await caches.match(event.request);
+    const network=fetch(event.request,{cache:"no-store"}).then(async response=>{
+      if(response&&response.ok){
+        const cache=await caches.open(STATIC_CACHE);
+        await cache.put(event.request,response.clone());
       }
       return response;
-    }).catch(() => null);
-    if(cached){ event.waitUntil(network); return cached; }
-    const response = await network;
-    return response || new Response("", {status:504});
+    }).catch(()=>null);
+    if(cached){event.waitUntil(network);return cached;}
+    return await network || new Response("",{status:504});
   })());
 });
