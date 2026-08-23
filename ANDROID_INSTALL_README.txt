@@ -1,10 +1,14 @@
 MOULDMASTER ACADEMY — ANDROID INSTALLABLE APP
 
-UPLOAD
-Upload these files to the ROOT of:
-https://github.com/connorth3-lgtm/Injection-moulding-app-
+LIVE APP
+https://connorth3-lgtm.github.io/Injection-moulding-app-/
 
+PUBLISHING
+GitHub Pages: Deploy from branch > main > /(root)
+
+PWA FILES
   index.html
+  MouldMaster_Academy_App.html
   manifest.webmanifest
   service-worker.js
   version.json
@@ -12,38 +16,35 @@ https://github.com/connorth3-lgtm/Injection-moulding-app-
   reading-patch.js
   training-upgrade.js
   training-qa-fix.js
+  pwa-shell.js
   mouldmaster-192.png
   mouldmaster-512.png
   .nojekyll
 
-GITHUB PAGES
-Repository > Settings > Pages
-Source: Deploy from a branch
-Branch: main
-Folder: /(root)
-Save.
-
-EXPECTED PHONE ADDRESS
-https://connorth3-lgtm.github.io/Injection-moulding-app-/
-
 INSTALL ON ANDROID
-1. Open the address above in Chrome.
-2. Wait for the page to load once online.
+1. Open the live app in Chrome while online.
+2. Let it finish loading once.
 3. Chrome menu > Install app / Add to Home screen.
 4. Confirm Install.
 
-UPDATES
-- Chrome checks the service worker for updates.
-- MouldMaster also requests an update check when the app starts.
-- New versions are cached and used on the next reopen.
-- Navigation is network-first when online, with the saved last-known-good page used offline.
-- Learner progress remains in the phone/browser profile and is not replaced by application files.
-- 2026.08.23.2 added clearer lesson/question cards and visible question references.
-- 2026.08.23.3 added topic-specific lesson teaching, plain-English examples, evidence checks, richer answer debriefs, difficulty labels, 16 extra troubleshooting scenarios, spaced repetition, confidence tracking, improved mobile lesson navigation and practical supervisor sign-off.
-- 2026.08.23.4 fixed compatibility between the enhanced assessment layer and the final audited/randomised exam objects.
-- 2026.08.23.5 includes spaced-review and practical-signoff state in normal backup/import handling and clears those records during a confirmed factory reset.
-- Existing technical answer keys, the 80% pass mark and the safety-critical regional certification gate are unchanged.
+UPDATE / OFFLINE DESIGN
+- index.html is now a direct bootstrap; it no longer relies on service-worker text rewriting to pretend the source is current.
+- The service worker caches the exact unversioned URLs requested by the bootstrap and uses ignoreSearch only as a compatibility fallback.
+- The audited core app, training scripts, CSS, manifest, icons and metadata are all cached for offline use after a successful online load.
+- Navigation is network-first while online and falls back to the cached bootstrap offline.
+- Learner progress remains in the browser/app profile during application updates.
 
-CURRENT RELEASE
-Android shell: 2026.08.23.5
-Learning content: 2026.08.21.1
+DATA / ASSESSMENT HARDENING
+- Spaced repetition uses stable question-bank IDs rather than question wording.
+- Backup/import validates core learner data and training extras before any data is changed.
+- Factory reset clears main learner data, spaced-review data and practical sign-off data.
+- Auto-selected lesson references are subject-curated; if no relevant general reference matches, the app says so instead of showing an unrelated source.
+- Older NZ injection/blow-moulding guidance is explicitly labelled legacy/supplementary; current HSWA/WorkSafe/site requirements control.
+- Existing audited answer keys, the >=80% overall threshold and the zero-wrong safety-critical regional gate are unchanged.
+
+VERSIONING
+Android shell: 2026.08.23.6
+Training content: 2026.08.23.1
+Audited core question bank: 2026.08.21.1
+
+The separate versions are intentional: visual/runtime shell changes, training/lesson changes and the audited assessment bank are tracked independently.
