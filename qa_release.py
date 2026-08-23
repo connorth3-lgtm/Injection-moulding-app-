@@ -7,8 +7,8 @@ import struct
 import subprocess
 import tempfile
 
-ANDROID_RELEASE = "2026.08.23.9"
-CONTENT_VERSION = "2026.08.23.4"
+ANDROID_RELEASE = "2026.08.23.10"
+CONTENT_VERSION = "2026.08.23.5"
 QUESTION_BANK_VERSION = "2026.08.21.1"
 CORE_SHA256 = "b30719d5d3ea946a01c72d0b8996b0375575ad910a5c8d9b22b4395d6b3c8098"
 EXE_SHA256 = "db7abc4da613a6d1409fdb129cb788b8ac396e5ac2d161963521c844d0ee771c"
@@ -87,6 +87,7 @@ for marker in ["mm-reading-guide", "READ THIS FIRST", "READ NEXT", "MAIN POINTS"
     assert marker in reading, f"lesson reading-order cue missing: {marker}"
 for marker in ["mm-extra-help", "Finished reading — next lesson", "lesson-actions-sticky"]:
     assert marker in reading or marker in text("reading-patch.css"), f"lesson mobile-clarity cue missing: {marker}"
+assert "Open <b>Extra help</b> only if you want examples or a simpler explanation" in reading
 
 bridge = text("training-qa-fix.js")
 for marker in ["file.size>10*1024*1024", "clean.id=sid", "clean.certificates=[]", "clean.certificateMeta={}", "clean.examPassStatus={}", "before[k]===null?localStorage.removeItem(k):localStorage.setItem(k,before[k])", "Certificates must be re-earned", "db!==beforeDb"]:
