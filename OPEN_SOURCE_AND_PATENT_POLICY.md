@@ -33,7 +33,18 @@ The project therefore:
 
 A distributed component should only be advertised as fully open source when the corresponding preferred source form and reasonable build instructions are available under an open-source licence.
 
-At the time this policy was added, the web/PWA source is present in the repository. The legacy `MouldMasterAcademy.exe` launcher binary is present, but its corresponding launcher source/build recipe has not been located in the repository. Therefore that binary must not yet be marketed as a fully open-source component.
+The web/PWA source is present in this repository. A preferred Windows desktop replacement is also now present under `desktop/electron/`, including:
+
+- Apache-2.0 project source;
+- a hardened Electron main process;
+- SHA-256 verification of bundled training assets before launch;
+- renderer sandbox/context isolation with Node integration disabled;
+- loopback-only serving of allow-listed local assets;
+- exact direct dependency versions and a committed npm dependency lock;
+- GitHub Actions dependency-lock and Windows build workflows;
+- documented portable, NSIS and MSIX packaging paths.
+
+The legacy `MouldMasterAcademy.exe` binary remains a recovery-only compatibility component because its original preferred source/build recipe has not been located. It must not be marketed as fully open source. It should remain quarantined from the normal public distribution path until the open replacement has passed Windows hardware testing and migration validation.
 
 ## Contributions
 
