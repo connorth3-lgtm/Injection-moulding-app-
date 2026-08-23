@@ -80,14 +80,12 @@ assert "Attempt graded" in training
 assert "return qu(q)?" in training, "question debrief references must be exact-only"
 
 reading = text("reading-patch.js")
-assert "const fallback=fallbackFor(stem)" not in reading, "question references must not use topic guesses"
-assert "function fallbackFor" not in reading and "const fallbacks" not in reading
-assert "lessonSources.slice" not in reading, "blanket sources must not be appended to every lesson"
-assert "const lessonSources" not in reading
-assert "if(!usable.length)return;" in reading
+assert "questionBank" not in reading and "question-reference" not in reading, "pre-grade source injection must remain disabled"
+assert "fallback" not in reading and "lessonSources" not in reading, "blanket or guessed sources must not return"
+assert "enhanceLesson" in reading
 
 bridge = text("training-qa-fix.js")
-for marker in ["clean.certificates=[]", "clean.certificateMeta={}", "clean.examPassStatus={}", "before[k]===null?localStorage.removeItem(k):localStorage.setItem(k,before[k])", "Certificates must be re-earned"]:
+for marker in ["file.size>10*1024*1024", "clean.id=sid", "clean.certificates=[]", "clean.certificateMeta={}", "clean.examPassStatus={}", "before[k]===null?localStorage.removeItem(k):localStorage.setItem(k,before[k])", "Certificates must be re-earned", "db!==beforeDb"]:
     assert marker in bridge, f"import hardening missing: {marker}"
 storage_commit = bridge.index("for(const [k,v] of Object.entries(writes))localStorage.setItem(k,v)")
 memory_commit = bridge.index("db=proposed;user=db.users[db.activeUser]")
