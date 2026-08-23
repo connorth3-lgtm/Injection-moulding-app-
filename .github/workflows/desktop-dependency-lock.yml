@@ -19,8 +19,6 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
-          cache: 'npm'
-          cache-dependency-path: desktop/electron/package-lock.json
       - name: Generate exact npm dependency lock
         working-directory: desktop/electron
         run: npm install --package-lock-only --ignore-scripts --no-audit --fund=false
