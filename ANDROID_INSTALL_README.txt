@@ -40,9 +40,10 @@ UPDATES
 - Learner progress remains in the phone/browser profile and is not replaced by application files.
 - 2026.08.23.2 added clearer lesson/question cards and visible question references.
 - 2026.08.23.3 added topic-specific lesson teaching, plain-English examples, evidence checks, richer answer debriefs, difficulty labels, 16 extra troubleshooting scenarios, spaced repetition, confidence tracking, improved mobile lesson navigation and practical supervisor sign-off.
-- 2026.08.23.4 fixes compatibility between the enhanced assessment layer and the final audited/randomised exam objects so confidence tracking, richer debriefs and spaced review use the actual exam questions and their exact rationales/references.
+- 2026.08.23.4 fixed compatibility between the enhanced assessment layer and the final audited/randomised exam objects.
+- 2026.08.23.5 includes spaced-review and practical-signoff state in normal backup/import handling and clears those records during a confirmed factory reset.
 - Existing technical answer keys, the 80% pass mark and the safety-critical regional certification gate are unchanged.
 
 CURRENT RELEASE
-Android shell: 2026.08.23.4
+Android shell: 2026.08.23.5
 Learning content: 2026.08.21.1
