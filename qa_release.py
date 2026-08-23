@@ -7,7 +7,7 @@ import struct
 import subprocess
 import tempfile
 
-ANDROID_RELEASE = "2026.08.23.10"
+ANDROID_RELEASE = "2026.08.24.1"
 CONTENT_VERSION = "2026.08.23.5"
 WINDOWS_RECOVERY_VERSION = "2026.08.21.1"
 QUESTION_BANK_VERSION = "2026.08.21.1"
@@ -59,10 +59,11 @@ assert "Compare All assesses ALL 9 regional items" in core, "Compare All regiona
 index = text("index.html")
 assert f'const SHELL_RELEASE="{ANDROID_RELEASE}"' in index
 assert 'const CORE_URL="./MouldMaster_Core_App.html"' in index
+assert '<script src="./source-library.js">' in index, "source library not loaded by shell"
 
 sw = text("service-worker.js")
 assert f"CACHE_VERSION='{ANDROID_RELEASE}'" in sw
-for asset in ["index.html", "MouldMaster_Core_App.html", "MouldMaster_Academy_App.html", "manifest.webmanifest", "mouldmaster-192.png", "mouldmaster-512.png", "version.json", "reading-patch.css", "reading-patch.js", "training-upgrade.js", "training-qa-fix.js", "pwa-shell.js"]:
+for asset in ["index.html", "MouldMaster_Core_App.html", "MouldMaster_Academy_App.html", "manifest.webmanifest", "mouldmaster-192.png", "mouldmaster-512.png", "version.json", "reading-patch.css", "reading-patch.js", "training-upgrade.js", "training-qa-fix.js", "source-library.js", "pwa-shell.js"]:
     assert f"'./{asset}'" in sw, f"offline asset missing: {asset}"
 install = sw[sw.index("self.addEventListener('install'"):sw.index("self.addEventListener('activate'")]
 assert "cache.addAll" in install, "install must fail if any core asset cannot be cached"
@@ -92,6 +93,13 @@ for marker in ["mm-extra-help", "Finished reading — next lesson", "lesson-acti
     assert marker in reading or marker in text("reading-patch.css"), f"lesson mobile-clarity cue missing: {marker}"
 assert "Open <b>Extra help</b> only if you want examples or a simpler explanation" in reading
 
+source_lib = text("source-library.js")
+for marker in ["ISO 20430:2020", "HSE PPIS4(rev1)", "OSHA 1910.147", "WorkSafe NZ — Machine lockouts", "ISO 1133-1:2022", "ISO 22514-2:2026", "NIST — Experimental design", "More authoritative sources"]:
+    assert marker in source_lib, f"authoritative source missing: {marker}"
+assert "#examQuestions" not in source_lib and "activeExam" not in source_lib and "questionBank" not in source_lib, "source library must not inject sources into live assessments"
+assert "lesson()" in source_lib and "standards()" in source_lib, "sources must be limited to lesson/standards presentation"
+assert Path("sources/AUTHORITATIVE_SOURCE_REGISTER.md").exists(), "authoritative source register missing"
+
 bridge = text("training-qa-fix.js")
 for marker in ["file.size>10*1024*1024", "clean.id=sid", "clean.certificates=[]", "clean.certificateMeta={}", "clean.examPassStatus={}", "before[k]===null?localStorage.removeItem(k):localStorage.setItem(k,before[k])", "Certificates must be re-earned", "db!==beforeDb"]:
     assert marker in bridge, f"import hardening missing: {marker}"
@@ -117,12 +125,12 @@ assert Path("privacy.html").exists(), "public privacy page missing"
 assert Path("support.html").exists(), "public support page missing"
 assert Path("certification/README.md").exists(), "certification roadmap missing"
 assert Path("credentials/README.md").exists(), "credential governance spec missing"
-runtime = "\n".join(text(x) for x in ["MouldMaster_Core_App.html", "index.html", "training-upgrade.js", "pwa-shell.js", "training-qa-fix.js"])
+runtime = "\n".join(text(x) for x in ["MouldMaster_Core_App.html", "index.html", "training-upgrade.js", "source-library.js", "pwa-shell.js", "training-qa-fix.js"])
 for claim in [r"\bNZQA approved\b", r"\bIACET CEUs?\b", r"\bMicrosoft certified\b", r"\bNZQA accredited\b"]:
     assert not re.search(claim, runtime, flags=re.I), f"premature external certification claim detected: {claim}"
 assert "not accredited" in core.lower() or "not third-party accredited" in core.lower(), "non-accredited certificate status must remain explicit"
 
-for js_name in ["service-worker.js", "reading-patch.js", "training-upgrade.js", "training-qa-fix.js", "pwa-shell.js"]:
+for js_name in ["service-worker.js", "reading-patch.js", "training-upgrade.js", "training-qa-fix.js", "source-library.js", "pwa-shell.js"]:
     p = subprocess.run([NODE, "--check", js_name], capture_output=True, text=True)
     assert p.returncode == 0, f"{js_name}: {p.stderr}"
 
