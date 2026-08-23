@@ -1,10 +1,10 @@
 {
-  "version": "2026.08.23.5",
-  "app_url": "https://raw.githubusercontent.com/connorth3-lgtm/Injection-moulding-app-/a79664b18775eb633c08f0b07bf880b3675879f0/MouldMaster_Academy_App.html",
-  "sha256": "8c64ea0f0f897e2667b09aad82ce9e2f3474661abcdce467559b77a39895bd8d",
+  "version": "2026.08.21.1",
+  "app_url": "https://raw.githubusercontent.com/connorth3-lgtm/Injection-moulding-app-/ffc05506e6baebc8d9f0e047f556a017a06c110a/MouldMaster_Core_App.html",
+  "sha256": "b30719d5d3ea946a01c72d0b8996b0375575ad910a5c8d9b22b4395d6b3c8098",
   "launcher_version": "2026.08.21.2",
   "launcher_url": "https://raw.githubusercontent.com/connorth3-lgtm/Injection-moulding-app-/main/MouldMasterAcademy.exe",
   "launcher_sha256": "db7abc4da613a6d1409fdb129cb788b8ac396e5ac2d161963521c844d0ee771c",
   "published": "2026-08-24",
-  "notes": "Windows content 2026.08.23.5 compatibility repair: the verified loader is padded into the installed launcher's accepted payload-size class and pinned to an immutable commit. Training content, audited question bank and safety-critical certification logic are unchanged."
+  "notes": "Recovery feed restored to the known-good full Windows content used by the working 2026.08.21.1 installation. Newer Windows training-layer updates are temporarily withheld while their updater compatibility is rebuilt and tested separately."
 }
