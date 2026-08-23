@@ -1,23 +1,13 @@
-/* MouldMaster reading clarity patch — 2026.08.23 */
+/* MouldMaster reading/question clarity patch — 2026.08.23.2 */
 .lesson-body{max-width:980px;background:linear-gradient(180deg,#13233a 0%,#0d1b2f 100%);border-color:#39577b}
 .lesson-body>h2{font-size:clamp(28px,4vw,38px);line-height:1.15;margin-bottom:18px;color:#fff}
 .lesson-read-block{margin:18px 0;padding:18px 20px;border:1px solid #345273;border-radius:14px;background:#0b192b;box-shadow:0 8px 22px rgba(0,0,0,.15)}
-.lesson-read-block h3{margin:5px 0 10px;font-size:18px;color:#fff}
-.lesson-read-block p,.lesson-read-block li{color:#d7e4f3;line-height:1.78;font-size:15px}
-.lesson-read-block ul{margin:8px 0 0;padding-left:22px;display:grid;gap:8px}
-.lesson-intro{border-left:5px solid #69a8ff;background:linear-gradient(135deg,#10243d,#0c1a2d)}
-.lesson-objectives{border-left:5px solid #7ce6a3}
-.lesson-points{border-left:5px solid #69a8ff}
-.lesson-exercise{border-left:5px solid #ffd166;background:linear-gradient(135deg,#282417,#151d29)}
-.lesson-source-box{margin:22px 0;padding:20px;border:1px solid #466d95;border-radius:15px;background:linear-gradient(145deg,#10243a,#0b1727)}
-.lesson-source-box h3{margin:5px 0 7px;color:#fff}
-.lesson-source-box>p{color:#b9cce2;line-height:1.65;margin:0 0 14px}
-.lesson-source-list{display:grid;gap:9px}
-.lesson-source-link{display:grid;grid-template-columns:1fr auto;gap:12px;align-items:center;padding:11px 13px;border:1px solid #355474;border-radius:10px;background:#0d1d31;color:#eaf4ff;text-decoration:none}
-.lesson-source-link:hover{background:#16304d;border-color:#69a8ff}
-.lesson-source-link small{display:block;color:#91a9c5;margin-top:3px;line-height:1.45}
-.lesson-source-link>span:last-child{color:#55d6be;font-weight:800}
-.lesson-source-note{margin-top:12px!important;font-size:12px!important;color:#91a9c5!important}
-.lesson-body .callout{font-size:15px;line-height:1.65;border:1px solid #2d665f;border-left:5px solid #55d6be;background:#102a31}
-.lesson-body .note-area{min-height:130px;font-size:15px;line-height:1.55;background:#081522;border-color:#46617f}
-@media(max-width:700px){.lesson-body{padding:18px}.lesson-read-block,.lesson-source-box{padding:15px}.lesson-source-link{grid-template-columns:1fr}.lesson-source-link>span:last-child{display:none}}
+.lesson-read-block h3{margin:5px 0 10px;font-size:18px;color:#fff}.lesson-read-block p,.lesson-read-block li{color:#d7e4f3;line-height:1.78;font-size:15px}.lesson-read-block ul{margin:8px 0 0;padding-left:22px;display:grid;gap:8px}
+.lesson-intro{border-left:5px solid #69a8ff}.lesson-objectives{border-left:5px solid #7ce6a3}.lesson-points{border-left:5px solid #69a8ff}.lesson-exercise{border-left:5px solid #ffd166;background:#211f18}
+.lesson-source-box,.question-reference{margin:18px 0;padding:16px;border:1px solid #466d95;border-radius:14px;background:linear-gradient(145deg,#10243a,#0b1727)}
+.lesson-source-box h3,.question-reference h4{margin:4px 0 8px;color:#fff}.lesson-source-list,.question-ref-list{display:grid;gap:8px}.lesson-source-link,.question-ref-link{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center;padding:10px 12px;border:1px solid #355474;border-radius:10px;background:#0d1d31;color:#eaf4ff;text-decoration:none}.lesson-source-link small,.question-ref-link small{display:block;color:#9cb2cb;margin-top:3px;line-height:1.45}.lesson-source-link:hover,.question-ref-link:hover{background:#16304d;border-color:#69a8ff}
+.exam-card .question,.question{padding:18px!important;background:#0b192c!important;border:1px solid #3b5d82!important;border-radius:14px!important;box-shadow:0 8px 20px rgba(0,0,0,.14)}
+.question p,.question>div:first-child,.question strong{font-size:16px;line-height:1.6;color:#f7fbff}.option{padding:12px 13px!important;margin:9px 0!important;background:#10233b;border-color:#41658d!important;line-height:1.5}.option:hover{background:#17314f}
+.question-reference{margin-top:14px;background:#0c2033}.question-reference .eyebrow{font-size:10px}.question-reference p{font-size:13px!important;color:#a9bed6!important;margin:4px 0 10px!important}.question-ref-link{font-size:13px}
+.question-plain-language{margin:8px 0 12px;padding:10px 12px;border-radius:10px;background:#13263b;border-left:4px solid #69a8ff;color:#dcecff;font-size:13px;line-height:1.55}
+@media(max-width:700px){.lesson-body{padding:18px}.lesson-read-block,.lesson-source-box,.question-reference{padding:14px}.lesson-source-link,.question-ref-link{grid-template-columns:1fr}.lesson-source-link span:last-child,.question-ref-link span:last-child{display:none}.question{padding:14px!important}.option{font-size:15px}}
