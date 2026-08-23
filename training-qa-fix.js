@@ -1,4 +1,4 @@
-/* MouldMaster training data/assessment bridge — 2026.08.23.7 */
+/* MouldMaster training data/assessment bridge — 2026.08.23.8 */
 (function(){
 'use strict';
 const REVIEW_KEY='mm_spaced_review_v2', LEGACY_REVIEW='mm_spaced_review_v1', SIGN_KEY='mm_practical_signoff_v1';
