@@ -1,4 +1,4 @@
-/* MouldMaster guided training upgrade v2 — content 2026.08.23.4 */
+/* MouldMaster guided training upgrade v2 — content 2026.08.23.5 */
 (function(){
 'use strict';
 const REVIEW_KEY='mm_spaced_review_v2', SIGN_KEY='mm_practical_signoff_v1', DAY=86400000;
