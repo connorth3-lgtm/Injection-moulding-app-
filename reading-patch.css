@@ -1,4 +1,4 @@
-/* MouldMaster reading/question clarity + guided training — 2026.08.23.5 */
+/* MouldMaster reading/question clarity + guided training — 2026.08.23.6 */
 .lesson-body{max-width:980px;background:linear-gradient(180deg,#13233a 0%,#0d1b2f 100%);border-color:#39577b}
 .lesson-body>h2{font-size:clamp(28px,4vw,38px);line-height:1.15;margin-bottom:18px;color:#fff}
 .mm-reading-guide{display:grid;grid-template-columns:auto 1fr;gap:14px;align-items:center;margin:0 0 20px;padding:16px 18px;border:2px solid #55d6be;border-radius:14px;background:linear-gradient(135deg,#103a3b,#10253a);box-shadow:0 0 0 4px rgba(85,214,190,.09),0 10px 26px rgba(0,0,0,.2)}
