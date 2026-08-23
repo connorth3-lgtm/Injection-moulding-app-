@@ -37,9 +37,10 @@ UPDATE / OFFLINE DESIGN
 DATA / ASSESSMENT HARDENING
 - Spaced repetition uses question-bank-versioned IDs rather than question wording.
 - Backup/import validates and serialises core learner data and training extras before any storage changes, with rollback if a write fails.
+- Backup imports are limited to 10 MiB, reject duplicate learner identifiers after sanitisation and keep each learner's stored ID aligned with its database key.
 - Imported progress never imports certificate authority; certificates must be re-earned by passing a newly submitted assessment on that device.
 - A submitted exam is locked after its first grading, so revealed answers cannot be re-used to regrade the same attempt.
-- Factory reset clears main learner data, spaced-review data and practical sign-off data.
+- A confirmed factory reset clears spaced-review and practical sign-off data even when the main learner database was already in its pristine state.
 - Auto-selected lesson references are subject-curated; if no relevant general reference matches, the app says so instead of showing an unrelated source.
 - Older NZ injection/blow-moulding guidance is explicitly labelled legacy/supplementary; current HSWA/WorkSafe/site requirements control.
 - Existing audited answer keys, the >=80% overall threshold and the zero-wrong safety-critical regional gate are unchanged.
