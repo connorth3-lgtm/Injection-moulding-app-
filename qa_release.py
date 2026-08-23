@@ -41,7 +41,7 @@ assert latest["version"] == WINDOWS_RECOVERY_VERSION, "Windows recovery version 
 assert latest["sha256"] == CORE_SHA256, "Windows recovery feed must use audited core SHA-256"
 assert latest["app_url"].endswith("/MouldMaster_Core_App.html"), "Windows recovery feed must point to audited full core"
 assert sha256("MouldMaster_Core_App.html") == latest["sha256"], "Windows recovery content hash mismatch"
-assert sha256("MouldMasterAcademy.exe") == latest["launcher_sha256"] == EXE_SHA256, "Windows launcher hash mismatch"
+assert sha256("MouldMasterAcademy.exe") == latest["launcher_sha256"] == EXE_SHA256, "Windows recovery launcher hash mismatch"
 
 icon_sizes = {icon["src"].removeprefix("./"): icon["sizes"] for icon in manifest["icons"]}
 for name, size in [("mouldmaster-192.png", 192), ("mouldmaster-512.png", 512)]:
@@ -112,13 +112,11 @@ assert f"const RELEASE='{ANDROID_RELEASE}'" in shell
 assert f"const CONTENT='{CONTENT_VERSION}'" in shell
 assert "NZ source-status (?:note|clarification)" in shell, "duplicate NZ note prevention missing"
 
-loader = text("MouldMaster_Academy_App.html")
-assert f'const CONTENT="{CONTENT_VERSION}"' in loader
-assert 'crypto.subtle.digest("SHA-256",bytes)' in loader
-for key, name in {"core": "MouldMaster_Core_App.html", "css": "reading-patch.css", "reading": "reading-patch.js", "training": "training-upgrade.js", "qa": "training-qa-fix.js"}.items():
-    expected = sha256(name)
-    marker = f'{key}:{{path:"{name}",sha256:"{expected}"}}'
-    assert marker in loader, f"Windows loader does not verify current {name} bytes"
+# The old dynamic HTML loader is not the active Windows feed. Keep its fail-safe SHA verification
+# if retained, but do not force it to follow the current PWA assets while Windows is on recovery.
+legacy_loader = text("MouldMaster_Academy_App.html")
+assert 'crypto.subtle.digest("SHA-256",bytes)' in legacy_loader, "legacy loader SHA-256 verification removed"
+assert "failed SHA-256 verification" in legacy_loader, "legacy loader must fail closed on altered assets"
 
 # Store/accreditation readiness: public policy pages exist and runtime code must not claim approvals not granted.
 assert Path("privacy.html").exists(), "public privacy page missing"
@@ -130,7 +128,35 @@ for claim in [r"\bNZQA approved\b", r"\bIACET CEUs?\b", r"\bMicrosoft certified\
     assert not re.search(claim, runtime, flags=re.I), f"premature external certification claim detected: {claim}"
 assert "not accredited" in core.lower() or "not third-party accredited" in core.lower(), "non-accredited certificate status must remain explicit"
 
-for js_name in ["service-worker.js", "reading-patch.js", "training-upgrade.js", "training-qa-fix.js", "source-library.js", "pwa-shell.js"]:
+# Open-source and patent-policy gates.
+assert Path("LICENSE").exists(), "Apache-2.0 licence missing"
+licence = text("LICENSE")
+assert "Apache License" in licence and "Version 2.0" in licence and "Grant of Patent License" in licence, "Apache-2.0/patent grant incomplete"
+assert Path("OPEN_SOURCE_AND_PATENT_POLICY.md").exists(), "open-source/patent policy missing"
+assert Path("THIRD_PARTY_NOTICES.md").exists(), "third-party notices missing"
+policy = text("OPEN_SOURCE_AND_PATENT_POLICY.md")
+assert "do not intend to seek patent protection" in policy, "project no-patenting commitment missing"
+assert "not a warranty that no third-party patent exists" in policy, "third-party patent limitation must remain explicit"
+
+# Open desktop replacement gates.
+desktop_root = Path("desktop/electron")
+for req in ["package.json", "README.md", "src/main.cjs", "scripts/generate-integrity.cjs", "scripts/qa.cjs"]:
+    assert (desktop_root / req).exists(), f"open desktop file missing: {req}"
+dpkg = json.loads((desktop_root / "package.json").read_text(encoding="utf-8"))
+assert dpkg["license"] == "Apache-2.0", "desktop package must use Apache-2.0"
+for dep in ["electron", "electron-builder"]:
+    assert re.fullmatch(r"\d+\.\d+\.\d+", dpkg["devDependencies"][dep]), f"{dep} must be exact-version pinned"
+dmain = (desktop_root / "src/main.cjs").read_text(encoding="utf-8")
+for marker in ["nodeIntegration: false", "contextIsolation: true", "sandbox: true", "webSecurity: true", "allowRunningInsecureContent: false", "setPermissionRequestHandler", "setPermissionCheckHandler", "will-attach-webview", "setWindowOpenHandler", "server.listen(0, '127.0.0.1')", "SHA-256 verification failed"]:
+    assert marker in dmain, f"open desktop security control missing: {marker}"
+assert Path(".github/workflows/desktop-dependency-lock.yml").exists(), "desktop dependency lock workflow missing"
+assert Path(".github/workflows/open-desktop-build.yml").exists(), "open desktop build workflow missing"
+lock = desktop_root / "package-lock.json"
+if lock.exists():
+    lock_data = json.loads(lock.read_text(encoding="utf-8"))
+    assert lock_data.get("lockfileVersion", 0) >= 2, "desktop npm lockfile is too old"
+
+for js_name in ["service-worker.js", "reading-patch.js", "training-upgrade.js", "training-qa-fix.js", "source-library.js", "pwa-shell.js", "desktop/electron/src/main.cjs", "desktop/electron/scripts/generate-integrity.cjs", "desktop/electron/scripts/qa.cjs"]:
     p = subprocess.run([NODE, "--check", js_name], capture_output=True, text=True)
     assert p.returncode == 0, f"{js_name}: {p.stderr}"
 
