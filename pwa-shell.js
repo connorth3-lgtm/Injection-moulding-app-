@@ -1,8 +1,8 @@
-/* MouldMaster PWA shell controller — 2026.08.23.9 */
+/* MouldMaster PWA shell controller — 2026.08.23.10 */
 (function(){
 'use strict';
-const RELEASE='2026.08.23.9';
-const CONTENT='2026.08.23.4';
+const RELEASE='2026.08.23.10';
+const CONTENT='2026.08.23.5';
 function syncLabels(){
   document.querySelectorAll('[data-mm-android-pwa] .tiny.muted').forEach(p=>{
     if(/Android release/i.test(p.textContent||''))p.textContent=`Android release ${RELEASE}. Training content ${CONTENT}. Learner progress, notes, scores and certificates remain in this browser profile during app updates.`;

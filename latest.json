@@ -1,10 +1,10 @@
 {
-  "version": "2026.08.23.4",
+  "version": "2026.08.23.5",
   "app_url": "https://raw.githubusercontent.com/connorth3-lgtm/Injection-moulding-app-/main/MouldMaster_Academy_App.html",
-  "sha256": "0d1481eade42ff4542be7c48e98f2186cf946271b8c6f4eea1157fb06fef72be",
+  "sha256": "edd53fe223ea5a4e1127d1ff8823b98a41ab0d486f61807f467cdb4dd3a6ad89",
   "launcher_version": "2026.08.21.2",
   "launcher_url": "https://raw.githubusercontent.com/connorth3-lgtm/Injection-moulding-app-/main/MouldMasterAcademy.exe",
   "launcher_sha256": "db7abc4da613a6d1409fdb129cb788b8ac396e5ac2d161963521c844d0ee771c",
   "published": "2026-08-23",
-  "notes": "Guided-training content 2026.08.23.4: prevents the lesson completion controls from covering text on small screens, renames the completion action to Finished reading — next lesson, and places supplementary examples in an expandable Extra help section. The numbered Start Here reading path remains. Assessment integrity, the audited core question bank and the safety-critical certification gate remain unchanged."
+  "notes": "Guided-training content 2026.08.23.5: aligns the Start Here instructions with the expandable Extra help section so the lesson reading order is fully consistent. The numbered reading path, non-overlapping phone controls and Finished reading — next lesson action remain. Assessment integrity, the audited core question bank and the safety-critical certification gate remain unchanged."
 }

@@ -1,4 +1,4 @@
-/* MouldMaster lesson-reading enhancement — 2026.08.23.5 */
+/* MouldMaster lesson-reading enhancement — 2026.08.23.6 */
 (function(){
   'use strict';
   function norm(s){return String(s||'').replace(/\s+/g,' ').trim().toLowerCase();}
@@ -19,7 +19,7 @@
       const guide=document.createElement('div');
       guide.className='mm-reading-guide';
       guide.setAttribute('role','note');
-      guide.innerHTML='<span>START HERE</span><div><strong>Read boxes 1, 2 and 3 in order.</strong><p>Then do the yellow box marked 4. The smaller example boxes underneath are extra help.</p></div>';
+      guide.innerHTML='<span>START HERE</span><div><strong>Read boxes 1, 2 and 3 in order.</strong><p>Then complete yellow box 4. Open <b>Extra help</b> only if you want examples or a simpler explanation.</p></div>';
       const progress=article.querySelector(':scope > .mm-lesson-progress');
       progress?progress.after(guide):article.prepend(guide);
     }

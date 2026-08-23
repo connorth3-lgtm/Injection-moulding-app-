@@ -14,15 +14,15 @@
 <script>
 (async function(){
 "use strict";
-const CONTENT="2026.08.23.4";
+const CONTENT="2026.08.23.5";
 const CACHE_KEY="mouldmaster_windows_assembled_"+CONTENT.replace(/\./g,"_");
 const BASE="https://raw.githubusercontent.com/connorth3-lgtm/Injection-moulding-app-/main/";
 const FILES={
  core:{path:"MouldMaster_Core_App.html",sha256:"b30719d5d3ea946a01c72d0b8996b0375575ad910a5c8d9b22b4395d6b3c8098"},
- css:{path:"reading-patch.css",sha256:"d2c2f3dc99cf958d74e2de8c4489e0aad486de56638c05ad73ed61bd0bd7e213"},
- reading:{path:"reading-patch.js",sha256:"03ccb02cb4febd4e88ecabd6c1819f435f30e19096505bc0d9a5d8ae184cd89d"},
- training:{path:"training-upgrade.js",sha256:"ba5ed0c29a8236bc6b37324eb9d83447494b0bda2de5a08962e9d7798fe7a816"},
- qa:{path:"training-qa-fix.js",sha256:"60f437c7bdbce6fc05c893f5fd19791a9a0f63ceec0dc565e794aa624abad192"}
+ css:{path:"reading-patch.css",sha256:"55f20703459ab5d9c5cf50effbae04f5bd134f5c6e6a2f258a58f021e7b1470e"},
+ reading:{path:"reading-patch.js",sha256:"2a1236a9fb4b2023261d3600238a26be7b90defcdf5b9540d8aac28af46997c9"},
+ training:{path:"training-upgrade.js",sha256:"6104958235e1a2ac8ab1d7b42137e527f19b21105fc7da07e058500eb7550e18"},
+ qa:{path:"training-qa-fix.js",sha256:"fd27c6d01f84a7f086eb6b6d566fe7d039f36cafd879d11c07417f59dac29ed5"}
 };
 async function sha256(bytes){
  if(!crypto?.subtle)throw new Error("SHA-256 verification unavailable");
