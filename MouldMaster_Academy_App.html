@@ -15,8 +15,9 @@
 (async function(){
 "use strict";
 const CONTENT="2026.08.23.5";
+const RELEASE_COMMIT="36119f5922feb06e5b8db291b1b61b401072b961";
 const CACHE_KEY="mouldmaster_windows_assembled_"+CONTENT.replace(/\./g,"_");
-const BASE="https://raw.githubusercontent.com/connorth3-lgtm/Injection-moulding-app-/main/";
+const BASE="https://raw.githubusercontent.com/connorth3-lgtm/Injection-moulding-app-/"+RELEASE_COMMIT+"/";
 const FILES={
  core:{path:"MouldMaster_Core_App.html",sha256:"b30719d5d3ea946a01c72d0b8996b0375575ad910a5c8d9b22b4395d6b3c8098"},
  css:{path:"reading-patch.css",sha256:"55f20703459ab5d9c5cf50effbae04f5bd134f5c6e6a2f258a58f021e7b1470e"},
