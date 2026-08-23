@@ -2,6 +2,7 @@ const CACHE_VERSION='2026.08.23.6';
 const STATIC_CACHE=`mouldmaster-static-${CACHE_VERSION}`;
 const CORE=[
   './index.html',
+  './MouldMaster_Core_App.html',
   './MouldMaster_Academy_App.html',
   './manifest.webmanifest',
   './mouldmaster-192.png',
@@ -48,7 +49,7 @@ self.addEventListener('fetch',event=>{
   }
   event.respondWith((async()=>{
     const cached=await caches.match(event.request,{ignoreSearch:true});
-    const network=fetch(event.request,{cache:'no-store'}).then(async r=>{if(r&&r.ok){const c=await caches.open(STATIC_CACHE);await c.put(url.pathname.split('/').pop()?`./${url.pathname.split('/').pop()}`:event.request,r.clone())}return r}).catch(()=>null);
+    const network=fetch(event.request,{cache:'no-store'}).then(async r=>{if(r&&r.ok){const c=await caches.open(STATIC_CACHE);const name=url.pathname.split('/').pop();await c.put(name?`./${name}`:event.request,r.clone())}return r}).catch(()=>null);
     if(cached){event.waitUntil(network);return cached}
     return await network||new Response('',{status:504});
   })());
