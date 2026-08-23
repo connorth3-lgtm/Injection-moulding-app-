@@ -24,7 +24,7 @@ WINDOWS SIGNING STATUS
 - MouldMasterAcademy.exe is not Authenticode-signed. Its exact SHA-256 is published in latest.json, but Windows publisher trust requires a separate code-signing certificate and signed executable release.
 
 CURRENT CONTENT RELEASE
-2026.08.23.3
+2026.08.23.4
 
 AUDITED QUESTION BANK
 2026.08.21.1
