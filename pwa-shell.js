@@ -1,8 +1,8 @@
-/* MouldMaster PWA shell controller — 2026.08.23.6 */
+/* MouldMaster PWA shell controller — 2026.08.23.7 */
 (function(){
 'use strict';
-const RELEASE='2026.08.23.6';
-const CONTENT='2026.08.23.1';
+const RELEASE='2026.08.23.7';
+const CONTENT='2026.08.23.2';
 function syncLabels(){
   document.querySelectorAll('[data-mm-android-pwa] .tiny.muted').forEach(p=>{
     if(/Android release/i.test(p.textContent||''))p.textContent=`Android release ${RELEASE}. Training content ${CONTENT}. Learner progress, notes, scores and certificates remain in this browser profile during app updates.`;
@@ -10,7 +10,7 @@ function syncLabels(){
   const meta=document.querySelector('meta[name="mm-shell-release"]');if(meta)meta.content=RELEASE;
 }
 function addNZLegacyNote(){
-  const host=document.getElementById('standards');if(!host||host.querySelector('[data-mm-nz-legacy-note]'))return;
+  const host=document.getElementById('standards');if(!host||host.querySelector('[data-mm-nz-legacy-note]')||[...host.querySelectorAll('.legal-note')].some(x=>/NZ source-status (?:note|clarification)/i.test(x.textContent||'')))return;
   const region=(window.user&&window.user.region)||'ALL';if(region!=='ALL'&&region!=='NZ')return;
   host.insertAdjacentHTML('beforeend',`<div class="legal-note" data-mm-nz-legacy-note="1"><b>NZ source-status note:</b> the older WorkSafe injection/blow-moulding fact sheet is retained only as <b>legacy supplementary guidance</b>. For current duties and safeguarding practice, use the Health and Safety at Work Act framework, current WorkSafe machinery/lockout guidance, applicable site procedures and current machinery standards. Do not treat the old fact sheet as the controlling current legal source.</div>`);
 }

@@ -3,19 +3,8 @@ name: MouldMaster Release QA
 on:
   push:
     branches: [main]
-    paths:
-      - 'index.html'
-      - 'MouldMaster_Academy_App.html'
-      - 'MouldMaster_Core_App.html'
-      - 'service-worker.js'
-      - 'version.json'
-      - 'latest.json'
-      - 'reading-patch.css'
-      - 'reading-patch.js'
-      - 'training-upgrade.js'
-      - 'training-qa-fix.js'
-      - 'pwa-shell.js'
-      - '.github/workflows/qa.yml'
+  pull_request:
+    branches: [main]
   workflow_dispatch:
 
 permissions:
@@ -34,51 +23,4 @@ jobs:
           node --check training-qa-fix.js
           node --check pwa-shell.js
       - name: Release and assessment integrity
-        run: |
-          python - <<'PY'
-          from pathlib import Path
-          import hashlib, json, re, subprocess, tempfile
-
-          version=json.loads(Path('version.json').read_text())
-          latest=json.loads(Path('latest.json').read_text())
-          assert version['android_release']=='2026.08.23.6'
-          assert version['content_version']=='2026.08.23.1'
-          assert version['question_bank_version']=='2026.08.21.1'
-          assert latest['version']=='2026.08.23.1'
-
-          win=Path('MouldMaster_Academy_App.html').read_bytes()
-          assert hashlib.sha256(win).hexdigest()==latest['sha256'], 'latest.json Windows content hash mismatch'
-
-          index=Path('index.html').read_text()
-          assert 'const CORE_URL="./MouldMaster_Core_App.html"' in index, 'Android bootstrap must load preserved core directly'
-
-          sw=Path('service-worker.js').read_text()
-          for marker in ['2026.08.23.6','MouldMaster_Core_App.html','MouldMaster_Academy_App.html','training-upgrade.js','training-qa-fix.js','pwa-shell.js']:
-              assert marker in sw, f'missing service-worker marker: {marker}'
-
-          core=Path('MouldMaster_Core_App.html').read_text()
-          assert len(core)>500000, 'audited core unexpectedly small'
-          assert 'criticalWrong===0' in core, 'safety-critical gate missing'
-          assert 'Compare All assesses ALL 9 regional items' in core, 'Compare All regional assessment rule missing'
-
-          training=Path('training-upgrade.js').read_text()
-          assert 'mm_spaced_review_v2' in training
-          assert 'tech:${level}:${i}' in training
-          assert 'No general external source was auto-selected' in training
-
-          qa=Path('training-qa-fix.js').read_text()
-          assert 'Atomic import' in qa
-          assert 'normaliseImportedUser' in qa
-
-          for html_name in ['index.html','MouldMaster_Academy_App.html']:
-              html=Path(html_name).read_text()
-              scripts=re.findall(r'<script(?:\s[^>]*)?>(.*?)</script>',html,flags=re.S|re.I)
-              for i,script in enumerate(scripts,1):
-                  if not script.strip(): continue
-                  with tempfile.NamedTemporaryFile('w',suffix='.js',delete=False) as f:
-                      f.write(script); name=f.name
-                  p=subprocess.run(['node','--check',name],capture_output=True,text=True)
-                  Path(name).unlink(missing_ok=True)
-                  assert p.returncode==0, f'{html_name} inline script {i}: {p.stderr}'
-          print('MouldMaster release QA passed')
-          PY
+        run: python qa_release.py

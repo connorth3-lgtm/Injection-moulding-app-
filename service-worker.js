@@ -1,4 +1,4 @@
-const CACHE_VERSION='2026.08.23.6';
+const CACHE_VERSION='2026.08.23.7';
 const STATIC_CACHE=`mouldmaster-static-${CACHE_VERSION}`;
 const CORE=[
   './index.html',
@@ -18,9 +18,7 @@ const CORE=[
 self.addEventListener('install',event=>{
   event.waitUntil((async()=>{
     const cache=await caches.open(STATIC_CACHE);
-    await Promise.all(CORE.map(async url=>{
-      try{const r=await fetch(new Request(url,{cache:'reload'}));if(r&&r.ok)await cache.put(url,r.clone())}catch(_){}
-    }));
+    await cache.addAll(CORE.map(url=>new Request(url,{cache:'reload'})));
     await self.skipWaiting();
   })());
 });
@@ -39,11 +37,12 @@ self.addEventListener('fetch',event=>{
   if(url.origin!==self.location.origin)return;
   if(event.request.mode==='navigate'){
     event.respondWith((async()=>{
+      const isShell=url.pathname.endsWith('/')||url.pathname.endsWith('/index.html');
       try{
         const r=await fetch(event.request,{cache:'no-store'});
-        if(r&&r.ok){const c=await caches.open(STATIC_CACHE);await c.put('./index.html',r.clone());return r}
+        if(r&&r.ok){if(isShell){const c=await caches.open(STATIC_CACHE);await c.put('./index.html',r.clone())}return r}
       }catch(_){}
-      return await caches.match('./index.html')||new Response('<h1>MouldMaster is offline</h1><p>Reconnect once to finish installing the offline copy.</p>',{status:503,headers:{'Content-Type':'text/html; charset=utf-8'}});
+      return await caches.match(event.request,{ignoreSearch:true})||await caches.match('./index.html')||new Response('<h1>MouldMaster is offline</h1><p>Reconnect once to finish installing the offline copy.</p>',{status:503,headers:{'Content-Type':'text/html; charset=utf-8'}});
     })());
     return;
   }

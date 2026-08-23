@@ -1,7 +1,7 @@
 MOULDMASTER WINDOWS UPDATE FEED
 
 CURRENT DESIGN
-- latest.json is the signed-by-hash content manifest used by the installed Windows launcher.
+- latest.json is the hash-verified content manifest used by the installed Windows launcher.
 - MouldMaster_Academy_App.html is the small verified Windows content loader.
 - MouldMaster_Core_App.html is the preserved audited core learning application.
 - reading-patch.css, reading-patch.js, training-upgrade.js and training-qa-fix.js provide the same guided-training layer used by Android.
@@ -16,12 +16,15 @@ PUBLISH ORDER FOR A CONTENT RELEASE
 
 OFFLINE BEHAVIOUR
 - The Windows launcher still verifies the downloaded update before accepting it.
-- The Windows content loader fetches the preserved core plus guided-training assets on the first successful online launch of a content version.
+- The Windows content loader fetches the preserved core plus guided-training assets on the first successful online launch of a content version and verifies the SHA-256 of every file before assembly.
 - The assembled guided-training page is cached locally for later offline reuse.
 - If a new content version has never completed one online launch, the loader asks the user to reconnect rather than silently presenting incomplete training enhancements.
 
+WINDOWS SIGNING STATUS
+- MouldMasterAcademy.exe is not Authenticode-signed. Its exact SHA-256 is published in latest.json, but Windows publisher trust requires a separate code-signing certificate and signed executable release.
+
 CURRENT CONTENT RELEASE
-2026.08.23.1
+2026.08.23.2
 
 AUDITED QUESTION BANK
 2026.08.21.1

@@ -1,4 +1,4 @@
-/* MouldMaster training data/assessment bridge — 2026.08.23.6 */
+/* MouldMaster training data/assessment bridge — 2026.08.23.7 */
 (function(){
 'use strict';
 const REVIEW_KEY='mm_spaced_review_v2', LEGACY_REVIEW='mm_spaced_review_v1', SIGN_KEY='mm_practical_signoff_v1';
@@ -14,11 +14,53 @@ function read(k,d){try{const x=JSON.parse(localStorage.getItem(k)||'');return ob
 /* One export contains the strictly validated core DB plus training extras. */
 window.exportData=function(){try{const p=JSON.parse(JSON.stringify(db));p.backupFormat='mouldmaster-backup-v2';p.trainingExtras={version:2,spacedReview:cleanReview(read(REVIEW_KEY,{items:{}})),practicalSignoff:cleanSign(read(SIGN_KEY,{}))};const blob=new Blob([JSON.stringify(p,null,2)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='mouldmaster-progress.json';a.click();setTimeout(()=>URL.revokeObjectURL(a.href),0);window.toast?.('Backup exported with review and sign-off data')}catch(e){alert('Backup could not be created on this device.')}};
 
-/* Atomic import: validate every core learner and all extras before changing any state. */
-window.importData=function(file){if(!file)return;const r=new FileReader();r.onload=()=>{try{const x=JSON.parse(r.result);if(!obj(x)||!obj(x.users)||typeof x.activeUser!=='string'||!x.users[x.activeUser])throw new Error('Invalid backup structure');if(typeof normaliseImportedUser!=='function')throw new Error('Core validator unavailable');const users={};for(const [id,u] of Object.entries(x.users).slice(0,500)){const sid=String(id).slice(0,160);users[sid]=normaliseImportedUser(u,id)}const active=String(x.activeUser).slice(0,160);if(!users[active])throw new Error('Missing active learner');const extras=obj(x.trainingExtras)?x.trainingExtras:{};const cleanR=cleanReview(extras.spacedReview||{items:{}}),cleanS=cleanSign(extras.practicalSignoff||{});const proposed={activeUser:active,users};db=proposed;user=db.users[db.activeUser];localStorage.setItem(REVIEW_KEY,JSON.stringify(cleanR));localStorage.setItem(SIGN_KEY,JSON.stringify(cleanS));localStorage.removeItem(LEGACY_REVIEW);persist();updateGlobalProgress();switchView('profile');window.toast?.('Backup imported and strictly validated')}catch(e){alert('That file is not a valid MouldMaster backup. No existing data was changed.')}};r.readAsText(file)};
+/* Best-effort atomic import: validate and serialise first, then roll back every store if a write fails. */
+window.importData=function(file){
+ if(!file)return;
+ if(file.size>10*1024*1024){alert('That backup is too large to import safely. No existing data was changed.');return}
+ const r=new FileReader();
+ r.onload=()=>{
+  let committed=false;
+  try{
+   const x=JSON.parse(r.result);
+   if(!obj(x)||!obj(x.users)||typeof x.activeUser!=='string'||!x.users[x.activeUser])throw new Error('Invalid backup structure');
+   if(typeof normaliseImportedUser!=='function')throw new Error('Core validator unavailable');
+   const users={};
+   for(const [id,u] of Object.entries(x.users).slice(0,500)){
+    const sid=String(id).slice(0,160),clean=normaliseImportedUser(u,id);
+    if(!sid||users[sid])throw new Error('Invalid or duplicate learner identifier');
+    clean.id=sid;
+    clean.certificates=[];clean.certificateMeta={};clean.examPassStatus={};
+    users[sid]=clean;
+   }
+   const active=String(x.activeUser).slice(0,160);
+   if(!users[active])throw new Error('Missing active learner');
+   const extras=obj(x.trainingExtras)?x.trainingExtras:{};
+   const cleanR=cleanReview(extras.spacedReview||{items:{}}),cleanS=cleanSign(extras.practicalSignoff||{});
+   const proposed={activeUser:active,users};
+   const writes={mouldmasterProDB:JSON.stringify(proposed),[REVIEW_KEY]:JSON.stringify(cleanR),[SIGN_KEY]:JSON.stringify(cleanS)};
+   const keys=[...Object.keys(writes),LEGACY_REVIEW],before={};
+   keys.forEach(k=>before[k]=localStorage.getItem(k));
+   try{
+    for(const [k,v] of Object.entries(writes))localStorage.setItem(k,v);
+    localStorage.removeItem(LEGACY_REVIEW);
+   }catch(storageError){
+    for(const k of keys){try{before[k]===null?localStorage.removeItem(k):localStorage.setItem(k,before[k])}catch(_){}}
+    throw storageError;
+   }
+   db=proposed;user=db.users[db.activeUser];committed=true;
+   try{updateGlobalProgress();switchView('profile')}catch(uiError){console.warn('[MouldMaster] imported data saved; view refresh failed:',uiError)}
+   window.toast?.('Progress imported. Certificates must be re-earned on this device.');
+  }catch(e){
+   if(committed)alert('Progress was imported, but the screen could not refresh. Reopen MouldMaster.');
+   else alert('That file is not a valid MouldMaster backup. No existing data was changed.');
+  }
+ };
+ r.readAsText(file);
+};
 
 /* Confirmed reset clears every MouldMaster-owned training store. */
-const baseReset=window.resetData;if(typeof baseReset==='function')window.resetData=function(){const before=localStorage.getItem('mouldmasterProDB');const r=baseReset.apply(this,arguments);setTimeout(()=>{const after=localStorage.getItem('mouldmasterProDB');if(before!==after){localStorage.removeItem(REVIEW_KEY);localStorage.removeItem(LEGACY_REVIEW);localStorage.removeItem(SIGN_KEY);window.activeExam=null}},0);return r};
+const baseReset=window.resetData;if(typeof baseReset==='function')window.resetData=function(){const beforeDb=typeof db==='undefined'?null:db,r=baseReset.apply(this,arguments);setTimeout(()=>{if(typeof db!=='undefined'&&db!==beforeDb){localStorage.removeItem(REVIEW_KEY);localStorage.removeItem(LEGACY_REVIEW);localStorage.removeItem(SIGN_KEY);window.activeExam=null}},0);return r};
 
 /* One-time migration: legacy text-keyed review records are intentionally not guessed into stable IDs. */
 try{if(!localStorage.getItem(REVIEW_KEY)&&localStorage.getItem(LEGACY_REVIEW))localStorage.setItem(REVIEW_KEY,JSON.stringify({items:{}}))}catch(_){}

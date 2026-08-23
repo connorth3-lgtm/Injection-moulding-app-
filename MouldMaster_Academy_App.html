@@ -14,22 +14,30 @@
 <script>
 (async function(){
 "use strict";
-const CONTENT="2026.08.23.1";
+const CONTENT="2026.08.23.2";
 const CACHE_KEY="mouldmaster_windows_assembled_"+CONTENT.replace(/\./g,"_");
 const BASE="https://raw.githubusercontent.com/connorth3-lgtm/Injection-moulding-app-/main/";
 const FILES={
- core:"MouldMaster_Core_App.html",
- css:"reading-patch.css",
- reading:"reading-patch.js",
- training:"training-upgrade.js",
- qa:"training-qa-fix.js"
+ core:{path:"MouldMaster_Core_App.html",sha256:"b30719d5d3ea946a01c72d0b8996b0375575ad910a5c8d9b22b4395d6b3c8098"},
+ css:{path:"reading-patch.css",sha256:"9dad65aef24c74f957a21852aa68dee3ffacc2cae1171a67e226a5d059a441a5"},
+ reading:{path:"reading-patch.js",sha256:"ae09f9cbf725366238912a0724ba80714eb11abf5b4d6d6905d7327c1a7eda68"},
+ training:{path:"training-upgrade.js",sha256:"054e5c1ae20538bfe00273322bdf2ce8df590562532902ab23b7995458dc62dc"},
+ qa:{path:"training-qa-fix.js",sha256:"e9e1784343099a2ae058faa2338ff5bbad2e4fd47f5bb87b4a867b6af4619c10"}
 };
+async function sha256(bytes){
+ if(!crypto?.subtle)throw new Error("SHA-256 verification unavailable");
+ const digest=await crypto.subtle.digest("SHA-256",bytes);
+ return [...new Uint8Array(digest)].map(x=>x.toString(16).padStart(2,"0")).join("");
+}
 async function get(name){
  const ctl=new AbortController(),timer=setTimeout(()=>ctl.abort(),15000);
  try{
-  const r=await fetch(BASE+FILES[name],{cache:"no-store",signal:ctl.signal});
+  const expected=FILES[name];
+  const r=await fetch(BASE+expected.path,{cache:"no-store",signal:ctl.signal});
   if(!r.ok)throw new Error(name+" HTTP "+r.status);
-  return await r.text();
+  const bytes=await r.arrayBuffer(),actual=await sha256(bytes);
+  if(actual!==expected.sha256)throw new Error(name+" failed SHA-256 verification");
+  return new TextDecoder().decode(bytes);
  }finally{clearTimeout(timer)}
 }
 function assemble(core,css,reading,training,qa){
