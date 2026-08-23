@@ -1,10 +1,10 @@
 {
-  "version": "2026.08.23.1",
+  "version": "2026.08.23.2",
   "app_url": "https://raw.githubusercontent.com/connorth3-lgtm/Injection-moulding-app-/main/MouldMaster_Academy_App.html",
-  "sha256": "ea055df1b736170c3a9dda73dfbc4a6e1f39f94673882b347f1485b86f580611",
+  "sha256": "5713ed301a1c858625e2627e397b56a3614f6aabf3da65be868edbadf648f547",
   "launcher_version": "2026.08.21.2",
   "launcher_url": "https://raw.githubusercontent.com/connorth3-lgtm/Injection-moulding-app-/main/MouldMasterAcademy.exe",
   "launcher_sha256": "db7abc4da613a6d1409fdb129cb788b8ac396e5ac2d161963521c844d0ee771c",
   "published": "2026-08-23",
-  "notes": "Guided-training content 2026.08.23.1: clearer topic-specific lessons, curated references, richer answer debriefs, stable-ID spaced repetition, confidence tracking, practical sign-off and Windows/Android training parity. The audited core question bank and safety-critical certification gate remain unchanged. Windows caches the assembled guided-training copy after one successful online launch for later offline reuse."
+  "notes": "Guided-training content 2026.08.23.2: locks each exam after its first grading, removes unrelated question references, preserves authored lesson content, uses course-aware teaching guidance and question-bank-versioned review IDs, makes imports rollback-safe, and requires imported certificates to be re-earned. The audited core question bank and safety-critical certification gate remain unchanged. The Windows loader verifies SHA-256 for the core and every enhancement before assembling or caching them."
 }
