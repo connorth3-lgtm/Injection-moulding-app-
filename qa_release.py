@@ -9,6 +9,7 @@ import tempfile
 
 ANDROID_RELEASE = "2026.08.23.10"
 CONTENT_VERSION = "2026.08.23.5"
+WINDOWS_RECOVERY_VERSION = "2026.08.21.1"
 QUESTION_BANK_VERSION = "2026.08.21.1"
 CORE_SHA256 = "b30719d5d3ea946a01c72d0b8996b0375575ad910a5c8d9b22b4395d6b3c8098"
 EXE_SHA256 = "db7abc4da613a6d1409fdb129cb788b8ac396e5ac2d161963521c844d0ee771c"
@@ -36,8 +37,10 @@ manifest = json.loads(text("manifest.webmanifest"))
 assert version["android_release"] == ANDROID_RELEASE
 assert version["content_version"] == CONTENT_VERSION
 assert version["question_bank_version"] == QUESTION_BANK_VERSION
-assert latest["version"] == CONTENT_VERSION
-assert sha256("MouldMaster_Academy_App.html") == latest["sha256"], "Windows loader hash mismatch"
+assert latest["version"] == WINDOWS_RECOVERY_VERSION, "Windows recovery version changed unexpectedly"
+assert latest["sha256"] == CORE_SHA256, "Windows recovery feed must use audited core SHA-256"
+assert latest["app_url"].endswith("/MouldMaster_Core_App.html"), "Windows recovery feed must point to audited full core"
+assert sha256("MouldMaster_Core_App.html") == latest["sha256"], "Windows recovery content hash mismatch"
 assert sha256("MouldMasterAcademy.exe") == latest["launcher_sha256"] == EXE_SHA256, "Windows launcher hash mismatch"
 
 icon_sizes = {icon["src"].removeprefix("./"): icon["sizes"] for icon in manifest["icons"]}
@@ -108,6 +111,16 @@ for key, name in {"core": "MouldMaster_Core_App.html", "css": "reading-patch.css
     expected = sha256(name)
     marker = f'{key}:{{path:"{name}",sha256:"{expected}"}}'
     assert marker in loader, f"Windows loader does not verify current {name} bytes"
+
+# Store/accreditation readiness: public policy pages exist and runtime code must not claim approvals not granted.
+assert Path("privacy.html").exists(), "public privacy page missing"
+assert Path("support.html").exists(), "public support page missing"
+assert Path("certification/README.md").exists(), "certification roadmap missing"
+assert Path("credentials/README.md").exists(), "credential governance spec missing"
+runtime = "\n".join(text(x) for x in ["MouldMaster_Core_App.html", "index.html", "training-upgrade.js", "pwa-shell.js", "training-qa-fix.js"])
+for claim in [r"\bNZQA approved\b", r"\bIACET CEUs?\b", r"\bMicrosoft certified\b", r"\bNZQA accredited\b"]:
+    assert not re.search(claim, runtime, flags=re.I), f"premature external certification claim detected: {claim}"
+assert "not accredited" in core.lower() or "not third-party accredited" in core.lower(), "non-accredited certificate status must remain explicit"
 
 for js_name in ["service-worker.js", "reading-patch.js", "training-upgrade.js", "training-qa-fix.js", "pwa-shell.js"]:
     p = subprocess.run([NODE, "--check", js_name], capture_output=True, text=True)
