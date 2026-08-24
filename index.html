@@ -24,38 +24,56 @@
     "use strict";
     const SHELL_RELEASE="2026.08.24.1";
     const CORE_URL="./MouldMaster_Core_App.html";
-    const headAdd=[
-      '<link rel="manifest" href="./manifest.webmanifest">',
-      '<link rel="icon" type="image/png" sizes="192x192" href="./mouldmaster-192.png">',
-      '<link rel="apple-touch-icon" href="./mouldmaster-192.png">',
-      '<link rel="stylesheet" href="./reading-patch.css">',
-      '<meta name="mm-shell-release" content="'+SHELL_RELEASE+'">'
-    ].join("\n");
+    const HEAD_ASSETS=[
+      ['manifest.webmanifest','<link rel="manifest" href="./manifest.webmanifest">'],
+      ['rel="icon" type="image/png" sizes="192x192"','<link rel="icon" type="image/png" sizes="192x192" href="./mouldmaster-192.png">'],
+      ['rel="apple-touch-icon"','<link rel="apple-touch-icon" href="./mouldmaster-192.png">'],
+      ['reading-patch.css','<link rel="stylesheet" href="./reading-patch.css">'],
+      ['mm-shell-release','<meta name="mm-shell-release" content="'+SHELL_RELEASE+'">']
+    ];
+    const BODY_SCRIPTS=[
+      ['./reading-patch.js','<script src="./reading-patch.js">'],
+      ['./training-upgrade.js','<script src="./training-upgrade.js">'],
+      ['./training-qa-fix.js','<script src="./training-qa-fix.js">'],
+      ['./assessment-100-pass.js','<script src="./assessment-100-pass.js">'],
+      ['./assessment-deep-dive.js','<script src="./assessment-deep-dive.js">'],
+      ['./assessment-answer-cue-fix.js','<script src="./assessment-answer-cue-fix.js">'],
+      ['./assessment-storage-scope.js','<script src="./assessment-storage-scope.js">'],
+      ['./assessment-quality-suite.js','<script src="./assessment-quality-suite.js">'],
+      ['./assessment-stable-review-bridge.js','<script src="./assessment-stable-review-bridge.js">'],
+      ['./assessment-analytics-ui.js','<script src="./assessment-analytics-ui.js">'],
+      ['./assessment-final-hardening.js','<script src="./assessment-final-hardening.js">'],
+      ['./source-library.js','<script src="./source-library.js">'],
+      ['./reference-data.js','<script src="./reference-data.js">'],
+      ['./reference-deep-dive.js','<script src="./reference-deep-dive.js">'],
+      ['./reference-research-extension.js','<script src="./reference-research-extension.js">'],
+      ['./reference-20x-extension.js','<script src="./reference-20x-extension.js">'],
+      ['./reference-sources.js','<script src="./reference-sources.js">'],
+      ['./reference-browser-ui.js','<script src="./reference-browser-ui.js">'],
+      ['./pwa-shell.js','<script src="./pwa-shell.js">']
+    ];
     const closeScript='</scr'+'ipt>';
-    const bodyAdd=[
-      '<script src="./reading-patch.js">'+closeScript,
-      '<script src="./training-upgrade.js">'+closeScript,
-      '<script src="./training-qa-fix.js">'+closeScript,
-      '<script src="./assessment-100-pass.js">'+closeScript,
-      '<script src="./assessment-deep-dive.js">'+closeScript,
-      '<script src="./assessment-storage-scope.js">'+closeScript,
-      '<script src="./assessment-quality-suite.js">'+closeScript,
-      '<script src="./assessment-stable-review-bridge.js">'+closeScript,
-      '<script src="./assessment-analytics-ui.js">'+closeScript,
-      '<script src="./assessment-final-hardening.js">'+closeScript,
-      '<script src="./source-library.js">'+closeScript,
-      '<script src="./reference-data.js">'+closeScript,
-      '<script src="./reference-deep-dive.js">'+closeScript,
-      '<script src="./reference-research-extension.js">'+closeScript,
-      '<script src="./reference-20x-extension.js">'+closeScript,
-      '<script src="./reference-sources.js">'+closeScript,
-      '<script src="./reference-browser-ui.js">'+closeScript,
-      '<script src="./pwa-shell.js">'+closeScript
-    ].join("\n");
+    function ensureViewportFit(out){
+      let found=false;
+      out=out.replace(/<meta\b[^>]*\bname=["']viewport["'][^>]*>/i,tag=>{
+        found=true;
+        if(/viewport-fit\s*=\s*cover/i.test(tag))return tag;
+        if(/\bcontent=["']/i.test(tag))return tag.replace(/\bcontent=(["'])(.*?)\1/i,(_m,q,value)=>`content=${q}${value},viewport-fit=cover${q}`);
+        return tag.replace(/>$/, ' content="width=device-width,initial-scale=1,viewport-fit=cover">');
+      });
+      if(!found)out=out.replace(/<\/head>/i,'<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">\n</head>');
+      return out;
+    }
     function assemble(html){
       let out=String(html||"");
-      if(!out.includes('reading-patch.css')) out=out.replace(/<\/head>/i,headAdd+'\n</head>');
-      if(!out.includes('training-upgrade.js')) out=out.replace(/<\/body>/i,bodyAdd+'\n</body>');
+      if(!/<\/head>/i.test(out)||!/<\/body>/i.test(out))throw new Error("Core training content is incomplete");
+      out=ensureViewportFit(out);
+      for(const [needle,markup] of HEAD_ASSETS){
+        if(!out.includes(needle))out=out.replace(/<\/head>/i,markup+'\n</head>');
+      }
+      for(const [src,tag] of BODY_SCRIPTS){
+        if(!out.includes(src))out=out.replace(/<\/body>/i,tag+closeScript+'\n</body>');
+      }
       return out;
     }
     async function getCore(){

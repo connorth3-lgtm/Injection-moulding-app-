@@ -33,6 +33,7 @@ jobs:
           node --check training-qa-fix.js
           node --check assessment-100-pass.js
           node --check assessment-deep-dive.js
+          node --check assessment-answer-cue-fix.js
           node --check assessment-storage-scope.js
           node --check assessment-quality-suite.js
           node --check assessment-stable-review-bridge.js
@@ -53,6 +54,8 @@ jobs:
           node --check desktop/electron/scripts/qa.cjs
       - name: Release and assessment integrity
         run: python qa_release.py
+      - name: Runtime shell hardening
+        run: python qa_runtime_hardening.py
       - name: Release and documentation coherence
         run: python qa_release_docs.py
       - name: 100-pass data and assessment audit

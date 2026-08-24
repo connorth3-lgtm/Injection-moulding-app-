@@ -61,7 +61,7 @@ assert "Compare All assesses ALL 9 regional items" in core, "Compare All regiona
 index = text("index.html")
 assert f'const SHELL_RELEASE="{ANDROID_RELEASE}"' in index
 assert 'const CORE_URL="./MouldMaster_Core_App.html"' in index
-assert '<script src="./source-library.js">' in index, "source library not loaded by shell"
+assert "BODY_SCRIPTS" in index and "'./source-library.js'" in index, "source library not loaded by shell"
 
 sw = text("service-worker.js")
 assert f"CACHE_VERSION='{ANDROID_RELEASE}'" in sw
@@ -143,7 +143,7 @@ dpkg = json.loads((desktop_root / "package.json").read_text(encoding="utf-8"))
 assert dpkg["license"] == "Apache-2.0", "desktop package must use Apache-2.0"
 for dep in ["electron", "electron-builder"]:
     assert re.fullmatch(r"\d+\.\d+\.\d+", dpkg["devDependencies"][dep]), f"{dep} must be exact-version pinned"
-dmain = (desktop_root / "src/main.cjs").read_text(encoding="utf-8")
+dmain = (desktop_root / "src" / "main.cjs").read_text(encoding="utf-8")
 for marker in ["nodeIntegration: false", "contextIsolation: true", "sandbox: true", "webSecurity: true", "allowRunningInsecureContent: false", "setPermissionRequestHandler", "setPermissionCheckHandler", "will-attach-webview", "setWindowOpenHandler", "server.listen(0, '127.0.0.1'", "SHA-256 verification failed"]:
     assert marker in dmain, f"open desktop security control missing: {marker}"
 assert Path(".github/workflows/desktop-dependency-lock.yml").exists(), "desktop dependency lock workflow missing"
