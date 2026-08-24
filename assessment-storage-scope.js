@@ -43,13 +43,17 @@ function migrateLegacy(){
  }
  return {migrated,discarded};
 }
+function wrapLearnerChange(name){
+ const base=typeof window[name]==='function'?window[name]:null;if(!base)return;
+ window[name]=function(){const before=learnerId(),r=base.apply(this,arguments);if(learnerId()!==before)cancelInMemoryAttempt();return r};
+}
 Object.defineProperty(P,'getItem',{configurable:true,writable:true,value:function(key){return rawGet.call(this,this===localStorage?scopedKey(key):key)}});
 Object.defineProperty(P,'setItem',{configurable:true,writable:true,value:function(key,value){return rawSet.call(this,this===localStorage?scopedKey(key):key,value)}});
 Object.defineProperty(P,'removeItem',{configurable:true,writable:true,value:function(key){return rawRemove.call(this,this===localStorage?scopedKey(key):key)}});
 Object.defineProperty(P,'__mmAssessmentStorageScopeInstalled',{configurable:false,writable:false,value:true});
 const legacy=migrateLegacy();
-const baseSwitch=typeof window.switchUser==='function'?window.switchUser:null;
-if(baseSwitch)window.switchUser=function(){cancelInMemoryAttempt();return baseSwitch.apply(this,arguments)};
+wrapLearnerChange('switchUser');
+wrapLearnerChange('createLearner');
 const baseReset=typeof window.resetData==='function'?window.resetData:null;
 if(baseReset)window.resetData=function(){
  let before=null;try{before=rawGet.call(localStorage,'mouldmasterProDB')}catch(_){}
