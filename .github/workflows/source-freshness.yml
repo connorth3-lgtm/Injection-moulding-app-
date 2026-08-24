@@ -1,0 +1,26 @@
+name: Authoritative Source Freshness
+
+on:
+  schedule:
+    - cron: '30 4 * * 1'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  source-freshness:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Check source review dates and live markers
+        run: python qa_source_freshness.py --network
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: mouldmaster-source-freshness-report
+          path: source-freshness-report.json
+          if-no-files-found: warn
