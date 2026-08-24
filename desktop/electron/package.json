@@ -57,6 +57,7 @@
       {"from": "../../training-qa-fix.js", "to": "mouldmaster/training-qa-fix.js"},
       {"from": "../../assessment-100-pass.js", "to": "mouldmaster/assessment-100-pass.js"},
       {"from": "../../assessment-deep-dive.js", "to": "mouldmaster/assessment-deep-dive.js"},
+      {"from": "../../assessment-quality-suite.js", "to": "mouldmaster/assessment-quality-suite.js"},
       {"from": "../../pwa-shell.js", "to": "mouldmaster/pwa-shell.js"},
       {"from": "../../source-library.js", "to": "mouldmaster/source-library.js"},
       {"from": "../../reference-data.js", "to": "mouldmaster/reference-data.js"},
