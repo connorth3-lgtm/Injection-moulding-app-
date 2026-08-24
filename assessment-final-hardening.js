@@ -97,7 +97,10 @@ function patchedAnalyticsExport(){
 }
 function installAnalyticsExportPatch(){
  if(A.__mmExposureTimingPatched)return;
- const original=A.export.bind(A);A.__mmOriginalExport=original;A.export=patchedAnalyticsExport;A.__mmExposureTimingPatched=true;
+ const original=A.export.bind(A),originalReset=typeof A.reset==='function'?A.reset.bind(A):null;
+ A.__mmOriginalExport=original;A.__mmOriginalReset=originalReset;A.export=patchedAnalyticsExport;
+ if(originalReset)A.reset=function(){localStorage.removeItem(TIMING_KEY);timingSession=null;return originalReset()};
+ A.__mmExposureTimingPatched=true;
 }
 function slowestExposure(){
  const t=timingStore(),a=patchedAnalyticsExport(),rows=Object.values(t.questions||{}).filter(x=>x.attempts>0).map(x=>({id:x.stableId,avg:x.totalResponseMs/x.attempts,stem:a.questions?.[x.stableId]?.stem||x.stableId}));
