@@ -19,6 +19,7 @@ on:
       - 'pwa-shell.js'
       - 'source-library.js'
       - 'reference-data.js'
+      - 'reference-deep-dive.js'
       - 'reference-sources.js'
       - 'qa_reference.py'
       - 'service-worker.js'
