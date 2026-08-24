@@ -52,6 +52,9 @@ jobs:
           npm run licenses
           npm run sbom
           npm run qa
+      - name: 100-pass data and assessment audit
+        working-directory: .
+        run: python qa_100_pass.py
       - name: Validate reference data and sources
         working-directory: .
         run: python qa_reference.py
