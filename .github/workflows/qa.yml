@@ -32,6 +32,7 @@ jobs:
           node --check reference-data.js
           node --check reference-deep-dive.js
           node --check reference-research-extension.js
+          node --check reference-20x-extension.js
           node --check reference-sources.js
           node --check pwa-shell.js
           node --check desktop/electron/src/main.cjs
