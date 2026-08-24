@@ -19,6 +19,8 @@ on:
       - 'pwa-shell.js'
       - 'source-library.js'
       - 'reference-data.js'
+      - 'reference-sources.js'
+      - 'qa_reference.py'
       - 'service-worker.js'
       - 'privacy.html'
       - 'support.html'
@@ -67,6 +69,9 @@ jobs:
       - name: Desktop security QA
         working-directory: desktop/electron
         run: npm run qa
+      - name: Reference data and source QA
+        working-directory: .
+        run: python qa_reference.py
       - name: Build unsigned portable Windows package
         working-directory: desktop/electron
         run: npm run dist:portable
