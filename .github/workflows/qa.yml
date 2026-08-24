@@ -29,6 +29,7 @@ jobs:
           node --check training-upgrade.js
           node --check training-qa-fix.js
           node --check source-library.js
+          node --check reference-data.js
           node --check pwa-shell.js
           node --check desktop/electron/src/main.cjs
           node --check desktop/electron/scripts/generate-integrity.cjs
