@@ -6,7 +6,8 @@ const CONTENT='2026.08.24.2';
 function setText(el,value){if(el&&el.textContent!==value)el.textContent=value}
 function setAttr(el,name,value){if(el&&el.getAttribute(name)!==value)el.setAttribute(name,value)}
 function displayContext(){
-  const desktop=new URLSearchParams(location.search).get('desktopRelease')||'';
+  const requested=new URLSearchParams(location.search).get('desktopRelease')||'';
+  const desktop=location.hostname==='127.0.0.1'&&/\bElectron\//.test(navigator.userAgent||'')?requested:'';
   const standalone=!desktop&&!!window.matchMedia?.('(display-mode: standalone)').matches;
   return desktop
     ?{version:desktop,mode:'Desktop package',title:'Desktop build',detail:'This desktop package uses the release version supplied by the verified desktop launcher.'}
