@@ -1,6 +1,6 @@
 # Legacy Windows migration to Open Desktop
 
-The open-source Electron desktop package is the normal Windows release path from `2026.08.24.2` onward. The old `MouldMasterAcademy.exe` runtime uses a separate local browser/storage context, so learner data is **not** assumed to migrate automatically.
+The open-source Electron desktop package is the normal Windows release path from `2026.08.24.2` onward. The old `MouldMasterAcademy.exe` runtime uses a separate local browser/storage context, so learner data is not assumed to migrate automatically.
 
 ## Before changing Windows runtimes
 
