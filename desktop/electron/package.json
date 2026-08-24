@@ -14,16 +14,15 @@
     "start": "npm run integrity && npm run licenses && npm run sbom && npm run qa && electron .",
     "dist:portable": "npm run integrity && npm run licenses && npm run sbom && npm run qa && electron-builder --win portable",
     "dist:nsis": "npm run integrity && npm run licenses && npm run sbom && npm run qa && electron-builder --win nsis",
-    "dist:msix": "npm run integrity && npm run licenses && npm run sbom && npm run qa && electron-builder --win msix"
+    "dist:msix": "npm run integrity && npm run licenses && npm run sbom && npm run qa && npx --yes electron-builder@27.0.0-alpha.6 --win msix"
   },
   "devDependencies": {
     "electron": "43.4.1",
-    "electron-builder": "27.0.0-alpha.7"
+    "electron-builder": "26.15.7"
   },
   "build": {
     "appId": "org.mouldmaster.academy",
     "productName": "MouldMaster Academy",
-    "buildNumber": "1",
     "asar": true,
     "directories": {"output": "dist"},
     "files": [
@@ -60,7 +59,7 @@
     ],
     "win": {
       "icon": "../../mouldmaster-512.png",
-      "artifactName": "MouldMaster-Academy-${buildVersion}-${arch}.${ext}"
+      "artifactName": "MouldMaster-Academy-${version}-${arch}.${ext}"
     },
     "nsis": {
       "oneClick": false,
@@ -68,17 +67,6 @@
       "createDesktopShortcut": true,
       "createStartMenuShortcut": true
     },
-    "toolsets": {"winCodeSign": "1.1.0"},
-    "msix": {
-      "applicationId": "MouldMasterAcademy",
-      "identityName": "MouldMasterAcademy",
-      "publisherDisplayName": "MouldMaster Academy",
-      "displayName": "MouldMaster Academy",
-      "setBuildNumber": true,
-      "createMsixupload": true,
-      "enforcePackageIntegrity": true,
-      "minVersion": "10.0.19041.0",
-      "languages": ["en-US"]
-    }
+    "toolsets": {"winCodeSign": "1.1.0"}
   }
 }
