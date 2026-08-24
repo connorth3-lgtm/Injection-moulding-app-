@@ -64,17 +64,18 @@ require(positions == sorted(positions), "standalone Reference Data scripts must 
 require("standalone-document-full-library" in page, "standalone Reference Data full-library runtime marker missing")
 
 require("reference-2026-expansion.js" in index, "main app must load the 2026 reference expansion")
-require("reference-expansion-20260824" in sw, "PWA cache revision must advance for the reference expansion")
-for asset in ["reference-data.html", "reference-2026-expansion.js"]:
+require("assessment-reference-links-20260824" in sw, "PWA cache revision must include current assessment-reference alignment")
+for asset in ["reference-data.html", "reference-2026-expansion.js", "reference-assessment-links.js"]:
     require(f"'./{asset}'" in sw, f"PWA offline cache missing expanded reference asset: {asset}")
 
 extra = pkg["build"]["extraResources"]
 from_paths = {x.get("from") for x in extra if isinstance(x, dict)}
-for asset in ["reference-data.html", "reference-2026-expansion.js"]:
+for asset in ["reference-data.html", "reference-2026-expansion.js", "reference-assessment-links.js"]:
     require(f"../../{asset}" in from_paths, f"desktop package missing expanded reference asset: {asset}")
     require(f"'{asset}'" in integrity, f"desktop integrity generator missing expanded reference asset: {asset}")
 
-p = subprocess.run(["node", "--check", str(ROOT / "reference-2026-expansion.js")], capture_output=True, text=True)
-require(p.returncode == 0, p.stderr or "reference-2026-expansion.js syntax check failed")
+for asset in ["reference-2026-expansion.js", "reference-assessment-links.js"]:
+    p = subprocess.run(["node", "--check", str(ROOT / asset)], capture_output=True, text=True)
+    require(p.returncode == 0, p.stderr or f"{asset} syntax check failed")
 
-print(f"MouldMaster expanded reference QA passed ({len(entries)} new structured entries, {len(urls)} source URLs)")
+print(f"MouldMaster expanded reference QA passed ({len(entries)} new structured entries, {len(urls)} source URLs; assessment evidence links packaged)")
