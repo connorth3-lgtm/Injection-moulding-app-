@@ -46,6 +46,7 @@ jobs:
           node --check reference-research-extension.js
           node --check reference-20x-extension.js
           node --check reference-2026-expansion.js
+          node --check reference-assessment-links.js
           node --check reference-sources.js
           node --check reference-browser-ui.js
           node --check pwa-shell.js
@@ -83,7 +84,7 @@ jobs:
       - name: Expanded reference library integrity
         run: python qa_reference_expansion.py
       - name: 500-pass reference/question cross-audit
-        run: python qa_reference_question_500_pass.py
+        run: python qa_reference_question_500_pass_aligned.py
       - uses: actions/upload-artifact@v4
         with:
           name: reference-question-500-pass-report
