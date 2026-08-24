@@ -66,9 +66,13 @@ for marker in [
     "will-attach-webview",
     "setWindowOpenHandler",
     "server.listen(0, '127.0.0.1'",
+    "const INTEGRITY_PATH = path.join(__dirname, '..', 'generated', 'integrity.json')",
+    "const allowed = new Set(Object.keys(integrity.files))",
+    "method !== 'GET' && method !== 'HEAD'",
     "SHA-256 verification failed",
 ]:
     require(marker in main, f"desktop security invariant missing: {marker}")
+require("process.resourcesPath, 'mouldmaster', 'integrity.json'" not in main, "packaged integrity manifest must not be read from the writable asset directory")
 
 integrity_script = (DESKTOP / "scripts" / "generate-integrity.cjs").read_text(encoding="utf-8")
 require("MouldMaster_Academy_App.html" in integrity_script, "desktop integrity set must include the file expected by the existing service worker")
