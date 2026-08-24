@@ -40,7 +40,7 @@ function patchStandards(){
   const base=window.renderStandards;window.renderStandards=function(){const r=base.apply(this,arguments);addNZLegacyNote();return r};window.__MM_STANDARDS_STATUS_PATCH__=true;
 }
 async function register(){
-  if(!('serviceWorker' in navigator))return;
+  if(displayContext().mode==='Desktop package'||!('serviceWorker' in navigator))return;
   try{const reg=await navigator.serviceWorker.register('./service-worker.js',{scope:'./'});await reg.update()}catch(e){console.warn('[MouldMaster] Offline/update support unavailable:',e)}
 }
 let syncQueued=false;
