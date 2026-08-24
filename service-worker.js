@@ -1,5 +1,5 @@
 const CACHE_VERSION='2026.08.24.1';
-const CACHE_REVISION='reference-page-20260824';
+const CACHE_REVISION='reference-standalone-page-20260824';
 const STATIC_CACHE=`mouldmaster-static-${CACHE_VERSION}-${CACHE_REVISION}`;
 const CORE=[
   './index.html',
@@ -24,6 +24,7 @@ const CORE=[
   './assessment-ux.js',
   './source-library.js',
   './reference-data.js',
+  './reference-data.html',
   './reference-deep-dive.js',
   './reference-research-extension.js',
   './reference-20x-extension.js',
