@@ -1,4 +1,4 @@
-name: Authoritative Source Freshness
+name: Authoritative and Research Source Freshness
 
 on:
   schedule:
@@ -16,11 +16,15 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
-      - name: Check source review dates and live markers
+      - name: Check authoritative source review dates and live markers
         run: python qa_source_freshness.py --network
+      - name: Check research DOI resolver freshness
+        run: python qa_research_source_freshness.py --network
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: mouldmaster-source-freshness-report
-          path: source-freshness-report.json
+          name: mouldmaster-source-freshness-reports
+          path: |
+            source-freshness-report.json
+            research-source-freshness-report.json
           if-no-files-found: warn
