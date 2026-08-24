@@ -1,0 +1,128 @@
+from pathlib import Path
+import json, re, subprocess
+
+ROOT=Path(__file__).resolve().parent
+REPORT=ROOT/'assessment-quality-report.json'
+
+def text(p): return (ROOT/p).read_text(encoding='utf-8')
+def need(ok,msg):
+    if not ok: raise AssertionError(msg)
+
+for p in ['assessment-quality-suite.js','assessment-deep-dive.js','training-upgrade.js','MouldMaster_Core_App.html','version.json','sources/QUESTION_BANK_CHANGELOG.md','sources/SOURCE_FRESHNESS.json','qa_source_freshness.py']:
+    need((ROOT/p).exists(),f'missing assessment quality file: {p}')
+
+suite=text('assessment-quality-suite.js')
+for marker in [
+    "const VERSION='2026.08.24.2'",
+    "mm_assessment_analytics_v1",
+    "tech:${level}:${index}",
+    "reg:${region}:${level}:${index}",
+    "const BLUEPRINT=['materials','machine','tooling','process','quality','troubleshooting']",
+    "Evidence, difficulty & revision",
+    "Device-local learning analytics",
+    "nearDuplicates",
+    "answerLeakRisks",
+    "migrateStableReviewIds",
+    "scenarioDrills:D.scenarios.length",
+    "sourceFreshnessReviewBy",
+]: need(marker in suite,f'assessment quality marker missing: {marker}')
+need(suite.count("['")>=24,'scenario expansion unexpectedly small')
+need('http://' not in suite,'assessment quality source links must use HTTPS')
+p=subprocess.run(['node','--check',str(ROOT/'assessment-quality-suite.js')],capture_output=True,text=True)
+need(p.returncode==0,f'assessment-quality-suite.js syntax error: {p.stderr}')
+
+core=text('MouldMaster_Core_App.html'); mark='window.MM_DATA = '
+need(mark in core,'MM_DATA marker missing')
+D,_=json.JSONDecoder().raw_decode(core[core.index(mark)+len(mark):])
+need(sum(len(v) for v in D['exams'].values())==30,'technical bank must remain 30 items')
+need(sum(len(v) for r in D['regionalQuestions'].values() for v in r.values())==27,'regional bank must remain 27 items')
+need(len(D['scenarios'])==8,'core scenario baseline must remain 8')
+
+extra_titles=['Fill time drifts but recipe does not','One cavity becomes light','Recovery time becomes erratic','Dimension shifts after water-line work','Part sticks after texture change','Cpk drops after gauge change','DOE result changes by run order','Pressure sensor disagrees with machine']
+upgrade=text('training-upgrade.js')
+for title in extra_titles: need(title in upgrade,f'training scenario missing: {title}')
+
+base=json.loads(json.dumps(D))
+for title in extra_titles:
+    base['scenarios'].append({'title':title,'situation':'placeholder','choices':['a','b','c','d'],'correct':0,'why':'placeholder','feedback':['a','b','c','d']})
+node=r'''
+const fs=require('fs'),vm=require('vm');
+const D=%s;
+const store={};
+const localStorage={getItem:k=>Object.prototype.hasOwnProperty.call(store,k)?store[k]:null,setItem:(k,v)=>{store[k]=String(v)},removeItem:k=>{delete store[k]}};
+const document={
+ getElementById:()=>null,
+ querySelectorAll:()=>[],
+ createElement:()=>({set id(v){this._id=v},get id(){return this._id},textContent:'',appendChild(){},setAttribute(){},insertAdjacentHTML(){}}),
+ head:{appendChild(){}},body:{appendChild(){}},documentElement:{}
+};
+const sandbox={window:{MM_DATA:D},document,localStorage,performance:{now:()=>1000},console,setTimeout:(fn)=>{if(typeof fn==='function')fn()},clearTimeout(){},Date,Math,JSON,Map,Set};
+sandbox.window.window=sandbox.window;sandbox.window.localStorage=localStorage;sandbox.window.document=document;
+vm.createContext(sandbox);
+vm.runInContext(fs.readFileSync(%s,'utf8'),sandbox,{filename:'assessment-deep-dive.js'});
+vm.runInContext(fs.readFileSync(%s,'utf8'),sandbox,{filename:'assessment-quality-suite.js'});
+const Q=sandbox.window.MM_ASSESSMENT_QUALITY;
+const exams={};
+for(const level of ['Beginner','Intermediate','Advanced']){
+ exams[level]={};
+ for(const region of ['UK','US','NZ','ALL']){
+   const arr=sandbox.window.getExamQuestions(level,region);
+   exams[level][region]=arr.map(q=>({id:q.stableId,difficulty:q.difficulty,competency:q.competency,concept:q.concept,critical:q.critical,region:q.region||null,options:q.options.length,correct:q.correct}));
+ }
+}
+const scenarios=D.scenarios.map(s=>({id:s.mmStableId,title:s.title,choices:s.choices.length,correct:s.correct,feedback:Array.isArray(s.feedback)?s.feedback.length:0,category:s.category,difficulty:s.difficulty,reference:s.reference||null,sourceUrl:s.sourceUrl||null}));
+process.stdout.write(JSON.stringify({scenarioCount:D.scenarios.length,exams,quality:Q,scenarios,qa:D.assessmentQA.qualitySuite,history:D.assessmentQA.questionRevisionHistory}));
+'''%(json.dumps(base),json.dumps(str(ROOT/'assessment-deep-dive.js')),json.dumps(str(ROOT/'assessment-quality-suite.js')))
+p=subprocess.run(['node','-e',node],capture_output=True,text=True)
+need(p.returncode==0,f'assessment quality runtime QA failed: {p.stderr or p.stdout}')
+runtime=json.loads(p.stdout)
+need(runtime['scenarioCount']==40,f"expected 40 scenario drills, got {runtime['scenarioCount']}")
+need(runtime['qa']['scenarioDrills']==40,'runtime assessment metadata must report 40 scenarios')
+need(runtime['qa']['stableQuestionIds'] is True,'stable question IDs not enabled')
+need(runtime['qa']['analytics']=='device-local only','analytics privacy marker missing')
+need(len(runtime.get('history',[]))>=3,'question revision history missing')
+
+for level,regions in runtime['exams'].items():
+    for region,items in regions.items():
+        expected=16 if region=='ALL' else 10
+        need(len(items)==expected,f'{level}/{region} exam count must be {expected}')
+        ids=[x['id'] for x in items]; need(all(ids),'every live item needs a stable ID'); need(len(ids)==len(set(ids)),f'{level}/{region} has duplicate stable IDs')
+        need(all(x['options']==4 and 0<=x['correct']<4 for x in items),f'{level}/{region} option/key integrity')
+        tech=[x for x in items if x['id'].startswith('tech:')]; reg=[x for x in items if x['id'].startswith('reg:')]
+        need(len(tech)==7,f'{level}/{region} must contain 7 technical items')
+        need(len(reg)==(9 if region=='ALL' else 3),f'{level}/{region} regional safety item count')
+        need(all(x['critical'] for x in reg),f'{level}/{region} regional items must remain safety-critical')
+        competencies={x['competency'] for x in tech}
+        need(len(competencies)>=5,f'{level}/{region} blueprint covers fewer than 5 technical competencies: {sorted(competencies)}')
+        need(all(x['difficulty'] for x in items),f'{level}/{region} difficulty metadata missing')
+        concepts=[x['concept'] for x in tech]; need(len(set(concepts))>=5,f'{level}/{region} has excessive repeated technical concepts')
+
+sc=runtime['scenarios']; need(len({x['id'] for x in sc})==40,'scenario stable IDs must be unique'); need(len({x['title'].strip().lower() for x in sc})==40,'scenario titles must be unique')
+need(all(x['choices']==4 and 0<=x['correct']<4 and x['feedback']==4 for x in sc),'scenario choice/key/feedback integrity')
+need(all(x['category'] and x['difficulty'] for x in sc),'scenario category/difficulty metadata missing')
+
+near=runtime['quality'].get('nearDuplicates',[]); leaks=runtime['quality'].get('answerLeakRisks',[])
+severe=[x for x in leaks if x.get('correctLength',0)>max(70,x.get('peerMedian',1)*2.6)]
+need(not severe,'severe correct-option length cue detected: '+json.dumps(severe[:5]))
+report={'schema':1,'quality_version':'2026.08.24.2','scenario_count':40,'near_duplicate_flags':near,'answer_leak_flags':leaks,'severe_answer_leaks':severe,'exam_blueprint_minimum':'7 technical items covering at least 5 technical competency groups plus regional safety/compliance'}
+REPORT.write_text(json.dumps(report,indent=2)+'\n',encoding='utf-8')
+
+V=json.loads(text('version.json'))
+need(V.get('question_bank_version')=='2026.08.24.2','question_bank_version must be bumped to 2026.08.24.2')
+need(V.get('content_version')=='2026.08.24.2','content_version must be bumped to 2026.08.24.2')
+need(V.get('legacy_review_id_version')=='2026.08.21.1','legacy review ID version must remain explicit for migration')
+
+log=text('sources/QUESTION_BANK_CHANGELOG.md')
+for marker in ['2026.08.24.2','stable question IDs','device-local question analytics','competency-balanced exam blueprint','Expanded shop-floor scenario drills from 16 to 40','scheduled authoritative-source freshness monitoring']:
+    need(marker in log,f'question-bank changelog marker missing: {marker}')
+
+idx=text('index.html'); need('<script src="./assessment-quality-suite.js">' in idx,'quality suite not loaded by shell'); need(idx.index('assessment-deep-dive.js')<idx.index('assessment-quality-suite.js')<idx.index('source-library.js'),'quality suite load order wrong')
+need("'./assessment-quality-suite.js'" in text('service-worker.js'),'quality suite not cached offline')
+pkg=json.loads(text('desktop/electron/package.json')); froms={x.get('from') for x in pkg['build']['extraResources'] if isinstance(x,dict)}; need('../../assessment-quality-suite.js' in froms,'quality suite missing from desktop package')
+need("'assessment-quality-suite.js'" in text('desktop/electron/scripts/generate-integrity.cjs'),'quality suite missing from desktop integrity set')
+qy=text('.github/workflows/qa.yml'); need('node --check assessment-quality-suite.js' in qy and 'python qa_assessment_quality.py' in qy and 'python qa_source_freshness.py' in qy,'release workflow missing assessment quality gates')
+ow=text('.github/workflows/open-desktop-build.yml'); need("- 'assessment-quality-suite.js'" in ow and "- 'qa_assessment_quality.py'" in ow and 'python qa_assessment_quality.py' in ow,'desktop workflow missing assessment quality suite')
+need('python qa_assessment_quality.py' in text('.github/workflows/microsoft-store-msix.yml'),'Store workflow missing assessment quality QA')
+need((ROOT/'.github/workflows/source-freshness.yml').exists(),'scheduled source freshness workflow missing')
+
+print(f"MouldMaster assessment quality QA passed (57 exam items; 40 scenarios; near-duplicate flags={len(near)}; answer-leak flags={len(leaks)})")
