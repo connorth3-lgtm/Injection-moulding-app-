@@ -59,6 +59,7 @@
       {"from": "../../source-library.js", "to": "mouldmaster/source-library.js"},
       {"from": "../../reference-data.js", "to": "mouldmaster/reference-data.js"},
       {"from": "../../reference-deep-dive.js", "to": "mouldmaster/reference-deep-dive.js"},
+      {"from": "../../reference-research-extension.js", "to": "mouldmaster/reference-research-extension.js"},
       {"from": "../../reference-sources.js", "to": "mouldmaster/reference-sources.js"},
       {"from": "../../service-worker.js", "to": "mouldmaster/service-worker.js"},
       {"from": "../../privacy.html", "to": "mouldmaster/privacy.html"},
