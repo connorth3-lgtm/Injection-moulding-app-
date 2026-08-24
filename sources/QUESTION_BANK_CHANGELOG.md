@@ -2,6 +2,14 @@
 
 This register records assessment changes that can affect learner interpretation, difficulty, evidence or spaced-review identity. It is deliberately separate from general release notes so an assessment reviewer can see what changed and why.
 
+## 2026.08.24.3 — final assessment hardening
+
+- Kept the 57 live exam answer keys and the 40-scenario bank unchanged.
+- Added an explicit 57-ID revision index and exposed the recorded per-question revision reason in the post-grade evidence panel. The 12 technical items changed during the deep review are individually identified as revision 2; all other live exam items remain at the audited revision-1 baseline.
+- Replaced learner-facing response-time interpretation with exposure-based timing: the timer starts when at least 55% of a question is visible or the learner directly interacts with it, and time while the document is hidden is excluded. Older whole-exam elapsed timing is retained only as legacy analytics data.
+- Added a separate research DOI freshness registry and scheduled resolver checks across research-bearing assessment/reference files. Resolver 404/410 results require human review; temporary publisher, access, rate-limit and network errors remain warnings.
+- Bumped only `assessment_quality_version` to `2026.08.24.3`; `question_bank_version` and `content_version` remain `2026.08.24.2` because no question text, answer key or learning content changed in this hardening pass.
+
 ## 2026.08.24.2 — assessment quality suite
 
 - Introduced stable question IDs independent of release version: `tech:<Level>:<zero-based-index>` and `reg:<Region>:<Level>:<zero-based-index>`.
