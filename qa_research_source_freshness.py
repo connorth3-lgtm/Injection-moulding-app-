@@ -6,7 +6,7 @@ import argparse, json, re, ssl, urllib.error, urllib.request
 ROOT=Path(__file__).resolve().parent
 MANIFEST=ROOT/'sources'/'RESEARCH_SOURCE_FRESHNESS.json'
 REPORT=ROOT/'research-source-freshness-report.json'
-DOI_RE=re.compile(r"https://doi\.org/10\.\d{4,9}/[^\s\"'<>\]\)]+",re.I)
+DOI_RE=re.compile(r"https://doi\.org/10\.\d{4,9}/[^\s\"'<>`\]\)]+",re.I)
 
 def need(ok,msg):
     if not ok: raise AssertionError(msg)
@@ -25,12 +25,12 @@ def discover(data):
         p=ROOT/name; need(p.exists(),f'research freshness source file missing: {name}')
         found=[]
         for raw in DOI_RE.findall(p.read_text(encoding='utf-8')):
-            url=raw.rstrip(".,;:)]}")
+            url=raw.rstrip(".,;:)]}`*_")
             found.append(url); urls.add(url.lower())
         per_file[name]=len(set(x.lower() for x in found))
     minimum=int(data.get('doi_minimum',0)); need(minimum>=20,'research DOI minimum is too weak')
     need(len(urls)>=minimum,f'research DOI coverage unexpectedly small: {len(urls)} < {minimum}')
-    need(all(u.startswith('https://doi.org/10.') for u in urls),'invalid DOI resolver URL found')
+    need(all(u.startswith('https://doi.org/10.') and not any(c in u for c in '`*_') for u in urls),'invalid DOI resolver URL found')
     return sorted(urls),per_file
 
 def check_doi(url):
