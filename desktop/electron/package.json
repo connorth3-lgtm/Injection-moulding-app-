@@ -18,7 +18,7 @@
   },
   "devDependencies": {
     "electron": "43.4.1",
-    "electron-builder": "26.15.7"
+    "electron-builder": "27.0.0-alpha.7"
   },
   "build": {
     "appId": "org.mouldmaster.academy",
