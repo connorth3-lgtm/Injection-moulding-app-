@@ -2,15 +2,31 @@
 const fs=require('fs');
 const path=require('path');
 const ROOT=path.resolve(__dirname,'..','..','..');
-const MAIN=fs.readFileSync(path.join(__dirname,'..','src','main.cjs'),'utf8');
-const PKG=JSON.parse(fs.readFileSync(path.join(__dirname,'..','package.json'),'utf8'));
-const INTEGRITY=JSON.parse(fs.readFileSync(path.join(__dirname,'..','generated','integrity.json'),'utf8'));
+const DESKTOP=path.resolve(__dirname,'..');
+const MAIN=fs.readFileSync(path.join(DESKTOP,'src','main.cjs'),'utf8');
+const PKG=JSON.parse(fs.readFileSync(path.join(DESKTOP,'package.json'),'utf8'));
+const LOCK=JSON.parse(fs.readFileSync(path.join(DESKTOP,'package-lock.json'),'utf8'));
+const INTEGRITY=JSON.parse(fs.readFileSync(path.join(DESKTOP,'generated','integrity.json'),'utf8'));
 function need(cond,msg){if(!cond)throw new Error(msg)}
 need(PKG.license==='Apache-2.0','desktop package must remain Apache-2.0');
 need(/^\d+\.\d+\.\d+$/.test(PKG.devDependencies.electron),'Electron version must be exact');
 need(/^\d+\.\d+\.\d+$/.test(PKG.devDependencies['electron-builder']),'electron-builder version must be exact');
+need(LOCK.lockfileVersion>=3,'npm dependency lock must be lockfileVersion 3 or newer');
+need(LOCK.packages?.['']?.devDependencies?.electron===PKG.devDependencies.electron,'locked Electron version does not match package.json');
+need(LOCK.packages?.['']?.devDependencies?.['electron-builder']===PKG.devDependencies['electron-builder'],'locked electron-builder version does not match package.json');
 for(const marker of ['nodeIntegration: false','contextIsolation: true','sandbox: true','webSecurity: true','allowRunningInsecureContent: false','setPermissionRequestHandler','setPermissionCheckHandler','will-attach-webview','setWindowOpenHandler','server.listen(0, \'127.0.0.1\')','SHA-256 verification failed'])need(MAIN.includes(marker),`desktop security marker missing: ${marker}`);
 need(INTEGRITY.schema===1,'integrity schema mismatch');
 need(Object.keys(INTEGRITY.files||{}).length>=15,'integrity manifest is incomplete');
 for(const [name,hash] of Object.entries(INTEGRITY.files)){need(/^[a-f0-9]{64}$/.test(hash),`bad SHA-256 for ${name}`);need(fs.existsSync(path.join(ROOT,name)),`integrity asset missing: ${name}`)}
+for(const req of ['generated/dependency-licenses.json','generated/sbom.cdx.json','THREAT_MODEL.md'])need(fs.existsSync(path.join(DESKTOP,req)),`desktop transparency artifact missing: ${req}`);
+const licences=JSON.parse(fs.readFileSync(path.join(DESKTOP,'generated','dependency-licenses.json'),'utf8'));
+need(licences.schema===1 && Array.isArray(licences.packages),'dependency licence inventory invalid');
+const blocked=licences.packages.filter(x=>/proprietary|unlicensed|commercial-only/i.test(String(x.license||'')));
+need(blocked.length===0,`blocked/non-open dependency licence metadata: ${blocked.map(x=>`${x.name}@${x.version}:${x.license}`).join(', ')}`);
+const sbom=JSON.parse(fs.readFileSync(path.join(DESKTOP,'generated','sbom.cdx.json'),'utf8'));
+need(sbom.bomFormat==='CycloneDX','SBOM must be CycloneDX JSON');
+need(fs.existsSync(path.join(ROOT,'LICENSE')),'repository Apache-2.0 licence missing');
+need(fs.existsSync(path.join(ROOT,'OPEN_SOURCE_AND_PATENT_POLICY.md')),'open-source/patent policy missing');
+need(fs.existsSync(path.join(ROOT,'THIRD_PARTY_NOTICES.md')),'third-party notices missing');
+need(fs.existsSync(path.join(ROOT,'.github','workflows','microsoft-store-msix.yml')),'Microsoft Store build workflow missing');
 console.log('MouldMaster open desktop QA passed');
