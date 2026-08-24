@@ -14,6 +14,7 @@ const CORE=[
   './training-qa-fix.js',
   './source-library.js',
   './reference-data.js',
+  './reference-sources.js',
   './pwa-shell.js'
 ];
 
