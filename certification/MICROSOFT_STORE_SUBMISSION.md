@@ -105,7 +105,7 @@ The final Store identity is supplied only at workflow runtime from Partner Cente
 
 ## Packaging toolchain
 
-Portable/NSIS packaging uses the stable, lockfile-pinned electron-builder v26 dependency. MSIX support is currently supplied by the exact `electron-builder@27.0.0-alpha.6` beta in the Store workflow because the MSIX target is not available in v26. Any change to that beta version requires a new Store packaging validation pass.
+Portable/NSIS packaging uses the stable, lockfile-pinned electron-builder v26 dependency. MSIX support is currently supplied by the exact `electron-builder@27.0.0-alpha.7` beta in the Store workflow because the MSIX target is not available in v26. Any change to that beta version requires a new Store packaging validation pass.
 
 ## Direct-download signing alternative
 
