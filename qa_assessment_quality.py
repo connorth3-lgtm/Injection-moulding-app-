@@ -1,5 +1,5 @@
 from pathlib import Path
-import json, re, subprocess
+import json, re, subprocess, tempfile
 
 ROOT=Path(__file__).resolve().parent
 REPORT=ROOT/'assessment-quality-report.json'
@@ -94,7 +94,13 @@ for(const level of ['Beginner','Intermediate','Advanced']){
 const scenarios=D.scenarios.map(s=>({id:s.mmStableId,title:s.title,choices:s.choices.length,correct:s.correct,feedback:Array.isArray(s.feedback)?s.feedback.length:0,category:s.category,difficulty:s.difficulty,reference:s.reference||null,sourceUrl:s.sourceUrl||null}));
 process.stdout.write(JSON.stringify({scenarioCount:D.scenarios.length,exams,quality:Q,scenarios,qa:D.assessmentQA.qualitySuite,history:D.assessmentQA.questionRevisionHistory,bridge:sandbox.window.MM_STABLE_REVIEW_BRIDGE}));
 '''%(json.dumps(base),json.dumps(str(ROOT/'assessment-deep-dive.js')),json.dumps(str(ROOT/'assessment-quality-suite.js')),json.dumps(str(ROOT/'assessment-stable-review-bridge.js')))
-p=subprocess.run(['node','-e',node],capture_output=True,text=True)
+with tempfile.NamedTemporaryFile('w',suffix='.js',delete=False,encoding='utf-8') as handle:
+    handle.write(node)
+    node_path=Path(handle.name)
+try:
+    p=subprocess.run(['node',str(node_path)],capture_output=True,text=True)
+finally:
+    node_path.unlink(missing_ok=True)
 need(p.returncode==0,f'assessment quality runtime QA failed: {p.stderr or p.stdout}')
 runtime=json.loads(p.stdout)
 need(runtime['scenarioCount']==40,f"expected 40 scenario drills, got {runtime['scenarioCount']}")
