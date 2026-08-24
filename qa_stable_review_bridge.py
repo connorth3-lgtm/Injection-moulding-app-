@@ -16,14 +16,19 @@ for marker in [
     "MM_ASSESSMENT_QUALITY",
     "q.mmId=q.stableId",
     "stableIdsPrimary:true",
+    "fullBlueprintRequired:true",
+    "Assessment blueprint incomplete: missing",
+    "requiredTechnicalDomains:(S.blueprint||[]).slice()",
     "legacyRecordsMigratedBy:'assessment-quality-suite.js'",
-]: need(marker in bridge,f'stable-review bridge marker missing: {marker}')
+]: need(marker in bridge,f'stable-review/blueprint guard marker missing: {marker}')
 p=subprocess.run(['node','--check',str(ROOT/'assessment-stable-review-bridge.js')],capture_output=True,text=True)
 need(p.returncode==0,f'assessment-stable-review-bridge.js syntax error: {p.stderr}')
 
 suite=text('assessment-quality-suite.js')
 need('migrateStableReviewIds' in suite,'quality suite must migrate older version-prefixed review records')
 need('techId(level,index)' in suite and 'regId(region,level,index)' in suite,'quality suite stable ID builders missing')
+need("const BLUEPRINT=['materials','machine','tooling','process','quality','troubleshooting']" in suite,'six-domain technical blueprint missing')
+need('competencies:competencySet' in suite,'technical questions must retain multi-competency tags for blueprint coverage')
 
 upgrade=text('training-upgrade.js')
 need("m=/^tech:([^:]+):(\\d+)$/.exec(id)" in upgrade,'spaced-review resolver must support stable technical IDs')
@@ -43,4 +48,4 @@ ow=text('.github/workflows/open-desktop-build.yml')
 need("- 'assessment-stable-review-bridge.js'" in ow and "- 'qa_stable_review_bridge.py'" in ow and 'python qa_stable_review_bridge.py' in ow,'desktop workflow missing stable-review bridge QA')
 need('python qa_stable_review_bridge.py' in text('.github/workflows/microsoft-store-msix.yml'),'Store workflow missing stable-review bridge QA')
 
-print('MouldMaster stable spaced-review ID bridge QA passed')
+print('MouldMaster stable spaced-review ID and full-blueprint guard QA passed')
