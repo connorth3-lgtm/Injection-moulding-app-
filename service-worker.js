@@ -1,5 +1,5 @@
 const CACHE_VERSION='2026.08.24.1';
-const CACHE_REVISION='reference-expansion-20260824';
+const CACHE_REVISION='assessment-reference-links-20260824';
 const STATIC_CACHE=`mouldmaster-static-${CACHE_VERSION}-${CACHE_REVISION}`;
 const CORE=[
   './index.html',
@@ -29,6 +29,7 @@ const CORE=[
   './reference-research-extension.js',
   './reference-20x-extension.js',
   './reference-2026-expansion.js',
+  './reference-assessment-links.js',
   './reference-sources.js',
   './reference-browser-ui.js',
   './pwa-shell.js',
