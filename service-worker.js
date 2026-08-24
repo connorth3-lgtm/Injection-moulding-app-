@@ -12,6 +12,7 @@ const CORE=[
   './reading-patch.js',
   './training-upgrade.js',
   './training-qa-fix.js',
+  './assessment-100-pass.js',
   './source-library.js',
   './reference-data.js',
   './reference-deep-dive.js',
