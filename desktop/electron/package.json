@@ -57,6 +57,7 @@
       {"from": "../../training-qa-fix.js", "to": "mouldmaster/training-qa-fix.js"},
       {"from": "../../pwa-shell.js", "to": "mouldmaster/pwa-shell.js"},
       {"from": "../../source-library.js", "to": "mouldmaster/source-library.js"},
+      {"from": "../../reference-data.js", "to": "mouldmaster/reference-data.js"},
       {"from": "../../service-worker.js", "to": "mouldmaster/service-worker.js"},
       {"from": "../../privacy.html", "to": "mouldmaster/privacy.html"},
       {"from": "../../support.html", "to": "mouldmaster/support.html"},
