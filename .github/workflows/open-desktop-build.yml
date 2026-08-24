@@ -21,6 +21,7 @@ on:
       - 'assessment-quality-suite.js'
       - 'assessment-stable-review-bridge.js'
       - 'assessment-analytics-ui.js'
+      - 'assessment-final-hardening.js'
       - 'pwa-shell.js'
       - 'source-library.js'
       - 'reference-data.js'
@@ -35,11 +36,15 @@ on:
       - 'qa_question_deep_dive.py'
       - 'qa_assessment_quality.py'
       - 'qa_stable_review_bridge.py'
+      - 'qa_assessment_final_hardening.py'
       - 'qa_source_freshness.py'
+      - 'qa_research_source_freshness.py'
       - 'sources/ASSESSMENT_AND_DATA_100_PASS_AUDIT.md'
       - 'sources/QUESTION_BANK_DEEP_DIVE.md'
       - 'sources/QUESTION_BANK_CHANGELOG.md'
+      - 'sources/QUESTION_REVISION_INDEX.json'
       - 'sources/SOURCE_FRESHNESS.json'
+      - 'sources/RESEARCH_SOURCE_FRESHNESS.json'
       - 'service-worker.js'
       - 'privacy.html'
       - 'support.html'
@@ -104,9 +109,15 @@ jobs:
       - name: Stable spaced-review ID QA
         working-directory: .
         run: python qa_stable_review_bridge.py
+      - name: Final assessment revision and timing hardening QA
+        working-directory: .
+        run: python qa_assessment_final_hardening.py
       - name: Authoritative source freshness metadata
         working-directory: .
         run: python qa_source_freshness.py
+      - name: Research DOI freshness metadata
+        working-directory: .
+        run: python qa_research_source_freshness.py
       - name: Reference data and source QA
         working-directory: .
         run: python qa_reference.py
@@ -133,4 +144,5 @@ jobs:
             desktop/electron/generated/sbom.cdx.json
             assessment-quality-report.json
             source-freshness-report.json
+            research-source-freshness-report.json
           if-no-files-found: error
