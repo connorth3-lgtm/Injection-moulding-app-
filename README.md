@@ -18,12 +18,12 @@ The project maintainers do not intend to seek patent protection over implementat
 ## Current release lanes
 
 - PWA / browser shell: `2026.08.24.1`
-- Open desktop source: `2026.08.24.1`
+- Open Windows desktop: `2026.08.24.2`
 - Training content: `2026.08.24.2`
 - Audited assessment bank: `2026.08.24.2`
 - Assessment quality / analytics hardening: `2026.08.24.3`
 - Learner-scoped assessment storage: `2026.08.24.4`
-- Legacy Windows recovery lane: `2026.08.21.1`
+- Frozen legacy Windows recovery lane: `2026.08.21.1`
 
 `version.json` is the machine-readable release record and is the source of truth for release identifiers.
 
@@ -41,13 +41,13 @@ The current assessment stack contains 30 technical exam items, 27 UK/US/NZ regio
 
 Assessment quality controls include stable question IDs, a competency-balanced exam blueprint, difficulty calibration, duplicate/answer-cue QA, per-question evidence/revision information and device-local analytics. Analytics are scoped to the active learner profile. Question-performance analytics and response-timing analytics are not uploaded by MouldMaster; they can be reset locally and are deliberately excluded from progress backups.
 
-## Open Windows desktop replacement
+## Open Windows desktop release
 
-The preferred replacement for the legacy Windows launcher is under:
+The normal open-source Windows desktop implementation is under:
 
 `desktop/electron/`
 
-It provides public source and documented builds for portable Windows, NSIS and MSIX/Microsoft Store packaging.
+Desktop `2026.08.24.2` is published from the exact repository source by `.github/workflows/publish-open-desktop.yml` to the tagged GitHub Release recorded in `version.json`. The release includes the portable Windows executable, SHA-256 hashes, the source commit, bundled-asset integrity manifest, dependency licence inventory, CycloneDX SBOM and assessment/source-freshness QA reports.
 
 Security controls include:
 - SHA-256 verification of bundled MouldMaster application assets before launch;
@@ -61,19 +61,19 @@ Security controls include:
 - dependency licence inventory and CycloneDX SBOM generation;
 - GitHub Actions build provenance and release hashes.
 
-See `desktop/electron/README.md` and `desktop/electron/THREAT_MODEL.md`.
+See `desktop/electron/README.md`, `desktop/electron/THREAT_MODEL.md` and `desktop/electron/LEGACY_MIGRATION.md`.
 
-### Why the old EXE still exists
+### Legacy Windows recovery boundary
 
-`MouldMasterAcademy.exe` is retained only as the known-good Windows recovery launcher while the open replacement is built and tested on real Windows hardware. Its original preferred source/build recipe has not been located, so it is **not represented as fully open source**.
+`MouldMasterAcademy.exe` is frozen as a recovery-only compatibility component; it is **not** the normal Windows release and is not represented as fully open source because its preferred source/build recipe has not been located.
 
-The Windows recovery feed must not be migrated to the new desktop package until the open package passes hardware/regression testing and learner-data migration is confirmed.
+The legacy recovery feed remains pinned to its audited 2026.08.21.1 bytes while the published open desktop package undergoes the final real-machine learner-backup migration check. The old binary should be deleted from current distribution after that manual check confirms export/import and local persistence on a normal Windows 10/11 installation. Do not auto-replace the legacy executable with the Electron EXE because the two runtimes do not share storage automatically.
 
 ## Microsoft Store
 
 A gated Store workflow exists at `.github/workflows/microsoft-store-msix.yml`. It intentionally refuses to create a Store package until the exact Microsoft Partner Center identity values are supplied as repository variables.
 
-This prevents invented publisher metadata from being used. Microsoft certification/signing is an external approval step and must not be claimed before it is granted.
+This prevents invented publisher metadata from being used. Microsoft certification/signing is an external approval step and must not be claimed before it is granted. The unsigned GitHub Release is the transparent open-source distribution/testing lane; Microsoft Store remains the preferred signed public trust route once certification is actually granted.
 
 ## Training certificates
 
@@ -118,4 +118,4 @@ The release workflows run structural, question/answer, assessment-quality, learn
 - `qa_research.py`
 - `qa_open_desktop.py`
 
-A release should not be treated as verified merely because source was committed; build/test results and release hashes must also be reviewed.
+A release should not be treated as verified merely because source was committed; build/test results, the tagged source commit and release hashes must also be reviewed.

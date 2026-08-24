@@ -1,0 +1,117 @@
+name: Publish Open Desktop Release
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'version.json'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: publish-open-desktop-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  publish-windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22.12.0'
+          cache: 'npm'
+          cache-dependency-path: desktop/electron/package-lock.json
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install exact locked dependencies
+        working-directory: desktop/electron
+        run: npm ci --no-audit --fund=false
+      - name: Generate integrity, licence and SBOM evidence
+        working-directory: desktop/electron
+        run: |
+          npm run integrity
+          npm run licenses
+          npm run sbom
+          npm run qa
+      - name: Release QA gates
+        run: |
+          python qa_release.py
+          python qa_release_docs.py
+          python qa_100_pass.py
+          python qa_question_deep_dive.py
+          python qa_assessment_quality.py
+          python qa_assessment_storage_scope.py
+          python qa_stable_review_bridge.py
+          python qa_assessment_final_hardening.py
+          python qa_source_freshness.py
+          python qa_research_source_freshness.py
+          python qa_reference.py
+          python qa_research.py
+          python qa_open_desktop.py
+      - name: Build unsigned portable Windows package
+        working-directory: desktop/electron
+        run: npm run dist:portable
+      - name: Stage release evidence
+        shell: pwsh
+        run: |
+          $version = (Get-Content 'version.json' -Raw | ConvertFrom-Json).desktop_release
+          $tag = "desktop-v$version"
+          $releaseDir = 'desktop/electron/release-assets'
+          New-Item -ItemType Directory -Force -Path $releaseDir | Out-Null
+          $exe = Get-ChildItem 'desktop/electron/dist' -Filter '*.exe' -File | Select-Object -First 1
+          if (-not $exe) { throw 'Portable Windows executable was not produced.' }
+          Copy-Item $exe.FullName $releaseDir
+          Copy-Item 'desktop/electron/generated/integrity.json' $releaseDir
+          Copy-Item 'desktop/electron/generated/dependency-licenses.json' $releaseDir
+          Copy-Item 'desktop/electron/generated/sbom.cdx.json' $releaseDir
+          Copy-Item 'assessment-quality-report.json' $releaseDir
+          Copy-Item 'source-freshness-report.json' $releaseDir
+          Copy-Item 'research-source-freshness-report.json' $releaseDir
+          git rev-parse HEAD | Set-Content "$releaseDir/SOURCE_COMMIT.txt"
+          Get-ChildItem $releaseDir -File | Where-Object { $_.Name -ne 'SHA256SUMS.txt' } | Sort-Object Name | Get-FileHash -Algorithm SHA256 | ForEach-Object { "$($_.Hash.ToLower())  $($_.Path | Split-Path -Leaf)" } | Set-Content "$releaseDir/SHA256SUMS.txt"
+          @"
+          # MouldMaster Academy Desktop $version
+
+          Open-source Windows desktop release built from this repository.
+
+          Included evidence:
+          - portable Windows executable
+          - SHA-256 release hashes
+          - source commit record
+          - bundled-asset integrity manifest
+          - dependency licence inventory
+          - CycloneDX SBOM
+          - assessment and source-freshness QA reports
+
+          This unsigned GitHub release is intended for transparent/open-source distribution and testing. Microsoft Store signing/certification remains a separate external process and must not be claimed until Microsoft grants it.
+          "@ | Set-Content "$releaseDir/RELEASE_NOTES.md"
+          "MM_RELEASE_VERSION=$version" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+          "MM_RELEASE_TAG=$tag" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+          "MM_RELEASE_DIR=$releaseDir" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+      - name: Publish immutable GitHub release
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          $tagSha = (git ls-remote --tags origin "refs/tags/$env:MM_RELEASE_TAG" | ForEach-Object { ($_ -split "`t")[0] } | Select-Object -First 1)
+          if ($tagSha -and $tagSha -ne $env:GITHUB_SHA) {
+            throw "Release tag $env:MM_RELEASE_TAG already points to $tagSha. Bump desktop_release before publishing different source."
+          }
+          $assets = Get-ChildItem $env:MM_RELEASE_DIR -File | Where-Object { $_.Name -ne 'RELEASE_NOTES.md' } | ForEach-Object { $_.FullName }
+          gh release view $env:MM_RELEASE_TAG *> $null
+          if ($LASTEXITCODE -eq 0) {
+            gh release upload $env:MM_RELEASE_TAG @assets --clobber
+          } else {
+            gh release create $env:MM_RELEASE_TAG @assets --target $env:GITHUB_SHA --title "MouldMaster Academy Desktop $env:MM_RELEASE_VERSION" --notes-file "$env:MM_RELEASE_DIR/RELEASE_NOTES.md"
+          }
+      - uses: actions/upload-artifact@v4
+        with:
+          name: mouldmaster-open-desktop-release-${{ github.sha }}
+          path: desktop/electron/release-assets/*
+          if-no-files-found: error

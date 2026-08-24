@@ -10,7 +10,7 @@ def need(ok,msg):
 V=json.loads(text('version.json'))
 expected={
  'android_release':'2026.08.24.1',
- 'desktop_release':'2026.08.24.1',
+ 'desktop_release':'2026.08.24.2',
  'content_version':'2026.08.24.2',
  'question_bank_version':'2026.08.24.2',
  'assessment_quality_version':'2026.08.24.3',
@@ -21,11 +21,13 @@ for k,v in expected.items(): need(V.get(k)==v,f'version.json {k} drift: {V.get(k
 
 readme=text('README.md')
 for label,k in [
- ('PWA / browser shell','android_release'),('Open desktop source','desktop_release'),('Training content','content_version'),
+ ('PWA / browser shell','android_release'),('Open Windows desktop','desktop_release'),('Training content','content_version'),
  ('Audited assessment bank','question_bank_version'),('Assessment quality / analytics hardening','assessment_quality_version'),
- ('Learner-scoped assessment storage','assessment_storage_scope_version'),('Legacy Windows recovery lane','windows_recovery_release')]:
+ ('Learner-scoped assessment storage','assessment_storage_scope_version'),('Frozen legacy Windows recovery lane','windows_recovery_release')]:
     need(f'- {label}: `{V[k]}`' in readme,f'README release lane stale/missing: {label}')
 need('qa_assessment_storage_scope.py' in readme,'README must list learner-scoped analytics QA')
+need(V.get('desktop_release_tag')==f"desktop-v{V['desktop_release']}",'desktop release tag/version mismatch')
+need(V.get('desktop_release_url')==f"https://github.com/{V['repository']}/releases/tag/{V['desktop_release_tag']}",'desktop release URL/tag mismatch')
 
 android=text('ANDROID_INSTALL_README.txt')
 for marker in ['assessment-storage-scope.js','assessment-final-hardening.js','reference-20x-extension.js','privacy.html','support.html']:

@@ -17,6 +17,7 @@ for path in [
     ROOT / "OPEN_SOURCE_AND_PATENT_POLICY.md",
     ROOT / "THIRD_PARTY_NOTICES.md",
     DESKTOP / "README.md",
+    DESKTOP / "LEGACY_MIGRATION.md",
     DESKTOP / "THREAT_MODEL.md",
     DESKTOP / "package.json",
     DESKTOP / "package-lock.json",
@@ -28,6 +29,7 @@ for path in [
     DESKTOP / "scripts" / "qa.cjs",
     ROOT / ".github" / "workflows" / "desktop-dependency-lock.yml",
     ROOT / ".github" / "workflows" / "open-desktop-build.yml",
+    ROOT / ".github" / "workflows" / "publish-open-desktop.yml",
     ROOT / ".github" / "workflows" / "microsoft-store-msix.yml",
 ]:
     require(path.exists(), f"open desktop/release file missing: {path.relative_to(ROOT)}")
@@ -50,10 +52,14 @@ normalized = [str(int(x)) for x in parts]
 expected_pkg_version = ".".join(normalized[:3])
 expected_build_number = normalized[3]
 expected_build_version = ".".join(normalized)
+expected_tag = f"desktop-v{release}"
+expected_url = f"https://github.com/{version.get('repository')}/releases/tag/{expected_tag}"
 require(pkg.get("version") == expected_pkg_version, "desktop package version must match the first three desktop_release components")
 require(str(pkg["build"].get("buildNumber")) == expected_build_number, "desktop buildNumber must match desktop_release fourth component")
 require(pkg["build"].get("buildVersion") == expected_build_version, "desktop buildVersion must match desktop_release")
 require("${buildVersion}" in pkg["build"]["win"].get("artifactName", ""), "Windows artifact name must include buildVersion")
+require(version.get("desktop_release_tag") == expected_tag, "desktop_release_tag must match desktop_release")
+require(version.get("desktop_release_url") == expected_url, "desktop_release_url must match the tagged GitHub release")
 require(version.get("windows_recovery_release"), "windows_recovery_release missing from version.json")
 require(version["desktop_release"] != version["windows_recovery_release"], "open desktop and legacy recovery lanes must be explicit and separate")
 
@@ -113,5 +119,33 @@ for marker in [
     "${buildVersion}",
 ]:
     require(marker in store, f"Store package gate missing: {marker}")
+
+publish = (ROOT / ".github" / "workflows" / "publish-open-desktop.yml").read_text(encoding="utf-8")
+for marker in [
+    "contents: write",
+    "npm run dist:portable",
+    "python qa_release.py",
+    "python qa_open_desktop.py",
+    "SHA256SUMS.txt",
+    "SOURCE_COMMIT.txt",
+    "dependency-licenses.json",
+    "sbom.cdx.json",
+    "git ls-remote --tags",
+    "gh release create",
+    "gh release upload",
+    "--target $env:GITHUB_SHA",
+]:
+    require(marker in publish, f"open desktop publish gate missing: {marker}")
+require("paths:\n      - 'version.json'" in publish, "desktop publishing must be driven by an explicit release-version change")
+
+migration = (DESKTOP / "LEGACY_MIGRATION.md").read_text(encoding="utf-8")
+for marker in [
+    "not assumed to migrate automatically",
+    "progress-backup export",
+    "certificates must be re-earned",
+    "real Windows 10/11",
+    "SHA256SUMS.txt",
+]:
+    require(marker in migration, f"legacy migration safeguard missing: {marker}")
 
 print("MouldMaster open desktop release QA passed")
