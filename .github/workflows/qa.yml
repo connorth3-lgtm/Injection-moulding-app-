@@ -33,6 +33,7 @@ jobs:
           node --check training-qa-fix.js
           node --check assessment-100-pass.js
           node --check assessment-deep-dive.js
+          node --check assessment-answer-cue-fix.js
           node --check assessment-storage-scope.js
           node --check assessment-quality-suite.js
           node --check assessment-stable-review-bridge.js
