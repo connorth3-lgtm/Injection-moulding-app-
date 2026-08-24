@@ -58,6 +58,9 @@ jobs:
       - name: Validate release and documentation coherence
         working-directory: .
         run: python qa_release_docs.py
+      - name: Validate Microsoft Store submission readiness
+        working-directory: .
+        run: python qa_store_submission.py
       - name: 100-pass data and assessment audit
         working-directory: .
         run: python qa_100_pass.py
