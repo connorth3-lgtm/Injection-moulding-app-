@@ -13,6 +13,7 @@ const CORE=[
   './training-upgrade.js',
   './training-qa-fix.js',
   './source-library.js',
+  './reference-data.js',
   './pwa-shell.js'
 ];
 
