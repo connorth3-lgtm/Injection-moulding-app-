@@ -53,8 +53,8 @@ if(baseSwitch)window.switchUser=function(){cancelInMemoryAttempt();return baseSw
 const baseReset=typeof window.resetData==='function'?window.resetData:null;
 if(baseReset)window.resetData=function(){
  let before=null;try{before=rawGet.call(localStorage,'mouldmasterProDB')}catch(_){}
- cancelInMemoryAttempt();const r=baseReset.apply(this,arguments);
- setTimeout(()=>{try{const after=rawGet.call(localStorage,'mouldmasterProDB');if(after!==before)clearAll()}catch(_){}},0);
+ const r=baseReset.apply(this,arguments);
+ setTimeout(()=>{try{const after=rawGet.call(localStorage,'mouldmasterProDB');if(after!==before){cancelInMemoryAttempt();clearAll()}}catch(_){}},0);
  return r;
 };
 window.MM_ASSESSMENT_STORAGE_SCOPE={version:VERSION,scopeToken,analyticsKey:()=>scopedKey(ANALYTICS_BASE),timingKey:()=>scopedKey(TIMING_BASE),clearAll,cancelInMemoryAttempt,legacyMigration:{...legacy},learnerScoped:true};
