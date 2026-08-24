@@ -1,9 +1,9 @@
-/* MouldMaster PWA shell controller — 2026.08.24.7 */
+/* MouldMaster PWA shell controller — 2026.08.24.8 */
 (function(){
 'use strict';
 const RELEASE='2026.08.24.1';
 const CONTENT='2026.08.24.2';
-let referenceDataReturnView='dashboard';
+const REFERENCE_DATA_URL='./reference-data.html';
 function setText(el,value){if(el&&el.textContent!==value)el.textContent=value}
 function setAttr(el,name,value){if(el&&el.getAttribute(name)!==value)el.setAttribute(name,value)}
 function isMobileNav(){return !!window.matchMedia?.('(max-width:680px)').matches}
@@ -68,51 +68,8 @@ function configureReferenceDrawer(){
   }
   modal.dataset.mmNonBlocking='1';
 }
-function ensureReferenceDataPage(){
-  const main=document.querySelector('.main');if(!main)return null;
-  let page=document.getElementById('mm-reference-data-page');
-  if(!page){
-    page=document.createElement('section');
-    page.id='mm-reference-data-page';page.className='view hidden';
-    page.setAttribute('aria-label','Reference data');
-    main.appendChild(page);
-  }
-  return page;
-}
-function openReferenceDataPage(){
-  const modal=document.querySelector('.mmrd'),panel=modal?.querySelector('.mmrd-panel'),page=ensureReferenceDataPage();
-  if(!modal||!panel||!page)return false;
-  const visible=[...document.querySelectorAll('.main > .view')].find(v=>v.id!=='mm-reference-data-page'&&!v.classList.contains('hidden'));
-  if(visible?.id)referenceDataReturnView=visible.id;
-  document.querySelectorAll('.main > .view').forEach(v=>v.classList.add('hidden'));
-  modal.dataset.open='0';
-  page.classList.remove('hidden');page.dataset.open='1';
-  panel.classList.add('mmrd-page-panel');page.appendChild(panel);
-  requestAnimationFrame(()=>{window.scrollTo({top:0,behavior:'auto'});panel.querySelector('.mmrd-search')?.focus({preventScroll:true})});
-  return true;
-}
-function closeReferenceDataPage(){
-  const page=document.getElementById('mm-reference-data-page'),modal=document.querySelector('.mmrd'),panel=page?.querySelector('.mmrd-panel');
-  if(panel&&modal){panel.classList.remove('mmrd-page-panel');modal.appendChild(panel)}
-  if(page){page.dataset.open='0';page.classList.add('hidden')}
-  const target=referenceDataReturnView||'dashboard';
-  if(typeof window.switchView==='function'){try{window.switchView(target);return}catch(_){}}
-  (document.getElementById(target)||document.getElementById('dashboard'))?.classList.remove('hidden');
-}
-function patchReferenceDataPageEvents(){
-  if(window.__MM_REFERENCE_DATA_PAGE_EVENTS__)return;
-  document.addEventListener('click',e=>{
-    if(!isMobileNav())return;
-    const close=e.target.closest?.('#mm-reference-data-page .mmrd-close');
-    if(!close)return;
-    e.preventDefault();e.stopImmediatePropagation();closeReferenceDataPage();
-  },true);
-  document.addEventListener('keydown',e=>{
-    if(e.key==='Escape'&&isMobileNav()&&document.getElementById('mm-reference-data-page')?.dataset.open==='1'){
-      e.preventDefault();e.stopImmediatePropagation();closeReferenceDataPage();
-    }
-  },true);
-  window.__MM_REFERENCE_DATA_PAGE_EVENTS__=true;
+function openStandaloneReferenceData(){
+  location.assign(REFERENCE_DATA_URL);
 }
 function patchMobileMoreForReferenceData(){
   if(window.__MM_REFERENCE_DATA_MORE_PATCH__||typeof window.openMobileMenu!=='function')return;
@@ -128,7 +85,7 @@ function patchMobileMoreForReferenceData(){
       button.innerHTML='<span class="icon">▤</span><b>Reference data</b><small>Materials, defects, signals and troubleshooting data.</small>';
       button.addEventListener('click',()=>{
         try{window.closeModal?.()}catch(_){}
-        if(!openReferenceDataPage())document.getElementById('mmrd-open')?.click();
+        openStandaloneReferenceData();
       });
       grid.appendChild(button);
     });
@@ -143,8 +100,8 @@ function dockReferenceDataLauncher(){
   open.style.zIndex='auto';open.style.pointerEvents='auto';
   if(isMobileNav()){
     open.style.display='none';open.style.width='auto';open.style.margin='0';
-    open.dataset.mmDocked='mobile-more-menu-page';
-    patchMobileMoreForReferenceData();patchReferenceDataPageEvents();
+    open.dataset.mmDocked='mobile-more-standalone-page';
+    patchMobileMoreForReferenceData();
     return;
   }
   const sidebar=document.querySelector('.sidebar-foot');
@@ -160,8 +117,9 @@ function dockReferenceDataLauncher(){
 function configureReferenceDataDrawer(){
   const modal=document.querySelector('.mmrd');if(!modal)return;
   modal.classList.add('mm-reference-data-drawer');
-  modal.setAttribute('aria-modal',isMobileNav()?'false':'false');
+  modal.setAttribute('aria-modal','false');
   modal.setAttribute('aria-label','MouldMaster reference data');
+  if(isMobileNav())modal.dataset.open='0';
   if(!document.getElementById('mm-reference-data-drawer-style')){
     const style=document.createElement('style');
     style.id='mm-reference-data-drawer-style';
@@ -171,13 +129,7 @@ function configureReferenceDataDrawer(){
 .mmrd.mm-reference-data-drawer .mmrd-panel{width:min(520px,calc(100vw - 24px))!important;max-height:min(74dvh,800px)!important;height:auto!important;border-radius:16px!important;pointer-events:auto!important;box-shadow:0 18px 52px rgba(0,0,0,.42)!important}
 .mmrd.mm-reference-data-drawer .mmrd-head{flex:0 0 auto!important}
 .mmrd.mm-reference-data-drawer .mmrd-body{min-height:0!important;overscroll-behavior:contain!important}
-@media(max-width:680px){
-  .mmrd.mm-reference-data-drawer{display:none!important}
-  #mm-reference-data-page{padding:0 0 calc(86px + env(safe-area-inset-bottom))!important}
-  #mm-reference-data-page .mmrd-panel{width:100%!important;max-height:none!important;height:auto!important;min-height:0!important;border:1px solid #304866!important;border-radius:16px!important;box-shadow:none!important;background:#0e1a2c!important;overflow:visible!important}
-  #mm-reference-data-page .mmrd-head{padding-top:14px!important;border-radius:16px 16px 0 0}
-  #mm-reference-data-page .mmrd-body{overflow:visible!important;padding-bottom:24px!important}
-}
+@media(max-width:680px){.mmrd.mm-reference-data-drawer,.mmrd.mm-reference-data-drawer[data-open="1"]{display:none!important;pointer-events:none!important}}
 `;
     document.head.appendChild(style);
   }
@@ -197,7 +149,7 @@ async function register(){
   try{const reg=await navigator.serviceWorker.register('./service-worker.js',{scope:'./'});await reg.update()}catch(e){console.warn('[MouldMaster] Offline/update support unavailable:',e)}
 }
 let syncQueued=false;
-function runSync(){syncQueued=false;syncLabels();syncUpdateCard();dockReferenceLauncher();configureReferenceDrawer();dockReferenceDataLauncher();configureReferenceDataDrawer();patchReferenceDataPageEvents();addNZLegacyNote()}
+function runSync(){syncQueued=false;syncLabels();syncUpdateCard();dockReferenceLauncher();configureReferenceDrawer();dockReferenceDataLauncher();configureReferenceDataDrawer();addNZLegacyNote()}
 function scheduleSync(){
   if(syncQueued)return;
   syncQueued=true;
@@ -210,5 +162,5 @@ runSync();
 window.addEventListener('resize',scheduleSync,{passive:true});
 window.addEventListener('load',()=>{runSync();register();setTimeout(scheduleSync,250)});
 document.addEventListener('visibilitychange',()=>{if(!document.hidden)scheduleSync()});
-window.MM_SHELL_RELEASE=RELEASE;window.MM_CONTENT_RELEASE=CONTENT;window.MM_DISPLAY_CONTEXT=displayContext;window.MM_REFERENCE_LAUNCHER_DOCK='sidebar-first-normal-flow';window.MM_REFERENCE_DRAWER_MODE='non-blocking';window.MM_REFERENCE_DATA_LAUNCHER_DOCK='mobile-more-menu-page';window.MM_REFERENCE_DATA_DRAWER_MODE='mobile-page-desktop-drawer';
+window.MM_SHELL_RELEASE=RELEASE;window.MM_CONTENT_RELEASE=CONTENT;window.MM_DISPLAY_CONTEXT=displayContext;window.MM_REFERENCE_LAUNCHER_DOCK='sidebar-first-normal-flow';window.MM_REFERENCE_DRAWER_MODE='non-blocking';window.MM_REFERENCE_DATA_URL=REFERENCE_DATA_URL;window.MM_REFERENCE_DATA_LAUNCHER_DOCK='mobile-more-standalone-page';window.MM_REFERENCE_DATA_DRAWER_MODE='standalone-mobile-page-desktop-drawer';
 })();
