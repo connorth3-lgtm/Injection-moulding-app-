@@ -35,6 +35,7 @@ jobs:
           node --check assessment-deep-dive.js
           node --check assessment-quality-suite.js
           node --check assessment-stable-review-bridge.js
+          node --check assessment-analytics-ui.js
           node --check source-library.js
           node --check reference-data.js
           node --check reference-deep-dive.js
