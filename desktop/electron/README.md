@@ -25,7 +25,7 @@ The first clean Windows validation build is intentionally triggered from the cur
 ## Build prerequisites
 
 - Windows 10/11 for Windows/MSIX packaging
-- Node.js 22 LTS or the Node version pinned by the CI workflow
+- Node.js 22.12.0 or newer for the current CI/MSIX toolchain
 - npm
 
 ## Development
@@ -41,10 +41,14 @@ npm start
 
 ```text
 npm run integrity
+npm run licenses
+npm run sbom
 npm run qa
 ```
 
-The integrity step hashes the exact MouldMaster PWA/training files that will be bundled into the desktop package. The desktop main process verifies those same hashes before opening a window. A missing or altered required file causes a fail-safe startup error rather than a bypass.
+The integrity step hashes the exact MouldMaster PWA/training files that will be bundled into the desktop package. The expected-hash manifest is packaged inside `app.asar`; the application assets remain under `resources/mouldmaster`. The desktop main process reads the trusted packaged manifest and verifies those external assets before opening a window. A missing or altered required file causes a fail-safe startup error rather than a bypass.
+
+For unsigned portable builds this is a strong consistency check, not a substitute for OS-level code signing: an attacker already able to replace the application package itself is outside this check's trust boundary. Microsoft Store signing and MSIX package-integrity enforcement provide the stronger distribution integrity boundary for Store installs.
 
 ## Windows packages
 
@@ -54,24 +58,37 @@ npm run dist:nsis
 npm run dist:msix
 ```
 
-Unsigned local/test packages are not the public trust route. The preferred public Windows distribution is Microsoft Store submission, where the Store identity/publisher values must be replaced with the values assigned in Partner Center and the submitted package is certified/signed through Microsoft's process.
+Portable and NSIS builds use the stable `electron-builder` version pinned in `package.json` and `package-lock.json`. MSIX support is not present in that stable v26 line, so the `dist:msix` command and Store workflow invoke the exact `electron-builder@27.0.0-alpha.6` MSIX beta separately. Do not silently change either packaging version; run release QA and Windows validation when updating them.
+
+Unsigned local/test packages are not the public trust route. The preferred public Windows distribution is Microsoft Store submission, where the Store identity/publisher values must be the exact values assigned in Partner Center and the submitted package must pass Microsoft's certification/signing process.
 
 ## MSIX identity
 
-`package.json` deliberately contains development-safe placeholder identity metadata for the package name/publisher display name. Before Store submission, use the exact identity and publisher values assigned by Microsoft Partner Center. Do not invent a publisher certificate subject.
+Store package identity is intentionally **not** hard-coded in `package.json`. `.github/workflows/microsoft-store-msix.yml` requires three repository variables copied from Microsoft Partner Center before it will build a Store upload:
+
+- `MM_STORE_IDENTITY_NAME` — Identity/Name
+- `MM_STORE_PUBLISHER` — Identity/Publisher (normally a `CN=...` value)
+- `MM_STORE_PUBLISHER_DISPLAY_NAME` — Publisher display name
+
+Do not invent a publisher certificate subject or substitute the display name for the package Publisher value.
+
+## Versioning
+
+`version.json` is the repository release record. `desktop_release` is four-part (for example `2026.08.24.1`). npm `package.json` keeps the first three numeric components as its package version, while `build.buildNumber` and `build.buildVersion` carry the fourth Windows release component. QA rejects drift between these values. Windows artifacts use `${buildVersion}` so package filenames and Windows metadata retain the complete desktop release number.
 
 ## Reproducibility
 
-- Direct build dependencies are pinned to exact versions.
-- `package-lock.json` is generated and committed by the dependency-lock workflow and subsequent builds use `npm ci`.
+- Direct runtime/desktop build dependencies are pinned to exact versions.
+- `package-lock.json` is generated and committed by the dependency-lock workflow and portable/NSIS builds use `npm ci`.
+- The MSIX builder beta is invoked by exact version in the Store workflow; it is build tooling rather than packaged runtime code.
 - GitHub Actions records the source commit used for every package.
 - The generated integrity manifest records SHA-256 for the full bundled learning application.
 
-Byte-for-byte reproducibility of signed Microsoft Store packages is not claimed because signing/timestamps and some packaging metadata are controlled externally. The unsigned source build should nevertheless be traceable to exact source, dependency lock and asset hashes.
+Byte-for-byte reproducibility of signed Microsoft Store packages is not claimed because signing/timestamps and some packaging metadata are controlled externally. Builds should nevertheless remain traceable to exact source, application dependency lock, asset hashes, and the explicitly selected MSIX builder version.
 
 ## Security boundary
 
-The training web application does not receive Node.js APIs. The Electron main process is the only privileged component. It serves only an allow-listed set of SHA-256-verified local assets on `127.0.0.1`, rejects webviews, denies renderer permission requests, and sends external HTTPS links to the system browser.
+The training web application does not receive Node.js APIs. The Electron main process is the only privileged component. It serves only the SHA-256-verified allow list on `127.0.0.1`, accepts only GET/HEAD requests, rejects webviews, denies renderer permission requests, and sends external HTTPS links to the system browser. The integrity manifest used for startup verification is read from inside the packaged application rather than from the external asset directory it verifies.
 
 ## Open-source dependency notice
 
