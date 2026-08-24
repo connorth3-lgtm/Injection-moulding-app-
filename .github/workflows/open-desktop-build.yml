@@ -36,6 +36,7 @@ on:
       - 'qa_release_docs.py'
       - 'qa_reference.py'
       - 'qa_reference_expansion.py'
+      - 'qa_reference_question_500_pass.py'
       - 'qa_research.py'
       - 'qa_100_pass.py'
       - 'qa_question_deep_dive.py'
@@ -139,6 +140,9 @@ jobs:
       - name: Expanded reference library QA
         working-directory: .
         run: python qa_reference_expansion.py
+      - name: 500-pass reference/question cross-audit
+        working-directory: .
+        run: python qa_reference_question_500_pass.py
       - name: Plugin-backed research QA
         working-directory: .
         run: python qa_research.py
@@ -163,4 +167,5 @@ jobs:
             assessment-quality-report.json
             source-freshness-report.json
             research-source-freshness-report.json
+            reference-question-500-pass-report.json
           if-no-files-found: error
