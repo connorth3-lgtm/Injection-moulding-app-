@@ -88,7 +88,7 @@ for(const level of ['Beginner','Intermediate','Advanced']){
  exams[level]={};
  for(const region of ['UK','US','NZ','ALL']){
    const arr=sandbox.window.getExamQuestions(level,region);
-   exams[level][region]=arr.map(q=>({id:q.stableId,mmId:q.mmId,difficulty:q.difficulty,competency:q.competency,concept:q.concept,critical:q.critical,region:q.region||null,options:q.options.length,correct:q.correct}));
+   exams[level][region]=arr.map(q=>({id:q.stableId,mmId:q.mmId,difficulty:q.difficulty,competency:q.competency,competencies:q.competencies||[q.competency],concept:q.concept,critical:q.critical,region:q.region||null,options:q.options,correct:q.correct,stem:q.q}));
  }
 }
 const scenarios=D.scenarios.map(s=>({id:s.mmStableId,title:s.title,choices:s.choices.length,correct:s.correct,feedback:Array.isArray(s.feedback)?s.feedback.length:0,category:s.category,difficulty:s.difficulty,reference:s.reference||null,sourceUrl:s.sourceUrl||null}));
@@ -104,30 +104,47 @@ need(runtime['qa']['analytics']=='device-local only','analytics privacy marker m
 need(runtime['bridge']['stableIdsPrimary'] is True,'stable review bridge not active')
 need(len(runtime.get('history',[]))>=3,'question revision history missing')
 
+live_technical={}
 for level,regions in runtime['exams'].items():
     for region,items in regions.items():
         expected=16 if region=='ALL' else 10
         need(len(items)==expected,f'{level}/{region} exam count must be {expected}')
         ids=[x['id'] for x in items]; need(all(ids),'every live item needs a stable ID'); need(len(ids)==len(set(ids)),f'{level}/{region} has duplicate stable IDs')
         need(all(x['mmId']==x['id'] for x in items),f'{level}/{region} spaced-review ID must equal stable ID')
-        need(all(x['options']==4 and 0<=x['correct']<4 for x in items),f'{level}/{region} option/key integrity')
+        need(all(len(x['options'])==4 and 0<=x['correct']<4 for x in items),f'{level}/{region} option/key integrity')
         tech=[x for x in items if x['id'].startswith('tech:')]; reg=[x for x in items if x['id'].startswith('reg:')]
         need(len(tech)==7,f'{level}/{region} must contain 7 technical items')
         need(len(reg)==(9 if region=='ALL' else 3),f'{level}/{region} regional safety item count')
         need(all(x['critical'] for x in reg),f'{level}/{region} regional items must remain safety-critical')
-        competencies={x['competency'] for x in tech}
-        need(len(competencies)>=5,f'{level}/{region} blueprint covers fewer than 5 technical competencies: {sorted(competencies)}')
+        coverage=set(c for x in tech for c in x.get('competencies',[]) if c)
+        need(len(coverage)>=5,f'{level}/{region} blueprint covers fewer than 5 technical competency groups: {sorted(coverage)}')
         need(all(x['difficulty'] for x in items),f'{level}/{region} difficulty metadata missing')
         concepts=[x['concept'] for x in tech]; need(len(set(concepts))>=5,f'{level}/{region} has excessive repeated technical concepts')
+        for x in tech: live_technical[x['id']]=x
 
 sc=runtime['scenarios']; need(len({x['id'] for x in sc})==40,'scenario stable IDs must be unique'); need(len({x['title'].strip().lower() for x in sc})==40,'scenario titles must be unique')
 need(all(x['choices']==4 and 0<=x['correct']<4 and x['feedback']==4 for x in sc),'scenario choice/key/feedback integrity')
 need(all(x['category'] and x['difficulty'] for x in sc),'scenario category/difficulty metadata missing')
 
-near=runtime['quality'].get('nearDuplicates',[]); leaks=runtime['quality'].get('answerLeakRisks',[])
-severe=[x for x in leaks if x.get('correctLength',0)>max(70,x.get('peerMedian',1)*2.6)]
+near=runtime['quality'].get('nearDuplicates',[]); runtime_leaks=runtime['quality'].get('answerLeakRisks',[])
+cue_flags=[]
+qualifiers=re.compile(r'\b(under|unless|provided|before|rather|while|current|validated|applicable|appropriate|within|depending|evidence)\b',re.I)
+absolutes=re.compile(r'\b(always|never|only|automatically|proves?|guarantees?|must)\b',re.I)
+def technical_density(s):
+    return sum(1 for w in re.findall(r"[A-Za-z][A-Za-z-]+",s) if len(w)>=10)
+for q in live_technical.values():
+    opts=q['options']; c=q['correct']; correct=opts[c]; others=[o for i,o in enumerate(opts) if i!=c]
+    clen=len(correct); med=sorted(len(o) for o in others)[1]
+    if clen>med*1.85 and clen-med>28: cue_flags.append({'id':q['id'],'type':'correct-option-length','correct_length':clen,'peer_median':med})
+    cq=len(qualifiers.findall(correct)); oq=max([len(qualifiers.findall(o)) for o in others] or [0])
+    if cq>=2 and cq>=oq+2: cue_flags.append({'id':q['id'],'type':'qualification-density','correct':cq,'max_distractor':oq})
+    ct=technical_density(correct); ot=max([technical_density(o) for o in others] or [0])
+    if ct>=4 and ct>=ot+3: cue_flags.append({'id':q['id'],'type':'technical-term-density','correct':ct,'max_distractor':ot})
+    abs_wrong=sum(1 for o in others if absolutes.search(o)); abs_correct=bool(absolutes.search(correct))
+    if abs_wrong>=2 and not abs_correct: cue_flags.append({'id':q['id'],'type':'absolute-language-distractors','distractors_flagged':abs_wrong})
+severe=[x for x in cue_flags if x['type']=='correct-option-length' and x.get('correct_length',0)>max(70,x.get('peer_median',1)*2.6)]
 need(not severe,'severe correct-option length cue detected: '+json.dumps(severe[:5]))
-report={'schema':1,'quality_version':'2026.08.24.2','scenario_count':40,'near_duplicate_flags':near,'answer_leak_flags':leaks,'severe_answer_leaks':severe,'exam_blueprint_minimum':'7 technical items covering at least 5 technical competency groups plus regional safety/compliance','stable_review_ids':True,'analytics':'device-local'}
+report={'schema':1,'quality_version':'2026.08.24.2','scenario_count':40,'near_duplicate_flags':near,'runtime_answer_leak_flags':runtime_leaks,'multi_cue_answer_leak_flags':cue_flags,'severe_answer_leaks':severe,'exam_blueprint_minimum':'7 technical items covering at least 5 technical competency groups plus regional safety/compliance','stable_review_ids':True,'analytics':'device-local'}
 REPORT.write_text(json.dumps(report,indent=2)+'\n',encoding='utf-8')
 
 V=json.loads(text('version.json'))
@@ -163,4 +180,4 @@ need("- 'qa_assessment_quality.py'" in ow and 'python qa_assessment_quality.py' 
 need('python qa_assessment_quality.py' in text('.github/workflows/microsoft-store-msix.yml'),'Store workflow missing assessment quality QA')
 need((ROOT/'.github/workflows/source-freshness.yml').exists(),'scheduled source freshness workflow missing')
 
-print(f"MouldMaster assessment quality QA passed (57 exam items; 40 scenarios; stable IDs; device-local analytics; near-duplicate flags={len(near)}; answer-leak flags={len(leaks)})")
+print(f"MouldMaster assessment quality QA passed (57 exam items; 40 scenarios; stable IDs; device-local analytics; near-duplicate flags={len(near)}; answer-cue flags={len(cue_flags)})")
