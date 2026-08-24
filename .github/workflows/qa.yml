@@ -45,6 +45,7 @@ jobs:
           node --check reference-deep-dive.js
           node --check reference-research-extension.js
           node --check reference-20x-extension.js
+          node --check reference-2026-expansion.js
           node --check reference-sources.js
           node --check reference-browser-ui.js
           node --check pwa-shell.js
@@ -79,6 +80,8 @@ jobs:
         run: python qa_research_source_freshness.py
       - name: Reference data and source integrity
         run: python qa_reference.py
+      - name: Expanded reference library integrity
+        run: python qa_reference_expansion.py
       - name: Plugin-backed research integrity
         run: python qa_research.py
       - name: Open desktop release integrity
