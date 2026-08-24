@@ -11,6 +11,7 @@ jobs:
     runs-on: windows-latest
     env:
       MM_STORE_IDENTITY_NAME: ${{ vars.MM_STORE_IDENTITY_NAME }}
+      MM_STORE_PUBLISHER: ${{ vars.MM_STORE_PUBLISHER }}
       MM_STORE_PUBLISHER_DISPLAY_NAME: ${{ vars.MM_STORE_PUBLISHER_DISPLAY_NAME }}
     steps:
       - uses: actions/checkout@v4
@@ -18,17 +19,23 @@ jobs:
         shell: pwsh
         run: |
           if ([string]::IsNullOrWhiteSpace($env:MM_STORE_IDENTITY_NAME)) {
-            Write-Error 'Repository variable MM_STORE_IDENTITY_NAME is required. Copy it exactly from Microsoft Partner Center after reserving the app.'
+            Write-Error 'Repository variable MM_STORE_IDENTITY_NAME is required. Copy Identity/Name exactly from Microsoft Partner Center.'
+          }
+          if ([string]::IsNullOrWhiteSpace($env:MM_STORE_PUBLISHER)) {
+            Write-Error 'Repository variable MM_STORE_PUBLISHER is required. Copy Identity/Publisher exactly from Microsoft Partner Center.'
           }
           if ([string]::IsNullOrWhiteSpace($env:MM_STORE_PUBLISHER_DISPLAY_NAME)) {
-            Write-Error 'Repository variable MM_STORE_PUBLISHER_DISPLAY_NAME is required. Use the publisher display name associated with the Partner Center account.'
+            Write-Error 'Repository variable MM_STORE_PUBLISHER_DISPLAY_NAME is required. Copy PublisherDisplayName exactly from Microsoft Partner Center.'
           }
           if ($env:MM_STORE_IDENTITY_NAME -notmatch '^[A-Za-z0-9.-]{3,50}$') {
             Write-Error 'MM_STORE_IDENTITY_NAME does not satisfy the MSIX identity-name format.'
           }
+          if ($env:MM_STORE_PUBLISHER -notmatch '^CN=.+') {
+            Write-Error 'MM_STORE_PUBLISHER must be the Partner Center Identity/Publisher value (normally beginning with CN=).'
+          }
       - uses: actions/setup-node@v4
         with:
-          node-version: '22'
+          node-version: '22.12.0'
           cache: 'npm'
           cache-dependency-path: desktop/electron/package-lock.json
       - name: Install exact locked dependencies
@@ -49,9 +56,13 @@ jobs:
         shell: pwsh
         working-directory: desktop/electron
         run: |
-          npx electron-builder --win msix --x64 --arm64 `
+          npx --yes electron-builder@27.0.0-alpha.6 --win msix --x64 --arm64 `
+            --config.msix.applicationId='MouldMasterAcademy' `
             --config.msix.identityName="$env:MM_STORE_IDENTITY_NAME" `
+            --config.msix.publisher="$env:MM_STORE_PUBLISHER" `
             --config.msix.publisherDisplayName="$env:MM_STORE_PUBLISHER_DISPLAY_NAME" `
+            --config.msix.displayName='MouldMaster Academy' `
+            --config.msix.minVersion='10.0.19041.0' `
             --config.msix.createMsixbundle=true `
             --config.msix.createMsixupload=true `
             --config.msix.enforcePackageIntegrity=true `
