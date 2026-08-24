@@ -8,11 +8,12 @@
   "main": "src/main.cjs",
   "scripts": {
     "integrity": "node scripts/generate-integrity.cjs",
+    "licenses": "node scripts/generate-licenses.cjs",
     "qa": "node scripts/qa.cjs",
-    "start": "npm run integrity && npm run qa && electron .",
-    "dist:portable": "npm run integrity && npm run qa && electron-builder --win portable",
-    "dist:nsis": "npm run integrity && npm run qa && electron-builder --win nsis",
-    "dist:msix": "npm run integrity && npm run qa && electron-builder --win msix"
+    "start": "npm run integrity && npm run licenses && npm run qa && electron .",
+    "dist:portable": "npm run integrity && npm run licenses && npm run qa && electron-builder --win portable",
+    "dist:nsis": "npm run integrity && npm run licenses && npm run qa && electron-builder --win nsis",
+    "dist:msix": "npm run integrity && npm run licenses && npm run qa && electron-builder --win msix"
   },
   "devDependencies": {
     "electron": "43.4.1",
@@ -28,6 +29,7 @@
     "files": [
       "src/**/*",
       "generated/integrity.json",
+      "generated/dependency-licenses.json",
       "package.json",
       "README.md"
     ],
@@ -49,7 +51,8 @@
       {"from": "../../support.html", "to": "mouldmaster/support.html"},
       {"from": "../../LICENSE", "to": "LICENSE"},
       {"from": "../../THIRD_PARTY_NOTICES.md", "to": "THIRD_PARTY_NOTICES.md"},
-      {"from": "generated/integrity.json", "to": "mouldmaster/integrity.json"}
+      {"from": "generated/integrity.json", "to": "mouldmaster/integrity.json"},
+      {"from": "generated/dependency-licenses.json", "to": "dependency-licenses.json"}
     ],
     "win": {
       "icon": "../../mouldmaster-512.png",
