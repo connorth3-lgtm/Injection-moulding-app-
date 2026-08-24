@@ -4,18 +4,18 @@
 
 const EXTRA={
  tooling:[
-  ['Autodesk Moldflow — Gate location','Background on gate location and filling-pattern effects.','https://help.autodesk.com/view/MFIA/2024/ENU/?guid=GUID-1B2EE66F-2CE9-4D8B-90F2-574CB1323C95'],
-  ['Autodesk Moldflow — Venting','Background on air traps, gas escape and venting during filling.','https://help.autodesk.com/view/MFIA/2024/ENU/?guid=GUID-0DFCC678-6C19-4DA5-B87D-ED3BECE9FD45'],
-  ['Autodesk Moldflow — Weld lines','Flow-front meeting and weld-line formation background.','https://help.autodesk.com/view/MFIA/2024/ENU/?guid=GUID-D3A8237E-C17D-407C-A0A6-825A8DFA382E'],
-  ['Autodesk Moldflow — Warpage','Simulation background on differential shrinkage, orientation and warpage.','https://help.autodesk.com/view/MFIA/2024/ENU/?guid=GUID-9E539E26-4147-45C4-A465-A6F54C7406B2'],
-  ['Autodesk Moldflow — Cooling system','Cooling-channel and mould-temperature analysis background.','https://help.autodesk.com/view/MFIA/2024/ENU/?guid=GUID-78801D59-60CE-4B82-A3D6-66FB2D15C54A']
+  ['Autodesk Moldflow — Gate location','Gate-location analysis and the effect of injection location on filling and defects.','https://help.autodesk.com/cloudhelp/2026/ENU/MoldflowAdviser-CLC-Tutorials/files/Introductory-tutorials/Fill-Pack-analysis-tutorial/GUID-AA3B3176-BE1B-4E55-AF16-46FE7E803C75.html'],
+  ['Autodesk Moldflow — Venting analysis','Air-pressure, air-trap and vent-location analysis during cavity filling.','https://help.autodesk.com/cloudhelp/2024/ENU/MoldflowInsight-CLC-Analyses/files/analysis-sequences/MFLO-VENTING-ANALYSIS-CPT.html'],
+  ['Autodesk Moldflow — Weld and meld lines','Flow-front meeting, weld/meld-line formation and interpretation.','https://help.autodesk.com/cloudhelp/2025/ENU/MoldflowInsight-CLC-Results/files/Fill-or-flow-results/MoldflowInsight_CLC_Results_Fill_or_flow_results_Weld_and_meld_lines_result_html.html'],
+  ['Autodesk Moldflow — Differential-shrinkage deflection','Warpage contribution from non-uniform shrinkage and related design/process factors.','https://help.autodesk.com/cloudhelp/2024/ENU/MoldflowAdviser-CLC-Results/files/Warp-analysis-results/MoldflowAdviser_CLC_Results_Warp_analysis_results_Deflection_differential_html.html'],
+  ['Autodesk Moldflow — Cooling-circuit efficiency','Cooling-channel heat-removal efficiency and factors affecting thermal performance.','https://help.autodesk.com/cloudhelp/2024/ENU/MoldflowInsight-CLC-Results/files/Cool-analysis-results/MoldflowInsight_CLC_Results_Cool_analysis_results_Circuit_heat_removal_efficiency_html.html']
  ],
  machine:[
   ['ISO 20430:2020','Safety requirements for injection moulding machines and machine/tool interfaces.','https://www.iso.org/standard/68000.html'],
   ['HSE PPIS4(rev1)','Safety at injection moulding machines, including guarding and access.','https://www.hse.gov.uk/pubns/ppis4.pdf'],
   ['OSHA Injection Molding eTool','Machine components, hazards, guarding and safe operation context.','https://www.osha.gov/etools/machine-guarding/plastics-machinery/horizontal-injection-molding-machines'],
-  ['Kistler — Cavity pressure monitoring','Technical background on cavity-pressure measurement and process monitoring.','https://www.kistler.com/INT/en/cavity-pressure-sensors-for-injection-molding/C00000006'],
-  ['RJG — Scientific molding resources','Technical learning resources on process development, cavity pressure and machine-independent thinking.','https://rjginc.com/resources/']
+  ['Kistler — Cavity pressure','Technical background on cavity-pressure measurement and process monitoring.','https://www.kistler.com/en/cavity-pressure/cavity-pressure/C00000099'],
+  ['RJG — Injection molding resources','Technical learning resources on scientific moulding, cavity pressure and process development.','https://rjginc.com/resource-center/']
  ],
  quality:[
   ['NIST Engineering Statistics Handbook','SPC, capability, measurement and DOE reference.','https://www.itl.nist.gov/div898/handbook/'],
