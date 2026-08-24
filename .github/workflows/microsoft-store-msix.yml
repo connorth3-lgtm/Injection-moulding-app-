@@ -34,11 +34,12 @@ jobs:
       - name: Install exact locked dependencies
         working-directory: desktop/electron
         run: npm ci --no-audit --fund=false
-      - name: Generate verified application manifests
+      - name: Generate verified application evidence
         working-directory: desktop/electron
         run: |
           npm run integrity
           npm run licenses
+          npm run sbom
           npm run qa
       - name: Generate MSIX artwork from open MouldMaster icon
         shell: pwsh
@@ -71,4 +72,5 @@ jobs:
             desktop/electron/dist/SOURCE_COMMIT.txt
             desktop/electron/generated/integrity.json
             desktop/electron/generated/dependency-licenses.json
+            desktop/electron/generated/sbom.cdx.json
           if-no-files-found: error
