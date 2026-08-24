@@ -9,11 +9,12 @@
   "scripts": {
     "integrity": "node scripts/generate-integrity.cjs",
     "licenses": "node scripts/generate-licenses.cjs",
+    "sbom": "node scripts/generate-sbom.cjs",
     "qa": "node scripts/qa.cjs",
-    "start": "npm run integrity && npm run licenses && npm run qa && electron .",
-    "dist:portable": "npm run integrity && npm run licenses && npm run qa && electron-builder --win portable",
-    "dist:nsis": "npm run integrity && npm run licenses && npm run qa && electron-builder --win nsis",
-    "dist:msix": "npm run integrity && npm run licenses && npm run qa && electron-builder --win msix"
+    "start": "npm run integrity && npm run licenses && npm run sbom && npm run qa && electron .",
+    "dist:portable": "npm run integrity && npm run licenses && npm run sbom && npm run qa && electron-builder --win portable",
+    "dist:nsis": "npm run integrity && npm run licenses && npm run sbom && npm run qa && electron-builder --win nsis",
+    "dist:msix": "npm run integrity && npm run licenses && npm run sbom && npm run qa && electron-builder --win msix"
   },
   "devDependencies": {
     "electron": "43.4.1",
@@ -30,8 +31,10 @@
       "src/**/*",
       "generated/integrity.json",
       "generated/dependency-licenses.json",
+      "generated/sbom.cdx.json",
       "package.json",
-      "README.md"
+      "README.md",
+      "THREAT_MODEL.md"
     ],
     "extraResources": [
       {"from": "../../index.html", "to": "mouldmaster/index.html"},
@@ -52,7 +55,8 @@
       {"from": "../../LICENSE", "to": "LICENSE"},
       {"from": "../../THIRD_PARTY_NOTICES.md", "to": "THIRD_PARTY_NOTICES.md"},
       {"from": "generated/integrity.json", "to": "mouldmaster/integrity.json"},
-      {"from": "generated/dependency-licenses.json", "to": "dependency-licenses.json"}
+      {"from": "generated/dependency-licenses.json", "to": "dependency-licenses.json"},
+      {"from": "generated/sbom.cdx.json", "to": "sbom.cdx.json"}
     ],
     "win": {
       "icon": "../../mouldmaster-512.png",
