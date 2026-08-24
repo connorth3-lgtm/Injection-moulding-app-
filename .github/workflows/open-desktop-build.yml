@@ -52,6 +52,9 @@ jobs:
       - name: Generate asset integrity manifest
         working-directory: desktop/electron
         run: npm run integrity
+      - name: Generate dependency licence inventory
+        working-directory: desktop/electron
+        run: npm run licenses
       - name: Desktop security QA
         working-directory: desktop/electron
         run: npm run qa
@@ -71,4 +74,5 @@ jobs:
             desktop/electron/dist/SHA256SUMS.txt
             desktop/electron/dist/SOURCE_COMMIT.txt
             desktop/electron/generated/integrity.json
+            desktop/electron/generated/dependency-licenses.json
           if-no-files-found: error
