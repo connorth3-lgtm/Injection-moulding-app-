@@ -1,13 +1,14 @@
-/* MouldMaster PWA shell controller — 2026.08.24.2 */
+/* MouldMaster PWA shell controller — 2026.08.24.3 */
 (function(){
 'use strict';
 const RELEASE='2026.08.24.1';
 const CONTENT='2026.08.24.2';
+function setText(el,value){if(el&&el.textContent!==value)el.textContent=value}
+function setAttr(el,name,value){if(el&&el.getAttribute(name)!==value)el.setAttribute(name,value)}
 function syncLabels(){
-  document.querySelectorAll('[data-mm-android-pwa] .tiny.muted').forEach(p=>{
-    if(/Android release/i.test(p.textContent||''))p.textContent=`Android release ${RELEASE}. Training content ${CONTENT}. Learner progress, notes, scores and certificates remain in this browser profile during app updates.`;
-  });
-  const meta=document.querySelector('meta[name="mm-shell-release"]');if(meta)meta.content=RELEASE;
+  const copy=`Android release ${RELEASE}. Training content ${CONTENT}. Learner progress, notes, scores and certificates remain in this browser profile during app updates.`;
+  document.querySelectorAll('[data-mm-android-pwa] .tiny.muted').forEach(p=>{if(/Android release/i.test(p.textContent||''))setText(p,copy)});
+  const meta=document.querySelector('meta[name="mm-shell-release"]');if(meta)setAttr(meta,'content',RELEASE);
 }
 function addNZLegacyNote(){
   const host=document.getElementById('standards');if(!host||host.querySelector('[data-mm-nz-legacy-note]')||[...host.querySelectorAll('.legal-note')].some(x=>/NZ source-status (?:note|clarification)/i.test(x.textContent||'')))return;
@@ -22,10 +23,17 @@ async function register(){
   if(!('serviceWorker' in navigator))return;
   try{const reg=await navigator.serviceWorker.register('./service-worker.js',{scope:'./'});await reg.update()}catch(e){console.warn('[MouldMaster] Offline/update support unavailable:',e)}
 }
+let syncQueued=false;
+function runSync(){syncQueued=false;syncLabels();addNZLegacyNote()}
+function scheduleSync(){
+  if(syncQueued)return;
+  syncQueued=true;
+  (window.requestAnimationFrame||function(fn){return setTimeout(fn,0)})(runSync);
+}
 patchStandards();
-const observer=new MutationObserver(()=>{syncLabels();addNZLegacyNote()});
+const observer=new MutationObserver(scheduleSync);
 if(document.documentElement)observer.observe(document.documentElement,{subtree:true,childList:true});
-window.addEventListener('load',()=>{syncLabels();addNZLegacyNote();register();setTimeout(syncLabels,250)});
-document.addEventListener('visibilitychange',()=>{if(!document.hidden){syncLabels();addNZLegacyNote()}});
+window.addEventListener('load',()=>{runSync();register();setTimeout(scheduleSync,250)});
+document.addEventListener('visibilitychange',()=>{if(!document.hidden)scheduleSync()});
 window.MM_SHELL_RELEASE=RELEASE;window.MM_CONTENT_RELEASE=CONTENT;
 })();
