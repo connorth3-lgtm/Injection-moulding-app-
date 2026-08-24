@@ -15,6 +15,7 @@ const CORE=[
   './assessment-100-pass.js',
   './assessment-deep-dive.js',
   './assessment-quality-suite.js',
+  './assessment-stable-review-bridge.js',
   './source-library.js',
   './reference-data.js',
   './reference-deep-dive.js',
