@@ -74,10 +74,12 @@ for marker in [
 for marker in ["re-signs the package with a Microsoft certificate", "Windows App Certification Kit", "must never be guessed"]:
     require(marker in submission, f"Store submission trust/identity safeguard missing: {marker}")
 
-# Avoid unsupported marketing counts and premature external approval claims.
+# Avoid unsupported marketing counts and premature Store/NZQA approval claims.
+# IACET claims are owned by qa_iacet_readiness.py so this checker does not use
+# proximity heuristics that can misclassify legitimate IACET explanatory text.
 require("120 structured injection moulding lessons" not in listing, "unverified exact lesson-count marketing claim returned")
 for body, name in [(listing, "listing"), (submission, "submission"), (roadmap, "roadmap"), (assets, "assets")]:
-    for claim in [r"\bMicrosoft certified\b", r"\bMicrosoft Store certified\b", r"\bNZQA approved\b", r"\bIACET CEUs?\b"]:
+    for claim in [r"\bMicrosoft certified\b", r"\bMicrosoft Store certified\b", r"\bNZQA approved\b"]:
         matches = list(re.finditer(claim, body, flags=re.I))
         for match in matches:
             context = body[max(0, match.start() - 400): min(len(body), match.end() + 400)].lower()
