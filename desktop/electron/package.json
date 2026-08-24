@@ -60,6 +60,7 @@
       {"from": "../../assessment-quality-suite.js", "to": "mouldmaster/assessment-quality-suite.js"},
       {"from": "../../assessment-stable-review-bridge.js", "to": "mouldmaster/assessment-stable-review-bridge.js"},
       {"from": "../../assessment-analytics-ui.js", "to": "mouldmaster/assessment-analytics-ui.js"},
+      {"from": "../../assessment-final-hardening.js", "to": "mouldmaster/assessment-final-hardening.js"},
       {"from": "../../pwa-shell.js", "to": "mouldmaster/pwa-shell.js"},
       {"from": "../../source-library.js", "to": "mouldmaster/source-library.js"},
       {"from": "../../reference-data.js", "to": "mouldmaster/reference-data.js"},
