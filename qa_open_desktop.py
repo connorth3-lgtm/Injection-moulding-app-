@@ -50,7 +50,7 @@ for marker in [
     "setPermissionCheckHandler",
     "will-attach-webview",
     "setWindowOpenHandler",
-    "server.listen(0, '127.0.0.1')",
+    "server.listen(0, '127.0.0.1'",
     "SHA-256 verification failed",
 ]:
     require(marker in main, f"desktop security invariant missing: {marker}")
