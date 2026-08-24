@@ -6,6 +6,7 @@ const DESKTOP=path.resolve(__dirname,'..');
 const MAIN=fs.readFileSync(path.join(DESKTOP,'src','main.cjs'),'utf8');
 const PKG=JSON.parse(fs.readFileSync(path.join(DESKTOP,'package.json'),'utf8'));
 const LOCK=JSON.parse(fs.readFileSync(path.join(DESKTOP,'package-lock.json'),'utf8'));
+const VERSION=JSON.parse(fs.readFileSync(path.join(ROOT,'version.json'),'utf8'));
 const INTEGRITY=JSON.parse(fs.readFileSync(path.join(DESKTOP,'generated','integrity.json'),'utf8'));
 function need(cond,msg){if(!cond)throw new Error(msg)}
 need(PKG.license==='Apache-2.0','desktop package must remain Apache-2.0');
@@ -14,8 +15,16 @@ need(/^\d+\.\d+\.\d+$/.test(PKG.devDependencies['electron-builder']),'electron-b
 need(LOCK.lockfileVersion>=3,'npm dependency lock must be lockfileVersion 3 or newer');
 need(LOCK.packages?.['']?.devDependencies?.electron===PKG.devDependencies.electron,'locked Electron version does not match package.json');
 need(LOCK.packages?.['']?.devDependencies?.['electron-builder']===PKG.devDependencies['electron-builder'],'locked electron-builder version does not match package.json');
+const releaseParts=String(VERSION.desktop_release||'').split('.');
+need(releaseParts.length===4&&releaseParts.every(x=>/^\d+$/.test(x)),'desktop_release must be a four-part numeric version');
+const normalized=releaseParts.map(x=>String(Number(x)));
+need(PKG.version===normalized.slice(0,3).join('.'),'desktop package version does not match desktop_release');
+need(String(PKG.build?.buildNumber)===normalized[3],'desktop buildNumber does not match desktop_release');
+need(PKG.build?.buildVersion===normalized.join('.'),'desktop buildVersion does not match desktop_release');
+need(String(PKG.build?.win?.artifactName||'').includes('${buildVersion}'),'Windows artifact name must include buildVersion');
 for(const marker of ['nodeIntegration: false','contextIsolation: true','sandbox: true','webSecurity: true','allowRunningInsecureContent: false','setPermissionRequestHandler','setPermissionCheckHandler','will-attach-webview','setWindowOpenHandler','server.listen(0, \'127.0.0.1\'','SHA-256 verification failed'])need(MAIN.includes(marker),`desktop security marker missing: ${marker}`);
 need(INTEGRITY.schema===1,'integrity schema mismatch');
+need(INTEGRITY.release===VERSION.desktop_release,'integrity release must match desktop_release');
 need(Object.keys(INTEGRITY.files||{}).length>=15,'integrity manifest is incomplete');
 for(const [name,hash] of Object.entries(INTEGRITY.files)){need(/^[a-f0-9]{64}$/.test(hash),`bad SHA-256 for ${name}`);need(fs.existsSync(path.join(ROOT,name)),`integrity asset missing: ${name}`)}
 for(const req of ['generated/dependency-licenses.json','generated/sbom.cdx.json','THREAT_MODEL.md'])need(fs.existsSync(path.join(DESKTOP,req)),`desktop transparency artifact missing: ${req}`);
