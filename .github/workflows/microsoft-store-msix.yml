@@ -55,6 +55,9 @@ jobs:
       - name: 100-pass data and assessment audit
         working-directory: .
         run: python qa_100_pass.py
+      - name: Deep question and answer QA
+        working-directory: .
+        run: python qa_question_deep_dive.py
       - name: Validate reference data and sources
         working-directory: .
         run: python qa_reference.py
