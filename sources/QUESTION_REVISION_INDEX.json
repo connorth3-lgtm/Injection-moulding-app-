@@ -1,0 +1,132 @@
+{
+  "schema": 1,
+  "bank_version": "2026.08.24.2",
+  "stable_id_count": 57,
+  "policy": "Every ID in all_stable_ids has revision 1 dated 2026-08-20 unless an additional revision is listed in revision2. Stable IDs persist across content releases; a materially different assessed competency receives a new stable ID. Answer-key changes require a documented reason and source/reviewer check.",
+  "baseline_revision": {
+    "revision": 1,
+    "date": "2026-08-20",
+    "change": "Safety-first audited assessment baseline."
+  },
+  "all_stable_ids": [
+    "tech:Beginner:0",
+    "tech:Beginner:1",
+    "tech:Beginner:2",
+    "tech:Beginner:3",
+    "tech:Beginner:4",
+    "tech:Beginner:5",
+    "tech:Beginner:6",
+    "tech:Beginner:7",
+    "tech:Beginner:8",
+    "tech:Beginner:9",
+    "tech:Intermediate:0",
+    "tech:Intermediate:1",
+    "tech:Intermediate:2",
+    "tech:Intermediate:3",
+    "tech:Intermediate:4",
+    "tech:Intermediate:5",
+    "tech:Intermediate:6",
+    "tech:Intermediate:7",
+    "tech:Intermediate:8",
+    "tech:Intermediate:9",
+    "tech:Advanced:0",
+    "tech:Advanced:1",
+    "tech:Advanced:2",
+    "tech:Advanced:3",
+    "tech:Advanced:4",
+    "tech:Advanced:5",
+    "tech:Advanced:6",
+    "tech:Advanced:7",
+    "tech:Advanced:8",
+    "tech:Advanced:9",
+    "reg:UK:Beginner:0",
+    "reg:UK:Beginner:1",
+    "reg:UK:Beginner:2",
+    "reg:UK:Intermediate:0",
+    "reg:UK:Intermediate:1",
+    "reg:UK:Intermediate:2",
+    "reg:UK:Advanced:0",
+    "reg:UK:Advanced:1",
+    "reg:UK:Advanced:2",
+    "reg:US:Beginner:0",
+    "reg:US:Beginner:1",
+    "reg:US:Beginner:2",
+    "reg:US:Intermediate:0",
+    "reg:US:Intermediate:1",
+    "reg:US:Intermediate:2",
+    "reg:US:Advanced:0",
+    "reg:US:Advanced:1",
+    "reg:US:Advanced:2",
+    "reg:NZ:Beginner:0",
+    "reg:NZ:Beginner:1",
+    "reg:NZ:Beginner:2",
+    "reg:NZ:Intermediate:0",
+    "reg:NZ:Intermediate:1",
+    "reg:NZ:Intermediate:2",
+    "reg:NZ:Advanced:0",
+    "reg:NZ:Advanced:1",
+    "reg:NZ:Advanced:2"
+  ],
+  "revision2": {
+    "tech:Beginner:3": {
+      "revision": 2,
+      "date": "2026-08-24",
+      "change": "Deepened barrel-setpoint versus measured melt-temperature reasoning and made competing thermal explanations more realistic."
+    },
+    "tech:Beginner:4": {
+      "revision": 2,
+      "date": "2026-08-24",
+      "change": "Reframed drying around grade-specific moisture evidence rather than generic drying recipes."
+    },
+    "tech:Beginner:9": {
+      "revision": 2,
+      "date": "2026-08-24",
+      "change": "Changed from simple troubleshooting recognition to comparison against known-good evidence."
+    },
+    "tech:Intermediate:0": {
+      "revision": 2,
+      "date": "2026-08-24",
+      "change": "Clarified that a part-mass plateau is supporting gate-seal evidence for the tested condition, not universal proof."
+    },
+    "tech:Intermediate:5": {
+      "revision": 2,
+      "date": "2026-08-24",
+      "change": "Strengthened shot-delivery diagnosis before packing compensation."
+    },
+    "tech:Intermediate:7": {
+      "revision": 2,
+      "date": "2026-08-24",
+      "change": "Expanded cooling acceptance to include ejection condition, conditioned dimensions, warpage and product requirements."
+    },
+    "tech:Intermediate:9": {
+      "revision": 2,
+      "date": "2026-08-24",
+      "change": "Clarified the legitimate use and limitations of one-factor-at-a-time testing."
+    },
+    "tech:Advanced:1": {
+      "revision": 2,
+      "date": "2026-08-24",
+      "change": "Added pooled-versus-cavity-specific capability and rational-subgroup reasoning."
+    },
+    "tech:Advanced:3": {
+      "revision": 2,
+      "date": "2026-08-24",
+      "change": "Replaced definition recall with a real DOE time-confounding case."
+    },
+    "tech:Advanced:4": {
+      "revision": 2,
+      "date": "2026-08-24",
+      "change": "Distinguished upstream machine/nozzle pressure from local cavity-pressure history."
+    },
+    "tech:Advanced:7": {
+      "revision": 2,
+      "date": "2026-08-24",
+      "change": "Reframed machine transfer around reproduced physical process outputs and receiving-machine capability."
+    },
+    "tech:Advanced:8": {
+      "revision": 2,
+      "date": "2026-08-24",
+      "change": "Added research-backed distinction between MFR and moulding rheology/mouldability."
+    }
+  }
+}
