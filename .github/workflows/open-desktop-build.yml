@@ -31,12 +31,14 @@ on:
       - 'reference-research-extension.js'
       - 'reference-20x-extension.js'
       - 'reference-2026-expansion.js'
+      - 'reference-assessment-links.js'
       - 'reference-sources.js'
       - 'reference-browser-ui.js'
       - 'qa_release_docs.py'
       - 'qa_reference.py'
       - 'qa_reference_expansion.py'
       - 'qa_reference_question_500_pass.py'
+      - 'qa_reference_question_500_pass_aligned.py'
       - 'qa_research.py'
       - 'qa_100_pass.py'
       - 'qa_question_deep_dive.py'
@@ -142,7 +144,7 @@ jobs:
         run: python qa_reference_expansion.py
       - name: 500-pass reference/question cross-audit
         working-directory: .
-        run: python qa_reference_question_500_pass.py
+        run: python qa_reference_question_500_pass_aligned.py
       - name: Plugin-backed research QA
         working-directory: .
         run: python qa_research.py
