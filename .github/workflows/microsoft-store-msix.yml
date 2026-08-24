@@ -60,7 +60,7 @@ jobs:
         shell: pwsh
         working-directory: desktop/electron
         run: |
-          npx --yes electron-builder@27.0.0-alpha.6 --win msix --x64 --arm64 `
+          npx --yes electron-builder@27.0.0-alpha.7 --win msix --x64 --arm64 `
             --config.msix.applicationId='MouldMasterAcademy' `
             --config.msix.identityName="$env:MM_STORE_IDENTITY_NAME" `
             --config.msix.publisher="$env:MM_STORE_PUBLISHER" `
