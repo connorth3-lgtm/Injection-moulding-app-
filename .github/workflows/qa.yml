@@ -30,6 +30,7 @@ jobs:
           node --check training-qa-fix.js
           node --check source-library.js
           node --check reference-data.js
+          node --check reference-sources.js
           node --check pwa-shell.js
           node --check desktop/electron/src/main.cjs
           node --check desktop/electron/scripts/generate-integrity.cjs
@@ -38,5 +39,7 @@ jobs:
           node --check desktop/electron/scripts/qa.cjs
       - name: Release and assessment integrity
         run: python qa_release.py
+      - name: Reference data and source integrity
+        run: python qa_reference.py
       - name: Open desktop release integrity
         run: python qa_open_desktop.py
