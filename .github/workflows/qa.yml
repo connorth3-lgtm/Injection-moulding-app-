@@ -82,3 +82,5 @@ jobs:
         run: python qa_open_desktop.py
       - name: Microsoft Store submission integrity
         run: python qa_store_submission.py
+      - name: NZQA 2026 readiness integrity
+        run: python qa_nzqa_readiness.py
