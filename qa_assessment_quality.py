@@ -8,7 +8,7 @@ def text(p): return (ROOT/p).read_text(encoding='utf-8')
 def need(ok,msg):
     if not ok: raise AssertionError(msg)
 
-for p in ['assessment-quality-suite.js','assessment-stable-review-bridge.js','assessment-analytics-ui.js','assessment-deep-dive.js','training-upgrade.js','MouldMaster_Core_App.html','version.json','sources/QUESTION_BANK_CHANGELOG.md','sources/SOURCE_FRESHNESS.json','qa_source_freshness.py']:
+for p in ['assessment-quality-suite.js','assessment-stable-review-bridge.js','assessment-analytics-ui.js','assessment-deep-dive.js','assessment-answer-cue-fix.js','training-upgrade.js','MouldMaster_Core_App.html','version.json','sources/QUESTION_BANK_CHANGELOG.md','sources/SOURCE_FRESHNESS.json','qa_source_freshness.py']:
     need((ROOT/p).exists(),f'missing assessment quality file: {p}')
 
 suite=text('assessment-quality-suite.js')
@@ -30,6 +30,12 @@ need(suite.count("['")>=24,'scenario expansion unexpectedly small')
 need('http://' not in suite,'assessment quality source links must use HTTPS')
 p=subprocess.run(['node','--check',str(ROOT/'assessment-quality-suite.js')],capture_output=True,text=True)
 need(p.returncode==0,f'assessment-quality-suite.js syntax error: {p.stderr}')
+
+cue_fix=text('assessment-answer-cue-fix.js')
+need("D?.exams?.Advanced?.[7]" in cue_fix and "row[2]!==2" in cue_fix,'advanced answer-cue correction guard missing')
+need('Match validated fill, pressure/transfer, thermal and part-quality outputs' in cue_fix,'advanced answer-cue correction text missing')
+p=subprocess.run(['node','--check',str(ROOT/'assessment-answer-cue-fix.js')],capture_output=True,text=True)
+need(p.returncode==0,f'assessment-answer-cue-fix.js syntax error: {p.stderr}')
 
 bridge=text('assessment-stable-review-bridge.js')
 for marker in ["q.mmId=q.stableId","stableIdsPrimary:true","legacyRecordsMigratedBy:'assessment-quality-suite.js'"]:
@@ -80,6 +86,7 @@ const sandbox={window:{MM_DATA:D},document,localStorage,performance:{now:()=>100
 sandbox.window.window=sandbox.window;sandbox.window.localStorage=localStorage;sandbox.window.document=document;sandbox.window.URL=sandbox.URL;
 vm.createContext(sandbox);
 vm.runInContext(fs.readFileSync(%s,'utf8'),sandbox,{filename:'assessment-deep-dive.js'});
+vm.runInContext(fs.readFileSync(%s,'utf8'),sandbox,{filename:'assessment-answer-cue-fix.js'});
 vm.runInContext(fs.readFileSync(%s,'utf8'),sandbox,{filename:'assessment-quality-suite.js'});
 vm.runInContext(fs.readFileSync(%s,'utf8'),sandbox,{filename:'assessment-stable-review-bridge.js'});
 const Q=sandbox.window.MM_ASSESSMENT_QUALITY;
@@ -93,7 +100,7 @@ for(const level of ['Beginner','Intermediate','Advanced']){
 }
 const scenarios=D.scenarios.map(s=>({id:s.mmStableId,title:s.title,choices:s.choices.length,correct:s.correct,feedback:Array.isArray(s.feedback)?s.feedback.length:0,category:s.category,difficulty:s.difficulty,reference:s.reference||null,sourceUrl:s.sourceUrl||null}));
 process.stdout.write(JSON.stringify({scenarioCount:D.scenarios.length,exams,quality:Q,scenarios,qa:D.assessmentQA.qualitySuite,history:D.assessmentQA.questionRevisionHistory,bridge:sandbox.window.MM_STABLE_REVIEW_BRIDGE}));
-'''%(json.dumps(base),json.dumps(str(ROOT/'assessment-deep-dive.js')),json.dumps(str(ROOT/'assessment-quality-suite.js')),json.dumps(str(ROOT/'assessment-stable-review-bridge.js')))
+'''%(json.dumps(base),json.dumps(str(ROOT/'assessment-deep-dive.js')),json.dumps(str(ROOT/'assessment-answer-cue-fix.js')),json.dumps(str(ROOT/'assessment-quality-suite.js')),json.dumps(str(ROOT/'assessment-stable-review-bridge.js')))
 with tempfile.NamedTemporaryFile('w',suffix='.js',delete=False,encoding='utf-8') as handle:
     handle.write(node)
     node_path=Path(handle.name)
@@ -163,20 +170,20 @@ for marker in ['2026.08.24.2','stable question IDs','device-local question analy
     need(marker in log,f'question-bank changelog marker missing: {marker}')
 
 idx=text('index.html')
-for asset in ['assessment-quality-suite.js','assessment-stable-review-bridge.js','assessment-analytics-ui.js']:
+for asset in ['assessment-answer-cue-fix.js','assessment-quality-suite.js','assessment-stable-review-bridge.js','assessment-analytics-ui.js']:
     need(f'<script src="./{asset}">' in idx,f'{asset} not loaded by shell')
-need(idx.index('assessment-deep-dive.js')<idx.index('assessment-quality-suite.js')<idx.index('assessment-stable-review-bridge.js')<idx.index('assessment-analytics-ui.js')<idx.index('source-library.js'),'assessment quality stack load order wrong')
+need(idx.index('assessment-deep-dive.js')<idx.index('assessment-answer-cue-fix.js')<idx.index('assessment-quality-suite.js')<idx.index('assessment-stable-review-bridge.js')<idx.index('assessment-analytics-ui.js')<idx.index('source-library.js'),'assessment quality stack load order wrong')
 sw=text('service-worker.js')
-for asset in ['assessment-quality-suite.js','assessment-stable-review-bridge.js','assessment-analytics-ui.js']:
+for asset in ['assessment-answer-cue-fix.js','assessment-quality-suite.js','assessment-stable-review-bridge.js','assessment-analytics-ui.js']:
     need(f"'./{asset}'" in sw,f'{asset} not cached offline')
 pkg=json.loads(text('desktop/electron/package.json')); froms={x.get('from') for x in pkg['build']['extraResources'] if isinstance(x,dict)}
-for asset in ['assessment-quality-suite.js','assessment-stable-review-bridge.js','assessment-analytics-ui.js']:
+for asset in ['assessment-answer-cue-fix.js','assessment-quality-suite.js','assessment-stable-review-bridge.js','assessment-analytics-ui.js']:
     need(f'../../{asset}' in froms,f'{asset} missing from desktop package')
 integrity=text('desktop/electron/scripts/generate-integrity.cjs')
-for asset in ['assessment-quality-suite.js','assessment-stable-review-bridge.js','assessment-analytics-ui.js']:
+for asset in ['assessment-answer-cue-fix.js','assessment-quality-suite.js','assessment-stable-review-bridge.js','assessment-analytics-ui.js']:
     need(f"'{asset}'" in integrity,f'{asset} missing from integrity hashes')
 qy=text('.github/workflows/qa.yml')
-for asset in ['assessment-quality-suite.js','assessment-stable-review-bridge.js','assessment-analytics-ui.js']:
+for asset in ['assessment-answer-cue-fix.js','assessment-quality-suite.js','assessment-stable-review-bridge.js','assessment-analytics-ui.js']:
     need(f'node --check {asset}' in qy,f'release workflow must syntax-check {asset}')
 need('python qa_assessment_quality.py' in qy and 'python qa_source_freshness.py' in qy,'release workflow missing assessment quality gates')
 ow=text('.github/workflows/open-desktop-build.yml')
