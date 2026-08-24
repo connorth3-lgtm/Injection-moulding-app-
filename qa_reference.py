@@ -16,7 +16,7 @@ def require(condition, message):
         raise AssertionError(message)
 
 
-REFERENCE_ASSETS = ["source-library.js", "reference-data.js", "reference-deep-dive.js", "reference-sources.js"]
+REFERENCE_ASSETS = ["source-library.js", "reference-data.js", "reference-deep-dive.js", "reference-sources.js", "reference-browser-ui.js"]
 SHIPPING_FILES = [
     *REFERENCE_ASSETS,
     "index.html",
@@ -93,6 +93,29 @@ source_urls = set(re.findall(r"https://[^'\"\s<]+", reference_sources + "\n" + d
 require(len(source_urls) >= 55, "authoritative reference library unexpectedly small after deep-dive expansion")
 require("http://" not in reference_sources, "reference browser must use HTTPS source links")
 
+reference_ui = text("reference-browser-ui.js")
+for marker in [
+    "['all','All']",
+    "['safety','Safety']",
+    "['materials','Materials']",
+    "['testing','Testing']",
+    "['automation','Automation']",
+    "['research','Research']",
+    "['sustainability','Sustainability']",
+    "mmsrc-search::placeholder",
+    "mmsrc-cardtop",
+    "mmsrc-badge",
+    "Under review",
+    "Status: ",
+    "Back to top of references",
+    "mmsrc-topbtn",
+    "prefers-reduced-motion",
+    "window.MM_REFERENCE_BROWSER_UI",
+]:
+    require(marker in reference_ui, f"reference UI feature missing: {marker}")
+require("#examQuestions" not in reference_ui and "activeExam" not in reference_ui, "reference UI must not alter live assessments")
+require("http://" not in reference_ui, "reference UI must not introduce HTTP links")
+
 source_register = text("sources/AUTHORITATIVE_SOURCE_REGISTER.md")
 for marker in [
     "Reference-database coverage",
@@ -131,7 +154,7 @@ for asset in REFERENCE_ASSETS:
     marker = f'<script src="./{asset}">'
     require(marker in index, f"reference shell asset missing: {asset}")
     positions.append(index.index(marker))
-require(positions == sorted(positions), "reference scripts must load source library, base data, deep-dive data, then source browser")
+require(positions == sorted(positions), "reference scripts must load source library, base data, deep-dive data, source browser, then reference UI")
 
 sw = text("service-worker.js")
 for asset in REFERENCE_ASSETS:
@@ -157,12 +180,12 @@ require("setWindowOpenHandler" in main and "shell.openExternal(url)" in main, "d
 require("/^https:\\/\\//i.test(url)" in main, "desktop external reference links must be HTTPS-only")
 
 qa_workflow = text(".github/workflows/qa.yml")
-for asset in ["reference-data.js", "reference-deep-dive.js", "reference-sources.js"]:
+for asset in ["reference-data.js", "reference-deep-dive.js", "reference-sources.js", "reference-browser-ui.js"]:
     require(f"node --check {asset}" in qa_workflow, f"release QA must syntax-check {asset}")
 require("python qa_reference.py" in qa_workflow, "release QA must run reference integrity QA")
 
 open_desktop = text(".github/workflows/open-desktop-build.yml")
-for asset in ["reference-data.js", "reference-deep-dive.js", "reference-sources.js", "qa_reference.py"]:
+for asset in ["reference-data.js", "reference-deep-dive.js", "reference-sources.js", "reference-browser-ui.js", "qa_reference.py"]:
     require(f"- '{asset}'" in open_desktop, f"desktop build trigger missing reference asset: {asset}")
 require("python qa_reference.py" in open_desktop, "desktop build must run reference integrity QA")
 
@@ -173,4 +196,4 @@ for js_name in REFERENCE_ASSETS:
     p = subprocess.run([NODE, "--check", str(ROOT / js_name)], capture_output=True, text=True)
     require(p.returncode == 0, f"{js_name}: {p.stderr}")
 
-print(f"MouldMaster reference data and source QA passed ({len(structured_entries)} structured entries, {len(source_urls)} source URLs)")
+print(f"MouldMaster reference data, source and mobile browser UI QA passed ({len(structured_entries)} structured entries, {len(source_urls)} source URLs)")
