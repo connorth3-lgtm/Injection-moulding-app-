@@ -4,7 +4,7 @@ const path=require('path');
 const crypto=require('crypto');
 const ROOT=path.resolve(__dirname,'..','..','..');
 const OUT=path.resolve(__dirname,'..','generated','integrity.json');
-const FILES=['index.html','MouldMaster_Core_App.html','MouldMaster_Academy_App.html','manifest.webmanifest','mouldmaster-192.png','mouldmaster-512.png','version.json','reading-patch.css','reading-patch.js','training-upgrade.js','training-qa-fix.js','pwa-shell.js','source-library.js','reference-data.js','reference-deep-dive.js','reference-research-extension.js','reference-sources.js','service-worker.js','privacy.html','support.html'];
+const FILES=['index.html','MouldMaster_Core_App.html','MouldMaster_Academy_App.html','manifest.webmanifest','mouldmaster-192.png','mouldmaster-512.png','version.json','reading-patch.css','reading-patch.js','training-upgrade.js','training-qa-fix.js','pwa-shell.js','source-library.js','reference-data.js','reference-deep-dive.js','reference-research-extension.js','reference-20x-extension.js','reference-sources.js','service-worker.js','privacy.html','support.html'];
 function sha(file){return crypto.createHash('sha256').update(fs.readFileSync(file)).digest('hex')}
 const version=JSON.parse(fs.readFileSync(path.join(ROOT,'version.json'),'utf8'));
 const files={};for(const name of FILES){const f=path.join(ROOT,name);if(!fs.existsSync(f))throw new Error(`Missing required asset: ${name}`);files[name]=sha(f)}
