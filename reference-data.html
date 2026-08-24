@@ -31,9 +31,14 @@
 <body>
   <header class="mm-reference-page-top">
     <button id="mm-reference-back" type="button" aria-label="Back to MouldMaster">← Back</button>
-    <div><strong>Reference Data</strong><br><span>Materials, defects, process signals and troubleshooting</span></div>
+    <div><strong>Reference Data</strong><br><span>Full practical library: materials, defects, signals, tooling, machines, quality, safety and troubleshooting</span></div>
   </header>
+  <script src="./source-library.js"></script>
   <script src="./reference-data.js"></script>
+  <script src="./reference-deep-dive.js"></script>
+  <script src="./reference-research-extension.js"></script>
+  <script src="./reference-20x-extension.js"></script>
+  <script src="./reference-2026-expansion.js"></script>
   <script>
   (function(){
     'use strict';
@@ -51,7 +56,7 @@
       modal.setAttribute('aria-label','MouldMaster Reference Data');
       document.getElementById('mm-reference-back')?.addEventListener('click',back);
       document.addEventListener('keydown',e=>{if(e.key==='Escape'){e.preventDefault();back()}},{capture:true});
-      window.MM_REFERENCE_DATA_PAGE_MODE='standalone-document';
+      window.MM_REFERENCE_DATA_PAGE_MODE='standalone-document-full-library';
     }
     if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',mount);else mount();
   })();

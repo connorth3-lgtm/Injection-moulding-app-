@@ -26,13 +26,16 @@ on:
       - 'pwa-shell.js'
       - 'source-library.js'
       - 'reference-data.js'
+      - 'reference-data.html'
       - 'reference-deep-dive.js'
       - 'reference-research-extension.js'
       - 'reference-20x-extension.js'
+      - 'reference-2026-expansion.js'
       - 'reference-sources.js'
       - 'reference-browser-ui.js'
       - 'qa_release_docs.py'
       - 'qa_reference.py'
+      - 'qa_reference_expansion.py'
       - 'qa_research.py'
       - 'qa_100_pass.py'
       - 'qa_question_deep_dive.py'
@@ -133,6 +136,9 @@ jobs:
       - name: Reference data and source QA
         working-directory: .
         run: python qa_reference.py
+      - name: Expanded reference library QA
+        working-directory: .
+        run: python qa_reference_expansion.py
       - name: Plugin-backed research QA
         working-directory: .
         run: python qa_research.py
