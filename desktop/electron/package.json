@@ -14,7 +14,7 @@
     "start": "npm run integrity && npm run licenses && npm run sbom && npm run qa && electron .",
     "dist:portable": "npm run integrity && npm run licenses && npm run sbom && npm run qa && electron-builder --win portable",
     "dist:nsis": "npm run integrity && npm run licenses && npm run sbom && npm run qa && electron-builder --win nsis",
-    "dist:msix": "npm run integrity && npm run licenses && npm run sbom && npm run qa && npx --yes electron-builder@27.0.0-alpha.6 --win msix --config.msix.setBuildNumber=true"
+    "dist:msix": "npm run integrity && npm run licenses && npm run sbom && npm run qa && npx --yes electron-builder@27.0.0-alpha.7 --win msix --config.msix.setBuildNumber=true"
   },
   "devDependencies": {
     "electron": "43.4.1",
