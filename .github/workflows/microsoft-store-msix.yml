@@ -55,6 +55,9 @@ jobs:
       - name: Validate reference data and sources
         working-directory: .
         run: python qa_reference.py
+      - name: Validate plugin-backed research
+        working-directory: .
+        run: python qa_research.py
       - name: Generate MSIX artwork from open MouldMaster icon
         shell: pwsh
         working-directory: desktop/electron
