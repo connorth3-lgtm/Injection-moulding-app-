@@ -63,6 +63,7 @@
       {"from": "../../reference-research-extension.js", "to": "mouldmaster/reference-research-extension.js"},
       {"from": "../../reference-20x-extension.js", "to": "mouldmaster/reference-20x-extension.js"},
       {"from": "../../reference-sources.js", "to": "mouldmaster/reference-sources.js"},
+      {"from": "../../reference-browser-ui.js", "to": "mouldmaster/reference-browser-ui.js"},
       {"from": "../../service-worker.js", "to": "mouldmaster/service-worker.js"},
       {"from": "../../privacy.html", "to": "mouldmaster/privacy.html"},
       {"from": "../../support.html", "to": "mouldmaster/support.html"},
