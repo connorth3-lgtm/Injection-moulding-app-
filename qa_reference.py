@@ -16,7 +16,7 @@ def require(condition, message):
         raise AssertionError(message)
 
 
-REFERENCE_ASSETS = ["source-library.js", "reference-data.js", "reference-sources.js"]
+REFERENCE_ASSETS = ["source-library.js", "reference-data.js", "reference-deep-dive.js", "reference-sources.js"]
 SHIPPING_FILES = [
     *REFERENCE_ASSETS,
     "index.html",
@@ -47,8 +47,26 @@ for marker in [
     "not universal production setpoints",
 ]:
     require(marker in reference_data, f"reference data category/control missing: {marker}")
-structured_entries = re.findall(r"\{\s*name\s*:\s*'", reference_data)
-require(len(structured_entries) >= 100, "reference database unexpectedly small")
+
+deep = text("reference-deep-dive.js")
+for marker in [
+    "window.MM_REFERENCE_DATA",
+    "ISO 294-4:2018",
+    "ISO 15512:2019",
+    "ISO 12100:2010",
+    "ISO 13849-1:2023",
+    "ISO 10218-1:2025",
+    "EUROMAP 77",
+    "ISO 14021:2026",
+    "ISO 14040:2006",
+    "FDA — Process Validation: General Principles and Practices",
+    "window.MM_DEEP_DIVE_REFERENCE",
+]:
+    require(marker in deep, f"deep-dive reference marker missing: {marker}")
+require("http://" not in deep, "deep-dive sources must use HTTPS")
+
+structured_entries = re.findall(r"\{\s*name\s*:\s*'", reference_data + "\n" + deep)
+require(len(structured_entries) >= 180, "reference database unexpectedly small after deep-dive expansion")
 
 reference_sources = text("reference-sources.js")
 for marker in [
@@ -70,8 +88,8 @@ for marker in [
 ]:
     require(marker in reference_sources, f"reference source/control missing: {marker}")
 require("#examQuestions" not in reference_sources and "activeExam" not in reference_sources, "reference browser must not alter live assessments")
-source_urls = set(re.findall(r"https://[^'\"\s<]+", reference_sources))
-require(len(source_urls) >= 30, "authoritative reference library unexpectedly small")
+source_urls = set(re.findall(r"https://[^'\"\s<]+", reference_sources + "\n" + deep))
+require(len(source_urls) >= 55, "authoritative reference library unexpectedly small after deep-dive expansion")
 require("http://" not in reference_sources, "reference browser must use HTTPS source links")
 
 source_register = text("sources/AUTHORITATIVE_SOURCE_REGISTER.md")
@@ -96,7 +114,7 @@ for asset in REFERENCE_ASSETS:
     marker = f'<script src="./{asset}">'
     require(marker in index, f"reference shell asset missing: {asset}")
     positions.append(index.index(marker))
-require(positions == sorted(positions), "reference scripts must load source library, data, then source browser")
+require(positions == sorted(positions), "reference scripts must load source library, base data, deep-dive data, then source browser")
 
 sw = text("service-worker.js")
 for asset in REFERENCE_ASSETS:
@@ -122,12 +140,12 @@ require("setWindowOpenHandler" in main and "shell.openExternal(url)" in main, "d
 require("/^https:\\/\\//i.test(url)" in main, "desktop external reference links must be HTTPS-only")
 
 qa_workflow = text(".github/workflows/qa.yml")
-require("node --check reference-data.js" in qa_workflow, "release QA must syntax-check reference data")
-require("node --check reference-sources.js" in qa_workflow, "release QA must syntax-check reference sources")
+for asset in ["reference-data.js", "reference-deep-dive.js", "reference-sources.js"]:
+    require(f"node --check {asset}" in qa_workflow, f"release QA must syntax-check {asset}")
 require("python qa_reference.py" in qa_workflow, "release QA must run reference integrity QA")
 
 open_desktop = text(".github/workflows/open-desktop-build.yml")
-for asset in ["reference-data.js", "reference-sources.js", "qa_reference.py"]:
+for asset in ["reference-data.js", "reference-deep-dive.js", "reference-sources.js", "qa_reference.py"]:
     require(f"- '{asset}'" in open_desktop, f"desktop build trigger missing reference asset: {asset}")
 require("python qa_reference.py" in open_desktop, "desktop build must run reference integrity QA")
 
