@@ -8,9 +8,9 @@ const http = require('http');
 
 const DEV_ROOT = path.resolve(__dirname, '..', '..', '..');
 const APP_ROOT = app.isPackaged ? path.join(process.resourcesPath, 'mouldmaster') : DEV_ROOT;
-const INTEGRITY_PATH = app.isPackaged
-  ? path.join(process.resourcesPath, 'mouldmaster', 'integrity.json')
-  : path.join(__dirname, '..', 'generated', 'integrity.json');
+// Keep the expected hashes inside the packaged app.asar rather than beside the writable assets.
+// In development this resolves to desktop/electron/generated/integrity.json as well.
+const INTEGRITY_PATH = path.join(__dirname, '..', 'generated', 'integrity.json');
 
 const MIME = {
   '.html': 'text/html; charset=utf-8',
@@ -49,6 +49,12 @@ function startLoopbackServer(allowedFiles) {
   return new Promise((resolve, reject) => {
     const server = http.createServer((req, res) => {
       try {
+        const method = req.method || 'GET';
+        if (method !== 'GET' && method !== 'HEAD') {
+          res.writeHead(405, {'Content-Type': 'text/plain; charset=utf-8', 'Allow': 'GET, HEAD'});
+          res.end('Method not allowed');
+          return;
+        }
         const u = new URL(req.url || '/', 'http://127.0.0.1');
         const name = decodeURIComponent(u.pathname.replace(/^\/+/, '')) || 'index.html';
         if (name.includes('/') || name.includes('\\') || !allowedFiles.has(name)) {
@@ -65,6 +71,10 @@ function startLoopbackServer(allowedFiles) {
           'Referrer-Policy': 'no-referrer',
           'Cross-Origin-Resource-Policy': 'same-origin'
         });
+        if (method === 'HEAD') {
+          res.end();
+          return;
+        }
         fs.createReadStream(file).pipe(res);
       } catch (_) {
         res.writeHead(400, {'Content-Type': 'text/plain; charset=utf-8'});
@@ -123,7 +133,7 @@ let localServer;
 app.whenReady().then(async () => {
   try {
     const integrity = verifyBundledAssets();
-    const allowed = new Set([...Object.keys(integrity.files), 'integrity.json']);
+    const allowed = new Set(Object.keys(integrity.files));
     const local = await startLoopbackServer(allowed);
     localServer = local.server;
     await createWindow(local.origin, integrity);
