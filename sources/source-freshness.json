@@ -1,0 +1,127 @@
+{
+  "schema": 1,
+  "reviewed": "2026-08-24",
+  "max_review_age_days": 60,
+  "sources": [
+    {
+      "id": "iso-20430",
+      "name": "ISO 20430:2020",
+      "url": "https://www.iso.org/standard/68000.html",
+      "marker_groups": [
+        ["ISO 20430:2020"],
+        ["90.93", "Confirmed", "confirmed"]
+      ],
+      "critical": true
+    },
+    {
+      "id": "bsi-20430",
+      "name": "BS EN ISO 20430:2020",
+      "url": "https://knowledge.bsigroup.com/products/plastics-and-rubber-machines-injection-moulding-machines-safety-requirements-1",
+      "marker_groups": [
+        ["BS EN ISO 20430:2020", "ISO 20430:2020"],
+        ["Current", "Under Review", "under review"]
+      ],
+      "critical": true
+    },
+    {
+      "id": "plastics-b151",
+      "name": "ANSI/PLASTICS B151.1-2017 status",
+      "url": "https://www.plasticsindustry.org/advocacy/codes-standards/machinery-safety-standards-committee/",
+      "marker_groups": [
+        ["B151.1-2017", "B151.1"],
+        ["ISO 20430", "review"]
+      ],
+      "critical": true
+    },
+    {
+      "id": "osha-1910-147",
+      "name": "OSHA 29 CFR 1910.147",
+      "url": "https://www.osha.gov/laws-regs/regulations/standardnumber/1910/1910.147",
+      "marker_groups": [
+        ["1910.147"],
+        ["Control of hazardous energy", "The control of hazardous energy", "lockout"]
+      ],
+      "critical": true
+    },
+    {
+      "id": "osha-state-plans",
+      "name": "OSHA State Plans",
+      "url": "https://www.osha.gov/stateplans",
+      "marker_groups": [
+        ["State Plans", "State Plan"],
+        ["at least as effective", "OSHA-approved"]
+      ],
+      "critical": true
+    },
+    {
+      "id": "uk-puwer-reg11",
+      "name": "PUWER 1998 Regulation 11",
+      "url": "https://www.legislation.gov.uk/uksi/1998/2306/regulation/11",
+      "marker_groups": [
+        ["Regulation 11", "11"],
+        ["Dangerous parts of machinery", "dangerous parts"]
+      ],
+      "critical": true
+    },
+    {
+      "id": "nz-hswa-2015",
+      "name": "Health and Safety at Work Act 2015",
+      "url": "https://www.legislation.govt.nz/act/public/2015/70/en/latest/",
+      "marker_groups": [
+        ["Health and Safety at Work Act 2015"],
+        ["primary duty", "PCBU", "reasonably practicable"]
+      ],
+      "critical": true
+    },
+    {
+      "id": "nz-amendment-2026",
+      "name": "Health and Safety at Work Amendment Act 2026",
+      "url": "https://www.legislation.govt.nz/act/public/2026/38/en/latest/",
+      "marker_groups": [
+        ["Health and Safety at Work Amendment Act 2026"],
+        ["1 April 2027", "April 2027"]
+      ],
+      "critical": true
+    },
+    {
+      "id": "worksafe-lockout",
+      "name": "WorkSafe NZ machine lockouts",
+      "url": "https://www.worksafe.govt.nz/topic-and-industry/machinery/keeping-workers-safe-with-machine-lockouts/",
+      "marker_groups": [
+        ["lockout", "lockouts"],
+        ["AS/NZS 4024", "stored energy", "isolation"]
+      ],
+      "critical": true
+    },
+    {
+      "id": "nist-capability",
+      "name": "NIST process capability",
+      "url": "https://www.itl.nist.gov/div898/handbook/pmc/section1/pmc16.htm",
+      "marker_groups": [
+        ["process capability", "Process Capability"],
+        ["Cpk", "Cp"]
+      ],
+      "critical": false
+    },
+    {
+      "id": "nist-doe",
+      "name": "NIST experimental design",
+      "url": "https://www.itl.nist.gov/div898/handbook/pri/section1/pri13.htm",
+      "marker_groups": [
+        ["experimental design", "Experimental Design", "design of experiments"],
+        ["random", "factor"]
+      ],
+      "critical": false
+    },
+    {
+      "id": "iso-15512",
+      "name": "ISO 15512:2019",
+      "url": "https://www.iso.org/standard/73834.html",
+      "marker_groups": [
+        ["ISO 15512:2019"],
+        ["water content", "Water content"]
+      ],
+      "critical": false
+    }
+  ]
+}
