@@ -22,6 +22,7 @@ SHIPPING_FILES = [
     "index.html",
     "service-worker.js",
     "sources/AUTHORITATIVE_SOURCE_REGISTER.md",
+    "sources/DEEP_DIVE_SOURCE_REGISTER.md",
     "desktop/electron/package.json",
     "desktop/electron/src/main.cjs",
     "desktop/electron/scripts/generate-integrity.cjs",
@@ -107,6 +108,22 @@ for marker in [
     "Law/regulator pages control legal statements",
 ]:
     require(marker in source_register, f"authoritative source register coverage missing: {marker}")
+
+deep_register = text("sources/DEEP_DIVE_SOURCE_REGISTER.md")
+for marker in [
+    "ISO 294-4:2018",
+    "ISO 527-2:2025",
+    "ISO 179-1:2026",
+    "ISO 12100:2010",
+    "ISO 13849-1:2023",
+    "ISO 10218-2:2025",
+    "EUROMAP 77",
+    "ISO 14021:2026",
+    "ISO 14044:2006",
+    "Process Validation: General Principles and Practices",
+    "Water-content testing and water-absorption testing answer different questions",
+]:
+    require(marker in deep_register, f"deep-dive source register coverage missing: {marker}")
 
 index = text("index.html")
 positions = []
