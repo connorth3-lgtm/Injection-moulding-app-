@@ -35,6 +35,7 @@ jobs:
           node --check reference-research-extension.js
           node --check reference-20x-extension.js
           node --check reference-sources.js
+          node --check reference-browser-ui.js
           node --check pwa-shell.js
           node --check desktop/electron/src/main.cjs
           node --check desktop/electron/scripts/generate-integrity.cjs
