@@ -1,0 +1,74 @@
+name: Microsoft Store MSIX
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  store-package:
+    runs-on: windows-latest
+    env:
+      MM_STORE_IDENTITY_NAME: ${{ vars.MM_STORE_IDENTITY_NAME }}
+      MM_STORE_PUBLISHER_DISPLAY_NAME: ${{ vars.MM_STORE_PUBLISHER_DISPLAY_NAME }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Require Partner Center identity
+        shell: pwsh
+        run: |
+          if ([string]::IsNullOrWhiteSpace($env:MM_STORE_IDENTITY_NAME)) {
+            Write-Error 'Repository variable MM_STORE_IDENTITY_NAME is required. Copy it exactly from Microsoft Partner Center after reserving the app.'
+          }
+          if ([string]::IsNullOrWhiteSpace($env:MM_STORE_PUBLISHER_DISPLAY_NAME)) {
+            Write-Error 'Repository variable MM_STORE_PUBLISHER_DISPLAY_NAME is required. Use the publisher display name associated with the Partner Center account.'
+          }
+          if ($env:MM_STORE_IDENTITY_NAME -notmatch '^[A-Za-z0-9.-]{3,50}$') {
+            Write-Error 'MM_STORE_IDENTITY_NAME does not satisfy the MSIX identity-name format.'
+          }
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+          cache-dependency-path: desktop/electron/package-lock.json
+      - name: Install exact locked dependencies
+        working-directory: desktop/electron
+        run: npm ci --no-audit --fund=false
+      - name: Generate verified application manifests
+        working-directory: desktop/electron
+        run: |
+          npm run integrity
+          npm run licenses
+          npm run qa
+      - name: Generate MSIX artwork from open MouldMaster icon
+        shell: pwsh
+        working-directory: desktop/electron
+        run: ./scripts/generate-msix-assets.ps1
+      - name: Build x64 + arm64 Store upload package
+        shell: pwsh
+        working-directory: desktop/electron
+        run: |
+          npx electron-builder --win msix --x64 --arm64 `
+            --config.msix.identityName="$env:MM_STORE_IDENTITY_NAME" `
+            --config.msix.publisherDisplayName="$env:MM_STORE_PUBLISHER_DISPLAY_NAME" `
+            --config.msix.createMsixbundle=true `
+            --config.msix.createMsixupload=true `
+            --config.msix.enforcePackageIntegrity=true `
+            --config.msix.artifactName='MouldMaster-Academy-Store-${version}.${ext}'
+      - name: Record source and SHA-256
+        shell: pwsh
+        run: |
+          git rev-parse HEAD | Set-Content 'desktop/electron/dist/SOURCE_COMMIT.txt'
+          Get-ChildItem 'desktop/electron/dist' -File | Where-Object { $_.Extension -in '.msix','.msixbundle','.msixupload' } | Get-FileHash -Algorithm SHA256 | ForEach-Object { "$($_.Hash.ToLower())  $($_.Path | Split-Path -Leaf)" } | Set-Content 'desktop/electron/dist/SHA256SUMS-STORE.txt'
+      - uses: actions/upload-artifact@v4
+        with:
+          name: mouldmaster-microsoft-store-msix
+          path: |
+            desktop/electron/dist/*.msix
+            desktop/electron/dist/*.msixbundle
+            desktop/electron/dist/*.msixupload
+            desktop/electron/dist/SHA256SUMS-STORE.txt
+            desktop/electron/dist/SOURCE_COMMIT.txt
+            desktop/electron/generated/integrity.json
+            desktop/electron/generated/dependency-licenses.json
+          if-no-files-found: error
