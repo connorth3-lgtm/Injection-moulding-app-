@@ -6,6 +6,10 @@ on:
 permissions:
   contents: read
 
+concurrency:
+  group: microsoft-store-msix-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   store-package:
     runs-on: windows-latest
@@ -62,11 +66,12 @@ jobs:
             --config.msix.publisher="$env:MM_STORE_PUBLISHER" `
             --config.msix.publisherDisplayName="$env:MM_STORE_PUBLISHER_DISPLAY_NAME" `
             --config.msix.displayName='MouldMaster Academy' `
+            --config.msix.setBuildNumber=true `
             --config.msix.minVersion='10.0.19041.0' `
             --config.msix.createMsixbundle=true `
             --config.msix.createMsixupload=true `
             --config.msix.enforcePackageIntegrity=true `
-            --config.msix.artifactName='MouldMaster-Academy-Store-${version}.${ext}'
+            --config.msix.artifactName='MouldMaster-Academy-Store-${buildVersion}.${ext}'
       - name: Record source and SHA-256
         shell: pwsh
         run: |
