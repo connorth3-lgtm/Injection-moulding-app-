@@ -1,4 +1,4 @@
-/* MouldMaster PWA shell controller — 2026.08.24.3 */
+/* MouldMaster PWA shell controller — 2026.08.24.4 */
 (function(){
 'use strict';
 const RELEASE='2026.08.24.1';
@@ -31,6 +31,21 @@ function syncUpdateCard(){
     });
   });
 }
+function dockReferenceLauncher(){
+  const open=document.getElementById('mm-src-open');if(!open)return;
+  const sidebar=document.querySelector('.sidebar-foot');
+  const dock=sidebar||document.querySelector('.top-actions')||document.querySelector('.main');
+  if(!dock)return;
+  if(open.parentElement!==dock)dock.appendChild(open);
+  open.style.position='static';
+  open.style.left='auto';open.style.right='auto';open.style.top='auto';open.style.bottom='auto';
+  open.style.zIndex='auto';open.style.pointerEvents='auto';
+  open.style.width=sidebar?'100%':'auto';
+  open.style.margin=sidebar?'12px 0 0':'0';
+  open.style.display=sidebar?'flex':'inline-flex';
+  open.style.justifyContent='center';
+  open.dataset.mmDocked=sidebar?'sidebar':dock.classList.contains('top-actions')?'topbar':'content';
+}
 function addNZLegacyNote(){
   const host=document.getElementById('standards');if(!host||host.querySelector('[data-mm-nz-legacy-note]')||[...host.querySelectorAll('.legal-note')].some(x=>/NZ source-status (?:note|clarification)/i.test(x.textContent||'')))return;
   const region=(window.user&&window.user.region)||'ALL';if(region!=='ALL'&&region!=='NZ')return;
@@ -45,7 +60,7 @@ async function register(){
   try{const reg=await navigator.serviceWorker.register('./service-worker.js',{scope:'./'});await reg.update()}catch(e){console.warn('[MouldMaster] Offline/update support unavailable:',e)}
 }
 let syncQueued=false;
-function runSync(){syncQueued=false;syncLabels();syncUpdateCard();addNZLegacyNote()}
+function runSync(){syncQueued=false;syncLabels();syncUpdateCard();dockReferenceLauncher();addNZLegacyNote()}
 function scheduleSync(){
   if(syncQueued)return;
   syncQueued=true;
@@ -56,5 +71,5 @@ const observer=new MutationObserver(scheduleSync);
 if(document.documentElement)observer.observe(document.documentElement,{subtree:true,childList:true});
 window.addEventListener('load',()=>{runSync();register();setTimeout(scheduleSync,250)});
 document.addEventListener('visibilitychange',()=>{if(!document.hidden)scheduleSync()});
-window.MM_SHELL_RELEASE=RELEASE;window.MM_CONTENT_RELEASE=CONTENT;window.MM_DISPLAY_CONTEXT=displayContext;
+window.MM_SHELL_RELEASE=RELEASE;window.MM_CONTENT_RELEASE=CONTENT;window.MM_DISPLAY_CONTEXT=displayContext;window.MM_REFERENCE_LAUNCHER_DOCK='sidebar-first-normal-flow';
 })();
