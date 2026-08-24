@@ -64,6 +64,9 @@ jobs:
       - name: Validate assessment quality, blueprint and analytics
         working-directory: .
         run: python qa_assessment_quality.py
+      - name: Validate stable spaced-review IDs
+        working-directory: .
+        run: python qa_stable_review_bridge.py
       - name: Validate authoritative source freshness metadata
         working-directory: .
         run: python qa_source_freshness.py
