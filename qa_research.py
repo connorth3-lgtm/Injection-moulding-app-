@@ -96,7 +96,7 @@ for marker in [
     "Micro injection moulding",
     "Energy efficiency",
     "Overmoulding and insert moulding",
-    "Published experiment demonstrates behaviour under its own material, mould, machine and test conditions",
+    "A published experiment demonstrates behaviour under its own material, mould, machine and test conditions",
 ]:
     need(marker in register, f"20-pass source register marker missing: {marker}")
 
