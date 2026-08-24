@@ -19,11 +19,13 @@ The project maintainers do not intend to seek patent protection over implementat
 
 - PWA / browser shell: `2026.08.24.1`
 - Open desktop source: `2026.08.24.1`
-- Training content: `2026.08.23.5`
-- Audited assessment bank: `2026.08.21.1`
+- Training content: `2026.08.24.2`
+- Audited assessment bank: `2026.08.24.2`
+- Assessment quality / analytics hardening: `2026.08.24.3`
+- Learner-scoped assessment storage: `2026.08.24.4`
 - Legacy Windows recovery lane: `2026.08.21.1`
 
-`version.json` is the machine-readable release record.
+`version.json` is the machine-readable release record and is the source of truth for release identifiers.
 
 ## Run the PWA
 
@@ -31,7 +33,13 @@ The hosted PWA is published through GitHub Pages:
 
 `https://connorth3-lgtm.github.io/Injection-moulding-app-/`
 
-The PWA uses an installable web manifest and a service worker for offline support after a successful initial load.
+The PWA uses an installable web manifest and a service worker for offline support after a successful initial load. The current shell caches the audited core, assessment/runtime layers, reference data and the privacy/support pages required by the public app.
+
+## Assessment system
+
+The current assessment stack contains 30 technical exam items, 27 UK/US/NZ regional safety/compliance items and 40 scenario drills. Regional safety items remain mandatory and safety-critical. A certificate requires at least 80% overall and zero wrong safety-critical regional items.
+
+Assessment quality controls include stable question IDs, a competency-balanced exam blueprint, difficulty calibration, duplicate/answer-cue QA, per-question evidence/revision information and device-local analytics. Analytics are scoped to the active learner profile. Question-performance analytics and response-timing analytics are not uploaded by MouldMaster; they can be reset locally and are deliberately excluded from progress backups.
 
 ## Open Windows desktop replacement
 
@@ -75,13 +83,11 @@ Accreditation-readiness material is under `certification/` and credential-govern
 
 ## Sources
 
-The application uses authoritative references from regulators, legislation, standards bodies, research literature and manufacturers. The formal source register is:
+The application uses authoritative references from regulators, legislation, standards bodies, research literature and manufacturers. Key source registers are under `sources/`, including the authoritative, deep-dive, 20-pass research, question-bank and freshness registers.
 
-`sources/AUTHORITATIVE_SOURCE_REGISTER.md`
+External source material remains subject to its publisher's rights. Citing a standard or paper does not relicense its protected text into this project. General lesson references are not injected into unanswered exams; exact assessment-item references are reserved for post-grade explanation where provided.
 
-External source material remains subject to its publisher's rights. Citing a standard or paper does not relicense its protected text into this project.
-
-Assessment integrity is preserved: general lesson references are not injected into unanswered exams. Exact assessment-item references are reserved for post-grade explanation where provided.
+Official/regulatory source metadata and research DOI resolvers have separate freshness QA. Temporary network/publisher failures are not treated as proof that a source disappeared; status/identity changes and DOI 404/410 results require review.
 
 ## Safety
 
@@ -98,6 +104,18 @@ Do not bypass guards, interlocks or hazardous-energy controls to follow training
 
 ## Release QA
 
-`qa_release.py` and GitHub Actions enforce core assessment, safety, source, licence and desktop-security invariants.
+The release workflows run structural, question/answer, assessment-quality, learner-scoped analytics, source-freshness, reference/research and desktop-security checks. Important entry points include:
+
+- `qa_release.py`
+- `qa_100_pass.py`
+- `qa_question_deep_dive.py`
+- `qa_assessment_quality.py`
+- `qa_assessment_final_hardening.py`
+- `qa_assessment_storage_scope.py`
+- `qa_source_freshness.py`
+- `qa_research_source_freshness.py`
+- `qa_reference.py`
+- `qa_research.py`
+- `qa_open_desktop.py`
 
 A release should not be treated as verified merely because source was committed; build/test results and release hashes must also be reviewed.

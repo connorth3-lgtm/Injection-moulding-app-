@@ -2,12 +2,23 @@
 
 This register records assessment changes that can affect learner interpretation, difficulty, evidence or spaced-review identity. It is deliberately separate from general release notes so an assessment reviewer can see what changed and why.
 
+## 2026.08.24.4 — learner-scoped analytics and release-coherence hardening
+
+- Kept all 57 live exam answer keys, question text, certificate rules and the 40-scenario bank unchanged.
+- Added a narrow local-storage scope layer for assessment analytics and exposure timing. The two analytics stores are now isolated by active learner profile on shared browser/device installations; other MouldMaster local-storage keys are not rewritten by this layer.
+- Switching learner profiles now cancels any in-memory exam attempt before the active learner changes, preventing a started attempt from being graded into another learner's analytics/history.
+- A single-profile installation conservatively migrates its old unscoped analytics into that learner's scope. Ambiguous unscoped analytics on a multi-profile installation are discarded rather than attributed to the wrong learner.
+- A successful progress-backup import now clears assessment analytics because analytics are deliberately excluded from the progress-backup format. A confirmed factory reset also clears every scoped/unscoped assessment-analytics store.
+- Updated the privacy/support pages to disclose learner-scoped analytics, exposure-based response timing, separate analytics export/reset behavior and public-support privacy warnings.
+- Removed stale August 23 release numbers from public release documentation and made `support.html` synchronise its displayed release family from `version.json` when available.
+- Added `assessment_storage_scope_version` = `2026.08.24.4` without changing `question_bank_version` or `content_version`.
+
 ## 2026.08.24.3 — final assessment hardening
 
 - Kept the 57 live exam answer keys and the 40-scenario bank unchanged.
 - Added an explicit 57-ID revision index and exposed the recorded per-question revision reason in the post-grade evidence panel. The 12 technical items changed during the deep review are individually identified as revision 2; all other live exam items remain at the audited revision-1 baseline.
 - Replaced learner-facing response-time interpretation with exposure-based timing: the timer starts when at least 55% of a question is visible or the learner directly interacts with it, and time while the document is hidden is excluded. Older whole-exam elapsed timing is retained only as legacy analytics data.
-- The existing **Reset local analytics** control now removes both the original assessment analytics store and the exposure-timing store, while preserving the original reset behavior.
+- The existing **Reset local analytics** control removes both the original assessment analytics store and the exposure-timing store, while preserving the original reset behavior.
 - Added a separate research DOI freshness registry and scheduled resolver checks across research-bearing assessment/reference files. Resolver 404/410 results require human review; temporary publisher, access, rate-limit and network errors remain warnings.
 - Bumped only `assessment_quality_version` to `2026.08.24.3`; `question_bank_version` and `content_version` remain `2026.08.24.2` because no question text, answer key or learning content changed in this hardening pass.
 
@@ -49,3 +60,4 @@ This version remains relevant only for migration of older locally stored spaced-
 4. Regional safety/compliance items require an official regulator, legislation or standards source and a freshness review.
 5. Research results support mechanisms and methods, not universal production setpoints.
 6. Question analytics are diagnostic evidence for question quality, not proof that a frequently selected answer is correct.
+7. Assessment analytics must remain learner-scoped and device-local unless a future privacy notice, architecture and explicit consent model deliberately change that boundary.

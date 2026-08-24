@@ -55,6 +55,9 @@ jobs:
           npm run licenses
           npm run sbom
           npm run qa
+      - name: Validate release and documentation coherence
+        working-directory: .
+        run: python qa_release_docs.py
       - name: 100-pass data and assessment audit
         working-directory: .
         run: python qa_100_pass.py
@@ -64,6 +67,9 @@ jobs:
       - name: Validate assessment quality, blueprint and analytics
         working-directory: .
         run: python qa_assessment_quality.py
+      - name: Validate learner-scoped assessment storage
+        working-directory: .
+        run: python qa_assessment_storage_scope.py
       - name: Validate stable spaced-review IDs
         working-directory: .
         run: python qa_stable_review_bridge.py

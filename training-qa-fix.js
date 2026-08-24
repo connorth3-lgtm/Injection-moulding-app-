@@ -1,7 +1,13 @@
-/* MouldMaster training data/assessment bridge — 2026.08.23.10 */
+/* MouldMaster training data/assessment bridge — 2026.08.24.4 */
 (function(){
 'use strict';
 const REVIEW_KEY='mm_spaced_review_v2', LEGACY_REVIEW='mm_spaced_review_v1', SIGN_KEY='mm_practical_signoff_v1';
+const ANALYTICS_PREFIXES=['mm_assessment_analytics_v1','mm_assessment_exposure_timing_v1'];
+function clearAssessmentAnalyticsStores(){
+ try{
+  for(let i=localStorage.length-1;i>=0;i--){const k=localStorage.key(i);if(k&&ANALYTICS_PREFIXES.some(p=>k===p||k.startsWith(p+'::')))localStorage.removeItem(k)}
+ }catch(e){console.warn('[MouldMaster] analytics cleanup:',e)}
+}
 
 function mirror(){try{if(typeof activeExam==='undefined'||!activeExam)return;(activeExam.questions||[]).forEach(q=>{if(!q||typeof q!=='object')return;if(q.why==null)q.why=q.explanation;if(q.source==null)q.source=q.reference;if(q.url==null)q.url=q.sourceUrl;if(q.feedback==null)q.feedback=q.optionFeedback});window.activeExam=activeExam}catch(e){console.warn('[MouldMaster] exam bridge:',e)}}
 const baseStart=window.startExam;if(typeof baseStart==='function')window.startExam=function(){const r=baseStart.apply(this,arguments);mirror();setTimeout(mirror,0);return r};
@@ -11,10 +17,10 @@ function cleanReview(v){const out={items:{}};if(!obj(v)||!obj(v.items))return ou
 function cleanSign(v){const o={checks:{},supervisor:'',date:'',notes:''};if(!obj(v))return o;if(obj(v.checks))for(const [k,b] of Object.entries(v.checks).slice(0,50))o.checks[String(k).slice(0,20)]=b===true;o.supervisor=String(v.supervisor||'').slice(0,160);o.date=String(v.date||'').slice(0,20);o.notes=String(v.notes||'').slice(0,10000);return o}
 function read(k,d){try{const x=JSON.parse(localStorage.getItem(k)||'');return obj(x)?x:d}catch(_){return d}}
 
-/* One export contains the strictly validated core DB plus training extras. */
+/* One export contains the strictly validated core DB plus training extras. Assessment analytics are deliberately exported separately. */
 window.exportData=function(){try{const p=JSON.parse(JSON.stringify(db));p.backupFormat='mouldmaster-backup-v2';p.trainingExtras={version:2,spacedReview:cleanReview(read(REVIEW_KEY,{items:{}})),practicalSignoff:cleanSign(read(SIGN_KEY,{}))};const blob=new Blob([JSON.stringify(p,null,2)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='mouldmaster-progress.json';a.click();setTimeout(()=>URL.revokeObjectURL(a.href),0);window.toast?.('Backup exported with review and sign-off data')}catch(e){alert('Backup could not be created on this device.')}};
 
-/* Best-effort atomic import: validate and serialise first, then roll back every store if a write fails. */
+/* Best-effort atomic import: validate and serialise first, then roll back every core/training store if a write fails. Analytics are not part of the backup and are cleared only after a successful import. */
 window.importData=function(file){
  if(!file)return;
  if(file.size>10*1024*1024){alert('That backup is too large to import safely. No existing data was changed.');return}
@@ -48,9 +54,9 @@ window.importData=function(file){
     for(const k of keys){try{before[k]===null?localStorage.removeItem(k):localStorage.setItem(k,before[k])}catch(_){}}
     throw storageError;
    }
-   db=proposed;user=db.users[db.activeUser];committed=true;
+   db=proposed;user=db.users[db.activeUser];committed=true;clearAssessmentAnalyticsStores();
    try{updateGlobalProgress();switchView('profile')}catch(uiError){console.warn('[MouldMaster] imported data saved; view refresh failed:',uiError)}
-   window.toast?.('Progress imported. Certificates must be re-earned on this device.');
+   window.toast?.('Progress imported. Certificates must be re-earned; local assessment analytics were reset.');
   }catch(e){
    if(committed)alert('Progress was imported, but the screen could not refresh. Reopen MouldMaster.');
    else alert('That file is not a valid MouldMaster backup. No existing data was changed.');
@@ -59,9 +65,10 @@ window.importData=function(file){
  r.readAsText(file);
 };
 
-/* Confirmed reset clears every MouldMaster-owned training store. */
-const baseReset=window.resetData;if(typeof baseReset==='function')window.resetData=function(){const beforeDb=typeof db==='undefined'?null:db,r=baseReset.apply(this,arguments);setTimeout(()=>{if(typeof db!=='undefined'&&db!==beforeDb){localStorage.removeItem(REVIEW_KEY);localStorage.removeItem(LEGACY_REVIEW);localStorage.removeItem(SIGN_KEY);window.activeExam=null}},0);return r};
+/* Confirmed factory reset clears every MouldMaster-owned training and assessment-analytics store. */
+const baseReset=window.resetData;if(typeof baseReset==='function')window.resetData=function(){const beforeDb=typeof db==='undefined'?null:db,r=baseReset.apply(this,arguments);setTimeout(()=>{if(typeof db!=='undefined'&&db!==beforeDb){localStorage.removeItem(REVIEW_KEY);localStorage.removeItem(LEGACY_REVIEW);localStorage.removeItem(SIGN_KEY);clearAssessmentAnalyticsStores();window.activeExam=null}},0);return r};
 
 /* One-time migration: legacy text-keyed review records are intentionally not guessed into stable IDs. */
 try{if(!localStorage.getItem(REVIEW_KEY)&&localStorage.getItem(LEGACY_REVIEW))localStorage.setItem(REVIEW_KEY,JSON.stringify({items:{}}))}catch(_){}
+window.MM_TRAINING_DATA_BRIDGE={version:'2026.08.24.4',clearAssessmentAnalyticsStores};
 })();

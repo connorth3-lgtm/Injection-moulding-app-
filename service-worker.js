@@ -14,6 +14,7 @@ const CORE=[
   './training-qa-fix.js',
   './assessment-100-pass.js',
   './assessment-deep-dive.js',
+  './assessment-storage-scope.js',
   './assessment-quality-suite.js',
   './assessment-stable-review-bridge.js',
   './assessment-analytics-ui.js',
@@ -25,7 +26,9 @@ const CORE=[
   './reference-20x-extension.js',
   './reference-sources.js',
   './reference-browser-ui.js',
-  './pwa-shell.js'
+  './pwa-shell.js',
+  './privacy.html',
+  './support.html'
 ];
 
 self.addEventListener('install',event=>{

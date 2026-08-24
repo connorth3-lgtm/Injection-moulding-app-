@@ -6,8 +6,9 @@ https://connorth3-lgtm.github.io/Injection-moulding-app-/
 PUBLISHING
 GitHub Pages: Deploy from branch > main > /(root)
 
-PWA FILES
+PWA / OFFLINE APPLICATION FILES
   index.html
+  MouldMaster_Core_App.html
   MouldMaster_Academy_App.html
   manifest.webmanifest
   service-worker.js
@@ -16,7 +17,23 @@ PWA FILES
   reading-patch.js
   training-upgrade.js
   training-qa-fix.js
+  assessment-100-pass.js
+  assessment-deep-dive.js
+  assessment-storage-scope.js
+  assessment-quality-suite.js
+  assessment-stable-review-bridge.js
+  assessment-analytics-ui.js
+  assessment-final-hardening.js
+  source-library.js
+  reference-data.js
+  reference-deep-dive.js
+  reference-research-extension.js
+  reference-20x-extension.js
+  reference-sources.js
+  reference-browser-ui.js
   pwa-shell.js
+  privacy.html
+  support.html
   mouldmaster-192.png
   mouldmaster-512.png
   .nojekyll
@@ -28,26 +45,31 @@ INSTALL ON ANDROID
 4. Confirm Install.
 
 UPDATE / OFFLINE DESIGN
-- index.html is now a direct bootstrap; it no longer relies on service-worker text rewriting to pretend the source is current.
-- The service worker caches the exact unversioned URLs requested by the bootstrap and uses ignoreSearch only as a compatibility fallback.
-- The audited core app, training scripts, CSS, manifest, icons and metadata are all cached for offline use after a successful online load.
+- index.html is a direct bootstrap; it does not rely on service-worker text rewriting to pretend the source is current.
+- The service worker caches the exact unversioned application URLs requested by the bootstrap and uses ignoreSearch only as a compatibility fallback.
+- The audited core app, assessment/training layers, reference browser/data, privacy/support pages, manifest, icons and version metadata are cached for offline use after a successful install/update.
 - Navigation is network-first while online and only a root/index response can refresh the cached bootstrap, preventing another HTML page from replacing the offline shell.
 - Learner progress remains in the browser/app profile during application updates.
 
 DATA / ASSESSMENT HARDENING
-- Spaced repetition uses question-bank-versioned IDs rather than question wording.
-- Backup/import validates and serialises core learner data and training extras before any storage changes, with rollback if a write fails.
+- Spaced repetition uses stable question IDs independent of content-release wording; older version-prefixed review records are migrated conservatively.
+- Backup/import validates and serialises core learner data and training extras before storage changes, with rollback if a core/training write fails.
 - Backup imports are limited to 10 MiB, reject duplicate learner identifiers after sanitisation and keep each learner's stored ID aligned with its database key.
 - Imported progress never imports certificate authority; certificates must be re-earned by passing a newly submitted assessment on that device.
+- Assessment analytics are device-local and scoped to the active learner profile so shared-browser learners do not intentionally share question-performance history.
+- Assessment analytics are not included in progress backups. A successful progress import resets local assessment analytics to prevent history from being attributed to imported learner records.
+- Response-time analytics start from meaningful question exposure and exclude time while the page is hidden.
 - A submitted exam is locked after its first grading, so revealed answers cannot be re-used to regrade the same attempt.
-- A confirmed factory reset clears spaced-review and practical sign-off data even when the main learner database was already in its pristine state.
+- A confirmed factory reset clears spaced-review, practical sign-off and all assessment-analytics stores.
 - Auto-selected lesson references are subject-curated; if no relevant general reference matches, the app says so instead of showing an unrelated source.
 - Older NZ injection/blow-moulding guidance is explicitly labelled legacy/supplementary; current HSWA/WorkSafe/site requirements control.
-- Existing audited answer keys, the >=80% overall threshold and the zero-wrong safety-critical regional gate are unchanged.
+- Current answer keys, the >=80% overall threshold and the zero-wrong safety-critical regional gate remain unchanged.
 
 VERSIONING
-Android shell: 2026.08.23.10
-Training content: 2026.08.23.5
-Audited core question bank: 2026.08.21.1
+Android/PWA shell: 2026.08.24.1
+Training content: 2026.08.24.2
+Audited question bank: 2026.08.24.2
+Assessment quality / analytics hardening: 2026.08.24.3
+Learner-scoped assessment storage: 2026.08.24.4
 
-The separate versions are intentional: visual/runtime shell changes, training/lesson changes and the audited assessment bank are tracked independently.
+version.json is the machine-readable source of truth. The separate versions are intentional: shell/runtime, training content, audited question bank, assessment-quality logic and analytics-storage privacy can change independently.

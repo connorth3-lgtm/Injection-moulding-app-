@@ -1,0 +1,64 @@
+from pathlib import Path
+import json, subprocess
+
+ROOT=Path(__file__).resolve().parent
+
+def text(p): return (ROOT/p).read_text(encoding='utf-8')
+def need(ok,msg):
+    if not ok: raise AssertionError(msg)
+
+scope=ROOT/'assessment-storage-scope.js'
+need(scope.exists(),'assessment-storage-scope.js missing')
+js=text('assessment-storage-scope.js')
+for marker in ["VERSION='2026.08.24.4'","ANALYTICS_BASE='mm_assessment_analytics_v1'","TIMING_BASE='mm_assessment_exposure_timing_v1'","learnerScoped:true","hashScope","migrateLegacy","clearAll","cancelInMemoryAttempt","baseSwitch","after!==before"]:
+    need(marker in js,f'assessment storage scope marker missing: {marker}')
+p=subprocess.run(['node','--check',str(scope)],capture_output=True,text=True)
+need(p.returncode==0,f'assessment-storage-scope.js syntax error: {p.stderr}')
+
+node=r'''
+const fs=require('fs'),vm=require('vm');
+class Storage{constructor(){this.m=new Map()}get length(){return this.m.size}key(i){return [...this.m.keys()][i]??null}getItem(k){return this.m.has(String(k))?this.m.get(String(k)):null}setItem(k,v){this.m.set(String(k),String(v))}removeItem(k){this.m.delete(String(k))}}
+const localStorage=new Storage();
+localStorage.setItem('mm_assessment_analytics_v1','legacy-one-profile');
+const db={activeUser:'learner-a',users:{'learner-a':{id:'learner-a'}}};
+let user=db.users[db.activeUser];
+let activeExam={level:'Beginner'};
+const window={activeExam,resetData(){localStorage.setItem('mouldmasterProDB','reset-'+Date.now())},switchUser(id){db.activeUser=id;user=db.users[id]}};
+const sandbox={window,Storage,localStorage,db,user,activeExam,Math,Object,String,Date,setTimeout:fn=>{if(typeof fn==='function')fn()},console};
+window.window=window;window.localStorage=localStorage;
+vm.createContext(sandbox);vm.runInContext(fs.readFileSync(%s,'utf8'),sandbox,{filename:'assessment-storage-scope.js'});
+const api=window.MM_ASSESSMENT_STORAGE_SCOPE;
+const aKey=api.analyticsKey();
+if(localStorage.getItem('mm_assessment_analytics_v1')!=='legacy-one-profile')throw new Error('single-profile legacy analytics not migrated into learner scope');
+localStorage.setItem('mm_assessment_analytics_v1','A');
+db.users['learner-b']={id:'learner-b'};
+window.switchUser('learner-b');
+if(sandbox.activeExam!==null||window.activeExam!==null)throw new Error('profile switch did not cancel in-memory exam attempt');
+if(localStorage.getItem('mm_assessment_analytics_v1')!==null)throw new Error('learner B can read learner A analytics');
+localStorage.setItem('mm_assessment_analytics_v1','B');
+const bKey=api.analyticsKey();if(aKey===bKey)throw new Error('learner scope keys collide');
+db.activeUser='learner-a';if(localStorage.getItem('mm_assessment_analytics_v1')!=='A')throw new Error('learner A analytics not isolated');
+localStorage.setItem('unrelated','keep');api.clearAll();
+if(localStorage.getItem('mm_assessment_analytics_v1')!==null)throw new Error('clearAll left analytics');
+if(localStorage.getItem('unrelated')!=='keep')throw new Error('clearAll removed unrelated storage');
+process.stdout.write(JSON.stringify({version:api.version,learnerScoped:api.learnerScoped,aKey,bKey}));
+'''%json.dumps(str(scope))
+p=subprocess.run(['node','-e',node],capture_output=True,text=True)
+need(p.returncode==0,f'assessment storage scope runtime QA failed: {p.stderr or p.stdout}')
+r=json.loads(p.stdout);need(r['version']=='2026.08.24.4' and r['learnerScoped'] is True,'assessment storage scope runtime metadata mismatch')
+
+idx=text('index.html');need('<script src="./assessment-storage-scope.js">' in idx,'storage scope not loaded by shell')
+need(idx.index('assessment-deep-dive.js')<idx.index('assessment-storage-scope.js')<idx.index('assessment-quality-suite.js'),'storage scope load order must precede analytics suite')
+need("'./assessment-storage-scope.js'" in text('service-worker.js'),'storage scope missing from offline cache')
+pkg=json.loads(text('desktop/electron/package.json'));froms={x.get('from') for x in pkg['build']['extraResources'] if isinstance(x,dict)}
+need('../../assessment-storage-scope.js' in froms,'storage scope missing from desktop package')
+need("'assessment-storage-scope.js'" in text('desktop/electron/scripts/generate-integrity.cjs'),'storage scope missing from integrity set')
+
+bridge=text('training-qa-fix.js')
+for marker in ['clearAssessmentAnalyticsStores','mm_assessment_analytics_v1','mm_assessment_exposure_timing_v1','committed=true;clearAssessmentAnalyticsStores()','clearAssessmentAnalyticsStores();window.activeExam=null']:
+    need(marker in bridge,f'training reset/import analytics cleanup missing: {marker}')
+
+V=json.loads(text('version.json'));need(V.get('assessment_storage_scope_version')=='2026.08.24.4','assessment storage scope version missing')
+for wf in ['.github/workflows/qa.yml','.github/workflows/open-desktop-build.yml','.github/workflows/microsoft-store-msix.yml']:
+    w=text(wf);need('python qa_assessment_storage_scope.py' in w,f'{wf} missing learner-scoped analytics QA')
+print('MouldMaster learner-scoped assessment storage QA passed')
