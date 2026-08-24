@@ -20,22 +20,24 @@ Manufacturer guides and white papers remain the property of their publishers. Th
 
 ## Open desktop software dependencies
 
-The preferred open Windows desktop replacement under `desktop/electron/` uses:
+The normal open Windows desktop implementation under `desktop/electron/` uses:
 
 - **Electron** — MIT-licensed project; bundles Chromium and Node.js and therefore also includes their respective open-source components/licences. Exact version is pinned in `desktop/electron/package.json` and the full application dependency graph/integrity metadata is locked in `desktop/electron/package-lock.json`.
 - **electron-builder 26.x** — MIT-licensed packaging project used for the stable portable/NSIS lane. Its exact version and installed transitive dependency graph are locked in the same npm lockfile.
 - **electron-builder 27.0.0-alpha.7** — an exact, separately selected build-tool version used only for MSIX/Microsoft Store packaging because the MSIX target is not available in the pinned v26 stable line. It is not shipped as application runtime code. Changes to this beta tool version require release-QA and Windows Store packaging revalidation.
-- Build tooling downloaded by those packages can include additional open-source components. Release builds must retain the dependency lock and generated dependency-licence/SBOM evidence for the packaged application dependency graph, and must separately record the explicitly selected Store build-tool version.
+- Build tooling downloaded by those packages can include additional open-source components. Release builds retain the dependency lock and generated dependency-licence/SBOM evidence for the packaged application dependency graph, and separately record the explicitly selected Store build-tool version.
 
 The npm lockfile is the machine-readable source of truth for the dependencies installed by `npm ci`. The separately invoked MSIX beta is pinned by exact version in workflow/package scripts but is not represented as part of the packaged runtime dependency graph. Neither mechanism is a substitute for individual upstream licence texts; redistribution must comply with applicable licences.
 
-The current web/PWA source does not intentionally bundle a third-party CDN framework. New runtime packages must be documented here before release.
+The tagged GitHub desktop release includes the generated dependency licence inventory and CycloneDX SBOM alongside the portable executable and SHA-256 release hashes. The current web/PWA source does not intentionally bundle a third-party CDN framework. New runtime packages must be documented here before release.
 
 ## Windows launcher transition
 
-`MouldMasterAcademy.exe` remains in the repository as the **legacy recovery launcher**. Its corresponding preferred source/build recipe has not been located, so that binary is not represented as fully open source.
+The public/open Windows desktop release is the source-backed Electron implementation under `desktop/electron/`, built and published from tagged repository source.
 
-The preferred replacement is now the public `desktop/electron/` implementation, which has source, security checks, build instructions, exact direct dependency versions, an npm dependency lock and GitHub Actions build automation. The legacy binary should be removed from normal distribution only after the open replacement has passed Windows hardware testing and the public release/update path has been migrated safely.
+`MouldMasterAcademy.exe` is a **frozen legacy recovery compatibility component**. Its corresponding preferred source/build recipe has not been located, so that binary is not represented as fully open source and must not be treated as the normal Windows download.
+
+The old runtime is kept only while the final real-machine learner-backup export/import migration check remains outstanding. The two runtimes must not be assumed to share local storage automatically. The migration/retirement checklist is documented in `desktop/electron/LEGACY_MIGRATION.md`. After that check passes, the legacy binary and launcher distribution path should be removed rather than carried forward into new releases.
 
 ## Trademarks
 
