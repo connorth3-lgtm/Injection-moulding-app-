@@ -54,6 +54,16 @@ require("${buildVersion}" in pkg["build"]["win"].get("artifactName", ""), "Windo
 require(version.get("windows_recovery_release"), "windows_recovery_release missing from version.json")
 require(version["desktop_release"] != version["windows_recovery_release"], "open desktop and legacy recovery lanes must be explicit and separate")
 
+fuses = pkg["build"].get("electronFuses", {})
+for name, expected in {
+    "runAsNode": False,
+    "enableNodeOptionsEnvironmentVariable": False,
+    "enableNodeCliInspectArguments": False,
+    "enableEmbeddedAsarIntegrityValidation": True,
+    "onlyLoadAppFromAsar": True,
+}.items():
+    require(fuses.get(name) is expected, f"Electron fuse must remain {name}={str(expected).lower()}")
+
 main = (DESKTOP / "src" / "main.cjs").read_text(encoding="utf-8")
 for marker in [
     "nodeIntegration: false",
