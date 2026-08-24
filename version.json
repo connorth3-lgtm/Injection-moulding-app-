@@ -2,8 +2,10 @@
   "android_release": "2026.08.24.1",
   "desktop_release": "2026.08.24.1",
   "windows_recovery_release": "2026.08.21.1",
-  "content_version": "2026.08.23.5",
-  "question_bank_version": "2026.08.21.1",
+  "content_version": "2026.08.24.2",
+  "question_bank_version": "2026.08.24.2",
+  "legacy_review_id_version": "2026.08.21.1",
+  "assessment_quality_version": "2026.08.24.2",
   "published": "2026-08-24",
   "repository": "connorth3-lgtm/Injection-moulding-app-",
   "pages_url": "https://connorth3-lgtm.github.io/Injection-moulding-app-/"
