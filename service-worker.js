@@ -14,6 +14,7 @@ const CORE=[
   './training-qa-fix.js',
   './assessment-100-pass.js',
   './assessment-deep-dive.js',
+  './assessment-quality-suite.js',
   './source-library.js',
   './reference-data.js',
   './reference-deep-dive.js',
