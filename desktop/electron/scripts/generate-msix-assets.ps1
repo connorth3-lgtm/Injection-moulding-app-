@@ -1,5 +1,5 @@
 param(
-  [string]$Source = "../../mouldmaster-512.png",
+  [string]$Source = "../../../mouldmaster-512.png",
   [string]$Output = "build/appx"
 )
 
