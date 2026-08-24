@@ -84,7 +84,7 @@ Current baseline used by this repository:
 - accreditation requires provider capability for delivery, assessment/moderation, staffing/resources and learner support
 - eligible TEOs apply through MyNZQA
 - Industry Skills Boards (ISBs) can apply for listing/approval but not provider accreditation
-- 2026 terminology uses ISB rather than the former WDC terminology
+- current vocational-education terminology uses Industry Skills Board (ISB)
 
 ### Preferred practical route — partner with an eligible provider
 
