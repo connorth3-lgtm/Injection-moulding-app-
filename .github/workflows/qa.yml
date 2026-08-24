@@ -36,6 +36,7 @@ jobs:
           node --check assessment-quality-suite.js
           node --check assessment-stable-review-bridge.js
           node --check assessment-analytics-ui.js
+          node --check assessment-final-hardening.js
           node --check source-library.js
           node --check reference-data.js
           node --check reference-deep-dive.js
@@ -59,8 +60,12 @@ jobs:
         run: python qa_assessment_quality.py
       - name: Stable spaced-review ID integrity
         run: python qa_stable_review_bridge.py
+      - name: Final assessment revision and timing hardening
+        run: python qa_assessment_final_hardening.py
       - name: Authoritative source freshness metadata
         run: python qa_source_freshness.py
+      - name: Research DOI freshness metadata
+        run: python qa_research_source_freshness.py
       - name: Reference data and source integrity
         run: python qa_reference.py
       - name: Plugin-backed research integrity
