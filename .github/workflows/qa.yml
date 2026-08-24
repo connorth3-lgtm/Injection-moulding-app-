@@ -10,11 +10,18 @@ on:
 permissions:
   contents: read
 
+concurrency:
+  group: mouldmaster-release-qa-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   integrity:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22.12.0'
       - name: JavaScript syntax
         run: |
           node --check service-worker.js
