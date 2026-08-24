@@ -45,7 +45,7 @@ function migrateLegacy(){
 }
 function wrapLearnerChange(name){
  const base=typeof window[name]==='function'?window[name]:null;if(!base)return;
- window[name]=function(){const before=learnerId(),r=base.apply(this,arguments);if(learnerId()!==before)cancelInMemoryAttempt();return r};
+ window[name]=function(){const before=learnerId();try{return base.apply(this,arguments)}finally{if(learnerId()!==before)cancelInMemoryAttempt()}};
 }
 Object.defineProperty(P,'getItem',{configurable:true,writable:true,value:function(key){return rawGet.call(this,this===localStorage?scopedKey(key):key)}});
 Object.defineProperty(P,'setItem',{configurable:true,writable:true,value:function(key,value){return rawSet.call(this,this===localStorage?scopedKey(key):key,value)}});
