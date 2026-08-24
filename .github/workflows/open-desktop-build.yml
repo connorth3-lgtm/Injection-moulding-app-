@@ -18,6 +18,7 @@ on:
       - 'training-qa-fix.js'
       - 'pwa-shell.js'
       - 'source-library.js'
+      - 'reference-data.js'
       - 'service-worker.js'
       - 'privacy.html'
       - 'support.html'
