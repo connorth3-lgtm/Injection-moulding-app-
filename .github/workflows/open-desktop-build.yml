@@ -19,6 +19,7 @@ on:
       - 'assessment-100-pass.js'
       - 'assessment-deep-dive.js'
       - 'assessment-quality-suite.js'
+      - 'assessment-stable-review-bridge.js'
       - 'pwa-shell.js'
       - 'source-library.js'
       - 'reference-data.js'
@@ -32,6 +33,7 @@ on:
       - 'qa_100_pass.py'
       - 'qa_question_deep_dive.py'
       - 'qa_assessment_quality.py'
+      - 'qa_stable_review_bridge.py'
       - 'qa_source_freshness.py'
       - 'sources/ASSESSMENT_AND_DATA_100_PASS_AUDIT.md'
       - 'sources/QUESTION_BANK_DEEP_DIVE.md'
@@ -98,6 +100,9 @@ jobs:
       - name: Assessment quality, blueprint and analytics QA
         working-directory: .
         run: python qa_assessment_quality.py
+      - name: Stable spaced-review ID QA
+        working-directory: .
+        run: python qa_stable_review_bridge.py
       - name: Authoritative source freshness metadata
         working-directory: .
         run: python qa_source_freshness.py
