@@ -4,7 +4,7 @@ import re
 import subprocess
 
 ROOT = Path(__file__).resolve().parent
-ASSET = "reference-research-extension.js"
+ASSETS = ["reference-research-extension.js", "reference-20x-extension.js"]
 
 
 def text(name):
@@ -16,8 +16,10 @@ def need(cond, msg):
         raise AssertionError(msg)
 
 
-need((ROOT / ASSET).exists(), "research extension missing")
-research = text(ASSET)
+for asset in ASSETS:
+    need((ROOT / asset).exists(), f"research extension missing: {asset}")
+
+research = text("reference-research-extension.js")
 for marker in [
     "window.MM_REFERENCE_DATA",
     "PCR-PP",
@@ -36,20 +38,82 @@ need("http://" not in research, "research sources must use HTTPS")
 need(len(re.findall(r"\{\s*name\s*:\s*'", research)) >= 70, "research extension unexpectedly small")
 need(len(set(re.findall(r"https://[^'\"\s<]+", research))) >= 9, "research source set unexpectedly small")
 
+x20 = text("reference-20x-extension.js")
+passes = [
+    "rheology and shear response",
+    "drying moisture and hydrolysis",
+    "hot runners and valve gates",
+    "tool wear and maintenance",
+    "defect mechanisms",
+    "fibre orientation and composites",
+    "velocity pressure and machine control",
+    "in-mould sensing",
+    "machine vision and ML inspection",
+    "robot and automation integration",
+    "process validation and SPC",
+    "DOE and multi-objective optimisation",
+    "recyclates and reprocessing",
+    "LCA and sustainability",
+    "predictive maintenance",
+    "design for injection moulding",
+    "micro injection moulding",
+    "assisted and microcellular moulding",
+    "energy efficiency",
+    "overmoulding and insert moulding",
+]
+for marker in passes:
+    need(marker in x20, f"20-pass research area missing: {marker}")
+for marker in [
+    "window.MM_RESEARCH_20X",
+    "passCount:PASSES.length",
+    "Hydrolysis-related embrittlement",
+    "Hot-runner thermal imbalance",
+    "Fibre-orientation warpage",
+    "Microfeature replication ratio",
+    "Bayesian adaptive DOE",
+    "Predictive maintenance is not isolation",
+    "Specific energy per part",
+    "Overmould interface qualification",
+    "Inline pvT / compressibility estimate",
+    "Vision false accept on novel defect",
+]:
+    need(marker in x20, f"20-pass research marker missing: {marker}")
+need("http://" not in x20, "20-pass research sources must use HTTPS")
+need(len(re.findall(r"\{\s*name\s*:\s*[\"']", x20)) >= 90, "20-pass structured research set unexpectedly small")
+need(len(set(re.findall(r"https://[^'\"\s<]+", x20))) >= 30, "20-pass research source set unexpectedly small")
+
 index = text("index.html")
-need('<script src="./reference-research-extension.js">' in index, "research extension not loaded by shell")
-need(index.index('reference-deep-dive.js') < index.index('reference-research-extension.js') < index.index('reference-sources.js'), "research extension load order is wrong")
-need("'./reference-research-extension.js'" in text("service-worker.js"), "research extension not cached offline")
+for asset in ASSETS:
+    need(f'<script src="./{asset}">' in index, f"research extension not loaded by shell: {asset}")
+need(
+    index.index("reference-deep-dive.js")
+    < index.index("reference-research-extension.js")
+    < index.index("reference-20x-extension.js")
+    < index.index("reference-sources.js"),
+    "research extension load order is wrong",
+)
+
+sw = text("service-worker.js")
+for asset in ASSETS:
+    need(f"'./{asset}'" in sw, f"research extension not cached offline: {asset}")
 
 pkg = json.loads(text("desktop/electron/package.json"))
 from_paths = {x.get("from") for x in pkg["build"]["extraResources"] if isinstance(x, dict)}
-need("../../reference-research-extension.js" in from_paths, "research extension missing from desktop bundle")
-need("'reference-research-extension.js'" in text("desktop/electron/scripts/generate-integrity.cjs"), "research extension missing from desktop integrity set")
+for asset in ASSETS:
+    need(f"../../{asset}" in from_paths, f"research extension missing from desktop bundle: {asset}")
+
+integrity = text("desktop/electron/scripts/generate-integrity.cjs")
+for asset in ASSETS:
+    need(f"'{asset}'" in integrity, f"research extension missing from desktop integrity set: {asset}")
 
 for name in [".github/workflows/qa.yml", ".github/workflows/open-desktop-build.yml", ".github/workflows/microsoft-store-msix.yml"]:
     need("python qa_research.py" in text(name), f"research QA not run by {name}")
-need("- 'reference-research-extension.js'" in text(".github/workflows/open-desktop-build.yml"), "desktop build trigger missing research extension")
+open_build = text(".github/workflows/open-desktop-build.yml")
+for asset in ASSETS:
+    need(f"- '{asset}'" in open_build, f"desktop build trigger missing research extension: {asset}")
 
-p = subprocess.run(["node", "--check", str(ROOT / ASSET)], capture_output=True, text=True)
-need(p.returncode == 0, f"{ASSET}: {p.stderr}")
-print("MouldMaster plugin-backed research extension QA passed")
+for asset in ASSETS:
+    p = subprocess.run(["node", "--check", str(ROOT / asset)], capture_output=True, text=True)
+    need(p.returncode == 0, f"{asset}: {p.stderr}")
+
+print(f"MouldMaster research QA passed ({len(passes)} research passes)")
