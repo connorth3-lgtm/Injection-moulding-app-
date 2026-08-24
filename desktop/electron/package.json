@@ -55,6 +55,7 @@
       {"from": "../../reading-patch.js", "to": "mouldmaster/reading-patch.js"},
       {"from": "../../training-upgrade.js", "to": "mouldmaster/training-upgrade.js"},
       {"from": "../../training-qa-fix.js", "to": "mouldmaster/training-qa-fix.js"},
+      {"from": "../../assessment-100-pass.js", "to": "mouldmaster/assessment-100-pass.js"},
       {"from": "../../pwa-shell.js", "to": "mouldmaster/pwa-shell.js"},
       {"from": "../../source-library.js", "to": "mouldmaster/source-library.js"},
       {"from": "../../reference-data.js", "to": "mouldmaster/reference-data.js"},
