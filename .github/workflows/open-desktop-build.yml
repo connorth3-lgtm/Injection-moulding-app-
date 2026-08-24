@@ -17,6 +17,7 @@ on:
       - 'training-upgrade.js'
       - 'training-qa-fix.js'
       - 'assessment-100-pass.js'
+      - 'assessment-deep-dive.js'
       - 'pwa-shell.js'
       - 'source-library.js'
       - 'reference-data.js'
@@ -28,7 +29,9 @@ on:
       - 'qa_reference.py'
       - 'qa_research.py'
       - 'qa_100_pass.py'
+      - 'qa_question_deep_dive.py'
       - 'sources/ASSESSMENT_AND_DATA_100_PASS_AUDIT.md'
+      - 'sources/QUESTION_BANK_DEEP_DIVE.md'
       - 'service-worker.js'
       - 'privacy.html'
       - 'support.html'
@@ -80,6 +83,9 @@ jobs:
       - name: 100-pass data and assessment audit
         working-directory: .
         run: python qa_100_pass.py
+      - name: Deep question and answer QA
+        working-directory: .
+        run: python qa_question_deep_dive.py
       - name: Reference data and source QA
         working-directory: .
         run: python qa_reference.py
