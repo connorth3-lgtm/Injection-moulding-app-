@@ -10,7 +10,7 @@ def need(ok,msg):
 scope=ROOT/'assessment-storage-scope.js'
 need(scope.exists(),'assessment-storage-scope.js missing')
 js=text('assessment-storage-scope.js')
-for marker in ["VERSION='2026.08.24.4'","ANALYTICS_BASE='mm_assessment_analytics_v1'","TIMING_BASE='mm_assessment_exposure_timing_v1'","learnerScoped:true","hashScope","migrateLegacy","clearAll","cancelInMemoryAttempt","baseSwitch","after!==before"]:
+for marker in ["VERSION='2026.08.24.4'","ANALYTICS_BASE='mm_assessment_analytics_v1'","TIMING_BASE='mm_assessment_exposure_timing_v1'","learnerScoped:true","hashScope","migrateLegacy","clearAll","cancelInMemoryAttempt","baseSwitch","after!==before){cancelInMemoryAttempt();clearAll()"]:
     need(marker in js,f'assessment storage scope marker missing: {marker}')
 p=subprocess.run(['node','--check',str(scope)],capture_output=True,text=True)
 need(p.returncode==0,f'assessment-storage-scope.js syntax error: {p.stderr}')
@@ -20,10 +20,11 @@ const fs=require('fs'),vm=require('vm');
 class Storage{constructor(){this.m=new Map()}get length(){return this.m.size}key(i){return [...this.m.keys()][i]??null}getItem(k){return this.m.has(String(k))?this.m.get(String(k)):null}setItem(k,v){this.m.set(String(k),String(v))}removeItem(k){this.m.delete(String(k))}}
 const localStorage=new Storage();
 localStorage.setItem('mm_assessment_analytics_v1','legacy-one-profile');
+localStorage.setItem('mouldmasterProDB','before');
 const db={activeUser:'learner-a',users:{'learner-a':{id:'learner-a'}}};
 let user=db.users[db.activeUser];
 let activeExam={level:'Beginner'};
-const window={activeExam,resetData(){localStorage.setItem('mouldmasterProDB','reset-'+Date.now())},switchUser(id){db.activeUser=id;user=db.users[id]}};
+const window={activeExam,__doReset:false,resetData(){if(this.__doReset)localStorage.setItem('mouldmasterProDB','after')},switchUser(id){db.activeUser=id;user=db.users[id]}};
 const sandbox={window,Storage,localStorage,db,user,activeExam,Math,Object,String,Date,setTimeout:fn=>{if(typeof fn==='function')fn()},console};
 window.window=window;window.localStorage=localStorage;
 vm.createContext(sandbox);vm.runInContext(fs.readFileSync(%s,'utf8'),sandbox,{filename:'assessment-storage-scope.js'});
@@ -38,8 +39,12 @@ if(localStorage.getItem('mm_assessment_analytics_v1')!==null)throw new Error('le
 localStorage.setItem('mm_assessment_analytics_v1','B');
 const bKey=api.analyticsKey();if(aKey===bKey)throw new Error('learner scope keys collide');
 db.activeUser='learner-a';if(localStorage.getItem('mm_assessment_analytics_v1')!=='A')throw new Error('learner A analytics not isolated');
+let keepAttempt={level:'Advanced'};sandbox.activeExam=keepAttempt;window.activeExam=keepAttempt;window.__doReset=false;window.resetData();
+if(sandbox.activeExam!==keepAttempt||window.activeExam!==keepAttempt)throw new Error('cancelled/no-op reset cancelled the active exam');
+window.__doReset=true;window.resetData();
+if(sandbox.activeExam!==null||window.activeExam!==null)throw new Error('confirmed reset did not cancel in-memory exam attempt');
+if(localStorage.getItem('mm_assessment_analytics_v1')!==null)throw new Error('confirmed reset did not clear learner analytics');
 localStorage.setItem('unrelated','keep');api.clearAll();
-if(localStorage.getItem('mm_assessment_analytics_v1')!==null)throw new Error('clearAll left analytics');
 if(localStorage.getItem('unrelated')!=='keep')throw new Error('clearAll removed unrelated storage');
 process.stdout.write(JSON.stringify({version:api.version,learnerScoped:api.learnerScoped,aKey,bKey}));
 '''%json.dumps(str(scope))
