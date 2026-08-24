@@ -34,6 +34,7 @@ jobs:
           node --check assessment-100-pass.js
           node --check assessment-deep-dive.js
           node --check assessment-quality-suite.js
+          node --check assessment-stable-review-bridge.js
           node --check source-library.js
           node --check reference-data.js
           node --check reference-deep-dive.js
@@ -55,6 +56,8 @@ jobs:
         run: python qa_question_deep_dive.py
       - name: Assessment quality, blueprint and analytics integrity
         run: python qa_assessment_quality.py
+      - name: Stable spaced-review ID integrity
+        run: python qa_stable_review_bridge.py
       - name: Authoritative source freshness metadata
         run: python qa_source_freshness.py
       - name: Reference data and source integrity
