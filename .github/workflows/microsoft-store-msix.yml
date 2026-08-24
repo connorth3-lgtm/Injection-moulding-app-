@@ -67,9 +67,15 @@ jobs:
       - name: Validate stable spaced-review IDs
         working-directory: .
         run: python qa_stable_review_bridge.py
+      - name: Validate final assessment revision and timing hardening
+        working-directory: .
+        run: python qa_assessment_final_hardening.py
       - name: Validate authoritative source freshness metadata
         working-directory: .
         run: python qa_source_freshness.py
+      - name: Validate research DOI freshness metadata
+        working-directory: .
+        run: python qa_research_source_freshness.py
       - name: Validate reference data and sources
         working-directory: .
         run: python qa_reference.py
@@ -115,4 +121,5 @@ jobs:
             desktop/electron/generated/sbom.cdx.json
             assessment-quality-report.json
             source-freshness-report.json
+            research-source-freshness-report.json
           if-no-files-found: error
