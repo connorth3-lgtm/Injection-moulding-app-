@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#07101c">
+  <title>Reference Data · MouldMaster Academy</title>
+  <style>
+    :root{color-scheme:dark;background:#07101c}
+    *{box-sizing:border-box}
+    html,body{margin:0;min-height:100%;background:#07101c;color:#eef7ff;font-family:system-ui,-apple-system,"Segoe UI",sans-serif}
+    body{padding:0 0 max(18px,env(safe-area-inset-bottom))}
+    .mm-reference-page-top{position:sticky;top:0;z-index:10;display:flex;align-items:center;gap:12px;padding:max(10px,env(safe-area-inset-top)) 14px 10px;background:rgba(7,16,28,.97);border-bottom:1px solid #253a54;backdrop-filter:blur(10px)}
+    .mm-reference-page-top button{border:1px solid #49627e;background:#172941;color:#fff;border-radius:10px;padding:9px 12px;font:700 14px/1 system-ui,-apple-system,"Segoe UI",sans-serif;cursor:pointer}
+    .mm-reference-page-top strong{font-size:15px}.mm-reference-page-top span{color:#9fb5cf;font-size:12px}
+    #mmrd-open{display:none!important}
+    .mmrd{position:static!important;inset:auto!important;z-index:auto!important;background:transparent!important;display:block!important;align-items:stretch!important;justify-content:stretch!important;padding:12px!important;min-height:calc(100dvh - 56px)!important;color:#eef7ff!important}
+    .mmrd[data-open="0"],.mmrd[data-open="1"]{display:block!important}
+    .mmrd-panel{width:min(1100px,100%)!important;max-height:none!important;height:auto!important;min-height:0!important;margin:0 auto!important;overflow:visible!important;border-radius:16px!important;box-shadow:none!important}
+    .mmrd-head{position:static!important;padding-top:16px!important}
+    .mmrd-body{overflow:visible!important;padding-bottom:28px!important}
+    .mmrd-close{display:none!important}
+    @media(max-width:650px){
+      .mmrd{padding:10px!important}
+      .mmrd-panel{height:auto!important;max-height:none!important;border:1px solid #304866!important;border-radius:14px!important}
+      .mmrd-head{padding-top:14px!important}
+      .mmrd-body{padding-bottom:24px!important}
+    }
+  </style>
+</head>
+<body>
+  <header class="mm-reference-page-top">
+    <button id="mm-reference-back" type="button" aria-label="Back to MouldMaster">← Back</button>
+    <div><strong>Reference Data</strong><br><span>Materials, defects, process signals and troubleshooting</span></div>
+  </header>
+  <script src="./reference-data.js"></script>
+  <script>
+  (function(){
+    'use strict';
+    function back(){
+      if(document.referrer&&new URL(document.referrer,location.href).origin===location.origin){history.back();return}
+      location.replace('./index.html');
+    }
+    function mount(){
+      const modal=document.querySelector('.mmrd');
+      if(!modal){setTimeout(mount,25);return}
+      document.getElementById('mmrd-open')?.setAttribute('aria-hidden','true');
+      modal.dataset.open='1';
+      modal.setAttribute('role','main');
+      modal.setAttribute('aria-modal','false');
+      modal.setAttribute('aria-label','MouldMaster Reference Data');
+      document.getElementById('mm-reference-back')?.addEventListener('click',back);
+      document.addEventListener('keydown',e=>{if(e.key==='Escape'){e.preventDefault();back()}},{capture:true});
+      window.MM_REFERENCE_DATA_PAGE_MODE='standalone-document';
+    }
+    if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',mount);else mount();
+  })();
+  </script>
+</body>
+</html>
