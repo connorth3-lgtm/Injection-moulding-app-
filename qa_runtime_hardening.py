@@ -18,6 +18,7 @@ require("new MutationObserver(scheduleSync)" in shell, "shell DOM sync must be c
 require("el.textContent!==value" in shell, "shell DOM sync must avoid no-op text mutations")
 require("syncUpdateCard" in shell and "[data-mm-update-card]" in shell, "runtime version card synchronization missing")
 require("desktopRelease" in shell, "desktop runtime version detection missing")
+require("location.hostname==='127.0.0.1'" in shell and "Electron" in shell, "desktop display context must be constrained to the Electron loopback runtime")
 require("displayContext().mode==='Desktop package'||!('serviceWorker' in navigator)" in shell, "desktop wrapper must not register the PWA service worker")
 
 print("MouldMaster runtime hardening QA passed")
