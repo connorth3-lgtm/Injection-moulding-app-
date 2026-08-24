@@ -1,0 +1,16 @@
+{
+  "schema": 1,
+  "reviewed": "2026-08-24",
+  "review_by": "2026-11-24",
+  "policy": "Release QA validates review dates and source metadata without network access. The scheduled source-freshness workflow performs best-effort network checks against official pages; a reachable page that loses all expected markers is treated as a change requiring human review. Network outages are warnings, not evidence that a source changed.",
+  "sources": [
+    {"id":"iso-20430-2020","name":"ISO 20430:2020","url":"https://www.iso.org/standard/68000.html","authority":"ISO","kind":"standard","status":"Published; International Standard confirmed [90.93]","expected_any":["ISO 20430:2020","International Standard confirmed","Safety requirements"]},
+    {"id":"iso-1133-1-2022","name":"ISO 1133-1:2022","url":"https://www.iso.org/standard/83905.html","authority":"ISO","kind":"standard","status":"Published","expected_any":["ISO 1133-1:2022","melt mass-flow rate","MFR"]},
+    {"id":"osha-1910-147","name":"OSHA 1910.147","url":"https://www.osha.gov/laws-regs/regulations/standardnumber/1910/1910.147","authority":"OSHA","kind":"regulation","status":"Current OSHA standard page","expected_any":["1910.147","control of hazardous energy","lockout/tagout"]},
+    {"id":"osha-1910-212","name":"OSHA 1910.212","url":"https://www.osha.gov/laws-regs/regulations/standardnumber/1910/1910.212","authority":"OSHA","kind":"regulation","status":"Current OSHA standard page","expected_any":["1910.212","General requirements for all machines","machine guarding"]},
+    {"id":"worksafe-nz-lockout","name":"WorkSafe NZ — Machine lockouts","url":"https://www.worksafe.govt.nz/topic-and-industry/machinery/keeping-workers-safe-with-machine-lockouts/","authority":"WorkSafe New Zealand","kind":"regulator guidance","status":"Current guidance page","expected_any":["machine lockouts","safe and effective lockout","de-energise"]},
+    {"id":"nz-hswa-amendment-2026","name":"Health and Safety at Work Amendment Act 2026","url":"https://www.legislation.govt.nz/act/public/2026/38/en/latest/","authority":"New Zealand Legislation","kind":"legislation","status":"Enacted; not yet in force; commencement 1 April 2027","expected_any":["Health and Safety at Work Amendment Act 2026","1 April 2027","Not yet in force"]},
+    {"id":"nist-process-capability","name":"NIST/SEMATECH — Process capability","url":"https://www.itl.nist.gov/div898/handbook/pmc/section1/pmc16.htm","authority":"NIST","kind":"technical reference","status":"Current handbook page","expected_any":["What is Process Capability","in-control process","Cpk"]},
+    {"id":"fda-process-validation","name":"FDA — Process Validation: General Principles and Practices","url":"https://www.fda.gov/regulatory-information/search-fda-guidance-documents/process-validation-general-principles-and-practices","authority":"US FDA","kind":"regulator guidance","status":"Current FDA guidance page; verify revision before regulated use","expected_any":["Process Validation","General Principles and Practices","guidance"]}
+  ]
+}
