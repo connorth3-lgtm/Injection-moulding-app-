@@ -1,13 +1,15 @@
 # MouldMaster Academy Open Desktop
 
-This directory contains the preferred open-source Windows desktop replacement for the legacy `MouldMasterAcademy.exe` launcher.
+This directory contains the normal open-source Windows desktop implementation for MouldMaster Academy and the replacement path for the legacy `MouldMasterAcademy.exe` launcher.
 
 ## Status
 
+- Current desktop release: `2026.08.24.2`
 - Source licence: Apache-2.0
 - Desktop runtime: Electron
 - Packaging: electron-builder
 - Targets: portable EXE, NSIS installer, MSIX / Microsoft Store upload package
+- Public open-source release lane: tagged GitHub Release with hashes/provenance/evidence
 - Training assets: bundled from the repository and SHA-256 verified before launch
 - Local application origin: loopback-only `127.0.0.1` server bound to a random port
 - Node integration: disabled in renderer
@@ -16,11 +18,13 @@ This directory contains the preferred open-source Windows desktop replacement fo
 - Renderer permissions: denied by default
 - External HTTPS links: opened in the user's normal browser
 
-The legacy Windows executable remains a recovery-only component until this replacement has been built and tested on real Windows hardware.
+The legacy Windows executable is frozen as a recovery-only compatibility component. It is not the normal Windows release and must not be represented as fully open source. See `LEGACY_MIGRATION.md` for the final real-machine backup/import validation required before deleting that frozen legacy component.
 
 ## Validation milestone
 
-The first clean Windows validation build is intentionally triggered from the current `main` source after the open-source, SBOM, MSIX, integrity and security gates were added. Do not promote the open desktop package into the Windows recovery feed until both GitHub Actions and a real Windows launch test have passed.
+The open desktop package has passed the repository's Windows GitHub Actions build, security, SBOM, release, assessment and source-integrity gates. `.github/workflows/publish-open-desktop.yml` publishes a versioned tagged GitHub Release when `version.json` changes on `main`, and records the exact source commit and SHA-256 release hashes.
+
+GitHub-hosted Windows validation does not prove a learner's specific hardware/storage migration. Before deleting the frozen legacy recovery launcher, run the checklist in `LEGACY_MIGRATION.md` on a normal Windows 10/11 machine with an exported legacy learner backup.
 
 ## Build prerequisites
 
@@ -60,7 +64,9 @@ npm run dist:msix
 
 Portable and NSIS builds use the stable `electron-builder` version pinned in `package.json` and `package-lock.json`. MSIX support is not present in that stable v26 line, so the `dist:msix` command and Store workflow invoke the exact `electron-builder@27.0.0-alpha.7` MSIX beta separately. Do not silently change either packaging version; run release QA and Windows validation when updating them.
 
-Unsigned local/test packages are not the public trust route. The preferred public Windows distribution is Microsoft Store submission, where the Store identity/publisher values must be the exact values assigned in Partner Center and the submitted package must pass Microsoft's certification/signing process.
+The tagged GitHub Release is the transparent open-source distribution/testing lane. It includes a portable executable plus SHA-256 sums, source commit, integrity manifest, dependency licence inventory, CycloneDX SBOM and QA reports. It is unsigned unless explicitly stated otherwise.
+
+Unsigned local/test packages are not the preferred public trust route. The preferred signed public Windows distribution is Microsoft Store submission, where the Store identity/publisher values must be the exact values assigned in Partner Center and the submitted package must pass Microsoft's certification/signing process.
 
 ## MSIX identity
 
@@ -74,7 +80,7 @@ Do not invent a publisher certificate subject or substitute the display name for
 
 ## Versioning
 
-`version.json` is the repository release record. `desktop_release` is four-part (for example `2026.08.24.1`). npm `package.json` keeps the first three numeric components as its package version, while `build.buildNumber` and `build.buildVersion` carry the fourth Windows release component. QA rejects drift between these values. Windows artifacts use `${buildVersion}` so package filenames and Windows metadata retain the complete desktop release number. Local MSIX builds and the Store workflow both enable MSIX build-number propagation, so the manifest also retains the fourth component.
+`version.json` is the repository release record. `desktop_release` is four-part (for example `2026.08.24.2`). `desktop_release_tag` and `desktop_release_url` identify the corresponding GitHub Release. npm `package.json` keeps the first three numeric components as its package version, while `build.buildNumber` and `build.buildVersion` carry the fourth Windows release component. QA rejects drift between these values. Windows artifacts use `${buildVersion}` so package filenames and Windows metadata retain the complete desktop release number. Local MSIX builds and the Store workflow both enable MSIX build-number propagation, so the manifest also retains the fourth component.
 
 ## Reproducibility
 
@@ -83,6 +89,7 @@ Do not invent a publisher certificate subject or substitute the display name for
 - The MSIX builder beta is invoked by exact version in the local command and Store workflow; it is build tooling rather than packaged runtime code.
 - GitHub Actions records the source commit used for every package.
 - The generated integrity manifest records SHA-256 for the full bundled learning application.
+- The publish workflow refuses to reuse a desktop release tag for different source, requiring a version bump instead.
 
 Byte-for-byte reproducibility of signed Microsoft Store packages is not claimed because signing/timestamps and some packaging metadata are controlled externally. Builds should nevertheless remain traceable to exact source, application dependency lock, asset hashes, and the explicitly selected MSIX builder version.
 
