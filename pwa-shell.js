@@ -1,4 +1,4 @@
-/* MouldMaster PWA shell controller — 2026.08.24.4 */
+/* MouldMaster PWA shell controller — 2026.08.24.5 */
 (function(){
 'use strict';
 const RELEASE='2026.08.24.1';
@@ -46,6 +46,26 @@ function dockReferenceLauncher(){
   open.style.justifyContent='center';
   open.dataset.mmDocked=sidebar?'sidebar':dock.classList.contains('top-actions')?'topbar':'content';
 }
+function configureReferenceDrawer(){
+  const modal=document.querySelector('.mmsrc');if(!modal)return;
+  modal.classList.add('mm-reference-drawer');
+  modal.setAttribute('aria-modal','false');
+  modal.setAttribute('aria-label','MouldMaster references — non-blocking reference drawer');
+  if(!document.getElementById('mm-reference-drawer-style')){
+    const style=document.createElement('style');
+    style.id='mm-reference-drawer-style';
+    style.textContent=`
+.mmsrc.mm-reference-drawer{background:transparent!important;align-items:flex-end!important;justify-content:flex-end!important;padding:12px!important;pointer-events:none!important}
+.mmsrc.mm-reference-drawer[data-open="1"]{display:flex!important}
+.mmsrc.mm-reference-drawer .mmsrc-panel{width:min(430px,calc(100vw - 24px))!important;max-height:min(72dvh,760px)!important;height:auto!important;border-radius:16px!important;pointer-events:auto!important;box-shadow:0 18px 52px rgba(0,0,0,.42)!important}
+.mmsrc.mm-reference-drawer .mmsrc-head{flex:0 0 auto!important}
+.mmsrc.mm-reference-drawer .mmsrc-body{min-height:0!important;overscroll-behavior:contain!important}
+@media(max-width:680px){.mmsrc.mm-reference-drawer{padding:6px!important}.mmsrc.mm-reference-drawer .mmsrc-panel{width:calc(100vw - 12px)!important;max-height:52dvh!important;border-radius:15px!important}.mmsrc.mm-reference-drawer .mmsrc-head{padding-top:10px!important}}
+`;
+    document.head.appendChild(style);
+  }
+  modal.dataset.mmNonBlocking='1';
+}
 function addNZLegacyNote(){
   const host=document.getElementById('standards');if(!host||host.querySelector('[data-mm-nz-legacy-note]')||[...host.querySelectorAll('.legal-note')].some(x=>/NZ source-status (?:note|clarification)/i.test(x.textContent||'')))return;
   const region=(window.user&&window.user.region)||'ALL';if(region!=='ALL'&&region!=='NZ')return;
@@ -60,7 +80,7 @@ async function register(){
   try{const reg=await navigator.serviceWorker.register('./service-worker.js',{scope:'./'});await reg.update()}catch(e){console.warn('[MouldMaster] Offline/update support unavailable:',e)}
 }
 let syncQueued=false;
-function runSync(){syncQueued=false;syncLabels();syncUpdateCard();dockReferenceLauncher();addNZLegacyNote()}
+function runSync(){syncQueued=false;syncLabels();syncUpdateCard();dockReferenceLauncher();configureReferenceDrawer();addNZLegacyNote()}
 function scheduleSync(){
   if(syncQueued)return;
   syncQueued=true;
@@ -71,5 +91,5 @@ const observer=new MutationObserver(scheduleSync);
 if(document.documentElement)observer.observe(document.documentElement,{subtree:true,childList:true});
 window.addEventListener('load',()=>{runSync();register();setTimeout(scheduleSync,250)});
 document.addEventListener('visibilitychange',()=>{if(!document.hidden)scheduleSync()});
-window.MM_SHELL_RELEASE=RELEASE;window.MM_CONTENT_RELEASE=CONTENT;window.MM_DISPLAY_CONTEXT=displayContext;window.MM_REFERENCE_LAUNCHER_DOCK='sidebar-first-normal-flow';
+window.MM_SHELL_RELEASE=RELEASE;window.MM_CONTENT_RELEASE=CONTENT;window.MM_DISPLAY_CONTEXT=displayContext;window.MM_REFERENCE_LAUNCHER_DOCK='sidebar-first-normal-flow';window.MM_REFERENCE_DRAWER_MODE='non-blocking';
 })();
