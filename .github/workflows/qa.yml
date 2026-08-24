@@ -84,3 +84,5 @@ jobs:
         run: python qa_store_submission.py
       - name: NZQA 2026 readiness integrity
         run: python qa_nzqa_readiness.py
+      - name: IACET 2026 readiness integrity
+        run: python qa_iacet_readiness.py
