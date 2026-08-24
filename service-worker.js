@@ -16,6 +16,7 @@ const CORE=[
   './reference-data.js',
   './reference-deep-dive.js',
   './reference-research-extension.js',
+  './reference-20x-extension.js',
   './reference-sources.js',
   './pwa-shell.js'
 ];
