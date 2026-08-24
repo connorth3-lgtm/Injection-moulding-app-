@@ -19,6 +19,7 @@ const CORE=[
   './reference-research-extension.js',
   './reference-20x-extension.js',
   './reference-sources.js',
+  './reference-browser-ui.js',
   './pwa-shell.js'
 ];
 
