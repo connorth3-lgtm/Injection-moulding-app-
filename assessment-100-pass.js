@@ -6,7 +6,7 @@ if(!D)throw new Error('MouldMaster core data must load before assessment audit m
 D.assessmentQA=D.assessmentQA||{};
 D.assessmentQA.reviewed='24 August 2026';
 D.assessmentQA.auditVersion='100-pass full data and assessment audit';
-D.assessmentQA.scope='12 courses, 120 lessons, 12 core defect records, 30 technical exam items, 27 UK/US/NZ regional safety/compliance items, 16 scenario drills, answer keys, rationales, distractor feedback, source links, option shuffling, certification logic and release shipping integrity.';
+D.assessmentQA.scope='12 courses, 120 lessons, 12 core defect records, 30 technical exam items, 27 UK/US/NZ regional safety/compliance items, 40 scenario drills after the assessment-quality expansion, answer keys, rationales, distractor feedback, source links, option shuffling, certification logic and release shipping integrity.';
 D.assessmentQA.deepAudit={
   passCount:100,
   auditDate:'24 August 2026',
@@ -14,8 +14,8 @@ D.assessmentQA.deepAudit={
   regionalQuestions:27,
   totalExamQuestions:57,
   baseScenarios:8,
-  addedScenarios:8,
-  scenarioDrills:16,
+  addedScenarios:32,
+  scenarioDrills:40,
   rules:[
     'One defensible best answer per exam item.',
     'Every regional exam item remains safety-critical.',
@@ -36,5 +36,5 @@ D.assessmentQA.deepAudit={
   }
 };
 D.assessmentQA.passes100='Executable checks are maintained in qa_100_pass.py and documented in sources/ASSESSMENT_AND_DATA_100_PASS_AUDIT.md.';
-window.MM_ASSESSMENT_AUDIT_100={version:'2026-08-24',passCount:100,examQuestions:57,scenarioDrills:16};
+window.MM_ASSESSMENT_AUDIT_100={version:'2026-08-24',passCount:100,examQuestions:57,scenarioDrills:40};
 })();
