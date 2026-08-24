@@ -46,12 +46,13 @@ require("dockReferenceLauncher();configureReferenceDrawer();dockReferenceDataLau
 require("runSync();\nwindow.addEventListener('resize',scheduleSync" in shell, "reference controls must normalize immediately and on viewport changes")
 
 require('<script src="./reference-data.js"></script>' in reference_page, "standalone Reference Data page must use the canonical data pack")
+require('<script src="./reference-2026-expansion.js"></script>' in reference_page, "standalone Reference Data page must load the current practical expansion")
 require('id="mm-reference-back"' in reference_page and "history.back()" in reference_page, "standalone Reference Data page must provide app return navigation")
 require("position:static!important" in reference_page and ".mmrd-close{display:none!important}" in reference_page, "standalone Reference Data page must not behave like a modal")
-require("modal.setAttribute('role','main')" in reference_page and "MM_REFERENCE_DATA_PAGE_MODE='standalone-document'" in reference_page, "standalone Reference Data page semantics/runtime marker missing")
+require("modal.setAttribute('role','main')" in reference_page and "MM_REFERENCE_DATA_PAGE_MODE='standalone-document-full-library'" in reference_page, "standalone Reference Data page semantics/runtime marker missing")
 require("CACHE_VERSION='2026.08.24.1'" in service_worker, "PWA cache version must stay aligned with the browser release")
-require("CACHE_REVISION='reference-standalone-page-20260824'" in service_worker and "${CACHE_VERSION}-${CACHE_REVISION}" in service_worker, "PWA cache revision must advance with the standalone Reference Data route")
-require("'./reference-data.html'" in service_worker, "standalone Reference Data page must be available offline")
+require("CACHE_REVISION='reference-expansion-20260824'" in service_worker and "${CACHE_VERSION}-${CACHE_REVISION}" in service_worker, "PWA cache revision must advance with the expanded Reference Data library")
+require("'./reference-data.html'" in service_worker and "'./reference-2026-expansion.js'" in service_worker, "expanded Reference Data assets must be available offline")
 
 require("MM_REFERENCE_DRAWER_MODE='non-blocking'" in shell, "reference drawer runtime mode marker missing")
 require("desktopRelease" in shell, "desktop runtime version detection missing")
