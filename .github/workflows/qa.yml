@@ -21,6 +21,14 @@ jobs:
           node --check reading-patch.js
           node --check training-upgrade.js
           node --check training-qa-fix.js
+          node --check source-library.js
           node --check pwa-shell.js
+          node --check desktop/electron/src/main.cjs
+          node --check desktop/electron/scripts/generate-integrity.cjs
+          node --check desktop/electron/scripts/generate-licenses.cjs
+          node --check desktop/electron/scripts/generate-sbom.cjs
+          node --check desktop/electron/scripts/qa.cjs
       - name: Release and assessment integrity
         run: python qa_release.py
+      - name: Open desktop release integrity
+        run: python qa_open_desktop.py
