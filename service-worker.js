@@ -17,6 +17,7 @@ const CORE=[
   './assessment-quality-suite.js',
   './assessment-stable-review-bridge.js',
   './assessment-analytics-ui.js',
+  './assessment-final-hardening.js',
   './source-library.js',
   './reference-data.js',
   './reference-deep-dive.js',
