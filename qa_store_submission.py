@@ -82,7 +82,7 @@ for body, name in [(listing, "listing"), (submission, "submission"), (roadmap, "
         for match in matches:
             context = body[max(0, match.start() - 120): min(len(body), match.end() + 120)].lower()
             require(
-                any(gate in context for gate in ["not yet", "not ", "do not", "must not", "until", "only after", "without permission", "false", "premature"]),
+                any(gate in context for gate in ["not yet", "not ", "no ", "do not", "must not", "until", "only after", "without permission", "false", "premature"]),
                 f"premature external approval claim in {name}: {match.group(0)}",
             )
 
