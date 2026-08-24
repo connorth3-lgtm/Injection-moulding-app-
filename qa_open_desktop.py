@@ -69,7 +69,15 @@ msix_assets = (DESKTOP / "scripts" / "generate-msix-assets.ps1").read_text(encod
 require('"../../../mouldmaster-512.png"' in msix_assets, "MSIX artwork source path must resolve to repository root icon")
 
 store = (ROOT / ".github" / "workflows" / "microsoft-store-msix.yml").read_text(encoding="utf-8")
-for marker in ["MM_STORE_IDENTITY_NAME", "MM_STORE_PUBLISHER_DISPLAY_NAME", "createMsixupload=true", "enforcePackageIntegrity=true"]:
+for marker in [
+    "MM_STORE_IDENTITY_NAME",
+    "MM_STORE_PUBLISHER",
+    "MM_STORE_PUBLISHER_DISPLAY_NAME",
+    "electron-builder@27.0.0-alpha.6",
+    "--config.msix.publisher=",
+    "createMsixupload=true",
+    "enforcePackageIntegrity=true",
+]:
     require(marker in store, f"Store package gate missing: {marker}")
 
 version = json.loads((ROOT / "version.json").read_text(encoding="utf-8"))
