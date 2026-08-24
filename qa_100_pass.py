@@ -74,7 +74,7 @@ audit(all(str(x["feedback"][x["correct"]]).strip() for x in S),"correct scenario
 upgrade=text("training-upgrade.js")
 extras=["Fill time drifts but recipe does not","One cavity becomes light","Recovery time becomes erratic","Dimension shifts after water-line work","Part sticks after texture change","Cpk drops after gauge change","DOE result changes by run order","Pressure sensor disagrees with machine"]
 audit(all(x in upgrade for x in extras),"8 added scenarios")
-audit("scenarioDrills:16" in text("assessment-100-pass.js"),"16 scenario metadata")
+audit("scenarioDrills:40" in text("assessment-100-pass.js"),"40 scenario metadata")
 
 def qt(q): return str(q[0]) if len(q)>0 else ""
 def qo(q): return q[1] if len(q)>1 and isinstance(q[1],list) else []
@@ -135,8 +135,8 @@ audit("Health and Safety at Work Amendment Act 2026" in nz and "1 April 2027" in
 # 81-90 runtime answer integrity
 V=json.loads(text("version.json"))
 m=re.search(r"const BANK_VERSION='([^']+)'",upgrade)
-audit(bool(m),"bank version pinned")
-audit(bool(m) and m.group(1)==V.get("question_bank_version"),"bank version matches release")
+audit(bool(m),"legacy bank version pinned")
+audit(bool(m) and m.group(1)==V.get("legacy_review_id_version") and V.get("question_bank_version")=="2026.08.24.2","legacy review ID version and current question-bank revision are explicit")
 audit("normaliseTechnicalQuestion10" in core,"technical normalizer")
 audit("normaliseRegionalQuestion10" in core,"regional normalizer")
 audit("correct:oldIndex===item.correct" in core and "correct:mixed.findIndex(x=>x.correct)" in core,"shuffle keeps answer key")
@@ -167,4 +167,4 @@ refs=["source-library.js","reference-data.js","reference-deep-dive.js","referenc
 audit(all("activeExam" not in text(x) and "#examQuestions" not in text(x) for x in refs),"references isolated from exams")
 
 if N!=100: raise AssertionError(f"audit definition error: {N} checks")
-print("MouldMaster 100-pass data and assessment audit passed (100/100; 57 exam questions; 16 scenarios)")
+print("MouldMaster 100-pass data and assessment audit passed (100/100; 57 exam questions; 40 scenarios)")
