@@ -22,7 +22,8 @@ need(PKG.version===normalized.slice(0,3).join('.'),'desktop package version does
 need(String(PKG.build?.buildNumber)===normalized[3],'desktop buildNumber does not match desktop_release');
 need(PKG.build?.buildVersion===normalized.join('.'),'desktop buildVersion does not match desktop_release');
 need(String(PKG.build?.win?.artifactName||'').includes('${buildVersion}'),'Windows artifact name must include buildVersion');
-for(const marker of ['nodeIntegration: false','contextIsolation: true','sandbox: true','webSecurity: true','allowRunningInsecureContent: false','setPermissionRequestHandler','setPermissionCheckHandler','will-attach-webview','setWindowOpenHandler','server.listen(0, \'127.0.0.1\'','SHA-256 verification failed'])need(MAIN.includes(marker),`desktop security marker missing: ${marker}`);
+for(const marker of ['nodeIntegration: false','contextIsolation: true','sandbox: true','webSecurity: true','allowRunningInsecureContent: false','setPermissionRequestHandler','setPermissionCheckHandler','will-attach-webview','setWindowOpenHandler','server.listen(0, \'127.0.0.1\'','const INTEGRITY_PATH = path.join(__dirname, \'..\', \'generated\', \'integrity.json\')','const allowed = new Set(Object.keys(integrity.files))','method !== \'GET\' && method !== \'HEAD\'','SHA-256 verification failed'])need(MAIN.includes(marker),`desktop security marker missing: ${marker}`);
+need(!MAIN.includes("process.resourcesPath, 'mouldmaster', 'integrity.json'"),'packaged integrity manifest must not be read from writable asset directory');
 need(INTEGRITY.schema===1,'integrity schema mismatch');
 need(INTEGRITY.release===VERSION.desktop_release,'integrity release must match desktop_release');
 need(Object.keys(INTEGRITY.files||{}).length>=15,'integrity manifest is incomplete');
