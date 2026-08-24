@@ -1,6 +1,8 @@
 # Draft NZQA Micro-credential Concept — Injection Moulding Process Foundations & Troubleshooting
 
-Status: preparation draft only. **Not NZQA approved.** Final title, level, credits, outcomes and assessment structure must be agreed with an eligible NZQA-recognised provider and approved through the applicable NZQA process.
+Status: preparation draft only. **Not NZQA approved or accredited.** Final title, NZQCF level, credits, learning outcomes, assessment structure, developer role and delivery arrangements must be agreed with an eligible NZQA-recognised tertiary education organisation (TEO) and approved through the applicable NZQA process.
+
+Rule baseline checked against the **Micro-credential Approval and Accreditation Rules 2026** and **Qualification and Micro-credential Listing and Operational Rules 2026**, effective 19 January 2026.
 
 ## Proposed purpose
 Provide employed or aspiring plastics-manufacturing workers with structured knowledge and evidence-based troubleshooting skills for injection moulding, including machinery safety awareness, process fundamentals, material behaviour, defect diagnosis and controlled process studies.
@@ -12,12 +14,12 @@ Provide employed or aspiring plastics-manufacturing workers with structured know
 - quality, maintenance or engineering staff needing process fundamentals
 
 ## Proposed entry requirements
-Draft:
-- workplace access to injection-moulding context is recommended for practical evidence
-- sufficient English/numeracy to interpret machine/process information and safety documentation
-- employer/site induction remains separate and mandatory where applicable
+Draft only:
+- workplace access to an injection-moulding context is recommended for practical evidence
+- sufficient language, literacy and numeracy to interpret machine/process information and safety documentation
+- employer/site induction and machine-specific authorisation remain separate and mandatory where applicable
 
-No claim is made here about NZQF level until provider mapping is completed.
+No claim is made here about NZQCF level until formal outcome-to-level mapping is completed with a provider.
 
 ## Proposed learning outcomes
 A successful learner should be able to:
@@ -30,12 +32,17 @@ A successful learner should be able to:
 7. Interpret basic capability, measurement and experimental evidence at an appropriate introductory/applied level.
 8. Document a controlled troubleshooting investigation and justify a safe next step or escalation decision.
 
+These are concept outcomes only. The provider must determine the final number, wording, level fit and component structure.
+
 ## Proposed assessment evidence
 ### Knowledge assessment
+Concept gate:
 - randomised technical questions
 - applicable regional safety-critical questions
 - minimum 80% overall
 - zero incorrect safety-critical items
+
+The provider must approve the final assessment standard, reassessment rules and evidence-retention requirements.
 
 ### Applied case assessment
 Learner analyses realistic cases such as:
@@ -48,7 +55,7 @@ Learner analyses realistic cases such as:
 - gate-seal/packing issue
 - cooling/warpage issue
 
-Required response:
+Required response concept:
 - state likely mechanism(s)
 - identify evidence to check
 - state competing cause
@@ -56,7 +63,7 @@ Required response:
 - identify when escalation is required
 
 ### Practical workplace evidence
-Observed by an approved assessor/supervisor using a controlled checklist. Examples:
+Observed by an appropriately authorised assessor/supervisor using a controlled checklist. Examples:
 - identify machine hazard zones and safeguarding status
 - identify major cycle phases and relevant actuals
 - retrieve approved machine/material documentation
@@ -67,37 +74,38 @@ Observed by an approved assessor/supervisor using a controlled checklist. Exampl
 
 Practical evidence must not require unauthorised machine intervention.
 
-## Credit/learning-hour design placeholder
-NZQA micro-credentials are generally designed within the permitted micro-credential credit range; one NZQF credit represents 10 notional learning hours. Final credits must be based on a defensible workload analysis, not fitted to the current app duration after the fact.
+## Credit and learning-hour design
+Under the current NZQCF rules, micro-credentials are **1–40 credits**, and **one credit represents 10 notional learning hours**.
 
-Workload analysis should include:
-- guided lesson time
+Final credits must be based on a documented workload analysis and best-fit outcome design, not fitted to the current app duration after the fact.
+
+Workload analysis must include relevant time for:
+- guided lesson activity
 - independent study/review
-- formative practice
+- formative practice and retrieval practice
+- troubleshooting/case work
 - summative knowledge assessment
 - applied case assessment
 - practical evidence/observation
+- feedback/reassessment where applicable
 
-## Moderation proposal
-- pre-assessment moderation of summative items and practical checklist
-- annual post-assessment moderation using learner evidence samples
-- external process SME participation
-- safety/legal source review for target jurisdiction
-- material-science specialist review for resin/material modules
-- documented action log for moderation findings
+See `NZQA_2026_EVIDENCE_MATRIX.md` for the workload-study gate.
 
-## Stakeholder evidence required before submission
-Collect letters/interviews/survey evidence from:
+## Need and stakeholder support
+The 2026 approval criteria require evidence of need and stakeholder support; where appropriate, the relevant **Industry Skills Board (ISB)** should be considered.
+
+Collect documented evidence from:
 - injection-moulding employers
-- plastics manufacturing industry bodies
+- plastics/manufacturing industry organisations
 - workers/setters/technicians
 - training providers/assessors
-- relevant recruitment/workforce stakeholders
+- recruitment/workforce stakeholders
+- relevant ISB contacts where appropriate to scope
 
-Evidence should show a genuine skills/training need and avoid claiming employer endorsement without written permission.
+Evidence must show a real learner/workforce need, not just interest in the software. Do not claim endorsement without written permission.
 
 ## Delivery model draft
-Blended:
+Blended concept:
 - self-paced digital theory and practice
 - facilitated workplace/application activities
 - controlled summative knowledge checks
@@ -105,38 +113,75 @@ Blended:
 
 Pure self-paced app completion should **not** be the sole basis of an NZQA-recognised award.
 
+The accredited provider must own and evidence delivery suitability, learner support, staff capability, facilities/resources and assessment/moderation capability.
+
+## Review and change control
+MouldMaster already has version-controlled releases, source-freshness checks and technical change control. These support—but do not replace—the formal review obligations of an approved micro-credential.
+
+The provider/developer must agree:
+- formal review period/date
+- stakeholder input process
+- responsibility for curriculum and assessment review
+- process for responding to regulatory/technical changes
+- change-control thresholds and any NZQA consent required for changes
+- evidence retained from each review
+
+Do not assume an annual review unless the provider and listed review arrangements require it.
+
+## Eligible application route
+NZQA currently accepts micro-credential applications from eligible TEOs such as polytechnics/institutes of technology, wānanga, NZQA-registered private training establishments and government training establishments. Industry Skills Boards may apply for listing/approval but not provider accreditation.
+
+The preferred MouldMaster route remains partnership with an eligible NZQA-recognised provider that can own delivery/accreditation responsibilities and submit through MyNZQA.
+
 ## Required provider decisions
-Before submission, the partner/approved provider must decide and control:
-- final qualification/micro-credential name
-- NZQF level and credits
-- admission and RPL/credit arrangements
+Before submission, the partner provider must decide/control:
+- final title and purpose
+- developer/provider roles
+- NZQCF level and credits
+- admission and RPL/credit recognition and transfer arrangements
+- learning structure and notional hours
 - assessment and reassessment policy
 - assessor competence requirements
 - moderation system
-- learner support
-- record retention
+- learner support and accessibility
+- identity, enrolment, privacy and record retention
 - complaints/appeals
-- delivery sites/modes
-- Māori/Pasifika and accessibility considerations appropriate to learner cohort
-- programme review cycle
+- delivery sites/modes and workplace arrangements
+- Māori, Pacific and other learner-support considerations appropriate to the cohort
+- formal review cycle
+- official achievement reporting and award-document process
 
 ## Evidence already available in MouldMaster
-- structured beginner-to-expert curriculum
+- structured beginner-to-advanced curriculum
 - audited question bank with safety-critical pass gate
 - UK/US/NZ source framework
 - practical supervisor checklist concept
 - assessment rationales/references
+- realistic troubleshooting cases
 - version-controlled releases
 - backup/change-control mechanisms
 - quality/assessment draft manual
+- source-freshness and reference QA
+- `NZQA_2026_EVIDENCE_MATRIX.md`
 
 ## Gaps before NZQA submission
-- legal provider/partner confirmed
-- NZQF level/credit mapping
+- eligible legal provider/partner confirmed
+- developer/provider/ISB roles confirmed
+- NZQCF level/credit mapping
+- formal workload study
 - formal needs analysis and stakeholder evidence
-- assessor/moderator appointment and CV/competence evidence
-- practical assessment instrument and marking schedule externally reviewed
+- relevant ISB engagement where appropriate
+- assessor/moderator appointment and competence evidence
+- final assessment instruments and marking schedules externally/provider reviewed
 - identity/enrolment/record system suitable for recognised credentials
-- controlled learner-support/appeals/complaints policies
-- full moderation schedule and evidence templates
+- controlled learner-support/appeals/complaints processes
+- moderation schedule and evidence templates
 - pilot cohort evidence and programme evaluation
+- formal review date/cycle and change governance
+- official NZQA achievement-reporting route confirmed
+
+## Current source links to recheck before submission
+- NZQA Micro-credential Approval and Accreditation Rules 2026
+- NZQA Qualification and Micro-credential Listing and Operational Rules 2026
+- NZQA micro-credential listing, approval and accreditation page/guidelines
+- MyNZQA micro-credential application instructions
