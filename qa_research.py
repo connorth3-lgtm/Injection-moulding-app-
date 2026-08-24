@@ -5,6 +5,7 @@ import subprocess
 
 ROOT = Path(__file__).resolve().parent
 ASSETS = ["reference-research-extension.js", "reference-20x-extension.js"]
+REGISTER = "sources/RESEARCH_20X_SOURCE_REGISTER.md"
 
 
 def text(name):
@@ -18,6 +19,7 @@ def need(cond, msg):
 
 for asset in ASSETS:
     need((ROOT / asset).exists(), f"research extension missing: {asset}")
+need((ROOT / REGISTER).exists(), "20-pass research source register missing")
 
 research = text("reference-research-extension.js")
 for marker in [
@@ -81,6 +83,22 @@ for marker in [
 need("http://" not in x20, "20-pass research sources must use HTTPS")
 need(len(re.findall(r"\{\s*name\s*:\s*[\"']", x20)) >= 90, "20-pass structured research set unexpectedly small")
 need(len(set(re.findall(r"https://[^'\"\s<]+", x20))) >= 30, "20-pass research source set unexpectedly small")
+
+register = text(REGISTER)
+for marker in [
+    "Twenty research passes",
+    "Rheology and shear response",
+    "Drying, moisture and hydrolysis",
+    "Hot runners and valve gates",
+    "Machine vision and ML inspection",
+    "Process validation and SPC",
+    "Predictive maintenance",
+    "Micro injection moulding",
+    "Energy efficiency",
+    "Overmoulding and insert moulding",
+    "Published experiment demonstrates behaviour under its own material, mould, machine and test conditions",
+]:
+    need(marker in register, f"20-pass source register marker missing: {marker}")
 
 index = text("index.html")
 for asset in ASSETS:
