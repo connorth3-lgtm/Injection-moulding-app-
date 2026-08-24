@@ -147,7 +147,7 @@ assert dpkg["license"] == "Apache-2.0", "desktop package must use Apache-2.0"
 for dep in ["electron", "electron-builder"]:
     assert re.fullmatch(r"\d+\.\d+\.\d+", dpkg["devDependencies"][dep]), f"{dep} must be exact-version pinned"
 dmain = (desktop_root / "src/main.cjs").read_text(encoding="utf-8")
-for marker in ["nodeIntegration: false", "contextIsolation: true", "sandbox: true", "webSecurity: true", "allowRunningInsecureContent: false", "setPermissionRequestHandler", "setPermissionCheckHandler", "will-attach-webview", "setWindowOpenHandler", "server.listen(0, '127.0.0.1')", "SHA-256 verification failed"]:
+for marker in ["nodeIntegration: false", "contextIsolation: true", "sandbox: true", "webSecurity: true", "allowRunningInsecureContent: false", "setPermissionRequestHandler", "setPermissionCheckHandler", "will-attach-webview", "setWindowOpenHandler", "server.listen(0, '127.0.0.1'", "SHA-256 verification failed"]:
     assert marker in dmain, f"open desktop security control missing: {marker}"
 assert Path(".github/workflows/desktop-dependency-lock.yml").exists(), "desktop dependency lock workflow missing"
 assert Path(".github/workflows/open-desktop-build.yml").exists(), "open desktop build workflow missing"
