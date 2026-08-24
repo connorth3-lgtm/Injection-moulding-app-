@@ -1,32 +1,65 @@
 # MouldMaster Academy — Certification & Accreditation Roadmap
 
-Status: **preparation in progress — not yet accredited by NZQA or IACET, and not yet Microsoft Store certified**.
+Status: **repository preparation is advanced, but MouldMaster Academy is not yet accredited by NZQA or IACET and is not yet Microsoft Store certified**.
 
-Current product baselines:
-- PWA shell: `2026.08.23.10`
-- Training content: `2026.08.23.5`
-- Audited question bank: `2026.08.21.1`
-- Windows recovery feed: `2026.08.21.1`
+Current product baselines are recorded in `../version.json`. As of 2026-08-24:
+- PWA / browser shell: `2026.08.24.1`
+- Open Windows desktop: `2026.08.24.2`
+- Training content: `2026.08.24.2`
+- Audited question bank: `2026.08.24.2`
+- Assessment quality / analytics hardening: `2026.08.24.3`
+- Learner-scoped assessment storage: `2026.08.24.4`
+- Legacy Windows recovery feed: `2026.08.21.1`
 
-## 1. Software trust — preferred route
+## 1. Software trust — Microsoft Store route
 
-### Microsoft Store PWA
-MouldMaster already has the core ingredients Microsoft requires for a Progressive Web App: HTTPS hosting, a web app manifest, installable icons, standalone display mode and a service worker/offline layer.
+### Preferred Store package: open Electron/MSIX desktop
 
-Preferred publishing path:
-1. Create/verify a Microsoft Partner Center developer account.
-2. Reserve the product name **MouldMaster Academy**.
-3. Run the live PWA through PWABuilder using the GitHub Pages URL.
-4. Fix any PWABuilder report-card action items.
-5. Generate the Windows Store package.
-6. Complete Store listing, privacy, age-rating, accessibility and product declarations.
-7. Submit for Microsoft certification.
-8. After approval, use the Microsoft Store as the primary Windows distribution route.
+The preferred Microsoft Store route is now the source-backed Electron desktop implementation under `../desktop/electron/`, packaged through the gated `../.github/workflows/microsoft-store-msix.yml` workflow.
 
-Why this route is preferred: Microsoft Store-distributed MSIX/PWA packages are signed by Microsoft after certification. This avoids relying on the current unsigned EXE for public distribution.
+Why this route is preferred:
+- repository-owned desktop source is public
+- exact direct dependencies and npm lockfile are committed
+- bundled learning assets are SHA-256 verified before launch
+- Electron renderer privileges are restricted
+- dependency licence inventory and CycloneDX SBOM are generated
+- x64 + arm64 MSIX/MSIX bundle/MSIX upload packaging is automated
+- package identity is taken from the actual Partner Center product rather than fabricated in source
+- Microsoft Store MSIX/AppX packages are re-signed by Microsoft after successful certification under Microsoft's current published process
+
+The PWA remains a supported browser/installable-web lane and may still be assessed with PWABuilder, but Store metadata must describe the package actually submitted.
+
+### Microsoft Store path
+
+Repository-controlled preparation:
+- [x] open Windows desktop source and reproducible build workflow
+- [x] public privacy/support pages
+- [x] release/security/assessment/source QA
+- [x] Partner Center identity-gated Store workflow
+- [x] Store listing draft
+- [x] screenshot/asset checklist
+- [x] certification claim gate
+
+External/account steps:
+1. Create or verify the Microsoft Partner Center developer account.
+2. Reserve **MouldMaster Academy** as the Store product name.
+3. Copy the exact Partner Center package identity values into the repository variables required by the Store workflow.
+4. Complete real Windows validation and Windows App Certification Kit testing.
+5. Run the Store MSIX workflow from the intended source commit.
+6. Upload the package in Partner Center.
+7. Complete pricing/availability, properties, age ratings, Store listing, privacy/support and any capability declarations.
+8. Upload actual application screenshots with no learner PII.
+9. Submit for Microsoft certification.
+10. Only after Microsoft grants certification may the project describe that Store package as Microsoft Store certified/signed by Microsoft.
+
+See:
+- `MICROSOFT_STORE_SUBMISSION.md`
+- `MICROSOFT_STORE_LISTING_COPY.md`
+- `MICROSOFT_STORE_ASSET_CHECKLIST.md`
 
 ### Direct EXE/MSIX distribution
-Keep as a secondary route only. Production direct-download binaries should use a trusted signing method such as Azure Artifact Signing or an OV code-signing certificate. Self-signed certificates are for development/testing only.
+
+Direct-download builds remain a separate trust lane. The GitHub portable release is transparent/open-source distribution and testing, but it is not Microsoft Store certification. Production binaries distributed directly outside the Store should use an appropriate trusted signing method; private signing keys/certificates must never be committed to the repository.
 
 ## 2. Training credential status
 
@@ -37,17 +70,18 @@ Until an external education/accreditation body approves the programme, MouldMast
 - government certification
 - statutory competence or authorisation to operate machinery
 
-A practical supervisor sign-off is evidence for workplace learning; it is not a substitute for employer authorisation, machine-specific training, site procedures or legal duties.
+A practical supervisor sign-off is evidence for workplace learning; it is not a substitute for employer authorisation, machine-specific training, approved site procedures or legal duties.
 
 ## 3. NZQA pathway
 
 ### Fastest practical route — partner with an existing recognised provider
-The preferred first route is to partner with an NZQA-recognised education provider (for example an NZQA-registered PTE) and jointly develop/approve an injection-moulding micro-credential.
 
-Current 2026 NZQA micro-credential evidence areas include:
+The preferred first route is to partner with an NZQA-recognised education provider and jointly develop/approve the appropriate learning product rather than representing MouldMaster itself as an approved provider.
+
+Preparation evidence areas include:
 - appropriate title and learning outcomes
 - evidence of need and stakeholder support
-- admission, recognition of prior learning/credit, length and structure
+- admission/RPL/credit and programme structure decisions
 - assessment methods and completion requirements
 - regular review for currency and content
 - delivery appropriate to learners and delivery mode
@@ -56,35 +90,52 @@ Current 2026 NZQA micro-credential evidence areas include:
 - suitable staff, facilities/resources and learner support
 - review of delivery and learner outcomes
 
-Approved NZQCF micro-credentials are normally 1–40 credits. One credit represents 10 notional learning hours.
+The exact NZQA product type, level, credits and approval route must be agreed with the recognised provider and checked against current NZQA rules at the time of application.
 
-### Own-PTE route
-This is a separate organisational project. It requires legal/governance information, financial and operational evidence, learner/academic record systems, policies, suitable management and evidence that the proposed training meets learner/community/stakeholder needs. Do not submit until the organisation and governance structure are settled.
+### Own-provider route
+
+Becoming a recognised education provider is a separate organisational project. It requires legal/governance, financial, operational, learner-record, policy, management and quality-system evidence. Do not present repository preparation as provider registration or accreditation.
+
+See:
+- `NZQA_MICROCREDENTIAL_DRAFT.md`
+- `PROVIDER_PARTNERSHIP_OUTREACH.md`
+- `QUALITY_AND_ASSESSMENT_MANUAL.md`
 
 ## 4. IACET pathway
 
-Target standard: **ANSI/IACET 1-2018 Standard for Continuing Education and Training**.
+The repository contains an IACET readiness matrix, but Accredited Provider status is an external organisational approval.
 
-Readiness conditions include:
-- applicant must be an eligible legal organisation/recognised sole proprietorship or governmental unit
-- organisation must have operated under the applicable conditions for at least one year
-- evidence-based policies, processes and records are required
-- learning needs, instructional design, learning outcomes, assessment, records, evaluation and continuous improvement must be controlled as an organisational system
+Readiness work includes:
+- eligible applicant legal entity
+- organisational ownership of the quality system
+- learning-needs and instructional-design controls
+- measurable learning outcomes
+- assessment and completion records
+- programme evaluation
+- records management
+- continuous improvement
+- evidence from a real operating/pilot cycle
 
-Current published 2026 IACET costs should be rechecked immediately before purchase/submission. IACET currently lists a USD 495 Standard/Application bundle and a separate initial application review fee.
+Current IACET fees, standards and eligibility requirements must be rechecked directly with IACET before purchase or application. Only after IACET grants Accredited Provider status may the organisation claim IACET CEUs.
 
-Only after IACET grants Accredited Provider status may the organisation issue IACET CEUs.
+See `IACET_READINESS_MATRIX.md`.
 
 ## 5. Evidence pack in this repository
 
-The following files are preparation documents, not proof of accreditation:
+Preparation documents are evidence of internal readiness, not proof of external approval:
 - `QUALITY_AND_ASSESSMENT_MANUAL.md`
 - `NZQA_MICROCREDENTIAL_DRAFT.md`
 - `IACET_READINESS_MATRIX.md`
 - `MICROSOFT_STORE_SUBMISSION.md`
+- `MICROSOFT_STORE_LISTING_COPY.md`
+- `MICROSOFT_STORE_ASSET_CHECKLIST.md`
 - `PROVIDER_PARTNERSHIP_OUTREACH.md`
 - `../credentials/README.md`
 
-## 6. Gating rule
+## 6. External-action tracker
 
-No UI, certificate, marketing copy or store listing may say **accredited**, **NZQA approved**, **IACET CEU**, **certified by Microsoft**, **qualified**, or an equivalent claim until the relevant external body has actually granted that status.
+Repository-completable work and external/account/provider steps are separated in GitHub issue #5. Legacy Windows migration/retirement checks are tracked in issue #6.
+
+## 7. Gating rule
+
+No UI, certificate, marketing copy, Store listing or repository documentation may say **accredited**, **NZQA approved**, **IACET CEU**, **Microsoft certified**, **Microsoft Store certified**, **qualified**, or an equivalent external-approval claim until the relevant external body has actually granted that status.
