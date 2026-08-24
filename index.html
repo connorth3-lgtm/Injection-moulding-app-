@@ -32,24 +32,24 @@
       ['mm-shell-release','<meta name="mm-shell-release" content="'+SHELL_RELEASE+'">']
     ];
     const BODY_SCRIPTS=[
-      './reading-patch.js',
-      './training-upgrade.js',
-      './training-qa-fix.js',
-      './assessment-100-pass.js',
-      './assessment-deep-dive.js',
-      './assessment-storage-scope.js',
-      './assessment-quality-suite.js',
-      './assessment-stable-review-bridge.js',
-      './assessment-analytics-ui.js',
-      './assessment-final-hardening.js',
-      './source-library.js',
-      './reference-data.js',
-      './reference-deep-dive.js',
-      './reference-research-extension.js',
-      './reference-20x-extension.js',
-      './reference-sources.js',
-      './reference-browser-ui.js',
-      './pwa-shell.js'
+      ['./reading-patch.js','<script src="./reading-patch.js">'],
+      ['./training-upgrade.js','<script src="./training-upgrade.js">'],
+      ['./training-qa-fix.js','<script src="./training-qa-fix.js">'],
+      ['./assessment-100-pass.js','<script src="./assessment-100-pass.js">'],
+      ['./assessment-deep-dive.js','<script src="./assessment-deep-dive.js">'],
+      ['./assessment-storage-scope.js','<script src="./assessment-storage-scope.js">'],
+      ['./assessment-quality-suite.js','<script src="./assessment-quality-suite.js">'],
+      ['./assessment-stable-review-bridge.js','<script src="./assessment-stable-review-bridge.js">'],
+      ['./assessment-analytics-ui.js','<script src="./assessment-analytics-ui.js">'],
+      ['./assessment-final-hardening.js','<script src="./assessment-final-hardening.js">'],
+      ['./source-library.js','<script src="./source-library.js">'],
+      ['./reference-data.js','<script src="./reference-data.js">'],
+      ['./reference-deep-dive.js','<script src="./reference-deep-dive.js">'],
+      ['./reference-research-extension.js','<script src="./reference-research-extension.js">'],
+      ['./reference-20x-extension.js','<script src="./reference-20x-extension.js">'],
+      ['./reference-sources.js','<script src="./reference-sources.js">'],
+      ['./reference-browser-ui.js','<script src="./reference-browser-ui.js">'],
+      ['./pwa-shell.js','<script src="./pwa-shell.js">']
     ];
     const closeScript='</scr'+'ipt>';
     function ensureViewportFit(out){
@@ -70,8 +70,8 @@
       for(const [needle,markup] of HEAD_ASSETS){
         if(!out.includes(needle))out=out.replace(/<\/head>/i,markup+'\n</head>');
       }
-      for(const src of BODY_SCRIPTS){
-        if(!out.includes(src))out=out.replace(/<\/body>/i,`<script src="${src}">${closeScript}\n</body>`);
+      for(const [src,tag] of BODY_SCRIPTS){
+        if(!out.includes(src))out=out.replace(/<\/body>/i,tag+closeScript+'\n</body>');
       }
       return out;
     }
