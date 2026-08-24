@@ -29,6 +29,7 @@ jobs:
           node --check training-upgrade.js
           node --check training-qa-fix.js
           node --check assessment-100-pass.js
+          node --check assessment-deep-dive.js
           node --check source-library.js
           node --check reference-data.js
           node --check reference-deep-dive.js
@@ -46,6 +47,8 @@ jobs:
         run: python qa_release.py
       - name: 100-pass data and assessment audit
         run: python qa_100_pass.py
+      - name: Deep question and answer integrity
+        run: python qa_question_deep_dive.py
       - name: Reference data and source integrity
         run: python qa_reference.py
       - name: Plugin-backed research integrity
