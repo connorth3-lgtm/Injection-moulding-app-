@@ -134,24 +134,58 @@ See:
 - `PROVIDER_PARTNERSHIP_OUTREACH.md`
 - `QUALITY_AND_ASSESSMENT_MANUAL.md`
 
-## 4. IACET pathway
+## 4. IACET pathway — current 2026 public baseline
 
-The repository contains an IACET readiness matrix, but Accredited Provider status is an external organisational approval.
+IACET accreditation is **organisational accreditation** for providers of adult continuing education and training. IACET does not independently approve one MouldMaster course as an IACET course without the organisation becoming an Accredited Provider.
 
-Readiness work includes:
-- eligible applicant legal entity
-- organisational ownership of the quality system
-- learning-needs and instructional-design controls
-- measurable learning outcomes
-- assessment and completion records
-- programme evaluation
-- records management
-- continuous improvement
-- evidence from a real operating/pilot cycle
+The public IACET eligibility baseline verified on 2026-08-24 requires an applicant to be a legally recognised eligible entity, have at least **one year in business**, have operated under the application conditions for at least **three months**, define the organisational unit responsible for CE/T, and be able to evidence compliant policies/processes in the application and accreditation interview.
 
-Current IACET fees, standards and eligibility requirements must be rechecked directly with IACET before purchase or application. Only after IACET grants Accredited Provider status may the organisation claim IACET CEUs.
+IACET's current public accreditation pages still identify **ANSI/IACET 1-2018** as the operative CE/T Standard. Publicly described categories cover:
+- Organization, Responsibility and Control
+- Learning Environment and Support Systems
+- Planning and Instructional Personnel
+- Needs Analysis
+- Learning Outcomes
+- Content and Instructional Requirements
+- Assessment of Learning Outcomes
+- Awarding the IACET CEU and Maintaining Learner Records
+- Evaluation of Learning Events
 
-See `IACET_READINESS_MATRIX.md`.
+Current 2026 public cost/process checkpoint:
+- Standard + Initial Application bundle: **USD 495**
+- Initial Application Review Fee: **USD 4,845**
+- Accredited Provider Annual Maintenance Fee: **USD 1,245**
+- purchased application validity: one year
+- typical review: approximately 3–4 months
+- virtual accreditation interview by default
+- ongoing annual reporting/maintenance and a five-year reaccreditation cycle after approval
+
+Fees/process details must be rechecked directly with IACET immediately before purchase or payment.
+
+### MouldMaster readiness boundary
+
+Repository preparation can supply versioned instructional content, assessment QA, source controls, policy drafts, evidence structures and claim gates. IACET will require evidence that the **applicant organisation actually operates** the CE/T management system.
+
+Priority external/organisational evidence includes:
+- eligible legal entity and operating-history proof
+- defined organisational CE/T unit and named accountable owner
+- real needs-analysis records
+- qualified instructional personnel/SME evidence
+- controlled learning-event design records
+- learner support/accessibility operation
+- provider-controlled learner records/privacy/security
+- real learner/event evaluations
+- corrective actions and management review
+- pilot/operating evidence showing policies are used in practice
+
+The public CEU definition is **1 CEU = 10 contact hours**, but this arithmetic does not authorize MouldMaster to advertise IACET CEUs. Only after IACET grants Accredited Provider status may the organisation issue IACET CEUs, and then only through the accredited organisation's compliant learning-event and record processes.
+
+Recommended sequence: verify legal/operating eligibility first, use IACET's free readiness resources, run a real operating/pilot cycle, close evidence gaps, then purchase the current Standard/application bundle for a clause-level self-audit when the organisation is genuinely ready.
+
+See:
+- `IACET_READINESS_MATRIX.md`
+- `IACET_2026_HANDOFF.md`
+- `QUALITY_AND_ASSESSMENT_MANUAL.md`
 
 ## 5. Evidence pack in this repository
 
@@ -160,6 +194,7 @@ Preparation documents are evidence of internal readiness, not proof of external 
 - `NZQA_2026_EVIDENCE_MATRIX.md`
 - `NZQA_MICROCREDENTIAL_DRAFT.md`
 - `IACET_READINESS_MATRIX.md`
+- `IACET_2026_HANDOFF.md`
 - `MICROSOFT_STORE_SUBMISSION.md`
 - `MICROSOFT_STORE_LISTING_COPY.md`
 - `MICROSOFT_STORE_ASSET_CHECKLIST.md`
