@@ -17,9 +17,12 @@ def require(condition: bool, message: str) -> None:
 matrix_path = CERT / "IACET_READINESS_MATRIX.md"
 handoff_path = CERT / "IACET_2026_HANDOFF.md"
 roadmap_path = CERT / "README.md"
+listing_path = CERT / "MICROSOFT_STORE_LISTING_COPY.md"
+submission_path = CERT / "MICROSOFT_STORE_SUBMISSION.md"
+assets_path = CERT / "MICROSOFT_STORE_ASSET_CHECKLIST.md"
 
-for path in [matrix_path, handoff_path, roadmap_path]:
-    require(path.exists(), f"IACET readiness file missing: {path.relative_to(ROOT)}")
+for path in [matrix_path, handoff_path, roadmap_path, listing_path, submission_path, assets_path]:
+    require(path.exists(), f"IACET readiness/claim file missing: {path.relative_to(ROOT)}")
 
 matrix = text(matrix_path)
 handoff = text(handoff_path)
@@ -88,9 +91,23 @@ require("IACET_2026_HANDOFF.md" in roadmap, "certification roadmap missing IACET
 require("IACET_READINESS_MATRIX.md" in roadmap, "certification roadmap missing IACET readiness matrix")
 require("Only after IACET grants Accredited Provider status" in roadmap, "IACET claim gate missing from roadmap")
 
-# Prevent unqualified affirmative approval language in IACET readiness documents.
-for body, name in [(matrix, "matrix"), (handoff, "handoff")]:
-    for claim in [r"\bMouldMaster Academy is an IACET Accredited Provider\b", r"\bMouldMaster issues IACET CEUs\b"]:
+# Explicitly block affirmative project/course approval claims across certification-facing files.
+claim_bodies = {
+    "matrix": matrix,
+    "handoff": handoff,
+    "roadmap": roadmap,
+    "store listing": text(listing_path),
+    "store submission": text(submission_path),
+    "store assets": text(assets_path),
+}
+for name, body in claim_bodies.items():
+    for claim in [
+        r"\bMouldMaster(?: Academy)? is an IACET Accredited Provider\b",
+        r"\bMouldMaster(?: Academy)? issues IACET CEUs\b",
+        r"\bMouldMaster(?: Academy)? awards IACET CEUs\b",
+        r"\bIACET[- ]approved (?:course|training|programme|program)\b",
+        r"\bIACET[- ]accredited (?:course|training|programme|program)\b",
+    ]:
         require(not re.search(claim, body, flags=re.I), f"premature IACET approval claim in {name}")
 
 print("MouldMaster IACET 2026 readiness QA passed")
