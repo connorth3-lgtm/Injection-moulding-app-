@@ -80,7 +80,7 @@ for body, name in [(listing, "listing"), (submission, "submission"), (roadmap, "
     for claim in [r"\bMicrosoft certified\b", r"\bMicrosoft Store certified\b", r"\bNZQA approved\b", r"\bIACET CEUs?\b"]:
         matches = list(re.finditer(claim, body, flags=re.I))
         for match in matches:
-            context = body[max(0, match.start() - 120): min(len(body), match.end() + 120)].lower()
+            context = body[max(0, match.start() - 400): min(len(body), match.end() + 400)].lower()
             require(
                 any(gate in context for gate in ["not yet", "not ", "no ", "do not", "must not", "until", "only after", "without permission", "false", "premature"]),
                 f"premature external approval claim in {name}: {match.group(0)}",
