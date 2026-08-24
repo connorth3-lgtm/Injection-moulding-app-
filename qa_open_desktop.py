@@ -39,6 +39,21 @@ require(lock.get("lockfileVersion", 0) >= 3, "desktop npm lockfile must be v3+")
 for dep in ("electron", "electron-builder"):
     require(lock["packages"][""]["devDependencies"][dep] == pkg["devDependencies"][dep], f"locked {dep} version mismatch")
 
+version = json.loads((ROOT / "version.json").read_text(encoding="utf-8"))
+release = version.get("desktop_release", "")
+parts = release.split(".")
+require(len(parts) == 4 and all(x.isdigit() for x in parts), "desktop_release must be a four-part numeric version")
+normalized = [str(int(x)) for x in parts]
+expected_pkg_version = ".".join(normalized[:3])
+expected_build_number = normalized[3]
+expected_build_version = ".".join(normalized)
+require(pkg.get("version") == expected_pkg_version, "desktop package version must match the first three desktop_release components")
+require(str(pkg["build"].get("buildNumber")) == expected_build_number, "desktop buildNumber must match desktop_release fourth component")
+require(pkg["build"].get("buildVersion") == expected_build_version, "desktop buildVersion must match desktop_release")
+require("${buildVersion}" in pkg["build"]["win"].get("artifactName", ""), "Windows artifact name must include buildVersion")
+require(version.get("windows_recovery_release"), "windows_recovery_release missing from version.json")
+require(version["desktop_release"] != version["windows_recovery_release"], "open desktop and legacy recovery lanes must be explicit and separate")
+
 main = (DESKTOP / "src" / "main.cjs").read_text(encoding="utf-8")
 for marker in [
     "nodeIntegration: false",
@@ -75,14 +90,11 @@ for marker in [
     "MM_STORE_PUBLISHER_DISPLAY_NAME",
     "electron-builder@27.0.0-alpha.6",
     "--config.msix.publisher=",
+    "--config.msix.setBuildNumber=true",
     "createMsixupload=true",
     "enforcePackageIntegrity=true",
+    "${buildVersion}",
 ]:
     require(marker in store, f"Store package gate missing: {marker}")
-
-version = json.loads((ROOT / "version.json").read_text(encoding="utf-8"))
-require(version.get("desktop_release"), "desktop_release missing from version.json")
-require(version.get("windows_recovery_release"), "windows_recovery_release missing from version.json")
-require(version["desktop_release"] != version["windows_recovery_release"], "open desktop and legacy recovery lanes must be explicit and separate")
 
 print("MouldMaster open desktop release QA passed")
