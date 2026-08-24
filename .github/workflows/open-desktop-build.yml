@@ -18,6 +18,7 @@ on:
       - 'training-qa-fix.js'
       - 'assessment-100-pass.js'
       - 'assessment-deep-dive.js'
+      - 'assessment-quality-suite.js'
       - 'pwa-shell.js'
       - 'source-library.js'
       - 'reference-data.js'
@@ -30,14 +31,19 @@ on:
       - 'qa_research.py'
       - 'qa_100_pass.py'
       - 'qa_question_deep_dive.py'
+      - 'qa_assessment_quality.py'
+      - 'qa_source_freshness.py'
       - 'sources/ASSESSMENT_AND_DATA_100_PASS_AUDIT.md'
       - 'sources/QUESTION_BANK_DEEP_DIVE.md'
+      - 'sources/QUESTION_BANK_CHANGELOG.md'
+      - 'sources/SOURCE_FRESHNESS.json'
       - 'service-worker.js'
       - 'privacy.html'
       - 'support.html'
       - 'LICENSE'
       - 'THIRD_PARTY_NOTICES.md'
       - '.github/workflows/open-desktop-build.yml'
+      - '.github/workflows/source-freshness.yml'
   pull_request:
     branches: [main]
   workflow_dispatch:
@@ -65,6 +71,9 @@ jobs:
           node-version: '22.12.0'
           cache: 'npm'
           cache-dependency-path: desktop/electron/package-lock.json
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
       - name: Install exact locked dependencies
         working-directory: desktop/electron
         run: npm ci --no-audit --fund=false
@@ -86,6 +95,12 @@ jobs:
       - name: Deep question and answer QA
         working-directory: .
         run: python qa_question_deep_dive.py
+      - name: Assessment quality, blueprint and analytics QA
+        working-directory: .
+        run: python qa_assessment_quality.py
+      - name: Authoritative source freshness metadata
+        working-directory: .
+        run: python qa_source_freshness.py
       - name: Reference data and source QA
         working-directory: .
         run: python qa_reference.py
@@ -110,4 +125,6 @@ jobs:
             desktop/electron/generated/integrity.json
             desktop/electron/generated/dependency-licenses.json
             desktop/electron/generated/sbom.cdx.json
+            assessment-quality-report.json
+            source-freshness-report.json
           if-no-files-found: error
