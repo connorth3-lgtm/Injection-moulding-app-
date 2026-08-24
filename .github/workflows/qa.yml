@@ -82,6 +82,13 @@ jobs:
         run: python qa_reference.py
       - name: Expanded reference library integrity
         run: python qa_reference_expansion.py
+      - name: 500-pass reference/question cross-audit
+        run: python qa_reference_question_500_pass.py
+      - uses: actions/upload-artifact@v4
+        with:
+          name: reference-question-500-pass-report
+          path: reference-question-500-pass-report.json
+          if-no-files-found: error
       - name: Plugin-backed research integrity
         run: python qa_research.py
       - name: Open desktop release integrity
