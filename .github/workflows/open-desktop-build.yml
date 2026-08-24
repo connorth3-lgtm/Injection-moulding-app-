@@ -24,6 +24,7 @@ on:
       - 'reference-research-extension.js'
       - 'reference-20x-extension.js'
       - 'reference-sources.js'
+      - 'reference-browser-ui.js'
       - 'qa_reference.py'
       - 'qa_research.py'
       - 'qa_100_pass.py'
