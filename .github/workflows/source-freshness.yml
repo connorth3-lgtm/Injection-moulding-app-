@@ -19,6 +19,7 @@ jobs:
       - name: Check authoritative source review dates and live markers
         run: python qa_source_freshness.py --network
       - name: Check research DOI resolver freshness
+        if: always()
         run: python qa_research_source_freshness.py --network
       - uses: actions/upload-artifact@v4
         if: always()
