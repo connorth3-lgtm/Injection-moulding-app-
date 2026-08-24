@@ -18,6 +18,10 @@ This directory contains the preferred open-source Windows desktop replacement fo
 
 The legacy Windows executable remains a recovery-only component until this replacement has been built and tested on real Windows hardware.
 
+## Validation milestone
+
+The first clean Windows validation build is intentionally triggered from the current `main` source after the open-source, SBOM, MSIX, integrity and security gates were added. Do not promote the open desktop package into the Windows recovery feed until both GitHub Actions and a real Windows launch test have passed.
+
 ## Build prerequisites
 
 - Windows 10/11 for Windows/MSIX packaging
