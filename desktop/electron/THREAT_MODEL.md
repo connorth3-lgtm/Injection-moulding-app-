@@ -67,7 +67,7 @@ Controls:
 - Electron and the stable portable/NSIS electron-builder dependency are exact-pinned;
 - `package-lock.json` locks their transitive versions, registry URLs and integrity hashes;
 - build CI uses `npm ci` rather than unconstrained install/update;
-- the Store workflow invokes the exact MSIX-capable `electron-builder@27.0.0-alpha.6` beta because MSIX is not available in the pinned v26 stable line;
+- the Store workflow invokes the exact MSIX-capable `electron-builder@27.0.0-alpha.7` beta because MSIX is not available in the pinned v26 stable line;
 - a dependency licence inventory is generated;
 - a CycloneDX SBOM is generated for the locked desktop dependency graph;
 - build-tool versions and the source commit are recorded by repository configuration/artifacts;
