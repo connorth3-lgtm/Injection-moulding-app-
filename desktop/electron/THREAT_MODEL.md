@@ -1,6 +1,6 @@
 # MouldMaster Open Desktop — Threat Model
 
-Status: initial security model for the open Electron replacement.
+Status: security model for the open Electron replacement.
 
 ## Security objective
 
@@ -14,7 +14,11 @@ The main process can access the local filesystem and operating-system APIs. Its 
 Controls:
 - no remote application code is loaded into the privileged process;
 - required MouldMaster assets are SHA-256 verified before a window is opened;
-- only an allow-listed set of local files is served;
+- the expected-hash manifest is read from inside packaged `app.asar`, not from the external asset directory it verifies;
+- Electron embedded ASAR integrity validation is enabled and Electron is configured to load application code only from `app.asar`;
+- `ELECTRON_RUN_AS_NODE`, `NODE_OPTIONS`, and command-line Node inspector support are disabled through Electron fuses;
+- only the integrity-manifest allow list of local application files is served;
+- the local server accepts only GET and HEAD requests;
 - local serving binds to `127.0.0.1` on a random ephemeral port;
 - the loopback server does not bind to LAN/public interfaces;
 - path traversal is rejected;
@@ -44,39 +48,46 @@ Controls:
 - navigation outside the local MouldMaster origin is prevented in the application window.
 
 ### 4. Packaged training assets
-The desktop package bundles the PWA/training files from the repository.
+The desktop package bundles the PWA/training files from the repository under `resources/mouldmaster`.
 
 Controls:
 - `scripts/generate-integrity.cjs` records SHA-256 for required assets;
-- `src/main.cjs` recomputes and compares those hashes before launch;
+- the same manifest is included inside `app.asar`, where Electron's embedded ASAR-integrity validation anchors it to the packaged application;
+- `src/main.cjs` recomputes and compares the external asset hashes before launch;
 - missing or changed files stop startup and show a fail-safe error;
-- integrity failure is never converted into a bypass/fallback-to-unverified-content path.
+- integrity failure is never converted into a bypass/fallback-to-unverified-content path;
+- an external copy of `integrity.json` may be retained for release evidence, but runtime trust does not depend on that copy.
 
-MSIX can additionally use Windows package-integrity enforcement after Store signing.
+For an unsigned portable build, a hostile actor able to replace the executable and the application package together remains outside this integrity boundary. Direct public distribution should therefore use trusted code signing. Microsoft Store distribution adds Microsoft signing/certification and can additionally enforce MSIX package integrity.
 
 ### 5. Dependencies/build system
 Electron, electron-builder and their transitive packages are third-party code.
 
 Controls:
-- direct versions are exact-pinned;
-- `package-lock.json` locks transitive versions, registry URLs and integrity hashes;
+- Electron and the stable portable/NSIS electron-builder dependency are exact-pinned;
+- `package-lock.json` locks their transitive versions, registry URLs and integrity hashes;
 - build CI uses `npm ci` rather than unconstrained install/update;
+- the Store workflow invokes the exact MSIX-capable `electron-builder@27.0.0-alpha.6` beta because MSIX is not available in the pinned v26 stable line;
 - a dependency licence inventory is generated;
-- a CycloneDX SBOM is generated for release auditing;
+- a CycloneDX SBOM is generated for the locked desktop dependency graph;
+- build-tool versions and the source commit are recorded by repository configuration/artifacts;
 - upgrades must re-run QA and Windows packaging tests.
 
 ## Main threats considered
 
 | Threat | Primary mitigation |
 | --- | --- |
-| Altered bundled lesson/assessment JS | SHA-256 verification before launch |
+| Altered bundled lesson/assessment JS | trusted in-ASAR manifest + SHA-256 verification before launch |
+| Replaced/unpacked Electron application code | embedded ASAR integrity + only-load-from-ASAR fuses |
 | Malicious external reference page | open externally in system browser |
 | Renderer JavaScript gaining filesystem/native access | no Node integration, sandbox, context isolation, no preload API |
+| Node environment/inspector abuse against packaged app | Electron fuses disable run-as-Node, NODE_OPTIONS and CLI inspector arguments |
 | Unintended camera/microphone/location access | deny renderer permission requests |
 | Remote site embedded as privileged webview | webviews blocked |
 | Local path traversal through loopback server | strict single-filename allow list |
+| Unexpected HTTP method against local server | GET/HEAD only |
 | LAN access to local content server | bind only to 127.0.0.1, random port |
-| Dependency drift | package-lock + npm ci |
+| Dependency drift | exact direct versions + package-lock + npm ci |
 | Compromised release provenance | source commit + SHA256SUMS + integrity manifest + SBOM artifacts |
 | Tampered Store-installed package | Store signing plus MSIX package integrity where enabled |
 
@@ -84,6 +95,7 @@ Controls:
 
 The wrapper does not claim to:
 - make an already-compromised operating system trustworthy;
+- make an unsigned portable executable equivalent to a trusted code-signed distribution;
 - provide DRM or prevent a user modifying their own open-source copy;
 - prove worldwide patent freedom-to-operate;
 - replace antivirus/OS security controls;
@@ -91,6 +103,6 @@ The wrapper does not claim to:
 
 ## Security regression gates
 
-Repository QA must fail if core controls such as renderer sandboxing, context isolation, disabled Node integration, permission denial, webview blocking, loopback-only binding or asset hash verification are removed.
+Repository QA must fail if core controls such as renderer sandboxing, context isolation, disabled Node integration, permission denial, webview blocking, loopback-only binding, trusted-manifest placement, ASAR-integrity fuses or asset hash verification are removed.
 
 Any future native feature should be exposed through a minimal, explicitly validated preload/API surface. Do not enable generic Node integration as a shortcut.
