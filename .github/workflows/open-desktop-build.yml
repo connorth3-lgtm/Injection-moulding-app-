@@ -16,6 +16,7 @@ on:
       - 'reading-patch.js'
       - 'training-upgrade.js'
       - 'training-qa-fix.js'
+      - 'assessment-100-pass.js'
       - 'pwa-shell.js'
       - 'source-library.js'
       - 'reference-data.js'
@@ -25,6 +26,8 @@ on:
       - 'reference-sources.js'
       - 'qa_reference.py'
       - 'qa_research.py'
+      - 'qa_100_pass.py'
+      - 'sources/ASSESSMENT_AND_DATA_100_PASS_AUDIT.md'
       - 'service-worker.js'
       - 'privacy.html'
       - 'support.html'
@@ -73,6 +76,9 @@ jobs:
       - name: Desktop security QA
         working-directory: desktop/electron
         run: npm run qa
+      - name: 100-pass data and assessment audit
+        working-directory: .
+        run: python qa_100_pass.py
       - name: Reference data and source QA
         working-directory: .
         run: python qa_reference.py
