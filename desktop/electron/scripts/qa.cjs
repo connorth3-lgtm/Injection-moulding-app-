@@ -14,7 +14,7 @@ need(/^\d+\.\d+\.\d+$/.test(PKG.devDependencies['electron-builder']),'electron-b
 need(LOCK.lockfileVersion>=3,'npm dependency lock must be lockfileVersion 3 or newer');
 need(LOCK.packages?.['']?.devDependencies?.electron===PKG.devDependencies.electron,'locked Electron version does not match package.json');
 need(LOCK.packages?.['']?.devDependencies?.['electron-builder']===PKG.devDependencies['electron-builder'],'locked electron-builder version does not match package.json');
-for(const marker of ['nodeIntegration: false','contextIsolation: true','sandbox: true','webSecurity: true','allowRunningInsecureContent: false','setPermissionRequestHandler','setPermissionCheckHandler','will-attach-webview','setWindowOpenHandler','server.listen(0, \'127.0.0.1\')','SHA-256 verification failed'])need(MAIN.includes(marker),`desktop security marker missing: ${marker}`);
+for(const marker of ['nodeIntegration: false','contextIsolation: true','sandbox: true','webSecurity: true','allowRunningInsecureContent: false','setPermissionRequestHandler','setPermissionCheckHandler','will-attach-webview','setWindowOpenHandler','server.listen(0, \'127.0.0.1\'','SHA-256 verification failed'])need(MAIN.includes(marker),`desktop security marker missing: ${marker}`);
 need(INTEGRITY.schema===1,'integrity schema mismatch');
 need(Object.keys(INTEGRITY.files||{}).length>=15,'integrity manifest is incomplete');
 for(const [name,hash] of Object.entries(INTEGRITY.files)){need(/^[a-f0-9]{64}$/.test(hash),`bad SHA-256 for ${name}`);need(fs.existsSync(path.join(ROOT,name)),`integrity asset missing: ${name}`)}
