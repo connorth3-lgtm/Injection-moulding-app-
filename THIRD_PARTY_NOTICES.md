@@ -22,11 +22,12 @@ Manufacturer guides and white papers remain the property of their publishers. Th
 
 The preferred open Windows desktop replacement under `desktop/electron/` uses:
 
-- **Electron** — MIT-licensed project; bundles Chromium and Node.js and therefore also includes their respective open-source components/licences. Exact version is pinned in `desktop/electron/package.json` and the full dependency graph/integrity metadata is locked in `desktop/electron/package-lock.json`.
-- **electron-builder** — MIT-licensed packaging project. Exact version and transitive dependency graph are locked in the same npm lockfile.
-- Build tooling downloaded by those packages can include additional open-source components. Release builds must retain the dependency lock and must generate/retain the applicable third-party licence files produced by the packaging toolchain where available.
+- **Electron** — MIT-licensed project; bundles Chromium and Node.js and therefore also includes their respective open-source components/licences. Exact version is pinned in `desktop/electron/package.json` and the full application dependency graph/integrity metadata is locked in `desktop/electron/package-lock.json`.
+- **electron-builder 26.x** — MIT-licensed packaging project used for the stable portable/NSIS lane. Its exact version and installed transitive dependency graph are locked in the same npm lockfile.
+- **electron-builder 27.0.0-alpha.6** — an exact, separately selected build-tool version used only by the Microsoft Store/MSIX workflow because the MSIX target is not available in the pinned v26 stable line. It is not shipped as application runtime code. Changes to this beta tool version require release-QA and Windows Store packaging revalidation.
+- Build tooling downloaded by those packages can include additional open-source components. Release builds must retain the dependency lock and generated dependency-licence/SBOM evidence for the packaged application dependency graph, and must separately record the explicitly selected Store build-tool version.
 
-The npm lockfile is the machine-readable source-of-truth for exact package versions and registry integrity hashes. It is not a substitute for individual upstream licence texts; redistribution must comply with those licences.
+The npm lockfile is the machine-readable source of truth for the dependencies installed by `npm ci`. The separately invoked MSIX beta is pinned by exact version in workflow/package scripts but is not represented as part of the packaged runtime dependency graph. Neither mechanism is a substitute for individual upstream licence texts; redistribution must comply with applicable licences.
 
 The current web/PWA source does not intentionally bundle a third-party CDN framework. New runtime packages must be documented here before release.
 
