@@ -44,7 +44,8 @@ require("MM_REFERENCE_DATA_LAUNCHER_DOCK='mobile-more-menu-page'" in shell, "ref
 require("MM_REFERENCE_DATA_DRAWER_MODE='mobile-page-desktop-drawer'" in shell, "reference data page/drawer runtime marker missing")
 require("dockReferenceLauncher();configureReferenceDrawer();dockReferenceDataLauncher();configureReferenceDataDrawer();patchReferenceDataPageEvents();addNZLegacyNote()" in shell, "both reference systems must be normalized during shell synchronization")
 require("runSync();\nwindow.addEventListener('resize',scheduleSync" in shell, "reference controls must normalize immediately and on viewport changes")
-require("CACHE_VERSION='2026.08.24.2'" in service_worker, "PWA cache revision must advance with the mobile reference-page fix")
+require("CACHE_VERSION='2026.08.24.1'" in service_worker, "PWA cache version must stay aligned with the browser release")
+require("CACHE_REVISION='reference-page-20260824'" in service_worker and "${CACHE_VERSION}-${CACHE_REVISION}" in service_worker, "PWA cache revision must advance with the mobile reference-page fix")
 
 require("MM_REFERENCE_DRAWER_MODE='non-blocking'" in shell, "reference drawer runtime mode marker missing")
 require("desktopRelease" in shell, "desktop runtime version detection missing")
