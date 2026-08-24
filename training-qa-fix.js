@@ -8,6 +8,10 @@ function clearAssessmentAnalyticsStores(){
   for(let i=localStorage.length-1;i>=0;i--){const k=localStorage.key(i);if(k&&ANALYTICS_PREFIXES.some(p=>k===p||k.startsWith(p+'::')))localStorage.removeItem(k)}
  }catch(e){console.warn('[MouldMaster] analytics cleanup:',e)}
 }
+function cancelActiveExam(){
+ try{if(typeof activeExam!=='undefined')activeExam=null}catch(_){}
+ try{window.activeExam=null}catch(_){}
+}
 
 function mirror(){try{if(typeof activeExam==='undefined'||!activeExam)return;(activeExam.questions||[]).forEach(q=>{if(!q||typeof q!=='object')return;if(q.why==null)q.why=q.explanation;if(q.source==null)q.source=q.reference;if(q.url==null)q.url=q.sourceUrl;if(q.feedback==null)q.feedback=q.optionFeedback});window.activeExam=activeExam}catch(e){console.warn('[MouldMaster] exam bridge:',e)}}
 const baseStart=window.startExam;if(typeof baseStart==='function')window.startExam=function(){const r=baseStart.apply(this,arguments);mirror();setTimeout(mirror,0);return r};
@@ -54,7 +58,7 @@ window.importData=function(file){
     for(const k of keys){try{before[k]===null?localStorage.removeItem(k):localStorage.setItem(k,before[k])}catch(_){}}
     throw storageError;
    }
-   db=proposed;user=db.users[db.activeUser];committed=true;clearAssessmentAnalyticsStores();
+   db=proposed;user=db.users[db.activeUser];committed=true;cancelActiveExam();clearAssessmentAnalyticsStores();
    try{updateGlobalProgress();switchView('profile')}catch(uiError){console.warn('[MouldMaster] imported data saved; view refresh failed:',uiError)}
    window.toast?.('Progress imported. Certificates must be re-earned; local assessment analytics were reset.');
   }catch(e){
@@ -66,9 +70,9 @@ window.importData=function(file){
 };
 
 /* Confirmed factory reset clears every MouldMaster-owned training and assessment-analytics store. */
-const baseReset=window.resetData;if(typeof baseReset==='function')window.resetData=function(){const beforeDb=typeof db==='undefined'?null:db,r=baseReset.apply(this,arguments);setTimeout(()=>{if(typeof db!=='undefined'&&db!==beforeDb){localStorage.removeItem(REVIEW_KEY);localStorage.removeItem(LEGACY_REVIEW);localStorage.removeItem(SIGN_KEY);clearAssessmentAnalyticsStores();window.activeExam=null}},0);return r};
+const baseReset=window.resetData;if(typeof baseReset==='function')window.resetData=function(){const beforeDb=typeof db==='undefined'?null:db,r=baseReset.apply(this,arguments);setTimeout(()=>{if(typeof db!=='undefined'&&db!==beforeDb){localStorage.removeItem(REVIEW_KEY);localStorage.removeItem(LEGACY_REVIEW);localStorage.removeItem(SIGN_KEY);clearAssessmentAnalyticsStores();cancelActiveExam()}},0);return r};
 
 /* One-time migration: legacy text-keyed review records are intentionally not guessed into stable IDs. */
 try{if(!localStorage.getItem(REVIEW_KEY)&&localStorage.getItem(LEGACY_REVIEW))localStorage.setItem(REVIEW_KEY,JSON.stringify({items:{}}))}catch(_){}
-window.MM_TRAINING_DATA_BRIDGE={version:'2026.08.24.4',clearAssessmentAnalyticsStores};
+window.MM_TRAINING_DATA_BRIDGE={version:'2026.08.24.4',clearAssessmentAnalyticsStores,cancelActiveExam};
 })();
