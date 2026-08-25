@@ -36,6 +36,7 @@ on:
       - 'reference-sources.js'
       - 'reference-browser-ui.js'
       - 'diagnostic-learning-labs.js'
+      - 'material-behaviour-labs.js'
       - 'qa_release_docs.py'
       - 'qa_reference.py'
       - 'qa_reference_expansion.py'
@@ -44,6 +45,7 @@ on:
       - 'qa_question_deep_dive.py'
       - 'qa_assessment_quality.py'
       - 'qa_assessment_evidence.py'
+      - 'qa_material_behaviour.py'
       - 'qa_assessment_storage_scope.py'
       - 'qa_stable_review_bridge.py'
       - 'qa_assessment_final_hardening.py'
@@ -114,6 +116,9 @@ jobs:
       - name: Release and documentation coherence
         working-directory: .
         run: python qa_release_docs.py
+      - name: Material behaviour learning QA
+        working-directory: .
+        run: python qa_material_behaviour.py
       - name: 100-pass data and assessment audit
         working-directory: .
         run: python qa_100_pass.py

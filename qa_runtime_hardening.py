@@ -51,9 +51,10 @@ require('id="mm-reference-back"' in reference_page and "history.back()" in refer
 require("position:static!important" in reference_page and ".mmrd-close{display:none!important}" in reference_page, "standalone Reference Data page must not behave like a modal")
 require("modal.setAttribute('role','main')" in reference_page and "MM_REFERENCE_DATA_PAGE_MODE='standalone-document-full-library'" in reference_page, "standalone Reference Data page semantics/runtime marker missing")
 require("CACHE_VERSION='2026.08.24.1'" in service_worker, "PWA cache version must stay aligned with the browser release")
-require("CACHE_REVISION='evidence-approval-20260825b'" in service_worker and "${CACHE_VERSION}-${CACHE_REVISION}" in service_worker, "PWA cache revision must advance when the offline learning bundle changes")
+require("CACHE_REVISION='material-labs-20260825'" in service_worker and "${CACHE_VERSION}-${CACHE_REVISION}" in service_worker, "PWA cache revision must advance when the offline learning bundle changes")
 require("'./reference-data.html'" in service_worker and "'./reference-2026-expansion.js'" in service_worker, "expanded Reference Data assets must be available offline")
 require("'./diagnostic-learning-labs.js'" in service_worker, "Diagnostic Learning Labs must be available offline")
+require("'./material-behaviour-labs.js'" in service_worker, "Material Behaviour Labs must be available offline")
 require("'./assessment-evidence-sources.js'" in service_worker and "'./assessment-evidence-approval.js'" in service_worker, "evidence approval assets must be available offline")
 
 require("MM_REFERENCE_DRAWER_MODE='non-blocking'" in shell, "reference drawer runtime mode marker missing")

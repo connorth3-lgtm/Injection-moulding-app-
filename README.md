@@ -42,7 +42,11 @@ The current assessment stack contains 30 technical exam items, 27 UK/US/NZ regio
 
 Assessment quality controls include stable question IDs, a competency-balanced exam blueprint, difficulty calibration, duplicate/answer-cue QA, per-question evidence/revision information and device-local analytics. Analytics are scoped to the active learner profile. Question-performance analytics and response-timing analytics are not uploaded by MouldMaster; they can be reset locally and are deliberately excluded from progress backups.
 
-All 133 keyed learner questions across exams, scenarios and Diagnostic Learning Labs are covered by the evidence-approval gate. Unmatched technical topics fail closed rather than inheriting a generic source; mapped evidence must support the actual mechanism or method being assessed.
+All 157 keyed learner questions across exams, scenarios, Diagnostic Learning Labs and Material Behaviour Labs are covered by the evidence-approval gate in this feature revision. Unmatched technical topics fail closed rather than inheriting a generic source; mapped evidence must support the actual mechanism or method being assessed. The 24 Material Behaviour Lab decisions use explicit source IDs and question/choice fingerprints rather than generic topic fallback.
+
+## Material Behaviour Labs
+
+Six material-specific practice labs turn resin/reference knowledge into evidence-first decisions: PP versus PC handling, wet versus verified-dry PC, PA66-GF30 drying/conditioning and anisotropy, ABS thermal history, POM degradation/contamination safety, and recycled-PP lot/rheology variability. Each lab uses Observe → Best next test → Controlled response → Explain and is explicitly scenario-specific education rather than a universal production recipe.
 
 ## Open Windows desktop release
 
@@ -107,13 +111,14 @@ Do not bypass guards, interlocks or hazardous-energy controls to follow training
 
 ## Release QA
 
-The release workflows run structural, question/answer, assessment-quality, learner-scoped analytics, evidence-approval, source-freshness, reference/research and desktop-security checks. Important entry points include:
+The release workflows run structural, question/answer, assessment-quality, learner-scoped analytics, evidence-approval, material-behaviour, source-freshness, reference/research and desktop-security checks. Important entry points include:
 
 - `qa_release.py`
 - `qa_100_pass.py`
 - `qa_question_deep_dive.py`
 - `qa_assessment_quality.py`
 - `qa_assessment_evidence.py`
+- `qa_material_behaviour.py`
 - `qa_assessment_final_hardening.py`
 - `qa_assessment_storage_scope.py`
 - `qa_source_freshness.py`
