@@ -2,6 +2,16 @@
 
 This register records assessment changes that can affect learner interpretation, difficulty, evidence or spaced-review identity. It is deliberately separate from general release notes so an assessment reviewer can see what changed and why.
 
+## 2026.08.25.2 — fail-closed evidence hardening
+
+- Kept all 57 live exam answer keys, question text, the 40-scenario bank and the 9 Diagnostic Learning Labs unchanged.
+- Removed the generic technical-source fallback from the evidence resolver. An unmatched technical/scenario/lab topic is now blocked rather than labelled approved with a merely general source.
+- Changed evidence QA to reconstruct the real guided-training scenario text instead of placeholder scenario records.
+- Added topic-specific source guards for previously weakly traced scenarios covering degradation/black specks, local flash, valve-gate timing, robot/IMM sequencing, energy per accepted part, insert/overmould thermal state, hot-runner service/warm-up and model drift.
+- Added explicit Molding Window evidence for the Advanced process-window question and corrected hyphenated short-shot matching for the cavity-specific Diagnostic Lab.
+- Enrolled the added authoritative and research-bearing evidence sources in source/DOI freshness tracking and advanced the offline cache revision.
+- Added `assessment_evidence_version` = `2026.08.25.2`; `question_bank_version` and `content_version` remain `2026.08.24.2` because learner question text and answer keys did not change.
+
 ## 2026.08.25.1 — answer-evidence approval layer
 
 - Kept all 57 live exam answer keys and question text unchanged.
@@ -74,4 +84,3 @@ This version remains relevant only for migration of older locally stored spaced-
 5. Research results support mechanisms and methods, not universal production setpoints.
 6. Question analytics are diagnostic evidence for question quality, not proof that a frequently selected answer is correct.
 7. Assessment analytics must remain learner-scoped and device-local unless a future privacy notice, architecture and explicit consent model deliberately change that boundary.
-8. A reviewed question-content source file changing invalidates the evidence approval gate until the approval input hash, source mapping and reviewer record are rechecked.
