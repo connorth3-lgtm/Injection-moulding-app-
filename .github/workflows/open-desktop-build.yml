@@ -23,6 +23,8 @@ on:
       - 'assessment-stable-review-bridge.js'
       - 'assessment-analytics-ui.js'
       - 'assessment-final-hardening.js'
+      - 'assessment-evidence-sources.js'
+      - 'assessment-evidence-approval.js'
       - 'pwa-shell.js'
       - 'source-library.js'
       - 'reference-data.js'
@@ -33,6 +35,7 @@ on:
       - 'reference-2026-expansion.js'
       - 'reference-sources.js'
       - 'reference-browser-ui.js'
+      - 'diagnostic-learning-labs.js'
       - 'qa_release_docs.py'
       - 'qa_reference.py'
       - 'qa_reference_expansion.py'
@@ -40,6 +43,7 @@ on:
       - 'qa_100_pass.py'
       - 'qa_question_deep_dive.py'
       - 'qa_assessment_quality.py'
+      - 'qa_assessment_evidence.py'
       - 'qa_assessment_storage_scope.py'
       - 'qa_stable_review_bridge.py'
       - 'qa_assessment_final_hardening.py'
@@ -51,6 +55,7 @@ on:
       - 'sources/ASSESSMENT_AND_DATA_100_PASS_AUDIT.md'
       - 'sources/QUESTION_BANK_DEEP_DIVE.md'
       - 'sources/QUESTION_BANK_CHANGELOG.md'
+      - 'sources/QUESTION_APPROVAL_POLICY.md'
       - 'sources/QUESTION_REVISION_INDEX.json'
       - 'sources/SOURCE_FRESHNESS.json'
       - 'sources/RESEARCH_SOURCE_FRESHNESS.json'
@@ -118,6 +123,9 @@ jobs:
       - name: Assessment quality, blueprint and analytics QA
         working-directory: .
         run: python qa_assessment_quality.py
+      - name: Question evidence approval QA
+        working-directory: .
+        run: python qa_assessment_evidence.py
       - name: Learner-scoped assessment storage QA
         working-directory: .
         run: python qa_assessment_storage_scope.py
