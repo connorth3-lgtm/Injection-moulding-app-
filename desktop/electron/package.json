@@ -75,6 +75,8 @@
       {"from": "../../reference-sources.js", "to": "mouldmaster/reference-sources.js"},
       {"from": "../../reference-browser-ui.js", "to": "mouldmaster/reference-browser-ui.js"},
       {"from": "../../diagnostic-learning-labs.js", "to": "mouldmaster/diagnostic-learning-labs.js"},
+      {"from": "../../assessment-evidence-sources.js", "to": "mouldmaster/assessment-evidence-sources.js"},
+      {"from": "../../assessment-evidence-approval.js", "to": "mouldmaster/assessment-evidence-approval.js"},
       {"from": "../../service-worker.js", "to": "mouldmaster/service-worker.js"},
       {"from": "../../privacy.html", "to": "mouldmaster/privacy.html"},
       {"from": "../../support.html", "to": "mouldmaster/support.html"},
