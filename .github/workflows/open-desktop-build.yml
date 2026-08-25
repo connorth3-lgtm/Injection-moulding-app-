@@ -24,6 +24,7 @@ on:
       - 'assessment-analytics-ui.js'
       - 'assessment-final-hardening.js'
       - 'assessment-evidence-sources.js'
+      - 'lesson-evidence-depth.js'
       - 'assessment-evidence-approval.js'
       - 'pwa-shell.js'
       - 'source-library.js'
@@ -45,6 +46,7 @@ on:
       - 'qa_question_deep_dive.py'
       - 'qa_assessment_quality.py'
       - 'qa_assessment_evidence.py'
+      - 'qa_lesson_evidence.py'
       - 'qa_material_behaviour.py'
       - 'qa_assessment_storage_scope.py'
       - 'qa_stable_review_bridge.py'
@@ -119,6 +121,9 @@ jobs:
       - name: Material behaviour learning QA
         working-directory: .
         run: python qa_material_behaviour.py
+      - name: Lesson evidence depth QA
+        working-directory: .
+        run: python qa_lesson_evidence.py
       - name: 100-pass data and assessment audit
         working-directory: .
         run: python qa_100_pass.py
@@ -174,6 +179,7 @@ jobs:
             desktop/electron/generated/dependency-licenses.json
             desktop/electron/generated/sbom.cdx.json
             assessment-quality-report.json
+            lesson-evidence-gap-report.json
             source-freshness-report.json
             research-source-freshness-report.json
           if-no-files-found: error
