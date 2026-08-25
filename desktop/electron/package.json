@@ -65,6 +65,7 @@
       {"from": "../../assessment-final-hardening.js", "to": "mouldmaster/assessment-final-hardening.js"},
       {"from": "../../assessment-ux.js", "to": "mouldmaster/assessment-ux.js"},
       {"from": "../../pwa-shell.js", "to": "mouldmaster/pwa-shell.js"},
+      {"from": "../../learning-experience.js", "to": "mouldmaster/learning-experience.js"},
       {"from": "../../source-library.js", "to": "mouldmaster/source-library.js"},
       {"from": "../../reference-data.js", "to": "mouldmaster/reference-data.js"},
       {"from": "../../reference-data.html", "to": "mouldmaster/reference-data.html"},
