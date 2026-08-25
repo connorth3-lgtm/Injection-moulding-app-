@@ -2,6 +2,19 @@
 
 This register records assessment changes that can affect learner interpretation, difficulty, evidence or spaced-review identity. It is deliberately separate from general release notes so an assessment reviewer can see what changed and why.
 
+## 2026.08.25.1 — answer-evidence approval layer
+
+- Kept all 57 live exam answer keys and question text unchanged.
+- Added an evidence-approval record for every keyed learner question: 30 technical exams, 27 regional safety/compliance exams, 40 scenario drills and 36 Diagnostic Learning Lab questions (133 total).
+- Every approval record now carries a reviewer, review date, status, rationale/reference context, direct HTTPS evidence links and a content fingerprint. Diagnostic-lab question fingerprints are tied to the approved lab source-file blob plus lab/step identity.
+- Regional questions retain their direct question-specific regulator, legislation or standards source. Technical/scenario/lab items without an existing direct question citation are mapped to authoritative technical documentation, standards, supplier guidance or peer-reviewed evidence supporting the assessed mechanism or method.
+- Added a release gate that fails if any keyed question is unsourced/unapproved, if coverage drops below 133, if regional items lose direct official/standards sourcing, or if a reviewed content-bearing source file changes without a fresh approval update.
+- Added learner-facing post-grade evidence approval panels and Diagnostic Learning Lab approval/source panels.
+- Added `assessment_evidence_version` = `2026.08.25.1`. This is an evidence/control-layer change; `question_bank_version` and `content_version` remain `2026.08.24.2` because the approved question text and answer keys were not changed.
+- Internal approval is explicitly not represented as external accreditation or independent third-party SME endorsement.
+
+See `sources/QUESTION_APPROVAL_POLICY.md` and `qa_assessment_evidence.py`.
+
 ## 2026.08.24.4 — learner-scoped analytics and release-coherence hardening
 
 - Kept all 57 live exam answer keys, question text, certificate rules and the 40-scenario bank unchanged.
@@ -61,3 +74,4 @@ This version remains relevant only for migration of older locally stored spaced-
 5. Research results support mechanisms and methods, not universal production setpoints.
 6. Question analytics are diagnostic evidence for question quality, not proof that a frequently selected answer is correct.
 7. Assessment analytics must remain learner-scoped and device-local unless a future privacy notice, architecture and explicit consent model deliberately change that boundary.
+8. A reviewed question-content source file changing invalidates the evidence approval gate until the approval input hash, source mapping and reviewer record are rechecked.
