@@ -43,11 +43,13 @@ const URLObj=function(u,b){return new (global.URL)(u,b)}; URLObj.createObjectURL
 const sandbox={window:{MM_DATA:D,MM_DIAGNOSTIC_LABS:{version:'qa',labs:LABS},requestAnimationFrame:fn=>fn(),addEventListener(){},scrollTo(){}},document,localStorage,performance:{now:()=>1000},console,setTimeout:(fn)=>{if(typeof fn==='function')fn()},clearTimeout(){},Date,Math,JSON,Map,Set,Blob:function(){},URL:URLObj,MutationObserver};
 sandbox.window.window=sandbox.window;sandbox.window.document=document;sandbox.window.localStorage=localStorage;sandbox.window.MutationObserver=MutationObserver;sandbox.window.URL=URLObj;sandbox.window.setTimeout=sandbox.setTimeout;
 vm.createContext(sandbox);
+// Match production dependency order: the reference deep-dive appends source rows as it appends reference rows.
+vm.runInContext(fs.readFileSync('source-library.js','utf8'),sandbox,{filename:'source-library.js'});
 for(const file of ['reference-data.js','reference-deep-dive.js','reference-research-extension.js','reference-20x-extension.js','reference-2026-expansion.js']){
  vm.runInContext(fs.readFileSync(file,'utf8'),sandbox,{filename:file});
 }
 document.readyState='complete';
-for(const file of ['material-behaviour-labs.js','assessment-deep-dive.js','assessment-answer-cue-fix.js','assessment-quality-suite.js','source-library.js','assessment-evidence-sources.js','evidence-maturity-deep-dive.js','lesson-evidence-depth.js','assessment-evidence-approval.js']){
+for(const file of ['material-behaviour-labs.js','assessment-deep-dive.js','assessment-answer-cue-fix.js','assessment-quality-suite.js','assessment-evidence-sources.js','evidence-maturity-deep-dive.js','lesson-evidence-depth.js','assessment-evidence-approval.js']){
  vm.runInContext(fs.readFileSync(file,'utf8'),sandbox,{filename:file});
 }
 const A=sandbox.window.MM_EVIDENCE_APPROVAL;
