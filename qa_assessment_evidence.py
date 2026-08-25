@@ -72,7 +72,7 @@ process.stdout.write(JSON.stringify({summary:A.summary,blockedIds:A.blockedIds,r
 with tempfile.NamedTemporaryFile('w',suffix='.js',delete=False,encoding='utf-8',dir=ROOT) as h:
     h.write(node); node_path=Path(h.name)
 try:
-    p=subprocess.run(['node',str(node_path)],cwd=ROOT,capture_output=True,text=True)
+    p=subprocess.run(['node',str(node_path)],cwd=ROOT,capture_output=True,text=True,encoding='utf-8',errors='replace')
 finally:
     node_path.unlink(missing_ok=True)
 need(p.returncode==0,f'evidence approval runtime failed: {p.stderr or p.stdout}')
