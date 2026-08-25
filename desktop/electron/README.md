@@ -4,7 +4,7 @@ This directory contains the normal open-source Windows desktop implementation fo
 
 ## Status
 
-- Current desktop release: `2026.08.24.2`
+- Current desktop release: `2026.08.25.1`
 - Source licence: Apache-2.0
 - Desktop runtime: Electron
 - Packaging: electron-builder
@@ -22,7 +22,7 @@ The legacy Windows executable is frozen as a recovery-only compatibility compone
 
 ## Validation milestone
 
-The open desktop package has passed the repository's Windows GitHub Actions build, security, SBOM, release, assessment and source-integrity gates. `.github/workflows/publish-open-desktop.yml` publishes a versioned tagged GitHub Release when `version.json` changes on `main`, and records the exact source commit and SHA-256 release hashes.
+The open desktop package has passed the repository's Windows GitHub Actions build, security, SBOM, release, assessment, question-evidence and source-integrity gates. `.github/workflows/publish-open-desktop.yml` publishes a versioned tagged GitHub Release when `version.json` changes on `main`, and records the exact source commit and SHA-256 release hashes.
 
 GitHub-hosted Windows validation does not prove a learner's specific hardware/storage migration. Before deleting the frozen legacy recovery launcher, run the checklist in `LEGACY_MIGRATION.md` on a normal Windows 10/11 machine with an exported legacy learner backup.
 
@@ -80,7 +80,7 @@ Do not invent a publisher certificate subject or substitute the display name for
 
 ## Versioning
 
-`version.json` is the repository release record. `desktop_release` is four-part (for example `2026.08.24.2`). `desktop_release_tag` and `desktop_release_url` identify the corresponding GitHub Release. npm `package.json` keeps the first three numeric components as its package version, while `build.buildNumber` and `build.buildVersion` carry the fourth Windows release component. QA rejects drift between these values. Windows artifacts use `${buildVersion}` so package filenames and Windows metadata retain the complete desktop release number. Local MSIX builds and the Store workflow both enable MSIX build-number propagation, so the manifest also retains the fourth component.
+`version.json` is the repository release record. `desktop_release` is four-part (for example `2026.08.25.1`). `desktop_release_tag` and `desktop_release_url` identify the corresponding GitHub Release. npm `package.json` keeps the first three numeric components as its package version, while `build.buildNumber` and `build.buildVersion` carry the fourth Windows release component. QA rejects drift between these values. Windows artifacts use `${buildVersion}` so package filenames and Windows metadata retain the complete desktop release number. Local MSIX builds and the Store workflow both enable MSIX build-number propagation, so the manifest also retains the fourth component.
 
 ## Reproducibility
 
