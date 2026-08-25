@@ -1,4 +1,4 @@
-/* MouldMaster assessment evidence sources — 2026-08-25.2 */
+/* MouldMaster assessment evidence sources — 2026-08-25.3 */
 (function(){
 'use strict';
 const SOURCES={
@@ -10,7 +10,13 @@ const SOURCES={
  'autodesk-flash':{name:'Autodesk Moldflow — flash defect reference',authority:'Autodesk',kind:'technical documentation',url:'https://help.autodesk.com/cloudhelp/2019/ENU/MoldflowInsight-Reference/files/GUID-47828B62-E02C-4367-8766-B8AF9DFF3ADE.htm'},
  'autodesk-valve-gate':{name:'Autodesk Moldflow — valve gate controllers and sequential gating',authority:'Autodesk',kind:'technical documentation',url:'https://help.autodesk.com/cloudhelp/2018/ENU/MoldflowInsight-Modelprep/files/GUID-F18BA634-5D28-4DC5-81E2-A5B56DB970A2.htm'},
  'basf-troubleshooter':{name:'BASF — Injection Molding Troubleshooter',authority:'BASF',kind:'resin-supplier technical guidance',url:'https://plastics-rubber.basf.com/asiapacific/en/performance_polymers/services/product_support_troubleshooting/injection_moulding_troubleshooter'},
+ 'basf-ultramid':{name:'BASF — Ultramid polyamide material family',authority:'BASF',kind:'resin-supplier product guidance',url:'https://plastics-rubber.basf.com/global/en/performance_polymers/products/ultramid'},
+ 'basf-pa66-gf30':{name:'BASF — Ultramid A 216 V30 PA66-GF30 grade data',authority:'BASF',kind:'resin-supplier grade data',url:'https://plastics-rubber.basf.com/global/en/performance_polymers/products/materials/30775362'},
  'covestro-drying':{name:'Covestro — Drying for injection moulding',authority:'Covestro',kind:'resin-supplier technical guidance',url:'https://solutions.covestro.com/-/media/covestro/solution-center/whitepapers/injection-molding-of-high-quality-molded-parts-drying.pdf'},
+ 'celanese-pom-processing':{name:'Celanese — Hostaform POM processing and safety guidance',authority:'Celanese',kind:'resin-supplier technical guide',url:'https://www.celanese.com/-/media/engineered%20materials/files/product%20technical%20guides/pom-065-hostaformpomeu-pm-en-r1-0916.pdf'},
+ 'exxon-pp-processing':{name:'ExxonMobil — polypropylene quick processing reference',authority:'ExxonMobil',kind:'resin-supplier technical guidance',url:'https://www.exxonmobilchemical.com/-/media/media-assets/media-library-assets/23/neat_polypropylene_process_parameters_en.pdf'},
+ 'sabic-cycolac':{name:'SABIC — CYCOLAC ABS resin family',authority:'SABIC',kind:'resin-supplier product guidance',url:'https://www.sabic.com/en/products/polymers/acrylonitrile-butadiene-styrene-abs/cycolac-resin'},
+ 'krantz-rpp-2024':{name:'Krantz et al. (2024) — in-mould rheology of recycled polypropylene',authority:'peer-reviewed research',kind:'research',url:'https://doi.org/10.1002/pen.26836'},
  'euromap-60':{name:'EUROMAP 60 — injection moulding machine energy efficiency',authority:'EUROMAP / VDMA',kind:'industry technical recommendation',url:'https://www.euromap.org/technical-issues/technical-recommendations'},
  'euromap-79':{name:'EUROMAP 79 — interface between injection moulding machine and robot',authority:'EUROMAP / VDMA',kind:'industry interface specification',url:'https://www.euromap.org/euromap79'},
  'iso-15512':{name:'ISO 15512:2019 — Plastics — Determination of water content',authority:'ISO',kind:'standard',url:'https://www.iso.org/standard/73834.html'},
@@ -35,6 +41,12 @@ function inferred(text){const t=String(text||'').toLowerCase(),ids=[];const add=
  if(/capabil|\bcpk\b|\bcp\b|\bppk\b|\bpp\b|measurement|gauge|gage|sampling/.test(t))add('nist-capability','nist-handbook');
  if(/\bdoe\b|experiment|randomis|randomiz|blocking|factor|interaction|confirmation run|one.factor|confound/.test(t))add('nist-doe');
  if(/process window|molding window|moulding window|operating window|feasible window|preferred window/.test(t))add('autodesk-molding-window','nist-doe');
+ if(/polycarbonate|\bpc\b.*moisture|\bpc\b.*dry/.test(t))add('covestro-drying','iso-15512');
+ if(/pa66|polyamide|nylon|glass.fib|glass fib|conditioned properties/.test(t))add('basf-pa66-gf30','basf-ultramid','iso-15512');
+ if(/polypropylene.*dry|neat pp|\bpp\b.*drying/.test(t))add('exxon-pp-processing');
+ if(/\babs\b|cycolac/.test(t))add('sabic-cycolac','basf-troubleshooter');
+ if(/\bpom\b|acetal|formaldehyde|pvc contamination|polyoxymethylene/.test(t))add('celanese-pom-processing');
+ if(/recycled.*pp|secondary feedstock|recycled polypropylene/.test(t))add('krantz-rpp-2024','iso-1133');
  if(/moisture|drying|dryer|hygroscopic|humid|splay|silver streak/.test(t))add('covestro-drying','iso-15512');
  if(/mfr|mvr|rheolog|viscos|shear|flow length|polypropylene grade|recycled pp/.test(t))add('trotta-2021','iso-1133');
  if(/cavity pressure|pressure trace|sensor|signal acquisition|pressure.time|pressure area/.test(t))add('araujo-2023','liew-2022','tsou-2023');
@@ -55,5 +67,5 @@ function inferred(text){const t=String(text||'').toLowerCase(),ids=[];const add=
  if(/guard|interlock|lockout|isolation|safety|danger zone|emergency stop/.test(t))add('iso-20430');
  return ids.map(id=>({id,...SOURCES[id]})).slice(0,4)
 }
-window.MM_EVIDENCE_SOURCES={version:'2026.08.25.2',sources:SOURCES,direct,inferred,hash};
+window.MM_EVIDENCE_SOURCES={version:'2026.08.25.3',sources:SOURCES,direct,inferred,hash};
 })();
