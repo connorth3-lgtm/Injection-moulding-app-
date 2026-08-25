@@ -70,6 +70,9 @@ jobs:
       - name: Validate assessment quality, blueprint and analytics
         working-directory: .
         run: python qa_assessment_quality.py
+      - name: Validate question evidence approval
+        working-directory: .
+        run: python qa_assessment_evidence.py
       - name: Validate learner-scoped assessment storage
         working-directory: .
         run: python qa_assessment_storage_scope.py
