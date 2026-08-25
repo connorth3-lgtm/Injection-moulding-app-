@@ -1,0 +1,97 @@
+from pathlib import Path
+import hashlib, json, re, subprocess, tempfile
+
+ROOT=Path(__file__).resolve().parent
+
+def need(ok,msg):
+    if not ok: raise AssertionError(msg)
+
+def text(path): return (ROOT/path).read_text(encoding='utf-8')
+
+def git_blob_sha(path):
+    data=(ROOT/path).read_bytes()
+    return hashlib.sha1(b'blob '+str(len(data)).encode()+b'\0'+data).hexdigest()
+
+for path in ['assessment-evidence-sources.js','assessment-evidence-approval.js','sources/QUESTION_APPROVAL_POLICY.md']:
+    need((ROOT/path).exists(),f'missing evidence approval asset: {path}')
+
+approval=text('assessment-evidence-approval.js')
+sources=text('assessment-evidence-sources.js')
+need("const VERSION='2026.08.25.1'" in approval,'approval version missing')
+need("summary.total!==133" in approval and "summary.labs!==36" in approval,'133-question coverage guard missing')
+need('direct-question-source' in approval and 'mapped-authoritative-source' in approval,'source modes missing')
+need('external accreditation or independent third-party SME endorsement is not implied' in approval,'approval scope disclaimer missing')
+need('https://' in sources and 'http://' not in sources,'evidence source map must use HTTPS')
+
+approved_inputs=dict(re.findall(r"'([^']+\.(?:html|js))':'([0-9a-f]{40})'",approval))
+need(len(approved_inputs)==6,f'expected 6 approval-pinned content inputs, got {len(approved_inputs)}')
+for path,sha in approved_inputs.items():
+    need((ROOT/path).exists(),f'approved content input missing: {path}')
+    actual=git_blob_sha(path)
+    need(actual==sha,f'evidence approval stale for {path}: approved {sha}, current {actual}; re-review evidence and update approval')
+
+core=text('MouldMaster_Core_App.html'); marker='window.MM_DATA = '
+need(marker in core,'MM_DATA marker missing')
+D,_=json.JSONDecoder().raw_decode(core[core.index(marker)+len(marker):])
+need(sum(len(v) for v in D['exams'].values())==30,'technical bank must contain 30 items')
+need(sum(len(v) for r in D['regionalQuestions'].values() for v in r.values())==27,'regional bank must contain 27 items')
+
+extra_titles=['Fill time drifts but recipe does not','One cavity becomes light','Recovery time becomes erratic','Dimension shifts after water-line work','Part sticks after texture change','Cpk drops after gauge change','DOE result changes by run order','Pressure sensor disagrees with machine']
+for title in extra_titles:
+    D['scenarios'].append({'title':title,'situation':'placeholder','choices':['a','b','c','d'],'correct':0,'why':'placeholder','feedback':['a','b','c','d']})
+
+lab_js=text('diagnostic-learning-labs.js')
+lab_rows=re.findall(r"\n\s*id:'([^']+)',\n\s*title:'([^']+)',\n\s*level:'([^']+)',\n\s*focus:'([^']+)'",lab_js)
+need(len(lab_rows)==9,f'expected 9 diagnostic labs, got {len(lab_rows)}')
+labs=[{'id':a,'title':b,'level':c,'focus':d} for a,b,c,d in lab_rows]
+
+node=r'''
+const fs=require('fs'),vm=require('vm');
+const D=%s,LABS=%s;
+const store={};
+const localStorage={getItem:k=>Object.prototype.hasOwnProperty.call(store,k)?store[k]:null,setItem:(k,v)=>{store[k]=String(v)},removeItem:k=>{delete store[k]},key:i=>Object.keys(store)[i]||null,get length(){return Object.keys(store).length}};
+const makeEl=()=>({textContent:'',innerHTML:'',className:'',dataset:{},style:{},appendChild(){},insertAdjacentHTML(){},querySelector(){return null},querySelectorAll(){return[]},addEventListener(){},setAttribute(){},hasAttribute(){return false},classList:{add(){},remove(){},contains(){return false}}});
+const document={getElementById:()=>null,querySelectorAll:()=>[],querySelector:()=>null,createElement:makeEl,head:{appendChild(){}},body:{appendChild(){}},documentElement:{},readyState:'complete'};
+function MutationObserver(){this.observe=()=>{};this.disconnect=()=>{}}
+const sandbox={window:{MM_DATA:D,MM_DIAGNOSTIC_LABS:{version:'2026.08.25.1',labs:LABS},requestAnimationFrame:fn=>fn()},document,localStorage,performance:{now:()=>1000},console,setTimeout:(fn)=>{if(typeof fn==='function')fn()},clearTimeout(){},Date,Math,JSON,Map,Set,Blob:function(){},URL:{createObjectURL:()=>'',revokeObjectURL(){}},MutationObserver};
+sandbox.window.window=sandbox.window;sandbox.window.document=document;sandbox.window.localStorage=localStorage;sandbox.window.MutationObserver=MutationObserver;sandbox.window.URL=sandbox.URL;sandbox.window.setTimeout=sandbox.setTimeout;
+vm.createContext(sandbox);
+for(const file of ['assessment-deep-dive.js','assessment-answer-cue-fix.js','assessment-quality-suite.js','assessment-evidence-sources.js','assessment-evidence-approval.js'])vm.runInContext(fs.readFileSync(file,'utf8'),sandbox,{filename:file});
+const A=sandbox.window.MM_EVIDENCE_APPROVAL;
+process.stdout.write(JSON.stringify({summary:A.summary,records:A.records,qa:D.assessmentQA.evidenceApproval}));
+'''%(json.dumps(D),json.dumps(labs))
+with tempfile.NamedTemporaryFile('w',suffix='.js',delete=False,encoding='utf-8',dir=ROOT) as h:
+    h.write(node); node_path=Path(h.name)
+try:
+    p=subprocess.run(['node',str(node_path)],cwd=ROOT,capture_output=True,text=True)
+finally:
+    node_path.unlink(missing_ok=True)
+need(p.returncode==0,f'evidence approval runtime failed: {p.stderr or p.stdout}')
+runtime=json.loads(p.stdout)
+s=runtime['summary']; records=runtime['records']
+need(s=={'total':133,'approved':133,'technical':30,'regional':27,'scenarios':40,'labs':36,'direct':s['direct'],'mapped':s['mapped']},f'unexpected approval summary: {s}')
+need(len(records)==133 and len({r['id'] for r in records})==133,'approval record IDs must be complete and unique')
+need(all(r['status']=='approved' for r in records),'every keyed question must be approved')
+need(all(r.get('reviewer') and r.get('reviewedOn')=='2026-08-25' for r in records),'reviewer/date metadata incomplete')
+need(all(re.fullmatch(r'fnv1a-[0-9a-f]{8}',r.get('fingerprint','')) for r in records),'fingerprint missing or malformed')
+need(all(r.get('sources') and r.get('sourceIds') for r in records),'every keyed question needs evidence sources')
+need(all(all(str(x.get('url','')).startswith('https://') for x in r['sources']) for r in records),'all evidence links must be direct HTTPS URLs')
+need(all(r['sourceMode']=='direct-question-source' for r in records if r['kind']=='regional-exam'),'regional safety/compliance items must retain direct question sources')
+need(all(0<=int(r['answerKey'])<4 for r in records if r['kind'] in ('technical-exam','regional-exam','scenario')),'exam/scenario answer keys invalid')
+need(len({r['fingerprint'] for r in records if r['kind']!='diagnostic-lab-question'})==97,'exam/scenario fingerprints must be unique')
+need(runtime['qa']['approvedQuestions']==133,'assessment QA metadata must expose 133 approved questions')
+
+regional_domains=('legislation.gov.uk','hse.gov.uk','osha.gov','plasticsindustry.org','worksafe.govt.nz','legislation.govt.nz','knowledge.bsigroup.com')
+for r in records:
+    if r['kind']=='regional-exam':
+        need(any(any(d in s['url'] for d in regional_domains) for s in r['sources']),f"regional item lacks recognised official/standards source: {r['id']}")
+
+idx=text('index.html')
+need("['./assessment-evidence-sources.js'" in idx and "['./assessment-evidence-approval.js'" in idx,'browser shell does not load evidence approval assets')
+need(idx.index('assessment-evidence-sources.js')<idx.index('assessment-evidence-approval.js'),'evidence source map must load before approval runtime')
+sw=text('service-worker.js'); need("'./assessment-evidence-sources.js'" in sw and "'./assessment-evidence-approval.js'" in sw,'evidence assets missing from offline cache')
+pkg=text('desktop/electron/package.json'); need('../../assessment-evidence-sources.js' in pkg and '../../assessment-evidence-approval.js' in pkg,'evidence assets missing from desktop package')
+integ=text('desktop/electron/scripts/generate-integrity.cjs'); need("'assessment-evidence-sources.js'" in integ and "'assessment-evidence-approval.js'" in integ,'evidence assets missing from integrity manifest')
+workflow=text('.github/workflows/qa.yml'); need('node --check assessment-evidence-sources.js' in workflow and 'node --check assessment-evidence-approval.js' in workflow,'workflow must syntax-check evidence assets'); need('python qa_assessment_evidence.py' in workflow,'workflow must enforce evidence approval gate')
+
+print(f"MouldMaster evidence approval QA passed: {s['approved']}/{s['total']} keyed questions approved, {s['direct']} direct-question sourced, {s['mapped']} mapped-authoritative sourced")
