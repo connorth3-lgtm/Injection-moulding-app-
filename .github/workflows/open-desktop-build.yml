@@ -45,6 +45,7 @@ on:
       - 'qa_question_deep_dive.py'
       - 'qa_assessment_quality.py'
       - 'qa_assessment_evidence.py'
+      - 'qa_assessment_two_source.py'
       - 'qa_material_behaviour.py'
       - 'qa_assessment_storage_scope.py'
       - 'qa_stable_review_bridge.py'
@@ -131,6 +132,9 @@ jobs:
       - name: Question evidence approval QA
         working-directory: .
         run: python qa_assessment_evidence.py
+      - name: Two-source question evidence QA
+        working-directory: .
+        run: python qa_assessment_two_source.py
       - name: Learner-scoped assessment storage QA
         working-directory: .
         run: python qa_assessment_storage_scope.py
@@ -174,6 +178,7 @@ jobs:
             desktop/electron/generated/dependency-licenses.json
             desktop/electron/generated/sbom.cdx.json
             assessment-quality-report.json
+            question-two-source-report.json
             source-freshness-report.json
             research-source-freshness-report.json
           if-no-files-found: error
