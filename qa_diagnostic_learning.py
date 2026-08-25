@@ -7,6 +7,7 @@ INDEX = (ROOT / 'index.html').read_text(encoding='utf-8')
 SW = (ROOT / 'service-worker.js').read_text(encoding='utf-8')
 PKG = (ROOT / 'desktop' / 'electron' / 'package.json').read_text(encoding='utf-8')
 INTEGRITY = (ROOT / 'desktop' / 'electron' / 'scripts' / 'generate-integrity.cjs').read_text(encoding='utf-8')
+LOWER_JS = JS.lower()
 
 
 def need(condition, message):
@@ -51,10 +52,10 @@ for concept in [
 ]:
     need(concept in JS, f'reference-data concept not connected to labs: {concept}')
 
-need('disable mould protection so the tool closes harder' in JS, 'expected safety distractor missing')
-need('Safeguards must never be bypassed' in JS, 'safety distractor must be explicitly rejected')
-need('bypass guards' not in JS.lower(), 'unsafe bypass instruction detected')
-need('defeat interlocks' not in JS.lower(), 'unsafe interlock-defeat instruction detected')
+need('disable mould protection so the tool closes harder' in LOWER_JS, 'expected safety distractor missing')
+need('safeguards must never be bypassed' in LOWER_JS, 'safety distractor must be explicitly rejected')
+need('bypass guards' not in LOWER_JS, 'unsafe bypass instruction detected')
+need('defeat interlocks' not in LOWER_JS, 'unsafe interlock-defeat instruction detected')
 
 asset = './diagnostic-learning-labs.js'
 need(asset in INDEX, 'browser shell does not load diagnostic learning labs')
