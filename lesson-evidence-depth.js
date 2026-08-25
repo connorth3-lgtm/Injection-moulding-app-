@@ -16,6 +16,20 @@ const CURATED={
  'validation-methodology':{name:'ValiData (2025) — data-driven process validation methodology',authority:'peer-reviewed research',kind:'research',url:'https://doi.org/10.1007/s00170-025-16649-3'},
  'reprocessing-degradation':{name:'Polymers (2024) — polypropylene degradation through repeated processing',authority:'peer-reviewed research',kind:'research',url:'https://doi.org/10.3390/polym16070895'}
 };
+const COURSE_FALLBACKS={
+ 'Foundations':['autodesk-fill-pack','iso-20430'],
+ 'Machine & Controls':['autodesk-fill-pack','liew-2022','iso-20430'],
+ 'Materials':['iso-1133','trotta-2021','covestro-drying'],
+ 'Mould Design':['autodesk-fill-pack','autodesk-cooling','zhao-2022'],
+ 'Process Setup':['autodesk-fill-pack','autodesk-molding-window','jansen-1998'],
+ 'Defect Troubleshooting':['basf-troubleshooter','autodesk-fill-pack','araujo-2023'],
+ 'Scientific Moulding':['trotta-2021','jansen-1998','araujo-2023','nist-doe'],
+ 'Capability & Validation':['nist-capability','nist-handbook'],
+ 'DOE & Statistics':['nist-doe','nist-handbook','adoe-2024'],
+ 'Automation & Sensors':['liew-2022','araujo-2023','euromap-79','iso-20430'],
+ 'Advanced Tooling & Simulation':['autodesk-molding-window','autodesk-fill-pack','hotrunner-2024','araujo-2023'],
+ 'Expert Process Engineering':['nist-handbook','autodesk-molding-window','iso-20430']
+};
 const RULES=[
  [/^Basic process documentation$/i,['e:nist-handbook','e:liew-2022']],
  [/^Safe start-up observation$/i,['e:iso-20430','e:autodesk-fill-pack']],
@@ -82,12 +96,21 @@ function ref(token){const [kind,id]=String(token).split(':');return kind==='e'?e
 function tuple(t){return Array.isArray(t)&&/^https:\/\//i.test(t[2]||'')?{id:'library:'+String(t[2]),name:t[0],authority:'MouldMaster audited source library',kind:t[1],url:t[2]}:null}
 function add(out,s,origin){s=normalise(s);if(!s||out.some(x=>x.url===s.url))return;out.push({...s,origin})}
 function explicit(title){const out=[];for(const [rx,refs] of RULES)if(rx.test(String(title||'')))for(const token of refs)add(out,ref(token),'explicit');return out}
+function legacyCategories(text){const t=String(text||'').toLowerCase(),out=[];
+ if(/guard|safety|interlock|lockout|isolation|hazard|robot|cell|fume|emergency/.test(t))out.push('safety');
+ if(/puwer|coshh|hswa|law|legal|pcbu|regulation/.test(t))out.push('law');
+ if(/material|polymer|resin|rheolog|viscos|mfr|mvr|moisture|dry|crystalli|degrad|regrind/.test(t))out.push('materials');
+ if(/pack|hold|gate|cool|thermal|shrink|warpage|fill|flow|pressure|cavity|runner|vent|burn|weld|sink/.test(t))out.push('process');
+ if(/sensor|cavity pressure|monitor|trace|industry 4|condition monitoring/.test(t))out.push('sensors');
+ if(/capability|cpk|ppk|doe|statistics|measurement|random|factorial|validation|sampling|msa/.test(t))out.push('stats');
+ return [...new Set(out)]}
+function librarySelect(text,limit=8){const L=window.MM_SOURCE_LIBRARY;if(typeof L?.select==='function')return L.select(text,limit);const out=[];for(const cat of legacyCategories(text))for(const x of L?.[cat]||[])if(!out.some(y=>y[2]===x[2]))out.push(x);return out.slice(0,limit)}
 function topicSources(row){const out=[],title=String(row?.title||'');
- for(const t of window.MM_SOURCE_LIBRARY?.select?.(title,8)||[])add(out,tuple(t),'title-category');
+ for(const t of librarySelect(title,8))add(out,tuple(t),'title-category');
  for(const s of window.MM_EVIDENCE_SOURCES?.inferred?.(title)||[])add(out,{id:'e:'+s.id,name:s.name,authority:s.authority,kind:s.kind,url:s.url},'title-inference');
  for(const s of explicit(title))add(out,s,s.origin||'explicit');
  return out}
-function fallbackSources(row){const out=[];for(const id of window.MM_SOURCE_LIBRARY?.courseFallbacks?.[row?.courseName]||[])add(out,evidence(id),'course-fallback');return out}
+function fallbackSources(row){const out=[];const ids=window.MM_SOURCE_LIBRARY?.courseFallbacks?.[row?.courseName]||COURSE_FALLBACKS[row?.courseName]||[];for(const id of ids)add(out,evidence(id),'course-fallback');return out}
 function lessonSources(row,limit=5){const out=[];for(const s of topicSources(row))add(out,s,s.origin);for(const s of fallbackSources(row))add(out,s,'course-fallback');return out.slice(0,limit)}
 function auth(s){return String(s?.authority||'').toLowerCase().replace(/peer-reviewed .*/,'peer-reviewed research').replace(/\s*\/.*$/,'').trim()}
 function auditLesson(row){const topic=topicSources(row),display=lessonSources(row,5),authorityFamilies=[...new Set(topic.map(auth).filter(Boolean))];return {id:row?.id,title:row?.title,course:row?.courseName,topicCount:topic.length,authorityCount:authorityFamilies.length,authorityFamilies,displayCount:display.length,status:topic.length>=2?'strong':topic.length===1?'supported':'fallback-only',topicSources:topic.map(s=>({id:s.id,name:s.name,url:s.url,authority:s.authority,origin:s.origin})),displaySources:display.map(s=>({id:s.id,name:s.name,url:s.url,origin:s.origin}))}}
