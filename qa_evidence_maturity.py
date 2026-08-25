@@ -37,13 +37,17 @@ const D=%s,LABS=%s;
 const store={};
 const localStorage={getItem:k=>Object.prototype.hasOwnProperty.call(store,k)?store[k]:null,setItem:(k,v)=>{store[k]=String(v)},removeItem:k=>{delete store[k]},key:i=>Object.keys(store)[i]||null,get length(){return Object.keys(store).length}};
 const makeEl=()=>({textContent:'',innerHTML:'',className:'',hidden:false,dataset:{},style:{},href:'',download:'',appendChild(){},prepend(){},insertBefore(){},insertAdjacentHTML(){},insertAdjacentElement(){},querySelector(){return null},querySelectorAll(){return[]},addEventListener(){},setAttribute(){},hasAttribute(){return false},remove(){},click(){},classList:{add(){},remove(){},contains(){return false}}});
-const document={getElementById:()=>null,querySelectorAll:()=>[],querySelector:()=>null,createElement:makeEl,head:{appendChild(){}},body:{append(){},appendChild(){},prepend(){}},documentElement:{},readyState:'complete',addEventListener(){}};
+const document={getElementById:()=>null,querySelectorAll:()=>[],querySelector:()=>null,createElement:makeEl,head:{appendChild(){}},body:{append(){},appendChild(){},prepend(){}},documentElement:{},readyState:'loading',addEventListener(){}};
 function MutationObserver(){this.observe=()=>{};this.disconnect=()=>{}}
 const URLObj=function(u,b){return new (global.URL)(u,b)}; URLObj.createObjectURL=()=>'';URLObj.revokeObjectURL=()=>{};
 const sandbox={window:{MM_DATA:D,MM_DIAGNOSTIC_LABS:{version:'qa',labs:LABS},requestAnimationFrame:fn=>fn(),addEventListener(){},scrollTo(){}},document,localStorage,performance:{now:()=>1000},console,setTimeout:(fn)=>{if(typeof fn==='function')fn()},clearTimeout(){},Date,Math,JSON,Map,Set,Blob:function(){},URL:URLObj,MutationObserver};
 sandbox.window.window=sandbox.window;sandbox.window.document=document;sandbox.window.localStorage=localStorage;sandbox.window.MutationObserver=MutationObserver;sandbox.window.URL=URLObj;sandbox.window.setTimeout=sandbox.setTimeout;
 vm.createContext(sandbox);
-for(const file of ['reference-data.js','reference-deep-dive.js','reference-research-extension.js','reference-20x-extension.js','reference-2026-expansion.js','material-behaviour-labs.js','assessment-deep-dive.js','assessment-answer-cue-fix.js','assessment-quality-suite.js','source-library.js','assessment-evidence-sources.js','evidence-maturity-deep-dive.js','lesson-evidence-depth.js','assessment-evidence-approval.js']){
+for(const file of ['reference-data.js','reference-deep-dive.js','reference-research-extension.js','reference-20x-extension.js','reference-2026-expansion.js']){
+ vm.runInContext(fs.readFileSync(file,'utf8'),sandbox,{filename:file});
+}
+document.readyState='complete';
+for(const file of ['material-behaviour-labs.js','assessment-deep-dive.js','assessment-answer-cue-fix.js','assessment-quality-suite.js','source-library.js','assessment-evidence-sources.js','evidence-maturity-deep-dive.js','lesson-evidence-depth.js','assessment-evidence-approval.js']){
  vm.runInContext(fs.readFileSync(file,'utf8'),sandbox,{filename:file});
 }
 const A=sandbox.window.MM_EVIDENCE_APPROVAL;
@@ -93,7 +97,7 @@ L=data['lessons']; need(L['total']==120,'lesson evidence audit lost canonical sc
 need(L['counts'].get('strong')==120 and L['counts'].get('supported')==0 and L['counts'].get('fallback-only')==0,f"lesson evidence still weak: {L['counts']}")
 for row in L['lessons']:
     need(row.get('topicCount',0)>=2,f"lesson {row['title']} has fewer than two topic sources")
-    urls=[s['url'] for s in row.get('topicSources',[])];need(len(urls)==len(set(urls)),f"lesson {row['title']} has duplicate topic URLs")
+    urls=[s['url'] for s in row.get('topicSources',[])]; need(len(urls)==len(set(urls)),f"lesson {row['title']} has duplicate topic URLs")
 
 # 4: broad material practice, deliberately beyond the initial six formal labs.
 P=data['practice']; labs2=P['labs']; need(len(labs2)>=10,'need at least ten extended material practice labs')
