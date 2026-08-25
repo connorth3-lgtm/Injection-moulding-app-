@@ -1,5 +1,5 @@
 from pathlib import Path
-import hashlib, json, re, subprocess, tempfile
+import ast, hashlib, json, re, subprocess, tempfile
 
 ROOT=Path(__file__).resolve().parent
 
@@ -17,11 +17,14 @@ for path in ['assessment-evidence-sources.js','assessment-evidence-approval.js',
 
 approval=text('assessment-evidence-approval.js')
 sources=text('assessment-evidence-sources.js')
-need("const VERSION='2026.08.25.1'" in approval,'approval version missing')
+need("const VERSION='2026.08.25.2'" in approval,'approval version missing')
+need("version:'2026.08.25.2'" in sources,'evidence source version missing')
 need("summary.total!==133" in approval and "summary.labs!==36" in approval,'133-question coverage guard missing')
+need('blockedIds' in approval,'blocked evidence IDs must be reported on failure')
 need('direct-question-source' in approval and 'mapped-authoritative-source' in approval,'source modes missing')
 need('external accreditation or independent third-party SME endorsement is not implied' in approval,'approval scope disclaimer missing')
 need('https://' in sources and 'http://' not in sources,'evidence source map must use HTTPS')
+need('if(!ids.length)' not in sources,'generic evidence fallback is forbidden; unmatched questions must fail closed')
 
 approved_inputs=dict(re.findall(r"'([^']+\.(?:html|js))':'([0-9a-f]{40})'",approval))
 need(len(approved_inputs)==6,f'expected 6 approval-pinned content inputs, got {len(approved_inputs)}')
@@ -36,9 +39,15 @@ D,_=json.JSONDecoder().raw_decode(core[core.index(marker)+len(marker):])
 need(sum(len(v) for v in D['exams'].values())==30,'technical bank must contain 30 items')
 need(sum(len(v) for r in D['regionalQuestions'].values() for v in r.values())==27,'regional bank must contain 27 items')
 
-extra_titles=['Fill time drifts but recipe does not','One cavity becomes light','Recovery time becomes erratic','Dimension shifts after water-line work','Part sticks after texture change','Cpk drops after gauge change','DOE result changes by run order','Pressure sensor disagrees with machine']
-for title in extra_titles:
-    D['scenarios'].append({'title':title,'situation':'placeholder','choices':['a','b','c','d'],'correct':0,'why':'placeholder','feedback':['a','b','c','d']})
+# Reconstruct the eight guided-training scenarios from their real source array.
+# Placeholder scenario text would allow a source-mapping regression to pass unnoticed.
+training=text('training-upgrade.js')
+m=re.search(r"const EXTRA=(\[[\s\S]*?\n\]);",training)
+need(m is not None,'training EXTRA scenario bank could not be parsed')
+extra=ast.literal_eval(m.group(1))
+need(len(extra)==8,'guided training must contribute exactly 8 scenarios')
+for a in extra:
+    D['scenarios'].append({'title':a[0],'situation':a[1],'choices':a[2],'correct':a[3],'why':a[4],'feedback':[a[4] if i==a[3] else 'This does not directly test the mechanism best supported by the evidence.' for i in range(4)]})
 
 lab_js=text('diagnostic-learning-labs.js')
 lab_rows=re.findall(r"\n\s*id:'([^']+)',\n\s*title:'([^']+)',\n\s*level:'([^']+)',\n\s*focus:'([^']+)'",lab_js)
@@ -58,7 +67,7 @@ sandbox.window.window=sandbox.window;sandbox.window.document=document;sandbox.wi
 vm.createContext(sandbox);
 for(const file of ['assessment-deep-dive.js','assessment-answer-cue-fix.js','assessment-quality-suite.js','assessment-evidence-sources.js','assessment-evidence-approval.js'])vm.runInContext(fs.readFileSync(file,'utf8'),sandbox,{filename:file});
 const A=sandbox.window.MM_EVIDENCE_APPROVAL;
-process.stdout.write(JSON.stringify({summary:A.summary,records:A.records,qa:D.assessmentQA.evidenceApproval}));
+process.stdout.write(JSON.stringify({summary:A.summary,blockedIds:A.blockedIds,records:A.records,qa:D.assessmentQA.evidenceApproval}));
 '''%(json.dumps(D),json.dumps(labs))
 with tempfile.NamedTemporaryFile('w',suffix='.js',delete=False,encoding='utf-8',dir=ROOT) as h:
     h.write(node); node_path=Path(h.name)
@@ -69,6 +78,7 @@ finally:
 need(p.returncode==0,f'evidence approval runtime failed: {p.stderr or p.stdout}')
 runtime=json.loads(p.stdout)
 s=runtime['summary']; records=runtime['records']
+need(runtime.get('blockedIds')==[],'no keyed question may remain blocked')
 need(s=={'total':133,'approved':133,'technical':30,'regional':27,'scenarios':40,'labs':36,'direct':s['direct'],'mapped':s['mapped']},f'unexpected approval summary: {s}')
 need(len(records)==133 and len({r['id'] for r in records})==133,'approval record IDs must be complete and unique')
 need(all(r['status']=='approved' for r in records),'every keyed question must be approved')
@@ -86,6 +96,24 @@ for r in records:
     if r['kind']=='regional-exam':
         need(any(any(d in s['url'] for d in regional_domains) for s in r['sources']),f"regional item lacks recognised official/standards source: {r['id']}")
 
+# Explicitly guard the previously unsourced newer scenarios so a broad keyword fallback cannot return.
+required_scenario_sources={
+ 'Black specks after a long shutdown':'basf-troubleshooter',
+ 'One cavity flashes after tool service':'autodesk-flash',
+ 'Valve-gate cavity timing separates':'autodesk-valve-gate',
+ 'Robot delay increases cycle only':'euromap-79',
+ 'Energy per part rises with stable cycle':'euromap-60',
+ 'Insert temperature varies':'overmould-2020',
+ 'Hot-runner leak suspected':'hotrunner-2024',
+ 'Warm-up state changes first-off parts':'hotrunner-2024',
+ 'Mass prediction stays good but dimension model worsens':'nist-ai-drift'
+}
+scenario_by_title={r.get('title'):r for r in records if r['kind']=='scenario'}
+for title,source_id in required_scenario_sources.items():
+    r=scenario_by_title.get(title)
+    need(r is not None,f'missing reviewed scenario: {title}')
+    need(source_id in r['sourceIds'],f'scenario {title} lacks topic-appropriate evidence {source_id}: {r["sourceIds"]}')
+
 idx=text('index.html')
 need("['./assessment-evidence-sources.js'" in idx and "['./assessment-evidence-approval.js'" in idx,'browser shell does not load evidence approval assets')
 need(idx.index('assessment-evidence-sources.js')<idx.index('assessment-evidence-approval.js'),'evidence source map must load before approval runtime')
@@ -94,4 +122,4 @@ pkg=text('desktop/electron/package.json'); need('../../assessment-evidence-sourc
 integ=text('desktop/electron/scripts/generate-integrity.cjs'); need("'assessment-evidence-sources.js'" in integ and "'assessment-evidence-approval.js'" in integ,'evidence assets missing from integrity manifest')
 workflow=text('.github/workflows/qa.yml'); need('node --check assessment-evidence-sources.js' in workflow and 'node --check assessment-evidence-approval.js' in workflow,'workflow must syntax-check evidence assets'); need('python qa_assessment_evidence.py' in workflow,'workflow must enforce evidence approval gate')
 
-print(f"MouldMaster evidence approval QA passed: {s['approved']}/{s['total']} keyed questions approved, {s['direct']} direct-question sourced, {s['mapped']} mapped-authoritative sourced")
+print(f"MouldMaster evidence approval QA passed: {s['approved']}/{s['total']} keyed questions approved, {s['direct']} direct-question sourced, {s['mapped']} topic-mapped authoritative sourced")
