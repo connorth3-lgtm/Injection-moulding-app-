@@ -1,5 +1,5 @@
 const CACHE_VERSION='2026.08.24.1';
-const CACHE_REVISION='evidence-maturity-20260826';
+const CACHE_REVISION='evidence-maturity-triangulation-20260826';
 const STATIC_CACHE=`mouldmaster-static-${CACHE_VERSION}-${CACHE_REVISION}`;
 const CORE=[
   './index.html',
@@ -35,6 +35,7 @@ const CORE=[
   './material-behaviour-labs.js',
   './assessment-evidence-sources.js',
   './evidence-maturity-deep-dive.js',
+  './evidence-maturity-formal-bridge.js',
   './lesson-evidence-depth.js',
   './assessment-evidence-approval.js',
   './pwa-shell.js',
