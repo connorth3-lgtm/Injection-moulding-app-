@@ -61,6 +61,9 @@ jobs:
       - name: Validate Microsoft Store submission readiness
         working-directory: .
         run: python qa_store_submission.py
+      - name: Validate material behaviour learning
+        working-directory: .
+        run: python qa_material_behaviour.py
       - name: 100-pass data and assessment audit
         working-directory: .
         run: python qa_100_pass.py
