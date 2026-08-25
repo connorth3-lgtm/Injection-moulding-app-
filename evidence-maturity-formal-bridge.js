@@ -1,7 +1,7 @@
-/* MouldMaster formal evidence triangulation bridge — 2026.08.26.4 */
+/* MouldMaster formal evidence triangulation bridge — 2026.08.26.5 */
 (function(){
 'use strict';
-const VERSION='2026.08.26.4';
+const VERSION='2026.08.26.5';
 const E=window.MM_EVIDENCE_SOURCES;
 if(!E)throw new Error('assessment-evidence-sources.js must load before formal evidence bridge');
 
@@ -46,11 +46,38 @@ E.inferred=function(text){
 const pom=window.MM_MATERIAL_BEHAVIOUR_LABS?.labs?.find(x=>x.id==='pom-thermal-safety');
 if(pom&&!pom.sourceIds.includes('delrin-pom-molding'))pom.sourceIds.push('delrin-pom-molding');
 
+// Reference extensions can legitimately contain repeated display names.  Preserve every
+// live record while giving each one a deterministic semantic ID rather than collapsing it.
+const RT=window.MM_REFERENCE_TRACEABILITY;
+if(RT?.audit){
+ const baseAudit=RT.audit.bind(RT);
+ const dynamicKeys=new Set(['id','sources','sourceIds','authorityFamilies','status','reviewedOn','reviewBy']);
+ const semanticIdentity=row=>{
+   const stable={};
+   for(const key of Object.keys(row||{}).sort())if(!dynamicKeys.has(key))stable[key]=row[key];
+   return E.hash(JSON.stringify(stable));
+ };
+ const hardenedAudit=()=>{
+   const result=baseAudit(),seen=new Map();
+   const records=(result.records||[]).map((row,index)=>{
+     const baseId=String(row.id||`ref:record:${index}`),semantic=semanticIdentity(row);
+     const candidate=`${baseId}:${semantic}`;
+     const occurrence=(seen.get(candidate)||0)+1;seen.set(candidate,occurrence);
+     return {...row,id:occurrence===1?candidate:`${candidate}:${occurrence}`};
+   });
+   return {...result,records,total:records.length};
+ };
+ RT.audit=hardenedAudit;
+ RT.record=id=>hardenedAudit().records.find(x=>x.id===id)||null;
+ RT.idPolicy={version:VERSION,scheme:'existing-semantic-id + content hash + duplicate ordinal',preservesAllEntries:true};
+}
+
 E.version=VERSION;
 E.formalTriangulationBridge={
  version:VERSION,minimumDistinctUrls:2,minimumAuthorityFamilies:2,
  capabilityAuthorities:['NIST','ISO'],measurementAuthorities:['NIST','ISO'],
  cavityPressureAuthorities:['peer-reviewed research','Kistler'],flashAuthorities:['Autodesk','BASF'],
- microcellularIndependentAuthority:'Autodesk',pomIndependentSuppliers:['Celanese','Delrin'],localOnly:true
+ microcellularIndependentAuthority:'Autodesk',pomIndependentSuppliers:['Celanese','Delrin'],
+ referenceIdPolicy:'semantic-hash-with-duplicate-ordinal',localOnly:true
 };
 })();
