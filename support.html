@@ -11,11 +11,12 @@
 <h1>MouldMaster Academy — Support</h1>
 <div class="box"><b>Current release family</b><br>
 PWA shell: <span id="mmPwa">2026.08.24.1</span><br>
-Open desktop: <span id="mmDesktop">2026.08.24.2</span><br>
+Open desktop: <span id="mmDesktop">2026.08.25.1</span><br>
 Training content: <span id="mmContent">2026.08.24.2</span><br>
 Audited question bank: <span id="mmBank">2026.08.24.2</span><br>
 Assessment quality layer: <span id="mmQuality">2026.08.24.3</span><br>
 Learner-scoped analytics storage: <span id="mmScope">2026.08.24.4</span><br>
+Question evidence approval: <span id="mmEvidence">2026.08.25.2</span><br>
 Legacy Windows recovery content: <span id="mmRecovery">2026.08.21.1</span><br>
 <span class="muted" id="mmVersionStatus">Release values are synchronised from version.json when available.</span></div>
 <h2>App does not update</h2><p>For the installed PWA, connect to the internet, open MouldMaster, close it fully and reopen it. Offline content is refreshed through the service worker after a successful online check.</p>
@@ -27,7 +28,7 @@ Legacy Windows recovery content: <span id="mmRecovery">2026.08.21.1</span><br>
 <p><a href="./">Return to MouldMaster Academy</a> · <a href="./privacy.html">Privacy notice</a></p>
 <script>
 (async()=>{
- const ids={android_release:'mmPwa',desktop_release:'mmDesktop',content_version:'mmContent',question_bank_version:'mmBank',assessment_quality_version:'mmQuality',assessment_storage_scope_version:'mmScope',windows_recovery_release:'mmRecovery'};
+ const ids={android_release:'mmPwa',desktop_release:'mmDesktop',content_version:'mmContent',question_bank_version:'mmBank',assessment_quality_version:'mmQuality',assessment_storage_scope_version:'mmScope',assessment_evidence_version:'mmEvidence',windows_recovery_release:'mmRecovery'};
  try{
   const r=await fetch('./version.json',{cache:'no-store'});if(!r.ok)throw new Error('version fetch failed');const v=await r.json();
   for(const [k,id] of Object.entries(ids)){const el=document.getElementById(id);if(el&&v[k])el.textContent=v[k]}

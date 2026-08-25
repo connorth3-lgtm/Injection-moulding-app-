@@ -46,6 +46,7 @@ jobs:
           python qa_100_pass.py
           python qa_question_deep_dive.py
           python qa_assessment_quality.py
+          python qa_assessment_evidence.py
           python qa_assessment_storage_scope.py
           python qa_stable_review_bridge.py
           python qa_assessment_final_hardening.py

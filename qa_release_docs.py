@@ -10,11 +10,12 @@ def need(ok,msg):
 V=json.loads(text('version.json'))
 expected={
  'android_release':'2026.08.24.1',
- 'desktop_release':'2026.08.24.2',
+ 'desktop_release':'2026.08.25.1',
  'content_version':'2026.08.24.2',
  'question_bank_version':'2026.08.24.2',
  'assessment_quality_version':'2026.08.24.3',
  'assessment_storage_scope_version':'2026.08.24.4',
+ 'assessment_evidence_version':'2026.08.25.2',
  'windows_recovery_release':'2026.08.21.1',
 }
 for k,v in expected.items(): need(V.get(k)==v,f'version.json {k} drift: {V.get(k)!r} != {v!r}')
@@ -23,16 +24,18 @@ readme=text('README.md')
 for label,k in [
  ('PWA / browser shell','android_release'),('Open Windows desktop','desktop_release'),('Training content','content_version'),
  ('Audited assessment bank','question_bank_version'),('Assessment quality / analytics hardening','assessment_quality_version'),
- ('Learner-scoped assessment storage','assessment_storage_scope_version'),('Frozen legacy Windows recovery lane','windows_recovery_release')]:
+ ('Learner-scoped assessment storage','assessment_storage_scope_version'),('Question evidence approval','assessment_evidence_version'),
+ ('Frozen legacy Windows recovery lane','windows_recovery_release')]:
     need(f'- {label}: `{V[k]}`' in readme,f'README release lane stale/missing: {label}')
 need('qa_assessment_storage_scope.py' in readme,'README must list learner-scoped analytics QA')
+need('qa_assessment_evidence.py' in readme,'README must list question evidence approval QA')
 need(V.get('desktop_release_tag')==f"desktop-v{V['desktop_release']}",'desktop release tag/version mismatch')
 need(V.get('desktop_release_url')==f"https://github.com/{V['repository']}/releases/tag/{V['desktop_release_tag']}",'desktop release URL/tag mismatch')
 
 android=text('ANDROID_INSTALL_README.txt')
-for marker in ['assessment-storage-scope.js','assessment-final-hardening.js','reference-20x-extension.js','privacy.html','support.html']:
+for marker in ['assessment-storage-scope.js','assessment-final-hardening.js','assessment-evidence-sources.js','assessment-evidence-approval.js','reference-20x-extension.js','privacy.html','support.html']:
     need(marker in android,f'Android install inventory missing: {marker}')
-for label,k in [('Android/PWA shell','android_release'),('Training content','content_version'),('Audited question bank','question_bank_version'),('Assessment quality / analytics hardening','assessment_quality_version'),('Learner-scoped assessment storage','assessment_storage_scope_version')]:
+for label,k in [('Android/PWA shell','android_release'),('Training content','content_version'),('Audited question bank','question_bank_version'),('Assessment quality / analytics hardening','assessment_quality_version'),('Learner-scoped assessment storage','assessment_storage_scope_version'),('Question evidence approval','assessment_evidence_version')]:
     need(f'{label}: {V[k]}' in android,f'Android install version stale/missing: {label}')
 need('stable question IDs independent of content-release wording' in android,'Android assessment-ID description is stale')
 
@@ -43,7 +46,7 @@ for label,k in [('CURRENT LEGACY RECOVERY CONTENT','windows_recovery_release'),(
 need('must NOT be silently inserted into this legacy feed' in upload,'recovery/PWA lane separation warning missing')
 
 support=text('support.html')
-for k,id_ in {'android_release':'mmPwa','desktop_release':'mmDesktop','content_version':'mmContent','question_bank_version':'mmBank','assessment_quality_version':'mmQuality','assessment_storage_scope_version':'mmScope','windows_recovery_release':'mmRecovery'}.items():
+for k,id_ in {'android_release':'mmPwa','desktop_release':'mmDesktop','content_version':'mmContent','question_bank_version':'mmBank','assessment_quality_version':'mmQuality','assessment_storage_scope_version':'mmScope','assessment_evidence_version':'mmEvidence','windows_recovery_release':'mmRecovery'}.items():
     need(f'id="{id_}">{V[k]}' in support,f'support fallback version stale: {k}')
     need(f"{k}:'{id_}'" in support,f'support dynamic version mapping missing: {k}')
 need("fetch('./version.json',{cache:'no-store'})" in support,'support page must synchronise from version.json')
@@ -54,7 +57,7 @@ for marker in ['assessment analytics','scoped to the active learner profile','fi
     need(marker in privacy,f'privacy disclosure missing: {marker}')
 
 sw=text('service-worker.js')
-for marker in ["'./privacy.html'","'./support.html'","'./assessment-storage-scope.js'"]:
+for marker in ["'./privacy.html'","'./support.html'","'./assessment-storage-scope.js'","'./assessment-evidence-sources.js'","'./assessment-evidence-approval.js'"]:
     need(marker in sw,f'offline compliance/runtime asset missing: {marker}')
 
 for name in ['README.md','ANDROID_INSTALL_README.txt','support.html','UPLOAD_README.txt']:

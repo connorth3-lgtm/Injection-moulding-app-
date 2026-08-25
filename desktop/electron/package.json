@@ -1,6 +1,6 @@
 {
   "name": "mouldmaster-academy-desktop",
-  "version": "2026.8.24",
+  "version": "2026.8.25",
   "description": "Open-source Windows desktop wrapper for MouldMaster Academy.",
   "author": "MouldMaster Academy contributors",
   "license": "Apache-2.0",
@@ -23,8 +23,8 @@
   "build": {
     "appId": "org.mouldmaster.academy",
     "productName": "MouldMaster Academy",
-    "buildNumber": "2",
-    "buildVersion": "2026.8.24.2",
+    "buildNumber": "1",
+    "buildVersion": "2026.8.25.1",
     "asar": true,
     "electronFuses": {
       "runAsNode": false,
@@ -75,6 +75,8 @@
       {"from": "../../reference-sources.js", "to": "mouldmaster/reference-sources.js"},
       {"from": "../../reference-browser-ui.js", "to": "mouldmaster/reference-browser-ui.js"},
       {"from": "../../diagnostic-learning-labs.js", "to": "mouldmaster/diagnostic-learning-labs.js"},
+      {"from": "../../assessment-evidence-sources.js", "to": "mouldmaster/assessment-evidence-sources.js"},
+      {"from": "../../assessment-evidence-approval.js", "to": "mouldmaster/assessment-evidence-approval.js"},
       {"from": "../../service-worker.js", "to": "mouldmaster/service-worker.js"},
       {"from": "../../privacy.html", "to": "mouldmaster/privacy.html"},
       {"from": "../../support.html", "to": "mouldmaster/support.html"},

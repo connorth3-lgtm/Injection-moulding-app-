@@ -40,6 +40,8 @@ jobs:
           node --check assessment-analytics-ui.js
           node --check assessment-final-hardening.js
           node --check assessment-ux.js
+          node --check assessment-evidence-sources.js
+          node --check assessment-evidence-approval.js
           node --check source-library.js
           node --check reference-data.js
           node --check reference-deep-dive.js
@@ -69,6 +71,8 @@ jobs:
         run: python qa_question_deep_dive.py
       - name: Assessment quality, blueprint and analytics integrity
         run: python qa_assessment_quality.py
+      - name: Question evidence approval integrity
+        run: python qa_assessment_evidence.py
       - name: Learner-scoped assessment storage integrity
         run: python qa_assessment_storage_scope.py
       - name: Stable spaced-review ID integrity

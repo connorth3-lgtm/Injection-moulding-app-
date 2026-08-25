@@ -1,12 +1,13 @@
 {
   "schema": 1,
-  "reviewed": "2026-08-24",
-  "review_by": "2026-11-24",
+  "reviewed": "2026-08-25",
+  "review_by": "2026-11-25",
   "doi_minimum": 30,
   "policy": "Every https://doi.org citation in the listed research-bearing files is discovered automatically. Release QA validates DOI syntax, coverage and review dates without network access. The scheduled freshness workflow asks the DOI resolver for citation metadata. A DOI resolver 404/410 is a hard review trigger; temporary access, publisher, rate-limit or network failures are warnings rather than evidence that a study disappeared.",
   "source_files": [
     "assessment-deep-dive.js",
     "assessment-quality-suite.js",
+    "assessment-evidence-sources.js",
     "reference-research-extension.js",
     "reference-20x-extension.js",
     "source-library.js",
