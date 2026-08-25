@@ -41,6 +41,9 @@ jobs:
           node --check assessment-final-hardening.js
           node --check assessment-ux.js
           node --check assessment-evidence-sources.js
+          node --check evidence-maturity-deep-dive.js
+          node --check evidence-maturity-formal-bridge.js
+          node --check lesson-evidence-depth.js
           node --check assessment-evidence-approval.js
           node --check source-library.js
           node --check reference-data.js
@@ -76,6 +79,8 @@ jobs:
         run: python qa_assessment_quality.py
       - name: Question evidence approval integrity
         run: python qa_assessment_evidence.py
+      - name: Evidence maturity seven-gap deep dive
+        run: python qa_evidence_maturity.py
       - name: Learner-scoped assessment storage integrity
         run: python qa_assessment_storage_scope.py
       - name: Stable spaced-review ID integrity
@@ -102,3 +107,9 @@ jobs:
         run: python qa_nzqa_readiness.py
       - name: IACET 2026 readiness integrity
         run: python qa_iacet_readiness.py
+      - name: Upload evidence maturity audit
+        uses: actions/upload-artifact@v4
+        with:
+          name: mouldmaster-evidence-maturity-audit
+          path: evidence-maturity-report.json
+          if-no-files-found: error

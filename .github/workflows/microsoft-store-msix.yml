@@ -76,6 +76,9 @@ jobs:
       - name: Validate question evidence approval
         working-directory: .
         run: python qa_assessment_evidence.py
+      - name: Validate evidence maturity seven-gap deep dive
+        working-directory: .
+        run: python qa_evidence_maturity.py
       - name: Validate learner-scoped assessment storage
         working-directory: .
         run: python qa_assessment_storage_scope.py
@@ -85,6 +88,9 @@ jobs:
       - name: Validate final assessment revision and timing hardening
         working-directory: .
         run: python qa_assessment_final_hardening.py
+      - name: Validate assessment interaction and readability
+        working-directory: .
+        run: python qa_assessment_ux.py
       - name: Validate authoritative source freshness metadata
         working-directory: .
         run: python qa_source_freshness.py
@@ -135,6 +141,7 @@ jobs:
             desktop/electron/generated/dependency-licenses.json
             desktop/electron/generated/sbom.cdx.json
             assessment-quality-report.json
+            evidence-maturity-report.json
             source-freshness-report.json
             research-source-freshness-report.json
           if-no-files-found: error

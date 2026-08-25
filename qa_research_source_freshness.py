@@ -1,5 +1,5 @@
 from pathlib import Path
-from datetime import date, datetime
+from datetime import date, datetime, timedelta
 from concurrent.futures import ThreadPoolExecutor, as_completed
 import argparse, json, re, ssl, urllib.error, urllib.request
 
@@ -7,6 +7,13 @@ ROOT=Path(__file__).resolve().parent
 MANIFEST=ROOT/'sources'/'RESEARCH_SOURCE_FRESHNESS.json'
 REPORT=ROOT/'research-source-freshness-report.json'
 DOI_RE=re.compile(r"https://doi\.org/10\.\d{4,9}/[^\s\"'<>`\]\)]+",re.I)
+
+# CI runners use UTC, while review metadata may be recorded in the reviewer's
+# local calendar date. Civil time zones can legitimately be one calendar day
+# ahead of UTC, so tolerate exactly that boundary but reject anything further
+# in the future. This keeps the future-date guard meaningful and cross-platform
+# without depending on OS timezone databases.
+MAX_LOCAL_DATE_LEAD_DAYS=1
 
 def need(ok,msg):
     if not ok: raise AssertionError(msg)
@@ -16,7 +23,7 @@ def parse_day(s): return datetime.strptime(s,'%Y-%m-%d').date()
 def discover(data):
     need(data.get('schema')==1,'research freshness schema must be 1')
     today=date.today(); reviewed=parse_day(data['reviewed']); review_by=parse_day(data['review_by'])
-    need(reviewed<=today,'research freshness reviewed date cannot be in the future')
+    need(reviewed<=today+timedelta(days=MAX_LOCAL_DATE_LEAD_DAYS),'research freshness reviewed date is more than one local-calendar day in the future')
     need(review_by>reviewed,'research freshness review_by must follow reviewed')
     need(review_by>=today,'research DOI review is overdue')
     files=data.get('source_files') or []; need(len(files)>=5,'research freshness source-file set unexpectedly small')
