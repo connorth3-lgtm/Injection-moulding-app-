@@ -24,6 +24,7 @@
     "use strict";
     const SHELL_RELEASE="2026.08.24.1";
     const CORE_URL="./MouldMaster_Core_App.html";
+    const EXPECTED_STATIC_CACHE="mouldmaster-static-2026.08.24.1-material-labs-mobile-hotfix-20260825";
     const HEAD_ASSETS=[
       ['manifest.webmanifest','<link rel="manifest" href="./manifest.webmanifest">'],
       ['rel="icon" type="image/png" sizes="192x192"','<link rel="icon" type="image/png" sizes="192x192" href="./mouldmaster-192.png">'],
@@ -82,6 +83,13 @@
       }
       return out;
     }
+    async function clearStaleRuntimeCaches(){
+      if(!navigator.onLine||!("caches" in window))return;
+      try{
+        const keys=await caches.keys();
+        await Promise.all(keys.filter(k=>k.startsWith('mouldmaster-static-')&&k!==EXPECTED_STATIC_CACHE).map(k=>caches.delete(k)));
+      }catch(_){ }
+    }
     async function getCore(){
       try{
         const r=await fetch(CORE_URL,{cache:"no-store"});
@@ -94,6 +102,7 @@
       throw new Error("Core training content is unavailable");
     }
     try{
+      await clearStaleRuntimeCaches();
       const html=assemble(await getCore());
       document.open();document.write(html);document.close();
     }catch(err){

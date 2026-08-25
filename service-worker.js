@@ -1,5 +1,5 @@
 const CACHE_VERSION='2026.08.24.1';
-const CACHE_REVISION='material-labs-20260825';
+const CACHE_REVISION='material-labs-mobile-hotfix-20260825';
 const STATIC_CACHE=`mouldmaster-static-${CACHE_VERSION}-${CACHE_REVISION}`;
 const CORE=[
   './index.html',
@@ -56,6 +56,18 @@ self.addEventListener('activate',event=>{
   })());
 });
 
+async function fetchAndCache(event,url){
+  try{
+    const r=await fetch(event.request,{cache:'no-store'});
+    if(r&&r.ok){
+      const c=await caches.open(STATIC_CACHE);
+      const name=url.pathname.split('/').pop();
+      await c.put(name?`./${name}`:event.request,r.clone());
+    }
+    return r;
+  }catch(_){return null}
+}
+
 self.addEventListener('fetch',event=>{
   if(event.request.method!=='GET')return;
   const url=new URL(event.request.url);
@@ -71,9 +83,18 @@ self.addEventListener('fetch',event=>{
     })());
     return;
   }
+  const runtimeCritical=url.pathname.endsWith('.js')||url.pathname.endsWith('.json');
+  if(runtimeCritical){
+    event.respondWith((async()=>{
+      const network=await fetchAndCache(event,url);
+      if(network&&network.ok)return network;
+      return await caches.match(event.request,{ignoreSearch:true})||new Response('',{status:504});
+    })());
+    return;
+  }
   event.respondWith((async()=>{
     const cached=await caches.match(event.request,{ignoreSearch:true});
-    const network=fetch(event.request,{cache:'no-store'}).then(async r=>{if(r&&r.ok){const c=await caches.open(STATIC_CACHE);const name=url.pathname.split('/').pop();await c.put(name?`./${name}`:event.request,r.clone())}return r}).catch(()=>null);
+    const network=fetchAndCache(event,url);
     if(cached){event.waitUntil(network);return cached}
     return await network||new Response('',{status:504});
   })());
