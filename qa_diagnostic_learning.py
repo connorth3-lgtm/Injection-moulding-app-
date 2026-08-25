@@ -62,8 +62,8 @@ need(asset in SW, 'diagnostic learning labs missing from offline cache')
 need('../../diagnostic-learning-labs.js' in PKG, 'desktop package does not include diagnostic learning labs')
 need("'diagnostic-learning-labs.js'" in INTEGRITY, 'desktop integrity manifest generator does not cover diagnostic learning labs')
 
-need('data-mm-diagnostic-labs' in JS, 'desktop/sidebar launcher missing')
-need('data-mm-diagnostic-menu' in JS, 'mobile More-menu launcher missing')
+need('mmDiagnosticLabs' in JS, 'desktop/sidebar launcher missing')
+need('mmDiagnosticMenu' in JS, 'mobile More-menu launcher missing')
 need("button[data-view=\"scenarios\"]" in JS, 'practice-area return path missing')
 need('localStorage' in JS and 'fetch(' not in JS, 'diagnostic progress must not upload or fetch production data')
 
