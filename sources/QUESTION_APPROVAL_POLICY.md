@@ -16,4 +16,6 @@ Coverage required by release QA:
 
 Regional safety/compliance questions must retain a direct official regulator, legislation or standards source. Technical questions may use a question-specific source or a mapped authoritative/peer-reviewed source that supports the mechanism or method being assessed. Research findings support mechanisms and methods; they are not universal production recipes.
 
+Mapped evidence must be topic-appropriate. A generic fallback source is not permitted: if the evidence resolver cannot identify a source that supports the actual question/scenario/lab topic, the record is blocked and release QA must fail with the affected stable ID. Scenario evidence QA must reconstruct the real live scenario text rather than placeholders. High-value mapped sources are also enrolled in source/DOI freshness tracking where applicable.
+
 Approval is invalidated when any reviewed content-bearing source file changes. A changed question, answer, rationale, scenario or diagnostic-lab source file therefore requires a fresh evidence review before release QA can pass.
