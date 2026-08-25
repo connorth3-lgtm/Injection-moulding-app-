@@ -48,7 +48,7 @@ function inferred(text){const t=String(text||'').toLowerCase(),ids=[];const add=
  if(/energy|kwh|specific energy|heater\/pump|heater.*pump|tcu duty|auxiliary energy|energy per/.test(t))add('euromap-60');
  if(/overmould|overmold|insert temperature|interface temperature|bond strength|peel strength|interface thermal/.test(t))add('overmould-2020');
  if(/model drift|quality model|prediction error|training.domain|domain coverage|ground truth|vision model|model output/.test(t))add('nist-ai-drift');
- if(/v\/p|transfer|fill|short shot|pressure loss|runner|gate|vent|burn|weld|jet|flow front|mould|mold|tooling/.test(t))add('autodesk-fill-pack','zhao-2022');
+ if(/v\/p|transfer|fill|short[-. ]shot|pressure loss|runner|gate|vent|burn|weld|jet|flow front|mould|mold|tooling/.test(t))add('autodesk-fill-pack','zhao-2022');
  if(/setpoint|actual|machine transfer|receiving machine|different machine|process transfer|fill time/.test(t))add('liew-2022','autodesk-fill-pack');
  if(/guard|interlock|lockout|isolation|safety|danger zone|emergency stop/.test(t))add('iso-20430');
  return ids.map(id=>({id,...SOURCES[id]})).slice(0,4)
