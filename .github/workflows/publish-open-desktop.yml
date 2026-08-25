@@ -43,6 +43,7 @@ jobs:
         run: |
           python qa_release.py
           python qa_release_docs.py
+          python qa_material_behaviour.py
           python qa_100_pass.py
           python qa_question_deep_dive.py
           python qa_assessment_quality.py
