@@ -18,7 +18,7 @@ for path in ['assessment-evidence-sources.js','assessment-evidence-approval.js',
 
 approval=text('assessment-evidence-approval.js')
 sources=text('assessment-evidence-sources.js')
-need("const VERSION='2026.08.25.3'" in approval,'approval version missing')
+need("const VERSION='2026.08.25.4'" in approval,'approval version missing')
 need("version:'2026.08.25.3'" in sources,'evidence source version missing')
 need("summary.total!==157" in approval and "summary.labs!==36" in approval and "summary.materialLabs!==24" in approval,'157-question coverage guard missing')
 need('blockedIds' in approval,'blocked evidence IDs must be reported on failure')
@@ -27,6 +27,7 @@ need('external accreditation or independent third-party SME endorsement is not i
 need('https://' in sources and 'http://' not in sources,'evidence source map must use HTTPS')
 need('if(!ids.length)' not in sources,'generic evidence fallback is forbidden; unmatched questions must fail closed')
 need('approveExplicit' in approval and 'forMaterialLab' in approval,'material lab explicit approval API missing')
+need("function scheduleApproval()" in approval and "DOMContentLoaded',()=>setTimeout(buildApproval,0)" in approval,'evidence snapshot must wait until earlier DOMContentLoaded content upgrades finish')
 
 approved_inputs=dict(re.findall(r"'([^']+\.(?:html|js))':'([0-9a-f]{40})'",approval))
 need(len(approved_inputs)==7,f'expected 7 approval-pinned content inputs, got {len(approved_inputs)}')
@@ -42,6 +43,7 @@ need(sum(len(v) for v in D['exams'].values())==30,'technical bank must contain 3
 need(sum(len(v) for r in D['regionalQuestions'].values() for v in r.values())==27,'regional bank must contain 27 items')
 
 training=text('training-upgrade.js')
+need("document.addEventListener('DOMContentLoaded',init)" in training,'startup-order regression guard expects the 8-scenario training upgrade to remain DOMContentLoaded-driven')
 m=re.search(r"const EXTRA=(\[[\s\S]*?\n\]);",training)
 need(m is not None,'training EXTRA scenario bank could not be parsed')
 extra=ast.literal_eval(m.group(1))
