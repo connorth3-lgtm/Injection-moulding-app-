@@ -3,6 +3,7 @@
 'use strict';
 const SOURCES={
  'autodesk-fill-pack':{name:'Autodesk Moldflow — injection / fill + pack process settings',authority:'Autodesk',kind:'technical documentation',url:'https://help.autodesk.com/cloudhelp/2023/ENU/MoldflowInsight-CLC-Analyses/files/molding-processes/injection-molding/Process-settings/MoldflowInsight_CLC_Analyses_molding_processes_injection_molding_Process_settings_Process_Settings_Wizard_1st_html.html'},
+ 'autodesk-molding-window':{name:'Autodesk Moldflow — Molding Window analysis',authority:'Autodesk',kind:'technical documentation',url:'https://help.autodesk.com/cloudhelp/2024/ENU/MoldflowInsight-CLC-Analyses/files/analysis-sequences/LM_MOLDING_WINDOW_ANALYSIS.html'},
  'autodesk-packing':{name:'Autodesk Moldflow — packing guidance',authority:'Autodesk',kind:'technical documentation',url:'https://help.autodesk.com/view/MOLDFLOW/2013/ENU/caas.html?url=caas%2Fvhelp%2Fhelp-dev-autodesk-com%2Fv%2FSimulation-Moldflow%2Fenu%2F2013%2FHelp%2F3Insight-360%2F3927-Process-3927%2F3933-Profiles3933%2F3945-Packing-3945.html'},
  'autodesk-cooling':{name:'Autodesk Moldflow — cooling stage',authority:'Autodesk',kind:'technical documentation',url:'https://help.autodesk.com/cloudhelp/2023/ENU/MoldflowInsight-CLC-Ref-Materials/files/glossary-of-terminology/MoldflowInsight_CLC_Ref_Materials_glossary_of_terminology_Cooling_stage_html.html'},
  'autodesk-clamp':{name:'Autodesk Moldflow — clamp force result',authority:'Autodesk',kind:'technical documentation',url:'https://help.autodesk.com/cloudhelp/2023/ENU/MoldflowInsight-CLC-Results/files/Fill-or-flow-results/MoldflowInsight_CLC_Results_Fill_or_flow_results_Clamp_force_result_html.html'},
@@ -33,6 +34,7 @@ function direct(reference,url){const u=String(url||'').trim();if(!/^https:\/\//i
 function inferred(text){const t=String(text||'').toLowerCase(),ids=[];const add=(...x)=>x.forEach(id=>{if(SOURCES[id]&&!ids.includes(id))ids.push(id)});
  if(/capabil|\bcpk\b|\bcp\b|\bppk\b|\bpp\b|measurement|gauge|gage|sampling/.test(t))add('nist-capability','nist-handbook');
  if(/\bdoe\b|experiment|randomis|randomiz|blocking|factor|interaction|confirmation run|one.factor|confound/.test(t))add('nist-doe');
+ if(/process window|molding window|moulding window|operating window|feasible window|preferred window/.test(t))add('autodesk-molding-window','nist-doe');
  if(/moisture|drying|dryer|hygroscopic|humid|splay|silver streak/.test(t))add('covestro-drying','iso-15512');
  if(/mfr|mvr|rheolog|viscos|shear|flow length|polypropylene grade|recycled pp/.test(t))add('trotta-2021','iso-1133');
  if(/cavity pressure|pressure trace|sensor|signal acquisition|pressure.time|pressure area/.test(t))add('araujo-2023','liew-2022','tsou-2023');
