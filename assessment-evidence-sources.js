@@ -84,7 +84,8 @@ const EXTRA={
  'autodesk-clamp-modeling':{name:'Autodesk Moldflow — modeling for accurate clamp-force prediction',authority:'Autodesk',kind:'technical documentation',url:'https://help.autodesk.com/cloudhelp/2019/ENU/MoldflowInsight-Modelprep/files/GUID-5C97629F-C5C5-4A6D-BD2A-55FE6A4A5EE2.htm'},
  'hse-ppis4':{name:'HSE PPIS4(rev1) — Safety at injection moulding machines',authority:'UK HSE',kind:'regulator guidance',url:'https://www.hse.gov.uk/pubns/ppis4.pdf'},
  'osha-injection-etool':{name:'OSHA Injection Molding eTool',authority:'US OSHA',kind:'regulator guidance',url:'https://www.osha.gov/etools/machine-guarding/plastics-machinery/horizontal-injection-molding-machines'},
- 'worksafe-safe-machinery':{name:'WorkSafe New Zealand — Safe use of machinery',authority:'WorkSafe New Zealand',kind:'regulator guidance',url:'https://www.worksafe.govt.nz/topic-and-industry/machinery/safe-use-of-machinery/'}
+ 'worksafe-safe-machinery':{name:'WorkSafe New Zealand — Safe use of machinery',authority:'WorkSafe New Zealand',kind:'regulator guidance',url:'https://www.worksafe.govt.nz/topic-and-industry/machinery/safe-use-of-machinery/'},
+ 'microcellular-flexural-2022':{name:'Güzel et al. (2022) — cell morphology and flexural behaviour of injection-moulded microcellular polymer',authority:'peer-reviewed research',kind:'research',url:'https://doi.org/10.3390/ma15103634'}
 };
 Object.assign(E.sources,EXTRA);
 const base=E.inferred.bind(E);
@@ -99,6 +100,7 @@ E.inferred=function(text){const t=String(text||'').toLowerCase(),out=base(text).
  if(/\bpom\b|acetal|formaldehyde|polyoxymethylene|pvc contamination/.test(t))add(out,'delrin-pom-molding');
  if(/residence|degrad|black speck|purge|thermal history|long shutdown|standstill/.test(t))add(out,'thermal-degradation-1990');
  if(/clamp|projected area/.test(t))add(out,'autodesk-clamp-modeling');
+ if(/foam|foamed|microcellular|cell morphology|skin thickness|stiffness/.test(t))add(out,'microcellular-flexural-2022');
  if(/\buk\b|united kingdom|puwer|coshh|\bhse\b|great britain/.test(t)){add(out,'hse-ppis4');add(out,'iso-20430')}
  if(/\bus\b|united states|\bosha\b/.test(t)){add(out,'osha-injection-etool');add(out,'iso-20430')}
  if(/\bnz\b|new zealand|worksafe|hswa|pcbu/.test(t)){add(out,'worksafe-safe-machinery');add(out,'iso-20430')}
