@@ -29,6 +29,7 @@ const RULES=[
  [/^Controller screens$/i,['c:machine-control','e:liew-2022']],
  [/^Shot capacity & screw diameter$/i,['e:autodesk-fill-pack','e:iso-20430']],
  [/^Melt temperature$/i,['e:trotta-2021','e:basf-troubleshooter']],
+ [/^Melt temperature study$/i,['e:trotta-2021','e:autodesk-fill-pack','e:basf-troubleshooter']],
  [/^Draft and texture$/i,['c:autodesk-draft','c:mould-design']],
  [/^Ejection$/i,['c:autodesk-draft','e:autodesk-cooling']],
  [/^Pre-start checklist$/i,['e:iso-20430','e:autodesk-fill-pack']],
