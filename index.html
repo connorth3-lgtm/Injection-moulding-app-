@@ -23,10 +23,9 @@
   (async function(){
     "use strict";
     const SHELL_RELEASE="2026.08.24.1";
+    const RUNTIME_ASSET_VERSION="20260825.4-coherent-bundle";
     const CORE_URL="./MouldMaster_Core_App.html";
-    const RUNTIME_COHERENCE_RESET="2026.08.25.2";
-    const RUNTIME_COHERENCE_KEY="mm_runtime_coherence_reset";
-    const EXPECTED_STATIC_CACHE="mouldmaster-static-2026.08.24.1-material-labs-mobile-coherence-reset-20260825";
+    const EXPECTED_STATIC_CACHE="mouldmaster-static-2026.08.24.1-material-labs-runtime-bundle-20260825";
     const HEAD_ASSETS=[
       ['manifest.webmanifest','<link rel="manifest" href="./manifest.webmanifest">'],
       ['rel="icon" type="image/png" sizes="192x192"','<link rel="icon" type="image/png" sizes="192x192" href="./mouldmaster-192.png">'],
@@ -62,6 +61,10 @@
       ['./pwa-shell.js','<script src="./pwa-shell.js">']
     ];
     const closeScript='</scr'+'ipt>';
+    const standalone=!!window.matchMedia?.('(display-mode: standalone)').matches;
+    function versionMarkup(markup){
+      return String(markup).replace(/(src|href)="(\.\/[^"?]+)(?:\?[^" ]*)?"/g,(_m,attr,url)=>`${attr}="${url}?v=${RUNTIME_ASSET_VERSION}"`);
+    }
     function ensureViewportFit(out){
       let found=false;
       out=out.replace(/<meta\b[^>]*\bname=["']viewport["'][^>]*>/i,tag=>{
@@ -78,38 +81,36 @@
       if(!/<\/head>/i.test(out)||!/<\/body>/i.test(out))throw new Error("Core training content is incomplete");
       out=ensureViewportFit(out);
       for(const [needle,markup] of HEAD_ASSETS){
-        if(!out.includes(needle))out=out.replace(/<\/head>/i,markup+'\n</head>');
+        if(!out.includes(needle))out=out.replace(/<\/head>/i,versionMarkup(markup)+'\n</head>');
       }
       for(const [src,tag] of BODY_SCRIPTS){
-        if(!out.includes(src))out=out.replace(/<\/body>/i,tag+closeScript+'\n</body>');
+        if(!out.includes(src))out=out.replace(/<\/body>/i,versionMarkup(tag)+closeScript+'\n</body>');
       }
       return out;
     }
-    function coherenceResetSeen(){
-      try{return localStorage.getItem(RUNTIME_COHERENCE_KEY)===RUNTIME_COHERENCE_RESET}catch(_){try{return sessionStorage.getItem(RUNTIME_COHERENCE_KEY)===RUNTIME_COHERENCE_RESET}catch(__){return false}}
-    }
-    function markCoherenceReset(){
-      try{localStorage.setItem(RUNTIME_COHERENCE_KEY,RUNTIME_COHERENCE_RESET);return}catch(_){try{sessionStorage.setItem(RUNTIME_COHERENCE_KEY,RUNTIME_COHERENCE_RESET)}catch(__){}}
-    }
     async function ensureCoherentRuntime(){
-      if(!navigator.onLine||location.hostname==='127.0.0.1'||coherenceResetSeen())return false;
+      if(!navigator.onLine||location.hostname==='127.0.0.1'||standalone)return false;
+      let changed=false;
       try{
-        markCoherenceReset();
         if("serviceWorker" in navigator){
           const scope=new URL('./',location.href).href;
           const regs=await navigator.serviceWorker.getRegistrations();
-          await Promise.all(regs.filter(r=>r.scope.startsWith(scope)).map(r=>r.unregister()));
+          const owned=regs.filter(r=>r.scope.startsWith(scope));
+          if(owned.length){changed=true;await Promise.all(owned.map(r=>r.unregister()))}
         }
         if("caches" in window){
           const keys=await caches.keys();
-          await Promise.all(keys.filter(k=>k.startsWith('mouldmaster-static-')).map(k=>caches.delete(k)));
+          const owned=keys.filter(k=>k.startsWith('mouldmaster-static-'));
+          if(owned.length){changed=true;await Promise.all(owned.map(k=>caches.delete(k)))}
         }
-        location.reload();
-        return true;
-      }catch(_){return false}
+        if(changed){
+          const fresh=new URL(location.href);fresh.searchParams.set('mmBundle',RUNTIME_ASSET_VERSION);location.replace(fresh.href);return true;
+        }
+      }catch(_){ }
+      return false;
     }
     async function clearStaleRuntimeCaches(){
-      if(!navigator.onLine||!("caches" in window))return;
+      if(!navigator.onLine||standalone||!("caches" in window))return;
       try{
         const keys=await caches.keys();
         await Promise.all(keys.filter(k=>k.startsWith('mouldmaster-static-')&&k!==EXPECTED_STATIC_CACHE).map(k=>caches.delete(k)));
@@ -117,7 +118,7 @@
     }
     async function getCore(){
       try{
-        const r=await fetch(CORE_URL,{cache:"no-store"});
+        const r=await fetch(`${CORE_URL}?v=${RUNTIME_ASSET_VERSION}`,{cache:"no-store"});
         if(r&&r.ok)return await r.text();
       }catch(_){ }
       if("caches" in window){
@@ -130,10 +131,11 @@
       if(await ensureCoherentRuntime())return;
       await clearStaleRuntimeCaches();
       const html=assemble(await getCore());
+      window.MM_RUNTIME_ASSET_VERSION=RUNTIME_ASSET_VERSION;
       document.open();document.write(html);document.close();
     }catch(err){
       const box=document.getElementById("mmBootstrap");
-      if(box)box.innerHTML='<b>MouldMaster could not finish loading</b><p>Connect to the internet once to install the current offline copy, then reopen the app.</p><button onclick="location.reload()" style="padding:10px 14px;border-radius:10px;border:1px solid #41658d;background:#1a2b45;color:#fff">Try again</button>';
+      if(box)box.innerHTML='<b>MouldMaster could not finish loading</b><p>Connect to the internet and reopen MouldMaster so the current training bundle can load.</p><button onclick="location.reload()" style="padding:10px 14px;border-radius:10px;border:1px solid #41658d;background:#1a2b45;color:#fff">Try again</button>';
       console.error("MouldMaster bootstrap failed",err);
     }
   })();
