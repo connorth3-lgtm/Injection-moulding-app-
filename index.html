@@ -24,7 +24,9 @@
     "use strict";
     const SHELL_RELEASE="2026.08.24.1";
     const CORE_URL="./MouldMaster_Core_App.html";
-    const EXPECTED_STATIC_CACHE="mouldmaster-static-2026.08.24.1-material-labs-mobile-hotfix-20260825";
+    const RUNTIME_COHERENCE_RESET="2026.08.25.2";
+    const RUNTIME_COHERENCE_KEY="mm_runtime_coherence_reset";
+    const EXPECTED_STATIC_CACHE="mouldmaster-static-2026.08.24.1-material-labs-mobile-coherence-reset-20260825";
     const HEAD_ASSETS=[
       ['manifest.webmanifest','<link rel="manifest" href="./manifest.webmanifest">'],
       ['rel="icon" type="image/png" sizes="192x192"','<link rel="icon" type="image/png" sizes="192x192" href="./mouldmaster-192.png">'],
@@ -83,6 +85,29 @@
       }
       return out;
     }
+    function coherenceResetSeen(){
+      try{return localStorage.getItem(RUNTIME_COHERENCE_KEY)===RUNTIME_COHERENCE_RESET}catch(_){try{return sessionStorage.getItem(RUNTIME_COHERENCE_KEY)===RUNTIME_COHERENCE_RESET}catch(__){return false}}
+    }
+    function markCoherenceReset(){
+      try{localStorage.setItem(RUNTIME_COHERENCE_KEY,RUNTIME_COHERENCE_RESET);return}catch(_){try{sessionStorage.setItem(RUNTIME_COHERENCE_KEY,RUNTIME_COHERENCE_RESET)}catch(__){}}
+    }
+    async function ensureCoherentRuntime(){
+      if(!navigator.onLine||location.hostname==='127.0.0.1'||coherenceResetSeen())return false;
+      try{
+        markCoherenceReset();
+        if("serviceWorker" in navigator){
+          const scope=new URL('./',location.href).href;
+          const regs=await navigator.serviceWorker.getRegistrations();
+          await Promise.all(regs.filter(r=>r.scope.startsWith(scope)).map(r=>r.unregister()));
+        }
+        if("caches" in window){
+          const keys=await caches.keys();
+          await Promise.all(keys.filter(k=>k.startsWith('mouldmaster-static-')).map(k=>caches.delete(k)));
+        }
+        location.reload();
+        return true;
+      }catch(_){return false}
+    }
     async function clearStaleRuntimeCaches(){
       if(!navigator.onLine||!("caches" in window))return;
       try{
@@ -102,6 +127,7 @@
       throw new Error("Core training content is unavailable");
     }
     try{
+      if(await ensureCoherentRuntime())return;
       await clearStaleRuntimeCaches();
       const html=assemble(await getCore());
       document.open();document.write(html);document.close();
