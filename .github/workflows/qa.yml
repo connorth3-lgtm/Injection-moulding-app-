@@ -76,6 +76,8 @@ jobs:
         run: python qa_assessment_quality.py
       - name: Question evidence approval integrity
         run: python qa_assessment_evidence.py
+      - name: Two-source question evidence integrity
+        run: python qa_assessment_two_source.py
       - name: Learner-scoped assessment storage integrity
         run: python qa_assessment_storage_scope.py
       - name: Stable spaced-review ID integrity
