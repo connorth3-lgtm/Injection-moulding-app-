@@ -1,5 +1,5 @@
 const CACHE_VERSION='2026.08.24.1';
-const CACHE_REVISION='material-labs-mobile-coherence-reset-20260825';
+const CACHE_REVISION='material-labs-runtime-bundle-20260825';
 const STATIC_CACHE=`mouldmaster-static-${CACHE_VERSION}-${CACHE_REVISION}`;
 const CORE=[
   './index.html',
@@ -36,6 +36,7 @@ const CORE=[
   './assessment-evidence-sources.js',
   './assessment-evidence-approval.js',
   './pwa-shell.js',
+  './repair.html',
   './privacy.html',
   './support.html'
 ];
