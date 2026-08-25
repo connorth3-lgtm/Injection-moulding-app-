@@ -120,9 +120,13 @@ need(sum(1 for d in DS if d['kind']=='tooling')>=4,'tooling fault dataset covera
 
 R=data['reference']; need(R['total']>=247,f"reference traceability scope too small: {R['total']}")
 need(R['counts'].get('weak',0)==0,'reference entries remain without two-source traceability')
+supported=[{'id':r.get('id'),'section':r.get('section'),'name':r.get('name') or r.get('term') or r.get('title'),'sourceIds':r.get('sourceIds',[]),'authorities':r.get('authorityFamilies',[])} for r in R['records'] if r.get('status')=='supported']
+need(not supported,'reference entries still lack independent authority triangulation: '+json.dumps(supported,ensure_ascii=False))
+need(R['counts'].get('strong')==R['total'],f"all reference records must be strong: {R['counts']}")
 need(len({r['id'] for r in R['records']})==R['total'],'reference traceability IDs must be unique')
 for r in R['records']:
     need(len({s['url'] for s in r.get('sources',[])})>=2,f"reference {r['id']} has fewer than two URLs")
+    need(len(set(r.get('authorityFamilies',[])))>=2,f"reference {r['id']} has fewer than two authority families")
     need(r.get('reviewedOn')=='2026-08-26' and r.get('reviewBy')=='2026-11-26',f"reference {r['id']} review metadata missing")
 
 PB=data['psych']; need(PB['learners']==240 and PB['itemCount']==30,'psychometric benchmark scope changed')
@@ -142,7 +146,7 @@ need(idx.index('assessment-evidence-sources.js')<idx.index('evidence-maturity-de
 need(idx.index('evidence-maturity-formal-bridge.js')<idx.index('lesson-evidence-depth.js'),'lesson depth must see final evidence mappings')
 
 report={
- 'schema':1,'version':'2026.08.26.3','formal_questions':157,'formal_min_urls':2,'formal_min_authorities':2,
+ 'schema':1,'version':'2026.08.26.4','formal_questions':157,'formal_min_urls':2,'formal_min_authorities':2,
  'lessons':L['counts'],'material_practice_labs':len(labs2),'material_practice_decisions':sum(len(l['steps']) for l in labs2),
  'synthetic_datasets':len(DS),'synthetic_rows':sum(x['rowCount'] for x in DS),'machine_datasets':sum(1 for d in DS if d['kind']=='machine'),'tooling_datasets':sum(1 for d in DS if d['kind']=='tooling'),
  'reference_records':R['total'],'reference_counts':R['counts'],'psychometric_benchmark':{'learners':PB['learners'],'attempts':PB['attempts'],'items':PB['itemCount'],'kr20':PB['kr20']}
