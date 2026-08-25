@@ -37,7 +37,7 @@ const D=%s,LABS=%s;
 const store={};
 const localStorage={getItem:k=>Object.prototype.hasOwnProperty.call(store,k)?store[k]:null,setItem:(k,v)=>{store[k]=String(v)},removeItem:k=>{delete store[k]},key:i=>Object.keys(store)[i]||null,get length(){return Object.keys(store).length}};
 const makeEl=()=>({textContent:'',innerHTML:'',className:'',hidden:false,dataset:{},style:{},href:'',download:'',appendChild(){},prepend(){},insertBefore(){},insertAdjacentHTML(){},insertAdjacentElement(){},querySelector(){return null},querySelectorAll(){return[]},addEventListener(){},setAttribute(){},hasAttribute(){return false},remove(){},click(){},classList:{add(){},remove(){},contains(){return false}}});
-const document={getElementById:()=>null,querySelectorAll:()=>[],querySelector:()=>null,createElement:makeEl,head:{appendChild(){}},body:{appendChild(){},prepend(){}},documentElement:{},readyState:'complete',addEventListener(){}};
+const document={getElementById:()=>null,querySelectorAll:()=>[],querySelector:()=>null,createElement:makeEl,head:{appendChild(){}},body:{append(){},appendChild(){},prepend(){}},documentElement:{},readyState:'complete',addEventListener(){}};
 function MutationObserver(){this.observe=()=>{};this.disconnect=()=>{}}
 const URLObj=function(u,b){return new (global.URL)(u,b)}; URLObj.createObjectURL=()=>'';URLObj.revokeObjectURL=()=>{};
 const sandbox={window:{MM_DATA:D,MM_DIAGNOSTIC_LABS:{version:'qa',labs:LABS},requestAnimationFrame:fn=>fn(),addEventListener(){},scrollTo(){}},document,localStorage,performance:{now:()=>1000},console,setTimeout:(fn)=>{if(typeof fn==='function')fn()},clearTimeout(){},Date,Math,JSON,Map,Set,Blob:function(){},URL:URLObj,MutationObserver};
