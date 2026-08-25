@@ -1,5 +1,5 @@
 from pathlib import Path
-import ast, hashlib, json, re, subprocess, tempfile
+import ast, json, re, subprocess, tempfile
 
 ROOT=Path(__file__).resolve().parent
 
@@ -9,8 +9,11 @@ def need(ok,msg):
 def text(path): return (ROOT/path).read_text(encoding='utf-8')
 
 def git_blob_sha(path):
-    data=(ROOT/path).read_bytes()
-    return hashlib.sha1(b'blob '+str(len(data)).encode()+b'\0'+data).hexdigest()
+    # Compare against the committed Git object, not checked-out bytes. Windows may
+    # materialise CRLF line endings without changing repository content identity.
+    p=subprocess.run(['git','rev-parse',f'HEAD:{path}'],cwd=ROOT,capture_output=True,text=True)
+    need(p.returncode==0,f'cannot resolve committed Git blob for {path}: {p.stderr.strip()}')
+    return p.stdout.strip()
 
 for path in ['assessment-evidence-sources.js','assessment-evidence-approval.js','sources/QUESTION_APPROVAL_POLICY.md']:
     need((ROOT/path).exists(),f'missing evidence approval asset: {path}')
@@ -96,7 +99,6 @@ for r in records:
     if r['kind']=='regional-exam':
         need(any(any(d in s['url'] for d in regional_domains) for s in r['sources']),f"regional item lacks recognised official/standards source: {r['id']}")
 
-# Explicitly guard the previously unsourced newer scenarios so a broad keyword fallback cannot return.
 required_scenario_sources={
  'Black specks after a long shutdown':'basf-troubleshooter',
  'One cavity flashes after tool service':'autodesk-flash',
