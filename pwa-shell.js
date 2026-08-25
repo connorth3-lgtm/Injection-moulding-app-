@@ -1,9 +1,10 @@
-/* MouldMaster PWA shell controller — 2026.08.24.8 */
+/* MouldMaster PWA shell controller — 2026.08.25.1 */
 (function(){
 'use strict';
 const RELEASE='2026.08.24.1';
 const CONTENT='2026.08.24.2';
 const REFERENCE_DATA_URL='./reference-data.html';
+const BROWSER_FRESH_TOKEN='20260825-browser-network-current';
 function setText(el,value){if(el&&el.textContent!==value)el.textContent=value}
 function setAttr(el,name,value){if(el&&el.getAttribute(name)!==value)el.setAttribute(name,value)}
 function isMobileNav(){return !!window.matchMedia?.('(max-width:680px)').matches}
@@ -13,7 +14,7 @@ function displayContext(){
   const standalone=!desktop&&!!window.matchMedia?.('(display-mode: standalone)').matches;
   return desktop
     ?{version:desktop,mode:'Desktop package',title:'Desktop build',detail:'This desktop package uses the release version supplied by the verified desktop launcher.'}
-    :{version:RELEASE,mode:standalone?'Installed PWA':'Browser / PWA',title:'Browser app updates',detail:'MouldMaster refreshes app files when online and keeps an offline copy after a successful install.'};
+    :{version:RELEASE,mode:standalone?'Installed PWA':'Browser',title:standalone?'Installed app updates':'Browser app updates',detail:standalone?'The installed PWA refreshes app files when online and keeps a verified offline copy.':'Browser mode loads the current app files from the network and does not install an offline service worker.'};
 }
 function syncLabels(){
   const copy=`Android release ${RELEASE}. Training content ${CONTENT}. Learner progress, notes, scores and certificates remain in this browser profile during app updates.`;
@@ -144,8 +145,28 @@ function patchStandards(){
   if(typeof window.renderStandards!=='function'||window.__MM_STANDARDS_STATUS_PATCH__)return;
   const base=window.renderStandards;window.renderStandards=function(){const r=base.apply(this,arguments);addNZLegacyNote();return r};window.__MM_STANDARDS_STATUS_PATCH__=true;
 }
+async function retireBrowserOfflineRuntime(){
+  if(displayContext().mode!=='Browser'||!navigator.onLine)return false;
+  let changed=false;
+  try{
+    if('serviceWorker' in navigator){
+      const scope=new URL('./',location.href).href;
+      const regs=await navigator.serviceWorker.getRegistrations();
+      const owned=regs.filter(r=>r.scope.startsWith(scope));
+      if(owned.length){changed=true;await Promise.all(owned.map(r=>r.unregister()))}
+    }
+    if('caches' in window){
+      const keys=await caches.keys();
+      const owned=keys.filter(k=>k.startsWith('mouldmaster-static-'));
+      if(owned.length){changed=true;await Promise.all(owned.map(k=>caches.delete(k)))}
+    }
+  }catch(e){console.warn('[MouldMaster] Browser cache retirement was incomplete:',e)}
+  if(!changed)return false;
+  try{localStorage.removeItem('mm_runtime_coherence_reset')}catch(_){ }
+  const fresh=new URL(location.href);fresh.searchParams.set('mmFresh',BROWSER_FRESH_TOKEN);location.replace(fresh.href);return true;
+}
 async function register(){
-  if(displayContext().mode==='Desktop package'||!('serviceWorker' in navigator))return;
+  if(displayContext().mode!=='Installed PWA'||!('serviceWorker' in navigator))return;
   try{const reg=await navigator.serviceWorker.register('./service-worker.js',{scope:'./'});await reg.update()}catch(e){console.warn('[MouldMaster] Offline/update support unavailable:',e)}
 }
 let syncQueued=false;
@@ -160,7 +181,7 @@ const observer=new MutationObserver(scheduleSync);
 if(document.documentElement)observer.observe(document.documentElement,{subtree:true,childList:true});
 runSync();
 window.addEventListener('resize',scheduleSync,{passive:true});
-window.addEventListener('load',()=>{runSync();register();setTimeout(scheduleSync,250)});
+window.addEventListener('load',async()=>{runSync();if(await retireBrowserOfflineRuntime())return;register();setTimeout(scheduleSync,250)});
 document.addEventListener('visibilitychange',()=>{if(!document.hidden)scheduleSync()});
-window.MM_SHELL_RELEASE=RELEASE;window.MM_CONTENT_RELEASE=CONTENT;window.MM_DISPLAY_CONTEXT=displayContext;window.MM_REFERENCE_LAUNCHER_DOCK='sidebar-first-normal-flow';window.MM_REFERENCE_DRAWER_MODE='non-blocking';window.MM_REFERENCE_DATA_URL=REFERENCE_DATA_URL;window.MM_REFERENCE_DATA_LAUNCHER_DOCK='mobile-more-standalone-page';window.MM_REFERENCE_DATA_DRAWER_MODE='standalone-mobile-page-desktop-drawer';
+window.MM_SHELL_RELEASE=RELEASE;window.MM_CONTENT_RELEASE=CONTENT;window.MM_DISPLAY_CONTEXT=displayContext;window.MM_REFERENCE_LAUNCHER_DOCK='sidebar-first-normal-flow';window.MM_REFERENCE_DRAWER_MODE='non-blocking';window.MM_REFERENCE_DATA_URL=REFERENCE_DATA_URL;window.MM_REFERENCE_DATA_LAUNCHER_DOCK='mobile-more-standalone-page';window.MM_REFERENCE_DATA_DRAWER_MODE='standalone-mobile-page-desktop-drawer';window.MM_BROWSER_UPDATE_MODE='network-current-no-service-worker';
 })();
