@@ -1,5 +1,5 @@
 const CACHE_VERSION='2026.08.24.1';
-const CACHE_REVISION='lesson-evidence-expansion-20260825';
+const CACHE_REVISION='lesson-evidence-depth-20260826';
 const STATIC_CACHE=`mouldmaster-static-${CACHE_VERSION}-${CACHE_REVISION}`;
 const CORE=[
   './index.html',
@@ -34,6 +34,7 @@ const CORE=[
   './diagnostic-learning-labs.js',
   './material-behaviour-labs.js',
   './assessment-evidence-sources.js',
+  './lesson-evidence-depth.js',
   './assessment-evidence-approval.js',
   './pwa-shell.js',
   './repair.html',
