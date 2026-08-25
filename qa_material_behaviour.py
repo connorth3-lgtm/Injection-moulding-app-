@@ -39,7 +39,7 @@ process.stdout.write(JSON.stringify({version:M.version,labs:M.labs.map(l=>({id:l
 with tempfile.NamedTemporaryFile('w',suffix='.js',delete=False,encoding='utf-8',dir=ROOT) as h:
     h.write(node); pth=Path(h.name)
 try:
-    p=subprocess.run(['node',str(pth)],cwd=ROOT,capture_output=True,text=True)
+    p=subprocess.run(['node',str(pth)],cwd=ROOT,capture_output=True,text=True,encoding='utf-8',errors='replace')
 finally:
     pth.unlink(missing_ok=True)
 need(p.returncode==0,f'material lab runtime failed: {p.stderr or p.stdout}')
