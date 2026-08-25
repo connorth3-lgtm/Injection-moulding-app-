@@ -64,7 +64,10 @@ require(positions == sorted(positions), "standalone Reference Data scripts must 
 require("standalone-document-full-library" in page, "standalone Reference Data full-library runtime marker missing")
 
 require("reference-2026-expansion.js" in index, "main app must load the 2026 reference expansion")
-require("reference-expansion-20260824" in sw, "PWA cache revision must advance for the reference expansion")
+revision_match = re.search(r"CACHE_REVISION='([^']+)'", sw)
+require(revision_match is not None and "${CACHE_VERSION}-${CACHE_REVISION}" in sw, "PWA cache revision marker missing")
+revision_dates = [int(x) for x in re.findall(r"20\d{6}", revision_match.group(1))]
+require(revision_dates and max(revision_dates) >= 20260824, "PWA cache revision must not predate the reference expansion")
 for asset in ["reference-data.html", "reference-2026-expansion.js"]:
     require(f"'./{asset}'" in sw, f"PWA offline cache missing expanded reference asset: {asset}")
 

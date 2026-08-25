@@ -1,5 +1,5 @@
 const CACHE_VERSION='2026.08.24.1';
-const CACHE_REVISION='reference-expansion-20260824';
+const CACHE_REVISION='diagnostic-labs-20260825';
 const STATIC_CACHE=`mouldmaster-static-${CACHE_VERSION}-${CACHE_REVISION}`;
 const CORE=[
   './index.html',
@@ -31,6 +31,7 @@ const CORE=[
   './reference-2026-expansion.js',
   './reference-sources.js',
   './reference-browser-ui.js',
+  './diagnostic-learning-labs.js',
   './pwa-shell.js',
   './privacy.html',
   './support.html'
