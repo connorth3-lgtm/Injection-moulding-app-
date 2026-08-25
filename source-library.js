@@ -1,4 +1,4 @@
-/* MouldMaster authoritative source library — 2026.08.24.1 */
+/* MouldMaster authoritative source library — 2026.08.25.2 */
 (function(){
 'use strict';
 const esc=v=>String(v??'').replace(/[&<>\"]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','\"':'&quot;'}[m]));
@@ -47,6 +47,20 @@ const SOURCES={
   ['ISO 22514-7:2021','Capability of measurement processes; recheck ISO status before formal use because a replacement edition was progressing in 2026.','https://www.iso.org/standard/80624.html']
  ]
 };
+const COURSE_SOURCE_IDS={
+ 'Foundations':['autodesk-fill-pack','iso-20430'],
+ 'Machine & Controls':['autodesk-fill-pack','liew-2022','iso-20430'],
+ 'Materials':['iso-1133','trotta-2021','covestro-drying'],
+ 'Mould Design':['autodesk-fill-pack','autodesk-cooling','zhao-2022'],
+ 'Process Setup':['autodesk-fill-pack','autodesk-molding-window','jansen-1998'],
+ 'Defect Troubleshooting':['basf-troubleshooter','autodesk-fill-pack','araujo-2023'],
+ 'Scientific Moulding':['trotta-2021','jansen-1998','araujo-2023','nist-doe'],
+ 'Capability & Validation':['nist-capability','nist-handbook'],
+ 'DOE & Statistics':['nist-doe','nist-handbook'],
+ 'Automation & Sensors':['liew-2022','araujo-2023','euromap-79','iso-20430'],
+ 'Advanced Tooling & Simulation':['autodesk-molding-window','autodesk-fill-pack','hotrunner-2024','araujo-2023'],
+ 'Expert Process Engineering':['nist-handbook','autodesk-molding-window','iso-20430']
+};
 function categories(text){const t=String(text||'').toLowerCase(),out=[];
  if(/guard|safety|interlock|lockout|isolation|hazard|robot|cell|fume|emergency/.test(t))out.push('safety');
  if(/puwer|coshh|hswa|law|legal|pcbu|regulation/.test(t))out.push('law');
@@ -56,11 +70,27 @@ function categories(text){const t=String(text||'').toLowerCase(),out=[];
  if(/capability|cpk|ppk|doe|statistics|measurement|random|factorial|validation|sampling|msa/.test(t))out.push('stats');
  return [...new Set(out)];}
 function select(text,limit=5){const out=[];for(const cat of categories(text))for(const s of SOURCES[cat]||[])if(!out.some(x=>x[2]===s[2]))out.push(s);return out.slice(0,limit)}
-function panel(text){const src=select(text);if(!src.length)return '';return `<section class="mm-ref-panel mm-authoritative-more" data-mm-authoritative-sources="1"><span class="eyebrow">More authoritative sources</span><h3>Verify and go deeper</h3>${src.map(s=>`<a href="${esc(s[2])}" target="_blank" rel="noopener"><b>${esc(s[0])}</b><small>${esc(s[1])}</small><em>Open ↗</em></a>`).join('')}<p>These sources support principles and obligations, not universal process settings. Current material data, machine/tool documentation, approved site procedures and applicable law control specific limits.</p></section>`}
-function lesson(){const article=document.querySelector('#lesson article.lesson-body');if(!article||article.querySelector('[data-mm-authoritative-sources]'))return;const title=article.querySelector('h2')?.textContent||'';const body=[...article.querySelectorAll('h3')].map(x=>x.textContent).join(' ');const html=panel(title+' '+body);if(html)article.insertAdjacentHTML('beforeend',html)}
+function evidenceById(id){const s=window.MM_EVIDENCE_SOURCES?.sources?.[id];return s?[s.name,`${s.kind} · ${s.authority}`,s.url]:null}
+function lessonSources(text,course,limit=5){const out=[];const add=s=>{if(s&&/^https:\/\//.test(s[2])&&!out.some(x=>x[2]===s[2]))out.push(s)};
+ for(const s of select(text,limit))add(s);
+ for(const s of window.MM_EVIDENCE_SOURCES?.inferred?.(text)||[])add([s.name,`${s.kind} · ${s.authority}`,s.url]);
+ for(const id of COURSE_SOURCE_IDS[course]||[])add(evidenceById(id));
+ return out.slice(0,limit)}
+function linkHtml(s){return `<a href="${esc(s[2])}" target="_blank" rel="noopener" data-mm-lesson-evidence="1"><b>${esc(s[0])}</b><small>${esc(s[1])}</small><em>Open ↗</em></a>`}
+function panel(text){const src=select(text);if(!src.length)return '';return `<section class="mm-ref-panel mm-authoritative-more" data-mm-authoritative-sources="1"><span class="eyebrow">More authoritative sources</span><h3>Verify and go deeper</h3>${src.map(linkHtml).join('')}<p>These sources support principles and obligations, not universal process settings. Current material data, machine/tool documentation, approved site procedures and applicable law control specific limits.</p></section>`}
+function enrichLessonPanel(article,src){if(!src.length)return;const panels=[...article.querySelectorAll('.mm-ref-panel')],target=panels.find(p=>/Evidence\s*&\s*further reading/i.test(p.textContent||''));if(!target){article.insertAdjacentHTML('beforeend',`<section class="mm-ref-panel" data-mm-lesson-evidence-expanded="1"><span class="eyebrow">References</span><h3>Evidence & further reading</h3>${src.map(linkHtml).join('')}<p>Use these sources to understand mechanisms and methods. Exact resin grade data, machine/tool documentation, approved site procedures and applicable law control real production limits.</p></section>`);return}
+ if(target.dataset.mmLessonEvidenceExpanded==='1')return;
+ const hrefs=new Set([...target.querySelectorAll('a[href]')].map(a=>a.href));
+ const fallback=[...target.querySelectorAll('p')].find(p=>/No general external source was auto-selected/i.test(p.textContent||''));if(fallback)fallback.remove();
+ const existingCount=hrefs.size,missing=src.filter(s=>!hrefs.has(new URL(s[2],location.href).href)).slice(0,Math.max(0,5-existingCount));
+ if(missing.length){const block=document.createElement('div');block.className='mm-lesson-evidence-links';block.innerHTML=missing.map(linkHtml).join('');const firstP=target.querySelector('p');firstP?target.insertBefore(block,firstP):target.appendChild(block)}
+ if(!target.querySelector('[data-mm-evidence-boundary]')){const p=document.createElement('p');p.dataset.mmEvidenceBoundary='1';p.textContent='These sources support mechanisms and study methods, not universal production settings. Verify the exact resin grade, machine and mould documentation, approved site procedures and applicable law for real work.';target.appendChild(p)}
+ target.dataset.mmLessonEvidenceExpanded='1'}
+function lesson(){const article=document.querySelector('#lesson article.lesson-body');if(!article)return;const title=article.querySelector('h2')?.textContent||'',body=[...article.querySelectorAll('h3')].map(x=>x.textContent).join(' '),row=(window.MM_DATA?.lessons||[]).find(x=>x.title===title),course=row?.courseName||'';const context=[course,title,body,row?.mmGuide?.plain,row?.mmGuide?.evidence].filter(Boolean).join(' ');const src=lessonSources(context,course,5);enrichLessonPanel(article,src)}
 function standards(){const host=document.getElementById('standards');if(!host||host.querySelector('[data-mm-authoritative-sources]'))return;const region=(window.user&&window.user.region)||'ALL';let text='safety law';if(region==='UK')text+=' puwer coshh';if(region==='US')text+=' osha lockout hazard';if(region==='NZ')text+=' hswa pcbu worksafe';const html=panel(text);if(html)host.insertAdjacentHTML('beforeend',html)}
 function run(){lesson();standards()}
-const mo=new MutationObserver(()=>requestAnimationFrame(run));if(document.documentElement)mo.observe(document.documentElement,{subtree:true,childList:true});
-if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',run);else run();
-window.MM_SOURCE_LIBRARY=SOURCES;
+let queued=false;function schedule(){if(queued)return;queued=true;(window.requestAnimationFrame||setTimeout)(()=>{queued=false;run()},0)}
+const mo=new MutationObserver(schedule);if(document.documentElement)mo.observe(document.documentElement,{subtree:true,childList:true});
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',schedule);else schedule();
+window.MM_SOURCE_LIBRARY={version:'2026.08.25.2',sources:SOURCES,courseFallbacks:COURSE_SOURCE_IDS,select,lessonSources};
 })();
