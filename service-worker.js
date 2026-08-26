@@ -1,5 +1,5 @@
-const CACHE_VERSION='2026.08.26.1';
-const CACHE_REVISION='curriculum-release-parity-20260826';
+const CACHE_VERSION='2026.08.26.2';
+const CACHE_REVISION='app-shell-mobile-qa-20260826';
 const STATIC_CACHE=`mouldmaster-static-${CACHE_VERSION}-${CACHE_REVISION}`;
 const CORE=[
   './index.html',
