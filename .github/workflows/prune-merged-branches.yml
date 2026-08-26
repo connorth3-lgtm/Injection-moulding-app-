@@ -2,20 +2,25 @@ name: Prune Fully Merged Branches
 
 on:
   workflow_dispatch:
-  push:
+  workflow_run:
+    workflows: ["Main PR Provenance Guard"]
+    types: [completed]
     branches: [main]
-    paths:
-      - '.github/workflows/prune-merged-branches.yml'
 
 permissions:
   contents: write
   pull-requests: read
 
+concurrency:
+  group: prune-fully-merged-branches
+  cancel-in-progress: false
+
 jobs:
   prune:
+    if: ${{ github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-latest
     steps:
-      - name: Delete merged and explicitly superseded branches
+      - name: Delete fully merged branches
         env:
           GH_TOKEN: ${{ github.token }}
           GH_REPO: ${{ github.repository }}
@@ -26,16 +31,6 @@ jobs:
           deleted=0
           kept=0
 
-          # Historical branches deliberately closed/superseded after their work was
-          # replaced by later validated changes. Exact head-SHA matching prevents
-          # deletion if any of these branch names are ever updated or reused.
-          declare -A superseded=(
-            ["codex/source-freshness-coherence-20260826"]="7dd8b9e605b5366fd1887cdf58328fb8ee9035d7"
-            ["feature/lesson-evidence-expansion"]="f19aca01d427e5f9dbb5640a7867f2e74aabe29b"
-            ["feature/question-two-source-evidence"]="72d048f1c48852254248c95b11860174b1996bb8"
-            ["qa/reference-question-500-pass-20260824"]="394652c4d519936dea68ea27ae3cb15d6f266439"
-          )
-
           while IFS=$'\t' read -r branch sha; do
             [[ -z "$branch" || "$branch" == "main" ]] && continue
 
@@ -44,8 +39,6 @@ jobs:
 
             if [[ "$ahead" == "0" ]]; then
               reason="no commits ahead of main"
-            elif [[ -n "${superseded[$branch]:-}" && "${superseded[$branch]}" == "$sha" ]]; then
-              reason="exact head matches an explicitly superseded historical branch"
             else
               merged_same_head=$(gh api --method GET "repos/$GH_REPO/pulls" \
                 -f state=closed \
@@ -59,13 +52,13 @@ jobs:
             fi
 
             if [[ -n "$reason" ]]; then
-              echo "Deleting branch: $branch ($reason)"
+              echo "Deleting merged branch: $branch ($reason)"
               gh api --method DELETE "repos/$GH_REPO/git/refs/heads/$branch"
               deleted=$((deleted+1))
             else
-              echo "Keeping branch with $ahead unique commit(s) and no merge/supersession proof at its current head: $branch"
+              echo "Keeping branch with $ahead unique commit(s) and no merged PR at its current head: $branch"
               kept=$((kept+1))
             fi
           done < <(gh api --paginate "repos/$GH_REPO/branches?per_page=100" --jq '.[] | [.name,.commit.sha] | @tsv')
 
-          echo "Deleted $deleted proven merged/superseded branch(es); kept $kept branch(es) whose current head is not proven safe to remove." >> "$GITHUB_STEP_SUMMARY"
+          echo "Deleted $deleted proven merged branch(es); kept $kept branch(es) whose current head is not proven safe to remove." >> "$GITHUB_STEP_SUMMARY"
