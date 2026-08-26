@@ -2,9 +2,9 @@
 
 Status: **repository preparation is advanced, but MouldMaster Academy is not yet accredited by NZQA or IACET and is not yet Microsoft Store certified**.
 
-Current product baselines are recorded in `../version.json`. As of 2026-08-25:
+Current product baselines are recorded in `../version.json`. As of 2026-08-26:
 - PWA / browser shell: `2026.08.24.1`
-- Open Windows desktop: `2026.08.25.1`
+- Open Windows desktop: `2026.08.26.1`
 - Training content: `2026.08.24.2`
 - Audited question bank: `2026.08.24.2`
 - Assessment quality / analytics hardening: `2026.08.24.3`
@@ -25,7 +25,7 @@ Why this route is preferred:
 - Electron renderer privileges are restricted
 - dependency licence inventory and CycloneDX SBOM are generated
 - x64 + arm64 MSIX/MSIX bundle/MSIX upload packaging is automated
-- the 133-question evidence-approval gate runs before packaging
+- the 157-question evidence-approval gate runs before packaging
 - package identity is taken from the actual Partner Center product rather than fabricated in source
 - Microsoft Store MSIX/AppX packages are re-signed by Microsoft after successful certification under Microsoft's current published process
 
