@@ -20,6 +20,8 @@ const viewListeners=new Set();
 const renderListeners=new Map();
 let finalized=false;
 let activeCustomId='';
+let mobileNavObserver=null;
+let geometryQueued=false;
 
 const CORE_NAV=[
   {id:'home',view:'dashboard',mobile:'home'},
@@ -41,7 +43,7 @@ function safeCall(fn,...args){try{return typeof fn==='function'?fn(...args):unde
 function installGeometry(){
   if(document.getElementById('mm-app-shell-registry-style'))return;
   const s=document.createElement('style');s.id='mm-app-shell-registry-style';s.textContent=`
-:root{--mm-mobile-nav-height:70px;--mm-mobile-nav-clearance:calc(var(--mm-mobile-nav-height) + env(safe-area-inset-bottom));--mm-mobile-content-clearance:calc(var(--mm-mobile-nav-clearance) + 26px)}
+:root{--mm-mobile-nav-height:calc(70px + env(safe-area-inset-bottom));--mm-mobile-nav-clearance:var(--mm-mobile-nav-height);--mm-mobile-content-clearance:calc(var(--mm-mobile-nav-clearance) + 26px)}
 .mm-dashboard-registry{display:grid;gap:14px}.mm-dashboard-registry:empty{display:none}
 .mm-registry-nav-divider{height:1px;background:#20344d;margin:9px 8px}
 @media(max-width:700px){
@@ -49,6 +51,7 @@ function installGeometry(){
   body{padding-bottom:0!important}
   .main{padding-bottom:var(--mm-mobile-content-clearance)!important}
   .mobile-nav{position:fixed!important;left:0!important;right:0!important;bottom:0!important;min-height:var(--mm-mobile-nav-height);z-index:40!important;background:#07101c!important;padding-bottom:max(8px,env(safe-area-inset-bottom))!important;box-shadow:0 -12px 28px rgba(0,0,0,.30),0 90px 0 #07101c!important}
+  .mobile-nav>button:not([data-view]):not([onclick*="openMobileMenu"]){display:none!important}
   body[data-mm-view="dashboard"] #continueBtn{display:none!important}
   .mm-mobile-actions{bottom:var(--mm-mobile-nav-clearance)!important;z-index:35!important;padding-bottom:9px!important}
   #lesson .lesson-body{padding-bottom:calc(var(--mm-mobile-content-clearance) + 86px)!important}
@@ -56,6 +59,29 @@ function installGeometry(){
 }
 `;
   document.head.appendChild(s)
+}
+function syncMobileGeometry(){
+  if(geometryQueued)return;geometryQueued=true;
+  requestAnimationFrame(()=>{
+    geometryQueued=false;
+    const nav=document.querySelector('.mobile-nav');if(!nav||!window.matchMedia?.('(max-width:700px)').matches)return;
+    const h=Math.ceil(nav.getBoundingClientRect().height);
+    if(h>0)document.documentElement.style.setProperty('--mm-mobile-nav-height',`${h}px`)
+  })
+}
+function canonicalMoreButton(button){return !button.dataset.view&&((button.getAttribute('onclick')||'').includes('openMobileMenu')||/\bMore\b/i.test(button.textContent||''))}
+function normalizeMobilePrimaryNav(){
+  const nav=document.querySelector('.mobile-nav');if(!nav)return;
+  [...nav.querySelectorAll(':scope > button')].forEach(button=>{
+    const view=button.dataset.view||'';
+    const keep=view==='dashboard'||view==='path'||view==='scenarios'||canonicalMoreButton(button);
+    if(!keep)button.remove()
+  });
+  if(!mobileNavObserver){
+    mobileNavObserver=new MutationObserver(()=>{normalizeMobilePrimaryNav();syncMobileGeometry()});
+    mobileNavObserver.observe(nav,{childList:true})
+  }
+  syncMobileGeometry()
 }
 
 function registerDashboard(section){
@@ -149,6 +175,7 @@ function canonicalMobileGroup(view){
   const item=navigationItems.get(activeCustomId);return item?.mobileGroup||'more'
 }
 function syncActiveState(){
+  normalizeMobilePrimaryNav();
   const view=typeof currentView==='string'?currentView:'dashboard';document.body.dataset.mmView=view;
   document.querySelectorAll('#nav button').forEach(b=>{
     const registryId=b.dataset.mmRegistryNav;
@@ -156,15 +183,36 @@ function syncActiveState(){
     b.classList.toggle('active',active);if(active)b.setAttribute('aria-current','page');else b.removeAttribute('aria-current')
   });
   const group=canonicalMobileGroup(view);
-  const primary=[...document.querySelectorAll('.mobile-nav button')];
-  primary.forEach(b=>{const v=b.dataset.view;let match=false;if(group==='home')match=v==='dashboard';else if(group==='learn')match=v==='path';else if(group==='practice')match=v==='scenarios';else if(group==='more')match=!v; b.classList.toggle('active',match);if(match)b.setAttribute('aria-current','page');else b.removeAttribute('aria-current')})
+  const primary=[...document.querySelectorAll('.mobile-nav > button')];
+  primary.forEach(b=>{
+    const v=b.dataset.view;let match=false;
+    if(group==='home')match=v==='dashboard';
+    else if(group==='learn')match=v==='path';
+    else if(group==='practice')match=v==='scenarios';
+    else if(group==='more')match=canonicalMoreButton(b);
+    b.classList.toggle('active',match);if(match)b.setAttribute('aria-current','page');else b.removeAttribute('aria-current')
+  });
+  syncMobileGeometry()
 }
-function syncNavigation(){installGeometry();syncDesktopNavigation();syncActiveState()}
+function syncNavigation(){installGeometry();syncDesktopNavigation();normalizeMobilePrimaryNav();syncActiveState()}
 
 function onViewChange(fn){viewListeners.add(fn);return ()=>viewListeners.delete(fn)}
 function onRender(view,fn){if(!renderListeners.has(view))renderListeners.set(view,new Set());renderListeners.get(view).add(fn);return ()=>renderListeners.get(view)?.delete(fn)}
 function emitView(id){for(const fn of viewListeners)safeCall(fn,id)}
 function emitRender(id){for(const fn of renderListeners.get(id)||[])safeCall(fn,id)}
+
+function bindExternalTool(id,apiName){
+  const api=window[apiName];if(!api||typeof api.open!=='function'||api.__mmShellBound)return;
+  const base=api.open;
+  api.open=function(){activeCustomId=id;const r=base.apply(this,arguments);syncActiveState();emitView(id);return r};
+  api.__mmShellBound=true
+}
+function bindExternalTools(){
+  bindExternalTool('mould-master','MM_MOULD_MASTER_WORKSPACE');
+  bindExternalTool('diagnostic-labs','MM_DIAGNOSTIC_LABS');
+  bindExternalTool('process-data','MM_PROCESS_DATA_DIAGNOSTICS');
+  bindExternalTool('material-labs','MM_MATERIAL_BEHAVIOUR_LABS')
+}
 
 function curriculumLessonAdapter(){
   const api=window.MM_CURRICULUM_INTEGRATION;if(!api?.recommendations||typeof currentLesson!=='function')return;
@@ -219,15 +267,15 @@ function openMobileMenuCanonical(){const r=captured.openMobileMenu.apply(this,ar
 function setCustomActive(id,mobileGroup){activeCustomId=id||'';if(mobileGroup&&navigationItems.has(id))navigationItems.get(id).mobileGroup=mobileGroup;syncActiveState();emitView(id)}
 
 function finalize(){
-  if(finalized)return;finalized=true;installGeometry();installDefaultDashboardSections();installDefaultNavigation();
+  if(finalized)return;finalized=true;installGeometry();installDefaultDashboardSections();installDefaultNavigation();bindExternalTools();
   renderDashboard=renderDashboardCanonical;window.renderDashboard=renderDashboardCanonical;
   renderLesson=renderLessonCanonical;window.renderLesson=renderLessonCanonical;
   switchView=switchViewCanonical;window.switchView=switchViewCanonical;
   openMobileMenu=openMobileMenuCanonical;window.openMobileMenu=openMobileMenuCanonical;
   window.__MM_DIAGNOSTIC_MORE_PATCH__=true;window.__MM_PROCESS_DATA_MORE_PATCH__=true;window.__MM_MATERIAL_MORE_PATCH__=true;window.__MM_REFERENCE_DATA_MORE_PATCH__=true;window.__MM_LEARNING_INSIGHTS_MORE__=true;
-  syncNavigation();
+  syncNavigation();window.addEventListener('resize',syncMobileGeometry,{passive:true});
   try{if(typeof currentView==='string'&&currentView==='dashboard')renderDashboardCanonical();else if(currentView==='lesson')renderLessonCanonical();else syncActiveState()}catch(e){console.warn('[MouldMaster shell] initial canonical render failed',e)}
 }
 
-window.MM_APP_SHELL={version:VERSION,captured:Object.freeze({...captured}),dashboard:{register:registerDashboard,compose:composeDashboard,sections:dashboardSections},navigation:{register:registerNavigation,sync:syncNavigation,items:navigationItems,setCustomActive},events:{onViewChange,onRender},geometry:{mobileNavHeight:'--mm-mobile-nav-height',mobileNavClearance:'--mm-mobile-nav-clearance',contentClearance:'--mm-mobile-content-clearance'},finalize,get finalized(){return finalized}};
+window.MM_APP_SHELL={version:VERSION,captured:Object.freeze({...captured}),dashboard:{register:registerDashboard,compose:composeDashboard,sections:dashboardSections},navigation:{register:registerNavigation,sync:syncNavigation,items:navigationItems,setCustomActive},events:{onViewChange,onRender},geometry:{mobileNavHeight:'--mm-mobile-nav-height',mobileNavClearance:'--mm-mobile-nav-clearance',contentClearance:'--mm-mobile-content-clearance',sync:syncMobileGeometry},finalize,get finalized(){return finalized}};
 })();
