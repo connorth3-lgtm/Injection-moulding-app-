@@ -9,30 +9,51 @@ on:
 
 permissions:
   contents: write
+  pull-requests: read
 
 jobs:
   prune:
     runs-on: ubuntu-latest
     steps:
-      - name: Delete branches with no commits ahead of main
+      - name: Delete fully merged and unchanged squash-merged branches
         env:
           GH_TOKEN: ${{ github.token }}
           GH_REPO: ${{ github.repository }}
         shell: bash
         run: |
           set -euo pipefail
+          owner="${GH_REPO%%/*}"
           deleted=0
           kept=0
+
           while IFS=$'\t' read -r branch sha; do
             [[ -z "$branch" || "$branch" == "main" ]] && continue
+
             ahead=$(gh api "repos/$GH_REPO/compare/main...$sha" --jq '.ahead_by')
+            reason=""
+
             if [[ "$ahead" == "0" ]]; then
-              echo "Deleting fully merged branch: $branch"
+              reason="no commits ahead of main"
+            else
+              merged_same_head=$(gh api --method GET "repos/$GH_REPO/pulls" \
+                -f state=closed \
+                -f base=main \
+                -f head="$owner:$branch" \
+                -f per_page=100 \
+                --jq "[.[] | select(.merged_at != null and .head.sha == \"$sha\")] | length")
+              if [[ "$merged_same_head" != "0" ]]; then
+                reason="current head exactly matches a merged PR into main"
+              fi
+            fi
+
+            if [[ -n "$reason" ]]; then
+              echo "Deleting merged branch: $branch ($reason)"
               gh api --method DELETE "repos/$GH_REPO/git/refs/heads/$branch"
               deleted=$((deleted+1))
             else
-              echo "Keeping branch with $ahead unique commit(s): $branch"
+              echo "Keeping branch with $ahead unique commit(s) and no merged PR at its current head: $branch"
               kept=$((kept+1))
             fi
           done < <(gh api --paginate "repos/$GH_REPO/branches?per_page=100" --jq '.[] | [.name,.commit.sha] | @tsv')
-          echo "Deleted $deleted fully merged branch(es); kept $kept branch(es) with unique commits." >> "$GITHUB_STEP_SUMMARY"
+
+          echo "Deleted $deleted merged branch(es); kept $kept branch(es) whose current head is not proven merged into main." >> "$GITHUB_STEP_SUMMARY"
