@@ -85,6 +85,9 @@ jobs:
       - name: Validate 50-case process-data deep dive
         working-directory: .
         run: python qa_process_data_deep_dive_50.py
+      - name: Validate 20-pass 200-case process-data atlas
+        working-directory: .
+        run: python qa_process_data_20_pass.py
       - name: Validate learner experience progression and mobile flow
         working-directory: .
         run: python qa_learning_experience.py
