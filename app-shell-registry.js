@@ -1,9 +1,9 @@
-/* MouldMaster canonical app-shell registry — 2026.08.26.3 */
+/* MouldMaster canonical app-shell registry — 2026.08.26.4 */
 (function(){
 'use strict';
 if(window.MM_APP_SHELL)return;
 
-const VERSION='2026.08.26.3';
+const VERSION='2026.08.26.4';
 const captured={
   renderDashboard:typeof renderDashboard==='function'?renderDashboard:null,
   renderLesson:typeof renderLesson==='function'?renderLesson:null,
@@ -22,6 +22,7 @@ let finalized=false;
 let activeCustomId='';
 let mobileNavObserver=null;
 let geometryQueued=false;
+let dashboardComposeQueued=false;
 
 const CORE_NAV=[
   {id:'home',view:'dashboard',mobile:'home'},
@@ -84,11 +85,6 @@ function normalizeMobilePrimaryNav(){
   syncMobileGeometry()
 }
 
-function registerDashboard(section){
-  if(!section||!section.id)throw new Error('Dashboard registry entries require id');
-  dashboardSections.set(section.id,{zone:'before',order:50,...section});
-  return ()=>dashboardSections.delete(section.id)
-}
 function ensureDashboardHosts(root){
   let before=root.querySelector(':scope > #mmDashboardRegistryBefore');
   let after=root.querySelector(':scope > #mmDashboardRegistryAfter');
@@ -96,34 +92,61 @@ function ensureDashboardHosts(root){
   if(!after){after=document.createElement('div');after.id='mmDashboardRegistryAfter';after.className='mm-dashboard-registry';root.append(after)}
   return {before,after}
 }
+function existingDashboardSlot(root,id){return [...root.querySelectorAll('.mm-dashboard-slot')].find(x=>x.dataset.mmDashboardSection===id)||null}
+function releaseDashboardSlot(root,slot){
+  if(slot.dataset.mmDashboardAdopt==='1'){
+    const after=root.querySelector(':scope > #mmDashboardRegistryAfter');
+    while(slot.firstChild)root.insertBefore(slot.firstChild,after||null)
+  }
+  slot.remove()
+}
 function materialize(section,slot,root){
   slot.dataset.mmDashboardSection=section.id;
   slot.dataset.mmDashboardOrder=String(section.order||50);
+  slot.dataset.mmDashboardAdopt=section.adopt?'1':'0';
   if(section.adopt){
+    const owned=[...slot.children].find(node=>node.matches?.(section.adopt));
+    if(owned)return;
     const node=root.querySelector(section.adopt);
     if(node&&node!==slot)slot.appendChild(node);
     return
   }
+  slot.innerHTML='';
   const out=safeCall(section.render,slot,root);
   if(typeof out==='string')slot.innerHTML=out;
   else if(out instanceof Node)slot.appendChild(out)
 }
 function composeDashboard(){
   const root=document.getElementById('dashboard');if(!root)return;
-  const {before,after}=ensureDashboardHosts(root);before.innerHTML='';after.innerHTML='';
-  const sections=[...dashboardSections.values()].sort((a,b)=>(a.order||50)-(b.order||50));
+  const {before,after}=ensureDashboardHosts(root);
+  const sections=[...dashboardSections.values()].filter(section=>!section.when||safeCall(section.when)!==false).sort((a,b)=>(a.order||50)-(b.order||50));
+  const desired=new Set(sections.map(section=>section.id));
+  for(const slot of [...root.querySelectorAll('.mm-dashboard-slot')])if(!desired.has(slot.dataset.mmDashboardSection))releaseDashboardSlot(root,slot);
   for(const section of sections){
-    if(section.when&&safeCall(section.when)===false)continue;
     const host=section.zone==='after'?after:before;
-    const slot=document.createElement('div');slot.className='mm-dashboard-slot';host.appendChild(slot);materialize(section,slot,root)
+    let slot=existingDashboardSlot(root,section.id);
+    if(!slot){slot=document.createElement('div');slot.className='mm-dashboard-slot'}
+    host.appendChild(slot);
+    materialize(section,slot,root)
   }
+}
+function queueDashboardCompose(){
+  if(!finalized||dashboardComposeQueued)return;
+  dashboardComposeQueued=true;
+  requestAnimationFrame(()=>{dashboardComposeQueued=false;composeDashboard()})
+}
+function registerDashboard(section){
+  if(!section||!section.id)throw new Error('Dashboard registry entries require id');
+  dashboardSections.set(section.id,{zone:'before',order:50,...section});
+  queueDashboardCompose();
+  return ()=>{dashboardSections.delete(section.id);queueDashboardCompose()}
 }
 
 function registerNavigation(item){
   if(!item||!item.id)throw new Error('Navigation registry entries require id');
   navigationItems.set(item.id,{desktop:true,mobileMore:true,order:50,...item});
   if(finalized)syncNavigation();
-  return ()=>{navigationItems.delete(item.id);syncNavigation()}
+  return ()=>{navigationItems.delete(item.id);if(finalized)syncNavigation()}
 }
 function removeLegacyDynamicNav(){
   document.querySelectorAll('#nav [data-mm-diagnostic-labs],#nav [data-mm-process-data],#nav [data-mm-material-labs],#nav [data-mm-learning-insights],#nav [data-mm-mould-master]').forEach(x=>x.remove())
@@ -276,15 +299,17 @@ function openMobileMenuCanonical(){const r=captured.openMobileMenu.apply(this,ar
 function setCustomActive(id,mobileGroup){activeCustomId=id||'';if(mobileGroup&&navigationItems.has(id))navigationItems.get(id).mobileGroup=mobileGroup;syncActiveState();emitView(id)}
 
 function finalize(){
-  if(finalized)return;finalized=true;installGeometry();installDefaultDashboardSections();installDefaultNavigation();bindExternalTools();
+  if(finalized)return;
+  installGeometry();installDefaultDashboardSections();installDefaultNavigation();bindExternalTools();
   renderDashboard=renderDashboardCanonical;window.renderDashboard=renderDashboardCanonical;
   renderLesson=renderLessonCanonical;window.renderLesson=renderLessonCanonical;
   switchView=switchViewCanonical;window.switchView=switchViewCanonical;
   openMobileMenu=openMobileMenuCanonical;window.openMobileMenu=openMobileMenuCanonical;
   window.__MM_DIAGNOSTIC_MORE_PATCH__=true;window.__MM_PROCESS_DATA_MORE_PATCH__=true;window.__MM_MATERIAL_MORE_PATCH__=true;window.__MM_REFERENCE_DATA_MORE_PATCH__=true;window.__MM_LEARNING_INSIGHTS_MORE__=true;
+  finalized=true;
   syncNavigation();window.addEventListener('resize',syncMobileGeometry,{passive:true});
   try{if(typeof currentView==='string'&&currentView==='dashboard')renderDashboardCanonical();else if(currentView==='lesson')renderLessonCanonical();else syncActiveState()}catch(e){console.warn('[MouldMaster shell] initial canonical render failed',e)}
 }
 
-window.MM_APP_SHELL={version:VERSION,captured:Object.freeze({...captured}),dashboard:{register:registerDashboard,compose:composeDashboard,sections:dashboardSections},navigation:{register:registerNavigation,sync:syncNavigation,items:navigationItems,setCustomActive},events:{onViewChange,onRender},geometry:{mobileNavHeight:'--mm-mobile-nav-height',mobileNavClearance:'--mm-mobile-nav-clearance',contentClearance:'--mm-mobile-content-clearance',sync:syncMobileGeometry},finalize,get finalized(){return finalized}};
+window.MM_APP_SHELL={version:VERSION,captured:Object.freeze({...captured}),dashboard:{register:registerDashboard,compose:composeDashboard,requestCompose:queueDashboardCompose,sections:dashboardSections},navigation:{register:registerNavigation,sync:syncNavigation,items:navigationItems,setCustomActive},events:{onViewChange,onRender},geometry:{mobileNavHeight:'--mm-mobile-nav-height',mobileNavClearance:'--mm-mobile-nav-clearance',contentClearance:'--mm-mobile-content-clearance',sync:syncMobileGeometry},finalize,get finalized(){return finalized}};
 })();
