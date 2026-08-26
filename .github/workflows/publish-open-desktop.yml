@@ -29,6 +29,45 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
+      - name: Application JavaScript syntax
+        run: |
+          node --check service-worker.js
+          node --check reading-patch.js
+          node --check training-upgrade.js
+          node --check training-qa-fix.js
+          node --check assessment-100-pass.js
+          node --check assessment-deep-dive.js
+          node --check assessment-answer-cue-fix.js
+          node --check assessment-storage-scope.js
+          node --check assessment-quality-suite.js
+          node --check assessment-stable-review-bridge.js
+          node --check assessment-analytics-ui.js
+          node --check assessment-final-hardening.js
+          node --check assessment-ux.js
+          node --check assessment-evidence-sources.js
+          node --check evidence-maturity-deep-dive.js
+          node --check evidence-maturity-formal-bridge.js
+          node --check lesson-evidence-depth.js
+          node --check assessment-evidence-approval.js
+          node --check source-library.js
+          node --check reference-data.js
+          node --check reference-deep-dive.js
+          node --check reference-research-extension.js
+          node --check reference-20x-extension.js
+          node --check reference-2026-expansion.js
+          node --check reference-sources.js
+          node --check reference-browser-ui.js
+          node --check diagnostic-learning-labs.js
+          node --check material-behaviour-labs.js
+          node --check pwa-shell.js
+          node --check learning-experience.js
+          node --check process-data-diagnostics.js
+          node --check learning-analytics.js
+          node --check desktop/electron/src/main.cjs
+          node --check desktop/electron/scripts/generate-integrity.cjs
+          node --check desktop/electron/scripts/generate-licenses.cjs
+          node --check desktop/electron/scripts/generate-sbom.cjs
+          node --check desktop/electron/scripts/qa.cjs
       - name: Install exact locked dependencies
         working-directory: desktop/electron
         run: npm ci --no-audit --fund=false
@@ -39,23 +78,34 @@ jobs:
           npm run licenses
           npm run sbom
           npm run qa
-      - name: Release QA gates
+      - name: Full release QA gates
         run: |
           python qa_release.py
+          python qa_runtime_hardening.py
           python qa_release_docs.py
+          python qa_diagnostic_learning.py
           python qa_material_behaviour.py
           python qa_100_pass.py
           python qa_question_deep_dive.py
           python qa_assessment_quality.py
           python qa_assessment_evidence.py
+          python qa_evidence_maturity.py
+          python qa_process_data_diagnostics.py
+          python qa_learning_experience.py
+          python qa_learning_analytics.py
           python qa_assessment_storage_scope.py
           python qa_stable_review_bridge.py
           python qa_assessment_final_hardening.py
+          python qa_assessment_ux.py
           python qa_source_freshness.py
           python qa_research_source_freshness.py
           python qa_reference.py
+          python qa_reference_expansion.py
           python qa_research.py
           python qa_open_desktop.py
+          python qa_store_submission.py
+          python qa_nzqa_readiness.py
+          python qa_iacet_readiness.py
       - name: Build unsigned portable Windows package
         working-directory: desktop/electron
         run: npm run dist:portable
@@ -73,6 +123,7 @@ jobs:
           Copy-Item 'desktop/electron/generated/dependency-licenses.json' $releaseDir
           Copy-Item 'desktop/electron/generated/sbom.cdx.json' $releaseDir
           Copy-Item 'assessment-quality-report.json' $releaseDir
+          Copy-Item 'evidence-maturity-report.json' $releaseDir
           Copy-Item 'source-freshness-report.json' $releaseDir
           Copy-Item 'research-source-freshness-report.json' $releaseDir
           git rev-parse HEAD | Set-Content "$releaseDir/SOURCE_COMMIT.txt"
@@ -89,7 +140,7 @@ jobs:
           - bundled-asset integrity manifest
           - dependency licence inventory
           - CycloneDX SBOM
-          - assessment and source-freshness QA reports
+          - assessment, evidence-maturity and source-freshness QA reports
 
           This unsigned GitHub release is intended for transparent/open-source distribution and testing. Microsoft Store signing/certification remains a separate external process and must not be claimed until Microsoft grants it.
           "@ | Set-Content "$releaseDir/RELEASE_NOTES.md"

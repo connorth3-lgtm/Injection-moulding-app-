@@ -4,6 +4,13 @@ on:
   schedule:
     - cron: '30 4 * * 1'
   workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - 'sources/**'
+      - 'qa_source_freshness.py'
+      - 'qa_research_source_freshness.py'
+      - '.github/workflows/source-freshness.yml'
 
 permissions:
   contents: read

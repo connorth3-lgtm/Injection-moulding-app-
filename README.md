@@ -18,7 +18,7 @@ The project maintainers do not intend to seek patent protection over implementat
 ## Current release lanes
 
 - PWA / browser shell: `2026.08.24.1`
-- Open Windows desktop: `2026.08.25.1`
+- Open Windows desktop: `2026.08.26.1`
 - Training content: `2026.08.24.2`
 - Audited assessment bank: `2026.08.24.2`
 - Assessment quality / analytics hardening: `2026.08.24.3`
@@ -54,7 +54,7 @@ The normal open-source Windows desktop implementation is under:
 
 `desktop/electron/`
 
-Desktop `2026.08.25.1` is published from the exact repository source by `.github/workflows/publish-open-desktop.yml` to the tagged GitHub Release recorded in `version.json`. The release includes the portable Windows executable, SHA-256 hashes, the source commit, bundled-asset integrity manifest, dependency licence inventory, CycloneDX SBOM and assessment/source-freshness QA reports.
+Desktop `2026.08.26.1` is published from the exact repository source by `.github/workflows/publish-open-desktop.yml` to the tagged GitHub Release recorded in `version.json`. The release includes the portable Windows executable, SHA-256 hashes, the source commit, bundled-asset integrity manifest, dependency licence inventory, CycloneDX SBOM and assessment/evidence/source-freshness QA reports.
 
 Security controls include:
 - SHA-256 verification of bundled MouldMaster application assets before launch;
@@ -111,20 +111,33 @@ Do not bypass guards, interlocks or hazardous-energy controls to follow training
 
 ## Release QA
 
-The release workflows run structural, question/answer, assessment-quality, learner-scoped analytics, evidence-approval, material-behaviour, source-freshness, reference/research and desktop-security checks. Important entry points include:
+The release workflows run structural, runtime, question/answer, assessment-quality, learner-scoped analytics, evidence-approval, evidence-maturity, guided-data, learner-experience, material-behaviour, source-freshness, reference/research, desktop-security and certification-readiness checks. Important entry points include:
 
 - `qa_release.py`
+- `qa_runtime_hardening.py`
+- `qa_release_docs.py`
+- `qa_diagnostic_learning.py`
+- `qa_material_behaviour.py`
 - `qa_100_pass.py`
 - `qa_question_deep_dive.py`
 - `qa_assessment_quality.py`
 - `qa_assessment_evidence.py`
-- `qa_material_behaviour.py`
+- `qa_evidence_maturity.py`
+- `qa_process_data_diagnostics.py`
+- `qa_learning_experience.py`
+- `qa_learning_analytics.py`
 - `qa_assessment_final_hardening.py`
+- `qa_assessment_ux.py`
 - `qa_assessment_storage_scope.py`
+- `qa_stable_review_bridge.py`
 - `qa_source_freshness.py`
 - `qa_research_source_freshness.py`
 - `qa_reference.py`
+- `qa_reference_expansion.py`
 - `qa_research.py`
 - `qa_open_desktop.py`
+- `qa_store_submission.py`
+- `qa_nzqa_readiness.py`
+- `qa_iacet_readiness.py`
 
 A release should not be treated as verified merely because source was committed; build/test results, the tagged source commit and release hashes must also be reviewed.
