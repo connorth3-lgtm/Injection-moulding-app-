@@ -91,6 +91,9 @@ jobs:
       - name: Validate local real-data intake privacy
         working-directory: .
         run: python qa_process_data_local_intake.py
+      - name: Validate real process-data pilot readiness
+        working-directory: .
+        run: python qa_real_process_data_pilot.py
       - name: Validate learner experience progression and mobile flow
         working-directory: .
         run: python qa_learning_experience.py
