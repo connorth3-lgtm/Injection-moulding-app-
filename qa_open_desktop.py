@@ -120,7 +120,7 @@ for marker in [
     "real legacy backup",
     "offline launch",
     "imported certificate/pass state is not trusted",
-    "Do not publish learner names",
+    "learner names, backup content, customer identifiers",
 ]:
     require(marker in real_windows, f"real-Windows retirement safeguard missing: {marker}")
 
