@@ -59,6 +59,12 @@ jobs:
           node --check pwa-shell.js
           node --check learning-experience.js
           node --check process-data-diagnostics.js
+          node --check process-data-deep-dive-machine.js
+          node --check process-data-deep-dive-tooling.js
+          node --check process-data-deep-dive-material.js
+          node --check process-data-deep-dive-scientific.js
+          node --check process-data-deep-dive-quality.js
+          node --check process-data-deep-dive-50.js
           node --check curriculum-integration.js
           node --check specialist-curriculum.js
           node --check mould-master-workspace.js
@@ -93,6 +99,8 @@ jobs:
         run: python qa_evidence_maturity.py
       - name: Guided process-data diagnostic integrity
         run: python qa_process_data_diagnostics.py
+      - name: 50-case process-data deep dive
+        run: python qa_process_data_deep_dive_50.py
       - name: Learner experience progression and mobile integrity
         run: python qa_learning_experience.py
       - name: Canonical app shell registry integrity
