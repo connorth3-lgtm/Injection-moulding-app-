@@ -63,6 +63,18 @@ jobs:
           node --check pwa-shell.js
           node --check learning-experience.js
           node --check process-data-diagnostics.js
+          node --check process-data-deep-dive-machine.js
+          node --check process-data-deep-dive-tooling.js
+          node --check process-data-deep-dive-material.js
+          node --check process-data-deep-dive-scientific.js
+          node --check process-data-deep-dive-quality.js
+          node --check process-data-deep-dive-50.js
+          node --check process-data-20-pass-01-05.js
+          node --check process-data-20-pass-06-10.js
+          node --check process-data-20-pass-11-15.js
+          node --check process-data-20-pass-16-20.js
+          node --check process-data-20-pass-atlas.js
+          node --check process-data-local-intake.js
           node --check curriculum-integration.js
           node --check specialist-curriculum.js
           node --check mould-master-workspace.js
@@ -96,6 +108,9 @@ jobs:
           python qa_assessment_evidence.py
           python qa_evidence_maturity.py
           python qa_process_data_diagnostics.py
+          python qa_process_data_deep_dive_50.py
+          python qa_process_data_20_pass.py
+          python qa_process_data_local_intake.py
           python qa_learning_experience.py
           python qa_app_shell_registry.py
           python qa_mould_master_workspace.py

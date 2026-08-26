@@ -34,6 +34,18 @@ on:
       - 'pwa-shell.js'
       - 'learning-experience.js'
       - 'process-data-diagnostics.js'
+      - 'process-data-deep-dive-machine.js'
+      - 'process-data-deep-dive-tooling.js'
+      - 'process-data-deep-dive-material.js'
+      - 'process-data-deep-dive-scientific.js'
+      - 'process-data-deep-dive-quality.js'
+      - 'process-data-deep-dive-50.js'
+      - 'process-data-20-pass-01-05.js'
+      - 'process-data-20-pass-06-10.js'
+      - 'process-data-20-pass-11-15.js'
+      - 'process-data-20-pass-16-20.js'
+      - 'process-data-20-pass-atlas.js'
+      - 'process-data-local-intake.js'
       - 'curriculum-integration.js'
       - 'specialist-curriculum.js'
       - 'mould-master-workspace.js'
@@ -63,6 +75,9 @@ on:
       - 'qa_app_shell_registry.py'
       - 'qa_mould_master_workspace.py'
       - 'qa_process_data_diagnostics.py'
+      - 'qa_process_data_deep_dive_50.py'
+      - 'qa_process_data_20_pass.py'
+      - 'qa_process_data_local_intake.py'
       - 'qa_curriculum_integration.py'
       - 'qa_specialist_curriculum.py'
       - 'qa_learning_analytics.py'
@@ -83,6 +98,7 @@ on:
       - 'sources/QUESTION_REVISION_INDEX.json'
       - 'sources/SOURCE_FRESHNESS.json'
       - 'sources/RESEARCH_SOURCE_FRESHNESS.json'
+      - 'sources/PROCESS_DATA_20_PASS_ATLAS.md'
       - 'service-worker.js'
       - 'privacy.html'
       - 'support.html'
@@ -159,6 +175,15 @@ jobs:
       - name: Guided process-data diagnostic QA
         working-directory: .
         run: python qa_process_data_diagnostics.py
+      - name: 50-case process-data deep dive QA
+        working-directory: .
+        run: python qa_process_data_deep_dive_50.py
+      - name: 20-pass 200-case process-data atlas QA
+        working-directory: .
+        run: python qa_process_data_20_pass.py
+      - name: Local real-data intake privacy QA
+        working-directory: .
+        run: python qa_process_data_local_intake.py
       - name: Learner experience progression and mobile QA
         working-directory: .
         run: python qa_learning_experience.py

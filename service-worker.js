@@ -1,5 +1,5 @@
 const CACHE_VERSION='2026.08.26.2';
-const CACHE_REVISION='app-shell-mobile-qa-20260826';
+const CACHE_REVISION='process-data-intake-20260826';
 const STATIC_CACHE=`mouldmaster-static-${CACHE_VERSION}-${CACHE_REVISION}`;
 const CORE=[
   './index.html',
@@ -42,6 +42,18 @@ const CORE=[
   './pwa-shell.js',
   './learning-experience.js',
   './process-data-diagnostics.js',
+  './process-data-deep-dive-machine.js',
+  './process-data-deep-dive-tooling.js',
+  './process-data-deep-dive-material.js',
+  './process-data-deep-dive-scientific.js',
+  './process-data-deep-dive-quality.js',
+  './process-data-deep-dive-50.js',
+  './process-data-20-pass-01-05.js',
+  './process-data-20-pass-06-10.js',
+  './process-data-20-pass-11-15.js',
+  './process-data-20-pass-16-20.js',
+  './process-data-20-pass-atlas.js',
+  './process-data-local-intake.js',
   './curriculum-integration.js',
   './specialist-curriculum.js',
   './mould-master-workspace.js',

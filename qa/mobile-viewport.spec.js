@@ -78,11 +78,66 @@ for(const viewport of [{name:'android-412x915',width:412,height:915},{name:'smal
       await expectOnlyCurrent(page,'Practice');
     });
 
-    test('Data diagnosis is directly reachable and mobile active state remains accessible',async({page})=>{
+    test('Data diagnosis and the 50-case deep dive are directly reachable',async({page})=>{
       await openApp(page);
       await page.getByRole('button',{name:/Analyse process data/i}).click();
       await expect(page.locator('#processDataLabs')).toBeVisible();
       await expect(page.getByRole('heading',{name:'Guided Data Diagnosis'})).toBeVisible();
+      await expect(page.getByRole('button',{name:'Open 50-case data deep dive'})).toBeVisible();
+      await expectOnlyCurrent(page,'Practice');
+
+      await page.getByRole('button',{name:'Open 50-case data deep dive'}).click();
+      await expect(page.getByRole('heading',{name:'50-case data deep dive'})).toBeVisible();
+      await expect(page.locator('.dd50-card')).toHaveCount(50);
+      await page.locator('[data-dd50-kind]').selectOption('quality-sensor');
+      await expect(page.locator('.dd50-card')).toHaveCount(10);
+      await page.locator('.dd50-card [data-dd50-open]').first().click();
+      await expect(page.getByText('Baseline → fault → recovery')).toBeVisible();
+      await expect(page.locator('.dd50-table tbody tr')).toHaveCount(4);
+      await expect(page.getByText('Ranked mechanism:')).toBeVisible();
+      await expect(page.getByText('Best next evidence:')).toBeVisible();
+      await expect(page.getByRole('button',{name:'Export 72-cycle CSV'})).toBeVisible();
+      await expectOnlyCurrent(page,'Practice');
+    });
+
+    test('Open 20-pass · 200-case atlas, filter a pass, and inspect the full evidence chain',async({page})=>{
+      await openApp(page);
+      await page.getByRole('button',{name:/Analyse process data/i}).click();
+      await expect(page.getByRole('button',{name:'Open 20-pass · 200-case atlas'})).toBeVisible();
+      await page.getByRole('button',{name:'Open 20-pass · 200-case atlas'}).click();
+      await expect(page.getByRole('heading',{name:'200 advanced process-data cases'})).toBeVisible();
+      await expect(page.locator('.at20-card')).toHaveCount(200);
+      await page.locator('[data-at20-pass]').selectOption('16');
+      await expect(page.locator('.at20-card')).toHaveCount(10);
+      await page.getByRole('button',{name:'Inspect evidence case'}).first().click();
+      await expect(page.locator('.at20-table tbody tr')).toHaveCount(4);
+      await expect(page.getByText('Ranked root-cause mechanism')).toBeVisible();
+      await expect(page.getByText('Best next evidence')).toBeVisible();
+      await expect(page.getByText('Verification')).toBeVisible();
+      await expect(page.getByText(/Compensation trap/i)).toBeVisible();
+      await expect(page.getByText(/Baseline index 100/i)).toBeVisible();
+      await expect(page.getByRole('button',{name:'Export 72-cycle CSV'})).toBeVisible();
+      await expectOnlyCurrent(page,'Practice');
+    });
+
+    test('Local shot CSV intake strips raw identifiers in the real UI',async({page})=>{
+      await openApp(page);
+      await page.getByRole('button',{name:/Analyse process data/i}).click();
+      await expect(page.getByRole('button',{name:'Prepare real shot CSV locally'})).toBeVisible();
+      await page.getByRole('button',{name:'Prepare real shot CSV locally'}).click();
+      await expect(page.getByRole('heading',{name:'Prepare shot data without uploading it'})).toBeVisible();
+      const csv='timestamp,machine,mould,material_grade,material_lot,customer_name,fill_time_s,cushion_mm,quality_result,comment\n2026-08-26T10:00:00Z,IMM-SECRET,TOOL-SECRET,PA66-GF30,LOT-SECRET,Customer Secret,1.20,4.5,PASS,private note\n2026-08-26T10:00:30Z,IMM-SECRET,TOOL-SECRET,PA66-GF30,LOT-SECRET,Customer Secret,1.24,4.4,FAIL,private note two\n';
+      await page.locator('[data-pdi-file]').setInputFiles({name:'shot-export.csv',mimeType:'text/csv',buffer:Buffer.from(csv)});
+      await expect(page.locator('.pdi-kpi').first()).toContainText('2');
+      await expect(page.locator('.pdi-rule').filter({hasText:'timestamp'}).locator('b.drop')).toHaveText('drop');
+      await expect(page.locator('.pdi-rule').filter({hasText:'machine'}).locator('b.alias')).toHaveText('alias');
+      await expect(page.locator('.pdi-rule').filter({hasText:'fill_time_s'}).locator('b.keep')).toHaveText('keep');
+      await expect(page.locator('.pdi-rule').filter({hasText:'quality_result'}).locator('b.quality')).toHaveText('quality');
+      await expect(page.getByRole('button',{name:'Export prepared CSV'})).toBeEnabled();
+      await expect(page.getByRole('button',{name:'Export data dictionary'})).toBeEnabled();
+      await expect(page.locator('body')).not.toContainText('IMM-SECRET');
+      await expect(page.locator('body')).not.toContainText('TOOL-SECRET');
+      await expect(page.locator('body')).not.toContainText('Customer Secret');
       await expectOnlyCurrent(page,'Practice');
     });
 

@@ -23,15 +23,21 @@ function deleteCase(id){write(all().filter(x=>x.id!==id));if(activeId===id)activ
 function defects(){try{return Array.isArray(D?.defects)?D.defects:[]}catch(_){return[]}}
 function lessons(){try{return Array.isArray(D?.lessons)?D.lessons:[]}catch(_){return[]}}
 function specialist(){return window.MM_SPECIALIST_CURRICULUM?.lessons||[]}
-function dataCases(){return window.MM_PROCESS_DATA_DIAGNOSTICS?.cases||[]}
+function dataCases(){
+  const guided=(window.MM_PROCESS_DATA_DIAGNOSTICS?.cases||[]).map(x=>({...x,origin:'Guided 14'}));
+  const deep=(window.MM_PROCESS_DATA_DEEP_DIVE_50?.cases||[]).map(x=>({...x,origin:'50-case deep dive'}));
+  const atlas=(window.MM_PROCESS_DATA_20_PASS_ATLAS?.cases||[]).map(x=>({...x,kind:x.kind||x.domain||'20-pass atlas',origin:'20-pass atlas'}));
+  return [...guided,...deep,...atlas]
+}
 function materialLabs(){return window.MM_MATERIAL_BEHAVIOUR_LABS?.labs||[]}
 function selectedDefect(c){return defects().find(d=>d.name===c.defect)||null}
-function words(v){return String(v||'').toLowerCase().replace(/[^a-z0-9 ]/g,' ').split(/\s+/).filter(x=>x.length>3)}
-function caseTerms(c){return [...new Set(words([c.defect,c.material,c.title,c.evidence,c.hypothesis].join(' ')))].slice(0,24)}
+const SHORT_TERMS=new Set(['PP','PC','ABS','POM','PET','PBT','TPU','PMMA','PEEK','PPS','LCP','HDPE','PA66','PA6','PPA','PEI','TPE'].map(x=>x.toLowerCase()));
+function words(v){return String(v||'').toLowerCase().replace(/[^a-z0-9 ]/g,' ').split(/\s+/).filter(x=>x.length>3||SHORT_TERMS.has(x))}
+function caseTerms(c){return [...new Set(words([c.defect,c.material,c.title,c.evidence,c.hypothesis].join(' ')))].slice(0,28)}
 function scoreText(text,terms){const s=String(text||'').toLowerCase();return terms.reduce((n,t)=>n+(s.includes(t)?1:0),0)}
 function relatedLessons(c){const terms=caseTerms(c);return lessons().map(l=>({l,score:scoreText([l.title,l.summary,l.intro,(l.keypoints||[]).join(' ')].join(' '),terms)})).filter(x=>x.score>0).sort((a,b)=>b.score-a.score).slice(0,5).map(x=>x.l)}
 function relatedSpecialist(c){const terms=caseTerms(c);return specialist().map(l=>({l,score:scoreText([l.title,l.level].join(' '),terms)})).filter(x=>x.score>0).sort((a,b)=>b.score-a.score).slice(0,4).map(x=>x.l)}
-function relatedData(c){const terms=caseTerms(c);return dataCases().map(x=>({x,score:scoreText([x.title,x.kind,(x.signals||[]).join(' ')].join(' '),terms)})).filter(x=>x.score>0).sort((a,b)=>b.score-a.score).slice(0,4).map(x=>x.x)}
+function relatedData(c){const terms=caseTerms(c);return dataCases().map(x=>({x,score:scoreText([x.title,x.kind,x.domain,x.passTitle,x.fault,x.diagnosis,x.next,(x.signals||[]).join(' ')].join(' '),terms)})).filter(x=>x.score>0).sort((a,b)=>b.score-a.score).slice(0,6).map(x=>x.x)}
 function relatedMaterial(c){const terms=caseTerms(c);return materialLabs().map(x=>({x,score:scoreText([x.title,x.focus,(x.materials||[]).join(' ')].join(' '),terms)})).filter(x=>x.score>0).sort((a,b)=>b.score-a.score).slice(0,4).map(x=>x.x)}
 
 function status(c){
@@ -62,7 +68,7 @@ function relatedHtml(c){
   const ls=relatedLessons(c),ss=relatedSpecialist(c),ds=relatedData(c),ms=relatedMaterial(c);
   const lessonButtons=ls.length?ls.map(l=>`<button class="ghost" type="button" data-mw-lesson="${l.id}">${esc(l.id+'. '+l.title)}</button>`).join(''):'<div class="mw-empty">Add a defect, material or evidence terms to surface related lessons.</div>';
   const spec=ss.length?`<div class="mw-chip-row">${ss.map(x=>`<span class="mw-chip">${esc(x.id+' · '+x.title)}</span>`).join('')}</div>`:'';
-  const data=ds.length?ds.map(x=>`<button class="ghost" type="button" data-mw-data="${esc(x.id)}">Data case · ${esc(x.title)}</button>`).join(''):'';
+  const data=ds.length?ds.map(x=>`<button class="ghost" type="button" data-mw-data="${esc(x.id)}" data-mw-data-origin="${esc(x.origin||'Guided 14')}">${esc(x.origin||'Data case')} · ${esc(x.title)}</button>`).join(''):'';
   const mat=ms.length?ms.map(x=>`<button class="ghost" type="button" data-mw-material="${esc(x.id)}">Material lab · ${esc(x.title)}</button>`).join(''):'';
   return `<div class="mw-related"><h3>Learning & evidence links</h3>${lessonButtons}${spec}${data}${mat}<button class="ghost" type="button" data-mw-defects>Open Defect Finder</button><button class="ghost" type="button" data-mw-diagnostic>Open Diagnostic Labs</button><button class="ghost" type="button" data-mw-data-home>Open Data Diagnosis</button><p class="mw-help">Use these links to learn the mechanism or test your reasoning. Case notes remain your own local evidence record.</p></div>`
 }
@@ -108,7 +114,19 @@ function wire(host,c){
   host.querySelector('[data-mw-defects]')?.addEventListener('click',()=>switchView('defects'));
   host.querySelector('[data-mw-diagnostic]')?.addEventListener('click',()=>window.MM_DIAGNOSTIC_LABS?.open?.());
   host.querySelector('[data-mw-data-home]')?.addEventListener('click',()=>window.MM_PROCESS_DATA_DIAGNOSTICS?.open?.());
-  host.querySelectorAll('[data-mw-data]').forEach(b=>b.addEventListener('click',()=>{window.MM_PROCESS_DATA_DIAGNOSTICS?.open?.();setTimeout(()=>document.querySelector(`[data-pd-start="${CSS.escape(b.dataset.mwData)}"]`)?.click(),0)}));
+  host.querySelectorAll('[data-mw-data]').forEach(b=>b.addEventListener('click',()=>{
+    const origin=b.dataset.mwDataOrigin||'Guided 14',id=b.dataset.mwData;
+    if(origin==='20-pass atlas'){
+      window.MM_PROCESS_DATA_20_PASS_ATLAS?.open?.();
+      return setTimeout(()=>document.querySelector(`[data-at20-open="${CSS.escape(id)}"]`)?.click(),0)
+    }
+    if(origin==='50-case deep dive'){
+      window.MM_PROCESS_DATA_DEEP_DIVE_50?.open?.();
+      return setTimeout(()=>document.querySelector(`[data-dd50-open="${CSS.escape(id)}"]`)?.click(),0)
+    }
+    window.MM_PROCESS_DATA_DIAGNOSTICS?.open?.();
+    setTimeout(()=>document.querySelector(`[data-pd-start="${CSS.escape(id)}"]`)?.click(),0)
+  }));
   host.querySelectorAll('[data-mw-material]').forEach(b=>b.addEventListener('click',()=>{window.MM_MATERIAL_BEHAVIOUR_LABS?.open?.();setTimeout(()=>document.querySelector(`[data-ml-start="${CSS.escape(b.dataset.mwMaterial)}"]`)?.click(),0)}));
   host.querySelector('[data-mw-field="defect"]')?.addEventListener('change',()=>{collect(c);saveCase(c);renderCase(c)})
 }

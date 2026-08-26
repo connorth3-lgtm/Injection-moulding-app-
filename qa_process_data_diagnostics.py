@@ -6,6 +6,10 @@ ROOT=Path(__file__).resolve().parent
 def text(name): return (ROOT/name).read_text(encoding='utf-8')
 def need(ok,msg):
     if not ok: raise AssertionError(msg)
+def js_const(source,name):
+    m=re.search(rf"const\s+{re.escape(name)}\s*=\s*['\"]([^'\"]+)['\"]",source)
+    need(m is not None,f'missing JavaScript constant {name}')
+    return m.group(1)
 
 required=[
     'process-data-diagnostics.js','evidence-maturity-deep-dive.js','index.html','service-worker.js',
@@ -46,11 +50,16 @@ need(set(canonical)==set(guided),f'guided data case coverage mismatch: missing={
 idx=text('index.html')
 need("['./process-data-diagnostics.js','<script src=\"./process-data-diagnostics.js\">']" in idx,'browser shell does not load guided data diagnostics')
 need(idx.index("'./evidence-maturity-deep-dive.js'") < idx.index("'./process-data-diagnostics.js'"),'guided data diagnostics must load after the canonical dataset pack')
-need('RUNTIME_ASSET_VERSION="20260826.5-app-shell-mobile-qa"' in idx,'guided data diagnostics must stay on the current coherent runtime token')
-need('mouldmaster-static-2026.08.26.2-app-shell-mobile-qa-20260826' in idx,'browser expected PWA cache drifted from the current coherent runtime')
 
+# Runtime coherence is structural, not tied to one hard-coded feature bundle.
 sw=text('service-worker.js')
-need("const CACHE_REVISION='app-shell-mobile-qa-20260826'" in sw,'PWA cache revision drifted from the current coherent runtime')
+runtime_asset=js_const(idx,'RUNTIME_ASSET_VERSION')
+expected_cache=js_const(idx,'EXPECTED_STATIC_CACHE')
+cache_version=js_const(sw,'CACHE_VERSION')
+cache_revision=js_const(sw,'CACHE_REVISION')
+need(expected_cache==f'mouldmaster-static-{cache_version}-{cache_revision}','browser expected PWA cache must match the service-worker cache identity')
+need(runtime_asset[:8]==''.join(cache_version.split('.')[:3]),'guided data runtime date must align with the PWA release date')
+need(runtime_asset.split('-',1)[1]==re.sub(r'-\d{8}$','',cache_revision),'guided data runtime family must match the PWA cache family')
 need("'./process-data-diagnostics.js'" in sw,'guided data diagnostics missing from offline cache')
 
 pkg=json.loads(text('desktop/electron/package.json'))
@@ -58,4 +67,4 @@ froms={x.get('from') for x in pkg['build']['extraResources'] if isinstance(x,dic
 need('../../process-data-diagnostics.js' in froms,'guided data diagnostics missing from desktop package')
 need("'process-data-diagnostics.js'" in text('desktop/electron/scripts/generate-integrity.cjs'),'guided data diagnostics missing from desktop integrity manifest')
 
-print('MouldMaster guided process-data diagnostics QA passed (14/14 canonical datasets; baseline/fault/recovery reasoning; local-only; outside formal assessment; coherent browser/PWA/desktop packaging)')
+print(f'MouldMaster guided process-data diagnostics QA passed (14/14 canonical datasets; baseline/fault/recovery reasoning; local-only; outside formal assessment; coherent runtime={runtime_asset})')
