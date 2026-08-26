@@ -60,6 +60,7 @@ function syncVisibleViewChrome(){
   const home=document.getElementById('dashboard');
   const isHome=!!home&&!home.classList.contains('hidden');
   document.body?.classList.toggle('mm-home-visible',isHome);
+  if(window.MM_APP_SHELL?.finalized)return;
   document.querySelectorAll('.mobile-nav button[data-view]').forEach(button=>{
     const target=button.dataset.view;
     const view=target?document.getElementById(target):null;
