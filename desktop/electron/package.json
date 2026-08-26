@@ -23,8 +23,8 @@
   "build": {
     "appId": "org.mouldmaster.academy",
     "productName": "MouldMaster Academy",
-    "buildNumber": "1",
-    "buildVersion": "2026.8.26.1",
+    "buildNumber": "2",
+    "buildVersion": "2026.8.26.2",
     "asar": true,
     "electronFuses": {
       "runAsNode": false,
