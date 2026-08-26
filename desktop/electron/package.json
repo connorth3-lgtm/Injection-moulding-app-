@@ -79,6 +79,7 @@
       {"from": "../../process-data-20-pass-11-15.js", "to": "mouldmaster/process-data-20-pass-11-15.js"},
       {"from": "../../process-data-20-pass-16-20.js", "to": "mouldmaster/process-data-20-pass-16-20.js"},
       {"from": "../../process-data-20-pass-atlas.js", "to": "mouldmaster/process-data-20-pass-atlas.js"},
+      {"from": "../../process-data-local-intake.js", "to": "mouldmaster/process-data-local-intake.js"},
       {"from": "../../curriculum-integration.js", "to": "mouldmaster/curriculum-integration.js"},
       {"from": "../../specialist-curriculum.js", "to": "mouldmaster/specialist-curriculum.js"},
       {"from": "../../mould-master-workspace.js", "to": "mouldmaster/mould-master-workspace.js"},
