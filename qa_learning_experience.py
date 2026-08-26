@@ -44,11 +44,11 @@ need('fetch(' not in js,'learning experience must remain local-only and must not
 idx=text('index.html')
 need("['./learning-experience.js','<script src=\"./learning-experience.js\">']" in idx,'browser shell does not load learning-experience.js')
 need(idx.index("'./pwa-shell.js'") < idx.index("'./learning-experience.js'"),'learning experience must load after the existing runtime patches')
-need('20260826.4-learning-flow' in idx,'coherent browser bundle token was not advanced')
-need('mouldmaster-static-2026.08.24.1-learning-flow-20260826' in idx,'browser expected-cache token does not match learning-flow release')
+need('20260826.3-evidence-maturity-triangulation' in idx,'learning UX must stay on the current coherent runtime token')
+need('mouldmaster-static-2026.08.24.1-evidence-maturity-triangulation-20260826' in idx,'browser expected-cache token drifted from the current coherent runtime')
 
 sw=text('service-worker.js')
-need("const CACHE_REVISION='learning-flow-20260826'" in sw,'service-worker cache revision not advanced')
+need("const CACHE_REVISION='evidence-maturity-triangulation-20260826'" in sw,'service-worker cache revision drifted from the current coherent runtime')
 need("'./learning-experience.js'" in sw,'learning experience missing from offline cache')
 
 pkg=json.loads(text('desktop/electron/package.json'))
