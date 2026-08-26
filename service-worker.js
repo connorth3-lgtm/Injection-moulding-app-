@@ -1,5 +1,5 @@
 const CACHE_VERSION='2026.08.24.1';
-const CACHE_REVISION='evidence-maturity-triangulation-20260826';
+const CACHE_REVISION='guided-data-diagnostics-20260826';
 const STATIC_CACHE=`mouldmaster-static-${CACHE_VERSION}-${CACHE_REVISION}`;
 const CORE=[
   './index.html',
@@ -40,6 +40,7 @@ const CORE=[
   './assessment-evidence-approval.js',
   './pwa-shell.js',
   './learning-experience.js',
+  './process-data-diagnostics.js',
   './repair.html',
   './privacy.html',
   './support.html'
