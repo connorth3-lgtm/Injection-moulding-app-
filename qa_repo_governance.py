@@ -16,9 +16,11 @@ def text(path):
 
 guard = text(".github/workflows/main-pr-provenance-guard.yml")
 pruner = text(".github/workflows/prune-merged-branches.yml")
+dep_lock = text(".github/workflows/desktop-dependency-lock.yml")
 release_qa = text(".github/workflows/qa.yml")
 
-# Main must be continuously checked for merged-PR provenance. This is a
+# Main must be continuously checked for merged-PR provenance and for the same
+# three pre-merge workflows intended for native branch protection. This is a
 # repository-level compensating control; it does not claim GitHub's native
 # branch-protection/ruleset setting is enabled.
 for marker in [
@@ -27,23 +29,53 @@ for marker in [
     "branches: [main]",
     "contents: write",
     "pull-requests: read",
+    "actions: read",
     "HEAD_SHA: ${{ github.sha }}",
     "BEFORE_SHA: ${{ github.event.before }}",
     "commits/$HEAD_SHA/pulls",
     "merged_at != null",
-    "base.ref == \\\"main\\\"",
-    "merge_commit_sha == \\\"$HEAD_SHA\\\"",
+    "merge_commit_sha",
+    "rollback_main",
+    "MouldMaster Release QA",
+    "Mobile Browser QA",
+    "Open Desktop Build",
+    "actions/runs?head_sha=$PR_HEAD_SHA&event=pull_request",
+    "all_required_success",
     "git/refs/heads/main",
-    "sha=\"$BEFORE_SHA\"",
     "force=true",
 ]:
     need(marker in guard, f"main provenance guard missing marker: {marker}")
 
-need(
-    '"$ACTOR" == "github-actions[bot]" && "$HEAD_MESSAGE" == "Lock open desktop dependencies"' in guard,
-    "dependency-lock bot exemption must remain actor- and message-scoped",
-)
-need("exit 1" in guard, "unauthorised direct pushes must fail after rollback")
+need("github-actions[bot]" not in guard, "main provenance guard must not exempt direct bot pushes")
+need("Lock open desktop dependencies" not in guard, "legacy dependency-lock direct-push exemption remains")
+need("conclusion\" != \"success" in guard, "required PR workflows must fail closed when not successful")
+need("exit 1" in guard, "unauthorised or unverified main pushes must fail after rollback")
+
+# Dependency-lock generation must be a verification gate, never a privileged
+# direct writer to main. Both package.json and package-lock.json changes are
+# covered on PRs and on main as a post-merge consistency check.
+for marker in [
+    "name: Desktop Dependency Lock",
+    "pull_request:",
+    "push:",
+    "branches: [main]",
+    "desktop/electron/package.json",
+    "desktop/electron/package-lock.json",
+    "contents: read",
+    "npm install --package-lock-only",
+    "git diff --exit-code -- package-lock.json",
+    "package-lock.json is not synchronized with package.json",
+]:
+    need(marker in dep_lock, f"dependency-lock verification missing marker: {marker}")
+
+for forbidden in [
+    "contents: write",
+    "git push",
+    "git commit",
+    "git add",
+    "Lock open desktop dependencies",
+]:
+    need(forbidden not in dep_lock, f"dependency-lock workflow must not write directly to main: {forbidden}")
 
 # Branch pruning must happen only after the main provenance guard succeeds (or
 # by explicit manual dispatch), so an unauthorised transient main push cannot
@@ -61,7 +93,7 @@ for marker in [
     "cancel-in-progress: false",
     '[[ -z "$branch" || "$branch" == "main" ]] && continue',
     'compare/main...$sha',
-    "select(.merged_at != null and .head.sha == \\\"$sha\\\")",
+    "merged_at != null",
     'git/refs/heads/$branch',
 ]:
     need(marker in pruner, f"merged-branch pruner missing marker: {marker}")
@@ -80,5 +112,5 @@ need("run: python qa_repo_governance.py" in release_qa, "release QA must run rep
 
 print(
     "MouldMaster repository governance QA passed "
-    "(PR provenance rollback, guard-gated safe branch pruning, no historical deletion exceptions)"
+    "(no direct-main bot exception; merged-PR + required-check rollback; read-only lock verification; guard-gated safe pruning)"
 )

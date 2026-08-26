@@ -7,43 +7,87 @@ on:
 permissions:
   contents: write
   pull-requests: read
+  actions: read
 
 jobs:
   enforce-pr-provenance:
     runs-on: ubuntu-latest
     steps:
-      - name: Require merged-PR provenance or approved lock bot commit
+      - name: Require merged-PR provenance and successful required checks
         env:
           GH_TOKEN: ${{ github.token }}
           GH_REPO: ${{ github.repository }}
           HEAD_SHA: ${{ github.sha }}
           BEFORE_SHA: ${{ github.event.before }}
-          ACTOR: ${{ github.actor }}
-          HEAD_MESSAGE: ${{ github.event.head_commit.message }}
         shell: bash
         run: |
           set -euo pipefail
 
-          if [[ "$ACTOR" == "github-actions[bot]" && "$HEAD_MESSAGE" == "Lock open desktop dependencies" ]]; then
-            echo "Approved dependency-lock synchronization commit."
-            exit 0
-          fi
+          rollback_main() {
+            local reason="$1"
+            if [[ -z "$BEFORE_SHA" || "$BEFORE_SHA" =~ ^0+$ ]]; then
+              echo "::error::$reason Previous main SHA is unavailable, so automatic rollback cannot run safely."
+              exit 1
+            fi
+            echo "::error::$reason Restoring main to $BEFORE_SHA."
+            gh api --method PATCH "repos/$GH_REPO/git/refs/heads/main" -f sha="$BEFORE_SHA" -F force=true
+            exit 1
+          }
 
-          merged_pr=$(gh api \
+          merged_pr_json=$(gh api \
             -H "Accept: application/vnd.github+json" \
             "repos/$GH_REPO/commits/$HEAD_SHA/pulls" \
-            --jq "[.[] | select(.merged_at != null and .base.ref == \"main\" and .merge_commit_sha == \"$HEAD_SHA\")] | length")
+            --jq "[.[] | select(.merged_at != null and .base.ref == \"main\" and .merge_commit_sha == \"$HEAD_SHA\")][0] // null")
 
-          if [[ "$merged_pr" != "0" ]]; then
-            echo "Commit is the merge commit of a PR into main."
-            exit 0
+          if [[ -z "$merged_pr_json" || "$merged_pr_json" == "null" ]]; then
+            rollback_main "Push to main did not originate from a merged pull request."
           fi
 
-          if [[ -z "$BEFORE_SHA" || "$BEFORE_SHA" =~ ^0+$ ]]; then
-            echo "::error::Cannot safely restore main because the previous SHA is unavailable."
-            exit 1
+          PR_NUMBER=$(jq -r '.number' <<<"$merged_pr_json")
+          PR_HEAD_SHA=$(jq -r '.head.sha' <<<"$merged_pr_json")
+          echo "Main commit is merged PR #$PR_NUMBER with source head $PR_HEAD_SHA."
+
+          required_workflows=(
+            "MouldMaster Release QA"
+            "Mobile Browser QA"
+            "Open Desktop Build"
+          )
+
+          all_required_success=false
+          for attempt in {1..10}; do
+            runs_json=$(gh api "repos/$GH_REPO/actions/runs?head_sha=$PR_HEAD_SHA&event=pull_request&per_page=100")
+            all_seen=true
+
+            for workflow in "${required_workflows[@]}"; do
+              status=$(jq -r --arg workflow "$workflow" \
+                '[.workflow_runs[] | select(.name == $workflow)] | sort_by(.updated_at) | reverse | (.[0].status // "missing")' \
+                <<<"$runs_json")
+              conclusion=$(jq -r --arg workflow "$workflow" \
+                '[.workflow_runs[] | select(.name == $workflow)] | sort_by(.updated_at) | reverse | (.[0].conclusion // "missing")' \
+                <<<"$runs_json")
+
+              echo "$workflow: status=$status conclusion=$conclusion"
+
+              if [[ "$status" == "completed" && "$conclusion" != "success" ]]; then
+                rollback_main "Required PR workflow '$workflow' did not succeed on $PR_HEAD_SHA (conclusion=$conclusion)."
+              fi
+
+              if [[ "$status" != "completed" || "$conclusion" != "success" ]]; then
+                all_seen=false
+              fi
+            done
+
+            if [[ "$all_seen" == "true" ]]; then
+              all_required_success=true
+              break
+            fi
+
+            echo "Required PR workflow state is not fully visible yet; retrying ($attempt/10)."
+            sleep 3
+          done
+
+          if [[ "$all_required_success" != "true" ]]; then
+            rollback_main "Required PR workflows are missing, pending, or not successful for merged PR #$PR_NUMBER."
           fi
 
-          echo "::error::Push to main did not originate from a merged PR. Restoring main to $BEFORE_SHA."
-          gh api --method PATCH "repos/$GH_REPO/git/refs/heads/main" -f sha="$BEFORE_SHA" -F force=true
-          exit 1
+          echo "Merged PR provenance and all required pre-merge workflows are verified."
