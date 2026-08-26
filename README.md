@@ -17,9 +17,9 @@ The project maintainers do not intend to seek patent protection over implementat
 
 ## Current release lanes
 
-- PWA / browser shell: `2026.08.24.1`
-- Open Windows desktop: `2026.08.26.2`
-- Training content: `2026.08.24.2`
+- PWA / browser shell: `2026.08.26.1`
+- Open Windows desktop: `2026.08.26.3`
+- Training content: `2026.08.26.1`
 - Audited assessment bank: `2026.08.24.2`
 - Assessment quality / analytics hardening: `2026.08.24.3`
 - Learner-scoped assessment storage: `2026.08.24.4`
@@ -34,7 +34,7 @@ The hosted PWA is published through GitHub Pages:
 
 `https://connorth3-lgtm.github.io/Injection-moulding-app-/`
 
-The PWA uses an installable web manifest and a service worker for offline support after a successful initial load. The current shell caches the audited core, assessment/runtime layers, reference data and the privacy/support pages required by the public app.
+The PWA uses an installable web manifest and a service worker for offline support after a successful initial load. The current shell caches the audited core, assessment/runtime layers, guided learning, specialist curriculum, reference data and the privacy/support pages required by the public app.
 
 ## Assessment system
 
@@ -48,13 +48,21 @@ All 157 keyed learner questions across exams, scenarios, Diagnostic Learning Lab
 
 Six material-specific practice labs turn resin/reference knowledge into evidence-first decisions: PP versus PC handling, wet versus verified-dry PC, PA66-GF30 drying/conditioning and anisotropy, ABS thermal history, POM degradation/contamination safety, and recycled-PP lot/rheology variability. Each lab uses Observe → Best next test → Controlled response → Explain and is explicitly scenario-specific education rather than a universal production recipe.
 
+## Guided curriculum and specialist extensions
+
+The canonical completion pathway remains **120 core lessons**. `curriculum-integration.js` links every core lesson to two valid formative activities drawn from the existing diagnostic, material-behaviour and process-data practice layers, with a return-to-lesson flow so learners move from theory → practice → evidence → explanation.
+
+Twelve optional specialist extensions in `specialist-curriculum.js` add depth only where the core curriculum audit identified a real gap: hazardous-energy intervention, clamp/projected-area reasoning, plasticising controls, reinforced polymers, purging/contamination, internal defects, SPC, Gage R&R/MSA, valve-gate timing, screw/barrel wear, ejector/tool condition, and energy/recycled-feedstock variability. Specialist completion is device-local and separate from the 120-lesson core.
+
+These formative layers do not change formal assessment answers, certificate thresholds or production setpoints.
+
 ## Open Windows desktop release
 
 The normal open-source Windows desktop implementation is under:
 
 `desktop/electron/`
 
-Desktop `2026.08.26.2` is published from the exact repository source by `.github/workflows/publish-open-desktop.yml` to the tagged GitHub Release recorded in `version.json`. The release includes the portable Windows executable, SHA-256 hashes, the source commit, bundled-asset integrity manifest, dependency licence inventory, CycloneDX SBOM and assessment/evidence/source-freshness QA reports.
+Desktop `2026.08.26.3` is published from the exact repository source by `.github/workflows/publish-open-desktop.yml` to the tagged GitHub Release recorded in `version.json`. The release includes the portable Windows executable, SHA-256 hashes, the source commit, bundled-asset integrity manifest, dependency licence inventory, CycloneDX SBOM and assessment/evidence/source-freshness QA reports.
 
 Security controls include:
 - SHA-256 verification of bundled MouldMaster application assets before launch;
@@ -111,7 +119,7 @@ Do not bypass guards, interlocks or hazardous-energy controls to follow training
 
 ## Release QA
 
-The release workflows run structural, runtime, question/answer, assessment-quality, learner-scoped analytics, evidence-approval, evidence-maturity, guided-data, learner-experience, material-behaviour, source-freshness, reference/research, desktop-security and certification-readiness checks. Important entry points include:
+The release workflows run structural, runtime, question/answer, assessment-quality, learner-scoped analytics, evidence-approval, evidence-maturity, guided-data, learner-experience, curriculum-integration, specialist-curriculum, material-behaviour, source-freshness, reference/research, desktop-security and certification-readiness checks. Important entry points include:
 
 - `qa_release.py`
 - `qa_runtime_hardening.py`
@@ -125,6 +133,8 @@ The release workflows run structural, runtime, question/answer, assessment-quali
 - `qa_evidence_maturity.py`
 - `qa_process_data_diagnostics.py`
 - `qa_learning_experience.py`
+- `qa_curriculum_integration.py`
+- `qa_specialist_curriculum.py`
 - `qa_learning_analytics.py`
 - `qa_assessment_final_hardening.py`
 - `qa_assessment_ux.py`

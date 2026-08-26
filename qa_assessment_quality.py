@@ -162,7 +162,7 @@ REPORT.write_text(json.dumps(report,indent=2)+'\n',encoding='utf-8')
 
 V=json.loads(text('version.json'))
 need(V.get('question_bank_version')=='2026.08.24.2','question_bank_version must be bumped to 2026.08.24.2')
-need(V.get('content_version')=='2026.08.24.2','content_version must be bumped to 2026.08.24.2')
+need(V.get('content_version')=='2026.08.26.1','content_version must match the current 2026.08.26.1 curriculum release')
 need(V.get('legacy_review_id_version')=='2026.08.21.1','legacy review ID version must remain explicit for migration')
 
 log=text('sources/QUESTION_BANK_CHANGELOG.md')

@@ -7,8 +7,8 @@ import struct
 import subprocess
 import tempfile
 
-ANDROID_RELEASE = "2026.08.24.1"
-CONTENT_VERSION = "2026.08.24.2"
+ANDROID_RELEASE = "2026.08.26.1"
+CONTENT_VERSION = "2026.08.26.1"
 WINDOWS_RECOVERY_VERSION = "2026.08.21.1"
 QUESTION_BANK_VERSION = "2026.08.24.2"
 LEGACY_REVIEW_ID_VERSION = "2026.08.21.1"
@@ -62,10 +62,12 @@ index = text("index.html")
 assert f'const SHELL_RELEASE="{ANDROID_RELEASE}"' in index
 assert 'const CORE_URL="./MouldMaster_Core_App.html"' in index
 assert "BODY_SCRIPTS" in index and "'./source-library.js'" in index, "source library not loaded by shell"
+for asset in ["learning-experience.js","process-data-diagnostics.js","curriculum-integration.js","specialist-curriculum.js","learning-analytics.js"]:
+    assert f"'./{asset}'" in index, f"current learner-facing runtime asset not loaded by shell: {asset}"
 
 sw = text("service-worker.js")
 assert f"CACHE_VERSION='{ANDROID_RELEASE}'" in sw
-for asset in ["index.html", "MouldMaster_Core_App.html", "MouldMaster_Academy_App.html", "manifest.webmanifest", "mouldmaster-192.png", "mouldmaster-512.png", "version.json", "reading-patch.css", "reading-patch.js", "training-upgrade.js", "training-qa-fix.js", "source-library.js", "pwa-shell.js"]:
+for asset in ["index.html", "MouldMaster_Core_App.html", "MouldMaster_Academy_App.html", "manifest.webmanifest", "mouldmaster-192.png", "mouldmaster-512.png", "version.json", "reading-patch.css", "reading-patch.js", "training-upgrade.js", "training-qa-fix.js", "source-library.js", "pwa-shell.js", "learning-experience.js", "process-data-diagnostics.js", "curriculum-integration.js", "specialist-curriculum.js", "learning-analytics.js"]:
     assert f"'./{asset}'" in sw, f"offline asset missing: {asset}"
 install = sw[sw.index("self.addEventListener('install'"):sw.index("self.addEventListener('activate'")]
 assert "cache.addAll" in install, "install must fail if any core asset cannot be cached"

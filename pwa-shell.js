@@ -1,10 +1,10 @@
-/* MouldMaster PWA shell controller — 2026.08.25.1 */
+/* MouldMaster PWA shell controller — 2026.08.26.1 */
 (function(){
 'use strict';
-const RELEASE='2026.08.24.1';
-const CONTENT='2026.08.24.2';
+const RELEASE='2026.08.26.1';
+const CONTENT='2026.08.26.1';
 const REFERENCE_DATA_URL='./reference-data.html';
-const BROWSER_FRESH_TOKEN='20260825-browser-network-current';
+const BROWSER_FRESH_TOKEN='20260826-curriculum-release-parity';
 function setText(el,value){if(el&&el.textContent!==value)el.textContent=value}
 function setAttr(el,name,value){if(el&&el.getAttribute(name)!==value)el.setAttribute(name,value)}
 function isMobileNav(){return !!window.matchMedia?.('(max-width:680px)').matches}
