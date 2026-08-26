@@ -46,11 +46,11 @@ need(set(canonical)==set(guided),f'guided data case coverage mismatch: missing={
 idx=text('index.html')
 need("['./process-data-diagnostics.js','<script src=\"./process-data-diagnostics.js\">']" in idx,'browser shell does not load guided data diagnostics')
 need(idx.index("'./evidence-maturity-deep-dive.js'") < idx.index("'./process-data-diagnostics.js'"),'guided data diagnostics must load after the canonical dataset pack')
-need('RUNTIME_ASSET_VERSION="20260826.3-evidence-maturity-triangulation"' in idx,'guided data diagnostics must stay on the current coherent runtime token')
-need('mouldmaster-static-2026.08.24.1-evidence-maturity-triangulation-20260826' in idx,'browser expected PWA cache drifted from the current coherent runtime')
+need('RUNTIME_ASSET_VERSION="20260826.4-curriculum-release-parity"' in idx,'guided data diagnostics must stay on the current coherent runtime token')
+need('mouldmaster-static-2026.08.26.1-curriculum-release-parity-20260826' in idx,'browser expected PWA cache drifted from the current coherent runtime')
 
 sw=text('service-worker.js')
-need("const CACHE_REVISION='evidence-maturity-triangulation-20260826'" in sw,'PWA cache revision drifted from the current coherent runtime')
+need("const CACHE_REVISION='curriculum-release-parity-20260826'" in sw,'PWA cache revision drifted from the current coherent runtime')
 need("'./process-data-diagnostics.js'" in sw,'guided data diagnostics missing from offline cache')
 
 pkg=json.loads(text('desktop/electron/package.json'))
