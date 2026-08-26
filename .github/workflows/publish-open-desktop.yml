@@ -63,6 +63,7 @@ jobs:
           node --check learning-experience.js
           node --check process-data-diagnostics.js
           node --check curriculum-integration.js
+          node --check specialist-curriculum.js
           node --check learning-analytics.js
           node --check desktop/electron/src/main.cjs
           node --check desktop/electron/scripts/generate-integrity.cjs
@@ -94,6 +95,7 @@ jobs:
           python qa_process_data_diagnostics.py
           python qa_learning_experience.py
           python qa_curriculum_integration.py
+          python qa_specialist_curriculum.py
           python qa_learning_analytics.py
           python qa_assessment_storage_scope.py
           python qa_stable_review_bridge.py
