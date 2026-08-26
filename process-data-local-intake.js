@@ -6,7 +6,7 @@ const BASE=window.MM_PROCESS_DATA_DIAGNOSTICS;
 if(!BASE)throw new Error('process-data-local-intake.js requires process-data-diagnostics.js');
 const MAX_ROWS=50000;
 const DROP_RE=/(?:^|_)(?:name|email|phone|address|customer|supplier_contact|serial_number|asset_tag|user|username|operator|operator_id|employee|employee_id|personnel)(?:_|$)/i;
-const TIME_RE=/(?:^|_)(?:timestamp|date|datetime|time|created_at|updated_at)(?:_|$)/i;
+const TIME_RE=/^(?:timestamp|date|datetime|time|created_at|updated_at|recorded_at|event_timestamp|shot_timestamp|cycle_timestamp)$/i;
 const ALIAS_RE=/(?:machine|cell|mould|mold|tool|cavity|material|grade|resin|lot|batch|job|work_?order|part_?(?:number|no))/i;
 const QUALITY_RE=/(?:quality|result|status|pass|fail|reject|defect|inspection|ok_ng|ng_ok)/i;
 const SAFE_QUALITY=new Set(['pass','fail','ok','ng','good','bad','accept','accepted','reject','rejected','yes','no','0','1','true','false']);
