@@ -1,9 +1,9 @@
-/* MouldMaster canonical app-shell registry — 2026.08.26.2 */
+/* MouldMaster canonical app-shell registry — 2026.08.26.3 */
 (function(){
 'use strict';
 if(window.MM_APP_SHELL)return;
 
-const VERSION='2026.08.26.2';
+const VERSION='2026.08.26.3';
 const captured={
   renderDashboard:typeof renderDashboard==='function'?renderDashboard:null,
   renderLesson:typeof renderLesson==='function'?renderLesson:null,
@@ -170,16 +170,25 @@ function populateMobileMore(){
     for(const item of items)grid.appendChild(makeMobileMoreButton(item))
   })
 }
+function visibleCoreView(){
+  for(const item of CORE_NAV){
+    const el=document.getElementById(item.view);
+    if(el&&!el.classList.contains('hidden')&&getComputedStyle(el).display!=='none')return item.view;
+  }
+  return ''
+}
 function canonicalMobileGroup(view){
-  const core=CORE_NAV.find(x=>x.view===view);if(core)return core.mobile;
-  const item=navigationItems.get(activeCustomId);return item?.mobileGroup||'more'
+  const item=navigationItems.get(activeCustomId);if(item)return item.mobileGroup||'more';
+  const core=CORE_NAV.find(x=>x.view===view);return core?.mobile||'more'
 }
 function syncActiveState(){
   normalizeMobilePrimaryNav();
-  const view=typeof currentView==='string'?currentView:'dashboard';document.body.dataset.mmView=view;
+  const visible=visibleCoreView();
+  const view=visible||(typeof currentView==='string'?currentView:'dashboard');
+  document.body.dataset.mmView=activeCustomId||view;
   document.querySelectorAll('#nav button').forEach(b=>{
     const registryId=b.dataset.mmRegistryNav;
-    const active=registryId?registryId===activeCustomId:b.dataset.view===view;
+    const active=registryId?registryId===activeCustomId:!activeCustomId&&b.dataset.view===view;
     b.classList.toggle('active',active);if(active)b.setAttribute('aria-current','page');else b.removeAttribute('aria-current')
   });
   const group=canonicalMobileGroup(view);
@@ -204,7 +213,7 @@ function emitRender(id){for(const fn of renderListeners.get(id)||[])safeCall(fn,
 function bindExternalTool(id,apiName){
   const api=window[apiName];if(!api||typeof api.open!=='function'||api.__mmShellBound)return;
   const base=api.open;
-  api.open=function(){activeCustomId=id;const r=base.apply(this,arguments);syncActiveState();emitView(id);return r};
+  api.open=function(){activeCustomId=id;const r=base.apply(this,arguments);syncActiveState();requestAnimationFrame(syncActiveState);emitView(id);return r};
   api.__mmShellBound=true
 }
 function bindExternalTools(){
@@ -257,10 +266,10 @@ function renderDashboardCanonical(){
 function renderLessonCanonical(){
   activeCustomId='';captured.renderLesson.apply(this,arguments);
   safeCall(window.MM_LEARNING_EXPERIENCE?.decorateLesson);
-  curriculumLessonAdapter();syncActiveState();emitRender('lesson')
+  curriculumLessonAdapter();syncActiveState();requestAnimationFrame(syncActiveState);emitRender('lesson')
 }
 function switchViewCanonical(id){
-  activeCustomId='';const r=captured.switchView.apply(this,arguments);syncActiveState();emitView(id);return r
+  activeCustomId='';const r=captured.switchView.apply(this,arguments);syncActiveState();requestAnimationFrame(syncActiveState);emitView(id);return r
 }
 function openMobileMenuCanonical(){const r=captured.openMobileMenu.apply(this,arguments);populateMobileMore();return r}
 
