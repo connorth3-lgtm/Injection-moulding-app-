@@ -1,5 +1,5 @@
 const CACHE_VERSION='2026.08.26.2';
-const CACHE_REVISION='process-data-atlas-20260826';
+const CACHE_REVISION='process-data-intake-20260826';
 const STATIC_CACHE=`mouldmaster-static-${CACHE_VERSION}-${CACHE_REVISION}`;
 const CORE=[
   './index.html',
@@ -53,6 +53,7 @@ const CORE=[
   './process-data-20-pass-11-15.js',
   './process-data-20-pass-16-20.js',
   './process-data-20-pass-atlas.js',
+  './process-data-local-intake.js',
   './curriculum-integration.js',
   './specialist-curriculum.js',
   './mould-master-workspace.js',
