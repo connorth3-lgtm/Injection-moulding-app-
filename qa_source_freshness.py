@@ -1,5 +1,5 @@
 from pathlib import Path
-from datetime import date, datetime
+from datetime import date, datetime, timezone
 import argparse, json, re, ssl, urllib.error, urllib.request
 
 ROOT=Path(__file__).resolve().parent
@@ -25,6 +25,8 @@ def static_check(data):
         need(str(x.get('url','')).startswith('https://'),'freshness sources must use HTTPS')
         need(x.get('authority') and x.get('kind') and x.get('status'),'freshness source metadata incomplete')
         need(isinstance(x.get('expected_any'),list) and len(x['expected_any'])>=2,'each freshness source needs multiple expected markers')
+        network_check=x.get('network_check','markers')
+        need(network_check in ('markers','reachability'),'network_check must be markers or reachability')
         groups=x.get('expected_groups')
         if groups is not None:
             need(isinstance(groups,list) and groups,'expected_groups must be a non-empty list')
@@ -34,10 +36,18 @@ def static_check(data):
     return rows
 
 def fetch_source(row):
-    req=urllib.request.Request(row['url'],headers={'User-Agent':'MouldMaster-Source-Freshness/1.1 (+https://github.com/connorth3-lgtm/Injection-moulding-app-)','Accept':'text/html,application/xhtml+xml,application/pdf;q=0.5,*/*;q=0.1'})
+    req=urllib.request.Request(row['url'],headers={'User-Agent':'MouldMaster-Source-Freshness/1.2 (+https://github.com/connorth3-lgtm/Injection-moulding-app-)','Accept':'text/html,application/xhtml+xml,application/pdf;q=0.5,*/*;q=0.1'})
     try:
         with urllib.request.urlopen(req,timeout=20,context=ssl.create_default_context()) as r:
             raw=r.read(2_000_000); status=getattr(r,'status',200); ctype=r.headers.get('content-type',''); final_url=r.geturl()
+        base={'id':row['id'],'url':row['url'],'final_url':final_url,'http_status':status,'content_type':ctype}
+        if status!=200:
+            return {**base,'result':'unreachable','error':f'HTTP {status}; marker content not evaluated'}
+        if row.get('network_check','markers')=='reachability':
+            return {**base,'bytes':len(raw),'result':'ok-reachability'}
+        media=ctype.split(';',1)[0].strip().lower()
+        if media and media not in ('text/html','application/xhtml+xml','text/plain','application/xml','text/xml'):
+            return {**base,'bytes':len(raw),'result':'unreachable','error':f'HTTP 200 {media}; marker text not evaluated'}
         page=raw.decode('utf-8','ignore').lower()
         markers=[m for m in row['expected_any'] if m.lower() in page]
         groups=row.get('expected_groups') or []
@@ -49,7 +59,7 @@ def fetch_source(row):
             ok=all(x['matched'] for x in group_results)
         else:
             ok=bool(markers)
-        return {'id':row['id'],'url':row['url'],'final_url':final_url,'http_status':status,'content_type':ctype,'matched_markers':markers,'marker_groups':group_results,'result':'ok' if ok else 'changed-marker'}
+        return {**base,'matched_markers':markers,'marker_groups':group_results,'result':'ok' if ok else 'changed-marker'}
     except urllib.error.HTTPError as e:
         return {'id':row['id'],'url':row['url'],'http_status':e.code,'result':'gone' if e.code in (404,410) else 'unreachable','error':f'HTTP {e.code}'}
     except Exception as e:
@@ -59,14 +69,14 @@ def main():
     ap=argparse.ArgumentParser(); ap.add_argument('--network',action='store_true'); args=ap.parse_args()
     need(MANIFEST.exists(),'sources/SOURCE_FRESHNESS.json missing')
     data=json.loads(MANIFEST.read_text(encoding='utf-8')); rows=static_check(data)
-    report={'schema':1,'checked_at':datetime.utcnow().replace(microsecond=0).isoformat()+'Z','mode':'network' if args.network else 'static','manifest_reviewed':data['reviewed'],'manifest_review_by':data['review_by'],'results':[]}
+    report={'schema':1,'checked_at':datetime.now(timezone.utc).replace(microsecond=0).isoformat().replace('+00:00','Z'),'mode':'network' if args.network else 'static','manifest_reviewed':data['reviewed'],'manifest_review_by':data['review_by'],'results':[]}
     changed=[]; gone=[]
     if args.network:
         for row in rows:
             result=fetch_source(row); report['results'].append(result)
             if result['result']=='changed-marker': changed.append(row['id'])
             elif result['result']=='gone': gone.append(row['id'])
-            elif result['result']=='unreachable': print(f"WARNING: {row['id']} could not be checked: {result.get('error')}")
+            elif result['result']=='unreachable': print(f"WARNING: {row['id']} could not be marker-checked: {result.get('error')}")
     REPORT.write_text(json.dumps(report,indent=2)+'\n',encoding='utf-8')
     failures=[]
     if changed: failures.append('official source identity/status marker changed: '+', '.join(changed))

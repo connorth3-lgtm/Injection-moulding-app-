@@ -1,7 +1,7 @@
-/* MouldMaster targeted lesson evidence depth — 2026.08.26.2 */
+/* MouldMaster targeted lesson evidence depth — 2026.08.26.3 */
 (function(){
 'use strict';
-const VERSION='2026.08.26.2';
+const VERSION='2026.08.26.3';
 const esc=v=>String(v??'').replace(/[&<>\"]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','\"':'&quot;'}[m]));
 const CURATED={
  'fda-validation':{name:'FDA — Process Validation: General Principles and Practices',authority:'US FDA',kind:'regulated-manufacturing validation guidance',url:'https://www.fda.gov/regulatory-information/search-fda-guidance-documents/process-validation-general-principles-and-practices',note:'FDA pharmaceutical/process-validation guidance; use here to teach validation structure, not as a universal plastics regulatory requirement.'},
@@ -10,10 +10,10 @@ const CURATED={
  'energy-review':{name:'Zhang et al. (2017) — energy consumption in injection moulding',authority:'peer-reviewed research',kind:'research',url:'https://doi.org/10.3390/en10111768'},
  'machine-control':{name:'Ren et al. (2024) — injection-moulding machine control and sensing',authority:'peer-reviewed research',kind:'research',url:'https://doi.org/10.3390/s24072205'},
  'mould-design':{name:'Godec et al. (2024) — injection-moulding tooling/design optimisation',authority:'peer-reviewed research',kind:'research',url:'https://doi.org/10.1007/s00170-024-13263-x'},
- 'fibre-orientation':{name:'Huang et al. (2025) — fibre orientation and moulding response',authority:'peer-reviewed research',kind:'research',url:'https://doi.org/10.1007/s00170-025-15244-w'},
+ 'fibre-orientation':{name:'Gao et al. (2025) — fibre orientation variation and geometrical shrinkage in FRP injection moulding',authority:'peer-reviewed research',kind:'research',url:'https://doi.org/10.3390/polym17172360'},
  'vision-inspection':{name:'Fan & Qiu (2023) — machine-vision inspection for injection moulding',authority:'peer-reviewed research',kind:'research',url:'https://doi.org/10.3390/pr11020411'},
- 'predictive-maintenance':{name:'Rousopoulou et al. (2025) — injection-moulding predictive maintenance',authority:'peer-reviewed research',kind:'research',url:'https://doi.org/10.3390/app15169259'},
- 'validation-methodology':{name:'ValiData (2025) — data-driven process validation methodology',authority:'peer-reviewed research',kind:'research',url:'https://doi.org/10.1007/s00170-025-16649-3'},
+ 'predictive-maintenance':{name:'Rousopoulou et al. (2020) — predictive maintenance for injection-moulding machines',authority:'peer-reviewed research',kind:'research',url:'https://doi.org/10.3389/frai.2020.578152'},
+ 'validation-methodology':{name:'Arslan et al. (2025) — AI-driven cognition for advanced injection moulding and industrial implementation',authority:'peer-reviewed research',kind:'research',url:'https://doi.org/10.1007/s00170-025-15611-x'},
  'reprocessing-degradation':{name:'Polymers (2024) — polypropylene degradation through repeated processing',authority:'peer-reviewed research',kind:'research',url:'https://doi.org/10.3390/polym16070895'}
 };
 const COURSE_FALLBACKS={
