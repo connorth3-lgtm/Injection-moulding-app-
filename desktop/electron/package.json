@@ -66,6 +66,7 @@
       {"from": "../../assessment-ux.js", "to": "mouldmaster/assessment-ux.js"},
       {"from": "../../pwa-shell.js", "to": "mouldmaster/pwa-shell.js"},
       {"from": "../../learning-experience.js", "to": "mouldmaster/learning-experience.js"},
+      {"from": "../../process-data-diagnostics.js", "to": "mouldmaster/process-data-diagnostics.js"},
       {"from": "../../source-library.js", "to": "mouldmaster/source-library.js"},
       {"from": "../../reference-data.js", "to": "mouldmaster/reference-data.js"},
       {"from": "../../reference-data.html", "to": "mouldmaster/reference-data.html"},
