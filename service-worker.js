@@ -39,6 +39,7 @@ const CORE=[
   './lesson-evidence-depth.js',
   './assessment-evidence-approval.js',
   './pwa-shell.js',
+  './learning-experience.js',
   './repair.html',
   './privacy.html',
   './support.html'
