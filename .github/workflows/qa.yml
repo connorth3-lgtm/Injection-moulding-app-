@@ -58,6 +58,7 @@ jobs:
           node --check pwa-shell.js
           node --check learning-experience.js
           node --check process-data-diagnostics.js
+          node --check curriculum-integration.js
           node --check learning-analytics.js
           node --check desktop/electron/src/main.cjs
           node --check desktop/electron/scripts/generate-integrity.cjs
@@ -90,6 +91,8 @@ jobs:
         run: python qa_process_data_diagnostics.py
       - name: Learner experience progression and mobile integrity
         run: python qa_learning_experience.py
+      - name: Curriculum theory-practice-evidence integration
+        run: python qa_curriculum_integration.py
       - name: Privacy-preserving learner validation analytics
         run: python qa_learning_analytics.py
       - name: Learner-scoped assessment storage integrity

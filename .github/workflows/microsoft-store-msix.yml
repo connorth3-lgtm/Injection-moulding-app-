@@ -85,6 +85,9 @@ jobs:
       - name: Validate learner experience progression and mobile flow
         working-directory: .
         run: python qa_learning_experience.py
+      - name: Validate curriculum theory-practice-evidence integration
+        working-directory: .
+        run: python qa_curriculum_integration.py
       - name: Validate privacy-preserving learner analytics
         working-directory: .
         run: python qa_learning_analytics.py
