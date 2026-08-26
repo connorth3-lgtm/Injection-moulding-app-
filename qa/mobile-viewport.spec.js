@@ -78,11 +78,25 @@ for(const viewport of [{name:'android-412x915',width:412,height:915},{name:'smal
       await expectOnlyCurrent(page,'Practice');
     });
 
-    test('Data diagnosis is directly reachable and mobile active state remains accessible',async({page})=>{
+    test('Data diagnosis and the 50-case deep dive are directly reachable',async({page})=>{
       await openApp(page);
       await page.getByRole('button',{name:/Analyse process data/i}).click();
       await expect(page.locator('#processDataLabs')).toBeVisible();
       await expect(page.getByRole('heading',{name:'Guided Data Diagnosis'})).toBeVisible();
+      await expect(page.getByRole('button',{name:'Open 50-case data deep dive'})).toBeVisible();
+      await expectOnlyCurrent(page,'Practice');
+
+      await page.getByRole('button',{name:'Open 50-case data deep dive'}).click();
+      await expect(page.getByRole('heading',{name:'50-case data deep dive'})).toBeVisible();
+      await expect(page.locator('.dd50-card')).toHaveCount(50);
+      await page.locator('[data-dd50-kind]').selectOption('quality-sensor');
+      await expect(page.locator('.dd50-card')).toHaveCount(10);
+      await page.locator('.dd50-card [data-dd50-open]').first().click();
+      await expect(page.getByText('Baseline → fault → recovery')).toBeVisible();
+      await expect(page.locator('.dd50-table tbody tr')).toHaveCount(4);
+      await expect(page.getByText('Ranked mechanism:')).toBeVisible();
+      await expect(page.getByText('Best next evidence:')).toBeVisible();
+      await expect(page.getByRole('button',{name:'Export 72-cycle CSV'})).toBeVisible();
       await expectOnlyCurrent(page,'Practice');
     });
 
