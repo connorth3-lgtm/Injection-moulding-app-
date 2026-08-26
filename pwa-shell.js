@@ -34,6 +34,24 @@ function syncUpdateCard(){
     });
   });
 }
+function installMobileLayoutGuard(){
+  if(document.getElementById('mm-mobile-layout-guard-style'))return;
+  const style=document.createElement('style');
+  style.id='mm-mobile-layout-guard-style';
+  style.textContent=`
+@media(max-width:700px){
+  html{scroll-padding-bottom:calc(124px + env(safe-area-inset-bottom))}
+  body{padding-bottom:0!important}
+  .main{padding:16px 16px calc(124px + env(safe-area-inset-bottom))!important}
+  .topbar{position:relative!important;top:auto!important;z-index:1!important;background:transparent!important;backdrop-filter:none!important;padding:0 0 10px!important}
+  .mobile-nav{background:#07101c!important;padding-bottom:calc(10px + env(safe-area-inset-bottom))!important;box-shadow:0 -12px 28px rgba(0,0,0,.30),0 80px 0 #07101c!important}
+  #dashboard{padding-bottom:18px}
+  #dashboard .mm-specialist-strip{margin-bottom:18px}
+  .toast{bottom:calc(98px + env(safe-area-inset-bottom))!important}
+}
+`;
+  document.head.appendChild(style);
+}
 function dockReferenceLauncher(){
   const open=document.getElementById('mm-src-open');if(!open)return;
   const sidebar=document.querySelector('.sidebar-foot');
@@ -170,7 +188,7 @@ async function register(){
   try{const reg=await navigator.serviceWorker.register('./service-worker.js',{scope:'./'});await reg.update()}catch(e){console.warn('[MouldMaster] Offline/update support unavailable:',e)}
 }
 let syncQueued=false;
-function runSync(){syncQueued=false;syncLabels();syncUpdateCard();dockReferenceLauncher();configureReferenceDrawer();dockReferenceDataLauncher();configureReferenceDataDrawer();addNZLegacyNote()}
+function runSync(){syncQueued=false;syncLabels();syncUpdateCard();installMobileLayoutGuard();dockReferenceLauncher();configureReferenceDrawer();dockReferenceDataLauncher();configureReferenceDataDrawer();addNZLegacyNote()}
 function scheduleSync(){
   if(syncQueued)return;
   syncQueued=true;
@@ -183,5 +201,5 @@ runSync();
 window.addEventListener('resize',scheduleSync,{passive:true});
 window.addEventListener('load',async()=>{runSync();if(await retireBrowserOfflineRuntime())return;register();setTimeout(scheduleSync,250)});
 document.addEventListener('visibilitychange',()=>{if(!document.hidden)scheduleSync()});
-window.MM_SHELL_RELEASE=RELEASE;window.MM_CONTENT_RELEASE=CONTENT;window.MM_DISPLAY_CONTEXT=displayContext;window.MM_REFERENCE_LAUNCHER_DOCK='sidebar-first-normal-flow';window.MM_REFERENCE_DRAWER_MODE='non-blocking';window.MM_REFERENCE_DATA_URL=REFERENCE_DATA_URL;window.MM_REFERENCE_DATA_LAUNCHER_DOCK='mobile-more-standalone-page';window.MM_REFERENCE_DATA_DRAWER_MODE='standalone-mobile-page-desktop-drawer';window.MM_BROWSER_UPDATE_MODE='network-current-no-service-worker';
+window.MM_SHELL_RELEASE=RELEASE;window.MM_CONTENT_RELEASE=CONTENT;window.MM_DISPLAY_CONTEXT=displayContext;window.MM_REFERENCE_LAUNCHER_DOCK='sidebar-first-normal-flow';window.MM_REFERENCE_DRAWER_MODE='non-blocking';window.MM_REFERENCE_DATA_URL=REFERENCE_DATA_URL;window.MM_REFERENCE_DATA_LAUNCHER_DOCK='mobile-more-standalone-page';window.MM_REFERENCE_DATA_DRAWER_MODE='standalone-mobile-page-desktop-drawer';window.MM_BROWSER_UPDATE_MODE='network-current-no-service-worker';window.MM_MOBILE_LAYOUT_GUARD='home-static-header-bottom-nav-clearance-v1';
 })();
