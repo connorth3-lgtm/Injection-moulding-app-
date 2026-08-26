@@ -70,6 +70,8 @@ jobs:
         run: python qa_runtime_hardening.py
       - name: Release and documentation coherence
         run: python qa_release_docs.py
+      - name: Repository governance integrity
+        run: python qa_repo_governance.py
       - name: Diagnostic learning integrity
         run: python qa_diagnostic_learning.py
       - name: Material behaviour integrity
