@@ -1,4 +1,5 @@
 from pathlib import Path
+import re
 
 
 def require(condition, message):
@@ -6,98 +7,113 @@ def require(condition, message):
         raise AssertionError(message)
 
 
-index = Path("index.html").read_text(encoding="utf-8")
-shell = Path("pwa-shell.js").read_text(encoding="utf-8")
-repair = Path("repair.html").read_text(encoding="utf-8")
-reference_page = Path("reference-data.html").read_text(encoding="utf-8")
-service_worker = Path("service-worker.js").read_text(encoding="utf-8")
-approval = Path("assessment-evidence-approval.js").read_text(encoding="utf-8")
-training = Path("training-upgrade.js").read_text(encoding="utf-8")
-sbom = Path("desktop/electron/scripts/generate-sbom.cjs").read_text(encoding="utf-8")
-assessment_qa = Path("qa_assessment_quality.py").read_text(encoding="utf-8")
+def read(path):
+    return Path(path).read_text(encoding="utf-8")
 
-require("viewport-fit=cover" in index, "mobile viewport must preserve safe-area support")
-require("HEAD_ASSETS" in index and "BODY_SCRIPTS" in index, "bootstrap assets must be injected individually")
-require("for(const [needle,markup] of HEAD_ASSETS)" in index, "head assets must be checked one by one")
-require("for(const [src,tag] of BODY_SCRIPTS)" in index, "runtime scripts must be checked one by one")
-require('throw new Error("Core training content is incomplete")' in index, "malformed core content must fail closed")
-require('RUNTIME_ASSET_VERSION="20260826.5-app-shell-mobile-qa"' in index, "bootstrap must expose the current coherent app-shell release asset version")
-require("versionMarkup" in index and "?v=${RUNTIME_ASSET_VERSION}" in index, "all injected runtime assets must receive the coherent bundle token")
-require("fetch(`${CORE_URL}?v=${RUNTIME_ASSET_VERSION}`" in index, "core HTML must use the same coherent runtime token")
-require("window.MM_RUNTIME_ASSET_VERSION=RUNTIME_ASSET_VERSION" in index, "runtime bundle version marker missing")
-require("EXPECTED_STATIC_CACHE=\"mouldmaster-static-2026.08.26.2-app-shell-mobile-qa-20260826\"" in index, "browser bootstrap must know the current coherent PWA cache")
-require("ensureCoherentRuntime" in index and "navigator.serviceWorker.getRegistrations()" in index and "owned.map(r=>r.unregister())" in index, "normal browser bootstrap must retire stale controlling MouldMaster workers")
-require("const standalone=!!window.matchMedia?.('(display-mode: standalone)').matches" in index and "||standalone)return false" in index, "installed PWA bootstrap must not unregister its own offline worker")
-require("owned.map(k=>caches.delete(k))" in index and "fresh.searchParams.set('mmBundle',RUNTIME_ASSET_VERSION)" in index, "runtime coherence repair must clear scoped static caches and re-enter through the versioned bundle")
-require("if(await ensureCoherentRuntime())return;" in index, "runtime coherence repair must run before core and version-coupled scripts are assembled")
-require("clearStaleRuntimeCaches" in index and "k.startsWith('mouldmaster-static-')&&k!==EXPECTED_STATIC_CACHE" in index, "online browser bootstrap must clear stale MouldMaster runtime caches before loading scripts")
-require("await clearStaleRuntimeCaches();" in index, "stale browser caches must be cleared before assembling the runtime")
-require("new MutationObserver(scheduleSync)" in shell, "shell DOM sync must be coalesced")
-require("el.textContent!==value" in shell, "shell DOM sync must avoid no-op text mutations")
-require("syncUpdateCard" in shell and "[data-mm-update-card]" in shell, "runtime version card synchronization missing")
-require("dockReferenceLauncher" in shell and "getElementById('mm-src-open')" in shell, "reference launcher docking control missing")
-require("document.querySelector('.sidebar-foot')" in shell, "reference launcher must prefer the non-overlay sidebar dock")
-require("open.style.position='static'" in shell and "open.style.zIndex='auto'" in shell, "reference launcher must not remain a fixed high-z overlay")
-require("configureReferenceDrawer" in shell, "non-blocking reference drawer control missing")
-require("modal.setAttribute('aria-modal','false')" in shell, "reference drawer must not claim modal ownership of the whole app")
-require("pointer-events:none!important" in shell, "reference drawer backdrop must allow app interaction outside the panel")
-require(".mmsrc.mm-reference-drawer .mmsrc-panel{width:min(430px" in shell and "pointer-events:auto!important" in shell, "reference panel itself must remain interactive")
-require("calc(82px + env(safe-area-inset-bottom))" in shell, "mobile references drawer must clear the fixed bottom navigation and safe area")
-require("max-height:48dvh" in shell, "mobile references drawer must leave working app space visible")
 
-require("REFERENCE_DATA_URL='./reference-data.html'" in shell, "mobile Reference Data must have a dedicated route")
-require("openStandaloneReferenceData" in shell and "location.assign(REFERENCE_DATA_URL)" in shell, "mobile Reference Data must navigate to its own document")
-require("patchMobileMoreForReferenceData" in shell and "window.openMobileMenu=function()" in shell, "Reference Data must remain reachable from the mobile More menu")
-require("data-mm-reference-data-menu" in shell and "Reference data" in shell, "mobile More menu Reference Data action missing")
-require("dockReferenceDataLauncher" in shell and "getElementById('mmrd-open')" in shell, "Reference Data launcher docking control missing")
-require("open.dataset.mmDocked='mobile-more-standalone-page'" in shell, "mobile Reference Data launcher must be removed from the app surface")
-require("open.style.display='none'" in shell, "floating Reference Data launcher must be hidden on mobile")
-require(".mmrd.mm-reference-data-drawer,.mmrd.mm-reference-data-drawer[data-open=\"1\"]{display:none!important" in shell, "Reference Data overlay must be impossible on mobile")
-require("MM_REFERENCE_DATA_LAUNCHER_DOCK='mobile-more-standalone-page'" in shell, "Reference Data standalone route runtime marker missing")
-require("MM_REFERENCE_DATA_DRAWER_MODE='standalone-mobile-page-desktop-drawer'" in shell, "Reference Data desktop/mobile mode marker missing")
+def js_const(source, name):
+    match = re.search(rf"const\s+{re.escape(name)}\s*=\s*['\"]([^'\"]+)['\"]", source)
+    require(match is not None, f"missing JavaScript constant: {name}")
+    return match.group(1)
+
+
+def must(source, needles, context):
+    for needle in needles:
+        require(needle in source, f"{context}: missing {needle}")
+
+
+index = read("index.html")
+shell = read("pwa-shell.js")
+repair = read("repair.html")
+reference_page = read("reference-data.html")
+service_worker = read("service-worker.js")
+approval = read("assessment-evidence-approval.js")
+training = read("training-upgrade.js")
+sbom = read("desktop/electron/scripts/generate-sbom.cjs")
+assessment_qa = read("qa_assessment_quality.py")
+
+# The bootstrap and service worker must describe one coherent bundle, but the
+# QA must not hard-code a specific feature release token. Data/curriculum
+# additions are allowed to advance the bundle while preserving coherence.
+shell_release = js_const(index, "SHELL_RELEASE")
+runtime_asset_version = js_const(index, "RUNTIME_ASSET_VERSION")
+expected_static_cache = js_const(index, "EXPECTED_STATIC_CACHE")
+cache_version = js_const(service_worker, "CACHE_VERSION")
+cache_revision = js_const(service_worker, "CACHE_REVISION")
+require(shell_release == cache_version, "browser shell release and PWA cache version must match")
+require(expected_static_cache == f"mouldmaster-static-{cache_version}-{cache_revision}", "bootstrap expected cache must exactly match the service-worker cache identity")
+require(re.fullmatch(r"\d{8}\.\d+-[a-z0-9-]+", runtime_asset_version) is not None, "runtime bundle token must retain dated revision + family format")
+require(runtime_asset_version[:8] == ''.join(cache_version.split('.')[:3]), "runtime bundle date must align with the PWA release date")
+runtime_family = runtime_asset_version.split('-', 1)[1]
+cache_family = re.sub(r"-\d{8}$", "", cache_revision)
+require(runtime_family == cache_family, "runtime asset family and PWA cache revision family must match")
+
+must(index, [
+    "viewport-fit=cover", "HEAD_ASSETS", "BODY_SCRIPTS",
+    "for(const [needle,markup] of HEAD_ASSETS)", "for(const [src,tag] of BODY_SCRIPTS)",
+    'throw new Error("Core training content is incomplete")', "versionMarkup", "?v=${RUNTIME_ASSET_VERSION}",
+    "fetch(`${CORE_URL}?v=${RUNTIME_ASSET_VERSION}`", "window.MM_RUNTIME_ASSET_VERSION=RUNTIME_ASSET_VERSION",
+    "ensureCoherentRuntime", "navigator.serviceWorker.getRegistrations()", "owned.map(r=>r.unregister())",
+    "const standalone=!!window.matchMedia?.('(display-mode: standalone)').matches", "||standalone)return false",
+    "owned.map(k=>caches.delete(k))", "fresh.searchParams.set('mmBundle',RUNTIME_ASSET_VERSION)",
+    "if(await ensureCoherentRuntime())return;", "clearStaleRuntimeCaches",
+    "k.startsWith('mouldmaster-static-')&&k!==EXPECTED_STATIC_CACHE", "await clearStaleRuntimeCaches();"
+], "bootstrap hardening")
+
+must(shell, [
+    "new MutationObserver(scheduleSync)", "el.textContent!==value", "syncUpdateCard", "[data-mm-update-card]",
+    "dockReferenceLauncher", "getElementById('mm-src-open')", "document.querySelector('.sidebar-foot')",
+    "open.style.position='static'", "open.style.zIndex='auto'", "configureReferenceDrawer",
+    "modal.setAttribute('aria-modal','false')", "pointer-events:none!important",
+    ".mmsrc.mm-reference-drawer .mmsrc-panel{width:min(430px", "pointer-events:auto!important",
+    "calc(82px + env(safe-area-inset-bottom))", "max-height:48dvh",
+    "REFERENCE_DATA_URL='./reference-data.html'", "openStandaloneReferenceData", "location.assign(REFERENCE_DATA_URL)",
+    "patchMobileMoreForReferenceData", "window.openMobileMenu=function()", "data-mm-reference-data-menu", "Reference data",
+    "dockReferenceDataLauncher", "getElementById('mmrd-open')", "open.dataset.mmDocked='mobile-more-standalone-page'",
+    "open.style.display='none'", ".mmrd.mm-reference-data-drawer,.mmrd.mm-reference-data-drawer[data-open=\"1\"]{display:none!important",
+    "MM_REFERENCE_DATA_LAUNCHER_DOCK='mobile-more-standalone-page'",
+    "MM_REFERENCE_DATA_DRAWER_MODE='standalone-mobile-page-desktop-drawer'",
+    "dockReferenceLauncher();configureReferenceDrawer();dockReferenceDataLauncher();configureReferenceDataDrawer();addNZLegacyNote()",
+    "runSync();\nwindow.addEventListener('resize',scheduleSync",
+    "mode:standalone?'Installed PWA':'Browser'", "retireBrowserOfflineRuntime",
+    "displayContext().mode!=='Browser'||!navigator.onLine", "owned.map(r=>r.unregister())", "owned.map(k=>caches.delete(k))",
+    "fresh.searchParams.set('mmFresh',BROWSER_FRESH_TOKEN)", "location.replace(fresh.href)",
+    "displayContext().mode!=='Installed PWA'||!('serviceWorker' in navigator)",
+    "MM_BROWSER_UPDATE_MODE='network-current-no-service-worker'", "MM_REFERENCE_DRAWER_MODE='non-blocking'",
+    "desktopRelease", "location.hostname==='127.0.0.1'", "Electron"
+], "shell hardening")
 require("ensureReferenceDataPage" not in shell and "openReferenceDataPage" not in shell, "legacy in-app Reference Data modal reparenting must be removed")
-require("dockReferenceLauncher();configureReferenceDrawer();dockReferenceDataLauncher();configureReferenceDataDrawer();addNZLegacyNote()" in shell, "both reference systems must be normalized during shell synchronization")
-require("runSync();\nwindow.addEventListener('resize',scheduleSync" in shell, "reference controls must normalize immediately and on viewport changes")
 
-require("mode:standalone?'Installed PWA':'Browser'" in shell, "browser and installed-PWA update modes must be distinct")
-require("retireBrowserOfflineRuntime" in shell and "displayContext().mode!=='Browser'||!navigator.onLine" in shell, "normal browser mode must retire old MouldMaster offline runtime state")
-require("owned.map(r=>r.unregister())" in shell and "owned.map(k=>caches.delete(k))" in shell, "browser cleanup must unregister the scoped worker and clear only MouldMaster static caches")
-require("fresh.searchParams.set('mmFresh',BROWSER_FRESH_TOKEN)" in shell and "location.replace(fresh.href)" in shell, "browser cleanup must reload through a fresh network URL when old offline state was removed")
-require("displayContext().mode!=='Installed PWA'||!('serviceWorker' in navigator)" in shell, "service worker registration must be reserved for the installed PWA")
-require("MM_BROWSER_UPDATE_MODE='network-current-no-service-worker'" in shell, "browser network-current runtime marker missing")
-require("MouldMaster browser repair" in repair, "deterministic browser repair entry point missing")
-require("navigator.serviceWorker.getRegistrations()" in repair and "r=>r.unregister()" in repair, "repair page must retire scoped MouldMaster service workers")
-require("k=>k.startsWith('mouldmaster-static-')" in repair and "caches.delete(k)" in repair, "repair page must remove only MouldMaster static caches")
+must(repair, [
+    "MouldMaster browser repair", "navigator.serviceWorker.getRegistrations()", "r=>r.unregister()",
+    "k=>k.startsWith('mouldmaster-static-')", "caches.delete(k)", "mmFresh", "location.replace(target.href)"
+], "repair route")
 require("localStorage.clear" not in repair and "sessionStorage.clear" not in repair, "repair page must not delete learner storage")
-require("mmFresh" in repair and "location.replace(target.href)" in repair, "repair page must redirect to a fresh network app URL")
 
-require('<script src="./reference-data.js"></script>' in reference_page, "standalone Reference Data page must use the canonical data pack")
-require('<script src="./reference-2026-expansion.js"></script>' in reference_page, "standalone Reference Data page must load the current practical expansion")
-require('id="mm-reference-back"' in reference_page and "history.back()" in reference_page, "standalone Reference Data page must provide app return navigation")
-require("position:static!important" in reference_page and ".mmrd-close{display:none!important}" in reference_page, "standalone Reference Data page must not behave like a modal")
-require("modal.setAttribute('role','main')" in reference_page and "MM_REFERENCE_DATA_PAGE_MODE='standalone-document-full-library'" in reference_page, "standalone Reference Data page semantics/runtime marker missing")
-require("CACHE_VERSION='2026.08.26.2'" in service_worker, "PWA cache version must stay aligned with the browser release")
-require("CACHE_REVISION='app-shell-mobile-qa-20260826'" in service_worker and "${CACHE_VERSION}-${CACHE_REVISION}" in service_worker, "PWA cache revision must stay aligned with the current app-shell release bundle")
-require("'./repair.html'" in service_worker, "installed PWA must carry the deterministic repair route offline")
-require("runtimeCritical=url.pathname.endsWith('.js')||url.pathname.endsWith('.json')" in service_worker, "version-coupled runtime scripts must use network-first update behaviour")
-require("const network=await fetchAndCache(event,url)" in service_worker and "if(network&&network.ok)return network" in service_worker, "critical runtime files must prefer a fresh network response before cache fallback")
-require("'./reference-data.html'" in service_worker and "'./reference-2026-expansion.js'" in service_worker, "expanded Reference Data assets must be available offline")
-require("'./diagnostic-learning-labs.js'" in service_worker, "Diagnostic Learning Labs must be available offline")
-require("'./material-behaviour-labs.js'" in service_worker, "Material Behaviour Labs must be available offline")
-require("'./assessment-evidence-sources.js'" in service_worker and "'./evidence-maturity-deep-dive.js'" in service_worker and "'./evidence-maturity-formal-bridge.js'" in service_worker and "'./lesson-evidence-depth.js'" in service_worker and "'./assessment-evidence-approval.js'" in service_worker, "evidence maturity, triangulation and approval assets must be available offline")
-require("'./curriculum-integration.js'" in service_worker and "'./specialist-curriculum.js'" in service_worker and "'./learning-analytics.js'" in service_worker, "current curriculum and local learner validation assets must be available offline")
+must(reference_page, [
+    '<script src="./reference-data.js"></script>', '<script src="./reference-2026-expansion.js"></script>',
+    'id="mm-reference-back"', "history.back()", "position:static!important", ".mmrd-close{display:none!important}",
+    "modal.setAttribute('role','main')", "MM_REFERENCE_DATA_PAGE_MODE='standalone-document-full-library'"
+], "standalone Reference Data")
 
-require("const coverageOk=!(summary.total!==157" in approval, "evidence runtime must detect incomplete initialized coverage")
+must(service_worker, [
+    "${CACHE_VERSION}-${CACHE_REVISION}", "'./repair.html'",
+    "runtimeCritical=url.pathname.endsWith('.js')||url.pathname.endsWith('.json')",
+    "const network=await fetchAndCache(event,url)", "if(network&&network.ok)return network",
+    "'./reference-data.html'", "'./reference-2026-expansion.js'", "'./diagnostic-learning-labs.js'",
+    "'./material-behaviour-labs.js'", "'./assessment-evidence-sources.js'", "'./evidence-maturity-deep-dive.js'",
+    "'./evidence-maturity-formal-bridge.js'", "'./lesson-evidence-depth.js'", "'./assessment-evidence-approval.js'",
+    "'./curriculum-integration.js'", "'./specialist-curriculum.js'", "'./learning-analytics.js'"
+], "PWA hardening")
+
+must(approval, [
+    "const coverageOk=!(summary.total!==157", "status:coverageOk?'approved':'update-required'",
+    "function scheduleApproval()", "DOMContentLoaded',()=>setTimeout(buildApproval,0)",
+    "Evidence metadata could not finish loading.", "showUpdateWarning"
+], "evidence approval hardening")
 require("throw new Error('Evidence approval coverage failure" not in approval, "incomplete evidence coverage must not crash the learning app")
-require("status:coverageOk?'approved':'update-required'" in approval, "incomplete evidence state must fail closed instead of claiming approval")
-require("function scheduleApproval()" in approval and "DOMContentLoaded',()=>setTimeout(buildApproval,0)" in approval, "evidence snapshot must run after earlier DOMContentLoaded content upgrades")
-require("document.addEventListener('DOMContentLoaded',init)" in training, "training scenario upgrade remains DOMContentLoaded-driven; evidence ordering guard depends on this known startup sequence")
-require("Evidence metadata could not finish loading." in approval and "showUpdateWarning" in approval, "learners must receive a non-blocking notice only after initialized coverage is genuinely incomplete")
-
-require("MM_REFERENCE_DRAWER_MODE='non-blocking'" in shell, "reference drawer runtime mode marker missing")
-require("desktopRelease" in shell, "desktop runtime version detection missing")
-require("location.hostname==='127.0.0.1'" in shell and "Electron" in shell, "desktop display context must be constrained to the Electron loopback runtime")
+require("document.addEventListener('DOMContentLoaded',init)" in training, "training scenario upgrade remains DOMContentLoaded-driven")
 require("npm_execpath" in sbom and "result.error" in sbom, "desktop SBOM generation must use the npm CLI entry point and report spawn failures")
 require("NamedTemporaryFile" in assessment_qa and "['node','-e',node]" not in assessment_qa, "assessment runtime QA must not exceed OS command-line limits")
 
-print("MouldMaster runtime hardening QA passed")
+print(f"MouldMaster runtime hardening QA passed ({runtime_asset_version}; {expected_static_cache})")
