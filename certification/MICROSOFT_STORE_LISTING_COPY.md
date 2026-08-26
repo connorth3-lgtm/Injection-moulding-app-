@@ -100,7 +100,7 @@ The application provides local learner progress, notes and learning-completion r
 The repository's public privacy and support pages are listed above. Any owner/legal contact details required by Partner Center must be supplied from the actual developer account and must not be fabricated in source control.
 
 ## Current Store package baseline
-- Open desktop release: `2026.08.26.4`
+- Open desktop release: `2026.08.26.5`
 - Intended package route: MSIX / MSIX bundle / MSIX upload package
 - Architecture workflow: x64 + arm64
 - Store identity: supplied at workflow runtime from the exact Partner Center product values
