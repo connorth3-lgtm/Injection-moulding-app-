@@ -31,6 +31,8 @@ on:
       - 'lesson-evidence-depth.js'
       - 'assessment-evidence-approval.js'
       - 'pwa-shell.js'
+      - 'learning-experience.js'
+      - 'process-data-diagnostics.js'
       - 'source-library.js'
       - 'reference-data.js'
       - 'reference-data.html'
@@ -51,6 +53,8 @@ on:
       - 'qa_assessment_quality.py'
       - 'qa_assessment_evidence.py'
       - 'qa_evidence_maturity.py'
+      - 'qa_learning_experience.py'
+      - 'qa_process_data_diagnostics.py'
       - 'qa_material_behaviour.py'
       - 'qa_assessment_storage_scope.py'
       - 'qa_stable_review_bridge.py'
@@ -141,6 +145,12 @@ jobs:
       - name: Evidence maturity seven-gap deep dive
         working-directory: .
         run: python qa_evidence_maturity.py
+      - name: Guided process-data diagnostic QA
+        working-directory: .
+        run: python qa_process_data_diagnostics.py
+      - name: Learner experience progression and mobile QA
+        working-directory: .
+        run: python qa_learning_experience.py
       - name: Learner-scoped assessment storage QA
         working-directory: .
         run: python qa_assessment_storage_scope.py

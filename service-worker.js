@@ -40,6 +40,7 @@ const CORE=[
   './assessment-evidence-approval.js',
   './pwa-shell.js',
   './learning-experience.js',
+  './process-data-diagnostics.js',
   './repair.html',
   './privacy.html',
   './support.html'

@@ -79,6 +79,12 @@ jobs:
       - name: Validate evidence maturity seven-gap deep dive
         working-directory: .
         run: python qa_evidence_maturity.py
+      - name: Validate guided process-data diagnostics
+        working-directory: .
+        run: python qa_process_data_diagnostics.py
+      - name: Validate learner experience progression and mobile flow
+        working-directory: .
+        run: python qa_learning_experience.py
       - name: Validate learner-scoped assessment storage
         working-directory: .
         run: python qa_assessment_storage_scope.py
