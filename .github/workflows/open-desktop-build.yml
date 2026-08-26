@@ -34,6 +34,7 @@ on:
       - 'learning-experience.js'
       - 'process-data-diagnostics.js'
       - 'curriculum-integration.js'
+      - 'specialist-curriculum.js'
       - 'learning-analytics.js'
       - 'source-library.js'
       - 'reference-data.js'
@@ -58,6 +59,7 @@ on:
       - 'qa_learning_experience.py'
       - 'qa_process_data_diagnostics.py'
       - 'qa_curriculum_integration.py'
+      - 'qa_specialist_curriculum.py'
       - 'qa_learning_analytics.py'
       - 'qa_material_behaviour.py'
       - 'qa_assessment_storage_scope.py'
@@ -158,6 +160,9 @@ jobs:
       - name: Curriculum theory-practice-evidence integration
         working-directory: .
         run: python qa_curriculum_integration.py
+      - name: Specialist curriculum gap extensions
+        working-directory: .
+        run: python qa_specialist_curriculum.py
       - name: Privacy-preserving learner validation analytics
         working-directory: .
         run: python qa_learning_analytics.py
