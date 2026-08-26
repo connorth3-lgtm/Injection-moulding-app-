@@ -23,9 +23,9 @@
   (async function(){
     "use strict";
     const SHELL_RELEASE="2026.08.26.2";
-    const RUNTIME_ASSET_VERSION="20260826.6-process-data-atlas";
+    const RUNTIME_ASSET_VERSION="20260826.7-process-data-intake";
     const CORE_URL="./MouldMaster_Core_App.html";
-    const EXPECTED_STATIC_CACHE="mouldmaster-static-2026.08.26.2-process-data-atlas-20260826";
+    const EXPECTED_STATIC_CACHE="mouldmaster-static-2026.08.26.2-process-data-intake-20260826";
     const HEAD_ASSETS=[
       ['manifest.webmanifest','<link rel="manifest" href="./manifest.webmanifest">'],
       ['rel="icon" type="image/png" sizes="192x192"','<link rel="icon" type="image/png" sizes="192x192" href="./mouldmaster-192.png">'],
@@ -76,6 +76,7 @@
       ['./process-data-20-pass-11-15.js','<script src="./process-data-20-pass-11-15.js">'],
       ['./process-data-20-pass-16-20.js','<script src="./process-data-20-pass-16-20.js">'],
       ['./process-data-20-pass-atlas.js','<script src="./process-data-20-pass-atlas.js">'],
+      ['./process-data-local-intake.js','<script src="./process-data-local-intake.js">'],
       ['./curriculum-integration.js','<script src="./curriculum-integration.js">'],
       ['./specialist-curriculum.js','<script src="./specialist-curriculum.js">'],
       ['./mould-master-workspace.js','<script src="./mould-master-workspace.js">'],
