@@ -100,6 +100,26 @@ for(const viewport of [{name:'android-412x915',width:412,height:915},{name:'smal
       await expectOnlyCurrent(page,'Practice');
     });
 
+    test('Open 20-pass · 200-case atlas, filter a pass, and inspect the full evidence chain',async({page})=>{
+      await openApp(page);
+      await page.getByRole('button',{name:/Analyse process data/i}).click();
+      await expect(page.getByRole('button',{name:'Open 20-pass · 200-case atlas'})).toBeVisible();
+      await page.getByRole('button',{name:'Open 20-pass · 200-case atlas'}).click();
+      await expect(page.getByRole('heading',{name:'200 advanced process-data cases'})).toBeVisible();
+      await expect(page.locator('.at20-card')).toHaveCount(200);
+      await page.locator('[data-at20-pass]').selectOption('16');
+      await expect(page.locator('.at20-card')).toHaveCount(10);
+      await page.getByRole('button',{name:'Inspect evidence case'}).first().click();
+      await expect(page.locator('.at20-table tbody tr')).toHaveCount(4);
+      await expect(page.getByText('Ranked root-cause mechanism')).toBeVisible();
+      await expect(page.getByText('Best next evidence')).toBeVisible();
+      await expect(page.getByText('Verification')).toBeVisible();
+      await expect(page.getByText(/Compensation trap/i)).toBeVisible();
+      await expect(page.getByText(/Baseline index 100/i)).toBeVisible();
+      await expect(page.getByRole('button',{name:'Export 72-cycle CSV'})).toBeVisible();
+      await expectOnlyCurrent(page,'Practice');
+    });
+
     test('Lesson action bar sits above the global mobile navigation',async({page})=>{
       await openApp(page);
       await page.getByRole('button',{name:/Continue lesson/i}).first().click();
