@@ -10,7 +10,7 @@ Use the repository's open Electron desktop implementation under `desktop/electro
 
 The active Store route is the **open Electron/MSIX desktop package**, not the PWA wrapper. The PWA remains a supported browser/installable-web lane and can still be evaluated separately with PWABuilder, but Store metadata and certification notes must describe the package actually being submitted.
 
-Current open desktop baseline: `2026.08.26.4`.
+Current open desktop baseline: `2026.08.26.5`.
 
 ## What Microsoft currently requires
 
@@ -43,7 +43,7 @@ Microsoft recommends running the Windows App Certification Kit before submission
 - [x] Dependency licence inventory is generated
 - [x] CycloneDX SBOM is generated
 - [x] GitHub Windows CI builds the portable open desktop package
-- [x] Tagged open desktop release lane is configured for `desktop-v2026.08.26.4`
+- [x] Tagged open desktop release lane is configured for `desktop-v2026.08.26.5`
 - [x] Store workflow builds x64 + arm64 MSIX, MSIX bundle and MSIX upload output
 - [x] Store workflow preserves the four-part desktop release version
 - [x] Store workflow enforces package integrity
@@ -64,10 +64,10 @@ Do not substitute a friendly publisher name for the `Identity/Publisher` certifi
 ## Pre-submission technical checklist
 
 ### Source/release provenance
-- [x] MouldMaster Release QA is configured for desktop release `2026.08.26.4`
-- [x] Open Desktop Build is configured for desktop release `2026.08.26.4`
+- [x] MouldMaster Release QA is configured for desktop release `2026.08.26.5`
+- [x] Open Desktop Build is configured for desktop release `2026.08.26.5`
 - [x] Question evidence approval is a required package gate
-- [ ] Confirm the final `2026.08.26.4` release workflow is green on the exact intended source commit
+- [ ] Confirm the final `2026.08.26.5` release workflow is green on the exact intended source commit
 - [ ] Record the exact commit selected for Store submission
 - [ ] Confirm the Store workflow is run from that same intended source commit
 
