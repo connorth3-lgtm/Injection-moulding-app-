@@ -1,5 +1,5 @@
-const CACHE_VERSION='2026.08.26.1';
-const CACHE_REVISION='curriculum-release-parity-20260826';
+const CACHE_VERSION='2026.08.26.2';
+const CACHE_REVISION='app-shell-mobile-qa-20260826';
 const STATIC_CACHE=`mouldmaster-static-${CACHE_VERSION}-${CACHE_REVISION}`;
 const CORE=[
   './index.html',
@@ -38,11 +38,14 @@ const CORE=[
   './evidence-maturity-formal-bridge.js',
   './lesson-evidence-depth.js',
   './assessment-evidence-approval.js',
+  './app-shell-registry.js',
   './pwa-shell.js',
   './learning-experience.js',
   './process-data-diagnostics.js',
   './curriculum-integration.js',
   './specialist-curriculum.js',
+  './mould-master-workspace.js',
+  './app-shell-finalize.js',
   './learning-analytics.js',
   './repair.html',
   './privacy.html',

@@ -59,11 +59,14 @@ jobs:
           node --check reference-browser-ui.js
           node --check diagnostic-learning-labs.js
           node --check material-behaviour-labs.js
+          node --check app-shell-registry.js
           node --check pwa-shell.js
           node --check learning-experience.js
           node --check process-data-diagnostics.js
           node --check curriculum-integration.js
           node --check specialist-curriculum.js
+          node --check mould-master-workspace.js
+          node --check app-shell-finalize.js
           node --check learning-analytics.js
           node --check desktop/electron/src/main.cjs
           node --check desktop/electron/scripts/generate-integrity.cjs
@@ -94,6 +97,8 @@ jobs:
           python qa_evidence_maturity.py
           python qa_process_data_diagnostics.py
           python qa_learning_experience.py
+          python qa_app_shell_registry.py
+          python qa_mould_master_workspace.py
           python qa_curriculum_integration.py
           python qa_specialist_curriculum.py
           python qa_learning_analytics.py

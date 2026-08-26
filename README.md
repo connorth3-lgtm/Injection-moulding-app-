@@ -17,8 +17,8 @@ The project maintainers do not intend to seek patent protection over implementat
 
 ## Current release lanes
 
-- PWA / browser shell: `2026.08.26.1`
-- Open Windows desktop: `2026.08.26.3`
+- PWA / browser shell: `2026.08.26.2`
+- Open Windows desktop: `2026.08.26.4`
 - Training content: `2026.08.26.1`
 - Audited assessment bank: `2026.08.24.2`
 - Assessment quality / analytics hardening: `2026.08.24.3`
@@ -62,7 +62,7 @@ The normal open-source Windows desktop implementation is under:
 
 `desktop/electron/`
 
-Desktop `2026.08.26.3` is published from the exact repository source by `.github/workflows/publish-open-desktop.yml` to the tagged GitHub Release recorded in `version.json`. The release includes the portable Windows executable, SHA-256 hashes, the source commit, bundled-asset integrity manifest, dependency licence inventory, CycloneDX SBOM and assessment/evidence/source-freshness QA reports.
+Desktop `2026.08.26.4` is published from the exact repository source by `.github/workflows/publish-open-desktop.yml` to the tagged GitHub Release recorded in `version.json`. The release includes the portable Windows executable, SHA-256 hashes, the source commit, bundled-asset integrity manifest, dependency licence inventory, CycloneDX SBOM and assessment/evidence/source-freshness QA reports.
 
 Security controls include:
 - SHA-256 verification of bundled MouldMaster application assets before launch;
@@ -119,7 +119,7 @@ Do not bypass guards, interlocks or hazardous-energy controls to follow training
 
 ## Release QA
 
-The release workflows run structural, runtime, question/answer, assessment-quality, learner-scoped analytics, evidence-approval, evidence-maturity, guided-data, learner-experience, curriculum-integration, specialist-curriculum, material-behaviour, source-freshness, reference/research, desktop-security and certification-readiness checks. Important entry points include:
+The release workflows run structural, runtime, question/answer, assessment-quality, learner-scoped analytics, evidence-approval, evidence-maturity, guided-data, learner-experience, curriculum-integration, specialist-curriculum, material-behaviour, app-shell/mobile-browser, Mould Master workspace, source-freshness, reference/research, desktop-security and certification-readiness checks. Important entry points include:
 
 - `qa_release.py`
 - `qa_runtime_hardening.py`
@@ -133,6 +133,8 @@ The release workflows run structural, runtime, question/answer, assessment-quali
 - `qa_evidence_maturity.py`
 - `qa_process_data_diagnostics.py`
 - `qa_learning_experience.py`
+- `qa_app_shell_registry.py`
+- `qa_mould_master_workspace.py`
 - `qa_curriculum_integration.py`
 - `qa_specialist_curriculum.py`
 - `qa_learning_analytics.py`

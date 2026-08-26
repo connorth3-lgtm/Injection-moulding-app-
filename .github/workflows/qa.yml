@@ -55,11 +55,14 @@ jobs:
           node --check reference-browser-ui.js
           node --check diagnostic-learning-labs.js
           node --check material-behaviour-labs.js
+          node --check app-shell-registry.js
           node --check pwa-shell.js
           node --check learning-experience.js
           node --check process-data-diagnostics.js
           node --check curriculum-integration.js
           node --check specialist-curriculum.js
+          node --check mould-master-workspace.js
+          node --check app-shell-finalize.js
           node --check learning-analytics.js
           node --check desktop/electron/src/main.cjs
           node --check desktop/electron/scripts/generate-integrity.cjs
@@ -92,6 +95,10 @@ jobs:
         run: python qa_process_data_diagnostics.py
       - name: Learner experience progression and mobile integrity
         run: python qa_learning_experience.py
+      - name: Canonical app shell registry integrity
+        run: python qa_app_shell_registry.py
+      - name: Mould Master evidence workspace integrity
+        run: python qa_mould_master_workspace.py
       - name: Curriculum theory-practice-evidence integration
         run: python qa_curriculum_integration.py
       - name: Specialist curriculum gap extensions
