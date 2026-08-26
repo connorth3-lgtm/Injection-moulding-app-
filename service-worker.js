@@ -41,6 +41,7 @@ const CORE=[
   './pwa-shell.js',
   './learning-experience.js',
   './process-data-diagnostics.js',
+  './learning-analytics.js',
   './repair.html',
   './privacy.html',
   './support.html'

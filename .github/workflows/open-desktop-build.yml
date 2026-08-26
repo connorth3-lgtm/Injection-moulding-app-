@@ -33,6 +33,7 @@ on:
       - 'pwa-shell.js'
       - 'learning-experience.js'
       - 'process-data-diagnostics.js'
+      - 'learning-analytics.js'
       - 'source-library.js'
       - 'reference-data.js'
       - 'reference-data.html'
@@ -55,6 +56,7 @@ on:
       - 'qa_evidence_maturity.py'
       - 'qa_learning_experience.py'
       - 'qa_process_data_diagnostics.py'
+      - 'qa_learning_analytics.py'
       - 'qa_material_behaviour.py'
       - 'qa_assessment_storage_scope.py'
       - 'qa_stable_review_bridge.py'
@@ -151,6 +153,9 @@ jobs:
       - name: Learner experience progression and mobile QA
         working-directory: .
         run: python qa_learning_experience.py
+      - name: Privacy-preserving learner validation analytics
+        working-directory: .
+        run: python qa_learning_analytics.py
       - name: Learner-scoped assessment storage QA
         working-directory: .
         run: python qa_assessment_storage_scope.py
