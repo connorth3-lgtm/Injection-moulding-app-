@@ -34,24 +34,23 @@ function parseCsv(text){
   return {headers,rows:rows.slice(1,MAX_ROWS+1).map(r=>Object.fromEntries(headers.map((h,i)=>[h,String(r[i]??'').trim()])))}
 }
 function numericColumn(rows,key){let present=0,numeric=0;for(const r of rows){const v=String(r[key]??'').trim();if(!v)continue;present++;if(Number.isFinite(Number(v)))numeric++}return present>0&&numeric/present>=0.9}
-function classify(headers,rows){return headers.map(key=>{if(DROP_RE.test(key))return {key,action:'drop',reason:'direct/person identifier'};if(TIME_RE.test(key))return {key,action:'drop',reason:'timestamp/date removed; row order becomes shot_index'};if(ALIAS_RE.test(key))return {key,action:'alias',reason:'operational identifier replaced with stable per-file alias'};if(numericColumn(rows,key))return {key,action:'keep',reason:'numeric process/quality signal'};if(QUALITY_RE.test(key))return {key,action:'quality',reason:'limited quality category'};return {key,action:'drop',reason:'unrecognised free-text field'}})}
+function classify(headers,rows){return headers.map(key=>{if(DROP_RE.test(key))return {key,action:'drop',reason:'direct/person identifier'};if(TIME_RE.test(key))return {key,action:'drop',reason:'timestamp/date removed; row order becomes shot_index'};if(ALIAS_RE.test(key))return {key,action:'alias',reason:'operational identifier replaced with stable per-file alias'};if(numericColumn(rows,key))return {key,action:'keep',reason:'numeric process/quality signal'};if(QUALITY_RE.test(key))return {key,action:'quality',reason:'limited quality category; unknown labels aliased per file'};return {key,action:'drop',reason:'unrecognised free-text field'}})}
 function aliasPrefix(key){return key.replace(/[^a-z0-9]+/gi,'-').replace(/^-+|-+$/g,'').slice(0,24)||'id'}
 function prepare(parsed){
   const headers=parsed?.headers||[],rows=(parsed?.rows||[]).slice(0,MAX_ROWS),rules=classify(headers,rows),maps={};
-  for(const rule of rules)if(rule.action==='alias')maps[rule.key]=new Map();
+  for(const rule of rules)if(rule.action==='alias'||rule.action==='quality')maps[rule.key]=new Map();
   const out=rows.map((raw,index)=>{
     const row={shot_index:index+1};
     for(const rule of rules){const v=String(raw[rule.key]??'').trim();if(rule.action==='drop')continue;
       if(rule.action==='keep'){row[rule.key]=v===''?'':Number(v);continue}
-      if(rule.action==='quality'){const q=v.toLowerCase();row[rule.key]=SAFE_QUALITY.has(q)?q:(q?`category-${Math.abs(hash32(q))%1000}`:'');continue}
+      if(rule.action==='quality'){const q=v.toLowerCase();if(!q){row[rule.key]='';continue}if(SAFE_QUALITY.has(q)){row[rule.key]=q;continue}const m=maps[rule.key];if(!m.has(v))m.set(v,`${aliasPrefix(rule.key)}-${String(m.size+1).padStart(2,'0')}`);row[rule.key]=m.get(v);continue}
       if(rule.action==='alias'){if(!v){row[rule.key]='';continue}const m=maps[rule.key];if(!m.has(v))m.set(v,`${aliasPrefix(rule.key)}-${String(m.size+1).padStart(2,'0')}`);row[rule.key]=m.get(v)}
     }
     return row
   });
   const outputHeaders=['shot_index',...rules.filter(r=>r.action!=='drop').map(r=>r.key)];
-  return {schema:1,version:VERSION,rows:out,headers:outputHeaders,rules,summary:{inputRows:rows.length,outputRows:out.length,keptNumeric:rules.filter(r=>r.action==='keep').length,aliased:rules.filter(r=>r.action==='alias').length,quality:rules.filter(r=>r.action==='quality').length,dropped:rules.filter(r=>r.action==='drop').length},boundary:'Prepared locally in memory. Raw identifiers, person/operator fields and timestamps are not retained by this module. Output is pseudonymised/prepared data, not proof of anonymity and not a production recipe.'}
+  return {schema:1,version:VERSION,rows:out,headers:outputHeaders,rules,summary:{inputRows:rows.length,outputRows:out.length,keptNumeric:rules.filter(r=>r.action==='keep').length,aliased:rules.filter(r=>r.action==='alias').length,quality:rules.filter(r=>r.action==='quality').length,dropped:rules.filter(r=>r.action==='drop').length},boundary:'Prepared locally in memory. Raw identifiers, person/operator fields and timestamps are not retained by this module. Unknown categorical quality labels are aliased only within the current prepared file. Output is pseudonymised/prepared data, not proof of anonymity and not a production recipe.'}
 }
-function hash32(s){let h=2166136261;for(const ch of String(s)){h^=ch.charCodeAt(0);h=Math.imul(h,16777619)}return h|0}
 function csvCell(v){const s=String(v??'');return /[",\n]/.test(s)?`"${s.replace(/"/g,'""')}"`:s}
 function toCsv(prepared){const lines=[prepared.headers.map(csvCell).join(',')];for(const row of prepared.rows)lines.push(prepared.headers.map(k=>csvCell(row[k])).join(','));return lines.join('\n')+'\n'}
 function templateCsv(){return 'timestamp,machine,mould,cavity,material_grade,material_lot,fill_time_s,transfer_pressure_mpa,cushion_mm,peak_cavity_pressure_mpa,pressure_time_area,part_mass_g,cycle_time_s,cooling_time_s,supply_temp_c,return_temp_c,flow_lmin,quality_result,defect_code\n'}
@@ -73,5 +72,5 @@ function rulesHtml(p){return `<div class="pdi-rules">${p.rules.map(r=>`<div clas
 function open(){BASE.open();requestAnimationFrame(()=>render())}
 const originalOpen=BASE.open.bind(BASE);BASE.open=function(){const r=originalOpen();requestAnimationFrame(attachLauncher);return r};
 attachLauncher();
-window.MM_PROCESS_DATA_LOCAL_INTAKE={version:VERSION,maxRows:MAX_ROWS,parseCsv,prepare,toCsv,templateCsv,open,scope:'Local in-memory CSV preparation only; strips direct/person identifiers and timestamps, aliases operational identifiers, keeps evidence signals, performs no upload/storage/machine control and does not define production limits.'};
+window.MM_PROCESS_DATA_LOCAL_INTAKE={version:VERSION,maxRows:MAX_ROWS,parseCsv,prepare,toCsv,templateCsv,open,scope:'Local in-memory CSV preparation only; strips direct/person identifiers and timestamps, aliases operational identifiers and unknown quality categories per prepared file, keeps evidence signals, performs no upload/storage/machine control and does not define production limits.'};
 })();
