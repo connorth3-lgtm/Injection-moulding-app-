@@ -9,9 +9,9 @@ def need(ok,msg):
 
 V=json.loads(text('version.json'))
 expected={
- 'android_release':'2026.08.24.1',
- 'desktop_release':'2026.08.26.2',
- 'content_version':'2026.08.24.2',
+ 'android_release':'2026.08.26.1',
+ 'desktop_release':'2026.08.26.3',
+ 'content_version':'2026.08.26.1',
  'question_bank_version':'2026.08.24.2',
  'assessment_quality_version':'2026.08.24.3',
  'assessment_storage_scope_version':'2026.08.24.4',
@@ -29,15 +29,30 @@ for label,k in [
     need(f'- {label}: `{V[k]}`' in readme,f'README release lane stale/missing: {label}')
 need('qa_assessment_storage_scope.py' in readme,'README must list learner-scoped analytics QA')
 need('qa_assessment_evidence.py' in readme,'README must list question evidence approval QA')
+need('qa_curriculum_integration.py' in readme,'README must list curriculum integration QA')
+need('qa_specialist_curriculum.py' in readme,'README must list specialist curriculum QA')
+need('120 core lessons' in readme and 'Twelve optional specialist extensions' in readme,'README must describe current core/specialist curriculum boundary')
 need(V.get('desktop_release_tag')==f"desktop-v{V['desktop_release']}",'desktop release tag/version mismatch')
 need(V.get('desktop_release_url')==f"https://github.com/{V['repository']}/releases/tag/{V['desktop_release_tag']}",'desktop release URL/tag mismatch')
 
+pkg=json.loads(text('desktop/electron/package.json'))
+release_parts=[str(int(x)) for x in V['desktop_release'].split('.')]
+need(pkg.get('version')=='.'.join(release_parts[:3]),'desktop package version must match desktop_release')
+need(str(pkg.get('build',{}).get('buildNumber'))==release_parts[3],'desktop buildNumber must match desktop_release')
+need(pkg.get('build',{}).get('buildVersion')=='.'.join(release_parts),'desktop buildVersion must match desktop_release')
+
 android=text('ANDROID_INSTALL_README.txt')
-for marker in ['assessment-storage-scope.js','assessment-final-hardening.js','assessment-evidence-sources.js','assessment-evidence-approval.js','reference-20x-extension.js','privacy.html','support.html']:
+for marker in [
+ 'assessment-storage-scope.js','assessment-final-hardening.js','assessment-evidence-sources.js','assessment-evidence-approval.js',
+ 'reference-20x-extension.js','diagnostic-learning-labs.js','material-behaviour-labs.js','process-data-diagnostics.js',
+ 'learning-experience.js','curriculum-integration.js','specialist-curriculum.js','learning-analytics.js',
+ 'evidence-maturity-deep-dive.js','evidence-maturity-formal-bridge.js','lesson-evidence-depth.js','privacy.html','support.html']:
     need(marker in android,f'Android install inventory missing: {marker}')
 for label,k in [('Android/PWA shell','android_release'),('Training content','content_version'),('Audited question bank','question_bank_version'),('Assessment quality / analytics hardening','assessment_quality_version'),('Learner-scoped assessment storage','assessment_storage_scope_version'),('Question evidence approval','assessment_evidence_version')]:
     need(f'{label}: {V[k]}' in android,f'Android install version stale/missing: {label}')
 need('stable question IDs independent of content-release wording' in android,'Android assessment-ID description is stale')
+need('All 157 keyed learner questions' in android,'Android evidence-approval question count is stale')
+need('120 core lessons' in android and '12 specialist extensions' in android,'Android curriculum boundary is stale')
 
 upload=text('UPLOAD_README.txt')
 need('LEGACY WINDOWS RECOVERY FEED' in upload,'Windows upload instructions must identify the recovery-only lane')
@@ -57,7 +72,7 @@ for marker in ['assessment analytics','scoped to the active learner profile','fi
     need(marker in privacy,f'privacy disclosure missing: {marker}')
 
 sw=text('service-worker.js')
-for marker in ["'./privacy.html'","'./support.html'","'./assessment-storage-scope.js'","'./assessment-evidence-sources.js'","'./assessment-evidence-approval.js'"]:
+for marker in ["'./privacy.html'","'./support.html'","'./assessment-storage-scope.js'","'./assessment-evidence-sources.js'","'./assessment-evidence-approval.js'","'./curriculum-integration.js'","'./specialist-curriculum.js'"]:
     need(marker in sw,f'offline compliance/runtime asset missing: {marker}')
 
 for name in ['README.md','ANDROID_INSTALL_README.txt','support.html','UPLOAD_README.txt']:
