@@ -10,7 +10,7 @@ def need(ok,msg):
 V=json.loads(text('version.json'))
 expected={
  'android_release':'2026.08.24.1',
- 'desktop_release':'2026.08.25.1',
+ 'desktop_release':'2026.08.26.1',
  'content_version':'2026.08.24.2',
  'question_bank_version':'2026.08.24.2',
  'assessment_quality_version':'2026.08.24.3',
