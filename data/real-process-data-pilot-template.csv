@@ -1,0 +1,1 @@
+shot_index,cavity_alias,machine_alias,mould_alias,material_alias,lot_alias,phase,fill_time_s,transfer_position_mm,transfer_pressure_mpa,cushion_mm,recovery_time_s,cycle_time_s,tcu_supply_c,tcu_return_c,tcu_flow_lpm,resin_moisture_ppm,hot_runner_actual_c,part_mass_g,dimension_value,dimension_unit,quality_result,defect_alias,intervention_code

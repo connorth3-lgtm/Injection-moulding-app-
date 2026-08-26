@@ -18,6 +18,7 @@ for path in [
     ROOT / "THIRD_PARTY_NOTICES.md",
     DESKTOP / "README.md",
     DESKTOP / "LEGACY_MIGRATION.md",
+    DESKTOP / "REAL_WINDOWS_VALIDATION.md",
     DESKTOP / "THREAT_MODEL.md",
     DESKTOP / "package.json",
     DESKTOP / "package-lock.json",
@@ -26,6 +27,7 @@ for path in [
     DESKTOP / "scripts" / "generate-licenses.cjs",
     DESKTOP / "scripts" / "generate-sbom.cjs",
     DESKTOP / "scripts" / "generate-msix-assets.ps1",
+    DESKTOP / "scripts" / "verify-real-windows-release.ps1",
     DESKTOP / "scripts" / "qa.cjs",
     ROOT / ".github" / "workflows" / "desktop-dependency-lock.yml",
     ROOT / ".github" / "workflows" / "open-desktop-build.yml",
@@ -62,6 +64,11 @@ require(version.get("desktop_release_tag") == expected_tag, "desktop_release_tag
 require(version.get("desktop_release_url") == expected_url, "desktop_release_url must match the tagged GitHub release")
 require(version.get("windows_recovery_release"), "windows_recovery_release missing from version.json")
 require(version["desktop_release"] != version["windows_recovery_release"], "open desktop and legacy recovery lanes must be explicit and separate")
+
+desktop_readme = (DESKTOP / "README.md").read_text(encoding="utf-8")
+require(f"Current desktop release: `{release}`" in desktop_readme, "desktop README current release is stale")
+for marker in ["REAL_WINDOWS_VALIDATION.md", "verify-real-windows-release.ps1", "normal Windows 10/11"]:
+    require(marker in desktop_readme, f"desktop README real-Windows validation marker missing: {marker}")
 
 fuses = pkg["build"].get("electronFuses", {})
 for name, expected in {
@@ -106,6 +113,28 @@ require("generated/sbom.cdx.json" in from_paths, "SBOM missing from package")
 msix_assets = (DESKTOP / "scripts" / "generate-msix-assets.ps1").read_text(encoding="utf-8")
 require('"../../../mouldmaster-512.png"' in msix_assets, "MSIX artwork source path must resolve to repository root icon")
 
+real_windows = (DESKTOP / "REAL_WINDOWS_VALIDATION.md").read_text(encoding="utf-8")
+for marker in [
+    "manual evidence required",
+    "normal Windows 10/11",
+    "real legacy backup",
+    "offline launch",
+    "imported certificate/pass state is not trusted",
+    "learner names, backup content, customer identifiers",
+]:
+    require(marker in real_windows, f"real-Windows retirement safeguard missing: {marker}")
+
+verify_script = (DESKTOP / "scripts" / "verify-real-windows-release.ps1").read_text(encoding="utf-8")
+for marker in [
+    "$IsWindows",
+    "Get-FileHash",
+    "SHA-256 mismatch",
+    "sha256_verified",
+    "content_copied_to_evidence = $false",
+    "manual_checks",
+]:
+    require(marker in verify_script, f"real-Windows evidence helper safeguard missing: {marker}")
+
 store = (ROOT / ".github" / "workflows" / "microsoft-store-msix.yml").read_text(encoding="utf-8")
 for marker in [
     "MM_STORE_IDENTITY_NAME",
@@ -126,6 +155,7 @@ for marker in [
     "npm run dist:portable",
     "python qa_release.py",
     "python qa_open_desktop.py",
+    "python qa_real_process_data_pilot.py",
     "SHA256SUMS.txt",
     "SOURCE_COMMIT.txt",
     "dependency-licenses.json",

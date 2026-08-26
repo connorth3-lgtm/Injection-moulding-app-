@@ -111,6 +111,8 @@ jobs:
         run: python qa_process_data_20_pass.py
       - name: Local real-data intake privacy integrity
         run: python qa_process_data_local_intake.py
+      - name: Real process-data pilot readiness
+        run: python qa_real_process_data_pilot.py
       - name: Learner experience progression and mobile integrity
         run: python qa_learning_experience.py
       - name: Canonical app shell registry integrity

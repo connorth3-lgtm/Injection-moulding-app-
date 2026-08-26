@@ -18,7 +18,7 @@ The project maintainers do not intend to seek patent protection over implementat
 ## Current release lanes
 
 - PWA / browser shell: `2026.08.26.2`
-- Open Windows desktop: `2026.08.26.4`
+- Open Windows desktop: `2026.08.26.5`
 - Training content: `2026.08.26.1`
 - Audited assessment bank: `2026.08.24.2`
 - Assessment quality / analytics hardening: `2026.08.24.3`
@@ -48,6 +48,14 @@ All 157 keyed learner questions across exams, scenarios, Diagnostic Learning Lab
 
 Six material-specific practice labs turn resin/reference knowledge into evidence-first decisions: PP versus PC handling, wet versus verified-dry PC, PA66-GF30 drying/conditioning and anisotropy, ABS thermal history, POM degradation/contamination safety, and recycled-PP lot/rheology variability. Each lab uses Observe → Best next test → Controlled response → Explain and is explicitly scenario-specific education rather than a universal production recipe.
 
+## Process-data learning and real-data pilot
+
+The process-data learning library contains 264 guided/synthetic diagnostic cases spanning baseline → fault → recovery reasoning, with 19,008 generated training cycles across machine, tooling, material, scientific-moulding, sensor, SPC, metrology and maintenance themes. Synthetic values are for pattern recognition and mechanism learning; they are not universal production setpoints or acceptance limits.
+
+`process-data-local-intake.js` provides an explicit local-only path for preparing real process CSV exports. Raw files are selected by the user, processed in-session, direct/person identifiers and timestamps are removed by default, operational identifiers are replaced with per-file aliases, and prepared exports remain pseudonymised rather than guaranteed anonymous.
+
+The controlled move toward real de-identified evidence is defined in `sources/REAL_PROCESS_DATA_PILOT_PROTOCOL.md` and `data/real-process-data-pilot-template.csv`. Pilot data should preserve shot/cavity identity within the prepared file, actual process signals, material/thermal state, quality outcomes and intervention timing while excluding customer/person identifiers and avoiding public upload of raw production data.
+
 ## Guided curriculum and specialist extensions
 
 The canonical completion pathway remains **120 core lessons**. `curriculum-integration.js` links every core lesson to two valid formative activities drawn from the existing diagnostic, material-behaviour and process-data practice layers, with a return-to-lesson flow so learners move from theory → practice → evidence → explanation.
@@ -62,7 +70,7 @@ The normal open-source Windows desktop implementation is under:
 
 `desktop/electron/`
 
-Desktop `2026.08.26.4` is published from the exact repository source by `.github/workflows/publish-open-desktop.yml` to the tagged GitHub Release recorded in `version.json`. The release includes the portable Windows executable, SHA-256 hashes, the source commit, bundled-asset integrity manifest, dependency licence inventory, CycloneDX SBOM and assessment/evidence/source-freshness QA reports.
+Desktop `2026.08.26.5` is published from the exact repository source by `.github/workflows/publish-open-desktop.yml` to the tagged GitHub Release recorded in `version.json`. The release includes the portable Windows executable, SHA-256 hashes, the source commit, bundled-asset integrity manifest, dependency licence inventory, CycloneDX SBOM and assessment/evidence/source-freshness QA reports.
 
 Security controls include:
 - SHA-256 verification of bundled MouldMaster application assets before launch;
