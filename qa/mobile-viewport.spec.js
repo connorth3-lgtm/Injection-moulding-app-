@@ -129,10 +129,10 @@ for(const viewport of [{name:'android-412x915',width:412,height:915},{name:'smal
       const csv='timestamp,machine,mould,material_grade,material_lot,customer_name,fill_time_s,cushion_mm,quality_result,comment\n2026-08-26T10:00:00Z,IMM-SECRET,TOOL-SECRET,PA66-GF30,LOT-SECRET,Customer Secret,1.20,4.5,PASS,private note\n2026-08-26T10:00:30Z,IMM-SECRET,TOOL-SECRET,PA66-GF30,LOT-SECRET,Customer Secret,1.24,4.4,FAIL,private note two\n';
       await page.locator('[data-pdi-file]').setInputFiles({name:'shot-export.csv',mimeType:'text/csv',buffer:Buffer.from(csv)});
       await expect(page.locator('.pdi-kpi').first()).toContainText('2');
-      await expect(page.locator('.pdi-rule').filter({hasText:'timestamp'})).toContainText('DROP');
-      await expect(page.locator('.pdi-rule').filter({hasText:'machine'})).toContainText('ALIAS');
-      await expect(page.locator('.pdi-rule').filter({hasText:'fill_time_s'})).toContainText('KEEP');
-      await expect(page.locator('.pdi-rule').filter({hasText:'quality_result'})).toContainText('QUALITY');
+      await expect(page.locator('.pdi-rule').filter({hasText:'timestamp'}).locator('b.drop')).toHaveText('drop');
+      await expect(page.locator('.pdi-rule').filter({hasText:'machine'}).locator('b.alias')).toHaveText('alias');
+      await expect(page.locator('.pdi-rule').filter({hasText:'fill_time_s'}).locator('b.keep')).toHaveText('keep');
+      await expect(page.locator('.pdi-rule').filter({hasText:'quality_result'}).locator('b.quality')).toHaveText('quality');
       await expect(page.getByRole('button',{name:'Export prepared CSV'})).toBeEnabled();
       await expect(page.getByRole('button',{name:'Export data dictionary'})).toBeEnabled();
       await expect(page.locator('body')).not.toContainText('IMM-SECRET');
