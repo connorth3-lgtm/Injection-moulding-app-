@@ -78,6 +78,7 @@ on:
       - 'qa_process_data_deep_dive_50.py'
       - 'qa_process_data_20_pass.py'
       - 'qa_process_data_local_intake.py'
+      - 'qa_real_process_data_pilot.py'
       - 'qa_curriculum_integration.py'
       - 'qa_specialist_curriculum.py'
       - 'qa_learning_analytics.py'
@@ -99,6 +100,8 @@ on:
       - 'sources/SOURCE_FRESHNESS.json'
       - 'sources/RESEARCH_SOURCE_FRESHNESS.json'
       - 'sources/PROCESS_DATA_20_PASS_ATLAS.md'
+      - 'sources/REAL_PROCESS_DATA_PILOT_PROTOCOL.md'
+      - 'data/real-process-data-pilot-template.csv'
       - 'service-worker.js'
       - 'privacy.html'
       - 'support.html'
@@ -184,6 +187,9 @@ jobs:
       - name: Local real-data intake privacy QA
         working-directory: .
         run: python qa_process_data_local_intake.py
+      - name: Real process-data pilot readiness QA
+        working-directory: .
+        run: python qa_real_process_data_pilot.py
       - name: Learner experience progression and mobile QA
         working-directory: .
         run: python qa_learning_experience.py
