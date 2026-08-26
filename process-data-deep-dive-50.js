@@ -10,9 +10,9 @@ const EXTRA_SOURCES={
  'sensor-review-2019':{name:'In-Mold Sensors for Injection Molding: On the Way to Industry 4.0',authority:'peer-reviewed research',kind:'review',url:'https://doi.org/10.3390/s19163551'},
  'measurement-review-2024':{name:'Zhao et al. (2024) — measurement techniques in injection molding',authority:'peer-reviewed research',kind:'review',url:'https://doi.org/10.1016/j.measurement.2024.114163'},
  'smart-sensor-review-2025':{name:'Shin et al. (2025) — in-situ and in-line monitoring with intelligent sensors',authority:'peer-reviewed research',kind:'review',url:'https://doi.org/10.1016/j.sna.2025.116248'},
- 'quality-ml-2024':{name:'Ke (2024) — data-driven quality prediction from injection-moulding pressure data',authority:'peer-reviewed research',kind:'research',url:'https://doi.org/10.1002/pen.26866'},
- 'predictive-maintenance-2026':{name:'Rebelo et al. (2026) — condition maintenance and prediction in an injection moulding machine',authority:'peer-reviewed research',kind:'case study',url:'https://doi.org/10.1108/JQME-05-2025-0050'},
- 'ultrasound-review-2021':{name:'Ultrasound Sensors for Process Monitoring in Injection Moulding',authority:'peer-reviewed research',kind:'review',url:'https://pubmed.ncbi.nlm.nih.gov/34372430/'}
+ 'quality-ml-2024':{name:'Ke (2024) — data-driven quality prediction in injection molding',authority:'peer-reviewed research',kind:'research',url:'https://doi.org/10.1002/pen.26866'},
+ 'predictive-maintenance-2026':{name:'Rebelo et al. (2026) — condition maintenance and prediction system in an injection molding machine',authority:'peer-reviewed research',kind:'case study',url:'https://doi.org/10.1108/JQME-05-2025-0050'},
+ 'ultrasound-review-2021':{name:'Kariminejad et al. (2021) — Ultrasound Sensors for Process Monitoring in Injection Moulding',authority:'peer-reviewed research',kind:'review',url:'https://doi.org/10.3390/s21155193'}
 };
 Object.assign(E.sources,EXTRA_SOURCES);
 const RAW=PACKS.flatMap(p=>p.cases||[]);
@@ -24,7 +24,7 @@ function noise(r,scale){return(r()-0.5)*2*scale}
 function generate(def,index){const r=rng(70000+index*211),rows=[];for(const [phase,p] of [['baseline',0],['fault',1],['recovery',2]])for(let cycle=1;cycle<=24;cycle++){const row={phase,cycle};for(const [key,v] of Object.entries(def.signals)){const base=+v[0],delta=+v[1],recovery=+v[2],target=p===0?base:p===1?base+delta:recovery,spread=Math.max(Math.abs(delta)*0.045,Math.abs(base)*0.0015,0.001);row[key]=+(target+noise(r,spread)).toFixed(4)}rows.push(row)}return{...def,synthetic:true,rows,phaseCounts:{baseline:24,fault:24,recovery:24},educationBoundary:'Synthetic training data only; relationships are illustrative and are not universal production setpoints, limits, maintenance thresholds or instructions.'}}
 const DATASETS=DEFS.map(generate);
 function mean(rows,key){const a=rows.map(r=>Number(r[key])).filter(Number.isFinite);return a.length?a.reduce((x,y)=>x+y,0)/a.length:0}
-function esc(v){return String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function esc(v){return String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot',"'":'&#39;'}[c]))}
 function label(k){return k.replace(/_/g,' ').replace(/([a-z])([A-Z])/g,'$1 $2')}
 function sourceName(id){return E.sources[id]?.name||id}
 function summary(ds){return Object.keys(ds.signals).map(key=>{const b=mean(ds.rows.filter(r=>r.phase==='baseline'),key),f=mean(ds.rows.filter(r=>r.phase==='fault'),key),r=mean(ds.rows.filter(r=>r.phase==='recovery'),key);return{key,b,f,r,d:f-b}})}
@@ -41,6 +41,6 @@ function click(e){const t=e.target.closest('[data-dd50-launch],[data-dd50-open],
 function change(e){if(e.target.matches('[data-dd50-kind]'))renderHome(e.target.value)}
 document.addEventListener('click',click);document.addEventListener('change',change);
 const originalOpen=BASE.open.bind(BASE);BASE.open=function(){const r=originalOpen();requestAnimationFrame(attachLauncher);return r};
-const observer=new MutationObserver(()=>requestAnimationFrame(attachLauncher));observer.observe(document.documentElement,{childList:true,subtree:true});attachLauncher();
+attachLauncher();
 window.MM_PROCESS_DATA_DEEP_DIVE_50={version:VERSION,reviewed:REVIEWED,reviewBy:REVIEW_BY,cases:DATASETS.map(d=>({id:d.id,title:d.title,kind:d.kind,signals:Object.keys(d.signals),sourceIds:d.sourceIds})),datasets:DATASETS,byId:id=>DATASETS.find(d=>d.id===id)||null,toCsv:id=>{const d=DATASETS.find(x=>x.id===id);return d?csv(d):''},open,scope:'50 additional deterministic synthetic process-data cases; educational evidence practice only, outside formal assessment and not a production recipe.'};
 })();
