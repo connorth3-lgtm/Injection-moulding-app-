@@ -1,15 +1,22 @@
 name: Desktop Dependency Lock
 
 on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'desktop/electron/package.json'
+      - 'desktop/electron/package-lock.json'
+      - '.github/workflows/desktop-dependency-lock.yml'
   push:
     branches: [main]
     paths:
       - 'desktop/electron/package.json'
+      - 'desktop/electron/package-lock.json'
       - '.github/workflows/desktop-dependency-lock.yml'
   workflow_dispatch:
 
 permissions:
-  contents: write
+  contents: read
 
 concurrency:
   group: desktop-dependency-lock-${{ github.ref }}
@@ -23,19 +30,15 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22.12.0'
-      - name: Generate exact npm dependency lock
+      - name: Verify exact npm dependency lock
         working-directory: desktop/electron
-        run: npm install --package-lock-only --ignore-scripts --no-audit --fund=false
-      - name: Commit lock if changed
         shell: bash
         run: |
-          if git diff --quiet -- desktop/electron/package-lock.json && git ls-files --error-unmatch desktop/electron/package-lock.json >/dev/null 2>&1; then
-            echo 'package-lock.json is already current'
-            exit 0
+          set -euo pipefail
+          npm install --package-lock-only --ignore-scripts --no-audit --fund=false
+          if ! git diff --exit-code -- package-lock.json; then
+            echo '::error::desktop/electron/package-lock.json is not synchronized with package.json. Regenerate it in the same pull request.'
+            exit 1
           fi
-          git config user.name 'github-actions[bot]'
-          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add desktop/electron/package-lock.json
-          git commit -m 'Lock open desktop dependencies'
-          git pull --rebase origin main
-          git push origin HEAD:main
+          git ls-files --error-unmatch package-lock.json >/dev/null
+          echo 'desktop/electron/package-lock.json is committed and synchronized.'
