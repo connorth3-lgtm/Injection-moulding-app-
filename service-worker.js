@@ -42,6 +42,7 @@ const CORE=[
   './learning-experience.js',
   './process-data-diagnostics.js',
   './curriculum-integration.js',
+  './specialist-curriculum.js',
   './learning-analytics.js',
   './repair.html',
   './privacy.html',
