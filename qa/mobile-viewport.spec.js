@@ -11,8 +11,24 @@ async function seedLearner(page){
 async function openApp(page){
   await seedLearner(page);
   await page.goto(BASE,{waitUntil:'domcontentloaded'});
-  await page.waitForFunction(()=>window.MM_APP_SHELL_FINALIZED==='2026.08.26.2'&&document.querySelector('#dashboard .mm-home-task-hub'));
+  await page.waitForFunction(()=>window.MM_APP_SHELL_FINALIZED==='2026.08.26.3'&&document.querySelector('#dashboard .mm-home-task-hub'));
   await expect(page.locator('#mmStartupFailure')).toHaveCount(0);
+  await expect(page.locator('.mobile-nav > button')).toHaveCount(4);
+}
+async function scrollAppToBottom(page){
+  await page.evaluate(()=>{
+    const main=document.querySelector('main.main')||document.querySelector('.main');
+    if(main&&main.scrollHeight>main.clientHeight)main.scrollTop=main.scrollHeight;
+    const root=document.scrollingElement;
+    if(root&&root.scrollHeight>root.clientHeight)root.scrollTop=root.scrollHeight;
+  });
+  await page.waitForFunction(()=>{
+    const main=document.querySelector('main.main')||document.querySelector('.main');
+    const root=document.scrollingElement;
+    const mainDone=!main||main.scrollHeight<=main.clientHeight||main.scrollTop+main.clientHeight>=main.scrollHeight-2;
+    const rootDone=!root||root.scrollHeight<=root.clientHeight||root.scrollTop+root.clientHeight>=root.scrollHeight-2;
+    return mainDone&&rootDone;
+  });
 }
 
 for(const viewport of [{name:'android-412x915',width:412,height:915},{name:'small-360x800',width:360,height:800}]){
@@ -34,18 +50,19 @@ for(const viewport of [{name:'android-412x915',width:412,height:915},{name:'smal
       const specialistParagraph=page.locator('#mmSpecialistDashboard > p');
       await expect(specialistParagraph).toBeHidden();
 
-      await page.evaluate(()=>window.scrollTo(0,document.documentElement.scrollHeight));
-      await page.waitForTimeout(80);
+      await scrollAppToBottom(page);
       const geometry=await page.evaluate(()=>{
         const nav=document.querySelector('.mobile-nav');
         const dashboard=document.getElementById('dashboard');
         const visible=[...dashboard.children].filter(x=>getComputedStyle(x).display!=='none');
         const last=visible[visible.length-1];
         const nr=nav.getBoundingClientRect(),lr=last.getBoundingClientRect();
-        return {navTop:nr.top,lastBottom:lr.bottom,position:getComputedStyle(nav).position,clearance:getComputedStyle(document.documentElement).getPropertyValue('--mm-mobile-nav-clearance').trim()};
+        const main=document.querySelector('main.main')||document.querySelector('.main');
+        return {navTop:nr.top,lastBottom:lr.bottom,position:getComputedStyle(nav).position,clearance:getComputedStyle(document.documentElement).getPropertyValue('--mm-mobile-nav-clearance').trim(),mainPaddingBottom:main?getComputedStyle(main).paddingBottom:''};
       });
       expect(geometry.position).toBe('fixed');
       expect(geometry.clearance).not.toBe('');
+      expect(geometry.mainPaddingBottom).not.toBe('0px');
       expect(geometry.lastBottom).toBeLessThanOrEqual(geometry.navTop+1);
 
       await page.getByRole('button',{name:/Diagnose a moulding problem/i}).click();
