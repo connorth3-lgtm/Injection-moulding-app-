@@ -39,18 +39,34 @@ function installMobileLayoutGuard(){
   const style=document.createElement('style');
   style.id='mm-mobile-layout-guard-style';
   style.textContent=`
+:root{--mm-mobile-nav-clearance:124px}
 @media(max-width:700px){
-  html{scroll-padding-bottom:calc(124px + env(safe-area-inset-bottom))}
+  html{scroll-padding-bottom:calc(var(--mm-mobile-nav-clearance) + env(safe-area-inset-bottom))}
   body{padding-bottom:0!important}
-  .main{padding:16px 16px calc(124px + env(safe-area-inset-bottom))!important}
+  .main{padding:16px 16px calc(var(--mm-mobile-nav-clearance) + env(safe-area-inset-bottom))!important}
   .topbar{position:relative!important;top:auto!important;z-index:1!important;background:transparent!important;backdrop-filter:none!important;padding:0 0 10px!important}
-  .mobile-nav{background:#07101c!important;padding-bottom:calc(10px + env(safe-area-inset-bottom))!important;box-shadow:0 -12px 28px rgba(0,0,0,.30),0 80px 0 #07101c!important}
+  .mobile-nav{position:fixed!important;left:0!important;right:0!important;bottom:0!important;background:#07101c!important;padding-bottom:calc(10px + env(safe-area-inset-bottom))!important;box-shadow:0 -12px 28px rgba(0,0,0,.30),0 80px 0 #07101c!important}
+  body.mm-home-visible #continueBtn{display:none!important}
+  body.mm-home-visible .top-actions{justify-content:flex-start!important}
+  body.mm-home-visible #searchBtn{flex:0 0 auto!important;min-width:118px}
   #dashboard{padding-bottom:18px}
   #dashboard .mm-specialist-strip{margin-bottom:18px}
   .toast{bottom:calc(98px + env(safe-area-inset-bottom))!important}
 }
 `;
   document.head.appendChild(style);
+}
+function syncVisibleViewChrome(){
+  const home=document.getElementById('dashboard');
+  const isHome=!!home&&!home.classList.contains('hidden');
+  document.body?.classList.toggle('mm-home-visible',isHome);
+  document.querySelectorAll('.mobile-nav button[data-view]').forEach(button=>{
+    const target=button.dataset.view;
+    const view=target?document.getElementById(target):null;
+    const active=!!view&&!view.classList.contains('hidden');
+    button.classList.toggle('active',active);
+    if(active)button.setAttribute('aria-current','page');else button.removeAttribute('aria-current');
+  });
 }
 function dockReferenceLauncher(){
   const open=document.getElementById('mm-src-open');if(!open)return;
@@ -188,7 +204,7 @@ async function register(){
   try{const reg=await navigator.serviceWorker.register('./service-worker.js',{scope:'./'});await reg.update()}catch(e){console.warn('[MouldMaster] Offline/update support unavailable:',e)}
 }
 let syncQueued=false;
-function runSync(){syncQueued=false;syncLabels();syncUpdateCard();installMobileLayoutGuard();dockReferenceLauncher();configureReferenceDrawer();dockReferenceDataLauncher();configureReferenceDataDrawer();addNZLegacyNote()}
+function runSync(){syncQueued=false;syncLabels();syncUpdateCard();installMobileLayoutGuard();syncVisibleViewChrome();dockReferenceLauncher();configureReferenceDrawer();dockReferenceDataLauncher();configureReferenceDataDrawer();addNZLegacyNote()}
 function scheduleSync(){
   if(syncQueued)return;
   syncQueued=true;
@@ -196,10 +212,10 @@ function scheduleSync(){
 }
 patchStandards();
 const observer=new MutationObserver(scheduleSync);
-if(document.documentElement)observer.observe(document.documentElement,{subtree:true,childList:true});
+if(document.documentElement)observer.observe(document.documentElement,{subtree:true,childList:true,attributes:true,attributeFilter:['class']});
 runSync();
 window.addEventListener('resize',scheduleSync,{passive:true});
 window.addEventListener('load',async()=>{runSync();if(await retireBrowserOfflineRuntime())return;register();setTimeout(scheduleSync,250)});
 document.addEventListener('visibilitychange',()=>{if(!document.hidden)scheduleSync()});
-window.MM_SHELL_RELEASE=RELEASE;window.MM_CONTENT_RELEASE=CONTENT;window.MM_DISPLAY_CONTEXT=displayContext;window.MM_REFERENCE_LAUNCHER_DOCK='sidebar-first-normal-flow';window.MM_REFERENCE_DRAWER_MODE='non-blocking';window.MM_REFERENCE_DATA_URL=REFERENCE_DATA_URL;window.MM_REFERENCE_DATA_LAUNCHER_DOCK='mobile-more-standalone-page';window.MM_REFERENCE_DATA_DRAWER_MODE='standalone-mobile-page-desktop-drawer';window.MM_BROWSER_UPDATE_MODE='network-current-no-service-worker';window.MM_MOBILE_LAYOUT_GUARD='home-static-header-bottom-nav-clearance-v1';
+window.MM_SHELL_RELEASE=RELEASE;window.MM_CONTENT_RELEASE=CONTENT;window.MM_DISPLAY_CONTEXT=displayContext;window.MM_REFERENCE_LAUNCHER_DOCK='sidebar-first-normal-flow';window.MM_REFERENCE_DRAWER_MODE='non-blocking';window.MM_REFERENCE_DATA_URL=REFERENCE_DATA_URL;window.MM_REFERENCE_DATA_LAUNCHER_DOCK='mobile-more-standalone-page';window.MM_REFERENCE_DATA_DRAWER_MODE='standalone-mobile-page-desktop-drawer';window.MM_BROWSER_UPDATE_MODE='network-current-no-service-worker';window.MM_MOBILE_LAYOUT_GUARD='home-task-first-fixed-nav-clearance-v2';
 })();
