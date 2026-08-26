@@ -52,11 +52,15 @@ need("conclusion\" != \"success" in guard, "required PR workflows must fail clos
 need("exit 1" in guard, "unauthorised or unverified main pushes must fail after rollback")
 
 # Dependency-lock generation must be a verification gate, never a privileged
-# direct writer to main. A package change belongs in the same PR as its lock.
+# direct writer to main. Both package.json and package-lock.json changes are
+# covered on PRs and on main as a post-merge consistency check.
 for marker in [
     "name: Desktop Dependency Lock",
     "pull_request:",
+    "push:",
     "branches: [main]",
+    "desktop/electron/package.json",
+    "desktop/electron/package-lock.json",
     "contents: read",
     "npm install --package-lock-only",
     "git diff --exit-code -- package-lock.json",
