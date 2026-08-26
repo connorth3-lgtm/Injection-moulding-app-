@@ -18,7 +18,7 @@ for js in ['app-shell-registry.js','app-shell-finalize.js','mould-master-workspa
 
 shell=text('app-shell-registry.js')
 for marker in [
-    "const VERSION='2026.08.26.2'",
+    "const VERSION='2026.08.26.3'",
     'dashboardSections=new Map()',
     'navigationItems=new Map()',
     'registerDashboard',
@@ -40,6 +40,8 @@ for marker in [
     '--mm-mobile-content-clearance',
     '.mm-mobile-actions{bottom:var(--mm-mobile-nav-clearance)!important',
     'aria-current',
+    'visibleCoreView',
+    "navigationItems.get(activeCustomId)",
     'captured.renderDashboard',
     'captured.renderLesson',
     'captured.switchView',
