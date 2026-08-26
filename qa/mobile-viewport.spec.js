@@ -120,6 +120,27 @@ for(const viewport of [{name:'android-412x915',width:412,height:915},{name:'smal
       await expectOnlyCurrent(page,'Practice');
     });
 
+    test('Local shot CSV intake strips raw identifiers in the real UI',async({page})=>{
+      await openApp(page);
+      await page.getByRole('button',{name:/Analyse process data/i}).click();
+      await expect(page.getByRole('button',{name:'Prepare real shot CSV locally'})).toBeVisible();
+      await page.getByRole('button',{name:'Prepare real shot CSV locally'}).click();
+      await expect(page.getByRole('heading',{name:'Prepare shot data without uploading it'})).toBeVisible();
+      const csv='timestamp,machine,mould,material_grade,material_lot,customer_name,fill_time_s,cushion_mm,quality_result,comment\n2026-08-26T10:00:00Z,IMM-SECRET,TOOL-SECRET,PA66-GF30,LOT-SECRET,Customer Secret,1.20,4.5,PASS,private note\n2026-08-26T10:00:30Z,IMM-SECRET,TOOL-SECRET,PA66-GF30,LOT-SECRET,Customer Secret,1.24,4.4,FAIL,private note two\n';
+      await page.locator('[data-pdi-file]').setInputFiles({name:'shot-export.csv',mimeType:'text/csv',buffer:Buffer.from(csv)});
+      await expect(page.locator('.pdi-kpi').first()).toContainText('2');
+      await expect(page.locator('.pdi-rule').filter({hasText:'timestamp'})).toContainText('DROP');
+      await expect(page.locator('.pdi-rule').filter({hasText:'machine'})).toContainText('ALIAS');
+      await expect(page.locator('.pdi-rule').filter({hasText:'fill_time_s'})).toContainText('KEEP');
+      await expect(page.locator('.pdi-rule').filter({hasText:'quality_result'})).toContainText('QUALITY');
+      await expect(page.getByRole('button',{name:'Export prepared CSV'})).toBeEnabled();
+      await expect(page.getByRole('button',{name:'Export data dictionary'})).toBeEnabled();
+      await expect(page.locator('body')).not.toContainText('IMM-SECRET');
+      await expect(page.locator('body')).not.toContainText('TOOL-SECRET');
+      await expect(page.locator('body')).not.toContainText('Customer Secret');
+      await expectOnlyCurrent(page,'Practice');
+    });
+
     test('Lesson action bar sits above the global mobile navigation',async({page})=>{
       await openApp(page);
       await page.getByRole('button',{name:/Continue lesson/i}).first().click();
