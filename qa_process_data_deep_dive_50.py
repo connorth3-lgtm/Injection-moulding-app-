@@ -45,12 +45,15 @@ for c in raw:
     need(isinstance(source_ids,list) and len(source_ids)>=2,f'{cid} must have at least two evidence-source IDs')
     need(len(set(source_ids))==len(source_ids),f'{cid} repeats a source ID')
     need(isinstance(signals,list) and len(signals)==4,f'{cid} must contain exactly four linked signals')
-    names=[]
+    names=[]; changed=0
     for s in signals:
         need(isinstance(s,list) and len(s)==4,f'{cid} signal must contain name/base/delta/recovery')
         name,base,delta,recovery=s; names.append(name)
         need(name and all(isinstance(x,(int,float)) for x in (base,delta,recovery)),f'{cid}/{name} signal targets must be numeric')
+        need(recovery==base,f'{cid}/{name} recovery target must return to the defined baseline')
+        if abs(delta)>1e-12: changed+=1
     need(len(set(names))==4,f'{cid} signal names must be unique')
+    need(changed>=2,f'{cid} must contain at least two meaningful fault-phase signal changes')
     for label,value in [('title',title),('fault',fault),('diagnosis',diagnosis),('next evidence',next_evidence)]:
         need(isinstance(value,str) and len(value.strip())>=12,f'{cid} {label} is too weak/empty')
 
@@ -101,6 +104,9 @@ for name in ALL:
 material=text('process-data-deep-dive-material.js').lower()
 need('pom-contamination-degradation' in material and 'supplier/site-approved' in material,'POM degradation case must route to the safe supplier/site procedure')
 need('increase temperature to burn' not in material and 'bypass guards' not in material,'material deep dive must not recommend unsafe degradation/guard actions')
+quality=text('process-data-deep-dive-quality.js')
+need('["processSD_mm",0.04,0,0.04]' in quality,'Gage R&R case must keep underlying process spread stable')
+need('["withinSD_mm",0.04,0,0.04]' in quality,'autocorrelation case must keep within-process spread stable')
 
 idx=text('index.html');sw=text('service-worker.js');pkg=json.loads(text('desktop/electron/package.json'));integrity=text('desktop/electron/scripts/generate-integrity.cjs')
 for f in ALL:
@@ -116,4 +122,4 @@ need('python qa_process_data_deep_dive_50.py' in desktop,'Windows build must gat
 for f in ALL:
     need(f'node --check {f}' in qa,f'release JS syntax gate missing {f}')
 
-print('MouldMaster 50-case process-data deep-dive QA passed (50 unique cases; 10 per domain; 4 signals each; 3,600 deterministic synthetic cycles; evidence-first/local-only; offline + desktop packaged)')
+print('MouldMaster 50-case process-data deep-dive QA passed (50 unique cases; 10 per domain; 4 signals each; 3,600 deterministic synthetic cycles; recovery invariants; evidence-first/local-only; offline + desktop packaged)')
