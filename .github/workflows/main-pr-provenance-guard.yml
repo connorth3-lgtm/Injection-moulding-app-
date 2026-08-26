@@ -1,0 +1,49 @@
+name: Main PR Provenance Guard
+
+on:
+  push:
+    branches: [main]
+
+permissions:
+  contents: write
+  pull-requests: read
+
+jobs:
+  enforce-pr-provenance:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Require merged-PR provenance or approved lock bot commit
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          HEAD_SHA: ${{ github.sha }}
+          BEFORE_SHA: ${{ github.event.before }}
+          ACTOR: ${{ github.actor }}
+          HEAD_MESSAGE: ${{ github.event.head_commit.message }}
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          if [[ "$ACTOR" == "github-actions[bot]" && "$HEAD_MESSAGE" == "Lock open desktop dependencies" ]]; then
+            echo "Approved dependency-lock synchronization commit."
+            exit 0
+          fi
+
+          merged_pr=$(gh api \
+            -H "Accept: application/vnd.github+json" \
+            "repos/$GH_REPO/commits/$HEAD_SHA/pulls" \
+            --jq "[.[] | select(.merged_at != null and .base.ref == \"main\" and .merge_commit_sha == \"$HEAD_SHA\")] | length")
+
+          if [[ "$merged_pr" != "0" ]]; then
+            echo "Commit is the merge commit of a PR into main."
+            exit 0
+          fi
+
+          if [[ -z "$BEFORE_SHA" || "$BEFORE_SHA" =~ ^0+$ ]]; then
+            echo "::error::Cannot safely restore main because the previous SHA is unavailable."
+            exit 1
+          fi
+
+          echo "::error::Push to main did not originate from a merged PR. Restoring main to $BEFORE_SHA."
+          gh api --method PATCH "repos/$GH_REPO/git/refs/heads/main" -f sha="$BEFORE_SHA" -F force=true
+          exit 1
