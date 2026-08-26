@@ -5,7 +5,7 @@
 const VERSION='2026.08.26.1';
 const RETURN_KEY='mm_curriculum_return_v1';
 
-if(typeof renderLesson!=='function'||typeof renderDashboard!=='function'||typeof currentLesson!=='function'||!window.D){
+if(typeof renderLesson!=='function'||typeof renderDashboard!=='function'||typeof currentLesson!=='function'||typeof D==='undefined'){
   throw new Error('curriculum-integration.js requires the core lesson runtime');
 }
 if(!window.MM_LEARNING_EXPERIENCE||!window.MM_DIAGNOSTIC_LABS||!window.MM_PROCESS_DATA_DIAGNOSTICS||!window.MM_MATERIAL_BEHAVIOUR_LABS){
