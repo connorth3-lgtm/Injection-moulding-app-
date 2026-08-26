@@ -10,7 +10,7 @@ def text(name):
 def need(ok,msg):
     if not ok: raise AssertionError(msg)
 
-required=['app-shell-registry.js','app-shell-finalize.js','mould-master-workspace.js','index.html','service-worker.js','desktop/electron/package.json','desktop/electron/scripts/generate-integrity.cjs']
+required=['app-shell-registry.js','app-shell-finalize.js','mould-master-workspace.js','index.html','service-worker.js','desktop/electron/package.json','desktop/electron/scripts/generate-integrity.cjs','qa/mobile-viewport.spec.js']
 for name in required: text(name)
 for js in ['app-shell-registry.js','app-shell-finalize.js','mould-master-workspace.js']:
     p=subprocess.run(['node','--check',str(ROOT/js)],capture_output=True,text=True)
@@ -18,12 +18,17 @@ for js in ['app-shell-registry.js','app-shell-finalize.js','mould-master-workspa
 
 shell=text('app-shell-registry.js')
 for marker in [
-    "const VERSION='2026.08.26.3'",
+    "const VERSION='2026.08.26.4'",
     'dashboardSections=new Map()',
     'navigationItems=new Map()',
     'registerDashboard',
     'registerNavigation',
     'composeDashboard',
+    'queueDashboardCompose',
+    'existingDashboardSlot',
+    'releaseDashboardSlot',
+    'dashboardComposeQueued',
+    'requestCompose:queueDashboardCompose',
     'syncDesktopNavigation',
     'populateMobileMore',
     "id:'today-focus'",
@@ -56,6 +61,12 @@ for marker in [
     'window.__MM_LEARNING_INSIGHTS_MORE__=true'
 ]: need(marker in shell,f'app shell marker missing: {marker}')
 
+# Late registration must trigger deterministic composition without clearing/adopting the same nodes repeatedly.
+need('if(!finalized||dashboardComposeQueued)return' in shell,'late dashboard registration is not safely queued after finalization')
+need("if(slot.dataset.mmDashboardAdopt==='1')" in shell,'adopted dashboard nodes are not preserved when a slot is released')
+need("for(const slot of [...root.querySelectorAll('.mm-dashboard-slot')])" in shell,'dashboard composition is not reconciling existing slots')
+need("before.innerHTML=''" not in shell and "after.innerHTML=''" not in shell,'dashboard composition still clears registry hosts destructively')
+
 # Registry/finalizer must consolidate presentation composition only.
 for forbidden in ['correctIndex=', 'question_bank_version=', 'MM_DATA.exams=', 'regionalQuestions=', 'certificates.push(', 'fetch(', 'XMLHttpRequest', 'WebSocket', 'sendBeacon']:
     need(forbidden not in shell,f'app shell contains forbidden assessment/network mutation: {forbidden}')
@@ -82,5 +93,19 @@ finalizer=text('app-shell-finalize.js')
 for dep in ['MM_APP_SHELL','MM_LEARNING_EXPERIENCE','MM_CURRICULUM_INTEGRATION','MM_SPECIALIST_CURRICULUM','MM_MOULD_MASTER_WORKSPACE']:
     need(dep in finalizer,f'finalizer dependency guard missing: {dep}')
 need('MM_APP_SHELL.finalize()' in finalizer,'finalizer does not activate canonical shell')
+need("MM_APP_SHELL_FINALIZED='2026.08.26.4'" in finalizer,'finalizer marker is stale')
+need('new MutationObserver' not in finalizer,'finalizer reintroduced redundant document/view MutationObserver ownership')
 
-print('MouldMaster app-shell registry QA passed (explicit dashboard/navigation registries, canonical mobile geometry, legacy wrapper consolidation, offline/desktop packaging)')
+browser=text('qa/mobile-viewport.spec.js')
+for marker in [
+    "window.MM_APP_SHELL_FINALIZED==='2026.08.26.4'",
+    "!document.getElementById('mmBootstrap')",
+    "Primary mobile navigation and More tools are keyboard reachable",
+    "data-mm-registry-menu=\"learning-insights\"",
+    "late dashboard modules recompose idempotently",
+    "window.MM_APP_SHELL.dashboard.register",
+    "window.MM_APP_SHELL.dashboard.compose()",
+    "capture Android-like Home regression artifact after bootstrap is gone"
+]: need(marker in browser,f'mobile browser QA marker missing: {marker}')
+
+print('MouldMaster app-shell registry QA passed (idempotent late dashboard registration, canonical navigation/geometry, keyboard-capable mobile browser coverage, offline/desktop packaging)')
