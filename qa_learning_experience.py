@@ -26,6 +26,16 @@ markers=[
     "const VERSION='2026.08.26.1'",
     'Complete & continue',
     'Today’s focus',
+    'What do you need help with?',
+    'Diagnose a moulding problem',
+    'Analyse process data',
+    'Practice a scenario',
+    'Explore your learning',
+    'Mould Master · start from the defect',
+    'mm-home-task-hub',
+    'mm-home-core-hero',
+    'mmOpenMouldMaster',
+    'mmOpenDataDiagnosis',
     'Notes autosave on this device.',
     'mm-mobile-actions',
     'aria-current',
@@ -40,22 +50,40 @@ markers=[
 for marker in markers:
     need(marker in js,f'learning experience marker missing: {marker}')
 
+# Home is task-first on small screens: the catalogue-heavy core dashboard is suppressed while
+# direct diagnosis, process-data, practice and learning actions remain visible.
+for marker in [
+    '#dashboard .mm-home-core-hero,#dashboard .mm-home-kpis,#dashboard .mm-home-course-head,#dashboard .mm-home-course-grid{display:none!important}',
+    '#dashboard .mm-specialist-strip>p{display:none!important}',
+    '.mm-home-actions{grid-template-columns:1fr 1fr',
+    '@media(max-width:430px){.mm-home-actions{grid-template-columns:1fr}'
+]:
+    need(marker in js,f'mobile Home hierarchy marker missing: {marker}')
+need("switchView('defects')" in js,'Mould Master Home action must open the evidence-first defect diagnosis view')
+need('window.MM_PROCESS_DATA_DIAGNOSTICS?.open' in js,'Home process-data action must use the guided data-diagnosis module')
+
 # Mobile Home must not leave a tall translucent sticky topbar over dashboard cards,
 # and scrolling content must reserve enough room for the fixed bottom navigation/safe area.
 mobile_markers=[
     'mm-mobile-layout-guard-style',
     'installMobileLayoutGuard',
+    'syncVisibleViewChrome',
+    '--mm-mobile-nav-clearance:124px',
     'body{padding-bottom:0!important}',
-    '.main{padding:16px 16px calc(124px + env(safe-area-inset-bottom))!important}',
+    '.main{padding:16px 16px calc(var(--mm-mobile-nav-clearance) + env(safe-area-inset-bottom))!important}',
     '.topbar{position:relative!important;top:auto!important',
-    '.mobile-nav{background:#07101c!important',
-    '0 80px 0 #07101c!important',
-    'scroll-padding-bottom:calc(124px + env(safe-area-inset-bottom))',
-    "window.MM_MOBILE_LAYOUT_GUARD='home-static-header-bottom-nav-clearance-v1'"
+    '.mobile-nav{position:fixed!important;left:0!important;right:0!important;bottom:0!important',
+    'body.mm-home-visible #continueBtn{display:none!important}',
+    'body.mm-home-visible #searchBtn{flex:0 0 auto!important',
+    'scroll-padding-bottom:calc(var(--mm-mobile-nav-clearance) + env(safe-area-inset-bottom))',
+    "window.MM_MOBILE_LAYOUT_GUARD='home-task-first-fixed-nav-clearance-v2'"
 ]
 for marker in mobile_markers:
     need(marker in shell,f'mobile layout regression guard missing: {marker}')
 need(shell.index('installMobileLayoutGuard()') < shell.index('dockReferenceLauncher()'),'mobile layout guard must install before shell docking work')
+need(shell.index('syncVisibleViewChrome()') < shell.index('dockReferenceLauncher()'),'visible-view chrome sync must run before shell docking work')
+need("attributeFilter:['class']" in shell,'mobile Home chrome must react when core views toggle visibility')
+need("button.setAttribute('aria-current','page')" in shell,'mobile navigation must expose the active page to assistive technology')
 
 # The UX layer must remain a presentation/progression enhancement, not an assessment rewrite.
 for forbidden in ['MM_EVIDENCE_APPROVAL.records=', 'correctIndex=', 'question_bank_version=', 'MM_DATA.exams=', 'regionalQuestions=']:
@@ -87,4 +115,4 @@ need(re.search(r"const next=D\.lessons\[index\+1\]\|\|null",js) is not None,'com
 need("user.currentLesson=next.id" in js,'complete-and-continue must advance currentLesson')
 need("toast('Learning path complete ✓')" in js,'final lesson must terminate the learning path rather than wrap')
 
-print('MouldMaster learning experience QA passed (progress context, complete-and-continue, autosave notes, mobile actions, Home header/nav clearance, coherent offline/desktop packaging)')
+print('MouldMaster learning experience QA passed (task-first Home, evidence-first diagnosis/data access, compact mobile hierarchy, complete-and-continue, autosave notes, fixed-nav clearance, coherent offline/desktop packaging)')
