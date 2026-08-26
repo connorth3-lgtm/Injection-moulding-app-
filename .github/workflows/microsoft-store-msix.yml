@@ -85,6 +85,12 @@ jobs:
       - name: Validate learner experience progression and mobile flow
         working-directory: .
         run: python qa_learning_experience.py
+      - name: Validate canonical app shell registry
+        working-directory: .
+        run: python qa_app_shell_registry.py
+      - name: Validate Mould Master evidence workspace
+        working-directory: .
+        run: python qa_mould_master_workspace.py
       - name: Validate curriculum theory-practice-evidence integration
         working-directory: .
         run: python qa_curriculum_integration.py
