@@ -45,6 +45,7 @@ on:
       - 'process-data-20-pass-11-15.js'
       - 'process-data-20-pass-16-20.js'
       - 'process-data-20-pass-atlas.js'
+      - 'process-data-local-intake.js'
       - 'curriculum-integration.js'
       - 'specialist-curriculum.js'
       - 'mould-master-workspace.js'
@@ -76,6 +77,7 @@ on:
       - 'qa_process_data_diagnostics.py'
       - 'qa_process_data_deep_dive_50.py'
       - 'qa_process_data_20_pass.py'
+      - 'qa_process_data_local_intake.py'
       - 'qa_curriculum_integration.py'
       - 'qa_specialist_curriculum.py'
       - 'qa_learning_analytics.py'
@@ -179,6 +181,9 @@ jobs:
       - name: 20-pass 200-case process-data atlas QA
         working-directory: .
         run: python qa_process_data_20_pass.py
+      - name: Local real-data intake privacy QA
+        working-directory: .
+        run: python qa_process_data_local_intake.py
       - name: Learner experience progression and mobile QA
         working-directory: .
         run: python qa_learning_experience.py
