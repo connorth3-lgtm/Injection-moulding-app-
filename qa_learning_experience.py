@@ -6,6 +6,10 @@ ROOT=Path(__file__).resolve().parent
 def text(name): return (ROOT/name).read_text(encoding='utf-8')
 def need(ok,msg):
     if not ok: raise AssertionError(msg)
+def js_const(source,name):
+    m=re.search(rf"const\s+{re.escape(name)}\s*=\s*['\"]([^'\"]+)['\"]",source)
+    need(m is not None,f'missing JavaScript constant {name}')
+    return m.group(1)
 
 required=[
     'learning-experience.js','pwa-shell.js','index.html','service-worker.js','desktop/electron/package.json',
@@ -93,11 +97,19 @@ need('fetch(' not in js,'learning experience must remain local-only and must not
 idx=text('index.html')
 need("['./learning-experience.js','<script src=\"./learning-experience.js\">']" in idx,'browser shell does not load learning-experience.js')
 need(idx.index("'./pwa-shell.js'") < idx.index("'./learning-experience.js'"),'learning experience must load after the existing runtime patches')
-need('20260826.5-app-shell-mobile-qa' in idx,'learning UX must stay on the current coherent runtime token')
-need('mouldmaster-static-2026.08.26.2-app-shell-mobile-qa-20260826' in idx,'browser expected-cache token drifted from the current coherent runtime')
 
+# Runtime coherence is structural, not a hard-coded feature-bundle token. This lets data modules
+# advance the runtime family without creating false learner-UX failures.
 sw=text('service-worker.js')
-need("const CACHE_REVISION='app-shell-mobile-qa-20260826'" in sw,'service-worker cache revision drifted from the current coherent runtime')
+shell_release=js_const(idx,'SHELL_RELEASE')
+runtime_asset=js_const(idx,'RUNTIME_ASSET_VERSION')
+expected_cache=js_const(idx,'EXPECTED_STATIC_CACHE')
+cache_version=js_const(sw,'CACHE_VERSION')
+cache_revision=js_const(sw,'CACHE_REVISION')
+need(shell_release==cache_version,'learning UX shell release must match PWA cache version')
+need(expected_cache==f'mouldmaster-static-{cache_version}-{cache_revision}','learning UX expected cache must match service-worker cache identity')
+need(runtime_asset[:8]==''.join(cache_version.split('.')[:3]),'learning UX runtime date must align with PWA release date')
+need(runtime_asset.split('-',1)[1]==re.sub(r'-\d{8}$','',cache_revision),'learning UX runtime family must match PWA cache family')
 need("'./learning-experience.js'" in sw,'learning experience missing from offline cache')
 need("'./pwa-shell.js'" in sw,'PWA shell/mobile layout guard missing from offline cache')
 need("url.pathname.endsWith('.js')" in sw,'PWA shell must remain on the network-first runtime-critical path so installed apps receive mobile layout fixes')
@@ -115,4 +127,4 @@ need(re.search(r"const next=D\.lessons\[index\+1\]\|\|null",js) is not None,'com
 need("user.currentLesson=next.id" in js,'complete-and-continue must advance currentLesson')
 need("toast('Learning path complete ✓')" in js,'final lesson must terminate the learning path rather than wrap')
 
-print('MouldMaster learning experience QA passed (task-first Home, evidence-first diagnosis/data access, compact mobile hierarchy, complete-and-continue, autosave notes, fixed-nav clearance, coherent offline/desktop packaging)')
+print(f'MouldMaster learning experience QA passed (task-first Home, evidence-first diagnosis/data access, compact mobile hierarchy, complete-and-continue, autosave notes, fixed-nav clearance, coherent runtime={runtime_asset}, offline/desktop packaging)')
