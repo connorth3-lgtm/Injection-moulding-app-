@@ -131,14 +131,14 @@ for required in [
     "at least two independent",
     "264 cases / 19,008 cycles",
     "synthetic",
-    "prediction is not diagnosis",
+    "prediction can identify quality risk without proving physical causation",
     "success metric",
 ]:
     need(required in policy_lower, f"evidence coverage policy marker missing: {required}")
 for forbidden in [
-    "1,100 verified peer-reviewed",
-    "1100 verified peer-reviewed",
-    "universal process recipe",
+    "1,100 verified peer-reviewed injection-moulding papers",
+    "1100 verified peer-reviewed injection-moulding papers",
+    "paper total is the success metric",
 ]:
     need(forbidden not in policy_lower, f"policy contains prohibited overclaim: {forbidden}")
 
