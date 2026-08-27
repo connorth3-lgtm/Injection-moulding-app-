@@ -1,0 +1,46 @@
+name: MouldMaster Evidence Coverage
+
+on:
+  push:
+    branches: [main, evidence-coverage-hardening]
+    paths:
+      - 'sources/EVIDENCE_COVERAGE_POLICY.md'
+      - 'sources/MECHANISM_VALIDATION_QUEUE.md'
+      - 'data/evidence-coverage-v1.json'
+      - 'data/measured-evidence-50-pass.json'
+      - 'sources/MEASURED_EVIDENCE_50_PASS.md'
+      - 'sources/PROCESS_DATA_20_PASS_ATLAS.md'
+      - 'qa_evidence_coverage.py'
+      - '.github/workflows/evidence-coverage.yml'
+  pull_request:
+    branches: [main]
+    paths:
+      - 'sources/EVIDENCE_COVERAGE_POLICY.md'
+      - 'sources/MECHANISM_VALIDATION_QUEUE.md'
+      - 'data/evidence-coverage-v1.json'
+      - 'data/measured-evidence-50-pass.json'
+      - 'sources/MEASURED_EVIDENCE_50_PASS.md'
+      - 'sources/PROCESS_DATA_20_PASS_ATLAS.md'
+      - 'qa_evidence_coverage.py'
+      - '.github/workflows/evidence-coverage.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  evidence-coverage:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Mechanism evidence coverage integrity
+        run: python qa_evidence_coverage.py
+      - name: Upload evidence coverage report
+        uses: actions/upload-artifact@v4
+        with:
+          name: mouldmaster-evidence-coverage
+          path: evidence-coverage-report.json
+          if-no-files-found: error
