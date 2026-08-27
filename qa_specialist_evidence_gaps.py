@@ -28,12 +28,17 @@ for asset in [JS,FINALIZER]:
     p=subprocess.run(['node','--check',str(ROOT/asset)],capture_output=True,text=True)
     need(p.returncode==0,asset+' syntax error: '+(p.stderr or p.stdout))
 
-need("const VERSION='2026.08.28.1'" in js,'evidence-gap extension version marker missing')
+need("const VERSION='2026.08.28.2'" in js,'evidence-gap extension version marker missing')
 need("CORE.lessons.length!==120" in js,'extension must lock to canonical 120 lessons')
 need("BASE.lessons.length!==12" in js,'extension must build on the established 12 specialist lessons')
 need('20 optional extensions' in js and '20 optional lessons' in js,'combined specialist count must be explicit')
 need('Evidence status:' in js and ('not promoted evidence' in js or 'not promoted' in js),'conservative fallback evidence boundary missing from learner UI')
 need('does not alter the canonical 120 lessons' in js,'canonical-path boundary missing')
+need('function resolvedStatus(l)' in js and 'function evidenceStateMarkup(l)' in js,'specialist renderer must resolve registry-aligned evidence state directly')
+need("status:'Registry-controlled'" in js,'specialist extension must declare registry-controlled evidence state')
+need('learner completion never changes evidence status' in js,'completion/evidence separation missing from learner boundary')
+need('eight provisional evidence areas' not in js,'dashboard must not claim all registry-tracked lessons remain provisional after promotions')
+need('eight evidence-gap lessons are explicitly provisional' not in js,'learning boundary must not falsely downgrade promoted mechanisms')
 
 ids=re.findall(r"\bid:'(S\d{2})',title:",js)
 need(ids==[f'S{i:02d}' for i in range(13,21)],f'expected contiguous S13-S20, found {ids}')
@@ -63,7 +68,9 @@ for area,label in status_map.items():
 need('MM_SPECIALIST_EVIDENCE_STATUS' in finalizer,'specialist evidence status export missing')
 need('publisher-verified primary measured studies' in finalizer,'promoted UI must retain evidence boundary')
 need('study-specific settings remain bounded' in finalizer,'promoted UI must retain no-universal-recipe boundary')
+need("'\"':'&quot;'" in finalizer,'finalizer HTML escaping for double quotes is malformed')
 need('fetch(' not in finalizer and 'XMLHttpRequest' not in finalizer and 'sendBeacon' not in finalizer,'evidence status bridge must not add network transport')
+need("MM_APP_SHELL_FINALIZED='2026.08.26.4'" in finalizer,'canonical app-shell compatibility marker changed')
 
 for title in ['Residual stress, frozen-in orientation & birefringence','Weld-line structural strength versus appearance','Runner, gate & multicavity imbalance diagnosis','Hot-runner actual thermal & mechanical behaviour','Liquid silicone rubber: metering, mixing & cure behaviour','Gas-, water- & projectile-assisted moulding','Surface replication, texture, adhesion & release','Injection-compression & precision optical moulding']:
     need(title in js,f'expected specialist evidence-gap topic missing: {title}')
@@ -86,7 +93,7 @@ need(idx.index("'./specialist-curriculum.js'") < idx.index("'./specialist-eviden
 sw=text('service-worker.js');need("'./specialist-evidence-gap-extension.js'" in sw,'specialist evidence-gap extension missing from offline cache');need("'./app-shell-finalize.js'" in sw,'evidence-status finalizer missing from offline cache')
 pkg=json.loads(text('desktop/electron/package.json'));froms={x.get('from') for x in pkg['build']['extraResources'] if isinstance(x,dict)};need('../../specialist-evidence-gap-extension.js' in froms,'specialist evidence-gap extension missing from desktop package');need('../../app-shell-finalize.js' in froms,'evidence-status finalizer missing from desktop package')
 integrity=text('desktop/electron/scripts/generate-integrity.cjs');need("'specialist-evidence-gap-extension.js'" in integrity and "'app-shell-finalize.js'" in integrity,'specialist evidence assets missing from desktop integrity manifest')
-workflow=text(WORKFLOW);need('node --check specialist-evidence-gap-extension.js' in workflow,'specialist evidence-gap workflow missing JavaScript syntax check');need('python qa_specialist_evidence_gaps.py' in workflow,'specialist evidence-gap workflow missing QA gate');need('python qa_evidence_coverage.py' in workflow,'specialist evidence-gap workflow must also verify the evidence registry')
+workflow=text(WORKFLOW);need("- 'app-shell-finalize.js'" in workflow,'specialist evidence workflow path filters must include app-shell-finalize.js');need('node --check specialist-evidence-gap-extension.js' in workflow and 'node --check app-shell-finalize.js' in workflow,'specialist evidence workflow missing JavaScript syntax checks');need('python qa_specialist_evidence_gaps.py' in workflow,'specialist evidence-gap workflow missing QA gate');need('python qa_evidence_coverage.py' in workflow,'specialist evidence-gap workflow must also verify the evidence registry')
 
 promoted=sum(1 for a in expected_areas if registry_by_id[a]['status']=='promoted')
 print(f'MouldMaster specialist evidence-gap QA passed (8 extensions S13-S20; {promoted} promoted evidence lessons; {8-promoted} provisional; canonical 120 unchanged)')
