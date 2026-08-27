@@ -48,6 +48,7 @@ on:
       - 'process-data-local-intake.js'
       - 'curriculum-integration.js'
       - 'specialist-curriculum.js'
+      - 'specialist-evidence-gap-extension.js'
       - 'mould-master-workspace.js'
       - 'app-shell-finalize.js'
       - 'learning-analytics.js'
@@ -83,6 +84,9 @@ on:
       - 'qa_real_process_data_pilot.py'
       - 'qa_curriculum_integration.py'
       - 'qa_specialist_curriculum.py'
+      - 'qa_specialist_evidence_gaps.py'
+      - 'qa_evidence_coverage.py'
+      - 'qa_mechanism_promotion.py'
       - 'qa_learning_analytics.py'
       - 'qa_material_behaviour.py'
       - 'qa_assessment_storage_scope.py'
@@ -105,8 +109,12 @@ on:
       - 'sources/REAL_PROCESS_DATA_INTAKE.md'
       - 'sources/REAL_PROCESS_DATA_PILOT_PROTOCOL.md'
       - 'sources/MEASURED_EVIDENCE_50_PASS.md'
+      - 'sources/EVIDENCE_COVERAGE_POLICY.md'
+      - 'sources/MECHANISM_VALIDATION_QUEUE.md'
       - 'data/real-process-data-pilot-template.csv'
       - 'data/measured-evidence-50-pass.json'
+      - 'data/evidence-coverage-v1.json'
+      - 'data/mechanism-promotion-evidence/**'
       - 'service-worker.js'
       - 'privacy.html'
       - 'support.html'
@@ -213,7 +221,7 @@ jobs:
       - name: Curriculum theory-practice-evidence integration
         working-directory: .
         run: python qa_curriculum_integration.py
-      - name: Specialist curriculum gap extensions
+      - name: Specialist curriculum + evidence governance
         working-directory: .
         run: python qa_specialist_curriculum.py
       - name: Privacy-preserving learner validation analytics
