@@ -56,6 +56,7 @@ const CORE=[
   './process-data-local-intake.js',
   './curriculum-integration.js',
   './specialist-curriculum.js',
+  './specialist-evidence-gap-extension.js',
   './mould-master-workspace.js',
   './app-shell-finalize.js',
   './learning-analytics.js',
