@@ -1,0 +1,59 @@
+{
+  "schema_version": 1,
+  "dataset": {
+    "title": "Data Model for Injection Molding and Blow Molding",
+    "publisher": "Mendeley Data",
+    "doi": "10.17632/gtnb4j7bfx.1",
+    "version": "1",
+    "license": "CC BY 4.0",
+    "published": "2025-08-05",
+    "context": "industrial injection- and blow-moulding operations"
+  },
+  "source_article": {
+    "title": "Enhancement of Operational Efficiency in a Plastic Manufacturing Industry Through TPM, SMED, and Machine Learning—Case Study",
+    "doi": "10.3390/su17167445",
+    "role": "associated peer-reviewed variable/methodology source"
+  },
+  "benchmark_scope": {
+    "required_process_context": "injection-moulding",
+    "record_resolution": "production-order/run-level unless the downloaded file proves finer resolution",
+    "separation_rule": "Injection- and blow-moulding records must remain separate.",
+    "site_pilot_status": "External public benchmark only; not authorised-site pilot evidence."
+  },
+  "preprocessing_guardrails": [
+    "Preserve missing values as missing; do not reproduce the source study's null-to-zero preprocessing by default.",
+    "Do not infer shot resolution, cavity trace alignment, intervention timing or recovery evidence unless the downloaded file proves them.",
+    "Do not treat historical pressure, temperature, time or speed values as recommended setpoints or validated production limits.",
+    "Do not label reject, flash, defective or reprocess correlations as root causes without independent discriminating evidence.",
+    "Keep machine/product/date identifiers out of shareable derived reports unless needed, licensed and appropriately governed.",
+    "Commanded/target versus actual semantics are unknown for process variables unless the downloaded file or associated documentation explicitly establishes them."
+  ],
+  "columns": [
+    {"name":"Date_Recorded","unit":"YYYY-MM-DD","class":"timestamp_metadata","share_action":"drop","command_actual":"not_applicable"},
+    {"name":"Machine","unit":null,"class":"operational_identifier","share_action":"alias","command_actual":"not_applicable"},
+    {"name":"Shift","unit":"index","class":"grouping_context","share_action":"keep","command_actual":"not_applicable"},
+    {"name":"Product_Name","unit":null,"class":"operational_identifier","share_action":"alias","command_actual":"not_applicable"},
+    {"name":"Product_Weight","unit":"g","class":"product_record","share_action":"keep","command_actual":"unknown_source_semantics"},
+    {"name":"Required_Production","unit":"units","class":"production_target","share_action":"keep","command_actual":"target"},
+    {"name":"Rejected_Products","unit":"units","class":"quality_outcome","share_action":"keep","command_actual":"not_applicable"},
+    {"name":"Total_Production","unit":"units","class":"production_count","share_action":"keep","command_actual":"not_applicable"},
+    {"name":"Avg_Gross_Weight","unit":"g","class":"quality_measurement","share_action":"keep","command_actual":"measured_or_derived_unknown"},
+    {"name":"PP_Consumption","unit":"kg","class":"material_consumption","share_action":"keep","command_actual":"measured_or_derived_unknown"},
+    {"name":"Pigment_Consumption","unit":"kg","class":"material_consumption","share_action":"keep","command_actual":"measured_or_derived_unknown"},
+    {"name":"Flash_kg","unit":"kg","class":"quality_outcome","share_action":"keep","command_actual":"measured_or_derived_unknown"},
+    {"name":"Defective_kg","unit":"kg","class":"quality_outcome","share_action":"keep","command_actual":"measured_or_derived_unknown"},
+    {"name":"%Flash","unit":"%","class":"derived_quality_metric","share_action":"keep","command_actual":"derived"},
+    {"name":"%Defective","unit":"%","class":"derived_quality_metric","share_action":"keep","command_actual":"derived"},
+    {"name":"%Reprocess","unit":"%","class":"derived_quality_metric","share_action":"keep","command_actual":"derived"},
+    {"name":"Mold_Cavities","unit":"units","class":"tooling_context","share_action":"keep","command_actual":"not_applicable"},
+    {"name":"Injection_Pressure","unit":"bar","class":"process_record","share_action":"keep","command_actual":"unknown_source_semantics"},
+    {"name":"Retention_Pressure","unit":"bar","class":"process_record","share_action":"keep","command_actual":"unknown_source_semantics"},
+    {"name":"Melt_Temp","unit":"°C","class":"process_record","share_action":"keep","command_actual":"unknown_source_semantics"},
+    {"name":"Mold_Temp","unit":"°C","class":"process_record","share_action":"keep","command_actual":"unknown_source_semantics"},
+    {"name":"Cycle_Time","unit":"s","class":"process_record","share_action":"keep","command_actual":"unknown_source_semantics"},
+    {"name":"Cooling_Time_Injection","unit":"s","class":"process_record","share_action":"keep","command_actual":"unknown_source_semantics"},
+    {"name":"Ejection_Time_Injection","unit":"s","class":"process_record","share_action":"keep","command_actual":"unknown_source_semantics"},
+    {"name":"Retention_Time_Injection","unit":"s","class":"process_record","share_action":"keep","command_actual":"unknown_source_semantics"},
+    {"name":"Injection_Speed","unit":"mm/s","class":"process_record","share_action":"keep","command_actual":"unknown_source_semantics"}
+  ]
+}
