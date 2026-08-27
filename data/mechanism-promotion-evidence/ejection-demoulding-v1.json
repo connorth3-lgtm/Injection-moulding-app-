@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "version": "2026.08.28.2",
+  "version": "2026.08.28.3",
   "reviewed": "2026-08-28",
   "mechanismId": "ejection-demoulding-physics",
   "registryTarget": "data/evidence-coverage-v1.json",
@@ -23,6 +23,7 @@
     "eligibleForPromotion": true,
     "registryPromotionApplied": true
   },
+  "independenceRationale": "The counted studies are distinct experiments from disjoint author teams: a Budapest University of Technology and Economics PLA eject-force/damage study and a Central South University microinjection friction/replication study. They use different materials, tooling, measured signals and physical release outcomes, so neither is a duplicate publication or re-analysis of the other.",
   "studies": [
     {
       "id": "doi:10.3311/PPme.18246",
