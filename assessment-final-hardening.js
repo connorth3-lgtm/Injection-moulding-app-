@@ -8,8 +8,8 @@ if(!D||!A||typeof window.startExam!=='function'||typeof window.gradeExam!=='func
 const VERSION='2026.08.24.3';
 const BANK_VERSION='2026.08.24.2';
 const TIMING_KEY='mm_assessment_exposure_timing_v1';
-const SOURCE_REVIEWED='2026-08-24';
-const SOURCE_REVIEW_BY='2026-11-24';
+const SOURCE_REVIEWED='2026-08-26';
+const SOURCE_REVIEW_BY='2026-11-26';
 const BASELINE={revision:1,date:'2026-08-20',change:'Safety-first audited assessment baseline.'};
 const REVISION2={
  'tech:Beginner:3':{revision:2,date:'2026-08-24',change:'Deepened barrel-setpoint versus measured melt-temperature reasoning and made competing thermal explanations more realistic.'},

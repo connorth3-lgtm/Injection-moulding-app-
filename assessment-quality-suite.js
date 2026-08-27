@@ -7,8 +7,8 @@ if(!D||!D.exams||!D.regionalQuestions||!D.scenarios)throw new Error('MouldMaster
 const VERSION='2026.08.24.2';
 const ANALYTICS_KEY='mm_assessment_analytics_v1';
 const REVIEW_KEY='mm_spaced_review_v2';
-const SOURCE_REVIEWED='2026-08-24';
-const SOURCE_REVIEW_BY='2026-11-24';
+const SOURCE_REVIEWED='2026-08-26';
+const SOURCE_REVIEW_BY='2026-11-26';
 const LEVELS=['Beginner','Intermediate','Advanced'];
 const REGIONS=['UK','US','NZ'];
 const BLUEPRINT=['materials','machine','tooling','process','quality','troubleshooting'];
@@ -168,7 +168,7 @@ function leakRisks(){const out=[];for(const level of LEVELS)(D.exams[level]||[])
 
 addScenarios();rebuildMeta();const migrated=migrateStableReviewIds();addStyles();
 D.assessmentQA=D.assessmentQA||{};
-D.assessmentQA.qualitySuite={version:VERSION,reviewed:'24 August 2026',questionBankRevision:VERSION,stableQuestionIds:true,analytics:'device-local only',examBlueprint:['Materials & rheology','Machine & controls','Tooling & thermal','Process development','Quality & statistics','Troubleshooting','Safety & compliance'],technicalExamItems:30,regionalExamItems:27,totalExamItems:57,scenarioDrills:D.scenarios.length,sourceFreshnessReviewed:SOURCE_REVIEWED,sourceFreshnessReviewBy:SOURCE_REVIEW_BY,migratedLegacyReviewRecords:migrated};
+D.assessmentQA.qualitySuite={version:VERSION,reviewed:'26 August 2026',questionBankRevision:VERSION,stableQuestionIds:true,analytics:'device-local only',examBlueprint:['Materials & rheology','Machine & controls','Tooling & thermal','Process development','Quality & statistics','Troubleshooting','Safety & compliance'],technicalExamItems:30,regionalExamItems:27,totalExamItems:57,scenarioDrills:D.scenarios.length,sourceFreshnessReviewed:SOURCE_REVIEWED,sourceFreshnessReviewBy:SOURCE_REVIEW_BY,migratedLegacyReviewRecords:migrated};
 if(D.assessmentQA.deepAudit)D.assessmentQA.deepAudit.scenarioDrills=D.scenarios.length;
 D.assessmentQA.questionRevisionHistory=[
  {version:'2026.08.21.1',date:'21 August 2026',change:'Prior stable assessment bank identifier used by spaced review.'},

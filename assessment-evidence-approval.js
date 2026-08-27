@@ -8,7 +8,7 @@ const APPROVED_INPUTS={
  'training-upgrade.js':'860dd33d0d8690b38755d8022999fc86098b0a03',
  'assessment-deep-dive.js':'541aa65816c47d8c979e78a626e0dc7e9f7c9e08',
  'assessment-answer-cue-fix.js':'52c1017b37e2bfe0d51016b922bd5e6638490bd2',
- 'assessment-quality-suite.js':'86a05d36b63e0bc8fd41676cf5413bcbf11468b0',
+ 'assessment-quality-suite.js':'4c5c1927fc98546be4cf9b96f925bafc3e259be6',
  'diagnostic-learning-labs.js':'67e9272a2808e44c7be850dc23bdf5e04bcc0f9b',
  'material-behaviour-labs.js':'a8957eab46e8bcb5fa91fb1ad992343dbfeb238f'
 };
