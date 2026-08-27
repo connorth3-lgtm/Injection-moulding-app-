@@ -1,5 +1,5 @@
 from pathlib import Path
-import json, re, subprocess
+import json, re, subprocess, sys
 
 ROOT=Path(__file__).resolve().parent
 
@@ -14,8 +14,10 @@ def need(ok,msg):
         raise AssertionError(msg)
 
 required=[
-    'specialist-curriculum.js','MouldMaster_Core_App.html','index.html','service-worker.js',
+    'specialist-curriculum.js','specialist-evidence-gap-extension.js','app-shell-finalize.js',
+    'MouldMaster_Core_App.html','index.html','service-worker.js',
     'process-data-diagnostics.js','evidence-maturity-deep-dive.js','material-behaviour-labs.js',
+    'data/evidence-coverage-v1.json','qa_evidence_coverage.py','qa_mechanism_promotion.py','qa_specialist_evidence_gaps.py',
     'desktop/electron/package.json','desktop/electron/scripts/generate-integrity.cjs',
     '.github/workflows/qa.yml','.github/workflows/open-desktop-build.yml',
     '.github/workflows/publish-open-desktop.yml','.github/workflows/microsoft-store-msix.yml'
@@ -42,8 +44,6 @@ for marker in [
 ]:
     need(marker in js,f'specialist curriculum marker missing: {marker}')
 
-# Keep the canonical learning/certificate authority untouched. The specialist layer may navigate
-# to existing learning but cannot append lessons to the core or write formal completion/results.
 for forbidden in [
     'CORE.lessons.push(', 'CORE.courses.push(', '.lessonIds.push(',
     'MM_DATA.lessons=', 'MM_DATA.courses=', 'user.completed.push(',
@@ -52,7 +52,6 @@ for forbidden in [
 ]:
     need(forbidden not in js,f'specialist curriculum contains forbidden mutation/transport: {forbidden}')
 
-# Core remains exactly 12 tracks x 10 lessons = 120. Specialist IDs are a separate namespace.
 core=text('MouldMaster_Core_App.html')
 lesson_count=len(re.findall(r'\{"id":\d+,"course":\d+,"courseName":"',core))
 need(lesson_count==120,f'canonical core changed: expected 120 lessons, found {lesson_count}')
@@ -87,7 +86,6 @@ for title in [
 ]:
     need(title in js,f'expected gap-driven specialist topic missing: {title}')
 
-# Every linked practice must already exist in the established formative layers.
 data_src=text('process-data-diagnostics.js')+'\n'+text('evidence-maturity-deep-dive.js')
 material_src=text('material-behaviour-labs.js')
 for item_id in re.findall(r"\{type:'data',id:'([^']+)'",js):
@@ -99,12 +97,10 @@ for item_id in re.findall(r"\{type:'core',id:'(\d+)'",js):
 need("data-view=\"defects\"" in core,'Defect Finder target missing for specialist internal-defect practice')
 need("data-view=\"standards\"" in core,'Standards & safety target missing for specialist safety practice')
 
-# Local-only progress must be scoped separately from core lesson completion.
 need('localStorage.getItem(storageKey())' in js and 'localStorage.setItem(storageKey()' in js,'specialist local completion storage missing')
 need('mm_specialist_curriculum_v1' in js,'specialist storage namespace missing')
 need('Mark specialist lesson complete' in js,'specialist completion UI missing')
 
-# Runtime order, offline packaging, desktop integrity and release gates must all carry the extension.
 idx=text('index.html')
 needle="['./specialist-curriculum.js','<script src=\"./specialist-curriculum.js\">']"
 need(needle in idx,'browser shell does not load specialist-curriculum.js')
@@ -125,7 +121,9 @@ need('python qa_specialist_curriculum.py' in qa,'Release QA missing specialist c
 
 win=text('.github/workflows/open-desktop-build.yml')
 need("- 'specialist-curriculum.js'" in win,'Windows build path filter missing specialist asset')
+need("- 'specialist-evidence-gap-extension.js'" in win,'Windows build path filter missing evidence-gap specialist asset')
 need("- 'qa_specialist_curriculum.py'" in win,'Windows build path filter missing specialist QA')
+need("- 'qa_specialist_evidence_gaps.py'" in win,'Windows build path filter missing evidence-gap specialist QA')
 need('python qa_specialist_curriculum.py' in win,'Windows build missing specialist QA step')
 
 publisher=text('.github/workflows/publish-open-desktop.yml')
@@ -135,4 +133,8 @@ need('python qa_specialist_curriculum.py' in publisher,'desktop publisher missin
 store=text('.github/workflows/microsoft-store-msix.yml')
 need('python qa_specialist_curriculum.py' in store,'Microsoft Store workflow missing specialist curriculum gate')
 
-print('MouldMaster specialist curriculum QA passed (120 core unchanged; 12 optional gap-driven extensions linked to canonical formative evidence practice)')
+for script in ['qa_evidence_coverage.py','qa_mechanism_promotion.py','qa_specialist_evidence_gaps.py']:
+    run=subprocess.run([sys.executable,str(ROOT/script)],capture_output=True,text=True)
+    need(run.returncode==0,f'{script} failed through specialist release integration:\n{run.stdout}\n{run.stderr}')
+
+print('MouldMaster specialist curriculum QA passed (120 core unchanged; 12 base + 8 evidence-gap optional lessons; evidence coverage/promotion/status governance integrated)')
