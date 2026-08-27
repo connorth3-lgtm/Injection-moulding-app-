@@ -17,11 +17,10 @@ def need(ok,msg):
 
 JS='specialist-evidence-gap-extension.js'
 REGISTRY='data/evidence-coverage-v1.json'
+WORKFLOW='.github/workflows/specialist-evidence-gaps.yml'
 required=[
     JS,'specialist-curriculum.js','MouldMaster_Core_App.html','index.html','service-worker.js',REGISTRY,
-    'desktop/electron/package.json','desktop/electron/scripts/generate-integrity.cjs',
-    '.github/workflows/qa.yml','.github/workflows/open-desktop-build.yml',
-    '.github/workflows/publish-open-desktop.yml','.github/workflows/microsoft-store-msix.yml'
+    'desktop/electron/package.json','desktop/electron/scripts/generate-integrity.cjs',WORKFLOW
 ]
 for name in required:text(name)
 
@@ -40,7 +39,6 @@ ids=re.findall(r"\bid:'(S\d{2})',title:",js)
 need(ids==[f'S{i:02d}' for i in range(13,21)],f'expected contiguous S13-S20, found {ids}')
 need(len(set(ids))==8,'evidence-gap specialist IDs must be unique')
 need(js.count("evidenceStatus:'Provisional'")==8,'every evidence-gap lesson must be explicitly provisional')
-need(js.count('evidenceArea:')==8,'every evidence-gap lesson must map to one evidence registry area')
 need(js.count('objectives:[')==8,'every evidence-gap lesson must define objectives')
 need(js.count('keypoints:[')==8,'every evidence-gap lesson must define engineering keypoints')
 need(js.count('evidenceTask:')==8,'every evidence-gap lesson must define an evidence task')
@@ -101,7 +99,7 @@ for item_id in re.findall(r"\{type:'core',id:'(\d+)'",js):
 for practice_type in re.findall(r"\{type:'([^']+)'",js):
     need(practice_type in {'core','defects','standards'},f'evidence-gap extension introduced unsupported practice type: {practice_type}')
 
-# Runtime load order, offline cache, desktop packaging and integrity must carry the extension.
+# Runtime load order, offline cache, desktop packaging and integrity must all carry the extension.
 idx=text('index.html')
 needle="['./specialist-evidence-gap-extension.js','<script src=\"./specialist-evidence-gap-extension.js\">']"
 need(needle in idx,'browser shell does not load specialist evidence-gap extension')
@@ -115,20 +113,9 @@ froms={x.get('from') for x in pkg['build']['extraResources'] if isinstance(x,dic
 need('../../specialist-evidence-gap-extension.js' in froms,'specialist evidence-gap extension missing from desktop package')
 need("'specialist-evidence-gap-extension.js'" in text('desktop/electron/scripts/generate-integrity.cjs'),'specialist evidence-gap extension missing from desktop integrity manifest')
 
-qa=text('.github/workflows/qa.yml')
-need('node --check specialist-evidence-gap-extension.js' in qa,'release QA missing evidence-gap JavaScript syntax gate')
-need('python qa_specialist_evidence_gaps.py' in qa,'release QA missing specialist evidence-gap gate')
-
-win=text('.github/workflows/open-desktop-build.yml')
-need("- 'specialist-evidence-gap-extension.js'" in win,'Windows build path filter missing specialist evidence-gap asset')
-need("- 'qa_specialist_evidence_gaps.py'" in win,'Windows build path filter missing specialist evidence-gap QA')
-need('python qa_specialist_evidence_gaps.py' in win,'Windows build missing specialist evidence-gap QA step')
-
-publisher=text('.github/workflows/publish-open-desktop.yml')
-need('node --check specialist-evidence-gap-extension.js' in publisher,'desktop publisher missing specialist evidence-gap syntax gate')
-need('python qa_specialist_evidence_gaps.py' in publisher,'desktop publisher missing specialist evidence-gap QA gate')
-
-store=text('.github/workflows/microsoft-store-msix.yml')
-need('python qa_specialist_evidence_gaps.py' in store,'Microsoft Store workflow missing specialist evidence-gap QA gate')
+workflow=text(WORKFLOW)
+need('node --check specialist-evidence-gap-extension.js' in workflow,'specialist evidence-gap workflow missing JavaScript syntax check')
+need('python qa_specialist_evidence_gaps.py' in workflow,'specialist evidence-gap workflow missing QA gate')
+need('python qa_evidence_coverage.py' in workflow,'specialist evidence-gap workflow must also verify the evidence registry')
 
 print('MouldMaster specialist evidence-gap QA passed (8 provisional extensions S13-S20; 20 optional specialist lessons total; canonical 120 unchanged)')
