@@ -1,4 +1,4 @@
-/* MouldMaster app-shell finalizer — 2026.08.28.1 */
+/* MouldMaster app-shell finalizer — 2026.08.28.2 */
 (function(){
 'use strict';
 if(!window.MM_APP_SHELL)throw new Error('app-shell-finalize.js requires app-shell-registry.js');
@@ -20,7 +20,7 @@ const EVIDENCE_STATUS=Object.freeze({
 });
 const GAP=window.MM_SPECIALIST_EVIDENCE_GAPS;
 const BASE=window.MM_SPECIALIST_CURRICULUM;
-function esc(v){return String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot',"'":'&#39;'}[c]))}
+function esc(v){return String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
 function syncEvidenceExports(){
   for(const lesson of GAP.lessons){
     const state=EVIDENCE_STATUS[lesson.evidenceArea]||'Provisional';
@@ -53,7 +53,7 @@ const originalSpecialistOpen=window.mmSpecialistOpen;
 const originalGapLesson=window.mmSpecialistGapLesson;
 window.mmSpecialistOpen=function(){const result=originalSpecialistOpen?.();queueMicrotask(patchEvidenceUi);return result};
 window.mmSpecialistGapLesson=function(id){const result=originalGapLesson?.(id);queueMicrotask(patchEvidenceUi);return result};
-window.MM_SPECIALIST_EVIDENCE_STATUS={version:'2026.08.28.1',statuses:{...EVIDENCE_STATUS},summary:{...GAP.evidenceSummary},scope:'Registry-aligned display state for optional evidence-gap learning; no assessment or certificate authority.'};
+window.MM_SPECIALIST_EVIDENCE_STATUS={version:'2026.08.28.2',statuses:{...EVIDENCE_STATUS},summary:{...GAP.evidenceSummary},scope:'Registry-aligned display state for optional evidence-gap learning; no assessment or certificate authority.'};
 
 window.MM_APP_SHELL.finalize();
 const geometryStyle=document.getElementById('mm-app-shell-registry-style');
