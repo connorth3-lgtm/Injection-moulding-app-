@@ -63,14 +63,14 @@ Optional specialist education may teach a mechanism before that mechanism is pro
 
 The established specialist layer keeps S01-S12 unchanged. `specialist-evidence-gap-extension.js` adds S13-S20 for eight of the priority evidence areas:
 
-- S13 residual stress / birefringence;
-- S14 weld-line structural strength;
-- S15 runner/gate/multicavity imbalance;
-- S16 hot-runner actual behaviour;
-- S17 liquid silicone rubber;
-- S18 gas/water/projectile-assisted moulding;
-- S19 surface replication / release;
-- S20 injection-compression / precision optics.
+- **S13** residual stress / birefringence;
+- **S14** weld-line structural strength;
+- **S15** runner/gate/multicavity imbalance;
+- **S16** hot-runner actual behaviour;
+- **S17** liquid silicone rubber;
+- **S18** gas/water/projectile-assisted moulding;
+- **S19** surface replication / release;
+- **S20** injection-compression / precision optics.
 
 These lessons are explicitly labelled **Provisional** while their registry mechanisms remain provisional. They are optional formative learning outside the canonical 120-lesson completion path and do not alter formal assessment answers or certificate requirements. Curriculum completion cannot promote an evidence mechanism.
 
