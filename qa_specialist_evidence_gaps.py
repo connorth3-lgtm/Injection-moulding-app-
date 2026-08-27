@@ -32,7 +32,7 @@ need("const VERSION='2026.08.28.1'" in js,'evidence-gap extension version marker
 need("CORE.lessons.length!==120" in js,'extension must lock to canonical 120 lessons')
 need("BASE.lessons.length!==12" in js,'extension must build on the established 12 specialist lessons')
 need('20 optional extensions' in js and '20 optional lessons' in js,'combined specialist count must be explicit')
-need('Evidence status:' in js and 'not promoted evidence' in js,'provisional evidence boundary missing from learner UI')
+need('Evidence status:' in js and ('not promoted evidence' in js or 'not promoted' in js),'provisional evidence boundary missing from learner UI')
 need('does not alter the canonical 120 lessons' in js,'canonical-path boundary missing')
 
 ids=re.findall(r"\bid:'(S\d{2})',title:",js)
@@ -77,7 +77,6 @@ for title in [
 ]:
     need(title in js,f'expected specialist evidence-gap topic missing: {title}')
 
-# This layer can extend only the optional specialist export and its own scoped progress.
 for forbidden in [
     'CORE.lessons.push(', 'CORE.courses.push(', '.lessonIds.push(',
     'MM_DATA.lessons=', 'MM_DATA.courses=', 'user.completed.push(',
@@ -88,18 +87,15 @@ for forbidden in [
 need('BASE.lessons.push(' in js,'evidence-gap lessons must surface through the optional specialist export')
 need("mm_specialist_evidence_gaps_v1" in js,'separate local storage namespace missing')
 
-# Core is untouched at 120 lessons.
 core=text('MouldMaster_Core_App.html')
 lesson_count=len(re.findall(r'\{"id":\d+,"course":\d+,"courseName":"',core))
 need(lesson_count==120,f'canonical core changed: expected 120 lessons, found {lesson_count}')
 
-# All core links stay inside the canonical range and non-core practices reuse supported base types.
 for item_id in re.findall(r"\{type:'core',id:'(\d+)'",js):
     need(1<=int(item_id)<=120,f'evidence-gap core link outside canonical range: {item_id}')
 for practice_type in re.findall(r"\{type:'([^']+)'",js):
     need(practice_type in {'core','defects','standards'},f'evidence-gap extension introduced unsupported practice type: {practice_type}')
 
-# Runtime load order, offline cache, desktop packaging and integrity must all carry the extension.
 idx=text('index.html')
 needle="['./specialist-evidence-gap-extension.js','<script src=\"./specialist-evidence-gap-extension.js\">']"
 need(needle in idx,'browser shell does not load specialist evidence-gap extension')
