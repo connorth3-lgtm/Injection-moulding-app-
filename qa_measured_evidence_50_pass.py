@@ -6,6 +6,7 @@ import re
 ROOT = Path(__file__).resolve().parent
 DATA = ROOT / 'data' / 'measured-evidence-50-pass.json'
 DOC = ROOT / 'sources' / 'MEASURED_EVIDENCE_50_PASS.md'
+REPORT = ROOT / 'measured-evidence-50-pass-report.json'
 
 
 def need(ok, msg):
@@ -33,11 +34,13 @@ need(len(set(urls)) == 50, 'each measured-evidence pass must currently point to 
 required = {'pass','id','theme','evidenceType','sourceTitle','sourceUrl','access','measuredSignals','learningUse','limitation'}
 theme_counts = Counter()
 type_counts = Counter()
+access_counts = Counter()
 for p in passes:
     need(set(p) == required, f"{p.get('id')} measured-evidence schema fields drifted: {set(p)}")
     need(p['theme'] in themes, f"{p['id']} uses an unknown theme")
     theme_counts[p['theme']] += 1
     type_counts[p['evidenceType']] += 1
+    access_counts[p['access']] += 1
     need(p['evidenceType'] in {'open-measured-dataset','embargoed-measured-dataset','primary-measured-study'}, f"{p['id']} has an unsupported evidence type")
     need(isinstance(p['sourceTitle'], str) and len(p['sourceTitle']) >= 16, f"{p['id']} needs a meaningful source title")
     need(re.match(r'^https://', p['sourceUrl']) is not None, f"{p['id']} source must use https")
@@ -63,5 +66,21 @@ need('data/measured-evidence-50-pass.json' in doc, 'measured-evidence document m
 for wf in ['.github/workflows/qa.yml','.github/workflows/open-desktop-build.yml','.github/workflows/publish-open-desktop.yml','.github/workflows/microsoft-store-msix.yml']:
     text = read(ROOT / wf)
     need('python qa_measured_evidence_50_pass.py' in text, f'{wf} must gate the 50-pass measured-evidence audit')
+
+report = {
+    'schema': 1,
+    'version': obj.get('version'),
+    'reviewed': obj.get('reviewed'),
+    'scope': obj.get('scope'),
+    'passes': len(passes),
+    'themes': dict(theme_counts),
+    'evidenceTypes': dict(type_counts),
+    'access': dict(access_counts),
+    'distinctSourceUrls': len(set(urls)),
+    'openMeasuredDatasetPasses': [p['pass'] for p in passes if p['evidenceType'] == 'open-measured-dataset'],
+    'embargoedMeasuredDatasetPasses': [p['pass'] for p in passes if p['evidenceType'] == 'embargoed-measured-dataset'],
+    'boundary': 'Measured studies/datasets remain distinct from MouldMaster synthetic cases; association/prediction is not automatically root-cause proof and published numeric settings are not universal production recipes.'
+}
+REPORT.write_text(json.dumps(report, indent=2, ensure_ascii=False) + '\n', encoding='utf-8')
 
 print(f"MouldMaster measured-evidence QA passed (50 passes; 10 themes x 5; {type_counts['open-measured-dataset']} open measured datasets; {type_counts['embargoed-measured-dataset']} embargoed datasets explicitly bounded; {type_counts['primary-measured-study']} primary measured studies; 0 synthetic rows relabelled as measured)")
