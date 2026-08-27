@@ -6,7 +6,7 @@ Reviewed: 2026-08-28
 
 MouldMaster uses research to improve injection-moulding education, troubleshooting reasoning and measured-data validation. The project must not confuse a large literature-search result with a large body of usable evidence.
 
-The recent scholarly searches produced an approximate **1,100-record discovery pool**. That number is a discovery count only. It includes strong journal papers, reviews, simulation studies, specialist metal/ceramic/medical applications, theses and occasional off-topic index matches. It must not be presented as “1,100 verified peer-reviewed injection-moulding papers” or used as an evidence-strength metric.
+The recent scholarly searches produced an approximate **1,100-record discovery pool**. That number is a discovery count only. It includes strong journal papers, reviews, simulation studies, specialist metal/ceramic/medical applications, theses and occasional off-topic index matches. It must not be presented as a publisher-verified peer-reviewed corpus of that size or used as an evidence-strength metric.
 
 The authoritative metric is **mechanism evidence coverage**:
 
