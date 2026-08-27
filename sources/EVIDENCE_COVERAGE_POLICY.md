@@ -6,7 +6,7 @@ Reviewed: 2026-08-28
 
 MouldMaster uses research to improve injection-moulding education, troubleshooting reasoning and measured-data validation. The project must not confuse a large literature-search result with a large body of usable evidence.
 
-The recent scholarly searches produced an approximate **1,100-record discovery pool**. That number is a discovery count only. It includes strong journal papers, reviews, simulation studies, specialist metal/ceramic/medical applications, theses and occasional off-topic index matches. It must not be presented as a publisher-verified peer-reviewed corpus of that size or used as an evidence-strength metric.
+The recent scholarly searches produced an approximate **1,100-record discovery pool**. That number is a discovery count only. It includes strong journal papers, reviews, simulation studies, specialist metal/ceramic/medical applications, theses and occasional off-topic index matches. It must not be presented as a verified evidence total or used as an evidence-strength metric.
 
 The authoritative metric is **mechanism evidence coverage**:
 
@@ -55,7 +55,24 @@ The 2026-08-28 corpus audit identified twelve areas where evidence depth should 
 11. surface replication, texture, adhesion and release;
 12. injection-compression and precision optical moulding.
 
-These are tracked in `data/evidence-coverage-v1.json`. Optional specialist lessons can teach a mechanism before it is fully promoted, but the UI and evidence task must preserve its evidence status and uncertainty.
+These are tracked in `data/evidence-coverage-v1.json`.
+
+## Specialist curriculum mapping
+
+Optional specialist education may teach a mechanism before that mechanism is promoted, but the learner must be shown the evidence state and uncertainty.
+
+The established specialist layer keeps S01-S12 unchanged. `specialist-evidence-gap-extension.js` adds S13-S20 for eight of the priority evidence areas:
+
+- S13 residual stress / birefringence;
+- S14 weld-line structural strength;
+- S15 runner/gate/multicavity imbalance;
+- S16 hot-runner actual behaviour;
+- S17 liquid silicone rubber;
+- S18 gas/water/projectile-assisted moulding;
+- S19 surface replication / release;
+- S20 injection-compression / precision optics.
+
+These lessons are explicitly labelled **Provisional** while their registry mechanisms remain provisional. They remain outside the canonical 120-lesson completion path and do not alter formal assessment answers or certificate requirements. Curriculum completion cannot promote an evidence mechanism.
 
 ## Relationship to the 264 synthetic learning cases
 
