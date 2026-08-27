@@ -58,7 +58,7 @@ for path in [GUIDED, *DEEP_PACKS, *ATLAS_PACKS]:
 node = r"""
 const fs=require('fs'),vm=require('vm');
 const guidedSource=fs.readFileSync(process.argv[1],'utf8');
-const m=/const DATASET_DEFS=(\[[\s\S]*?\]);\nfunction generateDataset/.exec(guidedSource);
+const m=/const DATASET_DEFS=(\[[\s\S]*?\]);\s*function generateDataset/.exec(guidedSource);
 if(!m)throw new Error('guided DATASET_DEFS block missing');
 const guidedCtx={};vm.runInNewContext('defs='+m[1],guidedCtx);
 global.window={};
