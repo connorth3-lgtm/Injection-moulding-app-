@@ -69,6 +69,11 @@ def main():
     ap=argparse.ArgumentParser(); ap.add_argument('--network',action='store_true'); args=ap.parse_args()
     need(MANIFEST.exists(),'sources/SOURCE_FRESHNESS.json missing')
     data=json.loads(MANIFEST.read_text(encoding='utf-8')); rows=static_check(data)
+    quality=(ROOT/'assessment-quality-suite.js').read_text(encoding='utf-8')
+    shell=(ROOT/'pwa-shell.js').read_text(encoding='utf-8')
+    need(f"const SOURCE_REVIEWED='{data['reviewed']}'" in quality,'assessment source-reviewed date must match the authoritative manifest')
+    need(f"const SOURCE_REVIEW_BY='{data['review_by']}'" in quality,'assessment source review-by date must match the authoritative manifest')
+    need("window.MM_DATA?.standards" in shell and '26 August 2026' in shell,'visible standards review date must be synchronized by the shell')
     report={'schema':1,'checked_at':datetime.now(timezone.utc).replace(microsecond=0).isoformat().replace('+00:00','Z'),'mode':'network' if args.network else 'static','manifest_reviewed':data['reviewed'],'manifest_review_by':data['review_by'],'results':[]}
     changed=[]; gone=[]
     if args.network:
@@ -77,6 +82,9 @@ def main():
             if result['result']=='changed-marker': changed.append(row['id'])
             elif result['result']=='gone': gone.append(row['id'])
             elif result['result']=='unreachable': print(f"WARNING: {row['id']} could not be marker-checked: {result.get('error')}")
+        successful=sum(x['result'] in ('ok','ok-reachability') for x in report['results'])
+        report['network_coverage']={'successful':successful,'total':len(rows),'minimum':(len(rows)+1)//2}
+        need(successful>=(len(rows)+1)//2,'source freshness network coverage below 50%; retry before treating the run as successful')
     REPORT.write_text(json.dumps(report,indent=2)+'\n',encoding='utf-8')
     failures=[]
     if changed: failures.append('official source identity/status marker changed: '+', '.join(changed))

@@ -67,6 +67,9 @@ def main():
     ap=argparse.ArgumentParser(); ap.add_argument('--network',action='store_true'); args=ap.parse_args()
     need(MANIFEST.exists(),'sources/RESEARCH_SOURCE_FRESHNESS.json missing')
     data=json.loads(MANIFEST.read_text(encoding='utf-8')); urls,per_file,locations=discover(data)
+    hardening=(ROOT/'assessment-final-hardening.js').read_text(encoding='utf-8')
+    need(f"const SOURCE_REVIEWED='{data['reviewed']}'" in hardening,'assessment DOI-reviewed date must match the research manifest')
+    need(f"const SOURCE_REVIEW_BY='{data['review_by']}'" in hardening,'assessment DOI review-by date must match the research manifest')
     report={'schema':1,'checked_at':datetime.now(timezone.utc).replace(microsecond=0).isoformat().replace('+00:00','Z'),'mode':'network' if args.network else 'static','manifest_reviewed':data['reviewed'],'manifest_review_by':data['review_by'],'doi_count':len(urls),'source_file_counts':per_file,'source_locations':locations,'results':[]}
     gone=[]
     if args.network:
@@ -77,6 +80,9 @@ def main():
             result=check_doi(url); report['results'].append(result)
             if result['result']=='gone': gone.append(result['url'])
             elif result['result']=='unreachable': print(f"WARNING: DOI could not be resolved now: {result['url']} ({result.get('error','network/access restriction')})")
+        successful=sum(x['result']=='ok' for x in report['results'])
+        report['network_coverage']={'successful':successful,'total':len(urls),'minimum':(len(urls)+1)//2}
+        need(successful>=(len(urls)+1)//2,'research DOI network coverage below 50%; retry before treating the run as successful')
     REPORT.write_text(json.dumps(report,indent=2)+'\n',encoding='utf-8')
     if gone: raise AssertionError('research DOI resolver returned 404/410; human source review required: '+', '.join(gone))
     print(f"MouldMaster research DOI freshness QA passed ({len(urls)} DOI citations; mode={report['mode']})")

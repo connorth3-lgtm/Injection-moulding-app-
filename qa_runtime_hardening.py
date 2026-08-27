@@ -63,6 +63,7 @@ must(index, [
 must(shell, [
     "new MutationObserver(scheduleSync)", "el.textContent!==value", "syncUpdateCard", "[data-mm-update-card]",
     "dockReferenceLauncher", "getElementById('mm-src-open')", "document.querySelector('.sidebar-foot')",
+    "syncStandardsReviewDate", "window.MM_DATA?.standards", "26 August 2026",
     "open.style.position='static'", "open.style.zIndex='auto'", "configureReferenceDrawer",
     "modal.setAttribute('aria-modal','false')", "pointer-events:none!important",
     ".mmsrc.mm-reference-drawer .mmsrc-panel{width:min(430px", "pointer-events:auto!important",

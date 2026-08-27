@@ -21,6 +21,12 @@ function syncLabels(){
   document.querySelectorAll('[data-mm-android-pwa] .tiny.muted').forEach(p=>{if(/Android release/i.test(p.textContent||''))setText(p,copy)});
   const meta=document.querySelector('meta[name="mm-shell-release"]');if(meta)setAttr(meta,'content',RELEASE);
 }
+function syncStandardsReviewDate(){
+  if(window.MM_DATA?.standards)window.MM_DATA.standards.verified='26 August 2026';
+  document.querySelectorAll('small,.tiny,.muted,p,span').forEach(el=>{
+    if(/References reviewed\s+20 August 2026/i.test(el.textContent||''))setText(el,(el.textContent||'').replace(/20 August 2026/gi,'26 August 2026'));
+  });
+}
 function syncUpdateCard(){
   const ctx=displayContext();
   document.querySelectorAll('[data-mm-update-card]').forEach(card=>{
@@ -205,7 +211,7 @@ async function register(){
   try{const reg=await navigator.serviceWorker.register('./service-worker.js',{scope:'./'});await reg.update()}catch(e){console.warn('[MouldMaster] Offline/update support unavailable:',e)}
 }
 let syncQueued=false;
-function runSync(){syncQueued=false;syncLabels();syncUpdateCard();installMobileLayoutGuard();syncVisibleViewChrome();dockReferenceLauncher();configureReferenceDrawer();dockReferenceDataLauncher();configureReferenceDataDrawer();addNZLegacyNote()}
+function runSync(){syncQueued=false;syncLabels();syncStandardsReviewDate();syncUpdateCard();installMobileLayoutGuard();syncVisibleViewChrome();dockReferenceLauncher();configureReferenceDrawer();dockReferenceDataLauncher();configureReferenceDataDrawer();addNZLegacyNote()}
 function scheduleSync(){
   if(syncQueued)return;
   syncQueued=true;
