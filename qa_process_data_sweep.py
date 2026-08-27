@@ -27,6 +27,16 @@ KNOWN_TITLE_OVERLAPS = {
     'hot runner thermocouple bias': {'hotrunner-thermocouple-bias', 'p05-thermocouple-bias'},
     'pa66 moisture reabsorption after drying': {'pa66-moisture-reabsorption', 'p08-pa66-reabsorption'},
 }
+# These guided datasets are controlled studies/transfer demonstrations whose
+# third phase is a verified endpoint rather than a return to the first value.
+# Keeping the exception narrow prevents a scientific study from being mislabeled
+# as a recovery while preserving the stronger recovery-to-baseline invariant for
+# every ordinary diagnostic case.
+CONTROLLED_ENDPOINT_CASES = {
+    'gate-seal-study': 'Gate-seal study deliberately progresses toward a mass/pressure-area plateau as hold time is extended.',
+    'recycled-pp-lot': 'A changed material lot is verified at a new stable material/process signature rather than assumed identical to the prior lot.',
+    'machine-transfer': 'Machine transfer verifies equivalent physical response after transfer; one actual-response feature can settle at a new machine-specific value.',
+}
 
 
 def text(path):
@@ -96,6 +106,8 @@ need(len(records) == 264, f'expected 264 total process-data cases, got {len(reco
 
 ids = [r['id'] for r in records]
 need(len(set(ids)) == len(ids), 'process-data case IDs must be globally unique across guided, deep-dive and atlas layers')
+need(set(CONTROLLED_ENDPOINT_CASES).issubset(set(ids)), 'controlled-study endpoint register references a missing case')
+need(all(next(r for r in records if r['id'] == cid)['layer'] == 'guided-14' for cid in CONTROLLED_ENDPOINT_CASES), 'controlled-study endpoint exceptions must remain limited to the guided scientific/transfer layer')
 
 exact_titles = defaultdict(list)
 for r in records:
@@ -111,6 +123,7 @@ signal_counts = Counter()
 domain_counts = Counter()
 source_counts = Counter()
 source_granularity = Counter()
+controlled_endpoint_summary = {}
 for r in records:
     domain_counts[r['domain']] += 1
     source_granularity[r['sourceGranularity']] += 1
@@ -123,15 +136,26 @@ for r in records:
     names = [s[0] for s in signals]
     need(len(set(names)) == 4, f"{r['id']} repeats a signal name")
     changed = 0
+    endpoint_changes = 0
     for name, baseline, delta, recovery in signals:
         signal_counts[name] += 1
         need(isinstance(name, str) and name, f"{r['id']} contains an empty signal name")
         need(all(isinstance(v, (int, float)) and math.isfinite(v) for v in (baseline, delta, recovery)), f"{r['id']}/{name} must contain finite numeric baseline/delta/recovery values")
-        need(recovery == baseline, f"{r['id']}/{name} recovery target must equal its defined baseline")
+        if r['id'] in CONTROLLED_ENDPOINT_CASES:
+            endpoint_changes += int(recovery != baseline)
+        else:
+            need(recovery == baseline, f"{r['id']}/{name} recovery target must equal its defined baseline")
         if abs(delta) > 1e-12:
             changed += 1
-    need(changed >= 2, f"{r['id']} must contain at least two changed fault signals")
+    need(changed >= 2, f"{r['id']} must contain at least two changed fault/study signals")
+    if r['id'] in CONTROLLED_ENDPOINT_CASES:
+        need(endpoint_changes >= 1, f"{r['id']} is registered as a controlled study endpoint but has no endpoint change")
+        controlled_endpoint_summary[r['id']] = {
+            'endpointSignalsDifferentFromBaseline': endpoint_changes,
+            'rationale': CONTROLLED_ENDPOINT_CASES[r['id']],
+        }
 
+need(set(controlled_endpoint_summary) == set(CONTROLLED_ENDPOINT_CASES), 'controlled-study endpoint audit did not execute every registered exception')
 expected_cycles = 264 * 72
 need(expected_cycles == 19008, 'process-data corpus cycle arithmetic drifted')
 
@@ -150,7 +174,7 @@ for marker in ['Two templates, one controlled flow','Sequence review required','
     need(marker in intake_standard, f'real-data intake standard missing sweep finding/fix marker: {marker}')
 
 report = {
-    'schema': 1,
+    'schema': 2,
     'scope': 'Cross-library structural sweep of MouldMaster synthetic process-data learning cases; no measured production rows are included.',
     'totals': {'cases': len(records), 'cycles': expected_cycles, 'signalsPerCase': 4},
     'layers': dict(layer_counts),
@@ -159,6 +183,11 @@ report = {
     'knownIntentionalTitleOverlaps': exact_collisions,
     'unapprovedTitleCollisions': unapproved_collisions,
     'titleOverlapPolicy': 'The registered overlaps teach the same physical mechanism at different representation/depth layers (physical-value guided/deep case versus normalized atlas evidence chain). Any new or differently paired title collision fails CI.',
+    'trajectoryPolicy': {
+        'ordinaryDiagnosticCases': 'Recovery target must equal defined baseline for every signal.',
+        'controlledStudyEndpointCases': controlled_endpoint_summary,
+        'boundary': 'A controlled scientific study or transfer endpoint is not relabeled as fault recovery merely to satisfy a structural invariant.'
+    },
     'uniqueSignalNames': len(signal_counts),
     'mostReusedSignalNames': [{'name': name, 'cases': count} for name, count in signal_counts.most_common(20)],
     'evidenceSources': {
@@ -178,4 +207,4 @@ report = {
     }
 }
 REPORT.write_text(json.dumps(report, indent=2, ensure_ascii=False) + '\n', encoding='utf-8')
-print(f"MouldMaster cross-library data sweep passed ({len(records)} globally unique case IDs; {expected_cycles:,} synthetic cycles; {len(signal_counts)} distinct signal names; {len(source_counts)} referenced source IDs; {len(exact_collisions)} registered cross-layer title overlaps; {source_granularity['pass']} atlas cases still use pass-level evidence granularity)")
+print(f"MouldMaster cross-library data sweep passed ({len(records)} globally unique case IDs; {expected_cycles:,} synthetic cycles; {len(signal_counts)} distinct signal names; {len(source_counts)} referenced source IDs; {len(exact_collisions)} registered cross-layer title overlaps; {len(CONTROLLED_ENDPOINT_CASES)} controlled study endpoints; {source_granularity['pass']} atlas cases still use pass-level evidence granularity)")
