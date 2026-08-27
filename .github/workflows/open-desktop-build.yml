@@ -78,6 +78,7 @@ on:
       - 'qa_process_data_deep_dive_50.py'
       - 'qa_process_data_20_pass.py'
       - 'qa_process_data_sweep.py'
+      - 'qa_measured_evidence_50_pass.py'
       - 'qa_process_data_local_intake.py'
       - 'qa_real_process_data_pilot.py'
       - 'qa_curriculum_integration.py'
@@ -103,7 +104,9 @@ on:
       - 'sources/PROCESS_DATA_20_PASS_ATLAS.md'
       - 'sources/REAL_PROCESS_DATA_INTAKE.md'
       - 'sources/REAL_PROCESS_DATA_PILOT_PROTOCOL.md'
+      - 'sources/MEASURED_EVIDENCE_50_PASS.md'
       - 'data/real-process-data-pilot-template.csv'
+      - 'data/measured-evidence-50-pass.json'
       - 'service-worker.js'
       - 'privacy.html'
       - 'support.html'
@@ -189,6 +192,9 @@ jobs:
       - name: Cross-library 264-case process-data sweep
         working-directory: .
         run: python qa_process_data_sweep.py
+      - name: 50-pass real measured-evidence audit
+        working-directory: .
+        run: python qa_measured_evidence_50_pass.py
       - name: Local real-data intake privacy QA
         working-directory: .
         run: python qa_process_data_local_intake.py
@@ -261,6 +267,7 @@ jobs:
             assessment-quality-report.json
             evidence-maturity-report.json
             process-data-sweep-report.json
+            measured-evidence-50-pass-report.json
             source-freshness-report.json
             research-source-freshness-report.json
           if-no-files-found: error

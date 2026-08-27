@@ -111,6 +111,7 @@ jobs:
           python qa_process_data_deep_dive_50.py
           python qa_process_data_20_pass.py
           python qa_process_data_sweep.py
+          python qa_measured_evidence_50_pass.py
           python qa_process_data_local_intake.py
           python qa_real_process_data_pilot.py
           python qa_learning_experience.py
@@ -151,6 +152,7 @@ jobs:
           Copy-Item 'assessment-quality-report.json' $releaseDir
           Copy-Item 'evidence-maturity-report.json' $releaseDir
           Copy-Item 'process-data-sweep-report.json' $releaseDir
+          Copy-Item 'measured-evidence-50-pass-report.json' $releaseDir
           Copy-Item 'source-freshness-report.json' $releaseDir
           Copy-Item 'research-source-freshness-report.json' $releaseDir
           git rev-parse HEAD | Set-Content "$releaseDir/SOURCE_COMMIT.txt"
@@ -167,7 +169,7 @@ jobs:
           - bundled-asset integrity manifest
           - dependency licence inventory
           - CycloneDX SBOM
-          - assessment, evidence-maturity, process-data-sweep and source-freshness QA reports
+          - assessment, evidence-maturity, process-data-sweep, measured-evidence and source-freshness QA reports
 
           This unsigned GitHub release is intended for transparent/open-source distribution and testing. Microsoft Store signing/certification remains a separate external process and must not be claimed until Microsoft grants it.
           "@ | Set-Content "$releaseDir/RELEASE_NOTES.md"

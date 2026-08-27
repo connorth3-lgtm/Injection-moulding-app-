@@ -91,6 +91,9 @@ jobs:
       - name: Validate cross-library 264-case process-data sweep
         working-directory: .
         run: python qa_process_data_sweep.py
+      - name: Validate 50-pass real measured-evidence audit
+        working-directory: .
+        run: python qa_measured_evidence_50_pass.py
       - name: Validate local real-data intake privacy
         working-directory: .
         run: python qa_process_data_local_intake.py
@@ -179,6 +182,7 @@ jobs:
             assessment-quality-report.json
             evidence-maturity-report.json
             process-data-sweep-report.json
+            measured-evidence-50-pass-report.json
             source-freshness-report.json
             research-source-freshness-report.json
           if-no-files-found: error
