@@ -77,6 +77,7 @@ on:
       - 'qa_process_data_diagnostics.py'
       - 'qa_process_data_deep_dive_50.py'
       - 'qa_process_data_20_pass.py'
+      - 'qa_process_data_sweep.py'
       - 'qa_process_data_local_intake.py'
       - 'qa_real_process_data_pilot.py'
       - 'qa_curriculum_integration.py'
@@ -100,6 +101,7 @@ on:
       - 'sources/SOURCE_FRESHNESS.json'
       - 'sources/RESEARCH_SOURCE_FRESHNESS.json'
       - 'sources/PROCESS_DATA_20_PASS_ATLAS.md'
+      - 'sources/REAL_PROCESS_DATA_INTAKE.md'
       - 'sources/REAL_PROCESS_DATA_PILOT_PROTOCOL.md'
       - 'data/real-process-data-pilot-template.csv'
       - 'service-worker.js'
@@ -184,6 +186,9 @@ jobs:
       - name: 20-pass 200-case process-data atlas QA
         working-directory: .
         run: python qa_process_data_20_pass.py
+      - name: Cross-library 264-case process-data sweep
+        working-directory: .
+        run: python qa_process_data_sweep.py
       - name: Local real-data intake privacy QA
         working-directory: .
         run: python qa_process_data_local_intake.py
@@ -255,6 +260,7 @@ jobs:
             desktop/electron/generated/sbom.cdx.json
             assessment-quality-report.json
             evidence-maturity-report.json
+            process-data-sweep-report.json
             source-freshness-report.json
             research-source-freshness-report.json
           if-no-files-found: error
