@@ -6,6 +6,7 @@ on:
     paths:
       - 'specialist-curriculum.js'
       - 'specialist-evidence-gap-extension.js'
+      - 'app-shell-finalize.js'
       - 'qa_specialist_evidence_gaps.py'
       - 'qa_evidence_coverage.py'
       - 'data/evidence-coverage-v1.json'
@@ -19,6 +20,7 @@ on:
     paths:
       - 'specialist-curriculum.js'
       - 'specialist-evidence-gap-extension.js'
+      - 'app-shell-finalize.js'
       - 'qa_specialist_evidence_gaps.py'
       - 'qa_evidence_coverage.py'
       - 'data/evidence-coverage-v1.json'
@@ -47,8 +49,10 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
-      - name: Specialist evidence-gap JavaScript syntax
-        run: node --check specialist-evidence-gap-extension.js
+      - name: Specialist evidence JavaScript syntax
+        run: |
+          node --check specialist-evidence-gap-extension.js
+          node --check app-shell-finalize.js
       - name: Mechanism evidence coverage integrity
         run: python qa_evidence_coverage.py
       - name: Specialist evidence-gap curriculum integrity
