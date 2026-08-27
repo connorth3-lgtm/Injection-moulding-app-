@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "version": "2026.08.28.1",
+  "version": "2026.08.28.2",
   "reviewed": "2026-08-28",
   "mechanismId": "ejection-demoulding-physics",
   "registryTarget": "data/evidence-coverage-v1.json",
@@ -21,7 +21,7 @@
     "experimentalContextPresent": true,
     "explicitLimitationsPresent": true,
     "eligibleForPromotion": true,
-    "registryPromotionApplied": false
+    "registryPromotionApplied": true
   },
   "studies": [
     {
@@ -37,16 +37,8 @@
       "independenceKey": "bme-pla-ejection-2022",
       "materialContext": "Poly(lactic acid) injection-moulded tensile specimens; calcium-stearate evaluated as a demoulding agent.",
       "toolContext": "Mould with low draft angle and varying cavity width along the flow path.",
-      "measuredSignals": [
-        "ejector force over 30 continuous injection-moulding cycles",
-        "processing parameters including injection rate, holding pressure/time, mould temperature, melt temperature, back pressure, screw speed and pre-process drying",
-        "high-speed-camera demoulding observation"
-      ],
-      "physicalQualityOutcomes": [
-        "problem-free demoulding",
-        "stuck but undamaged product",
-        "stuck and damaged/broken product"
-      ],
+      "measuredSignals": ["ejector force over 30 continuous injection-moulding cycles", "processing parameters including injection rate, holding pressure/time, mould temperature, melt temperature, back pressure, screw speed and pre-process drying", "high-speed-camera demoulding observation"],
+      "physicalQualityOutcomes": ["problem-free demoulding", "stuck but undamaged product", "stuck and damaged/broken product"],
       "supports": "Processing conditions and interfacial/mould-release behaviour can materially alter ejection load and demoulding damage risk.",
       "limitation": "PLA, the tested mould geometry and calcium-stearate result are application-specific; they do not define universal eject-force, additive, draft-angle or process limits."
     },
@@ -63,17 +55,8 @@
       "independenceKey": "csu-microinjection-sam-demoulding-2021",
       "materialContext": "Polymer microinjection moulding against nickel inserts with different self-assembled-monolayer anti-adhesion treatments.",
       "toolContext": "Nickel microstructured insert; surface chemistry modified to alter adhesion/friction and release quality.",
-      "measuredSignals": [
-        "contact angle",
-        "surface free energy",
-        "friction coefficient",
-        "friction/wear response through repeated cycles"
-      ],
-      "physicalQualityOutcomes": [
-        "microstructure replication quality after injection moulding",
-        "necking/warping/deformation risk at demoulding",
-        "reproducibility through the 100th demoulding cycle"
-      ],
+      "measuredSignals": ["contact angle", "surface free energy", "friction coefficient", "friction/wear response through repeated cycles"],
+      "physicalQualityOutcomes": ["microstructure replication quality after injection moulding", "necking/warping/deformation risk at demoulding", "reproducibility through the 100th demoulding cycle"],
       "supports": "Interfacial surface state and friction/adhesion behaviour can alter demoulding quality and repeatability of replicated microstructures.",
       "limitation": "Microstructured nickel inserts and the tested SAM coatings are specialist conditions; measured friction/replication response does not define universal surface-treatment or ejection settings."
     }
