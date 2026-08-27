@@ -1,9 +1,9 @@
-/* MouldMaster specialist evidence-gap extension — optional formative learning — 2026.08.28.1 */
+/* MouldMaster specialist evidence-gap extension — optional formative learning — 2026.08.28.2 */
 (function(){
 'use strict';
 if(window.MM_SPECIALIST_EVIDENCE_GAPS)return;
 
-const VERSION='2026.08.28.1';
+const VERSION='2026.08.28.2';
 const STORAGE_BASE='mm_specialist_evidence_gaps_v1';
 const BASE_STORAGE='mm_specialist_curriculum_v1';
 const CORE=window.MM_DATA;
@@ -109,6 +109,18 @@ function baseDoneCount(){return Object.keys(readKey(BASE_STORAGE)).filter(id=>/^
 function gapDoneCount(){return LESSONS.filter(x=>gapDone(x.id)).length}
 function totalDone(){return baseDoneCount()+gapDoneCount()}
 function coreLesson(id){return CORE.lessons.find(x=>x.id===Number(id))}
+function resolvedStatus(l){
+  const bridged=window.MM_SPECIALIST_EVIDENCE_STATUS?.statuses?.[l.evidenceArea];
+  if(bridged)return bridged;
+  const exported=window.MM_SPECIALIST_EVIDENCE_GAPS?.lessons?.find(x=>x.id===l.id)?.evidenceStatus;
+  return exported||l.evidenceStatus||'Provisional';
+}
+function evidenceStateMarkup(l){
+  const state=resolvedStatus(l);
+  if(state==='Promoted')return `<strong>Evidence status: Promoted</strong><br>Registry area: ${esc(l.evidenceArea)}. Independent publisher-verified primary measured studies have satisfied the mechanism promotion rule. Promotion is mechanism-level only; study-specific settings remain bounded to their material, mould, machine and test context.`;
+  if(state==='Gap')return `<strong>Evidence status: Gap</strong><br>Registry area: ${esc(l.evidenceArea)}. Suitable primary measured confirmation is not yet retained. Treat this as a hypothesis/evidence exercise, not validated production guidance.`;
+  return `<strong>Evidence status: Provisional</strong><br>Registry area: ${esc(l.evidenceArea)}. This mechanism remains bounded formative learning and is not promoted evidence until independent publisher-verified primary measured studies satisfy the repository promotion rule.`;
+}
 
 function ensureStyle(){
   if(document.getElementById('mm-specialist-gap-style'))return;
@@ -117,14 +129,15 @@ function ensureStyle(){
 `;
   document.head.appendChild(s)
 }
-function boundary(){return '<div class="mm-specialist-boundary"><strong>Learning boundary:</strong> These are optional specialist extensions outside the canonical 120-lesson completion path. They are formative education, do not change formal assessment answers or certificate requirements, and are not production recipes or machine-specific authorisation. The eight evidence-gap lessons are explicitly provisional until the mechanism-level evidence registry meets its promotion rule.</div>'}
+function boundary(){return '<div class="mm-specialist-boundary"><strong>Learning boundary:</strong> These are optional specialist extensions outside the canonical 120-lesson completion path. They are formative education, do not change formal assessment answers or certificate requirements, and are not production recipes or machine-specific authorisation. Evidence-gap lessons start with conservative provisional fallbacks and show Promoted only after the mechanism-level registry promotion rule is satisfied; learner completion never changes evidence status.</div>'}
 function patchCatalog(){
   ensureStyle();
   const body=document.getElementById('mmSpecialistBody');if(!body)return;
   const grid=body.querySelector('.mm-specialist-grid');if(!grid)return;
   for(const l of LESSONS){
     if(grid.querySelector(`[data-specialist-gap="${l.id}"]`))continue;
-    grid.insertAdjacentHTML('beforeend',`<article class="mm-specialist-card mm-specialist-gap-card" data-specialist-gap="${esc(l.id)}"><span class="mm-specialist-eyebrow">${esc(l.id)} · ${esc(l.level)}</span><h3>${esc(l.title)}</h3><p>${esc(l.gap)}</p><span class="mm-specialist-gap-chip">Evidence: ${esc(l.evidenceStatus)}</span>${gapDone(l.id)?'<div class="done">Completed ✓</div>':''}<div class="mm-specialist-actions"><button class="secondary" type="button" onclick="mmSpecialistGapLesson('${l.id}')">Open extension →</button></div></article>`)
+    const state=resolvedStatus(l);
+    grid.insertAdjacentHTML('beforeend',`<article class="mm-specialist-card mm-specialist-gap-card" data-specialist-gap="${esc(l.id)}" data-evidence-status="${esc(state.toLowerCase())}"><span class="mm-specialist-eyebrow">${esc(l.id)} · ${esc(l.level)}</span><h3>${esc(l.title)}</h3><p>${esc(l.gap)}</p><span class="mm-specialist-gap-chip">Evidence: ${esc(state)}</span>${gapDone(l.id)?'<div class="done">Completed ✓</div>':''}<div class="mm-specialist-actions"><button class="secondary" type="button" onclick="mmSpecialistGapLesson('${l.id}')">Open extension →</button></div></article>`)
   }
   const meta=body.querySelectorAll('.mm-specialist-meta span');
   if(meta[1])meta[1].textContent='20 optional extensions';
@@ -135,12 +148,12 @@ function openGapLesson(id){
   ensureStyle();const modal=document.getElementById('mmSpecialistModal');if(!modal){window.mmSpecialistOpen?.();return setTimeout(()=>openGapLesson(id),0)}
   modal.classList.remove('hidden');const body=document.getElementById('mmSpecialistBody'),title=document.getElementById('mmSpecialistTitle');if(!body||!title)return;title.textContent=l.title;
   const coreButtons=l.coreLessons.map(n=>{const x=coreLesson(n);return x?`<button class="ghost" type="button" onclick="mmSpecialistPractice('core','${n}')">${n}. ${esc(x.title)}</button>`:''}).join('');
-  body.innerHTML=boundary()+`<button class="ghost" type="button" onclick="mmSpecialistOpen()">← All specialist extensions</button><section class="mm-specialist-section"><span class="mm-specialist-eyebrow">Gap this closes</span><p>${esc(l.gap)}</p><div class="mm-specialist-evidence-state"><strong>Evidence status: ${esc(l.evidenceStatus)}</strong><br>Registry area: ${esc(l.evidenceArea)}. This mechanism is teachable as a bounded hypothesis/evidence problem, but it is not promoted evidence until independent publisher-verified primary measured studies satisfy the repository promotion rule.</div></section><section class="mm-specialist-section"><h3>Learning objectives</h3><ul>${l.objectives.map(x=>`<li>${esc(x)}</li>`).join('')}</ul></section><section class="mm-specialist-section"><h3>Key engineering points</h3><ul>${l.keypoints.map(x=>`<li>${esc(x)}</li>`).join('')}</ul></section><section class="mm-specialist-section mm-specialist-evidence"><h3>Evidence task</h3><p>${esc(l.evidenceTask)}</p></section><section class="mm-specialist-section"><h3>Linked core learning</h3><div class="mm-specialist-core">${coreButtons}</div></section><section class="mm-specialist-section"><h3>Apply the extension</h3><p>Use established formative learning to examine the mechanism without treating the provisional evidence as a universal production rule.</p><div class="mm-specialist-actions">${l.practices.map((p,i)=>`<button class="secondary" type="button" onclick="mmSpecialistPractice('${p.type}','${esc(p.id||'')}')">${esc(p.label||`Practice ${i+1}`)}</button>`).join('')}</div></section><div class="mm-specialist-done-row"><span>${gapDone(l.id)?'Completed locally ✓':'Optional completion is stored only on this device for this learner.'}</span><button class="primary" type="button" onclick="mmSpecialistGapToggle('${l.id}')">${gapDone(l.id)?'Mark incomplete':'Mark specialist lesson complete'}</button></div>`;
+  body.innerHTML=boundary()+`<button class="ghost" type="button" onclick="mmSpecialistOpen()">← All specialist extensions</button><section class="mm-specialist-section"><span class="mm-specialist-eyebrow">Gap this closes</span><p>${esc(l.gap)}</p><div class="mm-specialist-evidence-state">${evidenceStateMarkup(l)}</div></section><section class="mm-specialist-section"><h3>Learning objectives</h3><ul>${l.objectives.map(x=>`<li>${esc(x)}</li>`).join('')}</ul></section><section class="mm-specialist-section"><h3>Key engineering points</h3><ul>${l.keypoints.map(x=>`<li>${esc(x)}</li>`).join('')}</ul></section><section class="mm-specialist-section mm-specialist-evidence"><h3>Evidence task</h3><p>${esc(l.evidenceTask)}</p></section><section class="mm-specialist-section"><h3>Linked core learning</h3><div class="mm-specialist-core">${coreButtons}</div></section><section class="mm-specialist-section"><h3>Apply the extension</h3><p>Use established formative learning to examine the mechanism without turning study-specific evidence into a universal production rule.</p><div class="mm-specialist-actions">${l.practices.map((p,i)=>`<button class="secondary" type="button" onclick="mmSpecialistPractice('${p.type}','${esc(p.id||'')}')">${esc(p.label||`Practice ${i+1}`)}</button>`).join('')}</div></section><div class="mm-specialist-done-row"><span>${gapDone(l.id)?'Completed locally ✓':'Optional completion is stored only on this device for this learner.'}</span><button class="primary" type="button" onclick="mmSpecialistGapToggle('${l.id}')">${gapDone(l.id)?'Mark incomplete':'Mark specialist lesson complete'}</button></div>`;
 }
 function toggle(id){setGapDone(id,!gapDone(id));openGapLesson(id)}
 function patchDashboard(){
   const panel=document.getElementById('mmSpecialistDashboard');if(!panel)return;
-  const p=panel.querySelector('p');if(p)p.textContent='The 120-lesson core remains the complete main pathway. These 20 optional lessons close specific depth gaps in safety, machine health, materials, measurement, tooling, sustainability and eight provisional evidence areas. Provisional lessons are clearly labelled and do not become authoritative merely by being taught.';
+  const p=panel.querySelector('p');if(p)p.textContent='The 120-lesson core remains the complete main pathway. These 20 optional lessons close specific depth gaps in safety, machine health, materials, measurement, tooling, sustainability and eight registry-tracked evidence areas. Each evidence-gap lesson displays its current evidence state; completing a lesson never promotes the mechanism.';
   const spans=panel.querySelectorAll('.mm-specialist-meta span');if(spans[0])spans[0].textContent='20 optional lessons';if(spans[1])spans[1].textContent=`${totalDone()} completed locally`;
 }
 
@@ -152,7 +165,7 @@ const priorRenderDashboard=typeof renderDashboard==='function'?renderDashboard:n
 if(priorRenderDashboard){renderDashboard=function(){priorRenderDashboard();patchDashboard()}}
 
 for(const l of LESSONS){BASE.lessons.push({id:l.id,title:l.title,level:l.level,coreLessons:[...l.coreLessons],practices:l.practices.map(p=>({...p})),evidenceArea:l.evidenceArea,evidenceStatus:l.evidenceStatus})}
-BASE.evidenceGapExtension={version:VERSION,lessonCount:LESSONS.length,status:'Provisional',scope:'Optional formative evidence-gap learning; does not alter the canonical 120 lessons, formal assessment answers or certificate requirements.'};
+BASE.evidenceGapExtension={version:VERSION,lessonCount:LESSONS.length,status:'Registry-controlled',scope:'Optional formative evidence-gap learning; does not alter the canonical 120 lessons, formal assessment answers or certificate requirements.'};
 window.MM_SPECIALIST_EVIDENCE_GAPS={version:VERSION,optional:true,lessonCount:LESSONS.length,lessons:LESSONS.map(l=>({id:l.id,title:l.title,evidenceArea:l.evidenceArea,evidenceStatus:l.evidenceStatus,coreLessons:[...l.coreLessons]})),open:window.mmSpecialistOpen,scope:BASE.evidenceGapExtension.scope};
 if(typeof currentView==='string'&&currentView==='dashboard')patchDashboard();
 })();
