@@ -30,6 +30,8 @@ MouldMaster separates source roles rather than treating every citation as equiva
 A technical mechanism may be marked **promoted** in the evidence-coverage registry only when:
 
 - at least two independent **primary measured studies** are publisher-verified;
+- an explicit independence rationale records why the counted studies are separate experimental evidence rather than duplicate publications or re-analysis of one campaign;
+- DOI, experiment key and author-set checks do not reveal duplicate evidence being counted twice;
 - the measured signal(s) and physical quality outcome(s) are recorded;
 - material, machine, mould/tool and process context are retained where available;
 - the limitation states what cannot be generalized;
@@ -72,7 +74,9 @@ The established specialist layer keeps S01-S12 unchanged. `specialist-evidence-g
 - **S19** surface replication / release;
 - **S20** injection-compression / precision optics.
 
-These lessons are explicitly labelled **Provisional** while their registry mechanisms remain provisional. They are optional formative learning outside the canonical 120-lesson completion path and do not alter formal assessment answers or certificate requirements. Curriculum completion cannot promote an evidence mechanism.
+Each evidence-gap lesson starts from a conservative **Provisional** fallback, while the packaged status bridge displays the registry-controlled state. A provisional mechanism is shown as Provisional; a mechanism that passes the promotion gate is shown as **Promoted**. Promotion is still mechanism-level evidence maturity, not production authority, a universal recipe, an assessment answer or a certificate requirement. Learner completion can never change an evidence state.
+
+These lessons remain optional formative learning outside the canonical 120-lesson completion path and do not alter formal assessment answers or certificate requirements.
 
 ## Relationship to the 264 synthetic learning cases
 
@@ -105,7 +109,7 @@ For each dataset actually executed, MouldMaster should record source/version, ra
 
 Automatically quarantine or reject records when injection moulding is merely specimen preparation, the topic is unrelated biomedical/dental use, generic additive manufacturing, unrelated composites, or the paper provides no useful process/material/tool/quality measurement or transferable mechanism. Metal/ceramic/powder injection-moulding studies are specialist evidence only unless a clearly transferable mechanism is documented.
 
-Deduplicate primarily by DOI; otherwise use OpenAlex/work identifier plus normalized title/year. Never count duplicate versions, repositories and publisher copies as independent evidence.
+Deduplicate primarily by DOI; otherwise use OpenAlex/work identifier plus normalized title/year. Never count duplicate versions, repositories and publisher copies as independent evidence. Promotion dossiers must also explain experimental independence so different papers from the same underlying campaign are not silently counted twice.
 
 ## Success metric
 
