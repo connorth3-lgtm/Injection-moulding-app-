@@ -63,7 +63,7 @@ must(index, [
 must(shell, [
     "new MutationObserver(scheduleSync)", "el.textContent!==value", "syncUpdateCard", "[data-mm-update-card]",
     "dockReferenceLauncher", "getElementById('mm-src-open')", "document.querySelector('.sidebar-foot')",
-    "syncStandardsReviewDate", "window.MM_DATA?.standards", "26 August 2026",
+    "sourceReviewDisplayDate", "qualitySuite?.sourceFreshnessReviewed", "syncStandardsReviewDate", "window.MM_DATA?.standards", "References reviewed\\s+\\d{1,2}",
     "open.style.position='static'", "open.style.zIndex='auto'", "configureReferenceDrawer",
     "modal.setAttribute('aria-modal','false')", "pointer-events:none!important",
     ".mmsrc.mm-reference-drawer .mmsrc-panel{width:min(430px", "pointer-events:auto!important",
@@ -83,6 +83,7 @@ must(shell, [
     "MM_BROWSER_UPDATE_MODE='network-current-no-service-worker'", "MM_REFERENCE_DRAWER_MODE='non-blocking'",
     "desktopRelease", "location.hostname==='127.0.0.1'", "Electron"
 ], "shell hardening")
+require("26 August 2026" not in shell, "shell source-review date must derive from validated metadata rather than a hard-coded calendar date")
 require("ensureReferenceDataPage" not in shell and "openReferenceDataPage" not in shell, "legacy in-app Reference Data modal reparenting must be removed")
 
 must(repair, [
