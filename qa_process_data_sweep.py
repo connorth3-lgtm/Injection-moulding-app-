@@ -23,6 +23,10 @@ ATLAS_PACKS = [
 REPORT = ROOT / 'process-data-sweep-report.json'
 
 
+def text(path):
+    return (ROOT / path).read_text(encoding='utf-8')
+
+
 def need(ok, msg):
     if not ok:
         raise AssertionError(msg)
@@ -95,12 +99,15 @@ need(not exact_collisions, f'exact/normalised process-data titles collide across
 
 signal_counts = Counter()
 domain_counts = Counter()
+source_counts = Counter()
 source_granularity = Counter()
 for r in records:
     domain_counts[r['domain']] += 1
     source_granularity[r['sourceGranularity']] += 1
     need(len(r['sourceIds']) >= 2, f"{r['id']} needs at least two evidence sources at its declared granularity")
     need(len(set(r['sourceIds'])) == len(r['sourceIds']), f"{r['id']} repeats evidence sources")
+    for sid in r['sourceIds']:
+        source_counts[sid] += 1
     signals = r['signals']
     need(len(signals) == 4, f"{r['id']} must retain exactly four linked signals")
     names = [s[0] for s in signals]
@@ -118,10 +125,19 @@ for r in records:
 expected_cycles = 264 * 72
 need(expected_cycles == 19008, 'process-data corpus cycle arithmetic drifted')
 
-readme = (ROOT / 'README.md').read_text(encoding='utf-8')
+readme = text('README.md')
 need('264 guided/synthetic diagnostic cases' in readme, 'README process-data case total drifted')
 need('19,008 generated training cycles' in readme, 'README process-data cycle total drifted')
-need('qa_process_data_sweep.py' in readme, 'README release-QA list must include the cross-library data sweep')
+for qa_name in ['qa_process_data_diagnostics.py','qa_process_data_deep_dive_50.py','qa_process_data_20_pass.py','qa_process_data_local_intake.py','qa_process_data_sweep.py','qa_real_process_data_pilot.py']:
+    need(qa_name in readme, f'README release-QA list missing {qa_name}')
+
+for wf in ['.github/workflows/qa.yml','.github/workflows/open-desktop-build.yml','.github/workflows/publish-open-desktop.yml','.github/workflows/microsoft-store-msix.yml']:
+    need('python qa_process_data_sweep.py' in text(wf), f'{wf} must gate the corpus-wide process-data sweep')
+need("'qa_process_data_sweep.py'" in text('.github/workflows/open-desktop-build.yml'), 'Windows build path filter must include the corpus-wide sweep script')
+
+intake_standard = text('sources/REAL_PROCESS_DATA_INTAKE.md')
+for marker in ['Two templates, one controlled flow','Sequence review required','only one `shot_index` field']:
+    need(marker in intake_standard, f'real-data intake standard missing sweep finding/fix marker: {marker}')
 
 report = {
     'schema': 1,
@@ -133,6 +149,10 @@ report = {
     'normalisedTitleCollisions': exact_collisions,
     'uniqueSignalNames': len(signal_counts),
     'mostReusedSignalNames': [{'name': name, 'cases': count} for name, count in signal_counts.most_common(20)],
+    'evidenceSources': {
+        'uniqueSourceIdsReferenced': len(source_counts),
+        'mostReusedSourceIds': [{'sourceId': sid, 'casesAtDeclaredGranularity': count} for sid, count in source_counts.most_common(20)]
+    },
     'evidenceGranularity': {
         'caseLevelCases': source_granularity['case'],
         'passLevelCases': source_granularity['pass'],
@@ -146,4 +166,4 @@ report = {
     }
 }
 REPORT.write_text(json.dumps(report, indent=2, ensure_ascii=False) + '\n', encoding='utf-8')
-print(f"MouldMaster cross-library data sweep passed ({len(records)} globally unique cases; {expected_cycles:,} synthetic cycles; {len(signal_counts)} distinct signal names; {source_granularity['pass']} atlas cases still use pass-level evidence granularity)")
+print(f"MouldMaster cross-library data sweep passed ({len(records)} globally unique cases; {expected_cycles:,} synthetic cycles; {len(signal_counts)} distinct signal names; {len(source_counts)} referenced source IDs; {source_granularity['pass']} atlas cases still use pass-level evidence granularity)")
