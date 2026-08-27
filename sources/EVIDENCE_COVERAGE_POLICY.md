@@ -72,7 +72,7 @@ The established specialist layer keeps S01-S12 unchanged. `specialist-evidence-g
 - S19 surface replication / release;
 - S20 injection-compression / precision optics.
 
-These lessons are explicitly labelled **Provisional** while their registry mechanisms remain provisional. They remain outside the canonical 120-lesson completion path and do not alter formal assessment answers or certificate requirements. Curriculum completion cannot promote an evidence mechanism.
+These lessons are explicitly labelled **Provisional** while their registry mechanisms remain provisional. They are optional formative learning outside the canonical 120-lesson completion path and do not alter formal assessment answers or certificate requirements. Curriculum completion cannot promote an evidence mechanism.
 
 ## Relationship to the 264 synthetic learning cases
 
