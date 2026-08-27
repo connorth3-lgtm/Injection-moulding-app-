@@ -1,219 +1,24 @@
 {
   "schema": 1,
-  "version": "2026.08.28.2",
+  "version": "2026.08.28.3",
   "reviewed": "2026-08-28",
   "discoveryPoolApproximate": 1100,
   "discoveryPoolIsEvidenceCount": false,
   "successMetric": "mechanism-evidence-coverage",
-  "promotionRule": {
-    "minimumIndependentPublisherVerifiedPrimaryMeasured": 2,
-    "requiresMeasuredSignals": true,
-    "requiresPhysicalQualityOutcome": true,
-    "requiresExperimentalContext": true,
-    "requiresExplicitLimitation": true,
-    "predictionIsNotCausation": true,
-    "universalProcessRecipesAllowed": false
-  },
-  "statusDefinitions": {
-    "gap": "No suitable primary measured evidence has yet been retained.",
-    "provisional": "Useful evidence candidates exist, but publisher verification and/or independent measured confirmation is incomplete.",
-    "promoted": "At least two independent publisher-verified primary measured studies satisfy the promotion rule."
-  },
+  "promotionRule": {"minimumIndependentPublisherVerifiedPrimaryMeasured":2,"requiresMeasuredSignals":true,"requiresPhysicalQualityOutcome":true,"requiresExperimentalContext":true,"requiresExplicitLimitation":true,"predictionIsNotCausation":true,"universalProcessRecipesAllowed":false},
+  "statusDefinitions": {"gap":"No suitable primary measured evidence has yet been retained.","provisional":"Useful evidence candidates exist, but publisher verification and/or independent measured confirmation is incomplete.","promoted":"At least two independent publisher-verified primary measured studies satisfy the promotion rule."},
   "mechanisms": [
-    {
-      "id": "ejection-demoulding-physics",
-      "title": "Ejection and demoulding physics",
-      "status": "promoted",
-      "promoted": true,
-      "publisherVerifiedPrimaryMeasured": 2,
-      "whyItMatters": "Release load can change with temperature, shrinkage, draft, texture, adhesion and mould condition; simply increasing eject force can hide the mechanism or damage tooling.",
-      "desiredEvidence": ["ejection or demoulding force", "surface/draft or interfacial condition", "physical part quality or damage outcome"],
-      "sources": [
-        {"id":"doi:10.3311/PPme.18246","title":"The Effect of Processing Parameters and Calcium-stearate on the Ejection Process of Injection Molded Poly(Lactic Acid) Products","role":"primary-measured-study","verification":"publisher-verified"},
-        {"id":"doi:10.3390/mi12060636","title":"Self-Assembled Monolayers of Alkanethiols on Nickel Insert: Characterization of Friction and Analysis on Demolding Quality in Microinjection Molding","role":"primary-measured-study","verification":"publisher-verified"},
-        {"id":"doi:10.3390/polym15051285","title":"Adhesion-Induced Demolding Forces of Hard Coated Microstructures Measured with a Novel Injection Molding Tool","role":"primary-measured-candidate","verification":"publisher-verified"},
-        {"id":"W4405381881","title":"Coefficient of friction in the demoulding forces of the injection moulding process—a review","role":"review","verification":"metadata-screened"}
-      ],
-      "limitation": "PLA, microstructured inserts, coatings and the tested tool geometries are application-specific; the promoted mechanism does not create universal eject-force, lubricant, coating, draft-angle or process limits.",
-      "nextValidation": "Map the promoted evidence to S11/ejector-drag learning and test whether authorised site or public data contain suitable release-force, thermal and physical-quality signals."
-    },
-    {
-      "id": "residual-stress-birefringence",
-      "title": "Residual stress and birefringence",
-      "status": "provisional",
-      "promoted": false,
-      "publisherVerifiedPrimaryMeasured": 0,
-      "whyItMatters": "Residual stress can remain when appearance and dimensions look acceptable and is especially important in optical, precision and chemically sensitive parts.",
-      "desiredEvidence": ["residual stress or birefringence measurement", "thermal/packing history", "dimensional, optical or mechanical outcome"],
-      "sources": [
-        {"id":"W2489266123","title":"Residual stress measurement for injection molded components","role":"primary-measured-candidate","verification":"metadata-screened"},
-        {"id":"W2334854314","title":"Effects of Thermal Molding Conditions on the Residual Stress and Residual Birefringence in an Injection-Molded Polymer Strip","role":"primary-measured-candidate","verification":"metadata-screened"},
-        {"id":"W4308792047","title":"Online detection of residual stress near the gate using cavity pressure for injection molding","role":"primary-measured-candidate","verification":"metadata-screened"}
-      ],
-      "limitation": "Stress and birefringence response is strongly material-, geometry-, thermal-history- and measurement-method-specific.",
-      "nextValidation": "Verify experimental measurement methods and retain process history plus independent stress or optical measurements."
-    },
-    {
-      "id": "weld-line-mechanical-strength",
-      "title": "Weld-line mechanical strength versus appearance",
-      "status": "provisional",
-      "promoted": false,
-      "publisherVerifiedPrimaryMeasured": 0,
-      "whyItMatters": "A visually acceptable weld line can still be mechanically weak, while an obvious line is not automatically the highest structural risk.",
-      "desiredEvidence": ["weld-line geometry/location", "tensile, fatigue or impact outcome", "temperature/pressure/material context"],
-      "sources": [
-        {"id":"W4308122620","title":"Study on the Fatigue Strength of Welding Line in Injection Molding Products under Different Tensile Conditions","role":"primary-measured-candidate","verification":"metadata-screened"},
-        {"id":"W4387668781","title":"Weld Line Strength of Polyamide Fiberglass Composite at Different Processing Parameters in Injection Molding Technique","role":"primary-measured-candidate","verification":"metadata-screened"},
-        {"id":"W4400531525","title":"Optimizing the Tensile Strength of Weld Lines in Glass Fiber Composite Injection Molding","role":"primary-measured-candidate","verification":"metadata-screened"},
-        {"id":"W4396518863","title":"A review of research progress on the minimization of weld lines in injection molding","role":"review","verification":"metadata-screened"}
-      ],
-      "limitation": "Strength recovery and process effects cannot be generalized across resin, reinforcement, weld geometry and loading mode.",
-      "nextValidation": "Publisher-verify independent tensile/fatigue studies and keep cosmetic weld-line evidence separate from structural qualification."
-    },
-    {
-      "id": "fibre-breakage-retained-length",
-      "title": "Fibre breakage and retained fibre length",
-      "status": "provisional",
-      "promoted": false,
-      "publisherVerifiedPrimaryMeasured": 0,
-      "whyItMatters": "Fibre orientation alone does not describe reinforced-part behaviour; processing can shorten fibres and change stiffness, strength and anisotropy.",
-      "desiredEvidence": ["retained fibre-length distribution", "processing history", "mechanical or dimensional outcome"],
-      "sources": [
-        {"id":"W4313653197","title":"Relation between injection molding conditions, fiber length and mechanical properties for highly reinforced long fiber polypropylene","role":"primary-measured-candidate","verification":"metadata-screened"},
-        {"id":"W3186005056","title":"The Low Breaking Fiber Mechanism and Its Effect on the Behavior of the Melt Flow of Injection Molded Ultra-Long Glass Fiber Reinforced Polypropylene Composites","role":"primary-measured-candidate","verification":"metadata-screened"},
-        {"id":"W4308950709","title":"Influence of fiber breakage on flow behavior in fiber length- and orientation-dependent injection molding simulations","role":"validated-simulation-candidate","verification":"metadata-screened"}
-      ],
-      "limitation": "Fibre damage depends on feedstock architecture, fibre type/length, screw/nozzle/tool geometry and processing history.",
-      "nextValidation": "Verify at least two studies with measured retained fibre length and measured physical outcomes before promotion."
-    },
-    {
-      "id": "runner-gate-multicavity-imbalance",
-      "title": "Runner, gate and multicavity imbalance",
-      "status": "provisional",
-      "promoted": false,
-      "publisherVerifiedPrimaryMeasured": 0,
-      "whyItMatters": "Global machine averages can conceal cavity-specific imbalance caused by runner geometry, viscosity, gate condition or local thermal behaviour.",
-      "desiredEvidence": ["cavity-specific pressure/fill response", "runner/gate geometry or condition", "cavity-specific part quality"],
-      "sources": [
-        {"id":"W2934830048","title":"Simulation Studies on the Effect of Material Characteristics and Runners Layout Geometry on the Filling Imbalance in Geometrically Balanced Injection Molds","role":"simulation-candidate","verification":"metadata-screened"},
-        {"id":"W4403380517","title":"Impact of Runner Size, Gate Size, Polymer Viscosity, and Molding Process on Filling Imbalance in Geometrically Balanced Multi-Cavity Injection Molding","role":"primary-measured-candidate","verification":"metadata-screened"},
-        {"id":"W4396581749","title":"Study on the Influence of Runner and Overflow Area Design on Flow–Fiber Coupling in a Multi-Cavity System","role":"primary-measured-candidate","verification":"metadata-screened"}
-      ],
-      "limitation": "Balance response is mould-, cavity-, runner-, gate- and material-specific; a geometrically balanced layout is not proof of rheological balance.",
-      "nextValidation": "Verify multicavity measured studies and preserve cavity identity in public/site-data validation and learning examples."
-    },
-    {
-      "id": "hot-runner-actual-behaviour",
-      "title": "Hot-runner actual thermal and mechanical behaviour",
-      "status": "provisional",
-      "promoted": false,
-      "publisherVerifiedPrimaryMeasured": 0,
-      "whyItMatters": "Displayed zone temperature or commanded valve timing may not equal actual thermal/mechanical response at the manifold, nozzle, gate or cavity.",
-      "desiredEvidence": ["zone or actuation actual", "cavity-specific pressure/fill", "physical quality outcome"],
-      "sources": [
-        {"id":"W4394726558","title":"Out-of-Mold Sensor-Based Process Parameter Optimization and Adaptive Process Quality Control for Hot Runner Thin-Walled Injection-Molded Parts","role":"primary-measured-candidate","verification":"metadata-screened"},
-        {"id":"W4382788433","title":"Numerical Simulation of Deformation in Hot Runner Manifold","role":"simulation-candidate","verification":"metadata-screened"},
-        {"id":"W4392168082","title":"Mechanical and crystallization properties of hot runner injection molded virgin and recycled polypropylene","role":"primary-measured-candidate","verification":"metadata-screened"}
-      ],
-      "limitation": "Hot-runner response depends on system design, controller, manifold/nozzle architecture, material and tool thermal state.",
-      "nextValidation": "Verify measured hot-runner studies with independent actuals rather than displayed setpoints alone."
-    },
-    {
-      "id": "liquid-silicone-rubber",
-      "title": "Liquid silicone rubber cure and crosslinking behaviour",
-      "status": "provisional",
-      "promoted": false,
-      "publisherVerifiedPrimaryMeasured": 0,
-      "whyItMatters": "LSR uses thermoset cure/crosslinking behaviour and hot mould conditions that must not be taught as ordinary thermoplastic injection moulding.",
-      "desiredEvidence": ["cavity pressure or cure-state signal", "temperature/cure history", "mechanical or part-quality outcome"],
-      "sources": [
-        {"id":"W4308973098","title":"Novel approach to characterize the cross-linking effect of liquid silicone rubber via cavity pressure analysis during injection molding","role":"primary-measured-candidate","verification":"metadata-screened"},
-        {"id":"W2135174259","title":"Effects of Variation in Process Parameters on Cavity Pressure and Mechanical Strength of Molded Parts in LSR Injection Molding","role":"primary-measured-candidate","verification":"metadata-screened"},
-        {"id":"W4388077386","title":"Liquid Silicone Rubber Headlamp Lens Injection Molding Process Optimization Based on Tie Bar Elongation and NSGA III","role":"primary-measured-candidate","verification":"metadata-screened"}
-      ],
-      "limitation": "LSR formulations, cure systems, mould temperatures and optical/medical requirements are application-specific.",
-      "nextValidation": "Publisher-verify cure/cavity-pressure studies and retain LSR as a separate specialist process family."
-    },
-    {
-      "id": "fluid-assisted-moulding",
-      "title": "Gas, water and projectile-assisted moulding",
-      "status": "provisional",
-      "promoted": false,
-      "publisherVerifiedPrimaryMeasured": 0,
-      "whyItMatters": "Fluid penetration, residual wall thickness and void formation introduce mechanisms that do not exist in conventional solid-part filling.",
-      "desiredEvidence": ["assist-medium timing/pressure", "penetration or residual wall measurement", "physical geometry or quality outcome"],
-      "sources": [
-        {"id":"W3111723492","title":"Study of Residual Wall Thickness and Multiobjective Optimization for Process Parameters of Water-Assisted Injection Molding","role":"primary-measured-candidate","verification":"metadata-screened"},
-        {"id":"W2074306211","title":"Experimental and Numerical Investigation of the Effect of Process Conditions on Residual Wall Thickness and Cooling and Surface Characteristics of Water-Assisted Injection Molded Hollow Products","role":"primary-measured-candidate","verification":"metadata-screened"},
-        {"id":"W1974522617","title":"A Study on the Void Formation in Residual Wall Thickness of Fluid-Assisted Injection Molding Parts","role":"primary-measured-candidate","verification":"metadata-screened"},
-        {"id":"W4366827320","title":"Effects of Processing Method and Parameters on the Wall Thickness of Gas-Projectile-Assisted Injection Molding Pipes","role":"primary-measured-candidate","verification":"metadata-screened"}
-      ],
-      "limitation": "Water-, gas- and projectile-assisted processes have different equipment and penetration physics and must not be collapsed into one recipe.",
-      "nextValidation": "Verify representative measured studies for each assisted-process family before any mechanism promotion."
-    },
-    {
-      "id": "moisture-drying-degradation",
-      "title": "Moisture, drying and process-induced degradation",
-      "status": "provisional",
-      "promoted": false,
-      "publisherVerifiedPrimaryMeasured": 0,
-      "whyItMatters": "Dryer setpoint is not material moisture at point of use; hydrolysis and excessive thermal/shear history can alter rheology and properties while machine settings appear unchanged.",
-      "desiredEvidence": ["measured moisture/material-state evidence", "drying or thermal/residence history", "rheology, property or appearance outcome"],
-      "sources": [
-        {"id":"W4210347133","title":"An Investigation to Reduce the Effect of Moisture on Injection-Molded Parts through Optimization of Plasticization Parameters","role":"primary-measured-candidate","verification":"metadata-screened"},
-        {"id":"W2990075833","title":"Study of the Influence of the Reprocessing Cycles on the Final Properties of Polylactide Pieces Obtained by Injection Molding","role":"primary-measured-candidate","verification":"metadata-screened"},
-        {"id":"W3017124338","title":"Considerations on the Drying of the Raw Material and Consequences on the Quality of the Injected Products","role":"primary-measured-candidate","verification":"metadata-screened"}
-      ],
-      "limitation": "Moisture sensitivity, safe drying conditions and degradation mechanisms are resin/grade specific; supplier data and approved procedures control real processing limits.",
-      "nextValidation": "Prioritize studies with independently measured water content and physical property/process outcomes, not dryer settings alone."
-    },
-    {
-      "id": "recyclate-process-variability",
-      "title": "Recyclate and process variability",
-      "status": "provisional",
-      "promoted": false,
-      "publisherVerifiedPrimaryMeasured": 0,
-      "whyItMatters": "Recycled feedstock can vary in composition, degradation, rheology and contamination; nominal grade or one MFR value does not establish equivalent moulding response.",
-      "desiredEvidence": ["material identity/lot or property", "process actuals", "part mass, dimension, mechanical or quality outcome"],
-      "sources": [
-        {"id":"W7125412830","title":"Inline pvT Analysis for Precise Volume Dosing in Injection Molding: Addressing Variability in Recyclate Melts","role":"primary-measured-candidate","verification":"metadata-screened"},
-        {"id":"W4408267895","title":"Processing behavior evolution of recycled polypropylene: An integrated experimental and Computer-Aided engineering simulation study","role":"primary-measured-candidate","verification":"metadata-screened"},
-        {"id":"W4392168082","title":"Mechanical and crystallization properties of hot runner injection molded virgin and recycled polypropylene","role":"primary-measured-candidate","verification":"metadata-screened"}
-      ],
-      "limitation": "Recyclate response depends on feedstock stream, contamination, stabilisation, prior life, blend fraction and process history.",
-      "nextValidation": "Use the existing RWTH PCR public dataset as the first executable validation lane and verify literature relationships against measured process and part-mass data."
-    },
-    {
-      "id": "surface-replication-release",
-      "title": "Surface replication, texture, adhesion and release",
-      "status": "provisional",
-      "promoted": false,
-      "publisherVerifiedPrimaryMeasured": 0,
-      "whyItMatters": "Surface quality and microfeature fidelity couple filling, mould temperature, texture, adhesion and demoulding rather than belonging to a single machine setting.",
-      "desiredEvidence": ["replication ratio or surface metrology", "texture/coating/thermal condition", "demoulding, friction or surface-quality outcome"],
-      "sources": [
-        {"id":"W3164866543","title":"Self-Assembled Monolayers of Alkanethiols on Nickel Insert: Characterization of Friction and Analysis on Demolding Quality in Microinjection Molding","role":"primary-measured-candidate","verification":"metadata-screened"},
-        {"id":"W2807413761","title":"Geometric Replication Integrity of Micro Features Fabricated Using Variotherm Assisted Micro Injection Moulding","role":"primary-measured-candidate","verification":"metadata-screened"},
-        {"id":"W4411377760","title":"Considering microtexture geometry to improve micro-injection molding fidelity","role":"primary-measured-candidate","verification":"metadata-screened"}
-      ],
-      "limitation": "Micro/nano replication and release behaviour is feature-, tool-surface-, polymer- and thermal-cycle-specific.",
-      "nextValidation": "Verify measured replication/release studies and keep surface fidelity and release as related but separable outcomes."
-    },
-    {
-      "id": "injection-compression-precision-optics",
-      "title": "Injection-compression and precision optical moulding",
-      "status": "provisional",
-      "promoted": false,
-      "publisherVerifiedPrimaryMeasured": 0,
-      "whyItMatters": "Precision optics expose the interaction between fill/compression history, thermal control, residual stress, birefringence and geometric replication.",
-      "desiredEvidence": ["compression/fill history", "birefringence, stress or replication measurement", "optical or dimensional performance"],
-      "sources": [
-        {"id":"W2905038698","title":"Manufacturing Signatures of Injection Molding and Injection Compression Molding for Micro-Structured Polymer Fresnel Lens Production","role":"primary-measured-candidate","verification":"metadata-screened"},
-        {"id":"W2407031454","title":"Investigation of Molding Characteristics in Injection Compression Molding According to Molding Conditions through Birefringence","role":"primary-measured-candidate","verification":"metadata-screened"},
-        {"id":"W4379141605","title":"Fabrication of the low-residual-stress optical microstructure by using the simulation and practice strategies, in-mold induction heating system, and injection compression molding technology","role":"primary-measured-candidate","verification":"metadata-screened"}
-      ],
-      "limitation": "Optical-grade resins, lens geometry, compression strategy and metrology are highly application-specific.",
-      "nextValidation": "Verify independent measured optics/ICM studies and preserve material, tool and metrology context."
-    }
+    {"id":"ejection-demoulding-physics","title":"Ejection and demoulding physics","status":"promoted","promoted":true,"publisherVerifiedPrimaryMeasured":2,"whyItMatters":"Release load can change with temperature, shrinkage, draft, texture, adhesion and mould condition; simply increasing eject force can hide the mechanism or damage tooling.","desiredEvidence":["ejection or demoulding force","surface/draft or interfacial condition","physical part quality or damage outcome"],"sources":[{"id":"doi:10.3311/PPme.18246","title":"The Effect of Processing Parameters and Calcium-stearate on the Ejection Process of Injection Molded Poly(Lactic Acid) Products","role":"primary-measured-study","verification":"publisher-verified"},{"id":"doi:10.3390/mi12060636","title":"Self-Assembled Monolayers of Alkanethiols on Nickel Insert: Characterization of Friction and Analysis on Demolding Quality in Microinjection Molding","role":"primary-measured-study","verification":"publisher-verified"},{"id":"doi:10.3390/polym15051285","title":"Adhesion-Induced Demolding Forces of Hard Coated Microstructures Measured with a Novel Injection Molding Tool","role":"primary-measured-candidate","verification":"publisher-verified"},{"id":"W4405381881","title":"Coefficient of friction in the demoulding forces of the injection moulding process—a review","role":"review","verification":"metadata-screened"}],"limitation":"PLA, microstructured inserts, coatings and the tested tool geometries are application-specific; the promoted mechanism does not create universal eject-force, lubricant, coating, draft-angle or process limits.","nextValidation":"Map the promoted evidence to S11/ejector-drag learning and test whether authorised site or public data contain suitable release-force, thermal and physical-quality signals."},
+    {"id":"residual-stress-birefringence","title":"Residual stress and birefringence","status":"promoted","promoted":true,"publisherVerifiedPrimaryMeasured":2,"whyItMatters":"Residual stress can remain when appearance and dimensions look acceptable and is especially important in optical, precision and chemically sensitive parts.","desiredEvidence":["residual stress or birefringence measurement","thermal/packing or pressure history","dimensional, optical or mechanical outcome"],"sources":[{"id":"doi:10.1002/pen.70492","title":"Correlation Between In-Mold Pressure and Residual Stress in Cyclo-Olefin Copolymer Injection Molding Using Birefringence Analysis","role":"primary-measured-study","verification":"publisher-verified"},{"id":"doi:10.1002/pen.70647","title":"Study of the Effects of Mold Coating on the Birefringence of Injection-Molded Optical-Quality Polycarbonate","role":"primary-measured-study","verification":"publisher-verified"},{"id":"doi:10.1016/j.taml.2016.04.004","title":"Residual stress measurement for injection molded components","role":"primary-measured-candidate","verification":"publisher-verified"},{"id":"W2334854314","title":"Effects of Thermal Molding Conditions on the Residual Stress and Residual Birefringence in an Injection-Molded Polymer Strip","role":"simulation-only","verification":"metadata-screened"}],"limitation":"COC and optical polycarbonate studies, sensor locations, mould coatings and lens geometries are application-specific; promotion supports the mechanism but no tested pressure, coating, temperature, speed or timing becomes universal guidance.","nextValidation":"Use the promoted evidence in S13 and precision-optics learning while seeking public/site data with independent optical stress, pressure and dimensional outcomes."},
+    {"id":"weld-line-mechanical-strength","title":"Weld-line mechanical strength versus appearance","status":"provisional","promoted":false,"publisherVerifiedPrimaryMeasured":0,"whyItMatters":"A visually acceptable weld line can still be mechanically weak, while an obvious line is not automatically the highest structural risk.","desiredEvidence":["weld-line geometry/location","tensile, fatigue or impact outcome","temperature/pressure/material context"],"sources":[{"id":"W4308122620","title":"Study on the Fatigue Strength of Welding Line in Injection Molding Products under Different Tensile Conditions","role":"primary-measured-candidate","verification":"metadata-screened"},{"id":"W4387668781","title":"Weld Line Strength of Polyamide Fiberglass Composite at Different Processing Parameters in Injection Molding Technique","role":"primary-measured-candidate","verification":"metadata-screened"},{"id":"W4400531525","title":"Optimizing the Tensile Strength of Weld Lines in Glass Fiber Composite Injection Molding","role":"primary-measured-candidate","verification":"metadata-screened"},{"id":"W4396518863","title":"A review of research progress on the minimization of weld lines in injection molding","role":"review","verification":"metadata-screened"}],"limitation":"Strength recovery and process effects cannot be generalized across resin, reinforcement, weld geometry and loading mode.","nextValidation":"Publisher-verify independent tensile/fatigue studies and keep cosmetic weld-line evidence separate from structural qualification."},
+    {"id":"fibre-breakage-retained-length","title":"Fibre breakage and retained fibre length","status":"provisional","promoted":false,"publisherVerifiedPrimaryMeasured":0,"whyItMatters":"Fibre orientation alone does not describe reinforced-part behaviour; processing can shorten fibres and change stiffness, strength and anisotropy.","desiredEvidence":["retained fibre-length distribution","processing history","mechanical or dimensional outcome"],"sources":[{"id":"W4313653197","title":"Relation between injection molding conditions, fiber length and mechanical properties for highly reinforced long fiber polypropylene","role":"primary-measured-candidate","verification":"metadata-screened"},{"id":"W3186005056","title":"The Low Breaking Fiber Mechanism and Its Effect on the Behavior of the Melt Flow of Injection Molded Ultra-Long Glass Fiber Reinforced Polypropylene Composites","role":"primary-measured-candidate","verification":"metadata-screened"},{"id":"W4308950709","title":"Influence of fiber breakage on flow behavior in fiber length- and orientation-dependent injection molding simulations","role":"validated-simulation-candidate","verification":"metadata-screened"}],"limitation":"Fibre damage depends on feedstock architecture, fibre type/length, screw/nozzle/tool geometry and processing history.","nextValidation":"Verify at least two studies with measured retained fibre length and measured physical outcomes before promotion."},
+    {"id":"runner-gate-multicavity-imbalance","title":"Runner, gate and multicavity imbalance","status":"provisional","promoted":false,"publisherVerifiedPrimaryMeasured":0,"whyItMatters":"Global machine averages can conceal cavity-specific imbalance caused by runner geometry, viscosity, gate condition or local thermal behaviour.","desiredEvidence":["cavity-specific pressure/fill response","runner/gate geometry or condition","cavity-specific part quality"],"sources":[{"id":"W2934830048","title":"Simulation Studies on the Effect of Material Characteristics and Runners Layout Geometry on the Filling Imbalance in Geometrically Balanced Injection Molds","role":"simulation-candidate","verification":"metadata-screened"},{"id":"W4403380517","title":"Impact of Runner Size, Gate Size, Polymer Viscosity, and Molding Process on Filling Imbalance in Geometrically Balanced Multi-Cavity Injection Molding","role":"primary-measured-candidate","verification":"metadata-screened"},{"id":"W4396581749","title":"Study on the Influence of Runner and Overflow Area Design on Flow–Fiber Coupling in a Multi-Cavity System","role":"primary-measured-candidate","verification":"metadata-screened"}],"limitation":"Balance response is mould-, cavity-, runner-, gate- and material-specific; a geometrically balanced layout is not proof of rheological balance.","nextValidation":"Verify multicavity measured studies and preserve cavity identity in public/site-data validation and learning examples."},
+    {"id":"hot-runner-actual-behaviour","title":"Hot-runner actual thermal and mechanical behaviour","status":"provisional","promoted":false,"publisherVerifiedPrimaryMeasured":0,"whyItMatters":"Displayed zone temperature or commanded valve timing may not equal actual thermal/mechanical response at the manifold, nozzle, gate or cavity.","desiredEvidence":["zone or actuation actual","cavity-specific pressure/fill","physical quality outcome"],"sources":[{"id":"W4394726558","title":"Out-of-Mold Sensor-Based Process Parameter Optimization and Adaptive Process Quality Control for Hot Runner Thin-Walled Injection-Molded Parts","role":"primary-measured-candidate","verification":"metadata-screened"},{"id":"W4382788433","title":"Numerical Simulation of Deformation in Hot Runner Manifold","role":"simulation-candidate","verification":"metadata-screened"},{"id":"W4392168082","title":"Mechanical and crystallization properties of hot runner injection molded virgin and recycled polypropylene","role":"primary-measured-candidate","verification":"metadata-screened"}],"limitation":"Hot-runner response depends on system design, controller, manifold/nozzle architecture, material and tool thermal state.","nextValidation":"Verify measured hot-runner studies with independent actuals rather than displayed setpoints alone."},
+    {"id":"liquid-silicone-rubber","title":"Liquid silicone rubber cure and crosslinking behaviour","status":"provisional","promoted":false,"publisherVerifiedPrimaryMeasured":0,"whyItMatters":"LSR uses thermoset cure/crosslinking behaviour and hot mould conditions that must not be taught as ordinary thermoplastic injection moulding.","desiredEvidence":["cavity pressure or cure-state signal","temperature/cure history","mechanical or part-quality outcome"],"sources":[{"id":"W4308973098","title":"Novel approach to characterize the cross-linking effect of liquid silicone rubber via cavity pressure analysis during injection molding","role":"primary-measured-candidate","verification":"metadata-screened"},{"id":"W2135174259","title":"Effects of Variation in Process Parameters on Cavity Pressure and Mechanical Strength of Molded Parts in LSR Injection Molding","role":"primary-measured-candidate","verification":"metadata-screened"},{"id":"W4388077386","title":"Liquid Silicone Rubber Headlamp Lens Injection Molding Process Optimization Based on Tie Bar Elongation and NSGA III","role":"primary-measured-candidate","verification":"metadata-screened"}],"limitation":"LSR formulations, cure systems, mould temperatures and optical/medical requirements are application-specific.","nextValidation":"Publisher-verify cure/cavity-pressure studies and retain LSR as a separate specialist process family."},
+    {"id":"fluid-assisted-moulding","title":"Gas, water and projectile-assisted moulding","status":"provisional","promoted":false,"publisherVerifiedPrimaryMeasured":0,"whyItMatters":"Fluid penetration, residual wall thickness and void formation introduce mechanisms that do not exist in conventional solid-part filling.","desiredEvidence":["assist-medium timing/pressure","penetration or residual wall measurement","physical geometry or quality outcome"],"sources":[{"id":"W3111723492","title":"Study of Residual Wall Thickness and Multiobjective Optimization for Process Parameters of Water-Assisted Injection Molding","role":"primary-measured-candidate","verification":"metadata-screened"},{"id":"W2074306211","title":"Experimental and Numerical Investigation of the Effect of Process Conditions on Residual Wall Thickness and Cooling and Surface Characteristics of Water-Assisted Injection Molded Hollow Products","role":"primary-measured-candidate","verification":"metadata-screened"},{"id":"W1974522617","title":"A Study on the Void Formation in Residual Wall Thickness of Fluid-Assisted Injection Molding Parts","role":"primary-measured-candidate","verification":"metadata-screened"},{"id":"W4366827320","title":"Effects of Processing Method and Parameters on the Wall Thickness of Gas-Projectile-Assisted Injection Molding Pipes","role":"primary-measured-candidate","verification":"metadata-screened"}],"limitation":"Water-, gas- and projectile-assisted processes have different equipment and penetration physics and must not be collapsed into one recipe.","nextValidation":"Verify representative measured studies for each assisted-process family before any mechanism promotion."},
+    {"id":"moisture-drying-degradation","title":"Moisture, drying and process-induced degradation","status":"provisional","promoted":false,"publisherVerifiedPrimaryMeasured":0,"whyItMatters":"Dryer setpoint is not material moisture at point of use; hydrolysis and excessive thermal/shear history can alter rheology and properties while machine settings appear unchanged.","desiredEvidence":["measured moisture/material-state evidence","drying or thermal/residence history","rheology, property or appearance outcome"],"sources":[{"id":"W4210347133","title":"An Investigation to Reduce the Effect of Moisture on Injection-Molded Parts through Optimization of Plasticization Parameters","role":"primary-measured-candidate","verification":"metadata-screened"},{"id":"W2990075833","title":"Study of the Influence of the Reprocessing Cycles on the Final Properties of Polylactide Pieces Obtained by Injection Molding","role":"primary-measured-candidate","verification":"metadata-screened"},{"id":"W3017124338","title":"Considerations on the Drying of the Raw Material and Consequences on the Quality of the Injected Products","role":"primary-measured-candidate","verification":"metadata-screened"}],"limitation":"Moisture sensitivity, safe drying conditions and degradation mechanisms are resin/grade specific; supplier data and approved procedures control real processing limits.","nextValidation":"Prioritize studies with independently measured water content and physical property/process outcomes, not dryer settings alone."},
+    {"id":"recyclate-process-variability","title":"Recyclate and process variability","status":"provisional","promoted":false,"publisherVerifiedPrimaryMeasured":0,"whyItMatters":"Recycled feedstock can vary in composition, degradation, rheology and contamination; nominal grade or one MFR value does not establish equivalent moulding response.","desiredEvidence":["material identity/lot or property","process actuals","part mass, dimension, mechanical or quality outcome"],"sources":[{"id":"W7125412830","title":"Inline pvT Analysis for Precise Volume Dosing in Injection Molding: Addressing Variability in Recyclate Melts","role":"primary-measured-candidate","verification":"metadata-screened"},{"id":"W4408267895","title":"Processing behavior evolution of recycled polypropylene: An integrated experimental and Computer-Aided engineering simulation study","role":"primary-measured-candidate","verification":"metadata-screened"},{"id":"W4392168082","title":"Mechanical and crystallization properties of hot runner injection molded virgin and recycled polypropylene","role":"primary-measured-candidate","verification":"metadata-screened"}],"limitation":"Recyclate response depends on feedstock stream, contamination, stabilisation, prior life, blend fraction and process history.","nextValidation":"Use the existing RWTH PCR public dataset as the first executable validation lane and verify literature relationships against measured process and part-mass data."},
+    {"id":"surface-replication-release","title":"Surface replication, texture, adhesion and release","status":"provisional","promoted":false,"publisherVerifiedPrimaryMeasured":0,"whyItMatters":"Surface quality and microfeature fidelity couple filling, mould temperature, texture, adhesion and demoulding rather than belonging to a single machine setting.","desiredEvidence":["replication ratio or surface metrology","texture/coating/thermal condition","demoulding, friction or surface-quality outcome"],"sources":[{"id":"W3164866543","title":"Self-Assembled Monolayers of Alkanethiols on Nickel Insert: Characterization of Friction and Analysis on Demolding Quality in Microinjection Molding","role":"primary-measured-candidate","verification":"metadata-screened"},{"id":"W2807413761","title":"Geometric Replication Integrity of Micro Features Fabricated Using Variotherm Assisted Micro Injection Moulding","role":"primary-measured-candidate","verification":"metadata-screened"},{"id":"W4411377760","title":"Considering microtexture geometry to improve micro-injection molding fidelity","role":"primary-measured-candidate","verification":"metadata-screened"}],"limitation":"Micro/nano replication and release behaviour is feature-, tool-surface-, polymer- and thermal-cycle-specific.","nextValidation":"Verify measured replication/release studies and keep surface fidelity and release as related but separable outcomes."},
+    {"id":"injection-compression-precision-optics","title":"Injection-compression and precision optical moulding","status":"provisional","promoted":false,"publisherVerifiedPrimaryMeasured":0,"whyItMatters":"Precision optics expose the interaction between fill/compression history, thermal control, residual stress, birefringence and geometric replication.","desiredEvidence":["compression/fill history","birefringence, stress or replication measurement","optical or dimensional performance"],"sources":[{"id":"W2905038698","title":"Manufacturing Signatures of Injection Molding and Injection Compression Molding for Micro-Structured Polymer Fresnel Lens Production","role":"primary-measured-candidate","verification":"metadata-screened"},{"id":"W2407031454","title":"Investigation of Molding Characteristics in Injection Compression Molding According to Molding Conditions through Birefringence","role":"primary-measured-candidate","verification":"metadata-screened"},{"id":"W4379141605","title":"Fabrication of the low-residual-stress optical microstructure by using the simulation and practice strategies, in-mold induction heating system, and injection compression molding technology","role":"primary-measured-candidate","verification":"metadata-screened"}],"limitation":"Optical-grade resins, lens geometry, compression strategy and metrology are highly application-specific.","nextValidation":"Verify independent measured optics/ICM studies and preserve material, tool and metrology context."}
   ]
 }
