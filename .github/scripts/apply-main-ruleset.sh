@@ -12,9 +12,9 @@ Usage:
   REPO=owner/repo .github/scripts/apply-main-ruleset.sh --dry-run
   REPO=owner/repo .github/scripts/apply-main-ruleset.sh --apply
 
-The default is --dry-run. --apply requires a local GitHub CLI login/token with
-repository Administration permission. No token is read from or written to the
-repository.
+The default is --dry-run and is network/credential free. --apply requires a
+local GitHub CLI login/token with repository Administration permission. No token
+is read from or written to the repository.
 EOF
 }
 
@@ -24,16 +24,21 @@ case "$MODE" in
   *) usage >&2; exit 2 ;;
 esac
 
-for command in gh jq mktemp; do
+for command in jq mktemp; do
   command -v "$command" >/dev/null 2>&1 || {
     echo "Required command not found: $command" >&2
     exit 1
   }
 done
 
-gh auth status >/dev/null
-
-gh repo view "$REPO" --json nameWithOwner,defaultBranchRef >/dev/null
+if [[ "$MODE" == "--apply" ]]; then
+  command -v gh >/dev/null 2>&1 || {
+    echo "Required command not found: gh" >&2
+    exit 1
+  }
+  gh auth status >/dev/null
+  gh repo view "$REPO" --json nameWithOwner,defaultBranchRef >/dev/null
+fi
 
 payload="$(mktemp)"
 trap 'rm -f "$payload"' EXIT
@@ -104,7 +109,9 @@ jq -e '
   ([.rules[].type] | index("pull_request")) != null and
   ([.rules[].type] | index("required_status_checks")) != null and
   ([.rules[].type] | index("deletion")) != null and
-  ([.rules[].type] | index("non_fast_forward")) != null
+  ([.rules[].type] | index("non_fast_forward")) != null and
+  ([.rules[] | select(.type == "pull_request") | .parameters.required_approving_review_count] | .[0]) == 0 and
+  ([.rules[] | select(.type == "required_status_checks") | .parameters.strict_required_status_checks_policy] | .[0]) == true
 ' "$payload" >/dev/null
 
 printf 'Repository: %s\n' "$REPO"
