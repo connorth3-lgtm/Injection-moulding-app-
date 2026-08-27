@@ -5,6 +5,7 @@ ROOT = Path(__file__).resolve().parent
 PROTOCOL = ROOT / 'sources' / 'REAL_PROCESS_DATA_PILOT_PROTOCOL.md'
 TEMPLATE = ROOT / 'data' / 'real-process-data-pilot-template.csv'
 INTAKE = ROOT / 'sources' / 'REAL_PROCESS_DATA_INTAKE.md'
+PUBLIC_BENCHMARKS = ROOT / 'sources' / 'PUBLIC_REAL_PROCESS_DATA_BENCHMARKS.md'
 README = ROOT / 'README.md'
 
 
@@ -12,11 +13,12 @@ def need(ok, msg):
     if not ok:
         raise AssertionError(msg)
 
-for path in [PROTOCOL, TEMPLATE, INTAKE, README]:
+for path in [PROTOCOL, TEMPLATE, INTAKE, PUBLIC_BENCHMARKS, README]:
     need(path.exists(), f'real-data pilot file missing: {path.relative_to(ROOT)}')
 
 protocol = PROTOCOL.read_text(encoding='utf-8')
 intake = INTAKE.read_text(encoding='utf-8')
+benchmarks = PUBLIC_BENCHMARKS.read_text(encoding='utf-8')
 readme = README.read_text(encoding='utf-8')
 
 for marker in [
@@ -41,6 +43,26 @@ for marker in [
 ]:
     need(marker in intake, f'real-data intake boundary missing: {marker}')
 
+# Public measured benchmarks can exercise ingestion/evidence handling before a
+# private site pilot is available, but must not silently become MouldMaster-owned
+# training data or be used to claim a validated real troubleshooting workflow.
+for marker in [
+    'external benchmark register — not a substitute for an authorised site pilot',
+    '10.17632/gtnb4j7bfx.1',
+    '10.17632/vc3k9tt5zj.2',
+    'CC BY 4.0',
+    '10.5281/zenodo.20744054',
+    'licence must be verified before reuse',
+    'Current state in this review: **embargoed**',
+    'Preserve missing values as missing',
+    'distinguish commanded/target values from actual measured values',
+    'do not build field mappings from metadata alone',
+    'authorised site-pilot evidence tracked in issue #50',
+    'No benchmark result authorises a production change',
+]:
+    need(marker in benchmarks, f'public real-data benchmark safeguard missing: {marker}')
+
+need(benchmarks.count('CC BY 4.0') >= 2, 'at least two benchmark candidates must have explicit reuse licences')
 need('REAL_PROCESS_DATA_PILOT_PROTOCOL.md' in readme, 'README must link the real-data pilot protocol')
 need('real-process-data-pilot-template.csv' in readme, 'README must link the pilot CSV template')
 need('pilot-ready' in protocol and 'validated on real production data' in protocol, 'pilot maturity claim gate missing')
@@ -73,4 +95,4 @@ for col in ['fill_time_s', 'transfer_position_mm', 'transfer_pressure_mpa', 'cus
 
 need(not any('setpoint' in col.lower() for col in header), 'pilot template must not make setpoints the default evidence schema')
 
-print('MouldMaster real process-data pilot readiness QA passed')
+print('MouldMaster real process-data pilot readiness QA passed (authorised-site protocol + public measured benchmark register)')

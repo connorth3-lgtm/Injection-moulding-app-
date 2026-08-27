@@ -10,6 +10,12 @@ The 264-case synthetic library is intentionally broad, but synthetic data cannot
 
 The pilot is for **learning validation and diagnostic-method evaluation**, not automatic process control, process approval, maintenance authorisation or production-release decisions.
 
+## Public measured-data benchmark lane
+
+Before an authorised site dataset is available, openly licensed measured datasets can be used to test limited parts of the data pathway such as schema mapping, units, missing-data handling, actual-versus-command separation, process/quality relationships and uncertainty language.
+
+The reviewed external benchmark register is `PUBLIC_REAL_PROCESS_DATA_BENCHMARKS.md`. Public benchmark work does **not** satisfy this pilot's completion criterion unless the stronger governance, baseline/fault/intervention/recovery evidence and independent engineering-review requirements below are also met. Keep external measured benchmark data distinct from MouldMaster synthetic cases and do not copy third-party files into this repository unless the exact version/licence permits it and attribution is preserved.
+
 ## Minimum pilot design
 
 Use at least one real process history containing:
