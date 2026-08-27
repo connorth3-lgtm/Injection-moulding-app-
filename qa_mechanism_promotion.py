@@ -18,6 +18,10 @@ def load(path):
     return json.loads(path.read_text(encoding='utf-8'))
 
 
+def norm_author(value):
+    return re.sub(r'[^a-z0-9]+', '', str(value).lower())
+
+
 registry = load(REGISTRY_PATH)
 rule = registry.get('promotionRule', {})
 mechanisms = {m.get('id'): m for m in registry.get('mechanisms', [])}
@@ -51,8 +55,17 @@ for path in dossiers:
     min_required = rule.get('minimumIndependentPublisherVerifiedPrimaryMeasured', 2)
     need(len(studies) >= min_required, f'{path.name}: fewer than {min_required} qualifying studies')
 
+    rationale = str(d.get('independenceRationale', '')).strip()
+    need(len(rationale) >= 120, f'{path.name}: independence rationale is missing or too weak')
+    rationale_lower = rationale.lower()
+    need(('distinct' in rationale_lower or 'separate' in rationale_lower) and ('experiment' in rationale_lower or 'programme' in rationale_lower),
+         f'{path.name}: independence rationale must explain distinct experimental evidence')
+    need('duplicate' in rationale_lower or 're-analys' in rationale_lower,
+         f'{path.name}: independence rationale must address duplicate/re-analysis risk')
+
     dois = []
     independence = []
+    author_sets = []
     qualifying = 0
     for i, study in enumerate(studies, 1):
         prefix = f'{path.name}: study {i}'
@@ -67,6 +80,8 @@ for path in dossiers:
         need(isinstance(study.get('year'), int) and 1900 <= study['year'] <= 2100, f'{prefix}: year invalid')
         authors = study.get('authors')
         need(isinstance(authors, list) and authors and all(str(x).strip() for x in authors), f'{prefix}: authors missing')
+        normalized_authors = frozenset(norm_author(x) for x in authors if norm_author(x))
+        need(normalized_authors, f'{prefix}: normalized author set is empty')
         measured = study.get('measuredSignals')
         outcomes = study.get('physicalQualityOutcomes')
         need(isinstance(measured, list) and measured and all(str(x).strip() for x in measured), f'{prefix}: measured signals missing')
@@ -80,10 +95,12 @@ for path in dossiers:
         need(key, f'{prefix}: independence key missing')
         dois.append(doi.lower())
         independence.append(key)
+        author_sets.append(normalized_authors)
         qualifying += 1
 
     need(len(dois) == len(set(dois)), f'{path.name}: duplicate DOI counted as independent evidence')
     need(len(independence) == len(set(independence)), f'{path.name}: duplicate experiment/independence key counted twice')
+    need(len(author_sets) == len(set(author_sets)), f'{path.name}: identical author set counted as independent evidence without a distinct team/programme')
     need(qualifying >= min_required, f'{path.name}: promotion minimum not met')
 
     eligibility = d.get('eligibility', {})
@@ -123,6 +140,7 @@ for path in dossiers:
         'qualifyingStudies': qualifying,
         'eligibleForPromotion': True,
         'registryPromotionApplied': applied,
+        'independenceRationaleRecorded': True,
     })
 
 report = {
@@ -134,4 +152,4 @@ report = {
     'result': 'pass',
 }
 REPORT_PATH.write_text(json.dumps(report, indent=2) + '\n', encoding='utf-8')
-print(f"MouldMaster mechanism promotion QA passed ({len(results)} dossiers; {report['eligibleCount']} eligible; {report['appliedCount']} applied)")
+print(f"MouldMaster mechanism promotion QA passed ({len(results)} dossiers; {report['eligibleCount']} eligible; {report['appliedCount']} applied; independence rationales checked)")
