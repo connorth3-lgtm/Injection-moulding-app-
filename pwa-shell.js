@@ -21,10 +21,18 @@ function syncLabels(){
   document.querySelectorAll('[data-mm-android-pwa] .tiny.muted').forEach(p=>{if(/Android release/i.test(p.textContent||''))setText(p,copy)});
   const meta=document.querySelector('meta[name="mm-shell-release"]');if(meta)setAttr(meta,'content',RELEASE);
 }
+function sourceReviewDisplayDate(){
+  const iso=window.MM_DATA?.assessmentQA?.qualitySuite?.sourceFreshnessReviewed||'';
+  const match=/^(\d{4})-(\d{2})-(\d{2})$/.exec(iso);if(!match)return '';
+  const months=['January','February','March','April','May','June','July','August','September','October','November','December'];
+  const month=months[Number(match[2])-1];return month?`${Number(match[3])} ${month} ${match[1]}`:'';
+}
 function syncStandardsReviewDate(){
-  if(window.MM_DATA?.standards)window.MM_DATA.standards.verified='26 August 2026';
+  const reviewed=sourceReviewDisplayDate();if(!reviewed)return;
+  if(window.MM_DATA?.standards)window.MM_DATA.standards.verified=reviewed;
   document.querySelectorAll('small,.tiny,.muted,p,span').forEach(el=>{
-    if(/References reviewed\s+20 August 2026/i.test(el.textContent||''))setText(el,(el.textContent||'').replace(/20 August 2026/gi,'26 August 2026'));
+    const text=el.textContent||'';
+    if(/References reviewed\s+\d{1,2}\s+[A-Za-z]+\s+\d{4}/i.test(text))setText(el,text.replace(/(References reviewed\s+)\d{1,2}\s+[A-Za-z]+\s+\d{4}/gi,`$1${reviewed}`));
   });
 }
 function syncUpdateCard(){

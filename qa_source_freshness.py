@@ -73,7 +73,9 @@ def main():
     shell=(ROOT/'pwa-shell.js').read_text(encoding='utf-8')
     need(f"const SOURCE_REVIEWED='{data['reviewed']}'" in quality,'assessment source-reviewed date must match the authoritative manifest')
     need(f"const SOURCE_REVIEW_BY='{data['review_by']}'" in quality,'assessment source review-by date must match the authoritative manifest')
-    need("window.MM_DATA?.standards" in shell and '26 August 2026' in shell,'visible standards review date must be synchronized by the shell')
+    need('sourceReviewDisplayDate' in shell and 'qualitySuite?.sourceFreshnessReviewed' in shell,'visible standards review date must derive from validated assessment source metadata')
+    need('References reviewed\\s+\\d{1,2}' in shell,'visible standards review-date replacement must accept future review dates')
+    need('26 August 2026' not in shell,'PWA shell must not pin a specific source-review date')
     report={'schema':1,'checked_at':datetime.now(timezone.utc).replace(microsecond=0).isoformat().replace('+00:00','Z'),'mode':'network' if args.network else 'static','manifest_reviewed':data['reviewed'],'manifest_review_by':data['review_by'],'results':[]}
     changed=[]; gone=[]
     if args.network:
