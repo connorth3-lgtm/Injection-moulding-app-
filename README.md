@@ -52,7 +52,9 @@ Six material-specific practice labs turn resin/reference knowledge into evidence
 
 The process-data learning library contains 264 guided/synthetic diagnostic cases spanning baseline → fault → recovery reasoning, with 19,008 generated training cycles across machine, tooling, material, scientific-moulding, sensor, SPC, metrology and maintenance themes. Synthetic values are for pattern recognition and mechanism learning; they are not universal production setpoints or acceptance limits.
 
-`process-data-local-intake.js` provides an explicit local-only path for preparing real process CSV exports. Raw files are selected by the user, processed in-session, direct/person identifiers and timestamps are removed by default, operational identifiers are replaced with per-file aliases, and prepared exports remain pseudonymised rather than guaranteed anonymous.
+A corpus-wide release gate, `qa_process_data_sweep.py`, audits all 264 cases together rather than trusting the three process-data layers independently. It enforces global case-ID/title uniqueness, four-signal and recovery invariants, corpus totals and evidence-source granularity, and emits `process-data-sweep-report.json` without adding measured production rows to the synthetic corpus.
+
+`process-data-local-intake.js` provides an explicit local-only path for preparing real process CSV exports. Raw files are selected by the user, processed in-session, available shot/timestamp order is checked before timestamps are removed, direct/person identifiers are removed by default, operational identifiers are replaced with per-file aliases, and prepared exports remain pseudonymised rather than guaranteed anonymous. A usable source `shot_index` is preserved; otherwise a sequence index is generated from file row order and any detected order problem is surfaced for human review.
 
 The controlled move toward real de-identified evidence is defined in `sources/REAL_PROCESS_DATA_PILOT_PROTOCOL.md` and `data/real-process-data-pilot-template.csv`. Pilot data should preserve shot/cavity identity within the prepared file, actual process signals, material/thermal state, quality outcomes and intervention timing while excluding customer/person identifiers and avoiding public upload of raw production data.
 
@@ -140,6 +142,11 @@ The release workflows run structural, runtime, question/answer, assessment-quali
 - `qa_assessment_evidence.py`
 - `qa_evidence_maturity.py`
 - `qa_process_data_diagnostics.py`
+- `qa_process_data_deep_dive_50.py`
+- `qa_process_data_20_pass.py`
+- `qa_process_data_local_intake.py`
+- `qa_process_data_sweep.py`
+- `qa_real_process_data_pilot.py`
 - `qa_learning_experience.py`
 - `qa_app_shell_registry.py`
 - `qa_mould_master_workspace.py`

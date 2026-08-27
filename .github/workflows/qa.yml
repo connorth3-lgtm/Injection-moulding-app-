@@ -109,6 +109,8 @@ jobs:
         run: python qa_process_data_deep_dive_50.py
       - name: 20-pass 200-case process-data atlas
         run: python qa_process_data_20_pass.py
+      - name: Cross-library 264-case process-data sweep
+        run: python qa_process_data_sweep.py
       - name: Local real-data intake privacy integrity
         run: python qa_process_data_local_intake.py
       - name: Real process-data pilot readiness
@@ -151,6 +153,12 @@ jobs:
         run: python qa_nzqa_readiness.py
       - name: IACET 2026 readiness integrity
         run: python qa_iacet_readiness.py
+      - name: Upload process-data sweep report
+        uses: actions/upload-artifact@v4
+        with:
+          name: mouldmaster-process-data-sweep
+          path: process-data-sweep-report.json
+          if-no-files-found: error
       - name: Upload evidence maturity audit
         uses: actions/upload-artifact@v4
         with:

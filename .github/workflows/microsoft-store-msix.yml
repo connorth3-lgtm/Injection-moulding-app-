@@ -88,6 +88,9 @@ jobs:
       - name: Validate 20-pass 200-case process-data atlas
         working-directory: .
         run: python qa_process_data_20_pass.py
+      - name: Validate cross-library 264-case process-data sweep
+        working-directory: .
+        run: python qa_process_data_sweep.py
       - name: Validate local real-data intake privacy
         working-directory: .
         run: python qa_process_data_local_intake.py
@@ -175,6 +178,7 @@ jobs:
             desktop/electron/generated/sbom.cdx.json
             assessment-quality-report.json
             evidence-maturity-report.json
+            process-data-sweep-report.json
             source-freshness-report.json
             research-source-freshness-report.json
           if-no-files-found: error

@@ -1,7 +1,7 @@
 # MouldMaster real process-data intake standard
 
 Status: engineering/data-learning guidance only  
-Reviewed: 2026-08-26  
+Reviewed: 2026-08-27  
 Scope: local preparation of de-identified or pseudonymised injection-moulding process data for evidence-led learning and troubleshooting.
 
 ## Why this exists
@@ -9,6 +9,17 @@ Scope: local preparation of de-identified or pseudonymised injection-moulding pr
 The synthetic libraries teach mechanism recognition, but real investigations depend on whether the source data preserve the physical process. A large CSV is not automatically useful data. The highest-value records keep **shot order, cavity identity, actual machine response, material state, tool/thermal state, quality outcome and intervention timing** tied together.
 
 The browser/desktop intake tool processes a selected CSV in memory only. It removes timestamp/direct-identifier fields by default, aliases operational identifiers per file, keeps numeric evidence signals, and exports a prepared CSV plus data dictionary. This is **pseudonymisation, not guaranteed anonymisation**; the prepared output still needs human review before sharing.
+
+Before timestamp fields are removed, the current intake module checks any usable source `shot_index` and parseable timestamp/date columns in file row order. A numeric source `shot_index` is preserved rather than replaced; when no usable source index exists, a sequential `shot_index` is generated from file row order. Non-increasing or unparseable sequence evidence is surfaced as **Sequence review required** metadata. The check is a warning aid, not proof that rows were acquired, grouped or exported correctly.
+
+## Two templates, one controlled flow
+
+MouldMaster intentionally has two related schemas rather than treating every CSV as the same thing:
+
+1. **Local/raw intake template** — downloaded from the in-app intake screen. It can contain transient timestamp and operational identifier fields because those fields may be needed locally to verify ordering and build stable per-file aliases. The tool then removes timestamps/direct-person fields and prepares a shareable working copy.
+2. **Prepared pilot template** — `data/real-process-data-pilot-template.csv`. It represents the preferred de-identified/pseudonymised pilot evidence contract: preserved shot sequence, aliases, phase, actual process evidence, quality result and intervention code without customer/person/timestamp fields.
+
+The local template now includes `shot_index`, `phase`, dimensional value/unit and `intervention_code` so its prepared output can map cleanly toward the pilot contract. Controlled phase labels are retained, structured unit tokens are retained, and intervention identifiers are re-aliased per prepared file. Sites may still need additional approved preprocessing or fields because one generic CSV cannot replace the source system's data dictionary.
 
 ## Preferred capture hierarchy
 
@@ -97,7 +108,7 @@ This supports **baseline → fault → controlled test → recovery → verifica
 ## Data-quality checks before analysis
 
 1. Confirm units and distinguish commanded values from actual values.
-2. Confirm timestamps/shot order are monotonic before timestamps are removed for sharing.
+2. Confirm timestamps/shot order are monotonic before timestamps are removed for sharing. The local intake tool now flags obvious source-order problems, but the controlled raw source remains authoritative.
 3. Confirm cavity identity is retained when multi-cavity behaviour matters.
 4. Confirm sensor zero/calibration state and any sensor replacement event.
 5. Confirm missing values are represented consistently; do not silently convert missing data to zero.
@@ -106,6 +117,7 @@ This supports **baseline → fault → controlled test → recovery → verifica
 8. Confirm quality labels come from a known inspection method.
 9. Check sampling rate before comparing high-frequency curves.
 10. Keep the original raw export under the site's approved data-retention/security process; MouldMaster's prepared export is not a substitute for the controlled source record.
+11. Confirm the prepared CSV contains only one `shot_index` field and that any **Sequence review required** warning has been resolved before causal analysis.
 
 ## Privacy and confidentiality
 
@@ -114,6 +126,7 @@ This supports **baseline → fault → controlled test → recovery → verifica
 - Review part numbers, proprietary grade names, mould IDs and rare event combinations for re-identification risk.
 - Use the local intake tool only as a preparation aid; follow organisational confidentiality and data-governance requirements.
 - Raw selected CSV data are not uploaded or persisted by the MouldMaster intake module.
+- Timestamp values used for the in-session sequence check are not copied into the prepared export or data dictionary.
 
 ## Engineering boundary
 
