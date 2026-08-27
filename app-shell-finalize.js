@@ -20,7 +20,7 @@ const EVIDENCE_STATUS=Object.freeze({
 });
 const GAP=window.MM_SPECIALIST_EVIDENCE_GAPS;
 const BASE=window.MM_SPECIALIST_CURRICULUM;
-function esc(v){return String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function esc(v){return String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot',"'":'&#39;'}[c]))}
 function syncEvidenceExports(){
   for(const lesson of GAP.lessons){
     const state=EVIDENCE_STATUS[lesson.evidenceArea]||'Provisional';
@@ -60,5 +60,6 @@ const geometryStyle=document.getElementById('mm-app-shell-registry-style');
 if(geometryStyle&&geometryStyle.parentNode===document.head)document.head.appendChild(geometryStyle);
 window.addEventListener('popstate',()=>window.MM_APP_SHELL.navigation?.sync?.());
 requestAnimationFrame(()=>{window.MM_APP_SHELL.geometry?.sync?.();patchEvidenceUi()});
-window.MM_APP_SHELL_FINALIZED='2026.08.28.1';
+// Preserve the canonical shell compatibility marker. Evidence-status bridging has its own version above.
+window.MM_APP_SHELL_FINALIZED='2026.08.26.4';
 })();
