@@ -10,6 +10,23 @@ import pandas as pd
 ROOT = Path(__file__).resolve().parents[1]
 CONTRACT = ROOT / "data/public-benchmark-contracts/openmms-t4g-v1.json"
 
+SOURCE_SCHEMA = {
+    "t":  {"semantic":"time-module-1", "unit":"s", "module":"temperature-pressure-force"},
+    "T1": {"semantic":"temperature-1", "unit":"degC", "module":"temperature-pressure-force"},
+    "T2": {"semantic":"temperature-2", "unit":"degC", "module":"temperature-pressure-force"},
+    "P":  {"semantic":"cavity-pressure", "unit":"bar", "module":"temperature-pressure-force"},
+    "F":  {"semantic":"extraction-force", "unit":"N", "module":"temperature-pressure-force"},
+    "Ax": {"semantic":"acceleration-x", "unit":"g", "module":"inertial"},
+    "Ay": {"semantic":"acceleration-y", "unit":"g", "module":"inertial"},
+    "Az": {"semantic":"acceleration-z", "unit":"g", "module":"inertial"},
+    "Gx": {"semantic":"angular-velocity-x", "unit":"dps/1000", "module":"inertial"},
+    "Gy": {"semantic":"angular-velocity-y", "unit":"dps/1000", "module":"inertial"},
+    "Gz": {"semantic":"angular-velocity-z", "unit":"dps/1000", "module":"inertial"},
+    "t2": {"semantic":"time-module-2", "unit":"s", "module":"inertial"}
+}
+MEASURED_COLUMNS = ["T1","T2","P","F","Ax","Ay","Az","Gx","Gy","Gz"]
+TIME_COLUMNS = ["t","t2"]
+
 
 def sha256_file(path: Path) -> str:
     h = hashlib.sha256()
@@ -19,58 +36,22 @@ def sha256_file(path: Path) -> str:
     return h.hexdigest()
 
 
-def infer_semantic(name: str) -> dict:
-    n = name.lower().replace("º", "°")
-    if "press" in n or "bar" in n:
-        kind = "pressure"
-    elif "temp" in n or "thermo" in n or "°c" in n:
-        kind = "temperature"
-    elif "force" in n or "forca" in n or "força" in n or "newton" in n:
-        kind = "force"
-    elif "acc" in n or "acceler" in n:
-        kind = "acceleration"
-    elif "gyro" in n or "gyr" in n:
-        kind = "gyroscope"
-    elif "time" in n or "timestamp" in n or "date" in n:
-        kind = "time"
-    else:
-        kind = "unclassified"
-    unit = None
-    for token, normalized in [("bar", "bar"), ("°c", "degC"), (" c", "degC"), ("(n)", "N"), (" m/s", "m/s"), ("g)", "g"), ("deg/s", "deg/s")]:
-        if token in n:
-            unit = normalized
-            break
-    return {"semantic": kind, "unitFromHeader": unit}
-
-
 def time_profile(series: pd.Series) -> dict | None:
     numeric = pd.to_numeric(series, errors="coerce")
-    if numeric.notna().mean() >= 0.95:
-        values = numeric.dropna().to_numpy(dtype=float)
-        if len(values) > 1:
-            deltas = np.diff(values)
-            positive = deltas[deltas > 0]
-            return {
-                "basis": "numeric-column",
-                "nonNull": int(len(values)),
-                "monotonicNonDecreasing": bool(np.all(deltas >= 0)),
-                "medianPositiveStep": None if len(positive) == 0 else float(np.median(positive)),
-                "rawValuesEmitted": False,
-            }
-    parsed = pd.to_datetime(series, errors="coerce", utc=True)
-    if parsed.notna().mean() >= 0.95:
-        values = parsed.dropna().astype("int64").to_numpy()
-        if len(values) > 1:
-            deltas = np.diff(values) / 1_000_000_000
-            positive = deltas[deltas > 0]
-            return {
-                "basis": "datetime-column",
-                "nonNull": int(len(values)),
-                "monotonicNonDecreasing": bool(np.all(deltas >= 0)),
-                "medianPositiveStepSeconds": None if len(positive) == 0 else float(np.median(positive)),
-                "rawValuesEmitted": False,
-            }
-    return None
+    if numeric.notna().mean() < 0.99:
+        return None
+    values = numeric.dropna().to_numpy(dtype=float)
+    if len(values) < 2:
+        return None
+    deltas = np.diff(values)
+    positive = deltas[deltas > 0]
+    return {
+        "nonNull": int(len(values)),
+        "monotonicNonDecreasing": bool(np.all(deltas >= 0)),
+        "strictlyIncreasingFraction": float(np.mean(deltas > 0)),
+        "medianPositiveStepSeconds": None if len(positive) == 0 else float(np.median(positive)),
+        "rawValuesEmitted": False
+    }
 
 
 def run(output: Path, retrieved_date: str) -> dict:
@@ -80,7 +61,7 @@ def run(output: Path, retrieved_date: str) -> dict:
     work = Path(tempfile.mkdtemp(prefix="mouldmaster-openmms-"))
     try:
         local = work / "Case_Study_Raw_Data.csv"
-        req = urllib.request.Request(url, headers={"User-Agent": "MouldMaster measured-data profiler/1"})
+        req = urllib.request.Request(url, headers={"User-Agent": "MouldMaster measured-data profiler/2"})
         with urllib.request.urlopen(req, timeout=120) as response, local.open("wb") as out:
             shutil.copyfileobj(response, out)
         size = local.stat().st_size
@@ -88,27 +69,29 @@ def run(output: Path, retrieved_date: str) -> dict:
             raise RuntimeError(f"OpenMMS file size drifted: {size} != {f['sizeBytes']}")
         digest = sha256_file(local)
         df = pd.read_csv(local, sep=None, engine="python", on_bad_lines="error")
-        columns = []
-        classified_values = 0
-        time_candidates = []
-        for name in df.columns:
-            semantic = infer_semantic(str(name))
+        headers = [str(x) for x in df.columns]
+        schema_exact = headers == list(SOURCE_SCHEMA)
+        column_profiles = []
+        for name in headers:
+            mapping = SOURCE_SCHEMA.get(name)
             non_null = int(df[name].notna().sum())
-            rec = {
-                "name": str(name), "dtype": str(df[name].dtype), "nonNull": non_null,
-                "missing": int(len(df) - non_null), **semantic, "rawValuesEmitted": False
-            }
-            columns.append(rec)
-            if semantic["semantic"] in {"pressure", "temperature", "force", "acceleration", "gyroscope"}:
-                classified_values += non_null
-            if semantic["semantic"] == "time":
-                tp = time_profile(df[name])
-                if tp:
-                    time_candidates.append({"column": str(name), **tp})
-        signal_columns = [x for x in columns if x["semantic"] in {"pressure", "temperature", "force", "acceleration", "gyroscope"}]
-        accepted = len(df) > 0 and bool(signal_columns) and bool(time_candidates)
+            column_profiles.append({
+                "name": name,
+                "dtype": str(df[name].dtype),
+                "nonNull": non_null,
+                "missing": int(len(df)-non_null),
+                "semantic": None if mapping is None else mapping["semantic"],
+                "unit": None if mapping is None else mapping["unit"],
+                "module": None if mapping is None else mapping["module"],
+                "rawValuesEmitted": False
+            })
+        time_profiles = {name: time_profile(df[name]) for name in TIME_COLUMNS if name in df.columns}
+        time_profiles = {k:v for k,v in time_profiles.items() if v is not None}
+        time_ok = len(time_profiles) == 2 and all(v["monotonicNonDecreasing"] for v in time_profiles.values())
+        measured_values = sum(int(df[name].notna().sum()) for name in MEASURED_COLUMNS if name in df.columns)
+        accepted = schema_exact and time_ok and all(int(df[name].notna().sum()) == len(df) for name in MEASURED_COLUMNS)
         result = {
-            "schema_version": 1,
+            "schema_version": 2,
             "status": "completed-public-measured-benchmark" if accepted else "retrieved-profile-needs-semantic-review",
             "retrieved_date": retrieved_date,
             "source": {
@@ -117,11 +100,21 @@ def run(output: Path, retrieved_date: str) -> dict:
                 "gitBlobSha1": f["gitBlobSha1"], "sizeBytes": size, "sha256": digest
             },
             "profile": {
-                "rows": int(len(df)), "columns": int(len(df.columns)), "columnProfiles": columns,
-                "classifiedSensorColumns": len(signal_columns), "classifiedMeasuredValues": classified_values,
-                "timeOrderingCandidates": time_candidates,
-                "timeOrderingEstablished": bool(time_candidates),
+                "rows": int(len(df)), "columns": int(len(df.columns)), "headerSchemaExact": schema_exact,
+                "columnProfiles": column_profiles,
+                "measuredSignalColumns": len(MEASURED_COLUMNS),
+                "acceptedMeasuredTimeSeriesSamples": measured_values if accepted else 0,
+                "timeOrdering": time_profiles,
+                "bothModuleTimeBasesEstablished": time_ok,
+                "sourceCodeSchemaBasis": "OpenMMS main.py defines Time [s], Temperature 1/2 [degC], Pressure [bar], Force [N], Acceleration [g], Angular velocity [dps/1000], and writes t2 for module 2 when both modules operate.",
                 "rawRowsOrCellValuesEmitted": False
+            },
+            "caseStudy": {
+                "paperReportedCycles": 110,
+                "paperReportedNormalCycles": 54,
+                "faultContext": "simulated extraction-system fault after the first 54 normal cycles; repeated retightening used to recreate the abnormal condition",
+                "paperReportedVisualizationRateHz": 10,
+                "productionGeneralizationAllowed": False
             },
             "retrieval": {"rawPublisherFileCommitted": False, "rawRowsUploadedAsArtifact": False},
             "evidenceBoundary": c["evidenceBoundary"]
@@ -134,9 +127,9 @@ def run(output: Path, retrieved_date: str) -> dict:
 
 
 def main():
-    p = argparse.ArgumentParser(); p.add_argument("--output", type=Path, required=True); p.add_argument("--retrieved-date", required=True)
-    a = p.parse_args(); r = run(a.output, a.retrieved_date)
-    print(json.dumps({"status": r["status"], "rows": r["profile"]["rows"], "sensorColumns": r["profile"]["classifiedSensorColumns"], "classifiedMeasuredValues": r["profile"]["classifiedMeasuredValues"]}, indent=2))
+    p=argparse.ArgumentParser(); p.add_argument("--output",type=Path,required=True); p.add_argument("--retrieved-date",required=True)
+    a=p.parse_args(); r=run(a.output,a.retrieved_date)
+    print(json.dumps({"status":r["status"],"rows":r["profile"]["rows"],"measuredSignalColumns":r["profile"]["measuredSignalColumns"],"acceptedMeasuredTimeSeriesSamples":r["profile"]["acceptedMeasuredTimeSeriesSamples"]},indent=2))
 
 
 if __name__ == "__main__": main()
