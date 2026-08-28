@@ -27,28 +27,53 @@ jobs:
           python-version: '3.12'
       - name: Profile exact Zenodo production-energy CSVs
         run: python tools/profile_zenodo_energy_20338544.py --output zenodo-energy-20338544-v1.json
-      - name: Enforce discovery-only measured boundary
+      - name: Enforce strict measured promotion boundary
         run: |
           python - <<'PY'
           import json
           p=json.load(open('zenodo-energy-20338544-v1.json',encoding='utf-8'))
-          assert p['schema']==1
-          assert p['status']=='exact-file-discovery-profile-review-required'
+          assert p['schema']==2
+          assert p['status']=='completed-public-measured-timeseries-benchmark'
           assert p['source']['doi']=='10.5281/zenodo.20338544'
+          assert p['source']['accessStatus']=='open'
+          assert p['source']['license'].lower()=='cc-by-4.0'
           assert p['csvFilesProfiled']==3
-          expected={
+          assert p['rawProductionFilesAccepted']==2
+          assert p['rawProductionRowsAccepted']==1269887
+          assert p['observedMachineNames']==['FGP085']
+          assert p['acceptedMeasuredRecords']==1269887
+          assert p['acceptedMeasuredTimeSeriesSamples']==19048305
+          assert len(p['measurementSemantics']['directInstrumentReportedPhysicalChannels'])==15
+          assert set(p['measurementSemantics']['derivedOrAggregateExcludedFromScalarLedger'])=={
+            'A_PF','B_PF','C_PF','TOTAL_ACT_POWER','TOTAL_APRT_POWER','TOTAL_CURRENT'
+          }
+          assert p['measurementSemantics']['neutralCurrentExcludedBecauseUnpopulated']=='N_CURRENT'
+          assert p['measurementSemantics']['testDatasetExcludedFromScalarLedger'] is True
+          expected_md5={
             'feb_production.csv':'3b2daf123be817b271529b909e19edc5',
             'mar_production.csv':'12dd28a9e8a12ed734c3ca4398f93d1b',
             'test_dataset.csv':'2a19cfa6f2fc569723e3ad8d78d8e418',
           }
-          assert {f['name']:f['md5'] for f in p['files']}==expected
-          assert all(f['sizeBytes']>0 and len(f['sha256'])==64 for f in p['files'])
-          assert p['totalCsvRowsObserved']>0
-          assert p['acceptedMeasuredRecords']==0
-          assert p['acceptedMeasuredTimeSeriesSamples']==0
+          expected_sha={
+            'feb_production.csv':'8a728a72f7fd4cf3821f244db0b31410bd27da0ca1997fc766673d044cf9da4c',
+            'mar_production.csv':'26ea166c06180969e64e4055996b2609b9f13efa45080b7d674a546abb1d8d36',
+            'test_dataset.csv':'259d7cfa903320cb5a2d51c816771f07b0b39a701d2a1b4bde8bfb491fee5fee',
+          }
+          expected_rows={'feb_production.csv':816925,'mar_production.csv':452962,'test_dataset.csv':2901}
+          assert {f['name']:f['md5'] for f in p['files']}==expected_md5
+          assert {f['name']:f['sha256'] for f in p['files']}==expected_sha
+          assert {f['name']:f['table']['rows'] for f in p['files']}==expected_rows
+          raw=[f for f in p['files'] if f['datasetRole']=='raw-production-energy-timeseries']
+          assert len(raw)==2
+          assert all(f['table']['directPhysicalChannelsComplete'] for f in raw)
+          assert sum(f['table']['directPhysicalScalarValues'] for f in raw)==19048305
+          for f in raw:
+              assert f['table']['timeRange']['LOG_TIME']['parseFailures']==0
+              assert f['table']['timeRange']['OBSERVATION_TIME']['parseFailures']==0
+              assert f['table']['logTimeByDevice']['commonPositiveDeltaSeconds']
           assert p['rawSourceRowsCommitted'] is False
           assert p['rawSourceFilesCommitted'] is False
-          print('Zenodo injection-moulding energy exact-file discovery passed; zero evidence promoted pending schema/units/state review')
+          print('Zenodo injection-moulding energy strict measured promotion boundary passed: 1,269,887 rows / 19,048,305 direct physical scalar samples')
           PY
       - uses: actions/upload-artifact@v4
         with:
