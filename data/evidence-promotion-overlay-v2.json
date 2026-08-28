@@ -1,0 +1,90 @@
+{
+  "schema": 1,
+  "version": "2026.08.29.1",
+  "reviewed": "2026-08-29",
+  "baseRegistry": "data/evidence-coverage-v1.json",
+  "primaryMeasuredRegistry": "data/primary-measured-evidence-registry-v1.json",
+  "authorMetadata": "data/primary-measured-promotion-authors-v1.json",
+  "scope": "Formal additive promotion overlay. The historical v1 registry remains unchanged; resolved learner-facing maturity applies this overlay only when its linked dossiers pass the same independent publisher-verified primary-measured promotion gate. Promotion is mechanism-level evidence, not production authority or a universal recipe.",
+  "promotions": [
+    {
+      "mechanismId":"fibre-breakage-retained-length",
+      "dossier":"data/mechanism-promotion-evidence/fibre-breakage-retained-length-v2.json",
+      "qualifyingSources":[
+        {"id":"doi:10.1002/pc.27232","title":"Relation between injection molding conditions, fiber length and mechanical properties for highly reinforced long fiber polypropylene","role":"primary-measured-study","verification":"publisher-verified"},
+        {"id":"doi:10.1002/app.70427","title":"Mixing Element Structure in Direct Fiber Feeding Injection Molding: Correlating Microstructure and Fiber Morphology With Length Retention and Mechanical Properties in GF/PP Composites","role":"primary-measured-study","verification":"publisher-verified"}
+      ]
+    },
+    {
+      "mechanismId":"runner-gate-multicavity-imbalance",
+      "dossier":"data/mechanism-promotion-evidence/runner-gate-multicavity-imbalance-v2.json",
+      "qualifyingSources":[
+        {"id":"doi:10.3390/polym16202874","title":"Impact of Runner Size, Gate Size, Polymer Viscosity, and Molding Process on Filling Imbalance in Geometrically Balanced Multi-Cavity Injection Molding","role":"primary-measured-study","verification":"publisher-verified"},
+        {"id":"doi:10.3390/s23031735","title":"Multiple In-Mold Sensors for Quality and Process Control in Injection Molding","role":"primary-measured-study","verification":"publisher-verified"}
+      ]
+    },
+    {
+      "mechanismId":"hot-runner-actual-behaviour",
+      "dossier":"data/mechanism-promotion-evidence/hot-runner-actual-behaviour-v2.json",
+      "qualifyingSources":[
+        {"id":"doi:10.1002/app.22371","title":"Response of a sequential-valve-gate system used for thin-wall injection molding","role":"primary-measured-study","verification":"publisher-verified"},
+        {"id":"doi:10.1016/j.jmapro.2024.07.095","title":"Optimization of sequence valve gating (SVG) injection molding based on melt front detection (MFD)","role":"primary-measured-study","verification":"publisher-verified"}
+      ]
+    },
+    {
+      "mechanismId":"liquid-silicone-rubber",
+      "dossier":"data/mechanism-promotion-evidence/liquid-silicone-rubber-v2.json",
+      "qualifyingSources":[
+        {"id":"doi:10.1002/app.53381","title":"Novel approach to characterize the cross-linking effect of liquid silicone rubber via cavity pressure analysis during injection molding","role":"primary-measured-study","verification":"publisher-verified"},
+        {"id":"doi:10.7735/ksmte.2014.23.2.206","title":"Effects of Variation in Process Parameters on Cavity Pressure and Mechanical Strength of Molded Parts in LSR Injection Molding","role":"primary-measured-study","verification":"publisher-verified"}
+      ]
+    },
+    {
+      "mechanismId":"fluid-assisted-moulding",
+      "dossier":"data/mechanism-promotion-evidence/fluid-assisted-moulding-v2.json",
+      "qualifyingSources":[
+        {"id":"doi:10.1155/2015/161938","title":"Experimental and Numerical Investigation of the Effect of Process Conditions on Residual Wall Thickness and Cooling and Surface Characteristics of Water-Assisted Injection Molded Hollow Products","role":"primary-measured-study","verification":"publisher-verified"},
+        {"id":"doi:10.1002/pen.20832","title":"Ultrasonic measurement of residual wall thickness during gas assisted injection molding","role":"primary-measured-study","verification":"publisher-verified"}
+      ]
+    },
+    {
+      "mechanismId":"moisture-drying-degradation",
+      "dossier":"data/mechanism-promotion-evidence/moisture-drying-degradation-v2.json",
+      "qualifyingSources":[
+        {"id":"doi:10.3390/app12031410","title":"An Investigation to Reduce the Effect of Moisture on Injection-Molded Parts through Optimization of Plasticization Parameters","role":"primary-measured-study","verification":"publisher-verified"},
+        {"id":"doi:10.37358/MP.20.1.5311","title":"Considerations on the Drying of the Raw Material and Consequences on the Quality of the Injected Products","role":"primary-measured-study","verification":"publisher-verified"}
+      ]
+    },
+    {
+      "mechanismId":"recyclate-process-variability",
+      "dossier":"data/mechanism-promotion-evidence/recyclate-process-variability-v2.json",
+      "qualifyingSources":[
+        {"id":"doi:10.1016/j.jprocont.2026.103725","title":"Part-mass control in injection molding of recycled thermoplastics by learning-enabled model predictive cavity-pressure control","role":"primary-measured-study","verification":"publisher-verified"},
+        {"id":"doi:10.1002/pen.26689","title":"Mechanical and crystallization properties of hot runner injection molded virgin and recycled polypropylene","role":"primary-measured-study","verification":"publisher-verified"}
+      ]
+    },
+    {
+      "mechanismId":"surface-replication-release",
+      "dossier":"data/mechanism-promotion-evidence/surface-replication-release-v2.json",
+      "qualifyingSources":[
+        {"id":"doi:10.1016/j.jmapro.2019.04.010","title":"Improvement of the replication quality of randomly micro-textured injection-moulding components using a multi-scale surface analysis","role":"primary-measured-study","verification":"publisher-verified"},
+        {"id":"doi:10.1002/pen.24772","title":"Replication of surface micro-features using variothermal injection molding: Application to micro-fluidics","role":"primary-measured-study","verification":"publisher-verified"}
+      ]
+    },
+    {
+      "mechanismId":"injection-compression-precision-optics",
+      "dossier":"data/mechanism-promotion-evidence/injection-compression-precision-optics-v2.json",
+      "qualifyingSources":[
+        {"id":"doi:10.1002/pat.6166","title":"Injection-compression molding process on optical quality optimization of plastic lens array","role":"primary-measured-study","verification":"publisher-verified"},
+        {"id":"doi:10.1002/pen.23429","title":"Birefringence in injection-compression molding of amorphous polymers: Simulation and experiment","role":"primary-measured-study","verification":"publisher-verified"}
+      ]
+    }
+  ],
+  "summary": {
+    "basePromoted": 3,
+    "overlayPromoted": 9,
+    "resolvedPromoted": 12,
+    "resolvedProvisional": 0,
+    "resolvedGaps": 0
+  }
+}
