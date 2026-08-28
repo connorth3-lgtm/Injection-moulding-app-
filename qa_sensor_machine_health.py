@@ -3,6 +3,7 @@ import json
 
 ROOT = Path(__file__).resolve().parent
 REGISTRY = ROOT / 'data' / 'sensor-machine-health-registry-v1.json'
+CANDIDATES = ROOT / 'data' / 'sensor-machine-health-candidate-queue-v1.json'
 TARGETS = ROOT / 'data' / 'content-scale-targets.json'
 PRIMARY = ROOT / 'data' / 'primary-measured-evidence-registry-v1.json'
 REPORT = ROOT / 'sensor-machine-health-report.json'
@@ -12,6 +13,11 @@ ALLOWED_KINDS = {
     'derived-feature',
     'diagnostic-interpretation',
     'measurement-integrity',
+}
+ALLOWED_CANDIDATE_STATUSES = {
+    'publisher-verified-candidate-dedup-pending',
+    'supporting-machine-health-candidate-scope-review-required',
+    'existing-primary-study-sensor-concept-review-pending',
 }
 
 
@@ -26,6 +32,7 @@ def load(path):
 
 
 registry = load(REGISTRY)
+candidate_queue = load(CANDIDATES)
 targets = load(TARGETS)
 primary_index = load(PRIMARY)
 
@@ -113,13 +120,56 @@ need(summary.get('measurementIntegrityConcepts') == kind_counts['measurement-int
 need(len(dataset_profile_refs) >= 6, 'accepted sensor/health tranche needs broad measured-dataset provenance')
 need(len(primary_refs) >= 5, 'accepted sensor/health tranche needs peer-reviewed primary-measured support')
 
+# Candidate queue is deliberately fail-closed and non-counting.
+need(candidate_queue.get('schema') == 1, 'unsupported sensor/health candidate schema')
+need(candidate_queue.get('status') == 'candidate-queue-not-counted-as-accepted', 'candidate queue counting boundary missing')
+cb = candidate_queue.get('boundary') or {}
+need(cb.get('candidateIsNotAccepted') is True, 'candidate/accepted separation missing')
+need(cb.get('candidateIsNotPrimaryMeasuredUntilDedupReviewed') is True, 'candidate primary-measured dedup boundary missing')
+need(cb.get('simulationOrModelAloneDoesNotQualify') is True, 'simulation/model exclusion boundary missing')
+need(cb.get('universalThresholdsAllowed') is False, 'candidate queue must not allow universal thresholds')
+need(cb.get('productionSettingsDerived') is False, 'candidate queue must not derive production settings')
+
+candidate_rows = candidate_queue.get('candidates') or []
+need(len(candidate_rows) == 6, f'expected six staged sensor/health candidates, found {len(candidate_rows)}')
+candidate_dois = []
+existing_primary_candidates = []
+for i, row in enumerate(candidate_rows, 1):
+    prefix = f"sensor candidate {i} ({row.get('doi', 'missing-doi')})"
+    doi = str(row.get('doi', '')).strip().lower()
+    need(doi.startswith('10.') and '/' in doi, f'{prefix}: DOI missing')
+    candidate_dois.append(doi)
+    need(str(row.get('publisherUrl', '')).startswith('https://'), f'{prefix}: publisher URL missing')
+    need(row.get('status') in ALLOWED_CANDIDATE_STATUSES, f'{prefix}: unsupported candidate status')
+    need(len(str(row.get('whyUseful', '')).strip()) >= 80, f'{prefix}: usefulness rationale too weak')
+    measured = row.get('measuredEvidence')
+    concepts_out = row.get('candidateConcepts')
+    requirements = row.get('promotionRequirements')
+    need(isinstance(measured, list) and measured and all(str(x).strip() for x in measured), f'{prefix}: measured-evidence description missing')
+    need(isinstance(concepts_out, list) and concepts_out and all(str(x).strip() for x in concepts_out), f'{prefix}: candidate concept list missing')
+    need(isinstance(requirements, list) and len(requirements) >= 3 and all(str(x).strip() for x in requirements), f'{prefix}: promotion requirements too weak')
+    if row.get('status') == 'existing-primary-study-sensor-concept-review-pending':
+        need(doi in primary_dois, f'{prefix}: declared existing primary DOI is not in canonical registry')
+        existing_primary_candidates.append(doi)
+    else:
+        # New candidates may later prove to overlap an experiment, but the queue must not claim they are accepted.
+        need(row.get('status') != 'accepted-evidence-reviewed', f'{prefix}: candidate silently promoted')
+
+need(len(candidate_dois) == len(set(candidate_dois)), 'duplicate DOI inside sensor/health candidate queue')
+need(existing_primary_candidates == ['10.3390/app12031410'], 'existing-primary sensor candidate set drifted')
+need(target_count == 26, 'candidate queue must not inflate accepted sensor/machine-health count')
+
 report = {
     'schema': 1,
     'source': str(REGISTRY.relative_to(ROOT)),
+    'candidateQueue': str(CANDIDATES.relative_to(ROOT)),
     'acceptedConcepts': len(concepts),
+    'candidateConceptsNotAccepted': len(candidate_rows),
     'kindCounts': kind_counts,
     'datasetProfileEvidenceFiles': sorted(dataset_profile_refs),
     'primaryMeasuredDois': sorted(primary_refs),
+    'candidateDois': sorted(candidate_dois),
+    'existingPrimaryCandidatesForConceptReuse': existing_primary_candidates,
     'duplicateConceptIds': 0,
     'universalThresholdsAllowed': False,
     'result': 'pass',
@@ -127,7 +177,7 @@ report = {
 REPORT.write_text(json.dumps(report, indent=2) + '\n', encoding='utf-8')
 print(
     'MouldMaster sensor/machine-health QA passed '
-    f"({len(concepts)} accepted concepts; {kind_counts['direct-measurement']} direct, "
-    f"{kind_counts['derived-feature']} derived, {kind_counts['diagnostic-interpretation']} diagnostic, "
-    f"{kind_counts['measurement-integrity']} integrity)"
+    f"({len(concepts)} accepted concepts; {len(candidate_rows)} non-counting candidates; "
+    f"{kind_counts['direct-measurement']} direct, {kind_counts['derived-feature']} derived, "
+    f"{kind_counts['diagnostic-interpretation']} diagnostic, {kind_counts['measurement-integrity']} integrity)"
 )
