@@ -63,7 +63,8 @@ inventory = load(INVENTORY)
 datasets = inventory.get("datasets") or []
 summary = inventory.get("summary") or {}
 need(summary.get("datasets") == len(datasets) == 20, "measured dataset inventory count drifted")
-need(summary.get("automatedIngestionAllowed") == 9, "automated profiling inventory count drifted")
+need(summary.get("automatedIngestionAllowed") == 11, "automated profiling inventory count drifted")
+need(summary.get("rightsOrAccessReviewRequired") == 4, "rights/access review inventory count drifted")
 ids = [x.get("datasetId") for x in datasets]
 need(all(ids) and len(ids) == len(set(ids)), "measured dataset IDs must be unique")
 need(targets["fully_profiled_measured_datasets"].get("currentDiscovered") == 20, "discovered dataset target must match inventory")
@@ -84,6 +85,12 @@ need((inv["skz-loki-v1"].get("count") or {}).get("acceptedPhysicalScalarSamples"
 need(inv["iguzzini-road-lenses"].get("accessState") == "public-research-education-release", "iGuzzini source terms state drifted")
 need(inv["iguzzini-road-lenses"].get("rawRedistributionAllowedWithAttribution") is False, "iGuzzini research/education terms must not be widened")
 need((inv["iguzzini-road-lenses"].get("count") or {}).get("samples") == 1451, "iGuzzini inventory record count drifted")
+need(inv["impure-pascoe-2022"].get("accessState") == "executed-open-ccby" and inv["impure-pascoe-2022"].get("license") == "CC BY 4.0", "PASCOE inventory rights state drifted")
+need(inv["impure-pascoe-2022"].get("automatedIngestionAllowed") is True and inv["impure-pascoe-2022"].get("rawRedistributionAllowedWithAttribution") is True, "PASCOE automated/redistribution rights drifted")
+need((inv["impure-pascoe-2022"].get("count") or {}).get("cycles") == 307, "PASCOE inventory cycle count drifted")
+need(inv["forinfpro-himd-v1"].get("accessState") == "executed-open-ccby" and inv["forinfpro-himd-v1"].get("license") == "CC BY 4.0", "FORinFPRO inventory rights state drifted")
+need(inv["forinfpro-himd-v1"].get("automatedIngestionAllowed") is True and inv["forinfpro-himd-v1"].get("rawRedistributionAllowedWithAttribution") is True, "FORinFPRO automated/redistribution rights drifted")
+need((inv["forinfpro-himd-v1"].get("count") or {}).get("cycles") == 1, "FORinFPRO inventory cycle count drifted")
 need(inv["pet-preform-v2"].get("accessState") == "profiled-rejected-measured", "PET preform rejection must remain explicit")
 need(inv["leon-process-20309380"].get("accessState") == "embargoed", "León process embargo drifted")
 need(inv["leon-defects-20322729"].get("accessState") == "embargoed", "León defect embargo drifted")
@@ -298,7 +305,7 @@ report = {
 (ROOT / "content-scale-targets-report.json").write_text(json.dumps(report, indent=2) + "\n", encoding="utf-8")
 print(
     "MouldMaster content-scale target integrity QA passed "
-    f"({len(datasets)} measured datasets inventoried; 10 fully profiled dataset packages; "
+    f"({len(datasets)} measured datasets inventoried; 11 automated-profile sources; 10 fully profiled dataset packages; "
     "52,526,432 accepted real measured time-series samples; 867 accepted ProBayes cycles; "
     "1,451 accepted iGuzzini real-production records; 307 accepted PASCOE cycles; "
     "1 accepted FORinFPRO hybrid cycle; 60 publisher-verified primary measured studies)"
