@@ -8,6 +8,7 @@ INVENTORY = ROOT / "data" / "measured-dataset-inventory-v1.json"
 PRIMARY = ROOT / "data" / "primary-measured-evidence-registry-v1.json"
 BENCHMARK_RECORD = ROOT / "data" / "public-benchmark-results" / "gtnb4j7bfx-v1.json"
 BENCHMARK_AVAPS = ROOT / "data" / "public-benchmark-results" / "scatimdata-avaps-v1.json"
+BENCHMARK_OPENMMS = ROOT / "data" / "public-benchmark-results" / "openmms-t4g-v1.json"
 
 
 def need(ok, msg):
@@ -74,8 +75,27 @@ need(av_profile.get("acceptedMeasuredTimeSeriesSamples") == 13_631_488, "AVAPS a
 need(sum(int(x.get("acceptedMeasuredTimeSeriesSamples", 0)) for x in avaps.get("archives") or []) == 13_631_488, "AVAPS archive sample totals do not reconcile")
 need(by_id["scatimdata-avaps"].get("automatedIngestionAllowed") is True and by_id["scatimdata-avaps"].get("license") == "CC BY 4.0", "AVAPS inventory execution rights drifted")
 
-need(targets["fully_profiled_measured_datasets"]["currentAccepted"] == 2, "fully profiled measured dataset count must equal the two completed benchmark families")
-need(targets["measured_time_series_samples"]["currentAccepted"] == av_profile["acceptedMeasuredTimeSeriesSamples"], "measured sample count must equal delivered-file AVAPS evidence")
+openmms = json.loads(BENCHMARK_OPENMMS.read_text(encoding="utf-8"))
+need(openmms.get("status") == "completed-public-measured-benchmark", "OpenMMS public benchmark status missing")
+om_source = openmms.get("source") or {}
+om_profile = openmms.get("measurement_profile") or {}
+need(om_source.get("datasetId") == "openmms-t4g", "OpenMMS dataset identity drifted")
+need(om_source.get("repositoryCommit") == "cfa6e23c7fc02a645e31e06d299021cb0a3ce3e7", "OpenMMS pinned commit drifted")
+need(om_source.get("license") == "BSD-3-Clause", "OpenMMS licence drifted")
+need(om_source.get("peerReviewedCompanion") == "10.3390/s23073569", "OpenMMS companion DOI drifted")
+need(om_source.get("sha256") == "aa78e659bc4b7a0361882d2eaa516a0010bfb573d413a3600baad98aae397bf6", "OpenMMS source fingerprint drifted")
+need(om_profile.get("rows") == 29_808 and om_profile.get("columns") == 12, "OpenMMS file dimensions drifted")
+need(om_profile.get("measuredSignalColumns") == 10, "OpenMMS measured signal count drifted")
+need(om_profile.get("acceptedMeasuredTimeSeriesSamples") == 298_080, "OpenMMS accepted measured-sample count drifted")
+need(len(om_profile.get("signals") or []) == 10, "OpenMMS signal registry must contain ten source-defined measured channels")
+need(set((om_profile.get("time_bases") or {}).keys()) == {"t", "t2"}, "OpenMMS two time bases drifted")
+need(all(v.get("monotonicNonDecreasing") is True and v.get("strictlyIncreasingFraction") == 1.0 for v in (om_profile.get("time_bases") or {}).values()), "OpenMMS time bases must remain ordered")
+need(by_id["openmms-t4g"].get("automatedIngestionAllowed") is True, "OpenMMS inventory execution right drifted")
+
+accepted_measured_total = av_profile["acceptedMeasuredTimeSeriesSamples"] + om_profile["acceptedMeasuredTimeSeriesSamples"]
+need(accepted_measured_total == 13_929_568, "combined real measured-sample arithmetic drifted")
+need(targets["fully_profiled_measured_datasets"]["currentAccepted"] == 3, "fully profiled measured dataset count must equal the three completed benchmark families")
+need(targets["measured_time_series_samples"]["currentAccepted"] == accepted_measured_total, "measured sample count must equal AVAPS plus OpenMMS delivered-file evidence")
 
 primary = json.loads(PRIMARY.read_text(encoding="utf-8"))
 ps = primary.get("summary") or {}
@@ -87,7 +107,7 @@ need(targets["peer_reviewed_research_records"]["currentAccepted"] == verified, "
 
 need(targets["material_profiles"]["currentAccepted"] == 20, "base material count must remain conservative until a dedicated accepted registry supersedes it")
 need(targets["defect_mechanisms"]["currentAccepted"] == 20, "base defect count must remain conservative until mechanism records are normalized")
-need(targets["sensor_machine_health_concepts"]["currentAccepted"] == 0, "do not infer an accepted sensor/health count from mixed reference cards or drafts")
+need(targets["sensor_machine_health_concepts"]["currentAccepted"] == 0, "do not infer an accepted sensor/health count from mixed reference cards, measured datasets or drafts")
 need(targets["assessment_education_items"]["currentAccepted"] == 157, "accepted learner-item count must match the evidence-gated keyed-question baseline")
 
 rules = " ".join(obj.get("nonCountingRules", [])).lower()
@@ -95,23 +115,33 @@ for marker in ["synthetic process-data cases never count", "actual source files"
     need(marker in rules, f"content-scale non-counting rule missing: {marker}")
 
 report = {
-    "schema": 3,
+    "schema": 4,
     "version": obj.get("version"),
     "reviewed": obj.get("reviewed"),
     "measuredDatasetDiscovery": {
         "inventoryCount": len(datasets),
         "legacyCatalogSeedCount": len(legacy.get("datasets") or []),
-        "fullyProfiledAccepted": 2,
+        "fullyProfiledAccepted": 3,
         "automatedIngestionAllowed": summary.get("automatedIngestionAllowed"),
         "embargoedRecords": summary.get("embargoed"),
     },
     "realMeasuredSamples": {
-        "accepted": av_profile["acceptedMeasuredTimeSeriesSamples"],
-        "source": "data/public-benchmark-results/scatimdata-avaps-v1.json",
-        "linkedCycles": av_profile["linkedCycles"],
-        "signalsPerCycle": 2,
-        "deliveredValuesPerSignal": av_profile["deliveredPointsPerSignalPerLinkedCycle"],
-        "paperReportedValuesPerSignal": av_profile["paperReportedPointsPerSignalPerCycle"],
+        "accepted": accepted_measured_total,
+        "sources": [
+            {"path": "data/public-benchmark-results/scatimdata-avaps-v1.json", "accepted": av_profile["acceptedMeasuredTimeSeriesSamples"]},
+            {"path": "data/public-benchmark-results/openmms-t4g-v1.json", "accepted": om_profile["acceptedMeasuredTimeSeriesSamples"]},
+        ],
+        "avaps": {
+            "linkedCycles": av_profile["linkedCycles"],
+            "signalsPerCycle": 2,
+            "deliveredValuesPerSignal": av_profile["deliveredPointsPerSignalPerLinkedCycle"],
+            "paperReportedValuesPerSignal": av_profile["paperReportedPointsPerSignalPerCycle"],
+        },
+        "openmms": {
+            "rows": om_profile["rows"],
+            "measuredSignalColumns": om_profile["measuredSignalColumns"],
+            "timeBases": list(om_profile["time_bases"]),
+        },
     },
     "verifiedResearch": {
         "publisherVerifiedPeerReviewedPrimaryMeasured": verified,
@@ -132,4 +162,4 @@ report = {
     "boundary": "No synthetic, metadata-only, generated-draft or heuristic-candidate evidence is counted as completed measured/reviewed content unless its area-specific acceptance definition is satisfied."
 }
 (ROOT / "content-scale-targets-report.json").write_text(json.dumps(report, indent=2) + "\n", encoding="utf-8")
-print(f"MouldMaster content-scale target integrity QA passed ({len(datasets)} measured datasets inventoried; 2 fully profiled benchmark families; {av_profile['acceptedMeasuredTimeSeriesSamples']:,} real measured time-series values; {verified} publisher-verified primary measured studies)")
+print(f"MouldMaster content-scale target integrity QA passed ({len(datasets)} measured datasets inventoried; 3 fully profiled benchmark families; {accepted_measured_total:,} real measured time-series values; {verified} publisher-verified primary measured studies)")
