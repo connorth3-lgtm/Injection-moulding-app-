@@ -6,7 +6,7 @@ Status date: 2026-08-28
 
 Deep Dive v2 replaces the earlier range-based expansion goals with fixed, deliberately larger corpus targets. The objective is not to maximise paper or synthetic-row count in isolation. The objective is to build a traceable injection-moulding evidence system that connects mechanisms, measured signals, materials, tooling, machine state and part-quality outcomes.
 
-The machine-readable target ledger is `data/deep-dive-v2-targets.json`. Wave 1 remains preserved in `data/deep-dive-v2-100-pass.json`; the second independent run is stored in `data/deep-dive-v2-wave2-100-pass.json`. Together they form **200 cumulative research/evidence passes**.
+The machine-readable target ledger is `data/deep-dive-v2-targets.json`. Wave 1 remains preserved in `data/deep-dive-v2-100-pass.json`; Wave 2 is stored in `data/deep-dive-v2-wave2-100-pass.json`; and Wave 3 is stored in `data/deep-dive-v2-wave3-100-pass.json`. Together they form **300 cumulative research/evidence passes**.
 
 ## Fixed corpus targets
 
@@ -39,7 +39,7 @@ The machine-readable target ledger is `data/deep-dive-v2-targets.json`. Wave 1 r
 | Expert-level scenarios | 300 |
 | Appropriately licensed defect images, eventual | 10,000 |
 | Lessons/modules total | 250 |
-| Research/evidence domains | **200** |
+| Research/evidence domains | **300** |
 
 These are programme targets. They do not imply that a release may claim completion before the underlying evidence exists.
 
@@ -47,13 +47,15 @@ These are programme targets. They do not imply that a release may claim completi
 
 Deep Dive v2 builds on the canonical 120-lesson pathway, specialist extensions, evidence-gated learner questions, 264 synthetic process-data cases / 19,008 generated cycles, the earlier 20-pass research register, the 50-pass measured-evidence atlas, public benchmark preflight and the local privacy-first real-data intake path.
 
-Wave 1 IDs **1–100** are immutable baseline evidence domains. Wave 2 IDs **101–200** deepen rather than overwrite that work. The second wave deliberately leaves weakly supported subjects as `gap_seeded`; a search hit is not promoted to primary measured evidence simply to improve a count. A `seeded_with_primary` label means a relevant experimental/primary anchor was found for the domain; it is still subject to full-text identity, scope and claim-bounding review before promotion into the final evidence registry.
+Wave 1 IDs **1–100**, Wave 2 IDs **101–200**, and Wave 3 IDs **201–300** remain distinct ledgers. Later waves deepen rather than overwrite earlier work. Weakly supported subjects remain `gap_seeded`; a search result is not promoted simply to improve a count. A `seeded_with_primary` label means a relevant experimental/primary anchor was found for the domain; it is still subject to full-text identity, scope and claim-bounding review before promotion into the final evidence registry.
+
+Wave 3 places extra emphasis on inline pvT and rheology, filled/recycled materials, microcellular foaming, multi-cavity balance, precision and optical moulding, measurement uncertainty, LSR/rubber cure behaviour, powder/metal/ceramic injection moulding, mould and machine condition monitoring, anomaly detection and control, and measured energy/eco-efficiency.
 
 The next phase therefore prioritises evidence diversity and real measured signals instead of simply multiplying deterministic synthetic waveforms.
 
 ## Research-domain expansion
 
-The 200 cumulative passes span the following evidence families.
+The 300 cumulative passes span the following evidence families.
 
 ### Machine and plasticising
 
@@ -69,19 +71,23 @@ Cooling hydraulics; coolant flow and differential pressure; Reynolds/flow regime
 
 ### Materials and material state
 
-Commodity, engineering, high-performance, optical, flexible, bio-based and recycled polymers; moisture and reabsorption; over-drying; PA conditioning; hydrolysis; residence history; oxidation; crystallisation; pvT; compressibility; batch rheology; regrind/PCR fraction; recycled VOC/odour; contamination; masterbatch/additive dosing; flame retardants; conductive compounds; PEEK/PAEK; PPS; POM; PVC; LCP; TPU/TPE; PLA/PHA/PBS; short fibre; long fibre; carbon fibre; orientation; attrition; anisotropy; property retention and conditioning.
+Commodity, engineering, high-performance, optical, flexible, bio-based and recycled polymers; moisture and reabsorption; over-drying; PA conditioning; hydrolysis; residence history; oxidation; crystallisation; inline pvT; compressibility and bulk viscosity; pressure-dependent rheology; in-mould viscosity; batch rheology; regrind/PCR fraction; recycled VOC/odour; contamination; filler segregation; talc, glass beads and mineral fillers; masterbatch/additive dosing; flame retardants; conductive compounds; PEEK/PAEK; PPS; POM; PVC; LCP; TPU/TPE; PLA/PHA/PBS; short fibre; long fibre; carbon fibre; orientation; attrition; anisotropy; property retention and conditioning.
 
 ### Defects and physical outcomes
 
 Short shot; flash; sink; shrink voids; gas bubbles; trapped gas; burn/dieseling; splay families; black specks; colour streaks; plate-out; blush/gate blush; ghost marks; gloss nonuniformity; delamination; stress whitening; jetting; hesitation/race tracking; tiger stripes/flow marks; weld/meld lines; gate defects; ejection damage; sticking; optical haze/birefringence; fibre streaking/exposure; warpage/twist/bow; microfeature replication; foam-cell defects; LSR/thermoset cure defects; assisted-moulding penetration/wall-thickness defects; insert/interface defects.
 
-### Special processes
+### Special and reactive processes
 
-Thin-wall/high-speed; precision and micro moulding; ultrasonic micro; injection-compression; optical injection-compression; gas-assisted; water-assisted; projectile-assisted; microcellular/physical/chemical foaming; core-back; gas counter-pressure; co-injection; sandwich; 2K/3K; sequential multi-shot; insert and polymer overmoulding; organosheet/hybrid composite overmoulding; long-fibre; LSR; LSR overmoulding; optical silicone; thermoset; rubber; powder/metal/ceramic injection fundamentals; variotherm/RHCM; vacuum assistance; in-mould labelling/decoration/electronics; cleanroom/medical; high-temperature PAEK.
+Thin-wall/high-speed; precision and micro moulding; ultrasonic micro; injection-compression; optical injection-compression; gas-assisted; water-assisted; projectile-assisted; microcellular physical and chemical foaming; combined blowing agents; core-back and mould-opening foaming; gas counter-pressure; co-injection; sandwich; 2K/3K; sequential multi-shot; insert and polymer overmoulding; organosheet/hybrid composite overmoulding; long-fibre; LSR and LSR overmoulding; rubber/vulcanisation; optical silicone; thermoset; powder/metal/ceramic injection; low-pressure PIM; debinding and sintering; variotherm/RHCM; vacuum assistance; in-mould labelling/decoration/electronics; cleanroom/medical; high-temperature PAEK.
 
-### Sensors, metrology, statistics and data science
+### Multi-cavity, metrology and quality
 
-Cavity pressure/temperature; nozzle and melt pressure; infrared melt temperature; capacitance; dielectric; ultrasound; acoustic/vibration; mould strain; tie-bar strain; electrical signatures; thermal imaging; machine vision and defect segmentation; laser/displacement; CT and dimensional metrology; calibration; drift; sample rate; filtering; aliasing; synchronisation; uncertainty; MSA/Gage R&R; capability; univariate and multivariate SPC; EWMA; CUSUM; Hotelling T2; PCA; functional/time-series monitoring; DOE; response surfaces; split-plot/nested/mixture designs; anomaly detection; transfer learning; domain adaptation; drift; out-of-distribution detection; uncertainty calibration; interpretable models; causal intervention boundaries; digital twins; simulation discrepancy; cross-machine/process transfer.
+Multi-cavity shear-heating imbalance; runner thermal asymmetry; cavity-resolved fill, mass and dimensions; melt-flipper balancing; family-mould pressure balance; runner/gate packing balance; CT and micro-CT dimensional metrology; optical and tactile comparison; measurement uncertainty; GUM uncertainty budgets; confocal in-line measurement; surface-quality metrics; cavity pressure/temperature; nozzle and melt pressure; infrared melt temperature; capacitance; dielectric; ultrasound; acoustic/vibration; mould strain; tie-bar strain; extraction force; electrical signatures; thermal imaging; machine vision and defect segmentation; laser/displacement; calibration; drift; sample rate; filtering; aliasing; synchronisation; uncertainty; MSA/Gage R&R; capability; univariate and multivariate SPC; EWMA; CUSUM; Hotelling T2; PCA; functional/time-series monitoring.
+
+### Data science, maintenance and sustainability
+
+DOE; response surfaces; split-plot/nested/mixture designs; anomaly detection; LSTM autoencoders; representation learning; transfer learning; domain adaptation; drift; out-of-distribution detection; uncertainty calibration; interpretable models; causal inference boundaries; digital twins; simulation discrepancy; cross-machine/process transfer; mould wear-out prediction; condition monitoring from pressure, vibration, acceleration and extraction force; predictive maintenance; self-retraining analytics; measured electricity consumption; machine-selection energy models; specific energy consumption; and eco-efficiency.
 
 ## Real-data-first rule
 
