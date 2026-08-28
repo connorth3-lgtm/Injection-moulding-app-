@@ -1,0 +1,110 @@
+{
+  "schema": 2,
+  "status": "completed-public-measured-benchmark",
+  "completedDate": "2026-08-28",
+  "source": {
+    "title": "Cross-process-chain dataset archive: Combined data collection from injection molding and screw driving",
+    "doi": "10.5281/zenodo.17240390",
+    "recordId": "17240390",
+    "publisher": "Zenodo",
+    "version": "v1.1",
+    "license": "CC BY 4.0",
+    "accessRight": "open",
+    "companionSoftware": "https://github.com/nikolaiwest/cpc-data",
+    "publishedInjectionSamplingFrequency": "approximately 1 kHz at dataset level; individual raw recordings retain their own observed time basis",
+    "publishedInjectionCycleTime": "2-8 seconds typical",
+    "materialContext": "thermoplastic with varying recyclate and glass-fibre content"
+  },
+  "archive": {
+    "name": "class_values.zip",
+    "sizeBytes": 685541746,
+    "publisherMd5": "069e190338b2ca29f736b21fabf407ba",
+    "md5": "069e190338b2ca29f736b21fabf407ba",
+    "sha256": "a0c7c07997e6c5a996823744aceb82bfc7b4efd371c7be0f4afc60d04771ec90",
+    "files": 30572,
+    "totalUncompressedBytes": 2546998476
+  },
+  "injectionCycleCoverage": {
+    "upper": {
+      "serialFiles": 10697,
+      "uniqueCycleIds": 10697,
+      "minimumCycleId": 1,
+      "maximumCycleId": 12155,
+      "missingIdsWithinRange": 1458,
+      "duplicateCycleIds": 0,
+      "staticRows": 12155,
+      "staticColumns": 57,
+      "staticSerialFileReferences": 10697,
+      "staticSerialFileReferencesMissingFromArchive": 0,
+      "staticFileSha256": "cb63b530a22f413dff26c473e5051f8e66947a994fa4123963b461c42a1d2a2b"
+    },
+    "lower": {
+      "serialFiles": 4989,
+      "uniqueCycleIds": 4989,
+      "minimumCycleId": 2,
+      "maximumCycleId": 7861,
+      "missingIdsWithinRange": 2871,
+      "duplicateCycleIds": 0,
+      "staticRows": 7861,
+      "staticColumns": 58,
+      "staticSerialFileReferences": 4987,
+      "staticSerialFileReferencesMissingFromArchive": 7,
+      "missingStaticReferenceFiles": [
+        "lower_workpiece_cycle_00450.txt",
+        "lower_workpiece_cycle_00460.txt",
+        "lower_workpiece_cycle_00478.txt",
+        "lower_workpiece_cycle_00579.txt",
+        "lower_workpiece_cycle_00583.txt",
+        "lower_workpiece_cycle_00789.txt",
+        "lower_workpiece_cycle_00890.txt"
+      ],
+      "staticFileSha256": "613f82a2a5f1b185003b2825ba2a99d6be787051660cf4fe194c0ddb7829d1a6"
+    },
+    "acceptedInjectionSerialRecordings": 15686,
+    "screwDrivingSerialFilesExcluded": 14882
+  },
+  "qualityAndClassLinkage": {
+    "classValuesRows": 17574,
+    "classValuesColumns": 6,
+    "classValuesFileSha256": "2690fbdee0dcecda51e7a3571ca7064d49005bb6e8d8a64f871869d24a04e8d5",
+    "nonBlankUpperClassValues": 10830,
+    "nonBlankLowerClassValues": 7861,
+    "nonBlankScrewDrivingClassValuesExcludedFromInjectionEvidence": 7443,
+    "exampleInjectionFactors": ["cooling time", "mould temperature", "glass-fibre content", "recyclate content", "switching point", "injection velocity"]
+  },
+  "serialSchemaInspection": {
+    "upper": {
+      "observedColumns": ["row index", "time", "injection_pressure_target", "injection_pressure_actual", "melt_volume", "injection_velocity", "state"],
+      "sampledTraceRows": [2048, 2048, 2048],
+      "sampledTraceSha256": [
+        "2760ec0c5b5a1483f8a765f928b34488c5190710131357bf8ae48bb625364bd3",
+        "f19f303ff108ea1dee20142866eb927d8f49087dcef7420d4c333f0f9fcee118",
+        "4a0b13ecc241699a24778e10d49ece1c7867a91aeae499b7a80563e110f99e76"
+      ]
+    },
+    "lower": {
+      "observedSchemaFromSourceCompanionParser": ["time", "injection_pressure_target", "injection_pressure_actual", "melt_volume", "injection_velocity"],
+      "sampledTraceRows": [498, 497, 501],
+      "sampledTraceSha256": [
+        "d985a2124c8bfcdc9021b5196ef12421a2e2af40421a78d994d01b8b2894e335",
+        "3aa379ab883c25d61c4868eede7fc21fa97cb9a69da4146500e2a9b1516a6de6",
+        "cdfc8d6258383cbd3f81e3b97b5c878e5b001c354a948226a59e0ce315691127"
+      ],
+      "samplePreamblesExposeSamplingRateField": true,
+      "sampleObservedSamplingRateValue": "0.0300",
+      "note": "The lower source files expose per-file acquisition metadata and do not justify forcing the dataset-level approximately-1-kHz description onto every trace."
+    },
+    "measurementRoles": {
+      "directPhysical": ["injection_pressure_actual", "injection_velocity", "melt_volume"],
+      "command": ["injection_pressure_target"],
+      "state": ["state on upper traces"],
+      "axis": ["time"]
+    },
+    "sourceUnitsExplicitInRawSerialHeaders": false
+  },
+  "acceptedMeasuredCycles": 15686,
+  "acceptedMeasuredTimeSeriesSamples": 0,
+  "rawSourceRowsCommitted": false,
+  "rawSourceFilesCommitted": false,
+  "boundary": "The exact CC BY 4.0 v1.1 Zenodo archive is accepted as one measured injection-moulding dataset package. Its 10,697 upper and 4,989 lower serial recordings are treated as 15,686 real injection-moulding trace records; all 14,882 screw-driving JSON streams are excluded. Seven filenames referenced by the lower static table are absent from the checksum-matched archive and remain an explicit source-quality limitation. Direct actual pressure, injection velocity and melt-volume channels are separated from target/state/time fields. Their scalar values remain outside the accepted sample ledger because physical units are not explicit in the raw serial headers and observed per-file timing must not be overwritten by the dataset-level approximate sampling description."
+}
