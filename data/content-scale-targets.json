@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "version": "2026.08.28.9",
+  "version": "2026.08.28.10",
   "reviewed": "2026-08-28",
   "scope": "Hard content-scale targets for MouldMaster. Completion counts only evidence that satisfies the acceptance definition for that area. Synthetic learning cases, generated drafts, unverified candidate papers and metadata-only dataset records must not be counted as completed measured evidence.",
   "targets": {
@@ -9,9 +9,9 @@
       "preferred": 50,
       "unit": "datasets",
       "acceptance": "A real measured dataset whose exact source/version/licence or access terms are recorded; source files have been obtained lawfully; file fingerprint and profile are recorded; schema/units/grouping are inspected; direct measurements, commands, derived fields and labels are distinguished; material/process/machine/mould/quality context and limitations are documented. Metadata-only records do not count.",
-      "currentAccepted": 8,
+      "currentAccepted": 9,
       "currentDiscovered": 20,
-      "notes": "Eight dataset packages now pass the full acceptance boundary: Mendeley 10.17632/gtnb4j7bfx.1 v1, scatimdata, the Sustainability 2021 hot-runner supplement, the paper-linked OpenMMS-T4G case study, ProBayes main v2, ProBayes d-optimal v1, SKZ LoKI, and the iGuzzini industrial road-lens dataset. iGuzzini is pinned to source commit 41b8f392923d37b50b5098ed918dd2f0de1bc328 and contains 1,451 complete real-production rows with 13 process fields plus quality label; its repository terms explicitly permit research/education, while raw redistribution is not widened beyond those terms. RWTH 10.18154/RWTH-2025-06809 is CC BY 4.0/open access but remains uncounted because its versioned file endpoint returns a 248-byte HTML interstitial to GitHub automation, so exact source bytes have not yet been profiled. The PET preform candidate remains profiled but rejected from measured evidence."
+      "notes": "Nine dataset packages now pass the full acceptance boundary: Mendeley 10.17632/gtnb4j7bfx.1 v1, scatimdata, the Sustainability 2021 hot-runner supplement, the paper-linked OpenMMS-T4G case study, ProBayes main v2, ProBayes d-optimal v1, SKZ LoKI, the iGuzzini industrial road-lens dataset, and ImPure/PASCOE Trial 17 May 2022. PASCOE contributes 307 checksum-verified real cycle CSVs plus two measured quality files under CC BY 4.0; all 309 files matched publisher MD5 values and its cycle schema is fully enumerated. Its sensor scalar values are not added to the measured-sample ledger because channel units and the Time-field basis are not explicitly encoded in the published cycle headers. RWTH 10.18154/RWTH-2025-06809 is CC BY 4.0/open access but remains uncounted because its versioned file endpoint returns a 248-byte HTML interstitial to GitHub automation, so exact source bytes have not yet been profiled. The PET preform candidate remains profiled but rejected from measured evidence."
     },
     "measured_time_series_samples": {
       "minimum": 1000000,
@@ -19,7 +19,7 @@
       "unit": "samples",
       "acceptance": "Measured time-series samples from lawfully accessed real experimental or industrial injection-moulding datasets with source provenance, signal identity, units, sample ordering/time basis and dataset linkage. Synthetic training cycles and generated traces never count.",
       "currentAccepted": 52526432,
-      "notes": "scatimdata contributes 16,228,352 accepted pressure/flow/cavity-pressure scalar samples and OpenMMS contributes 298,080 physical sensor values. SKZ LoKI adds 36,000,000 direct physical pressure readings: 18,000,000 front/nozzle-side plus 18,000,000 back/mould-side values over 60 pressure-covered cycles at an observed ~10 kHz and 300,000 rows per cycle. Its Time[s] axis and 18,000,000 derived pressure-difference values are excluded. ProBayes adds 867 accepted real cycle records but its nested scalar arrays remain outside this sample total until per-channel time bases, units and direct-measurement masks are normalized. iGuzzini contributes 1,451 accepted real production records but zero waveform samples because each row is a scalar feature vector."
+      "notes": "scatimdata contributes 16,228,352 accepted pressure/flow/cavity-pressure scalar samples and OpenMMS contributes 298,080 physical sensor values. SKZ LoKI adds 36,000,000 direct physical pressure readings: 18,000,000 front/nozzle-side plus 18,000,000 back/mould-side values over 60 pressure-covered cycles at an observed ~10 kHz and 300,000 rows per cycle. Its Time[s] axis and 18,000,000 derived pressure-difference values are excluded. ProBayes adds 867 accepted real cycle records but its nested scalar arrays remain outside this sample total until per-channel time bases, units and direct-measurement masks are normalized. iGuzzini contributes 1,451 accepted real production records but zero waveform samples because each row is a scalar feature vector. PASCOE adds 307 accepted real moulding cycles and 297,087 sampled rows, but its 1,782,522 candidate values across six clearly named direct channels remain outside this total until source units and Time-field semantics are explicitly verified."
     },
     "material_profiles": {
       "minimum": 250,
@@ -43,7 +43,7 @@
       "unit": "concepts",
       "acceptance": "A distinct sensor, derived signal, calibration/drift concept, failure mode, wear signature, machine-health indicator or diagnostic interpretation with measurement location/domain, units or feature semantics where applicable, failure/confounders and evidence provenance.",
       "currentAccepted": 0,
-      "notes": "OpenMMS, ProBayes, SKZ and iGuzzini now provide strong measured evidence across mould/nozzle pressure, temperature, force, inertial sensing, machine DataXplorer signals, temperature-control, dryer/dosing, EUROMAP77, torque and MES process domains, but a dedicated normalized accepted sensor/health registry is still required before claiming a consolidated count."
+      "notes": "OpenMMS, ProBayes, SKZ, iGuzzini and PASCOE now provide strong measured evidence across mould/nozzle/cavity/hydraulic pressure, temperature, force, inertial sensing, machine DataXplorer signals, temperature-control, dryer/dosing, EUROMAP77, torque, screw position and MES/process domains, but a dedicated normalized accepted sensor/health registry is still required before claiming a consolidated count."
     },
     "assessment_education_items": {
       "minimum": 1000,
