@@ -1,0 +1,48 @@
+{
+  "schema": 1,
+  "version": "2026.08.29.1",
+  "reviewed": "2026-08-29",
+  "purpose": "One-by-one execution state for the 20 real measured-data sources. This ledger does not change accepted counts by itself; only completed source-file profiling may do that.",
+  "policy": {
+    "rawThirdPartyRowsCommitted": false,
+    "automatedRetrievalRequiresExplicitLicenceOrRepositoryTerms": true,
+    "rightsUnresolvedSourcesRemainBlocked": true,
+    "embargoedRequestOnlyAndConfidentialSourcesRemainBlocked": true,
+    "paperReportedCountsMustBeReconciledAgainstDeliveredFiles": true,
+    "measuredSampleCountsUseDeliveredFileStructureWhenItDiffersFromPaperText": true
+  },
+  "sources": [
+    {"priority":1,"datasetId":"mendeley-gtnb4j7bfx-v1","state":"accepted-profiled","action":"keep regression-pinned","reason":"CC BY 4.0 exact workbook already retrieved, SHA-256 fingerprinted and process-separated"},
+    {"priority":2,"datasetId":"scatimdata-avaps","state":"executing-profile","action":"pinned 3-archive CI retrieval and structure reconciliation","reason":"CC BY 4.0 high-resolution source; first run fingerprinted all archives and exposed transposed CSV plus HDF5 storage"},
+    {"priority":3,"datasetId":"su13148102-supplement","state":"queued-executable","action":"retrieve publisher supplementary ZIP and profile 955 x 42 table","reason":"CC BY 4.0 publisher supplementary data"},
+    {"priority":4,"datasetId":"probayes-main-v2","state":"blocked-rights-review","action":"capture explicit B2SHARE reuse licence before ingest","reason":"downloadable files are not sufficient evidence of reuse rights"},
+    {"priority":5,"datasetId":"probayes-doptimal-v1","state":"blocked-rights-review","action":"capture explicit B2SHARE reuse licence before ingest","reason":"downloadable files are not sufficient evidence of reuse rights"},
+    {"priority":6,"datasetId":"skz-loki-v1","state":"blocked-rights-review","action":"capture explicit B2SHARE reuse licence before waveform ingest","reason":"valuable time-resolved pressure data but licence not yet recorded"},
+    {"priority":7,"datasetId":"rwth-pcr-2025","state":"blocked-rights-review","action":"record versioned repository reuse terms before downloading archive","reason":"public download exists but exact reuse terms remain unresolved"},
+    {"priority":8,"datasetId":"impure-pascoe-2022","state":"blocked-rights-review","action":"verify Zenodo licence then enumerate per-cycle CSV archive","reason":"605.2 MB source is high-value but rights must be explicit before automated ingestion"},
+    {"priority":9,"datasetId":"iguzzini-road-lenses","state":"restricted-research-education","action":"profile only under stated research/education terms; do not widen redistribution rights","reason":"source is publicly released for research and educational purposes but lacks a standard reusable data licence"},
+    {"priority":10,"datasetId":"openmms-t4g","state":"queued-executable","action":"profile pinned Case_Study_Raw_Data.csv and reconcile sensor sampling/case segmentation","reason":"BSD-3-Clause repository with article-linked raw case-study data"},
+    {"priority":11,"datasetId":"forinfpro-himd-v1","state":"blocked-rights-review","action":"verify Zenodo licence and release version before multimodal ingest","reason":"rich sensor release but reuse terms not yet recorded"},
+    {"priority":12,"datasetId":"cross-process-chain-17240390","state":"blocked-rights-review","action":"verify licence and enumerate injection-only experiment IDs","reason":"must exclude downstream screw-driving observations from injection-cycle/sample counts"},
+    {"priority":13,"datasetId":"kamp-injection-7996","state":"blocked-mirror-rights","action":"locate authoritative original KAMP distribution terms","reason":"GitHub mirror does not prove rights for original factory dataset"},
+    {"priority":14,"datasetId":"foxconn-competition-16600","state":"blocked-mirror-rights","action":"locate original competition licence/terms","reason":"public mirror is not authority to redistribute or automatically ingest original competition data"},
+    {"priority":15,"datasetId":"warwick-demoulding","state":"queued-executable-special-format","action":"retrieve CC BY 4.0 Mendeley v2 files and add Origin/export adapter","reason":"open specialist demoulding evidence in Origin project format"},
+    {"priority":16,"datasetId":"pet-preform-v2","state":"queued-executable","action":"retrieve CC BY 4.0 Mendeley v2 files and inspect schema/counts","reason":"reuse-ready public process database"},
+    {"priority":17,"datasetId":"leon-process-20309380","state":"blocked-embargo","action":"recheck after embargo end","notBefore":"2027-12-31","reason":"raw files currently embargoed"},
+    {"priority":18,"datasetId":"leon-defects-20322729","state":"blocked-embargo","action":"recheck after embargo end","notBefore":"2027-12-31","reason":"raw files currently embargoed"},
+    {"priority":19,"datasetId":"inqcim-2500-request","state":"blocked-request-only","action":"obtain authorised access/data-use terms before any profiling","reason":"request-only source is not executable from public metadata"},
+    {"priority":20,"datasetId":"bottle-cap-7162-confidential","state":"blocked-confidential","action":"do not ingest without explicit authorised site/data agreement","reason":"confidential source must remain outside public automated pipeline"}
+  ],
+  "summary": {
+    "total": 20,
+    "acceptedProfiled": 1,
+    "executingProfile": 1,
+    "queuedExecutable": 4,
+    "rightsOrTermsBlocked": 7,
+    "restrictedResearchEducation": 1,
+    "mirrorRightsBlocked": 2,
+    "embargoed": 2,
+    "requestOnly": 1,
+    "confidential": 1
+  }
+}
