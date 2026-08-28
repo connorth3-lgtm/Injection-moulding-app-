@@ -8,7 +8,7 @@ RECORD_URL = "https://publications.rwth-aachen.de/record/1016199/"
 URL = RECORD_URL + "files/ExperimentalData.zip"
 VERSIONED_URL = URL + "?version=1"
 DOI = "10.18154/RWTH-2025-06809"
-UA = "Mozilla/5.0 MouldMaster-RWTH-PCR-profiler/1.2"
+UA = "Mozilla/5.0 MouldMaster-RWTH-PCR-profiler/1.3"
 
 
 def digest_bytes(data: bytes, algo="sha256"):
@@ -16,11 +16,13 @@ def digest_bytes(data: bytes, algo="sha256"):
 
 
 def download_archive():
-    jar = http.cookiejar.CookieJar()
-    opener = urllib.request.build_opener(urllib.request.HTTPCookieProcessor(jar))
-    opener.addheaders = [("User-Agent", UA), ("Accept-Language", "en-US,en;q=0.9")]
-    with opener.open(RECORD_URL, timeout=60) as r: r.read(4096)
-    variants = [VERSIONED_URL, VERSIONED_URL + "&download=1", URL, URL + "?download=1"]
+    jar=http.cookiejar.CookieJar(); opener=urllib.request.build_opener(urllib.request.HTTPCookieProcessor(jar))
+    opener.addheaders=[("User-Agent",UA),("Accept-Language","en-US,en;q=0.9")]
+    try:
+        with opener.open(RECORD_URL,timeout=60) as r: r.read(4096)
+    except Exception:
+        pass
+    variants=[VERSIONED_URL,VERSIONED_URL+"&download=1",URL,URL+"?download=1"]
     diagnostics=[]
     for candidate in variants:
         req=urllib.request.Request(candidate,headers={"User-Agent":UA,"Accept":"application/zip,application/octet-stream,*/*","Referer":RECORD_URL})
@@ -29,8 +31,9 @@ def download_archive():
                 data=r.read(); ct=r.headers.get("Content-Type"); final=r.geturl()
             diagnostics.append({"url":candidate,"finalUrl":final,"contentType":ct,"bytes":len(data),"prefixHex":data[:16].hex()})
             if zipfile.is_zipfile(io.BytesIO(data)): return data,candidate,diagnostics
-        except Exception as e: diagnostics.append({"url":candidate,"error":f"{type(e).__name__}: {e}"})
-    raise RuntimeError("RWTH archive fetch did not return ZIP: "+json.dumps(diagnostics,ensure_ascii=False))
+        except Exception as e:
+            diagnostics.append({"url":candidate,"error":f"{type(e).__name__}: {e}"})
+    return None,None,diagnostics
 
 
 def inspect_csv(data: bytes):
@@ -64,25 +67,22 @@ def inspect_mat(data: bytes):
 def main():
     ap=argparse.ArgumentParser(); ap.add_argument("--output",default="rwth-pcr-v1.json"); args=ap.parse_args()
     raw,used_url,fetch_diag=download_archive(); members=[]
-    with zipfile.ZipFile(io.BytesIO(raw)) as z:
-        for info in z.infolist():
-            if info.is_dir(): continue
-            data=z.read(info.filename); suffix=Path(info.filename).suffix.lower()
-            rec={"path":info.filename,"sizeBytes":len(data),"sha256":digest_bytes(data),"suffix":suffix}
-            if suffix in {".csv",".txt",".tsv"} and len(data)<=100_000_000: rec["tableInspection"]=inspect_csv(data)
-            elif suffix==".mat": rec["matInspection"]=inspect_mat(data)
-            elif suffix in {".json",".md",".yaml",".yml"} and len(data)<=5_000_000: rec["textPreview"]=data.decode("utf-8",errors="replace")[:2500]
-            members.append(rec)
-    payload={
-        "schema":1,"status":"profile-generated-review-required","completedDate":"2026-08-28",
-        "source":{"title":"Injection Molding Process Data for Post-Consumer-Recycled Materials","doi":DOI,"recordUrl":RECORD_URL,"downloadUrl":URL,"versionedDownloadUrl":VERSIONED_URL,"downloadVariantUsed":used_url,"publisher":"RWTH Publications","license":"CC BY 4.0","openAccess":True,"peerReviewedCompanion":"10.1016/j.jprocont.2026.103725","fileVersion":1,"publishedFileSizeLabel":"1,007.55 KB"},
-        "archive":{"name":"ExperimentalData.zip","sizeBytes":len(raw),"sha256":digest_bytes(raw),"members":len(members)},
-        "fetchDiagnostics":fetch_diag,"members":members,
-        "publishedContext":{"materials":["Systalen PP-24000 gr000 PCR","SABIC PP579S virgin PP"],"machine":"Arburg Allrounder 520 A 1500-800","mouldGeometry":"flat plate","signals":["screw-antechamber pressure","cavity pressure","controller output","screw velocity","screw-antechamber volume"],"quality":["part mass","part-mass reference"],"controllers":["learning-based nonlinear MPC","proportional cavity-pressure control","part-mass control"]},
-        "acceptedMeasuredCycles":0,"acceptedMeasuredTimeSeriesSamples":0,"rawSourceRowsCommitted":False,
-        "boundary":"Discovery profile only. Promotion requires reconciling experiment/cycle cardinality, signal matrices, units/time basis, controller/setpoint versus direct measurements, and part-mass linkage from the exact archive."
-    }
+    if raw is not None:
+        with zipfile.ZipFile(io.BytesIO(raw)) as z:
+            for info in z.infolist():
+                if info.is_dir(): continue
+                data=z.read(info.filename); suffix=Path(info.filename).suffix.lower()
+                rec={"path":info.filename,"sizeBytes":len(data),"sha256":digest_bytes(data),"suffix":suffix}
+                if suffix in {".csv",".txt",".tsv"} and len(data)<=100_000_000: rec["tableInspection"]=inspect_csv(data)
+                elif suffix==".mat": rec["matInspection"]=inspect_mat(data)
+                members.append(rec)
+    source={"title":"Injection Molding Process Data for Post-Consumer-Recycled Materials","doi":DOI,"recordUrl":RECORD_URL,"downloadUrl":URL,"versionedDownloadUrl":VERSIONED_URL,"downloadVariantUsed":used_url,"publisher":"RWTH Publications","license":"CC BY 4.0","openAccess":True,"peerReviewedCompanion":"10.1016/j.jprocont.2026.103725","fileVersion":1,"publishedFileSizeLabel":"1,007.55 KB"}
+    context={"materials":["Systalen PP-24000 gr000 PCR","SABIC PP579S virgin PP"],"machine":"Arburg Allrounder 520 A 1500-800","mouldGeometry":"flat plate","signals":["screw-antechamber pressure","cavity pressure","controller output","screw velocity","screw-antechamber volume"],"quality":["part mass","part-mass reference"],"controllers":["learning-based nonlinear MPC","proportional cavity-pressure control","part-mass control"]}
+    if raw is None:
+        payload={"schema":1,"status":"source-access-blocked-not-profiled","completedDate":"2026-08-28","source":source,"fetchDiagnostics":fetch_diag,"publishedContext":context,"acceptedMeasuredCycles":0,"acceptedMeasuredTimeSeriesSamples":0,"rawSourceRowsCommitted":False,"boundary":"RWTH metadata, file version, licence and experimental context are verified, but the public file endpoint returns a 248-byte HTML interstitial to GitHub-hosted automation. This source is not fully profiled and contributes no accepted dataset/sample count until exact source bytes are lawfully obtained and inspected."}
+    else:
+        payload={"schema":1,"status":"profile-generated-review-required","completedDate":"2026-08-28","source":source,"archive":{"name":"ExperimentalData.zip","sizeBytes":len(raw),"sha256":digest_bytes(raw),"members":len(members)},"fetchDiagnostics":fetch_diag,"members":members,"publishedContext":context,"acceptedMeasuredCycles":0,"acceptedMeasuredTimeSeriesSamples":0,"rawSourceRowsCommitted":False,"boundary":"Discovery profile only. Promotion requires reconciling experiment/cycle cardinality, signal matrices, units/time basis, controller/setpoint versus direct measurements, and part-mass linkage from the exact archive."}
     Path(args.output).write_text(json.dumps(payload,indent=2,ensure_ascii=False)+"\n",encoding="utf-8")
-    print(json.dumps({"archive":payload["archive"],"fetch":fetch_diag,"members":[{"path":m["path"],"sizeBytes":m["sizeBytes"],"suffix":m["suffix"],"table":m.get("tableInspection"),"mat":m.get("matInspection")} for m in members]},indent=2,ensure_ascii=False))
+    print(json.dumps({"status":payload["status"],"archive":payload.get("archive"),"fetch":fetch_diag,"memberCount":len(members)},indent=2,ensure_ascii=False))
 
 if __name__=="__main__": main()
