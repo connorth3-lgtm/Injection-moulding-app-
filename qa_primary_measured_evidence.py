@@ -4,6 +4,7 @@ import re
 
 ROOT = Path(__file__).resolve().parent
 INDEX = ROOT / 'data' / 'primary-measured-evidence-registry-v1.json'
+OVERLAY = ROOT / 'data' / 'evidence-promotion-overlay-v2.json'
 REPORT = ROOT / 'primary-measured-evidence-report.json'
 
 DOI_RE = re.compile(r'^10\.\d{4,9}/\S+$', re.I)
@@ -38,6 +39,7 @@ def load(path):
 
 
 index = load(INDEX)
+overlay = load(OVERLAY)
 need(index.get('schema') == 1, 'unsupported primary measured evidence schema')
 policy = index.get('credibilityPolicy', {})
 need(policy.get('predictionIsNotCausation') is True, 'prediction/causation boundary missing')
@@ -120,7 +122,7 @@ for c in candidates:
     mid = str(c.get('mechanismId', '')).strip()
     need(mid and mid not in seen_mechanisms, f'duplicate/missing promotion candidate mechanism: {mid}')
     seen_mechanisms.add(mid)
-    need(c.get('status') == 'eligible-candidate-not-applied', f'{mid}: candidate must remain staged, not automatically applied')
+    need(c.get('status') == 'eligible-candidate-not-applied', f'{mid}: primary evidence registry must remain a pre-promotion qualification snapshot')
 
     q = c.get('qualifyingDois')
     need(isinstance(q, list) and len(q) == 2, f'{mid}: exactly two qualifying DOI references required')
@@ -159,17 +161,44 @@ for c in candidates:
 
 need(seen_mechanisms == EXPECTED_STAGED, f'staged mechanism set drifted: {sorted(seen_mechanisms)}')
 
-# Staging this registry must not silently change the learner-facing mechanism registry.
+# The historical v1 mechanism registry remains a pre-promotion audit snapshot.
 coverage = load(ROOT / 'data' / 'evidence-coverage-v1.json')
 coverage_by_id = {m.get('id'): m for m in coverage.get('mechanisms', [])}
 for c in candidates:
     mid = c['mechanismId']
     need(mid in coverage_by_id, f'{mid}: staged candidate not found in mechanism registry')
     need(coverage_by_id[mid].get('promoted') is False and coverage_by_id[mid].get('status') != 'promoted',
-         f'{mid}: learner-facing promotion changed without a formal promotion dossier')
+         f'{mid}: historical v1 registry was rewritten instead of preserving the explicit promotion transition')
+
+# Formal promotion is a separate downstream governance transition, not an automatic side effect of discovery.
+need(overlay.get('schema') == 1, 'formal promotion overlay schema drifted')
+need(overlay.get('baseRegistry') == 'data/evidence-coverage-v1.json', 'formal promotion overlay base drifted')
+promotions = overlay.get('promotions', [])
+need(len(promotions) == 9, f'expected nine explicit formal promotions, found {len(promotions)}')
+overlay_by_mid = {x.get('mechanismId'): x for x in promotions}
+need(set(overlay_by_mid) == EXPECTED_STAGED, 'formal promotion overlay mechanism set disagrees with staged qualification set')
+formal_transition_count = 0
+for c in candidates:
+    mid = c['mechanismId']
+    item = overlay_by_mid[mid]
+    need(str(item.get('dossier', '')).startswith('data/mechanism-promotion-evidence/'), f'{mid}: formal promotion dossier path missing')
+    need((ROOT / item['dossier']).exists(), f'{mid}: formal promotion dossier file missing')
+    overlay_q = item.get('qualifyingSources')
+    need(isinstance(overlay_q, list) and len(overlay_q) == 2, f'{mid}: formal promotion must preserve exactly two counted qualifying studies')
+    overlay_dois = [str(x.get('id', '')).removeprefix('doi:').lower() for x in overlay_q]
+    need(overlay_dois == [str(x).lower() for x in c['qualifyingDois']], f'{mid}: formal promotion DOI pair differs from qualified evidence pair')
+    for src in overlay_q:
+        need(src.get('role') == 'primary-measured-study' and src.get('verification') == 'publisher-verified', f'{mid}: formal promotion source is not publisher-verified primary measured')
+    formal_transition_count += 1
+
+ov_summary = overlay.get('summary', {})
+need(ov_summary.get('basePromoted') == 3 and ov_summary.get('overlayPromoted') == 9 and ov_summary.get('resolvedPromoted') == 12,
+     'formal promotion overlay summary drifted')
+need(ov_summary.get('resolvedProvisional') == 0 and ov_summary.get('resolvedGaps') == 0,
+     'formal promotion overlay must resolve all priority mechanisms')
 
 report = {
-    'schema': 1,
+    'schema': 2,
     'source': str(INDEX.relative_to(ROOT)),
     'packCounts': pack_counts,
     'countedPrimaryMeasuredStudies': len(entries),
@@ -181,9 +210,11 @@ report = {
     'redundantEvidenceCounts': redundancy,
     'minimumRedundancyPerStagedMechanism': policy['minimumRedundancyPerStagedMechanism'],
     'automaticLearnerStatusChanges': 0,
+    'formalOverlayPromotions': formal_transition_count,
+    'resolvedPromotedMechanisms': ov_summary.get('resolvedPromoted'),
     'duplicateDois': 0,
     'duplicateExperimentIdentities': 0,
     'result': 'pass'
 }
 REPORT.write_text(json.dumps(report, indent=2) + '\n', encoding='utf-8')
-print('MouldMaster primary measured evidence QA passed (60 unique peer-reviewed primary measured studies; 4 Tier A / 56 Tier B; 9 staged mechanisms with independent backup evidence; no automatic status changes)')
+print('MouldMaster primary measured evidence QA passed (60 unique peer-reviewed primary measured studies; 4 Tier A / 56 Tier B; 9 qualified mechanisms with independent backup evidence; 9 explicit formal promotions; no automatic discovery-to-status changes)')
