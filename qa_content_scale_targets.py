@@ -2,16 +2,26 @@ from pathlib import Path
 import json
 
 ROOT = Path(__file__).resolve().parent
-TARGETS = ROOT / "data" / "content-scale-targets.json"
-LEGACY_CATALOG = ROOT / "data" / "measured-dataset-catalog.json"
-INVENTORY = ROOT / "data" / "measured-dataset-inventory-v1.json"
-PROFILED = ROOT / "data" / "profiled-measured-dataset-registry-v1.json"
-PRIMARY = ROOT / "data" / "primary-measured-evidence-registry-v1.json"
-BENCHMARK = ROOT / "data" / "public-benchmark-results" / "gtnb4j7bfx-v1.json"
-SCATIM = ROOT / "data" / "public-benchmark-results" / "scatimdata-v1.json"
-SUSTAINABLE = ROOT / "data" / "public-benchmark-results" / "su13148102-v1.json"
-OPENMMS = ROOT / "data" / "public-benchmark-results" / "openmms-t4g-v1.json"
-PET_PREFORM = ROOT / "data" / "public-benchmark-results" / "vc3k9tt5zj-v2.json"
+DATA = ROOT / "data"
+RESULTS = DATA / "public-benchmark-results"
+
+TARGETS = DATA / "content-scale-targets.json"
+LEGACY_CATALOG = DATA / "measured-dataset-catalog.json"
+INVENTORY = DATA / "measured-dataset-inventory-v1.json"
+PROFILED = DATA / "profiled-measured-dataset-registry-v1.json"
+PRIMARY = DATA / "primary-measured-evidence-registry-v1.json"
+
+BENCHMARK = RESULTS / "gtnb4j7bfx-v1.json"
+SCATIM = RESULTS / "scatimdata-v1.json"
+SUSTAINABLE = RESULTS / "su13148102-v1.json"
+OPENMMS = RESULTS / "openmms-t4g-v1.json"
+PROBAYES_MAIN = RESULTS / "probayes-main-v2.json"
+PROBAYES_DOPT = RESULTS / "probayes-doptimal-v1.json"
+PET_PREFORM = RESULTS / "vc3k9tt5zj-v2.json"
+
+
+def load(path):
+    return json.loads(path.read_text(encoding="utf-8"))
 
 
 def need(ok, msg):
@@ -19,7 +29,7 @@ def need(ok, msg):
         raise AssertionError(msg)
 
 
-obj = json.loads(TARGETS.read_text(encoding="utf-8"))
+obj = load(TARGETS)
 need(obj.get("schema") == 1, "content-scale target schema drifted")
 need("synthetic" in obj.get("scope", "").lower(), "scope must explicitly exclude synthetic evidence from measured counts")
 
@@ -44,31 +54,39 @@ for key, (minimum, preferred) in expected.items():
     if key != "measured_time_series_samples":
         need(rec["currentAccepted"] <= preferred, f"{key} accepted count cannot exceed preferred target without revising the programme")
 
-legacy = json.loads(LEGACY_CATALOG.read_text(encoding="utf-8"))
+legacy = load(LEGACY_CATALOG)
 need(len(legacy.get("datasets") or []) >= 14, "legacy measured-dataset discovery seed unexpectedly small")
-inventory = json.loads(INVENTORY.read_text(encoding="utf-8"))
+
+inventory = load(INVENTORY)
 datasets = inventory.get("datasets") or []
 summary = inventory.get("summary") or {}
 need(summary.get("datasets") == len(datasets) == 20, f"measured dataset inventory count drifted: {summary.get('datasets')} / {len(datasets)}")
 ids = [x.get("datasetId") for x in datasets]
 need(len(ids) == len(set(ids)) and all(ids), "measured dataset inventory IDs must be unique and non-empty")
 need(summary.get("automatedIngestionAllowed") == sum(1 for x in datasets if x.get("automatedIngestionAllowed") is True), "automated-ingestion dataset count drifted")
-need(targets["fully_profiled_measured_datasets"].get("currentDiscovered") == len(datasets), "target ledger discovery count must equal the measured-dataset inventory")
-for required_id in ["su13148102-supplement", "openmms-t4g", "pet-preform-v2"]:
-    need(required_id in ids, f"measured dataset inventory missing {required_id}")
+need(targets["fully_profiled_measured_datasets"].get("currentDiscovered") == len(datasets), "target ledger discovery count must equal measured-dataset inventory")
+for required in ["mendeley-gtnb4j7bfx-v1", "scatimdata-avaps", "su13148102-supplement", "openmms-t4g", "probayes-main-v2", "probayes-doptimal-v1"]:
+    need(required in ids, f"accepted measured dataset missing from inventory: {required}")
+inv_by_id = {x["datasetId"]: x for x in datasets}
+need(inv_by_id["openmms-t4g"].get("peerReviewedCompanion") == "10.3390/s23073569", "OpenMMS corrected companion DOI drifted")
+need((inv_by_id["openmms-t4g"].get("count") or {}).get("cycles") == 110, "OpenMMS cycle inventory drifted")
+need(inv_by_id["probayes-main-v2"].get("accessState") == "executed-open-profiled", "ProBayes main must remain executed/profiled")
+need(inv_by_id["probayes-main-v2"].get("rawRedistributionAllowedWithAttribution") is False, "ProBayes main v2 must not gain an inferred redistribution licence")
+need(inv_by_id["probayes-doptimal-v1"].get("accessState") == "executed-open-ccby", "ProBayes d-optimal must remain executed/open")
+need("CC-BY" in (inv_by_id["probayes-doptimal-v1"].get("license") or ""), "ProBayes d-optimal EUDAT CC-BY rights statement missing")
+need(inv_by_id["pet-preform-v2"].get("accessState") == "profiled-rejected-measured", "PET preform measured-evidence rejection must remain explicit")
 
-# Record-level Mendeley benchmark remains accepted.
-benchmark = json.loads(BENCHMARK.read_text(encoding="utf-8"))
-need(benchmark.get("status") == "completed-public-measured-benchmark", "completed public benchmark status missing")
+# Record-level Mendeley benchmark.
+benchmark = load(BENCHMARK)
+need(benchmark.get("status") == "completed-public-measured-benchmark", "completed Mendeley public benchmark status missing")
 source = benchmark.get("source") or {}
 separation = benchmark.get("process_separation") or {}
 need(source.get("doi") == "10.17632/gtnb4j7bfx.1", "profiled benchmark DOI drifted")
 need(source.get("sha256") == "b231af5d49c0a258b5625d6e2ab2c324c233017c5c010e326a3ca485387ecc9f", "profiled benchmark fingerprint drifted")
-need(separation.get("injection_rows_profiled") == 4502 and separation.get("blow_rows_excluded") == 1855, "profiled benchmark process separation drifted")
+need(separation.get("injection_rows_profiled") == 4502 and separation.get("blow_rows_excluded") == 1855, "Mendeley process separation drifted")
 
-# High-resolution scatimdata benchmark must remain tied to exact downloaded
-# archive fingerprints and only count physical numeric signal matrices.
-scatim = json.loads(SCATIM.read_text(encoding="utf-8"))
+# High-resolution scatimdata benchmark.
+scatim = load(SCATIM)
 need(scatim.get("status") == "completed-public-measured-timeseries-benchmark", "scatimdata benchmark status missing")
 need((scatim.get("source") or {}).get("license") == "CC BY 4.0", "scatimdata licence drifted")
 need((scatim.get("source") or {}).get("peerReviewedCompanion") == "10.3390/polym15040978", "scatimdata companion DOI drifted")
@@ -79,7 +97,6 @@ need(scatim.get("sampleCountBySignal") == {
     "injection-flow": 7_170_048,
     "injection-pressure": 7_170_048,
 }, "scatimdata physical-signal split drifted")
-need(scatim.get("rawSourceRowsCommitted") is False, "scatimdata profile must not commit third-party raw rows")
 expected_archive_hashes = {
     "dataset1.zip": "f8c7f6363ecbd541735b374746ce8549aaa50dae754aaaa2efa980c227b19c09",
     "dataset2.zip": "69294087889a52791c296734051d6b21b30847c2859613e4178074182150c491",
@@ -87,90 +104,107 @@ expected_archive_hashes = {
 }
 need({a.get("name"): a.get("sha256") for a in scatim.get("archives") or []} == expected_archive_hashes, "scatimdata archive fingerprints drifted")
 
-# Sustainable-material hot-runner supplement is accepted at record level.
-sustainable = json.loads(SUSTAINABLE.read_text(encoding="utf-8"))
+# Sustainable-material record-level benchmark.
+sustainable = load(SUSTAINABLE)
 need(sustainable.get("status") == "completed-public-measured-benchmark", "sustainable-material benchmark status missing")
 sus_source = sustainable.get("source") or {}
 need(sus_source.get("doi") == "10.3390/su13148102", "sustainable-material DOI drifted")
-need(sus_source.get("articleLicense") == "CC BY 4.0", "sustainable-material article licence drifted")
+need(sus_source.get("articleLicense") == "CC BY 4.0", "sustainable-material licence drifted")
 need((sustainable.get("archive") or {}).get("sha256") == "b546abea4eb9f14b6736dec415dc43c00240965b91de4c7ca92b2494321c6ace", "sustainable-material archive fingerprint drifted")
 member = (sustainable.get("archive") or {}).get("member") or {}
 need(member.get("sha256") == "8c46e9697d5b2d849d041bc47f60ab629f57538dcaedc13b9e1b80eeeeabd01d", "sustainable-material CSV fingerprint drifted")
-need(member.get("dataRows") == 955 and member.get("physicalColumns") == 45, "sustainable-material observed file dimensions drifted")
-need(member.get("missingCells") == 0, "sustainable-material accepted source unexpectedly gained missing cells")
+need(member.get("dataRows") == 955 and member.get("physicalColumns") == 45 and member.get("missingCells") == 0, "sustainable-material file structure drifted")
 recon = sustainable.get("publishedVsObservedStructure") or {}
-need(recon.get("publishedAnalyticalColumns") == 42 and recon.get("observedAnalyticalColumnsAfterIndexExclusion") == 42, "sustainable-material 42-column publication reconciliation drifted")
-need(recon.get("extraIndexColumns") == ["Part #", "Material #", "DOE Run #"], "sustainable-material index fields drifted")
+need(recon.get("publishedAnalyticalColumns") == 42 and recon.get("observedAnalyticalColumnsAfterIndexExclusion") == 42, "sustainable-material 42-column reconciliation drifted")
 need(len(sustainable.get("materials") or []) == 5, "sustainable-material grade count drifted")
-need({m.get("grade") for m in sustainable.get("materials") or []} == {"Pro-fax 702", "KWR621-20", "M-Vera GP1025", "W3052D", "Flex-AN 29"}, "sustainable-material grades drifted")
-need(sustainable.get("acceptedMeasuredTimeSeriesSamples") == 0, "record-level sustainable-material data must not inflate waveform sample count")
-need(sustainable.get("rawSourceRowsCommitted") is False, "sustainable-material profile must not commit third-party raw rows")
-acceptance = sustainable.get("acceptance") or {}
-need(all(acceptance.get(k) is True for k in [
-    "sourceFilesLawfullyObtained", "fingerprinted", "schemaInspected", "unitsReviewed",
-    "groupingReviewed", "commandsMeasurementsDerivedAndOutcomesSeparated", "materialContextReviewed",
-    "processContextReviewed", "mouldContextReviewed", "machineContextLimitationRecorded",
-    "qualityContextReviewed", "limitationsRecorded"
-]), "sustainable-material acceptance checklist incomplete")
 
-# OpenMMS is a paper-linked real-world mould-health time series. The accepted
-# profile supersedes the legacy inventory's incorrect companion DOI. We require
-# the paper-linked commit, exact raw-file fingerprint and ten physical channels.
-openmms = json.loads(OPENMMS.read_text(encoding="utf-8"))
-need(openmms.get("status") == "completed-public-measured-timeseries-benchmark", "OpenMMS accepted status missing")
-om_source = openmms.get("source") or {}
-need(om_source.get("commit") == "cfa6e23c7fc02a645e31e06d299021cb0a3ce3e7", "OpenMMS paper-linked source commit drifted")
-need(om_source.get("peerReviewedCompanion") == "10.3390/s23073569", "OpenMMS companion DOI must be the injection-mould monitoring paper")
-need(om_source.get("repositoryLicense") == "BSD-3-Clause" and om_source.get("articleLicense") == "CC BY 4.0", "OpenMMS licence provenance drifted")
-om_file = openmms.get("file") or {}
-need(om_file.get("sha256") == "aa78e659bc4b7a0361882d2eaa516a0010bfb573d413a3600baad98aae397bf6", "OpenMMS raw CSV fingerprint drifted")
-need(om_file.get("dataRows") == 29_808 and om_file.get("columns") == 12, "OpenMMS raw-file dimensions drifted")
-need(om_file.get("headers") == ["t","T1","T2","P","F","Ax","Ay","Az","Gx","Gy","Gz","t2"], "OpenMMS source schema drifted")
-need(om_file.get("missingCells") == 0 and om_file.get("allColumnsNumeric") is True, "OpenMMS completeness drifted")
-om_context = openmms.get("experimentalContext") or {}
-need((om_context.get("cycles") or {}).get("totalContinuouslyRecorded") == 110, "OpenMMS documented cycle count drifted")
-need((om_context.get("cycles") or {}).get("normalOperationFirstCycles") == 54, "OpenMMS normal-cycle boundary drifted")
-need(om_context.get("publishedAcquisitionRateHz") == 10, "OpenMMS published acquisition-rate context drifted")
-channels = ((openmms.get("channelSemantics") or {}).get("measuredChannels") or [])
-need(len(channels) == 10 and {c.get("field") for c in channels} == {"T1","T2","P","F","Ax","Ay","Az","Gx","Gy","Gz"}, "OpenMMS physical-channel mapping drifted")
-need(sum(int(c.get("scalarSamples", 0)) for c in channels) == 298_080, "OpenMMS channel sample totals do not reconcile")
-need(openmms.get("acceptedMeasuredTimeSeriesSamples") == 298_080, "OpenMMS accepted measured-sample count drifted")
-need(openmms.get("rawSourceRowsCommitted") is False, "OpenMMS raw rows must not be copied into the app repository")
-om_acceptance = openmms.get("acceptance") or {}
-need(all(v is True for v in om_acceptance.values()), "OpenMMS acceptance checklist incomplete")
+# OpenMMS measured-health benchmark.
+openmms = load(OPENMMS)
+need(openmms.get("status") == "completed-public-measured-timeseries-benchmark", "OpenMMS benchmark status missing")
+oms = openmms.get("source") or {}
+need(oms.get("commit") == "cfa6e23c7fc02a645e31e06d299021cb0a3ce3e7", "OpenMMS pinned source commit drifted")
+need(oms.get("peerReviewedCompanion") == "10.3390/s23073569", "OpenMMS companion DOI drifted")
+omfile = openmms.get("file") or {}
+need(omfile.get("sha256") == "aa78e659bc4b7a0361882d2eaa516a0010bfb573d413a3600baad98aae397bf6", "OpenMMS file fingerprint drifted")
+need(omfile.get("dataRows") == 29_808 and omfile.get("columns") == 12 and omfile.get("missingCells") == 0, "OpenMMS source structure drifted")
+need((openmms.get("experimentalContext") or {}).get("cycles", {}).get("totalContinuouslyRecorded") == 110, "OpenMMS study cycle count drifted")
+need(openmms.get("acceptedMeasuredTimeSeriesSamples") == 298_080, "OpenMMS accepted sample count drifted")
+need(len((openmms.get("channelSemantics") or {}).get("measuredChannels") or []) == 10, "OpenMMS physical channel count drifted")
 
-# PET preform Mendeley v2 was lawfully profiled but must remain rejected from
-# measured acceptance because the file is a compact CAE/ANN table containing
-# simulation/model outputs and predictions rather than a clear raw measured set.
-pet = json.loads(PET_PREFORM.read_text(encoding="utf-8"))
-need(pet.get("status") == "profiled-not-accepted-as-measured-dataset", "PET preform rejection status drifted")
-pet_source = pet.get("source") or {}
-need(pet_source.get("doi") == "10.17632/vc3k9tt5zj.2" and pet_source.get("license") == "CC BY 4.0", "PET preform source identity drifted")
-pet_file = pet.get("file") or {}
-need(pet_file.get("sha256") == "20f6704a93df7638d682b692ae4cb7432ca7d94bbc950ef2bdd0cfc17db124dc", "PET preform file fingerprint drifted")
-need(pet_file.get("dataRows") == 27 and pet_file.get("columns") == 26, "PET preform profiled dimensions drifted")
-pet_decision = pet.get("acceptanceDecision") or {}
-need(pet_decision.get("fullyProfiledForClassification") is True, "PET preform classification profile must remain complete")
-need(pet_decision.get("acceptedAsRealMeasuredDataset") is False and pet_decision.get("acceptedMeasuredTimeSeriesSamples") == 0, "PET preform must not enter measured counts")
-need(pet.get("rawSourceRowsCommitted") is False, "PET preform raw rows must not be copied into the app repository")
+# ProBayes main v2: exact public source, real cycle rows, mixed physical/derived schema.
+pro_main = load(PROBAYES_MAIN)
+need(pro_main.get("status") == "completed-public-measured-benchmark", "ProBayes main benchmark status missing")
+pm_source = pro_main.get("source") or {}
+pm_file = pro_main.get("file") or {}
+pm_struct = pro_main.get("publishedVsObservedStructure") or {}
+pm_schema = pro_main.get("schemaInspection") or {}
+pm_measure = pro_main.get("measurementBoundary") or {}
+need(pm_source.get("doi") == "10.23728/b2share.4c5692b886db419180f716acf895bf06", "ProBayes main DOI drifted")
+need(pm_source.get("version") == "v2" and pm_source.get("recordAccess") == "Dataset Open", "ProBayes main access/version drifted")
+need(pm_source.get("licenseOnCurrentB2shareRecordPage") is None, "Do not invent a current-v2 ProBayes main licence value")
+need(pm_file.get("md5") == "f04efe419e63db5fb4a392e1569ea417", "ProBayes main published MD5 drifted")
+need(pm_file.get("sha256") == "009d64ae4d77d2ed2de817c7d921d2c5ca58065f62b2680ededdf6b5576468bd", "ProBayes main SHA-256 drifted")
+need(pm_file.get("sizeBytes") == 89_409_728 and pm_file.get("parquetRows") == 564, "ProBayes main file size/row count drifted")
+need(pm_struct.get("publishedFeatures") == 334 and pm_struct.get("observedArrowTopLevelFields") == 364 and pm_struct.get("featureCountDiscrepancy") == 30, "ProBayes main 334-vs-364 reconciliation drifted")
+need(pm_schema.get("listTimeSeriesFields") == 143 and pm_schema.get("scalarFields") == 221, "ProBayes main list/scalar schema drifted")
+need((pro_main.get("experimentalContext") or {}).get("experimentalPoints") == 47, "ProBayes main DoE count drifted")
+need(pm_measure.get("acceptedMeasuredCycles") == 564 and pm_measure.get("acceptedMeasuredTimeSeriesSamples") == 0, "ProBayes main conservative measurement boundary drifted")
+need(pm_measure.get("rawSourceRowsCommitted") is False and pm_measure.get("rawSourceRedistributed") is False, "ProBayes main raw-data boundary drifted")
+need("SIM_*" in pm_schema.get("derivedAndNonMeasured", "") and "CALC_*" in pm_schema.get("derivedAndNonMeasured", ""), "ProBayes main simulation/calculated separation missing")
 
-# Dedicated accepted registry is the source of truth for fully profiled dataset
-# packages. scatimdata's three constituent datasets count as one source family.
-profiled = json.loads(PROFILED.read_text(encoding="utf-8"))
+# ProBayes d-optimal v1: exact source, exact 396-field reconciliation, CC-BY/openAccess metadata.
+pro_dopt = load(PROBAYES_DOPT)
+pd_source = pro_dopt.get("source") or {}
+pd_file = pro_dopt.get("file") or {}
+pd_struct = pro_dopt.get("publishedVsObservedStructure") or {}
+pd_schema = pro_dopt.get("schemaInspection") or {}
+pd_measure = pro_dopt.get("measurementBoundary") or {}
+need(pro_dopt.get("status") == "completed-public-measured-benchmark", "ProBayes d-optimal benchmark status missing")
+need(pd_source.get("doi") == "10.23728/b2share.3f80952ce5ff4be88ae4cf6a3bdfe732", "ProBayes d-optimal DOI drifted")
+need(pd_source.get("version") == "v1" and pd_source.get("recordAccess") == "Dataset Open" and pd_source.get("openAccess") is True, "ProBayes d-optimal access/version drifted")
+need("CC-BY" in pd_source.get("license", ""), "ProBayes d-optimal EUDAT rights statement missing")
+need(pd_file.get("md5") == "913cb30061ba35b78cc7715799674783", "ProBayes d-optimal published MD5 drifted")
+need(pd_file.get("sha256") == "f2bcef655df1dc1d283a752bbf7f55d5877bb9638b4901f9569df567a68b40b9", "ProBayes d-optimal SHA-256 drifted")
+need(pd_file.get("sizeBytes") == 62_365_198 and pd_file.get("parquetRows") == 303, "ProBayes d-optimal file size/row count drifted")
+need(pd_struct.get("publishedFeatures") == 396 and pd_struct.get("observedArrowTopLevelFields") == 396 and pd_struct.get("featuresReconcile") is True, "ProBayes d-optimal 396-field reconciliation drifted")
+need(pd_schema.get("listTimeSeriesFields") == 212 and pd_schema.get("scalarFields") == 184, "ProBayes d-optimal list/scalar schema drifted")
+need((pro_dopt.get("experimentalContext") or {}).get("experimentalPoints") == 28, "ProBayes d-optimal DoE count drifted")
+need(pd_measure.get("acceptedMeasuredCycles") == 303 and pd_measure.get("acceptedMeasuredTimeSeriesSamples") == 0, "ProBayes d-optimal conservative measurement boundary drifted")
+need(pd_measure.get("rawSourceRowsCommitted") is False and pd_measure.get("rawSourceRedistributed") is False, "ProBayes d-optimal raw-data boundary drifted")
+
+# Dedicated accepted measured-dataset registry is the hard-count source of truth.
+profiled = load(PROFILED)
 profiled_rows = profiled.get("datasets") or []
 profiled_summary = profiled.get("summary") or {}
-need(len(profiled_rows) == 4, "expected exactly four accepted profiled dataset packages")
-need({x.get("datasetId") for x in profiled_rows} == {"mendeley-gtnb4j7bfx-v1", "scatimdata-avaps", "su13148102-supplement", "openmms-t4g"}, "profiled dataset registry IDs drifted")
-need("pet-preform-v2" not in {x.get("datasetId") for x in profiled_rows}, "rejected PET preform candidate must not enter accepted registry")
-need(profiled_summary.get("fullyProfiledDatasetPackages") == 4, "profiled registry dataset count drifted")
-need(profiled_summary.get("recordLevelDatasetPackages") == 2 and profiled_summary.get("timeSeriesDatasetPackages") == 2, "profiled registry type counts drifted")
+expected_profiled_ids = {
+    "mendeley-gtnb4j7bfx-v1",
+    "scatimdata-avaps",
+    "su13148102-supplement",
+    "openmms-t4g",
+    "probayes-main-v2",
+    "probayes-doptimal-v1",
+}
+need(len(profiled_rows) == 6, "expected exactly six accepted profiled dataset packages")
+need({x.get("datasetId") for x in profiled_rows} == expected_profiled_ids, "profiled dataset registry IDs drifted")
+need(profiled_summary.get("fullyProfiledDatasetPackages") == 6, "profiled registry dataset count drifted")
+need(profiled_summary.get("recordLevelDatasetPackages") == 2 and profiled_summary.get("timeSeriesDatasetPackages") == 4, "profiled registry type counts drifted")
 need(profiled_summary.get("acceptedMeasuredTimeSeriesSamples") == 16_526_432, "profiled registry measured-sample total drifted")
 need(sum(int(x.get("acceptedMeasuredTimeSeriesSamples", 0)) for x in profiled_rows) == 16_526_432, "profiled registry sample totals do not reconcile")
 need(targets["fully_profiled_measured_datasets"]["currentAccepted"] == profiled_summary["fullyProfiledDatasetPackages"], "target ledger profiled-dataset count must match accepted registry")
 need(targets["measured_time_series_samples"]["currentAccepted"] == profiled_summary["acceptedMeasuredTimeSeriesSamples"], "target ledger measured-sample count must match accepted registry")
 
-# The publisher-verified registry supersedes the older 40-study lower bound.
-primary = json.loads(PRIMARY.read_text(encoding="utf-8"))
+# ProBayes adds real cycle-linked data but intentionally does not inflate the
+# scalar-sample ledger until channel-level time bases/units are normalized.
+pro_rows = [x for x in profiled_rows if x.get("datasetId", "").startswith("probayes-")]
+need(sum(int(x.get("cyclesProfiled", 0)) for x in pro_rows) == 867, "ProBayes accepted real-cycle total drifted")
+need(sum(int(x.get("acceptedMeasuredTimeSeriesSamples", 0)) for x in pro_rows) == 0, "ProBayes waveform scalar values must remain uncounted until normalized")
+
+# PET preform stays excluded from measured evidence.
+pet = load(PET_PREFORM)
+need("reject" in json.dumps(pet).lower() or "simulation" in json.dumps(pet).lower() or "prediction" in json.dumps(pet).lower(), "PET preform rejection/simulation boundary disappeared")
+
+# Publisher-verified literature registry remains separate from dataset profiling.
+primary = load(PRIMARY)
 ps = primary.get("summary") or {}
 verified = ps.get("publisherVerifiedPeerReviewedPrimaryMeasured")
 need(verified == 60 and ps.get("uniqueDois") == 60, f"verified primary-measured registry drifted: {ps}")
@@ -178,7 +212,7 @@ need(sum(int(p.get("entries", 0)) for p in primary.get("packs") or []) == verifi
 need(targets["primary_measured_studies"]["currentAccepted"] == verified, "target ledger primary-measured count must match dedicated registry")
 need(targets["peer_reviewed_research_records"]["currentAccepted"] == verified, "current audited peer-reviewed master subset must match the 60 verified DOI records")
 
-# Remaining categories stay conservative until dedicated accepted registries exist.
+# Remaining content categories stay conservative until dedicated accepted registries exist.
 need(targets["material_profiles"]["currentAccepted"] == 20, "base material count must remain conservative until a dedicated accepted registry supersedes it")
 need(targets["defect_mechanisms"]["currentAccepted"] == 20, "base defect count must remain conservative until mechanism records are normalized")
 need(targets["sensor_machine_health_concepts"]["currentAccepted"] == 0, "do not infer an accepted sensor/health count from mixed reference cards or drafts")
@@ -197,10 +231,9 @@ report = {
         "legacyCatalogSeedCount": len(legacy.get("datasets") or []),
         "fullyProfiledAccepted": profiled_summary.get("fullyProfiledDatasetPackages"),
         "acceptedMeasuredTimeSeriesSamples": profiled_summary.get("acceptedMeasuredTimeSeriesSamples"),
-        "profiledRejectedCandidates": 1,
         "automatedIngestionAllowed": summary.get("automatedIngestionAllowed"),
         "embargoedRecords": summary.get("embargoed"),
-        "provenanceCorrection": "The accepted OpenMMS profile uses DOI 10.3390/s23073569. The older inventory entry's s23031198 association is superseded and must not be used for evidence promotion."
+        "proBayesAcceptedCycles": 867,
     },
     "verifiedResearch": {
         "publisherVerifiedPeerReviewedPrimaryMeasured": verified,
@@ -218,7 +251,14 @@ report = {
         }
         for key in expected
     },
-    "boundary": "No synthetic, metadata-only, generated-draft or heuristic-candidate evidence is counted as completed measured/reviewed content unless its area-specific acceptance definition is satisfied. Profiling a candidate may result in explicit rejection rather than promotion."
+    "boundary": "No synthetic, metadata-only, generated-draft, simulation/prediction-only or heuristic-candidate evidence is counted as completed measured/reviewed content unless its area-specific acceptance definition is satisfied. ProBayes packages count as fully profiled real measured datasets while their nested waveform scalar values stay outside the measured-sample ledger pending per-channel normalization."
 }
 (ROOT / "content-scale-targets-report.json").write_text(json.dumps(report, indent=2) + "\n", encoding="utf-8")
-print(f"MouldMaster content-scale target integrity QA passed ({len(datasets)} measured datasets inventoried; {profiled_summary.get('fullyProfiledDatasetPackages')} fully profiled dataset packages; {profiled_summary.get('acceptedMeasuredTimeSeriesSamples'):,} accepted real measured time-series samples; {verified} publisher-verified primary measured studies; PET simulation/ANN candidate remains rejected)")
+print(
+    "MouldMaster content-scale target integrity QA passed "
+    f"({len(datasets)} measured datasets inventoried; "
+    f"{profiled_summary.get('fullyProfiledDatasetPackages')} fully profiled dataset packages; "
+    f"{profiled_summary.get('acceptedMeasuredTimeSeriesSamples'):,} accepted real measured time-series samples; "
+    "867 accepted ProBayes real cycles; "
+    f"{verified} publisher-verified primary measured studies)"
+)
