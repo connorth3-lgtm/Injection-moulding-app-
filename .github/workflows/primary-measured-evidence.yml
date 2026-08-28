@@ -6,8 +6,10 @@ on:
     paths:
       - 'data/primary-measured-evidence-registry-v1.json'
       - 'data/primary-measured-evidence/**'
+      - 'data/measured-dataset-inventory-v1.json'
       - 'data/evidence-coverage-v1.json'
       - 'qa_primary_measured_evidence.py'
+      - 'qa_measured_dataset_inventory.py'
       - 'sources/PRIMARY_MEASURED_EVIDENCE_REGISTRY.md'
       - '.github/workflows/primary-measured-evidence.yml'
   pull_request:
@@ -15,8 +17,10 @@ on:
     paths:
       - 'data/primary-measured-evidence-registry-v1.json'
       - 'data/primary-measured-evidence/**'
+      - 'data/measured-dataset-inventory-v1.json'
       - 'data/evidence-coverage-v1.json'
       - 'qa_primary_measured_evidence.py'
+      - 'qa_measured_dataset_inventory.py'
       - 'sources/PRIMARY_MEASURED_EVIDENCE_REGISTRY.md'
       - '.github/workflows/primary-measured-evidence.yml'
   workflow_dispatch:
@@ -38,9 +42,17 @@ jobs:
           python-version: '3.12'
       - name: Validate deduplicated peer-reviewed primary measured registry
         run: python qa_primary_measured_evidence.py
-      - name: Upload aggregate registry QA report
+      - name: Validate governed measured dataset inventory
+        run: python qa_measured_dataset_inventory.py
+      - name: Upload aggregate primary measured registry QA report
         uses: actions/upload-artifact@v4
         with:
           name: mouldmaster-primary-measured-evidence
           path: primary-measured-evidence-report.json
+          if-no-files-found: error
+      - name: Upload aggregate measured dataset inventory QA report
+        uses: actions/upload-artifact@v4
+        with:
+          name: mouldmaster-measured-dataset-inventory
+          path: measured-dataset-inventory-report.json
           if-no-files-found: error
