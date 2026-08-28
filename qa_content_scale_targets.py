@@ -9,6 +9,7 @@ PROFILED = ROOT / "data" / "profiled-measured-dataset-registry-v1.json"
 PRIMARY = ROOT / "data" / "primary-measured-evidence-registry-v1.json"
 BENCHMARK = ROOT / "data" / "public-benchmark-results" / "gtnb4j7bfx-v1.json"
 SCATIM = ROOT / "data" / "public-benchmark-results" / "scatimdata-v1.json"
+SUSTAINABLE = ROOT / "data" / "public-benchmark-results" / "su13148102-v1.json"
 
 
 def need(ok, msg):
@@ -38,8 +39,6 @@ for key, (minimum, preferred) in expected.items():
     need(rec.get("preferred") == preferred, f"{key} preferred target drifted")
     need(isinstance(rec.get("acceptance"), str) and len(rec["acceptance"]) >= 120, f"{key} needs a substantive acceptance definition")
     need(isinstance(rec.get("currentAccepted"), int) and rec["currentAccepted"] >= 0, f"{key} currentAccepted must be a non-negative integer")
-    # Some scale measures can legitimately exceed the preferred target while
-    # other programme areas remain incomplete. Do not cap real measured samples.
     if key != "measured_time_series_samples":
         need(rec["currentAccepted"] <= preferred, f"{key} accepted count cannot exceed preferred target without revising the programme")
 
@@ -53,6 +52,7 @@ ids = [x.get("datasetId") for x in datasets]
 need(len(ids) == len(set(ids)) and all(ids), "measured dataset inventory IDs must be unique and non-empty")
 need(summary.get("automatedIngestionAllowed") == sum(1 for x in datasets if x.get("automatedIngestionAllowed") is True), "automated-ingestion dataset count drifted")
 need(targets["fully_profiled_measured_datasets"].get("currentDiscovered") == len(datasets), "target ledger discovery count must equal the measured-dataset inventory")
+need("su13148102-supplement" in ids, "accepted sustainable-material dataset must remain in measured-dataset inventory")
 
 # Record-level Mendeley benchmark remains accepted.
 benchmark = json.loads(BENCHMARK.read_text(encoding="utf-8"))
@@ -84,14 +84,43 @@ expected_archive_hashes = {
 }
 need({a.get("name"): a.get("sha256") for a in scatim.get("archives") or []} == expected_archive_hashes, "scatimdata archive fingerprints drifted")
 
+# Sustainable-material hot-runner supplement is accepted at record level.
+# The paper reports 42 analytical fields, while the physical CSV contains those
+# fields plus three leading index columns. The profile must preserve that fact.
+sustainable = json.loads(SUSTAINABLE.read_text(encoding="utf-8"))
+need(sustainable.get("status") == "completed-public-measured-benchmark", "sustainable-material benchmark status missing")
+sus_source = sustainable.get("source") or {}
+need(sus_source.get("doi") == "10.3390/su13148102", "sustainable-material DOI drifted")
+need(sus_source.get("articleLicense") == "CC BY 4.0", "sustainable-material article licence drifted")
+need((sustainable.get("archive") or {}).get("sha256") == "b546abea4eb9f14b6736dec415dc43c00240965b91de4c7ca92b2494321c6ace", "sustainable-material archive fingerprint drifted")
+member = (sustainable.get("archive") or {}).get("member") or {}
+need(member.get("sha256") == "8c46e9697d5b2d849d041bc47f60ab629f57538dcaedc13b9e1b80eeeeabd01d", "sustainable-material CSV fingerprint drifted")
+need(member.get("dataRows") == 955 and member.get("physicalColumns") == 45, "sustainable-material observed file dimensions drifted")
+need(member.get("missingCells") == 0, "sustainable-material accepted source unexpectedly gained missing cells")
+recon = sustainable.get("publishedVsObservedStructure") or {}
+need(recon.get("publishedAnalyticalColumns") == 42 and recon.get("observedAnalyticalColumnsAfterIndexExclusion") == 42, "sustainable-material 42-column publication reconciliation drifted")
+need(recon.get("extraIndexColumns") == ["Part #", "Material #", "DOE Run #"], "sustainable-material index fields drifted")
+need(len(sustainable.get("materials") or []) == 5, "sustainable-material grade count drifted")
+need({m.get("grade") for m in sustainable.get("materials") or []} == {"Pro-fax 702", "KWR621-20", "M-Vera GP1025", "W3052D", "Flex-AN 29"}, "sustainable-material grades drifted")
+need(sustainable.get("acceptedMeasuredTimeSeriesSamples") == 0, "record-level sustainable-material data must not inflate waveform sample count")
+need(sustainable.get("rawSourceRowsCommitted") is False, "sustainable-material profile must not commit third-party raw rows")
+acceptance = sustainable.get("acceptance") or {}
+need(all(acceptance.get(k) is True for k in [
+    "sourceFilesLawfullyObtained", "fingerprinted", "schemaInspected", "unitsReviewed",
+    "groupingReviewed", "commandsMeasurementsDerivedAndOutcomesSeparated", "materialContextReviewed",
+    "processContextReviewed", "mouldContextReviewed", "machineContextLimitationRecorded",
+    "qualityContextReviewed", "limitationsRecorded"
+]), "sustainable-material acceptance checklist incomplete")
+
 # Dedicated accepted registry is the source of truth for fully profiled dataset
 # packages. scatimdata's three constituent datasets count as one source family.
 profiled = json.loads(PROFILED.read_text(encoding="utf-8"))
 profiled_rows = profiled.get("datasets") or []
 profiled_summary = profiled.get("summary") or {}
-need(len(profiled_rows) == 2, "expected exactly two accepted profiled dataset packages")
-need({x.get("datasetId") for x in profiled_rows} == {"mendeley-gtnb4j7bfx-v1", "scatimdata-avaps"}, "profiled dataset registry IDs drifted")
-need(profiled_summary.get("fullyProfiledDatasetPackages") == 2, "profiled registry dataset count drifted")
+need(len(profiled_rows) == 3, "expected exactly three accepted profiled dataset packages")
+need({x.get("datasetId") for x in profiled_rows} == {"mendeley-gtnb4j7bfx-v1", "scatimdata-avaps", "su13148102-supplement"}, "profiled dataset registry IDs drifted")
+need(profiled_summary.get("fullyProfiledDatasetPackages") == 3, "profiled registry dataset count drifted")
+need(profiled_summary.get("recordLevelDatasetPackages") == 2 and profiled_summary.get("timeSeriesDatasetPackages") == 1, "profiled registry type counts drifted")
 need(profiled_summary.get("acceptedMeasuredTimeSeriesSamples") == 16_228_352, "profiled registry measured-sample total drifted")
 need(sum(int(x.get("acceptedMeasuredTimeSeriesSamples", 0)) for x in profiled_rows) == 16_228_352, "profiled registry sample totals do not reconcile")
 need(targets["fully_profiled_measured_datasets"]["currentAccepted"] == profiled_summary["fullyProfiledDatasetPackages"], "target ledger profiled-dataset count must match accepted registry")
@@ -117,7 +146,7 @@ for marker in ["synthetic process-data cases never count", "actual source files"
     need(marker in rules, f"content-scale non-counting rule missing: {marker}")
 
 report = {
-    "schema": 3,
+    "schema": 4,
     "version": obj.get("version"),
     "reviewed": obj.get("reviewed"),
     "measuredDatasetDiscovery": {
