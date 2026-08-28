@@ -1,0 +1,45 @@
+name: MouldMaster sustainable-material measured benchmark
+
+on:
+  workflow_dispatch:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'tools/profile_su13148102.py'
+      - '.github/workflows/su13148102-benchmark.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  profile:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install spreadsheet reader
+        run: python -m pip install --disable-pip-version-check openpyxl
+      - name: Profile MDPI supplementary experimental data
+        run: python tools/profile_su13148102.py --output su13148102-v1.json
+      - name: Enforce review boundary
+        run: |
+          python - <<'PY'
+          import json
+          p=json.load(open('su13148102-v1.json',encoding='utf-8'))
+          assert p['source']['doi']=='10.3390/su13148102'
+          assert p['source']['articleLicense']=='CC BY 4.0'
+          assert p['archive']['sha256'] and p['archive']['sizeBytes']>0
+          assert p['rawSourceRowsCommitted'] is False
+          checks=p['acceptanceChecks']
+          print('Observed supplement acceptance checks:', checks)
+          # Do not promote merely because a file downloaded. Exact 955 x 42
+          # structure must be observed before this becomes an accepted dataset.
+          assert checks['observed955Rows'] and checks['observed42Columns']
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: mouldmaster-su13148102-profile
+          path: su13148102-v1.json
+          retention-days: 90
