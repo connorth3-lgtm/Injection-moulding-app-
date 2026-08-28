@@ -41,6 +41,7 @@ def snapshot_file(path):
 def compile_measured():
     targets = load_json("data/content-scale-targets.json")
     inventory = load_json("data/measured-dataset-inventory-v1.json")
+    execution = load_json("data/measured-dataset-execution-ledger-v1.json")
     discovery = load_json("data/measured-dataset-catalog.json")
     queue = load_json("data/measured-data-discovery-queue-v1.json")
     evidence50 = load_json("data/measured-evidence-50-pass.json")
@@ -63,9 +64,28 @@ def compile_measured():
     for p in sorted((ROOT / "data/mechanism-promotion-evidence").glob("*.json")):
         dossiers[p.name] = json.loads(p.read_text(encoding="utf-8"))
 
+    benchmark_specs = [
+        ("gtnb4j7bfx-v1", "data/public-benchmark-contracts/gtnb4j7bfx-v1.json", "data/public-benchmark-results/gtnb4j7bfx-v1.json"),
+        ("scatimdata-avaps", "data/public-benchmark-contracts/scatimdata-avaps-v1.json", "data/public-benchmark-results/scatimdata-avaps-v1.json"),
+        ("openmms-t4g", "data/public-benchmark-contracts/openmms-t4g-v1.json", "data/public-benchmark-results/openmms-t4g-v1.json"),
+    ]
+    benchmark_contracts = {}
+    benchmark_results = {}
+    for benchmark_id, contract_path, result_path in benchmark_specs:
+        contract = load_json(contract_path)
+        result = load_json(result_path)
+        need(result.get("status") == "completed-public-measured-benchmark", f"completed measured benchmark status missing: {benchmark_id}")
+        benchmark_contracts[benchmark_id] = contract
+        benchmark_results[benchmark_id] = result
+
+    accepted_profiled = targets["targets"]["fully_profiled_measured_datasets"]["currentAccepted"]
+    need(len(benchmark_results) == accepted_profiled == 3, "completed measured benchmark result count must match accepted profiled dataset count")
+    need(execution.get("summary", {}).get("acceptedProfiled") == accepted_profiled, "execution ledger accepted-profiled count drifted")
+
     return {
         "targetLedger": targets,
         "datasetInventory": inventory,
+        "datasetExecutionLedger": execution,
         "datasetDiscoveryCatalog": discovery,
         "datasetDiscoveryQueue": queue,
         "measuredEvidence50Pass": evidence50,
@@ -73,8 +93,11 @@ def compile_measured():
         "primaryMeasuredPacks": packs,
         "primaryMeasuredStudies": studies,
         "mechanismPromotionDossiers": dossiers,
-        "publicBenchmarkContract": load_json("data/public-benchmark-contracts/gtnb4j7bfx-v1.json"),
-        "publicBenchmarkResult": load_json("data/public-benchmark-results/gtnb4j7bfx-v1.json"),
+        "publicBenchmarkContracts": benchmark_contracts,
+        "publicBenchmarkResults": benchmark_results,
+        # Backward-compatible aliases for the original record-level benchmark.
+        "publicBenchmarkContract": benchmark_contracts["gtnb4j7bfx-v1"],
+        "publicBenchmarkResult": benchmark_results["gtnb4j7bfx-v1"],
     }
 
 
@@ -208,8 +231,8 @@ def make_manifest(measured, research, app, process, drafts, candidate_path):
     draft_counts = drafts["manifest"]["counts"]
     candidates = research.get("candidateRegistry") or {}
     return {
-        "schema": 1,
-        "compiledOn": "2026-08-28",
+        "schema": 2,
+        "compiledOn": measured["targetLedger"].get("reviewed"),
         "scope": "Master compilation of MouldMaster structured data, evidence/provenance registries, application data assets, synthetic learning corpus metadata, curriculum/assessment data, generated draft banks and optionally the research-candidate registry. Restricted third-party raw files are not copied.",
         "boundaries": {
             "syntheticIsNotMeasured": True,
