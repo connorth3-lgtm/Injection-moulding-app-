@@ -6,6 +6,7 @@ import csv
 import hashlib
 import io
 import json
+import urllib.error
 import urllib.parse
 import urllib.request
 import zipfile
@@ -18,7 +19,7 @@ TITLE = "AD-STGN for RCA in CMMS"
 PAGE = f"https://data.mendeley.com/datasets/{DATASET_ID}/{VERSION}"
 API = f"https://api.data.mendeley.com/datasets/{DATASET_ID}/files?version={VERSION}&folder_id=root&$limit=500"
 ZIP_URL = f"https://api.data.mendeley.com/datasets/{DATASET_ID}/zip/file_downloaded?version={VERSION}"
-UA = "MouldMaster-Automotive-Injection-Profiler/1.1"
+UA = "MouldMaster-Automotive-Injection-Profiler/1.2"
 
 
 def sha256(data: bytes) -> str:
@@ -39,6 +40,14 @@ def flatten(value):
             if isinstance(value.get(key), list):
                 return value[key]
     return []
+
+
+def error_record(exc: Exception) -> dict:
+    out = {"type": type(exc).__name__, "message": str(exc)}
+    if isinstance(exc, urllib.error.HTTPError):
+        out["httpStatus"] = exc.code
+        out["url"] = exc.geturl()
+    return out
 
 
 def discover_files():
@@ -144,12 +153,12 @@ def main():
     args = parser.parse_args()
 
     files = []
-    acquisition = {"mode": None}
+    acquisition = {"mode": None, "accessBlocked": False}
+    records = []
     try:
         records = discover_files()
     except Exception as exc:
-        records = []
-        acquisition["fileApiError"] = str(exc)
+        acquisition["fileApiError"] = error_record(exc)
 
     if records:
         acquisition["mode"] = "current-public-file-api"
@@ -159,14 +168,19 @@ def main():
             files.append(profile_bytes(name, raw, record.get("publisherId"), record.get("publisherSha256")))
     else:
         acquisition["mode"] = "version-pinned-dataset-zip-fallback"
-        archive, _, final_url = get(ZIP_URL, "application/zip")
-        acquisition["zip"] = {"sizeBytes": len(archive), "sha256": sha256(archive), "finalUrlHost": urllib.parse.urlparse(final_url).hostname}
-        with zipfile.ZipFile(io.BytesIO(archive)) as zf:
-            for info in zf.infolist():
-                if info.is_dir():
-                    continue
-                raw = zf.read(info.filename)
-                files.append(profile_bytes(info.filename, raw))
+        try:
+            archive, _, final_url = get(ZIP_URL, "application/zip")
+            acquisition["zip"] = {"sizeBytes": len(archive), "sha256": sha256(archive), "finalUrlHost": urllib.parse.urlparse(final_url).hostname}
+            with zipfile.ZipFile(io.BytesIO(archive)) as zf:
+                for info in zf.infolist():
+                    if info.is_dir():
+                        continue
+                    raw = zf.read(info.filename)
+                    files.append(profile_bytes(info.filename, raw))
+        except Exception as exc:
+            acquisition["zipError"] = error_record(exc)
+            acquisition["accessBlocked"] = True
+            acquisition["mode"] = "public-metadata-visible-file-bytes-auth-blocked"
 
     candidate_rows = sum((f.get("table") or {}).get("rows", 0) for f in files if f["processClassification"].startswith("automotive-injection-candidate"))
     candidate_tables = sum(1 for f in files if f["processClassification"].startswith("automotive-injection-candidate") and f.get("table"))
@@ -175,9 +189,10 @@ def main():
     for f in files:
         classifications[f["processClassification"]] = classifications.get(f["processClassification"], 0) + 1
 
+    status = "public-metadata-profile-access-blocked" if acquisition["accessBlocked"] else "exact-file-discovery-profile-review-required"
     payload = {
         "schema": 1,
-        "status": "exact-file-discovery-profile-review-required",
+        "status": status,
         "completedDate": "2026-08-28",
         "source": {
             "datasetId": DATASET_ID,
@@ -203,14 +218,14 @@ def main():
         "acceptedMeasuredTimeSeriesSamples": 0,
         "rawSourceRowsCommitted": False,
         "rawSourceFilesCommitted": False,
-        "boundary": "This Mendeley package bundles Tennessee Eastman, SWaT and one real automotive injection-moulding case. Only exact source files proven to belong to the automotive injection line may be promoted. TEP/SWaT rows never count as injection-moulding evidence. Promotion additionally requires exact table identity, 66-measurement/7-control reconciliation, time/sample ordering and anomaly/defect-label semantics.",
+        "boundary": "Public metadata confirms the injection-moulding case and licence, but source bytes must be lawfully obtained and profiled before promotion. This package also bundles Tennessee Eastman and SWaT; those rows never count as injection-moulding evidence. If Mendeley requires authenticated file access, the dataset remains non-counting rather than being inferred from metadata.",
     }
     Path(args.output).write_text(json.dumps(payload, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
     print(json.dumps({
+        "status": status,
         "acquisition": acquisition,
         "fileCount": len(files),
         "classifications": classifications,
-        "files": [(f["name"], f["sizeBytes"], f["sha256"], f["processClassification"], (f.get("table") or {}).get("rows"), (f.get("table") or {}).get("columns")) for f in files],
         "automotiveInjectionCandidateTables": candidate_tables,
         "automotiveInjectionCandidateRowsObserved": candidate_rows,
         "nonInjectionBenchmarkRowsObserved": excluded_rows,
