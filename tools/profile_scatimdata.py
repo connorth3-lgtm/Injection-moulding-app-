@@ -107,6 +107,30 @@ def profile_numpy(raw: bytes, name: str) -> dict:
         return {'path':name,'format':'npy','shape':list(obj.shape),'dtype':str(obj.dtype)}
     except Exception as e: return {'path':name,'format':'numpy','parseError':str(e)}
 
+
+def profile_hdf5(raw: bytes, name: str) -> dict:
+    try:
+        import h5py
+    except Exception as e:
+        return {'path':name,'format':'h5','parseError':f'h5py unavailable: {e}'}
+    with tempfile.NamedTemporaryFile(suffix='.h5') as f:
+        f.write(raw); f.flush()
+        datasets=[]
+        with h5py.File(f.name,'r') as h:
+            def visit(path,obj):
+                if isinstance(obj,h5py.Dataset):
+                    attrs={}
+                    for k,v in obj.attrs.items():
+                        try:
+                            if hasattr(v,'tolist'): v=v.tolist()
+                            if isinstance(v,bytes): v=v.decode('utf-8','replace')
+                            attrs[str(k)]=v if isinstance(v,(str,int,float,bool,list,tuple)) else str(v)
+                        except Exception:
+                            attrs[str(k)]=str(v)
+                    datasets.append({'path':path,'shape':list(obj.shape),'dtype':str(obj.dtype),'size':int(obj.size),'attrs':attrs})
+            h.visititems(visit)
+        return {'path':name,'format':'h5','datasets':datasets}
+
 def profile_member(z: zipfile.ZipFile, info: zipfile.ZipInfo) -> dict:
     raw=z.read(info)
     ext=Path(info.filename).suffix.lower()
@@ -116,6 +140,7 @@ def profile_member(z: zipfile.ZipFile, info: zipfile.ZipInfo) -> dict:
         elif ext=='.json': base.update(profile_json(raw,info.filename))
         elif ext in {'.xlsx','.xlsm'}: base.update(profile_xlsx(raw,info.filename))
         elif ext in {'.npy','.npz'}: base.update(profile_numpy(raw,info.filename))
+        elif ext in {'.h5','.hdf5'}: base.update(profile_hdf5(raw,info.filename))
         else: base['format']=ext.lstrip('.') or 'unknown'
     except Exception as e:
         base['profileError']=f'{type(e).__name__}: {e}'
@@ -132,13 +157,18 @@ def infer_samples(files: list[dict]) -> dict:
                 nm=(v.get('name') or '').lower()
                 if any(k in nm for k in ['pressure','flow','druck','volumenstrom','injection']):
                     vectors.append({'file':f['path'],**v,'rows':f.get('rows',0)})
-            # If file name itself is a time-series signal and dimensions match 2049 x cycles or cycles x 2049.
+            # Published CSVs use one time column plus one column per injection cycle.
             nm=f['path'].lower()
             if any(k in nm for k in ['pressure','flow','druck','volumenstrom']):
                 r=f.get('rows') or 0; c=f.get('columns') or 0
-                if r==EXPECTED_POINTS or c==EXPECTED_POINTS:
-                    samples=max(r,c)*EXPECTED_POINTS
-                    matrix_candidates.append({'file':f['path'],'rows':r,'columns':c,'samples':samples})
+                if r >= 1000 and c > 1:
+                    samples=r*(c-1)
+                    matrix_candidates.append({'file':f['path'],'rows':r,'columns':c,'cycleColumns':c-1,'samples':samples,'timeAxisColumn':True})
+        elif f.get('format')=='h5':
+            for d in f.get('datasets') or []:
+                nm=(f['path']+' '+d.get('path','')).lower()
+                if any(k in nm for k in ['pressure','flow','druck','volumenstrom']) and (d.get('size') or 0)>=1000:
+                    matrix_candidates.append({'file':f['path'],'dataset':d.get('path'),'shape':d.get('shape'),'samples':d.get('size'),'hdf5':True})
         elif f.get('format') in {'npy','npz'}:
             pass
     vector_samples=sum(v['rows']*v['length'] for v in vectors if v.get('length') and v.get('rows'))
