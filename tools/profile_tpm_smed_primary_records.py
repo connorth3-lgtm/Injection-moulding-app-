@@ -1,8 +1,13 @@
 #!/usr/bin/env python3
 from __future__ import annotations
-import argparse, io, json
+import argparse, io, json, sys
 from datetime import datetime
 from pathlib import Path
+
+ROOT = Path(__file__).resolve().parents[1]
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
+
 from openpyxl import load_workbook
 from tools.profile_mendeley_ypf95p4bs4 import discover, get, filename, sha256, DOI, LICENSE
 
