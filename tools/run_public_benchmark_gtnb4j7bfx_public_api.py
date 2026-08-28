@@ -52,6 +52,8 @@ def machine_class_counts(candidate):
     header_map = {benchmark.norm(name): index for index, name in enumerate(candidate.get("headers", []))}
     index = header_map.get("machine")
     if index is None:
+        index = header_map.get("maquina")
+    if index is None:
         return None
     counts = {"injection_prefix": 0, "blow_prefix": 0, "blank": 0, "other": 0}
     for row in candidate.get("rows", []):
