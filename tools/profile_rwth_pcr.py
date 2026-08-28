@@ -1,13 +1,14 @@
 #!/usr/bin/env python3
 from __future__ import annotations
 
-import argparse, csv, hashlib, io, json, urllib.request, urllib.parse, urllib.error, http.cookiejar, zipfile
+import argparse, csv, hashlib, io, json, urllib.request, http.cookiejar, zipfile
 from pathlib import Path
 
 RECORD_URL = "https://publications.rwth-aachen.de/record/1016199/"
 URL = RECORD_URL + "files/ExperimentalData.zip"
+VERSIONED_URL = URL + "?version=1"
 DOI = "10.18154/RWTH-2025-06809"
-UA = "Mozilla/5.0 MouldMaster-RWTH-PCR-profiler/1.1"
+UA = "Mozilla/5.0 MouldMaster-RWTH-PCR-profiler/1.2"
 
 
 def digest_bytes(data: bytes, algo="sha256"):
@@ -18,41 +19,26 @@ def download_archive():
     jar = http.cookiejar.CookieJar()
     opener = urllib.request.build_opener(urllib.request.HTTPCookieProcessor(jar))
     opener.addheaders = [("User-Agent", UA), ("Accept-Language", "en-US,en;q=0.9")]
-    # Establish repository session/cookies before requesting the file.
-    with opener.open(RECORD_URL, timeout=60) as r:
-        r.read(4096)
-    variants = [
-        URL,
-        URL + "?download=1",
-        URL + "?ln=en",
-        URL + "?download=1&ln=en",
-    ]
-    diagnostics = []
+    with opener.open(RECORD_URL, timeout=60) as r: r.read(4096)
+    variants = [VERSIONED_URL, VERSIONED_URL + "&download=1", URL, URL + "?download=1"]
+    diagnostics=[]
     for candidate in variants:
-        req = urllib.request.Request(candidate, headers={
-            "User-Agent": UA,
-            "Accept": "application/zip,application/octet-stream,*/*",
-            "Referer": RECORD_URL,
-        })
+        req=urllib.request.Request(candidate,headers={"User-Agent":UA,"Accept":"application/zip,application/octet-stream,*/*","Referer":RECORD_URL})
         try:
-            with opener.open(req, timeout=300) as r:
-                data = r.read()
-                ct = r.headers.get("Content-Type")
-                final = r.geturl()
-            diagnostics.append({"url": candidate, "finalUrl": final, "contentType": ct, "bytes": len(data), "prefixHex": data[:16].hex()})
-            if zipfile.is_zipfile(io.BytesIO(data)):
-                return data, candidate, diagnostics
-        except Exception as e:
-            diagnostics.append({"url": candidate, "error": f"{type(e).__name__}: {e}"})
-    raise RuntimeError("RWTH archive fetch did not return ZIP: " + json.dumps(diagnostics, ensure_ascii=False))
+            with opener.open(req,timeout=300) as r:
+                data=r.read(); ct=r.headers.get("Content-Type"); final=r.geturl()
+            diagnostics.append({"url":candidate,"finalUrl":final,"contentType":ct,"bytes":len(data),"prefixHex":data[:16].hex()})
+            if zipfile.is_zipfile(io.BytesIO(data)): return data,candidate,diagnostics
+        except Exception as e: diagnostics.append({"url":candidate,"error":f"{type(e).__name__}: {e}"})
+    raise RuntimeError("RWTH archive fetch did not return ZIP: "+json.dumps(diagnostics,ensure_ascii=False))
 
 
 def inspect_csv(data: bytes):
-    text = data.decode("utf-8-sig", errors="replace")
-    try: delim = csv.Sniffer().sniff(text[:20000], delimiters=",;\t").delimiter
-    except Exception: delim = ","
+    text=data.decode("utf-8-sig",errors="replace")
+    try: delim=csv.Sniffer().sniff(text[:20000],delimiters=",;\t").delimiter
+    except Exception: delim=","
     rows=[]
-    for i,row in enumerate(csv.reader(io.StringIO(text), delimiter=delim)):
+    for i,row in enumerate(csv.reader(io.StringIO(text),delimiter=delim)):
         rows.append(row)
         if i>=4: break
     return {"delimiter":delim,"lineCount":text.count("\n")+(1 if text and not text.endswith("\n") else 0),"header":rows[0] if rows else [],"previewRowWidths":[len(r) for r in rows]}
@@ -89,7 +75,7 @@ def main():
             members.append(rec)
     payload={
         "schema":1,"status":"profile-generated-review-required","completedDate":"2026-08-28",
-        "source":{"title":"Injection Molding Process Data for Post-Consumer-Recycled Materials","doi":DOI,"recordUrl":RECORD_URL,"downloadUrl":URL,"downloadVariantUsed":used_url,"publisher":"RWTH Publications","license":"CC BY 4.0","openAccess":True,"peerReviewedCompanion":"10.1016/j.jprocont.2026.103725"},
+        "source":{"title":"Injection Molding Process Data for Post-Consumer-Recycled Materials","doi":DOI,"recordUrl":RECORD_URL,"downloadUrl":URL,"versionedDownloadUrl":VERSIONED_URL,"downloadVariantUsed":used_url,"publisher":"RWTH Publications","license":"CC BY 4.0","openAccess":True,"peerReviewedCompanion":"10.1016/j.jprocont.2026.103725","fileVersion":1,"publishedFileSizeLabel":"1,007.55 KB"},
         "archive":{"name":"ExperimentalData.zip","sizeBytes":len(raw),"sha256":digest_bytes(raw),"members":len(members)},
         "fetchDiagnostics":fetch_diag,"members":members,
         "publishedContext":{"materials":["Systalen PP-24000 gr000 PCR","SABIC PP579S virgin PP"],"machine":"Arburg Allrounder 520 A 1500-800","mouldGeometry":"flat plate","signals":["screw-antechamber pressure","cavity pressure","controller output","screw velocity","screw-antechamber volume"],"quality":["part mass","part-mass reference"],"controllers":["learning-based nonlinear MPC","proportional cavity-pressure control","part-mass control"]},
