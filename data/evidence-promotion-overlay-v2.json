@@ -59,7 +59,7 @@
       "mechanismId":"recyclate-process-variability",
       "dossier":"data/mechanism-promotion-evidence/recyclate-process-variability-v2.json",
       "qualifyingSources":[
-        {"id":"doi:10.1016/j.jprocont.2026.103725","title":"Part-mass control in injection molding of recycled thermoplastics by learning-enabled model predictive cavity-pressure control","role":"primary-measured-study","verification":"publisher-verified"},
+        {"id":"doi:10.1016/j.jprocont.2026.103725","title":"Model predictive control of part mass for injection molding with post-consumer recycled thermoplastics","role":"primary-measured-study","verification":"publisher-verified"},
         {"id":"doi:10.1002/pen.26689","title":"Mechanical and crystallization properties of hot runner injection molded virgin and recycled polypropylene","role":"primary-measured-study","verification":"publisher-verified"}
       ]
     },
