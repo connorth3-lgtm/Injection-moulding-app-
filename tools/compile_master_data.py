@@ -46,10 +46,17 @@ def compile_measured():
     queue = load_json("data/measured-data-discovery-queue-v1.json")
     evidence50 = load_json("data/measured-evidence-50-pass.json")
     registry = load_json("data/primary-measured-evidence-registry-v1.json")
+    sensor_health = load_json("data/sensor-machine-health-registry-v1.json")
 
     profiled_summary = profiled.get("summary") or {}
     need(profiled_summary.get("fullyProfiledDatasetPackages") == targets["targets"]["fully_profiled_measured_datasets"]["currentAccepted"], "profiled dataset registry and target ledger disagree")
     need(profiled_summary.get("acceptedMeasuredTimeSeriesSamples") == targets["targets"]["measured_time_series_samples"]["currentAccepted"], "measured sample registry and target ledger disagree")
+
+    sensor_rows = sensor_health.get("concepts") or []
+    sensor_summary = sensor_health.get("summary") or {}
+    expected_sensor = targets["targets"]["sensor_machine_health_concepts"]["currentAccepted"]
+    need(len(sensor_rows) == expected_sensor, "sensor/machine-health registry and target ledger disagree")
+    need(sensor_summary.get("acceptedConcepts") == expected_sensor, "sensor/machine-health summary and target ledger disagree")
 
     studies = []
     packs = []
@@ -85,6 +92,7 @@ def compile_measured():
         "primaryMeasuredRegistry": registry,
         "primaryMeasuredPacks": packs,
         "primaryMeasuredStudies": studies,
+        "sensorMachineHealthRegistry": sensor_health,
         "mechanismPromotionDossiers": dossiers,
         "publicBenchmarkContract": load_json("data/public-benchmark-contracts/gtnb4j7bfx-v1.json"),
         "publicBenchmarkResult": benchmark_results["gtnb4j7bfx-v1.json"],
@@ -220,14 +228,16 @@ def make_manifest(measured, research, app, process, drafts, candidate_path):
     inventory_summary = measured["datasetInventory"]["summary"]
     profiled_summary = measured["profiledMeasuredDatasetRegistry"]["summary"]
     primary_summary = measured["primaryMeasuredRegistry"]["summary"]
+    sensor_summary = measured["sensorMachineHealthRegistry"]["summary"]
     draft_counts = drafts["manifest"]["counts"]
     candidates = research.get("candidateRegistry") or {}
     need(profiled_summary["fullyProfiledDatasetPackages"] == targets["fully_profiled_measured_datasets"]["currentAccepted"], "manifest dataset count sources disagree")
     need(profiled_summary["acceptedMeasuredTimeSeriesSamples"] == targets["measured_time_series_samples"]["currentAccepted"], "manifest measured sample sources disagree")
+    need(sensor_summary["acceptedConcepts"] == targets["sensor_machine_health_concepts"]["currentAccepted"], "manifest sensor/health count sources disagree")
     return {
         "schema": 1,
-        "compiledOn": "2026-08-28",
-        "scope": "Master compilation of MouldMaster structured data, evidence/provenance registries, accepted measured dataset profiles, application data assets, synthetic learning corpus metadata, curriculum/assessment data, generated draft banks and optionally the research-candidate registry. Restricted third-party raw files are not copied.",
+        "compiledOn": "2026-08-29",
+        "scope": "Master compilation of MouldMaster structured data, evidence/provenance registries, accepted measured dataset profiles, accepted sensor/machine-health concepts, application data assets, synthetic learning corpus metadata, curriculum/assessment data, generated draft banks and optionally the research-candidate registry. Restricted third-party raw files are not copied.",
         "boundaries": {
             "syntheticIsNotMeasured": True,
             "candidateResearchIsNotVerified": True,
@@ -242,6 +252,7 @@ def make_manifest(measured, research, app, process, drafts, candidate_path):
             "measuredTimeSeriesSamplesAccepted": profiled_summary["acceptedMeasuredTimeSeriesSamples"],
             "publisherVerifiedPrimaryMeasuredStudies": primary_summary["publisherVerifiedPeerReviewedPrimaryMeasured"],
             "verifiedPeerReviewedResearchRecords": targets["peer_reviewed_research_records"]["currentAccepted"],
+            "acceptedSensorMachineHealthConcepts": sensor_summary["acceptedConcepts"],
             "measuredEvidencePasses": len(measured["measuredEvidence50Pass"].get("passes") or []),
             "deepDiveEvidencePasses": research["cumulativePassCount"],
             "researchCandidates": candidates.get("candidateCount", 0),
