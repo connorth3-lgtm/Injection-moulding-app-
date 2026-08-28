@@ -1,14 +1,15 @@
 {
   "schema": 1,
-  "version": "2026.08.28.1",
+  "version": "2026.08.28.2",
   "reviewed": "2026-08-28",
-  "scope": "Deduplicated publisher-verified peer-reviewed primary measured injection-moulding evidence. Reviews, simulation-only work, synthetic-only data and duplicate publications/companion datasets from the same experiment do not inflate the primary measured count.",
+  "scope": "Deduplicated publisher-verified peer-reviewed primary measured injection-moulding evidence. Reviews, simulation-only work, synthetic-only data and duplicate publications/companion datasets from the same experiment do not inflate the primary measured count. The registry intentionally retains more independent studies than the two-study promotion minimum so mechanism claims do not rest on one evidence pair.",
   "credibilityPolicy": {
     "tierA": "Peer-reviewed primary measured study with a public raw or companion measured dataset whose provenance is tied to the experiment.",
     "tierB": "Publisher-verified peer-reviewed primary measured study with real experimental/production measurements and physical quality outcomes, but reusable raw data are not confirmed public or are request-only.",
     "predictionIsNotCausation": true,
     "universalProcessRecipesAllowed": false,
     "sameExperimentPaperAndDatasetCountOnce": true,
+    "minimumRedundancyPerStagedMechanism": 3,
     "excludedFromCount": [
       "review",
       "systematic-review",
@@ -23,57 +24,26 @@
     {"path":"data/primary-measured-evidence/process-quality-pressure-v1.json","entries":10},
     {"path":"data/primary-measured-evidence/specialist-tooling-v1.json","entries":6},
     {"path":"data/primary-measured-evidence/materials-fibre-moisture-v1.json","entries":7},
-    {"path":"data/primary-measured-evidence/surface-optics-classic-v1.json","entries":8}
+    {"path":"data/primary-measured-evidence/surface-optics-classic-v1.json","entries":8},
+    {"path":"data/primary-measured-evidence/gap-closure-redundancy-v1.json","entries":29}
   ],
   "summary": {
-    "publisherVerifiedPeerReviewedPrimaryMeasured": 31,
-    "tierA": 3,
-    "tierB": 28,
-    "uniqueDois": 31,
-    "promotionCandidatesStagedNotApplied": 6
+    "publisherVerifiedPeerReviewedPrimaryMeasured": 60,
+    "tierA": 4,
+    "tierB": 56,
+    "uniqueDois": 60,
+    "promotionCandidatesStagedNotApplied": 9,
+    "stagedMechanismsWithRedundantEvidence": 9
   },
   "promotionCandidates": [
-    {
-      "mechanismId":"fibre-breakage-retained-length",
-      "status":"eligible-candidate-not-applied",
-      "qualifyingDois":["10.1002/pc.27232","10.1002/app.70427"],
-      "independenceRationale":"The two qualifying papers are distinct experimental programmes with different author teams and different fibre-processing architectures: conventional highly reinforced long-fibre polypropylene injection moulding versus direct-fibre-feeding GF/PP with redesigned mixing elements. They do not re-analyse or duplicate one moulding campaign, and both independently measure retained fibre morphology/length together with physical mechanical outcomes.",
-      "boundedClaim":"Measured injection-moulding history and plasticising/mixing architecture can change retained fibre length and therefore mechanical response. Do not promote any tested screw, mixing-element, fibre-length or process value as a universal limit or setting."
-    },
-    {
-      "mechanismId":"runner-gate-multicavity-imbalance",
-      "status":"eligible-candidate-not-applied",
-      "qualifyingDois":["10.3390/polym16202874","10.3390/s23031735"],
-      "independenceRationale":"These are separate multicavity experimental programmes from distinct research teams: one varies runner/gate geometry and polymer viscosity while measuring cavity-specific fill and mechanical outcomes, while the other uses multiple in-mould sensors and controlled switchover/holding/clamping experiments to observe local cavity behaviour. They are not duplicate publications or re-analyses of a shared dataset.",
-      "boundedClaim":"Geometric balance does not guarantee rheological balance; cavity-resolved pressure/fill and physical outcomes are needed before averaging multicavity behaviour. Do not promote runner size, gate size, pressure or balance values as universal design limits."
-    },
-    {
-      "mechanismId":"liquid-silicone-rubber",
-      "status":"eligible-candidate-not-applied",
-      "qualifyingDois":["10.1002/app.53381","10.7735/ksmte.2014.23.2.206"],
-      "independenceRationale":"The counted LSR studies are distinct experiments from different teams and years: the 2023 programme characterises cross-linking/cure state through cavity-pressure and DSC evidence, while the 2014 programme varies processing conditions and measures cavity pressure/temperature together with tensile strength. They are separate experimental programmes rather than duplicate publications or re-analysis of the same moulding campaign.",
-      "boundedClaim":"LSR cure/cross-linking produces measurable cavity-pressure/thermal signatures tied to physical material or mechanical outcomes. Do not promote any cure time, cavity pressure, mould temperature or strength value as a universal LSR prescription."
-    },
-    {
-      "mechanismId":"moisture-drying-degradation",
-      "status":"eligible-candidate-not-applied",
-      "qualifyingDois":["10.3390/app12031410","10.37358/MP.20.1.5311"],
-      "independenceRationale":"The two qualifying studies are separate material-conditioning and injection-moulding experiments from different research teams. One uses measured residual moisture with controlled plasticisation experiments on TPU/PC and physical appearance outcomes; the other independently examines PA/TPU drying/residual-moisture condition and moulded quality defects. They are not duplicate publications or re-analysis of one dataset.",
-      "boundedClaim":"Measured material moisture/drying state can alter moulded-part quality and must be distinguished from a dryer setpoint alone. Do not promote any moisture percentage, dryer temperature or residence time as a universal material limit; supplier grade data remain authoritative for production."
-    },
-    {
-      "mechanismId":"surface-replication-release",
-      "status":"eligible-candidate-not-applied",
-      "qualifyingDois":["10.1016/j.jmapro.2019.04.010","10.1002/pen.24772"],
-      "independenceRationale":"The qualifying studies are distinct experimental programmes from separate teams and tooling contexts: one applies a factorial process study and multi-scale metrology to randomly micro-textured mouldings, while the other uses variothermal PMMA microfluidic replication with independently measured cavity-surface temperature and in-cavity melt pressure. They do not duplicate or re-analyse the same moulding experiment.",
-      "boundedClaim":"Surface replication depends on local thermal/pressure history, feature scale, polymer and tool surface; measured physical replication should be used instead of appearance assumptions. Do not promote tested temperatures, pressures, feature ratios or timing as universal replication settings."
-    },
-    {
-      "mechanismId":"injection-compression-precision-optics",
-      "status":"eligible-candidate-not-applied",
-      "qualifyingDois":["10.1002/pat.6166","10.1002/pen.23429"],
-      "independenceRationale":"These are independent precision-optics injection-compression programmes with different authors, polymers and geometries: a 2023 plastic lens-array experiment measures optical path difference, displacement, birefringence and imaging quality, while a 2013 PS/PC disk programme experimentally measures residual birefringence alongside simulation. They are separate experiments, not duplicate publications or re-analysis of the same data.",
-      "boundedClaim":"Injection-compression history can materially affect residual birefringence, dimensional and optical performance, so precision optics requires physical optical/stress metrology. Do not promote compression gap, timing, temperature, pressure or birefringence values as universal production limits."
-    }
+    {"mechanismId":"fibre-breakage-retained-length","status":"eligible-candidate-not-applied","qualifyingDois":["10.1002/pc.27232","10.1002/app.70427"],"supportingDois":["10.3390/polym14061251","10.1016/j.compositesa.2006.01.007","10.1002/pc.20298"],"independenceRationale":"The two qualifying papers are distinct experimental programmes with different author teams and different fibre-processing architectures: conventional highly reinforced long-fibre polypropylene injection moulding versus direct-fibre-feeding GF/PP with redesigned mixing elements. They do not re-analyse or duplicate one moulding campaign, and both independently measure retained fibre morphology/length together with physical mechanical outcomes.","boundedClaim":"Measured injection-moulding history and plasticising/mixing architecture can change retained fibre length and therefore mechanical response. Do not promote any tested screw, mixing-element, fibre-length or process value as a universal limit or setting."},
+    {"mechanismId":"runner-gate-multicavity-imbalance","status":"eligible-candidate-not-applied","qualifyingDois":["10.3390/polym16202874","10.3390/s23031735"],"supportingDois":["10.14314/polimery.2015.411","10.1016/j.powtec.2014.02.056"],"independenceRationale":"These are separate multicavity experimental programmes from distinct research teams: one varies runner/gate geometry and polymer viscosity while measuring cavity-specific fill and mechanical outcomes, while the other uses multiple in-mould sensors and controlled switchover/holding/clamping experiments to observe local cavity behaviour. They are not duplicate publications or re-analyses of a shared dataset.","boundedClaim":"Geometric balance does not guarantee rheological balance; cavity-resolved pressure/fill and physical outcomes are needed before averaging multicavity behaviour. Do not promote runner size, gate size, pressure or balance values as universal design limits."},
+    {"mechanismId":"hot-runner-actual-behaviour","status":"eligible-candidate-not-applied","qualifyingDois":["10.1002/app.22371","10.1016/j.jmapro.2024.07.095"],"supportingDois":["10.3390/polym16081057","10.3390/polym15081924","10.1155/2021/6692133","10.22847/ksdme.19.2.202506.009","10.1016/j.matdes.2006.03.015"],"independenceRationale":"The qualifying studies are separated by almost two decades, institutions, tooling and sensing methods. The 2005 programme directly measures command-to-actual sequential-valve-gate response with CCD, cavity-pressure transducers and accelerometer verification; the 2024 programme independently detects the melt front and validates real-time valve-gate sequencing on a large-part mould. They are distinct experiments, not duplicate publications or re-analysis of one hot-runner campaign.","boundedClaim":"Commanded valve timing and displayed hot-runner state are not guaranteed to equal actual mechanical opening or cavity filling state; actual actuation and cavity/melt-front evidence should be checked. Do not promote any delay, pressure, temperature or valve sequence as a universal hot-runner setting."},
+    {"mechanismId":"liquid-silicone-rubber","status":"eligible-candidate-not-applied","qualifyingDois":["10.1002/app.53381","10.7735/ksmte.2014.23.2.206"],"supportingDois":["10.3390/polym15214278"],"independenceRationale":"The counted LSR studies are distinct experiments from different teams and years: the 2023 programme characterises cross-linking/cure state through cavity-pressure and DSC evidence, while the 2014 programme varies processing conditions and measures cavity pressure/temperature together with tensile strength. They are separate experimental programmes rather than duplicate publications or re-analysis of the same moulding campaign.","boundedClaim":"LSR cure/cross-linking produces measurable cavity-pressure/thermal signatures tied to physical material or mechanical outcomes. Do not promote any cure time, cavity pressure, mould temperature or strength value as a universal LSR prescription."},
+    {"mechanismId":"fluid-assisted-moulding","status":"eligible-candidate-not-applied","qualifyingDois":["10.1155/2015/161938","10.1002/pen.20832"],"supportingDois":["10.1155/2020/3481752","10.1155/2014/238251","10.3139/217.0130","10.3139/217.2612","10.1179/174328906X79969","10.1016/j.powtec.2013.02.032","10.1155/2020/6154694","10.1002/app.42866"],"independenceRationale":"The qualifying evidence comes from distinct teams and different assisted-moulding families and measurement approaches: a 2015 water-assisted experiment physically evaluates residual wall thickness, cooling and surface quality, while a 2007 gas-assisted programme uses independent ultrasonic in-process measurement to infer and validate residual wall thickness. They are separate experimental programmes and not duplicate publications or re-analysis of the same hollow-part campaign.","boundedClaim":"Gas- and water-assisted moulding introduce measurable penetration, cooling and residual-wall mechanisms that require process-specific physical evidence. Do not promote any assist pressure, delay, wall thickness, temperature or penetration value as a universal rule, and do not collapse water, gas and projectile processes into one recipe."},
+    {"mechanismId":"moisture-drying-degradation","status":"eligible-candidate-not-applied","qualifyingDois":["10.3390/app12031410","10.37358/MP.20.1.5311"],"supportingDois":["10.1016/j.compositesb.2020.108369"],"independenceRationale":"The two qualifying studies are separate material-conditioning and injection-moulding experiments from different research teams. One uses measured residual moisture with controlled plasticisation experiments on TPU/PC and physical appearance outcomes; the other independently examines PA/TPU drying/residual-moisture condition and moulded quality defects. They are not duplicate publications or re-analysis of one dataset.","boundedClaim":"Measured material moisture/drying state can alter moulded-part quality and must be distinguished from a dryer setpoint alone. Do not promote any moisture percentage, dryer temperature or residence time as a universal material limit; supplier grade data remain authoritative for production."},
+    {"mechanismId":"recyclate-process-variability","status":"eligible-candidate-not-applied","qualifyingDois":["10.1016/j.jprocont.2026.103725","10.1002/pen.26689"],"supportingDois":["10.1016/j.susmat.2024.e00897","10.1016/j.cirpj.2025.09.005","10.3390/polym11121908","10.1016/j.nxmate.2026.101622","10.1016/j.nxmate.2026.102559","10.3390/su13148102"],"independenceRationale":"The qualifying studies are independent programmes from different institutions and data sources. The 2026 RWTH work measures cavity and screw-antechamber pressure, controller response and part mass for virgin and post-consumer-recycled polypropylene with an open companion dataset; the 2024 UMass Lowell programme independently compares virgin and recycled PP in a multi-cavity hot-runner tool using processing history, crystallization/morphology and physical mechanical outcomes. They do not duplicate or re-analyse one experiment.","boundedClaim":"Recyclate source, contamination, degradation and prior processing can materially change measured moulding response and physical properties even when nominal resin identity appears similar. Do not promote any recycled-content, pressure, temperature, residence-time, MFI or property value as a universal acceptance or process setting."},
+    {"mechanismId":"surface-replication-release","status":"eligible-candidate-not-applied","qualifyingDois":["10.1016/j.jmapro.2019.04.010","10.1002/pen.24772"],"supportingDois":["10.3390/ma11081442","10.1021/acsapm.9b00312","10.1002/app.30053"],"independenceRationale":"The qualifying studies are distinct experimental programmes from separate teams and tooling contexts: one applies a factorial process study and multi-scale metrology to randomly micro-textured mouldings, while the other uses variothermal PMMA microfluidic replication with independently measured cavity-surface temperature and in-cavity melt pressure. They do not duplicate or re-analyse the same moulding experiment.","boundedClaim":"Surface replication depends on local thermal/pressure history, feature scale, polymer and tool surface; measured physical replication should be used instead of appearance assumptions. Do not promote tested temperatures, pressures, feature ratios or timing as universal replication settings."},
+    {"mechanismId":"injection-compression-precision-optics","status":"eligible-candidate-not-applied","qualifyingDois":["10.1002/pat.6166","10.1002/pen.23429"],"supportingDois":["10.1007/s12541-012-0286-x"],"independenceRationale":"These are independent precision-optics injection-compression programmes with different authors, polymers and geometries: a 2023 plastic lens-array experiment measures optical path difference, displacement, birefringence and imaging quality, while a 2013 PS/PC disk programme experimentally measures residual birefringence alongside simulation. They are separate experiments, not duplicate publications or re-analysis of the same data.","boundedClaim":"Injection-compression history can materially affect residual birefringence, dimensional and optical performance, so precision optics requires physical optical/stress metrology. Do not promote compression gap, timing, temperature, pressure or birefringence values as universal production limits."}
   ]
 }
