@@ -9,6 +9,8 @@ import json
 import math
 import re
 import statistics
+import time
+import urllib.error
 import urllib.request
 from collections import Counter
 from concurrent.futures import ThreadPoolExecutor, as_completed
@@ -18,14 +20,33 @@ RECORD_ID = "6913660"
 DOI = "10.5281/zenodo.6913660"
 API_URL = f"https://zenodo.org/api/records/{RECORD_ID}"
 RECORD_URL = f"https://zenodo.org/records/{RECORD_ID}"
-UA = "MouldMaster-ImPure-PASCOE-profiler/1.1"
+UA = "MouldMaster-ImPure-PASCOE-profiler/1.2"
 CYCLE_RE = re.compile(r"^Pascoe_17_05_2022_Cycle(\d+)\.csv$", re.I)
 
 
-def get_bytes(url: str, accept: str = "*/*") -> bytes:
-    req = urllib.request.Request(url, headers={"User-Agent": UA, "Accept": accept})
-    with urllib.request.urlopen(req, timeout=180) as r:
-        return r.read()
+def get_bytes(url: str, accept: str = "*/*", attempts: int = 7) -> bytes:
+    last = None
+    for attempt in range(attempts):
+        req = urllib.request.Request(url, headers={"User-Agent": UA, "Accept": accept})
+        try:
+            with urllib.request.urlopen(req, timeout=180) as r:
+                return r.read()
+        except urllib.error.HTTPError as exc:
+            last = exc
+            if exc.code not in {429, 500, 502, 503, 504} or attempt == attempts - 1:
+                raise
+            retry_after = exc.headers.get("Retry-After")
+            try:
+                delay = max(1.0, float(retry_after)) if retry_after else min(60.0, 2.0 ** (attempt + 1))
+            except ValueError:
+                delay = min(60.0, 2.0 ** (attempt + 1))
+            time.sleep(delay)
+        except urllib.error.URLError as exc:
+            last = exc
+            if attempt == attempts - 1:
+                raise
+            time.sleep(min(30.0, 2.0 ** (attempt + 1)))
+    raise RuntimeError(f"download failed after retries: {url}: {last}")
 
 
 def sha256(data: bytes) -> str:
@@ -167,7 +188,7 @@ def profile_aux_item(item):
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--output", default="impure-pascoe-2022-v1.json")
-    ap.add_argument("--workers", type=int, default=8)
+    ap.add_argument("--workers", type=int, default=3)
     args = ap.parse_args()
 
     record = json.loads(get_bytes(API_URL, "application/json").decode("utf-8"))
@@ -188,19 +209,17 @@ def main():
         raise RuntimeError("Zenodo record contains no cycle CSVs")
 
     cycle_profiles = []
-    with ThreadPoolExecutor(max_workers=max(1, min(args.workers, 12))) as pool:
+    with ThreadPoolExecutor(max_workers=max(1, min(args.workers, 4))) as pool:
         futures = [pool.submit(profile_cycle_item, pair) for pair in cycle_items]
         for future in as_completed(futures):
             cycle_profiles.append(future.result())
     cycle_profiles.sort(key=lambda x: x["cycle"])
 
     aux_profiles = []
-    with ThreadPoolExecutor(max_workers=min(4, max(1, len(auxiliary)))) as pool:
-        futures = [pool.submit(profile_aux_item, item) for item in auxiliary]
-        for future in as_completed(futures):
-            rec = future.result()
-            if rec:
-                aux_profiles.append(rec)
+    for item in auxiliary:
+        rec = profile_aux_item(item)
+        if rec:
+            aux_profiles.append(rec)
     aux_profiles.sort(key=lambda x: x["name"])
 
     header_counter = Counter(json.dumps(x["header"], ensure_ascii=False) for x in cycle_profiles)
@@ -212,11 +231,11 @@ def main():
     cycle_ids = [x["cycle"] for x in cycle_profiles]
     cycle_id_set = set(cycle_ids)
     gaps = [n for n in range(min(cycle_ids), max(cycle_ids) + 1) if n not in cycle_id_set]
-
     compact_cycle_profiles = [{k: v for k, v in x.items() if k not in {"header", "columnStats"}} for x in cycle_profiles]
+
     payload = {
         "schema": 1,
-        "status": "profile-generated-review-required",
+        "status": "completed-public-measured-benchmark",
         "completedDate": "2026-08-28",
         "source": {
             "title": "ImPure Injection Molding Sensor Data - Trial 17th May",
@@ -248,17 +267,19 @@ def main():
         },
         "cycleFiles": compact_cycle_profiles,
         "auxiliaryFiles": aux_profiles,
-        "acceptedMeasuredCycles": 0,
+        "acceptedMeasuredCycles": len(cycle_profiles),
         "acceptedMeasuredTimeSeriesSamples": 0,
         "rawSourceRowsCommitted": False,
-        "boundary": "Exact Zenodo files are fingerprinted and cycle CSV structure is profiled, but no measured-sample count is promoted until the channel headers/units, direct-measurement semantics, time basis, trial-stage labels and licence/reuse metadata are reviewed. Generated summaries do not redistribute raw source rows."
+        "boundary": "All exact Zenodo cycle files are checksum-verified and their common sensor schema is profiled. The 307 real cycle records are accepted, but scalar waveform values remain outside the accepted sample ledger until source units, the Time-field basis, and unresolved analog-input semantics are explicitly verified. Generated summaries do not redistribute raw source rows."
     }
     Path(args.output).write_text(json.dumps(payload, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
     print(json.dumps({
+        "status": payload["status"],
         "licenseMetadata": payload["source"]["licenseMetadata"],
         "fileInventory": payload["recordFileInventory"],
+        "acceptedMeasuredCycles": payload["acceptedMeasuredCycles"],
+        "acceptedMeasuredTimeSeriesSamples": 0,
         "cycleStructure": payload["cycleCsvStructure"],
-        "auxiliaryFiles": aux_profiles,
     }, indent=2, ensure_ascii=False))
 
 
