@@ -1,0 +1,16 @@
+{
+  "schema": 2,
+  "version": "2026.08.29.1",
+  "reviewed": "2026-08-29",
+  "mechanismId": "liquid-silicone-rubber",
+  "registryTarget": "data/evidence-coverage-v1.json",
+  "promotionOverlayTarget": "data/evidence-promotion-overlay-v2.json",
+  "primaryMeasuredRegistryTarget": "data/primary-measured-evidence-registry-v1.json",
+  "authorMetadataTarget": "data/primary-measured-promotion-authors-v1.json",
+  "promotionRuleSnapshot": {"minimumIndependentPublisherVerifiedPrimaryMeasured":2,"requiresMeasuredSignals":true,"requiresPhysicalQualityOutcome":true,"requiresExperimentalContext":true,"requiresExplicitLimitation":true,"predictionIsNotCausation":true,"universalProcessRecipesAllowed":false},
+  "eligibility": {"independentPublisherVerifiedPrimaryMeasured":2,"meetsMinimumIndependentStudies":true,"measuredSignalsPresent":true,"physicalQualityOutcomesPresent":true,"experimentalContextPresent":true,"explicitLimitationsPresent":true,"eligibleForPromotion":true,"registryPromotionApplied":true},
+  "qualifyingDois": ["10.1002/app.53381","10.7735/ksmte.2014.23.2.206"],
+  "supportingDois": ["10.3390/polym15214278"],
+  "independenceRationale": "The counted LSR studies are distinct experiments from different teams and years. The 2023 programme characterises cross-linking and cure state through cavity-pressure and DSC evidence, while the 2014 programme independently varies processing conditions and measures cavity pressure and temperature together with tensile strength. They are separate experimental programmes rather than duplicate publications or re-analysis of the same moulding campaign.",
+  "promotionClaim": "Promote the mechanism-level statement that measured LSR cavity-pressure and thermal history can contain cure or cross-linking information that must be interpreted with independent physical part-quality or mechanical outcomes. Do not promote any cure time, cavity pressure, mould temperature, vent value or tensile-strength value as a universal LSR prescription or acceptance rule."
+}
