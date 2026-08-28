@@ -1,0 +1,77 @@
+name: MouldMaster Real Site Pilot Preflight
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+    paths:
+      - 'tools/preflight_real_process_data_pilot.py'
+      - 'qa/fixtures/real-process-data-pilot-synthetic.csv'
+      - 'sources/REAL_PROCESS_DATA_PILOT_PROTOCOL.md'
+      - 'sources/REAL_PROCESS_DATA_INTAKE.md'
+      - 'data/real-process-data-pilot-template.csv'
+      - '.github/workflows/real-site-pilot-preflight.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  pilot-preflight:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Python syntax
+        run: python -m py_compile tools/preflight_real_process_data_pilot.py
+      - name: Synthetic structural regression
+        run: |
+          python tools/preflight_real_process_data_pilot.py \
+            --input qa/fixtures/real-process-data-pilot-synthetic.csv \
+            --output /tmp/pilot-structural.json \
+            --synthetic-test-fixture
+      - name: Confirm governance fails closed
+        shell: bash
+        run: |
+          set +e
+          python tools/preflight_real_process_data_pilot.py \
+            --input qa/fixtures/real-process-data-pilot-synthetic.csv \
+            --output /tmp/pilot-unconfirmed.json
+          code=$?
+          set -e
+          test "$code" -eq 2
+      - name: Confirm evaluation-ready gate
+        run: |
+          python tools/preflight_real_process_data_pilot.py \
+            --input qa/fixtures/real-process-data-pilot-synthetic.csv \
+            --output /tmp/pilot-confirmed.json \
+            --confirm-site-authorised \
+            --confirm-prepared-file-approved \
+            --confirm-units-reviewed \
+            --confirm-command-actual-reviewed \
+            --confirm-raw-retained-under-site-governance \
+            --confirm-independent-finding-available
+      - name: Aggregate-only report assertions
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          structural=json.loads(Path('/tmp/pilot-structural.json').read_text())
+          unconfirmed=json.loads(Path('/tmp/pilot-unconfirmed.json').read_text())
+          confirmed=json.loads(Path('/tmp/pilot-confirmed.json').read_text())
+          assert structural['synthetic_test_fixture'] is True
+          assert structural['technical_checks_passed'] is True
+          assert structural['privacy']['raw_values_emitted'] is False
+          assert structural['phases']['canonical_counts']=={'baseline':2,'fault':2,'test':2,'recovery':2,'verification':2}
+          assert unconfirmed['ready_for_diagnostic_evaluation'] is False
+          assert unconfirmed['governance_confirmations_passed'] is False
+          assert confirmed['ready_for_diagnostic_evaluation'] is True
+          assert confirmed['status']=='evaluation-ready-human-comparison-required'
+          assert 'does not complete' in confirmed['completion_boundary']
+          text=json.dumps(confirmed)
+          for forbidden in ['raw_rows','row_values','sample_values','minimum','maximum','setpoint_values']:
+              assert forbidden not in text
+          PY
