@@ -1,0 +1,96 @@
+{
+  "schema_version": 1,
+  "status": "completed-public-measured-benchmark",
+  "completed_date": "2026-08-28",
+  "source": {
+    "title": "Data Model for Injection Molding and Blow Molding",
+    "publisher": "Mendeley Data",
+    "doi": "10.17632/gtnb4j7bfx.1",
+    "version": "1",
+    "license": "CC BY 4.0",
+    "publisher_file": "modelo.xlsx",
+    "publisher_file_id": "5a234943-9f9d-45de-b82f-de0c64809dd7",
+    "worksheet": "nicky",
+    "size_bytes": 4843621,
+    "sha256": "b231af5d49c0a258b5625d6e2ab2c324c233017c5c010e326a3ca485387ecc9f"
+  },
+  "retrieval": {
+    "retrieved_date": "2026-08-28",
+    "mode": "credential-free Mendeley public API",
+    "endpoint": "https://data.mendeley.com/public-api/datasets/gtnb4j7bfx/files?folder_id=root&version=1",
+    "first_successful_workflow_run_id": 33131865212,
+    "aggregate_artifact_id": 9670558748,
+    "aggregate_artifact_digest": "sha256:03f4a3b9ff2c148190033919b134b0ccafda09cc3f69aa09c698dfcc9c56c284",
+    "raw_publisher_file_committed": false,
+    "raw_rows_uploaded_as_artifact": false
+  },
+  "process_separation": {
+    "source_rows": 6357,
+    "injection_rows_profiled": 4502,
+    "blow_rows_excluded": 1855,
+    "blank_or_unclassified_machine_rows": 0,
+    "method": "v1-spanish-schema+documented-machine-prefix",
+    "source_machine_header": "Maquina",
+    "source_rule": "I/INY-prefixed machine identifiers are injection moulding; S/SOP-prefixed identifiers are blow moulding, consistent with the associated peer-reviewed article.",
+    "mixed_process_rows_emitted": false
+  },
+  "normalization": {
+    "source_columns": 33,
+    "canonical_injection_columns": 26,
+    "canonical_columns_present": 26,
+    "canonical_columns_missing": 0,
+    "blow_only_columns_excluded": 7,
+    "source_language": "Spanish",
+    "unit_conversion_performed": false,
+    "missing_cells_rewritten": false,
+    "raw_row_values_emitted": false
+  },
+  "missingness": {
+    "profiled_cells": 117052,
+    "missing_cells_in_delivered_injection_subset": 0,
+    "zero_fill_performed_by_mouldmaster": false,
+    "interpretation": "The downloaded v1 workbook contains no cells matching MouldMaster missing-value tokens in the 4,502 x 26 injection subset. This does not prove the original pre-publication records had no missing values: the associated study reports replacing null values with zero during modelling preprocessing. MouldMaster does not reverse-engineer or reinterpret zeros as missing without source evidence."
+  },
+  "nonzero_zero_counts": {
+    "Pigment_Consumption": 84,
+    "Cycle_Time": 8,
+    "Cooling_Time_Injection": 8,
+    "Ejection_Time_Injection": 8,
+    "Retention_Time_Injection": 8
+  },
+  "command_actual_unresolved_columns": [
+    "Product_Weight",
+    "Avg_Gross_Weight",
+    "PP_Consumption",
+    "Pigment_Consumption",
+    "Flash_kg",
+    "Defective_kg",
+    "Injection_Pressure",
+    "Retention_Pressure",
+    "Melt_Temp",
+    "Mold_Temp",
+    "Cycle_Time",
+    "Cooling_Time_Injection",
+    "Ejection_Time_Injection",
+    "Retention_Time_Injection",
+    "Injection_Speed"
+  ],
+  "quality_or_derived_columns_not_root_causes": [
+    "Rejected_Products",
+    "Avg_Gross_Weight",
+    "Flash_kg",
+    "Defective_kg",
+    "%Flash",
+    "%Defective",
+    "%Reprocess"
+  ],
+  "evidence_gaps": [
+    "Production-order/run-level data are not assumed to be shot-resolved.",
+    "No controlled intervention or recovery sequence is established by this benchmark.",
+    "No cavity-pressure, cavity-temperature or other discriminating in-mould trace is established by this benchmark.",
+    "Historical process records do not establish a validated setting window or universal production recipe.",
+    "Correlation with reject, flash or defect metrics does not establish physical root cause.",
+    "Commanded/target versus actual semantics remain unresolved for process variables unless source documentation explicitly establishes them."
+  ],
+  "boundary": "This result validates parts of MouldMaster's measured-data pathway only. It is not an authorised site pilot, root-cause proof, validated process window, production setting recommendation or production-change authority."
+}
