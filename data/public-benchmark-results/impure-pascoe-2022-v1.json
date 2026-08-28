@@ -1,0 +1,103 @@
+{
+  "schema": 1,
+  "status": "completed-public-measured-benchmark",
+  "completedDate": "2026-08-28",
+  "source": {
+    "title": "ImPure Injection Molding Sensor Data - Trial 17th May",
+    "doi": "10.5281/zenodo.6913660",
+    "recordId": "6913660",
+    "recordUrl": "https://zenodo.org/records/6913660",
+    "publisher": "Zenodo",
+    "accessRight": "open",
+    "license": "CC BY 4.0",
+    "description": "ImPure project, open access data from PASCOE IM line."
+  },
+  "sourceVerification": {
+    "publisherFiles": 309,
+    "cycleCsvFiles": 307,
+    "auxiliaryCsvFiles": 2,
+    "allDownloadedFilesMatchedPublisherMd5": true,
+    "verifiedFileCount": 309,
+    "fingerprintManifestMethod": "SHA-256 over sorted lines name|md5|sha256|sizeBytes|rows|columns for all 309 exact source files",
+    "fingerprintManifestSha256": "7ccf2279e0906269adce34d2ba6167d6daa86b40ed0ed2f1e811e9d99f1e6655",
+    "exampleFirstCycle": {
+      "name": "Pascoe_17_05_2022_Cycle1.csv",
+      "md5": "709cabf385abc87b89d62aaf75db9106",
+      "sha256": "8584ebd9a13df7cc836ace5d2ec8afd3ece6c530e75db88b132063dd2e85c031",
+      "sizeBytes": 59982,
+      "rows": 970,
+      "columns": 9
+    },
+    "qualityLabelFile": {
+      "name": "Trial 17 05 all stages_ires-labels.csv",
+      "md5": "e608b7a2f752fee7dd5ef1155b357d72",
+      "sha256": "725ae6f831e2784a599ee7cfeab85dd19f5264fe115edd8aeefe926cc43d2b83",
+      "rows": 386,
+      "columns": 3
+    },
+    "dimensionalQualityFile": {
+      "name": "Trial 17 05 all stages.csv",
+      "md5": "da3912b00b893227d0b63d817c576b79",
+      "sha256": "fcdb47ac31f2b709bb8f224e21767b03aa25893180deb6b9b16d1bbe1f2c4bd8",
+      "rows": 772,
+      "columns": 10
+    }
+  },
+  "cycleCoverage": {
+    "acceptedMeasuredCycles": 307,
+    "minimumPublishedCycleNumber": 1,
+    "maximumPublishedCycleNumber": 390,
+    "missingCycleNumbersWithinRange": 83,
+    "note": "Cycle number range is not treated as cycle count; only the 307 checksum-verified cycle CSV files count."
+  },
+  "observedCycleStructure": {
+    "headerVariants": 1,
+    "all307CycleFilesUseSameHeader": true,
+    "header": [
+      "Time",
+      "HydPressure[IRT/Pascoe]",
+      "ScrewPosition[IRT/Pascoe]",
+      "Analog Input[1]",
+      "Analog Input[2]",
+      "TempMold1[IRT/Pascoe]",
+      "TempMold2[IRT/Pascoe]",
+      "Pressure1[IRT/Pascoe]",
+      "Pressure2[IRT/Pascoe]"
+    ],
+    "minRowsPerCycle": 600,
+    "maxRowsPerCycle": 972,
+    "medianRowsPerCycle": 970,
+    "totalRowsAcrossCycleFiles": 297087,
+    "totalNumericSensorCellsAcrossCycleFiles": 2376696,
+    "totalMissingSensorCellsAcrossCycleFiles": 0,
+    "numericSensorChannelsPerRow": 8
+  },
+  "measurementSemantics": {
+    "directNamedChannels": [
+      "HydPressure[IRT/Pascoe]",
+      "ScrewPosition[IRT/Pascoe]",
+      "TempMold1[IRT/Pascoe]",
+      "TempMold2[IRT/Pascoe]",
+      "Pressure1[IRT/Pascoe]",
+      "Pressure2[IRT/Pascoe]"
+    ],
+    "unknownSemanticsExcludedFromSampleLedger": ["Analog Input[1]", "Analog Input[2]"],
+    "timeField": "Time",
+    "sourceUnitsExplicitInCycleHeaders": false,
+    "sourceTimeBasisNormalized": false,
+    "candidateDirectNamedValuesNotAcceptedAsSamples": 1782522,
+    "note": "Six channel names unambiguously identify hydraulic pressure, screw position, two mould temperatures and two pressure channels. Their physical units and the Time-field basis are not explicitly encoded in the published cycle headers, so none of these scalar values are counted in the accepted measured-time-series ledger yet."
+  },
+  "qualityEvidence": {
+    "twoCavityLabelRows": 386,
+    "labelFields": ["Cycle", "Cavity 1", "Cavity 2"],
+    "dimensionalAndWeightRows": 772,
+    "dimensionalFields": ["One dot", "Two dots", "Lehgth(mm)", "Width(mm)", "Height(mm)", "Thickness(mm)", "Weight(g)", "Label"],
+    "note": "The separate quality files are source-fingerprinted and retained as measured quality evidence. Their row cardinalities are recorded without inventing a one-to-one join beyond the published cycle/cavity fields."
+  },
+  "acceptedMeasuredCycles": 307,
+  "acceptedMeasuredTimeSeriesSamples": 0,
+  "rawSourceRowsCommitted": false,
+  "rawSourceFilesCommitted": false,
+  "boundary": "PASCOE is accepted as one fully profiled real measured dataset package because the exact open CC BY 4.0 source was obtained, all 309 files were checksum-verified, the 307 real cycle CSVs were enumerated and schema-profiled, direct named sensor channels were separated from unknown analog inputs, and source quality files were fingerprinted. The measured scalar sample ledger remains unchanged until source units and Time-field semantics are explicitly verified."
+}
