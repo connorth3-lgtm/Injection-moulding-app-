@@ -9,6 +9,7 @@ PASS_FILE = Path("data/deep-dive-v2-100-pass.json")
 PASS_DOC = Path("sources/DEEP_DIVE_V2_100_PASS_EXECUTION.md")
 EXPANSION_FILE = Path("sources/DEEP_DIVE_V2_100_PASS_EXPANSION.md")
 WAVE2_FILE = Path("data/deep-dive-v2-wave2-100-pass.json")
+WAVE3_FILE = Path("data/deep-dive-v2-wave3-100-pass.json")
 REPORT_FILE = Path("deep-dive-v2-report.json")
 
 MIN_TARGETS = {
@@ -39,10 +40,10 @@ MIN_TARGETS = {
     "expert_level_scenarios": 300,
     "licensed_defect_images_eventual": 10000,
     "lessons_and_modules_total": 250,
-    "research_evidence_domains": 200,
+    "research_evidence_domains": 300,
 }
 
-for path in (TARGET_FILE, PROGRAMME_FILE, SEED_FILE, PASS_FILE, PASS_DOC, EXPANSION_FILE, WAVE2_FILE):
+for path in (TARGET_FILE, PROGRAMME_FILE, SEED_FILE, PASS_FILE, PASS_DOC, EXPANSION_FILE, WAVE2_FILE, WAVE3_FILE):
     assert path.exists(), f"Deep Dive v2 file missing: {path}"
 
 data = json.loads(TARGET_FILE.read_text(encoding="utf-8"))
@@ -57,9 +58,12 @@ for key, minimum in MIN_TARGETS.items():
 execution = data.get("execution_state", {})
 assert execution.get("wave1_passes_preserved") == 100, "Wave-1 preservation state missing"
 assert execution.get("wave2_passes_added") == 100, "Wave-2 execution state missing"
-assert execution.get("cumulative_passes") == 200, "Cumulative execution state must remain 200"
+assert execution.get("wave3_passes_added") == 100, "Wave-3 execution state missing"
+assert execution.get("cumulative_passes") == 300, "Cumulative execution state must remain 300"
 assert execution.get("wave2_primary_seeded", 0) >= 59, "Wave-2 primary-seeded execution state regressed"
 assert execution.get("wave2_explicit_gaps") == 100 - execution.get("wave2_primary_seeded", 0), "Wave-2 execution-state accounting is incoherent"
+assert execution.get("wave3_primary_seeded", 0) >= 93, "Wave-3 primary-seeded execution state regressed"
+assert execution.get("wave3_explicit_gaps") == 100 - execution.get("wave3_primary_seeded", 0), "Wave-3 execution-state accounting is incoherent"
 
 levels = data.get("evidence_levels", {})
 assert list(levels) == ["E0", "E1", "E2", "E3", "E4", "E5", "E6"], "Evidence maturity E0-E6 must remain explicit"
@@ -75,7 +79,7 @@ assert required_intake.issubset(set(data.get("dataset_intake_required_fields", [
 
 programme = PROGRAMME_FILE.read_text(encoding="utf-8")
 for phrase in [
-    "2,000", "1,000", "300", "400", "600", "10,000", "200 cumulative research/evidence passes",
+    "2,000", "1,000", "300", "400", "600", "10,000", "300 cumulative research/evidence passes",
     "Real-data-first rule", "Evidence maturity", "model accuracy", "causality",
     "Do not relabel synthetic data as measured"
 ]:
@@ -139,7 +143,7 @@ wave2_text = WAVE2_FILE.read_text(encoding="utf-8")
 wave2_data = json.loads(wave2_text)
 assert wave2_data.get("pass_count") == 100, "Wave 2 must contain exactly 100 execution passes"
 assert wave2_data.get("id_range") == [101, 200], "Wave-2 ID range must remain 101-200"
-assert wave2_data.get("cumulative_pass_count") == 200, "Cumulative Deep Dive execution count must remain 200"
+assert wave2_data.get("cumulative_pass_count") == 200, "Wave-2 cumulative count must remain 200"
 wave2 = wave2_data.get("passes", [])
 assert len(wave2) == 100, f"Expected 100 Wave-2 pass records, found {len(wave2)}"
 wave2_ids = [p.get("id") for p in wave2]
@@ -173,6 +177,46 @@ for marker in [
 ]:
     assert marker in wave2_text, f"Wave-2 evidence marker missing: {marker}"
 
+wave3_text = WAVE3_FILE.read_text(encoding="utf-8")
+wave3_data = json.loads(wave3_text)
+assert wave3_data.get("pass_count") == 100, "Wave 3 must contain exactly 100 execution passes"
+assert wave3_data.get("id_range") == [201, 300], "Wave-3 ID range must remain 201-300"
+assert wave3_data.get("cumulative_pass_count") == 300, "Wave-3 cumulative count must remain 300"
+wave3 = wave3_data.get("passes", [])
+assert len(wave3) == 100, f"Expected 100 Wave-3 pass records, found {len(wave3)}"
+wave3_ids = [p.get("id") for p in wave3]
+assert wave3_ids == list(range(201, 301)), "Wave-3 IDs must be unique, ordered and contiguous from 201 to 300"
+wave3_titles = [p.get("title") for p in wave3]
+assert len(set(wave3_titles)) == 100 and all(wave3_titles), "Wave-3 titles must be non-empty and unique"
+assert not set(titles).intersection(wave3_titles), "Wave-3 titles must not duplicate Wave-1 titles"
+assert not set(wave2_titles).intersection(wave3_titles), "Wave-3 titles must not duplicate Wave-2 titles"
+assert {p.get("status") for p in wave3}.issubset(allowed_statuses), "Unknown Wave-3 status"
+for p in wave3:
+    assert p.get("theme"), f"Wave-3 pass {p.get('id')} missing theme"
+    anchors = p.get("evidence_anchors", [])
+    assert anchors, f"Wave-3 pass {p.get('id')} missing evidence anchor"
+    assert all(isinstance(x, str) and x.strip() for x in anchors), f"Wave-3 pass {p.get('id')} has invalid evidence anchor"
+
+wave3_seeded = sum(p["status"] == "seeded_with_primary" for p in wave3)
+wave3_gaps = sum(p["status"] == "gap_seeded" for p in wave3)
+assert wave3_seeded >= 93, f"Wave-3 primary-seeded pass count regressed: {wave3_seeded}"
+assert wave3_gaps == 100 - wave3_seeded, "Wave-3 seeded/gap accounting is incoherent"
+assert wave3_data.get("summary", {}).get("by_status", {}).get("seeded_with_primary") == wave3_seeded
+assert wave3_data.get("summary", {}).get("by_status", {}).get("gap_seeded") == wave3_gaps
+assert execution.get("wave3_primary_seeded") == wave3_seeded, "Target execution state disagrees with Wave-3 ledger"
+assert execution.get("wave3_explicit_gaps") == wave3_gaps, "Target execution state gap count disagrees with Wave-3 ledger"
+for marker in [
+    "10.1002/app.70411",
+    "10.1063/5.0055930",
+    "10.3390/POLYM13111843",
+    "10.3390/MI9120653",
+    "10.5254/1.3538554",
+    "10.1007/S11837-018-2786-3",
+    "10.1080/0951192X.2020.1829062",
+    "10.3390/MA11091740",
+]:
+    assert marker in wave3_text, f"Wave-3 evidence marker missing: {marker}"
+
 report = {
     "programme": data["programme"],
     "status_date": data["status_date"],
@@ -188,7 +232,10 @@ report = {
     "wave2_execution_passes": len(wave2),
     "wave2_execution_passes_primary_seeded": wave2_seeded,
     "wave2_execution_passes_gap_seeded": wave2_gaps,
-    "cumulative_execution_passes": len(passes) + len(wave2),
+    "wave3_execution_passes": len(wave3),
+    "wave3_execution_passes_primary_seeded": wave3_seeded,
+    "wave3_execution_passes_gap_seeded": wave3_gaps,
+    "cumulative_execution_passes": len(passes) + len(wave2) + len(wave3),
     "evidence_levels": list(levels),
     "status": "pass",
 }
