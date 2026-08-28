@@ -41,7 +41,7 @@ with tempfile.TemporaryDirectory() as td:
     expected = {
         "measuredDatasetInventory": 20,
         "automatedIngestionAllowedDatasets": 9,
-        "fullyProfiledMeasuredDatasets": 8,
+        "fullyProfiledMeasuredDatasets": 9,
         "measuredTimeSeriesSamplesAccepted": 52_526_432,
         "publisherVerifiedPrimaryMeasuredStudies": 60,
         "verifiedPeerReviewedResearchRecords": 60,
@@ -75,10 +75,12 @@ with tempfile.TemporaryDirectory() as td:
 
     measured = json.loads((out / "measured-data.json").read_text(encoding="utf-8"))
     need(measured["datasetInventory"]["summary"]["datasets"] == 20, "compiled measured dataset inventory drifted")
-    need(measured["profiledMeasuredDatasetRegistry"]["summary"]["fullyProfiledDatasetPackages"] == 8, "compiled profiled dataset count drifted")
+    need(measured["profiledMeasuredDatasetRegistry"]["summary"]["fullyProfiledDatasetPackages"] == 9, "compiled profiled dataset count drifted")
     need(measured["profiledMeasuredDatasetRegistry"]["summary"]["acceptedMeasuredTimeSeriesSamples"] == 52_526_432, "compiled measured-sample total drifted")
     profiled_ids = {x["datasetId"] for x in measured["profiledMeasuredDatasetRegistry"]["datasets"]}
-    need("iguzzini-road-lenses" in profiled_ids and "skz-loki-v1" in profiled_ids, "compiled accepted dataset registry missing recent promotions")
+    need({"iguzzini-road-lenses", "skz-loki-v1", "impure-pascoe-2022"}.issubset(profiled_ids), "compiled accepted dataset registry missing recent promotions")
+    benchmark_profiles = measured.get("benchmarkProfiles") or {}
+    need("impure-pascoe-2022-v1.json" in benchmark_profiles and "skz-loki-v1.json" in benchmark_profiles, "compiled benchmark profile set missing PASCOE/SKZ")
     need(len(measured["primaryMeasuredStudies"]) == 60, "compiled primary-measured study set incomplete")
     need(len({x["doi"].lower() for x in measured["primaryMeasuredStudies"]}) == 60, "compiled primary-measured DOI deduplication failed")
     need(measured["publicBenchmarkResult"]["status"] == "completed-public-measured-benchmark", "compiled first public benchmark result missing")
@@ -103,4 +105,4 @@ with tempfile.TemporaryDirectory() as td:
     for section in ["manifest", "measured", "research", "appData", "processData", "drafts"]:
         need(section in combined, f"combined master package missing section: {section}")
 
-print("MouldMaster master data compilation QA passed (20 inventoried datasets; 8 fully profiled measured packages; 52,526,432 accepted real time-series samples; 60 verified primary measured studies; 600 evidence passes; 264/19,008 synthetic cases/cycles; 157 approved items; 120+20 lessons; full draft banks)")
+print("MouldMaster master data compilation QA passed (20 inventoried datasets; 9 fully profiled measured packages; 52,526,432 accepted real time-series samples; 60 verified primary measured studies; 600 evidence passes; 264/19,008 synthetic cases/cycles; 157 approved items; 120+20 lessons; full draft banks)")
