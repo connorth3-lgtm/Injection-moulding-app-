@@ -1,0 +1,100 @@
+{
+  "schema_version": 3,
+  "status": "completed-public-measured-benchmark",
+  "completed_date": "2026-08-28",
+  "source": {
+    "title": "Multivariate Modeling of Mechanical Properties for Hot Runner Molded Bioplastics and a Recycled Polypropylene Blend — supplementary experimental data",
+    "doi": "10.3390/su13148102",
+    "supplementLanding": "https://www.mdpi.com/article/10.3390/su13148102/s1",
+    "downloadUrlResolved": "https://mdpi-res.com/d_attachment/sustainability/sustainability-13-08102/article_deploy/sustainability-13-08102-s001.zip",
+    "articleLicense": "CC BY 4.0",
+    "peerReviewed": true,
+    "dataAvailability": "Dataset used for the results is supplied as online supplemental material with the journal article."
+  },
+  "experimentalContext": {
+    "process": "fully automatic injection moulding in a pilot-production environment",
+    "machineModel": "not stated in the reviewed article methods; this unknown is retained rather than inferred",
+    "mould": {
+      "type": "two-cavity hot-runner mould supplied by Milacron Mold-Masters",
+      "part": "ASTM tensile bars",
+      "nominalThicknessMm": 3.18,
+      "gageLengthMm": 75.0,
+      "gageWidthMm": 12.7
+    },
+    "design": {
+      "doeRunsPerMaterial": 32,
+      "stabilizationCyclesDiscardedBeforeEachRun": 30,
+      "partsCollectedPerDoeRun": 30,
+      "startupCyclesDiscarded": 60,
+      "manipulatedFactors": [
+        "hot-runner/barrel temperature",
+        "cooling time",
+        "plastication/screw speed",
+        "injection velocity"
+      ]
+    },
+    "materialHandling": "Resins were pre-dried at 170 C for 4 h and transferred using a sealed hopper, as reported by the study.",
+    "testMethod": "Tensile properties characterized at room temperature according to ASTM D638; specimen thickness measured by micrometer; tensile speed 10 mm/min.",
+    "limitations": [
+      "The injection-moulding machine model is not stated in the reviewed methods and is not inferred.",
+      "The supplement is record-level DOE/process/property data, not high-frequency waveform data, so it adds zero samples to the measured time-series ledger.",
+      "Study-specific process/property correlations are contextual evidence and are not universal processing limits."
+    ]
+  },
+  "materials": [
+    {"studyCode":"iPP","family":"isotactic polypropylene homopolymer","supplier":"LyondellBasell","grade":"Pro-fax 702","meltFlowRate_g_10min":35,"recommendedMeltTemperature_C":210,"onsetMeltTemperature_C":156,"peakDegradationTemperature_C":304},
+    {"studyCode":"rPP","family":"recycled polypropylene/polyethylene blend","supplier":"KW Plastics","grade":"KWR621-20","meltFlowRate_g_10min":20,"recommendedMeltTemperature_C":200,"onsetMeltTemperature_C":153,"peakDegradationTemperature_C":350},
+    {"studyCode":"PBAT","family":"polybutylene adipate terephthalate","supplier":"Bio-Fed","grade":"M-Vera GP1025","meltFlowRate_g_10min":16,"recommendedMeltTemperature_C":190,"onsetMeltTemperature_C":163,"peakDegradationTemperature_C":358},
+    {"studyCode":"PLA-N","family":"polylactic acid","supplier":"NatureWorks","grade":"W3052D","meltFlowRate_g_10min":14,"recommendedMeltTemperature_C":205,"onsetMeltTemperature_C":163,"peakDegradationTemperature_C":350},
+    {"studyCode":"PLA-V","family":"polylactic acid","supplier":"Vegeplast","grade":"Flex-AN 29","meltFlowRate_g_10min":50,"recommendedMeltTemperature_C":180,"onsetMeltTemperature_C":144,"peakDegradationTemperature_C":280}
+  ],
+  "archive": {
+    "sizeBytes": 104525,
+    "sha256": "b546abea4eb9f14b6736dec415dc43c00240965b91de4c7ca92b2494321c6ace",
+    "memberCount": 1,
+    "member": {
+      "name": "sustainability-1272832-supplementary.csv",
+      "sizeBytes": 390087,
+      "sha256": "8c46e9697d5b2d849d041bc47f60ab629f57538dcaedc13b9e1b80eeeeabd01d",
+      "dataRows": 955,
+      "physicalColumns": 45,
+      "missingCells": 0,
+      "numericCellsPerColumn": 955
+    }
+  },
+  "publishedVsObservedStructure": {
+    "publishedObservationRows": 955,
+    "publishedAnalyticalColumns": 42,
+    "observedDataRows": 955,
+    "observedPhysicalColumns": 45,
+    "extraIndexColumns": ["Part #", "Material #", "DOE Run #"],
+    "observedAnalyticalColumnsAfterIndexExclusion": 42,
+    "reconciliation": "The article describes 42 columns of processing data and mechanical properties. The downloadable CSV contains those 42 analytical columns plus three leading indexing fields, producing 45 physical file columns. All 45 are retained in the profile."
+  },
+  "fieldSemantics": {
+    "indexAndLinkage": ["Part #", "Material #", "DOE Run #", "Cycle #", "Start Time, s", "Tensile Test #", "Tensile Material #", "DOE Run", "Specimen", "Cavity #"],
+    "doeCommandsOrControlledSettings": ["HR-Barrel Temp, C", "Cooling Time, s", "Screw Speed, RPM", "Inj Velocity, inps"],
+    "measuredOrObservedProcess": ["Cycle Time, s", "Fill Time, s", "Cav1 Cool Time, s", "Cav2 Cool Time, s", "Plas Time, s", "Max Inj Pres, MPa", "Max Cav1 Pres, MPa", "Inj Flow Rate, ccps", "Melt Temp, C", "Part Temp, C", "Mold Temp, C"],
+    "derivedProcessFeatures": ["HR Viscosity, Pa.s", "CP1 Viscosity, Pa.s", "CP2 Viscosity, Pa.s", "Inj Energy, J", "Pack Energy, J", "Pack Volume, pct", "Temp Trend, dTdt", "Cav Shear Rate, s-1", "Structural Norm, pct", "Structural Loss, pct", "Clock time, s", "Degradation, %@T", "dDegradation/dT, %/C", "tCycle*dD/dT, %"],
+    "measuredQualityOutcomes": ["Thickness, mm", "Max Strain, pct", "Ult Stress, MPa", "Modulus, MPa", "Toughness, MJ/m^3"],
+    "modelTerm": ["Intercept"],
+    "semanticsBoundary": "Grouping follows the study methods and field names. Where the supplementary table does not independently expose controller command/actual provenance for a field, the profile does not claim a more specific signal origin than the study supports."
+  },
+  "acceptedMeasuredTimeSeriesSamples": 0,
+  "rawSourceRowsCommitted": false,
+  "acceptance": {
+    "sourceFilesLawfullyObtained": true,
+    "fingerprinted": true,
+    "schemaInspected": true,
+    "unitsReviewed": true,
+    "groupingReviewed": true,
+    "commandsMeasurementsDerivedAndOutcomesSeparated": true,
+    "materialContextReviewed": true,
+    "processContextReviewed": true,
+    "mouldContextReviewed": true,
+    "machineContextLimitationRecorded": true,
+    "qualityContextReviewed": true,
+    "limitationsRecorded": true
+  },
+  "boundary": "This accepted profile stores provenance, fingerprints, structure, field semantics, material/process context and limitations without committing the 955 third-party raw observations. It contributes one fully profiled measured dataset package and zero high-frequency time-series samples."
+}
