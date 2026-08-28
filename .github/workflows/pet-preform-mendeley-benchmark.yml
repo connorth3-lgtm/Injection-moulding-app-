@@ -1,0 +1,44 @@
+name: MouldMaster PET preform measured benchmark
+
+on:
+  workflow_dispatch:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'tools/profile_mendeley_vc3k9tt5zj.py'
+      - '.github/workflows/pet-preform-mendeley-benchmark.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  profile:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install spreadsheet reader
+        run: python -m pip install --disable-pip-version-check openpyxl
+      - name: Profile version-pinned PET preform source files
+        run: python tools/profile_mendeley_vc3k9tt5zj.py --output vc3k9tt5zj-v2.json
+      - name: Enforce discovery boundary
+        run: |
+          python - <<'PY'
+          import json
+          p=json.load(open('vc3k9tt5zj-v2.json',encoding='utf-8'))
+          assert p['source']['doi']=='10.17632/vc3k9tt5zj.2'
+          assert p['source']['version']=='2'
+          assert p['source']['license']=='CC BY 4.0'
+          assert p['files'] and all(f['sha256'] and f['sizeBytes']>0 for f in p['files'])
+          assert p['tableCount']>=1
+          assert p['rawSourceRowsCommitted'] is False
+          print('PET preform files:', [(f['name'],f['sizeBytes'],f.get('format')) for f in p['files']])
+          print('Largest table:',p['largestTable'])
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: mouldmaster-pet-preform-profile
+          path: vc3k9tt5zj-v2.json
+          retention-days: 90
