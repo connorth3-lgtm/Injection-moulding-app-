@@ -6,9 +6,17 @@ on:
     paths:
       - 'tools/compile_master_data.py'
       - 'tools/harvest_openalex_injection_moulding.py'
+      - 'tools/materialize_evidence_overlays.py'
       - 'qa_master_data_compile.py'
       - 'qa_content_scale_targets.py'
+      - 'qa_sensor_machine_health.py'
       - 'data/content-scale-targets.json'
+      - 'data/content-scale-targets-overlay-v2.json'
+      - 'data/sensor-machine-health-registry-v1.json'
+      - 'data/sensor-machine-health-registry-v2.json'
+      - 'data/sensor-machine-health/**'
+      - 'data/machine-health-supporting-evidence-v1.json'
+      - 'data/sensor-machine-health-candidate-resolution-v2.json'
       - 'data/measured-dataset-inventory-v1.json'
       - 'data/profiled-measured-dataset-registry-v1.json'
       - 'data/public-benchmark-results/**'
@@ -37,6 +45,10 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
+      - name: Resolve accepted evidence overlays
+        run: python tools/materialize_evidence_overlays.py
+      - name: Validate resolved sensor and machine-health evidence
+        run: python qa_sensor_machine_health.py
       - name: Validate reconciled content counts
         run: python qa_content_scale_targets.py
       - name: Compile repository data and validate core boundaries
@@ -67,6 +79,7 @@ jobs:
           source_inventory=load('data/measured-dataset-inventory-v1.json')
           source_profiled=load('data/profiled-measured-dataset-registry-v1.json')
           source_primary=load('data/primary-measured-evidence-registry-v1.json')
+          source_sensor=load('data/sensor-machine-health-registry-v1.json')
           source_targets=load('data/content-scale-targets.json')
           counts=manifest['counts']
 
@@ -75,6 +88,7 @@ jobs:
           expected_profiled=len(source_profiled['datasets'])
           expected_samples=source_profiled['summary']['acceptedMeasuredTimeSeriesSamples']
           expected_primary=source_primary['summary']['publisherVerifiedPeerReviewedPrimaryMeasured']
+          expected_sensor=source_sensor['summary']['acceptedConcepts']
           expected_peer=source_targets['targets']['peer_reviewed_research_records']['currentAccepted']
 
           assert manifest['candidateRegistryEmbedded'] is True
@@ -84,6 +98,7 @@ jobs:
           assert counts['measuredTimeSeriesSamplesAccepted']==expected_samples
           assert counts['publisherVerifiedPrimaryMeasuredStudies']==expected_primary
           assert counts['verifiedPeerReviewedResearchRecords']==expected_peer
+          assert counts['acceptedSensorMachineHealthConcepts']==expected_sensor==81
           assert counts['measuredEvidencePasses']==50
           assert counts['deepDiveEvidencePasses']==600
           assert counts['researchCandidates']==2000
@@ -101,6 +116,8 @@ jobs:
           assert measured['datasetInventory']['summary']['datasets']==expected_inventory
           assert measured['profiledMeasuredDatasetRegistry']['summary']['fullyProfiledDatasetPackages']==expected_profiled
           assert measured['profiledMeasuredDatasetRegistry']['summary']['acceptedMeasuredTimeSeriesSamples']==expected_samples
+          assert measured['sensorMachineHealthRegistry']['summary']['acceptedConcepts']==81
+          assert len(measured['sensorMachineHealthRegistry']['concepts'])==81
           assert {x['datasetId'] for x in measured['profiledMeasuredDatasetRegistry']['datasets']} == {x['datasetId'] for x in source_profiled['datasets']}
           for profile in [
               'skz-loki-v1.json','iguzzini-road-lenses-v1.json','impure-pascoe-2022-v1.json',
