@@ -18,8 +18,9 @@ def need(ok,msg):
 JS='specialist-evidence-gap-extension.js'
 FINALIZER='app-shell-finalize.js'
 REGISTRY='data/evidence-coverage-v1.json'
+OVERLAY='data/evidence-promotion-overlay-v2.json'
 WORKFLOW='.github/workflows/specialist-evidence-gaps.yml'
-required=[JS,FINALIZER,'specialist-curriculum.js','MouldMaster_Core_App.html','index.html','service-worker.js',REGISTRY,'desktop/electron/package.json','desktop/electron/scripts/generate-integrity.cjs',WORKFLOW]
+required=[JS,FINALIZER,'specialist-curriculum.js','MouldMaster_Core_App.html','index.html','service-worker.js',REGISTRY,OVERLAY,'desktop/electron/package.json','desktop/electron/scripts/generate-integrity.cjs',WORKFLOW]
 for name in required:text(name)
 
 js=text(JS)
@@ -56,15 +57,26 @@ need(areas==expected_areas,f'evidence-gap registry mapping changed unexpectedly:
 registry=json.loads(text(REGISTRY))
 registry_by_id={x['id']:x for x in registry['mechanisms']}
 for area in expected_areas:need(area in registry_by_id,f'specialist evidence area missing from registry: {area}')
+overlay=json.loads(text(OVERLAY))
+need(overlay.get('schema')==1,'specialist evidence promotion overlay schema drifted')
+need(overlay.get('baseRegistry')==REGISTRY,'specialist evidence promotion overlay base registry drifted')
+overlay_ids=[x.get('mechanismId') for x in overlay.get('promotions',[])]
+need(len(overlay_ids)==9 and len(set(overlay_ids))==9,'formal promotion overlay must contain nine unique mechanisms')
+for mid in overlay_ids:
+    need(mid in registry_by_id,f'formal promotion overlay references unknown mechanism: {mid}')
+    base=registry_by_id[mid]
+    need(base.get('promoted') is False and base.get('status')!='promoted',f'{mid}: historical base registry must remain pre-promotion')
+resolved_status={mid:('promoted' if mid in overlay_ids else item.get('status')) for mid,item in registry_by_id.items()}
+need(sum(1 for x in resolved_status.values() if x=='promoted')==12,'formal overlay must resolve all 12 mechanisms to promoted')
 
 m=re.search(r"const EVIDENCE_STATUS=Object\.freeze\(\{(.*?)\}\);",finalizer,re.S)
 need(m is not None,'app-shell finalizer evidence-status bridge missing')
 status_map=dict(re.findall(r"'([^']+)':'(Promoted|Provisional|Gap)'",m.group(1)))
 need(list(status_map)==expected_areas,f'evidence-status bridge areas/order changed: {list(status_map)}')
 for area,label in status_map.items():
-    item=registry_by_id[area]
-    need(label.lower()==item.get('status'),f'{area}: specialist badge {label} disagrees with registry status {item.get("status")}')
-    need((label=='Promoted')==bool(item.get('promoted')),f'{area}: promoted boolean disagrees with specialist badge')
+    expected=resolved_status[area]
+    need(label.lower()==expected,f'{area}: specialist badge {label} disagrees with formally resolved status {expected}')
+    need(label=='Promoted',f'{area}: all S13-S20 evidence-depth mechanisms should now be formally promoted')
 need('MM_SPECIALIST_EVIDENCE_STATUS' in finalizer,'specialist evidence status export missing')
 need('publisher-verified primary measured studies' in finalizer,'promoted UI must retain evidence boundary')
 need('study-specific settings remain bounded' in finalizer,'promoted UI must retain no-universal-recipe boundary')
@@ -93,7 +105,7 @@ need(idx.index("'./specialist-curriculum.js'") < idx.index("'./specialist-eviden
 sw=text('service-worker.js');need("'./specialist-evidence-gap-extension.js'" in sw,'specialist evidence-gap extension missing from offline cache');need("'./app-shell-finalize.js'" in sw,'evidence-status finalizer missing from offline cache')
 pkg=json.loads(text('desktop/electron/package.json'));froms={x.get('from') for x in pkg['build']['extraResources'] if isinstance(x,dict)};need('../../specialist-evidence-gap-extension.js' in froms,'specialist evidence-gap extension missing from desktop package');need('../../app-shell-finalize.js' in froms,'evidence-status finalizer missing from desktop package')
 integrity=text('desktop/electron/scripts/generate-integrity.cjs');need("'specialist-evidence-gap-extension.js'" in integrity and "'app-shell-finalize.js'" in integrity,'specialist evidence assets missing from desktop integrity manifest')
-workflow=text(WORKFLOW);need("- 'app-shell-finalize.js'" in workflow,'specialist evidence workflow path filters must include app-shell-finalize.js');need('node --check specialist-evidence-gap-extension.js' in workflow and 'node --check app-shell-finalize.js' in workflow,'specialist evidence workflow missing JavaScript syntax checks');need('python qa_specialist_evidence_gaps.py' in workflow,'specialist evidence-gap workflow missing QA gate');need('python qa_evidence_coverage.py' in workflow,'specialist evidence-gap workflow must also verify the evidence registry')
+workflow=text(WORKFLOW);need("- 'app-shell-finalize.js'" in workflow,'specialist evidence workflow path filters must include app-shell-finalize.js');need("- 'data/evidence-promotion-overlay-v2.json'" in workflow,'specialist evidence workflow path filters must include formal promotion overlay');need('node --check specialist-evidence-gap-extension.js' in workflow and 'node --check app-shell-finalize.js' in workflow,'specialist evidence workflow missing JavaScript syntax checks');need('python qa_specialist_evidence_gaps.py' in workflow,'specialist evidence-gap workflow missing QA gate');need('python qa_evidence_coverage.py' in workflow,'specialist evidence-gap workflow must also verify the evidence registry')
 
-promoted=sum(1 for a in expected_areas if registry_by_id[a]['status']=='promoted')
-print(f'MouldMaster specialist evidence-gap QA passed (8 extensions S13-S20; {promoted} promoted evidence lessons; {8-promoted} provisional; canonical 120 unchanged)')
+promoted=sum(1 for a in expected_areas if resolved_status[a]=='promoted')
+print(f'MouldMaster specialist evidence-gap QA passed (8 extensions S13-S20; {promoted} formally promoted evidence lessons; {8-promoted} provisional; canonical 120 unchanged)')
