@@ -10,6 +10,8 @@ on:
       - 'qa_content_scale_targets.py'
       - 'data/content-scale-targets.json'
       - 'data/measured-dataset-inventory-v1.json'
+      - 'data/profiled-measured-dataset-registry-v1.json'
+      - 'data/public-benchmark-results/**'
       - 'data/primary-measured-evidence-registry-v1.json'
       - 'data/primary-measured-evidence/**'
       - 'data/deep-dive-v2-*.json'
@@ -57,16 +59,19 @@ jobs:
           import json
           from pathlib import Path
           x=json.loads(Path('compiled-data/manifest.json').read_text(encoding='utf-8'))
+          m=json.loads(Path('compiled-data/measured-data.json').read_text(encoding='utf-8'))
           c=x['counts']
           assert x['candidateRegistryEmbedded'] is True
           assert c['measuredDatasetInventory']==20
-          assert c['fullyProfiledMeasuredDatasets']==1
-          assert c['measuredTimeSeriesSamplesAccepted']==0
+          assert c['automatedIngestionAllowedDatasets']==9
+          assert c['fullyProfiledMeasuredDatasets']==8
+          assert c['measuredTimeSeriesSamplesAccepted']==52526432
           assert c['publisherVerifiedPrimaryMeasuredStudies']==60
           assert c['verifiedPeerReviewedResearchRecords']==60
           assert c['measuredEvidencePasses']==50
           assert c['deepDiveEvidencePasses']==600
           assert c['researchCandidates']==2000
+          assert c['heuristicPrimaryMeasuredCandidates']==1320
           assert c['syntheticProcessCases']==264
           assert c['syntheticGeneratedCycles']==19008
           assert c['approvedAssessmentItems']==157
@@ -76,6 +81,10 @@ jobs:
           assert c['draftDefectMechanisms']==320
           assert c['draftSensorMachineHealthConcepts']==220
           assert c['draftAssessmentItems']==1200
+          assert m['profiledMeasuredDatasetRegistry']['summary']['fullyProfiledDatasetPackages']==8
+          assert m['profiledMeasuredDatasetRegistry']['summary']['acceptedMeasuredTimeSeriesSamples']==52526432
+          assert 'skz-loki-v1.json' in m['publicBenchmarkResults']
+          assert 'iguzzini-road-lenses-v1.json' in m['publicBenchmarkResults']
           print(json.dumps(c, indent=2, sort_keys=True))
           PY
       - name: Upload complete master data package
