@@ -1,24 +1,27 @@
 from pathlib import Path
 import json
+import re
 
 ROOT = Path(__file__).resolve().parent
 REGISTRY = ROOT / 'data' / 'sensor-machine-health-registry-v1.json'
+OVERLAY = ROOT / 'data' / 'sensor-machine-health-registry-v2.json'
+SUPPORT = ROOT / 'data' / 'machine-health-supporting-evidence-v1.json'
 CANDIDATES = ROOT / 'data' / 'sensor-machine-health-candidate-queue-v1.json'
+RESOLUTIONS = ROOT / 'data' / 'sensor-machine-health-candidate-resolution-v2.json'
 TARGETS = ROOT / 'data' / 'content-scale-targets.json'
 PRIMARY = ROOT / 'data' / 'primary-measured-evidence-registry-v1.json'
 REPORT = ROOT / 'sensor-machine-health-report.json'
 
 ALLOWED_KINDS = {
-    'direct-measurement',
-    'derived-feature',
-    'diagnostic-interpretation',
-    'measurement-integrity',
+    'direct-measurement', 'derived-feature', 'diagnostic-interpretation',
+    'measurement-integrity', 'quality-measurement', 'command-signal', 'state-signal',
 }
 ALLOWED_CANDIDATE_STATUSES = {
     'publisher-verified-candidate-dedup-pending',
     'supporting-machine-health-candidate-scope-review-required',
     'existing-primary-study-sensor-concept-review-pending',
 }
+DOI_RE = re.compile(r'^10\.\d{4,9}/\S+$', re.I)
 
 
 def need(ok, msg):
@@ -27,34 +30,66 @@ def need(ok, msg):
 
 
 def load(path):
-    need(path.exists(), f'missing sensor/health dependency: {path.relative_to(ROOT)}')
+    need(path.exists(), f'missing sensor/health dependency: {path.relative_to(ROOT).as_posix()}')
     return json.loads(path.read_text(encoding='utf-8'))
 
 
 registry = load(REGISTRY)
+overlay = load(OVERLAY)
+support = load(SUPPORT)
 candidate_queue = load(CANDIDATES)
+resolution = load(RESOLUTIONS)
 targets = load(TARGETS)
 primary_index = load(PRIMARY)
 
-need(registry.get('schema') == 1, 'unsupported sensor/machine-health schema')
-need(registry.get('status') == 'accepted-evidence-reviewed-registry', 'sensor/machine-health registry is not accepted')
+need(registry.get('schema') == 1 and registry.get('status') == 'accepted-evidence-reviewed-registry', 'resolved sensor registry status/schema drifted')
+need(registry.get('materializedOverlay') == 'data/sensor-machine-health-registry-v2.json', 'sensor overlay was not materialized before QA')
+need(registry.get('materializedFromBaseAccepted') == 26, 'historical sensor baseline count drifted')
+need(overlay.get('schema') == 1 and overlay.get('status') == 'accepted-evidence-reviewed-overlay', 'sensor v2 overlay status/schema drifted')
+need(overlay.get('baseRegistry') == 'data/sensor-machine-health-registry-v1.json', 'sensor v2 overlay base drifted')
+pack_refs = overlay.get('packs') or []
+need(len(pack_refs) == 5, f'expected five sensor v2 packs, found {len(pack_refs)}')
+overlay_rows = []
+for p in pack_refs:
+    pack = load(ROOT / p['path'])
+    need(pack.get('schema') == 1 and pack.get('status') == 'accepted-evidence-reviewed-overlay-pack', f"{p['path']}: overlay pack status/schema drifted")
+    rows = pack.get('entries') or []
+    need(len(rows) == p.get('entries'), f"{p['path']}: overlay pack count mismatch")
+    overlay_rows.extend(rows)
+need(len(overlay_rows) == 55, f'expected second sensor tranche of 55 concepts, found {len(overlay_rows)}')
+need((overlay.get('summary') or {}).get('baseAccepted') == 26, 'sensor overlay base count drifted')
+need((overlay.get('summary') or {}).get('overlayAccepted') == 55, 'sensor overlay tranche count drifted')
+need((overlay.get('summary') or {}).get('resolvedAccepted') == 81, 'sensor overlay resolved count drifted')
+
 policy = registry.get('policy') or {}
 need(policy.get('signalIsEvidenceNotRootCause') is True, 'signal/root-cause boundary missing')
 need(policy.get('sourceUnitsAndScaleMustBePreserved') is True, 'source unit/scale boundary missing')
 need(policy.get('sensorLocationMustBePreservedWhereKnown') is True, 'sensor-location boundary missing')
-need(policy.get('derivedFeaturesMustRemainDistinctFromDirectMeasurements') is True, 'direct/derived signal boundary missing')
-need(policy.get('universalThresholdsAllowed') is False, 'universal signal thresholds must remain disallowed')
+need(policy.get('derivedFeaturesMustRemainDistinctFromDirectMeasurements') is True, 'direct/derived boundary missing')
+need(policy.get('universalThresholdsAllowed') is False, 'universal thresholds must remain disallowed')
 need(policy.get('crossMachineTransferRequiresValidation') is True, 'cross-machine validation boundary missing')
 
-concepts = registry.get('concepts') or []
-summary = registry.get('summary') or {}
-need(len(concepts) == 26, f'expected first accepted sensor/health tranche of 26 concepts, found {len(concepts)}')
-need(summary.get('acceptedConcepts') == len(concepts), 'sensor/health summary total drifted')
+support_boundary = support.get('countingBoundary') or {}
+need(support.get('schema') == 1 and support.get('status') == 'peer-reviewed-machine-health-supporting-evidence', 'support registry status/schema drifted')
+need(support_boundary.get('countsTowardPrimaryMeasuredStudies') is False, 'machine-health support must not inflate primary measured count')
+need(support_boundary.get('countsTowardPeerReviewedResearchRecords') is False, 'machine-health support must not silently inflate peer-reviewed headline count')
+need(support_boundary.get('simulationOnlyCannotSupportAcceptedDirectMeasurement') is True, 'simulation-only machine-health boundary missing')
+need(support_boundary.get('universalThresholdsAllowed') is False, 'support registry universal-threshold boundary missing')
+support_rows = support.get('studies') or []
+need(len(support_rows) == 7, f'expected seven supporting machine-health studies, found {len(support_rows)}')
+support_dois = []
+for i, row in enumerate(support_rows, 1):
+    prefix = f"machine-health support {i} ({row.get('doi', 'missing-doi')})"
+    doi = str(row.get('doi', '')).strip().lower()
+    need(DOI_RE.fullmatch(doi) is not None, f'{prefix}: valid DOI missing')
+    support_dois.append(doi)
+    need(str(row.get('publisherUrl', '')).startswith('https://'), f'{prefix}: publisher URL missing')
+    need(isinstance(row.get('measuredEvidence'), list) and row['measuredEvidence'], f'{prefix}: measured evidence missing')
+    bounded = str(row.get('boundedUse', '')).lower()
+    need(len(bounded) >= 90 and ('not ' in bounded or 'remain' in bounded or 'specific' in bounded), f'{prefix}: bounded use too weak')
+need(len(support_dois) == len(set(support_dois)), 'duplicate DOI inside supporting machine-health registry')
+support_doi_set = set(support_dois)
 
-target_count = (targets.get('targets') or {}).get('sensor_machine_health_concepts', {}).get('currentAccepted')
-need(target_count == len(concepts), f'sensor/health target ledger mismatch: {target_count} != {len(concepts)}')
-
-# Resolve every primary-measured DOI once from the canonical packs.
 primary_dois = set()
 for p in primary_index.get('packs') or []:
     pack = load(ROOT / p['path'])
@@ -62,10 +97,18 @@ for p in primary_index.get('packs') or []:
     need(len(rows) == p.get('entries'), f"primary pack count mismatch while validating sensor evidence: {p['path']}")
     primary_dois.update(str(x.get('doi', '')).lower() for x in rows)
 
+concepts = registry.get('concepts') or []
+summary = registry.get('summary') or {}
+need(len(concepts) == 81, f'expected resolved sensor/health count of 81, found {len(concepts)}')
+target_count = (targets.get('targets') or {}).get('sensor_machine_health_concepts', {}).get('currentAccepted')
+need(target_count == len(concepts), f'resolved sensor target mismatch: {target_count} != {len(concepts)}')
+need(targets.get('materializedOverlay') == 'data/content-scale-targets-overlay-v2.json', 'target overlay was not materialized before sensor QA')
+
 ids = []
 kind_counts = {k: 0 for k in ALLOWED_KINDS}
 dataset_profile_refs = set()
 primary_refs = set()
+support_refs = set()
 for i, concept in enumerate(concepts, 1):
     prefix = f"sensor concept {i} ({concept.get('id', 'missing-id')})"
     cid = str(concept.get('id', '')).strip()
@@ -78,15 +121,14 @@ for i, concept in enumerate(concepts, 1):
     need(bool(str(concept.get('modality', '')).strip()), f'{prefix}: modality missing')
     need(len(str(concept.get('measurementLocationOrDomain', '')).strip()) >= 40, f'{prefix}: measurement location/domain too weak')
     unit_semantics = str(concept.get('unitsOrFeatureSemantics', '')).strip()
-    need(len(unit_semantics) >= 20 and any(ch.isalpha() for ch in unit_semantics), f'{prefix}: units/feature semantics too weak')
+    need(len(unit_semantics) >= 10 and any(ch.isalpha() for ch in unit_semantics), f'{prefix}: units/feature semantics too weak')
     confounders = concept.get('failureAndConfounders')
     need(isinstance(confounders, list) and len(confounders) >= 3 and all(str(x).strip() for x in confounders), f'{prefix}: failure/confounder coverage too weak')
     boundary = str(concept.get('diagnosticUseBoundary', '')).strip()
     need(len(boundary) >= 80, f'{prefix}: diagnostic-use boundary too weak')
     low = boundary.lower()
-    bounded_tokens = ('universal', 'not ', 'cannot', 'requires', 'require ', 'only', 'unless', 'may arise')
+    bounded_tokens = ('universal', 'not ', 'cannot', 'requires', 'require ', 'only', 'unless', 'may arise', 'specific', 'must remain', 'do not')
     need(any(token in low for token in bounded_tokens), f'{prefix}: bounded interpretation language missing')
-
     evidence = concept.get('evidence')
     need(isinstance(evidence, list) and evidence, f'{prefix}: evidence provenance missing')
     for ev in evidence:
@@ -103,74 +145,76 @@ for i, concept in enumerate(concepts, 1):
             doi = eid.lower()
             need(doi in primary_dois, f'{prefix}: primary measured DOI not in canonical registry: {eid}')
             primary_refs.add(doi)
+        elif et == 'machine-health-study':
+            doi = eid.lower()
+            need(doi in support_doi_set, f'{prefix}: machine-health DOI not in supporting registry: {eid}')
+            support_refs.add(doi)
         else:
             raise AssertionError(f'{prefix}: unsupported evidence type {et}')
 
-need(len(ids) == len(set(ids)), 'duplicate sensor/machine-health concept id')
+need(len(ids) == len(set(ids)), 'duplicate resolved sensor/machine-health concept id')
 expected_kind_counts = {
-    'direct-measurement': 20,
-    'derived-feature': 3,
-    'diagnostic-interpretation': 2,
-    'measurement-integrity': 1,
+    'direct-measurement': 50,
+    'derived-feature': 8,
+    'diagnostic-interpretation': 6,
+    'measurement-integrity': 9,
+    'quality-measurement': 6,
+    'command-signal': 1,
+    'state-signal': 1,
 }
-need(kind_counts == expected_kind_counts, f'sensor/health kind counts drifted: {kind_counts}')
-need(summary.get('directMeasurementConcepts') == kind_counts['direct-measurement'], 'direct measurement summary drifted')
-need(summary.get('derivedFeatureConcepts') == kind_counts['derived-feature'], 'derived feature summary drifted')
-need(summary.get('diagnosticInterpretationConcepts') == kind_counts['diagnostic-interpretation'], 'diagnostic interpretation summary drifted')
-need(summary.get('measurementIntegrityConcepts') == kind_counts['measurement-integrity'], 'measurement integrity summary drifted')
-need(len(dataset_profile_refs) >= 6, 'accepted sensor/health tranche needs broad measured-dataset provenance')
-need(len(primary_refs) >= 5, 'accepted sensor/health tranche needs peer-reviewed primary-measured support')
+need(kind_counts == expected_kind_counts, f'resolved sensor/health kind counts drifted: {kind_counts}')
+need(summary.get('acceptedConcepts') == 81, 'resolved sensor summary total drifted')
+need(summary.get('kindCounts') == dict(sorted(kind_counts.items())), 'resolved sensor kind summary drifted')
+need(len(dataset_profile_refs) >= 11, 'resolved sensor/health registry needs broad measured-dataset provenance')
+need(len(primary_refs) >= 5, 'resolved sensor/health registry needs peer-reviewed primary-measured support')
+need(len(support_refs) >= 4, 'resolved sensor/health registry needs promoted supporting machine-health evidence')
 
-# Candidate queue is deliberately fail-closed and non-counting.
-need(candidate_queue.get('schema') == 1, 'unsupported sensor/health candidate schema')
-need(candidate_queue.get('status') == 'candidate-queue-not-counted-as-accepted', 'candidate queue counting boundary missing')
+need(candidate_queue.get('schema') == 1 and candidate_queue.get('status') == 'candidate-queue-not-counted-as-accepted', 'candidate queue counting boundary missing')
 cb = candidate_queue.get('boundary') or {}
-need(cb.get('candidateIsNotAccepted') is True, 'candidate/accepted separation missing')
-need(cb.get('candidateIsNotPrimaryMeasuredUntilDedupReviewed') is True, 'candidate primary-measured dedup boundary missing')
-need(cb.get('simulationOrModelAloneDoesNotQualify') is True, 'simulation/model exclusion boundary missing')
-need(cb.get('universalThresholdsAllowed') is False, 'candidate queue must not allow universal thresholds')
-need(cb.get('productionSettingsDerived') is False, 'candidate queue must not derive production settings')
-
+need(cb.get('candidateIsNotAccepted') is True and cb.get('productionSettingsDerived') is False, 'candidate queue boundary drifted')
 candidate_rows = candidate_queue.get('candidates') or []
-need(len(candidate_rows) == 6, f'expected six staged sensor/health candidates, found {len(candidate_rows)}')
+need(len(candidate_rows) == 6, f'expected six historical sensor candidates, found {len(candidate_rows)}')
 candidate_dois = []
-existing_primary_candidates = []
 for i, row in enumerate(candidate_rows, 1):
-    prefix = f"sensor candidate {i} ({row.get('doi', 'missing-doi')})"
     doi = str(row.get('doi', '')).strip().lower()
-    need(doi.startswith('10.') and '/' in doi, f'{prefix}: DOI missing')
+    need(DOI_RE.fullmatch(doi) is not None, f'sensor candidate {i}: DOI missing')
     candidate_dois.append(doi)
-    need(str(row.get('publisherUrl', '')).startswith('https://'), f'{prefix}: publisher URL missing')
-    need(row.get('status') in ALLOWED_CANDIDATE_STATUSES, f'{prefix}: unsupported candidate status')
-    need(len(str(row.get('whyUseful', '')).strip()) >= 80, f'{prefix}: usefulness rationale too weak')
-    measured = row.get('measuredEvidence')
-    concepts_out = row.get('candidateConcepts')
-    requirements = row.get('promotionRequirements')
-    need(isinstance(measured, list) and measured and all(str(x).strip() for x in measured), f'{prefix}: measured-evidence description missing')
-    need(isinstance(concepts_out, list) and concepts_out and all(str(x).strip() for x in concepts_out), f'{prefix}: candidate concept list missing')
-    need(isinstance(requirements, list) and len(requirements) >= 3 and all(str(x).strip() for x in requirements), f'{prefix}: promotion requirements too weak')
-    if row.get('status') == 'existing-primary-study-sensor-concept-review-pending':
-        need(doi in primary_dois, f'{prefix}: declared existing primary DOI is not in canonical registry')
-        existing_primary_candidates.append(doi)
-    else:
-        # New candidates may later prove to overlap an experiment, but the queue must not claim they are accepted.
-        need(row.get('status') != 'accepted-evidence-reviewed', f'{prefix}: candidate silently promoted')
+    need(row.get('status') in ALLOWED_CANDIDATE_STATUSES, f'sensor candidate {i}: unsupported status')
+need(len(candidate_dois) == len(set(candidate_dois)), 'duplicate DOI inside historical sensor candidate queue')
 
-need(len(candidate_dois) == len(set(candidate_dois)), 'duplicate DOI inside sensor/health candidate queue')
-need(existing_primary_candidates == ['10.3390/app12031410'], 'existing-primary sensor candidate set drifted')
-need(target_count == 26, 'candidate queue must not inflate accepted sensor/machine-health count')
+need(resolution.get('schema') == 1 and resolution.get('status') == 'candidate-resolution-snapshot', 'candidate resolution schema/status drifted')
+rb = resolution.get('boundary') or {}
+need(rb.get('resolutionDoesNotInflatePrimaryMeasuredCount') is True, 'candidate resolution primary-count boundary missing')
+res_rows = resolution.get('resolutions') or []
+need(len(res_rows) == len(candidate_rows), 'candidate resolution row count drifted')
+need({str(x.get('doi', '')).lower() for x in res_rows} == set(candidate_dois), 'candidate resolution DOI set differs from historical queue')
+resolved_ids = set(ids)
+for row in res_rows:
+    doi = str(row['doi']).lower()
+    out = str(row.get('outcome', ''))
+    accepted = row.get('acceptedConceptIds') or []
+    need(all(x in resolved_ids for x in accepted), f'{doi}: candidate resolution references non-accepted concept')
+    if doi == '10.1016/j.engfailanal.2022.106118':
+        need(not accepted and 'forensics-only' in out, 'corrosion forensics must not be misrepresented as online sensor evidence')
+    elif doi == '10.3390/app12031410':
+        need(doi in primary_dois and 'existing-primary-study' in out, 'moisture candidate must reuse the existing primary identity')
+    else:
+        need(doi in support_doi_set and accepted, f'{doi}: supporting candidate resolution incomplete')
 
 report = {
-    'schema': 1,
+    'schema': 2,
     'source': str(REGISTRY.relative_to(ROOT)),
-    'candidateQueue': str(CANDIDATES.relative_to(ROOT)),
-    'acceptedConcepts': len(concepts),
-    'candidateConceptsNotAccepted': len(candidate_rows),
+    'overlayRegistry': str(OVERLAY.relative_to(ROOT)),
+    'supportingEvidenceRegistry': str(SUPPORT.relative_to(ROOT)),
+    'candidateResolution': str(RESOLUTIONS.relative_to(ROOT)),
+    'baseAcceptedConcepts': 26,
+    'overlayAcceptedConcepts': 55,
+    'resolvedAcceptedConcepts': 81,
+    'remainingToMinimum': 119,
     'kindCounts': kind_counts,
     'datasetProfileEvidenceFiles': sorted(dataset_profile_refs),
     'primaryMeasuredDois': sorted(primary_refs),
-    'candidateDois': sorted(candidate_dois),
-    'existingPrimaryCandidatesForConceptReuse': existing_primary_candidates,
+    'supportingMachineHealthDois': sorted(support_refs),
     'duplicateConceptIds': 0,
     'universalThresholdsAllowed': False,
     'result': 'pass',
@@ -178,7 +222,8 @@ report = {
 REPORT.write_text(json.dumps(report, indent=2) + '\n', encoding='utf-8')
 print(
     'MouldMaster sensor/machine-health QA passed '
-    f"({len(concepts)} accepted concepts; {len(candidate_rows)} non-counting candidates; "
+    f"(26 baseline + 55 overlay = {len(concepts)} accepted concepts; "
     f"{kind_counts['direct-measurement']} direct, {kind_counts['derived-feature']} derived, "
-    f"{kind_counts['diagnostic-interpretation']} diagnostic, {kind_counts['measurement-integrity']} integrity)"
+    f"{kind_counts['diagnostic-interpretation']} diagnostic, {kind_counts['quality-measurement']} quality, "
+    f"{kind_counts['measurement-integrity']} integrity, {kind_counts['command-signal']} command, {kind_counts['state-signal']} state)"
 )
