@@ -68,7 +68,7 @@ assert required_intake.issubset(set(data.get("dataset_intake_required_fields", [
 programme = PROGRAMME_FILE.read_text(encoding="utf-8")
 for phrase in [
     "2,000", "1,000", "300", "400", "600", "10,000",
-    "Real-data-first rule", "Evidence maturity", "prediction", "causality",
+    "Real-data-first rule", "Evidence maturity", "model accuracy", "causality",
     "Do not relabel synthetic data as measured"
 ]:
     assert phrase in programme, f"Deep Dive v2 programme marker missing: {phrase}"
