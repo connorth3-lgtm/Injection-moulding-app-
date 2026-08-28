@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "version": "2026.08.29.1",
+  "version": "2026.08.29.2",
   "reviewed": "2026-08-29",
   "scope": "Hard content-scale targets for MouldMaster. Completion counts only evidence that satisfies the acceptance definition for that area. Synthetic learning cases, generated drafts, unverified candidate papers and metadata-only dataset records must not be counted as completed measured evidence.",
   "targets": {
@@ -11,7 +11,7 @@
       "acceptance": "A real measured dataset whose exact source/version/licence or access terms are recorded; source files have been obtained lawfully; file fingerprint and profile are recorded; schema/units/grouping are inspected; direct measurements, commands, derived fields and labels are distinguished; material/process/machine/mould/quality context and limitations are documented. Metadata-only records do not count.",
       "currentAccepted": 13,
       "currentDiscovered": 22,
-      "notes": "Thirteen dataset packages now pass the full acceptance boundary. The newest is Zenodo 10.5281/zenodo.20338544, a CC BY 4.0 real injection-moulding plant energy/production dataset: two exact raw February/March CSV streams contain 1,269,887 observations on machine FGP085 with timestamp ordering verified and 15 direct three-phase electrical channels separated from aggregate/derived fields. The preceding additions are the CC BY 4.0 cross-process-chain archive and Mendeley HDPE/GNP v3. Warwick demoulding remains exact-file profiled but non-counting because all five files are Origin OPJU projects requiring a compatible extraction adapter. RWTH remains uncounted because its public file endpoint serves an HTML interstitial to GitHub automation."
+      "notes": "Thirteen dataset packages now pass the full acceptance boundary. The newest is Zenodo 10.5281/zenodo.20338544, a CC BY 4.0 real injection-moulding plant energy/production dataset: two exact raw February/March CSV streams contain 1,269,887 observations on machine FGP085 with timestamp ordering verified and 15 direct three-phase electrical channels separated from aggregate/derived fields. The preceding additions are the CC BY 4.0 cross-process-chain archive and Mendeley HDPE/GNP v3. Warwick demoulding remains exact-file profiled but non-counting because all five files are Origin OPJU projects requiring a compatible extraction adapter. RWTH remains governed by its exact-source benchmark/registry acceptance state rather than inferred from publication metadata alone."
     },
     "measured_time_series_samples": {
       "minimum": 1000000,
@@ -58,16 +58,16 @@
       "preferred": 2000,
       "unit": "records",
       "acceptance": "A deduplicated peer-reviewed research record with stable bibliographic identity (prefer DOI), title, year, venue/type, topic tags, materials/process/sensor/defect/method tags where supported, concise finding/limitation fields, access status and evidence-quality classification. Concept cards and duplicate publication versions do not count.",
-      "currentAccepted": 65,
-      "notes": "The dedicated primary-measured evidence registry now supplies a conservative audited peer-reviewed master subset of 65 unique publisher-verified DOI records across six evidence packs. The newest five broaden the corpus across cooling/demoulding/warpage, conformal-cooling and CuBe tooling, polypropylene molecular-weight degradation, a 1,320-experiment 27-machine automotive campaign, and multi-material injection-moulding energy measurements. Dataset profiling does not automatically change this research count."
+      "currentAccepted": 70,
+      "notes": "The dedicated primary-measured evidence registry now supplies a conservative audited peer-reviewed master subset of 70 unique publisher-verified DOI records across seven evidence packs. The newest five add approximately 280,000 cycles of long-horizon industrial stability monitoring, an instrumented burn-mark/short-shot diagnosis with tool/venting maintenance and recovery, two-site external-sensor adaptive production control, shot-level cavity-pressure holding compensation, and a classic Kistler cavity-pressure/mould-temperature physical-quality experiment. Dataset profiling does not automatically change this research count."
     },
     "primary_measured_studies": {
       "minimum": 800,
       "preferred": 1000,
       "unit": "studies",
       "acceptance": "A deduplicated primary study containing actual injection-moulding experimental or industrial measurements. The record must identify measured signals/outcomes and study context and must be manually or explicitly evidence-reviewed. Reviews, simulation-only studies, theory-only papers and heuristic search candidates do not count.",
-      "currentAccepted": 65,
-      "notes": "data/primary-measured-evidence-registry-v1.json now contains 65 unique publisher-verified peer-reviewed primary measured studies. The newest five are independent experiments and do not alter measured-dataset package counts or the 71,574,737 accepted measured-scalar ledger."
+      "currentAccepted": 70,
+      "notes": "data/primary-measured-evidence-registry-v1.json now contains 70 unique publisher-verified peer-reviewed primary measured studies. The newest five are distinct experiment identities and do not alter the separate measured-dataset package count or the 71,574,737 accepted measured-scalar ledger. A separate 2025 drift-detection paper that explicitly reuses a prior dataset was screened as supporting/re-analysis literature and was not counted as a new independent experiment."
     }
   },
   "nonCountingRules": [
