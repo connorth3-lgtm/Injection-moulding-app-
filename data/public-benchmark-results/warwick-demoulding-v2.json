@@ -1,0 +1,29 @@
+{
+  "schema": 1,
+  "status": "profile-generated-review-required",
+  "completedDate": "2026-08-28",
+  "source": {
+    "datasetId": "x9hc7hf6xd",
+    "version": "2",
+    "doi": "10.17632/x9hc7hf6xd.2",
+    "title": "Demoulding behaviour of material jetted surfaces",
+    "license": "CC BY 4.0",
+    "publisher": "Mendeley Data",
+    "page": "https://data.mendeley.com/datasets/x9hc7hf6xd/2",
+    "studyDomain": "high-speed demoulding/ejection data acquisition for injection-moulded/material-jetted surfaces"
+  },
+  "files": [
+    {"name":"data1_09.06.2023_Material_Jetting.opju","publisherId":"481d9425-741d-460b-94ce-69f8ee956098","sizeBytes":4143026,"sha256":"53739d36aed0426df00283f8fb1b7b2af014b5bbe1303237ec5ec083f4c02b5e","suffix":".opju","format":"origin-project","schemaInspection":"dedicated Origin adapter required"},
+    {"name":"data1_16.06.2023_b2b.opju","publisherId":"dfc6ab0d-4461-4921-8868-4940bb402c00","sizeBytes":264433,"sha256":"cc072f1cde8bb4eeee5fd53cc995d24783ba5ee525609cb4da4408b8e3880b4f","suffix":".opju","format":"origin-project","schemaInspection":"dedicated Origin adapter required"},
+    {"name":"data_visualisation.opju","publisherId":"6816a135-8ce6-4611-923f-2043656fd481","sizeBytes":11432475,"sha256":"643260c698d84d63171948bf31032d6772f7aa00d32add9edff75ffa400b8395","suffix":".opju","format":"origin-project","schemaInspection":"dedicated Origin adapter required"},
+    {"name":"representative_curves_14.06.2023.opju","publisherId":"856c93b0-9d1d-4c3c-8083-0ce93a180427","sizeBytes":4869172,"sha256":"3ed17602a83fdda1b3afdb48c949c68e468936a84f4b314b4bd8d729d79fc947","suffix":".opju","format":"origin-project","schemaInspection":"dedicated Origin adapter required"},
+    {"name":"surface_parameters_27.10.2023.opju","publisherId":"422ff7f2-17d4-44ad-bcae-29d1f19b9a43","sizeBytes":715139,"sha256":"a98f9cf4b4286da502d20ee53c3156b5498641117bc20c0072145f4a241572ac","suffix":".opju","format":"origin-project","schemaInspection":"dedicated Origin adapter required"}
+  ],
+  "fileCount": 5,
+  "originProjectFiles": 5,
+  "tabularFiles": 0,
+  "acceptedMeasuredCycles": 0,
+  "acceptedMeasuredTimeSeriesSamples": 0,
+  "rawSourceRowsCommitted": false,
+  "boundary": "Exact version-2 publisher files are fingerprinted and formats enumerated. The source is CC BY 4.0, but no dataset-package or scalar promotion occurs until demoulding trial grouping, high-speed DAQ channel semantics, units and sample ordering are extracted. All five source files are Origin OPJU project containers, so a dedicated lawful adapter/export path is required rather than guessed parsing."
+}
