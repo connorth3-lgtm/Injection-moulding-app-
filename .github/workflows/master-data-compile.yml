@@ -64,7 +64,7 @@ jobs:
           assert x['candidateRegistryEmbedded'] is True
           assert c['measuredDatasetInventory']==20
           assert c['automatedIngestionAllowedDatasets']==9
-          assert c['fullyProfiledMeasuredDatasets']==8
+          assert c['fullyProfiledMeasuredDatasets']==9
           assert c['measuredTimeSeriesSamplesAccepted']==52526432
           assert c['publisherVerifiedPrimaryMeasuredStudies']==60
           assert c['verifiedPeerReviewedResearchRecords']==60
@@ -81,10 +81,11 @@ jobs:
           assert c['draftDefectMechanisms']==320
           assert c['draftSensorMachineHealthConcepts']==220
           assert c['draftAssessmentItems']==1200
-          assert m['profiledMeasuredDatasetRegistry']['summary']['fullyProfiledDatasetPackages']==8
+          assert m['profiledMeasuredDatasetRegistry']['summary']['fullyProfiledDatasetPackages']==9
           assert m['profiledMeasuredDatasetRegistry']['summary']['acceptedMeasuredTimeSeriesSamples']==52526432
           assert 'skz-loki-v1.json' in m['publicBenchmarkResults']
           assert 'iguzzini-road-lenses-v1.json' in m['publicBenchmarkResults']
+          assert 'impure-pascoe-2022-v1.json' in m['publicBenchmarkResults']
           print(json.dumps(c, indent=2, sort_keys=True))
           PY
       - name: Upload complete master data package
