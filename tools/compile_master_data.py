@@ -41,10 +41,15 @@ def snapshot_file(path):
 def compile_measured():
     targets = load_json("data/content-scale-targets.json")
     inventory = load_json("data/measured-dataset-inventory-v1.json")
+    profiled = load_json("data/profiled-measured-dataset-registry-v1.json")
     discovery = load_json("data/measured-dataset-catalog.json")
     queue = load_json("data/measured-data-discovery-queue-v1.json")
     evidence50 = load_json("data/measured-evidence-50-pass.json")
     registry = load_json("data/primary-measured-evidence-registry-v1.json")
+
+    profiled_summary = profiled.get("summary") or {}
+    need(profiled_summary.get("fullyProfiledDatasetPackages") == targets["targets"]["fully_profiled_measured_datasets"]["currentAccepted"], "profiled dataset registry and target ledger disagree")
+    need(profiled_summary.get("acceptedMeasuredTimeSeriesSamples") == targets["targets"]["measured_time_series_samples"]["currentAccepted"], "measured sample registry and target ledger disagree")
 
     studies = []
     packs = []
@@ -63,9 +68,17 @@ def compile_measured():
     for p in sorted((ROOT / "data/mechanism-promotion-evidence").glob("*.json")):
         dossiers[p.name] = json.loads(p.read_text(encoding="utf-8"))
 
+    benchmark_results = {}
+    for p in sorted((ROOT / "data/public-benchmark-results").glob("*.json")):
+        benchmark_results[p.name] = json.loads(p.read_text(encoding="utf-8"))
+    need("gtnb4j7bfx-v1.json" in benchmark_results, "first public measured benchmark missing")
+    need("skz-loki-v1.json" in benchmark_results, "SKZ accepted benchmark missing from compilation")
+    need("iguzzini-road-lenses-v1.json" in benchmark_results, "iGuzzini accepted benchmark missing from compilation")
+
     return {
         "targetLedger": targets,
         "datasetInventory": inventory,
+        "profiledMeasuredDatasetRegistry": profiled,
         "datasetDiscoveryCatalog": discovery,
         "datasetDiscoveryQueue": queue,
         "measuredEvidence50Pass": evidence50,
@@ -74,7 +87,8 @@ def compile_measured():
         "primaryMeasuredStudies": studies,
         "mechanismPromotionDossiers": dossiers,
         "publicBenchmarkContract": load_json("data/public-benchmark-contracts/gtnb4j7bfx-v1.json"),
-        "publicBenchmarkResult": load_json("data/public-benchmark-results/gtnb4j7bfx-v1.json"),
+        "publicBenchmarkResult": benchmark_results["gtnb4j7bfx-v1.json"],
+        "publicBenchmarkResults": benchmark_results,
     }
 
 
@@ -204,13 +218,16 @@ def compile_drafts():
 def make_manifest(measured, research, app, process, drafts, candidate_path):
     targets = measured["targetLedger"]["targets"]
     inventory_summary = measured["datasetInventory"]["summary"]
+    profiled_summary = measured["profiledMeasuredDatasetRegistry"]["summary"]
     primary_summary = measured["primaryMeasuredRegistry"]["summary"]
     draft_counts = drafts["manifest"]["counts"]
     candidates = research.get("candidateRegistry") or {}
+    need(profiled_summary["fullyProfiledDatasetPackages"] == targets["fully_profiled_measured_datasets"]["currentAccepted"], "manifest dataset count sources disagree")
+    need(profiled_summary["acceptedMeasuredTimeSeriesSamples"] == targets["measured_time_series_samples"]["currentAccepted"], "manifest measured sample sources disagree")
     return {
         "schema": 1,
         "compiledOn": "2026-08-28",
-        "scope": "Master compilation of MouldMaster structured data, evidence/provenance registries, application data assets, synthetic learning corpus metadata, curriculum/assessment data, generated draft banks and optionally the research-candidate registry. Restricted third-party raw files are not copied.",
+        "scope": "Master compilation of MouldMaster structured data, evidence/provenance registries, accepted measured dataset profiles, application data assets, synthetic learning corpus metadata, curriculum/assessment data, generated draft banks and optionally the research-candidate registry. Restricted third-party raw files are not copied.",
         "boundaries": {
             "syntheticIsNotMeasured": True,
             "candidateResearchIsNotVerified": True,
@@ -221,8 +238,8 @@ def make_manifest(measured, research, app, process, drafts, candidate_path):
         "counts": {
             "measuredDatasetInventory": inventory_summary["datasets"],
             "automatedIngestionAllowedDatasets": inventory_summary["automatedIngestionAllowed"],
-            "fullyProfiledMeasuredDatasets": targets["fully_profiled_measured_datasets"]["currentAccepted"],
-            "measuredTimeSeriesSamplesAccepted": targets["measured_time_series_samples"]["currentAccepted"],
+            "fullyProfiledMeasuredDatasets": profiled_summary["fullyProfiledDatasetPackages"],
+            "measuredTimeSeriesSamplesAccepted": profiled_summary["acceptedMeasuredTimeSeriesSamples"],
             "publisherVerifiedPrimaryMeasuredStudies": primary_summary["publisherVerifiedPeerReviewedPrimaryMeasured"],
             "verifiedPeerReviewedResearchRecords": targets["peer_reviewed_research_records"]["currentAccepted"],
             "measuredEvidencePasses": len(measured["measuredEvidence50Pass"].get("passes") or []),
