@@ -6,6 +6,7 @@ on:
     paths:
       - 'tools/profile_public_benchmark.py'
       - 'tools/run_public_benchmark_gtnb4j7bfx.py'
+      - 'tools/run_public_benchmark_gtnb4j7bfx_public_api.py'
       - 'qa_public_benchmark_runner.py'
       - 'qa_public_benchmark_result.py'
       - 'data/public-benchmark-contracts/gtnb4j7bfx-v1.json'
@@ -16,6 +17,7 @@ on:
     paths:
       - 'tools/profile_public_benchmark.py'
       - 'tools/run_public_benchmark_gtnb4j7bfx.py'
+      - 'tools/run_public_benchmark_gtnb4j7bfx_public_api.py'
       - 'qa_public_benchmark_runner.py'
       - 'qa_public_benchmark_result.py'
       - 'data/public-benchmark-contracts/gtnb4j7bfx-v1.json'
@@ -39,7 +41,9 @@ jobs:
         with:
           python-version: '3.12'
       - name: Benchmark runner regression QA
-        run: python qa_public_benchmark_runner.py
+        run: |
+          python -m py_compile tools/run_public_benchmark_gtnb4j7bfx_public_api.py
+          python qa_public_benchmark_runner.py
 
   public-measured-benchmark:
     if: github.event_name != 'pull_request'
@@ -55,7 +59,7 @@ jobs:
       - name: Retrieve and profile exact public measured dataset
         run: |
           mkdir -p benchmark-results
-          python tools/run_public_benchmark_gtnb4j7bfx.py \
+          python tools/run_public_benchmark_gtnb4j7bfx_public_api.py \
             --output benchmark-results/gtnb4j7bfx-v1-profile.json \
             --retrieved-date "$(date -u +%F)"
 
