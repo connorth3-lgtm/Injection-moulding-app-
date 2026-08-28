@@ -16,8 +16,14 @@ on:
       - 'data/mechanism-promotion-evidence/**'
       - 'data/measured-evidence-50-pass.json'
       - 'data/sensor-machine-health-registry-v1.json'
+      - 'data/sensor-machine-health-registry-v2.json'
+      - 'data/sensor-machine-health/**'
+      - 'data/machine-health-supporting-evidence-v1.json'
       - 'data/sensor-machine-health-candidate-queue-v1.json'
+      - 'data/sensor-machine-health-candidate-resolution-v2.json'
       - 'data/content-scale-targets.json'
+      - 'data/content-scale-targets-overlay-v2.json'
+      - 'tools/materialize_evidence_overlays.py'
       - 'sources/MEASURED_EVIDENCE_50_PASS.md'
       - 'sources/PROCESS_DATA_20_PASS_ATLAS.md'
       - 'qa_evidence_coverage.py'
@@ -40,8 +46,14 @@ on:
       - 'data/mechanism-promotion-evidence/**'
       - 'data/measured-evidence-50-pass.json'
       - 'data/sensor-machine-health-registry-v1.json'
+      - 'data/sensor-machine-health-registry-v2.json'
+      - 'data/sensor-machine-health/**'
+      - 'data/machine-health-supporting-evidence-v1.json'
       - 'data/sensor-machine-health-candidate-queue-v1.json'
+      - 'data/sensor-machine-health-candidate-resolution-v2.json'
       - 'data/content-scale-targets.json'
+      - 'data/content-scale-targets-overlay-v2.json'
+      - 'tools/materialize_evidence_overlays.py'
       - 'sources/MEASURED_EVIDENCE_50_PASS.md'
       - 'sources/PROCESS_DATA_20_PASS_ATLAS.md'
       - 'qa_evidence_coverage.py'
@@ -62,6 +74,8 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
+      - name: Resolve accepted evidence overlays
+        run: python tools/materialize_evidence_overlays.py
       - name: Primary measured evidence integrity
         run: python qa_primary_measured_evidence.py
       - name: Sensor and machine-health evidence integrity
