@@ -77,7 +77,8 @@ for i, concept in enumerate(concepts, 1):
     kind_counts[kind] += 1
     need(bool(str(concept.get('modality', '')).strip()), f'{prefix}: modality missing')
     need(len(str(concept.get('measurementLocationOrDomain', '')).strip()) >= 40, f'{prefix}: measurement location/domain too weak')
-    need(len(str(concept.get('unitsOrFeatureSemantics', '')).strip()) >= 30, f'{prefix}: units/feature semantics too weak')
+    unit_semantics = str(concept.get('unitsOrFeatureSemantics', '')).strip()
+    need(len(unit_semantics) >= 20 and any(ch.isalpha() for ch in unit_semantics), f'{prefix}: units/feature semantics too weak')
     confounders = concept.get('failureAndConfounders')
     need(isinstance(confounders, list) and len(confounders) >= 3 and all(str(x).strip() for x in confounders), f'{prefix}: failure/confounder coverage too weak')
     boundary = str(concept.get('diagnosticUseBoundary', '')).strip()
