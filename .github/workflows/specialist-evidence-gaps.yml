@@ -2,14 +2,18 @@ name: MouldMaster Specialist Evidence Gaps
 
 on:
   push:
-    branches: [main, evidence-coverage-hardening]
+    branches: [main, evidence-coverage-hardening, evidence-scale-execution-2026-08-28]
     paths:
       - 'specialist-curriculum.js'
       - 'specialist-evidence-gap-extension.js'
       - 'app-shell-finalize.js'
       - 'qa_specialist_evidence_gaps.py'
       - 'qa_evidence_coverage.py'
+      - 'qa_mechanism_promotion.py'
       - 'data/evidence-coverage-v1.json'
+      - 'data/evidence-promotion-overlay-v2.json'
+      - 'data/primary-measured-promotion-authors-v1.json'
+      - 'data/mechanism-promotion-evidence/**'
       - 'index.html'
       - 'service-worker.js'
       - 'desktop/electron/package.json'
@@ -23,7 +27,11 @@ on:
       - 'app-shell-finalize.js'
       - 'qa_specialist_evidence_gaps.py'
       - 'qa_evidence_coverage.py'
+      - 'qa_mechanism_promotion.py'
       - 'data/evidence-coverage-v1.json'
+      - 'data/evidence-promotion-overlay-v2.json'
+      - 'data/primary-measured-promotion-authors-v1.json'
+      - 'data/mechanism-promotion-evidence/**'
       - 'index.html'
       - 'service-worker.js'
       - 'desktop/electron/package.json'
@@ -55,5 +63,7 @@ jobs:
           node --check app-shell-finalize.js
       - name: Mechanism evidence coverage integrity
         run: python qa_evidence_coverage.py
+      - name: Mechanism formal promotion integrity
+        run: python qa_mechanism_promotion.py
       - name: Specialist evidence-gap curriculum integrity
         run: python qa_specialist_evidence_gaps.py
