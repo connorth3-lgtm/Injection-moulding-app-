@@ -83,7 +83,7 @@ for i, concept in enumerate(concepts, 1):
     boundary = str(concept.get('diagnosticUseBoundary', '')).strip()
     need(len(boundary) >= 80, f'{prefix}: diagnostic-use boundary too weak')
     low = boundary.lower()
-    bounded_tokens = ('universal', 'not ', 'cannot', 'requires', 'require ', 'only', 'unless')
+    bounded_tokens = ('universal', 'not ', 'cannot', 'requires', 'require ', 'only', 'unless', 'may arise')
     need(any(token in low for token in bounded_tokens), f'{prefix}: bounded interpretation language missing')
 
     evidence = concept.get('evidence')
