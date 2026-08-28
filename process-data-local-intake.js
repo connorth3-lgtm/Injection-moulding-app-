@@ -1,13 +1,15 @@
 /* MouldMaster local process-data intake — privacy-first preparation for real shot exports */
 (function(){
 'use strict';
-const VERSION='2026.08.27.1';
+const VERSION='2026.08.28.1';
 const BASE=window.MM_PROCESS_DATA_DIAGNOSTICS;
 if(!BASE)throw new Error('process-data-local-intake.js requires process-data-diagnostics.js');
 const MAX_ROWS=50000;
 const DROP_RE=/(?:^|_)(?:name|email|phone|address|customer|supplier_contact|serial_number|asset_tag|user|username|operator|operator_id|employee|employee_id|personnel)(?:_|$)/i;
 const TIME_RE=/^(?:timestamp|date|datetime|time|created_at|updated_at|recorded_at|event_timestamp|shot_timestamp|cycle_timestamp)$/i;
 const ALIAS_RE=/(?:machine|cell|mould|mold|tool|cavity|material|grade|resin|lot|batch|job|work_?order|part_?(?:number|no)|intervention)/i;
+const ALIAS_ID_TOKEN_RE=/(?:^|_)(?:id|alias|code|number|no|serial)(?:_|$)/i;
+const ALIAS_EXACT_RE=/^(?:machine|cell|mould|mold|tool|cavity|material|material_grade|material_lot|grade|resin|resin_grade|lot|batch|job|work_?order|part_?(?:number|no)|intervention)$/i;
 const QUALITY_RE=/(?:quality|result|status|pass|fail|reject|defect|inspection|ok_ng|ng_ok)/i;
 const CATEGORY_RE=/^(?:phase)$/i;
 const UNIT_RE=/(?:^|_)unit$/i;
@@ -38,6 +40,7 @@ function parseCsv(text){
   return {headers,rows:rows.slice(1,MAX_ROWS+1).map(r=>Object.fromEntries(headers.map((h,i)=>[h,String(r[i]??'').trim()])))}
 }
 function numericColumn(rows,key){let present=0,numeric=0;for(const r of rows){const v=String(r[key]??'').trim();if(!v)continue;present++;if(Number.isFinite(Number(v)))numeric++}return present>0&&numeric/present>=0.9}
+function explicitOperationalIdentifier(key){return ALIAS_RE.test(key)&&(ALIAS_EXACT_RE.test(key)||ALIAS_ID_TOKEN_RE.test(key))}
 function strictlyIncreasing(values){if(values.length<2)return null;for(let i=1;i<values.length;i++)if(values[i]<=values[i-1])return false;return true}
 function sequenceAudit(headers,rows){
   const warnings=[],hasShotIndex=headers.includes('shot_index'),usableShotIndex=hasShotIndex&&numericColumn(rows,'shot_index');
@@ -61,7 +64,7 @@ function sequenceAudit(headers,rows){
   }
   return {sourceShotIndex:usableShotIndex?'preserved':'generated',sourceShotIndexPresent:hasShotIndex,shotIndexMonotonic,shotIndexMissing,timestampChecks,reviewRequired:warnings.length>0,warnings};
 }
-function classify(headers,rows){return headers.map(key=>{if(DROP_RE.test(key))return {key,action:'drop',reason:'direct/person identifier'};if(TIME_RE.test(key))return {key,action:'drop',reason:'timestamp/date checked for sequence then removed; row order remains represented by shot_index'};if(ALIAS_RE.test(key))return {key,action:'alias',reason:'operational identifier replaced with stable per-file alias'};if(numericColumn(rows,key))return {key,action:'keep',reason:'numeric process/quality signal'};if(UNIT_RE.test(key))return {key,action:'unit',reason:'structured measurement unit retained only when it is a short unit token'};if(CATEGORY_RE.test(key))return {key,action:'category',reason:'controlled analysis phase retained; unknown labels aliased per file'};if(QUALITY_RE.test(key))return {key,action:'quality',reason:'limited quality category; unknown labels aliased per file'};return {key,action:'drop',reason:'unrecognised free-text field'}})}
+function classify(headers,rows){return headers.map(key=>{if(DROP_RE.test(key))return {key,action:'drop',reason:'direct/person identifier'};if(TIME_RE.test(key))return {key,action:'drop',reason:'timestamp/date checked for sequence then removed; row order remains represented by shot_index'};if(explicitOperationalIdentifier(key))return {key,action:'alias',reason:'operational identifier replaced with stable per-file alias'};if(numericColumn(rows,key))return {key,action:'keep',reason:'numeric process/quality signal'};if(ALIAS_RE.test(key))return {key,action:'alias',reason:'operational identifier replaced with stable per-file alias'};if(UNIT_RE.test(key))return {key,action:'unit',reason:'structured measurement unit retained only when it is a short unit token'};if(CATEGORY_RE.test(key))return {key,action:'category',reason:'controlled analysis phase retained; unknown labels aliased per file'};if(QUALITY_RE.test(key))return {key,action:'quality',reason:'limited quality category; unknown labels aliased per file'};return {key,action:'drop',reason:'unrecognised free-text field'}})}
 function aliasPrefix(key){return key.replace(/[^a-z0-9]+/gi,'-').replace(/^-+|-+$/g,'').slice(0,24)||'id'}
 function prepare(parsed){
   const headers=parsed?.headers||[],rows=(parsed?.rows||[]).slice(0,MAX_ROWS),sequence=sequenceAudit(headers,rows),rules=classify(headers,rows),maps={};
