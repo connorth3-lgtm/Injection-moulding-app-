@@ -1,0 +1,94 @@
+{
+  "schema": 1,
+  "version": "2026.08.29.1",
+  "reviewed": "2026-08-29",
+  "status": "candidate-queue-not-counted-as-accepted",
+  "scope": "Publisher-identified measured machine/tool-health candidates for the next MouldMaster sensor and machine-health evidence pass. These records do not change accepted sensor/health or primary-measured counts until canonical DOI/experiment deduplication, measured-method review and bounded-concept promotion are complete.",
+  "boundary": {
+    "candidateIsNotAccepted": true,
+    "candidateIsNotPrimaryMeasuredUntilDedupReviewed": true,
+    "simulationOrModelAloneDoesNotQualify": true,
+    "universalThresholdsAllowed": false,
+    "productionSettingsDerived": false
+  },
+  "candidates": [
+    {
+      "doi": "10.1002/pen.26246",
+      "title": "Study on the evaluation and compensating strategy for the wear damage of non-return valve during injection molding process",
+      "year": 2023,
+      "venue": "Polymer Engineering & Science",
+      "publisherUrl": "https://4spepublications.onlinelibrary.wiley.com/doi/10.1002/pen.26246",
+      "candidateArea": "non-return-valve-wear",
+      "measuredEvidence": ["injection-moulding experimental wear states", "cycle-level process response", "part-weight consistency before/after compensation"],
+      "candidateConcepts": ["non-return-valve-wear-state", "wear-induced-backflow/process-instability", "wear-compensation-vp-adjustment"],
+      "whyUseful": "Directly targets a hidden screw-head wear mechanism that can alter process stability and product weight without requiring barrel disassembly.",
+      "promotionRequirements": ["scan all canonical primary packs for DOI/experiment overlap", "extract exact wear-state generation and measured signals", "separate prediction/compensation from physical wear proof", "retain machine-specific calibration boundary"],
+      "status": "publisher-verified-candidate-dedup-pending"
+    },
+    {
+      "doi": "10.1177/09544089251324760",
+      "title": "Algorithm for assessing the level of cooling channel contamination in injection mold",
+      "year": 2025,
+      "venue": "Proceedings of the Institution of Mechanical Engineers, Part B: Journal of Engineering Manufacture",
+      "publisherUrl": "https://journals.sagepub.com/doi/10.1177/09544089251324760",
+      "candidateArea": "cooling-channel-contamination",
+      "measuredEvidence": ["water and compressed-air volume flow", "pressure drop", "experimentally derived hydraulic resistance/channel condition"],
+      "candidateConcepts": ["coolant-flow-health", "cooling-channel-pressure-drop", "hydraulic-resistance-contamination-indicator"],
+      "whyUseful": "Provides an objective measured route for judging whether injection-mould cooling channels are becoming contaminated instead of relying on cycle-time or temperature symptoms alone.",
+      "promotionRequirements": ["scan canonical primary packs for overlap", "verify experimental mould/channel context", "separate measured flow/pressure from model-derived contamination estimate", "retain supply-pressure/fluid/geometry calibration boundary"],
+      "status": "publisher-verified-candidate-dedup-pending"
+    },
+    {
+      "doi": "10.2478/ama-2024-0067",
+      "title": "Evaluation of Flow Resistance Increase Due to Fouling in Cooling Channels: A Case Study for Rapid Injection Molding",
+      "year": 2024,
+      "venue": "Acta Mechanica et Automatica",
+      "publisherUrl": "https://reference-global.com/article/10.2478/ama-2024-0067",
+      "candidateArea": "cooling-channel-fouling",
+      "measuredEvidence": ["real injection-mould cooling-channel flow rate", "differential/absolute pressure", "temperature difference", "production-used mould channel pressure loss"],
+      "candidateConcepts": ["cooling-channel-flow-resistance", "fouling-pressure-loss-signature", "cooling-circuit-condition-baseline"],
+      "whyUseful": "Independent real-mould evidence links a production-used cooling channel to measured flow resistance and pressure loss, complementing contamination-assessment experiments.",
+      "promotionRequirements": ["scan canonical primary packs for overlap", "confirm which measurements are direct versus model/CFD outputs", "keep sediment-thickness inference derived", "do not promote the case-study pressure drop as a universal cleaning threshold"],
+      "status": "publisher-verified-candidate-dedup-pending"
+    },
+    {
+      "doi": "10.3390/s22134792",
+      "title": "Injection Barrel/Nozzle/Mold-Cavity Scientific Real-Time Sensing and Molding Quality Monitoring for Different Polymer-Material Processes",
+      "year": 2022,
+      "venue": "Sensors",
+      "publisherUrl": "https://www.mdpi.com/1424-8220/22/13/4792",
+      "candidateArea": "pressure-location-and-rheology-sensing",
+      "measuredEvidence": ["barrel pressure", "nozzle pressure", "mould-cavity pressure", "screw position", "3D optical shrinkage/roundness measurements"],
+      "candidateConcepts": ["barrel-nozzle-cavity-pressure-domain-separation", "pressure-time-viscosity-index", "multi-location-melt-pressure-monitoring"],
+      "whyUseful": "Adds direct measured separation of barrel, nozzle and cavity pressure domains and links pressure-time behavior to physical dimensional quality.",
+      "promotionRequirements": ["scan canonical primary packs for overlap", "confirm exact material/machine/sensor configuration", "classify viscosity index as derived rather than direct", "preserve pressure-sensor location when comparing channels"],
+      "status": "publisher-verified-candidate-dedup-pending"
+    },
+    {
+      "doi": "10.1016/j.engfailanal.2022.106118",
+      "title": "Corrosion failure analysis of a cooling system of an injection mold",
+      "year": 2022,
+      "venue": "Engineering Failure Analysis",
+      "publisherUrl": "https://www.sciencedirect.com/science/article/pii/S1350630722000929",
+      "candidateArea": "cooling-circuit-corrosion",
+      "measuredEvidence": ["production-plant cooling-circuit inspection", "SEM/EDS/XRD/XPS analysis of collected corrosion samples"],
+      "candidateConcepts": ["cooling-circuit-corrosion-condition", "galvanic-corrosion-material-compatibility", "cooling-system-failure-forensics"],
+      "whyUseful": "Adds real plant failure-forensics evidence for cooling-system health rather than only process-performance monitoring.",
+      "promotionRequirements": ["determine whether scope satisfies primary injection-moulding evidence definition or should remain supporting machine-health evidence", "scan canonical primary packs for overlap", "avoid inferring online sensor signatures from post-failure laboratory analysis"],
+      "status": "supporting-machine-health-candidate-scope-review-required"
+    },
+    {
+      "doi": "10.3390/app12031410",
+      "title": "An Investigation to Reduce the Effect of Moisture on Injection-Molded Parts through Optimization of Plasticization Parameters",
+      "year": 2022,
+      "venue": "Applied Sciences",
+      "publisherUrl": "https://www.mdpi.com/2076-3417/12/3/1410",
+      "candidateArea": "material-moisture-measurement",
+      "measuredEvidence": ["residual material moisture measured with moisture analyzer", "controlled drying state", "surface gloss", "air-bubble/appearance defects"],
+      "candidateConcepts": ["resin-moisture-direct-measurement", "moisture-state-vs-dryer-setpoint", "moisture-quality-corroboration"],
+      "whyUseful": "This DOI is already part of the canonical measured-study corpus, so it can support sensor/health concept promotion without adding a new primary-study count.",
+      "promotionRequirements": ["reuse existing canonical DOI rather than count again", "document moisture analyzer method/units", "separate measured moisture from dryer settings and drying time", "retain resin-grade-specific limits"],
+      "status": "existing-primary-study-sensor-concept-review-pending"
+    }
+  ]
+}
