@@ -20,7 +20,7 @@ jobs:
         with:
           python-version: '3.12'
       - name: Install profiling readers
-        run: python -m pip install --disable-pip-version-check openpyxl numpy h5py
+        run: python -m pip install --disable-pip-version-check h5py
       - name: Profile CC BY scatimdata archives
         run: python tools/profile_scatimdata.py --output scatimdata-v1.json
       - name: Validate profile boundary
@@ -31,8 +31,16 @@ jobs:
           assert p['source']['license']=='CC BY 4.0'
           assert len(p['archives'])==3
           assert all(a['sha256'] and a['sizeBytes']>0 for a in p['archives'])
-          assert p['publishedStructure']['pointsPerTimeSeries']==2049
-          print('Detected measured time-series scalar samples:',p['acceptedMeasuredTimeSeriesSamples'])
+          assert p['publishedStructure']['pointsPerTimeSeriesReported']==2049
+          assert p['observedSourceStructure']['pointsPerCurveInDownloadedMatrices']==2048
+          assert p['acceptedMeasuredTimeSeriesSamples']==16228352
+          assert p['sampleCountBySignal']=={
+            'cavity-pressure':1888256,
+            'injection-flow':7164352,
+            'injection-pressure':7175744,
+          }
+          assert p['rawSourceRowsCommitted'] is False
+          print('Accepted real measured scalar time-series samples:',p['acceptedMeasuredTimeSeriesSamples'])
           PY
       - uses: actions/upload-artifact@v4
         with:
