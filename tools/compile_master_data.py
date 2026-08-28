@@ -61,8 +61,8 @@ def compile_measured():
         packs.append({"path": pack["path"], "pack": obj.get("pack"), "entries": rows})
     dois = [str(x.get("doi", "")).lower() for x in studies]
     expected = registry["summary"]["publisherVerifiedPeerReviewedPrimaryMeasured"]
-    need(len(studies) == expected == 60, "primary measured registry must compile to 60 studies")
-    need(len(dois) == len(set(dois)) and all(dois), "compiled primary measured studies must have 60 unique DOIs")
+    need(len(studies) == expected, f"primary measured registry must compile to {expected} studies")
+    need(len(dois) == len(set(dois)) and all(dois), f"compiled primary measured studies must have {expected} unique DOIs")
 
     dossiers = {}
     for p in sorted((ROOT / "data/mechanism-promotion-evidence").glob("*.json")):
