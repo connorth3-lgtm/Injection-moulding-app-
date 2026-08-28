@@ -30,36 +30,31 @@ def safe_zip(data, out):
     return paths
 
 def classify_headers(headers):
-    low=[str(h).strip().lower() for h in headers]
-    process=sum(any(tok in h for tok in ['temp','cycle','speed','velocity','pressure','screw','shear','cool']) for h in low)
-    mechanical=sum(any(tok in h for tok in ['stress','modulus','strain','tough','elong']) for h in low)
-    material=sum(any(tok in h for tok in ['material','resin','polymer','grade']) for h in low)
-    return {'processFieldMarkers':process,'mechanicalFieldMarkers':mechanical,'materialFieldMarkers':material,'processAndMechanicalFieldsObserved':process>0 and mechanical>0,'headerCount':len(headers),'rawValuesEmitted':False}
+    names=[str(h).strip() for h in headers]
+    low=[x.lower() for x in names]
+    process=[n for n,h in zip(names,low) if any(tok in h for tok in ['temp','cycle','speed','velocity','pressure','pres','flow','screw','shear','cool','energy','viscosity'])]
+    mechanical=[n for n,h in zip(names,low) if any(tok in h for tok in ['stress','modulus','strain','tough','thickness','structural'])]
+    identifiers=[n for n,h in zip(names,low) if any(tok in h for tok in ['part #','material #','doe run','cycle #','test #','specimen','cavity #'])]
+    derived=[n for n,h in zip(names,low) if any(tok in h for tok in ['viscosity','shear rate','trend','energy','structural norm','structural loss','degradation','dd/dt','dd/dt','intercept'])]
+    material=[n for n,h in zip(names,low) if 'material' in h]
+    return {
+      'processFields':process,'mechanicalOutcomeFields':mechanical,'identifierGroupingFields':identifiers,'derivedOrEngineeredFields':derived,'materialFields':material,
+      'processAndMechanicalFieldsObserved':bool(process and mechanical),'headerCount':len(headers),'rawValuesEmitted':False}
 
 def header_diagnostics(headers):
-    """Return source schema labels only; never return row/cell values."""
     names=[str(h).strip() for h in headers]
     unnamed=[name for name in names if re.fullmatch(r'Unnamed:\s*\d+',name,flags=re.I)]
     index_like=[name for name in names if name.lower() in {'index','row','row id','id'} or name.lower().startswith('unnamed:')]
-    return {
-      'columnNames':names,
-      'columnNameCount':len(names),
-      'unnamedColumns':unnamed,
-      'indexLikeColumns':index_like,
-      'namedColumnsExcludingIndexLike':len([name for name in names if name not in index_like]),
-      'rawValuesEmitted':False
-    }
+    return {'columnNames':names,'columnNameCount':len(names),'unnamedColumns':unnamed,'indexLikeColumns':index_like,'namedColumnsExcludingIndexLike':len([name for name in names if name not in index_like]),'rawValuesEmitted':False}
 
 def material_groups(df):
     candidates=[]
     for c in df.columns:
         name=str(c).lower()
         if any(t in name for t in ['material','resin','polymer','grade']):
-            vals=df[c].dropna().astype(str).str.strip()
-            n=vals[vals!=''].nunique()
+            vals=df[c].dropna().astype(str).str.strip(); n=vals[vals!=''].nunique()
             if 2<=n<=20: candidates.append({'column':str(c),'uniqueGroups':int(n)})
     if candidates: return max(candidates,key=lambda x:x['uniqueGroups'])
-    # Paper reports five materials; identify a five-group categorical field without exposing values.
     for c in df.columns:
         vals=df[c].dropna()
         if vals.dtype=='object':
@@ -68,15 +63,13 @@ def material_groups(df):
     return None
 
 def run(output,retrieved_date):
-    c=json.loads(CONTRACT.read_text())
-    work=Path(tempfile.mkdtemp(prefix='mouldmaster-su13148102-'))
+    c=json.loads(CONTRACT.read_text()); work=Path(tempfile.mkdtemp(prefix='mouldmaster-su13148102-'))
     try:
         errors=[]; data=None; final=None; ctype=None
         for url in [DIRECT,LANDING]:
             try:
                 b,f,ct=get(url)
-                if b.startswith(b'PK\x03\x04') or b[:200].lstrip().startswith(b'<') is False:
-                    data,final,ctype=b,f,ct; break
+                if b.startswith(b'PK\x03\x04') or b[:200].lstrip().startswith(b'<') is False: data,final,ctype=b,f,ct; break
                 errors.append(f'{url}: returned HTML')
             except Exception as e: errors.append(f'{url}: {type(e).__name__}: {e}')
         if data is None: raise RuntimeError('supplement retrieval failed: '+' | '.join(errors))
@@ -98,21 +91,16 @@ def run(output,retrieved_date):
         p,df=max(tables,key=lambda x: len(x[1])*max(1,len(x[1].columns)))
         dims={'rows':int(len(df)),'columns':int(len(df.columns))}
         headers=classify_headers(list(df.columns)); schema=header_diagnostics(list(df.columns)); groups=material_groups(df)
-        reconciled_columns=schema['namedColumnsExcludingIndexLike']
-        accepted=dims['rows']==955 and reconciled_columns==42 and headers['processAndMechanicalFieldsObserved'] and groups is not None and groups['uniqueGroups']==5
+        delivered=c.get('deliveredRelease') or {}
+        accepted=(dims['rows']==delivered.get('rows')==955 and dims['columns']==delivered.get('columns')==45 and source_sha==delivered.get('sha256') and schema['columnNameCount']==45 and not schema['unnamedColumns'] and headers['processAndMechanicalFieldsObserved'] and groups is not None and groups['uniqueGroups']==5)
         result={
-          'schema_version':1,
-          'status':'completed-public-measured-benchmark' if accepted else 'retrieved-profile-needs-semantic-review',
-          'retrieved_date':retrieved_date,
+          'schema_version':1,'status':'completed-public-measured-benchmark' if accepted else 'retrieved-profile-needs-semantic-review','retrieved_date':retrieved_date,
           'source':{'datasetId':c['datasetId'],'articleDoi':c['source']['articleDoi'],'license':c['source']['license'],'requestedUrl':LANDING,'resolvedUrl':final,'contentType':ctype,'sizeBytes':len(data),'sha256':source_sha},
-          'profile':{**dims,'selectedFile':p.name,'headerSemantics':headers,'schemaDiagnostics':schema,'reconciledPaperDataColumns':reconciled_columns,'materialGrouping':groups,'paperReported':c['paperReported'],'rawRowsOrCellValuesEmitted':False},
-          'retrieval':{'rawSupplementCommitted':False,'rawRowsUploadedAsArtifact':False},
-          'evidenceBoundary':c['evidenceBoundary']
-        }
-        output.parent.mkdir(parents=True,exist_ok=True); output.write_text(json.dumps(result,indent=2)+'\n')
-        return result
+          'profile':{**dims,'selectedFile':p.name,'fieldRoles':headers,'schemaDiagnostics':schema,'materialGrouping':groups,'paperReported':c['paperReported'],'deliveredRelease':delivered,'paperReleaseColumnDelta':dims['columns']-int(c['paperReported']['columns']),'recordUnit':'experimental observation / tensile-linked process record','countsAsTimeSeriesSamples':False,'rawRowsOrCellValuesEmitted':False},
+          'retrieval':{'rawSupplementCommitted':False,'rawRowsUploadedAsArtifact':False},'evidenceBoundary':c['evidenceBoundary']}
+        output.parent.mkdir(parents=True,exist_ok=True); output.write_text(json.dumps(result,indent=2)+'\n'); return result
     finally: shutil.rmtree(work,ignore_errors=True)
 
 def main():
-    a=argparse.ArgumentParser(); a.add_argument('--output',type=Path,required=True); a.add_argument('--retrieved-date',required=True); x=a.parse_args(); r=run(x.output,x.retrieved_date); print(json.dumps({'status':r['status'],'rows':r['profile']['rows'],'columns':r['profile']['columns'],'reconciledPaperDataColumns':r['profile']['reconciledPaperDataColumns'],'materialGrouping':r['profile']['materialGrouping']},indent=2))
+    a=argparse.ArgumentParser(); a.add_argument('--output',type=Path,required=True); a.add_argument('--retrieved-date',required=True); x=a.parse_args(); r=run(x.output,x.retrieved_date); print(json.dumps({'status':r['status'],'rows':r['profile']['rows'],'columns':r['profile']['columns'],'paperReleaseColumnDelta':r['profile']['paperReleaseColumnDelta'],'materialGrouping':r['profile']['materialGrouping']},indent=2))
 if __name__=='__main__': main()
