@@ -61,7 +61,8 @@ jobs:
           assert x['profile']['rawRowsOrCellValuesEmitted'] is False
           assert x['retrieval']['rawPublisherFileCommitted'] is False
           assert x['retrieval']['rawRowsUploadedAsArtifact'] is False
-          print(x['status'], x['profile']['rows'], x['profile']['classifiedSensorColumns'])
+          assert x['profile']['measuredSignalColumns'] == 10
+          print(x['status'], x['profile']['rows'], x['profile']['measuredSignalColumns'], x['profile']['acceptedMeasuredTimeSeriesSamples'])
           PY
       - name: Upload aggregate OpenMMS evidence only
         uses: actions/upload-artifact@v4
