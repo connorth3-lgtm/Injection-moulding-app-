@@ -1,0 +1,80 @@
+{
+  "schema": 1,
+  "status": "completed-public-measured-benchmark",
+  "completedDate": "2026-08-28",
+  "source": {
+    "title": "FORinFPRO-HIMD: Multimodal Sensor Dataset for Hybrid Injection Molding of Continuous Fiber-Reinforced Polypropylene Composites",
+    "doi": "10.5281/zenodo.20744054",
+    "recordId": "20744054",
+    "recordUrl": "https://zenodo.org/records/20744054",
+    "publisher": "Zenodo",
+    "version": "v1",
+    "accessRight": "open",
+    "license": "CC BY 4.0"
+  },
+  "experimentalContext": {
+    "machine": "ENGEL V-Duo hybrid injection moulding cell",
+    "process": "in-situ forming of continuous glass-fibre reinforced polypropylene organosheet followed by polypropylene overmoulding in one hybrid injection-moulding cycle",
+    "material": "continuous glass-fibre reinforced polypropylene organosheet with polypropylene overmoulding",
+    "visibleCycles": 1,
+    "inMouldSensors": {
+      "ultrasonic": 4,
+      "pressureTemperature": 6,
+      "dielectricAnalysis": 2,
+      "total": 12
+    },
+    "qualityLabelsPresentInVisibleV1": false
+  },
+  "files": {
+    "cycle_001_machine_data.csv": {
+      "sizeBytes": 4860142,
+      "md5": "d2a7d96d133f3d7b43a5089ad4bf0b09",
+      "sha256": "d249cbe4980b00f1565a100c3363dde4cf621c490233a4c184d47ad8d202e480",
+      "rows": 10132,
+      "columns": 101,
+      "namedColumns": 60,
+      "numericNamedColumns": 59,
+      "directMachineActualColumns": 35,
+      "roleCounts": {
+        "identifier-or-time": 2,
+        "unclassified": 9,
+        "direct-machine-actual": 35,
+        "setpoint": 4,
+        "state": 2,
+        "derived-or-aggregate": 8,
+        "blank": 41
+      }
+    },
+    "cycle_001_pt.csv": {
+      "sizeBytes": 21280,
+      "md5": "40d8511c11e8e0575dc3930ddd258c19",
+      "sha256": "9c8dff7f18c531d447a7b2e0ca3420c3a8a30b9771dd373c4f3433f1acd27538",
+      "rows": 403,
+      "columns": 3,
+      "header": ["time", "pressure", "temperature"]
+    },
+    "cycle_001_us_rms.csv": {
+      "sizeBytes": 87363,
+      "md5": "c767196cfd1b6dec0d09ed0a2dba2551",
+      "sha256": "0e7d1610202d05177d0a3f8d44a783a9d6268a8b7df59abc268f41d97c360628",
+      "rows": 2154,
+      "columns": 3,
+      "header": ["time", "rms_ch0", "rms_ch3"]
+    }
+  },
+  "measurementSemantics": {
+    "machineDecimalCommaParsed": true,
+    "directMachineActualsSeparatedFromSetpointsDerivedAndStates": true,
+    "directMachineActualColumns": 35,
+    "pressureTemperatureDirectMeasurementsIdentified": true,
+    "ultrasoundRmsIsDerivedFeature": true,
+    "sourceUnitsExplicitInCsvHeaders": false,
+    "physicalTimeBasisNormalized": false,
+    "note": "The machine export naming distinguishes measured actuals from setpoints, state flags and derived/aggregate fields. The pressure/temperature file contains direct measurements, while the ultrasound file contains derived RMS features. The exact visible v1 source does not state physical units in these CSV headers, so no scalar values are promoted into the accepted measured-sample ledger."
+  },
+  "acceptedMeasuredCycles": 1,
+  "acceptedMeasuredTimeSeriesSamples": 0,
+  "rawSourceRowsCommitted": false,
+  "rawSourceFilesCommitted": false,
+  "boundary": "FORinFPRO-HIMD v1 is accepted as one fully profiled real measured dataset package because the exact open CC BY 4.0 files were obtained and fingerprinted, decimal-comma machine values were parsed, measurement/setpoint/derived/state roles were separated, and the hybrid material/machine/sensor context is documented. The current visible release contains one deeply instrumented moulding cycle. No waveform scalar values count until source units and physical time-basis semantics are explicitly verified."
+}
