@@ -1,0 +1,51 @@
+name: MouldMaster TPM-SMED primary plant records
+
+on:
+  workflow_dispatch:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'tools/profile_mendeley_ypf95p4bs4.py'
+      - 'tools/profile_tpm_smed_primary_records.py'
+      - '.github/workflows/tpm-smed-primary-records.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  profile:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install spreadsheet dependency
+        run: python -m pip install --disable-pip-version-check openpyxl
+      - name: Profile strict primary plant records
+        run: python tools/profile_tpm_smed_primary_records.py --output tpm-smed-primary-v1.json
+      - name: Enforce primary-record boundary
+        run: |
+          python - <<'PY'
+          import json
+          p=json.load(open('tpm-smed-primary-v1.json',encoding='utf-8'))
+          assert p['schema']==1
+          assert p['status']=='completed-public-measured-record-benchmark'
+          assert p['source']['doi']=='10.17632/ypf95p4bs4.1'
+          assert p['source']['license']=='CC BY 4.0'
+          assert p['source']['workbook']['sha256']=='b8bdf20f4e513d647ef4fc887f8846c254d0151657137a888f20752559ce1917'
+          assert len(p['acceptedPrimaryTables'])==3
+          assert all(x['acceptedRows']>0 for x in p['acceptedPrimaryTables'])
+          assert p['acceptedMeasuredRecords']==sum(x['acceptedRows'] for x in p['acceptedPrimaryTables'])
+          assert p['acceptedMeasuredTimeSeriesSamples']==0
+          assert 'VINCULACION' in p['excludedSheets'] and 'Hoja3' in p['excludedSheets']
+          assert p['rawSourceRowsCommitted'] is False
+          assert p['rawSourceFilesCommitted'] is False
+          print('TPM/SMED strict primary-record benchmark passed', p['acceptedMeasuredRecords'], p['acceptedPrimaryTables'])
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: mouldmaster-tpm-smed-primary-profile
+          path: tpm-smed-primary-v1.json
+          retention-days: 90
