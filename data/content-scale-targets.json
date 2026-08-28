@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "version": "2026.08.28.4",
+  "version": "2026.08.28.5",
   "reviewed": "2026-08-28",
   "scope": "Hard content-scale targets for MouldMaster. Completion counts only evidence that satisfies the acceptance definition for that area. Synthetic learning cases, generated drafts, unverified candidate papers and metadata-only dataset records must not be counted as completed measured evidence.",
   "targets": {
@@ -9,9 +9,9 @@
       "preferred": 50,
       "unit": "datasets",
       "acceptance": "A real measured dataset whose exact source/version/licence or access terms are recorded; source files have been obtained lawfully; file fingerprint and profile are recorded; schema/units/grouping are inspected; direct measurements, commands, derived fields and labels are distinguished; material/process/machine/mould/quality context and limitations are documented. Metadata-only records do not count.",
-      "currentAccepted": 2,
+      "currentAccepted": 3,
       "currentDiscovered": 20,
-      "notes": "Two dataset packages now pass the full acceptance boundary: Mendeley 10.17632/gtnb4j7bfx.1 v1 and the CC BY 4.0 scatimdata high-resolution package. scatimdata contains three published experimental datasets, but the package is counted once here to avoid inflating the hard target with constituent archives from one source family."
+      "notes": "Three dataset packages now pass the full acceptance boundary: Mendeley 10.17632/gtnb4j7bfx.1 v1, the CC BY 4.0 scatimdata high-resolution package, and the Sustainability 2021 hot-runner sustainable-material supplementary dataset (10.3390/su13148102). scatimdata contains three published experimental subsets but remains one source family for this hard count."
     },
     "measured_time_series_samples": {
       "minimum": 1000000,
@@ -19,7 +19,7 @@
       "unit": "samples",
       "acceptance": "Measured time-series samples from lawfully accessed real experimental or industrial injection-moulding datasets with source provenance, signal identity, units, sample ordering/time basis and dataset linkage. Synthetic training cycles and generated traces never count.",
       "currentAccepted": 16228352,
-      "notes": "The accepted count comes only from the fully profiled CC BY 4.0 scatimdata package: 1,888,256 cavity-pressure values, 7,170,048 injection-flow values and 7,170,048 injection-pressure values. Source matrices contain 2,048 observed numeric time rows per curve; axes, identifiers and HDF5 state arrays are excluded. The existing 19,008 synthetic learning cycles remain excluded."
+      "notes": "The accepted count comes only from the fully profiled CC BY 4.0 scatimdata package: 1,888,256 cavity-pressure values, 7,170,048 injection-flow values and 7,170,048 injection-pressure values. Source matrices contain 2,048 observed numeric time rows per curve; axes, identifiers and HDF5 state arrays are excluded. Record-level Mendeley and Sustainability observations do not inflate this waveform-sample count."
     },
     "material_profiles": {
       "minimum": 250,
@@ -27,7 +27,7 @@
       "unit": "profiles",
       "acceptance": "A distinct polymer family/grade or explicitly bounded material class with identity, family, reinforcement/filler where relevant, rheology/MFR or equivalent evidence where available, drying/moisture handling, thermal transitions or thermal behaviour, shrinkage/dimensional behaviour, degradation/compatibility cautions, processing-window provenance and source references. Generic placeholders do not count as complete grade profiles.",
       "currentAccepted": 20,
-      "notes": "Twenty explicit base material profiles exist in reference-data.js. Additional mixed reference entries and the 260 generated profile drafts are not automatically counted as complete material profiles."
+      "notes": "Twenty explicit base material profiles exist in reference-data.js. The new sustainable-material dataset supplies strong grade-level evidence for five materials, but those records are not automatically promoted to the material-profile target until the complete material acceptance schema, including dimensional/shrinkage and compatibility context, is satisfied."
     },
     "defect_mechanisms": {
       "minimum": 300,
@@ -67,7 +67,7 @@
       "unit": "studies",
       "acceptance": "A deduplicated primary study containing actual injection-moulding experimental or industrial measurements. The record must identify measured signals/outcomes and study context and must be manually or explicitly evidence-reviewed. Reviews, simulation-only studies, theory-only papers and heuristic search candidates do not count.",
       "currentAccepted": 60,
-      "notes": "data/primary-measured-evidence-registry-v1.json contains 60 unique publisher-verified peer-reviewed primary measured studies across five audited evidence packs. This supersedes the older 40-study minimum visible in the original 50-pass measured-evidence gate."
+      "notes": "data/primary-measured-evidence-registry-v1.json contains 60 unique publisher-verified peer-reviewed primary measured studies across five audited evidence packs. Dataset profiling does not automatically increase this study count; literature promotion remains a separate evidence-review gate."
     }
   },
   "nonCountingRules": [
