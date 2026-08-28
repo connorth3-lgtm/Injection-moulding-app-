@@ -10,6 +10,9 @@ DIRECT_CANDIDATES = [
     LANDING,
 ]
 UA = "Mozilla/5.0 (compatible; MouldMasterEvidenceProfiler/1.0; +https://github.com/connorth3-lgtm/Injection-moulding-app-)"
+IDENTIFIER_COLUMNS = ["Part #", "Material #", "DOE Run #"]
+PUBLISHED_ANALYTICAL_COLUMNS = 42
+EXPECTED_TOTAL_COLUMNS = PUBLISHED_ANALYTICAL_COLUMNS + len(IDENTIFIER_COLUMNS)
 
 
 def sha256(b: bytes) -> str:
@@ -66,7 +69,25 @@ def profile_csv(raw: bytes, name: str) -> dict:
         return {"name": name, "format": "csv", "dataRows": 0, "columns": 0}
     header = [str(x).strip() for x in rows[0]]
     data = [r for r in rows[1:] if any(str(x).strip() for x in r)]
-    return {"name": name, "format": "csv", "dataRows": len(data), "columns": len(header), "headers": header, "sizeBytes": len(raw), "sha256": sha256(raw)}
+    missing = [0] * len(header)
+    numeric = [0] * len(header)
+    for row in data:
+        vals = list(row[:len(header)]) + [""] * max(0, len(header) - len(row))
+        for i, value in enumerate(vals):
+            value = str(value).strip()
+            if value == "":
+                missing[i] += 1
+            else:
+                try:
+                    float(value)
+                    numeric[i] += 1
+                except ValueError:
+                    pass
+    return {
+        "name": name, "format": "csv", "dataRows": len(data), "columns": len(header),
+        "headers": header, "missingCounts": missing, "numericCounts": numeric,
+        "sizeBytes": len(raw), "sha256": sha256(raw)
+    }
 
 
 def profile_xlsx(raw: bytes, name: str) -> dict:
@@ -123,10 +144,13 @@ def main() -> None:
             for s in m.get("sheets", []):
                 candidate_tables.append({"member": m["name"], **s})
         elif m.get("format") == "csv":
-            candidate_tables.append({"member": m["name"], "name": None, "dataRows": m.get("dataRows"), "columns": m.get("columns"), "headers": m.get("headers")})
+            candidate_tables.append({"member": m["name"], "name": None, "dataRows": m.get("dataRows"), "columns": m.get("columns"), "headers": m.get("headers"), "missingCounts": m.get("missingCounts"), "numericCounts": m.get("numericCounts")})
     best = max(candidate_tables, key=lambda x: (int(x.get("dataRows") or 0) * int(x.get("columns") or 0)), default={})
+    headers = best.get("headers") or []
+    observed_identifier_columns = [h for h in IDENTIFIER_COLUMNS if h in headers]
+    observed_analytical_columns = int(best.get("columns") or 0) - len(observed_identifier_columns)
     payload = {
-        "schema_version": 1,
+        "schema_version": 2,
         "status": "profile-generated-review-required",
         "completed_date": "2026-08-28",
         "source": {
@@ -138,22 +162,30 @@ def main() -> None:
             "process": "two-cavity hot-runner injection moulding",
             "materials": 5,
             "publishedObservationRows": 955,
-            "publishedColumns": 42
+            "publishedAnalyticalColumns": PUBLISHED_ANALYTICAL_COLUMNS
         },
         "archive": {"sizeBytes": len(archive), "sha256": sha256(archive), "memberCount": len(members), "contentType": ctype},
         "members": members,
         "largestTable": best,
+        "observedStructure": {
+            "totalColumns": int(best.get("columns") or 0),
+            "identifierColumns": observed_identifier_columns,
+            "analyticalColumnsAfterIdentifierExclusion": observed_analytical_columns,
+            "reconciliation": "The paper describes 42 columns of processing data and mechanical properties. The downloadable CSV contains those 42 analytical columns plus three leading indexing fields (Part #, Material #, DOE Run #), giving 45 physical file columns. No columns are discarded from the profile."
+        },
         "rawSourceRowsCommitted": False,
         "acceptanceChecks": {
             "observed955Rows": best.get("dataRows") == 955,
-            "observed42Columns": best.get("columns") == 42,
+            "observed45PhysicalColumns": best.get("columns") == EXPECTED_TOTAL_COLUMNS,
+            "observedThreeIdentifierColumns": observed_identifier_columns == IDENTIFIER_COLUMNS,
+            "reconcilesToPublished42AnalyticalColumns": observed_analytical_columns == PUBLISHED_ANALYTICAL_COLUMNS,
             "hasFiveMaterialContext": True,
             "licenseContextRecorded": True
         },
-        "boundary": "Profile contains hashes, schema and aggregate missingness/type counts only. It does not emit supplementary raw observations or convert study correlations into universal processing limits."
+        "boundary": "Profile contains hashes, headers and aggregate missingness/type counts only. It does not emit supplementary raw observations or convert study correlations into universal processing limits. The paper/file column-count difference is retained explicitly rather than silently dropping identifier fields."
     }
     Path(args.output).write_text(json.dumps(payload, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
-    print(json.dumps({"resolved": final_url, "archiveBytes": len(archive), "members": len(members), "largestTable": best, "acceptanceChecks": payload["acceptanceChecks"]}, indent=2))
+    print(json.dumps({"resolved": final_url, "archiveBytes": len(archive), "members": len(members), "largestTable": best, "observedStructure": payload["observedStructure"], "acceptanceChecks": payload["acceptanceChecks"]}, indent=2))
 
 
 if __name__ == "__main__":
