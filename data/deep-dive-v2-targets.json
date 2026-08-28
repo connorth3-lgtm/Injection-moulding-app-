@@ -2,6 +2,14 @@
   "programme": "MouldMaster Deep Dive v2",
   "status_date": "2026-08-28",
   "purpose": "Scale MouldMaster beyond the first 20 research passes and 50-pass measured-evidence atlas while prioritising traceable measured evidence over raw synthetic volume. Preserve the first 100-pass Deep Dive execution and add a distinct second 100-pass wave for 200 cumulative evidence domains.",
+  "execution_state": {
+    "wave1_passes_preserved": 100,
+    "wave2_passes_added": 100,
+    "cumulative_passes": 200,
+    "wave2_primary_seeded": 59,
+    "wave2_explicit_gaps": 41,
+    "completion_boundary": "Execution passes are evidence-discovery domains, not a claim that the 2,000-paper or 1,000-primary-study corpus targets are complete."
+  },
   "principles": [
     "Measured evidence and provenance outrank synthetic-row count.",
     "Do not convert paper-specific settings into universal production recipes.",
