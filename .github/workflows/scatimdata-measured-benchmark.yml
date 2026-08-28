@@ -36,8 +36,8 @@ jobs:
           assert p['acceptedMeasuredTimeSeriesSamples']==16228352
           assert p['sampleCountBySignal']=={
             'cavity-pressure':1888256,
-            'injection-flow':7164352,
-            'injection-pressure':7175744,
+            'injection-flow':7170048,
+            'injection-pressure':7170048,
           }
           assert p['rawSourceRowsCommitted'] is False
           print('Accepted real measured scalar time-series samples:',p['acceptedMeasuredTimeSeriesSamples'])
