@@ -14,8 +14,8 @@
   },
   "summary": {
     "acceptedConcepts": 26,
-    "directMeasurementConcepts": 19,
-    "derivedFeatureConcepts": 4,
+    "directMeasurementConcepts": 20,
+    "derivedFeatureConcepts": 3,
     "diagnosticInterpretationConcepts": 2,
     "measurementIntegrityConcepts": 1
   },
