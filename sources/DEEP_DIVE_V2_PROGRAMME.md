@@ -6,7 +6,7 @@ Status date: 2026-08-28
 
 Deep Dive v2 replaces the earlier range-based expansion goals with fixed, deliberately larger corpus targets. The objective is not to maximise paper or synthetic-row count in isolation. The objective is to build a traceable injection-moulding evidence system that connects mechanisms, measured signals, materials, tooling, machine state and part-quality outcomes.
 
-The machine-readable target ledger is `data/deep-dive-v2-targets.json`.
+The machine-readable target ledger is `data/deep-dive-v2-targets.json`. Wave 1 remains preserved in `data/deep-dive-v2-100-pass.json`; the second independent run is stored in `data/deep-dive-v2-wave2-100-pass.json`. Together they form **200 cumulative research/evidence passes**.
 
 ## Fixed corpus targets
 
@@ -39,51 +39,49 @@ The machine-readable target ledger is `data/deep-dive-v2-targets.json`.
 | Expert-level scenarios | 300 |
 | Appropriately licensed defect images, eventual | 10,000 |
 | Lessons/modules total | 250 |
-| Research/evidence domains | 100 |
+| Research/evidence domains | **200** |
 
 These are programme targets. They do not imply that a release may claim completion before the underlying evidence exists.
 
-## Baseline already present
+## Preserved baseline and cumulative execution
 
-Deep Dive v2 builds on the existing MouldMaster foundation rather than discarding it: the canonical 120-lesson pathway, specialist extensions, evidence-gated learner questions, 264 synthetic process-data cases / 19,008 generated cycles, the 20-pass research register, the 50-pass measured-evidence atlas, public benchmark preflight and the local privacy-first real-data intake path.
+Deep Dive v2 builds on the canonical 120-lesson pathway, specialist extensions, evidence-gated learner questions, 264 synthetic process-data cases / 19,008 generated cycles, the earlier 20-pass research register, the 50-pass measured-evidence atlas, public benchmark preflight and the local privacy-first real-data intake path.
+
+Wave 1 IDs **1–100** are immutable baseline evidence domains. Wave 2 IDs **101–200** deepen rather than overwrite that work. The second wave deliberately leaves weakly supported subjects as `gap_seeded`; a search hit is not promoted to primary measured evidence simply to improve a count.
 
 The next phase therefore prioritises evidence diversity and real measured signals instead of simply multiplying deterministic synthetic waveforms.
 
 ## Research-domain expansion
 
-The first twenty passes remain valid. Deep Dive v2 grows toward 100 evidence domains by adding focused passes in the following families.
+The 200 cumulative passes span the following evidence families.
 
 ### Machine and plasticising
 
-Check-ring/non-return-valve behaviour; screw wear; barrel wear; screw/barrel clearance; feed-zone behaviour; screw torque; plasticising drive current; recovery stability; back-pressure actuals; decompression/air ingress; injection-axis command versus actual response; servo following error; hydraulic thermal state; nozzle pressure; nozzle contact; machine fingerprints; cold-start and warm-equilibrium behaviour; transfer between machines.
+Check-ring/non-return-valve closure and wear; screw and barrel wear; screw/barrel clearance; feed-throat behaviour and bridging; pellet feeding and bulk density; hopper drying/dew point; screw torque and plasticising drive current; recovery stability; cushion stability; decompression/suck-back; injection-axis command versus actual response; acceleration/jerk; servo following error; hydraulic thermal state; accumulator response; nozzle pressure/contact/alignment; nozzle drool/freezing; shot utilisation and residence volume; machine fingerprints; cold-start and warm-equilibrium behaviour; transfer between machines.
 
-### Clamp, mould motion and ejection
+### Clamp, mould motion, tooling and ejection
 
-Individual tie-bar load; platen parallelism; clamp-force distribution; mould separation; core deflection; toggle/hydraulic clamp condition; ejector force; mould-open force; release friction; slide/lifter condition; ejection temperature; sticking and drag evidence.
+Individual tie-bar load; platen parallelism; clamp-force distribution; mould separation and deflection; core/cavity elastic deformation; toggle/hydraulic clamp condition; ejector force/friction; mould-open force; release friction; slide/lifter condition; mould surface roughness, texture and draft; insert/gate wear; vent degradation; vacuum evacuation; flash from mould deformation; sticking and drag evidence.
 
-### Cooling and tooling
+### Cooling and hot runners
 
-Cooling hydraulics; Reynolds/flow regime; circuit pressure drop; inlet/outlet temperature; circuit balance; scale/fouling; corrosion; baffles/bubblers; core cooling; conformal cooling; high-conductivity inserts; additive-manufactured cooling inserts; thermal contact resistance; thermal maps; gate erosion; vent degradation; hot-runner thermal balance; heater duty; thermocouple bias; valve-gate timing; manifold expansion and leakage.
+Cooling hydraulics; coolant flow and differential pressure; Reynolds/flow regime; circuit pressure drop; parallel/series balance; scale/fouling; cavitation/air locks; corrosion/coolant chemistry; baffles/bubblers; core cooling; conformal cooling; AM-channel roughness; AM insert porosity/fatigue/leakage; high-conductivity inserts; polymer/tool thermal contact resistance; thermal maps; hot-runner thermal balance; heater duty/coupling/faults; thermocouple bias; valve-pin timing/wear/leakage; residence/dead spots; manifold expansion and leakage; cold-slug/nozzle-tip behaviour.
 
 ### Materials and material state
 
-Commodity, engineering, high-performance, optical, flexible, bio-based and recycled polymers; moisture; drying; hydrolysis; residence history; oxidation; crystallisation; pvT; compressibility; batch rheology; regrind/PCR fraction; contamination; masterbatch/additive dosing; flame retardants; conductive compounds; short fibre; long fibre; mineral filling; orientation; attrition; anisotropy; property retention and conditioning.
+Commodity, engineering, high-performance, optical, flexible, bio-based and recycled polymers; moisture and reabsorption; over-drying; PA conditioning; hydrolysis; residence history; oxidation; crystallisation; pvT; compressibility; batch rheology; regrind/PCR fraction; recycled VOC/odour; contamination; masterbatch/additive dosing; flame retardants; conductive compounds; PEEK/PAEK; PPS; POM; PVC; LCP; TPU/TPE; PLA/PHA/PBS; short fibre; long fibre; carbon fibre; orientation; attrition; anisotropy; property retention and conditioning.
 
 ### Defects and physical outcomes
 
-Short shot; flash; sink; void; burn/dieseling; splay families; jetting; hesitation; weld/meld lines; delamination; colour and contamination defects; gate defects; ejection damage; optical haze/birefringence; fibre streaking/exposure; warpage/twist/bow; microfeature replication; foam-cell defects; LSR/thermoset cure defects; assisted-moulding penetration/wall-thickness defects; insert/interface defects.
+Short shot; flash; sink; shrink voids; gas bubbles; trapped gas; burn/dieseling; splay families; black specks; colour streaks; plate-out; blush/gate blush; ghost marks; gloss nonuniformity; delamination; stress whitening; jetting; hesitation/race tracking; tiger stripes/flow marks; weld/meld lines; gate defects; ejection damage; sticking; optical haze/birefringence; fibre streaking/exposure; warpage/twist/bow; microfeature replication; foam-cell defects; LSR/thermoset cure defects; assisted-moulding penetration/wall-thickness defects; insert/interface defects.
 
 ### Special processes
 
-Thin-wall/high-speed; precision; micro; ultrasonic micro; injection-compression; gas-assisted; water-assisted; projectile-assisted; microcellular/physical/chemical foaming; core-back; gas counter-pressure; co-injection; sandwich; 2K/3K; sequential multi-shot; insert and polymer overmoulding; organosheet/hybrid composite overmoulding; long-fibre; LSR; LSR overmoulding; optical silicone; thermoset; rubber; powder/metal/ceramic injection fundamentals; optical thermoplastic; variotherm/RHCM; vacuum assistance; in-mould labelling/decoration/electronics; cleanroom/medical; high-temperature PAEK.
+Thin-wall/high-speed; precision and micro moulding; ultrasonic micro; injection-compression; optical injection-compression; gas-assisted; water-assisted; projectile-assisted; microcellular/physical/chemical foaming; core-back; gas counter-pressure; co-injection; sandwich; 2K/3K; sequential multi-shot; insert and polymer overmoulding; organosheet/hybrid composite overmoulding; long-fibre; LSR; LSR overmoulding; optical silicone; thermoset; rubber; powder/metal/ceramic injection fundamentals; variotherm/RHCM; vacuum assistance; in-mould labelling/decoration/electronics; cleanroom/medical; high-temperature PAEK.
 
-### Sensors, metrology and quality
+### Sensors, metrology, statistics and data science
 
-Cavity pressure/temperature; nozzle and melt pressure; infrared melt temperature; capacitance; dielectric; ultrasound; acoustic emission; mould strain; tie-bar strain; vibration; electrical signatures; thermal imaging; machine vision; laser/displacement; CT and dimensional metrology; calibration; drift; sample rate; filtering; aliasing; synchronisation; uncertainty; MSA/Gage R&R; capability; univariate and multivariate SPC; EWMA; CUSUM; Hotelling T2; PCA; functional/time-series monitoring.
-
-### Data science and evidence interpretation
-
-DOE; response surfaces; split-plot/nested/mixture designs; adaptive/Bayesian DOE; anomaly detection; transfer learning; domain adaptation; drift; out-of-distribution detection; uncertainty calibration; interpretable models; causal inference boundaries; digital twins; simulation discrepancy; cross-machine/process transfer.
+Cavity pressure/temperature; nozzle and melt pressure; infrared melt temperature; capacitance; dielectric; ultrasound; acoustic/vibration; mould strain; tie-bar strain; electrical signatures; thermal imaging; machine vision and defect segmentation; laser/displacement; CT and dimensional metrology; calibration; drift; sample rate; filtering; aliasing; synchronisation; uncertainty; MSA/Gage R&R; capability; univariate and multivariate SPC; EWMA; CUSUM; Hotelling T2; PCA; functional/time-series monitoring; DOE; response surfaces; split-plot/nested/mixture designs; anomaly detection; transfer learning; domain adaptation; drift; out-of-distribution detection; uncertainty calibration; interpretable models; causal intervention boundaries; digital twins; simulation discrepancy; cross-machine/process transfer.
 
 ## Real-data-first rule
 
@@ -93,7 +91,7 @@ Scalar summaries are useful but should not replace the waveform when the source 
 
 ## Dataset intake gate
 
-A candidate is not promoted to a verified MouldMaster dataset merely because a repository record exists. Verification should record source/version, licence, redistribution boundary, local SHA-256 when files are actually used, schema, units, row/cycle count, sampling rate, machine/material/tool context, sensor location, missingness, synchronisation, quality outcome, intervention/DOE structure and the exact claims the source can and cannot support.
+A candidate is not promoted to a verified MouldMaster dataset merely because a repository record exists. Verification must record source/version, licence, redistribution boundary, local SHA-256 when files are actually used, schema, units, row/cycle count, sampling rate, machine/material/tool context, sensor location, missingness, synchronisation, quality outcome, intervention/DOE structure and the exact claims the source can and cannot support.
 
 ## Evidence maturity
 
