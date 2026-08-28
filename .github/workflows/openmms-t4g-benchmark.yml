@@ -1,0 +1,45 @@
+name: MouldMaster OpenMMS measured benchmark
+
+on:
+  workflow_dispatch:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'tools/profile_openmms_t4g.py'
+      - '.github/workflows/openmms-t4g-benchmark.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  profile:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Profile pinned OpenMMS case-study raw data
+        run: python tools/profile_openmms_t4g.py --output openmms-t4g-v1.json
+      - name: Enforce discovery boundary
+        run: |
+          python - <<'PY'
+          import json
+          p=json.load(open('openmms-t4g-v1.json',encoding='utf-8'))
+          assert p['source']['commit']=='cfa6e23c7fc02a645e31e06d299021cb0a3ce3e7'
+          assert p['source']['license']=='BSD-3-Clause'
+          assert p['source']['peerReviewedCompanion']=='10.3390/s23073569'
+          assert p['file']['sha256'] and p['file']['sizeBytes']>2_000_000
+          assert p['file']['dataRows']>1000
+          assert p['file']['columns']>=4
+          assert p['rawSourceRowsCommitted'] is False
+          assert p['acceptedMeasuredTimeSeriesSamples']==0
+          print('OpenMMS raw profile:',p['file'])
+          print('Timing:',p['timing'])
+          print('Signal families:',p['signalFamilies'])
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: mouldmaster-openmms-profile
+          path: openmms-t4g-v1.json
+          retention-days: 90
