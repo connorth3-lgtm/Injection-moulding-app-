@@ -1,0 +1,48 @@
+name: MouldMaster Warwick demoulding measured benchmark
+
+on:
+  workflow_dispatch:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'tools/profile_mendeley_x9hc7hf6xd.py'
+      - '.github/workflows/warwick-demoulding-benchmark.yml'
+      - 'data/public-benchmark-results/warwick-demoulding-v2.json'
+      - 'data/profiled-measured-dataset-registry-v1.json'
+      - 'data/content-scale-targets.json'
+      - 'qa_content_scale_targets.py'
+
+permissions:
+  contents: read
+
+jobs:
+  profile:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Profile exact Warwick Mendeley files
+        run: python tools/profile_mendeley_x9hc7hf6xd.py --output warwick-demoulding-v2.json
+      - name: Enforce discovery boundary
+        run: |
+          python - <<'PY'
+          import json
+          p=json.load(open('warwick-demoulding-v2.json',encoding='utf-8'))
+          assert p['source']['doi']=='10.17632/x9hc7hf6xd.2'
+          assert p['source']['license']=='CC BY 4.0'
+          assert p['fileCount']>0
+          assert all(len(f['sha256'])==64 and f['sizeBytes']>0 for f in p['files'])
+          assert p['acceptedMeasuredCycles']==0
+          assert p['acceptedMeasuredTimeSeriesSamples']==0
+          assert p['rawSourceRowsCommitted'] is False
+          print('Warwick demoulding exact-file discovery profile passed')
+          print('files:',[(f['name'],f['format'],f['sizeBytes']) for f in p['files']])
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: mouldmaster-warwick-demoulding-profile
+          path: warwick-demoulding-v2.json
+          retention-days: 90
