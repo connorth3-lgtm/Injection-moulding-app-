@@ -62,12 +62,28 @@ index = text("index.html")
 assert f'const SHELL_RELEASE="{ANDROID_RELEASE}"' in index
 assert 'const CORE_URL="./MouldMaster_Core_App.html"' in index
 assert "BODY_SCRIPTS" in index and "'./source-library.js'" in index, "source library not loaded by shell"
-for asset in ["learning-experience.js","process-data-diagnostics.js","curriculum-integration.js","specialist-curriculum.js","learning-analytics.js"]:
+for asset in [
+    "learning-experience.js",
+    "process-data-diagnostics.js",
+    "curriculum-integration.js",
+    "specialist-curriculum.js",
+    "specialist-evidence-gap-extension.js",
+    "mould-master-workspace.js",
+    "app-shell-finalize.js",
+    "learning-analytics.js",
+]:
     assert f"'./{asset}'" in index, f"current learner-facing runtime asset not loaded by shell: {asset}"
+assert index.index("'./specialist-curriculum.js'") < index.index("'./specialist-evidence-gap-extension.js'") < index.index("'./mould-master-workspace.js'") < index.index("'./app-shell-finalize.js'"), "specialist evidence/runtime finalizer load order is wrong"
 
 sw = text("service-worker.js")
 assert f"CACHE_VERSION='{ANDROID_RELEASE}'" in sw
-for asset in ["index.html", "MouldMaster_Core_App.html", "MouldMaster_Academy_App.html", "manifest.webmanifest", "mouldmaster-192.png", "mouldmaster-512.png", "version.json", "reading-patch.css", "reading-patch.js", "training-upgrade.js", "training-qa-fix.js", "source-library.js", "pwa-shell.js", "learning-experience.js", "process-data-diagnostics.js", "curriculum-integration.js", "specialist-curriculum.js", "learning-analytics.js"]:
+for asset in [
+    "index.html", "MouldMaster_Core_App.html", "MouldMaster_Academy_App.html", "manifest.webmanifest",
+    "mouldmaster-192.png", "mouldmaster-512.png", "version.json", "reading-patch.css", "reading-patch.js",
+    "training-upgrade.js", "training-qa-fix.js", "source-library.js", "pwa-shell.js", "learning-experience.js",
+    "process-data-diagnostics.js", "curriculum-integration.js", "specialist-curriculum.js",
+    "specialist-evidence-gap-extension.js", "mould-master-workspace.js", "app-shell-finalize.js", "learning-analytics.js"
+]:
     assert f"'./{asset}'" in sw, f"offline asset missing: {asset}"
 install = sw[sw.index("self.addEventListener('install'"):sw.index("self.addEventListener('activate'")]
 assert "cache.addAll" in install, "install must fail if any core asset cannot be cached"
@@ -155,7 +171,12 @@ if lock.exists():
     lock_data = json.loads(lock.read_text(encoding="utf-8"))
     assert lock_data.get("lockfileVersion", 0) >= 2, "desktop npm lockfile is too old"
 
-for js_name in ["service-worker.js", "reading-patch.js", "training-upgrade.js", "training-qa-fix.js", "assessment-quality-suite.js", "source-library.js", "pwa-shell.js", "desktop/electron/src/main.cjs", "desktop/electron/scripts/generate-integrity.cjs", "desktop/electron/scripts/qa.cjs"]:
+for js_name in [
+    "service-worker.js", "reading-patch.js", "training-upgrade.js", "training-qa-fix.js",
+    "assessment-quality-suite.js", "source-library.js", "pwa-shell.js", "specialist-curriculum.js",
+    "specialist-evidence-gap-extension.js", "mould-master-workspace.js", "app-shell-finalize.js",
+    "desktop/electron/src/main.cjs", "desktop/electron/scripts/generate-integrity.cjs", "desktop/electron/scripts/qa.cjs"
+]:
     p = subprocess.run([NODE, "--check", js_name], capture_output=True, text=True)
     assert p.returncode == 0, f"{js_name}: {p.stderr}"
 
