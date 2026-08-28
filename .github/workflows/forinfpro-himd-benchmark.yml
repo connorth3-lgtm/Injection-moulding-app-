@@ -1,0 +1,51 @@
+name: MouldMaster FORinFPRO HIMD measured benchmark
+
+on:
+  workflow_dispatch:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'tools/profile_forinfpro_himd.py'
+      - '.github/workflows/forinfpro-himd-benchmark.yml'
+      - 'data/public-benchmark-results/forinfpro-himd-v1.json'
+      - 'data/profiled-measured-dataset-registry-v1.json'
+      - 'data/content-scale-targets.json'
+      - 'qa_content_scale_targets.py'
+
+permissions:
+  contents: read
+
+jobs:
+  profile:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Profile exact FORinFPRO HIMD Zenodo files
+        run: python tools/profile_forinfpro_himd.py --output forinfpro-himd-v1.json
+      - name: Enforce non-counting discovery boundary
+        run: |
+          python - <<'PY'
+          import json
+          p=json.load(open('forinfpro-himd-v1.json',encoding='utf-8'))
+          assert p['source']['doi']=='10.5281/zenodo.20744054'
+          assert p['source']['version']=='v1'
+          assert p['experimentalContext']['visibleCycles']==1
+          assert p['experimentalContext']['inMouldSensors']['total']==12
+          assert set(p['files'])=={'cycle_001_machine_data.csv','cycle_001_pt.csv','cycle_001_us_rms.csv'}
+          assert all(v['table']['rows']>0 and v['table']['columns']>0 for v in p['files'].values())
+          assert p['acceptedMeasuredCycles']==0
+          assert p['acceptedMeasuredTimeSeriesSamples']==0
+          assert p['rawSourceRowsCommitted'] is False
+          print('FORinFPRO HIMD exact-file discovery profile passed')
+          print('license:',p['source']['licenseMetadata'])
+          print('schemas:',{k:v['table']['header'] for k,v in p['files'].items()})
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: mouldmaster-forinfpro-himd-profile
+          path: forinfpro-himd-v1.json
+          retention-days: 90
