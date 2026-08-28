@@ -1,0 +1,16 @@
+{
+  "schema": 2,
+  "version": "2026.08.29.1",
+  "reviewed": "2026-08-29",
+  "mechanismId": "fibre-breakage-retained-length",
+  "registryTarget": "data/evidence-coverage-v1.json",
+  "promotionOverlayTarget": "data/evidence-promotion-overlay-v2.json",
+  "primaryMeasuredRegistryTarget": "data/primary-measured-evidence-registry-v1.json",
+  "authorMetadataTarget": "data/primary-measured-promotion-authors-v1.json",
+  "promotionRuleSnapshot": {"minimumIndependentPublisherVerifiedPrimaryMeasured":2,"requiresMeasuredSignals":true,"requiresPhysicalQualityOutcome":true,"requiresExperimentalContext":true,"requiresExplicitLimitation":true,"predictionIsNotCausation":true,"universalProcessRecipesAllowed":false},
+  "eligibility": {"independentPublisherVerifiedPrimaryMeasured":2,"meetsMinimumIndependentStudies":true,"measuredSignalsPresent":true,"physicalQualityOutcomesPresent":true,"experimentalContextPresent":true,"explicitLimitationsPresent":true,"eligibleForPromotion":true,"registryPromotionApplied":true},
+  "qualifyingDois": ["10.1002/pc.27232","10.1002/app.70427"],
+  "supportingDois": ["10.3390/polym14061251","10.1016/j.compositesa.2006.01.007","10.1002/pc.20298"],
+  "independenceRationale": "The two qualifying papers are distinct experimental programmes with different author teams and different fibre-processing architectures: conventional highly reinforced long-fibre polypropylene injection moulding versus direct-fibre-feeding GF/PP with redesigned mixing elements. They do not re-analyse or duplicate one moulding campaign, and both independently measure retained fibre morphology or length together with physical mechanical outcomes.",
+  "promotionClaim": "Promote the mechanism-level statement that measured plasticising and injection-moulding history can change retained fibre length and orientation, which can change physical part-quality and mechanical performance. Do not promote any tested screw speed, back pressure, mixing element, fibre length or strength value as a universal process setting, limit or acceptance rule."
+}
