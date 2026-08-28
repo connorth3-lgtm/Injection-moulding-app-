@@ -1,0 +1,35 @@
+{
+  "schema": 1,
+  "datasetId": "su13148102-supplement",
+  "status": "candidate-until-executed-profile-passes",
+  "source": {
+    "title": "Hot-runner molded sustainable-material experimental supplementary data",
+    "articleDoi": "10.3390/su13148102",
+    "supplementUrl": "https://www.mdpi.com/article/10.3390/su13148102/s1",
+    "publisher": "MDPI",
+    "license": "CC BY 4.0",
+    "peerReviewedCompanion": "10.3390/su13148102"
+  },
+  "paperReported": {
+    "rows": 955,
+    "columns": 42,
+    "materials": 5,
+    "namedDataFile": "BioplasticsTensile.csv",
+    "experiment": "two-cavity hot-runner injection moulding of iPP, recycled PP blend, PBAT and two PLA grades",
+    "processFactors": ["melt temperature", "injection velocity", "cycle time", "screw speed"],
+    "physicalOutcomes": ["strain to failure", "ultimate stress", "tensile modulus", "toughness"],
+    "additionalMeasuredStateExamples": ["observed cycle time", "observed melt temperature", "calculated cavity shear rate"]
+  },
+  "acceptance": {
+    "requireExactPublisherSupplementRetrieval": true,
+    "requireSha256": true,
+    "require955Rows": true,
+    "require42Columns": true,
+    "requireFiveMaterialGroups": true,
+    "requireProcessAndMechanicalFields": true,
+    "requireNoRawRowsInProfile": true,
+    "rawSupplementCommitted": false,
+    "rawRowsUploadedAsArtifact": false
+  },
+  "evidenceBoundary": "The peer-reviewed article explicitly states that the supplementary table contains 955 observations and 42 columns across five materials. The benchmark must retrieve the publisher supplement, fingerprint the delivered file, prove those dimensions and document field/material grouping before it counts as a fully profiled measured dataset. It does not establish universal process settings."
+}
