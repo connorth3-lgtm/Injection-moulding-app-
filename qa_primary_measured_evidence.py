@@ -49,7 +49,7 @@ need(policy.get('minimumRedundancyPerStagedMechanism') == 3, 'staged mechanism r
 need(set(policy.get('excludedFromCount', [])) == FORBIDDEN_COUNT_TYPES, 'excluded evidence-type policy drifted')
 
 packs = index.get('packs', [])
-need(len(packs) == 5, f'expected 5 primary measured evidence packs, found {len(packs)}')
+need(len(packs) == 6, f'expected 6 primary measured evidence packs, found {len(packs)}')
 entries = []
 pack_counts = {}
 for p in packs:
@@ -63,9 +63,9 @@ for p in packs:
     entries.extend(rows)
 
 summary = index.get('summary', {})
-need(len(entries) == 60, f'expected 60 counted primary measured studies, found {len(entries)}')
-need(summary.get('publisherVerifiedPeerReviewedPrimaryMeasured') == 60, 'summary primary measured total drifted')
-need(summary.get('uniqueDois') == 60, 'summary unique DOI count drifted')
+need(len(entries) == 65, f'expected 65 counted primary measured studies, found {len(entries)}')
+need(summary.get('publisherVerifiedPeerReviewedPrimaryMeasured') == 65, 'summary primary measured total drifted')
+need(summary.get('uniqueDois') == 65, 'summary unique DOI count drifted')
 
 dois = []
 experiments = []
@@ -108,8 +108,8 @@ for i, e in enumerate(entries, 1):
 
 need(len(dois) == len(set(dois)), 'duplicate DOI counted as independent primary measured evidence')
 need(len(experiments) == len(set(experiments)), 'duplicate experiment identity counted as an independent primary measured study')
-need(tier_counts == {'A': 4, 'B': 56}, f'credibility-tier counts drifted: {tier_counts}')
-need(summary.get('tierA') == 4 and summary.get('tierB') == 56, 'manifest tier summary drifted')
+need(tier_counts == {'A': 4, 'B': 61}, f'credibility-tier counts drifted: {tier_counts}')
+need(summary.get('tierA') == 4 and summary.get('tierB') == 61, 'manifest tier summary drifted')
 
 by_doi = {e['doi'].lower(): e for e in entries}
 candidates = index.get('promotionCandidates', [])
@@ -217,4 +217,4 @@ report = {
     'result': 'pass'
 }
 REPORT.write_text(json.dumps(report, indent=2) + '\n', encoding='utf-8')
-print('MouldMaster primary measured evidence QA passed (60 unique peer-reviewed primary measured studies; 4 Tier A / 56 Tier B; 9 qualified mechanisms with independent backup evidence; 9 explicit formal promotions; no automatic discovery-to-status changes)')
+print('MouldMaster primary measured evidence QA passed (65 unique peer-reviewed primary measured studies; 4 Tier A / 61 Tier B; 9 qualified mechanisms with independent backup evidence; 9 explicit formal promotions; no automatic discovery-to-status changes)')
