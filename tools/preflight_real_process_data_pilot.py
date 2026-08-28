@@ -154,20 +154,21 @@ def main() -> int:
         except StopIteration:
             headers = []
         headers = [h.strip() for h in headers]
-        duplicate_headers = sorted({h for h in headers if headers.count(h) > 1 and h})
         rows = [row for row in reader if any(str(v).strip() for v in row)]
 
     row_count = len(rows)
     width = len(headers)
+    empty_header_count = sum(not h for h in headers)
+    duplicate_header_count = sum(count - 1 for count in Counter(h for h in headers if h).values() if count > 1)
+    row_width_mismatch_count = sum(len(row) != width for row in rows)
     normalized_rows = [dict(zip(headers, row + [""] * max(0, width - len(row)))) for row in rows]
 
     missing_required = sorted(REQUIRED_HEADERS - set(headers))
-    forbidden_headers = []
+    forbidden_header_count = 0
     for h in headers:
         lower = h.lower()
         if any(token in lower for token in FORBIDDEN_HEADER_TOKENS):
-            forbidden_headers.append(h)
-    forbidden_headers = sorted(set(forbidden_headers))
+            forbidden_header_count += 1
 
     shot_missing = shot_nonnumeric = shot_duplicate = shot_non_increasing = 0
     shot_values = []
@@ -233,11 +234,15 @@ def main() -> int:
     technical_failures = []
     if row_count < 2:
         technical_failures.append("prepared file must contain at least two data rows")
-    if duplicate_headers:
+    if empty_header_count:
+        technical_failures.append("one or more CSV headers are blank")
+    if duplicate_header_count:
         technical_failures.append("duplicate headers are present")
+    if row_width_mismatch_count:
+        technical_failures.append("one or more data rows do not match the header column count")
     if missing_required:
         technical_failures.append("required prepared-pilot headers are missing")
-    if forbidden_headers:
+    if forbidden_header_count:
         technical_failures.append("prepared file still contains direct/person/timestamp/free-text header classes")
     if shot_missing or shot_nonnumeric or shot_duplicate or shot_non_increasing:
         technical_failures.append("shot_index is not complete, numeric, unique and strictly increasing")
@@ -280,11 +285,14 @@ def main() -> int:
             "size_bytes": file_size,
             "data_rows": row_count,
             "columns": width,
+            "row_width_mismatch_count": row_width_mismatch_count,
         },
         "privacy": {
             "raw_values_emitted": False,
-            "forbidden_headers_present": forbidden_headers,
-            "duplicate_headers": duplicate_headers,
+            "forbidden_header_count": forbidden_header_count,
+            "duplicate_header_count": duplicate_header_count,
+            "empty_header_count": empty_header_count,
+            "unknown_header_names_emitted": False,
         },
         "schema": {
             "missing_required_headers": missing_required,
