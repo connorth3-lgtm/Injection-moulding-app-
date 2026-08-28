@@ -1,1 +1,79 @@
-PLACEHOLDER
+{
+  "schema": 1,
+  "version": "2026.08.28.1",
+  "reviewed": "2026-08-28",
+  "scope": "Deduplicated publisher-verified peer-reviewed primary measured injection-moulding evidence. Reviews, simulation-only work, synthetic-only data and duplicate publications/companion datasets from the same experiment do not inflate the primary measured count.",
+  "credibilityPolicy": {
+    "tierA": "Peer-reviewed primary measured study with a public raw or companion measured dataset whose provenance is tied to the experiment.",
+    "tierB": "Publisher-verified peer-reviewed primary measured study with real experimental/production measurements and physical quality outcomes, but reusable raw data are not confirmed public or are request-only.",
+    "predictionIsNotCausation": true,
+    "universalProcessRecipesAllowed": false,
+    "sameExperimentPaperAndDatasetCountOnce": true,
+    "excludedFromCount": [
+      "review",
+      "systematic-review",
+      "simulation-only",
+      "synthetic-only",
+      "conference-abstract-without-measured-methods",
+      "unverified-third-party-mirror",
+      "duplicate-publication-of-same-experiment"
+    ]
+  },
+  "packs": [
+    {"path":"data/primary-measured-evidence/process-quality-pressure-v1.json","entries":10},
+    {"path":"data/primary-measured-evidence/specialist-tooling-v1.json","entries":6},
+    {"path":"data/primary-measured-evidence/materials-fibre-moisture-v1.json","entries":7},
+    {"path":"data/primary-measured-evidence/surface-optics-classic-v1.json","entries":8}
+  ],
+  "summary": {
+    "publisherVerifiedPeerReviewedPrimaryMeasured": 31,
+    "tierA": 3,
+    "tierB": 28,
+    "uniqueDois": 31,
+    "promotionCandidatesStagedNotApplied": 6
+  },
+  "promotionCandidates": [
+    {
+      "mechanismId":"fibre-breakage-retained-length",
+      "status":"eligible-candidate-not-applied",
+      "qualifyingDois":["10.1002/pc.27232","10.1002/app.70427"],
+      "independenceRationale":"The two qualifying papers are distinct experimental programmes with different author teams and different fibre-processing architectures: conventional highly reinforced long-fibre polypropylene injection moulding versus direct-fibre-feeding GF/PP with redesigned mixing elements. They do not re-analyse or duplicate one moulding campaign, and both independently measure retained fibre morphology/length together with physical mechanical outcomes.",
+      "boundedClaim":"Measured injection-moulding history and plasticising/mixing architecture can change retained fibre length and therefore mechanical response. Do not promote any tested screw, mixing-element, fibre-length or process value as a universal limit or setting."
+    },
+    {
+      "mechanismId":"runner-gate-multicavity-imbalance",
+      "status":"eligible-candidate-not-applied",
+      "qualifyingDois":["10.3390/polym16202874","10.3390/s23031735"],
+      "independenceRationale":"These are separate multicavity experimental programmes from distinct research teams: one varies runner/gate geometry and polymer viscosity while measuring cavity-specific fill and mechanical outcomes, while the other uses multiple in-mould sensors and controlled switchover/holding/clamping experiments to observe local cavity behaviour. They are not duplicate publications or re-analyses of a shared dataset.",
+      "boundedClaim":"Geometric balance does not guarantee rheological balance; cavity-resolved pressure/fill and physical outcomes are needed before averaging multicavity behaviour. Do not promote runner size, gate size, pressure or balance values as universal design limits."
+    },
+    {
+      "mechanismId":"liquid-silicone-rubber",
+      "status":"eligible-candidate-not-applied",
+      "qualifyingDois":["10.1002/app.53381","10.7735/ksmte.2014.23.2.206"],
+      "independenceRationale":"The counted LSR studies are distinct experiments from different teams and years: the 2023 programme characterises cross-linking/cure state through cavity-pressure and DSC evidence, while the 2014 programme varies processing conditions and measures cavity pressure/temperature together with tensile strength. They are separate experimental programmes rather than duplicate publications or re-analysis of the same moulding campaign.",
+      "boundedClaim":"LSR cure/cross-linking produces measurable cavity-pressure/thermal signatures tied to physical material or mechanical outcomes. Do not promote any cure time, cavity pressure, mould temperature or strength value as a universal LSR prescription."
+    },
+    {
+      "mechanismId":"moisture-drying-degradation",
+      "status":"eligible-candidate-not-applied",
+      "qualifyingDois":["10.3390/app12031410","10.37358/MP.20.1.5311"],
+      "independenceRationale":"The two qualifying studies are separate material-conditioning and injection-moulding experiments from different research teams. One uses measured residual moisture with controlled plasticisation experiments on TPU/PC and physical appearance outcomes; the other independently examines PA/TPU drying/residual-moisture condition and moulded quality defects. They are not duplicate publications or re-analysis of one dataset.",
+      "boundedClaim":"Measured material moisture/drying state can alter moulded-part quality and must be distinguished from a dryer setpoint alone. Do not promote any moisture percentage, dryer temperature or residence time as a universal material limit; supplier grade data remain authoritative for production."
+    },
+    {
+      "mechanismId":"surface-replication-release",
+      "status":"eligible-candidate-not-applied",
+      "qualifyingDois":["10.1016/j.jmapro.2019.04.010","10.1002/pen.24772"],
+      "independenceRationale":"The qualifying studies are distinct experimental programmes from separate teams and tooling contexts: one applies a factorial process study and multi-scale metrology to randomly micro-textured mouldings, while the other uses variothermal PMMA microfluidic replication with independently measured cavity-surface temperature and in-cavity melt pressure. They do not duplicate or re-analyse the same moulding experiment.",
+      "boundedClaim":"Surface replication depends on local thermal/pressure history, feature scale, polymer and tool surface; measured physical replication should be used instead of appearance assumptions. Do not promote tested temperatures, pressures, feature ratios or timing as universal replication settings."
+    },
+    {
+      "mechanismId":"injection-compression-precision-optics",
+      "status":"eligible-candidate-not-applied",
+      "qualifyingDois":["10.1002/pat.6166","10.1002/pen.23429"],
+      "independenceRationale":"These are independent precision-optics injection-compression programmes with different authors, polymers and geometries: a 2023 plastic lens-array experiment measures optical path difference, displacement, birefringence and imaging quality, while a 2013 PS/PC disk programme experimentally measures residual birefringence alongside simulation. They are separate experiments, not duplicate publications or re-analysis of the same data.",
+      "boundedClaim":"Injection-compression history can materially affect residual birefringence, dimensional and optical performance, so precision optics requires physical optical/stress metrology. Do not promote compression gap, timing, temperature, pressure or birefringence values as universal production limits."
+    }
+  ]
+}
