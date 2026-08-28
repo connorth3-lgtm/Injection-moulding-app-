@@ -2,30 +2,40 @@ name: MouldMaster Primary Measured Evidence
 
 on:
   push:
-    branches: [main, evidence-coverage-hardening]
+    branches: [main, evidence-coverage-hardening, evidence-scale-execution-2026-08-28]
     paths:
       - 'data/primary-measured-evidence-registry-v1.json'
       - 'data/primary-measured-evidence/**'
+      - 'data/primary-measured-promotion-authors-v1.json'
+      - 'data/evidence-promotion-overlay-v2.json'
+      - 'data/mechanism-promotion-evidence/**'
       - 'data/measured-dataset-inventory-v1.json'
       - 'data/measured-data-discovery-queue-v1.json'
       - 'data/evidence-coverage-v1.json'
       - 'qa_primary_measured_evidence.py'
+      - 'qa_mechanism_promotion.py'
       - 'qa_measured_dataset_inventory.py'
       - 'qa_measured_data_discovery_queue.py'
       - 'sources/PRIMARY_MEASURED_EVIDENCE_REGISTRY.md'
+      - 'sources/EVIDENCE_PROMOTION_OVERLAY.md'
       - '.github/workflows/primary-measured-evidence.yml'
   pull_request:
     branches: [main]
     paths:
       - 'data/primary-measured-evidence-registry-v1.json'
       - 'data/primary-measured-evidence/**'
+      - 'data/primary-measured-promotion-authors-v1.json'
+      - 'data/evidence-promotion-overlay-v2.json'
+      - 'data/mechanism-promotion-evidence/**'
       - 'data/measured-dataset-inventory-v1.json'
       - 'data/measured-data-discovery-queue-v1.json'
       - 'data/evidence-coverage-v1.json'
       - 'qa_primary_measured_evidence.py'
+      - 'qa_mechanism_promotion.py'
       - 'qa_measured_dataset_inventory.py'
       - 'qa_measured_data_discovery_queue.py'
       - 'sources/PRIMARY_MEASURED_EVIDENCE_REGISTRY.md'
+      - 'sources/EVIDENCE_PROMOTION_OVERLAY.md'
       - '.github/workflows/primary-measured-evidence.yml'
   workflow_dispatch:
 
@@ -46,6 +56,8 @@ jobs:
           python-version: '3.12'
       - name: Validate deduplicated peer-reviewed primary measured registry
         run: python qa_primary_measured_evidence.py
+      - name: Validate formal mechanism promotion dossiers
+        run: python qa_mechanism_promotion.py
       - name: Validate governed measured dataset inventory
         run: python qa_measured_dataset_inventory.py
       - name: Validate new measured-data discovery queue
@@ -54,7 +66,9 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: mouldmaster-primary-measured-evidence
-          path: primary-measured-evidence-report.json
+          path: |
+            primary-measured-evidence-report.json
+            mechanism-promotion-report.json
           if-no-files-found: error
       - name: Upload aggregate measured dataset inventory QA report
         uses: actions/upload-artifact@v4
