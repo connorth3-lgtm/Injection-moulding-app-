@@ -22,6 +22,7 @@ need(COMPILER.exists(), "master data compiler missing")
 source_inventory = load(DATA / "measured-dataset-inventory-v1.json")
 source_profiled = load(DATA / "profiled-measured-dataset-registry-v1.json")
 source_primary = load(DATA / "primary-measured-evidence-registry-v1.json")
+source_sensor = load(DATA / "sensor-machine-health-registry-v1.json")
 source_targets = load(DATA / "content-scale-targets.json")
 
 inventory_rows = source_inventory.get("datasets") or []
@@ -29,19 +30,24 @@ inventory_summary = source_inventory.get("summary") or {}
 profiled_rows = source_profiled.get("datasets") or []
 profiled_summary = source_profiled.get("summary") or {}
 primary_summary = source_primary.get("summary") or {}
+sensor_rows = source_sensor.get("concepts") or []
+sensor_summary = source_sensor.get("summary") or {}
 
 expected_inventory = len(inventory_rows)
 expected_automated = sum(1 for row in inventory_rows if row.get("automatedIngestionAllowed") is True)
 expected_profiled = len(profiled_rows)
 expected_samples = profiled_summary.get("acceptedMeasuredTimeSeriesSamples")
 expected_primary = primary_summary.get("publisherVerifiedPeerReviewedPrimaryMeasured")
+expected_sensor = len(sensor_rows)
 expected_peer_reviewed = (source_targets.get("targets") or {}).get("peer_reviewed_research_records", {}).get("currentAccepted")
 
 need(inventory_summary.get("datasets") == expected_inventory, "source inventory summary drifted before compilation")
 need(inventory_summary.get("automatedIngestionAllowed") == expected_automated, "source automated-ingestion summary drifted before compilation")
 need(profiled_summary.get("fullyProfiledDatasetPackages") == expected_profiled, "source profiled summary drifted before compilation")
+need(sensor_summary.get("acceptedConcepts") == expected_sensor, "source sensor/machine-health summary drifted before compilation")
 need((source_targets.get("targets") or {}).get("fully_profiled_measured_datasets", {}).get("currentAccepted") == expected_profiled, "target/profiled package mismatch before compilation")
 need((source_targets.get("targets") or {}).get("measured_time_series_samples", {}).get("currentAccepted") == expected_samples, "target/profiled sample mismatch before compilation")
+need((source_targets.get("targets") or {}).get("sensor_machine_health_concepts", {}).get("currentAccepted") == expected_sensor, "target/sensor-health mismatch before compilation")
 
 with tempfile.TemporaryDirectory() as td:
     p = subprocess.run(
@@ -70,6 +76,7 @@ with tempfile.TemporaryDirectory() as td:
         "measuredTimeSeriesSamplesAccepted": expected_samples,
         "publisherVerifiedPrimaryMeasuredStudies": expected_primary,
         "verifiedPeerReviewedResearchRecords": expected_peer_reviewed,
+        "acceptedSensorMachineHealthConcepts": expected_sensor,
     }
     for key, value in ledger_expected.items():
         need(counts.get(key) == value, f"compiled ledger count drift for {key}: {counts.get(key)} != {value}")
@@ -104,10 +111,13 @@ with tempfile.TemporaryDirectory() as td:
     measured = load(out / "measured-data.json")
     compiled_inventory = measured["datasetInventory"]
     compiled_profiled = measured["profiledMeasuredDatasetRegistry"]
+    compiled_sensor = measured["sensorMachineHealthRegistry"]
     need(compiled_inventory["summary"]["datasets"] == expected_inventory, "compiled measured inventory count drifted")
     need(len(compiled_inventory["datasets"]) == expected_inventory, "compiled measured inventory rows incomplete")
     need(compiled_profiled["summary"]["fullyProfiledDatasetPackages"] == expected_profiled, "compiled profiled package count drifted")
     need(compiled_profiled["summary"]["acceptedMeasuredTimeSeriesSamples"] == expected_samples, "compiled measured-sample total drifted")
+    need(compiled_sensor["summary"]["acceptedConcepts"] == expected_sensor, "compiled accepted sensor/health count drifted")
+    need(len(compiled_sensor["concepts"]) == expected_sensor, "compiled accepted sensor/health registry incomplete")
 
     source_profiled_ids = {x["datasetId"] for x in profiled_rows}
     compiled_profiled_ids = {x["datasetId"] for x in compiled_profiled["datasets"]}
@@ -116,6 +126,15 @@ with tempfile.TemporaryDirectory() as td:
         "iguzzini-road-lenses", "skz-loki-v1", "impure-pascoe-2022", "forinfpro-himd-v1",
         "cross-process-chain-17240390", "hdpe-gnp-v3",
     }.issubset(compiled_profiled_ids), "compiled accepted registry missing recent promotions")
+
+    source_sensor_ids = {x["id"] for x in sensor_rows}
+    compiled_sensor_ids = {x["id"] for x in compiled_sensor["concepts"]}
+    need(compiled_sensor_ids == source_sensor_ids, "compiled sensor/machine-health registry differs from canonical source registry")
+    need({
+        "sig-cavity-pressure-direct-measurement", "sig-extraction-force-ejector-pin",
+        "sig-screw-torque-peak", "sig-tie-bar-strain-clamp-proxy",
+        "sig-three-phase-active-power",
+    }.issubset(compiled_sensor_ids), "compiled sensor/machine-health registry missing foundational accepted concepts")
 
     benchmark_profiles = measured.get("publicBenchmarkResults") or {}
     need({
@@ -150,5 +169,5 @@ print(
     "MouldMaster master data compilation QA passed "
     f"({expected_inventory} inventoried sources; {expected_automated} automated-ingestion; "
     f"{expected_profiled} accepted measured packages; {expected_samples:,} accepted scalar samples; "
-    f"{expected_primary} verified primary measured studies)"
+    f"{expected_primary} verified primary measured studies; {expected_sensor} accepted sensor/health concepts)"
 )
