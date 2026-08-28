@@ -20,6 +20,7 @@ PROBAYES_MAIN = RESULTS / "probayes-main-v2.json"
 PROBAYES_DOPT = RESULTS / "probayes-doptimal-v1.json"
 SKZ_LOKI = RESULTS / "skz-loki-v1.json"
 IGUZZINI = RESULTS / "iguzzini-road-lenses-v1.json"
+PASCOE = RESULTS / "impure-pascoe-2022-v1.json"
 PET_PREFORM = RESULTS / "vc3k9tt5zj-v2.json"
 
 
@@ -69,7 +70,7 @@ inv = {x["datasetId"]: x for x in datasets}
 for required in [
     "mendeley-gtnb4j7bfx-v1", "scatimdata-avaps", "su13148102-supplement",
     "openmms-t4g", "probayes-main-v2", "probayes-doptimal-v1",
-    "skz-loki-v1", "iguzzini-road-lenses"
+    "skz-loki-v1", "iguzzini-road-lenses", "impure-pascoe-2022"
 ]:
     need(required in inv, f"required measured source missing from inventory: {required}")
 need(inv["probayes-main-v2"].get("accessState") == "executed-open-profiled", "ProBayes main access state drifted")
@@ -191,6 +192,27 @@ need(ig.get("acceptedMeasuredRecords") == 1451 and ig.get("acceptedMeasuredTimeS
 need(ig.get("rawSourceRowsCommitted") is False and ig.get("rawSourceRedistributed") is False, "iGuzzini raw-data boundary drifted")
 need("not specified" in ((ig.get("experimentalContext") or {}).get("material") or "").lower(), "iGuzzini missing-material limitation must remain explicit")
 
+# ImPure/PASCOE 17 May: exact 307-cycle source and quality files, scalar ledger kept conservative.
+pascoe = load(PASCOE)
+psource = pascoe.get("source") or {}
+pverify = pascoe.get("sourceVerification") or {}
+pcycle = pascoe.get("cycleCoverage") or {}
+pstruct = pascoe.get("observedCycleStructure") or {}
+psem = pascoe.get("measurementSemantics") or {}
+pquality = pascoe.get("qualityEvidence") or {}
+need(pascoe.get("status") == "completed-public-measured-benchmark", "PASCOE benchmark status missing")
+need(psource.get("doi") == "10.5281/zenodo.6913660" and psource.get("license") == "CC BY 4.0", "PASCOE source/licence drifted")
+need(pverify.get("publisherFiles") == 309 and pverify.get("verifiedFileCount") == 309 and pverify.get("allDownloadedFilesMatchedPublisherMd5") is True, "PASCOE exact-file verification drifted")
+need(pverify.get("fingerprintManifestSha256") == "7ccf2279e0906269adce34d2ba6167d6daa86b40ed0ed2f1e811e9d99f1e6655", "PASCOE fingerprint manifest drifted")
+need(pcycle.get("acceptedMeasuredCycles") == 307 and pascoe.get("acceptedMeasuredCycles") == 307, "PASCOE accepted cycle count drifted")
+need(pstruct.get("all307CycleFilesUseSameHeader") is True and pstruct.get("totalRowsAcrossCycleFiles") == 297_087, "PASCOE cycle structure drifted")
+need(pstruct.get("numericSensorChannelsPerRow") == 8 and pstruct.get("totalNumericSensorCellsAcrossCycleFiles") == 2_376_696 and pstruct.get("totalMissingSensorCellsAcrossCycleFiles") == 0, "PASCOE sensor-cell structure drifted")
+need(len(psem.get("directNamedChannels") or []) == 6 and psem.get("candidateDirectNamedValuesNotAcceptedAsSamples") == 1_782_522, "PASCOE direct-channel candidate count drifted")
+need(psem.get("sourceUnitsExplicitInCycleHeaders") is False and psem.get("sourceTimeBasisNormalized") is False, "PASCOE unit/time non-counting boundary drifted")
+need(pascoe.get("acceptedMeasuredTimeSeriesSamples") == 0, "PASCOE must not inflate measured scalar samples before unit/time verification")
+need(pquality.get("twoCavityLabelRows") == 386 and pquality.get("dimensionalAndWeightRows") == 772, "PASCOE measured quality-file structure drifted")
+need(pascoe.get("rawSourceRowsCommitted") is False and pascoe.get("rawSourceFilesCommitted") is False, "PASCOE raw-data boundary drifted")
+
 # Dedicated accepted dataset registry is the hard count source of truth.
 profiled = load(PROFILED)
 profiled_rows = profiled.get("datasets") or []
@@ -198,14 +220,14 @@ profiled_summary = profiled.get("summary") or {}
 expected_profiled_ids = {
     "mendeley-gtnb4j7bfx-v1", "scatimdata-avaps", "su13148102-supplement",
     "openmms-t4g", "probayes-main-v2", "probayes-doptimal-v1",
-    "skz-loki-v1", "iguzzini-road-lenses",
+    "skz-loki-v1", "iguzzini-road-lenses", "impure-pascoe-2022",
 }
-need(len(profiled_rows) == 8 and {x.get("datasetId") for x in profiled_rows} == expected_profiled_ids, "accepted profiled dataset set drifted")
-need(profiled_summary.get("fullyProfiledDatasetPackages") == 8, "profiled dataset count drifted")
-need(profiled_summary.get("recordLevelDatasetPackages") == 3 and profiled_summary.get("timeSeriesDatasetPackages") == 5, "profiled dataset type counts drifted")
+need(len(profiled_rows) == 9 and {x.get("datasetId") for x in profiled_rows} == expected_profiled_ids, "accepted profiled dataset set drifted")
+need(profiled_summary.get("fullyProfiledDatasetPackages") == 9, "profiled dataset count drifted")
+need(profiled_summary.get("recordLevelDatasetPackages") == 3 and profiled_summary.get("timeSeriesDatasetPackages") == 6, "profiled dataset type counts drifted")
 need(profiled_summary.get("acceptedMeasuredTimeSeriesSamples") == 52_526_432, "profiled registry sample total drifted")
 need(sum(int(x.get("acceptedMeasuredTimeSeriesSamples", 0)) for x in profiled_rows) == 52_526_432, "profiled sample totals do not reconcile")
-need(targets["fully_profiled_measured_datasets"]["currentAccepted"] == 8, "target ledger accepted dataset count drifted")
+need(targets["fully_profiled_measured_datasets"]["currentAccepted"] == 9, "target ledger accepted dataset count drifted")
 need(targets["measured_time_series_samples"]["currentAccepted"] == 52_526_432, "target ledger measured-sample total drifted")
 
 # PET remains simulation/prediction-oriented and excluded.
@@ -232,18 +254,19 @@ for marker in ["synthetic process-data cases never count", "actual source files"
     need(marker in rules, f"content-scale non-counting rule missing: {marker}")
 
 report = {
-    "schema": 6,
+    "schema": 7,
     "version": obj.get("version"),
     "reviewed": obj.get("reviewed"),
     "measuredDatasetDiscovery": {
         "inventoryCount": len(datasets),
         "legacyCatalogSeedCount": len(legacy.get("datasets") or []),
-        "fullyProfiledAccepted": 8,
+        "fullyProfiledAccepted": 9,
         "acceptedMeasuredTimeSeriesSamples": 52_526_432,
         "automatedIngestionAllowed": summary.get("automatedIngestionAllowed"),
         "embargoedRecords": summary.get("embargoed"),
         "proBayesAcceptedCycles": 867,
         "iGuzziniAcceptedRecords": 1451,
+        "pascoeAcceptedCycles": 307,
     },
     "verifiedResearch": {
         "publisherVerifiedPeerReviewedPrimaryMeasured": verified,
@@ -261,12 +284,13 @@ report = {
         }
         for key in expected_targets
     },
-    "boundary": "No synthetic, metadata-only, generated-draft, simulation/prediction-only or heuristic-candidate evidence is counted as completed measured/reviewed content unless its area-specific acceptance definition is satisfied. iGuzzini is accepted as record-level real-production evidence but contributes zero waveform samples; RWTH remains uncounted until exact source bytes are obtainable and profiled."
+    "boundary": "No synthetic, metadata-only, generated-draft, simulation/prediction-only or heuristic-candidate evidence is counted as completed measured/reviewed content unless its area-specific acceptance definition is satisfied. PASCOE is accepted as 307 real cycle records under CC BY 4.0 but contributes zero accepted waveform scalars until source units/time semantics are verified; RWTH remains uncounted until exact source bytes are obtainable and profiled."
 }
 (ROOT / "content-scale-targets-report.json").write_text(json.dumps(report, indent=2) + "\n", encoding="utf-8")
 print(
     "MouldMaster content-scale target integrity QA passed "
-    f"({len(datasets)} measured datasets inventoried; 8 fully profiled dataset packages; "
+    f"({len(datasets)} measured datasets inventoried; 9 fully profiled dataset packages; "
     "52,526,432 accepted real measured time-series samples; 867 accepted ProBayes cycles; "
-    "1,451 accepted iGuzzini real-production records; 60 publisher-verified primary measured studies)"
+    "1,451 accepted iGuzzini real-production records; 307 accepted PASCOE cycles; "
+    "60 publisher-verified primary measured studies)"
 )
