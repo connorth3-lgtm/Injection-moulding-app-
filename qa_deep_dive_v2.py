@@ -54,6 +54,13 @@ for key, minimum in MIN_TARGETS.items():
     assert isinstance(actual, int), f"Deep Dive v2 target missing or non-integer: {key}"
     assert actual >= minimum, f"Deep Dive v2 target reduced: {key}={actual}, minimum={minimum}"
 
+execution = data.get("execution_state", {})
+assert execution.get("wave1_passes_preserved") == 100, "Wave-1 preservation state missing"
+assert execution.get("wave2_passes_added") == 100, "Wave-2 execution state missing"
+assert execution.get("cumulative_passes") == 200, "Cumulative execution state must remain 200"
+assert execution.get("wave2_primary_seeded", 0) >= 59, "Wave-2 primary-seeded execution state regressed"
+assert execution.get("wave2_explicit_gaps") == 100 - execution.get("wave2_primary_seeded", 0), "Wave-2 execution-state accounting is incoherent"
+
 levels = data.get("evidence_levels", {})
 assert list(levels) == ["E0", "E1", "E2", "E3", "E4", "E5", "E6"], "Evidence maturity E0-E6 must remain explicit"
 
@@ -68,7 +75,7 @@ assert required_intake.issubset(set(data.get("dataset_intake_required_fields", [
 
 programme = PROGRAMME_FILE.read_text(encoding="utf-8")
 for phrase in [
-    "2,000", "1,000", "300", "400", "600", "10,000",
+    "2,000", "1,000", "300", "400", "600", "10,000", "200 cumulative research/evidence passes",
     "Real-data-first rule", "Evidence maturity", "model accuracy", "causality",
     "Do not relabel synthetic data as measured"
 ]:
@@ -128,7 +135,8 @@ for marker in [
 ]:
     assert marker in expansion, f"Wave-1 expansion marker missing: {marker}"
 
-wave2_data = json.loads(WAVE2_FILE.read_text(encoding="utf-8"))
+wave2_text = WAVE2_FILE.read_text(encoding="utf-8")
+wave2_data = json.loads(wave2_text)
 assert wave2_data.get("pass_count") == 100, "Wave 2 must contain exactly 100 execution passes"
 assert wave2_data.get("id_range") == [101, 200], "Wave-2 ID range must remain 101-200"
 assert wave2_data.get("cumulative_pass_count") == 200, "Cumulative Deep Dive execution count must remain 200"
@@ -152,6 +160,8 @@ assert wave2_seeded >= 59, f"Wave-2 primary-seeded pass count regressed: {wave2_
 assert wave2_gaps == 100 - wave2_seeded, "Wave-2 seeded/gap accounting is incoherent"
 assert wave2_data.get("summary", {}).get("by_status", {}).get("seeded_with_primary") == wave2_seeded
 assert wave2_data.get("summary", {}).get("by_status", {}).get("gap_seeded") == wave2_gaps
+assert execution.get("wave2_primary_seeded") == wave2_seeded, "Target execution state disagrees with Wave-2 ledger"
+assert execution.get("wave2_explicit_gaps") == wave2_gaps, "Target execution state gap count disagrees with Wave-2 ledger"
 for marker in [
     "10.1016/j.jmapro.2024.03.019",
     "10.1002/pen.70028",
@@ -161,7 +171,7 @@ for marker in [
     "10.1109/tim.2024.3522402",
     "10.1109/access.2024.3425582",
 ]:
-    assert marker in WAVE2_FILE.read_text(encoding="utf-8"), f"Wave-2 evidence marker missing: {marker}"
+    assert marker in wave2_text, f"Wave-2 evidence marker missing: {marker}"
 
 report = {
     "programme": data["programme"],
