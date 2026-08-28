@@ -1,6 +1,7 @@
 # Public real injection-moulding data benchmarks
 
-Status: external benchmark register — first public measured benchmark completed; not a substitute for an authorised site pilot  
+Status: external benchmark register — not a substitute for an authorised site pilot  
+Measured benchmark status: first public measured benchmark completed 2026-08-28  
 Reviewed: 2026-08-28
 
 MouldMaster's synthetic process-data library is useful for teaching mechanisms, but measured external datasets can expose ingestion, missing-data, process/quality and evidence-ranking assumptions before a private site pilot is available. This register records candidate **real measured** datasets without copying third-party raw data into this repository.
@@ -62,7 +63,7 @@ The completed run demonstrates that MouldMaster can:
 
 It does **not** establish shot-level causality, intervention/recovery evidence, in-mould cavity-pressure or cavity-temperature traces, a validated process window, universal settings or an independently proven physical root cause. It is external measured-data **pathway evidence**, not completion of authorised site-pilot issue #50.
 
-Issue #53 is closed as completed. The stronger real-site diagnostic validation remains open separately in issue #50.
+Issue #53 is closed as completed. The stronger authorised site-pilot evidence tracked in issue #50 remains open separately.
 
 ## Reuse-ready candidate 2 — Preform injection molding analysis — Database
 
@@ -129,7 +130,7 @@ Recheck the live record later rather than assuming the embargo or licence remain
 
 The repository provides two complementary paths for benchmark 1.
 
-`tools/profile_public_benchmark.py` fingerprints and profiles a locally downloaded licensed CSV/TSV/TXT/XLSX source without writing raw rows to its JSON report. This remains useful for controlled local review.
+`tools/profile_public_benchmark.py` fingerprints and profiles a locally downloaded licensed CSV/TSV/TXT/XLSX source without writing raw rows to its JSON report. This remains useful for controlled local review. The raw measured file stays outside this repository, and local use of the preflight still requires `--confirm-process-separated` only after the operator has selected or filtered injection-moulding records.
 
 The CI benchmark lane uses the exact-source Mendeley v1 adapter and public publisher endpoint. It verifies the exact file/sheet/schema, proves the 4,502/1,855 process split, normalizes the 26 injection fields, runs aggregate profiling and result QA, deletes `.benchmark-work`, and uploads only the aggregate JSON profile.
 
