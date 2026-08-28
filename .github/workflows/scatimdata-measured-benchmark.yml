@@ -20,7 +20,7 @@ jobs:
         with:
           python-version: '3.12'
       - name: Install profiling readers
-        run: python -m pip install --disable-pip-version-check openpyxl numpy
+        run: python -m pip install --disable-pip-version-check openpyxl numpy h5py
       - name: Profile CC BY scatimdata archives
         run: python tools/profile_scatimdata.py --output scatimdata-v1.json
       - name: Validate profile boundary
