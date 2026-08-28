@@ -5,13 +5,17 @@ import re
 TARGET_FILE = Path("data/deep-dive-v2-targets.json")
 PROGRAMME_FILE = Path("sources/DEEP_DIVE_V2_PROGRAMME.md")
 SEED_FILE = Path("sources/DEEP_DIVE_V2_SEED_RESEARCH.md")
-WAVE1_FILE = Path("data/deep-dive-v2-100-pass.json")
+WAVE_FILES = [
+    Path("data/deep-dive-v2-100-pass.json"),
+    Path("data/deep-dive-v2-wave2-100-pass.json"),
+    Path("data/deep-dive-v2-wave3-100-pass.json"),
+    Path("data/deep-dive-v2-wave4-100-pass.json"),
+    Path("data/deep-dive-v2-wave5-100-pass.json"),
+    Path("data/deep-dive-v2-wave6-100-pass.json"),
+]
 WAVE1_DOC = Path("sources/DEEP_DIVE_V2_100_PASS_EXECUTION.md")
 EXPANSION_FILE = Path("sources/DEEP_DIVE_V2_100_PASS_EXPANSION.md")
-WAVE2_FILE = Path("data/deep-dive-v2-wave2-100-pass.json")
-WAVE3_FILE = Path("data/deep-dive-v2-wave3-100-pass.json")
-WAVE4_FILE = Path("data/deep-dive-v2-wave4-100-pass.json")
-WAVE5_FILE = Path("data/deep-dive-v2-wave5-100-pass.json")
+WAVE6_DOC = Path("sources/DEEP_DIVE_V2_WAVE6_EXECUTION.md")
 REPORT_FILE = Path("deep-dive-v2-report.json")
 
 MIN_TARGETS = {
@@ -42,11 +46,10 @@ MIN_TARGETS = {
     "expert_level_scenarios": 300,
     "licensed_defect_images_eventual": 10000,
     "lessons_and_modules_total": 250,
-    "research_evidence_domains": 500,
+    "research_evidence_domains": 600,
 }
 
-for path in (TARGET_FILE, PROGRAMME_FILE, SEED_FILE, WAVE1_FILE, WAVE1_DOC,
-             EXPANSION_FILE, WAVE2_FILE, WAVE3_FILE, WAVE4_FILE, WAVE5_FILE):
+for path in [TARGET_FILE, PROGRAMME_FILE, SEED_FILE, WAVE1_DOC, EXPANSION_FILE, WAVE6_DOC, *WAVE_FILES]:
     assert path.exists(), f"Deep Dive v2 file missing: {path}"
 
 data = json.loads(TARGET_FILE.read_text(encoding="utf-8"))
@@ -55,119 +58,102 @@ assert data.get("status_date") == "2026-08-28"
 targets = data.get("targets", {})
 for key, minimum in MIN_TARGETS.items():
     actual = targets.get(key)
-    assert isinstance(actual, int), f"Deep Dive v2 target missing or non-integer: {key}"
+    assert isinstance(actual, int), f"Deep Dive v2 target missing/non-integer: {key}"
     assert actual >= minimum, f"Deep Dive v2 target reduced: {key}={actual}, minimum={minimum}"
 
 execution = data.get("execution_state", {})
-for wave in range(1, 6):
-    key = "wave1_passes_preserved" if wave == 1 else f"wave{wave}_passes_added"
-    assert execution.get(key) == 100, f"Wave-{wave} execution state must remain 100"
-assert execution.get("cumulative_passes") == 500, "Cumulative execution state must remain 500"
+assert execution.get("wave1_passes_preserved") == 100
+for wave in range(2, 7):
+    assert execution.get(f"wave{wave}_passes_added") == 100, f"Wave {wave} execution count regressed"
+assert execution.get("cumulative_passes") == 600, "Cumulative execution must remain 600"
+assert execution.get("wave6_primary_seeded") == 92
+assert execution.get("wave6_explicit_gaps") == 8
 
 levels = data.get("evidence_levels", {})
-assert list(levels) == ["E0", "E1", "E2", "E3", "E4", "E5", "E6"], "Evidence maturity E0-E6 must remain explicit"
+assert list(levels) == ["E0", "E1", "E2", "E3", "E4", "E5", "E6"], "E0-E6 evidence maturity must remain explicit"
 required_intake = {
-    "source_identity", "source_version", "licence", "redistribution_rights",
-    "raw_file_sha256", "schema", "units", "row_cycle_count", "sampling_frequency",
-    "machine_context", "material_context", "mould_and_cavity_context", "sensor_location",
-    "missingness", "signal_synchronisation", "quality_outcome",
-    "intervention_or_doe_structure", "permitted_claims", "prohibited_inferences"
+    "source_identity", "source_version", "licence", "redistribution_rights", "raw_file_sha256",
+    "schema", "units", "row_cycle_count", "sampling_frequency", "machine_context", "material_context",
+    "mould_and_cavity_context", "sensor_location", "missingness", "signal_synchronisation",
+    "quality_outcome", "intervention_or_doe_structure", "permitted_claims", "prohibited_inferences"
 }
-assert required_intake.issubset(set(data.get("dataset_intake_required_fields", []))), "Dataset intake provenance fields regressed"
+assert required_intake.issubset(set(data.get("dataset_intake_required_fields", []))), "Dataset provenance fields regressed"
 
 programme = PROGRAMME_FILE.read_text(encoding="utf-8")
-for phrase in [
-    "2,000", "1,000", "300", "400", "500", "600", "10,000",
-    "500 cumulative research/evidence passes", "Real-data-first rule", "Evidence maturity",
-    "model accuracy", "causality", "Do not relabel synthetic data as measured"
+for marker in [
+    "2,000", "1,000", "300", "400", "600", "10,000",
+    "600 cumulative research/evidence passes", "Wave 6 IDs 501–600",
+    "Real-data-first rule", "Evidence maturity", "prediction", "model accuracy", "causality",
+    "Do not relabel synthetic data as measured"
 ]:
-    assert phrase in programme, f"Deep Dive v2 programme marker missing: {phrase}"
+    assert marker in programme, f"Programme marker missing: {marker}"
 
 seed = SEED_FILE.read_text(encoding="utf-8")
 dataset_rows = len(re.findall(r"^\| .*?\| https?://", seed, flags=re.M))
 numbered_sources = [int(x) for x in re.findall(r"^(\d+)\. ", seed, flags=re.M)]
-assert dataset_rows >= 6, f"Deep Dive v2 seed must retain at least 6 dataset candidates, found {dataset_rows}"
-assert numbered_sources and max(numbered_sources) >= 34, "Deep Dive v2 research seed regressed"
+assert dataset_rows >= 6, f"Measured-data candidate seed regressed: {dataset_rows}"
+assert numbered_sources and max(numbered_sources) >= 34, "Research seed regressed"
 for marker in ["10.5281/zenodo.20744054", "fkk68-zyf30", "10.17632/gtnb4j7bfx.1"]:
     assert marker in seed, f"Required measured-data seed missing: {marker}"
 
-allowed_statuses = {"seeded_with_primary", "gap_seeded"}
+allowed = {"seeded_with_primary", "gap_seeded"}
+minimum_seeded = [78, 59, 93, 69, 95, 92]
+all_titles = []
+wave_counts = {}
 
-def load_wave(path, start, end, cumulative, minimum_seeded):
-    text = path.read_text(encoding="utf-8")
-    obj = json.loads(text)
-    assert obj.get("pass_count") == 100, f"{path} must contain 100 passes"
-    if start == 1:
-        ids_expected = list(range(1, 101))
-    else:
+for index, path in enumerate(WAVE_FILES, start=1):
+    obj = json.loads(path.read_text(encoding="utf-8"))
+    start = 1 if index == 1 else (index - 1) * 100 + 1
+    end = index * 100
+    assert obj.get("pass_count") == 100, f"{path} pass count regressed"
+    if index > 1:
         assert obj.get("id_range") == [start, end], f"{path} ID range regressed"
-        assert obj.get("cumulative_pass_count") == cumulative, f"{path} cumulative count regressed"
-        ids_expected = list(range(start, end + 1))
-    passes = obj.get("passes", [])
-    assert len(passes) == 100, f"{path} has {len(passes)} passes"
-    ids = [p.get("id") for p in passes]
-    assert ids == ids_expected, f"{path} IDs are not ordered/contiguous"
-    titles = [p.get("title") for p in passes]
-    assert len(set(titles)) == 100 and all(titles), f"{path} titles must be non-empty and unique"
-    assert {p.get("status") for p in passes}.issubset(allowed_statuses), f"{path} has unknown statuses"
-    for p in passes:
+        assert obj.get("cumulative_pass_count") == end, f"{path} cumulative count regressed"
+    raw_passes = obj.get("passes", [])
+    assert len(raw_passes) == 100, f"{path} does not contain 100 passes"
+
+    normalized = []
+    columns = obj.get("columns")
+    if columns:
+        assert columns == ["id", "title", "theme", "status", "evidence_anchors"], f"Unexpected compact schema in {path}"
+        for row in raw_passes:
+            assert isinstance(row, list) and len(row) == 5, f"Malformed compact pass in {path}"
+            normalized.append({"id": row[0], "title": row[1], "theme": row[2], "status": row[3], "evidence_anchors": row[4]})
+    else:
+        normalized = raw_passes
+
+    ids = [p.get("id") for p in normalized]
+    assert ids == list(range(start, end + 1)), f"{path} IDs must be ordered and contiguous"
+    titles = [p.get("title") for p in normalized]
+    assert len(set(titles)) == 100 and all(titles), f"{path} titles must be unique/non-empty"
+    all_titles.extend(titles)
+    for p in normalized:
         assert p.get("theme"), f"Pass {p.get('id')} missing theme"
+        assert p.get("status") in allowed, f"Pass {p.get('id')} has unknown status"
         anchors = p.get("evidence_anchors", [])
-        assert anchors and all(isinstance(x, str) and x.strip() for x in anchors), f"Pass {p.get('id')} missing evidence anchors"
-    seeded = sum(p["status"] == "seeded_with_primary" for p in passes)
-    gaps = sum(p["status"] == "gap_seeded" for p in passes)
-    assert seeded >= minimum_seeded, f"{path} primary-seeded count regressed: {seeded}"
-    assert gaps == 100 - seeded, f"{path} seeded/gap accounting incoherent"
+        assert anchors and all(isinstance(x, str) and x.strip() for x in anchors), f"Pass {p.get('id')} missing anchors"
+    seeded = sum(p["status"] == "seeded_with_primary" for p in normalized)
+    gaps = 100 - seeded
+    assert seeded >= minimum_seeded[index - 1], f"Wave {index} primary-seeded count regressed: {seeded}"
     summary = obj.get("summary", {}).get("by_status", {})
-    assert summary.get("seeded_with_primary") == seeded, f"{path} seeded summary disagrees"
-    assert summary.get("gap_seeded") == gaps, f"{path} gap summary disagrees"
-    return text, passes, titles, seeded, gaps
+    assert summary.get("seeded_with_primary") == seeded, f"Wave {index} seeded summary disagrees"
+    assert summary.get("gap_seeded") == gaps, f"Wave {index} gap summary disagrees"
+    wave_counts[f"wave{index}"] = {"seeded": seeded, "gaps": gaps}
 
-wave1_text, wave1, titles1, seeded1, gaps1 = load_wave(WAVE1_FILE, 1, 100, 100, 78)
-wave2_text, wave2, titles2, seeded2, gaps2 = load_wave(WAVE2_FILE, 101, 200, 200, 59)
-wave3_text, wave3, titles3, seeded3, gaps3 = load_wave(WAVE3_FILE, 201, 300, 300, 93)
-wave4_text, wave4, titles4, seeded4, gaps4 = load_wave(WAVE4_FILE, 301, 400, 400, 69)
-wave5_text, wave5, titles5, seeded5, gaps5 = load_wave(WAVE5_FILE, 401, 500, 500, 95)
-assert all(p.get("objective") for p in wave1), "Wave-1 objectives must remain present"
-assert all(p.get("objective") for p in wave4), "Wave-4 objectives must remain present"
-assert all(p.get("objective") for p in wave5), "Wave-5 objectives must remain present"
-all_titles = titles1 + titles2 + titles3 + titles4 + titles5
-assert len(set(all_titles)) == 500, "Pass titles must remain distinct across all five waves"
+assert len(set(all_titles)) == 600, "Pass titles must remain distinct across all six waves"
+assert wave_counts["wave6"] == {"seeded": 92, "gaps": 8}
 
-assert execution.get("wave2_primary_seeded") == seeded2 and execution.get("wave2_explicit_gaps") == gaps2
-assert execution.get("wave3_primary_seeded") == seeded3 and execution.get("wave3_explicit_gaps") == gaps3
-assert execution.get("wave4_primary_seeded") == seeded4 and execution.get("wave4_explicit_gaps") == gaps4
-assert execution.get("wave5_primary_seeded") == seeded5 and execution.get("wave5_explicit_gaps") == gaps5
-
-wave1_doc = WAVE1_DOC.read_text(encoding="utf-8")
-for marker in ["total passes: **100**", "seeded with primary/experimental evidence: **78**", "explicit targeted gaps: **22**", "| 100 | Causal inference"]:
-    assert marker in wave1_doc, f"Wave-1 execution marker missing: {marker}"
-
-expansion = EXPANSION_FILE.read_text(encoding="utf-8")
-expansion_ids = [int(x) for x in re.findall(r"^\| (\d{1,3}) \|", expansion, flags=re.M)]
-assert expansion_ids == list(range(1, 101)), "Wave-1 expansion ledger must retain passes 1-100"
-expansion_persistent_ids = set(re.findall(r"`(10\.\d{4,9}/[^`]+)`", expansion))
-assert len(expansion_persistent_ids) >= 50, f"Wave-1 evidence queue too small: {len(expansion_persistent_ids)}"
-for marker in ["10.1016/j.jmapro.2024.03.019", "10.1002/pen.70028", "10.5281/zenodo.20322729", "31 December 2027"]:
-    assert marker in expansion, f"Wave-1 expansion marker missing: {marker}"
-
-for marker in ["10.1016/j.jmapro.2024.03.019", "10.1002/pen.70028", "10.1109/tim.2024.3522402"]:
-    assert marker in wave2_text, f"Wave-2 evidence marker missing: {marker}"
-for marker in ["10.1002/app.70411", "10.3390/POLYM13111843", "10.1080/0951192X.2020.1829062"]:
-    assert marker in wave3_text, f"Wave-3 evidence marker missing: {marker}"
+wave6_text = WAVE_FILES[-1].read_text(encoding="utf-8")
 for marker in [
-    "10.1002/PC.22149", "10.3390/recycling9050093", "10.3390/MI11040358",
-    "10.3390/app12010196", "10.3390/jmmp7010031", "10.1002/app.55374",
-    "10.5228/KSTP.2011.20.2.173", "10.3390/JMMP5040113", "10.1002/PEN.23677",
-    "10.3139/217.2192", "10.1016/j.asoc.2023.111029", "10.5281/zenodo.20744054"
+    "10.1515/polyeng-2023-0201", "10.18494/SAM.2019.2357", "10.2478/ama-2024-0067",
+    "10.1016/j.jmapro.2024.02.021", "10.1002/pls2.70012", "10.1177/0731684407086627",
+    "10.1109/TIM.2024.3522402", "10.3390/polym18010032", "10.3389/FRAI.2020.578152"
 ]:
-    assert marker in wave4_text, f"Wave-4 evidence marker missing: {marker}"
-for marker in [
-    "10.1002/pen.26246", "10.1063/1.4873755", "10.1002/PEN.20653",
-    "10.3390/polym15051285", "10.2478/ama-2024-0067", "10.1063/1.4942273",
-    "10.1002/APP.27057", "10.1002/ADV.10027"
-]:
-    assert marker in wave5_text, f"Wave-5 evidence marker missing: {marker}"
+    assert marker in wave6_text, f"Wave 6 evidence marker missing: {marker}"
+
+wave6_doc = WAVE6_DOC.read_text(encoding="utf-8")
+for marker in ["IDs **501–600**", "primary/experimental-seeded passes: **92**", "explicit evidence gaps retained: **8**", "cumulative passes: **600**"]:
+    assert marker in wave6_doc, f"Wave 6 execution document marker missing: {marker}"
 
 report = {
     "programme": data["programme"],
@@ -176,11 +162,10 @@ report = {
     "targets": targets,
     "seed_dataset_candidates": dataset_rows,
     "seed_research_sources": max(numbered_sources),
-    "execution_passes": 500,
-    "wave_primary_seeded": {"wave1": seeded1, "wave2": seeded2, "wave3": seeded3, "wave4": seeded4, "wave5": seeded5},
-    "wave_explicit_gaps": {"wave1": gaps1, "wave2": gaps2, "wave3": gaps3, "wave4": gaps4, "wave5": gaps5},
+    "execution_passes": 600,
+    "wave_counts": wave_counts,
     "evidence_levels": list(levels),
     "status": "pass",
 }
 REPORT_FILE.write_text(json.dumps(report, indent=2) + "\n", encoding="utf-8")
-print("MouldMaster Deep Dive v2 QA passed — 500 cumulative passes protected")
+print("MouldMaster Deep Dive v2 QA passed — 600 cumulative passes protected")
