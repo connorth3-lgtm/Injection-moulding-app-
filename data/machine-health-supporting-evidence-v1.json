@@ -1,0 +1,116 @@
+{
+  "schema": 1,
+  "version": "2026.08.29.1",
+  "reviewed": "2026-08-29",
+  "status": "peer-reviewed-machine-health-supporting-evidence",
+  "scope": "Peer-reviewed measured injection-moulding machine/tool-health evidence used to support sensor and maintenance concepts. These records are deliberately separate from the canonical primary-measured study count unless they independently satisfy that narrower registry's injection-moulding experiment boundary.",
+  "countingBoundary": {
+    "countsTowardPrimaryMeasuredStudies": false,
+    "countsTowardPeerReviewedResearchRecords": false,
+    "simulationOnlyCannotSupportAcceptedDirectMeasurement": true,
+    "universalThresholdsAllowed": false
+  },
+  "studies": [
+    {
+      "doi": "10.1002/pen.26246",
+      "title": "Study on the evaluation and compensating strategy for the wear damage of non-return valve during injection molding process",
+      "year": 2023,
+      "journal": "Polymer Engineering & Science",
+      "publisherUrl": "https://4spepublications.onlinelibrary.wiley.com/doi/10.1002/pen.26246",
+      "evidenceClass": "measured-injection-machine-health-experiment",
+      "measuredEvidence": [
+        "controlled non-return-valve wear states",
+        "cycle-level moulding response used for wear monitoring",
+        "physical part-weight consistency before/after compensation"
+      ],
+      "boundedUse": "Supports online NRV-wear monitoring and compensation concepts on the tested machine; it does not establish universal wear thresholds, V/P corrections or proof that every weight drift is NRV wear."
+    },
+    {
+      "doi": "10.1177/09544089251324760",
+      "title": "Algorithm for assessing the level of cooling channel contamination in injection mold",
+      "year": 2025,
+      "journal": "Proceedings of the Institution of Mechanical Engineers, Part B: Journal of Engineering Manufacture",
+      "publisherUrl": "https://journals.sagepub.com/doi/10.1177/09544089251324760",
+      "evidenceClass": "measured-tool-cooling-health-experiment",
+      "measuredEvidence": [
+        "water and compressed-air volume flow",
+        "pressure drop",
+        "experimentally derived hydraulic resistance/channel condition"
+      ],
+      "boundedUse": "Supports measured cooling-channel contamination assessment; flow, pressure and resistance values remain geometry-, fluid-, supply-pressure- and installation-specific."
+    },
+    {
+      "doi": "10.2478/ama-2024-0067",
+      "title": "Evaluation of Flow Resistance Increase Due to Fouling in Cooling Channels: A Case Study for Rapid Injection Molding",
+      "year": 2024,
+      "journal": "Acta Mechanica et Automatica",
+      "publisherUrl": "https://reference-global.com/article/10.2478/ama-2024-0067",
+      "evidenceClass": "measured-real-mould-cooling-fouling-case",
+      "measuredEvidence": [
+        "real injection-mould cooling-channel flow",
+        "measured pressure loss",
+        "temperature difference with hydraulic-model comparison"
+      ],
+      "boundedUse": "Supports pressure-loss/flow-resistance fouling concepts for a production-used mould; model-estimated sediment thickness is derived and not a universal cleaning threshold."
+    },
+    {
+      "doi": "10.3390/s22134792",
+      "title": "Injection Barrel/Nozzle/Mold-Cavity Scientific Real-Time Sensing and Molding Quality Monitoring for Different Polymer-Material Processes",
+      "year": 2022,
+      "journal": "Sensors",
+      "publisherUrl": "https://www.mdpi.com/1424-8220/22/13/4792",
+      "evidenceClass": "measured-multi-location-melt-pressure-experiment",
+      "measuredEvidence": [
+        "barrel pressure",
+        "nozzle pressure",
+        "mould-cavity pressure",
+        "screw position",
+        "3D optical shrinkage/roundness measurements"
+      ],
+      "boundedUse": "Supports physical separation of barrel, nozzle and cavity pressure domains and derived viscosity/quality features; pressure ranges and fitted indices remain sensor-, material-, machine- and mould-specific."
+    },
+    {
+      "doi": "10.1016/j.engfailanal.2022.106118",
+      "title": "Corrosion failure analysis of a cooling system of an injection mold",
+      "year": 2022,
+      "journal": "Engineering Failure Analysis",
+      "publisherUrl": "https://www.sciencedirect.com/science/article/pii/S1350630722000929",
+      "evidenceClass": "post-failure-tool-health-forensics",
+      "measuredEvidence": [
+        "production cooling-circuit inspection",
+        "SEM/EDS",
+        "XRD",
+        "XPS of corrosion products"
+      ],
+      "boundedUse": "Supports cooling-system corrosion and material-compatibility forensics; it is post-failure laboratory evidence and does not create an online corrosion sensor signature."
+    },
+    {
+      "doi": "10.1016/j.applthermaleng.2005.11.024",
+      "title": "On-line detection of fouling in a water circulating temperature controller (WCTC) used in injection moulding: Part 2: Application",
+      "year": 2006,
+      "journal": "Applied Thermal Engineering",
+      "publisherUrl": "https://www.sciencedirect.com/science/article/abs/pii/S1359431105004151",
+      "evidenceClass": "measured-temperature-controller-fouling-validation",
+      "measuredEvidence": [
+        "experimental WCTC operating characteristic vector",
+        "measured fouling-modified operating behaviour",
+        "experimental diagnostic validation"
+      ],
+      "boundedUse": "Supports condition-vector and drift-based fouling detection for the tested WCTC; the characteristic space must be re-established for another controller, mould or cooling circuit."
+    },
+    {
+      "doi": "10.1016/j.jmapro.2024.02.021",
+      "title": "Sensorised metal AM injection mould tools for in-process monitoring of cooling performance with conventional and conformal cooling channel designs",
+      "year": 2024,
+      "journal": "Journal of Manufacturing Processes",
+      "publisherUrl": "https://www.sciencedirect.com/science/article/pii/S1526612524001543",
+      "evidenceClass": "measured-in-mould-cooling-sensor-experiment",
+      "measuredEvidence": [
+        "embedded/flexible thermocouple measurements",
+        "conventional versus conformal cooling response",
+        "physical part quality/cycle and ejection-temperature evidence"
+      ],
+      "boundedUse": "Supports in-mould thermal monitoring and ejection-point reasoning; thermocouple positions and thermal endpoints are tool- and part-specific and do not define universal ejection temperatures."
+    }
+  ]
+}
