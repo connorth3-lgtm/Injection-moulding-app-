@@ -47,7 +47,7 @@ These are programme targets. They do not imply that a release may claim completi
 
 Deep Dive v2 builds on the canonical 120-lesson pathway, specialist extensions, evidence-gated learner questions, 264 synthetic process-data cases / 19,008 generated cycles, the earlier 20-pass research register, the 50-pass measured-evidence atlas, public benchmark preflight and the local privacy-first real-data intake path.
 
-Wave 1 IDs **1–100** are immutable baseline evidence domains. Wave 2 IDs **101–200** deepen rather than overwrite that work. The second wave deliberately leaves weakly supported subjects as `gap_seeded`; a search hit is not promoted to primary measured evidence simply to improve a count.
+Wave 1 IDs **1–100** are immutable baseline evidence domains. Wave 2 IDs **101–200** deepen rather than overwrite that work. The second wave deliberately leaves weakly supported subjects as `gap_seeded`; a search hit is not promoted to primary measured evidence simply to improve a count. A `seeded_with_primary` label means a relevant experimental/primary anchor was found for the domain; it is still subject to full-text identity, scope and claim-bounding review before promotion into the final evidence registry.
 
 The next phase therefore prioritises evidence diversity and real measured signals instead of simply multiplying deterministic synthetic waveforms.
 
