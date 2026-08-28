@@ -1,0 +1,62 @@
+name: MouldMaster SKZ LoKI measured benchmark
+
+on:
+  workflow_dispatch:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'tools/profile_skz_loki.py'
+      - '.github/workflows/skz-loki-benchmark.yml'
+      - 'data/public-benchmark-results/skz-loki-v1.json'
+      - 'data/profiled-measured-dataset-registry-v1.json'
+      - 'data/content-scale-targets.json'
+      - 'qa_content_scale_targets.py'
+
+permissions:
+  contents: read
+
+jobs:
+  profile:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install Parquet profiler dependency
+        run: python -m pip install --disable-pip-version-check pyarrow==21.0.0
+      - name: Profile exact SKZ LoKI publisher files
+        run: python tools/profile_skz_loki.py --output skz-loki-v1.json
+      - name: Enforce exact-source discovery boundary
+        run: |
+          python - <<'PY'
+          import json
+          p=json.load(open('skz-loki-v1.json',encoding='utf-8'))
+          assert p['source']['recordId']=='fkk68-zyf30'
+          assert p['experimentalContext']['publishedCycles']==68
+          assert p['experimentalContext']['uniqueMachineSettings']==17
+          assert p['experimentalContext']['repeatsPerSetting']==4
+          assert p['files']['quality']['md5']=='4078fb85d2586bc3dd03d4a0825ff74d'
+          assert p['files']['machine']['md5']=='384b1ee87679fa4b52b78e842a83cd99'
+          assert p['files']['viscometer']['md5']=='d37a69bacfbdbe5d7bac9339dfdd94be'
+          assert p['reconciliation']['qualityCycleCountMatchesPublished'] is True
+          assert p['reconciliation']['machineCycleCountMatchesPublished'] is True
+          assert p['reconciliation']['viscometerCycleCountMatchesPublished'] is True
+          assert p['reconciliation']['allThreeSubdatasetsJoinOnSameCycleCardinality'] is True
+          assert p['viscometerPressure']['candidateDirectPressureScalarSamples']>0
+          assert p['acceptedMeasuredCycles']==0
+          assert p['acceptedMeasuredTimeSeriesSamples']==0
+          assert p['rawSourceRowsCommitted'] is False
+          assert p['redistributionAllowed'] is False
+          assert p['source']['license'] is None
+          print('SKZ LoKI exact-file discovery profile passed')
+          print('viscometer schema:',p['viscometerPressure']['fieldClasses'])
+          print('time columns:',p['viscometerPressure']['timeColumnStats'])
+          print('candidate direct pressure samples:',p['viscometerPressure']['candidateDirectPressureScalarSamples'])
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: mouldmaster-skz-loki-profile
+          path: skz-loki-v1.json
+          retention-days: 90
