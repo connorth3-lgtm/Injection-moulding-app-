@@ -1,4 +1,4 @@
-/* MouldMaster app-shell finalizer — 2026.08.28.3 */
+/* MouldMaster app-shell finalizer — 2026.08.29.1 */
 (function(){
 'use strict';
 if(!window.MM_APP_SHELL)throw new Error('app-shell-finalize.js requires app-shell-registry.js');
@@ -11,12 +11,12 @@ if(!window.MM_MOULD_MASTER_WORKSPACE)throw new Error('app-shell-finalize.js requ
 const EVIDENCE_STATUS=Object.freeze({
   'residual-stress-birefringence':'Promoted',
   'weld-line-mechanical-strength':'Promoted',
-  'runner-gate-multicavity-imbalance':'Provisional',
-  'hot-runner-actual-behaviour':'Provisional',
-  'liquid-silicone-rubber':'Provisional',
-  'fluid-assisted-moulding':'Provisional',
-  'surface-replication-release':'Provisional',
-  'injection-compression-precision-optics':'Provisional'
+  'runner-gate-multicavity-imbalance':'Promoted',
+  'hot-runner-actual-behaviour':'Promoted',
+  'liquid-silicone-rubber':'Promoted',
+  'fluid-assisted-moulding':'Promoted',
+  'surface-replication-release':'Promoted',
+  'injection-compression-precision-optics':'Promoted'
 });
 const GAP=window.MM_SPECIALIST_EVIDENCE_GAPS;
 const BASE=window.MM_SPECIALIST_CURRICULUM;
@@ -29,8 +29,10 @@ function syncEvidenceExports(){
   }
   const promoted=GAP.lessons.filter(x=>x.evidenceStatus==='Promoted').length;
   const provisional=GAP.lessons.filter(x=>x.evidenceStatus==='Provisional').length;
-  GAP.evidenceSummary={promoted,provisional,gaps:GAP.lessons.length-promoted-provisional};
-  BASE.evidenceGapExtension={...(BASE.evidenceGapExtension||{}),status:promoted?'Mixed':'Provisional',evidenceSummary:{...GAP.evidenceSummary}};
+  const gaps=GAP.lessons.length-promoted-provisional;
+  GAP.evidenceSummary={promoted,provisional,gaps};
+  const status=provisional?(promoted?'Mixed':'Provisional'):(promoted?'Promoted':'Gap');
+  BASE.evidenceGapExtension={...(BASE.evidenceGapExtension||{}),status,evidenceSummary:{...GAP.evidenceSummary}};
 }
 function evidenceMessage(lesson){
   if(lesson.evidenceStatus==='Promoted')return `<strong>Evidence status: Promoted</strong><br>Registry area: ${esc(lesson.evidenceArea)}. This mechanism has met the repository promotion rule with independent publisher-verified primary measured studies. Promotion is mechanism-level only; study-specific settings remain bounded to their material, mould, machine and test context.`;
@@ -53,7 +55,7 @@ const originalSpecialistOpen=window.mmSpecialistOpen;
 const originalGapLesson=window.mmSpecialistGapLesson;
 window.mmSpecialistOpen=function(){const result=originalSpecialistOpen?.();queueMicrotask(patchEvidenceUi);return result};
 window.mmSpecialistGapLesson=function(id){const result=originalGapLesson?.(id);queueMicrotask(patchEvidenceUi);return result};
-window.MM_SPECIALIST_EVIDENCE_STATUS={version:'2026.08.28.3',statuses:{...EVIDENCE_STATUS},summary:{...GAP.evidenceSummary},scope:'Registry-aligned display state for optional evidence-gap learning; no assessment or certificate authority.'};
+window.MM_SPECIALIST_EVIDENCE_STATUS={version:'2026.08.29.1',statuses:{...EVIDENCE_STATUS},summary:{...GAP.evidenceSummary},scope:'Resolved display state from the historical mechanism registry plus the formal promotion overlay; no assessment, certificate, process-setting or production authority.'};
 
 window.MM_APP_SHELL.finalize();
 const geometryStyle=document.getElementById('mm-app-shell-registry-style');
