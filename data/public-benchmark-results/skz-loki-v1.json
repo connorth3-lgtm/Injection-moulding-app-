@@ -1,0 +1,181 @@
+{
+  "schema_version": 1,
+  "status": "completed-public-measured-timeseries-benchmark",
+  "completed_date": "2026-08-28",
+  "source": {
+    "title": "Injection Molding Dataset (Viscometer, Euromap77, Quality Table)",
+    "recordUrl": "https://b2share.eudat.eu/records/fkk68-zyf30",
+    "doi": "10.23728/b2share.d8502ea56c544e069ebda44c3edd441b",
+    "version": "v1",
+    "publisher": "EUDAT B2SHARE",
+    "recordAccess": "Dataset Open",
+    "license": null,
+    "licenseBoundary": "The current B2SHARE record renders an empty License field. MouldMaster may retrieve/profile the public files but does not infer permission to redistribute the raw Parquet files."
+  },
+  "experimentalContext": {
+    "organization": "SKZ German Plastics Center, Würzburg",
+    "project": "LoKI",
+    "machine": "KraussMaffei 160-750PX",
+    "material": {
+      "family": "ABS",
+      "grade": "Terluran GP-35",
+      "manufacturer": "INEOS Styrolution Europe GmbH"
+    },
+    "viscometer": "Dynisco MDT465FXL-1/2-2M-A mounted at the injection nozzle",
+    "design": {
+      "uniqueMachineSettings": 17,
+      "repeatsPerSetting": 4,
+      "realInjectionCycles": 68
+    },
+    "joinKeys": [
+      "META_experiment",
+      "META_run"
+    ],
+    "setParameters": [
+      {
+        "field": "SET_CylinderTemperature",
+        "sourceUnit": "°C",
+        "observedMin": 220,
+        "observedMax": 260
+      },
+      {
+        "field": "SET_HotRunner/Nozzle",
+        "sourceUnit": "°C",
+        "observedMin": 220,
+        "observedMax": 260
+      },
+      {
+        "field": "SET_InjectionSpeed",
+        "sourceUnit": "ccm/s",
+        "observedMin": 50,
+        "observedMax": 100
+      },
+      {
+        "field": "SET_UP",
+        "sourceUnit": "ccm",
+        "observedMin": 13.5,
+        "observedMax": 13.5
+      },
+      {
+        "field": "SET_MoldTemperature",
+        "sourceUnit": "°C",
+        "observedMin": 60,
+        "observedMax": 60
+      }
+    ]
+  },
+  "files": {
+    "quality": {
+      "name": "quality_table_data.parquet",
+      "sizeBytes": 22222,
+      "md5": "4078fb85d2586bc3dd03d4a0825ff74d",
+      "sha256": "97935c148f8657ebde652b7d704364af42a93731734f815bc1d4232543537dbc"
+    },
+    "machine": {
+      "name": "set_parameter_and_EM77_data.parquet",
+      "sizeBytes": 29445,
+      "md5": "384b1ee87679fa4b52b78e842a83cd99",
+      "sha256": "843f5a7ca038efb82f101b53b51cfef8ebd4f6b283cb680155eb0c490bbc2cd4"
+    },
+    "viscometer": {
+      "name": "viscometer_pressure_data.parquet",
+      "sizeBytes": 181521395,
+      "md5": "d37a69bacfbdbe5d7bac9339dfdd94be",
+      "sha256": "10017d1e4f8ce73915797bb4005c3912fc5c18eaa455bc365c8e9f89d1e7b035"
+    }
+  },
+  "observedStructure": {
+    "qualityTable": {
+      "rows": 68,
+      "columns": 25,
+      "cycles": 68
+    },
+    "machineAndEuromap77": {
+      "rows": 68,
+      "columns": 34,
+      "cycles": 68
+    },
+    "viscometerPressure": {
+      "rows": 18000000,
+      "columns": 6,
+      "cyclesWithPressure": 60,
+      "rowsPerPressureCycle": 300000,
+      "timeField": "Time[s]",
+      "observedMedianStepS": 9.999999999976694e-05,
+      "observedApproxRateHz": 10000.000000023307,
+      "directPhysicalChannels": [
+        {
+          "field": "MEAS_pressure_frontsensor_bar",
+          "unit": "bar",
+          "samples": 18000000,
+          "nulls": 0,
+          "min": -0.9140192,
+          "max": 1113.559
+        },
+        {
+          "field": "MEAS_pressure_backsensor_bar",
+          "unit": "bar",
+          "samples": 18000000,
+          "nulls": 0,
+          "min": -1.316295,
+          "max": 507.0242
+        }
+      ],
+      "derivedField": {
+        "field": "MEAS_pressure_difference_bar",
+        "unit": "bar",
+        "values": 18000000,
+        "countedAsMeasuredSamples": false
+      }
+    }
+  },
+  "pressureCoverage": {
+    "cyclesWithPressure": 60,
+    "totalCycles": 68,
+    "coverageFraction": 0.8823529411764706,
+    "cyclesWithoutPressure": [
+      {
+        "experiment": 16,
+        "runs": [1, 2, 3, 4]
+      },
+      {
+        "experiment": 17,
+        "runs": [1, 2, 3, 4]
+      }
+    ]
+  },
+  "publishedVsObserved": {
+    "publisherDescriptionPressureRows": 1048575,
+    "observedChecksumMatchedPressureRows": 18000000,
+    "publisherDescriptionTimeField": "MEAS_time_s",
+    "observedChecksumMatchedTimeField": "Time[s]",
+    "note": "The publisher-description PDF and the exact current Parquet disagree. The Parquet matches the MD5 displayed on the B2SHARE record, so MouldMaster preserves the exact-file structure and records the discrepancy rather than rewriting the data."
+  },
+  "acceptedMeasuredCycles": 68,
+  "cyclesWithAcceptedPressureTimeSeries": 60,
+  "acceptedMeasuredTimeSeriesSamples": 36000000,
+  "sampleCountMethod": "18,000,000 rows × two direct physical pressure channels. Time[s] is an axis and excluded. MEAS_pressure_difference_bar is derived and excluded.",
+  "rawSourceRowsCommitted": false,
+  "rawSourceRedistributed": false,
+  "acceptance": {
+    "sourceFilesLawfullyObtained": true,
+    "fingerprintedAgainstPublisherMd5": true,
+    "sha256Recorded": true,
+    "schemaInspected": true,
+    "setCommandsSeparatedFromMeasuredFields": true,
+    "directPressureSeparatedFromDerivedPressure": true,
+    "cycleLinkageReviewed": true,
+    "timeBasisReviewed": true,
+    "materialMachineAndSensorContextReviewed": true,
+    "sourceDiscrepanciesRecorded": true,
+    "limitationsRecorded": true
+  },
+  "limitations": [
+    "The current B2SHARE record displays no licence value, so raw redistribution rights are not inferred.",
+    "Pressure waveforms exist for 60 of the 68 scalar machine/quality cycles; experiments 16 and 17 have no pressure rows in the exact current Parquet.",
+    "The publisher-description PDF reports a different pressure-row count and time-field name than the checksum-matched Parquet; exact-file observations take precedence for the benchmark while the discrepancy is retained.",
+    "Some EUROMAP77 raw scales appear inconsistent with source-document unit labels (for example cycle-time and hydraulic-pressure magnitudes). MouldMaster preserves raw values/source labels and does not apply undocumented scaling.",
+    "Small negative pressure baselines are retained as measured raw values and are not clipped."
+  ],
+  "boundary": "Only source-supported direct physical pressure readings enter the measured time-series sample ledger. Commands, time axes, derived pressure differences, quality aggregates and EUROMAP scalar fields do not inflate this high-frequency sample count."
+}
