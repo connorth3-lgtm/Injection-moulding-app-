@@ -1,0 +1,54 @@
+name: MouldMaster Research Registry Harvest
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'tools/harvest_openalex_injection_moulding.py'
+      - '.github/workflows/research-registry-harvest.yml'
+      - 'data/content-scale-targets.json'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: mouldmaster-research-harvest-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  harvest:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Harvest deduplicated OpenAlex candidates
+        run: |
+          python tools/harvest_openalex_injection_moulding.py \
+            --output data/research-master-candidates.json \
+            --target 2000 \
+            --per-query-pages 5
+      - name: Validate candidate registry boundary
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          p=Path('data/research-master-candidates.json')
+          x=json.loads(p.read_text(encoding='utf-8'))
+          assert x['status']=='candidate-registry-not-counted-as-verified'
+          assert x['candidateCount']==len(x['records'])
+          assert all(not r['verification']['primaryMeasuredReviewed'] for r in x['records'])
+          assert all(not r['verification']['peerReviewedConfirmed'] for r in x['records'])
+          ids=[(r.get('doi') or r.get('id') or r.get('title')) for r in x['records']]
+          assert len(ids)==len(set(ids))
+          print({'candidates':x['candidateCount'],'primaryMeasuredCandidates':x['primaryMeasuredCandidateCount']})
+          PY
+      - name: Upload research candidate registry
+        uses: actions/upload-artifact@v4
+        with:
+          name: mouldmaster-research-master-candidates
+          path: data/research-master-candidates.json
+          if-no-files-found: error
