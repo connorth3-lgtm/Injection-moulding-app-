@@ -11,13 +11,14 @@ import re
 import statistics
 import urllib.request
 from collections import Counter
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from pathlib import Path
 
 RECORD_ID = "6913660"
 DOI = "10.5281/zenodo.6913660"
 API_URL = f"https://zenodo.org/api/records/{RECORD_ID}"
 RECORD_URL = f"https://zenodo.org/records/{RECORD_ID}"
-UA = "MouldMaster-ImPure-PASCOE-profiler/1.0"
+UA = "MouldMaster-ImPure-PASCOE-profiler/1.1"
 CYCLE_RE = re.compile(r"^Pascoe_17_05_2022_Cycle(\d+)\.csv$", re.I)
 
 
@@ -82,9 +83,8 @@ def license_metadata(record: dict):
 
 def sniff_csv(data: bytes) -> tuple[str, list[str], list[list[str]]]:
     text = data.decode("utf-8-sig", errors="replace")
-    sample = text[:20000]
     try:
-        delim = csv.Sniffer().sniff(sample, delimiters=",;\t").delimiter
+        delim = csv.Sniffer().sniff(text[:20000], delimiters=",;\t").delimiter
     except Exception:
         delim = ","
     rows = list(csv.reader(io.StringIO(text), delimiter=delim))
@@ -117,15 +117,57 @@ def profile_cycle_csv(data: bytes) -> dict:
                 numeric_counts[i] += 1
                 mins[i] = x if mins[i] is None else min(mins[i], x)
                 maxs[i] = x if maxs[i] is None else max(maxs[i], x)
-    cols = []
-    for i, name in enumerate(header):
-        cols.append({"name": name, "numericCount": numeric_counts[i], "min": mins[i], "max": maxs[i]})
+    cols = [{"name": name, "numericCount": numeric_counts[i], "min": mins[i], "max": maxs[i]} for i, name in enumerate(header)]
     return {"delimiter": delim, "rows": len(rows), "columns": width, "missingCells": missing, "header": header, "columnStats": cols}
+
+
+def profile_cycle_item(pair):
+    cycle_id, item = pair
+    url = file_url(item)
+    if not url:
+        raise RuntimeError(f"missing download URL for cycle {cycle_id}")
+    data = get_bytes(url)
+    declared = declared_md5(item)
+    observed = md5(data)
+    if declared and declared != observed:
+        raise RuntimeError(f"MD5 mismatch for cycle {cycle_id}: {observed} != {declared}")
+    p = profile_cycle_csv(data)
+    return {
+        "cycle": cycle_id,
+        "name": file_name(item),
+        "sizeBytes": len(data),
+        "declaredMd5": declared,
+        "md5": observed,
+        "sha256": sha256(data),
+        "rows": p["rows"],
+        "columns": p["columns"],
+        "missingCells": p["missingCells"],
+        "header": p["header"],
+        "columnStats": p["columnStats"],
+    }
+
+
+def profile_aux_item(item):
+    name = file_name(item)
+    url = file_url(item)
+    if not url:
+        return None
+    data = get_bytes(url)
+    declared = declared_md5(item)
+    observed = md5(data)
+    if declared and declared != observed:
+        raise RuntimeError(f"MD5 mismatch for auxiliary file {name}")
+    rec = {"name": name, "sizeBytes": len(data), "declaredMd5": declared, "md5": observed, "sha256": sha256(data)}
+    if name.lower().endswith(".csv"):
+        p = profile_cycle_csv(data)
+        rec.update({"rows": p["rows"], "columns": p["columns"], "missingCells": p["missingCells"], "header": p["header"], "columnStats": p["columnStats"]})
+    return rec
 
 
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--output", default="impure-pascoe-2022-v1.json")
+    ap.add_argument("--workers", type=int, default=8)
     args = ap.parse_args()
 
     record = json.loads(get_bytes(API_URL, "application/json").decode("utf-8"))
@@ -136,8 +178,7 @@ def main():
     cycle_items = []
     auxiliary = []
     for item in files:
-        name = file_name(item)
-        match = CYCLE_RE.match(name)
+        match = CYCLE_RE.match(file_name(item))
         if match:
             cycle_items.append((int(match.group(1)), item))
         else:
@@ -147,60 +188,32 @@ def main():
         raise RuntimeError("Zenodo record contains no cycle CSVs")
 
     cycle_profiles = []
-    header_counter = Counter()
-    row_counts = []
-    total_numeric_cells = 0
-    total_missing_cells = 0
-    first_columns = None
-    for cycle_id, item in cycle_items:
-        url = file_url(item)
-        if not url:
-            raise RuntimeError(f"missing download URL for cycle {cycle_id}")
-        data = get_bytes(url)
-        declared = declared_md5(item)
-        observed_md5 = md5(data)
-        if declared and declared != observed_md5:
-            raise RuntimeError(f"MD5 mismatch for cycle {cycle_id}: {observed_md5} != {declared}")
-        p = profile_cycle_csv(data)
-        header_key = json.dumps(p["header"], ensure_ascii=False)
-        header_counter[header_key] += 1
-        row_counts.append(p["rows"])
-        total_missing_cells += p["missingCells"]
-        total_numeric_cells += sum(c["numericCount"] for c in p["columnStats"])
-        if first_columns is None:
-            first_columns = p["columnStats"]
-        cycle_profiles.append({
-            "cycle": cycle_id,
-            "name": file_name(item),
-            "sizeBytes": len(data),
-            "declaredMd5": declared,
-            "md5": observed_md5,
-            "sha256": sha256(data),
-            "rows": p["rows"],
-            "columns": p["columns"],
-            "missingCells": p["missingCells"],
-        })
+    with ThreadPoolExecutor(max_workers=max(1, min(args.workers, 12))) as pool:
+        futures = [pool.submit(profile_cycle_item, pair) for pair in cycle_items]
+        for future in as_completed(futures):
+            cycle_profiles.append(future.result())
+    cycle_profiles.sort(key=lambda x: x["cycle"])
 
     aux_profiles = []
-    for item in auxiliary:
-        name = file_name(item)
-        url = file_url(item)
-        if not url:
-            continue
-        data = get_bytes(url)
-        declared = declared_md5(item)
-        observed = md5(data)
-        if declared and declared != observed:
-            raise RuntimeError(f"MD5 mismatch for auxiliary file {name}")
-        rec = {"name": name, "sizeBytes": len(data), "declaredMd5": declared, "md5": observed, "sha256": sha256(data)}
-        if name.lower().endswith(".csv"):
-            p = profile_cycle_csv(data)
-            rec.update({"rows": p["rows"], "columns": p["columns"], "missingCells": p["missingCells"], "header": p["header"]})
-        aux_profiles.append(rec)
+    with ThreadPoolExecutor(max_workers=min(4, max(1, len(auxiliary)))) as pool:
+        futures = [pool.submit(profile_aux_item, item) for item in auxiliary]
+        for future in as_completed(futures):
+            rec = future.result()
+            if rec:
+                aux_profiles.append(rec)
+    aux_profiles.sort(key=lambda x: x["name"])
 
+    header_counter = Counter(json.dumps(x["header"], ensure_ascii=False) for x in cycle_profiles)
+    row_counts = [x["rows"] for x in cycle_profiles]
+    total_missing_cells = sum(x["missingCells"] for x in cycle_profiles)
+    total_numeric_cells = sum(sum(c["numericCount"] for c in x["columnStats"]) for x in cycle_profiles)
+    first_columns = cycle_profiles[0]["columnStats"]
     header_variants = [{"header": json.loads(k), "cycleFiles": v} for k, v in header_counter.items()]
-    cycle_ids = [x[0] for x in cycle_items]
-    gaps = [n for n in range(min(cycle_ids), max(cycle_ids) + 1) if n not in set(cycle_ids)]
+    cycle_ids = [x["cycle"] for x in cycle_profiles]
+    cycle_id_set = set(cycle_ids)
+    gaps = [n for n in range(min(cycle_ids), max(cycle_ids) + 1) if n not in cycle_id_set]
+
+    compact_cycle_profiles = [{k: v for k, v in x.items() if k not in {"header", "columnStats"}} for x in cycle_profiles]
     payload = {
         "schema": 1,
         "status": "profile-generated-review-required",
@@ -233,7 +246,7 @@ def main():
             "totalNumericCellsAcrossCycleFiles": total_numeric_cells,
             "totalMissingCellsAcrossCycleFiles": total_missing_cells,
         },
-        "cycleFiles": cycle_profiles,
+        "cycleFiles": compact_cycle_profiles,
         "auxiliaryFiles": aux_profiles,
         "acceptedMeasuredCycles": 0,
         "acceptedMeasuredTimeSeriesSamples": 0,
