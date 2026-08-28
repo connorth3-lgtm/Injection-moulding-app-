@@ -14,11 +14,14 @@ on:
       - 'data/primary-measured-promotion-authors-v1.json'
       - 'data/mechanism-promotion-evidence/**'
       - 'data/measured-evidence-50-pass.json'
+      - 'data/sensor-machine-health-registry-v1.json'
+      - 'data/content-scale-targets.json'
       - 'sources/MEASURED_EVIDENCE_50_PASS.md'
       - 'sources/PROCESS_DATA_20_PASS_ATLAS.md'
       - 'qa_evidence_coverage.py'
       - 'qa_mechanism_promotion.py'
       - 'qa_primary_measured_evidence.py'
+      - 'qa_sensor_machine_health.py'
       - '.github/workflows/evidence-coverage.yml'
   pull_request:
     branches: [main]
@@ -33,11 +36,14 @@ on:
       - 'data/primary-measured-promotion-authors-v1.json'
       - 'data/mechanism-promotion-evidence/**'
       - 'data/measured-evidence-50-pass.json'
+      - 'data/sensor-machine-health-registry-v1.json'
+      - 'data/content-scale-targets.json'
       - 'sources/MEASURED_EVIDENCE_50_PASS.md'
       - 'sources/PROCESS_DATA_20_PASS_ATLAS.md'
       - 'qa_evidence_coverage.py'
       - 'qa_mechanism_promotion.py'
       - 'qa_primary_measured_evidence.py'
+      - 'qa_sensor_machine_health.py'
       - '.github/workflows/evidence-coverage.yml'
   workflow_dispatch:
 
@@ -54,6 +60,8 @@ jobs:
           python-version: '3.12'
       - name: Primary measured evidence integrity
         run: python qa_primary_measured_evidence.py
+      - name: Sensor and machine-health evidence integrity
+        run: python qa_sensor_machine_health.py
       - name: Mechanism evidence coverage integrity
         run: python qa_evidence_coverage.py
       - name: Mechanism promotion dossier integrity
@@ -64,6 +72,7 @@ jobs:
           name: mouldmaster-evidence-coverage
           path: |
             primary-measured-evidence-report.json
+            sensor-machine-health-report.json
             evidence-coverage-report.json
             mechanism-promotion-report.json
           if-no-files-found: error
