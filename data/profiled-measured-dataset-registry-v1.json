@@ -1,13 +1,13 @@
 {
   "schema": 1,
-  "version": "2026.08.28.5",
+  "version": "2026.08.28.6",
   "reviewed": "2026-08-28",
   "acceptanceBoundary": "One accepted registry record represents one lawfully obtained and fully profiled dataset package/source family. Archives or constituent experimental subsets inside the same published package are documented but do not inflate the fully-profiled-dataset target. Measured scalar samples are counted separately from dataset packages and moulding cycles.",
   "summary": {
-    "fullyProfiledDatasetPackages": 7,
+    "fullyProfiledDatasetPackages": 8,
     "acceptedMeasuredTimeSeriesSamples": 52526432,
     "timeSeriesDatasetPackages": 5,
-    "recordLevelDatasetPackages": 2
+    "recordLevelDatasetPackages": 3
   },
   "datasets": [
     {
@@ -155,6 +155,27 @@
       "acceptedMeasuredTimeSeriesSamples": 36000000,
       "signals": ["nozzle-side pressure", "mould-side pressure", "EUROMAP77 machine actuals", "machine quality/energy actuals"],
       "notes": "All three current B2SHARE Parquets match the publisher-displayed MD5 values. The pressure file contains 18,000,000 rows across 60 cycles, not the 1,048,575 rows implied by the description PDF; experiments 16 and 17 have no pressure traces. Only the two direct physical pressure channels count, giving 36,000,000 samples. Time and the derived pressure-difference field are excluded. EUROMAP raw-scale/documentation inconsistencies are retained without undocumented conversion."
+    },
+    {
+      "datasetId": "iguzzini-road-lenses",
+      "title": "Plastic road-lens injection-moulding quality dataset",
+      "source": "https://github.com/airtlab/machine-learning-for-quality-prediction-in-plastic-injection-molding",
+      "license": "Freely released for research and educational purposes; no broader standard data licence inferred",
+      "peerReviewedCompanion": "10.3390/info13060272",
+      "profile": "data/public-benchmark-results/iguzzini-road-lenses-v1.json",
+      "profileType": "record-level-real-production-process-quality-data",
+      "sourceFilesLawfullyObtained": true,
+      "sourcePinnedToCommit": "41b8f392923d37b50b5098ed918dd2f0de1bc328",
+      "fingerprinted": true,
+      "schemaInspected": true,
+      "unitsAndSemanticsReviewed": true,
+      "processQualityLinkageReviewed": true,
+      "recordsProfiled": 1451,
+      "processParameterFields": 13,
+      "productionDays": 5,
+      "acceptedMeasuredTimeSeriesSamples": 0,
+      "signals": ["melt temperature", "mould temperature", "filling/plasticising/cycle times", "closing/clamping force", "screw torque", "back/injection pressure peaks", "screw position", "shot volume"],
+      "notes": "Pinned source CSV contains 1,451 complete real-production feature vectors and four measured photometric quality classes. The README class table contains a five-row discrepancy: class 4 is 365 in the exact CSV, not 360, so the file totals 1,451 as stated. The polymer grade is not specified in the repository and remains an explicit limitation. Raw data are not redistributed outside the source's research/education terms."
     }
   ]
 }
