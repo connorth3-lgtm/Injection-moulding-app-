@@ -113,6 +113,10 @@ jobs:
         run: python qa_process_data_sweep.py
       - name: 50-pass real measured-evidence audit
         run: python qa_measured_evidence_50_pass.py
+      - name: Content scale target integrity
+        run: python qa_content_scale_targets.py
+      - name: Full-scale draft bank integrity
+        run: python qa_content_scale_drafts.py
       - name: Local real-data intake privacy integrity
         run: python qa_process_data_local_intake.py
       - name: Real process-data pilot readiness
@@ -166,6 +170,12 @@ jobs:
         with:
           name: mouldmaster-measured-evidence-50-pass
           path: measured-evidence-50-pass-report.json
+          if-no-files-found: error
+      - name: Upload content-scale target report
+        uses: actions/upload-artifact@v4
+        with:
+          name: mouldmaster-content-scale-targets
+          path: content-scale-targets-report.json
           if-no-files-found: error
       - name: Upload evidence maturity audit
         uses: actions/upload-artifact@v4
