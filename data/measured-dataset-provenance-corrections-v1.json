@@ -1,0 +1,30 @@
+{
+  "schema": 1,
+  "reviewed": "2026-08-28",
+  "purpose": "Record corrections discovered while profiling measured-data candidates so stale discovery metadata cannot be mistaken for accepted provenance.",
+  "corrections": [
+    {
+      "datasetId": "openmms-t4g",
+      "field": "peerReviewedCompanion",
+      "staleValue": "10.3390/s23031198",
+      "correctValue": "10.3390/s23073569",
+      "verification": [
+        "Peer-reviewed Sensors article: Development of an Open-Source Injection Mold Monitoring System",
+        "Article data-availability statement points to the pinned OpenMMS-T4G Case_Study_Raw_Data.csv"
+      ],
+      "effect": "The stale DOI belongs to an unrelated autonomous-driving paper and must never support OpenMMS evidence promotion. Accepted OpenMMS profiles and QA use only 10.3390/s23073569."
+    },
+    {
+      "datasetId": "pet-preform-v2",
+      "field": "measuredAcceptance",
+      "staleValue": "reuse-ready candidate implied by licence/access state",
+      "correctValue": "profiled-not-accepted-as-measured-dataset",
+      "verification": [
+        "Version-pinned Mendeley file profiled at 27 rows x 26 columns",
+        "Table contains CAE residual-stress/displacement outputs, hidden-layer values and predicted outputs",
+        "Companion article combines numerical simulation and machine learning"
+      ],
+      "effect": "CC BY access makes the file inspectable/reusable but does not make simulated/model outputs real measured process data. The candidate contributes zero accepted measured datasets and zero measured time-series samples."
+    }
+  ]
+}
