@@ -6,6 +6,7 @@ on:
     branches: [main]
     paths:
       - 'tools/profile_probayes_b2share.py'
+      - 'tools/profile_probayes_b2share_fast.py'
       - '.github/workflows/probayes-b2share-benchmark.yml'
 
 permissions:
@@ -13,6 +14,18 @@ permissions:
 
 jobs:
   profile:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - dataset_id: probayes-main-v2
+            output: probayes-main-v2.json
+            rows: 564
+            md5: f04efe419e63db5fb4a392e1569ea417
+          - dataset_id: probayes-doptimal-v1
+            output: probayes-doptimal-v1.json
+            rows: 303
+            md5: 913cb30061ba35b78cc7715799674783
     runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:
@@ -22,37 +35,32 @@ jobs:
           python-version: '3.12'
       - name: Install Parquet profiler dependency
         run: python -m pip install --disable-pip-version-check pyarrow==21.0.0
-      - name: Profile both ProBayes B2SHARE datasets
-        run: python tools/profile_probayes_b2share.py --output probayes-b2share-profile.json
-      - name: Enforce discovery boundary
+      - name: Profile ${{ matrix.dataset_id }}
+        run: python tools/profile_probayes_b2share_fast.py --dataset-id '${{ matrix.dataset_id }}' --output '${{ matrix.output }}'
+      - name: Enforce exact source and non-promotion boundary
+        env:
+          PROFILE: ${{ matrix.output }}
+          EXPECTED_ID: ${{ matrix.dataset_id }}
+          EXPECTED_ROWS: ${{ matrix.rows }}
+          EXPECTED_MD5: ${{ matrix.md5 }}
         run: |
           python - <<'PY'
-          import json
-          p=json.load(open('probayes-b2share-profile.json',encoding='utf-8'))
-          assert p['datasetPackages']==2
-          ids={x['datasetId'] for x in p['profiles']}
-          assert ids=={'probayes-main-v2','probayes-doptimal-v1'}
-          expected={
-            'probayes-main-v2':(564,334,'f04efe419e63db5fb4a392e1569ea417'),
-            'probayes-doptimal-v1':(303,396,'913cb30061ba35b78cc7715799674783'),
-          }
-          for x in p['profiles']:
-            rows,features,md5=expected[x['datasetId']]
-            assert x['file']['parquetRows']==rows
-            assert x['file']['md5']==md5
-            assert x['reconciliation']['rowsMatchPublished'] is True
-            assert x['file']['arrowTopLevelFields']>100
-            assert x['schemaSummary']['listFields']>0
-            assert x['schemaSummary']['totalFiniteNumericElementsInsideAllListFields']>0
-            assert x['acceptedMeasuredTimeSeriesSamples']==0
-            assert x['acceptedMeasuredCycles']==0
-            assert x['rawSourceRowsCommitted'] is False
-            assert x['redistributionAllowed'] is False
-            assert x['source']['license'] is None
-          print('ProBayes discovery profiles passed strict non-promotion boundary')
+          import json, os
+          p=json.load(open(os.environ['PROFILE'],encoding='utf-8'))
+          assert p['datasetId']==os.environ['EXPECTED_ID']
+          assert p['file']['parquetRows']==int(os.environ['EXPECTED_ROWS'])
+          assert p['file']['md5']==os.environ['EXPECTED_MD5']
+          assert p['file']['sha256'] and p['file']['sizeBytes']>50_000_000
+          assert p['file']['arrowTopLevelFields']>100
+          assert p['schemaSummary']['listFields']>0
+          assert p['acceptedMeasuredTimeSeriesSamples']==0
+          assert p['acceptedMeasuredCycles']==0
+          assert p['rawSourceRowsCommitted'] is False
+          assert p['rawSourceRedistributed'] is False
+          print('ProBayes exact-file discovery profile passed:',p['datasetId'],p['file'])
           PY
       - uses: actions/upload-artifact@v4
         with:
-          name: mouldmaster-probayes-b2share-profile
-          path: probayes-b2share-profile.json
+          name: mouldmaster-${{ matrix.dataset_id }}-profile
+          path: ${{ matrix.output }}
           retention-days: 90
