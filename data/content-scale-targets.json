@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "version": "2026.08.28.11",
+  "version": "2026.08.28.12",
   "reviewed": "2026-08-28",
   "scope": "Hard content-scale targets for MouldMaster. Completion counts only evidence that satisfies the acceptance definition for that area. Synthetic learning cases, generated drafts, unverified candidate papers and metadata-only dataset records must not be counted as completed measured evidence.",
   "targets": {
@@ -9,9 +9,9 @@
       "preferred": 50,
       "unit": "datasets",
       "acceptance": "A real measured dataset whose exact source/version/licence or access terms are recorded; source files have been obtained lawfully; file fingerprint and profile are recorded; schema/units/grouping are inspected; direct measurements, commands, derived fields and labels are distinguished; material/process/machine/mould/quality context and limitations are documented. Metadata-only records do not count.",
-      "currentAccepted": 10,
-      "currentDiscovered": 20,
-      "notes": "Ten dataset packages now pass the full acceptance boundary. The latest two are ImPure/PASCOE Trial 17 May 2022 and FORinFPRO-HIMD v1. PASCOE contributes 307 checksum-verified real cycle CSVs plus two measured quality files under CC BY 4.0. FORinFPRO-HIMD contributes one deeply instrumented hybrid injection-moulding cycle under CC BY 4.0; its exact machine, pressure/temperature and ultrasound-RMS files are checksum-verified, decimal-comma machine values are parsed, and 35 direct machine-actual fields are separated from setpoints, states and derived/aggregate fields. Neither PASCOE nor FORinFPRO adds scalar samples yet because their published CSV headers do not explicitly establish the required physical units/time-basis semantics. RWTH 10.18154/RWTH-2025-06809 remains uncounted because its versioned file endpoint returns a 248-byte HTML interstitial to GitHub automation. The PET preform candidate remains profiled but rejected from measured evidence."
+      "currentAccepted": 12,
+      "currentDiscovered": 21,
+      "notes": "Twelve dataset packages now pass the full acceptance boundary. The newest are the CC BY 4.0 cross-process-chain Zenodo v1.1 archive and Mendeley HDPE/GNP v3. The cross-process package contributes 15,686 real upper/lower injection-moulding serial recordings while explicitly excluding 14,882 downstream screw-driving files; seven lower static-table filenames are absent from the checksum-matched archive and remain a documented source-quality limitation. HDPE/GNP contributes 35 measured injection-moulding experiments with GNP content, injection temperature/pressure and measured tensile modulus, toughness and Vickers hardness reconciled against the peer-reviewed companion. Warwick demoulding is exact-file profiled but remains non-counting because all five source files are Origin OPJU projects requiring a compatible extraction adapter. RWTH remains uncounted because its public file endpoint serves an HTML interstitial to GitHub automation."
     },
     "measured_time_series_samples": {
       "minimum": 1000000,
@@ -19,7 +19,7 @@
       "unit": "samples",
       "acceptance": "Measured time-series samples from lawfully accessed real experimental or industrial injection-moulding datasets with source provenance, signal identity, units, sample ordering/time basis and dataset linkage. Synthetic training cycles and generated traces never count.",
       "currentAccepted": 52526432,
-      "notes": "scatimdata contributes 16,228,352 accepted pressure/flow/cavity-pressure scalar samples, OpenMMS contributes 298,080 physical sensor values, and SKZ LoKI contributes 36,000,000 direct pressure readings. ProBayes contributes 867 accepted real cycles but its nested scalar arrays remain outside this total until per-channel normalization. iGuzzini contributes 1,451 accepted real production records but zero waveform samples. PASCOE adds 307 accepted real moulding cycles and 297,087 sampled rows; its 1,782,522 candidate values across six clearly named direct channels remain non-counting until units and Time semantics are source-verified. FORinFPRO-HIMD adds one accepted highly instrumented cycle with 10,132 machine rows, 403 pressure/temperature rows and 2,154 ultrasound-RMS rows, but no scalar values count because the source CSV headers do not explicitly state physical units or a normalized physical time basis and the ultrasound RMS fields are derived features."
+      "notes": "scatimdata contributes 16,228,352 accepted pressure/flow/cavity-pressure scalar samples, OpenMMS contributes 298,080 physical sensor values, and SKZ LoKI contributes 36,000,000 direct pressure readings. ProBayes, PASCOE and FORinFPRO contribute accepted real cycle evidence but their waveform scalars remain outside this total until per-channel units/time semantics satisfy the scalar acceptance boundary. The cross-process-chain archive adds 15,686 accepted injection trace recordings, but no scalar samples: raw serial headers do not explicitly encode physical units and observed per-file timing must not be overwritten by the dataset-level approximately-1-kHz description. HDPE/GNP is record-level experimental data and adds no waveform samples."
     },
     "material_profiles": {
       "minimum": 250,
@@ -27,7 +27,7 @@
       "unit": "profiles",
       "acceptance": "A distinct polymer family/grade or explicitly bounded material class with identity, family, reinforcement/filler where relevant, rheology/MFR or equivalent evidence where available, drying/moisture handling, thermal transitions or thermal behaviour, shrinkage/dimensional behaviour, degradation/compatibility cautions, processing-window provenance and source references. Generic placeholders do not count as complete grade profiles.",
       "currentAccepted": 20,
-      "notes": "Twenty explicit base material profiles exist in reference-data.js. New measured datasets provide grade-level evidence, including five sustainable-material grades, Dow LDPE 780E, ProBayes PP/70%-recyclate ABS, Borealis HE125MO PP, SKZ Terluran GP-35 ABS and FORinFPRO continuous glass-fibre reinforced polypropylene organosheet with polypropylene overmoulding, but those are not automatically promoted until the complete material-profile acceptance schema is satisfied. iGuzzini does not name the polymer grade."
+      "notes": "Twenty explicit base material profiles exist in reference-data.js. Measured datasets now provide additional grade/class evidence including five sustainable-material grades, Dow LDPE 780E, ProBayes PP/70%-recyclate ABS, Borealis HE125MO PP, SKZ Terluran GP-35 ABS, FORinFPRO glass-fibre reinforced PP/PP overmoulding, cross-process recyclate/glass-fibre thermoplastic variants and HDPE with graphite nanoplatelets. These are not automatically promoted until the full material-profile acceptance schema is satisfied."
     },
     "defect_mechanisms": {
       "minimum": 300,
@@ -43,7 +43,7 @@
       "unit": "concepts",
       "acceptance": "A distinct sensor, derived signal, calibration/drift concept, failure mode, wear signature, machine-health indicator or diagnostic interpretation with measurement location/domain, units or feature semantics where applicable, failure/confounders and evidence provenance.",
       "currentAccepted": 0,
-      "notes": "OpenMMS, ProBayes, SKZ, iGuzzini, PASCOE and FORinFPRO now provide strong measured evidence across mould/nozzle/cavity/hydraulic pressure, temperature, force, inertial sensing, machine DataXplorer/ENGEL actuals, temperature-control, dryer/dosing, EUROMAP77, torque, screw position, ultrasound RMS, dielectric-analysis context and MES/process domains, but a dedicated normalized accepted sensor/health registry is still required before claiming a consolidated count."
+      "notes": "OpenMMS, ProBayes, SKZ, iGuzzini, PASCOE, FORinFPRO and the cross-process-chain package now provide strong measured evidence across mould/nozzle/cavity/hydraulic pressure, temperature, force, inertial sensing, machine actuals, EUROMAP77, torque, screw position, ultrasound RMS, dielectric-analysis context, injection velocity and melt volume. A dedicated normalized accepted sensor/health registry is still required before claiming a consolidated count."
     },
     "assessment_education_items": {
       "minimum": 1000,
@@ -59,7 +59,7 @@
       "unit": "records",
       "acceptance": "A deduplicated peer-reviewed research record with stable bibliographic identity (prefer DOI), title, year, venue/type, topic tags, materials/process/sensor/defect/method tags where supported, concise finding/limitation fields, access status and evidence-quality classification. Concept cards and duplicate publication versions do not count.",
       "currentAccepted": 60,
-      "notes": "The dedicated primary-measured evidence registry currently supplies a conservative audited peer-reviewed master subset of 60 unique publisher-verified DOI records. Dataset profiling does not automatically change this research count; literature records must be deduplicated and explicitly promoted."
+      "notes": "The dedicated primary-measured evidence registry currently supplies a conservative audited peer-reviewed master subset of 60 unique publisher-verified DOI records. Dataset profiling does not automatically change this research count. The newly verified HDPE/GNP companion DOI 10.1016/j.dib.2024.110987 is staged for separate literature-registry promotion rather than being silently counted through dataset acquisition."
     },
     "primary_measured_studies": {
       "minimum": 800,
@@ -67,7 +67,7 @@
       "unit": "studies",
       "acceptance": "A deduplicated primary study containing actual injection-moulding experimental or industrial measurements. The record must identify measured signals/outcomes and study context and must be manually or explicitly evidence-reviewed. Reviews, simulation-only studies, theory-only papers and heuristic search candidates do not count.",
       "currentAccepted": 60,
-      "notes": "data/primary-measured-evidence-registry-v1.json contains 60 unique publisher-verified peer-reviewed primary measured studies across five audited evidence packs. Dataset acquisition/profile work does not increment this literature count unless a distinct peer-reviewed paper is separately verified and deduplicated."
+      "notes": "data/primary-measured-evidence-registry-v1.json contains 60 unique publisher-verified peer-reviewed primary measured studies. The HDPE/GNP Data in Brief companion is verified as a distinct measured injection-moulding study but remains staged until it is inserted through the dedicated literature registry and DOI QA."
     }
   },
   "nonCountingRules": [
