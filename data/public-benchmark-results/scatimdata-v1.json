@@ -1,0 +1,63 @@
+{
+  "schema_version": 2,
+  "status": "completed-public-measured-timeseries-benchmark",
+  "completed_date": "2026-08-28",
+  "source": {
+    "title": "High-resolution injection-moulding time-series datasets (scatimdata)",
+    "repository": "https://github.com/sc4t1m/scatimdata",
+    "license": "CC BY 4.0",
+    "peerReviewedCompanion": "10.3390/polym15040978",
+    "machine": "Arburg Allrounder 520E 1500-800, 45 mm screw",
+    "moulds": "two industrial-representative single-cavity hot-runner moulds",
+    "materials": "two polyamide granules",
+    "machineInterface": "OPC UA / EUROMAP 63 via AVAPS",
+    "samplingIntervalMsPublished": 6
+  },
+  "publishedStructure": {
+    "pointsPerTimeSeriesReported": 2049,
+    "signalsPerCycleUsedForPrediction": [
+      "injection pressure curve",
+      "injection flow curve"
+    ],
+    "qualityPerCycle": [
+      "part weight",
+      "geometric dimension"
+    ],
+    "cycleLinkage": true
+  },
+  "observedSourceStructure": {
+    "pointsPerCurveInDownloadedMatrices": 2048,
+    "note": "The article reports 2049 points per series; the published machine-readable signal matrices contain 2048 numeric time rows. MouldMaster counts downloaded numeric values rather than inflating to the nominal article value.",
+    "cycleColumnCountsByArchive": {
+      "dataset1.zip": 1174,
+      "dataset2.zip": 922,
+      "dataset3.zip": 1405
+    },
+    "physicalSignalMatrices": [
+      {"archive":"dataset1.zip","member":"dataset1/ds1_timeseries_injectionflow.csv","signal":"injection-flow","pointsPerCurveObserved":2048,"cycleColumns":1174,"sampleCount":2404352,"storage":"csv-matrix"},
+      {"archive":"dataset1.zip","member":"dataset1/ds1_timeseries_injectionpressure.csv","signal":"injection-pressure","pointsPerCurveObserved":2048,"cycleColumns":1174,"sampleCount":2404352,"storage":"csv-matrix"},
+      {"archive":"dataset2.zip","member":"dataset2/dynamic_data_versuch_large.h5","dataset":"Einspritzdruck/block0_values","signal":"injection-pressure","pointsPerCurveObserved":2048,"cycleColumns":922,"sampleCount":1888256,"storage":"hdf5-float-matrix"},
+      {"archive":"dataset2.zip","member":"dataset2/dynamic_data_versuch_large.h5","dataset":"Einspritzstrom/block0_values","signal":"injection-flow","pointsPerCurveObserved":2048,"cycleColumns":922,"sampleCount":1888256,"storage":"hdf5-float-matrix"},
+      {"archive":"dataset2.zip","member":"dataset2/dynamic_data_versuch_large.h5","dataset":"Werkzeuginnendruck/block0_values","signal":"cavity-pressure","pointsPerCurveObserved":2048,"cycleColumns":922,"sampleCount":1888256,"storage":"hdf5-float-matrix"},
+      {"archive":"dataset3.zip","member":"dataset3/ds3_timeseries_injectionflow.csv","signal":"injection-flow","pointsPerCurveObserved":2048,"cycleColumns":1405,"sampleCount":2877440,"storage":"csv-matrix"},
+      {"archive":"dataset3.zip","member":"dataset3/ds3_timeseries_injectionpressure.csv","signal":"injection-pressure","pointsPerCurveObserved":2048,"cycleColumns":1405,"sampleCount":2877440,"storage":"csv-matrix"}
+    ],
+    "scalarTables": [
+      {"archive":"dataset1.zip","member":"dataset1/ds1_scalar_and_quality.csv","rows":1167,"columns":21,"qualityFields":["weight","distanceA"]},
+      {"archive":"dataset3.zip","member":"dataset3/ds3_scalar_and_quality.csv","rows":1332,"columns":20,"qualityFields":["weight","distanceB"]}
+    ]
+  },
+  "archives": [
+    {"name":"dataset1.zip","sizeBytes":5431885,"sha256":"f8c7f6363ecbd541735b374746ce8549aaa50dae754aaaa2efa980c227b19c09","memberCount":3},
+    {"name":"dataset2.zip","sizeBytes":8708313,"sha256":"69294087889a52791c296734051d6b21b30847c2859613e4178074182150c491","memberCount":1},
+    {"name":"dataset3.zip","sizeBytes":7754358,"sha256":"b6baa4f5f5dbdf0c1bbe23a7b854358967d9004b75de4a16502730a77aed316e","memberCount":3}
+  ],
+  "acceptedMeasuredTimeSeriesSamples": 16228352,
+  "sampleCountBySignal": {
+    "cavity-pressure": 1888256,
+    "injection-flow": 7170048,
+    "injection-pressure": 7170048
+  },
+  "rawSourceRowsCommitted": false,
+  "boundary": "Only float physical signal matrices and cycle-linked numeric CSV signal matrices are counted. HDF5 axes, identifiers and *_states arrays are excluded. One sample is one measured scalar value in a time-series channel, not one cycle. Raw source rows are not emitted."
+}
