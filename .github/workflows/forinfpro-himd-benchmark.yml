@@ -26,23 +26,35 @@ jobs:
           python-version: '3.12'
       - name: Profile exact FORinFPRO HIMD Zenodo files
         run: python tools/profile_forinfpro_himd.py --output forinfpro-himd-v1.json
-      - name: Enforce non-counting discovery boundary
+      - name: Enforce accepted-cycle and conservative-sample boundary
         run: |
           python - <<'PY'
           import json
           p=json.load(open('forinfpro-himd-v1.json',encoding='utf-8'))
+          assert p['status']=='completed-public-measured-benchmark'
           assert p['source']['doi']=='10.5281/zenodo.20744054'
           assert p['source']['version']=='v1'
+          assert p['source']['licenseMetadata']['accessRight']=='open'
+          assert p['source']['licenseMetadata']['license']['id']=='cc-by-4.0'
           assert p['experimentalContext']['visibleCycles']==1
           assert p['experimentalContext']['inMouldSensors']['total']==12
           assert set(p['files'])=={'cycle_001_machine_data.csv','cycle_001_pt.csv','cycle_001_us_rms.csv'}
           assert all(v['table']['rows']>0 and v['table']['columns']>0 for v in p['files'].values())
-          assert p['acceptedMeasuredCycles']==0
+          assert p['observedStructure']['machineRows']==10132
+          assert p['observedStructure']['machineNamedColumns']==60
+          assert p['observedStructure']['machineNumericNamedColumns']==59
+          assert p['observedStructure']['directMachineActualColumns']==35
+          assert p['observedStructure']['pressureTemperatureRows']==403
+          assert p['observedStructure']['ultrasoundRmsRows']==2154
+          assert p['measurementBoundary']['directMachineActualsSeparatedFromSetpointsDerivedAndStates'] is True
+          assert p['measurementBoundary']['ultrasoundRmsIsDerivedFeature'] is True
+          assert p['measurementBoundary']['sourceUnitsExplicitInCsvHeaders'] is False
+          assert p['acceptedMeasuredCycles']==1
           assert p['acceptedMeasuredTimeSeriesSamples']==0
           assert p['rawSourceRowsCommitted'] is False
-          print('FORinFPRO HIMD exact-file discovery profile passed')
+          print('FORinFPRO HIMD accepted-cycle profile passed; scalar sample ledger remains conservative')
           print('license:',p['source']['licenseMetadata'])
-          print('schemas:',{k:v['table']['header'] for k,v in p['files'].items()})
+          print('structure:',p['observedStructure'])
           PY
       - uses: actions/upload-artifact@v4
         with:
