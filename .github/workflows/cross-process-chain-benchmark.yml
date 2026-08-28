@@ -26,23 +26,37 @@ jobs:
           python-version: '3.12'
       - name: Profile exact cross-process-chain Zenodo archive
         run: python tools/profile_cross_process_chain.py --output cross-process-chain-v1.json
-      - name: Enforce injection-only discovery boundary
+      - name: Enforce injection-only acceptance boundary
         run: |
           python - <<'PY'
           import json
           p=json.load(open('cross-process-chain-v1.json',encoding='utf-8'))
+          assert p['status']=='completed-public-measured-benchmark'
           assert p['source']['doi']=='10.5281/zenodo.17240390'
+          assert p['source']['licenseMetadata']['license']['id']=='cc-by-4.0'
+          assert p['source']['licenseMetadata']['version']=='v1.1'
           assert p['archive']['md5']=='069e190338b2ca29f736b21fabf407ba'
-          assert len(p['archive']['sha256'])==64
-          assert p['memberInventory']['files']>0
-          assert p['memberInventory']['categoryCounts'].get('screw-driving-json',0)>0
-          assert p['acceptedMeasuredCycles']==0
+          assert p['archive']['sha256']=='a0c7c07997e6c5a996823744aceb82bfc7b4efd371c7be0f4afc60d04771ec90'
+          inv=p['memberInventory']
+          assert inv['files']==30572
+          assert inv['upperInjectionSerialFiles']==10697
+          assert inv['lowerInjectionSerialFiles']==4989
+          assert inv['screwDrivingSerialFilesExcluded']==14882
+          cov=p['injectionCycleCoverage']
+          assert cov['acceptedInjectionSerialRecordings']==15686
+          assert cov['screwDrivingOperationsExcludedFromInjectionCount']==14882
+          assert cov['upper']['uniqueCycleIds']==10697 and cov['upper']['duplicateCycleIds']==0
+          assert cov['lower']['uniqueCycleIds']==4989 and cov['lower']['duplicateCycleIds']==0
+          assert p['staticData']['upper']['serialFileReferencesMissingFromArchive']==0
+          assert p['staticData']['lower']['serialFileReferencesMissingFromArchive']==0
+          assert len(p['serialSchemaInspection']['upperSamples'])==3
+          assert len(p['serialSchemaInspection']['lowerSamples'])==3
+          assert p['serialSchemaInspection']['sourceUnitsExplicitInRawSerialHeaders'] is False
+          assert p['acceptedMeasuredCycles']==15686
           assert p['acceptedMeasuredTimeSeriesSamples']==0
           assert p['rawSourceRowsCommitted'] is False
-          print('Cross-process-chain exact-archive discovery profile passed; downstream screw-driving remains non-counting')
-          print('license:',p['source']['licenseMetadata'])
-          print('inventory:',p['memberInventory'])
-          print('sampled members:',[(x['path'],x['classification'],x.get('header')) for x in p['sampledMembers']])
+          assert p['rawSourceFilesCommitted'] is False
+          print('Cross-process-chain exact-archive benchmark passed: 15,686 injection serial recordings accepted; 14,882 screw-driving files excluded; waveform scalars remain non-counting without explicit raw units')
           PY
       - uses: actions/upload-artifact@v4
         with:
