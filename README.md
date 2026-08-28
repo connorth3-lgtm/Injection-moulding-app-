@@ -64,9 +64,11 @@ The controlled move toward real de-identified evidence is defined in `sources/RE
 
 The canonical completion pathway remains **120 core lessons**. `curriculum-integration.js` links every core lesson to two valid formative activities drawn from the existing diagnostic, material-behaviour and process-data practice layers, with a return-to-lesson flow so learners move from theory → practice → evidence → explanation.
 
-Twelve optional specialist extensions in `specialist-curriculum.js` add depth only where the core curriculum audit identified a real gap: hazardous-energy intervention, clamp/projected-area reasoning, plasticising controls, reinforced polymers, purging/contamination, internal defects, SPC, Gage R&R/MSA, valve-gate timing, screw/barrel wear, ejector/tool condition, and energy/recycled-feedstock variability. Specialist completion is device-local and separate from the 120-lesson core.
+The optional specialist layer contains **20 lessons total** and remains separate from the canonical 120-lesson completion/certificate path. `specialist-curriculum.js` provides S01–S12: hazardous-energy intervention, clamp/projected-area reasoning, plasticising controls, reinforced polymers, purging/contamination, internal defects, SPC, Gage R&R/MSA, valve-gate timing, screw/barrel wear, ejector/tool condition, and energy/recycled-feedstock variability.
 
-These formative layers do not change formal assessment answers, certificate thresholds or production setpoints.
+`specialist-evidence-gap-extension.js` adds S13–S20 for evidence-depth gaps identified by the mechanism audit: residual stress/birefringence, weld-line structural strength, runner/gate/multicavity imbalance, hot-runner actual behaviour, liquid silicone rubber, gas/water/projectile-assisted moulding, surface replication/release and injection-compression/precision optics. Their learner-visible evidence status is controlled by `data/evidence-coverage-v1.json` through `app-shell-finalize.js`; learner completion never promotes evidence maturity. Promoted mechanisms require independent publisher-verified primary measured studies with measured signals, physical quality outcomes, context, limitations and bounded claims. Provisional lessons remain clearly labelled until their own promotion gate is met.
+
+Specialist completion is device-local and separate from the core pathway. These formative layers do not change formal assessment answers, certificate thresholds or production setpoints, and evidence promotion does not convert study-specific values into universal production recipes.
 
 ## Open Windows desktop release
 
@@ -131,7 +133,7 @@ Do not bypass guards, interlocks or hazardous-energy controls to follow training
 
 ## Release QA
 
-The release workflows run structural, runtime, question/answer, assessment-quality, learner-scoped analytics, evidence-approval, evidence-maturity, guided-data, cross-library process-data, measured-evidence, learner-experience, curriculum-integration, specialist-curriculum, material-behaviour, app-shell/mobile-browser, Mould Master workspace, source-freshness, reference/research, desktop-security and certification-readiness checks. Important entry points include:
+The release workflows run structural, runtime, question/answer, assessment-quality, learner-scoped analytics, evidence-approval, evidence-maturity, guided-data, cross-library process-data, measured-evidence, mechanism-evidence coverage/promotion, learner-experience, curriculum-integration, specialist-curriculum/evidence-status, material-behaviour, app-shell/mobile-browser, Mould Master workspace, source-freshness, reference/research, desktop-security and certification-readiness checks. Important entry points include:
 
 - `qa_release.py`
 - `qa_runtime_hardening.py`
@@ -143,6 +145,8 @@ The release workflows run structural, runtime, question/answer, assessment-quali
 - `qa_assessment_quality.py`
 - `qa_assessment_evidence.py`
 - `qa_evidence_maturity.py`
+- `qa_evidence_coverage.py`
+- `qa_mechanism_promotion.py`
 - `qa_process_data_diagnostics.py`
 - `qa_process_data_deep_dive_50.py`
 - `qa_process_data_20_pass.py`
@@ -155,6 +159,7 @@ The release workflows run structural, runtime, question/answer, assessment-quali
 - `qa_mould_master_workspace.py`
 - `qa_curriculum_integration.py`
 - `qa_specialist_curriculum.py`
+- `qa_specialist_evidence_gaps.py`
 - `qa_learning_analytics.py`
 - `qa_assessment_final_hardening.py`
 - `qa_assessment_ux.py`
