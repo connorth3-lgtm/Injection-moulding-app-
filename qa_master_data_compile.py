@@ -36,7 +36,7 @@ with tempfile.TemporaryDirectory() as td:
     counts = manifest.get("counts") or {}
     expected = {
         "measuredDatasetInventory": 20,
-        "automatedIngestionAllowedDatasets": 9,
+        "automatedIngestionAllowedDatasets": 11,
         "fullyProfiledMeasuredDatasets": 10,
         "measuredTimeSeriesSamplesAccepted": 52_526_432,
         "publisherVerifiedPrimaryMeasuredStudies": 60,
@@ -99,4 +99,4 @@ with tempfile.TemporaryDirectory() as td:
     for section in ["manifest", "measured", "research", "appData", "processData", "drafts"]:
         need(section in combined, f"combined master package missing section: {section}")
 
-print("MouldMaster master data compilation QA passed (20 inventoried datasets; 10 fully profiled measured packages; 52,526,432 accepted real time-series samples; 60 verified primary measured studies; 600 evidence passes; 264/19,008 synthetic cases/cycles; 157 approved items; 120+20 lessons; full draft banks)")
+print("MouldMaster master data compilation QA passed (20 inventoried datasets; 11 reproducibly profileable sources; 10 fully profiled measured packages; 52,526,432 accepted real time-series samples; 60 verified primary measured studies; 600 evidence passes; 264/19,008 synthetic cases/cycles; 157 approved items; 120+20 lessons; full draft banks)")
