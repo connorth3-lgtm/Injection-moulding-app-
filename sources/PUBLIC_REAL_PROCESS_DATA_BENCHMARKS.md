@@ -1,50 +1,77 @@
 # Public real injection-moulding data benchmarks
 
 Status: external benchmark register — not a substitute for an authorised site pilot  
-Reviewed: 2026-08-27
+Measured benchmark status: first public measured benchmark completed 2026-08-28  
+Reviewed: 2026-08-28
 
-MouldMaster's synthetic process-data library is useful for teaching mechanisms, but measured external datasets can expose ingestion, missing-data, process/quality and evidence-ranking assumptions before a private site pilot is available. This register records candidate **real measured** datasets without copying third-party data into this repository.
+MouldMaster's synthetic process-data library is useful for teaching mechanisms, but measured external datasets can expose ingestion, missing-data, process/quality and evidence-ranking assumptions before a private site pilot is available. This register records candidate **real measured** datasets without copying third-party raw data into this repository.
 
 A public dataset does not automatically establish a root cause, validated process window, production limit or safe setting change. MouldMaster must use only the claims and relationships supported by the source metadata/publication and must keep measured benchmark data distinct from MouldMaster-owned synthetic learning cases.
 
-## Reuse-ready candidates with an explicit licence
-
-### 1. Data Model for Injection Molding and Blow Molding
+## Completed benchmark 1 — Data Model for Injection Molding and Blow Molding
 
 - Publisher: Mendeley Data
 - Version: 1
 - Published: 2025-08-05
 - DOI: `10.17632/gtnb4j7bfx.1`
 - Licence: **CC BY 4.0**
-- Source: https://doi.org/10.17632/gtnb4j7bfx.1
 - Context: industrial injection- and blow-moulding operations
+- Associated peer-reviewed case study: `10.3390/su17167445`
+- Source contract: `data/public-benchmark-contracts/gtnb4j7bfx-v1.json`
+- Completed result: `data/public-benchmark-results/gtnb4j7bfx-v1.json`
 
-The dataset description reports more than 30 production/process variables. Relevant injection-moulding fields include machine/product/material identifiers, injection and holding pressure, melt and mould temperature, cycle/cooling/ejection timing, injection velocity, cavity count, good/rejected quantities and flash-waste/defect quantities.
+The first real public benchmark was executed successfully on 2026-08-28 through the dedicated publisher-retrieval lane. MouldMaster retrieved the exact version-1 publisher workbook and did not commit or upload raw measured rows.
 
-The associated peer-reviewed case study is DOI `10.3390/su17167445`. Its injection-moulding variable table is captured as a version-pinned **source contract** in `data/public-benchmark-contracts/gtnb4j7bfx-v1.json`. The contract records names, published units, field roles and interpretation uncertainty; it contains no measured rows and no recommended process ranges.
+### Verified source and process split
 
-**Useful MouldMaster benchmark questions**
-- Can the intake path distinguish physical/process evidence from identifiers and derived production metrics?
-- Can quality/reject/flash relationships be explored without turning correlations into asserted mechanisms?
-- Are units, missingness and order/run grouping preserved during preparation?
-- Does the diagnostic-learning explanation distinguish what was measured from what would need an additional discriminating test?
+- Publisher file: `modelo.xlsx`
+- Worksheet: `nicky`
+- File size: **4,843,621 bytes**
+- SHA-256: `b231af5d49c0a258b5625d6e2ab2c324c233017c5c010e326a3ca485387ecc9f`
+- Source rows: **6,357**
+- Injection-moulding rows profiled: **4,502**
+- Blow-moulding rows excluded: **1,855**
+- Blank/unclassified machine rows: **0**
+- Separation field: source `Maquina` column
+- Separation evidence: injection and blow prefixes produced the same 4,502/1,855 split reported by the associated paper
 
-**Limitations to record before use**
-- A production-order record is not automatically a shot-resolved trace.
-- Injection and blow-moulding records must not be pooled as though they were one process.
-- A defect quantity does not itself prove the physical cause of that defect.
-- Customer/product/machine identifiers must be reviewed before redistributing derived subsets.
-- The associated study describes replacing null values with zero during its modelling preprocessing. MouldMaster's benchmark preflight deliberately does **not** copy that choice: missing values remain missing and zero is counted separately.
-- The published variable names do not by themselves prove whether pressure, temperature, time or speed fields are machine commands/setpoints or actual measurements. Their command/actual status remains explicitly unresolved until the downloaded source file/documentation establishes it.
+The exact workbook contains 33 Spanish-named columns spanning injection and blow-moulding variables. The source-specific adapter accepts the exact v1 workbook/sheet/schema, filters the proven injection records, removes seven blow-only fields, and maps the remaining **26/26 injection fields** to the canonical MouldMaster contract. Publisher drift fails closed rather than silently changing the benchmark.
 
-### 2. Preform injection molding analysis — Database
+### Missingness, zero handling and semantics
+
+MouldMaster performed **no zero-filling** and **no unit conversion**. The 4,502 × 26 delivered injection subset contains no cells matching MouldMaster's missing-value tokens. This is recorded only as a property of the downloaded workbook: the associated study reports replacing nulls with zero during modelling preprocessing, so the benchmark does **not** claim that the original pre-publication source had no missing values and does not reverse-engineer zeros into missing values without evidence.
+
+Observed zero counts are retained separately in the completion record, including 84 in `Pigment_Consumption` and 8 each in `Cycle_Time`, `Cooling_Time_Injection`, `Ejection_Time_Injection` and `Retention_Time_Injection`.
+
+The published field names and workbook do not establish commanded/target-versus-actual semantics for all pressure, temperature, timing, speed, weight and consumption fields. Those semantics remain explicitly unresolved where source documentation does not establish them.
+
+### What this completed benchmark validates
+
+The completed run demonstrates that MouldMaster can:
+
+- retrieve an exact licensed/version-pinned public measured source;
+- fingerprint and verify the publisher container;
+- inspect the real schema rather than infer it from metadata alone;
+- prove and enforce injection-versus-blow process separation;
+- normalize a source-specific Spanish schema to the canonical contract;
+- preserve missing-value and zero semantics without silent rewriting;
+- keep identifiers, derived quality metrics and physical process evidence conceptually separate;
+- retain command/actual uncertainty instead of inventing semantics;
+- emit aggregate profile/provenance evidence without raw record values;
+- delete the publisher raw-data workspace before artifact upload;
+- keep historical process values from becoming recommended setpoints or production limits.
+
+It does **not** establish shot-level causality, intervention/recovery evidence, in-mould cavity-pressure or cavity-temperature traces, a validated process window, universal settings or an independently proven physical root cause. It is external measured-data **pathway evidence**, not completion of authorised site-pilot issue #50.
+
+Issue #53 is closed as completed. The stronger authorised site-pilot evidence tracked in issue #50 remains open separately.
+
+## Reuse-ready candidate 2 — Preform injection molding analysis — Database
 
 - Publisher: Mendeley Data
 - Current registered version in this review: 2
 - Published: 2025-04-04
 - DOI: `10.17632/vc3k9tt5zj.2`
 - Licence: **CC BY 4.0**
-- Source: https://doi.org/10.17632/vc3k9tt5zj.2
 - Context: PET water-bottle preform injection moulding; data-driven process study
 
 **Useful MouldMaster benchmark questions**
@@ -66,7 +93,6 @@ These sources are valuable for schema/design review, but their current public re
 - Version: v1
 - Published: 2026-06-18
 - DOI: `10.5281/zenodo.20744054`
-- Source: https://doi.org/10.5281/zenodo.20744054
 - Context: research hybrid injection moulding of continuous-glass-fibre PP organosheets with PP overmoulding on an ENGEL V-Duo
 
 The public record describes synchronized machine process data, cavity pressure/temperature, ultrasound and dielectric-analysis measurements. Machine signals include injection pressure, screw position, injection speed, clamp force and temperatures. This makes the record particularly useful for reviewing MouldMaster's command/actual, time-series and in-mould-sensor evidence model once reuse rights are confirmed.
@@ -77,7 +103,6 @@ The public record describes synchronized machine process data, cavity pressure/t
 - Version: v1.1
 - Published: 2025-10-01
 - DOI: `10.5281/zenodo.17240390`
-- Source: https://doi.org/10.5281/zenodo.17240390
 
 The public record describes injection-moulding time series with target and actual pressure, velocity and volume, experiment IDs linking process stages, material classifications and quality labels. It is a useful candidate for testing command-versus-actual handling and upstream/downstream quality reasoning once licence terms are confirmed.
 
@@ -101,42 +126,19 @@ Do not build automated tests or redistribute files from an embargoed record mere
 
 Recheck the live record later rather than assuming the embargo or licence remains unchanged.
 
-## Executable local preflight for benchmark 1
+## Executable benchmark tooling
 
-The repository now provides `tools/profile_public_benchmark.py`. It fingerprints and profiles a **locally downloaded** licensed benchmark without writing raw rows to its JSON report. Supported local formats are CSV, TSV, TXT and XLSX. The raw measured file stays outside this repository.
+The repository provides two complementary paths for benchmark 1.
 
-1. Open DOI `10.17632/gtnb4j7bfx.1` at the publisher and download the exact **version 1** file locally.
-2. Retain the publisher's dataset title, version, DOI and CC BY 4.0 attribution with the local evidence record.
-3. Inspect the downloaded workbook/files and select or filter **injection-moulding only**. Do not combine blow-moulding rows into this benchmark run.
-4. If an XLSX workbook contains more than one worksheet, select the injection worksheet explicitly with `--sheet "<exact sheet name>"`.
-5. Run the preflight. `--confirm-process-separated` is an affirmative operator assertion that the input passed to the profiler contains only the intended injection-moulding context.
+`tools/profile_public_benchmark.py` fingerprints and profiles a locally downloaded licensed CSV/TSV/TXT/XLSX source without writing raw rows to its JSON report. This remains useful for controlled local review. The raw measured file stays outside this repository, and local use of the preflight still requires `--confirm-process-separated` only after the operator has selected or filtered injection-moulding records.
 
-Example:
+The CI benchmark lane uses the exact-source Mendeley v1 adapter and public publisher endpoint. It verifies the exact file/sheet/schema, proves the 4,502/1,855 process split, normalizes the 26 injection fields, runs aggregate profiling and result QA, deletes `.benchmark-work`, and uploads only the aggregate JSON profile.
 
-```bash
-python tools/profile_public_benchmark.py \
-  --input "/local/path/to/licensed-downloaded-file.xlsx" \
-  --sheet "<injection worksheet if needed>" \
-  --contract data/public-benchmark-contracts/gtnb4j7bfx-v1.json \
-  --output "/local/path/to/gtnb4j7bfx-v1-profile.json" \
-  --title "Data Model for Injection Molding and Blow Molding" \
-  --doi "10.17632/gtnb4j7bfx.1" \
-  --dataset-version "1" \
-  --license "CC BY 4.0" \
-  --retrieved-date "YYYY-MM-DD" \
-  --process-context injection-moulding \
-  --confirm-process-separated
-```
-
-The generated profile records the input SHA-256 and byte size; dataset/version/licence/retrieval provenance; selected worksheet; row/column counts; expected/missing/unexpected fields; published units and field roles; aggregate missing and zero counts; and command/actual uncertainty. It does **not** emit raw row values, sample values, minima/maxima, process windows or recommended settings.
-
-The preflight does not rewrite the downloaded file. It fails if the source file changes while being profiled. A generated report is intentionally marked `profile-generated-review-required`: a human must still inspect units, source semantics, process separation, missing-data conventions, identifiers, grouping and evidence gaps before using the benchmark for MouldMaster reasoning evaluation.
-
-CI runs the same profiler against `qa/fixtures/public-benchmark-gtnb4j7bfx-synthetic.csv`. That fixture is fabricated test data which mirrors the published schema only; it is **not** copied from the Mendeley dataset and cannot substitute for running the actual licensed measured file. Execution of the first real public benchmark is tracked in issue #53. The stronger authorised site-pilot evidence remains tracked separately in issue #50.
+The synthetic fixture under `qa/fixtures/` remains fabricated schema-test data only; it is **not** a substitute for the completed measured run and is never relabelled as measured evidence.
 
 ## Benchmark acceptance checklist
 
-Before any public benchmark is used in a MouldMaster analysis or regression test:
+Before any additional public benchmark is used in a MouldMaster analysis or regression test:
 
 1. Record the exact dataset title, DOI, version, retrieval date and licence.
 2. Preserve required attribution and licence notices with any permitted derived copy.
@@ -153,7 +155,7 @@ Before any public benchmark is used in a MouldMaster analysis or regression test
 
 ## What a public benchmark can and cannot validate
 
-A suitable public dataset can validate parts of the **data pathway**: parsing, unit/missing-data handling, actual-versus-command separation, grouping, process/quality relationships, evidence presentation and uncertainty language.
+A suitable public dataset can validate parts of the **data pathway**: parsing, provenance, unit/missing-data handling, command-versus-actual uncertainty, grouping, process/quality relationships, evidence presentation and uncertainty language.
 
 It does **not** by itself validate MouldMaster's full real troubleshooting workflow. Closing the real-pilot gap still requires an approved site/organisation dataset with enough baseline → fault/onset → controlled test or independently investigated cause → recovery/verification evidence to compare MouldMaster's ranked mechanism against a defensible engineering finding.
 

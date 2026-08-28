@@ -1,0 +1,70 @@
+name: MouldMaster Primary Measured Evidence
+
+on:
+  push:
+    branches: [main, evidence-coverage-hardening]
+    paths:
+      - 'data/primary-measured-evidence-registry-v1.json'
+      - 'data/primary-measured-evidence/**'
+      - 'data/measured-dataset-inventory-v1.json'
+      - 'data/measured-data-discovery-queue-v1.json'
+      - 'data/evidence-coverage-v1.json'
+      - 'qa_primary_measured_evidence.py'
+      - 'qa_measured_dataset_inventory.py'
+      - 'qa_measured_data_discovery_queue.py'
+      - 'sources/PRIMARY_MEASURED_EVIDENCE_REGISTRY.md'
+      - '.github/workflows/primary-measured-evidence.yml'
+  pull_request:
+    branches: [main]
+    paths:
+      - 'data/primary-measured-evidence-registry-v1.json'
+      - 'data/primary-measured-evidence/**'
+      - 'data/measured-dataset-inventory-v1.json'
+      - 'data/measured-data-discovery-queue-v1.json'
+      - 'data/evidence-coverage-v1.json'
+      - 'qa_primary_measured_evidence.py'
+      - 'qa_measured_dataset_inventory.py'
+      - 'qa_measured_data_discovery_queue.py'
+      - 'sources/PRIMARY_MEASURED_EVIDENCE_REGISTRY.md'
+      - '.github/workflows/primary-measured-evidence.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: mouldmaster-primary-measured-evidence-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  primary-measured-evidence:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Validate deduplicated peer-reviewed primary measured registry
+        run: python qa_primary_measured_evidence.py
+      - name: Validate governed measured dataset inventory
+        run: python qa_measured_dataset_inventory.py
+      - name: Validate new measured-data discovery queue
+        run: python qa_measured_data_discovery_queue.py
+      - name: Upload aggregate primary measured registry QA report
+        uses: actions/upload-artifact@v4
+        with:
+          name: mouldmaster-primary-measured-evidence
+          path: primary-measured-evidence-report.json
+          if-no-files-found: error
+      - name: Upload aggregate measured dataset inventory QA report
+        uses: actions/upload-artifact@v4
+        with:
+          name: mouldmaster-measured-dataset-inventory
+          path: measured-dataset-inventory-report.json
+          if-no-files-found: error
+      - name: Upload aggregate measured-data discovery report
+        uses: actions/upload-artifact@v4
+        with:
+          name: mouldmaster-measured-data-discovery-queue
+          path: measured-data-discovery-queue-report.json
+          if-no-files-found: error

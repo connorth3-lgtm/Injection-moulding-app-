@@ -1,0 +1,78 @@
+{
+  "schema": 1,
+  "version": "2026.08.28.3",
+  "reviewed": "2026-08-28",
+  "mechanismId": "ejection-demoulding-physics",
+  "registryTarget": "data/evidence-coverage-v1.json",
+  "promotionRuleSnapshot": {
+    "minimumIndependentPublisherVerifiedPrimaryMeasured": 2,
+    "requiresMeasuredSignals": true,
+    "requiresPhysicalQualityOutcome": true,
+    "requiresExperimentalContext": true,
+    "requiresExplicitLimitation": true,
+    "predictionIsNotCausation": true,
+    "universalProcessRecipesAllowed": false
+  },
+  "eligibility": {
+    "independentPublisherVerifiedPrimaryMeasured": 2,
+    "meetsMinimumIndependentStudies": true,
+    "measuredSignalsPresent": true,
+    "physicalQualityOutcomesPresent": true,
+    "experimentalContextPresent": true,
+    "explicitLimitationsPresent": true,
+    "eligibleForPromotion": true,
+    "registryPromotionApplied": true
+  },
+  "independenceRationale": "The counted studies are distinct experiments from disjoint author teams: a Budapest University of Technology and Economics PLA eject-force/damage study and a Central South University microinjection friction/replication study. They use different materials, tooling, measured signals and physical release outcomes, so neither is a duplicate publication or re-analysis of the other.",
+  "studies": [
+    {
+      "id": "doi:10.3311/PPme.18246",
+      "title": "The Effect of Processing Parameters and Calcium-stearate on the Ejection Process of Injection Molded Poly(Lactic Acid) Products",
+      "authors": ["Tamás Tábi", "Kornél Pölöskei"],
+      "year": 2022,
+      "journal": "Periodica Polytechnica Mechanical Engineering",
+      "doi": "10.3311/PPme.18246",
+      "publisherUrl": "https://pp.bme.hu/me/article/view/18246",
+      "role": "primary-measured-study",
+      "verification": "publisher-verified",
+      "independenceKey": "bme-pla-ejection-2022",
+      "materialContext": "Poly(lactic acid) injection-moulded tensile specimens; calcium-stearate evaluated as a demoulding agent.",
+      "toolContext": "Mould with low draft angle and varying cavity width along the flow path.",
+      "measuredSignals": ["ejector force over 30 continuous injection-moulding cycles", "processing parameters including injection rate, holding pressure/time, mould temperature, melt temperature, back pressure, screw speed and pre-process drying", "high-speed-camera demoulding observation"],
+      "physicalQualityOutcomes": ["problem-free demoulding", "stuck but undamaged product", "stuck and damaged/broken product"],
+      "supports": "Processing conditions and interfacial/mould-release behaviour can materially alter ejection load and demoulding damage risk.",
+      "limitation": "PLA, the tested mould geometry and calcium-stearate result are application-specific; they do not define universal eject-force, additive, draft-angle or process limits."
+    },
+    {
+      "id": "doi:10.3390/mi12060636",
+      "title": "Self-Assembled Monolayers of Alkanethiols on Nickel Insert: Characterization of Friction and Analysis on Demolding Quality in Microinjection Molding",
+      "authors": ["Jiachen Chen", "Jin Yang", "Mingyong Zhou", "Can Weng"],
+      "year": 2021,
+      "journal": "Micromachines",
+      "doi": "10.3390/mi12060636",
+      "publisherUrl": "https://www.mdpi.com/2072-666X/12/6/636",
+      "role": "primary-measured-study",
+      "verification": "publisher-verified",
+      "independenceKey": "csu-microinjection-sam-demoulding-2021",
+      "materialContext": "Polymer microinjection moulding against nickel inserts with different self-assembled-monolayer anti-adhesion treatments.",
+      "toolContext": "Nickel microstructured insert; surface chemistry modified to alter adhesion/friction and release quality.",
+      "measuredSignals": ["contact angle", "surface free energy", "friction coefficient", "friction/wear response through repeated cycles"],
+      "physicalQualityOutcomes": ["microstructure replication quality after injection moulding", "necking/warping/deformation risk at demoulding", "reproducibility through the 100th demoulding cycle"],
+      "supports": "Interfacial surface state and friction/adhesion behaviour can alter demoulding quality and repeatability of replicated microstructures.",
+      "limitation": "Microstructured nickel inserts and the tested SAM coatings are specialist conditions; measured friction/replication response does not define universal surface-treatment or ejection settings."
+    }
+  ],
+  "supportingStudy": {
+    "id": "doi:10.3390/polym15051285",
+    "title": "Adhesion-Induced Demolding Forces of Hard Coated Microstructures Measured with a Novel Injection Molding Tool",
+    "year": 2023,
+    "journal": "Polymers",
+    "doi": "10.3390/polym15051285",
+    "publisherUrl": "https://www.mdpi.com/2073-4360/15/5/1285",
+    "role": "primary-measured-study",
+    "verification": "publisher-verified",
+    "use": "Supporting force-measurement evidence; not required to reach the two-study minimum in this dossier.",
+    "limitation": "PET, coating, insert geometry and adhesion-force configuration are specific to the experiment."
+  },
+  "promotionClaim": "Promote the mechanism-level statement that demoulding/ejection response is governed by interacting thermal contraction, friction/adhesion, surface/tool state and process history, and should be diagnosed with measured release/ejection signals plus physical part-quality evidence. Do not promote any study-specific numerical setting or coating/additive recommendation as universal guidance."
+}

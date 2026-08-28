@@ -1,0 +1,59 @@
+name: MouldMaster Specialist Evidence Gaps
+
+on:
+  push:
+    branches: [main, evidence-coverage-hardening]
+    paths:
+      - 'specialist-curriculum.js'
+      - 'specialist-evidence-gap-extension.js'
+      - 'app-shell-finalize.js'
+      - 'qa_specialist_evidence_gaps.py'
+      - 'qa_evidence_coverage.py'
+      - 'data/evidence-coverage-v1.json'
+      - 'index.html'
+      - 'service-worker.js'
+      - 'desktop/electron/package.json'
+      - 'desktop/electron/scripts/generate-integrity.cjs'
+      - '.github/workflows/specialist-evidence-gaps.yml'
+  pull_request:
+    branches: [main]
+    paths:
+      - 'specialist-curriculum.js'
+      - 'specialist-evidence-gap-extension.js'
+      - 'app-shell-finalize.js'
+      - 'qa_specialist_evidence_gaps.py'
+      - 'qa_evidence_coverage.py'
+      - 'data/evidence-coverage-v1.json'
+      - 'index.html'
+      - 'service-worker.js'
+      - 'desktop/electron/package.json'
+      - 'desktop/electron/scripts/generate-integrity.cjs'
+      - '.github/workflows/specialist-evidence-gaps.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: mouldmaster-specialist-evidence-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  specialist-evidence:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22.12.0'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Specialist evidence JavaScript syntax
+        run: |
+          node --check specialist-evidence-gap-extension.js
+          node --check app-shell-finalize.js
+      - name: Mechanism evidence coverage integrity
+        run: python qa_evidence_coverage.py
+      - name: Specialist evidence-gap curriculum integrity
+        run: python qa_specialist_evidence_gaps.py

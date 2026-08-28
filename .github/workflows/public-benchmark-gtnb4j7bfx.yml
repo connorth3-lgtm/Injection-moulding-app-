@@ -1,0 +1,79 @@
+name: MouldMaster Public Measured Benchmark — gtnb4j7bfx v1
+
+on:
+  push:
+    branches: [main, evidence-coverage-hardening]
+    paths:
+      - 'tools/profile_public_benchmark.py'
+      - 'tools/run_public_benchmark_gtnb4j7bfx.py'
+      - 'tools/run_public_benchmark_gtnb4j7bfx_public_api.py'
+      - 'qa_public_benchmark_runner.py'
+      - 'qa_public_benchmark_result.py'
+      - 'data/public-benchmark-contracts/gtnb4j7bfx-v1.json'
+      - 'sources/PUBLIC_REAL_PROCESS_DATA_BENCHMARKS.md'
+      - '.github/workflows/public-benchmark-gtnb4j7bfx.yml'
+  pull_request:
+    branches: [main]
+    paths:
+      - 'tools/profile_public_benchmark.py'
+      - 'tools/run_public_benchmark_gtnb4j7bfx.py'
+      - 'tools/run_public_benchmark_gtnb4j7bfx_public_api.py'
+      - 'qa_public_benchmark_runner.py'
+      - 'qa_public_benchmark_result.py'
+      - 'data/public-benchmark-contracts/gtnb4j7bfx-v1.json'
+      - 'sources/PUBLIC_REAL_PROCESS_DATA_BENCHMARKS.md'
+      - '.github/workflows/public-benchmark-gtnb4j7bfx.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: mouldmaster-public-benchmark-gtnb4j7bfx-v1-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  runner-qa:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Benchmark runner regression QA
+        run: |
+          python -m py_compile tools/run_public_benchmark_gtnb4j7bfx_public_api.py
+          python qa_public_benchmark_runner.py
+
+  public-measured-benchmark:
+    if: github.event_name != 'pull_request'
+    needs: runner-qa
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Retrieve and profile exact public measured dataset
+        run: |
+          mkdir -p benchmark-results
+          python tools/run_public_benchmark_gtnb4j7bfx_public_api.py \
+            --output benchmark-results/gtnb4j7bfx-v1-profile.json \
+            --retrieved-date "$(date -u +%F)"
+
+      - name: Validate measured benchmark result boundaries
+        run: python qa_public_benchmark_result.py benchmark-results/gtnb4j7bfx-v1-profile.json
+
+      - name: Remove publisher raw-data workspace
+        if: always()
+        run: rm -rf .benchmark-work
+
+      - name: Upload aggregate benchmark evidence only
+        uses: actions/upload-artifact@v4
+        with:
+          name: mouldmaster-public-measured-benchmark-gtnb4j7bfx-v1
+          path: benchmark-results/gtnb4j7bfx-v1-profile.json
+          if-no-files-found: error
+          retention-days: 30
