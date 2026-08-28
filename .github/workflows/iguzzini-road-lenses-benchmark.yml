@@ -1,0 +1,56 @@
+name: MouldMaster iGuzzini road-lens benchmark
+
+on:
+  workflow_dispatch:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'tools/profile_iguzzini_road_lenses.py'
+      - '.github/workflows/iguzzini-road-lenses-benchmark.yml'
+      - 'data/public-benchmark-results/iguzzini-road-lenses-v1.json'
+      - 'data/profiled-measured-dataset-registry-v1.json'
+      - 'data/content-scale-targets.json'
+      - 'qa_content_scale_targets.py'
+
+permissions:
+  contents: read
+
+jobs:
+  profile:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Profile pinned real-production CSV
+        run: python tools/profile_iguzzini_road_lenses.py --output iguzzini-road-lenses-v1.json
+      - name: Enforce exact-source boundary
+        run: |
+          python - <<'PY'
+          import json
+          p=json.load(open('iguzzini-road-lenses-v1.json',encoding='utf-8'))
+          assert p['status']=='completed-public-measured-benchmark'
+          assert p['source']['commit']=='41b8f392923d37b50b5098ed918dd2f0de1bc328'
+          assert p['file']['gitBlobShaFromPublisherMetadata']=='1ca731e1e80451f6ebf857f3db69bc9f4566d073'
+          assert p['file']['sizeBytes']==127056
+          assert p['file']['rows']==1451
+          assert p['file']['columns']==14
+          assert p['file']['missingCells']==0
+          assert len(p['schemaInspection']['processParameterFields'])==13
+          assert sum(p['quality']['observedLabelCounts'].values())==1451
+          assert p['quality']['readmePublishedCountSum']==1446
+          assert p['acceptedMeasuredRecords']==1451
+          assert p['acceptedMeasuredTimeSeriesSamples']==0
+          assert p['rawSourceRowsCommitted'] is False
+          assert p['rawSourceRedistributed'] is False
+          print('iGuzzini exact real-production benchmark passed')
+          print('sha256:',p['file']['sha256'])
+          print('quality labels:',p['quality']['observedLabelCounts'])
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: mouldmaster-iguzzini-road-lenses-profile
+          path: iguzzini-road-lenses-v1.json
+          retention-days: 90
