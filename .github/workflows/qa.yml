@@ -25,6 +25,8 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
+      - name: Resolve accepted evidence overlays
+        run: python tools/materialize_evidence_overlays.py
       - name: JavaScript syntax
         run: |
           node --check service-worker.js
@@ -113,6 +115,8 @@ jobs:
         run: python qa_process_data_sweep.py
       - name: 50-pass real measured-evidence audit
         run: python qa_measured_evidence_50_pass.py
+      - name: Sensor and machine-health evidence integrity
+        run: python qa_sensor_machine_health.py
       - name: Content scale target integrity
         run: python qa_content_scale_targets.py
       - name: Full-scale draft bank integrity
