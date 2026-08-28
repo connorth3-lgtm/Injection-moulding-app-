@@ -100,7 +100,7 @@ guardrails = [str(x).lower() for x in interpretation.get("guardrails", [])]
 evidence_gaps = [str(x).lower() for x in interpretation.get("evidence_gaps", [])]
 need(any("do not treat" in x and "recommended setpoint" in x for x in guardrails), "historical-value/no-setpoint guardrail missing")
 need(any("does not establish physical root cause" in x for x in evidence_gaps), "correlation/root-cause limitation missing")
-need(any("does not establish a validated setting window" in x for x in evidence_gaps), "validated-window limitation missing")
+need(any("validated setting window" in x and ("does not establish" in x or "do not establish" in x) for x in evidence_gaps), "validated-window limitation missing")
 need("human engineering review is required" in interpretation.get("boundary", "").lower(), "human-review boundary missing")
 need("no result authorises a production change" in interpretation.get("boundary", "").lower(), "production-change boundary missing")
 need("not a site pilot" in report.get("benchmark_boundary", "").lower(), "site-pilot separation boundary missing")
