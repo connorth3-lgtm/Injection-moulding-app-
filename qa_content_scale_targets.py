@@ -21,6 +21,7 @@ PROBAYES_DOPT = RESULTS / "probayes-doptimal-v1.json"
 SKZ_LOKI = RESULTS / "skz-loki-v1.json"
 IGUZZINI = RESULTS / "iguzzini-road-lenses-v1.json"
 PASCOE = RESULTS / "impure-pascoe-2022-v1.json"
+FORINFPRO = RESULTS / "forinfpro-himd-v1.json"
 PET_PREFORM = RESULTS / "vc3k9tt5zj-v2.json"
 
 
@@ -70,7 +71,7 @@ inv = {x["datasetId"]: x for x in datasets}
 for required in [
     "mendeley-gtnb4j7bfx-v1", "scatimdata-avaps", "su13148102-supplement",
     "openmms-t4g", "probayes-main-v2", "probayes-doptimal-v1",
-    "skz-loki-v1", "iguzzini-road-lenses", "impure-pascoe-2022"
+    "skz-loki-v1", "iguzzini-road-lenses", "impure-pascoe-2022", "forinfpro-himd-v1"
 ]:
     need(required in inv, f"required measured source missing from inventory: {required}")
 need(inv["probayes-main-v2"].get("accessState") == "executed-open-profiled", "ProBayes main access state drifted")
@@ -87,7 +88,6 @@ need(inv["pet-preform-v2"].get("accessState") == "profiled-rejected-measured", "
 need(inv["leon-process-20309380"].get("accessState") == "embargoed", "León process embargo drifted")
 need(inv["leon-defects-20322729"].get("accessState") == "embargoed", "León defect embargo drifted")
 
-# First public record-level benchmark.
 bench = load(BENCHMARK)
 need(bench.get("status") == "completed-public-measured-benchmark", "Mendeley benchmark status missing")
 need((bench.get("source") or {}).get("doi") == "10.17632/gtnb4j7bfx.1", "Mendeley DOI drifted")
@@ -95,7 +95,6 @@ need((bench.get("source") or {}).get("sha256") == "b231af5d49c0a258b5625d6e2ab2c
 need((bench.get("process_separation") or {}).get("injection_rows_profiled") == 4502, "Mendeley injection row count drifted")
 need((bench.get("process_separation") or {}).get("blow_rows_excluded") == 1855, "Mendeley process separation drifted")
 
-# scatimdata high-resolution source.
 scatim = load(SCATIM)
 need(scatim.get("status") == "completed-public-measured-timeseries-benchmark", "scatimdata status missing")
 need(scatim.get("acceptedMeasuredTimeSeriesSamples") == 16_228_352, "scatimdata sample count drifted")
@@ -111,7 +110,6 @@ need({a.get("name"): a.get("sha256") for a in scatim.get("archives") or []} == {
     "dataset3.zip": "b6baa4f5f5dbdf0c1bbe23a7b854358967d9004b75de4a16502730a77aed316e",
 }, "scatimdata archive fingerprints drifted")
 
-# Sustainable-material measured DOE.
 sus = load(SUSTAINABLE)
 need(sus.get("status") == "completed-public-measured-benchmark", "sustainable-material status missing")
 need((sus.get("source") or {}).get("doi") == "10.3390/su13148102", "sustainable-material DOI drifted")
@@ -122,7 +120,6 @@ need(sus_member.get("dataRows") == 955 and sus_member.get("physicalColumns") == 
 need((sus.get("publishedVsObservedStructure") or {}).get("observedAnalyticalColumnsAfterIndexExclusion") == 42, "sustainable 42-vs-45 reconciliation drifted")
 need(len(sus.get("materials") or []) == 5, "sustainable material count drifted")
 
-# OpenMMS measured machine-health source.
 openmms = load(OPENMMS)
 need(openmms.get("status") == "completed-public-measured-timeseries-benchmark", "OpenMMS status missing")
 need((openmms.get("source") or {}).get("commit") == "cfa6e23c7fc02a645e31e06d299021cb0a3ce3e7", "OpenMMS pinned commit drifted")
@@ -132,7 +129,6 @@ need((openmms.get("file") or {}).get("dataRows") == 29_808 and (openmms.get("fil
 need(openmms.get("acceptedMeasuredTimeSeriesSamples") == 298_080, "OpenMMS sample count drifted")
 need(len((openmms.get("channelSemantics") or {}).get("measuredChannels") or []) == 10, "OpenMMS physical channel count drifted")
 
-# ProBayes sources: real cycles accepted, nested waveform values deliberately not counted yet.
 pro_main = load(PROBAYES_MAIN)
 pm_file = pro_main.get("file") or {}
 pm_struct = pro_main.get("publishedVsObservedStructure") or {}
@@ -155,7 +151,6 @@ need(pd_file.get("sha256") == "f2bcef655df1dc1d283a752bbf7f55d5877bb9638b4901f95
 need(pd_file.get("parquetRows") == 303 and pd_struct.get("publishedFeatures") == 396 and pd_struct.get("observedArrowTopLevelFields") == 396, "ProBayes d-optimal schema reconciliation drifted")
 need(pd_schema.get("listTimeSeriesFields") == 212 and pd_measure.get("acceptedMeasuredCycles") == 303 and pd_measure.get("acceptedMeasuredTimeSeriesSamples") == 0, "ProBayes d-optimal measurement boundary drifted")
 
-# SKZ LoKI: direct pressure only; time and calculated pressure difference excluded.
 skz = load(SKZ_LOKI)
 need(skz.get("status") == "completed-public-measured-timeseries-benchmark", "SKZ benchmark status missing")
 need((skz.get("source") or {}).get("license") is None, "SKZ current blank licence must remain explicit")
@@ -172,7 +167,6 @@ need(len(direct) == 2 and sum(int(x.get("samples", 0)) for x in direct) == 36_00
 need(skz.get("acceptedMeasuredTimeSeriesSamples") == 36_000_000, "SKZ accepted sample total drifted")
 need(skz.get("rawSourceRowsCommitted") is False and skz.get("rawSourceRedistributed") is False, "SKZ raw-data boundary drifted")
 
-# iGuzzini real-production record-level dataset.
 ig = load(IGUZZINI)
 ig_source = ig.get("source") or {}
 ig_file = ig.get("file") or {}
@@ -192,7 +186,6 @@ need(ig.get("acceptedMeasuredRecords") == 1451 and ig.get("acceptedMeasuredTimeS
 need(ig.get("rawSourceRowsCommitted") is False and ig.get("rawSourceRedistributed") is False, "iGuzzini raw-data boundary drifted")
 need("not specified" in ((ig.get("experimentalContext") or {}).get("material") or "").lower(), "iGuzzini missing-material limitation must remain explicit")
 
-# ImPure/PASCOE 17 May: exact 307-cycle source and quality files, scalar ledger kept conservative.
 pascoe = load(PASCOE)
 psource = pascoe.get("source") or {}
 pverify = pascoe.get("sourceVerification") or {}
@@ -213,28 +206,44 @@ need(pascoe.get("acceptedMeasuredTimeSeriesSamples") == 0, "PASCOE must not infl
 need(pquality.get("twoCavityLabelRows") == 386 and pquality.get("dimensionalAndWeightRows") == 772, "PASCOE measured quality-file structure drifted")
 need(pascoe.get("rawSourceRowsCommitted") is False and pascoe.get("rawSourceFilesCommitted") is False, "PASCOE raw-data boundary drifted")
 
-# Dedicated accepted dataset registry is the hard count source of truth.
+forinfpro = load(FORINFPRO)
+fs = forinfpro.get("source") or {}
+ff = forinfpro.get("files") or {}
+fsem = forinfpro.get("measurementSemantics") or {}
+need(forinfpro.get("status") == "completed-public-measured-benchmark", "FORinFPRO benchmark status missing")
+need(fs.get("doi") == "10.5281/zenodo.20744054" and fs.get("version") == "v1" and fs.get("license") == "CC BY 4.0", "FORinFPRO source/licence drifted")
+need((ff.get("cycle_001_machine_data.csv") or {}).get("md5") == "d2a7d96d133f3d7b43a5089ad4bf0b09", "FORinFPRO machine MD5 drifted")
+need((ff.get("cycle_001_machine_data.csv") or {}).get("sha256") == "d249cbe4980b00f1565a100c3363dde4cf621c490233a4c184d47ad8d202e480", "FORinFPRO machine SHA-256 drifted")
+need((ff.get("cycle_001_pt.csv") or {}).get("sha256") == "9c8dff7f18c531d447a7b2e0ca3420c3a8a30b9771dd373c4f3433f1acd27538", "FORinFPRO PT SHA-256 drifted")
+need((ff.get("cycle_001_us_rms.csv") or {}).get("sha256") == "0e7d1610202d05177d0a3f8d44a783a9d6268a8b7df59abc268f41d97c360628", "FORinFPRO ultrasound SHA-256 drifted")
+machine = ff.get("cycle_001_machine_data.csv") or {}
+need(machine.get("rows") == 10_132 and machine.get("columns") == 101 and machine.get("namedColumns") == 60, "FORinFPRO machine structure drifted")
+need(machine.get("numericNamedColumns") == 59 and machine.get("directMachineActualColumns") == 35, "FORinFPRO parsed machine-actual separation drifted")
+need((ff.get("cycle_001_pt.csv") or {}).get("rows") == 403 and (ff.get("cycle_001_us_rms.csv") or {}).get("rows") == 2_154, "FORinFPRO sensor row counts drifted")
+need(fsem.get("machineDecimalCommaParsed") is True and fsem.get("directMachineActualsSeparatedFromSetpointsDerivedAndStates") is True, "FORinFPRO machine parsing/role boundary drifted")
+need(fsem.get("ultrasoundRmsIsDerivedFeature") is True and fsem.get("sourceUnitsExplicitInCsvHeaders") is False and fsem.get("physicalTimeBasisNormalized") is False, "FORinFPRO conservative sample boundary drifted")
+need(forinfpro.get("acceptedMeasuredCycles") == 1 and forinfpro.get("acceptedMeasuredTimeSeriesSamples") == 0, "FORinFPRO accepted cycle/sample boundary drifted")
+need(forinfpro.get("rawSourceRowsCommitted") is False and forinfpro.get("rawSourceFilesCommitted") is False, "FORinFPRO raw-data boundary drifted")
+
 profiled = load(PROFILED)
 profiled_rows = profiled.get("datasets") or []
 profiled_summary = profiled.get("summary") or {}
 expected_profiled_ids = {
     "mendeley-gtnb4j7bfx-v1", "scatimdata-avaps", "su13148102-supplement",
     "openmms-t4g", "probayes-main-v2", "probayes-doptimal-v1",
-    "skz-loki-v1", "iguzzini-road-lenses", "impure-pascoe-2022",
+    "skz-loki-v1", "iguzzini-road-lenses", "impure-pascoe-2022", "forinfpro-himd-v1",
 }
-need(len(profiled_rows) == 9 and {x.get("datasetId") for x in profiled_rows} == expected_profiled_ids, "accepted profiled dataset set drifted")
-need(profiled_summary.get("fullyProfiledDatasetPackages") == 9, "profiled dataset count drifted")
-need(profiled_summary.get("recordLevelDatasetPackages") == 3 and profiled_summary.get("timeSeriesDatasetPackages") == 6, "profiled dataset type counts drifted")
+need(len(profiled_rows) == 10 and {x.get("datasetId") for x in profiled_rows} == expected_profiled_ids, "accepted profiled dataset set drifted")
+need(profiled_summary.get("fullyProfiledDatasetPackages") == 10, "profiled dataset count drifted")
+need(profiled_summary.get("recordLevelDatasetPackages") == 3 and profiled_summary.get("timeSeriesDatasetPackages") == 7, "profiled dataset type counts drifted")
 need(profiled_summary.get("acceptedMeasuredTimeSeriesSamples") == 52_526_432, "profiled registry sample total drifted")
 need(sum(int(x.get("acceptedMeasuredTimeSeriesSamples", 0)) for x in profiled_rows) == 52_526_432, "profiled sample totals do not reconcile")
-need(targets["fully_profiled_measured_datasets"]["currentAccepted"] == 9, "target ledger accepted dataset count drifted")
+need(targets["fully_profiled_measured_datasets"]["currentAccepted"] == 10, "target ledger accepted dataset count drifted")
 need(targets["measured_time_series_samples"]["currentAccepted"] == 52_526_432, "target ledger measured-sample total drifted")
 
-# PET remains simulation/prediction-oriented and excluded.
 pet_text = json.dumps(load(PET_PREFORM)).lower()
 need(any(x in pet_text for x in ["reject", "simulation", "prediction"]), "PET measured-evidence rejection boundary disappeared")
 
-# Literature registry remains independent from dataset profiling.
 primary = load(PRIMARY)
 ps = primary.get("summary") or {}
 verified = ps.get("publisherVerifiedPeerReviewedPrimaryMeasured")
@@ -243,7 +252,6 @@ need(sum(int(p.get("entries", 0)) for p in primary.get("packs") or []) == 60, "p
 need(targets["primary_measured_studies"]["currentAccepted"] == 60, "primary measured target ledger drifted")
 need(targets["peer_reviewed_research_records"]["currentAccepted"] == 60, "audited peer-reviewed target ledger drifted")
 
-# Other content areas stay conservative until dedicated accepted registries exist.
 need(targets["material_profiles"]["currentAccepted"] == 20, "material accepted count must remain conservative")
 need(targets["defect_mechanisms"]["currentAccepted"] == 20, "defect accepted count must remain conservative")
 need(targets["sensor_machine_health_concepts"]["currentAccepted"] == 0, "sensor/health accepted count must not be inferred from mixed sources")
@@ -254,19 +262,20 @@ for marker in ["synthetic process-data cases never count", "actual source files"
     need(marker in rules, f"content-scale non-counting rule missing: {marker}")
 
 report = {
-    "schema": 7,
+    "schema": 8,
     "version": obj.get("version"),
     "reviewed": obj.get("reviewed"),
     "measuredDatasetDiscovery": {
         "inventoryCount": len(datasets),
         "legacyCatalogSeedCount": len(legacy.get("datasets") or []),
-        "fullyProfiledAccepted": 9,
+        "fullyProfiledAccepted": 10,
         "acceptedMeasuredTimeSeriesSamples": 52_526_432,
         "automatedIngestionAllowed": summary.get("automatedIngestionAllowed"),
         "embargoedRecords": summary.get("embargoed"),
         "proBayesAcceptedCycles": 867,
         "iGuzziniAcceptedRecords": 1451,
         "pascoeAcceptedCycles": 307,
+        "forinfproAcceptedCycles": 1,
     },
     "verifiedResearch": {
         "publisherVerifiedPeerReviewedPrimaryMeasured": verified,
@@ -284,13 +293,13 @@ report = {
         }
         for key in expected_targets
     },
-    "boundary": "No synthetic, metadata-only, generated-draft, simulation/prediction-only or heuristic-candidate evidence is counted as completed measured/reviewed content unless its area-specific acceptance definition is satisfied. PASCOE is accepted as 307 real cycle records under CC BY 4.0 but contributes zero accepted waveform scalars until source units/time semantics are verified; RWTH remains uncounted until exact source bytes are obtainable and profiled."
+    "boundary": "No synthetic, metadata-only, generated-draft, simulation/prediction-only or heuristic-candidate evidence is counted as completed measured/reviewed content unless its area-specific acceptance definition is satisfied. PASCOE and FORinFPRO are accepted as real measured dataset packages but contribute zero additional accepted waveform scalars until their source units/time semantics satisfy the measured-sample boundary; RWTH remains uncounted until exact source bytes are obtainable and profiled."
 }
 (ROOT / "content-scale-targets-report.json").write_text(json.dumps(report, indent=2) + "\n", encoding="utf-8")
 print(
     "MouldMaster content-scale target integrity QA passed "
-    f"({len(datasets)} measured datasets inventoried; 9 fully profiled dataset packages; "
+    f"({len(datasets)} measured datasets inventoried; 10 fully profiled dataset packages; "
     "52,526,432 accepted real measured time-series samples; 867 accepted ProBayes cycles; "
     "1,451 accepted iGuzzini real-production records; 307 accepted PASCOE cycles; "
-    "60 publisher-verified primary measured studies)"
+    "1 accepted FORinFPRO hybrid cycle; 60 publisher-verified primary measured studies)"
 )
