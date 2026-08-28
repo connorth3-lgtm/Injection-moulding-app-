@@ -6,6 +6,7 @@ import tempfile
 
 ROOT = Path(__file__).resolve().parent
 COMPILER = ROOT / "tools" / "compile_master_data.py"
+TARGETS = ROOT / "data" / "content-scale-targets.json"
 
 
 def need(ok, msg):
@@ -14,6 +15,13 @@ def need(ok, msg):
 
 
 need(COMPILER.exists(), "master data compiler missing")
+target_obj = json.loads(TARGETS.read_text(encoding="utf-8"))
+targets = target_obj["targets"]
+expected_profiled = targets["fully_profiled_measured_datasets"]["currentAccepted"]
+expected_samples = targets["measured_time_series_samples"]["currentAccepted"]
+need(expected_profiled == 3, "audited profiled-dataset baseline drifted")
+need(expected_samples == 13_929_568, "audited measured-sample baseline drifted")
+
 with tempfile.TemporaryDirectory() as td:
     p = subprocess.run(
         [sys.executable, str(COMPILER), "--output-dir", td],
@@ -41,8 +49,8 @@ with tempfile.TemporaryDirectory() as td:
     expected = {
         "measuredDatasetInventory": 20,
         "automatedIngestionAllowedDatasets": 6,
-        "fullyProfiledMeasuredDatasets": 1,
-        "measuredTimeSeriesSamplesAccepted": 0,
+        "fullyProfiledMeasuredDatasets": expected_profiled,
+        "measuredTimeSeriesSamplesAccepted": expected_samples,
         "publisherVerifiedPrimaryMeasuredStudies": 60,
         "verifiedPeerReviewedResearchRecords": 60,
         "measuredEvidencePasses": 50,
@@ -63,6 +71,7 @@ with tempfile.TemporaryDirectory() as td:
         need(counts.get(key) == value, f"compiled count drift for {key}: {counts.get(key)} != {value}")
     need(counts.get("structuredReferenceEntryMarkers", 0) >= 180, "compiled reference knowledge unexpectedly small")
     need(manifest.get("candidateRegistryEmbedded") is False, "core compilation must not require a network-harvested candidate registry")
+    need(manifest.get("compiledOn") == target_obj.get("reviewed"), "master compilation date must follow audited target ledger")
 
     for key in [
         "syntheticIsNotMeasured",
@@ -75,9 +84,21 @@ with tempfile.TemporaryDirectory() as td:
 
     measured = json.loads((out / "measured-data.json").read_text(encoding="utf-8"))
     need(measured["datasetInventory"]["summary"]["datasets"] == 20, "compiled measured dataset inventory drifted")
+    need(measured["datasetExecutionLedger"]["summary"]["acceptedProfiled"] == expected_profiled, "compiled execution ledger accepted-profiled count drifted")
     need(len(measured["primaryMeasuredStudies"]) == 60, "compiled primary-measured study set incomplete")
     need(len({x["doi"].lower() for x in measured["primaryMeasuredStudies"]}) == 60, "compiled primary-measured study DOI deduplication failed")
-    need(measured["publicBenchmarkResult"]["status"] == "completed-public-measured-benchmark", "compiled public benchmark result missing")
+    need(measured["publicBenchmarkResult"]["status"] == "completed-public-measured-benchmark", "legacy public benchmark alias missing")
+    results = measured.get("publicBenchmarkResults") or {}
+    need(set(results) == {"gtnb4j7bfx-v1", "scatimdata-avaps", "openmms-t4g"}, f"completed public benchmark set drifted: {set(results)}")
+    need(all(x.get("status") == "completed-public-measured-benchmark" for x in results.values()), "compiled public benchmark completion state drifted")
+    need(results["scatimdata-avaps"]["measurement_profile"]["acceptedMeasuredTimeSeriesSamples"] == 13_631_488, "compiled AVAPS sample count drifted")
+    need(results["openmms-t4g"]["measurement_profile"]["acceptedMeasuredTimeSeriesSamples"] == 298_080, "compiled OpenMMS sample count drifted")
+    need(
+        results["scatimdata-avaps"]["measurement_profile"]["acceptedMeasuredTimeSeriesSamples"]
+        + results["openmms-t4g"]["measurement_profile"]["acceptedMeasuredTimeSeriesSamples"]
+        == expected_samples,
+        "compiled measured benchmark sample totals do not reconcile",
+    )
 
     research = json.loads((out / "research-evidence.json").read_text(encoding="utf-8"))
     need(research["cumulativePassCount"] == 600 and len(research["waves"]) == 6, "compiled Deep Dive v2 evidence coverage drifted")
@@ -99,4 +120,4 @@ with tempfile.TemporaryDirectory() as td:
     for section in ["manifest", "measured", "research", "appData", "processData", "drafts"]:
         need(section in combined, f"combined master package missing section: {section}")
 
-print("MouldMaster master data compilation QA passed (20 measured datasets; 1 profiled benchmark; 60 verified primary measured studies; 600 evidence passes; 264/19,008 synthetic cases/cycles; 157 approved items; 120+20 lessons; full draft banks)")
+print(f"MouldMaster master data compilation QA passed (20 measured datasets; {expected_profiled} profiled benchmarks; {expected_samples:,} accepted measured time-series values; 60 verified primary measured studies; 600 evidence passes; 264/19,008 synthetic cases/cycles; 157 approved items; 120+20 lessons; full draft banks)")
