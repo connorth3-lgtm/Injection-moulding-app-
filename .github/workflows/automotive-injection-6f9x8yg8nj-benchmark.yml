@@ -25,27 +25,36 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
-      - name: Profile exact Mendeley v1 files
+      - name: Profile exact Mendeley v1 files or record access block
         run: python tools/profile_mendeley_6f9x8yg8nj.py --output automotive-injection-6f9x8yg8nj-v1.json
-      - name: Enforce discovery and process-separation boundary
+      - name: Enforce non-inflating process/access boundary
         run: |
           python - <<'PY'
           import json
           p=json.load(open('automotive-injection-6f9x8yg8nj-v1.json',encoding='utf-8'))
           assert p['schema']==1
-          assert p['status']=='exact-file-discovery-profile-review-required'
+          assert p['status'] in {'exact-file-discovery-profile-review-required','public-metadata-profile-access-blocked'}
           assert p['source']['doi']=='10.17632/6f9x8yg8nj.1'
           assert p['source']['license']=='CC BY 4.0'
           assert p['source']['publishedSystem']=={'continuousMeasurements':66,'discreteControls':7,'terminalIndicator':'X66'}
           assert p['source']['publishedNormalSamples']=={'training':88000,'validation':22614}
-          assert p['fileCount']>0
-          assert all(f['sizeBytes']>0 and len(f['sha256'])==64 for f in p['files'])
           assert p['acceptedMeasuredRecords']==0
           assert p['acceptedMeasuredTimeSeriesSamples']==0
           assert p['rawSourceRowsCommitted'] is False
           assert p['rawSourceFilesCommitted'] is False
-          assert all(f['processClassification'] in {'automotive-injection-candidate','non-injection-benchmark','unresolved'} for f in p['files'])
-          print('Automotive injection-line exact-file discovery passed; TEP/SWaT remain excluded pending injection-file promotion review')
+          if p['status']=='public-metadata-profile-access-blocked':
+              assert p['fileCount']==0
+              assert p['acquisition']['accessBlocked'] is True
+              statuses={
+                  (p['acquisition'].get('fileApiError') or {}).get('httpStatus'),
+                  (p['acquisition'].get('zipError') or {}).get('httpStatus'),
+              }
+              assert 401 in statuses
+              print('Automotive Mendeley metadata is useful but file bytes require authenticated access; zero evidence promoted')
+          else:
+              assert p['fileCount']>0
+              assert all(f['sizeBytes']>0 and len(f['sha256'])==64 for f in p['files'])
+              print('Automotive injection-line exact-file discovery completed; zero evidence promoted pending process separation review')
           PY
       - uses: actions/upload-artifact@v4
         with:
