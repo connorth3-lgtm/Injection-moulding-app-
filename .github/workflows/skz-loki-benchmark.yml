@@ -31,31 +31,58 @@ jobs:
       - name: Enforce exact-source discovery boundary
         run: |
           python - <<'PY'
-          import json
+          import json, math
           p=json.load(open('skz-loki-v1.json',encoding='utf-8'))
           assert p['source']['recordId']=='fkk68-zyf30'
+          assert p['source']['doi']=='10.23728/b2share.d8502ea56c544e069ebda44c3edd441b'
           assert p['experimentalContext']['publishedCycles']==68
           assert p['experimentalContext']['uniqueMachineSettings']==17
           assert p['experimentalContext']['repeatsPerSetting']==4
           assert p['files']['quality']['md5']=='4078fb85d2586bc3dd03d4a0825ff74d'
           assert p['files']['machine']['md5']=='384b1ee87679fa4b52b78e842a83cd99'
           assert p['files']['viscometer']['md5']=='d37a69bacfbdbe5d7bac9339dfdd94be'
+          assert p['qualityTable']['rows']==68 and p['qualityTable']['columns']==25
+          assert p['machineAndEuromap77']['rows']==68 and p['machineAndEuromap77']['columns']==34
           assert p['reconciliation']['qualityCycleCountMatchesPublished'] is True
           assert p['reconciliation']['machineCycleCountMatchesPublished'] is True
-          assert p['reconciliation']['viscometerCycleCountMatchesPublished'] is True
-          assert p['reconciliation']['allThreeSubdatasetsJoinOnSameCycleCardinality'] is True
-          assert p['viscometerPressure']['candidateDirectPressureScalarSamples']>0
+          # The exact publisher Parquet, verified by the B2SHARE-displayed MD5,
+          # materially differs from the PDF description. Preserve the observed file.
+          assert p['viscometerPressure']['rows']==18_000_000
+          assert p['viscometerPressure']['columns']==6
+          assert p['viscometerPressure']['cyclePairs']==60
+          assert len(p['reconciliation']['pressureCyclesMissingFromMachineTable'])==8
+          assert p['reconciliation']['unexpectedPressureCycles']==[]
+          assert math.isclose(p['reconciliation']['pressureCoverageFraction'],60/68,rel_tol=0,abs_tol=1e-12)
+          classes=p['viscometerPressure']['fieldClasses']
+          assert classes['directPressureMeasured']==['MEAS_pressure_frontsensor_bar','MEAS_pressure_backsensor_bar']
+          assert classes['derivedPressure']==['MEAS_pressure_difference_bar']
+          assert classes['timeLike']==['Time[s]']
+          stats={x['name']:x for x in p['viscometerPressure']['measuredColumnStats']}
+          for name in classes['directPressureMeasured']:
+            assert stats[name]['classification']=='direct-physical-pressure'
+            assert stats[name]['numericCount']==18_000_000
+            assert stats[name]['nullCount']==0
+          assert stats['MEAS_pressure_difference_bar']['classification']=='derived-pressure-difference'
+          assert p['viscometerPressure']['candidateDirectPhysicalPressureSamples']==36_000_000
+          assert p['viscometerPressure']['derivedPressureDifferenceValues']==18_000_000
+          t=p['viscometerPressure']['timeColumnStats'][0]
+          assert t['numericCount']==18_000_000
+          assert math.isclose(t['medianPositiveStep'],0.0001,rel_tol=0,abs_tol=1e-9)
+          assert p['candidateMeasuredCycles']==68
+          assert p['candidateCyclesWithPressureTimeSeries']==60
+          assert p['candidateMeasuredTimeSeriesSamples']==36_000_000
           assert p['acceptedMeasuredCycles']==0
           assert p['acceptedMeasuredTimeSeriesSamples']==0
           assert p['rawSourceRowsCommitted'] is False
           assert p['redistributionAllowed'] is False
           assert p['source']['license'] is None
-          print('SKZ LoKI exact-file discovery profile passed')
-          print('viscometer schema:',p['viscometerPressure']['fieldClasses'])
-          print('time columns:',p['viscometerPressure']['timeColumnStats'])
-          print('candidate direct pressure samples:',p['viscometerPressure']['candidateDirectPressureScalarSamples'])
+          print('SKZ LoKI exact-file discovery profile passed with documented source discrepancy')
+          print('missing pressure cycles:',p['reconciliation']['pressureCyclesMissingFromMachineTable'])
+          print('rows per pressure cycle:',p['viscometerPressure']['rowsPerPressureCycle'])
+          print('direct physical pressure samples:',p['viscometerPressure']['candidateDirectPhysicalPressureSamples'])
           PY
       - uses: actions/upload-artifact@v4
+        if: always()
         with:
           name: mouldmaster-skz-loki-profile
           path: skz-loki-v1.json
