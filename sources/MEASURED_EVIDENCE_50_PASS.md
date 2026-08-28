@@ -29,10 +29,10 @@ These five sources give MouldMaster a practical path from metadata-only research
 
 ## Embargoed measured datasets
 
-Two 2026 Zenodo records are deliberately retained as future targets rather than falsely treated as available raw data:
+Two 2026 Zenodo records are deliberately retained as future targets rather than falsely treated as available raw data. Their metadata currently indicate an embargo through **31 December 2027**; access must be rechecked at execution time rather than inferred from licence metadata alone:
 
-- Pass 45: image/segmentation/quantified multi-defect dataset, embargoed until 2027-12-31.
-- Pass 50: polypropylene process/weight/energy/cycle-time dataset, currently embargoed.
+- Pass 45: image/segmentation/quantified multi-defect dataset — raw files not currently available for execution.
+- Pass 50: polypropylene process/weight/energy/cycle-time dataset — raw files not currently available for execution.
 
 The atlas records their provenance and expected signal structure but blocks any claim that MouldMaster has executed a raw-data benchmark on them.
 
