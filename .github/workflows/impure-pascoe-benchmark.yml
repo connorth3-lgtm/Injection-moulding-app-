@@ -18,31 +18,35 @@ permissions:
 jobs:
   profile:
     runs-on: ubuntu-latest
-    timeout-minutes: 25
+    timeout-minutes: 40
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
       - name: Profile exact Zenodo PASCOE cycle files
-        run: python tools/profile_impure_pascoe.py --output impure-pascoe-2022-v1.json
-      - name: Enforce non-counting discovery boundary
+        run: python tools/profile_impure_pascoe.py --output impure-pascoe-2022-v1.json --workers 3
+      - name: Enforce accepted-cycle and conservative-sample boundary
         run: |
           python - <<'PY'
           import json
           p=json.load(open('impure-pascoe-2022-v1.json',encoding='utf-8'))
+          assert p['status']=='completed-public-measured-benchmark'
           assert p['source']['doi']=='10.5281/zenodo.6913660'
           assert p['source']['recordId']=='6913660'
-          assert p['recordFileInventory']['cycleCsvFiles']>100
-          assert p['cycleCsvStructure']['totalRowsAcrossCycleFiles']>0
-          assert len(p['cycleCsvStructure']['headerVariants'])>=1
-          assert p['acceptedMeasuredCycles']==0
+          assert p['source']['licenseMetadata']['accessRight']=='open'
+          assert p['source']['licenseMetadata']['license']['id']=='cc-by-4.0'
+          assert p['recordFileInventory']['allFiles']==309
+          assert p['recordFileInventory']['cycleCsvFiles']==307
+          assert p['recordFileInventory']['auxiliaryFiles']==2
+          assert p['cycleCsvStructure']['totalRowsAcrossCycleFiles']==297087
+          assert len(p['cycleCsvStructure']['headerVariants'])==1
+          assert p['acceptedMeasuredCycles']==307
           assert p['acceptedMeasuredTimeSeriesSamples']==0
           assert p['rawSourceRowsCommitted'] is False
-          print('ImPure PASCOE exact-file discovery benchmark passed')
+          print('ImPure PASCOE accepted-cycle benchmark passed; scalar sample ledger remains conservative')
           print('license:',p['source']['licenseMetadata'])
           print('file inventory:',p['recordFileInventory'])
-          print('structure:',p['cycleCsvStructure'])
           PY
       - uses: actions/upload-artifact@v4
         with:
