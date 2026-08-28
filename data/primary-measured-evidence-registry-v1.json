@@ -1,7 +1,7 @@
 {
   "schema": 1,
-  "version": "2026.08.28.2",
-  "reviewed": "2026-08-28",
+  "version": "2026.08.29.2",
+  "reviewed": "2026-08-29",
   "scope": "Deduplicated publisher-verified peer-reviewed primary measured injection-moulding evidence. Reviews, simulation-only work, synthetic-only data and duplicate publications/companion datasets from the same experiment do not inflate the primary measured count. The registry intentionally retains more independent studies than the two-study promotion minimum so mechanism claims do not rest on one evidence pair.",
   "credibilityPolicy": {
     "tierA": "Peer-reviewed primary measured study with a public raw or companion measured dataset whose provenance is tied to the experiment.",
@@ -25,13 +25,14 @@
     {"path":"data/primary-measured-evidence/specialist-tooling-v1.json","entries":6},
     {"path":"data/primary-measured-evidence/materials-fibre-moisture-v1.json","entries":7},
     {"path":"data/primary-measured-evidence/surface-optics-classic-v1.json","entries":8},
-    {"path":"data/primary-measured-evidence/gap-closure-redundancy-v1.json","entries":29}
+    {"path":"data/primary-measured-evidence/gap-closure-redundancy-v1.json","entries":29},
+    {"path":"data/primary-measured-evidence/breadth-production-cooling-v1.json","entries":5}
   ],
   "summary": {
-    "publisherVerifiedPeerReviewedPrimaryMeasured": 60,
+    "publisherVerifiedPeerReviewedPrimaryMeasured": 65,
     "tierA": 4,
-    "tierB": 56,
-    "uniqueDois": 60,
+    "tierB": 61,
+    "uniqueDois": 65,
     "promotionCandidatesStagedNotApplied": 9,
     "stagedMechanismsWithRedundantEvidence": 9
   },
