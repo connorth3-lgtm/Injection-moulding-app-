@@ -35,7 +35,7 @@ Reviews remain useful as discovery maps. Validated simulations remain useful as 
 
 A 2025 drift-detection/incremental-learning paper was specifically screened out of the independent count because the paper states that its experimental evaluation reuses the same dataset as an earlier study. It remains potentially useful supporting/re-analysis literature but contributes **zero** new experiment identities.
 
-During the seventh-pack QA, `10.1007/s00170-023-11100-1` was also rejected as a new addition because it was already present in the original process-quality pack. Its fault → cavity evidence → venting/tool maintenance → recovery sequence remains highly valuable, but it is counted exactly once.
+During seventh-pack QA, `10.1007/s00170-023-11100-1` was rejected as a new addition because it was already present in the original process-quality pack. The first replacement attempt, `10.1016/j.matdes.2009.01.004`, was also rejected because the same DOI was already present in the classic surface/optics pack. Both remain useful evidence and are counted exactly once. The final replacement is the independent quantitative ejection-force experiment `10.1016/S0141-6359(99)00039-2`.
 
 ## Deduplication and redundancy rules
 
@@ -73,11 +73,11 @@ The seventh pack, `data/primary-measured-evidence/longrun-fault-control-v1.json`
 - a controlled conventional-versus-external-gas-assisted moulding experiment where physical burn marks were photographed, quantified by image processing and reduced/eliminated under controlled gas intervention (`10.3390/polym13234087`);
 - external nozzle-pressure and tie-bar-strain sensing with adaptive quality control validated in continuous production at **two sites**, using measured product weight as the quality outcome (`10.3390/technologies13030097`);
 - shot-to-shot cavity-pressure-based holding-pressure compensation under an imposed barrel-temperature disturbance, verified against part weight and dimensions (`10.1002/app.50357`);
-- a classic Kistler CoMo 2869A experiment directly measuring cavity pressure and mould-surface temperature against final part quality (`10.1016/j.matdes.2009.01.004`).
+- a quantitative ejection-force experiment across PP, PMMA and PET using controlled core roughness and PVD-coated mould cores (`10.1016/S0141-6359(99)00039-2`).
 
 Together these packs raise the peer-reviewed primary-measured study ledger from 60 to **70**. They do **not** change the separate fully profiled dataset count or the accepted measured scalar-sample ledger unless their exact raw files later pass the dataset profiling boundary.
 
-The long-run stability study is counted as one experiment, not 280,000 independent studies. Its volatile/pre-defect operating windows are partly derived around operator-identified non-conforming events, so they support drift detection but do not by themselves prove physical root cause. The already-counted 2023 cavity-sensor fault study remains especially useful for educational replacement of synthetic cases because it contains measured defects, diagnostic evidence, maintenance/process intervention and physical improvement in one bounded experiment.
+The long-run stability study is counted as one experiment, not 280,000 independent studies. Its volatile/pre-defect operating windows are partly derived around operator-identified non-conforming events, so they support drift detection but do not by themselves prove physical root cause. The already-counted 2023 cavity-sensor fault study remains especially useful for educational replacement of synthetic cases because it contains measured defects, diagnostic evidence, maintenance/process intervention and physical improvement in one bounded experiment. The new ejection-force study strengthens tool-release and machine-health learning without converting its measured surface-roughness or coating results into universal mould specifications.
 
 ## Formal mechanism promotions
 
