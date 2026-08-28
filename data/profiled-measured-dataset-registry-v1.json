@@ -1,0 +1,51 @@
+{
+  "schema": 1,
+  "version": "2026.08.28.1",
+  "reviewed": "2026-08-28",
+  "acceptanceBoundary": "One accepted registry record represents one lawfully obtained and fully profiled dataset package/source family. Archives or constituent experimental subsets inside the same published package are documented but do not inflate the fully-profiled-dataset target. Measured scalar samples are counted separately from dataset packages and moulding cycles.",
+  "summary": {
+    "fullyProfiledDatasetPackages": 2,
+    "acceptedMeasuredTimeSeriesSamples": 16228352,
+    "timeSeriesDatasetPackages": 1,
+    "recordLevelDatasetPackages": 1
+  },
+  "datasets": [
+    {
+      "datasetId": "mendeley-gtnb4j7bfx-v1",
+      "title": "Data Model for Injection Molding and Blow Molding",
+      "source": "https://doi.org/10.17632/gtnb4j7bfx.1",
+      "license": "CC BY 4.0",
+      "profile": "data/public-benchmark-results/gtnb4j7bfx-v1.json",
+      "profileType": "record-level-production-data",
+      "sourceFilesLawfullyObtained": true,
+      "fingerprinted": true,
+      "schemaInspected": true,
+      "unitsAndSemanticsReviewed": true,
+      "injectionContextSeparated": true,
+      "acceptedMeasuredTimeSeriesSamples": 0,
+      "injectionRecordsProfiled": 4502,
+      "notes": "Blow-moulding rows were excluded. This package contributes one fully profiled dataset but no high-frequency time-series samples."
+    },
+    {
+      "datasetId": "scatimdata-avaps",
+      "title": "High-resolution injection-moulding time-series datasets (scatimdata)",
+      "source": "https://github.com/sc4t1m/scatimdata",
+      "license": "CC BY 4.0",
+      "peerReviewedCompanion": "10.3390/polym15040978",
+      "profile": "data/public-benchmark-results/scatimdata-v1.json",
+      "profileType": "cycle-linked-high-resolution-time-series",
+      "sourceFilesLawfullyObtained": true,
+      "fingerprinted": true,
+      "schemaInspected": true,
+      "unitsAndSemanticsReviewed": true,
+      "cycleAndQualityLinkageReviewed": true,
+      "constituentPublishedDatasets": 3,
+      "countAsFullyProfiledDatasetPackages": 1,
+      "acceptedMeasuredTimeSeriesSamples": 16228352,
+      "signals": ["injection-pressure", "injection-flow", "cavity-pressure"],
+      "samplingIntervalMsPublished": 6,
+      "observedNumericPointsPerCurve": 2048,
+      "notes": "The source contains three published experimental datasets, but they remain one source family for the hard fully-profiled-dataset count. The sample ledger counts only observed physical numeric signal values and excludes axes, identifiers and state arrays."
+    }
+  ]
+}
