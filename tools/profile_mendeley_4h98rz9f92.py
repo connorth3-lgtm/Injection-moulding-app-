@@ -8,7 +8,7 @@ TITLE='Dataset on Graphite nanoplatelet enhanced HDPE composites: tensile modulu
 LICENSE='CC BY 4.0'; COMPANION='10.1016/j.dib.2024.110987'
 PAGE=f'https://data.mendeley.com/datasets/{DATASET_ID}/{VERSION}'
 API=f'https://data.mendeley.com/public-api/datasets/{DATASET_ID}/files?folder_id=root&version={VERSION}'
-UA='MouldMaster-HDPE-GNP-profiler/1.0'
+UA='MouldMaster-HDPE-GNP-profiler/1.1'
 
 def sha256(b):return hashlib.sha256(b).hexdigest()
 def get(url,accept='*/*'):
@@ -46,6 +46,9 @@ def fname(final,h,fallback):
         if m:return urllib.parse.unquote(m.group(1).strip().strip('"'))
     n=Path(urllib.parse.urlparse(final).path).name
     return n if Path(n).suffix else fallback
+def finite(v):
+    try:float(str(v).strip());return True
+    except Exception:return False
 def profile_rows(headers,rows):
     missing=[0]*len(headers); numeric=[0]*len(headers); mins=[None]*len(headers); maxs=[None]*len(headers)
     for row in rows:
@@ -63,16 +66,36 @@ def profile_csv(raw):
     return {'format':'csv','rows':len(rows),'columns':len(h),'header':h,'columnStats':profile_rows(h,rows)}
 def profile_xlsx(raw):
     from openpyxl import load_workbook
-    wb=load_workbook(io.BytesIO(raw),read_only=True,data_only=True);sheets=[]
+    wb=load_workbook(io.BytesIO(raw),read_only=False,data_only=True);sheets=[]
     for ws in wb.worksheets:
-        it=ws.iter_rows(values_only=True)
-        try:first=next(it)
-        except StopIteration:sheets.append({'name':ws.title,'rows':0,'columns':0,'header':[]});continue
-        h=['' if v is None else str(v).strip() for v in first];rows=[]
-        for r in it:
-            vals=list(r[:len(h)])+[None]*max(0,len(h)-len(r))
-            if any(v not in (None,'') for v in vals):rows.append(vals)
-        sheets.append({'name':ws.title,'rows':len(rows),'columns':len(h),'header':h,'columnStats':profile_rows(h,rows)})
+        matrix=[[cell.value for cell in row] for row in ws.iter_rows()]
+        width=max((len(r) for r in matrix),default=0)
+        matrix=[r+[None]*(width-len(r)) for r in matrix]
+        nonempty=[r for r in matrix if any(v not in (None,'') for v in r)]
+        first=['' if v is None else str(v).strip() for v in (nonempty[0] if nonempty else [])]
+        body=nonempty[1:] if nonempty else []
+        preview=[['' if v is None else str(v) for v in r] for r in nonempty[:5]]
+        merged=[str(rng) for rng in ws.merged_cells.ranges]
+        # Raw Data.xlsx uses two heading rows followed by 35 experimental rows.
+        experimental=None
+        if ws.title=='Sheet1' and len(nonempty)>=37:
+            candidates=nonempty[2:]
+            candidates=[r for r in candidates if finite(r[0]) and finite(r[1]) and finite(r[2]) and finite(r[3])]
+            if len(candidates)==35:
+                experimental={
+                    'rows':35,
+                    'inputColumns':{
+                        'experimentNumber':{'index':0,'min':min(float(r[0]) for r in candidates),'max':max(float(r[0]) for r in candidates)},
+                        'gnpFraction':{'index':1,'min':min(float(r[1]) for r in candidates),'max':max(float(r[1]) for r in candidates)},
+                        'temperatureC':{'index':2,'min':min(float(r[2]) for r in candidates),'max':max(float(r[2]) for r in candidates)},
+                        'pressureMPa':{'index':3,'min':min(float(r[3]) for r in candidates),'max':max(float(r[3]) for r in candidates)},
+                    },
+                    'outputNumericColumnRanges':[
+                        {'index':i,'min':min(float(r[i]) for r in candidates if finite(r[i])),'max':max(float(r[i]) for r in candidates if finite(r[i])),'numericRows':sum(1 for r in candidates if finite(r[i]))}
+                        for i in range(4,width) if sum(1 for r in candidates if finite(r[i]))>=30
+                    ],
+                }
+        sheets.append({'name':ws.title,'rows':len(body),'columns':len(first),'header':first,'columnStats':profile_rows(first,body),'preview':preview,'mergedRanges':merged,'experimentalStructure':experimental})
     return {'format':'xlsx','sheets':sheets}
 def main():
     ap=argparse.ArgumentParser();ap.add_argument('--output',default='hdpe-gnp-v3.json');a=ap.parse_args()
@@ -88,9 +111,10 @@ def main():
         else:p['format']=ext.lstrip('.') or 'unknown'
         files.append(p)
     biggest=max(tables,key=lambda x:x.get('rows',0)*x.get('columns',0),default={})
-    headers=' '.join(str(x.get('header') or '') for x in tables).lower()
+    headers=' '.join(str(x.get('header') or '')+' '+str(x.get('preview') or '') for x in tables).lower()
     markers={k:(k in headers) for k in ['injection','temperature','pressure','gnp','graphite','tensile','toughness','hardness']}
-    payload={'schema':1,'status':'profile-generated-review-required','completedDate':'2026-08-28','source':{'datasetId':DATASET_ID,'version':VERSION,'doi':DOI,'title':TITLE,'license':LICENSE,'publisher':'Mendeley Data','page':PAGE,'peerReviewedCompanion':COMPANION,'materialContext':'HDPE with graphite nanoplatelet reinforcement'},'files':files,'tableCount':len(tables),'largestTable':biggest,'semanticHeaderMarkers':markers,'acceptedMeasuredRecords':0,'acceptedMeasuredTimeSeriesSamples':0,'rawSourceRowsCommitted':False,'boundary':'Exact version-3 publisher files are fingerprinted and tabular schemas are profiled. Promotion requires observed rows to directly reconcile GNP content, injection temperature/pressure and measured mechanical responses with the peer-reviewed experimental study. This is record-level experimental evidence, not waveform time-series data.'}
+    raw_data=next((s for f in files if f['name']=='Raw Data.xlsx' for s in f.get('sheets',[]) if s['name']=='Sheet1'),None)
+    payload={'schema':2,'status':'profile-generated-review-required','completedDate':'2026-08-28','source':{'datasetId':DATASET_ID,'version':VERSION,'doi':DOI,'title':TITLE,'license':LICENSE,'publisher':'Mendeley Data','page':PAGE,'peerReviewedCompanion':COMPANION,'materialContext':'HDPE with graphite nanoplatelet reinforcement'},'files':files,'tableCount':len(tables),'largestTable':biggest,'semanticHeaderMarkers':markers,'rawDataExperimentalStructure':(raw_data or {}).get('experimentalStructure'),'acceptedMeasuredRecords':0,'acceptedMeasuredTimeSeriesSamples':0,'rawSourceRowsCommitted':False,'boundary':'Exact version-3 publisher files are fingerprinted. Raw Data.xlsx is inspected using its two-row/merged heading structure and must reconcile to 35 experimental injection-moulding configurations before promotion. Peer-reviewed semantics define GNP fraction, injection temperature (deg C), injection pressure (MPa), tensile modulus (GPa), toughness (MPa), and Vickers hardness (HV). Record-level measurements do not count as waveform samples.'}
     Path(a.output).write_text(json.dumps(payload,indent=2,ensure_ascii=False)+'\n',encoding='utf-8')
-    print(json.dumps({'files':[(f['name'],f['format'],f['sizeBytes'],f['sha256']) for f in files],'tableCount':len(tables),'largestTable':biggest,'semanticHeaderMarkers':markers},indent=2,ensure_ascii=False))
+    print(json.dumps({'files':[(f['name'],f['format'],f['sizeBytes'],f['sha256']) for f in files],'tableCount':len(tables),'rawData':raw_data,'semanticHeaderMarkers':markers},indent=2,ensure_ascii=False))
 if __name__=='__main__':main()
