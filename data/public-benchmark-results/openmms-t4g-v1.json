@@ -1,0 +1,99 @@
+{
+  "schema_version": 2,
+  "status": "completed-public-measured-timeseries-benchmark",
+  "completed_date": "2026-08-28",
+  "source": {
+    "title": "OpenMMS-T4G real-world injection-mold monitoring case study",
+    "repository": "https://github.com/TEPGomes/OpenMMS-T4G",
+    "commit": "cfa6e23c7fc02a645e31e06d299021cb0a3ce3e7",
+    "path": "Real_World_Test/Case_Study_Raw_Data.csv",
+    "repositoryLicense": "BSD-3-Clause",
+    "peerReviewedCompanion": "10.3390/s23073569",
+    "articleLicense": "CC BY 4.0",
+    "dataAvailability": "The peer-reviewed article explicitly identifies the pinned repository CSV as the raw case-study data."
+  },
+  "experimentalContext": {
+    "machine": "Tederic D80 injection-molding machine",
+    "material": {
+      "family": "LDPE",
+      "grade": "Dow LDPE 780E",
+      "supplierRoute": "DOW Europe / RESINEX"
+    },
+    "mould": "cup-shaped part mould",
+    "sensorPlacement": {
+      "cavityPressure": "pressure sensor installed in the cavity in direct contact with plastic flow",
+      "temperature": "thermocouple installed in the mould plate",
+      "force": "force sensor installed in one extraction pin",
+      "inertial": "3D accelerometer/gyroscope module mounted on the extraction plate"
+    },
+    "processSettings": {
+      "barrelTemperatureC": {"nozzle":220,"zone1":220,"zone2":210,"zone3":200},
+      "mouldTemperatureC": 20,
+      "hydraulicInjectionPressureBar": 100,
+      "injectionTimeS": 0.8,
+      "hydraulicPackingPressureBar": 20,
+      "packingTimeS": 4,
+      "nominalCycleTimeS": 19
+    },
+    "cycles": {
+      "totalContinuouslyRecorded": 110,
+      "normalOperationFirstCycles": 54,
+      "subsequentCycles": 56,
+      "faultContext": "After the first 54 cycles, an extraction-system fault was repeatedly simulated by tightening a screw against the extraction pin carrying the force sensor. The raw CSV is continuous and does not contain a per-row fault label, so MouldMaster does not invent row labels."
+    },
+    "publishedAcquisitionRateHz": 10
+  },
+  "file": {
+    "sizeBytes": 2872573,
+    "sha256": "aa78e659bc4b7a0361882d2eaa516a0010bfb573d413a3600baad98aae397bf6",
+    "dataRows": 29808,
+    "columns": 12,
+    "headers": ["t","T1","T2","P","F","Ax","Ay","Az","Gx","Gy","Gz","t2"],
+    "missingCells": 0,
+    "allColumnsNumeric": true
+  },
+  "channelSemantics": {
+    "timeAxes": [
+      {"field":"t","module":"Arduino-based temperature/pressure/force module","unit":"s","observedStart":0.015883300000041345,"observedEnd":3074.6090863,"observedMedianPositiveStepS":0.09538550000070245,"observedApproxRateHz":10.483773739117956},
+      {"field":"t2","module":"inertial accelerometer/gyroscope module","unit":"s","observedStart":0.10011510000003909,"observedEnd":3041.1866743,"note":"Second acquisition-module clock. It is retained separately rather than forced onto the Arduino clock."}
+    ],
+    "measuredChannels": [
+      {"field":"T1","meaning":"temperature sensor 1","sourceUiUnit":"°C","observedMin":19.63,"observedMax":32.63,"scalarSamples":29808},
+      {"field":"T2","meaning":"temperature sensor 2","sourceUiUnit":"°C","observedMin":22.5,"observedMax":23.5,"scalarSamples":29808},
+      {"field":"P","meaning":"mould cavity pressure","sourceUiUnit":"bar","observedMin":0.0,"observedMax":183.02,"scalarSamples":29808},
+      {"field":"F","meaning":"extraction force","sourceUiUnit":"N","observedMin":0.0,"observedMax":8058.61,"scalarSamples":29808},
+      {"field":"Ax","meaning":"acceleration OX","sourceUiUnit":"g (software label; raw scale requires caution)","observedMin":-1692.0,"observedMax":1953.0,"scalarSamples":29808},
+      {"field":"Ay","meaning":"acceleration OY","sourceUiUnit":"g (software label; raw scale requires caution)","observedMin":-1451.0,"observedMax":1071.0,"scalarSamples":29808},
+      {"field":"Az","meaning":"acceleration OZ","sourceUiUnit":"g (software label; raw scale requires caution)","observedMin":590.0,"observedMax":1340.0,"scalarSamples":29808},
+      {"field":"Gx","meaning":"angular velocity X","sourceUiUnit":"dps/1000 (software label)","observedMin":-245140.0,"observedMax":133560.0,"scalarSamples":29808},
+      {"field":"Gy","meaning":"angular velocity Y","sourceUiUnit":"dps/1000 (software label)","observedMin":-166390.0,"observedMax":219240.0,"scalarSamples":29808},
+      {"field":"Gz","meaning":"angular velocity Z","sourceUiUnit":"dps/1000 (software label)","observedMin":-128870.0,"observedMax":127470.0,"scalarSamples":29808}
+    ],
+    "unitCaveat": "The OpenMMS software labels acceleration as [g], while the raw stationary Z values are near 1000, indicating that a scale factor may be embedded in the inertial module output. MouldMaster retains the raw values and the source UI label and does not silently divide by 1000. The gyro label is likewise retained verbatim as dps/1000."
+  },
+  "acceptedMeasuredTimeSeriesSamples": 298080,
+  "sampleCountMethod": "29,808 rows × 10 physical measured channels. The two acquisition time axes t and t2 are excluded from the measured-sensor scalar count.",
+  "rawSourceRowsCommitted": false,
+  "acceptance": {
+    "sourceFilesLawfullyObtained": true,
+    "sourcePinnedToPaperLinkedCommit": true,
+    "fingerprinted": true,
+    "schemaInspected": true,
+    "channelSemanticsReviewed": true,
+    "unitsOrSourceScaleLabelsReviewed": true,
+    "separateAcquisitionClocksPreserved": true,
+    "machineContextReviewed": true,
+    "materialContextReviewed": true,
+    "mouldContextReviewed": true,
+    "processSettingsReviewed": true,
+    "normalFaultStudyContextReviewed": true,
+    "limitationsRecorded": true
+  },
+  "limitations": [
+    "The raw CSV contains no explicit per-row cycle ID or normal/fault label; the article supplies the 110-cycle sequence and first-54-normal study design, so row-level labels are not fabricated.",
+    "The two acquisition modules have separate time columns and are not forced into a single reconstructed clock.",
+    "Inertial raw-value scale semantics are retained with the source software labels; no undocumented scaling conversion is applied.",
+    "The dataset is primarily a mould-health/predictive-maintenance case study and does not provide part-quality measurements for every cycle."
+  ],
+  "boundary": "The accepted profile stores provenance, exact file fingerprint, aggregate structure and source-supported semantics without committing third-party raw rows. Only the 10 physical sensor channels count as measured scalar samples; timestamps do not."
+}
