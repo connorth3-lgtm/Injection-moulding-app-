@@ -1,0 +1,55 @@
+name: MouldMaster TPM-SMED measured-data benchmark
+
+on:
+  workflow_dispatch:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'tools/profile_mendeley_ypf95p4bs4.py'
+      - '.github/workflows/mendeley-ypf95p4bs4-benchmark.yml'
+      - 'data/public-benchmark-results/mendeley-ypf95p4bs4-v1.json'
+      - 'data/measured-dataset-inventory-v1.json'
+      - 'data/profiled-measured-dataset-registry-v1.json'
+      - 'data/content-scale-targets.json'
+      - 'qa_content_scale_targets.py'
+
+permissions:
+  contents: read
+
+jobs:
+  profile:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install spreadsheet profiler dependency
+        run: python -m pip install --disable-pip-version-check openpyxl
+      - name: Profile exact Mendeley v1 files
+        run: python tools/profile_mendeley_ypf95p4bs4.py --output mendeley-ypf95p4bs4-v1.json
+      - name: Enforce measured-versus-simulation discovery boundary
+        run: |
+          python - <<'PY'
+          import json
+          p=json.load(open('mendeley-ypf95p4bs4-v1.json',encoding='utf-8'))
+          assert p['schema']==1
+          assert p['status']=='exact-file-profile-review-required'
+          assert p['source']['doi']=='10.17632/ypf95p4bs4.1'
+          assert p['source']['license']=='CC BY 4.0'
+          assert p['fileCount']>0
+          assert all(f['sizeBytes']>0 and len(f['sha256'])==64 for f in p['files'])
+          assert p['acceptedMeasuredRecords']==0
+          assert p['acceptedMeasuredTimeSeriesSamples']==0
+          assert p['rawSourceRowsCommitted'] is False
+          assert p['rawSourceFilesCommitted'] is False
+          allowed={'candidate-real-plant-records','simulation-or-model-output','mixed-plant-and-simulation-review-required','unresolved'}
+          assert all(x['category'] in allowed for x in p['tableOrSheetClassifications'])
+          print('TPM/SMED Mendeley exact-file discovery passed; Arena/model outputs remain non-counting pending plant-table review')
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: mouldmaster-mendeley-ypf95p4bs4-profile
+          path: mendeley-ypf95p4bs4-v1.json
+          retention-days: 90
