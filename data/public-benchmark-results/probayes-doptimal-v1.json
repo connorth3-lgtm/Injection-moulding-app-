@@ -1,0 +1,113 @@
+{
+  "schema_version": 1,
+  "status": "completed-public-measured-benchmark",
+  "completed_date": "2026-08-28",
+  "datasetId": "probayes-doptimal-v1",
+  "title": "Injection-Molding Production Data with Quality Labels (d-optimal Design of Experiment pattern)",
+  "source": {
+    "recordUrl": "https://b2share.eudat.eu/records/v64sz-f0f41",
+    "legacyRecordId": "3f80952ce5ff4be88ae4cf6a3bdfe732",
+    "doi": "10.23728/b2share.3f80952ce5ff4be88ae4cf6a3bdfe732",
+    "version": "v1",
+    "file": "dataset.parquet",
+    "recordAccess": "Dataset Open",
+    "license": "Creative Commons Attribution (CC-BY), version not specified in EUDAT B2FIND metadata",
+    "openAccess": true,
+    "rightsBoundary": "EUDAT B2FIND records this exact ProBayes d-optimal record as CC-BY/openAccess. MouldMaster records that rights statement without inventing a CC-BY version and keeps the raw Parquet out of the repository."
+  },
+  "file": {
+    "sizeBytes": 62365198,
+    "md5": "913cb30061ba35b78cc7715799674783",
+    "sha256": "f2bcef655df1dc1d283a752bbf7f55d5877bb9638b4901f9569df567a68b40b9",
+    "parquetRows": 303,
+    "parquetPhysicalColumns": 396,
+    "arrowTopLevelFields": 396,
+    "rowGroups": 1
+  },
+  "publishedVsObservedStructure": {
+    "publishedCycles": 303,
+    "observedRows": 303,
+    "rowsReconcile": true,
+    "publishedFeatures": 396,
+    "observedArrowTopLevelFields": 396,
+    "featuresReconcile": true
+  },
+  "experimentalContext": {
+    "machine": "KraussMaffei 160-750PX",
+    "part": "warpage shell research part",
+    "material": "Borealis HE125MO polypropylene",
+    "experimentalPoints": 28,
+    "dataSources": 9,
+    "rowSemantics": "one injection-moulded part / machine cycle per row, linked by MET_MachineCycleID; E77_MachineCycleCounter_global is also present",
+    "variedSetParameters": ["cylinder temperature", "mould temperature", "injection speed", "holding pressure"],
+    "qualityContext": "All produced parts were manually inspected/classified; additional quality sources include scale, computer vision and infrared camera."
+  },
+  "schemaInspection": {
+    "fieldFamilies": {
+      "MET": 7,
+      "SCA": 1,
+      "SET": 4,
+      "LBL": 10,
+      "CV": 15,
+      "QUA": 34,
+      "TCE": 22,
+      "TCN": 22,
+      "DXP": 158,
+      "IR": 51,
+      "DRY": 24,
+      "DOS": 13,
+      "E77": 33,
+      "ENV": 2
+    },
+    "listTimeSeriesFields": 212,
+    "scalarFields": 184,
+    "firstObservedArrayLengths": {
+      "TCE_temperature_control_ejector_side": 61,
+      "TCN_temperature_control_nozzle_side": 61,
+      "DXP_machine_DataXplorer": 12280,
+      "DRY_drying_system": 32,
+      "DOS_dosing_system": 32
+    },
+    "directMeasuredExamples": [
+      "DXP_Inj1PrsAct",
+      "DXP_Inj1VelAct",
+      "DXP_Inj1PosAct",
+      "DXP_MldCavPrs1Act",
+      "DXP_MldCavPrs2Act",
+      "DXP_ClpFceAct",
+      "DXP_MldCavTmp1Act",
+      "DXP_MldCavTmp2Act",
+      "TCE_ActualFlowRate",
+      "TCN_PressureMainLine",
+      "DRY_HT101_acSensorMoisture",
+      "DOS_acWeight",
+      "E77_CavityPressureMaximum",
+      "SCA_PartWeight",
+      "CV_Warpage"
+    ],
+    "commandsAndSetpoints": "SET_* fields and DXP/DOS/DRY fields carrying Set/sv semantics are commands or set values and are not treated as direct measured waveform values.",
+    "derivedAndAggregated": "QUA area/max aggregates, E77 cycle aggregates and Mean-suffixed temperature-control fields are measured-derived summaries rather than raw waveform samples. Trigger, alarm, option and generic state fields are retained but excluded from physical-sample counting.",
+    "labels": "LBL_* fields include NOK, sink marks, sprue-circle, underfill, streak levels, old granulate and blowhole labels.",
+    "unitsAndSemanticsReview": "Source naming convention and data dictionary were reviewed by data-source family. EUROMAP77 and cycle-based fields carry documented physical semantics; vendor DataXplorer shorthand is retained without invented unit conversion. Generic vendor parameter/state fields remain bounded by their source semantics."
+  },
+  "measurementBoundary": {
+    "acceptedMeasuredCycles": 303,
+    "acceptedMeasuredTimeSeriesSamples": 0,
+    "reasonSamplesNotYetAdded": "The Parquet contains real physical time-series arrays, but MouldMaster does not add them to the scalar-sample ledger until per-channel time bases, lengths across every cycle, units and direct-measurement masks are normalized. Setpoints, triggers/states and aggregate features are therefore not accidentally counted as physical samples.",
+    "rawSourceRowsCommitted": false,
+    "rawSourceRedistributed": false
+  },
+  "acceptance": {
+    "sourceFilesLawfullyObtained": true,
+    "fingerprinted": true,
+    "schemaInspected": true,
+    "sourceGroupingInspected": true,
+    "unitsAndSemanticsReviewed": true,
+    "commandsMeasurementsDerivedAndLabelsSeparated": true,
+    "materialContextReviewed": true,
+    "machineContextReviewed": true,
+    "processContextReviewed": true,
+    "qualityContextReviewed": true,
+    "limitationsRecorded": true
+  }
+}
