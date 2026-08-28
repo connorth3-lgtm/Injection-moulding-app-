@@ -1,12 +1,12 @@
 # MouldMaster Deep Dive v2 — evidence expansion programme
 
-Status date: 2026-08-28
+Status date: 2026-08-29
 
 ## Purpose
 
 Deep Dive v2 builds a traceable injection-moulding evidence system connecting physical mechanisms, machine/mould signals, material state, process history, measurement quality and part outcomes. Volume is useful only when provenance and evidence quality remain explicit.
 
-Six additive 100-pass ledgers are preserved: Wave 1 IDs 1–100, Wave 2 IDs 101–200, Wave 3 IDs 201–300, Wave 4 IDs 301–400, Wave 5 IDs 401–500 and Wave 6 IDs 501–600. Together they form **600 cumulative research/evidence passes**. New waves deepen the corpus and never replace earlier data.
+Seven additive 100-pass ledgers are preserved: Wave 1 IDs 1–100, Wave 2 IDs 101–200, Wave 3 IDs 201–300, Wave 4 IDs 301–400, Wave 5 IDs 401–500, Wave 6 IDs 501–600 and Wave 7 IDs 601–700. Together they form **700 cumulative research/evidence passes**. New waves deepen the corpus and never replace earlier data.
 
 ## Fixed corpus targets
 
@@ -39,7 +39,7 @@ Six additive 100-pass ledgers are preserved: Wave 1 IDs 1–100, Wave 2 IDs 101�
 | Expert-level scenarios | 300 |
 | Appropriately licensed defect images, eventual | 10,000 |
 | Lessons/modules total | 250 |
-| Research/evidence domains | **600** |
+| Research/evidence domains | **700** |
 
 These are programme targets, not claims that the 2,000-paper or 1,000-primary-study corpus is already complete.
 
@@ -49,13 +49,17 @@ The programme builds on the 120-lesson pathway, specialist extensions, evidence-
 
 `seeded_with_primary` means at least one relevant primary/experimental anchor was found for the domain. It still requires identity, method, scope and claim-bounding review before final evidence-registry promotion. `gap_seeded` keeps weak areas visible instead of padding the count.
 
-Wave 5 is preserved at 95 primary/experimental-seeded passes and 5 gaps. Wave 6 adds **92 primary/experimental-seeded passes and 8 explicit gaps**. It deepens check-ring/backflow, ultrasound plasticising state, demoulding force, real cooling-channel fouling, sensorised conformal cooling, hot-runner/multi-cavity thermal imbalance, moisture and recyclate degradation, fibre orientation/attrition, quantified defects, LSR/water/gas-assisted moulding, powder injection, multimodal sensing, long-run time-series analytics, maintenance and energy.
+Wave 6 remains preserved at **92 primary/experimental-seeded passes and 8 gaps**. Wave 7 adds **89 primary/experimental-seeded passes and 11 explicit gaps** and raises protected execution to **700 cumulative research/evidence passes**.
+
+Wave 7 deliberately deepens areas where measured physical signals can discriminate mechanisms: gate freeze and solidification pressure, packing-pressure transmission, pvT/shrinkage discrepancy, true melt temperature versus barrel settings, nozzle/sprue shear heating, vent clogging and cavity-gas pressure, hot-runner stagnation and multi-cavity thermal imbalance, polyamide/polycarbonate moisture effects, PEEK crystallisation, fibre orientation and weld-line morphology, LSR cure/shrinkage, multimodal and ultrasonic sensing, streaming time-series quality monitoring, variable polymer/mould thermal contact resistance and measured machine energy.
+
+The 11 retained Wave 7 gaps are intentional. They cover areas where current discovery is dominated by reviews, simulations, repository/preprint evidence or broader manufacturing evidence rather than sufficiently strong injection-moulding primary measurements. Examples include direct heater-duty/thermocouple-fault signatures, some moisture-sensitive rheology measurement controls, injection-specific waveform Gage R&R, and out-of-distribution/causal-intervention validation.
 
 ## Evidence families
 
-The 600 passes span machine/plasticising, clamp/tooling/ejection, cooling/hot runners, materials/recyclates, defects, fibre composites, multi-cavity systems, special/reactive/powder processes, sensors/metrology, quality/statistics, AI/data science, maintenance, energy and sustainability.
+The 700 passes span machine/plasticising, clamp/tooling/ejection, solidification/packing, cooling/hot runners, venting, materials/recyclates, defects, fibre composites, multi-cavity systems, special/reactive/powder processes, sensors/metrology, quality/statistics, AI/data science, maintenance, energy and sustainability.
 
-High-value measured fields include complete cavity-pressure curves, injection position/velocity/pressure alignment, nozzle pressure, screw-recovery signals, plasticising torque/current, coolant flow and differential pressure, hot-runner temperatures/heater duty, tie-bar/mould-strain signals, cavity-resolved mass/dimensions, material-lot/moisture history, maintenance events, measurement-system records and timestamped interventions.
+High-value measured fields include complete cavity-pressure curves, injection position/velocity/pressure alignment, nozzle pressure, screw-recovery signals, plasticising torque/current, actual melt temperature, cavity-gas pressure, coolant flow and differential pressure, hot-runner temperatures/heater duty, tie-bar/mould-strain signals, cavity-resolved mass/dimensions, material-lot/moisture history, maintenance events, measurement-system records and timestamped interventions.
 
 ## Real-data-first rule
 
