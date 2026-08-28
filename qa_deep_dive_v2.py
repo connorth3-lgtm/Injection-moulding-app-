@@ -5,6 +5,8 @@ import re
 TARGET_FILE = Path("data/deep-dive-v2-targets.json")
 PROGRAMME_FILE = Path("sources/DEEP_DIVE_V2_PROGRAMME.md")
 SEED_FILE = Path("sources/DEEP_DIVE_V2_SEED_RESEARCH.md")
+PASS_FILE = Path("data/deep-dive-v2-100-pass.json")
+PASS_DOC = Path("sources/DEEP_DIVE_V2_100_PASS_EXECUTION.md")
 REPORT_FILE = Path("deep-dive-v2-report.json")
 
 MIN_TARGETS = {
@@ -38,7 +40,7 @@ MIN_TARGETS = {
     "research_evidence_domains": 100,
 }
 
-for path in (TARGET_FILE, PROGRAMME_FILE, SEED_FILE):
+for path in (TARGET_FILE, PROGRAMME_FILE, SEED_FILE, PASS_FILE, PASS_DOC):
     assert path.exists(), f"Deep Dive v2 file missing: {path}"
 
 data = json.loads(TARGET_FILE.read_text(encoding="utf-8"))
@@ -79,6 +81,34 @@ assert "10.5281/zenodo.20744054" in seed, "FORinFPRO-HIMD seed missing"
 assert "fkk68-zyf30" in seed, "SKZ time-series dataset seed missing"
 assert "10.17632/gtnb4j7bfx.1" in seed, "Mendeley industrial dataset seed missing"
 
+pass_data = json.loads(PASS_FILE.read_text(encoding="utf-8"))
+assert pass_data.get("pass_count") == 100, "Deep Dive v2 must retain exactly 100 execution passes"
+passes = pass_data.get("passes", [])
+assert len(passes) == 100, f"Expected 100 pass records, found {len(passes)}"
+ids = [p.get("id") for p in passes]
+assert ids == list(range(1, 101)), "100-pass IDs must be unique, ordered and contiguous from 1 to 100"
+titles = [p.get("title") for p in passes]
+assert len(set(titles)) == 100 and all(titles), "100-pass titles must be non-empty and unique"
+allowed_statuses = {"seeded_with_primary", "gap_seeded"}
+assert {p.get("status") for p in passes}.issubset(allowed_statuses), "Unknown 100-pass status"
+for p in passes:
+    assert p.get("theme"), f"Pass {p.get('id')} missing theme"
+    assert p.get("objective"), f"Pass {p.get('id')} missing objective"
+    anchors = p.get("evidence_anchors", [])
+    assert anchors, f"Pass {p.get('id')} missing evidence anchor"
+    assert all(isinstance(x, str) and x.strip() for x in anchors), f"Pass {p.get('id')} has invalid evidence anchor"
+
+seeded = sum(p["status"] == "seeded_with_primary" for p in passes)
+gaps = sum(p["status"] == "gap_seeded" for p in passes)
+assert seeded >= 78, f"Primary-seeded pass count regressed: {seeded}"
+assert gaps == 100 - seeded, "100-pass seeded/gap accounting is incoherent"
+assert pass_data.get("summary", {}).get("by_status", {}).get("seeded_with_primary") == seeded
+assert pass_data.get("summary", {}).get("by_status", {}).get("gap_seeded") == gaps
+
+pass_doc = PASS_DOC.read_text(encoding="utf-8")
+for marker in ["total passes: **100**", "seeded with primary/experimental evidence: **78**", "explicit targeted gaps: **22**", "| 100 | Causal inference"]:
+    assert marker in pass_doc, f"100-pass execution document marker missing: {marker}"
+
 report = {
     "programme": data["programme"],
     "status_date": data["status_date"],
@@ -86,6 +116,9 @@ report = {
     "targets": targets,
     "seed_dataset_candidates": dataset_rows,
     "seed_research_sources": max(numbered_sources),
+    "execution_passes": len(passes),
+    "execution_passes_primary_seeded": seeded,
+    "execution_passes_gap_seeded": gaps,
     "evidence_levels": list(levels),
     "status": "pass",
 }
