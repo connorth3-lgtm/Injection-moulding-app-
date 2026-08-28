@@ -13,16 +13,14 @@ never included in the JSON result. CI deletes the work directory before artifact
 from __future__ import annotations
 
 import argparse
-import csv
 import datetime as dt
-import hashlib
+import html
+import io
 import json
 from pathlib import Path
 import re
 import shutil
-import tempfile
 import urllib.error
-import urllib.parse
 import urllib.request
 import zipfile
 
@@ -85,6 +83,43 @@ def flatten_files(payload):
     raise RuntimeError("publisher file-list response did not contain a file array")
 
 
+def fetch_public_file_links_from_page():
+    """Extract exact public-file links from the version-pinned publisher page.
+
+    Mendeley's REST API now requires OIDC even for public dataset metadata/files.
+    Public dataset pages still expose version-scoped public-files download URLs. This
+    fallback accepts only URLs rooted at data.mendeley.com, for this exact dataset ID,
+    with a UUID file identifier and the public file_downloaded endpoint.
+    """
+    raw = http_get(DATASET_PAGE, accept="text/html,application/xhtml+xml").decode("utf-8", "replace")
+    page = html.unescape(raw).replace("\\u002F", "/").replace("\\/", "/")
+    pattern = re.compile(
+        rf"https://data\.mendeley\.com/public-files/datasets/{re.escape(DATASET_ID)}/files/"
+        r"([0-9a-fA-F-]{36})/file_downloaded"
+    )
+    seen = set()
+    files = []
+    for match in pattern.finditer(page):
+        fid = match.group(1).lower()
+        url = match.group(0)
+        if fid in seen:
+            continue
+        seen.add(fid)
+        files.append(
+            {
+                "id": fid,
+                "name": f"publisher-file-{fid}",
+                "direct_url": url,
+                "source": "version-pinned-public-dataset-page",
+            }
+        )
+    if not files:
+        raise RuntimeError(
+            "version-pinned public dataset page did not expose any approved public-files download links"
+        )
+    return files, DATASET_PAGE
+
+
 def fetch_public_file_list():
     errors = []
     urls = [
@@ -98,7 +133,14 @@ def fetch_public_file_list():
                 return files, url
         except Exception as exc:
             errors.append(str(exc))
-    raise RuntimeError("could not retrieve public dataset file list; " + " | ".join(errors))
+    try:
+        return fetch_public_file_links_from_page()
+    except Exception as exc:
+        errors.append(str(exc))
+    raise RuntimeError(
+        "could not retrieve public dataset file list from authenticated API or exact public dataset page; "
+        + " | ".join(errors)
+    )
 
 
 def file_name(item) -> str:
@@ -110,6 +152,12 @@ def file_uuid(item) -> str:
 
 
 def file_download_url(item) -> str | None:
+    if item.get("direct_url"):
+        url = str(item["direct_url"])
+        expected_prefix = f"https://data.mendeley.com/public-files/datasets/{DATASET_ID}/files/"
+        if not url.startswith(expected_prefix) or not url.endswith("/file_downloaded"):
+            raise RuntimeError("refusing non-canonical Mendeley public-file URL")
+        return url
     details = item.get("content_details") or item.get("contentDetails") or {}
     for candidate in (
         details.get("download_url"),
@@ -132,26 +180,59 @@ def safe_filename(name: str, fallback: str) -> str:
     return re.sub(r"[^A-Za-z0-9._ -]+", "_", leaf)
 
 
+def detected_suffix(data: bytes) -> str:
+    """Infer only the supported table/container type from bytes, not row semantics."""
+    if data.startswith(b"PK\x03\x04"):
+        try:
+            with zipfile.ZipFile(io.BytesIO(data)) as archive:
+                if "xl/workbook.xml" in archive.namelist():
+                    return ".xlsx"
+        except zipfile.BadZipFile:
+            pass
+        return ".zip"
+    sample = data[:8192]
+    try:
+        text = sample.decode("utf-8-sig")
+    except UnicodeDecodeError:
+        return ""
+    first = next((line for line in text.splitlines() if line.strip()), "")
+    if "\t" in first:
+        return ".tsv"
+    if "," in first or ";" in first:
+        return ".csv"
+    if first:
+        return ".txt"
+    return ""
+
+
 def download_dataset_files(work_dir: Path):
     work_dir.mkdir(parents=True, exist_ok=True)
     files, listing_url = fetch_public_file_list()
     downloaded = []
     for index, item in enumerate(files, 1):
         name = file_name(item)
-        suffix = Path(name).suffix.lower()
-        if suffix not in SUPPORTED_SUFFIXES and suffix != ".zip":
-            continue
+        declared_suffix = Path(name).suffix.lower()
+        if declared_suffix not in SUPPORTED_SUFFIXES and declared_suffix != ".zip":
+            declared_suffix = ""
         url = file_download_url(item)
         if not url:
             continue
-        target = work_dir / safe_filename(name, f"file-{index}{suffix or '.bin'}")
-        target.write_bytes(http_get(url, accept="*/*"))
+        data = http_get(url, accept="*/*")
+        suffix = declared_suffix or detected_suffix(data)
+        if suffix not in SUPPORTED_SUFFIXES and suffix != ".zip":
+            continue
+        fallback = f"publisher-file-{index}{suffix}"
+        target_name = safe_filename(name, fallback)
+        if Path(target_name).suffix.lower() not in SUPPORTED_SUFFIXES | {".zip"}:
+            target_name = safe_filename(Path(target_name).stem + suffix, fallback)
+        target = work_dir / target_name
+        target.write_bytes(data)
         downloaded.append(
             {
                 "path": target,
                 "publisher_file_id": file_uuid(item) or None,
                 "publisher_filename": name or target.name,
-                "download_url_source": "publisher-file-endpoint",
+                "download_url_source": item.get("source") or "publisher-file-endpoint",
                 "sha256": file_sha256(target),
                 "size_bytes": target.stat().st_size,
             }
@@ -159,7 +240,7 @@ def download_dataset_files(work_dir: Path):
     if not downloaded:
         raise RuntimeError(
             "publisher returned no downloadable CSV/TSV/TXT/XLSX/ZIP file; "
-            f"file-list endpoint was {listing_url}"
+            f"file-list source was {listing_url}"
         )
     return downloaded, listing_url
 
