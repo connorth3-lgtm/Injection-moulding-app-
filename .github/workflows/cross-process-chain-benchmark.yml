@@ -49,7 +49,14 @@ jobs:
           assert cov['upper']['uniqueCycleIds']==10697 and cov['upper']['duplicateCycleIds']==0
           assert cov['lower']['uniqueCycleIds']==4989 and cov['lower']['duplicateCycleIds']==0
           assert p['staticData']['upper']['serialFileReferencesMissingFromArchive']==0
-          assert p['staticData']['lower']['serialFileReferencesMissingFromArchive']==0
+          assert p['staticData']['lower']['serialFileReferences']==4987
+          assert p['staticData']['lower']['serialFileReferencesMissingFromArchive']==7
+          assert p['staticData']['lower']['missingReferenceExamples']==[
+              'lower_workpiece_cycle_00450.txt','lower_workpiece_cycle_00460.txt',
+              'lower_workpiece_cycle_00478.txt','lower_workpiece_cycle_00579.txt',
+              'lower_workpiece_cycle_00583.txt','lower_workpiece_cycle_00789.txt',
+              'lower_workpiece_cycle_00890.txt'
+          ]
           assert len(p['serialSchemaInspection']['upperSamples'])==3
           assert len(p['serialSchemaInspection']['lowerSamples'])==3
           assert p['serialSchemaInspection']['sourceUnitsExplicitInRawSerialHeaders'] is False
@@ -57,7 +64,7 @@ jobs:
           assert p['acceptedMeasuredTimeSeriesSamples']==0
           assert p['rawSourceRowsCommitted'] is False
           assert p['rawSourceFilesCommitted'] is False
-          print('Cross-process-chain exact-archive benchmark passed: 15,686 injection serial recordings accepted; 14,882 screw-driving files excluded; waveform scalars remain non-counting without explicit raw units')
+          print('Cross-process-chain exact-archive benchmark passed: 15,686 injection trace files accepted; seven lower static-table references are missing from the archive and remain an explicit linkage limitation; 14,882 screw-driving files excluded; waveform scalars remain non-counting without explicit raw units')
           PY
       - uses: actions/upload-artifact@v4
         with:
