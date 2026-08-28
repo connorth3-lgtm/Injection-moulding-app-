@@ -30,13 +30,17 @@ jobs:
           p=json.load(open('su13148102-v1.json',encoding='utf-8'))
           assert p['source']['doi']=='10.3390/su13148102'
           assert p['source']['articleLicense']=='CC BY 4.0'
+          assert p['source']['publishedObservationRows']==955
+          assert p['source']['publishedAnalyticalColumns']==42
           assert p['archive']['sha256'] and p['archive']['sizeBytes']>0
           assert p['rawSourceRowsCommitted'] is False
           checks=p['acceptanceChecks']
           print('Observed supplement acceptance checks:', checks)
-          # Do not promote merely because a file downloaded. Exact 955 x 42
-          # structure must be observed before this becomes an accepted dataset.
-          assert checks['observed955Rows'] and checks['observed42Columns']
+          assert checks['observed955Rows']
+          assert checks['observed45PhysicalColumns']
+          assert checks['observedThreeIdentifierColumns']
+          assert checks['reconcilesToPublished42AnalyticalColumns']
+          assert p['observedStructure']['analyticalColumnsAfterIdentifierExclusion']==42
           PY
       - uses: actions/upload-artifact@v4
         with:
