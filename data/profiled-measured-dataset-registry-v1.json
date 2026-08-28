@@ -1,12 +1,12 @@
 {
   "schema": 1,
-  "version": "2026.08.28.4",
+  "version": "2026.08.28.5",
   "reviewed": "2026-08-28",
   "acceptanceBoundary": "One accepted registry record represents one lawfully obtained and fully profiled dataset package/source family. Archives or constituent experimental subsets inside the same published package are documented but do not inflate the fully-profiled-dataset target. Measured scalar samples are counted separately from dataset packages and moulding cycles.",
   "summary": {
-    "fullyProfiledDatasetPackages": 6,
-    "acceptedMeasuredTimeSeriesSamples": 16526432,
-    "timeSeriesDatasetPackages": 4,
+    "fullyProfiledDatasetPackages": 7,
+    "acceptedMeasuredTimeSeriesSamples": 52526432,
+    "timeSeriesDatasetPackages": 5,
     "recordLevelDatasetPackages": 2
   },
   "datasets": [
@@ -133,6 +133,28 @@
       "acceptedMeasuredTimeSeriesSamples": 0,
       "signals": ["machine DataXplorer traces", "dual cavity pressure", "injection pressure/velocity/position", "clamp force", "mould cavity temperature", "EUROMAP77 aggregates", "temperature-control streams", "dryer/dosing streams", "part weight", "computer-vision warpage", "IR quality features"],
       "notes": "Exact Parquet MD5/SHA-256 and schema are recorded and the observed 396 fields reconcile with the publisher's feature count. Physical time-series arrays are retained as real measured evidence, but their scalar values remain outside the sample ledger until per-channel time bases and direct-measurement masks are normalized."
+    },
+    {
+      "datasetId": "skz-loki-v1",
+      "title": "Injection Molding Dataset (Viscometer, Euromap77, Quality Table)",
+      "source": "https://doi.org/10.23728/b2share.d8502ea56c544e069ebda44c3edd441b",
+      "license": "Current B2SHARE record is Dataset Open; displayed licence field blank; no raw redistribution claimed",
+      "profile": "data/public-benchmark-results/skz-loki-v1.json",
+      "profileType": "cycle-linked-high-frequency-nozzle-pressure-and-machine-quality",
+      "sourceFilesLawfullyObtained": true,
+      "fingerprinted": true,
+      "schemaInspected": true,
+      "unitsAndSemanticsReviewed": true,
+      "commandsMeasurementsDerivedAndLabelsSeparated": true,
+      "cycleAndQualityLinkageReviewed": true,
+      "cyclesProfiled": 68,
+      "cyclesWithPressureTimeSeries": 60,
+      "uniqueMachineSettings": 17,
+      "rowsPerPressureCycle": 300000,
+      "observedApproxPressureRateHz": 10000,
+      "acceptedMeasuredTimeSeriesSamples": 36000000,
+      "signals": ["nozzle-side pressure", "mould-side pressure", "EUROMAP77 machine actuals", "machine quality/energy actuals"],
+      "notes": "All three current B2SHARE Parquets match the publisher-displayed MD5 values. The pressure file contains 18,000,000 rows across 60 cycles, not the 1,048,575 rows implied by the description PDF; experiments 16 and 17 have no pressure traces. Only the two direct physical pressure channels count, giving 36,000,000 samples. Time and the derived pressure-difference field are excluded. EUROMAP raw-scale/documentation inconsistencies are retained without undocumented conversion."
     }
   ]
 }
