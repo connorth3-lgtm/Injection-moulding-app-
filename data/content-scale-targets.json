@@ -1,7 +1,7 @@
 {
   "schema": 1,
-  "version": "2026.08.28.3",
-  "reviewed": "2026-08-28",
+  "version": "2026.08.29.1",
+  "reviewed": "2026-08-29",
   "scope": "Hard content-scale targets for MouldMaster. Completion counts only evidence that satisfies the acceptance definition for that area. Synthetic learning cases, generated drafts, unverified candidate papers and metadata-only dataset records must not be counted as completed measured evidence.",
   "targets": {
     "fully_profiled_measured_datasets": {
@@ -9,17 +9,17 @@
       "preferred": 50,
       "unit": "datasets",
       "acceptance": "A real measured dataset whose exact source/version/licence or access terms are recorded; source files have been obtained lawfully; file fingerprint and profile are recorded; schema/units/grouping are inspected; direct measurements, commands, derived fields and labels are distinguished; material/process/machine/mould/quality context and limitations are documented. Metadata-only records do not count.",
-      "currentAccepted": 1,
+      "currentAccepted": 2,
       "currentDiscovered": 20,
-      "notes": "The dedicated measured-dataset inventory contains 20 real data-bearing records. One exact-source CC BY 4.0 public benchmark, Mendeley 10.17632/gtnb4j7bfx.1 v1, has been lawfully retrieved, SHA-256 fingerprinted, process-separated and profiled; the remaining inventory records do not count as fully profiled until their actual files pass the same evidence boundary."
+      "notes": "The 20-source inventory now has two exact-source completed public benchmarks. Mendeley 10.17632/gtnb4j7bfx.1 v1 remains the profiled record-level benchmark. The pinned scatimdata/AVAPS CC BY 4.0 release has also been lawfully retrieved, all three archives SHA-256 fingerprinted, 3,328 quality-linked cycles reconciled against delivered files, and its pressure/flow time-series structure inspected. Other inventory records remain non-counting until their actual files pass the same evidence boundary."
     },
     "measured_time_series_samples": {
       "minimum": 1000000,
       "preferred": 5000000,
       "unit": "samples",
       "acceptance": "Measured time-series samples from lawfully accessed real experimental or industrial injection-moulding datasets with source provenance, signal identity, units, sample ordering/time basis and dataset linkage. Synthetic training cycles and generated traces never count.",
-      "currentAccepted": 0,
-      "notes": "The existing 19,008 process-data learning cycles are synthetic and deliberately excluded. High-resolution real sources are inventoried, but their raw time-series samples are not promoted into this count until source-file profiling and sample-level provenance are complete."
+      "currentAccepted": 13631488,
+      "notes": "The accepted count comes only from the completed scatimdata/AVAPS benchmark: 3,328 quality-linked injection-moulding cycles x two delivered measured signals (injection pressure and injection flow) x 2,048 stored values per signal = 13,631,488 real time-series values. The companion paper reports 2,049 points per signal, but the released files consistently expose 2,048 stored values, so MouldMaster uses the delivered-file count and fabricates no missing point. The existing 19,008 process-data learning cycles remain synthetic and excluded."
     },
     "material_profiles": {
       "minimum": 250,
