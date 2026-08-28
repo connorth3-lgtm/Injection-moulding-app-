@@ -7,6 +7,7 @@ PROGRAMME_FILE = Path("sources/DEEP_DIVE_V2_PROGRAMME.md")
 SEED_FILE = Path("sources/DEEP_DIVE_V2_SEED_RESEARCH.md")
 PASS_FILE = Path("data/deep-dive-v2-100-pass.json")
 PASS_DOC = Path("sources/DEEP_DIVE_V2_100_PASS_EXECUTION.md")
+EXPANSION_FILE = Path("sources/DEEP_DIVE_V2_100_PASS_EXPANSION.md")
 REPORT_FILE = Path("deep-dive-v2-report.json")
 
 MIN_TARGETS = {
@@ -40,7 +41,7 @@ MIN_TARGETS = {
     "research_evidence_domains": 100,
 }
 
-for path in (TARGET_FILE, PROGRAMME_FILE, SEED_FILE, PASS_FILE, PASS_DOC):
+for path in (TARGET_FILE, PROGRAMME_FILE, SEED_FILE, PASS_FILE, PASS_DOC, EXPANSION_FILE):
     assert path.exists(), f"Deep Dive v2 file missing: {path}"
 
 data = json.loads(TARGET_FILE.read_text(encoding="utf-8"))
@@ -109,6 +110,23 @@ pass_doc = PASS_DOC.read_text(encoding="utf-8")
 for marker in ["total passes: **100**", "seeded with primary/experimental evidence: **78**", "explicit targeted gaps: **22**", "| 100 | Causal inference"]:
     assert marker in pass_doc, f"100-pass execution document marker missing: {marker}"
 
+expansion = EXPANSION_FILE.read_text(encoding="utf-8")
+expansion_ids = [int(x) for x in re.findall(r"^\| (\d{1,3}) \|", expansion, flags=re.M)]
+assert expansion_ids == list(range(1, 101)), "100-pass expansion ledger must contain exactly the numbered passes 1-100"
+expansion_persistent_ids = set(re.findall(r"`(10\.\d{4,9}/[^`]+)`", expansion))
+assert len(expansion_persistent_ids) >= 50, f"100-pass expansion evidence queue too small: {len(expansion_persistent_ids)} unique DOI/persistent IDs"
+for marker in [
+    "10.1016/j.jmapro.2024.03.019",
+    "10.1016/S0141-6359(99)00039-2",
+    "10.1002/pen.70028",
+    "10.1016/j.jmapro.2026.05.017",
+    "10.1016/j.jmapro.2026.04.072",
+    "10.5281/zenodo.20322729",
+    "31 December 2027",
+    "research passes**, not 100 approved papers",
+]:
+    assert marker in expansion, f"100-pass expansion marker missing: {marker}"
+
 report = {
     "programme": data["programme"],
     "status_date": data["status_date"],
@@ -119,6 +137,8 @@ report = {
     "execution_passes": len(passes),
     "execution_passes_primary_seeded": seeded,
     "execution_passes_gap_seeded": gaps,
+    "retry_expansion_passes": len(expansion_ids),
+    "retry_expansion_unique_persistent_ids": len(expansion_persistent_ids),
     "evidence_levels": list(levels),
     "status": "pass",
 }
