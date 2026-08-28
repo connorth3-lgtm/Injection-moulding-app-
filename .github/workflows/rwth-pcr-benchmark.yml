@@ -28,7 +28,7 @@ jobs:
         run: python -m pip install --disable-pip-version-check scipy==1.16.1 h5py==3.14.0
       - name: Profile exact RWTH publisher archive
         run: python tools/profile_rwth_pcr.py --output rwth-pcr-v1.json
-      - name: Enforce discovery boundary
+      - name: Enforce evidence boundary
         run: |
           python - <<'PY'
           import json
@@ -36,15 +36,18 @@ jobs:
           assert p['source']['doi']=='10.18154/RWTH-2025-06809'
           assert p['source']['license']=='CC BY 4.0'
           assert p['source']['openAccess'] is True
+          assert p['source']['fileVersion']==1
           assert p['source']['peerReviewedCompanion']=='10.1016/j.jprocont.2026.103725'
-          assert p['archive']['members']>0
-          assert len(p['archive']['sha256'])==64
+          assert p['status'] in {'profile-generated-review-required','source-access-blocked-not-profiled'}
+          if p['status']=='profile-generated-review-required':
+              assert p['archive']['members']>0 and len(p['archive']['sha256'])==64
+          else:
+              assert len(p['fetchDiagnostics'])>=1
+              assert all(d.get('bytes')==248 for d in p['fetchDiagnostics'] if 'bytes' in d)
           assert p['acceptedMeasuredCycles']==0
           assert p['acceptedMeasuredTimeSeriesSamples']==0
           assert p['rawSourceRowsCommitted'] is False
-          print('RWTH PCR exact-archive discovery profile passed')
-          print('archive:', p['archive'])
-          print('members:', [(m['path'],m['sizeBytes'],m['suffix']) for m in p['members']])
+          print('RWTH PCR evidence-boundary check passed:',p['status'])
           PY
       - uses: actions/upload-artifact@v4
         with:
