@@ -13,8 +13,10 @@ from __future__ import annotations
 
 import argparse
 import json
+import random
 import re
 import time
+import urllib.error
 import urllib.parse
 import urllib.request
 from pathlib import Path
@@ -87,14 +89,42 @@ TAG_RULES = {
     "machine-learning": ["machine learning", "neural network", "random forest", "support vector"],
     "cooling-heat-transfer": ["conformal cooling", "heat transfer", "cooling channel", "solidification"],
     "fibre-composite": ["fiber orientation", "fibre orientation", "glass fiber", "glass fibre", "composite"],
-    "rheology-viscosity": ["rheology", "viscosity", "melt flow", "pvt", "pvt"]
+    "rheology-viscosity": ["rheology", "viscosity", "melt flow", "pvt"]
 }
 
 
-def request_json(url: str, timeout: int = 45) -> dict:
-    req = urllib.request.Request(url, headers={"User-Agent": "MouldMasterResearchRegistry/1.0 (open-source educational project)"})
-    with urllib.request.urlopen(req, timeout=timeout) as r:
-        return json.load(r)
+def request_json(url: str, timeout: int = 45, retries: int = 6) -> dict:
+    """Fetch OpenAlex JSON with bounded handling for transient throttling/server errors."""
+    headers = {
+        "User-Agent": "MouldMasterResearchRegistry/1.1 (open-source educational project)",
+        "Accept": "application/json",
+    }
+    last_error = None
+    for attempt in range(retries + 1):
+        req = urllib.request.Request(url, headers=headers)
+        try:
+            with urllib.request.urlopen(req, timeout=timeout) as response:
+                return json.load(response)
+        except urllib.error.HTTPError as exc:
+            last_error = exc
+            if exc.code not in {429, 500, 502, 503, 504} or attempt >= retries:
+                raise
+            retry_after = exc.headers.get("Retry-After") if exc.headers else None
+            try:
+                delay = float(retry_after) if retry_after else min(32.0, 1.5 * (2 ** attempt))
+            except (TypeError, ValueError):
+                delay = min(32.0, 1.5 * (2 ** attempt))
+            delay += random.uniform(0.15, 0.65)
+            print(f"OpenAlex transient HTTP {exc.code}; retry {attempt + 1}/{retries} after {delay:.1f}s", flush=True)
+            time.sleep(delay)
+        except (urllib.error.URLError, TimeoutError) as exc:
+            last_error = exc
+            if attempt >= retries:
+                raise
+            delay = min(24.0, 1.0 * (2 ** attempt)) + random.uniform(0.1, 0.5)
+            print(f"OpenAlex transient network error; retry {attempt + 1}/{retries} after {delay:.1f}s", flush=True)
+            time.sleep(delay)
+    raise RuntimeError(f"OpenAlex request failed after retries: {last_error}")
 
 
 def abstract_text(work: dict) -> str:
@@ -195,7 +225,7 @@ def main() -> None:
     ap.add_argument("--target", type=int, default=2000, help="Maximum unique candidate records to retain")
     ap.add_argument("--per-query-pages", type=int, default=6, help="Maximum OpenAlex cursor pages per query")
     ap.add_argument("--mailto", default="", help="Optional contact email appended to OpenAlex requests")
-    ap.add_argument("--sleep", type=float, default=0.12)
+    ap.add_argument("--sleep", type=float, default=0.18)
     args = ap.parse_args()
 
     records: dict[str, dict] = {}
@@ -218,8 +248,6 @@ def main() -> None:
                 c = rec["classification"]
                 if not c["injectionMouldingRelevant"]:
                     continue
-                # Keep likely scholarly articles/conference records. Verification later
-                # determines whether each record is truly peer reviewed.
                 if rec.get("type") not in {"article", "book-chapter"}:
                     continue
                 key = rec.get("doi") or rec.get("id") or (rec.get("title") or "").strip().lower()
