@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "version": "2026.08.29.2",
+  "version": "2026.08.29.3",
   "reviewed": "2026-08-29",
   "purpose": "One-by-one execution state for the 20 real measured-data sources. This ledger does not change accepted counts by itself; only completed source-file profiling may do that.",
   "policy": {
@@ -21,7 +21,7 @@
     {"priority":7,"datasetId":"rwth-pcr-2025","state":"blocked-rights-review","action":"record versioned repository reuse terms before downloading archive","reason":"public download exists but exact reuse terms remain unresolved"},
     {"priority":8,"datasetId":"impure-pascoe-2022","state":"blocked-rights-review","action":"verify Zenodo licence then enumerate per-cycle CSV archive","reason":"605.2 MB source is high-value but rights must be explicit before automated ingestion"},
     {"priority":9,"datasetId":"iguzzini-road-lenses","state":"restricted-research-education","action":"profile only under stated research/education terms; do not widen redistribution rights","reason":"source is publicly released for research and educational purposes but lacks a standard reusable data licence"},
-    {"priority":10,"datasetId":"openmms-t4g","state":"executing-profile","action":"profile exact article-pinned Case_Study_Raw_Data.csv and reconcile sensor/time semantics","reason":"BSD-3-Clause repository; peer-reviewed article points to the exact raw case-study file at the pinned commit"},
+    {"priority":10,"datasetId":"openmms-t4g","state":"accepted-profiled","action":"keep exact article-pinned case-study file and source-defined signal/unit mapping regression-pinned","reason":"BSD-3-Clause source completed: exact CSV SHA-256 fingerprinted, 29,808 ordered rows, 10 measured sensor channels, two strictly increasing module time bases and 298,080 accepted measured values"},
     {"priority":11,"datasetId":"forinfpro-himd-v1","state":"blocked-rights-review","action":"verify Zenodo licence and release version before multimodal ingest","reason":"rich sensor release but reuse terms not yet recorded"},
     {"priority":12,"datasetId":"cross-process-chain-17240390","state":"blocked-rights-review","action":"verify licence and enumerate injection-only experiment IDs","reason":"must exclude downstream screw-driving observations from injection-cycle/sample counts"},
     {"priority":13,"datasetId":"kamp-injection-7996","state":"blocked-mirror-rights","action":"locate authoritative original KAMP distribution terms","reason":"GitHub mirror does not prove rights for original factory dataset"},
@@ -35,8 +35,8 @@
   ],
   "summary": {
     "total": 20,
-    "acceptedProfiled": 2,
-    "executingProfile": 1,
+    "acceptedProfiled": 3,
+    "executingProfile": 0,
     "queuedExecutable": 3,
     "rightsOrTermsBlocked": 7,
     "restrictedResearchEducation": 1,
