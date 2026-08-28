@@ -1,0 +1,46 @@
+name: MouldMaster Primary Measured Evidence
+
+on:
+  push:
+    branches: [main, evidence-coverage-hardening]
+    paths:
+      - 'data/primary-measured-evidence-registry-v1.json'
+      - 'data/primary-measured-evidence/**'
+      - 'data/evidence-coverage-v1.json'
+      - 'qa_primary_measured_evidence.py'
+      - 'sources/PRIMARY_MEASURED_EVIDENCE_REGISTRY.md'
+      - '.github/workflows/primary-measured-evidence.yml'
+  pull_request:
+    branches: [main]
+    paths:
+      - 'data/primary-measured-evidence-registry-v1.json'
+      - 'data/primary-measured-evidence/**'
+      - 'data/evidence-coverage-v1.json'
+      - 'qa_primary_measured_evidence.py'
+      - 'sources/PRIMARY_MEASURED_EVIDENCE_REGISTRY.md'
+      - '.github/workflows/primary-measured-evidence.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: mouldmaster-primary-measured-evidence-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  primary-measured-evidence:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Validate deduplicated peer-reviewed primary measured registry
+        run: python qa_primary_measured_evidence.py
+      - name: Upload aggregate registry QA report
+        uses: actions/upload-artifact@v4
+        with:
+          name: mouldmaster-primary-measured-evidence
+          path: primary-measured-evidence-report.json
+          if-no-files-found: error
