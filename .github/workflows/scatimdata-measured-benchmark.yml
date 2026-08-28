@@ -1,0 +1,41 @@
+name: MouldMaster scatimdata measured benchmark
+
+on:
+  workflow_dispatch:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'tools/profile_scatimdata.py'
+      - '.github/workflows/scatimdata-measured-benchmark.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  profile:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install profiling readers
+        run: python -m pip install --disable-pip-version-check openpyxl numpy
+      - name: Profile CC BY scatimdata archives
+        run: python tools/profile_scatimdata.py --output scatimdata-v1.json
+      - name: Validate profile boundary
+        run: |
+          python - <<'PY'
+          import json
+          p=json.load(open('scatimdata-v1.json',encoding='utf-8'))
+          assert p['source']['license']=='CC BY 4.0'
+          assert len(p['archives'])==3
+          assert all(a['sha256'] and a['sizeBytes']>0 for a in p['archives'])
+          assert p['publishedStructure']['pointsPerTimeSeries']==2049
+          print('Detected measured time-series scalar samples:',p['acceptedMeasuredTimeSeriesSamples'])
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: mouldmaster-scatimdata-profile
+          path: scatimdata-v1.json
+          retention-days: 90
