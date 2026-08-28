@@ -1,16 +1,19 @@
 {
   "programme": "MouldMaster Deep Dive v2",
   "status_date": "2026-08-28",
-  "purpose": "Scale MouldMaster beyond the first 20 research passes and 50-pass measured-evidence atlas while prioritising traceable measured evidence over raw synthetic volume. Preserve the first two 100-pass Deep Dive waves and add a distinct third 100-pass wave for 300 cumulative evidence domains.",
+  "purpose": "Scale MouldMaster beyond the first 20 research passes and 50-pass measured-evidence atlas while prioritising traceable measured evidence over raw synthetic volume. Preserve the first three 100-pass Deep Dive waves and add a distinct fourth 100-pass wave for 400 cumulative evidence domains.",
   "execution_state": {
     "wave1_passes_preserved": 100,
     "wave2_passes_added": 100,
     "wave3_passes_added": 100,
-    "cumulative_passes": 300,
+    "wave4_passes_added": 100,
+    "cumulative_passes": 400,
     "wave2_primary_seeded": 59,
     "wave2_explicit_gaps": 41,
     "wave3_primary_seeded": 93,
     "wave3_explicit_gaps": 7,
+    "wave4_primary_seeded": 69,
+    "wave4_explicit_gaps": 31,
     "completion_boundary": "Execution passes are evidence-discovery domains, not a claim that the 2,000-paper or 1,000-primary-study corpus targets are complete."
   },
   "principles": [
@@ -49,7 +52,7 @@
     "expert_level_scenarios": 300,
     "licensed_defect_images_eventual": 10000,
     "lessons_and_modules_total": 250,
-    "research_evidence_domains": 300
+    "research_evidence_domains": 400
   },
   "evidence_levels": {
     "E0": "Educational synthetic example only.",
