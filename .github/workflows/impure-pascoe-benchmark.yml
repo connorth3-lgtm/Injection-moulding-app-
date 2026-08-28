@@ -1,0 +1,51 @@
+name: MouldMaster ImPure PASCOE measured benchmark
+
+on:
+  workflow_dispatch:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'tools/profile_impure_pascoe.py'
+      - '.github/workflows/impure-pascoe-benchmark.yml'
+      - 'data/public-benchmark-results/impure-pascoe-2022-v1.json'
+      - 'data/profiled-measured-dataset-registry-v1.json'
+      - 'data/content-scale-targets.json'
+      - 'qa_content_scale_targets.py'
+
+permissions:
+  contents: read
+
+jobs:
+  profile:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Profile exact Zenodo PASCOE cycle files
+        run: python tools/profile_impure_pascoe.py --output impure-pascoe-2022-v1.json
+      - name: Enforce non-counting discovery boundary
+        run: |
+          python - <<'PY'
+          import json
+          p=json.load(open('impure-pascoe-2022-v1.json',encoding='utf-8'))
+          assert p['source']['doi']=='10.5281/zenodo.6913660'
+          assert p['source']['recordId']=='6913660'
+          assert p['recordFileInventory']['cycleCsvFiles']>100
+          assert p['cycleCsvStructure']['totalRowsAcrossCycleFiles']>0
+          assert len(p['cycleCsvStructure']['headerVariants'])>=1
+          assert p['acceptedMeasuredCycles']==0
+          assert p['acceptedMeasuredTimeSeriesSamples']==0
+          assert p['rawSourceRowsCommitted'] is False
+          print('ImPure PASCOE exact-file discovery benchmark passed')
+          print('license:',p['source']['licenseMetadata'])
+          print('file inventory:',p['recordFileInventory'])
+          print('structure:',p['cycleCsvStructure'])
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: mouldmaster-impure-pascoe-profile
+          path: impure-pascoe-2022-v1.json
+          retention-days: 90
