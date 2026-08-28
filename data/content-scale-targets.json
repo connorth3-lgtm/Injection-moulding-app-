@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "version": "2026.08.28.6",
+  "version": "2026.08.28.7",
   "reviewed": "2026-08-28",
   "scope": "Hard content-scale targets for MouldMaster. Completion counts only evidence that satisfies the acceptance definition for that area. Synthetic learning cases, generated drafts, unverified candidate papers and metadata-only dataset records must not be counted as completed measured evidence.",
   "targets": {
@@ -9,9 +9,9 @@
       "preferred": 50,
       "unit": "datasets",
       "acceptance": "A real measured dataset whose exact source/version/licence or access terms are recorded; source files have been obtained lawfully; file fingerprint and profile are recorded; schema/units/grouping are inspected; direct measurements, commands, derived fields and labels are distinguished; material/process/machine/mould/quality context and limitations are documented. Metadata-only records do not count.",
-      "currentAccepted": 4,
+      "currentAccepted": 6,
       "currentDiscovered": 20,
-      "notes": "Four dataset packages now pass the full acceptance boundary: Mendeley 10.17632/gtnb4j7bfx.1 v1, scatimdata, the Sustainability 2021 hot-runner supplement, and the paper-linked OpenMMS-T4G real-world mould-monitoring case study. The PET preform Mendeley candidate was profiled but rejected from this measured count because its downloadable table is CAE/ANN-oriented rather than a clear raw measured process dataset."
+      "notes": "Six dataset packages now pass the full acceptance boundary: Mendeley 10.17632/gtnb4j7bfx.1 v1, scatimdata, the Sustainability 2021 hot-runner supplement, the paper-linked OpenMMS-T4G case study, ProBayes main v2, and ProBayes d-optimal v1. Both ProBayes source Parquets were downloaded from B2SHARE, matched the publisher-displayed MD5 checksums, received independent SHA-256 fingerprints, and had their real cycle, quality, time-series, command/setpoint, derived/aggregate and label fields separated. The PET preform Mendeley candidate remains profiled but rejected from measured evidence."
     },
     "measured_time_series_samples": {
       "minimum": 1000000,
@@ -19,7 +19,7 @@
       "unit": "samples",
       "acceptance": "Measured time-series samples from lawfully accessed real experimental or industrial injection-moulding datasets with source provenance, signal identity, units, sample ordering/time basis and dataset linkage. Synthetic training cycles and generated traces never count.",
       "currentAccepted": 16526432,
-      "notes": "scatimdata contributes 16,228,352 accepted pressure/flow/cavity-pressure scalar samples. OpenMMS contributes 298,080 additional real sensor values from 29,808 rows across ten physical channels (two temperatures, cavity pressure, extraction force, 3-axis acceleration and 3-axis angular velocity); its two acquisition time axes are excluded. Record-level Mendeley/Sustainability observations do not inflate this waveform-sample count."
+      "notes": "scatimdata contributes 16,228,352 accepted pressure/flow/cavity-pressure scalar samples. OpenMMS contributes 298,080 additional real sensor values from 29,808 rows across ten physical channels. ProBayes adds 867 accepted real cycle records and contains extensive physical time-series arrays, but its nested scalar values are deliberately not added here until per-channel time bases, units, lengths across every cycle and direct-measurement masks are normalized; setpoints, triggers/states, simulation outputs and aggregate features must never inflate this sample total."
     },
     "material_profiles": {
       "minimum": 250,
@@ -27,7 +27,7 @@
       "unit": "profiles",
       "acceptance": "A distinct polymer family/grade or explicitly bounded material class with identity, family, reinforcement/filler where relevant, rheology/MFR or equivalent evidence where available, drying/moisture handling, thermal transitions or thermal behaviour, shrinkage/dimensional behaviour, degradation/compatibility cautions, processing-window provenance and source references. Generic placeholders do not count as complete grade profiles.",
       "currentAccepted": 20,
-      "notes": "Twenty explicit base material profiles exist in reference-data.js. New measured datasets provide grade-level evidence, including five sustainable-material grades and Dow LDPE 780E, but those are not automatically promoted until the complete material-profile acceptance schema is satisfied."
+      "notes": "Twenty explicit base material profiles exist in reference-data.js. New measured datasets provide grade-level evidence, including five sustainable-material grades, Dow LDPE 780E, ProBayes PP/70%-recyclate ABS and Borealis HE125MO PP, but those are not automatically promoted until the complete material-profile acceptance schema is satisfied."
     },
     "defect_mechanisms": {
       "minimum": 300,
@@ -35,7 +35,7 @@
       "unit": "mechanisms",
       "acceptance": "A distinct defect-mechanism record linking observable evidence to a physical mechanism, likely causes, discriminating evidence/tests, bounded corrective-response concepts, and material/tool/machine interactions with evidence provenance. A visible defect name alone is not a mechanism record.",
       "currentAccepted": 20,
-      "notes": "Twenty explicit base defect entries exist; deeper research concepts and the 320 generated mechanism drafts must be normalized and evidence-reviewed before counting."
+      "notes": "Twenty explicit base defect entries exist; deeper research concepts and the 320 generated mechanism drafts must be normalized and evidence-reviewed before counting. ProBayes supplies measured defect labels such as sink marks, underfill, streaks and blowholes, but labels alone do not satisfy the mechanism target."
     },
     "sensor_machine_health_concepts": {
       "minimum": 200,
@@ -43,7 +43,7 @@
       "unit": "concepts",
       "acceptance": "A distinct sensor, derived signal, calibration/drift concept, failure mode, wear signature, machine-health indicator or diagnostic interpretation with measurement location/domain, units or feature semantics where applicable, failure/confounders and evidence provenance.",
       "currentAccepted": 0,
-      "notes": "OpenMMS now provides strong measured evidence for mould temperature, cavity pressure, extraction force, acceleration and angular-velocity machine-health concepts, but a dedicated normalized accepted sensor/health registry is still required before claiming a consolidated count."
+      "notes": "OpenMMS and ProBayes now provide strong measured evidence across mould pressure/temperature, force, inertial sensing, machine DataXplorer signals, temperature-control, dryer/dosing and EUROMAP77 domains, but a dedicated normalized accepted sensor/health registry is still required before claiming a consolidated count."
     },
     "assessment_education_items": {
       "minimum": 1000,
@@ -67,7 +67,7 @@
       "unit": "studies",
       "acceptance": "A deduplicated primary study containing actual injection-moulding experimental or industrial measurements. The record must identify measured signals/outcomes and study context and must be manually or explicitly evidence-reviewed. Reviews, simulation-only studies, theory-only papers and heuristic search candidates do not count.",
       "currentAccepted": 60,
-      "notes": "data/primary-measured-evidence-registry-v1.json contains 60 unique publisher-verified peer-reviewed primary measured studies across five audited evidence packs. The OpenMMS paper is independently verified during dataset profiling, but the literature registry is not incremented until DOI-level deduplication against the accepted master registry is performed."
+      "notes": "data/primary-measured-evidence-registry-v1.json contains 60 unique publisher-verified peer-reviewed primary measured studies across five audited evidence packs. Dataset acquisition/profile work does not increment this literature count unless a distinct peer-reviewed paper is separately verified and deduplicated."
     }
   },
   "nonCountingRules": [
