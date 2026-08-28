@@ -1,0 +1,57 @@
+name: MouldMaster injection-moulding energy measured benchmark
+
+on:
+  workflow_dispatch:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'tools/profile_zenodo_energy_20338544.py'
+      - '.github/workflows/zenodo-energy-20338544-benchmark.yml'
+      - 'data/public-benchmark-results/zenodo-energy-20338544-v1.json'
+      - 'data/measured-dataset-inventory-v1.json'
+      - 'data/profiled-measured-dataset-registry-v1.json'
+      - 'data/content-scale-targets.json'
+      - 'qa_content_scale_targets.py'
+
+permissions:
+  contents: read
+
+jobs:
+  profile:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Profile exact Zenodo production-energy CSVs
+        run: python tools/profile_zenodo_energy_20338544.py --output zenodo-energy-20338544-v1.json
+      - name: Enforce discovery-only measured boundary
+        run: |
+          python - <<'PY'
+          import json
+          p=json.load(open('zenodo-energy-20338544-v1.json',encoding='utf-8'))
+          assert p['schema']==1
+          assert p['status']=='exact-file-discovery-profile-review-required'
+          assert p['source']['doi']=='10.5281/zenodo.20338544'
+          assert p['csvFilesProfiled']==3
+          expected={
+            'feb_production.csv':'3b2daf123be817b271529b909e19edc5',
+            'mar_production.csv':'12dd28a9e8a12ed734c3ca4398f93d1b',
+            'test_dataset.csv':'2a19cfa6f2fc569723e3ad8d78d8e418',
+          }
+          assert {f['name']:f['md5'] for f in p['files']}==expected
+          assert all(f['sizeBytes']>0 and len(f['sha256'])==64 for f in p['files'])
+          assert p['totalCsvRowsObserved']>0
+          assert p['acceptedMeasuredRecords']==0
+          assert p['acceptedMeasuredTimeSeriesSamples']==0
+          assert p['rawSourceRowsCommitted'] is False
+          assert p['rawSourceFilesCommitted'] is False
+          print('Zenodo injection-moulding energy exact-file discovery passed; zero evidence promoted pending schema/units/state review')
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: mouldmaster-zenodo-energy-20338544-profile
+          path: zenodo-energy-20338544-v1.json
+          retention-days: 90
