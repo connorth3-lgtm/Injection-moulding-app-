@@ -7,6 +7,9 @@ REPORT = ROOT / 'measured-dataset-inventory-report.json'
 
 ALLOWED_STATES = {
     'executed-open',
+    'executed-open-profiled',
+    'executed-open-ccby',
+    'profiled-rejected-measured',
     'public-open',
     'public-download-license-review',
     'public-research-education-release',
@@ -16,8 +19,16 @@ ALLOWED_STATES = {
     'request-only',
     'confidential',
 }
-EXECUTABLE_STATES = {'executed-open', 'public-open', 'public-repo-license'}
+EXECUTABLE_STATES = {
+    'executed-open',
+    'executed-open-profiled',
+    'executed-open-ccby',
+    'profiled-rejected-measured',
+    'public-open',
+    'public-repo-license',
+}
 NONEXECUTABLE_STATES = ALLOWED_STATES - EXECUTABLE_STATES
+BLANK_LICENCE_PROFILE_STATES = {'executed-open-profiled'}
 EXPECTED_KNOWN_COUNTS = {
     'mendeley-gtnb4j7bfx-v1': ('injectionRecords', 4502),
     'scatimdata-avaps': ('cycles', 3328),
@@ -80,13 +91,24 @@ for i, d in enumerate(rows, 1):
     need(isinstance(d.get('signals'), list), f'{prefix}: signals must be a list')
     need(isinstance(d.get('quality'), list), f'{prefix}: quality must be a list')
     need(isinstance(d.get('count'), dict), f'{prefix}: count must be an object preserving record-unit semantics')
-    need(len(str(d.get('statusNote', '')).strip()) >= 50, f'{prefix}: status note too weak')
+    note = str(d.get('statusNote', '')).strip()
+    need(len(note) >= 50, f'{prefix}: status note too weak')
 
     can_ingest = d.get('automatedIngestionAllowed') is True
     if can_ingest:
         automated += 1
-        need(state in EXECUTABLE_STATES, f'{prefix}: automated ingestion enabled for non-executable access state')
-        need(bool(str(d.get('license', '')).strip()), f'{prefix}: automated ingestion requires explicit licence/terms')
+        need(state in EXECUTABLE_STATES, f'{prefix}: automated profiling enabled for non-executable access state')
+        licence = str(d.get('license') or '').strip()
+        if not licence:
+            need(state in BLANK_LICENCE_PROFILE_STATES,
+                 f'{prefix}: blank licence is only allowed for explicitly profiled open records')
+            need(d.get('rawRedistributionAllowedWithAttribution') is False,
+                 f'{prefix}: blank-licence source must not claim raw redistribution rights')
+            note_lower = note.lower()
+            need('blank' in note_lower or 'no licence' in note_lower or 'no license' in note_lower or 'displays no licence' in note_lower,
+                 f'{prefix}: blank-licence profiling exception must be documented in status note')
+            need('redistribution' in note_lower,
+                 f'{prefix}: blank-licence profiling exception must document redistribution boundary')
     else:
         need(state in NONEXECUTABLE_STATES or state in EXECUTABLE_STATES,
              f'{prefix}: unexpected access state for non-automated source')
@@ -98,11 +120,25 @@ for i, d in enumerate(rows, 1):
         need(not can_ingest, f'{prefix}: inaccessible source cannot be automatically ingested')
     if state == 'public-research-education-release':
         need(not d.get('rawRedistributionAllowedWithAttribution'), f'{prefix}: research/education terms must not be widened into redistribution rights')
+    if state == 'profiled-rejected-measured':
+        need(can_ingest, f'{prefix}: rejected measured candidate must remain reproducibly profiled')
+        need('reject' in note.lower(), f'{prefix}: measured-evidence rejection must remain explicit')
 
 by_id = {d['datasetId']: d for d in rows}
 for did, (field, value) in EXPECTED_KNOWN_COUNTS.items():
     need(by_id[did]['count'].get(field) == value, f'{did}: verified count drifted for {field}')
 
+need(by_id['probayes-main-v2']['accessState'] == 'executed-open-profiled', 'ProBayes main profiled access state drifted')
+need(by_id['probayes-main-v2']['license'] is None, 'ProBayes main current blank licence field must not be invented')
+need(by_id['probayes-main-v2']['rawRedistributionAllowedWithAttribution'] is False, 'ProBayes main must not claim raw redistribution rights')
+need(by_id['probayes-doptimal-v1']['accessState'] == 'executed-open-ccby', 'ProBayes d-optimal CC-BY state drifted')
+need('CC-BY' in str(by_id['probayes-doptimal-v1'].get('license') or ''), 'ProBayes d-optimal CC-BY metadata missing')
+need(by_id['skz-loki-v1']['accessState'] == 'executed-open-profiled', 'SKZ LoKI profiled access state drifted')
+need(by_id['skz-loki-v1']['license'] is None, 'SKZ LoKI current blank licence field must not be invented')
+need(by_id['skz-loki-v1']['rawRedistributionAllowedWithAttribution'] is False, 'SKZ LoKI must not claim raw redistribution rights')
+need((by_id['skz-loki-v1']['count'] or {}).get('cyclesWithPressureTimeSeries') == 60, 'SKZ LoKI pressure-cycle coverage drifted')
+need((by_id['skz-loki-v1']['count'] or {}).get('acceptedPhysicalScalarSamples') == 36_000_000, 'SKZ LoKI direct pressure sample count drifted')
+need(by_id['pet-preform-v2']['accessState'] == 'profiled-rejected-measured', 'PET preform measured-evidence rejection state drifted')
 need(by_id['leon-process-20309380']['accessState'] == 'embargoed', 'León process dataset must remain embargoed')
 need(by_id['leon-defects-20322729']['accessState'] == 'embargoed', 'León defect dataset must remain embargoed')
 need('2027-12-31' in by_id['leon-process-20309380']['statusNote'], 'León process embargo end date missing')
@@ -118,8 +154,8 @@ need(by_id['bottle-cap-7162-confidential']['accessState'] == 'confidential', 'bo
 
 summary = inv.get('summary', {})
 need(summary.get('datasets') == 20, 'inventory summary dataset count drifted')
-need(summary.get('automatedIngestionAllowed') == automated == 6, f'automated-ingestion count drifted: {automated}')
-need(summary.get('rightsOrAccessReviewRequired') == 7, 'licence-review count drifted')
+need(summary.get('automatedIngestionAllowed') == automated == 9, f'automated-ingestion count drifted: {automated}')
+need(summary.get('rightsOrAccessReviewRequired') == rights_review == 6, f'licence-review count drifted: {rights_review}')
 need(state_counts['embargoed'] == summary.get('embargoed') == 2, 'embargoed count drifted')
 need(state_counts['request-only'] == summary.get('requestOnly') == 1, 'request-only count drifted')
 need(state_counts['confidential'] == summary.get('confidential') == 1, 'confidential count drifted')
@@ -127,15 +163,16 @@ need(state_counts['public-mirror-rights-unresolved'] == summary.get('publicMirro
 need(state_counts['public-research-education-release'] == summary.get('publicResearchEducationTerms') == 1, 'research/education terms count drifted')
 
 report = {
-    'schema': 1,
+    'schema': 2,
     'source': str(INVENTORY.relative_to(ROOT)),
     'datasetCount': len(rows),
     'accessStateCounts': state_counts,
     'automatedIngestionAllowed': automated,
     'knownCountsChecked': len(EXPECTED_KNOWN_COUNTS),
     'rightsReviewSources': rights_review,
+    'blankLicenceProfiledOpenSources': sum(1 for d in rows if d.get('automatedIngestionAllowed') is True and not d.get('license')),
     'rawRowsCommittedToRepository': False,
     'result': 'pass',
 }
 REPORT.write_text(json.dumps(report, indent=2) + '\n', encoding='utf-8')
-print('MouldMaster measured dataset inventory QA passed (20 sources; 6 executable; rights/access/embargo/mirror boundaries enforced)')
+print('MouldMaster measured dataset inventory QA passed (20 sources; 9 reproducibly profileable; 6 rights-review; blank-licence profiling separated from raw redistribution)')
