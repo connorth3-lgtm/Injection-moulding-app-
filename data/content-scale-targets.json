@@ -1,7 +1,7 @@
 {
   "schema": 1,
-  "version": "2026.08.28.13",
-  "reviewed": "2026-08-28",
+  "version": "2026.08.29.1",
+  "reviewed": "2026-08-29",
   "scope": "Hard content-scale targets for MouldMaster. Completion counts only evidence that satisfies the acceptance definition for that area. Synthetic learning cases, generated drafts, unverified candidate papers and metadata-only dataset records must not be counted as completed measured evidence.",
   "targets": {
     "fully_profiled_measured_datasets": {
@@ -58,16 +58,16 @@
       "preferred": 2000,
       "unit": "records",
       "acceptance": "A deduplicated peer-reviewed research record with stable bibliographic identity (prefer DOI), title, year, venue/type, topic tags, materials/process/sensor/defect/method tags where supported, concise finding/limitation fields, access status and evidence-quality classification. Concept cards and duplicate publication versions do not count.",
-      "currentAccepted": 60,
-      "notes": "The dedicated primary-measured evidence registry currently supplies a conservative audited peer-reviewed master subset of 60 unique publisher-verified DOI records. Dataset profiling does not automatically change this research count. The newly verified HDPE/GNP companion DOI 10.1016/j.dib.2024.110987 is staged for separate literature-registry promotion rather than being silently counted through dataset acquisition."
+      "currentAccepted": 65,
+      "notes": "The dedicated primary-measured evidence registry now supplies a conservative audited peer-reviewed master subset of 65 unique publisher-verified DOI records across six evidence packs. The newest five broaden the corpus across cooling/demoulding/warpage, conformal-cooling and CuBe tooling, polypropylene molecular-weight degradation, a 1,320-experiment 27-machine automotive campaign, and multi-material injection-moulding energy measurements. Dataset profiling does not automatically change this research count."
     },
     "primary_measured_studies": {
       "minimum": 800,
       "preferred": 1000,
       "unit": "studies",
       "acceptance": "A deduplicated primary study containing actual injection-moulding experimental or industrial measurements. The record must identify measured signals/outcomes and study context and must be manually or explicitly evidence-reviewed. Reviews, simulation-only studies, theory-only papers and heuristic search candidates do not count.",
-      "currentAccepted": 60,
-      "notes": "data/primary-measured-evidence-registry-v1.json contains 60 unique publisher-verified peer-reviewed primary measured studies. The HDPE/GNP Data in Brief companion is verified as a distinct measured injection-moulding study but remains staged until it is inserted through the dedicated literature registry and DOI QA."
+      "currentAccepted": 65,
+      "notes": "data/primary-measured-evidence-registry-v1.json now contains 65 unique publisher-verified peer-reviewed primary measured studies. The newest five are independent experiments and do not alter measured-dataset package counts or the 71,574,737 accepted measured-scalar ledger."
     }
   },
   "nonCountingRules": [
