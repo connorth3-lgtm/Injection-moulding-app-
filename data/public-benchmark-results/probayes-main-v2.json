@@ -1,0 +1,112 @@
+{
+  "schema_version": 1,
+  "status": "completed-public-measured-benchmark",
+  "completed_date": "2026-08-28",
+  "datasetId": "probayes-main-v2",
+  "title": "Injection-Molding Production Data with Quality Labels",
+  "source": {
+    "recordUrl": "https://b2share.eudat.eu/records/k0v7s-jf859",
+    "legacyRecordId": "4c5692b886db419180f716acf895bf06",
+    "doi": "10.23728/b2share.4c5692b886db419180f716acf895bf06",
+    "version": "v2",
+    "file": "dataset_V2.parquet",
+    "recordAccess": "Dataset Open",
+    "licenseOnCurrentB2shareRecordPage": null,
+    "rightsBoundary": "The exact current B2SHARE v2 page is openly downloadable but its displayed License field is blank. EUDAT B2FIND metadata for the ProBayes dataset family records CC-BY/openAccess, but MouldMaster does not infer a licence version or redistribute this v2 Parquet. Dataset acceptance relies on documented lawful open access plus exact-file profiling, not on a redistribution claim."
+  },
+  "file": {
+    "sizeBytes": 89409728,
+    "md5": "f04efe419e63db5fb4a392e1569ea417",
+    "sha256": "009d64ae4d77d2ed2de817c7d921d2c5ca58065f62b2680ededdf6b5576468bd",
+    "parquetRows": 564,
+    "parquetPhysicalColumns": 364,
+    "arrowTopLevelFields": 364,
+    "rowGroups": 1
+  },
+  "publishedVsObservedStructure": {
+    "publishedCycles": 564,
+    "observedRows": 564,
+    "rowsReconcile": true,
+    "publishedFeatures": 334,
+    "observedArrowTopLevelFields": 364,
+    "featureCountDiscrepancy": 30,
+    "discrepancyHandling": "The source page's 334-feature description is retained as publisher metadata, but the exact v2 Parquet contains 364 top-level Arrow fields. MouldMaster preserves the physical schema and does not drop 30 fields to force a match."
+  },
+  "experimentalContext": {
+    "machine": "KraussMaffei 160-750PX",
+    "part": "warpage shell research part",
+    "materials": ["polypropylene (PP)", "ABS containing 70% recyclate"],
+    "experimentalPoints": 47,
+    "partsPerExperimentalPoint": 12,
+    "dataSources": 9,
+    "rowSemantics": "one injection-moulded part / machine cycle per row, linked by MET_MachineCycleID",
+    "variedSetParameters": ["cylinder temperature", "mould temperature", "injection speed", "holding pressure"],
+    "qualityContext": "All produced parts were manually inspected/classified; additional quality sources include scale, computer vision and infrared camera."
+  },
+  "schemaInspection": {
+    "fieldFamilies": {
+      "MET": 7,
+      "SCA": 1,
+      "ENV": 2,
+      "SET": 10,
+      "LBL": 8,
+      "CV": 15,
+      "QUA": 43,
+      "TCE": 22,
+      "TCN": 22,
+      "DXP": 74,
+      "IR": 76,
+      "DRY": 31,
+      "DOS": 21,
+      "SIM": 29,
+      "CALC": 3
+    },
+    "listTimeSeriesFields": 143,
+    "scalarFields": 221,
+    "firstObservedArrayLengths": {
+      "TCE_temperature_control_ejector_side": 57,
+      "TCN_temperature_control_nozzle_side": 57,
+      "DXP_machine_DataXplorer": 11396,
+      "DRY_drying_system": 27,
+      "DOS_dosing_system": 27
+    },
+    "directMeasuredExamples": [
+      "DXP_Inj1PrsAct",
+      "DXP_Inj1VelAct",
+      "DXP_Inj1PosAct",
+      "DXP_MldCavPrs1Act",
+      "DXP_ClpFceAct",
+      "TCE_ActualFlowRate",
+      "TCE_PressureMainLine",
+      "TCN_TemperatureReturnLine",
+      "DRY_HT101_acSensorMoisture",
+      "DOS_acWeight",
+      "SCA_PartWeight",
+      "CV_Warpage"
+    ],
+    "commandsAndSetpoints": "SET_* fields and DXP/DOS/DRY fields carrying Set/sv semantics are commands or set values and are not treated as direct measured waveform values.",
+    "derivedAndNonMeasured": "SIM_* fields are simulation outputs and CALC_* fields are calculated features. QUA area/max aggregates and Mean-suffixed peripheral fields are derived summaries. These are retained for learning/quality linkage but are excluded from measured-sample counting.",
+    "labels": "LBL_* fields are manual visual defect labels, including NOK, sink marks, sprue-circle, underfill and streak levels.",
+    "unitsAndSemanticsReview": "Source naming convention and data dictionary were reviewed by data-source family. Units are explicit for many cycle/scalar parameters in the source dictionary; vendor DataXplorer shorthand is retained without invented unit conversion. Generic vendor parameter/state fields remain bounded by their source semantics."
+  },
+  "measurementBoundary": {
+    "acceptedMeasuredCycles": 564,
+    "acceptedMeasuredTimeSeriesSamples": 0,
+    "reasonSamplesNotYetAdded": "The Parquet clearly contains real physical time-series arrays, but MouldMaster does not add them to the scalar-sample ledger until per-channel time bases, array lengths across every cycle, units and direct-measurement masks are normalized. This avoids counting setpoints, trigger/state arrays, simulation outputs or calculated summaries as physical samples.",
+    "rawSourceRowsCommitted": false,
+    "rawSourceRedistributed": false
+  },
+  "acceptance": {
+    "sourceFilesLawfullyObtained": true,
+    "fingerprinted": true,
+    "schemaInspected": true,
+    "sourceGroupingInspected": true,
+    "unitsAndSemanticsReviewed": true,
+    "commandsMeasurementsDerivedAndLabelsSeparated": true,
+    "materialContextReviewed": true,
+    "machineContextReviewed": true,
+    "processContextReviewed": true,
+    "qualityContextReviewed": true,
+    "limitationsRecorded": true
+  }
+}
