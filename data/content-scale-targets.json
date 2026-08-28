@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "version": "2026.08.29.3",
+  "version": "2026.08.29.4",
   "reviewed": "2026-08-29",
   "scope": "Hard content-scale targets for MouldMaster. Completion counts only evidence that satisfies the acceptance definition for that area. Synthetic learning cases, generated drafts, unverified candidate papers and metadata-only dataset records must not be counted as completed measured evidence.",
   "targets": {
@@ -42,8 +42,8 @@
       "preferred": 250,
       "unit": "concepts",
       "acceptance": "A distinct sensor, derived signal, calibration/drift concept, failure mode, wear signature, machine-health indicator or diagnostic interpretation with measurement location/domain, units or feature semantics where applicable, failure/confounders and evidence provenance.",
-      "currentAccepted": 0,
-      "notes": "OpenMMS, ProBayes, SKZ, iGuzzini, PASCOE, FORinFPRO, the cross-process-chain package and the Zenodo plant-energy source now provide strong measured evidence across mould/nozzle/cavity/hydraulic pressure, temperature, force, inertial sensing, machine actuals, EUROMAP77, torque, screw position, ultrasound RMS, dielectric-analysis context, injection velocity, melt volume and three-phase active/apparent power, current, voltage and frequency. A dedicated normalized accepted sensor/health registry is still required before claiming a consolidated count."
+      "currentAccepted": 26,
+      "notes": "The first accepted registry tranche is data/sensor-machine-health-registry-v1.json with 26 evidence-reviewed concepts: 20 direct measurements, 3 derived features, 2 bounded diagnostic interpretations and 1 measurement-integrity concept. It is grounded in exact OpenMMS, SKZ LoKI, scatimdata, iGuzzini, FORinFPRO and Zenodo plant-energy profiles plus counted primary measured studies. Covered concepts include cavity/nozzle pressure, mould temperature, extraction force, extraction-plate inertial sensing, acquisition-clock separation, injection pressure/flow, screw position/torque, clamp force, back pressure, tie-bar strain, part weight, ultrasound RMS and per-phase active/apparent power, current, voltage and frequency. The remaining draft concepts do not count until they pass the same provenance, units/semantics, confounder and bounded-interpretation QA."
     },
     "assessment_education_items": {
       "minimum": 1000,
@@ -59,7 +59,7 @@
       "unit": "records",
       "acceptance": "A deduplicated peer-reviewed research record with stable bibliographic identity (prefer DOI), title, year, venue/type, topic tags, materials/process/sensor/defect/method tags where supported, concise finding/limitation fields, access status and evidence-quality classification. Concept cards and duplicate publication versions do not count.",
       "currentAccepted": 70,
-      "notes": "The dedicated primary-measured evidence registry now supplies a conservative audited peer-reviewed master subset of 70 unique publisher-verified DOI records across seven evidence packs. The newest independent additions include approximately 280,000 cycles of long-horizon industrial stability monitoring, a physically quantified external-gas burn-mark intervention experiment, two-site external-sensor adaptive production control, shot-level cavity-pressure holding compensation, and a classic Kistler cavity-pressure/mould-temperature physical-quality experiment. The already-counted 2023 venting/tool-maintenance fault study was detected as a duplicate during seventh-pack QA and was not counted again. Dataset profiling does not automatically change this research count."
+      "notes": "The dedicated primary-measured evidence registry now supplies a conservative audited peer-reviewed master subset of 70 unique publisher-verified DOI records across seven evidence packs. The newest independent additions include approximately 280,000 cycles of long-horizon industrial stability monitoring, a physically quantified external-gas burn-mark intervention experiment, two-site external-sensor adaptive production control, shot-level cavity-pressure holding compensation, and an independent quantitative ejection-force/tool-surface experiment across PP, PMMA and PET. The already-counted 2023 venting/tool-maintenance fault study and a previously counted 2009 cavity-pressure/temperature study were both prevented from inflating the seventh-pack count. Dataset profiling does not automatically change this research count."
     },
     "primary_measured_studies": {
       "minimum": 800,
@@ -67,7 +67,7 @@
       "unit": "studies",
       "acceptance": "A deduplicated primary study containing actual injection-moulding experimental or industrial measurements. The record must identify measured signals/outcomes and study context and must be manually or explicitly evidence-reviewed. Reviews, simulation-only studies, theory-only papers and heuristic search candidates do not count.",
       "currentAccepted": 70,
-      "notes": "data/primary-measured-evidence-registry-v1.json now contains 70 unique publisher-verified peer-reviewed primary measured studies. The newest five are distinct experiment identities and do not alter the separate measured-dataset package count or the 71,574,737 accepted measured-scalar ledger. Both a re-analysis paper that explicitly reused a prior dataset and a seventh-pack candidate already present in the original 60-study corpus were prevented from inflating the independent measured-study count."
+      "notes": "data/primary-measured-evidence-registry-v1.json now contains 70 unique publisher-verified peer-reviewed primary measured studies. The newest five are distinct experiment identities and do not alter the separate measured-dataset package count or the 71,574,737 accepted measured-scalar ledger. A re-analysis paper that explicitly reused a prior dataset and two proposed seventh-pack studies already represented in the canonical corpus were prevented from inflating the independent measured-study count."
     }
   },
   "nonCountingRules": [
