@@ -1,0 +1,57 @@
+{
+  "schema": 1,
+  "status": "completed-public-measured-benchmark",
+  "completedDate": "2026-08-28",
+  "source": {
+    "datasetId": "4h98rz9f92",
+    "version": "3",
+    "doi": "10.17632/4h98rz9f92.3",
+    "title": "Dataset on Graphite nanoplatelet enhanced HDPE composites: tensile modulus, hardness and toughness",
+    "license": "CC BY 4.0",
+    "publisher": "Mendeley Data",
+    "peerReviewedCompanion": "10.1016/j.dib.2024.110987",
+    "materialContext": "HDPE with 0-5% graphite nanoplatelet reinforcement",
+    "experimentalMethodEvidence": "Peer-reviewed Data in Brief article documents preparation by injection moulding with varied GNP content, injection temperature and injection pressure; tensile testing followed ASTM D1708 and hardness was measured with a Vickers tester."
+  },
+  "sourceFiles": [
+    {"name":"Code1.txt","sizeBytes":33452,"sha256":"9467691d06cdb90629612037548198ba1f516c8e380e052466099d7be657b268","role":"analysis code/documentation"},
+    {"name":"Raw Data_SEM Image of filler.tif","sizeBytes":894317,"sha256":"8ec915d059babd36e7310b386b406f6993eb8f0d1058f86337e3442ac0b265b7","role":"SEM source image"},
+    {"name":"Raw Data.xlsx","sizeBytes":14922,"sha256":"39210169aac62a1455603d37cdffaca93cf0c46189ea4258c5f3c0a4a37255c9","role":"raw experimental inputs and measured mechanical responses"},
+    {"name":"RFR_Hardness.xlsx","sizeBytes":10291,"sha256":"452b4615f079378045ce3279fd9fa945fbfb7d27b19d0492a0cca6bdc2d9e972","role":"hardness modelling table derived from experimental design"},
+    {"name":"RFR_Tensile modulus.xlsx","sizeBytes":10277,"sha256":"818aa2ad05805c310aa898a7ed30ca1b1cb952bc2ebd4e614fcd739480473aa3","role":"tensile-modulus modelling table derived from experimental design"},
+    {"name":"RFR_Toughness.xlsx","sizeBytes":10287,"sha256":"0c2f201ad5429d49b5edf130170f82ad99cc1054990cba2f63be292cec311a18","role":"toughness modelling table derived from experimental design"},
+    {"name":"Rules DT.xlsx","sizeBytes":13523,"sha256":"5e92067b6d55760a337b6b72fe376287604667c0a5b769f8e42ff719352a3dfd","role":"derived decision-tree rules; not counted as measurements"}
+  ],
+  "experimentalDesign": {
+    "experiments": 35,
+    "inputs": [
+      {"name":"GNP content","unit":"fraction as published table values 0-0.05","observedRange":[0.0,0.05]},
+      {"name":"injection temperature","unit":"degC","observedRange":[170.0,210.0]},
+      {"name":"injection pressure","unit":"MPa","observedRange":[20.0,38.4]}
+    ],
+    "measuredOutputs": [
+      {"name":"tensile modulus","unit":"GPa"},
+      {"name":"toughness","unit":"MPa"},
+      {"name":"Vickers hardness","unit":"HV"}
+    ],
+    "rawWorkbookObservedStructure": {
+      "sheet":"Sheet1",
+      "physicalRowsAfterFirstHeader":37,
+      "physicalColumns":25,
+      "experimentalNumericRows":35,
+      "note":"The raw workbook uses merged/multi-row headings; the peer-reviewed companion supplies the normalized input/output labels and units. Thirty-five numeric experimental rows reconcile with the paper's Tables 1-2."
+    }
+  },
+  "measurementBoundary": {
+    "acceptedMeasuredRecords": 35,
+    "acceptedMeasuredTimeSeriesSamples": 0,
+    "derivedMachineLearningTablesNotCountedAsIndependentExperiments": true,
+    "decisionTreeRulesNotCountedAsMeasurements": true,
+    "semImageNotCountedAsInjectionCycle": true
+  },
+  "acceptedMeasuredRecords": 35,
+  "acceptedMeasuredTimeSeriesSamples": 0,
+  "rawSourceRowsCommitted": false,
+  "rawSourceFilesCommitted": false,
+  "boundary": "One Mendeley version-3 package contributes 35 measured injection-moulding experiments, not one dataset per workbook. Exact publisher files are SHA-256 fingerprinted. Inputs and units are normalized from the peer-reviewed companion article; measured tensile modulus, toughness and Vickers hardness are accepted as record-level outcomes. Random-forest tables, categorized outputs, decision-tree rules and SEM imagery are derivative/supporting artefacts and do not inflate measured-record or time-series counts."
+}
