@@ -37,6 +37,8 @@ EXPECTED_KNOWN_COUNTS = {
     'probayes-doptimal-v1': ('cycles', 303),
     'skz-loki-v1': ('cycles', 68),
     'iguzzini-road-lenses': ('samples', 1451),
+    'impure-pascoe-2022': ('cycles', 307),
+    'forinfpro-himd-v1': ('cycles', 1),
     'kamp-injection-7996': ('rows', 7996),
     'foxconn-competition-16600': ('cycles', 16600),
     'bottle-cap-7162-confidential': ('cycles', 7162),
@@ -138,6 +140,10 @@ need(by_id['skz-loki-v1']['license'] is None, 'SKZ LoKI current blank licence fi
 need(by_id['skz-loki-v1']['rawRedistributionAllowedWithAttribution'] is False, 'SKZ LoKI must not claim raw redistribution rights')
 need((by_id['skz-loki-v1']['count'] or {}).get('cyclesWithPressureTimeSeries') == 60, 'SKZ LoKI pressure-cycle coverage drifted')
 need((by_id['skz-loki-v1']['count'] or {}).get('acceptedPhysicalScalarSamples') == 36_000_000, 'SKZ LoKI direct pressure sample count drifted')
+need(by_id['impure-pascoe-2022']['accessState'] == 'executed-open-ccby', 'PASCOE CC BY state drifted')
+need(by_id['impure-pascoe-2022']['license'] == 'CC BY 4.0', 'PASCOE CC BY licence drifted')
+need(by_id['forinfpro-himd-v1']['accessState'] == 'executed-open-ccby', 'FORinFPRO CC BY state drifted')
+need(by_id['forinfpro-himd-v1']['license'] == 'CC BY 4.0', 'FORinFPRO CC BY licence drifted')
 need(by_id['pet-preform-v2']['accessState'] == 'profiled-rejected-measured', 'PET preform measured-evidence rejection state drifted')
 need(by_id['leon-process-20309380']['accessState'] == 'embargoed', 'León process dataset must remain embargoed')
 need(by_id['leon-defects-20322729']['accessState'] == 'embargoed', 'León defect dataset must remain embargoed')
@@ -154,8 +160,8 @@ need(by_id['bottle-cap-7162-confidential']['accessState'] == 'confidential', 'bo
 
 summary = inv.get('summary', {})
 need(summary.get('datasets') == 20, 'inventory summary dataset count drifted')
-need(summary.get('automatedIngestionAllowed') == automated == 9, f'automated-ingestion count drifted: {automated}')
-need(summary.get('rightsOrAccessReviewRequired') == rights_review == 6, f'licence-review count drifted: {rights_review}')
+need(summary.get('automatedIngestionAllowed') == automated == 11, f'automated-ingestion count drifted: {automated}')
+need(summary.get('rightsOrAccessReviewRequired') == rights_review == 4, f'licence-review count drifted: {rights_review}')
 need(state_counts['embargoed'] == summary.get('embargoed') == 2, 'embargoed count drifted')
 need(state_counts['request-only'] == summary.get('requestOnly') == 1, 'request-only count drifted')
 need(state_counts['confidential'] == summary.get('confidential') == 1, 'confidential count drifted')
@@ -163,7 +169,7 @@ need(state_counts['public-mirror-rights-unresolved'] == summary.get('publicMirro
 need(state_counts['public-research-education-release'] == summary.get('publicResearchEducationTerms') == 1, 'research/education terms count drifted')
 
 report = {
-    'schema': 2,
+    'schema': 3,
     'source': str(INVENTORY.relative_to(ROOT)),
     'datasetCount': len(rows),
     'accessStateCounts': state_counts,
@@ -175,4 +181,4 @@ report = {
     'result': 'pass',
 }
 REPORT.write_text(json.dumps(report, indent=2) + '\n', encoding='utf-8')
-print('MouldMaster measured dataset inventory QA passed (20 sources; 9 reproducibly profileable; 6 rights-review; blank-licence profiling separated from raw redistribution)')
+print('MouldMaster measured dataset inventory QA passed (20 sources; 11 reproducibly profileable; 4 rights-review; blank-licence profiling separated from raw redistribution)')
