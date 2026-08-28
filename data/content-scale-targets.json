@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "version": "2026.08.28.1",
+  "version": "2026.08.28.2",
   "reviewed": "2026-08-28",
   "scope": "Hard content-scale targets for MouldMaster. Completion counts only evidence that satisfies the acceptance definition for that area. Synthetic learning cases, generated drafts, unverified candidate papers and metadata-only dataset records must not be counted as completed measured evidence.",
   "targets": {
@@ -10,8 +10,8 @@
       "unit": "datasets",
       "acceptance": "A real measured dataset whose exact source/version/licence or access terms are recorded; source files have been obtained lawfully; file fingerprint and profile are recorded; schema/units/grouping are inspected; direct measurements, commands, derived fields and labels are distinguished; material/process/machine/mould/quality context and limitations are documented. Metadata-only records do not count.",
       "currentAccepted": 0,
-      "currentDiscovered": 7,
-      "notes": "The repository has open/embargoed measured-dataset evidence records and a local profiler, but no real publisher file is currently claimed as fully profiled in-repo."
+      "currentDiscovered": 14,
+      "notes": "The dedicated measured-dataset catalog currently contains 14 discovery records. None is counted as fully profiled until the actual source files are lawfully obtained, fingerprinted and reviewed."
     },
     "measured_time_series_samples": {
       "minimum": 1000000,
