@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "version": "2026.08.28.3",
+  "version": "2026.08.28.4",
   "reviewed": "2026-08-28",
   "scope": "Hard content-scale targets for MouldMaster. Completion counts only evidence that satisfies the acceptance definition for that area. Synthetic learning cases, generated drafts, unverified candidate papers and metadata-only dataset records must not be counted as completed measured evidence.",
   "targets": {
@@ -9,17 +9,17 @@
       "preferred": 50,
       "unit": "datasets",
       "acceptance": "A real measured dataset whose exact source/version/licence or access terms are recorded; source files have been obtained lawfully; file fingerprint and profile are recorded; schema/units/grouping are inspected; direct measurements, commands, derived fields and labels are distinguished; material/process/machine/mould/quality context and limitations are documented. Metadata-only records do not count.",
-      "currentAccepted": 1,
+      "currentAccepted": 2,
       "currentDiscovered": 20,
-      "notes": "The dedicated measured-dataset inventory contains 20 real data-bearing records. One exact-source CC BY 4.0 public benchmark, Mendeley 10.17632/gtnb4j7bfx.1 v1, has been lawfully retrieved, SHA-256 fingerprinted, process-separated and profiled; the remaining inventory records do not count as fully profiled until their actual files pass the same evidence boundary."
+      "notes": "Two dataset packages now pass the full acceptance boundary: Mendeley 10.17632/gtnb4j7bfx.1 v1 and the CC BY 4.0 scatimdata high-resolution package. scatimdata contains three published experimental datasets, but the package is counted once here to avoid inflating the hard target with constituent archives from one source family."
     },
     "measured_time_series_samples": {
       "minimum": 1000000,
       "preferred": 5000000,
       "unit": "samples",
       "acceptance": "Measured time-series samples from lawfully accessed real experimental or industrial injection-moulding datasets with source provenance, signal identity, units, sample ordering/time basis and dataset linkage. Synthetic training cycles and generated traces never count.",
-      "currentAccepted": 0,
-      "notes": "The existing 19,008 process-data learning cycles are synthetic and deliberately excluded. High-resolution real sources are inventoried, but their raw time-series samples are not promoted into this count until source-file profiling and sample-level provenance are complete."
+      "currentAccepted": 16228352,
+      "notes": "The accepted count comes only from the fully profiled CC BY 4.0 scatimdata package: 1,888,256 cavity-pressure values, 7,170,048 injection-flow values and 7,170,048 injection-pressure values. Source matrices contain 2,048 observed numeric time rows per curve; axes, identifiers and HDF5 state arrays are excluded. The existing 19,008 synthetic learning cycles remain excluded."
     },
     "material_profiles": {
       "minimum": 250,
