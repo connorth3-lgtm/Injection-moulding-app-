@@ -1,12 +1,12 @@
 {
   "schema": 1,
-  "version": "2026.08.28.6",
+  "version": "2026.08.28.7",
   "reviewed": "2026-08-28",
   "acceptanceBoundary": "One accepted registry record represents one lawfully obtained and fully profiled dataset package/source family. Archives or constituent experimental subsets inside the same published package are documented but do not inflate the fully-profiled-dataset target. Measured scalar samples are counted separately from dataset packages and moulding cycles.",
   "summary": {
-    "fullyProfiledDatasetPackages": 8,
+    "fullyProfiledDatasetPackages": 9,
     "acceptedMeasuredTimeSeriesSamples": 52526432,
-    "timeSeriesDatasetPackages": 5,
+    "timeSeriesDatasetPackages": 6,
     "recordLevelDatasetPackages": 3
   },
   "datasets": [
@@ -176,6 +176,28 @@
       "acceptedMeasuredTimeSeriesSamples": 0,
       "signals": ["melt temperature", "mould temperature", "filling/plasticising/cycle times", "closing/clamping force", "screw torque", "back/injection pressure peaks", "screw position", "shot volume"],
       "notes": "Pinned source CSV contains 1,451 complete real-production feature vectors and four measured photometric quality classes. The README class table contains a five-row discrepancy: class 4 is 365 in the exact CSV, not 360, so the file totals 1,451 as stated. The polymer grade is not specified in the repository and remains an explicit limitation. Raw data are not redistributed outside the source's research/education terms."
+    },
+    {
+      "datasetId": "impure-pascoe-2022",
+      "title": "ImPure Injection Molding Sensor Data - Trial 17th May",
+      "source": "https://doi.org/10.5281/zenodo.6913660",
+      "license": "CC BY 4.0",
+      "profile": "data/public-benchmark-results/impure-pascoe-2022-v1.json",
+      "profileType": "cycle-linked-multisensor-time-series-and-quality",
+      "sourceFilesLawfullyObtained": true,
+      "fingerprinted": true,
+      "schemaInspected": true,
+      "unitsAndSemanticsReviewed": true,
+      "commandsMeasurementsDerivedAndLabelsSeparated": true,
+      "cycleAndQualityLinkageReviewed": true,
+      "cyclesProfiled": 307,
+      "cycleFilesVerified": 307,
+      "auxiliaryQualityFilesVerified": 2,
+      "totalCycleRows": 297087,
+      "numericSensorChannelsPerRow": 8,
+      "acceptedMeasuredTimeSeriesSamples": 0,
+      "signals": ["hydraulic pressure", "screw position", "mould temperature x2", "cavity pressure x2", "two analog inputs with unresolved semantics"],
+      "notes": "All 309 exact Zenodo files matched publisher MD5 values. The 307 real cycle CSVs share one 9-column schema and contain 297,087 sampled rows with no missing sensor cells. Six named channels are clearly physical process measurements, while two analog inputs remain semantically unresolved. Source headers do not explicitly state physical units or normalize the Time-field basis, so the candidate 1,782,522 direct named values remain outside the accepted scalar-sample ledger. Separate two-cavity label and dimensional/weight files are fingerprinted as measured quality evidence."
     }
   ]
 }
