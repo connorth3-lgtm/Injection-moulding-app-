@@ -1,0 +1,81 @@
+{
+  "schema": 1,
+  "version": "2026.08.28.1",
+  "reviewed": "2026-08-28",
+  "scope": "Hard content-scale targets for MouldMaster. Completion counts only evidence that satisfies the acceptance definition for that area. Synthetic learning cases, generated drafts, unverified candidate papers and metadata-only dataset records must not be counted as completed measured evidence.",
+  "targets": {
+    "fully_profiled_measured_datasets": {
+      "minimum": 30,
+      "preferred": 50,
+      "unit": "datasets",
+      "acceptance": "A real measured dataset whose exact source/version/licence or access terms are recorded; source files have been obtained lawfully; file fingerprint and profile are recorded; schema/units/grouping are inspected; direct measurements, commands, derived fields and labels are distinguished; material/process/machine/mould/quality context and limitations are documented. Metadata-only records do not count.",
+      "currentAccepted": 0,
+      "currentDiscovered": 7,
+      "notes": "The repository has open/embargoed measured-dataset evidence records and a local profiler, but no real publisher file is currently claimed as fully profiled in-repo."
+    },
+    "measured_time_series_samples": {
+      "minimum": 1000000,
+      "preferred": 5000000,
+      "unit": "samples",
+      "acceptance": "Measured time-series samples from lawfully accessed real experimental or industrial injection-moulding datasets with source provenance, signal identity, units, sample ordering/time basis and dataset linkage. Synthetic training cycles and generated traces never count.",
+      "currentAccepted": 0,
+      "notes": "The existing 19,008 process-data learning cycles are synthetic and are deliberately excluded."
+    },
+    "material_profiles": {
+      "minimum": 250,
+      "preferred": 300,
+      "unit": "profiles",
+      "acceptance": "A distinct polymer family/grade or explicitly bounded material class with identity, family, reinforcement/filler where relevant, rheology/MFR or equivalent evidence where available, drying/moisture handling, thermal transitions or thermal behaviour, shrinkage/dimensional behaviour, degradation/compatibility cautions, processing-window provenance and source references. Generic placeholders do not count as complete grade profiles.",
+      "currentAccepted": 20,
+      "notes": "Twenty explicit base material profiles exist in reference-data.js. Additional mixed reference entries are not automatically counted as complete material profiles."
+    },
+    "defect_mechanisms": {
+      "minimum": 300,
+      "preferred": 400,
+      "unit": "mechanisms",
+      "acceptance": "A distinct defect-mechanism record linking observable evidence to a physical mechanism, likely causes, discriminating evidence/tests, bounded corrective-response concepts, and material/tool/machine interactions with evidence provenance. A visible defect name alone is not a mechanism record.",
+      "currentAccepted": 20,
+      "notes": "Twenty explicit base defect entries exist; deeper research concepts must be normalized into mechanism records before counting."
+    },
+    "sensor_machine_health_concepts": {
+      "minimum": 200,
+      "preferred": 250,
+      "unit": "concepts",
+      "acceptance": "A distinct sensor, derived signal, calibration/drift concept, failure mode, wear signature, machine-health indicator or diagnostic interpretation with measurement location/domain, units or feature semantics where applicable, failure/confounders and evidence provenance.",
+      "currentAccepted": 0,
+      "notes": "Many sensor/signal/maintenance concepts exist across current libraries, but there is not yet a dedicated audited registry, so no consolidated count is claimed."
+    },
+    "assessment_education_items": {
+      "minimum": 1000,
+      "preferred": 1500,
+      "unit": "items",
+      "acceptance": "A stable-ID learner item with level/competency, prompt/task, expected answer or scoring logic, explanation, evidence mapping, safety classification where relevant, duplicate/cue QA and revision metadata. Ungraded generated drafts do not count until they pass approval QA.",
+      "currentAccepted": 157,
+      "notes": "The current README reports 157 keyed learner questions covered by the evidence-approval gate."
+    },
+    "peer_reviewed_research_records": {
+      "minimum": 1500,
+      "preferred": 2000,
+      "unit": "records",
+      "acceptance": "A deduplicated peer-reviewed research record with stable bibliographic identity (prefer DOI), title, year, venue/type, topic tags, materials/process/sensor/defect/method tags where supported, concise finding/limitation fields, access status and evidence-quality classification. Concept cards and duplicate publication versions do not count.",
+      "currentAccepted": 0,
+      "notes": "Existing research extensions contain many structured learning entries and source URLs, but there is not yet a 1:1 deduplicated master paper registry; therefore no master-record completion count is claimed."
+    },
+    "primary_measured_studies": {
+      "minimum": 800,
+      "preferred": 1000,
+      "unit": "studies",
+      "acceptance": "A deduplicated primary study containing actual injection-moulding experimental or industrial measurements. The record must identify measured signals/outcomes and study context and must be manually or explicitly evidence-reviewed. Reviews, simulation-only studies, theory-only papers and heuristic search candidates do not count.",
+      "currentAccepted": 40,
+      "notes": "qa_measured_evidence_50_pass.py enforces at least 40 primary measured studies among the current 50 distinct measured-evidence records."
+    }
+  },
+  "nonCountingRules": [
+    "Synthetic process-data cases never count toward measured datasets or measured samples.",
+    "A dataset DOI or metadata page does not count as a fully profiled measured dataset until the actual source files are lawfully obtained and profiled.",
+    "A search-engine or OpenAlex candidate is not a verified peer-reviewed or primary measured record until bibliographic identity and study type are checked.",
+    "A material family name without the required profile fields is not a completed material profile.",
+    "A visible defect label without a physical mechanism/evidence/test chain is not a completed defect mechanism.",
+    "Generated assessment drafts do not enter the accepted count until existing evidence-approval and quality gates pass."
+  ]
+}
