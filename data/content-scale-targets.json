@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "version": "2026.08.29.1",
+  "version": "2026.08.29.2",
   "reviewed": "2026-08-29",
   "scope": "Hard content-scale targets for MouldMaster. Completion counts only evidence that satisfies the acceptance definition for that area. Synthetic learning cases, generated drafts, unverified candidate papers and metadata-only dataset records must not be counted as completed measured evidence.",
   "targets": {
@@ -9,17 +9,17 @@
       "preferred": 50,
       "unit": "datasets",
       "acceptance": "A real measured dataset whose exact source/version/licence or access terms are recorded; source files have been obtained lawfully; file fingerprint and profile are recorded; schema/units/grouping are inspected; direct measurements, commands, derived fields and labels are distinguished; material/process/machine/mould/quality context and limitations are documented. Metadata-only records do not count.",
-      "currentAccepted": 2,
+      "currentAccepted": 3,
       "currentDiscovered": 20,
-      "notes": "The 20-source inventory now has two exact-source completed public benchmarks. Mendeley 10.17632/gtnb4j7bfx.1 v1 remains the profiled record-level benchmark. The pinned scatimdata/AVAPS CC BY 4.0 release has also been lawfully retrieved, all three archives SHA-256 fingerprinted, 3,328 quality-linked cycles reconciled against delivered files, and its pressure/flow time-series structure inspected. Other inventory records remain non-counting until their actual files pass the same evidence boundary."
+      "notes": "The 20-source inventory now has three exact-source completed measured benchmarks. Mendeley 10.17632/gtnb4j7bfx.1 v1 is the profiled record-level benchmark; scatimdata/AVAPS is a CC BY 4.0 high-resolution pressure/flow benchmark with 3,328 quality-linked cycles; and OpenMMS-T4G is a BSD-3-Clause article-linked mould-monitoring case-study file with exact source-code signal/unit semantics and two verified time bases. Other inventory records remain non-counting until their actual files pass the same evidence boundary."
     },
     "measured_time_series_samples": {
       "minimum": 1000000,
       "preferred": 5000000,
       "unit": "samples",
       "acceptance": "Measured time-series samples from lawfully accessed real experimental or industrial injection-moulding datasets with source provenance, signal identity, units, sample ordering/time basis and dataset linkage. Synthetic training cycles and generated traces never count.",
-      "currentAccepted": 13631488,
-      "notes": "The accepted count comes only from the completed scatimdata/AVAPS benchmark: 3,328 quality-linked injection-moulding cycles x two delivered measured signals (injection pressure and injection flow) x 2,048 stored values per signal = 13,631,488 real time-series values. The companion paper reports 2,049 points per signal, but the released files consistently expose 2,048 stored values, so MouldMaster uses the delivered-file count and fabricates no missing point. The existing 19,008 process-data learning cycles remain synthetic and excluded."
+      "currentAccepted": 13929568,
+      "notes": "Accepted real time-series evidence now totals 13,929,568 values. AVAPS contributes 13,631,488 values from 3,328 quality-linked cycles x two delivered signals x 2,048 stored values per signal. OpenMMS-T4G contributes 298,080 values from 29,808 ordered rows x 10 source-defined sensor channels. The AVAPS companion paper reports 2,049 points per signal, but released files consistently contain 2,048 stored values, so the delivered-file count is used. The existing 19,008 process-data learning cycles remain synthetic and excluded."
     },
     "material_profiles": {
       "minimum": 250,
@@ -43,7 +43,7 @@
       "unit": "concepts",
       "acceptance": "A distinct sensor, derived signal, calibration/drift concept, failure mode, wear signature, machine-health indicator or diagnostic interpretation with measurement location/domain, units or feature semantics where applicable, failure/confounders and evidence provenance.",
       "currentAccepted": 0,
-      "notes": "Many sensor, signal and maintenance concepts exist across current libraries and 220 structured drafts can be generated, but there is not yet a dedicated audited accepted registry, so no consolidated accepted count is claimed."
+      "notes": "Many sensor, signal and maintenance concepts exist across current libraries and 220 structured drafts can be generated, but there is not yet a dedicated audited accepted registry, so no consolidated accepted count is claimed. The completed OpenMMS dataset contributes measured evidence but does not by itself promote sensor or machine-health concepts into this separate accepted registry."
     },
     "assessment_education_items": {
       "minimum": 1000,
