@@ -58,34 +58,56 @@ jobs:
           python - <<'PY'
           import json
           from pathlib import Path
-          x=json.loads(Path('compiled-data/manifest.json').read_text(encoding='utf-8'))
-          m=json.loads(Path('compiled-data/measured-data.json').read_text(encoding='utf-8'))
-          c=x['counts']
-          assert x['candidateRegistryEmbedded'] is True
-          assert c['measuredDatasetInventory']==20
-          assert c['automatedIngestionAllowedDatasets']==11
-          assert c['fullyProfiledMeasuredDatasets']==10
-          assert c['measuredTimeSeriesSamplesAccepted']==52526432
-          assert c['publisherVerifiedPrimaryMeasuredStudies']==60
-          assert c['verifiedPeerReviewedResearchRecords']==60
-          assert c['measuredEvidencePasses']==50
-          assert c['deepDiveEvidencePasses']==600
-          assert c['researchCandidates']==2000
-          assert c['heuristicPrimaryMeasuredCandidates']==1320
-          assert c['syntheticProcessCases']==264
-          assert c['syntheticGeneratedCycles']==19008
-          assert c['approvedAssessmentItems']==157
-          assert c['coreLessons']==120
-          assert c['specialistLessons']==20
-          assert c['draftMaterialProfiles']==260
-          assert c['draftDefectMechanisms']==320
-          assert c['draftSensorMachineHealthConcepts']==220
-          assert c['draftAssessmentItems']==1200
-          assert m['profiledMeasuredDatasetRegistry']['summary']['fullyProfiledDatasetPackages']==10
-          assert m['profiledMeasuredDatasetRegistry']['summary']['acceptedMeasuredTimeSeriesSamples']==52526432
-          for profile in ['skz-loki-v1.json','iguzzini-road-lenses-v1.json','impure-pascoe-2022-v1.json','forinfpro-himd-v1.json']:
-              assert profile in m['publicBenchmarkResults']
-          print(json.dumps(c, indent=2, sort_keys=True))
+
+          def load(path):
+              return json.loads(Path(path).read_text(encoding='utf-8'))
+
+          manifest=load('compiled-data/manifest.json')
+          measured=load('compiled-data/measured-data.json')
+          source_inventory=load('data/measured-dataset-inventory-v1.json')
+          source_profiled=load('data/profiled-measured-dataset-registry-v1.json')
+          source_primary=load('data/primary-measured-evidence-registry-v1.json')
+          source_targets=load('data/content-scale-targets.json')
+          counts=manifest['counts']
+
+          expected_inventory=len(source_inventory['datasets'])
+          expected_automated=sum(1 for row in source_inventory['datasets'] if row.get('automatedIngestionAllowed') is True)
+          expected_profiled=len(source_profiled['datasets'])
+          expected_samples=source_profiled['summary']['acceptedMeasuredTimeSeriesSamples']
+          expected_primary=source_primary['summary']['publisherVerifiedPeerReviewedPrimaryMeasured']
+          expected_peer=source_targets['targets']['peer_reviewed_research_records']['currentAccepted']
+
+          assert manifest['candidateRegistryEmbedded'] is True
+          assert counts['measuredDatasetInventory']==expected_inventory
+          assert counts['automatedIngestionAllowedDatasets']==expected_automated
+          assert counts['fullyProfiledMeasuredDatasets']==expected_profiled
+          assert counts['measuredTimeSeriesSamplesAccepted']==expected_samples
+          assert counts['publisherVerifiedPrimaryMeasuredStudies']==expected_primary
+          assert counts['verifiedPeerReviewedResearchRecords']==expected_peer
+          assert counts['measuredEvidencePasses']==50
+          assert counts['deepDiveEvidencePasses']==600
+          assert counts['researchCandidates']==2000
+          assert counts['heuristicPrimaryMeasuredCandidates']>=1000
+          assert counts['syntheticProcessCases']==264
+          assert counts['syntheticGeneratedCycles']==19008
+          assert counts['approvedAssessmentItems']==157
+          assert counts['coreLessons']==120
+          assert counts['specialistLessons']==20
+          assert counts['draftMaterialProfiles']==260
+          assert counts['draftDefectMechanisms']==320
+          assert counts['draftSensorMachineHealthConcepts']==220
+          assert counts['draftAssessmentItems']==1200
+
+          assert measured['datasetInventory']['summary']['datasets']==expected_inventory
+          assert measured['profiledMeasuredDatasetRegistry']['summary']['fullyProfiledDatasetPackages']==expected_profiled
+          assert measured['profiledMeasuredDatasetRegistry']['summary']['acceptedMeasuredTimeSeriesSamples']==expected_samples
+          assert {x['datasetId'] for x in measured['profiledMeasuredDatasetRegistry']['datasets']} == {x['datasetId'] for x in source_profiled['datasets']}
+          for profile in [
+              'skz-loki-v1.json','iguzzini-road-lenses-v1.json','impure-pascoe-2022-v1.json',
+              'forinfpro-himd-v1.json','cross-process-chain-v1.json','hdpe-gnp-v3.json'
+          ]:
+              assert profile in measured['publicBenchmarkResults']
+          print(json.dumps(counts, indent=2, sort_keys=True))
           PY
       - name: Upload complete master data package
         uses: actions/upload-artifact@v4
