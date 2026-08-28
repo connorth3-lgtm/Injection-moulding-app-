@@ -1,0 +1,44 @@
+name: MouldMaster deep-dive anchor verification
+
+on:
+  workflow_dispatch:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'tools/verify_deep_dive_primary.py'
+      - 'data/deep-dive-v2-*.json'
+      - '.github/workflows/deep-dive-anchor-verification.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Verify Deep Dive DOI anchors
+        run: python tools/verify_deep_dive_primary.py --output deep-dive-anchor-verification-v1.json
+      - name: Enforce conservative promotion boundary
+        run: |
+          python - <<'PY'
+          import json
+          p=json.load(open('deep-dive-anchor-verification-v1.json',encoding='utf-8'))
+          assert p['sourceAnchorCount'] >= 300
+          assert p['bibliographicVerifiedCount'] >= p['peerReviewedConfirmedCount'] >= p['primaryMeasuredReviewedCount']
+          for r in p['records']:
+              if r['verification']['primaryMeasuredReviewed']:
+                  c=r['classification']
+                  assert r['verification']['peerReviewedConfirmed']
+                  assert c['exactInjectionMouldingText'] and c['experimentalMarkerHits'] and c['measuredSignalHits'] and c['measuredOutcomeHits']
+          print('verified counts',p['bibliographicVerifiedCount'],p['peerReviewedConfirmedCount'],p['primaryMeasuredReviewedCount'])
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: mouldmaster-deep-dive-anchor-verification
+          path: deep-dive-anchor-verification-v1.json
+          retention-days: 90
