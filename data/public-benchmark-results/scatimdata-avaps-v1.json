@@ -1,0 +1,85 @@
+{
+  "schema_version": 1,
+  "status": "completed-public-measured-benchmark",
+  "completed_date": "2026-08-29",
+  "source": {
+    "datasetId": "scatimdata-avaps",
+    "title": "High-resolution injection-moulding time-series datasets (scatimdata)",
+    "repository": "https://github.com/sc4t1m/scatimdata",
+    "repositoryCommit": "7bd35941d75c97a3f276439377dc430ab47402be",
+    "license": "CC BY 4.0",
+    "peerReviewedCompanion": "10.3390/polym15040978"
+  },
+  "retrieval": {
+    "workflowRunId": 33217967500,
+    "aggregateArtifactId": 9704102122,
+    "aggregateArtifactDigest": "sha256:7beabf5ccf8fa55563fbef667ccf1872e584f52b7244e41a6b2bfe0e7a106479",
+    "mode": "credential-free pinned GitHub archive retrieval",
+    "rawPublisherFilesCommitted": false,
+    "rawPublisherFilesUploadedAsArtifact": false,
+    "rawRowsOrCellValuesEmitted": false
+  },
+  "archives": [
+    {
+      "name": "dataset1.zip",
+      "part": "Housing Part",
+      "gitBlobSha1": "3c6796453f724fd99e4c692edd1c9a6ad4a84c4f",
+      "sizeBytes": 5431885,
+      "sha256": "f8c7f6363ecbd541735b374746ce8549aaa50dae754aaaa2efa980c227b19c09",
+      "linkedCycles": 1167,
+      "pressureSeriesAvailable": 1174,
+      "flowSeriesAvailable": 1174,
+      "pressureSamplesPerLinkedCycle": 2048,
+      "flowSamplesPerLinkedCycle": 2048,
+      "acceptedMeasuredTimeSeriesSamples": 4780032,
+      "storage": "scalar/quality CSV plus transposed pressure and flow CSVs"
+    },
+    {
+      "name": "dataset2.zip",
+      "part": "Stacking Box I",
+      "gitBlobSha1": "f271b73093612d21d153dbbe3f7f7b2457206941",
+      "sizeBytes": 8708313,
+      "sha256": "69294087889a52791c296734051d6b21b30847c2859613e4178074182150c491",
+      "linkedCycles": 829,
+      "pressureSeriesAvailable": 921,
+      "flowSeriesAvailable": 921,
+      "pressureSamplesPerLinkedCycle": 2048,
+      "flowSamplesPerLinkedCycle": 2048,
+      "acceptedMeasuredTimeSeriesSamples": 3395584,
+      "storage": "HDF5 dynamic matrices linked to scalar cycle_counter",
+      "cycleLinkField": "cycle_counter"
+    },
+    {
+      "name": "dataset3.zip",
+      "part": "Stacking Box II",
+      "gitBlobSha1": "697cb54676b0af9b25768eb7ec2c0768a1beeb20",
+      "sizeBytes": 7754358,
+      "sha256": "b6baa4f5f5dbdf0c1bbe23a7b854358967d9004b75de4a16502730a77aed316e",
+      "linkedCycles": 1332,
+      "pressureSeriesAvailable": 1405,
+      "flowSeriesAvailable": 1405,
+      "pressureSamplesPerLinkedCycle": 2048,
+      "flowSamplesPerLinkedCycle": 2048,
+      "acceptedMeasuredTimeSeriesSamples": 5455872,
+      "storage": "scalar/quality CSV plus transposed pressure and flow CSVs"
+    }
+  ],
+  "measurement_profile": {
+    "linkedCycles": 3328,
+    "signals": ["injection pressure curve", "injection flow curve"],
+    "deliveredPointsPerSignalPerLinkedCycle": 2048,
+    "acceptedMeasuredTimeSeriesSamples": 13631488,
+    "paperReportedPointsPerSignalPerCycle": 2049,
+    "paperReportedSampleIntervalMilliseconds": 6,
+    "paperDeliveredPointDifference": "The peer-reviewed article reports 2,049 points per signal, while all three delivered data releases expose 2,048 stored signal values per linked cycle. Accepted sample counts use the delivered files. No inferred or missing point is fabricated.",
+    "qualityOutcomes": ["part weight", "geometric dimension"],
+    "cycleCountReconciledAgainstDeliveredFiles": true,
+    "timeSeriesStructureObservedInDeliveredFiles": true
+  },
+  "evidence_gaps": [
+    "The extra dynamic traces not linked to the scalar/quality tables are retained outside the accepted labelled-cycle count.",
+    "The benchmark does not establish universal process settings, causal defect mechanisms or a production process window.",
+    "The paper-reported 2,049-point description is not silently substituted for the 2,048 values actually delivered in each stored trace."
+  ],
+  "boundary": "This result establishes one fully profiled real measured dataset family and 13,631,488 real time-series signal values for MouldMaster. It does not authorize universal recipes or production changes."
+}
