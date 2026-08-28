@@ -18,6 +18,7 @@ def sha(data): return hashlib.sha256(data).hexdigest()
 
 def safe_zip(data, out):
     paths=[]
+    out.mkdir(parents=True,exist_ok=True)
     with zipfile.ZipFile(io.BytesIO(data)) as z:
         for m in z.infolist():
             p=PurePosixPath(m.filename)
@@ -80,7 +81,7 @@ def run(output,retrieved_date):
             except Exception as e: errors.append(f'{url}: {type(e).__name__}: {e}')
         if data is None: raise RuntimeError('supplement retrieval failed: '+' | '.join(errors))
         source_sha=sha(data)
-        files=safe_zip(data,work) if data.startswith(b'PK\x03\x04') else []
+        files=safe_zip(data,work/'supplement') if data.startswith(b'PK\x03\x04') else []
         if not files:
             leaf=work/'supplement.bin'; leaf.write_bytes(data); files=[leaf]
         tables=[]
@@ -100,10 +101,14 @@ def run(output,retrieved_date):
         reconciled_columns=schema['namedColumnsExcludingIndexLike']
         accepted=dims['rows']==955 and reconciled_columns==42 and headers['processAndMechanicalFieldsObserved'] and groups is not None and groups['uniqueGroups']==5
         result={
-          'schema_version':1,'status':'completed-public-measured-benchmark' if accepted else 'retrieved-profile-needs-semantic-review','retrieved_date':retrieved_date,
+          'schema_version':1,
+          'status':'completed-public-measured-benchmark' if accepted else 'retrieved-profile-needs-semantic-review',
+          'retrieved_date':retrieved_date,
           'source':{'datasetId':c['datasetId'],'articleDoi':c['source']['articleDoi'],'license':c['source']['license'],'requestedUrl':LANDING,'resolvedUrl':final,'contentType':ctype,'sizeBytes':len(data),'sha256':source_sha},
           'profile':{**dims,'selectedFile':p.name,'headerSemantics':headers,'schemaDiagnostics':schema,'reconciledPaperDataColumns':reconciled_columns,'materialGrouping':groups,'paperReported':c['paperReported'],'rawRowsOrCellValuesEmitted':False},
-          'retrieval':{'rawSupplementCommitted':False,'rawRowsUploadedAsArtifact':False},'evidenceBoundary':c['evidenceBoundary']
+          'retrieval':{'rawSupplementCommitted':False,'rawRowsUploadedAsArtifact':False},
+          'evidenceBoundary':c['evidenceBoundary']
+        }
         output.parent.mkdir(parents=True,exist_ok=True); output.write_text(json.dumps(result,indent=2)+'\n')
         return result
     finally: shutil.rmtree(work,ignore_errors=True)
