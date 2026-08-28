@@ -40,7 +40,7 @@ def suffix(data):
     return '.txt' if first else ''
 
 def safe_extract(data,out):
-    paths=[]
+    paths=[]; out.mkdir(parents=True,exist_ok=True)
     with zipfile.ZipFile(io.BytesIO(data)) as z:
         for m in z.infolist():
             p=PurePosixPath(m.filename)
@@ -67,10 +67,12 @@ def header_semantics(headers):
     measured=['weight','mass','dimension','diameter','length','thickness','temperature','pressure','time','speed','velocity']
     simulation=['warpage','shrinkage','residual stress','orientation','simulation','moldflow','predicted']
     process=['melt','mold','mould','holding','cooling','packing','injection','temperature','pressure','time','speed']
+    quality=['weight','mass','dimension','diameter','length','thickness','defect','quality','response']
     return {
       'measuredOrProcessHeaderMarkers':sorted({t for t in measured if t in joined}),
       'simulationHeaderMarkers':sorted({t for t in simulation if t in joined}),
       'processHeaderMarkers':sorted({t for t in process if t in joined}),
+      'qualityHeaderMarkers':sorted({t for t in quality if t in joined}),
       'headerNames':[str(h) for h in headers],
       'rawValuesEmitted':False}
 
@@ -83,7 +85,7 @@ def run(output,retrieved_date):
             src={'fileId':item['fileId'],'downloadUrl':item['url'],'resolvedUrl':final,'sizeBytes':len(data),'sha256':digest,'detectedType':ext}
             sources.append(src)
             paths=[]
-            if ext=='.zip': paths=safe_extract(data,work/f'unzip-{i}'); (work/f'unzip-{i}').mkdir(exist_ok=True) if False else None
+            if ext=='.zip': paths=safe_extract(data,work/f'unzip-{i}')
             elif ext in {'.csv','.tsv','.txt','.xlsx'}:
                 p=work/f'file-{i}{ext}'; p.write_bytes(data); paths=[p]
             for p in paths:
