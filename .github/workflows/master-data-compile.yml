@@ -1,0 +1,87 @@
+name: MouldMaster Master Data Compilation
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'tools/compile_master_data.py'
+      - 'tools/harvest_openalex_injection_moulding.py'
+      - 'qa_master_data_compile.py'
+      - 'qa_content_scale_targets.py'
+      - 'data/content-scale-targets.json'
+      - 'data/measured-dataset-inventory-v1.json'
+      - 'data/primary-measured-evidence-registry-v1.json'
+      - 'data/primary-measured-evidence/**'
+      - 'data/deep-dive-v2-*.json'
+      - '.github/workflows/master-data-compile.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: mouldmaster-master-data-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  compile:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22.12.0'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Validate reconciled content counts
+        run: python qa_content_scale_targets.py
+      - name: Compile repository data and validate core boundaries
+        run: python qa_master_data_compile.py
+      - name: Harvest 2,000 deduplicated research candidates
+        run: |
+          mkdir -p compiled-input
+          python tools/harvest_openalex_injection_moulding.py \
+            --output compiled-input/research-master-candidates.json \
+            --target 2000 \
+            --per-query-pages 5
+      - name: Compile complete master data package
+        run: |
+          python tools/compile_master_data.py \
+            --output-dir compiled-data \
+            --research-candidates compiled-input/research-master-candidates.json
+      - name: Validate complete compilation
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          x=json.loads(Path('compiled-data/manifest.json').read_text(encoding='utf-8'))
+          c=x['counts']
+          assert x['candidateRegistryEmbedded'] is True
+          assert c['measuredDatasetInventory']==20
+          assert c['fullyProfiledMeasuredDatasets']==1
+          assert c['measuredTimeSeriesSamplesAccepted']==0
+          assert c['publisherVerifiedPrimaryMeasuredStudies']==60
+          assert c['verifiedPeerReviewedResearchRecords']==60
+          assert c['measuredEvidencePasses']==50
+          assert c['deepDiveEvidencePasses']==600
+          assert c['researchCandidates']==2000
+          assert c['syntheticProcessCases']==264
+          assert c['syntheticGeneratedCycles']==19008
+          assert c['approvedAssessmentItems']==157
+          assert c['coreLessons']==120
+          assert c['specialistLessons']==20
+          assert c['draftMaterialProfiles']==260
+          assert c['draftDefectMechanisms']==320
+          assert c['draftSensorMachineHealthConcepts']==220
+          assert c['draftAssessmentItems']==1200
+          print(json.dumps(c, indent=2, sort_keys=True))
+          PY
+      - name: Upload complete master data package
+        uses: actions/upload-artifact@v4
+        with:
+          name: mouldmaster-master-data
+          path: compiled-data/
+          if-no-files-found: error
+          retention-days: 90
