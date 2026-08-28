@@ -3,6 +3,7 @@ import json
 
 ROOT = Path(__file__).resolve().parent
 TARGETS = ROOT / "data" / "content-scale-targets.json"
+DATASET_CATALOG = ROOT / "data" / "measured-dataset-catalog.json"
 
 
 def need(ok, msg):
@@ -35,6 +36,21 @@ for key, (minimum, preferred) in expected.items():
     need(isinstance(rec.get("currentAccepted"), int) and rec["currentAccepted"] >= 0, f"{key} currentAccepted must be a non-negative integer")
     need(rec["currentAccepted"] <= preferred, f"{key} accepted count cannot exceed preferred target without revising the programme")
 
+# Dedicated measured-dataset discovery catalog. Discovery is not profiling.
+need(DATASET_CATALOG.exists(), "measured dataset catalog missing")
+catalog = json.loads(DATASET_CATALOG.read_text(encoding="utf-8"))
+need(catalog.get("schema") == 1, "measured dataset catalog schema drifted")
+datasets = catalog.get("datasets") or []
+need(len(datasets) >= 14, f"measured dataset discovery catalog unexpectedly small: {len(datasets)}")
+ids = [d.get("id") for d in datasets]
+need(len(ids) == len(set(ids)) and all(ids), "measured dataset catalog IDs must be unique and non-empty")
+for d in datasets:
+    need(isinstance(d.get("signals"), list) and d["signals"], f"{d.get('id')} needs signal/outcome discovery metadata")
+    need(isinstance(d.get("profileRequirement"), str) and len(d["profileRequirement"]) >= 35, f"{d.get('id')} needs an explicit profiling requirement")
+    need(d.get("profiled") is False, f"{d.get('id')} must not be marked profiled without a source-file profile record")
+need(targets["fully_profiled_measured_datasets"].get("currentDiscovered") == len(datasets), "target ledger discovery count must equal measured-dataset catalog length")
+need(targets["fully_profiled_measured_datasets"]["currentAccepted"] == sum(1 for d in datasets if d.get("profiled") is True), "accepted profiled-dataset count must equal catalog profile state")
+
 # Hard truthfulness boundaries. These are intentionally conservative and should
 # only be raised when a dedicated registry/QA proves the higher count.
 need(targets["fully_profiled_measured_datasets"]["currentAccepted"] == 0, "do not claim a fully profiled real dataset until actual publisher files were profiled")
@@ -59,6 +75,11 @@ report = {
     "schema": 1,
     "version": obj.get("version"),
     "reviewed": obj.get("reviewed"),
+    "measuredDatasetDiscovery": {
+        "catalogCount": len(datasets),
+        "profiledAccepted": sum(1 for d in datasets if d.get("profiled") is True),
+        "embargoedRecords": sum(1 for d in datasets if "embargoed" in (d.get("access") or "")),
+    },
     "areas": {
         key: {
             "accepted": targets[key]["currentAccepted"],
@@ -72,4 +93,4 @@ report = {
     "boundary": "No synthetic, metadata-only, generated-draft or heuristic-candidate evidence is counted as completed measured/reviewed content unless its area-specific acceptance definition is satisfied."
 }
 (ROOT / "content-scale-targets-report.json").write_text(json.dumps(report, indent=2) + "\n", encoding="utf-8")
-print("MouldMaster content-scale target integrity QA passed")
+print(f"MouldMaster content-scale target integrity QA passed ({len(datasets)} measured datasets discovered; 0 falsely profiled)")
