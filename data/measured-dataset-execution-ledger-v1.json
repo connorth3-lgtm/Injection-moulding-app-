@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "version": "2026.08.29.1",
+  "version": "2026.08.29.2",
   "reviewed": "2026-08-29",
   "purpose": "One-by-one execution state for the 20 real measured-data sources. This ledger does not change accepted counts by itself; only completed source-file profiling may do that.",
   "policy": {
@@ -13,7 +13,7 @@
   },
   "sources": [
     {"priority":1,"datasetId":"mendeley-gtnb4j7bfx-v1","state":"accepted-profiled","action":"keep regression-pinned","reason":"CC BY 4.0 exact workbook already retrieved, SHA-256 fingerprinted and process-separated"},
-    {"priority":2,"datasetId":"scatimdata-avaps","state":"executing-profile","action":"pinned 3-archive CI retrieval and structure reconciliation","reason":"CC BY 4.0 high-resolution source; first run fingerprinted all archives and exposed transposed CSV plus HDF5 storage"},
+    {"priority":2,"datasetId":"scatimdata-avaps","state":"accepted-profiled","action":"keep 3-archive source and delivered-file sample count regression-pinned","reason":"CC BY 4.0 source completed: three SHA-256-fingerprinted archives, 3,328 quality-linked cycles and 13,631,488 delivered pressure/flow values reconciled; paper says 2,049 points but released traces contain 2,048"},
     {"priority":3,"datasetId":"su13148102-supplement","state":"queued-executable","action":"retrieve publisher supplementary ZIP and profile 955 x 42 table","reason":"CC BY 4.0 publisher supplementary data"},
     {"priority":4,"datasetId":"probayes-main-v2","state":"blocked-rights-review","action":"capture explicit B2SHARE reuse licence before ingest","reason":"downloadable files are not sufficient evidence of reuse rights"},
     {"priority":5,"datasetId":"probayes-doptimal-v1","state":"blocked-rights-review","action":"capture explicit B2SHARE reuse licence before ingest","reason":"downloadable files are not sufficient evidence of reuse rights"},
@@ -21,7 +21,7 @@
     {"priority":7,"datasetId":"rwth-pcr-2025","state":"blocked-rights-review","action":"record versioned repository reuse terms before downloading archive","reason":"public download exists but exact reuse terms remain unresolved"},
     {"priority":8,"datasetId":"impure-pascoe-2022","state":"blocked-rights-review","action":"verify Zenodo licence then enumerate per-cycle CSV archive","reason":"605.2 MB source is high-value but rights must be explicit before automated ingestion"},
     {"priority":9,"datasetId":"iguzzini-road-lenses","state":"restricted-research-education","action":"profile only under stated research/education terms; do not widen redistribution rights","reason":"source is publicly released for research and educational purposes but lacks a standard reusable data licence"},
-    {"priority":10,"datasetId":"openmms-t4g","state":"queued-executable","action":"profile pinned Case_Study_Raw_Data.csv and reconcile sensor sampling/case segmentation","reason":"BSD-3-Clause repository with article-linked raw case-study data"},
+    {"priority":10,"datasetId":"openmms-t4g","state":"executing-profile","action":"profile exact article-pinned Case_Study_Raw_Data.csv and reconcile sensor/time semantics","reason":"BSD-3-Clause repository; peer-reviewed article points to the exact raw case-study file at the pinned commit"},
     {"priority":11,"datasetId":"forinfpro-himd-v1","state":"blocked-rights-review","action":"verify Zenodo licence and release version before multimodal ingest","reason":"rich sensor release but reuse terms not yet recorded"},
     {"priority":12,"datasetId":"cross-process-chain-17240390","state":"blocked-rights-review","action":"verify licence and enumerate injection-only experiment IDs","reason":"must exclude downstream screw-driving observations from injection-cycle/sample counts"},
     {"priority":13,"datasetId":"kamp-injection-7996","state":"blocked-mirror-rights","action":"locate authoritative original KAMP distribution terms","reason":"GitHub mirror does not prove rights for original factory dataset"},
@@ -35,9 +35,9 @@
   ],
   "summary": {
     "total": 20,
-    "acceptedProfiled": 1,
+    "acceptedProfiled": 2,
     "executingProfile": 1,
-    "queuedExecutable": 4,
+    "queuedExecutable": 3,
     "rightsOrTermsBlocked": 7,
     "restrictedResearchEducation": 1,
     "mirrorRightsBlocked": 2,
