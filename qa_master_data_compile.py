@@ -79,7 +79,7 @@ with tempfile.TemporaryDirectory() as td:
     need(measured["profiledMeasuredDatasetRegistry"]["summary"]["acceptedMeasuredTimeSeriesSamples"] == 52_526_432, "compiled measured-sample total drifted")
     profiled_ids = {x["datasetId"] for x in measured["profiledMeasuredDatasetRegistry"]["datasets"]}
     need({"iguzzini-road-lenses", "skz-loki-v1", "impure-pascoe-2022"}.issubset(profiled_ids), "compiled accepted dataset registry missing recent promotions")
-    benchmark_profiles = measured.get("benchmarkProfiles") or {}
+    benchmark_profiles = measured.get("publicBenchmarkResults") or {}
     need("impure-pascoe-2022-v1.json" in benchmark_profiles and "skz-loki-v1.json" in benchmark_profiles, "compiled benchmark profile set missing PASCOE/SKZ")
     need(len(measured["primaryMeasuredStudies"]) == 60, "compiled primary-measured study set incomplete")
     need(len({x["doi"].lower() for x in measured["primaryMeasuredStudies"]}) == 60, "compiled primary-measured DOI deduplication failed")
