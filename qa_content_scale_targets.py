@@ -1,5 +1,6 @@
 from pathlib import Path
 import json
+import math
 
 ROOT = Path(__file__).resolve().parent
 DATA = ROOT / "data"
@@ -17,6 +18,7 @@ SUSTAINABLE = RESULTS / "su13148102-v1.json"
 OPENMMS = RESULTS / "openmms-t4g-v1.json"
 PROBAYES_MAIN = RESULTS / "probayes-main-v2.json"
 PROBAYES_DOPT = RESULTS / "probayes-doptimal-v1.json"
+SKZ_LOKI = RESULTS / "skz-loki-v1.json"
 PET_PREFORM = RESULTS / "vc3k9tt5zj-v2.json"
 
 
@@ -64,8 +66,9 @@ need(summary.get("datasets") == len(datasets) == 20, f"measured dataset inventor
 ids = [x.get("datasetId") for x in datasets]
 need(len(ids) == len(set(ids)) and all(ids), "measured dataset inventory IDs must be unique and non-empty")
 need(summary.get("automatedIngestionAllowed") == sum(1 for x in datasets if x.get("automatedIngestionAllowed") is True), "automated-ingestion dataset count drifted")
+need(summary.get("automatedIngestionAllowed") == 9, "executed/open automated-profiling inventory count drifted")
 need(targets["fully_profiled_measured_datasets"].get("currentDiscovered") == len(datasets), "target ledger discovery count must equal measured-dataset inventory")
-for required in ["mendeley-gtnb4j7bfx-v1", "scatimdata-avaps", "su13148102-supplement", "openmms-t4g", "probayes-main-v2", "probayes-doptimal-v1"]:
+for required in ["mendeley-gtnb4j7bfx-v1", "scatimdata-avaps", "su13148102-supplement", "openmms-t4g", "probayes-main-v2", "probayes-doptimal-v1", "skz-loki-v1"]:
     need(required in ids, f"accepted measured dataset missing from inventory: {required}")
 inv_by_id = {x["datasetId"]: x for x in datasets}
 need(inv_by_id["openmms-t4g"].get("peerReviewedCompanion") == "10.3390/s23073569", "OpenMMS corrected companion DOI drifted")
@@ -74,6 +77,12 @@ need(inv_by_id["probayes-main-v2"].get("accessState") == "executed-open-profiled
 need(inv_by_id["probayes-main-v2"].get("rawRedistributionAllowedWithAttribution") is False, "ProBayes main v2 must not gain an inferred redistribution licence")
 need(inv_by_id["probayes-doptimal-v1"].get("accessState") == "executed-open-ccby", "ProBayes d-optimal must remain executed/open")
 need("CC-BY" in (inv_by_id["probayes-doptimal-v1"].get("license") or ""), "ProBayes d-optimal EUDAT CC-BY rights statement missing")
+skz_inv = inv_by_id["skz-loki-v1"]
+need(skz_inv.get("accessState") == "executed-open-profiled", "SKZ LoKI must remain executed/profiled")
+need(skz_inv.get("license") is None and skz_inv.get("rawRedistributionAllowedWithAttribution") is False, "SKZ LoKI blank-licence/raw-redistribution boundary drifted")
+need(skz_inv.get("automatedIngestionAllowed") is True, "SKZ LoKI reproducible profiling must remain enabled")
+need((skz_inv.get("count") or {}).get("cycles") == 68 and (skz_inv.get("count") or {}).get("cyclesWithPressureTimeSeries") == 60, "SKZ LoKI cycle coverage inventory drifted")
+need((skz_inv.get("count") or {}).get("acceptedPhysicalScalarSamples") == 36_000_000, "SKZ LoKI inventory sample count drifted")
 need(inv_by_id["pet-preform-v2"].get("accessState") == "profiled-rejected-measured", "PET preform measured-evidence rejection must remain explicit")
 
 # Record-level Mendeley benchmark.
@@ -172,6 +181,38 @@ need((pro_dopt.get("experimentalContext") or {}).get("experimentalPoints") == 28
 need(pd_measure.get("acceptedMeasuredCycles") == 303 and pd_measure.get("acceptedMeasuredTimeSeriesSamples") == 0, "ProBayes d-optimal conservative measurement boundary drifted")
 need(pd_measure.get("rawSourceRowsCommitted") is False and pd_measure.get("rawSourceRedistributed") is False, "ProBayes d-optimal raw-data boundary drifted")
 
+# SKZ LoKI: exact publisher files, direct pressure only, source discrepancy retained.
+skz = load(SKZ_LOKI)
+need(skz.get("status") == "completed-public-measured-timeseries-benchmark", "SKZ LoKI benchmark status missing")
+skz_source = skz.get("source") or {}
+need(skz_source.get("doi") == "10.23728/b2share.d8502ea56c544e069ebda44c3edd441b", "SKZ LoKI DOI drifted")
+need(skz_source.get("version") == "v1" and skz_source.get("recordAccess") == "Dataset Open", "SKZ LoKI access/version drifted")
+need(skz_source.get("license") is None, "Do not invent an SKZ LoKI licence value while the B2SHARE field is blank")
+expected_skz_hashes = {
+    "quality": ("4078fb85d2586bc3dd03d4a0825ff74d", "97935c148f8657ebde652b7d704364af42a93731734f815bc1d4232543537dbc"),
+    "machine": ("384b1ee87679fa4b52b78e842a83cd99", "843f5a7ca038efb82f101b53b51cfef8ebd4f6b283cb680155eb0c490bbc2cd4"),
+    "viscometer": ("d37a69bacfbdbe5d7bac9339dfdd94be", "10017d1e4f8ce73915797bb4005c3912fc5c18eaa455bc365c8e9f89d1e7b035"),
+}
+for key, (md5, sha256) in expected_skz_hashes.items():
+    f = (skz.get("files") or {}).get(key) or {}
+    need(f.get("md5") == md5 and f.get("sha256") == sha256, f"SKZ LoKI {key} fingerprint drifted")
+skz_obs = skz.get("observedStructure") or {}
+skz_press = skz_obs.get("viscometerPressure") or {}
+need((skz_obs.get("qualityTable") or {}).get("rows") == 68 and (skz_obs.get("machineAndEuromap77") or {}).get("rows") == 68, "SKZ LoKI scalar cycle tables drifted")
+need(skz_press.get("rows") == 18_000_000 and skz_press.get("columns") == 6 and skz_press.get("cyclesWithPressure") == 60, "SKZ LoKI exact pressure structure drifted")
+need(skz_press.get("rowsPerPressureCycle") == 300_000 and skz_press.get("timeField") == "Time[s]", "SKZ LoKI pressure timing structure drifted")
+need(math.isclose(float(skz_press.get("observedApproxRateHz")), 10_000.0, rel_tol=0, abs_tol=0.01), "SKZ LoKI observed pressure rate drifted")
+channels = skz_press.get("directPhysicalChannels") or []
+need([x.get("field") for x in channels] == ["MEAS_pressure_frontsensor_bar", "MEAS_pressure_backsensor_bar"], "SKZ LoKI direct pressure channels drifted")
+need(all(x.get("samples") == 18_000_000 and x.get("nulls") == 0 and x.get("unit") == "bar" for x in channels), "SKZ LoKI direct pressure sample/null/unit boundary drifted")
+need((skz_press.get("derivedField") or {}).get("field") == "MEAS_pressure_difference_bar" and (skz_press.get("derivedField") or {}).get("countedAsMeasuredSamples") is False, "SKZ LoKI derived pressure must remain excluded")
+need(skz.get("acceptedMeasuredCycles") == 68 and skz.get("cyclesWithAcceptedPressureTimeSeries") == 60, "SKZ LoKI accepted cycle coverage drifted")
+need(skz.get("acceptedMeasuredTimeSeriesSamples") == 36_000_000, "SKZ LoKI accepted direct-pressure sample count drifted")
+need(skz.get("rawSourceRowsCommitted") is False and skz.get("rawSourceRedistributed") is False, "SKZ LoKI raw-data boundary drifted")
+pvo = skz.get("publishedVsObserved") or {}
+need(pvo.get("publisherDescriptionPressureRows") == 1_048_575 and pvo.get("observedChecksumMatchedPressureRows") == 18_000_000, "SKZ LoKI publisher-vs-file discrepancy disappeared")
+need((skz.get("pressureCoverage") or {}).get("cyclesWithPressure") == 60 and (skz.get("pressureCoverage") or {}).get("totalCycles") == 68, "SKZ LoKI pressure coverage drifted")
+
 # Dedicated accepted measured-dataset registry is the hard-count source of truth.
 profiled = load(PROFILED)
 profiled_rows = profiled.get("datasets") or []
@@ -183,13 +224,14 @@ expected_profiled_ids = {
     "openmms-t4g",
     "probayes-main-v2",
     "probayes-doptimal-v1",
+    "skz-loki-v1",
 }
-need(len(profiled_rows) == 6, "expected exactly six accepted profiled dataset packages")
+need(len(profiled_rows) == 7, "expected exactly seven accepted profiled dataset packages")
 need({x.get("datasetId") for x in profiled_rows} == expected_profiled_ids, "profiled dataset registry IDs drifted")
-need(profiled_summary.get("fullyProfiledDatasetPackages") == 6, "profiled registry dataset count drifted")
-need(profiled_summary.get("recordLevelDatasetPackages") == 2 and profiled_summary.get("timeSeriesDatasetPackages") == 4, "profiled registry type counts drifted")
-need(profiled_summary.get("acceptedMeasuredTimeSeriesSamples") == 16_526_432, "profiled registry measured-sample total drifted")
-need(sum(int(x.get("acceptedMeasuredTimeSeriesSamples", 0)) for x in profiled_rows) == 16_526_432, "profiled registry sample totals do not reconcile")
+need(profiled_summary.get("fullyProfiledDatasetPackages") == 7, "profiled registry dataset count drifted")
+need(profiled_summary.get("recordLevelDatasetPackages") == 2 and profiled_summary.get("timeSeriesDatasetPackages") == 5, "profiled registry type counts drifted")
+need(profiled_summary.get("acceptedMeasuredTimeSeriesSamples") == 52_526_432, "profiled registry measured-sample total drifted")
+need(sum(int(x.get("acceptedMeasuredTimeSeriesSamples", 0)) for x in profiled_rows) == 52_526_432, "profiled registry sample totals do not reconcile")
 need(targets["fully_profiled_measured_datasets"]["currentAccepted"] == profiled_summary["fullyProfiledDatasetPackages"], "target ledger profiled-dataset count must match accepted registry")
 need(targets["measured_time_series_samples"]["currentAccepted"] == profiled_summary["acceptedMeasuredTimeSeriesSamples"], "target ledger measured-sample count must match accepted registry")
 
@@ -223,7 +265,7 @@ for marker in ["synthetic process-data cases never count", "actual source files"
     need(marker in rules, f"content-scale non-counting rule missing: {marker}")
 
 report = {
-    "schema": 5,
+    "schema": 6,
     "version": obj.get("version"),
     "reviewed": obj.get("reviewed"),
     "measuredDatasetDiscovery": {
@@ -234,6 +276,9 @@ report = {
         "automatedIngestionAllowed": summary.get("automatedIngestionAllowed"),
         "embargoedRecords": summary.get("embargoed"),
         "proBayesAcceptedCycles": 867,
+        "skzAcceptedCycles": 68,
+        "skzPressureCycles": 60,
+        "skzAcceptedPressureSamples": 36_000_000,
     },
     "verifiedResearch": {
         "publisherVerifiedPeerReviewedPrimaryMeasured": verified,
@@ -251,7 +296,7 @@ report = {
         }
         for key in expected
     },
-    "boundary": "No synthetic, metadata-only, generated-draft, simulation/prediction-only or heuristic-candidate evidence is counted as completed measured/reviewed content unless its area-specific acceptance definition is satisfied. ProBayes packages count as fully profiled real measured datasets while their nested waveform scalar values stay outside the measured-sample ledger pending per-channel normalization."
+    "boundary": "No synthetic, metadata-only, generated-draft, simulation/prediction-only or heuristic-candidate evidence is counted as completed measured/reviewed content unless its area-specific acceptance definition is satisfied. SKZ counts only its two direct physical pressure channels; its time axis and derived pressure difference are excluded. ProBayes packages count as fully profiled real measured datasets while their nested waveform scalar values stay outside the measured-sample ledger pending per-channel normalization."
 }
 (ROOT / "content-scale-targets-report.json").write_text(json.dumps(report, indent=2) + "\n", encoding="utf-8")
 print(
@@ -259,6 +304,6 @@ print(
     f"({len(datasets)} measured datasets inventoried; "
     f"{profiled_summary.get('fullyProfiledDatasetPackages')} fully profiled dataset packages; "
     f"{profiled_summary.get('acceptedMeasuredTimeSeriesSamples'):,} accepted real measured time-series samples; "
-    "867 accepted ProBayes real cycles; "
+    "867 accepted ProBayes real cycles; 68 SKZ cycles / 60 pressure cycles; "
     f"{verified} publisher-verified primary measured studies)"
 )
