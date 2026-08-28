@@ -31,6 +31,7 @@ jobs:
           python - <<'PY'
           import json
           p=json.load(open('cross-process-chain-v1.json',encoding='utf-8'))
+          assert p['schema']==2
           assert p['status']=='completed-public-measured-benchmark'
           assert p['source']['doi']=='10.5281/zenodo.17240390'
           assert p['source']['licenseMetadata']['license']['id']=='cc-by-4.0'
