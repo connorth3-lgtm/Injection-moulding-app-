@@ -1,0 +1,29 @@
+{
+  "schema": 1,
+  "version": "2026.08.29.2",
+  "reviewed": "2026-08-29",
+  "status": "accepted-evidence-reviewed-overlay",
+  "baseRegistry": "data/sensor-machine-health-registry-v1.json",
+  "scope": "Second accepted MouldMaster sensor/machine-health tranche. Concepts are additive to the 26-concept v1 baseline and remain grounded in exact measured dataset profiles or separately bounded peer-reviewed machine-health evidence.",
+  "packs": [
+    {"path": "data/sensor-machine-health/sensor-machine-health-probayes-v2.json", "entries": 18},
+    {"path": "data/sensor-machine-health/sensor-machine-health-pascoe-v2.json", "entries": 15},
+    {"path": "data/sensor-machine-health/sensor-machine-health-cpc-v2.json", "entries": 9},
+    {"path": "data/sensor-machine-health/sensor-machine-health-iguzzini-v2.json", "entries": 9},
+    {"path": "data/sensor-machine-health/sensor-machine-health-machine-health-v2.json", "entries": 4}
+  ],
+  "summary": {
+    "baseAccepted": 26,
+    "overlayAccepted": 55,
+    "resolvedAccepted": 81,
+    "kindCounts": {
+      "direct-measurement": 30,
+      "derived-feature": 5,
+      "diagnostic-interpretation": 4,
+      "quality-measurement": 6,
+      "measurement-integrity": 8,
+      "command-signal": 1,
+      "state-signal": 1
+    }
+  }
+}
