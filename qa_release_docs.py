@@ -31,9 +31,13 @@ need('qa_assessment_storage_scope.py' in readme,'README must list learner-scoped
 need('qa_assessment_evidence.py' in readme,'README must list question evidence approval QA')
 need('qa_curriculum_integration.py' in readme,'README must list curriculum integration QA')
 need('qa_specialist_curriculum.py' in readme,'README must list specialist curriculum QA')
+need('qa_evidence_coverage.py' in readme,'README must list mechanism evidence coverage QA')
+need('qa_mechanism_promotion.py' in readme,'README must list mechanism promotion QA')
+need('qa_specialist_evidence_gaps.py' in readme,'README must list specialist evidence-status QA')
 need('qa_app_shell_registry.py' in readme,'README must list canonical app-shell QA')
 need('qa_mould_master_workspace.py' in readme,'README must list Mould Master workspace QA')
-need('120 core lessons' in readme and 'Twelve optional specialist extensions' in readme,'README must describe current core/specialist curriculum boundary')
+need('120 core lessons' in readme and '20 lessons total' in readme and 'S13–S20' in readme,'README must describe current 120-core / 20-optional specialist curriculum boundary')
+need('learner completion never promotes evidence maturity' in readme,'README must preserve learner-completion/evidence-maturity separation')
 need(V.get('desktop_release_tag')==f"desktop-v{V['desktop_release']}",'desktop release tag/version mismatch')
 need(V.get('desktop_release_url')==f"https://github.com/{V['repository']}/releases/tag/{V['desktop_release_tag']}",'desktop release URL/tag mismatch')
 
@@ -47,7 +51,7 @@ android=text('ANDROID_INSTALL_README.txt')
 for marker in [
  'assessment-storage-scope.js','assessment-final-hardening.js','assessment-evidence-sources.js','assessment-evidence-approval.js',
  'reference-20x-extension.js','diagnostic-learning-labs.js','material-behaviour-labs.js','process-data-diagnostics.js',
- 'learning-experience.js','curriculum-integration.js','specialist-curriculum.js','learning-analytics.js',
+ 'learning-experience.js','curriculum-integration.js','specialist-curriculum.js','specialist-evidence-gap-extension.js','learning-analytics.js',
  'app-shell-registry.js','mould-master-workspace.js','app-shell-finalize.js',
  'evidence-maturity-deep-dive.js','evidence-maturity-formal-bridge.js','lesson-evidence-depth.js','privacy.html','support.html']:
     need(marker in android,f'Android install inventory missing: {marker}')
@@ -55,7 +59,8 @@ for label,k in [('Android/PWA shell','android_release'),('Training content','con
     need(f'{label}: {V[k]}' in android,f'Android install version stale/missing: {label}')
 need('stable question IDs independent of content-release wording' in android,'Android assessment-ID description is stale')
 need('All 157 keyed learner questions' in android,'Android evidence-approval question count is stale')
-need('120 core lessons' in android and '12 specialist extensions' in android,'Android curriculum boundary is stale')
+need('120 core lessons' in android and '20 optional specialist lessons total' in android,'Android curriculum boundary is stale')
+need('S13-S20 evidence maturity is registry-controlled' in android,'Android specialist evidence-status boundary missing')
 need('Mould Master troubleshooting cases are learner-scoped' in android,'Android Mould Master local evidence boundary missing')
 
 upload=text('UPLOAD_README.txt')
@@ -76,7 +81,7 @@ for marker in ['assessment analytics','scoped to the active learner profile','fi
     need(marker in privacy,f'privacy disclosure missing: {marker}')
 
 sw=text('service-worker.js')
-for marker in ["'./privacy.html'","'./support.html'","'./assessment-storage-scope.js'","'./assessment-evidence-sources.js'","'./assessment-evidence-approval.js'","'./curriculum-integration.js'","'./specialist-curriculum.js'","'./app-shell-registry.js'","'./mould-master-workspace.js'","'./app-shell-finalize.js'"]:
+for marker in ["'./privacy.html'","'./support.html'","'./assessment-storage-scope.js'","'./assessment-evidence-sources.js'","'./assessment-evidence-approval.js'","'./curriculum-integration.js'","'./specialist-curriculum.js'","'./specialist-evidence-gap-extension.js'","'./app-shell-registry.js'","'./mould-master-workspace.js'","'./app-shell-finalize.js'"]:
     need(marker in sw,f'offline compliance/runtime asset missing: {marker}')
 
 for name in ['README.md','ANDROID_INSTALL_README.txt','support.html','UPLOAD_README.txt']:
