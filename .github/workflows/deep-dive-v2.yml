@@ -1,0 +1,32 @@
+name: MouldMaster Deep Dive v2 QA
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: mouldmaster-deep-dive-v2-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  deep-dive-v2:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Deep Dive v2 target and seed integrity
+        run: python qa_deep_dive_v2.py
+      - name: Upload Deep Dive v2 programme report
+        uses: actions/upload-artifact@v4
+        with:
+          name: mouldmaster-deep-dive-v2
+          path: deep-dive-v2-report.json
+          if-no-files-found: error
