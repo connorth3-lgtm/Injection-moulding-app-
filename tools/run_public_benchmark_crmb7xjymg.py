@@ -58,8 +58,13 @@ def main():
     if item is None: raise RuntimeError("VAMAS publisher file disappeared")
     data,final=get(furl(item)); digest=hashlib.sha256(data).hexdigest()
     if digest.lower()!=expected["sha256"].lower(): raise RuntimeError(f"publisher SHA mismatch: {digest}")
+    # CasaXPS comments in this source contain CP1252 characters (for example German umlauts).
+    # The vamas package opens paths as UTF-8, so normalize only the temporary parser copy.
+    # Original publisher bytes remain the SHA-verified authority and are never committed.
+    normalized_text=data.decode("cp1252")
+    normalized_bytes=normalized_text.encode("utf-8")
     with tempfile.TemporaryDirectory() as td:
-        p=Path(td)/"source.vms"; p.write_bytes(data); parsed=Vamas(p)
+        p=Path(td)/"source-utf8.vms"; p.write_bytes(normalized_bytes); parsed=Vamas(p)
         blocks=[]; total_counts=0; total_other=0; xps_blocks=0; labels={}
         for i,b in enumerate(parsed.blocks):
             if str(getattr(b,"technique","")).upper()=="XPS": xps_blocks+=1
@@ -88,7 +93,7 @@ def main():
             })
     result={
       "schema":1,"status":"completed-profiled-xps-vamas-material-tool-interface","retrievedDate":args.retrieved_date,
-      "source":{"datasetId":c["datasetId"],"datasetDoi":c["source"]["datasetDoi"],"license":c["source"]["license"],"version":VERSION,"publisherFileName":expected["name"],"sha256":digest,"publisherSha256Matched":True,"retrievedSizeBytes":len(data),"resolvedUrl":final},
+      "source":{"datasetId":c["datasetId"],"datasetDoi":c["source"]["datasetDoi"],"license":c["source"]["license"],"version":VERSION,"publisherFileName":expected["name"],"sha256":digest,"publisherSha256Matched":True,"retrievedSizeBytes":len(data),"resolvedUrl":final,"parserTextEncodingNormalization":"cp1252-to-utf8-temporary-copy","normalizedParserCopySha256":hashlib.sha256(normalized_bytes).hexdigest()},
       "profile":{"vamasBlockCount":len(blocks),"xpsBlockCount":xps_blocks,"dependentVariablePointCountsByLabel":labels,"measuredDetectorCountsValues":total_counts,"otherDependentVariableValuesExcluded":total_other,"blocks":blocks,"rawSpectralValuesEmitted":False},
       "acceptance":{"countsAsFullyProfiledMeasuredDataset":len(blocks)>0 and xps_blocks==len(blocks) and total_counts>0,"evidenceClass":"material-tool-interface-xps-characterization","injectionMouldingCycleDataset":False,"acceptedMeasuredTimeSeriesSamples":0,"acceptedMaterialCharacterizationTraceValues":total_counts,"energyAxisExcluded":True,"transmissionAndCalibrationVariablesExcluded":True},
       "retrieval":{"rawPublisherFileCommitted":False,"rawSpectralValuesUploadedAsArtifact":False},"evidenceBoundary":c["evidenceBoundary"]}
