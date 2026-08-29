@@ -1,0 +1,49 @@
+{
+  "schema": 1,
+  "status": "accepted-profiled-injection-moulded-xrd-characterization",
+  "retrievedDate": "2026-08-29",
+  "source": {
+    "datasetId": "mendeley-8c8fjwcw86-v1",
+    "datasetDoi": "10.17632/8c8fjwcw86.1",
+    "license": "CC BY 4.0",
+    "version": 1,
+    "publisherPackage": [
+      {
+        "fileName": "Draft_nylon 12_supporting information_rev 2.docx",
+        "sha256": "2a15794fd8d439e97b824dffecf648c29551fbd418d2d13f983155ae4e2cd70f",
+        "publisherSha256Matched": true
+      },
+      {
+        "fileName": "Irradiated Nylon12_Manuscript Figures_rev 2.pptx",
+        "sha256": "7b0397e4f28c3963782727fe533756572acc51422fe2e00642c84e084228a116",
+        "publisherSha256Matched": true
+      }
+    ]
+  },
+  "profile": {
+    "acceptedEvidenceClass": "injection-moulded-material-xrd-characterization",
+    "acceptedChartXml": "ppt/charts/chart7.xml",
+    "acceptedSlideXml": "ppt/slides/slide12.xml",
+    "acceptedSeriesSemanticLabel": "Injection Molded Nylon 12",
+    "slideContext": "XRD results compare powder, SLS and injection-moulded Nylon-12",
+    "acceptedMeasuredXrdIntensityValues": 6588,
+    "xrdCategoryAxisValuesExcluded": 6588,
+    "excludedEvidence": {
+      "stressStrainCharts": "SLS-only specimen curves; not injection-moulded evidence",
+      "utsCharts": "summary/box-plot derived statistics rather than delivered specimen-level direct measurements",
+      "mdscTableS2": "explicitly SLS samples",
+      "mdscTableS1": "manufacturing route is not explicit enough to assign values to injection moulding",
+      "otherXrdSeries": "powder/SLS/reuse-powder series are not injection-moulded evidence"
+    },
+    "rawNumericValuesEmitted": false
+  },
+  "acceptance": {
+    "countsAsFullyProfiledMeasuredDataset": true,
+    "injectionMouldingCycleDataset": false,
+    "acceptedMeasuredTimeSeriesSamples": 0,
+    "acceptedMaterialCharacterizationTraceValues": 6588,
+    "rawPublisherFilesCommitted": false,
+    "rawNumericValuesCommittedOrArtifacted": false
+  },
+  "evidenceBoundary": "Only the chart series explicitly identified as Injection Molded Nylon-12 within the XRD comparison slide is accepted as direct injection-moulded characterization evidence. XRD category-axis coordinates, SLS/powder series, SLS stress-strain curves, summary UTS box-plot statistics, and MDSC rows without an explicit injection-moulded route are excluded."
+}
