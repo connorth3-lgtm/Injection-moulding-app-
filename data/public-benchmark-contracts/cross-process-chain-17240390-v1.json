@@ -67,6 +67,7 @@
     "commandsTargetsStatesAndDerivedFieldsMustBeSeparatedFromDirectMeasurements": true
   },
   "rightsGate": {
+    "publicDownloadDoesNotEqualReusePermission": true,
     "openAccessDoesNotEqualSpecificReuseLicenceEvidence": true,
     "zenodoPublicFileLicenceRequirementRecorded": true,
     "zenodoDefaultLicenceNotAssumedForThisRecord": true,
