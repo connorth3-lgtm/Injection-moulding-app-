@@ -1,0 +1,60 @@
+name: MouldMaster Public Measured Benchmark — Nylon 12 radiation support package
+
+on:
+  push:
+    branches: [data/real-dataset-profiling-wave2-batch3]
+    paths:
+      - 'tools/run_public_benchmark_8c8fjwcw86.py'
+      - 'qa_public_benchmark_8c8fjwcw86.py'
+      - 'data/public-benchmark-results/mendeley-wave2-batch3-stage1.json'
+      - '.github/workflows/public-benchmark-8c8fjwcw86.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  supporting-data-profile:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python -m pip install --disable-pip-version-check olefile
+      - name: Validate supporting-package evidence boundaries
+        run: python qa_public_benchmark_8c8fjwcw86.py
+      - name: Profile exact DOCX and PPTX package without raw values
+        run: |
+          mkdir -p benchmark-results
+          python tools/run_public_benchmark_8c8fjwcw86.py \
+            --output benchmark-results/8c8fjwcw86-v1.json \
+            --retrieved-date "$(date -u +%F)"
+      - name: Validate aggregate supporting-package profile
+        run: |
+          python - <<'PY'
+          import json
+          x=json.load(open('benchmark-results/8c8fjwcw86-v1.json'))
+          assert x['status']=='retrieved-nylon12-supporting-package-needs-semantic-decision'
+          assert x['source']['datasetId']=='mendeley-8c8fjwcw86-v1'
+          assert x['source']['datasetDoi']=='10.17632/8c8fjwcw86.1'
+          assert x['source']['license']=='CC BY 4.0'
+          assert len(x['files'])==2
+          assert all(f['publisherSha256Matched'] is True for f in x['files'])
+          assert x['acceptance']['countsAsFullyProfiledMeasuredDataset'] is False
+          assert x['acceptance']['acceptedMeasuredTimeSeriesSamples']==0
+          assert x['retrieval']['rawPublisherFilesCommitted'] is False
+          assert x['retrieval']['rawNumericValuesUploadedAsArtifact'] is False
+          for f in x['files']:
+              assert f['rawPublisherFileCommitted'] is False
+              assert f['profile']['rawNumericValuesEmitted'] is False
+          print(json.dumps({'files':[{'name':f['fileName'],'profile':f['profile']} for f in x['files']]},indent=2))
+          PY
+      - name: Upload aggregate supporting-package profile only
+        uses: actions/upload-artifact@v4
+        with:
+          name: mouldmaster-public-measured-benchmark-8c8fjwcw86
+          path: benchmark-results/8c8fjwcw86-v1.json
+          if-no-files-found: error
+          retention-days: 30
