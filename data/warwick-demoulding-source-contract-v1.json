@@ -1,0 +1,44 @@
+{
+  "schema": 1,
+  "version": "2026.08.29.1",
+  "reviewed": "2026-08-29",
+  "datasetId": "warwick-demoulding",
+  "source": {
+    "dataset": "https://doi.org/10.17632/x9hc7hf6xd.2",
+    "license": "CC BY 4.0",
+    "companionStudy": "Investigating demoulding characteristics of material jetted rapid mould inserts for microinjection moulding using in-line monitoring and surface metrology",
+    "companionStudyDoi": "10.1108/RPJ-03-2024-0129"
+  },
+  "retrievedState": {
+    "publisherProjectFiles": 5,
+    "format": "Origin/OriginPro OPJU",
+    "sha256Verified": true,
+    "acceptedTrialCount": null,
+    "acceptedChannelCount": null,
+    "acceptedMeasuredTimeSeriesSamples": 0
+  },
+  "measurementChain": {
+    "primaryQuantity": "demoulding/ejection force",
+    "samplingRateHz": 10000,
+    "sensor": "Kistler Type 9211B force transducer",
+    "sensorLocation": "behind the ejector/measurement pin at the centre of the circular cavity",
+    "chargeAmplifier": "Kistler Type 5073A",
+    "dataAcquisition": "NI cDAQ-9174 with NI 9215 voltage input module",
+    "logging": "LabVIEW synchronized to pneumatic ejection",
+    "reportedSensitivity": "approximately 4.4 pC/N",
+    "reportedForceRange": "up to 1000 N",
+    "reportedAnalogOutput": "0-10 V",
+    "derivedQuantity": "demoulding energy derived/integrated from force data in the study"
+  },
+  "originExportAcceptance": [
+    "Export all five verified OPJU projects using a validated Windows Origin/OriginPro workflow.",
+    "Preserve project, workbook, worksheet/matrix and trial identity in the export manifest.",
+    "Identify direct force waveforms separately from formulas, derived columns and integrated demoulding-energy outputs.",
+    "Preserve source time/order and verify the 10 kHz sampling basis where the waveform is present.",
+    "Record exported units and any voltage-to-force conversion metadata contained in the Origin project; do not reconstruct conversion solely from the paper if the project contains its own scaling.",
+    "Reconcile exported row, column, channel and trial counts against each source OPJU project.",
+    "Fingerprint every exported table and map it to the original OPJU SHA-256.",
+    "Retain aggregate profiles only in the public repository unless the dataset licence and project policy explicitly permit raw redistribution."
+  ],
+  "boundary": "Companion-study moulding settings are study-specific context and must not be promoted into universal production setpoints, validated process windows or machine/mould/material limits. Accepted sample counts remain zero until the five OPJU projects are actually exported and reconciled."
+}
