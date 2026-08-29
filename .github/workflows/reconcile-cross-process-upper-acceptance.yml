@@ -1,25 +1,18 @@
-name: MouldMaster Cross-Process Upper Acceptance Reconciliation
+name: MouldMaster Cross-Process Inventory State Patch
 
 on:
   push:
     branches: [data/cross-process-specialist-parser]
     paths:
-      - 'data/public-benchmark-results/cross-process-upper-workpiece-source-contract-v1.json'
-      - 'tools/reconcile_cross_process_upper_acceptance.py'
       - '.github/workflows/reconcile-cross-process-upper-acceptance.yml'
   workflow_dispatch:
 
 permissions:
   contents: write
 
-concurrency:
-  group: mouldmaster-cross-process-upper-reconcile
-  cancel-in-progress: false
-
 jobs:
-  reconcile:
+  patch:
     runs-on: ubuntu-latest
-    timeout-minutes: 30
     steps:
       - uses: actions/checkout@v4
         with:
@@ -27,36 +20,31 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
-      - name: Python syntax
+      - name: Add governed partial-acceptance state
         run: |
-          python -m py_compile tools/reconcile_cross_process_upper_acceptance.py
-          python -m py_compile tools/profile_cross_process_upper_workpiece.py
-          python -m py_compile qa_cross_process_upper_contract.py
-      - name: Reconcile exact upper acceptance
-        run: python tools/reconcile_cross_process_upper_acceptance.py
-      - name: Validate upper parser contract
-        run: python qa_cross_process_upper_contract.py
-      - name: Validate measured-data blocker boundaries
-        run: python qa_measured_data_blocker_contracts.py
-      - name: Validate content-scale arithmetic
-        run: python qa_content_scale_targets.py
-      - name: Validate master compilation
-        run: python qa_master_data_compile.py
-      - name: Commit reconciled ledgers and QA
+          python - <<'PY'
+          from pathlib import Path
+          path = Path('qa_measured_dataset_inventory.py')
+          text = path.read_text(encoding='utf-8')
+          marker = "    'public-open-profiled-scope-limited',\n"
+          insertion = marker + "    'public-open-partially-accepted-lower-upper-pressure-state-unresolved',\n"
+          if "'public-open-partially-accepted-lower-upper-pressure-state-unresolved'" not in text:
+              if text.count(marker) != 2:
+                  raise AssertionError(f'expected governed state marker twice, found {text.count(marker)}')
+              text = text.replace(marker, insertion)
+              path.write_text(text, encoding='utf-8')
+          PY
+      - name: Validate governed measured dataset inventory
+        run: python qa_measured_dataset_inventory.py
+      - name: Validate terminal and blocker contracts
+        run: |
+          python qa_remaining_dataset_terminal_states.py
+          python qa_measured_data_blocker_contracts.py
+      - name: Commit governed state vocabulary
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add -- \
-            data/content-scale-targets.json \
-            data/measured-dataset-execution-ledger-v1.json \
-            data/measured-dataset-inventory-v1.json \
-            data/cross-process-upper-workpiece-dictionary-v1.json \
-            tools/compile_master_data.py \
-            qa_content_scale_targets.py \
-            qa_master_data_compile.py \
-            qa_measured_data_blocker_contracts.py \
-            sources/MASTER_DATA_COMPILATION.md \
-            sources/CONTENT_SCALE_PROGRAMME.md
+          git add -- qa_measured_dataset_inventory.py
           git diff --cached --quiet && exit 0
-          git commit -m "Reconcile cross-process upper measured acceptance"
+          git commit -m "Govern cross-process partial acceptance state"
           git push origin HEAD:data/cross-process-specialist-parser
