@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "datasetId": "cross-process-chain-17240390",
-  "status": "blocked-rights-review",
+  "status": "queued-executable-hosted-large-archive",
   "source": {
     "datasetDoi": "10.5281/zenodo.17240390",
     "recordUrl": "https://zenodo.org/records/17240390",
@@ -10,10 +10,10 @@
     "created": "2025-10-01",
     "recordModified": "2025-10-01",
     "access": "open",
-    "license": null,
-    "licenseEvidenceStatus": "no explicit dataset licence identifier or licence text was rendered on the authoritative record page during review; Zenodo policy requires a licence for public files, but the specific deposited licence is not inferred from repository defaults",
-    "automatedRetrievalAllowed": false,
-    "rawRedistributionAllowed": false,
+    "license": "CC BY 4.0",
+    "licenseEvidenceStatus": "official Zenodo records API metadata.license.id returned cc-by-4.0 on 2026-08-29",
+    "automatedRetrievalAllowed": true,
+    "rawRedistributionAllowed": true,
     "publisherFile": {
       "name": "class_values.zip",
       "reportedSizeMB": 685.5,
@@ -60,26 +60,20 @@
   },
   "scopeBoundary": {
     "mouldMasterInjectionScopeOnly": true,
-    "upperAndLowerInjectionStreamsMayBeProfiledAfterRightsClearance": true,
+    "upperAndLowerInjectionStreamsMayBeProfiled": true,
     "screwDrivingStreamsExcludedFromInjectionMeasuredSampleCounts": true,
     "downstreamQualityMayBeRetainedOnlyAsLinkedOutcomeMetadata": true,
     "pressureTargetMustNotBeCountedAsMeasuredPressure": true,
     "commandsTargetsStatesAndDerivedFieldsMustBeSeparatedFromDirectMeasurements": true
   },
-  "rightsGate": {
-    "publicDownloadDoesNotEqualReusePermission": true,
-    "openAccessDoesNotEqualSpecificReuseLicenceEvidence": true,
-    "zenodoPublicFileLicenceRequirementRecorded": true,
-    "zenodoDefaultLicenceNotAssumedForThisRecord": true,
-    "metadataMayBeReviewedWithoutRawFileIngestion": true,
-    "rawFilesMustNotBeDownloadedByAutomationUntilLicenceIsExplicit": true,
-    "requiredEvidence": [
-      "Capture the exact licence identifier or licence text attached to Zenodo record 17240390, or equivalent explicit depositor terms.",
-      "Confirm that the licence permits the intended automated retrieval and aggregate profiling use.",
-      "Pin the exact record version and publisher file checksum before raw retrieval."
-    ]
+  "licenseVerification": {
+    "authority": "Zenodo records API",
+    "metadataPath": "metadata.license.id",
+    "value": "cc-by-4.0",
+    "verifiedOn": "2026-08-29",
+    "retrievalState": "685.5 MB archive queued for hosted profiling"
   },
-  "profilingPlanAfterRightsClearance": [
+  "profilingPlan": [
     "Retrieve only the pinned publisher archive and verify the published MD5 plus a locally computed SHA-256 without committing the raw archive.",
     "Enumerate experiment IDs and all internal files from the delivered archive rather than inferring counts from descriptions.",
     "Profile upper and lower injection streams independently and preserve delivered time bases, units and cycle grouping.",
@@ -88,5 +82,6 @@
     "Count accepted measured injection time-series values only from delivered direct-measurement arrays or columns with ordering/time basis established.",
     "Emit aggregate schemas, counts and fingerprints only; never upload raw third-party rows or arrays as workflow artifacts."
   ],
-  "evidenceBoundary": "The Zenodo record describes a real cross-process manufacturing dataset with two injection-moulding streams sampled at approximately 1 kHz and two downstream screw-driving streams sampled at 833.33 Hz. The injection streams are highly relevant to MouldMaster, but downstream screw-driving samples cannot enter injection-moulding totals and target/reference fields cannot be counted as measurements. The record is openly accessible, yet the specific deposited dataset licence was not rendered during review. Zenodo requires public files to carry a licence and defaults new deposits to CC BY 4.0, but MouldMaster does not infer the record-specific licence from that default. Automated raw retrieval and promotion therefore remain blocked until the exact reuse terms are captured."
+  "evidenceBoundary": "The Zenodo record describes a real cross-process manufacturing dataset with two injection-moulding streams sampled at approximately 1 kHz and two downstream screw-driving streams sampled at 833.33 Hz. The official Zenodo records API confirms CC BY 4.0, so automated retrieval and aggregate profiling are permitted. Downstream screw-driving samples cannot enter injection-moulding totals, and target/reference fields cannot be counted as measurements. The pinned 685.5 MB archive remains queued for hosted profiling; no cycle or measured-value total is accepted until its published MD5 and internal contents are validated."
 }
+
