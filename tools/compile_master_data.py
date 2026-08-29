@@ -83,9 +83,26 @@ def compile_measured():
         benchmark_contracts[benchmark_id] = contract
         benchmark_results[benchmark_id] = result
 
+    restricted_specs = [
+        ("iguzzini-road-lenses", "data/public-benchmark-contracts/iguzzini-road-lenses-v1.json", "data/public-benchmark-results/iguzzini-road-lenses-v1.json"),
+    ]
+    restricted_contracts = {}
+    restricted_results = {}
+    for benchmark_id, contract_path, result_path in restricted_specs:
+        contract = load_json(contract_path)
+        result = load_json(result_path)
+        acceptance = result.get("acceptance") or {}
+        need(result.get("status") == "accepted-restricted-profile", f"restricted measured benchmark status missing: {benchmark_id}")
+        need(acceptance.get("countsAsFullyProfiledMeasuredDataset") is True, f"restricted measured benchmark acceptance missing: {benchmark_id}")
+        need(acceptance.get("useScope") == "research-and-education-only", f"restricted measured benchmark scope drifted: {benchmark_id}")
+        need((result.get("source") or {}).get("rawRedistributionAllowed") is False, f"restricted measured benchmark redistribution boundary drifted: {benchmark_id}")
+        restricted_contracts[benchmark_id] = contract
+        restricted_results[benchmark_id] = result
+
     accepted_profiled = targets["targets"]["fully_profiled_measured_datasets"]["currentAccepted"]
-    need(len(benchmark_results) == accepted_profiled == 4, "completed measured benchmark result count must match accepted profiled dataset count")
+    need(len(benchmark_results) + len(restricted_results) == accepted_profiled == 5, "completed measured benchmark result count must match accepted profiled dataset count")
     need(execution.get("summary", {}).get("acceptedProfiled") == accepted_profiled, "execution ledger accepted-profiled count drifted")
+    need(execution.get("summary", {}).get("acceptedRestrictedResearchEducation") == len(restricted_results) == 1, "restricted accepted measured-profile count drifted")
 
     return {
         "targetLedger": targets,
@@ -101,9 +118,12 @@ def compile_measured():
         "mechanismPromotionDossiers": dossiers,
         "publicBenchmarkContracts": benchmark_contracts,
         "publicBenchmarkResults": benchmark_results,
+        "restrictedBenchmarkContracts": restricted_contracts,
+        "restrictedBenchmarkResults": restricted_results,
         "publicBenchmarkReviewResults": {
             "pet-preform-v2": load_json("data/public-benchmark-results/pet-preform-v2.json"),
             "warwick-demoulding": load_json("data/public-benchmark-results/warwick-demoulding-v2.json"),
+            "rwth-pcr-2025": load_json("data/public-benchmark-results/rwth-pcr-2025-v1.json"),
         },
         "publicBenchmarkContract": benchmark_contracts["gtnb4j7bfx-v1"],
         "publicBenchmarkResult": benchmark_results["gtnb4j7bfx-v1"],
