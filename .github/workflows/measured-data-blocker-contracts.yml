@@ -10,6 +10,9 @@ on:
       - 'qa_cross_process_upper_contract.py'
       - 'data/impure-pascoe-channel-dictionary-v1.json'
       - 'data/warwick-demoulding-source-contract-v1.json'
+      - 'data/warwick-origin-export-manifest-template-v1.json'
+      - 'tools/validate_warwick_origin_export.py'
+      - 'qa_warwick_origin_export_contract.py'
       - 'qa_measured_data_blocker_contracts.py'
       - '.github/workflows/measured-data-blocker-contracts.yml'
   push:
@@ -21,6 +24,9 @@ on:
       - 'qa_cross_process_upper_contract.py'
       - 'data/impure-pascoe-channel-dictionary-v1.json'
       - 'data/warwick-demoulding-source-contract-v1.json'
+      - 'data/warwick-origin-export-manifest-template-v1.json'
+      - 'tools/validate_warwick_origin_export.py'
+      - 'qa_warwick_origin_export_contract.py'
       - 'qa_measured_data_blocker_contracts.py'
       - '.github/workflows/measured-data-blocker-contracts.yml'
   workflow_dispatch:
@@ -41,7 +47,13 @@ jobs:
           python -m py_compile qa_measured_data_blocker_contracts.py
           python -m py_compile tools/profile_cross_process_upper_workpiece.py
           python -m py_compile qa_cross_process_upper_contract.py
+          python -m py_compile tools/validate_warwick_origin_export.py
+          python -m py_compile qa_warwick_origin_export_contract.py
       - name: Validate upper specialist parser contract
         run: python qa_cross_process_upper_contract.py
+      - name: Validate Warwick Origin export contract
+        run: |
+          python qa_warwick_origin_export_contract.py
+          python tools/validate_warwick_origin_export.py --manifest data/warwick-origin-export-manifest-template-v1.json
       - name: Validate fail-closed source contracts
         run: python qa_measured_data_blocker_contracts.py
