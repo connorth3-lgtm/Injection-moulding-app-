@@ -12,6 +12,7 @@ ALLOWED_STATES = {
     'public-open-profile-queued',
     'public-open-hosted-profile-queued',
     'public-open-profiled-scope-limited',
+    'public-open-partially-accepted-lower-upper-pressure-state-unresolved',
     'public-download-license-review',
     'public-research-education-release',
     'public-repo-license',
@@ -26,6 +27,7 @@ EXECUTABLE_STATES = {
     'public-open-profile-queued',
     'public-open-hosted-profile-queued',
     'public-open-profiled-scope-limited',
+    'public-open-partially-accepted-lower-upper-pressure-state-unresolved',
     'public-repo-license',
 }
 NONEXECUTABLE_STATES = ALLOWED_STATES - EXECUTABLE_STATES
