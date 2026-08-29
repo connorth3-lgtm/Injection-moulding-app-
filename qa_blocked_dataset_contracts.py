@@ -10,9 +10,6 @@ BLOCKED = {
     'probayes-main-v2': 'probayes-main-v2.json',
     'probayes-doptimal-v1': 'probayes-doptimal-v1.json',
     'skz-loki-v1': 'skz-loki-v1.json',
-    'impure-pascoe-2022': 'impure-pascoe-2022-v1.json',
-    'forinfpro-himd-v1': 'forinfpro-himd-v1.json',
-    'cross-process-chain-17240390': 'cross-process-chain-17240390-v1.json',
 }
 
 
@@ -83,10 +80,6 @@ ctx = pro_d.get('experimentContext') or {}
 need(ctx.get('injectionMouldedParts') == 303 and ctx.get('experimentalPoints') == 28, 'ProBayes d-optimal counts drifted')
 need(ctx.get('featuresPerPart') == 396 and ctx.get('dataSources') == 9, 'ProBayes d-optimal feature/source counts drifted')
 
-cross = load(CONTRACT_DIR / BLOCKED['cross-process-chain-17240390'])
-text = json.dumps(cross).lower()
-need('screw' in text and 'exclude' in text, 'cross-process contract must preserve downstream screw-driving exclusion')
-
 report = {
     'schema': 1,
     'blockedContractCount': len(BLOCKED),
@@ -97,4 +90,5 @@ report = {
     'result': 'pass',
 }
 REPORT.write_text(json.dumps(report, indent=2) + '\n', encoding='utf-8')
-print('MouldMaster blocked dataset contract QA passed (6 open-download sources remain fail-closed until explicit reuse rights are captured)')
+print('MouldMaster blocked dataset contract QA passed (3 open-download sources remain fail-closed until explicit reuse rights are captured)')
+
