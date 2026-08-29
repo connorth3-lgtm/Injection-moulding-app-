@@ -43,32 +43,40 @@ jobs:
           python - <<'PY'
           import json
           x=json.load(open('benchmark-results/fhj5p7ww9v-v1.json'))
-          assert x['status'] in {'completed-restricted-noncommercial-measured-benchmark', 'retrieved-profile-needs-semantic-review'}
+          assert x['status']=='completed-restricted-noncommercial-measured-benchmark'
           assert x['source']['datasetDoi']=='10.17632/fhj5p7ww9v.1'
           assert x['source']['license']=='CC BY-NC 3.0'
           assert x['source']['publisherFileName']=='DATA - COST.xlsx'
           assert len(x['source']['sha256'])==64
-          assert x['profile']['sheetCount'] >= 1
-          assert x['profile']['totalRowsAcrossSheets'] >= 1
+          assert x['source'].get('publisherSha256Matched') is True
+          assert x['profile']['sheetCount']==3
+          assert x['profile']['recognizedMeasuredOutcomeSheets']==3
+          assert x['profile']['experimentalConditionsPerSheet']==8
+          assert len(x['profile']['materialGroups'])==4
+          assert len(x['profile']['measuredOutcomeFamilies'])==3
+          assert x['profile']['recordLevelMeasuredOutcomeValues']==96
           assert x['profile']['acceptedMeasuredTimeSeriesSamples']==0
           assert x['profile']['rawRowsOrCellValuesEmitted'] is False
+          assert x['profile']['numericMeasurementValuesEmitted'] is False
+          assert x['acceptance']['countsAsFullyProfiledMeasuredDataset'] is True
+          assert x['acceptance']['semanticLayoutRecognized'] is True
           assert x['acceptance']['commercialReuseAllowed'] is False
           assert x['acceptance']['rawRedistributionAllowedUnderProjectPolicy'] is False
           assert x['retrieval']['rawPublisherFileCommitted'] is False
           assert x['retrieval']['rawRowsOrCellValuesUploadedAsArtifact'] is False
-          if x['status']=='completed-restricted-noncommercial-measured-benchmark':
-              assert x['profile']['recordLevelMeasuredValues'] >= 1
-              assert x['acceptance']['countsAsFullyProfiledMeasuredDataset'] is True
-              assert x['acceptance']['semanticLayoutRecognized'] is True
-          else:
-              assert x['profile']['recordLevelMeasuredValues'] == 0
-              assert x['acceptance']['countsAsFullyProfiledMeasuredDataset'] is False
-              assert x['acceptance']['semanticLayoutRecognized'] is False
+          for sheet in x['profile']['sheets']:
+              sm=sheet['layout']['semanticMap']
+              assert sm['recognized'] is True
+              assert sm['experimentalConditionColumns']==8
+              assert sm['directMeasuredOutcomeCells']==32
+              assert sm['processFactorCellsExcludedFromMeasuredOutcomes']==16
+              assert sm['spreadSummaryCellsExcludedFromDirectMeasurements']==64
+              assert sm['formulaCellsExcludedAsDerived']==72
           print(json.dumps({
             'status': x['status'],
             'sha256': x['source']['sha256'],
-            'sheets': x['profile']['sheets'],
-            'recordLevelMeasuredValues': x['profile']['recordLevelMeasuredValues'],
+            'recordLevelMeasuredOutcomeValues': x['profile']['recordLevelMeasuredOutcomeValues'],
+            'measurementLevel': x['profile']['measurementLevel'],
           }, indent=2))
           PY
       - name: Upload aggregate PP foam profile only
