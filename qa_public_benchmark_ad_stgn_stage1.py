@@ -30,7 +30,8 @@ need(rules["doNotCountTEPOrSWaTAsInjectionMouldingEvidence"] is True, "non-injec
 need(rules["acceptedMeasuredTimeSeriesSamples"] == 0, "AD-STGN cannot claim measured samples before stage two")
 need(rules["countsAsFullyProfiledMeasuredDataset"] is False, "AD-STGN cannot be accepted before stage two")
 text = RUNNER.read_text(encoding="utf-8")
-for marker in ["api.data.mendeley.com", "datasets/publics", "likelyInjectionSubsetByName", "explicitNonInjectionBenchmarkByName", "rawPayloadsDownloaded\": False", "acceptedMeasuredTimeSeriesSamples\": 0"]:
+for marker in ["data.mendeley.com/public-api/datasets", "folder_id=root", "likelyInjectionSubsetByName", "explicitNonInjectionBenchmarkByName", "rawPayloadsDownloaded\": False", "acceptedMeasuredTimeSeriesSamples\": 0"]:
     need(marker in text, f"AD-STGN runner guard missing: {marker}")
 need("file_downloaded" not in text, "stage-one runner must not call file-download endpoints")
+need("api.data.mendeley.com" not in text, "stage one must not depend on OAuth-only Mendeley API")
 print("MouldMaster AD-STGN metadata-only stage-one QA passed")
