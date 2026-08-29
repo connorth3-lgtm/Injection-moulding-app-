@@ -54,9 +54,7 @@ jobs:
             tools/compile_master_data.py \
             qa_content_scale_targets.py \
             qa_master_data_compile.py \
-            .github/workflows/master-data-compile.yml \
             qa_measured_data_blocker_contracts.py \
-            .github/workflows/measured-data-blocker-contracts.yml \
             sources/MASTER_DATA_COMPILATION.md \
             sources/CONTENT_SCALE_PROGRAMME.md
           git diff --cached --quiet && exit 0
