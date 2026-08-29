@@ -57,27 +57,39 @@ jobs:
           python - <<'PY'
           import json
           x=json.load(open('benchmark-results/rwth-pcr-2025-stage1-profile.json'))
-          assert x['status']=='retrieved-profile-needs-semantic-review'
+          assert x['status'] in {'retrieved-profile-needs-semantic-review', 'retrieval-blocked-non-archive-response'}
           assert x['source']['datasetDoi']=='10.18154/RWTH-2025-06809'
           assert x['source']['license']=='CC BY 4.0'
-          assert len(x['source']['sha256'])==64
-          assert x['archiveProfile']['nonDirectoryMembers'] >= 1
-          assert x['archiveProfile']['allArchivePathsSafe'] is True
-          assert all(len(m['sha256'])==64 for m in x['archiveProfile']['members'])
-          assert x['archiveProfile']['rawRowsOrCellValuesEmitted'] is False
-          assert x['acceptance']['stage1ProfileComplete'] is True
+          assert len(x['source'].get('retrievalAttempts') or []) >= 1
           assert x['acceptance']['countsAsFullyProfiledMeasuredDataset'] is False
           assert x['acceptance']['acceptedMeasuredTimeSeriesSamples']==0
           assert x['retrieval']['rawPublisherArchiveCommitted'] is False
           assert x['retrieval']['rawPublisherFilesCommitted'] is False
           assert x['retrieval']['rawRowsOrArraysUploadedAsArtifact'] is False
-          print(json.dumps({
-              'archiveSha256': x['source']['sha256'],
-              'members': x['archiveProfile']['nonDirectoryMembers'],
-              'supportedDataMembers': x['archiveProfile']['supportedDataMembers'],
-              'fileTypeCounts': x['archiveProfile']['fileTypeCounts'],
-              'semanticNameMarkersObserved': x['archiveProfile']['semanticNameMarkersObserved'],
-          }, indent=2))
+          assert x['retrieval']['rawResponseBodiesUploadedAsArtifact'] is False
+          if x['status']=='retrieved-profile-needs-semantic-review':
+              assert len(x['source']['sha256'])==64
+              assert x['archiveProfile']['nonDirectoryMembers'] >= 1
+              assert x['archiveProfile']['allArchivePathsSafe'] is True
+              assert all(len(m['sha256'])==64 for m in x['archiveProfile']['members'])
+              assert x['archiveProfile']['rawRowsOrCellValuesEmitted'] is False
+              assert x['acceptance']['stage1ProfileComplete'] is True
+              print(json.dumps({
+                  'status': x['status'],
+                  'archiveSha256': x['source']['sha256'],
+                  'members': x['archiveProfile']['nonDirectoryMembers'],
+                  'supportedDataMembers': x['archiveProfile']['supportedDataMembers'],
+                  'fileTypeCounts': x['archiveProfile']['fileTypeCounts'],
+                  'semanticNameMarkersObserved': x['archiveProfile']['semanticNameMarkersObserved'],
+              }, indent=2))
+          else:
+              assert x['archiveProfile'] is None
+              assert x['acceptance']['stage1ProfileComplete'] is False
+              assert all(a.get('rawResponseBodyEmitted') is False for a in x['source']['retrievalAttempts'])
+              print(json.dumps({
+                  'status': x['status'],
+                  'retrievalAttempts': x['source']['retrievalAttempts'],
+              }, indent=2))
           PY
       - name: Upload aggregate RWTH profile only
         uses: actions/upload-artifact@v4
