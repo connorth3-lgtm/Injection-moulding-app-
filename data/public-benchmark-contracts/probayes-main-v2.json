@@ -12,7 +12,16 @@
     "technicalModified": "2025-10-28",
     "access": "open",
     "license": null,
-    "licenseEvidenceStatus": "The authoritative B2SHARE record exposes Rights > License, but no licence value is present.",
+    "licenseEvidenceStatus": "The current B2SHARE v2 record exposes Rights > License with no value. EUDAT B2FIND does report Creative Commons Attribution (CC-BY) for the earlier ProBayes v1 legacy record 03133fb279294389a15baefd55e4257a, but that licence evidence is tied to a different DOI/file release and is not carried forward to the changed v2 files without explicit version-specific evidence.",
+    "priorVersionLicenseEvidence": {
+      "registry": "EUDAT B2FIND",
+      "recordUrl": "https://b2find.eudat.eu/dataset/00e35196-1983-57a0-8ec1-ae2bee01da40",
+      "version": "v1",
+      "legacyRecordId": "03133fb279294389a15baefd55e4257a",
+      "datasetDoi": "10.23728/b2share.03133fb279294389a15baefd55e4257a",
+      "reportedRights": "Creative Commons Attribution (CC-BY); info:eu-repo/semantics/openAccess",
+      "appliesToCurrentV2": false
+    },
     "automatedRetrievalAllowed": false,
     "rawRedistributionAllowed": false,
     "reportedTotalSize": "107.0 MB"
@@ -52,7 +61,7 @@
     "publicDownloadDoesNotEqualReusePermission": true,
     "rawFilesMustNotBeDownloadedByAutomationUntilLicenceIsExplicit": true,
     "requiredEvidence": [
-      "An explicit dataset licence or written reuse permission from SKZ/Fraunhofer/B2SHARE is captured.",
+      "An explicit licence or written reuse permission tied to ProBayes v2 legacy record 4c5692b886db419180f716acf895bf06 is captured; the CC-BY metadata for the earlier v1 release is not treated as version-transitive evidence.",
       "The captured terms permit automated ingestion and aggregate profiling.",
       "The exact v2 file manifest and checksums are revalidated at retrieval time."
     ]
@@ -65,5 +74,5 @@
     "Verify manual OK/NOK and other labels against source-defined semantics before mechanism/defect promotion.",
     "Emit aggregate schemas, counts and fingerprints only; do not commit or artifact raw third-party rows or arrays."
   ],
-  "evidenceBoundary": "The ProBayes v2 record documents 564 real injection-moulded parts across 47 experimental points, two materials, 334 features and nine data sources, with unique MachineCycleID records and manual quality labels. Exact publisher file names, sizes and MD5 checksums are available. However, the authoritative B2SHARE Rights > License field is blank, so the dataset remains non-executable and contributes no accepted measured count until explicit reuse terms are captured."
+  "evidenceBoundary": "The ProBayes v2 record documents 564 real injection-moulded parts across 47 experimental points, two materials, 334 features and nine data sources, with unique MachineCycleID records and manual quality labels. Exact publisher file names, sizes and MD5 checksums are available. EUDAT B2FIND preserves CC-BY metadata for the earlier v1 release, but the current v2 B2SHARE Rights > License field is blank and the v2 release has a different legacy record, DOI and file manifest. The v1 licence is therefore not assumed to cover v2, which remains non-executable and contributes no accepted measured count until version-specific reuse terms are captured."
 }
