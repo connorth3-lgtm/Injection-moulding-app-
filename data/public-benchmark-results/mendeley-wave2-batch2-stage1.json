@@ -1,0 +1,39 @@
+{
+  "schema": 1,
+  "status": "publisher-metadata-batch-profiled",
+  "retrievedDate": "2026-08-29",
+  "sources": [
+    {
+      "datasetId": "mendeley-c3pt29jt7c-v1",
+      "doi": "10.17632/c3pt29jt7c.1",
+      "license": "CC BY 4.0",
+      "priority": 1,
+      "state": "publisher-file-manifest-exposed",
+      "apiFiles": [{"id":"bc9f4d9c-ecbb-4d73-8286-a1d39f9ea3a3","name":"DIC data.xlsx","folderId":null,"sizeBytes":1043361,"sha256":"c9a552b885e451f3feb03af8830c9d16428ee52fcdbf0440757fad163f0a36c0","contentType":"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet","rawPayloadDownloaded":false}],
+      "htmlFileIds": [], "htmlOnlyFileIds": [], "fileCountLowerBound": 1, "errors": [],
+      "rawPayloadsDownloaded": false, "countsAsFullyProfiledMeasuredDataset": false, "acceptedMeasuredTimeSeriesSamples": 0
+    },
+    {
+      "datasetId": "mendeley-yxz2w7ctnh-v1",
+      "doi": "10.17632/yxz2w7ctnh.1",
+      "license": "CC BY 4.0",
+      "priority": 2,
+      "state": "publisher-file-manifest-exposed",
+      "apiFiles": [
+        {"id":"0dde1c6b-3618-4a62-bab4-af3ff5286f12","name":"data_3pbending_3d_print_d_ryan.xlsx","folderId":null,"sizeBytes":21537,"sha256":"5c8e5967a95d90a9652ed9167885118bc4ffe4792bf9167c19254ff526fa6742","contentType":"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet","rawPayloadDownloaded":false},
+        {"id":"ff9cce79-7132-4375-956a-4b4948635cdc","name":"data_energy_3d_print_d_ryan.xlsx","folderId":null,"sizeBytes":20156,"sha256":"378f371f7d3b2a31902d59e4d654b8de3a7be6d057ba73dc8f1bd819b9cfcda0","contentType":"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet","rawPayloadDownloaded":false},
+        {"id":"9893bf52-bbc7-4853-adba-45f8e38880d0","name":"data_impact_3d_print_d_ryan.xlsx","folderId":null,"sizeBytes":50039,"sha256":"2eba6818e340e963f88dcb03729aac793d5686c9c1416e81b00c104da3e41196","contentType":"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet","rawPayloadDownloaded":false},
+        {"id":"e30b2a0b-12d2-461a-a119-efed84b2c82e","name":"data_tensile_3d_print_d_ryan.xlsx","folderId":null,"sizeBytes":19904,"sha256":"670fb27b14e34f68ee17de115c4f14b22c4aa4b9887ff8c73a42eb7b2a7e3b79","contentType":"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet","rawPayloadDownloaded":false}
+      ],
+      "htmlFileIds": [], "htmlOnlyFileIds": [], "fileCountLowerBound": 4, "errors": [],
+      "rawPayloadsDownloaded": false, "countsAsFullyProfiledMeasuredDataset": false, "acceptedMeasuredTimeSeriesSamples": 0
+    },
+    {
+      "datasetId": "mendeley-ztkc87d6sr-v1", "doi": "10.17632/ztkc87d6sr.1", "license": "CC BY 4.0", "priority": 3,
+      "state": "publisher-record-no-files-exposed", "apiFiles": [], "htmlFileIds": [], "htmlOnlyFileIds": [], "fileCountLowerBound": 0, "errors": [],
+      "rawPayloadsDownloaded": false, "countsAsFullyProfiledMeasuredDataset": false, "acceptedMeasuredTimeSeriesSamples": 0
+    }
+  ],
+  "summary": {"sourcesReviewed":3,"publisherFileManifestExposed":2,"publisherRecordNoFilesExposed":1,"fullyProfiledAccepted":0,"acceptedMeasuredTimeSeriesSamples":0,"rawPayloadsDownloaded":false},
+  "evidenceBoundary": "Stage 1 enumerates publisher metadata and file identifiers only. No third-party payload is downloaded; no reported row, sample, test or measurement count is accepted until a source-specific stage-two profiler verifies delivered files and semantics."
+}
