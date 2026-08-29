@@ -105,18 +105,28 @@ need((ig_result.get("acceptance") or {}).get("countsAsFullyProfiledMeasuredDatas
 need((ig_result.get("acceptance") or {}).get("acceptedMeasuredTimeSeriesSamples") == 0, "iGuzzini cannot inflate high-frequency sample count")
 
 pet = load(RESULTS / "pet-preform-v2.json")
-need(pet.get("status") == "retrieved-profile-needs-semantic-review", "PET review-only state drifted")
-pet_acceptance = pet.get("acceptance") or {}
-need(pet_acceptance.get("countsAsFullyProfiledMeasuredDataset") in {None, False}, "PET must remain non-counting")
-need(pet_acceptance.get("acceptedMeasuredTimeSeriesSamples") in {None, 0}, "PET cannot contribute measured time-series samples")
-need((pet.get("profile") or {}).get("rawRowsOrCellValuesEmitted") is False, "PET raw-value boundary drifted")
+need(pet.get("status") == "completed-profiled-zero-measured-simulation-optimization-model-workbook", "PET zero-measured terminal state drifted")
+pet_profile = pet.get("profile") or {}
+need(pet_profile.get("controlledProcessSettingColumns") == 5, "PET controlled-setting count drifted")
+need(pet_profile.get("simulationResultColumns") == 7, "PET simulation-result count drifted")
+need(pet_profile.get("modelValidationColumns") == 1, "PET validation-field count drifted")
+need(pet_profile.get("annHiddenLayerIntermediateColumns") == 6, "PET hidden-layer count drifted")
+need(pet_profile.get("annPredictionColumns") == 7, "PET prediction-field count drifted")
+need(sum(pet_profile.get(k, -100) for k in [
+    "controlledProcessSettingColumns", "simulationResultColumns", "modelValidationColumns",
+    "annHiddenLayerIntermediateColumns", "annPredictionColumns"
+]) == 26, "PET terminal semantic groups must account for all 26 columns")
+need(pet_profile.get("sourceDefinedMeasuredOutcomeColumns") == 0, "PET cannot invent a measured outcome")
+need(pet_profile.get("acceptedMeasuredProcessValues") == 0, "PET cannot contribute measured process values")
+need(pet_profile.get("acceptedMeasuredQualityValues") == 0, "PET cannot contribute measured quality values")
+need(pet_profile.get("acceptedMeasuredTimeSeriesSamples") == 0, "PET cannot contribute measured time-series samples")
+need(pet_profile.get("rawRowsOrCellValuesEmitted") is False, "PET raw-value boundary drifted")
 
 rwth = load(RESULTS / "rwth-pcr-2025-v1.json")
 need(rwth.get("status") == "retrieval-blocked-non-archive-response", "RWTH source retrieval terminal state drifted")
 need((rwth.get("acceptance") or {}).get("countsAsFullyProfiledMeasuredDataset") is False, "RWTH cannot be accepted without delivered archive")
 need(len((rwth.get("source") or {}).get("retrievalAttempts") or []) == 3, "RWTH retrieval audit must retain all three publisher URL attempts")
 
-report = {"schema": 4, "terminalContractsChecked": len(expected), "rightsBlocked": 3, "licensedQueued": 0, "licensedProfiledUnitLimited": 2, "licensedProfiledSemanticReview": 1, "mirrorRightsBlocked": 2, "embargoed": 2, "requestOnly": 1, "confidential": 1, "specialFormatExport": 1, "restrictedEducationAccepted": 1, "rwthRetrievalBlocked": 1, "petReviewOnly": 1, "result": "pass"}
+report = {"schema": 5, "terminalContractsChecked": len(expected), "rightsBlocked": 3, "licensedQueued": 0, "licensedProfiledUnitLimited": 2, "licensedProfiledSemanticReview": 1, "mirrorRightsBlocked": 2, "embargoed": 2, "requestOnly": 1, "confidential": 1, "specialFormatExport": 1, "restrictedEducationAccepted": 1, "rwthRetrievalBlocked": 1, "petSimulationModelZeroMeasured": 1, "result": "pass"}
 (ROOT / "remaining-dataset-terminal-states-report.json").write_text(json.dumps(report, indent=2) + "\n", encoding="utf-8")
-print("MouldMaster remaining dataset terminal-state QA passed (all sources are accepted or have an explicit rights/access/embargo/confidentiality/technical blocker)")
-
+print("MouldMaster remaining dataset terminal-state QA passed (all sources are accepted or have an explicit rights/access/embargo/confidentiality/technical/zero-measured terminal state)")
