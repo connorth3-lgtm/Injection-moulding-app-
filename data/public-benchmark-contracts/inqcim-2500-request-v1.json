@@ -1,0 +1,9 @@
+{
+  "schema": 1,
+  "datasetId": "inqcim-2500-request",
+  "status": "blocked-request-only",
+  "source": {"correctedPeerReviewedDoi": "10.3390/polym14173551", "articleUrl": "https://www.mdpi.com/2073-4360/14/17/3551", "dataAvailability": "available upon request from the corresponding authors", "automatedRetrievalAllowed": false},
+  "experimentContext": {"material": "Novodur HH-112 ABS with 4% Renol-black CAV 80036 masterbatch", "machine": "WITTMANN BATTENFELD EcoPower 110, 35 mm screw", "doeExperiments": 56, "samplesApprox": 2500, "digitalSensors": "IMM/dryer/TCU via OPC UA at 60 Hz", "analogMachineSensors": "screw pressure, screw position, clamping force and process-phase signals at 600 Hz", "analogMoldSensors": "cavity pressure/polymer temperature at 600 Hz", "quality": ["part weight", "six dimensional measurements", "surface quality"]},
+  "requestGate": {"authorisedDataUseTermsRequired": true, "authorisedFilesRequired": true, "paperCountsDoNotSubstituteForDeliveredFiles": true, "noAuthorContactImpersonation": true},
+  "evidenceBoundary": "The peer-reviewed article provides strong measured methodology and approximate sample counts, but the raw data are available only upon request. MouldMaster keeps this as Tier-B/request-only evidence until authorised files and data-use terms are actually obtained. The prior inventory DOI 10.3390/polym14081648 was incorrect and must be replaced with 10.3390/polym14173551."
+}

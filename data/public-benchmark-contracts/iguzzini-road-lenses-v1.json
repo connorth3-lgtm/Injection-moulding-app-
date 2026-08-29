@@ -1,0 +1,47 @@
+{
+  "schema": 1,
+  "datasetId": "iguzzini-road-lenses",
+  "status": "restricted-research-education-profile-candidate",
+  "source": {
+    "repository": "https://github.com/airtlab/machine-learning-for-quality-prediction-in-plastic-injection-molding",
+    "pinnedCommit": "41b8f392923d37b50b5098ed918dd2f0de1bc328",
+    "file": "dataset/data.csv",
+    "gitBlobSha": "1ca731e1e80451f6ebf857f3db69bc9f4566d073",
+    "sizeBytes": 127056,
+    "peerReviewedCompanion": "10.3390/info13060272",
+    "releaseTerms": "Dataset and source code are freely released for research and educational purposes; citation requested.",
+    "releaseTermsEvidence": "https://github.com/airtlab/machine-learning-for-quality-prediction-in-plastic-injection-molding/blob/master/readme.md",
+    "standardOpenDataLicense": false,
+    "rawRedistributionAllowed": false,
+    "automatedAggregateProfilingAllowedForResearchEducation": true
+  },
+  "experimentContext": {
+    "process": "plastic injection moulding of road lenses",
+    "producer": "iGuzzini Illuminazione",
+    "machine": "Engel E-MAC 310/100",
+    "collectionSystem": "TIG Manufacturing Execution System (MES)",
+    "productionDays": ["2019-09-18", "2019-09-19", "2019-09-20", "2020-02-07", "2020-05-20"],
+    "recordUnit": "one produced lens feature vector",
+    "publisherReportedRows": 1451,
+    "publisherReportedProcessFeatures": 13,
+    "publisherReportedQualityClasses": {
+      "1": {"name": "Waste", "reportedCount": 370},
+      "2": {"name": "Acceptable", "reportedCount": 406},
+      "3": {"name": "Target", "reportedCount": 310},
+      "4": {"name": "Inefficient", "reportedCount": 360}
+    },
+    "reportedClassCountSum": 1446,
+    "reportedClassCountDiscrepancy": 5
+  },
+  "acceptanceRules": {
+    "exactPinnedSourceRequired": true,
+    "actualRowAndColumnCountsMustComeFromDeliveredCsv": true,
+    "qualityCountsMustBeComputedFromDeliveredCsv": true,
+    "paperReadmeCountMismatchMustBeExplicit": true,
+    "recordLevelNotHighFrequencyTimeSeries": true,
+    "acceptedMeasuredTimeSeriesSamples": 0,
+    "rawRowsCommittedOrArtifacted": false,
+    "useScopeMustRemainResearchEducationOnly": true
+  },
+  "evidenceBoundary": "The repository and peer-reviewed paper explicitly release this real-production dataset for research and educational purposes. MouldMaster may profile it for the project's educational use, but must not widen those terms into unrestricted redistribution or a standard open-data licence. Delivered CSV counts override prose summaries, and this record-level dataset contributes zero high-frequency measured time-series samples."
+}

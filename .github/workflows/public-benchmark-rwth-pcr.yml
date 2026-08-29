@@ -36,7 +36,7 @@ jobs:
       - run: python qa_public_benchmark_rwth_pcr.py
 
   public-measured-benchmark:
-    if: github.event_name != 'pull_request'
+    if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
     needs: runner-qa
     runs-on: ubuntu-latest
     timeout-minutes: 25
@@ -74,22 +74,10 @@ jobs:
               assert all(len(m['sha256'])==64 for m in x['archiveProfile']['members'])
               assert x['archiveProfile']['rawRowsOrCellValuesEmitted'] is False
               assert x['acceptance']['stage1ProfileComplete'] is True
-              print(json.dumps({
-                  'status': x['status'],
-                  'archiveSha256': x['source']['sha256'],
-                  'members': x['archiveProfile']['nonDirectoryMembers'],
-                  'supportedDataMembers': x['archiveProfile']['supportedDataMembers'],
-                  'fileTypeCounts': x['archiveProfile']['fileTypeCounts'],
-                  'semanticNameMarkersObserved': x['archiveProfile']['semanticNameMarkersObserved'],
-              }, indent=2))
           else:
               assert x['archiveProfile'] is None
               assert x['acceptance']['stage1ProfileComplete'] is False
               assert all(a.get('rawResponseBodyEmitted') is False for a in x['source']['retrievalAttempts'])
-              print(json.dumps({
-                  'status': x['status'],
-                  'retrievalAttempts': x['source']['retrievalAttempts'],
-              }, indent=2))
           PY
       - name: Upload aggregate RWTH profile only
         uses: actions/upload-artifact@v4
