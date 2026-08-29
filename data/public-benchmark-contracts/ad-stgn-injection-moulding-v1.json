@@ -1,0 +1,42 @@
+{
+  "schema": 1,
+  "datasetId": "ad-stgn-injection-moulding-v1",
+  "status": "metadata-profile-candidate",
+  "source": {
+    "datasetPage": "https://data.mendeley.com/datasets/6f9x8yg8nj/1",
+    "datasetId": "6f9x8yg8nj",
+    "datasetDoi": "10.17632/6f9x8yg8nj.1",
+    "version": 1,
+    "publisher": "Mendeley Data",
+    "institution": "Tianjin University",
+    "published": "2026-05-29",
+    "license": "CC BY 4.0",
+    "automatedAggregateProfilingAllowed": true,
+    "rawRedistributionAllowedWithAttribution": true
+  },
+  "experimentContext": {
+    "process": "real-world automotive electronics injection-moulding production line",
+    "collectionPeriod": "2025-02-02 to 2025-03-14",
+    "collectionSystems": ["Manufacturing Execution System", "IoT sensors"],
+    "stages": ["clamping", "injection", "holding", "cooling", "ejection", "robot picking/placing"],
+    "continuousSensorMeasurements": 66,
+    "discreteControlActions": 7,
+    "terminalStateIndicator": "X66 part temperature when placed by robotic arm",
+    "reportedTrainingSamples": 88000,
+    "reportedValidationSamples": 22614,
+    "reportedTestingStructure": "chronological sequence; anomalies start from the 75th sample",
+    "qualityContext": ["PMT defect outbreak", "internal bubbles", "warpage", "incomplete cooling"]
+  },
+  "stage1Rules": {
+    "publisherApiMetadataOnly": true,
+    "downloadDatasetPayloads": false,
+    "enumerateAllFilesAndFolders": true,
+    "recordPublisherFileIdsNamesSizesHashesAndContentTypes": true,
+    "identifyLikelyInjectionMouldingSubsetFromPublisherManifest": true,
+    "doNotCountTEPOrSWaTAsInjectionMouldingEvidence": true,
+    "acceptedMeasuredTimeSeriesSamples": 0,
+    "countsAsFullyProfiledMeasuredDataset": false,
+    "rawRowsOrArraysCommittedOrArtifacted": false
+  },
+  "evidenceBoundary": "The publisher page explicitly identifies a real injection-moulding industrial case study and CC BY 4.0 reuse terms, but the same dataset package also contains Tennessee Eastman and SWaT benchmark data. Stage 1 therefore enumerates publisher file metadata only. No file payload, row count, signal count or measured-sample count is accepted until the injection-moulding subset is isolated from the delivered file manifest and profiled independently."
+}
