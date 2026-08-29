@@ -96,7 +96,9 @@ count = impure.get('count') or {}
 need(count.get('cycleRows') == 297087 and count.get('profiledNumericValues') == 2376696, 'ImPure inventory structure drifted')
 need(count.get('acceptedMeasuredChannels') == 4, 'ImPure inventory accepted-channel count drifted')
 need(count.get('acceptedMeasuredTimeSeriesSamples') == 1188348, 'ImPure inventory accepted measured-value count drifted')
-need('stage-dependent' in impure.get('statusNote', '').lower(), 'ImPure inventory must preserve stage-dependent analogue exclusion')
+status_note = impure.get('statusNote', '').lower()
+need('trial-stage metadata' in status_note and 'changes measurement purpose' in status_note,
+     'ImPure inventory must preserve the stage-dependent analogue exclusion')
 need(impure.get('peerReviewedCompanion') == '10.1051/matecconf/202440108011', 'ImPure peer-reviewed companion drifted')
 
 print('MouldMaster ImPure semantic QA passed (307 cycle files / 297,087 rows; four source-backed cavity channels accepted = 1,188,348 measured values; hydraulic, screw-position and analogue channels remain fail-closed where definitions are incomplete or stage-dependent)')
