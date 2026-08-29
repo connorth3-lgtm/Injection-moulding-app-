@@ -20,7 +20,7 @@ target_obj = json.loads(TARGETS.read_text(encoding="utf-8"))
 targets = target_obj["targets"]
 expected_profiled = targets["fully_profiled_measured_datasets"]["currentAccepted"]
 expected_samples = targets["measured_time_series_samples"]["currentAccepted"]
-need(expected_profiled == 6, "audited profiled-dataset baseline drifted")
+need(expected_profiled == 7, "audited profiled-dataset baseline drifted")
 need(expected_samples == 13_929_568, "audited measured-sample baseline drifted")
 workflow_text = WORKFLOW.read_text(encoding="utf-8")
 need(f"assert c['fullyProfiledMeasuredDatasets']=={expected_profiled}" in workflow_text, "master-data workflow profiled-dataset assertion is stale")
@@ -73,18 +73,19 @@ with tempfile.TemporaryDirectory() as td:
     need(inv["summary"]["automatedIngestionAllowed"] == 10, "compiled executable measured-source count drifted")
     need(ledger["summary"]["acceptedProfiled"] == expected_profiled, "compiled execution ledger accepted-profiled count drifted")
     need(ledger["summary"]["acceptedRestrictedResearchEducation"] == 1, "compiled restricted accepted profile count drifted")
-    need(ledger["summary"]["queuedExecutable"] == 2, "ImPure and cross-process hosted profiling queue drifted")
+    need(ledger["summary"]["queuedExecutable"] == 0, "completed licensed profiling sources must not remain queued")
     need(ledger["summary"]["retrievalBlockedExecutable"] == 1, "RWTH retrieval blocker count drifted")
     need((measured.get("datasetRightsReview") or {}).get("summary", {}).get("unblockedForAutomatedIngestion") == 4, "compiled rights-review promotion count drifted")
     need(len(measured["primaryMeasuredStudies"]) == 60, "compiled primary-measured study set incomplete")
     need(len({x["doi"].lower() for x in measured["primaryMeasuredStudies"]}) == 60, "compiled primary-measured study DOI deduplication failed")
 
     results = measured.get("publicBenchmarkResults") or {}
-    need(set(results) == {"gtnb4j7bfx-v1", "scatimdata-avaps", "openmms-t4g", "su13148102-supplement", "forinfpro-himd-v1"}, f"completed public benchmark set drifted: {set(results)}")
+    need(set(results) == {"gtnb4j7bfx-v1", "scatimdata-avaps", "openmms-t4g", "su13148102-supplement", "forinfpro-himd-v1", "impure-pascoe-2022"}, f"completed public benchmark set drifted: {set(results)}")
     need(all(x.get("status") == "completed-public-measured-benchmark" for x in results.values()), "compiled public benchmark completion state drifted")
     need(results["su13148102-supplement"]["profile"]["rows"] == 955, "compiled Sustainability supplement row count drifted")
     need(results["forinfpro-himd-v1"]["profile"]["deliveredCycles"] == 1, "compiled FORinFPRO release boundary drifted")
     need(results["forinfpro-himd-v1"]["profile"]["acceptedMeasuredTimeSeriesSamples"] == 0, "unit-limited FORinFPRO values must not inflate measured samples")
+    need(results["impure-pascoe-2022"]["profile"]["cycleFiles"] == 307, "compiled ImPure profile drifted")
 
     restricted = measured.get("restrictedBenchmarkResults") or {}
     need(set(restricted) == {"iguzzini-road-lenses"}, f"restricted accepted benchmark set drifted: {set(restricted)}")
@@ -98,10 +99,11 @@ with tempfile.TemporaryDirectory() as td:
     need((ig.get("profile") or {}).get("deliveredQualityCounts") == {"1": 370, "2": 406, "3": 310, "4": 365}, "compiled iGuzzini class reconciliation drifted")
 
     review_results = measured.get("publicBenchmarkReviewResults") or {}
-    need(set(review_results) == {"pet-preform-v2", "warwick-demoulding", "rwth-pcr-2025"}, "retrieved/review/blocker result set drifted")
+    need(set(review_results) == {"pet-preform-v2", "warwick-demoulding", "rwth-pcr-2025", "cross-process-chain-17240390"}, "retrieved/review/blocker result set drifted")
     need(review_results["pet-preform-v2"].get("status") == "retrieved-profile-needs-semantic-review", "PET review-only state drifted")
     need(review_results["warwick-demoulding"].get("status") == "retrieved-profile-needs-special-format-export", "Warwick technical export state drifted")
     need(review_results["rwth-pcr-2025"].get("status") == "retrieval-blocked-non-archive-response", "RWTH retrieval blocker state drifted")
+    need(review_results["cross-process-chain-17240390"].get("status") == "completed-public-measured-benchmark-scope-limited", "cross-process review state drifted")
     need((review_results["rwth-pcr-2025"].get("acceptance") or {}).get("countsAsFullyProfiledMeasuredDataset") is False, "RWTH must remain non-counting")
 
     need(results["scatimdata-avaps"]["measurement_profile"]["acceptedMeasuredTimeSeriesSamples"] == 13_631_488, "compiled AVAPS sample count drifted")
@@ -134,3 +136,4 @@ with tempfile.TemporaryDirectory() as td:
         need(section in combined, f"combined master package missing section: {section}")
 
 print(f"MouldMaster master data compilation QA passed (20 measured datasets; 10 legally executable sources; {expected_profiled} fully profiled families including 1 restricted educational profile; {expected_samples:,} accepted measured time-series values; 60 verified primary measured studies; 600 evidence passes; 264/19,008 synthetic cases/cycles; 157 approved items; 120+20 lessons; full draft banks)")
+
