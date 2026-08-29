@@ -1,0 +1,107 @@
+{
+  "schema": 1,
+  "version": "2026.08.30.1",
+  "reviewed": "2026-08-30",
+  "datasetId": "bottle-cap-7162-confidential",
+  "status": "confidential-owner-authorization-required",
+  "source": {
+    "paperTitle": "Data-driven prediction of possible quality deterioration in injection molding processes",
+    "paperDoi": "10.1016/j.asoc.2023.111029",
+    "journal": "Applied Soft Computing",
+    "volume": 150,
+    "articleNumber": "111029",
+    "publicationYear": 2024,
+    "authors": ["Edwin Lughofer", "Kurt Pichler"],
+    "paperOpenAccess": true,
+    "paperLicenceDoesNotAuthorizeConfidentialProductionData": true,
+    "dataAvailability": "The publisher states that the data used in the study are confidential.",
+    "publicCompanionDatasetLocated": false,
+    "datasetSpecificReuseLicenceLocated": false
+  },
+  "paperBackedExperimentContext": {
+    "process": "real production injection moulding of bottle caps",
+    "productionCycles": 7162,
+    "qualityCriteria": 3,
+    "qualityMeasurement": "optical inspection of produced parts",
+    "processEvidence": [
+      "online process-data streams from regular production",
+      "real-occurring anomalies",
+      "material changes",
+      "production-parameter changes"
+    ],
+    "paperReportedPredictionCorrelations": [0.7, 0.89, 0.98],
+    "paperReportedMeanAbsoluteErrorsBelowPercent": 5,
+    "acceptedMeasuredSamplesBeforeAuthorization": 0
+  },
+  "ownershipBoundary": {
+    "publiclyNamedIndustrialDataOwner": null,
+    "authorsAreNotAssumedToOwnOrControlTheConfidentialProductionData": true,
+    "paperPublicationLicenceDoesNotOverrideConfidentiality": true,
+    "requiredAuthority": "the industrial data owner or a person/organisation explicitly authorised by that owner to approve research access and automated aggregate profiling"
+  },
+  "currentContactRoute": {
+    "primary": {
+      "name": "Kurt Pichler",
+      "organisation": "Linz Center of Mechatronics GmbH (LCM)",
+      "email": "kurt.pichler@lcm.at",
+      "role": "surviving paper co-author and current LCM researcher",
+      "purpose": "identify the confidential-data owner and route an authorization request to the person with authority to approve research use"
+    },
+    "organisationalFallback": {
+      "organisation": "Linz Center of Mechatronics GmbH (LCM)",
+      "email": "office@lcm.at",
+      "purpose": "route the request if the direct author address changes or if owner approval must be handled institutionally"
+    },
+    "historicalAuthorBoundary": "Edwin Lughofer died in 2023; outreach must not depend on his former contact address."
+  },
+  "acceptableAuthorizationPaths": [
+    {
+      "id": "controlled-transfer",
+      "description": "The industrial data owner, or an explicitly authorised representative, approves a controlled research transfer to MouldMaster for aggregate profiling.",
+      "minimumTerms": [
+        "purpose is limited to injection-moulding research/benchmark profiling",
+        "automated local analysis is permitted",
+        "raw rows and traces will not be committed to the repository or published",
+        "only aggregate schemas, counts, fingerprints and non-identifying diagnostics may be retained",
+        "storage, retention, deletion and confidentiality requirements are documented",
+        "any company, machine, product or operator identifiers are removed or handled under the owner's rules"
+      ]
+    },
+    {
+      "id": "owner-side-execution",
+      "description": "The data remain inside LCM/the industrial owner's environment; the owner or LCM runs an agreed MouldMaster profiler and returns only an aggregate result artifact.",
+      "minimumTerms": [
+        "the exact profiler version or commit is recorded",
+        "the profiler emits no raw rows, traces or sensitive identifiers",
+        "source file fingerprints or owner-approved stable identifiers are included where permitted",
+        "measurement semantics and units are supplied sufficiently to distinguish measured signals from setpoints, labels and derived fields",
+        "the owner approves publication of the resulting aggregate counts/metadata"
+      ]
+    }
+  ],
+  "requiredAuthorizationEvidence": [
+    "The confidential-data owner/controller is identified.",
+    "Written permission is captured from the owner or an explicitly authorised representative.",
+    "The permission explicitly covers automated aggregate profiling or owner-side execution of the profiler.",
+    "The permission states whether aggregate schemas, counts, fingerprints and non-identifying diagnostics may be retained and published.",
+    "Any NDA, data-processing, storage, retention, deletion, geographic or attribution restrictions are recorded before execution.",
+    "The delivered or owner-side-profiled data are linked unambiguously to the 7,162-cycle experiment reported in DOI 10.1016/j.asoc.2023.111029."
+  ],
+  "profilingGateAfterAuthorization": [
+    "Fingerprint the exact delivered files or record owner-approved stable source identifiers.",
+    "Reconcile the delivered cycle count to the paper-reported horizon of 7,162 production cycles without assuming one row equals one cycle.",
+    "Establish signal names, units, sampling/time bases and cycle grouping from source documentation or the delivered schema.",
+    "Separate directly measured process/quality values from commands, setpoints, identifiers, transformed trends, model outputs and labels.",
+    "Confirm how the three optical quality criteria align to production cycles and whether they are raw measurements or derived inspection features.",
+    "Count only delivered measured values whose semantics and ordering are established.",
+    "Emit aggregate outputs only and retain no raw confidential production rows or arrays in the repository or CI artifacts."
+  ],
+  "decision": {
+    "automatedIngestionAllowed": false,
+    "rawRedistributionAllowed": false,
+    "restrictedAggregateProfilingAllowed": false,
+    "acceptedMeasuredSamplesChanged": false,
+    "nextAction": "Contact Kurt Pichler/LCM to identify the industrial data owner and request either controlled-transfer authorization or owner-side execution approval."
+  },
+  "evidenceBoundary": "The paper is strong Tier-B evidence of a real 7,162-cycle bottle-cap production campaign with three optically measured quality criteria and naturally occurring process/material changes. However, the publisher explicitly states that the data used are confidential, and no public dataset-specific reuse licence or named industrial data owner was located. The open-access status of the article does not license the underlying production data. Therefore the source remains non-executable and contributes zero accepted measured samples unless the actual owner, or an explicitly authorised representative, approves a controlled profiling path."
+}
