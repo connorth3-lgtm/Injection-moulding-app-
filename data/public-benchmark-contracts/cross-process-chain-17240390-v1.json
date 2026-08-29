@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "datasetId": "cross-process-chain-17240390",
-  "status": "profiled-scope-limited-semantic-review",
+  "status": "profiled-scope-limited-upper-pressure-state-review",
   "source": {
     "datasetDoi": "10.5281/zenodo.17240390",
     "recordUrl": "https://zenodo.org/records/17240390",
@@ -71,17 +71,44 @@
     "metadataPath": "metadata.license.id",
     "value": "cc-by-4.0",
     "verifiedOn": "2026-08-29",
-    "retrievalState": "completed on hosted runner; MD5, SHA-256 and ZIP CRC verified; semantic acceptance remains pending"
+    "retrievalState": "completed on hosted runner; publisher MD5, local SHA-256 and ZIP CRC verified"
+  },
+  "resolvedSourceContracts": {
+    "lowerWorkpiece": {
+      "dictionary": "data/cross-process-lower-workpiece-dictionary-v1.json",
+      "aggregateResult": "data/public-benchmark-results/cross-process-lower-workpiece-source-contract-v1.json",
+      "filesAccepted": 4989,
+      "filesRejected": 0,
+      "rowsAccepted": 2475581,
+      "acceptedMeasuredTimeSeriesSamples": 7426743,
+      "actualChannelsAcceptedPerRow": 3,
+      "pressureTargetValuesExcludedAsCommands": 2475581,
+      "sourceIntervalSeconds": 0.03
+    },
+    "upperWorkpiece": {
+      "dictionary": "data/cross-process-upper-workpiece-dictionary-v1.json",
+      "schemaSourceDefined": true,
+      "meltVolumeUnit": "cm3",
+      "injectionVelocityUnit": "cm3/s",
+      "pressureUnit": null,
+      "stateCodeSemantics": null,
+      "observedStateCodesInCheckedAuthorExample": [0, 1, 2, 4, 8],
+      "checkedAuthorExampleTimeIncrement": 0.01,
+      "additionalAcceptedMeasuredTimeSeriesSamples": 0
+    }
   },
   "profilingPlan": [
-    "Retrieve only the pinned publisher archive and verify the published MD5 plus a locally computed SHA-256 without committing the raw archive.",
-    "Enumerate experiment IDs and all internal files from the delivered archive rather than inferring counts from descriptions.",
-    "Profile upper and lower injection streams independently and preserve delivered time bases, units and cycle grouping.",
-    "Separate pressure actual from pressure target and separate measured velocity/volume from commands, targets, states or derived fields using source semantics.",
-    "Exclude both screw-driving JSON streams from injection-moulding sample totals while preserving their experiment-link metadata for cross-process educational analysis.",
-    "Count accepted measured injection time-series values only from delivered direct-measurement arrays or columns with ordering/time basis established.",
-    "Emit aggregate schemas, counts and fingerprints only; never upload raw third-party rows or arrays as workflow artifacts."
+    "Keep the exact publisher archive fingerprint pinned and do not commit raw publisher rows.",
+    "Preserve lower-workpiece acceptance under its source-native TXT header, unit and timing contract.",
+    "Preserve each upper CSV file's explicit time vector rather than imposing the publisher's approximate global injection-moulding sampling frequency.",
+    "Do not infer the upper pressure engineering unit from the lower-workpiece stream or from numeric magnitude.",
+    "Do not infer semantic names for upper state codes 0, 1, 2, 4 and 8 from their transition timing.",
+    "Promote any future upper-workpiece values only after authoritative field definitions and deterministic archive-wide profiling pass fail-closed QA.",
+    "Exclude both screw-driving JSON streams from injection-moulding sample totals while preserving experiment-link metadata."
   ],
-  "evidenceBoundary": "The Zenodo record describes a real cross-process manufacturing dataset with two injection-moulding streams sampled at approximately 1 kHz and two downstream screw-driving streams sampled at 833.33 Hz. The official Zenodo records API confirms CC BY 4.0, so automated retrieval and aggregate profiling are permitted. Downstream screw-driving samples cannot enter injection-moulding totals, and target/reference fields cannot be counted as measurements. The pinned 685.5 MB archive remains queued for hosted profiling; no cycle or measured-value total is accepted until its published MD5 and internal contents are validated."
+  "remainingBlockers": [
+    "authoritative engineering unit for upper-workpiece injection_pressure_target and injection_pressure_actual",
+    "authoritative semantic mapping for upper-workpiece state codes 0, 1, 2, 4 and 8"
+  ],
+  "evidenceBoundary": "The exact publisher archive has been retrieved and integrity-verified. The lower-workpiece TXT stream is source-defined and contributes 7,426,743 accepted actual measured values. Same-author upper-workpiece documentation supports cm3 for melt-volume/switching-point coordinates and cm3/s for injection velocity, while the checked author CSV establishes the exact six-field schema and a 0.01 delivered time increment in the exemplar. No public author/publisher source found in the 2026-08-29 review explicitly defines the upper pressure engineering unit or the meanings of state codes 0, 1, 2, 4 and 8. Those fields therefore remain fail-closed and no additional measured values are promoted; the project accepted measured baseline remains 21,356,311 and the fully profiled-family count remains 7."
 }
-
