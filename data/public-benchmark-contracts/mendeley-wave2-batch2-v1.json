@@ -1,0 +1,52 @@
+{
+  "schema": 1,
+  "reviewed": "2026-08-29",
+  "status": "metadata-only-source-intake",
+  "sources": [
+    {
+      "datasetId": "mendeley-c3pt29jt7c-v1",
+      "mendeleyDatasetId": "c3pt29jt7c",
+      "version": 1,
+      "doi": "10.17632/c3pt29jt7c.1",
+      "license": "CC BY 4.0",
+      "datasetPage": "https://data.mendeley.com/datasets/c3pt29jt7c/1",
+      "title": "Data for: A new characterizing method for warpage measurement of injection-molded thermoplastics",
+      "processRelevance": "direct injection-moulded plaque warpage measurement",
+      "reportedMeasurement": "plaque deflection measured using digital image correlation",
+      "priority": 1
+    },
+    {
+      "datasetId": "mendeley-yxz2w7ctnh-v1",
+      "mendeleyDatasetId": "yxz2w7ctnh",
+      "version": 1,
+      "doi": "10.17632/yxz2w7ctnh.1",
+      "license": "CC BY 4.0",
+      "datasetPage": "https://data.mendeley.com/datasets/yxz2w7ctnh/1",
+      "title": "The energy consumption and structural performance of 3D printed FDM parts in PLA & ABS, a comparison with Injection moulding",
+      "processRelevance": "mixed manufacturing comparison containing injection-moulded ABS and PLA specimens",
+      "reportedMeasurement": "three-point bending, tensile and impact structural testing; injection subset must be isolated from FDM data",
+      "priority": 2
+    },
+    {
+      "datasetId": "mendeley-ztkc87d6sr-v1",
+      "mendeleyDatasetId": "ztkc87d6sr",
+      "version": 1,
+      "doi": "10.17632/ztkc87d6sr.1",
+      "license": "CC BY 4.0",
+      "datasetPage": "https://data.mendeley.com/datasets/ztkc87d6sr/1",
+      "title": "Dataset on tribological, characterization and thermal properties of Silicon carbide reinforced polyamide composites for industrial applications",
+      "processRelevance": "injection-moulded Nylon 6 / SiC specimens",
+      "reportedMeasurement": "wear, TGA, FTIR and SEM characterization",
+      "priority": 3
+    }
+  ],
+  "stage1Rules": {
+    "publisherMetadataOnly": true,
+    "downloadPublisherPayloads": false,
+    "rawRowsOrArraysEmitted": false,
+    "countsAsFullyProfiledMeasuredDataset": false,
+    "acceptedMeasuredTimeSeriesSamples": 0,
+    "mixedProcessSourcesMustBeSeparatedBeforeAcceptance": true,
+    "reportedMeasurementsDoNotCountWithoutDeliveredFileProfiling": true
+  }
+}
