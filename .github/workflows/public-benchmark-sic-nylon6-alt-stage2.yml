@@ -1,0 +1,60 @@
+name: MouldMaster Public Measured Benchmark — SiC Nylon 6 DOCX profile
+
+on:
+  push:
+    branches: [data/real-dataset-profiling-wave2-batch4]
+    paths:
+      - 'tools/run_public_benchmark_sic_nylon6_alt_stage2.py'
+      - 'qa_public_benchmark_sic_nylon6_alt_stage2.py'
+      - 'data/public-benchmark-results/sic-nylon6-alt-stage1.json'
+      - '.github/workflows/public-benchmark-sic-nylon6-alt-stage2.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  document-profile:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Validate document evidence boundary
+        run: python qa_public_benchmark_sic_nylon6_alt_stage2.py
+      - name: Profile one unique publisher DOCX without raw values
+        run: |
+          mkdir -p benchmark-results
+          python tools/run_public_benchmark_sic_nylon6_alt_stage2.py \
+            --output benchmark-results/sic-nylon6-alt-stage2.json \
+            --retrieved-date "$(date -u +%F)"
+      - name: Validate aggregate document profile
+        run: |
+          python - <<'PY'
+          import json
+          x=json.load(open('benchmark-results/sic-nylon6-alt-stage2.json'))
+          assert x['status']=='retrieved-document-profile-needs-semantic-decision'
+          assert x['source']['datasetFamilyId']=='sic-nylon6-injection-moulded-v1'
+          assert x['source']['alternateDatasetDoi']=='10.17632/47k6jswwg7.1'
+          assert x['source']['licenseBoundary']=='CC BY-NC 3.0'
+          assert x['source']['publisherSha256Matched'] is True
+          assert x['profile']['rawNumericValuesEmitted'] is False
+          assert x['profile']['imageOcrPerformed'] is False
+          assert x['acceptance']['countsAsFullyProfiledMeasuredDataset'] is False
+          assert x['acceptance']['acceptedMeasuredTimeSeriesSamples']==0
+          assert x['acceptance']['sameStudyAlternateReleaseDoesNotCreateSecondFamily'] is True
+          assert x['retrieval']['duplicateSecondPublisherEntryDownloaded'] is False
+          assert x['retrieval']['rawPublisherFileCommitted'] is False
+          assert x['retrieval']['rawNumericValuesUploadedAsArtifact'] is False
+          assert x['retrieval']['imagesOcred'] is False
+          print(json.dumps({'source':x['source'],'profile':x['profile']},indent=2))
+          PY
+      - name: Upload aggregate DOCX profile only
+        uses: actions/upload-artifact@v4
+        with:
+          name: mouldmaster-public-measured-benchmark-sic-nylon6-alt-stage2
+          path: benchmark-results/sic-nylon6-alt-stage2.json
+          if-no-files-found: error
+          retention-days: 30
