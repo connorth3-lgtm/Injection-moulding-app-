@@ -1,7 +1,13 @@
 {
   "schema": 1,
   "datasetId": "iguzzini-road-lenses",
-  "status": "restricted-research-education-profile-candidate",
+  "status": "accepted-restricted-profile",
+  "profileAcceptanceEvidence": {
+    "workflowRun": 33229910314,
+    "artifactId": 9708145379,
+    "artifactDigest": "sha256:ae88eea7210ab1b448e092a0b4704212b25da0d42ff4eb3733bb8819c9bee494",
+    "resultPath": "data/public-benchmark-results/iguzzini-road-lenses-v1.json"
+  },
   "source": {
     "repository": "https://github.com/airtlab/machine-learning-for-quality-prediction-in-plastic-injection-molding",
     "pinnedCommit": "41b8f392923d37b50b5098ed918dd2f0de1bc328",
@@ -31,7 +37,10 @@
       "4": {"name": "Inefficient", "reportedCount": 360}
     },
     "reportedClassCountSum": 1446,
-    "reportedClassCountDiscrepancy": 5
+    "reportedClassCountDiscrepancy": 5,
+    "deliveredQualityClasses": {"1": 370, "2": 406, "3": 310, "4": 365},
+    "deliveredClassCountSum": 1451,
+    "recordLevelMeasuredProcessValues": 18863
   },
   "acceptanceRules": {
     "exactPinnedSourceRequired": true,
@@ -43,5 +52,5 @@
     "rawRowsCommittedOrArtifacted": false,
     "useScopeMustRemainResearchEducationOnly": true
   },
-  "evidenceBoundary": "The repository and peer-reviewed paper explicitly release this real-production dataset for research and educational purposes. MouldMaster may profile it for the project's educational use, but must not widen those terms into unrestricted redistribution or a standard open-data licence. Delivered CSV counts override prose summaries, and this record-level dataset contributes zero high-frequency measured time-series samples."
+  "evidenceBoundary": "The exact pinned real-production CSV passed aggregate profiling under the repository and peer-reviewed paper's explicit research/education release terms. MouldMaster counts this as a fully profiled measured dataset family for its educational scope, but does not widen those terms into unrestricted redistribution or a standard open-data licence. All 1,451 delivered rows contain all 13 process fields and a quality label; the delivered class-4 count is 365, resolving the README's five-row shortfall. This record-level source contributes zero high-frequency time-series samples."
 }
