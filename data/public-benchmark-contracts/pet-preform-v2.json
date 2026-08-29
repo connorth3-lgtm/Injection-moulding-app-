@@ -1,0 +1,26 @@
+{
+  "schema": 1,
+  "datasetId": "pet-preform-v2",
+  "status": "candidate-until-source-files-and-measurement-semantics-pass",
+  "source": {
+    "title": "Preform injection molding analysis - Database",
+    "datasetDoi": "10.17632/vc3k9tt5zj.2",
+    "datasetPage": "https://data.mendeley.com/datasets/vc3k9tt5zj/2",
+    "datasetVersion": 2,
+    "publisher": "Mendeley Data",
+    "license": "CC BY 4.0",
+    "relatedArticleDoi": "10.1016/j.rinma.2026.101013"
+  },
+  "acceptance": {
+    "requireVersionPinnedPublicFileLinks": true,
+    "requireAllSelectedFilesSha256": true,
+    "requireReadableTableSchema": true,
+    "requireInjectionMouldingMeasurementSemantics": true,
+    "requireMeasuredVersusSimulatedFieldsSeparated": true,
+    "requireQualityOutcomeSemantics": true,
+    "requireNoRawRowsInProfile": true,
+    "rawPublisherFilesCommitted": false,
+    "rawRowsUploadedAsArtifact": false
+  },
+  "evidenceBoundary": "The CC BY 4.0 dataset is publicly reusable, but the related 2026 paper combines statistical, simulation and machine-learning results. The source files must therefore be inspected before any row or field is counted as real measured injection-moulding evidence; simulation-only outputs never enter measured counts."
+}

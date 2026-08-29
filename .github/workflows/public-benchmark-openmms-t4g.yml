@@ -1,0 +1,73 @@
+name: MouldMaster Public Measured Benchmark — OpenMMS-T4G
+
+on:
+  push:
+    branches: [main, data/real-dataset-profiling-wave1]
+    paths:
+      - 'tools/run_public_benchmark_openmms_t4g.py'
+      - 'qa_public_benchmark_openmms.py'
+      - 'data/public-benchmark-contracts/openmms-t4g-v1.json'
+      - '.github/workflows/public-benchmark-openmms-t4g.yml'
+  pull_request:
+    branches: [main]
+    paths:
+      - 'tools/run_public_benchmark_openmms_t4g.py'
+      - 'qa_public_benchmark_openmms.py'
+      - 'data/public-benchmark-contracts/openmms-t4g-v1.json'
+      - '.github/workflows/public-benchmark-openmms-t4g.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: mouldmaster-public-benchmark-openmms-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  runner-qa:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python -m pip install --disable-pip-version-check pandas numpy
+      - run: python qa_public_benchmark_openmms.py
+
+  public-measured-benchmark:
+    if: github.event_name != 'pull_request'
+    needs: runner-qa
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python -m pip install --disable-pip-version-check pandas numpy
+      - name: Retrieve and profile exact OpenMMS case-study file
+        run: |
+          mkdir -p benchmark-results
+          python tools/run_public_benchmark_openmms_t4g.py \
+            --output benchmark-results/openmms-t4g-profile.json \
+            --retrieved-date "$(date -u +%F)"
+      - name: Validate aggregate-only boundary
+        run: |
+          python - <<'PY'
+          import json
+          x=json.load(open('benchmark-results/openmms-t4g-profile.json'))
+          assert len(x['source']['sha256']) == 64
+          assert x['profile']['rawRowsOrCellValuesEmitted'] is False
+          assert x['retrieval']['rawPublisherFileCommitted'] is False
+          assert x['retrieval']['rawRowsUploadedAsArtifact'] is False
+          assert x['profile']['measuredSignalColumns'] == 10
+          print(x['status'], x['profile']['rows'], x['profile']['measuredSignalColumns'], x['profile']['acceptedMeasuredTimeSeriesSamples'])
+          PY
+      - name: Upload aggregate OpenMMS evidence only
+        uses: actions/upload-artifact@v4
+        with:
+          name: mouldmaster-public-measured-benchmark-openmms-t4g
+          path: benchmark-results/openmms-t4g-profile.json
+          if-no-files-found: error
+          retention-days: 30

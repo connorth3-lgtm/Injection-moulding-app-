@@ -1,0 +1,95 @@
+{
+  "schema_version": 1,
+  "status": "retrieved-profile-needs-semantic-review",
+  "retrieved_date": "2026-08-29",
+  "source": {
+    "datasetId": "pet-preform-v2",
+    "datasetDoi": "10.17632/vc3k9tt5zj.2",
+    "datasetPage": "https://data.mendeley.com/datasets/vc3k9tt5zj/2",
+    "license": "CC BY 4.0",
+    "version": 2
+  },
+  "files": [
+    {
+      "fileId": "0d563ce9-3845-4f81-9f1b-e8a894da4285",
+      "publisherName": "Preform Manuscript Database .xlsx",
+      "listingSource": "https://data.mendeley.com/public-api/datasets/vc3k9tt5zj/files?folder_id=root&version=2",
+      "downloadUrl": "https://data.mendeley.com/public-files/datasets/vc3k9tt5zj/files/0d563ce9-3845-4f81-9f1b-e8a894da4285/file_downloaded",
+      "resolvedUrl": "https://prod-dcd-datasets-public-files-eu-west-1.s3.eu-west-1.amazonaws.com/5b0081e1-2741-4e88-aa65-7ce2da46bfe5",
+      "sizeBytes": 15817,
+      "sha256": "20f6704a93df7638d682b692ae4cb7432ca7d94bbc950ef2bdd0cfc17db124dc",
+      "detectedType": ".xlsx"
+    }
+  ],
+  "tables": [
+    {
+      "sourceFileId": "0d563ce9-3845-4f81-9f1b-e8a894da4285",
+      "publisherName": "Preform Manuscript Database .xlsx",
+      "fileName": "file-1.xlsx",
+      "table": "ANN data ",
+      "rows": 27,
+      "columns": 26,
+      "semantics": {
+        "measuredOrProcessHeaderMarkers": [
+          "pressure",
+          "temperature",
+          "time"
+        ],
+        "simulationHeaderMarkers": [
+          "orientation",
+          "predicted",
+          "residual stress"
+        ],
+        "processHeaderMarkers": [
+          "cooling",
+          "melt",
+          "mold",
+          "pressure",
+          "temperature",
+          "time"
+        ],
+        "qualityHeaderMarkers": [],
+        "headerNames": [
+          "Melt Temperature (\u00b0C)",
+          "Mold Temperature (\u00b0C)",
+          "Ambient Temperature (\u00b0C)",
+          "Pressure hold time (sec)",
+          "Pure cooling time (sec)",
+          "Residual stress at Post Filling End",
+          "Total stress Displacement",
+          "In-mold Residual stress Displacement",
+          "Quenching  thermal stress Displacement",
+          "Total stress Displacement (orientation effect)",
+          "In-mold Residual Von-mises stress",
+          "De-mold Residual Von-mises stress",
+          "Validation 2",
+          "H1_1",
+          "H1_2",
+          "H1_3",
+          "H1_4",
+          "H1_5",
+          "H1_6",
+          "Predicted Residual stress at Post Filling End",
+          "Predicted Total stress Displacement",
+          "Predicted In-mold Residual stress Displacement",
+          "Predicted Quenching  thermal stress Displacement",
+          "Predicted Total stress Displacement (orientation effect)",
+          "Predicted In-mold Residual Von-mises stress",
+          "Predicted De-mold Residual Von-mises stress"
+        ],
+        "rawValuesEmitted": false
+      }
+    }
+  ],
+  "profile": {
+    "publicFilesRetrieved": 1,
+    "readableTables": 1,
+    "totalTabularRowsAcrossTables": 27,
+    "rawRowsOrCellValuesEmitted": false
+  },
+  "retrieval": {
+    "rawPublisherFilesCommitted": false,
+    "rawRowsUploadedAsArtifact": false
+  },
+  "evidenceBoundary": "The CC BY 4.0 dataset is publicly reusable, but the related 2026 paper combines statistical, simulation and machine-learning results. The source files must therefore be inspected before any row or field is counted as real measured injection-moulding evidence; simulation-only outputs never enter measured counts."
+}

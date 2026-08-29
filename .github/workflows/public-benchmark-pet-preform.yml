@@ -1,0 +1,75 @@
+name: MouldMaster Public Measured Benchmark — PET preform v2
+
+on:
+  push:
+    branches: [main, data/real-dataset-profiling-wave1]
+    paths:
+      - 'tools/run_public_benchmark_pet_preform.py'
+      - 'qa_public_benchmark_pet_preform.py'
+      - 'data/public-benchmark-contracts/pet-preform-v2.json'
+      - '.github/workflows/public-benchmark-pet-preform.yml'
+  pull_request:
+    branches: [main]
+    paths:
+      - 'tools/run_public_benchmark_pet_preform.py'
+      - 'qa_public_benchmark_pet_preform.py'
+      - 'data/public-benchmark-contracts/pet-preform-v2.json'
+      - '.github/workflows/public-benchmark-pet-preform.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: mouldmaster-public-benchmark-pet-preform-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  runner-qa:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python -m pip install --disable-pip-version-check pandas openpyxl xlrd
+      - run: python qa_public_benchmark_pet_preform.py
+
+  public-measured-benchmark:
+    if: github.event_name != 'pull_request'
+    needs: runner-qa
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python -m pip install --disable-pip-version-check pandas openpyxl xlrd
+      - name: Retrieve and profile version-pinned PET preform files
+        run: |
+          mkdir -p benchmark-results
+          python tools/run_public_benchmark_pet_preform.py \
+            --output benchmark-results/pet-preform-v2-profile.json \
+            --retrieved-date "$(date -u +%F)"
+      - name: Validate aggregate-only result
+        run: |
+          python - <<'PY'
+          import json
+          x=json.load(open('benchmark-results/pet-preform-v2-profile.json'))
+          assert x['source']['datasetDoi']=='10.17632/vc3k9tt5zj.2'
+          assert x['source']['version']==2
+          assert x['profile']['publicFilesRetrieved'] >= 1
+          assert all(len(f['sha256'])==64 for f in x['files'])
+          assert x['profile']['rawRowsOrCellValuesEmitted'] is False
+          assert x['retrieval']['rawPublisherFilesCommitted'] is False
+          assert x['retrieval']['rawRowsUploadedAsArtifact'] is False
+          print(x['status'], x['profile']['publicFilesRetrieved'], x['profile']['readableTables'], x['profile']['totalTabularRowsAcrossTables'])
+          PY
+      - name: Upload aggregate PET preform evidence only
+        uses: actions/upload-artifact@v4
+        with:
+          name: mouldmaster-public-measured-benchmark-pet-preform-v2
+          path: benchmark-results/pet-preform-v2-profile.json
+          if-no-files-found: error
+          retention-days: 30

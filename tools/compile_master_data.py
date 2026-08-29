@@ -41,6 +41,8 @@ def snapshot_file(path):
 def compile_measured():
     targets = load_json("data/content-scale-targets.json")
     inventory = load_json("data/measured-dataset-inventory-v1.json")
+    execution = load_json("data/measured-dataset-execution-ledger-v1.json")
+    rights_review = load_json("data/measured-dataset-rights-review-2026-08-29.json")
     discovery = load_json("data/measured-dataset-catalog.json")
     queue = load_json("data/measured-data-discovery-queue-v1.json")
     evidence50 = load_json("data/measured-evidence-50-pass.json")
@@ -59,13 +61,56 @@ def compile_measured():
     need(len(studies) == expected == 60, "primary measured registry must compile to 60 studies")
     need(len(dois) == len(set(dois)) and all(dois), "compiled primary measured studies must have 60 unique DOIs")
 
+    need((rights_review.get("summary") or {}).get("sourcesReviewed") == 5, "measured-data rights review source count drifted")
+    need((rights_review.get("summary") or {}).get("unblockedForAutomatedIngestion") == 4, "measured-data rights review promotion count drifted")
+
     dossiers = {}
     for p in sorted((ROOT / "data/mechanism-promotion-evidence").glob("*.json")):
         dossiers[p.name] = json.loads(p.read_text(encoding="utf-8"))
 
+    benchmark_specs = [
+        ("gtnb4j7bfx-v1", "data/public-benchmark-contracts/gtnb4j7bfx-v1.json", "data/public-benchmark-results/gtnb4j7bfx-v1.json"),
+        ("scatimdata-avaps", "data/public-benchmark-contracts/scatimdata-avaps-v1.json", "data/public-benchmark-results/scatimdata-avaps-v1.json"),
+        ("openmms-t4g", "data/public-benchmark-contracts/openmms-t4g-v1.json", "data/public-benchmark-results/openmms-t4g-v1.json"),
+        ("su13148102-supplement", "data/public-benchmark-contracts/su13148102-supplement-v1.json", "data/public-benchmark-results/su13148102-supplement-v1.json"),
+        ("forinfpro-himd-v1", "data/public-benchmark-contracts/forinfpro-himd-v1.json", "data/public-benchmark-results/forinfpro-himd-v1.json"),
+        ("impure-pascoe-2022", "data/public-benchmark-contracts/impure-pascoe-2022-v1.json", "data/public-benchmark-results/impure-pascoe-2022-v1.json"),
+    ]
+    benchmark_contracts = {}
+    benchmark_results = {}
+    for benchmark_id, contract_path, result_path in benchmark_specs:
+        contract = load_json(contract_path)
+        result = load_json(result_path)
+        need(result.get("status") == "completed-public-measured-benchmark", f"completed measured benchmark status missing: {benchmark_id}")
+        benchmark_contracts[benchmark_id] = contract
+        benchmark_results[benchmark_id] = result
+
+    restricted_specs = [
+        ("iguzzini-road-lenses", "data/public-benchmark-contracts/iguzzini-road-lenses-v1.json", "data/public-benchmark-results/iguzzini-road-lenses-v1.json"),
+    ]
+    restricted_contracts = {}
+    restricted_results = {}
+    for benchmark_id, contract_path, result_path in restricted_specs:
+        contract = load_json(contract_path)
+        result = load_json(result_path)
+        acceptance = result.get("acceptance") or {}
+        need(result.get("status") == "accepted-restricted-profile", f"restricted measured benchmark status missing: {benchmark_id}")
+        need(acceptance.get("countsAsFullyProfiledMeasuredDataset") is True, f"restricted measured benchmark acceptance missing: {benchmark_id}")
+        need(acceptance.get("useScope") == "research-and-education-only", f"restricted measured benchmark scope drifted: {benchmark_id}")
+        need((result.get("source") or {}).get("rawRedistributionAllowed") is False, f"restricted measured benchmark redistribution boundary drifted: {benchmark_id}")
+        restricted_contracts[benchmark_id] = contract
+        restricted_results[benchmark_id] = result
+
+    accepted_profiled = targets["targets"]["fully_profiled_measured_datasets"]["currentAccepted"]
+    need(len(benchmark_results) + len(restricted_results) == accepted_profiled == 7, "completed measured benchmark result count must match accepted profiled dataset count")
+    need(execution.get("summary", {}).get("acceptedProfiled") == accepted_profiled, "execution ledger accepted-profiled count drifted")
+    need(execution.get("summary", {}).get("acceptedRestrictedResearchEducation") == len(restricted_results) == 1, "restricted accepted measured-profile count drifted")
+
     return {
         "targetLedger": targets,
         "datasetInventory": inventory,
+        "datasetExecutionLedger": execution,
+        "datasetRightsReview": rights_review,
         "datasetDiscoveryCatalog": discovery,
         "datasetDiscoveryQueue": queue,
         "measuredEvidence50Pass": evidence50,
@@ -73,8 +118,18 @@ def compile_measured():
         "primaryMeasuredPacks": packs,
         "primaryMeasuredStudies": studies,
         "mechanismPromotionDossiers": dossiers,
-        "publicBenchmarkContract": load_json("data/public-benchmark-contracts/gtnb4j7bfx-v1.json"),
-        "publicBenchmarkResult": load_json("data/public-benchmark-results/gtnb4j7bfx-v1.json"),
+        "publicBenchmarkContracts": benchmark_contracts,
+        "publicBenchmarkResults": benchmark_results,
+        "restrictedBenchmarkContracts": restricted_contracts,
+        "restrictedBenchmarkResults": restricted_results,
+        "publicBenchmarkReviewResults": {
+            "pet-preform-v2": load_json("data/public-benchmark-results/pet-preform-v2.json"),
+            "warwick-demoulding": load_json("data/public-benchmark-results/warwick-demoulding-v2.json"),
+            "rwth-pcr-2025": load_json("data/public-benchmark-results/rwth-pcr-2025-v1.json"),
+            "cross-process-chain-17240390": load_json("data/public-benchmark-results/cross-process-chain-17240390-v1.json"),
+        },
+        "publicBenchmarkContract": benchmark_contracts["gtnb4j7bfx-v1"],
+        "publicBenchmarkResult": benchmark_results["gtnb4j7bfx-v1"],
     }
 
 
@@ -208,8 +263,8 @@ def make_manifest(measured, research, app, process, drafts, candidate_path):
     draft_counts = drafts["manifest"]["counts"]
     candidates = research.get("candidateRegistry") or {}
     return {
-        "schema": 1,
-        "compiledOn": "2026-08-28",
+        "schema": 2,
+        "compiledOn": measured["targetLedger"].get("reviewed"),
         "scope": "Master compilation of MouldMaster structured data, evidence/provenance registries, application data assets, synthetic learning corpus metadata, curriculum/assessment data, generated draft banks and optionally the research-candidate registry. Restricted third-party raw files are not copied.",
         "boundaries": {
             "syntheticIsNotMeasured": True,
@@ -274,3 +329,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+

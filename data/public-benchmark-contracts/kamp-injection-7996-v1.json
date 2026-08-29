@@ -1,0 +1,9 @@
+{
+  "schema": 1,
+  "datasetId": "kamp-injection-7996",
+  "status": "blocked-mirror-rights",
+  "source": {"analysisMirror": "https://github.com/johnwslee/injection_molding_analysis", "originalSource": "Korea AI Manufacturing Platform (KAMP)", "mirrorLicense": "MIT for analysis repository code", "datasetLicense": null, "automatedRetrievalAllowed": false, "rawRedistributionAllowed": false},
+  "experimentContext": {"publisherReportedRows": 7996, "publisherReportedColumns": 44, "partFamilies": ["CN7-LH", "CN7-RH", "RG3-LH", "RG3-RH"], "target": "PassOrFail", "recordUnit": "factory injection-moulding process record", "signalFamilies": ["filling/injection/plasticising/cycle time", "cushion and screw position/speed/RPM", "pressure", "barrel/hopper/mould temperatures"]},
+  "rightsGate": {"publicMirrorDoesNotProveOriginalDatasetRights": true, "analysisRepositoryLicenseDoesNotLicenseOriginalKAMPData": true, "rawFilesMustNotBeDownloadedByAutomationUntilOriginalTermsAreCaptured": true, "requiredEvidence": ["Authoritative KAMP dataset distribution terms or explicit permission for reuse/profiling.", "Exact original dataset identity/version sufficient to prove the mirror corresponds to the authorised release."]},
+  "evidenceBoundary": "The analysis repository states that its dataset was downloaded from KAMP. The repository's MIT licence governs the analysis code and does not prove rights for the original manufacturing dataset. Metadata and paper-level facts may be used, but automated raw ingestion and redistribution remain blocked."
+}

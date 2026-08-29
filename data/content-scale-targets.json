@@ -1,7 +1,7 @@
 {
   "schema": 1,
-  "version": "2026.08.28.3",
-  "reviewed": "2026-08-28",
+  "version": "2026.08.29.4",
+  "reviewed": "2026-08-29",
   "scope": "Hard content-scale targets for MouldMaster. Completion counts only evidence that satisfies the acceptance definition for that area. Synthetic learning cases, generated drafts, unverified candidate papers and metadata-only dataset records must not be counted as completed measured evidence.",
   "targets": {
     "fully_profiled_measured_datasets": {
@@ -9,17 +9,17 @@
       "preferred": 50,
       "unit": "datasets",
       "acceptance": "A real measured dataset whose exact source/version/licence or access terms are recorded; source files have been obtained lawfully; file fingerprint and profile are recorded; schema/units/grouping are inspected; direct measurements, commands, derived fields and labels are distinguished; material/process/machine/mould/quality context and limitations are documented. Metadata-only records do not count.",
-      "currentAccepted": 1,
+      "currentAccepted": 7,
       "currentDiscovered": 20,
-      "notes": "The dedicated measured-dataset inventory contains 20 real data-bearing records. One exact-source CC BY 4.0 public benchmark, Mendeley 10.17632/gtnb4j7bfx.1 v1, has been lawfully retrieved, SHA-256 fingerprinted, process-separated and profiled; the remaining inventory records do not count as fully profiled until their actual files pass the same evidence boundary."
+      "notes": "Seven exact-source measured dataset families satisfy the profiling acceptance definition, including the hosted ImPure profile: 309 checksum-verified publisher files, 307 cycle files, 297,087 cycle rows and one consistent nine-column cycle schema. Its 2,376,696 numeric values remain unit/analogue-semantics limited and add zero accepted time-series samples. The cross-process archive is checksum-verified and structurally profiled but remains non-counting because its lower-workpiece TXT preamble/chart shapes and unit/target semantics require a source-specific parser. PET, Warwick and RWTH retain their documented semantic, format and retrieval blockers."
     },
     "measured_time_series_samples": {
       "minimum": 1000000,
       "preferred": 5000000,
       "unit": "samples",
       "acceptance": "Measured time-series samples from lawfully accessed real experimental or industrial injection-moulding datasets with source provenance, signal identity, units, sample ordering/time basis and dataset linkage. Synthetic training cycles and generated traces never count.",
-      "currentAccepted": 0,
-      "notes": "The existing 19,008 process-data learning cycles are synthetic and deliberately excluded. High-resolution real sources are inventoried, but their raw time-series samples are not promoted into this count until source-file profiling and sample-level provenance are complete."
+      "currentAccepted": 13929568,
+      "notes": "Accepted real time-series evidence totals 13,929,568 values. AVAPS contributes 13,631,488 values from 3,328 quality-linked cycles x two delivered signals x 2,048 stored values per signal. OpenMMS-T4G contributes 298,080 values from 29,808 ordered rows x 10 source-defined sensor channels. The iGuzzini accepted restricted profile is record-level and contributes zero high-frequency time-series samples. The AVAPS companion paper reports 2,049 points per signal, but released files consistently contain 2,048 stored values, so the delivered-file count is used. The existing 19,008 process-data learning cycles remain synthetic and excluded."
     },
     "material_profiles": {
       "minimum": 250,
@@ -43,7 +43,7 @@
       "unit": "concepts",
       "acceptance": "A distinct sensor, derived signal, calibration/drift concept, failure mode, wear signature, machine-health indicator or diagnostic interpretation with measurement location/domain, units or feature semantics where applicable, failure/confounders and evidence provenance.",
       "currentAccepted": 0,
-      "notes": "Many sensor, signal and maintenance concepts exist across current libraries and 220 structured drafts can be generated, but there is not yet a dedicated audited accepted registry, so no consolidated accepted count is claimed."
+      "notes": "Many sensor, signal and maintenance concepts exist across current libraries and 220 structured drafts can be generated, but there is not yet a dedicated audited accepted registry, so no consolidated accepted count is claimed. The completed OpenMMS dataset contributes measured evidence but does not by itself promote sensor or machine-health concepts into this separate accepted registry."
     },
     "assessment_education_items": {
       "minimum": 1000,
@@ -79,3 +79,4 @@
     "Generated assessment drafts do not enter the accepted count until existing evidence-approval and quality gates pass."
   ]
 }
+

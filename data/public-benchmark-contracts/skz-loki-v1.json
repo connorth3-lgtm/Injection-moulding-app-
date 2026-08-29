@@ -1,0 +1,66 @@
+{
+  "schema": 1,
+  "datasetId": "skz-loki-v1",
+  "status": "blocked-rights-review",
+  "source": {
+    "recordUrl": "https://b2share.eudat.eu/records/fkk68-zyf30",
+    "legacyRecordId": "d8502ea56c544e069ebda44c3edd441b",
+    "datasetDoi": "10.23728/b2share.d8502ea56c544e069ebda44c3edd441b",
+    "publisher": "B2SHARE v2",
+    "version": "v1",
+    "technicalCreated": "2025-03-26",
+    "technicalModified": "2025-10-28",
+    "access": "open",
+    "license": null,
+    "licenseEvidenceStatus": "The authoritative B2SHARE record exposes Rights > License, but no licence value is present.",
+    "automatedRetrievalAllowed": false,
+    "rawRedistributionAllowed": false,
+    "reportedTotalSize": "1.0 GB"
+  },
+  "experimentContext": {
+    "process": "injection moulding",
+    "machine": "KraussMaffei 160-750PX",
+    "material": "Terluran GP-35 ABS",
+    "project": "LoKI",
+    "experiments": 68,
+    "uniqueMachineSettings": 17,
+    "repeatsPerSetting": 4,
+    "recordUnit": "cycle/experiment",
+    "publisherDescribedSignals": [
+      "time-resolved viscometer pressure",
+      "EUROMAP77/internal machine sensor data",
+      "machine setting parameters"
+    ],
+    "publisherDescribedQuality": [
+      "quality table"
+    ]
+  },
+  "publisherFileManifest": [
+    {"name":"Dataset description.pdf","size":"197.3 kB","md5":"7ea331b2f4cda398698fe6da74dccab0","role":"documentation"},
+    {"name":"quality_table_data.csv","size":"8.6 kB","md5":"a8f578f7ef5a4a510d980743780ca6f1","role":"quality-table-csv"},
+    {"name":"quality_table_data.parquet","size":"22.2 kB","md5":"4078fb85d2586bc3dd03d4a0825ff74d","role":"quality-table-parquet"},
+    {"name":"set_parameter_and_EM77_data.csv","size":"14.5 kB","md5":"ad39e7281ebdfc2b9f7b4d92bc8367fe","role":"settings-and-euromap77-csv"},
+    {"name":"set_parameter_and_EM77_data.parquet","size":"29.4 kB","md5":"384b1ee87679fa4b52b78e842a83cd99","role":"settings-and-euromap77-parquet"},
+    {"name":"viscometer_pressure_data.csv","size":"845.2 MB","md5":"df6b59101924ca1d28cea7f654f43873","role":"time-resolved-pressure-csv"},
+    {"name":"viscometer_pressure_data.parquet","size":"181.5 MB","md5":"d37a69bacfbdbe5d7bac9339dfdd94be","role":"time-resolved-pressure-parquet"}
+  ],
+  "rightsGate": {
+    "publicDownloadDoesNotEqualReusePermission": true,
+    "rawFilesMustNotBeDownloadedByAutomationUntilLicenceIsExplicit": true,
+    "requiredEvidence": [
+      "An explicit dataset licence or written reuse permission from SKZ/B2SHARE is captured.",
+      "The captured terms permit automated ingestion and aggregate profiling.",
+      "The exact v1 file manifest and checksums are revalidated at retrieval time."
+    ]
+  },
+  "profilingPlanAfterRightsClearance": [
+    "Retrieve one canonical representation of each logical table and verify its publisher checksum; use the paired CSV/Parquet forms for schema/equivalence validation, not as independent evidence.",
+    "Confirm all 68 cycle identifiers and the 17-setting by four-repeat grouping from delivered data rather than relying only on description text.",
+    "Profile time-resolved viscometer pressure separately from cycle-level machine settings, EUROMAP77 values and quality fields.",
+    "Establish the pressure-series time/index basis and delivered sample length per cycle before accepting any high-frequency measured-sample count.",
+    "Do not double-count identical measurements represented in both CSV and Parquet files.",
+    "Separate directly measured pressure/machine values from setpoints, identifiers, derived fields and quality labels.",
+    "Emit only aggregate schemas, counts and fingerprints; do not commit or artifact raw third-party rows or arrays."
+  ],
+  "evidenceBoundary": "SKZ/B2SHARE provides a scientifically valuable waveform dataset with 68 injection-moulding cycles, 17 unique settings repeated four times, time-resolved nozzle-viscometer pressure, EUROMAP77 machine data and a quality table. The publisher record also exposes exact file names, sizes and MD5 checksums. However, the authoritative Rights > License field is blank. Therefore the source remains non-executable and contributes no accepted measured-sample count until explicit reuse terms are captured."
+}

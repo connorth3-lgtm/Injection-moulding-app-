@@ -1,0 +1,14 @@
+{
+  "schema_version": 1,
+  "status": "completed-public-measured-benchmark",
+  "retrieved_date": "2026-08-29",
+  "source": {"datasetId":"forinfpro-himd-v1","recordDoi":"10.5281/zenodo.20744054","recordId":20744054,"license":"CC BY 4.0","licenseEvidence":"official Zenodo records API metadata.license.id = cc-by-4.0","access":"open"},
+  "files": [
+    {"name":"cycle_001_pt.csv","sizeBytes":21280,"sha256":"9c8dff7f18c531d447a7b2e0ca3420c3a8a30b9771dd373c4f3433f1acd27538","rows":403,"namedColumns":3,"delimiter":",","signals":["time","pressure","temperature"]},
+    {"name":"cycle_001_us_rms.csv","sizeBytes":87363,"sha256":"0e7d1610202d05177d0a3f8d44a783a9d6268a8b7df59abc268f41d97c360628","rows":2154,"namedColumns":3,"delimiter":",","signals":["time","rms_ch0","rms_ch3"]},
+    {"name":"cycle_001_machine_data.csv","sizeBytes":4860142,"sha256":"d249cbe4980b00f1565a100c3363dde4cf621c490233a4c184d47ad8d202e480","rows":10132,"deliveredColumns":101,"namedColumns":60,"delimiter":";","nonEmptyNamedValues":607920}
+  ],
+  "profile": {"deliveredCycles":1,"publicFilesRetrieved":3,"totalRowsAcrossFiles":12689,"namedMachineChannels":60,"acceptedMeasuredTimeSeriesSamples":0,"rawRowsOrCellValuesEmitted":false},
+  "retrieval": {"rawPublisherFilesCommitted":false,"rawRowsUploadedAsArtifact":false},
+  "limitations": ["The visible release contains only cycle_001.","Several delivered channels lack explicit units, so their values do not enter the accepted cross-dataset time-series total.","Machine data contain 60 named fields and 41 trailing unnamed empty columns."]
+}

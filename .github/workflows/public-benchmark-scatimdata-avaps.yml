@@ -1,0 +1,83 @@
+name: MouldMaster Public Measured Benchmark — scatimdata AVAPS
+
+on:
+  push:
+    branches: [main, data/real-dataset-profiling-wave1]
+    paths:
+      - 'tools/run_public_benchmark_scatimdata_avaps.py'
+      - 'qa_public_benchmark_scatimdata.py'
+      - 'data/public-benchmark-contracts/scatimdata-avaps-v1.json'
+      - '.github/workflows/public-benchmark-scatimdata-avaps.yml'
+  pull_request:
+    branches: [main]
+    paths:
+      - 'tools/run_public_benchmark_scatimdata_avaps.py'
+      - 'qa_public_benchmark_scatimdata.py'
+      - 'data/public-benchmark-contracts/scatimdata-avaps-v1.json'
+      - '.github/workflows/public-benchmark-scatimdata-avaps.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: mouldmaster-public-benchmark-scatimdata-avaps-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  runner-qa:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install profiling dependencies
+        run: python -m pip install --disable-pip-version-check pandas pyarrow openpyxl h5py
+      - name: AVAPS benchmark regression QA
+        run: python qa_public_benchmark_scatimdata.py
+
+  public-measured-benchmark:
+    if: github.event_name != 'pull_request'
+    needs: runner-qa
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install profiling dependencies
+        run: python -m pip install --disable-pip-version-check pandas pyarrow openpyxl h5py
+      - name: Retrieve and profile pinned AVAPS archives
+        run: |
+          mkdir -p benchmark-results
+          python tools/run_public_benchmark_scatimdata_avaps.py \
+            --output benchmark-results/scatimdata-avaps-profile.json \
+            --retrieved-date "$(date -u +%F)"
+      - name: Validate aggregate-only result boundary
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          p = Path('benchmark-results/scatimdata-avaps-profile.json')
+          x = json.loads(p.read_text())
+          assert len(x['archives']) == 3
+          assert all(len(a['sha256']) == 64 for a in x['archives'])
+          assert all(a['rawValuesEmitted'] is False for a in x['archives'])
+          assert x['retrieval']['rawPublisherFilesCommitted'] is False
+          assert x['retrieval']['rawPublisherFilesUploadedAsArtifact'] is False
+          assert x['retrieval']['rawRowsOrCellValuesEmitted'] is False
+          print(x['status'], x['measurementProfile']['deliveredMeasuredTimeSeriesSamples'])
+          PY
+      - name: Remove publisher raw-data workspace
+        if: always()
+        run: rm -rf .benchmark-work
+      - name: Upload aggregate AVAPS evidence only
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: mouldmaster-public-measured-benchmark-scatimdata-avaps
+          path: benchmark-results/scatimdata-avaps-profile.json
+          if-no-files-found: error
+          retention-days: 30

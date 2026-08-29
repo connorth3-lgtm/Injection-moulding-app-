@@ -1,0 +1,54 @@
+name: MouldMaster Profile Queued Zenodo Data
+
+on:
+  push:
+    branches: [data/real-dataset-profiling-wave1]
+    paths:
+      - tools/profile_queued_zenodo_datasets.py
+      - .github/workflows/profile-queued-zenodo-data.yml
+
+permissions:
+  contents: write
+
+concurrency:
+  group: mouldmaster-profile-queued-zenodo-data
+  cancel-in-progress: false
+
+jobs:
+  profile:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: data/real-dataset-profiling-wave1
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Profile licensed publisher data
+        run: python tools/profile_queued_zenodo_datasets.py
+      - name: Validate aggregate outputs
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          root = Path('data/public-benchmark-results')
+          impure = json.loads((root / 'impure-pascoe-2022-v1.json').read_text())
+          cross = json.loads((root / 'cross-process-chain-17240390-v1.json').read_text())
+          assert impure['profile']['cycleFiles'] > 0
+          assert impure['profile']['widthMismatchRows'] == 0
+          assert cross['source']['publisherChecksum'] == 'md5:069e190338b2ca29f736b21fabf407ba'
+          assert cross['profile']['archiveMembers'] > 0
+          assert cross['profile']['acceptedMeasuredTimeSeriesSamples'] == 0
+          assert not impure['profile']['rawRowsOrCellValuesEmitted']
+          assert not cross['profile']['rawRowsOrCellValuesEmitted']
+          PY
+      - name: Commit aggregate profiles
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -- data/public-benchmark-results/impure-pascoe-2022-v1.json data/public-benchmark-results/cross-process-chain-17240390-v1.json
+          git diff --cached --quiet && exit 0
+          git commit -m "Profile queued licensed Zenodo datasets"
+          git push origin HEAD:data/real-dataset-profiling-wave1
+

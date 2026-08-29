@@ -1,0 +1,45 @@
+{
+  "schema": 1,
+  "datasetId": "su13148102-supplement",
+  "status": "executed-profiled-release-schema-reconciled",
+  "source": {
+    "title": "Hot-runner molded sustainable-material experimental supplementary data",
+    "articleDoi": "10.3390/su13148102",
+    "supplementUrl": "https://www.mdpi.com/article/10.3390/su13148102/s1",
+    "publisher": "MDPI",
+    "license": "CC BY 4.0",
+    "peerReviewedCompanion": "10.3390/su13148102"
+  },
+  "paperReported": {
+    "rows": 955,
+    "columns": 42,
+    "materials": 5,
+    "namedDataFile": "BioplasticsTensile.csv",
+    "experiment": "two-cavity hot-runner injection moulding of iPP, recycled PP blend, PBAT and two PLA grades",
+    "processFactors": ["melt temperature", "injection velocity", "cycle time", "screw speed"],
+    "physicalOutcomes": ["strain to failure", "ultimate stress", "tensile modulus", "toughness"],
+    "additionalMeasuredStateExamples": ["observed cycle time", "observed melt temperature", "calculated cavity shear rate"]
+  },
+  "deliveredRelease": {
+    "retrievedFile": "sustainability-1272832-supplementary.csv",
+    "rows": 955,
+    "columns": 45,
+    "materials": 5,
+    "sha256": "b546abea4eb9f14b6736dec415dc43c00240965b91de4c7ca92b2494321c6ace",
+    "schemaDiscrepancy": "The current publisher supplement contains 45 substantive named fields, while the article text reports 42 columns and names BioplasticsTensile.csv. No unnamed or dummy index fields account for the difference. MouldMaster records the delivered release exactly and does not delete or invent columns to force agreement with the paper."
+  },
+  "acceptance": {
+    "requireExactPublisherSupplementRetrieval": true,
+    "requireSha256": true,
+    "require955Rows": true,
+    "requireDelivered45Columns": true,
+    "requirePaper42ColumnDiscrepancyDocumented": true,
+    "requireFiveMaterialGroups": true,
+    "requireProcessAndMechanicalFields": true,
+    "requireFieldRolesAndUnitsInspectableFromHeaders": true,
+    "requireNoRawRowsInProfile": true,
+    "rawSupplementCommitted": false,
+    "rawRowsUploadedAsArtifact": false
+  },
+  "evidenceBoundary": "The peer-reviewed article reports 955 observations, 42 columns and five materials. The exact CC BY 4.0 publisher release retrieved by MouldMaster contains the same 955 observations and five material groups but 45 substantive named columns. Acceptance therefore requires the exact released file fingerprint, delivered 45-column schema, field/unit inspection, material grouping and explicit documentation of the 42-versus-45 paper/release discrepancy. This record-level DOE evidence does not count as high-frequency time-series samples and does not establish universal process settings."
+}

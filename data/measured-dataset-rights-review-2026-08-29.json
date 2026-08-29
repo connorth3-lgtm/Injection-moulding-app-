@@ -1,0 +1,65 @@
+{
+  "schema": 1,
+  "version": "2026.08.29.1",
+  "reviewed": "2026-08-29",
+  "purpose": "Authoritative reuse-rights review for the highest-value measured waveform sources that were blocked only because public download availability had not yet been tied to explicit dataset reuse terms.",
+  "policy": {
+    "publicDownloadDoesNotEqualReusable": true,
+    "explicitDatasetLicenceOrRepositoryTermsRequiredForAutomatedIngestion": true,
+    "codeRepositoryLicenceDoesNotAutomaticallyLicenseThirdPartyOrCompanionData": true,
+    "missingOrBlankLicenceFieldRemainsBlocked": true
+  },
+  "summary": {
+    "sourcesReviewed": 5,
+    "unblockedForAutomatedIngestion": 4,
+    "remainBlockedForRights": 1
+  },
+  "sources": [
+    {
+      "datasetId": "rwth-pcr-2025",
+      "authoritativeRecord": "https://publications.rwth-aachen.de/record/1016199?ln=de",
+      "decision": "executable-license-confirmed",
+      "license": "CC BY 4.0",
+      "evidence": "The authoritative RWTH Publications dataset record explicitly displays Creative Commons Attribution CC BY 4.0 and provides the OpenAccess ExperimentalData.zip file.",
+      "automatedIngestionAllowed": true,
+      "nextAction": "Retrieve ExperimentalData.zip, fingerprint files, enumerate experiment/cycle structure, separate controller experiments from part-mass iterations, and count only delivered measured time-series samples."
+    },
+    {
+      "datasetId": "skz-loki-v1",
+      "authoritativeRecord": "https://b2share.eudat.eu/records/fkk68-zyf30",
+      "decision": "blocked-no-explicit-license",
+      "license": null,
+      "evidence": "The B2SHARE record is openly downloadable and exposes a Rights > License field, but the licence value is blank on the authoritative record.",
+      "automatedIngestionAllowed": false,
+      "nextAction": "Obtain explicit dataset reuse terms from SKZ/B2SHARE before automated waveform ingestion."
+    },
+    {
+      "datasetId": "impure-pascoe-2022",
+      "authoritativeRecord": "https://zenodo.org/records/6913660",
+      "decision": "executable-license-confirmed",
+      "license": "CC BY 4.0",
+      "evidence": "The official Zenodo records API returned metadata.license.id=cc-by-4.0 for record 6913660.",
+      "automatedIngestionAllowed": true,
+      "nextAction": "Enumerate and aggregate-profile all cycle CSVs with rate-limited retrieval; retain no raw rows."
+    },
+    {
+      "datasetId": "forinfpro-himd-v1",
+      "authoritativeRecord": "https://zenodo.org/records/20744054",
+      "decision": "executable-license-confirmed",
+      "license": "CC BY 4.0",
+      "evidence": "The official Zenodo records API returned metadata.license.id=cc-by-4.0; the three delivered files were subsequently retrieved and SHA-256 fingerprinted.",
+      "automatedIngestionAllowed": true,
+      "nextAction": "Keep the exact three-file manifest and one-cycle/unit limitations regression-pinned."
+    },
+    {
+      "datasetId": "cross-process-chain-17240390",
+      "authoritativeRecord": "https://zenodo.org/records/17240390",
+      "decision": "executable-license-confirmed",
+      "license": "CC BY 4.0",
+      "evidence": "The official Zenodo records API returned metadata.license.id=cc-by-4.0 for record 17240390; the archive MD5 remains pinned as 069e190338b2ca29f736b21fabf407ba.",
+      "automatedIngestionAllowed": true,
+      "nextAction": "Profile the 685.5 MB archive on a hosted runner and count only upper/lower injection streams; exclude both screw-driving streams."
+    }
+  ],
+  "evidenceBoundary": "This review changes execution eligibility only. It does not promote a dataset to fully profiled measured evidence and does not change accepted measured-sample counts until actual source files are lawfully retrieved, fingerprinted, profiled and reconciled."
+}

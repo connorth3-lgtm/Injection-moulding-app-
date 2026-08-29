@@ -1,0 +1,72 @@
+name: MouldMaster Public Measured Benchmark — Sustainability 8102 supplement
+
+on:
+  push:
+    branches: [main, data/real-dataset-profiling-wave1]
+    paths:
+      - 'tools/run_public_benchmark_su13148102.py'
+      - 'qa_public_benchmark_su13148102.py'
+      - 'data/public-benchmark-contracts/su13148102-supplement-v1.json'
+      - '.github/workflows/public-benchmark-su13148102.yml'
+  pull_request:
+    branches: [main]
+    paths:
+      - 'tools/run_public_benchmark_su13148102.py'
+      - 'qa_public_benchmark_su13148102.py'
+      - 'data/public-benchmark-contracts/su13148102-supplement-v1.json'
+      - '.github/workflows/public-benchmark-su13148102.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: mouldmaster-public-benchmark-su13148102-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  runner-qa:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python -m pip install --disable-pip-version-check pandas openpyxl
+      - run: python qa_public_benchmark_su13148102.py
+
+  public-measured-benchmark:
+    if: github.event_name != 'pull_request'
+    needs: runner-qa
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python -m pip install --disable-pip-version-check pandas openpyxl
+      - name: Retrieve and profile publisher supplement
+        run: |
+          mkdir -p benchmark-results
+          python tools/run_public_benchmark_su13148102.py \
+            --output benchmark-results/su13148102-supplement-profile.json \
+            --retrieved-date "$(date -u +%F)"
+      - name: Validate aggregate-only result
+        run: |
+          python - <<'PY'
+          import json
+          x=json.load(open('benchmark-results/su13148102-supplement-profile.json'))
+          assert len(x['source']['sha256']) == 64
+          assert x['profile']['rawRowsOrCellValuesEmitted'] is False
+          assert x['retrieval']['rawSupplementCommitted'] is False
+          assert x['retrieval']['rawRowsUploadedAsArtifact'] is False
+          print(x['status'], x['profile']['rows'], x['profile']['columns'], x['profile']['materialGrouping'])
+          PY
+      - name: Upload aggregate supplement evidence only
+        uses: actions/upload-artifact@v4
+        with:
+          name: mouldmaster-public-measured-benchmark-su13148102
+          path: benchmark-results/su13148102-supplement-profile.json
+          if-no-files-found: error
+          retention-days: 30

@@ -1,0 +1,67 @@
+name: MouldMaster Restricted Measured Benchmark — iGuzzini road lenses
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'tools/run_public_benchmark_iguzzini.py'
+      - 'qa_public_benchmark_iguzzini.py'
+      - 'data/public-benchmark-contracts/iguzzini-road-lenses-v1.json'
+      - '.github/workflows/public-benchmark-iguzzini.yml'
+  push:
+    branches: [main, data/real-dataset-profiling-wave1]
+    paths:
+      - 'tools/run_public_benchmark_iguzzini.py'
+      - 'qa_public_benchmark_iguzzini.py'
+      - 'data/public-benchmark-contracts/iguzzini-road-lenses-v1.json'
+      - '.github/workflows/public-benchmark-iguzzini.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: mouldmaster-public-benchmark-iguzzini-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  restricted-measured-benchmark:
+    if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python -m pip install --disable-pip-version-check pandas
+      - run: python qa_public_benchmark_iguzzini.py
+      - name: Profile exact pinned iGuzzini CSV under research/education terms
+        run: |
+          mkdir -p benchmark-results
+          python tools/run_public_benchmark_iguzzini.py \
+            --output benchmark-results/iguzzini-road-lenses-v1-profile.json \
+            --retrieved-date "$(date -u +%F)"
+      - name: Validate aggregate-only restricted profile
+        run: |
+          python - <<'PY'
+          import json
+          x=json.load(open('benchmark-results/iguzzini-road-lenses-v1-profile.json'))
+          assert x['source']['useScope']=='research-and-education-only'
+          assert x['source']['rawRedistributionAllowed'] is False
+          assert x['profile']['rows']==1451
+          assert x['profile']['columns']==14
+          assert x['profile']['processFeatureCount']==13
+          assert x['profile']['rawRowsOrCellValuesEmitted'] is False
+          assert x['acceptance']['acceptedMeasuredTimeSeriesSamples']==0
+          assert x['acceptance']['rawPublisherFileCommitted'] is False
+          assert x['acceptance']['rawRowsUploadedAsArtifact'] is False
+          print(json.dumps({'status': x['status'], 'rows': x['profile']['rows'], 'qualityCounts': x['profile']['deliveredQualityCounts'], 'reportedQualityCounts': x['profile']['publisherReportedQualityCounts'], 'recordLevelMeasuredProcessValues': x['profile']['recordLevelMeasuredProcessValues']}, indent=2))
+          PY
+      - name: Upload aggregate iGuzzini profile only
+        uses: actions/upload-artifact@v4
+        with:
+          name: mouldmaster-restricted-measured-benchmark-iguzzini
+          path: benchmark-results/iguzzini-road-lenses-v1-profile.json
+          if-no-files-found: error
+          retention-days: 30

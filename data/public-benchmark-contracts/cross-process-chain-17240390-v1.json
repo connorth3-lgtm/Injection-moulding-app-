@@ -1,0 +1,87 @@
+{
+  "schema": 1,
+  "datasetId": "cross-process-chain-17240390",
+  "status": "profiled-scope-limited-semantic-review",
+  "source": {
+    "datasetDoi": "10.5281/zenodo.17240390",
+    "recordUrl": "https://zenodo.org/records/17240390",
+    "publisher": "Zenodo",
+    "recordId": 17240390,
+    "created": "2025-10-01",
+    "recordModified": "2025-10-01",
+    "access": "open",
+    "license": "CC BY 4.0",
+    "licenseEvidenceStatus": "official Zenodo records API metadata.license.id returned cc-by-4.0 on 2026-08-29",
+    "automatedRetrievalAllowed": true,
+    "rawRedistributionAllowed": true,
+    "publisherFile": {
+      "name": "class_values.zip",
+      "reportedSizeMB": 685.5,
+      "md5": "069e190338b2ca29f736b21fabf407ba"
+    }
+  },
+  "experimentContext": {
+    "processChain": [
+      "upper workpiece injection moulding",
+      "lower workpiece injection moulding",
+      "left-position screw driving",
+      "right-position screw driving"
+    ],
+    "experimentJoinKey": "upper_workpiece_id",
+    "publisherDescribedStreams": [
+      {
+        "stream": "upper workpiece injection moulding",
+        "format": "CSV",
+        "measurements": ["pressure target", "pressure actual", "velocity", "volume", "state"],
+        "sampling": "approximately 1 kHz"
+      },
+      {
+        "stream": "lower workpiece injection moulding",
+        "format": "TXT",
+        "measurements": ["pressure target", "pressure actual", "velocity", "volume"],
+        "sampling": "approximately 1 kHz"
+      },
+      {
+        "stream": "left-position screw driving",
+        "format": "JSON",
+        "measurements": ["torque", "angle", "gradient"],
+        "sampling": "833.33 Hz"
+      },
+      {
+        "stream": "right-position screw driving",
+        "format": "JSON",
+        "measurements": ["torque", "angle", "gradient"],
+        "sampling": "833.33 Hz"
+      }
+    ],
+    "publisherDescribedInjectionCycleDuration": "typically 2-8 seconds",
+    "materialVariation": "thermoplastic with varying recyclate and glass-fibre content",
+    "qualityContext": ["static quality metrics", "material/process classes", "cross-process downstream assembly outcomes"]
+  },
+  "scopeBoundary": {
+    "mouldMasterInjectionScopeOnly": true,
+    "upperAndLowerInjectionStreamsMayBeProfiled": true,
+    "screwDrivingStreamsExcludedFromInjectionMeasuredSampleCounts": true,
+    "downstreamQualityMayBeRetainedOnlyAsLinkedOutcomeMetadata": true,
+    "pressureTargetMustNotBeCountedAsMeasuredPressure": true,
+    "commandsTargetsStatesAndDerivedFieldsMustBeSeparatedFromDirectMeasurements": true
+  },
+  "licenseVerification": {
+    "authority": "Zenodo records API",
+    "metadataPath": "metadata.license.id",
+    "value": "cc-by-4.0",
+    "verifiedOn": "2026-08-29",
+    "retrievalState": "completed on hosted runner; MD5, SHA-256 and ZIP CRC verified; semantic acceptance remains pending"
+  },
+  "profilingPlan": [
+    "Retrieve only the pinned publisher archive and verify the published MD5 plus a locally computed SHA-256 without committing the raw archive.",
+    "Enumerate experiment IDs and all internal files from the delivered archive rather than inferring counts from descriptions.",
+    "Profile upper and lower injection streams independently and preserve delivered time bases, units and cycle grouping.",
+    "Separate pressure actual from pressure target and separate measured velocity/volume from commands, targets, states or derived fields using source semantics.",
+    "Exclude both screw-driving JSON streams from injection-moulding sample totals while preserving their experiment-link metadata for cross-process educational analysis.",
+    "Count accepted measured injection time-series values only from delivered direct-measurement arrays or columns with ordering/time basis established.",
+    "Emit aggregate schemas, counts and fingerprints only; never upload raw third-party rows or arrays as workflow artifacts."
+  ],
+  "evidenceBoundary": "The Zenodo record describes a real cross-process manufacturing dataset with two injection-moulding streams sampled at approximately 1 kHz and two downstream screw-driving streams sampled at 833.33 Hz. The official Zenodo records API confirms CC BY 4.0, so automated retrieval and aggregate profiling are permitted. Downstream screw-driving samples cannot enter injection-moulding totals, and target/reference fields cannot be counted as measurements. The pinned 685.5 MB archive remains queued for hosted profiling; no cycle or measured-value total is accepted until its published MD5 and internal contents are validated."
+}
+

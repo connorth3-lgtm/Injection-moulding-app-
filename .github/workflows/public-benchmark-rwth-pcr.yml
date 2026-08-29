@@ -1,0 +1,88 @@
+name: MouldMaster Public Measured Benchmark — RWTH PCR 2025
+
+on:
+  push:
+    branches: [main, data/real-dataset-profiling-wave1]
+    paths:
+      - 'tools/run_public_benchmark_rwth_pcr.py'
+      - 'qa_public_benchmark_rwth_pcr.py'
+      - 'data/public-benchmark-contracts/rwth-pcr-2025-v1.json'
+      - '.github/workflows/public-benchmark-rwth-pcr.yml'
+  pull_request:
+    branches: [main]
+    paths:
+      - 'tools/run_public_benchmark_rwth_pcr.py'
+      - 'qa_public_benchmark_rwth_pcr.py'
+      - 'data/public-benchmark-contracts/rwth-pcr-2025-v1.json'
+      - '.github/workflows/public-benchmark-rwth-pcr.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: mouldmaster-public-benchmark-rwth-pcr-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  runner-qa:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python -m pip install --disable-pip-version-check numpy pandas openpyxl xlrd scipy h5py
+      - run: python qa_public_benchmark_rwth_pcr.py
+
+  public-measured-benchmark:
+    if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
+    needs: runner-qa
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python -m pip install --disable-pip-version-check numpy pandas openpyxl xlrd scipy h5py
+      - name: Retrieve and profile exact RWTH ExperimentalData.zip
+        run: |
+          mkdir -p benchmark-results
+          python tools/run_public_benchmark_rwth_pcr.py \
+            --output benchmark-results/rwth-pcr-2025-stage1-profile.json \
+            --retrieved-date "$(date -u +%F)"
+      - name: Validate aggregate-only stage-1 result
+        run: |
+          python - <<'PY'
+          import json
+          x=json.load(open('benchmark-results/rwth-pcr-2025-stage1-profile.json'))
+          assert x['status'] in {'retrieved-profile-needs-semantic-review', 'retrieval-blocked-non-archive-response'}
+          assert x['source']['datasetDoi']=='10.18154/RWTH-2025-06809'
+          assert x['source']['license']=='CC BY 4.0'
+          assert len(x['source'].get('retrievalAttempts') or []) >= 1
+          assert x['acceptance']['countsAsFullyProfiledMeasuredDataset'] is False
+          assert x['acceptance']['acceptedMeasuredTimeSeriesSamples']==0
+          assert x['retrieval']['rawPublisherArchiveCommitted'] is False
+          assert x['retrieval']['rawPublisherFilesCommitted'] is False
+          assert x['retrieval']['rawRowsOrArraysUploadedAsArtifact'] is False
+          assert x['retrieval']['rawResponseBodiesUploadedAsArtifact'] is False
+          if x['status']=='retrieved-profile-needs-semantic-review':
+              assert len(x['source']['sha256'])==64
+              assert x['archiveProfile']['nonDirectoryMembers'] >= 1
+              assert x['archiveProfile']['allArchivePathsSafe'] is True
+              assert all(len(m['sha256'])==64 for m in x['archiveProfile']['members'])
+              assert x['archiveProfile']['rawRowsOrCellValuesEmitted'] is False
+              assert x['acceptance']['stage1ProfileComplete'] is True
+          else:
+              assert x['archiveProfile'] is None
+              assert x['acceptance']['stage1ProfileComplete'] is False
+              assert all(a.get('rawResponseBodyEmitted') is False for a in x['source']['retrievalAttempts'])
+          PY
+      - name: Upload aggregate RWTH profile only
+        uses: actions/upload-artifact@v4
+        with:
+          name: mouldmaster-public-measured-benchmark-rwth-pcr-2025
+          path: benchmark-results/rwth-pcr-2025-stage1-profile.json
+          if-no-files-found: error
+          retention-days: 30

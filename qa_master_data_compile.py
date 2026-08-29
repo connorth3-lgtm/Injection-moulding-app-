@@ -6,6 +6,8 @@ import tempfile
 
 ROOT = Path(__file__).resolve().parent
 COMPILER = ROOT / "tools" / "compile_master_data.py"
+TARGETS = ROOT / "data" / "content-scale-targets.json"
+WORKFLOW = ROOT / ".github" / "workflows" / "master-data-compile.yml"
 
 
 def need(ok, msg):
@@ -14,35 +16,31 @@ def need(ok, msg):
 
 
 need(COMPILER.exists(), "master data compiler missing")
+target_obj = json.loads(TARGETS.read_text(encoding="utf-8"))
+targets = target_obj["targets"]
+expected_profiled = targets["fully_profiled_measured_datasets"]["currentAccepted"]
+expected_samples = targets["measured_time_series_samples"]["currentAccepted"]
+need(expected_profiled == 7, "audited profiled-dataset baseline drifted")
+need(expected_samples == 13_929_568, "audited measured-sample baseline drifted")
+workflow_text = WORKFLOW.read_text(encoding="utf-8")
+need(f"assert c['fullyProfiledMeasuredDatasets']=={expected_profiled}" in workflow_text, "master-data workflow profiled-dataset assertion is stale")
+need(f"assert c['measuredTimeSeriesSamplesAccepted']=={expected_samples}" in workflow_text, "master-data workflow measured-sample assertion is stale")
+need("assert c['automatedIngestionAllowedDatasets']==10" in workflow_text, "master-data workflow executable-source assertion is stale")
+
 with tempfile.TemporaryDirectory() as td:
-    p = subprocess.run(
-        [sys.executable, str(COMPILER), "--output-dir", td],
-        cwd=ROOT,
-        capture_output=True,
-        text=True,
-        encoding="utf-8",
-        errors="replace",
-    )
+    p = subprocess.run([sys.executable, str(COMPILER), "--output-dir", td], cwd=ROOT, capture_output=True, text=True, encoding="utf-8", errors="replace")
     need(p.returncode == 0, f"master data compiler failed:\n{p.stdout}\n{p.stderr}")
     out = Path(td)
-    expected_files = {
-        "manifest.json",
-        "measured-data.json",
-        "research-evidence.json",
-        "app-data-sources.json",
-        "synthetic-process-data.json",
-        "draft-banks.json",
-        "mouldmaster-all-data.json",
-    }
+    expected_files = {"manifest.json", "measured-data.json", "research-evidence.json", "app-data-sources.json", "synthetic-process-data.json", "draft-banks.json", "mouldmaster-all-data.json"}
     need(expected_files.issubset({x.name for x in out.iterdir()}), "master data output set incomplete")
 
     manifest = json.loads((out / "manifest.json").read_text(encoding="utf-8"))
     counts = manifest.get("counts") or {}
     expected = {
         "measuredDatasetInventory": 20,
-        "automatedIngestionAllowedDatasets": 6,
-        "fullyProfiledMeasuredDatasets": 1,
-        "measuredTimeSeriesSamplesAccepted": 0,
+        "automatedIngestionAllowedDatasets": 10,
+        "fullyProfiledMeasuredDatasets": expected_profiled,
+        "measuredTimeSeriesSamplesAccepted": expected_samples,
         "publisherVerifiedPrimaryMeasuredStudies": 60,
         "verifiedPeerReviewedResearchRecords": 60,
         "measuredEvidencePasses": 50,
@@ -63,21 +61,59 @@ with tempfile.TemporaryDirectory() as td:
         need(counts.get(key) == value, f"compiled count drift for {key}: {counts.get(key)} != {value}")
     need(counts.get("structuredReferenceEntryMarkers", 0) >= 180, "compiled reference knowledge unexpectedly small")
     need(manifest.get("candidateRegistryEmbedded") is False, "core compilation must not require a network-harvested candidate registry")
+    need(manifest.get("compiledOn") == target_obj.get("reviewed"), "master compilation date must follow audited target ledger")
 
-    for key in [
-        "syntheticIsNotMeasured",
-        "candidateResearchIsNotVerified",
-        "metadataOnlyDatasetIsNotProfiled",
-        "thirdPartyRawRedistributionNotAssumed",
-        "productionSetpointsNotDerived",
-    ]:
+    for key in ["syntheticIsNotMeasured", "candidateResearchIsNotVerified", "metadataOnlyDatasetIsNotProfiled", "thirdPartyRawRedistributionNotAssumed", "productionSetpointsNotDerived"]:
         need((manifest.get("boundaries") or {}).get(key) is True, f"master compilation boundary missing: {key}")
 
     measured = json.loads((out / "measured-data.json").read_text(encoding="utf-8"))
-    need(measured["datasetInventory"]["summary"]["datasets"] == 20, "compiled measured dataset inventory drifted")
+    inv = measured["datasetInventory"]
+    ledger = measured["datasetExecutionLedger"]
+    need(inv["summary"]["datasets"] == 20, "compiled measured dataset inventory drifted")
+    need(inv["summary"]["automatedIngestionAllowed"] == 10, "compiled executable measured-source count drifted")
+    need(ledger["summary"]["acceptedProfiled"] == expected_profiled, "compiled execution ledger accepted-profiled count drifted")
+    need(ledger["summary"]["acceptedRestrictedResearchEducation"] == 1, "compiled restricted accepted profile count drifted")
+    need(ledger["summary"]["queuedExecutable"] == 0, "completed licensed profiling sources must not remain queued")
+    need(ledger["summary"]["retrievalBlockedExecutable"] == 1, "RWTH retrieval blocker count drifted")
+    need((measured.get("datasetRightsReview") or {}).get("summary", {}).get("unblockedForAutomatedIngestion") == 4, "compiled rights-review promotion count drifted")
     need(len(measured["primaryMeasuredStudies"]) == 60, "compiled primary-measured study set incomplete")
     need(len({x["doi"].lower() for x in measured["primaryMeasuredStudies"]}) == 60, "compiled primary-measured study DOI deduplication failed")
-    need(measured["publicBenchmarkResult"]["status"] == "completed-public-measured-benchmark", "compiled public benchmark result missing")
+
+    results = measured.get("publicBenchmarkResults") or {}
+    need(set(results) == {"gtnb4j7bfx-v1", "scatimdata-avaps", "openmms-t4g", "su13148102-supplement", "forinfpro-himd-v1", "impure-pascoe-2022"}, f"completed public benchmark set drifted: {set(results)}")
+    need(all(x.get("status") == "completed-public-measured-benchmark" for x in results.values()), "compiled public benchmark completion state drifted")
+    need(results["su13148102-supplement"]["profile"]["rows"] == 955, "compiled Sustainability supplement row count drifted")
+    need(results["forinfpro-himd-v1"]["profile"]["deliveredCycles"] == 1, "compiled FORinFPRO release boundary drifted")
+    need(results["forinfpro-himd-v1"]["profile"]["acceptedMeasuredTimeSeriesSamples"] == 0, "unit-limited FORinFPRO values must not inflate measured samples")
+    need(results["impure-pascoe-2022"]["profile"]["cycleFiles"] == 307, "compiled ImPure profile drifted")
+
+    restricted = measured.get("restrictedBenchmarkResults") or {}
+    need(set(restricted) == {"iguzzini-road-lenses"}, f"restricted accepted benchmark set drifted: {set(restricted)}")
+    ig = restricted["iguzzini-road-lenses"]
+    need(ig.get("status") == "accepted-restricted-profile", "compiled iGuzzini acceptance state drifted")
+    need((ig.get("acceptance") or {}).get("countsAsFullyProfiledMeasuredDataset") is True, "compiled iGuzzini profile must count as fully profiled")
+    need((ig.get("acceptance") or {}).get("acceptedMeasuredTimeSeriesSamples") == 0, "iGuzzini record-level evidence cannot inflate waveform samples")
+    need((ig.get("source") or {}).get("useScope") == "research-and-education-only", "compiled iGuzzini restricted scope drifted")
+    need((ig.get("source") or {}).get("rawRedistributionAllowed") is False, "compiled iGuzzini terms must not be widened")
+    need((ig.get("profile") or {}).get("recordLevelMeasuredProcessValues") == 18_863, "compiled iGuzzini record-level value count drifted")
+    need((ig.get("profile") or {}).get("deliveredQualityCounts") == {"1": 370, "2": 406, "3": 310, "4": 365}, "compiled iGuzzini class reconciliation drifted")
+
+    review_results = measured.get("publicBenchmarkReviewResults") or {}
+    need(set(review_results) == {"pet-preform-v2", "warwick-demoulding", "rwth-pcr-2025", "cross-process-chain-17240390"}, "retrieved/review/blocker result set drifted")
+    need(review_results["pet-preform-v2"].get("status") == "retrieved-profile-needs-semantic-review", "PET review-only state drifted")
+    need(review_results["warwick-demoulding"].get("status") == "retrieved-profile-needs-special-format-export", "Warwick technical export state drifted")
+    need(review_results["rwth-pcr-2025"].get("status") == "retrieval-blocked-non-archive-response", "RWTH retrieval blocker state drifted")
+    need(review_results["cross-process-chain-17240390"].get("status") == "completed-public-measured-benchmark-scope-limited", "cross-process review state drifted")
+    need((review_results["rwth-pcr-2025"].get("acceptance") or {}).get("countsAsFullyProfiledMeasuredDataset") is False, "RWTH must remain non-counting")
+
+    need(results["scatimdata-avaps"]["measurement_profile"]["acceptedMeasuredTimeSeriesSamples"] == 13_631_488, "compiled AVAPS sample count drifted")
+    need(results["openmms-t4g"]["measurement_profile"]["acceptedMeasuredTimeSeriesSamples"] == 298_080, "compiled OpenMMS sample count drifted")
+    need(results["scatimdata-avaps"]["measurement_profile"]["acceptedMeasuredTimeSeriesSamples"] + results["openmms-t4g"]["measurement_profile"]["acceptedMeasuredTimeSeriesSamples"] == expected_samples, "compiled measured benchmark sample totals do not reconcile")
+
+    by_id = {x["datasetId"]: x for x in inv["datasets"]}
+    impure = by_id["impure-pascoe-2022"]["count"]
+    need(impure.get("publisherBytes") == 18_708_850 and impure.get("publisherFiles") == 309 and impure.get("cycleFiles") == 307 and impure.get("zenodoCumulativeDownloadTrafficMB") == 605.2 and "dataVolumeMB" not in impure, "compiled ImPure source dimensions drifted")
+    need(by_id["inqcim-2500-request"]["source"] == "https://doi.org/10.3390/polym14173551", "compiled INQCIM DOI correction drifted")
 
     research = json.loads((out / "research-evidence.json").read_text(encoding="utf-8"))
     need(research["cumulativePassCount"] == 600 and len(research["waves"]) == 6, "compiled Deep Dive v2 evidence coverage drifted")
@@ -99,4 +135,5 @@ with tempfile.TemporaryDirectory() as td:
     for section in ["manifest", "measured", "research", "appData", "processData", "drafts"]:
         need(section in combined, f"combined master package missing section: {section}")
 
-print("MouldMaster master data compilation QA passed (20 measured datasets; 1 profiled benchmark; 60 verified primary measured studies; 600 evidence passes; 264/19,008 synthetic cases/cycles; 157 approved items; 120+20 lessons; full draft banks)")
+print(f"MouldMaster master data compilation QA passed (20 measured datasets; 10 legally executable sources; {expected_profiled} fully profiled families including 1 restricted educational profile; {expected_samples:,} accepted measured time-series values; 60 verified primary measured studies; 600 evidence passes; 264/19,008 synthetic cases/cycles; 157 approved items; 120+20 lessons; full draft banks)")
+

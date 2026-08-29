@@ -1,0 +1,71 @@
+{
+  "schema": 1,
+  "datasetId": "forinfpro-himd-v1",
+  "status": "accepted-profiled-unit-limited",
+  "source": {
+    "datasetDoi": "10.5281/zenodo.20744054",
+    "recordUrl": "https://zenodo.org/records/20744054",
+    "publisher": "Zenodo",
+    "version": "v1",
+    "published": "2026-06-18",
+    "recordModified": "2026-07-30",
+    "access": "open",
+    "license": "CC BY 4.0",
+    "licenseEvidenceStatus": "official Zenodo records API metadata.license.id returned cc-by-4.0 on 2026-08-29",
+    "automatedRetrievalAllowed": true,
+    "rawRedistributionAllowed": true,
+    "reportedDataVolumeMB": 146.5
+  },
+  "experimentContext": {
+    "process": "hybrid injection moulding with in-situ forming of continuous glass-fibre reinforced polypropylene organosheets followed by polypropylene overmoulding",
+    "machine": "ENGEL V-Duo injection moulding machine",
+    "researchPlatform": "Erlanger Träger hybrid injection moulding demonstrator at the University of Augsburg",
+    "materialSystem": "continuous glass-fibre reinforced polypropylene organosheet plus polypropylene overmoulding",
+    "publisherDescribedMachineSignals": [
+      "injection pressure",
+      "screw position",
+      "injection speed",
+      "clamping force",
+      "temperatures"
+    ],
+    "publisherDescribedInMouldSensors": {
+      "total": 12,
+      "ultrasonicPulseEcho": 4,
+      "pressureTemperature": 6,
+      "dielectricAnalysis": 2
+    },
+    "publisherDescribedModalities": [
+      "machine process data",
+      "active pulse-echo ultrasonic measurements",
+      "cavity pressure and temperature measurements",
+      "dielectric analysis measurements",
+      "associated process metadata"
+    ],
+    "visibleFileExamples": [
+      "cycle_001_machine_data.csv",
+      "cycle_001_pt.csv",
+      "cycle_001_us_rms.csv"
+    ]
+  },
+  "rightsGate": {
+    "publicDownloadDoesNotEqualReusePermission": true,
+    "openAccessDoesNotEqualReusePermission": true,
+    "metadataMayBeReviewedWithoutRawFileIngestion": true,
+    "rawFilesMustNotBeDownloadedByAutomationUntilLicenceIsExplicit": true,
+    "requiredEvidence": [
+      "An explicit dataset licence identifier or licence text from the authoritative Zenodo record or depositor is captured.",
+      "The captured terms permit the intended automated ingestion and aggregate profiling use.",
+      "The exact release/version and file manifest are pinned before retrieval."
+    ]
+  },
+  "profilingPlanAfterRightsClearance": [
+    "Retrieve the version-pinned file manifest and record hashes/checksums without committing raw third-party data.",
+    "Enumerate delivered cycle IDs from file names and internal metadata rather than assuming the currently visible cycle_001 examples are the complete release.",
+    "Profile machine, pressure/temperature, ultrasonic and DEA tables separately while preserving their source-defined time bases and units.",
+    "Establish synchronization keys and time alignment across modalities before any cross-sensor sample count is accepted.",
+    "Separate directly measured channels from setpoints, commands, derived features, RMS summaries and process metadata.",
+    "Count measured time-series values only from delivered measured arrays/columns with ordering and measurement semantics established.",
+    "Emit aggregate schemas, counts and fingerprints only; do not upload raw rows, arrays or cell values as workflow artifacts."
+  ],
+  "evidenceBoundary": "The official Zenodo API confirms CC BY 4.0 and the three visible files were retrieved and SHA-256 fingerprinted. The source counts as one profiled real dataset family. It contributes zero values to the accepted cross-dataset time-series total because the visible release contains only cycle_001 and several delivered channel units are not explicit."
+}

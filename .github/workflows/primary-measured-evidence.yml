@@ -7,10 +7,15 @@ on:
       - 'data/primary-measured-evidence-registry-v1.json'
       - 'data/primary-measured-evidence/**'
       - 'data/measured-dataset-inventory-v1.json'
+      - 'data/measured-dataset-rights-review-*.json'
+      - 'data/public-benchmark-contracts/**'
+      - 'data/public-benchmark-results/**'
       - 'data/measured-data-discovery-queue-v1.json'
       - 'data/evidence-coverage-v1.json'
       - 'qa_primary_measured_evidence.py'
       - 'qa_measured_dataset_inventory.py'
+      - 'qa_blocked_dataset_contracts.py'
+      - 'qa_remaining_dataset_terminal_states.py'
       - 'qa_measured_data_discovery_queue.py'
       - 'sources/PRIMARY_MEASURED_EVIDENCE_REGISTRY.md'
       - '.github/workflows/primary-measured-evidence.yml'
@@ -20,10 +25,15 @@ on:
       - 'data/primary-measured-evidence-registry-v1.json'
       - 'data/primary-measured-evidence/**'
       - 'data/measured-dataset-inventory-v1.json'
+      - 'data/measured-dataset-rights-review-*.json'
+      - 'data/public-benchmark-contracts/**'
+      - 'data/public-benchmark-results/**'
       - 'data/measured-data-discovery-queue-v1.json'
       - 'data/evidence-coverage-v1.json'
       - 'qa_primary_measured_evidence.py'
       - 'qa_measured_dataset_inventory.py'
+      - 'qa_blocked_dataset_contracts.py'
+      - 'qa_remaining_dataset_terminal_states.py'
       - 'qa_measured_data_discovery_queue.py'
       - 'sources/PRIMARY_MEASURED_EVIDENCE_REGISTRY.md'
       - '.github/workflows/primary-measured-evidence.yml'
@@ -48,6 +58,10 @@ jobs:
         run: python qa_primary_measured_evidence.py
       - name: Validate governed measured dataset inventory
         run: python qa_measured_dataset_inventory.py
+      - name: Validate fail-closed blocked dataset contracts
+        run: python qa_blocked_dataset_contracts.py
+      - name: Validate all remaining dataset terminal states
+        run: python qa_remaining_dataset_terminal_states.py
       - name: Validate new measured-data discovery queue
         run: python qa_measured_data_discovery_queue.py
       - name: Upload aggregate primary measured registry QA report
@@ -61,6 +75,18 @@ jobs:
         with:
           name: mouldmaster-measured-dataset-inventory
           path: measured-dataset-inventory-report.json
+          if-no-files-found: error
+      - name: Upload aggregate blocked dataset contracts QA report
+        uses: actions/upload-artifact@v4
+        with:
+          name: mouldmaster-blocked-dataset-contracts
+          path: blocked-dataset-contracts-report.json
+          if-no-files-found: error
+      - name: Upload aggregate remaining dataset terminal-state report
+        uses: actions/upload-artifact@v4
+        with:
+          name: mouldmaster-remaining-dataset-terminal-states
+          path: remaining-dataset-terminal-states-report.json
           if-no-files-found: error
       - name: Upload aggregate measured-data discovery report
         uses: actions/upload-artifact@v4
