@@ -278,7 +278,8 @@ function installDefaultNavigation(){
   registerNavigation({id:'process-data',label:'Data diagnosis',icon:'⌁',description:'Read process trends and choose the next evidence check.',order:30,group:'practice',legacyDataset:'mmProcessData',mobileGroup:'practice',action:()=>window.MM_PROCESS_DATA_DIAGNOSTICS?.open?.()});
   registerNavigation({id:'material-labs',label:'Material labs',icon:'◈',description:'Compare resin-specific behaviour and evidence.',order:40,group:'practice',legacyDataset:'mmMaterialLabs',mobileGroup:'practice',action:()=>window.MM_MATERIAL_BEHAVIOUR_LABS?.open?.()});
   registerNavigation({id:'reference-data',label:'Reference data',icon:'▤',description:'Materials, defects, signals and troubleshooting data.',order:50,group:'progress',desktop:false,mobileGroup:'more',action:()=>location.assign('./reference-data.html')});
-  registerNavigation({id:'learning-insights',label:'Learning insights',icon:'◫',description:'See local learning progress and retry trends.',order:60,group:'progress',legacyDataset:'mmLearningInsights',mobileGroup:'more',action:()=>window.MM_LEARNING_ANALYTICS?.open?.()})
+  registerNavigation({id:'learning-insights',label:'Learning insights',icon:'◫',description:'See local learning progress and retry trends.',order:60,group:'progress',legacyDataset:'mmLearningInsights',mobileGroup:'more',action:()=>window.MM_LEARNING_ANALYTICS?.open?.()});
+  registerNavigation({id:'repair-app-files',label:'Repair app files',icon:'↻',description:'Refresh installed files without deleting learner progress.',order:70,group:'progress',desktop:false,mobileGroup:'more',action:()=>location.assign('./repair.html')})
 }
 
 function renderDashboardCanonical(){

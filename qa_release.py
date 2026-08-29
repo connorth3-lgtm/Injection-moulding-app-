@@ -53,6 +53,8 @@ assert manifest["start_url"] in ("./", "./index.html")
 assert manifest["display"] == "standalone"
 
 core = text("MouldMaster_Core_App.html")
+attributes = text(".gitattributes")
+assert re.search(r"^MouldMaster_Core_App\.html\s+-text\s*$", attributes, flags=re.M), "audited core must disable Git line-ending conversion"
 assert sha256("MouldMaster_Core_App.html") == CORE_SHA256, "audited core bytes changed"
 assert len(core) > 500000, "audited core unexpectedly small"
 assert "criticalWrong===0" in core, "zero-wrong safety-critical gate missing"
