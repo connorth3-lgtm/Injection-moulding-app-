@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "version": "2026.08.29.2",
+  "version": "2026.08.29.3",
   "reviewed": "2026-08-29",
   "baseWave": {
     "fullyProfiledMeasuredDatasetFamilies": 5,
@@ -45,15 +45,30 @@
       "materialCharacterizationTraceMeasurementCells": 6026,
       "acceptedMeasuredTimeSeriesSamples": 0,
       "resultPath": "data/public-benchmark-results/6k8fpbrd9s-v1.json"
+    },
+    {
+      "priority": 4,
+      "datasetId": "mendeley-4h98rz9f92-v3",
+      "doi": "10.17632/4h98rz9f92.3",
+      "license": "CC BY 4.0",
+      "state": "accepted-profiled-record-level-injection-moulding",
+      "countsAsFullyProfiledMeasuredDataset": true,
+      "experimentalRows": 35,
+      "directMeasuredPropertyValues": 525,
+      "directMeasuredPropertyBreakdown": {"tensileModulus":175,"hardness":175,"toughness":175},
+      "derivedAverageValuesExcluded": 105,
+      "acceptedMeasuredTimeSeriesSamples": 0,
+      "resultPath": "data/public-benchmark-results/4h98rz9f92-v3.json"
     }
   ],
   "summary": {
-    "wave2SourcesReviewed": 3,
-    "wave2FullyProfiledAccepted": 2,
+    "wave2SourcesReviewed": 4,
+    "wave2FullyProfiledAccepted": 3,
     "wave2PublisherPayloadBlocked": 1,
-    "effectiveFullyProfiledMeasuredDatasetFamilies": 7,
+    "effectiveFullyProfiledMeasuredDatasetFamilies": 8,
     "effectiveAcceptedMeasuredTimeSeriesSamples": 13929568,
-    "wave2RecordLevelMeasuredOutcomeValues": 96,
+    "wave2RecordLevelMeasuredOutcomeValues": 621,
+    "wave2RecordLevelDerivedSummaryValuesExcluded": 105,
     "wave2MaterialCharacterizationDirectPhysicalValues": 28590,
     "wave2MaterialCharacterizationTraceMeasurementCells": 6026
   },
@@ -62,6 +77,7 @@
     "metadataReportedSamplesDoNotCountWithoutDeliveredFiles": true,
     "restrictedNoncommercialRightsAreNotWidened": true,
     "recordLevelOutcomeValuesDoNotCountAsTimeSeriesSamples": true,
+    "derivedRecordLevelSummaryValuesAreExcludedFromDirectMeasuredOutcomeCount": true,
     "materialCharacterizationCellCountsDoNotInflateInjectionCycleHighFrequencySampleMetric": true,
     "crossFigureMaterialCharacterizationReuseIsNotClaimedAsDeduplicatedExperiments": true
   }
