@@ -1,11 +1,12 @@
 # MouldMaster content-scale programme
 
-Reviewed: 2026-08-28  
-Machine-readable targets: `data/content-scale-targets.json`
+Reviewed: 2026-08-29  
+Machine-readable targets: `data/content-scale-targets.json`  
+Measured-data execution state: `data/measured-dataset-execution-ledger-v1.json`
 
 ## Hard targets
 
-MouldMaster now treats the following as explicit content-scale acceptance targets rather than informal aspirations:
+MouldMaster treats the following as explicit content-scale acceptance targets rather than informal aspirations:
 
 | Area | Minimum | Preferred |
 | --- | ---: | ---: |
@@ -30,40 +31,58 @@ Scale does not override evidence quality.
 - A generated material profile slot is not a completed grade profile until its exact grade/properties/source fields are reviewed.
 - A generated defect pairing is only a hypothesis until the physical mechanism/evidence/test relationship is confirmed.
 - A generated assessment item is not live and does not count until it passes the existing evidence approval, answer-key, duplicate/cue and assessment-quality controls.
+- Structurally profiled numeric values do not enter the accepted measured-sample count while units, signal meanings, target/actual semantics, ordering or file parsing remain unresolved.
 
-`qa_content_scale_targets.py` enforces conservative accepted counts until a dedicated registry proves a higher value.
+`qa_content_scale_targets.py` enforces accepted counts from the audited machine-readable registries rather than from prose summaries.
 
 ## Current accepted baseline
 
-The initial hard-target ledger deliberately starts from conservative claims:
+As of **2026-08-29**, the audited target ledger records:
 
-- 0 fully profiled real datasets claimed in-repo;
-- 0 measured time-series samples claimed in-repo;
-- 20 explicit base material profiles;
-- 20 explicit base defect entries;
-- 0 consolidated sensor/machine-health accepted count until a dedicated registry is reviewed;
-- 157 evidence-gated keyed learner questions;
-- 0 deduplicated master peer-reviewed-paper count until the master registry exists;
-- at least 40 primary measured studies already enforced by `qa_measured_evidence_50_pass.py`.
+- **7** fully profiled real measured dataset families accepted;
+- **13,929,568** accepted measured time-series values;
+- **20** real measured/data-bearing sources inventoried;
+- **20** explicit base material profiles;
+- **20** explicit base defect entries;
+- **0** consolidated sensor/machine-health accepted count until a dedicated registry is reviewed;
+- **157** evidence-gated keyed learner questions;
+- **60** deduplicated publisher-verified peer-reviewed research records in the current master subset;
+- **60** publisher-verified primary measured studies.
 
-The current 19,008 generated learning cycles remain synthetic and are intentionally excluded from measured-data progress.
+The accepted measured time-series total is **13,631,488** delivered AVAPS pressure/flow values plus **298,080** OpenMMS-T4G sensor values. The current **19,008** generated learning cycles remain synthetic and are intentionally excluded.
+
+The seven accepted/profiled measured families are Mendeley `gtnb4j7bfx` v1, scatimdata/AVAPS, Sustainability 8102 supplement, ImPure/PASCOE, iGuzzini road lenses, OpenMMS-T4G and FORinFPRO-HIMD. Profile acceptance and measured-value acceptance remain separate: ImPure is profiled but its **2,376,696** numeric values remain outside the measured-sample total pending unit and analogue-channel definitions.
 
 ## Measured-dataset track
 
-`data/measured-dataset-catalog.json` creates a dedicated discovery catalog for real measured datasets. It starts with the existing Mendeley/B2SHARE/RWTH/Zenodo evidence plus additional ImPure injection-moulding sensor-data trial records identified during the 2026-08-28 research pass.
+`data/measured-dataset-inventory-v1.json` inventories the 20 real measured/data-bearing sources. `data/measured-dataset-execution-ledger-v1.json` is the controlling one-by-one execution-state record. `data/content-scale-targets.json` carries the accepted headline counts.
 
-Every entry begins with `profiled:false`. Promotion to a fully profiled dataset requires:
+Promotion to a fully profiled dataset requires a defensible source-specific record of:
 
 1. exact source/version and access or licence terms;
-2. lawful local retrieval of the actual files;
+2. lawful retrieval of the actual files;
 3. file fingerprint and byte size;
-4. schema, units and grouping inspection;
+4. schema, units and grouping inspection to the extent the source documentation permits;
 5. distinction between commands/setpoints, actual measurements, derived values and labels;
 6. material, machine, mould/process and quality context where the source provides it;
 7. missingness/order/time-basis review;
 8. explicit limitations and transfer boundaries.
 
-The existing `tools/profile_public_benchmark.py` remains the first executable profiling path for the licensed Mendeley benchmark.
+A source can be fully profiled while some numeric fields remain non-counting when the unresolved semantics are explicitly bounded. The accepted measured-sample total is therefore independently gated.
+
+### Remaining measured-data blockers
+
+- **Cross-process chain** — archive downloaded and verified, but exact units/field meanings, actual-versus-target mapping and the lower-workpiece TXT preamble/chart format still need a source-specific parser before any values are counted.
+- **ImPure/PASCOE** — define units and meanings for both analogue-input channels and the remaining sensor columns before its profiled numeric values can be promoted into the accepted measured-sample total.
+- **Warwick demoulding** — export the five verified `.opju` projects through Origin/OriginPro before accepting trial/channel/sample counts.
+- **RWTH PCR** — the publisher endpoint currently returns HTML instead of the advertised ZIP; obtain the real CC BY 4.0 archive and profile it.
+- **ProBayes main, ProBayes D-optimal and SKZ LoKI** — obtain explicit dataset reuse licences/terms.
+- **KAMP and Foxconn** — establish authoritative original distribution/reuse rights; mirror availability is not sufficient.
+- **INQCIM** — obtain the files and author permission.
+- **Bottle-cap dataset** — obtain owner authorization because the production dataset is confidential.
+- **León process and defect datasets** — unavailable until **31 December 2027** unless released earlier; recheck access and rights at release time.
+
+The detailed blocker rationale is kept in the execution ledger and summarized in `sources/MASTER_DATA_COMPILATION.md`.
 
 ## Research track
 
@@ -116,9 +135,9 @@ Generated items are prompts for authoring only. Before acceptance they require l
 
 ## Release QA
 
-`.github/workflows/qa.yml` now runs:
+`.github/workflows/qa.yml` runs:
 
-- `qa_content_scale_targets.py` — target definitions, conservative accepted counts and non-counting rules;
+- `qa_content_scale_targets.py` — target definitions, accepted counts and non-counting rules;
 - `qa_content_scale_drafts.py` — deterministic 260/320/220/1200 draft generation and draft-only boundary.
 
 The target audit writes `content-scale-targets-report.json`, which is uploaded as a CI artifact alongside the existing process-data and measured-evidence reports.
