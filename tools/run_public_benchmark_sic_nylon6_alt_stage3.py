@@ -11,13 +11,14 @@ def get():
 def text(node):return ' '.join((t.text or '') for t in node.iter(f'{{{W}}}t')).strip()
 def numeric_count(s):return len(re.findall(r'[-+]?\d+(?:\.\d+)?(?:[Ee][-+]?\d+)?',str(s or '')))
 def norm(s):return re.sub(r'\s+','',str(s or '')).upper()
+def semantic_norm(s):return re.sub(r'[^a-z0-9]+','',str(s or '').lower())
 def parse_table(tbl,index,title):
-    rows=tbl.findall(f'{{{W}}}tr');
+    rows=tbl.findall(f'{{{W}}}tr')
     if len(rows)!=6:raise RuntimeError(f'{title} table row count changed: {len(rows)}')
     matrix=[[text(tc) for tc in tr.findall(f'{{{W}}}tc')] for tr in rows]
     if any(len(r)!=5 for r in matrix):raise RuntimeError(f'{title} table column count changed')
     headers=[norm(x) for x in matrix[0]]
-    if headers[0] not in {'DESIGNATIONOFSPECIMEN','DESIGNATIONOFSPECIMEN'}:raise RuntimeError(f'{title} specimen header changed: {matrix[0][0]}')
+    if headers[0]!='DESIGNATIONOFSPECIMEN':raise RuntimeError(f'{title} specimen header changed: {matrix[0][0]}')
     if headers[1:]!=['5N','10N','20N','30N']:raise RuntimeError(f'{title} load headers changed: {matrix[0][1:]}')
     if [norm(r[0]) for r in matrix[1:]]!=['S1','S2','S3','S4','S5']:raise RuntimeError(f'{title} specimen labels changed')
     direct=0
@@ -30,9 +31,9 @@ def main():
     ap=argparse.ArgumentParser();ap.add_argument('--output',type=Path,required=True);ap.add_argument('--retrieved-date',required=True);a=ap.parse_args();data,final=get();digest=hashlib.sha256(data).hexdigest()
     if digest!=ENTRY['sha256']:raise RuntimeError('publisher SHA mismatch for SiC/Nylon-6 tribology DOCX')
     with zipfile.ZipFile(io.BytesIO(data)) as z:root=ET.fromstring(z.read('word/document.xml'))
-    paras=[text(p) for p in root.iter(f'{{{W}}}p') if text(p)];joined='\n'.join(paras).lower()
-    if 'variations of co-efficient of friction for n6 and n6 composites' not in joined:raise RuntimeError('coefficient-of-friction semantic title missing')
-    if 'variations of wear for n6 and n6 composites' not in joined:raise RuntimeError('wear semantic title missing')
+    paras=[text(p) for p in root.iter(f'{{{W}}}p') if text(p)];joined_norm=semantic_norm('\n'.join(paras))
+    if 'variationsofcoefficientoffrictionforn6andn6composites' not in joined_norm:raise RuntimeError('coefficient-of-friction semantic title missing')
+    if 'variationsofwearforn6andn6composites' not in joined_norm:raise RuntimeError('wear semantic title missing')
     tables=list(root.iter(f'{{{W}}}tbl'))
     if len(tables)!=2:raise RuntimeError(f'expected exactly two delivered numeric tables, found {len(tables)}')
     blocks=[parse_table(tables[0],1,'coefficient-of-friction'),parse_table(tables[1],2,'wear')];total=sum(x['directMeasuredValues'] for x in blocks)
