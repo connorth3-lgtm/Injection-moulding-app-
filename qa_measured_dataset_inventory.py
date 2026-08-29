@@ -3,6 +3,7 @@ import json
 
 ROOT = Path(__file__).resolve().parent
 INVENTORY = ROOT / 'data' / 'measured-dataset-inventory-v1.json'
+RIGHTS_REVIEW = ROOT / 'data' / 'measured-dataset-rights-review-2026-08-29.json'
 REPORT = ROOT / 'measured-dataset-inventory-report.json'
 
 ALLOWED_STATES = {
@@ -43,6 +44,7 @@ def load(path):
 
 
 inv = load(INVENTORY)
+rights = load(RIGHTS_REVIEW)
 need(inv.get('schema') == 1, 'unsupported measured dataset inventory schema')
 rules = inv.get('rules', {})
 for key in [
@@ -103,6 +105,27 @@ by_id = {d['datasetId']: d for d in rows}
 for did, (field, value) in EXPECTED_KNOWN_COUNTS.items():
     need(by_id[did]['count'].get(field) == value, f'{did}: verified count drifted for {field}')
 
+# Rights promotion is explicit and narrow: only RWTH moved from review to executable.
+rights_rows = rights.get('sources') or []
+need((rights.get('summary') or {}).get('sourcesReviewed') == len(rights_rows) == 5, 'waveform rights-review source count drifted')
+need((rights.get('summary') or {}).get('unblockedForAutomatedIngestion') == 1, 'waveform rights-review promotion count drifted')
+need((rights.get('summary') or {}).get('remainBlockedForRights') == 4, 'waveform rights-review blocked count drifted')
+rights_by_id = {x.get('datasetId'): x for x in rights_rows}
+need(set(rights_by_id) == {'rwth-pcr-2025', 'skz-loki-v1', 'impure-pascoe-2022', 'forinfpro-himd-v1', 'cross-process-chain-17240390'}, 'waveform rights-review source set drifted')
+need(rights_by_id['rwth-pcr-2025'].get('decision') == 'executable-license-confirmed', 'RWTH rights decision drifted')
+need(rights_by_id['rwth-pcr-2025'].get('license') == 'CC BY 4.0', 'RWTH rights licence drifted')
+need(by_id['rwth-pcr-2025'].get('accessState') == 'public-open', 'RWTH access state must reflect confirmed open licence')
+need(by_id['rwth-pcr-2025'].get('license') == 'CC BY 4.0', 'RWTH inventory licence drifted')
+need(by_id['rwth-pcr-2025'].get('automatedIngestionAllowed') is True, 'RWTH must be executable after CC BY 4.0 confirmation')
+need(by_id['rwth-pcr-2025'].get('rawRedistributionAllowedWithAttribution') is True, 'RWTH attribution reuse boundary drifted')
+need('publications.rwth-aachen.de' in str(by_id['rwth-pcr-2025'].get('licenseEvidence', '')), 'RWTH authoritative licence evidence missing')
+for blocked_id in ['skz-loki-v1', 'impure-pascoe-2022', 'forinfpro-himd-v1', 'cross-process-chain-17240390']:
+    need(rights_by_id[blocked_id].get('decision') == 'blocked-no-explicit-license', f'{blocked_id}: rights decision drifted')
+    need(rights_by_id[blocked_id].get('automatedIngestionAllowed') is False, f'{blocked_id}: rights review must remain fail-closed')
+    need(by_id[blocked_id].get('accessState') == 'public-download-license-review', f'{blocked_id}: inventory must remain in licence review')
+    need(by_id[blocked_id].get('license') is None, f'{blocked_id}: do not invent a dataset licence')
+    need(by_id[blocked_id].get('automatedIngestionAllowed') is False, f'{blocked_id}: must remain non-executable without explicit data licence')
+
 need(by_id['leon-process-20309380']['accessState'] == 'embargoed', 'León process dataset must remain embargoed')
 need(by_id['leon-defects-20322729']['accessState'] == 'embargoed', 'León defect dataset must remain embargoed')
 need('2027-12-31' in by_id['leon-process-20309380']['statusNote'], 'León process embargo end date missing')
@@ -118,8 +141,8 @@ need(by_id['bottle-cap-7162-confidential']['accessState'] == 'confidential', 'bo
 
 summary = inv.get('summary', {})
 need(summary.get('datasets') == 20, 'inventory summary dataset count drifted')
-need(summary.get('automatedIngestionAllowed') == automated == 6, f'automated-ingestion count drifted: {automated}')
-need(summary.get('rightsOrAccessReviewRequired') == 7, 'licence-review count drifted')
+need(summary.get('automatedIngestionAllowed') == automated == 7, f'automated-ingestion count drifted: {automated}')
+need(summary.get('rightsOrAccessReviewRequired') == state_counts['public-download-license-review'] == 6, 'licence-review count drifted')
 need(state_counts['embargoed'] == summary.get('embargoed') == 2, 'embargoed count drifted')
 need(state_counts['request-only'] == summary.get('requestOnly') == 1, 'request-only count drifted')
 need(state_counts['confidential'] == summary.get('confidential') == 1, 'confidential count drifted')
@@ -127,15 +150,18 @@ need(state_counts['public-mirror-rights-unresolved'] == summary.get('publicMirro
 need(state_counts['public-research-education-release'] == summary.get('publicResearchEducationTerms') == 1, 'research/education terms count drifted')
 
 report = {
-    'schema': 1,
+    'schema': 2,
     'source': str(INVENTORY.relative_to(ROOT)),
+    'rightsReviewSource': str(RIGHTS_REVIEW.relative_to(ROOT)),
     'datasetCount': len(rows),
     'accessStateCounts': state_counts,
     'automatedIngestionAllowed': automated,
     'knownCountsChecked': len(EXPECTED_KNOWN_COUNTS),
     'rightsReviewSources': rights_review,
+    'waveformRightsSourcesReviewed': len(rights_rows),
+    'waveformRightsSourcesUnblocked': 1,
     'rawRowsCommittedToRepository': False,
     'result': 'pass',
 }
 REPORT.write_text(json.dumps(report, indent=2) + '\n', encoding='utf-8')
-print('MouldMaster measured dataset inventory QA passed (20 sources; 6 executable; rights/access/embargo/mirror boundaries enforced)')
+print('MouldMaster measured dataset inventory QA passed (20 sources; 7 executable; 6 direct licence-review sources; RWTH CC BY 4.0 unblocked; remaining rights/access/embargo/mirror boundaries enforced)')
