@@ -19,7 +19,7 @@ expected = {
     "skz-loki-v1": ("skz-loki-v1.json", "blocked-rights-review"),
     "impure-pascoe-2022": ("impure-pascoe-2022-v1.json", "accepted-profiled-unit-limited"),
     "iguzzini-road-lenses": ("iguzzini-road-lenses-v1.json", "accepted-restricted-profile"),
-    "forinfpro-himd-v1": ("forinfpro-himd-v1.json", "accepted-profiled-unit-limited"),
+    "forinfpro-himd-v1": ("forinfpro-himd-v1.json", "accepted-profiled-partially-semantic-resolved"),
     "cross-process-chain-17240390": ("cross-process-chain-17240390-v1.json", "profiled-scope-limited-semantic-review"),
     "kamp-injection-7996": ("kamp-injection-7996-v1.json", "blocked-mirror-rights"),
     "foxconn-competition-16600": ("foxconn-competition-16600-v1.json", "blocked-mirror-rights"),
@@ -50,10 +50,25 @@ cross = loaded["cross-process-chain-17240390"]
 need((cross.get("scopeBoundary") or {}).get("screwDrivingStreamsExcludedFromInjectionMeasuredSampleCounts") is True,
      "cross-process downstream screw-driving exclusion missing")
 
+forinfpro = loaded["forinfpro-himd-v1"]
+semantic = forinfpro.get("semanticAcceptance") or {}
+need(semantic.get("decision") == "partial-measured-channel-acceptance", "FORinFPRO partial semantic decision drifted")
+need(semantic.get("acceptedEngineeringUnit") == "degC", "FORinFPRO accepted temperature unit drifted")
+need(semantic.get("acceptedMeasurementRole") == "actual/real measured value", "FORinFPRO accepted measurement role drifted")
+need(semantic.get("acceptedMeasuredChannels") == 16, "FORinFPRO accepted channel count drifted")
+need(semantic.get("acceptedMeasuredTimeSeriesSamples") == 162112, "FORinFPRO accepted measured-value count drifted")
+need(semantic.get("acceptedCountFormula") == "16 * 10132", "FORinFPRO accepted count formula drifted")
+need(len(semantic.get("acceptedMeasuredColumns") or []) == 16, "FORinFPRO accepted column list drifted")
+need(all(x.startswith("Heating.sv_Zone") and x.endswith(".rActualTemp") for x in semantic.get("acceptedMeasuredColumns") or []),
+     "FORinFPRO accepted columns must remain exact ENGEL heating-zone actual-temperature fields")
+need((semantic.get("timeOrdering") or {}).get("strictlyIncreasing") is True, "FORinFPRO accepted traces require ordered machine timestamps")
+need((semantic.get("timeOrdering") or {}).get("fixedSamplingIntervalAssumed") is False, "FORinFPRO variable timing must not be rewritten as a fixed rate")
+need("machine-specific" in str(semantic.get("physicalLocationBoundary", "")).lower(), "FORinFPRO machine-specific zone-affiliation boundary missing")
+
 forinfpro_result = load(RESULTS / "forinfpro-himd-v1.json")
-need(forinfpro_result.get("status") == "completed-public-measured-benchmark", "FORinFPRO accepted result missing")
+need(forinfpro_result.get("status") == "completed-public-measured-benchmark", "FORinFPRO structural result missing")
 need((forinfpro_result.get("profile") or {}).get("acceptedMeasuredTimeSeriesSamples") == 0,
-     "FORinFPRO unit-limited profile must not inflate accepted time-series values")
+     "FORinFPRO original structural profile must remain pre-semantic and non-promoting; semantic promotion is governed by the later review/contract")
 
 impure_result = load(RESULTS / "impure-pascoe-2022-v1.json")
 need(impure_result.get("status") == "completed-public-measured-benchmark", "ImPure completed result missing")
@@ -116,7 +131,23 @@ need(rwth.get("status") == "retrieval-blocked-non-archive-response", "RWTH sourc
 need((rwth.get("acceptance") or {}).get("countsAsFullyProfiledMeasuredDataset") is False, "RWTH cannot be accepted without delivered archive")
 need(len((rwth.get("source") or {}).get("retrievalAttempts") or []) == 3, "RWTH retrieval audit must retain all three publisher URL attempts")
 
-report = {"schema": 4, "terminalContractsChecked": len(expected), "rightsBlocked": 3, "licensedQueued": 0, "licensedProfiledUnitLimited": 2, "licensedProfiledSemanticReview": 1, "mirrorRightsBlocked": 2, "embargoed": 2, "requestOnly": 1, "confidential": 1, "specialFormatExport": 1, "restrictedEducationAccepted": 1, "rwthRetrievalBlocked": 1, "petReviewOnly": 1, "result": "pass"}
+report = {
+    "schema": 5,
+    "terminalContractsChecked": len(expected),
+    "rightsBlocked": 3,
+    "licensedQueued": 0,
+    "licensedProfiledUnitLimited": 1,
+    "licensedProfiledPartialSemanticAcceptance": 1,
+    "licensedProfiledSemanticReview": 1,
+    "mirrorRightsBlocked": 2,
+    "embargoed": 2,
+    "requestOnly": 1,
+    "confidential": 1,
+    "specialFormatExport": 1,
+    "restrictedEducationAccepted": 1,
+    "rwthRetrievalBlocked": 1,
+    "petReviewOnly": 1,
+    "result": "pass"
+}
 (ROOT / "remaining-dataset-terminal-states-report.json").write_text(json.dumps(report, indent=2) + "\n", encoding="utf-8")
-print("MouldMaster remaining dataset terminal-state QA passed (all sources are accepted or have an explicit rights/access/embargo/confidentiality/technical blocker)")
-
+print("MouldMaster remaining dataset terminal-state QA passed (all sources are accepted or have an explicit rights/access/embargo/confidentiality/technical/semantic blocker)")
