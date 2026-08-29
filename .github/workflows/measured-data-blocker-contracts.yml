@@ -5,6 +5,9 @@ on:
     branches: [main]
     paths:
       - 'data/cross-process-upper-workpiece-dictionary-v1.json'
+      - 'data/public-benchmark-results/cross-process-upper-workpiece-source-contract-v1.json'
+      - 'tools/profile_cross_process_upper_workpiece.py'
+      - 'qa_cross_process_upper_contract.py'
       - 'data/impure-pascoe-channel-dictionary-v1.json'
       - 'data/warwick-demoulding-source-contract-v1.json'
       - 'qa_measured_data_blocker_contracts.py'
@@ -13,6 +16,9 @@ on:
     branches: [main]
     paths:
       - 'data/cross-process-upper-workpiece-dictionary-v1.json'
+      - 'data/public-benchmark-results/cross-process-upper-workpiece-source-contract-v1.json'
+      - 'tools/profile_cross_process_upper_workpiece.py'
+      - 'qa_cross_process_upper_contract.py'
       - 'data/impure-pascoe-channel-dictionary-v1.json'
       - 'data/warwick-demoulding-source-contract-v1.json'
       - 'qa_measured_data_blocker_contracts.py'
@@ -31,6 +37,11 @@ jobs:
         with:
           python-version: '3.12'
       - name: Python syntax
-        run: python -m py_compile qa_measured_data_blocker_contracts.py
+        run: |
+          python -m py_compile qa_measured_data_blocker_contracts.py
+          python -m py_compile tools/profile_cross_process_upper_workpiece.py
+          python -m py_compile qa_cross_process_upper_contract.py
+      - name: Validate upper specialist parser contract
+        run: python qa_cross_process_upper_contract.py
       - name: Validate fail-closed source contracts
         run: python qa_measured_data_blocker_contracts.py
