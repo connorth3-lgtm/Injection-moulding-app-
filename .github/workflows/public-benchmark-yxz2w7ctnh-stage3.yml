@@ -1,0 +1,63 @@
+name: MouldMaster Public Measured Benchmark — ABS PLA injection tests stage 3
+
+on:
+  push:
+    branches: [data/real-dataset-profiling-wave2]
+    paths:
+      - 'tools/run_public_benchmark_yxz2w7ctnh_stage3.py'
+      - 'qa_public_benchmark_yxz2w7ctnh_stage3.py'
+      - 'data/public-benchmark-contracts/yxz2w7ctnh-v1.json'
+      - '.github/workflows/public-benchmark-yxz2w7ctnh-stage3.yml'
+  pull_request:
+    branches: [data/real-dataset-profiling-wave1, main]
+    paths:
+      - 'tools/run_public_benchmark_yxz2w7ctnh_stage3.py'
+      - 'qa_public_benchmark_yxz2w7ctnh_stage3.py'
+      - 'data/public-benchmark-contracts/yxz2w7ctnh-v1.json'
+      - '.github/workflows/public-benchmark-yxz2w7ctnh-stage3.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  route-coordinate-profile:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python -m pip install --disable-pip-version-check openpyxl
+      - name: Validate stage-three evidence boundary
+        run: python qa_public_benchmark_yxz2w7ctnh_stage3.py
+      - name: Map canonical route coordinates
+        run: |
+          mkdir -p benchmark-results
+          python tools/run_public_benchmark_yxz2w7ctnh_stage3.py \
+            --output benchmark-results/yxz2w7ctnh-stage3.json \
+            --retrieved-date "$(date -u +%F)"
+      - name: Validate route-coordinate profile
+        run: |
+          python - <<'PY'
+          import json
+          x=json.load(open('benchmark-results/yxz2w7ctnh-stage3.json'))
+          assert x['status']=='route-coordinate-profiled'
+          assert x['profile']['canonicalSheetCount']==6
+          assert x['profile']['allPublisherHashesMatched'] is True
+          assert x['profile']['duplicateEmbeddedSheetsCounted'] is False
+          assert x['profile']['energySheetsCounted'] is False
+          assert x['profile']['rawNumericValuesEmitted'] is False
+          assert x['acceptance']['countsAsFullyProfiledMeasuredDataset'] is False
+          assert x['acceptance']['acceptedMaterialTestTraceValues']==0
+          assert x['acceptance']['acceptedInjectionProcessTimeSeriesSamples']==0
+          print(json.dumps({'status':x['status'],'canonicalSheets':x['profile']['canonicalSheets']},indent=2))
+          PY
+      - name: Upload aggregate route map only
+        uses: actions/upload-artifact@v4
+        with:
+          name: mouldmaster-yxz2w7ctnh-stage3-route-map
+          path: benchmark-results/yxz2w7ctnh-stage3.json
+          if-no-files-found: error
+          retention-days: 30
