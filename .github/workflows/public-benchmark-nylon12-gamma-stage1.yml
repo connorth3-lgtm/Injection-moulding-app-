@@ -1,0 +1,56 @@
+name: MouldMaster Public Measured Benchmark — Nylon-12 gamma stage 1
+
+on:
+  push:
+    branches: [data/real-dataset-profiling-wave2]
+    paths:
+      - 'tools/run_public_benchmark_nylon12_gamma_stage1.py'
+      - 'qa_public_benchmark_nylon12_gamma_stage1.py'
+      - 'data/public-benchmark-contracts/nylon12-gamma-8c8fjwcw86-v1.json'
+      - '.github/workflows/public-benchmark-nylon12-gamma-stage1.yml'
+  pull_request:
+    branches: [data/real-dataset-profiling-wave1, main]
+    paths:
+      - 'tools/run_public_benchmark_nylon12_gamma_stage1.py'
+      - 'qa_public_benchmark_nylon12_gamma_stage1.py'
+      - 'data/public-benchmark-contracts/nylon12-gamma-8c8fjwcw86-v1.json'
+      - '.github/workflows/public-benchmark-nylon12-gamma-stage1.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+jobs:
+  manifest-profile:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: '3.12'}
+      - name: Validate manifest-only evidence boundary
+        run: python qa_public_benchmark_nylon12_gamma_stage1.py
+      - name: Enumerate publisher manifest only
+        run: |
+          mkdir -p benchmark-results
+          python tools/run_public_benchmark_nylon12_gamma_stage1.py --output benchmark-results/nylon12-gamma-stage1.json --retrieved-date "$(date -u +%F)"
+      - name: Validate aggregate manifest result
+        run: |
+          python - <<'PY'
+          import json
+          x=json.load(open('benchmark-results/nylon12-gamma-stage1.json'))
+          assert x['status'] in {'publisher-file-manifest-profiled','publisher-links-visible-names-unresolved','publisher-record-no-files-exposed'}
+          assert x['source']['datasetDoi']=='10.17632/8c8fjwcw86.1'
+          assert x['source']['license']=='CC BY 4.0'
+          assert x['manifest']['rawPayloadsDownloaded'] is False
+          assert x['manifest']['rawRowsOrArraysEmitted'] is False
+          assert x['retrievalDiagnostics']['payloadDownloadEndpointsCalled'] is False
+          assert x['acceptance']['countsAsFullyProfiledMeasuredDataset'] is False
+          assert x['acceptance']['acceptedInjectionProcessTimeSeriesSamples']==0
+          print(json.dumps({'status':x['status'],'fileCount':x['manifest']['fileCount'],'injectionCandidateFiles':x['manifest']['injectionCandidateFiles'],'slsCandidateFiles':x['manifest']['slsCandidateFiles'],'ambiguousRouteFiles':x['manifest']['ambiguousRouteFiles'],'htmlFileIdCount':len(x['manifest']['htmlDiscoveredFileIds'])},indent=2))
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: mouldmaster-nylon12-gamma-stage1-manifest
+          path: benchmark-results/nylon12-gamma-stage1.json
+          if-no-files-found: error
+          retention-days: 30

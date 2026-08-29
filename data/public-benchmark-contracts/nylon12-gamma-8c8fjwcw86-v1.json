@@ -1,0 +1,29 @@
+{
+  "schema": 1,
+  "datasetId": "mendeley-8c8fjwcw86-v1",
+  "status": "stage1-manifest-candidate",
+  "source": {
+    "datasetPage": "https://data.mendeley.com/datasets/8c8fjwcw86/1",
+    "datasetDoi": "10.17632/8c8fjwcw86.1",
+    "mendeleyDatasetId": "8c8fjwcw86",
+    "version": 1,
+    "publisher": "Mendeley Data",
+    "license": "CC BY 4.0"
+  },
+  "experimentContext": {
+    "material": "Nylon-12 / PA12",
+    "manufacturingRoutesReported": ["injection moulding", "selective laser sintering"],
+    "treatment": "gamma irradiation",
+    "measurementFamiliesReported": ["tensile testing", "mechanical characterization", "structural characterization"]
+  },
+  "stage1Rules": {
+    "publisherMetadataOnly": true,
+    "downloadPayloads": false,
+    "injectionAndSlsSubsetsMustBeSeparatedBeforeDownload": true,
+    "ambiguousFilesMustRemainNonCounting": true,
+    "rawRowsOrArraysMustNotBeEmitted": true,
+    "countsAsFullyProfiledMeasuredDataset": false,
+    "acceptedInjectionProcessTimeSeriesSamples": 0
+  },
+  "evidenceBoundary": "Stage 1 enumerates only the version-pinned Mendeley publisher manifest. Because the release covers both injection-moulded and selective-laser-sintered Nylon-12, filenames/folders must prove the manufacturing-route subset before any payload is downloaded. SLS-only or ambiguous files cannot count as injection-moulding evidence. No raw payloads, rows or arrays are retrieved or emitted in Stage 1."
+}
