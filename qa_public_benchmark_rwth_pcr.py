@@ -4,6 +4,7 @@ import json
 ROOT = Path(__file__).resolve().parent
 CONTRACT = ROOT / 'data' / 'public-benchmark-contracts' / 'rwth-pcr-2025-v1.json'
 RUNNER = ROOT / 'tools' / 'run_public_benchmark_rwth_pcr.py'
+WORKFLOW = ROOT / '.github' / 'workflows' / 'public-benchmark-rwth-pcr.yml'
 
 
 def need(ok, msg):
@@ -37,17 +38,30 @@ need(any('raw third-party' in x.lower() for x in final), 'RWTH raw-data boundary
 text = RUNNER.read_text(encoding='utf-8')
 for marker in [
     'retrieved-profile-needs-semantic-review',
+    'retrieval-blocked-non-archive-response',
     'countsAsFullyProfiledMeasuredDataset',
     'acceptedMeasuredTimeSeriesSamples',
     'rawRowsOrCellValuesEmitted',
     'rawRowsOrArraysUploadedAsArtifact',
+    'rawResponseBodiesUploadedAsArtifact',
+    'retrievalAttempts',
     'zipfile.ZipFile',
+    'zipfile.is_zipfile',
     'sha256_stream',
     'allArchivePathsSafe',
+    'HTTPCookieProcessor',
+    'download=1',
 ]:
     need(marker in text, f'RWTH profiler safety/profile marker missing: {marker}')
 need('countsAsFullyProfiledMeasuredDataset": False' in text, 'RWTH stage-1 profiler must not auto-promote dataset family')
 need('"acceptedMeasuredTimeSeriesSamples": 0' in text, 'RWTH stage-1 profiler must not auto-count samples')
 need('rawPublisherArchiveCommitted": False' in text, 'RWTH profiler must not claim raw archive committed')
+need('rawResponseBodyEmitted": False' in text, 'RWTH retrieval diagnostics must never emit response bodies')
 
-print('MouldMaster RWTH PCR stage-1 benchmark QA passed (CC BY 4.0 source pinned; aggregate-only archive/schema profiling; promotion remains fail-closed)')
+workflow = WORKFLOW.read_text(encoding='utf-8')
+need('retrieval-blocked-non-archive-response' in workflow, 'RWTH workflow must accept safe fail-closed retrieval diagnostics')
+need("x['acceptance']['countsAsFullyProfiledMeasuredDataset'] is False" in workflow, 'RWTH workflow must keep dataset promotion disabled')
+need("x['acceptance']['acceptedMeasuredTimeSeriesSamples']==0" in workflow, 'RWTH workflow must keep measured sample count at zero before semantic acceptance')
+need("rawResponseBodiesUploadedAsArtifact" in workflow, 'RWTH workflow must guard against raw response-body artifacts')
+
+print('MouldMaster RWTH PCR stage-1 benchmark QA passed (CC BY 4.0 source pinned; robust ZIP validation; aggregate-only fail-closed retrieval diagnostics; promotion remains disabled)')
