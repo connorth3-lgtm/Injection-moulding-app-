@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "datasetId": "mendeley-yxz2w7ctnh-v1",
-  "status": "stage1-manifest-candidate",
+  "status": "stage2-schema-candidate",
   "source": {
     "datasetPage": "https://data.mendeley.com/datasets/yxz2w7ctnh/1",
     "datasetDoi": "10.17632/yxz2w7ctnh.1",
@@ -13,18 +13,28 @@
   "experimentContext": {
     "manufacturingRoutesReported": ["injection moulding", "FDM 3D printing"],
     "materials": ["ABS", "PLA"],
-    "measurementFamiliesReported": ["tensile testing", "three-point bending", "impact testing", "energy consumption"],
-    "injectionRelevantMeasurements": ["tensile", "three-point bending", "impact"],
-    "defaultExcludedMeasurements": ["FDM-only energy consumption", "3D-printed-only measurements"]
+    "measurementFamiliesReported": ["tensile testing", "three-point bending", "impact testing", "energy consumption"]
   },
-  "stage1Rules": {
-    "publisherManifestOnly": true,
-    "downloadDatasetPayloads": false,
+  "stage1Evidence": {
+    "sourceRunId": 33235935549,
+    "publisherFileCount": 4,
+    "totalBytes": 111636,
+    "mechanicalFiles": [
+      {"id":"0dde1c6b-3618-4a62-bab4-af3ff5286f12","filename":"data_3pbending_3d_print_d_ryan.xlsx","sizeBytes":21537,"sha256":"5c8e5967a95d90a9652ed9167885118bc4ffe4792bf9167c19254ff526fa6742"},
+      {"id":"9893bf52-bbc7-4853-adba-45f8e38880d0","filename":"data_impact_3d_print_d_ryan.xlsx","sizeBytes":50039,"sha256":"2eba6818e340e963f88dcb03729aac793d5686c9c1416e81b00c104da3e41196"},
+      {"id":"e30b2a0b-12d2-461a-a119-efed84b2c82e","filename":"data_tensile_3d_print_d_ryan.xlsx","sizeBytes":19904,"sha256":"670fb27b14e34f68ee17de115c4f14b22c4aa4b9887ff8c73a42eb7b2a7e3b79"}
+    ],
+    "excludedEnergyFile": {"id":"ff9cce79-7132-4375-956a-4b4948635cdc","filename":"data_energy_3d_print_d_ryan.xlsx","sizeBytes":20156,"sha256":"378f371f7d3b2a31902d59e4d654b8de3a7be6d057ba73dc8f1bd819b9cfcda0"}
+  },
+  "stage2Rules": {
+    "retrieveOnlyThreeMechanicalFiles": true,
+    "publisherSha256MustMatch": true,
+    "energyWorkbookMustNotBeRetrieved": true,
+    "emitTextLabelsAndAggregateCellCountsOnly": true,
+    "rawNumericValuesMustNotBeEmitted": true,
     "routeMustBeResolvedBeforeMeasurementCounting": true,
-    "injectionAndFdmMeasurementsMustNotBeCombined": true,
-    "rawRowsOrArraysEmitted": false,
     "countsAsFullyProfiledMeasuredDataset": false,
     "acceptedInjectionProcessTimeSeriesSamples": 0
   },
-  "evidenceBoundary": "Stage 1 enumerates only publisher file/folder metadata. Injection-moulded ABS/PLA mechanical-test evidence must be isolated from FDM and energy datasets before any measured values can count. Mechanical-test traces, if delivered, remain material-test evidence and do not inflate injection-machine/cavity process time-series samples."
+  "evidenceBoundary": "Stage 2 may temporarily retrieve only the three mechanical-test workbooks and verify their exact publisher hashes. It may emit sheet names, text labels and aggregate cell/formula counts, but no numeric measurement values. Injection-moulded ABS/PLA subsets must be distinguished from FDM before acceptance. The energy workbook remains excluded."
 }
