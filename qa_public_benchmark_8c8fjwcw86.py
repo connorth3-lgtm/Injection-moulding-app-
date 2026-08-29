@@ -12,7 +12,11 @@ need(s['license']=='CC BY 4.0','Nylon-12 licence drifted')
 need(len(s['apiFiles'])==2,'Nylon-12 publisher file count drifted')
 need({f['name'].split('.')[-1].lower() for f in s['apiFiles']}=={'docx','pptx'},'expected DOCX/PPTX package changed')
 text=RUNNER.read_text()
-for marker in ['chartCount','numericValuePointCount','oleCompoundFile','safePrintableLabels','tableCount','numericTokenCount','rawNumericValuesEmitted\":False','countsAsFullyProfiledMeasuredDataset\":False','acceptedMeasuredTimeSeriesSamples\":0']:
+for marker in ['chartCount','numericValuePointCount','oleCompoundFile','safePrintableLabels','tableCount','numericTokenCount','rawNumericValuesEmitted','countsAsFullyProfiledMeasuredDataset','acceptedMeasuredTimeSeriesSamples','rawNumericValuesUploadedAsArtifact']:
     need(marker in text,f'Nylon-12 profiler guard missing: {marker}')
+need("'rawNumericValuesEmitted':False" in text,'raw numeric emission must stay disabled')
+need("'countsAsFullyProfiledMeasuredDataset':False" in text,'profiler must remain non-accepting until semantic review')
+need("'acceptedMeasuredTimeSeriesSamples':0" in text,'Nylon-12 profiler cannot claim waveform samples')
+need("'rawNumericValuesUploadedAsArtifact':False" in text,'raw numeric artifact upload must stay disabled')
 need('publisher SHA mismatch' in text,'Nylon-12 publisher fingerprint gate missing')
 print('MouldMaster Nylon-12 supporting-data QA passed')
