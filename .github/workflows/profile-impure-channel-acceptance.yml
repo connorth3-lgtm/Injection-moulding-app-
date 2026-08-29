@@ -1,0 +1,30 @@
+name: MouldMaster ImPure Specialist Channel Parser
+
+on:
+  push:
+    branches: [data/impure-channel-mapping]
+    paths:
+      - 'tools/profile_impure_channel_acceptance.py'
+      - '.github/workflows/profile-impure-channel-acceptance.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: mouldmaster-impure-specialist-parser
+  cancel-in-progress: true
+
+jobs:
+  profile:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Python syntax
+        run: python -m py_compile tools/profile_impure_channel_acceptance.py
+      - name: Profile exact ImPure publisher cycle files
+        run: python tools/profile_impure_channel_acceptance.py
