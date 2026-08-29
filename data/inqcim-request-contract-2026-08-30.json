@@ -1,0 +1,111 @@
+{
+  "schema": 1,
+  "version": "2026.08.30.1",
+  "reviewed": "2026-08-30",
+  "datasetId": "inqcim-2500-request",
+  "status": "blocked-request-only",
+  "source": {
+    "paperDoi": "10.3390/polym14173551",
+    "paperUrl": "https://www.mdpi.com/2073-4360/14/17/3551",
+    "projectUrl": "https://projekte.ffg.at/projekt/2920223",
+    "projectId": "FFG 864885",
+    "projectName": "InQCIM - Integrierte Qualitätsregelung beim Spritzgießen",
+    "projectState": "completed",
+    "dataAvailabilityStatement": "The data presented in this study are available upon request from the corresponding authors.",
+    "publicDatasetLocated": false,
+    "datasetLicenseLocated": false,
+    "automatedIngestionAllowed": false,
+    "rawRedistributionAllowed": false
+  },
+  "paperBackedStructure": {
+    "doeExperiments": 56,
+    "minimumSamplesPerExperiment": 40,
+    "approxTotalMoldedSamples": 2500,
+    "statisticalDoeShotsPerExperiment": 10,
+    "machineAndPeripheralOpcUaRateHz": 60,
+    "analogMachineRateHz": 600,
+    "analogMoldRateHz": 600,
+    "ambientSensorSamplePeriodSeconds": 30,
+    "ambientUploadPeriodMinutes": 10,
+    "machineAnalogSignals": [
+      "screw pressure / screw-antechamber pressure",
+      "screw position",
+      "clamping force",
+      "digital process-phase signals"
+    ],
+    "moldSignals": [
+      "cavity pressure",
+      "polymer temperature"
+    ],
+    "qualityFeatures": [
+      "part weight",
+      "dimensional properties",
+      "surface quality"
+    ]
+  },
+  "contactEvidence": {
+    "paperCorrespondingAuthors": [
+      {
+        "name": "Saeid Saeidi Aminabadi",
+        "paperEmail": "s.saeidi-aminabadi@stud.unileoben.ac.at",
+        "currentInstitution": "FH Wiener Neustadt, Institute of Industrial Engineering and Management",
+        "currentPublicEmail": "saeid.aminabadi@fhwn.ac.at",
+        "currentContactEvidence": "https://www.fhwn.ac.at/en/employee/saeidi-aminabadi-saeid"
+      },
+      {
+        "name": "Walter Friesenbichler",
+        "paperEmail": "walter.friesenbichler@unileoben.ac.at",
+        "currentContactEvidence": null
+      }
+    ],
+    "otherProjectContacts": [
+      {
+        "name": "Dieter Paul Gruber",
+        "role": "paper author; project resource/funding contributor",
+        "publicEmailEvidence": "dieter.gruber@pccl.at"
+      },
+      {
+        "name": "Gerald Berger-Weber",
+        "role": "paper author; InQCIM project lead in contemporaneous project material",
+        "publicEmailEvidence": "gerald.berger-weber@unileoben.ac.at"
+      }
+    ]
+  },
+  "requestRequirements": {
+    "filesRequested": [
+      "cycle-linked machine/peripheral OPC UA records",
+      "600 Hz analog machine traces",
+      "600 Hz mold pressure/temperature traces",
+      "part-weight measurements",
+      "dimensional measurements",
+      "surface-quality labels or measurements",
+      "cycle/experiment identifiers and DOE grouping needed to reconcile the 56 experiments"
+    ],
+    "permissionRequested": [
+      "permission to retrieve the research files for MouldMaster aggregate profiling",
+      "permission to compute and publish only aggregate schemas, counts, units, fingerprints and non-identifying statistics",
+      "clarification whether automated retrieval/profiling is allowed",
+      "clarification whether any raw-file redistribution is permitted; default remains no redistribution"
+    ],
+    "privacyAndCommercialBoundary": "Do not request or retain personal data, company-confidential production identifiers, proprietary recipes, customer identifiers or raw rows beyond what is necessary for source verification. Accept a redacted or de-identified research release if that is the permitted form."
+  },
+  "outreachDraft": {
+    "subject": "Request for INQCIM injection-moulding research dataset and reuse permission",
+    "body": "I am working on MouldMaster, an injection-moulding engineering application that profiles public and permissioned measured datasets without redistributing third-party raw data. Your 2022 Polymers paper (DOI 10.3390/polym14173551) states that the INQCIM data are available upon request. Could you provide the research dataset used for the paper, or the subset that can be shared, together with written permission for automated aggregate profiling? We are specifically interested in the cycle-linked machine/peripheral data, 600 Hz machine and mold sensor traces, and linked quality measurements. Our intended output is limited to aggregate schemas, units, sample/cycle counts, source fingerprints and non-identifying statistics; raw third-party files or rows would not be redistributed unless you explicitly permit it. If some fields are confidential, a de-identified or reduced research release would be fully acceptable."
+  },
+  "acceptanceGate": {
+    "requiredBeforeRetrieval": [
+      "A corresponding author, project data steward, or authorised rights holder supplies the files or an authorised download location.",
+      "Written terms explicitly permit MouldMaster to retrieve and aggregate-profile the supplied research data.",
+      "Any confidentiality, attribution, publication, retention and deletion conditions are captured before processing."
+    ],
+    "requiredBeforeMeasuredPromotion": [
+      "Delivered files are fingerprinted and their relationship to the paper/project is established.",
+      "Cycle and DOE grouping are established from delivered identifiers rather than inferred from approximate paper counts.",
+      "Sampling rates, units and channel meanings are established from source metadata or documentation.",
+      "Measured channels are separated from commands, setpoints, model predictions, extracted features and labels.",
+      "No raw third-party rows, traces or files are committed to the repository or uploaded as public CI artifacts."
+    ]
+  },
+  "evidenceBoundary": "The peer-reviewed INQCIM paper provides unusually strong measurement-system detail: 56 DOE experiments, a minimum of 40 produced samples per experiment, about 2,500 samples used for AI training, 60 Hz OPC UA machine/peripheral acquisition, and separate 600 Hz analog machine and mold acquisition with linked product-quality measurements. The same paper explicitly makes the underlying data request-only. No public dataset release or dataset-specific reuse licence was located in the current search. Therefore this source remains non-executable and contributes zero accepted measured samples until authorised files and written reuse terms are obtained."
+}
