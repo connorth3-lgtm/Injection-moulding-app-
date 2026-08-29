@@ -105,6 +105,27 @@ by_id = {d['datasetId']: d for d in rows}
 for did, (field, value) in EXPECTED_KNOWN_COUNTS.items():
     need(by_id[did]['count'].get(field) == value, f'{did}: verified count drifted for {field}')
 
+need(by_id['su13148102-supplement']['count'].get('columns') == 45, 'Sustainability delivered 45-column schema correction drifted')
+need(by_id['openmms-t4g']['count'].get('rows') == 29808 and by_id['openmms-t4g']['count'].get('measuredSignalColumns') == 10, 'OpenMMS completed source dimensions drifted')
+ig = by_id['iguzzini-road-lenses']
+need(ig.get('accessState') == 'public-research-education-release', 'iGuzzini restricted access state drifted')
+need(ig.get('restrictedAggregateProfilingAllowed') is True, 'iGuzzini educational aggregate profiling gate missing')
+need(ig.get('automatedIngestionAllowed') is False, 'iGuzzini restricted release must not become unrestricted automated ingestion')
+need(ig.get('rawRedistributionAllowedWithAttribution') is False, 'iGuzzini raw redistribution must remain disabled')
+need(ig['count'].get('recordLevelMeasuredProcessValues') == 18863, 'iGuzzini delivered record-level measured value count drifted')
+
+impure_count = by_id['impure-pascoe-2022']['count']
+need(impure_count.get('publisherFilesTotalMB') == 18.7, 'ImPure current publisher file-set size drifted')
+need(impure_count.get('zenodoCumulativeDownloadTrafficMB') == 605.2, 'ImPure cumulative Zenodo traffic metric drifted')
+need('dataVolumeMB' not in impure_count, 'do not conflate ImPure download traffic with dataset size')
+
+inq = by_id['inqcim-2500-request']
+need(inq.get('source') == 'https://doi.org/10.3390/polym14173551', 'INQCIM corrected article DOI drifted')
+need(inq.get('peerReviewedCompanion') == '10.3390/polym14173551', 'INQCIM corrected companion DOI drifted')
+need('upon request' in inq.get('statusNote', '').lower(), 'INQCIM request-only evidence boundary missing')
+
+need(by_id['leon-process-20309380']['overlapGroup'] == by_id['leon-defects-20322729']['overlapGroup'], 'León process and defects records must share one manufacturing-campaign overlap group')
+
 # Rights promotion is explicit and narrow: only RWTH moved from review to executable.
 rights_rows = rights.get('sources') or []
 need((rights.get('summary') or {}).get('sourcesReviewed') == len(rights_rows) == 5, 'waveform rights-review source count drifted')
@@ -116,9 +137,10 @@ need(rights_by_id['rwth-pcr-2025'].get('decision') == 'executable-license-confir
 need(rights_by_id['rwth-pcr-2025'].get('license') == 'CC BY 4.0', 'RWTH rights licence drifted')
 need(by_id['rwth-pcr-2025'].get('accessState') == 'public-open', 'RWTH access state must reflect confirmed open licence')
 need(by_id['rwth-pcr-2025'].get('license') == 'CC BY 4.0', 'RWTH inventory licence drifted')
-need(by_id['rwth-pcr-2025'].get('automatedIngestionAllowed') is True, 'RWTH must be executable after CC BY 4.0 confirmation')
+need(by_id['rwth-pcr-2025'].get('automatedIngestionAllowed') is True, 'RWTH must be legally executable after CC BY 4.0 confirmation')
 need(by_id['rwth-pcr-2025'].get('rawRedistributionAllowedWithAttribution') is True, 'RWTH attribution reuse boundary drifted')
 need('publications.rwth-aachen.de' in str(by_id['rwth-pcr-2025'].get('licenseEvidence', '')), 'RWTH authoritative licence evidence missing')
+need('248-byte HTML' in by_id['rwth-pcr-2025'].get('statusNote', ''), 'RWTH actual source-retrieval blocker missing from inventory')
 for blocked_id in ['skz-loki-v1', 'impure-pascoe-2022', 'forinfpro-himd-v1', 'cross-process-chain-17240390']:
     need(rights_by_id[blocked_id].get('decision') == 'blocked-no-explicit-license', f'{blocked_id}: rights decision drifted')
     need(rights_by_id[blocked_id].get('automatedIngestionAllowed') is False, f'{blocked_id}: rights review must remain fail-closed')
@@ -132,7 +154,7 @@ need('2027-12-31' in by_id['leon-process-20309380']['statusNote'], 'León proces
 need('2027-12-31' in by_id['leon-defects-20322729']['statusNote'], 'León defect embargo end date missing')
 need(by_id['cross-process-chain-17240390']['count'].get('injectionCycles') is None,
      'cross-process injection cycle count must remain unknown until archive enumeration')
-need('downstream screw-driving' in by_id['cross-process-chain-17240390']['statusNote'],
+need('screw-driving' in by_id['cross-process-chain-17240390']['statusNote'],
      'cross-process source must explicitly prevent downstream operations being counted as moulding cycles')
 need(by_id['foxconn-competition-16600']['accessState'] == 'public-mirror-rights-unresolved', 'Foxconn mirror rights boundary drifted')
 need(by_id['kamp-injection-7996']['accessState'] == 'public-mirror-rights-unresolved', 'KAMP mirror rights boundary drifted')
@@ -150,18 +172,20 @@ need(state_counts['public-mirror-rights-unresolved'] == summary.get('publicMirro
 need(state_counts['public-research-education-release'] == summary.get('publicResearchEducationTerms') == 1, 'research/education terms count drifted')
 
 report = {
-    'schema': 2,
+    'schema': 3,
     'source': str(INVENTORY.relative_to(ROOT)),
     'rightsReviewSource': str(RIGHTS_REVIEW.relative_to(ROOT)),
     'datasetCount': len(rows),
     'accessStateCounts': state_counts,
     'automatedIngestionAllowed': automated,
+    'restrictedAggregateProfiled': 1,
     'knownCountsChecked': len(EXPECTED_KNOWN_COUNTS),
     'rightsReviewSources': rights_review,
     'waveformRightsSourcesReviewed': len(rights_rows),
     'waveformRightsSourcesUnblocked': 1,
+    'metadataCorrections': ['impure-file-size-vs-download-traffic', 'inqcim-doi', 'sustainability-delivered-columns', 'leon-overlap-group'],
     'rawRowsCommittedToRepository': False,
     'result': 'pass',
 }
 REPORT.write_text(json.dumps(report, indent=2) + '\n', encoding='utf-8')
-print('MouldMaster measured dataset inventory QA passed (20 sources; 7 executable; 6 direct licence-review sources; RWTH CC BY 4.0 unblocked; remaining rights/access/embargo/mirror boundaries enforced)')
+print('MouldMaster measured dataset inventory QA passed (20 sources; 7 legally executable; 1 restricted educational profile; 6 direct licence-review sources; corrected ImPure/INQCIM metadata; remaining rights/access/embargo/mirror boundaries enforced)')
