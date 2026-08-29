@@ -1,0 +1,42 @@
+{
+  "schema": 1,
+  "status": "slide-context-profile-no-acceptable-injection-trace",
+  "retrievedDate": "2026-08-29",
+  "source": {
+    "datasetId": "mendeley-8c8fjwcw86-v1",
+    "datasetDoi": "10.17632/8c8fjwcw86.1",
+    "license": "CC BY 4.0",
+    "pptxSha256": "7b0397e4f28c3963782727fe533756572acc51422fe2e00642c84e084228a116"
+  },
+  "semanticProfile": {
+    "chartCount": 7,
+    "slsTensileTracePointPairsExcluded": 1359,
+    "derivedBoxPlotPairedPointsExcluded": 72,
+    "mixedRouteStructuralPairedPointsExcluded": 26424,
+    "candidateInjectionMaterialTracePointPairs": 0,
+    "candidateInjectionMaterialTraceValues": 0,
+    "acceptedInjectionProcessTimeSeriesSamplesAdded": 0,
+    "rawNumericValuesEmitted": false,
+    "chartDisposition": [
+      {"chart":"chart1.xml","kind":"tensile-stress-displacement-trace","route":"sls","pairedPointCount":312,"accepted":false},
+      {"chart":"chart2.xml","kind":"tensile-stress-displacement-trace","route":"sls","pairedPointCount":1047,"accepted":false},
+      {"chart":"chart3.xml","kind":"derived-boxplot","route":"mixed","pairedPointCount":18,"accepted":false},
+      {"chart":"chart4.xml","kind":"derived-boxplot","route":"mixed","pairedPointCount":18,"accepted":false},
+      {"chart":"chart5.xml","kind":"derived-boxplot","route":"mixed","pairedPointCount":18,"accepted":false},
+      {"chart":"chart6.xml","kind":"derived-boxplot","route":"mixed","pairedPointCount":18,"accepted":false},
+      {"chart":"chart7.xml","kind":"structural-xrd","route":"mixed","pairedPointCount":26352,"accepted":false}
+    ]
+  },
+  "acceptance": {
+    "countsAsFullyProfiledMeasuredDataset": false,
+    "terminalReviewComplete": true,
+    "acceptedMeasuredRecordLevelValues": 0,
+    "acceptedMaterialTestTraceValues": 0,
+    "acceptedInjectionProcessTimeSeriesSamples": 0
+  },
+  "retrieval": {
+    "rawPublisherFilesCommitted": false,
+    "rawNumericRowsOrValuesArtifacted": false
+  },
+  "evidenceBoundary": "The delivered presentation contains SLS tensile traces, derived box-plot summaries and mixed-route structural charts. No paired stress/displacement trace is unambiguously injection-moulded in both chart and slide context, so none is accepted as measured injection-moulding evidence."
+}
