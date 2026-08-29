@@ -1,0 +1,55 @@
+name: MouldMaster Public Measured Benchmark — SiC Nylon 6 alternate release
+
+on:
+  push:
+    branches: [data/real-dataset-profiling-wave2-batch4]
+    paths:
+      - 'tools/run_public_benchmark_sic_nylon6_alt_stage1.py'
+      - 'qa_public_benchmark_sic_nylon6_alt_stage1.py'
+      - 'data/public-benchmark-contracts/sic-nylon6-alt-release-v1.json'
+      - '.github/workflows/public-benchmark-sic-nylon6-alt-stage1.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  manifest-profile:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Validate alternate-release evidence boundary
+        run: python qa_public_benchmark_sic_nylon6_alt_stage1.py
+      - name: Enumerate alternate publisher manifest only
+        run: |
+          mkdir -p benchmark-results
+          python tools/run_public_benchmark_sic_nylon6_alt_stage1.py \
+            --output benchmark-results/sic-nylon6-alt-stage1.json \
+            --retrieved-date "$(date -u +%F)"
+      - name: Validate aggregate manifest
+        run: |
+          python - <<'PY'
+          import json
+          x=json.load(open('benchmark-results/sic-nylon6-alt-stage1.json'))
+          assert x['status'] in {'publisher-file-manifest-exposed','publisher-record-no-files-exposed'}
+          assert x['source']['datasetFamilyId']=='sic-nylon6-injection-moulded-v1'
+          assert x['source']['alternateDatasetDoi']=='10.17632/47k6jswwg7.1'
+          assert x['source']['alternateLicense']=='CC BY-NC 3.0'
+          assert x['manifest']['rawPayloadsDownloaded'] is False
+          assert x['manifest']['rawRowsOrArraysEmitted'] is False
+          assert x['acceptance']['countsAsFullyProfiledMeasuredDataset'] is False
+          assert x['acceptance']['acceptedMeasuredTimeSeriesSamples']==0
+          assert x['acceptance']['sameStudyAlternateReleaseDoesNotCreateSecondFamily'] is True
+          print(json.dumps({'status':x['status'],'manifest':x['manifest']},indent=2))
+          PY
+      - name: Upload aggregate manifest only
+        uses: actions/upload-artifact@v4
+        with:
+          name: mouldmaster-public-measured-benchmark-sic-nylon6-alt-stage1
+          path: benchmark-results/sic-nylon6-alt-stage1.json
+          if-no-files-found: error
+          retention-days: 30
