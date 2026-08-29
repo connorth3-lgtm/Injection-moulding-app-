@@ -1,0 +1,42 @@
+name: MouldMaster Real Process Data Contract
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'data/real-process-data-pilot-template.csv'
+      - 'data/real-process-data-dictionary-template.csv'
+      - 'data/real-process-trace-template.csv'
+      - 'data/real-process-sensor-calibration-template.csv'
+      - 'data/real-process-event-template.csv'
+      - 'sources/REAL_PROCESS_DATA_CAPTURE_CONTRACT.md'
+      - 'qa_real_process_data_contract.py'
+      - '.github/workflows/real-process-data-contract.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'data/real-process-data-pilot-template.csv'
+      - 'data/real-process-data-dictionary-template.csv'
+      - 'data/real-process-trace-template.csv'
+      - 'data/real-process-sensor-calibration-template.csv'
+      - 'data/real-process-event-template.csv'
+      - 'sources/REAL_PROCESS_DATA_CAPTURE_CONTRACT.md'
+      - 'qa_real_process_data_contract.py'
+      - '.github/workflows/real-process-data-contract.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  capture-contract:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Python syntax
+        run: python -m py_compile qa_real_process_data_contract.py
+      - name: Validate public capture schemas and evidence boundaries
+        run: python qa_real_process_data_contract.py
