@@ -20,7 +20,7 @@ target_obj = json.loads(TARGETS.read_text(encoding="utf-8"))
 targets = target_obj["targets"]
 expected_profiled = targets["fully_profiled_measured_datasets"]["currentAccepted"]
 expected_samples = targets["measured_time_series_samples"]["currentAccepted"]
-need(expected_profiled == 3, "audited profiled-dataset baseline drifted")
+need(expected_profiled == 4, "audited profiled-dataset baseline drifted")
 need(expected_samples == 13_929_568, "audited measured-sample baseline drifted")
 workflow_text = WORKFLOW.read_text(encoding="utf-8")
 need(
@@ -99,8 +99,12 @@ with tempfile.TemporaryDirectory() as td:
     need(len({x["doi"].lower() for x in measured["primaryMeasuredStudies"]}) == 60, "compiled primary-measured study DOI deduplication failed")
     need(measured["publicBenchmarkResult"]["status"] == "completed-public-measured-benchmark", "legacy public benchmark alias missing")
     results = measured.get("publicBenchmarkResults") or {}
-    need(set(results) == {"gtnb4j7bfx-v1", "scatimdata-avaps", "openmms-t4g"}, f"completed public benchmark set drifted: {set(results)}")
+    need(set(results) == {"gtnb4j7bfx-v1", "scatimdata-avaps", "openmms-t4g", "su13148102-supplement"}, f"completed public benchmark set drifted: {set(results)}")
     need(all(x.get("status") == "completed-public-measured-benchmark" for x in results.values()), "compiled public benchmark completion state drifted")
+    need(results["su13148102-supplement"]["profile"]["rows"] == 955, "compiled Sustainability supplement row count drifted")
+    review_results = measured.get("publicBenchmarkReviewResults") or {}
+    need(set(review_results) == {"pet-preform-v2", "warwick-demoulding"}, "retrieved non-accepted result set drifted")
+    need(all(x.get("status") != "completed-public-measured-benchmark" for x in review_results.values()), "review-only datasets must not enter accepted benchmark counts")
     need(results["scatimdata-avaps"]["measurement_profile"]["acceptedMeasuredTimeSeriesSamples"] == 13_631_488, "compiled AVAPS sample count drifted")
     need(results["openmms-t4g"]["measurement_profile"]["acceptedMeasuredTimeSeriesSamples"] == 298_080, "compiled OpenMMS sample count drifted")
     need(

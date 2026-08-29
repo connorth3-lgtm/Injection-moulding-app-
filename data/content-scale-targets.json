@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "version": "2026.08.29.2",
+  "version": "2026.08.29.3",
   "reviewed": "2026-08-29",
   "scope": "Hard content-scale targets for MouldMaster. Completion counts only evidence that satisfies the acceptance definition for that area. Synthetic learning cases, generated drafts, unverified candidate papers and metadata-only dataset records must not be counted as completed measured evidence.",
   "targets": {
@@ -9,9 +9,9 @@
       "preferred": 50,
       "unit": "datasets",
       "acceptance": "A real measured dataset whose exact source/version/licence or access terms are recorded; source files have been obtained lawfully; file fingerprint and profile are recorded; schema/units/grouping are inspected; direct measurements, commands, derived fields and labels are distinguished; material/process/machine/mould/quality context and limitations are documented. Metadata-only records do not count.",
-      "currentAccepted": 3,
+      "currentAccepted": 4,
       "currentDiscovered": 20,
-      "notes": "The 20-source inventory now has three exact-source completed measured benchmarks. Mendeley 10.17632/gtnb4j7bfx.1 v1 is the profiled record-level benchmark; scatimdata/AVAPS is a CC BY 4.0 high-resolution pressure/flow benchmark with 3,328 quality-linked cycles; and OpenMMS-T4G is a BSD-3-Clause article-linked mould-monitoring case-study file with exact source-code signal/unit semantics and two verified time bases. Other inventory records remain non-counting until their actual files pass the same evidence boundary."
+      "notes": "The 20-source inventory now has four exact-source completed measured benchmarks: Mendeley 10.17632/gtnb4j7bfx.1 v1, scatimdata/AVAPS, OpenMMS-T4G, and the CC BY 4.0 Sustainability 8102 supplement with 955 delivered observations across 45 fields and five material groups. PET preform v2 was retrieved but remains non-counting because its workbook mixes process inputs with simulated/predicted stress outputs and lacks a source-defined measured quality outcome. All five Warwick OPJU files were hash-verified but remain non-counting until validated table export."
     },
     "measured_time_series_samples": {
       "minimum": 1000000,

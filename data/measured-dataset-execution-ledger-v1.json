@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "version": "2026.08.29.3",
+  "version": "2026.08.29.4",
   "reviewed": "2026-08-29",
   "purpose": "One-by-one execution state for the 20 real measured-data sources. This ledger does not change accepted counts by itself; only completed source-file profiling may do that.",
   "policy": {
@@ -14,7 +14,7 @@
   "sources": [
     {"priority":1,"datasetId":"mendeley-gtnb4j7bfx-v1","state":"accepted-profiled","action":"keep regression-pinned","reason":"CC BY 4.0 exact workbook already retrieved, SHA-256 fingerprinted and process-separated"},
     {"priority":2,"datasetId":"scatimdata-avaps","state":"accepted-profiled","action":"keep 3-archive source and delivered-file sample count regression-pinned","reason":"CC BY 4.0 source completed: three SHA-256-fingerprinted archives, 3,328 quality-linked cycles and 13,631,488 delivered pressure/flow values reconciled; paper says 2,049 points but released traces contain 2,048"},
-    {"priority":3,"datasetId":"su13148102-supplement","state":"queued-executable","action":"retrieve publisher supplementary ZIP and profile 955 x 42 table","reason":"CC BY 4.0 publisher supplementary data"},
+    {"priority":3,"datasetId":"su13148102-supplement","state":"accepted-profiled","action":"keep exact publisher supplement and delivered-schema regression-pinned","reason":"CC BY 4.0 source completed: SHA-256 verified, 955 rows, 45 delivered fields, five material groups; the delivered release has three more fields than the paper-reported 42"},
     {"priority":4,"datasetId":"probayes-main-v2","state":"blocked-rights-review","action":"capture explicit B2SHARE reuse licence before ingest","reason":"downloadable files are not sufficient evidence of reuse rights"},
     {"priority":5,"datasetId":"probayes-doptimal-v1","state":"blocked-rights-review","action":"capture explicit B2SHARE reuse licence before ingest","reason":"downloadable files are not sufficient evidence of reuse rights"},
     {"priority":6,"datasetId":"skz-loki-v1","state":"blocked-rights-review","action":"capture explicit B2SHARE reuse licence before waveform ingest","reason":"valuable time-resolved pressure data but licence not yet recorded"},
@@ -26,8 +26,8 @@
     {"priority":12,"datasetId":"cross-process-chain-17240390","state":"blocked-rights-review","action":"verify licence and enumerate injection-only experiment IDs","reason":"must exclude downstream screw-driving observations from injection-cycle/sample counts"},
     {"priority":13,"datasetId":"kamp-injection-7996","state":"blocked-mirror-rights","action":"locate authoritative original KAMP distribution terms","reason":"GitHub mirror does not prove rights for original factory dataset"},
     {"priority":14,"datasetId":"foxconn-competition-16600","state":"blocked-mirror-rights","action":"locate original competition licence/terms","reason":"public mirror is not authority to redistribute or automatically ingest original competition data"},
-    {"priority":15,"datasetId":"warwick-demoulding","state":"queued-executable-special-format","action":"retrieve CC BY 4.0 Mendeley v2 files and add Origin/export adapter","reason":"open specialist demoulding evidence in Origin project format"},
-    {"priority":16,"datasetId":"pet-preform-v2","state":"queued-executable","action":"retrieve CC BY 4.0 Mendeley v2 files and inspect schema/counts","reason":"reuse-ready public process database"},
+    {"priority":15,"datasetId":"warwick-demoulding","state":"retrieved-special-format-needs-export","action":"export the five hash-verified OPJU projects through a validated OriginLab-compatible workflow before accepting trial/channel/sample counts","reason":"all CC BY 4.0 publisher files are retrieved and fingerprinted, but the proprietary project container cannot be counted without validated table export"},
+    {"priority":16,"datasetId":"pet-preform-v2","state":"retrieved-semantic-review-not-accepted","action":"retain the fingerprinted 27-row schema profile but exclude it from measured-quality counts","reason":"the delivered workbook combines process inputs with simulated/predicted residual-stress fields and supplies no source-defined measured quality outcome"},
     {"priority":17,"datasetId":"leon-process-20309380","state":"blocked-embargo","action":"recheck after embargo end","notBefore":"2027-12-31","reason":"raw files currently embargoed"},
     {"priority":18,"datasetId":"leon-defects-20322729","state":"blocked-embargo","action":"recheck after embargo end","notBefore":"2027-12-31","reason":"raw files currently embargoed"},
     {"priority":19,"datasetId":"inqcim-2500-request","state":"blocked-request-only","action":"obtain authorised access/data-use terms before any profiling","reason":"request-only source is not executable from public metadata"},
@@ -35,9 +35,10 @@
   ],
   "summary": {
     "total": 20,
-    "acceptedProfiled": 3,
+    "acceptedProfiled": 4,
     "executingProfile": 0,
-    "queuedExecutable": 3,
+    "queuedExecutable": 0,
+    "retrievedNotAccepted": 2,
     "rightsOrTermsBlocked": 7,
     "restrictedResearchEducation": 1,
     "mirrorRightsBlocked": 2,

@@ -68,6 +68,7 @@ def compile_measured():
         ("gtnb4j7bfx-v1", "data/public-benchmark-contracts/gtnb4j7bfx-v1.json", "data/public-benchmark-results/gtnb4j7bfx-v1.json"),
         ("scatimdata-avaps", "data/public-benchmark-contracts/scatimdata-avaps-v1.json", "data/public-benchmark-results/scatimdata-avaps-v1.json"),
         ("openmms-t4g", "data/public-benchmark-contracts/openmms-t4g-v1.json", "data/public-benchmark-results/openmms-t4g-v1.json"),
+        ("su13148102-supplement", "data/public-benchmark-contracts/su13148102-supplement-v1.json", "data/public-benchmark-results/su13148102-supplement-v1.json"),
     ]
     benchmark_contracts = {}
     benchmark_results = {}
@@ -79,7 +80,7 @@ def compile_measured():
         benchmark_results[benchmark_id] = result
 
     accepted_profiled = targets["targets"]["fully_profiled_measured_datasets"]["currentAccepted"]
-    need(len(benchmark_results) == accepted_profiled == 3, "completed measured benchmark result count must match accepted profiled dataset count")
+    need(len(benchmark_results) == accepted_profiled == 4, "completed measured benchmark result count must match accepted profiled dataset count")
     need(execution.get("summary", {}).get("acceptedProfiled") == accepted_profiled, "execution ledger accepted-profiled count drifted")
 
     return {
@@ -95,6 +96,10 @@ def compile_measured():
         "mechanismPromotionDossiers": dossiers,
         "publicBenchmarkContracts": benchmark_contracts,
         "publicBenchmarkResults": benchmark_results,
+        "publicBenchmarkReviewResults": {
+            "pet-preform-v2": load_json("data/public-benchmark-results/pet-preform-v2.json"),
+            "warwick-demoulding": load_json("data/public-benchmark-results/warwick-demoulding-v2.json"),
+        },
         # Backward-compatible aliases for the original record-level benchmark.
         "publicBenchmarkContract": benchmark_contracts["gtnb4j7bfx-v1"],
         "publicBenchmarkResult": benchmark_results["gtnb4j7bfx-v1"],

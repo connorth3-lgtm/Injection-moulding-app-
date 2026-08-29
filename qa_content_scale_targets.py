@@ -9,6 +9,9 @@ PRIMARY = ROOT / "data" / "primary-measured-evidence-registry-v1.json"
 BENCHMARK_RECORD = ROOT / "data" / "public-benchmark-results" / "gtnb4j7bfx-v1.json"
 BENCHMARK_AVAPS = ROOT / "data" / "public-benchmark-results" / "scatimdata-avaps-v1.json"
 BENCHMARK_OPENMMS = ROOT / "data" / "public-benchmark-results" / "openmms-t4g-v1.json"
+BENCHMARK_SU = ROOT / "data" / "public-benchmark-results" / "su13148102-supplement-v1.json"
+REVIEW_PET = ROOT / "data" / "public-benchmark-results" / "pet-preform-v2.json"
+REVIEW_WARWICK = ROOT / "data" / "public-benchmark-results" / "warwick-demoulding-v2.json"
 
 
 def need(ok, msg):
@@ -92,9 +95,21 @@ need(set((om_profile.get("time_bases") or {}).keys()) == {"t", "t2"}, "OpenMMS t
 need(all(v.get("monotonicNonDecreasing") is True and v.get("strictlyIncreasingFraction") == 1.0 for v in (om_profile.get("time_bases") or {}).values()), "OpenMMS time bases must remain ordered")
 need(by_id["openmms-t4g"].get("automatedIngestionAllowed") is True, "OpenMMS inventory execution right drifted")
 
+su = json.loads(BENCHMARK_SU.read_text(encoding="utf-8"))
+need(su.get("status") == "completed-public-measured-benchmark", "Sustainability supplement benchmark status missing")
+need((su.get("source") or {}).get("sha256") == "b546abea4eb9f14b6736dec415dc43c00240965b91de4c7ca92b2494321c6ace", "Sustainability supplement fingerprint drifted")
+need((su.get("profile") or {}).get("rows") == 955 and (su.get("profile") or {}).get("columns") == 45, "Sustainability supplement delivered schema drifted")
+need((su.get("profile") or {}).get("paperReleaseColumnDelta") == 3, "Sustainability supplement paper/release discrepancy missing")
+need((su.get("profile") or {}).get("countsAsTimeSeriesSamples") is False, "record-level supplement must not inflate time-series values")
+pet = json.loads(REVIEW_PET.read_text(encoding="utf-8"))
+warwick = json.loads(REVIEW_WARWICK.read_text(encoding="utf-8"))
+need(pet.get("status") == "retrieved-profile-needs-semantic-review", "PET review-only state drifted")
+need(warwick.get("status") == "retrieved-profile-needs-special-format-export", "Warwick special-format state drifted")
+need(all(x.get("publisherHashMatched") is True for x in warwick.get("files") or []) and len(warwick.get("files") or []) == 5, "Warwick file verification drifted")
+
 accepted_measured_total = av_profile["acceptedMeasuredTimeSeriesSamples"] + om_profile["acceptedMeasuredTimeSeriesSamples"]
 need(accepted_measured_total == 13_929_568, "combined real measured-sample arithmetic drifted")
-need(targets["fully_profiled_measured_datasets"]["currentAccepted"] == 3, "fully profiled measured dataset count must equal the three completed benchmark families")
+need(targets["fully_profiled_measured_datasets"]["currentAccepted"] == 4, "fully profiled measured dataset count must equal the four completed benchmark families")
 need(targets["measured_time_series_samples"]["currentAccepted"] == accepted_measured_total, "measured sample count must equal AVAPS plus OpenMMS delivered-file evidence")
 
 primary = json.loads(PRIMARY.read_text(encoding="utf-8"))
@@ -121,7 +136,7 @@ report = {
     "measuredDatasetDiscovery": {
         "inventoryCount": len(datasets),
         "legacyCatalogSeedCount": len(legacy.get("datasets") or []),
-        "fullyProfiledAccepted": 3,
+        "fullyProfiledAccepted": 4,
         "automatedIngestionAllowed": summary.get("automatedIngestionAllowed"),
         "embargoedRecords": summary.get("embargoed"),
     },
@@ -162,4 +177,4 @@ report = {
     "boundary": "No synthetic, metadata-only, generated-draft or heuristic-candidate evidence is counted as completed measured/reviewed content unless its area-specific acceptance definition is satisfied."
 }
 (ROOT / "content-scale-targets-report.json").write_text(json.dumps(report, indent=2) + "\n", encoding="utf-8")
-print(f"MouldMaster content-scale target integrity QA passed ({len(datasets)} measured datasets inventoried; 3 fully profiled benchmark families; {accepted_measured_total:,} real measured time-series values; {verified} publisher-verified primary measured studies)")
+print(f"MouldMaster content-scale target integrity QA passed ({len(datasets)} measured datasets inventoried; 4 fully profiled benchmark families; {accepted_measured_total:,} real measured time-series values; {verified} publisher-verified primary measured studies)")
