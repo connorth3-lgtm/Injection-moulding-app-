@@ -1,0 +1,37 @@
+name: MouldMaster Measured Dataset Wave 2 Batch 2 QA
+
+on:
+  push:
+    branches: [data/real-dataset-profiling-wave2-batch2]
+    paths:
+      - 'qa_measured_dataset_wave2_batch2.py'
+      - 'data/measured-dataset-wave2-ledger-v1.json'
+      - 'data/public-benchmark-results/yxz2w7ctnh-v1.json'
+      - 'data/public-benchmark-results/c3pt29jt7c-v1.json'
+      - 'data/public-benchmark-results/mendeley-wave2-batch2-stage1.json'
+      - '.github/workflows/measured-dataset-wave2-batch2-qa.yml'
+  pull_request:
+    branches: [data/real-dataset-profiling-wave2, data/real-dataset-profiling-wave1, main]
+    paths:
+      - 'qa_measured_dataset_wave2_batch2.py'
+      - 'data/measured-dataset-wave2-ledger-v1.json'
+      - 'data/public-benchmark-results/yxz2w7ctnh-v1.json'
+      - 'data/public-benchmark-results/c3pt29jt7c-v1.json'
+      - 'data/public-benchmark-results/mendeley-wave2-batch2-stage1.json'
+      - '.github/workflows/measured-dataset-wave2-batch2-qa.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  evidence-qa:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Validate Wave 2 batch 2 evidence ledger
+        run: python qa_measured_dataset_wave2_batch2.py
