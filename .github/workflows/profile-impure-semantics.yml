@@ -1,0 +1,73 @@
+name: MouldMaster ImPure Semantic Probe
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'tools/profile_impure_semantics.py'
+      - '.github/workflows/profile-impure-semantics.yml'
+      - 'data/impure-pascoe-channel-dictionary-v1.json'
+      - 'data/public-benchmark-contracts/impure-pascoe-2022-v1.json'
+  push:
+    branches: [data/resolve-impure-semantics]
+    paths:
+      - 'tools/profile_impure_semantics.py'
+      - '.github/workflows/profile-impure-semantics.yml'
+      - 'data/impure-pascoe-channel-dictionary-v1.json'
+      - 'data/public-benchmark-contracts/impure-pascoe-2022-v1.json'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: mouldmaster-impure-semantic-probe-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  aggregate-probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Retrieve licensed ImPure cycles and compute aggregate semantic statistics
+        run: |
+          mkdir -p benchmark-results
+          python tools/profile_impure_semantics.py --output benchmark-results/impure-semantics-probe.json
+      - name: Validate privacy and counting boundary
+        run: |
+          python - <<'PY'
+          import json
+          x=json.load(open('benchmark-results/impure-semantics-probe.json'))
+          assert x['status']=='aggregate-semantic-probe-complete'
+          assert x['source']['datasetId']=='impure-pascoe-2022'
+          assert x['source']['license']=='CC BY 4.0'
+          assert x['source']['cycleFilesVerified']==307
+          assert x['profile']['cycleRows']==297087
+          assert x['profile']['numericSensorValues']==2376696
+          assert x['profile']['sensorColumns']==8
+          assert x['profile']['rawRowsOrCellValuesEmitted'] is False
+          assert x['profile']['absoluteTimestampsEmitted'] is False
+          assert x['profile']['perCycleRawValuesEmitted'] is False
+          assert x['interpretationBoundary']['automaticPromotion'] is False
+          assert x['interpretationBoundary']['acceptedMeasuredTimeSeriesSamples']==0
+          assert x['retrieval']['rawPublisherFilesCommitted'] is False
+          assert x['retrieval']['rawPublisherFilesUploadedAsArtifact'] is False
+          assert x['retrieval']['rawRowsOrArraysUploadedAsArtifact'] is False
+          assert set(x['profile']['channels']) == {
+              'HydPressure[IRT/Pascoe]', 'ScrewPosition[IRT/Pascoe]',
+              'Analog Input[1]', 'Analog Input[2]',
+              'TempMold1[IRT/Pascoe]', 'TempMold2[IRT/Pascoe]',
+              'Pressure1[IRT/Pascoe]', 'Pressure2[IRT/Pascoe]'
+          }
+          PY
+      - name: Upload aggregate semantic profile only
+        uses: actions/upload-artifact@v4
+        with:
+          name: mouldmaster-impure-semantic-probe
+          path: benchmark-results/impure-semantics-probe.json
+          if-no-files-found: error
+          retention-days: 30
