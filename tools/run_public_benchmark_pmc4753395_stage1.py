@@ -6,10 +6,9 @@ import hashlib
 import io
 import json
 import re
-import tarfile
 import tempfile
+import urllib.parse
 import urllib.request
-import xml.etree.ElementTree as ET
 import zipfile
 from pathlib import Path, PurePosixPath
 
@@ -27,6 +26,11 @@ def get_bytes(url: str, accept: str = "*/*"):
         return r.read(), r.geturl(), r.headers.get("Content-Type")
 
 
+def get_json(url: str):
+    raw, final, content_type = get_bytes(url, "application/json,*/*")
+    return json.loads(raw.decode("utf-8")), final, content_type, hashlib.sha256(raw).hexdigest()
+
+
 def safe_member(name: str) -> bool:
     p = PurePosixPath(name)
     return not p.is_absolute() and ".." not in p.parts
@@ -39,6 +43,53 @@ def compact_text(v):
     if not s:
         return None
     return s[:160]
+
+
+def s3_to_https(url: str) -> str:
+    if not url.startswith("s3://pmc-oa-opendata/"):
+        raise RuntimeError("unexpected PMC cloud media URL")
+    tail = url[len("s3://pmc-oa-opendata/"):]
+    return "https://pmc-oa-opendata.s3.amazonaws.com/" + tail
+
+
+def cloud_supplement(metadata_url: str, pmcid: str, supplement_label: str):
+    meta, final, content_type, metadata_sha = get_json(metadata_url)
+    if meta.get("pmcid") != pmcid:
+        raise RuntimeError(f"PMC cloud metadata PMCID mismatch: {meta.get('pmcid')!r}")
+    license_code = str(meta.get("license_code") or "").upper().replace("-", " ")
+    if license_code != "CC BY":
+        raise RuntimeError(f"PMC cloud metadata licence is not CC BY: {meta.get('license_code')!r}")
+    media_urls = meta.get("media_urls") or []
+    target = supplement_label.lower()
+    candidates = []
+    for media_url in media_urls:
+        parsed = urllib.parse.urlparse(str(media_url))
+        name = Path(parsed.path).name.lower()
+        if name == target:
+            candidates.append(str(media_url))
+    if len(candidates) != 1:
+        raise RuntimeError(f"expected exactly one cloud media object {supplement_label!r}; found {len(candidates)}")
+    s3_url = candidates[0]
+    https_url = s3_to_https(s3_url)
+    payload, payload_final, payload_type = get_bytes(https_url, "application/zip,*/*")
+    return payload, {
+        "metadataUrl": metadata_url,
+        "metadataResolvedUrl": final,
+        "metadataContentType": content_type,
+        "metadataSha256": metadata_sha,
+        "metadataPmcid": meta.get("pmcid"),
+        "metadataVersion": meta.get("version"),
+        "metadataDoi": meta.get("doi"),
+        "metadataLicenseCode": meta.get("license_code"),
+        "mediaObjectCount": len(media_urls),
+        "supplementS3Url": s3_url,
+        "supplementHttpsUrl": https_url,
+        "supplementResolvedUrl": payload_final,
+        "supplementContentType": payload_type,
+        "supplementSizeBytes": len(payload),
+        "supplementSha256": hashlib.sha256(payload).hexdigest(),
+        "rawCloudMetadataOrMediaUploaded": False
+    }
 
 
 def profile_xlsx(data: bytes, member_name: str):
@@ -87,49 +138,6 @@ def profile_xlsx(data: bytes, member_name: str):
         }
 
 
-def oa_package_supplement(api_url: str, supplement_label: str):
-    xml_bytes, api_final, api_type = get_bytes(api_url, "application/xml,text/xml,*/*")
-    root = ET.fromstring(xml_bytes)
-    href = None
-    for link in root.iter("link"):
-        if str(link.attrib.get("format", "")).lower() == "tgz" and link.attrib.get("href"):
-            href = link.attrib["href"]
-            break
-    if not href:
-        raise RuntimeError("NCBI OA package API exposed no tgz link")
-    if href.startswith("ftp://ftp.ncbi.nlm.nih.gov/"):
-        href = "https://ftp.ncbi.nlm.nih.gov/" + href.split("ftp://ftp.ncbi.nlm.nih.gov/", 1)[1]
-    package_bytes, package_final, package_type = get_bytes(href, "application/gzip,application/x-gzip,*/*")
-    package_sha = hashlib.sha256(package_bytes).hexdigest()
-    target = supplement_label.lower()
-    nested = None
-    nested_name = None
-    with tarfile.open(fileobj=io.BytesIO(package_bytes), mode="r:gz") as tf:
-        for member in tf.getmembers():
-            if not member.isfile() or not safe_member(member.name):
-                continue
-            if Path(member.name).name.lower() == target:
-                fh = tf.extractfile(member)
-                if fh is not None:
-                    nested = fh.read()
-                    nested_name = member.name
-                    break
-    if nested is None:
-        raise RuntimeError(f"NCBI OA package did not contain {supplement_label}")
-    return nested, {
-        "oaApiUrl": api_url,
-        "oaApiResolvedUrl": api_final,
-        "oaApiContentType": api_type,
-        "packageUrl": href,
-        "packageResolvedUrl": package_final,
-        "packageContentType": package_type,
-        "packageSizeBytes": len(package_bytes),
-        "packageSha256": package_sha,
-        "supplementMemberPath": nested_name,
-        "rawOaPackageCommittedOrUploaded": False
-    }
-
-
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--output", type=Path, required=True)
@@ -140,16 +148,18 @@ def main():
     supplement_label = contract["source"]["supplementLabel"]
     direct_data, direct_final, direct_type = get_bytes(url, "application/zip,*/*")
     retrieval_route = "direct-supplement-url"
-    oa_diagnostics = None
+    cloud_diagnostics = None
     if zipfile.is_zipfile(io.BytesIO(direct_data)):
         data = direct_data
         final_url = direct_final
         content_type = direct_type
     else:
-        data, oa_diagnostics = oa_package_supplement(contract["source"]["oaPackageApi"], supplement_label)
-        final_url = oa_diagnostics["supplementMemberPath"]
-        content_type = "application/zip"
-        retrieval_route = "ncbi-open-access-package"
+        data, cloud_diagnostics = cloud_supplement(
+            contract["source"]["cloudMetadataUrl"], contract["source"]["pmcid"], supplement_label
+        )
+        final_url = cloud_diagnostics["supplementResolvedUrl"]
+        content_type = cloud_diagnostics["supplementContentType"]
+        retrieval_route = "pmc-current-cloud-media"
     archive_sha = hashlib.sha256(data).hexdigest()
     valid_zip = zipfile.is_zipfile(io.BytesIO(data))
     members = []
@@ -199,7 +209,7 @@ def main():
                 "zipStructureValid": zipfile.is_zipfile(io.BytesIO(direct_data)),
                 "responseBodyEmitted": False
             },
-            "oaFallback": oa_diagnostics,
+            "cloudFallback": cloud_diagnostics,
             "resolvedSupplementLocation": final_url,
             "contentType": content_type,
             "retrievedSizeBytes": len(data),
