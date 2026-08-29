@@ -1,0 +1,61 @@
+name: MouldMaster Public Measured Benchmark — XPS mould-release interface
+
+on:
+  push:
+    branches: [data/real-dataset-profiling-wave2-batch3]
+    paths:
+      - 'tools/run_public_benchmark_crmb7xjymg.py'
+      - 'qa_public_benchmark_crmb7xjymg.py'
+      - 'data/public-benchmark-contracts/crmb7xjymg-v1.json'
+      - '.github/workflows/public-benchmark-crmb7xjymg.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  vamas-profile:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python -m pip install --disable-pip-version-check vamas==0.2.0
+      - name: Validate XPS evidence boundaries
+        run: python qa_public_benchmark_crmb7xjymg.py
+      - name: Parse exact VAMAS source and count detector arrays
+        run: |
+          mkdir -p benchmark-results
+          python tools/run_public_benchmark_crmb7xjymg.py \
+            --output benchmark-results/crmb7xjymg-v1.json \
+            --retrieved-date "$(date -u +%F)"
+      - name: Validate aggregate XPS profile
+        run: |
+          python - <<'PY'
+          import json
+          x=json.load(open('benchmark-results/crmb7xjymg-v1.json'))
+          assert x['status']=='completed-profiled-xps-vamas-material-tool-interface'
+          assert x['source']['datasetDoi']=='10.17632/crmb7xjymg.1'
+          assert x['source']['publisherSha256Matched'] is True
+          assert x['profile']['vamasBlockCount'] > 0
+          assert x['profile']['xpsBlockCount']==x['profile']['vamasBlockCount']
+          assert x['profile']['measuredDetectorCountsValues'] > 0
+          assert x['profile']['rawSpectralValuesEmitted'] is False
+          assert x['acceptance']['countsAsFullyProfiledMeasuredDataset'] is True
+          assert x['acceptance']['acceptedMeasuredTimeSeriesSamples']==0
+          assert x['acceptance']['acceptedMaterialCharacterizationTraceValues']==x['profile']['measuredDetectorCountsValues']
+          assert x['acceptance']['energyAxisExcluded'] is True
+          assert x['acceptance']['transmissionAndCalibrationVariablesExcluded'] is True
+          assert x['retrieval']['rawPublisherFileCommitted'] is False
+          assert x['retrieval']['rawSpectralValuesUploadedAsArtifact'] is False
+          print(json.dumps({'blocks':x['profile']['vamasBlockCount'],'measuredDetectorCountsValues':x['profile']['measuredDetectorCountsValues'],'dependentVariablePointCountsByLabel':x['profile']['dependentVariablePointCountsByLabel']},indent=2))
+          PY
+      - name: Upload aggregate XPS profile only
+        uses: actions/upload-artifact@v4
+        with:
+          name: mouldmaster-public-measured-benchmark-crmb7xjymg
+          path: benchmark-results/crmb7xjymg-v1.json
+          if-no-files-found: error
+          retention-days: 30
