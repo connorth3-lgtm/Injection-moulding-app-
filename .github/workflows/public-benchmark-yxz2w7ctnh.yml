@@ -1,0 +1,61 @@
+name: MouldMaster Public Measured Benchmark — PLA ABS injection mechanical tests
+
+on:
+  push:
+    branches: [data/real-dataset-profiling-wave2-batch2]
+    paths:
+      - 'tools/run_public_benchmark_yxz2w7ctnh.py'
+      - 'qa_public_benchmark_yxz2w7ctnh.py'
+      - 'data/public-benchmark-contracts/yxz2w7ctnh-v1.json'
+      - '.github/workflows/public-benchmark-yxz2w7ctnh.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  semantic-profile:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python -m pip install --disable-pip-version-check openpyxl
+      - name: Validate source-specific evidence boundaries
+        run: python qa_public_benchmark_yxz2w7ctnh.py
+      - name: Profile explicitly labelled injection-moulded test blocks
+        run: |
+          mkdir -p benchmark-results
+          python tools/run_public_benchmark_yxz2w7ctnh.py \
+            --output benchmark-results/yxz2w7ctnh-v1.json \
+            --retrieved-date "$(date -u +%F)"
+      - name: Validate accepted aggregate profile
+        run: |
+          python - <<'PY'
+          import json
+          x=json.load(open('benchmark-results/yxz2w7ctnh-v1.json'))
+          assert x['status']=='completed-profiled-record-level-injection-mechanical-testing'
+          assert x['source']['datasetDoi']=='10.17632/yxz2w7ctnh.1'
+          assert x['source']['license']=='CC BY 4.0'
+          assert x['profile']['publisherFilesVerified']==4
+          assert x['profile']['directRecordLevelInjectionMeasuredValues'] > 0
+          assert x['profile']['acceptedMeasuredTimeSeriesSamples']==0
+          assert x['profile']['rawRowsOrNumericValuesEmitted'] is False
+          assert x['acceptance']['countsAsFullyProfiledMeasuredDataset'] is True
+          assert x['acceptance']['energySheetsExcluded'] is True
+          assert x['acceptance']['impactSheetsExcludedForRouteAmbiguity'] is True
+          assert x['acceptance']['duplicateWorksheetsExcluded'] is True
+          assert x['acceptance']['formulaCellsExcludedAsDerived'] is True
+          assert x['retrieval']['rawPublisherFilesCommitted'] is False
+          assert x['retrieval']['rawRowsOrNumericValuesUploadedAsArtifact'] is False
+          print(json.dumps({'directRecordLevelInjectionMeasuredValues':x['profile']['directRecordLevelInjectionMeasuredValues'],'selectedInjectionBlocks':x['profile']['selectedInjectionBlocks'],'duplicateGroups':len(x['profile']['duplicateWorksheetGroupsExcluded'])},indent=2))
+          PY
+      - name: Upload aggregate profile only
+        uses: actions/upload-artifact@v4
+        with:
+          name: mouldmaster-public-measured-benchmark-yxz2w7ctnh
+          path: benchmark-results/yxz2w7ctnh-v1.json
+          if-no-files-found: error
+          retention-days: 30
