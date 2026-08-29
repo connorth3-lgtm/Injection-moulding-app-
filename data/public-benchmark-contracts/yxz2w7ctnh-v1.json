@@ -1,0 +1,30 @@
+{
+  "schema": 1,
+  "datasetId": "mendeley-yxz2w7ctnh-v1",
+  "status": "stage1-manifest-candidate",
+  "source": {
+    "datasetPage": "https://data.mendeley.com/datasets/yxz2w7ctnh/1",
+    "datasetDoi": "10.17632/yxz2w7ctnh.1",
+    "mendeleyDatasetId": "yxz2w7ctnh",
+    "version": 1,
+    "publisher": "Mendeley Data",
+    "license": "CC BY 4.0"
+  },
+  "experimentContext": {
+    "manufacturingRoutesReported": ["injection moulding", "FDM 3D printing"],
+    "materials": ["ABS", "PLA"],
+    "measurementFamiliesReported": ["tensile testing", "three-point bending", "impact testing", "energy consumption"],
+    "injectionRelevantMeasurements": ["tensile", "three-point bending", "impact"],
+    "defaultExcludedMeasurements": ["FDM-only energy consumption", "3D-printed-only measurements"]
+  },
+  "stage1Rules": {
+    "publisherManifestOnly": true,
+    "downloadDatasetPayloads": false,
+    "routeMustBeResolvedBeforeMeasurementCounting": true,
+    "injectionAndFdmMeasurementsMustNotBeCombined": true,
+    "rawRowsOrArraysEmitted": false,
+    "countsAsFullyProfiledMeasuredDataset": false,
+    "acceptedInjectionProcessTimeSeriesSamples": 0
+  },
+  "evidenceBoundary": "Stage 1 enumerates only publisher file/folder metadata. Injection-moulded ABS/PLA mechanical-test evidence must be isolated from FDM and energy datasets before any measured values can count. Mechanical-test traces, if delivered, remain material-test evidence and do not inflate injection-machine/cavity process time-series samples."
+}
