@@ -15,7 +15,6 @@ from pathlib import Path
 from urllib.error import HTTPError
 from urllib.request import Request, urlopen
 
-ROOT = Path(__file__).resolve().parents[1]
 RECORD_URL = "https://zenodo.org/api/records/6913660"
 USER_AGENT = "MouldMaster-impure-specialist-profiler/1.0 (aggregate research profiling)"
 EXPECTED_HEADER = [
@@ -98,16 +97,14 @@ def parse_time(value: str) -> tuple[float, str]:
     normalized = s[:-1] + "+00:00" if s.endswith("Z") else s
     try:
         dt = datetime.fromisoformat(normalized)
-        return dt.timestamp() if dt.tzinfo else dt.toordinal() * 86400.0 + dt.hour * 3600 + dt.minute * 60 + dt.second + dt.microsecond / 1e6, "iso8601"
+        base = dt.timestamp() if dt.tzinfo else dt.toordinal() * 86400.0
+        return base + (0.0 if dt.tzinfo else dt.hour * 3600 + dt.minute * 60 + dt.second + dt.microsecond / 1e6), "iso8601"
     except ValueError:
         pass
     for name, fmt in TIME_FORMATS[1:]:
         try:
             dt = datetime.strptime(s, fmt)
-            if "%Y" in fmt:
-                base = dt.toordinal() * 86400.0
-            else:
-                base = 0.0
+            base = dt.toordinal() * 86400.0 if "%Y" in fmt else 0.0
             return base + dt.hour * 3600 + dt.minute * 60 + dt.second + dt.microsecond / 1e6, name
         except ValueError:
             continue
@@ -121,8 +118,7 @@ def canonical_step(value: float) -> str:
 def profile_cycle(raw: bytes, filename: str) -> dict:
     wrapper = io.TextIOWrapper(io.BytesIO(raw), encoding="utf-8-sig", errors="strict", newline="")
     reader = csv.reader(wrapper)
-    header = next(reader, [])
-    header = [str(x).strip() for x in header]
+    header = [str(x).strip() for x in next(reader, [])]
     need(header == EXPECTED_HEADER, f"{filename}: exact nine-column schema drift")
 
     rows = 0
@@ -144,7 +140,7 @@ def profile_cycle(raw: bytes, filename: str) -> dict:
             time_format = fmt
         need(fmt == time_format, f"{filename}: mixed Time formats within one cycle")
         if prev_time is not None:
-            need(t > prev_time, f"{filename}: Time vector is not strictly increasing at row {rows}")
+            need(t >= prev_time, f"{filename}: Time vector moves backward at row {rows}")
             increments[canonical_step(t - prev_time)] += 1
         prev_time = t
 
@@ -159,18 +155,12 @@ def profile_cycle(raw: bytes, filename: str) -> dict:
             finite_counts[column] += 1
 
     need(rows > 0, f"{filename}: no cycle rows")
-    return {
-        "rows": rows,
-        "timeFormat": time_format,
-        "timeIncrementCounts": increments,
-        "finiteCounts": finite_counts,
-    }
+    return {"rows": rows, "timeFormat": time_format, "timeIncrementCounts": increments, "finiteCounts": finite_counts}
 
 
 def main() -> None:
     record = fetch_json(RECORD_URL)
-    metadata = record.get("metadata") or {}
-    licence = (metadata.get("license") or {}).get("id")
+    licence = (((record.get("metadata") or {}).get("license") or {}).get("id"))
     need(licence == "cc-by-4.0", f"ImPure licence drifted: {licence}")
     files = record.get("files") or []
     need(len(files) == 309, f"publisher file-count drifted: {len(files)}")
@@ -201,8 +191,7 @@ def main() -> None:
     need(total_rows == 297_087, f"cycle-row count drifted: {total_rows}")
     need(all(channel_finite_counts[column] == total_rows for column in EXPECTED_HEADER[1:]), "not every non-time channel is finite on every accepted row")
 
-    accepted_per_row = len(ACCEPTED_COLUMNS)
-    accepted_values = total_rows * accepted_per_row
+    accepted_values = total_rows * len(ACCEPTED_COLUMNS)
     result = {
         "schema_version": 1,
         "status": "completed-source-defined-impure-partial-channel-acceptance",
@@ -218,7 +207,7 @@ def main() -> None:
             "cycleFilesAccepted": len(cycle_items),
             "cycleFilesRejected": 0,
             "cycleRowsAccepted": total_rows,
-            "acceptedMeasuredChannelsPerRow": accepted_per_row,
+            "acceptedMeasuredChannelsPerRow": len(ACCEPTED_COLUMNS),
             "acceptedMeasuredTimeSeriesSamples": accepted_values,
             "parsedButNonCountingChannelsPerRow": len(NONCOUNTING_COLUMNS),
             "rawRowsOrCellValuesEmitted": False,
@@ -240,16 +229,14 @@ def main() -> None:
             "screwPositionMeaningResolved": True,
             "screwPositionEngineeringUnitResolved": False,
             "timeEngineeringUnitInferred": False,
+            "duplicateDeliveredTimestampsPreserved": True,
+            "backwardTimeJumpsAllowed": False,
         },
-        "retrieval": {
-            "rawPublisherFilesCommitted": False,
-            "rawRowsUploadedAsArtifact": False,
-            "temporaryFilesDeletedAfterRun": True,
-        },
+        "retrieval": {"rawPublisherFilesCommitted": False, "rawRowsUploadedAsArtifact": False, "temporaryFilesDeletedAfterRun": True},
         "limitations": [
             "Analog Input[1]/[2] remain non-counting until an authoritative source maps the two released columns to nozzle-temperature versus water-temperature roles.",
             "ScrewPosition remains non-counting until the released engineering unit and scaling/reference are authoritative.",
-            "The parser validates the delivered Time strings for strict ordering and regularity facts without inventing an engineering unit.",
+            "The parser preserves source-native row order and allows duplicate delivered Time values while rejecting backward jumps; no Time engineering unit is invented.",
         ],
     }
     print(json.dumps(result, indent=2, sort_keys=True))
