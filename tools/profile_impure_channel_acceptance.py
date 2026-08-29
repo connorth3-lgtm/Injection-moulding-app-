@@ -41,7 +41,6 @@ NONCOUNTING_COLUMNS = {
     "Analog Input[2]": "one of nozzle-temperature/heating-water-temperature pair; exact column-to-role ordering unresolved",
 }
 TIME_FORMATS = [
-    ("HMS_micro", "%H:%M:%S.%f"),
     ("HMS_comma_micro", "%H:%M:%S,%f"),
     ("HMS", "%H:%M:%S"),
     ("DMY_HMS_micro", "%d/%m/%Y %H:%M:%S.%f"),
@@ -51,7 +50,7 @@ TIME_FORMATS = [
     ("YMD_HMS_comma_micro", "%Y-%m-%d %H:%M:%S,%f"),
     ("YMD_HMS", "%Y-%m-%d %H:%M:%S"),
 ]
-ORDINAL_RE = re.compile(r"^(\d{2}):(\d{2}):(\d{3})\.(\d{3})$")
+COLON_ORDINAL_RE = re.compile(r"^(\d+):(\d+):(\d+)\.(\d+)$")
 
 
 def need(ok: bool, msg: str) -> None:
@@ -94,11 +93,11 @@ def parse_time(value: str) -> tuple[tuple, str]:
     s = value.strip()
     need(bool(s), "blank Time value")
 
-    ordinal = ORDINAL_RE.fullmatch(s)
+    ordinal = COLON_ORDINAL_RE.fullmatch(s)
     if ordinal:
-        # Fixed widths make tuple comparison a deterministic source-order test.
-        # No physical unit/radix is assigned to these components.
-        return (1,) + tuple(int(x) for x in ordinal.groups()), "fixed_2_2_3_dot_3_ordinal"
+        # Source-native digit groups are compared component-wise only.
+        # Their physical unit/radix is intentionally not inferred.
+        return (1,) + tuple(int(x) for x in ordinal.groups()), "colon_numeric_ordinal"
 
     normalized = s[:-1] + "+00:00" if s.endswith("Z") else s
     try:
@@ -244,7 +243,7 @@ def main() -> None:
         "limitations": [
             "Analog Input[1]/[2] remain non-counting until an authoritative source maps the two released columns to nozzle-temperature versus water-temperature roles.",
             "ScrewPosition remains non-counting until the released engineering unit and scaling/reference are authoritative.",
-            "The parser validates source-native Time tokens only as ordered values; duplicate tokens are preserved, backward transitions fail, and no Time engineering unit is invented.",
+            "The parser validates source-native Time tokens only as ordered numeric-component tuples; duplicate tokens are preserved, backward transitions fail, and no Time engineering unit is invented.",
         ],
     }
     print(json.dumps(result, indent=2, sort_keys=True))
