@@ -4,6 +4,7 @@ on:
   pull_request:
     branches: [main]
     paths:
+      - 'data/cross-process-upper-workpiece-dictionary-v1.json'
       - 'data/impure-pascoe-channel-dictionary-v1.json'
       - 'data/warwick-demoulding-source-contract-v1.json'
       - 'qa_measured_data_blocker_contracts.py'
@@ -11,6 +12,7 @@ on:
   push:
     branches: [main]
     paths:
+      - 'data/cross-process-upper-workpiece-dictionary-v1.json'
       - 'data/impure-pascoe-channel-dictionary-v1.json'
       - 'data/warwick-demoulding-source-contract-v1.json'
       - 'qa_measured_data_blocker_contracts.py'
