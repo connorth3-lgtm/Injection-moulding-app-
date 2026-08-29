@@ -1,0 +1,34 @@
+name: MouldMaster Measured Data Blocker Contracts
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'data/impure-pascoe-channel-dictionary-v1.json'
+      - 'data/warwick-demoulding-source-contract-v1.json'
+      - 'qa_measured_data_blocker_contracts.py'
+      - '.github/workflows/measured-data-blocker-contracts.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'data/impure-pascoe-channel-dictionary-v1.json'
+      - 'data/warwick-demoulding-source-contract-v1.json'
+      - 'qa_measured_data_blocker_contracts.py'
+      - '.github/workflows/measured-data-blocker-contracts.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  blocker-contracts:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Python syntax
+        run: python -m py_compile qa_measured_data_blocker_contracts.py
+      - name: Validate fail-closed source contracts
+        run: python qa_measured_data_blocker_contracts.py
