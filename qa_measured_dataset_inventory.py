@@ -125,7 +125,8 @@ need(ig.get('rawRedistributionAllowedWithAttribution') is False, 'iGuzzini raw r
 need(ig['count'].get('recordLevelMeasuredProcessValues') == 18863, 'iGuzzini delivered record-level measured value count drifted')
 
 impure_count = by_id['impure-pascoe-2022']['count']
-need(impure_count.get('publisherFilesTotalMB') == 18.7, 'ImPure current publisher file-set size drifted')
+need(impure_count.get('publisherBytes') == 18_708_850, 'ImPure exact publisher file-set size drifted')
+need(impure_count.get('publisherFiles') == 309 and impure_count.get('cycleFiles') == 307, 'ImPure delivered file counts drifted')
 need(impure_count.get('zenodoCumulativeDownloadTrafficMB') == 605.2, 'ImPure cumulative Zenodo traffic metric drifted')
 need('dataVolumeMB' not in impure_count, 'do not conflate ImPure download traffic with dataset size')
 
