@@ -48,6 +48,7 @@
     ]
   },
   "rightsGate": {
+    "publicDownloadDoesNotEqualReusePermission": true,
     "openAccessDoesNotEqualReusePermission": true,
     "metadataMayBeReviewedWithoutRawFileIngestion": true,
     "rawFilesMustNotBeDownloadedByAutomationUntilLicenceIsExplicit": true,
