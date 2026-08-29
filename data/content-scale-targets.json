@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "version": "2026.08.29.3",
+  "version": "2026.08.29.4",
   "reviewed": "2026-08-29",
   "scope": "Hard content-scale targets for MouldMaster. Completion counts only evidence that satisfies the acceptance definition for that area. Synthetic learning cases, generated drafts, unverified candidate papers and metadata-only dataset records must not be counted as completed measured evidence.",
   "targets": {
@@ -9,9 +9,9 @@
       "preferred": 50,
       "unit": "datasets",
       "acceptance": "A real measured dataset whose exact source/version/licence or access terms are recorded; source files have been obtained lawfully; file fingerprint and profile are recorded; schema/units/grouping are inspected; direct measurements, commands, derived fields and labels are distinguished; material/process/machine/mould/quality context and limitations are documented. Metadata-only records do not count.",
-      "currentAccepted": 4,
+      "currentAccepted": 5,
       "currentDiscovered": 20,
-      "notes": "The 20-source inventory now has four exact-source completed measured benchmarks: Mendeley 10.17632/gtnb4j7bfx.1 v1, scatimdata/AVAPS, OpenMMS-T4G, and the CC BY 4.0 Sustainability 8102 supplement with 955 delivered observations across 45 fields and five material groups. PET preform v2 was retrieved but remains non-counting because its workbook mixes process inputs with simulated/predicted stress outputs and lacks a source-defined measured quality outcome. All five Warwick OPJU files were hash-verified but remain non-counting until validated table export."
+      "notes": "Five exact-source measured dataset families now satisfy the profiling acceptance definition: Mendeley 10.17632/gtnb4j7bfx.1 v1, scatimdata/AVAPS, OpenMMS-T4G, the CC BY 4.0 Sustainability 8102 supplement, and the iGuzzini real-production road-lens CSV under its explicit research/education-only release terms. iGuzzini contributes 1,451 complete records x 13 process fields = 18,863 record-level measured process values and resolves the README's 1,446-vs-1,451 class-count mismatch to a delivered class-4 count of 365; its restricted terms are not widened into raw redistribution. PET remains non-counting because its workbook mixes process inputs with simulated/predicted stress outputs and lacks a source-defined measured quality outcome. Warwick's five hash-verified OPJU files remain non-counting until validated Origin export. RWTH is CC BY 4.0 but its source runner received HTML rather than the advertised ZIP, so it remains non-counting."
     },
     "measured_time_series_samples": {
       "minimum": 1000000,
@@ -19,7 +19,7 @@
       "unit": "samples",
       "acceptance": "Measured time-series samples from lawfully accessed real experimental or industrial injection-moulding datasets with source provenance, signal identity, units, sample ordering/time basis and dataset linkage. Synthetic training cycles and generated traces never count.",
       "currentAccepted": 13929568,
-      "notes": "Accepted real time-series evidence now totals 13,929,568 values. AVAPS contributes 13,631,488 values from 3,328 quality-linked cycles x two delivered signals x 2,048 stored values per signal. OpenMMS-T4G contributes 298,080 values from 29,808 ordered rows x 10 source-defined sensor channels. The AVAPS companion paper reports 2,049 points per signal, but released files consistently contain 2,048 stored values, so the delivered-file count is used. The existing 19,008 process-data learning cycles remain synthetic and excluded."
+      "notes": "Accepted real time-series evidence totals 13,929,568 values. AVAPS contributes 13,631,488 values from 3,328 quality-linked cycles x two delivered signals x 2,048 stored values per signal. OpenMMS-T4G contributes 298,080 values from 29,808 ordered rows x 10 source-defined sensor channels. The iGuzzini accepted restricted profile is record-level and contributes zero high-frequency time-series samples. The AVAPS companion paper reports 2,049 points per signal, but released files consistently contain 2,048 stored values, so the delivered-file count is used. The existing 19,008 process-data learning cycles remain synthetic and excluded."
     },
     "material_profiles": {
       "minimum": 250,
