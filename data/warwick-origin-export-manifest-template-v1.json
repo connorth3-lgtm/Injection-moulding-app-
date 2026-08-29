@@ -1,0 +1,163 @@
+{
+  "schema": 1,
+  "version": "2026.08.30.1",
+  "datasetId": "warwick-demoulding",
+  "datasetDoi": "10.17632/x9hc7hf6xd.2",
+  "license": "CC BY 4.0",
+  "status": "pending-origin-export",
+  "originEnvironment": {
+    "platform": "Windows",
+    "product": null,
+    "version": null,
+    "build": null,
+    "validatedOpenOfAllProjects": false
+  },
+  "sourceProjects": [
+    {
+      "sourceFile": "data1_09.06.2023_Material_Jetting.opju",
+      "publisherDisplaySize": "3.95 MB",
+      "sourceSha256": "REQUIRED_VERIFIED_SHA256",
+      "originOpened": false,
+      "projectReconciliation": null,
+      "objects": []
+    },
+    {
+      "sourceFile": "data1_16.06.2023_b2b.opju",
+      "publisherDisplaySize": "258 KB",
+      "sourceSha256": "REQUIRED_VERIFIED_SHA256",
+      "originOpened": false,
+      "projectReconciliation": null,
+      "objects": []
+    },
+    {
+      "sourceFile": "data_visualisation.opju",
+      "publisherDisplaySize": "10.9 MB",
+      "sourceSha256": "REQUIRED_VERIFIED_SHA256",
+      "originOpened": false,
+      "projectReconciliation": null,
+      "objects": []
+    },
+    {
+      "sourceFile": "representative_curves_14.06.2023.opju",
+      "publisherDisplaySize": "4.64 MB",
+      "sourceSha256": "REQUIRED_VERIFIED_SHA256",
+      "originOpened": false,
+      "projectReconciliation": null,
+      "objects": []
+    },
+    {
+      "sourceFile": "surface_parameters_27.10.2023.opju",
+      "publisherDisplaySize": "698 KB",
+      "sourceSha256": "REQUIRED_VERIFIED_SHA256",
+      "originOpened": false,
+      "projectReconciliation": null,
+      "objects": []
+    }
+  ],
+  "exportContract": {
+    "preferredTableFormat": "csv",
+    "textEncoding": "utf-8",
+    "singleHeaderRow": true,
+    "noResamplingOrRecalculationDuringExport": true,
+    "preserveOriginIdentity": [
+      "project file",
+      "workbook or matrix",
+      "worksheet or matrix sheet",
+      "sheet index",
+      "trial identity or explicit not-applicable marker"
+    ],
+    "columnMetadataRequired": [
+      "name",
+      "unit status and unit text",
+      "role",
+      "Origin designation where present",
+      "Origin formula where derived"
+    ],
+    "directMeasuredRoles": [
+      "direct-measured"
+    ],
+    "nonCountingRoles": [
+      "time-order",
+      "derived-formula",
+      "metadata-id",
+      "command-setpoint",
+      "category-label",
+      "unknown"
+    ],
+    "forceWaveformRule": "A direct demoulding/ejection-force waveform may count only when its unit/conversion is source-defined in the Origin project/export and its 10 kHz basis is verified from project metadata or the exported time vector, not from the paper alone.",
+    "publicRepositoryBoundary": "Retain aggregate manifests/profiles only; do not commit exported raw tables or OPJU binaries unless repository policy is explicitly changed."
+  },
+  "completedManifestRequirements": {
+    "allFiveSourceSha256Required": true,
+    "allFiveProjectsMustOpenInOrigin": true,
+    "allDataBearingWorksheetMatrixObjectsAccountedFor": true,
+    "exportSha256Required": true,
+    "rowAndColumnCountsRequired": true,
+    "directMeasuredNumericCountsRequired": true,
+    "forceWaveformSamplingRateHz": 10000,
+    "derivedColumnsMustRemainNonCounting": true
+  },
+  "acceptance": {
+    "allFiveProjectsReconciled": false,
+    "dataBearingObjectsSkipped": null,
+    "acceptedMeasuredValues": 0,
+    "acceptedTrialCount": null,
+    "acceptedChannelCount": null,
+    "rawRowsCommittedToRepository": false
+  },
+  "operatorChecklist": [
+    "Work on Windows in a licensed/validated Origin or OriginPro installation; record product, version and build in originEnvironment.",
+    "Before opening each OPJU, compute SHA-256 with Get-FileHash -Algorithm SHA256 and replace REQUIRED_VERIFIED_SHA256 with the verified source hash. If the earlier verified copy is unavailable, re-download that exact Version 2 publisher file and verify it before use.",
+    "Open each of the five named OPJU projects and set originOpened=true only after Origin/OriginPro opens it without repair/conversion warnings that could alter data.",
+    "In Project Explorer, count workbooks plus worksheet/matrix objects and record projectReconciliation before exporting.",
+    "For every data-bearing worksheet or matrix, record workbook, sheet, zero-based sheetIndex, objectType and trialIdentity. Use trialIdentity.status=not-applicable only when the source project genuinely has no trial identity for that object.",
+    "For each column, copy the source name, unit text/status, Origin designation and any Origin formula. Mark only source-defined raw sensor/process columns as direct-measured; formulas, integrated energy and other derived columns must be derived-formula and non-counting.",
+    "For direct force waveforms, verify the 10 kHz basis from Origin project metadata or the exported time vector. Do not use the companion paper alone as sampling proof.",
+    "If force is already in N, record whether the project stores native force or an explicit project-documented voltage-to-force conversion. If only voltage is present, keep the source unit and do not reconstruct force solely from paper sensitivity.",
+    "Export each data-bearing table without resampling/recalculation as UTF-8 CSV (or TSV when needed) with exactly one header row matching columns[].name.",
+    "Compute SHA-256 for every exported CSV/TSV and record rowCount, columnCount and acceptedNumericCount for each direct-measured column.",
+    "Set allFiveProjectsReconciled=true only when every data-bearing Origin worksheet/matrix across all five projects is exported and reconciled; reconciled-ready-for-counting also requires zero skipped data-bearing objects.",
+    "Run: python tools/validate_warwick_origin_export.py --manifest <completed-manifest.json> --exports-root <export-directory>. Keep raw OPJU/CSV/TSV files out of the public repository; commit only the completed aggregate manifest/profile unless repository policy is explicitly changed."
+  ],
+  "completedObjectTemplate": {
+    "objectType": "worksheet",
+    "workbook": "REQUIRED_ORIGIN_WORKBOOK",
+    "sheet": "REQUIRED_ORIGIN_SHEET",
+    "sheetIndex": 0,
+    "dataBearing": true,
+    "trialIdentity": {
+      "status": "source-defined",
+      "value": "REQUIRED_OR_SOURCE_NOT_APPLICABLE"
+    },
+    "export": {
+      "path": "relative/path/to/export.csv",
+      "format": "csv",
+      "sha256": "REQUIRED_64_HEX_SHA256",
+      "rowCount": 0,
+      "columnCount": 0
+    },
+    "columns": [
+      {
+        "name": "REQUIRED_EXACT_EXPORTED_HEADER",
+        "unitStatus": "source-defined",
+        "unit": "REQUIRED_OR_NULL_BY_STATUS",
+        "role": "direct-measured",
+        "quantity": "REQUIRED_FOR_DIRECT_MEASURED",
+        "originDesignation": "X/Y/Z/NONE",
+        "originFormula": null,
+        "acceptedNumericCount": 0
+      }
+    ],
+    "timeBasis": {
+      "kind": "explicit-time-column",
+      "timeColumn": "REQUIRED_IF_EXPLICIT",
+      "samplingRateHz": 10000,
+      "samplingEvidence": "exported-time-vector",
+      "timeStepInColumnUnits": 0.0001
+    },
+    "forceConversion": {
+      "status": "project-native-force",
+      "source": "REQUIRED_ORIGIN_PROJECT/WORKSHEET_EVIDENCE"
+    }
+  }
+}
