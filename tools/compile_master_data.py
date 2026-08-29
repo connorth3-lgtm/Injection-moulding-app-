@@ -74,6 +74,7 @@ def compile_measured():
         ("openmms-t4g", "data/public-benchmark-contracts/openmms-t4g-v1.json", "data/public-benchmark-results/openmms-t4g-v1.json"),
         ("su13148102-supplement", "data/public-benchmark-contracts/su13148102-supplement-v1.json", "data/public-benchmark-results/su13148102-supplement-v1.json"),
         ("forinfpro-himd-v1", "data/public-benchmark-contracts/forinfpro-himd-v1.json", "data/public-benchmark-results/forinfpro-himd-v1.json"),
+        ("impure-pascoe-2022", "data/public-benchmark-contracts/impure-pascoe-2022-v1.json", "data/public-benchmark-results/impure-pascoe-2022-v1.json"),
     ]
     benchmark_contracts = {}
     benchmark_results = {}
@@ -101,7 +102,7 @@ def compile_measured():
         restricted_results[benchmark_id] = result
 
     accepted_profiled = targets["targets"]["fully_profiled_measured_datasets"]["currentAccepted"]
-    need(len(benchmark_results) + len(restricted_results) == accepted_profiled == 6, "completed measured benchmark result count must match accepted profiled dataset count")
+    need(len(benchmark_results) + len(restricted_results) == accepted_profiled == 7, "completed measured benchmark result count must match accepted profiled dataset count")
     need(execution.get("summary", {}).get("acceptedProfiled") == accepted_profiled, "execution ledger accepted-profiled count drifted")
     need(execution.get("summary", {}).get("acceptedRestrictedResearchEducation") == len(restricted_results) == 1, "restricted accepted measured-profile count drifted")
 
@@ -125,6 +126,7 @@ def compile_measured():
             "pet-preform-v2": load_json("data/public-benchmark-results/pet-preform-v2.json"),
             "warwick-demoulding": load_json("data/public-benchmark-results/warwick-demoulding-v2.json"),
             "rwth-pcr-2025": load_json("data/public-benchmark-results/rwth-pcr-2025-v1.json"),
+            "cross-process-chain-17240390": load_json("data/public-benchmark-results/cross-process-chain-17240390-v1.json"),
         },
         "publicBenchmarkContract": benchmark_contracts["gtnb4j7bfx-v1"],
         "publicBenchmarkResult": benchmark_results["gtnb4j7bfx-v1"],
@@ -327,3 +329,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+
