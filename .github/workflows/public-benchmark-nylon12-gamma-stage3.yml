@@ -1,0 +1,39 @@
+name: MouldMaster Public Measured Benchmark — Nylon-12 gamma stage 3
+on:
+  push:
+    branches: [data/real-dataset-profiling-wave2]
+    paths: ['tools/run_public_benchmark_nylon12_gamma_stage3.py','qa_public_benchmark_nylon12_gamma_stage3.py','data/public-benchmark-contracts/nylon12-gamma-8c8fjwcw86-v1.json','.github/workflows/public-benchmark-nylon12-gamma-stage3.yml']
+  pull_request:
+    branches: [data/real-dataset-profiling-wave1, main]
+    paths: ['tools/run_public_benchmark_nylon12_gamma_stage3.py','qa_public_benchmark_nylon12_gamma_stage3.py','data/public-benchmark-contracts/nylon12-gamma-8c8fjwcw86-v1.json','.github/workflows/public-benchmark-nylon12-gamma-stage3.yml']
+  workflow_dispatch:
+permissions: {contents: read}
+jobs:
+  slide-context-profile:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: '3.12'}
+      - run: python qa_public_benchmark_nylon12_gamma_stage3.py
+      - run: |
+          mkdir -p benchmark-results
+          python tools/run_public_benchmark_nylon12_gamma_stage3.py --output benchmark-results/nylon12-gamma-stage3.json --retrieved-date "$(date -u +%F)"
+      - name: Validate route-separated trace profile
+        run: |
+          python - <<'PY'
+          import json
+          x=json.load(open('benchmark-results/nylon12-gamma-stage3.json'))
+          assert x['status'] in {'slide-context-profile-complete-needs-acceptance','slide-context-profile-no-acceptable-injection-trace'}
+          assert x['semanticProfile']['rawNumericValuesEmitted'] is False
+          assert x['semanticProfile']['acceptedInjectionProcessTimeSeriesSamplesAdded']==0
+          assert x['acceptance']['countsAsFullyProfiledMeasuredDataset'] is False
+          print(json.dumps({'status':x['status'],'candidatePairs':x['semanticProfile']['candidateInjectionMaterialTracePointPairs'],'candidateValues':x['semanticProfile']['candidateInjectionMaterialTraceValues'],'derivedBoxPlotPairedPointsExcluded':x['semanticProfile']['derivedBoxPlotPairedPointsExcluded'],'mixedRoutePairedPointsExcluded':x['semanticProfile']['mixedRoutePairedPointsExcluded'],'charts':{k:{'kind':v['kind'],'route':v['route'],'paired':v['pairedPointCount'],'candidatePairs':v['candidateInjectionMaterialTracePointPairs'],'slides':v['slides']} for k,v in x['semanticProfile']['charts'].items()}},indent=2))
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: mouldmaster-nylon12-gamma-stage3-profile
+          path: benchmark-results/nylon12-gamma-stage3.json
+          if-no-files-found: error
+          retention-days: 30

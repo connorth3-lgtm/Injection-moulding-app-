@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "datasetId": "mendeley-8c8fjwcw86-v1",
-  "status": "stage2-ooxml-profile-candidate",
+  "status": "stage3-slide-context-candidate",
   "source": {
     "datasetPage": "https://data.mendeley.com/datasets/8c8fjwcw86/1",
     "datasetDoi": "10.17632/8c8fjwcw86.1",
@@ -24,16 +24,30 @@
       {"id": "2b6d2ae7-8a94-4cca-868a-ff52a9c62779", "filename": "Irradiated Nylon12_Manuscript Figures_rev 2.pptx", "sizeBytes": 69991185, "sha256": "7b0397e4f28c3963782727fe533756572acc51422fe2e00642c84e084228a116"}
     ]
   },
-  "stage2Rules": {
+  "stage2Evidence": {
+    "embeddedWorkbookCount": 0,
+    "chartXmlCount": 9,
+    "chartCachedPointElements": 71162,
+    "packageRouteMarkers": {"injection": 11, "sls": 94},
+    "notableCharts": {
+      "chart1.xml": {"cachedPointElements": 1485, "axisMarkers": ["Cross head displacement (in)", "Stress (MPa)"]},
+      "chart2.xml": {"cachedPointElements": 3491, "axisMarkers": ["Cross head displacement (in)", "Stress (MPa)"]},
+      "chart4.xml": {"cachedPointElements": 75, "sourceSheetMarker": "Nylon-12 IM Batch 2 metric"},
+      "chart5.xml": {"cachedPointElements": 75, "sourceSheetMarker": "Nylon-12 IM Batch 2 metric (2)"},
+      "chart7.xml": {"cachedPointElements": 65886, "mixedStructuralMarker": "Injection Molded Nylon 12"}
+    }
+  },
+  "stage3Rules": {
     "exactPublisherFileFingerprintsRequired": true,
-    "ooxmlPackageStructureOnly": true,
-    "embeddedWorkbookAndChartCachesMayBeAggregateProfiled": true,
-    "injectionAndSlsEvidenceMustRemainSeparated": true,
+    "chartMustBeMappedToSlideRelationship": true,
+    "slideAndChartRouteContextMustAgreeBeforeInjectionClassification": true,
+    "boxPlotQuartilesAndOutliersAreDerivedAndExcluded": true,
+    "mixedRouteStructuralChartsAreExcluded": true,
+    "onlyPairedStressDisplacementTracePointsMayBecomeMaterialTestEvidence": true,
     "rawNumericValuesMustNotBeEmitted": true,
-    "rawImagesMustNotBeEmitted": true,
-    "rawThirdPartyFilesMustNotBeCommittedOrUploaded": true,
+    "rawImagesAndFullDocumentTextMustNotBeEmitted": true,
     "countsAsFullyProfiledMeasuredDataset": false,
     "acceptedInjectionProcessTimeSeriesSamples": 0
   },
-  "evidenceBoundary": "The publisher release contains a supporting DOCX and figure PPTX rather than standalone raw tables. Stage 2 may temporarily retrieve these exact CC BY 4.0 files, verify their hashes, and inspect OOXML package structure, embedded workbook metadata, chart-cache point counts and route-related text labels. Raw document text, images and numeric measurement values are not emitted. Injection-moulded and SLS evidence must remain distinguishable before any measured count is accepted."
+  "evidenceBoundary": "Stage 3 maps OOXML chart relationships to slide context and profiles chart-cache structure without emitting numeric values. UTS box-plot quartiles/outliers are derived summaries and cannot count as raw tensile traces. XRD or other charts mixing SLS and injection-moulded series remain excluded. Only stress-versus-cross-head-displacement series that are clearly injection-moulded from both chart references and slide context, and have paired X/Y cache lengths, may advance as material-test trace evidence. They never count as injection-machine/cavity process waveforms."
 }
