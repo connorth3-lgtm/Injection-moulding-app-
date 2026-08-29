@@ -11,7 +11,11 @@ on:
       - 'data/impure-pascoe-channel-dictionary-v1.json'
       - 'data/warwick-demoulding-source-contract-v1.json'
       - 'data/bottle-cap-confidential-access-contract-2026-08-30.json'
+      - 'data/bottle-cap-owner-authorization-manifest-template-v1.json'
+      - 'data/bottle-cap-confidential-promotion-contract-v1.json'
+      - 'tools/validate_bottle_cap_authorized_profile.py'
       - 'qa_bottle_cap_confidential_contract.py'
+      - 'qa_bottle_cap_authorized_profile.py'
       - 'qa_measured_data_blocker_contracts.py'
       - '.github/workflows/measured-data-blocker-contracts.yml'
   push:
@@ -24,7 +28,11 @@ on:
       - 'data/impure-pascoe-channel-dictionary-v1.json'
       - 'data/warwick-demoulding-source-contract-v1.json'
       - 'data/bottle-cap-confidential-access-contract-2026-08-30.json'
+      - 'data/bottle-cap-owner-authorization-manifest-template-v1.json'
+      - 'data/bottle-cap-confidential-promotion-contract-v1.json'
+      - 'tools/validate_bottle_cap_authorized_profile.py'
       - 'qa_bottle_cap_confidential_contract.py'
+      - 'qa_bottle_cap_authorized_profile.py'
       - 'qa_measured_data_blocker_contracts.py'
       - '.github/workflows/measured-data-blocker-contracts.yml'
   workflow_dispatch:
@@ -46,9 +54,13 @@ jobs:
           python -m py_compile tools/profile_cross_process_upper_workpiece.py
           python -m py_compile qa_cross_process_upper_contract.py
           python -m py_compile qa_bottle_cap_confidential_contract.py
+          python -m py_compile tools/validate_bottle_cap_authorized_profile.py
+          python -m py_compile qa_bottle_cap_authorized_profile.py
       - name: Validate upper specialist parser contract
         run: python qa_cross_process_upper_contract.py
       - name: Validate fail-closed source contracts
         run: python qa_measured_data_blocker_contracts.py
       - name: Validate bottle-cap confidential access contract
         run: python qa_bottle_cap_confidential_contract.py
+      - name: Validate bottle-cap authorized profiling paths
+        run: python qa_bottle_cap_authorized_profile.py
