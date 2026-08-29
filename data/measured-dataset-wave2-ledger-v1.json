@@ -1,0 +1,50 @@
+{
+  "schema": 1,
+  "version": "2026.08.29.1",
+  "reviewed": "2026-08-29",
+  "baseWave": {
+    "fullyProfiledMeasuredDatasetFamilies": 5,
+    "acceptedMeasuredTimeSeriesSamples": 13929568,
+    "source": "data/content-scale-targets.json on data/real-dataset-profiling-wave1"
+  },
+  "sources": [
+    {
+      "priority": 1,
+      "datasetId": "ad-stgn-injection-moulding-v1",
+      "doi": "10.17632/6f9x8yg8nj.1",
+      "license": "CC BY 4.0",
+      "state": "publisher-record-no-files-exposed",
+      "countsAsFullyProfiledMeasuredDataset": false,
+      "acceptedMeasuredTimeSeriesSamples": 0,
+      "resultPath": "data/public-benchmark-results/ad-stgn-injection-moulding-v1-stage1.json",
+      "nextAction": "recheck publisher file exposure; do not count reported 66 sensors or 88,000/22,614 samples until delivered files are exposed and profiled"
+    },
+    {
+      "priority": 2,
+      "datasetId": "mendeley-fhj5p7ww9v-v1",
+      "doi": "10.17632/fhj5p7ww9v.1",
+      "license": "CC BY-NC 3.0",
+      "state": "accepted-profiled-restricted-noncommercial",
+      "countsAsFullyProfiledMeasuredDataset": true,
+      "recordLevelMeasuredOutcomeValues": 96,
+      "acceptedMeasuredTimeSeriesSamples": 0,
+      "resultPath": "data/public-benchmark-results/fhj5p7ww9v-v1.json",
+      "useScope": "noncommercial-education-research-only",
+      "commercialReuseAllowed": false
+    }
+  ],
+  "summary": {
+    "wave2SourcesReviewed": 2,
+    "wave2FullyProfiledAccepted": 1,
+    "wave2PublisherPayloadBlocked": 1,
+    "effectiveFullyProfiledMeasuredDatasetFamilies": 6,
+    "effectiveAcceptedMeasuredTimeSeriesSamples": 13929568,
+    "wave2RecordLevelMeasuredOutcomeValues": 96
+  },
+  "boundaries": {
+    "rawThirdPartyRowsOrFilesCommitted": false,
+    "metadataReportedSamplesDoNotCountWithoutDeliveredFiles": true,
+    "restrictedNoncommercialRightsAreNotWidened": true,
+    "recordLevelOutcomeValuesDoNotCountAsTimeSeriesSamples": true
+  }
+}
