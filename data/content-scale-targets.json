@@ -9,9 +9,9 @@
       "preferred": 50,
       "unit": "datasets",
       "acceptance": "A real measured dataset whose exact source/version/licence or access terms are recorded; source files have been obtained lawfully; file fingerprint and profile are recorded; schema/units/grouping are inspected; direct measurements, commands, derived fields and labels are distinguished; material/process/machine/mould/quality context and limitations are documented. Metadata-only records do not count.",
-      "currentAccepted": 6,
+      "currentAccepted": 7,
       "currentDiscovered": 20,
-      "notes": "Five exact-source measured dataset families now satisfy the profiling acceptance definition: Mendeley 10.17632/gtnb4j7bfx.1 v1, scatimdata/AVAPS, OpenMMS-T4G, the CC BY 4.0 Sustainability 8102 supplement, and the iGuzzini real-production road-lens CSV under its explicit research/education-only release terms. iGuzzini contributes 1,451 complete records x 13 process fields = 18,863 record-level measured process values and resolves the README's 1,446-vs-1,451 class-count mismatch to a delivered class-4 count of 365; its restricted terms are not widened into raw redistribution. PET remains non-counting because its workbook mixes process inputs with simulated/predicted stress outputs and lacks a source-defined measured quality outcome. Warwick's five hash-verified OPJU files remain non-counting until validated Origin export. RWTH is CC BY 4.0 but its source runner received HTML rather than the advertised ZIP, so it remains non-counting."
+      "notes": "Seven exact-source measured dataset families satisfy the profiling acceptance definition, including the hosted ImPure profile: 309 checksum-verified publisher files, 307 cycle files, 297,087 cycle rows and one consistent nine-column cycle schema. Its 2,376,696 numeric values remain unit/analogue-semantics limited and add zero accepted time-series samples. The cross-process archive is checksum-verified and structurally profiled but remains non-counting because its lower-workpiece TXT preamble/chart shapes and unit/target semantics require a source-specific parser. PET, Warwick and RWTH retain their documented semantic, format and retrieval blockers."
     },
     "measured_time_series_samples": {
       "minimum": 1000000,
@@ -79,3 +79,4 @@
     "Generated assessment drafts do not enter the accepted count until existing evidence-approval and quality gates pass."
   ]
 }
+
