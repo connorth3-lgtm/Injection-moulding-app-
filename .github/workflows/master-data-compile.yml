@@ -10,6 +10,8 @@ on:
       - 'qa_content_scale_targets.py'
       - 'data/content-scale-targets.json'
       - 'data/measured-dataset-inventory-v1.json'
+      - 'data/measured-dataset-execution-ledger-v1.json'
+      - 'data/measured-dataset-rights-review-*.json'
       - 'data/primary-measured-evidence-registry-v1.json'
       - 'data/primary-measured-evidence/**'
       - 'data/deep-dive-v2-*.json'
@@ -60,6 +62,7 @@ jobs:
           c=x['counts']
           assert x['candidateRegistryEmbedded'] is True
           assert c['measuredDatasetInventory']==20
+          assert c['automatedIngestionAllowedDatasets']==7
           assert c['fullyProfiledMeasuredDatasets']==4
           assert c['measuredTimeSeriesSamplesAccepted']==13929568
           assert c['publisherVerifiedPrimaryMeasuredStudies']==60

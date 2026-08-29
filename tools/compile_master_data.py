@@ -42,6 +42,7 @@ def compile_measured():
     targets = load_json("data/content-scale-targets.json")
     inventory = load_json("data/measured-dataset-inventory-v1.json")
     execution = load_json("data/measured-dataset-execution-ledger-v1.json")
+    rights_review = load_json("data/measured-dataset-rights-review-2026-08-29.json")
     discovery = load_json("data/measured-dataset-catalog.json")
     queue = load_json("data/measured-data-discovery-queue-v1.json")
     evidence50 = load_json("data/measured-evidence-50-pass.json")
@@ -59,6 +60,9 @@ def compile_measured():
     expected = registry["summary"]["publisherVerifiedPeerReviewedPrimaryMeasured"]
     need(len(studies) == expected == 60, "primary measured registry must compile to 60 studies")
     need(len(dois) == len(set(dois)) and all(dois), "compiled primary measured studies must have 60 unique DOIs")
+
+    need((rights_review.get("summary") or {}).get("sourcesReviewed") == 5, "measured-data rights review source count drifted")
+    need((rights_review.get("summary") or {}).get("unblockedForAutomatedIngestion") == 1, "measured-data rights review promotion count drifted")
 
     dossiers = {}
     for p in sorted((ROOT / "data/mechanism-promotion-evidence").glob("*.json")):
@@ -87,6 +91,7 @@ def compile_measured():
         "targetLedger": targets,
         "datasetInventory": inventory,
         "datasetExecutionLedger": execution,
+        "datasetRightsReview": rights_review,
         "datasetDiscoveryCatalog": discovery,
         "datasetDiscoveryQueue": queue,
         "measuredEvidence50Pass": evidence50,
@@ -100,7 +105,6 @@ def compile_measured():
             "pet-preform-v2": load_json("data/public-benchmark-results/pet-preform-v2.json"),
             "warwick-demoulding": load_json("data/public-benchmark-results/warwick-demoulding-v2.json"),
         },
-        # Backward-compatible aliases for the original record-level benchmark.
         "publicBenchmarkContract": benchmark_contracts["gtnb4j7bfx-v1"],
         "publicBenchmarkResult": benchmark_results["gtnb4j7bfx-v1"],
     }

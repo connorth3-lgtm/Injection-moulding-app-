@@ -5,6 +5,7 @@ ROOT = Path(__file__).resolve().parent
 TARGETS = ROOT / "data" / "content-scale-targets.json"
 LEGACY_CATALOG = ROOT / "data" / "measured-dataset-catalog.json"
 INVENTORY = ROOT / "data" / "measured-dataset-inventory-v1.json"
+RIGHTS_REVIEW = ROOT / "data" / "measured-dataset-rights-review-2026-08-29.json"
 PRIMARY = ROOT / "data" / "primary-measured-evidence-registry-v1.json"
 BENCHMARK_RECORD = ROOT / "data" / "public-benchmark-results" / "gtnb4j7bfx-v1.json"
 BENCHMARK_AVAPS = ROOT / "data" / "public-benchmark-results" / "scatimdata-avaps-v1.json"
@@ -41,7 +42,6 @@ for key, (minimum, preferred) in expected.items():
     need(rec.get("preferred") == preferred, f"{key} preferred target drifted")
     need(isinstance(rec.get("acceptance"), str) and len(rec["acceptance"]) >= 120, f"{key} needs a substantive acceptance definition")
     need(isinstance(rec.get("currentAccepted"), int) and rec["currentAccepted"] >= 0, f"{key} currentAccepted must be a non-negative integer")
-    # Targets are thresholds, not caps. Valid measured evidence may exceed preferred scale.
 
 legacy = json.loads(LEGACY_CATALOG.read_text(encoding="utf-8"))
 need(len(legacy.get("datasets") or []) >= 14, "legacy measured-dataset discovery seed unexpectedly small")
@@ -52,8 +52,20 @@ need(summary.get("datasets") == len(datasets) == 20, f"measured dataset inventor
 ids = [x.get("datasetId") for x in datasets]
 need(len(ids) == len(set(ids)) and all(ids), "measured dataset inventory IDs must be unique and non-empty")
 need(summary.get("automatedIngestionAllowed") == sum(1 for x in datasets if x.get("automatedIngestionAllowed") is True), "automated-ingestion dataset count drifted")
+need(summary.get("automatedIngestionAllowed") == 7, "audited automated-ingestion source count must include RWTH PCR under CC BY 4.0")
+need(summary.get("rightsOrAccessReviewRequired") == 6, "rights-review source count must fall by one after RWTH licence confirmation")
 need(targets["fully_profiled_measured_datasets"].get("currentDiscovered") == len(datasets), "target ledger discovery count must equal the measured-dataset inventory")
 by_id = {x.get("datasetId"): x for x in datasets}
+
+rights = json.loads(RIGHTS_REVIEW.read_text(encoding="utf-8"))
+need((rights.get("summary") or {}).get("sourcesReviewed") == 5, "waveform rights-review source count drifted")
+need((rights.get("summary") or {}).get("unblockedForAutomatedIngestion") == 1, "waveform rights-review unblocked count drifted")
+rights_by_id = {x.get("datasetId"): x for x in rights.get("sources") or []}
+need(rights_by_id["rwth-pcr-2025"].get("decision") == "executable-license-confirmed" and rights_by_id["rwth-pcr-2025"].get("license") == "CC BY 4.0", "RWTH rights decision drifted")
+need(by_id["rwth-pcr-2025"].get("license") == "CC BY 4.0" and by_id["rwth-pcr-2025"].get("automatedIngestionAllowed") is True, "RWTH inventory execution rights drifted")
+for blocked_id in ["skz-loki-v1", "impure-pascoe-2022", "forinfpro-himd-v1", "cross-process-chain-17240390"]:
+    need(rights_by_id[blocked_id].get("decision") == "blocked-no-explicit-license", f"{blocked_id} rights decision drifted")
+    need(by_id[blocked_id].get("license") is None and by_id[blocked_id].get("automatedIngestionAllowed") is False, f"{blocked_id} must remain non-executable without explicit data licence")
 
 record = json.loads(BENCHMARK_RECORD.read_text(encoding="utf-8"))
 need(record.get("status") == "completed-public-measured-benchmark", "record-level public benchmark status missing")
@@ -177,4 +189,4 @@ report = {
     "boundary": "No synthetic, metadata-only, generated-draft or heuristic-candidate evidence is counted as completed measured/reviewed content unless its area-specific acceptance definition is satisfied."
 }
 (ROOT / "content-scale-targets-report.json").write_text(json.dumps(report, indent=2) + "\n", encoding="utf-8")
-print(f"MouldMaster content-scale target integrity QA passed ({len(datasets)} measured datasets inventoried; 4 fully profiled benchmark families; {accepted_measured_total:,} real measured time-series values; {verified} publisher-verified primary measured studies)")
+print(f"MouldMaster content-scale target integrity QA passed ({len(datasets)} measured datasets inventoried; 4 fully profiled benchmark families; {accepted_measured_total:,} real measured time-series values; {verified} publisher-verified primary measured studies; {summary.get('automatedIngestionAllowed')} sources legally executable)")

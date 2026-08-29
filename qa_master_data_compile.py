@@ -23,42 +23,22 @@ expected_samples = targets["measured_time_series_samples"]["currentAccepted"]
 need(expected_profiled == 4, "audited profiled-dataset baseline drifted")
 need(expected_samples == 13_929_568, "audited measured-sample baseline drifted")
 workflow_text = WORKFLOW.read_text(encoding="utf-8")
-need(
-    f"assert c['fullyProfiledMeasuredDatasets']=={expected_profiled}" in workflow_text,
-    "master-data workflow profiled-dataset assertion is stale",
-)
-need(
-    f"assert c['measuredTimeSeriesSamplesAccepted']=={expected_samples}" in workflow_text,
-    "master-data workflow measured-sample assertion is stale",
-)
+need(f"assert c['fullyProfiledMeasuredDatasets']=={expected_profiled}" in workflow_text, "master-data workflow profiled-dataset assertion is stale")
+need(f"assert c['measuredTimeSeriesSamplesAccepted']=={expected_samples}" in workflow_text, "master-data workflow measured-sample assertion is stale")
+need("assert c['automatedIngestionAllowedDatasets']==7" in workflow_text, "master-data workflow executable-source assertion is stale")
 
 with tempfile.TemporaryDirectory() as td:
-    p = subprocess.run(
-        [sys.executable, str(COMPILER), "--output-dir", td],
-        cwd=ROOT,
-        capture_output=True,
-        text=True,
-        encoding="utf-8",
-        errors="replace",
-    )
+    p = subprocess.run([sys.executable, str(COMPILER), "--output-dir", td], cwd=ROOT, capture_output=True, text=True, encoding="utf-8", errors="replace")
     need(p.returncode == 0, f"master data compiler failed:\n{p.stdout}\n{p.stderr}")
     out = Path(td)
-    expected_files = {
-        "manifest.json",
-        "measured-data.json",
-        "research-evidence.json",
-        "app-data-sources.json",
-        "synthetic-process-data.json",
-        "draft-banks.json",
-        "mouldmaster-all-data.json",
-    }
+    expected_files = {"manifest.json", "measured-data.json", "research-evidence.json", "app-data-sources.json", "synthetic-process-data.json", "draft-banks.json", "mouldmaster-all-data.json"}
     need(expected_files.issubset({x.name for x in out.iterdir()}), "master data output set incomplete")
 
     manifest = json.loads((out / "manifest.json").read_text(encoding="utf-8"))
     counts = manifest.get("counts") or {}
     expected = {
         "measuredDatasetInventory": 20,
-        "automatedIngestionAllowedDatasets": 6,
+        "automatedIngestionAllowedDatasets": 7,
         "fullyProfiledMeasuredDatasets": expected_profiled,
         "measuredTimeSeriesSamplesAccepted": expected_samples,
         "publisherVerifiedPrimaryMeasuredStudies": 60,
@@ -83,18 +63,15 @@ with tempfile.TemporaryDirectory() as td:
     need(manifest.get("candidateRegistryEmbedded") is False, "core compilation must not require a network-harvested candidate registry")
     need(manifest.get("compiledOn") == target_obj.get("reviewed"), "master compilation date must follow audited target ledger")
 
-    for key in [
-        "syntheticIsNotMeasured",
-        "candidateResearchIsNotVerified",
-        "metadataOnlyDatasetIsNotProfiled",
-        "thirdPartyRawRedistributionNotAssumed",
-        "productionSetpointsNotDerived",
-    ]:
+    for key in ["syntheticIsNotMeasured", "candidateResearchIsNotVerified", "metadataOnlyDatasetIsNotProfiled", "thirdPartyRawRedistributionNotAssumed", "productionSetpointsNotDerived"]:
         need((manifest.get("boundaries") or {}).get(key) is True, f"master compilation boundary missing: {key}")
 
     measured = json.loads((out / "measured-data.json").read_text(encoding="utf-8"))
     need(measured["datasetInventory"]["summary"]["datasets"] == 20, "compiled measured dataset inventory drifted")
+    need(measured["datasetInventory"]["summary"]["automatedIngestionAllowed"] == 7, "compiled executable measured-source count drifted")
     need(measured["datasetExecutionLedger"]["summary"]["acceptedProfiled"] == expected_profiled, "compiled execution ledger accepted-profiled count drifted")
+    need(measured["datasetExecutionLedger"]["summary"]["queuedExecutable"] == 1, "compiled execution ledger must queue RWTH PCR")
+    need((measured.get("datasetRightsReview") or {}).get("summary", {}).get("unblockedForAutomatedIngestion") == 1, "compiled rights-review promotion count drifted")
     need(len(measured["primaryMeasuredStudies"]) == 60, "compiled primary-measured study set incomplete")
     need(len({x["doi"].lower() for x in measured["primaryMeasuredStudies"]}) == 60, "compiled primary-measured study DOI deduplication failed")
     need(measured["publicBenchmarkResult"]["status"] == "completed-public-measured-benchmark", "legacy public benchmark alias missing")
@@ -107,12 +84,7 @@ with tempfile.TemporaryDirectory() as td:
     need(all(x.get("status") != "completed-public-measured-benchmark" for x in review_results.values()), "review-only datasets must not enter accepted benchmark counts")
     need(results["scatimdata-avaps"]["measurement_profile"]["acceptedMeasuredTimeSeriesSamples"] == 13_631_488, "compiled AVAPS sample count drifted")
     need(results["openmms-t4g"]["measurement_profile"]["acceptedMeasuredTimeSeriesSamples"] == 298_080, "compiled OpenMMS sample count drifted")
-    need(
-        results["scatimdata-avaps"]["measurement_profile"]["acceptedMeasuredTimeSeriesSamples"]
-        + results["openmms-t4g"]["measurement_profile"]["acceptedMeasuredTimeSeriesSamples"]
-        == expected_samples,
-        "compiled measured benchmark sample totals do not reconcile",
-    )
+    need(results["scatimdata-avaps"]["measurement_profile"]["acceptedMeasuredTimeSeriesSamples"] + results["openmms-t4g"]["measurement_profile"]["acceptedMeasuredTimeSeriesSamples"] == expected_samples, "compiled measured benchmark sample totals do not reconcile")
 
     research = json.loads((out / "research-evidence.json").read_text(encoding="utf-8"))
     need(research["cumulativePassCount"] == 600 and len(research["waves"]) == 6, "compiled Deep Dive v2 evidence coverage drifted")
@@ -134,4 +106,4 @@ with tempfile.TemporaryDirectory() as td:
     for section in ["manifest", "measured", "research", "appData", "processData", "drafts"]:
         need(section in combined, f"combined master package missing section: {section}")
 
-print(f"MouldMaster master data compilation QA passed (20 measured datasets; {expected_profiled} profiled benchmarks; {expected_samples:,} accepted measured time-series values; 60 verified primary measured studies; 600 evidence passes; 264/19,008 synthetic cases/cycles; 157 approved items; 120+20 lessons; full draft banks)")
+print(f"MouldMaster master data compilation QA passed (20 measured datasets; 7 legally executable sources; {expected_profiled} profiled benchmarks; {expected_samples:,} accepted measured time-series values; 60 verified primary measured studies; 600 evidence passes; 264/19,008 synthetic cases/cycles; 157 approved items; 120+20 lessons; full draft banks)")
