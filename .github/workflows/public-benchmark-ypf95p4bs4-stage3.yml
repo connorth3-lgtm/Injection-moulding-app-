@@ -1,0 +1,59 @@
+name: MouldMaster Public Measured Benchmark — Injection operations stage 3
+
+on:
+  push:
+    branches: [data/real-dataset-profiling-wave2-batch4]
+    paths:
+      - 'tools/run_public_benchmark_ypf95p4bs4_stage3.py'
+      - 'qa_public_benchmark_ypf95p4bs4_stage3.py'
+      - 'data/public-benchmark-results/ypf95p4bs4-stage1.json'
+      - '.github/workflows/public-benchmark-ypf95p4bs4-stage3.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  semantic-acceptance:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python -m pip install --disable-pip-version-check openpyxl
+      - name: Validate acceptance boundary
+        run: python qa_public_benchmark_ypf95p4bs4_stage3.py
+      - name: Count direct injector operational measurements only
+        run: |
+          mkdir -p benchmark-results
+          python tools/run_public_benchmark_ypf95p4bs4_stage3.py \
+            --output benchmark-results/ypf95p4bs4-v1.json \
+            --retrieved-date "$(date -u +%F)"
+      - name: Validate accepted aggregate result
+        run: |
+          python - <<'PY'
+          import json
+          x=json.load(open('benchmark-results/ypf95p4bs4-v1.json'))
+          assert x['status']=='accepted-profiled-record-level-injection-operations'
+          assert x['source']['datasetDoi']=='10.17632/ypf95p4bs4.1'
+          assert x['source']['publisherSha256Matched'] is True
+          assert x['acceptance']['countsAsFullyProfiledMeasuredDataset'] is True
+          assert x['acceptance']['acceptedRecordLevelMeasuredValues'] > 0
+          assert x['acceptance']['acceptedMeasuredTimeSeriesSamples']==0
+          assert x['retrieval']['validationWorkbookDownloaded'] is False
+          assert x['retrieval']['doeFilesDownloaded'] is False
+          assert x['retrieval']['rawPublisherFileCommitted'] is False
+          assert x['retrieval']['rawNumericValuesUploadedAsArtifact'] is False
+          assert x['profile']['rawNumericValuesEmitted'] is False
+          assert len(x['profile']['acceptedDirectObservedBlocks'])==4
+          print(json.dumps({'status':x['status'],'blocks':x['profile']['acceptedDirectObservedBlocks'],'accepted':x['acceptance']},indent=2))
+          PY
+      - name: Upload aggregate accepted profile only
+        uses: actions/upload-artifact@v4
+        with:
+          name: mouldmaster-public-measured-benchmark-ypf95p4bs4-stage3
+          path: benchmark-results/ypf95p4bs4-v1.json
+          if-no-files-found: error
+          retention-days: 30
