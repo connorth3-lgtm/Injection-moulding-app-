@@ -1,0 +1,65 @@
+name: MouldMaster Cross-Process Lower Workpiece
+
+on:
+  push:
+    branches: [data/cross-process-lower-source-contract]
+    paths:
+      - 'data/cross-process-lower-workpiece-dictionary-v1.json'
+      - 'tools/profile_cross_process_lower_workpiece.py'
+      - 'qa_cross_process_lower_contract.py'
+      - '.github/workflows/profile-cross-process-lower-workpiece.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: mouldmaster-cross-process-lower-workpiece
+  cancel-in-progress: false
+
+jobs:
+  profile:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: data/cross-process-lower-source-contract
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Python syntax
+        run: |
+          python -m py_compile tools/profile_cross_process_lower_workpiece.py
+          python -m py_compile qa_cross_process_lower_contract.py
+      - name: Validate source contract with synthetic fixture
+        run: python qa_cross_process_lower_contract.py
+      - name: Profile exact publisher archive
+        run: python tools/profile_cross_process_lower_workpiece.py
+      - name: Validate aggregate result
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          result = json.loads(Path('data/public-benchmark-results/cross-process-lower-workpiece-source-contract-v1.json').read_text(encoding='utf-8'))
+          profile = result['profile']
+          assert result['source']['publisherChecksum'] == 'md5:069e190338b2ca29f736b21fabf407ba'
+          assert profile['lowerWorkpieceTxtFilesAccepted'] > 0
+          assert profile['lowerWorkpieceTxtFilesRejected'] == 0
+          assert profile['lowerWorkpieceRowsAccepted'] > 0
+          assert profile['acceptedActualChannelsPerRow'] == 3
+          assert profile['commandChannelsPerRow'] == 1
+          assert profile['acceptedMeasuredTimeSeriesSamples'] == profile['lowerWorkpieceRowsAccepted'] * 3
+          assert profile['commandTargetValuesExcludedFromMeasuredCount'] == profile['lowerWorkpieceRowsAccepted']
+          assert profile['rawRowsOrCellValuesEmitted'] is False
+          assert result['retrieval']['rawPublisherFilesCommitted'] is False
+          assert result['retrieval']['rawRowsUploadedAsArtifact'] is False
+          PY
+      - name: Commit aggregate profile only
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -- data/public-benchmark-results/cross-process-lower-workpiece-source-contract-v1.json
+          git diff --cached --quiet && exit 0
+          git commit -m "Profile cross-process lower workpiece source contract"
+          git push origin HEAD:data/cross-process-lower-source-contract
