@@ -1,17 +1,10 @@
 name: MouldMaster Cross-Process Specialist Parser
 
 on:
-  push:
-    branches: [data/cross-process-specialist-parser]
-    paths:
-      - 'data/cross-process-upper-workpiece-dictionary-v1.json'
-      - 'tools/profile_cross_process_upper_workpiece.py'
-      - 'qa_cross_process_upper_contract.py'
-      - '.github/workflows/profile-cross-process-upper-workpiece.yml'
   workflow_dispatch:
 
 permissions:
-  contents: write
+  contents: read
 
 concurrency:
   group: mouldmaster-cross-process-specialist-parser
@@ -23,8 +16,6 @@ jobs:
     timeout-minutes: 120
     steps:
       - uses: actions/checkout@v4
-        with:
-          ref: data/cross-process-specialist-parser
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
@@ -52,8 +43,9 @@ jobs:
           assert profile['upperWorkpieceSerialCsvFilesAccepted'] == 10697
           assert profile['upperWorkpieceSerialCsvFilesRejected'] == 0
           assert profile['injectionStaticCsvFilesExcluded'] == 2
-          assert profile['upperWorkpieceRowsAccepted'] > 0
+          assert profile['upperWorkpieceRowsAccepted'] == 21907374
           assert profile['acceptedMeasuredChannelsPerRow'] == 2
+          assert profile['acceptedMeasuredTimeSeriesSamples'] == 43814748
           assert profile['acceptedMeasuredTimeSeriesSamples'] == profile['upperWorkpieceRowsAccepted'] * 2
           assert profile['pressureTargetValuesExcludedFromMeasuredCount'] == profile['upperWorkpieceRowsAccepted']
           assert profile['pressureActualValuesExcludedPendingUnit'] == profile['upperWorkpieceRowsAccepted']
@@ -68,18 +60,6 @@ jobs:
               if channel['acceptedMeasuredValue']
           }
           assert accepted == {'melt_volume', 'injection_velocity'}
-          blocked = {
-              channel['canonicalName']
-              for channel in result['channels']
-              if not channel['acceptedMeasuredValue']
-          }
-          assert {'time', 'injection_pressure_target', 'injection_pressure_actual', 'state'} <= blocked
           PY
-      - name: Commit aggregate profile only
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add -- data/public-benchmark-results/cross-process-upper-workpiece-source-contract-v1.json
-          git diff --cached --quiet && exit 0
-          git commit -m "Profile cross-process upper workpiece specialist stream"
-          git push origin HEAD:data/cross-process-specialist-parser
+      - name: Verify deterministic committed aggregate
+        run: git diff --exit-code -- data/public-benchmark-results/cross-process-upper-workpiece-source-contract-v1.json
