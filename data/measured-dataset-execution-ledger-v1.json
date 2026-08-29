@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "version": "2026.08.29.7",
+  "version": "2026.08.29.8",
   "reviewed": "2026-08-29",
   "purpose": "One-by-one execution state for the 20 real measured-data sources. This ledger does not change accepted counts by itself; only completed source-file profiling may do that.",
   "policy": {
@@ -93,9 +93,9 @@
     {
       "priority": 12,
       "datasetId": "cross-process-chain-17240390",
-      "state": "partial-accepted-lower-profiled-upper-unit-blocked",
-      "action": "keep the source-native lower TXT parser/dictionary and 7,426,743 accepted lower actual-signal values regression-pinned; resolve authoritative upper-workpiece engineering units before full-family promotion",
-      "reason": "exact publisher archive re-run accepted 4,989/4,989 lower TXT files and 2,475,581 rows with source-defined units and timing; three actual channels contribute 7,426,743 measured values while 2,475,581 pressure-target command values are excluded; upper CSV units remain unresolved"
+      "state": "partial-accepted-lower-and-upper-pressure-state-blocked",
+      "action": "keep lower and upper source-native parsers/results regression-pinned; obtain the authoritative upper pressure engineering unit and state-code semantic mapping before full-family promotion",
+      "reason": "exact publisher archive specialist run accepted 10,697/10,697 upper cycle CSVs and 21,907,374 rows; melt volume (cm³) and volumetric injection velocity (cm³/s) add 43,814,748 measured values. Together with 7,426,743 accepted lower actual values, cross-process contributes 51,241,491 accepted values. Upper pressure actual remains unit-blocked, pressure target remains command evidence and state remains semantics-blocked."
     },
     {
       "priority": 13,

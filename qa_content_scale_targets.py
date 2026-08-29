@@ -16,6 +16,7 @@ BENCHMARK_FORINFPRO = ROOT / "data" / "public-benchmark-results" / "forinfpro-hi
 BENCHMARK_IMPURE = ROOT / "data" / "public-benchmark-results" / "impure-pascoe-2022-v1.json"
 REVIEW_CROSS = ROOT / "data" / "public-benchmark-results" / "cross-process-chain-17240390-v1.json"
 ACCEPTED_CROSS_LOWER = ROOT / "data" / "public-benchmark-results" / "cross-process-lower-workpiece-source-contract-v1.json"
+ACCEPTED_CROSS_UPPER = ROOT / "data" / "public-benchmark-results" / "cross-process-upper-workpiece-source-contract-v1.json"
 REVIEW_PET = ROOT / "data" / "public-benchmark-results" / "pet-preform-v2.json"
 REVIEW_WARWICK = ROOT / "data" / "public-benchmark-results" / "warwick-demoulding-v2.json"
 REVIEW_RWTH = ROOT / "data" / "public-benchmark-results" / "rwth-pcr-2025-v1.json"
@@ -185,10 +186,20 @@ need(cl_profile.get("lowerWorkpieceRowsAccepted") == 2_475_581, "cross-process l
 need(cl_profile.get("acceptedMeasuredTimeSeriesSamples") == 7_426_743, "cross-process lower accepted sample count drifted")
 need(cl_profile.get("commandTargetValuesExcludedFromMeasuredCount") == 2_475_581, "cross-process lower command exclusion drifted")
 need(cl_profile.get("rawRowsOrCellValuesEmitted") is False, "cross-process lower result must not emit raw values")
-accepted_measured_total = av_profile["acceptedMeasuredTimeSeriesSamples"] + om_profile["acceptedMeasuredTimeSeriesSamples"] + cl_profile["acceptedMeasuredTimeSeriesSamples"]
-need(accepted_measured_total == 21_356_311, "combined real measured-sample arithmetic drifted")
-need(targets["fully_profiled_measured_datasets"]["currentAccepted"] == 7, "partial cross-process lower acceptance must not inflate the fully profiled family count")
-need(targets["measured_time_series_samples"]["currentAccepted"] == accepted_measured_total, "measured sample count must equal AVAPS plus OpenMMS plus accepted cross-process lower evidence")
+cross_upper = json.loads(ACCEPTED_CROSS_UPPER.read_text(encoding="utf-8"))
+cu_profile = cross_upper.get("profile") or {}
+need(cross_upper.get("status") == "completed-source-defined-upper-workpiece-partial-acceptance", "cross-process upper accepted profile status drifted")
+need(cu_profile.get("upperWorkpieceSerialCsvFilesAccepted") == 10_697 and cu_profile.get("upperWorkpieceSerialCsvFilesRejected") == 0, "cross-process upper file acceptance drifted")
+need(cu_profile.get("upperWorkpieceRowsAccepted") == 21_907_374, "cross-process upper row count drifted")
+need(cu_profile.get("acceptedMeasuredChannelsPerRow") == 2, "cross-process upper accepted channel count drifted")
+need(cu_profile.get("acceptedMeasuredTimeSeriesSamples") == 43_814_748, "cross-process upper accepted sample count drifted")
+need(cu_profile.get("pressureActualValuesExcludedPendingUnit") == 21_907_374, "cross-process upper pressure-unit exclusion drifted")
+need(cu_profile.get("stateValuesExcludedPendingSemantics") == 21_907_374, "cross-process upper state exclusion drifted")
+need(cu_profile.get("rawRowsOrCellValuesEmitted") is False, "cross-process upper result must not emit raw values")
+accepted_measured_total = av_profile["acceptedMeasuredTimeSeriesSamples"] + om_profile["acceptedMeasuredTimeSeriesSamples"] + cl_profile["acceptedMeasuredTimeSeriesSamples"] + cu_profile["acceptedMeasuredTimeSeriesSamples"]
+need(accepted_measured_total == 65_171_059, "combined real measured-sample arithmetic drifted")
+need(targets["fully_profiled_measured_datasets"]["currentAccepted"] == 7, "partial cross-process acceptance must not inflate the fully profiled family count")
+need(targets["measured_time_series_samples"]["currentAccepted"] == accepted_measured_total, "measured sample count must equal AVAPS plus OpenMMS plus accepted cross-process lower and upper evidence")
 
 primary = json.loads(PRIMARY.read_text(encoding="utf-8"))
 ps = primary.get("summary") or {}
@@ -231,6 +242,8 @@ report = {
         "sources": [
             {"path": "data/public-benchmark-results/scatimdata-avaps-v1.json", "accepted": av_profile["acceptedMeasuredTimeSeriesSamples"]},
             {"path": "data/public-benchmark-results/openmms-t4g-v1.json", "accepted": om_profile["acceptedMeasuredTimeSeriesSamples"]},
+            {"path": "data/public-benchmark-results/cross-process-lower-workpiece-source-contract-v1.json", "accepted": cl_profile["acceptedMeasuredTimeSeriesSamples"]},
+            {"path": "data/public-benchmark-results/cross-process-upper-workpiece-source-contract-v1.json", "accepted": cu_profile["acceptedMeasuredTimeSeriesSamples"]},
         ],
         "avaps": {
             "linkedCycles": av_profile["linkedCycles"],
