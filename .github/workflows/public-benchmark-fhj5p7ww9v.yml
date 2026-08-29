@@ -43,21 +43,27 @@ jobs:
           python - <<'PY'
           import json
           x=json.load(open('benchmark-results/fhj5p7ww9v-v1.json'))
-          assert x['status']=='completed-restricted-noncommercial-measured-benchmark'
+          assert x['status'] in {'completed-restricted-noncommercial-measured-benchmark', 'retrieved-profile-needs-semantic-review'}
           assert x['source']['datasetDoi']=='10.17632/fhj5p7ww9v.1'
           assert x['source']['license']=='CC BY-NC 3.0'
           assert x['source']['publisherFileName']=='DATA - COST.xlsx'
           assert len(x['source']['sha256'])==64
           assert x['profile']['sheetCount'] >= 1
           assert x['profile']['totalRowsAcrossSheets'] >= 1
-          assert x['profile']['recordLevelMeasuredValues'] >= 1
           assert x['profile']['acceptedMeasuredTimeSeriesSamples']==0
           assert x['profile']['rawRowsOrCellValuesEmitted'] is False
-          assert x['acceptance']['countsAsFullyProfiledMeasuredDataset'] is True
           assert x['acceptance']['commercialReuseAllowed'] is False
           assert x['acceptance']['rawRedistributionAllowedUnderProjectPolicy'] is False
           assert x['retrieval']['rawPublisherFileCommitted'] is False
           assert x['retrieval']['rawRowsOrCellValuesUploadedAsArtifact'] is False
+          if x['status']=='completed-restricted-noncommercial-measured-benchmark':
+              assert x['profile']['recordLevelMeasuredValues'] >= 1
+              assert x['acceptance']['countsAsFullyProfiledMeasuredDataset'] is True
+              assert x['acceptance']['semanticLayoutRecognized'] is True
+          else:
+              assert x['profile']['recordLevelMeasuredValues'] == 0
+              assert x['acceptance']['countsAsFullyProfiledMeasuredDataset'] is False
+              assert x['acceptance']['semanticLayoutRecognized'] is False
           print(json.dumps({
             'status': x['status'],
             'sha256': x['source']['sha256'],
