@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "datasetId": "pmc4753395-hdpe-cenosphere-v1",
-  "status": "stage1-profile-candidate",
+  "status": "stage2-semantic-profile-candidate",
   "source": {
     "articlePage": "https://pmc.ncbi.nlm.nih.gov/articles/PMC4753395/",
     "datasetDoi": "10.1016/j.dib.2016.01.058",
@@ -20,23 +20,31 @@
     "matrixMaterial": "HDPE",
     "filler": "fly-ash cenospheres",
     "reportedCompositionsWeightPercent": [0, 20, 40, 60],
-    "measuredData": ["tensile load", "tensile displacement", "derived stress-strain properties from measured tests"],
+    "measuredData": ["tensile load", "tensile displacement", "source-delivered stress-strain traces derived from tensile tests"],
     "reportedInjectionFactors": ["mould temperature", "nozzle temperature", "heating-zone temperature", "screw speed", "injection speed", "injection time", "holding time", "cooling time", "cycle time"],
     "theoreticalDataToExclude": ["Porfiri-Gupta model outputs", "parametric theoretical estimates"]
   },
-  "stage1Rules": {
-    "exactSupplementRequired": true,
-    "currentPmcCloudFallbackAllowed": true,
-    "cloudMetadataMustMatchPmcidAndCcByLicense": true,
-    "cloudFallbackMustRetrieveExactSupplementOnly": true,
-    "legacyOaWebServiceMustNotBeRequired": true,
-    "archiveFingerprintRequired": true,
-    "memberFingerprintsRequired": true,
-    "measuredWorkbookMustBeSeparatedFromTheoreticalWorkbook": true,
+  "stage1Evidence": {
+    "retrievalRoute": "pmc-current-cloud-media",
+    "cloudMetadataLicenseCode": "CC BY",
+    "supplementSha256": "cf6224bf9f2dc93c5c19ef1a4d4439fc44d4df34fe53ef04b2b05b29c82d9342",
+    "nestedRarSha256": "2f86606b0450c2cd549ef177714dd352dc884a40924e287ca7a92aadf4113fd2",
+    "measuredWorkbookSha256": "6e376e0acdfc614b6c16e0fef99e0e74cace8bc4d931a08a729e05dfc2cd7783",
+    "theoreticalWorkbookSha256": "e25db4b43e93b262c4d6c37df0e56e77bafa95053ef11906efb5255ae34fbe8c",
+    "measuredWorkbookSheets": ["HDPE", "HDPE20", "HDPE40", "HDPE60", "PLots"],
+    "theoreticalWorkbookSheets": ["E=const", "eta=const"]
+  },
+  "stage2Rules": {
+    "exactFingerprintsRequired": true,
+    "measuredWorkbookOnlyForAcceptedTraceCounts": true,
+    "compositionSheets": ["HDPE", "HDPE20", "HDPE40", "HDPE60"],
+    "plotSheetMustBeExcluded": true,
+    "theoreticalWorkbookMustBeExcluded": true,
+    "stressAndStrainMustBeClassifiedByTextHeaders": true,
     "rawNumericValuesMustNotBeEmitted": true,
     "rawThirdPartyFilesMustNotBeCommitted": true,
-    "countsAsFullyProfiledMeasuredDataset": false,
-    "acceptedMeasuredTimeSeriesSamples": 0
+    "injectionMachineTimeSeriesSamplesAdded": 0,
+    "countsAsFullyProfiledMeasuredDataset": false
   },
-  "evidenceBoundary": "Stage 1 tries the visible CC BY 4.0 supplementary ZIP temporarily. If PMC serves an HTML wrapper, the profiler uses the current PMC Article Datasets cloud structure on the public pmc-oa-opendata S3 bucket, validates the article metadata and CC BY licence, and retrieves only the exact mmc1.zip media object in memory. It fingerprints the supplement and its members and emits aggregate workbook structure/text-label diagnostics only. Tensile-Data.xlsx is the measured candidate; Porfiri-Gupta-Model.xlsx and other theoretical/model outputs are excluded from measured counts. No raw rows, measurement values, images, cloud objects, or third-party files are committed or uploaded."
+  "evidenceBoundary": "This source contains physical tensile-test evidence from injection-moulded HDPE/cenosphere specimens, but its delivered Tensile-Data.xlsx exposes stress-strain traces rather than injection-machine/cavity process waveforms. Stage 2 may count source-delivered stress and strain numeric trace cells only after exact hash, sheet and text-header reconciliation. The PLots sheet and the entire Porfiri-Gupta theoretical workbook are excluded. These material-test trace values must remain separate from MouldMaster's accepted injection-process high-frequency time-series total. No raw numeric values or third-party files are emitted, committed or uploaded."
 }
