@@ -13,6 +13,8 @@ BENCHMARK_OPENMMS = ROOT / "data" / "public-benchmark-results" / "openmms-t4g-v1
 BENCHMARK_SU = ROOT / "data" / "public-benchmark-results" / "su13148102-supplement-v1.json"
 BENCHMARK_IGUZZINI = ROOT / "data" / "public-benchmark-results" / "iguzzini-road-lenses-v1.json"
 BENCHMARK_FORINFPRO = ROOT / "data" / "public-benchmark-results" / "forinfpro-himd-v1.json"
+BENCHMARK_IMPURE = ROOT / "data" / "public-benchmark-results" / "impure-pascoe-2022-v1.json"
+REVIEW_CROSS = ROOT / "data" / "public-benchmark-results" / "cross-process-chain-17240390-v1.json"
 REVIEW_PET = ROOT / "data" / "public-benchmark-results" / "pet-preform-v2.json"
 REVIEW_WARWICK = ROOT / "data" / "public-benchmark-results" / "warwick-demoulding-v2.json"
 REVIEW_RWTH = ROOT / "data" / "public-benchmark-results" / "rwth-pcr-2025-v1.json"
@@ -157,6 +159,16 @@ forinfpro = json.loads(BENCHMARK_FORINFPRO.read_text(encoding="utf-8"))
 need(forinfpro.get("status") == "completed-public-measured-benchmark", "FORinFPRO benchmark status missing")
 need((forinfpro.get("profile") or {}).get("deliveredCycles") == 1 and (forinfpro.get("profile") or {}).get("namedMachineChannels") == 60, "FORinFPRO delivered profile drifted")
 need((forinfpro.get("profile") or {}).get("acceptedMeasuredTimeSeriesSamples") == 0, "unit-limited FORinFPRO values must not inflate measured samples")
+impure = json.loads(BENCHMARK_IMPURE.read_text(encoding="utf-8"))
+need(impure.get("status") == "completed-public-measured-benchmark", "ImPure benchmark status missing")
+need((impure.get("profile") or {}).get("cycleFiles") == 307, "ImPure cycle-file count drifted")
+need((impure.get("profile") or {}).get("cycleRows") == 297087, "ImPure cycle-row count drifted")
+need((impure.get("profile") or {}).get("cycleSchemaFamilies") == 1, "ImPure schema-family count drifted")
+need((impure.get("profile") or {}).get("widthMismatchRows") == 0, "ImPure width integrity drifted")
+cross = json.loads(REVIEW_CROSS.read_text(encoding="utf-8"))
+need(cross.get("status") == "completed-public-measured-benchmark-scope-limited", "cross-process structural profile missing")
+need((cross.get("profile") or {}).get("injectionScopeMembers") == 15688, "cross-process injection member count drifted")
+need((cross.get("profile") or {}).get("acceptedMeasuredTimeSeriesSamples") == 0, "cross-process semantic-review data cannot inflate accepted samples")
 need(rwth.get("status") == "retrieval-blocked-non-archive-response", "RWTH retrieval-blocked state drifted")
 need((rwth.get("acceptance") or {}).get("countsAsFullyProfiledMeasuredDataset") is False, "RWTH must remain non-counting until real archive profiling passes")
 need((rwth.get("acceptance") or {}).get("acceptedMeasuredTimeSeriesSamples") == 0, "RWTH blocked retrieval cannot contribute measured samples")
@@ -165,7 +177,7 @@ need(all(a.get("sizeBytes") == 248 and a.get("contentType") == "text/html; chars
 
 accepted_measured_total = av_profile["acceptedMeasuredTimeSeriesSamples"] + om_profile["acceptedMeasuredTimeSeriesSamples"]
 need(accepted_measured_total == 13_929_568, "combined real measured-sample arithmetic drifted")
-need(targets["fully_profiled_measured_datasets"]["currentAccepted"] == 6, "fully profiled measured dataset count must equal five open benchmark families plus one restricted educational profile")
+need(targets["fully_profiled_measured_datasets"]["currentAccepted"] == 7, "fully profiled measured dataset count must include ImPure plus the established benchmark families")
 need(targets["measured_time_series_samples"]["currentAccepted"] == accepted_measured_total, "measured sample count must equal AVAPS plus OpenMMS delivered-file evidence")
 
 primary = json.loads(PRIMARY.read_text(encoding="utf-8"))
@@ -192,7 +204,7 @@ report = {
     "measuredDatasetDiscovery": {
         "inventoryCount": len(datasets),
         "legacyCatalogSeedCount": len(legacy.get("datasets") or []),
-        "fullyProfiledAccepted": 6,
+        "fullyProfiledAccepted": 7,
         "openOrStandardRepoAccepted": 4,
         "restrictedResearchEducationAccepted": 1,
         "automatedIngestionAllowed": summary.get("automatedIngestionAllowed"),
@@ -241,4 +253,5 @@ report = {
     "boundary": "No synthetic, metadata-only, generated-draft or heuristic-candidate evidence is counted as completed measured/reviewed content unless its area-specific acceptance definition is satisfied. Restricted research/education source terms are preserved rather than widened."
 }
 (ROOT / "content-scale-targets-report.json").write_text(json.dumps(report, indent=2) + "\n", encoding="utf-8")
-print(f"MouldMaster content-scale target integrity QA passed ({len(datasets)} measured datasets inventoried; 6 fully profiled families including 1 restricted research/education profile; {accepted_measured_total:,} real measured time-series values; {verified} publisher-verified primary measured studies; {summary.get('automatedIngestionAllowed')} sources legally executable)")
+print(f"MouldMaster content-scale target integrity QA passed ({len(datasets)} measured datasets inventoried; 7 fully profiled families including ImPure and 1 restricted research/education profile; {accepted_measured_total:,} accepted real measured time-series values; {verified} publisher-verified primary measured studies; {summary.get('automatedIngestionAllowed')} sources legally executable)")
+
