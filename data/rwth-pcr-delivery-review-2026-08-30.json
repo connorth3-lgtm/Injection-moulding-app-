@@ -1,0 +1,29 @@
+{
+  "schema": 1,
+  "reviewed": "2026-08-30",
+  "datasetId": "rwth-pcr-2025",
+  "sourceRecord": "https://publications.rwth-aachen.de/record/1016199",
+  "filesPage": "https://publications.rwth-aachen.de/record/1016199/files/",
+  "publisherArchive": {
+    "fileName": "ExperimentalData.zip",
+    "version": 1,
+    "publisherDisplayedSize": "1,007.55 KB",
+    "publisherDisplayedDate": "2026-04-14",
+    "accessLabel": "OpenAccess",
+    "versionedDownloadUrl": "https://publications.rwth-aachen.de/record/1016199/files/ExperimentalData.zip?version=1"
+  },
+  "priorExecution": {
+    "workflowRun": 33229910280,
+    "date": "2026-08-29",
+    "testedVersionedPublisherUrl": false,
+    "testedBareUrl": true,
+    "testedDownloadQueryVariants": true,
+    "result": "all tested variants returned the same 248-byte HTML response rather than a ZIP"
+  },
+  "decision": "retry-exact-publisher-version-link",
+  "countingBoundary": {
+    "countsAsFullyProfiledMeasuredDataset": false,
+    "acceptedMeasuredTimeSeriesSamples": 0,
+    "reason": "The versioned first-party file link is a delivery retry path only. Promotion still requires successful archive retrieval followed by delivered-schema and measurement-semantic review."
+  }
+}
