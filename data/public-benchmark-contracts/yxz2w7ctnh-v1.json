@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "datasetId": "mendeley-yxz2w7ctnh-v1",
-  "status": "source-specific-semantic-profile-candidate",
+  "status": "accepted-profiled-record-level-injection-mechanical-testing",
   "source": {
     "datasetPage": "https://data.mendeley.com/datasets/yxz2w7ctnh/1",
     "datasetDoi": "10.17632/yxz2w7ctnh.1",
@@ -44,6 +44,12 @@
     "recordLevelNotHighFrequencyTimeSeries": true,
     "acceptedMeasuredTimeSeriesSamples": 0,
     "rawRowsOrNumericValuesCommittedOrArtifacted": false
+  },
+  "acceptanceResult": {
+    "countsAsFullyProfiledMeasuredDataset": true,
+    "directRecordLevelInjectionMeasuredValues": 489,
+    "acceptedMeasuredTimeSeriesSamples": 0,
+    "resultPath": "data/public-benchmark-results/yxz2w7ctnh-v1.json"
   },
   "evidenceBoundary": "Only numeric constants inside workbook regions explicitly headed as injection moulded are counted as direct record-level test values. Repeated worksheets are deduplicated by worksheet-content SHA256. Energy/FDM content, formulas, and impact sheets lacking an explicit manufacturing-route identity are excluded."
 }
