@@ -64,7 +64,7 @@ jobs:
           c=x['counts']
           assert x['candidateRegistryEmbedded'] is True
           assert c['measuredDatasetInventory']==20
-          assert c['automatedIngestionAllowedDatasets']==8
+          assert c['automatedIngestionAllowedDatasets']==10
           assert c['fullyProfiledMeasuredDatasets']==6
           assert c['measuredTimeSeriesSamplesAccepted']==13929568
           assert c['publisherVerifiedPrimaryMeasuredStudies']==60

@@ -25,7 +25,7 @@ need(expected_samples == 13_929_568, "audited measured-sample baseline drifted")
 workflow_text = WORKFLOW.read_text(encoding="utf-8")
 need(f"assert c['fullyProfiledMeasuredDatasets']=={expected_profiled}" in workflow_text, "master-data workflow profiled-dataset assertion is stale")
 need(f"assert c['measuredTimeSeriesSamplesAccepted']=={expected_samples}" in workflow_text, "master-data workflow measured-sample assertion is stale")
-need("assert c['automatedIngestionAllowedDatasets']==8" in workflow_text, "master-data workflow executable-source assertion is stale")
+need("assert c['automatedIngestionAllowedDatasets']==10" in workflow_text, "master-data workflow executable-source assertion is stale")
 
 with tempfile.TemporaryDirectory() as td:
     p = subprocess.run([sys.executable, str(COMPILER), "--output-dir", td], cwd=ROOT, capture_output=True, text=True, encoding="utf-8", errors="replace")
@@ -38,7 +38,7 @@ with tempfile.TemporaryDirectory() as td:
     counts = manifest.get("counts") or {}
     expected = {
         "measuredDatasetInventory": 20,
-        "automatedIngestionAllowedDatasets": 8,
+        "automatedIngestionAllowedDatasets": 10,
         "fullyProfiledMeasuredDatasets": expected_profiled,
         "measuredTimeSeriesSamplesAccepted": expected_samples,
         "publisherVerifiedPrimaryMeasuredStudies": 60,
@@ -70,12 +70,12 @@ with tempfile.TemporaryDirectory() as td:
     inv = measured["datasetInventory"]
     ledger = measured["datasetExecutionLedger"]
     need(inv["summary"]["datasets"] == 20, "compiled measured dataset inventory drifted")
-    need(inv["summary"]["automatedIngestionAllowed"] == 8, "compiled executable measured-source count drifted")
+    need(inv["summary"]["automatedIngestionAllowed"] == 10, "compiled executable measured-source count drifted")
     need(ledger["summary"]["acceptedProfiled"] == expected_profiled, "compiled execution ledger accepted-profiled count drifted")
     need(ledger["summary"]["acceptedRestrictedResearchEducation"] == 1, "compiled restricted accepted profile count drifted")
-    need(ledger["summary"]["queuedExecutable"] == 0, "RWTH must no longer remain ambiguously queued")
+    need(ledger["summary"]["queuedExecutable"] == 2, "ImPure and cross-process hosted profiling queue drifted")
     need(ledger["summary"]["retrievalBlockedExecutable"] == 1, "RWTH retrieval blocker count drifted")
-    need((measured.get("datasetRightsReview") or {}).get("summary", {}).get("unblockedForAutomatedIngestion") == 2, "compiled rights-review promotion count drifted")
+    need((measured.get("datasetRightsReview") or {}).get("summary", {}).get("unblockedForAutomatedIngestion") == 4, "compiled rights-review promotion count drifted")
     need(len(measured["primaryMeasuredStudies"]) == 60, "compiled primary-measured study set incomplete")
     need(len({x["doi"].lower() for x in measured["primaryMeasuredStudies"]}) == 60, "compiled primary-measured study DOI deduplication failed")
 
@@ -133,4 +133,4 @@ with tempfile.TemporaryDirectory() as td:
     for section in ["manifest", "measured", "research", "appData", "processData", "drafts"]:
         need(section in combined, f"combined master package missing section: {section}")
 
-print(f"MouldMaster master data compilation QA passed (20 measured datasets; 8 legally executable sources; {expected_profiled} fully profiled families including 1 restricted educational profile; {expected_samples:,} accepted measured time-series values; 60 verified primary measured studies; 600 evidence passes; 264/19,008 synthetic cases/cycles; 157 approved items; 120+20 lessons; full draft banks)")
+print(f"MouldMaster master data compilation QA passed (20 measured datasets; 10 legally executable sources; {expected_profiled} fully profiled families including 1 restricted educational profile; {expected_samples:,} accepted measured time-series values; 60 verified primary measured studies; 600 evidence passes; 264/19,008 synthetic cases/cycles; 157 approved items; 120+20 lessons; full draft banks)")

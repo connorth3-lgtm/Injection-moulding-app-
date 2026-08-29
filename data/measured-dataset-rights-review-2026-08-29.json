@@ -11,8 +11,8 @@
   },
   "summary": {
     "sourcesReviewed": 5,
-    "unblockedForAutomatedIngestion": 2,
-    "remainBlockedForRights": 3
+    "unblockedForAutomatedIngestion": 4,
+    "remainBlockedForRights": 1
   },
   "sources": [
     {
@@ -36,11 +36,11 @@
     {
       "datasetId": "impure-pascoe-2022",
       "authoritativeRecord": "https://zenodo.org/records/6913660",
-      "decision": "blocked-no-explicit-license",
-      "license": null,
-      "evidence": "The Zenodo record describes the data as open access and exposes downloadable cycle CSVs, but the authoritative record does not display an explicit licence identifier or licence text.",
-      "automatedIngestionAllowed": false,
-      "nextAction": "Obtain explicit dataset reuse terms before automated enumeration or ingestion of the cycle files."
+      "decision": "executable-license-confirmed",
+      "license": "CC BY 4.0",
+      "evidence": "The official Zenodo records API returned metadata.license.id=cc-by-4.0 for record 6913660.",
+      "automatedIngestionAllowed": true,
+      "nextAction": "Enumerate and aggregate-profile all cycle CSVs with rate-limited retrieval; retain no raw rows."
     },
     {
       "datasetId": "forinfpro-himd-v1",
@@ -54,11 +54,11 @@
     {
       "datasetId": "cross-process-chain-17240390",
       "authoritativeRecord": "https://zenodo.org/records/17240390",
-      "decision": "blocked-no-explicit-license",
-      "license": null,
-      "evidence": "The Zenodo record exposes a 685.5 MB archive and linked software repositories, but its Rights > License section does not display a licence value. A software-repository licence is not treated as a licence for the archived dataset.",
-      "automatedIngestionAllowed": false,
-      "nextAction": "Obtain explicit dataset reuse terms before download; when executable, count only injection-moulding experiment streams and exclude downstream screw-driving observations from injection sample totals."
+      "decision": "executable-license-confirmed",
+      "license": "CC BY 4.0",
+      "evidence": "The official Zenodo records API returned metadata.license.id=cc-by-4.0 for record 17240390; the archive MD5 remains pinned as 069e190338b2ca29f736b21fabf407ba.",
+      "automatedIngestionAllowed": true,
+      "nextAction": "Profile the 685.5 MB archive on a hosted runner and count only upper/lower injection streams; exclude both screw-driving streams."
     }
   ],
   "evidenceBoundary": "This review changes execution eligibility only. It does not promote a dataset to fully profiled measured evidence and does not change accepted measured-sample counts until actual source files are lawfully retrieved, fingerprinted, profiled and reconciled."

@@ -62,7 +62,7 @@ def compile_measured():
     need(len(dois) == len(set(dois)) and all(dois), "compiled primary measured studies must have 60 unique DOIs")
 
     need((rights_review.get("summary") or {}).get("sourcesReviewed") == 5, "measured-data rights review source count drifted")
-    need((rights_review.get("summary") or {}).get("unblockedForAutomatedIngestion") == 2, "measured-data rights review promotion count drifted")
+    need((rights_review.get("summary") or {}).get("unblockedForAutomatedIngestion") == 4, "measured-data rights review promotion count drifted")
 
     dossiers = {}
     for p in sorted((ROOT / "data/mechanism-promotion-evidence").glob("*.json")):

@@ -55,18 +55,18 @@ need(summary.get("datasets") == len(datasets) == 20, f"measured dataset inventor
 ids = [x.get("datasetId") for x in datasets]
 need(len(ids) == len(set(ids)) and all(ids), "measured dataset inventory IDs must be unique and non-empty")
 need(summary.get("automatedIngestionAllowed") == sum(1 for x in datasets if x.get("automatedIngestionAllowed") is True), "automated-ingestion dataset count drifted")
-need(summary.get("automatedIngestionAllowed") == 8, "audited automated-ingestion source count must include RWTH PCR and FORinFPRO under CC BY 4.0")
-need(summary.get("rightsOrAccessReviewRequired") == 5, "rights-review source count must reflect FORinFPRO licence confirmation")
+need(summary.get("automatedIngestionAllowed") == 10, "audited automated-ingestion source count must include four confirmed waveform-source promotions")
+need(summary.get("rightsOrAccessReviewRequired") == 3, "rights-review source count must reflect Zenodo API licence confirmations")
 need(targets["fully_profiled_measured_datasets"].get("currentDiscovered") == len(datasets), "target ledger discovery count must equal the measured-dataset inventory")
 by_id = {x.get("datasetId"): x for x in datasets}
 
 rights = json.loads(RIGHTS_REVIEW.read_text(encoding="utf-8"))
 need((rights.get("summary") or {}).get("sourcesReviewed") == 5, "waveform rights-review source count drifted")
-need((rights.get("summary") or {}).get("unblockedForAutomatedIngestion") == 2, "waveform rights-review unblocked count drifted")
+need((rights.get("summary") or {}).get("unblockedForAutomatedIngestion") == 4, "waveform rights-review unblocked count drifted")
 rights_by_id = {x.get("datasetId"): x for x in rights.get("sources") or []}
 need(rights_by_id["rwth-pcr-2025"].get("decision") == "executable-license-confirmed" and rights_by_id["rwth-pcr-2025"].get("license") == "CC BY 4.0", "RWTH rights decision drifted")
 need(by_id["rwth-pcr-2025"].get("license") == "CC BY 4.0" and by_id["rwth-pcr-2025"].get("automatedIngestionAllowed") is True, "RWTH inventory execution rights drifted")
-for blocked_id in ["skz-loki-v1", "impure-pascoe-2022", "cross-process-chain-17240390"]:
+for blocked_id in ["skz-loki-v1"]:
     need(rights_by_id[blocked_id].get("decision") == "blocked-no-explicit-license", f"{blocked_id} rights decision drifted")
     need(by_id[blocked_id].get("license") is None and by_id[blocked_id].get("automatedIngestionAllowed") is False, f"{blocked_id} must remain non-executable without explicit data licence")
 
@@ -79,6 +79,9 @@ need(by_id["inqcim-2500-request"].get("peerReviewedCompanion") == "10.3390/polym
 need(by_id["leon-defects-20322729"].get("overlapGroup") == by_id["leon-process-20309380"].get("overlapGroup"), "León defect/process campaign must remain one overlap group")
 need(rights_by_id["forinfpro-himd-v1"].get("decision") == "executable-license-confirmed", "FORinFPRO rights promotion drifted")
 need(by_id["forinfpro-himd-v1"].get("license") == "CC BY 4.0" and by_id["forinfpro-himd-v1"].get("automatedIngestionAllowed") is True, "FORinFPRO inventory execution rights drifted")
+for promoted_id in ["impure-pascoe-2022", "cross-process-chain-17240390"]:
+    need(rights_by_id[promoted_id].get("decision") == "executable-license-confirmed", f"{promoted_id} rights promotion drifted")
+    need(by_id[promoted_id].get("license") == "CC BY 4.0" and by_id[promoted_id].get("automatedIngestionAllowed") is True, f"{promoted_id} inventory execution rights drifted")
 
 record = json.loads(BENCHMARK_RECORD.read_text(encoding="utf-8"))
 need(record.get("status") == "completed-public-measured-benchmark", "record-level public benchmark status missing")
