@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "datasetId": "pmc4753395-hdpe-cenosphere-v1",
-  "status": "stage2-semantic-profile-candidate",
+  "status": "accepted-profiled-material-test-traces",
   "source": {
     "articlePage": "https://pmc.ncbi.nlm.nih.gov/articles/PMC4753395/",
     "datasetDoi": "10.1016/j.dib.2016.01.058",
@@ -44,7 +44,17 @@
     "rawNumericValuesMustNotBeEmitted": true,
     "rawThirdPartyFilesMustNotBeCommitted": true,
     "injectionMachineTimeSeriesSamplesAdded": 0,
-    "countsAsFullyProfiledMeasuredDataset": false
+    "countsAsFullyProfiledMeasuredDataset": true
   },
-  "evidenceBoundary": "This source contains physical tensile-test evidence from injection-moulded HDPE/cenosphere specimens, but its delivered Tensile-Data.xlsx exposes stress-strain traces rather than injection-machine/cavity process waveforms. Stage 2 may count source-delivered stress and strain numeric trace cells only after exact hash, sheet and text-header reconciliation. The PLots sheet and the entire Porfiri-Gupta theoretical workbook are excluded. These material-test trace values must remain separate from MouldMaster's accepted injection-process high-frequency time-series total. No raw numeric values or third-party files are emitted, committed or uploaded."
+  "acceptanceEvidence": {
+    "stressTraceValues": 71442,
+    "strainTraceValues": 71442,
+    "stressStrainTracePointPairs": 71442,
+    "materialTestTraceValues": 142884,
+    "preHeaderNumericCellsExcluded": 20,
+    "plotNumericCellsExcluded": 4,
+    "theoreticalWorkbookValuesAccepted": 0,
+    "acceptedInjectionProcessTimeSeriesSamplesAdded": 0
+  },
+  "evidenceBoundary": "This source contains physical tensile-test evidence from injection-moulded HDPE/cenosphere specimens, but its delivered Tensile-Data.xlsx exposes stress-strain traces rather than injection-machine/cavity process waveforms. Accepted counts include only paired stress and strain numeric cells below the row-2 semantic headers on HDPE, HDPE20, HDPE40 and HDPE60. Exactly 20 pre-header numeric cells, the PLots sheet and the entire Porfiri-Gupta theoretical workbook are excluded. These material-test trace values remain separate from MouldMaster's accepted injection-process high-frequency time-series total. No raw numeric values or third-party files are emitted, committed or uploaded."
 }
