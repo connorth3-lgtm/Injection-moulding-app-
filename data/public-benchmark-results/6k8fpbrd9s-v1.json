@@ -1,0 +1,53 @@
+{
+  "schema": 1,
+  "status": "completed-public-measured-material-characterization-benchmark",
+  "retrievedDate": "2026-08-29",
+  "source": {
+    "datasetId": "mendeley-6k8fpbrd9s-v1",
+    "datasetDoi": "10.17632/6k8fpbrd9s.1",
+    "version": 1,
+    "license": "CC BY 4.0",
+    "publisherFileId": "8598d42d-f794-47e2-ad84-dd952c900d27",
+    "publisherFileName": "Data.xlsx",
+    "sha256": "14c056dd86e11cc47e1e97834174631f9dc0806442917a7149ddf5856dc9b11c",
+    "publisherSha256Matched": true,
+    "retrievedSizeBytes": 1434996
+  },
+  "profile": {
+    "material": "polypropylene",
+    "measurementDomain": "pressure-specific volume-temperature (pvT) material characterization",
+    "injectionMouldingCycleDataset": false,
+    "sheetCount": 10,
+    "sheetRoleCounts": [
+      {"sheet":"Figure2","numericCells":822,"formulaCells":0,"roles":{"temperature":411,"specificVolume":411}},
+      {"sheet":"Figure3","numericCells":545,"formulaCells":0,"roles":{"time":272,"temperature":273}},
+      {"sheet":"Figure4","numericCells":1656,"formulaCells":0,"roles":{"temperature":828,"specificVolume":828}},
+      {"sheet":"Figure5","numericCells":234,"formulaCells":0,"roles":{"time":117,"pressure":117}},
+      {"sheet":"Figure6","numericCells":1644,"formulaCells":0,"roles":{"temperature":822,"specificVolume":822}},
+      {"sheet":"Figure7","numericCells":8454,"formulaCells":0,"roles":{"time":2818,"pressure":2818,"specificVolume":2818}},
+      {"sheet":"Figure8","numericCells":528,"formulaCells":0,"roles":{"temperature":88,"specificVolume":440}},
+      {"sheet":"Figure9","numericCells":240,"formulaCells":0,"roles":{"pistonSpeed":20,"specificVolume":220}},
+      {"sheet":"Figure10abc","numericCells":9002,"formulaCells":0,"roles":{"pressure":4501,"specificVolume":4501}},
+      {"sheet":"Figure10def","numericCells":8692,"formulaCells":0,"roles":{"pressure":4346,"specificVolume":4346}}
+    ],
+    "deliveredNumericCells": 31817,
+    "deliveredDirectPhysicalValueCells": 28590,
+    "directPhysicalRoleTotals": {"temperature":2422,"pressure":11782,"specificVolume":14386},
+    "coordinateCellsExcludedFromDirectPhysicalCount": 3227,
+    "coordinateRoleTotals": {"time":3207,"pistonSpeed":20},
+    "materialCharacterizationTraceMeasurementCells": 6026,
+    "formulaCells": 0,
+    "crossFigureReuseMayExist": true,
+    "uniqueExperimentalMeasurementCount": null,
+    "rawRowsOrCellValuesEmitted": false,
+    "numericMeasurementValuesEmitted": false
+  },
+  "acceptance": {
+    "countsAsFullyProfiledMeasuredDataset": true,
+    "acceptedMeasuredTimeSeriesSamples": 0,
+    "materialCharacterizationTraceMeasurementsNotAddedToInjectionCycleSampleMetric": true,
+    "deliveredCellCountsAreNotClaimedAsDeduplicatedExperiments": true
+  },
+  "retrieval": {"rawPublisherFileCommitted":false,"rawRowsOrCellValuesUploadedAsArtifact":false},
+  "evidenceBoundary": "The exact CC BY 4.0 workbook is SHA-256 matched and every delivered numeric cell is classified by role across ten figure-data sheets. 28,590 delivered cells are physical temperature, pressure or specific-volume values; 3,227 time/piston-speed coordinates are excluded from that direct-physical count. Cross-figure reuse may occur, so no deduplicated experiment count is claimed. The dataset is accepted as measured polypropylene material-characterization evidence, not as an injection-moulding cycle dataset, and contributes zero to the injection-cycle high-frequency sample metric."
+}
