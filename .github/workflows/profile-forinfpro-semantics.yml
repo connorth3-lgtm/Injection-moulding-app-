@@ -90,9 +90,12 @@ jobs:
           assert t['profile']['rawRowsOrCellValuesEmitted'] is False
           assert t['interpretationBoundary']['automaticPromotion'] is False
           assert t['interpretationBoundary']['unitNotDerivedFromNumericRange'] is True
-          assert t['timeOrdering']['allTimestampsParsed'] is True
-          assert t['timeOrdering']['strictlyIncreasing'] is True
-          assert t['timeOrdering']['absoluteTimestampsEmitted'] is False
+          time=t['profile']['timeOrdering']
+          assert time['nonEmptyCount']==10132
+          assert time['parsedCount']==10132
+          assert time['strictlyIncreasing'] is True
+          assert time['positiveDeltaCount']==10131
+          assert time['absoluteTimestampsEmitted'] is False
           PY
       - name: Upload aggregate semantic profiles only
         uses: actions/upload-artifact@v4
