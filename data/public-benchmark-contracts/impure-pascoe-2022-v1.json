@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "datasetId": "impure-pascoe-2022",
-  "status": "queued-executable-rate-limited",
+  "status": "accepted-profiled-unit-limited",
   "source": {
     "datasetDoi": "10.5281/zenodo.6913660",
     "recordUrl": "https://zenodo.org/records/6913660",
@@ -38,7 +38,7 @@
     "metadataPath": "metadata.license.id",
     "value": "cc-by-4.0",
     "verifiedOn": "2026-08-29",
-    "retrievalState": "initial bulk request received HTTP 429; retry remains queued"
+    "retrievalState": "completed on hosted runner; all 309 publisher files checksum-verified"
   },
   "profilingPlan": [
     "Enumerate every delivered cycle CSV and supporting trial/label file from the authoritative manifest; do not infer cycle count from numeric filenames.",
