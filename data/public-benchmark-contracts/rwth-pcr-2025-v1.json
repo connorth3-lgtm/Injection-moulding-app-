@@ -1,0 +1,61 @@
+{
+  "schema": 1,
+  "datasetId": "rwth-pcr-2025",
+  "status": "candidate-until-source-archive-and-measurement-semantics-pass",
+  "source": {
+    "datasetDoi": "10.18154/RWTH-2025-06809",
+    "recordUrl": "https://publications.rwth-aachen.de/record/1016199",
+    "downloadUrl": "https://publications.rwth-aachen.de/record/1016199/files/ExperimentalData.zip",
+    "publisherFileName": "ExperimentalData.zip",
+    "license": "CC BY 4.0",
+    "licenseEvidenceUrl": "https://publications.rwth-aachen.de/record/1016199?ln=de",
+    "peerReviewedCompanion": "10.1016/j.jprocont.2026.103725",
+    "recordLastModified": "2026-04-16"
+  },
+  "experimentContext": {
+    "process": "injection moulding",
+    "machine": "Arburg Allrounder 520 A 1500-800",
+    "geometry": "flat plate",
+    "materials": [
+      "Systalen PP-24000 gr000 post-consumer-recycled material",
+      "Sabic PP579S virgin material"
+    ],
+    "controllerExperiments": [
+      "learning-based nonlinear model predictive cavity-pressure control",
+      "proportional cavity-pressure control",
+      "part-mass control"
+    ],
+    "publisherDescribedTimeSeriesSignals": [
+      "screw-antechamber pressure",
+      "cavity pressure",
+      "controller output",
+      "screw velocity",
+      "screw-antechamber volume"
+    ],
+    "publisherDescribedPartMassIterationFields": [
+      "cavity-pressure reference",
+      "part mass",
+      "part-mass reference"
+    ]
+  },
+  "stage1Acceptance": {
+    "sourceArchiveRetrieved": true,
+    "archiveSha256Recorded": true,
+    "allNonDirectoryMembersFingerprintable": true,
+    "archivePathsSafe": true,
+    "internalFileTypesEnumerated": true,
+    "supportedTabularOrScientificSchemasProfiledWithoutRawValues": true,
+    "rawPublisherFilesCommitted": false,
+    "rawRowsOrCellValuesEmitted": false
+  },
+  "finalAcceptanceRequires": [
+    "Exact source archive identity and file fingerprints are recorded.",
+    "Internal experiment and cycle grouping is established from delivered files rather than inferred from the paper alone.",
+    "Time bases and measured signal arrays/columns are identified with units or source-defined semantics.",
+    "Measured signals are separated from controller commands, references, predictions, derived features and labels.",
+    "Part-mass iterations are not counted as high-frequency time-series samples unless delivered sampled measurement arrays establish that structure.",
+    "Accepted measured-sample totals are computed only from delivered measured arrays/columns with ordering/time basis established.",
+    "No raw third-party rows, arrays or cell values are committed or uploaded as workflow artifacts."
+  ],
+  "evidenceBoundary": "The authoritative RWTH dataset record is CC BY 4.0 and explicitly describes real injection-moulding experiments with time-resolved pressures, controller output, screw velocity and screw-antechamber volume, plus part-mass-control iterations. Stage 1 only fingerprints and inventories the delivered archive. No dataset-family promotion or measured-sample count is allowed until delivered experiment grouping, time bases, signal semantics and measured-versus-command/reference boundaries are established."
+}
