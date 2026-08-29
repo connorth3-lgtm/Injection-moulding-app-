@@ -12,6 +12,7 @@ import tempfile
 ROOT = Path(__file__).resolve().parent
 SCRIPT = ROOT / "tools" / "validate_inqcim_author_response.py"
 TEMPLATE = ROOT / "data" / "inqcim-author-response-manifest-template-v1.json"
+PROMOTION = ROOT / "data" / "inqcim-author-response-promotion-contract-v1.json"
 
 
 def need(condition, message):
@@ -25,10 +26,21 @@ validator = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(validator)
 
 need(TEMPLATE.exists(), "INQCIM author-response template missing")
+need(PROMOTION.exists(), "INQCIM author-response promotion contract missing")
 template = json.loads(TEMPLATE.read_text(encoding="utf-8"))
+promotion = json.loads(PROMOTION.read_text(encoding="utf-8"))
 need(template.get("datasetId") == "inqcim-2500-request", "response-template dataset id drifted")
 need(template["authorization"]["rawRedistributionAllowed"] is False, "response template must default raw redistribution to false")
 need(template["authorization"]["automatedAggregateProfilingAllowed"] is False, "response template must fail closed before author permission")
+need(promotion.get("datasetId") == "inqcim-2500-request", "promotion-contract dataset id drifted")
+need(promotion.get("status") == "inactive-until-authorized-delivery", "promotion path must remain inactive before delivery")
+need(promotion["authorityGate"]["writtenAuthorizationEvidenceRequired"] is True, "written authorization gate missing")
+need(promotion["authorityGate"]["rawRedistributionPermissionDefaultsToFalse"] is True, "raw redistribution must default to false")
+need(promotion["deliveryGate"]["sha256EveryDeliveredFile"] is True, "delivered files must be fingerprinted")
+need(promotion["semanticGate"]["commandsSetpointsModelOutputsDerivedFeaturesAndLabelsExcludedFromMeasuredCounts"] is True, "non-measured role exclusion missing")
+need(promotion["aggregateOnlyOutput"]["rawRowsOrCellValuesEmitted"] is False, "promotion contract must forbid raw-value output")
+need(promotion["promotionBoundary"]["validatorMayAutomaticallyCountAsFullyProfiledMeasuredDataset"] is False, "validator must never auto-promote a dataset family")
+need(promotion.get("currentAcceptedMeasuredValuesAdded") == 0, "inactive promotion protocol cannot add measured values")
 
 with tempfile.TemporaryDirectory() as td:
     root = Path(td)
