@@ -30,12 +30,16 @@ text = RUNNER.read_text(encoding="utf-8")
 for marker in [
     "expectedPublisherFile",
     "publisherSha256",
-    "measuredOutcomeColumns",
-    "derivedOutcomeColumns",
-    "recordLevelMeasuredValues",
+    "MATERIAL_ROWS",
+    "PROCESS_ROWS",
+    "SPREAD_ROWS",
+    "directMeasuredOutcomeCells",
+    "recordLevelMeasuredOutcomeValues",
+    "formulaCellsExcludedAsDerived",
     "acceptedMeasuredTimeSeriesSamples\": 0",
     "rawRowsOrCellValuesUploadedAsArtifact\": False",
 ]:
     need(marker in text, f"PP foam runner guard missing: {marker}")
+need("recognized_sheets == 3 and total_direct == 96" in text, "exact 3-sheet / 96-outcome reconciliation gate missing")
 need("commercialReuseAllowed\": False" in text, "runner must preserve noncommercial boundary")
 print("MouldMaster PP foam restricted measured benchmark QA passed")
