@@ -1,0 +1,35 @@
+{
+  "schema": 1,
+  "status": "publisher-metadata-batch-profiled",
+  "retrievedDate": "2026-08-29",
+  "sources": [
+    {
+      "datasetId": "mendeley-8c8fjwcw86-v1", "doi": "10.17632/8c8fjwcw86.1", "license": "CC BY 4.0", "priority": 1,
+      "state": "publisher-file-manifest-exposed",
+      "apiFiles": [
+        {"id":"394d8f18-d6dc-4669-9448-1534634fa02b","name":"Draft_nylon 12_supporting information_rev 2.docx","folderId":null,"sizeBytes":4654448,"sha256":"2a15794fd8d439e97b824dffecf648c29551fbd418d2d13f983155ae4e2cd70f","contentType":"application/vnd.openxmlformats-officedocument.wordprocessingml.document","rawPayloadDownloaded":false},
+        {"id":"2b6d2ae7-8a94-4cca-868a-ff52a9c62779","name":"Irradiated Nylon12_Manuscript Figures_rev 2.pptx","folderId":null,"sizeBytes":69991185,"sha256":"7b0397e4f28c3963782727fe533756572acc51422fe2e00642c84e084228a116","contentType":"application/vnd.openxmlformats-officedocument.presentationml.presentation","rawPayloadDownloaded":false}
+      ],
+      "htmlFileIds":[],"htmlOnlyFileIds":[],"fileCountLowerBound":2,"errors":[],"rawPayloadsDownloaded":false,"countsAsFullyProfiledMeasuredDataset":false,"acceptedMeasuredTimeSeriesSamples":0
+    },
+    {
+      "datasetId": "mendeley-597jrsm9zm-v1", "doi": "10.17632/597jrsm9zm.1", "license": "CC BY-NC 3.0", "priority": 2,
+      "state": "publisher-file-manifest-exposed",
+      "apiFiles": [
+        {"id":"b309fa59-76db-4fb4-969f-1ec85803cf4e","name":"supplementary_material.pdf","folderId":null,"sizeBytes":957303,"sha256":"0ed9c86b6b56e4fe62c9c4658445afe299b8ce0146c0131b41f5ccdee3f25a3b","contentType":"application/pdf","rawPayloadDownloaded":false}
+      ],
+      "htmlFileIds":[],"htmlOnlyFileIds":[],"fileCountLowerBound":1,"errors":[],"rawPayloadsDownloaded":false,"countsAsFullyProfiledMeasuredDataset":false,"acceptedMeasuredTimeSeriesSamples":0
+    },
+    {
+      "datasetId": "mendeley-crmb7xjymg-v1", "doi": "10.17632/crmb7xjymg.1", "license": "CC BY 4.0", "priority": 3,
+      "state": "publisher-file-manifest-exposed",
+      "apiFiles": [
+        {"id":"ce7ba801-65d0-4195-b18e-537450ee6396","name":"2024-11-18 XPS figures.opju","folderId":null,"sizeBytes":990352,"sha256":"5b8af08cf128d0f23528c128dea72208a56ae3ea027a5748db80677dfaff4279","contentType":"application/octet-stream","rawPayloadDownloaded":false},
+        {"id":"a3bcfcb7-9267-4057-9fbf-fa0723dc3d10","name":"2025-07-05 XPS spectral data.vms","folderId":null,"sizeBytes":1388151,"sha256":"b9fe94af44634712bc7f90fa5591ae0e7ba7aeadd0858eae3945bba8600cc52c","contentType":"application/octet-stream","rawPayloadDownloaded":false}
+      ],
+      "htmlFileIds":[],"htmlOnlyFileIds":[],"fileCountLowerBound":2,"errors":[],"rawPayloadsDownloaded":false,"countsAsFullyProfiledMeasuredDataset":false,"acceptedMeasuredTimeSeriesSamples":0
+    }
+  ],
+  "summary": {"sourcesReviewed":3,"publisherFileManifestExposed":3,"publisherRecordNoFilesExposed":0,"fullyProfiledAccepted":0,"acceptedMeasuredTimeSeriesSamples":0,"rawPayloadsDownloaded":false},
+  "evidenceBoundary": "Stage 1 enumerates publisher metadata and exact file fingerprints only. No third-party payload is retained and no measurement count is accepted before format-specific structural and semantic profiling."
+}
