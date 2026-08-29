@@ -10,6 +10,8 @@ on:
       - 'qa_cross_process_upper_contract.py'
       - 'data/impure-pascoe-channel-dictionary-v1.json'
       - 'data/warwick-demoulding-source-contract-v1.json'
+      - 'data/kamp-foxconn-origin-rights-review-2026-08-29.json'
+      - 'qa_kamp_foxconn_rights.py'
       - 'qa_measured_data_blocker_contracts.py'
       - '.github/workflows/measured-data-blocker-contracts.yml'
   push:
@@ -21,6 +23,8 @@ on:
       - 'qa_cross_process_upper_contract.py'
       - 'data/impure-pascoe-channel-dictionary-v1.json'
       - 'data/warwick-demoulding-source-contract-v1.json'
+      - 'data/kamp-foxconn-origin-rights-review-2026-08-29.json'
+      - 'qa_kamp_foxconn_rights.py'
       - 'qa_measured_data_blocker_contracts.py'
       - '.github/workflows/measured-data-blocker-contracts.yml'
   workflow_dispatch:
@@ -39,9 +43,12 @@ jobs:
       - name: Python syntax
         run: |
           python -m py_compile qa_measured_data_blocker_contracts.py
+          python -m py_compile qa_kamp_foxconn_rights.py
           python -m py_compile tools/profile_cross_process_upper_workpiece.py
           python -m py_compile qa_cross_process_upper_contract.py
       - name: Validate upper specialist parser contract
         run: python qa_cross_process_upper_contract.py
       - name: Validate fail-closed source contracts
         run: python qa_measured_data_blocker_contracts.py
+      - name: Validate KAMP and Foxconn rights contracts
+        run: python qa_kamp_foxconn_rights.py
