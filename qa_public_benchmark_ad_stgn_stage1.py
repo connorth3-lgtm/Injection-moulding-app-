@@ -29,9 +29,27 @@ need(rules["downloadDatasetPayloads"] is False, "AD-STGN stage one cannot downlo
 need(rules["doNotCountTEPOrSWaTAsInjectionMouldingEvidence"] is True, "non-injection benchmark exclusion missing")
 need(rules["acceptedMeasuredTimeSeriesSamples"] == 0, "AD-STGN cannot claim measured samples before stage two")
 need(rules["countsAsFullyProfiledMeasuredDataset"] is False, "AD-STGN cannot be accepted before stage two")
+
 text = RUNNER.read_text(encoding="utf-8")
-for marker in ["data.mendeley.com/public-api/datasets", "folder_id=root", "likelyInjectionSubsetByName", "explicitNonInjectionBenchmarkByName", "rawPayloadsDownloaded\": False", "acceptedMeasuredTimeSeriesSamples\": 0"]:
+for marker in [
+    "data.mendeley.com/public-api/datasets",
+    "page_file_links",
+    "likelyInjectionFilesByName",
+    "explicitNonInjectionFilesByName",
+    "rawPayloadDownloaded\": False",
+    "rawPayloadsDownloaded\": False",
+    "acceptedMeasuredTimeSeriesSamples\": 0",
+]:
     need(marker in text, f"AD-STGN runner guard missing: {marker}")
-need("file_downloaded" not in text, "stage-one runner must not call file-download endpoints")
+
+# The HTML parser may recognize `file_downloaded` URLs solely to obtain stable
+# publisher file IDs. Stage 1 must not request any of those discovered links.
 need("api.data.mendeley.com" not in text, "stage one must not depend on OAuth-only Mendeley API")
+need("request_bytes(item['url']" not in text and 'request_bytes(item["url"]' not in text,
+     "stage one must not retrieve discovered file payloads")
+need("request_bytes(link" not in text and "urlopen(link" not in text,
+     "stage one must not retrieve publisher file links")
+need("rawPayloadDownloaded\": True" not in text and "rawPayloadsDownloaded\": True" not in text,
+     "stage one must never mark payload retrieval true")
+
 print("MouldMaster AD-STGN metadata-only stage-one QA passed")
