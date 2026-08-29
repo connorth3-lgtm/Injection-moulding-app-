@@ -1,49 +1,29 @@
-name: MouldMaster Normalize Cross-Process Partial Acceptance
+name: MouldMaster Cross-Process Lower Acceptance Audit
 
-# One-shot normalization after the deterministic lower-workpiece reconciliation.
+# The lower-workpiece reconciliation is complete. This workflow is retained as a
+# read-only manual audit so it cannot mutate the evidence ledgers after review.
 on:
-  push:
-    branches: [data/impure-warwick-source-contracts]
-    paths:
-      - '.github/workflows/reconcile-cross-process-lower-acceptance.yml'
+  workflow_dispatch:
 
 permissions:
-  contents: write
+  contents: read
 
 jobs:
-  normalize:
+  audit:
     runs-on: ubuntu-latest
+    timeout-minutes: 20
     steps:
       - uses: actions/checkout@v4
-        with:
-          ref: data/impure-warwick-source-contracts
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
-      - name: Normalize governed access-state vocabulary
-        run: |
-          python - <<'PY'
-          import json
-          from pathlib import Path
-          p = Path('data/measured-dataset-inventory-v1.json')
-          x = json.loads(p.read_text(encoding='utf-8'))
-          row = next(d for d in x['datasets'] if d.get('datasetId') == 'cross-process-chain-17240390')
-          if row.get('accessState') != 'public-open-partially-accepted-lower-upper-units-unresolved':
-              raise SystemExit(f"unexpected pre-normalization state: {row.get('accessState')}")
-          if (row.get('count') or {}).get('acceptedMeasuredTimeSeriesSamples') != 7426743:
-              raise SystemExit('accepted lower measured total drifted')
-          row['accessState'] = 'public-open-profiled-scope-limited'
-          p.write_text(json.dumps(x, indent=2, ensure_ascii=False) + '\n', encoding='utf-8')
-          PY
+      - name: Validate source-defined lower-workpiece contract
+        run: python qa_cross_process_lower_contract.py
+      - name: Validate reconciled content arithmetic
+        run: python qa_content_scale_targets.py
       - name: Validate governed measured inventory
         run: python qa_measured_dataset_inventory.py
-      - name: Validate reconciled target arithmetic
-        run: python qa_content_scale_targets.py
-      - name: Commit normalized inventory
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add data/measured-dataset-inventory-v1.json
-          git diff --cached --quiet && exit 0
-          git commit -m "Normalize cross-process partial acceptance state"
-          git push origin HEAD:data/impure-warwick-source-contracts
+      - name: Validate master compilation boundaries
+        run: python qa_master_data_compile.py
+      - name: Validate unresolved measured-data blocker contracts
+        run: python qa_measured_data_blocker_contracts.py
