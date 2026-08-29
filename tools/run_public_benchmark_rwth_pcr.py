@@ -3,17 +3,20 @@
 
 Retrieves the exact CC BY 4.0 publisher archive, fingerprints every delivered
 member, and records schema/shape metadata without emitting raw rows, arrays or
-cell values. Stage 1 is deliberately non-promoting.
+cell values. Stage 1 is deliberately non-promoting. If the repository serves a
+non-archive response, the runner emits aggregate retrieval diagnostics and
+remains fail-closed rather than crashing or treating HTML as data.
 """
 
 from __future__ import annotations
 
 import argparse
 import hashlib
+import http.cookiejar
 import json
-import os
 import shutil
 import tempfile
+import urllib.error
 import urllib.request
 import zipfile
 from collections import Counter
@@ -71,8 +74,8 @@ def tabular_profile(path: Path, ext: str) -> dict:
                 "dtypes": {str(c): str(df[c].dtype) for c in df.columns},
                 "nonNullCounts": {str(c): int(df[c].notna().sum()) for c in df.columns},
                 "semanticNameMarkers": schema_markers(headers),
-                "rawValuesEmitted": False
-            }]
+                "rawValuesEmitted": False,
+            }],
         }
     if ext in {".xlsx", ".xls"}:
         book = pd.ExcelFile(path)
@@ -88,7 +91,7 @@ def tabular_profile(path: Path, ext: str) -> dict:
                 "dtypes": {str(c): str(df[c].dtype) for c in df.columns},
                 "nonNullCounts": {str(c): int(df[c].notna().sum()) for c in df.columns},
                 "semanticNameMarkers": schema_markers([sheet, *headers]),
-                "rawValuesEmitted": False
+                "rawValuesEmitted": False,
             })
         return {"kind": "workbook", "tables": tables}
     raise ValueError(ext)
@@ -105,7 +108,7 @@ def mat_profile(path: Path) -> dict:
                 "matlabClass": str(matlab_class),
                 "elementCount": int(np.prod(shape, dtype=np.int64)) if shape else 1,
                 "semanticNameMarkers": schema_markers([name]),
-                "rawValuesEmitted": False
+                "rawValuesEmitted": False,
             })
         return {"kind": "mat-v5-or-earlier", "variables": variables}
     except (NotImplementedError, ValueError, OSError):
@@ -121,7 +124,7 @@ def mat_profile(path: Path) -> dict:
                         "dtype": str(obj.dtype),
                         "elementCount": int(np.prod(shape, dtype=np.int64)) if shape else 1,
                         "semanticNameMarkers": schema_markers([name]),
-                        "rawValuesEmitted": False
+                        "rawValuesEmitted": False,
                     })
             h5.visititems(visitor)
         return {"kind": "mat-v7.3-hdf5", "datasets": datasets}
@@ -138,8 +141,8 @@ def numpy_profile(path: Path, ext: str) -> dict:
                 "dtype": str(arr.dtype),
                 "elementCount": int(arr.size),
                 "semanticNameMarkers": schema_markers([path.name]),
-                "rawValuesEmitted": False
-            }]
+                "rawValuesEmitted": False,
+            }],
         }
     z = np.load(path, allow_pickle=False)
     arrays = []
@@ -152,7 +155,7 @@ def numpy_profile(path: Path, ext: str) -> dict:
                 "dtype": str(arr.dtype),
                 "elementCount": int(arr.size),
                 "semanticNameMarkers": schema_markers([name]),
-                "rawValuesEmitted": False
+                "rawValuesEmitted": False,
             })
     finally:
         z.close()
@@ -195,23 +198,135 @@ def inspect_member(extracted: Path, ext: str) -> dict | None:
     return None
 
 
+def retrieval_candidates(url: str) -> list[str]:
+    suffix = "&" if "?" in url else "?"
+    candidates = [url, f"{url}{suffix}download=1", f"{url}{suffix}download=true"]
+    return list(dict.fromkeys(candidates))
+
+
+def retrieve_archive(src: dict, work: Path) -> tuple[Path | None, list[dict]]:
+    """Retrieve a valid ZIP or return aggregate-only diagnostics.
+
+    No response bodies or raw file values are included in diagnostics.
+    """
+    jar = http.cookiejar.CookieJar()
+    opener = urllib.request.build_opener(urllib.request.HTTPCookieProcessor(jar))
+    browser_headers = {
+        "User-Agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 MouldMaster/1.0",
+        "Accept": "application/zip, application/octet-stream;q=0.9, */*;q=0.5",
+        "Referer": src["recordUrl"],
+    }
+
+    # Establish repository session/cookies where the publication server uses them.
+    try:
+        landing_req = urllib.request.Request(src["recordUrl"], headers=browser_headers)
+        with opener.open(landing_req, timeout=60) as landing:
+            landing.read(1)
+    except Exception:
+        pass
+
+    attempts = []
+    for index, url in enumerate(retrieval_candidates(src["downloadUrl"]), 1):
+        target = work / f"download-attempt-{index}.bin"
+        rec = {"url": url, "rawResponseBodyEmitted": False}
+        try:
+            req = urllib.request.Request(url, headers=browser_headers)
+            with opener.open(req, timeout=180) as response, target.open("wb") as out:
+                rec.update({
+                    "httpStatus": int(getattr(response, "status", 200) or 200),
+                    "finalUrl": response.geturl(),
+                    "contentType": response.headers.get("Content-Type"),
+                    "contentLengthHeader": response.headers.get("Content-Length"),
+                    "contentDisposition": response.headers.get("Content-Disposition"),
+                })
+                shutil.copyfileobj(response, out)
+            rec["sizeBytes"] = int(target.stat().st_size)
+            rec["sha256"] = sha256_file(target)
+            with target.open("rb") as fh:
+                signature = fh.read(4)
+            rec["zipSignatureMatch"] = signature in {b"PK\x03\x04", b"PK\x05\x06", b"PK\x07\x08"}
+            rec["zipStructureValid"] = bool(zipfile.is_zipfile(target))
+            attempts.append(rec)
+            if rec["zipStructureValid"]:
+                archive = work / src["publisherFileName"]
+                target.replace(archive)
+                return archive, attempts
+        except urllib.error.HTTPError as exc:
+            rec.update({
+                "httpStatus": int(exc.code),
+                "errorType": type(exc).__name__,
+                "contentType": exc.headers.get("Content-Type") if exc.headers else None,
+                "zipSignatureMatch": False,
+                "zipStructureValid": False,
+            })
+            attempts.append(rec)
+        except Exception as exc:
+            rec.update({
+                "errorType": type(exc).__name__,
+                "zipSignatureMatch": False,
+                "zipStructureValid": False,
+            })
+            attempts.append(rec)
+        finally:
+            target.unlink(missing_ok=True)
+    return None, attempts
+
+
+def blocked_result(contract: dict, retrieved_date: str, attempts: list[dict]) -> dict:
+    src = contract["source"]
+    return {
+        "schema_version": 1,
+        "status": "retrieval-blocked-non-archive-response",
+        "retrieved_date": retrieved_date,
+        "source": {
+            "datasetId": contract["datasetId"],
+            "datasetDoi": src["datasetDoi"],
+            "recordUrl": src["recordUrl"],
+            "downloadUrl": src["downloadUrl"],
+            "publisherFileName": src["publisherFileName"],
+            "license": src["license"],
+            "licenseEvidenceUrl": src["licenseEvidenceUrl"],
+            "peerReviewedCompanion": src["peerReviewedCompanion"],
+            "retrievalAttempts": attempts,
+        },
+        "archiveProfile": None,
+        "acceptance": {
+            "stage1ProfileComplete": False,
+            "countsAsFullyProfiledMeasuredDataset": False,
+            "acceptedMeasuredTimeSeriesSamples": 0,
+            "reason": "The authoritative download endpoint did not deliver a structurally valid ZIP in this execution environment; no source data were accepted.",
+        },
+        "retrieval": {
+            "rawPublisherArchiveCommitted": False,
+            "rawPublisherFilesCommitted": False,
+            "rawRowsOrArraysUploadedAsArtifact": False,
+            "rawResponseBodiesUploadedAsArtifact": False,
+        },
+        "experimentContext": contract["experimentContext"],
+        "evidenceBoundary": contract["evidenceBoundary"],
+    }
+
+
 def run(output: Path, retrieved_date: str) -> dict:
     contract = json.loads(CONTRACT.read_text(encoding="utf-8"))
     src = contract["source"]
     work = Path(tempfile.mkdtemp(prefix="mouldmaster-rwth-pcr-"))
     try:
-        archive = work / src["publisherFileName"]
-        req = urllib.request.Request(src["downloadUrl"], headers={"User-Agent": "MouldMaster measured-data profiler/1"})
-        with urllib.request.urlopen(req, timeout=180) as response, archive.open("wb") as out:
-            shutil.copyfileobj(response, out)
+        archive, attempts = retrieve_archive(src, work)
+        if archive is None:
+            result = blocked_result(contract, retrieved_date, attempts)
+            output.parent.mkdir(parents=True, exist_ok=True)
+            output.write_text(json.dumps(result, indent=2) + "\n", encoding="utf-8")
+            return result
+
         archive_size = archive.stat().st_size
         archive_sha = sha256_file(archive)
-
         members = []
         type_counts = Counter()
         data_members = 0
         total_uncompressed = 0
         unsafe = []
+
         with zipfile.ZipFile(archive, "r") as zf:
             infos = zf.infolist()
             for info in infos:
@@ -237,7 +352,7 @@ def run(output: Path, retrieved_date: str) -> dict:
                     "crc32": f"{info.CRC:08x}",
                     "sha256": digest,
                     "supportedForSchemaProfile": ext in SUPPORTED,
-                    "rawValuesEmitted": False
+                    "rawValuesEmitted": False,
                 }
                 if ext in SUPPORTED:
                     data_members += 1
@@ -249,9 +364,9 @@ def run(output: Path, retrieved_date: str) -> dict:
                 members.append(rec)
 
         observed_names = []
-        for m in members:
-            observed_names.append(m["name"])
-            sp = m.get("schemaProfile") or {}
+        for member in members:
+            observed_names.append(member["name"])
+            sp = member.get("schemaProfile") or {}
             for table in sp.get("tables") or []:
                 observed_names.extend([table.get("name", ""), *(table.get("headers") or [])])
             for var in sp.get("variables") or []:
@@ -275,7 +390,8 @@ def run(output: Path, retrieved_date: str) -> dict:
                 "licenseEvidenceUrl": src["licenseEvidenceUrl"],
                 "peerReviewedCompanion": src["peerReviewedCompanion"],
                 "sizeBytes": archive_size,
-                "sha256": archive_sha
+                "sha256": archive_sha,
+                "retrievalAttempts": attempts,
             },
             "archiveProfile": {
                 "nonDirectoryMembers": len(members),
@@ -285,21 +401,22 @@ def run(output: Path, retrieved_date: str) -> dict:
                 "allArchivePathsSafe": True,
                 "semanticNameMarkersObserved": schema_markers(observed_names),
                 "members": members,
-                "rawRowsOrCellValuesEmitted": False
+                "rawRowsOrCellValuesEmitted": False,
             },
             "acceptance": {
                 "stage1ProfileComplete": len(members) > 0 and all(len(m["sha256"]) == 64 for m in members),
                 "countsAsFullyProfiledMeasuredDataset": False,
                 "acceptedMeasuredTimeSeriesSamples": 0,
-                "reason": "Stage 1 deliberately stops before measurement-semantic and time-basis acceptance."
+                "reason": "Stage 1 deliberately stops before measurement-semantic and time-basis acceptance.",
             },
             "retrieval": {
                 "rawPublisherArchiveCommitted": False,
                 "rawPublisherFilesCommitted": False,
-                "rawRowsOrArraysUploadedAsArtifact": False
+                "rawRowsOrArraysUploadedAsArtifact": False,
+                "rawResponseBodiesUploadedAsArtifact": False,
             },
             "experimentContext": contract["experimentContext"],
-            "evidenceBoundary": contract["evidenceBoundary"]
+            "evidenceBoundary": contract["evidenceBoundary"],
         }
         output.parent.mkdir(parents=True, exist_ok=True)
         output.write_text(json.dumps(result, indent=2) + "\n", encoding="utf-8")
@@ -314,15 +431,22 @@ def main():
     ap.add_argument("--retrieved-date", required=True)
     args = ap.parse_args()
     result = run(args.output, args.retrieved_date)
-    print(json.dumps({
+    summary = {
         "status": result["status"],
-        "archiveSha256": result["source"]["sha256"],
-        "nonDirectoryMembers": result["archiveProfile"]["nonDirectoryMembers"],
-        "supportedDataMembers": result["archiveProfile"]["supportedDataMembers"],
-        "fileTypeCounts": result["archiveProfile"]["fileTypeCounts"],
-        "semanticNameMarkersObserved": result["archiveProfile"]["semanticNameMarkersObserved"],
-        "acceptedMeasuredTimeSeriesSamples": result["acceptance"]["acceptedMeasuredTimeSeriesSamples"]
-    }, indent=2))
+        "stage1ProfileComplete": result["acceptance"]["stage1ProfileComplete"],
+        "countsAsFullyProfiledMeasuredDataset": result["acceptance"]["countsAsFullyProfiledMeasuredDataset"],
+        "acceptedMeasuredTimeSeriesSamples": result["acceptance"]["acceptedMeasuredTimeSeriesSamples"],
+        "retrievalAttempts": len(result["source"].get("retrievalAttempts") or []),
+    }
+    if result.get("archiveProfile"):
+        summary.update({
+            "archiveSha256": result["source"]["sha256"],
+            "nonDirectoryMembers": result["archiveProfile"]["nonDirectoryMembers"],
+            "supportedDataMembers": result["archiveProfile"]["supportedDataMembers"],
+            "fileTypeCounts": result["archiveProfile"]["fileTypeCounts"],
+            "semanticNameMarkersObserved": result["archiveProfile"]["semanticNameMarkersObserved"],
+        })
+    print(json.dumps(summary, indent=2))
 
 
 if __name__ == "__main__":
