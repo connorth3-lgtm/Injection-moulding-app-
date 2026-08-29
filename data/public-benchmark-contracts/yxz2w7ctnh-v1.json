@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "datasetId": "mendeley-yxz2w7ctnh-v1",
-  "status": "stage2-schema-candidate",
+  "status": "stage3-route-coordinate-candidate",
   "source": {
     "datasetPage": "https://data.mendeley.com/datasets/yxz2w7ctnh/1",
     "datasetDoi": "10.17632/yxz2w7ctnh.1",
@@ -26,15 +26,26 @@
     ],
     "excludedEnergyFile": {"id":"ff9cce79-7132-4375-956a-4b4948635cdc","filename":"data_energy_3d_print_d_ryan.xlsx","sizeBytes":20156,"sha256":"378f371f7d3b2a31902d59e4d654b8de3a7be6d057ba73dc8f1bd819b9cfcda0"}
   },
-  "stage2Rules": {
-    "retrieveOnlyThreeMechanicalFiles": true,
+  "stage2Evidence": {
+    "sourceRunId": 33236037196,
+    "allPublisherHashesMatched": true,
+    "canonicalTestSheets": {
+      "bending": {"file":"data_3pbending_3d_print_d_ryan.xlsx","sheets":["bending_PLA","bending_ABS"]},
+      "tensile": {"file":"data_tensile_3d_print_d_ryan.xlsx","sheets":["tensile_PLA","tensile_ABS"]},
+      "impact": {"file":"data_impact_3d_print_d_ryan.xlsx","sheets":["impact_PLA","impact_ABS"]}
+    },
+    "duplicateSheetsExcludedFromImpactWorkbook": ["tensile_PLA","tensile_ABS","bending_PLA","bending_ABS"],
+    "energySheetsExcludedFromImpactWorkbook": ["energy_PLA","energy_ABS","energy_test samples"]
+  },
+  "stage3Rules": {
+    "useCanonicalSheetsOnly": true,
+    "duplicateEmbeddedSheetsMustNotDoubleCount": true,
+    "mapTextCellCoordinatesBeforeNumericCounting": true,
+    "injectionAndFdmRegionsMustBeSeparated": true,
     "publisherSha256MustMatch": true,
-    "energyWorkbookMustNotBeRetrieved": true,
-    "emitTextLabelsAndAggregateCellCountsOnly": true,
     "rawNumericValuesMustNotBeEmitted": true,
-    "routeMustBeResolvedBeforeMeasurementCounting": true,
     "countsAsFullyProfiledMeasuredDataset": false,
     "acceptedInjectionProcessTimeSeriesSamples": 0
   },
-  "evidenceBoundary": "Stage 2 may temporarily retrieve only the three mechanical-test workbooks and verify their exact publisher hashes. It may emit sheet names, text labels and aggregate cell/formula counts, but no numeric measurement values. Injection-moulded ABS/PLA subsets must be distinguished from FDM before acceptance. The energy workbook remains excluded."
+  "evidenceBoundary": "Stage 3 maps route labels and workbook coordinates on one canonical workbook/sheet per mechanical-test family. Duplicated bending/tensile sheets embedded in the impact workbook and all energy sheets are excluded. No numeric measurement values are emitted or accepted until injection-moulded regions are unambiguously separated from FDM regions."
 }
