@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "datasetId": "impure-pascoe-2022",
-  "status": "blocked-rights-review",
+  "status": "queued-executable-rate-limited",
   "source": {
     "datasetDoi": "10.5281/zenodo.6913660",
     "recordUrl": "https://zenodo.org/records/6913660",
@@ -11,10 +11,10 @@
     "recordModified": "2022-07-28",
     "access": "open",
     "descriptionAccessStatement": "ImPure project, open access data from PASCOE IM line.",
-    "license": null,
-    "licenseEvidenceStatus": "no explicit dataset licence identifier or licence text was rendered on the authoritative record page during review; the description's open-access statement is not widened into an inferred redistribution licence",
-    "automatedRetrievalAllowed": false,
-    "rawRedistributionAllowed": false,
+    "license": "CC BY 4.0",
+    "licenseEvidenceStatus": "official Zenodo records API metadata.license.id returned cc-by-4.0 on 2026-08-29",
+    "automatedRetrievalAllowed": true,
+    "rawRedistributionAllowed": true,
     "publisherFilesTotalMB": 18.7,
     "zenodoDownloadTrafficDataVolumeMB": 605.2,
     "dataVolumeInterpretation": "18.7 MB is the current publisher file-set size; 605.2 MB is Zenodo cumulative download traffic and must not be treated as dataset size"
@@ -31,22 +31,16 @@
     ],
     "publisherProvidesPerFileMd5": true,
     "cycleCount": null,
-    "cycleCountBoundary": "do not infer the count from highest visible cycle number because the delivered sequence contains gaps; enumerate the manifest after rights clearance"
+    "cycleCountBoundary": "do not infer the count from highest visible cycle number because the delivered sequence contains gaps; enumerate the authoritative manifest during profiling"
   },
-  "rightsGate": {
-    "publicDownloadDoesNotEqualReusePermission": true,
-    "openAccessDescriptionDoesNotEqualSpecificReuseLicenceEvidence": true,
-    "zenodoPublicFileLicenceRequirementRecorded": true,
-    "zenodoDefaultLicenceNotAssumedForThisRecord": true,
-    "metadataMayBeReviewedWithoutRawFileIngestion": true,
-    "rawFilesMustNotBeDownloadedByAutomationUntilLicenceIsExplicit": true,
-    "requiredEvidence": [
-      "Capture the exact licence identifier or licence text attached to Zenodo record 6913660, or equivalent explicit depositor terms.",
-      "Confirm the terms permit automated retrieval and aggregate profiling.",
-      "Pin the complete publisher manifest and checksums before raw retrieval."
-    ]
+  "licenseVerification": {
+    "authority": "Zenodo records API",
+    "metadataPath": "metadata.license.id",
+    "value": "cc-by-4.0",
+    "verifiedOn": "2026-08-29",
+    "retrievalState": "initial bulk request received HTTP 429; retry remains queued"
   },
-  "profilingPlanAfterRightsClearance": [
+  "profilingPlan": [
     "Enumerate every delivered cycle CSV and supporting trial/label file from the authoritative manifest; do not infer cycle count from numeric filenames.",
     "Verify publisher MD5 values and compute SHA-256 fingerprints without committing raw files.",
     "Profile one schema family at a time and determine whether all cycle CSVs share headers, units, row counts and time bases.",
@@ -55,5 +49,6 @@
     "Count measured time-series values only from delivered direct-measurement columns with established ordering/time semantics.",
     "Emit aggregate schemas, cycle counts and fingerprints only; never upload raw third-party rows or arrays as workflow artifacts."
   ],
-  "evidenceBoundary": "The Zenodo record is a real PASCOE injection-moulding trial and exposes many cycle-specific CSVs plus trial/stage label tables with per-file MD5 checksums. The page describes the data as open access, but the specific deposited dataset licence was not rendered during review, so MouldMaster does not translate that phrase or Zenodo's default into a record-specific reuse licence. The current publisher file set is 18.7 MB; the displayed 605.2 MB Data volume is cumulative Zenodo download traffic, not source-file size. Automated raw retrieval and promotion remain blocked until exact reuse terms are captured."
+  "evidenceBoundary": "The Zenodo record is a real PASCOE injection-moulding trial and exposes many cycle-specific CSVs plus trial/stage label tables with per-file MD5 checksums. The official Zenodo records API confirms CC BY 4.0, so automated retrieval and aggregate profiling are permitted. The current publisher file set is 18.7 MB; the displayed 605.2 MB Data volume is cumulative Zenodo download traffic, not source-file size. Profiling remains queued after the initial bulk request received HTTP 429; no cycle or measured-value total is accepted until the complete manifest is retrieved and validated."
 }
+
