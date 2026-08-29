@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
-"""Aggregate validation for locale-formatted ENGEL actual-temperature channels.
+"""Aggregate validation for locale-formatted ENGEL machine temperature channels.
 
-This intentionally emits no row-level values. It verifies the pinned FORinFPRO
-machine CSV, parses decimal-comma numeric formatting, and summarizes only the
-delivered columns whose source names end in `.rActualTemp`.
+This intentionally emits no row-level values or absolute timestamps. It verifies
+the pinned FORinFPRO machine CSV, parses the delivered date/time coordinate and
+German decimal-comma numeric formatting, and summarizes only the source-named
+`.rActualTemp` candidate channels.
 """
 
 from __future__ import annotations
@@ -16,6 +17,7 @@ import math
 import statistics
 import tempfile
 import urllib.request
+from datetime import datetime
 from pathlib import Path
 
 RECORD_ID = 20744054
@@ -23,6 +25,7 @@ NAME = "cycle_001_machine_data.csv"
 URL = f"https://zenodo.org/records/{RECORD_ID}/files/{NAME}?download=1"
 EXPECTED_SHA256 = "d249cbe4980b00f1565a100c3363dde4cf621c490233a4c184d47ad8d202e480"
 EXPECTED_ROWS = 10132
+TIME_HEADER = "Datum/Zeit"
 
 
 def sha256_file(path: Path) -> str:
@@ -37,8 +40,6 @@ def parse_locale_number(value: str):
     text = value.strip().replace("\u00a0", "")
     if not text:
         return None
-    # The delivered machine CSV is semicolon-delimited and uses German-style
-    # decimal commas. Do not attempt ambiguous thousands-separator rewriting.
     if text.count(",") == 1 and "." not in text:
         text = text.replace(",", ".")
     try:
@@ -46,6 +47,31 @@ def parse_locale_number(value: str):
     except ValueError:
         return None
     return x if math.isfinite(x) else None
+
+
+def parse_delivered_datetime(value: str):
+    text = value.strip()
+    if not text:
+        return None, None
+    formats = [
+        "%d.%m.%Y %H:%M:%S.%f",
+        "%d.%m.%Y %H:%M:%S,%f",
+        "%d.%m.%Y %H:%M:%S",
+        "%Y-%m-%d %H:%M:%S.%f",
+        "%Y-%m-%d %H:%M:%S,%f",
+        "%Y-%m-%d %H:%M:%S",
+        "%Y-%m-%dT%H:%M:%S.%f",
+        "%Y-%m-%dT%H:%M:%S",
+    ]
+    for fmt in formats:
+        try:
+            return datetime.strptime(text, fmt), fmt
+        except ValueError:
+            pass
+    try:
+        return datetime.fromisoformat(text.replace("Z", "+00:00")), "isoformat"
+    except ValueError:
+        return None, None
 
 
 def run(output: Path) -> dict:
@@ -66,9 +92,15 @@ def run(output: Path) -> dict:
         with target.open("r", encoding="utf-8-sig", newline="") as fh:
             reader = csv.reader(fh, delimiter=";")
             headers = next(reader)
+            if TIME_HEADER not in headers:
+                raise AssertionError(f"missing delivered time header: {TIME_HEADER}")
+            time_index = headers.index(TIME_HEADER)
             candidates = [i for i, h in enumerate(headers) if h.strip().endswith(".rActualTemp")]
             values = {i: [] for i in candidates}
             non_empty = {i: 0 for i in candidates}
+            parsed_times = []
+            time_formats = set()
+            time_non_empty = 0
             rows = 0
             width_mismatch = 0
             for row in reader:
@@ -79,6 +111,13 @@ def run(output: Path) -> dict:
                         row = row + [""] * (len(headers) - len(row))
                     else:
                         row = row[:len(headers)]
+                time_text = row[time_index].strip()
+                if time_text:
+                    time_non_empty += 1
+                    dt, fmt = parse_delivered_datetime(time_text)
+                    if dt is not None:
+                        parsed_times.append(dt)
+                        time_formats.add(fmt)
                 for i in candidates:
                     text = row[i].strip()
                     if not text:
@@ -107,8 +146,26 @@ def run(output: Path) -> dict:
                 "rawValuesEmitted": False,
             })
 
+        time_deltas = []
+        if len(parsed_times) >= 2:
+            time_deltas = [(b - a).total_seconds() for a, b in zip(parsed_times, parsed_times[1:])]
+        positive_time_deltas = [x for x in time_deltas if x > 0]
+        time_profile = {
+            "header": TIME_HEADER,
+            "nonEmptyCount": time_non_empty,
+            "parsedCount": len(parsed_times),
+            "parseFormatsObserved": sorted(time_formats),
+            "absoluteTimestampsEmitted": False,
+            "strictlyIncreasing": bool(time_deltas) and all(x > 0 for x in time_deltas),
+            "nonDecreasing": bool(time_deltas) and all(x >= 0 for x in time_deltas),
+            "positiveDeltaCount": len(positive_time_deltas),
+            "medianPositiveDeltaSeconds": statistics.median(positive_time_deltas) if positive_time_deltas else None,
+            "minPositiveDeltaSeconds": min(positive_time_deltas) if positive_time_deltas else None,
+            "maxPositiveDeltaSeconds": max(positive_time_deltas) if positive_time_deltas else None,
+        }
+
         result = {
-            "schema": 1,
+            "schema": 2,
             "status": "aggregate-actual-temperature-validation-complete",
             "source": {
                 "datasetId": "forinfpro-himd-v1",
@@ -121,6 +178,7 @@ def run(output: Path) -> dict:
                 "rows": rows,
                 "deliveredColumns": len(headers),
                 "widthMismatchRows": width_mismatch,
+                "timeOrdering": time_profile,
                 "actualTemperatureCandidateColumns": len(candidates),
                 "allCandidatesCompleteLocalizedNumericTraces": all(x["completeLocalizedNumericTrace"] for x in profiles),
                 "candidateProfiles": profiles,
@@ -147,7 +205,8 @@ def main() -> int:
     x = run(args.output)
     print(
         f"FORinFPRO actual-temperature validation complete: "
-        f"{x['profile']['actualTemperatureCandidateColumns']} complete candidate channels"
+        f"{x['profile']['actualTemperatureCandidateColumns']} complete candidate channels; "
+        f"{x['profile']['timeOrdering']['parsedCount']} timestamps parsed"
     )
     return 0
 
