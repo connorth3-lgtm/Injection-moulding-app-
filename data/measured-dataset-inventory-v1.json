@@ -349,7 +349,7 @@
       "datasetId": "cross-process-chain-17240390",
       "title": "Cross-process-chain dataset archive: injection molding and screw driving",
       "source": "https://doi.org/10.5281/zenodo.17240390",
-      "accessState": "public-open-partially-accepted-lower-upper-units-unresolved",
+      "accessState": "public-open-profiled-scope-limited",
       "license": "CC BY 4.0",
       "licenseEvidence": "official Zenodo records API metadata.license.id = cc-by-4.0",
       "automatedIngestionAllowed": true,
