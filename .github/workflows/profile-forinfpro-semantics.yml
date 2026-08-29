@@ -1,0 +1,73 @@
+name: MouldMaster FORinFPRO Semantic Probe
+
+on:
+  push:
+    branches: [data/resolve-forinfpro-semantics]
+    paths:
+      - 'tools/profile_forinfpro_semantics.py'
+      - '.github/workflows/profile-forinfpro-semantics.yml'
+  pull_request:
+    branches: [main]
+    paths:
+      - 'tools/profile_forinfpro_semantics.py'
+      - '.github/workflows/profile-forinfpro-semantics.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: mouldmaster-forinfpro-semantic-probe-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  aggregate-probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Retrieve exact licensed release and compute aggregate semantic statistics
+        run: |
+          mkdir -p benchmark-results
+          python tools/profile_forinfpro_semantics.py --output benchmark-results/forinfpro-semantic-probe.json
+      - name: Validate privacy and counting boundary
+        run: |
+          python - <<'PY'
+          import json
+          x=json.load(open('benchmark-results/forinfpro-semantic-probe.json'))
+          assert x['status']=='aggregate-semantic-probe-complete'
+          assert x['source']['datasetId']=='forinfpro-himd-v1'
+          assert x['source']['doi']=='10.5281/zenodo.20744054'
+          assert x['source']['license']=='CC BY 4.0'
+          assert x['source']['expectedFilesVerified']==3
+          assert x['summary']['filesVerified']==3
+          assert x['summary']['totalRows']==12689
+          assert x['summary']['machineNamedColumns']==60
+          assert x['summary']['rawRowsOrCellValuesEmitted'] is False
+          assert x['summary']['rawPublisherFilesCommitted'] is False
+          assert x['summary']['rawPublisherFilesUploadedAsArtifact'] is False
+          assert x['interpretationBoundary']['automaticPromotion'] is False
+          assert x['interpretationBoundary']['acceptedMeasuredTimeSeriesSamples']==0
+          expected={
+              'cycle_001_machine_data.csv': (10132, 101),
+              'cycle_001_pt.csv': (403, 3),
+              'cycle_001_us_rms.csv': (2154, 3),
+          }
+          for f in x['files']:
+              rows, cols = expected[f['name']]
+              assert f['profile']['rows']==rows
+              assert f['profile']['columns']==cols
+              assert f['profile']['widthMismatchRows']==0
+              assert f['profile']['rawRowsOrCellValuesEmitted'] is False
+              assert len(f['sha256'])==64
+          PY
+      - name: Upload aggregate semantic profile only
+        uses: actions/upload-artifact@v4
+        with:
+          name: mouldmaster-forinfpro-semantic-probe
+          path: benchmark-results/forinfpro-semantic-probe.json
+          if-no-files-found: error
+          retention-days: 30
