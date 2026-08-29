@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import argparse
+import datetime as dt
 import hashlib
 import io
 import json
@@ -59,45 +60,164 @@ def safe_text(value):
     text = " ".join(value.strip().split())
     if not text or len(text) > 120 or not re.search(r"[A-Za-z]", text):
         return None
-    # Avoid emitting strings that are effectively raw numeric measurements.
     if re.fullmatch(r"[-+0-9.,Ee% /]+", text):
         return None
     return text
 
 
+def value_token(value):
+    if isinstance(value, dt.datetime):
+        return value.isoformat()
+    if isinstance(value, dt.date):
+        return value.isoformat()
+    return repr(value)
+
+
+def sheet_content_sha256(ws):
+    h = hashlib.sha256()
+    for row in ws.iter_rows():
+        for cell in row:
+            if cell.value is None:
+                continue
+            h.update(cell.coordinate.encode())
+            h.update(b"\0")
+            h.update(str(cell.data_type).encode())
+            h.update(b"\0")
+            h.update(value_token(cell.value).encode("utf-8", "replace"))
+            h.update(b"\n")
+    return h.hexdigest()
+
+
+def rich_text(title_obj):
+    try:
+        paras = title_obj.tx.rich.p
+        pieces = []
+        for p in paras:
+            for r in getattr(p, "r", []) or []:
+                if getattr(r, "t", None):
+                    pieces.append(r.t)
+            if getattr(p, "endParaRPr", None) is not None and getattr(p, "t", None):
+                pieces.append(p.t)
+        text = " ".join(str(x).strip() for x in pieces if str(x).strip())
+        return text or None
+    except Exception:
+        return None
+
+
+def title_text(obj):
+    if obj is None:
+        return None
+    direct = rich_text(obj)
+    if direct:
+        return direct
+    try:
+        if obj.tx and obj.tx.strRef and obj.tx.strRef.f:
+            return obj.tx.strRef.f
+    except Exception:
+        pass
+    return None
+
+
+def series_ref(ser, attr):
+    try:
+        obj = getattr(ser, attr, None)
+        if obj is None:
+            return None
+        num = getattr(obj, "numRef", None)
+        if num is not None and getattr(num, "f", None):
+            return num.f
+        st = getattr(obj, "strRef", None)
+        if st is not None and getattr(st, "f", None):
+            return st.f
+    except Exception:
+        pass
+    return None
+
+
+def chart_profile(ws):
+    out = []
+    for chart in getattr(ws, "_charts", []) or []:
+        series = []
+        for ser in getattr(chart, "ser", []) or []:
+            title = None
+            try:
+                tx = getattr(ser, "tx", None)
+                if tx is not None:
+                    if getattr(tx, "v", None):
+                        title = tx.v
+                    elif getattr(tx, "strRef", None) is not None:
+                        title = getattr(tx.strRef, "f", None)
+            except Exception:
+                pass
+            series.append({
+                "titleOrReference": title,
+                "valuesReference": series_ref(ser, "val") or series_ref(ser, "yVal"),
+                "categoriesReference": series_ref(ser, "cat") or series_ref(ser, "xVal"),
+            })
+        out.append({
+            "type": type(chart).__name__,
+            "title": title_text(getattr(chart, "title", None)),
+            "xAxisTitle": title_text(getattr(getattr(chart, "x_axis", None), "title", None)),
+            "yAxisTitle": title_text(getattr(getattr(chart, "y_axis", None), "title", None)),
+            "series": series,
+        })
+    return out
+
+
 def profile_workbook(data: bytes):
-    wb = load_workbook(io.BytesIO(data), read_only=True, data_only=False)
+    wb = load_workbook(io.BytesIO(data), read_only=False, data_only=False)
     sheets = []
     for ws in wb.worksheets:
         nonempty = numeric = formulas = strings = booleans = dates = 0
         text_labels = []
         seen = set()
         first_text_cells = []
-        for row in ws.iter_rows():
-            for cell in row:
+        formula_cells = []
+        row_profiles = []
+        for row_idx in range(1, ws.max_row + 1):
+            row_numeric = row_formula = row_string = 0
+            row_labels = []
+            for cell in ws[row_idx]:
                 v = cell.value
                 if v is None:
                     continue
                 nonempty += 1
                 if cell.data_type == "f":
                     formulas += 1
+                    row_formula += 1
+                    if len(formula_cells) < 150:
+                        formula_cells.append({"coordinate": cell.coordinate, "formula": str(v)[:160]})
                     continue
                 if isinstance(v, bool):
                     booleans += 1
                 elif isinstance(v, (int, float)):
                     numeric += 1
+                    row_numeric += 1
                 elif getattr(cell, "is_date", False):
                     dates += 1
                 elif isinstance(v, str):
                     strings += 1
+                    row_string += 1
                     t = safe_text(v)
-                    if t and t not in seen and len(text_labels) < 120:
-                        seen.add(t)
-                        text_labels.append(t)
-                        if len(first_text_cells) < 80:
+                    if t:
+                        if t not in seen and len(text_labels) < 160:
+                            seen.add(t)
+                            text_labels.append(t)
+                        if len(first_text_cells) < 120:
                             first_text_cells.append({"coordinate": cell.coordinate, "text": t})
+                        if len(row_labels) < 12:
+                            row_labels.append({"coordinate": cell.coordinate, "text": t})
+            if row_numeric or row_formula or row_string:
+                row_profiles.append({
+                    "row": row_idx,
+                    "numericConstantCells": row_numeric,
+                    "formulaCells": row_formula,
+                    "stringCells": row_string,
+                    "textLabels": row_labels,
+                })
         sheets.append({
             "sheet": ws.title,
+            "sheetContentSha256": sheet_content_sha256(ws),
             "maxRow": ws.max_row,
             "maxColumn": ws.max_column,
             "nonEmptyCells": nonempty,
@@ -108,6 +228,9 @@ def profile_workbook(data: bytes):
             "dateCells": dates,
             "textLabels": text_labels,
             "firstTextCells": first_text_cells,
+            "rowTypeProfiles": row_profiles,
+            "formulaCoordinatesAndExpressions": formula_cells,
+            "charts": chart_profile(ws),
             "rawNumericValuesEmitted": False,
         })
     return sheets
@@ -165,7 +288,7 @@ def main():
             "acceptedMeasuredTimeSeriesSamples": 0,
         })
     result = {
-        "schema": 1,
+        "schema": 2,
         "status": "retrieved-workbook-layouts-needing-semantic-review",
         "retrievedDate": args.retrieved_date,
         "sources": selected,
@@ -177,7 +300,7 @@ def main():
             "rawPublisherFilesCommitted": False,
             "rawRowsOrNumericValuesEmitted": False,
         },
-        "evidenceBoundary": "Exact CC BY 4.0 publisher workbooks are temporarily retrieved and SHA-verified. Only workbook structure, text labels, cell-type counts and fingerprints are emitted. Numeric measurement values and raw files are not retained. Acceptance requires a separate source-specific semantic mapping."
+        "evidenceBoundary": "Exact CC BY 4.0 publisher workbooks are temporarily retrieved and SHA-verified. Only workbook structure, safe text labels, cell-type/row counts, formulas, chart references and cryptographic fingerprints are emitted. Raw numeric measurements and source files are not retained. Worksheet content hashes are used only to detect duplicate sheets. Acceptance requires a source-specific semantic mapping."
     }
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_text(json.dumps(result, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
