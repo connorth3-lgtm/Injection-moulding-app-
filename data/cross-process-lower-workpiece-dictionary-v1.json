@@ -1,0 +1,101 @@
+{
+  "schema": 1,
+  "version": "2026.08.29.1",
+  "reviewed": "2026-08-29",
+  "datasetId": "cross-process-chain-17240390",
+  "scope": "lower-workpiece injection-moulding TXT time series only",
+  "sources": {
+    "dataset": "https://doi.org/10.5281/zenodo.17240390",
+    "authorAnalysisRepository": "https://github.com/nikolaiwest/cpc-data",
+    "authorParser": "https://github.com/nikolaiwest/cpc-data/blob/main/schema/recordings/injection_molding.py",
+    "checkedInSourceExample": "https://github.com/nikolaiwest/cpc-data/blob/main/data/injection_molding/lower_workpiece/serial_data/lower_workpiece_cycle_00002.txt",
+    "processingConfiguration": "https://github.com/nikolaiwest/cpc-data/blob/main/settings/processing.yml"
+  },
+  "format": {
+    "encodingPolicy": "UTF-8 with replacement only for non-semantic preamble text; structural markers, units, labels and signal codes must match exactly before values are accepted",
+    "delimiter": ";",
+    "preamble": "semicolon-delimited key/value metadata before the column-description section",
+    "columnDescriptionMarker": "-column description-",
+    "dataStartMarker": "-start data-",
+    "declaredSignals": 4,
+    "expectedUnitsRow": ["s", "bar", "bar", "cm³", "cm³/s"],
+    "expectedSourceLabels": ["time", "Einspritzdruck, Soll", "Einspritzdruck, Ist", "Schneckenvolumen, Ist", "Einspritzstrom, Ist"],
+    "expectedSignalCodes": ["", "p3001S", "p3001I", "V3001I", "Q3001I"],
+    "numericColumns": 5
+  },
+  "channels": [
+    {
+      "column": 1,
+      "canonicalName": "time",
+      "sourceLabel": "time",
+      "signalCode": null,
+      "meaning": "elapsed cycle time",
+      "role": "time-basis",
+      "unit": "s",
+      "acceptedMeasuredValue": false
+    },
+    {
+      "column": 2,
+      "canonicalName": "injection_pressure_target",
+      "sourceLabel": "Einspritzdruck, Soll",
+      "signalCode": "p3001S",
+      "meaning": "injection pressure target/command",
+      "role": "command-target",
+      "unit": "bar",
+      "acceptedMeasuredValue": false
+    },
+    {
+      "column": 3,
+      "canonicalName": "injection_pressure_actual",
+      "sourceLabel": "Einspritzdruck, Ist",
+      "signalCode": "p3001I",
+      "meaning": "injection pressure actual machine signal",
+      "role": "actual-signal",
+      "unit": "bar",
+      "acceptedMeasuredValue": true
+    },
+    {
+      "column": 4,
+      "canonicalName": "screw_volume_actual",
+      "sourceLabel": "Schneckenvolumen, Ist",
+      "signalCode": "V3001I",
+      "meaning": "screw volume actual machine signal",
+      "role": "actual-signal",
+      "unit": "cm³",
+      "acceptedMeasuredValue": true
+    },
+    {
+      "column": 5,
+      "canonicalName": "injection_flow_actual",
+      "sourceLabel": "Einspritzstrom, Ist",
+      "signalCode": "Q3001I",
+      "meaning": "actual volumetric injection-flow signal",
+      "role": "actual-signal",
+      "unit": "cm³/s",
+      "acceptedMeasuredValue": true,
+      "semanticCorrection": "The author analysis wrapper normalizes this fifth lower-workpiece field under the key injection_velocity, but the source TXT label and unit define volumetric injection flow. MouldMaster preserves the source-native meaning rather than relabelling cm³/s as linear velocity."
+    }
+  ],
+  "sampling": {
+    "sourceHeaderKey": "sampling rate",
+    "acceptanceInterpretation": "Treat the per-file numeric value as the declared sample interval in seconds only when it agrees with successive values in the source time column.",
+    "frequencyDerivation": "Hz may be calculated as 1 / validated interval; no global sampling frequency is imposed across files.",
+    "discrepancy": "The Zenodo description gives an approximate injection-moulding sampling frequency of ~1 kHz and the author processing configuration comments refer to 0.01 s time steps, while the checked-in lower source example declares 0.0300 and advances its time column by 0.0300 s. Per-file source metadata plus observed time deltas therefore control acceptance."
+  },
+  "acceptance": {
+    "acceptedActualChannelsPerRow": 3,
+    "commandChannelsPerRow": 1,
+    "rules": [
+      "Both structural markers must be present in order.",
+      "The units, source labels and signal-code rows must match the source contract exactly.",
+      "Every data row must contain exactly five finite numeric fields.",
+      "Elapsed time must be strictly increasing.",
+      "Every observed time step must agree with the file-declared sampling interval within numerical tolerance.",
+      "The declared plotting-point count must equal parsed data-row count when present.",
+      "Target pressure is retained as command evidence but excluded from accepted measured-value totals.",
+      "Only source-defined actual pressure, actual screw volume and actual injection flow are counted as measured values.",
+      "Any structural, unit, label, signal-code, interval or row-width drift fails that file closed."
+    ]
+  },
+  "remainingFamilyBlocker": "Upper-workpiece CSV units are not established by this lower-workpiece contract. The cross-process family must not be claimed fully profiled solely from this partial semantic resolution."
+}
