@@ -1,0 +1,63 @@
+name: MouldMaster Public Measured Benchmark — Mendeley Wave 2 batch 3
+
+on:
+  push:
+    branches: [data/real-dataset-profiling-wave2-batch3]
+    paths:
+      - 'tools/run_public_benchmark_mendeley_wave2_batch3.py'
+      - 'qa_public_benchmark_mendeley_wave2_batch3.py'
+      - 'data/public-benchmark-contracts/mendeley-wave2-batch3-v1.json'
+      - '.github/workflows/public-benchmark-mendeley-wave2-batch3.yml'
+  pull_request:
+    branches: [data/real-dataset-profiling-wave2-batch2, data/real-dataset-profiling-wave2, main]
+    paths:
+      - 'tools/run_public_benchmark_mendeley_wave2_batch3.py'
+      - 'qa_public_benchmark_mendeley_wave2_batch3.py'
+      - 'data/public-benchmark-contracts/mendeley-wave2-batch3-v1.json'
+      - '.github/workflows/public-benchmark-mendeley-wave2-batch3.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  metadata-profile:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Validate metadata-only boundaries
+        run: python qa_public_benchmark_mendeley_wave2_batch3.py
+      - name: Profile publisher manifests without payload downloads
+        run: |
+          mkdir -p benchmark-results
+          python tools/run_public_benchmark_mendeley_wave2_batch3.py \
+            --output benchmark-results/mendeley-wave2-batch3-stage1.json \
+            --retrieved-date "$(date -u +%F)"
+      - name: Validate fail-closed batch result
+        run: |
+          python - <<'PY'
+          import json
+          x=json.load(open('benchmark-results/mendeley-wave2-batch3-stage1.json'))
+          assert x['status']=='publisher-metadata-batch-profiled'
+          assert x['summary']['sourcesReviewed']==3
+          assert x['summary']['fullyProfiledAccepted']==0
+          assert x['summary']['acceptedMeasuredTimeSeriesSamples']==0
+          assert x['summary']['rawPayloadsDownloaded'] is False
+          for s in x['sources']:
+              assert s['state'] in {'publisher-file-manifest-exposed','publisher-record-no-files-exposed'}
+              assert s['rawPayloadsDownloaded'] is False
+              assert s['countsAsFullyProfiledMeasuredDataset'] is False
+              assert s['acceptedMeasuredTimeSeriesSamples']==0
+          print(json.dumps(x['summary'], indent=2))
+          PY
+      - name: Upload aggregate metadata manifest only
+        uses: actions/upload-artifact@v4
+        with:
+          name: mouldmaster-mendeley-wave2-batch3-stage1
+          path: benchmark-results/mendeley-wave2-batch3-stage1.json
+          if-no-files-found: error
+          retention-days: 30
