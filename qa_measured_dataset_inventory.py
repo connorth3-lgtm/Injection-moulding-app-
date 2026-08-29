@@ -172,8 +172,10 @@ need(by_id['leon-process-20309380']['accessState'] == 'embargoed', 'León proces
 need(by_id['leon-defects-20322729']['accessState'] == 'embargoed', 'León defect dataset must remain embargoed')
 need('2027-12-31' in by_id['leon-process-20309380']['statusNote'], 'León process embargo end date missing')
 need('2027-12-31' in by_id['leon-defects-20322729']['statusNote'], 'León defect embargo end date missing')
-need(by_id['cross-process-chain-17240390']['count'].get('injectionCycles') is None,
-     'cross-process injection cycle count must remain unknown until archive enumeration')
+need(by_id['cross-process-chain-17240390']['count'].get('injectionCycles') == 15686,
+     'cross-process enumerated injection cycle-file count drifted')
+need(by_id['cross-process-chain-17240390']['count'].get('injectionScopeMembers') == 15688,
+     'cross-process injection scope must contain 15,686 cycle files plus two static tables')
 need('screw-driving' in (by_id['cross-process-chain-17240390']['statusNote'] + ' ' + by_id['cross-process-chain-17240390']['sampling']),
      'cross-process source must explicitly prevent downstream operations being counted as moulding cycles')
 need(by_id['foxconn-competition-16600']['accessState'] == 'public-mirror-rights-unresolved', 'Foxconn mirror rights boundary drifted')
