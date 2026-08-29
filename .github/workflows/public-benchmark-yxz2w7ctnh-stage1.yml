@@ -1,0 +1,61 @@
+name: MouldMaster Public Measured Benchmark — ABS PLA injection tests stage 1
+
+on:
+  push:
+    branches: [data/real-dataset-profiling-wave2]
+    paths:
+      - 'tools/run_public_benchmark_yxz2w7ctnh_stage1.py'
+      - 'qa_public_benchmark_yxz2w7ctnh_stage1.py'
+      - 'data/public-benchmark-contracts/yxz2w7ctnh-v1.json'
+      - '.github/workflows/public-benchmark-yxz2w7ctnh-stage1.yml'
+  pull_request:
+    branches: [data/real-dataset-profiling-wave1, main]
+    paths:
+      - 'tools/run_public_benchmark_yxz2w7ctnh_stage1.py'
+      - 'qa_public_benchmark_yxz2w7ctnh_stage1.py'
+      - 'data/public-benchmark-contracts/yxz2w7ctnh-v1.json'
+      - '.github/workflows/public-benchmark-yxz2w7ctnh-stage1.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  manifest-profile:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Validate stage-one evidence boundary
+        run: python qa_public_benchmark_yxz2w7ctnh_stage1.py
+      - name: Enumerate publisher manifest only
+        run: |
+          mkdir -p benchmark-results
+          python tools/run_public_benchmark_yxz2w7ctnh_stage1.py \
+            --output benchmark-results/yxz2w7ctnh-stage1.json \
+            --retrieved-date "$(date -u +%F)"
+      - name: Validate aggregate manifest
+        run: |
+          python - <<'PY'
+          import json
+          x=json.load(open('benchmark-results/yxz2w7ctnh-stage1.json'))
+          assert x['status'] in {'publisher-file-manifest-profiled','publisher-folder-manifest-profiled-no-files-yet'}
+          assert x['source']['datasetDoi']=='10.17632/yxz2w7ctnh.1'
+          assert x['source']['license']=='CC BY 4.0'
+          assert x['manifest']['rawPayloadsDownloaded'] is False
+          assert x['manifest']['rawRowsOrArraysEmitted'] is False
+          assert x['acceptance']['countsAsFullyProfiledMeasuredDataset'] is False
+          assert x['acceptance']['acceptedInjectionProcessTimeSeriesSamples']==0
+          assert x['acceptance']['stage2Required'] is True
+          print(json.dumps({'status':x['status'],'fileCount':x['manifest']['fileCount'],'folderCount':x['manifest']['folderCount'],'totalBytes':x['manifest']['totalBytes'],'injectionFilesByName':x['manifest']['injectionFilesByName'],'fdmFilesByName':x['manifest']['fdmFilesByName'],'mechanicalTestFilesByName':x['manifest']['mechanicalTestFilesByName'],'energyFilesByName':x['manifest']['energyFilesByName']},indent=2))
+          PY
+      - name: Upload aggregate manifest only
+        uses: actions/upload-artifact@v4
+        with:
+          name: mouldmaster-yxz2w7ctnh-stage1-manifest
+          path: benchmark-results/yxz2w7ctnh-stage1.json
+          if-no-files-found: error
+          retention-days: 30
