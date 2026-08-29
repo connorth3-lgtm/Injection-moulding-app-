@@ -1,70 +1,49 @@
-name: MouldMaster Reconcile Cross-Process Lower Acceptance
+name: MouldMaster Normalize Cross-Process Partial Acceptance
 
-# Deterministic promotion of the source-defined lower-workpiece aggregate only.
+# One-shot normalization after the deterministic lower-workpiece reconciliation.
 on:
   push:
     branches: [data/impure-warwick-source-contracts]
     paths:
-      - 'tools/reconcile_cross_process_lower_acceptance.py'
       - '.github/workflows/reconcile-cross-process-lower-acceptance.yml'
-  workflow_dispatch:
 
 permissions:
   contents: write
 
-concurrency:
-  group: mouldmaster-reconcile-cross-lower
-  cancel-in-progress: false
-
 jobs:
-  reconcile:
+  normalize:
     runs-on: ubuntu-latest
-    timeout-minutes: 30
     steps:
       - uses: actions/checkout@v4
         with:
           ref: data/impure-warwick-source-contracts
-      - uses: actions/setup-node@v4
-        with:
-          node-version: '22.12.0'
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
-      - name: Prepare already-pinned workflow marker
+      - name: Normalize governed access-state vocabulary
         run: |
           python - <<'PY'
+          import json
           from pathlib import Path
-          p = Path('.github/workflows/master-data-compile.yml')
-          text = p.read_text(encoding='utf-8')
-          old = "assert c['measuredTimeSeriesSamplesAccepted']==21356311"
-          new = "assert c['measuredTimeSeriesSamplesAccepted']==13929568"
-          if text.count(old) != 1:
-              raise SystemExit('expected exactly one reconciled workflow marker')
-          p.write_text(text.replace(old, new, 1), encoding='utf-8')
+          p = Path('data/measured-dataset-inventory-v1.json')
+          x = json.loads(p.read_text(encoding='utf-8'))
+          row = next(d for d in x['datasets'] if d.get('datasetId') == 'cross-process-chain-17240390')
+          if row.get('accessState') != 'public-open-partially-accepted-lower-upper-units-unresolved':
+              raise SystemExit(f"unexpected pre-normalization state: {row.get('accessState')}")
+          if (row.get('count') or {}).get('acceptedMeasuredTimeSeriesSamples') != 7426743:
+              raise SystemExit('accepted lower measured total drifted')
+          row['accessState'] = 'public-open-profiled-scope-limited'
+          p.write_text(json.dumps(x, indent=2, ensure_ascii=False) + '\n', encoding='utf-8')
           PY
-      - name: Reconcile accepted lower-workpiece evidence
-        run: python tools/reconcile_cross_process_lower_acceptance.py
+      - name: Validate governed measured inventory
+        run: python qa_measured_dataset_inventory.py
       - name: Validate reconciled target arithmetic
         run: python qa_content_scale_targets.py
-      - name: Validate master compilation
-        run: python qa_master_data_compile.py
-      - name: Validate cross-process source contract
-        run: python qa_cross_process_lower_contract.py
-      - name: Validate unresolved blocker contracts
-        run: python qa_measured_data_blocker_contracts.py
-      - name: Commit reconciled ledgers and QA
+      - name: Commit normalized inventory
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add -- \
-            data/content-scale-targets.json \
-            data/measured-dataset-execution-ledger-v1.json \
-            data/measured-dataset-inventory-v1.json \
-            tools/compile_master_data.py \
-            qa_content_scale_targets.py \
-            qa_master_data_compile.py \
-            sources/MASTER_DATA_COMPILATION.md \
-            sources/CONTENT_SCALE_PROGRAMME.md
+          git add data/measured-dataset-inventory-v1.json
           git diff --cached --quiet && exit 0
-          git commit -m "Accept source-defined cross-process lower measurements"
+          git commit -m "Normalize cross-process partial acceptance state"
           git push origin HEAD:data/impure-warwick-source-contracts
