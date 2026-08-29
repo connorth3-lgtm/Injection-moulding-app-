@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "datasetId": "mendeley-8c8fjwcw86-v1",
-  "status": "stage3-slide-context-candidate",
+  "status": "completed-no-acceptable-injection-trace",
   "source": {
     "datasetPage": "https://data.mendeley.com/datasets/8c8fjwcw86/1",
     "datasetDoi": "10.17632/8c8fjwcw86.1",
@@ -28,26 +28,31 @@
     "embeddedWorkbookCount": 0,
     "chartXmlCount": 9,
     "chartCachedPointElements": 71162,
-    "packageRouteMarkers": {"injection": 11, "sls": 94},
-    "notableCharts": {
-      "chart1.xml": {"cachedPointElements": 1485, "axisMarkers": ["Cross head displacement (in)", "Stress (MPa)"]},
-      "chart2.xml": {"cachedPointElements": 3491, "axisMarkers": ["Cross head displacement (in)", "Stress (MPa)"]},
-      "chart4.xml": {"cachedPointElements": 75, "sourceSheetMarker": "Nylon-12 IM Batch 2 metric"},
-      "chart5.xml": {"cachedPointElements": 75, "sourceSheetMarker": "Nylon-12 IM Batch 2 metric (2)"},
-      "chart7.xml": {"cachedPointElements": 65886, "mixedStructuralMarker": "Injection Molded Nylon 12"}
-    }
+    "packageRouteMarkers": {"injection": 11, "sls": 94}
   },
-  "stage3Rules": {
+  "stage3Evidence": {
+    "sourceRunId": 33234648432,
+    "artifactName": "mouldmaster-nylon12-gamma-stage3-profile",
+    "profiledChartCount": 7,
+    "slsTensileTracePointPairsExcluded": 1359,
+    "derivedBoxPlotPairedPointsExcluded": 72,
+    "mixedRoutePairedPointsExcluded": 26424,
+    "candidateInjectionMaterialTracePointPairs": 0,
+    "candidateInjectionMaterialTraceValues": 0,
+    "acceptedInjectionProcessTimeSeriesSamples": 0
+  },
+  "terminalRules": {
     "exactPublisherFileFingerprintsRequired": true,
-    "chartMustBeMappedToSlideRelationship": true,
+    "chartMappedToSlideRelationships": true,
     "slideAndChartRouteContextMustAgreeBeforeInjectionClassification": true,
     "boxPlotQuartilesAndOutliersAreDerivedAndExcluded": true,
     "mixedRouteStructuralChartsAreExcluded": true,
-    "onlyPairedStressDisplacementTracePointsMayBecomeMaterialTestEvidence": true,
+    "slsMaterialTestTracesAreExcludedFromInjectionMouldingEvidence": true,
     "rawNumericValuesMustNotBeEmitted": true,
-    "rawImagesAndFullDocumentTextMustNotBeEmitted": true,
     "countsAsFullyProfiledMeasuredDataset": false,
-    "acceptedInjectionProcessTimeSeriesSamples": 0
+    "acceptedInjectionProcessTimeSeriesSamples": 0,
+    "terminalReviewComplete": true
   },
-  "evidenceBoundary": "Stage 3 maps OOXML chart relationships to slide context and profiles chart-cache structure without emitting numeric values. UTS box-plot quartiles/outliers are derived summaries and cannot count as raw tensile traces. XRD or other charts mixing SLS and injection-moulded series remain excluded. Only stress-versus-cross-head-displacement series that are clearly injection-moulded from both chart references and slide context, and have paired X/Y cache lengths, may advance as material-test trace evidence. They never count as injection-machine/cavity process waveforms."
+  "resultPath": "data/public-benchmark-results/nylon12-gamma-8c8fjwcw86-v1.json",
+  "evidenceBoundary": "Stage 3 maps OOXML chart relationships to slide context without emitting numeric values. The delivered presentation contains SLS tensile traces, derived box-plot summaries and mixed-route structural charts, but no paired stress/displacement trace that is unambiguously injection-moulded in both chart and slide context. It therefore remains non-counting."
 }
