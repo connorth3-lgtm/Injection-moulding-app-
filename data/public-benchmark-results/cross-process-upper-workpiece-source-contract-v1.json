@@ -1,0 +1,118 @@
+{
+  "schema_version": 1,
+  "status": "completed-source-defined-upper-workpiece-partial-acceptance",
+  "retrieved_date": "2026-08-29",
+  "source": {
+    "datasetId": "cross-process-chain-17240390",
+    "recordId": 17240390,
+    "license": "CC BY 4.0",
+    "publisherChecksum": "md5:069e190338b2ca29f736b21fabf407ba",
+    "sha256": "a0c7c07997e6c5a996823744aceb82bfc7b4efd371c7be0f4afc60d04771ec90",
+    "sizeBytes": 685541746,
+    "dictionary": "data/cross-process-upper-workpiece-dictionary-v1.json"
+  },
+  "profile": {
+    "archiveMembers": 30572,
+    "upperWorkpieceSerialCsvFilesAccepted": 10697,
+    "upperWorkpieceSerialCsvFilesRejected": 0,
+    "injectionStaticCsvFilesExcluded": 2,
+    "upperWorkpieceRowsAccepted": 21907374,
+    "acceptedMeasuredChannelsPerRow": 2,
+    "acceptedMeasuredTimeSeriesSamples": 43814748,
+    "pressureTargetValuesExcludedFromMeasuredCount": 21907374,
+    "pressureActualValuesExcludedPendingUnit": 21907374,
+    "stateValuesExcludedPendingSemantics": 21907374,
+    "deliveredTimeIncrementFileCounts": [
+      {
+        "deliveredIncrement": 0.0099999997764825,
+        "canonicalKey": "0.00999999977648",
+        "files": 10697,
+        "engineeringUnit": null
+      }
+    ],
+    "observedStateCodeCounts": [
+      {
+        "code": 0,
+        "values": 10242053
+      },
+      {
+        "code": 1,
+        "values": 499303
+      },
+      {
+        "code": 2,
+        "values": 3212606
+      },
+      {
+        "code": 4,
+        "values": 285916
+      },
+      {
+        "code": 8,
+        "values": 7667496
+      }
+    ],
+    "rawRowsOrCellValuesEmitted": false
+  },
+  "channels": [
+    {
+      "canonicalName": "time",
+      "role": "ordering/time vector",
+      "unit": null,
+      "acceptedMeasuredValue": false,
+      "blocker": null
+    },
+    {
+      "canonicalName": "injection_pressure_target",
+      "role": "command/target",
+      "unit": null,
+      "acceptedMeasuredValue": false,
+      "blocker": "authoritative upper-workpiece pressure engineering unit not found in public author/publisher material"
+    },
+    {
+      "canonicalName": "injection_pressure_actual",
+      "role": "measured process signal",
+      "unit": null,
+      "acceptedMeasuredValue": false,
+      "blocker": "authoritative upper-workpiece pressure engineering unit not found in public author/publisher material"
+    },
+    {
+      "canonicalName": "melt_volume",
+      "role": "measured process signal",
+      "unit": "cm3",
+      "acceptedMeasuredValue": true,
+      "blocker": null
+    },
+    {
+      "canonicalName": "injection_velocity",
+      "role": "measured process signal",
+      "unit": "cm3/s",
+      "acceptedMeasuredValue": true,
+      "blocker": null
+    },
+    {
+      "canonicalName": "state",
+      "role": "categorical machine/process-state code",
+      "unit": null,
+      "acceptedMeasuredValue": false,
+      "blocker": "authoritative semantic mapping for state codes 0/1/2/4/8 not found in public author/publisher material"
+    }
+  ],
+  "rejectedFiles": {
+    "count": 0,
+    "reasons": {},
+    "filenamesEmitted": false
+  },
+  "retrieval": {
+    "rawPublisherFilesCommitted": false,
+    "rawRowsUploadedAsArtifact": false,
+    "temporaryArchiveDeletedAfterRun": true
+  },
+  "limitations": [
+    "Upper pressure target is command evidence and remains excluded from measured totals.",
+    "Upper pressure actual is structurally validated but remains excluded until an authoritative engineering unit is established.",
+    "Upper state codes are structurally validated and aggregated but remain excluded until authoritative semantics are established.",
+    "The delivered time vector is validated per file without assigning an engineering unit or imposing the publisher's approximate global frequency.",
+    "Injection static_data.csv tables are outside this time-series parser and remain non-promoted here."
+  ]
+}
