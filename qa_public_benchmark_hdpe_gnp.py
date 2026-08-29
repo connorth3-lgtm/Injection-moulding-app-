@@ -28,13 +28,13 @@ need(rules["acceptedMeasuredTimeSeriesSamples"] == 0, "HDPE/GNP cannot claim wav
 text = RUNNER.read_text(encoding="utf-8")
 for marker in [
     "data.mendeley.com/public-api/datasets",
-    "tensileModulus",
-    "toughness",
-    "hardness",
+    "RFR_Hardness.xlsx",
+    "RFR_Tensile modulus.xlsx",
+    "RFR_Toughness.xlsx",
+    "selectedMeasuredTablesByOutcome",
+    "publisherSha256Matched",
     "directMeasuredOutcomeCells",
-    "selectedMeasuredTable",
-    "recordLevelMeasuredOutcomeValues",
-    "selected[\"directMeasuredOutcomeCells\"] == 105",
+    "sum(x[\"directMeasuredOutcomeCells\"] for x in selected_by_outcome.values()) == 105",
     "acceptedMeasuredTimeSeriesSamples\": 0",
     "rawRowsOrCellValuesUploadedAsArtifact\": False",
 ]:
