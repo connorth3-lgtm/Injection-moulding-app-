@@ -50,18 +50,25 @@ def retrieve(c):
 def sheet_profile(ws):
     labels=[]; label_counts={'Strain (%)':0,'Stress (MPa)':0}; numeric_by_col=[]
     for col in range(1,ws.max_column+1):
-        numeric=0; first=None; last=None; col_labels=[]
+        header_row=None; header_label=None; text_labels=[]
         for row in range(1,ws.max_row+1):
             v=ws.cell(row=row,column=col).value
-            if isinstance(v,bool) or v is None: continue
-            if isinstance(v,(int,float)):
-                numeric+=1; first=row if first is None else first; last=row
-            elif isinstance(v,str) and v.strip():
-                s=' '.join(v.split())[:120]; col_labels.append(s)
-                if s in label_counts: label_counts[s]+=1
-                labels.append({'row':row,'column':col,'label':s})
-        numeric_by_col.append({'column':col,'numericCells':numeric,'firstNumericRow':first,'lastNumericRow':last,'textLabels':col_labels[:12]})
-    return {'rows':ws.max_row,'columns':ws.max_column,'textLabelCells':labels[:80],'textLabelCounts':label_counts,'numericCellsByColumn':numeric_by_col,'numericCellsTotal':sum(x['numericCells'] for x in numeric_by_col),'rawNumericValuesEmitted':False}
+            if isinstance(v,str) and v.strip():
+                s=' '.join(v.split())[:120]; text_labels.append(s); labels.append({'row':row,'column':col,'label':s})
+                if s in label_counts:
+                    label_counts[s]+=1
+                    if header_row is None: header_row=row; header_label=s
+        numeric_total=0; trace_numeric=0; pre_header=0; first_trace=None; last_trace=None
+        for row in range(1,ws.max_row+1):
+            v=ws.cell(row=row,column=col).value
+            if isinstance(v,bool) or not isinstance(v,(int,float)): continue
+            numeric_total+=1
+            if header_row is not None and row>header_row:
+                trace_numeric+=1; first_trace=row if first_trace is None else first_trace; last_trace=row
+            else:
+                pre_header+=1
+        numeric_by_col.append({'column':col,'headerRow':header_row,'headerLabel':header_label,'numericCells':numeric_total,'traceNumericCells':trace_numeric,'preHeaderNumericCellsExcluded':pre_header,'firstTraceNumericRow':first_trace,'lastTraceNumericRow':last_trace,'textLabels':text_labels[:12]})
+    return {'rows':ws.max_row,'columns':ws.max_column,'textLabelCells':labels[:80],'textLabelCounts':label_counts,'numericCellsByColumn':numeric_by_col,'numericCellsTotal':sum(x['numericCells'] for x in numeric_by_col),'traceNumericCellsTotal':sum(x['traceNumericCells'] for x in numeric_by_col),'preHeaderNumericCellsExcluded':sum(x['preHeaderNumericCellsExcluded'] for x in numeric_by_col),'rawNumericValuesEmitted':False}
 
 def main():
     a=argparse.ArgumentParser(); a.add_argument('--output',type=Path,required=True); a.add_argument('--retrieved-date',required=True); args=a.parse_args()
@@ -74,12 +81,14 @@ def main():
             profiles[s]=sheet_profile(wb[s])
         if 'PLots' not in wb.sheetnames: raise RuntimeError('PLots exclusion sheet missing')
         plot=sheet_profile(wb['PLots'])
-    strain=sum(p['numericCellsByColumn'][i]['numericCells'] for p in profiles.values() for i in range(p['columns']) if 'Strain (%)' in p['numericCellsByColumn'][i]['textLabels'])
-    stress=sum(p['numericCellsByColumn'][i]['numericCells'] for p in profiles.values() for i in range(p['columns']) if 'Stress (MPa)' in p['numericCellsByColumn'][i]['textLabels'])
-    candidate=sum(p['numericCellsTotal'] for p in profiles.values())
-    header_ok=all(p['columns']==10 and p['textLabelCounts']=={'Strain (%)':5,'Stress (MPa)':5} and all(len(x['textLabels'])==1 for x in p['numericCellsByColumn']) for p in profiles.values())
-    complete=header_ok and candidate==strain+stress and strain>0 and stress>0
-    result={'schema':1,'status':'semantic-profile-complete-needs-acceptance' if complete else 'semantic-profile-needs-review','retrievedDate':args.retrieved_date,'source':{'datasetId':c['datasetId'],'datasetDoi':c['source']['datasetDoi'],'license':c['source']['license'],'metadataSha256':metadata_sha,'measuredWorkbookMember':name,'measuredWorkbookSha256':hashlib.sha256(measured).hexdigest()},'semanticProfile':{'compositionSheets':profiles,'excludedPlotSheet':{'sheet':'PLots','numericCells':plot['numericCellsTotal']},'pairedHeaderPatternValidated':header_ok,'sourceDeliveredStressTraceValues':stress,'sourceDeliveredStrainTraceValues':strain,'sourceDeliveredStressStrainTraceValues':candidate,'theoreticalWorkbookValuesAccepted':0,'injectionMachineTimeSeriesSamplesAdded':0,'rawNumericValuesEmitted':False},'acceptance':{'countsAsFullyProfiledMeasuredDataset':False,'stage3AcceptanceRequired':complete,'acceptedInjectionProcessTimeSeriesSamplesAdded':0},'evidenceBoundary':c['evidenceBoundary']}
+    strain=sum(x['traceNumericCells'] for p in profiles.values() for x in p['numericCellsByColumn'] if x['headerLabel']=='Strain (%)')
+    stress=sum(x['traceNumericCells'] for p in profiles.values() for x in p['numericCellsByColumn'] if x['headerLabel']=='Stress (MPa)')
+    preheader=sum(p['preHeaderNumericCellsExcluded'] for p in profiles.values())
+    trace_total=sum(p['traceNumericCellsTotal'] for p in profiles.values())
+    header_ok=all(p['columns']==10 and p['textLabelCounts']=={'Strain (%)':5,'Stress (MPa)':5} and all(x['headerRow']==2 and x['headerLabel'] in {'Strain (%)','Stress (MPa)'} and len(x['textLabels'])==1 for x in p['numericCellsByColumn']) for p in profiles.values())
+    pair_ok=all(p['numericCellsByColumn'][i]['traceNumericCells']==p['numericCellsByColumn'][i+1]['traceNumericCells'] for p in profiles.values() for i in range(0,10,2))
+    complete=header_ok and pair_ok and trace_total==strain+stress and strain==stress and preheader==20 and trace_total>0
+    result={'schema':1,'status':'semantic-profile-complete-needs-acceptance' if complete else 'semantic-profile-needs-review','retrievedDate':args.retrieved_date,'source':{'datasetId':c['datasetId'],'datasetDoi':c['source']['datasetDoi'],'license':c['source']['license'],'metadataSha256':metadata_sha,'measuredWorkbookMember':name,'measuredWorkbookSha256':hashlib.sha256(measured).hexdigest()},'semanticProfile':{'compositionSheets':profiles,'excludedPlotSheet':{'sheet':'PLots','numericCells':plot['numericCellsTotal']},'pairedHeaderPatternValidated':header_ok,'pairedTraceLengthValidated':pair_ok,'preHeaderNumericCellsExcluded':preheader,'sourceDeliveredStressTraceValues':stress,'sourceDeliveredStrainTraceValues':strain,'sourceDeliveredStressStrainTraceValues':trace_total,'sourceDeliveredStressStrainTracePointPairs':stress,'theoreticalWorkbookValuesAccepted':0,'injectionMachineTimeSeriesSamplesAdded':0,'rawNumericValuesEmitted':False},'acceptance':{'countsAsFullyProfiledMeasuredDataset':False,'stage3AcceptanceRequired':complete,'acceptedInjectionProcessTimeSeriesSamplesAdded':0},'evidenceBoundary':c['evidenceBoundary']}
     args.output.parent.mkdir(parents=True,exist_ok=True); args.output.write_text(json.dumps(result,indent=2)+'\n')
-    print(json.dumps({'status':result['status'],'pairedHeaderPatternValidated':header_ok,'stressValues':stress,'strainValues':strain,'traceValues':candidate,'plotNumericExcluded':plot['numericCellsTotal']},indent=2))
+    print(json.dumps({'status':result['status'],'pairedHeaderPatternValidated':header_ok,'pairedTraceLengthValidated':pair_ok,'preHeaderNumericCellsExcluded':preheader,'stressValues':stress,'strainValues':strain,'traceValues':trace_total,'tracePointPairs':stress,'plotNumericExcluded':plot['numericCellsTotal']},indent=2))
 if __name__=='__main__': main()
