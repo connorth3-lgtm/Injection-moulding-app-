@@ -1,0 +1,53 @@
+{
+  "schema": 1,
+  "reviewed": "2026-08-29",
+  "status": "metadata-only-source-intake",
+  "sources": [
+    {
+      "datasetId": "mendeley-8c8fjwcw86-v1",
+      "mendeleyDatasetId": "8c8fjwcw86",
+      "version": 1,
+      "doi": "10.17632/8c8fjwcw86.1",
+      "license": "CC BY 4.0",
+      "datasetPage": "https://data.mendeley.com/datasets/8c8fjwcw86/1",
+      "title": "Effect of Gamma Radiation on Selective Laser Sintered Nylon-12",
+      "processRelevance": "comparison includes injection-moulded Nylon-12 specimens",
+      "reportedMeasurement": "mechanical and radiation-response measurements; injection-moulded subset must be isolated from SLS",
+      "priority": 1
+    },
+    {
+      "datasetId": "mendeley-597jrsm9zm-v1",
+      "mendeleyDatasetId": "597jrsm9zm",
+      "version": 1,
+      "doi": "10.17632/597jrsm9zm.1",
+      "license": "CC BY-NC 3.0",
+      "datasetPage": "https://data.mendeley.com/datasets/597jrsm9zm/1",
+      "title": "Data for: The influence of fiber orientation and geometry-induced strain concentration on the fatigue life of short carbon fibers reinforced polyamide-6",
+      "processRelevance": "injection-moulded short-carbon-fibre PA6 fatigue specimens",
+      "reportedMeasurement": "injection-moulding process details and fatigue/mechanical evidence",
+      "priority": 2
+    },
+    {
+      "datasetId": "mendeley-crmb7xjymg-v1",
+      "mendeleyDatasetId": "crmb7xjymg",
+      "version": 1,
+      "doi": "10.17632/crmb7xjymg.1",
+      "license": "CC BY 4.0",
+      "datasetPage": "https://data.mendeley.com/datasets/crmb7xjymg/1",
+      "title": "Interphase formation of low surface energy PE-CVD release coatings in plastic injection moulding",
+      "processRelevance": "mould-release coating / polymer-tool interphase characterization",
+      "reportedMeasurement": "XPS spectral measurements of release-coating interphase",
+      "priority": 3
+    }
+  ],
+  "stage1Rules": {
+    "publisherMetadataOnly": true,
+    "downloadPublisherPayloads": false,
+    "rawRowsOrArraysEmitted": false,
+    "countsAsFullyProfiledMeasuredDataset": false,
+    "acceptedMeasuredTimeSeriesSamples": 0,
+    "mixedManufacturingRoutesMustBeSeparatedBeforeAcceptance": true,
+    "restrictedNoncommercialRightsMustRemainRestricted": true,
+    "reportedMeasurementsDoNotCountWithoutDeliveredFileProfiling": true
+  }
+}
