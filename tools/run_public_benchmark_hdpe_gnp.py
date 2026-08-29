@@ -19,6 +19,11 @@ VERSION = 3
 PUBLIC_FILES_ENDPOINT = f"https://data.mendeley.com/public-api/datasets/{DATASET_ID}/files?folder_id=root&version={VERSION}"
 API_ROOT = "https://api.data.mendeley.com"
 UA = "MouldMaster-Educational-Evidence-Profiler/1.0"
+EXPECTED_TARGET_FILES = {
+    "hardness": "RFR_Hardness.xlsx",
+    "tensileModulus": "RFR_Tensile modulus.xlsx",
+    "toughness": "RFR_Toughness.xlsx",
+}
 
 
 def get(url: str, accept: str = "*/*"):
@@ -155,6 +160,7 @@ def main():
             continue
         for table_name, frame in tables:
             frame = frame.dropna(axis=0, how="all").dropna(axis=1, how="all")
+            frame.columns = [str(x).strip() for x in frame.columns]
             sem = semantic_columns(frame.columns)
             rows = int(len(frame))
             measured_non_null = {
@@ -179,12 +185,29 @@ def main():
                 best = candidate
 
     selected = best[2] if best else None
+    selected_by_outcome = {}
+    for outcome, expected_file in EXPECTED_TARGET_FILES.items():
+        candidates = [
+            table for table in table_profiles
+            if table.get("fileName") == expected_file
+            and table.get("rows") == 35
+            and set(table.get("semantics", {}).get("measured", {}).keys()) == {outcome}
+            and {"gnpPercentage", "injectionPressure", "injectionTemperature"}.issubset(table.get("semantics", {}).get("process", {}).keys())
+            and table.get("directMeasuredOutcomeCells") == 35
+        ]
+        if len(candidates) == 1:
+            selected_by_outcome[outcome] = candidates[0]
+
+    expected_file_profiles = {
+        item["fileName"]: item for item in file_profiles if item.get("fileName") in set(EXPECTED_TARGET_FILES.values())
+    }
+    hashes_proven = len(expected_file_profiles) == 3 and all(
+        item.get("publisherSha256Matched") is True for item in expected_file_profiles.values()
+    )
     recognised = bool(
-        selected
-        and selected["rows"] == contract["experimentContext"]["reportedExperimentalConditions"]
-        and set(selected["semantics"]["measured"].keys()) == {"tensileModulus", "toughness", "hardness"}
-        and {"injectionPressure", "injectionTemperature"}.issubset(selected["semantics"]["process"].keys())
-        and selected["directMeasuredOutcomeCells"] == 105
+        set(selected_by_outcome.keys()) == set(EXPECTED_TARGET_FILES.keys())
+        and hashes_proven
+        and sum(x["directMeasuredOutcomeCells"] for x in selected_by_outcome.values()) == 105
     )
 
     result = {
@@ -201,11 +224,14 @@ def main():
             "publisherFiles": file_profiles,
             "publisherFileCount": len(file_profiles),
             "tabularFilesProfiled": sum(1 for x in file_profiles if x.get("retrievalStatus") == "retrieved-temporarily"),
+            "expectedMeasuredTargetFiles": list(EXPECTED_TARGET_FILES.values()),
+            "expectedMeasuredTargetHashesMatched": hashes_proven,
             "rawPublisherFilesCommitted": False,
         },
         "profile": {
             "tables": table_profiles,
             "selectedMeasuredTable": selected,
+            "selectedMeasuredTablesByOutcome": selected_by_outcome,
             "semanticLayoutRecognized": recognised,
             "reportedExperimentalConditions": contract["experimentContext"]["reportedExperimentalConditions"],
             "recordLevelMeasuredOutcomeValues": 105 if recognised else 0,
@@ -230,7 +256,8 @@ def main():
         "status": result["status"],
         "publisherFileCount": result["manifest"]["publisherFileCount"],
         "tabularFilesProfiled": result["manifest"]["tabularFilesProfiled"],
-        "semanticLayoutRecognized": recognised,
+        "expectedMeasuredTargetHashesMatched": hashes_proven,
+        "selectedOutcomes": sorted(selected_by_outcome.keys()),
         "recordLevelMeasuredOutcomeValues": result["profile"]["recordLevelMeasuredOutcomeValues"],
     }, indent=2))
 
