@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "datasetId": "mendeley-yxz2w7ctnh-v1",
-  "status": "stage3-route-coordinate-candidate",
+  "status": "stage4-injection-count-candidate",
   "source": {
     "datasetPage": "https://data.mendeley.com/datasets/yxz2w7ctnh/1",
     "datasetDoi": "10.17632/yxz2w7ctnh.1",
@@ -37,15 +37,30 @@
     "duplicateSheetsExcludedFromImpactWorkbook": ["tensile_PLA","tensile_ABS","bending_PLA","bending_ABS"],
     "energySheetsExcludedFromImpactWorkbook": ["energy_PLA","energy_ABS","energy_test samples"]
   },
-  "stage3Rules": {
-    "useCanonicalSheetsOnly": true,
-    "duplicateEmbeddedSheetsMustNotDoubleCount": true,
-    "mapTextCellCoordinatesBeforeNumericCounting": true,
-    "injectionAndFdmRegionsMustBeSeparated": true,
+  "stage3Evidence": {
+    "sourceRunId": 33236111650,
+    "allPublisherHashesMatched": true,
+    "injectionRegions": {
+      "bending_PLA": {"anchor":"O1","anchorText":"PLA Injection moulded","directNumericColumns":["P","Q","R","S"]},
+      "bending_ABS": {"anchor":"P1","anchorText":"ABS Injection moulded","directNumericColumns":["Q","R","S","T"]},
+      "tensile_PLA": {"anchor":"M1","anchorText":"PLA INKECTION MOULDED","directNumericColumns":["O","P","Q","R","S","T","U","V"]},
+      "tensile_ABS": {"anchor":"M1","anchorText":"ABS INjECTION MOULDED","directNumericColumns":["O","P","Q","R","S","T","U","V"]}
+    },
+    "impactRouteStatus": "unresolved-no-route-labels",
+    "impactExcludedFromAcceptance": true
+  },
+  "stage4Rules": {
+    "useOnlyPinnedInjectionColumns": true,
+    "countNumericConstantsOnly": true,
+    "formulaCellsAreDerivedAndExcluded": true,
+    "sampleIdentifiersAreExcluded": true,
+    "tensileS0GeometryColumnExcluded": true,
+    "fdmRegionsExcluded": true,
+    "impactExcludedUntilRouteResolved": true,
+    "energyAndDuplicateSheetsExcluded": true,
     "publisherSha256MustMatch": true,
     "rawNumericValuesMustNotBeEmitted": true,
-    "countsAsFullyProfiledMeasuredDataset": false,
     "acceptedInjectionProcessTimeSeriesSamples": 0
   },
-  "evidenceBoundary": "Stage 3 maps route labels and workbook coordinates on one canonical workbook/sheet per mechanical-test family. Duplicated bending/tensile sheets embedded in the impact workbook and all energy sheets are excluded. No numeric measurement values are emitted or accepted until injection-moulded regions are unambiguously separated from FDM regions."
+  "evidenceBoundary": "Stage 4 counts only numeric constant cells in the explicitly injection-labelled bending and tensile regions. Specimen identifiers, formulas, averages/STD, FDM regions, tensile S0 geometry, impact sheets without route labels, energy sheets and duplicated embedded sheets are excluded. These are material-test scalar values and never injection-machine/cavity waveform samples."
 }
