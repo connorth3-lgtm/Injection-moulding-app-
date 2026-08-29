@@ -11,8 +11,10 @@ BENCHMARK_RECORD = ROOT / "data" / "public-benchmark-results" / "gtnb4j7bfx-v1.j
 BENCHMARK_AVAPS = ROOT / "data" / "public-benchmark-results" / "scatimdata-avaps-v1.json"
 BENCHMARK_OPENMMS = ROOT / "data" / "public-benchmark-results" / "openmms-t4g-v1.json"
 BENCHMARK_SU = ROOT / "data" / "public-benchmark-results" / "su13148102-supplement-v1.json"
+BENCHMARK_IGUZZINI = ROOT / "data" / "public-benchmark-results" / "iguzzini-road-lenses-v1.json"
 REVIEW_PET = ROOT / "data" / "public-benchmark-results" / "pet-preform-v2.json"
 REVIEW_WARWICK = ROOT / "data" / "public-benchmark-results" / "warwick-demoulding-v2.json"
+REVIEW_RWTH = ROOT / "data" / "public-benchmark-results" / "rwth-pcr-2025-v1.json"
 
 
 def need(ok, msg):
@@ -67,6 +69,14 @@ for blocked_id in ["skz-loki-v1", "impure-pascoe-2022", "forinfpro-himd-v1", "cr
     need(rights_by_id[blocked_id].get("decision") == "blocked-no-explicit-license", f"{blocked_id} rights decision drifted")
     need(by_id[blocked_id].get("license") is None and by_id[blocked_id].get("automatedIngestionAllowed") is False, f"{blocked_id} must remain non-executable without explicit data licence")
 
+impure_count = by_id["impure-pascoe-2022"].get("count") or {}
+need(impure_count.get("publisherFilesTotalMB") == 18.7, "ImPure publisher file-set size correction drifted")
+need(impure_count.get("zenodoCumulativeDownloadTrafficMB") == 605.2, "ImPure Zenodo traffic metric drifted")
+need("dataVolumeMB" not in impure_count, "ImPure must not mislabel cumulative download traffic as source-data size")
+need(by_id["inqcim-2500-request"].get("source") == "https://doi.org/10.3390/polym14173551", "INQCIM corrected DOI drifted")
+need(by_id["inqcim-2500-request"].get("peerReviewedCompanion") == "10.3390/polym14173551", "INQCIM companion DOI drifted")
+need(by_id["leon-defects-20322729"].get("overlapGroup") == by_id["leon-process-20309380"].get("overlapGroup"), "León defect/process campaign must remain one overlap group")
+
 record = json.loads(BENCHMARK_RECORD.read_text(encoding="utf-8"))
 need(record.get("status") == "completed-public-measured-benchmark", "record-level public benchmark status missing")
 record_source = record.get("source") or {}
@@ -113,15 +123,39 @@ need((su.get("source") or {}).get("sha256") == "b546abea4eb9f14b6736dec415dc43c0
 need((su.get("profile") or {}).get("rows") == 955 and (su.get("profile") or {}).get("columns") == 45, "Sustainability supplement delivered schema drifted")
 need((su.get("profile") or {}).get("paperReleaseColumnDelta") == 3, "Sustainability supplement paper/release discrepancy missing")
 need((su.get("profile") or {}).get("countsAsTimeSeriesSamples") is False, "record-level supplement must not inflate time-series values")
+
+iguzzini = json.loads(BENCHMARK_IGUZZINI.read_text(encoding="utf-8"))
+ig_source = iguzzini.get("source") or {}
+ig_profile = iguzzini.get("profile") or {}
+ig_acceptance = iguzzini.get("acceptance") or {}
+need(iguzzini.get("status") == "accepted-restricted-profile", "iGuzzini restricted accepted state drifted")
+need(ig_source.get("pinnedCommit") == "41b8f392923d37b50b5098ed918dd2f0de1bc328", "iGuzzini pinned source drifted")
+need(ig_source.get("gitBlobSha") == "1ca731e1e80451f6ebf857f3db69bc9f4566d073", "iGuzzini source blob drifted")
+need(ig_source.get("sha256") == "c8424a6a47cb793383e19e646212b09f5b63b66147a9397f26fdd8760b6889e0", "iGuzzini source fingerprint drifted")
+need(ig_source.get("useScope") == "research-and-education-only" and ig_source.get("rawRedistributionAllowed") is False, "iGuzzini restricted-use boundary drifted")
+need(ig_profile.get("rows") == 1451 and ig_profile.get("columns") == 14 and ig_profile.get("processFeatureCount") == 13, "iGuzzini delivered dimensions drifted")
+need(ig_profile.get("recordLevelMeasuredProcessValues") == 18_863, "iGuzzini record-level measured value count drifted")
+need(ig_profile.get("deliveredQualityCounts") == {"1": 370, "2": 406, "3": 310, "4": 365}, "iGuzzini delivered quality counts drifted")
+need(ig_profile.get("publisherReportedQualityCountSum") == 1446 and ig_profile.get("deliveredQualityCountSum") == 1451, "iGuzzini README/release reconciliation drifted")
+need(ig_profile.get("deliveredMinusReportedByClass") == {"1": 0, "2": 0, "3": 0, "4": 5}, "iGuzzini five-row discrepancy must remain localized to class 4")
+need(ig_acceptance.get("countsAsFullyProfiledMeasuredDataset") is True and ig_acceptance.get("acceptedMeasuredTimeSeriesSamples") == 0, "iGuzzini acceptance boundary drifted")
+need(by_id["iguzzini-road-lenses"].get("restrictedAggregateProfilingAllowed") is True and by_id["iguzzini-road-lenses"].get("automatedIngestionAllowed") is False, "iGuzzini inventory restricted-use gate drifted")
+
 pet = json.loads(REVIEW_PET.read_text(encoding="utf-8"))
 warwick = json.loads(REVIEW_WARWICK.read_text(encoding="utf-8"))
+rwth = json.loads(REVIEW_RWTH.read_text(encoding="utf-8"))
 need(pet.get("status") == "retrieved-profile-needs-semantic-review", "PET review-only state drifted")
 need(warwick.get("status") == "retrieved-profile-needs-special-format-export", "Warwick special-format state drifted")
 need(all(x.get("publisherHashMatched") is True for x in warwick.get("files") or []) and len(warwick.get("files") or []) == 5, "Warwick file verification drifted")
+need(rwth.get("status") == "retrieval-blocked-non-archive-response", "RWTH retrieval-blocked state drifted")
+need((rwth.get("acceptance") or {}).get("countsAsFullyProfiledMeasuredDataset") is False, "RWTH must remain non-counting until real archive profiling passes")
+need((rwth.get("acceptance") or {}).get("acceptedMeasuredTimeSeriesSamples") == 0, "RWTH blocked retrieval cannot contribute measured samples")
+need(len((rwth.get("source") or {}).get("retrievalAttempts") or []) == 3, "RWTH retrieval attempt audit drifted")
+need(all(a.get("sizeBytes") == 248 and a.get("contentType") == "text/html; charset=UTF-8" and a.get("zipStructureValid") is False for a in rwth["source"]["retrievalAttempts"]), "RWTH non-archive response evidence drifted")
 
 accepted_measured_total = av_profile["acceptedMeasuredTimeSeriesSamples"] + om_profile["acceptedMeasuredTimeSeriesSamples"]
 need(accepted_measured_total == 13_929_568, "combined real measured-sample arithmetic drifted")
-need(targets["fully_profiled_measured_datasets"]["currentAccepted"] == 4, "fully profiled measured dataset count must equal the four completed benchmark families")
+need(targets["fully_profiled_measured_datasets"]["currentAccepted"] == 5, "fully profiled measured dataset count must equal four open benchmark families plus one restricted educational profile")
 need(targets["measured_time_series_samples"]["currentAccepted"] == accepted_measured_total, "measured sample count must equal AVAPS plus OpenMMS delivered-file evidence")
 
 primary = json.loads(PRIMARY.read_text(encoding="utf-8"))
@@ -142,15 +176,23 @@ for marker in ["synthetic process-data cases never count", "actual source files"
     need(marker in rules, f"content-scale non-counting rule missing: {marker}")
 
 report = {
-    "schema": 4,
+    "schema": 5,
     "version": obj.get("version"),
     "reviewed": obj.get("reviewed"),
     "measuredDatasetDiscovery": {
         "inventoryCount": len(datasets),
         "legacyCatalogSeedCount": len(legacy.get("datasets") or []),
-        "fullyProfiledAccepted": 4,
+        "fullyProfiledAccepted": 5,
+        "openOrStandardRepoAccepted": 4,
+        "restrictedResearchEducationAccepted": 1,
         "automatedIngestionAllowed": summary.get("automatedIngestionAllowed"),
         "embargoedRecords": summary.get("embargoed"),
+    },
+    "recordLevelMeasured": {
+        "iguzziniRoadLensProcessValues": ig_profile["recordLevelMeasuredProcessValues"],
+        "iguzziniRows": ig_profile["rows"],
+        "iguzziniProcessFeatures": ig_profile["processFeatureCount"],
+        "timeSeriesSamplesContributed": 0,
     },
     "realMeasuredSamples": {
         "accepted": accepted_measured_total,
@@ -186,7 +228,7 @@ report = {
         }
         for key in expected
     },
-    "boundary": "No synthetic, metadata-only, generated-draft or heuristic-candidate evidence is counted as completed measured/reviewed content unless its area-specific acceptance definition is satisfied."
+    "boundary": "No synthetic, metadata-only, generated-draft or heuristic-candidate evidence is counted as completed measured/reviewed content unless its area-specific acceptance definition is satisfied. Restricted research/education source terms are preserved rather than widened."
 }
 (ROOT / "content-scale-targets-report.json").write_text(json.dumps(report, indent=2) + "\n", encoding="utf-8")
-print(f"MouldMaster content-scale target integrity QA passed ({len(datasets)} measured datasets inventoried; 4 fully profiled benchmark families; {accepted_measured_total:,} real measured time-series values; {verified} publisher-verified primary measured studies; {summary.get('automatedIngestionAllowed')} sources legally executable)")
+print(f"MouldMaster content-scale target integrity QA passed ({len(datasets)} measured datasets inventoried; 5 fully profiled families including 1 restricted research/education profile; {accepted_measured_total:,} real measured time-series values; {verified} publisher-verified primary measured studies; {summary.get('automatedIngestionAllowed')} sources legally executable)")
