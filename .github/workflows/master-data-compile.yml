@@ -65,7 +65,7 @@ jobs:
           assert x['candidateRegistryEmbedded'] is True
           assert c['measuredDatasetInventory']==20
           assert c['automatedIngestionAllowedDatasets']==10
-          assert c['fullyProfiledMeasuredDatasets']==6
+          assert c['fullyProfiledMeasuredDatasets']==7
           assert c['measuredTimeSeriesSamplesAccepted']==13929568
           assert c['publisherVerifiedPrimaryMeasuredStudies']==60
           assert c['verifiedPeerReviewedResearchRecords']==60
@@ -90,3 +90,4 @@ jobs:
           path: compiled-data/
           if-no-files-found: error
           retention-days: 90
+
