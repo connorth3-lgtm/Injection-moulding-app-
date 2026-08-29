@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "datasetId": "cross-process-chain-17240390",
-  "status": "queued-executable-hosted-large-archive",
+  "status": "profiled-scope-limited-semantic-review",
   "source": {
     "datasetDoi": "10.5281/zenodo.17240390",
     "recordUrl": "https://zenodo.org/records/17240390",
@@ -71,7 +71,7 @@
     "metadataPath": "metadata.license.id",
     "value": "cc-by-4.0",
     "verifiedOn": "2026-08-29",
-    "retrievalState": "685.5 MB archive queued for hosted profiling"
+    "retrievalState": "completed on hosted runner; MD5, SHA-256 and ZIP CRC verified; semantic acceptance remains pending"
   },
   "profilingPlan": [
     "Retrieve only the pinned publisher archive and verify the published MD5 plus a locally computed SHA-256 without committing the raw archive.",
