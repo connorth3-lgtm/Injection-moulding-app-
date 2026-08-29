@@ -35,7 +35,7 @@ jobs:
           python-version: '3.12'
       - name: Validate stage-one evidence boundaries
         run: python qa_public_benchmark_ad_stgn_stage1.py
-      - name: Enumerate Mendeley publisher file manifest only
+      - name: Enumerate Mendeley publisher file/folder manifest only
         run: |
           mkdir -p benchmark-results
           python tools/run_public_benchmark_ad_stgn_stage1.py \
@@ -46,9 +46,11 @@ jobs:
           python - <<'PY'
           import json
           x=json.load(open('benchmark-results/ad-stgn-stage1-manifest.json'))
-          assert x['status']=='publisher-file-manifest-profiled'
+          assert x['status'] in {'publisher-file-manifest-profiled', 'publisher-folder-manifest-profiled-no-files-yet'}
           assert x['source']['datasetDoi']=='10.17632/6f9x8yg8nj.1'
-          assert x['manifest']['fileCount'] >= 1
+          assert x['manifest']['fileCount'] >= 0
+          assert x['manifest']['folderCount'] >= 0
+          assert x['acceptance']['stage1ManifestComplete'] is (x['manifest']['fileCount'] > 0 or x['manifest']['folderCount'] > 0)
           assert x['manifest']['rawPayloadsDownloaded'] is False
           assert x['manifest']['rawRowsOrArraysEmitted'] is False
           assert x['acceptance']['countsAsFullyProfiledMeasuredDataset'] is False
@@ -57,9 +59,12 @@ jobs:
           print(json.dumps({
             'status': x['status'],
             'fileCount': x['manifest']['fileCount'],
+            'folderCount': x['manifest']['folderCount'],
             'totalBytes': x['manifest']['totalBytes'],
-            'likelyInjectionSubsetByName': x['manifest']['likelyInjectionSubsetByName'],
-            'explicitNonInjectionBenchmarkByName': x['manifest']['explicitNonInjectionBenchmarkByName'],
+            'likelyInjectionFilesByName': x['manifest']['likelyInjectionFilesByName'],
+            'likelyInjectionFoldersByName': x['manifest']['likelyInjectionFoldersByName'],
+            'explicitNonInjectionFilesByName': x['manifest']['explicitNonInjectionFilesByName'],
+            'explicitNonInjectionFoldersByName': x['manifest']['explicitNonInjectionFoldersByName'],
           }, indent=2))
           PY
       - name: Upload aggregate publisher manifest only
