@@ -1,18 +1,20 @@
 {
   "schema": 1,
-  "version": "2026.08.29.1",
+  "version": "2026.08.29.2",
   "reviewed": "2026-08-29",
   "purpose": "Authoritative reuse-rights review for the highest-value measured waveform sources that were blocked only because public download availability had not yet been tied to explicit dataset reuse terms.",
   "policy": {
     "publicDownloadDoesNotEqualReusable": true,
     "explicitDatasetLicenceOrRepositoryTermsRequiredForAutomatedIngestion": true,
     "codeRepositoryLicenceDoesNotAutomaticallyLicenseThirdPartyOrCompanionData": true,
-    "missingOrBlankLicenceFieldRemainsBlocked": true
+    "missingOrBlankLicenceFieldRemainsBlocked": true,
+    "licenceEvidenceIsVersionSpecific": true,
+    "conflictingOfficialMetadataRemainsFailClosedUntilReconciled": true
   },
   "summary": {
-    "sourcesReviewed": 5,
+    "sourcesReviewed": 7,
     "unblockedForAutomatedIngestion": 4,
-    "remainBlockedForRights": 1
+    "remainBlockedForRights": 3
   },
   "sources": [
     {
@@ -23,6 +25,26 @@
       "evidence": "The authoritative RWTH Publications dataset record explicitly displays Creative Commons Attribution CC BY 4.0 and provides the OpenAccess ExperimentalData.zip file.",
       "automatedIngestionAllowed": true,
       "nextAction": "Retrieve ExperimentalData.zip, fingerprint files, enumerate experiment/cycle structure, separate controller experiments from part-mass iterations, and count only delivered measured time-series samples."
+    },
+    {
+      "datasetId": "probayes-main-v2",
+      "authoritativeRecord": "https://b2share.eudat.eu/records/k0v7s-jf859",
+      "decision": "blocked-no-v2-specific-license",
+      "license": null,
+      "evidence": "The current ProBayes v2 B2SHARE Rights > License field is blank. EUDAT B2FIND preserves Creative Commons Attribution (CC-BY) for the earlier v1 legacy record 03133fb279294389a15baefd55e4257a, but v2 uses legacy record 4c5692b886db419180f716acf895bf06 with a different DOI and changed file manifest, so the v1 licence is not treated as automatically version-transitive.",
+      "supportingRecord": "https://b2find.eudat.eu/dataset/00e35196-1983-57a0-8ec1-ae2bee01da40",
+      "automatedIngestionAllowed": false,
+      "nextAction": "Obtain an explicit licence or written permission tied to ProBayes v2 legacy record 4c5692b886db419180f716acf895bf06."
+    },
+    {
+      "datasetId": "probayes-doptimal-v1",
+      "authoritativeRecord": "https://b2share.eudat.eu/records/v64sz-f0f41",
+      "decision": "blocked-conflicting-official-license-metadata",
+      "license": null,
+      "evidence": "EUDAT B2FIND metadata for the exact legacy record 3f80952ce5ff4be88ae4cf6a3bdfe732 reports Creative Commons Attribution (CC-BY) and open access, while the current B2SHARE v2 Rights > License field is blank. Because the two official EUDAT surfaces disagree, automated ingestion remains fail-closed until the governing licence for the exact current v1 files is confirmed.",
+      "supportingRecord": "https://b2find.eudat.eu/dataset/5836dc7a-319a-56ea-af97-a9ac562b6772",
+      "automatedIngestionAllowed": false,
+      "nextAction": "Ask EUDAT/SKZ to confirm that the harvested CC-BY statement governs the exact current v1 files, or wait for the current B2SHARE licence field to be restored with equivalent terms."
     },
     {
       "datasetId": "skz-loki-v1",
@@ -61,5 +83,5 @@
       "nextAction": "Profile the 685.5 MB archive on a hosted runner and count only upper/lower injection streams; exclude both screw-driving streams."
     }
   ],
-  "evidenceBoundary": "This review changes execution eligibility only. It does not promote a dataset to fully profiled measured evidence and does not change accepted measured-sample counts until actual source files are lawfully retrieved, fingerprinted, profiled and reconciled."
+  "evidenceBoundary": "This review changes execution eligibility only where version-specific reuse terms are explicit and internally consistent. Historical or harvested licence metadata is retained as evidence but is not silently propagated across changed dataset versions, and conflicting official metadata remains fail-closed. No dataset is promoted to fully profiled measured evidence and no accepted measured-sample count changes until source files are lawfully retrieved, fingerprinted, profiled and reconciled."
 }
