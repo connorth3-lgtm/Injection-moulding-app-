@@ -17,10 +17,10 @@ expected = {
     "probayes-main-v2": ("probayes-main-v2.json", "blocked-rights-review"),
     "probayes-doptimal-v1": ("probayes-doptimal-v1.json", "blocked-rights-review"),
     "skz-loki-v1": ("skz-loki-v1.json", "blocked-rights-review"),
-    "impure-pascoe-2022": ("impure-pascoe-2022-v1.json", "queued-executable-rate-limited"),
+    "impure-pascoe-2022": ("impure-pascoe-2022-v1.json", "accepted-profiled-unit-limited"),
     "iguzzini-road-lenses": ("iguzzini-road-lenses-v1.json", "accepted-restricted-profile"),
     "forinfpro-himd-v1": ("forinfpro-himd-v1.json", "accepted-profiled-unit-limited"),
-    "cross-process-chain-17240390": ("cross-process-chain-17240390-v1.json", "queued-executable-hosted-large-archive"),
+    "cross-process-chain-17240390": ("cross-process-chain-17240390-v1.json", "profiled-scope-limited-semantic-review"),
     "kamp-injection-7996": ("kamp-injection-7996-v1.json", "blocked-mirror-rights"),
     "foxconn-competition-16600": ("foxconn-competition-16600-v1.json", "blocked-mirror-rights"),
     "warwick-demoulding": ("warwick-demoulding-v2.json", "retrieved-special-format-needs-origin-export"),
@@ -54,6 +54,18 @@ forinfpro_result = load(RESULTS / "forinfpro-himd-v1.json")
 need(forinfpro_result.get("status") == "completed-public-measured-benchmark", "FORinFPRO accepted result missing")
 need((forinfpro_result.get("profile") or {}).get("acceptedMeasuredTimeSeriesSamples") == 0,
      "FORinFPRO unit-limited profile must not inflate accepted time-series values")
+
+impure_result = load(RESULTS / "impure-pascoe-2022-v1.json")
+need(impure_result.get("status") == "completed-public-measured-benchmark", "ImPure completed result missing")
+need((impure_result.get("profile") or {}).get("cycleFiles") == 307, "ImPure cycle-file count drifted")
+need((impure_result.get("profile") or {}).get("cycleSchemaFamilies") == 1, "ImPure cycle schema drifted")
+need((impure_result.get("profile") or {}).get("widthMismatchRows") == 0, "ImPure row-width integrity drifted")
+
+cross_result = load(RESULTS / "cross-process-chain-17240390-v1.json")
+need(cross_result.get("status") == "completed-public-measured-benchmark-scope-limited", "cross-process structural profile missing")
+need((cross_result.get("source") or {}).get("publisherChecksum") == "md5:069e190338b2ca29f736b21fabf407ba", "cross-process publisher checksum drifted")
+need((cross_result.get("profile") or {}).get("injectionScopeMembers") == 15688, "cross-process injection-scope member count drifted")
+need((cross_result.get("profile") or {}).get("acceptedMeasuredTimeSeriesSamples") == 0, "cross-process semantic-review profile cannot inflate accepted samples")
 
 for did in ["kamp-injection-7996", "foxconn-competition-16600"]:
     gate = loaded[did]["rightsGate"]
@@ -104,7 +116,7 @@ need(rwth.get("status") == "retrieval-blocked-non-archive-response", "RWTH sourc
 need((rwth.get("acceptance") or {}).get("countsAsFullyProfiledMeasuredDataset") is False, "RWTH cannot be accepted without delivered archive")
 need(len((rwth.get("source") or {}).get("retrievalAttempts") or []) == 3, "RWTH retrieval audit must retain all three publisher URL attempts")
 
-report = {"schema": 3, "terminalContractsChecked": len(expected), "rightsBlocked": 3, "licensedQueued": 2, "licensedProfiledUnitLimited": 1, "mirrorRightsBlocked": 2, "embargoed": 2, "requestOnly": 1, "confidential": 1, "specialFormatExport": 1, "restrictedEducationAccepted": 1, "rwthRetrievalBlocked": 1, "petReviewOnly": 1, "result": "pass"}
+report = {"schema": 4, "terminalContractsChecked": len(expected), "rightsBlocked": 3, "licensedQueued": 0, "licensedProfiledUnitLimited": 2, "licensedProfiledSemanticReview": 1, "mirrorRightsBlocked": 2, "embargoed": 2, "requestOnly": 1, "confidential": 1, "specialFormatExport": 1, "restrictedEducationAccepted": 1, "rwthRetrievalBlocked": 1, "petReviewOnly": 1, "result": "pass"}
 (ROOT / "remaining-dataset-terminal-states-report.json").write_text(json.dumps(report, indent=2) + "\n", encoding="utf-8")
 print("MouldMaster remaining dataset terminal-state QA passed (all sources are accepted or have an explicit rights/access/embargo/confidentiality/technical blocker)")
 
