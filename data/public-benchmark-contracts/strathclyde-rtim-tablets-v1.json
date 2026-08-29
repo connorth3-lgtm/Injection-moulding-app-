@@ -1,0 +1,36 @@
+{
+  "schema": 1,
+  "datasetId": "strathclyde-rtim-tablets-v1",
+  "status": "profile-candidate",
+  "source": {
+    "datasetPage": "https://pureportal.strath.ac.uk/en/datasets/data-for-manufacture-of-tablets-with-structurally-controlled-drug/",
+    "datasetDoi": "10.15129/e1a516b3-41ad-4b38-81e1-6ebec17b8e7d",
+    "publisher": "University of Strathclyde",
+    "license": "CC BY 4.0",
+    "expectedPublisherFile": "doi.org_10.1016_j.ijpharm.2022.121956_AllData.xlsx",
+    "companionArticleDoi": "10.1016/j.ijpharm.2022.121956"
+  },
+  "experimentContext": {
+    "process": "rapid tooling injection moulding",
+    "product": "pharmaceutical polymer tablets",
+    "publisherDescribedMeasuredDomains": [
+      "gravimetric analysis",
+      "dimensional analysis",
+      "optical coherence tomography analysis",
+      "dissolution testing"
+    ],
+    "companionStudyContext": "tablets manufactured with varying structural features and polymer formulations to evaluate manufacturing precision and drug release"
+  },
+  "acceptanceRules": {
+    "exactPublisherWorkbookRequired": true,
+    "publisherWorkbookFingerprintRequired": true,
+    "deliveredWorkbookSemanticProfileRequired": true,
+    "formulaDerivedCellsMustBeSeparatedFromDirectMeasurements": true,
+    "processOrDesignInputsMustNotBeCountedAsMeasuredOutcomes": true,
+    "recordLevelOrDissolutionTraceValuesMustNotInflateMachineTimeSeriesMetric": true,
+    "rawRowsOrNumericValuesCommittedOrArtifacted": false,
+    "countsAsFullyProfiledMeasuredDatasetBeforeSemanticReview": false,
+    "acceptedMeasuredTimeSeriesSamplesBeforeSemanticReview": 0
+  },
+  "evidenceBoundary": "The dataset and workbook are CC BY 4.0. MouldMaster may retrieve the exact publisher workbook transiently and retain only aggregate schema, fingerprints, safe text labels and counts. Direct measured values must be distinguished from formula-derived cells, geometry/design inputs and other non-measurement values before acceptance. Pharmaceutical dissolution/OCT traces are characterization evidence and do not count as injection-machine high-frequency samples."
+}
