@@ -17,10 +17,10 @@ expected = {
     "probayes-main-v2": ("probayes-main-v2.json", "blocked-rights-review"),
     "probayes-doptimal-v1": ("probayes-doptimal-v1.json", "blocked-rights-review"),
     "skz-loki-v1": ("skz-loki-v1.json", "blocked-rights-review"),
-    "impure-pascoe-2022": ("impure-pascoe-2022-v1.json", "blocked-rights-review"),
+    "impure-pascoe-2022": ("impure-pascoe-2022-v1.json", "queued-executable-rate-limited"),
     "iguzzini-road-lenses": ("iguzzini-road-lenses-v1.json", "accepted-restricted-profile"),
-    "forinfpro-himd-v1": ("forinfpro-himd-v1.json", "blocked-rights-review"),
-    "cross-process-chain-17240390": ("cross-process-chain-17240390-v1.json", "blocked-rights-review"),
+    "forinfpro-himd-v1": ("forinfpro-himd-v1.json", "accepted-profiled-unit-limited"),
+    "cross-process-chain-17240390": ("cross-process-chain-17240390-v1.json", "queued-executable-hosted-large-archive"),
     "kamp-injection-7996": ("kamp-injection-7996-v1.json", "blocked-mirror-rights"),
     "foxconn-competition-16600": ("foxconn-competition-16600-v1.json", "blocked-mirror-rights"),
     "warwick-demoulding": ("warwick-demoulding-v2.json", "retrieved-special-format-needs-origin-export"),
@@ -36,9 +36,24 @@ for dataset_id, (name, status) in expected.items():
     need(x.get("status") == status, f"{dataset_id}: terminal state drifted")
     loaded[dataset_id] = x
 
-for did in ["probayes-main-v2", "probayes-doptimal-v1", "skz-loki-v1", "impure-pascoe-2022", "forinfpro-himd-v1", "cross-process-chain-17240390"]:
+for did in ["probayes-main-v2", "probayes-doptimal-v1", "skz-loki-v1"]:
     gate = loaded[did].get("rightsGate") or {}
     need(gate.get("rawFilesMustNotBeDownloadedByAutomationUntilLicenceIsExplicit") is True, f"{did}: raw retrieval fail-closed gate missing")
+
+for did in ["impure-pascoe-2022", "forinfpro-himd-v1", "cross-process-chain-17240390"]:
+    source = loaded[did].get("source") or {}
+    need(source.get("license") == "CC BY 4.0", f"{did}: confirmed Zenodo licence drifted")
+    need(source.get("automatedRetrievalAllowed") is True, f"{did}: licensed source must remain executable")
+    need("Zenodo records API" in str(source.get("licenseEvidenceStatus", "")), f"{did}: authoritative licence evidence missing")
+
+cross = loaded["cross-process-chain-17240390"]
+need((cross.get("scopeBoundary") or {}).get("screwDrivingStreamsExcludedFromInjectionMeasuredSampleCounts") is True,
+     "cross-process downstream screw-driving exclusion missing")
+
+forinfpro_result = load(RESULTS / "forinfpro-himd-v1.json")
+need(forinfpro_result.get("status") == "completed-public-measured-benchmark", "FORinFPRO accepted result missing")
+need((forinfpro_result.get("profile") or {}).get("acceptedMeasuredTimeSeriesSamples") == 0,
+     "FORinFPRO unit-limited profile must not inflate accepted time-series values")
 
 for did in ["kamp-injection-7996", "foxconn-competition-16600"]:
     gate = loaded[did]["rightsGate"]
@@ -89,6 +104,7 @@ need(rwth.get("status") == "retrieval-blocked-non-archive-response", "RWTH sourc
 need((rwth.get("acceptance") or {}).get("countsAsFullyProfiledMeasuredDataset") is False, "RWTH cannot be accepted without delivered archive")
 need(len((rwth.get("source") or {}).get("retrievalAttempts") or []) == 3, "RWTH retrieval audit must retain all three publisher URL attempts")
 
-report = {"schema": 2, "terminalContractsChecked": len(expected), "rightsBlocked": 6, "mirrorRightsBlocked": 2, "embargoed": 2, "requestOnly": 1, "confidential": 1, "specialFormatExport": 1, "restrictedEducationAccepted": 1, "rwthRetrievalBlocked": 1, "petReviewOnly": 1, "result": "pass"}
+report = {"schema": 3, "terminalContractsChecked": len(expected), "rightsBlocked": 3, "licensedQueued": 2, "licensedProfiledUnitLimited": 1, "mirrorRightsBlocked": 2, "embargoed": 2, "requestOnly": 1, "confidential": 1, "specialFormatExport": 1, "restrictedEducationAccepted": 1, "rwthRetrievalBlocked": 1, "petReviewOnly": 1, "result": "pass"}
 (ROOT / "remaining-dataset-terminal-states-report.json").write_text(json.dumps(report, indent=2) + "\n", encoding="utf-8")
 print("MouldMaster remaining dataset terminal-state QA passed (all sources are accepted or have an explicit rights/access/embargo/confidentiality/technical blocker)")
+
