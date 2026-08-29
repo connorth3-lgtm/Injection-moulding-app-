@@ -74,7 +74,12 @@ need(ig["experimentContext"]["reportedClassCountDiscrepancy"] == 5, "iGuzzini 14
 
 pet = load(RESULTS / "pet-preform-v2.json")
 need(pet.get("status") == "retrieved-profile-needs-semantic-review", "PET review-only state drifted")
-need((pet.get("acceptance") or {}).get("countsAsFullyProfiledMeasuredDataset") is False, "PET must remain non-counting")
+# PET's v2 result predates the common acceptance object. Treat absence as non-counting,
+# and fail if a future record explicitly promotes it or assigns measured time-series samples.
+pet_acceptance = pet.get("acceptance") or {}
+need(pet_acceptance.get("countsAsFullyProfiledMeasuredDataset") in {None, False}, "PET must remain non-counting")
+need(pet_acceptance.get("acceptedMeasuredTimeSeriesSamples") in {None, 0}, "PET cannot contribute measured time-series samples")
+need((pet.get("profile") or {}).get("rawRowsOrCellValuesEmitted") is False, "PET raw-value boundary drifted")
 
 report = {"schema": 1, "terminalContractsChecked": len(expected), "rightsBlocked": 6, "mirrorRightsBlocked": 2, "embargoed": 2, "requestOnly": 1, "confidential": 1, "specialFormatExport": 1, "restrictedEducationProfileCandidate": 1, "petReviewOnly": 1, "result": "pass"}
 (ROOT / "remaining-dataset-terminal-states-report.json").write_text(json.dumps(report, indent=2) + "\n", encoding="utf-8")
