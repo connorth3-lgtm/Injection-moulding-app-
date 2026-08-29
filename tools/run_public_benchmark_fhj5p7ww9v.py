@@ -8,6 +8,7 @@ import tempfile
 import urllib.request
 from pathlib import Path
 import pandas as pd
+from openpyxl import load_workbook
 
 ROOT = Path(__file__).resolve().parents[1]
 CONTRACT = ROOT / "data/public-benchmark-contracts/fhj5p7ww9v-v1.json"
@@ -75,6 +76,44 @@ def classify_headers(headers):
     }
 
 
+def aggregate_layout(path: Path):
+    wb = load_workbook(path, read_only=True, data_only=False)
+    out = {}
+    for ws in wb.worksheets:
+        text_cells = []
+        numeric_by_row = []
+        numeric_by_column = {}
+        formula_count = 0
+        for row in ws.iter_rows():
+            row_numeric = 0
+            for cell in row:
+                value = cell.value
+                if value is None:
+                    continue
+                if isinstance(value, str):
+                    if value.startswith("="):
+                        formula_count += 1
+                    else:
+                        cleaned = " ".join(value.split())
+                        if cleaned:
+                            text_cells.append({"cell": cell.coordinate, "text": cleaned[:200]})
+                elif isinstance(value, (int, float)) and not isinstance(value, bool):
+                    row_numeric += 1
+                    numeric_by_column[cell.column_letter] = numeric_by_column.get(cell.column_letter, 0) + 1
+            if row_numeric:
+                numeric_by_row.append({"row": row[0].row if row else None, "numericCells": row_numeric})
+        out[ws.title] = {
+            "textCells": text_cells,
+            "textCellCount": len(text_cells),
+            "numericCellsByRow": numeric_by_row,
+            "numericCellsByColumn": numeric_by_column,
+            "numericCellCount": sum(x["numericCells"] for x in numeric_by_row),
+            "formulaCellCount": formula_count,
+            "numericValuesEmitted": False,
+        }
+    return out
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--output", type=Path, required=True)
@@ -99,6 +138,7 @@ def main():
         path = Path(td) / "source.xlsx"
         path.write_bytes(data)
         sheets = pd.read_excel(path, sheet_name=None)
+        layout = aggregate_layout(path)
         profiles = []
         total_rows = 0
         total_columns = 0
@@ -118,6 +158,7 @@ def main():
                 "rows": rows,
                 "columns": cols,
                 "semantics": sem,
+                "layout": layout.get(str(sheet_name), {}),
                 "nonNullMeasuredOutcomeCells": measured_non_null,
             })
 
@@ -126,7 +167,7 @@ def main():
     recognized = total_measured_cells > 0
     status = "completed-restricted-noncommercial-measured-benchmark" if recognized else "retrieved-profile-needs-semantic-review"
     result = {
-        "schema": 1,
+        "schema": 2,
         "status": status,
         "retrievedDate": args.retrieved_date,
         "source": {
@@ -151,6 +192,7 @@ def main():
             "recordLevelMeasuredValues": total_measured_cells,
             "acceptedMeasuredTimeSeriesSamples": 0,
             "rawRowsOrCellValuesEmitted": False,
+            "numericMeasurementValuesEmitted": False,
         },
         "acceptance": {
             "countsAsFullyProfiledMeasuredDataset": recognized,
@@ -164,7 +206,7 @@ def main():
             "rawPublisherFileCommitted": False,
             "rawRowsOrCellValuesUploadedAsArtifact": False,
         },
-        "evidenceBoundary": contract["evidenceBoundary"] if recognized else "The exact CC BY-NC 3.0 publisher workbook was retrieved and fingerprinted, but its delivered table headers do not directly expose the expected measured outcomes to the first-pass parser. The source remains non-counting until the sheet layout is semantically mapped from aggregate schema evidence; raw cell values are not retained or artifacted."
+        "evidenceBoundary": contract["evidenceBoundary"] if recognized else "The exact CC BY-NC 3.0 publisher workbook was retrieved and fingerprinted. Its sheet names identify measured outcome families, but the delivered columns are numbered rather than semantically named. The aggregate artifact therefore exposes only textual layout labels and numeric-cell counts/coordinates, never measurement values. The source remains non-counting until measured rows and derived/process-factor rows are separated from this layout evidence."
     }
     if publisher_sha and len(str(publisher_sha)) == 64:
         result["source"]["publisherSha256Matched"] = str(publisher_sha).lower() == digest.lower()
