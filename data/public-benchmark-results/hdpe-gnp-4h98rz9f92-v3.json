@@ -1,0 +1,48 @@
+{
+  "schema": 1,
+  "status": "completed-public-open-measured-benchmark",
+  "retrievedDate": "2026-08-29",
+  "source": {
+    "datasetId": "mendeley-4h98rz9f92-v3",
+    "datasetDoi": "10.17632/4h98rz9f92.3",
+    "version": 3,
+    "license": "CC BY 4.0"
+  },
+  "manifest": {
+    "publisherFiles": [
+      {"fileId":"a453d24e-08fc-4bc7-a713-7f576916fb82","fileName":"Code1.txt","extension":".txt","publisherReportedSizeBytes":33452,"publisherSha256":"9467691d06cdb90629612037548198ba1f516c8e380e052466099d7be657b268","tabularProfileEligible":false,"rawPayloadCommitted":false},
+      {"fileId":"24827c7e-168c-4b02-b29e-ac5094df3e42","fileName":"Raw Data_SEM Image of filler.tif","extension":".tif","publisherReportedSizeBytes":894317,"publisherSha256":"8ec915d059babd36e7310b386b406f6993eb8f0d1058f86337e3442ac0b265b7","tabularProfileEligible":false,"rawPayloadCommitted":false},
+      {"fileId":"368356fe-618c-4eab-82e6-53dc86762943","fileName":"Raw Data.xlsx","extension":".xlsx","publisherReportedSizeBytes":14922,"publisherSha256":"39210169aac62a1455603d37cdffaca93cf0c46189ea4258c5f3c0a4a37255c9","sha256":"39210169aac62a1455603d37cdffaca93cf0c46189ea4258c5f3c0a4a37255c9","publisherSha256Matched":true,"rawPayloadCommitted":false},
+      {"fileId":"62c7495b-11eb-4c81-81e0-d1a68797c483","fileName":"RFR_Hardness.xlsx","extension":".xlsx","publisherReportedSizeBytes":10291,"publisherSha256":"452b4615f079378045ce3279fd9fa945fbfb7d27b19d0492a0cca6bdc2d9e972","sha256":"452b4615f079378045ce3279fd9fa945fbfb7d27b19d0492a0cca6bdc2d9e972","publisherSha256Matched":true,"rawPayloadCommitted":false},
+      {"fileId":"3cfa378a-9e15-4a59-9c60-6c3902a6443f","fileName":"RFR_Tensile modulus.xlsx","extension":".xlsx","publisherReportedSizeBytes":10277,"publisherSha256":"818aa2ad05805c310aa898a7ed30ca1b1cb952bc2ebd4e614fcd739480473aa3","sha256":"818aa2ad05805c310aa898a7ed30ca1b1cb952bc2ebd4e614fcd739480473aa3","publisherSha256Matched":true,"rawPayloadCommitted":false},
+      {"fileId":"7acb9f11-f875-4b56-9b8a-633423db3783","fileName":"RFR_Toughness.xlsx","extension":".xlsx","publisherReportedSizeBytes":10287,"publisherSha256":"0c2f201ad5429d49b5edf130170f82ad99cc1054990cba2f63be292cec311a18","sha256":"0c2f201ad5429d49b5edf130170f82ad99cc1054990cba2f63be292cec311a18","publisherSha256Matched":true,"rawPayloadCommitted":false},
+      {"fileId":"9d00f2f0-74d8-43ca-a82f-02c8f0f3027b","fileName":"Rules DT.xlsx","extension":".xlsx","publisherReportedSizeBytes":13523,"publisherSha256":"5e92067b6d55760a337b6b72fe376287604667c0a5b769f8e42ff719352a3dfd","sha256":"5e92067b6d55760a337b6b72fe376287604667c0a5b769f8e42ff719352a3dfd","publisherSha256Matched":true,"rawPayloadCommitted":false}
+    ],
+    "publisherFileCount": 7,
+    "tabularFilesProfiled": 5,
+    "expectedMeasuredTargetFiles": ["RFR_Hardness.xlsx","RFR_Tensile modulus.xlsx","RFR_Toughness.xlsx"],
+    "expectedMeasuredTargetHashesMatched": true,
+    "rawPublisherFilesCommitted": false
+  },
+  "profile": {
+    "selectedMeasuredTablesByOutcome": {
+      "hardness": {"fileName":"RFR_Hardness.xlsx","table":"Sheet1","rows":35,"columns":5,"columnNames":["Expt No.","GNP %","Temperature","Pressure","Hardness"],"directMeasuredOutcomeCells":35,"rawRowsOrCellValuesEmitted":false},
+      "tensileModulus": {"fileName":"RFR_Tensile modulus.xlsx","table":"A","rows":35,"columns":5,"columnNames":["Expt No.","GNP %","Temperature","Pressure","Tensile modulus"],"directMeasuredOutcomeCells":35,"rawRowsOrCellValuesEmitted":false},
+      "toughness": {"fileName":"RFR_Toughness.xlsx","table":"Sheet1","rows":35,"columns":5,"columnNames":["Expt No.","GNP %","Temperature","Pressure","Toughness"],"directMeasuredOutcomeCells":35,"rawRowsOrCellValuesEmitted":false}
+    },
+    "derivedExcluded": {"fileName":"Rules DT.xlsx","reason":"decision-tree rules and predicted classes are derived/non-measured outputs"},
+    "semanticLayoutRecognized": true,
+    "reportedExperimentalConditions": 35,
+    "recordLevelMeasuredOutcomeValues": 105,
+    "acceptedMeasuredTimeSeriesSamples": 0,
+    "rawRowsOrCellValuesEmitted": false
+  },
+  "acceptance": {
+    "countsAsFullyProfiledMeasuredDataset": true,
+    "licenseScope": "public-open-cc-by-4.0",
+    "recordLevelMeasuredOutcomeValues": 105,
+    "acceptedMeasuredTimeSeriesSamples": 0
+  },
+  "retrieval": {"rawPublisherFileCommitted":false,"rawRowsOrCellValuesUploadedAsArtifact":false},
+  "evidenceBoundary": "Only directly delivered experimental measurements attributable to injection-moulded HDPE/GNP specimens may count. Quartile classes, predictions, model outputs, decision-tree rules, figures and code are derived/non-measured evidence and must not inflate measured-value counts. Aggregate schemas, counts and fingerprints may be retained; raw publisher rows/files are not committed."
+}
