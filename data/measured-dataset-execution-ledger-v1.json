@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "version": "2026.08.29.6",
+  "version": "2026.08.29.7",
   "reviewed": "2026-08-29",
   "purpose": "One-by-one execution state for the 20 real measured-data sources. This ledger does not change accepted counts by itself; only completed source-file profiling may do that.",
   "policy": {
@@ -13,26 +13,148 @@
     "restrictedResearchEducationProfilesMayCountWhenExactSourceProfilingPassesButTermsMustNotBeWidened": true
   },
   "sources": [
-    {"priority":1,"datasetId":"mendeley-gtnb4j7bfx-v1","state":"accepted-profiled","action":"keep regression-pinned","reason":"CC BY 4.0 exact workbook already retrieved, SHA-256 fingerprinted and process-separated"},
-    {"priority":2,"datasetId":"scatimdata-avaps","state":"accepted-profiled","action":"keep 3-archive source and delivered-file sample count regression-pinned","reason":"CC BY 4.0 source completed: three SHA-256-fingerprinted archives, 3,328 quality-linked cycles and 13,631,488 delivered pressure/flow values reconciled; paper says 2,049 points but released traces contain 2,048"},
-    {"priority":3,"datasetId":"su13148102-supplement","state":"accepted-profiled","action":"keep exact publisher supplement and delivered-schema regression-pinned","reason":"CC BY 4.0 source completed: SHA-256 verified, 955 rows, 45 delivered fields, five material groups; the delivered release has three more fields than the paper-reported 42"},
-    {"priority":4,"datasetId":"probayes-main-v2","state":"blocked-rights-review","action":"capture explicit B2SHARE reuse licence before ingest","reason":"downloadable files are not sufficient evidence of reuse rights"},
-    {"priority":5,"datasetId":"probayes-doptimal-v1","state":"blocked-rights-review","action":"capture explicit B2SHARE reuse licence before ingest","reason":"downloadable files are not sufficient evidence of reuse rights"},
-    {"priority":6,"datasetId":"skz-loki-v1","state":"blocked-rights-review","action":"obtain explicit SKZ/B2SHARE dataset reuse terms before waveform ingest","reason":"the authoritative B2SHARE Rights > License field is present but blank; public download alone is not treated as a reusable data licence"},
-    {"priority":7,"datasetId":"rwth-pcr-2025","state":"retrieval-blocked-source-response","action":"recheck the authoritative CC BY 4.0 archive endpoint or obtain a direct publisher-delivered archive; then profile delivered measurement semantics","reason":"same-repository GitHub Actions source run 33229910280 received the same 248-byte text/html response instead of a ZIP from the canonical URL and both tested download query variants; no source data were accepted"},
-    {"priority":8,"datasetId":"impure-pascoe-2022","state":"accepted-profiled-unit-limited","action":"keep the 309-file manifest, checksums, one-schema reconciliation and zero accepted-sample boundary regression-pinned","reason":"hosted profiling completed all 307 cycle files and two support tables; 2,376,696 numeric values remain unit/analogue-semantics limited"},
-    {"priority":9,"datasetId":"iguzzini-road-lenses","state":"accepted-profiled-restricted-research-education","action":"keep exact pinned CSV and delivered class-count reconciliation regression-pinned; retain research/education-only scope and no raw redistribution","reason":"exact pinned source completed under explicit research/education release terms: 1,451 rows, 13 complete process fields, 18,863 record-level measured process values and delivered quality counts 370/406/310/365; README class 4 count is short by five"},
-    {"priority":10,"datasetId":"openmms-t4g","state":"accepted-profiled","action":"keep exact article-pinned case-study file and source-defined signal/unit mapping regression-pinned","reason":"BSD-3-Clause source completed: exact CSV SHA-256 fingerprinted, 29,808 ordered rows, 10 measured sensor channels, two strictly increasing module time bases and 298,080 accepted measured values"},
-    {"priority":11,"datasetId":"forinfpro-himd-v1","state":"accepted-profiled","action":"keep exact three-file manifest and one-cycle/unit limitations regression-pinned","reason":"official Zenodo API confirms CC BY 4.0; three files, 12,689 rows and 60 named machine channels were profiled without committing raw rows"},
-    {"priority":12,"datasetId":"cross-process-chain-17240390","state":"profiled-scope-limited-semantic-review","action":"add a source-specific lower-workpiece preamble/chart parser and map units plus actual-versus-target semantics before accepting measured values","reason":"published MD5, local SHA-256 and ZIP CRC passed; 30,572 members and 15,688 injection-scope files were enumerated, but mixed lower TXT row shapes make the generic numeric profile non-accepting"},
-    {"priority":13,"datasetId":"kamp-injection-7996","state":"blocked-mirror-rights","action":"locate authoritative original KAMP distribution terms","reason":"GitHub analysis-code licence does not prove rights for the original KAMP factory dataset"},
-    {"priority":14,"datasetId":"foxconn-competition-16600","state":"blocked-mirror-rights","action":"locate original competition licence/terms","reason":"the original competition download is no longer authoritative/available and public mirrors do not prove redistribution or automated-ingestion rights"},
-    {"priority":15,"datasetId":"warwick-demoulding","state":"retrieved-special-format-needs-export","action":"export the five hash-verified OPJU projects through a validated Windows Origin/OriginPro workflow before accepting trial/channel/sample counts","reason":"all CC BY 4.0 publisher files are retrieved and fingerprinted, but a validated Origin-compatible table export is still required"},
-    {"priority":16,"datasetId":"pet-preform-v2","state":"retrieved-semantic-review-not-accepted","action":"retain the fingerprinted 27-row schema profile but exclude it from measured-quality counts","reason":"the delivered workbook combines process inputs with simulated/predicted residual-stress fields and supplies no source-defined measured quality outcome"},
-    {"priority":17,"datasetId":"leon-process-20309380","state":"blocked-embargo","action":"recheck after embargo end or earlier depositor release","notBefore":"2027-12-31","reason":"CC BY 4.0 metadata are visible but raw files remain embargoed"},
-    {"priority":18,"datasetId":"leon-defects-20322729","state":"blocked-embargo","action":"recheck after embargo end or earlier depositor release; preserve overlap with the companion 1,000-batch process campaign","notBefore":"2027-12-31","reason":"CC BY 4.0 metadata are visible but raw image/label files remain embargoed"},
-    {"priority":19,"datasetId":"inqcim-2500-request","state":"blocked-request-only","action":"obtain authorised files and data-use terms from the corresponding authors before profiling","reason":"correct paper DOI 10.3390/polym14173551 states that data are available upon request, not openly executable"},
-    {"priority":20,"datasetId":"bottle-cap-7162-confidential","state":"blocked-confidential","action":"use the paper as measured Tier-B evidence only unless an explicit authorised site/data agreement is obtained","reason":"the paper explicitly states that the underlying 7,162-cycle production data are confidential"}
+    {
+      "priority": 1,
+      "datasetId": "mendeley-gtnb4j7bfx-v1",
+      "state": "accepted-profiled",
+      "action": "keep regression-pinned",
+      "reason": "CC BY 4.0 exact workbook already retrieved, SHA-256 fingerprinted and process-separated"
+    },
+    {
+      "priority": 2,
+      "datasetId": "scatimdata-avaps",
+      "state": "accepted-profiled",
+      "action": "keep 3-archive source and delivered-file sample count regression-pinned",
+      "reason": "CC BY 4.0 source completed: three SHA-256-fingerprinted archives, 3,328 quality-linked cycles and 13,631,488 delivered pressure/flow values reconciled; paper says 2,049 points but released traces contain 2,048"
+    },
+    {
+      "priority": 3,
+      "datasetId": "su13148102-supplement",
+      "state": "accepted-profiled",
+      "action": "keep exact publisher supplement and delivered-schema regression-pinned",
+      "reason": "CC BY 4.0 source completed: SHA-256 verified, 955 rows, 45 delivered fields, five material groups; the delivered release has three more fields than the paper-reported 42"
+    },
+    {
+      "priority": 4,
+      "datasetId": "probayes-main-v2",
+      "state": "blocked-rights-review",
+      "action": "capture explicit B2SHARE reuse licence before ingest",
+      "reason": "downloadable files are not sufficient evidence of reuse rights"
+    },
+    {
+      "priority": 5,
+      "datasetId": "probayes-doptimal-v1",
+      "state": "blocked-rights-review",
+      "action": "capture explicit B2SHARE reuse licence before ingest",
+      "reason": "downloadable files are not sufficient evidence of reuse rights"
+    },
+    {
+      "priority": 6,
+      "datasetId": "skz-loki-v1",
+      "state": "blocked-rights-review",
+      "action": "obtain explicit SKZ/B2SHARE dataset reuse terms before waveform ingest",
+      "reason": "the authoritative B2SHARE Rights > License field is present but blank; public download alone is not treated as a reusable data licence"
+    },
+    {
+      "priority": 7,
+      "datasetId": "rwth-pcr-2025",
+      "state": "retrieval-blocked-source-response",
+      "action": "recheck the authoritative CC BY 4.0 archive endpoint or obtain a direct publisher-delivered archive; then profile delivered measurement semantics",
+      "reason": "same-repository GitHub Actions source run 33229910280 received the same 248-byte text/html response instead of a ZIP from the canonical URL and both tested download query variants; no source data were accepted"
+    },
+    {
+      "priority": 8,
+      "datasetId": "impure-pascoe-2022",
+      "state": "accepted-profiled-unit-limited",
+      "action": "keep the 309-file manifest, checksums, one-schema reconciliation and zero accepted-sample boundary regression-pinned",
+      "reason": "hosted profiling completed all 307 cycle files and two support tables; 2,376,696 numeric values remain unit/analogue-semantics limited"
+    },
+    {
+      "priority": 9,
+      "datasetId": "iguzzini-road-lenses",
+      "state": "accepted-profiled-restricted-research-education",
+      "action": "keep exact pinned CSV and delivered class-count reconciliation regression-pinned; retain research/education-only scope and no raw redistribution",
+      "reason": "exact pinned source completed under explicit research/education release terms: 1,451 rows, 13 complete process fields, 18,863 record-level measured process values and delivered quality counts 370/406/310/365; README class 4 count is short by five"
+    },
+    {
+      "priority": 10,
+      "datasetId": "openmms-t4g",
+      "state": "accepted-profiled",
+      "action": "keep exact article-pinned case-study file and source-defined signal/unit mapping regression-pinned",
+      "reason": "BSD-3-Clause source completed: exact CSV SHA-256 fingerprinted, 29,808 ordered rows, 10 measured sensor channels, two strictly increasing module time bases and 298,080 accepted measured values"
+    },
+    {
+      "priority": 11,
+      "datasetId": "forinfpro-himd-v1",
+      "state": "accepted-profiled",
+      "action": "keep exact three-file manifest and one-cycle/unit limitations regression-pinned",
+      "reason": "official Zenodo API confirms CC BY 4.0; three files, 12,689 rows and 60 named machine channels were profiled without committing raw rows"
+    },
+    {
+      "priority": 12,
+      "datasetId": "cross-process-chain-17240390",
+      "state": "partial-accepted-lower-profiled-upper-unit-blocked",
+      "action": "keep the source-native lower TXT parser/dictionary and 7,426,743 accepted lower actual-signal values regression-pinned; resolve authoritative upper-workpiece engineering units before full-family promotion",
+      "reason": "exact publisher archive re-run accepted 4,989/4,989 lower TXT files and 2,475,581 rows with source-defined units and timing; three actual channels contribute 7,426,743 measured values while 2,475,581 pressure-target command values are excluded; upper CSV units remain unresolved"
+    },
+    {
+      "priority": 13,
+      "datasetId": "kamp-injection-7996",
+      "state": "blocked-mirror-rights",
+      "action": "locate authoritative original KAMP distribution terms",
+      "reason": "GitHub analysis-code licence does not prove rights for the original KAMP factory dataset"
+    },
+    {
+      "priority": 14,
+      "datasetId": "foxconn-competition-16600",
+      "state": "blocked-mirror-rights",
+      "action": "locate original competition licence/terms",
+      "reason": "the original competition download is no longer authoritative/available and public mirrors do not prove redistribution or automated-ingestion rights"
+    },
+    {
+      "priority": 15,
+      "datasetId": "warwick-demoulding",
+      "state": "retrieved-special-format-needs-export",
+      "action": "export the five hash-verified OPJU projects through a validated Windows Origin/OriginPro workflow before accepting trial/channel/sample counts",
+      "reason": "all CC BY 4.0 publisher files are retrieved and fingerprinted, but a validated Origin-compatible table export is still required"
+    },
+    {
+      "priority": 16,
+      "datasetId": "pet-preform-v2",
+      "state": "retrieved-semantic-review-not-accepted",
+      "action": "retain the fingerprinted 27-row schema profile but exclude it from measured-quality counts",
+      "reason": "the delivered workbook combines process inputs with simulated/predicted residual-stress fields and supplies no source-defined measured quality outcome"
+    },
+    {
+      "priority": 17,
+      "datasetId": "leon-process-20309380",
+      "state": "blocked-embargo",
+      "action": "recheck after embargo end or earlier depositor release",
+      "notBefore": "2027-12-31",
+      "reason": "CC BY 4.0 metadata are visible but raw files remain embargoed"
+    },
+    {
+      "priority": 18,
+      "datasetId": "leon-defects-20322729",
+      "state": "blocked-embargo",
+      "action": "recheck after embargo end or earlier depositor release; preserve overlap with the companion 1,000-batch process campaign",
+      "notBefore": "2027-12-31",
+      "reason": "CC BY 4.0 metadata are visible but raw image/label files remain embargoed"
+    },
+    {
+      "priority": 19,
+      "datasetId": "inqcim-2500-request",
+      "state": "blocked-request-only",
+      "action": "obtain authorised files and data-use terms from the corresponding authors before profiling",
+      "reason": "correct paper DOI 10.3390/polym14173551 states that data are available upon request, not openly executable"
+    },
+    {
+      "priority": 20,
+      "datasetId": "bottle-cap-7162-confidential",
+      "state": "blocked-confidential",
+      "action": "use the paper as measured Tier-B evidence only unless an explicit authorised site/data agreement is obtained",
+      "reason": "the paper explicitly states that the underlying 7,162-cycle production data are confidential"
+    }
   ],
   "summary": {
     "total": 20,
@@ -41,12 +163,12 @@
     "executingProfile": 0,
     "queuedExecutable": 0,
     "retrievalBlockedExecutable": 1,
-    "retrievedNotAccepted": 3,
+    "retrievedNotAccepted": 2,
     "rightsOrTermsBlocked": 3,
     "mirrorRightsBlocked": 2,
     "embargoed": 2,
     "requestOnly": 1,
-    "confidential": 1
+    "confidential": 1,
+    "partiallyAcceptedNotFullyProfiled": 1
   }
 }
-

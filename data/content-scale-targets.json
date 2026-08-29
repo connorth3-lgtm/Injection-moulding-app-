@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "version": "2026.08.29.4",
+  "version": "2026.08.29.5",
   "reviewed": "2026-08-29",
   "scope": "Hard content-scale targets for MouldMaster. Completion counts only evidence that satisfies the acceptance definition for that area. Synthetic learning cases, generated drafts, unverified candidate papers and metadata-only dataset records must not be counted as completed measured evidence.",
   "targets": {
@@ -11,15 +11,15 @@
       "acceptance": "A real measured dataset whose exact source/version/licence or access terms are recorded; source files have been obtained lawfully; file fingerprint and profile are recorded; schema/units/grouping are inspected; direct measurements, commands, derived fields and labels are distinguished; material/process/machine/mould/quality context and limitations are documented. Metadata-only records do not count.",
       "currentAccepted": 7,
       "currentDiscovered": 20,
-      "notes": "Seven exact-source measured dataset families satisfy the profiling acceptance definition, including the hosted ImPure profile: 309 checksum-verified publisher files, 307 cycle files, 297,087 cycle rows and one consistent nine-column cycle schema. Its 2,376,696 numeric values remain unit/analogue-semantics limited and add zero accepted time-series samples. The cross-process archive is checksum-verified and structurally profiled but remains non-counting because its lower-workpiece TXT preamble/chart shapes and unit/target semantics require a source-specific parser. PET, Warwick and RWTH retain their documented semantic, format and retrieval blockers."
+      "notes": "Seven exact-source measured dataset families satisfy the profiling acceptance definition. The cross-process archive now has a source-defined accepted lower-workpiece stream: 4,989/4,989 TXT files, 2,475,581 rows and 7,426,743 accepted actual-signal values, with target-pressure commands excluded. It does not become an eighth fully profiled family because authoritative engineering units for the upper-workpiece CSV remain unresolved. ImPure remains structurally profiled but its 2,376,696 numeric cycle values are still unit/analogue-semantics limited. PET, Warwick and RWTH retain their documented semantic, format and retrieval blockers."
     },
     "measured_time_series_samples": {
       "minimum": 1000000,
       "preferred": 5000000,
       "unit": "samples",
       "acceptance": "Measured time-series samples from lawfully accessed real experimental or industrial injection-moulding datasets with source provenance, signal identity, units, sample ordering/time basis and dataset linkage. Synthetic training cycles and generated traces never count.",
-      "currentAccepted": 13929568,
-      "notes": "Accepted real time-series evidence totals 13,929,568 values. AVAPS contributes 13,631,488 values from 3,328 quality-linked cycles x two delivered signals x 2,048 stored values per signal. OpenMMS-T4G contributes 298,080 values from 29,808 ordered rows x 10 source-defined sensor channels. The iGuzzini accepted restricted profile is record-level and contributes zero high-frequency time-series samples. The AVAPS companion paper reports 2,049 points per signal, but released files consistently contain 2,048 stored values, so the delivered-file count is used. The existing 19,008 process-data learning cycles remain synthetic and excluded."
+      "currentAccepted": 21356311,
+      "notes": "Accepted real time-series evidence totals 21,356,311 values. AVAPS contributes 13,631,488 values from 3,328 quality-linked cycles x two delivered signals x 2,048 stored values per signal. OpenMMS-T4G contributes 298,080 values from 29,808 ordered rows x 10 source-defined sensor channels. The cross-process lower-workpiece source contract contributes 7,426,743 actual measured values from 2,475,581 rows x three source-defined actual channels: pressure (bar), screw volume (cm³) and injection flow (cm³/s). Its 2,475,581 pressure-target command values are excluded. The cross-process upper-workpiece stream remains outside accepted counts until engineering units are source-defined. iGuzzini is record-level and contributes zero high-frequency time-series samples. The existing 19,008 process-data learning cycles remain synthetic and excluded."
     },
     "material_profiles": {
       "minimum": 250,
@@ -79,4 +79,3 @@
     "Generated assessment drafts do not enter the accepted count until existing evidence-approval and quality gates pass."
   ]
 }
-
