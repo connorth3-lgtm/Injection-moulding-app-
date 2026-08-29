@@ -5,20 +5,24 @@ on:
     branches: [main]
     paths:
       - 'data/cross-process-upper-workpiece-dictionary-v1.json'
+      - 'data/cross-process-upper-pressure-state-clarification-2026-08-30.json'
       - 'data/public-benchmark-results/cross-process-upper-workpiece-source-contract-v1.json'
       - 'tools/profile_cross_process_upper_workpiece.py'
       - 'qa_cross_process_upper_contract.py'
+      - 'qa_cross_process_upper_clarification.py'
       - 'data/impure-pascoe-channel-dictionary-v1.json'
       - 'data/warwick-demoulding-source-contract-v1.json'
       - 'qa_measured_data_blocker_contracts.py'
       - '.github/workflows/measured-data-blocker-contracts.yml'
   push:
-    branches: [main]
+    branches: [main, data/cross-process-upper-clarification]
     paths:
       - 'data/cross-process-upper-workpiece-dictionary-v1.json'
+      - 'data/cross-process-upper-pressure-state-clarification-2026-08-30.json'
       - 'data/public-benchmark-results/cross-process-upper-workpiece-source-contract-v1.json'
       - 'tools/profile_cross_process_upper_workpiece.py'
       - 'qa_cross_process_upper_contract.py'
+      - 'qa_cross_process_upper_clarification.py'
       - 'data/impure-pascoe-channel-dictionary-v1.json'
       - 'data/warwick-demoulding-source-contract-v1.json'
       - 'qa_measured_data_blocker_contracts.py'
@@ -41,7 +45,10 @@ jobs:
           python -m py_compile qa_measured_data_blocker_contracts.py
           python -m py_compile tools/profile_cross_process_upper_workpiece.py
           python -m py_compile qa_cross_process_upper_contract.py
+          python -m py_compile qa_cross_process_upper_clarification.py
       - name: Validate upper specialist parser contract
         run: python qa_cross_process_upper_contract.py
+      - name: Validate upper semantic clarification boundary
+        run: python qa_cross_process_upper_clarification.py
       - name: Validate fail-closed source contracts
         run: python qa_measured_data_blocker_contracts.py
