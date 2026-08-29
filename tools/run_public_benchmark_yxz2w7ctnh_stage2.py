@@ -6,7 +6,7 @@ from openpyxl import load_workbook
 
 ROOT=Path(__file__).resolve().parents[1]
 CONTRACT=ROOT/'data/public-benchmark-contracts/yxz2w7ctnh-v1.json'
-DATASET_ID='yxz2w7ctnh'; VERSION=1; API_ROOT='https://api.data.mendeley.com'; UA='MouldMaster-Educational-Evidence-Profiler/1.0'
+DATASET_ID='yxz2w7ctnh'; VERSION=1; PUBLIC_FILE_ROOT=f'https://data.mendeley.com/public-files/datasets/{DATASET_ID}/files'; UA='MouldMaster-Educational-Evidence-Profiler/1.0'
 
 def get(url):
     req=urllib.request.Request(url,headers={'User-Agent':UA,'Accept':'*/*'})
@@ -26,7 +26,7 @@ def main():
     ap=argparse.ArgumentParser(); ap.add_argument('--output',required=True); ap.add_argument('--retrieved-date',required=True); a=ap.parse_args()
     c=json.loads(CONTRACT.read_text()); profiles=[]; hashes_ok=True
     for f in c['stage1Evidence']['mechanicalFiles']:
-        url=f"{API_ROOT}/datasets/{DATASET_ID}/files/{f['id']}/file_downloaded?version={VERSION}"
+        url=f"{PUBLIC_FILE_ROOT}/{f['id']}/file_downloaded"
         data,final=get(url); digest=hashlib.sha256(data).hexdigest(); matched=digest.lower()==f['sha256'].lower(); hashes_ok &= matched
         wb=load_workbook(io.BytesIO(data),read_only=True,data_only=False)
         sheets=[]
