@@ -1,0 +1,70 @@
+{
+  "schema": 1,
+  "datasetId": "probayes-doptimal-v1",
+  "status": "blocked-rights-review",
+  "source": {
+    "recordUrl": "https://b2share.eudat.eu/records/v64sz-f0f41",
+    "legacyRecordIds": [
+      "49ad5d305a4a43aabbd1ba94c8956e50",
+      "3f80952ce5ff4be88ae4cf6a3bdfe732"
+    ],
+    "datasetDoi": "10.23728/b2share.3f80952ce5ff4be88ae4cf6a3bdfe732",
+    "publisher": "B2SHARE v2",
+    "version": "v1",
+    "published": "2023-07-20",
+    "technicalModified": "2025-10-28",
+    "access": "open",
+    "license": null,
+    "licenseEvidenceStatus": "The authoritative B2SHARE record exposes Rights > License, but no licence value is present.",
+    "automatedRetrievalAllowed": false,
+    "rawRedistributionAllowed": false,
+    "reportedTotalSize": "78.1 MB"
+  },
+  "experimentContext": {
+    "project": "ProBayes",
+    "process": "injection moulding",
+    "machine": "KraussMaffei 160-750PX",
+    "part": "warpage shell",
+    "material": "Borealis HE125MO polypropylene",
+    "injectionMouldedParts": 303,
+    "experimentalPoints": 28,
+    "featuresPerPart": 396,
+    "dataSources": 9,
+    "recordUnit": "one produced part / injection-moulding cycle identified by MachineCycleID",
+    "design": "d-optimal Design of Experiment",
+    "variedSetParameters": [
+      "cylinder temperature",
+      "mould temperature",
+      "injection speed",
+      "holding pressure"
+    ],
+    "qualitySemantics": [
+      "manual OK/NOK inspection",
+      "additional source-defined labels"
+    ]
+  },
+  "publisherFileManifest": [
+    {"name":"data_description.pdf","size":"8.2 MB","md5":"b5e23f6afb701e1398664396dfa6ae10","role":"documentation"},
+    {"name":"dataset.parquet","size":"62.4 MB","md5":"913cb30061ba35b78cc7715799674783","role":"combined per-cycle dataset"},
+    {"name":"DataXplorer-Parameter_Names.xlsx","size":"22.2 kB","md5":"772dacf3c15db62644e3ce5411e91079","role":"parameter-name mapping"},
+    {"name":"Pandas_Profiling_Report.html","size":"7.5 MB","md5":"2c520b13c3b17f91459bd5abc6c54c6a","role":"profiling report"}
+  ],
+  "rightsGate": {
+    "publicDownloadDoesNotEqualReusePermission": true,
+    "rawFilesMustNotBeDownloadedByAutomationUntilLicenceIsExplicit": true,
+    "requiredEvidence": [
+      "An explicit dataset licence or written reuse permission from SKZ/Fraunhofer/B2SHARE is captured.",
+      "The captured terms permit automated ingestion and aggregate profiling.",
+      "The exact v1 file manifest and checksums are revalidated at retrieval time."
+    ]
+  },
+  "profilingPlanAfterRightsClearance": [
+    "Verify dataset.parquet against its publisher MD5 and retain a SHA-256 fingerprint in the aggregate result.",
+    "Confirm exactly 303 MachineCycleID records and reconcile 28 experimental points from delivered data.",
+    "Classify the 396 features by the nine source systems and distinguish measured fields, setpoints, identifiers, extracted features and labels.",
+    "Keep cycle-level feature records distinct from any embedded or derived time-series features and do not invent a high-frequency sample count.",
+    "Verify manual OK/NOK and other labels against source-defined semantics before defect or mechanism promotion.",
+    "Emit aggregate schemas, counts and fingerprints only; do not commit or artifact raw third-party rows or arrays."
+  ],
+  "evidenceBoundary": "The ProBayes d-optimal record documents 303 real injection-moulded parts across 28 experimental points, one PP material, 396 features and nine data sources, with MachineCycleID records and manual quality labels. Exact publisher file names, sizes and MD5 checksums are available. However, the authoritative B2SHARE Rights > License field is blank, so the dataset remains non-executable and contributes no accepted measured count until explicit reuse terms are captured."
+}
