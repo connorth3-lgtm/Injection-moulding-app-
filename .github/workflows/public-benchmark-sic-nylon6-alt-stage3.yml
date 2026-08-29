@@ -1,0 +1,64 @@
+name: MouldMaster Public Measured Benchmark — SiC Nylon 6 tribology acceptance
+
+on:
+  push:
+    branches: [data/real-dataset-profiling-wave2-batch4]
+    paths:
+      - 'tools/run_public_benchmark_sic_nylon6_alt_stage3.py'
+      - 'qa_public_benchmark_sic_nylon6_alt_stage3.py'
+      - 'data/public-benchmark-results/sic-nylon6-alt-stage1.json'
+      - '.github/workflows/public-benchmark-sic-nylon6-alt-stage3.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  semantic-acceptance:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Validate tribology acceptance boundary
+        run: python qa_public_benchmark_sic_nylon6_alt_stage3.py
+      - name: Count direct Word-table tribology measurements only
+        run: |
+          mkdir -p benchmark-results
+          python tools/run_public_benchmark_sic_nylon6_alt_stage3.py \
+            --output benchmark-results/sic-nylon6-v1.json \
+            --retrieved-date "$(date -u +%F)"
+      - name: Validate accepted aggregate result
+        run: |
+          python - <<'PY'
+          import json
+          x=json.load(open('benchmark-results/sic-nylon6-v1.json'))
+          assert x['status']=='accepted-profiled-injection-moulded-tribology'
+          assert x['source']['primaryDatasetDoi']=='10.17632/ztkc87d6sr.1'
+          assert x['source']['alternateDatasetDoi']=='10.17632/47k6jswwg7.1'
+          assert x['source']['useLicenseBoundary']=='CC BY-NC 3.0'
+          assert x['source']['publisherSha256Matched'] is True
+          assert x['profile']['directRecordLevelTribologyMeasurements']==40
+          assert len(x['profile']['acceptedDirectMeasuredBlocks'])==2
+          assert all(b['directMeasuredValues']==20 for b in x['profile']['acceptedDirectMeasuredBlocks'])
+          assert x['profile']['imageOcrPerformed'] is False
+          assert x['acceptance']['countsAsFullyProfiledMeasuredDataset'] is True
+          assert x['acceptance']['recoversPreviouslyBlockedDatasetFamily'] is True
+          assert x['acceptance']['createsNewSecondFamilyForAlternateDoi'] is False
+          assert x['acceptance']['acceptedRecordLevelMeasuredValues']==40
+          assert x['acceptance']['acceptedMeasuredTimeSeriesSamples']==0
+          assert x['acceptance']['commercialReuseAllowed'] is False
+          assert x['retrieval']['duplicateSecondPublisherEntryDownloaded'] is False
+          assert x['retrieval']['rawPublisherFileCommitted'] is False
+          assert x['retrieval']['rawNumericValuesUploadedAsArtifact'] is False
+          print(json.dumps({'source':x['source'],'profile':x['profile'],'acceptance':x['acceptance']},indent=2))
+          PY
+      - name: Upload aggregate accepted profile only
+        uses: actions/upload-artifact@v4
+        with:
+          name: mouldmaster-public-measured-benchmark-sic-nylon6-alt-stage3
+          path: benchmark-results/sic-nylon6-v1.json
+          if-no-files-found: error
+          retention-days: 30
