@@ -1,13 +1,15 @@
 {
   "schema_version": 1,
-  "status": "retrieved-profile-needs-semantic-review",
+  "status": "completed-profiled-zero-measured-simulation-optimization-model-workbook",
   "retrieved_date": "2026-08-29",
+  "semantic_review_date": "2026-08-30",
   "source": {
     "datasetId": "pet-preform-v2",
     "datasetDoi": "10.17632/vc3k9tt5zj.2",
     "datasetPage": "https://data.mendeley.com/datasets/vc3k9tt5zj/2",
     "license": "CC BY 4.0",
-    "version": 2
+    "version": 2,
+    "relatedArticleDoi": "10.1016/j.rinma.2026.101013"
   },
   "files": [
     {
@@ -30,45 +32,25 @@
       "rows": 27,
       "columns": 26,
       "semantics": {
-        "measuredOrProcessHeaderMarkers": [
-          "pressure",
-          "temperature",
-          "time"
-        ],
-        "simulationHeaderMarkers": [
-          "orientation",
-          "predicted",
-          "residual stress"
-        ],
-        "processHeaderMarkers": [
-          "cooling",
-          "melt",
-          "mold",
-          "pressure",
-          "temperature",
-          "time"
-        ],
-        "qualityHeaderMarkers": [],
-        "headerNames": [
-          "Melt Temperature (\u00b0C)",
-          "Mold Temperature (\u00b0C)",
-          "Ambient Temperature (\u00b0C)",
+        "controlledProcessSettings": [
+          "Melt Temperature (°C)",
+          "Mold Temperature (°C)",
+          "Ambient Temperature (°C)",
           "Pressure hold time (sec)",
-          "Pure cooling time (sec)",
+          "Pure cooling time (sec)"
+        ],
+        "solidworksPlasticsSimulationResults": [
           "Residual stress at Post Filling End",
           "Total stress Displacement",
           "In-mold Residual stress Displacement",
           "Quenching  thermal stress Displacement",
           "Total stress Displacement (orientation effect)",
           "In-mold Residual Von-mises stress",
-          "De-mold Residual Von-mises stress",
-          "Validation 2",
-          "H1_1",
-          "H1_2",
-          "H1_3",
-          "H1_4",
-          "H1_5",
-          "H1_6",
+          "De-mold Residual Von-mises stress"
+        ],
+        "modelValidationFields": ["Validation 2"],
+        "annHiddenLayerIntermediates": ["H1_1", "H1_2", "H1_3", "H1_4", "H1_5", "H1_6"],
+        "annPredictionFields": [
           "Predicted Residual stress at Post Filling End",
           "Predicted Total stress Displacement",
           "Predicted In-mold Residual stress Displacement",
@@ -77,6 +59,7 @@
           "Predicted In-mold Residual Von-mises stress",
           "Predicted De-mold Residual Von-mises stress"
         ],
+        "sourceDefinedMeasuredOutcomeFields": [],
         "rawValuesEmitted": false
       }
     }
@@ -85,11 +68,27 @@
     "publicFilesRetrieved": 1,
     "readableTables": 1,
     "totalTabularRowsAcrossTables": 27,
+    "controlledProcessSettingColumns": 5,
+    "simulationResultColumns": 7,
+    "modelValidationColumns": 1,
+    "annHiddenLayerIntermediateColumns": 6,
+    "annPredictionColumns": 7,
+    "sourceDefinedMeasuredOutcomeColumns": 0,
+    "acceptedMeasuredProcessValues": 0,
+    "acceptedMeasuredQualityValues": 0,
+    "acceptedMeasuredTimeSeriesSamples": 0,
     "rawRowsOrCellValuesEmitted": false
+  },
+  "semanticEvidence": {
+    "review": "data/pet-preform-semantic-review-2026-08-30.json",
+    "solidworksPackHelp": "https://help.solidworks.com/2023/english/swplastics/hidd_pack_results.htm",
+    "solidworksWarpHelp": "https://help.solidworks.com/2024/english/swplastics/hidd_warp_results.htm?id=10.3",
+    "jmpNeuralConvention": "https://www.jmp.com/content/dam/jmp/documents/en/academic/case-study-library/case-study-library-17/pdf/jmp031-boston-housing.pdf",
+    "articlePublisherPage": "https://www.sciencedirect.com/science/article/pii/S2590048X26001299"
   },
   "retrieval": {
     "rawPublisherFilesCommitted": false,
     "rawRowsUploadedAsArtifact": false
   },
-  "evidenceBoundary": "The CC BY 4.0 dataset is publicly reusable, but the related 2026 paper combines statistical, simulation and machine-learning results. The source files must therefore be inspected before any row or field is counted as real measured injection-moulding evidence; simulation-only outputs never enter measured counts."
+  "evidenceBoundary": "The exact CC BY 4.0 release is fully profiled. Five columns are controlled optimization settings, seven are SOLIDWORKS Plastics simulation results, one is non-physical validation bookkeeping, six are ANN hidden-layer intermediates, and seven are explicit predictions. No source-defined physical measured outcome is present in the published workbook, so accepted measured values remain zero."
 }
