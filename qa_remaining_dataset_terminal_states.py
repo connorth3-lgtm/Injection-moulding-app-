@@ -17,7 +17,7 @@ expected = {
     "probayes-main-v2": ("probayes-main-v2.json", "blocked-rights-review"),
     "probayes-doptimal-v1": ("probayes-doptimal-v1.json", "blocked-rights-review"),
     "skz-loki-v1": ("skz-loki-v1.json", "blocked-rights-review"),
-    "impure-pascoe-2022": ("impure-pascoe-2022-v1.json", "accepted-profiled-unit-limited"),
+    "impure-pascoe-2022": ("impure-pascoe-2022-v1.json", "accepted-profiled-partially-semantic-resolved"),
     "iguzzini-road-lenses": ("iguzzini-road-lenses-v1.json", "accepted-restricted-profile"),
     "forinfpro-himd-v1": ("forinfpro-himd-v1.json", "accepted-profiled-unit-limited"),
     "cross-process-chain-17240390": ("cross-process-chain-17240390-v1.json", "profiled-scope-limited-semantic-review"),
@@ -55,11 +55,24 @@ need(forinfpro_result.get("status") == "completed-public-measured-benchmark", "F
 need((forinfpro_result.get("profile") or {}).get("acceptedMeasuredTimeSeriesSamples") == 0,
      "FORinFPRO unit-limited profile must not inflate accepted time-series values")
 
+impure = loaded["impure-pascoe-2022"]
+semantic = impure.get("semanticAcceptance") or {}
+need(semantic.get("acceptedMeasuredChannels") == 4, "ImPure partial semantic acceptance must retain four accepted cavity channels")
+need(semantic.get("acceptedMeasuredTimeSeriesSamples") == 1_188_348, "ImPure partial semantic accepted value count drifted")
+need(set(semantic.get("acceptedMeasuredColumns") or []) == {
+    "TempMold1[IRT/Pascoe]", "TempMold2[IRT/Pascoe]", "Pressure1[IRT/Pascoe]", "Pressure2[IRT/Pascoe]"
+}, "ImPure accepted cavity-channel set drifted")
+need(set((semantic.get("excludedColumns") or {}).keys()) == {
+    "HydPressure[IRT/Pascoe]", "ScrewPosition[IRT/Pascoe]", "Analog Input[1]", "Analog Input[2]"
+}, "ImPure unresolved sensor-channel boundary drifted")
+
 impure_result = load(RESULTS / "impure-pascoe-2022-v1.json")
-need(impure_result.get("status") == "completed-public-measured-benchmark", "ImPure completed result missing")
+need(impure_result.get("status") == "completed-public-measured-benchmark", "ImPure completed structural result missing")
 need((impure_result.get("profile") or {}).get("cycleFiles") == 307, "ImPure cycle-file count drifted")
 need((impure_result.get("profile") or {}).get("cycleSchemaFamilies") == 1, "ImPure cycle schema drifted")
 need((impure_result.get("profile") or {}).get("widthMismatchRows") == 0, "ImPure row-width integrity drifted")
+need((impure_result.get("profile") or {}).get("acceptedMeasuredTimeSeriesSamples") == 0,
+     "ImPure original structural profile must remain pre-semantic and non-promoting; semantic promotion is governed by the later review/contract")
 
 cross_result = load(RESULTS / "cross-process-chain-17240390-v1.json")
 need(cross_result.get("status") == "completed-public-measured-benchmark-scope-limited", "cross-process structural profile missing")
@@ -116,7 +129,23 @@ need(rwth.get("status") == "retrieval-blocked-non-archive-response", "RWTH sourc
 need((rwth.get("acceptance") or {}).get("countsAsFullyProfiledMeasuredDataset") is False, "RWTH cannot be accepted without delivered archive")
 need(len((rwth.get("source") or {}).get("retrievalAttempts") or []) == 3, "RWTH retrieval audit must retain all three publisher URL attempts")
 
-report = {"schema": 4, "terminalContractsChecked": len(expected), "rightsBlocked": 3, "licensedQueued": 0, "licensedProfiledUnitLimited": 2, "licensedProfiledSemanticReview": 1, "mirrorRightsBlocked": 2, "embargoed": 2, "requestOnly": 1, "confidential": 1, "specialFormatExport": 1, "restrictedEducationAccepted": 1, "rwthRetrievalBlocked": 1, "petReviewOnly": 1, "result": "pass"}
+report = {
+    "schema": 5,
+    "terminalContractsChecked": len(expected),
+    "rightsBlocked": 3,
+    "licensedQueued": 0,
+    "licensedProfiledUnitLimited": 1,
+    "licensedProfiledPartialSemanticAcceptance": 1,
+    "licensedProfiledSemanticReview": 1,
+    "mirrorRightsBlocked": 2,
+    "embargoed": 2,
+    "requestOnly": 1,
+    "confidential": 1,
+    "specialFormatExport": 1,
+    "restrictedEducationAccepted": 1,
+    "rwthRetrievalBlocked": 1,
+    "petReviewOnly": 1,
+    "result": "pass"
+}
 (ROOT / "remaining-dataset-terminal-states-report.json").write_text(json.dumps(report, indent=2) + "\n", encoding="utf-8")
-print("MouldMaster remaining dataset terminal-state QA passed (all sources are accepted or have an explicit rights/access/embargo/confidentiality/technical blocker)")
-
+print("MouldMaster remaining dataset terminal-state QA passed (all sources are accepted or have an explicit rights/access/embargo/confidentiality/technical/semantic blocker)")
