@@ -27,8 +27,9 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with: {python-version: '3.12'}
-      - name: Install nested archive dependency
+      - name: Install semantic profiling dependencies
         run: |
+          python -m pip install --disable-pip-version-check openpyxl
           sudo apt-get update -qq
           sudo apt-get install -y -qq p7zip-full
       - name: Validate stage-two evidence boundary
