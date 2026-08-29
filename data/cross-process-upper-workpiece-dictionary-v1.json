@@ -1,5 +1,7 @@
 {
   "schema": 1,
+  "version": "2026.08.29.2",
+  "reviewed": "2026-08-29",
   "datasetId": "cross-process-chain-17240390",
   "streamId": "upper-workpiece-injection-moulding",
   "status": "partially-source-defined-pressure-and-state-blocked",
@@ -27,6 +29,7 @@
       "engineeringUnit": null,
       "sourceDefinedMeaning": "time",
       "promotionEligible": false,
+      "promotionEligibleAfterDeterministicProfile": false,
       "note": "The checked-in author CSV establishes the delivered time vector. Unit text is not present in the CSV header, so no unit string is invented here."
     },
     {
@@ -35,6 +38,7 @@
       "engineeringUnit": null,
       "sourceDefinedMeaning": "injection pressure target",
       "promotionEligible": false,
+      "promotionEligibleAfterDeterministicProfile": false,
       "blocker": "authoritative upper-workpiece pressure engineering unit not found in public author/publisher material"
     },
     {
@@ -43,6 +47,7 @@
       "engineeringUnit": null,
       "sourceDefinedMeaning": "injection pressure actual",
       "promotionEligible": false,
+      "promotionEligibleAfterDeterministicProfile": false,
       "blocker": "authoritative upper-workpiece pressure engineering unit not found in public author/publisher material"
     },
     {
@@ -51,8 +56,9 @@
       "engineeringUnit": "cm3",
       "sourceDefinedMeaning": "melt volume / screw-volume coordinate",
       "promotionEligible": false,
+      "promotionEligibleAfterDeterministicProfile": true,
       "unitEvidence": "Same-author upper-workpiece fabrication documentation expresses switching-point/melt-volume settings in cm3.",
-      "note": "No additional measured values are promoted by this dictionary alone; deterministic archive-wide profiling and acceptance remain separate."
+      "note": "This field may enter accepted measured totals only after the specialist parser validates the exact delivered schema and time vector archive-wide."
     },
     {
       "column": "injection_velocity",
@@ -60,25 +66,60 @@
       "engineeringUnit": "cm3/s",
       "sourceDefinedMeaning": "volumetric injection velocity",
       "promotionEligible": false,
+      "promotionEligibleAfterDeterministicProfile": true,
       "unitEvidence": "Same-author upper-workpiece fabrication documentation expresses primary and secondary injection velocity in cm3/s.",
-      "note": "No additional measured values are promoted by this dictionary alone; deterministic archive-wide profiling and acceptance remain separate."
+      "note": "This field may enter accepted measured totals only after the specialist parser validates the exact delivered schema and time vector archive-wide."
     },
     {
       "column": "state",
       "role": "categorical machine/process-state code",
       "engineeringUnit": null,
       "sourceDefinedMeaning": null,
-      "observedCodesInCheckedAuthorExample": [0, 1, 2, 4, 8],
+      "observedCodesInCheckedAuthorExample": [
+        0,
+        1,
+        2,
+        4,
+        8
+      ],
       "promotionEligible": false,
+      "promotionEligibleAfterDeterministicProfile": false,
       "blocker": "authoritative semantic mapping for state codes 0/1/2/4/8 not found in public author/publisher material",
-      "note": "The bit-like values and their timing must not be converted into phase names by inference."
+      "note": "The bit-like values and their timing must not be converted into phase names by inference. The specialist parser may aggregate observed integer codes without assigning semantics."
     }
   ],
+  "specialistParserAcceptance": {
+    "serialPath": "injection_molding/upper_workpiece/serial_data/*.csv",
+    "expectedSerialFilesFromStructuralInventory": 10697,
+    "expectedCsvColumnsIncludingUnlabelledIndex": 7,
+    "acceptedMeasuredChannelsPerRow": 2,
+    "acceptedMeasuredColumns": [
+      "melt_volume",
+      "injection_velocity"
+    ],
+    "parsedButNonCountingColumns": [
+      "time",
+      "injection_pressure_target",
+      "injection_pressure_actual",
+      "state"
+    ],
+    "rules": [
+      "The first CSV header field must be the delivered unlabelled row index and the remaining six fields must match exactDeliveredSchema in exact order.",
+      "Every non-empty data row must contain exactly seven finite numeric fields including the delivered row index.",
+      "The delivered row index must be integer-like and contiguous from zero.",
+      "The delivered time vector must be strictly increasing and regularly stepped within each file; its engineering unit is not inferred.",
+      "State values must be integer-like, but observed codes are aggregated without assigning phase semantics.",
+      "Only melt_volume and injection_velocity enter accepted measured-value totals after a file passes all structural and time-vector checks.",
+      "Injection pressure target remains command evidence; injection pressure actual remains unit-blocked; state remains semantics-blocked.",
+      "Injection static_data.csv tables and screw-driving streams remain outside this time-series parser.",
+      "Any header, row-width, numeric, index or time-vector drift fails that upper serial file closed."
+    ]
+  },
   "timing": {
     "publisherDescription": "approximately 1 kHz for injection moulding",
     "checkedAuthorExampleTimeIncrement": 0.01,
     "checkedAuthorExampleRateHzIfTimeColumnIsSeconds": 100,
-    "resolutionRule": "Preserve each delivered file's explicit time vector. Do not impose the publisher's approximate global frequency where it conflicts with the source file.",
+    "resolutionRule": "Preserve and validate each delivered file's explicit time vector. Do not assign a time engineering unit or impose the publisher's approximate global frequency where the source file differs.",
     "samplingRateAcceptedAsSingleArchiveConstant": false
   },
   "evidenceBoundary": {
@@ -86,6 +127,7 @@
     "doNotInferStateSemanticsFromObservedTransitions": true,
     "pressureActualRemainsNonCounting": true,
     "stateRemainsNonCounting": true,
+    "staticDataRemainsOutsideSpecialistTimeSeriesParser": true,
     "additionalAcceptedMeasuredTimeSeriesSamples": 0,
     "fullyProfiledFamily": false,
     "projectAcceptedMeasuredBaselineRemains": 21356311,
@@ -93,6 +135,6 @@
   },
   "remainingAuthoritativeEvidenceRequired": [
     "engineering unit for upper-workpiece injection_pressure_target and injection_pressure_actual",
-    "semantic mapping for upper-workpiece state codes 0, 1, 2, 4 and 8"
+    "semantic mapping for upper-workpiece state codes"
   ]
 }
