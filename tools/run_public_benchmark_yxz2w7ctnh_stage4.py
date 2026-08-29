@@ -30,7 +30,7 @@ def main():
     needed_files={canonical['bending']['file'],canonical['tensile']['file']}; books={}; hashes={}; hashes_ok=True
     for name in sorted(needed_files):
         f=by_name[name]; data,final=get(f"{PUBLIC_FILE_ROOT}/{f['id']}/file_downloaded"); digest=hashlib.sha256(data).hexdigest(); matched=digest.lower()==f['sha256'].lower(); hashes_ok &= matched
-        books[name]=load_workbook(io.BytesIO(data),read_only=True,data_only=False); hashes[name]={'fileId':f['id'],'expectedSha256':f['sha256'],'sha256':digest,'publisherSha256Matched':matched,'sizeBytes':len(data),'resolvedUrl':final}
+        books[name]=load_workbook(io.BytesIO(data),read_only=False,data_only=False); hashes[name]={'fileId':f['id'],'expectedSha256':f['sha256'],'sha256':digest,'publisherSha256Matched':matched,'sizeBytes':len(data),'resolvedUrl':final}
     sheet_profiles=[]; total=0; formula_excluded=0
     specs=[('bending','bending_PLA'),('bending','bending_ABS'),('tensile','tensile_PLA'),('tensile','tensile_ABS')]
     for family,sheet in specs:
