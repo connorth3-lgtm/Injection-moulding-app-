@@ -1,0 +1,69 @@
+{
+  "schema": 1,
+  "datasetId": "probayes-main-v2",
+  "status": "blocked-rights-review",
+  "source": {
+    "recordUrl": "https://b2share.eudat.eu/records/k0v7s-jf859",
+    "legacyRecordId": "4c5692b886db419180f716acf895bf06",
+    "datasetDoi": "10.23728/b2share.4c5692b886db419180f716acf895bf06",
+    "publisher": "B2SHARE",
+    "version": "v2",
+    "published": "2022-10-25",
+    "technicalModified": "2025-10-28",
+    "access": "open",
+    "license": null,
+    "licenseEvidenceStatus": "The authoritative B2SHARE record exposes Rights > License, but no licence value is present.",
+    "automatedRetrievalAllowed": false,
+    "rawRedistributionAllowed": false,
+    "reportedTotalSize": "107.0 MB"
+  },
+  "experimentContext": {
+    "project": "ProBayes",
+    "process": "injection moulding",
+    "machine": "KraussMaffei 160-750PX",
+    "part": "warpage shell",
+    "materials": [
+      "polypropylene (PP)",
+      "ABS containing 70% recyclate"
+    ],
+    "injectionMouldedParts": 564,
+    "experimentalPoints": 47,
+    "featuresPerPart": 334,
+    "dataSources": 9,
+    "recordUnit": "one produced part / injection-moulding cycle identified by MachineCycleID",
+    "variedSetParameters": [
+      "cylinder temperature",
+      "mould temperature",
+      "injection speed",
+      "holding pressure"
+    ],
+    "qualitySemantics": [
+      "manual OK/NOK inspection",
+      "additional source-defined labels"
+    ]
+  },
+  "publisherFileManifest": [
+    {"name":"data_description.pdf","size":"8.2 MB","md5":"2455efb8cb3fcf930a84f4a82347190a","role":"documentation"},
+    {"name":"dataset_V2.parquet","size":"89.4 MB","md5":"f04efe419e63db5fb4a392e1569ea417","role":"combined per-cycle dataset"},
+    {"name":"DatasetV2_Report_Minimal.html","size":"9.3 MB","md5":"5b9569a824fb1e0566721eec7be33c2b","role":"profiling report"},
+    {"name":"DataXplorer-Parameter_Names.xlsx","size":"22.2 kB","md5":"772dacf3c15db62644e3ce5411e91079","role":"parameter-name mapping"}
+  ],
+  "rightsGate": {
+    "publicDownloadDoesNotEqualReusePermission": true,
+    "rawFilesMustNotBeDownloadedByAutomationUntilLicenceIsExplicit": true,
+    "requiredEvidence": [
+      "An explicit dataset licence or written reuse permission from SKZ/Fraunhofer/B2SHARE is captured.",
+      "The captured terms permit automated ingestion and aggregate profiling.",
+      "The exact v2 file manifest and checksums are revalidated at retrieval time."
+    ]
+  },
+  "profilingPlanAfterRightsClearance": [
+    "Verify dataset_V2.parquet against its publisher MD5 and retain a SHA-256 fingerprint in the aggregate result.",
+    "Confirm exactly 564 MachineCycleID records and reconcile 47 experimental points from delivered data.",
+    "Classify the 334 features by the nine source systems and distinguish measured fields, setpoints, identifiers, extracted features and labels.",
+    "Keep cycle-level features distinct from any embedded time-series-derived arrays or summaries; do not infer high-frequency sample counts from the word Timeseries alone.",
+    "Verify manual OK/NOK and other labels against source-defined semantics before mechanism/defect promotion.",
+    "Emit aggregate schemas, counts and fingerprints only; do not commit or artifact raw third-party rows or arrays."
+  ],
+  "evidenceBoundary": "The ProBayes v2 record documents 564 real injection-moulded parts across 47 experimental points, two materials, 334 features and nine data sources, with unique MachineCycleID records and manual quality labels. Exact publisher file names, sizes and MD5 checksums are available. However, the authoritative B2SHARE Rights > License field is blank, so the dataset remains non-executable and contributes no accepted measured count until explicit reuse terms are captured."
+}
