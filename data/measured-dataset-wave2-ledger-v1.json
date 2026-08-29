@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "version": "2026.08.29.4",
+  "version": "2026.08.29.5",
   "reviewed": "2026-08-29",
   "baseWave": {
     "fullyProfiledMeasuredDatasetFamilies": 5,
@@ -76,12 +76,28 @@
       "theoreticalWorkbookValuesAccepted": 0,
       "acceptedMeasuredTimeSeriesSamples": 0,
       "resultPath": "data/public-benchmark-results/pmc4753395-hdpe-cenosphere-v1.json"
+    },
+    {
+      "priority": 6,
+      "datasetId": "mendeley-8c8fjwcw86-v1",
+      "doi": "10.17632/8c8fjwcw86.1",
+      "license": "CC BY 4.0",
+      "state": "completed-no-acceptable-injection-trace",
+      "countsAsFullyProfiledMeasuredDataset": false,
+      "slsTensileTracePointPairsExcluded": 1359,
+      "derivedBoxPlotPairedPointsExcluded": 72,
+      "mixedRouteStructuralPairedPointsExcluded": 26424,
+      "candidateInjectionMaterialTracePointPairs": 0,
+      "acceptedMeasuredTimeSeriesSamples": 0,
+      "resultPath": "data/public-benchmark-results/nylon12-gamma-8c8fjwcw86-v1.json",
+      "terminalReviewComplete": true
     }
   ],
   "summary": {
-    "wave2SourcesReviewed": 5,
+    "wave2SourcesReviewed": 6,
     "wave2FullyProfiledAccepted": 4,
     "wave2PublisherPayloadBlocked": 1,
+    "wave2TerminalSemanticRejected": 1,
     "effectiveFullyProfiledMeasuredDatasetFamilies": 9,
     "effectiveAcceptedMeasuredTimeSeriesSamples": 13929568,
     "wave2RecordLevelMeasuredOutcomeValues": 621,
@@ -100,6 +116,7 @@
     "derivedRecordLevelSummaryValuesAreExcludedFromDirectMeasuredOutcomeCount": true,
     "materialCharacterizationCellCountsDoNotInflateInjectionCycleHighFrequencySampleMetric": true,
     "materialTestTraceValuesDoNotInflateInjectionProcessHighFrequencySampleMetric": true,
-    "crossFigureMaterialCharacterizationReuseIsNotClaimedAsDeduplicatedExperiments": true
+    "crossFigureMaterialCharacterizationReuseIsNotClaimedAsDeduplicatedExperiments": true,
+    "mixedManufacturingRouteEvidenceMustBeUnambiguousBeforeCounting": true
   }
 }
