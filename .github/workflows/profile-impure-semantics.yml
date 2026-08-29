@@ -2,23 +2,27 @@ name: MouldMaster ImPure Semantic Probe
 
 on:
   pull_request:
-    branches: [main]
+    branches: [main, data/resolve-impure-semantics]
     paths:
       - 'tools/profile_impure_semantics.py'
       - 'qa_impure_pascoe_semantics.py'
+      - 'qa_impure_remaining_clarification.py'
       - '.github/workflows/profile-impure-semantics.yml'
       - 'data/impure-pascoe-channel-dictionary-v1.json'
       - 'data/impure-pascoe-semantic-review-2026-08-30.json'
+      - 'data/impure-pascoe-remaining-clarification-2026-08-30.json'
       - 'data/public-benchmark-contracts/impure-pascoe-2022-v1.json'
       - 'data/measured-dataset-inventory-v1.json'
   push:
-    branches: [data/resolve-impure-semantics]
+    branches: [data/resolve-impure-semantics, data/impure-remaining-clarification]
     paths:
       - 'tools/profile_impure_semantics.py'
       - 'qa_impure_pascoe_semantics.py'
+      - 'qa_impure_remaining_clarification.py'
       - '.github/workflows/profile-impure-semantics.yml'
       - 'data/impure-pascoe-channel-dictionary-v1.json'
       - 'data/impure-pascoe-semantic-review-2026-08-30.json'
+      - 'data/impure-pascoe-remaining-clarification-2026-08-30.json'
       - 'data/public-benchmark-contracts/impure-pascoe-2022-v1.json'
       - 'data/measured-dataset-inventory-v1.json'
   workflow_dispatch:
@@ -41,6 +45,8 @@ jobs:
           python-version: '3.12'
       - name: Validate committed semantic acceptance boundary
         run: python qa_impure_pascoe_semantics.py
+      - name: Validate remaining-channel clarification boundary
+        run: python qa_impure_remaining_clarification.py
       - name: Retrieve licensed ImPure cycles and compute aggregate semantic statistics
         run: |
           mkdir -p benchmark-results
