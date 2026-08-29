@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "datasetId": "ad-stgn-injection-moulding-v1",
-  "status": "metadata-profile-candidate",
+  "status": "publisher-record-no-files-exposed",
   "source": {
     "datasetPage": "https://data.mendeley.com/datasets/6f9x8yg8nj/1",
     "datasetId": "6f9x8yg8nj",
@@ -27,16 +27,23 @@
     "reportedTestingStructure": "chronological sequence; anomalies start from the 75th sample",
     "qualityContext": ["PMT defect outbreak", "internal bubbles", "warpage", "incomplete cooling"]
   },
+  "publisherBlocker": {
+    "publicRootFilesReturned": 0,
+    "publicFilesWithoutFolderReturned": 0,
+    "publicFoldersExposed": false,
+    "publicFileLinksFoundInPageHtml": 0,
+    "publisherPayloadObtained": false,
+    "workflowRunId": 33230852690,
+    "resultPath": "data/public-benchmark-results/ad-stgn-injection-moulding-v1-stage1.json"
+  },
   "stage1Rules": {
     "publisherApiMetadataOnly": true,
     "downloadDatasetPayloads": false,
-    "enumerateAllFilesAndFolders": true,
-    "recordPublisherFileIdsNamesSizesHashesAndContentTypes": true,
-    "identifyLikelyInjectionMouldingSubsetFromPublisherManifest": true,
     "doNotCountTEPOrSWaTAsInjectionMouldingEvidence": true,
     "acceptedMeasuredTimeSeriesSamples": 0,
     "countsAsFullyProfiledMeasuredDataset": false,
     "rawRowsOrArraysCommittedOrArtifacted": false
   },
-  "evidenceBoundary": "The publisher page explicitly identifies a real injection-moulding industrial case study and CC BY 4.0 reuse terms, but the same dataset package also contains Tennessee Eastman and SWaT benchmark data. Stage 1 therefore enumerates publisher file metadata only. No file payload, row count, signal count or measured-sample count is accepted until the injection-moulding subset is isolated from the delivered file manifest and profiled independently."
+  "nextAction": "Recheck the publisher record if file entries become exposed. Do not count reported sensor/sample totals until the delivered injection-moulding payload is obtained and profiled independently.",
+  "evidenceBoundary": "The publisher record documents a CC BY 4.0 real injection-moulding case study, but no file payloads are currently exposed through the public listings or page HTML. The reported 66 sensors and 88,000/22,614 samples remain metadata only. TEP and SWaT are explicitly excluded from injection-moulding evidence."
 }
