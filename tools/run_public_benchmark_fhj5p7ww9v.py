@@ -104,7 +104,6 @@ def main():
         total_columns = 0
         total_measured_cells = 0
         for sheet_name, df in sheets.items():
-            # Preserve delivered table shape while ignoring completely empty rows/columns.
             df = df.dropna(axis=0, how="all").dropna(axis=1, how="all")
             sem = classify_headers(df.columns)
             rows = int(len(df))
@@ -124,9 +123,11 @@ def main():
 
     details = item.get("content_details") or item.get("contentDetails") or {}
     publisher_sha = details.get("sha256_hash") or details.get("sha256Hash")
+    recognized = total_measured_cells > 0
+    status = "completed-restricted-noncommercial-measured-benchmark" if recognized else "retrieved-profile-needs-semantic-review"
     result = {
         "schema": 1,
-        "status": "completed-restricted-noncommercial-measured-benchmark",
+        "status": status,
         "retrievedDate": args.retrieved_date,
         "source": {
             "datasetId": contract["datasetId"],
@@ -152,7 +153,8 @@ def main():
             "rawRowsOrCellValuesEmitted": False,
         },
         "acceptance": {
-            "countsAsFullyProfiledMeasuredDataset": True,
+            "countsAsFullyProfiledMeasuredDataset": recognized,
+            "semanticLayoutRecognized": recognized,
             "useScope": "noncommercial-education-research-only",
             "commercialReuseAllowed": False,
             "rawRedistributionAllowedUnderProjectPolicy": False,
@@ -162,7 +164,7 @@ def main():
             "rawPublisherFileCommitted": False,
             "rawRowsOrCellValuesUploadedAsArtifact": False,
         },
-        "evidenceBoundary": contract["evidenceBoundary"],
+        "evidenceBoundary": contract["evidenceBoundary"] if recognized else "The exact CC BY-NC 3.0 publisher workbook was retrieved and fingerprinted, but its delivered table headers do not directly expose the expected measured outcomes to the first-pass parser. The source remains non-counting until the sheet layout is semantically mapped from aggregate schema evidence; raw cell values are not retained or artifacted."
     }
     if publisher_sha and len(str(publisher_sha)) == 64:
         result["source"]["publisherSha256Matched"] = str(publisher_sha).lower() == digest.lower()
@@ -175,6 +177,7 @@ def main():
         "sheetCount": result["profile"]["sheetCount"],
         "totalRowsAcrossSheets": result["profile"]["totalRowsAcrossSheets"],
         "recordLevelMeasuredValues": result["profile"]["recordLevelMeasuredValues"],
+        "semanticLayoutRecognized": result["acceptance"]["semanticLayoutRecognized"],
     }, indent=2))
 
 
