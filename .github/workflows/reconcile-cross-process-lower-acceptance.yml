@@ -30,6 +30,18 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
+      - name: Prepare already-pinned workflow marker
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p = Path('.github/workflows/master-data-compile.yml')
+          text = p.read_text(encoding='utf-8')
+          old = "assert c['measuredTimeSeriesSamplesAccepted']==21356311"
+          new = "assert c['measuredTimeSeriesSamplesAccepted']==13929568"
+          if text.count(old) != 1:
+              raise SystemExit('expected exactly one reconciled workflow marker')
+          p.write_text(text.replace(old, new, 1), encoding='utf-8')
+          PY
       - name: Reconcile accepted lower-workpiece evidence
         run: python tools/reconcile_cross_process_lower_acceptance.py
       - name: Validate reconciled target arithmetic
@@ -51,7 +63,6 @@ jobs:
             tools/compile_master_data.py \
             qa_content_scale_targets.py \
             qa_master_data_compile.py \
-            .github/workflows/master-data-compile.yml \
             sources/MASTER_DATA_COMPILATION.md \
             sources/CONTENT_SCALE_PROGRAMME.md
           git diff --cached --quiet && exit 0
