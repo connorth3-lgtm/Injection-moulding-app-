@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "version": "2026.08.29.1",
+  "version": "2026.08.29.2",
   "reviewed": "2026-08-29",
   "baseWave": {
     "fullyProfiledMeasuredDatasetFamilies": 5,
@@ -31,20 +31,38 @@
       "resultPath": "data/public-benchmark-results/fhj5p7ww9v-v1.json",
       "useScope": "noncommercial-education-research-only",
       "commercialReuseAllowed": false
+    },
+    {
+      "priority": 3,
+      "datasetId": "mendeley-6k8fpbrd9s-v1",
+      "doi": "10.17632/6k8fpbrd9s.1",
+      "license": "CC BY 4.0",
+      "state": "accepted-profiled-material-characterization",
+      "countsAsFullyProfiledMeasuredDataset": true,
+      "injectionMouldingCycleDataset": false,
+      "deliveredNumericCells": 31817,
+      "deliveredDirectPhysicalValueCells": 28590,
+      "materialCharacterizationTraceMeasurementCells": 6026,
+      "acceptedMeasuredTimeSeriesSamples": 0,
+      "resultPath": "data/public-benchmark-results/6k8fpbrd9s-v1.json"
     }
   ],
   "summary": {
-    "wave2SourcesReviewed": 2,
-    "wave2FullyProfiledAccepted": 1,
+    "wave2SourcesReviewed": 3,
+    "wave2FullyProfiledAccepted": 2,
     "wave2PublisherPayloadBlocked": 1,
-    "effectiveFullyProfiledMeasuredDatasetFamilies": 6,
+    "effectiveFullyProfiledMeasuredDatasetFamilies": 7,
     "effectiveAcceptedMeasuredTimeSeriesSamples": 13929568,
-    "wave2RecordLevelMeasuredOutcomeValues": 96
+    "wave2RecordLevelMeasuredOutcomeValues": 96,
+    "wave2MaterialCharacterizationDirectPhysicalValues": 28590,
+    "wave2MaterialCharacterizationTraceMeasurementCells": 6026
   },
   "boundaries": {
     "rawThirdPartyRowsOrFilesCommitted": false,
     "metadataReportedSamplesDoNotCountWithoutDeliveredFiles": true,
     "restrictedNoncommercialRightsAreNotWidened": true,
-    "recordLevelOutcomeValuesDoNotCountAsTimeSeriesSamples": true
+    "recordLevelOutcomeValuesDoNotCountAsTimeSeriesSamples": true,
+    "materialCharacterizationCellCountsDoNotInflateInjectionCycleHighFrequencySampleMetric": true,
+    "crossFigureMaterialCharacterizationReuseIsNotClaimedAsDeduplicatedExperiments": true
   }
 }
