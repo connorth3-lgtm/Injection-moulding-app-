@@ -1,0 +1,41 @@
+{
+  "schema": 1,
+  "status": "publisher-record-no-files-exposed",
+  "retrievedDate": "2026-08-29",
+  "source": {
+    "datasetId": "ad-stgn-injection-moulding-v1",
+    "mendeleyDatasetId": "6f9x8yg8nj",
+    "datasetDoi": "10.17632/6f9x8yg8nj.1",
+    "version": 1,
+    "publisher": "Mendeley Data",
+    "datasetPage": "https://data.mendeley.com/datasets/6f9x8yg8nj/1",
+    "license": "CC BY 4.0"
+  },
+  "publisherEvidence": {
+    "pageShowsDownloadAll": true,
+    "pageFilesSectionHasNoDisplayedEntries": true,
+    "publicRootFilesEndpointReachable": true,
+    "publicRootFilesReturned": 0,
+    "publicFilesWithoutFolderReturned": 0,
+    "publicFoldersEndpointsAvailable": false,
+    "publicFileLinksFoundInPageHtml": 0
+  },
+  "reportedExperimentContext": {
+    "realWorldInjectionMouldingProductionLine": true,
+    "continuousSensorMeasurements": 66,
+    "discreteControlActions": 7,
+    "trainingSamplesReported": 88000,
+    "validationSamplesReported": 22614
+  },
+  "acceptance": {
+    "countsAsFullyProfiledMeasuredDataset": false,
+    "acceptedMeasuredTimeSeriesSamples": 0,
+    "publisherPayloadObtained": false
+  },
+  "retrieval": {
+    "rawPublisherFilesDownloaded": false,
+    "rawPublisherFilesCommitted": false,
+    "rawRowsOrArraysUploadedAsArtifact": false
+  },
+  "evidenceBoundary": "The live publisher record documents a CC BY 4.0 real-world injection-moulding case study, but no file entries are currently exposed through the public file listings or page HTML. Reported sample and channel counts remain metadata only and are not accepted as possessed/profiled measurements. Recheck the publisher record if files become exposed."
+}
