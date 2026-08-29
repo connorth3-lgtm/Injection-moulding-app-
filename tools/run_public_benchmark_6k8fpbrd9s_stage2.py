@@ -59,7 +59,7 @@ def aggregate_sheet(ws):
     numeric_by_column = {}
     formula_count = 0
     nonempty = 0
-    for row in ws.iter_rows():
+    for row_index, row in enumerate(ws.iter_rows(), start=1):
         row_numeric = 0
         for cell in row:
             value = cell.value
@@ -72,12 +72,16 @@ def aggregate_sheet(ws):
                 else:
                     cleaned = " ".join(value.split())
                     if cleaned:
-                        text_cells.append({"cell": cell.coordinate, "text": cleaned[:240]})
+                        coordinate = getattr(cell, "coordinate", None)
+                        if coordinate:
+                            text_cells.append({"cell": coordinate, "text": cleaned[:240]})
             elif isinstance(value, (int, float)) and not isinstance(value, bool):
                 row_numeric += 1
-                numeric_by_column[cell.column_letter] = numeric_by_column.get(cell.column_letter, 0) + 1
+                col = getattr(cell, "column_letter", None)
+                if col:
+                    numeric_by_column[col] = numeric_by_column.get(col, 0) + 1
         if row_numeric:
-            numeric_by_row[row[0].row] = row_numeric
+            numeric_by_row[row_index] = row_numeric
     labels = [x["text"].lower() for x in text_cells]
     markers = {
         "pressure": any("pressure" in x or x.strip() in {"p", "p/mpa", "p [mpa]"} for x in labels),
