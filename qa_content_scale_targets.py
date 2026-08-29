@@ -73,7 +73,8 @@ for blocked_id in ["skz-loki-v1"]:
     need(by_id[blocked_id].get("license") is None and by_id[blocked_id].get("automatedIngestionAllowed") is False, f"{blocked_id} must remain non-executable without explicit data licence")
 
 impure_count = by_id["impure-pascoe-2022"].get("count") or {}
-need(impure_count.get("publisherFilesTotalMB") == 18.7, "ImPure publisher file-set size correction drifted")
+need(impure_count.get("publisherBytes") == 18_708_850, "ImPure exact publisher file-set size drifted")
+need(impure_count.get("publisherFiles") == 309 and impure_count.get("cycleFiles") == 307, "ImPure delivered file counts drifted")
 need(impure_count.get("zenodoCumulativeDownloadTrafficMB") == 605.2, "ImPure Zenodo traffic metric drifted")
 need("dataVolumeMB" not in impure_count, "ImPure must not mislabel cumulative download traffic as source-data size")
 need(by_id["inqcim-2500-request"].get("source") == "https://doi.org/10.3390/polym14173551", "INQCIM corrected DOI drifted")
