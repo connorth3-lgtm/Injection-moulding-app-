@@ -19,4 +19,4 @@ need("'countsAsFullyProfiledMeasuredDataset':False" in text,'profiler must remai
 need("'acceptedMeasuredTimeSeriesSamples':0" in text,'Nylon-12 profiler cannot claim waveform samples')
 need("'rawNumericValuesUploadedAsArtifact':False" in text,'raw numeric artifact upload must stay disabled')
 need('publisher SHA mismatch' in text,'Nylon-12 publisher fingerprint gate missing')
-print('MouldMaster Nylon-12 supporting-data QA passed')
+print('MouldMaster Nylon-12 supporting-data QA passed; source profiling required before semantic acceptance')
