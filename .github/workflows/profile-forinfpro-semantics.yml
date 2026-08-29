@@ -6,12 +6,20 @@ on:
     paths:
       - 'tools/profile_forinfpro_semantics.py'
       - 'tools/profile_forinfpro_machine_locale.py'
+      - 'qa_forinfpro_himd_semantics.py'
+      - 'data/forinfpro-himd-semantic-review-2026-08-30.json'
+      - 'data/public-benchmark-contracts/forinfpro-himd-v1.json'
+      - 'data/measured-dataset-inventory-v1.json'
       - '.github/workflows/profile-forinfpro-semantics.yml'
   pull_request:
     branches: [main]
     paths:
       - 'tools/profile_forinfpro_semantics.py'
       - 'tools/profile_forinfpro_machine_locale.py'
+      - 'qa_forinfpro_himd_semantics.py'
+      - 'data/forinfpro-himd-semantic-review-2026-08-30.json'
+      - 'data/public-benchmark-contracts/forinfpro-himd-v1.json'
+      - 'data/measured-dataset-inventory-v1.json'
       - '.github/workflows/profile-forinfpro-semantics.yml'
   workflow_dispatch:
 
@@ -31,12 +39,14 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
+      - name: Validate committed semantic acceptance boundary
+        run: python qa_forinfpro_himd_semantics.py
       - name: Retrieve exact licensed release and compute aggregate semantic statistics
         run: |
           mkdir -p benchmark-results
           python tools/profile_forinfpro_semantics.py --output benchmark-results/forinfpro-semantic-probe.json
           python tools/profile_forinfpro_machine_locale.py --output benchmark-results/forinfpro-machine-temperature-probe.json
-      - name: Validate privacy and counting boundary
+      - name: Validate privacy and source-profile boundary
         run: |
           python - <<'PY'
           import json
@@ -80,6 +90,9 @@ jobs:
           assert t['profile']['rawRowsOrCellValuesEmitted'] is False
           assert t['interpretationBoundary']['automaticPromotion'] is False
           assert t['interpretationBoundary']['unitNotDerivedFromNumericRange'] is True
+          assert t['timeOrdering']['allTimestampsParsed'] is True
+          assert t['timeOrdering']['strictlyIncreasing'] is True
+          assert t['timeOrdering']['absoluteTimestampsEmitted'] is False
           PY
       - name: Upload aggregate semantic profiles only
         uses: actions/upload-artifact@v4
