@@ -1,0 +1,36 @@
+name: MouldMaster Measured Dataset Wave 2 Ledger
+
+on:
+  push:
+    branches: [data/real-dataset-profiling-wave2]
+    paths:
+      - 'data/measured-dataset-wave2-ledger-v1.json'
+      - 'data/public-benchmark-results/6k8fpbrd9s-v1.json'
+      - 'data/public-benchmark-results/fhj5p7ww9v-v1.json'
+      - 'data/public-benchmark-results/ad-stgn-injection-moulding-v1-stage1.json'
+      - 'qa_measured_dataset_wave2_ledger.py'
+      - '.github/workflows/measured-dataset-wave2-ledger.yml'
+  pull_request:
+    branches: [data/real-dataset-profiling-wave1, main]
+    paths:
+      - 'data/measured-dataset-wave2-ledger-v1.json'
+      - 'data/public-benchmark-results/6k8fpbrd9s-v1.json'
+      - 'data/public-benchmark-results/fhj5p7ww9v-v1.json'
+      - 'data/public-benchmark-results/ad-stgn-injection-moulding-v1-stage1.json'
+      - 'qa_measured_dataset_wave2_ledger.py'
+      - '.github/workflows/measured-dataset-wave2-ledger.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  ledger-qa:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Validate Wave 2 measured dataset ledger
+        run: python qa_measured_dataset_wave2_ledger.py
