@@ -1,0 +1,62 @@
+{
+  "schema": 1,
+  "datasetId": "inqcim-2500-request",
+  "status": "inactive-until-authorized-delivery",
+  "input": {
+    "manifestTemplate": "data/inqcim-author-response-manifest-template-v1.json",
+    "validator": "tools/validate_inqcim_author_response.py",
+    "dataLocation": "local or controlled workspace only; never committed to the public repository"
+  },
+  "authorityGate": {
+    "acceptedRoles": [
+      "corresponding_author",
+      "project_data_steward",
+      "rights_holder_authorized_representative"
+    ],
+    "writtenAuthorizationEvidenceRequired": true,
+    "retrieveAndProfilePermissionRequired": true,
+    "automatedAggregateProfilingPermissionRequired": true,
+    "rawRedistributionPermissionDefaultsToFalse": true,
+    "conditionsMustBeCapturedBeforeProcessing": true
+  },
+  "deliveryGate": {
+    "allDeliveredFilesMustExist": true,
+    "sha256EveryDeliveredFile": true,
+    "sizeEveryDeliveredFile": true,
+    "cycleIdentifierRequired": true,
+    "experimentIdentifierRequired": true,
+    "unsupportedTabularFormatsBlockPromotion": true
+  },
+  "semanticGate": {
+    "everyChannelRoleMustBeSourceDefined": true,
+    "measuredChannelsRequireQuantity": true,
+    "measuredChannelsRequireUnit": true,
+    "measuredSignalChannelsRequirePositiveSamplingRateHz": true,
+    "everyClassificationRequiresSourceEvidence": true,
+    "commandsSetpointsModelOutputsDerivedFeaturesAndLabelsExcludedFromMeasuredCounts": true
+  },
+  "aggregateOnlyOutput": {
+    "allowed": [
+      "source filenames",
+      "file sizes",
+      "SHA-256 fingerprints",
+      "table dimensions",
+      "header names",
+      "source-defined channel dictionary",
+      "numeric-cell counts for measured channels",
+      "permission and blocker state"
+    ],
+    "rawRowsOrCellValuesEmitted": false,
+    "rawPublisherFilesCommitted": false,
+    "rawRowsUploadedAsPublicArtifact": false
+  },
+  "promotionBoundary": {
+    "validatorMayMarkAuthorResponseStructurallyEligible": true,
+    "validatorMayCountSourceDefinedMeasuredNumericCells": true,
+    "validatorMayAutomaticallyCountAsFullyProfiledMeasuredDataset": false,
+    "finalFamilyPromotionRequiresSeparateRepositoryDecision": true,
+    "finalDecisionMustReconcileDeliveredCycleAndDoeCoverageAgainstPaperAndAuthorConditions": true
+  },
+  "currentAcceptedMeasuredValuesAdded": 0,
+  "evidenceBoundary": "This protocol prepares INQCIM for an authorised delivery without weakening the existing request-only gate. Until files and written permission are actually supplied, no retrieval is authorised and zero measured values are added. After delivery, the validator may fingerprint files, verify source-defined semantics and compute aggregate measured-cell counts locally, but it cannot by itself promote INQCIM to a fully profiled measured family."
+}
