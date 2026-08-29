@@ -1,0 +1,37 @@
+{
+  "schema": 1,
+  "datasetId": "mendeley-fhj5p7ww9v-v1",
+  "status": "restricted-noncommercial-profile-candidate",
+  "source": {
+    "datasetPage": "https://data.mendeley.com/datasets/fhj5p7ww9v/1",
+    "datasetDoi": "10.17632/fhj5p7ww9v.1",
+    "mendeleyDatasetId": "fhj5p7ww9v",
+    "version": 1,
+    "publisher": "Mendeley Data",
+    "license": "CC BY-NC 3.0",
+    "automatedAggregateProfilingAllowedForNonCommercialEducation": true,
+    "commercialReuseAllowed": false,
+    "rawRedistributionAllowedUnderProjectPolicy": false,
+    "expectedPublisherFile": "DATA - COST.xlsx"
+  },
+  "experimentContext": {
+    "process": "microcellular-insert injection moulding",
+    "materialFamily": "polypropylene",
+    "groups": ["solid PP", "PP foam", "all-PP composite", "all-PP composite foam"],
+    "variedProcessFactors": ["injection temperature", "injection speed"],
+    "measuredOutcomes": ["weight", "flexural strength", "flexural modulus"],
+    "derivedOutcomes": ["weight reduction percentage", "flexural strength increase percentage", "flexural modulus increase percentage"],
+    "recordUnit": "source-defined experimental observation / condition"
+  },
+  "acceptanceRules": {
+    "exactVersionAndPublisherFileRequired": true,
+    "publisherFileFingerprintRequired": true,
+    "deliveredWorkbookSchemaMustBeProfiled": true,
+    "measuredOutcomesMustBeSeparatedFromDerivedPercentages": true,
+    "recordLevelNotHighFrequencyTimeSeries": true,
+    "acceptedMeasuredTimeSeriesSamples": 0,
+    "rawRowsOrCellValuesCommittedOrArtifacted": false,
+    "useScopeMustRemainNonCommercial": true
+  },
+  "evidenceBoundary": "The source is reusable for noncommercial educational/research purposes under CC BY-NC 3.0. MouldMaster may retain aggregate schema, counts and fingerprints but must not widen the licence into commercial permission or raw-data redistribution. Weight, flexural strength and flexural modulus are treated as measured outcomes; percentage comparisons are derived outcomes."
+}
