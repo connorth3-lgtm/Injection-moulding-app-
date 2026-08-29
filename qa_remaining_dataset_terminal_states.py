@@ -18,7 +18,7 @@ expected = {
     "probayes-doptimal-v1": ("probayes-doptimal-v1.json", "blocked-rights-review"),
     "skz-loki-v1": ("skz-loki-v1.json", "blocked-rights-review"),
     "impure-pascoe-2022": ("impure-pascoe-2022-v1.json", "blocked-rights-review"),
-    "iguzzini-road-lenses": ("iguzzini-road-lenses-v1.json", "restricted-research-education-profile-candidate"),
+    "iguzzini-road-lenses": ("iguzzini-road-lenses-v1.json", "accepted-restricted-profile"),
     "forinfpro-himd-v1": ("forinfpro-himd-v1.json", "blocked-rights-review"),
     "cross-process-chain-17240390": ("cross-process-chain-17240390-v1.json", "blocked-rights-review"),
     "kamp-injection-7996": ("kamp-injection-7996-v1.json", "blocked-mirror-rights"),
@@ -71,16 +71,24 @@ ig = loaded["iguzzini-road-lenses"]
 need(ig["source"]["automatedAggregateProfilingAllowedForResearchEducation"] is True, "iGuzzini educational profiling permission missing")
 need(ig["source"]["rawRedistributionAllowed"] is False, "iGuzzini terms cannot be widened")
 need(ig["experimentContext"]["reportedClassCountDiscrepancy"] == 5, "iGuzzini 1451 vs 1446 reported-count discrepancy must stay explicit")
+need(ig["experimentContext"]["deliveredQualityClasses"] == {"1": 370, "2": 406, "3": 310, "4": 365}, "iGuzzini delivered class reconciliation drifted")
+ig_result = load(RESULTS / "iguzzini-road-lenses-v1.json")
+need(ig_result.get("status") == "accepted-restricted-profile", "iGuzzini committed accepted result missing")
+need((ig_result.get("acceptance") or {}).get("countsAsFullyProfiledMeasuredDataset") is True, "iGuzzini must count as fully profiled under restricted educational terms")
+need((ig_result.get("acceptance") or {}).get("acceptedMeasuredTimeSeriesSamples") == 0, "iGuzzini cannot inflate high-frequency sample count")
 
 pet = load(RESULTS / "pet-preform-v2.json")
 need(pet.get("status") == "retrieved-profile-needs-semantic-review", "PET review-only state drifted")
-# PET's v2 result predates the common acceptance object. Treat absence as non-counting,
-# and fail if a future record explicitly promotes it or assigns measured time-series samples.
 pet_acceptance = pet.get("acceptance") or {}
 need(pet_acceptance.get("countsAsFullyProfiledMeasuredDataset") in {None, False}, "PET must remain non-counting")
 need(pet_acceptance.get("acceptedMeasuredTimeSeriesSamples") in {None, 0}, "PET cannot contribute measured time-series samples")
 need((pet.get("profile") or {}).get("rawRowsOrCellValuesEmitted") is False, "PET raw-value boundary drifted")
 
-report = {"schema": 1, "terminalContractsChecked": len(expected), "rightsBlocked": 6, "mirrorRightsBlocked": 2, "embargoed": 2, "requestOnly": 1, "confidential": 1, "specialFormatExport": 1, "restrictedEducationProfileCandidate": 1, "petReviewOnly": 1, "result": "pass"}
+rwth = load(RESULTS / "rwth-pcr-2025-v1.json")
+need(rwth.get("status") == "retrieval-blocked-non-archive-response", "RWTH source retrieval terminal state drifted")
+need((rwth.get("acceptance") or {}).get("countsAsFullyProfiledMeasuredDataset") is False, "RWTH cannot be accepted without delivered archive")
+need(len((rwth.get("source") or {}).get("retrievalAttempts") or []) == 3, "RWTH retrieval audit must retain all three publisher URL attempts")
+
+report = {"schema": 2, "terminalContractsChecked": len(expected), "rightsBlocked": 6, "mirrorRightsBlocked": 2, "embargoed": 2, "requestOnly": 1, "confidential": 1, "specialFormatExport": 1, "restrictedEducationAccepted": 1, "rwthRetrievalBlocked": 1, "petReviewOnly": 1, "result": "pass"}
 (ROOT / "remaining-dataset-terminal-states-report.json").write_text(json.dumps(report, indent=2) + "\n", encoding="utf-8")
-print("MouldMaster remaining dataset terminal-state QA passed (all non-accepted sources explicitly governed)")
+print("MouldMaster remaining dataset terminal-state QA passed (all sources are accepted or have an explicit rights/access/embargo/confidentiality/technical blocker)")
