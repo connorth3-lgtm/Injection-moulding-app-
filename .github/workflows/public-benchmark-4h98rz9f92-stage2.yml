@@ -1,0 +1,67 @@
+name: MouldMaster Public Measured Benchmark — HDPE GNP stage 2
+
+on:
+  push:
+    branches: [data/real-dataset-profiling-wave2]
+    paths:
+      - 'tools/run_public_benchmark_4h98rz9f92_stage2.py'
+      - 'qa_public_benchmark_4h98rz9f92_stage2.py'
+      - '.github/workflows/public-benchmark-4h98rz9f92-stage2.yml'
+  pull_request:
+    branches: [data/real-dataset-profiling-wave1, main]
+    paths:
+      - 'tools/run_public_benchmark_4h98rz9f92_stage2.py'
+      - 'qa_public_benchmark_4h98rz9f92_stage2.py'
+      - '.github/workflows/public-benchmark-4h98rz9f92-stage2.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  raw-workbook-profile:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python -m pip install --disable-pip-version-check openpyxl
+      - name: Validate stage-two aggregate boundaries
+        run: python qa_public_benchmark_4h98rz9f92_stage2.py
+      - name: Retrieve exact raw workbook and profile schema
+        run: |
+          mkdir -p benchmark-results
+          python tools/run_public_benchmark_4h98rz9f92_stage2.py \
+            --output benchmark-results/4h98rz9f92-stage2.json \
+            --retrieved-date "$(date -u +%F)"
+      - name: Validate semantic-review result
+        run: |
+          python - <<'PY'
+          import json
+          x=json.load(open('benchmark-results/4h98rz9f92-stage2.json'))
+          assert x['status']=='retrieved-profile-needs-semantic-review'
+          assert x['source']['datasetDoi']=='10.17632/4h98rz9f92.3'
+          assert x['source']['license']=='CC BY 4.0'
+          assert x['source']['publisherFileName']=='Raw Data.xlsx'
+          assert x['source']['sha256']=='39210169aac62a1455603d37cdffaca93cf0c46189ea4258c5f3c0a4a37255c9'
+          assert x['source']['publisherSha256Matched'] is True
+          assert x['profile']['sheetCount'] >= 1
+          assert x['profile']['totalNumericCells'] >= 1
+          assert x['profile']['rawRowsOrCellValuesEmitted'] is False
+          assert x['profile']['numericMeasurementValuesEmitted'] is False
+          assert x['acceptance']['countsAsFullyProfiledMeasuredDataset'] is False
+          assert x['acceptance']['acceptedMeasuredTimeSeriesSamples']==0
+          assert x['acceptance']['stage3SemanticMappingRequired'] is True
+          assert x['retrieval']['rawPublisherFileCommitted'] is False
+          assert x['retrieval']['rawRowsOrCellValuesUploadedAsArtifact'] is False
+          print(json.dumps({'status':x['status'],'sheetCount':x['profile']['sheetCount'],'totalNumericCells':x['profile']['totalNumericCells'],'totalFormulaCells':x['profile']['totalFormulaCells'],'sheets':x['profile']['sheets']},indent=2))
+          PY
+      - name: Upload aggregate HDPE GNP profile only
+        uses: actions/upload-artifact@v4
+        with:
+          name: mouldmaster-hdpe-gnp-stage2
+          path: benchmark-results/4h98rz9f92-stage2.json
+          if-no-files-found: error
+          retention-days: 30
