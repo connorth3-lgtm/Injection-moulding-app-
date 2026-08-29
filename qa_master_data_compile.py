@@ -112,7 +112,7 @@ with tempfile.TemporaryDirectory() as td:
 
     by_id = {x["datasetId"]: x for x in inv["datasets"]}
     impure = by_id["impure-pascoe-2022"]["count"]
-    need(impure.get("publisherFilesTotalMB") == 18.7 and impure.get("zenodoCumulativeDownloadTrafficMB") == 605.2 and "dataVolumeMB" not in impure, "compiled ImPure volume correction drifted")
+    need(impure.get("publisherBytes") == 18_708_850 and impure.get("publisherFiles") == 309 and impure.get("cycleFiles") == 307 and impure.get("zenodoCumulativeDownloadTrafficMB") == 605.2 and "dataVolumeMB" not in impure, "compiled ImPure source dimensions drifted")
     need(by_id["inqcim-2500-request"]["source"] == "https://doi.org/10.3390/polym14173551", "compiled INQCIM DOI correction drifted")
 
     research = json.loads((out / "research-evidence.json").read_text(encoding="utf-8"))
