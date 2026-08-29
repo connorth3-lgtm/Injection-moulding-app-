@@ -12,6 +12,7 @@ BENCHMARK_AVAPS = ROOT / "data" / "public-benchmark-results" / "scatimdata-avaps
 BENCHMARK_OPENMMS = ROOT / "data" / "public-benchmark-results" / "openmms-t4g-v1.json"
 BENCHMARK_SU = ROOT / "data" / "public-benchmark-results" / "su13148102-supplement-v1.json"
 BENCHMARK_IGUZZINI = ROOT / "data" / "public-benchmark-results" / "iguzzini-road-lenses-v1.json"
+BENCHMARK_FORINFPRO = ROOT / "data" / "public-benchmark-results" / "forinfpro-himd-v1.json"
 REVIEW_PET = ROOT / "data" / "public-benchmark-results" / "pet-preform-v2.json"
 REVIEW_WARWICK = ROOT / "data" / "public-benchmark-results" / "warwick-demoulding-v2.json"
 REVIEW_RWTH = ROOT / "data" / "public-benchmark-results" / "rwth-pcr-2025-v1.json"
@@ -54,18 +55,18 @@ need(summary.get("datasets") == len(datasets) == 20, f"measured dataset inventor
 ids = [x.get("datasetId") for x in datasets]
 need(len(ids) == len(set(ids)) and all(ids), "measured dataset inventory IDs must be unique and non-empty")
 need(summary.get("automatedIngestionAllowed") == sum(1 for x in datasets if x.get("automatedIngestionAllowed") is True), "automated-ingestion dataset count drifted")
-need(summary.get("automatedIngestionAllowed") == 7, "audited automated-ingestion source count must include RWTH PCR under CC BY 4.0")
-need(summary.get("rightsOrAccessReviewRequired") == 6, "rights-review source count must fall by one after RWTH licence confirmation")
+need(summary.get("automatedIngestionAllowed") == 8, "audited automated-ingestion source count must include RWTH PCR and FORinFPRO under CC BY 4.0")
+need(summary.get("rightsOrAccessReviewRequired") == 5, "rights-review source count must reflect FORinFPRO licence confirmation")
 need(targets["fully_profiled_measured_datasets"].get("currentDiscovered") == len(datasets), "target ledger discovery count must equal the measured-dataset inventory")
 by_id = {x.get("datasetId"): x for x in datasets}
 
 rights = json.loads(RIGHTS_REVIEW.read_text(encoding="utf-8"))
 need((rights.get("summary") or {}).get("sourcesReviewed") == 5, "waveform rights-review source count drifted")
-need((rights.get("summary") or {}).get("unblockedForAutomatedIngestion") == 1, "waveform rights-review unblocked count drifted")
+need((rights.get("summary") or {}).get("unblockedForAutomatedIngestion") == 2, "waveform rights-review unblocked count drifted")
 rights_by_id = {x.get("datasetId"): x for x in rights.get("sources") or []}
 need(rights_by_id["rwth-pcr-2025"].get("decision") == "executable-license-confirmed" and rights_by_id["rwth-pcr-2025"].get("license") == "CC BY 4.0", "RWTH rights decision drifted")
 need(by_id["rwth-pcr-2025"].get("license") == "CC BY 4.0" and by_id["rwth-pcr-2025"].get("automatedIngestionAllowed") is True, "RWTH inventory execution rights drifted")
-for blocked_id in ["skz-loki-v1", "impure-pascoe-2022", "forinfpro-himd-v1", "cross-process-chain-17240390"]:
+for blocked_id in ["skz-loki-v1", "impure-pascoe-2022", "cross-process-chain-17240390"]:
     need(rights_by_id[blocked_id].get("decision") == "blocked-no-explicit-license", f"{blocked_id} rights decision drifted")
     need(by_id[blocked_id].get("license") is None and by_id[blocked_id].get("automatedIngestionAllowed") is False, f"{blocked_id} must remain non-executable without explicit data licence")
 
@@ -76,6 +77,8 @@ need("dataVolumeMB" not in impure_count, "ImPure must not mislabel cumulative do
 need(by_id["inqcim-2500-request"].get("source") == "https://doi.org/10.3390/polym14173551", "INQCIM corrected DOI drifted")
 need(by_id["inqcim-2500-request"].get("peerReviewedCompanion") == "10.3390/polym14173551", "INQCIM companion DOI drifted")
 need(by_id["leon-defects-20322729"].get("overlapGroup") == by_id["leon-process-20309380"].get("overlapGroup"), "León defect/process campaign must remain one overlap group")
+need(rights_by_id["forinfpro-himd-v1"].get("decision") == "executable-license-confirmed", "FORinFPRO rights promotion drifted")
+need(by_id["forinfpro-himd-v1"].get("license") == "CC BY 4.0" and by_id["forinfpro-himd-v1"].get("automatedIngestionAllowed") is True, "FORinFPRO inventory execution rights drifted")
 
 record = json.loads(BENCHMARK_RECORD.read_text(encoding="utf-8"))
 need(record.get("status") == "completed-public-measured-benchmark", "record-level public benchmark status missing")
@@ -147,6 +150,10 @@ rwth = json.loads(REVIEW_RWTH.read_text(encoding="utf-8"))
 need(pet.get("status") == "retrieved-profile-needs-semantic-review", "PET review-only state drifted")
 need(warwick.get("status") == "retrieved-profile-needs-special-format-export", "Warwick special-format state drifted")
 need(all(x.get("publisherHashMatched") is True for x in warwick.get("files") or []) and len(warwick.get("files") or []) == 5, "Warwick file verification drifted")
+forinfpro = json.loads(BENCHMARK_FORINFPRO.read_text(encoding="utf-8"))
+need(forinfpro.get("status") == "completed-public-measured-benchmark", "FORinFPRO benchmark status missing")
+need((forinfpro.get("profile") or {}).get("deliveredCycles") == 1 and (forinfpro.get("profile") or {}).get("namedMachineChannels") == 60, "FORinFPRO delivered profile drifted")
+need((forinfpro.get("profile") or {}).get("acceptedMeasuredTimeSeriesSamples") == 0, "unit-limited FORinFPRO values must not inflate measured samples")
 need(rwth.get("status") == "retrieval-blocked-non-archive-response", "RWTH retrieval-blocked state drifted")
 need((rwth.get("acceptance") or {}).get("countsAsFullyProfiledMeasuredDataset") is False, "RWTH must remain non-counting until real archive profiling passes")
 need((rwth.get("acceptance") or {}).get("acceptedMeasuredTimeSeriesSamples") == 0, "RWTH blocked retrieval cannot contribute measured samples")
@@ -155,7 +162,7 @@ need(all(a.get("sizeBytes") == 248 and a.get("contentType") == "text/html; chars
 
 accepted_measured_total = av_profile["acceptedMeasuredTimeSeriesSamples"] + om_profile["acceptedMeasuredTimeSeriesSamples"]
 need(accepted_measured_total == 13_929_568, "combined real measured-sample arithmetic drifted")
-need(targets["fully_profiled_measured_datasets"]["currentAccepted"] == 5, "fully profiled measured dataset count must equal four open benchmark families plus one restricted educational profile")
+need(targets["fully_profiled_measured_datasets"]["currentAccepted"] == 6, "fully profiled measured dataset count must equal five open benchmark families plus one restricted educational profile")
 need(targets["measured_time_series_samples"]["currentAccepted"] == accepted_measured_total, "measured sample count must equal AVAPS plus OpenMMS delivered-file evidence")
 
 primary = json.loads(PRIMARY.read_text(encoding="utf-8"))
@@ -182,7 +189,7 @@ report = {
     "measuredDatasetDiscovery": {
         "inventoryCount": len(datasets),
         "legacyCatalogSeedCount": len(legacy.get("datasets") or []),
-        "fullyProfiledAccepted": 5,
+        "fullyProfiledAccepted": 6,
         "openOrStandardRepoAccepted": 4,
         "restrictedResearchEducationAccepted": 1,
         "automatedIngestionAllowed": summary.get("automatedIngestionAllowed"),
@@ -231,4 +238,4 @@ report = {
     "boundary": "No synthetic, metadata-only, generated-draft or heuristic-candidate evidence is counted as completed measured/reviewed content unless its area-specific acceptance definition is satisfied. Restricted research/education source terms are preserved rather than widened."
 }
 (ROOT / "content-scale-targets-report.json").write_text(json.dumps(report, indent=2) + "\n", encoding="utf-8")
-print(f"MouldMaster content-scale target integrity QA passed ({len(datasets)} measured datasets inventoried; 5 fully profiled families including 1 restricted research/education profile; {accepted_measured_total:,} real measured time-series values; {verified} publisher-verified primary measured studies; {summary.get('automatedIngestionAllowed')} sources legally executable)")
+print(f"MouldMaster content-scale target integrity QA passed ({len(datasets)} measured datasets inventoried; 6 fully profiled families including 1 restricted research/education profile; {accepted_measured_total:,} real measured time-series values; {verified} publisher-verified primary measured studies; {summary.get('automatedIngestionAllowed')} sources legally executable)")

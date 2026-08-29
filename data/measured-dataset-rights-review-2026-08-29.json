@@ -11,8 +11,8 @@
   },
   "summary": {
     "sourcesReviewed": 5,
-    "unblockedForAutomatedIngestion": 1,
-    "remainBlockedForRights": 4
+    "unblockedForAutomatedIngestion": 2,
+    "remainBlockedForRights": 3
   },
   "sources": [
     {
@@ -45,11 +45,11 @@
     {
       "datasetId": "forinfpro-himd-v1",
       "authoritativeRecord": "https://zenodo.org/records/20744054",
-      "decision": "blocked-no-explicit-license",
-      "license": null,
-      "evidence": "The Zenodo record makes the multimodal files publicly downloadable but does not display an explicit dataset licence identifier or licence text.",
-      "automatedIngestionAllowed": false,
-      "nextAction": "Obtain explicit data reuse terms and then pin the release version before multimodal ingestion."
+      "decision": "executable-license-confirmed",
+      "license": "CC BY 4.0",
+      "evidence": "The official Zenodo records API returned metadata.license.id=cc-by-4.0; the three delivered files were subsequently retrieved and SHA-256 fingerprinted.",
+      "automatedIngestionAllowed": true,
+      "nextAction": "Keep the exact three-file manifest and one-cycle/unit limitations regression-pinned."
     },
     {
       "datasetId": "cross-process-chain-17240390",

@@ -62,7 +62,7 @@ def compile_measured():
     need(len(dois) == len(set(dois)) and all(dois), "compiled primary measured studies must have 60 unique DOIs")
 
     need((rights_review.get("summary") or {}).get("sourcesReviewed") == 5, "measured-data rights review source count drifted")
-    need((rights_review.get("summary") or {}).get("unblockedForAutomatedIngestion") == 1, "measured-data rights review promotion count drifted")
+    need((rights_review.get("summary") or {}).get("unblockedForAutomatedIngestion") == 2, "measured-data rights review promotion count drifted")
 
     dossiers = {}
     for p in sorted((ROOT / "data/mechanism-promotion-evidence").glob("*.json")):
@@ -73,6 +73,7 @@ def compile_measured():
         ("scatimdata-avaps", "data/public-benchmark-contracts/scatimdata-avaps-v1.json", "data/public-benchmark-results/scatimdata-avaps-v1.json"),
         ("openmms-t4g", "data/public-benchmark-contracts/openmms-t4g-v1.json", "data/public-benchmark-results/openmms-t4g-v1.json"),
         ("su13148102-supplement", "data/public-benchmark-contracts/su13148102-supplement-v1.json", "data/public-benchmark-results/su13148102-supplement-v1.json"),
+        ("forinfpro-himd-v1", "data/public-benchmark-contracts/forinfpro-himd-v1.json", "data/public-benchmark-results/forinfpro-himd-v1.json"),
     ]
     benchmark_contracts = {}
     benchmark_results = {}
@@ -100,7 +101,7 @@ def compile_measured():
         restricted_results[benchmark_id] = result
 
     accepted_profiled = targets["targets"]["fully_profiled_measured_datasets"]["currentAccepted"]
-    need(len(benchmark_results) + len(restricted_results) == accepted_profiled == 5, "completed measured benchmark result count must match accepted profiled dataset count")
+    need(len(benchmark_results) + len(restricted_results) == accepted_profiled == 6, "completed measured benchmark result count must match accepted profiled dataset count")
     need(execution.get("summary", {}).get("acceptedProfiled") == accepted_profiled, "execution ledger accepted-profiled count drifted")
     need(execution.get("summary", {}).get("acceptedRestrictedResearchEducation") == len(restricted_results) == 1, "restricted accepted measured-profile count drifted")
 

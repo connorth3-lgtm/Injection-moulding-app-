@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "datasetId": "forinfpro-himd-v1",
-  "status": "blocked-rights-review",
+  "status": "accepted-profiled-unit-limited",
   "source": {
     "datasetDoi": "10.5281/zenodo.20744054",
     "recordUrl": "https://zenodo.org/records/20744054",
@@ -10,10 +10,10 @@
     "published": "2026-06-18",
     "recordModified": "2026-07-30",
     "access": "open",
-    "license": null,
-    "licenseEvidenceStatus": "no explicit dataset licence identifier or licence text visible on the authoritative record page during review",
-    "automatedRetrievalAllowed": false,
-    "rawRedistributionAllowed": false,
+    "license": "CC BY 4.0",
+    "licenseEvidenceStatus": "official Zenodo records API metadata.license.id returned cc-by-4.0 on 2026-08-29",
+    "automatedRetrievalAllowed": true,
+    "rawRedistributionAllowed": true,
     "reportedDataVolumeMB": 146.5
   },
   "experimentContext": {
@@ -67,5 +67,5 @@
     "Count measured time-series values only from delivered measured arrays/columns with ordering and measurement semantics established.",
     "Emit aggregate schemas, counts and fingerprints only; do not upload raw rows, arrays or cell values as workflow artifacts."
   ],
-  "evidenceBoundary": "The authoritative Zenodo record describes a real hybrid injection-moulding experiment with synchronized machine data and twelve in-mould sensors spanning ultrasonic, cavity pressure/temperature and dielectric modalities. The source is scientifically valuable and appears openly downloadable, but no explicit dataset licence identifier or licence text was visible during this review. Therefore no automated raw-file retrieval, dataset-family promotion or measured-sample count is permitted until reuse terms are explicitly captured from the authoritative source or depositor."
+  "evidenceBoundary": "The official Zenodo API confirms CC BY 4.0 and the three visible files were retrieved and SHA-256 fingerprinted. The source counts as one profiled real dataset family. It contributes zero values to the accepted cross-dataset time-series total because the visible release contains only cycle_001 and several delivered channel units are not explicit."
 }
