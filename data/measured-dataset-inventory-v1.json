@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "version": "2026.08.29.3",
+  "version": "2026.08.29.4",
   "reviewed": "2026-08-29",
   "purpose": "Inventory real measured injection-moulding datasets and data-bearing studies without conflating public metadata, downloadable files, reuse rights, record units, or independent experimental evidence.",
   "rules": {
@@ -349,7 +349,7 @@
       "datasetId": "cross-process-chain-17240390",
       "title": "Cross-process-chain dataset archive: injection molding and screw driving",
       "source": "https://doi.org/10.5281/zenodo.17240390",
-      "accessState": "public-open-profiled-scope-limited",
+      "accessState": "public-open-partially-accepted-lower-upper-pressure-state-unresolved",
       "license": "CC BY 4.0",
       "licenseEvidence": "official Zenodo records API metadata.license.id = cc-by-4.0",
       "automatedIngestionAllowed": true,
@@ -362,30 +362,41 @@
         "injectionScopeMembers": 15688,
         "injectionRowsStructurallyProfiled": 24482795,
         "numericValuesStructurallyProfiled": 159186308,
-        "acceptedMeasuredTimeSeriesSamples": 7426743,
+        "acceptedMeasuredTimeSeriesSamples": 51241491,
         "lowerWorkpieceFilesAccepted": 4989,
         "lowerWorkpieceRowsAccepted": 2475581,
         "lowerAcceptedActualChannelsPerRow": 3,
         "lowerAcceptedMeasuredTimeSeriesSamples": 7426743,
-        "lowerCommandTargetValuesExcluded": 2475581
+        "lowerCommandTargetValuesExcluded": 2475581,
+        "upperWorkpieceFilesAccepted": 10697,
+        "upperWorkpieceRowsAccepted": 21907374,
+        "upperAcceptedMeasuredChannelsPerRow": 2,
+        "upperAcceptedMeasuredTimeSeriesSamples": 43814748,
+        "upperPressureTargetValuesExcluded": 21907374,
+        "upperPressureActualValuesUnitBlocked": 21907374,
+        "upperStateValuesSemanticBlocked": 21907374
       },
       "signals": [
         "lower: injection pressure target (command, bar; excluded from measured total)",
         "lower: injection pressure actual (bar)",
         "lower: screw volume actual (cm³)",
         "lower: injection flow actual (cm³/s)",
-        "upper: pressure target/actual, melt volume, injection velocity, state (engineering units unresolved)",
+        "upper: melt volume / screw-volume coordinate (cm³)",
+        "upper: volumetric injection velocity (cm³/s)",
+        "upper: injection pressure target (command; unit unresolved, excluded)",
+        "upper: injection pressure actual (unit unresolved, excluded)",
+        "upper: state code (semantics unresolved, excluded)",
         "downstream screw-driving streams (excluded from injection-moulding counts)"
       ],
       "quality": [
         "material/process classes",
         "downstream quality labels"
       ],
-      "sampling": "lower: 4,989 source-conforming TXT files, each declaring 0.0300 s and matching observed time deltas (33.333... Hz); upper: 10,697 CSV cycle files remain structurally available but unit-limited; screw-driving streams excluded",
+      "sampling": "lower: 4,989 source-conforming TXT files, each declaring 0.0300 s and matching observed time deltas (33.333... Hz); upper: 10,697/10,697 source-conforming cycle CSVs, each with a validated explicit delivered time increment of 0.0099999997764825 in the source time coordinate; no engineering unit is assigned to the upper time column; two injection static_data.csv tables and screw-driving streams are excluded from this time-series acceptance",
       "overlapGroup": "cross-process-chain-17240390",
       "peerReviewedCompanion": null,
       "priority": 12,
-      "statusNote": "Exact CC BY 4.0 archive passed publisher MD5, local SHA-256 and ZIP CRC. A source-native lower-workpiece parser validated 4,989/4,989 TXT files, 2,475,581 rows and the exact units/labels/signal codes. Three actual channels contribute 7,426,743 accepted measured values; 2,475,581 pressure-target command values are retained but excluded. The family remains scope-limited because authoritative engineering units for the upper-workpiece CSV are not yet established."
+      "statusNote": "Exact CC BY 4.0 archive passed publisher MD5, local SHA-256 and ZIP CRC. The lower parser accepts 4,989 TXT files / 2,475,581 rows and 7,426,743 actual measured values. The specialist upper parser accepts 10,697/10,697 cycle CSVs / 21,907,374 rows and 43,814,748 measured values from source-backed melt volume (cm³) and volumetric injection velocity (cm³/s). Cross-process therefore contributes 51,241,491 accepted measured time-series values. Upper pressure actual remains excluded pending an authoritative engineering unit; pressure target is command evidence; state remains excluded pending semantic mapping. The family remains partially accepted rather than fully profiled."
     },
     {
       "datasetId": "kamp-injection-7996",

@@ -1,0 +1,65 @@
+name: MouldMaster Cross-Process Specialist Parser
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: mouldmaster-cross-process-specialist-parser
+  cancel-in-progress: false
+
+jobs:
+  profile:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Python syntax
+        run: |
+          python -m py_compile tools/profile_cross_process_upper_workpiece.py
+          python -m py_compile qa_cross_process_upper_contract.py
+      - name: Validate specialist parser contract with synthetic fixtures
+        run: python qa_cross_process_upper_contract.py
+      - name: Profile exact publisher archive
+        run: python tools/profile_cross_process_upper_workpiece.py
+      - name: Validate aggregate upper-workpiece result
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          result = json.loads(
+              Path('data/public-benchmark-results/cross-process-upper-workpiece-source-contract-v1.json')
+              .read_text(encoding='utf-8')
+          )
+          profile = result['profile']
+          assert result['status'] == 'completed-source-defined-upper-workpiece-partial-acceptance'
+          assert result['source']['publisherChecksum'] == 'md5:069e190338b2ca29f736b21fabf407ba'
+          assert profile['upperWorkpieceSerialCsvFilesAccepted'] == 10697
+          assert profile['upperWorkpieceSerialCsvFilesRejected'] == 0
+          assert profile['injectionStaticCsvFilesExcluded'] == 2
+          assert profile['upperWorkpieceRowsAccepted'] == 21907374
+          assert profile['acceptedMeasuredChannelsPerRow'] == 2
+          assert profile['acceptedMeasuredTimeSeriesSamples'] == 43814748
+          assert profile['acceptedMeasuredTimeSeriesSamples'] == profile['upperWorkpieceRowsAccepted'] * 2
+          assert profile['pressureTargetValuesExcludedFromMeasuredCount'] == profile['upperWorkpieceRowsAccepted']
+          assert profile['pressureActualValuesExcludedPendingUnit'] == profile['upperWorkpieceRowsAccepted']
+          assert profile['stateValuesExcludedPendingSemantics'] == profile['upperWorkpieceRowsAccepted']
+          assert profile['rawRowsOrCellValuesEmitted'] is False
+          assert result['retrieval']['rawPublisherFilesCommitted'] is False
+          assert result['retrieval']['rawRowsUploadedAsArtifact'] is False
+
+          accepted = {
+              channel['canonicalName']
+              for channel in result['channels']
+              if channel['acceptedMeasuredValue']
+          }
+          assert accepted == {'melt_volume', 'injection_velocity'}
+          PY
+      - name: Verify deterministic committed aggregate
+        run: git diff --exit-code -- data/public-benchmark-results/cross-process-upper-workpiece-source-contract-v1.json

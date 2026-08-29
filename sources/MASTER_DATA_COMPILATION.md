@@ -33,9 +33,9 @@ Reviewed against the machine-readable ledgers on **2026-08-29**:
 
 - **20** real measured/data-bearing dataset records inventoried.
 - **7** exact-source measured dataset families accepted/profiled: Mendeley `gtnb4j7bfx` v1, scatimdata/AVAPS, Sustainability 8102 supplement, ImPure/PASCOE, iGuzzini road lenses, OpenMMS-T4G and FORinFPRO-HIMD.
-- **21,356,311** accepted measured time-series values: **13,631,488** from scatimdata/AVAPS, **298,080** from OpenMMS-T4G and **7,426,743** from the source-defined cross-process lower-workpiece actual signals.
+- **65,171,059** accepted measured time-series values: **13,631,488** from scatimdata/AVAPS, **298,080** from OpenMMS-T4G and **51,241,491** from cross-process (7,426,743 lower-workpiece + 43,814,748 specialist upper-workpiece accepted values).
 - ImPure's **2,376,696** profiled numeric values remain outside the accepted time-series total until source units and analogue-channel semantics are established.
-- Cross-process lower-workpiece data now contribute **7,426,743** accepted actual measured values from 4,989 source-conforming TXT files; the family remains only partially accepted because upper-workpiece engineering units are unresolved.
+- Cross-process now contributes **51,241,491** accepted measured values: **7,426,743** lower-workpiece actual values plus **43,814,748** upper-workpiece values from 10,697/10,697 cycle CSVs and 21,907,374 rows. Upper melt volume (cm³) and volumetric injection velocity (cm³/s) are accepted; upper pressure actual and state remain non-counting pending an authoritative pressure unit and state-code semantics, so the family remains only partially accepted.
 - iGuzzini contributes **18,863** accepted record-level measured process values under research/education-only terms, but **0** high-frequency time-series values.
 - **60** unique publisher-verified peer-reviewed primary measured studies.
 - **60** verified peer-reviewed research records in the current audited master subset (the same 60 primary-measured papers, not an additional 60 papers).
@@ -50,7 +50,7 @@ Reviewed against the machine-readable ledgers on **2026-08-29**:
 
 These blockers do not reduce the secured baseline above; they define what is still needed before additional sources or values can be accepted.
 
-- **Cross-process upper-workpiece definitions** — the lower TXT stream is now source-defined and accepted; authoritative engineering units for the upper-workpiece CSV still need to be established before the family can become fully profiled. Do not extrapolate lower units to the upper files without source evidence.
+- **Cross-process remaining upper definitions** — the specialist parser now accepts melt volume (cm³) and volumetric injection velocity (cm³/s) across all 10,697 upper cycle CSVs. The remaining blockers are only the authoritative upper pressure engineering unit and semantic mapping of state codes; pressure actual and state stay non-counting until those are sourced.
 - **ImPure definitions** — establish units and meanings for both analogue-input channels and the remaining sensor columns before its profiled numeric values can enter accepted measured-sample totals.
 - **Warwick export** — convert the five retrieved, SHA-256-verified `.opju` files using a validated Origin/OriginPro workflow before accepting trial, channel or sample counts.
 - **RWTH archive** — the authoritative CC BY 4.0 publisher download currently returns a small HTML response instead of the advertised ZIP; obtain the real archive and then profile it.

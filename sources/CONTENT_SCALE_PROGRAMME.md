@@ -40,7 +40,7 @@ Scale does not override evidence quality.
 As of **2026-08-29**, the audited target ledger records:
 
 - **7** fully profiled real measured dataset families accepted;
-- **21,356,311** accepted measured time-series values;
+- **65,171,059** accepted measured time-series values;
 - **20** real measured/data-bearing sources inventoried;
 - **20** explicit base material profiles;
 - **20** explicit base defect entries;
@@ -49,7 +49,7 @@ As of **2026-08-29**, the audited target ledger records:
 - **60** deduplicated publisher-verified peer-reviewed research records in the current master subset;
 - **60** publisher-verified primary measured studies.
 
-The accepted measured time-series total is **13,631,488** delivered AVAPS pressure/flow values plus **298,080** OpenMMS-T4G sensor values plus **7,426,743** source-defined cross-process lower-workpiece actual values. The cross-process pressure-target command channel is excluded. The current **19,008** generated learning cycles remain synthetic and are intentionally excluded.
+The accepted measured time-series total is **13,631,488** delivered AVAPS pressure/flow values plus **298,080** OpenMMS-T4G sensor values plus **51,241,491** cross-process values. Cross-process comprises **7,426,743** lower-workpiece actual values and **43,814,748** specialist upper-workpiece values from **21,907,374** validated upper rows x two source-backed channels: melt volume (cm³) and volumetric injection velocity (cm³/s). Pressure-target commands are excluded; upper pressure actual remains unit-blocked and state remains semantics-blocked. The current **19,008** generated learning cycles remain synthetic and are intentionally excluded.
 
 The seven accepted/profiled measured families are Mendeley `gtnb4j7bfx` v1, scatimdata/AVAPS, Sustainability 8102 supplement, ImPure/PASCOE, iGuzzini road lenses, OpenMMS-T4G and FORinFPRO-HIMD. Profile acceptance and measured-value acceptance remain separate: ImPure is profiled but its **2,376,696** numeric values remain outside the measured-sample total pending unit and analogue-channel definitions.
 
@@ -72,7 +72,7 @@ A source can be fully profiled while some numeric fields remain non-counting whe
 
 ### Remaining measured-data blockers
 
-- **Cross-process upper workpiece** — the lower TXT stream is now source-defined and contributes 7,426,743 accepted actual values; authoritative upper-CSV engineering units remain unresolved, so the dataset family is not yet promoted to fully profiled.
+- **Cross-process upper workpiece** — all 10,697 upper cycle CSVs are now deterministically parsed; melt volume (cm³) and volumetric injection velocity (cm³/s) contribute 43,814,748 accepted values. The family remains not fully profiled only because the authoritative upper pressure unit and state-code semantic mapping are unresolved.
 - **ImPure/PASCOE** — define units and meanings for both analogue-input channels and the remaining sensor columns before its profiled numeric values can be promoted into the accepted measured-sample total.
 - **Warwick demoulding** — export the five verified `.opju` projects through Origin/OriginPro before accepting trial/channel/sample counts.
 - **RWTH PCR** — the publisher endpoint currently returns HTML instead of the advertised ZIP; obtain the real CC BY 4.0 archive and profile it.
