@@ -1,0 +1,31 @@
+name: MouldMaster Measured Dataset Wave 2 Batch 3 QA
+
+on:
+  push:
+    branches: [data/real-dataset-profiling-wave2-batch3]
+    paths:
+      - 'data/measured-dataset-wave2-ledger-v1.json'
+      - 'data/public-benchmark-results/8c8fjwcw86-v1.json'
+      - 'data/public-benchmark-results/597jrsm9zm-v1.json'
+      - 'data/public-benchmark-results/crmb7xjymg-v1.json'
+      - 'data/public-benchmark-results/strathclyde-rtim-tablets-v1.json'
+      - 'qa_measured_dataset_wave2_batch3.py'
+      - '.github/workflows/measured-dataset-wave2-batch3-qa.yml'
+  pull_request:
+    branches: [data/real-dataset-profiling-wave2-batch2, data/real-dataset-profiling-wave2, main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  evidence-ledger-qa:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Validate Batch 3 accepted and blocked evidence states
+        run: python qa_measured_dataset_wave2_batch3.py
