@@ -27,7 +27,7 @@ need(r["rawThirdPartyFilesMustNotBeCommitted"] is True, "raw file boundary missi
 need(r["countsAsFullyProfiledMeasuredDataset"] is False, "stage one cannot accept dataset")
 need(r["acceptedMeasuredTimeSeriesSamples"] == 0, "stage one cannot accept samples")
 text = RUNNER.read_text(encoding="utf-8")
-for marker in ["zipfile.is_zipfile", "Tensile-Data.xlsx", "porfiri", "rawNumericValuesEmitted", "formulaCells", "sha256", "acceptedMeasuredTimeSeriesSamples\": 0"]:
+for marker in ["zipfile.is_zipfile", "tensile-data.xlsx", "porfiri", "rawNumericValuesEmitted", "formulaCells", "sha256", "acceptedMeasuredTimeSeriesSamples\": 0"]:
     need(marker in text, f"runner guard missing: {marker}")
 need("to_numpy().ravel" in text, "aggregate-only numeric-cell scan missing")
 need("rawMembersUploadedAsArtifact\": False" in text, "raw member upload guard missing")
