@@ -34,6 +34,7 @@
     "cycleCountBoundary": "do not infer the count from highest visible cycle number because the delivered sequence contains gaps; enumerate the manifest after rights clearance"
   },
   "rightsGate": {
+    "publicDownloadDoesNotEqualReusePermission": true,
     "openAccessDescriptionDoesNotEqualSpecificReuseLicenceEvidence": true,
     "zenodoPublicFileLicenceRequirementRecorded": true,
     "zenodoDefaultLicenceNotAssumedForThisRecord": true,
