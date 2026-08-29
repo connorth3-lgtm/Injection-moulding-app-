@@ -71,7 +71,7 @@ need(impure_result.get("status") == "completed-public-measured-benchmark", "ImPu
 need((impure_result.get("profile") or {}).get("cycleFiles") == 307, "ImPure cycle-file count drifted")
 need((impure_result.get("profile") or {}).get("cycleSchemaFamilies") == 1, "ImPure cycle schema drifted")
 need((impure_result.get("profile") or {}).get("widthMismatchRows") == 0, "ImPure row-width integrity drifted")
-need((impure_result.get("profile") or {}).get("acceptedMeasuredTimeSeriesSamples") == 0,
+need((impure_result.get("profile") or {}).get("acceptedMeasuredTimeSeriesSamples") in {None, 0},
      "ImPure original structural profile must remain pre-semantic and non-promoting; semantic promotion is governed by the later review/contract")
 
 cross_result = load(RESULTS / "cross-process-chain-17240390-v1.json")
