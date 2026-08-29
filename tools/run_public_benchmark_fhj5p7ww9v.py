@@ -18,6 +18,16 @@ PUBLIC_FILES_ENDPOINT = f"https://data.mendeley.com/public-api/datasets/{DATASET
 API_ROOT = "https://api.data.mendeley.com"
 UA = "MouldMaster-Educational-Evidence-Profiler/1.0"
 
+MEASURED_SHEETS = {"weight", "flexural strength", "flexural modulus"}
+MATERIAL_ROWS = {
+    4: "Solid PP",
+    7: "All-PP composite",
+    10: "PP foam",
+    13: "All-PP composite foam",
+}
+PROCESS_ROWS = {2: "injection temperature", 3: "injection speed"}
+SPREAD_ROWS = {5, 6, 8, 9, 11, 12, 14, 15}
+
 
 def get(url, accept="*/*"):
     req = urllib.request.Request(url, headers={"Accept": accept, "User-Agent": UA})
@@ -54,64 +64,65 @@ def file_url(item):
     return None
 
 
-def classify_headers(headers):
-    names = [str(x).strip() for x in headers]
-    low = [x.lower() for x in names]
-    measured = []
-    derived = []
-    process = []
-    for original, name in zip(names, low):
-        if any(k in name for k in ["weight reduction", "increase percentage", "increase percent", "%", "percentage"]):
-            derived.append(original)
-        elif any(k in name for k in ["weight", "flexural strength", "flexural modulus", "modulus"]):
-            measured.append(original)
-        if any(k in name for k in ["injection temperature", "injection speed", "temperature", "speed"]):
-            process.append(original)
+def aggregate_sheet(ws):
+    text_cells = []
+    numeric_by_row = {}
+    numeric_by_column = {}
+    formula_count = 0
+    for row in ws.iter_rows():
+        row_numeric = 0
+        for cell in row:
+            value = cell.value
+            if value is None:
+                continue
+            if isinstance(value, str):
+                if value.startswith("="):
+                    formula_count += 1
+                else:
+                    cleaned = " ".join(value.split())
+                    if cleaned:
+                        text_cells.append({"cell": cell.coordinate, "text": cleaned[:200]})
+            elif isinstance(value, (int, float)) and not isinstance(value, bool):
+                row_numeric += 1
+                numeric_by_column[cell.column_letter] = numeric_by_column.get(cell.column_letter, 0) + 1
+        if row_numeric:
+            numeric_by_row[row[0].row] = row_numeric
+    text_by_cell = {x["cell"]: x["text"] for x in text_cells}
+
+    exact_layout = (
+        ws.title.strip().lower() in MEASURED_SHEETS
+        and text_by_cell.get("A1") == "No."
+        and text_by_cell.get("A2") == "injection temperature"
+        and text_by_cell.get("A3") == "injection speed"
+        and all(text_by_cell.get(f"A{r}") == label for r, label in MATERIAL_ROWS.items())
+        and all(numeric_by_row.get(r) == 8 for r in [1, 2, 3, *MATERIAL_ROWS.keys(), *SPREAD_ROWS])
+    )
+
+    direct_measured = sum(numeric_by_row.get(r, 0) for r in MATERIAL_ROWS) if exact_layout else 0
+    process_factor = sum(numeric_by_row.get(r, 0) for r in PROCESS_ROWS) if exact_layout else 0
+    spread_summary = sum(numeric_by_row.get(r, 0) for r in SPREAD_ROWS) if exact_layout else 0
+    condition_ids = numeric_by_row.get(1, 0) if exact_layout else 0
     return {
-        "headerNames": names,
-        "measuredOutcomeColumns": measured,
-        "derivedOutcomeColumns": derived,
-        "processFactorColumns": process,
-        "rawValuesEmitted": False,
+        "textCells": text_cells,
+        "textCellCount": len(text_cells),
+        "numericCellsByRow": [{"row": r, "numericCells": c} for r, c in sorted(numeric_by_row.items())],
+        "numericCellsByColumn": numeric_by_column,
+        "numericCellCount": sum(numeric_by_row.values()),
+        "formulaCellCount": formula_count,
+        "semanticMap": {
+            "recognized": exact_layout,
+            "outcomeFamily": ws.title.strip().lower() if exact_layout else None,
+            "experimentalConditionColumns": condition_ids,
+            "processFactorRows": [{"row": r, "label": label, "numericCells": numeric_by_row.get(r, 0)} for r, label in PROCESS_ROWS.items()] if exact_layout else [],
+            "directMeasuredMaterialRows": [{"row": r, "label": label, "numericCells": numeric_by_row.get(r, 0)} for r, label in MATERIAL_ROWS.items()] if exact_layout else [],
+            "spreadSummaryRows": sorted(SPREAD_ROWS) if exact_layout else [],
+            "directMeasuredOutcomeCells": direct_measured,
+            "processFactorCellsExcludedFromMeasuredOutcomes": process_factor,
+            "spreadSummaryCellsExcludedFromDirectMeasurements": spread_summary,
+            "formulaCellsExcludedAsDerived": formula_count,
+        },
+        "numericValuesEmitted": False,
     }
-
-
-def aggregate_layout(path: Path):
-    wb = load_workbook(path, read_only=True, data_only=False)
-    out = {}
-    for ws in wb.worksheets:
-        text_cells = []
-        numeric_by_row = []
-        numeric_by_column = {}
-        formula_count = 0
-        for row in ws.iter_rows():
-            row_numeric = 0
-            for cell in row:
-                value = cell.value
-                if value is None:
-                    continue
-                if isinstance(value, str):
-                    if value.startswith("="):
-                        formula_count += 1
-                    else:
-                        cleaned = " ".join(value.split())
-                        if cleaned:
-                            text_cells.append({"cell": cell.coordinate, "text": cleaned[:200]})
-                elif isinstance(value, (int, float)) and not isinstance(value, bool):
-                    row_numeric += 1
-                    numeric_by_column[cell.column_letter] = numeric_by_column.get(cell.column_letter, 0) + 1
-            if row_numeric:
-                numeric_by_row.append({"row": row[0].row if row else None, "numericCells": row_numeric})
-        out[ws.title] = {
-            "textCells": text_cells,
-            "textCellCount": len(text_cells),
-            "numericCellsByRow": numeric_by_row,
-            "numericCellsByColumn": numeric_by_column,
-            "numericCellCount": sum(x["numericCells"] for x in numeric_by_row),
-            "formulaCellCount": formula_count,
-            "numericValuesEmitted": False,
-        }
-    return out
 
 
 def main():
@@ -137,37 +148,29 @@ def main():
     with tempfile.TemporaryDirectory() as td:
         path = Path(td) / "source.xlsx"
         path.write_bytes(data)
-        sheets = pd.read_excel(path, sheet_name=None)
-        layout = aggregate_layout(path)
+        wb = load_workbook(path, read_only=True, data_only=False)
         profiles = []
+        total_direct = 0
         total_rows = 0
         total_columns = 0
-        total_measured_cells = 0
-        for sheet_name, df in sheets.items():
-            df = df.dropna(axis=0, how="all").dropna(axis=1, how="all")
-            sem = classify_headers(df.columns)
-            rows = int(len(df))
-            cols = int(len(df.columns))
-            measured_cols = sem["measuredOutcomeColumns"]
-            measured_non_null = int(sum(int(df[c].notna().sum()) for c in measured_cols if c in df.columns))
-            total_rows += rows
-            total_columns += cols
-            total_measured_cells += measured_non_null
-            profiles.append({
-                "sheet": str(sheet_name),
-                "rows": rows,
-                "columns": cols,
-                "semantics": sem,
-                "layout": layout.get(str(sheet_name), {}),
-                "nonNullMeasuredOutcomeCells": measured_non_null,
-            })
+        recognized_sheets = 0
+        for ws in wb.worksheets:
+            layout = aggregate_sheet(ws)
+            if layout["semanticMap"]["recognized"]:
+                recognized_sheets += 1
+                total_direct += layout["semanticMap"]["directMeasuredOutcomeCells"]
+            # pandas dimensions give a stable substantive table shape after empty edges are removed.
+            df = pd.read_excel(path, sheet_name=ws.title).dropna(axis=0, how="all").dropna(axis=1, how="all")
+            total_rows += int(len(df))
+            total_columns += int(len(df.columns))
+            profiles.append({"sheet": ws.title, "rows": int(len(df)), "columns": int(len(df.columns)), "layout": layout})
 
     details = item.get("content_details") or item.get("contentDetails") or {}
     publisher_sha = details.get("sha256_hash") or details.get("sha256Hash")
-    recognized = total_measured_cells > 0
+    recognized = recognized_sheets == 3 and total_direct == 96
     status = "completed-restricted-noncommercial-measured-benchmark" if recognized else "retrieved-profile-needs-semantic-review"
     result = {
-        "schema": 2,
+        "schema": 3,
         "status": status,
         "retrievedDate": args.retrieved_date,
         "source": {
@@ -186,10 +189,14 @@ def main():
         "profile": {
             "sheets": profiles,
             "sheetCount": len(profiles),
+            "recognizedMeasuredOutcomeSheets": recognized_sheets,
+            "experimentalConditionsPerSheet": 8 if recognized else None,
+            "materialGroups": list(MATERIAL_ROWS.values()) if recognized else [],
+            "measuredOutcomeFamilies": sorted(MEASURED_SHEETS) if recognized else [],
             "totalRowsAcrossSheets": total_rows,
             "totalColumnsAcrossSheets": total_columns,
-            "nonNullMeasuredOutcomeCells": total_measured_cells,
-            "recordLevelMeasuredValues": total_measured_cells,
+            "recordLevelMeasuredOutcomeValues": total_direct,
+            "measurementLevel": "source-reported outcome values by material and experimental condition; not raw replicate-level observations" if recognized else None,
             "acceptedMeasuredTimeSeriesSamples": 0,
             "rawRowsOrCellValuesEmitted": False,
             "numericMeasurementValuesEmitted": False,
@@ -206,20 +213,18 @@ def main():
             "rawPublisherFileCommitted": False,
             "rawRowsOrCellValuesUploadedAsArtifact": False,
         },
-        "evidenceBoundary": contract["evidenceBoundary"] if recognized else "The exact CC BY-NC 3.0 publisher workbook was retrieved and fingerprinted. Its sheet names identify measured outcome families, but the delivered columns are numbered rather than semantically named. The aggregate artifact therefore exposes only textual layout labels and numeric-cell counts/coordinates, never measurement values. The source remains non-counting until measured rows and derived/process-factor rows are separated from this layout evidence."
+        "evidenceBoundary": "The exact CC BY-NC 3.0 workbook is fingerprinted. Direct measured outcome cells are only the four material rows on the three outcome sheets across eight experimental-condition columns (4 x 3 x 8 = 96). Injection-temperature/speed rows, deviation summaries and formula-based comparison/percentage cells are explicitly excluded. These 96 cells are source-reported outcome values, not raw replicate measurements or high-frequency time-series samples." if recognized else "The exact publisher workbook was retrieved, but the expected aggregate semantic layout did not reconcile; it remains non-counting."
     }
     if publisher_sha and len(str(publisher_sha)) == 64:
         result["source"]["publisherSha256Matched"] = str(publisher_sha).lower() == digest.lower()
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_text(json.dumps(result, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
     print(json.dumps({
-        "status": result["status"],
-        "file": expected,
+        "status": status,
         "sha256": digest,
-        "sheetCount": result["profile"]["sheetCount"],
-        "totalRowsAcrossSheets": result["profile"]["totalRowsAcrossSheets"],
-        "recordLevelMeasuredValues": result["profile"]["recordLevelMeasuredValues"],
-        "semanticLayoutRecognized": result["acceptance"]["semanticLayoutRecognized"],
+        "recognizedMeasuredOutcomeSheets": recognized_sheets,
+        "recordLevelMeasuredOutcomeValues": total_direct,
+        "acceptedMeasuredTimeSeriesSamples": 0,
     }, indent=2))
 
 
