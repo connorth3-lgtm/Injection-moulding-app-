@@ -1,5 +1,6 @@
 name: MouldMaster Reconcile Cross-Process Lower Acceptance
 
+# Deterministic promotion of the source-defined lower-workpiece aggregate only.
 on:
   push:
     branches: [data/impure-warwick-source-contracts]
