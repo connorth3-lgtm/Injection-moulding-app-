@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "version": "2026.08.29.4",
+  "version": "2026.08.29.5",
   "reviewed": "2026-08-29",
   "baseWave": {
     "fullyProfiledMeasuredDatasetFamilies": 5,
@@ -100,19 +100,70 @@
       "acceptedMeasuredTimeSeriesSamples": 0,
       "resultPath": "data/public-benchmark-results/mendeley-wave2-batch2-stage1.json",
       "nextAction": "recheck publisher file exposure before profiling reported wear, TGA, FTIR or SEM evidence"
+    },
+    {
+      "priority": 8,
+      "datasetId": "mendeley-8c8fjwcw86-v1",
+      "doi": "10.17632/8c8fjwcw86.1",
+      "license": "CC BY 4.0",
+      "state": "accepted-profiled-injection-moulded-xrd-characterization",
+      "countsAsFullyProfiledMeasuredDataset": true,
+      "injectionMouldingCycleDataset": false,
+      "acceptedMaterialCharacterizationTraceValues": 6588,
+      "acceptedMeasuredTimeSeriesSamples": 0,
+      "resultPath": "data/public-benchmark-results/8c8fjwcw86-v1.json"
+    },
+    {
+      "priority": 9,
+      "datasetId": "mendeley-597jrsm9zm-v1",
+      "doi": "10.17632/597jrsm9zm.1",
+      "license": "CC BY-NC 3.0",
+      "state": "profiled-process-documentation-only-noncounting",
+      "countsAsFullyProfiledMeasuredDataset": false,
+      "acceptedMeasuredTimeSeriesSamples": 0,
+      "acceptedRecordLevelMeasuredOutcomeValues": 0,
+      "resultPath": "data/public-benchmark-results/597jrsm9zm-v1.json",
+      "useScope": "noncommercial-education-research-only"
+    },
+    {
+      "priority": 10,
+      "datasetId": "mendeley-crmb7xjymg-v1",
+      "doi": "10.17632/crmb7xjymg.1",
+      "license": "CC BY 4.0",
+      "state": "accepted-profiled-xps-material-tool-interface",
+      "countsAsFullyProfiledMeasuredDataset": true,
+      "injectionMouldingCycleDataset": false,
+      "acceptedMaterialCharacterizationTraceValues": 71868,
+      "acceptedMeasuredTimeSeriesSamples": 0,
+      "resultPath": "data/public-benchmark-results/crmb7xjymg-v1.json"
+    },
+    {
+      "priority": 11,
+      "datasetId": "strathclyde-rtim-tablets-v1",
+      "doi": "10.15129/e1a516b3-41ad-4b38-81e1-6ebec17b8e7d",
+      "license": "CC BY 4.0",
+      "state": "retrieval-blocked-http",
+      "countsAsFullyProfiledMeasuredDataset": false,
+      "acceptedMeasuredTimeSeriesSamples": 0,
+      "resultPath": "data/public-benchmark-results/strathclyde-rtim-tablets-v1.json",
+      "nextAction": "recheck publisher asset access or obtain an authoritative publisher-supported workbook endpoint"
     }
   ],
   "summary": {
-    "wave2SourcesReviewed": 7,
-    "wave2FullyProfiledAccepted": 4,
-    "wave2PublisherPayloadBlocked": 3,
-    "effectiveFullyProfiledMeasuredDatasetFamilies": 9,
+    "wave2SourcesReviewed": 11,
+    "wave2FullyProfiledAccepted": 6,
+    "wave2PublisherPayloadBlocked": 4,
+    "wave2ProfiledNonCounting": 1,
+    "effectiveFullyProfiledMeasuredDatasetFamilies": 11,
     "effectiveAcceptedMeasuredTimeSeriesSamples": 13929568,
     "wave2RecordLevelMeasuredOutcomeValues": 1110,
     "wave2RecordLevelDerivedSummaryValuesExcluded": 105,
     "wave2RecordLevelFormulaValuesExcluded": 22,
     "wave2MaterialCharacterizationDirectPhysicalValues": 28590,
-    "wave2MaterialCharacterizationTraceMeasurementCells": 6026
+    "wave2MaterialCharacterizationTraceMeasurementCells": 6026,
+    "wave2AcceptedXpsTraceValues": 71868,
+    "wave2AcceptedXrdTraceValues": 6588,
+    "wave2AcceptedMaterialCharacterizationTraceValuesTotal": 84482
   },
   "boundaries": {
     "rawThirdPartyRowsOrFilesCommitted": false,
@@ -125,6 +176,8 @@
     "mixedManufacturingRoutesRequireExplicitInjectionMouldedIdentityBeforeCounting": true,
     "externalWorkbookChartReferencesDoNotCountAsDeliveredMeasurements": true,
     "materialCharacterizationCellCountsDoNotInflateInjectionCycleHighFrequencySampleMetric": true,
-    "crossFigureMaterialCharacterizationReuseIsNotClaimedAsDeduplicatedExperiments": true
+    "crossFigureMaterialCharacterizationReuseIsNotClaimedAsDeduplicatedExperiments": true,
+    "summaryOrBoxPlotStatisticsDoNotCountAsDirectSpecimenMeasurements": true,
+    "publisherHttpBlockedAssetsDoNotCountWithoutDeliveredBytes": true
   }
 }
