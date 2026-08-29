@@ -36,18 +36,24 @@ jobs:
           python - <<'PY'
           import json
           x=json.load(open('benchmark-results/strathclyde-rtim-tablets-v1.json'))
-          assert x['status']=='retrieved-profile-needs-semantic-review'
+          assert x['status'] in {'retrieved-profile-needs-semantic-review','retrieval-blocked-http'}
           assert x['source']['datasetDoi']=='10.15129/e1a516b3-41ad-4b38-81e1-6ebec17b8e7d'
           assert x['source']['license']=='CC BY 4.0'
           assert x['source']['publisherFileName']=='doi.org_10.1016_j.ijpharm.2022.121956_AllData.xlsx'
-          assert len(x['source']['sha256'])==64
-          assert x['profile']['sheetCount']>=1
-          assert x['profile']['rawRowsOrNumericValuesEmitted'] is False
           assert x['acceptance']['countsAsFullyProfiledMeasuredDataset'] is False
           assert x['acceptance']['acceptedMeasuredTimeSeriesSamples']==0
           assert x['retrieval']['rawPublisherFileCommitted'] is False
           assert x['retrieval']['rawNumericValuesUploadedAsArtifact'] is False
-          print(json.dumps({'source':x['source'],'profile':x['profile']},indent=2))
+          assert x['retrieval']['rawResponseBodiesEmitted'] is False
+          assert len(x['retrieval']['attempts'])>=1
+          assert all(a['responseBodyEmitted'] is False for a in x['retrieval']['attempts'])
+          if x['status']=='retrieved-profile-needs-semantic-review':
+              assert len(x['source']['sha256'])==64
+              assert x['profile']['sheetCount']>=1
+              assert x['profile']['rawRowsOrNumericValuesEmitted'] is False
+          else:
+              assert x['profile'] is None
+          print(json.dumps({'status':x['status'],'source':x['source'],'retrieval':x['retrieval'],'profile':x['profile']},indent=2))
           PY
       - name: Upload aggregate workbook profile only
         uses: actions/upload-artifact@v4
