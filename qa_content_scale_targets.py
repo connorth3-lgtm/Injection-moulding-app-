@@ -15,6 +15,7 @@ BENCHMARK_IGUZZINI = ROOT / "data" / "public-benchmark-results" / "iguzzini-road
 BENCHMARK_FORINFPRO = ROOT / "data" / "public-benchmark-results" / "forinfpro-himd-v1.json"
 BENCHMARK_IMPURE = ROOT / "data" / "public-benchmark-results" / "impure-pascoe-2022-v1.json"
 REVIEW_CROSS = ROOT / "data" / "public-benchmark-results" / "cross-process-chain-17240390-v1.json"
+ACCEPTED_CROSS_LOWER = ROOT / "data" / "public-benchmark-results" / "cross-process-lower-workpiece-source-contract-v1.json"
 REVIEW_PET = ROOT / "data" / "public-benchmark-results" / "pet-preform-v2.json"
 REVIEW_WARWICK = ROOT / "data" / "public-benchmark-results" / "warwick-demoulding-v2.json"
 REVIEW_RWTH = ROOT / "data" / "public-benchmark-results" / "rwth-pcr-2025-v1.json"
@@ -176,10 +177,18 @@ need((rwth.get("acceptance") or {}).get("acceptedMeasuredTimeSeriesSamples") == 
 need(len((rwth.get("source") or {}).get("retrievalAttempts") or []) == 3, "RWTH retrieval attempt audit drifted")
 need(all(a.get("sizeBytes") == 248 and a.get("contentType") == "text/html; charset=UTF-8" and a.get("zipStructureValid") is False for a in rwth["source"]["retrievalAttempts"]), "RWTH non-archive response evidence drifted")
 
-accepted_measured_total = av_profile["acceptedMeasuredTimeSeriesSamples"] + om_profile["acceptedMeasuredTimeSeriesSamples"]
-need(accepted_measured_total == 13_929_568, "combined real measured-sample arithmetic drifted")
-need(targets["fully_profiled_measured_datasets"]["currentAccepted"] == 7, "fully profiled measured dataset count must include ImPure plus the established benchmark families")
-need(targets["measured_time_series_samples"]["currentAccepted"] == accepted_measured_total, "measured sample count must equal AVAPS plus OpenMMS delivered-file evidence")
+cross_lower = json.loads(ACCEPTED_CROSS_LOWER.read_text(encoding="utf-8"))
+cl_profile = cross_lower.get("profile") or {}
+need(cross_lower.get("status") == "completed-source-defined-lower-workpiece-profile", "cross-process lower accepted profile status drifted")
+need(cl_profile.get("lowerWorkpieceTxtFilesAccepted") == 4_989 and cl_profile.get("lowerWorkpieceTxtFilesRejected") == 0, "cross-process lower file acceptance drifted")
+need(cl_profile.get("lowerWorkpieceRowsAccepted") == 2_475_581, "cross-process lower row count drifted")
+need(cl_profile.get("acceptedMeasuredTimeSeriesSamples") == 7_426_743, "cross-process lower accepted sample count drifted")
+need(cl_profile.get("commandTargetValuesExcludedFromMeasuredCount") == 2_475_581, "cross-process lower command exclusion drifted")
+need(cl_profile.get("rawRowsOrCellValuesEmitted") is False, "cross-process lower result must not emit raw values")
+accepted_measured_total = av_profile["acceptedMeasuredTimeSeriesSamples"] + om_profile["acceptedMeasuredTimeSeriesSamples"] + cl_profile["acceptedMeasuredTimeSeriesSamples"]
+need(accepted_measured_total == 21_356_311, "combined real measured-sample arithmetic drifted")
+need(targets["fully_profiled_measured_datasets"]["currentAccepted"] == 7, "partial cross-process lower acceptance must not inflate the fully profiled family count")
+need(targets["measured_time_series_samples"]["currentAccepted"] == accepted_measured_total, "measured sample count must equal AVAPS plus OpenMMS plus accepted cross-process lower evidence")
 
 primary = json.loads(PRIMARY.read_text(encoding="utf-8"))
 ps = primary.get("summary") or {}

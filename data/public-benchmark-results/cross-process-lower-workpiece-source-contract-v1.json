@@ -1,0 +1,89 @@
+{
+  "schema_version": 1,
+  "status": "completed-source-defined-lower-workpiece-profile",
+  "retrieved_date": "2026-08-29",
+  "source": {
+    "datasetId": "cross-process-chain-17240390",
+    "recordId": 17240390,
+    "license": "CC BY 4.0",
+    "publisherChecksum": "md5:069e190338b2ca29f736b21fabf407ba",
+    "sha256": "a0c7c07997e6c5a996823744aceb82bfc7b4efd371c7be0f4afc60d04771ec90",
+    "sizeBytes": 685541746,
+    "dictionary": "data/cross-process-lower-workpiece-dictionary-v1.json"
+  },
+  "profile": {
+    "archiveMembers": 30572,
+    "lowerWorkpieceTxtFilesAccepted": 4989,
+    "lowerWorkpieceTxtFilesRejected": 0,
+    "lowerWorkpieceRowsAccepted": 2475581,
+    "acceptedActualChannelsPerRow": 3,
+    "commandChannelsPerRow": 1,
+    "acceptedMeasuredTimeSeriesSamples": 7426743,
+    "commandTargetValuesExcludedFromMeasuredCount": 2475581,
+    "samplingIntervalSecondsFileCounts": [
+      {
+        "intervalSeconds": 0.03,
+        "files": 4989,
+        "derivedHz": 33.333333333333336
+      }
+    ],
+    "rawRowsOrCellValuesEmitted": false
+  },
+  "channels": [
+    {
+      "canonicalName": "time",
+      "sourceLabel": "time",
+      "signalCode": null,
+      "role": "time-basis",
+      "unit": "s",
+      "acceptedMeasuredValue": false
+    },
+    {
+      "canonicalName": "injection_pressure_target",
+      "sourceLabel": "Einspritzdruck, Soll",
+      "signalCode": "p3001S",
+      "role": "command-target",
+      "unit": "bar",
+      "acceptedMeasuredValue": false
+    },
+    {
+      "canonicalName": "injection_pressure_actual",
+      "sourceLabel": "Einspritzdruck, Ist",
+      "signalCode": "p3001I",
+      "role": "actual-signal",
+      "unit": "bar",
+      "acceptedMeasuredValue": true
+    },
+    {
+      "canonicalName": "screw_volume_actual",
+      "sourceLabel": "Schneckenvolumen, Ist",
+      "signalCode": "V3001I",
+      "role": "actual-signal",
+      "unit": "cm³",
+      "acceptedMeasuredValue": true
+    },
+    {
+      "canonicalName": "injection_flow_actual",
+      "sourceLabel": "Einspritzstrom, Ist",
+      "signalCode": "Q3001I",
+      "role": "actual-signal",
+      "unit": "cm³/s",
+      "acceptedMeasuredValue": true
+    }
+  ],
+  "rejectedFiles": {
+    "count": 0,
+    "reasons": {},
+    "filenamesEmitted": false
+  },
+  "retrieval": {
+    "rawPublisherFilesCommitted": false,
+    "rawRowsUploadedAsArtifact": false,
+    "temporaryArchiveDeletedAfterRun": true
+  },
+  "limitations": [
+    "Upper-workpiece CSV units are not established by this lower-workpiece contract. The cross-process family must not be claimed fully profiled solely from this partial semantic resolution.",
+    "Pressure target/command values are structurally validated but excluded from accepted measured-value totals.",
+    "Per-file sampling metadata and observed time deltas control acceptance; no global injection-moulding sampling rate is assumed."
+  ]
+}

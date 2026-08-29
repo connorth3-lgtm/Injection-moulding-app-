@@ -1,0 +1,29 @@
+name: MouldMaster Cross-Process Lower Acceptance Audit
+
+# The lower-workpiece reconciliation is complete. This workflow is retained as a
+# read-only manual audit so it cannot mutate the evidence ledgers after review.
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Validate source-defined lower-workpiece contract
+        run: python qa_cross_process_lower_contract.py
+      - name: Validate reconciled content arithmetic
+        run: python qa_content_scale_targets.py
+      - name: Validate governed measured inventory
+        run: python qa_measured_dataset_inventory.py
+      - name: Validate master compilation boundaries
+        run: python qa_master_data_compile.py
+      - name: Validate unresolved measured-data blocker contracts
+        run: python qa_measured_data_blocker_contracts.py

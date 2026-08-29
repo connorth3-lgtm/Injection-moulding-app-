@@ -127,6 +127,7 @@ def compile_measured():
             "warwick-demoulding": load_json("data/public-benchmark-results/warwick-demoulding-v2.json"),
             "rwth-pcr-2025": load_json("data/public-benchmark-results/rwth-pcr-2025-v1.json"),
             "cross-process-chain-17240390": load_json("data/public-benchmark-results/cross-process-chain-17240390-v1.json"),
+            "cross-process-lower-workpiece-source-contract": load_json("data/public-benchmark-results/cross-process-lower-workpiece-source-contract-v1.json"),
         },
         "publicBenchmarkContract": benchmark_contracts["gtnb4j7bfx-v1"],
         "publicBenchmarkResult": benchmark_results["gtnb4j7bfx-v1"],

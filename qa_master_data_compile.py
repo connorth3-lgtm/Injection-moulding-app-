@@ -21,7 +21,7 @@ targets = target_obj["targets"]
 expected_profiled = targets["fully_profiled_measured_datasets"]["currentAccepted"]
 expected_samples = targets["measured_time_series_samples"]["currentAccepted"]
 need(expected_profiled == 7, "audited profiled-dataset baseline drifted")
-need(expected_samples == 13_929_568, "audited measured-sample baseline drifted")
+need(expected_samples == 21_356_311, "audited measured-sample baseline drifted")
 workflow_text = WORKFLOW.read_text(encoding="utf-8")
 need(f"assert c['fullyProfiledMeasuredDatasets']=={expected_profiled}" in workflow_text, "master-data workflow profiled-dataset assertion is stale")
 need(f"assert c['measuredTimeSeriesSamplesAccepted']=={expected_samples}" in workflow_text, "master-data workflow measured-sample assertion is stale")
@@ -99,16 +99,18 @@ with tempfile.TemporaryDirectory() as td:
     need((ig.get("profile") or {}).get("deliveredQualityCounts") == {"1": 370, "2": 406, "3": 310, "4": 365}, "compiled iGuzzini class reconciliation drifted")
 
     review_results = measured.get("publicBenchmarkReviewResults") or {}
-    need(set(review_results) == {"pet-preform-v2", "warwick-demoulding", "rwth-pcr-2025", "cross-process-chain-17240390"}, "retrieved/review/blocker result set drifted")
+    need(set(review_results) == {"pet-preform-v2", "warwick-demoulding", "rwth-pcr-2025", "cross-process-chain-17240390", "cross-process-lower-workpiece-source-contract"}, "retrieved/review/partial-acceptance result set drifted")
     need(review_results["pet-preform-v2"].get("status") == "retrieved-profile-needs-semantic-review", "PET review-only state drifted")
     need(review_results["warwick-demoulding"].get("status") == "retrieved-profile-needs-special-format-export", "Warwick technical export state drifted")
     need(review_results["rwth-pcr-2025"].get("status") == "retrieval-blocked-non-archive-response", "RWTH retrieval blocker state drifted")
     need(review_results["cross-process-chain-17240390"].get("status") == "completed-public-measured-benchmark-scope-limited", "cross-process review state drifted")
+    need(review_results["cross-process-lower-workpiece-source-contract"].get("status") == "completed-source-defined-lower-workpiece-profile", "cross-process lower accepted source-contract state drifted")
+    need((review_results["cross-process-lower-workpiece-source-contract"].get("profile") or {}).get("acceptedMeasuredTimeSeriesSamples") == 7_426_743, "cross-process lower accepted sample count drifted")
     need((review_results["rwth-pcr-2025"].get("acceptance") or {}).get("countsAsFullyProfiledMeasuredDataset") is False, "RWTH must remain non-counting")
 
     need(results["scatimdata-avaps"]["measurement_profile"]["acceptedMeasuredTimeSeriesSamples"] == 13_631_488, "compiled AVAPS sample count drifted")
     need(results["openmms-t4g"]["measurement_profile"]["acceptedMeasuredTimeSeriesSamples"] == 298_080, "compiled OpenMMS sample count drifted")
-    need(results["scatimdata-avaps"]["measurement_profile"]["acceptedMeasuredTimeSeriesSamples"] + results["openmms-t4g"]["measurement_profile"]["acceptedMeasuredTimeSeriesSamples"] == expected_samples, "compiled measured benchmark sample totals do not reconcile")
+    need(results["scatimdata-avaps"]["measurement_profile"]["acceptedMeasuredTimeSeriesSamples"] + results["openmms-t4g"]["measurement_profile"]["acceptedMeasuredTimeSeriesSamples"] + review_results["cross-process-lower-workpiece-source-contract"]["profile"]["acceptedMeasuredTimeSeriesSamples"] == expected_samples, "compiled measured benchmark sample totals do not reconcile")
 
     by_id = {x["datasetId"]: x for x in inv["datasets"]}
     impure = by_id["impure-pascoe-2022"]["count"]
