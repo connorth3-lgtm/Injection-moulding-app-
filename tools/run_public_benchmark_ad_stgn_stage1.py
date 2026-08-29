@@ -3,78 +3,49 @@ from __future__ import annotations
 
 import argparse
 import json
-import urllib.parse
 import urllib.request
 from pathlib import Path
 
 DATASET_ID = "6f9x8yg8nj"
 VERSION = 1
 DOI = "10.17632/6f9x8yg8nj.1"
-API = "https://api.data.mendeley.com"
+PAGE = f"https://data.mendeley.com/datasets/{DATASET_ID}/{VERSION}"
+PUBLIC_FILES_ENDPOINT = f"https://data.mendeley.com/public-api/datasets/{DATASET_ID}/files?folder_id=root&version={VERSION}"
 UA = "MouldMaster-Educational-Evidence-Profiler/1.0"
 
 
 def request_json(url: str):
-    req = urllib.request.Request(
-        url,
-        headers={
-            "User-Agent": UA,
-            "Accept": "application/json, application/vnd.mendeley-public-dataset.1+json",
-        },
-    )
+    req = urllib.request.Request(url, headers={"User-Agent": UA, "Accept": "application/json"})
     with urllib.request.urlopen(req, timeout=60) as r:
         return json.loads(r.read().decode("utf-8"))
 
 
-def walk_files():
-    files = []
-    folders_seen = set()
-    queue = [None]
-    while queue:
-        folder_id = queue.pop(0)
-        params = {"version": VERSION, "$start": 0, "$limit": 100}
-        if folder_id:
-            params["folder_id"] = folder_id
-        url = f"{API}/datasets/publics/{DATASET_ID}/files?{urllib.parse.urlencode(params)}"
-        batch = request_json(url)
-        if isinstance(batch, dict):
-            batch = batch.get("results") or batch.get("files") or []
-        if batch is None:
-            batch = []
-        for f in batch:
-            files.append(f)
-        if folder_id is None:
-            folder_url = f"{API}/datasets/{DATASET_ID}/folders?version={VERSION}"
-            try:
-                folders = request_json(folder_url) or []
-            except Exception:
-                folders = []
-            for folder in folders:
-                fid = folder.get("id")
-                if fid and fid not in folders_seen:
-                    folders_seen.add(fid)
-                    queue.append(fid)
-    dedup = {}
-    for f in files:
-        key = f.get("id") or f.get("file_id") or f.get("filename")
-        if key:
-            dedup[key] = f
-    return list(dedup.values())
+def flatten_files(payload):
+    if isinstance(payload, list):
+        return payload
+    if isinstance(payload, dict):
+        for key in ("results", "files", "items", "data"):
+            value = payload.get(key)
+            if isinstance(value, list):
+                return value
+    raise RuntimeError("Mendeley public file-list response did not contain a file array")
 
 
 def compact_file(f):
-    cd = f.get("content_details") or {}
-    name = f.get("filename") or f.get("name") or ""
+    cd = f.get("content_details") or f.get("contentDetails") or {}
+    name = str(f.get("filename") or f.get("name") or "").strip()
     lower = name.lower()
     injection_marker = any(x in lower for x in ["injection", "mold", "mould", "case", "real"])
     excluded_marker = any(x in lower for x in ["swat", "tennessee", "tep"])
+    sha = cd.get("sha256_hash") or cd.get("sha256Hash") or f.get("sha256") or f.get("sha256_hash")
     return {
-        "id": f.get("id") or f.get("file_id"),
+        "id": f.get("id") or f.get("file_id") or f.get("uuid"),
         "filename": name,
-        "folderId": f.get("folder_id"),
+        "folderId": f.get("folder_id") or f.get("folderId"),
         "sizeBytes": cd.get("size") if cd.get("size") is not None else f.get("size"),
-        "sha256": cd.get("sha256_hash"),
-        "contentType": cd.get("content_type"),
+        "sha256": sha,
+        "md5": f.get("md5") or f.get("md5_hash"),
+        "contentType": cd.get("content_type") or cd.get("contentType") or f.get("content_type"),
         "status": f.get("status"),
         "likelyInjectionSubsetByName": bool(injection_marker and not excluded_marker),
         "explicitNonInjectionBenchmarkByName": bool(excluded_marker),
@@ -88,9 +59,9 @@ def main():
     ap.add_argument("--retrieved-date", required=True)
     args = ap.parse_args()
 
-    metadata_url = f"{API}/datasets/{DATASET_ID}?version={VERSION}"
-    metadata = request_json(metadata_url)
-    files = [compact_file(x) for x in walk_files()]
+    payload = request_json(PUBLIC_FILES_ENDPOINT)
+    files = [compact_file(x) for x in flatten_files(payload)]
+    files = [x for x in files if x.get("id") or x.get("filename")]
     result = {
         "schema": 1,
         "status": "publisher-file-manifest-profiled",
@@ -101,16 +72,16 @@ def main():
             "datasetDoi": DOI,
             "version": VERSION,
             "publisher": "Mendeley Data",
+            "datasetPage": PAGE,
+            "manifestEndpoint": PUBLIC_FILES_ENDPOINT,
             "licenseExpectedFromPublisherPage": "CC BY 4.0",
-            "metadataName": metadata.get("name"),
-            "metadataVersion": metadata.get("version"),
-            "metadataDoi": ((metadata.get("doi") or {}).get("id") if isinstance(metadata.get("doi"), dict) else metadata.get("doi")),
         },
         "manifest": {
             "files": files,
             "fileCount": len(files),
             "totalBytes": sum(int(x.get("sizeBytes") or 0) for x in files),
             "filesWithPublisherSha256": sum(1 for x in files if isinstance(x.get("sha256"), str) and len(x["sha256"]) == 64),
+            "filesWithPublisherMd5": sum(1 for x in files if isinstance(x.get("md5"), str) and len(x["md5"]) == 32),
             "likelyInjectionSubsetByName": [x["filename"] for x in files if x["likelyInjectionSubsetByName"]],
             "explicitNonInjectionBenchmarkByName": [x["filename"] for x in files if x["explicitNonInjectionBenchmarkByName"]],
             "rawPayloadsDownloaded": False,
@@ -127,7 +98,13 @@ def main():
     out = Path(args.output)
     out.parent.mkdir(parents=True, exist_ok=True)
     out.write_text(json.dumps(result, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
-    print(json.dumps({"status": result["status"], "fileCount": result["manifest"]["fileCount"], "likelyInjectionSubsetByName": result["manifest"]["likelyInjectionSubsetByName"], "explicitNonInjectionBenchmarkByName": result["manifest"]["explicitNonInjectionBenchmarkByName"]}, indent=2))
+    print(json.dumps({
+        "status": result["status"],
+        "fileCount": result["manifest"]["fileCount"],
+        "totalBytes": result["manifest"]["totalBytes"],
+        "likelyInjectionSubsetByName": result["manifest"]["likelyInjectionSubsetByName"],
+        "explicitNonInjectionBenchmarkByName": result["manifest"]["explicitNonInjectionBenchmarkByName"],
+    }, indent=2))
 
 
 if __name__ == "__main__":
