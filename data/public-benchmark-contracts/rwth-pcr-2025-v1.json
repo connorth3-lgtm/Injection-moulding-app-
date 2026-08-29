@@ -38,6 +38,14 @@
       "part-mass reference"
     ]
   },
+  "sourceExecutionGate": {
+    "requiredEvent": "push",
+    "workflow": ".github/workflows/public-benchmark-rwth-pcr.yml",
+    "rawThirdPartyDataCommitted": false,
+    "artifactPolicy": "aggregate profile only",
+    "promotionOnWorkflowSuccessAlone": false,
+    "reason": "A PR-only runner QA success does not prove that the publisher archive was retrieved. Dataset promotion requires a non-pull-request source execution plus inspection of its aggregate artifact."
+  },
   "stage1Acceptance": {
     "sourceArchiveRetrieved": true,
     "archiveSha256Recorded": true,
