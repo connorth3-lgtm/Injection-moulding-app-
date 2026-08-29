@@ -7,6 +7,7 @@ import tempfile
 ROOT = Path(__file__).resolve().parent
 COMPILER = ROOT / "tools" / "compile_master_data.py"
 TARGETS = ROOT / "data" / "content-scale-targets.json"
+WORKFLOW = ROOT / ".github" / "workflows" / "master-data-compile.yml"
 
 
 def need(ok, msg):
@@ -21,6 +22,15 @@ expected_profiled = targets["fully_profiled_measured_datasets"]["currentAccepted
 expected_samples = targets["measured_time_series_samples"]["currentAccepted"]
 need(expected_profiled == 3, "audited profiled-dataset baseline drifted")
 need(expected_samples == 13_929_568, "audited measured-sample baseline drifted")
+workflow_text = WORKFLOW.read_text(encoding="utf-8")
+need(
+    f"assert c['fullyProfiledMeasuredDatasets']=={expected_profiled}" in workflow_text,
+    "master-data workflow profiled-dataset assertion is stale",
+)
+need(
+    f"assert c['measuredTimeSeriesSamplesAccepted']=={expected_samples}" in workflow_text,
+    "master-data workflow measured-sample assertion is stale",
+)
 
 with tempfile.TemporaryDirectory() as td:
     p = subprocess.run(
