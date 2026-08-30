@@ -120,12 +120,12 @@ must(approval, [
     "Evidence metadata could not finish loading.", "showUpdateWarning"
 ], "evidence approval hardening")
 must(psychometric_hardening, [
-    "const VERSION='2026.08.30.6'", "scenarioCount!==40", "DOMContentLoaded",
-    "initialization:'after-training-upgrade'", "itemsHardened,optionsParallelised"
+    "const VERSION='2026.08.31.2'", "scenarioCount!==40", "DOMContentLoaded",
+    "initialization:'after-training-upgrade'", "itemsHardened,optionsParallelised", "technicalKeyPositions:technicalKeyPositions.slice()"
 ], "psychometric initialization hardening")
 must(psychometric_approval, [
-    "const REQUIRED_VERSION='2026.08.30.6'", "itemsHardened:197", "optionsParallelised:788",
-    "verifiedSurfaceCueMean:0.269", "verifiedOptionPermutationEvaluations:9850", "psychometricCoverageOk"
+    "const REQUIRED_VERSION='2026.08.31.2'", "itemsHardened:197", "optionsParallelised:788", "technicalKeyPositions:[8,8,7,7]",
+    "verifiedSurfaceCueMean:0.249", "verifiedStandardWarnings:0", "verifiedExtremeWarnings:0", "verifiedOptionPermutationEvaluations:9850", "psychometricCoverageOk"
 ], "psychometric approval hardening")
 require("throw new Error('Evidence approval coverage failure" not in approval, "incomplete evidence coverage must not crash the learning app")
 require("document.addEventListener('DOMContentLoaded',init)" in training, "training scenario upgrade remains DOMContentLoaded-driven")
