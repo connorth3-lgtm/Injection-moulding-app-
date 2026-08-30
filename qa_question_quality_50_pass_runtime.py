@@ -1,15 +1,14 @@
 from pathlib import Path
 import json
-import re
 import subprocess
 import tempfile
-from collections import Counter
 import qa_question_quality_50_pass as base
 
 ROOT=Path(__file__).resolve().parent
 FORMAL_OVERLAY=None
 OPTIONAL_OVERLAY=None
 OPTIONAL_POSITIONS=None
+BASE_LOAD_RUNTIME=base.load_runtime_bank
 BASE_EVALUATE=base.evaluate_item
 
 
@@ -20,7 +19,7 @@ def need(ok,msg):
 
 def apply_formal_runtime_overlay():
     global FORMAL_OVERLAY
-    items=base.load_runtime_bank()
+    items=BASE_LOAD_RUNTIME()
     scenarios=[x for x in items if x.get('kind')=='scenario']
     payload=[{
         'title':x['stem'].split(': ',1)[0],
