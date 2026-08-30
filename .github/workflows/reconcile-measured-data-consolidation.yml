@@ -1,0 +1,45 @@
+name: MouldMaster Reconcile Measured Data Consolidation
+
+on:
+  push:
+    branches: [data/measured-data-consolidation-20260830]
+    paths:
+      - 'tools/reconcile_consolidation_ledger.py'
+      - '.github/workflows/reconcile-measured-data-consolidation.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: mouldmaster-reconcile-measured-data-consolidation
+  cancel-in-progress: false
+
+jobs:
+  reconcile:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: data/measured-data-consolidation-20260830
+          fetch-depth: 1
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Validate helper syntax
+        run: python -m py_compile tools/reconcile_consolidation_ledger.py
+      - name: Reconcile canonical ledger
+        run: python tools/reconcile_consolidation_ledger.py
+      - name: Validate reconciled targets and inventory
+        run: |
+          python qa_content_scale_targets.py
+          python qa_measured_dataset_inventory.py
+          python qa_remaining_dataset_terminal_states.py
+      - name: Commit only canonical reconciliation files
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -- data/content-scale-targets.json qa_content_scale_targets.py
+          test "$(git diff --cached --name-only | sort)" = "$(printf '%s\n' 'data/content-scale-targets.json' 'qa_content_scale_targets.py' | sort)"
+          git commit -m "Reconcile measured-data target ledger"
+          git push origin HEAD:data/measured-data-consolidation-20260830
