@@ -1,8 +1,8 @@
 {
   "schema": 1,
-  "bank_version": "2026.08.24.2",
+  "bank_version": "2026.08.30.1",
   "stable_id_count": 57,
-  "policy": "Every ID in all_stable_ids has revision 1 dated 2026-08-20 unless an additional revision is listed in revision2. Stable IDs persist across content releases; a materially different assessed competency receives a new stable ID. Answer-key changes require a documented reason and source/reviewer check.",
+  "policy": "Every ID in all_stable_ids has revision 1 dated 2026-08-20 unless an additional revision is listed in revision2 or revision3. Stable IDs persist across wording/difficulty changes when the assessed technical competency remains the same; a materially different assessed competency receives a new stable ID. Answer-key or keyed-option-position changes require a documented reason and source/reviewer check.",
   "baseline_revision": {
     "revision": 1,
     "date": "2026-08-20",
@@ -68,65 +68,37 @@
     "reg:NZ:Advanced:2"
   ],
   "revision2": {
-    "tech:Beginner:3": {
-      "revision": 2,
-      "date": "2026-08-24",
-      "change": "Deepened barrel-setpoint versus measured melt-temperature reasoning and made competing thermal explanations more realistic."
-    },
-    "tech:Beginner:4": {
-      "revision": 2,
-      "date": "2026-08-24",
-      "change": "Reframed drying around grade-specific moisture evidence rather than generic drying recipes."
-    },
-    "tech:Beginner:9": {
-      "revision": 2,
-      "date": "2026-08-24",
-      "change": "Changed from simple troubleshooting recognition to comparison against known-good evidence."
-    },
-    "tech:Intermediate:0": {
-      "revision": 2,
-      "date": "2026-08-24",
-      "change": "Clarified that a part-mass plateau is supporting gate-seal evidence for the tested condition, not universal proof."
-    },
-    "tech:Intermediate:5": {
-      "revision": 2,
-      "date": "2026-08-24",
-      "change": "Strengthened shot-delivery diagnosis before packing compensation."
-    },
-    "tech:Intermediate:7": {
-      "revision": 2,
-      "date": "2026-08-24",
-      "change": "Expanded cooling acceptance to include ejection condition, conditioned dimensions, warpage and product requirements."
-    },
-    "tech:Intermediate:9": {
-      "revision": 2,
-      "date": "2026-08-24",
-      "change": "Clarified the legitimate use and limitations of one-factor-at-a-time testing."
-    },
-    "tech:Advanced:1": {
-      "revision": 2,
-      "date": "2026-08-24",
-      "change": "Added pooled-versus-cavity-specific capability and rational-subgroup reasoning."
-    },
-    "tech:Advanced:3": {
-      "revision": 2,
-      "date": "2026-08-24",
-      "change": "Replaced definition recall with a real DOE time-confounding case."
-    },
-    "tech:Advanced:4": {
-      "revision": 2,
-      "date": "2026-08-24",
-      "change": "Distinguished upstream machine/nozzle pressure from local cavity-pressure history."
-    },
-    "tech:Advanced:7": {
-      "revision": 2,
-      "date": "2026-08-24",
-      "change": "Reframed machine transfer around reproduced physical process outputs and receiving-machine capability."
-    },
-    "tech:Advanced:8": {
-      "revision": 2,
-      "date": "2026-08-24",
-      "change": "Added research-backed distinction between MFR and moulding rheology/mouldability."
-    }
+    "tech:Beginner:3": {"revision": 2, "date": "2026-08-24", "change": "Deepened barrel-setpoint versus measured melt-temperature reasoning and made competing thermal explanations more realistic."},
+    "tech:Beginner:4": {"revision": 2, "date": "2026-08-24", "change": "Reframed drying around grade-specific moisture evidence rather than generic drying recipes."},
+    "tech:Beginner:9": {"revision": 2, "date": "2026-08-24", "change": "Changed from simple troubleshooting recognition to comparison against known-good evidence."},
+    "tech:Intermediate:0": {"revision": 2, "date": "2026-08-24", "change": "Clarified that a part-mass plateau is supporting gate-seal evidence for the tested condition, not universal proof."},
+    "tech:Intermediate:5": {"revision": 2, "date": "2026-08-24", "change": "Strengthened shot-delivery diagnosis before packing compensation."},
+    "tech:Intermediate:7": {"revision": 2, "date": "2026-08-24", "change": "Expanded cooling acceptance to include ejection condition, conditioned dimensions, warpage and product requirements."},
+    "tech:Intermediate:9": {"revision": 2, "date": "2026-08-24", "change": "Clarified the legitimate use and limitations of one-factor-at-a-time testing."},
+    "tech:Advanced:1": {"revision": 2, "date": "2026-08-24", "change": "Added pooled-versus-cavity-specific capability and rational-subgroup reasoning."},
+    "tech:Advanced:3": {"revision": 2, "date": "2026-08-24", "change": "Replaced definition recall with a real DOE time-confounding case."},
+    "tech:Advanced:4": {"revision": 2, "date": "2026-08-24", "change": "Distinguished upstream machine/nozzle pressure from local cavity-pressure history."},
+    "tech:Advanced:7": {"revision": 2, "date": "2026-08-24", "change": "Reframed machine transfer around reproduced physical process outputs and receiving-machine capability."},
+    "tech:Advanced:8": {"revision": 2, "date": "2026-08-24", "change": "Added research-backed distinction between MFR and moulding rheology/mouldability."}
+  },
+  "revision3": {
+    "tech:Beginner:0": {"revision": 3, "date": "2026-08-30", "change": "Replaced definition recall with a controlled hold-time/part-mass plateau interpretation while retaining the pack/hold competency."},
+    "tech:Beginner:1": {"revision": 3, "date": "2026-08-30", "change": "Changed cushion recognition into a linked shot-delivery evidence case where one isolated value is explicitly insufficient for root-cause assignment."},
+    "tech:Beginner:2": {"revision": 3, "date": "2026-08-30", "change": "Reframed injection-speed knowledge around unchanged commands versus changed fill-time and pressure actuals."},
+    "tech:Beginner:5": {"revision": 3, "date": "2026-08-30", "change": "Reframed V/P transfer as interpretation of the measured fill-to-pack transition and cavity-pressure response."},
+    "tech:Beginner:6": {"revision": 3, "date": "2026-08-30", "change": "Reframed clamp reasoning around local flash evidence after service instead of automatic global clamp compensation."},
+    "tech:Beginner:7": {"revision": 3, "date": "2026-08-30", "change": "Reframed gate/runner knowledge as a branch-specific fill-delay and pressure-loss diagnostic after repair."},
+    "tech:Beginner:8": {"revision": 3, "date": "2026-08-30", "change": "Reframed cooling knowledge around circuit/thermal evidence and directional warpage while filling remains stable."},
+    "tech:Intermediate:1": {"revision": 3, "date": "2026-08-30", "change": "Changed burn-mark troubleshooting into an end-of-fill location and controlled-speed discrimination case for trapped gas/venting."},
+    "tech:Intermediate:2": {"revision": 3, "date": "2026-08-30", "change": "Changed splay troubleshooting into a moisture-versus-filling discrimination case requiring direct material-condition evidence."},
+    "tech:Intermediate:3": {"revision": 3, "date": "2026-08-30", "change": "Changed flash troubleshooting into cavity-specific post-service fault isolation before global process changes."},
+    "tech:Intermediate:4": {"revision": 3, "date": "2026-08-30", "change": "Changed cavity-balance knowledge into a local-branch restriction versus global-viscosity discrimination test."},
+    "tech:Intermediate:6": {"revision": 3, "date": "2026-08-30", "change": "Changed black-speck troubleshooting into thermal-history diagnosis with recovery evidence through the approved purge/start-up sequence."},
+    "tech:Intermediate:8": {"revision": 3, "date": "2026-08-30", "change": "Changed warpage troubleshooting into a cooling-circuit thermal-evidence discrimination case with stable fill/shot evidence."},
+    "tech:Advanced:0": {"revision": 3, "date": "2026-08-30", "change": "Changed capability recall into Cp-versus-Cpk interpretation with stability and measurement adequacy established."},
+    "tech:Advanced:2": {"revision": 3, "date": "2026-08-30", "change": "Changed DOE recall into interpretation of a factor interaction where the direction of one effect depends on another factor."},
+    "tech:Advanced:5": {"revision": 3, "date": "2026-08-30", "change": "Changed process-window knowledge into a fail-closed validation case where factor progression is confounded with a material-lot viscosity shift."},
+    "tech:Advanced:6": {"revision": 3, "date": "2026-08-30", "change": "Changed DOE-model knowledge into independent confirmation-run reasoning when predictions fail to reproduce."},
+    "tech:Advanced:9": {"revision": 3, "date": "2026-08-30", "change": "Changed pressure-loss recall into an explicit insufficient-evidence case when pressure-channel location, unit/reference or timing semantics are unresolved."}
   }
 }
