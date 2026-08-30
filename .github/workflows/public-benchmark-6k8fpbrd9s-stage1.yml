@@ -1,0 +1,66 @@
+name: MouldMaster Public Measured Benchmark — polypropylene pvT stage 1
+
+on:
+  push:
+    branches: [data/real-dataset-profiling-wave2]
+    paths:
+      - 'tools/run_public_benchmark_6k8fpbrd9s_stage1.py'
+      - 'qa_public_benchmark_6k8fpbrd9s_stage1.py'
+      - 'data/public-benchmark-contracts/6k8fpbrd9s-v1.json'
+      - '.github/workflows/public-benchmark-6k8fpbrd9s-stage1.yml'
+  pull_request:
+    branches: [data/real-dataset-profiling-wave1, main]
+    paths:
+      - 'tools/run_public_benchmark_6k8fpbrd9s_stage1.py'
+      - 'qa_public_benchmark_6k8fpbrd9s_stage1.py'
+      - 'data/public-benchmark-contracts/6k8fpbrd9s-v1.json'
+      - '.github/workflows/public-benchmark-6k8fpbrd9s-stage1.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  manifest-profile:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Validate pvT evidence boundaries
+        run: python qa_public_benchmark_6k8fpbrd9s_stage1.py
+      - name: Enumerate publisher file manifest only
+        run: |
+          mkdir -p benchmark-results
+          python tools/run_public_benchmark_6k8fpbrd9s_stage1.py \
+            --output benchmark-results/6k8fpbrd9s-stage1.json \
+            --retrieved-date "$(date -u +%F)"
+      - name: Validate aggregate manifest
+        run: |
+          python - <<'PY'
+          import json
+          x=json.load(open('benchmark-results/6k8fpbrd9s-stage1.json'))
+          assert x['status'] in {'publisher-file-manifest-profiled', 'publisher-record-no-files-exposed'}
+          assert x['source']['datasetDoi']=='10.17632/6k8fpbrd9s.1'
+          assert x['source']['license']=='CC BY 4.0'
+          assert x['manifest']['rawPayloadsDownloaded'] is False
+          assert x['manifest']['rawRowsOrArraysEmitted'] is False
+          assert x['acceptance']['countsAsFullyProfiledMeasuredDataset'] is False
+          assert x['acceptance']['acceptedMeasuredTimeSeriesSamples']==0
+          print(json.dumps({
+            'status': x['status'],
+            'fileCount': x['manifest']['fileCount'],
+            'totalBytes': x['manifest']['totalBytes'],
+            'supportedStage2Files': x['manifest']['supportedStage2Files'],
+            'files': x['manifest']['files'],
+          }, indent=2))
+          PY
+      - name: Upload aggregate pvT manifest only
+        uses: actions/upload-artifact@v4
+        with:
+          name: mouldmaster-polypropylene-pvt-stage1
+          path: benchmark-results/6k8fpbrd9s-stage1.json
+          if-no-files-found: error
+          retention-days: 30

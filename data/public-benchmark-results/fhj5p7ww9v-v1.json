@@ -1,0 +1,54 @@
+{
+  "schema": 3,
+  "status": "completed-restricted-noncommercial-measured-benchmark",
+  "retrievedDate": "2026-08-29",
+  "source": {
+    "datasetId": "mendeley-fhj5p7ww9v-v1",
+    "datasetDoi": "10.17632/fhj5p7ww9v.1",
+    "version": 1,
+    "license": "CC BY-NC 3.0",
+    "publisherFileId": "4bc98915-bc6b-415c-bc4a-dfb34c75a7f1",
+    "publisherFileName": "DATA - COST.xlsx",
+    "publisherReportedSizeBytes": 62702,
+    "publisherSha256": "1cf9f038f2f9b968c7a78787ce6f9c684d50108542002e491f5979357725ce5e",
+    "retrievedSizeBytes": 62702,
+    "sha256": "1cf9f038f2f9b968c7a78787ce6f9c684d50108542002e491f5979357725ce5e",
+    "publisherSha256Matched": true
+  },
+  "profile": {
+    "sheetCount": 3,
+    "recognizedMeasuredOutcomeSheets": 3,
+    "experimentalConditionsPerSheet": 8,
+    "materialGroups": ["Solid PP", "All-PP composite", "PP foam", "All-PP composite foam"],
+    "measuredOutcomeFamilies": ["weight", "flexural strength", "flexural modulus"],
+    "totalRowsAcrossSheets": 69,
+    "totalColumnsAcrossSheets": 29,
+    "recordLevelMeasuredOutcomeValues": 96,
+    "measurementLevel": "source-reported outcome values by material and experimental condition; not raw replicate-level observations",
+    "directMeasurementMap": {
+      "perSheetMeasuredRows": [4, 7, 10, 13],
+      "directMeasuredOutcomeCellsPerSheet": 32,
+      "processFactorRowsExcluded": [2, 3],
+      "processFactorCellsExcludedPerSheet": 16,
+      "spreadSummaryRowsExcluded": [5, 6, 8, 9, 11, 12, 14, 15],
+      "spreadSummaryCellsExcludedPerSheet": 64,
+      "formulaCellsExcludedAsDerivedPerSheet": 72
+    },
+    "acceptedMeasuredTimeSeriesSamples": 0,
+    "rawRowsOrCellValuesEmitted": false,
+    "numericMeasurementValuesEmitted": false
+  },
+  "acceptance": {
+    "countsAsFullyProfiledMeasuredDataset": true,
+    "semanticLayoutRecognized": true,
+    "useScope": "noncommercial-education-research-only",
+    "commercialReuseAllowed": false,
+    "rawRedistributionAllowedUnderProjectPolicy": false,
+    "acceptedMeasuredTimeSeriesSamples": 0
+  },
+  "retrieval": {
+    "rawPublisherFileCommitted": false,
+    "rawRowsOrCellValuesUploadedAsArtifact": false
+  },
+  "evidenceBoundary": "The exact CC BY-NC 3.0 workbook is fingerprinted. Direct measured outcome cells are only the four material rows on the three outcome sheets across eight experimental-condition columns (4 x 3 x 8 = 96). Injection-temperature/speed rows, deviation summaries and formula-based comparison/percentage cells are excluded. These 96 cells are source-reported outcome values, not raw replicate measurements or high-frequency time-series samples."
+}

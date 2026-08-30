@@ -1,0 +1,39 @@
+{
+  "schema": 1,
+  "datasetId": "mendeley-4h98rz9f92-v3",
+  "status": "metadata-profile-candidate",
+  "source": {
+    "datasetPage": "https://data.mendeley.com/datasets/4h98rz9f92/3",
+    "datasetDoi": "10.17632/4h98rz9f92.3",
+    "mendeleyDatasetId": "4h98rz9f92",
+    "version": 3,
+    "publisher": "Mendeley Data",
+    "published": "2024-08-14",
+    "license": "CC BY 4.0",
+    "companionArticleDoi": "10.1016/j.dib.2024.110987",
+    "automatedAggregateProfilingAllowed": true,
+    "rawRedistributionAllowedWithAttribution": true
+  },
+  "experimentContext": {
+    "process": "injection moulding",
+    "baseMaterial": "high-density polyethylene (HDPE)",
+    "reinforcement": "graphite nanoplatelets (GNP)",
+    "variedInputs": ["GNP percentage", "injection pressure", "injection temperature"],
+    "directMeasuredOutcomes": ["tensile modulus", "toughness", "hardness"],
+    "derivedOrAnalysedOutputs": ["high/medium/low classes", "machine-learning predictions", "feature importance", "decision-tree rules", "model metrics"],
+    "paperReportedExperimentalRows": 35,
+    "paperMethod": "Injection-moulded HDPE/GNP specimens; tensile testing according to ASTM D1708 and Vickers hardness testing; each test repeated five times.",
+    "recordUnit": "delivered experimental condition / mechanical-property observation"
+  },
+  "stage1Rules": {
+    "publisherManifestFirst": true,
+    "downloadPayloads": false,
+    "enumerateFileIdsNamesSizesHashesAndContentTypes": true,
+    "paperReportedRowsDoNotCountWithoutDeliveredFiles": true,
+    "directMeasurementsMustBeSeparatedFromDerivedAndModelOutputs": true,
+    "acceptedMeasuredTimeSeriesSamples": 0,
+    "countsAsFullyProfiledMeasuredDataset": false,
+    "rawRowsOrArraysCommittedOrArtifacted": false
+  },
+  "evidenceBoundary": "This source is real injection-moulding experimental evidence under CC BY 4.0. Stage 1 enumerates the exact publisher file/folder manifest without downloading payloads. Tensile modulus, toughness and hardness may count only after delivered files are fingerprinted and mapped to experimental rows. Quartile classes, predictions, feature importance, decision-tree rules and model metrics are derived/analysed outputs and must never be counted as direct measurements."
+}

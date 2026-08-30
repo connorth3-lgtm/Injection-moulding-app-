@@ -1,0 +1,72 @@
+name: MouldMaster Public Measured Benchmark — polypropylene pvT stage 2
+
+on:
+  push:
+    branches: [data/real-dataset-profiling-wave2]
+    paths:
+      - 'tools/run_public_benchmark_6k8fpbrd9s_stage2.py'
+      - 'qa_public_benchmark_6k8fpbrd9s_stage2.py'
+      - '.github/workflows/public-benchmark-6k8fpbrd9s-stage2.yml'
+  pull_request:
+    branches: [data/real-dataset-profiling-wave1, main]
+    paths:
+      - 'tools/run_public_benchmark_6k8fpbrd9s_stage2.py'
+      - 'qa_public_benchmark_6k8fpbrd9s_stage2.py'
+      - '.github/workflows/public-benchmark-6k8fpbrd9s-stage2.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  workbook-profile:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python -m pip install --disable-pip-version-check openpyxl
+      - name: Validate stage-two aggregate boundaries
+        run: python qa_public_benchmark_6k8fpbrd9s_stage2.py
+      - name: Retrieve exact pvT workbook and profile schema
+        run: |
+          mkdir -p benchmark-results
+          python tools/run_public_benchmark_6k8fpbrd9s_stage2.py \
+            --output benchmark-results/6k8fpbrd9s-stage2.json \
+            --retrieved-date "$(date -u +%F)"
+      - name: Validate semantic-review result
+        run: |
+          python - <<'PY'
+          import json
+          x=json.load(open('benchmark-results/6k8fpbrd9s-stage2.json'))
+          assert x['status']=='retrieved-profile-needs-semantic-review'
+          assert x['source']['datasetDoi']=='10.17632/6k8fpbrd9s.1'
+          assert x['source']['license']=='CC BY 4.0'
+          assert x['source']['publisherFileName']=='Data.xlsx'
+          assert x['source']['sha256']=='14c056dd86e11cc47e1e97834174631f9dc0806442917a7149ddf5856dc9b11c'
+          assert x['source']['publisherSha256Matched'] is True
+          assert x['profile']['sheetCount'] >= 1
+          assert x['profile']['totalNumericCells'] >= 1
+          assert x['profile']['rawRowsOrCellValuesEmitted'] is False
+          assert x['profile']['numericMeasurementValuesEmitted'] is False
+          assert x['acceptance']['countsAsFullyProfiledMeasuredDataset'] is False
+          assert x['acceptance']['acceptedMeasuredTimeSeriesSamples']==0
+          assert x['acceptance']['injectionMouldingCycleDataset'] is False
+          assert x['retrieval']['rawPublisherFileCommitted'] is False
+          assert x['retrieval']['rawRowsOrCellValuesUploadedAsArtifact'] is False
+          print(json.dumps({
+            'status': x['status'],
+            'sheetCount': x['profile']['sheetCount'],
+            'totalNumericCells': x['profile']['totalNumericCells'],
+            'sheets': x['profile']['sheets'],
+          }, indent=2))
+          PY
+      - name: Upload aggregate pvT profile only
+        uses: actions/upload-artifact@v4
+        with:
+          name: mouldmaster-polypropylene-pvt-stage2
+          path: benchmark-results/6k8fpbrd9s-stage2.json
+          if-no-files-found: error
+          retention-days: 30

@@ -1,0 +1,37 @@
+{
+  "schema": 1,
+  "datasetId": "mendeley-6k8fpbrd9s-v1",
+  "status": "metadata-profile-candidate",
+  "source": {
+    "datasetPage": "https://data.mendeley.com/datasets/6k8fpbrd9s/1",
+    "datasetDoi": "10.17632/6k8fpbrd9s.1",
+    "mendeleyDatasetId": "6k8fpbrd9s",
+    "version": 1,
+    "publisher": "Mendeley Data",
+    "published": "2019-07-19",
+    "license": "CC BY 4.0",
+    "automatedAggregateProfilingAllowed": true,
+    "rawRedistributionAllowedWithAttribution": true
+  },
+  "experimentContext": {
+    "material": "polypropylene",
+    "measurementDevice": "piston-die pvT testing device",
+    "measuredRelationship": "pressure-specific volume-temperature (pvT)",
+    "measurementProcesses": ["isobaric cooling", "isobaric heating", "isothermal compression", "isothermal decompression"],
+    "variedHistoryFactors": ["cooling rate", "heating rate", "compression rate", "decompression rate"],
+    "injectionMouldingRelevance": "polymer material-state characterization for process/material education; not an injection-moulding cycle dataset",
+    "expectedDirectMeasurements": ["pressure", "temperature", "specific volume"],
+    "recordUnit": "delivered pvT measurement observation or series point"
+  },
+  "stage1Rules": {
+    "publisherManifestFirst": true,
+    "downloadPayloads": false,
+    "enumerateFileIdsNamesSizesHashesAndContentTypes": true,
+    "reportedPaperOrPageCountsDoNotCountWithoutDeliveredFiles": true,
+    "doNotCountAsInjectionMouldingCycleDataset": true,
+    "acceptedMeasuredTimeSeriesSamples": 0,
+    "countsAsFullyProfiledMeasuredDataset": false,
+    "rawRowsOrArraysCommittedOrArtifacted": false
+  },
+  "evidenceBoundary": "This is real measured polypropylene pvT material-characterization evidence relevant to injection-moulding education, but not a moulding-cycle dataset. Stage 1 records the exact publisher file manifest only. Direct pressure, temperature and specific-volume measurements may be counted at record/series level only after delivered files are fingerprinted and their schema is separated from fitted, derived or model-generated fields."
+}

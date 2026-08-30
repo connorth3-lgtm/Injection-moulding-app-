@@ -1,0 +1,76 @@
+name: MouldMaster Public Measured Benchmark — HDPE GNP stage 3
+
+on:
+  push:
+    branches: [data/real-dataset-profiling-wave2]
+    paths:
+      - 'tools/run_public_benchmark_4h98rz9f92_stage3.py'
+      - 'qa_public_benchmark_4h98rz9f92_stage3.py'
+      - '.github/workflows/public-benchmark-4h98rz9f92-stage3.yml'
+  pull_request:
+    branches: [data/real-dataset-profiling-wave1, main]
+    paths:
+      - 'tools/run_public_benchmark_4h98rz9f92_stage3.py'
+      - 'qa_public_benchmark_4h98rz9f92_stage3.py'
+      - '.github/workflows/public-benchmark-4h98rz9f92-stage3.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  semantic-acceptance:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python -m pip install --disable-pip-version-check openpyxl
+      - name: Validate semantic acceptance guards
+        run: python qa_public_benchmark_4h98rz9f92_stage3.py
+      - name: Reconcile exact raw workbook roles
+        run: |
+          mkdir -p benchmark-results
+          python tools/run_public_benchmark_4h98rz9f92_stage3.py \
+            --output benchmark-results/4h98rz9f92-v3.json \
+            --retrieved-date "$(date -u +%F)"
+      - name: Validate accepted aggregate result
+        run: |
+          python - <<'PY'
+          import json
+          x=json.load(open('benchmark-results/4h98rz9f92-v3.json'))
+          assert x['status']=='completed-public-measured-record-level-benchmark'
+          assert x['source']['datasetDoi']=='10.17632/4h98rz9f92.3'
+          assert x['source']['license']=='CC BY 4.0'
+          assert x['source']['publisherFileName']=='Raw Data.xlsx'
+          assert x['source']['sha256']=='39210169aac62a1455603d37cdffaca93cf0c46189ea4258c5f3c0a4a37255c9'
+          assert x['source']['publisherSha256Matched'] is True
+          p=x['profile']
+          assert p['experimentalRows']==35
+          assert p['numericColumns']==22
+          assert p['deliveredNumericCells']==770
+          assert p['directMeasuredPropertyValues']==525
+          assert p['directMeasuredPropertyBreakdown']=={'tensileModulus':175,'hardness':175,'toughness':175}
+          assert p['derivedAverageValuesExcluded']==105
+          assert p['processInputValuesExcludedFromMeasuredOutcomeCount']==105
+          assert p['experimentIdentifiersExcluded']==35
+          assert p['formulaCells']==0
+          assert p['acceptedMeasuredTimeSeriesSamples']==0
+          assert p['rawRowsOrCellValuesEmitted'] is False
+          assert p['numericMeasurementValuesEmitted'] is False
+          assert x['acceptance']['countsAsFullyProfiledMeasuredDataset'] is True
+          assert x['acceptance']['recordLevelMeasuredDataset'] is True
+          assert x['acceptance']['modelAndClassificationFilesExcluded'] is True
+          assert x['retrieval']['rawPublisherFileCommitted'] is False
+          assert x['retrieval']['rawRowsOrCellValuesUploadedAsArtifact'] is False
+          print(json.dumps({'status':x['status'],'experimentalRows':p['experimentalRows'],'directMeasuredPropertyValues':p['directMeasuredPropertyValues'],'derivedAverageValuesExcluded':p['derivedAverageValuesExcluded']},indent=2))
+          PY
+      - name: Upload aggregate HDPE GNP acceptance only
+        uses: actions/upload-artifact@v4
+        with:
+          name: mouldmaster-hdpe-gnp-stage3
+          path: benchmark-results/4h98rz9f92-v3.json
+          if-no-files-found: error
+          retention-days: 30
