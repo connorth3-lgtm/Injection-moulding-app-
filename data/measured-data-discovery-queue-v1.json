@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "version": "2026.08.30.3",
+  "version": "2026.08.30.4",
   "reviewed": "2026-08-30",
   "purpose": "Credible measured-data discoveries that are still awaiting file-level profiling, retrieval, rights clearance, or role assignment. Already promoted families are removed from the active queue and recorded under resolvedPromotions; explicitly rejected false positives are recorded under screenedOutDiscoveries so neither group can be mistaken for unexecuted promotable work.",
   "rules": {
@@ -11,7 +11,8 @@
     "licenseMustTravelWithAnyPermittedDerivedUse": true,
     "alreadyPromotedFamiliesMustNotRemainActiveDiscoveries": true,
     "articleOrThesisLicenceDoesNotAutomaticallyLicenseUnderlyingThirdPartyProductionData": true,
-    "publicMirrorAvailabilityDoesNotProveDatasetReuseRights": true
+    "publicMirrorAvailabilityDoesNotProveDatasetReuseRights": true,
+    "reportedCountsFromRelatedPublicationsRemainUnacceptedUntilPayloadRightsAndOverlapAreResolved": true
   },
   "activeDiscoveries": [
     {
@@ -48,25 +49,43 @@
       "scale": {"processParameterCombinations": null, "testsPerCombinationReported": 10, "workbook": "Data.xlsx"},
       "machine": "Ferromatik Milacron A K85 injection molding machine",
       "signals": ["mold pressure from a reported Priamus 6001B sensor", "mold temperature from a reported type-K thermocouple"],
+      "provenanceChecks": {
+        "repositoryCreated": "2024-03-19",
+        "repositoryDeclaredLicense": null,
+        "repositoryHomepage": null,
+        "earliestDataCommitMessage": "Molding Machine Free Access Data",
+        "decision": "descriptive free-access wording is not treated as an explicit reuse licence or proof that the mirror owner is the original data rights-holder"
+      },
       "status": "public-mirror-rights-and-origin-unresolved",
       "lastPublicRecheck": "2026-08-30",
       "acceptedMeasuredTimeSeriesSamples": 0,
-      "limitation": "The public GitHub repository describes real repeated injection-moulding acquisitions and exposes a 2.4 MB Data.xlsx workbook, but no repository licence or authoritative original dataset distribution was located. Public mirror availability is not treated as permission for automated ingestion or redistribution. The workbook must remain non-counting until provenance and reuse rights are tied to the original data owner/source; only then should its sheets, units, rows and overlap be profiled."
+      "limitation": "The public GitHub repository describes real repeated injection-moulding acquisitions and exposes a 2.4 MB Data.xlsx workbook, but GitHub reports no repository licence and no authoritative original dataset distribution has been located. The historical commit wording 'Molding Machine Free Access Data' is descriptive access language, not an explicit reuse grant. Public mirror availability is not treated as permission for automated ingestion or redistribution. The workbook must remain non-counting until provenance and reuse rights are tied to the original data owner/source; only then should its sheets, units, rows and overlap be profiled."
     },
     {
       "id": "aspoeck-costa-industrial-71016-v1",
-      "title": "Aspöck Portugal industrial injection-moulding process-monitoring dataset reported in Costa 2025 thesis",
-      "source": "https://iconline.ipleiria.pt/entities/publication/b06bd27d-3ef5-4aad-9d5b-9fc3afef84d6",
-      "license": "CC BY applies to the open thesis; underlying company production-data reuse rights not stated",
+      "title": "Aspöck/Leiria industrial injection-moulding process-monitoring data reported in Costa 2025 thesis and peer-reviewed Polymers study",
+      "source": "https://doi.org/10.3390/polym18010032",
+      "relatedSources": [
+        "https://iconline.ipleiria.pt/entities/publication/b06bd27d-3ef5-4aad-9d5b-9fc3afef84d6",
+        "https://iconline.ipleiria.pt/entities/publication/1d5c7c69-fd17-4cec-88fe-bbb3b4bd1def"
+      ],
+      "license": "CC BY applies to the open thesis and journal article; underlying company production-data reuse rights are not stated",
       "role": "large-industrial-process-data-access-and-rights-review",
       "recordUnit": "reported injection cycle with associated industrial machine/sensor features",
-      "scale": {"reportedInjectionCycles": 71016, "reportedPiecesPerCycle": 2, "collectionDuration": "approximately six months of continuous 24/7 production"},
-      "signals": ["temperature-related machine/sensor features", "pressure-related machine/sensor features", "torque-related machine/sensor features", "cycle-time and other industrial process features"],
-      "quality": ["faulty/non-conforming production time-zone labels used for industrial anomaly monitoring"],
-      "status": "payload-not-public-company-data-rights-unresolved",
+      "scale": {
+        "thesisReportedInjectionCycles": 71016,
+        "thesisReportedPiecesPerCycle": 2,
+        "journalReportedInjectionCyclesApprox": 280000,
+        "collectionDuration": "approximately six months of continuous production"
+      },
+      "reportedCountRelationship": "The thesis and later journal paper report different cycle totals over approximately six months. They are treated as related reported scales only; no equality, containment, deduplication, or additive relationship is assumed until the underlying payloads and collection windows are available.",
+      "signals": ["temperature-related machine/sensor features", "pressure-related machine/sensor features", "torque-related machine/sensor features", "cycle-time, rheology and other industrial process features"],
+      "quality": ["faulty/non-conforming production time-zone labels used for industrial anomaly monitoring", "melt-instability or volatile-zone labels preceding quality degradation"],
+      "dataAvailability": "The 2025 Polymers article states that the original contributions are included in the article and that further inquiries can be directed to the corresponding author; no reusable raw production CSV/XLSX payload is publicly attached.",
+      "status": "request-only-payload-not-public-company-data-rights-unresolved",
       "lastPublicRecheck": "2026-08-30",
       "acceptedMeasuredTimeSeriesSamples": 0,
-      "limitation": "The Polytechnic Institute of Leiria repository exposes the CC BY thesis, not the underlying Aspöck Portugal production CSV/XLSX payload. The thesis reports real unfiltered industrial sensor data and 71,016 injection cycles, but the thesis licence must not be widened into a licence for company production data. No cycles, feature cells or waveform values may be counted unless the original dataset is released or the data owner supplies explicit reuse permission and files."
+      "limitation": "The Polytechnic Institute of Leiria repository exposes the CC BY thesis and CC BY journal article, not the underlying Aspöck/industrial production CSV/XLSX payload. The thesis reports 71,016 real injection cycles while the later peer-reviewed Polymers paper reports approximately 280,000 cycles from six months of continuous production. Those publication licences must not be widened into a licence for company production data, and the two reported totals must not be added or deduplicated by assumption. No cycles, feature cells or waveform values may be counted unless the original dataset is released or the data owner supplies explicit reuse permission and files, after which overlap and record semantics must be profiled."
     },
     {
       "id": "aisemo-accelerometer-state-recognition-v1",
