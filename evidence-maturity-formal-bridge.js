@@ -129,12 +129,15 @@ const plausibleQualifier={
  'Controlled response':' then verify the result against the same baseline evidence',
  'Explain':' as the primary mechanism across the stated observations'
 };
-function ensureLongerDistractor(wrong,correctLength,stage){
- const safe=wrong.filter(c=>!/bypass|defeat|disable/i.test(String(c.text||'')));
- const pool=safe.length?safe:wrong;
+function extendChoice(choice,target,suffix){while(String(choice.text||'').length<target)choice.text=String(choice.text||'').trim()+suffix}
+function ensureBalancedDistractors(wrong,correctLength,stage){
+ const suffix=plausibleQualifier[stage]||' under the same controlled comparison';
+ const safe=wrong.filter(c=>!/bypass|defeat|disable/i.test(String(c.text||''))),pool=safe.length>=2?safe:wrong;
  if(!pool.length)return;
- let candidate=pool.reduce((a,b)=>String(a.text||'').length>=String(b.text||'').length?a:b),suffix=plausibleQualifier[stage]||' under the same controlled comparison';
- while(String(candidate.text||'').length<=correctLength)candidate.text=String(candidate.text||'').trim()+suffix;
+ const longest=pool.reduce((a,b)=>String(a.text||'').length>=String(b.text||'').length?a:b);
+ extendChoice(longest,correctLength+1,suffix);
+ const ranked=pool.slice().sort((a,b)=>String(b.text||'').length-String(a.text||'').length),medianFloor=Math.ceil(correctLength/1.7);
+ for(const choice of ranked.slice(0,2))extendChoice(choice,medianFloor,suffix);
 }
 if(PRACTICE?.labs){
  PRACTICE.labs.forEach((lab,labIndex)=>(lab.steps||[]).forEach((step,stepIndex)=>{
@@ -145,7 +148,7 @@ if(PRACTICE?.labs){
    if(!replacement)throw new Error(`Missing optional-practice quality mapping: ${mapKey}`);
    choices[keyIndex].text=replacement;
    const correctChoice=choices[keyIndex],wrong=choices.filter((_,i)=>i!==keyIndex);
-   ensureLongerDistractor(wrong,String(correctChoice.text).length,step.stage);
+   ensureBalancedDistractors(wrong,String(correctChoice.text).length,step.stage);
    const focus=String(lab.focus||'the stated mechanism').toLowerCase();
    correctChoice.feedback=`Correct. ${correctChoice.text}. This directly addresses ${focus}.`;
    wrong.forEach(c=>{c.feedback=wrongFeedback(c.text,focus,'Test the material or process mechanism with the most direct evidence before changing unrelated conditions.')});
