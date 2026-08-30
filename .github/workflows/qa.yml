@@ -48,6 +48,7 @@ jobs:
           node --check assessment-evidence-approval.js
           node --check source-library.js
           node --check measured-evidence-integration.js
+          node --check measured-evidence-decision.js
           node --check reference-data.js
           node --check reference-deep-dive.js
           node --check reference-research-extension.js
@@ -92,6 +93,8 @@ jobs:
         run: python qa_release_docs.py
       - name: Repository governance integrity
         run: python qa_repo_governance.py
+      - name: Critical GitHub Actions version integrity
+        run: python qa_critical_actions_versions.py
       - name: App-wide data and runtime deep audit
         run: python qa_app_wide_audit.py
       - name: Canonical master-data reconciliation
@@ -122,6 +125,8 @@ jobs:
         run: python qa_measured_evidence_50_pass.py
       - name: Canonical measured-evidence runtime integration
         run: python qa_measured_evidence_integration.py
+      - name: Evidence-to-decision workflow integrity
+        run: python qa_measured_evidence_decision_workflows.py
       - name: Content scale target integrity
         run: python qa_content_scale_targets.py
       - name: Full-scale draft bank integrity
@@ -130,6 +135,8 @@ jobs:
         run: python qa_process_data_local_intake.py
       - name: Real process-data pilot readiness
         run: python qa_real_process_data_pilot.py
+      - name: Real-site human feedback contract
+        run: python qa_real_site_feedback_contract.py
       - name: Learner experience progression and mobile integrity
         run: python qa_learning_experience.py
       - name: Canonical app shell registry integrity
@@ -185,6 +192,24 @@ jobs:
         with:
           name: mouldmaster-measured-evidence-integration
           path: measured-evidence-integration-report.json
+          if-no-files-found: error
+      - name: Upload evidence-decision workflow report
+        uses: actions/upload-artifact@v7
+        with:
+          name: mouldmaster-evidence-decision-workflows
+          path: measured-evidence-decision-workflow-report.json
+          if-no-files-found: error
+      - name: Upload real-site feedback contract report
+        uses: actions/upload-artifact@v7
+        with:
+          name: mouldmaster-real-site-feedback-contract
+          path: real-site-feedback-contract-report.json
+          if-no-files-found: error
+      - name: Upload critical Actions version report
+        uses: actions/upload-artifact@v7
+        with:
+          name: mouldmaster-critical-actions-versions
+          path: critical-actions-versions-report.json
           if-no-files-found: error
       - name: Upload content-scale target report
         uses: actions/upload-artifact@v7
