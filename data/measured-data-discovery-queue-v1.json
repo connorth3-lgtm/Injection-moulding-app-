@@ -1,8 +1,8 @@
 {
   "schema": 1,
-  "version": "2026.08.30.6",
+  "version": "2026.08.30.7",
   "reviewed": "2026-08-30",
-  "purpose": "Credible measured-data discoveries that are still awaiting file-level profiling, retrieval, rights clearance, or role assignment. Already promoted families are removed from the active queue and recorded under resolvedPromotions; explicitly rejected false positives are recorded under screenedOutDiscoveries so neither group can be mistaken for unexecuted promotable work.",
+  "purpose": "Credible measured-data discoveries still awaiting file-level profiling, retrieval, rights clearance, or role assignment. Sources already governed by the canonical inventory are removed from the active discovery queue and recorded separately so discovery metadata cannot contradict executed canonical state.",
   "rules": {
     "queueDoesNotCountAsIngested": true,
     "timeSamplesAreNotInjectionCycles": true,
@@ -10,6 +10,7 @@
     "simulationOutputsAreNotMeasuredProcessEvidence": true,
     "licenseMustTravelWithAnyPermittedDerivedUse": true,
     "alreadyPromotedFamiliesMustNotRemainActiveDiscoveries": true,
+    "activeDiscoveryMustNotDuplicateCanonicalInventory": true,
     "articleOrThesisLicenceDoesNotAutomaticallyLicenseUnderlyingThirdPartyProductionData": true,
     "publicMirrorAvailabilityDoesNotProveDatasetReuseRights": true,
     "reportedCountsFromRelatedPublicationsRemainUnacceptedUntilPayloadRightsAndOverlapAreResolved": true,
@@ -41,66 +42,6 @@
       "lastPublicRecheck": "2026-08-30",
       "acceptedMeasuredTimeSeriesSamples": 0,
       "limitation": "The live Mendeley record still describes the industrial injection-moulding case and exposes a Download All control, but its Files section contains no public file entries. Reported sample/channel counts therefore remain metadata only. Exact payload bytes, timestamps/grouping, field semantics, labels and test-sequence length must be inspected before any measured count or benchmark adapter is created."
-    },
-    {
-      "id": "mendeley-gtnb4j7bfx-production-v1",
-      "title": "Data Model for Injection Molding and Blow Molding — historical industrial production records",
-      "source": "https://doi.org/10.17632/gtnb4j7bfx.1",
-      "relatedSource": "https://doi.org/10.3390/su17167445",
-      "license": "CC BY 4.0",
-      "role": "industrial-record-level-process-data-retrieval-review",
-      "recordUnit": "historical production-order record from injection or blow molding operations; not assumed to represent one injection cycle or an intra-cycle waveform",
-      "scale": {
-        "injectionMoldingRecordsReportedByArticle": 4502,
-        "blowMoldingRecordsReportedByArticle": 1855,
-        "datasetVariablesReported": "more than 30"
-      },
-      "signals": [
-        "injection and holding pressure in bar",
-        "melt and mold temperatures in degrees Celsius",
-        "cycle, cooling, ejection and retention times",
-        "injection speed",
-        "production quantities, good/rejected units and flash waste",
-        "material consumption and product/machine/shift identifiers"
-      ],
-      "collection": "publisher states PLCs, digital scales and velocity sensors plus MES automatic logging and manual spreadsheet inputs were used in an operating plastic-manufacturing facility",
-      "status": "retrieval-blocked-publisher-no-file-entries",
-      "lastPublicRecheck": "2026-08-30",
-      "acceptedMeasuredTimeSeriesSamples": 0,
-      "limitation": "The Mendeley record is explicitly CC BY 4.0 and describes real industrial process/production records, while the associated peer-reviewed Sustainability article reports 4,502 injection-molding records and 1,855 blow-molding records. However, the live publisher page currently renders Download All with an empty Files section, so no source CSV/workbook bytes can be profiled or separated into injection-only records. The reported row totals remain metadata and must not be counted as injection cycles, process-waveform samples, or accepted record-level measurements until publisher files are exposed and inspected for schema, duplicates, derived columns, injection/blow separation and provenance."
-    },
-    {
-      "id": "zenodo-forinfpro-himd-20744054",
-      "title": "FORinFPRO-HIMD — multimodal sensor dataset for hybrid injection molding of continuous fiber-reinforced polypropylene composites",
-      "source": "https://doi.org/10.5281/zenodo.20744054",
-      "license": null,
-      "role": "direct-process-multimodal-license-and-file-profile-review",
-      "recordUnit": "sample within publisher-exposed cycle_001 machine, pressure/temperature or ultrasonic-RMS CSV; exact sampling grids, units and synchronization are not yet profiled",
-      "machine": "ENGEL V-Duo injection molding machine at the University of Augsburg Hybrid Injection Molding Cell",
-      "process": "in-situ forming of continuous glass-fiber reinforced polypropylene organosheets followed by polypropylene overmolding in a hybrid injection-molding cycle",
-      "sensorLayout": {
-        "activePulseEchoUltrasonicSensors": 4,
-        "pressureTemperatureSensors": 6,
-        "dielectricAnalysisSensors": 2,
-        "reportedInMoldSensorsTotal": 12
-      },
-      "signals": [
-        "machine injection pressure, screw position, injection speed, clamping force and temperatures",
-        "cavity pressure and temperature",
-        "active pulse-echo ultrasonic response",
-        "dielectric-analysis measurements described by the publisher"
-      ],
-      "publisherIndexedFiles": [
-        {"name": "cycle_001_machine_data.csv", "size": "4.9 MB", "md5": "d2a7d96d133f3d7b43a5089ad4bf0b09"},
-        {"name": "cycle_001_pt.csv", "size": "21.3 kB", "md5": "40d8511c11e8e0575dc3930ddd258c19"},
-        {"name": "cycle_001_us_rms.csv", "size": "87.4 kB", "md5": "c767196cfd1b6dec0d09ed0a2dba2551"}
-      ],
-      "visibleCycleIds": ["cycle_001"],
-      "publisherAccessStatus": "Dataset Open",
-      "status": "payload-public-formal-license-and-semantics-unverified",
-      "lastPublicRecheck": "2026-08-30",
-      "acceptedMeasuredTimeSeriesSamples": 0,
-      "limitation": "Zenodo exposes three numeric CSV files for cycle_001 and describes genuine synchronized machine and in-mold sensing from an ENGEL V-Duo hybrid injection-molding experiment. The indexed authoritative record labels the deposit Dataset Open and says it is publicly available for reproducible research, but the retrieved publisher metadata does not surface a formal licence identifier. Open-access wording is therefore not substituted for an explicit reuse licence. No additional cycle IDs are inferred from Zenodo download-volume statistics, and none of the approximately 5 MB of exposed numeric payload is counted until the formal licence, exact columns/units, sampling rates, synchronization, missing-value treatment and whether DEA data are actually present in the exposed files are verified."
     },
     {
       "id": "github-k85-pressure-temperature-v1",
@@ -169,6 +110,28 @@
       "lastPublicRecheck": "2026-08-30",
       "acceptedMeasuredTimeSeriesSamples": 0,
       "limitation": "The study is genuine production monitoring across five injection-moulding machines, but its Data Availability Statement says the authors can be contacted to obtain the study data. The CC BY article licence does not establish an open licence for unpublished recordings. Keep the source as request-only evidence until authorised payload and terms are obtained."
+    }
+  ],
+  "canonicalInventoryManagedSources": [
+    {
+      "formerDiscoveryId": "mendeley-gtnb4j7bfx-production-v1",
+      "canonicalDatasetId": "mendeley-gtnb4j7bfx-v1",
+      "source": "https://doi.org/10.17632/gtnb4j7bfx.1",
+      "accessState": "executed-open",
+      "license": "CC BY 4.0",
+      "state": "canonical-executed-record-level-benchmark",
+      "note": "The canonical inventory already governs this source as an executed-open CC BY 4.0 production-record dataset. It is record-level rather than a high-frequency shot waveform and must not remain in the zero-count discovery queue."
+    },
+    {
+      "formerDiscoveryId": "zenodo-forinfpro-himd-20744054",
+      "canonicalDatasetId": "forinfpro-himd-v1",
+      "source": "https://doi.org/10.5281/zenodo.20744054",
+      "accessState": "executed-open",
+      "license": "CC BY 4.0",
+      "state": "canonical-partially-semantic-resolved",
+      "acceptedMeasuredTimeSeriesSamples": 162112,
+      "acceptedCountFormula": "16 * 10132",
+      "note": "The canonical contract records official Zenodo API CC BY 4.0 evidence and accepts sixteen ENGEL Heating.sv_Zone*.rActualTemp channels in degrees Celsius. Remaining channel semantics can expand this family later but do not make the source an active discovery."
     }
   ],
   "screenedOutDiscoveries": [

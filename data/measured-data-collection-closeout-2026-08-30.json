@@ -1,0 +1,106 @@
+{
+  "schema": 1,
+  "version": "2026.08.30.1",
+  "reviewed": "2026-08-30",
+  "status": "collection-phase-closed-current-public-and-authorized-scope",
+  "scope": "Close the current measured-data discovery, rights, retrieval and profiling pass without claiming that no future dataset can be published or released. Every known source is either canonically accepted/profiled, explicitly non-counting, or assigned a fail-closed future gate. No additional measured value may be accepted merely because a paper, metadata page, mirror or inaccessible file reports a scale.",
+  "canonicalEffectiveState": {
+    "inventoriedMeasuredSources": 34,
+    "rightsExecutableSources": 21,
+    "fullyProfiledMeasuredFamilies": 17,
+    "acceptedInjectionProcessTimeSeriesValues": 85569824
+  },
+  "baseCheckpoint": {
+    "inventoriedMeasuredSources": 25,
+    "rightsExecutableSources": 14,
+    "fullyProfiledMeasuredFamilies": 12,
+    "acceptedInjectionProcessTimeSeriesValues": 66521519,
+    "note": "This is the immutable pre-batch-4/batch-5 checkpoint retained by the content-scale and Wave-2 ledgers; later layered promotions produce the effective state above."
+  },
+  "collectionDecision": {
+    "repoAutomatableCollectionWorkRemaining": 0,
+    "activeZeroCountDiscoveries": 4,
+    "canonicalInventoryManagedFormerDiscoveries": 2,
+    "knownTerminalDocumentationOnlySources": 1,
+    "unresolvedSourcesContributeZeroAdditionalValuesUntilGateResolution": true,
+    "futurePromotionRequiresNewEvidenceOrExternalStateChange": true,
+    "reopenTriggers": [
+      "a publisher exposes previously unavailable payload bytes",
+      "an original rights-holder supplies explicit reuse permission or authoritative distribution terms",
+      "an author supplies requested payloads or field/unit semantics",
+      "the Warwick OPJU files are exported with trusted Origin/OriginPro lineage",
+      "a confidential-data owner authorizes the governed bottle-cap intake",
+      "a Leon embargo is lifted early or reaches 2027-12-31",
+      "a genuinely new public measured source is discovered"
+    ]
+  },
+  "activeDiscoveryIds": [
+    "mendeley-ad-stgn-injection-line-v1",
+    "github-k85-pressure-temperature-v1",
+    "aspoeck-costa-industrial-71016-v1",
+    "aisemo-accelerometer-state-recognition-v1"
+  ],
+  "canonicalInventoryManagedFormerDiscoveries": [
+    {
+      "formerDiscoveryId": "mendeley-gtnb4j7bfx-production-v1",
+      "canonicalDatasetId": "mendeley-gtnb4j7bfx-v1",
+      "state": "executed-open-record-level-benchmark",
+      "acceptedAdditionalValuesFromCloseout": 0
+    },
+    {
+      "formerDiscoveryId": "zenodo-forinfpro-himd-20744054",
+      "canonicalDatasetId": "forinfpro-himd-v1",
+      "state": "accepted-profiled-partially-semantic-resolved",
+      "alreadyAcceptedMeasuredTimeSeriesSamples": 162112,
+      "acceptedAdditionalValuesFromCloseout": 0
+    }
+  ],
+  "futureGates": {
+    "publisherPayloadOrDelivery": [
+      {"id": "ad-stgn-injection-moulding-v1", "state": "publisher-record-no-files-exposed", "gate": "Mendeley must expose the CC BY 4.0 payload files before profiling", "acceptedAdditionalValuesWhileBlocked": 0},
+      {"id": "rwth-pcr-2025-v1", "state": "retrieval-blocked-non-archive-response", "gate": "publisher endpoint must deliver the advertised archive rather than a non-archive response", "acceptedAdditionalValuesWhileBlocked": 0},
+      {"id": "mendeley-c3pt29jt7c-v1", "state": "retrieved-profile-blocked-external-dic-workbook-not-delivered", "gate": "publisher/authors must deliver the external PP6523_DIC measurement workbook referenced by the charts", "acceptedAdditionalValuesWhileBlocked": 0},
+      {"id": "strathclyde-rtim-tablets-v1", "state": "retrieval-blocked-http", "gate": "authoritative publisher-supported XLSX delivery must succeed instead of HTTP 403", "acceptedAdditionalValuesWhileBlocked": 0}
+    ],
+    "rightsOrOriginalProvenance": [
+      {"id": "probayes-main-v2", "state": "blocked-rights-review", "gate": "explicit dataset reuse licence required", "acceptedAdditionalValuesWhileBlocked": 0},
+      {"id": "probayes-doptimal-v1", "state": "blocked-rights-review", "gate": "explicit dataset reuse licence required", "acceptedAdditionalValuesWhileBlocked": 0},
+      {"id": "skz-loki-v1", "state": "blocked-rights-review", "gate": "explicit dataset reuse licence required", "acceptedAdditionalValuesWhileBlocked": 0},
+      {"id": "kamp-injection-7996", "state": "blocked-mirror-rights", "gate": "authoritative original distribution rights must be captured", "acceptedAdditionalValuesWhileBlocked": 0},
+      {"id": "foxconn-competition-16600", "state": "blocked-mirror-rights", "gate": "authoritative original distribution rights must be captured", "acceptedAdditionalValuesWhileBlocked": 0},
+      {"id": "github-k85-pressure-temperature-v1", "state": "public-mirror-rights-and-origin-unresolved", "gate": "original data provenance and explicit reuse rights must be tied to the source owner", "acceptedAdditionalValuesWhileBlocked": 0}
+    ],
+    "requestOnlyOrOwnerResponse": [
+      {"id": "aspoeck-costa-industrial-71016-v1", "state": "request-only-payload-not-public-company-data-rights-unresolved", "gate": "underlying company production data and reuse authorization must be supplied; thesis/paper licences do not transfer automatically", "acceptedAdditionalValuesWhileBlocked": 0},
+      {"id": "aisemo-accelerometer-state-recognition-v1", "state": "request-only-underlying-data-not-public", "gate": "authors must supply the unpublished recordings with usable terms", "acceptedAdditionalValuesWhileBlocked": 0},
+      {"id": "inqcim-2500-request", "state": "blocked-request-only", "gate": "authors must supply the files and permission/terms", "acceptedAdditionalValuesWhileBlocked": 0}
+    ],
+    "semanticExpansionOfAlreadyAcceptedFamilies": [
+      {"id": "cross-process-chain-17240390", "state": "profiled-scope-limited-semantic-review", "gate": "exact field/unit semantics are required before held channels can expand accepted counts", "acceptedAdditionalValuesWhileBlocked": 0},
+      {"id": "impure-pascoe-2022", "state": "accepted-profiled-partially-semantic-resolved", "gate": "HydPressure, ScrewPosition and Analog Input 1/2 meanings/units require authoritative clarification", "alreadyAcceptedMeasuredTimeSeriesSamples": 1188348, "acceptedAdditionalValuesWhileBlocked": 0},
+      {"id": "forinfpro-himd-v1", "state": "accepted-profiled-partially-semantic-resolved", "gate": "remaining machine, pressure/temperature and ultrasonic fields need authoritative semantics before any expansion", "alreadyAcceptedMeasuredTimeSeriesSamples": 162112, "acceptedAdditionalValuesWhileBlocked": 0}
+    ],
+    "specialFormatExport": [
+      {"id": "warwick-demoulding", "state": "retrieved-special-format-needs-origin-export", "gate": "five verified OPJU files require trusted Origin/OriginPro export and validation", "acceptedAdditionalValuesWhileBlocked": 0}
+    ],
+    "confidentialAuthorization": [
+      {"id": "bottle-cap-7162-confidential", "state": "blocked-confidential", "gate": "owner authorization and governed payload delivery required", "acceptedAdditionalValuesWhileBlocked": 0}
+    ],
+    "embargo": [
+      {"id": "leon-process-20309380", "state": "blocked-embargo", "notBefore": "2027-12-31", "acceptedAdditionalValuesWhileBlocked": 0},
+      {"id": "leon-defects-20322729", "state": "blocked-embargo", "notBefore": "2027-12-31", "acceptedAdditionalValuesWhileBlocked": 0}
+    ]
+  },
+  "terminalNonCounting": [
+    {"id": "mendeley-597jrsm9zm-v1", "state": "profiled-process-documentation-only-noncounting", "reason": "The delivered CC BY-NC 3.0 supplement is process/manufacturing documentation and contains no source-profiled specimen-level measured arrays or machine time series.", "acceptedMeasuredTimeSeriesSamples": 0}
+  ],
+  "safetyBoundaries": {
+    "rawThirdPartyNumericPayloadCommitted": false,
+    "fabricatedOrInferredMeasurementsAccepted": false,
+    "metadataOrPublicationCountsTreatedAsPossessedPayload": false,
+    "embargoedPayloadRetrievedEarly": false,
+    "confidentialPayloadClaimedPossessedWithoutAuthorization": false,
+    "mirrorAvailabilityTreatedAsReusePermission": false,
+    "unresolvedFieldSemanticsCounted": false
+  }
+}
