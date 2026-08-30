@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "version": "2026.08.30.1",
+  "version": "2026.08.30.2",
   "reviewed": "2026-08-30",
   "purpose": "Inventory real measured injection-moulding datasets and data-bearing studies without conflating public metadata, downloadable files, reuse rights, record units, or independent experimental evidence.",
   "rules": {
@@ -329,25 +329,26 @@
         "cyclesInCurrentVisibleRelease": 1,
         "deliveredFiles": 3,
         "totalRowsAcrossFiles": 12689,
-        "namedMachineChannels": 60
+        "namedMachineChannels": 60,
+        "acceptedMachineRows": 10132,
+        "acceptedMeasuredChannels": 16,
+        "acceptedMeasuredTimeSeriesSamples": 162112,
+        "acceptedCountFormula": "16 * 10132"
       },
       "signals": [
-        "machine injection pressure",
-        "screw position",
-        "injection speed",
-        "clamping force",
-        "temperatures",
-        "cavity pressure/temperature",
-        "ultrasound"
+        "16 ENGEL Heating.sv_Zone*.rActualTemp actual heating-zone temperature channels (degC; accepted)",
+        "other machine injection pressure/screw position/injection speed/clamping-force/temperature fields (unit-limited; excluded unless separately source-resolved)",
+        "cavity pressure/temperature file (roles known, engineering units unresolved; excluded)",
+        "ultrasonic RMS channels (derived/unit-limited; excluded)"
       ],
       "quality": [
         "multimodal process-state evidence"
       ],
-      "sampling": "one synchronized delivered cycle; unit-limited values excluded from accepted time-series total",
+      "sampling": "one synchronized delivered cycle; accepted ENGEL machine temperature traces contain 10,132 ordered rows under Datum/Zeit, with all timestamps parsed and strictly increasing; observed positive deltas span 0.009834–0.014125 s (median 0.011953 s), so no fixed sampling interval is assumed",
       "overlapGroup": "forinfpro-himd-v1",
       "peerReviewedCompanion": null,
       "priority": 11,
-      "statusNote": "Official Zenodo API confirms CC BY 4.0. Three files were retrieved and fingerprinted; the one-cycle schema is accepted, but channel values remain outside the time-series total where units are not explicit."
+      "statusNote": "Exact CC BY 4.0 v1 release is fingerprinted. Manufacturer-backed ENGEL data-interface semantics plus an aggregate source probe accept 16 exact Heating.sv_Zone*.rActualTemp channels as actual heating-zone temperatures in degC across 10,132 strictly time-ordered machine rows, contributing 162,112 measured time-series values. HeatingOven1, other machine fields, cavity pressure/temperature and ultrasonic RMS remain excluded where source-specific units/roles are incomplete. This source was already one profiled dataset family, so the family count does not change."
     },
     {
       "datasetId": "cross-process-chain-17240390",
