@@ -1,0 +1,48 @@
+{
+  "schema": 1,
+  "status": "accepted-profiled-injection-moulded-tribology",
+  "retrievedDate": "2026-08-29",
+  "source": {
+    "datasetFamilyId": "sic-nylon6-injection-moulded-v1",
+    "primaryDatasetDoi": "10.17632/ztkc87d6sr.1",
+    "alternateDatasetDoi": "10.17632/47k6jswwg7.1",
+    "useLicenseBoundary": "CC BY-NC 3.0",
+    "companionArticleDoi": "10.1016/j.dib.2020.105662",
+    "publisherFileName": "dataset file.docx",
+    "sha256": "283e9599a55bda50f061cccc30e0b21b5ac5fc546af1b583790aa022df8d438a",
+    "publisherSha256Matched": true
+  },
+  "profile": {
+    "acceptedDirectMeasuredBlocks": [
+      {"tableIndex": 1, "semanticTitle": "coefficient-of-friction", "specimenCount": 5, "appliedLoadLevelsN": [5, 10, 20, 30], "measurementCellsPerSpecimen": 4, "directMeasuredValues": 20, "rawNumericValuesEmitted": false},
+      {"tableIndex": 2, "semanticTitle": "wear", "specimenCount": 5, "appliedLoadLevelsN": [5, 10, 20, 30], "measurementCellsPerSpecimen": 4, "directMeasuredValues": 20, "rawNumericValuesEmitted": false}
+    ],
+    "directRecordLevelTribologyMeasurements": 40,
+    "excludedEvidence": {
+      "tga": "image-only in delivered DOCX; no OCR numeric reconstruction",
+      "ftir": "image-only in delivered DOCX; no OCR numeric reconstruction",
+      "sem": "image-only qualitative morphology evidence; no numeric count",
+      "duplicatePublisherEntry": "same payload SHA; not downloaded or counted twice",
+      "loadHeaderNumbers": "experimental conditions, not measured outcomes",
+      "specimenIdentifiers": "labels, not measured outcomes"
+    },
+    "rawNumericValuesEmitted": false,
+    "imageOcrPerformed": false
+  },
+  "acceptance": {
+    "countsAsFullyProfiledMeasuredDataset": true,
+    "recoversPreviouslyBlockedDatasetFamily": true,
+    "createsNewSecondFamilyForAlternateDoi": false,
+    "acceptedRecordLevelMeasuredValues": 40,
+    "acceptedMeasuredTimeSeriesSamples": 0,
+    "commercialReuseAllowed": false,
+    "rawRedistributionAllowedUnderProjectPolicy": false
+  },
+  "retrieval": {
+    "duplicateSecondPublisherEntryDownloaded": false,
+    "rawPublisherFileCommitted": false,
+    "rawNumericValuesUploadedAsArtifact": false,
+    "imagesOcred": false
+  },
+  "evidenceBoundary": "The alternate CC BY-NC 3.0 DOCX recovers the previously blocked SiC/Nylon-6 family. Exactly 40 direct tribology values are accepted from two machine-readable Word tables: coefficient of friction and wear, each 5 specimens by 4 applied loads. TGA, FTIR and SEM are image-only and are not OCR-counted. The alternate DOI does not create a second family."
+}

@@ -7,14 +7,13 @@ import json
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-BASE_PATH = Path(__file__).with_name("compile_master_data_base.py")
-
-spec = importlib.util.spec_from_file_location("mouldmaster_compile_base", BASE_PATH)
-base = importlib.util.module_from_spec(spec)
+PREVIOUS_PATH = Path(__file__).with_name("compile_master_data_wave2_xrd_xps.py")
+spec = importlib.util.spec_from_file_location("mouldmaster_compile_wave2_xrd_xps", PREVIOUS_PATH)
+previous = importlib.util.module_from_spec(spec)
 assert spec and spec.loader
-spec.loader.exec_module(base)
-
-BASE_COMPILE_MEASURED = base.compile_measured
+spec.loader.exec_module(previous)
+base = previous.base
+PREVIOUS_COMPILE_MEASURED = base.compile_measured
 
 
 def load_json(path: str):
@@ -26,80 +25,76 @@ def need(ok, msg):
         raise AssertionError(msg)
 
 
-def compile_measured_with_wave2_extension():
-    measured = BASE_COMPILE_MEASURED()
-    ext = load_json("data/measured-dataset-wave2-extension-v1.json")
-
-    checkpoint = ext["baseCheckpoint"]
-    need(checkpoint["inventoriedMeasuredSources"] == 25, "Wave-2 extension base inventory drifted")
-    need(checkpoint["automatedIngestionAllowed"] == 14, "Wave-2 extension base executable count drifted")
-    need(checkpoint["fullyProfiledMeasuredFamilies"] == 12, "Wave-2 extension base family count drifted")
-    need(checkpoint["acceptedInjectionProcessTimeSeriesValues"] == 66_521_519, "Wave-2 extension base waveform count drifted")
+def compile_measured_with_batch4():
+    measured = PREVIOUS_COMPILE_MEASURED()
+    ext = load_json("data/measured-dataset-wave2-batch4-extension-v1.json")
+    need(measured["datasetInventory"]["summary"]["datasets"] == 31, "batch-4 base effective inventory drifted")
+    need(measured["datasetInventory"]["summary"]["automatedIngestionAllowed"] == 19, "batch-4 base executable count drifted")
+    need(measured["datasetExecutionLedger"]["summary"]["acceptedProfiled"] == 14, "batch-4 base family count drifted")
 
     inventory = deepcopy(measured["datasetInventory"])
-    base_ids = {x["datasetId"] for x in inventory["datasets"]}
-    extension_ids = [x["datasetId"] for x in ext["inventoryEntries"]]
-    need(len(extension_ids) == len(set(extension_ids)) == 6, "Wave-2 extension inventory IDs must be six unique sources")
-    need(not (base_ids & set(extension_ids)), "Wave-2 extension duplicates a base inventory source")
-    inventory["datasets"].extend(deepcopy(ext["inventoryEntries"]))
+    by_id = {x["datasetId"]: i for i, x in enumerate(inventory["datasets"])}
+    for update in ext["inventoryUpdates"]:
+        did = update["datasetId"]
+        need(did in by_id, f"batch-4 inventory update target missing: {did}")
+        inventory["datasets"][by_id[did]] = deepcopy(update["replacement"])
+    for rec in ext["inventoryAdditions"]:
+        need(rec["datasetId"] not in by_id, f"batch-4 inventory addition duplicates source: {rec['datasetId']}")
+        inventory["datasets"].append(deepcopy(rec))
     inventory["summary"] = deepcopy(ext["effectiveInventorySummary"])
-    need(len(inventory["datasets"]) == inventory["summary"]["datasets"] == 31, "effective measured inventory must contain 31 sources")
-    need(sum(1 for x in inventory["datasets"] if x.get("automatedIngestionAllowed") is True) == 19, "effective executable-source count must be 19")
+    need(len(inventory["datasets"]) == 32, "batch-4 effective inventory must contain 32 families")
+    need(sum(1 for x in inventory["datasets"] if x.get("automatedIngestionAllowed") is True) == 19, "batch-4 effective automated-ingestion count must be 19")
 
     execution = deepcopy(measured["datasetExecutionLedger"])
-    execution_ids = {x["datasetId"] for x in execution["sources"]}
-    need(not (execution_ids & {x["datasetId"] for x in ext["executionEntries"]}), "Wave-2 extension duplicates a base execution source")
-    execution["sources"].extend(deepcopy(ext["executionEntries"]))
+    ex_by_id = {x["datasetId"]: i for i, x in enumerate(execution["sources"])}
+    for update in ext["executionUpdates"]:
+        did = update["datasetId"]
+        need(did in ex_by_id, f"batch-4 execution update target missing: {did}")
+        execution["sources"][ex_by_id[did]] = deepcopy(update["replacement"])
+    for rec in ext["executionAdditions"]:
+        need(rec["datasetId"] not in ex_by_id, f"batch-4 execution addition duplicates source: {rec['datasetId']}")
+        execution["sources"].append(deepcopy(rec))
     execution["summary"] = deepcopy(ext["effectiveExecutionSummary"])
-    need(len(execution["sources"]) == execution["summary"]["total"] == 31, "effective execution ledger must contain 31 sources")
-    need(execution["summary"]["acceptedProfiled"] == 14, "effective accepted-profiled count must be 14")
+    need(len(execution["sources"]) == 32 and execution["summary"]["acceptedProfiled"] == 16, "batch-4 effective execution reconciliation drifted")
 
     targets = deepcopy(measured["targetLedger"])
-    targets["version"] = "2026.08.30.4-wave2-extension"
+    targets["version"] = "2026.08.30.5-wave2-batch4-extension"
     profiled = targets["targets"]["fully_profiled_measured_datasets"]
-    profiled["currentAccepted"] = 14
-    profiled["currentDiscovered"] = 31
-    profiled["notes"] = "Fourteen exact-source measured dataset families satisfy the profiling definition. The fresh-main Wave-2 extension promotes route-explicit injection-moulded Nylon-12 XRD (6,588 intensity values) and XPS material/tool-interface characterization (71,868 detector Counts values). Four companion records are retained as non-counting or access-blocked evidence. None of these additions is an injection-machine/cavity process waveform source, so the process-waveform total remains 66,521,519."
+    profiled["currentAccepted"] = 16
+    profiled["currentDiscovered"] = 32
+    profiled["notes"] = "Sixteen exact-source measured dataset families satisfy the profiling definition. Fresh-main batch 4 adds 666 direct injection-operation duration measurements from ypf95p4bs4 and recovers the already-inventoried SiC/Nylon-6 family via alternate release 47k6jswwg7 with 40 direct tribology measurements under CC BY-NC 3.0. The alternate DOI does not create a second family. These are record-level measurements, so accepted injection-process waveform values remain 66,521,519."
 
-    xrd_contract = load_json("data/public-benchmark-contracts/8c8fjwcw86-v1.json")
-    xrd_result = load_json("data/public-benchmark-results/8c8fjwcw86-v1.json")
-    xps_contract = load_json("data/public-benchmark-contracts/crmb7xjymg-v1.json")
-    xps_result = load_json("data/public-benchmark-results/crmb7xjymg-v1.json")
-    need(xrd_result["status"] == "accepted-profiled-injection-moulded-xrd-characterization", "XRD accepted result status drifted")
-    need(xrd_result["acceptance"]["acceptedMaterialCharacterizationTraceValues"] == 6_588, "XRD accepted trace count drifted")
-    need(xps_result["status"] == "completed-profiled-xps-vamas-material-tool-interface", "XPS accepted result status drifted")
-    need(xps_result["acceptance"]["acceptedMaterialCharacterizationTraceValues"] == 71_868, "XPS accepted trace count drifted")
-    need(xrd_result["acceptance"]["acceptedMeasuredTimeSeriesSamples"] == xps_result["acceptance"]["acceptedMeasuredTimeSeriesSamples"] == 0, "material-characterisation additions must add zero process waveform samples")
+    ypf_contract = load_json("data/public-benchmark-contracts/ypf95p4bs4-v1.json")
+    ypf_result = load_json("data/public-benchmark-results/ypf95p4bs4-v1.json")
+    sic_contract = load_json("data/public-benchmark-contracts/sic-nylon6-alt-release-v1.json")
+    sic_result = load_json("data/public-benchmark-results/sic-nylon6-alt-v1.json")
+    need(ypf_result["acceptance"]["acceptedRecordLevelMeasuredValues"] == 666, "ypf accepted value count drifted")
+    need(sic_result["acceptance"]["acceptedRecordLevelMeasuredValues"] == 40, "SiC/Nylon-6 accepted value count drifted")
+    need(sic_result["acceptance"]["recoversPreviouslyBlockedDatasetFamily"] is True and sic_result["acceptance"]["createsNewSecondFamilyForAlternateDoi"] is False, "SiC alternate-release family-dedup boundary drifted")
+    need(ypf_result["acceptance"]["acceptedMeasuredTimeSeriesSamples"] == sic_result["acceptance"]["acceptedMeasuredTimeSeriesSamples"] == 0, "batch-4 records must add zero process waveform samples")
 
-    specialized_contracts = deepcopy(measured["specializedMeasuredBenchmarkContracts"])
-    specialized_results = deepcopy(measured["specializedMeasuredBenchmarkResults"])
-    specialized_contracts["mendeley-8c8fjwcw86-v1"] = xrd_contract
-    specialized_contracts["mendeley-crmb7xjymg-v1"] = xps_contract
-    specialized_results["mendeley-8c8fjwcw86-v1"] = xrd_result
-    specialized_results["mendeley-crmb7xjymg-v1"] = xps_result
-    need(len(specialized_results) == 6, "effective specialized measured benchmark set must contain six sources")
+    contracts = deepcopy(measured["specializedMeasuredBenchmarkContracts"])
+    results = deepcopy(measured["specializedMeasuredBenchmarkResults"])
+    contracts["mendeley-ypf95p4bs4-v1"] = ypf_contract
+    results["mendeley-ypf95p4bs4-v1"] = ypf_result
+    contracts["mendeley-ztkc87d6sr-v1"] = sic_contract
+    results["mendeley-ztkc87d6sr-v1"] = sic_result
+    need(len(results) == 8, "batch-4 effective specialized measured benchmark set must contain eight families")
 
-    review_results = deepcopy(measured["publicBenchmarkReviewResults"])
-    review_results["mendeley-597jrsm9zm-v1"] = load_json("data/public-benchmark-results/597jrsm9zm-v1.json")
-    review_results["mendeley-c3pt29jt7c-v1"] = load_json("data/public-benchmark-results/c3pt29jt7c-v1.json")
-    review_results["mendeley-ztkc87d6sr-v1"] = load_json("data/public-benchmark-results/ztkc87d6sr-v1.json")
-    review_results["strathclyde-rtim-tablets-v1"] = load_json("data/public-benchmark-results/strathclyde-rtim-tablets-v1.json")
-    need(review_results["mendeley-597jrsm9zm-v1"]["acceptance"]["countsAsFullyProfiledMeasuredDataset"] is False, "597 process-documentation record must remain non-counting")
-    need(review_results["mendeley-c3pt29jt7c-v1"]["status"] == "retrieved-profile-blocked-external-dic-workbook-not-delivered", "c3 DIC blocker drifted")
-    need(review_results["mendeley-ztkc87d6sr-v1"]["status"] == "publisher-record-no-files-exposed", "ztkc payload blocker drifted")
-    need(review_results["strathclyde-rtim-tablets-v1"]["status"] == "retrieval-blocked-http", "Strathclyde HTTP blocker drifted")
+    reviews = deepcopy(measured["publicBenchmarkReviewResults"])
+    reviews.pop("mendeley-ztkc87d6sr-v1", None)
 
     measured["targetLedger"] = targets
     measured["datasetInventory"] = inventory
     measured["datasetExecutionLedger"] = execution
-    measured["specializedMeasuredBenchmarkContracts"] = specialized_contracts
-    measured["specializedMeasuredBenchmarkResults"] = specialized_results
-    measured["publicBenchmarkReviewResults"] = review_results
-    measured["wave2Extension"] = ext
+    measured["specializedMeasuredBenchmarkContracts"] = contracts
+    measured["specializedMeasuredBenchmarkResults"] = results
+    measured["publicBenchmarkReviewResults"] = reviews
+    measured["wave2Batch4Extension"] = ext
     return measured
 
 
-base.compile_measured = compile_measured_with_wave2_extension
+base.compile_measured = compile_measured_with_batch4
 
 if __name__ == "__main__":
     base.main()

@@ -1,11 +1,12 @@
 name: MouldMaster Master Data Compilation
-# The effective measured-source view includes the fresh-main Wave-2 extension. XRD/XPS characterization does not inflate process waveforms.
+# Effective measured-source view includes XRD/XPS plus fresh-main Wave-2 batch 4. Record-level batch-4 values do not inflate process waveforms.
 
 on:
   pull_request:
     branches: [main]
     paths:
       - 'tools/compile_master_data.py'
+      - 'tools/compile_master_data_wave2_xrd_xps.py'
       - 'tools/compile_master_data_base.py'
       - 'tools/harvest_openalex_injection_moulding.py'
       - 'qa_master_data_compile.py'
@@ -14,6 +15,7 @@ on:
       - 'data/measured-dataset-inventory-v1.json'
       - 'data/measured-dataset-execution-ledger-v1.json'
       - 'data/measured-dataset-wave2-extension-v1.json'
+      - 'data/measured-dataset-wave2-batch4-extension-v1.json'
       - 'data/measured-dataset-rights-review-*.json'
       - 'data/public-benchmark-contracts/**'
       - 'data/public-benchmark-results/**'
@@ -66,9 +68,9 @@ jobs:
           x=json.loads(Path('compiled-data/manifest.json').read_text(encoding='utf-8'))
           c=x['counts']
           assert x['candidateRegistryEmbedded'] is True
-          assert c['measuredDatasetInventory']==31
+          assert c['measuredDatasetInventory']==32
           assert c['automatedIngestionAllowedDatasets']==19
-          assert c['fullyProfiledMeasuredDatasets']==14
+          assert c['fullyProfiledMeasuredDatasets']==16
           assert c['measuredTimeSeriesSamplesAccepted']==66521519
           assert c['publisherVerifiedPrimaryMeasuredStudies']==60
           assert c['verifiedPeerReviewedResearchRecords']==60
