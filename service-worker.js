@@ -1,5 +1,5 @@
 const CACHE_VERSION='2026.08.26.2';
-const CACHE_REVISION='process-data-sweep-20260827';
+const CACHE_REVISION='evidence-decision-20260830';
 const STATIC_CACHE=`mouldmaster-static-${CACHE_VERSION}-${CACHE_REVISION}`;
 const CORE=[
   './index.html',
@@ -24,6 +24,7 @@ const CORE=[
   './assessment-ux.js',
   './source-library.js',
   './measured-evidence-integration.js',
+  './measured-evidence-decision.js',
   './reference-data.js',
   './reference-data.html',
   './reference-deep-dive.js',

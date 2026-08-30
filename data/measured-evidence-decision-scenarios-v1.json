@@ -1,0 +1,27 @@
+{
+  "schema": 1,
+  "purpose": "Deterministic relevance-routing QA for the 17 canonical measured-evidence families. These scenarios test evidence selection and role labelling; they are not production recipes or root-cause ground truth.",
+  "scenarios": [
+    {"id":"production-quality","query":"quality reject product weight cycle time hold pressure production","expectedTopId":"mendeley-gtnb4j7bfx-v1","expectedRole":"supporting"},
+    {"id":"avaps-fill-transfer","query":"injection pressure pressure curve flow curve transfer process trace","expectedTopId":"scatimdata-avaps","expectedRole":"direct"},
+    {"id":"mould-monitoring","query":"cavity pressure extraction force ejection acceleration vibration mould monitoring fault","expectedTopId":"openmms-t4g","expectedRole":"direct"},
+    {"id":"cross-process-chain","query":"injection pressure velocity volume lower workpiece process chain waveform","expectedTopId":"cross-process-chain-17240390","expectedRole":"direct"},
+    {"id":"pascoe-cavity","query":"cavity pressure cavity temperature pascoe medical process trace","expectedTopId":"impure-pascoe-2022","expectedRole":"direct"},
+    {"id":"machine-heating","query":"heating zone barrel machine temperature engel hybrid moulding thermal","expectedTopId":"forinfpro-himd-v1","expectedRole":"direct"},
+    {"id":"road-lens-quality","query":"screw position shot volume clamping force back pressure torque fill time","expectedTopId":"iguzzini-road-lenses","expectedRole":"supporting"},
+    {"id":"pp-foam-outcomes","query":"polypropylene foam composite flexural strength flexural modulus weight","expectedTopId":"mendeley-fhj5p7ww9v-v1","expectedRole":"supporting"},
+    {"id":"pp-pvt","query":"polypropylene pvt specific volume shrinkage rheology thermal","expectedTopId":"mendeley-6k8fpbrd9s-v1","expectedRole":"supporting"},
+    {"id":"material-properties","query":"material property injection moulded specimen strength property","expectedTopId":"mendeley-4h98rz9f92-v3","expectedRole":"supporting"},
+    {"id":"hdpe-mechanical","query":"hdpe cenosphere stress strain tensile composite modulus","expectedTopId":"pmc4753395-hdpe-cenosphere-v1","expectedRole":"supporting"},
+    {"id":"nylon12-xrd","query":"nylon 12 pa12 xrd crystallinity crystal structure","expectedTopId":"mendeley-8c8fjwcw86-v1","expectedRole":"supporting"},
+    {"id":"abs-pla-mechanics","query":"abs pla tensile bending injection moulded mechanical","expectedTopId":"mendeley-yxz2w7ctnh-v1","expectedRole":"supporting"},
+    {"id":"xps-interface","query":"xps surface interface mould surface chemistry characterisation","expectedTopId":"mendeley-crmb7xjymg-v1","expectedRole":"supporting"},
+    {"id":"operations-changeover","query":"maintenance mould change setup downtime cleaning time study changeover","expectedTopId":"mendeley-ypf95p4bs4-v1","expectedRole":"supporting"},
+    {"id":"pa6-tribology","query":"nylon 6 pa6 sic tribology wear friction coefficient of friction","expectedTopId":"mendeley-ztkc87d6sr-v1","expectedRole":"supporting"},
+    {"id":"industrial-energy","query":"energy power current voltage frequency electrical machine load sustainability","expectedTopId":"zenodo-energy-20338544","expectedRole":"direct"}
+  ],
+  "negativeRouting": [
+    {"id":"pp-token-boundary","query":"approved app workflow","mustNotSelect":"mendeley-fhj5p7ww9v-v1"},
+    {"id":"abs-token-boundary","query":"labs dashboard","mustNotSelect":"mendeley-yxz2w7ctnh-v1"}
+  ]
+}
