@@ -15,7 +15,9 @@ on:
       - 'diagnostic-learning-labs.js'
       - 'material-behaviour-labs.js'
       - 'evidence-maturity-deep-dive.js'
+      - 'evidence-maturity-formal-bridge.js'
       - 'qa_question_quality_50_pass.py'
+      - 'qa_question_quality_50_pass_runtime.py'
       - '.github/workflows/question-quality-50-pass.yml'
   workflow_dispatch:
 
@@ -38,8 +40,8 @@ jobs:
       - uses: actions/setup-python@v7
         with:
           python-version: '3.12'
-      - name: Run 50-pass quality audit across formal and optional questions
-        run: python qa_question_quality_50_pass.py
+      - name: Run 50-pass quality audit across formal and optional learner-visible questions
+        run: python qa_question_quality_50_pass_runtime.py
       - name: Upload question quality report
         if: always()
         uses: actions/upload-artifact@v7
