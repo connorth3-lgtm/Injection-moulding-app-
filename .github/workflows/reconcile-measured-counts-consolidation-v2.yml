@@ -1,0 +1,76 @@
+name: Reconcile measured counts on consolidation branch v2
+
+on:
+  push:
+    branches: [data/measured-data-consolidation-20260830]
+    paths:
+      - '.github/workflows/reconcile-measured-counts-consolidation-v2.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  reconcile:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: data/measured-data-consolidation-20260830
+          fetch-depth: 1
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Patch reconciled count and rights assertions
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import json
+
+          def one(path, old, new):
+              p=Path(path); s=p.read_text(encoding='utf-8')
+              if old not in s: raise SystemExit(f'missing expected text in {path}: {old[:90]}')
+              p.write_text(s.replace(old,new,1), encoding='utf-8')
+
+          p=Path('data/content-scale-targets.json')
+          x=json.loads(p.read_text(encoding='utf-8'))
+          x['version']='2026.08.30.1'; x['reviewed']='2026-08-30'
+          x['targets']['fully_profiled_measured_datasets']['currentAccepted']=7
+          x['targets']['fully_profiled_measured_datasets']['notes']='Seven exact-source families remain fully profiled. Cross-process, ImPure and FORinFPRO have valid partial measured-channel acceptance without increasing the fully-profiled-family count; unresolved source semantics remain fail-closed. PET is zero-measured; Warwick and RWTH remain export/delivery blocked.'
+          x['targets']['measured_time_series_samples']['currentAccepted']=66_521_519
+          x['targets']['measured_time_series_samples']['notes']='Accepted measured time-series values: AVAPS 13,631,488; OpenMMS-T4G 298,080; cross-process 51,241,491; ImPure 1,188,348; FORinFPRO 162,112; total 66,521,519. Commands, unresolved channels, model/simulation outputs and synthetic learning cycles remain excluded.'
+          p.write_text(json.dumps(x,indent=2,ensure_ascii=False)+'\n',encoding='utf-8')
+
+          q='qa_content_scale_targets.py'
+          one(q,'need((rights.get("summary") or {}).get("sourcesReviewed") == 5, "waveform rights-review source count drifted")','need((rights.get("summary") or {}).get("sourcesReviewed") == 7, "waveform rights-review source count drifted")')
+          one(q,'need((rights.get("summary") or {}).get("unblockedForAutomatedIngestion") == 4, "waveform rights-review unblocked count drifted")','need((rights.get("summary") or {}).get("unblockedForAutomatedIngestion") == 4, "waveform rights-review unblocked count drifted")\nneed((rights.get("summary") or {}).get("remainBlockedForRights") == 3, "waveform rights-review blocked count drifted")')
+          one(q,'for blocked_id in ["skz-loki-v1"]:\n    need(rights_by_id[blocked_id].get("decision") == "blocked-no-explicit-license", f"{blocked_id} rights decision drifted")\n    need(by_id[blocked_id].get("license") is None and by_id[blocked_id].get("automatedIngestionAllowed") is False, f"{blocked_id} must remain non-executable without explicit data licence")','blocked_decisions={"probayes-main-v2":"blocked-no-v2-specific-license","probayes-doptimal-v1":"blocked-conflicting-official-license-metadata","skz-loki-v1":"blocked-no-explicit-license"}\nfor blocked_id, decision in blocked_decisions.items():\n    need(rights_by_id[blocked_id].get("decision") == decision, f"{blocked_id} rights decision drifted")\n    need(rights_by_id[blocked_id].get("license") is None and rights_by_id[blocked_id].get("automatedIngestionAllowed") is False, f"{blocked_id} rights review must remain fail-closed")\n    need(by_id[blocked_id].get("license") is None and by_id[blocked_id].get("automatedIngestionAllowed") is False, f"{blocked_id} must remain non-executable without explicit data licence")')
+          one(q,'need("dataVolumeMB" not in impure_count, "ImPure must not mislabel cumulative download traffic as source-data size")','need("dataVolumeMB" not in impure_count, "ImPure must not mislabel cumulative download traffic as source-data size")\nneed(impure_count.get("acceptedMeasuredChannels") == 4 and impure_count.get("acceptedMeasuredTimeSeriesSamples") == 1_188_348, "ImPure accepted partial-semantic count drifted")\nforinfpro_count=by_id["forinfpro-himd-v1"].get("count") or {}\nneed(forinfpro_count.get("acceptedMachineRows") == 10_132 and forinfpro_count.get("acceptedMeasuredChannels") == 16 and forinfpro_count.get("acceptedMeasuredTimeSeriesSamples") == 162_112, "FORinFPRO accepted partial-semantic count drifted")')
+          one(q,'accepted_measured_total = av_profile["acceptedMeasuredTimeSeriesSamples"] + om_profile["acceptedMeasuredTimeSeriesSamples"] + cl_profile["acceptedMeasuredTimeSeriesSamples"] + cu_profile["acceptedMeasuredTimeSeriesSamples"]','accepted_measured_total = av_profile["acceptedMeasuredTimeSeriesSamples"] + om_profile["acceptedMeasuredTimeSeriesSamples"] + cl_profile["acceptedMeasuredTimeSeriesSamples"] + cu_profile["acceptedMeasuredTimeSeriesSamples"] + impure_count["acceptedMeasuredTimeSeriesSamples"] + forinfpro_count["acceptedMeasuredTimeSeriesSamples"]')
+          one(q,'need(accepted_measured_total == 65_171_059, "combined real measured-sample arithmetic drifted")','need(accepted_measured_total == 66_521_519, "combined real measured-sample arithmetic drifted")')
+          one(q,'{"path": "data/public-benchmark-results/cross-process-upper-workpiece-source-contract-v1.json", "accepted": cu_profile["acceptedMeasuredTimeSeriesSamples"]},','{"path": "data/public-benchmark-results/cross-process-upper-workpiece-source-contract-v1.json", "accepted": cu_profile["acceptedMeasuredTimeSeriesSamples"]},\n            {"path": "data/impure-pascoe-semantic-review-2026-08-30.json", "accepted": impure_count["acceptedMeasuredTimeSeriesSamples"]},\n            {"path": "data/forinfpro-himd-semantic-review-2026-08-30.json", "accepted": forinfpro_count["acceptedMeasuredTimeSeriesSamples"]},')
+          one(q,'7 fully profiled families including ImPure and 1 restricted research/education profile','7 fully profiled families plus partial ImPure/FORinFPRO acceptance and 1 restricted research/education profile')
+
+          q='qa_master_data_compile.py'
+          one(q,'need(expected_samples == 65_171_059, "audited measured-sample baseline drifted")','need(expected_samples == 66_521_519, "audited measured-sample baseline drifted")')
+          one(q,'need(results["scatimdata-avaps"]["measurement_profile"]["acceptedMeasuredTimeSeriesSamples"] + results["openmms-t4g"]["measurement_profile"]["acceptedMeasuredTimeSeriesSamples"] + review_results["cross-process-lower-workpiece-source-contract"]["profile"]["acceptedMeasuredTimeSeriesSamples"] + review_results["cross-process-upper-workpiece-source-contract"]["profile"]["acceptedMeasuredTimeSeriesSamples"] == expected_samples, "compiled measured benchmark sample totals do not reconcile")','need(results["scatimdata-avaps"]["measurement_profile"]["acceptedMeasuredTimeSeriesSamples"] + results["openmms-t4g"]["measurement_profile"]["acceptedMeasuredTimeSeriesSamples"] + review_results["cross-process-lower-workpiece-source-contract"]["profile"]["acceptedMeasuredTimeSeriesSamples"] + review_results["cross-process-upper-workpiece-source-contract"]["profile"]["acceptedMeasuredTimeSeriesSamples"] + 1_188_348 + 162_112 == expected_samples, "compiled measured benchmark plus partial semantic sample totals do not reconcile")')
+          one(q,'need(impure.get("publisherBytes") == 18_708_850 and impure.get("publisherFiles") == 309 and impure.get("cycleFiles") == 307 and impure.get("zenodoCumulativeDownloadTrafficMB") == 605.2 and "dataVolumeMB" not in impure, "compiled ImPure source dimensions drifted")','need(impure.get("publisherBytes") == 18_708_850 and impure.get("publisherFiles") == 309 and impure.get("cycleFiles") == 307 and impure.get("zenodoCumulativeDownloadTrafficMB") == 605.2 and "dataVolumeMB" not in impure, "compiled ImPure source dimensions drifted")\n    need(impure.get("acceptedMeasuredChannels") == 4 and impure.get("acceptedMeasuredTimeSeriesSamples") == 1_188_348, "compiled ImPure accepted values drifted")\n    forinfpro_inv=by_id["forinfpro-himd-v1"]["count"]\n    need(forinfpro_inv.get("acceptedMachineRows") == 10_132 and forinfpro_inv.get("acceptedMeasuredChannels") == 16 and forinfpro_inv.get("acceptedMeasuredTimeSeriesSamples") == 162_112, "compiled FORinFPRO accepted values drifted")')
+
+          one('.github/workflows/master-data-compile.yml',"assert c['measuredTimeSeriesSamplesAccepted']==65171059","assert c['measuredTimeSeriesSamplesAccepted']==66521519")
+          one('tools/compile_master_data.py','need((rights_review.get("summary") or {}).get("sourcesReviewed") == 5, "measured-data rights review source count drifted")','need((rights_review.get("summary") or {}).get("sourcesReviewed") == 7, "measured-data rights review source count drifted")')
+          one('tools/compile_master_data.py','need((rights_review.get("summary") or {}).get("unblockedForAutomatedIngestion") == 4, "measured-data rights review promotion count drifted")','need((rights_review.get("summary") or {}).get("unblockedForAutomatedIngestion") == 4, "measured-data rights review promotion count drifted")\n    need((rights_review.get("summary") or {}).get("remainBlockedForRights") == 3, "measured-data rights review blocked count drifted")')
+          PY
+      - name: Validate all reconciled guards
+        run: |
+          python qa_measured_dataset_inventory.py
+          python qa_content_scale_targets.py
+          python qa_remaining_dataset_terminal_states.py
+          python qa_master_data_compile.py
+      - name: Commit validated reconciliation
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -- data/content-scale-targets.json qa_content_scale_targets.py qa_master_data_compile.py .github/workflows/master-data-compile.yml tools/compile_master_data.py
+          git diff --cached --quiet && exit 0
+          git commit -m "Reconcile measured sample ledger to 66,521,519"
+          git push origin HEAD:data/measured-data-consolidation-20260830
