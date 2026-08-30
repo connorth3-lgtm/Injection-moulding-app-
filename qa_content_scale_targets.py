@@ -155,7 +155,17 @@ need(by_id["iguzzini-road-lenses"].get("restrictedAggregateProfilingAllowed") is
 pet = json.loads(REVIEW_PET.read_text(encoding="utf-8"))
 warwick = json.loads(REVIEW_WARWICK.read_text(encoding="utf-8"))
 rwth = json.loads(REVIEW_RWTH.read_text(encoding="utf-8"))
-need(pet.get("status") == "retrieved-profile-needs-semantic-review", "PET review-only state drifted")
+need(pet.get("status") == "completed-profiled-zero-measured-simulation-optimization-model-workbook", "PET zero-measured terminal state drifted")
+pet_profile = pet.get("profile") or {}
+need(pet_profile.get("controlledProcessSettingColumns") == 5, "PET settings-column count drifted")
+need(pet_profile.get("simulationResultColumns") == 7, "PET simulation-column count drifted")
+need(pet_profile.get("modelValidationColumns") == 1, "PET validation-column count drifted")
+need(pet_profile.get("annHiddenLayerIntermediateColumns") == 6, "PET hidden-layer count drifted")
+need(pet_profile.get("annPredictionColumns") == 7, "PET prediction-column count drifted")
+need(sum(pet_profile.get(k, -100) for k in ["controlledProcessSettingColumns", "simulationResultColumns", "modelValidationColumns", "annHiddenLayerIntermediateColumns", "annPredictionColumns"]) == 26, "PET semantic groups must account for all 26 columns")
+need(pet_profile.get("sourceDefinedMeasuredOutcomeColumns") == 0, "PET must not claim a source-defined measured outcome")
+need(pet_profile.get("acceptedMeasuredProcessValues") == 0 and pet_profile.get("acceptedMeasuredQualityValues") == 0 and pet_profile.get("acceptedMeasuredTimeSeriesSamples") == 0, "PET zero-measured counting boundary drifted")
+need(pet_profile.get("rawRowsOrCellValuesEmitted") is False, "PET raw-value boundary drifted")
 need(warwick.get("status") == "retrieved-profile-needs-special-format-export", "Warwick special-format state drifted")
 need(all(x.get("publisherHashMatched") is True for x in warwick.get("files") or []) and len(warwick.get("files") or []) == 5, "Warwick file verification drifted")
 forinfpro = json.loads(BENCHMARK_FORINFPRO.read_text(encoding="utf-8"))
@@ -277,4 +287,3 @@ report = {
 }
 (ROOT / "content-scale-targets-report.json").write_text(json.dumps(report, indent=2) + "\n", encoding="utf-8")
 print(f"MouldMaster content-scale target integrity QA passed ({len(datasets)} measured datasets inventoried; 7 fully profiled families including ImPure and 1 restricted research/education profile; {accepted_measured_total:,} accepted real measured time-series values; {verified} publisher-verified primary measured studies; {summary.get('automatedIngestionAllowed')} sources legally executable)")
-

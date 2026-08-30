@@ -1,0 +1,108 @@
+name: MouldMaster FORinFPRO Semantic Probe
+
+on:
+  push:
+    branches: [data/resolve-forinfpro-semantics]
+    paths:
+      - 'tools/profile_forinfpro_semantics.py'
+      - 'tools/profile_forinfpro_machine_locale.py'
+      - 'qa_forinfpro_himd_semantics.py'
+      - 'data/forinfpro-himd-semantic-review-2026-08-30.json'
+      - 'data/public-benchmark-contracts/forinfpro-himd-v1.json'
+      - 'data/measured-dataset-inventory-v1.json'
+      - '.github/workflows/profile-forinfpro-semantics.yml'
+  pull_request:
+    branches: [main]
+    paths:
+      - 'tools/profile_forinfpro_semantics.py'
+      - 'tools/profile_forinfpro_machine_locale.py'
+      - 'qa_forinfpro_himd_semantics.py'
+      - 'data/forinfpro-himd-semantic-review-2026-08-30.json'
+      - 'data/public-benchmark-contracts/forinfpro-himd-v1.json'
+      - 'data/measured-dataset-inventory-v1.json'
+      - '.github/workflows/profile-forinfpro-semantics.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: mouldmaster-forinfpro-semantic-probe-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  aggregate-probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Validate committed semantic acceptance boundary
+        run: python qa_forinfpro_himd_semantics.py
+      - name: Retrieve exact licensed release and compute aggregate semantic statistics
+        run: |
+          mkdir -p benchmark-results
+          python tools/profile_forinfpro_semantics.py --output benchmark-results/forinfpro-semantic-probe.json
+          python tools/profile_forinfpro_machine_locale.py --output benchmark-results/forinfpro-machine-temperature-probe.json
+      - name: Validate privacy and source-profile boundary
+        run: |
+          python - <<'PY'
+          import json
+          x=json.load(open('benchmark-results/forinfpro-semantic-probe.json'))
+          t=json.load(open('benchmark-results/forinfpro-machine-temperature-probe.json'))
+          assert x['status']=='aggregate-semantic-probe-complete'
+          assert x['source']['datasetId']=='forinfpro-himd-v1'
+          assert x['source']['doi']=='10.5281/zenodo.20744054'
+          assert x['source']['license']=='CC BY 4.0'
+          assert x['source']['expectedFilesVerified']==3
+          assert x['summary']['filesVerified']==3
+          assert x['summary']['totalRows']==12689
+          assert x['summary']['machineNamedColumns']==60
+          assert x['summary']['rawRowsOrCellValuesEmitted'] is False
+          assert x['summary']['rawPublisherFilesCommitted'] is False
+          assert x['summary']['rawPublisherFilesUploadedAsArtifact'] is False
+          assert x['interpretationBoundary']['automaticPromotion'] is False
+          assert x['interpretationBoundary']['acceptedMeasuredTimeSeriesSamples']==0
+          expected={
+              'cycle_001_machine_data.csv': (10132, 101),
+              'cycle_001_pt.csv': (403, 3),
+              'cycle_001_us_rms.csv': (2154, 3),
+          }
+          for f in x['files']:
+              rows, cols = expected[f['name']]
+              assert f['profile']['rows']==rows
+              assert f['profile']['columns']==cols
+              assert f['profile']['widthMismatchRows']==0
+              assert f['profile']['rawRowsOrCellValuesEmitted'] is False
+              assert len(f['sha256'])==64
+          assert t['status']=='aggregate-actual-temperature-validation-complete'
+          assert t['source']['datasetId']=='forinfpro-himd-v1'
+          assert t['source']['sha256']=='d249cbe4980b00f1565a100c3363dde4cf621c490233a4c184d47ad8d202e480'
+          assert t['profile']['rows']==10132
+          assert t['profile']['deliveredColumns']==101
+          assert t['profile']['widthMismatchRows']==0
+          assert t['profile']['actualTemperatureCandidateColumns']==22
+          assert t['profile']['allCandidatesCompleteLocalizedNumericTraces'] is True
+          assert all(p['localizedNumericCount']==10132 for p in t['profile']['candidateProfiles'])
+          assert all(p['header'].endswith('.rActualTemp') for p in t['profile']['candidateProfiles'])
+          assert t['profile']['rawRowsOrCellValuesEmitted'] is False
+          assert t['interpretationBoundary']['automaticPromotion'] is False
+          assert t['interpretationBoundary']['unitNotDerivedFromNumericRange'] is True
+          time=t['profile']['timeOrdering']
+          assert time['nonEmptyCount']==10132
+          assert time['parsedCount']==10132
+          assert time['strictlyIncreasing'] is True
+          assert time['positiveDeltaCount']==10131
+          assert time['absoluteTimestampsEmitted'] is False
+          PY
+      - name: Upload aggregate semantic profiles only
+        uses: actions/upload-artifact@v4
+        with:
+          name: mouldmaster-forinfpro-semantic-probe
+          path: |
+            benchmark-results/forinfpro-semantic-probe.json
+            benchmark-results/forinfpro-machine-temperature-probe.json
+          if-no-files-found: error
+          retention-days: 30

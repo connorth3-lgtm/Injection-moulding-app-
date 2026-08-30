@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "datasetId": "forinfpro-himd-v1",
-  "status": "accepted-profiled-unit-limited",
+  "status": "accepted-profiled-partially-semantic-resolved",
   "source": {
     "datasetDoi": "10.5281/zenodo.20744054",
     "recordUrl": "https://zenodo.org/records/20744054",
@@ -48,24 +48,76 @@
     ]
   },
   "rightsGate": {
-    "publicDownloadDoesNotEqualReusePermission": true,
-    "openAccessDoesNotEqualReusePermission": true,
-    "metadataMayBeReviewedWithoutRawFileIngestion": true,
-    "rawFilesMustNotBeDownloadedByAutomationUntilLicenceIsExplicit": true,
-    "requiredEvidence": [
-      "An explicit dataset licence identifier or licence text from the authoritative Zenodo record or depositor is captured.",
-      "The captured terms permit the intended automated ingestion and aggregate profiling use.",
-      "The exact release/version and file manifest are pinned before retrieval."
-    ]
+    "status": "satisfied",
+    "license": "CC BY 4.0",
+    "automatedRetrievalAllowed": true,
+    "rawRedistributionAllowed": true,
+    "authority": "official Zenodo records API"
   },
-  "profilingPlanAfterRightsClearance": [
-    "Retrieve the version-pinned file manifest and record hashes/checksums without committing raw third-party data.",
-    "Enumerate delivered cycle IDs from file names and internal metadata rather than assuming the currently visible cycle_001 examples are the complete release.",
-    "Profile machine, pressure/temperature, ultrasonic and DEA tables separately while preserving their source-defined time bases and units.",
-    "Establish synchronization keys and time alignment across modalities before any cross-sensor sample count is accepted.",
-    "Separate directly measured channels from setpoints, commands, derived features, RMS summaries and process metadata.",
-    "Count measured time-series values only from delivered measured arrays/columns with ordering and measurement semantics established.",
-    "Emit aggregate schemas, counts and fingerprints only; do not upload raw rows, arrays or cell values as workflow artifacts."
+  "executedProfile": {
+    "releaseFilesVerified": 3,
+    "machineRows": 10132,
+    "pressureTemperatureRows": 403,
+    "ultrasonicRmsRows": 2154,
+    "totalRowsAcrossFiles": 12689,
+    "machineDeliveredColumns": 101,
+    "machineNamedColumns": 60,
+    "machineFileSha256": "d249cbe4980b00f1565a100c3363dde4cf621c490233a4c184d47ad8d202e480",
+    "rawRowsOrCellValuesEmitted": false
+  },
+  "semanticAcceptance": {
+    "decision": "partial-measured-channel-acceptance",
+    "review": "data/forinfpro-himd-semantic-review-2026-08-30.json",
+    "manufacturerEvidence": "ENGEL data interfaces guide, May 2026",
+    "acceptedPattern": "Heating.sv_Zone*.rActualTemp",
+    "acceptedMeaning": "ENGEL machine heating-zone actual temperature",
+    "acceptedEngineeringUnit": "degC",
+    "acceptedMeasurementRole": "actual/real measured value",
+    "acceptedMeasuredColumns": [
+      "Heating.sv_Zone14.rActualTemp",
+      "Heating.sv_Zone13.rActualTemp",
+      "Heating.sv_Zone12.rActualTemp",
+      "Heating.sv_Zone11.rActualTemp",
+      "Heating.sv_Zone10.rActualTemp",
+      "Heating.sv_Zone9.rActualTemp",
+      "Heating.sv_Zone15.rActualTemp",
+      "Heating.sv_Zone16.rActualTemp",
+      "Heating.sv_Zone17.rActualTemp",
+      "Heating.sv_Zone18.rActualTemp",
+      "Heating.sv_Zone19.rActualTemp",
+      "Heating.sv_Zone20.rActualTemp",
+      "Heating.sv_Zone21.rActualTemp",
+      "Heating.sv_Zone22.rActualTemp",
+      "Heating.sv_Zone23.rActualTemp",
+      "Heating.sv_Zone24.rActualTemp"
+    ],
+    "rowsPerAcceptedChannel": 10132,
+    "acceptedMeasuredChannels": 16,
+    "acceptedMeasuredTimeSeriesSamples": 162112,
+    "acceptedCountFormula": "16 * 10132",
+    "physicalLocationBoundary": "ENGEL documents heating-zone affiliation as machine-specific; preserve delivered zone identifiers without universal barrel/nozzle labels",
+    "timeOrdering": {
+      "column": "Datum/Zeit",
+      "parsedRows": 10132,
+      "strictlyIncreasing": true,
+      "medianPositiveDeltaSeconds": 0.011953,
+      "minPositiveDeltaSeconds": 0.009834,
+      "maxPositiveDeltaSeconds": 0.014125,
+      "fixedSamplingIntervalAssumed": false,
+      "absoluteTimestampsEmitted": false
+    },
+    "excluded": {
+      "HeatingOven1RActualTemp": "six traces remain excluded because no first-party unit mapping for the HeatingOven1 namespace was captured",
+      "otherMachineColumns": "additional identifiers, setpoints, commands, booleans, derived values and actual fields remain excluded where exact engineering units are not pinned",
+      "cycle_001_pt.csv": "pressure and temperature roles are source-described, but engineering units are not stated in the delivered file/public metadata",
+      "cycle_001_us_rms.csv": "RMS channels are derived summaries and lack a direct measured engineering-unit contract"
+    }
+  },
+  "remainingResolution": [
+    "Capture a machine-specific ENGEL parameter/configuration export with physical units for additional actual-value fields.",
+    "Capture first-party definition/unit evidence for HeatingOven1 if those six actual-temperature traces are to be promoted.",
+    "Capture engineering units and exact sensor/channel mapping for cycle_001_pt.csv.",
+    "Keep ultrasonic RMS and any future DEA data separated from direct measured values unless source semantics and units support promotion."
   ],
-  "evidenceBoundary": "The official Zenodo API confirms CC BY 4.0 and the three visible files were retrieved and SHA-256 fingerprinted. The source counts as one profiled real dataset family. It contributes zero values to the accepted cross-dataset time-series total because the visible release contains only cycle_001 and several delivered channel units are not explicit."
+  "evidenceBoundary": "The exact CC BY 4.0 v1 release was retrieved and fingerprinted. A privacy-preserving aggregate probe verified 10,132 machine rows and 22 complete rActualTemp traces. Manufacturer documentation directly supports the Heating.sv_Zone*.rActualTemp pattern as heating-zone actual/real temperature in degrees Celsius while warning that zone affiliation is machine-specific. Sixteen exact-pattern channels therefore contribute 162,112 accepted measured time-series values. HeatingOven1, other machine fields, cavity pressure/temperature columns and ultrasonic RMS remain excluded until their source-specific unit/role contracts are sufficient. The source remains one already-profiled dataset family; family count does not change."
 }

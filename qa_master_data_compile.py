@@ -100,7 +100,12 @@ with tempfile.TemporaryDirectory() as td:
 
     review_results = measured.get("publicBenchmarkReviewResults") or {}
     need(set(review_results) == {"pet-preform-v2", "warwick-demoulding", "rwth-pcr-2025", "cross-process-chain-17240390", "cross-process-lower-workpiece-source-contract", "cross-process-upper-workpiece-source-contract"}, "retrieved/review/partial-acceptance result set drifted")
-    need(review_results["pet-preform-v2"].get("status") == "retrieved-profile-needs-semantic-review", "PET review-only state drifted")
+    pet = review_results["pet-preform-v2"]
+    need(pet.get("status") == "completed-profiled-zero-measured-simulation-optimization-model-workbook", "PET zero-measured terminal state drifted")
+    pet_profile = pet.get("profile") or {}
+    need(pet_profile.get("sourceDefinedMeasuredOutcomeColumns") == 0, "compiled PET result must not invent measured outcomes")
+    need(pet_profile.get("acceptedMeasuredProcessValues") == 0 and pet_profile.get("acceptedMeasuredQualityValues") == 0 and pet_profile.get("acceptedMeasuredTimeSeriesSamples") == 0, "compiled PET zero-measured boundary drifted")
+    need(sum(pet_profile.get(k, -100) for k in ["controlledProcessSettingColumns", "simulationResultColumns", "modelValidationColumns", "annHiddenLayerIntermediateColumns", "annPredictionColumns"]) == 26, "compiled PET semantic groups must account for all 26 columns")
     need(review_results["warwick-demoulding"].get("status") == "retrieved-profile-needs-special-format-export", "Warwick technical export state drifted")
     need(review_results["rwth-pcr-2025"].get("status") == "retrieval-blocked-non-archive-response", "RWTH retrieval blocker state drifted")
     need(review_results["cross-process-chain-17240390"].get("status") == "completed-public-measured-benchmark-scope-limited", "cross-process review state drifted")

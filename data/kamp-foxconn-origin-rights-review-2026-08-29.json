@@ -1,0 +1,96 @@
+{
+  "schema": 1,
+  "version": "2026.08.30.1",
+  "reviewed": "2026-08-30",
+  "purpose": "Pin original-source reuse-rights evidence for the KAMP and Foxconn measured-data candidates without treating public mirrors, code licences, competition access or catalog-level licences as permission to ingest third-party manufacturing data.",
+  "policy": {
+    "publicMirrorDoesNotEstablishSourceDataRights": true,
+    "repositoryCodeLicenceDoesNotAutomaticallyLicenseThirdPartyData": true,
+    "competitionDownloadAccessDoesNotEqualEnduringReusePermission": true,
+    "catalogLicenceDoesNotAutomaticallyTransferToUnderlyingManufacturingFiles": true,
+    "automatedIngestionRemainsFailClosedUntilDatasetSpecificTermsAreCaptured": true
+  },
+  "sources": [
+    {
+      "datasetId": "kamp-injection-7996",
+      "decision": "blocked-pending-first-party-dataset-row-or-terms-capture",
+      "automatedIngestionAllowed": false,
+      "rawRedistributionAllowed": false,
+      "originalSource": {
+        "platform": "Korea AI Manufacturing Platform (KAMP)",
+        "datasetUrl": "https://www.kamp-ai.kr/aidataDetail?AI_SEARCH=&page=1&DATASET_SEQ=4&EQUIP_SEL=&GUBUN_SEL=&FILE_TYPE_SEL=&WDATE_SEL=",
+        "datasetSequence": 4,
+        "identityEvidence": "The independent analysis repository states that this exact KAMP URL supplied the 7,996-row, 44-column injection-moulding dataset with PassOrFail as the target label.",
+        "rows": 7996,
+        "columns": 44,
+        "target": "PassOrFail"
+      },
+      "governmentCatalogEvidence": {
+        "recordUrl": "https://www.data.go.kr/data/15089213/fileData.do",
+        "schemaMetadataUrl": "https://www.data.go.kr/catalog/15089213/fileData.json",
+        "provider": "중소기업기술정보진흥원 (Korea Technology and Information Promotion Agency for SMEs / TIPA)",
+        "catalogTitle": "중소기업기술정보진흥원_제조AI 데이터셋 50종_20241231",
+        "catalogRows": 50,
+        "catalogFormat": "CSV",
+        "catalogFileDownloadWithoutLogin": true,
+        "catalogPermissionScope": "이용허락범위 제한 없음",
+        "catalogPermissionScopeEnglish": "no restriction on permission scope",
+        "catalogDescriptionBoundary": "The official Public Data Portal describes 50 manufacturing-AI datasets made freely available through KAMP for manufacturers' AI analysis.",
+        "rowSchemaIncludesUsageCondition": true,
+        "rowSchemaFields": [
+          "연번",
+          "기준년도",
+          "업종",
+          "목적",
+          "적용공정",
+          "제공 제조AI데이터셋 명",
+          "제조AI데이터셋 내용",
+          "유형",
+          "사용조건",
+          "데이터셋 다운 링크"
+        ],
+        "catalogFileLicenceBoundary": "The government catalog itself is published without a permission-scope restriction. That catalog-level permission is not treated as a licence for every underlying manufacturing file; the separate per-row 사용조건 field is the dataset-specific evidence that still needs first-party capture.",
+        "exactRowUsageConditionStatus": "Multiple secondary reproductions of the government catalog row report the injection-moulding dataset usage condition as 콘텐츠 변경허용 (content modification allowed), but the exact first-party row value has not yet been durably captured from the official CSV/KAMP page.",
+        "exactRowCapturedFromFirstParty": false,
+        "officialRawCsvEndpointExposedByPublicHtml": false
+      },
+      "publicAnalysisIntentEvidence": {
+        "historicalMinistryEvidence": "The Ministry of SMEs and Startups has run public K-AI manufacturing-data competitions in which KAMP datasets are supplied for AI analysis; a 2023 Ministry release explicitly states that a KAMP heat-treatment quality-assurance dataset was used by 184 applicant teams.",
+        "current2026CompetitionEvidence": "The current sixth K-AI manufacturing-data analysis competition is described as using one or more of the 50 manufacturing-AI datasets listed in KAMP for model development by public/university and SME employee tracks.",
+        "boundary": "This strongly supports intentional analytical use of KAMP datasets, but it is not accepted as a dataset-specific redistribution licence for DATASET_SEQ=4 and does not replace the row-level 사용조건 capture."
+      },
+      "mirrorEvidence": {
+        "url": "https://github.com/johnwslee/injection_molding_analysis",
+        "repositoryLicence": "MIT",
+        "licenceBoundary": "The MIT licence applies to the repository's own code/content and is not accepted as proof that KAMP granted redistribution rights over the source manufacturing dataset."
+      },
+      "nextAction": "Capture the exact DATASET_SEQ=4 사용조건 value from the official TIPA Public Data Portal CSV or the KAMP dataset page/terms. If it confirms 콘텐츠 변경허용 or an equivalent source-defined reuse permission, separately determine whether automated aggregate profiling is permitted and keep raw redistribution independent. Do not promote from the mirror or catalog-level licence alone."
+    },
+    {
+      "datasetId": "foxconn-competition-16600",
+      "decision": "blocked-no-authoritative-reuse-license",
+      "automatedIngestionAllowed": false,
+      "rawRedistributionAllowed": false,
+      "originalSource": {
+        "provider": "Foxconn Industrial Internet Co., Ltd.",
+        "competitionContext": "2020 industrial big-data / intelligent-manufacturing competition, injection-moulding Task 2",
+        "provenanceEvidence": "Authoritative competition and Chinese Academy of Sciences material identifies the injection-moulding virtual-measurement/tuning task as using production data supplied by Foxconn Industrial Internet.",
+        "competitionDownloadWasAvailable": true,
+        "enduringReuseLicenceLocated": false,
+        "postCompetitionRedistributionPermissionLocated": false
+      },
+      "freshCorroboration": {
+        "checkedOn": "2026-08-30",
+        "evidence": "A current research-code repository using the same competition dataset identifies Foxconn Industrial Internet as the source and deliberately does not redistribute the original raw data, noting the competition source rather than an enduring public licence.",
+        "rightsImpact": "corroborates provenance only; does not establish reuse permission"
+      },
+      "mirrorEvidence": {
+        "url": "https://github.com/dengxq888/Injection-Molding-Dataset",
+        "repositoryLicence": null,
+        "repositoryDescriptionBoundary": "The mirror states that it re-shared the Foxconn injection-moulding dataset because the original data no longer appeared to have a download link. The mirror supplies no repository licence and is not an authoritative rights grant from Foxconn or the competition organiser."
+      },
+      "nextAction": "Obtain the original competition dataset terms/rules or written permission from Foxconn or the organiser that explicitly permits post-competition reuse and automated ingestion. Until then, keep all mirrored raw files non-executable and non-redistributable."
+    }
+  ],
+  "evidenceBoundary": "This review narrows two mirror-rights blockers but changes no accepted dataset-family count, measured-sample count, automated-ingestion permission or raw-redistribution permission. KAMP now has first-party proof that the official 50-row catalog is unrestricted, no-login downloadable and includes a per-dataset usage-condition field, plus strong official evidence of intended public analytical use; the exact first-party DATASET_SEQ=4 usage-condition value still needs durable capture. Foxconn has authoritative provenance and historical competition access but no located enduring reuse licence."
+}

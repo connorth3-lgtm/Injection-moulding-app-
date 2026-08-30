@@ -15,7 +15,14 @@
     "technicalModified": "2025-10-28",
     "access": "open",
     "license": null,
-    "licenseEvidenceStatus": "The authoritative B2SHARE record exposes Rights > License, but no licence value is present.",
+    "licenseEvidenceStatus": "EUDAT B2FIND metadata harvested for the exact legacy record 3f80952ce5ff4be88ae4cf6a3bdfe732 reports Creative Commons Attribution (CC-BY) and open access, while the current B2SHARE v2 Rights > License field is blank. The source remains fail-closed until EUDAT/SKZ confirms that the harvested CC-BY metadata is the governing licence for the exact current v1 files.",
+    "harvestedLicenseEvidence": {
+      "registry": "EUDAT B2FIND",
+      "recordUrl": "https://b2find.eudat.eu/dataset/5836dc7a-319a-56ea-af97-a9ac562b6772",
+      "legacyRecordId": "3f80952ce5ff4be88ae4cf6a3bdfe732",
+      "reportedRights": "Creative Commons Attribution (CC-BY); info:eu-repo/semantics/openAccess",
+      "openAccess": true
+    },
     "automatedRetrievalAllowed": false,
     "rawRedistributionAllowed": false,
     "reportedTotalSize": "78.1 MB"
@@ -53,8 +60,8 @@
     "publicDownloadDoesNotEqualReusePermission": true,
     "rawFilesMustNotBeDownloadedByAutomationUntilLicenceIsExplicit": true,
     "requiredEvidence": [
-      "An explicit dataset licence or written reuse permission from SKZ/Fraunhofer/B2SHARE is captured.",
-      "The captured terms permit automated ingestion and aggregate profiling.",
+      "EUDAT/SKZ confirms that B2FIND's harvested CC-BY rights statement governs the exact legacy record 3f80952ce5ff4be88ae4cf6a3bdfe732 and its current v1 files, or the current B2SHARE licence field is restored with equivalent terms.",
+      "The confirmed terms permit automated ingestion and aggregate profiling.",
       "The exact v1 file manifest and checksums are revalidated at retrieval time."
     ]
   },
@@ -66,5 +73,5 @@
     "Verify manual OK/NOK and other labels against source-defined semantics before defect or mechanism promotion.",
     "Emit aggregate schemas, counts and fingerprints only; do not commit or artifact raw third-party rows or arrays."
   ],
-  "evidenceBoundary": "The ProBayes d-optimal record documents 303 real injection-moulded parts across 28 experimental points, one PP material, 396 features and nine data sources, with MachineCycleID records and manual quality labels. Exact publisher file names, sizes and MD5 checksums are available. However, the authoritative B2SHARE Rights > License field is blank, so the dataset remains non-executable and contributes no accepted measured count until explicit reuse terms are captured."
+  "evidenceBoundary": "The ProBayes d-optimal record documents 303 real injection-moulded parts across 28 experimental points, one PP material, 396 features and nine data sources, with MachineCycleID records and manual quality labels. Exact publisher file names, sizes and MD5 checksums are available. EUDAT B2FIND preserves an explicit CC-BY rights statement tied to the exact legacy record and DOI, but the current B2SHARE v2 Rights > License field is blank. Because those official EUDAT surfaces conflict, the dataset remains non-executable and contributes no accepted measured count until the governing licence for the exact current v1 files is confirmed."
 }
