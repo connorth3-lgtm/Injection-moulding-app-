@@ -1,11 +1,12 @@
 name: MouldMaster Master Data Compilation
-# Effective measured-source view includes XRD/XPS plus fresh-main Wave-2 batch 4. Record-level batch-4 values do not inflate process waveforms.
+# Effective measured-source view includes fresh-main Wave-2 batches through batch 5. Zenodo 20338544 adds direct production-energy waveforms; AD-STGN remains metadata-only until publisher payload delivery.
 
 on:
   pull_request:
     branches: [main]
     paths:
       - 'tools/compile_master_data.py'
+      - 'tools/compile_master_data_wave2_batch4.py'
       - 'tools/compile_master_data_wave2_xrd_xps.py'
       - 'tools/compile_master_data_base.py'
       - 'tools/harvest_openalex_injection_moulding.py'
@@ -16,6 +17,7 @@ on:
       - 'data/measured-dataset-execution-ledger-v1.json'
       - 'data/measured-dataset-wave2-extension-v1.json'
       - 'data/measured-dataset-wave2-batch4-extension-v1.json'
+      - 'data/measured-dataset-wave2-batch5-extension-v1.json'
       - 'data/measured-dataset-rights-review-*.json'
       - 'data/public-benchmark-contracts/**'
       - 'data/public-benchmark-results/**'
@@ -68,10 +70,10 @@ jobs:
           x=json.loads(Path('compiled-data/manifest.json').read_text(encoding='utf-8'))
           c=x['counts']
           assert x['candidateRegistryEmbedded'] is True
-          assert c['measuredDatasetInventory']==32
-          assert c['automatedIngestionAllowedDatasets']==19
-          assert c['fullyProfiledMeasuredDatasets']==16
-          assert c['measuredTimeSeriesSamplesAccepted']==66521519
+          assert c['measuredDatasetInventory']==34
+          assert c['automatedIngestionAllowedDatasets']==21
+          assert c['fullyProfiledMeasuredDatasets']==17
+          assert c['measuredTimeSeriesSamplesAccepted']==85569824
           assert c['publisherVerifiedPrimaryMeasuredStudies']==60
           assert c['verifiedPeerReviewedResearchRecords']==60
           assert c['measuredEvidencePasses']==50
