@@ -99,7 +99,7 @@ for(const level of ['Beginner','Intermediate','Advanced']){
    exams[level][region]=arr.map(q=>({id:q.stableId,mmId:q.mmId,difficulty:q.difficulty,competency:q.competency,competencies:q.competencies||[q.competency],concept:q.concept,critical:q.critical,region:q.region||null,options:q.options,correct:q.correct,stem:q.q}));
  }
 }
-const scenarios=D.scenarios.map(s=>({id:s.mmStableId,title:s.title,choices:s.choices.length,correct:s.correct,feedback:Array.isArray(s.feedback)?s.feedback.length:0,category:s.category,difficulty:s.difficulty,reference:s.reference||null,sourceUrl:s.sourceUrl||null}));
+const scenarios=D.scenarios.map(s=>({id:s.mmStableId,title:s.title,options:s.choices,choices:s.choices.length,correct:s.correct,feedback:Array.isArray(s.feedback)?s.feedback.length:0,category:s.category,difficulty:s.difficulty,reference:s.reference||null,sourceUrl:s.sourceUrl||null}));
 process.stdout.write(JSON.stringify({scenarioCount:D.scenarios.length,exams,quality:Q,scenarios,qa:D.assessmentQA.qualitySuite,history:D.assessmentQA.questionRevisionHistory,bridge:sandbox.window.MM_STABLE_REVIEW_BRIDGE}));
 '''%(json.dumps(base),json.dumps(str(ROOT/'assessment-deep-dive.js')),json.dumps(str(ROOT/'assessment-answer-cue-fix.js')),json.dumps(str(ROOT/'assessment-quality-suite.js')),json.dumps(str(ROOT/'assessment-stable-review-bridge.js')))
 with tempfile.NamedTemporaryFile('w',suffix='.js',delete=False,encoding='utf-8') as handle:
@@ -119,6 +119,7 @@ need(runtime['bridge']['stableIdsPrimary'] is True,'stable review bridge not act
 need(len(runtime.get('history',[]))>=3,'question revision history missing')
 
 live_technical={}
+live_items={}
 for level,regions in runtime['exams'].items():
     for region,items in regions.items():
         expected=16 if region=='ALL' else 10
@@ -134,11 +135,32 @@ for level,regions in runtime['exams'].items():
         need(len(coverage)>=5,f'{level}/{region} blueprint covers fewer than 5 technical competency groups: {sorted(coverage)}')
         need(all(x['difficulty'] for x in items),f'{level}/{region} difficulty metadata missing')
         concepts=[x['concept'] for x in tech]; need(len(set(concepts))>=5,f'{level}/{region} has excessive repeated technical concepts')
+        for x in items: live_items[x['id']]=x
         for x in tech: live_technical[x['id']]=x
 
+need(len(live_items)==57,f"expected 57 unique live questions, got {len(live_items)}")
 sc=runtime['scenarios']; need(len({x['id'] for x in sc})==40,'scenario stable IDs must be unique'); need(len({x['title'].strip().lower() for x in sc})==40,'scenario titles must be unique')
 need(all(x['choices']==4 and 0<=x['correct']<4 and x['feedback']==4 for x in sc),'scenario choice/key/feedback integrity')
 need(all(x['category'] and x['difficulty'] for x in sc),'scenario category/difficulty metadata missing')
+
+# Exact answer-length cue guard. A correct answer may not be the longest or tied-longest option.
+def norm_len(value):
+    return len(re.sub(r'\s+',' ',str(value or '').strip()))
+def longest_flag(item_id,options,correct,kind):
+    lengths=[norm_len(x) for x in options]
+    keyed=lengths[correct]
+    longest_distractor=max(lengths[:correct]+lengths[correct+1:])
+    if keyed>=longest_distractor:
+        return {'id':item_id,'kind':kind,'correct_index':correct,'correct_length':keyed,'longest_distractor_length':longest_distractor,'lengths':lengths,'options':options}
+    return None
+strict_length_flags=[]
+for item_id,q in sorted(live_items.items()):
+    flag=longest_flag(item_id,q['options'],q['correct'],'live-exam')
+    if flag: strict_length_flags.append(flag)
+for s in sc:
+    flag=longest_flag(s['id'] or s['title'],s['options'],s['correct'],'scenario')
+    if flag: strict_length_flags.append(flag)
+need(not strict_length_flags,'correct answer is longest/tied-longest in live/scenario bank: '+json.dumps(strict_length_flags,ensure_ascii=False))
 
 near=runtime['quality'].get('nearDuplicates',[]); runtime_leaks=runtime['quality'].get('answerLeakRisks',[])
 cue_flags=[]
@@ -158,7 +180,7 @@ for q in live_technical.values():
     if abs_wrong>=2 and not abs_correct: cue_flags.append({'id':q['id'],'type':'absolute-language-distractors','distractors_flagged':abs_wrong})
 severe=[x for x in cue_flags if x['type']=='correct-option-length' and x.get('correct_length',0)>max(70,x.get('peer_median',1)*2.6)]
 need(not severe,'severe correct-option length cue detected: '+json.dumps(severe[:5]))
-report={'schema':1,'quality_version':'2026.08.24.2','scenario_count':40,'near_duplicate_flags':near,'runtime_answer_leak_flags':runtime_leaks,'multi_cue_answer_leak_flags':cue_flags,'severe_answer_leaks':severe,'exam_blueprint_minimum':'7 technical items covering at least 5 technical competency groups plus regional safety/compliance','stable_review_ids':True,'analytics':'device-local'}
+report={'schema':1,'quality_version':'2026.08.24.2','scenario_count':40,'near_duplicate_flags':near,'runtime_answer_leak_flags':runtime_leaks,'multi_cue_answer_leak_flags':cue_flags,'strict_longest_answer_flags':strict_length_flags,'severe_answer_leaks':severe,'exam_blueprint_minimum':'7 technical items covering at least 5 technical competency groups plus regional safety/compliance','stable_review_ids':True,'analytics':'device-local'}
 REPORT.write_text(json.dumps(report,indent=2)+'\n',encoding='utf-8')
 
 V=json.loads(text('version.json'))
@@ -194,4 +216,4 @@ need("- 'qa_assessment_quality.py'" in ow and 'python qa_assessment_quality.py' 
 need('python qa_assessment_quality.py' in text('.github/workflows/microsoft-store-msix.yml'),'Store workflow missing assessment quality QA')
 need((ROOT/'.github/workflows/source-freshness.yml').exists(),'scheduled source freshness workflow missing')
 
-print(f"MouldMaster assessment quality QA passed (57 exam items; 40 scenarios; stable IDs; device-local analytics; near-duplicate flags={len(near)}; answer-cue flags={len(cue_flags)})")
+print(f"MouldMaster assessment quality QA passed (57 exam items; 40 scenarios; strict longest-answer flags=0; stable IDs; device-local analytics; near-duplicate flags={len(near)}; answer-cue flags={len(cue_flags)})")
