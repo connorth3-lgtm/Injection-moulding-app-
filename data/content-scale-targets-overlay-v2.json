@@ -1,11 +1,13 @@
 {
   "schema": 1,
-  "version": "2026.08.29.1",
-  "reviewed": "2026-08-29",
+  "version": "2026.08.30.1",
+  "reviewed": "2026-08-30",
   "baseTargets": "data/content-scale-targets.json",
   "status": "accepted-count-overlay",
   "acceptedOverrides": {
+    "primary_measured_studies": 70,
+    "peer_reviewed_research_records": 70,
     "sensor_machine_health_concepts": 81
   },
-  "boundary": "This overlay changes only the resolved accepted count for evidence-reviewed sensor/machine-health concepts. Minimum/preferred targets and every other accepted count remain inherited from the base target ledger."
+  "boundary": "This overlay changes only accepted evidence-layer counts for primary measured studies, the currently audited peer-reviewed research subset, and evidence-reviewed sensor/machine-health concepts. Minimum/preferred targets and all measured-dataset, material, defect, assessment and waveform counts remain inherited from the immutable base target ledger."
 }

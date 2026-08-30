@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 """Resolve additive evidence overlays into the CI working copy.
 
-Committed v1 files remain historical baselines. CI and local release validation call this
-script before QA/compilation so downstream code sees the current accepted ledger without
-rewriting the historical snapshots in Git.
+Committed v1 files remain historical baselines. Overlay-aware CI materializes the
+current accepted evidence layer only after immutable base reconciliation passes.
+No raw third-party data or measured-dataset acceptance state is changed here.
 """
 from __future__ import annotations
 
@@ -13,6 +13,8 @@ from collections import Counter
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
+PRIMARY_BASE = ROOT / 'data' / 'primary-measured-evidence-registry-v1.json'
+PRIMARY_OVERLAY = ROOT / 'data' / 'primary-measured-evidence-overlay-v2.json'
 SENSOR_BASE = ROOT / 'data' / 'sensor-machine-health-registry-v1.json'
 SENSOR_OVERLAY = ROOT / 'data' / 'sensor-machine-health-registry-v2.json'
 TARGET_BASE = ROOT / 'data' / 'content-scale-targets.json'
@@ -30,6 +32,66 @@ def write(path: Path, value):
 def need(ok, msg):
     if not ok:
         raise AssertionError(msg)
+
+
+def materialize_primary():
+    base = load(PRIMARY_BASE)
+    if base.get('materializedOverlay') == 'data/primary-measured-evidence-overlay-v2.json':
+        summary = base.get('summary') or {}
+        need(summary.get('publisherVerifiedPeerReviewedPrimaryMeasured') == 70, 'already-materialized primary total drifted')
+        need(summary.get('uniqueDois') == 70 and summary.get('tierA') == 4 and summary.get('tierB') == 66, 'already-materialized primary summary drifted')
+        return base
+
+    overlay = load(PRIMARY_OVERLAY)
+    need(overlay.get('schema') == 1 and overlay.get('status') == 'accepted-primary-measured-overlay', 'primary overlay invalid')
+    need(overlay.get('baseRegistry') == 'data/primary-measured-evidence-registry-v1.json', 'primary overlay base mismatch')
+    base_summary = base.get('summary') or {}
+    expected_base = overlay.get('baseSummary') or {}
+    for key in ['publisherVerifiedPeerReviewedPrimaryMeasured', 'tierA', 'tierB', 'uniqueDois']:
+        need(base_summary.get(key) == expected_base.get(key), f'primary base checkpoint drifted: {key}')
+    need(base_summary.get('publisherVerifiedPeerReviewedPrimaryMeasured') == 60, 'historical primary baseline must remain 60')
+    need(len(base.get('packs') or []) == 5, 'historical primary pack manifest drifted')
+    need(len(base.get('promotionCandidates') or []) == overlay.get('promotionCandidatesInheritedFromBase') == 9, 'primary promotion-candidate inheritance drifted')
+
+    added_packs = overlay.get('addedPacks') or []
+    need(len(added_packs) == 2, 'primary overlay must contain exactly two additive packs')
+    added_entries = []
+    for ref in added_packs:
+        pack = load(ROOT / ref['path'])
+        rows = pack.get('entries') or []
+        need(pack.get('schema') == 1, f'{ref["path"]}: unsupported pack schema')
+        need(len(rows) == ref.get('entries') == 5, f'{ref["path"]}: additive pack count mismatch')
+        added_entries.extend(rows)
+    need(len(added_entries) == 10, 'primary overlay additive total drifted')
+
+    base_dois = set()
+    for ref in base.get('packs') or []:
+        pack = load(ROOT / ref['path'])
+        rows = pack.get('entries') or []
+        need(len(rows) == ref.get('entries'), f'{ref["path"]}: base pack count mismatch')
+        base_dois.update(str(x.get('doi', '')).lower() for x in rows)
+    added_dois = [str(x.get('doi', '')).lower() for x in added_entries]
+    need(all(added_dois) and len(added_dois) == len(set(added_dois)), 'primary overlay contains duplicate/missing DOIs')
+    need(not (base_dois & set(added_dois)), 'primary overlay duplicates a base primary DOI')
+
+    resolved = copy.deepcopy(base)
+    resolved['version'] = overlay.get('version')
+    resolved['reviewed'] = overlay.get('reviewed')
+    resolved['materializedFromBaseAccepted'] = 60
+    resolved['materializedOverlay'] = 'data/primary-measured-evidence-overlay-v2.json'
+    resolved['packs'] = list(base.get('packs') or []) + added_packs
+    effective = overlay.get('effectiveSummary') or {}
+    resolved['summary'] = {
+        **base_summary,
+        'publisherVerifiedPeerReviewedPrimaryMeasured': effective.get('publisherVerifiedPeerReviewedPrimaryMeasured'),
+        'tierA': effective.get('tierA'),
+        'tierB': effective.get('tierB'),
+        'uniqueDois': effective.get('uniqueDois'),
+    }
+    need(resolved['summary']['publisherVerifiedPeerReviewedPrimaryMeasured'] == 70, 'resolved primary total drifted')
+    need(resolved['summary']['tierA'] == 4 and resolved['summary']['tierB'] == 66 and resolved['summary']['uniqueDois'] == 70, 'resolved primary summary drifted')
+    write(PRIMARY_BASE, resolved)
+    return resolved
 
 
 def materialize_sensor():
@@ -84,7 +146,10 @@ def materialize_sensor():
 def materialize_targets():
     base = load(TARGET_BASE)
     if base.get('materializedOverlay') == 'data/content-scale-targets-overlay-v2.json':
-        need(base['targets']['sensor_machine_health_concepts']['currentAccepted'] == 81, 'already-materialized target total drifted')
+        targets = base.get('targets') or {}
+        need(targets['primary_measured_studies']['currentAccepted'] == 70, 'already-materialized primary target drifted')
+        need(targets['peer_reviewed_research_records']['currentAccepted'] == 70, 'already-materialized research target drifted')
+        need(targets['sensor_machine_health_concepts']['currentAccepted'] == 81, 'already-materialized sensor target drifted')
         return base
     overlay = load(TARGET_OVERLAY)
     need(overlay.get('schema') == 1 and overlay.get('status') == 'accepted-count-overlay', 'target overlay invalid')
@@ -99,7 +164,10 @@ def materialize_targets():
     return resolved
 
 
+primary = materialize_primary()
 sensor = materialize_sensor()
 targets = materialize_targets()
-need(sensor['summary']['acceptedConcepts'] == targets['targets']['sensor_machine_health_concepts']['currentAccepted'], 'resolved sensor and target totals disagree')
-print('MouldMaster evidence overlays materialized (sensor/machine-health: 26 + 55 = 81 accepted concepts)')
+need(primary['summary']['publisherVerifiedPeerReviewedPrimaryMeasured'] == targets['targets']['primary_measured_studies']['currentAccepted'] == 70, 'resolved primary and target totals disagree')
+need(targets['targets']['peer_reviewed_research_records']['currentAccepted'] == 70, 'resolved peer-reviewed target total disagrees')
+need(sensor['summary']['acceptedConcepts'] == targets['targets']['sensor_machine_health_concepts']['currentAccepted'] == 81, 'resolved sensor and target totals disagree')
+print('MouldMaster evidence overlays materialized (primary: 60 + 10 = 70; sensor/machine-health: 26 + 55 = 81)')
