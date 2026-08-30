@@ -18,6 +18,10 @@ def need(condition, message):
         raise AssertionError(message)
 
 
+def option_len(value):
+    return len(re.sub(r'\s+',' ',str(value or '').strip()))
+
+
 need("MM_DIAGNOSTIC_LABS" in JS, 'diagnostic lab public metadata missing')
 need("learner-scoped local progress only" in JS, 'diagnostic progress must remain local/learner scoped')
 need("Training boundary:" in JS, 'educational/production boundary missing')
@@ -91,6 +95,7 @@ labs=json.loads(p.stdout)
 need(len(labs)==9,'runtime diagnostic lab count must be exactly 9')
 expected_stages=['Observe','Best next test','Controlled response','Explain']
 question_count=0
+length_flags=[]
 for lab in labs:
     steps=lab.get('steps',[])
     need(len(steps)==4,f"{lab['id']} must contain exactly four keyed decisions")
@@ -105,14 +110,20 @@ for lab in labs:
         need(len({t.lower() for t in texts})==4,f"{lab['id']} / {step.get('stage')} has duplicate choices")
         keyed=[i for i,c in enumerate(choices) if c.get('correct') is True]
         need(len(keyed)==1,f"{lab['id']} / {step.get('stage')} must have exactly one correct choice")
+        key=keyed[0]
+        lengths=[option_len(t) for t in texts]
+        longest_distractor=max(lengths[:key]+lengths[key+1:])
+        if lengths[key]>=longest_distractor:
+            length_flags.append({'id':f"lab:{lab['id']}:{expected_stages.index(step.get('stage'))}",'lab':lab['id'],'stage':step.get('stage'),'correct_index':key,'correct_length':lengths[key],'longest_distractor_length':longest_distractor,'lengths':lengths,'options':texts})
         for c in choices:
             fb=str(c.get('feedback','')).strip()
             need(len(fb)>=20,f"{lab['id']} / {step.get('stage')} feedback is too shallow")
-        correct_feedback=str(choices[keyed[0]].get('feedback','')).lower()
+        correct_feedback=str(choices[key].get('feedback','')).lower()
         need('correct' in correct_feedback or 'exactly' in correct_feedback,f"{lab['id']} / {step.get('stage')} keyed feedback must explicitly affirm the answer")
-        keyed_text=texts[keyed[0]].lower()
+        keyed_text=texts[key].lower()
         need(not re.search(r'\b(bypass|defeat|disable)\b.{0,35}\b(guard|interlock|safeguard|protection)\b',keyed_text),f"{lab['id']} / {step.get('stage')} unsafe action is keyed correct")
 need(question_count==36,f'expected exactly 36 optional diagnostic decisions, got {question_count}')
+need(not length_flags,'correct answer is longest/tied-longest in diagnostic labs: '+json.dumps(length_flags,ensure_ascii=False))
 
 need('disable mould protection so the tool closes harder' in LOWER_JS, 'expected safety distractor missing')
 need('safeguards must never be bypassed' in LOWER_JS, 'safety distractor must be explicitly rejected')
@@ -130,4 +141,4 @@ need('mmDiagnosticMenu' in JS, 'mobile More-menu launcher missing')
 need("button[data-view=\"scenarios\"]" in JS, 'practice-area return path missing')
 need('localStorage' in JS and 'fetch(' not in JS, 'diagnostic progress must not upload or fetch production data')
 
-print(f'MouldMaster diagnostic learning QA passed (9 labs / {question_count} optional evidence-first decisions)')
+print(f'MouldMaster diagnostic learning QA passed (9 labs / {question_count} optional evidence-first decisions / strict longest-answer flags=0)')
