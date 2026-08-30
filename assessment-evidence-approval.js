@@ -6,7 +6,7 @@ const SCOPE='Internal educational content approval; external accreditation or in
 const APPROVED_INPUTS={
  'MouldMaster_Core_App.html':'4eb0412467d3e7ce19f3ca28caf44528a0f1a968',
  'training-upgrade.js':'860dd33d0d8690b38755d8022999fc86098b0a03',
- 'assessment-deep-dive.js':'249ee8cc98d4119012bf4be370b16b665458c230',
+ 'assessment-deep-dive.js':'79c02dcdaa5ba29d3405228f47e374ef53aaebe3',
  'assessment-answer-cue-fix.js':'513e92d56a01f27cd6be15f36b43c150bf0381d1',
  'assessment-quality-suite.js':'4c5c1927fc98546be4cf9b96f925bafc3e259be6',
  'diagnostic-learning-labs.js':'67e9272a2808e44c7be850dc23bdf5e04bcc0f9b',
