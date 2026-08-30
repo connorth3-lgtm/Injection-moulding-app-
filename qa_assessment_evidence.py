@@ -18,7 +18,7 @@ for path in ['assessment-evidence-sources.js','assessment-evidence-approval.js',
 
 approval=text('assessment-evidence-approval.js')
 sources=text('assessment-evidence-sources.js')
-need("const VERSION='2026.08.30.2'" in approval,'approval version missing')
+need("const VERSION='2026.08.30.3'" in approval,'approval version missing')
 need("version:'2026.08.25.3'" in sources,'evidence source version missing')
 need("summary.total!==157" in approval and "summary.labs!==36" in approval and "summary.materialLabs!==24" in approval,'157-question coverage guard missing')
 need('blockedIds' in approval,'blocked evidence IDs must be reported on failure')
