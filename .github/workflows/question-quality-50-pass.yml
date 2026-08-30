@@ -18,6 +18,7 @@ on:
       - 'evidence-maturity-formal-bridge.js'
       - 'qa_question_quality_50_pass.py'
       - 'qa_question_quality_50_pass_runtime.py'
+      - 'qa_question_quality_extreme_50_pass.py'
       - '.github/workflows/question-quality-50-pass.yml'
   workflow_dispatch:
 
@@ -42,11 +43,15 @@ jobs:
           python-version: '3.12'
       - name: Run 50-pass quality audit across formal and optional learner-visible questions
         run: python qa_question_quality_50_pass_runtime.py
-      - name: Upload question quality report
+      - name: Run extreme 50-pass psychometric and evidence audit
+        run: python qa_question_quality_extreme_50_pass.py
+      - name: Upload question quality reports
         if: always()
         uses: actions/upload-artifact@v7
         with:
           name: mouldmaster-question-quality-50-pass
-          path: question-quality-50-pass-report.json
+          path: |
+            question-quality-50-pass-report.json
+            question-quality-extreme-50-pass-report.json
           if-no-files-found: warn
           retention-days: 30
