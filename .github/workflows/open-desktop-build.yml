@@ -53,6 +53,8 @@ on:
       - 'app-shell-finalize.js'
       - 'learning-analytics.js'
       - 'source-library.js'
+      - 'measured-evidence-integration.js'
+      - 'measured-evidence-decision.js'
       - 'reference-data.js'
       - 'reference-data.html'
       - 'reference-deep-dive.js'
@@ -80,6 +82,8 @@ on:
       - 'qa_process_data_20_pass.py'
       - 'qa_process_data_sweep.py'
       - 'qa_measured_evidence_50_pass.py'
+      - 'qa_measured_evidence_integration.py'
+      - 'qa_measured_evidence_decision_workflows.py'
       - 'qa_process_data_local_intake.py'
       - 'qa_real_process_data_pilot.py'
       - 'qa_curriculum_integration.py'
@@ -95,6 +99,7 @@ on:
       - 'qa_assessment_ux.py'
       - 'qa_source_freshness.py'
       - 'qa_research_source_freshness.py'
+      - 'qa_critical_actions_versions.py'
       - 'README.md'
       - 'ANDROID_INSTALL_README.txt'
       - 'UPLOAD_README.txt'
@@ -113,6 +118,7 @@ on:
       - 'sources/MECHANISM_VALIDATION_QUEUE.md'
       - 'data/real-process-data-pilot-template.csv'
       - 'data/measured-evidence-50-pass.json'
+      - 'data/measured-evidence-decision-scenarios-v1.json'
       - 'data/evidence-coverage-v1.json'
       - 'data/mechanism-promotion-evidence/**'
       - 'service-worker.js'
@@ -137,19 +143,19 @@ jobs:
   build-windows:
     runs-on: windows-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - name: Require committed dependency lock
         shell: pwsh
         run: |
           if (-not (Test-Path 'desktop/electron/package-lock.json')) {
             Write-Error 'desktop/electron/package-lock.json is missing. Let Desktop Dependency Lock finish first.'
           }
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v7
         with:
           node-version: '22.12.0'
           cache: 'npm'
           cache-dependency-path: desktop/electron/package-lock.json
-      - uses: actions/setup-python@v5
+      - uses: actions/setup-python@v7
         with:
           python-version: '3.12'
       - name: Install exact locked dependencies
@@ -170,6 +176,9 @@ jobs:
       - name: Release and documentation coherence
         working-directory: .
         run: python qa_release_docs.py
+      - name: Critical GitHub Actions version QA
+        working-directory: .
+        run: python qa_critical_actions_versions.py
       - name: Material behaviour learning QA
         working-directory: .
         run: python qa_material_behaviour.py
@@ -203,6 +212,12 @@ jobs:
       - name: 50-pass real measured-evidence audit
         working-directory: .
         run: python qa_measured_evidence_50_pass.py
+      - name: Canonical measured-evidence runtime integration
+        working-directory: .
+        run: python qa_measured_evidence_integration.py
+      - name: Evidence-to-decision workflow QA
+        working-directory: .
+        run: python qa_measured_evidence_decision_workflows.py
       - name: Local real-data intake privacy QA
         working-directory: .
         run: python qa_process_data_local_intake.py
@@ -262,7 +277,7 @@ jobs:
         run: |
           Get-ChildItem 'desktop/electron/dist' -File | Get-FileHash -Algorithm SHA256 | ForEach-Object { "$($_.Hash.ToLower())  $($_.Path | Split-Path -Leaf)" } | Set-Content 'desktop/electron/dist/SHA256SUMS.txt'
           git rev-parse HEAD | Set-Content 'desktop/electron/dist/SOURCE_COMMIT.txt'
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: mouldmaster-open-desktop-windows
           path: |
@@ -276,6 +291,9 @@ jobs:
             evidence-maturity-report.json
             process-data-sweep-report.json
             measured-evidence-50-pass-report.json
+            measured-evidence-integration-report.json
+            measured-evidence-decision-workflow-report.json
+            critical-actions-versions-report.json
             source-freshness-report.json
             research-source-freshness-report.json
           if-no-files-found: error
