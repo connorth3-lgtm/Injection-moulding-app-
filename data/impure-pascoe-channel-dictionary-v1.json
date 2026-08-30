@@ -1,40 +1,124 @@
 {
   "schema": 1,
-  "version": "2026.08.29.1",
-  "reviewed": "2026-08-29",
+  "version": "2026.08.30.1",
+  "reviewed": "2026-08-30",
   "datasetId": "impure-pascoe-2022",
-  "scope": "Exact delivered nine-column cycle CSV schema; unresolved semantics are deliberately non-counting.",
+  "scope": "Exact delivered nine-column cycle CSV schema. Four cavity-sensor channels are accepted from source-backed instrumentation and engineering-unit evidence; unresolved or stage-dependent channels remain non-counting.",
   "sources": {
     "publisherRecord": "https://doi.org/10.5281/zenodo.6913660",
     "aggregateProfile": "data/public-benchmark-results/impure-pascoe-2022-v1.json",
-    "projectContext": "Public imPURE/PASCOE project material confirms installed sensors/transducers and process monitoring/data acquisition but does not publicly define every delivered channel."
+    "semanticReview": "data/impure-pascoe-semantic-review-2026-08-30.json",
+    "pascoeInstrumentationPaper": "https://doi.org/10.3233/ATDE230912",
+    "pascoeMachineLearningPaper": "https://doi.org/10.1051/matecconf/202440108011",
+    "kistler6188A": "https://www.kistler.com/US/en/cp/cavity-pressure-and-temperature-sensors-6188a/P0000430"
   },
   "cycleSchema": [
-    {"column":"Time","meaning":"cycle trace time basis","engineeringUnit":null,"measurementLocation":null,"commandActualSemantics":"time-basis","status":"definition-required-before-promotion"},
-    {"column":"HydPressure[IRT/Pascoe]","meaning":"hydraulic-pressure channel name as delivered","engineeringUnit":null,"measurementLocation":null,"commandActualSemantics":null,"status":"unit-location-semantics-required"},
-    {"column":"ScrewPosition[IRT/Pascoe]","meaning":"screw-position channel name as delivered","engineeringUnit":null,"measurementLocation":null,"commandActualSemantics":null,"status":"unit-reference-semantics-required"},
-    {"column":"Analog Input[1]","meaning":null,"engineeringUnit":null,"measurementLocation":null,"commandActualSemantics":null,"status":"exact-signal-definition-required"},
-    {"column":"Analog Input[2]","meaning":null,"engineeringUnit":null,"measurementLocation":null,"commandActualSemantics":null,"status":"exact-signal-definition-required"},
-    {"column":"TempMold1[IRT/Pascoe]","meaning":"mould-temperature channel 1 name as delivered","engineeringUnit":null,"measurementLocation":null,"commandActualSemantics":"likely-measurement-name-only-not-yet-accepted","status":"unit-location-required"},
-    {"column":"TempMold2[IRT/Pascoe]","meaning":"mould-temperature channel 2 name as delivered","engineeringUnit":null,"measurementLocation":null,"commandActualSemantics":"likely-measurement-name-only-not-yet-accepted","status":"unit-location-required"},
-    {"column":"Pressure1[IRT/Pascoe]","meaning":"pressure channel 1 name as delivered","engineeringUnit":null,"measurementLocation":null,"commandActualSemantics":null,"status":"unit-location-semantics-required"},
-    {"column":"Pressure2[IRT/Pascoe]","meaning":"pressure channel 2 name as delivered","engineeringUnit":null,"measurementLocation":null,"commandActualSemantics":null,"status":"unit-location-semantics-required"}
+    {
+      "column": "Time",
+      "meaning": "source-provided cycle trace clock time/order",
+      "engineeringUnit": "seconds for parsed clock-time differences",
+      "measurementLocation": null,
+      "commandActualSemantics": "time-basis-not-process-measurement",
+      "status": "accepted-ordering-not-counted",
+      "note": "All delivered values parse as HH:MM:SS.fraction. Positive deltas are variable, so no fixed sampling interval is assumed."
+    },
+    {
+      "column": "HydPressure[IRT/Pascoe]",
+      "meaning": "measured hydraulic pressure",
+      "engineeringUnit": null,
+      "measurementLocation": "injection-moulding machine hydraulic circuit; PASCOE instrumentation uses a Kistler 4262A pressure transmitter",
+      "commandActualSemantics": "measured",
+      "status": "source-meaning-resolved-export-unit-required"
+    },
+    {
+      "column": "ScrewPosition[IRT/Pascoe]",
+      "meaning": "measured screw position",
+      "engineeringUnit": null,
+      "measurementLocation": "injection unit screw position",
+      "commandActualSemantics": "measured",
+      "status": "source-meaning-resolved-unit-reference-required"
+    },
+    {
+      "column": "Analog Input[1]",
+      "meaning": null,
+      "engineeringUnit": null,
+      "measurementLocation": "generic PASCOE/ComoNeo analogue acquisition input",
+      "commandActualSemantics": "measured-input-but-exact-sensor-not-pinned",
+      "status": "exact-signal-definition-required",
+      "note": "Aggregate values are temperature-like, but source evidence does not bind this generic export field to one exact sensor/configuration strongly enough for promotion."
+    },
+    {
+      "column": "Analog Input[2]",
+      "meaning": "stage-dependent auxiliary analogue acquisition channel",
+      "engineeringUnit": null,
+      "measurementLocation": "PASCOE junction-box/auxiliary sensor input; exact attached sensor changes during the trial",
+      "commandActualSemantics": "measured-input-with-stage-dependent-sensor",
+      "status": "configuration-dependent-not-globally-counted",
+      "note": "Trial metadata records water-temperature monitoring, switching to core-water flow, and later nozzle-temperature measurement at junction-box channel 4. Aggregate cycle bands contain incompatible regimes, so one global meaning/unit is not valid."
+    },
+    {
+      "column": "TempMold1[IRT/Pascoe]",
+      "meaning": "mould cavity 1 contact temperature",
+      "engineeringUnit": "degC",
+      "measurementLocation": "mould cavity 1; Kistler 6188A combined pressure/contact-temperature sensor",
+      "commandActualSemantics": "measured",
+      "status": "accepted-measured"
+    },
+    {
+      "column": "TempMold2[IRT/Pascoe]",
+      "meaning": "mould cavity 2 contact temperature",
+      "engineeringUnit": "degC",
+      "measurementLocation": "mould cavity 2; Kistler 6188A combined pressure/contact-temperature sensor",
+      "commandActualSemantics": "measured",
+      "status": "accepted-measured"
+    },
+    {
+      "column": "Pressure1[IRT/Pascoe]",
+      "meaning": "mould cavity 1 pressure",
+      "engineeringUnit": "bar",
+      "measurementLocation": "mould cavity 1; Kistler 6188A combined pressure/contact-temperature sensor",
+      "commandActualSemantics": "measured",
+      "status": "accepted-measured"
+    },
+    {
+      "column": "Pressure2[IRT/Pascoe]",
+      "meaning": "mould cavity 2 pressure",
+      "engineeringUnit": "bar",
+      "measurementLocation": "mould cavity 2; Kistler 6188A combined pressure/contact-temperature sensor",
+      "commandActualSemantics": "measured",
+      "status": "accepted-measured"
+    }
   ],
+  "sourceBackedInstrumentation": {
+    "pascoeMachineSignals": [
+      "hydraulic pressure",
+      "screw position",
+      "nozzle temperature",
+      "heating/cooling-water temperature"
+    ],
+    "pascoeMouldSignals": [
+      "pressure and temperature from cavity 1",
+      "pressure and temperature from cavity 2"
+    ],
+    "cavitySensorModel": "Kistler 6188A",
+    "cavitySensorPressureRange": "0 to 2000 bar",
+    "cavitySensorTemperatureRange": "0 to 200 degC, Type K"
+  },
   "profiledStructure": {
     "publisherFiles": 309,
     "cycleFiles": 307,
     "cycleRows": 297087,
     "cycleSchemaFamilies": 1,
     "profiledNumericValues": 2376696,
-    "acceptedMeasuredTimeSeriesSamples": 0
+    "acceptedMeasuredChannels": 4,
+    "acceptedMeasuredTimeSeriesSamples": 1188348,
+    "acceptedCountFormula": "4 * 297087"
   },
-  "requiredResolution": [
-    "Define Analog Input[1] exact signal, unit and physical location.",
-    "Define Analog Input[2] exact signal, unit and physical location.",
-    "Define engineering units and physical/reference locations for HydPressure, ScrewPosition, TempMold1/2 and Pressure1/2.",
-    "Define the Time unit, sampling/time-base convention and any reset/origin rule.",
-    "Record any scale factors, offsets, calibration/zero references or acquisition transformations.",
-    "Distinguish direct measured channels from commands/setpoints or derived values using source documentation rather than abbreviated names."
+  "remainingResolution": [
+    "Pin the exact engineering unit/export scaling for HydPressure[IRT/Pascoe].",
+    "Pin the exact engineering unit and position origin/reference for ScrewPosition[IRT/Pascoe].",
+    "Bind Analog Input[1] to an exact source-defined sensor/configuration before counting it.",
+    "If Analog Input[2] is to be reused, reconstruct stage-specific sensor assignments and units rather than assigning one global definition."
   ],
-  "acceptanceRule": "No ImPure cycle numeric value enters the accepted measured-sample total until its source-backed meaning, engineering unit, time basis and command/actual role are sufficient for interpretation. Unknown fields remain unknown rather than inferred from names."
+  "acceptanceRule": "Only delivered direct-measurement columns with source-backed physical meaning, engineering unit, measurement location/role and usable source ordering enter the accepted measured-sample total. Stage-dependent or unit-unresolved fields remain excluded rather than inferred."
 }

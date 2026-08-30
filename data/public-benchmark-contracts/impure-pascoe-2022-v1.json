@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "datasetId": "impure-pascoe-2022",
-  "status": "accepted-profiled-unit-limited",
+  "status": "accepted-profiled-partially-semantic-resolved",
   "source": {
     "datasetDoi": "10.5281/zenodo.6913660",
     "recordUrl": "https://zenodo.org/records/6913660",
@@ -30,8 +30,9 @@
       "Trial 17 05 all stages_ires-labels.csv"
     ],
     "publisherProvidesPerFileMd5": true,
-    "cycleCount": null,
-    "cycleCountBoundary": "do not infer the count from highest visible cycle number because the delivered sequence contains gaps; enumerate the authoritative manifest during profiling"
+    "deliveredCycleFiles": 307,
+    "deliveredCycleRows": 297087,
+    "cycleCountBoundary": "enumerate the authoritative manifest; do not infer cycle count from highest visible cycle number because the delivered sequence contains gaps"
   },
   "licenseVerification": {
     "authority": "Zenodo records API",
@@ -39,6 +40,33 @@
     "value": "cc-by-4.0",
     "verifiedOn": "2026-08-29",
     "retrievalState": "completed on hosted runner; all 309 publisher files checksum-verified"
+  },
+  "semanticEvidence": {
+    "pascoeInstrumentationPaper": "10.3233/ATDE230912",
+    "pascoeMachineLearningPaper": "10.1051/matecconf/202440108011",
+    "cavitySensorModel": "Kistler 6188A",
+    "cavitySensorReference": "https://www.kistler.com/US/en/cp/cavity-pressure-and-temperature-sensors-6188a/P0000430",
+    "aggregateSemanticWorkflowRun": 33275743091,
+    "aggregateSemanticArtifactId": 9721483497,
+    "reviewFile": "data/impure-pascoe-semantic-review-2026-08-30.json"
+  },
+  "semanticAcceptance": {
+    "acceptedMeasuredColumns": [
+      "TempMold1[IRT/Pascoe]",
+      "TempMold2[IRT/Pascoe]",
+      "Pressure1[IRT/Pascoe]",
+      "Pressure2[IRT/Pascoe]"
+    ],
+    "acceptedMeasuredChannels": 4,
+    "acceptedMeasuredTimeSeriesSamples": 1188348,
+    "acceptedCountFormula": "4 * 297087",
+    "timeBasis": "HH:MM:SS.fraction source clock ordering; deltas interpreted in seconds; no fixed sampling interval assumed",
+    "excludedColumns": {
+      "HydPressure[IRT/Pascoe]": "exact export engineering unit/scaling not pinned",
+      "ScrewPosition[IRT/Pascoe]": "exact engineering unit and position origin/reference not pinned",
+      "Analog Input[1]": "generic export field not unambiguously bound to one source-defined sensor/configuration",
+      "Analog Input[2]": "trial metadata shows stage-dependent sensor purpose including water-temperature, core-water-flow and nozzle-temperature measurement"
+    }
   },
   "profilingPlan": [
     "Enumerate every delivered cycle CSV and supporting trial/label file from the authoritative manifest; do not infer cycle count from numeric filenames.",
@@ -49,6 +77,5 @@
     "Count measured time-series values only from delivered direct-measurement columns with established ordering/time semantics.",
     "Emit aggregate schemas, cycle counts and fingerprints only; never upload raw third-party rows or arrays as workflow artifacts."
   ],
-  "evidenceBoundary": "The Zenodo record is a real PASCOE injection-moulding trial and exposes many cycle-specific CSVs plus trial/stage label tables with per-file MD5 checksums. The official Zenodo records API confirms CC BY 4.0, so automated retrieval and aggregate profiling are permitted. The current publisher file set is 18.7 MB; the displayed 605.2 MB Data volume is cumulative Zenodo download traffic, not source-file size. Profiling remains queued after the initial bulk request received HTTP 429; no cycle or measured-value total is accepted until the complete manifest is retrieved and validated."
+  "evidenceBoundary": "The CC BY 4.0 Zenodo release has been fully checksum-profiled. PASCOE publications identify paired Kistler 6188A cavity pressure/contact-temperature sensors and synchronized real-time acquisition, while Kistler specifies their engineering ranges in bar and degrees Celsius. This supports partial acceptance of the two delivered cavity-pressure and two cavity-temperature columns. Hydraulic pressure and screw position retain unresolved export-unit/reference details, Analog Input[1] remains generically named, and trial-stage metadata proves Analog Input[2] changes measurement purpose; those fields remain fail-closed."
 }
-
