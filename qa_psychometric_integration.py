@@ -47,12 +47,14 @@ idx=text('index.html')
 for asset in ['./assessment-psychometric-hardening.js','./assessment-psychometric-approval.js']:
     need(asset in idx,f'browser shell missing {asset}')
 need(idx.index("'./evidence-maturity-formal-bridge.js'") < idx.index("'./assessment-psychometric-hardening.js'") < idx.index("'./assessment-evidence-approval.js'") < idx.index("'./assessment-psychometric-approval.js'") < idx.index("'./app-shell-registry.js'"),'psychometric/evidence browser load order is wrong')
-need('question-quality-warning-cleanup' in idx,'browser runtime token was not advanced for warning-free question bundle')
+# The question-rotation patch is order-only. It must advance delivery without changing the
+# pinned warning-free psychometric content contract above.
+need('20260826.14-assessment-question-rotation' in idx,'browser runtime token was not advanced for assessment question rotation')
 
 sw=text('service-worker.js')
 for asset in ["'./assessment-psychometric-hardening.js'","'./assessment-psychometric-approval.js'"]:
     need(asset in sw,f'offline cache missing {asset}')
-need("CACHE_REVISION='question-quality-warning-cleanup-20260831'" in sw,'PWA cache revision was not advanced for warning-free question bundle')
+need("CACHE_REVISION='assessment-question-rotation-20260831'" in sw,'PWA cache revision was not advanced for assessment question rotation')
 
 pkg=json.loads(text('desktop/electron/package.json'))
 froms={x.get('from') for x in pkg['build']['extraResources'] if isinstance(x,dict)}
@@ -69,4 +71,4 @@ need("_form_only_surface_features" in runtime,'extreme runtime does not use form
 standard=text('qa_question_quality_50_pass_runtime.py')
 need("zero learner-visible quality warnings" in standard and "need(not report.get('warning_types')" in standard,'standard runtime does not fail closed on learner-visible warnings')
 
-print(f'MouldMaster psychometric integration QA passed: 197 decisions / 788 options pinned to {actual}, standard/extreme warnings=0, surface cue=0.249, technical keys 8/8/7/7, scenarios 10/10/10/10, browser/PWA/desktop delivery aligned')
+print(f'MouldMaster psychometric integration QA passed: 197 decisions / 788 options pinned to {actual}, standard/extreme warnings=0, surface cue=0.249, technical keys 8/8/7/7, scenarios 10/10/10/10, browser/PWA/desktop delivery aligned with opening-question rotation')
