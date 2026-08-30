@@ -14,6 +14,8 @@ PUBLIC_BENCHMARKS = ROOT / 'sources' / 'PUBLIC_REAL_PROCESS_DATA_BENCHMARKS.md'
 BENCHMARK_TOOL = ROOT / 'tools' / 'profile_public_benchmark.py'
 BENCHMARK_CONTRACT = ROOT / 'data' / 'public-benchmark-contracts' / 'gtnb4j7bfx-v1.json'
 BENCHMARK_FIXTURE = ROOT / 'qa' / 'fixtures' / 'public-benchmark-gtnb4j7bfx-synthetic.csv'
+LIVE_READINESS = ROOT / 'data' / 'live-release-readiness.json'
+LIVE_READINESS_DOC = ROOT / 'sources' / 'LIVE_RELEASE_READINESS.md'
 README = ROOT / 'README.md'
 
 
@@ -28,13 +30,16 @@ def sha256(path):
 
 for path in [
     PROTOCOL, TEMPLATE, INTAKE, PUBLIC_BENCHMARKS, BENCHMARK_TOOL,
-    BENCHMARK_CONTRACT, BENCHMARK_FIXTURE, README
+    BENCHMARK_CONTRACT, BENCHMARK_FIXTURE, LIVE_READINESS,
+    LIVE_READINESS_DOC, README
 ]:
     need(path.exists(), f'real-data pilot file missing: {path.relative_to(ROOT)}')
 
 protocol = PROTOCOL.read_text(encoding='utf-8')
 intake = INTAKE.read_text(encoding='utf-8')
 benchmarks = PUBLIC_BENCHMARKS.read_text(encoding='utf-8')
+live_doc = LIVE_READINESS_DOC.read_text(encoding='utf-8')
+live_policy = json.loads(LIVE_READINESS.read_text(encoding='utf-8'))
 readme = README.read_text(encoding='utf-8')
 
 for marker in [
@@ -49,6 +54,9 @@ for marker in [
     'root-cause action from a compensating setting change',
     'pilot-ready',
     'No pilot finding authorises a real production change',
+    'not a prerequisite for public learner deployment',
+    'validated on real production data',
+    'data/live-release-readiness.json',
 ]:
     need(marker in protocol, f'pilot protocol safeguard missing: {marker}')
 
@@ -85,6 +93,37 @@ need(benchmarks.count('CC BY 4.0') >= 2, 'at least two benchmark candidates must
 need('REAL_PROCESS_DATA_PILOT_PROTOCOL.md' in readme, 'README must link the real-data pilot protocol')
 need('real-process-data-pilot-template.csv' in readme, 'README must link the pilot CSV template')
 need('pilot-ready' in protocol and 'validated on real production data' in protocol, 'pilot maturity claim gate missing')
+
+# Public deployment, site-validation evidence, and production-control authority
+# are separate states. A missing external site pilot must not silently become a
+# software release blocker, while the stronger real-production validation claim
+# must still fail closed until the evidence exists.
+need(live_policy.get('schema') == 1, 'live-release policy schema drifted')
+need(live_policy.get('reviewed') == '2026-08-31', 'live-release policy review date drifted')
+public_release = live_policy.get('public_learner_release', {})
+site_evidence = live_policy.get('real_site_evidence', {})
+production_authority = live_policy.get('production_control_authority', {})
+need(public_release.get('status') == 'eligible-when-release-qa-passes', 'public learner release must remain QA-gated')
+need(public_release.get('requires_authorised_site_pilot') is False, 'authorised site pilot must not block ordinary learner deployment')
+need(public_release.get('requires_real_production_validation_claim') is False, 'public learner deployment must not require an unsupported production-validation claim')
+need(site_evidence.get('status') == 'pilot-ready-human-comparison-required', 'real-site evidence maturity status drifted')
+need(site_evidence.get('requires_external_site_authorisation') is True, 'real-site evidence must retain external authorisation')
+need(site_evidence.get('requires_independent_engineering_finding_or_review') is True, 'real-site evidence must retain independent engineering comparison')
+need(site_evidence.get('blocks_public_learner_release') is False, 'site evidence maturity must not block public learner release')
+need(site_evidence.get('claim_allowed_before_completion') == 'pilot-ready', 'permitted pre-pilot claim drifted')
+need(site_evidence.get('claim_forbidden_before_completion') == 'validated on real production data', 'forbidden pre-pilot claim drifted')
+need(production_authority.get('status') == 'not_provided', 'educational app must not gain production-control authority')
+need(production_authority.get('blocks_public_learner_release') is False, 'absence of production-control authority must define scope, not block learner deployment')
+need(production_authority.get('claim_forbidden') is True, 'production-control authority claim must remain forbidden')
+for marker in [
+    'public learner release is not blocked',
+    'eligible-when-release-qa-passes',
+    'pilot-ready-human-comparison-required',
+    'validated on real production data',
+    'Production-control authority',
+    'CI must fail',
+]:
+    need(marker in live_doc, f'live-release readiness boundary missing: {marker}')
 
 rows = list(csv.reader(TEMPLATE.read_text(encoding='utf-8').splitlines()))
 need(len(rows) == 1, 'public pilot template must contain header only, not production/example rows')
@@ -154,7 +193,7 @@ with tempfile.TemporaryDirectory() as td:
         '--retrieved-date', '2099-01-01',
         '--process-context', 'injection-moulding',
         '--confirm-process-separated',
-    ], cwd=ROOT, text=True, capture_output=True)
+    ], cwd=ROOT, text=True, capture_output=True, encoding='utf-8', errors='replace')
     need(proc.returncode == 0, f'benchmark profiler failed on synthetic fixture: {proc.stderr or proc.stdout}')
     need(report_path.exists(), 'benchmark profiler did not create a report')
     report = json.loads(report_path.read_text(encoding='utf-8'))
@@ -183,4 +222,4 @@ for forbidden_key in ['"raw_rows"', '"row_values"', '"sample_values"', '"example
     need(forbidden_key not in report_text, f'benchmark profile exposes raw/range detail via {forbidden_key}')
 need('no result authorises a production change' in report['interpretation']['boundary'].lower(), 'benchmark production-authority boundary missing')
 
-print('MouldMaster real process-data pilot readiness QA passed (authorised-site protocol + executable public measured benchmark preflight)')
+print('MouldMaster real process-data/live-release QA passed (public learner release QA-gated; authorised-site validation remains external and claim-gated)')
