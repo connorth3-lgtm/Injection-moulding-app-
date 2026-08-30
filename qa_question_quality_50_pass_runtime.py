@@ -21,6 +21,11 @@ def need(ok,msg):
         raise AssertionError(msg)
 
 
+def evaluate_runtime(item):
+    """Compatibility surface used by the extreme audit; evaluates final items with the shared rubric."""
+    return BASE_EVALUATE(item)
+
+
 def apply_formal_runtime_overlay():
     global FORMAL_OVERLAY
     items=BASE_LOAD_RUNTIME()
