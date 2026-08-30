@@ -4,6 +4,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 qa = ROOT / "qa_master_data_compile.py"
 workflow = ROOT / ".github" / "workflows" / "master-data-compile.yml"
+compiler = ROOT / "tools" / "compile_master_data.py"
 
 s = qa.read_text(encoding="utf-8")
 old = 'need(expected_samples == 65_171_059, "audited measured-sample baseline drifted")'
@@ -36,4 +37,14 @@ if old not in w:
     raise SystemExit("missing master workflow measured-sample anchor")
 workflow.write_text(w.replace(old, new, 1), encoding="utf-8")
 
-print("Reconciled master-data compiler guard to 66,521,519 accepted measured values")
+c = compiler.read_text(encoding="utf-8")
+old = '''    need((rights_review.get("summary") or {}).get("sourcesReviewed") == 5, "measured-data rights review source count drifted")
+    need((rights_review.get("summary") or {}).get("unblockedForAutomatedIngestion") == 4, "measured-data rights review promotion count drifted")'''
+new = '''    need((rights_review.get("summary") or {}).get("sourcesReviewed") == len(rights_review.get("sources") or []) == 7, "measured-data rights review source count drifted")
+    need((rights_review.get("summary") or {}).get("unblockedForAutomatedIngestion") == 4, "measured-data rights review promotion count drifted")
+    need((rights_review.get("summary") or {}).get("remainBlockedForRights") == 3, "measured-data rights review blocked count drifted")'''
+if old not in c:
+    raise SystemExit("missing master compiler rights-review anchor")
+compiler.write_text(c.replace(old, new, 1), encoding="utf-8")
+
+print("Reconciled master-data compiler guard to 66,521,519 accepted values and seven-source rights review")
