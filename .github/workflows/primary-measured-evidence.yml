@@ -11,12 +11,14 @@ on:
       - 'data/public-benchmark-contracts/**'
       - 'data/public-benchmark-results/**'
       - 'data/measured-data-discovery-queue-v1.json'
+      - 'data/measured-data-collection-closeout-2026-08-30.json'
       - 'data/evidence-coverage-v1.json'
       - 'qa_primary_measured_evidence.py'
       - 'qa_measured_dataset_inventory.py'
       - 'qa_blocked_dataset_contracts.py'
       - 'qa_remaining_dataset_terminal_states.py'
       - 'qa_measured_data_discovery_queue.py'
+      - 'qa_measured_data_collection_closeout.py'
       - 'sources/PRIMARY_MEASURED_EVIDENCE_REGISTRY.md'
       - '.github/workflows/primary-measured-evidence.yml'
   pull_request:
@@ -29,12 +31,14 @@ on:
       - 'data/public-benchmark-contracts/**'
       - 'data/public-benchmark-results/**'
       - 'data/measured-data-discovery-queue-v1.json'
+      - 'data/measured-data-collection-closeout-2026-08-30.json'
       - 'data/evidence-coverage-v1.json'
       - 'qa_primary_measured_evidence.py'
       - 'qa_measured_dataset_inventory.py'
       - 'qa_blocked_dataset_contracts.py'
       - 'qa_remaining_dataset_terminal_states.py'
       - 'qa_measured_data_discovery_queue.py'
+      - 'qa_measured_data_collection_closeout.py'
       - 'sources/PRIMARY_MEASURED_EVIDENCE_REGISTRY.md'
       - '.github/workflows/primary-measured-evidence.yml'
   workflow_dispatch:
@@ -64,6 +68,8 @@ jobs:
         run: python qa_remaining_dataset_terminal_states.py
       - name: Validate new measured-data discovery queue
         run: python qa_measured_data_discovery_queue.py
+      - name: Validate measured-data collection closeout
+        run: python qa_measured_data_collection_closeout.py
       - name: Upload aggregate primary measured registry QA report
         uses: actions/upload-artifact@v4
         with:
@@ -93,4 +99,10 @@ jobs:
         with:
           name: mouldmaster-measured-data-discovery-queue
           path: measured-data-discovery-queue-report.json
+          if-no-files-found: error
+      - name: Upload measured-data collection closeout report
+        uses: actions/upload-artifact@v4
+        with:
+          name: mouldmaster-measured-data-collection-closeout
+          path: measured-data-collection-closeout-report.json
           if-no-files-found: error
