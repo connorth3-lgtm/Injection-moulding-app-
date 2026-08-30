@@ -44,8 +44,10 @@ jobs:
           node --check assessment-evidence-sources.js
           node --check evidence-maturity-deep-dive.js
           node --check evidence-maturity-formal-bridge.js
+          node --check assessment-psychometric-hardening.js
           node --check lesson-evidence-depth.js
           node --check assessment-evidence-approval.js
+          node --check assessment-psychometric-approval.js
           node --check source-library.js
           node --check measured-evidence-integration.js
           node --check measured-evidence-decision.js
@@ -111,6 +113,8 @@ jobs:
         run: python qa_assessment_quality.py
       - name: Question evidence approval integrity
         run: python qa_assessment_evidence.py
+      - name: Psychometric production integration integrity
+        run: python qa_psychometric_integration.py
       - name: Evidence maturity seven-gap deep dive
         run: python qa_evidence_maturity.py
       - name: Guided process-data diagnostic integrity
