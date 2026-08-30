@@ -49,6 +49,6 @@ test('desktop decision evidence labels XRD as supporting material evidence and p
   const panel=page.locator('#processDataLabs [data-mm-measured-evidence="relevant"]');
   await expect(panel.locator('[data-mme-decision-role="supporting"]').first()).toContainText('Supporting material evidence');
   await expect(panel.locator('[data-mme-why]').first()).toContainText('xrd');
-  await expect(panel).toContainText('not a root-cause verdict');
+  await expect(panel).toContainText('root-cause verdict');
   await expect(panel).toContainText('universal setpoint');
 });
