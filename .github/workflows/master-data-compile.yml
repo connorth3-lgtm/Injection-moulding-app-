@@ -12,6 +12,31 @@ on:
       - 'tools/harvest_openalex_injection_moulding.py'
       - 'qa_master_data_compile.py'
       - 'qa_content_scale_targets.py'
+      - 'qa_content_scale_targets_impl.py'
+      - 'data/content-scale-targets.json'
+      - 'data/measured-dataset-inventory-v1.json'
+      - 'data/measured-dataset-execution-ledger-v1.json'
+      - 'data/measured-dataset-wave2-extension-v1.json'
+      - 'data/measured-dataset-wave2-batch4-extension-v1.json'
+      - 'data/measured-dataset-wave2-batch5-extension-v1.json'
+      - 'data/measured-dataset-rights-review-*.json'
+      - 'data/public-benchmark-contracts/**'
+      - 'data/public-benchmark-results/**'
+      - 'data/primary-measured-evidence-registry-v1.json'
+      - 'data/primary-measured-evidence/**'
+      - 'data/deep-dive-v2-*.json'
+      - '.github/workflows/master-data-compile.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'tools/compile_master_data.py'
+      - 'tools/compile_master_data_wave2_batch4.py'
+      - 'tools/compile_master_data_wave2_xrd_xps.py'
+      - 'tools/compile_master_data_base.py'
+      - 'tools/harvest_openalex_injection_moulding.py'
+      - 'qa_master_data_compile.py'
+      - 'qa_content_scale_targets.py'
+      - 'qa_content_scale_targets_impl.py'
       - 'data/content-scale-targets.json'
       - 'data/measured-dataset-inventory-v1.json'
       - 'data/measured-dataset-execution-ledger-v1.json'
@@ -39,11 +64,12 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 25
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
         with:
           node-version: '22.12.0'
-      - uses: actions/setup-python@v5
+          package-manager-cache: false
+      - uses: actions/setup-python@v7
         with:
           python-version: '3.12'
       - name: Validate landed base content checkpoint
@@ -91,7 +117,7 @@ jobs:
           print(json.dumps(c, indent=2, sort_keys=True))
           PY
       - name: Upload complete master data package
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: mouldmaster-master-data
           path: compiled-data/

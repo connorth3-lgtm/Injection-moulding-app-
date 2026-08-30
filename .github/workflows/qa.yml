@@ -18,11 +18,12 @@ jobs:
   integrity:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
         with:
           node-version: '22.12.0'
-      - uses: actions/setup-python@v5
+          package-manager-cache: false
+      - uses: actions/setup-python@v7
         with:
           python-version: '3.12'
       - name: JavaScript syntax
@@ -73,6 +74,7 @@ jobs:
           node --check process-data-local-intake.js
           node --check curriculum-integration.js
           node --check specialist-curriculum.js
+          node --check specialist-evidence-gap-extension.js
           node --check mould-master-workspace.js
           node --check app-shell-finalize.js
           node --check learning-analytics.js
@@ -89,6 +91,10 @@ jobs:
         run: python qa_release_docs.py
       - name: Repository governance integrity
         run: python qa_repo_governance.py
+      - name: App-wide data and runtime deep audit
+        run: python qa_app_wide_audit.py
+      - name: Canonical master-data reconciliation
+        run: python qa_master_data_compile.py
       - name: Diagnostic learning integrity
         run: python qa_diagnostic_learning.py
       - name: Material behaviour integrity
@@ -160,25 +166,25 @@ jobs:
       - name: IACET 2026 readiness integrity
         run: python qa_iacet_readiness.py
       - name: Upload process-data sweep report
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: mouldmaster-process-data-sweep
           path: process-data-sweep-report.json
           if-no-files-found: error
       - name: Upload measured-evidence report
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: mouldmaster-measured-evidence-50-pass
           path: measured-evidence-50-pass-report.json
           if-no-files-found: error
       - name: Upload content-scale target report
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: mouldmaster-content-scale-targets
           path: content-scale-targets-report.json
           if-no-files-found: error
       - name: Upload evidence maturity audit
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: mouldmaster-evidence-maturity-audit
           path: evidence-maturity-report.json

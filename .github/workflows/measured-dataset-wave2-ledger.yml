@@ -9,13 +9,38 @@ on:
       - 'data/measured-dataset-execution-ledger-v1.json'
       - 'data/measured-dataset-wave2-ledger-v1.json'
       - 'data/measured-dataset-wave2-extension-v1.json'
+      - 'data/measured-dataset-wave2-batch4-extension-v1.json'
+      - 'data/measured-dataset-wave2-batch5-extension-v1.json'
       - 'data/public-benchmark-contracts/**'
       - 'data/public-benchmark-results/**'
       - 'qa_measured_dataset_inventory.py'
       - 'qa_content_scale_targets.py'
+      - 'qa_content_scale_targets_impl.py'
       - 'qa_measured_dataset_wave2_ledger.py'
       - 'qa_master_data_compile.py'
       - 'tools/compile_master_data.py'
+      - 'tools/compile_master_data_wave2_*.py'
+      - 'tools/compile_master_data_base.py'
+      - '.github/workflows/measured-dataset-wave2-ledger.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'data/content-scale-targets.json'
+      - 'data/measured-dataset-inventory-v1.json'
+      - 'data/measured-dataset-execution-ledger-v1.json'
+      - 'data/measured-dataset-wave2-ledger-v1.json'
+      - 'data/measured-dataset-wave2-extension-v1.json'
+      - 'data/measured-dataset-wave2-batch4-extension-v1.json'
+      - 'data/measured-dataset-wave2-batch5-extension-v1.json'
+      - 'data/public-benchmark-contracts/**'
+      - 'data/public-benchmark-results/**'
+      - 'qa_measured_dataset_inventory.py'
+      - 'qa_content_scale_targets.py'
+      - 'qa_content_scale_targets_impl.py'
+      - 'qa_measured_dataset_wave2_ledger.py'
+      - 'qa_master_data_compile.py'
+      - 'tools/compile_master_data.py'
+      - 'tools/compile_master_data_wave2_*.py'
       - 'tools/compile_master_data_base.py'
       - '.github/workflows/measured-dataset-wave2-ledger.yml'
   workflow_dispatch:
@@ -27,7 +52,7 @@ jobs:
   ledger:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - name: Validate landed 25-source inventory checkpoint
         run: python qa_measured_dataset_inventory.py
       - name: Validate landed content-scale checkpoint
