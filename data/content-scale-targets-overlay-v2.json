@@ -1,0 +1,11 @@
+{
+  "schema": 1,
+  "version": "2026.08.29.1",
+  "reviewed": "2026-08-29",
+  "baseTargets": "data/content-scale-targets.json",
+  "status": "accepted-count-overlay",
+  "acceptedOverrides": {
+    "sensor_machine_health_concepts": 81
+  },
+  "boundary": "This overlay changes only the resolved accepted count for evidence-reviewed sensor/machine-health concepts. Minimum/preferred targets and every other accepted count remain inherited from the base target ledger."
+}

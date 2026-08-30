@@ -1,0 +1,16 @@
+{
+  "schema": 2,
+  "version": "2026.08.29.1",
+  "reviewed": "2026-08-29",
+  "mechanismId": "moisture-drying-degradation",
+  "registryTarget": "data/evidence-coverage-v1.json",
+  "promotionOverlayTarget": "data/evidence-promotion-overlay-v2.json",
+  "primaryMeasuredRegistryTarget": "data/primary-measured-evidence-registry-v1.json",
+  "authorMetadataTarget": "data/primary-measured-promotion-authors-v1.json",
+  "promotionRuleSnapshot": {"minimumIndependentPublisherVerifiedPrimaryMeasured":2,"requiresMeasuredSignals":true,"requiresPhysicalQualityOutcome":true,"requiresExperimentalContext":true,"requiresExplicitLimitation":true,"predictionIsNotCausation":true,"universalProcessRecipesAllowed":false},
+  "eligibility": {"independentPublisherVerifiedPrimaryMeasured":2,"meetsMinimumIndependentStudies":true,"measuredSignalsPresent":true,"physicalQualityOutcomesPresent":true,"experimentalContextPresent":true,"explicitLimitationsPresent":true,"eligibleForPromotion":true,"registryPromotionApplied":true},
+  "qualifyingDois": ["10.3390/app12031410","10.37358/MP.20.1.5311"],
+  "supportingDois": ["10.1016/j.compositesb.2020.108369"],
+  "independenceRationale": "The two qualifying studies are separate material-conditioning and injection-moulding experiments from different research teams. One uses measured residual moisture with controlled plasticisation experiments on TPU and polycarbonate and physical appearance outcomes; the other independently examines polyamide and TPU drying or residual-moisture condition and moulded quality defects. They are not duplicate publications or re-analysis of one dataset.",
+  "promotionClaim": "Promote the mechanism-level statement that measured material moisture and drying state can alter moulded physical part-quality and that a dryer setpoint alone does not establish material condition at the machine. Do not promote any moisture percentage, dryer temperature, residence time or plasticising value as a universal material limit; current supplier grade data and approved site procedures remain authoritative for production."
+}

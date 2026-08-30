@@ -1,0 +1,50 @@
+{
+  "schema": 1,
+  "version": "2026.08.29.1",
+  "reviewed": "2026-08-29",
+  "status": "candidate-resolution-snapshot",
+  "baseQueue": "data/sensor-machine-health-candidate-queue-v1.json",
+  "boundary": {
+    "resolutionDoesNotInflatePrimaryMeasuredCount": true,
+    "supportingEvidenceCanRemainOutsidePrimaryRegistry": true,
+    "acceptedConceptStillRequiresBoundedSemanticsAndProvenance": true
+  },
+  "resolutions": [
+    {
+      "doi": "10.1002/pen.26246",
+      "outcome": "supporting-machine-health-evidence-and-concept-accepted",
+      "acceptedConceptIds": ["sig-nrv-wear-state-monitoring"],
+      "note": "Measured NRV wear evidence supports a bounded wear-state monitoring concept; no universal wear or compensation threshold is promoted."
+    },
+    {
+      "doi": "10.1177/09544089251324760",
+      "outcome": "supporting-machine-health-evidence-and-concept-accepted",
+      "acceptedConceptIds": ["sig-cooling-channel-hydraulic-resistance-health"],
+      "note": "Measured flow and pressure-drop evidence supports cooling-channel hydraulic-resistance health interpretation; contamination magnitude remains tool/fluid specific."
+    },
+    {
+      "doi": "10.2478/ama-2024-0067",
+      "outcome": "supporting-machine-health-evidence-and-concept-accepted",
+      "acceptedConceptIds": ["sig-cooling-channel-hydraulic-resistance-health"],
+      "note": "Independent real-mould fouling measurements corroborate the same bounded hydraulic-resistance concept; model-derived sediment thickness remains derived."
+    },
+    {
+      "doi": "10.3390/s22134792",
+      "outcome": "supporting-machine-health-evidence-and-concept-accepted",
+      "acceptedConceptIds": ["sig-pressure-domain-separation-barrel-nozzle-cavity"],
+      "note": "Direct barrel, nozzle and cavity pressure measurements support explicit pressure-domain separation; fitted viscosity indices remain derived and study-specific."
+    },
+    {
+      "doi": "10.1016/j.engfailanal.2022.106118",
+      "outcome": "supporting-forensics-only-no-online-sensor-concept",
+      "acceptedConceptIds": [],
+      "note": "Real corrosion failure forensics are retained as maintenance evidence, but post-failure SEM/EDS/XRD/XPS do not create an online sensor signature."
+    },
+    {
+      "doi": "10.3390/app12031410",
+      "outcome": "existing-primary-study-reused-for-concept-accepted",
+      "acceptedConceptIds": ["sig-resin-moisture-measured-vs-dryer-setting"],
+      "note": "The already-counted primary study supports direct measured-moisture reasoning without adding a new primary-study identity."
+    }
+  ]
+}

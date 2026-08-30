@@ -1,22 +1,22 @@
 # MouldMaster primary measured evidence registry
 
 Status: peer-reviewed primary measured evidence layer  
-Reviewed: 2026-08-28
+Reviewed: 2026-08-29
 
 ## Purpose
 
 This registry makes MouldMaster's evidence base depend on **credible measured experiments**, not a headline paper count. It is deliberately separate from the 264-case / 19,008-cycle synthetic learning library and from the public raw-data benchmark lane.
 
-The machine-readable index is `data/primary-measured-evidence-registry-v1.json`; detailed study records are split across five packs under `data/primary-measured-evidence/`.
+The machine-readable index is `data/primary-measured-evidence-registry-v1.json`; detailed study records are split across seven packs under `data/primary-measured-evidence/`.
 
 ## Current counted evidence
 
-- **60 unique peer-reviewed primary measured studies**
-- **60 unique DOIs**
-- **60 unique experiment identities**
+- **70 unique peer-reviewed primary measured studies**
+- **70 unique DOIs**
+- **70 unique experiment identities**
 - **4 Tier A** studies: peer-reviewed primary measured evidence with a public raw or companion measured dataset
-- **56 Tier B** studies: publisher-verified peer-reviewed primary measured experiments whose reusable raw rows are not confirmed public or are available only by request
-- **9/9 provisional mechanisms** now have a staged independent qualifying pair plus at least one additional independent backup experiment.
+- **66 Tier B** studies: publisher-verified peer-reviewed primary measured experiments whose reusable raw rows are not confirmed public or are available only by request
+- The nine formerly provisional priority mechanisms retain an independent qualifying pair plus at least one additional independent backup experiment, and their formal promotion is now recorded through `data/evidence-promotion-overlay-v2.json`.
 
 Raw-data availability and scientific credibility are intentionally separate attributes. A strong peer-reviewed experiment can be Tier B because the raw rows are not reusable; an open repository is not automatically Tier A unless its provenance is tied to a peer-reviewed measured experiment.
 
@@ -33,19 +33,23 @@ The registry does **not** count the following as independent primary measured ev
 
 Reviews remain useful as discovery maps. Validated simulations remain useful as supporting physics. Neither inflates the primary measured count.
 
+A 2025 drift-detection/incremental-learning paper was specifically screened out of the independent count because the paper states that its experimental evaluation reuses the same dataset as an earlier study. It remains potentially useful supporting/re-analysis literature but contributes **zero** new experiment identities.
+
+During seventh-pack QA, `10.1007/s00170-023-11100-1` was rejected as a new addition because it was already present in the original process-quality pack. The first replacement attempt, `10.1016/j.matdes.2009.01.004`, was also rejected because the same DOI was already present in the classic surface/optics pack. Both remain useful evidence and are counted exactly once. The final replacement is the independent quantitative ejection-force experiment `10.1016/S0141-6359(99)00039-2`.
+
 ## Deduplication and redundancy rules
 
 Every counted study has DOI/publisher provenance, an experiment identity and overlap group, machine/material/tool context, measured signals, physical outcomes, a scale statement, raw-data status, causal-strength classification and an explicit limitation.
 
 A paper and its companion raw dataset share one experiment/overlap identity for independence purposes. A different paper is not independent merely because it has a different DOI: the experimental programme must also be distinct.
 
-The registry now deliberately goes beyond the two-study promotion minimum. Every staged mechanism must retain at least **three distinct experimental identities** across its qualifying and backup evidence. `qa_primary_measured_evidence.py` fails if a DOI, experiment identity or overlap group is reused inside a mechanism's evidence set, if a qualifying DOI is reused as backup evidence, or if redundancy falls below three independent experiments.
+The registry deliberately goes beyond the two-study promotion minimum. Every staged mechanism retains at least **three distinct experimental identities** across its qualifying and backup evidence. `qa_primary_measured_evidence.py` fails if a DOI, experiment identity or overlap group is reused inside a mechanism's evidence set, if a qualifying DOI is reused as backup evidence, or if redundancy falls below three independent experiments.
 
 ## Credibility tiers
 
 ### Tier A — measured + executable data
 
-A Tier A record requires peer-reviewed primary measured evidence plus a public raw or companion measured dataset with traceable provenance. Current examples include the high-resolution scatimdata experiments, the completed Mendeley industrial benchmark, the RWTH post-consumer-recycled material control experiments and the 955-row hot-runner sustainable-material supplementary dataset associated with `10.3390/su13148102`.
+A Tier A record requires peer-reviewed primary measured evidence plus a public raw or companion measured dataset with traceable provenance. Current examples include the high-resolution scatimdata experiments, the completed Mendeley industrial benchmark, the RWTH post-consumer-recycled material control experiments and the hot-runner sustainable-material supplementary dataset associated with `10.3390/su13148102`.
 
 Tier A is the preferred source for executable MouldMaster benchmark/data-path work. It still does not make historical values into recommended process settings.
 
@@ -53,38 +57,41 @@ Tier A is the preferred source for executable MouldMaster benchmark/data-path wo
 
 Tier B requires publisher-verified peer-reviewed primary measured experiments with real process/material signals and physical outcomes. These studies are strong mechanism evidence but are not silently treated as reusable training datasets.
 
-## Mechanism coverage strengthened in this revision
+## Breadth added beyond the first 60 studies
 
-The expansion adds substantial independent measured depth for:
+The sixth pack, `data/primary-measured-evidence/breadth-production-cooling-v1.json`, adds five independent 2026 measured programmes chosen for diversity rather than duplication:
 
-- hot-runner and sequential-valve-gate **actual behaviour**, including direct command-to-valve-opening measurement, cavity pressure, accelerometer/CCD verification and real-time melt-front detection;
-- gas- and water-assisted moulding, including residual wall thickness, penetration, cooling, surface quality, void formation and ultrasonic in-process measurement;
-- post-consumer/recycled polypropylene variability, contamination, silver streaks, crystallization, mechanical properties and repeat/reprocessing history;
-- retained fibre length and fibre breakage with independent mechanical outcomes;
-- multicavity filling imbalance across conventional thermoplastics and powder-injection systems;
-- additional LSR cavity-pressure/tie-bar/quality evidence;
-- injection-compression cavity-pressure/backflow evidence;
-- plus the previously retained cavity-pressure, surface-replication, residual-stress, weld-line, moisture and optical studies.
+- cooling time, measured demoulding temperature, shrinkage and warpage in virgin and post-consumer-recycled PP (`10.3390/polym18151852`);
+- real-time cavity pressure and temperature across conventional, conformal-cooling and CuBe mould configurations with dimensional/mechanical outcomes (`10.1007/s12541-026-01580-y`);
+- PP processing history linked to molecular-weight distribution, rheology, shrinkage and tensile behaviour (`10.1016/j.polymer.2026.130427`);
+- **1,320 physical experiments across 27 industrial machines**, 10 PP grades and 50 automotive reservoir variants with measured warpage (`10.3389/fmats.2026.1838502`);
+- multi-material experimental injection-moulding energy observations spanning PLA, PBS, virgin PP and recycled/modified recycled PP (`10.1007/s40684-026-00916-3`).
 
-## Nine promotion candidates — staged, not automatically applied
+The seventh pack, `data/primary-measured-evidence/longrun-fault-control-v1.json`, adds five more independent programmes that target MouldMaster's remaining measured-learning weaknesses:
 
-All nine mechanisms that remain provisional in the learner-facing registry now have an independent qualifying pair and backup evidence:
+- approximately **280,000 real production cycles over six months** for long-horizon melt/process stability and defect-onset monitoring (`10.3390/polym18010032`);
+- a controlled conventional-versus-external-gas-assisted moulding experiment where physical burn marks were photographed, quantified by image processing and reduced/eliminated under controlled gas intervention (`10.3390/polym13234087`);
+- external nozzle-pressure and tie-bar-strain sensing with adaptive quality control validated in continuous production at **two sites**, using measured product weight as the quality outcome (`10.3390/technologies13030097`);
+- shot-to-shot cavity-pressure-based holding-pressure compensation under an imposed barrel-temperature disturbance, verified against part weight and dimensions (`10.1002/app.50357`);
+- a quantitative ejection-force experiment across PP, PMMA and PET using controlled core roughness and PVD-coated mould cores (`10.1016/S0141-6359(99)00039-2`).
 
-| Mechanism | Qualifying DOI pair | Additional independent backup |
-| --- | --- | ---: |
-| Fibre breakage / retained fibre length | `10.1002/pc.27232` + `10.1002/app.70427` | 3 |
-| Runner/gate/multicavity imbalance | `10.3390/polym16202874` + `10.3390/s23031735` | 2 |
-| Hot-runner actual behaviour | `10.1002/app.22371` + `10.1016/j.jmapro.2024.07.095` | 5 |
-| Liquid silicone rubber | `10.1002/app.53381` + `10.7735/ksmte.2014.23.2.206` | 1 |
-| Fluid-assisted moulding | `10.1155/2015/161938` + `10.1002/pen.20832` | 8 |
-| Moisture/drying/degradation | `10.3390/app12031410` + `10.37358/MP.20.1.5311` | 1 |
-| Recyclate/process variability | `10.1016/j.jprocont.2026.103725` + `10.1002/pen.26689` | 6 |
-| Surface replication/release | `10.1016/j.jmapro.2019.04.010` + `10.1002/pen.24772` | 3 |
-| Injection-compression/precision optics | `10.1002/pat.6166` + `10.1002/pen.23429` | 1 |
+Together these packs raise the peer-reviewed primary-measured study ledger from 60 to **70**. They do **not** change the separate fully profiled dataset count or the accepted measured scalar-sample ledger unless their exact raw files later pass the dataset profiling boundary.
 
-These remain deliberately **staged**. Learner-visible evidence maturity in `data/evidence-coverage-v1.json` is not changed merely because the literature registry now exceeds the promotion threshold. Formal promotion still requires a mechanism dossier, bounded claim, explicit experimental-independence rationale and the existing promotion QA.
+The long-run stability study is counted as one experiment, not 280,000 independent studies. Its volatile/pre-defect operating windows are partly derived around operator-identified non-conforming events, so they support drift detection but do not by themselves prove physical root cause. The already-counted 2023 cavity-sensor fault study remains especially useful for educational replacement of synthetic cases because it contains measured defects, diagnostic evidence, maintenance/process intervention and physical improvement in one bounded experiment. The new ejection-force study strengthens tool-release and machine-health learning without converting its measured surface-roughness or coating results into universal mould specifications.
 
-The hot-runner gap is materially stronger than before: the qualifying evidence now includes a 2005 experiment that directly measures command-to-actual valve response with CCD, cavity-pressure transducers and accelerometer verification, and an independent 2024 experiment that uses real-time melt-front detection to control/validate sequential valve gating. Supporting experiments add physical filling, weld-line, structural and mechanical outcomes across different hot-runner architectures.
+## Formal mechanism promotions
+
+The historical `data/evidence-coverage-v1.json` remains the preserved pre-promotion snapshot. `data/evidence-promotion-overlay-v2.json` records nine explicit downstream promotions after the qualifying studies were resolved through formal dossiers and independence checks.
+
+Resolved priority-mechanism state:
+
+- **12 promoted**
+- **0 provisional**
+- **0 gaps**
+
+The nine overlay promotions cover fibre breakage/retained length, runner/gate/multicavity imbalance, hot-runner actual behaviour, LSR, fluid-assisted moulding, moisture/drying/degradation, recyclate/process variability, surface replication/release and injection-compression/precision optics.
+
+Promotion remains mechanism-level evidence only. It does not make paper-specific pressure, temperature, timing, material, geometry, wall-thickness, moisture, fibre-length, valve-delay, energy or quality values into universal production rules.
 
 ## Evidence interpretation boundary
 
@@ -96,4 +103,4 @@ No numerical pressure, temperature, speed, time, fibre length, moisture value, r
 
 Synthetic data remain useful for controlled teaching cases, rare faults and counterfactual/recovery demonstrations where no suitable measured dataset exists. They remain explicitly synthetic.
 
-The intended direction is **measured-data-first where credible measured evidence exists, synthetic gap-filling where it does not**. With all nine previously provisional mechanisms now backed by redundant primary measured literature, the next reduction in synthetic dependence should come from ingesting more Tier A raw datasets and building real fault/intervention/recovery histories rather than simply adding more simulated rows.
+The intended direction is **measured-data-first where credible measured evidence exists, synthetic gap-filling where it does not**. The next reduction in synthetic dependence should come from profiling more lawful Tier A/raw datasets and obtaining real fault → intervention → recovery histories, while continuing to broaden independent peer-reviewed experimental coverage.
