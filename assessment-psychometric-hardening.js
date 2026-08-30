@@ -1,9 +1,7 @@
-/* MouldMaster psychometric assessment hardening — 2026.08.30.5 */
+/* MouldMaster psychometric assessment hardening — 2026.08.30.6 */
 (function(){
 'use strict';
-const VERSION='2026.08.30.5';
-const D=window.MM_DATA,DIAG=window.MM_DIAGNOSTIC_LABS,MAT=window.MM_MATERIAL_BEHAVIOUR_LABS,OPT=window.MM_MATERIAL_PRACTICE_EXTENSIONS;
-if(!D||!DIAG?.labs||!MAT?.labs)throw new Error('Assessment and lab banks must load before psychometric hardening');
+const VERSION='2026.08.30.6';
 const clean=t=>String(t||'').trim().replace(/[.]+$/,'');
 const unsafe=t=>/\b(bypass|defeat|disable|remove)\b.{0,55}\b(guard|interlock|safeguard|protection|lockout)\b/i.test(String(t||''));
 function lcFirst(s){s=clean(s);return s?s.charAt(0).toLowerCase()+s.slice(1):s}
@@ -44,28 +42,43 @@ function harden(options,key,feedback,focus,seed){
  }
  return rows;
 }
-let technicalItems=0,regionalItems=0,scenarioItems=0,diagnosticItems=0,materialItems=0,optionalItems=0;
-for(const level of ['Beginner','Intermediate','Advanced'])for(let i=0;i<(D.exams?.[level]||[]).length;i++){
- const q=D.exams[level][i],key=Number(q?.correct??q?.[2]),x=harden(q?.options??q?.[1],key,q?.optionFeedback??q?.[6],q?.q??q?.[0],100+i);if(!x)continue;
- if(Array.isArray(q)){q[1]=x.map(r=>r.text);q[6]=x.map(r=>r.feedback)}else{q.options=x.map(r=>r.text);q.optionFeedback=x.map(r=>r.feedback)}technicalItems++;
+function applyHardening(attempt=0){
+ if(window.MM_PSYCHOMETRIC_HARDENING?.version===VERSION)return;
+ const D=window.MM_DATA,DIAG=window.MM_DIAGNOSTIC_LABS,MAT=window.MM_MATERIAL_BEHAVIOUR_LABS,OPT=window.MM_MATERIAL_PRACTICE_EXTENSIONS;
+ const scenarioCount=D?.scenarios?.length||0;
+ if(!D||!DIAG?.labs||!MAT?.labs||!OPT?.labs||scenarioCount!==40){
+   if(attempt<80&&typeof setTimeout==='function'){setTimeout(()=>applyHardening(attempt+1),25);return}
+   throw new Error(`Assessment banks must finish loading before psychometric hardening (scenarios ${scenarioCount}/40)`);
+ }
+ let technicalItems=0,regionalItems=0,scenarioItems=0,diagnosticItems=0,materialItems=0,optionalItems=0;
+ for(const level of ['Beginner','Intermediate','Advanced'])for(let i=0;i<(D.exams?.[level]||[]).length;i++){
+  const q=D.exams[level][i],key=Number(q?.correct??q?.[2]),x=harden(q?.options??q?.[1],key,q?.optionFeedback??q?.[6],q?.q??q?.[0],100+i);if(!x)continue;
+  if(Array.isArray(q)){q[1]=x.map(r=>r.text);q[6]=x.map(r=>r.feedback)}else{q.options=x.map(r=>r.text);q.optionFeedback=x.map(r=>r.feedback)}technicalItems++;
+ }
+ for(const regionName of ['UK','US','NZ'])for(const level of ['Beginner','Intermediate','Advanced'])for(let i=0;i<(D.regionalQuestions?.[regionName]?.[level]||[]).length;i++){
+  const q=D.regionalQuestions[regionName][level][i],key=Number(q?.correct??q?.[2]),x=harden(q?.options??q?.[1],key,q?.optionFeedback??q?.[6],q?.q??q?.[0],300+i);if(!x)continue;
+  if(Array.isArray(q)){q[1]=x.map(r=>r.text);q[6]=x.map(r=>r.feedback)}else{q.options=x.map(r=>r.text);q.optionFeedback=x.map(r=>r.feedback)}regionalItems++;
+ }
+ const scenarioKeyPositions=[0,0,0,0];
+ (D.scenarios||[]).forEach((s,i)=>{const key=Number(s.correct),x=harden(s.choices,key,s.feedback,s.category||s.title,500+i);if(!x)return;const keyed=x[key],wrong=x.filter((_,j)=>j!==key),target=i%4;wrong.splice(target,0,keyed);s.choices=wrong.map(r=>r.text);s.feedback=wrong.map(r=>r.feedback);s.correct=target;scenarioKeyPositions[target]++;scenarioItems++});
+ if(scenarioKeyPositions.some(x=>x!==10))throw new Error(`Scenario key positions are not balanced: ${scenarioKeyPositions.join(',')}`);
+ for(const [li,lab] of (DIAG.labs||[]).entries())for(const [si,step] of (lab.steps||[]).entries()){const key=(step.choices||[]).findIndex(c=>c.correct===true);if(key<0)continue;const x=harden(step.choices.map(c=>c.text),key,step.choices.map(c=>c.feedback),lab.focus||lab.title,800+li*7+si);if(!x)continue;step.choices=x.map((r,i)=>({text:r.text,correct:i===key,feedback:r.feedback}));diagnosticItems++}
+ for(const [li,lab] of (MAT.labs||[]).entries())for(const [si,step] of (lab.steps||[]).entries()){const key=(step.choices||[]).findIndex(c=>c.correct===true);if(key<0)continue;const x=harden(step.choices.map(c=>c.text),key,step.choices.map(c=>c.feedback),lab.focus||lab.title,1100+li*7+si);if(!x)continue;step.choices=x.map((r,i)=>({text:r.text,correct:i===key,feedback:r.feedback}));materialItems++}
+ for(const [li,lab] of OPT.labs.entries())for(const [si,step] of (lab.steps||[]).entries()){
+  const key=(step.choices||[]).findIndex(c=>c.correct===true);if(key<0)continue;
+  if(String(step.stage||'').toLowerCase()==='explain'&&/^(why is this|what is the|what does the|why can)/i.test(String(step.question||'')))step.question=`In the ${lab.title} case, what does the evidence demonstrate about ${String(lab.focus||'material behaviour').toLowerCase()}?`;
+  const x=harden(step.choices.map(c=>c.text),key,step.choices.map(c=>c.feedback),lab.focus||lab.title,1400+li*7+si);if(!x)continue;step.choices=x.map((r,i)=>({text:r.text,correct:i===key,feedback:r.feedback}));optionalItems++;
+ }
+ const expected={technicalItems:30,regionalItems:27,scenarioItems:40,diagnosticItems:36,materialItems:24,optionalItems:40};
+ const actual={technicalItems,regionalItems,scenarioItems,diagnosticItems,materialItems,optionalItems};for(const k of Object.keys(expected))if(actual[k]!==expected[k])throw new Error(`Psychometric item coverage mismatch for ${k}: ${actual[k]}/${expected[k]}`);
+ const itemsHardened=Object.values(actual).reduce((a,b)=>a+b,0),optionsParallelised=itemsHardened*4;
+ D.assessmentQA=D.assessmentQA||{};D.assessmentQA.psychometricHardening={version:VERSION,semanticAnswerChanges:0,scenarioKeyPositions:scenarioKeyPositions.slice(),itemsHardened,optionsParallelised,optionSpecificFeedback:true,initialization:'after-training-upgrade'};
+ window.MM_PSYCHOMETRIC_HARDENING={version:VERSION,semanticAnswerChanges:0,scenarioKeyPositions:scenarioKeyPositions.slice(),itemsHardened,optionsParallelised,byBank:actual,initialization:'after-training-upgrade',policy:'Apply a common evidence-review frame to every option, retain each underlying proposition and safety boundary, keep the keyed answer shorter than at least one distractor, and balance scenario key positions.'};
 }
-for(const regionName of ['UK','US','NZ'])for(const level of ['Beginner','Intermediate','Advanced'])for(let i=0;i<(D.regionalQuestions?.[regionName]?.[level]||[]).length;i++){
- const q=D.regionalQuestions[regionName][level][i],key=Number(q?.correct??q?.[2]),x=harden(q?.options??q?.[1],key,q?.optionFeedback??q?.[6],q?.q??q?.[0],300+i);if(!x)continue;
- if(Array.isArray(q)){q[1]=x.map(r=>r.text);q[6]=x.map(r=>r.feedback)}else{q.options=x.map(r=>r.text);q.optionFeedback=x.map(r=>r.feedback)}regionalItems++;
+function scheduleHardening(){
+ if(typeof document==='undefined'){applyHardening();return}
+ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',()=>setTimeout(()=>applyHardening(),0),{once:true});
+ else setTimeout(()=>applyHardening(),0);
 }
-const scenarioKeyPositions=[0,0,0,0];
-(D.scenarios||[]).forEach((s,i)=>{const key=Number(s.correct),x=harden(s.choices,key,s.feedback,s.category||s.title,500+i);if(!x)return;const keyed=x[key],wrong=x.filter((_,j)=>j!==key),target=i%4;wrong.splice(target,0,keyed);s.choices=wrong.map(r=>r.text);s.feedback=wrong.map(r=>r.feedback);s.correct=target;scenarioKeyPositions[target]++;scenarioItems++});
-if((D.scenarios||[]).length===40&&scenarioKeyPositions.some(x=>x!==10))throw new Error(`Scenario key positions are not balanced: ${scenarioKeyPositions.join(',')}`);
-for(const [li,lab] of (DIAG.labs||[]).entries())for(const [si,step] of (lab.steps||[]).entries()){const key=(step.choices||[]).findIndex(c=>c.correct===true);if(key<0)continue;const x=harden(step.choices.map(c=>c.text),key,step.choices.map(c=>c.feedback),lab.focus||lab.title,800+li*7+si);if(!x)continue;step.choices=x.map((r,i)=>({text:r.text,correct:i===key,feedback:r.feedback}));diagnosticItems++}
-for(const [li,lab] of (MAT.labs||[]).entries())for(const [si,step] of (lab.steps||[]).entries()){const key=(step.choices||[]).findIndex(c=>c.correct===true);if(key<0)continue;const x=harden(step.choices.map(c=>c.text),key,step.choices.map(c=>c.feedback),lab.focus||lab.title,1100+li*7+si);if(!x)continue;step.choices=x.map((r,i)=>({text:r.text,correct:i===key,feedback:r.feedback}));materialItems++}
-if(OPT?.labs)for(const [li,lab] of OPT.labs.entries())for(const [si,step] of (lab.steps||[]).entries()){
- const key=(step.choices||[]).findIndex(c=>c.correct===true);if(key<0)continue;
- if(String(step.stage||'').toLowerCase()==='explain'&&/^(why is this|what is the|what does the|why can)/i.test(String(step.question||'')))step.question=`In the ${lab.title} case, what does the evidence demonstrate about ${String(lab.focus||'material behaviour').toLowerCase()}?`;
- const x=harden(step.choices.map(c=>c.text),key,step.choices.map(c=>c.feedback),lab.focus||lab.title,1400+li*7+si);if(!x)continue;step.choices=x.map((r,i)=>({text:r.text,correct:i===key,feedback:r.feedback}));optionalItems++;
-}
-const expected={technicalItems:30,regionalItems:27,scenarioItems:40,diagnosticItems:36,materialItems:24,optionalItems:40};
-const actual={technicalItems,regionalItems,scenarioItems,diagnosticItems,materialItems,optionalItems};for(const k of Object.keys(expected))if(actual[k]!==expected[k])throw new Error(`Psychometric item coverage mismatch for ${k}: ${actual[k]}/${expected[k]}`);
-const itemsHardened=Object.values(actual).reduce((a,b)=>a+b,0),optionsParallelised=itemsHardened*4;
-D.assessmentQA=D.assessmentQA||{};D.assessmentQA.psychometricHardening={version:VERSION,semanticAnswerChanges:0,scenarioKeyPositions:scenarioKeyPositions.slice(),itemsHardened,optionsParallelised,optionSpecificFeedback:true};
-window.MM_PSYCHOMETRIC_HARDENING={version:VERSION,semanticAnswerChanges:0,scenarioKeyPositions:scenarioKeyPositions.slice(),itemsHardened,optionsParallelised,byBank:actual,policy:'Apply a common evidence-review frame to every option, retain each underlying proposition and safety boundary, keep the keyed answer shorter than at least one distractor, and balance scenario key positions.'};
+scheduleHardening();
 })();
