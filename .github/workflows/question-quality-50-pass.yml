@@ -21,6 +21,7 @@ on:
       - 'qa_question_quality_50_pass_runtime.py'
       - 'qa_question_quality_extreme_50_pass.py'
       - 'qa_question_quality_extreme_runtime.py'
+      - 'qa_question_quality_extreme_runtime_v2.py'
       - '.github/workflows/question-quality-50-pass.yml'
   workflow_dispatch:
 
@@ -46,7 +47,7 @@ jobs:
       - name: Run 50-pass quality audit across formal and optional learner-visible questions
         run: python qa_question_quality_50_pass_runtime.py
       - name: Run extreme 50-pass psychometric and evidence audit
-        run: python qa_question_quality_extreme_runtime.py
+        run: python qa_question_quality_extreme_runtime_v2.py
       - name: Upload question quality reports
         if: always()
         uses: actions/upload-artifact@v7
