@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "version": "2026.08.30.2",
+  "version": "2026.08.30.3",
   "reviewed": "2026-08-30",
   "baseWave": {
     "fullyProfiledMeasuredDatasetFamilies": 7,
@@ -16,8 +16,7 @@
       "state": "publisher-record-no-files-exposed",
       "countsAsFullyProfiledMeasuredDataset": false,
       "acceptedMeasuredTimeSeriesSamples": 0,
-      "resultPath": "data/public-benchmark-results/ad-stgn-injection-moulding-v1-stage1.json",
-      "nextAction": "recheck publisher file exposure; do not count reported sensors or samples until delivered files are exposed and profiled"
+      "resultPath": "data/public-benchmark-results/ad-stgn-injection-moulding-v1-stage1.json"
     },
     {
       "priority": 2,
@@ -28,9 +27,7 @@
       "countsAsFullyProfiledMeasuredDataset": true,
       "recordLevelMeasuredOutcomeValues": 96,
       "acceptedMeasuredTimeSeriesSamples": 0,
-      "resultPath": "data/public-benchmark-results/fhj5p7ww9v-v1.json",
-      "useScope": "noncommercial-education-research-only",
-      "commercialReuseAllowed": false
+      "resultPath": "data/public-benchmark-results/fhj5p7ww9v-v1.json"
     },
     {
       "priority": 3,
@@ -39,8 +36,6 @@
       "license": "CC BY 4.0",
       "state": "accepted-profiled-material-characterization",
       "countsAsFullyProfiledMeasuredDataset": true,
-      "injectionMouldingCycleDataset": false,
-      "deliveredNumericCells": 31817,
       "deliveredDirectPhysicalValueCells": 28590,
       "materialCharacterizationTraceMeasurementCells": 6026,
       "acceptedMeasuredTimeSeriesSamples": 0,
@@ -53,13 +48,7 @@
       "license": "CC BY 4.0",
       "state": "accepted-profiled-record-level-injection-moulding",
       "countsAsFullyProfiledMeasuredDataset": true,
-      "experimentalRows": 35,
       "directMeasuredPropertyValues": 525,
-      "directMeasuredPropertyBreakdown": {
-        "tensileModulus": 175,
-        "hardness": 175,
-        "toughness": 175
-      },
       "derivedAverageValuesExcluded": 105,
       "acceptedMeasuredTimeSeriesSamples": 0,
       "resultPath": "data/public-benchmark-results/4h98rz9f92-v3.json"
@@ -71,13 +60,8 @@
       "license": "CC BY 4.0",
       "state": "accepted-profiled-material-test-traces",
       "countsAsFullyProfiledMeasuredDataset": true,
-      "materialTestStressTraceValues": 71442,
-      "materialTestStrainTraceValues": 71442,
-      "materialTestTracePointPairs": 71442,
       "materialTestTraceValues": 142884,
-      "preHeaderNumericCellsExcluded": 20,
-      "plotNumericCellsExcluded": 4,
-      "theoreticalWorkbookValuesAccepted": 0,
+      "materialTestTracePointPairs": 71442,
       "acceptedMeasuredTimeSeriesSamples": 0,
       "resultPath": "data/public-benchmark-results/pmc4753395-hdpe-cenosphere-v1.json"
     },
@@ -86,15 +70,13 @@
       "datasetId": "mendeley-8c8fjwcw86-v1",
       "doi": "10.17632/8c8fjwcw86.1",
       "license": "CC BY 4.0",
-      "state": "completed-no-acceptable-injection-trace",
-      "countsAsFullyProfiledMeasuredDataset": false,
-      "slsTensileTracePointPairsExcluded": 1359,
-      "derivedBoxPlotPairedPointsExcluded": 72,
-      "mixedRouteStructuralPairedPointsExcluded": 26424,
-      "candidateInjectionMaterialTracePointPairs": 0,
+      "state": "accepted-profiled-injection-moulded-xrd-characterization",
+      "countsAsFullyProfiledMeasuredDataset": true,
+      "acceptedMaterialCharacterizationTraceValues": 6588,
+      "xrdCategoryAxisValuesExcluded": 6588,
       "acceptedMeasuredTimeSeriesSamples": 0,
-      "resultPath": "data/public-benchmark-results/nylon12-gamma-8c8fjwcw86-v1.json",
-      "terminalReviewComplete": true
+      "resultPath": "data/public-benchmark-results/8c8fjwcw86-v1.json",
+      "decisionNote": "Later route-explicit semantic audit supersedes the earlier conservative rejection only for the XRD series explicitly labelled Injection Molded Nylon 12."
     },
     {
       "priority": 7,
@@ -103,24 +85,77 @@
       "license": "CC BY 4.0",
       "state": "accepted-profiled-record-level-injection-mechanical-testing",
       "countsAsFullyProfiledMeasuredDataset": true,
-      "tensileDirectRecordLevelValues": 347,
-      "bendingDirectRecordLevelValues": 142,
       "directRecordLevelInjectionMeasuredValues": 489,
       "acceptedMeasuredTimeSeriesSamples": 0,
       "resultPath": "data/public-benchmark-results/yxz2w7ctnh-v1.json"
+    },
+    {
+      "priority": 8,
+      "datasetId": "mendeley-crmb7xjymg-v1",
+      "doi": "10.17632/crmb7xjymg.1",
+      "license": "CC BY 4.0",
+      "state": "completed-profiled-xps-vamas-material-tool-interface",
+      "countsAsFullyProfiledMeasuredDataset": true,
+      "acceptedMaterialCharacterizationTraceValues": 71868,
+      "transmissionAndCalibrationVariablesExcluded": true,
+      "energyAxisExcluded": true,
+      "acceptedMeasuredTimeSeriesSamples": 0,
+      "resultPath": "data/public-benchmark-results/crmb7xjymg-v1.json"
+    },
+    {
+      "priority": 9,
+      "datasetId": "mendeley-597jrsm9zm-v1",
+      "doi": "10.17632/597jrsm9zm.1",
+      "license": "CC BY-NC 3.0",
+      "state": "profiled-process-documentation-only-noncounting",
+      "countsAsFullyProfiledMeasuredDataset": false,
+      "acceptedMeasuredTimeSeriesSamples": 0,
+      "resultPath": "data/public-benchmark-results/597jrsm9zm-v1.json"
+    },
+    {
+      "priority": 10,
+      "datasetId": "mendeley-c3pt29jt7c-v1",
+      "doi": "10.17632/c3pt29jt7c.1",
+      "license": "CC BY 4.0",
+      "state": "retrieved-profile-blocked-external-dic-workbook-not-delivered",
+      "countsAsFullyProfiledMeasuredDataset": false,
+      "externalWorkbookToken": "[1]PP6523_DIC!",
+      "acceptedMeasuredTimeSeriesSamples": 0,
+      "resultPath": "data/public-benchmark-results/c3pt29jt7c-v1.json"
+    },
+    {
+      "priority": 11,
+      "datasetId": "mendeley-ztkc87d6sr-v1",
+      "doi": "10.17632/ztkc87d6sr.1",
+      "license": "CC BY 4.0",
+      "state": "publisher-record-no-files-exposed",
+      "countsAsFullyProfiledMeasuredDataset": false,
+      "acceptedMeasuredTimeSeriesSamples": 0,
+      "resultPath": "data/public-benchmark-results/ztkc87d6sr-v1.json"
+    },
+    {
+      "priority": 12,
+      "datasetId": "strathclyde-rtim-tablets-v1",
+      "doi": "10.15129/e1a516b3-41ad-4b38-81e1-6ebec17b8e7d",
+      "license": "CC BY 4.0",
+      "state": "retrieval-blocked-http",
+      "countsAsFullyProfiledMeasuredDataset": false,
+      "acceptedMeasuredTimeSeriesSamples": 0,
+      "resultPath": "data/public-benchmark-results/strathclyde-rtim-tablets-v1.json"
     }
   ],
   "summary": {
-    "wave2SourcesReviewed": 7,
-    "wave2FullyProfiledAccepted": 5,
-    "wave2PublisherPayloadBlocked": 1,
-    "wave2TerminalSemanticRejected": 1,
-    "effectiveFullyProfiledMeasuredDatasetFamilies": 12,
+    "wave2SourcesReviewed": 12,
+    "wave2FullyProfiledAccepted": 7,
+    "wave2PublisherPayloadBlocked": 3,
+    "wave2ProfiledNonCounting": 1,
+    "wave2TerminalSemanticRejected": 0,
+    "effectiveFullyProfiledMeasuredDatasetFamilies": 14,
     "effectiveAcceptedMeasuredTimeSeriesSamples": 66521519,
     "wave2RecordLevelMeasuredOutcomeValues": 1110,
     "wave2RecordLevelDerivedSummaryValuesExcluded": 105,
     "wave2MaterialCharacterizationDirectPhysicalValues": 28590,
-    "wave2MaterialCharacterizationTraceMeasurementCells": 6026,
+    "wave2MaterialCharacterizationTraceMeasurementCells": 84482,
     "wave2MaterialTestTraceValues": 142884,
     "wave2MaterialTestTracePointPairs": 71442,
     "wave2MaterialTestPreHeaderNumericCellsExcluded": 20
@@ -133,7 +168,8 @@
     "derivedRecordLevelSummaryValuesAreExcludedFromDirectMeasuredOutcomeCount": true,
     "materialCharacterizationCellCountsDoNotInflateInjectionCycleHighFrequencySampleMetric": true,
     "materialTestTraceValuesDoNotInflateInjectionProcessHighFrequencySampleMetric": true,
-    "crossFigureMaterialCharacterizationReuseIsNotClaimedAsDeduplicatedExperiments": true,
-    "mixedManufacturingRouteEvidenceMustBeUnambiguousBeforeCounting": true
+    "mixedManufacturingRouteEvidenceMustBeUnambiguousBeforeCounting": true,
+    "missingExternalWorkbookArraysAreNotCounted": true,
+    "httpBlockedAndUnexposedPayloadsAreNotCounted": true
   }
 }

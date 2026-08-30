@@ -1,17 +1,19 @@
 name: MouldMaster Master Data Compilation
-# The measured-sample assertion below remains 66,521,519 because record-level/material-test Wave-2 families do not inflate injection-process waveforms.
+# The effective measured-source view includes the fresh-main Wave-2 extension. XRD/XPS characterization does not inflate process waveforms.
 
 on:
   pull_request:
     branches: [main]
     paths:
       - 'tools/compile_master_data.py'
+      - 'tools/compile_master_data_base.py'
       - 'tools/harvest_openalex_injection_moulding.py'
       - 'qa_master_data_compile.py'
       - 'qa_content_scale_targets.py'
       - 'data/content-scale-targets.json'
       - 'data/measured-dataset-inventory-v1.json'
       - 'data/measured-dataset-execution-ledger-v1.json'
+      - 'data/measured-dataset-wave2-extension-v1.json'
       - 'data/measured-dataset-rights-review-*.json'
       - 'data/public-benchmark-contracts/**'
       - 'data/public-benchmark-results/**'
@@ -40,9 +42,9 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
-      - name: Validate reconciled content counts
+      - name: Validate landed base content checkpoint
         run: python qa_content_scale_targets.py
-      - name: Compile repository data and validate core boundaries
+      - name: Validate effective Wave-2 master compilation
         run: python qa_master_data_compile.py
       - name: Harvest 2,000 deduplicated research candidates
         run: |
@@ -56,7 +58,7 @@ jobs:
           python tools/compile_master_data.py \
             --output-dir compiled-data \
             --research-candidates compiled-input/research-master-candidates.json
-      - name: Validate complete compilation
+      - name: Validate complete effective compilation
         run: |
           python - <<'PY'
           import json
@@ -64,9 +66,9 @@ jobs:
           x=json.loads(Path('compiled-data/manifest.json').read_text(encoding='utf-8'))
           c=x['counts']
           assert x['candidateRegistryEmbedded'] is True
-          assert c['measuredDatasetInventory']==25
-          assert c['automatedIngestionAllowedDatasets']==14
-          assert c['fullyProfiledMeasuredDatasets']==12
+          assert c['measuredDatasetInventory']==31
+          assert c['automatedIngestionAllowedDatasets']==19
+          assert c['fullyProfiledMeasuredDatasets']==14
           assert c['measuredTimeSeriesSamplesAccepted']==66521519
           assert c['publisherVerifiedPrimaryMeasuredStudies']==60
           assert c['verifiedPeerReviewedResearchRecords']==60

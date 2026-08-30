@@ -1,0 +1,40 @@
+{
+  "schema": 1,
+  "status": "retrieved-profile-blocked-external-dic-workbook-not-delivered",
+  "retrievedDate": "2026-08-29",
+  "source": {
+    "datasetId": "mendeley-c3pt29jt7c-v1",
+    "datasetDoi": "10.17632/c3pt29jt7c.1",
+    "license": "CC BY 4.0",
+    "version": 1,
+    "publisherFileName": "DIC data.xlsx",
+    "publisherFileSha256": "c9a552b885e451f3feb03af8830c9d16428ee52fcdbf0440757fad163f0a36c0",
+    "publisherFileSizeBytes": 1043361
+  },
+  "deliveredWorkbookProfile": {
+    "worksheets": [
+      {"sheet":"Sheet1","numericConstantCells":18,"formulaCells":0,"charts":19,"sheetContentSha256":"c75359b72684"},
+      {"sheet":"Sheet2","numericConstantCells":20,"formulaCells":16,"charts":1,"sheetContentSha256":"3bf1f3a18fdf"}
+    ],
+    "chartCount": 20,
+    "chartSeriesCount": 74,
+    "chartExternalCellReferences": 148,
+    "uniqueExternalCellReferences": 90,
+    "externalWorkbookToken": "[1]PP6523_DIC!",
+    "externalWorkbookSheetDelivered": false,
+    "axisSemanticsObserved": ["Distance from gate/mm", "Z position/mm"],
+    "seriesTimeLabelsObserved": ["25min", "1h", "3h", "24h", "12day/12days"],
+    "exampleExternalRangePattern": "[1]PP6523_DIC!$<column>$17:$<column>$<row>",
+    "rawDicMeasurementArraysEmbeddedInDeliveredWorkbook": false,
+    "rawNumericValuesEmitted": false
+  },
+  "acceptance": {
+    "countsAsFullyProfiledMeasuredDataset": false,
+    "acceptedMeasuredTimeSeriesSamples": 0,
+    "reason": "The delivered workbook contains charts whose data series reference a separate external workbook/sheet named PP6523_DIC. That measurement workbook is not present in the publisher release, so the DIC Z-position arrays cannot be source-profiled or counted."
+  },
+  "retrieval": {
+    "rawPublisherFileCommitted": false,
+    "rawRowsOrNumericValuesUploadedAsArtifact": false
+  }
+}
