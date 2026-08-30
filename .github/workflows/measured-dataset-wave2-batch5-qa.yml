@@ -1,0 +1,33 @@
+name: MouldMaster Measured Dataset Wave 2 Batch 5 QA
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'data/measured-dataset-wave2-batch5-extension-v1.json'
+      - 'data/public-benchmark-contracts/zenodo-energy-20338544-v1.json'
+      - 'data/public-benchmark-results/zenodo-energy-20338544-v1.json'
+      - 'data/public-benchmark-results/ad-stgn-injection-moulding-v1-stage1.json'
+      - 'tools/profile_zenodo_energy_20338544.py'
+      - 'tools/compile_master_data.py'
+      - 'tools/compile_master_data_wave2_batch4.py'
+      - 'qa_measured_dataset_wave2_batch5.py'
+      - 'qa_master_data_compile.py'
+      - '.github/workflows/measured-dataset-wave2-batch5-qa.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  source-and-reconciliation-audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Validate Zenodo energy acceptance and AD-STGN blocker
+        run: python qa_measured_dataset_wave2_batch5.py
+      - name: Validate immutable batch-4 checkpoint and effective batch-5 compilation
+        run: python qa_master_data_compile.py

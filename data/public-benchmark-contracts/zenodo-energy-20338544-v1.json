@@ -1,0 +1,34 @@
+{
+  "schema": 1,
+  "datasetId": "zenodo-energy-20338544",
+  "status": "completed-industrial-energy-timeseries-contract",
+  "source": {
+    "recordId": "20338544",
+    "datasetDoi": "10.5281/zenodo.20338544",
+    "publisher": "Zenodo",
+    "license": "CC BY 4.0",
+    "access": "open"
+  },
+  "measurementBoundary": {
+    "machine": "FGP085",
+    "acceptedRawProductionFiles": ["feb_production.csv", "mar_production.csv"],
+    "excludedOverlapCandidate": "test_dataset.csv",
+    "acceptedDirectPhysicalChannels": [
+      "A_ACT_POWER", "A_APRT_POWER", "A_CURRENT", "A_FREQ", "A_VOLTAGE",
+      "B_ACT_POWER", "B_APRT_POWER", "B_CURRENT", "B_FREQ", "B_VOLTAGE",
+      "C_ACT_POWER", "C_APRT_POWER", "C_CURRENT", "C_FREQ", "C_VOLTAGE"
+    ],
+    "excludedDerivedOrAggregateChannels": ["A_PF", "B_PF", "C_PF", "TOTAL_ACT_POWER", "TOTAL_APRT_POWER", "TOTAL_CURRENT"],
+    "excludedUnpopulatedChannel": "N_CURRENT",
+    "rawProductionRowsAccepted": 1269887,
+    "acceptedMeasuredTimeSeriesSamples": 19048305,
+    "rawFilesCommitted": false,
+    "rawRowsCommitted": false
+  },
+  "fingerprints": {
+    "feb_production.csv": {"md5": "3b2daf123be817b271529b909e19edc5", "sha256": "8a728a72f7fd4cf3821f244db0b31410bd27da0ca1997fc766673d044cf9da4c", "rows": 816925},
+    "mar_production.csv": {"md5": "12dd28a9e8a12ed734c3ca4398f93d1b", "sha256": "26ea166c06180969e64e4055996b2609b9f13efa45080b7d674a546abb1d8d36", "rows": 452962},
+    "test_dataset.csv": {"md5": "2a19cfa6f2fc569723e3ad8d78d8e418", "sha256": "259d7cfa903320cb5a2d51c816771f07b0b39a701d2a1b4bde8bfb491fee5fee", "rows": 2901}
+  },
+  "evidenceBoundary": "Only direct per-phase Shelly Pro 3EM instrument measurements from the exact February and March raw production streams count. Power-factor and total fields are derived/aggregate, neutral current is unpopulated, and the curated test dataset is excluded to avoid overlap."
+}
