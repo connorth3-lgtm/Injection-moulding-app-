@@ -8,7 +8,11 @@ ROOT=Path(__file__).resolve().parent
 FORMAL_OVERLAY=None
 OPTIONAL_OVERLAY=None
 OPTIONAL_POSITIONS=None
+FINAL_RUNTIME=None
+FINAL_META=None
 BASE_LOAD_RUNTIME=base.load_runtime_bank
+BASE_LOAD_LAB=base.load_lab_file
+BASE_LOAD_OPTIONAL=base.load_optional_material_practice
 BASE_EVALUATE=base.evaluate_item
 
 
@@ -86,34 +90,83 @@ process.stdout.write(JSON.stringify({items:out,overlay:window.MM_QUESTION_QUALIT
     return items
 
 
-def evaluate_runtime(item):
-    result=BASE_EVALUATE(item)
-    if item.get('kind')!='optional-material-practice':
-        return result
-    hard=set(result['hard']);warnings=set(result['warnings']);warnings.discard('optional-feedback-generated-at-runtime')
-    if 'correct-length-salience' in warnings:
-        warnings.remove('correct-length-salience');hard.add('correct-length-salience')
-    feedback=[base.norm(x) for x in item.get('feedback',[])]
-    if len(feedback)!=4:hard.add('feedback-count')
-    elif min(map(base.char_len,feedback))<20:hard.add('lab-feedback-too-shallow')
-    if len({base.norm_lower(x) for x in feedback if x})<3:hard.add('repetitive-option-feedback')
-    score=max(0,100-25*len(hard)-4*len(warnings))
-    return {'hard':sorted(hard),'warnings':sorted(warnings),'score':score}
+def load_final_runtime():
+    global FINAL_RUNTIME,FINAL_META
+    if FINAL_RUNTIME is not None:
+        return FINAL_RUNTIME
+    items=[]
+    items.extend(apply_formal_runtime_overlay())
+    items.extend(BASE_LOAD_LAB('diagnostic-learning-labs.js','MM_DIAGNOSTIC_LABS','diagnostic-lab','lab:'))
+    items.extend(BASE_LOAD_LAB('material-behaviour-labs.js','MM_MATERIAL_BEHAVIOUR_LABS','material-lab','material:'))
+    items.extend(load_optional_runtime())
+    need(len(items)==197,f'pre-hardening final-runtime item count mismatch: {len(items)}')
+    node=r'''
+const fs=require('fs'),vm=require('vm'),items=%s;
+const D={exams:{Beginner:[],Intermediate:[],Advanced:[]},regionalQuestions:{UK:{Beginner:[],Intermediate:[],Advanced:[]},US:{Beginner:[],Intermediate:[],Advanced:[]},NZ:{Beginner:[],Intermediate:[],Advanced:[]}},scenarios:[],assessmentQA:{}};
+const diagMap=new Map(),matMap=new Map(),optMap=new Map();
+const mkChoice=(text,correct,feedback)=>({text,correct,feedback});
+for(const x of items){
+ if(x.kind==='technical-exam')D.exams[x.level].push([x.stem,x.options,x.correct,x.rationale,x.reference||'',x.sourceUrl||null,x.feedback||[],!!x.critical]);
+ else if(x.kind==='regional-exam')D.regionalQuestions[x.region][x.level].push([x.stem,x.options,x.correct,x.rationale,x.reference||'',x.sourceUrl||null,x.feedback||[],true]);
+ else if(x.kind==='scenario'){const parts=String(x.stem||'').split(': ');D.scenarios.push({title:parts.shift()||x.id,situation:parts.join(': '),choices:x.options,correct:x.correct,why:x.rationale,feedback:x.feedback||[],category:x.category||'',difficulty:x.level||'',mmStableId:x.id});}
+ else if(x.kind==='diagnostic-lab'){if(!diagMap.has(x.labId))diagMap.set(x.labId,{id:x.labId,title:x.labId,level:x.level||'',focus:x.focus||'',steps:[]});diagMap.get(x.labId).steps.push({stage:x.stage,question:x.stem,choices:x.options.map((t,i)=>mkChoice(t,i===x.correct,(x.feedback||[])[i]||''))});}
+ else if(x.kind==='material-lab'){if(!matMap.has(x.labId))matMap.set(x.labId,{id:x.labId,title:x.labId,level:x.level||'',focus:x.focus||'',sourceIds:x.sourceIds||[],steps:[]});matMap.get(x.labId).steps.push({stage:x.stage,question:x.stem,choices:x.options.map((t,i)=>mkChoice(t,i===x.correct,(x.feedback||[])[i]||''))});}
+ else if(x.kind==='optional-material-practice'){if(!optMap.has(x.labId))optMap.set(x.labId,{id:x.labId,title:x.labId,level:x.level||'',focus:x.focus||'',sourceIds:x.sourceIds||[],steps:[]});optMap.get(x.labId).steps.push({stage:x.stage,question:x.stem,choices:x.options.map((t,i)=>mkChoice(t,i===x.correct,(x.feedback||[])[i]||''))});}
+}
+const DIAG={labs:[...diagMap.values()]},MAT={labs:[...matMap.values()]},OPT={labs:[...optMap.values()]};
+const window={MM_DATA:D,MM_DIAGNOSTIC_LABS:DIAG,MM_MATERIAL_BEHAVIOUR_LABS:MAT,MM_MATERIAL_PRACTICE_EXTENSIONS:OPT};
+const sandbox={window,console};window.window=window;vm.createContext(sandbox);vm.runInContext(fs.readFileSync('assessment-psychometric-hardening.js','utf8'),sandbox,{filename:'assessment-psychometric-hardening.js'});
+const out=[];
+for(const level of ['Beginner','Intermediate','Advanced'])for(let i=0;i<D.exams[level].length;i++){const q=D.exams[level][i];out.push({id:`tech:${level}:${i}`,kind:'technical-exam',scope:'formal',level,stem:q[0],options:q[1],correct:q[2],rationale:q[3],feedback:q[6],reference:q[4],sourceUrl:q[5],critical:!!q[7]})}
+for(const region of ['UK','US','NZ'])for(const level of ['Beginner','Intermediate','Advanced'])for(let i=0;i<D.regionalQuestions[region][level].length;i++){const q=D.regionalQuestions[region][level][i];out.push({id:`reg:${region}:${level}:${i}`,kind:'regional-exam',scope:'formal',region,level,stem:q[0],options:q[1],correct:q[2],rationale:q[3],feedback:q[6],reference:q[4],sourceUrl:q[5],critical:true})}
+for(const s of D.scenarios)out.push({id:s.mmStableId,kind:'scenario',scope:'formal',level:s.difficulty||'',category:s.category||'',stem:`${s.title}: ${s.situation}`,options:s.choices,correct:s.correct,rationale:s.why,feedback:s.feedback,critical:false});
+function labsToOut(labs,kind,prefix,scope){for(const lab of labs)for(let i=0;i<lab.steps.length;i++){const s=lab.steps[i],correct=s.choices.findIndex(c=>c.correct===true);out.push({id:prefix+lab.id+':'+i,kind,scope,labId:lab.id,level:lab.level||'',stage:s.stage||'',stem:s.question||'',options:s.choices.map(c=>c.text),correct,feedback:s.choices.map(c=>c.feedback||''),rationale:s.choices[correct]?.feedback||'',sourceIds:lab.sourceIds||[],focus:lab.focus||'',critical:/safety|isolation|guard|interlock|shutdown|high-temperature/i.test((lab.focus||'')+' '+(s.question||''))})}}
+labsToOut(DIAG.labs,'diagnostic-lab','lab:','formal');labsToOut(MAT.labs,'material-lab','material:','formal');labsToOut(OPT.labs,'optional-material-practice','optional-material:','optional');
+process.stdout.write(JSON.stringify({items:out,meta:window.MM_PSYCHOMETRIC_HARDENING||null}));
+'''%json.dumps(items)
+    with tempfile.NamedTemporaryFile('w',suffix='.js',delete=False,encoding='utf-8',dir=ROOT) as h:
+        h.write(node);pth=Path(h.name)
+    try:
+        p=subprocess.run(['node',str(pth)],cwd=ROOT,capture_output=True,text=True,encoding='utf-8',errors='replace')
+    finally:
+        pth.unlink(missing_ok=True)
+    need(p.returncode==0,'final learner-visible psychometric runtime failed: '+(p.stderr or p.stdout)[:8000])
+    data=json.loads(p.stdout);FINAL_RUNTIME=data['items'];FINAL_META=data.get('meta')
+    need(len(FINAL_RUNTIME)==197,f'post-hardening final-runtime item count mismatch: {len(FINAL_RUNTIME)}')
+    need(FINAL_META and FINAL_META.get('itemsHardened')==197 and FINAL_META.get('optionsParallelised')==788,f'final psychometric coverage mismatch: {FINAL_META}')
+    need(FINAL_META.get('technicalKeyPositions')==[8,8,7,7],f'final technical key positions not balanced: {FINAL_META}')
+    need(FINAL_META.get('scenarioKeyPositions')==[10,10,10,10],f'final scenario key positions not balanced: {FINAL_META}')
+    return FINAL_RUNTIME
+
+
+def final_formal_runtime():
+    return [x for x in load_final_runtime() if x['kind'] in ('technical-exam','regional-exam','scenario')]
+
+
+def final_lab_runtime(path,global_name,kind,prefix):
+    return [x for x in load_final_runtime() if x['kind']==kind]
+
+
+def final_optional_runtime():
+    return [x for x in load_final_runtime() if x['kind']=='optional-material-practice']
 
 
 def main():
-    base.load_runtime_bank=apply_formal_runtime_overlay
-    base.load_optional_material_practice=load_optional_runtime
-    base.evaluate_item=evaluate_runtime
+    base.load_runtime_bank=final_formal_runtime
+    base.load_lab_file=final_lab_runtime
+    base.load_optional_material_practice=final_optional_runtime
+    base.evaluate_item=BASE_EVALUATE
     base.main()
     report=json.loads((ROOT/'question-quality-50-pass-report.json').read_text(encoding='utf-8'))
     report['quality_overlay']=OPTIONAL_OVERLAY
     report['scenario_feedback_upgraded']=FORMAL_OVERLAY.get('scenarioFeedbackUpgraded',0) if FORMAL_OVERLAY else 0
     report['optional_answer_positions']=OPTIONAL_POSITIONS
-    report['runtime_quality_version']='2026.08.30.1'
-    report['rubric']['hard_gates'] += ['balanced 10/10/10/10 optional answer positions','option-specific optional feedback','no optional correct-answer length salience versus the median distractor']
+    report['psychometric_runtime']=FINAL_META
+    report['runtime_quality_version']='2026.08.31.1'
+    report['rubric']['hard_gates'] += ['balanced 8/8/7/7 technical answer positions','balanced 10/10/10/10 scenario and optional answer positions','option-specific optional feedback','zero learner-visible quality warnings']
+    need(not report.get('warning_types'),f"final learner-visible standard audit still has warnings: {report.get('warning_types')} / {report.get('warning_items')}")
     (ROOT/'question-quality-50-pass-report.json').write_text(json.dumps(report,indent=2)+'\n',encoding='utf-8')
-    print(f"Runtime overlay verified: scenarios={report['scenario_feedback_upgraded']} optional=40 positions={OPTIONAL_POSITIONS}")
+    print(f"Final runtime verified: psychometric={FINAL_META.get('version')} technical={FINAL_META.get('technicalKeyPositions')} scenarios={FINAL_META.get('scenarioKeyPositions')} warnings=0")
 
 
 if __name__=='__main__':
