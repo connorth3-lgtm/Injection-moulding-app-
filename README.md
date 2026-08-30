@@ -20,7 +20,7 @@ The project maintainers do not intend to seek patent protection over implementat
 - PWA / browser shell: `2026.08.26.2`
 - Open Windows desktop: `2026.08.26.5`
 - Training content: `2026.08.26.1`
-- Audited assessment bank: `2026.08.24.2`
+- Audited assessment bank: `2026.08.30.1`
 - Assessment quality / analytics hardening: `2026.08.24.3`
 - Learner-scoped assessment storage: `2026.08.24.4`
 - Question evidence approval: `2026.08.25.2`
@@ -39,6 +39,8 @@ The PWA uses an installable web manifest and a service worker for offline suppor
 ## Assessment system
 
 The current assessment stack contains 30 technical exam items, 27 UK/US/NZ regional safety/compliance items and 40 scenario drills. Regional safety items remain mandatory and safety-critical. A certificate requires at least 80% overall and zero wrong safety-critical regional items.
+
+All 30 technical exam items now use evidence-based reasoning rather than pure definition recall: learners interpret linked observations, select diagnostic decisions, choose discriminating tests, evaluate verification/recovery evidence and recognise when signal semantics or other evidence are insufficient for a defensible conclusion. Regional legal/safety answer keys remain jurisdiction-specific and unchanged by this question-bank release.
 
 Assessment quality controls include stable question IDs, a competency-balanced exam blueprint, difficulty calibration, duplicate/answer-cue QA, per-question evidence/revision information and device-local analytics. Analytics are scoped to the active learner profile. Question-performance analytics and response-timing analytics are not uploaded by MouldMaster; they can be reset locally and are deliberately excluded from progress backups.
 
