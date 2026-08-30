@@ -16,16 +16,23 @@ for p in [PATCH,REGISTER,'index.html','service-worker.js','desktop/electron/pack
     need((ROOT/p).exists(),f'missing deep assessment file: {p}')
 
 src=text(PATCH)
-need(src.count("set('")==12,'deep dive must rewrite exactly 12 technical items')
+need(src.count("set('")==30,'deep dive must rewrite exactly 30 technical items')
 for marker in [
-    "technicalItemsRewritten:12",
+    "technicalItemsRewritten:30",
     "scenarioItemsRewritten:8",
     "regionalAnswerChanges:0",
+    "observation:true",
+    "decision:true",
+    "discrimination:true",
+    "verification:true",
+    "insufficientEvidence:true",
+    "allTechnicalEvidenceReasoning:true",
     "MFR is measured under specified test conditions",
     "Part mass reaches a repeatable plateau",
     "Machine/nozzle and local cavity pressure are measurements at different locations",
     "factor effect may be confounded with time-related drift",
     "Reproduce the relevant material/process outputs",
+    "There is insufficient evidence for a defensible quantitative pressure-loss calculation",
     "https://doi.org/10.1007/s13367-023-00081-y",
     "https://doi.org/10.1515/ipp-2022-4281",
     "https://doi.org/10.1007/s00170-023-11100-1",
@@ -67,7 +74,7 @@ for(const level of Object.keys(D.exams))for(const q of D.exams[level]){
   if(new Set(q[6].map(x=>String(x).trim().toLowerCase())).size<3)throw new Error('feedback is overly generic');
   if(!String(q[6][q[2]]).toLowerCase().includes('correct'))throw new Error('keyed feedback must explicitly identify correct answer');
 }
-if(changed!==12)throw new Error(`expected 12 rewrites, got ${changed}`);
+if(changed!==30)throw new Error(`expected 30 rewrites, got ${changed}`);
 for(const s of D.scenarios){
   if(!Array.isArray(s.choices)||s.choices.length!==4)throw new Error('scenario choice count');
   if(new Set(s.choices.map(x=>String(x).trim().toLowerCase())).size!==4)throw new Error('scenario duplicate choices');
@@ -77,8 +84,10 @@ for(const s of D.scenarios){
   if(!String(s.feedback[s.correct]).toLowerCase().includes('correct'))throw new Error('scenario keyed feedback');
 }
 if(JSON.stringify(D.regionalQuestions)!==before)throw new Error('regional bank changed');
-if(!D.assessmentQA.questionDeepDive||D.assessmentQA.questionDeepDive.technicalItemsRewritten!==12||D.assessmentQA.questionDeepDive.scenarioItemsRewritten!==8)throw new Error('deep-dive metadata missing');
-if(!sandbox.window.MM_QUESTION_DEEP_DIVE||sandbox.window.MM_QUESTION_DEEP_DIVE.regionalAnswerChanges!==0)throw new Error('deep-dive runtime marker missing');
+const meta=D.assessmentQA.questionDeepDive;
+if(!meta||meta.technicalItemsRewritten!==30||meta.scenarioItemsRewritten!==8)throw new Error('deep-dive metadata missing');
+for(const key of ['observation','decision','discrimination','verification','insufficientEvidence'])if(meta.designCoverage?.[key]!==true)throw new Error(`deep-dive design coverage missing ${key}`);
+if(!sandbox.window.MM_QUESTION_DEEP_DIVE||sandbox.window.MM_QUESTION_DEEP_DIVE.regionalAnswerChanges!==0||sandbox.window.MM_QUESTION_DEEP_DIVE.allTechnicalEvidenceReasoning!==true)throw new Error('deep-dive runtime marker missing');
 console.log('runtime deep question patch passed');
 '''%(json.dumps(scenario_titles),json.dumps(str(ROOT/PATCH)),json.dumps(PATCH))
 p=subprocess.run(['node','-e',node_test],capture_output=True,text=True)
@@ -86,7 +95,7 @@ need(p.returncode==0,f'deep question runtime QA failed: {p.stderr or p.stdout}')
 
 reg=text(REGISTER)
 for marker in [
- 'all 57 live exam questions','all 16 troubleshooting scenario drills','Twelve technical questions and eight scenario drills','regional safety/compliance answer keys','MFR needed stronger treatment','DOE reasoning needed a real confounding case','ISO 20430:2020 remains published and confirmed','Research results are evidence of mechanisms or methods, not automatic local production settings'
+ 'all 57 live exam questions','all 16 troubleshooting scenario drills','All 30 technical questions','five evidence-reasoning modes','regional safety/compliance answer keys','MFR needed stronger treatment','DOE reasoning needed a real confounding case','Insufficient evidence is a valid expert answer','ISO 20430:2020 remains published and confirmed','Research results are evidence of mechanisms or methods, not automatic local production settings'
 ]: need(marker in reg,f'deep question register marker missing: {marker}')
 
 idx=text('index.html')
@@ -104,4 +113,4 @@ ow=text('.github/workflows/open-desktop-build.yml')
 need("- 'assessment-deep-dive.js'" in ow and "- 'qa_question_deep_dive.py'" in ow and "- 'sources/QUESTION_BANK_DEEP_DIVE.md'" in ow and 'python qa_question_deep_dive.py' in ow,'desktop workflow missing deep question QA')
 need('python qa_question_deep_dive.py' in text('.github/workflows/microsoft-store-msix.yml'),'Store workflow missing deep question QA')
 
-print('MouldMaster deep question-and-answer QA passed (57 exams reviewed; 12 technical rewrites; 16 scenarios reviewed; 8 scenario rewrites; 0 regional key changes)')
+print('MouldMaster deep question-and-answer QA passed (57 exams reviewed; 30 technical evidence-reasoning rewrites; 16 scenarios reviewed; 8 scenario rewrites; 0 regional key changes)')
