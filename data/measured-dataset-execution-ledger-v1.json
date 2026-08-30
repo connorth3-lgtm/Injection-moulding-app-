@@ -1,7 +1,7 @@
 {
   "schema": 1,
-  "version": "2026.08.29.8",
-  "reviewed": "2026-08-29",
+  "version": "2026.08.30.1",
+  "reviewed": "2026-08-30",
   "purpose": "One-by-one execution state for the 20 real measured-data sources. This ledger does not change accepted counts by itself; only completed source-file profiling may do that.",
   "policy": {
     "rawThirdPartyRowsCommitted": false,
@@ -154,12 +154,40 @@
       "state": "blocked-confidential",
       "action": "use the paper as measured Tier-B evidence only unless an explicit authorised site/data agreement is obtained",
       "reason": "the paper explicitly states that the underlying 7,162-cycle production data are confidential"
+    },
+    {
+      "priority": 21,
+      "datasetId": "mendeley-fhj5p7ww9v-v1",
+      "state": "accepted-profiled-restricted-noncommercial",
+      "action": "keep exact workbook fingerprint, 96 direct outcomes and noncommercial scope regression-pinned",
+      "reason": "CC BY-NC 3.0 exact workbook fully profiled; zero injection-process waveform samples"
+    },
+    {
+      "priority": 22,
+      "datasetId": "mendeley-6k8fpbrd9s-v1",
+      "state": "accepted-profiled-material-characterization",
+      "action": "keep exact workbook fingerprint and full numeric-cell role classification regression-pinned",
+      "reason": "CC BY 4.0 polypropylene pvT source fully profiled; 28,590 direct physical cells; zero injection-process waveform samples"
+    },
+    {
+      "priority": 23,
+      "datasetId": "mendeley-4h98rz9f92-v3",
+      "state": "accepted-profiled-record-level-injection-moulding",
+      "action": "keep exact Raw Data.xlsx fingerprint and replicate/derived separation regression-pinned",
+      "reason": "CC BY 4.0 injection-moulding source fully profiled; 525 direct measured property replicates; zero high-frequency process waveform samples"
+    },
+    {
+      "priority": 24,
+      "datasetId": "pmc4753395-hdpe-cenosphere-v1",
+      "state": "accepted-profiled-material-test-traces",
+      "action": "keep measured-workbook fingerprint and stress/strain trace exclusions regression-pinned",
+      "reason": "CC BY 4.0 material-test source fully profiled; 142,884 stress/strain values; zero injection-process waveform samples"
     }
   ],
   "summary": {
-    "total": 20,
-    "acceptedProfiled": 7,
-    "acceptedRestrictedResearchEducation": 1,
+    "total": 24,
+    "acceptedProfiled": 11,
+    "acceptedRestrictedResearchEducation": 2,
     "executingProfile": 0,
     "queuedExecutable": 0,
     "retrievalBlockedExecutable": 1,

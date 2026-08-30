@@ -55,11 +55,11 @@ need(len(legacy.get("datasets") or []) >= 14, "legacy measured-dataset discovery
 inventory = json.loads(INVENTORY.read_text(encoding="utf-8"))
 datasets = inventory.get("datasets") or []
 summary = inventory.get("summary") or {}
-need(summary.get("datasets") == len(datasets) == 20, f"measured dataset inventory count drifted: {summary.get('datasets')} / {len(datasets)}")
+need(summary.get("datasets") == len(datasets) == 24, f"measured dataset inventory count drifted: {summary.get('datasets')} / {len(datasets)}")
 ids = [x.get("datasetId") for x in datasets]
 need(len(ids) == len(set(ids)) and all(ids), "measured dataset inventory IDs must be unique and non-empty")
 need(summary.get("automatedIngestionAllowed") == sum(1 for x in datasets if x.get("automatedIngestionAllowed") is True), "automated-ingestion dataset count drifted")
-need(summary.get("automatedIngestionAllowed") == 10, "audited automated-ingestion source count must include four confirmed waveform-source promotions")
+need(summary.get("automatedIngestionAllowed") == 13, "audited automated-ingestion source count must include four confirmed waveform-source promotions")
 need(summary.get("rightsOrAccessReviewRequired") == 3, "rights-review source count must reflect Zenodo API licence confirmations")
 need(targets["fully_profiled_measured_datasets"].get("currentDiscovered") == len(datasets), "target ledger discovery count must equal the measured-dataset inventory")
 by_id = {x.get("datasetId"): x for x in datasets}
@@ -216,7 +216,7 @@ need(cu_profile.get("stateValuesExcludedPendingSemantics") == 21_907_374, "cross
 need(cu_profile.get("rawRowsOrCellValuesEmitted") is False, "cross-process upper result must not emit raw values")
 accepted_measured_total = av_profile["acceptedMeasuredTimeSeriesSamples"] + om_profile["acceptedMeasuredTimeSeriesSamples"] + cl_profile["acceptedMeasuredTimeSeriesSamples"] + cu_profile["acceptedMeasuredTimeSeriesSamples"] + impure_count["acceptedMeasuredTimeSeriesSamples"] + forinfpro_count["acceptedMeasuredTimeSeriesSamples"]
 need(accepted_measured_total == 66_521_519, "combined real measured-sample arithmetic drifted")
-need(targets["fully_profiled_measured_datasets"]["currentAccepted"] == 7, "partial cross-process acceptance must not inflate the fully profiled family count")
+need(targets["fully_profiled_measured_datasets"]["currentAccepted"] == 11, "partial cross-process acceptance must not inflate the fully profiled family count")
 need(targets["measured_time_series_samples"]["currentAccepted"] == accepted_measured_total, "measured sample count must equal AVAPS, OpenMMS, cross-process, ImPure and FORinFPRO accepted evidence")
 
 primary = json.loads(PRIMARY.read_text(encoding="utf-8"))
@@ -296,4 +296,4 @@ report = {
     "boundary": "No synthetic, metadata-only, generated-draft or heuristic-candidate evidence is counted as completed measured/reviewed content unless its area-specific acceptance definition is satisfied. Restricted research/education source terms are preserved rather than widened."
 }
 (ROOT / "content-scale-targets-report.json").write_text(json.dumps(report, indent=2) + "\n", encoding="utf-8")
-print(f"MouldMaster content-scale target integrity QA passed ({len(datasets)} measured datasets inventoried; 7 fully profiled families and 1 restricted research/education profile; {accepted_measured_total:,} accepted real measured time-series values; {verified} publisher-verified primary measured studies; {summary.get('automatedIngestionAllowed')} sources legally executable)")
+print(f"MouldMaster content-scale target integrity QA passed ({len(datasets)} measured datasets inventoried; 11 fully profiled families including 2 restricted educational/noncommercial profiles; {accepted_measured_total:,} accepted real measured time-series values; {verified} publisher-verified primary measured studies; {summary.get('automatedIngestionAllowed')} sources legally executable)")
