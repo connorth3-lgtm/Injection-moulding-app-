@@ -28,7 +28,8 @@ measured["notes"] = (
 )
 target_path.write_text(json.dumps(target, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
 
-text = qa_path.read_text(encoding="utf-8")n = text
+text = qa_path.read_text(encoding="utf-8")
+original = text
 replacements = {
     'need((rights.get("summary") or {}).get("sourcesReviewed") == 5, "waveform rights-review source count drifted")':
     'need((rights.get("summary") or {}).get("sourcesReviewed") == len(rights.get("sources") or []) == 7, "waveform rights-review source count drifted")',
@@ -51,7 +52,7 @@ for old, new in replacements.items():
     if old not in text:
         raise SystemExit(f"required reconciliation anchor missing: {old[:90]}")
     text = text.replace(old, new, 1)
-if text == n:
+if text == original:
     raise SystemExit("no QA reconciliation changes made")
 qa_path.write_text(text, encoding="utf-8")
 print("Reconciled canonical measured-data ledger to 66,521,519 accepted values and seven-source rights review")
