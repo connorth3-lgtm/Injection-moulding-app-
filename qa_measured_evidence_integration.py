@@ -71,13 +71,15 @@ for token in [
     "material characterisation",
     "process waveform",
     "do not supply universal settings",
-    "do not override the validated machine/mould/material/site process",
+    "or override the validated machine/mould/material/site process",
 ]:
     need(token in js, f"missing measured-evidence runtime boundary/integration marker: {token}")
 
 for surface in ["#lesson article.lesson-body", "diagnosticLabs", "processDataLabs", "mmMouldMasterWorkspace"]:
     need(surface in js, f"measured-evidence runtime is not integrated with required surface: {surface}")
 need("/material.*lab/i" in js, "material-lab runtime hook missing")
+need("function hasTopic" in js and "hasTopic(t,k)" in js, "token-safe short-topic matcher missing")
+need("t.includes(k)" not in js, "ambiguous substring matcher must not be used directly for short technical tags")
 
 restricted_ids = {"iguzzini-road-lenses", "mendeley-fhj5p7ww9v-v1", "mendeley-ztkc87d6sr-v1"}
 for did in restricted_ids:
