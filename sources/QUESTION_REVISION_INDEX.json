@@ -55,7 +55,7 @@
   },
   "revision3": {
     "tech:Beginner:0":{"revision":3,"date":"2026-08-30","change":"Replaced definition recall with a controlled hold-time/part-mass plateau interpretation while retaining the pack/hold competency."},
-    "tech:Beginner:1":{"revision":3,"date":"2026-08-30","change":"Changed cushion recognition into a linked shot-delivery evidence case where one isolated value is explicitly insufficient for root-cause assignment."},
+    "tech:Beginner:1":{"revision":3,"date":"2026-08-30","change":"Changed cushion recognition into a linked shot-delivery evidence case where one isolated value is insufficient for root-cause assignment."},
     "tech:Beginner:2":{"revision":3,"date":"2026-08-30","change":"Reframed injection-speed knowledge around unchanged commands versus changed fill-time and pressure actuals."},
     "tech:Beginner:5":{"revision":3,"date":"2026-08-30","change":"Reframed V/P transfer as interpretation of the measured fill-to-pack transition and cavity-pressure response."},
     "tech:Beginner:6":{"revision":3,"date":"2026-08-30","change":"Reframed clamp reasoning around local flash evidence after service instead of automatic global clamp compensation."},
