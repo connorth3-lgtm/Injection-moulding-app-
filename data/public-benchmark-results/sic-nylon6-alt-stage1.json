@@ -1,0 +1,32 @@
+{
+  "schema": 1,
+  "status": "publisher-file-manifest-exposed",
+  "retrievedDate": "2026-08-29",
+  "source": {
+    "datasetFamilyId": "sic-nylon6-injection-moulded-v1",
+    "primaryDatasetDoi": "10.17632/ztkc87d6sr.1",
+    "alternateDatasetDoi": "10.17632/47k6jswwg7.1",
+    "alternateLicense": "CC BY-NC 3.0",
+    "version": 1
+  },
+  "manifest": {
+    "publisherFileEntries": [
+      {"id":"1cf7c736-55f5-47a1-bc17-a78ecacf9802","filename":"dataset file.docx","sizeBytes":719394,"sha256":"283e9599a55bda50f061cccc30e0b21b5ac5fc546af1b583790aa022df8d438a","contentType":"application/vnd.openxmlformats-officedocument.wordprocessingml.document"},
+      {"id":"05f8e0ac-04e1-4834-b615-78ef7f3a5f20","filename":"dataset file.docx","sizeBytes":719394,"sha256":"283e9599a55bda50f061cccc30e0b21b5ac5fc546af1b583790aa022df8d438a","contentType":"application/vnd.openxmlformats-officedocument.wordprocessingml.document"}
+    ],
+    "uniquePayloadHashes": 1,
+    "duplicatePublisherEntriesByHash": 1,
+    "structuredStandaloneNumericFiles": 0,
+    "documentFiles": 2,
+    "rawPayloadsDownloaded": false,
+    "rawRowsOrArraysEmitted": false
+  },
+  "acceptance": {
+    "countsAsFullyProfiledMeasuredDataset": false,
+    "acceptedMeasuredTimeSeriesSamples": 0,
+    "sameStudyAlternateReleaseDoesNotCreateSecondFamily": true,
+    "duplicatePublisherEntriesDoNotDoubleCount": true,
+    "documentSemanticProfilingRequired": true
+  },
+  "evidenceBoundary": "Both publisher entries resolve to the same DOCX payload fingerprint and therefore represent one unique source document. The alternate release recovers access for the existing SiC/Nylon-6 study family but cannot create a second family or duplicate evidence count. Numeric evidence must be delivered as Word tables/chart caches/embedded structured objects; images are not OCR-counted."
+}

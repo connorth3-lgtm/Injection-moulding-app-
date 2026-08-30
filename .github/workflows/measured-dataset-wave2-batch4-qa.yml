@@ -1,0 +1,42 @@
+name: MouldMaster Measured Dataset Wave 2 Batch 4 QA
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'data/measured-dataset-wave2-batch4-extension-v1.json'
+      - 'data/public-benchmark-contracts/ypf95p4bs4-v1.json'
+      - 'data/public-benchmark-contracts/sic-nylon6-alt-release-v1.json'
+      - 'data/public-benchmark-results/ypf95p4bs4-stage1.json'
+      - 'data/public-benchmark-results/ypf95p4bs4-v1.json'
+      - 'data/public-benchmark-results/sic-nylon6-alt-stage1.json'
+      - 'data/public-benchmark-results/sic-nylon6-alt-v1.json'
+      - 'tools/run_public_benchmark_ypf95p4bs4_stage3.py'
+      - 'tools/run_public_benchmark_sic_nylon6_alt_stage3.py'
+      - 'qa_public_benchmark_ypf95p4bs4_stage3.py'
+      - 'qa_public_benchmark_sic_nylon6_alt_stage3.py'
+      - 'qa_measured_dataset_wave2_batch4_sources.py'
+      - 'qa_measured_dataset_wave2_batch4.py'
+      - '.github/workflows/measured-dataset-wave2-batch4-qa.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  source-by-source-audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Validate ypf semantic counter implementation
+        run: python qa_public_benchmark_ypf95p4bs4_stage3.py
+      - name: Validate SiC/Nylon-6 semantic counter implementation
+        run: python qa_public_benchmark_sic_nylon6_alt_stage3.py
+      - name: Validate accepted source records and exclusions
+        run: python qa_measured_dataset_wave2_batch4_sources.py
+      - name: Validate batch-4 effective reconciliation
+        run: python qa_measured_dataset_wave2_batch4.py
