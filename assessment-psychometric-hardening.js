@@ -1,7 +1,7 @@
-/* MouldMaster psychometric assessment hardening — 2026.08.30.4 */
+/* MouldMaster psychometric assessment hardening — 2026.08.30.5 */
 (function(){
 'use strict';
-const VERSION='2026.08.30.4';
+const VERSION='2026.08.30.5';
 const D=window.MM_DATA,DIAG=window.MM_DIAGNOSTIC_LABS,MAT=window.MM_MATERIAL_BEHAVIOUR_LABS,OPT=window.MM_MATERIAL_PRACTICE_EXTENSIONS;
 if(!D||!DIAG?.labs||!MAT?.labs)throw new Error('Assessment and lab banks must load before psychometric hardening');
 const clean=t=>String(t||'').trim().replace(/[.]+$/,'');
@@ -15,27 +15,32 @@ function parallel(text){
   [/^Ignore\s+/i,'Deprioritising '],[/^Assume\s+/i,'The assumption that '],[/^Approve\s+/i,'Approval based on '],[/^Accept\s+/i,'Acceptance based on '],[/^Treat\s+/i,'Treatment of '],[/^Judge\s+/i,'Judgement based on '],[/^Use\s+/i,'Use of '],[/^Keep\s+/i,'Keeping '],[/^Dry\s+/i,'Drying ']
  ];
  for(const [rx,p] of rules)if(rx.test(t))return p+lcFirst(t.replace(rx,''));
- if(/^Never\s+/i.test(t))return 'Treating '+lcFirst(t.replace(/^Never\s+/i,''))+' as unnecessary in every case';
+ if(/^Never\s+/i.test(t))return 'Treating '+lcFirst(t.replace(/^Never\s+/i,''))+' as categorically unnecessary';
  if(/^Always\s+/i.test(t))return 'Treating '+lcFirst(t.replace(/^Always\s+/i,''))+' as universally required';
  if(/^All\s+/i.test(t))return 'Universal application of '+lcFirst(t.replace(/^All\s+/i,''));
  if(/^Every\s+/i.test(t))return 'A single rule applied to '+lcFirst(t.replace(/^Every\s+/i,''));
  if(/^Only\s+/i.test(t))return 'Exclusive reliance on '+lcFirst(t.replace(/^Only\s+/i,''));
  return t;
 }
-function wrongFeedback(text,focus,index){
- if(unsafe(text))return 'Unsafe. Safeguards and isolation requirements remain in force; this is not an acceptable diagnostic or production action.';
- return `Not the strongest first decision. Alternative ${index+1} prioritises “${clean(text)}”, but the stated evidence discriminates more strongly toward ${String(focus||'the keyed mechanism').toLowerCase()}.`;
+function frame(core){
+ return `When reviewing every option, consider whether ${lcFirst(core)} is best supported by the case evidence, using the same validated baseline and measurement method, and without changing other controlled conditions`;
+}
+function wrongFeedback(core,focus,index){
+ if(unsafe(core))return 'Unsafe. Safeguards and isolation requirements remain in force; this is not an acceptable diagnostic or production action.';
+ return `Not the strongest first decision. Alternative ${index+1} prioritises “${clean(core)}”, but the stated evidence discriminates more strongly toward ${String(focus||'the keyed mechanism').toLowerCase()}.`;
 }
 function harden(options,key,feedback,focus,seed){
  if(!Array.isArray(options)||options.length!==4||!Number.isInteger(key)||key<0||key>3)return null;
- const rows=options.map((text,i)=>({text:parallel(text),feedback:Array.isArray(feedback)?String(feedback[i]||''):''}));
- rows.forEach((r,i)=>{if(i!==key)r.feedback=wrongFeedback(r.text,focus,i)});
+ const rows=options.map((text,i)=>{const core=parallel(text);return {core,text:frame(core),feedback:Array.isArray(feedback)?String(feedback[i]||''):''}});
+ rows.forEach((r,i)=>{if(i!==key)r.feedback=wrongFeedback(r.core,focus,i)});
  rows[key].feedback=rows[key].feedback||`Correct. This option is the most direct decision supported by ${String(focus||'the stated evidence').toLowerCase()}.`;
- const safeWrong=rows.map((_,i)=>i).filter(i=>i!==key&&!unsafe(rows[i].text));
+ const maxLen=Math.max(...rows.map(r=>r.text.length)),floor=Math.max(190,Math.ceil(maxLen*0.84));
+ const pad=[' within the same documented evidence window',' using the same documented observation window',' with the same recorded comparison window'];
+ rows.forEach((r,i)=>{while(r.text.length<floor)r.text=clean(r.text)+pad[(seed+i+r.text.length)%pad.length]});
+ const safeWrong=rows.map((_,i)=>i).filter(i=>i!==key&&!unsafe(rows[i].core));
  if(safeWrong.length){
-   let longest=safeWrong.reduce((a,b)=>rows[a].text.length>=rows[b].text.length?a:b);
-   const suffix=[' under the stated conditions',' using the same acceptance rule',' against the same validated baseline'];
-   while(rows[longest].text.length<=rows[key].text.length)rows[longest].text=clean(rows[longest].text)+suffix[(seed+rows[longest].text.length)%suffix.length];
+   const longest=safeWrong.reduce((a,b)=>rows[a].text.length>=rows[b].text.length?a:b);
+   while(rows[longest].text.length<=rows[key].text.length)rows[longest].text=clean(rows[longest].text)+pad[(seed+longest+rows[longest].text.length)%pad.length];
  }
  return rows;
 }
@@ -62,5 +67,5 @@ const expected={technicalItems:30,regionalItems:27,scenarioItems:40,diagnosticIt
 const actual={technicalItems,regionalItems,scenarioItems,diagnosticItems,materialItems,optionalItems};for(const k of Object.keys(expected))if(actual[k]!==expected[k])throw new Error(`Psychometric item coverage mismatch for ${k}: ${actual[k]}/${expected[k]}`);
 const itemsHardened=Object.values(actual).reduce((a,b)=>a+b,0),optionsParallelised=itemsHardened*4;
 D.assessmentQA=D.assessmentQA||{};D.assessmentQA.psychometricHardening={version:VERSION,semanticAnswerChanges:0,scenarioKeyPositions:scenarioKeyPositions.slice(),itemsHardened,optionsParallelised,optionSpecificFeedback:true};
-window.MM_PSYCHOMETRIC_HARDENING={version:VERSION,semanticAnswerChanges:0,scenarioKeyPositions:scenarioKeyPositions.slice(),itemsHardened,optionsParallelised,byBank:actual,policy:'Parallelise the wording form of every option, retain each proposition and safety boundary, keep the keyed answer shorter than at least one distractor, and balance scenario key positions.'};
+window.MM_PSYCHOMETRIC_HARDENING={version:VERSION,semanticAnswerChanges:0,scenarioKeyPositions:scenarioKeyPositions.slice(),itemsHardened,optionsParallelised,byBank:actual,policy:'Apply a common evidence-review frame to every option, retain each underlying proposition and safety boundary, keep the keyed answer shorter than at least one distractor, and balance scenario key positions.'};
 })();
