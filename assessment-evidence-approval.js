@@ -1,12 +1,12 @@
-/* MouldMaster answer-evidence approval layer — 2026-08-25.4 */
+/* MouldMaster answer-evidence approval layer — 2026-08-30.1 */
 (function(){
 'use strict';
-const VERSION='2026.08.25.4',REVIEWED='2026-08-25',REVIEW_BY='2026-11-25';
+const VERSION='2026.08.30.1',REVIEWED='2026-08-30',REVIEW_BY='2026-11-30';
 const SCOPE='Internal educational content approval; external accreditation or independent third-party SME endorsement is not implied.';
 const APPROVED_INPUTS={
  'MouldMaster_Core_App.html':'4eb0412467d3e7ce19f3ca28caf44528a0f1a968',
  'training-upgrade.js':'860dd33d0d8690b38755d8022999fc86098b0a03',
- 'assessment-deep-dive.js':'541aa65816c47d8c979e78a626e0dc7e9f7c9e08',
+ 'assessment-deep-dive.js':'a449a6c272f843c8e1aa00b0e8cb5d1f47872661',
  'assessment-answer-cue-fix.js':'52c1017b37e2bfe0d51016b922bd5e6638490bd2',
  'assessment-quality-suite.js':'4c5c1927fc98546be4cf9b96f925bafc3e259be6',
  'diagnostic-learning-labs.js':'67e9272a2808e44c7be850dc23bdf5e04bcc0f9b',
