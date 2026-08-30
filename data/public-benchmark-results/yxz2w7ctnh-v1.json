@@ -1,0 +1,49 @@
+{
+  "schema": 1,
+  "status": "completed-profiled-record-level-injection-mechanical-testing",
+  "retrievedDate": "2026-08-29",
+  "source": {
+    "datasetId": "mendeley-yxz2w7ctnh-v1",
+    "datasetDoi": "10.17632/yxz2w7ctnh.1",
+    "license": "CC BY 4.0",
+    "version": 1,
+    "publisherFilesVerified": [
+      {"name":"data_3pbending_3d_print_d_ryan.xlsx","sha256":"5c8e5967a95d90a9652ed9167885118bc4ffe4792bf9167c19254ff526fa6742"},
+      {"name":"data_energy_3d_print_d_ryan.xlsx","sha256":"378f371f7d3b2a31902d59e4d654b8de3a7be6d057ba73dc8f1bd819b9cfcda0"},
+      {"name":"data_impact_3d_print_d_ryan.xlsx","sha256":"2eba6818e340e963f88dcb03729aac793d5686c9c1416e81b00c104da3e41196"},
+      {"name":"data_tensile_3d_print_d_ryan.xlsx","sha256":"670fb27b14e34f68ee17de115c4f14b22c4aa4b9887ff8c73a42eb7b2a7e3b79"}
+    ]
+  },
+  "profile": {
+    "uniqueWorksheetContentHashes": 9,
+    "duplicateWorksheetGroupsExcluded": 7,
+    "selectedInjectionBlocks": [
+      {"sheet":"tensile_PLA","marker":"PLA INKECTION MOULDED","region":"O4:W22","rowsWithNumericConstants":19,"numericConstantCells":171,"formulaCellsExcluded":0},
+      {"sheet":"tensile_ABS","marker":"ABS INjECTION MOULDED","region":"O4:W23","rowsWithNumericConstants":20,"numericConstantCells":176,"formulaCellsExcluded":0},
+      {"sheet":"bending_PLA","marker":"PLA Injection moulded","directColumns":["P","Q","R","S"],"headers":["Thick","Width","Fmax","dL"],"rowsWithDirectMeasurements":20,"numericConstantCells":80,"formulaCellsExcluded":0},
+      {"sheet":"bending_ABS","marker":"ABS Injection moulded","directColumns":["Q","R","S","T"],"headers":["Thick","Width","Fmax","dL"],"rowsWithDirectMeasurements":20,"numericConstantCells":62,"formulaCellsExcluded":22}
+    ],
+    "tensileDirectRecordLevelValues": 347,
+    "bendingDirectRecordLevelValues": 142,
+    "directRecordLevelInjectionMeasuredValues": 489,
+    "acceptedMeasuredTimeSeriesSamples": 0,
+    "rawRowsOrNumericValuesEmitted": false
+  },
+  "exclusions": {
+    "3dPrintedBlocks": true,
+    "energySheets": true,
+    "impactSheetsBecauseManufacturingRouteIsNotExplicitlySeparated": true,
+    "duplicateWorksheetCopies": true,
+    "formulaCellsAsDerived": true
+  },
+  "acceptance": {
+    "countsAsFullyProfiledMeasuredDataset": true,
+    "recordLevelOnly": true,
+    "acceptedMeasuredTimeSeriesSamples": 0
+  },
+  "retrieval": {
+    "rawPublisherFilesCommitted": false,
+    "rawRowsOrNumericValuesUploadedAsArtifact": false
+  },
+  "evidenceBoundary": "Only numeric constants inside workbook regions explicitly headed as injection moulded are counted. Repeated worksheets are deduplicated by worksheet-content SHA256; FDM/energy content, formula-derived cells, and impact sheets without explicit manufacturing-route identity are excluded."
+}
