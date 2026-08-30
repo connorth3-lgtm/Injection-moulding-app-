@@ -23,7 +23,8 @@ const FAMILIES=[
  {id:'zenodo-energy-20338544',title:'Industrial production electrical energy',kind:'industrial energy waveform',scale:'19,048,305 accepted electrical values',timeSeries:19048305,rights:'CC BY 4.0',restricted:false,source:'https://doi.org/10.5281/zenodo.20338544',topics:['energy','power','current','voltage','frequency','electrical','machine load','auxiliary','base load','production','sustainability'],boundary:'Only 15 direct physical Shelly Pro 3EM channels from the accepted production streams are counted; derived totals/power factor, neutral current and the overlapping curated test subset are excluded.'}
 ];
 const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-function score(f,text){const t=String(text||'').toLowerCase();return f.topics.reduce((n,k)=>n+(t.includes(k)?Math.max(1,k.split(' ').length):0),0)}
+function hasTopic(text,topic){if(topic.length>3)return text.includes(topic);const safe=topic.replace(/[.*+?^${}()|[\]\\]/g,'\\$&');return new RegExp(`(?:^|[^a-z0-9])${safe}(?:$|[^a-z0-9])`,'i').test(text)}
+function score(f,text){const t=String(text||'').toLowerCase();return f.topics.reduce((n,k)=>n+(hasTopic(t,k)?Math.max(1,k.split(' ').length):0),0)}
 function select(text,limit=4){return FAMILIES.map(f=>({f,s:score(f,text)})).filter(x=>x.s>0).sort((a,b)=>b.s-a.s||b.f.timeSeries-a.f.timeSeries).slice(0,limit).map(x=>x.f)}
 function badge(f){return `<span class="mme-chip">${esc(f.kind)}</span><span class="mme-chip">${esc(f.rights)}</span>`}
 function card(f){return `<article class="mme-card"><div class="mme-card-head"><div><b>${esc(f.title)}</b><small>${esc(f.id)}</small></div><a href="${esc(f.source)}" target="_blank" rel="noopener">Source ↗</a></div><div class="mme-chips">${badge(f)}</div><strong>${esc(f.scale)}</strong><p>${esc(f.boundary)}</p></article>`}
