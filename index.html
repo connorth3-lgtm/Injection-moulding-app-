@@ -23,9 +23,9 @@
   (async function(){
     "use strict";
     const SHELL_RELEASE="2026.08.26.2";
-    const RUNTIME_ASSET_VERSION="20260826.11-evidence-questions";
+    const RUNTIME_ASSET_VERSION="20260826.12-psychometric-questions";
     const CORE_URL="./MouldMaster_Core_App.html";
-    const EXPECTED_STATIC_CACHE="mouldmaster-static-2026.08.26.2-evidence-questions-20260830";
+    const EXPECTED_STATIC_CACHE="mouldmaster-static-2026.08.26.2-psychometric-questions-20260831";
     const HEAD_ASSETS=[
       ['manifest.webmanifest','<link rel="manifest" href="./manifest.webmanifest">'],
       ['rel="icon" type="image/png" sizes="192x192"','<link rel="icon" type="image/png" sizes="192x192" href="./mouldmaster-192.png">'],
@@ -61,8 +61,10 @@
       ['./assessment-evidence-sources.js','<script src="./assessment-evidence-sources.js">'],
       ['./evidence-maturity-deep-dive.js','<script src="./evidence-maturity-deep-dive.js">'],
       ['./evidence-maturity-formal-bridge.js','<script src="./evidence-maturity-formal-bridge.js">'],
+      ['./assessment-psychometric-hardening.js','<script src="./assessment-psychometric-hardening.js">'],
       ['./lesson-evidence-depth.js','<script src="./lesson-evidence-depth.js">'],
       ['./assessment-evidence-approval.js','<script src="./assessment-evidence-approval.js">'],
+      ['./assessment-psychometric-approval.js','<script src="./assessment-psychometric-approval.js">'],
       ['./app-shell-registry.js','<script src="./app-shell-registry.js">'],
       ['./pwa-shell.js','<script src="./pwa-shell.js">'],
       ['./learning-experience.js','<script src="./learning-experience.js">'],
