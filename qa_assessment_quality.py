@@ -28,20 +28,20 @@ for marker in [
 ]: need(marker in suite,f'assessment quality marker missing: {marker}')
 need(suite.count("['")>=24,'scenario expansion unexpectedly small')
 need('http://' not in suite,'assessment quality source links must use HTTPS')
-p=subprocess.run(['node','--check',str(ROOT/'assessment-quality-suite.js')],capture_output=True,text=True)
+p=subprocess.run(['node','--check',str(ROOT/'assessment-quality-suite.js')],capture_output=True,text=True,encoding='utf-8',errors='replace')
 need(p.returncode==0,f'assessment-quality-suite.js syntax error: {p.stderr}')
 
 cue_fix=text('assessment-answer-cue-fix.js')
 need("const transfer=D?.exams?.Advanced?.[7]" in cue_fix and "transfer[2]!==2" in cue_fix,'advanced answer-cue correction guard missing')
 need('Match validated fill, pressure/transfer, thermal and part-quality outputs' in cue_fix,'advanced answer-cue correction text missing')
 need('regionalItemsRewritten:27' in cue_fix and 'regionalAnswerChanges:0' in cue_fix,'regional applied-safety hardening metadata missing')
-p=subprocess.run(['node','--check',str(ROOT/'assessment-answer-cue-fix.js')],capture_output=True,text=True)
+p=subprocess.run(['node','--check',str(ROOT/'assessment-answer-cue-fix.js')],capture_output=True,text=True,encoding='utf-8',errors='replace')
 need(p.returncode==0,f'assessment-answer-cue-fix.js syntax error: {p.stderr}')
 
 bridge=text('assessment-stable-review-bridge.js')
 for marker in ["q.mmId=q.stableId","stableIdsPrimary:true","legacyRecordsMigratedBy:'assessment-quality-suite.js'"]:
     need(marker in bridge,f'stable-review bridge marker missing: {marker}')
-p=subprocess.run(['node','--check',str(ROOT/'assessment-stable-review-bridge.js')],capture_output=True,text=True)
+p=subprocess.run(['node','--check',str(ROOT/'assessment-stable-review-bridge.js')],capture_output=True,text=True,encoding='utf-8',errors='replace')
 need(p.returncode==0,f'assessment-stable-review-bridge.js syntax error: {p.stderr}')
 
 analytics_ui=text('assessment-analytics-ui.js')
@@ -54,7 +54,7 @@ for marker in [
     'MM_ASSESSMENT_ANALYTICS_REVIEW',
 ]: need(marker in analytics_ui,f'assessment analytics UI marker missing: {marker}')
 need('fetch(' not in analytics_ui and 'XMLHttpRequest' not in analytics_ui,'assessment analytics UI must remain device-local and make no network analytics calls')
-p=subprocess.run(['node','--check',str(ROOT/'assessment-analytics-ui.js')],capture_output=True,text=True)
+p=subprocess.run(['node','--check',str(ROOT/'assessment-analytics-ui.js')],capture_output=True,text=True,encoding='utf-8',errors='replace')
 need(p.returncode==0,f'assessment-analytics-ui.js syntax error: {p.stderr}')
 
 core=text('MouldMaster_Core_App.html'); mark='window.MM_DATA = '
@@ -106,7 +106,7 @@ with tempfile.NamedTemporaryFile('w',suffix='.js',delete=False,encoding='utf-8')
     handle.write(node)
     node_path=Path(handle.name)
 try:
-    p=subprocess.run(['node',str(node_path)],capture_output=True,text=True)
+    p=subprocess.run(['node',str(node_path)],capture_output=True,text=True,encoding='utf-8',errors='replace')
 finally:
     node_path.unlink(missing_ok=True)
 need(p.returncode==0,f'assessment quality runtime QA failed: {p.stderr or p.stdout}')
