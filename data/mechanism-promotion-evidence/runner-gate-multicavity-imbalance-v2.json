@@ -1,0 +1,16 @@
+{
+  "schema": 2,
+  "version": "2026.08.29.1",
+  "reviewed": "2026-08-29",
+  "mechanismId": "runner-gate-multicavity-imbalance",
+  "registryTarget": "data/evidence-coverage-v1.json",
+  "promotionOverlayTarget": "data/evidence-promotion-overlay-v2.json",
+  "primaryMeasuredRegistryTarget": "data/primary-measured-evidence-registry-v1.json",
+  "authorMetadataTarget": "data/primary-measured-promotion-authors-v1.json",
+  "promotionRuleSnapshot": {"minimumIndependentPublisherVerifiedPrimaryMeasured":2,"requiresMeasuredSignals":true,"requiresPhysicalQualityOutcome":true,"requiresExperimentalContext":true,"requiresExplicitLimitation":true,"predictionIsNotCausation":true,"universalProcessRecipesAllowed":false},
+  "eligibility": {"independentPublisherVerifiedPrimaryMeasured":2,"meetsMinimumIndependentStudies":true,"measuredSignalsPresent":true,"physicalQualityOutcomesPresent":true,"experimentalContextPresent":true,"explicitLimitationsPresent":true,"eligibleForPromotion":true,"registryPromotionApplied":true},
+  "qualifyingDois": ["10.3390/polym16202874","10.3390/s23031735"],
+  "supportingDois": ["10.14314/polimery.2015.411","10.1016/j.powtec.2014.02.056"],
+  "independenceRationale": "These are separate multicavity experimental programmes from distinct research teams. One varies runner and gate geometry plus polymer viscosity while measuring cavity-specific filling and mechanical outcomes; the other independently uses multiple in-mould sensors with controlled switchover, holding and clamping experiments to observe local cavity behaviour. They are not duplicate publications or re-analysis of a shared dataset.",
+  "promotionClaim": "Promote the mechanism-level statement that measured cavity-resolved filling or pressure response and physical part-quality can differ across nominally balanced cavities because runner, gate, rheology and local thermal conditions interact. Do not promote any runner size, gate size, pressure, balance percentage or cavity threshold as a universal design or process rule."
+}

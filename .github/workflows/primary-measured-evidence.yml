@@ -5,6 +5,7 @@ on:
     branches: [main, evidence-coverage-hardening]
     paths:
       - 'data/primary-measured-evidence-registry-v1.json'
+      - 'data/primary-measured-evidence-overlay-v2.json'
       - 'data/primary-measured-evidence/**'
       - 'data/measured-dataset-inventory-v1.json'
       - 'data/measured-dataset-rights-review-*.json'
@@ -13,6 +14,10 @@ on:
       - 'data/measured-data-discovery-queue-v1.json'
       - 'data/measured-data-collection-closeout-2026-08-30.json'
       - 'data/evidence-coverage-v1.json'
+      - 'data/content-scale-targets-overlay-v2.json'
+      - 'data/sensor-machine-health-registry-v2.json'
+      - 'data/sensor-machine-health/**'
+      - 'tools/materialize_evidence_overlays.py'
       - 'qa_primary_measured_evidence.py'
       - 'qa_measured_dataset_inventory.py'
       - 'qa_blocked_dataset_contracts.py'
@@ -25,6 +30,7 @@ on:
     branches: [main]
     paths:
       - 'data/primary-measured-evidence-registry-v1.json'
+      - 'data/primary-measured-evidence-overlay-v2.json'
       - 'data/primary-measured-evidence/**'
       - 'data/measured-dataset-inventory-v1.json'
       - 'data/measured-dataset-rights-review-*.json'
@@ -33,6 +39,10 @@ on:
       - 'data/measured-data-discovery-queue-v1.json'
       - 'data/measured-data-collection-closeout-2026-08-30.json'
       - 'data/evidence-coverage-v1.json'
+      - 'data/content-scale-targets-overlay-v2.json'
+      - 'data/sensor-machine-health-registry-v2.json'
+      - 'data/sensor-machine-health/**'
+      - 'tools/materialize_evidence_overlays.py'
       - 'qa_primary_measured_evidence.py'
       - 'qa_measured_dataset_inventory.py'
       - 'qa_blocked_dataset_contracts.py'
@@ -58,7 +68,11 @@ jobs:
       - uses: actions/setup-python@v7
         with:
           python-version: '3.12'
-      - name: Validate deduplicated peer-reviewed primary measured registry
+      - name: Validate immutable measured-data closeout before evidence overlays
+        run: python qa_measured_data_collection_closeout.py
+      - name: Materialize additive evidence overlays in CI workspace only
+        run: python tools/materialize_evidence_overlays.py
+      - name: Validate deduplicated effective peer-reviewed primary measured registry
         run: python qa_primary_measured_evidence.py
       - name: Validate governed measured dataset inventory
         run: python qa_measured_dataset_inventory.py
@@ -68,7 +82,7 @@ jobs:
         run: python qa_remaining_dataset_terminal_states.py
       - name: Validate new measured-data discovery queue
         run: python qa_measured_data_discovery_queue.py
-      - name: Validate measured-data collection closeout
+      - name: Revalidate measured-data collection closeout after evidence overlays
         run: python qa_measured_data_collection_closeout.py
       - name: Upload aggregate primary measured registry QA report
         uses: actions/upload-artifact@v7

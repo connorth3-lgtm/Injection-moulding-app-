@@ -1,0 +1,13 @@
+{
+  "schema": 1,
+  "version": "2026.08.30.3",
+  "reviewed": "2026-08-30",
+  "baseTargets": "data/content-scale-targets.json",
+  "status": "accepted-count-overlay",
+  "acceptedOverrides": {
+    "primary_measured_studies": 70,
+    "peer_reviewed_research_records": 70,
+    "sensor_machine_health_concepts": 60
+  },
+  "boundary": "This overlay changes only accepted evidence-layer counts for primary measured studies, the currently audited peer-reviewed research subset, and rights/canonical-profile-gated sensor/machine-health concepts. The sensor count is fail-closed at 60: 21 additional reviewed concepts remain deferred because their supporting dataset profiles are rights-blocked or not canonical. Minimum/preferred targets and all measured-dataset, material, defect, assessment and waveform counts remain inherited from the immutable base target ledger."
+}

@@ -1,0 +1,39 @@
+{
+  "schema": 1,
+  "version": "2026.08.30.3",
+  "reviewed": "2026-08-30",
+  "status": "evidence-reviewed-overlay-with-rights-gates",
+  "baseRegistry": "data/sensor-machine-health-registry-v1.json",
+  "scope": "Second MouldMaster sensor/machine-health evidence tranche. The source-reviewed registry contains 26 base concepts plus 55 overlay concepts, but acceptance is fail-closed against current canonical profile availability and reuse rights. Rights-blocked or non-canonical-profile concepts remain reviewed but do not count as accepted until their evidence gate is resolved.",
+  "packs": [
+    {"path": "data/sensor-machine-health/sensor-machine-health-probayes-v2.json", "entries": 18, "acceptance": "deferred-rights-blocked"},
+    {"path": "data/sensor-machine-health/sensor-machine-health-pascoe-v2.json", "entries": 15, "acceptance": "accepted-after-canonical-profile-validation"},
+    {"path": "data/sensor-machine-health/sensor-machine-health-cpc-v2.json", "entries": 9, "acceptance": "accepted-after-canonical-profile-alias-normalization"},
+    {"path": "data/sensor-machine-health/sensor-machine-health-iguzzini-v2.json", "entries": 9, "acceptance": "accepted-after-canonical-profile-validation"},
+    {"path": "data/sensor-machine-health/sensor-machine-health-machine-health-v2.json", "entries": 4, "acceptance": "accepted-with-rights-blocked-secondary-profile-filtered"}
+  ],
+  "summary": {
+    "sourceReviewedBase": 26,
+    "sourceReviewedOverlay": 55,
+    "acceptedBaseAfterRightsAndCanonicalProfileGates": 23,
+    "acceptedOverlayAfterRightsAndCanonicalProfileGates": 37,
+    "resolvedAccepted": 60,
+    "deferredSourceReviewedConcepts": 21,
+    "resolvedKindCounts": {
+      "direct-measurement": 36,
+      "derived-feature": 5,
+      "diagnostic-interpretation": 5,
+      "quality-measurement": 5,
+      "measurement-integrity": 7,
+      "command-signal": 1,
+      "state-signal": 1
+    }
+  },
+  "rightsBoundary": {
+    "proBayesMainAndDOptimal": "deferred pending explicit version-specific reuse licence",
+    "skzLoKI": "deferred pending explicit reuse licence",
+    "missingCanonicalDatasetProfileCannotCount": true,
+    "secondaryBlockedEvidenceMayBeRemovedOnlyWhenIndependentAcceptedEvidenceRemains": true,
+    "rawThirdPartyPayloadAdded": false
+  }
+}

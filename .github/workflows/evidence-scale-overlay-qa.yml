@@ -1,0 +1,96 @@
+name: MouldMaster Evidence Scale Overlay QA
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'app-shell-finalize.js'
+      - 'data/content-scale-targets-overlay-v2.json'
+      - 'data/evidence-promotion-overlay-v2.json'
+      - 'data/machine-health-supporting-evidence-v1.json'
+      - 'data/primary-measured-evidence-registry-v1.json'
+      - 'data/primary-measured-evidence-overlay-v2.json'
+      - 'data/primary-measured-evidence/**'
+      - 'data/primary-measured-promotion-authors-v1.json'
+      - 'data/mechanism-promotion-evidence/**'
+      - 'data/sensor-machine-health-candidate-queue-v1.json'
+      - 'data/sensor-machine-health-candidate-resolution-v2.json'
+      - 'data/sensor-machine-health-registry-v1.json'
+      - 'data/sensor-machine-health-registry-v2.json'
+      - 'data/sensor-machine-health/**'
+      - 'qa_evidence_coverage.py'
+      - 'qa_mechanism_promotion.py'
+      - 'qa_primary_measured_evidence.py'
+      - 'qa_sensor_machine_health.py'
+      - 'qa_specialist_evidence_gaps.py'
+      - 'tools/materialize_evidence_overlays.py'
+      - '.github/workflows/evidence-scale-overlay-qa.yml'
+      - '.github/workflows/primary-measured-evidence.yml'
+      - '.github/workflows/specialist-evidence-gaps.yml'
+  pull_request:
+    branches: [main]
+    paths:
+      - 'app-shell-finalize.js'
+      - 'data/content-scale-targets-overlay-v2.json'
+      - 'data/evidence-promotion-overlay-v2.json'
+      - 'data/machine-health-supporting-evidence-v1.json'
+      - 'data/primary-measured-evidence-registry-v1.json'
+      - 'data/primary-measured-evidence-overlay-v2.json'
+      - 'data/primary-measured-evidence/**'
+      - 'data/primary-measured-promotion-authors-v1.json'
+      - 'data/mechanism-promotion-evidence/**'
+      - 'data/sensor-machine-health-candidate-queue-v1.json'
+      - 'data/sensor-machine-health-candidate-resolution-v2.json'
+      - 'data/sensor-machine-health-registry-v1.json'
+      - 'data/sensor-machine-health-registry-v2.json'
+      - 'data/sensor-machine-health/**'
+      - 'qa_evidence_coverage.py'
+      - 'qa_mechanism_promotion.py'
+      - 'qa_primary_measured_evidence.py'
+      - 'qa_sensor_machine_health.py'
+      - 'qa_specialist_evidence_gaps.py'
+      - 'tools/materialize_evidence_overlays.py'
+      - '.github/workflows/evidence-scale-overlay-qa.yml'
+      - '.github/workflows/primary-measured-evidence.yml'
+      - '.github/workflows/specialist-evidence-gaps.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: mouldmaster-evidence-scale-overlay-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  evidence-scale-overlay:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: '22.12.0'
+          package-manager-cache: false
+      - uses: actions/setup-python@v7
+        with:
+          python-version: '3.12'
+      - name: Preserve canonical measured-state and historical content checkpoint
+        run: |
+          python qa_master_data_compile.py
+          python qa_content_scale_targets.py
+      - name: Materialize evidence overlays in CI workspace only
+        run: python tools/materialize_evidence_overlays.py
+      - name: Primary measured evidence integrity
+        run: python qa_primary_measured_evidence.py
+      - name: Mechanism promotion integrity
+        run: python qa_mechanism_promotion.py
+      - name: Mechanism coverage integrity
+        run: python qa_evidence_coverage.py
+      - name: Sensor and machine-health integrity
+        run: python qa_sensor_machine_health.py
+      - name: Specialist evidence integration
+        run: python qa_specialist_evidence_gaps.py
+      - name: Prove measured-data closeout is unchanged after evidence materialization
+        run: python qa_measured_data_collection_closeout.py
+      - name: Runtime syntax
+        run: node --check app-shell-finalize.js

@@ -1,0 +1,57 @@
+{
+  "schema": 1,
+  "pack": "machine-health",
+  "status": "accepted-evidence-reviewed-overlay-pack",
+  "entries": [
+    {
+      "id": "sig-nrv-wear-state-monitoring",
+      "status": "accepted-evidence-reviewed",
+      "kind": "diagnostic-interpretation",
+      "modality": "non-return-valve-wear",
+      "measurementLocationOrDomain": "Cycle-level injection-moulding response used to infer non-return-valve wear state without disassembling the barrel.",
+      "unitsOrFeatureSemantics": "Bounded wear-state classification/monitoring feature; exact model inputs and wear classes remain study-specific.",
+      "failureAndConfounders": ["material viscosity", "check-ring geometry", "barrel temperature", "sensor repeatability", "other causes of weight drift"],
+      "diagnosticUseBoundary": "The measured study supports NRV wear monitoring on its tested machine, but a predicted wear state is not universal proof and requires maintenance/inspection confirmation.",
+      "evidence": [{"type": "machine-health-study", "id": "10.1002/pen.26246", "role": "measured non-return-valve wear and part-weight experiment"}]
+    },
+    {
+      "id": "sig-pressure-domain-separation-barrel-nozzle-cavity",
+      "status": "accepted-evidence-reviewed",
+      "kind": "diagnostic-interpretation",
+      "modality": "melt-pressure-domain",
+      "measurementLocationOrDomain": "Physical distinction among barrel-wall, nozzle-wall and mould-cavity pressure sensors in a controlled injection-moulding experiment.",
+      "unitsOrFeatureSemantics": "Separate local pressure domains with independent sensors; sensor range/location and polymer context remain attached to each channel.",
+      "failureAndConfounders": ["sensor construction", "location", "pressure transmission", "material rheology", "machine/mould geometry"],
+      "diagnosticUseBoundary": "Barrel, nozzle and cavity pressures are related but not interchangeable; differences support process reasoning but do not define a universal pressure-loss or viscosity threshold.",
+      "evidence": [{"type": "machine-health-study", "id": "10.3390/s22134792", "role": "measured barrel/nozzle/cavity pressure experiment"}]
+    },
+    {
+      "id": "sig-cooling-channel-hydraulic-resistance-health",
+      "status": "accepted-evidence-reviewed",
+      "kind": "derived-feature",
+      "modality": "cooling-channel-hydraulic-resistance",
+      "measurementLocationOrDomain": "Injection-mould cooling-channel health inferred from measured coolant volume flow and pressure drop under a defined supply/fluid condition.",
+      "unitsOrFeatureSemantics": "Derived hydraulic resistance/condition feature from measured flow and pressure; geometry, fluid and supply condition are part of the calibration.",
+      "failureAndConfounders": ["coolant viscosity", "supply pressure", "channel geometry", "temperature", "meter accuracy"],
+      "diagnosticUseBoundary": "Rising hydraulic resistance can support contamination/fouling investigation, but the derived value is circuit-specific and is not a universal cleaning threshold.",
+      "evidence": [
+        {"type": "machine-health-study", "id": "10.1177/09544089251324760", "role": "measured flow/pressure contamination study"},
+        {"type": "machine-health-study", "id": "10.2478/ama-2024-0067", "role": "independent real-mould pressure-loss/fouling case"}
+      ]
+    },
+    {
+      "id": "sig-resin-moisture-measured-vs-dryer-setting",
+      "status": "accepted-evidence-reviewed",
+      "kind": "diagnostic-interpretation",
+      "modality": "resin-moisture",
+      "measurementLocationOrDomain": "Distinction between directly measured residual resin moisture and dryer temperature/time or other commanded conditioning settings.",
+      "unitsOrFeatureSemantics": "Moisture analyzer/sensor result is a measured material state; dryer settings are commands/conditions and are not equivalent evidence.",
+      "failureAndConfounders": ["sampling location", "material grade", "equilibration", "analyzer calibration", "ambient exposure"],
+      "diagnosticUseBoundary": "Measured moisture can corroborate moisture-related quality reasoning, but acceptable limits are resin-grade/supplier specific and cannot be inferred from dryer settings alone.",
+      "evidence": [
+        {"type": "primary-measured-study", "id": "10.3390/app12031410", "role": "measured residual moisture linked to moulded quality"},
+        {"type": "dataset-profile", "id": "probayes-main-v2", "path": "data/public-benchmark-results/probayes-main-v2.json", "role": "direct drying-system moisture sensor"}
+      ]
+    }
+  ]
+}
