@@ -17,6 +17,11 @@ on:
       - 'process-data-diagnostics.js'
       - 'diagnostic-learning-labs.js'
       - 'material-behaviour-labs.js'
+      - 'measured-evidence-integration.js'
+      - 'measured-evidence-decision.js'
+      - 'data/measured-evidence-decision-scenarios-v1.json'
+      - 'qa_measured_evidence_integration.py'
+      - 'qa_measured_evidence_decision_workflows.py'
       - 'learning-analytics.js'
       - 'pwa-shell.js'
       - 'service-worker.js'
@@ -35,17 +40,20 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
         with:
           python-version: '3.13'
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v7
         with:
           node-version: '22'
-      - name: Static shell and workspace QA
+          package-manager-cache: false
+      - name: Static shell, workspace and measured-evidence QA
         run: |
           python qa_app_shell_registry.py
           python qa_mould_master_workspace.py
+          python qa_measured_evidence_integration.py
+          python qa_measured_evidence_decision_workflows.py
       - name: Install pinned Playwright test runtime
         run: |
           npm install --no-save --no-package-lock @playwright/test@1.55.0
@@ -61,7 +69,7 @@ jobs:
         run: npx playwright test --config=playwright.config.cjs
       - name: Upload mobile QA artifacts
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: mobile-browser-qa
           path: qa-artifacts/
