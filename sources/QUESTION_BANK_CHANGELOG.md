@@ -2,6 +2,19 @@
 
 This register records assessment changes that can affect learner interpretation, difficulty, evidence or spaced-review identity. It is deliberately separate from general release notes so an assessment reviewer can see what changed and why.
 
+## 2026.08.30.1 — evidence-based diagnostic question bank
+
+- Upgraded the remaining 18 technical exam items so **all 30 technical questions** now require evidence interpretation, a diagnostic decision, a discriminating test, verification/recovery reasoning or recognition that the available evidence is insufficient.
+- Retained the 12 technical questions already deepened on 24 August and the eight mechanism-specific scenario rewrites; the 27 regional UK/US/NZ safety/compliance questions and their keyed answers were not changed.
+- Kept the existing stable technical IDs because each rewrite preserves its original technical competency/topic while increasing the cognitive task from recall to applied evidence reasoning. The 18 newly rewritten IDs are recorded as revision 3; the earlier 12 remain revision 2.
+- Re-reviewed changed keyed-option positions and rationale/source fit. A changed option index is not treated as an automated answer flip; the keyed engineering conclusion is explicitly reviewed and recorded in `sources/QUESTION_REVISION_INDEX.json`.
+- Added deliberate coverage of five reasoning modes: observation, decision, discrimination, verification and **insufficient evidence**.
+- Added fail-closed assessment cases that prohibit inferring pressure units/references or quantitative pressure loss from ambiguous signal names or magnitudes.
+- Grounded questions in the types of accepted measured evidence available to MouldMaster—pressure/flow response, cavity pressure, thermal/cooling behaviour, shot delivery, process actuals and quality outcomes—without copying raw third-party rows or turning study-specific values into universal production settings.
+- Refreshed the evidence-approval snapshot for all 157 keyed questions and advanced `question_bank_version` to `2026.08.30.1`.
+
+See `sources/QUESTION_BANK_DEEP_DIVE.md`, `sources/QUESTION_REVISION_INDEX.json` and `qa_question_deep_dive.py`.
+
 ## 2026.08.25.2 — fail-closed evidence hardening
 
 - Kept all 57 live exam answer keys, question text, the 40-scenario bank and the 9 Diagnostic Learning Labs unchanged.
