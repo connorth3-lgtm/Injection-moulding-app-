@@ -136,7 +136,7 @@ audit("Health and Safety at Work Amendment Act 2026" in nz and "1 April 2027" in
 V=json.loads(text("version.json"))
 m=re.search(r"const BANK_VERSION='([^']+)'",upgrade)
 audit(bool(m),"legacy bank version pinned")
-audit(bool(m) and m.group(1)==V.get("legacy_review_id_version") and V.get("question_bank_version")=="2026.08.24.2","legacy review ID version and current question-bank revision are explicit")
+audit(bool(m) and m.group(1)==V.get("legacy_review_id_version") and V.get("question_bank_version")=="2026.08.30.1","legacy review ID version and current question-bank revision are explicit")
 audit("normaliseTechnicalQuestion10" in core,"technical normalizer")
 audit("normaliseRegionalQuestion10" in core,"regional normalizer")
 audit("correct:oldIndex===item.correct" in core and "correct:mixed.findIndex(x=>x.correct)" in core,"shuffle keeps answer key")
