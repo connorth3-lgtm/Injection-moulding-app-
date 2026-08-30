@@ -1,7 +1,7 @@
 # MouldMaster real process-data pilot protocol
 
 Status: pilot-readiness protocol; no production-control authority  
-Reviewed: 2026-08-27  
+Reviewed: 2026-08-31  
 Scope: controlled use of de-identified or pseudonymised real injection-moulding shot data to evaluate MouldMaster diagnostic learning against physical process evidence.
 
 ## Purpose
@@ -166,6 +166,16 @@ The public repository must not contain raw production exports or site-confidenti
 ## Safety and production boundary
 
 No pilot finding authorises a real production change. Real changes remain subject to the exact machine, mould, material, validated process, approved site procedure, competent risk assessment, change control and applicable safety requirements. Never bypass guards, interlocks or hazardous-energy controls to create or investigate a training case.
+
+## Live deployment and claim boundary
+
+Completion of the authorised real-site pilot is **not a prerequisite for public learner deployment**. The hosted PWA and open Windows learner build are eligible for live release when their normal release, browser, desktop, assessment, evidence, provenance and safety QA gates pass on the exact source head.
+
+The site pilot is instead an evidence-maturity gate for a stronger claim. Until the pilot completion criterion below is actually satisfied, MouldMaster may describe the real-data workflow as **pilot-ready** but must not claim it is **validated on real production data**.
+
+The absence of production-control authority is also not a learner-deployment blocker. It is a permanent product-scope boundary: MouldMaster does not authorise machine, mould, material, maintenance, safeguarding, production-release or process-setting changes.
+
+The machine-readable release policy is `data/live-release-readiness.json`; `sources/LIVE_RELEASE_READINESS.md` explains the release decision and CI claim boundary.
 
 ## Pilot completion criterion
 
