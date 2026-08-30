@@ -18,16 +18,29 @@ jobs:
           fetch-depth: 0
       - name: Prepare canonical Wave 2 reconciliation
         run: python tools/reconcile_wave2_four_families.py
-      - name: Reconcile restricted-source QA count
+      - name: Reconcile residual QA expectations
         run: |
           python - <<'PY'
           from pathlib import Path
+
           p=Path('qa_measured_dataset_inventory.py')
           t=p.read_text(encoding='utf-8')
           old="state_counts['public-research-education-release'] == summary.get('publicResearchEducationTerms') == 1"
           new="state_counts['public-research-education-release'] == summary.get('publicResearchEducationTerms') == 2"
           assert t.count(old)==1
           p.write_text(t.replace(old,new,1), encoding='utf-8')
+
+          p=Path('qa_master_data_compile.py')
+          t=p.read_text(encoding='utf-8')
+          old="need(\"assert c['automatedIngestionAllowedDatasets']==10\" in workflow_text, \"master-data workflow executable-source assertion is stale\")"
+          new="need(\"assert c['automatedIngestionAllowedDatasets']==13\" in workflow_text, \"master-data workflow executable-source assertion is stale\")"
+          assert t.count(old)==1
+          p.write_text(t.replace(old,new,1), encoding='utf-8')
+
+          p=Path('qa_content_scale_targets.py')
+          t=p.read_text(encoding='utf-8')
+          t=t.replace('7 fully profiled families and 1 restricted research/education profile', '11 fully profiled families including 2 restricted educational/noncommercial profiles')
+          p.write_text(t, encoding='utf-8')
           PY
       - name: Validate inventory
         run: python qa_measured_dataset_inventory.py
