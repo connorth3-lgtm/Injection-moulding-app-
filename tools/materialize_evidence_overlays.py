@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
 """Resolve additive evidence overlays into the CI working copy.
 
-Committed v1 files remain historical baselines. Overlay-aware CI materializes the
-current accepted evidence layer only after immutable base reconciliation passes.
-No raw third-party data or measured-dataset acceptance state is changed here.
+Committed v1 files remain historical/source-reviewed baselines. Overlay-aware CI
+materializes only evidence that is currently rights-executable and backed by an
+existing canonical profile. No raw third-party payload or measured-dataset
+acceptance state is changed here.
 """
 from __future__ import annotations
 
@@ -19,6 +20,22 @@ SENSOR_BASE = ROOT / 'data' / 'sensor-machine-health-registry-v1.json'
 SENSOR_OVERLAY = ROOT / 'data' / 'sensor-machine-health-registry-v2.json'
 TARGET_BASE = ROOT / 'data' / 'content-scale-targets.json'
 TARGET_OVERLAY = ROOT / 'data' / 'content-scale-targets-overlay-v2.json'
+
+PROFILE_ALIASES = {
+    'data/public-benchmark-results/scatimdata-v1.json':
+        'data/public-benchmark-results/scatimdata-avaps-v1.json',
+    'data/public-benchmark-results/cross-process-chain-v1.json':
+        'data/public-benchmark-results/cross-process-chain-17240390-v1.json',
+}
+EXPECTED_SENSOR_KINDS = {
+    'direct-measurement': 36,
+    'derived-feature': 5,
+    'diagnostic-interpretation': 5,
+    'measurement-integrity': 7,
+    'quality-measurement': 5,
+    'command-signal': 1,
+    'state-signal': 1,
+}
 
 
 def load(path: Path):
@@ -94,40 +111,75 @@ def materialize_primary():
     return resolved
 
 
+def normalize_sensor_concept(raw):
+    concept = copy.deepcopy(raw)
+    evidence = []
+    for source in concept.get('evidence') or []:
+        item = copy.deepcopy(source)
+        if item.get('type') == 'dataset-profile':
+            path = str(item.get('path', '')).strip()
+            path = PROFILE_ALIASES.get(path, path)
+            item['path'] = path
+            if not path or not (ROOT / path).exists():
+                continue
+        evidence.append(item)
+    concept['evidence'] = evidence
+    return concept if evidence else None
+
+
 def materialize_sensor():
     base = load(SENSOR_BASE)
     if base.get('materializedOverlay') == 'data/sensor-machine-health-registry-v2.json':
-        need((base.get('summary') or {}).get('acceptedConcepts') == 81, 'already-materialized sensor total drifted')
+        summary = base.get('summary') or {}
+        need(summary.get('acceptedConcepts') == 60, 'already-materialized sensor total drifted')
+        need(summary.get('baseAccepted') == 23 and summary.get('overlayAccepted') == 37, 'already-materialized sensor layer split drifted')
         return base
+
     overlay = load(SENSOR_OVERLAY)
-    need(overlay.get('schema') == 1 and overlay.get('status') == 'accepted-evidence-reviewed-overlay', 'sensor overlay invalid')
+    need(overlay.get('schema') == 1 and overlay.get('status') == 'evidence-reviewed-overlay-with-rights-gates', 'sensor overlay invalid')
     need(overlay.get('baseRegistry') == 'data/sensor-machine-health-registry-v1.json', 'sensor overlay base mismatch')
-    baseline = list(base.get('concepts') or [])
+    source_base = list(base.get('concepts') or [])
     expected = overlay.get('summary') or {}
-    need(len(baseline) == expected.get('baseAccepted') == 26, 'historical sensor baseline drifted')
-    added = []
+    need(len(source_base) == expected.get('sourceReviewedBase') == 26, 'source-reviewed sensor base drifted')
+
+    source_overlay = []
     for ref in overlay.get('packs') or []:
-        p = ROOT / ref['path']
-        pack = load(p)
+        pack = load(ROOT / ref['path'])
         rows = pack.get('entries') or []
-        need(pack.get('schema') == 1 and pack.get('status') == 'accepted-evidence-reviewed-overlay-pack', f'{ref["path"]}: invalid pack')
+        need(pack.get('schema') == 1 and pack.get('status') == 'accepted-evidence-reviewed-overlay-pack', f'{ref["path"]}: invalid reviewed pack')
         need(len(rows) == ref.get('entries'), f'{ref["path"]}: manifest count mismatch')
-        added.extend(rows)
-    need(len(added) == expected.get('overlayAccepted') == 55, 'sensor overlay accepted count drifted')
-    rows = baseline + added
+        source_overlay.extend(rows)
+    need(len(source_overlay) == expected.get('sourceReviewedOverlay') == 55, 'source-reviewed sensor overlay total drifted')
+
+    source_ids = [str(x.get('id', '')) for x in source_base + source_overlay]
+    need(all(source_ids) and len(source_ids) == len(set(source_ids)), 'source-reviewed sensor registry contains duplicate/missing IDs')
+
+    accepted_base = [x for raw in source_base if (x := normalize_sensor_concept(raw)) is not None]
+    accepted_overlay = [x for raw in source_overlay if (x := normalize_sensor_concept(raw)) is not None]
+    need(len(accepted_base) == expected.get('acceptedBaseAfterRightsAndCanonicalProfileGates') == 23, 'rights/profile-gated base sensor total drifted')
+    need(len(accepted_overlay) == expected.get('acceptedOverlayAfterRightsAndCanonicalProfileGates') == 37, 'rights/profile-gated overlay sensor total drifted')
+
+    rows = accepted_base + accepted_overlay
+    need(len(rows) == expected.get('resolvedAccepted') == 60, 'resolved sensor total drifted')
+    need(len(source_ids) - len(rows) == expected.get('deferredSourceReviewedConcepts') == 21, 'deferred sensor concept total drifted')
     ids = [str(x.get('id', '')) for x in rows]
-    need(all(ids) and len(ids) == len(set(ids)), 'resolved sensor registry contains duplicate/missing IDs')
-    need(len(rows) == expected.get('resolvedAccepted') == 81, 'resolved sensor total drifted')
+    need(len(ids) == len(set(ids)), 'resolved sensor registry contains duplicate IDs')
+    need(not any(x.startswith('sig-probayes-') for x in ids), 'ProBayes-dependent concepts must remain deferred while reuse rights are blocked')
+    for blocked_id in ['sig-nozzle-front-pressure-direct', 'sig-nozzle-back-pressure-direct', 'sig-nozzle-pressure-difference-derived']:
+        need(blocked_id not in ids, f'{blocked_id} must remain deferred while SKZ LoKI reuse rights are blocked')
+
     counts = Counter(str(x.get('kind', '')) for x in rows)
+    need(dict(counts) == EXPECTED_SENSOR_KINDS, f'resolved sensor kind counts drifted: {dict(counts)}')
     resolved = copy.deepcopy(base)
     resolved['version'] = overlay.get('version')
     resolved['reviewed'] = overlay.get('reviewed')
-    resolved['status'] = 'accepted-evidence-reviewed-registry'
-    resolved['materializedFromBaseAccepted'] = 26
+    resolved['status'] = 'accepted-rights-and-canonical-profile-gated-registry'
+    resolved['materializedFromSourceBaseReviewed'] = 26
+    resolved['materializedFromBaseAccepted'] = 23
     resolved['materializedOverlay'] = 'data/sensor-machine-health-registry-v2.json'
     resolved['concepts'] = rows
     resolved['summary'] = {
-        'acceptedConcepts': 81,
+        'acceptedConcepts': 60,
         'directMeasurementConcepts': counts['direct-measurement'],
         'derivedFeatureConcepts': counts['derived-feature'],
         'diagnosticInterpretationConcepts': counts['diagnostic-interpretation'],
@@ -136,8 +188,11 @@ def materialize_sensor():
         'commandSignalConcepts': counts['command-signal'],
         'stateSignalConcepts': counts['state-signal'],
         'kindCounts': dict(sorted(counts.items())),
-        'baseAccepted': 26,
-        'overlayAccepted': 55,
+        'sourceReviewedBase': 26,
+        'sourceReviewedOverlay': 55,
+        'baseAccepted': 23,
+        'overlayAccepted': 37,
+        'deferredSourceReviewedConcepts': 21,
     }
     write(SENSOR_BASE, resolved)
     return resolved
@@ -149,7 +204,7 @@ def materialize_targets():
         targets = base.get('targets') or {}
         need(targets['primary_measured_studies']['currentAccepted'] == 70, 'already-materialized primary target drifted')
         need(targets['peer_reviewed_research_records']['currentAccepted'] == 70, 'already-materialized research target drifted')
-        need(targets['sensor_machine_health_concepts']['currentAccepted'] == 81, 'already-materialized sensor target drifted')
+        need(targets['sensor_machine_health_concepts']['currentAccepted'] == 60, 'already-materialized sensor target drifted')
         return base
     overlay = load(TARGET_OVERLAY)
     need(overlay.get('schema') == 1 and overlay.get('status') == 'accepted-count-overlay', 'target overlay invalid')
@@ -169,5 +224,5 @@ sensor = materialize_sensor()
 targets = materialize_targets()
 need(primary['summary']['publisherVerifiedPeerReviewedPrimaryMeasured'] == targets['targets']['primary_measured_studies']['currentAccepted'] == 70, 'resolved primary and target totals disagree')
 need(targets['targets']['peer_reviewed_research_records']['currentAccepted'] == 70, 'resolved peer-reviewed target total disagrees')
-need(sensor['summary']['acceptedConcepts'] == targets['targets']['sensor_machine_health_concepts']['currentAccepted'] == 81, 'resolved sensor and target totals disagree')
-print('MouldMaster evidence overlays materialized (primary: 60 + 10 = 70; sensor/machine-health: 26 + 55 = 81)')
+need(sensor['summary']['acceptedConcepts'] == targets['targets']['sensor_machine_health_concepts']['currentAccepted'] == 60, 'resolved sensor and target totals disagree')
+print('MouldMaster evidence overlays materialized (primary: 60 + 10 = 70; sensor/machine-health: 60 accepted, 21 source-reviewed concepts deferred by rights/profile gates)')
