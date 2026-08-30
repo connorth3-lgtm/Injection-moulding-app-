@@ -4,7 +4,7 @@
 const RELEASE='2026.08.26.2';
 const CONTENT='2026.08.26.1';
 const REFERENCE_DATA_URL='./reference-data.html';
-const BROWSER_FRESH_TOKEN='20260826-app-shell-mobile-qa';
+const BROWSER_FRESH_TOKEN='20260829-app-deep-audit-fixes';
 function setText(el,value){if(el&&el.textContent!==value)el.textContent=value}
 function setAttr(el,name,value){if(el&&el.getAttribute(name)!==value)el.setAttribute(name,value)}
 function isMobileNav(){return !!window.matchMedia?.('(max-width:680px)').matches}
@@ -46,6 +46,18 @@ function syncUpdateCard(){
       if(label==='Installed version')setText(value,ctx.version);
       if(label==='Update mode')setText(value,ctx.mode);
     });
+    if(!card.querySelector('[data-mm-repair-link]')){
+      const repair=document.createElement('button');repair.type='button';repair.className='secondary';repair.dataset.mmRepairLink='1';repair.textContent='Repair app files';
+      repair.addEventListener('click',()=>location.assign('./repair.html'));
+      card.appendChild(repair);
+    }
+  });
+}
+function hideInternalQaProvenance(){
+  document.querySelectorAll('h3').forEach(heading=>{
+    if((heading.textContent||'').trim()==='Plugin-assisted QA provenance'){
+      const card=heading.closest('.card');if(card){card.hidden=true;card.style.display='none';card.setAttribute('aria-hidden','true')}
+    }
   });
 }
 function installMobileLayoutGuard(){
@@ -129,15 +141,17 @@ function patchMobileMoreForReferenceData(){
     requestAnimationFrame(()=>{
       const card=document.querySelector('#modal .modal-card');
       const grid=card?.querySelector('.grid2');
-      if(!grid||grid.querySelector('[data-mm-reference-data-menu]'))return;
-      const button=document.createElement('button');
-      button.type='button';button.className='quick-action';button.dataset.mmReferenceDataMenu='1';
-      button.innerHTML='<span class="icon">▤</span><b>Reference data</b><small>Materials, defects, signals and troubleshooting data.</small>';
-      button.addEventListener('click',()=>{
-        try{window.closeModal?.()}catch(_){}
-        openStandaloneReferenceData();
-      });
-      grid.appendChild(button);
+      if(!grid)return;
+      if(!grid.querySelector('[data-mm-reference-data-menu]')){
+        const button=document.createElement('button');
+        button.type='button';button.className='quick-action';button.dataset.mmReferenceDataMenu='1';
+        button.innerHTML='<span class="icon">▤</span><b>Reference data</b><small>Materials, defects, signals and troubleshooting data.</small>';
+        button.addEventListener('click',()=>{
+          try{window.closeModal?.()}catch(_){}
+          openStandaloneReferenceData();
+        });
+        grid.appendChild(button);
+      }
     });
     return r;
   };
@@ -219,7 +233,7 @@ async function register(){
   try{const reg=await navigator.serviceWorker.register('./service-worker.js',{scope:'./'});await reg.update()}catch(e){console.warn('[MouldMaster] Offline/update support unavailable:',e)}
 }
 let syncQueued=false;
-function runSync(){syncQueued=false;syncLabels();syncStandardsReviewDate();syncUpdateCard();installMobileLayoutGuard();syncVisibleViewChrome();dockReferenceLauncher();configureReferenceDrawer();dockReferenceDataLauncher();configureReferenceDataDrawer();addNZLegacyNote()}
+function runSync(){syncQueued=false;syncLabels();syncStandardsReviewDate();syncUpdateCard();hideInternalQaProvenance();installMobileLayoutGuard();syncVisibleViewChrome();dockReferenceLauncher();configureReferenceDrawer();dockReferenceDataLauncher();configureReferenceDataDrawer();addNZLegacyNote()}
 function scheduleSync(){
   if(syncQueued)return;
   syncQueued=true;
