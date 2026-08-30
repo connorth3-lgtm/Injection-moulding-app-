@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "version": "2026.08.30.4",
+  "version": "2026.08.30.5",
   "reviewed": "2026-08-30",
   "purpose": "Credible measured-data discoveries that are still awaiting file-level profiling, retrieval, rights clearance, or role assignment. Already promoted families are removed from the active queue and recorded under resolvedPromotions; explicitly rejected false positives are recorded under screenedOutDiscoveries so neither group can be mistaken for unexecuted promotable work.",
   "rules": {
@@ -12,7 +12,8 @@
     "alreadyPromotedFamiliesMustNotRemainActiveDiscoveries": true,
     "articleOrThesisLicenceDoesNotAutomaticallyLicenseUnderlyingThirdPartyProductionData": true,
     "publicMirrorAvailabilityDoesNotProveDatasetReuseRights": true,
-    "reportedCountsFromRelatedPublicationsRemainUnacceptedUntilPayloadRightsAndOverlapAreResolved": true
+    "reportedCountsFromRelatedPublicationsRemainUnacceptedUntilPayloadRightsAndOverlapAreResolved": true,
+    "cycleLevelFeatureRowsAreNotIntraCycleProcessWaveforms": true
   },
   "activeDiscoveries": [
     {
@@ -70,22 +71,27 @@
         "https://iconline.ipleiria.pt/entities/publication/1d5c7c69-fd17-4cec-88fe-bbb3b4bd1def"
       ],
       "license": "CC BY applies to the open thesis and journal article; underlying company production-data reuse rights are not stated",
-      "role": "large-industrial-process-data-access-and-rights-review",
-      "recordUnit": "reported injection cycle with associated industrial machine/sensor features",
+      "role": "large-industrial-record-level-process-data-access-and-rights-review",
+      "recordUnit": "one reported cycle-level machine/sensor feature record per injection cycle; not an intra-cycle process waveform unless released payload proves otherwise",
       "scale": {
         "thesisReportedInjectionCycles": 71016,
         "thesisReportedPiecesPerCycle": 2,
         "journalReportedInjectionCyclesApprox": 280000,
+        "journalReportedSensorsPerCycle": 264,
+        "journalReportedCandidateFeaturesAfterInitialReduction": 47,
+        "journalReportedMachineCount": 1,
+        "journalReportedApproxCycleSeconds": 55,
         "collectionDuration": "approximately six months of continuous production"
       },
       "reportedCountRelationship": "The thesis and later journal paper report different cycle totals over approximately six months. They are treated as related reported scales only; no equality, containment, deduplication, or additive relationship is assumed until the underlying payloads and collection windows are available.",
-      "signals": ["temperature-related machine/sensor features", "pressure-related machine/sensor features", "torque-related machine/sensor features", "cycle-time, rheology and other industrial process features"],
+      "measurementGranularity": "The peer-reviewed paper states that 264 sensors each provide one reading per cycle. These are cycle-level process measurements/features, not 264 within-cycle sampled waveforms. If released, they must enter the record-level process-measurement lane unless file inspection demonstrates additional intra-cycle time-series data.",
+      "signals": ["264 reported cycle-level readings covering temperature, pressure, torque, stage time, force and related machine variables", "47 candidate signals after duplicate/near-constant/operational filtering", "engineered relative-viscosity proxy in the published modelling workflow"],
       "quality": ["faulty/non-conforming production time-zone labels used for industrial anomaly monitoring", "melt-instability or volatile-zone labels preceding quality degradation"],
       "dataAvailability": "The 2025 Polymers article states that the original contributions are included in the article and that further inquiries can be directed to the corresponding author; no reusable raw production CSV/XLSX payload is publicly attached.",
       "status": "request-only-payload-not-public-company-data-rights-unresolved",
       "lastPublicRecheck": "2026-08-30",
       "acceptedMeasuredTimeSeriesSamples": 0,
-      "limitation": "The Polytechnic Institute of Leiria repository exposes the CC BY thesis and CC BY journal article, not the underlying Aspöck/industrial production CSV/XLSX payload. The thesis reports 71,016 real injection cycles while the later peer-reviewed Polymers paper reports approximately 280,000 cycles from six months of continuous production. Those publication licences must not be widened into a licence for company production data, and the two reported totals must not be added or deduplicated by assumption. No cycles, feature cells or waveform values may be counted unless the original dataset is released or the data owner supplies explicit reuse permission and files, after which overlap and record semantics must be profiled."
+      "limitation": "The Polytechnic Institute of Leiria repository exposes the CC BY thesis and CC BY journal article, not the underlying Aspöck/industrial production CSV/XLSX payload. The thesis reports 71,016 real injection cycles while the later peer-reviewed Polymers paper reports approximately 280,000 cycles from six months of continuous production. The journal describes 264 sensors/features recorded once per cycle, so these must not be inflated into process-waveform counts. Publication licences must not be widened into a licence for company production data, and the two reported totals must not be added or deduplicated by assumption. No cycles, feature cells or waveform values may be counted unless the original dataset is released or the data owner supplies explicit reuse permission and files, after which overlap, record semantics and measurement granularity must be profiled."
     },
     {
       "id": "aisemo-accelerometer-state-recognition-v1",
