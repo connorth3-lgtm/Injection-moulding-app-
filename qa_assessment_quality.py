@@ -161,12 +161,12 @@ report={'schema':1,'quality_version':'2026.08.24.2','scenario_count':40,'near_du
 REPORT.write_text(json.dumps(report,indent=2)+'\n',encoding='utf-8')
 
 V=json.loads(text('version.json'))
-need(V.get('question_bank_version')=='2026.08.24.2','question_bank_version must be bumped to 2026.08.24.2')
+need(V.get('question_bank_version')=='2026.08.30.1','question_bank_version must reflect the evidence-diagnostic question release')
 need(V.get('content_version')=='2026.08.26.1','content_version must match the current 2026.08.26.1 curriculum release')
 need(V.get('legacy_review_id_version')=='2026.08.21.1','legacy review ID version must remain explicit for migration')
 
 log=text('sources/QUESTION_BANK_CHANGELOG.md')
-for marker in ['2026.08.24.2','stable question IDs','device-local question analytics','competency-balanced exam blueprint','Expanded shop-floor scenario drills from 16 to 40','scheduled authoritative-source freshness monitoring']:
+for marker in ['2026.08.30.1','all 30 technical questions','insufficient evidence','2026.08.24.2','stable question IDs','device-local question analytics','competency-balanced exam blueprint','Expanded shop-floor scenario drills from 16 to 40','scheduled authoritative-source freshness monitoring']:
     need(marker in log,f'question-bank changelog marker missing: {marker}')
 
 idx=text('index.html')
