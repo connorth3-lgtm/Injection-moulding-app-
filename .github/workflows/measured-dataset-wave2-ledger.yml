@@ -50,7 +50,7 @@ jobs:
   ledger:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - name: Validate landed 25-source inventory checkpoint
         run: python qa_measured_dataset_inventory.py
       - name: Validate landed content-scale checkpoint

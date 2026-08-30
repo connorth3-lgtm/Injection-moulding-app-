@@ -18,11 +18,12 @@ jobs:
   integrity:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
         with:
           node-version: '22.12.0'
-      - uses: actions/setup-python@v5
+          package-manager-cache: false
+      - uses: actions/setup-python@v7
         with:
           python-version: '3.12'
       - name: JavaScript syntax
@@ -165,25 +166,25 @@ jobs:
       - name: IACET 2026 readiness integrity
         run: python qa_iacet_readiness.py
       - name: Upload process-data sweep report
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: mouldmaster-process-data-sweep
           path: process-data-sweep-report.json
           if-no-files-found: error
       - name: Upload measured-evidence report
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: mouldmaster-measured-evidence-50-pass
           path: measured-evidence-50-pass-report.json
           if-no-files-found: error
       - name: Upload content-scale target report
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: mouldmaster-content-scale-targets
           path: content-scale-targets-report.json
           if-no-files-found: error
       - name: Upload evidence maturity audit
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: mouldmaster-evidence-maturity-audit
           path: evidence-maturity-report.json
