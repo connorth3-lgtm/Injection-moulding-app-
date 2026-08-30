@@ -26,13 +26,15 @@ for path in [
 
 hardening=text('assessment-psychometric-hardening.js')
 approval=text('assessment-psychometric-approval.js')
-need("const VERSION='2026.08.30.5'" in hardening,'psychometric hardening version mismatch')
-need("const REQUIRED_VERSION='2026.08.30.5'" in approval,'psychometric approval required version mismatch')
+need("const VERSION='2026.08.30.6'" in hardening,'psychometric hardening version mismatch')
+need("const REQUIRED_VERSION='2026.08.30.6'" in approval,'psychometric approval required version mismatch')
 need("itemsHardened:197" in approval and "optionsParallelised:788" in approval,'psychometric approval coverage contract missing')
 need("surfaceCueThreshold:0.50" in approval and "verifiedSurfaceCueMean:0.269" in approval,'verified surface-cue metadata missing')
 need("verifiedOptionPermutationEvaluations:9850" in approval,'50-pass permutation verification count missing')
 need("semanticAnswerChanges:0" in hardening and "semanticAnswerChanges:0" in approval,'semantic-answer preservation guard missing')
 need("scenarioKeyPositions:[10,10,10,10]" in approval,'balanced scenario key-position approval missing')
+need("initialization:'after-training-upgrade'" in hardening,'psychometric hardening must wait for the 40-scenario training upgrade')
+need("DOMContentLoaded" in hardening and "scenarioCount!==40" in hardening,'psychometric initialization guard missing')
 
 m=re.search(r"const INPUT_BLOB='([0-9a-f]{40})'",approval)
 need(m is not None,'psychometric input blob pin missing')
@@ -63,4 +65,4 @@ for marker in ['node --check assessment-psychometric-hardening.js','node --check
 runtime=text('qa_question_quality_extreme_runtime_v2.py')
 need("meta.get('optionsParallelised')==788" in runtime,'extreme runtime does not accept the tested 788-option contract')
 
-print(f'MouldMaster psychometric integration QA passed: 197 decisions / 788 options pinned to {actual}, browser/PWA/desktop delivery aligned, 9,850-permutation audit provenance retained')
+print(f'MouldMaster psychometric integration QA passed: 197 decisions / 788 options pinned to {actual}, delayed until 40 scenarios are present, browser/PWA/desktop delivery aligned, 9,850-permutation audit provenance retained')
