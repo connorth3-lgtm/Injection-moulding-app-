@@ -18,6 +18,17 @@ jobs:
           fetch-depth: 0
       - name: Prepare canonical Wave 2 reconciliation
         run: python tools/reconcile_wave2_four_families.py
+      - name: Reconcile restricted-source QA count
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p=Path('qa_measured_dataset_inventory.py')
+          t=p.read_text(encoding='utf-8')
+          old="state_counts['public-research-education-release'] == summary.get('publicResearchEducationTerms') == 1"
+          new="state_counts['public-research-education-release'] == summary.get('publicResearchEducationTerms') == 2"
+          assert t.count(old)==1
+          p.write_text(t.replace(old,new,1), encoding='utf-8')
+          PY
       - name: Validate inventory
         run: python qa_measured_dataset_inventory.py
       - name: Validate content-scale targets
