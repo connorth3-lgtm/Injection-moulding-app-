@@ -29,23 +29,9 @@
         "continuousSensors": 66,
         "discreteControlActions": 7
       },
-      "processStages": [
-        "clamping",
-        "injection",
-        "holding",
-        "cooling",
-        "ejection",
-        "robot pick/place"
-      ],
-      "signals": [
-        "66 reported continuous MES/IoT sensor measurements",
-        "7 machine setpoint/equipment-configuration actions",
-        "terminal part temperature X66"
-      ],
-      "quality": [
-        "chronological PMT anomaly/defect outbreak sequence",
-        "reported examples include internal bubbles, warpage and incomplete cooling"
-      ],
+      "processStages": ["clamping", "injection", "holding", "cooling", "ejection", "robot pick/place"],
+      "signals": ["66 reported continuous MES/IoT sensor measurements", "7 machine setpoint/equipment-configuration actions", "terminal part temperature X66"],
+      "quality": ["chronological PMT anomaly/defect outbreak sequence", "reported examples include internal bubbles, warpage and incomplete cooling"],
       "collectionWindow": "2025-02-02 to 2025-03-14",
       "status": "retrieval-blocked-publisher-no-files",
       "lastPublicRecheck": "2026-08-30",
@@ -59,16 +45,9 @@
       "license": null,
       "role": "direct-process-data-rights-and-provenance-review",
       "recordUnit": "repeated injection-moulding pressure/temperature test acquisition; exact workbook row and channel structure not yet accepted",
-      "scale": {
-        "processParameterCombinations": null,
-        "testsPerCombinationReported": 10,
-        "workbook": "Data.xlsx"
-      },
+      "scale": {"processParameterCombinations": null, "testsPerCombinationReported": 10, "workbook": "Data.xlsx"},
       "machine": "Ferromatik Milacron A K85 injection molding machine",
-      "signals": [
-        "mold pressure from a reported Priamus 6001B sensor",
-        "mold temperature from a reported type-K thermocouple"
-      ],
+      "signals": ["mold pressure from a reported Priamus 6001B sensor", "mold temperature from a reported type-K thermocouple"],
       "status": "public-mirror-rights-and-origin-unresolved",
       "lastPublicRecheck": "2026-08-30",
       "acceptedMeasuredTimeSeriesSamples": 0,
@@ -77,24 +56,13 @@
     {
       "id": "aspoeck-costa-industrial-71016-v1",
       "title": "Aspöck Portugal industrial injection-moulding process-monitoring dataset reported in Costa 2025 thesis",
-      "source": "http://hdl.handle.net/10400.8/15186",
+      "source": "https://iconline.ipleiria.pt/entities/publication/b06bd27d-3ef5-4aad-9d5b-9fc3afef84d6",
       "license": "CC BY applies to the open thesis; underlying company production-data reuse rights not stated",
       "role": "large-industrial-process-data-access-and-rights-review",
       "recordUnit": "reported injection cycle with associated industrial machine/sensor features",
-      "scale": {
-        "reportedInjectionCycles": 71016,
-        "reportedPiecesPerCycle": 2,
-        "collectionDuration": "approximately six months of continuous 24/7 production"
-      },
-      "signals": [
-        "temperature-related machine/sensor features",
-        "pressure-related machine/sensor features",
-        "torque-related machine/sensor features",
-        "cycle-time and other industrial process features"
-      ],
-      "quality": [
-        "faulty/non-conforming production time-zone labels used for industrial anomaly monitoring"
-      ],
+      "scale": {"reportedInjectionCycles": 71016, "reportedPiecesPerCycle": 2, "collectionDuration": "approximately six months of continuous 24/7 production"},
+      "signals": ["temperature-related machine/sensor features", "pressure-related machine/sensor features", "torque-related machine/sensor features", "cycle-time and other industrial process features"],
+      "quality": ["faulty/non-conforming production time-zone labels used for industrial anomaly monitoring"],
       "status": "payload-not-public-company-data-rights-unresolved",
       "lastPublicRecheck": "2026-08-30",
       "acceptedMeasuredTimeSeriesSamples": 0,
@@ -107,22 +75,9 @@
       "license": "CC BY 4.0 applies to the article; underlying recordings are available only by contacting the authors",
       "role": "direct-process-auxiliary-sensor-request-only",
       "recordUnit": "100 Hz triaxial accelerometer sample synchronized to PLC state labels",
-      "scale": {
-        "reportedInjectionMoldingMachines": 5,
-        "reportedProducts": 15,
-        "samplingFrequencyHz": 100
-      },
-      "signals": [
-        "3-axis machine acceleration",
-        "PLC-derived process-state labels"
-      ],
-      "processStages": [
-        "closing",
-        "injection unit",
-        "plasticizing",
-        "demolding",
-        "null/non-producing state"
-      ],
+      "scale": {"reportedInjectionMoldingMachines": 5, "reportedProducts": 15, "samplingFrequencyHz": 100},
+      "signals": ["3-axis machine acceleration", "PLC-derived process-state labels"],
+      "processStages": ["closing", "injection unit", "plasticizing", "demolding", "null/non-producing state"],
       "status": "request-only-underlying-data-not-public",
       "lastPublicRecheck": "2026-08-30",
       "acceptedMeasuredTimeSeriesSamples": 0,
@@ -140,29 +95,9 @@
     }
   ],
   "resolvedPromotions": [
-    {
-      "formerDiscoveryId": "mendeley-pp-pvt-v1",
-      "canonicalDatasetId": "mendeley-6k8fpbrd9s-v1",
-      "resolution": "promoted-profiled-supporting-material-physics",
-      "note": "28,590 accepted pvT material-characterisation cells; never counted as injection-cycle waveform values."
-    },
-    {
-      "formerDiscoveryId": "mendeley-im-pla-abs-mechanics-v1",
-      "canonicalDatasetId": "mendeley-yxz2w7ctnh-v1",
-      "resolution": "promoted-profiled-supporting-mechanical-data",
-      "note": "489 accepted direct mechanical-test values; zero process-waveform contribution."
-    },
-    {
-      "formerDiscoveryId": "mendeley-release-coating-xps-v1",
-      "canonicalDatasetId": "mendeley-crmb7xjymg-v1",
-      "resolution": "promoted-profiled-supporting-surface-characterisation",
-      "note": "71,868 accepted XPS trace values; zero process-waveform contribution."
-    },
-    {
-      "formerDiscoveryId": "mendeley-hsmed-tpm-im-v1",
-      "canonicalDatasetId": "mendeley-ypf95p4bs4-v1",
-      "resolution": "promoted-profiled-production-engineering-subset",
-      "note": "666 accepted direct literal duration cells after excluding simulation, formulas, sales and other non-measured content; zero process-waveform contribution."
-    }
+    {"formerDiscoveryId": "mendeley-pp-pvt-v1", "canonicalDatasetId": "mendeley-6k8fpbrd9s-v1", "resolution": "promoted-profiled-supporting-material-physics", "note": "28,590 accepted pvT material-characterisation cells; never counted as injection-cycle waveform values."},
+    {"formerDiscoveryId": "mendeley-im-pla-abs-mechanics-v1", "canonicalDatasetId": "mendeley-yxz2w7ctnh-v1", "resolution": "promoted-profiled-supporting-mechanical-data", "note": "489 accepted direct mechanical-test values; zero process-waveform contribution."},
+    {"formerDiscoveryId": "mendeley-release-coating-xps-v1", "canonicalDatasetId": "mendeley-crmb7xjymg-v1", "resolution": "promoted-profiled-supporting-surface-characterisation", "note": "71,868 accepted XPS trace values; zero process-waveform contribution."},
+    {"formerDiscoveryId": "mendeley-hsmed-tpm-im-v1", "canonicalDatasetId": "mendeley-ypf95p4bs4-v1", "resolution": "promoted-profiled-production-engineering-subset", "note": "666 accepted direct literal duration cells after excluding simulation, formulas, sales and other non-measured content; zero process-waveform contribution."}
   ]
 }
