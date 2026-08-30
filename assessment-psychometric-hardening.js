@@ -1,13 +1,14 @@
-/* MouldMaster psychometric assessment hardening — 2026.08.31.1 */
+/* MouldMaster psychometric assessment hardening — 2026.08.31.2 */
 (function(){
 'use strict';
-const VERSION='2026.08.31.1';
+const VERSION='2026.08.31.2';
 const clean=t=>String(t||'').trim().replace(/[.]+$/,'');
 const unsafe=t=>/\b(bypass|defeat|disable|remove)\b.{0,55}\b(guard|interlock|safeguard|protection|lockout)\b/i.test(String(t||''));
 const prefixes=['Assessment of ','Review of ','Evaluation of ','Consideration of '];
+const negTails=['; with no alteration to the stated case','; with no alteration to the recorded window','; with no alteration to the production state','; with no alteration to the reference state'];
 const pads=[
  [' under the stated case conditions',' within this production review',' for the present decision'],
- [' within the recorded comparison window',' for this production review',' at the present decision point'],
+ [' within the recorded contrast window',' for this production review',' at the present decision point'],
  [' for the observed production state',' within this case review',' at the current decision point'],
  [' against the recorded reference state',' for this case review',' within the current decision point']
 ];
@@ -39,6 +40,7 @@ function cueNeutral(text){
   [/\bproves\b/gi,'establishes'],[/\bprove\b/gi,'establish'],[/\bproven\b/gi,'established'],[/\bidentical\b/gi,'the same'],[/\bevery\b/gi,'each'],[/\ball\b/gi,'the full set of']
  ];
  for(const [rx,r] of replacements)t=t.replace(rx,r);
+ t=t.replace(/,\s*/g,'; ').replace(/\s+and\s+/gi,' together with ').replace(/\s{2,}/g,' ');
  return clean(t);
 }
 function tightenStem(id,stem){
@@ -46,17 +48,20 @@ function tightenStem(id,stem){
  s=s.replace(/\b(obviously|clearly|simply|just)\b\s*/gi,'').replace(/\s{2,}/g,' ').replace(/\s+([,.;:?])/g,'$1');
  return s;
 }
-function frame(core,index){return prefixes[index%4]+lcFirst(core)}
+function frame(core,index,context){
+ const tag=context&&String(context).length<46?`; for this ${String(context).toLowerCase()} case`:'';
+ return prefixes[index%4]+lcFirst(core)+negTails[index%4]+tag;
+}
 function wrongFeedback(core,focus,index){
  if(unsafe(core))return 'Unsafe. Safeguards and isolation requirements remain in force; this is not an acceptable diagnostic or production action.';
  return `Not the strongest first decision. Alternative ${index+1} prioritises “${clean(core)}”, but the stated observations discriminate more strongly toward ${String(focus||'the keyed mechanism').toLowerCase()}.`;
 }
-function harden(options,key,feedback,focus,seed){
+function harden(options,key,feedback,focus,seed,context=''){
  if(!Array.isArray(options)||options.length!==4||!Number.isInteger(key)||key<0||key>3)return null;
- const rows=options.map((text,i)=>{const core=cueNeutral(text);return {core,text:frame(core,i),feedback:Array.isArray(feedback)?String(feedback[i]||''):''}});
+ const rows=options.map((text,i)=>{const core=cueNeutral(text);return {core,text:frame(core,i,context),feedback:Array.isArray(feedback)?String(feedback[i]||''):''}});
  rows.forEach((r,i)=>{if(i!==key)r.feedback=wrongFeedback(r.core,focus,i)});
  rows[key].feedback=rows[key].feedback||`Correct. This option is the most direct decision supported by ${String(focus||'the stated observations').toLowerCase()}.`;
- const target=Math.max(112,Math.max(...rows.map(r=>r.text.length))+10);
+ const target=Math.max(124,Math.max(...rows.map(r=>r.text.length))+10);
  rows.forEach((r,i)=>{let n=0;while(r.text.length<target){r.text=clean(r.text)+pads[i][n%pads[i].length];n++}});
  const wrong=rows.map((_,i)=>i).filter(i=>i!==key),chosen=wrong.reduce((a,b)=>rows[a].text.length>=rows[b].text.length?a:b);
  let n=0;while(rows[chosen].text.length<=rows[key].text.length){rows[chosen].text=clean(rows[chosen].text)+pads[chosen][n%pads[chosen].length];n++}
@@ -89,7 +94,7 @@ function applyHardening(attempt=0){
   const key=Number(q?.correct??q?.[2]),x=harden(q?.options??q?.[1],key,q?.optionFeedback??q?.[6],newStem,300+i);if(!x)continue;setQuestionRows(q,x,key);regionalItems++;
  }
  const scenarioKeyPositions=[0,0,0,0];
- (D.scenarios||[]).forEach((s,i)=>{const oldStem=s.situation||'',newStem=tightenStem(`scenario:${String(i+1).padStart(2,'0')}`,oldStem);if(newStem!==oldStem){s.situation=newStem;stemRewrites++}const key=Number(s.correct),x=harden(s.choices,key,s.feedback,s.category||s.title,500+i);if(!x)return;const moved=reposition(x,key,i%4);s.choices=moved.rows.map(r=>r.text);s.feedback=moved.rows.map(r=>r.feedback);s.correct=moved.key;scenarioKeyPositions[moved.key]++;scenarioItems++});
+ (D.scenarios||[]).forEach((s,i)=>{const oldStem=s.situation||'',newStem=tightenStem(`scenario:${String(i+1).padStart(2,'0')}`,oldStem);if(newStem!==oldStem){s.situation=newStem;stemRewrites++}const key=Number(s.correct),context=s.category||s.title||'',x=harden(s.choices,key,s.feedback,context,500+i,context);if(!x)return;const moved=reposition(x,key,i%4);s.choices=moved.rows.map(r=>r.text);s.feedback=moved.rows.map(r=>r.feedback);s.correct=moved.key;scenarioKeyPositions[moved.key]++;scenarioItems++});
  if(scenarioKeyPositions.some(x=>x!==10))throw new Error(`Scenario key positions are not balanced: ${scenarioKeyPositions.join(',')}`);
  for(const [li,lab] of (DIAG.labs||[]).entries())for(const [si,step] of (lab.steps||[]).entries()){step.question=tightenStem(`lab:${lab.id}:${si}`,step.question);const key=(step.choices||[]).findIndex(c=>c.correct===true);if(key<0)continue;const x=harden(step.choices.map(c=>c.text),key,step.choices.map(c=>c.feedback),lab.focus||lab.title,800+li*7+si);if(!x)continue;step.choices=x.map((r,i)=>({text:r.text,correct:i===key,feedback:r.feedback}));diagnosticItems++}
  for(const [li,lab] of (MAT.labs||[]).entries())for(const [si,step] of (lab.steps||[]).entries()){step.question=tightenStem(`material:${lab.id}:${si}`,step.question);const key=(step.choices||[]).findIndex(c=>c.correct===true);if(key<0)continue;const x=harden(step.choices.map(c=>c.text),key,step.choices.map(c=>c.feedback),lab.focus||lab.title,1100+li*7+si);if(!x)continue;step.choices=x.map((r,i)=>({text:r.text,correct:i===key,feedback:r.feedback}));materialItems++}
@@ -103,7 +108,7 @@ function applyHardening(attempt=0){
  const itemsHardened=Object.values(actual).reduce((a,b)=>a+b,0),optionsParallelised=itemsHardened*4;
  const meta={version:VERSION,semanticAnswerChanges:0,technicalKeyPositions:technicalKeyPositions.slice(),scenarioKeyPositions:scenarioKeyPositions.slice(),itemsHardened,optionsParallelised,optionSpecificFeedback:true,stemRewrites,initialization:'after-training-upgrade'};
  D.assessmentQA=D.assessmentQA||{};D.assessmentQA.psychometricHardening={...meta};
- window.MM_PSYCHOMETRIC_HARDENING={...meta,byBank:actual,policy:'Keep every option concise and grammatically parallel, neutralise surface cue vocabulary without changing the proposition, keep the keyed answer shorter than at least one distractor, balance technical and scenario key positions, and retain safety boundaries.'};
+ window.MM_PSYCHOMETRIC_HARDENING={...meta,byBank:actual,initialization:'after-training-upgrade',policy:'Keep every option concise and grammatically parallel, neutralise surface cue vocabulary without changing the proposition, keep the keyed answer shorter than at least one distractor, balance technical and scenario key positions, and retain safety boundaries.'};
 }
 function scheduleHardening(){
  if(typeof document==='undefined'){applyHardening();return}
