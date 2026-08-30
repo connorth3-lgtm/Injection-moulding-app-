@@ -12,7 +12,7 @@ expected={
  'android_release':'2026.08.26.2',
  'desktop_release':'2026.08.26.5',
  'content_version':'2026.08.26.1',
- 'question_bank_version':'2026.08.24.2',
+ 'question_bank_version':'2026.08.30.1',
  'assessment_quality_version':'2026.08.24.3',
  'assessment_storage_scope_version':'2026.08.24.4',
  'assessment_evidence_version':'2026.08.25.2',
@@ -27,6 +27,7 @@ for label,k in [
  ('Learner-scoped assessment storage','assessment_storage_scope_version'),('Question evidence approval','assessment_evidence_version'),
  ('Frozen legacy Windows recovery lane','windows_recovery_release')]:
     need(f'- {label}: `{V[k]}`' in readme,f'README release lane stale/missing: {label}')
+need('all 30 technical exam items now use evidence-based reasoning' in readme.lower(),'README must describe the evidence-diagnostic technical bank')
 need('qa_assessment_storage_scope.py' in readme,'README must list learner-scoped analytics QA')
 need('qa_assessment_evidence.py' in readme,'README must list question evidence approval QA')
 need('qa_curriculum_integration.py' in readme,'README must list curriculum integration QA')
