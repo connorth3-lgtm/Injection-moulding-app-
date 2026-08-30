@@ -1,0 +1,31 @@
+{
+  "schema": 1,
+  "datasetId": "mendeley-8c8fjwcw86-v1",
+  "status": "route-explicit-xrd-semantic-profile",
+  "source": {
+    "datasetPage": "https://data.mendeley.com/datasets/8c8fjwcw86/1",
+    "datasetDoi": "10.17632/8c8fjwcw86.1",
+    "version": 1,
+    "license": "CC BY 4.0",
+    "publisher": "Mendeley Data",
+    "publisherPackage": [
+      {"name": "Draft_nylon 12_supporting information_rev 2.docx", "sha256": "2a15794fd8d439e97b824dffecf648c29551fbd418d2d13f983155ae4e2cd70f"},
+      {"name": "Irradiated Nylon12_Manuscript Figures_rev 2.pptx", "sha256": "7b0397e4f28c3963782727fe533756572acc51422fe2e00642c84e084228a116"}
+    ]
+  },
+  "semanticRules": {
+    "acceptOnlySeriesExplicitlyLabelledInjectionMoldedNylon12": true,
+    "acceptedChartXml": "ppt/charts/chart7.xml",
+    "acceptedSlideXml": "ppt/slides/slide12.xml",
+    "acceptedSeriesSemanticLabel": "Injection Molded Nylon 12",
+    "excludeXrdCategoryAxisCoordinates": true,
+    "excludePowderAndSlsXrdSeries": true,
+    "excludeSlsStressStrainCurves": true,
+    "excludeDerivedUtsBoxPlotSummaries": true,
+    "excludeMdscRowsWithoutExplicitInjectionMouldedRoute": true,
+    "materialCharacterizationNotInjectionCycleData": true,
+    "acceptedMeasuredTimeSeriesSamples": 0,
+    "rawNumericValuesCommittedOrArtifacted": false
+  },
+  "evidenceBoundary": "The later semantic audit supersedes the earlier conservative no-route decision only for the XRD series whose slide and chart explicitly identify Injection Molded Nylon 12. Exactly 6,588 intensity values are accepted; axis coordinates and every non-injection or route-ambiguous series remain excluded."
+}

@@ -2,11 +2,13 @@ name: MouldMaster Measured Dataset Wave 2 Ledger
 
 on:
   pull_request:
+    branches: [main]
     paths:
       - 'data/content-scale-targets.json'
       - 'data/measured-dataset-inventory-v1.json'
       - 'data/measured-dataset-execution-ledger-v1.json'
       - 'data/measured-dataset-wave2-ledger-v1.json'
+      - 'data/measured-dataset-wave2-extension-v1.json'
       - 'data/public-benchmark-contracts/**'
       - 'data/public-benchmark-results/**'
       - 'qa_measured_dataset_inventory.py'
@@ -14,6 +16,7 @@ on:
       - 'qa_measured_dataset_wave2_ledger.py'
       - 'qa_master_data_compile.py'
       - 'tools/compile_master_data.py'
+      - 'tools/compile_master_data_base.py'
       - '.github/workflows/measured-dataset-wave2-ledger.yml'
   workflow_dispatch:
 
@@ -25,11 +28,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Validate measured dataset inventory
+      - name: Validate landed 25-source inventory checkpoint
         run: python qa_measured_dataset_inventory.py
-      - name: Validate content-scale targets
+      - name: Validate landed content-scale checkpoint
         run: python qa_content_scale_targets.py
-      - name: Validate Wave 2 family ledger
+      - name: Validate effective Wave 2 extension
         run: python qa_measured_dataset_wave2_ledger.py
-      - name: Validate master data compilation
+      - name: Validate effective master data compilation
         run: python qa_master_data_compile.py

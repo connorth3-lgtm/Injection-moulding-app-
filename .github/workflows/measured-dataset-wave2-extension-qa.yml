@@ -1,0 +1,38 @@
+name: MouldMaster Measured Dataset Wave 2 Extension QA
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'data/measured-dataset-wave2-ledger-v1.json'
+      - 'data/measured-dataset-wave2-extension-v1.json'
+      - 'data/public-benchmark-contracts/8c8fjwcw86-v1.json'
+      - 'data/public-benchmark-contracts/crmb7xjymg-v1.json'
+      - 'data/public-benchmark-contracts/strathclyde-rtim-tablets-v1.json'
+      - 'data/public-benchmark-results/8c8fjwcw86-v1.json'
+      - 'data/public-benchmark-results/crmb7xjymg-v1.json'
+      - 'data/public-benchmark-results/597jrsm9zm-v1.json'
+      - 'data/public-benchmark-results/c3pt29jt7c-v1.json'
+      - 'data/public-benchmark-results/ztkc87d6sr-v1.json'
+      - 'data/public-benchmark-results/strathclyde-rtim-tablets-v1.json'
+      - 'qa_measured_dataset_wave2_ledger.py'
+      - 'qa_measured_dataset_wave2_extension_sources.py'
+      - '.github/workflows/measured-dataset-wave2-extension-qa.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  evidence-reconciliation:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Validate effective Wave-2 counts and checkpoint boundary
+        run: python qa_measured_dataset_wave2_ledger.py
+      - name: Validate XRD/XPS acceptance and carry-forward blockers
+        run: python qa_measured_dataset_wave2_extension_sources.py

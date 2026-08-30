@@ -1,0 +1,26 @@
+{
+  "schema": 1,
+  "datasetId": "mendeley-crmb7xjymg-v1",
+  "status": "vamas-semantic-profile-candidate",
+  "source": {
+    "datasetPage": "https://data.mendeley.com/datasets/crmb7xjymg/1",
+    "datasetDoi": "10.17632/crmb7xjymg.1",
+    "version": 1,
+    "license": "CC BY 4.0",
+    "publisher": "Mendeley Data",
+    "vamasFile": {"id":"a3bcfcb7-9267-4057-9fbf-fa0723dc3d10","name":"2025-07-05 XPS spectral data.vms","sha256":"b9fe94af44634712bc7f90fa5591ae0e7ba7aeadd0858eae3945bba8600cc52c"},
+    "originProject": {"id":"ce7ba801-65d0-4195-b18e-537450ee6396","name":"2024-11-18 XPS figures.opju","sha256":"5b8af08cf128d0f23528c128dea72208a56ae3ea027a5748db80677dfaff4279"}
+  },
+  "semanticRules": {
+    "parseVamasUsingStandardsBasedLibrary": true,
+    "countOnlyMeasuredDetectorDependentVariables": true,
+    "acceptedDetectorVariableLabels": ["Counts"],
+    "excludeRegularScanEnergyAxis": true,
+    "excludeTransmissionAndCalibrationVariables": true,
+    "originProjectIsSupportingVisualizationNotCountingSource": true,
+    "materialToolInterfaceCharacterizationNotInjectionCycleData": true,
+    "acceptedMeasuredTimeSeriesSamples": 0,
+    "rawSpectralValuesCommittedOrArtifacted": false
+  },
+  "evidenceBoundary": "The VAMAS file is the authoritative raw XPS spectral source. MouldMaster counts only lengths of dependent-variable arrays labelled Counts from parsed XPS blocks. Energy-axis coordinates are generated from x_start/x_step for REGULAR scans and are not detector measurements; Transmission/calibration variables and OPJU visualization data are excluded from measured-value counts."
+}
