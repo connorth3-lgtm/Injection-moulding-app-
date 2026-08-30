@@ -1,9 +1,11 @@
-/* MouldMaster assessment experience — private UX candidate 2026-08-24.1 */
+/* MouldMaster assessment experience — question rotation hardening 2026-08-31.2 */
 (function(){
 'use strict';
 
-const VERSION='2026.08.24.1';
+const VERSION='2026.08.31.2';
+const FIRST_HISTORY_LIMIT=3;
 const root=document.documentElement;
+const firstQuestionHistory=new Map();
 
 function addStyles(){
   if(document.getElementById('mm-assessment-ux-style'))return;
@@ -59,6 +61,31 @@ function addStyles(){
   `;
   document.head.appendChild(s);
 }
+
+function questionIdentity(item){
+  return String(item?.stableId||item?.mmId||item?.id||item?.q||'').trim();
+}
+function questionScope(level,region){
+  return `${String(level||'unknown')}::${String(region||'ALL')}`;
+}
+function rotateOpeningQuestion(rows,level,region){
+  if(!Array.isArray(rows)||rows.length<2)return rows;
+  const scope=questionScope(level,region);
+  const recent=firstQuestionHistory.get(scope)||[];
+  const current=questionIdentity(rows[0]);
+  if(current&&recent.includes(current)){
+    let swap=rows.findIndex((item,index)=>index>0&&questionIdentity(item)&&!recent.includes(questionIdentity(item)));
+    if(swap<1)swap=rows.findIndex((item,index)=>index>0&&questionIdentity(item)!==current);
+    if(swap>0)[rows[0],rows[swap]]=[rows[swap],rows[0]];
+  }
+  const first=questionIdentity(rows[0]);
+  if(first){
+    const limit=Math.min(FIRST_HISTORY_LIMIT,Math.max(1,rows.length-1));
+    firstQuestionHistory.set(scope,[first,...recent.filter(id=>id!==first)].slice(0,limit));
+  }
+  return rows;
+}
+function resetQuestionRotation(){firstQuestionHistory.clear()}
 
 function optionLabels(card,index){
   const labels=[...card.querySelectorAll('label.option')];
@@ -219,6 +246,10 @@ function decorateScenario(i,ci,el){
 }
 
 addStyles();
+const baseQuestions=window.getExamQuestions;
+if(typeof baseQuestions==='function')window.getExamQuestions=function(level,region){
+  return rotateOpeningQuestion(baseQuestions.apply(this,arguments),level,region);
+};
 const baseStart=window.startExam;
 if(typeof baseStart==='function')window.startExam=function(){state=null;const r=baseStart.apply(this,arguments);setTimeout(decorateExam,0);return r};
 const baseGrade=window.gradeExam;
@@ -226,5 +257,13 @@ if(typeof baseGrade==='function')window.gradeExam=function(){const r=baseGrade.a
 const baseScenario=window.answerScenario;
 if(typeof baseScenario==='function')window.answerScenario=function(i,ci,el){const r=baseScenario.apply(this,arguments);setTimeout(()=>decorateScenario(i,ci,el),0);return r};
 
-window.MM_ASSESSMENT_UX={version:VERSION,decorateExam,decorateReview,showQuestion};
+window.MM_ASSESSMENT_UX={
+  version:VERSION,
+  decorateExam,
+  decorateReview,
+  showQuestion,
+  rotateOpeningQuestion,
+  resetQuestionRotation,
+  questionRotation:{historyLimit:FIRST_HISTORY_LIMIT,scope:'level + region',policy:'avoid the last three opening questions when another valid item is available'}
+};
 })();
