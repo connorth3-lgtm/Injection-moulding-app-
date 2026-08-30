@@ -73,8 +73,9 @@ process.stdout.write(JSON.stringify({items:out,meta:window.MM_PSYCHOMETRIC_HARDE
     need(p.returncode==0,'psychometric runtime failed: '+(p.stderr or p.stdout)[:8000])
     data=json.loads(p.stdout);PSYCHOMETRIC_META=data.get('meta');out=data['items']
     need(len(out)==197,f'post-hardening item count mismatch: {len(out)}')
-    need(PSYCHOMETRIC_META and PSYCHOMETRIC_META.get('distractorsRewritten')==197,f'psychometric coverage mismatch: {PSYCHOMETRIC_META}')
+    need(PSYCHOMETRIC_META and PSYCHOMETRIC_META.get('optionsParallelised')==788,f'psychometric coverage mismatch: {PSYCHOMETRIC_META}')
     need(PSYCHOMETRIC_META.get('scenarioKeyPositions')==[10,10,10,10],f'scenario key positions not balanced: {PSYCHOMETRIC_META}')
+    need(PSYCHOMETRIC_META.get('technicalKeyPositions')==[8,8,7,7],f'technical key positions not balanced: {PSYCHOMETRIC_META}')
     return out
 
 
@@ -138,9 +139,9 @@ def evidence_checks(items):
     formal=base.text('evidence-maturity-formal-bridge.js') if (ROOT/'evidence-maturity-formal-bridge.js').exists() else ''
     source_registry='\n'.join([base_registry,maturity,formal])
     maturity_governed=('REVIEWED=' in maturity and 'REVIEW_BY=' in maturity)
-    official={
-        'UK':{'hse.gov.uk','www.hse.gov.uk','legislation.gov.uk','www.legislation.gov.uk'},
-        'US':{'osha.gov','www.osha.gov','ecfr.gov','www.ecfr.gov'},
+    authoritative={
+        'UK':{'hse.gov.uk','www.hse.gov.uk','legislation.gov.uk','www.legislation.gov.uk','knowledge.bsigroup.com','bsigroup.com','www.bsigroup.com'},
+        'US':{'osha.gov','www.osha.gov','ecfr.gov','www.ecfr.gov','plasticsindustry.org','www.plasticsindustry.org'},
         'NZ':{'worksafe.govt.nz','www.worksafe.govt.nz','legislation.govt.nz','www.legislation.govt.nz'},
     }
     for x in items:
@@ -149,7 +150,7 @@ def evidence_checks(items):
             if not url.startswith('https://'):hard.append({'id':x['id'],'issue':'regional-source-not-https','url':url})
             else:
                 host=urlparse(url).hostname or ''
-                if host not in official.get(x.get('region'),set()):warnings.append({'id':x['id'],'issue':'regional-source-domain-review','host':host,'region':x.get('region')})
+                if host not in authoritative.get(x.get('region'),set()):warnings.append({'id':x['id'],'issue':'regional-source-domain-review','host':host,'region':x.get('region')})
         if x['kind'] in ('diagnostic-lab','material-lab','optional-material-practice'):
             for sid in x.get('sourceIds',[]):
                 if sid not in source_registry:hard.append({'id':x['id'],'issue':'source-id-not-registered','source_id':sid})

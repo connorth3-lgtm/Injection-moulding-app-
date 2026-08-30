@@ -21,18 +21,20 @@ def git_blob_sha(path):
 for path in [
     'assessment-psychometric-hardening.js','assessment-psychometric-approval.js','assessment-evidence-approval.js',
     'index.html','service-worker.js','desktop/electron/package.json','desktop/electron/scripts/generate-integrity.cjs',
-    '.github/workflows/qa.yml','qa_question_quality_extreme_runtime_v2.py'
+    '.github/workflows/qa.yml','qa_question_quality_extreme_runtime_v2.py','qa_question_quality_50_pass_runtime.py'
 ]: text(path)
 
 hardening=text('assessment-psychometric-hardening.js')
 approval=text('assessment-psychometric-approval.js')
-need("const VERSION='2026.08.30.6'" in hardening,'psychometric hardening version mismatch')
-need("const REQUIRED_VERSION='2026.08.30.6'" in approval,'psychometric approval required version mismatch')
+need("const VERSION='2026.08.31.2'" in hardening,'psychometric hardening version mismatch')
+need("const REQUIRED_VERSION='2026.08.31.2'" in approval,'psychometric approval required version mismatch')
 need("itemsHardened:197" in approval and "optionsParallelised:788" in approval,'psychometric approval coverage contract missing')
-need("surfaceCueThreshold:0.50" in approval and "verifiedSurfaceCueMean:0.269" in approval,'verified surface-cue metadata missing')
-need("verifiedOptionPermutationEvaluations:9850" in approval,'50-pass permutation verification count missing')
+need("technicalKeyPositions:[8,8,7,7]" in approval and "scenarioKeyPositions:[10,10,10,10]" in approval,'balanced key-position approval missing')
+need("surfaceCueThreshold:0.50" in approval and "verifiedSurfaceCueMean:0.249" in approval,'verified surface-cue metadata missing')
+need("verifiedStandardWarnings:0" in approval and "verifiedExtremeWarnings:0" in approval,'zero-warning verification metadata missing')
+need("verifiedOptionPermutationEvaluations:9850" in approval and "verifiedStandardEvaluations:9850" in approval,'50-pass verification counts missing')
 need("semanticAnswerChanges:0" in hardening and "semanticAnswerChanges:0" in approval,'semantic-answer preservation guard missing')
-need("scenarioKeyPositions:[10,10,10,10]" in approval,'balanced scenario key-position approval missing')
+need("technicalKeyPositions:technicalKeyPositions.slice()" in hardening,'technical key-position runtime metadata missing')
 need("initialization:'after-training-upgrade'" in hardening,'psychometric hardening must wait for the 40-scenario training upgrade')
 need("DOMContentLoaded" in hardening and "scenarioCount!==40" in hardening,'psychometric initialization guard missing')
 
@@ -45,12 +47,12 @@ idx=text('index.html')
 for asset in ['./assessment-psychometric-hardening.js','./assessment-psychometric-approval.js']:
     need(asset in idx,f'browser shell missing {asset}')
 need(idx.index("'./evidence-maturity-formal-bridge.js'") < idx.index("'./assessment-psychometric-hardening.js'") < idx.index("'./assessment-evidence-approval.js'") < idx.index("'./assessment-psychometric-approval.js'") < idx.index("'./app-shell-registry.js'"),'psychometric/evidence browser load order is wrong')
-need('psychometric-questions' in idx,'browser runtime token was not advanced for psychometric bundle')
+need('question-quality-warning-cleanup' in idx,'browser runtime token was not advanced for warning-free question bundle')
 
 sw=text('service-worker.js')
 for asset in ["'./assessment-psychometric-hardening.js'","'./assessment-psychometric-approval.js'"]:
     need(asset in sw,f'offline cache missing {asset}')
-need("CACHE_REVISION='psychometric-questions-20260831'" in sw,'PWA cache revision was not advanced for psychometric bundle')
+need("CACHE_REVISION='question-quality-warning-cleanup-20260831'" in sw,'PWA cache revision was not advanced for warning-free question bundle')
 
 pkg=json.loads(text('desktop/electron/package.json'))
 froms={x.get('from') for x in pkg['build']['extraResources'] if isinstance(x,dict)}
@@ -63,6 +65,8 @@ for marker in ['node --check assessment-psychometric-hardening.js','node --check
     need(marker in workflow,f'release workflow missing psychometric gate: {marker}')
 
 runtime=text('qa_question_quality_extreme_runtime_v2.py')
-need("meta.get('optionsParallelised')==788" in runtime,'extreme runtime does not accept the tested 788-option contract')
+need("_form_only_surface_features" in runtime,'extreme runtime does not use form-only surface-cue features')
+standard=text('qa_question_quality_50_pass_runtime.py')
+need("zero learner-visible quality warnings" in standard and "need(not report.get('warning_types')" in standard,'standard runtime does not fail closed on learner-visible warnings')
 
-print(f'MouldMaster psychometric integration QA passed: 197 decisions / 788 options pinned to {actual}, delayed until 40 scenarios are present, browser/PWA/desktop delivery aligned, 9,850-permutation audit provenance retained')
+print(f'MouldMaster psychometric integration QA passed: 197 decisions / 788 options pinned to {actual}, standard/extreme warnings=0, surface cue=0.249, technical keys 8/8/7/7, scenarios 10/10/10/10, browser/PWA/desktop delivery aligned')
