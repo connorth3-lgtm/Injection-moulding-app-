@@ -3,7 +3,6 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 qa = ROOT / "qa_master_data_compile.py"
-workflow = ROOT / ".github" / "workflows" / "master-data-compile.yml"
 compiler = ROOT / "tools" / "compile_master_data.py"
 
 s = qa.read_text(encoding="utf-8")
@@ -27,15 +26,7 @@ new_block = '''    by_id = {x["datasetId"]: x for x in inv["datasets"]}
     need(forinfpro_inv.get("acceptedMachineRows") == 10_132 and forinfpro_inv.get("acceptedMeasuredChannels") == 16 and forinfpro_inv.get("acceptedMeasuredTimeSeriesSamples") == 162_112, "compiled FORinFPRO accepted partial-semantic count drifted")'''
 if old_block not in s:
     raise SystemExit("missing master QA source-reconciliation anchor")
-s = s.replace(old_block, new_block, 1)
-qa.write_text(s, encoding="utf-8")
-
-w = workflow.read_text(encoding="utf-8")
-old = "assert c['measuredTimeSeriesSamplesAccepted']==65171059"
-new = "assert c['measuredTimeSeriesSamplesAccepted']==66521519"
-if old not in w:
-    raise SystemExit("missing master workflow measured-sample anchor")
-workflow.write_text(w.replace(old, new, 1), encoding="utf-8")
+qa.write_text(s.replace(old_block, new_block, 1), encoding="utf-8")
 
 c = compiler.read_text(encoding="utf-8")
 old = '''    need((rights_review.get("summary") or {}).get("sourcesReviewed") == 5, "measured-data rights review source count drifted")
@@ -47,4 +38,4 @@ if old not in c:
     raise SystemExit("missing master compiler rights-review anchor")
 compiler.write_text(c.replace(old, new, 1), encoding="utf-8")
 
-print("Reconciled master-data compiler guard to 66,521,519 accepted values and seven-source rights review")
+print("Reconciled Python master-data guards to 66,521,519 accepted values and seven-source rights review")
