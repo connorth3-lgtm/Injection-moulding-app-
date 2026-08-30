@@ -1,9 +1,9 @@
-/* MouldMaster psychometric approval bridge — 2026.08.30.1 */
+/* MouldMaster psychometric approval bridge — 2026.08.30.2 */
 (function(){
 'use strict';
-const VERSION='2026.08.30.1';
-const REQUIRED_VERSION='2026.08.30.5';
-const INPUT_BLOB='822c90596dcdc40187b381ea0343017836a75e04';
+const VERSION='2026.08.30.2';
+const REQUIRED_VERSION='2026.08.30.6';
+const INPUT_BLOB='1049cafc466bfd3446519ab118c04baee0ae75f8';
 const EXPECTED={itemsHardened:197,optionsParallelised:788,semanticAnswerChanges:0,scenarioKeyPositions:[10,10,10,10]};
 function sameArray(a,b){return Array.isArray(a)&&Array.isArray(b)&&a.length===b.length&&a.every((x,i)=>x===b[i])}
 function attach(){
