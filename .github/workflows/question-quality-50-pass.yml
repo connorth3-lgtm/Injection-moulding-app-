@@ -1,0 +1,60 @@
+name: Question Quality 50-Pass
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+    paths:
+      - 'MouldMaster_Core_App.html'
+      - 'training-upgrade.js'
+      - 'assessment-deep-dive.js'
+      - 'assessment-answer-cue-fix.js'
+      - 'assessment-quality-suite.js'
+      - 'assessment-stable-review-bridge.js'
+      - 'diagnostic-learning-labs.js'
+      - 'material-behaviour-labs.js'
+      - 'evidence-maturity-deep-dive.js'
+      - 'evidence-maturity-formal-bridge.js'
+      - 'assessment-psychometric-hardening.js'
+      - 'qa_question_quality_50_pass.py'
+      - 'qa_question_quality_50_pass_runtime.py'
+      - 'qa_question_quality_extreme_50_pass.py'
+      - 'qa_question_quality_extreme_runtime.py'
+      - 'qa_question_quality_extreme_runtime_v2.py'
+      - '.github/workflows/question-quality-50-pass.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: question-quality-50-pass-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  question-quality-50-pass:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: '22.12.0'
+          package-manager-cache: false
+      - uses: actions/setup-python@v7
+        with:
+          python-version: '3.12'
+      - name: Run 50-pass quality audit across formal and optional learner-visible questions
+        run: python qa_question_quality_50_pass_runtime.py
+      - name: Run extreme 50-pass psychometric and evidence audit
+        run: python qa_question_quality_extreme_runtime_v2.py
+      - name: Upload question quality reports
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: mouldmaster-question-quality-50-pass
+          path: |
+            question-quality-50-pass-report.json
+            question-quality-extreme-50-pass-report.json
+          if-no-files-found: warn
+          retention-days: 30
