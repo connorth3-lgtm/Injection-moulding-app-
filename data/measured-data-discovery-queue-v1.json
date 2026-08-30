@@ -1,15 +1,17 @@
 {
   "schema": 1,
-  "version": "2026.08.30.2",
+  "version": "2026.08.30.3",
   "reviewed": "2026-08-30",
-  "purpose": "Credible measured-data discoveries that are still awaiting file-level profiling, retrieval, or role assignment. Already promoted families are removed from the active queue and recorded under resolvedPromotions so the queue cannot be mistaken for unexecuted work.",
+  "purpose": "Credible measured-data discoveries that are still awaiting file-level profiling, retrieval, rights clearance, or role assignment. Already promoted families are removed from the active queue and recorded under resolvedPromotions; explicitly rejected false positives are recorded under screenedOutDiscoveries so neither group can be mistaken for unexecuted promotable work.",
   "rules": {
     "queueDoesNotCountAsIngested": true,
     "timeSamplesAreNotInjectionCycles": true,
     "supportingMaterialDataAreNotProcessCycles": true,
     "simulationOutputsAreNotMeasuredProcessEvidence": true,
     "licenseMustTravelWithAnyPermittedDerivedUse": true,
-    "alreadyPromotedFamiliesMustNotRemainActiveDiscoveries": true
+    "alreadyPromotedFamiliesMustNotRemainActiveDiscoveries": true,
+    "articleOrThesisLicenceDoesNotAutomaticallyLicenseUnderlyingThirdPartyProductionData": true,
+    "publicMirrorAvailabilityDoesNotProveDatasetReuseRights": true
   },
   "activeDiscoveries": [
     {
@@ -49,6 +51,92 @@
       "lastPublicRecheck": "2026-08-30",
       "acceptedMeasuredTimeSeriesSamples": 0,
       "limitation": "The live Mendeley record still describes the industrial injection-moulding case and exposes a Download All control, but its Files section contains no public file entries. Reported sample/channel counts therefore remain metadata only. Exact payload bytes, timestamps/grouping, field semantics, labels and test-sequence length must be inspected before any measured count or benchmark adapter is created."
+    },
+    {
+      "id": "github-k85-pressure-temperature-v1",
+      "title": "Ferromatik Milacron K85 mold pressure and temperature acquisition workbook",
+      "source": "https://github.com/CEOsCompany/Injection-Molding-Machine-IMM--dataset",
+      "license": null,
+      "role": "direct-process-data-rights-and-provenance-review",
+      "recordUnit": "repeated injection-moulding pressure/temperature test acquisition; exact workbook row and channel structure not yet accepted",
+      "scale": {
+        "processParameterCombinations": null,
+        "testsPerCombinationReported": 10,
+        "workbook": "Data.xlsx"
+      },
+      "machine": "Ferromatik Milacron A K85 injection molding machine",
+      "signals": [
+        "mold pressure from a reported Priamus 6001B sensor",
+        "mold temperature from a reported type-K thermocouple"
+      ],
+      "status": "public-mirror-rights-and-origin-unresolved",
+      "lastPublicRecheck": "2026-08-30",
+      "acceptedMeasuredTimeSeriesSamples": 0,
+      "limitation": "The public GitHub repository describes real repeated injection-moulding acquisitions and exposes a 2.4 MB Data.xlsx workbook, but no repository licence or authoritative original dataset distribution was located. Public mirror availability is not treated as permission for automated ingestion or redistribution. The workbook must remain non-counting until provenance and reuse rights are tied to the original data owner/source; only then should its sheets, units, rows and overlap be profiled."
+    },
+    {
+      "id": "aspoeck-costa-industrial-71016-v1",
+      "title": "Aspöck Portugal industrial injection-moulding process-monitoring dataset reported in Costa 2025 thesis",
+      "source": "http://hdl.handle.net/10400.8/15186",
+      "license": "CC BY applies to the open thesis; underlying company production-data reuse rights not stated",
+      "role": "large-industrial-process-data-access-and-rights-review",
+      "recordUnit": "reported injection cycle with associated industrial machine/sensor features",
+      "scale": {
+        "reportedInjectionCycles": 71016,
+        "reportedPiecesPerCycle": 2,
+        "collectionDuration": "approximately six months of continuous 24/7 production"
+      },
+      "signals": [
+        "temperature-related machine/sensor features",
+        "pressure-related machine/sensor features",
+        "torque-related machine/sensor features",
+        "cycle-time and other industrial process features"
+      ],
+      "quality": [
+        "faulty/non-conforming production time-zone labels used for industrial anomaly monitoring"
+      ],
+      "status": "payload-not-public-company-data-rights-unresolved",
+      "lastPublicRecheck": "2026-08-30",
+      "acceptedMeasuredTimeSeriesSamples": 0,
+      "limitation": "The Polytechnic Institute of Leiria repository exposes the CC BY thesis, not the underlying Aspöck Portugal production CSV/XLSX payload. The thesis reports real unfiltered industrial sensor data and 71,016 injection cycles, but the thesis licence must not be widened into a licence for company production data. No cycles, feature cells or waveform values may be counted unless the original dataset is released or the data owner supplies explicit reuse permission and files."
+    },
+    {
+      "id": "aisemo-accelerometer-state-recognition-v1",
+      "title": "Injection-moulding state recognition from triaxial accelerometer data",
+      "source": "https://doi.org/10.3390/s22166165",
+      "license": "CC BY 4.0 applies to the article; underlying recordings are available only by contacting the authors",
+      "role": "direct-process-auxiliary-sensor-request-only",
+      "recordUnit": "100 Hz triaxial accelerometer sample synchronized to PLC state labels",
+      "scale": {
+        "reportedInjectionMoldingMachines": 5,
+        "reportedProducts": 15,
+        "samplingFrequencyHz": 100
+      },
+      "signals": [
+        "3-axis machine acceleration",
+        "PLC-derived process-state labels"
+      ],
+      "processStages": [
+        "closing",
+        "injection unit",
+        "plasticizing",
+        "demolding",
+        "null/non-producing state"
+      ],
+      "status": "request-only-underlying-data-not-public",
+      "lastPublicRecheck": "2026-08-30",
+      "acceptedMeasuredTimeSeriesSamples": 0,
+      "limitation": "The study is genuine production monitoring across five injection-moulding machines, but its Data Availability Statement says the authors can be contacted to obtain the study data. The CC BY article licence does not establish an open licence for unpublished recordings. Keep the source as request-only evidence until authorised payload and terms are obtained."
+    }
+  ],
+  "screenedOutDiscoveries": [
+    {
+      "id": "peerj-imm-api-sampling-2020",
+      "title": "Towards a general application programming interface (API) for injection molding machines — supplemental sampling CSVs",
+      "source": "https://doi.org/10.7717/peerj-cs.302",
+      "decision": "exclude-from-measured-process-intake",
+      "acceptedMeasuredTimeSeriesSamples": 0,
+      "reason": "The openly licensed supplemental CSVs test acquisition at 2, 33, 50 and 100 Hz, but the study explicitly states that no injection-moulding production runs were performed during the tests and most machine parameter values were constant or zero. These files are instrumentation/API evidence, not moulding-process waveform evidence."
     }
   ],
   "resolvedPromotions": [
