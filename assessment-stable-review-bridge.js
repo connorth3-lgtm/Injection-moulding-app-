@@ -108,7 +108,7 @@ const STRICT_ANSWER_BALANCE={
 
 function optionsOf(q){return q?.options??q?.[1]}
 function correctOf(q){return Number(q?.correct??q?.[2])}
-function applyBalance(){
+function applyBalance(requireFull){
  let applied=0;
  for(const level of ['Beginner','Intermediate','Advanced'])for(let i=0;i<(D.exams?.[level]||[]).length;i++){
   const id=`tech:${level}:${i}`,replacement=STRICT_ANSWER_BALANCE[id];if(!replacement)continue;
@@ -122,12 +122,14 @@ function applyBalance(){
   const id=s.mmStableId||`scenario:${String(i+1).padStart(2,'0')}`,replacement=STRICT_ANSWER_BALANCE[id];if(!replacement)return;
   const opts=s.choices,key=Number(s.correct);if(!Array.isArray(opts)||opts.length!==4||key<0||key>3)throw new Error(`Strict answer-balance source invalid: ${id}`);opts[key]=replacement;applied++;
  });
- if(applied!==93)throw new Error(`Strict answer-balance coverage mismatch: ${applied}/93`);
+ if(applied>93||requireFull&&applied!==93)throw new Error(`Strict answer-balance coverage mismatch: ${applied}/93`);
+ window.MM_STABLE_REVIEW_BRIDGE.strictAnswerBalance.applied=applied;
+ return applied;
 }
-applyBalance();
 
 const base=window.getExamQuestions;
 window.getExamQuestions=function(){
+ applyBalance(false);
  const rows=base.apply(this,arguments);
  const technical=rows.filter(q=>q&&q.kind==='technical');
  const covered=new Set();
@@ -137,5 +139,9 @@ window.getExamQuestions=function(){
  rows.forEach(q=>{if(q&&q.stableId)q.mmId=q.stableId});
  return rows;
 };
-window.MM_STABLE_REVIEW_BRIDGE={version:'2026.08.30.1',stableIdsPrimary:true,fullBlueprintRequired:true,requiredTechnicalDomains:(S.blueprint||[]).slice(),legacyRecordsMigratedBy:'assessment-quality-suite.js',strictAnswerBalance:{applied:93,policy:'correct option must be shorter than at least one distractor; key indexes unchanged'}};
+
+window.MM_STABLE_REVIEW_BRIDGE={version:'2026.08.30.2',stableIdsPrimary:true,fullBlueprintRequired:true,requiredTechnicalDomains:(S.blueprint||[]).slice(),legacyRecordsMigratedBy:'assessment-quality-suite.js',strictAnswerBalance:{applied:0,required:93,policy:'correct option must be shorter than at least one distractor; key indexes unchanged'}};
+applyBalance(false);
+function finalizeBalance(){applyBalance(true)}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',finalizeBalance,{once:true});else finalizeBalance();
 })();
