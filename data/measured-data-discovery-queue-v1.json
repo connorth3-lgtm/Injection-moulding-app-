@@ -1,23 +1,25 @@
 {
   "schema": 1,
-  "version": "2026.08.28.1",
-  "reviewed": "2026-08-28",
-  "purpose": "New credible measured-data discoveries awaiting file-level profiling or role assignment. Entries in this queue do not inflate injection-cycle counts and do not become executable MouldMaster benchmarks until their exact files, record units and provenance are profiled.",
+  "version": "2026.08.30.2",
+  "reviewed": "2026-08-30",
+  "purpose": "Credible measured-data discoveries that are still awaiting file-level profiling, retrieval, or role assignment. Already promoted families are removed from the active queue and recorded under resolvedPromotions so the queue cannot be mistaken for unexecuted work.",
   "rules": {
     "queueDoesNotCountAsIngested": true,
     "timeSamplesAreNotInjectionCycles": true,
     "supportingMaterialDataAreNotProcessCycles": true,
     "simulationOutputsAreNotMeasuredProcessEvidence": true,
-    "licenseMustTravelWithAnyPermittedDerivedUse": true
+    "licenseMustTravelWithAnyPermittedDerivedUse": true,
+    "alreadyPromotedFamiliesMustNotRemainActiveDiscoveries": true
   },
-  "discoveries": [
+  "activeDiscoveries": [
     {
       "id": "mendeley-ad-stgn-injection-line-v1",
+      "canonicalDatasetId": "ad-stgn-injection-moulding-v1",
       "title": "AD-STGN for RCA in CMMS — real-world injection molding production-line case",
       "source": "https://doi.org/10.17632/6f9x8yg8nj.1",
       "license": "CC BY 4.0",
       "role": "direct-process-data-next-intake",
-      "recordUnit": "process time sample; not assumed to equal one moulding cycle",
+      "recordUnit": "reported process time sample; not assumed to equal one moulding cycle",
       "scale": {
         "normalTrainingSamples": 88000,
         "normalValidationSamples": 22614,
@@ -25,60 +27,54 @@
         "continuousSensors": 66,
         "discreteControlActions": 7
       },
-      "processStages": ["clamping", "injection", "holding", "cooling", "ejection", "robot pick/place"],
-      "signals": ["66 continuous MES/IoT sensor measurements", "7 machine setpoint/equipment-configuration actions", "terminal part temperature X66"],
-      "quality": ["chronological PMT anomaly/defect outbreak sequence", "reported examples include internal bubbles, warpage and incomplete cooling"],
+      "processStages": [
+        "clamping",
+        "injection",
+        "holding",
+        "cooling",
+        "ejection",
+        "robot pick/place"
+      ],
+      "signals": [
+        "66 reported continuous MES/IoT sensor measurements",
+        "7 machine setpoint/equipment-configuration actions",
+        "terminal part temperature X66"
+      ],
+      "quality": [
+        "chronological PMT anomaly/defect outbreak sequence",
+        "reported examples include internal bubbles, warpage and incomplete cooling"
+      ],
       "collectionWindow": "2025-02-02 to 2025-03-14",
-      "status": "ready-for-file-profile",
-      "limitation": "The published counts are time/process samples rather than proven one-row-per-shot records. MouldMaster must inspect the exact injection-line files, timestamps/grouping, label construction and test-sequence length before any cycle count, causal claim or benchmark adapter is created."
+      "status": "retrieval-blocked-publisher-no-files",
+      "lastPublicRecheck": "2026-08-30",
+      "acceptedMeasuredTimeSeriesSamples": 0,
+      "limitation": "The live Mendeley record still describes the industrial injection-moulding case and exposes a Download All control, but its Files section contains no public file entries. Reported sample/channel counts therefore remain metadata only. Exact payload bytes, timestamps/grouping, field semantics, labels and test-sequence length must be inspected before any measured count or benchmark adapter is created."
+    }
+  ],
+  "resolvedPromotions": [
+    {
+      "formerDiscoveryId": "mendeley-pp-pvt-v1",
+      "canonicalDatasetId": "mendeley-6k8fpbrd9s-v1",
+      "resolution": "promoted-profiled-supporting-material-physics",
+      "note": "28,590 accepted pvT material-characterisation cells; never counted as injection-cycle waveform values."
     },
     {
-      "id": "mendeley-pp-pvt-v1",
-      "title": "Data for: Influence of measurement processes on pressure-specific volume-temperature relationships of semi-crystalline polymer: Polypropylene",
-      "source": "https://doi.org/10.17632/6k8fpbrd9s.1",
-      "license": "CC BY 4.0",
-      "role": "supporting-material-physics-data",
-      "recordUnit": "pvT material-property measurement",
-      "signals": ["pressure", "temperature", "specific volume", "cooling/heating rate", "compression/decompression rate"],
-      "quality": ["polypropylene process-history-dependent pvT response"],
-      "status": "supporting-data-not-cycle-benchmark",
-      "limitation": "These are polymer-physics measurements from a piston-die pvT device, not injection-moulding cycles. They can strengthen shrinkage/packing/thermal education but must never be counted as real moulding shots."
+      "formerDiscoveryId": "mendeley-im-pla-abs-mechanics-v1",
+      "canonicalDatasetId": "mendeley-yxz2w7ctnh-v1",
+      "resolution": "promoted-profiled-supporting-mechanical-data",
+      "note": "489 accepted direct mechanical-test values; zero process-waveform contribution."
     },
     {
-      "id": "mendeley-im-pla-abs-mechanics-v1",
-      "title": "The energy consumption and structural performance of 3D printed FDM parts in PLA & ABS, a comparison with Injection moulding",
-      "source": "https://doi.org/10.17632/yxz2w7ctnh.1",
-      "license": "CC BY 4.0",
-      "role": "supporting-injection-moulded-mechanical-data",
-      "recordUnit": "mechanical-test result on manufactured specimen",
-      "signals": ["manufacturing route/material identity"],
-      "quality": ["three-point bending", "tensile", "impact performance of injection-moulded PLA/ABS specimens"],
-      "status": "supporting-data-not-cycle-benchmark",
-      "limitation": "The repository provides physical testing of injection-moulded specimens but not a shot-resolved injection process history. It supports material/property learning and manufacturing comparisons, not process-diagnostic cycle counts."
+      "formerDiscoveryId": "mendeley-release-coating-xps-v1",
+      "canonicalDatasetId": "mendeley-crmb7xjymg-v1",
+      "resolution": "promoted-profiled-supporting-surface-characterisation",
+      "note": "71,868 accepted XPS trace values; zero process-waveform contribution."
     },
     {
-      "id": "mendeley-release-coating-xps-v1",
-      "title": "Interphase formation of low surface energy PE-CVD release coatings in plastic injection moulding",
-      "source": "https://doi.org/10.17632/crmb7xjymg.1",
-      "license": "CC BY 4.0",
-      "role": "supporting-release-surface-chemistry-data",
-      "recordUnit": "XPS surface spectrum/characterization measurement",
-      "signals": ["XPS spectral measurements", "surface/interphase chemistry"],
-      "quality": ["release-coating surface characterization"],
-      "status": "supporting-data-not-cycle-benchmark",
-      "limitation": "This is surface-characterization data associated with injection-mould release coatings, not shot-level demoulding-force or process-cycle data. It can support coating/interphase education but cannot substitute for physical release-force evidence."
-    },
-    {
-      "id": "mendeley-hsmed-tpm-im-v1",
-      "title": "Data - Model to increase availability using H-SMED, SMED and TPM in the injection molding process in a plastic company",
-      "source": "https://doi.org/10.17632/ypf95p4bs4.1",
-      "license": "CC BY 4.0",
-      "role": "supporting-production-engineering-data",
-      "recordUnit": "database/engineering-method/simulation result; exact source file roles require profiling",
-      "signals": ["injection-moulding production/availability database elements", "SMED/TPM engineering data", "Arena simulation outputs"],
-      "quality": ["availability/process-improvement results"],
-      "status": "profile-before-evidence-use",
-      "limitation": "The repository mixes underlying database/tooling information with Arena simulation results. MouldMaster must separate measured production records from simulated outputs before any item is counted as measured process evidence."
+      "formerDiscoveryId": "mendeley-hsmed-tpm-im-v1",
+      "canonicalDatasetId": "mendeley-ypf95p4bs4-v1",
+      "resolution": "promoted-profiled-production-engineering-subset",
+      "note": "666 accepted direct literal duration cells after excluding simulation, formulas, sales and other non-measured content; zero process-waveform contribution."
     }
   ]
 }
