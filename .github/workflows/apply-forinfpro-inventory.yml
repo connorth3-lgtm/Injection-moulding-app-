@@ -2,7 +2,7 @@ name: MouldMaster Apply FORinFPRO Inventory Acceptance
 
 on:
   push:
-    branches: [data/resolve-forinfpro-semantics]
+    branches: [data/measured-data-consolidation-20260830]
     paths:
       - 'tools/apply_forinfpro_inventory_acceptance.py'
       - '.github/workflows/apply-forinfpro-inventory.yml'
@@ -12,7 +12,7 @@ permissions:
   contents: write
 
 concurrency:
-  group: mouldmaster-apply-forinfpro-inventory
+  group: mouldmaster-apply-forinfpro-inventory-consolidation
   cancel-in-progress: false
 
 jobs:
@@ -21,7 +21,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: data/resolve-forinfpro-semantics
+          ref: data/measured-data-consolidation-20260830
           fetch-depth: 1
       - uses: actions/setup-python@v5
         with:
@@ -38,4 +38,4 @@ jobs:
           git diff --cached --quiet && exit 0
           test "$(git diff --cached --name-only)" = "data/measured-dataset-inventory-v1.json"
           git commit -m "Apply FORinFPRO semantic acceptance to inventory"
-          git push origin HEAD:data/resolve-forinfpro-semantics
+          git push origin HEAD:data/measured-data-consolidation-20260830
