@@ -25,6 +25,8 @@ const REVISION2={
  'tech:Advanced:7':{revision:2,date:'2026-08-24',change:'Reframed machine transfer around reproduced physical process outputs and receiving-machine capability.'},
  'tech:Advanced:8':{revision:2,date:'2026-08-24',change:'Added research-backed distinction between MFR and moulding rheology/mouldability.'}
 };
+const REGIONAL_REVISION_CHANGE='Reframed jurisdiction-specific safety/compliance recall into an applied decision while retaining the safety-critical answer key and direct official/standards evidence.';
+for(const region of ['UK','US','NZ'])for(const level of ['Beginner','Intermediate','Advanced'])for(let i=0;i<3;i++)REVISION2[`reg:${region}:${level}:${i}`]={revision:2,date:'2026-08-30',change:REGIONAL_REVISION_CHANGE};
 const REVISION3={
  'tech:Beginner:0':{revision:3,date:'2026-08-30',change:'Replaced definition recall with a controlled hold-time/part-mass plateau interpretation while retaining the pack/hold competency.'},
  'tech:Beginner:1':{revision:3,date:'2026-08-30',change:'Changed cushion recognition into a linked shot-delivery evidence case where one isolated value is insufficient for root-cause assignment.'},
