@@ -10,7 +10,10 @@ on:
       - 'qa/fixtures/real-process-data-pilot-synthetic.csv'
       - 'sources/REAL_PROCESS_DATA_PILOT_PROTOCOL.md'
       - 'sources/REAL_PROCESS_DATA_INTAKE.md'
+      - 'sources/REAL_SITE_PILOT_FEEDBACK.md'
       - 'data/real-process-data-pilot-template.csv'
+      - 'data/real-site-pilot-feedback-template.csv'
+      - 'qa_real_site_feedback_contract.py'
       - '.github/workflows/real-site-pilot-preflight.yml'
   workflow_dispatch:
 
@@ -21,12 +24,14 @@ jobs:
   pilot-preflight:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
         with:
           python-version: '3.12'
       - name: Python syntax
-        run: python -m py_compile tools/preflight_real_process_data_pilot.py
+        run: |
+          python -m py_compile tools/preflight_real_process_data_pilot.py
+          python -m py_compile qa_real_site_feedback_contract.py
       - name: Synthetic structural regression
         run: |
           python tools/preflight_real_process_data_pilot.py \
@@ -75,3 +80,5 @@ jobs:
           for forbidden in ['raw_rows','row_values','sample_values','minimum','maximum','setpoint_values']:
               assert forbidden not in text
           PY
+      - name: Validate privacy-safe human feedback contract
+        run: python qa_real_site_feedback_contract.py
