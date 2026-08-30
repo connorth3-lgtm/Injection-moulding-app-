@@ -24,18 +24,18 @@ jobs:
           python-version: '3.12'
       - name: Validate helper syntax
         run: python -m py_compile tools/fix_master_data_consolidation_guard.py
-      - name: Reconcile compiler guard
+      - name: Reconcile Python compiler guards
         run: python tools/fix_master_data_consolidation_guard.py
       - name: Validate compiler reconciliation
         run: |
           python qa_content_scale_targets.py
           python qa_measured_dataset_inventory.py
           python qa_master_data_compile.py
-      - name: Commit compiler guards only
+      - name: Commit Python compiler guards only
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add -- qa_master_data_compile.py .github/workflows/master-data-compile.yml tools/compile_master_data.py
-          test "$(git diff --cached --name-only | sort)" = "$(printf '%s\n' '.github/workflows/master-data-compile.yml' 'qa_master_data_compile.py' 'tools/compile_master_data.py' | sort)"
-          git commit -m "Reconcile master-data measured count guard"
+          git add -- qa_master_data_compile.py tools/compile_master_data.py
+          test "$(git diff --cached --name-only | sort)" = "$(printf '%s\n' 'qa_master_data_compile.py' 'tools/compile_master_data.py' | sort)"
+          git commit -m "Reconcile master-data Python guards"
           git push origin HEAD:data/measured-data-consolidation-20260830
