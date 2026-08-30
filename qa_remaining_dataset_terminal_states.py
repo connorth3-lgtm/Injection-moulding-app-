@@ -19,7 +19,7 @@ expected = {
     "skz-loki-v1": ("skz-loki-v1.json", "blocked-rights-review"),
     "impure-pascoe-2022": ("impure-pascoe-2022-v1.json", "accepted-profiled-partially-semantic-resolved"),
     "iguzzini-road-lenses": ("iguzzini-road-lenses-v1.json", "accepted-restricted-profile"),
-    "forinfpro-himd-v1": ("forinfpro-himd-v1.json", "accepted-profiled-unit-limited"),
+    "forinfpro-himd-v1": ("forinfpro-himd-v1.json", "accepted-profiled-partially-semantic-resolved"),
     "cross-process-chain-17240390": ("cross-process-chain-17240390-v1.json", "profiled-scope-limited-semantic-review"),
     "kamp-injection-7996": ("kamp-injection-7996-v1.json", "blocked-mirror-rights"),
     "foxconn-competition-16600": ("foxconn-competition-16600-v1.json", "blocked-mirror-rights"),
@@ -50,19 +50,34 @@ cross = loaded["cross-process-chain-17240390"]
 need((cross.get("scopeBoundary") or {}).get("screwDrivingStreamsExcludedFromInjectionMeasuredSampleCounts") is True,
      "cross-process downstream screw-driving exclusion missing")
 
+forinfpro = loaded["forinfpro-himd-v1"]
+forinfpro_semantic = forinfpro.get("semanticAcceptance") or {}
+need(forinfpro_semantic.get("decision") == "partial-measured-channel-acceptance", "FORinFPRO partial semantic decision drifted")
+need(forinfpro_semantic.get("acceptedEngineeringUnit") == "degC", "FORinFPRO accepted temperature unit drifted")
+need(forinfpro_semantic.get("acceptedMeasurementRole") == "actual/real measured value", "FORinFPRO accepted measurement role drifted")
+need(forinfpro_semantic.get("acceptedMeasuredChannels") == 16, "FORinFPRO accepted channel count drifted")
+need(forinfpro_semantic.get("acceptedMeasuredTimeSeriesSamples") == 162112, "FORinFPRO accepted measured-value count drifted")
+need(forinfpro_semantic.get("acceptedCountFormula") == "16 * 10132", "FORinFPRO accepted count formula drifted")
+need(len(forinfpro_semantic.get("acceptedMeasuredColumns") or []) == 16, "FORinFPRO accepted column list drifted")
+need(all(x.startswith("Heating.sv_Zone") and x.endswith(".rActualTemp") for x in forinfpro_semantic.get("acceptedMeasuredColumns") or []),
+     "FORinFPRO accepted columns must remain exact ENGEL heating-zone actual-temperature fields")
+need((forinfpro_semantic.get("timeOrdering") or {}).get("strictlyIncreasing") is True, "FORinFPRO accepted traces require ordered machine timestamps")
+need((forinfpro_semantic.get("timeOrdering") or {}).get("fixedSamplingIntervalAssumed") is False, "FORinFPRO variable timing must not be rewritten as a fixed rate")
+need("machine-specific" in str(forinfpro_semantic.get("physicalLocationBoundary", "")).lower(), "FORinFPRO machine-specific zone-affiliation boundary missing")
+
 forinfpro_result = load(RESULTS / "forinfpro-himd-v1.json")
-need(forinfpro_result.get("status") == "completed-public-measured-benchmark", "FORinFPRO accepted result missing")
+need(forinfpro_result.get("status") == "completed-public-measured-benchmark", "FORinFPRO structural result missing")
 need((forinfpro_result.get("profile") or {}).get("acceptedMeasuredTimeSeriesSamples") == 0,
-     "FORinFPRO unit-limited profile must not inflate accepted time-series values")
+     "FORinFPRO original structural profile must remain pre-semantic and non-promoting; semantic promotion is governed by the later review/contract")
 
 impure = loaded["impure-pascoe-2022"]
-semantic = impure.get("semanticAcceptance") or {}
-need(semantic.get("acceptedMeasuredChannels") == 4, "ImPure partial semantic acceptance must retain four accepted cavity channels")
-need(semantic.get("acceptedMeasuredTimeSeriesSamples") == 1_188_348, "ImPure partial semantic accepted value count drifted")
-need(set(semantic.get("acceptedMeasuredColumns") or []) == {
+impure_semantic = impure.get("semanticAcceptance") or {}
+need(impure_semantic.get("acceptedMeasuredChannels") == 4, "ImPure partial semantic acceptance must retain four accepted cavity channels")
+need(impure_semantic.get("acceptedMeasuredTimeSeriesSamples") == 1_188_348, "ImPure partial semantic accepted value count drifted")
+need(set(impure_semantic.get("acceptedMeasuredColumns") or []) == {
     "TempMold1[IRT/Pascoe]", "TempMold2[IRT/Pascoe]", "Pressure1[IRT/Pascoe]", "Pressure2[IRT/Pascoe]"
 }, "ImPure accepted cavity-channel set drifted")
-need(set((semantic.get("excludedColumns") or {}).keys()) == {
+need(set((impure_semantic.get("excludedColumns") or {}).keys()) == {
     "HydPressure[IRT/Pascoe]", "ScrewPosition[IRT/Pascoe]", "Analog Input[1]", "Analog Input[2]"
 }, "ImPure unresolved sensor-channel boundary drifted")
 
@@ -118,11 +133,22 @@ need((ig_result.get("acceptance") or {}).get("countsAsFullyProfiledMeasuredDatas
 need((ig_result.get("acceptance") or {}).get("acceptedMeasuredTimeSeriesSamples") == 0, "iGuzzini cannot inflate high-frequency sample count")
 
 pet = load(RESULTS / "pet-preform-v2.json")
-need(pet.get("status") == "retrieved-profile-needs-semantic-review", "PET review-only state drifted")
-pet_acceptance = pet.get("acceptance") or {}
-need(pet_acceptance.get("countsAsFullyProfiledMeasuredDataset") in {None, False}, "PET must remain non-counting")
-need(pet_acceptance.get("acceptedMeasuredTimeSeriesSamples") in {None, 0}, "PET cannot contribute measured time-series samples")
-need((pet.get("profile") or {}).get("rawRowsOrCellValuesEmitted") is False, "PET raw-value boundary drifted")
+need(pet.get("status") == "completed-profiled-zero-measured-simulation-optimization-model-workbook", "PET zero-measured terminal state drifted")
+pet_profile = pet.get("profile") or {}
+need(pet_profile.get("controlledProcessSettingColumns") == 5, "PET controlled-setting count drifted")
+need(pet_profile.get("simulationResultColumns") == 7, "PET simulation-result count drifted")
+need(pet_profile.get("modelValidationColumns") == 1, "PET validation-field count drifted")
+need(pet_profile.get("annHiddenLayerIntermediateColumns") == 6, "PET hidden-layer count drifted")
+need(pet_profile.get("annPredictionColumns") == 7, "PET prediction-field count drifted")
+need(sum(pet_profile.get(k, -100) for k in [
+    "controlledProcessSettingColumns", "simulationResultColumns", "modelValidationColumns",
+    "annHiddenLayerIntermediateColumns", "annPredictionColumns"
+]) == 26, "PET terminal semantic groups must account for all 26 columns")
+need(pet_profile.get("sourceDefinedMeasuredOutcomeColumns") == 0, "PET cannot invent a measured outcome")
+need(pet_profile.get("acceptedMeasuredProcessValues") == 0, "PET cannot contribute measured process values")
+need(pet_profile.get("acceptedMeasuredQualityValues") == 0, "PET cannot contribute measured quality values")
+need(pet_profile.get("acceptedMeasuredTimeSeriesSamples") == 0, "PET cannot contribute measured time-series samples")
+need(pet_profile.get("rawRowsOrCellValuesEmitted") is False, "PET raw-value boundary drifted")
 
 rwth = load(RESULTS / "rwth-pcr-2025-v1.json")
 need(rwth.get("status") == "retrieval-blocked-non-archive-response", "RWTH source retrieval terminal state drifted")
@@ -130,12 +156,12 @@ need((rwth.get("acceptance") or {}).get("countsAsFullyProfiledMeasuredDataset") 
 need(len((rwth.get("source") or {}).get("retrievalAttempts") or []) == 3, "RWTH retrieval audit must retain all three publisher URL attempts")
 
 report = {
-    "schema": 5,
+    "schema": 6,
     "terminalContractsChecked": len(expected),
     "rightsBlocked": 3,
     "licensedQueued": 0,
-    "licensedProfiledUnitLimited": 1,
-    "licensedProfiledPartialSemanticAcceptance": 1,
+    "licensedProfiledUnitLimited": 0,
+    "licensedProfiledPartialSemanticAcceptance": 2,
     "licensedProfiledSemanticReview": 1,
     "mirrorRightsBlocked": 2,
     "embargoed": 2,
@@ -144,8 +170,8 @@ report = {
     "specialFormatExport": 1,
     "restrictedEducationAccepted": 1,
     "rwthRetrievalBlocked": 1,
-    "petReviewOnly": 1,
+    "petSimulationModelZeroMeasured": 1,
     "result": "pass"
 }
 (ROOT / "remaining-dataset-terminal-states-report.json").write_text(json.dumps(report, indent=2) + "\n", encoding="utf-8")
-print("MouldMaster remaining dataset terminal-state QA passed (all sources are accepted or have an explicit rights/access/embargo/confidentiality/technical/semantic blocker)")
+print("MouldMaster remaining dataset terminal-state QA passed (all sources are accepted or have an explicit rights/access/embargo/confidentiality/technical/semantic/zero-measured boundary)")
