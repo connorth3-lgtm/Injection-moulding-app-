@@ -91,6 +91,8 @@ def evaluate_runtime(item):
     if item.get('kind')!='optional-material-practice':
         return result
     hard=set(result['hard']);warnings=set(result['warnings']);warnings.discard('optional-feedback-generated-at-runtime')
+    if 'correct-length-salience' in warnings:
+        warnings.remove('correct-length-salience');hard.add('correct-length-salience')
     feedback=[base.norm(x) for x in item.get('feedback',[])]
     if len(feedback)!=4:hard.add('feedback-count')
     elif min(map(base.char_len,feedback))<20:hard.add('lab-feedback-too-shallow')
@@ -109,7 +111,7 @@ def main():
     report['scenario_feedback_upgraded']=FORMAL_OVERLAY.get('scenarioFeedbackUpgraded',0) if FORMAL_OVERLAY else 0
     report['optional_answer_positions']=OPTIONAL_POSITIONS
     report['runtime_quality_version']='2026.08.30.1'
-    report['rubric']['hard_gates'] += ['balanced 10/10/10/10 optional answer positions','option-specific optional feedback']
+    report['rubric']['hard_gates'] += ['balanced 10/10/10/10 optional answer positions','option-specific optional feedback','no optional correct-answer length salience versus the median distractor']
     (ROOT/'question-quality-50-pass-report.json').write_text(json.dumps(report,indent=2)+'\n',encoding='utf-8')
     print(f"Runtime overlay verified: scenarios={report['scenario_feedback_upgraded']} optional=40 positions={OPTIONAL_POSITIONS}")
 
