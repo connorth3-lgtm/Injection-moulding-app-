@@ -1,0 +1,49 @@
+name: Wave 2 Four-Family Reconciliation
+
+on:
+  push:
+    branches:
+      - data/wave2-four-family-integration-20260830
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  reconcile:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Prepare canonical Wave 2 reconciliation
+        run: python tools/reconcile_wave2_four_families.py
+      - name: Validate inventory
+        run: python qa_measured_dataset_inventory.py
+      - name: Validate content-scale targets
+        run: python qa_content_scale_targets.py
+      - name: Validate Wave 2 ledger
+        run: python qa_measured_dataset_wave2_ledger.py
+      - name: Validate master compiler
+        run: python qa_master_data_compile.py
+      - name: Commit validated ordinary files only
+        run: |
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add \
+            data/content-scale-targets.json \
+            data/measured-dataset-inventory-v1.json \
+            data/measured-dataset-execution-ledger-v1.json \
+            data/measured-dataset-wave2-ledger-v1.json \
+            qa_measured_dataset_inventory.py \
+            qa_content_scale_targets.py \
+            qa_master_data_compile.py \
+            qa_measured_dataset_wave2_ledger.py \
+            tools/compile_master_data.py
+          git diff --cached --check
+          if git diff --cached --quiet; then
+            echo 'No canonical changes to commit.'
+            exit 0
+          fi
+          git commit -m 'Reconcile four Wave 2 measured families'
+          git push origin HEAD:data/wave2-four-family-integration-20260830
