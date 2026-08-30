@@ -12,7 +12,7 @@ def text(name): return (ROOT/name).read_text(encoding='utf-8')
 
 required=[
  'MouldMaster_Core_App.html','training-upgrade.js','assessment-deep-dive.js','assessment-answer-cue-fix.js',
- 'assessment-quality-suite.js','diagnostic-learning-labs.js','material-behaviour-labs.js','assessment-evidence-sources.js',
+ 'assessment-quality-suite.js','assessment-stable-review-bridge.js','diagnostic-learning-labs.js','material-behaviour-labs.js','assessment-evidence-sources.js',
  'assessment-evidence-approval.js','source-library.js','reference-data.js','reference-deep-dive.js','reference-research-extension.js',
  'reference-20x-extension.js','reference-2026-expansion.js','evidence-maturity-deep-dive.js','evidence-maturity-formal-bridge.js','lesson-evidence-depth.js'
 ]
@@ -26,21 +26,17 @@ training=text('training-upgrade.js'); m=re.search(r"const EXTRA=(\[[\s\S]*?\n\])
 extra=ast.literal_eval(m.group(1)); need(len(extra)==8,'expected eight training-upgrade scenarios')
 for a in extra:
     D['scenarios'].append({'title':a[0],'situation':a[1],'choices':a[2],'correct':a[3],'why':a[4],'feedback':[a[4] if i==a[3] else 'Not strongest.' for i in range(4)],'category':a[5] if len(a)>5 else ''})
-lab_js=text('diagnostic-learning-labs.js')
-lab_rows=re.findall(r"\n\s*id:'([^']+)',\n\s*title:'([^']+)',\n\s*level:'([^']+)',\n\s*focus:'([^']+)'",lab_js)
-need(len(lab_rows)==9,f'expected 9 diagnostic labs, got {len(lab_rows)}')
-labs=[{'id':a,'title':b,'level':c,'focus':d} for a,b,c,d in lab_rows]
 
 node=r'''
 const fs=require('fs'),vm=require('vm');
-const D=%s,LABS=%s;
+const D=%s;
 const store={};
 const localStorage={getItem:k=>Object.prototype.hasOwnProperty.call(store,k)?store[k]:null,setItem:(k,v)=>{store[k]=String(v)},removeItem:k=>{delete store[k]},key:i=>Object.keys(store)[i]||null,get length(){return Object.keys(store).length}};
 const makeEl=()=>({textContent:'',innerHTML:'',className:'',hidden:false,dataset:{},style:{},href:'',download:'',appendChild(){},prepend(){},insertBefore(){},insertAdjacentHTML(){},insertAdjacentElement(){},querySelector(){return null},querySelectorAll(){return[]},addEventListener(){},setAttribute(){},hasAttribute(){return false},remove(){},click(){},classList:{add(){},remove(){},contains(){return false}}});
 const document={getElementById:()=>null,querySelectorAll:()=>[],querySelector:()=>null,createElement:makeEl,head:{appendChild(){}},body:{append(){},appendChild(){},prepend(){}},documentElement:{},readyState:'loading',addEventListener(){}};
 function MutationObserver(){this.observe=()=>{};this.disconnect=()=>{}}
 const URLObj=function(u,b){return new (global.URL)(u,b)}; URLObj.createObjectURL=()=>'';URLObj.revokeObjectURL=()=>{};
-const sandbox={window:{MM_DATA:D,MM_DIAGNOSTIC_LABS:{version:'qa',labs:LABS},requestAnimationFrame:fn=>fn(),addEventListener(){},scrollTo(){}},document,localStorage,performance:{now:()=>1000},console,setTimeout:(fn)=>{if(typeof fn==='function')fn()},clearTimeout(){},Date,Math,JSON,Map,Set,Blob:function(){},URL:URLObj,MutationObserver};
+const sandbox={window:{MM_DATA:D,requestAnimationFrame:fn=>fn(),addEventListener(){},scrollTo(){}},document,localStorage,performance:{now:()=>1000},console,setTimeout:(fn)=>{if(typeof fn==='function')fn()},clearTimeout(){},Date,Math,JSON,Map,Set,Blob:function(){},URL:URLObj,MutationObserver};
 sandbox.window.window=sandbox.window;sandbox.window.document=document;sandbox.window.localStorage=localStorage;sandbox.window.MutationObserver=MutationObserver;sandbox.window.URL=URLObj;sandbox.window.setTimeout=sandbox.setTimeout;
 vm.createContext(sandbox);
 vm.runInContext(fs.readFileSync('source-library.js','utf8'),sandbox,{filename:'source-library.js'});
@@ -48,7 +44,7 @@ for(const file of ['reference-data.js','reference-deep-dive.js','reference-resea
  vm.runInContext(fs.readFileSync(file,'utf8'),sandbox,{filename:file});
 }
 document.readyState='complete';
-for(const file of ['material-behaviour-labs.js','assessment-deep-dive.js','assessment-answer-cue-fix.js','assessment-quality-suite.js','assessment-evidence-sources.js','evidence-maturity-deep-dive.js','evidence-maturity-formal-bridge.js','lesson-evidence-depth.js','assessment-evidence-approval.js']){
+for(const file of ['diagnostic-learning-labs.js','material-behaviour-labs.js','assessment-deep-dive.js','assessment-answer-cue-fix.js','assessment-quality-suite.js','assessment-stable-review-bridge.js','assessment-evidence-sources.js','evidence-maturity-deep-dive.js','evidence-maturity-formal-bridge.js','lesson-evidence-depth.js','assessment-evidence-approval.js']){
  vm.runInContext(fs.readFileSync(file,'utf8'),sandbox,{filename:file});
 }
 const A=sandbox.window.MM_EVIDENCE_APPROVAL;
@@ -57,8 +53,8 @@ const R=sandbox.window.MM_REFERENCE_TRACEABILITY.audit();
 const P=sandbox.window.MM_MATERIAL_PRACTICE_EXTENSIONS;
 const DS=sandbox.window.MM_PROCESS_EVIDENCE_DATASETS;
 const PB=sandbox.window.MM_ASSESSMENT_PSYCHOMETRICS.benchmark();
-process.stdout.write(JSON.stringify({approval:{records:A.records,summary:A.summary,coverageOk:A.coverageOk},lessons:L,reference:R,practice:P,datasets:DS.datasets.map(d=>({id:d.id,title:d.title,kind:d.kind,sourceIds:d.sourceIds,rowCount:d.rows.length,phaseCounts:d.phaseCounts,signalCount:Object.keys(d.signals).length})),psych:PB,evidenceVersion:sandbox.window.MM_EVIDENCE_SOURCES.version,independencePolicy:sandbox.window.MM_EVIDENCE_SOURCES.independencePolicy}));
-'''%(json.dumps(D),json.dumps(labs))
+process.stdout.write(JSON.stringify({approval:{records:A.records,summary:A.summary,coverageOk:A.coverageOk},diagnostic:sandbox.window.MM_DIAGNOSTIC_LABS,bridge:sandbox.window.MM_STABLE_REVIEW_BRIDGE,lessons:L,reference:R,practice:P,datasets:DS.datasets.map(d=>({id:d.id,title:d.title,kind:d.kind,sourceIds:d.sourceIds,rowCount:d.rows.length,phaseCounts:d.phaseCounts,signalCount:Object.keys(d.signals).length})),psych:PB,evidenceVersion:sandbox.window.MM_EVIDENCE_SOURCES.version,independencePolicy:sandbox.window.MM_EVIDENCE_SOURCES.independencePolicy}));
+'''%(json.dumps(D))
 with tempfile.NamedTemporaryFile('w',suffix='.js',delete=False,encoding='utf-8',dir=ROOT) as f:
     f.write(node); path=Path(f.name)
 try:
@@ -70,6 +66,8 @@ data=json.loads(p.stdout)
 
 records=data['approval']['records']; need(data['approval']['coverageOk'],'formal 157-question evidence approval lost coverage')
 need(len(records)==157,'formal keyed bank must remain 157 while practice extensions stay separate')
+need(len(data.get('diagnostic',{}).get('labs',[]))==9,'diagnostic lab runtime must expose nine reviewed labs')
+need(data.get('bridge',{}).get('strictAnswerBalance',{}).get('applied')==93,'strict answer-balance bridge must be active in evidence-maturity runtime')
 
 def authority_family(src):
     a=str(src.get('authority','')).strip().lower()
