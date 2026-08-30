@@ -7,6 +7,7 @@ def need(ok,msg):
     if not ok: raise AssertionError(msg)
 
 def text(path): return (ROOT/path).read_text(encoding='utf-8')
+def option_len(value): return len(re.sub(r'\s+',' ',str(value or '').strip()))
 
 js=text('material-behaviour-labs.js')
 need("const VERSION='2026.08.25.1'" in js,'material lab version marker missing')
@@ -34,7 +35,7 @@ const sandbox={window:{addEventListener(){},requestAnimationFrame:fn=>fn(),scrol
 sandbox.window.window=sandbox.window;sandbox.window.document=document;sandbox.window.localStorage=localStorage;sandbox.window.MutationObserver=MutationObserver;
 vm.createContext(sandbox);vm.runInContext(fs.readFileSync('material-behaviour-labs.js','utf8'),sandbox);
 const M=sandbox.window.MM_MATERIAL_BEHAVIOUR_LABS;
-process.stdout.write(JSON.stringify({version:M.version,labs:M.labs.map(l=>({id:l.id,title:l.title,materials:l.materials,sources:l.sourceIds,steps:l.steps.map(s=>({stage:s.stage,question:s.question,correct:s.choices.filter(c=>c.correct).length,choices:s.choices.length}))}))}));
+process.stdout.write(JSON.stringify({version:M.version,labs:M.labs.map(l=>({id:l.id,title:l.title,materials:l.materials,sources:l.sourceIds,steps:l.steps.map(s=>({stage:s.stage,question:s.question,choices:s.choices.map(c=>({text:c.text,correct:c.correct===true,feedback:c.feedback}))}))}))}));
 '''
 with tempfile.NamedTemporaryFile('w',suffix='.js',delete=False,encoding='utf-8',dir=ROOT) as h:
     h.write(node); pth=Path(h.name)
@@ -47,11 +48,21 @@ data=json.loads(p.stdout)
 need(len(data['labs'])==6,'exactly six initial material behaviour labs required')
 need(sum(len(l['steps']) for l in data['labs'])==24,'material labs must contain 24 keyed decisions')
 need(len({l['id'] for l in data['labs']})==6,'material lab IDs must be unique')
+length_flags=[]
 for lab in data['labs']:
     need(len(lab['steps'])==4,f"{lab['id']} must have four reasoning stages")
     need(lab['sources'],f"{lab['id']} needs explicit evidence sources")
-    for step in lab['steps']:
-        need(step['choices']==4 and step['correct']==1,f"{lab['id']} / {step['stage']} must have exactly one correct answer among four choices")
+    for step_index,step in enumerate(lab['steps']):
+        choices=step['choices']
+        keyed=[i for i,c in enumerate(choices) if c.get('correct') is True]
+        need(len(choices)==4 and len(keyed)==1,f"{lab['id']} / {step['stage']} must have exactly one correct answer among four choices")
+        texts=[str(c.get('text','')).strip() for c in choices]
+        key=keyed[0]
+        lengths=[option_len(t) for t in texts]
+        longest_distractor=max(lengths[:key]+lengths[key+1:])
+        if lengths[key]>=longest_distractor:
+            length_flags.append({'id':f"material:{lab['id']}:{step_index}",'lab':lab['id'],'stage':step['stage'],'correct_index':key,'correct_length':lengths[key],'longest_distractor_length':longest_distractor,'lengths':lengths,'options':texts})
+need(not length_flags,'correct answer is longest/tied-longest in material labs: '+json.dumps(length_flags,ensure_ascii=False))
 
 idx=text('index.html'); sw=text('service-worker.js'); pkg=text('desktop/electron/package.json'); integ=text('desktop/electron/scripts/generate-integrity.cjs')
 need("['./material-behaviour-labs.js'" in idx,'browser shell does not load material labs')
@@ -66,4 +77,4 @@ for source_id in ['exxon-pp-processing','sabic-cycolac','basf-ultramid','basf-pa
     need(source_id in fresh,f'source freshness registry missing {source_id}')
 need("'krantz-rpp-2024'" in source_map and '10.1002/pen.26836' in source_map,'recycled-PP research source missing')
 
-print('MouldMaster material behaviour QA passed: 6 labs / 24 evidence-approved material decisions')
+print('MouldMaster material behaviour QA passed: 6 labs / 24 evidence-approved material decisions / strict longest-answer flags=0')
