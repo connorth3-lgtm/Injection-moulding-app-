@@ -92,7 +92,7 @@ DATA / ASSESSMENT HARDENING
 VERSIONING
 Android/PWA shell: 2026.08.26.2
 Training content: 2026.08.26.1
-Audited question bank: 2026.08.24.2
+Audited question bank: 2026.08.30.1
 Assessment quality / analytics hardening: 2026.08.24.3
 Learner-scoped assessment storage: 2026.08.24.4
 Question evidence approval: 2026.08.25.2
