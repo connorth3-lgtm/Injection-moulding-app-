@@ -23,6 +23,7 @@ const CORE=[
   './assessment-final-hardening.js',
   './assessment-ux.js',
   './source-library.js',
+  './measured-evidence-integration.js',
   './reference-data.js',
   './reference-data.html',
   './reference-deep-dive.js',
