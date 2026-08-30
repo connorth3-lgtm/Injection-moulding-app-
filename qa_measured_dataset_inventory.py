@@ -70,12 +70,12 @@ for key in [
 need(rules.get('rawRowsCommittedToRepository') is False, 'third-party measured raw rows must not be claimed committed')
 
 rows = inv.get('datasets')
-need(isinstance(rows, list) and len(rows) == 24, f'expected 20 measured dataset records, found {len(rows) if isinstance(rows, list) else "non-list"}')
+need(isinstance(rows, list) and len(rows) == 25, f'expected 20 measured dataset records, found {len(rows) if isinstance(rows, list) else "non-list"}')
 ids = [str(x.get('datasetId', '')).strip() for x in rows]
 need(all(ids), 'dataset ID missing')
 need(len(ids) == len(set(ids)), 'duplicate dataset ID in measured inventory')
 priorities = [x.get('priority') for x in rows]
-need(sorted(priorities) == list(range(1, 25)), f'priorities must be unique 1..20: {priorities}')
+need(sorted(priorities) == list(range(1, 26)), f'priorities must be unique 1..20: {priorities}')
 
 state_counts = {s: 0 for s in ALLOWED_STATES}
 automated = 0
@@ -210,11 +210,13 @@ need(by_id['mendeley-fhj5p7ww9v-v1'].get('license') == 'CC BY-NC 3.0' and by_id[
 need(by_id['mendeley-6k8fpbrd9s-v1']['count'].get('deliveredDirectPhysicalValueCells') == 28590, 'Wave-2 pvT physical-cell count drifted')
 need(by_id['mendeley-4h98rz9f92-v3']['count'].get('directMeasuredPropertyValues') == 525, 'Wave-2 HDPE/GNP measured-property count drifted')
 need(by_id['pmc4753395-hdpe-cenosphere-v1']['count'].get('materialTestTraceValues') == 142884, 'Wave-2 material-test trace count drifted')
+need(by_id['mendeley-yxz2w7ctnh-v1']['count'].get('directRecordLevelInjectionMeasuredValues') == 489, 'Wave-2 yxz2 direct injection mechanical-test count drifted')
+need(by_id['mendeley-yxz2w7ctnh-v1'].get('license') == 'CC BY 4.0' and by_id['mendeley-yxz2w7ctnh-v1'].get('automatedIngestionAllowed') is True, 'Wave-2 yxz2 CC BY execution boundary drifted')
 need(all((by_id[x]['count'].get('acceptedMeasuredTimeSeriesSamples') or 0) == 0 for x in ['mendeley-fhj5p7ww9v-v1','mendeley-6k8fpbrd9s-v1','mendeley-4h98rz9f92-v3','pmc4753395-hdpe-cenosphere-v1']), 'Wave-2 additions must not inflate injection-process waveform samples')
 
 summary = inv.get('summary', {})
-need(summary.get('datasets') == 24, 'inventory summary dataset count drifted')
-need(summary.get('automatedIngestionAllowed') == automated == 13, f'automated-ingestion count drifted: {automated}')
+need(summary.get('datasets') == 25, 'inventory summary dataset count drifted')
+need(summary.get('automatedIngestionAllowed') == automated == 14, f'automated-ingestion count drifted: {automated}')
 need(summary.get('rightsOrAccessReviewRequired') == state_counts['public-download-license-review'] == 3, 'licence-review count drifted')
 need(state_counts['embargoed'] == summary.get('embargoed') == 2, 'embargoed count drifted')
 need(state_counts['request-only'] == summary.get('requestOnly') == 1, 'request-only count drifted')
@@ -246,4 +248,4 @@ report = {
     'result': 'pass',
 }
 REPORT.write_text(json.dumps(report, indent=2) + '\n', encoding='utf-8')
-print('MouldMaster measured dataset inventory QA passed (24 sources; 13 legally executable; 2 restricted educational/noncommercial profiles; 3 direct licence-review sources; 7-source rights review; ImPure/FORinFPRO partial acceptance pinned)')
+print('MouldMaster measured dataset inventory QA passed (25 sources; 14 legally executable; 2 restricted educational/noncommercial profiles; 3 direct licence-review sources; 7-source rights review; ImPure/FORinFPRO partial acceptance pinned)')

@@ -20,12 +20,12 @@ target_obj = json.loads(TARGETS.read_text(encoding="utf-8"))
 targets = target_obj["targets"]
 expected_profiled = targets["fully_profiled_measured_datasets"]["currentAccepted"]
 expected_samples = targets["measured_time_series_samples"]["currentAccepted"]
-need(expected_profiled == 11, "audited profiled-dataset baseline drifted")
+need(expected_profiled == 12, "audited profiled-dataset baseline drifted")
 need(expected_samples == 66_521_519, "audited measured-sample baseline drifted")
 workflow_text = WORKFLOW.read_text(encoding="utf-8")
 need(f"assert c['fullyProfiledMeasuredDatasets']=={expected_profiled}" in workflow_text, "master-data workflow profiled-dataset assertion is stale")
 need(f"assert c['measuredTimeSeriesSamplesAccepted']=={expected_samples}" in workflow_text, "master-data workflow measured-sample assertion is stale")
-need("assert c['automatedIngestionAllowedDatasets']==13" in workflow_text, "master-data workflow executable-source assertion is stale")
+need("assert c['automatedIngestionAllowedDatasets']==14" in workflow_text, "master-data workflow executable-source assertion is stale")
 
 with tempfile.TemporaryDirectory() as td:
     p = subprocess.run([sys.executable, str(COMPILER), "--output-dir", td], cwd=ROOT, capture_output=True, text=True, encoding="utf-8", errors="replace")
@@ -37,8 +37,8 @@ with tempfile.TemporaryDirectory() as td:
     manifest = json.loads((out / "manifest.json").read_text(encoding="utf-8"))
     counts = manifest.get("counts") or {}
     expected = {
-        "measuredDatasetInventory": 24,
-        "automatedIngestionAllowedDatasets": 13,
+        "measuredDatasetInventory": 25,
+        "automatedIngestionAllowedDatasets": 14,
         "fullyProfiledMeasuredDatasets": expected_profiled,
         "measuredTimeSeriesSamplesAccepted": expected_samples,
         "publisherVerifiedPrimaryMeasuredStudies": 60,
@@ -69,8 +69,8 @@ with tempfile.TemporaryDirectory() as td:
     measured = json.loads((out / "measured-data.json").read_text(encoding="utf-8"))
     inv = measured["datasetInventory"]
     ledger = measured["datasetExecutionLedger"]
-    need(inv["summary"]["datasets"] == 24, "compiled measured dataset inventory drifted")
-    need(inv["summary"]["automatedIngestionAllowed"] == 13, "compiled executable measured-source count drifted")
+    need(inv["summary"]["datasets"] == 25, "compiled measured dataset inventory drifted")
+    need(inv["summary"]["automatedIngestionAllowed"] == 14, "compiled executable measured-source count drifted")
     need(ledger["summary"]["acceptedProfiled"] == expected_profiled, "compiled execution ledger accepted-profiled count drifted")
     need(ledger["summary"]["acceptedRestrictedResearchEducation"] == 2, "compiled restricted accepted profile count drifted")
     need(ledger["summary"]["queuedExecutable"] == 0, "completed licensed profiling sources must not remain queued")
@@ -88,10 +88,11 @@ with tempfile.TemporaryDirectory() as td:
     need(results["impure-pascoe-2022"]["profile"]["cycleFiles"] == 307, "compiled ImPure profile drifted")
 
     specialized = measured.get("specializedMeasuredBenchmarkResults") or {}
-    need(set(specialized) == {"mendeley-6k8fpbrd9s-v1", "mendeley-4h98rz9f92-v3", "pmc4753395-hdpe-cenosphere-v1"}, f"specialized measured benchmark set drifted: {set(specialized)}")
+    need(set(specialized) == {"mendeley-6k8fpbrd9s-v1", "mendeley-4h98rz9f92-v3", "pmc4753395-hdpe-cenosphere-v1", "mendeley-yxz2w7ctnh-v1"}, f"specialized measured benchmark set drifted: {set(specialized)}")
     need((specialized["mendeley-6k8fpbrd9s-v1"].get("profile") or {}).get("deliveredDirectPhysicalValueCells") == 28590, "compiled Wave-2 pvT count drifted")
     need((specialized["mendeley-4h98rz9f92-v3"].get("profile") or {}).get("directMeasuredPropertyValues") == 525, "compiled Wave-2 HDPE/GNP count drifted")
     need((specialized["pmc4753395-hdpe-cenosphere-v1"].get("profile") or {}).get("materialTestTraceValues") == 142884, "compiled Wave-2 material-test count drifted")
+    need((specialized["mendeley-yxz2w7ctnh-v1"].get("profile") or {}).get("directRecordLevelInjectionMeasuredValues") == 489, "compiled Wave-2 yxz2 injection mechanical-test count drifted")
 
     restricted_nc = measured.get("restrictedNoncommercialBenchmarkResults") or {}
     need(set(restricted_nc) == {"mendeley-fhj5p7ww9v-v1"}, f"restricted noncommercial benchmark set drifted: {set(restricted_nc)}")
@@ -159,5 +160,5 @@ with tempfile.TemporaryDirectory() as td:
     for section in ["manifest", "measured", "research", "appData", "processData", "drafts"]:
         need(section in combined, f"combined master package missing section: {section}")
 
-print(f"MouldMaster master data compilation QA passed (24 measured datasets; 13 legally executable sources; {expected_profiled} fully profiled families including 1 restricted educational profile; {expected_samples:,} accepted measured time-series values; 60 verified primary measured studies; 600 evidence passes; 264/19,008 synthetic cases/cycles; 157 approved items; 120+20 lessons; full draft banks)")
+print(f"MouldMaster master data compilation QA passed (25 measured datasets; 14 legally executable sources; {expected_profiled} fully profiled families including 1 restricted educational profile; {expected_samples:,} accepted measured time-series values; 60 verified primary measured studies; 600 evidence passes; 264/19,008 synthetic cases/cycles; 157 approved items; 120+20 lessons; full draft banks)")
 
