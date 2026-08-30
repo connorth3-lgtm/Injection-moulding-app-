@@ -62,6 +62,7 @@ must(index, [
 
 must(shell, [
     "new MutationObserver(scheduleSync)", "el.textContent!==value", "syncUpdateCard", "[data-mm-update-card]",
+    "data-mm-repair-link", "Repair app files", "location.assign('./repair.html')", "hideInternalQaProvenance", "Plugin-assisted QA provenance",
     "dockReferenceLauncher", "getElementById('mm-src-open')", "document.querySelector('.sidebar-foot')",
     "sourceReviewDisplayDate", "qualitySuite?.sourceFreshnessReviewed", "syncStandardsReviewDate", "window.MM_DATA?.standards", "References reviewed\\s+\\d{1,2}",
     "open.style.position='static'", "open.style.zIndex='auto'", "configureReferenceDrawer",

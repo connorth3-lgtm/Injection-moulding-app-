@@ -170,6 +170,7 @@ for(const viewport of [{name:'android-412x915',width:412,height:915},{name:'smal
       await expect(page.locator('[data-mm-registry-menu="mould-master"]')).toHaveCount(1);
       await expect(page.locator('[data-mm-registry-menu="process-data"]')).toHaveCount(1);
       await expect(page.locator('[data-mm-registry-menu="learning-insights"]')).toHaveCount(1);
+      await expect(page.locator('[data-mm-registry-menu="repair-app-files"]')).toHaveCount(1);
       const insights=page.locator('[data-mm-registry-menu="learning-insights"]');
       await insights.focus();
       await page.keyboard.press('Enter');
