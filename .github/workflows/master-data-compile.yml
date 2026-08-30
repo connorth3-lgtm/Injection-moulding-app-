@@ -1,5 +1,5 @@
 name: MouldMaster Master Data Compilation
-# The measured-sample assertion below is reconciled to source-defined lower and specialist upper cross-process acceptance.
+# The measured-sample assertion below is reconciled to accepted AVAPS, OpenMMS, cross-process, ImPure and FORinFPRO evidence.
 
 on:
   pull_request:
@@ -67,7 +67,7 @@ jobs:
           assert c['measuredDatasetInventory']==20
           assert c['automatedIngestionAllowedDatasets']==10
           assert c['fullyProfiledMeasuredDatasets']==7
-          assert c['measuredTimeSeriesSamplesAccepted']==65171059
+          assert c['measuredTimeSeriesSamplesAccepted']==66521519
           assert c['publisherVerifiedPrimaryMeasuredStudies']==60
           assert c['verifiedPeerReviewedResearchRecords']==60
           assert c['measuredEvidencePasses']==50
