@@ -86,7 +86,7 @@ for marker in [
     "Direct measured signal",
     "Supporting process context",
     "Supporting material evidence",
-    "not a root-cause verdict",
+    "root-cause verdict",
     "universal setpoint",
     "matchedTopics",
     "MM_MEASURED_EVIDENCE_DECISIONS",
