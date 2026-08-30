@@ -30,14 +30,16 @@ for key in [
     'publicMirrorAvailabilityDoesNotProveDatasetReuseRights',
     'reportedCountsFromRelatedPublicationsRemainUnacceptedUntilPayloadRightsAndOverlapAreResolved',
     'cycleLevelFeatureRowsAreNotIntraCycleProcessWaveforms',
+    'openAccessStatusDoesNotReplaceExplicitReuseLicense',
+    'publisherMetadataCountsRemainUnacceptedUntilPayloadFilesAreProfiled',
 ]:
     need(rules.get(key) is True, f'discovery queue boundary missing: {key}')
 
 active = q.get('activeDiscoveries')
 resolved = q.get('resolvedPromotions')
 screened = q.get('screenedOutDiscoveries')
-need(isinstance(active, list) and len(active) == 4,
-     f'expected four active measured-data discoveries, found {len(active) if isinstance(active, list) else "non-list"}')
+need(isinstance(active, list) and len(active) == 6,
+     f'expected six active measured-data discoveries, found {len(active) if isinstance(active, list) else "non-list"}')
 need(isinstance(resolved, list) and len(resolved) == 4,
      f'expected four resolved promotions, found {len(resolved) if isinstance(resolved, list) else "non-list"}')
 need(isinstance(screened, list) and len(screened) == 1,
@@ -61,6 +63,8 @@ for item in active:
 by_id = {x['id']: x for x in active}
 expected_active = {
     'mendeley-ad-stgn-injection-line-v1',
+    'mendeley-gtnb4j7bfx-production-v1',
+    'zenodo-forinfpro-himd-20744054',
     'github-k85-pressure-temperature-v1',
     'aspoeck-costa-industrial-71016-v1',
     'aisemo-accelerometer-state-recognition-v1',
@@ -80,6 +84,45 @@ need(ad['scale'].get('continuousSensors') == 66 and ad['scale'].get('discreteCon
 need(ad.get('processStages') == ['clamping', 'injection', 'holding', 'cooling', 'ejection', 'robot pick/place'],
      'AD-STGN process-stage description drifted')
 need('not assumed to equal one moulding cycle' in ad.get('recordUnit', ''), 'AD-STGN sample/cycle boundary missing')
+
+gtnb = by_id['mendeley-gtnb4j7bfx-production-v1']
+need(gtnb.get('license') == 'CC BY 4.0', 'gtnb publisher licence must remain CC BY 4.0')
+need(gtnb.get('status') == 'retrieval-blocked-publisher-no-file-entries', 'gtnb file-retrieval blocker drifted')
+need(gtnb.get('role') == 'industrial-record-level-process-data-retrieval-review', 'gtnb role must remain record-level process data')
+need('not assumed to represent one injection cycle' in gtnb.get('recordUnit', ''), 'gtnb production-record/cycle boundary missing')
+need('or an intra-cycle waveform' in gtnb.get('recordUnit', ''), 'gtnb record/waveform boundary missing')
+gtnb_scale = gtnb.get('scale', {})
+need(gtnb_scale.get('injectionMoldingRecordsReportedByArticle') == 4502, 'gtnb reported injection-record count drifted')
+need(gtnb_scale.get('blowMoldingRecordsReportedByArticle') == 1855, 'gtnb reported blow-record count drifted')
+need(gtnb.get('source') == 'https://doi.org/10.17632/gtnb4j7bfx.1', 'gtnb Mendeley DOI drifted')
+need(gtnb.get('relatedSource') == 'https://doi.org/10.3390/su17167445', 'gtnb associated article DOI drifted')
+need('empty Files section' in gtnb.get('limitation', ''), 'gtnb empty-files blocker must remain explicit')
+
+forinfpro = by_id['zenodo-forinfpro-himd-20744054']
+need(forinfpro.get('license') is None, 'FORinFPRO must not acquire an inferred licence')
+need(forinfpro.get('status') == 'payload-public-formal-license-and-semantics-unverified', 'FORinFPRO blocker status drifted')
+need(forinfpro.get('publisherAccessStatus') == 'Dataset Open', 'FORinFPRO publisher access label drifted')
+need(forinfpro.get('visibleCycleIds') == ['cycle_001'], 'FORinFPRO must not infer unobserved cycle IDs')
+need(forinfpro.get('machine') == 'ENGEL V-Duo injection molding machine at the University of Augsburg Hybrid Injection Molding Cell',
+     'FORinFPRO machine description drifted')
+layout = forinfpro.get('sensorLayout', {})
+need(layout.get('activePulseEchoUltrasonicSensors') == 4, 'FORinFPRO ultrasonic sensor count drifted')
+need(layout.get('pressureTemperatureSensors') == 6, 'FORinFPRO pressure/temperature sensor count drifted')
+need(layout.get('dielectricAnalysisSensors') == 2, 'FORinFPRO DEA sensor count drifted')
+need(layout.get('reportedInMoldSensorsTotal') == 12, 'FORinFPRO total in-mold sensor count drifted')
+files = forinfpro.get('publisherIndexedFiles', [])
+need(len(files) == 3, f'FORinFPRO expected exactly three indexed files, found {len(files)}')
+expected_files = {
+    'cycle_001_machine_data.csv': 'd2a7d96d133f3d7b43a5089ad4bf0b09',
+    'cycle_001_pt.csv': '40d8511c11e8e0575dc3930ddd258c19',
+    'cycle_001_us_rms.csv': 'c767196cfd1b6dec0d09ed0a2dba2551',
+}
+need({str(x.get('name')): str(x.get('md5')) for x in files} == expected_files,
+     'FORinFPRO indexed filenames/checksums drifted')
+need('Open-access wording is therefore not substituted for an explicit reuse licence' in forinfpro.get('limitation', ''),
+     'FORinFPRO open-access/licence boundary missing')
+need('No additional cycle IDs are inferred' in forinfpro.get('limitation', ''),
+     'FORinFPRO visible-cycle boundary missing')
 
 k85 = by_id['github-k85-pressure-temperature-v1']
 need(k85.get('license') is None, 'K85 mirror must not acquire an inferred licence')
@@ -154,6 +197,13 @@ for item in resolved:
 need(not (set(active_ids) & resolved_ids), 'active discoveries must not also appear in resolved promotions')
 need(not (set(active_ids) & set(screened_ids)), 'screened-out discoveries must not remain active')
 
+publisher_retrieval_blocked = sum(
+    1 for item in active if str(item.get('status', '')).startswith('retrieval-blocked-publisher-')
+)
+public_payload_license_unverified = sum(
+    1 for item in active if item.get('status') == 'payload-public-formal-license-and-semantics-unverified'
+)
+
 report = {
     'schema': 1,
     'source': str(QUEUE.relative_to(ROOT)),
@@ -163,6 +213,11 @@ report = {
     'directProcessNextIntake': 1,
     'countedAsIngested': 0,
     'countedInjectionCycles': 0,
+    'publisherRetrievalBlockedDiscoveries': publisher_retrieval_blocked,
+    'publicPayloadLicenseUnverifiedDiscoveries': public_payload_license_unverified,
+    'gtnbReportedInjectionRecordsUnaccepted': gtnb_scale['injectionMoldingRecordsReportedByArticle'],
+    'gtnbReportedBlowRecordsUnaccepted': gtnb_scale['blowMoldingRecordsReportedByArticle'],
+    'forinfproVisibleCycleIds': forinfpro['visibleCycleIds'],
     'reportedUnacceptedInjectionCyclesThesis': scale['thesisReportedInjectionCycles'],
     'reportedUnacceptedInjectionCyclesJournalApprox': scale['journalReportedInjectionCyclesApprox'],
     'reportedJournalSensorsPerCycle': scale['journalReportedSensorsPerCycle'],
@@ -171,4 +226,4 @@ report = {
     'result': 'pass',
 }
 REPORT.write_text(json.dumps(report, indent=2) + '\n', encoding='utf-8')
-print('MouldMaster measured-data discovery queue QA passed (4 active zero-count discoveries; Aspöck 71,016 thesis and ~280,000 journal cycle reports remain unaccepted/non-additive; 264 journal readings are cycle-level features, not waveforms; 1 false positive screened out; 4 promoted discoveries archived; zero canonical count inflation)')
+print('MouldMaster measured-data discovery queue QA passed (6 active zero-count discoveries; 2 publisher retrieval blockers; 1 public-payload licence blocker; gtnb 4,502 injection + 1,855 blow records remain metadata; FORinFPRO cycle_001 remains unaccepted; zero canonical count inflation)')
