@@ -1,0 +1,50 @@
+name: MouldMaster León Embargo Watch
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'data/leon-embargo-activation-contract-2026-08-30.json'
+      - 'tools/check_leon_embargo_state.py'
+      - 'qa_leon_embargo_contract.py'
+      - '.github/workflows/leon-embargo-watch.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'data/leon-embargo-activation-contract-2026-08-30.json'
+      - 'tools/check_leon_embargo_state.py'
+      - 'qa_leon_embargo_contract.py'
+      - '.github/workflows/leon-embargo-watch.yml'
+  schedule:
+    - cron: '23 7 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  contract-qa:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Python syntax
+        run: |
+          python -m py_compile tools/check_leon_embargo_state.py
+          python -m py_compile qa_leon_embargo_contract.py
+      - name: Validate embargo activation contract
+        run: python qa_leon_embargo_contract.py
+
+  live-release-watch:
+    if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
+    needs: contract-qa
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Check live Zenodo embargo state
+        run: python tools/check_leon_embargo_state.py

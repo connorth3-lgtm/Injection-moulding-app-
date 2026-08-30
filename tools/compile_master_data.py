@@ -61,8 +61,9 @@ def compile_measured():
     need(len(studies) == expected == 60, "primary measured registry must compile to 60 studies")
     need(len(dois) == len(set(dois)) and all(dois), "compiled primary measured studies must have 60 unique DOIs")
 
-    need((rights_review.get("summary") or {}).get("sourcesReviewed") == 5, "measured-data rights review source count drifted")
+    need((rights_review.get("summary") or {}).get("sourcesReviewed") == len(rights_review.get("sources") or []) == 7, "measured-data rights review source count drifted")
     need((rights_review.get("summary") or {}).get("unblockedForAutomatedIngestion") == 4, "measured-data rights review promotion count drifted")
+    need((rights_review.get("summary") or {}).get("remainBlockedForRights") == 3, "measured-data rights review blocked count drifted")
 
     dossiers = {}
     for p in sorted((ROOT / "data/mechanism-promotion-evidence").glob("*.json")):

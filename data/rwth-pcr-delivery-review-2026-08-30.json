@@ -1,0 +1,46 @@
+{
+  "schema": 1,
+  "reviewed": "2026-08-30",
+  "datasetId": "rwth-pcr-2025",
+  "sourceRecord": "https://publications.rwth-aachen.de/record/1016199",
+  "filesPage": "https://publications.rwth-aachen.de/record/1016199/files/",
+  "publisherArchive": {
+    "fileName": "ExperimentalData.zip",
+    "version": 1,
+    "publisherDisplayedSize": "1,007.55 KB",
+    "publisherDisplayedDate": "2026-04-14",
+    "accessLabel": "OpenAccess",
+    "versionedDownloadUrl": "https://publications.rwth-aachen.de/record/1016199/files/ExperimentalData.zip?version=1"
+  },
+  "priorExecution": {
+    "workflowRun": 33229910280,
+    "date": "2026-08-29",
+    "testedVersionedPublisherUrl": false,
+    "testedBareUrl": true,
+    "testedDownloadQueryVariants": true,
+    "result": "all tested variants returned the same 248-byte HTML response rather than a ZIP"
+  },
+  "versionedRetryExecution": {
+    "workflowRun": 33275082399,
+    "artifactId": 9721253363,
+    "artifactDigest": "sha256:a401d66147a8e803d1b2af9c0d1ea71d3c36ec9e7ba56730542e25e6594eba1b",
+    "testedVersionedPublisherUrl": true,
+    "testedDownloadQueryVariants": true,
+    "httpStatus": 200,
+    "contentType": "text/html; charset=UTF-8",
+    "sizeBytes": 248,
+    "responseSha256": "4681fa6e4303ecc351521fa1c7c836c9f3d6774b11725d39885ec3bf8ff16561",
+    "zipStructureValid": false,
+    "result": "the exact version-1 publisher URL and both download query variants still returned the same 248-byte HTML response"
+  },
+  "decision": "publisher-file-listing-confirmed-but-machine-download-still-blocked",
+  "nextEvidenceRequired": [
+    "A first-party RWTH download endpoint that serves the advertised ZIP bytes to a non-interactive research client, or publisher guidance explaining the access mechanism required for this file.",
+    "After delivery succeeds, exact archive/member fingerprints and delivered-schema semantics must still pass the existing stage-1 and final acceptance gates."
+  ],
+  "countingBoundary": {
+    "countsAsFullyProfiledMeasuredDataset": false,
+    "acceptedMeasuredTimeSeriesSamples": 0,
+    "reason": "The publisher visibly lists an OpenAccess version-1 ZIP, but two independent GitHub Actions executions have received HTML instead of ZIP bytes. No source data are accepted until actual archive delivery succeeds."
+  }
+}

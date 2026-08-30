@@ -5,8 +5,12 @@
   "source": {
     "datasetDoi": "10.18154/RWTH-2025-06809",
     "recordUrl": "https://publications.rwth-aachen.de/record/1016199",
-    "downloadUrl": "https://publications.rwth-aachen.de/record/1016199/files/ExperimentalData.zip",
+    "filesPageUrl": "https://publications.rwth-aachen.de/record/1016199/files/",
+    "downloadUrl": "https://publications.rwth-aachen.de/record/1016199/files/ExperimentalData.zip?version=1",
     "publisherFileName": "ExperimentalData.zip",
+    "publisherFileVersion": 1,
+    "publisherDisplayedSize": "1,007.55 KB",
+    "publisherDisplayedDate": "2026-04-14",
     "license": "CC BY 4.0",
     "licenseEvidenceUrl": "https://publications.rwth-aachen.de/record/1016199?ln=de",
     "peerReviewedCompanion": "10.1016/j.jprocont.2026.103725",
@@ -65,5 +69,5 @@
     "Accepted measured-sample totals are computed only from delivered measured arrays/columns with ordering/time basis established.",
     "No raw third-party rows, arrays or cell values are committed or uploaded as workflow artifacts."
   ],
-  "evidenceBoundary": "The authoritative RWTH dataset record is CC BY 4.0 and explicitly describes real injection-moulding experiments with time-resolved pressures, controller output, screw velocity and screw-antechamber volume, plus part-mass-control iterations. Stage 1 only fingerprints and inventories the delivered archive. No dataset-family promotion or measured-sample count is allowed until delivered experiment grouping, time bases, signal semantics and measured-versus-command/reference boundaries are established."
+  "evidenceBoundary": "The authoritative RWTH dataset record is CC BY 4.0 and explicitly describes real injection-moulding experiments with time-resolved pressures, controller output, screw velocity and screw-antechamber volume, plus part-mass-control iterations. The publisher Files page now pins ExperimentalData.zip version 1 as an OpenAccess file. Stage 1 only fingerprints and inventories the delivered archive. No dataset-family promotion or measured-sample count is allowed until delivered experiment grouping, time bases, signal semantics and measured-versus-command/reference boundaries are established."
 }

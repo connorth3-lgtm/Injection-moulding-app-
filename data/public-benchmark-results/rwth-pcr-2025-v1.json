@@ -2,27 +2,29 @@
   "schema_version": 1,
   "status": "retrieval-blocked-non-archive-response",
   "retrieved_date": "2026-08-29",
-  "sourceWorkflowRun": 33229910280,
+  "sourceWorkflowRun": 33275082399,
   "sourceArtifact": {
-    "id": 9708150583,
+    "id": 9721253363,
     "name": "mouldmaster-public-measured-benchmark-rwth-pcr-2025",
-    "digest": "sha256:1902d726e9448eb8ba436ae8e5fa8ac14730ab32211de6dd6d760170f715d834"
+    "digest": "sha256:a401d66147a8e803d1b2af9c0d1ea71d3c36ec9e7ba56730542e25e6594eba1b"
   },
   "source": {
     "datasetId": "rwth-pcr-2025",
     "datasetDoi": "10.18154/RWTH-2025-06809",
     "recordUrl": "https://publications.rwth-aachen.de/record/1016199",
-    "downloadUrl": "https://publications.rwth-aachen.de/record/1016199/files/ExperimentalData.zip",
+    "downloadUrl": "https://publications.rwth-aachen.de/record/1016199/files/ExperimentalData.zip?version=1",
     "publisherFileName": "ExperimentalData.zip",
     "license": "CC BY 4.0",
     "licenseEvidenceUrl": "https://publications.rwth-aachen.de/record/1016199?ln=de",
     "peerReviewedCompanion": "10.1016/j.jprocont.2026.103725",
     "retrievalAttempts": [
       {
-        "url": "https://publications.rwth-aachen.de/record/1016199/files/ExperimentalData.zip",
+        "url": "https://publications.rwth-aachen.de/record/1016199/files/ExperimentalData.zip?version=1",
         "httpStatus": 200,
+        "finalUrl": "https://publications.rwth-aachen.de/record/1016199/files/ExperimentalData.zip?version=1",
         "contentType": "text/html; charset=UTF-8",
         "contentLengthHeader": "248",
+        "contentDisposition": null,
         "sizeBytes": 248,
         "sha256": "4681fa6e4303ecc351521fa1c7c836c9f3d6774b11725d39885ec3bf8ff16561",
         "zipSignatureMatch": false,
@@ -30,10 +32,12 @@
         "rawResponseBodyEmitted": false
       },
       {
-        "url": "https://publications.rwth-aachen.de/record/1016199/files/ExperimentalData.zip?download=1",
+        "url": "https://publications.rwth-aachen.de/record/1016199/files/ExperimentalData.zip?version=1&download=1",
         "httpStatus": 200,
+        "finalUrl": "https://publications.rwth-aachen.de/record/1016199/files/ExperimentalData.zip?version=1&download=1",
         "contentType": "text/html; charset=UTF-8",
         "contentLengthHeader": "248",
+        "contentDisposition": null,
         "sizeBytes": 248,
         "sha256": "4681fa6e4303ecc351521fa1c7c836c9f3d6774b11725d39885ec3bf8ff16561",
         "zipSignatureMatch": false,
@@ -41,10 +45,12 @@
         "rawResponseBodyEmitted": false
       },
       {
-        "url": "https://publications.rwth-aachen.de/record/1016199/files/ExperimentalData.zip?download=true",
+        "url": "https://publications.rwth-aachen.de/record/1016199/files/ExperimentalData.zip?version=1&download=true",
         "httpStatus": 200,
+        "finalUrl": "https://publications.rwth-aachen.de/record/1016199/files/ExperimentalData.zip?version=1&download=true",
         "contentType": "text/html; charset=UTF-8",
         "contentLengthHeader": "248",
+        "contentDisposition": null,
         "sizeBytes": 248,
         "sha256": "4681fa6e4303ecc351521fa1c7c836c9f3d6774b11725d39885ec3bf8ff16561",
         "zipSignatureMatch": false,
@@ -58,7 +64,7 @@
     "stage1ProfileComplete": false,
     "countsAsFullyProfiledMeasuredDataset": false,
     "acceptedMeasuredTimeSeriesSamples": 0,
-    "reason": "The authoritative download endpoint returned the same 248-byte HTML response for all three tested download variants; no structurally valid ZIP was delivered to the GitHub Actions runner."
+    "reason": "The exact first-party version-1 archive URL and both download query variants still returned the same 248-byte HTML response; no structurally valid ZIP was delivered to the GitHub Actions runner."
   },
   "retrieval": {
     "rawPublisherArchiveCommitted": false,
@@ -66,5 +72,5 @@
     "rawRowsOrArraysUploadedAsArtifact": false,
     "rawResponseBodiesUploadedAsArtifact": false
   },
-  "evidenceBoundary": "RWTH reuse rights are confirmed as CC BY 4.0, but lawful access terms alone do not count as a completed source profile. The exact source runner received HTML rather than the advertised ZIP on every tested publisher URL variant, so the source remains non-counting until a real archive is delivered and its internal measurement semantics are profiled."
+  "evidenceBoundary": "RWTH reuse rights and the visible version-1 OpenAccess file listing are confirmed, but the exact machine retrieval still receives HTML rather than the advertised ZIP. The source remains non-counting until a first-party delivery mechanism returns the real archive and its internal measurement semantics are profiled."
 }

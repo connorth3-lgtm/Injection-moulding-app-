@@ -1,0 +1,40 @@
+{
+  "schema": 1,
+  "datasetId": "bottle-cap-7162-confidential",
+  "mode": "controlled-transfer",
+  "authority": {
+    "ownerIdentified": false,
+    "ownerOrControllerName": "",
+    "authorizingRepresentativeName": "",
+    "authorizingRepresentativeRole": "",
+    "organization": "",
+    "authorizationEvidence": ""
+  },
+  "authorization": {
+    "researchProfilingAllowed": false,
+    "automatedAggregateProfilingAllowed": false,
+    "aggregatePublicationAllowed": false,
+    "rawRedistributionAllowed": false,
+    "conditions": []
+  },
+  "confidentiality": {
+    "rawDataMayLeaveOwnerEnvironment": false,
+    "publicArtifactsMayContainRawRowsOrValues": false,
+    "storageLocationRestrictions": [],
+    "retentionOrDeletionRequirements": [],
+    "additionalConditions": []
+  },
+  "delivery": {
+    "receivedDate": "",
+    "files": []
+  },
+  "ownerSideExecution": {
+    "profilerCommit": "",
+    "aggregateArtifactRelativePath": ""
+  },
+  "semantics": {
+    "cycleIdentifierField": "",
+    "channels": []
+  },
+  "notes": "Set mode to controlled-transfer only when the owner explicitly permits the confidential files to leave its environment. Set mode to owner-side-execution when only an aggregate profiler result may leave. Measured channels require source-supplied quantity, unit and semantic evidence. Commands, setpoints, identifiers, labels, model outputs and derived fields must not be counted as directly measured values."
+}

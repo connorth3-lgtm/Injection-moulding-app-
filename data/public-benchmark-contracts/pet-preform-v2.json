@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "datasetId": "pet-preform-v2",
-  "status": "candidate-until-source-files-and-measurement-semantics-pass",
+  "status": "terminal-profiled-zero-measured-simulation-optimization-model-workbook",
   "source": {
     "title": "Preform injection molding analysis - Database",
     "datasetDoi": "10.17632/vc3k9tt5zj.2",
@@ -11,16 +11,40 @@
     "license": "CC BY 4.0",
     "relatedArticleDoi": "10.1016/j.rinma.2026.101013"
   },
+  "retrievedRelease": {
+    "files": 1,
+    "publisherFile": "Preform Manuscript Database .xlsx",
+    "sha256": "20f6704a93df7638d682b692ae4cb7432ca7d94bbc950ef2bdd0cfc17db124dc",
+    "worksheet": "ANN data ",
+    "rows": 27,
+    "columns": 26
+  },
+  "semanticDecision": {
+    "review": "data/pet-preform-semantic-review-2026-08-30.json",
+    "controlledProcessSettingColumns": 5,
+    "solidworksSimulationResultColumns": 7,
+    "modelValidationColumns": 1,
+    "annHiddenLayerIntermediateColumns": 6,
+    "annPredictionColumns": 7,
+    "sourceDefinedMeasuredOutcomeColumns": 0,
+    "acceptedMeasuredProcessValues": 0,
+    "acceptedMeasuredQualityValues": 0,
+    "acceptedMeasuredTimeSeriesSamples": 0,
+    "fullyProfiledMeasuredFamily": false
+  },
   "acceptance": {
-    "requireVersionPinnedPublicFileLinks": true,
-    "requireAllSelectedFilesSha256": true,
-    "requireReadableTableSchema": true,
-    "requireInjectionMouldingMeasurementSemantics": true,
-    "requireMeasuredVersusSimulatedFieldsSeparated": true,
-    "requireQualityOutcomeSemantics": true,
+    "versionPinnedPublicFileLinksSatisfied": true,
+    "selectedFileSha256Satisfied": true,
+    "readableTableSchemaSatisfied": true,
+    "measuredVersusSimulatedFieldsSeparated": true,
+    "qualityOutcomeSemanticsResolvedAsAbsentFromPublishedWorkbook": true,
+    "simulationOnlyOutputsNeverEnterMeasuredCounts": true,
+    "modelIntermediatesAndPredictionsNeverEnterMeasuredCounts": true,
+    "controlledSettingsNeverEnterMeasuredCounts": true,
     "requireNoRawRowsInProfile": true,
     "rawPublisherFilesCommitted": false,
     "rawRowsUploadedAsArtifact": false
   },
-  "evidenceBoundary": "The CC BY 4.0 dataset is publicly reusable, but the related 2026 paper combines statistical, simulation and machine-learning results. The source files must therefore be inspected before any row or field is counted as real measured injection-moulding evidence; simulation-only outputs never enter measured counts."
+  "reopenRule": "Reopen measured-evidence eligibility only if a publisher/author release supplies a physically measured quality outcome or machine/sensor channel with explicit provenance. The current version-2 workbook is terminal at zero measured values.",
+  "evidenceBoundary": "The CC BY 4.0 workbook is reusable and fully profiled, but its process fields are optimization settings, its response fields use SOLIDWORKS Plastics simulation-result terminology, and its remaining ANN fields are validation/model intermediates/predictions. It contributes zero accepted measured values."
 }

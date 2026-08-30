@@ -1,0 +1,129 @@
+{
+  "schema": 1,
+  "reviewed": "2026-08-30",
+  "datasetId": "impure-pascoe-2022",
+  "decision": "remaining-four-channels-fail-closed-pending-source-clarification",
+  "baseSemanticAcceptance": {
+    "cycleRows": 297087,
+    "profiledNumericSensorValues": 2376696,
+    "acceptedMeasuredColumns": [
+      "TempMold1[IRT/Pascoe]",
+      "TempMold2[IRT/Pascoe]",
+      "Pressure1[IRT/Pascoe]",
+      "Pressure2[IRT/Pascoe]"
+    ],
+    "acceptedMeasuredTimeSeriesSamples": 1188348,
+    "remainingProfiledNumericSensorValues": 1188348
+  },
+  "authoritativeSourceRoutes": [
+    {
+      "role": "dataset depositor",
+      "name": "Georgios Bakas",
+      "affiliation": "IRES",
+      "sourceEvidence": "https://zenodo.org/records/6913660",
+      "publicContact": "gbakas@innovation-res.eu",
+      "contactEvidence": "https://eposters.betterevents.io/elekap2022/web/sites/default/files/2022-06/sessions/PPT-Genigraphics-Poster-IRES-48x25C_GBakas-IRES_1.pdf",
+      "priority": 1
+    },
+    {
+      "role": "corresponding author, PASCOE machine-parameter analysis",
+      "name": "Manaf Al-Ahmad",
+      "affiliation": "University of Strathclyde",
+      "sourceEvidence": "https://doi.org/10.1051/matecconf/202440108011",
+      "publicContact": "manaf.al-ahmad@strath.ac.uk",
+      "priority": 2
+    },
+    {
+      "role": "corresponding author, PASCOE instrumentation paper",
+      "name": "Yi Qin",
+      "affiliation": "University of Strathclyde",
+      "sourceEvidence": "https://doi.org/10.3233/ATDE230912",
+      "publicContact": "qin.yi@strath.ac.uk",
+      "priority": 3
+    }
+  ],
+  "supportingEvidence": {
+    "instrumentationPaper": {
+      "hydraulicPressureSensor": "Kistler 4262A",
+      "screwPositionSensor": "Kistler P510",
+      "nozzleTemperatureSensor": "Kistler 4021B",
+      "cavitySensors": "two Kistler 6188A combined pressure/contact-temperature sensors",
+      "acquisitionSystem": "Kistler ComoNeo"
+    },
+    "manufacturerBoundary": {
+      "kistler4262AReference": "https://www.kistler.com/SK/en/cp/piezoresistive-relative-pressure-transmitters-4262a/P0000232",
+      "assessment": "Type 4262A supports multiple pressure ranges, pressure-unit variants and mV/V/mA electrical-output options. Hardware capability therefore does not establish the engineering unit or scaling used in the delivered CSV.",
+      "mustNotInferDeliveredCsvUnitFromSensorFamilyAlone": true
+    },
+    "stageMetadata": {
+      "supportFile": "Trial 17 05 all stages.csv",
+      "establishedFacts": [
+        "auxiliary acquisition includes water-temperature monitoring",
+        "a later stage switches a sensor to core-water flow",
+        "a later stage records nozzle temperature at junction-box channel 4"
+      ],
+      "analogInput2SingleGlobalDefinitionRejected": true
+    }
+  },
+  "clarificationRequests": [
+    {
+      "column": "HydPressure[IRT/Pascoe]",
+      "currentMeaning": "measured hydraulic pressure",
+      "questions": [
+        "What engineering unit do the delivered CSV values use?",
+        "Are the CSV values already scaled pressure values, or raw/transformed electrical output from the Kistler 4262A?",
+        "If a conversion was applied, what scale factor, offset and sensor configuration/variant were used?"
+      ],
+      "minimumEvidenceForPromotion": "A source-author/data-dictionary statement that explicitly defines the delivered CSV engineering unit and any scaling/conversion.",
+      "potentialAdditionalMeasuredValues": 297087
+    },
+    {
+      "column": "ScrewPosition[IRT/Pascoe]",
+      "currentMeaning": "measured screw position",
+      "questions": [
+        "What engineering unit do the delivered CSV values use?",
+        "What physical zero/origin/reference is used for screw position?",
+        "Are values already scaled engineering coordinates or an electrical/raw acquisition value?"
+      ],
+      "minimumEvidenceForPromotion": "A source-author/data-dictionary statement defining both engineering unit and position reference/origin for the delivered export.",
+      "potentialAdditionalMeasuredValues": 297087
+    },
+    {
+      "column": "Analog Input[1]",
+      "currentMeaning": null,
+      "questions": [
+        "Which exact physical sensor/signal is exported as Analog Input[1]?",
+        "Is that assignment stable across all 307 delivered cycle CSVs or does it change by trial stage?",
+        "What engineering unit and scaling are used in each applicable configuration?"
+      ],
+      "minimumEvidenceForPromotion": "An authoritative binding from Analog Input[1] to a stable sensor/configuration and engineering unit, or an authoritative stage map that permits deterministic subset counting.",
+      "potentialAdditionalMeasuredValuesIfStableAcrossAllRows": 297087
+    },
+    {
+      "column": "Analog Input[2]",
+      "currentMeaning": "stage-dependent auxiliary analogue acquisition channel",
+      "questions": [
+        "For which exact cycle ranges/stages was Analog Input[2] connected to water temperature, core-water flow, nozzle temperature, or any other signal?",
+        "What engineering unit and scaling apply in each configuration?",
+        "Can the support-stage table be used as the authoritative row/cycle mapping, and if so what are the exact boundaries?"
+      ],
+      "minimumEvidenceForPromotion": "An authoritative stage-to-cycle mapping plus engineering unit/scaling for each configuration. A single global meaning/unit is not acceptable.",
+      "potentialAdditionalMeasuredValuesUpperBound": 297087
+    }
+  ],
+  "countingBoundary": {
+    "automaticPromotionAllowed": false,
+    "currentAcceptedMeasuredTimeSeriesSamples": 1188348,
+    "additionalAcceptedMeasuredTimeSeriesSamplesFromThisContract": 0,
+    "maximumRemainingProfiledNumericValuesPotentiallyResolvable": 1188348,
+    "promotionMayBeChannelByChannelOrStageSubset": true,
+    "manufacturerNominalUnitsAloneAreInsufficient": true,
+    "aggregateDistributionSimilarityAloneIsInsufficient": true,
+    "rawRowsOrCellValuesCommitted": false
+  },
+  "outreachDraft": {
+    "status": "prepared-not-sent",
+    "subject": "Clarification of PASCOE ImPure CSV sensor units and analogue-channel mapping",
+    "body": "We are profiling the open CC BY 4.0 ImPure Injection Molding Sensor Data (Zenodo 6913660) using aggregate-only QA. Four cavity pressure/temperature channels are source-defined, but four delivered fields remain intentionally excluded from measured-value totals. Could you confirm: (1) the engineering unit and any scaling/conversion for HydPressure[IRT/Pascoe]; (2) the engineering unit and zero/reference for ScrewPosition[IRT/Pascoe]; (3) the exact sensor, unit and whether the assignment is stable for Analog Input[1]; and (4) the stage/cycle mapping, sensor identity, units and scaling for Analog Input[2], which the trial metadata indicates was reconfigured between water-temperature, core-water-flow and nozzle-temperature measurements? A short data dictionary or mapping table is sufficient. We will keep unresolved fields non-counting until source-defined semantics are available."
+  }
+}

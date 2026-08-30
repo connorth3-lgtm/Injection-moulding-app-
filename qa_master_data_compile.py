@@ -21,7 +21,7 @@ targets = target_obj["targets"]
 expected_profiled = targets["fully_profiled_measured_datasets"]["currentAccepted"]
 expected_samples = targets["measured_time_series_samples"]["currentAccepted"]
 need(expected_profiled == 7, "audited profiled-dataset baseline drifted")
-need(expected_samples == 65_171_059, "audited measured-sample baseline drifted")
+need(expected_samples == 66_521_519, "audited measured-sample baseline drifted")
 workflow_text = WORKFLOW.read_text(encoding="utf-8")
 need(f"assert c['fullyProfiledMeasuredDatasets']=={expected_profiled}" in workflow_text, "master-data workflow profiled-dataset assertion is stale")
 need(f"assert c['measuredTimeSeriesSamplesAccepted']=={expected_samples}" in workflow_text, "master-data workflow measured-sample assertion is stale")
@@ -100,7 +100,12 @@ with tempfile.TemporaryDirectory() as td:
 
     review_results = measured.get("publicBenchmarkReviewResults") or {}
     need(set(review_results) == {"pet-preform-v2", "warwick-demoulding", "rwth-pcr-2025", "cross-process-chain-17240390", "cross-process-lower-workpiece-source-contract", "cross-process-upper-workpiece-source-contract"}, "retrieved/review/partial-acceptance result set drifted")
-    need(review_results["pet-preform-v2"].get("status") == "retrieved-profile-needs-semantic-review", "PET review-only state drifted")
+    pet = review_results["pet-preform-v2"]
+    need(pet.get("status") == "completed-profiled-zero-measured-simulation-optimization-model-workbook", "PET zero-measured terminal state drifted")
+    pet_profile = pet.get("profile") or {}
+    need(pet_profile.get("sourceDefinedMeasuredOutcomeColumns") == 0, "compiled PET result must not invent measured outcomes")
+    need(pet_profile.get("acceptedMeasuredProcessValues") == 0 and pet_profile.get("acceptedMeasuredQualityValues") == 0 and pet_profile.get("acceptedMeasuredTimeSeriesSamples") == 0, "compiled PET zero-measured boundary drifted")
+    need(sum(pet_profile.get(k, -100) for k in ["controlledProcessSettingColumns", "simulationResultColumns", "modelValidationColumns", "annHiddenLayerIntermediateColumns", "annPredictionColumns"]) == 26, "compiled PET semantic groups must account for all 26 columns")
     need(review_results["warwick-demoulding"].get("status") == "retrieved-profile-needs-special-format-export", "Warwick technical export state drifted")
     need(review_results["rwth-pcr-2025"].get("status") == "retrieval-blocked-non-archive-response", "RWTH retrieval blocker state drifted")
     need(review_results["cross-process-chain-17240390"].get("status") == "completed-public-measured-benchmark-scope-limited", "cross-process review state drifted")
@@ -114,11 +119,13 @@ with tempfile.TemporaryDirectory() as td:
 
     need(results["scatimdata-avaps"]["measurement_profile"]["acceptedMeasuredTimeSeriesSamples"] == 13_631_488, "compiled AVAPS sample count drifted")
     need(results["openmms-t4g"]["measurement_profile"]["acceptedMeasuredTimeSeriesSamples"] == 298_080, "compiled OpenMMS sample count drifted")
-    need(results["scatimdata-avaps"]["measurement_profile"]["acceptedMeasuredTimeSeriesSamples"] + results["openmms-t4g"]["measurement_profile"]["acceptedMeasuredTimeSeriesSamples"] + review_results["cross-process-lower-workpiece-source-contract"]["profile"]["acceptedMeasuredTimeSeriesSamples"] + review_results["cross-process-upper-workpiece-source-contract"]["profile"]["acceptedMeasuredTimeSeriesSamples"] == expected_samples, "compiled measured benchmark sample totals do not reconcile")
-
     by_id = {x["datasetId"]: x for x in inv["datasets"]}
     impure = by_id["impure-pascoe-2022"]["count"]
+    forinfpro_inv = by_id["forinfpro-himd-v1"]["count"]
+    need(results["scatimdata-avaps"]["measurement_profile"]["acceptedMeasuredTimeSeriesSamples"] + results["openmms-t4g"]["measurement_profile"]["acceptedMeasuredTimeSeriesSamples"] + review_results["cross-process-lower-workpiece-source-contract"]["profile"]["acceptedMeasuredTimeSeriesSamples"] + review_results["cross-process-upper-workpiece-source-contract"]["profile"]["acceptedMeasuredTimeSeriesSamples"] + impure.get("acceptedMeasuredTimeSeriesSamples", 0) + forinfpro_inv.get("acceptedMeasuredTimeSeriesSamples", 0) == expected_samples, "compiled measured benchmark sample totals do not reconcile")
     need(impure.get("publisherBytes") == 18_708_850 and impure.get("publisherFiles") == 309 and impure.get("cycleFiles") == 307 and impure.get("zenodoCumulativeDownloadTrafficMB") == 605.2 and "dataVolumeMB" not in impure, "compiled ImPure source dimensions drifted")
+    need(impure.get("acceptedMeasuredChannels") == 4 and impure.get("acceptedMeasuredTimeSeriesSamples") == 1_188_348, "compiled ImPure accepted partial-semantic count drifted")
+    need(forinfpro_inv.get("acceptedMachineRows") == 10_132 and forinfpro_inv.get("acceptedMeasuredChannels") == 16 and forinfpro_inv.get("acceptedMeasuredTimeSeriesSamples") == 162_112, "compiled FORinFPRO accepted partial-semantic count drifted")
     need(by_id["inqcim-2500-request"]["source"] == "https://doi.org/10.3390/polym14173551", "compiled INQCIM DOI correction drifted")
 
     research = json.loads((out / "research-evidence.json").read_text(encoding="utf-8"))

@@ -1,0 +1,112 @@
+{
+  "schema": 1,
+  "reviewed": "2026-08-30",
+  "datasetId": "impure-pascoe-2022",
+  "decision": "partial-measured-channel-acceptance",
+  "sourceEvidence": {
+    "dataset": "https://doi.org/10.5281/zenodo.6913660",
+    "pascoeInstrumentationPaper": "https://doi.org/10.3233/ATDE230912",
+    "pascoeMachineLearningPaper": "https://doi.org/10.1051/matecconf/202440108011",
+    "kistler6188A": "https://www.kistler.com/US/en/cp/cavity-pressure-and-temperature-sensors-6188a/P0000430"
+  },
+  "executedEvidence": {
+    "workflowRun": 33275743091,
+    "artifactId": 9721483497,
+    "artifactDigest": "sha256:ffe2b2dc35461e08d1021ed81c826e4b6711fcd98b1ed2d5809df5cd9292998c",
+    "cycleFilesVerified": 307,
+    "supportFilesVerified": 2,
+    "publisherFilesVerifiedInProbe": 309,
+    "cycleRows": 297087,
+    "profiledNumericSensorValues": 2376696,
+    "rawRowsOrCellValuesEmitted": false
+  },
+  "sourceDefinedInstrumentation": {
+    "machineSignals": [
+      "hydraulic pressure",
+      "screw position",
+      "nozzle temperature",
+      "heating/cooling-water temperature"
+    ],
+    "mouldSignals": [
+      "cavity 1 pressure and contact temperature",
+      "cavity 2 pressure and contact temperature"
+    ],
+    "cavitySensor": "Kistler 6188A combined cavity-pressure/contact-temperature sensor in each mould cavity",
+    "cavitySensorEngineeringRanges": {
+      "pressure": "0 to 2000 bar",
+      "temperature": "0 to 200 degC, Type K"
+    }
+  },
+  "acceptedColumns": [
+    {
+      "column": "TempMold1[IRT/Pascoe]",
+      "meaning": "mould cavity 1 contact temperature",
+      "engineeringUnit": "degC",
+      "measurementRole": "direct measured sensor channel"
+    },
+    {
+      "column": "TempMold2[IRT/Pascoe]",
+      "meaning": "mould cavity 2 contact temperature",
+      "engineeringUnit": "degC",
+      "measurementRole": "direct measured sensor channel"
+    },
+    {
+      "column": "Pressure1[IRT/Pascoe]",
+      "meaning": "mould cavity 1 pressure",
+      "engineeringUnit": "bar",
+      "measurementRole": "direct measured sensor channel"
+    },
+    {
+      "column": "Pressure2[IRT/Pascoe]",
+      "meaning": "mould cavity 2 pressure",
+      "engineeringUnit": "bar",
+      "measurementRole": "direct measured sensor channel"
+    }
+  ],
+  "excludedColumns": [
+    {
+      "column": "HydPressure[IRT/Pascoe]",
+      "reason": "Physical meaning is source-backed as hydraulic pressure, but the exact engineering-unit/export scaling used for this delivered channel is not yet pinned."
+    },
+    {
+      "column": "ScrewPosition[IRT/Pascoe]",
+      "reason": "Physical meaning is source-backed as screw position, but the exact position unit and reference/origin used by the delivered export are not yet pinned."
+    },
+    {
+      "column": "Analog Input[1]",
+      "reason": "Its aggregate level is temperature-like, but the delivered generic field name is not linked unambiguously to one source-defined sensor/configuration."
+    },
+    {
+      "column": "Analog Input[2]",
+      "reason": "Trial-stage metadata explicitly records switching auxiliary measurement purpose between water-temperature monitoring, core-water flow and nozzle-temperature measurement; aggregate cycle bands show corresponding incompatible regimes, so one global meaning/unit would be false."
+    },
+    {
+      "column": "Time",
+      "reason": "Time establishes ordering and second-based clock deltas but is a time basis rather than a measured process channel and is not counted as a measured sensor value."
+    }
+  ],
+  "timeBasis": {
+    "deliveredFormat": "HH:MM:SS.fraction",
+    "sourceRole": "synchronised real-time trace ordering",
+    "engineeringInterpretation": "clock-time differences are seconds",
+    "fixedSamplingIntervalAssumed": false
+  },
+  "stageMetadataEvidence": {
+    "supportFile": "Trial 17 05 all stages.csv",
+    "aggregateOnlyNotesObserved": [
+      "start with core water temperature",
+      "start measuring mould water temperature",
+      "switch the sensor to measure the flow of core water 15 cycle",
+      "Start measuring the nozzle temperature at channel 4 of junction box"
+    ],
+    "rawSupportRowsEmitted": false
+  },
+  "counting": {
+    "acceptedMeasuredChannels": 4,
+    "rowsPerAcceptedChannel": 297087,
+    "acceptedMeasuredTimeSeriesSamples": 1188348,
+    "formula": "4 * 297087",
+    "excludedProfiledNumericSensorValues": 1188348
+  },
+  "boundary": "Only the four cavity-sensor channels are promoted. No unit is inferred for hydraulic pressure or screw position, and the generic analogue channels remain fail-closed where stage-dependent acquisition prevents a single defensible channel definition."
+}

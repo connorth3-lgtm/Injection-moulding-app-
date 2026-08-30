@@ -37,8 +37,8 @@ need(upper_fields["state"]["promotionEligible"] is False, "Upper state codes mus
 need(upper["timing"]["checkedAuthorExampleTimeIncrement"] == 0.01, "Upper checked source time increment drifted")
 need(upper["timing"]["samplingRateAcceptedAsSingleArchiveConstant"] is False, "Do not collapse conflicting sampling evidence into one archive-wide rate")
 need(upper["evidenceBoundary"]["additionalAcceptedMeasuredTimeSeriesSamples"] == 43_814_748, "Upper specialist-parser accepted value count drifted")
-need(upper["evidenceBoundary"]["projectAcceptedMeasuredBaselineRemains"] == 65_171_059, "Project measured baseline must remain 65,171,059")
-need(upper["evidenceBoundary"]["fullyProfiledFamiliesRemain"] == 7, "Fully profiled family count must remain seven")
+need(upper["evidenceBoundary"]["projectAcceptedMeasuredBaselineRemains"] == 65_171_059, "Cross-process acceptance-time project baseline drifted")
+need(upper["evidenceBoundary"]["fullyProfiledFamiliesRemain"] == 7, "Cross-process acceptance-time fully profiled family count drifted")
 need(len(upper["remainingAuthoritativeEvidenceRequired"]) == 2, "Upper blocker must remain narrowed to pressure unit and state semantics")
 upper_result = load("data/public-benchmark-results/cross-process-upper-workpiece-source-contract-v1.json")
 upper_profile = upper_result.get("profile") or {}
@@ -57,12 +57,32 @@ need([x["column"] for x in impure["cycleSchema"]] == [
     "Time", "HydPressure[IRT/Pascoe]", "ScrewPosition[IRT/Pascoe]", "Analog Input[1]", "Analog Input[2]",
     "TempMold1[IRT/Pascoe]", "TempMold2[IRT/Pascoe]", "Pressure1[IRT/Pascoe]", "Pressure2[IRT/Pascoe]"
 ], "ImPure delivered cycle schema drifted")
-need(impure["profiledStructure"]["profiledNumericValues"] == 2376696, "ImPure profiled value count drifted")
-need(impure["profiledStructure"]["acceptedMeasuredTimeSeriesSamples"] == 0, "ImPure values must remain non-counting while semantics/units are unresolved")
-for field in impure["cycleSchema"]:
-    need(field["engineeringUnit"] is None, f"Do not invent an ImPure unit for {field['column']}")
-need(next(x for x in impure["cycleSchema"] if x["column"] == "Analog Input[1]")["meaning"] is None, "Analog Input[1] must remain unresolved")
-need(next(x for x in impure["cycleSchema"] if x["column"] == "Analog Input[2]")["meaning"] is None, "Analog Input[2] must remain unresolved")
+impure_fields = {x["column"]: x for x in impure["cycleSchema"]}
+profile = impure["profiledStructure"]
+need(profile["profiledNumericValues"] == 2_376_696, "ImPure profiled value count drifted")
+need(profile["acceptedMeasuredChannels"] == 4, "ImPure partial-acceptance channel count drifted")
+need(profile["acceptedMeasuredTimeSeriesSamples"] == 1_188_348, "ImPure partial-acceptance measured value count drifted")
+need(profile["acceptedCountFormula"] == "4 * 297087", "ImPure partial-acceptance formula drifted")
+for column, unit in {
+    "TempMold1[IRT/Pascoe]": "degC",
+    "TempMold2[IRT/Pascoe]": "degC",
+    "Pressure1[IRT/Pascoe]": "bar",
+    "Pressure2[IRT/Pascoe]": "bar",
+}.items():
+    field = impure_fields[column]
+    need(field["status"] == "accepted-measured", f"{column}: accepted status drifted")
+    need(field["engineeringUnit"] == unit, f"{column}: accepted unit drifted")
+    need(field["commandActualSemantics"] == "measured", f"{column}: direct-measurement role drifted")
+for column in ["HydPressure[IRT/Pascoe]", "ScrewPosition[IRT/Pascoe]", "Analog Input[1]", "Analog Input[2]"]:
+    need(impure_fields[column]["engineeringUnit"] is None, f"Do not invent an unresolved ImPure unit for {column}")
+need(impure_fields["HydPressure[IRT/Pascoe]"]["status"] == "source-meaning-resolved-export-unit-required", "ImPure hydraulic-pressure export-unit gate drifted")
+need(impure_fields["ScrewPosition[IRT/Pascoe]"]["status"] == "source-meaning-resolved-unit-reference-required", "ImPure screw-position unit/reference gate drifted")
+need(impure_fields["Analog Input[1]"]["meaning"] is None, "Analog Input[1] exact signal must remain unresolved")
+need(impure_fields["Analog Input[1]"]["status"] == "exact-signal-definition-required", "Analog Input[1] signal-definition gate drifted")
+need(impure_fields["Analog Input[2]"]["status"] == "configuration-dependent-not-globally-counted", "Analog Input[2] stage-dependent gate drifted")
+need("stage-dependent" in str(impure_fields["Analog Input[2]"]["meaning"]), "Analog Input[2] must remain explicitly configuration-dependent")
+need(impure_fields["Time"]["status"] == "accepted-ordering-not-counted", "ImPure time basis must remain ordering-only")
+need("seconds" in str(impure_fields["Time"]["engineeringUnit"]), "ImPure time-delta interpretation drifted")
 
 warwick = load("data/warwick-demoulding-source-contract-v1.json")
 need(warwick["datasetId"] == "warwick-demoulding", "Warwick dataset id drifted")

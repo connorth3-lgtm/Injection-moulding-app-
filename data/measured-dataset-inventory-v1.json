@@ -1,7 +1,7 @@
 {
   "schema": 1,
-  "version": "2026.08.29.4",
-  "reviewed": "2026-08-29",
+  "version": "2026.08.30.2",
+  "reviewed": "2026-08-30",
   "purpose": "Inventory real measured injection-moulding datasets and data-bearing studies without conflating public metadata, downloadable files, reuse rights, record units, or independent experimental evidence.",
   "rules": {
     "rawRowsCommittedToRepository": false,
@@ -231,7 +231,7 @@
       "licenseEvidence": "official Zenodo records API metadata.license.id = cc-by-4.0",
       "automatedIngestionAllowed": true,
       "rawRedistributionAllowedWithAttribution": true,
-      "recordUnit": "per-cycle CSV",
+      "recordUnit": "per-cycle measured sensor trace",
       "count": {
         "publisherFiles": 309,
         "cycleFiles": 307,
@@ -239,22 +239,26 @@
         "cycleSchemaFamilies": 1,
         "publisherBytes": 18708850,
         "profiledNumericValues": 2376696,
-        "acceptedMeasuredTimeSeriesSamples": 0,
+        "acceptedMeasuredChannels": 4,
+        "acceptedMeasuredTimeSeriesSamples": 1188348,
         "zenodoCumulativeDownloadTrafficMB": 605.2
       },
       "signals": [
-        "hydraulic pressure",
-        "screw position",
-        "two analogue inputs",
-        "two mould temperatures",
-        "two pressure channels"
+        "accepted: cavity 1 contact temperature (degC)",
+        "accepted: cavity 2 contact temperature (degC)",
+        "accepted: cavity 1 pressure (bar)",
+        "accepted: cavity 2 pressure (bar)",
+        "excluded pending export unit: hydraulic pressure",
+        "excluded pending unit/reference: screw position",
+        "excluded pending exact sensor binding: Analog Input[1]",
+        "excluded as stage-dependent sensor configuration: Analog Input[2]"
       ],
       "quality": [],
-      "sampling": "307 cycle CSVs plus two trial/stage files; one consistent nine-column cycle schema",
+      "sampling": "307 ordered cycle CSVs; Time is HH:MM:SS.fraction source clock ordering with second-based deltas and no fixed-rate assumption",
       "overlapGroup": "impure-pascoe-2022",
-      "peerReviewedCompanion": null,
+      "peerReviewedCompanion": "10.1051/matecconf/202440108011",
       "priority": 8,
-      "statusNote": "Completed hosted CC BY 4.0 profile: all 309 publisher files checksum-verified, 307 cycle files, 297,087 cycle rows, one cycle schema and no width mismatches. The 2,376,696 numeric values remain outside accepted time-series totals until source units and analogue-channel semantics are established."
+      "statusNote": "All 309 CC BY 4.0 publisher files are checksum-verified. PASCOE instrumentation evidence identifies paired Kistler 6188A cavity pressure/contact-temperature sensors; the delivered TempMold1/2 and Pressure1/2 channels therefore contribute 1,188,348 accepted measured values (4 x 297,087 rows). Hydraulic pressure and screw position remain excluded pending exact export units/reference, Analog Input[1] remains generically bound, and trial-stage metadata proves Analog Input[2] changes measurement purpose between water-temperature, water-flow and nozzle-temperature acquisition."
     },
     {
       "datasetId": "iguzzini-road-lenses",
@@ -325,25 +329,26 @@
         "cyclesInCurrentVisibleRelease": 1,
         "deliveredFiles": 3,
         "totalRowsAcrossFiles": 12689,
-        "namedMachineChannels": 60
+        "namedMachineChannels": 60,
+        "acceptedMachineRows": 10132,
+        "acceptedMeasuredChannels": 16,
+        "acceptedMeasuredTimeSeriesSamples": 162112,
+        "acceptedCountFormula": "16 * 10132"
       },
       "signals": [
-        "machine injection pressure",
-        "screw position",
-        "injection speed",
-        "clamping force",
-        "temperatures",
-        "cavity pressure/temperature",
-        "ultrasound"
+        "16 ENGEL Heating.sv_Zone*.rActualTemp actual heating-zone temperature channels (degC; accepted)",
+        "other machine injection pressure/screw position/injection speed/clamping-force/temperature fields (unit-limited; excluded unless separately source-resolved)",
+        "cavity pressure/temperature file (roles known, engineering units unresolved; excluded)",
+        "ultrasonic RMS channels (derived/unit-limited; excluded)"
       ],
       "quality": [
         "multimodal process-state evidence"
       ],
-      "sampling": "one synchronized delivered cycle; unit-limited values excluded from accepted time-series total",
+      "sampling": "one synchronized delivered cycle; accepted ENGEL machine temperature traces contain 10,132 ordered rows under Datum/Zeit, with all timestamps parsed and strictly increasing; observed positive deltas span 0.009834–0.014125 s (median 0.011953 s), so no fixed sampling interval is assumed",
       "overlapGroup": "forinfpro-himd-v1",
       "peerReviewedCompanion": null,
       "priority": 11,
-      "statusNote": "Official Zenodo API confirms CC BY 4.0. Three files were retrieved and fingerprinted; the one-cycle schema is accepted, but channel values remain outside the time-series total where units are not explicit."
+      "statusNote": "Exact CC BY 4.0 v1 release is fingerprinted. Manufacturer-backed ENGEL data-interface semantics plus an aggregate source probe accept 16 exact Heating.sv_Zone*.rActualTemp channels as actual heating-zone temperatures in degC across 10,132 strictly time-ordered machine rows, contributing 162,112 measured time-series values. HeatingOven1, other machine fields, cavity pressure/temperature and ultrasonic RMS remain excluded where source-specific units/roles are incomplete. This source was already one profiled dataset family, so the family count does not change."
     },
     {
       "datasetId": "cross-process-chain-17240390",

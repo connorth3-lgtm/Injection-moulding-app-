@@ -2,11 +2,13 @@ name: MouldMaster Public Measured Benchmark — PET preform v2
 
 on:
   push:
-    branches: [main, data/real-dataset-profiling-wave1]
+    branches: [main, data/real-dataset-profiling-wave1, data/pet-preform-semantic-terminal]
     paths:
       - 'tools/run_public_benchmark_pet_preform.py'
       - 'qa_public_benchmark_pet_preform.py'
       - 'data/public-benchmark-contracts/pet-preform-v2.json'
+      - 'data/public-benchmark-results/pet-preform-v2.json'
+      - 'data/pet-preform-semantic-review-2026-08-30.json'
       - '.github/workflows/public-benchmark-pet-preform.yml'
   pull_request:
     branches: [main]
@@ -14,6 +16,8 @@ on:
       - 'tools/run_public_benchmark_pet_preform.py'
       - 'qa_public_benchmark_pet_preform.py'
       - 'data/public-benchmark-contracts/pet-preform-v2.json'
+      - 'data/public-benchmark-results/pet-preform-v2.json'
+      - 'data/pet-preform-semantic-review-2026-08-30.json'
       - '.github/workflows/public-benchmark-pet-preform.yml'
   workflow_dispatch:
 
@@ -52,15 +56,20 @@ jobs:
           python tools/run_public_benchmark_pet_preform.py \
             --output benchmark-results/pet-preform-v2-profile.json \
             --retrieved-date "$(date -u +%F)"
-      - name: Validate aggregate-only result
+      - name: Validate aggregate-only structural result
         run: |
           python - <<'PY'
           import json
           x=json.load(open('benchmark-results/pet-preform-v2-profile.json'))
           assert x['source']['datasetDoi']=='10.17632/vc3k9tt5zj.2'
           assert x['source']['version']==2
-          assert x['profile']['publicFilesRetrieved'] >= 1
+          assert x['profile']['publicFilesRetrieved'] == 1
+          assert x['profile']['readableTables'] == 1
+          assert x['profile']['totalTabularRowsAcrossTables'] == 27
           assert all(len(f['sha256'])==64 for f in x['files'])
+          assert x['files'][0]['sha256']=='20f6704a93df7638d682b692ae4cb7432ca7d94bbc950ef2bdd0cfc17db124dc'
+          assert x['tables'][0]['rows']==27 and x['tables'][0]['columns']==26
+          assert x['tables'][0]['semantics']['headerNames']==json.load(open('data/pet-preform-semantic-review-2026-08-30.json'))['deliveredTable']['headerNames']
           assert x['profile']['rawRowsOrCellValuesEmitted'] is False
           assert x['retrieval']['rawPublisherFilesCommitted'] is False
           assert x['retrieval']['rawRowsUploadedAsArtifact'] is False
