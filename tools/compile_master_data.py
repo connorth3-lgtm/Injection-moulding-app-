@@ -106,6 +106,7 @@ def compile_measured():
         ("mendeley-6k8fpbrd9s-v1", "data/public-benchmark-contracts/6k8fpbrd9s-v1.json", "data/public-benchmark-results/6k8fpbrd9s-v1.json", "completed-public-measured-material-characterization-benchmark"),
         ("mendeley-4h98rz9f92-v3", "data/public-benchmark-contracts/4h98rz9f92-v3.json", "data/public-benchmark-results/4h98rz9f92-v3.json", "completed-public-measured-record-level-benchmark"),
         ("pmc4753395-hdpe-cenosphere-v1", "data/public-benchmark-contracts/pmc4753395-hdpe-cenosphere-v1.json", "data/public-benchmark-results/pmc4753395-hdpe-cenosphere-v1.json", "accepted-profiled-material-test-traces"),
+        ("mendeley-yxz2w7ctnh-v1", "data/public-benchmark-contracts/yxz2w7ctnh-v1.json", "data/public-benchmark-results/yxz2w7ctnh-v1.json", "completed-profiled-record-level-injection-mechanical-testing"),
     ]
     specialized_contracts = {}
     specialized_results = {}
@@ -135,7 +136,7 @@ def compile_measured():
         restricted_noncommercial_results[benchmark_id] = result
 
     accepted_profiled = targets["targets"]["fully_profiled_measured_datasets"]["currentAccepted"]
-    need(len(benchmark_results) + len(restricted_results) + len(specialized_results) + len(restricted_noncommercial_results) == accepted_profiled == 11, "completed measured benchmark result count must match accepted profiled dataset count")
+    need(len(benchmark_results) + len(restricted_results) + len(specialized_results) + len(restricted_noncommercial_results) == accepted_profiled == 12, "completed measured benchmark result count must match accepted profiled dataset count")
     need(execution.get("summary", {}).get("acceptedProfiled") == accepted_profiled, "execution ledger accepted-profiled count drifted")
     need(execution.get("summary", {}).get("acceptedRestrictedResearchEducation") == len(restricted_results) + len(restricted_noncommercial_results) == 2, "restricted accepted measured-profile count drifted")
 

@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "version": "2026.08.30.3",
+  "version": "2026.08.30.4",
   "reviewed": "2026-08-30",
   "purpose": "Inventory real measured injection-moulding datasets and data-bearing studies without conflating public metadata, downloadable files, reuse rights, record units, or independent experimental evidence.",
   "rules": {
@@ -12,8 +12,8 @@
     "embargoedRequestOnlyConfidentialAndRightsUnresolvedAreNotExecutable": true
   },
   "summary": {
-    "datasets": 24,
-    "automatedIngestionAllowed": 13,
+    "datasets": 25,
+    "automatedIngestionAllowed": 14,
     "rightsOrAccessReviewRequired": 3,
     "embargoed": 2,
     "requestOnly": 1,
@@ -733,6 +733,38 @@
       "peerReviewedCompanion": "10.1016/j.dib.2016.01.058",
       "priority": 24,
       "statusNote": "CC BY 4.0 supplementary package and nested measured workbook are fingerprinted. 142,884 physical tensile-test stress/strain values (71,442 point pairs) are accepted as material-test evidence; pre-header, plot and theoretical values are excluded, and zero injection-process waveform samples are added."
+    },
+    {
+      "datasetId": "mendeley-yxz2w7ctnh-v1",
+      "title": "ABS/PLA injection-moulded mechanical testing comparison dataset",
+      "source": "https://doi.org/10.17632/yxz2w7ctnh.1",
+      "accessState": "public-open",
+      "license": "CC BY 4.0",
+      "automatedIngestionAllowed": true,
+      "rawRedistributionAllowedWithAttribution": true,
+      "recordUnit": "record-level direct mechanical-test value from explicitly injection-moulded specimen block",
+      "count": {
+        "tensileDirectRecordLevelValues": 347,
+        "bendingDirectRecordLevelValues": 142,
+        "directRecordLevelInjectionMeasuredValues": 489,
+        "acceptedMeasuredTimeSeriesSamples": 0
+      },
+      "signals": [
+        "tensile workbook injection-moulded numeric blocks",
+        "bending thickness",
+        "bending width",
+        "maximum force Fmax",
+        "bending displacement dL"
+      ],
+      "quality": [
+        "tensile mechanical response",
+        "three-point-bending specimen dimensions and response"
+      ],
+      "sampling": "record-level mechanical testing; repeated worksheet copies deduplicated; not injection-machine/cavity time series",
+      "overlapGroup": "mendeley-yxz2w7ctnh-v1",
+      "peerReviewedCompanion": null,
+      "priority": 25,
+      "statusNote": "Exact CC BY 4.0 four-workbook release is fingerprinted and fully profiled. Only numeric constants in regions explicitly marked as injection moulded are accepted: 347 tensile plus 142 bending values = 489 direct record-level measured values. FDM/energy blocks, duplicate worksheet copies, formulas and ambiguous impact sheets are excluded; zero injection-process waveform samples are added."
     }
   ]
 }

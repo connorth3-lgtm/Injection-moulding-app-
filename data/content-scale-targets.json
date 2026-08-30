@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "version": "2026.08.30.2",
+  "version": "2026.08.30.3",
   "reviewed": "2026-08-30",
   "scope": "Hard content-scale targets for MouldMaster. Completion counts only evidence that satisfies the acceptance definition for that area. Synthetic learning cases, generated drafts, unverified candidate papers and metadata-only dataset records must not be counted as completed measured evidence.",
   "targets": {
@@ -9,9 +9,9 @@
       "preferred": 50,
       "unit": "datasets",
       "acceptance": "A real measured dataset whose exact source/version/licence or access terms are recorded; source files have been obtained lawfully; file fingerprint and profile are recorded; schema/units/grouping are inspected; direct measurements, commands, derived fields and labels are distinguished; material/process/machine/mould/quality context and limitations are documented. Metadata-only records do not count.",
-      "currentAccepted": 11,
-      "currentDiscovered": 24,
-      "notes": "Eleven exact-source measured dataset families satisfy the profiling definition. The four Wave-2 additions are a 96-value CC BY-NC outcome workbook, a 28,590-cell polypropylene pvT characterization workbook, a 525-value HDPE/GNP record-level mechanical dataset, and 142,884 HDPE/cenosphere material-test trace values. These additions are measured evidence but are not injection-machine/cavity process waveforms, so the accepted process time-series total remains 66,521,519. Existing cross-process, ImPure, FORinFPRO and external blocker boundaries remain unchanged."
+      "currentAccepted": 12,
+      "currentDiscovered": 25,
+      "notes": "Twelve exact-source measured dataset families satisfy the profiling definition. In addition to the four prior Wave-2 families, Mendeley yxz2w7ctnh contributes 489 direct record-level injection-moulded ABS/PLA tensile and bending test values. FDM/energy content, duplicate worksheet copies, formula-derived cells and impact data without explicit manufacturing-route identity are excluded. All five Wave-2 promotions are non-process-waveform evidence, so accepted injection-process time-series values remain 66,521,519."
     },
     "measured_time_series_samples": {
       "minimum": 1000000,

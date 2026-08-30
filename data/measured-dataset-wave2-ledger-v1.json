@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "version": "2026.08.30.1",
+  "version": "2026.08.30.2",
   "reviewed": "2026-08-30",
   "baseWave": {
     "fullyProfiledMeasuredDatasetFamilies": 7,
@@ -95,16 +95,29 @@
       "acceptedMeasuredTimeSeriesSamples": 0,
       "resultPath": "data/public-benchmark-results/nylon12-gamma-8c8fjwcw86-v1.json",
       "terminalReviewComplete": true
+    },
+    {
+      "priority": 7,
+      "datasetId": "mendeley-yxz2w7ctnh-v1",
+      "doi": "10.17632/yxz2w7ctnh.1",
+      "license": "CC BY 4.0",
+      "state": "accepted-profiled-record-level-injection-mechanical-testing",
+      "countsAsFullyProfiledMeasuredDataset": true,
+      "tensileDirectRecordLevelValues": 347,
+      "bendingDirectRecordLevelValues": 142,
+      "directRecordLevelInjectionMeasuredValues": 489,
+      "acceptedMeasuredTimeSeriesSamples": 0,
+      "resultPath": "data/public-benchmark-results/yxz2w7ctnh-v1.json"
     }
   ],
   "summary": {
-    "wave2SourcesReviewed": 6,
-    "wave2FullyProfiledAccepted": 4,
+    "wave2SourcesReviewed": 7,
+    "wave2FullyProfiledAccepted": 5,
     "wave2PublisherPayloadBlocked": 1,
     "wave2TerminalSemanticRejected": 1,
-    "effectiveFullyProfiledMeasuredDatasetFamilies": 11,
+    "effectiveFullyProfiledMeasuredDatasetFamilies": 12,
     "effectiveAcceptedMeasuredTimeSeriesSamples": 66521519,
-    "wave2RecordLevelMeasuredOutcomeValues": 621,
+    "wave2RecordLevelMeasuredOutcomeValues": 1110,
     "wave2RecordLevelDerivedSummaryValuesExcluded": 105,
     "wave2MaterialCharacterizationDirectPhysicalValues": 28590,
     "wave2MaterialCharacterizationTraceMeasurementCells": 6026,
