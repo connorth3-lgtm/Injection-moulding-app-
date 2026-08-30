@@ -131,6 +131,14 @@ need(impure_count.get('publisherBytes') == 18_708_850, 'ImPure exact publisher f
 need(impure_count.get('publisherFiles') == 309 and impure_count.get('cycleFiles') == 307, 'ImPure delivered file counts drifted')
 need(impure_count.get('zenodoCumulativeDownloadTrafficMB') == 605.2, 'ImPure cumulative Zenodo traffic metric drifted')
 need('dataVolumeMB' not in impure_count, 'do not conflate ImPure download traffic with dataset size')
+need(impure_count.get('acceptedMeasuredChannels') == 4, 'ImPure accepted channel count drifted')
+need(impure_count.get('acceptedMeasuredTimeSeriesSamples') == 1_188_348, 'ImPure accepted measured-value count drifted')
+
+forinfpro_count = by_id['forinfpro-himd-v1']['count']
+need(forinfpro_count.get('acceptedMachineRows') == 10_132, 'FORinFPRO accepted machine-row count drifted')
+need(forinfpro_count.get('acceptedMeasuredChannels') == 16, 'FORinFPRO accepted channel count drifted')
+need(forinfpro_count.get('acceptedMeasuredTimeSeriesSamples') == 162_112, 'FORinFPRO accepted measured-value count drifted')
+need(forinfpro_count.get('acceptedCountFormula') == '16 * 10132', 'FORinFPRO accepted formula drifted')
 
 inq = by_id['inqcim-2500-request']
 need(inq.get('source') == 'https://doi.org/10.3390/polym14173551', 'INQCIM corrected article DOI drifted')
@@ -139,14 +147,19 @@ need('upon request' in inq.get('statusNote', '').lower(), 'INQCIM request-only e
 
 need(by_id['leon-process-20309380']['overlapGroup'] == by_id['leon-defects-20322729']['overlapGroup'], 'León process and defects records must share one manufacturing-campaign overlap group')
 
-# Rights promotion is explicit and source-backed: RWTH plus three Zenodo records
-# have authoritative CC BY 4.0 metadata; SKZ remains fail-closed.
+# Rights promotion is explicit and source-backed. RWTH plus three Zenodo records
+# are executable under explicit CC BY 4.0. ProBayes main, ProBayes d-optimal,
+# and SKZ LoKI remain fail-closed because version-specific/current rights are incomplete.
 rights_rows = rights.get('sources') or []
-need((rights.get('summary') or {}).get('sourcesReviewed') == len(rights_rows) == 5, 'waveform rights-review source count drifted')
+need((rights.get('summary') or {}).get('sourcesReviewed') == len(rights_rows) == 7, 'waveform rights-review source count drifted')
 need((rights.get('summary') or {}).get('unblockedForAutomatedIngestion') == 4, 'waveform rights-review promotion count drifted')
-need((rights.get('summary') or {}).get('remainBlockedForRights') == 1, 'waveform rights-review blocked count drifted')
+need((rights.get('summary') or {}).get('remainBlockedForRights') == 3, 'waveform rights-review blocked count drifted')
 rights_by_id = {x.get('datasetId'): x for x in rights_rows}
-need(set(rights_by_id) == {'rwth-pcr-2025', 'skz-loki-v1', 'impure-pascoe-2022', 'forinfpro-himd-v1', 'cross-process-chain-17240390'}, 'waveform rights-review source set drifted')
+need(set(rights_by_id) == {
+    'rwth-pcr-2025', 'probayes-main-v2', 'probayes-doptimal-v1', 'skz-loki-v1',
+    'impure-pascoe-2022', 'forinfpro-himd-v1', 'cross-process-chain-17240390'
+}, 'waveform rights-review source set drifted')
+
 need(rights_by_id['rwth-pcr-2025'].get('decision') == 'executable-license-confirmed', 'RWTH rights decision drifted')
 need(rights_by_id['rwth-pcr-2025'].get('license') == 'CC BY 4.0', 'RWTH rights licence drifted')
 need(by_id['rwth-pcr-2025'].get('accessState') == 'public-open', 'RWTH access state must reflect confirmed open licence')
@@ -155,6 +168,7 @@ need(by_id['rwth-pcr-2025'].get('automatedIngestionAllowed') is True, 'RWTH must
 need(by_id['rwth-pcr-2025'].get('rawRedistributionAllowedWithAttribution') is True, 'RWTH attribution reuse boundary drifted')
 need('publications.rwth-aachen.de' in str(by_id['rwth-pcr-2025'].get('licenseEvidence', '')), 'RWTH authoritative licence evidence missing')
 need('248-byte HTML' in by_id['rwth-pcr-2025'].get('statusNote', ''), 'RWTH actual source-retrieval blocker missing from inventory')
+
 for open_id in ['impure-pascoe-2022', 'forinfpro-himd-v1', 'cross-process-chain-17240390']:
     need(rights_by_id[open_id].get('decision') == 'executable-license-confirmed', f'{open_id}: rights decision drifted')
     need(rights_by_id[open_id].get('license') == 'CC BY 4.0', f'{open_id}: confirmed licence drifted')
@@ -163,12 +177,18 @@ for open_id in ['impure-pascoe-2022', 'forinfpro-himd-v1', 'cross-process-chain-
     need(by_id[open_id].get('automatedIngestionAllowed') is True, f'{open_id}: inventory execution gate drifted')
     need('official Zenodo records API' in str(by_id[open_id].get('licenseEvidence', '')), f'{open_id}: authoritative licence evidence missing')
 
-blocked_id = 'skz-loki-v1'
-need(rights_by_id[blocked_id].get('decision') == 'blocked-no-explicit-license', f'{blocked_id}: rights decision drifted')
-need(rights_by_id[blocked_id].get('automatedIngestionAllowed') is False, f'{blocked_id}: rights review must remain fail-closed')
-need(by_id[blocked_id].get('accessState') == 'public-download-license-review', f'{blocked_id}: inventory must remain in licence review')
-need(by_id[blocked_id].get('license') is None, f'{blocked_id}: do not invent a dataset licence')
-need(by_id[blocked_id].get('automatedIngestionAllowed') is False, f'{blocked_id}: must remain non-executable without explicit data licence')
+blocked_decisions = {
+    'probayes-main-v2': 'blocked-no-v2-specific-license',
+    'probayes-doptimal-v1': 'blocked-conflicting-official-license-metadata',
+    'skz-loki-v1': 'blocked-no-explicit-license',
+}
+for blocked_id, decision in blocked_decisions.items():
+    need(rights_by_id[blocked_id].get('decision') == decision, f'{blocked_id}: rights decision drifted')
+    need(rights_by_id[blocked_id].get('license') is None, f'{blocked_id}: do not invent a dataset licence')
+    need(rights_by_id[blocked_id].get('automatedIngestionAllowed') is False, f'{blocked_id}: rights review must remain fail-closed')
+    need(by_id[blocked_id].get('accessState') == 'public-download-license-review', f'{blocked_id}: inventory must remain in licence review')
+    need(by_id[blocked_id].get('license') is None, f'{blocked_id}: inventory must not invent a licence')
+    need(by_id[blocked_id].get('automatedIngestionAllowed') is False, f'{blocked_id}: inventory must remain non-executable')
 
 need(by_id['leon-process-20309380']['accessState'] == 'embargoed', 'León process dataset must remain embargoed')
 need(by_id['leon-defects-20322729']['accessState'] == 'embargoed', 'León defect dataset must remain embargoed')
@@ -196,7 +216,7 @@ need(state_counts['public-mirror-rights-unresolved'] == summary.get('publicMirro
 need(state_counts['public-research-education-release'] == summary.get('publicResearchEducationTerms') == 1, 'research/education terms count drifted')
 
 report = {
-    'schema': 3,
+    'schema': 4,
     'source': str(INVENTORY.relative_to(ROOT)),
     'rightsReviewSource': str(RIGHTS_REVIEW.relative_to(ROOT)),
     'datasetCount': len(rows),
@@ -207,10 +227,16 @@ report = {
     'rightsReviewSources': rights_review,
     'waveformRightsSourcesReviewed': len(rights_rows),
     'waveformRightsSourcesUnblocked': 4,
-    'metadataCorrections': ['zenodo-api-license-verification', 'impure-file-size-vs-download-traffic', 'inqcim-doi', 'sustainability-delivered-columns', 'leon-overlap-group'],
+    'waveformRightsSourcesBlocked': 3,
+    'impureAcceptedMeasuredValues': 1_188_348,
+    'forinfproAcceptedMeasuredValues': 162_112,
+    'metadataCorrections': [
+        'zenodo-api-license-verification', 'impure-file-size-vs-download-traffic',
+        'inqcim-doi', 'sustainability-delivered-columns', 'leon-overlap-group',
+        'expanded-version-specific-rights-review'
+    ],
     'rawRowsCommittedToRepository': False,
     'result': 'pass',
 }
 REPORT.write_text(json.dumps(report, indent=2) + '\n', encoding='utf-8')
-print('MouldMaster measured dataset inventory QA passed (20 sources; 10 legally executable; 1 restricted educational profile; 3 direct licence-review sources; Zenodo licence and source metadata corrections enforced)')
-
+print('MouldMaster measured dataset inventory QA passed (20 sources; 10 legally executable; 1 restricted educational profile; 3 direct licence-review sources; 7-source rights review; ImPure/FORinFPRO partial acceptance pinned)')
