@@ -65,13 +65,18 @@ need(targets["fully_profiled_measured_datasets"].get("currentDiscovered") == len
 by_id = {x.get("datasetId"): x for x in datasets}
 
 rights = json.loads(RIGHTS_REVIEW.read_text(encoding="utf-8"))
-need((rights.get("summary") or {}).get("sourcesReviewed") == 5, "waveform rights-review source count drifted")
+need((rights.get("summary") or {}).get("sourcesReviewed") == len(rights.get("sources") or []) == 7, "waveform rights-review source count drifted")
 need((rights.get("summary") or {}).get("unblockedForAutomatedIngestion") == 4, "waveform rights-review unblocked count drifted")
 rights_by_id = {x.get("datasetId"): x for x in rights.get("sources") or []}
 need(rights_by_id["rwth-pcr-2025"].get("decision") == "executable-license-confirmed" and rights_by_id["rwth-pcr-2025"].get("license") == "CC BY 4.0", "RWTH rights decision drifted")
 need(by_id["rwth-pcr-2025"].get("license") == "CC BY 4.0" and by_id["rwth-pcr-2025"].get("automatedIngestionAllowed") is True, "RWTH inventory execution rights drifted")
-for blocked_id in ["skz-loki-v1"]:
-    need(rights_by_id[blocked_id].get("decision") == "blocked-no-explicit-license", f"{blocked_id} rights decision drifted")
+blocked_rights = {
+    "probayes-main-v2": "blocked-no-v2-specific-license",
+    "probayes-doptimal-v1": "blocked-conflicting-official-license-metadata",
+    "skz-loki-v1": "blocked-no-explicit-license",
+}
+for blocked_id, expected_decision in blocked_rights.items():
+    need(rights_by_id[blocked_id].get("decision") == expected_decision, f"{blocked_id} rights decision drifted")
     need(by_id[blocked_id].get("license") is None and by_id[blocked_id].get("automatedIngestionAllowed") is False, f"{blocked_id} must remain non-executable without explicit data licence")
 
 impure_count = by_id["impure-pascoe-2022"].get("count") or {}
@@ -79,6 +84,9 @@ need(impure_count.get("publisherBytes") == 18_708_850, "ImPure exact publisher f
 need(impure_count.get("publisherFiles") == 309 and impure_count.get("cycleFiles") == 307, "ImPure delivered file counts drifted")
 need(impure_count.get("zenodoCumulativeDownloadTrafficMB") == 605.2, "ImPure Zenodo traffic metric drifted")
 need("dataVolumeMB" not in impure_count, "ImPure must not mislabel cumulative download traffic as source-data size")
+need(impure_count.get("acceptedMeasuredTimeSeriesSamples") == 1_188_348, "ImPure accepted measured-value count drifted")
+forinfpro_count = by_id["forinfpro-himd-v1"].get("count") or {}
+need(forinfpro_count.get("acceptedMeasuredTimeSeriesSamples") == 162_112, "FORinFPRO accepted measured-value count drifted")
 need(by_id["inqcim-2500-request"].get("source") == "https://doi.org/10.3390/polym14173551", "INQCIM corrected DOI drifted")
 need(by_id["inqcim-2500-request"].get("peerReviewedCompanion") == "10.3390/polym14173551", "INQCIM companion DOI drifted")
 need(by_id["leon-defects-20322729"].get("overlapGroup") == by_id["leon-process-20309380"].get("overlapGroup"), "León defect/process campaign must remain one overlap group")
@@ -206,10 +214,10 @@ need(cu_profile.get("acceptedMeasuredTimeSeriesSamples") == 43_814_748, "cross-p
 need(cu_profile.get("pressureActualValuesExcludedPendingUnit") == 21_907_374, "cross-process upper pressure-unit exclusion drifted")
 need(cu_profile.get("stateValuesExcludedPendingSemantics") == 21_907_374, "cross-process upper state exclusion drifted")
 need(cu_profile.get("rawRowsOrCellValuesEmitted") is False, "cross-process upper result must not emit raw values")
-accepted_measured_total = av_profile["acceptedMeasuredTimeSeriesSamples"] + om_profile["acceptedMeasuredTimeSeriesSamples"] + cl_profile["acceptedMeasuredTimeSeriesSamples"] + cu_profile["acceptedMeasuredTimeSeriesSamples"]
-need(accepted_measured_total == 65_171_059, "combined real measured-sample arithmetic drifted")
+accepted_measured_total = av_profile["acceptedMeasuredTimeSeriesSamples"] + om_profile["acceptedMeasuredTimeSeriesSamples"] + cl_profile["acceptedMeasuredTimeSeriesSamples"] + cu_profile["acceptedMeasuredTimeSeriesSamples"] + impure_count["acceptedMeasuredTimeSeriesSamples"] + forinfpro_count["acceptedMeasuredTimeSeriesSamples"]
+need(accepted_measured_total == 66_521_519, "combined real measured-sample arithmetic drifted")
 need(targets["fully_profiled_measured_datasets"]["currentAccepted"] == 7, "partial cross-process acceptance must not inflate the fully profiled family count")
-need(targets["measured_time_series_samples"]["currentAccepted"] == accepted_measured_total, "measured sample count must equal AVAPS plus OpenMMS plus accepted cross-process lower and upper evidence")
+need(targets["measured_time_series_samples"]["currentAccepted"] == accepted_measured_total, "measured sample count must equal AVAPS, OpenMMS, cross-process, ImPure and FORinFPRO accepted evidence")
 
 primary = json.loads(PRIMARY.read_text(encoding="utf-8"))
 ps = primary.get("summary") or {}
@@ -254,6 +262,8 @@ report = {
             {"path": "data/public-benchmark-results/openmms-t4g-v1.json", "accepted": om_profile["acceptedMeasuredTimeSeriesSamples"]},
             {"path": "data/public-benchmark-results/cross-process-lower-workpiece-source-contract-v1.json", "accepted": cl_profile["acceptedMeasuredTimeSeriesSamples"]},
             {"path": "data/public-benchmark-results/cross-process-upper-workpiece-source-contract-v1.json", "accepted": cu_profile["acceptedMeasuredTimeSeriesSamples"]},
+            {"path": "data/measured-dataset-inventory-v1.json#impure-pascoe-2022", "accepted": impure_count["acceptedMeasuredTimeSeriesSamples"]},
+            {"path": "data/measured-dataset-inventory-v1.json#forinfpro-himd-v1", "accepted": forinfpro_count["acceptedMeasuredTimeSeriesSamples"]},
         ],
         "avaps": {
             "linkedCycles": av_profile["linkedCycles"],
@@ -286,4 +296,4 @@ report = {
     "boundary": "No synthetic, metadata-only, generated-draft or heuristic-candidate evidence is counted as completed measured/reviewed content unless its area-specific acceptance definition is satisfied. Restricted research/education source terms are preserved rather than widened."
 }
 (ROOT / "content-scale-targets-report.json").write_text(json.dumps(report, indent=2) + "\n", encoding="utf-8")
-print(f"MouldMaster content-scale target integrity QA passed ({len(datasets)} measured datasets inventoried; 7 fully profiled families including ImPure and 1 restricted research/education profile; {accepted_measured_total:,} accepted real measured time-series values; {verified} publisher-verified primary measured studies; {summary.get('automatedIngestionAllowed')} sources legally executable)")
+print(f"MouldMaster content-scale target integrity QA passed ({len(datasets)} measured datasets inventoried; 7 fully profiled families and 1 restricted research/education profile; {accepted_measured_total:,} accepted real measured time-series values; {verified} publisher-verified primary measured studies; {summary.get('automatedIngestionAllowed')} sources legally executable)")
