@@ -96,7 +96,7 @@
         "measured fouling-modified operating behaviour",
         "experimental diagnostic validation"
       ],
-      "boundedUse": "Supports condition-vector and drift-based fouling detection for the tested WCTC; the characteristic space must be re-established for another controller, mould or cooling circuit."
+      "boundedUse": "Supports condition-vector and drift-based fouling detection for the tested WCTC; the characteristic space must be re-established for another controller, mould or cooling circuit, and it is not a universal fouling threshold or transferable alarm limit."
     },
     {
       "doi": "10.1016/j.jmapro.2024.02.021",
