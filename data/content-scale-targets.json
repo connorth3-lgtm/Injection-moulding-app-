@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "version": "2026.08.30.1",
+  "version": "2026.08.30.2",
   "reviewed": "2026-08-30",
   "scope": "Hard content-scale targets for MouldMaster. Completion counts only evidence that satisfies the acceptance definition for that area. Synthetic learning cases, generated drafts, unverified candidate papers and metadata-only dataset records must not be counted as completed measured evidence.",
   "targets": {
@@ -9,9 +9,9 @@
       "preferred": 50,
       "unit": "datasets",
       "acceptance": "A real measured dataset whose exact source/version/licence or access terms are recorded; source files have been obtained lawfully; file fingerprint and profile are recorded; schema/units/grouping are inspected; direct measurements, commands, derived fields and labels are distinguished; material/process/machine/mould/quality context and limitations are documented. Metadata-only records do not count.",
-      "currentAccepted": 7,
-      "currentDiscovered": 20,
-      "notes": "Seven exact-source measured dataset families satisfy the profiling acceptance definition. Cross-process contributes 51,241,491 accepted values while remaining partially unresolved for upper pressure/state semantics. ImPure now contributes 1,188,348 accepted cavity pressure/contact-temperature values but its hydraulic-pressure, screw-position and two generic analogue fields remain fail-closed, so the fully profiled-family count does not increase. FORinFPRO contributes 162,112 accepted ENGEL heating-zone actual-temperature values without changing the existing family count. PET is terminalized as zero-measured simulation/model evidence; Warwick, RWTH, rights, request-only, confidential and embargoed sources retain their explicit blockers."
+      "currentAccepted": 11,
+      "currentDiscovered": 24,
+      "notes": "Eleven exact-source measured dataset families satisfy the profiling definition. The four Wave-2 additions are a 96-value CC BY-NC outcome workbook, a 28,590-cell polypropylene pvT characterization workbook, a 525-value HDPE/GNP record-level mechanical dataset, and 142,884 HDPE/cenosphere material-test trace values. These additions are measured evidence but are not injection-machine/cavity process waveforms, so the accepted process time-series total remains 66,521,519. Existing cross-process, ImPure, FORinFPRO and external blocker boundaries remain unchanged."
     },
     "measured_time_series_samples": {
       "minimum": 1000000,

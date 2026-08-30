@@ -1,0 +1,39 @@
+{
+  "schema": 1,
+  "status": "accepted-profiled-material-test-traces",
+  "retrievedDate": "2026-08-29",
+  "source": {
+    "datasetId": "pmc4753395-hdpe-cenosphere-v1",
+    "datasetDoi": "10.1016/j.dib.2016.01.058",
+    "pmcid": "PMC4753395",
+    "license": "CC BY 4.0",
+    "retrievalRoute": "pmc-current-cloud-media",
+    "supplementSha256": "cf6224bf9f2dc93c5c19ef1a4d4439fc44d4df34fe53ef04b2b05b29c82d9342",
+    "nestedRarSha256": "2f86606b0450c2cd549ef177714dd352dc884a40924e287ca7a92aadf4113fd2",
+    "measuredWorkbookSha256": "6e376e0acdfc614b6c16e0fef99e0e74cace8bc4d931a08a729e05dfc2cd7783",
+    "theoreticalWorkbookSha256": "e25db4b43e93b262c4d6c37df0e56e77bafa95053ef11906efb5255ae34fbe8c"
+  },
+  "profile": {
+    "compositionSheets": 4,
+    "compositionSheetNames": ["HDPE", "HDPE20", "HDPE40", "HDPE60"],
+    "sourceDeliveredStressTraceValues": 71442,
+    "sourceDeliveredStrainTraceValues": 71442,
+    "sourceDeliveredStressStrainTracePointPairs": 71442,
+    "materialTestTraceValues": 142884,
+    "preHeaderNumericCellsExcluded": 20,
+    "plotNumericCellsExcluded": 4,
+    "theoreticalWorkbookValuesAccepted": 0,
+    "injectionMachineTimeSeriesSamplesAdded": 0,
+    "pairedHeaderPatternValidated": true,
+    "pairedTraceLengthValidated": true,
+    "rawNumericValuesEmitted": false
+  },
+  "acceptance": {
+    "countsAsFullyProfiledMeasuredDataset": true,
+    "acceptedMaterialTestTraceValues": 142884,
+    "acceptedMaterialTestTracePointPairs": 71442,
+    "acceptedInjectionProcessTimeSeriesSamplesAdded": 0,
+    "rawThirdPartyFilesCommittedOrUploaded": false
+  },
+  "evidenceBoundary": "Physical tensile-test traces from injection-moulded HDPE/cenosphere specimens are accepted as material-test evidence only. They do not count as injection-machine/cavity process waveforms. Exactly 20 pre-header numeric metadata cells, 4 PLots-sheet numeric cells, and all Porfiri-Gupta theoretical workbook values are excluded."
+}

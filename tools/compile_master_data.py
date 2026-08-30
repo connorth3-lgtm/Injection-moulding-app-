@@ -102,10 +102,42 @@ def compile_measured():
         restricted_contracts[benchmark_id] = contract
         restricted_results[benchmark_id] = result
 
+    specialized_specs = [
+        ("mendeley-6k8fpbrd9s-v1", "data/public-benchmark-contracts/6k8fpbrd9s-v1.json", "data/public-benchmark-results/6k8fpbrd9s-v1.json", "completed-public-measured-material-characterization-benchmark"),
+        ("mendeley-4h98rz9f92-v3", "data/public-benchmark-contracts/4h98rz9f92-v3.json", "data/public-benchmark-results/4h98rz9f92-v3.json", "completed-public-measured-record-level-benchmark"),
+        ("pmc4753395-hdpe-cenosphere-v1", "data/public-benchmark-contracts/pmc4753395-hdpe-cenosphere-v1.json", "data/public-benchmark-results/pmc4753395-hdpe-cenosphere-v1.json", "accepted-profiled-material-test-traces"),
+    ]
+    specialized_contracts = {}
+    specialized_results = {}
+    for benchmark_id, contract_path, result_path, expected_status in specialized_specs:
+        contract = load_json(contract_path)
+        result = load_json(result_path)
+        acceptance = result.get("acceptance") or {}
+        need(result.get("status") == expected_status, f"specialized measured benchmark status missing: {benchmark_id}")
+        need(acceptance.get("countsAsFullyProfiledMeasuredDataset") is True, f"specialized measured benchmark acceptance missing: {benchmark_id}")
+        specialized_contracts[benchmark_id] = contract
+        specialized_results[benchmark_id] = result
+
+    restricted_noncommercial_specs = [
+        ("mendeley-fhj5p7ww9v-v1", "data/public-benchmark-contracts/fhj5p7ww9v-v1.json", "data/public-benchmark-results/fhj5p7ww9v-v1.json"),
+    ]
+    restricted_noncommercial_contracts = {}
+    restricted_noncommercial_results = {}
+    for benchmark_id, contract_path, result_path in restricted_noncommercial_specs:
+        contract = load_json(contract_path)
+        result = load_json(result_path)
+        acceptance = result.get("acceptance") or {}
+        need(result.get("status") == "completed-restricted-noncommercial-measured-benchmark", f"restricted noncommercial benchmark status missing: {benchmark_id}")
+        need(acceptance.get("countsAsFullyProfiledMeasuredDataset") is True, f"restricted noncommercial acceptance missing: {benchmark_id}")
+        need(acceptance.get("useScope") == "noncommercial-education-research-only", f"restricted noncommercial scope drifted: {benchmark_id}")
+        need(acceptance.get("commercialReuseAllowed") is False, f"commercial reuse boundary drifted: {benchmark_id}")
+        restricted_noncommercial_contracts[benchmark_id] = contract
+        restricted_noncommercial_results[benchmark_id] = result
+
     accepted_profiled = targets["targets"]["fully_profiled_measured_datasets"]["currentAccepted"]
-    need(len(benchmark_results) + len(restricted_results) == accepted_profiled == 7, "completed measured benchmark result count must match accepted profiled dataset count")
+    need(len(benchmark_results) + len(restricted_results) + len(specialized_results) + len(restricted_noncommercial_results) == accepted_profiled == 11, "completed measured benchmark result count must match accepted profiled dataset count")
     need(execution.get("summary", {}).get("acceptedProfiled") == accepted_profiled, "execution ledger accepted-profiled count drifted")
-    need(execution.get("summary", {}).get("acceptedRestrictedResearchEducation") == len(restricted_results) == 1, "restricted accepted measured-profile count drifted")
+    need(execution.get("summary", {}).get("acceptedRestrictedResearchEducation") == len(restricted_results) + len(restricted_noncommercial_results) == 2, "restricted accepted measured-profile count drifted")
 
     return {
         "targetLedger": targets,
@@ -123,6 +155,10 @@ def compile_measured():
         "publicBenchmarkResults": benchmark_results,
         "restrictedBenchmarkContracts": restricted_contracts,
         "restrictedBenchmarkResults": restricted_results,
+        "specializedMeasuredBenchmarkContracts": specialized_contracts,
+        "specializedMeasuredBenchmarkResults": specialized_results,
+        "restrictedNoncommercialBenchmarkContracts": restricted_noncommercial_contracts,
+        "restrictedNoncommercialBenchmarkResults": restricted_noncommercial_results,
         "publicBenchmarkReviewResults": {
             "pet-preform-v2": load_json("data/public-benchmark-results/pet-preform-v2.json"),
             "warwick-demoulding": load_json("data/public-benchmark-results/warwick-demoulding-v2.json"),

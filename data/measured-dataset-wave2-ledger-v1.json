@@ -1,0 +1,126 @@
+{
+  "schema": 1,
+  "version": "2026.08.30.1",
+  "reviewed": "2026-08-30",
+  "baseWave": {
+    "fullyProfiledMeasuredDatasetFamilies": 7,
+    "acceptedMeasuredTimeSeriesSamples": 66521519,
+    "source": "data/content-scale-targets.json at post-PR-95 main baseline"
+  },
+  "sources": [
+    {
+      "priority": 1,
+      "datasetId": "ad-stgn-injection-moulding-v1",
+      "doi": "10.17632/6f9x8yg8nj.1",
+      "license": "CC BY 4.0",
+      "state": "publisher-record-no-files-exposed",
+      "countsAsFullyProfiledMeasuredDataset": false,
+      "acceptedMeasuredTimeSeriesSamples": 0,
+      "resultPath": "data/public-benchmark-results/ad-stgn-injection-moulding-v1-stage1.json",
+      "nextAction": "recheck publisher file exposure; do not count reported sensors or samples until delivered files are exposed and profiled"
+    },
+    {
+      "priority": 2,
+      "datasetId": "mendeley-fhj5p7ww9v-v1",
+      "doi": "10.17632/fhj5p7ww9v.1",
+      "license": "CC BY-NC 3.0",
+      "state": "accepted-profiled-restricted-noncommercial",
+      "countsAsFullyProfiledMeasuredDataset": true,
+      "recordLevelMeasuredOutcomeValues": 96,
+      "acceptedMeasuredTimeSeriesSamples": 0,
+      "resultPath": "data/public-benchmark-results/fhj5p7ww9v-v1.json",
+      "useScope": "noncommercial-education-research-only",
+      "commercialReuseAllowed": false
+    },
+    {
+      "priority": 3,
+      "datasetId": "mendeley-6k8fpbrd9s-v1",
+      "doi": "10.17632/6k8fpbrd9s.1",
+      "license": "CC BY 4.0",
+      "state": "accepted-profiled-material-characterization",
+      "countsAsFullyProfiledMeasuredDataset": true,
+      "injectionMouldingCycleDataset": false,
+      "deliveredNumericCells": 31817,
+      "deliveredDirectPhysicalValueCells": 28590,
+      "materialCharacterizationTraceMeasurementCells": 6026,
+      "acceptedMeasuredTimeSeriesSamples": 0,
+      "resultPath": "data/public-benchmark-results/6k8fpbrd9s-v1.json"
+    },
+    {
+      "priority": 4,
+      "datasetId": "mendeley-4h98rz9f92-v3",
+      "doi": "10.17632/4h98rz9f92.3",
+      "license": "CC BY 4.0",
+      "state": "accepted-profiled-record-level-injection-moulding",
+      "countsAsFullyProfiledMeasuredDataset": true,
+      "experimentalRows": 35,
+      "directMeasuredPropertyValues": 525,
+      "directMeasuredPropertyBreakdown": {
+        "tensileModulus": 175,
+        "hardness": 175,
+        "toughness": 175
+      },
+      "derivedAverageValuesExcluded": 105,
+      "acceptedMeasuredTimeSeriesSamples": 0,
+      "resultPath": "data/public-benchmark-results/4h98rz9f92-v3.json"
+    },
+    {
+      "priority": 5,
+      "datasetId": "pmc4753395-hdpe-cenosphere-v1",
+      "doi": "10.1016/j.dib.2016.01.058",
+      "license": "CC BY 4.0",
+      "state": "accepted-profiled-material-test-traces",
+      "countsAsFullyProfiledMeasuredDataset": true,
+      "materialTestStressTraceValues": 71442,
+      "materialTestStrainTraceValues": 71442,
+      "materialTestTracePointPairs": 71442,
+      "materialTestTraceValues": 142884,
+      "preHeaderNumericCellsExcluded": 20,
+      "plotNumericCellsExcluded": 4,
+      "theoreticalWorkbookValuesAccepted": 0,
+      "acceptedMeasuredTimeSeriesSamples": 0,
+      "resultPath": "data/public-benchmark-results/pmc4753395-hdpe-cenosphere-v1.json"
+    },
+    {
+      "priority": 6,
+      "datasetId": "mendeley-8c8fjwcw86-v1",
+      "doi": "10.17632/8c8fjwcw86.1",
+      "license": "CC BY 4.0",
+      "state": "completed-no-acceptable-injection-trace",
+      "countsAsFullyProfiledMeasuredDataset": false,
+      "slsTensileTracePointPairsExcluded": 1359,
+      "derivedBoxPlotPairedPointsExcluded": 72,
+      "mixedRouteStructuralPairedPointsExcluded": 26424,
+      "candidateInjectionMaterialTracePointPairs": 0,
+      "acceptedMeasuredTimeSeriesSamples": 0,
+      "resultPath": "data/public-benchmark-results/nylon12-gamma-8c8fjwcw86-v1.json",
+      "terminalReviewComplete": true
+    }
+  ],
+  "summary": {
+    "wave2SourcesReviewed": 6,
+    "wave2FullyProfiledAccepted": 4,
+    "wave2PublisherPayloadBlocked": 1,
+    "wave2TerminalSemanticRejected": 1,
+    "effectiveFullyProfiledMeasuredDatasetFamilies": 11,
+    "effectiveAcceptedMeasuredTimeSeriesSamples": 66521519,
+    "wave2RecordLevelMeasuredOutcomeValues": 621,
+    "wave2RecordLevelDerivedSummaryValuesExcluded": 105,
+    "wave2MaterialCharacterizationDirectPhysicalValues": 28590,
+    "wave2MaterialCharacterizationTraceMeasurementCells": 6026,
+    "wave2MaterialTestTraceValues": 142884,
+    "wave2MaterialTestTracePointPairs": 71442,
+    "wave2MaterialTestPreHeaderNumericCellsExcluded": 20
+  },
+  "boundaries": {
+    "rawThirdPartyRowsOrFilesCommitted": false,
+    "metadataReportedSamplesDoNotCountWithoutDeliveredFiles": true,
+    "restrictedNoncommercialRightsAreNotWidened": true,
+    "recordLevelOutcomeValuesDoNotCountAsTimeSeriesSamples": true,
+    "derivedRecordLevelSummaryValuesAreExcludedFromDirectMeasuredOutcomeCount": true,
+    "materialCharacterizationCellCountsDoNotInflateInjectionCycleHighFrequencySampleMetric": true,
+    "materialTestTraceValuesDoNotInflateInjectionProcessHighFrequencySampleMetric": true,
+    "crossFigureMaterialCharacterizationReuseIsNotClaimedAsDeduplicatedExperiments": true,
+    "mixedManufacturingRouteEvidenceMustBeUnambiguousBeforeCounting": true
+  }
+}

@@ -1,0 +1,69 @@
+name: MouldMaster Public Measured Benchmark — HDPE GNP stage 1
+
+on:
+  push:
+    branches: [data/real-dataset-profiling-wave2]
+    paths:
+      - 'data/public-benchmark-contracts/4h98rz9f92-v3.json'
+      - 'tools/run_public_benchmark_4h98rz9f92_stage1.py'
+      - 'qa_public_benchmark_4h98rz9f92_stage1.py'
+      - '.github/workflows/public-benchmark-4h98rz9f92-stage1.yml'
+  pull_request:
+    branches: [data/real-dataset-profiling-wave1, main]
+    paths:
+      - 'data/public-benchmark-contracts/4h98rz9f92-v3.json'
+      - 'tools/run_public_benchmark_4h98rz9f92_stage1.py'
+      - 'qa_public_benchmark_4h98rz9f92_stage1.py'
+      - '.github/workflows/public-benchmark-4h98rz9f92-stage1.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  manifest-profile:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Validate stage-one evidence boundaries
+        run: python qa_public_benchmark_4h98rz9f92_stage1.py
+      - name: Enumerate Mendeley publisher file/folder manifest only
+        run: |
+          mkdir -p benchmark-results
+          python tools/run_public_benchmark_4h98rz9f92_stage1.py \
+            --output benchmark-results/4h98rz9f92-stage1.json \
+            --retrieved-date "$(date -u +%F)"
+      - name: Validate aggregate manifest result
+        run: |
+          python - <<'PY'
+          import json
+          x=json.load(open('benchmark-results/4h98rz9f92-stage1.json'))
+          assert x['status'] in {'publisher-file-manifest-profiled','publisher-folder-manifest-profiled-no-files-yet'}
+          assert x['source']['datasetDoi']=='10.17632/4h98rz9f92.3'
+          assert x['source']['version']==3
+          assert x['source']['licenseExpectedFromPublisherPage']=='CC BY 4.0'
+          assert x['manifest']['rawPayloadsDownloaded'] is False
+          assert x['manifest']['rawRowsOrArraysEmitted'] is False
+          assert x['acceptance']['countsAsFullyProfiledMeasuredDataset'] is False
+          assert x['acceptance']['acceptedMeasuredTimeSeriesSamples']==0
+          assert x['acceptance']['stage2Required'] is True
+          print(json.dumps({
+            'status':x['status'],
+            'fileCount':x['manifest']['fileCount'],
+            'folderCount':x['manifest']['folderCount'],
+            'totalBytes':x['manifest']['totalBytes'],
+            'likelyExperimentalFilesByName':x['manifest']['likelyExperimentalFilesByName'],
+            'likelyDerivedOrSupportingFilesByName':x['manifest']['likelyDerivedOrSupportingFilesByName']
+          },indent=2))
+          PY
+      - name: Upload aggregate publisher manifest only
+        uses: actions/upload-artifact@v4
+        with:
+          name: mouldmaster-hdpe-gnp-stage1-manifest
+          path: benchmark-results/4h98rz9f92-stage1.json
+          if-no-files-found: error
+          retention-days: 30

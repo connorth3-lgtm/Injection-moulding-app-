@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "version": "2026.08.30.2",
+  "version": "2026.08.30.3",
   "reviewed": "2026-08-30",
   "purpose": "Inventory real measured injection-moulding datasets and data-bearing studies without conflating public metadata, downloadable files, reuse rights, record units, or independent experimental evidence.",
   "rules": {
@@ -12,14 +12,14 @@
     "embargoedRequestOnlyConfidentialAndRightsUnresolvedAreNotExecutable": true
   },
   "summary": {
-    "datasets": 20,
-    "automatedIngestionAllowed": 10,
+    "datasets": 24,
+    "automatedIngestionAllowed": 13,
     "rightsOrAccessReviewRequired": 3,
     "embargoed": 2,
     "requestOnly": 1,
     "confidential": 1,
     "publicMirrorRightsUnresolved": 2,
-    "publicResearchEducationTerms": 1
+    "publicResearchEducationTerms": 2
   },
   "datasets": [
     {
@@ -619,6 +619,120 @@
       "peerReviewedCompanion": "10.1016/j.asoc.2023.111029",
       "priority": 20,
       "statusNote": "Strong real-production evidence: the paper reports 7,162 cycles, but explicitly states the underlying data are confidential. Use as Tier-B literature evidence only unless an authorised site/data agreement is obtained."
+    },
+    {
+      "datasetId": "mendeley-fhj5p7ww9v-v1",
+      "title": "Injection-moulded polypropylene composite/foam measured outcomes",
+      "source": "https://doi.org/10.17632/fhj5p7ww9v.1",
+      "accessState": "public-research-education-release",
+      "license": "CC BY-NC 3.0",
+      "automatedIngestionAllowed": false,
+      "restrictedAggregateProfilingAllowed": true,
+      "rawRedistributionAllowedWithAttribution": false,
+      "recordUnit": "experimental condition/material measured outcome",
+      "count": {
+        "recordLevelMeasuredOutcomeValues": 96,
+        "acceptedMeasuredTimeSeriesSamples": 0
+      },
+      "signals": [
+        "injection temperature and speed are process factors, not measured outcomes"
+      ],
+      "quality": [
+        "weight",
+        "flexural strength",
+        "flexural modulus"
+      ],
+      "sampling": "record-level source-reported outcomes across four material groups and eight experimental conditions; not raw replicate or waveform data",
+      "overlapGroup": "mendeley-fhj5p7ww9v-v1",
+      "peerReviewedCompanion": null,
+      "priority": 21,
+      "statusNote": "Exact CC BY-NC 3.0 workbook is fingerprinted and fully profiled. Ninety-six direct source-reported outcome cells are accepted for noncommercial education/research use; process-factor rows, deviation summaries and formulas are excluded, raw redistribution is not assumed, and zero injection-process waveform samples are added."
+    },
+    {
+      "datasetId": "mendeley-6k8fpbrd9s-v1",
+      "title": "Polypropylene pressure-specific-volume-temperature material characterization",
+      "source": "https://doi.org/10.17632/6k8fpbrd9s.1",
+      "accessState": "public-open",
+      "license": "CC BY 4.0",
+      "automatedIngestionAllowed": true,
+      "rawRedistributionAllowedWithAttribution": true,
+      "recordUnit": "material-characterization physical value cell/trace coordinate",
+      "count": {
+        "deliveredNumericCells": 31817,
+        "deliveredDirectPhysicalValueCells": 28590,
+        "materialCharacterizationTraceMeasurementCells": 6026,
+        "acceptedMeasuredTimeSeriesSamples": 0
+      },
+      "signals": [
+        "temperature",
+        "pressure",
+        "specific volume",
+        "time/piston-speed coordinates"
+      ],
+      "quality": [],
+      "sampling": "ten figure-data sheets; material characterization rather than injection-cycle acquisition",
+      "overlapGroup": "mendeley-6k8fpbrd9s-v1",
+      "peerReviewedCompanion": null,
+      "priority": 22,
+      "statusNote": "Exact CC BY 4.0 workbook is SHA-256 matched and every numeric cell is role-classified. 28,590 physical temperature/pressure/specific-volume cells are accepted as polypropylene material-characterization evidence; coordinate cells and possible cross-figure reuse remain explicitly bounded, and zero injection-process waveform samples are added."
+    },
+    {
+      "datasetId": "mendeley-4h98rz9f92-v3",
+      "title": "Injection-moulded HDPE/graphite nanoplatelet mechanical-property dataset",
+      "source": "https://doi.org/10.17632/4h98rz9f92.3",
+      "accessState": "public-open",
+      "license": "CC BY 4.0",
+      "automatedIngestionAllowed": true,
+      "rawRedistributionAllowedWithAttribution": true,
+      "recordUnit": "injection-moulding experiment measured mechanical-property replicate",
+      "count": {
+        "experimentalRows": 35,
+        "directMeasuredPropertyValues": 525,
+        "derivedAverageValuesExcluded": 105,
+        "acceptedMeasuredTimeSeriesSamples": 0
+      },
+      "signals": [
+        "GNP percentage",
+        "injection temperature",
+        "injection pressure"
+      ],
+      "quality": [
+        "tensile modulus",
+        "hardness",
+        "toughness"
+      ],
+      "sampling": "35 record-level injection-moulding experiments with direct replicate mechanical-property outcomes",
+      "overlapGroup": "mendeley-4h98rz9f92-v3",
+      "peerReviewedCompanion": "10.1016/j.dib.2024.110987",
+      "priority": 23,
+      "statusNote": "Exact CC BY 4.0 Raw Data.xlsx is SHA-256 matched. Fifteen direct replicate outcome columns provide 525 measured mechanical-property values across 35 injection-moulding experiments; derived averages, process inputs, identifiers and model files are excluded, and zero high-frequency process waveform samples are added."
+    },
+    {
+      "datasetId": "pmc4753395-hdpe-cenosphere-v1",
+      "title": "Injection-moulded HDPE/cenosphere tensile-test traces",
+      "source": "https://doi.org/10.1016/j.dib.2016.01.058",
+      "accessState": "public-open",
+      "license": "CC BY 4.0",
+      "automatedIngestionAllowed": true,
+      "rawRedistributionAllowedWithAttribution": true,
+      "recordUnit": "material-test stress/strain trace value from injection-moulded specimen",
+      "count": {
+        "materialTestTraceValues": 142884,
+        "materialTestTracePointPairs": 71442,
+        "acceptedMeasuredTimeSeriesSamples": 0
+      },
+      "signals": [
+        "tensile-test stress",
+        "tensile-test strain"
+      ],
+      "quality": [
+        "mechanical tensile response"
+      ],
+      "sampling": "paired stress/strain material-test traces from injection-moulded specimens; not injection-machine/cavity process waveforms",
+      "overlapGroup": "pmc4753395-hdpe-cenosphere-v1",
+      "peerReviewedCompanion": "10.1016/j.dib.2016.01.058",
+      "priority": 24,
+      "statusNote": "CC BY 4.0 supplementary package and nested measured workbook are fingerprinted. 142,884 physical tensile-test stress/strain values (71,442 point pairs) are accepted as material-test evidence; pre-header, plot and theoretical values are excluded, and zero injection-process waveform samples are added."
     }
   ]
 }

@@ -1,0 +1,81 @@
+name: MouldMaster Public Measured Benchmark — polypropylene pvT stage 3
+
+on:
+  push:
+    branches: [data/real-dataset-profiling-wave2]
+    paths:
+      - 'tools/run_public_benchmark_6k8fpbrd9s_stage3.py'
+      - 'qa_public_benchmark_6k8fpbrd9s_stage3.py'
+      - '.github/workflows/public-benchmark-6k8fpbrd9s-stage3.yml'
+  pull_request:
+    branches: [data/real-dataset-profiling-wave1, main]
+    paths:
+      - 'tools/run_public_benchmark_6k8fpbrd9s_stage3.py'
+      - 'qa_public_benchmark_6k8fpbrd9s_stage3.py'
+      - '.github/workflows/public-benchmark-6k8fpbrd9s-stage3.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  semantic-acceptance:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python -m pip install --disable-pip-version-check openpyxl
+      - name: Validate semantic acceptance guards
+        run: python qa_public_benchmark_6k8fpbrd9s_stage3.py
+      - name: Retrieve exact pvT workbook and reconcile every numeric cell
+        run: |
+          mkdir -p benchmark-results
+          python tools/run_public_benchmark_6k8fpbrd9s_stage3.py \
+            --output benchmark-results/6k8fpbrd9s-v1.json \
+            --retrieved-date "$(date -u +%F)"
+      - name: Validate accepted aggregate result
+        run: |
+          python - <<'PY'
+          import json
+          x=json.load(open('benchmark-results/6k8fpbrd9s-v1.json'))
+          assert x['status']=='completed-public-measured-material-characterization-benchmark'
+          assert x['source']['datasetDoi']=='10.17632/6k8fpbrd9s.1'
+          assert x['source']['license']=='CC BY 4.0'
+          assert x['source']['publisherFileName']=='Data.xlsx'
+          assert x['source']['sha256']=='14c056dd86e11cc47e1e97834174631f9dc0806442917a7149ddf5856dc9b11c'
+          assert x['source']['publisherSha256Matched'] is True
+          p=x['profile']
+          assert p['sheetCount']==10
+          assert p['deliveredNumericCells']==31817
+          assert p['deliveredDirectPhysicalValueCells']==28590
+          assert p['directPhysicalRoleTotals']=={'temperature':2422,'pressure':11782,'specificVolume':14386}
+          assert p['coordinateCellsExcludedFromDirectPhysicalCount']==3227
+          assert p['coordinateRoleTotals']=={'time':3207,'pistonSpeed':20}
+          assert p['materialCharacterizationTraceMeasurementCells']==6026
+          assert p['formulaCells']==0
+          assert p['crossFigureReuseMayExist'] is True
+          assert p['uniqueExperimentalMeasurementCount'] is None
+          assert p['rawRowsOrCellValuesEmitted'] is False
+          assert p['numericMeasurementValuesEmitted'] is False
+          assert x['acceptance']['countsAsFullyProfiledMeasuredDataset'] is True
+          assert x['acceptance']['acceptedMeasuredTimeSeriesSamples']==0
+          assert x['retrieval']['rawPublisherFileCommitted'] is False
+          assert x['retrieval']['rawRowsOrCellValuesUploadedAsArtifact'] is False
+          print(json.dumps({
+            'status':x['status'],
+            'deliveredNumericCells':p['deliveredNumericCells'],
+            'directPhysical':p['deliveredDirectPhysicalValueCells'],
+            'coordinatesExcluded':p['coordinateCellsExcludedFromDirectPhysicalCount'],
+            'traceMeasurements':p['materialCharacterizationTraceMeasurementCells'],
+          },indent=2))
+          PY
+      - name: Upload aggregate pvT acceptance only
+        uses: actions/upload-artifact@v4
+        with:
+          name: mouldmaster-polypropylene-pvt-stage3
+          path: benchmark-results/6k8fpbrd9s-v1.json
+          if-no-files-found: error
+          retention-days: 30

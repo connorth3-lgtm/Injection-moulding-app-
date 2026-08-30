@@ -1,0 +1,88 @@
+name: MouldMaster Restricted Measured Benchmark — PP foam flexural data
+
+on:
+  push:
+    branches: [data/real-dataset-profiling-wave2]
+    paths:
+      - 'tools/run_public_benchmark_fhj5p7ww9v.py'
+      - 'qa_public_benchmark_fhj5p7ww9v.py'
+      - 'data/public-benchmark-contracts/fhj5p7ww9v-v1.json'
+      - '.github/workflows/public-benchmark-fhj5p7ww9v.yml'
+  pull_request:
+    branches: [data/real-dataset-profiling-wave1, main]
+    paths:
+      - 'tools/run_public_benchmark_fhj5p7ww9v.py'
+      - 'qa_public_benchmark_fhj5p7ww9v.py'
+      - 'data/public-benchmark-contracts/fhj5p7ww9v-v1.json'
+      - '.github/workflows/public-benchmark-fhj5p7ww9v.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  restricted-measured-benchmark:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python -m pip install --disable-pip-version-check pandas openpyxl
+      - name: Validate noncommercial evidence boundary
+        run: python qa_public_benchmark_fhj5p7ww9v.py
+      - name: Retrieve and aggregate-profile exact publisher workbook
+        run: |
+          mkdir -p benchmark-results
+          python tools/run_public_benchmark_fhj5p7ww9v.py \
+            --output benchmark-results/fhj5p7ww9v-v1.json \
+            --retrieved-date "$(date -u +%F)"
+      - name: Validate aggregate-only result
+        run: |
+          python - <<'PY'
+          import json
+          x=json.load(open('benchmark-results/fhj5p7ww9v-v1.json'))
+          assert x['status']=='completed-restricted-noncommercial-measured-benchmark'
+          assert x['source']['datasetDoi']=='10.17632/fhj5p7ww9v.1'
+          assert x['source']['license']=='CC BY-NC 3.0'
+          assert x['source']['publisherFileName']=='DATA - COST.xlsx'
+          assert len(x['source']['sha256'])==64
+          assert x['source'].get('publisherSha256Matched') is True
+          assert x['profile']['sheetCount']==3
+          assert x['profile']['recognizedMeasuredOutcomeSheets']==3
+          assert x['profile']['experimentalConditionsPerSheet']==8
+          assert len(x['profile']['materialGroups'])==4
+          assert len(x['profile']['measuredOutcomeFamilies'])==3
+          assert x['profile']['recordLevelMeasuredOutcomeValues']==96
+          assert x['profile']['acceptedMeasuredTimeSeriesSamples']==0
+          assert x['profile']['rawRowsOrCellValuesEmitted'] is False
+          assert x['profile']['numericMeasurementValuesEmitted'] is False
+          assert x['acceptance']['countsAsFullyProfiledMeasuredDataset'] is True
+          assert x['acceptance']['semanticLayoutRecognized'] is True
+          assert x['acceptance']['commercialReuseAllowed'] is False
+          assert x['acceptance']['rawRedistributionAllowedUnderProjectPolicy'] is False
+          assert x['retrieval']['rawPublisherFileCommitted'] is False
+          assert x['retrieval']['rawRowsOrCellValuesUploadedAsArtifact'] is False
+          for sheet in x['profile']['sheets']:
+              sm=sheet['layout']['semanticMap']
+              assert sm['recognized'] is True
+              assert sm['experimentalConditionColumns']==8
+              assert sm['directMeasuredOutcomeCells']==32
+              assert sm['processFactorCellsExcludedFromMeasuredOutcomes']==16
+              assert sm['spreadSummaryCellsExcludedFromDirectMeasurements']==64
+              assert sm['formulaCellsExcludedAsDerived']==72
+          print(json.dumps({
+            'status': x['status'],
+            'sha256': x['source']['sha256'],
+            'recordLevelMeasuredOutcomeValues': x['profile']['recordLevelMeasuredOutcomeValues'],
+            'measurementLevel': x['profile']['measurementLevel'],
+          }, indent=2))
+          PY
+      - name: Upload aggregate PP foam profile only
+        uses: actions/upload-artifact@v4
+        with:
+          name: mouldmaster-restricted-measured-benchmark-fhj5p7ww9v
+          path: benchmark-results/fhj5p7ww9v-v1.json
+          if-no-files-found: error
+          retention-days: 30
