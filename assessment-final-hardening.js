@@ -6,7 +6,7 @@ const A=window.MM_ASSESSMENT_ANALYTICS;
 if(!D||!A||typeof window.startExam!=='function'||typeof window.gradeExam!=='function')throw new Error('Assessment quality and analytics must load before final hardening');
 
 const VERSION='2026.08.24.3';
-const BANK_VERSION='2026.08.24.2';
+const BANK_VERSION='2026.08.30.1';
 const TIMING_KEY='mm_assessment_exposure_timing_v1';
 const SOURCE_REVIEWED='2026-08-26';
 const SOURCE_REVIEW_BY='2026-11-26';
@@ -25,10 +25,32 @@ const REVISION2={
  'tech:Advanced:7':{revision:2,date:'2026-08-24',change:'Reframed machine transfer around reproduced physical process outputs and receiving-machine capability.'},
  'tech:Advanced:8':{revision:2,date:'2026-08-24',change:'Added research-backed distinction between MFR and moulding rheology/mouldability.'}
 };
+const REGIONAL_REVISION_CHANGE='Reframed jurisdiction-specific safety/compliance recall into an applied decision while retaining the safety-critical answer key and direct official/standards evidence.';
+for(const region of ['UK','US','NZ'])for(const level of ['Beginner','Intermediate','Advanced'])for(let i=0;i<3;i++)REVISION2[`reg:${region}:${level}:${i}`]={revision:2,date:'2026-08-30',change:REGIONAL_REVISION_CHANGE};
+const REVISION3={
+ 'tech:Beginner:0':{revision:3,date:'2026-08-30',change:'Replaced definition recall with a controlled hold-time/part-mass plateau interpretation while retaining the pack/hold competency.'},
+ 'tech:Beginner:1':{revision:3,date:'2026-08-30',change:'Changed cushion recognition into a linked shot-delivery evidence case where one isolated value is insufficient for root-cause assignment.'},
+ 'tech:Beginner:2':{revision:3,date:'2026-08-30',change:'Reframed injection-speed knowledge around unchanged commands versus changed fill-time and pressure actuals.'},
+ 'tech:Beginner:5':{revision:3,date:'2026-08-30',change:'Reframed V/P transfer as interpretation of the measured fill-to-pack transition and cavity-pressure response.'},
+ 'tech:Beginner:6':{revision:3,date:'2026-08-30',change:'Reframed clamp reasoning around local flash evidence after service instead of automatic global clamp compensation.'},
+ 'tech:Beginner:7':{revision:3,date:'2026-08-30',change:'Reframed gate/runner knowledge as a branch-specific fill-delay and pressure-loss diagnostic after repair.'},
+ 'tech:Beginner:8':{revision:3,date:'2026-08-30',change:'Reframed cooling knowledge around circuit/thermal evidence and directional warpage while filling remains stable.'},
+ 'tech:Intermediate:1':{revision:3,date:'2026-08-30',change:'Changed burn-mark troubleshooting into an end-of-fill location and controlled-speed discrimination case for trapped gas/venting.'},
+ 'tech:Intermediate:2':{revision:3,date:'2026-08-30',change:'Changed splay troubleshooting into a moisture-versus-filling discrimination case requiring direct material-condition evidence.'},
+ 'tech:Intermediate:3':{revision:3,date:'2026-08-30',change:'Changed flash troubleshooting into cavity-specific post-service fault isolation before global process changes.'},
+ 'tech:Intermediate:4':{revision:3,date:'2026-08-30',change:'Changed cavity-balance knowledge into a local-branch restriction versus global-viscosity discrimination test.'},
+ 'tech:Intermediate:6':{revision:3,date:'2026-08-30',change:'Changed black-speck troubleshooting into thermal-history diagnosis with recovery evidence through the approved purge/start-up sequence.'},
+ 'tech:Intermediate:8':{revision:3,date:'2026-08-30',change:'Changed warpage troubleshooting into a cooling-circuit thermal-evidence discrimination case with stable fill/shot evidence.'},
+ 'tech:Advanced:0':{revision:3,date:'2026-08-30',change:'Changed capability recall into Cp-versus-Cpk interpretation with stability and measurement adequacy established.'},
+ 'tech:Advanced:2':{revision:3,date:'2026-08-30',change:'Changed DOE recall into interpretation of a factor interaction where the direction of one effect depends on another factor.'},
+ 'tech:Advanced:5':{revision:3,date:'2026-08-30',change:'Changed process-window knowledge into a fail-closed validation case where factor progression is confounded with a material-lot viscosity shift.'},
+ 'tech:Advanced:6':{revision:3,date:'2026-08-30',change:'Changed DOE-model knowledge into independent confirmation-run reasoning when predictions fail to reproduce.'},
+ 'tech:Advanced:9':{revision:3,date:'2026-08-30',change:'Changed pressure-loss recall into an explicit insufficient-evidence case when pressure-channel location, unit/reference or timing semantics are unresolved.'}
+};
 const esc=v=>String(v??'').replace(/[&<>\"]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','\"':'&quot;'}[m]));
 const read=(k,d)=>{try{const x=JSON.parse(localStorage.getItem(k)||'');return x&&typeof x==='object'?x:d}catch(_){return d}};
 const write=(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v));return true}catch(_){return false}};
-function revisionFor(id){return REVISION2[id]||BASELINE}
+function revisionFor(id){return REVISION3[id]||REVISION2[id]||BASELINE}
 function allStableIds(){
  const out=[];
  for(const level of ['Beginner','Intermediate','Advanced'])for(let i=0;i<(D.exams?.[level]||[]).length;i++)out.push(`tech:${level}:${i}`);
@@ -128,7 +150,7 @@ const baseStart=window.startExam;window.startExam=function(){const r=baseStart.a
 const baseGrade=window.gradeExam;window.gradeExam=function(){persistExposureTiming();const r=baseGrade.apply(this,arguments);setTimeout(()=>{enhanceRevisionDetails();rewriteTimingPanel()},20);return r};
 const baseRender=typeof window.renderExams==='function'?window.renderExams:null;if(baseRender)window.renderExams=function(){const r=baseRender.apply(this,arguments);setTimeout(rewriteTimingPanel,20);return r};
 
-D.assessmentQA=D.assessmentQA||{};D.assessmentQA.finalHardening={version:VERSION,bankVersion:BANK_VERSION,stableIds:allStableIds().length,revision2Items:Object.keys(REVISION2).length,responseTiming:'first meaningful question exposure; hidden-tab time excluded',researchFreshness:'separate DOI resolver QA'};
-window.MM_QUESTION_REVISIONS={version:VERSION,bankVersion:BANK_VERSION,stableIds:allStableIds(),baseline:{...BASELINE},revision2:{...REVISION2},forId:revisionFor};
+D.assessmentQA=D.assessmentQA||{};D.assessmentQA.finalHardening={version:VERSION,bankVersion:BANK_VERSION,stableIds:allStableIds().length,revision2Items:Object.keys(REVISION2).length,revision3Items:Object.keys(REVISION3).length,responseTiming:'first meaningful question exposure; hidden-tab time excluded',researchFreshness:'separate DOI resolver QA'};
+window.MM_QUESTION_REVISIONS={version:VERSION,bankVersion:BANK_VERSION,stableIds:allStableIds(),baseline:{...BASELINE},revision2:{...REVISION2},revision3:{...REVISION3},forId:revisionFor};
 window.MM_ASSESSMENT_FINAL_HARDENING={version:VERSION,responseTimingKey:TIMING_KEY,rewriteTimingPanel,enhanceRevisionDetails};
 })();

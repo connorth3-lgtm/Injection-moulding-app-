@@ -2,6 +2,21 @@
 
 This register records assessment changes that can affect learner interpretation, difficulty, evidence or spaced-review identity. It is deliberately separate from general release notes so an assessment reviewer can see what changed and why.
 
+## 2026.08.30.1 — evidence-based diagnostic question bank
+
+- Upgraded **all 30 technical questions** so every live technical item requires evidence interpretation, a diagnostic decision, a discriminating test, verification/recovery reasoning or recognition that the available evidence is insufficient.
+- Upgraded all **27 regional UK/US/NZ safety/compliance questions** from rule-name recall to applied workplace safety/compliance decisions. The safety-critical keyed answer positions were deliberately retained: regional answer-key changes = **0**.
+- Preserved all 57 stable live-question IDs because each rewrite retains the assessed competency. Revision governance now records every live ID: **39 revision-2 items** (the 12 earlier technical reviews plus all 27 regional applied-safety reviews) and **18 revision-3 technical items**.
+- Re-reviewed keyed-option positions and rationale/source fit. A changed option index is never treated as an automated answer flip; the keyed engineering or safety conclusion is explicitly reviewed and recorded in `sources/QUESTION_REVISION_INDEX.json`.
+- Added deliberate coverage of five reasoning modes: observation, decision, discrimination, verification and **insufficient evidence**.
+- Added fail-closed cases that prohibit inferring pressure units/references or quantitative pressure loss from ambiguous signal names or magnitudes.
+- Audited the complete optional practice surface rather than treating it as secondary content: **40 scenario drills + 36 Diagnostic Learning Lab decisions + 24 Material Behaviour Lab decisions = 100 optional keyed questions**. Strong existing optional items were retained; release QA now verifies their structure, keys, feedback, safety boundaries and evidence rather than rewriting sound items for change-count purposes.
+- The evidence-approval snapshot covers **157/157 keyed learner questions**: 57 live + 100 optional. Unmatched evidence fails closed.
+- Grounded questions in the types of accepted measured evidence available to MouldMaster—pressure/flow response, cavity pressure, thermal/cooling behaviour, shot delivery, process actuals and quality outcomes—without copying raw third-party rows or turning study-specific values into universal production settings.
+- Advanced `question_bank_version` to `2026.08.30.1` while leaving measured-data acceptance counts unchanged.
+
+See `sources/QUESTION_BANK_DEEP_DIVE.md`, `sources/QUESTION_REVISION_INDEX.json` and `qa_question_deep_dive.py`.
+
 ## 2026.08.25.2 — fail-closed evidence hardening
 
 - Kept all 57 live exam answer keys, question text, the 40-scenario bank and the 9 Diagnostic Learning Labs unchanged.
@@ -15,10 +30,10 @@ This register records assessment changes that can affect learner interpretation,
 ## 2026.08.25.1 — answer-evidence approval layer
 
 - Kept all 57 live exam answer keys and question text unchanged.
-- Added an evidence-approval record for every keyed learner question: 30 technical exams, 27 regional safety/compliance exams, 40 scenario drills and 36 Diagnostic Learning Lab questions (133 total).
-- Every approval record now carries a reviewer, review date, status, rationale/reference context, direct HTTPS evidence links and a content fingerprint. Diagnostic-lab question fingerprints are tied to the approved lab source-file blob plus lab/step identity.
+- Added an evidence-approval record for every keyed learner question then in scope: 30 technical exams, 27 regional safety/compliance exams, 40 scenario drills and 36 Diagnostic Learning Lab questions (133 total at that release stage).
+- Every approval record carries a reviewer, review date, status, rationale/reference context, direct HTTPS evidence links and a content fingerprint. Diagnostic-lab question fingerprints are tied to the approved lab source-file blob plus lab/step identity.
 - Regional questions retain their direct question-specific regulator, legislation or standards source. Technical/scenario/lab items without an existing direct question citation are mapped to authoritative technical documentation, standards, supplier guidance or peer-reviewed evidence supporting the assessed mechanism or method.
-- Added a release gate that fails if any keyed question is unsourced/unapproved, if coverage drops below 133, if regional items lose direct official/standards sourcing, or if a reviewed content-bearing source file changes without a fresh approval update.
+- Added a release gate that fails if any keyed question is unsourced/unapproved, if expected coverage drops, if regional items lose direct official/standards sourcing, or if a reviewed content-bearing source file changes without a fresh approval update.
 - Added learner-facing post-grade evidence approval panels and Diagnostic Learning Lab approval/source panels.
 - Added `assessment_evidence_version` = `2026.08.25.1`. This is an evidence/control-layer change; `question_bank_version` and `content_version` remain `2026.08.24.2` because the approved question text and answer keys were not changed.
 - Internal approval is explicitly not represented as external accreditation or independent third-party SME endorsement.
@@ -39,11 +54,11 @@ See `sources/QUESTION_APPROVAL_POLICY.md` and `qa_assessment_evidence.py`.
 ## 2026.08.24.3 — final assessment hardening
 
 - Kept the 57 live exam answer keys and the 40-scenario bank unchanged.
-- Added an explicit 57-ID revision index and exposed the recorded per-question revision reason in the post-grade evidence panel. The 12 technical items changed during the deep review are individually identified as revision 2; all other live exam items remain at the audited revision-1 baseline.
+- Added an explicit 57-ID revision index and exposed the recorded per-question revision reason in the post-grade evidence panel. The 12 technical items changed during the deep review were individually identified as revision 2; subsequent 30 August question-bank work extends that same governance model to every live stable ID.
 - Replaced learner-facing response-time interpretation with exposure-based timing: the timer starts when at least 55% of a question is visible or the learner directly interacts with it, and time while the document is hidden is excluded. Older whole-exam elapsed timing is retained only as legacy analytics data.
 - The existing **Reset local analytics** control removes both the original assessment analytics store and the exposure-timing store, while preserving the original reset behavior.
 - Added a separate research DOI freshness registry and scheduled resolver checks across research-bearing assessment/reference files. Resolver 404/410 results require human review; temporary publisher, access, rate-limit and network errors remain warnings.
-- Bumped only `assessment_quality_version` to `2026.08.24.3`; `question_bank_version` and `content_version` remain `2026.08.24.2` because no question text, answer key or learning content changed in this hardening pass.
+- Bumped only `assessment_quality_version` to `2026.08.24.3`; `question_bank_version` and `content_version` remained `2026.08.24.2` at that release stage.
 
 ## 2026.08.24.2 — assessment quality suite
 
@@ -54,7 +69,7 @@ See `sources/QUESTION_APPROVAL_POLICY.md` and `qa_assessment_evidence.py`.
 - Added a competency-balanced exam blueprint. A normal regional exam still contains 7 technical items plus 3 regional safety/compliance items; Compare All still contains 7 technical items plus all 9 regional items. The selector favours coverage across materials/rheology, machine/controls, tooling/thermal, process development, quality/statistics and troubleshooting, while regional items supply safety/compliance.
 - Added per-question evidence/revision panels after grading with the exact cited source when one exists and a source-review freshness notice.
 - Added automated near-duplicate and answer-leak risk reporting. These checks do not change an answer key automatically; they identify questions needing human assessment review.
-- Expanded shop-floor scenario drills from 16 to 40. New cases cover hot runners, cooling restrictions, check-ring sealing, thermal degradation, venting/burns, reinforced weld lines, local flash, valve gates, pressure-curve features, vision domain shift, sensor service, robot delays, energy, overmoulding, insert temperature, microfeatures, foaming, recycled feedstock, tool wear, hot-runner leakage, startup equilibrium, model drift and cooling/warpage trade-offs.
+- **Expanded shop-floor scenario drills from 16 to 40.** New cases cover hot runners, cooling restrictions, check-ring sealing, thermal degradation, venting/burns, reinforced weld lines, local flash, valve gates, pressure-curve features, vision domain shift, sensor service, robot delays, energy, overmoulding, insert temperature, microfeatures, foaming, recycled feedstock, tool wear, hot-runner leakage, startup equilibrium, model drift and cooling/warpage trade-offs.
 - Added scheduled authoritative-source freshness monitoring using official ISO, OSHA, WorkSafe NZ, New Zealand Legislation, NIST and FDA pages. Network failures are warnings; a reachable official page losing all expected status/content markers is treated as a review trigger.
 
 ## 2026-08-24 — deep question review
