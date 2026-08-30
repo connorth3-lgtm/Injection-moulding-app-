@@ -28,6 +28,8 @@ for key in [
     'alreadyPromotedFamiliesMustNotRemainActiveDiscoveries',
     'articleOrThesisLicenceDoesNotAutomaticallyLicenseUnderlyingThirdPartyProductionData',
     'publicMirrorAvailabilityDoesNotProveDatasetReuseRights',
+    'reportedCountsFromRelatedPublicationsRemainUnacceptedUntilPayloadRightsAndOverlapAreResolved',
+    'cycleLevelFeatureRowsAreNotIntraCycleProcessWaveforms',
 ]:
     need(rules.get(key) is True, f'discovery queue boundary missing: {key}')
 
@@ -84,12 +86,40 @@ need(k85.get('license') is None, 'K85 mirror must not acquire an inferred licenc
 need(k85.get('status') == 'public-mirror-rights-and-origin-unresolved', 'K85 rights/origin blocker drifted')
 need(k85.get('scale', {}).get('testsPerCombinationReported') == 10, 'K85 repeated-test description drifted')
 need(k85.get('scale', {}).get('processParameterCombinations') is None, 'K85 must not invent a combination count before workbook profiling')
+k85_checks = k85.get('provenanceChecks', {})
+need(k85_checks.get('repositoryDeclaredLicense') is None, 'K85 GitHub repository must remain explicitly unlicensed')
+need(k85_checks.get('repositoryCreated') == '2024-03-19', 'K85 mirror repository creation date drifted')
+need(k85_checks.get('earliestDataCommitMessage') == 'Molding Machine Free Access Data', 'K85 earliest data commit wording drifted')
+need('not treated as an explicit reuse licence' in k85_checks.get('decision', ''), 'K85 access-versus-rights boundary missing')
 
 aspoeck = by_id['aspoeck-costa-industrial-71016-v1']
-need(aspoeck.get('status') == 'payload-not-public-company-data-rights-unresolved', 'Aspöck payload/rights blocker drifted')
-need(aspoeck.get('scale', {}).get('reportedInjectionCycles') == 71016, 'Aspöck thesis reported-cycle count drifted')
-need('underlying company production-data reuse rights not stated' in aspoeck.get('license', ''),
-     'Aspöck thesis/data licence boundary missing')
+need(aspoeck.get('status') == 'request-only-payload-not-public-company-data-rights-unresolved', 'Aspöck request/payload/rights blocker drifted')
+need(aspoeck.get('role') == 'large-industrial-record-level-process-data-access-and-rights-review',
+     'Aspöck must remain classified as record-level process data pending payload inspection')
+need('not an intra-cycle process waveform' in aspoeck.get('recordUnit', ''),
+     'Aspöck cycle-level versus waveform boundary missing from record unit')
+scale = aspoeck.get('scale', {})
+need(scale.get('thesisReportedInjectionCycles') == 71016, 'Aspöck thesis reported-cycle count drifted')
+need(scale.get('journalReportedInjectionCyclesApprox') == 280000, 'Aspöck peer-reviewed approximate cycle count drifted')
+need(scale.get('thesisReportedPiecesPerCycle') == 2, 'Aspöck thesis pieces-per-cycle report drifted')
+need(scale.get('journalReportedSensorsPerCycle') == 264, 'Aspöck journal sensor/feature count drifted')
+need(scale.get('journalReportedCandidateFeaturesAfterInitialReduction') == 47, 'Aspöck post-filter candidate-feature count drifted')
+need(scale.get('journalReportedMachineCount') == 1, 'Aspöck single-machine description drifted')
+need(scale.get('journalReportedApproxCycleSeconds') == 55, 'Aspöck approximate cycle duration drifted')
+need('underlying company production-data reuse rights are not stated' in aspoeck.get('license', ''),
+     'Aspöck publication/data licence boundary missing')
+need('further inquiries can be directed to the corresponding author' in aspoeck.get('dataAvailability', ''),
+     'Aspöck peer-reviewed request-only data availability statement missing')
+need('no equality, containment, deduplication, or additive relationship is assumed' in aspoeck.get('reportedCountRelationship', ''),
+     'Aspöck thesis/journal reported-count overlap boundary missing')
+need('264 sensors each provide one reading per cycle' in aspoeck.get('measurementGranularity', ''),
+     'Aspöck one-reading-per-cycle granularity missing')
+need('not 264 within-cycle sampled waveforms' in aspoeck.get('measurementGranularity', ''),
+     'Aspöck cycle-level values must not be inflated into waveform channels')
+need(aspoeck.get('source') == 'https://doi.org/10.3390/polym18010032', 'Aspöck strongest peer-reviewed source drifted')
+related_sources = aspoeck.get('relatedSources', [])
+need(len(related_sources) == 2 and all(str(x).startswith('https://') for x in related_sources),
+     'Aspöck related publication sources missing')
 
 accel = by_id['aisemo-accelerometer-state-recognition-v1']
 need(accel.get('status') == 'request-only-underlying-data-not-public', 'accelerometer request-only status drifted')
@@ -133,8 +163,12 @@ report = {
     'directProcessNextIntake': 1,
     'countedAsIngested': 0,
     'countedInjectionCycles': 0,
-    'reportedUnacceptedInjectionCycles': aspoeck['scale']['reportedInjectionCycles'],
+    'reportedUnacceptedInjectionCyclesThesis': scale['thesisReportedInjectionCycles'],
+    'reportedUnacceptedInjectionCyclesJournalApprox': scale['journalReportedInjectionCyclesApprox'],
+    'reportedJournalSensorsPerCycle': scale['journalReportedSensorsPerCycle'],
+    'reportedCountsAssumedAdditive': False,
+    'aspoeckClassifiedAsIntraCycleWaveforms': False,
     'result': 'pass',
 }
 REPORT.write_text(json.dumps(report, indent=2) + '\n', encoding='utf-8')
-print('MouldMaster measured-data discovery queue QA passed (4 active zero-count discoveries; 1 false positive screened out; 4 promoted discoveries archived; zero canonical count inflation)')
+print('MouldMaster measured-data discovery queue QA passed (4 active zero-count discoveries; Aspöck 71,016 thesis and ~280,000 journal cycle reports remain unaccepted/non-additive; 264 journal readings are cycle-level features, not waveforms; 1 false positive screened out; 4 promoted discoveries archived; zero canonical count inflation)')
