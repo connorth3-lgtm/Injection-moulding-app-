@@ -16,9 +16,11 @@ on:
       - 'material-behaviour-labs.js'
       - 'evidence-maturity-deep-dive.js'
       - 'evidence-maturity-formal-bridge.js'
+      - 'assessment-psychometric-hardening.js'
       - 'qa_question_quality_50_pass.py'
       - 'qa_question_quality_50_pass_runtime.py'
       - 'qa_question_quality_extreme_50_pass.py'
+      - 'qa_question_quality_extreme_runtime.py'
       - '.github/workflows/question-quality-50-pass.yml'
   workflow_dispatch:
 
@@ -44,7 +46,7 @@ jobs:
       - name: Run 50-pass quality audit across formal and optional learner-visible questions
         run: python qa_question_quality_50_pass_runtime.py
       - name: Run extreme 50-pass psychometric and evidence audit
-        run: python qa_question_quality_extreme_50_pass.py
+        run: python qa_question_quality_extreme_runtime.py
       - name: Upload question quality reports
         if: always()
         uses: actions/upload-artifact@v7
