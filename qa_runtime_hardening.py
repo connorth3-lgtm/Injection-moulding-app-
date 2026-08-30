@@ -28,6 +28,7 @@ repair = read("repair.html")
 reference_page = read("reference-data.html")
 service_worker = read("service-worker.js")
 approval = read("assessment-evidence-approval.js")
+psychometric_hardening = read("assessment-psychometric-hardening.js")
 psychometric_approval = read("assessment-psychometric-approval.js")
 training = read("training-upgrade.js")
 sbom = read("desktop/electron/scripts/generate-sbom.cjs")
@@ -118,8 +119,12 @@ must(approval, [
     "function scheduleApproval()", "DOMContentLoaded',()=>setTimeout(buildApproval,0)",
     "Evidence metadata could not finish loading.", "showUpdateWarning"
 ], "evidence approval hardening")
+must(psychometric_hardening, [
+    "const VERSION='2026.08.30.6'", "scenarioCount!==40", "DOMContentLoaded",
+    "initialization:'after-training-upgrade'", "itemsHardened,optionsParallelised"
+], "psychometric initialization hardening")
 must(psychometric_approval, [
-    "const REQUIRED_VERSION='2026.08.30.5'", "itemsHardened:197", "optionsParallelised:788",
+    "const REQUIRED_VERSION='2026.08.30.6'", "itemsHardened:197", "optionsParallelised:788",
     "verifiedSurfaceCueMean:0.269", "verifiedOptionPermutationEvaluations:9850", "psychometricCoverageOk"
 ], "psychometric approval hardening")
 require("throw new Error('Evidence approval coverage failure" not in approval, "incomplete evidence coverage must not crash the learning app")
