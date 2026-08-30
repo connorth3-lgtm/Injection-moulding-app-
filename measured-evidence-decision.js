@@ -1,7 +1,7 @@
-/* MouldMaster measured-evidence decision layer — 2026.08.30.1 */
+/* MouldMaster measured-evidence decision layer — 2026.08.30.2 */
 (function(){
 'use strict';
-const VERSION='2026.08.30.1';
+const VERSION='2026.08.30.2';
 const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 function base(){return window.MM_MEASURED_EVIDENCE||null}
 function hasTopic(text,topic){const t=String(text||'').toLowerCase(),k=String(topic||'').toLowerCase();if(k.length>3)return t.includes(k);const safe=k.replace(/[.*+?^${}()|[\]\\]/g,'\\$&');return new RegExp(`(?:^|[^a-z0-9])${safe}(?:$|[^a-z0-9])`,'i').test(t)}
@@ -11,7 +11,7 @@ function role(f){
  if(/production|process\/quality|operations/i.test(f.kind))return {group:'supporting',label:'Supporting process context',detail:'The source contains record-level production, quality or operational measurements rather than an intra-cycle waveform.'};
  return {group:'supporting',label:'Supporting material evidence',detail:'The source contains material, specimen, surface or tribology measurements that help interpret mechanisms but are not machine/cavity waveforms.'};
 }
-function explain(text,limit=4){const b=base();if(!b)return[];return b.select(text,limit).map(f=>{const matches=matchedTopics(f,text),r=role(f);return {id:f.id,title:f.title,role:r.group,roleLabel:r.label,matches,why:`${r.detail}${matches.length?` Matched topic${matches.length===1?'':'s'}: ${matches.slice(0,3).join(', ')}.`:''}`,boundary:f.boundary,rights:f.rights,restricted:!!f.restricted,timeSeries:Number(f.timeSeries)||0}})}
+function explain(text,limit=4){const b=base();if(!b)return[];return b.select(text,limit).map(f=>{const matches=matchedTopics(f,text),r=role(f);return {id:f.id,title:f.title,role:r.group,roleLabel:r.label,matches,why:`${r.detail}${matches.length?` Matched topic${matches.length===1?'':'s'}: ${matches.slice(0,4).join(', ')}.`:''}`,boundary:f.boundary,rights:f.rights,restricted:!!f.restricted,timeSeries:Number(f.timeSeries)||0}})}
 function cleanContext(panel){const host=panel?.parentElement;if(!host)return'';const clone=host.cloneNode(true);clone.querySelectorAll('[data-mm-measured-evidence]').forEach(x=>x.remove());const fields=[...clone.querySelectorAll('input,textarea,select')].map(x=>x.value||'').join(' ');return `${clone.textContent||''} ${fields}`}
 function addRole(card,f){if(card.querySelector('[data-mme-decision-role]'))return;const r=role(f),chips=card.querySelector('.mme-chips');if(!chips)return;chips.insertAdjacentHTML('beforeend',`<span class="mme-chip mme-role-${r.group}" data-mme-decision-role="${r.group}">${esc(r.label)}</span>`)}
 function annotatePanel(panel){const b=base();if(!b||!panel)return;const byId=new Map(b.families.map(f=>[f.id,f]));const relevant=panel.getAttribute('data-mm-measured-evidence')==='relevant';const context=relevant?cleanContext(panel):'';const decisions=relevant?new Map(explain(context,8).map(x=>[x.id,x])):new Map();
