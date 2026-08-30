@@ -1,5 +1,5 @@
 const CACHE_VERSION='2026.08.26.2';
-const CACHE_REVISION='evidence-questions-20260830';
+const CACHE_REVISION='psychometric-questions-20260831';
 const STATIC_CACHE=`mouldmaster-static-${CACHE_VERSION}-${CACHE_REVISION}`;
 const CORE=[
   './index.html',
@@ -38,8 +38,10 @@ const CORE=[
   './assessment-evidence-sources.js',
   './evidence-maturity-deep-dive.js',
   './evidence-maturity-formal-bridge.js',
+  './assessment-psychometric-hardening.js',
   './lesson-evidence-depth.js',
   './assessment-evidence-approval.js',
+  './assessment-psychometric-approval.js',
   './app-shell-registry.js',
   './pwa-shell.js',
   './learning-experience.js',
