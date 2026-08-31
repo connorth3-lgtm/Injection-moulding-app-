@@ -38,6 +38,7 @@ for marker in [
     'window.getExamQuestions=function',
     'recent.includes(current)',
     '!recent.includes(questionIdentity(item))',
+    "scope:'learner + level + region'",
 ]:
     require(marker in ux, f'assessment UX safeguard missing: {marker}')
 
@@ -54,9 +55,9 @@ require('assessment-question-rotation-20260831' in index, 'runtime bundle must b
 require("CACHE_REVISION='assessment-question-rotation-20260831'" in sw, 'offline cache must be bumped for the rotation fix')
 
 # Execute the real browser layer in Node with a minimal DOM shim. The underlying generator
-# deliberately returns the same order every time. The test reinstalls the module midway
-# while retaining localStorage to model a full page reload/reopen and prove the history
-# survives that lifecycle boundary.
+# deliberately returns the same order every time. Storage is learner-scoped in the shim so
+# the test covers same-page starts, a full reload/reopen, and switching learners without
+# reloading the module. The wrapper must resynchronise from the active learner's history.
 node_test = textwrap.dedent(r'''
   global.window=global;
   global.document={
@@ -66,10 +67,12 @@ node_test = textwrap.dedent(r'''
     head:{appendChild:()=>{}}
   };
   const backing={};
+  let learner='A';
+  const scopedKey=key=>key==='mm_assessment_opening_history_v1'?`${key}::${learner}`:key;
   global.localStorage={
-    getItem:key=>Object.prototype.hasOwnProperty.call(backing,key)?backing[key]:null,
-    setItem:(key,value)=>{backing[key]=String(value)},
-    removeItem:key=>{delete backing[key]}
+    getItem:key=>{const k=scopedKey(key);return Object.prototype.hasOwnProperty.call(backing,k)?backing[k]:null},
+    setItem:(key,value)=>{backing[scopedKey(key)]=String(value)},
+    removeItem:key=>{delete backing[scopedKey(key)]}
   };
   const baseQuestions=()=>[
     {stableId:'q1',q:'Q1'},
@@ -90,7 +93,8 @@ node_test = textwrap.dedent(r'''
   install();
   const openings=[];
   for(let i=0;i<3;i++) openings.push(global.getExamQuestions('Beginner','NZ')[0].stableId);
-  const storedBeforeReload=JSON.parse(backing.mm_assessment_opening_history_v1||'{}');
+  const aKey='mm_assessment_opening_history_v1::A';
+  const storedBeforeReload=JSON.parse(backing[aKey]||'{}');
   if((storedBeforeReload['Beginner::NZ']||[]).length!==3) throw new Error('opening history was not persisted before reload');
   const recentBeforeReload=openings.slice(-3);
 
@@ -98,6 +102,17 @@ node_test = textwrap.dedent(r'''
   const afterReload=global.getExamQuestions('Beginner','NZ')[0].stableId;
   openings.push(afterReload);
   if(recentBeforeReload.includes(afterReload)) throw new Error(`opening question repeated across reload boundary: ${openings.join(',')}`);
+
+  learner='B';
+  const learnerBFirst=global.getExamQuestions('Beginner','NZ')[0].stableId;
+  if(learnerBFirst!=='q1') throw new Error(`learner B inherited learner A in-memory history: ${learnerBFirst}`);
+  if(!backing['mm_assessment_opening_history_v1::B']) throw new Error('learner B opening history was not stored in its own scope');
+
+  learner='A';
+  const aRecent=JSON.parse(backing[aKey]||'{}')['Beginner::NZ']||[];
+  const afterLearnerReturn=global.getExamQuestions('Beginner','NZ')[0].stableId;
+  openings.push(afterLearnerReturn);
+  if(aRecent.includes(afterLearnerReturn)) throw new Error('learner A history was not restored after switching back');
 
   for(let i=openings.length;i<12;i++) openings.push(global.getExamQuestions('Beginner','NZ')[0].stableId);
   for(let i=1;i<openings.length;i++){
@@ -108,11 +123,12 @@ node_test = textwrap.dedent(r'''
   const usFirst=global.getExamQuestions('Beginner','US')[0].stableId;
   if(usFirst!=='q1') throw new Error('rotation history leaked between region scopes');
   if(global.MM_ASSESSMENT_UX?.questionRotation?.historyLimit!==3) throw new Error('rotation metadata missing');
-  if(!/localStorage/.test(global.MM_ASSESSMENT_UX?.questionRotation?.persistence||'')) throw new Error('rotation persistence metadata missing');
+  if(!/learner-scoped localStorage/.test(global.MM_ASSESSMENT_UX?.questionRotation?.persistence||'')) throw new Error('rotation persistence metadata missing learner scope');
 
   global.MM_ASSESSMENT_UX.resetQuestionRotation();
-  if(backing.mm_assessment_opening_history_v1!==undefined) throw new Error('rotation reset did not clear persisted history');
-  if(global.getExamQuestions('Beginner','NZ')[0].stableId!=='q1') throw new Error('rotation reset did not restore a clean history');
+  if(backing[aKey]!==undefined) throw new Error('rotation reset did not clear active learner persisted history');
+  if(backing['mm_assessment_opening_history_v1::B']===undefined) throw new Error('active learner reset incorrectly cleared another learner history');
+  if(global.getExamQuestions('Beginner','NZ')[0].stableId!=='q1') throw new Error('rotation reset did not restore a clean active learner history');
   console.log(openings.join(','));
 ''')
 proc = subprocess.run(
@@ -123,4 +139,4 @@ proc = subprocess.run(
 )
 require(proc.returncode == 0, f'assessment opening-question rotation runtime test failed: {proc.stderr or proc.stdout}')
 
-print('MouldMaster assessment UX QA passed (opening-question repeat guard: persistent 3-item history across reloads)')
+print('MouldMaster assessment UX QA passed (persistent learner-scoped 3-item opening history across starts, reloads and learner switches)')
