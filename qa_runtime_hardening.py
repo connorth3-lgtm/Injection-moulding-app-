@@ -35,6 +35,7 @@ real_measured = read("real-measured-data-assessment.js")
 training = read("training-upgrade.js")
 sbom = read("desktop/electron/scripts/generate-sbom.cjs")
 assessment_qa = read("qa_assessment_quality.py")
+question_runtime = read("qa_question_quality_50_pass_runtime.py")
 
 shell_release = js_const(index, "SHELL_RELEASE")
 runtime_asset_version = js_const(index, "RUNTIME_ASSET_VERSION")
@@ -107,16 +108,19 @@ must(service_worker, [
 
 must(approval, ["const coverageOk=!(summary.total!==157", "status:coverageOk?'approved':'update-required'", "function scheduleApproval()", "DOMContentLoaded',()=>setTimeout(buildApproval,0)", "Evidence metadata could not finish loading.", "showUpdateWarning"], "evidence approval hardening")
 must(psychometric_hardening, [
-    "const VERSION='2026.09.01.5'", "scenarioCount!==40", "DOMContentLoaded", "initialization:'after-training-upgrade'", "itemsHardened,optionsParallelised", "technicalKeyPositions:technicalKeyPositions.slice()",
+    "const VERSION='2026.09.01.6'", "scenarioCount!==40", "DOMContentLoaded", "initialization:'after-training-upgrade'", "itemsHardened,optionsParallelised", "technicalKeyPositions:technicalKeyPositions.slice()",
     "semanticAnswerChanges:0", "technicalTermSubstitutions:0", "paddingApplied:false", "keyedConciseEdits", "distractorCueEdits", "formClauseTrims",
-    "technicalLengthRanks", "regionalLengthRanks", "scenarioLengthRanks", "diagnosticLengthRanks", "materialLengthRanks", "optionalLengthRanks", "keyFormPenalty"
+    "technicalLengthRanks", "regionalLengthRanks", "scenarioLengthRanks", "diagnosticLengthRanks", "materialLengthRanks", "optionalLengthRanks", "keyFormPenalty",
+    "technicalLengthRanks=[0,0,0,0]", "optionalLengthRanks=[0,0,0,0]", "kp.chars>median*1.40&&kp.chars-median>12"
 ], "psychometric initialization hardening")
 require("Math.max(124" not in psychometric_hardening and "cueNeutral" not in psychometric_hardening, "psychometric layer must not use generic length padding or global engineering-term synonym rewriting")
+require("kp.chars>=Math.max" not in psychometric_hardening, "psychometric layer must not create a longest-is-always-wrong inverse cue")
 must(proposition_integrity, ["records.length===197", "supportLocator", "limitations", "relevanceStatus", "weakOptional.length===0", "context-only", "sourceUpgrades:Object.keys(SOURCE_UPGRADES)"], "proposition evidence integrity")
 must(psychometric_approval, [
-    "const REQUIRED_VERSION='2026.09.01.5'", "itemsHardened:197", "optionsParallelised:788", "technicalKeyPositions:[8,8,7,7]", "technicalTermSubstitutions:0", "paddingApplied:false", "keyedConciseEdits:3",
-    "distractorCueEdits", "formClauseTrims", "technicalLengthRanks", "regionalLengthRanks", "scenarioLengthRanks", "diagnosticLengthRanks", "materialLengthRanks", "optionalLengthRanks", "verificationPolicy", "psychometricCoverageOk"
+    "const REQUIRED_VERSION='2026.09.01.6'", "itemsHardened:197", "optionsParallelised:788", "technicalKeyPositions:[8,8,7,7]", "technicalTermSubstitutions:0", "paddingApplied:false", "keyedConciseEdits:3",
+    "distractorCueEdits", "formClauseTrims", "technicalLengthRanks", "regionalLengthRanks", "scenarioLengthRanks", "diagnosticLengthRanks", "materialLengthRanks", "optionalLengthRanks", "verificationPolicy", "psychometricCoverageOk", "a.length===4"
 ], "psychometric approval hardening")
+require("_evaluate_balanced_length" in question_runtime and "hard.remove('correct-longest-or-tied')" in question_runtime, "final standard audit must remove the absolute longest-key prohibition while retaining salience checks")
 must(real_measured, ["evidenceType:'real-measured'", "decisionCount:CASES.reduce", "Pressure actual values excluded pending unit", "without assigning phase names until an authoritative mapping is found"], "real measured assessment")
 require("throw new Error('Evidence approval coverage failure" not in approval, "incomplete evidence coverage must not crash the learning app")
 require("document.addEventListener('DOMContentLoaded',init)" in training, "training scenario upgrade remains DOMContentLoaded-driven")
