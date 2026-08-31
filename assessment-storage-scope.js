@@ -1,8 +1,8 @@
-/* MouldMaster learner-scoped assessment storage — 2026-08-31.5 */
+/* MouldMaster learner-scoped assessment storage — 2026-08-24.4 */
 (function(){
 'use strict';
 if(typeof window==='undefined'||typeof Storage==='undefined'||typeof localStorage==='undefined')return;
-const VERSION='2026.08.31.5';
+const VERSION='2026.08.24.4';
 const ANALYTICS_BASE='mm_assessment_analytics_v1';
 const TIMING_BASE='mm_assessment_exposure_timing_v1';
 const ROTATION_BASE='mm_assessment_opening_history_v1';
