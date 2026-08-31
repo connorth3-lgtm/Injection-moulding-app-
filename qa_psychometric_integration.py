@@ -67,9 +67,10 @@ for marker in ['node --check assessment-psychometric-hardening.js','node --check
     need(marker in question_workflow,f'question-quality workflow missing evidence/psychometric gate: {marker}')
 
 runtime=text('qa_question_quality_extreme_runtime_v2.py')
-need('_form_only_surface_features' in runtime,'extreme runtime does not use form-only surface-cue features')
-need("'__qual_'" in runtime and "'__starter_'" in runtime,'extreme hard cue gate still includes engineering-semantic starter/qualifier categories')
+for marker in ['_relative_form_features','_relative_form_cue_model','within-question relative presentation form only','audit.surface_cue_model=_relative_form_cue_model']:
+    need(marker in runtime,f'extreme runtime relative-form cue methodology missing: {marker}')
+need('__qual_' not in runtime and '__starter_' not in runtime and '__unit_' not in runtime and '__unsafe_' not in runtime,'extreme hard cue model must not use engineering-semantic categories')
 standard=text('qa_question_quality_50_pass_runtime.py')
 need("zero learner-visible quality warnings" in standard and "need(not report.get('warning_types')" in standard,'standard runtime does not fail closed on learner-visible warnings')
 
-print(f'MouldMaster psychometric integration QA passed: 197 keyed decisions retain keyed propositions and technical vocabulary; reviewed cue edits are tracked; proposition evidence is loaded before approval; 12 real-measured decisions are delivered; blob pin={actual}')
+print(f'MouldMaster psychometric integration QA passed: 197 keyed decisions retain keyed propositions and technical vocabulary; reviewed cue edits are tracked; extreme cue gate uses within-question presentation form; proposition evidence is loaded before approval; 12 real-measured decisions are delivered; blob pin={actual}')
