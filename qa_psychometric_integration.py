@@ -21,7 +21,7 @@ def git_blob_sha(path):
 for path in [
     'assessment-psychometric-hardening.js','assessment-evidence-integrity-upgrade.js','assessment-psychometric-approval.js','assessment-evidence-approval.js','real-measured-data-assessment.js',
     'index.html','service-worker.js','desktop/electron/package.json','desktop/electron/scripts/generate-integrity.cjs',
-    '.github/workflows/qa.yml','qa_question_quality_extreme_runtime_v2.py','qa_question_quality_50_pass_runtime.py','qa_assessment_evidence_integrity.py'
+    '.github/workflows/qa.yml','.github/workflows/question-quality-50-pass.yml','qa_question_quality_extreme_runtime_v2.py','qa_question_quality_50_pass_runtime.py','qa_assessment_evidence_integrity.py'
 ]: text(path)
 
 hardening=text('assessment-psychometric-hardening.js')
@@ -58,9 +58,11 @@ for asset in ['assessment-psychometric-hardening.js','assessment-evidence-integr
     need('../../'+asset in froms,f'desktop package missing {asset}')
     need("'"+asset+"'" in text('desktop/electron/scripts/generate-integrity.cjs'),f'desktop integrity manifest missing {asset}')
 
-workflow=text('.github/workflows/qa.yml')
-for marker in ['node --check assessment-psychometric-hardening.js','node --check assessment-evidence-integrity-upgrade.js','node --check real-measured-data-assessment.js','python qa_psychometric_integration.py','python qa_assessment_evidence_integrity.py']:
-    need(marker in workflow,f'release workflow missing evidence/psychometric gate: {marker}')
+release_workflow=text('.github/workflows/qa.yml')
+need('python qa_psychometric_integration.py' in release_workflow,'release QA must retain psychometric production integration gate')
+question_workflow=text('.github/workflows/question-quality-50-pass.yml')
+for marker in ['node --check assessment-psychometric-hardening.js','node --check assessment-evidence-integrity-upgrade.js','node --check real-measured-data-assessment.js','python qa_assessment_evidence_integrity.py']:
+    need(marker in question_workflow,f'question-quality workflow missing evidence/psychometric gate: {marker}')
 
 runtime=text('qa_question_quality_extreme_runtime_v2.py')
 need('_form_only_surface_features' in runtime,'extreme runtime does not use form-only surface-cue features')
