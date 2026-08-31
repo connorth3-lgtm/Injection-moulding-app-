@@ -20,11 +20,12 @@ dep_lock = text(".github/workflows/desktop-dependency-lock.yml")
 release_qa = text(".github/workflows/qa.yml")
 mobile_qa = text(".github/workflows/mobile-browser-qa.yml")
 desktop_build = text(".github/workflows/open-desktop-build.yml")
+question_quality = text(".github/workflows/question-quality-50-pass.yml")
 protection_helper = text(".github/scripts/apply-main-ruleset.sh")
 protection_doc = text(".github/MAIN_PROTECTION.md")
 
 # Main must be continuously checked for merged-PR provenance and for the same
-# three pre-merge workflows intended for native branch protection. This is a
+# four pre-merge workflows intended for native branch protection. This is a
 # repository-level compensating control; it does not claim GitHub's native
 # branch-protection/ruleset setting is enabled.
 for marker in [
@@ -43,6 +44,7 @@ for marker in [
     "MouldMaster Release QA",
     "Mobile Browser QA",
     "Open Desktop Build",
+    "Question Quality 50-Pass",
     "actions/runs?head_sha=$PR_HEAD_SHA&event=pull_request",
     "all_required_success",
     "git/refs/heads/main",
@@ -76,10 +78,13 @@ for marker in [
     '"context": "integrity"',
     '"context": "mobile-browser"',
     '"context": "build-windows"',
+    '"context": "question-quality-50-pass"',
+    '["build-windows","integrity","mobile-browser","question-quality-50-pass"]',
     'gh api --method POST "repos/$REPO/rulesets"',
     'gh api --method PUT "repos/$REPO/rulesets/$existing_id"',
     'gh api "repos/$REPO/branches/main" --jq',
     'protected=true',
+    'all four required checks',
 ]:
     need(marker in protection_helper, f"native-protection helper missing marker: {marker}")
 
@@ -93,6 +98,10 @@ for marker in [
     "`integrity`",
     "`mobile-browser`",
     "`build-windows`",
+    "`question-quality-50-pass`",
+    "four technical gates",
+    "all four are green",
+    "all four required workflows green",
     "block branch deletion",
     "block non-fast-forward/force updates",
     "required_approving_review_count: 0",
@@ -107,6 +116,8 @@ for marker in [
 need("jobs:\n  integrity:" in release_qa, "required status context 'integrity' is no longer the Release QA job")
 need("jobs:\n  mobile-browser:" in mobile_qa, "required status context 'mobile-browser' is no longer the mobile QA job")
 need("jobs:\n  build-windows:" in desktop_build, "required status context 'build-windows' is no longer the desktop build job")
+need("jobs:\n  question-quality-50-pass:" in question_quality, "required status context 'question-quality-50-pass' is no longer the question-quality job")
+need("pull_request:\n    branches: [main]" in question_quality, "question-quality required check must run on every PR to main")
 
 # Dependency-lock generation must be a verification gate, never a privileged
 # direct writer to main. Both package.json and package-lock.json changes are
@@ -169,5 +180,5 @@ need("run: python qa_repo_governance.py" in release_qa, "release QA must run rep
 
 print(
     "MouldMaster repository governance QA passed "
-    "(required-check rollback; no direct-main bot write; reviewed native-ruleset helper; guard-gated safe pruning)"
+    "(four required-check rollback; no direct-main bot write; reviewed native-ruleset helper; guard-gated safe pruning)"
 )

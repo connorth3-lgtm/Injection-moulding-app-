@@ -93,6 +93,10 @@ cat >"$payload" <<JSON
           {
             "context": "build-windows",
             "integration_id": $GITHUB_ACTIONS_APP_ID
+          },
+          {
+            "context": "question-quality-50-pass",
+            "integration_id": $GITHUB_ACTIONS_APP_ID
           }
         ]
       }
@@ -111,7 +115,8 @@ jq -e '
   ([.rules[].type] | index("deletion")) != null and
   ([.rules[].type] | index("non_fast_forward")) != null and
   ([.rules[] | select(.type == "pull_request") | .parameters.required_approving_review_count] | .[0]) == 0 and
-  ([.rules[] | select(.type == "required_status_checks") | .parameters.strict_required_status_checks_policy] | .[0]) == true
+  ([.rules[] | select(.type == "required_status_checks") | .parameters.strict_required_status_checks_policy] | .[0]) == true and
+  ([.rules[] | select(.type == "required_status_checks") | .parameters.required_status_checks[].context] | sort) == (["build-windows","integrity","mobile-browser","question-quality-50-pass"] | sort)
 ' "$payload" >/dev/null
 
 printf 'Repository: %s\n' "$REPO"
@@ -151,4 +156,4 @@ if [[ "$protected" != "true" ]]; then
 fi
 
 echo "Verified: GitHub reports main protected=true."
-echo "Next: open a test PR and confirm all three required checks block merge while pending/failing."
+echo "Next: open a test PR and confirm all four required checks block merge while pending/failing."

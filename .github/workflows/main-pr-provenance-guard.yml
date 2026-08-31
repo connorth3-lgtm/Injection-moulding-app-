@@ -51,6 +51,7 @@ jobs:
             "MouldMaster Release QA"
             "Mobile Browser QA"
             "Open Desktop Build"
+            "Question Quality 50-Pass"
           )
 
           all_required_success=false
