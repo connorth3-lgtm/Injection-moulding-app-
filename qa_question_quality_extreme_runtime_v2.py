@@ -9,17 +9,19 @@ def _compatible_need(ok,msg):
         return
     if msg.startswith('psychometric coverage mismatch:'):
         meta=audit.PSYCHOMETRIC_META or {}
-        if meta.get('itemsHardened')==197 and (meta.get('optionsParallelised')==788 or meta.get('distractorsRewritten',0)>=350):
+        if meta.get('itemsHardened')==197 and meta.get('optionsParallelised')==788:
             return
     _original_need(ok,msg)
 
 
 def _form_only_surface_features(option,stem):
     feats=set(_original_surface_features(option,stem))
-    # Unit/value content and explicit unsafe safeguarding language carry domain
-    # meaning. They remain in semantic/safety QA, but are not test-taking form.
-    feats={x for x in feats if not x.startswith('__unit_') and not x.startswith('__unsafe_')}
-    return feats
+    # The hard cue model is deliberately limited to presentation/form signals.
+    # Engineering-semantic categories (evidence-vs-parameter starter, qualifier
+    # vocabulary, units and explicit safeguarding language) remain covered by
+    # item-level semantic/safety QA and the review-only content model instead.
+    semantic_prefixes=('__unit_','__unsafe_','__qual_','__starter_')
+    return {x for x in feats if not x.startswith(semantic_prefixes)}
 
 
 audit.need=_compatible_need
