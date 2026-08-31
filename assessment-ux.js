@@ -1,11 +1,36 @@
-/* MouldMaster assessment experience — question rotation hardening 2026-08-31.2 */
+/* MouldMaster assessment experience — persistent question rotation hardening 2026-08-31.3 */
 (function(){
 'use strict';
 
-const VERSION='2026.08.31.2';
+const VERSION='2026.08.31.3';
 const FIRST_HISTORY_LIMIT=3;
+const HISTORY_KEY='mm_assessment_opening_history_v1';
 const root=document.documentElement;
 const firstQuestionHistory=new Map();
+
+function readQuestionHistory(){
+  try{
+    const raw=JSON.parse(localStorage.getItem(HISTORY_KEY)||'{}');
+    if(!raw||typeof raw!=='object'||Array.isArray(raw))return;
+    for(const [scope,ids] of Object.entries(raw)){
+      if(!Array.isArray(ids))continue;
+      const clean=ids.map(x=>String(x||'').trim()).filter(Boolean).slice(0,FIRST_HISTORY_LIMIT);
+      if(clean.length)firstQuestionHistory.set(scope,clean);
+    }
+  }catch(_){}
+}
+function persistQuestionHistory(){
+  try{
+    const out={};
+    for(const [scope,ids] of firstQuestionHistory.entries()){
+      const clean=(Array.isArray(ids)?ids:[]).map(x=>String(x||'').trim()).filter(Boolean).slice(0,FIRST_HISTORY_LIMIT);
+      if(clean.length)out[scope]=clean;
+    }
+    localStorage.setItem(HISTORY_KEY,JSON.stringify(out));
+    return true;
+  }catch(_){return false}
+}
+readQuestionHistory();
 
 function addStyles(){
   if(document.getElementById('mm-assessment-ux-style'))return;
@@ -82,10 +107,14 @@ function rotateOpeningQuestion(rows,level,region){
   if(first){
     const limit=Math.min(FIRST_HISTORY_LIMIT,Math.max(1,rows.length-1));
     firstQuestionHistory.set(scope,[first,...recent.filter(id=>id!==first)].slice(0,limit));
+    persistQuestionHistory();
   }
   return rows;
 }
-function resetQuestionRotation(){firstQuestionHistory.clear()}
+function resetQuestionRotation(){
+  firstQuestionHistory.clear();
+  try{localStorage.removeItem(HISTORY_KEY)}catch(_){}
+}
 
 function optionLabels(card,index){
   const labels=[...card.querySelectorAll('label.option')];
@@ -264,6 +293,6 @@ window.MM_ASSESSMENT_UX={
   showQuestion,
   rotateOpeningQuestion,
   resetQuestionRotation,
-  questionRotation:{historyLimit:FIRST_HISTORY_LIMIT,scope:'level + region',policy:'avoid the last three opening questions when another valid item is available'}
+  questionRotation:{historyLimit:FIRST_HISTORY_LIMIT,scope:'level + region',persistence:'localStorage stable IDs only; no answers or personal data',storageKey:HISTORY_KEY,policy:'avoid the last three opening questions across starts and reloads when another valid item is available'}
 };
 })();
