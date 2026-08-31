@@ -13,12 +13,37 @@ FINAL_META=None
 BASE_LOAD_RUNTIME=base.load_runtime_bank
 BASE_LOAD_LAB=base.load_lab_file
 BASE_LOAD_OPTIONAL=base.load_optional_material_practice
-BASE_EVALUATE=base.evaluate_item
+ORIGINAL_EVALUATE=base.evaluate_item
 
 
 def need(ok,msg):
     if not ok:
         raise AssertionError(msg)
+
+
+def _evaluate_balanced_length(item):
+    """Retain the shared rubric without creating an inverse 'longest is always wrong' cue.
+
+    A keyed option may be longest when it is not meaningfully length-salient. The stricter
+    moderate salience boundary remains fail-closed because the final runtime requires zero
+    learner-visible warnings.
+    """
+    result=ORIGINAL_EVALUATE(item)
+    hard=set(result.get('hard',[]));warnings=set(result.get('warnings',[]))
+    if 'correct-longest-or-tied' in hard:
+        hard.remove('correct-longest-or-tied')
+        options=[base.norm(x) for x in item.get('options',[])]
+        key=item.get('correct')
+        if len(options)==4 and isinstance(key,int) and 0<=key<4:
+            lens=[base.char_len(x) for x in options];keyed=lens[key]
+            wrong=sorted(x for i,x in enumerate(lens) if i!=key);median=wrong[1]
+            if keyed>median*1.40 and keyed-median>12:
+                warnings.add('correct-length-salience')
+    score=max(0,100-25*len(hard)-4*len(warnings))
+    return {'hard':sorted(hard),'warnings':sorted(warnings),'score':score}
+
+
+BASE_EVALUATE=_evaluate_balanced_length
 
 
 def evaluate_runtime(item):
@@ -167,8 +192,8 @@ def main():
     report['scenario_feedback_upgraded']=FORMAL_OVERLAY.get('scenarioFeedbackUpgraded',0) if FORMAL_OVERLAY else 0
     report['optional_answer_positions']=OPTIONAL_POSITIONS
     report['psychometric_runtime']=FINAL_META
-    report['runtime_quality_version']='2026.08.31.1'
-    report['rubric']['hard_gates'] += ['balanced 8/8/7/7 technical answer positions','balanced 10/10/10/10 scenario and optional answer positions','option-specific optional feedback','zero learner-visible quality warnings']
+    report['runtime_quality_version']='2026.09.01.2'
+    report['rubric']['hard_gates'] += ['balanced 8/8/7/7 technical answer positions','balanced 10/10/10/10 scenario and optional answer positions','non-salient correct options may occupy any relative length rank','option-specific optional feedback','zero learner-visible quality warnings']
     need(not report.get('warning_types'),f"final learner-visible standard audit still has warnings: {report.get('warning_types')} / {report.get('warning_items')}")
     (ROOT/'question-quality-50-pass-report.json').write_text(json.dumps(report,indent=2)+'\n',encoding='utf-8')
     print(f"Final runtime verified: psychometric={FINAL_META.get('version')} technical={FINAL_META.get('technicalKeyPositions')} scenarios={FINAL_META.get('scenarioKeyPositions')} warnings=0")
