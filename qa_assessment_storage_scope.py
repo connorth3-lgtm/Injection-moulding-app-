@@ -10,7 +10,7 @@ def need(ok,msg):
 scope=ROOT/'assessment-storage-scope.js'
 need(scope.exists(),'assessment-storage-scope.js missing')
 js=text('assessment-storage-scope.js')
-for marker in ["VERSION='2026.08.31.5'","ANALYTICS_BASE='mm_assessment_analytics_v1'","TIMING_BASE='mm_assessment_exposure_timing_v1'","ROTATION_BASE='mm_assessment_opening_history_v1'","BASES=[ANALYTICS_BASE,TIMING_BASE,ROTATION_BASE]","rotationKey:()=>scopedKey(ROTATION_BASE)","learnerScoped:true","hashScope","migrateLegacy","clearAll","cancelInMemoryAttempt","wrapLearnerChange('switchUser')","wrapLearnerChange('createLearner')","after!==before){cancelInMemoryAttempt();clearAll()"]:
+for marker in ["VERSION='2026.08.24.4'","ANALYTICS_BASE='mm_assessment_analytics_v1'","TIMING_BASE='mm_assessment_exposure_timing_v1'","ROTATION_BASE='mm_assessment_opening_history_v1'","BASES=[ANALYTICS_BASE,TIMING_BASE,ROTATION_BASE]","rotationKey:()=>scopedKey(ROTATION_BASE)","learnerScoped:true","hashScope","migrateLegacy","clearAll","cancelInMemoryAttempt","wrapLearnerChange('switchUser')","wrapLearnerChange('createLearner')","after!==before){cancelInMemoryAttempt();clearAll()"]:
     need(marker in js,f'assessment storage scope marker missing: {marker}')
 p=subprocess.run(['node','--check',str(scope)],capture_output=True,text=True)
 need(p.returncode==0,f'assessment-storage-scope.js syntax error: {p.stderr}')
@@ -62,7 +62,7 @@ process.stdout.write(JSON.stringify({version:api.version,learnerScoped:api.learn
 '''%json.dumps(str(scope))
 p=subprocess.run(['node','-e',node],capture_output=True,text=True)
 need(p.returncode==0,f'assessment storage scope runtime QA failed: {p.stderr or p.stdout}')
-r=json.loads(p.stdout);need(r['version']=='2026.08.31.5' and r['learnerScoped'] is True,'assessment storage scope runtime metadata mismatch')
+r=json.loads(p.stdout);need(r['version']=='2026.08.24.4' and r['learnerScoped'] is True,'assessment storage scope runtime metadata mismatch')
 
 idx=text('index.html');need('<script src="./assessment-storage-scope.js">' in idx,'storage scope not loaded by shell')
 need(idx.index('assessment-deep-dive.js')<idx.index('assessment-storage-scope.js')<idx.index('assessment-quality-suite.js'),'storage scope load order must precede analytics suite')
@@ -75,7 +75,7 @@ bridge=text('training-qa-fix.js')
 for marker in ['clearAssessmentAnalyticsStores','cancelActiveExam','mm_assessment_analytics_v1','mm_assessment_exposure_timing_v1','mm_assessment_opening_history_v1','committed=true;cancelActiveExam();clearAssessmentAnalyticsStores()','clearAssessmentAnalyticsStores();cancelActiveExam()']:
     need(marker in bridge,f'training reset/import assessment cleanup missing: {marker}')
 
-V=json.loads(text('version.json'));need(V.get('assessment_storage_scope_version')=='2026.08.31.5','assessment storage scope version missing')
+V=json.loads(text('version.json'));need(V.get('assessment_storage_scope_version')=='2026.08.24.4','assessment storage scope version missing')
 for wf in ['.github/workflows/qa.yml','.github/workflows/open-desktop-build.yml','.github/workflows/microsoft-store-msix.yml']:
     w=text(wf);need('python qa_assessment_storage_scope.py' in w,f'{wf} missing learner-scoped analytics QA')
 print('MouldMaster learner-scoped assessment storage QA passed (analytics, timing and opening-question history)')
