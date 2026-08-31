@@ -19,13 +19,16 @@ hardening=text('assessment-psychometric-hardening.js')
 integrity=text('assessment-evidence-integrity-upgrade.js')
 real=text('real-measured-data-assessment.js')
 
-need("const VERSION='2026.09.01.5'" in hardening,'final psychometric hardening version missing')
+need("const VERSION='2026.09.01.6'" in hardening,'final psychometric hardening version missing')
 for forbidden in ['Math.max(124','cueNeutral','negTails','const pads=','qualification\'','quantification\'']:
     need(forbidden not in hardening,f'forbidden semantic/padding transform remains: {forbidden}')
 for required in ['semanticAnswerChanges:0','technicalTermSubstitutions:0','paddingApplied:false','keyedConciseEdits','distractorCueEdits','formClauseTrims','technicalLengthRanks','regionalLengthRanks','scenarioLengthRanks','diagnosticLengthRanks','materialLengthRanks','optionalLengthRanks']:
     need(required in hardening,f'missing tracked psychometric-integrity metadata: {required}')
 need("'scenario:03'" in hardening and "'scenario:30'" in hardening and "'scenario:33'" in hardening,'three reviewed concise keyed overrides are not explicit')
 need('CLAUSE_MARKERS' in hardening and 'balanceFormRows' in hardening and 'keyFormPenalty' in hardening,'all-bank relative-form distractor compaction/balancing is missing')
+need('technicalLengthRanks=[0,0,0,0]' in hardening and 'optionalLengthRanks=[0,0,0,0]' in hardening,'four-rank answer-length balancing is not explicit')
+need("kp.chars>median*1.40&&kp.chars-median>12" in hardening,'non-salient longest-answer boundary missing')
+need("kp.chars>=Math.max" not in hardening,'runtime still forbids every longest keyed option and creates an inverse cue')
 
 items=runtime.load_psychometric_items()
 need(len(items)==197,f'learner-visible keyed decision count changed: {len(items)}/197')
@@ -86,13 +89,14 @@ need('Assume bar because the lower workpiece uses bar' in real,'fail-closed uppe
 need('without assigning phase names until an authoritative mapping is found' in real,'fail-closed state-code boundary missing')
 
 report={
- 'version':'2026.09.01.4','learner_visible_keyed_decisions':len(items),'formal_decisions':len([x for x in items if x.get('scope')=='formal']),
+ 'version':'2026.09.01.5','learner_visible_keyed_decisions':len(items),'formal_decisions':len([x for x in items if x.get('scope')=='formal']),
  'optional_decisions':len(optional),'real_measured_additional_decisions':12,'psychometric_keyed_propositions_preserved':True,
  'psychometric_technical_term_substitutions':0,'psychometric_padding_applied':False,'psychometric_reviewed_keyed_concise_overrides':3,
- 'psychometric_distractor_cue_edits_tracked':True,'psychometric_form_clause_trims_tracked':True,'psychometric_all_bank_relative_form_balancing':True,
+ 'psychometric_distractor_cue_edits_tracked':True,'psychometric_form_clause_trims_tracked':True,'psychometric_four_rank_length_balancing':True,
+ 'psychometric_inverse_longest_cue_removed':True,
  'source_registration_hard_failures':len(hard),'source_registration_warnings':len(warnings),'independent_material_source_upgrades':upgrades,
  'real_measured_contracts':{'avaps_values':13631488,'openmms_values':298080,'cross_process_lower_values':7426743,'cross_process_upper_values':43814748,'cross_process_combined_values':7426743+43814748,'upper_pressure_values_excluded_pending_unit':21907374,'upper_state_values_excluded_pending_semantics':21907374},
  'status':'passed'
 }
 REPORT.write_text(json.dumps(report,indent=2)+'\n',encoding='utf-8')
-print('Assessment evidence integrity passed: 197 keyed decisions + 12 real-measured decisions; keyed propositions/technical terms preserved; all-bank relative-form cue balancing, proposition/source relevance and unresolved-channel boundaries enforced')
+print('Assessment evidence integrity passed: 197 keyed decisions + 12 real-measured decisions; keyed propositions/technical terms preserved; four-rank length balancing removes inverse longest cue; proposition/source relevance and unresolved-channel boundaries enforced')
