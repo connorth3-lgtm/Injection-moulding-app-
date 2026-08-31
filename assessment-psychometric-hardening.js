@@ -1,7 +1,7 @@
-/* MouldMaster psychometric assessment hardening — 2026.09.01.5 */
+/* MouldMaster psychometric assessment hardening — 2026.09.01.6 */
 (function(){
 'use strict';
-const VERSION='2026.09.01.5';
+const VERSION='2026.09.01.6';
 const unsafe=t=>/\b(bypass|defeat|disable|remove)\b.{0,55}\b(guard|interlock|safeguard|protection|lockout)\b/i.test(String(t||''));
 
 /* Reviewed stem clarifications. Filler cue words are removed, but technical vocabulary
@@ -63,8 +63,7 @@ function balanceFormRows(id,options,key,feedback,focus,targetRank){
  function visit(pos,texts,trims){
    if(pos===wrongIdx.length){
      const trial=rows.map((r,i)=>({...r,text:texts[i]??r.text})),kp=profile(trial[key].text),wrong=wrongIdx.map(i=>profile(trial[i].text));
-     if(kp.chars>=Math.max(...wrong.map(x=>x.chars)))return;
-     const sorted=wrong.map(x=>x.chars).sort((a,b)=>a-b),median=sorted[1];if(kp.chars>median*1.75&&kp.chars-median>16)return;
+     const sorted=wrong.map(x=>x.chars).sort((a,b)=>a-b),median=sorted[1];if(kp.chars>median*1.40&&kp.chars-median>12)return;
      const charRank=relativeRank(trial,key,'chars'),wordRank=relativeRank(trial,key,'words'),spread=Math.max(...trial.map(r=>profile(r.text).chars))-Math.min(...trial.map(r=>profile(r.text).chars));
      const score=Math.abs(charRank-targetRank)*100000+Math.abs(wordRank-targetRank)*50000+keyFormPenalty(trial,key)*25000+spread*10-trims;
      if(!best||score<best.score)best={rows:trial,score,trims,charRank,wordRank};return;
@@ -82,33 +81,33 @@ function applyHardening(attempt=0){
  if(!D||!DIAG?.labs||!MAT?.labs||!OPT?.labs||scenarioCount!==40){if(attempt<80&&typeof setTimeout==='function'){setTimeout(()=>applyHardening(attempt+1),25);return}throw new Error(`Assessment banks must finish loading before psychometric hardening (scenarios ${scenarioCount}/40)`) }
  let technicalItems=0,regionalItems=0,scenarioItems=0,diagnosticItems=0,materialItems=0,optionalItems=0,stemRewrites=0,techOrdinal=0,regionalOrdinal=0,scenarioOrdinal=0,diagnosticOrdinal=0,materialOrdinal=0,optionalOrdinal=0;
  const technicalKeyPositions=[0,0,0,0],scenarioKeyPositions=[0,0,0,0];
- const technicalLengthRanks=[0,0,0],regionalLengthRanks=[0,0,0],scenarioLengthRanks=[0,0,0],diagnosticLengthRanks=[0,0,0],materialLengthRanks=[0,0,0],optionalLengthRanks=[0,0,0];
- const countRank=(a,rows,key)=>{const r=relativeRank(rows,key,'chars');if(r<3)a[r]++};
+ const technicalLengthRanks=[0,0,0,0],regionalLengthRanks=[0,0,0,0],scenarioLengthRanks=[0,0,0,0],diagnosticLengthRanks=[0,0,0,0],materialLengthRanks=[0,0,0,0],optionalLengthRanks=[0,0,0,0];
+ const countRank=(a,rows,key)=>{const r=relativeRank(rows,key,'chars');if(r<4)a[r]++};
  for(const level of ['Beginner','Intermediate','Advanced'])for(let i=0;i<(D.exams?.[level]||[]).length;i++){
    const q=D.exams[level][i],id=`tech:${level}:${i}`,oldStem=q?.q??q?.[0]??'',newStem=tightenStem(id,oldStem);if(newStem!==oldStem){setQuestionStem(q,newStem);stemRewrites++}
-   const key=Number(q?.correct??q?.[2]),rows=balanceFormRows(id,q?.options??q?.[1],key,q?.optionFeedback??q?.[6],newStem,techOrdinal%3);if(!rows)continue;countRank(technicalLengthRanks,rows,key);const moved=reposition(rows,key,techOrdinal%4);setQuestionRows(q,moved.rows,moved.key);technicalKeyPositions[moved.key]++;technicalItems++;techOrdinal++;
+   const key=Number(q?.correct??q?.[2]),rows=balanceFormRows(id,q?.options??q?.[1],key,q?.optionFeedback??q?.[6],newStem,techOrdinal%4);if(!rows)continue;countRank(technicalLengthRanks,rows,key);const moved=reposition(rows,key,techOrdinal%4);setQuestionRows(q,moved.rows,moved.key);technicalKeyPositions[moved.key]++;technicalItems++;techOrdinal++;
  }
  if(technicalKeyPositions.join(',')!=='8,8,7,7')throw new Error(`Technical key positions are not balanced: ${technicalKeyPositions.join(',')}`);
  for(const regionName of ['UK','US','NZ'])for(const level of ['Beginner','Intermediate','Advanced'])for(let i=0;i<(D.regionalQuestions?.[regionName]?.[level]||[]).length;i++){
    const q=D.regionalQuestions[regionName][level][i],id=`reg:${regionName}:${level}:${i}`,oldStem=q?.q??q?.[0]??'',newStem=tightenStem(id,oldStem);if(newStem!==oldStem){setQuestionStem(q,newStem);stemRewrites++}
-   const key=Number(q?.correct??q?.[2]),rows=balanceFormRows(id,q?.options??q?.[1],key,q?.optionFeedback??q?.[6],newStem,regionalOrdinal%3);if(!rows)continue;countRank(regionalLengthRanks,rows,key);setQuestionRows(q,rows,key);regionalItems++;regionalOrdinal++;
+   const key=Number(q?.correct??q?.[2]),rows=balanceFormRows(id,q?.options??q?.[1],key,q?.optionFeedback??q?.[6],newStem,regionalOrdinal%4);if(!rows)continue;countRank(regionalLengthRanks,rows,key);setQuestionRows(q,rows,key);regionalItems++;regionalOrdinal++;
  }
- (D.scenarios||[]).forEach((s,i)=>{const id=s.mmStableId||`scenario:${String(i+1).padStart(2,'0')}`,oldStem=s.situation||'',newStem=tightenStem(id,oldStem);if(newStem!==oldStem){s.situation=newStem;stemRewrites++}const key=Number(s.correct),focus=s.category||s.title||'',rows=balanceFormRows(id,s.choices,key,s.feedback,focus,scenarioOrdinal%3);if(!rows)return;countRank(scenarioLengthRanks,rows,key);const moved=reposition(rows,key,i%4);s.choices=moved.rows.map(r=>r.text);s.feedback=moved.rows.map(r=>r.feedback);s.correct=moved.key;scenarioKeyPositions[moved.key]++;scenarioItems++;scenarioOrdinal++});
+ (D.scenarios||[]).forEach((s,i)=>{const id=s.mmStableId||`scenario:${String(i+1).padStart(2,'0')}`,oldStem=s.situation||'',newStem=tightenStem(id,oldStem);if(newStem!==oldStem){s.situation=newStem;stemRewrites++}const key=Number(s.correct),focus=s.category||s.title||'',rows=balanceFormRows(id,s.choices,key,s.feedback,focus,scenarioOrdinal%4);if(!rows)return;countRank(scenarioLengthRanks,rows,key);const moved=reposition(rows,key,i%4);s.choices=moved.rows.map(r=>r.text);s.feedback=moved.rows.map(r=>r.feedback);s.correct=moved.key;scenarioKeyPositions[moved.key]++;scenarioItems++;scenarioOrdinal++});
  if(scenarioKeyPositions.some(x=>x!==10))throw new Error(`Scenario key positions are not balanced: ${scenarioKeyPositions.join(',')}`);
  for(const lab of (DIAG.labs||[]))for(const [si,step] of (lab.steps||[]).entries()){
-   const id=`lab:${lab.id}:${si}`,oldStem=step.question||'',newStem=tightenStem(id,oldStem);if(newStem!==oldStem){step.question=newStem;stemRewrites++}const key=(step.choices||[]).findIndex(c=>c.correct===true);if(key<0)continue;const rows=balanceFormRows(id,step.choices.map(c=>c.text),key,step.choices.map(c=>c.feedback),lab.focus||lab.title,diagnosticOrdinal%3);if(!rows)continue;countRank(diagnosticLengthRanks,rows,key);step.choices=rows.map((r,i)=>({text:r.text,correct:i===key,feedback:r.feedback}));diagnosticItems++;diagnosticOrdinal++;
+   const id=`lab:${lab.id}:${si}`,oldStem=step.question||'',newStem=tightenStem(id,oldStem);if(newStem!==oldStem){step.question=newStem;stemRewrites++}const key=(step.choices||[]).findIndex(c=>c.correct===true);if(key<0)continue;const rows=balanceFormRows(id,step.choices.map(c=>c.text),key,step.choices.map(c=>c.feedback),lab.focus||lab.title,diagnosticOrdinal%4);if(!rows)continue;countRank(diagnosticLengthRanks,rows,key);step.choices=rows.map((r,i)=>({text:r.text,correct:i===key,feedback:r.feedback}));diagnosticItems++;diagnosticOrdinal++;
  }
  for(const lab of (MAT.labs||[]))for(const [si,step] of (lab.steps||[]).entries()){
-   const id=`material:${lab.id}:${si}`,oldStem=step.question||'',newStem=tightenStem(id,oldStem);if(newStem!==oldStem){step.question=newStem;stemRewrites++}const key=(step.choices||[]).findIndex(c=>c.correct===true);if(key<0)continue;const rows=balanceFormRows(id,step.choices.map(c=>c.text),key,step.choices.map(c=>c.feedback),lab.focus||lab.title,materialOrdinal%3);if(!rows)continue;countRank(materialLengthRanks,rows,key);step.choices=rows.map((r,i)=>({text:r.text,correct:i===key,feedback:r.feedback}));materialItems++;materialOrdinal++;
+   const id=`material:${lab.id}:${si}`,oldStem=step.question||'',newStem=tightenStem(id,oldStem);if(newStem!==oldStem){step.question=newStem;stemRewrites++}const key=(step.choices||[]).findIndex(c=>c.correct===true);if(key<0)continue;const rows=balanceFormRows(id,step.choices.map(c=>c.text),key,step.choices.map(c=>c.feedback),lab.focus||lab.title,materialOrdinal%4);if(!rows)continue;countRank(materialLengthRanks,rows,key);step.choices=rows.map((r,i)=>({text:r.text,correct:i===key,feedback:r.feedback}));materialItems++;materialOrdinal++;
  }
  for(const lab of (OPT.labs||[]))for(const [si,step] of (lab.steps||[]).entries()){
    const id=`optional-material:${lab.id}:${si}`;if(String(step.stage||'').toLowerCase()==='explain'&&/^(why is this|what is the|what does the|why can)/i.test(String(step.question||'')))step.question=`In the ${lab.title} case, what do the observations demonstrate about ${String(lab.focus||'material behaviour').toLowerCase()}?`;
-   const oldStem=step.question||'',newStem=tightenStem(id,oldStem);if(newStem!==oldStem){step.question=newStem;stemRewrites++}const key=(step.choices||[]).findIndex(c=>c.correct===true);if(key<0)continue;const rows=balanceFormRows(id,step.choices.map(c=>c.text),key,step.choices.map(c=>c.feedback),lab.focus||lab.title,optionalOrdinal%3);if(!rows)continue;countRank(optionalLengthRanks,rows,key);step.choices=rows.map((r,i)=>({text:r.text,correct:i===key,feedback:r.feedback}));optionalItems++;optionalOrdinal++;
+   const oldStem=step.question||'',newStem=tightenStem(id,oldStem);if(newStem!==oldStem){step.question=newStem;stemRewrites++}const key=(step.choices||[]).findIndex(c=>c.correct===true);if(key<0)continue;const rows=balanceFormRows(id,step.choices.map(c=>c.text),key,step.choices.map(c=>c.feedback),lab.focus||lab.title,optionalOrdinal%4);if(!rows)continue;countRank(optionalLengthRanks,rows,key);step.choices=rows.map((r,i)=>({text:r.text,correct:i===key,feedback:r.feedback}));optionalItems++;optionalOrdinal++;
  }
  const expected={technicalItems:30,regionalItems:27,scenarioItems:40,diagnosticItems:36,materialItems:24,optionalItems:40},actual={technicalItems,regionalItems,scenarioItems,diagnosticItems,materialItems,optionalItems};for(const k of Object.keys(expected))if(actual[k]!==expected[k])throw new Error(`Psychometric item coverage mismatch for ${k}: ${actual[k]}/${expected[k]}`);if(keyedConciseEdits!==3)throw new Error(`Reviewed keyed concise overrides mismatch: ${keyedConciseEdits}/3`);
  const itemsHardened=Object.values(actual).reduce((a,b)=>a+b,0),optionsParallelised=itemsHardened*4;
  const meta={version:VERSION,semanticAnswerChanges:0,technicalTermSubstitutions:0,paddingApplied:false,keyedConciseEdits,distractorCueEdits,formClauseTrims,technicalLengthRanks,regionalLengthRanks,scenarioLengthRanks,diagnosticLengthRanks,materialLengthRanks,optionalLengthRanks,technicalKeyPositions:technicalKeyPositions.slice(),scenarioKeyPositions:scenarioKeyPositions.slice(),itemsHardened,optionsParallelised,optionSpecificFeedback:true,stemRewrites,initialization:'after-training-upgrade'};
- D.assessmentQA=D.assessmentQA||{};D.assessmentQA.psychometricHardening={...meta};window.MM_PSYCHOMETRIC_HARDENING={...meta,byBank:actual,policy:'Keep keyed propositions and technical terminology intact; remove giveaway explanatory tails only from distractors while retaining reasoning in feedback; balance relative length and compound-form cues across every assessment bank without filler padding; preserve safety boundaries and balanced key positions.'};
+ D.assessmentQA=D.assessmentQA||{};D.assessmentQA.psychometricHardening={...meta};window.MM_PSYCHOMETRIC_HARDENING={...meta,byBank:actual,policy:'Keep keyed propositions and technical terminology intact; permit any relative answer-length rank when salience remains bounded; remove giveaway explanatory tails only from distractors while retaining reasoning in feedback; balance relative length across all four ranks without filler padding; preserve safety boundaries and balanced key positions.'};
 }
 function scheduleHardening(){if(typeof document==='undefined'){applyHardening();return}if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',()=>setTimeout(()=>applyHardening(),0),{once:true});else setTimeout(()=>applyHardening(),0)}
 scheduleHardening();
