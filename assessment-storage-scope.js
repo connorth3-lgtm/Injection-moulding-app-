@@ -5,7 +5,8 @@ if(typeof window==='undefined'||typeof Storage==='undefined'||typeof localStorag
 const VERSION='2026.08.24.4';
 const ANALYTICS_BASE='mm_assessment_analytics_v1';
 const TIMING_BASE='mm_assessment_exposure_timing_v1';
-const BASES=[ANALYTICS_BASE,TIMING_BASE];
+const ROTATION_BASE='mm_assessment_opening_history_v1';
+const BASES=[ANALYTICS_BASE,TIMING_BASE,ROTATION_BASE];
 const P=Storage.prototype;
 if(P.__mmAssessmentStorageScopeInstalled)return;
 const rawGet=P.getItem,rawSet=P.setItem,rawRemove=P.removeItem,rawKey=P.key;
@@ -61,5 +62,5 @@ if(baseReset)window.resetData=function(){
  setTimeout(()=>{try{const after=rawGet.call(localStorage,'mouldmasterProDB');if(after!==before){cancelInMemoryAttempt();clearAll()}}catch(_){}},0);
  return r;
 };
-window.MM_ASSESSMENT_STORAGE_SCOPE={version:VERSION,scopeToken,analyticsKey:()=>scopedKey(ANALYTICS_BASE),timingKey:()=>scopedKey(TIMING_BASE),clearAll,cancelInMemoryAttempt,legacyMigration:{...legacy},learnerScoped:true};
+window.MM_ASSESSMENT_STORAGE_SCOPE={version:VERSION,scopeToken,analyticsKey:()=>scopedKey(ANALYTICS_BASE),timingKey:()=>scopedKey(TIMING_BASE),rotationKey:()=>scopedKey(ROTATION_BASE),clearAll,cancelInMemoryAttempt,legacyMigration:{...legacy},learnerScoped:true};
 })();

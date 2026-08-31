@@ -1,11 +1,39 @@
-/* MouldMaster assessment experience — question rotation hardening 2026-08-31.2 */
+/* MouldMaster assessment experience — persistent question rotation hardening 2026-08-31.4 */
 (function(){
 'use strict';
 
-const VERSION='2026.08.31.2';
+const VERSION='2026.08.31.4';
 const FIRST_HISTORY_LIMIT=3;
+const HISTORY_KEY='mm_assessment_opening_history_v1';
 const root=document.documentElement;
 const firstQuestionHistory=new Map();
+
+function readQuestionHistory(){
+  try{
+    const stored=localStorage.getItem(HISTORY_KEY);
+    const raw=JSON.parse(stored||'{}');
+    firstQuestionHistory.clear();
+    if(!raw||typeof raw!=='object'||Array.isArray(raw))return true;
+    for(const [scope,ids] of Object.entries(raw)){
+      if(!Array.isArray(ids))continue;
+      const clean=ids.map(x=>String(x||'').trim()).filter(Boolean).slice(0,FIRST_HISTORY_LIMIT);
+      if(clean.length)firstQuestionHistory.set(scope,clean);
+    }
+    return true;
+  }catch(_){return false}
+}
+function persistQuestionHistory(){
+  try{
+    const out={};
+    for(const [scope,ids] of firstQuestionHistory.entries()){
+      const clean=(Array.isArray(ids)?ids:[]).map(x=>String(x||'').trim()).filter(Boolean).slice(0,FIRST_HISTORY_LIMIT);
+      if(clean.length)out[scope]=clean;
+    }
+    localStorage.setItem(HISTORY_KEY,JSON.stringify(out));
+    return true;
+  }catch(_){return false}
+}
+readQuestionHistory();
 
 function addStyles(){
   if(document.getElementById('mm-assessment-ux-style'))return;
@@ -70,6 +98,7 @@ function questionScope(level,region){
 }
 function rotateOpeningQuestion(rows,level,region){
   if(!Array.isArray(rows)||rows.length<2)return rows;
+  readQuestionHistory();
   const scope=questionScope(level,region);
   const recent=firstQuestionHistory.get(scope)||[];
   const current=questionIdentity(rows[0]);
@@ -82,10 +111,14 @@ function rotateOpeningQuestion(rows,level,region){
   if(first){
     const limit=Math.min(FIRST_HISTORY_LIMIT,Math.max(1,rows.length-1));
     firstQuestionHistory.set(scope,[first,...recent.filter(id=>id!==first)].slice(0,limit));
+    persistQuestionHistory();
   }
   return rows;
 }
-function resetQuestionRotation(){firstQuestionHistory.clear()}
+function resetQuestionRotation(){
+  firstQuestionHistory.clear();
+  try{localStorage.removeItem(HISTORY_KEY)}catch(_){}
+}
 
 function optionLabels(card,index){
   const labels=[...card.querySelectorAll('label.option')];
@@ -264,6 +297,6 @@ window.MM_ASSESSMENT_UX={
   showQuestion,
   rotateOpeningQuestion,
   resetQuestionRotation,
-  questionRotation:{historyLimit:FIRST_HISTORY_LIMIT,scope:'level + region',policy:'avoid the last three opening questions when another valid item is available'}
+  questionRotation:{historyLimit:FIRST_HISTORY_LIMIT,scope:'learner + level + region',persistence:'learner-scoped localStorage stable IDs only; no answers or personal data',storageKey:HISTORY_KEY,policy:'avoid the last three opening questions across starts, reloads and learner switches when another valid item is available'}
 };
 })();
