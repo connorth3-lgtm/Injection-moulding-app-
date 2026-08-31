@@ -12,11 +12,13 @@ on:
       - 'assessment-answer-cue-fix.js'
       - 'assessment-quality-suite.js'
       - 'assessment-stable-review-bridge.js'
+      - 'assessment-ux.js'
       - 'diagnostic-learning-labs.js'
       - 'material-behaviour-labs.js'
       - 'evidence-maturity-deep-dive.js'
       - 'evidence-maturity-formal-bridge.js'
       - 'assessment-psychometric-hardening.js'
+      - 'qa_assessment_ux.py'
       - 'qa_question_quality_50_pass.py'
       - 'qa_question_quality_50_pass_runtime.py'
       - 'qa_question_quality_extreme_50_pass.py'
@@ -44,6 +46,8 @@ jobs:
       - uses: actions/setup-python@v7
         with:
           python-version: '3.12'
+      - name: Run assessment UX regression checks
+        run: python qa_assessment_ux.py
       - name: Run 50-pass quality audit across formal and optional learner-visible questions
         run: python qa_question_quality_50_pass_runtime.py
       - name: Run extreme 50-pass psychometric and evidence audit
