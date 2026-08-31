@@ -30,8 +30,9 @@ need("const VERSION='2026.09.01.3'" in hardening,'psychometric hardening version
 need("const REQUIRED_VERSION='2026.09.01.3'" in approval,'psychometric approval required version mismatch')
 need("itemsHardened:197" in approval and "optionsParallelised:788" in approval,'psychometric approval coverage contract missing')
 need("technicalKeyPositions:[8,8,7,7]" in approval and "scenarioKeyPositions:[10,10,10,10]" in approval,'balanced key-position approval missing')
-for marker in ['semanticAnswerChanges:0','technicalTermSubstitutions:0','paddingApplied:false','keyedConciseEdits:3']:
+for marker in ['semanticAnswerChanges:0','technicalTermSubstitutions:0','paddingApplied:false']:
     need(marker in hardening and marker in approval,f'psychometric integrity guard missing: {marker}')
+need('keyedConciseEdits!==3' in hardening and 'keyedConciseEdits:3' in approval,'three reviewed concise keyed edits are not pinned')
 need('distractorCueEdits' in hardening and 'distractorCueEdits' in approval,'bounded distractor cue-edit tracking missing')
 need('Math.max(124' not in hardening and 'cueNeutral' not in hardening,'generic semantic/padding transformer must be removed')
 need("initialization:'after-training-upgrade'" in hardening and 'scenarioCount!==40' in hardening and 'DOMContentLoaded' in hardening,'psychometric initialization guard missing')
@@ -67,6 +68,7 @@ for marker in ['node --check assessment-psychometric-hardening.js','node --check
 
 runtime=text('qa_question_quality_extreme_runtime_v2.py')
 need('_form_only_surface_features' in runtime,'extreme runtime does not use form-only surface-cue features')
+need("'__qual_'" in runtime and "'__starter_'" in runtime,'extreme hard cue gate still includes engineering-semantic starter/qualifier categories')
 standard=text('qa_question_quality_50_pass_runtime.py')
 need("zero learner-visible quality warnings" in standard and "need(not report.get('warning_types')" in standard,'standard runtime does not fail closed on learner-visible warnings')
 
