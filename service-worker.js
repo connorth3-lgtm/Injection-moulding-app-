@@ -1,5 +1,5 @@
 const CACHE_VERSION='2026.08.26.2';
-const CACHE_REVISION='assessment-question-rotation-20260831';
+const CACHE_REVISION='assessment-evidence-integrity-20260826';
 const STATIC_CACHE=`mouldmaster-static-${CACHE_VERSION}-${CACHE_REVISION}`;
 const CORE=[
   './index.html',
@@ -39,6 +39,7 @@ const CORE=[
   './evidence-maturity-deep-dive.js',
   './evidence-maturity-formal-bridge.js',
   './assessment-psychometric-hardening.js',
+  './assessment-evidence-integrity-upgrade.js',
   './lesson-evidence-depth.js',
   './assessment-evidence-approval.js',
   './assessment-psychometric-approval.js',
@@ -46,6 +47,7 @@ const CORE=[
   './pwa-shell.js',
   './learning-experience.js',
   './process-data-diagnostics.js',
+  './real-measured-data-assessment.js',
   './process-data-deep-dive-machine.js',
   './process-data-deep-dive-tooling.js',
   './process-data-deep-dive-material.js',

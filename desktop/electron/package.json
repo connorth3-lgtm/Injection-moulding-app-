@@ -16,33 +16,16 @@
     "dist:nsis": "npm run integrity && npm run licenses && npm run sbom && npm run qa && electron-builder --win nsis",
     "dist:msix": "npm run integrity && npm run licenses && npm run sbom && npm run qa && npx --yes electron-builder@27.0.0-alpha.7 --win msix --config.msix.setBuildNumber=true"
   },
-  "devDependencies": {
-    "electron": "43.4.1",
-    "electron-builder": "26.15.7"
-  },
+  "devDependencies": {"electron": "43.4.1", "electron-builder": "26.15.7"},
   "build": {
     "appId": "org.mouldmaster.academy",
     "productName": "MouldMaster Academy",
     "buildNumber": "5",
     "buildVersion": "2026.8.26.5",
     "asar": true,
-    "electronFuses": {
-      "runAsNode": false,
-      "enableNodeOptionsEnvironmentVariable": false,
-      "enableNodeCliInspectArguments": false,
-      "enableEmbeddedAsarIntegrityValidation": true,
-      "onlyLoadAppFromAsar": true
-    },
+    "electronFuses": {"runAsNode": false,"enableNodeOptionsEnvironmentVariable": false,"enableNodeCliInspectArguments": false,"enableEmbeddedAsarIntegrityValidation": true,"onlyLoadAppFromAsar": true},
     "directories": {"output": "dist"},
-    "files": [
-      "src/**/*",
-      "generated/integrity.json",
-      "generated/dependency-licenses.json",
-      "generated/sbom.cdx.json",
-      "package.json",
-      "README.md",
-      "THREAT_MODEL.md"
-    ],
+    "files": ["src/**/*","generated/integrity.json","generated/dependency-licenses.json","generated/sbom.cdx.json","package.json","README.md","THREAT_MODEL.md"],
     "extraResources": [
       {"from": "../../index.html", "to": "mouldmaster/index.html"},
       {"from": "../../MouldMaster_Core_App.html", "to": "mouldmaster/MouldMaster_Core_App.html"},
@@ -68,6 +51,7 @@
       {"from": "../../pwa-shell.js", "to": "mouldmaster/pwa-shell.js"},
       {"from": "../../learning-experience.js", "to": "mouldmaster/learning-experience.js"},
       {"from": "../../process-data-diagnostics.js", "to": "mouldmaster/process-data-diagnostics.js"},
+      {"from": "../../real-measured-data-assessment.js", "to": "mouldmaster/real-measured-data-assessment.js"},
       {"from": "../../process-data-deep-dive-machine.js", "to": "mouldmaster/process-data-deep-dive-machine.js"},
       {"from": "../../process-data-deep-dive-tooling.js", "to": "mouldmaster/process-data-deep-dive-tooling.js"},
       {"from": "../../process-data-deep-dive-material.js", "to": "mouldmaster/process-data-deep-dive-material.js"},
@@ -101,6 +85,7 @@
       {"from": "../../evidence-maturity-deep-dive.js", "to": "mouldmaster/evidence-maturity-deep-dive.js"},
       {"from": "../../evidence-maturity-formal-bridge.js", "to": "mouldmaster/evidence-maturity-formal-bridge.js"},
       {"from": "../../assessment-psychometric-hardening.js", "to": "mouldmaster/assessment-psychometric-hardening.js"},
+      {"from": "../../assessment-evidence-integrity-upgrade.js", "to": "mouldmaster/assessment-evidence-integrity-upgrade.js"},
       {"from": "../../lesson-evidence-depth.js", "to": "mouldmaster/lesson-evidence-depth.js"},
       {"from": "../../assessment-evidence-approval.js", "to": "mouldmaster/assessment-evidence-approval.js"},
       {"from": "../../assessment-psychometric-approval.js", "to": "mouldmaster/assessment-psychometric-approval.js"},
@@ -113,16 +98,8 @@
       {"from": "generated/dependency-licenses.json", "to": "dependency-licenses.json"},
       {"from": "generated/sbom.cdx.json", "to": "sbom.cdx.json"}
     ],
-    "win": {
-      "icon": "../../mouldmaster-512.png",
-      "artifactName": "MouldMaster-Academy-${buildVersion}-${arch}.${ext}"
-    },
-    "nsis": {
-      "oneClick": false,
-      "allowToChangeInstallationDirectory": true,
-      "createDesktopShortcut": true,
-      "createStartMenuShortcut": true
-    },
+    "win": {"icon": "../../mouldmaster-512.png","artifactName": "MouldMaster-Academy-${buildVersion}-${arch}.${ext}"},
+    "nsis": {"oneClick": false,"allowToChangeInstallationDirectory": true,"createDesktopShortcut": true,"createStartMenuShortcut": true},
     "toolsets": {"winCodeSign": "1.1.0"}
   }
 }
