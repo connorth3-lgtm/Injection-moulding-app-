@@ -19,12 +19,14 @@ hardening=text('assessment-psychometric-hardening.js')
 integrity=text('assessment-evidence-integrity-upgrade.js')
 real=text('real-measured-data-assessment.js')
 
-# Psychometric hardening must preserve reviewed engineering terminology and option text.
-need("const VERSION='2026.09.01.1'" in hardening,'semantic-preserving hardening version missing')
+# Psychometric hardening may make bounded, tracked form edits, but must not rewrite
+# the engineering proposition, substitute technical terminology, or add length padding.
+need("const VERSION='2026.09.01.3'" in hardening,'final psychometric hardening version missing')
 for forbidden in ['Math.max(124','cueNeutral','negTails','const pads=','qualification\'','quantification\'']:
     need(forbidden not in hardening,f'forbidden semantic/padding transform remains: {forbidden}')
-for required in ['optionTextMutations:0','lexicalSubstitutions:0','paddingApplied:false','optionsTextPreserved:true','semanticAnswerChanges:0']:
-    need(required in hardening,f'missing semantic-preservation metadata: {required}')
+for required in ['semanticAnswerChanges:0','technicalTermSubstitutions:0','paddingApplied:false','keyedConciseEdits','distractorCueEdits']:
+    need(required in hardening,f'missing tracked psychometric-integrity metadata: {required}')
+need("'scenario:03'" in hardening and "'scenario:30'" in hardening and "'scenario:33'" in hardening,'three reviewed concise keyed overrides are not explicit')
 
 items=runtime.load_psychometric_items()
 need(len(items)==197,f'learner-visible keyed decision count changed: {len(items)}/197')
@@ -99,12 +101,16 @@ need('Assume bar because the lower workpiece uses bar' in real,'fail-closed uppe
 need('without assigning phase names until an authoritative mapping is found' in real,'fail-closed state-code boundary missing')
 
 report={
- 'version':'2026.09.01.1',
+ 'version':'2026.09.01.2',
  'learner_visible_keyed_decisions':len(items),
  'formal_decisions':len([x for x in items if x.get('scope')=='formal']),
  'optional_decisions':len(optional),
  'real_measured_additional_decisions':12,
- 'psychometric_option_text_preserved':True,
+ 'psychometric_keyed_propositions_preserved':True,
+ 'psychometric_technical_term_substitutions':0,
+ 'psychometric_padding_applied':False,
+ 'psychometric_reviewed_keyed_concise_overrides':3,
+ 'psychometric_distractor_cue_edits_tracked':True,
  'source_registration_hard_failures':len(hard),
  'source_registration_warnings':len(warnings),
  'independent_material_source_upgrades':upgrades,
@@ -118,4 +124,4 @@ report={
  'status':'passed'
 }
 REPORT.write_text(json.dumps(report,indent=2)+'\n',encoding='utf-8')
-print('Assessment evidence integrity passed: 197 keyed decisions + 12 real-measured decisions; semantic option rewriting removed; proposition/source relevance and unresolved-channel boundaries enforced')
+print('Assessment evidence integrity passed: 197 keyed decisions + 12 real-measured decisions; keyed propositions/technical terms preserved; tracked cue edits, proposition/source relevance and unresolved-channel boundaries enforced')
