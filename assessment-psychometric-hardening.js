@@ -1,7 +1,7 @@
-/* MouldMaster psychometric assessment hardening — 2026.09.01.2 */
+/* MouldMaster psychometric assessment hardening — 2026.09.01.3 */
 (function(){
 'use strict';
-const VERSION='2026.09.01.2';
+const VERSION='2026.09.01.3';
 const unsafe=t=>/\b(bypass|defeat|disable|remove)\b.{0,55}\b(guard|interlock|safeguard|protection|lockout)\b/i.test(String(t||''));
 
 /* Reviewed stem clarifications. Filler cue words are removed, but technical vocabulary
@@ -15,10 +15,11 @@ const STEM_REWRITES={
  'tech:Advanced:5':'A process window is mapped from low to high settings, but the material lot changes halfway through and fill pressure shifts with it. Can the factor boundary be treated as validated?',
  'tech:Advanced:8':'Two polypropylene grades have similar published MFR values but different fill-pressure and flow-length behaviour in the same mould. What does this evidence imply about MFR and moulding behaviour?'
 };
-/* Two reviewed concise equivalents remove residual correct-answer length salience. */
+/* Three reviewed concise equivalents remove residual correct-answer length salience. */
 const KEYED_CONCISE_OVERRIDES={
  'scenario:03':'Inspect the serviced local shutoff first',
- 'scenario:30':'Map the interface history first'
+ 'scenario:30':'Map the interface history first',
+ 'scenario:33':'Check cell structure and mechanics'
 };
 const DISTRACTOR_CUE_RULES=[
  [/\balways\b/gi,'normally'],
@@ -115,11 +116,11 @@ function applyHardening(attempt=0){
  const expected={technicalItems:30,regionalItems:27,scenarioItems:40,diagnosticItems:36,materialItems:24,optionalItems:40};
  const actual={technicalItems,regionalItems,scenarioItems,diagnosticItems,materialItems,optionalItems};
  for(const k of Object.keys(expected))if(actual[k]!==expected[k])throw new Error(`Psychometric item coverage mismatch for ${k}: ${actual[k]}/${expected[k]}`);
- if(keyedConciseEdits!==2)throw new Error(`Reviewed keyed concise overrides mismatch: ${keyedConciseEdits}/2`);
+ if(keyedConciseEdits!==3)throw new Error(`Reviewed keyed concise overrides mismatch: ${keyedConciseEdits}/3`);
  const itemsHardened=Object.values(actual).reduce((a,b)=>a+b,0),optionsParallelised=itemsHardened*4;
  const meta={version:VERSION,semanticAnswerChanges:0,technicalTermSubstitutions:0,paddingApplied:false,keyedConciseEdits,distractorCueEdits,technicalKeyPositions:technicalKeyPositions.slice(),scenarioKeyPositions:scenarioKeyPositions.slice(),itemsHardened,optionsParallelised,optionSpecificFeedback:true,stemRewrites,initialization:'after-training-upgrade'};
  D.assessmentQA=D.assessmentQA||{};D.assessmentQA.psychometricHardening={...meta};
- window.MM_PSYCHOMETRIC_HARDENING={...meta,byBank:actual,policy:'Keep keyed propositions and technical terminology intact; use two reviewed concise keyed equivalents for residual length salience; soften giveaway absolute wording in distractors into more plausible competing decisions; never use generic length padding.'};
+ window.MM_PSYCHOMETRIC_HARDENING={...meta,byBank:actual,policy:'Keep keyed propositions and technical terminology intact; use three reviewed concise keyed equivalents for residual length salience; soften giveaway absolute wording in distractors into more plausible competing decisions; never use generic length padding.'};
 }
 function scheduleHardening(){
  if(typeof document==='undefined'){applyHardening();return}
