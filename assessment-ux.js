@@ -1,8 +1,8 @@
-/* MouldMaster assessment experience — persistent question rotation hardening 2026-08-31.3 */
+/* MouldMaster assessment experience — persistent question rotation hardening 2026-08-31.4 */
 (function(){
 'use strict';
 
-const VERSION='2026.08.31.3';
+const VERSION='2026.08.31.4';
 const FIRST_HISTORY_LIMIT=3;
 const HISTORY_KEY='mm_assessment_opening_history_v1';
 const root=document.documentElement;
@@ -10,14 +10,17 @@ const firstQuestionHistory=new Map();
 
 function readQuestionHistory(){
   try{
-    const raw=JSON.parse(localStorage.getItem(HISTORY_KEY)||'{}');
-    if(!raw||typeof raw!=='object'||Array.isArray(raw))return;
+    const stored=localStorage.getItem(HISTORY_KEY);
+    const raw=JSON.parse(stored||'{}');
+    firstQuestionHistory.clear();
+    if(!raw||typeof raw!=='object'||Array.isArray(raw))return true;
     for(const [scope,ids] of Object.entries(raw)){
       if(!Array.isArray(ids))continue;
       const clean=ids.map(x=>String(x||'').trim()).filter(Boolean).slice(0,FIRST_HISTORY_LIMIT);
       if(clean.length)firstQuestionHistory.set(scope,clean);
     }
-  }catch(_){}
+    return true;
+  }catch(_){return false}
 }
 function persistQuestionHistory(){
   try{
@@ -95,6 +98,7 @@ function questionScope(level,region){
 }
 function rotateOpeningQuestion(rows,level,region){
   if(!Array.isArray(rows)||rows.length<2)return rows;
+  readQuestionHistory();
   const scope=questionScope(level,region);
   const recent=firstQuestionHistory.get(scope)||[];
   const current=questionIdentity(rows[0]);
@@ -293,6 +297,6 @@ window.MM_ASSESSMENT_UX={
   showQuestion,
   rotateOpeningQuestion,
   resetQuestionRotation,
-  questionRotation:{historyLimit:FIRST_HISTORY_LIMIT,scope:'level + region',persistence:'localStorage stable IDs only; no answers or personal data',storageKey:HISTORY_KEY,policy:'avoid the last three opening questions across starts and reloads when another valid item is available'}
+  questionRotation:{historyLimit:FIRST_HISTORY_LIMIT,scope:'learner + level + region',persistence:'learner-scoped localStorage stable IDs only; no answers or personal data',storageKey:HISTORY_KEY,policy:'avoid the last three opening questions across starts, reloads and learner switches when another valid item is available'}
 };
 })();
