@@ -27,18 +27,17 @@ def _bucket_relative(value,others,tolerance=0):
 def _relative_form_features(item,option_index):
     """Presentation-only features relative to the other three options in this question.
 
-    This detects exploitable form outliers (length, punctuation and syntactic density)
-    without learning engineering vocabulary or bank-wide writing style as if it were a
-    test-taking cue.
+    The hard predictive gate uses answer length and terminal punctuation only. Internal
+    conjunction/comma density is deliberately excluded because it also encodes genuine
+    proposition structure (for example, a correct comparison may legitimately join two
+    engineering observations with "and"). Semantic/content cues remain reported by the
+    separate review-only model and by item-level cue checks.
     """
     profiles=[audit.extreme.style_profile(o) for o in item['options']]
     p=profiles[option_index];others=[x for i,x in enumerate(profiles) if i!=option_index]
     feats=set()
     feats.add('__rel_chars_'+_bucket_relative(p['chars'],[x['chars'] for x in others],4))
     feats.add('__rel_words_'+_bucket_relative(p['words'],[x['words'] for x in others],1))
-    feats.add('__rel_commas_'+_bucket_relative(p['commas'],[x['commas'] for x in others]))
-    feats.add('__rel_semicolons_'+_bucket_relative(p['semicolons'],[x['semicolons'] for x in others]))
-    feats.add('__rel_ands_'+_bucket_relative(p['ands'],[x['ands'] for x in others]))
     periods=[x['period'] for x in profiles]
     if periods.count(p['period'])==1:feats.add('__terminal_punctuation_outlier')
     else:feats.add('__terminal_punctuation_shared')
@@ -73,7 +72,7 @@ def _relative_form_cue_model(items,passes=50):
         'passes':passes,'chance':0.25,'mean_accuracy':round(sum(acc)/len(acc),3),
         'min_accuracy':round(min(acc),3),'max_accuracy':round(max(acc),3),
         'by_kind':{k:round(sum(v)/len(v),3) for k,v in sorted(by_kind.items())},
-        'feature_scope':'within-question relative presentation form only'
+        'feature_scope':'within-question relative length and terminal punctuation only'
     }
 
 
