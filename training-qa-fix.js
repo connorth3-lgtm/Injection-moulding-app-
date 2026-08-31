@@ -1,4 +1,4 @@
-/* MouldMaster training data/assessment bridge — 2026.08.31.5 */
+/* MouldMaster training data/assessment bridge — 2026.08.24.4 */
 (function(){
 'use strict';
 const REVIEW_KEY='mm_spaced_review_v2', LEGACY_REVIEW='mm_spaced_review_v1', SIGN_KEY='mm_practical_signoff_v1';
@@ -74,5 +74,5 @@ const baseReset=window.resetData;if(typeof baseReset==='function')window.resetDa
 
 /* One-time migration: legacy text-keyed review records are intentionally not guessed into stable IDs. */
 try{if(!localStorage.getItem(REVIEW_KEY)&&localStorage.getItem(LEGACY_REVIEW))localStorage.setItem(REVIEW_KEY,JSON.stringify({items:{}}))}catch(_){}
-window.MM_TRAINING_DATA_BRIDGE={version:'2026.08.31.5',clearAssessmentAnalyticsStores,cancelActiveExam};
+window.MM_TRAINING_DATA_BRIDGE={version:'2026.08.24.4',clearAssessmentAnalyticsStores,cancelActiveExam};
 })();
