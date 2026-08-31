@@ -26,14 +26,15 @@ for path in [
 
 hardening=text('assessment-psychometric-hardening.js')
 approval=text('assessment-psychometric-approval.js')
-need("const VERSION='2026.09.01.3'" in hardening,'psychometric hardening version mismatch')
-need("const REQUIRED_VERSION='2026.09.01.3'" in approval,'psychometric approval required version mismatch')
+need("const VERSION='2026.09.01.4'" in hardening,'psychometric hardening version mismatch')
+need("const REQUIRED_VERSION='2026.09.01.4'" in approval,'psychometric approval required version mismatch')
 need("itemsHardened:197" in approval and "optionsParallelised:788" in approval,'psychometric approval coverage contract missing')
 need("technicalKeyPositions:[8,8,7,7]" in approval and "scenarioKeyPositions:[10,10,10,10]" in approval,'balanced key-position approval missing')
 for marker in ['semanticAnswerChanges:0','technicalTermSubstitutions:0','paddingApplied:false']:
     need(marker in hardening and marker in approval,f'psychometric integrity guard missing: {marker}')
 need('keyedConciseEdits!==3' in hardening and 'keyedConciseEdits:3' in approval,'three reviewed concise keyed edits are not pinned')
-need('distractorCueEdits' in hardening and 'distractorCueEdits' in approval,'bounded distractor cue-edit tracking missing')
+for marker in ['distractorCueEdits','formClauseTrims','technicalLengthRanks','diagnosticLengthRanks','materialLengthRanks']:
+    need(marker in hardening and marker in approval,f'relative-form balancing metadata missing: {marker}')
 need('Math.max(124' not in hardening and 'cueNeutral' not in hardening,'generic semantic/padding transformer must be removed')
 need("initialization:'after-training-upgrade'" in hardening and 'scenarioCount!==40' in hardening and 'DOMContentLoaded' in hardening,'psychometric initialization guard missing')
 
@@ -73,4 +74,4 @@ need('__qual_' not in runtime and '__starter_' not in runtime and '__unit_' not 
 standard=text('qa_question_quality_50_pass_runtime.py')
 need("zero learner-visible quality warnings" in standard and "need(not report.get('warning_types')" in standard,'standard runtime does not fail closed on learner-visible warnings')
 
-print(f'MouldMaster psychometric integration QA passed: 197 keyed decisions retain keyed propositions and technical vocabulary; reviewed cue edits are tracked; extreme cue gate uses within-question presentation form; proposition evidence is loaded before approval; 12 real-measured decisions are delivered; blob pin={actual}')
+print(f'MouldMaster psychometric integration QA passed: 197 keyed decisions retain keyed propositions and technical vocabulary; reviewed cue edits and relative-form balancing are tracked; extreme cue gate uses within-question presentation form; proposition evidence is loaded before approval; 12 real-measured decisions are delivered; blob pin={actual}')
