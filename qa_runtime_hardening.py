@@ -107,13 +107,13 @@ must(service_worker, [
 
 must(approval, ["const coverageOk=!(summary.total!==157", "status:coverageOk?'approved':'update-required'", "function scheduleApproval()", "DOMContentLoaded',()=>setTimeout(buildApproval,0)", "Evidence metadata could not finish loading.", "showUpdateWarning"], "evidence approval hardening")
 must(psychometric_hardening, [
-    "const VERSION='2026.09.01.1'", "scenarioCount!==40", "DOMContentLoaded", "initialization:'after-training-upgrade'", "itemsHardened,optionsParallelised", "technicalKeyPositions:technicalKeyPositions.slice()",
-    "optionTextMutations:0", "lexicalSubstitutions:0", "paddingApplied:false", "optionsTextPreserved:true"
+    "const VERSION='2026.09.01.3'", "scenarioCount!==40", "DOMContentLoaded", "initialization:'after-training-upgrade'", "itemsHardened,optionsParallelised", "technicalKeyPositions:technicalKeyPositions.slice()",
+    "semanticAnswerChanges:0", "technicalTermSubstitutions:0", "paddingApplied:false", "keyedConciseEdits", "distractorCueEdits"
 ], "psychometric initialization hardening")
-require("Math.max(124" not in psychometric_hardening and "cueNeutral" not in psychometric_hardening, "psychometric layer must not pad or synonym-rewrite reviewed answer options")
+require("Math.max(124" not in psychometric_hardening and "cueNeutral" not in psychometric_hardening, "psychometric layer must not use generic length padding or global engineering-term synonym rewriting")
 must(proposition_integrity, ["records.length===197", "supportLocator", "limitations", "relevanceStatus", "weakOptional.length===0", "context-only", "sourceUpgrades:Object.keys(SOURCE_UPGRADES)"], "proposition evidence integrity")
 must(psychometric_approval, [
-    "const REQUIRED_VERSION='2026.09.01.1'", "itemsHardened:197", "optionsParallelised:788", "technicalKeyPositions:[8,8,7,7]", "optionTextMutations:0", "paddingApplied:false", "optionsTextPreserved:true", "verificationPolicy", "psychometricCoverageOk"
+    "const REQUIRED_VERSION='2026.09.01.3'", "itemsHardened:197", "optionsParallelised:788", "technicalKeyPositions:[8,8,7,7]", "technicalTermSubstitutions:0", "paddingApplied:false", "keyedConciseEdits:3", "distractorCueEdits", "verificationPolicy", "psychometricCoverageOk"
 ], "psychometric approval hardening")
 must(real_measured, ["evidenceType:'real-measured'", "decisionCount:CASES.reduce", "Pressure actual values excluded pending unit", "without assigning phase names until an authoritative mapping is found"], "real measured assessment")
 require("throw new Error('Evidence approval coverage failure" not in approval, "incomplete evidence coverage must not crash the learning app")
