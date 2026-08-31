@@ -19,15 +19,13 @@ hardening=text('assessment-psychometric-hardening.js')
 integrity=text('assessment-evidence-integrity-upgrade.js')
 real=text('real-measured-data-assessment.js')
 
-# Psychometric hardening may make bounded, tracked form edits, but must not rewrite
-# the engineering proposition, substitute technical terminology, or add filler padding.
-need("const VERSION='2026.09.01.4'" in hardening,'final psychometric hardening version missing')
+need("const VERSION='2026.09.01.5'" in hardening,'final psychometric hardening version missing')
 for forbidden in ['Math.max(124','cueNeutral','negTails','const pads=','qualification\'','quantification\'']:
     need(forbidden not in hardening,f'forbidden semantic/padding transform remains: {forbidden}')
-for required in ['semanticAnswerChanges:0','technicalTermSubstitutions:0','paddingApplied:false','keyedConciseEdits','distractorCueEdits','formClauseTrims','technicalLengthRanks','diagnosticLengthRanks','materialLengthRanks']:
+for required in ['semanticAnswerChanges:0','technicalTermSubstitutions:0','paddingApplied:false','keyedConciseEdits','distractorCueEdits','formClauseTrims','technicalLengthRanks','regionalLengthRanks','scenarioLengthRanks','diagnosticLengthRanks','materialLengthRanks','optionalLengthRanks']:
     need(required in hardening,f'missing tracked psychometric-integrity metadata: {required}')
 need("'scenario:03'" in hardening and "'scenario:30'" in hardening and "'scenario:33'" in hardening,'three reviewed concise keyed overrides are not explicit')
-need('CLAUSE_MARKERS' in hardening and 'balanceFormRows' in hardening,'relative-form distractor compaction/balancing is missing')
+need('CLAUSE_MARKERS' in hardening and 'balanceFormRows' in hardening and 'keyFormPenalty' in hardening,'all-bank relative-form distractor compaction/balancing is missing')
 
 items=runtime.load_psychometric_items()
 need(len(items)==197,f'learner-visible keyed decision count changed: {len(items)}/197')
@@ -36,31 +34,22 @@ need(all(0<=int(x.get('correct',-1))<4 for x in items),'invalid answer key after
 need(all(str(x.get('stem','')).strip() for x in items),'blank assessment stem')
 need(all(str(x.get('rationale','')).strip() for x in items),'blank keyed rationale')
 
-# Existing evidence registration remains a prerequisite.
 hard,warnings=runtime.evidence_checks(items)
 need(not hard,f'existing evidence-registration hard failures: {hard[:8]}')
 
-# Proposition-level runtime contract must cover every bank and expose explicit evidence semantics.
 for marker in [
     "records.length===197", "relevanceStatus:relevant.length?'supported':'blocked'",
     "supportLocator", "limitations", "dataEvidence:type", "scope:'optional'",
     "policy:'Every learner-visible keyed decision has an explicit proposition",
     "context-only", "weakOptional.length===0"
-]:
-    need(marker in integrity,f'proposition evidence contract missing: {marker}')
+]: need(marker in integrity,f'proposition evidence contract missing: {marker}')
 
 allowed=['real-measured','published-experimental','synthetic','supplier','standard/regulatory','engineering-principle']
-for value in allowed:
-    need(repr(value) in integrity or f"'{value}'" in integrity,f'evidence type missing: {value}')
+for value in allowed: need(repr(value) in integrity or f"'{value}'" in integrity,f'evidence type missing: {value}')
 
-# The formerly weak material cases must have independent material-specific corroboration.
 upgrades={
- 'pet-vs-copolyester':'pet-envalior-arnite',
- 'peek-crystallinity-capability':'peek-solvay-ketaspire',
- 'pps-contamination-wear':'pps-solvay-ryton',
- 'lcp-orientation':'lcp-polyplastics-laperos',
- 'pcabs-grade-identity':'pcabs-sabic-cycoloy',
- 'hdpe-lot-shrink':'hdpe-sabic-injection',
+ 'pet-vs-copolyester':'pet-envalior-arnite','peek-crystallinity-capability':'peek-solvay-ketaspire','pps-contamination-wear':'pps-solvay-ryton',
+ 'lcp-orientation':'lcp-polyplastics-laperos','pcabs-grade-identity':'pcabs-sabic-cycoloy','hdpe-lot-shrink':'hdpe-sabic-injection',
 }
 for lab,source in upgrades.items():
     need(f"'{lab}':['{source}']" in integrity,f'independent source upgrade missing for {lab}: {source}')
@@ -69,10 +58,8 @@ need("s?.id==='iso-20430'&&!isSafetyText(searchText)" in integrity,'generic mach
 
 optional=[x for x in items if x.get('kind')=='optional-material-practice']
 need(len(optional)==40,f'optional practice count changed: {len(optional)}/40')
-for x in optional:
-    need(len(set(x.get('sourceIds') or []))>=2,f'optional item lacks two baseline sources: {x.get("id")}')
+for x in optional: need(len(set(x.get('sourceIds') or []))>=2,f'optional item lacks two baseline sources: {x.get("id")}')
 
-# Real measured-data challenge must be an additional (non-formal) 12-decision set.
 need("decisionCount:CASES.reduce" in real and "evidenceType:'real-measured'" in real,'real-measured assessment metadata missing')
 need(real.count("contractPath:'data/public-benchmark-results/")==4,'expected four pinned real-data contracts')
 need(real.count("questions:[")==4,'expected four real measured cases')
@@ -99,29 +86,13 @@ need('Assume bar because the lower workpiece uses bar' in real,'fail-closed uppe
 need('without assigning phase names until an authoritative mapping is found' in real,'fail-closed state-code boundary missing')
 
 report={
- 'version':'2026.09.01.3',
- 'learner_visible_keyed_decisions':len(items),
- 'formal_decisions':len([x for x in items if x.get('scope')=='formal']),
- 'optional_decisions':len(optional),
- 'real_measured_additional_decisions':12,
- 'psychometric_keyed_propositions_preserved':True,
- 'psychometric_technical_term_substitutions':0,
- 'psychometric_padding_applied':False,
- 'psychometric_reviewed_keyed_concise_overrides':3,
- 'psychometric_distractor_cue_edits_tracked':True,
- 'psychometric_form_clause_trims_tracked':True,
- 'psychometric_relative_length_rank_balancing':True,
- 'source_registration_hard_failures':len(hard),
- 'source_registration_warnings':len(warnings),
- 'independent_material_source_upgrades':upgrades,
- 'real_measured_contracts':{
-   'avaps_values':13631488,'openmms_values':298080,
-   'cross_process_lower_values':7426743,'cross_process_upper_values':43814748,
-   'cross_process_combined_values':7426743+43814748,
-   'upper_pressure_values_excluded_pending_unit':21907374,
-   'upper_state_values_excluded_pending_semantics':21907374,
- },
+ 'version':'2026.09.01.4','learner_visible_keyed_decisions':len(items),'formal_decisions':len([x for x in items if x.get('scope')=='formal']),
+ 'optional_decisions':len(optional),'real_measured_additional_decisions':12,'psychometric_keyed_propositions_preserved':True,
+ 'psychometric_technical_term_substitutions':0,'psychometric_padding_applied':False,'psychometric_reviewed_keyed_concise_overrides':3,
+ 'psychometric_distractor_cue_edits_tracked':True,'psychometric_form_clause_trims_tracked':True,'psychometric_all_bank_relative_form_balancing':True,
+ 'source_registration_hard_failures':len(hard),'source_registration_warnings':len(warnings),'independent_material_source_upgrades':upgrades,
+ 'real_measured_contracts':{'avaps_values':13631488,'openmms_values':298080,'cross_process_lower_values':7426743,'cross_process_upper_values':43814748,'cross_process_combined_values':7426743+43814748,'upper_pressure_values_excluded_pending_unit':21907374,'upper_state_values_excluded_pending_semantics':21907374},
  'status':'passed'
 }
 REPORT.write_text(json.dumps(report,indent=2)+'\n',encoding='utf-8')
-print('Assessment evidence integrity passed: 197 keyed decisions + 12 real-measured decisions; keyed propositions/technical terms preserved; relative-form cue balancing, proposition/source relevance and unresolved-channel boundaries enforced')
+print('Assessment evidence integrity passed: 197 keyed decisions + 12 real-measured decisions; keyed propositions/technical terms preserved; all-bank relative-form cue balancing, proposition/source relevance and unresolved-channel boundaries enforced')
