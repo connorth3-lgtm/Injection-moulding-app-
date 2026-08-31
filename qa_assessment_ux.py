@@ -1,5 +1,6 @@
 from pathlib import Path
 import json
+import re
 import subprocess
 import textwrap
 
@@ -51,8 +52,15 @@ require("'assessment-ux.js'" in integrity, 'desktop integrity manifest must incl
 extra = pkg['build']['extraResources']
 from_paths = {x.get('from') for x in extra if isinstance(x, dict)}
 require('../../assessment-ux.js' in from_paths, 'desktop bundle must include assessment UX')
-require('assessment-question-rotation-20260831' in index, 'runtime bundle must be cache-bumped for the rotation fix')
-require("CACHE_REVISION='assessment-question-rotation-20260831'" in sw, 'offline cache must be bumped for the rotation fix')
+
+# The rotation fix remains mandatory, but later coherent runtime releases are allowed to
+# advance the cache family. Protect the behavior itself plus a dated/revisioned runtime bump
+# instead of pinning the entire app forever to the original August 31 cache token.
+runtime = re.search(r'const RUNTIME_ASSET_VERSION="([^"]+)"', index)
+cache = re.search(r"const CACHE_REVISION='([^']+)'", sw)
+require(runtime is not None and re.fullmatch(r'\d{8}\.\d+-[a-z0-9-]+', runtime.group(1)), 'runtime bundle must retain a dated revision token after the rotation fix')
+require(cache is not None and re.fullmatch(r'[a-z0-9-]+-\d{8}', cache.group(1)), 'offline cache must retain a dated revision token after the rotation fix')
+require('assessment-question-rotation-20260831' not in index or runtime.group(1).endswith('assessment-question-rotation'), 'legacy rotation token must not be malformed')
 
 # Execute the real browser layer in Node with a minimal DOM shim. The underlying generator
 # deliberately returns the same order every time. Storage is learner-scoped in the shim so
@@ -139,4 +147,4 @@ proc = subprocess.run(
 )
 require(proc.returncode == 0, f'assessment opening-question rotation runtime test failed: {proc.stderr or proc.stdout}')
 
-print('MouldMaster assessment UX QA passed (persistent learner-scoped 3-item opening history across starts, reloads and learner switches)')
+print('MouldMaster assessment UX QA passed (persistent learner-scoped 3-item opening history across starts, reloads and learner switches; later coherent cache revisions allowed)')
