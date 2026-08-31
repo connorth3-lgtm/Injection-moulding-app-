@@ -26,8 +26,8 @@ for path in [
 
 hardening=text('assessment-psychometric-hardening.js')
 approval=text('assessment-psychometric-approval.js')
-need("const VERSION='2026.09.01.5'" in hardening,'psychometric hardening version mismatch')
-need("const REQUIRED_VERSION='2026.09.01.5'" in approval,'psychometric approval required version mismatch')
+need("const VERSION='2026.09.01.6'" in hardening,'psychometric hardening version mismatch')
+need("const REQUIRED_VERSION='2026.09.01.6'" in approval,'psychometric approval required version mismatch')
 need("itemsHardened:197" in approval and "optionsParallelised:788" in approval,'psychometric approval coverage contract missing')
 need("technicalKeyPositions:[8,8,7,7]" in approval and "scenarioKeyPositions:[10,10,10,10]" in approval,'balanced key-position approval missing')
 for marker in ['semanticAnswerChanges:0','technicalTermSubstitutions:0','paddingApplied:false']:
@@ -37,6 +37,7 @@ for marker in ['distractorCueEdits','formClauseTrims','technicalLengthRanks','re
     need(marker in hardening and marker in approval,f'all-bank relative-form balancing metadata missing: {marker}')
 need('Math.max(124' not in hardening and 'cueNeutral' not in hardening,'generic semantic/padding transformer must be removed')
 need("initialization:'after-training-upgrade'" in hardening and 'scenarioCount!==40' in hardening and 'DOMContentLoaded' in hardening,'psychometric initialization guard missing')
+need("a.length===4" in approval,'approval must require four relative answer-length ranks')
 
 m=re.search(r"const INPUT_BLOB='([0-9a-f]{40})'",approval)
 need(m is not None,'psychometric input blob pin missing')
@@ -68,10 +69,12 @@ for marker in ['node --check assessment-psychometric-hardening.js','node --check
     need(marker in question_workflow,f'question-quality workflow missing evidence/psychometric gate: {marker}')
 
 runtime=text('qa_question_quality_extreme_runtime_v2.py')
-for marker in ['_relative_form_features','_relative_form_cue_model','within-question relative presentation form only','audit.surface_cue_model=_relative_form_cue_model']:
-    need(marker in runtime,f'extreme runtime relative-form cue methodology missing: {marker}')
-need('__qual_' not in runtime and '__starter_' not in runtime and '__unit_' not in runtime and '__unsafe_' not in runtime,'extreme hard cue model must not use engineering-semantic categories')
+for marker in ['_relative_form_features','_relative_form_cue_model','within-question relative length and terminal punctuation only','audit.surface_cue_model=_relative_form_cue_model']:
+    need(marker in runtime,f'extreme runtime presentation-cue methodology missing: {marker}')
+for forbidden in ['__qual_','__starter_','__unit_','__unsafe_','__rel_commas_','__rel_semicolons_','__rel_ands_']:
+    need(forbidden not in runtime,f'extreme hard cue model contains semantic/structural feature: {forbidden}')
 standard=text('qa_question_quality_50_pass_runtime.py')
+need('_evaluate_balanced_length' in standard and "hard.remove('correct-longest-or-tied')" in standard,'standard runtime still creates a longest-is-wrong inverse cue')
 need("zero learner-visible quality warnings" in standard and "need(not report.get('warning_types')" in standard,'standard runtime does not fail closed on learner-visible warnings')
 
-print(f'MouldMaster psychometric integration QA passed: 197 keyed decisions retain keyed propositions and technical vocabulary; relative-form balancing spans all assessment banks; extreme cue gate uses within-question presentation form; proposition evidence is loaded before approval; 12 real-measured decisions are delivered; blob pin={actual}')
+print(f'MouldMaster psychometric integration QA passed: 197 keyed decisions retain keyed propositions and technical vocabulary; four-rank answer-length balancing removes the inverse longest-is-wrong cue; extreme hard gate uses only relative length and terminal punctuation; proposition evidence is loaded before approval; 12 real-measured decisions are delivered; blob pin={actual}')
