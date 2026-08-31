@@ -8,7 +8,6 @@ import json
 import os
 import re
 import shutil
-from datetime import datetime, timezone
 from html.parser import HTMLParser
 from pathlib import Path
 from urllib.parse import unquote, urlsplit
@@ -186,7 +185,6 @@ def main() -> None:
         "schema": 1,
         "source_sha": source_sha,
         "source_ref": os.environ.get("GITHUB_REF_NAME", "local"),
-        "generated_at_utc": datetime.now(timezone.utc).isoformat(),
         "assessment_runtime": runtime_version,
         "service_worker_cache_version": cache_version,
         "service_worker_cache_revision": cache_revision,
