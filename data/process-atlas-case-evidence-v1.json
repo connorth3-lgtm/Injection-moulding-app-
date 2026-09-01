@@ -1,0 +1,4708 @@
+{
+  "schema": 1,
+  "version": "2026.09.02.1",
+  "scope": "Machine-generated case-level source-role mapping for the 200 normalized synthetic process-data atlas cases. Sources are selected only from each case pass reviewed source pool; token ranking is a relevance aid, not a new scientific claim.",
+  "meta": {
+    "version": "2026.09.02.1",
+    "status": "approved",
+    "cases": 200,
+    "uniqueSourceSignatures": 44,
+    "passInheritedOnly": 50,
+    "scope": "Each of the 200 atlas cases receives an explicit case-level source subset and role from its already reviewed pass-level source pool. No source is invented or promoted by token matching."
+  },
+  "cases": [
+    {
+      "id": "p01-check-ring-progressive-leak",
+      "pass": 1,
+      "sourceIds": [
+        "switchover-review-2025",
+        "measurement-review-2024"
+      ],
+      "caseEvidence": [
+        {
+          "sourceId": "switchover-review-2025",
+          "role": "mechanism-context",
+          "matchTerms": [
+            "injection",
+            "pressure"
+          ],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        },
+        {
+          "sourceId": "measurement-review-2024",
+          "role": "measurement-or-verification-method",
+          "matchTerms": [],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        }
+      ]
+    },
+    {
+      "id": "p01-recovery-time-instability",
+      "pass": 1,
+      "sourceIds": [
+        "measurement-review-2024",
+        "switchover-review-2025"
+      ],
+      "caseEvidence": [
+        {
+          "sourceId": "measurement-review-2024",
+          "role": "mechanism-context",
+          "matchTerms": [],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        },
+        {
+          "sourceId": "switchover-review-2025",
+          "role": "measurement-or-verification-method",
+          "matchTerms": [],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        }
+      ]
+    },
+    {
+      "id": "p01-barrel-zone-response-drift",
+      "pass": 1,
+      "sourceIds": [
+        "measurement-review-2024",
+        "switchover-review-2025"
+      ],
+      "caseEvidence": [
+        {
+          "sourceId": "measurement-review-2024",
+          "role": "mechanism-context",
+          "matchTerms": [],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        },
+        {
+          "sourceId": "switchover-review-2025",
+          "role": "measurement-or-verification-method",
+          "matchTerms": [],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        }
+      ]
+    },
+    {
+      "id": "p01-screw-position-encoder-drift",
+      "pass": 1,
+      "sourceIds": [
+        "measurement-review-2024",
+        "switchover-review-2025"
+      ],
+      "caseEvidence": [
+        {
+          "sourceId": "measurement-review-2024",
+          "role": "mechanism-context",
+          "matchTerms": [],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        },
+        {
+          "sourceId": "switchover-review-2025",
+          "role": "measurement-or-verification-method",
+          "matchTerms": [],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        }
+      ]
+    },
+    {
+      "id": "p01-back-pressure-actual-oscillation",
+      "pass": 1,
+      "sourceIds": [
+        "switchover-review-2025",
+        "measurement-review-2024"
+      ],
+      "caseEvidence": [
+        {
+          "sourceId": "switchover-review-2025",
+          "role": "mechanism-context",
+          "matchTerms": [
+            "pressure"
+          ],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        },
+        {
+          "sourceId": "measurement-review-2024",
+          "role": "measurement-or-verification-method",
+          "matchTerms": [],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        }
+      ]
+    },
+    {
+      "id": "p01-decompression-repeatability",
+      "pass": 1,
+      "sourceIds": [
+        "switchover-review-2025",
+        "measurement-review-2024"
+      ],
+      "caseEvidence": [
+        {
+          "sourceId": "switchover-review-2025",
+          "role": "mechanism-context",
+          "matchTerms": [
+            "pressure"
+          ],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        },
+        {
+          "sourceId": "measurement-review-2024",
+          "role": "measurement-or-verification-method",
+          "matchTerms": [],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        }
+      ]
+    },
+    {
+      "id": "p01-nozzle-leakage",
+      "pass": 1,
+      "sourceIds": [
+        "measurement-review-2024",
+        "switchover-review-2025"
+      ],
+      "caseEvidence": [
+        {
+          "sourceId": "measurement-review-2024",
+          "role": "mechanism-context",
+          "matchTerms": [],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        },
+        {
+          "sourceId": "switchover-review-2025",
+          "role": "measurement-or-verification-method",
+          "matchTerms": [],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        }
+      ]
+    },
+    {
+      "id": "p01-feed-throat-bridging",
+      "pass": 1,
+      "sourceIds": [
+        "switchover-review-2025",
+        "measurement-review-2024"
+      ],
+      "caseEvidence": [
+        {
+          "sourceId": "switchover-review-2025",
+          "role": "mechanism-context",
+          "matchTerms": [],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        },
+        {
+          "sourceId": "measurement-review-2024",
+          "role": "measurement-or-verification-method",
+          "matchTerms": [
+            "injection"
+          ],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        }
+      ]
+    },
+    {
+      "id": "p01-residence-thermal-drift",
+      "pass": 1,
+      "sourceIds": [
+        "measurement-review-2024",
+        "switchover-review-2025"
+      ],
+      "caseEvidence": [
+        {
+          "sourceId": "measurement-review-2024",
+          "role": "mechanism-context",
+          "matchTerms": [],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        },
+        {
+          "sourceId": "switchover-review-2025",
+          "role": "measurement-or-verification-method",
+          "matchTerms": [],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        }
+      ]
+    },
+    {
+      "id": "p01-cushion-shot-coupling",
+      "pass": 1,
+      "sourceIds": [
+        "measurement-review-2024",
+        "switchover-review-2025"
+      ],
+      "caseEvidence": [
+        {
+          "sourceId": "measurement-review-2024",
+          "role": "mechanism-context",
+          "matchTerms": [],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        },
+        {
+          "sourceId": "switchover-review-2025",
+          "role": "measurement-or-verification-method",
+          "matchTerms": [],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        }
+      ]
+    },
+    {
+      "id": "p02-injection-velocity-lag",
+      "pass": 2,
+      "sourceIds": [
+        "measurement-review-2024",
+        "tsou-2023"
+      ],
+      "caseEvidence": [
+        {
+          "sourceId": "measurement-review-2024",
+          "role": "mechanism-context",
+          "matchTerms": [
+            "injection"
+          ],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        },
+        {
+          "sourceId": "tsou-2023",
+          "role": "measurement-or-verification-method",
+          "matchTerms": [],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        }
+      ]
+    },
+    {
+      "id": "p02-pressure-limited-fill",
+      "pass": 2,
+      "sourceIds": [
+        "measurement-review-2024",
+        "tsou-2023"
+      ],
+      "caseEvidence": [
+        {
+          "sourceId": "measurement-review-2024",
+          "role": "mechanism-context",
+          "matchTerms": [],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        },
+        {
+          "sourceId": "tsou-2023",
+          "role": "measurement-or-verification-method",
+          "matchTerms": [],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        }
+      ]
+    },
+    {
+      "id": "p02-vp-trigger-delay",
+      "pass": 2,
+      "sourceIds": [
+        "tsou-2023",
+        "measurement-review-2024"
+      ],
+      "caseEvidence": [
+        {
+          "sourceId": "tsou-2023",
+          "role": "mechanism-context",
+          "matchTerms": [],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        },
+        {
+          "sourceId": "measurement-review-2024",
+          "role": "measurement-or-verification-method",
+          "matchTerms": [],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        }
+      ]
+    },
+    {
+      "id": "p02-servo-following-error",
+      "pass": 2,
+      "sourceIds": [
+        "tsou-2023",
+        "measurement-review-2024"
+      ],
+      "caseEvidence": [
+        {
+          "sourceId": "tsou-2023",
+          "role": "mechanism-context",
+          "matchTerms": [],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        },
+        {
+          "sourceId": "measurement-review-2024",
+          "role": "measurement-or-verification-method",
+          "matchTerms": [],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        }
+      ]
+    },
+    {
+      "id": "p02-hydraulic-oil-thermal-drift",
+      "pass": 2,
+      "sourceIds": [
+        "tsou-2023",
+        "measurement-review-2024"
+      ],
+      "caseEvidence": [
+        {
+          "sourceId": "tsou-2023",
+          "role": "mechanism-context",
+          "matchTerms": [],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        },
+        {
+          "sourceId": "measurement-review-2024",
+          "role": "measurement-or-verification-method",
+          "matchTerms": [],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        }
+      ]
+    },
+    {
+      "id": "p02-pressure-transducer-zero-bias",
+      "pass": 2,
+      "sourceIds": [
+        "measurement-review-2024",
+        "tsou-2023"
+      ],
+      "caseEvidence": [
+        {
+          "sourceId": "measurement-review-2024",
+          "role": "mechanism-context",
+          "matchTerms": [
+            "injection",
+            "measurement"
+          ],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        },
+        {
+          "sourceId": "tsou-2023",
+          "role": "measurement-or-verification-method",
+          "matchTerms": [],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        }
+      ]
+    },
+    {
+      "id": "p02-injection-acceleration-overshoot",
+      "pass": 2,
+      "sourceIds": [
+        "measurement-review-2024",
+        "tsou-2023"
+      ],
+      "caseEvidence": [
+        {
+          "sourceId": "measurement-review-2024",
+          "role": "mechanism-context",
+          "matchTerms": [
+            "injection"
+          ],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        },
+        {
+          "sourceId": "tsou-2023",
+          "role": "measurement-or-verification-method",
+          "matchTerms": [],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        }
+      ]
+    },
+    {
+      "id": "p02-hold-pressure-decay",
+      "pass": 2,
+      "sourceIds": [
+        "measurement-review-2024",
+        "tsou-2023"
+      ],
+      "caseEvidence": [
+        {
+          "sourceId": "measurement-review-2024",
+          "role": "mechanism-context",
+          "matchTerms": [],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        },
+        {
+          "sourceId": "tsou-2023",
+          "role": "measurement-or-verification-method",
+          "matchTerms": [],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        }
+      ]
+    },
+    {
+      "id": "p02-controller-cycle-jitter",
+      "pass": 2,
+      "sourceIds": [
+        "measurement-review-2024",
+        "tsou-2023"
+      ],
+      "caseEvidence": [
+        {
+          "sourceId": "measurement-review-2024",
+          "role": "mechanism-context",
+          "matchTerms": [],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        },
+        {
+          "sourceId": "tsou-2023",
+          "role": "measurement-or-verification-method",
+          "matchTerms": [],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        }
+      ]
+    },
+    {
+      "id": "p02-recovery-motion-overshoot",
+      "pass": 2,
+      "sourceIds": [
+        "measurement-review-2024",
+        "tsou-2023"
+      ],
+      "caseEvidence": [
+        {
+          "sourceId": "measurement-review-2024",
+          "role": "mechanism-context",
+          "matchTerms": [],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        },
+        {
+          "sourceId": "tsou-2023",
+          "role": "measurement-or-verification-method",
+          "matchTerms": [],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        }
+      ]
+    },
+    {
+      "id": "p03-tie-bar-load-imbalance",
+      "pass": 3,
+      "sourceIds": [
+        "switchover-review-2025",
+        "iso-20430"
+      ],
+      "caseEvidence": [
+        {
+          "sourceId": "switchover-review-2025",
+          "role": "mechanism-context",
+          "matchTerms": [
+            "pressure",
+            "injection"
+          ],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        },
+        {
+          "sourceId": "iso-20430",
+          "role": "measurement-or-verification-method",
+          "matchTerms": [],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        }
+      ]
+    },
+    {
+      "id": "p03-parting-line-separation",
+      "pass": 3,
+      "sourceIds": [
+        "autodesk-clamp",
+        "switchover-review-2025"
+      ],
+      "caseEvidence": [
+        {
+          "sourceId": "autodesk-clamp",
+          "role": "mechanism-context",
+          "matchTerms": [
+            "clamp"
+          ],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        },
+        {
+          "sourceId": "switchover-review-2025",
+          "role": "measurement-or-verification-method",
+          "matchTerms": [
+            "pressure"
+          ],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        }
+      ]
+    },
+    {
+      "id": "p03-clamp-reserve-low",
+      "pass": 3,
+      "sourceIds": [
+        "autodesk-clamp",
+        "iso-20430"
+      ],
+      "caseEvidence": [
+        {
+          "sourceId": "autodesk-clamp",
+          "role": "mechanism-context",
+          "matchTerms": [
+            "clamp"
+          ],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        },
+        {
+          "sourceId": "iso-20430",
+          "role": "measurement-or-verification-method",
+          "matchTerms": [],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        }
+      ]
+    },
+    {
+      "id": "p03-platen-parallelism-drift",
+      "pass": 3,
+      "sourceIds": [
+        "autodesk-clamp",
+        "switchover-review-2025"
+      ],
+      "caseEvidence": [
+        {
+          "sourceId": "autodesk-clamp",
+          "role": "mechanism-context",
+          "matchTerms": [
+            "clamp"
+          ],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        },
+        {
+          "sourceId": "switchover-review-2025",
+          "role": "measurement-or-verification-method",
+          "matchTerms": [
+            "methods"
+          ],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        }
+      ]
+    },
+    {
+      "id": "p03-toggle-friction-change",
+      "pass": 3,
+      "sourceIds": [
+        "autodesk-clamp",
+        "iso-20430"
+      ],
+      "caseEvidence": [
+        {
+          "sourceId": "autodesk-clamp",
+          "role": "mechanism-context",
+          "matchTerms": [
+            "clamp"
+          ],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        },
+        {
+          "sourceId": "iso-20430",
+          "role": "measurement-or-verification-method",
+          "matchTerms": [],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        }
+      ]
+    },
+    {
+      "id": "p03-mould-height-seating",
+      "pass": 3,
+      "sourceIds": [
+        "iso-20430",
+        "autodesk-clamp"
+      ],
+      "caseEvidence": [
+        {
+          "sourceId": "iso-20430",
+          "role": "mechanism-context",
+          "matchTerms": [],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        },
+        {
+          "sourceId": "autodesk-clamp",
+          "role": "measurement-or-verification-method",
+          "matchTerms": [
+            "clamp"
+          ],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        }
+      ]
+    },
+    {
+      "id": "p03-core-shift-under-pressure",
+      "pass": 3,
+      "sourceIds": [
+        "switchover-review-2025",
+        "autodesk-clamp"
+      ],
+      "caseEvidence": [
+        {
+          "sourceId": "switchover-review-2025",
+          "role": "mechanism-context",
+          "matchTerms": [
+            "pressure"
+          ],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        },
+        {
+          "sourceId": "autodesk-clamp",
+          "role": "measurement-or-verification-method",
+          "matchTerms": [],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        }
+      ]
+    },
+    {
+      "id": "p03-support-pillar-deflection",
+      "pass": 3,
+      "sourceIds": [
+        "autodesk-clamp",
+        "iso-20430"
+      ],
+      "caseEvidence": [
+        {
+          "sourceId": "autodesk-clamp",
+          "role": "mechanism-context",
+          "matchTerms": [
+            "clamp"
+          ],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        },
+        {
+          "sourceId": "iso-20430",
+          "role": "measurement-or-verification-method",
+          "matchTerms": [],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        }
+      ]
+    },
+    {
+      "id": "p03-clamp-compensation-trap",
+      "pass": 3,
+      "sourceIds": [
+        "autodesk-clamp",
+        "iso-20430"
+      ],
+      "caseEvidence": [
+        {
+          "sourceId": "autodesk-clamp",
+          "role": "mechanism-context",
+          "matchTerms": [
+            "clamp"
+          ],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        },
+        {
+          "sourceId": "iso-20430",
+          "role": "measurement-or-verification-method",
+          "matchTerms": [],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        }
+      ]
+    },
+    {
+      "id": "p03-clamp-repeatability-drift",
+      "pass": 3,
+      "sourceIds": [
+        "autodesk-clamp",
+        "iso-20430"
+      ],
+      "caseEvidence": [
+        {
+          "sourceId": "autodesk-clamp",
+          "role": "mechanism-context",
+          "matchTerms": [
+            "clamp"
+          ],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        },
+        {
+          "sourceId": "iso-20430",
+          "role": "measurement-or-verification-method",
+          "matchTerms": [],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        }
+      ]
+    },
+    {
+      "id": "p04-circuit-flow-restriction",
+      "pass": 4,
+      "sourceIds": [
+        "thermal-control-review-2022",
+        "warpage-review-2025"
+      ],
+      "caseEvidence": [
+        {
+          "sourceId": "thermal-control-review-2022",
+          "role": "mechanism-context",
+          "matchTerms": [
+            "thermal"
+          ],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        },
+        {
+          "sourceId": "warpage-review-2025",
+          "role": "measurement-or-verification-method",
+          "matchTerms": [
+            "warpage"
+          ],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        }
+      ]
+    },
+    {
+      "id": "p04-supply-temperature-drift",
+      "pass": 4,
+      "sourceIds": [
+        "thermal-control-review-2022",
+        "autodesk-cooling"
+      ],
+      "caseEvidence": [
+        {
+          "sourceId": "thermal-control-review-2022",
+          "role": "mechanism-context",
+          "matchTerms": [
+            "mould",
+            "thermal",
+            "control"
+          ],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        },
+        {
+          "sourceId": "autodesk-cooling",
+          "role": "measurement-or-verification-method",
+          "matchTerms": [],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        }
+      ]
+    },
+    {
+      "id": "p04-return-temperature-rise",
+      "pass": 4,
+      "sourceIds": [
+        "autodesk-cooling",
+        "thermal-control-review-2022"
+      ],
+      "caseEvidence": [
+        {
+          "sourceId": "autodesk-cooling",
+          "role": "mechanism-context",
+          "matchTerms": [],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        },
+        {
+          "sourceId": "thermal-control-review-2022",
+          "role": "measurement-or-verification-method",
+          "matchTerms": [
+            "thermal"
+          ],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        }
+      ]
+    },
+    {
+      "id": "p04-cavity-surface-imbalance",
+      "pass": 4,
+      "sourceIds": [
+        "thermal-control-review-2022",
+        "autodesk-cooling"
+      ],
+      "caseEvidence": [
+        {
+          "sourceId": "thermal-control-review-2022",
+          "role": "mechanism-context",
+          "matchTerms": [
+            "thermal"
+          ],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        },
+        {
+          "sourceId": "autodesk-cooling",
+          "role": "measurement-or-verification-method",
+          "matchTerms": [
+            "cooling"
+          ],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        }
+      ]
+    },
+    {
+      "id": "p04-core-cavity-differential",
+      "pass": 4,
+      "sourceIds": [
+        "thermal-control-review-2022",
+        "warpage-review-2025"
+      ],
+      "caseEvidence": [
+        {
+          "sourceId": "thermal-control-review-2022",
+          "role": "mechanism-context",
+          "matchTerms": [
+            "thermal"
+          ],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        },
+        {
+          "sourceId": "warpage-review-2025",
+          "role": "measurement-or-verification-method",
+          "matchTerms": [],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        }
+      ]
+    },
+    {
+      "id": "p04-conformal-circuit-fouling",
+      "pass": 4,
+      "sourceIds": [
+        "autodesk-cooling",
+        "thermal-control-review-2022"
+      ],
+      "caseEvidence": [
+        {
+          "sourceId": "autodesk-cooling",
+          "role": "mechanism-context",
+          "matchTerms": [
+            "cooling"
+          ],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        },
+        {
+          "sourceId": "thermal-control-review-2022",
+          "role": "measurement-or-verification-method",
+          "matchTerms": [
+            "thermal",
+            "mould"
+          ],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        }
+      ]
+    },
+    {
+      "id": "p04-series-circuit-cross-coupling",
+      "pass": 4,
+      "sourceIds": [
+        "thermal-control-review-2022",
+        "autodesk-cooling"
+      ],
+      "caseEvidence": [
+        {
+          "sourceId": "thermal-control-review-2022",
+          "role": "mechanism-context",
+          "matchTerms": [
+            "thermal"
+          ],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        },
+        {
+          "sourceId": "autodesk-cooling",
+          "role": "measurement-or-verification-method",
+          "matchTerms": [],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        }
+      ]
+    },
+    {
+      "id": "p04-cooling-time-plateau",
+      "pass": 4,
+      "sourceIds": [
+        "autodesk-cooling",
+        "thermal-control-review-2022"
+      ],
+      "caseEvidence": [
+        {
+          "sourceId": "autodesk-cooling",
+          "role": "mechanism-context",
+          "matchTerms": [
+            "cooling"
+          ],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        },
+        {
+          "sourceId": "thermal-control-review-2022",
+          "role": "measurement-or-verification-method",
+          "matchTerms": [
+            "mould"
+          ],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        }
+      ]
+    },
+    {
+      "id": "p04-eject-temperature-drift",
+      "pass": 4,
+      "sourceIds": [
+        "autodesk-cooling",
+        "thermal-control-review-2022"
+      ],
+      "caseEvidence": [
+        {
+          "sourceId": "autodesk-cooling",
+          "role": "mechanism-context",
+          "matchTerms": [
+            "cooling"
+          ],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        },
+        {
+          "sourceId": "thermal-control-review-2022",
+          "role": "measurement-or-verification-method",
+          "matchTerms": [
+            "mould"
+          ],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        }
+      ]
+    },
+    {
+      "id": "p04-ambient-seasonal-cooling",
+      "pass": 4,
+      "sourceIds": [
+        "thermal-control-review-2022",
+        "warpage-review-2025"
+      ],
+      "caseEvidence": [
+        {
+          "sourceId": "thermal-control-review-2022",
+          "role": "mechanism-context",
+          "matchTerms": [
+            "mould"
+          ],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        },
+        {
+          "sourceId": "warpage-review-2025",
+          "role": "measurement-or-verification-method",
+          "matchTerms": [],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        }
+      ]
+    },
+    {
+      "id": "p05-heater-duty-hidden-drift",
+      "pass": 5,
+      "sourceIds": [
+        "measurement-review-2024",
+        "hotrunner-2024"
+      ],
+      "caseEvidence": [
+        {
+          "sourceId": "measurement-review-2024",
+          "role": "mechanism-context",
+          "matchTerms": [],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        },
+        {
+          "sourceId": "hotrunner-2024",
+          "role": "measurement-or-verification-method",
+          "matchTerms": [],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        }
+      ]
+    },
+    {
+      "id": "p05-thermocouple-bias",
+      "pass": 5,
+      "sourceIds": [
+        "hotrunner-2024",
+        "autodesk-valve-gate"
+      ],
+      "caseEvidence": [
+        {
+          "sourceId": "hotrunner-2024",
+          "role": "mechanism-context",
+          "matchTerms": [],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        },
+        {
+          "sourceId": "autodesk-valve-gate",
+          "role": "measurement-or-verification-method",
+          "matchTerms": [],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        }
+      ]
+    },
+    {
+      "id": "p05-manifold-thermal-imbalance",
+      "pass": 5,
+      "sourceIds": [
+        "autodesk-valve-gate",
+        "hotrunner-2024"
+      ],
+      "caseEvidence": [
+        {
+          "sourceId": "autodesk-valve-gate",
+          "role": "mechanism-context",
+          "matchTerms": [],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        },
+        {
+          "sourceId": "hotrunner-2024",
+          "role": "measurement-or-verification-method",
+          "matchTerms": [],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        }
+      ]
+    },
+    {
+      "id": "p05-hot-tip-cold-slug",
+      "pass": 5,
+      "sourceIds": [
+        "autodesk-valve-gate",
+        "measurement-review-2024"
+      ],
+      "caseEvidence": [
+        {
+          "sourceId": "autodesk-valve-gate",
+          "role": "mechanism-context",
+          "matchTerms": [
+            "gate"
+          ],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        },
+        {
+          "sourceId": "measurement-review-2024",
+          "role": "measurement-or-verification-method",
+          "matchTerms": [],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        }
+      ]
+    },
+    {
+      "id": "p05-valve-open-delay",
+      "pass": 5,
+      "sourceIds": [
+        "autodesk-valve-gate",
+        "measurement-review-2024"
+      ],
+      "caseEvidence": [
+        {
+          "sourceId": "autodesk-valve-gate",
+          "role": "mechanism-context",
+          "matchTerms": [
+            "valve",
+            "gate"
+          ],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        },
+        {
+          "sourceId": "measurement-review-2024",
+          "role": "measurement-or-verification-method",
+          "matchTerms": [],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        }
+      ]
+    },
+    {
+      "id": "p05-valve-close-delay",
+      "pass": 5,
+      "sourceIds": [
+        "autodesk-valve-gate",
+        "hotrunner-2024"
+      ],
+      "caseEvidence": [
+        {
+          "sourceId": "autodesk-valve-gate",
+          "role": "mechanism-context",
+          "matchTerms": [
+            "valve",
+            "gate"
+          ],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        },
+        {
+          "sourceId": "hotrunner-2024",
+          "role": "measurement-or-verification-method",
+          "matchTerms": [],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        }
+      ]
+    },
+    {
+      "id": "p05-pneumatic-actuation-drift",
+      "pass": 5,
+      "sourceIds": [
+        "autodesk-valve-gate",
+        "hotrunner-2024"
+      ],
+      "caseEvidence": [
+        {
+          "sourceId": "autodesk-valve-gate",
+          "role": "mechanism-context",
+          "matchTerms": [
+            "valve",
+            "gate"
+          ],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        },
+        {
+          "sourceId": "hotrunner-2024",
+          "role": "measurement-or-verification-method",
+          "matchTerms": [],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        }
+      ]
+    },
+    {
+      "id": "p05-valve-pin-drag",
+      "pass": 5,
+      "sourceIds": [
+        "autodesk-valve-gate",
+        "hotrunner-2024"
+      ],
+      "caseEvidence": [
+        {
+          "sourceId": "autodesk-valve-gate",
+          "role": "mechanism-context",
+          "matchTerms": [
+            "valve"
+          ],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        },
+        {
+          "sourceId": "hotrunner-2024",
+          "role": "measurement-or-verification-method",
+          "matchTerms": [],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        }
+      ]
+    },
+    {
+      "id": "p05-sequential-gate-overlap",
+      "pass": 5,
+      "sourceIds": [
+        "autodesk-valve-gate",
+        "measurement-review-2024"
+      ],
+      "caseEvidence": [
+        {
+          "sourceId": "autodesk-valve-gate",
+          "role": "mechanism-context",
+          "matchTerms": [
+            "gate"
+          ],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        },
+        {
+          "sourceId": "measurement-review-2024",
+          "role": "measurement-or-verification-method",
+          "matchTerms": [],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        }
+      ]
+    },
+    {
+      "id": "p05-gate-freeze-thermal-split",
+      "pass": 5,
+      "sourceIds": [
+        "autodesk-valve-gate",
+        "hotrunner-2024"
+      ],
+      "caseEvidence": [
+        {
+          "sourceId": "autodesk-valve-gate",
+          "role": "mechanism-context",
+          "matchTerms": [
+            "gate"
+          ],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        },
+        {
+          "sourceId": "hotrunner-2024",
+          "role": "measurement-or-verification-method",
+          "matchTerms": [],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        }
+      ]
+    },
+    {
+      "id": "p06-blocked-end-vent",
+      "pass": 6,
+      "sourceIds": [
+        "autodesk-fill-pack",
+        "araujo-2023"
+      ],
+      "caseEvidence": [
+        {
+          "sourceId": "autodesk-fill-pack",
+          "role": "mechanism-context",
+          "matchTerms": [
+            "fill"
+          ],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        },
+        {
+          "sourceId": "araujo-2023",
+          "role": "measurement-or-verification-method",
+          "matchTerms": [],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        }
+      ]
+    },
+    {
+      "id": "p06-runner-branch-imbalance",
+      "pass": 6,
+      "sourceIds": [
+        "autodesk-fill-pack",
+        "araujo-2023"
+      ],
+      "caseEvidence": [
+        {
+          "sourceId": "autodesk-fill-pack",
+          "role": "mechanism-context",
+          "matchTerms": [
+            "fill"
+          ],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        },
+        {
+          "sourceId": "araujo-2023",
+          "role": "measurement-or-verification-method",
+          "matchTerms": [],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        }
+      ]
+    },
+    {
+      "id": "p06-gate-wear-enlargement",
+      "pass": 6,
+      "sourceIds": [
+        "basf-troubleshooter",
+        "araujo-2023"
+      ],
+      "caseEvidence": [
+        {
+          "sourceId": "basf-troubleshooter",
+          "role": "mechanism-context",
+          "matchTerms": [],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        },
+        {
+          "sourceId": "araujo-2023",
+          "role": "measurement-or-verification-method",
+          "matchTerms": [],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        }
+      ]
+    },
+    {
+      "id": "p06-cold-slug-restriction",
+      "pass": 6,
+      "sourceIds": [
+        "autodesk-fill-pack",
+        "basf-troubleshooter"
+      ],
+      "caseEvidence": [
+        {
+          "sourceId": "autodesk-fill-pack",
+          "role": "mechanism-context",
+          "matchTerms": [
+            "fill"
+          ],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        },
+        {
+          "sourceId": "basf-troubleshooter",
+          "role": "measurement-or-verification-method",
+          "matchTerms": [],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        }
+      ]
+    },
+    {
+      "id": "p06-vent-contamination-drift",
+      "pass": 6,
+      "sourceIds": [
+        "autodesk-fill-pack",
+        "araujo-2023"
+      ],
+      "caseEvidence": [
+        {
+          "sourceId": "autodesk-fill-pack",
+          "role": "mechanism-context",
+          "matchTerms": [
+            "fill"
+          ],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        },
+        {
+          "sourceId": "araujo-2023",
+          "role": "measurement-or-verification-method",
+          "matchTerms": [],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        }
+      ]
+    },
+    {
+      "id": "p06-weld-line-position-shift",
+      "pass": 6,
+      "sourceIds": [
+        "autodesk-fill-pack",
+        "araujo-2023"
+      ],
+      "caseEvidence": [
+        {
+          "sourceId": "autodesk-fill-pack",
+          "role": "mechanism-context",
+          "matchTerms": [
+            "fill"
+          ],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        },
+        {
+          "sourceId": "araujo-2023",
+          "role": "measurement-or-verification-method",
+          "matchTerms": [],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        }
+      ]
+    },
+    {
+      "id": "p06-jetting-onset",
+      "pass": 6,
+      "sourceIds": [
+        "autodesk-fill-pack",
+        "basf-troubleshooter"
+      ],
+      "caseEvidence": [
+        {
+          "sourceId": "autodesk-fill-pack",
+          "role": "mechanism-context",
+          "matchTerms": [],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        },
+        {
+          "sourceId": "basf-troubleshooter",
+          "role": "measurement-or-verification-method",
+          "matchTerms": [],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        }
+      ]
+    },
+    {
+      "id": "p06-thickness-hesitation",
+      "pass": 6,
+      "sourceIds": [
+        "basf-troubleshooter",
+        "autodesk-fill-pack"
+      ],
+      "caseEvidence": [
+        {
+          "sourceId": "basf-troubleshooter",
+          "role": "mechanism-context",
+          "matchTerms": [],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        },
+        {
+          "sourceId": "autodesk-fill-pack",
+          "role": "measurement-or-verification-method",
+          "matchTerms": [
+            "fill"
+          ],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        }
+      ]
+    },
+    {
+      "id": "p06-multicavity-gate-seal-split",
+      "pass": 6,
+      "sourceIds": [
+        "autodesk-fill-pack",
+        "araujo-2023"
+      ],
+      "caseEvidence": [
+        {
+          "sourceId": "autodesk-fill-pack",
+          "role": "mechanism-context",
+          "matchTerms": [
+            "pack"
+          ],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        },
+        {
+          "sourceId": "araujo-2023",
+          "role": "measurement-or-verification-method",
+          "matchTerms": [],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        }
+      ]
+    },
+    {
+      "id": "p06-runner-thermal-imbalance",
+      "pass": 6,
+      "sourceIds": [
+        "autodesk-fill-pack",
+        "araujo-2023"
+      ],
+      "caseEvidence": [
+        {
+          "sourceId": "autodesk-fill-pack",
+          "role": "mechanism-context",
+          "matchTerms": [],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        },
+        {
+          "sourceId": "araujo-2023",
+          "role": "measurement-or-verification-method",
+          "matchTerms": [],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        }
+      ]
+    },
+    {
+      "id": "p07-ejector-force-rise",
+      "pass": 7,
+      "sourceIds": [
+        "autodesk-cooling",
+        "iso-20430"
+      ],
+      "caseEvidence": [
+        {
+          "sourceId": "autodesk-cooling",
+          "role": "mechanism-context",
+          "matchTerms": [
+            "cooling"
+          ],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        },
+        {
+          "sourceId": "iso-20430",
+          "role": "measurement-or-verification-method",
+          "matchTerms": [],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        }
+      ]
+    },
+    {
+      "id": "p07-sleeve-drag",
+      "pass": 7,
+      "sourceIds": [
+        "autodesk-cooling",
+        "measurement-review-2024"
+      ],
+      "caseEvidence": [
+        {
+          "sourceId": "autodesk-cooling",
+          "role": "mechanism-context",
+          "matchTerms": [
+            "cooling"
+          ],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        },
+        {
+          "sourceId": "measurement-review-2024",
+          "role": "measurement-or-verification-method",
+          "matchTerms": [],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        }
+      ]
+    },
+    {
+      "id": "p07-lifter-timing-drag",
+      "pass": 7,
+      "sourceIds": [
+        "autodesk-cooling",
+        "measurement-review-2024"
+      ],
+      "caseEvidence": [
+        {
+          "sourceId": "autodesk-cooling",
+          "role": "mechanism-context",
+          "matchTerms": [],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        },
+        {
+          "sourceId": "measurement-review-2024",
+          "role": "measurement-or-verification-method",
+          "matchTerms": [],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        }
+      ]
+    },
+    {
+      "id": "p07-core-pin-deflection",
+      "pass": 7,
+      "sourceIds": [
+        "measurement-review-2024",
+        "iso-20430"
+      ],
+      "caseEvidence": [
+        {
+          "sourceId": "measurement-review-2024",
+          "role": "mechanism-context",
+          "matchTerms": [],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        },
+        {
+          "sourceId": "iso-20430",
+          "role": "measurement-or-verification-method",
+          "matchTerms": [],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        }
+      ]
+    },
+    {
+      "id": "p07-release-surface-condition",
+      "pass": 7,
+      "sourceIds": [
+        "iso-20430",
+        "measurement-review-2024"
+      ],
+      "caseEvidence": [
+        {
+          "sourceId": "iso-20430",
+          "role": "mechanism-context",
+          "matchTerms": [],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        },
+        {
+          "sourceId": "measurement-review-2024",
+          "role": "measurement-or-verification-method",
+          "matchTerms": [],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        }
+      ]
+    },
+    {
+      "id": "p07-parting-line-damage-flash",
+      "pass": 7,
+      "sourceIds": [
+        "measurement-review-2024",
+        "autodesk-cooling"
+      ],
+      "caseEvidence": [
+        {
+          "sourceId": "measurement-review-2024",
+          "role": "mechanism-context",
+          "matchTerms": [],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        },
+        {
+          "sourceId": "autodesk-cooling",
+          "role": "measurement-or-verification-method",
+          "matchTerms": [],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        }
+      ]
+    },
+    {
+      "id": "p07-shutoff-wear",
+      "pass": 7,
+      "sourceIds": [
+        "measurement-review-2024",
+        "iso-20430"
+      ],
+      "caseEvidence": [
+        {
+          "sourceId": "measurement-review-2024",
+          "role": "mechanism-context",
+          "matchTerms": [],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        },
+        {
+          "sourceId": "iso-20430",
+          "role": "measurement-or-verification-method",
+          "matchTerms": [],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        }
+      ]
+    },
+    {
+      "id": "p07-insert-seating-drift",
+      "pass": 7,
+      "sourceIds": [
+        "autodesk-cooling",
+        "measurement-review-2024"
+      ],
+      "caseEvidence": [
+        {
+          "sourceId": "autodesk-cooling",
+          "role": "mechanism-context",
+          "matchTerms": [],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        },
+        {
+          "sourceId": "measurement-review-2024",
+          "role": "measurement-or-verification-method",
+          "matchTerms": [],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        }
+      ]
+    },
+    {
+      "id": "p07-ejector-return-timing",
+      "pass": 7,
+      "sourceIds": [
+        "measurement-review-2024",
+        "autodesk-cooling"
+      ],
+      "caseEvidence": [
+        {
+          "sourceId": "measurement-review-2024",
+          "role": "mechanism-context",
+          "matchTerms": [],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        },
+        {
+          "sourceId": "autodesk-cooling",
+          "role": "measurement-or-verification-method",
+          "matchTerms": [],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        }
+      ]
+    },
+    {
+      "id": "p07-tool-warmup-mechanical-change",
+      "pass": 7,
+      "sourceIds": [
+        "autodesk-cooling",
+        "measurement-review-2024"
+      ],
+      "caseEvidence": [
+        {
+          "sourceId": "autodesk-cooling",
+          "role": "mechanism-context",
+          "matchTerms": [],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        },
+        {
+          "sourceId": "measurement-review-2024",
+          "role": "measurement-or-verification-method",
+          "matchTerms": [],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        }
+      ]
+    },
+    {
+      "id": "p08-pc-moisture-rise",
+      "pass": 8,
+      "sourceIds": [
+        "iso-15512",
+        "covestro-drying"
+      ],
+      "caseEvidence": [
+        {
+          "sourceId": "iso-15512",
+          "role": "mechanism-context",
+          "matchTerms": [],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        },
+        {
+          "sourceId": "covestro-drying",
+          "role": "measurement-or-verification-method",
+          "matchTerms": [
+            "drying"
+          ],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        }
+      ]
+    },
+    {
+      "id": "p08-pa66-reabsorption",
+      "pass": 8,
+      "sourceIds": [
+        "covestro-drying",
+        "iso-15512"
+      ],
+      "caseEvidence": [
+        {
+          "sourceId": "covestro-drying",
+          "role": "mechanism-context",
+          "matchTerms": [
+            "drying"
+          ],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        },
+        {
+          "sourceId": "iso-15512",
+          "role": "measurement-or-verification-method",
+          "matchTerms": [],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        }
+      ]
+    },
+    {
+      "id": "p08-pet-hydrolysis",
+      "pass": 8,
+      "sourceIds": [
+        "basf-troubleshooter",
+        "covestro-drying"
+      ],
+      "caseEvidence": [
+        {
+          "sourceId": "basf-troubleshooter",
+          "role": "mechanism-context",
+          "matchTerms": [],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        },
+        {
+          "sourceId": "covestro-drying",
+          "role": "measurement-or-verification-method",
+          "matchTerms": [
+            "drying"
+          ],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        }
+      ]
+    },
+    {
+      "id": "p08-pbt-hydrolysis",
+      "pass": 8,
+      "sourceIds": [
+        "covestro-drying",
+        "iso-15512"
+      ],
+      "caseEvidence": [
+        {
+          "sourceId": "covestro-drying",
+          "role": "mechanism-context",
+          "matchTerms": [],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        },
+        {
+          "sourceId": "iso-15512",
+          "role": "measurement-or-verification-method",
+          "matchTerms": [],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        }
+      ]
+    },
+    {
+      "id": "p08-tpu-reabsorption",
+      "pass": 8,
+      "sourceIds": [
+        "covestro-drying",
+        "basf-troubleshooter"
+      ],
+      "caseEvidence": [
+        {
+          "sourceId": "covestro-drying",
+          "role": "mechanism-context",
+          "matchTerms": [
+            "drying"
+          ],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        },
+        {
+          "sourceId": "basf-troubleshooter",
+          "role": "measurement-or-verification-method",
+          "matchTerms": [],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        }
+      ]
+    },
+    {
+      "id": "p08-pmma-moisture-optics",
+      "pass": 8,
+      "sourceIds": [
+        "iso-15512",
+        "basf-troubleshooter"
+      ],
+      "caseEvidence": [
+        {
+          "sourceId": "iso-15512",
+          "role": "mechanism-context",
+          "matchTerms": [],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        },
+        {
+          "sourceId": "basf-troubleshooter",
+          "role": "measurement-or-verification-method",
+          "matchTerms": [],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        }
+      ]
+    },
+    {
+      "id": "p08-dryer-dewpoint-deterioration",
+      "pass": 8,
+      "sourceIds": [
+        "covestro-drying",
+        "basf-troubleshooter"
+      ],
+      "caseEvidence": [
+        {
+          "sourceId": "covestro-drying",
+          "role": "mechanism-context",
+          "matchTerms": [
+            "drying"
+          ],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        },
+        {
+          "sourceId": "basf-troubleshooter",
+          "role": "measurement-or-verification-method",
+          "matchTerms": [],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        }
+      ]
+    },
+    {
+      "id": "p08-hopper-residence-short",
+      "pass": 8,
+      "sourceIds": [
+        "covestro-drying",
+        "basf-troubleshooter"
+      ],
+      "caseEvidence": [
+        {
+          "sourceId": "covestro-drying",
+          "role": "mechanism-context",
+          "matchTerms": [
+            "drying"
+          ],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        },
+        {
+          "sourceId": "basf-troubleshooter",
+          "role": "measurement-or-verification-method",
+          "matchTerms": [],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        }
+      ]
+    },
+    {
+      "id": "p08-open-transfer-exposure",
+      "pass": 8,
+      "sourceIds": [
+        "basf-troubleshooter",
+        "iso-15512"
+      ],
+      "caseEvidence": [
+        {
+          "sourceId": "basf-troubleshooter",
+          "role": "mechanism-context",
+          "matchTerms": [],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        },
+        {
+          "sourceId": "iso-15512",
+          "role": "measurement-or-verification-method",
+          "matchTerms": [],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        }
+      ]
+    },
+    {
+      "id": "p08-wrong-grade-material",
+      "pass": 8,
+      "sourceIds": [
+        "basf-troubleshooter",
+        "iso-15512"
+      ],
+      "caseEvidence": [
+        {
+          "sourceId": "basf-troubleshooter",
+          "role": "mechanism-context",
+          "matchTerms": [],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        },
+        {
+          "sourceId": "iso-15512",
+          "role": "measurement-or-verification-method",
+          "matchTerms": [],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        }
+      ]
+    },
+    {
+      "id": "p09-pp-cooling-crystallinity",
+      "pass": 9,
+      "sourceIds": [
+        "autodesk-cooling",
+        "warpage-review-2025"
+      ],
+      "caseEvidence": [
+        {
+          "sourceId": "autodesk-cooling",
+          "role": "mechanism-context",
+          "matchTerms": [
+            "cooling"
+          ],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        },
+        {
+          "sourceId": "warpage-review-2025",
+          "role": "measurement-or-verification-method",
+          "matchTerms": [
+            "warpage"
+          ],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        }
+      ]
+    },
+    {
+      "id": "p09-hdpe-lot-density-rheology",
+      "pass": 9,
+      "sourceIds": [
+        "autodesk-cooling",
+        "warpage-review-2025"
+      ],
+      "caseEvidence": [
+        {
+          "sourceId": "autodesk-cooling",
+          "role": "mechanism-context",
+          "matchTerms": [],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        },
+        {
+          "sourceId": "warpage-review-2025",
+          "role": "measurement-or-verification-method",
+          "matchTerms": [
+            "warpage"
+          ],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        }
+      ]
+    },
+    {
+      "id": "p09-pom-shrinkage-thermal",
+      "pass": 9,
+      "sourceIds": [
+        "autodesk-cooling",
+        "warpage-review-2025"
+      ],
+      "caseEvidence": [
+        {
+          "sourceId": "autodesk-cooling",
+          "role": "mechanism-context",
+          "matchTerms": [
+            "cooling"
+          ],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        },
+        {
+          "sourceId": "warpage-review-2025",
+          "role": "measurement-or-verification-method",
+          "matchTerms": [],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        }
+      ]
+    },
+    {
+      "id": "p09-pbt-mould-temp-dimension",
+      "pass": 9,
+      "sourceIds": [
+        "autodesk-cooling",
+        "zhao-2022"
+      ],
+      "caseEvidence": [
+        {
+          "sourceId": "autodesk-cooling",
+          "role": "mechanism-context",
+          "matchTerms": [
+            "cooling"
+          ],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        },
+        {
+          "sourceId": "zhao-2022",
+          "role": "measurement-or-verification-method",
+          "matchTerms": [],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        }
+      ]
+    },
+    {
+      "id": "p09-pa66-conditioning-dimension",
+      "pass": 9,
+      "sourceIds": [
+        "warpage-review-2025",
+        "autodesk-cooling"
+      ],
+      "caseEvidence": [
+        {
+          "sourceId": "warpage-review-2025",
+          "role": "mechanism-context",
+          "matchTerms": [],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        },
+        {
+          "sourceId": "autodesk-cooling",
+          "role": "measurement-or-verification-method",
+          "matchTerms": [],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        }
+      ]
+    },
+    {
+      "id": "p09-peek-crystallinity",
+      "pass": 9,
+      "sourceIds": [
+        "zhao-2022",
+        "warpage-review-2025"
+      ],
+      "caseEvidence": [
+        {
+          "sourceId": "zhao-2022",
+          "role": "mechanism-context",
+          "matchTerms": [],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        },
+        {
+          "sourceId": "warpage-review-2025",
+          "role": "measurement-or-verification-method",
+          "matchTerms": [],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        }
+      ]
+    },
+    {
+      "id": "p09-pet-crystallisation-history",
+      "pass": 9,
+      "sourceIds": [
+        "autodesk-cooling",
+        "zhao-2022"
+      ],
+      "caseEvidence": [
+        {
+          "sourceId": "autodesk-cooling",
+          "role": "mechanism-context",
+          "matchTerms": [
+            "cooling"
+          ],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        },
+        {
+          "sourceId": "zhao-2022",
+          "role": "measurement-or-verification-method",
+          "matchTerms": [],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        }
+      ]
+    },
+    {
+      "id": "p09-asymmetric-cooling-warpage",
+      "pass": 9,
+      "sourceIds": [
+        "warpage-review-2025",
+        "autodesk-cooling"
+      ],
+      "caseEvidence": [
+        {
+          "sourceId": "warpage-review-2025",
+          "role": "mechanism-context",
+          "matchTerms": [
+            "warpage"
+          ],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        },
+        {
+          "sourceId": "autodesk-cooling",
+          "role": "measurement-or-verification-method",
+          "matchTerms": [
+            "cooling"
+          ],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        }
+      ]
+    },
+    {
+      "id": "p09-post-mould-shrinkage-time",
+      "pass": 9,
+      "sourceIds": [
+        "autodesk-cooling",
+        "warpage-review-2025"
+      ],
+      "caseEvidence": [
+        {
+          "sourceId": "autodesk-cooling",
+          "role": "mechanism-context",
+          "matchTerms": [],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        },
+        {
+          "sourceId": "warpage-review-2025",
+          "role": "measurement-or-verification-method",
+          "matchTerms": [
+            "moulding"
+          ],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        }
+      ]
+    },
+    {
+      "id": "p09-cavity-thermal-history-split",
+      "pass": 9,
+      "sourceIds": [
+        "autodesk-cooling",
+        "zhao-2022"
+      ],
+      "caseEvidence": [
+        {
+          "sourceId": "autodesk-cooling",
+          "role": "mechanism-context",
+          "matchTerms": [
+            "cooling"
+          ],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        },
+        {
+          "sourceId": "zhao-2022",
+          "role": "measurement-or-verification-method",
+          "matchTerms": [],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        }
+      ]
+    },
+    {
+      "id": "p10-fibre-orientation-shift",
+      "pass": 10,
+      "sourceIds": [
+        "krantz-rpp-2024",
+        "basf-pa66-gf30"
+      ],
+      "caseEvidence": [
+        {
+          "sourceId": "krantz-rpp-2024",
+          "role": "mechanism-context",
+          "matchTerms": [],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        },
+        {
+          "sourceId": "basf-pa66-gf30",
+          "role": "measurement-or-verification-method",
+          "matchTerms": [],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        }
+      ]
+    },
+    {
+      "id": "p10-fibre-attrition",
+      "pass": 10,
+      "sourceIds": [
+        "basf-pa66-gf30",
+        "iso-1133"
+      ],
+      "caseEvidence": [
+        {
+          "sourceId": "basf-pa66-gf30",
+          "role": "mechanism-context",
+          "matchTerms": [],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        },
+        {
+          "sourceId": "iso-1133",
+          "role": "measurement-or-verification-method",
+          "matchTerms": [],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        }
+      ]
+    },
+    {
+      "id": "p10-filler-concentration-segregation",
+      "pass": 10,
+      "sourceIds": [
+        "krantz-rpp-2024",
+        "basf-pa66-gf30"
+      ],
+      "caseEvidence": [
+        {
+          "sourceId": "krantz-rpp-2024",
+          "role": "mechanism-context",
+          "matchTerms": [],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        },
+        {
+          "sourceId": "basf-pa66-gf30",
+          "role": "measurement-or-verification-method",
+          "matchTerms": [],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        }
+      ]
+    },
+    {
+      "id": "p10-regrind-fraction-drift",
+      "pass": 10,
+      "sourceIds": [
+        "iso-1133",
+        "krantz-rpp-2024"
+      ],
+      "caseEvidence": [
+        {
+          "sourceId": "iso-1133",
+          "role": "mechanism-context",
+          "matchTerms": [],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        },
+        {
+          "sourceId": "krantz-rpp-2024",
+          "role": "measurement-or-verification-method",
+          "matchTerms": [],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        }
+      ]
+    },
+    {
+      "id": "p10-recycled-pp-lot-rheology",
+      "pass": 10,
+      "sourceIds": [
+        "basf-pa66-gf30",
+        "iso-1133"
+      ],
+      "caseEvidence": [
+        {
+          "sourceId": "basf-pa66-gf30",
+          "role": "mechanism-context",
+          "matchTerms": [],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        },
+        {
+          "sourceId": "iso-1133",
+          "role": "measurement-or-verification-method",
+          "matchTerms": [],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        }
+      ]
+    },
+    {
+      "id": "p10-pcabs-grade-change",
+      "pass": 10,
+      "sourceIds": [
+        "krantz-rpp-2024",
+        "iso-1133"
+      ],
+      "caseEvidence": [
+        {
+          "sourceId": "krantz-rpp-2024",
+          "role": "mechanism-context",
+          "matchTerms": [],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        },
+        {
+          "sourceId": "iso-1133",
+          "role": "measurement-or-verification-method",
+          "matchTerms": [],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        }
+      ]
+    },
+    {
+      "id": "p10-masterbatch-carrier-mismatch",
+      "pass": 10,
+      "sourceIds": [
+        "iso-1133",
+        "basf-pa66-gf30"
+      ],
+      "caseEvidence": [
+        {
+          "sourceId": "iso-1133",
+          "role": "mechanism-context",
+          "matchTerms": [],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        },
+        {
+          "sourceId": "basf-pa66-gf30",
+          "role": "measurement-or-verification-method",
+          "matchTerms": [],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        }
+      ]
+    },
+    {
+      "id": "p10-filled-resin-moisture",
+      "pass": 10,
+      "sourceIds": [
+        "krantz-rpp-2024",
+        "basf-pa66-gf30"
+      ],
+      "caseEvidence": [
+        {
+          "sourceId": "krantz-rpp-2024",
+          "role": "mechanism-context",
+          "matchTerms": [],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        },
+        {
+          "sourceId": "basf-pa66-gf30",
+          "role": "measurement-or-verification-method",
+          "matchTerms": [],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        }
+      ]
+    },
+    {
+      "id": "p10-recycled-contamination",
+      "pass": 10,
+      "sourceIds": [
+        "basf-pa66-gf30",
+        "krantz-rpp-2024"
+      ],
+      "caseEvidence": [
+        {
+          "sourceId": "basf-pa66-gf30",
+          "role": "mechanism-context",
+          "matchTerms": [],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        },
+        {
+          "sourceId": "krantz-rpp-2024",
+          "role": "measurement-or-verification-method",
+          "matchTerms": [],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        }
+      ]
+    },
+    {
+      "id": "p10-blend-ratio-drift",
+      "pass": 10,
+      "sourceIds": [
+        "iso-1133",
+        "krantz-rpp-2024"
+      ],
+      "caseEvidence": [
+        {
+          "sourceId": "iso-1133",
+          "role": "mechanism-context",
+          "matchTerms": [],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        },
+        {
+          "sourceId": "krantz-rpp-2024",
+          "role": "measurement-or-verification-method",
+          "matchTerms": [],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        }
+      ]
+    },
+    {
+      "id": "p11-fill-speed-viscosity-curve",
+      "pass": 11,
+      "sourceIds": [
+        "autodesk-fill-pack",
+        "iso-1133"
+      ],
+      "caseEvidence": [
+        {
+          "sourceId": "autodesk-fill-pack",
+          "role": "mechanism-context",
+          "matchTerms": [
+            "fill"
+          ],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        },
+        {
+          "sourceId": "iso-1133",
+          "role": "measurement-or-verification-method",
+          "matchTerms": [],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        }
+      ]
+    },
+    {
+      "id": "p11-nozzle-pressure-loss",
+      "pass": 11,
+      "sourceIds": [
+        "iso-1133",
+        "autodesk-fill-pack"
+      ],
+      "caseEvidence": [
+        {
+          "sourceId": "iso-1133",
+          "role": "mechanism-context",
+          "matchTerms": [],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        },
+        {
+          "sourceId": "autodesk-fill-pack",
+          "role": "measurement-or-verification-method",
+          "matchTerms": [
+            "fill"
+          ],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        }
+      ]
+    },
+    {
+      "id": "p11-sprue-pressure-loss",
+      "pass": 11,
+      "sourceIds": [
+        "iso-1133",
+        "trotta-2021"
+      ],
+      "caseEvidence": [
+        {
+          "sourceId": "iso-1133",
+          "role": "mechanism-context",
+          "matchTerms": [],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        },
+        {
+          "sourceId": "trotta-2021",
+          "role": "measurement-or-verification-method",
+          "matchTerms": [],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        }
+      ]
+    },
+    {
+      "id": "p11-runner-pressure-loss",
+      "pass": 11,
+      "sourceIds": [
+        "iso-1133",
+        "autodesk-fill-pack"
+      ],
+      "caseEvidence": [
+        {
+          "sourceId": "iso-1133",
+          "role": "mechanism-context",
+          "matchTerms": [],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        },
+        {
+          "sourceId": "autodesk-fill-pack",
+          "role": "measurement-or-verification-method",
+          "matchTerms": [
+            "fill"
+          ],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        }
+      ]
+    },
+    {
+      "id": "p11-gate-pressure-loss",
+      "pass": 11,
+      "sourceIds": [
+        "autodesk-fill-pack",
+        "trotta-2021"
+      ],
+      "caseEvidence": [
+        {
+          "sourceId": "autodesk-fill-pack",
+          "role": "mechanism-context",
+          "matchTerms": [],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        },
+        {
+          "sourceId": "trotta-2021",
+          "role": "measurement-or-verification-method",
+          "matchTerms": [],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        }
+      ]
+    },
+    {
+      "id": "p11-material-viscosity-lot-shift",
+      "pass": 11,
+      "sourceIds": [
+        "autodesk-fill-pack",
+        "trotta-2021"
+      ],
+      "caseEvidence": [
+        {
+          "sourceId": "autodesk-fill-pack",
+          "role": "mechanism-context",
+          "matchTerms": [
+            "fill"
+          ],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        },
+        {
+          "sourceId": "trotta-2021",
+          "role": "measurement-or-verification-method",
+          "matchTerms": [],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        }
+      ]
+    },
+    {
+      "id": "p11-fill-speed-weld-response",
+      "pass": 11,
+      "sourceIds": [
+        "autodesk-fill-pack",
+        "iso-1133"
+      ],
+      "caseEvidence": [
+        {
+          "sourceId": "autodesk-fill-pack",
+          "role": "mechanism-context",
+          "matchTerms": [
+            "fill"
+          ],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        },
+        {
+          "sourceId": "iso-1133",
+          "role": "measurement-or-verification-method",
+          "matchTerms": [],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        }
+      ]
+    },
+    {
+      "id": "p11-fill-speed-burn-window",
+      "pass": 11,
+      "sourceIds": [
+        "autodesk-fill-pack",
+        "trotta-2021"
+      ],
+      "caseEvidence": [
+        {
+          "sourceId": "autodesk-fill-pack",
+          "role": "mechanism-context",
+          "matchTerms": [
+            "fill"
+          ],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        },
+        {
+          "sourceId": "trotta-2021",
+          "role": "measurement-or-verification-method",
+          "matchTerms": [],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        }
+      ]
+    },
+    {
+      "id": "p11-melt-actual-vs-setpoint",
+      "pass": 11,
+      "sourceIds": [
+        "autodesk-fill-pack",
+        "iso-1133"
+      ],
+      "caseEvidence": [
+        {
+          "sourceId": "autodesk-fill-pack",
+          "role": "mechanism-context",
+          "matchTerms": [],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        },
+        {
+          "sourceId": "iso-1133",
+          "role": "measurement-or-verification-method",
+          "matchTerms": [],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        }
+      ]
+    },
+    {
+      "id": "p11-progressive-short-shot-balance",
+      "pass": 11,
+      "sourceIds": [
+        "autodesk-fill-pack",
+        "iso-1133"
+      ],
+      "caseEvidence": [
+        {
+          "sourceId": "autodesk-fill-pack",
+          "role": "mechanism-context",
+          "matchTerms": [
+            "pack"
+          ],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        },
+        {
+          "sourceId": "iso-1133",
+          "role": "measurement-or-verification-method",
+          "matchTerms": [],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        }
+      ]
+    },
+    {
+      "id": "p12-early-vp-transfer",
+      "pass": 12,
+      "sourceIds": [
+        "switchover-review-2025",
+        "jansen-1998"
+      ],
+      "caseEvidence": [
+        {
+          "sourceId": "switchover-review-2025",
+          "role": "mechanism-context",
+          "matchTerms": [
+            "pressure",
+            "switchover"
+          ],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        },
+        {
+          "sourceId": "jansen-1998",
+          "role": "measurement-or-verification-method",
+          "matchTerms": [],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        }
+      ]
+    },
+    {
+      "id": "p12-late-vp-transfer",
+      "pass": 12,
+      "sourceIds": [
+        "switchover-review-2025",
+        "autodesk-packing"
+      ],
+      "caseEvidence": [
+        {
+          "sourceId": "switchover-review-2025",
+          "role": "mechanism-context",
+          "matchTerms": [
+            "pressure",
+            "switchover"
+          ],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        },
+        {
+          "sourceId": "autodesk-packing",
+          "role": "measurement-or-verification-method",
+          "matchTerms": [],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        }
+      ]
+    },
+    {
+      "id": "p12-pressure-trigger-drift",
+      "pass": 12,
+      "sourceIds": [
+        "switchover-review-2025",
+        "jansen-1998"
+      ],
+      "caseEvidence": [
+        {
+          "sourceId": "switchover-review-2025",
+          "role": "mechanism-context",
+          "matchTerms": [
+            "pressure"
+          ],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        },
+        {
+          "sourceId": "jansen-1998",
+          "role": "measurement-or-verification-method",
+          "matchTerms": [],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        }
+      ]
+    },
+    {
+      "id": "p12-position-transfer-nrv-variation",
+      "pass": 12,
+      "sourceIds": [
+        "switchover-review-2025",
+        "autodesk-packing"
+      ],
+      "caseEvidence": [
+        {
+          "sourceId": "switchover-review-2025",
+          "role": "mechanism-context",
+          "matchTerms": [],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        },
+        {
+          "sourceId": "autodesk-packing",
+          "role": "measurement-or-verification-method",
+          "matchTerms": [],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        }
+      ]
+    },
+    {
+      "id": "p12-hold-pressure-ladder",
+      "pass": 12,
+      "sourceIds": [
+        "switchover-review-2025",
+        "jansen-1998"
+      ],
+      "caseEvidence": [
+        {
+          "sourceId": "switchover-review-2025",
+          "role": "mechanism-context",
+          "matchTerms": [
+            "pressure"
+          ],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        },
+        {
+          "sourceId": "jansen-1998",
+          "role": "measurement-or-verification-method",
+          "matchTerms": [],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        }
+      ]
+    },
+    {
+      "id": "p12-gate-seal-mass-plateau",
+      "pass": 12,
+      "sourceIds": [
+        "switchover-review-2025",
+        "autodesk-packing"
+      ],
+      "caseEvidence": [
+        {
+          "sourceId": "switchover-review-2025",
+          "role": "mechanism-context",
+          "matchTerms": [
+            "pressure"
+          ],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        },
+        {
+          "sourceId": "autodesk-packing",
+          "role": "measurement-or-verification-method",
+          "matchTerms": [],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        }
+      ]
+    },
+    {
+      "id": "p12-cavity-pressure-area-shift",
+      "pass": 12,
+      "sourceIds": [
+        "autodesk-packing",
+        "switchover-review-2025"
+      ],
+      "caseEvidence": [
+        {
+          "sourceId": "autodesk-packing",
+          "role": "mechanism-context",
+          "matchTerms": [
+            "packing"
+          ],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        },
+        {
+          "sourceId": "switchover-review-2025",
+          "role": "measurement-or-verification-method",
+          "matchTerms": [
+            "pressure"
+          ],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        }
+      ]
+    },
+    {
+      "id": "p12-cushion-stable-mass-drift",
+      "pass": 12,
+      "sourceIds": [
+        "switchover-review-2025",
+        "autodesk-packing"
+      ],
+      "caseEvidence": [
+        {
+          "sourceId": "switchover-review-2025",
+          "role": "mechanism-context",
+          "matchTerms": [
+            "pressure"
+          ],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        },
+        {
+          "sourceId": "autodesk-packing",
+          "role": "measurement-or-verification-method",
+          "matchTerms": [],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        }
+      ]
+    },
+    {
+      "id": "p12-cavity-pack-balance",
+      "pass": 12,
+      "sourceIds": [
+        "switchover-review-2025",
+        "autodesk-packing"
+      ],
+      "caseEvidence": [
+        {
+          "sourceId": "switchover-review-2025",
+          "role": "mechanism-context",
+          "matchTerms": [
+            "pressure"
+          ],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        },
+        {
+          "sourceId": "autodesk-packing",
+          "role": "measurement-or-verification-method",
+          "matchTerms": [],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        }
+      ]
+    },
+    {
+      "id": "p12-overpack-compensation-trap",
+      "pass": 12,
+      "sourceIds": [
+        "autodesk-packing",
+        "switchover-review-2025"
+      ],
+      "caseEvidence": [
+        {
+          "sourceId": "autodesk-packing",
+          "role": "mechanism-context",
+          "matchTerms": [
+            "packing"
+          ],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        },
+        {
+          "sourceId": "switchover-review-2025",
+          "role": "measurement-or-verification-method",
+          "matchTerms": [],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        }
+      ]
+    },
+    {
+      "id": "p13-pressure-rise-timing",
+      "pass": 13,
+      "sourceIds": [
+        "sensor-review-2019",
+        "ai-cognition-2025"
+      ],
+      "caseEvidence": [
+        {
+          "sourceId": "sensor-review-2019",
+          "role": "mechanism-context",
+          "matchTerms": [
+            "sensor"
+          ],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        },
+        {
+          "sourceId": "ai-cognition-2025",
+          "role": "measurement-or-verification-method",
+          "matchTerms": [],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        }
+      ]
+    },
+    {
+      "id": "p13-pressure-peak-height",
+      "pass": 13,
+      "sourceIds": [
+        "sensor-review-2019",
+        "measurement-review-2024"
+      ],
+      "caseEvidence": [
+        {
+          "sourceId": "sensor-review-2019",
+          "role": "mechanism-context",
+          "matchTerms": [
+            "sensor"
+          ],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        },
+        {
+          "sourceId": "measurement-review-2024",
+          "role": "measurement-or-verification-method",
+          "matchTerms": [],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        }
+      ]
+    },
+    {
+      "id": "p13-pressure-area-feature",
+      "pass": 13,
+      "sourceIds": [
+        "sensor-review-2019",
+        "measurement-review-2024"
+      ],
+      "caseEvidence": [
+        {
+          "sourceId": "sensor-review-2019",
+          "role": "mechanism-context",
+          "matchTerms": [
+            "sensor"
+          ],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        },
+        {
+          "sourceId": "measurement-review-2024",
+          "role": "measurement-or-verification-method",
+          "matchTerms": [],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        }
+      ]
+    },
+    {
+      "id": "p13-end-cavity-arrival",
+      "pass": 13,
+      "sourceIds": [
+        "sensor-review-2019",
+        "ai-cognition-2025"
+      ],
+      "caseEvidence": [
+        {
+          "sourceId": "sensor-review-2019",
+          "role": "mechanism-context",
+          "matchTerms": [
+            "sensor"
+          ],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        },
+        {
+          "sourceId": "ai-cognition-2025",
+          "role": "measurement-or-verification-method",
+          "matchTerms": [],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        }
+      ]
+    },
+    {
+      "id": "p13-dual-sensor-flow-front",
+      "pass": 13,
+      "sourceIds": [
+        "sensor-review-2019",
+        "measurement-review-2024"
+      ],
+      "caseEvidence": [
+        {
+          "sourceId": "sensor-review-2019",
+          "role": "mechanism-context",
+          "matchTerms": [
+            "sensor"
+          ],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        },
+        {
+          "sourceId": "measurement-review-2024",
+          "role": "measurement-or-verification-method",
+          "matchTerms": [],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        }
+      ]
+    },
+    {
+      "id": "p13-cavity-sensor-zero-drift",
+      "pass": 13,
+      "sourceIds": [
+        "sensor-review-2019",
+        "measurement-review-2024"
+      ],
+      "caseEvidence": [
+        {
+          "sourceId": "sensor-review-2019",
+          "role": "mechanism-context",
+          "matchTerms": [
+            "sensor"
+          ],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        },
+        {
+          "sourceId": "measurement-review-2024",
+          "role": "measurement-or-verification-method",
+          "matchTerms": [],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        }
+      ]
+    },
+    {
+      "id": "p13-pressure-temperature-correlation",
+      "pass": 13,
+      "sourceIds": [
+        "sensor-review-2019",
+        "ai-cognition-2025"
+      ],
+      "caseEvidence": [
+        {
+          "sourceId": "sensor-review-2019",
+          "role": "mechanism-context",
+          "matchTerms": [
+            "sensor"
+          ],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        },
+        {
+          "sourceId": "ai-cognition-2025",
+          "role": "measurement-or-verification-method",
+          "matchTerms": [],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        }
+      ]
+    },
+    {
+      "id": "p13-tiebar-strain-proxy",
+      "pass": 13,
+      "sourceIds": [
+        "sensor-review-2019",
+        "measurement-review-2024"
+      ],
+      "caseEvidence": [
+        {
+          "sourceId": "sensor-review-2019",
+          "role": "mechanism-context",
+          "matchTerms": [
+            "sensor"
+          ],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        },
+        {
+          "sourceId": "measurement-review-2024",
+          "role": "measurement-or-verification-method",
+          "matchTerms": [],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        }
+      ]
+    },
+    {
+      "id": "p13-mould-strain-proxy",
+      "pass": 13,
+      "sourceIds": [
+        "sensor-review-2019",
+        "ai-cognition-2025"
+      ],
+      "caseEvidence": [
+        {
+          "sourceId": "sensor-review-2019",
+          "role": "mechanism-context",
+          "matchTerms": [
+            "sensor"
+          ],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        },
+        {
+          "sourceId": "ai-cognition-2025",
+          "role": "measurement-or-verification-method",
+          "matchTerms": [],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        }
+      ]
+    },
+    {
+      "id": "p13-ultrasound-solidification",
+      "pass": 13,
+      "sourceIds": [
+        "sensor-review-2019",
+        "measurement-review-2024"
+      ],
+      "caseEvidence": [
+        {
+          "sourceId": "sensor-review-2019",
+          "role": "mechanism-context",
+          "matchTerms": [
+            "sensor"
+          ],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        },
+        {
+          "sourceId": "measurement-review-2024",
+          "role": "measurement-or-verification-method",
+          "matchTerms": [],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        }
+      ]
+    },
+    {
+      "id": "p14-pooled-cavity-cpk",
+      "pass": 14,
+      "sourceIds": [
+        "nist-capability",
+        "nist-handbook"
+      ],
+      "caseEvidence": [
+        {
+          "sourceId": "nist-capability",
+          "role": "mechanism-context",
+          "matchTerms": [],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        },
+        {
+          "sourceId": "nist-handbook",
+          "role": "measurement-or-verification-method",
+          "matchTerms": [],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        }
+      ]
+    },
+    {
+      "id": "p14-autocorrelation-false-alarms",
+      "pass": 14,
+      "sourceIds": [
+        "nist-capability",
+        "nist-handbook"
+      ],
+      "caseEvidence": [
+        {
+          "sourceId": "nist-capability",
+          "role": "mechanism-context",
+          "matchTerms": [],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        },
+        {
+          "sourceId": "nist-handbook",
+          "role": "measurement-or-verification-method",
+          "matchTerms": [],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        }
+      ]
+    },
+    {
+      "id": "p14-tool-warmup-trend",
+      "pass": 14,
+      "sourceIds": [
+        "nist-handbook",
+        "nist-capability"
+      ],
+      "caseEvidence": [
+        {
+          "sourceId": "nist-handbook",
+          "role": "mechanism-context",
+          "matchTerms": [],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        },
+        {
+          "sourceId": "nist-capability",
+          "role": "measurement-or-verification-method",
+          "matchTerms": [
+            "capability"
+          ],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        }
+      ]
+    },
+    {
+      "id": "p14-batch-stratification",
+      "pass": 14,
+      "sourceIds": [
+        "nist-capability",
+        "nist-handbook"
+      ],
+      "caseEvidence": [
+        {
+          "sourceId": "nist-capability",
+          "role": "mechanism-context",
+          "matchTerms": [
+            "capability"
+          ],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        },
+        {
+          "sourceId": "nist-handbook",
+          "role": "measurement-or-verification-method",
+          "matchTerms": [],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        }
+      ]
+    },
+    {
+      "id": "p14-nonnormal-distribution",
+      "pass": 14,
+      "sourceIds": [
+        "nist-capability",
+        "nist-handbook"
+      ],
+      "caseEvidence": [
+        {
+          "sourceId": "nist-capability",
+          "role": "mechanism-context",
+          "matchTerms": [
+            "capability"
+          ],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        },
+        {
+          "sourceId": "nist-handbook",
+          "role": "measurement-or-verification-method",
+          "matchTerms": [],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        }
+      ]
+    },
+    {
+      "id": "p14-variance-rise-stable-mean",
+      "pass": 14,
+      "sourceIds": [
+        "nist-handbook",
+        "nist-capability"
+      ],
+      "caseEvidence": [
+        {
+          "sourceId": "nist-handbook",
+          "role": "mechanism-context",
+          "matchTerms": [],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        },
+        {
+          "sourceId": "nist-capability",
+          "role": "measurement-or-verification-method",
+          "matchTerms": [],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        }
+      ]
+    },
+    {
+      "id": "p14-rational-subgroup-error",
+      "pass": 14,
+      "sourceIds": [
+        "nist-capability",
+        "nist-handbook"
+      ],
+      "caseEvidence": [
+        {
+          "sourceId": "nist-capability",
+          "role": "mechanism-context",
+          "matchTerms": [],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        },
+        {
+          "sourceId": "nist-handbook",
+          "role": "measurement-or-verification-method",
+          "matchTerms": [],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        }
+      ]
+    },
+    {
+      "id": "p14-short-run-standardisation",
+      "pass": 14,
+      "sourceIds": [
+        "nist-handbook",
+        "nist-capability"
+      ],
+      "caseEvidence": [
+        {
+          "sourceId": "nist-handbook",
+          "role": "mechanism-context",
+          "matchTerms": [],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        },
+        {
+          "sourceId": "nist-capability",
+          "role": "measurement-or-verification-method",
+          "matchTerms": [],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        }
+      ]
+    },
+    {
+      "id": "p14-shift-vs-gradual-trend",
+      "pass": 14,
+      "sourceIds": [
+        "nist-handbook",
+        "nist-capability"
+      ],
+      "caseEvidence": [
+        {
+          "sourceId": "nist-handbook",
+          "role": "mechanism-context",
+          "matchTerms": [],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        },
+        {
+          "sourceId": "nist-capability",
+          "role": "measurement-or-verification-method",
+          "matchTerms": [],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        }
+      ]
+    },
+    {
+      "id": "p14-attribute-vs-variable-data",
+      "pass": 14,
+      "sourceIds": [
+        "nist-capability",
+        "nist-handbook"
+      ],
+      "caseEvidence": [
+        {
+          "sourceId": "nist-capability",
+          "role": "mechanism-context",
+          "matchTerms": [],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        },
+        {
+          "sourceId": "nist-handbook",
+          "role": "measurement-or-verification-method",
+          "matchTerms": [],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        }
+      ]
+    },
+    {
+      "id": "p15-gage-rr-operator",
+      "pass": 15,
+      "sourceIds": [
+        "measurement-review-2024",
+        "smart-sensor-review-2025"
+      ],
+      "caseEvidence": [
+        {
+          "sourceId": "measurement-review-2024",
+          "role": "mechanism-context",
+          "matchTerms": [
+            "measurement"
+          ],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        },
+        {
+          "sourceId": "smart-sensor-review-2025",
+          "role": "measurement-or-verification-method",
+          "matchTerms": [],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        }
+      ]
+    },
+    {
+      "id": "p15-fixture-thermal-expansion",
+      "pass": 15,
+      "sourceIds": [
+        "measurement-review-2024",
+        "nist-handbook"
+      ],
+      "caseEvidence": [
+        {
+          "sourceId": "measurement-review-2024",
+          "role": "mechanism-context",
+          "matchTerms": [
+            "measurement"
+          ],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        },
+        {
+          "sourceId": "nist-handbook",
+          "role": "measurement-or-verification-method",
+          "matchTerms": [],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        }
+      ]
+    },
+    {
+      "id": "p15-conditioning-time",
+      "pass": 15,
+      "sourceIds": [
+        "measurement-review-2024",
+        "smart-sensor-review-2025"
+      ],
+      "caseEvidence": [
+        {
+          "sourceId": "measurement-review-2024",
+          "role": "mechanism-context",
+          "matchTerms": [
+            "measurement"
+          ],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        },
+        {
+          "sourceId": "smart-sensor-review-2025",
+          "role": "measurement-or-verification-method",
+          "matchTerms": [],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        }
+      ]
+    },
+    {
+      "id": "p15-vision-lighting-drift",
+      "pass": 15,
+      "sourceIds": [
+        "measurement-review-2024",
+        "smart-sensor-review-2025"
+      ],
+      "caseEvidence": [
+        {
+          "sourceId": "measurement-review-2024",
+          "role": "mechanism-context",
+          "matchTerms": [
+            "measurement"
+          ],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        },
+        {
+          "sourceId": "smart-sensor-review-2025",
+          "role": "measurement-or-verification-method",
+          "matchTerms": [],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        }
+      ]
+    },
+    {
+      "id": "p15-scale-zero-drift",
+      "pass": 15,
+      "sourceIds": [
+        "measurement-review-2024",
+        "smart-sensor-review-2025"
+      ],
+      "caseEvidence": [
+        {
+          "sourceId": "measurement-review-2024",
+          "role": "mechanism-context",
+          "matchTerms": [
+            "measurement"
+          ],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        },
+        {
+          "sourceId": "smart-sensor-review-2025",
+          "role": "measurement-or-verification-method",
+          "matchTerms": [],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        }
+      ]
+    },
+    {
+      "id": "p15-cmm-fixture-bias",
+      "pass": 15,
+      "sourceIds": [
+        "measurement-review-2024",
+        "nist-handbook"
+      ],
+      "caseEvidence": [
+        {
+          "sourceId": "measurement-review-2024",
+          "role": "mechanism-context",
+          "matchTerms": [
+            "measurement"
+          ],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        },
+        {
+          "sourceId": "nist-handbook",
+          "role": "measurement-or-verification-method",
+          "matchTerms": [],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        }
+      ]
+    },
+    {
+      "id": "p15-resolution-rounding",
+      "pass": 15,
+      "sourceIds": [
+        "measurement-review-2024",
+        "smart-sensor-review-2025"
+      ],
+      "caseEvidence": [
+        {
+          "sourceId": "measurement-review-2024",
+          "role": "mechanism-context",
+          "matchTerms": [
+            "measurement"
+          ],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        },
+        {
+          "sourceId": "smart-sensor-review-2025",
+          "role": "measurement-or-verification-method",
+          "matchTerms": [],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        }
+      ]
+    },
+    {
+      "id": "p15-destructive-test-sampling",
+      "pass": 15,
+      "sourceIds": [
+        "measurement-review-2024",
+        "smart-sensor-review-2025"
+      ],
+      "caseEvidence": [
+        {
+          "sourceId": "measurement-review-2024",
+          "role": "mechanism-context",
+          "matchTerms": [
+            "measurement"
+          ],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        },
+        {
+          "sourceId": "smart-sensor-review-2025",
+          "role": "measurement-or-verification-method",
+          "matchTerms": [
+            "review"
+          ],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        }
+      ]
+    },
+    {
+      "id": "p15-surface-roughness-instrument",
+      "pass": 15,
+      "sourceIds": [
+        "measurement-review-2024",
+        "smart-sensor-review-2025"
+      ],
+      "caseEvidence": [
+        {
+          "sourceId": "measurement-review-2024",
+          "role": "mechanism-context",
+          "matchTerms": [
+            "measurement"
+          ],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        },
+        {
+          "sourceId": "smart-sensor-review-2025",
+          "role": "measurement-or-verification-method",
+          "matchTerms": [],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        }
+      ]
+    },
+    {
+      "id": "p15-calibration-expiry-drift",
+      "pass": 15,
+      "sourceIds": [
+        "measurement-review-2024",
+        "nist-handbook"
+      ],
+      "caseEvidence": [
+        {
+          "sourceId": "measurement-review-2024",
+          "role": "mechanism-context",
+          "matchTerms": [
+            "measurement"
+          ],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        },
+        {
+          "sourceId": "nist-handbook",
+          "role": "measurement-or-verification-method",
+          "matchTerms": [],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        }
+      ]
+    },
+    {
+      "id": "p16-drive-vibration-trend",
+      "pass": 16,
+      "sourceIds": [
+        "predictive-maintenance-2026",
+        "measurement-review-2024"
+      ],
+      "caseEvidence": [
+        {
+          "sourceId": "predictive-maintenance-2026",
+          "role": "mechanism-context",
+          "matchTerms": [
+            "injection",
+            "machine",
+            "condition"
+          ],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        },
+        {
+          "sourceId": "measurement-review-2024",
+          "role": "measurement-or-verification-method",
+          "matchTerms": [],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        }
+      ]
+    },
+    {
+      "id": "p16-screw-drive-current-rise",
+      "pass": 16,
+      "sourceIds": [
+        "predictive-maintenance-2026",
+        "measurement-review-2024"
+      ],
+      "caseEvidence": [
+        {
+          "sourceId": "predictive-maintenance-2026",
+          "role": "mechanism-context",
+          "matchTerms": [
+            "machine",
+            "condition",
+            "system"
+          ],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        },
+        {
+          "sourceId": "measurement-review-2024",
+          "role": "measurement-or-verification-method",
+          "matchTerms": [],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        }
+      ]
+    },
+    {
+      "id": "p16-hydraulic-pump-efficiency",
+      "pass": 16,
+      "sourceIds": [
+        "predictive-maintenance-2026",
+        "measurement-review-2024"
+      ],
+      "caseEvidence": [
+        {
+          "sourceId": "predictive-maintenance-2026",
+          "role": "mechanism-context",
+          "matchTerms": [
+            "machine",
+            "condition"
+          ],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        },
+        {
+          "sourceId": "measurement-review-2024",
+          "role": "measurement-or-verification-method",
+          "matchTerms": [],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        }
+      ]
+    },
+    {
+      "id": "p16-tcu-pump-condition",
+      "pass": 16,
+      "sourceIds": [
+        "predictive-maintenance-2026",
+        "measurement-review-2024"
+      ],
+      "caseEvidence": [
+        {
+          "sourceId": "predictive-maintenance-2026",
+          "role": "mechanism-context",
+          "matchTerms": [
+            "machine",
+            "condition"
+          ],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        },
+        {
+          "sourceId": "measurement-review-2024",
+          "role": "measurement-or-verification-method",
+          "matchTerms": [],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        }
+      ]
+    },
+    {
+      "id": "p16-heater-resistance-drift",
+      "pass": 16,
+      "sourceIds": [
+        "predictive-maintenance-2026",
+        "measurement-review-2024"
+      ],
+      "caseEvidence": [
+        {
+          "sourceId": "predictive-maintenance-2026",
+          "role": "mechanism-context",
+          "matchTerms": [
+            "machine",
+            "condition"
+          ],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        },
+        {
+          "sourceId": "measurement-review-2024",
+          "role": "measurement-or-verification-method",
+          "matchTerms": [],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        }
+      ]
+    },
+    {
+      "id": "p16-valve-gate-actuator-wear",
+      "pass": 16,
+      "sourceIds": [
+        "predictive-maintenance-2026",
+        "measurement-review-2024"
+      ],
+      "caseEvidence": [
+        {
+          "sourceId": "predictive-maintenance-2026",
+          "role": "mechanism-context",
+          "matchTerms": [
+            "condition",
+            "machine",
+            "maintenance"
+          ],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        },
+        {
+          "sourceId": "measurement-review-2024",
+          "role": "measurement-or-verification-method",
+          "matchTerms": [],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        }
+      ]
+    },
+    {
+      "id": "p16-robot-drive-cycle-drift",
+      "pass": 16,
+      "sourceIds": [
+        "predictive-maintenance-2026",
+        "measurement-review-2024"
+      ],
+      "caseEvidence": [
+        {
+          "sourceId": "predictive-maintenance-2026",
+          "role": "mechanism-context",
+          "matchTerms": [
+            "machine",
+            "condition"
+          ],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        },
+        {
+          "sourceId": "measurement-review-2024",
+          "role": "measurement-or-verification-method",
+          "matchTerms": [],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        }
+      ]
+    },
+    {
+      "id": "p16-lubrication-pressure-decline",
+      "pass": 16,
+      "sourceIds": [
+        "predictive-maintenance-2026",
+        "measurement-review-2024"
+      ],
+      "caseEvidence": [
+        {
+          "sourceId": "predictive-maintenance-2026",
+          "role": "mechanism-context",
+          "matchTerms": [
+            "system",
+            "machine",
+            "condition",
+            "maintenance"
+          ],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        },
+        {
+          "sourceId": "measurement-review-2024",
+          "role": "measurement-or-verification-method",
+          "matchTerms": [],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        }
+      ]
+    },
+    {
+      "id": "p16-bearing-temperature-trend",
+      "pass": 16,
+      "sourceIds": [
+        "predictive-maintenance-2026",
+        "measurement-review-2024"
+      ],
+      "caseEvidence": [
+        {
+          "sourceId": "predictive-maintenance-2026",
+          "role": "mechanism-context",
+          "matchTerms": [
+            "machine",
+            "condition"
+          ],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        },
+        {
+          "sourceId": "measurement-review-2024",
+          "role": "measurement-or-verification-method",
+          "matchTerms": [],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        }
+      ]
+    },
+    {
+      "id": "p16-maintenance-intervention-verification",
+      "pass": 16,
+      "sourceIds": [
+        "predictive-maintenance-2026",
+        "measurement-review-2024"
+      ],
+      "caseEvidence": [
+        {
+          "sourceId": "predictive-maintenance-2026",
+          "role": "mechanism-context",
+          "matchTerms": [
+            "maintenance",
+            "machine",
+            "condition"
+          ],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        },
+        {
+          "sourceId": "measurement-review-2024",
+          "role": "measurement-or-verification-method",
+          "matchTerms": [],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        }
+      ]
+    },
+    {
+      "id": "p17-same-velocity-different-actual",
+      "pass": 17,
+      "sourceIds": [
+        "liew-2022",
+        "tsou-2023"
+      ],
+      "caseEvidence": [
+        {
+          "sourceId": "liew-2022",
+          "role": "mechanism-context",
+          "matchTerms": [],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        },
+        {
+          "sourceId": "tsou-2023",
+          "role": "measurement-or-verification-method",
+          "matchTerms": [],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        }
+      ]
+    },
+    {
+      "id": "p17-screw-diameter-volume-conversion",
+      "pass": 17,
+      "sourceIds": [
+        "measurement-review-2024",
+        "tsou-2023"
+      ],
+      "caseEvidence": [
+        {
+          "sourceId": "measurement-review-2024",
+          "role": "mechanism-context",
+          "matchTerms": [],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        },
+        {
+          "sourceId": "tsou-2023",
+          "role": "measurement-or-verification-method",
+          "matchTerms": [],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        }
+      ]
+    },
+    {
+      "id": "p17-pressure-capability-mismatch",
+      "pass": 17,
+      "sourceIds": [
+        "measurement-review-2024",
+        "tsou-2023"
+      ],
+      "caseEvidence": [
+        {
+          "sourceId": "measurement-review-2024",
+          "role": "mechanism-context",
+          "matchTerms": [],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        },
+        {
+          "sourceId": "tsou-2023",
+          "role": "measurement-or-verification-method",
+          "matchTerms": [],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        }
+      ]
+    },
+    {
+      "id": "p17-clamp-capability-mismatch",
+      "pass": 17,
+      "sourceIds": [
+        "measurement-review-2024",
+        "tsou-2023"
+      ],
+      "caseEvidence": [
+        {
+          "sourceId": "measurement-review-2024",
+          "role": "mechanism-context",
+          "matchTerms": [],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        },
+        {
+          "sourceId": "tsou-2023",
+          "role": "measurement-or-verification-method",
+          "matchTerms": [],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        }
+      ]
+    },
+    {
+      "id": "p17-residence-time-difference",
+      "pass": 17,
+      "sourceIds": [
+        "tsou-2023",
+        "measurement-review-2024"
+      ],
+      "caseEvidence": [
+        {
+          "sourceId": "tsou-2023",
+          "role": "mechanism-context",
+          "matchTerms": [],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        },
+        {
+          "sourceId": "measurement-review-2024",
+          "role": "measurement-or-verification-method",
+          "matchTerms": [],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        }
+      ]
+    },
+    {
+      "id": "p17-controller-sampling-filtering",
+      "pass": 17,
+      "sourceIds": [
+        "measurement-review-2024",
+        "liew-2022"
+      ],
+      "caseEvidence": [
+        {
+          "sourceId": "measurement-review-2024",
+          "role": "mechanism-context",
+          "matchTerms": [],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        },
+        {
+          "sourceId": "liew-2022",
+          "role": "measurement-or-verification-method",
+          "matchTerms": [],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        }
+      ]
+    },
+    {
+      "id": "p17-nozzle-geometry-loss",
+      "pass": 17,
+      "sourceIds": [
+        "tsou-2023",
+        "liew-2022"
+      ],
+      "caseEvidence": [
+        {
+          "sourceId": "tsou-2023",
+          "role": "mechanism-context",
+          "matchTerms": [],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        },
+        {
+          "sourceId": "liew-2022",
+          "role": "measurement-or-verification-method",
+          "matchTerms": [],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        }
+      ]
+    },
+    {
+      "id": "p17-screw-design-mixing",
+      "pass": 17,
+      "sourceIds": [
+        "measurement-review-2024",
+        "liew-2022"
+      ],
+      "caseEvidence": [
+        {
+          "sourceId": "measurement-review-2024",
+          "role": "mechanism-context",
+          "matchTerms": [],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        },
+        {
+          "sourceId": "liew-2022",
+          "role": "measurement-or-verification-method",
+          "matchTerms": [],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        }
+      ]
+    },
+    {
+      "id": "p17-zone-response-difference",
+      "pass": 17,
+      "sourceIds": [
+        "tsou-2023",
+        "liew-2022"
+      ],
+      "caseEvidence": [
+        {
+          "sourceId": "tsou-2023",
+          "role": "mechanism-context",
+          "matchTerms": [],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        },
+        {
+          "sourceId": "liew-2022",
+          "role": "measurement-or-verification-method",
+          "matchTerms": [],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        }
+      ]
+    },
+    {
+      "id": "p17-receiving-machine-repeatability",
+      "pass": 17,
+      "sourceIds": [
+        "liew-2022",
+        "measurement-review-2024"
+      ],
+      "caseEvidence": [
+        {
+          "sourceId": "liew-2022",
+          "role": "mechanism-context",
+          "matchTerms": [],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        },
+        {
+          "sourceId": "measurement-review-2024",
+          "role": "measurement-or-verification-method",
+          "matchTerms": [],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        }
+      ]
+    },
+    {
+      "id": "p18-tpe-substrate-compatibility",
+      "pass": 18,
+      "sourceIds": [
+        "measurement-review-2024",
+        "overmould-2020"
+      ],
+      "caseEvidence": [
+        {
+          "sourceId": "measurement-review-2024",
+          "role": "mechanism-context",
+          "matchTerms": [],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        },
+        {
+          "sourceId": "overmould-2020",
+          "role": "measurement-or-verification-method",
+          "matchTerms": [],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        }
+      ]
+    },
+    {
+      "id": "p18-insert-preheat-variation",
+      "pass": 18,
+      "sourceIds": [
+        "overmould-2020",
+        "measurement-review-2024"
+      ],
+      "caseEvidence": [
+        {
+          "sourceId": "overmould-2020",
+          "role": "mechanism-context",
+          "matchTerms": [],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        },
+        {
+          "sourceId": "measurement-review-2024",
+          "role": "measurement-or-verification-method",
+          "matchTerms": [],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        }
+      ]
+    },
+    {
+      "id": "p18-insert-seating-variation",
+      "pass": 18,
+      "sourceIds": [
+        "measurement-review-2024",
+        "overmould-2020"
+      ],
+      "caseEvidence": [
+        {
+          "sourceId": "measurement-review-2024",
+          "role": "mechanism-context",
+          "matchTerms": [],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        },
+        {
+          "sourceId": "overmould-2020",
+          "role": "measurement-or-verification-method",
+          "matchTerms": [],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        }
+      ]
+    },
+    {
+      "id": "p18-interface-thermal-history",
+      "pass": 18,
+      "sourceIds": [
+        "measurement-review-2024",
+        "overmould-2020"
+      ],
+      "caseEvidence": [
+        {
+          "sourceId": "measurement-review-2024",
+          "role": "mechanism-context",
+          "matchTerms": [],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        },
+        {
+          "sourceId": "overmould-2020",
+          "role": "measurement-or-verification-method",
+          "matchTerms": [],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        }
+      ]
+    },
+    {
+      "id": "p18-overmould-delay",
+      "pass": 18,
+      "sourceIds": [
+        "overmould-2020",
+        "measurement-review-2024"
+      ],
+      "caseEvidence": [
+        {
+          "sourceId": "overmould-2020",
+          "role": "mechanism-context",
+          "matchTerms": [
+            "overmould"
+          ],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        },
+        {
+          "sourceId": "measurement-review-2024",
+          "role": "measurement-or-verification-method",
+          "matchTerms": [],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        }
+      ]
+    },
+    {
+      "id": "p18-peel-response-locality",
+      "pass": 18,
+      "sourceIds": [
+        "overmould-2020",
+        "measurement-review-2024"
+      ],
+      "caseEvidence": [
+        {
+          "sourceId": "overmould-2020",
+          "role": "mechanism-context",
+          "matchTerms": [],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        },
+        {
+          "sourceId": "measurement-review-2024",
+          "role": "measurement-or-verification-method",
+          "matchTerms": [],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        }
+      ]
+    },
+    {
+      "id": "p18-coreback-timing",
+      "pass": 18,
+      "sourceIds": [
+        "overmould-2020",
+        "measurement-review-2024"
+      ],
+      "caseEvidence": [
+        {
+          "sourceId": "overmould-2020",
+          "role": "mechanism-context",
+          "matchTerms": [],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        },
+        {
+          "sourceId": "measurement-review-2024",
+          "role": "measurement-or-verification-method",
+          "matchTerms": [],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        }
+      ]
+    },
+    {
+      "id": "p18-cross-material-contamination",
+      "pass": 18,
+      "sourceIds": [
+        "measurement-review-2024",
+        "overmould-2020"
+      ],
+      "caseEvidence": [
+        {
+          "sourceId": "measurement-review-2024",
+          "role": "mechanism-context",
+          "matchTerms": [],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        },
+        {
+          "sourceId": "overmould-2020",
+          "role": "measurement-or-verification-method",
+          "matchTerms": [],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        }
+      ]
+    },
+    {
+      "id": "p18-differential-shrinkage",
+      "pass": 18,
+      "sourceIds": [
+        "overmould-2020",
+        "measurement-review-2024"
+      ],
+      "caseEvidence": [
+        {
+          "sourceId": "overmould-2020",
+          "role": "mechanism-context",
+          "matchTerms": [],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        },
+        {
+          "sourceId": "measurement-review-2024",
+          "role": "measurement-or-verification-method",
+          "matchTerms": [],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        }
+      ]
+    },
+    {
+      "id": "p18-insert-movement-under-flow",
+      "pass": 18,
+      "sourceIds": [
+        "measurement-review-2024",
+        "overmould-2020"
+      ],
+      "caseEvidence": [
+        {
+          "sourceId": "measurement-review-2024",
+          "role": "mechanism-context",
+          "matchTerms": [],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        },
+        {
+          "sourceId": "overmould-2020",
+          "role": "measurement-or-verification-method",
+          "matchTerms": [],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        }
+      ]
+    },
+    {
+      "id": "p19-micro-shot-metering",
+      "pass": 19,
+      "sourceIds": [
+        "measurement-review-2024",
+        "autodesk-fill-pack"
+      ],
+      "caseEvidence": [
+        {
+          "sourceId": "measurement-review-2024",
+          "role": "mechanism-context",
+          "matchTerms": [],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        },
+        {
+          "sourceId": "autodesk-fill-pack",
+          "role": "measurement-or-verification-method",
+          "matchTerms": [],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        }
+      ]
+    },
+    {
+      "id": "p19-control-delay-significance",
+      "pass": 19,
+      "sourceIds": [
+        "autodesk-fill-pack",
+        "nist-doe"
+      ],
+      "caseEvidence": [
+        {
+          "sourceId": "autodesk-fill-pack",
+          "role": "mechanism-context",
+          "matchTerms": [
+            "fill"
+          ],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        },
+        {
+          "sourceId": "nist-doe",
+          "role": "measurement-or-verification-method",
+          "matchTerms": [],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        }
+      ]
+    },
+    {
+      "id": "p19-high-speed-acceleration",
+      "pass": 19,
+      "sourceIds": [
+        "autodesk-fill-pack",
+        "nist-doe"
+      ],
+      "caseEvidence": [
+        {
+          "sourceId": "autodesk-fill-pack",
+          "role": "mechanism-context",
+          "matchTerms": [
+            "fill"
+          ],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        },
+        {
+          "sourceId": "nist-doe",
+          "role": "measurement-or-verification-method",
+          "matchTerms": [],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        }
+      ]
+    },
+    {
+      "id": "p19-thinwall-pressure-loss",
+      "pass": 19,
+      "sourceIds": [
+        "nist-doe",
+        "autodesk-fill-pack"
+      ],
+      "caseEvidence": [
+        {
+          "sourceId": "nist-doe",
+          "role": "mechanism-context",
+          "matchTerms": [],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        },
+        {
+          "sourceId": "autodesk-fill-pack",
+          "role": "measurement-or-verification-method",
+          "matchTerms": [
+            "fill"
+          ],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        }
+      ]
+    },
+    {
+      "id": "p19-micro-gate-seal",
+      "pass": 19,
+      "sourceIds": [
+        "autodesk-fill-pack",
+        "nist-doe"
+      ],
+      "caseEvidence": [
+        {
+          "sourceId": "autodesk-fill-pack",
+          "role": "mechanism-context",
+          "matchTerms": [],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        },
+        {
+          "sourceId": "nist-doe",
+          "role": "measurement-or-verification-method",
+          "matchTerms": [],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        }
+      ]
+    },
+    {
+      "id": "p19-micro-mass-metrology",
+      "pass": 19,
+      "sourceIds": [
+        "measurement-review-2024",
+        "nist-doe"
+      ],
+      "caseEvidence": [
+        {
+          "sourceId": "measurement-review-2024",
+          "role": "mechanism-context",
+          "matchTerms": [
+            "measurement"
+          ],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        },
+        {
+          "sourceId": "nist-doe",
+          "role": "measurement-or-verification-method",
+          "matchTerms": [],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        }
+      ]
+    },
+    {
+      "id": "p19-lcp-orientation",
+      "pass": 19,
+      "sourceIds": [
+        "measurement-review-2024",
+        "nist-doe"
+      ],
+      "caseEvidence": [
+        {
+          "sourceId": "measurement-review-2024",
+          "role": "mechanism-context",
+          "matchTerms": [],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        },
+        {
+          "sourceId": "nist-doe",
+          "role": "measurement-or-verification-method",
+          "matchTerms": [],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        }
+      ]
+    },
+    {
+      "id": "p19-pmma-optical-stress",
+      "pass": 19,
+      "sourceIds": [
+        "autodesk-fill-pack",
+        "nist-doe"
+      ],
+      "caseEvidence": [
+        {
+          "sourceId": "autodesk-fill-pack",
+          "role": "mechanism-context",
+          "matchTerms": [],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        },
+        {
+          "sourceId": "nist-doe",
+          "role": "measurement-or-verification-method",
+          "matchTerms": [],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        }
+      ]
+    },
+    {
+      "id": "p19-connector-core-shift",
+      "pass": 19,
+      "sourceIds": [
+        "autodesk-fill-pack",
+        "nist-doe"
+      ],
+      "caseEvidence": [
+        {
+          "sourceId": "autodesk-fill-pack",
+          "role": "mechanism-context",
+          "matchTerms": [],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        },
+        {
+          "sourceId": "nist-doe",
+          "role": "measurement-or-verification-method",
+          "matchTerms": [],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        }
+      ]
+    },
+    {
+      "id": "p19-micro-cavity-thermal-stabilisation",
+      "pass": 19,
+      "sourceIds": [
+        "autodesk-fill-pack",
+        "nist-doe"
+      ],
+      "caseEvidence": [
+        {
+          "sourceId": "autodesk-fill-pack",
+          "role": "mechanism-context",
+          "matchTerms": [],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        },
+        {
+          "sourceId": "nist-doe",
+          "role": "measurement-or-verification-method",
+          "matchTerms": [],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        }
+      ]
+    },
+    {
+      "id": "p20-idle-base-load",
+      "pass": 20,
+      "sourceIds": [
+        "energy-review-2017",
+        "ai-cognition-2025"
+      ],
+      "caseEvidence": [
+        {
+          "sourceId": "energy-review-2017",
+          "role": "mechanism-context",
+          "matchTerms": [
+            "energy"
+          ],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        },
+        {
+          "sourceId": "ai-cognition-2025",
+          "role": "measurement-or-verification-method",
+          "matchTerms": [
+            "moulding"
+          ],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        }
+      ]
+    },
+    {
+      "id": "p20-dryer-energy-inefficiency",
+      "pass": 20,
+      "sourceIds": [
+        "energy-review-2017",
+        "ai-cognition-2025"
+      ],
+      "caseEvidence": [
+        {
+          "sourceId": "energy-review-2017",
+          "role": "mechanism-context",
+          "matchTerms": [
+            "energy"
+          ],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        },
+        {
+          "sourceId": "ai-cognition-2025",
+          "role": "measurement-or-verification-method",
+          "matchTerms": [],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        }
+      ]
+    },
+    {
+      "id": "p20-tcu-energy-flow-loss",
+      "pass": 20,
+      "sourceIds": [
+        "energy-review-2017",
+        "euromap-60"
+      ],
+      "caseEvidence": [
+        {
+          "sourceId": "energy-review-2017",
+          "role": "mechanism-context",
+          "matchTerms": [
+            "energy"
+          ],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        },
+        {
+          "sourceId": "euromap-60",
+          "role": "measurement-or-verification-method",
+          "matchTerms": [],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        }
+      ]
+    },
+    {
+      "id": "p20-compressed-air-leak",
+      "pass": 20,
+      "sourceIds": [
+        "energy-review-2017",
+        "ai-cognition-2025"
+      ],
+      "caseEvidence": [
+        {
+          "sourceId": "energy-review-2017",
+          "role": "mechanism-context",
+          "matchTerms": [
+            "energy"
+          ],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        },
+        {
+          "sourceId": "ai-cognition-2025",
+          "role": "measurement-or-verification-method",
+          "matchTerms": [],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        }
+      ]
+    },
+    {
+      "id": "p20-chiller-load-rise",
+      "pass": 20,
+      "sourceIds": [
+        "energy-review-2017",
+        "euromap-60"
+      ],
+      "caseEvidence": [
+        {
+          "sourceId": "energy-review-2017",
+          "role": "mechanism-context",
+          "matchTerms": [
+            "energy"
+          ],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        },
+        {
+          "sourceId": "euromap-60",
+          "role": "measurement-or-verification-method",
+          "matchTerms": [],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        }
+      ]
+    },
+    {
+      "id": "p20-scrap-regrind-feedback",
+      "pass": 20,
+      "sourceIds": [
+        "energy-review-2017",
+        "ai-cognition-2025"
+      ],
+      "caseEvidence": [
+        {
+          "sourceId": "energy-review-2017",
+          "role": "mechanism-context",
+          "matchTerms": [
+            "energy"
+          ],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        },
+        {
+          "sourceId": "ai-cognition-2025",
+          "role": "measurement-or-verification-method",
+          "matchTerms": [],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        }
+      ]
+    },
+    {
+      "id": "p20-energy-per-good-part",
+      "pass": 20,
+      "sourceIds": [
+        "energy-review-2017",
+        "ai-cognition-2025"
+      ],
+      "caseEvidence": [
+        {
+          "sourceId": "energy-review-2017",
+          "role": "mechanism-context",
+          "matchTerms": [
+            "energy"
+          ],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        },
+        {
+          "sourceId": "ai-cognition-2025",
+          "role": "measurement-or-verification-method",
+          "matchTerms": [],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        }
+      ]
+    },
+    {
+      "id": "p20-cycle-extension-energy",
+      "pass": 20,
+      "sourceIds": [
+        "energy-review-2017",
+        "euromap-60"
+      ],
+      "caseEvidence": [
+        {
+          "sourceId": "energy-review-2017",
+          "role": "mechanism-context",
+          "matchTerms": [
+            "energy"
+          ],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        },
+        {
+          "sourceId": "euromap-60",
+          "role": "measurement-or-verification-method",
+          "matchTerms": [],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        }
+      ]
+    },
+    {
+      "id": "p20-warmup-standby-energy",
+      "pass": 20,
+      "sourceIds": [
+        "energy-review-2017",
+        "euromap-60"
+      ],
+      "caseEvidence": [
+        {
+          "sourceId": "energy-review-2017",
+          "role": "mechanism-context",
+          "matchTerms": [
+            "energy"
+          ],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        },
+        {
+          "sourceId": "euromap-60",
+          "role": "measurement-or-verification-method",
+          "matchTerms": [],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        }
+      ]
+    },
+    {
+      "id": "p20-runner-material-yield",
+      "pass": 20,
+      "sourceIds": [
+        "energy-review-2017",
+        "ai-cognition-2025"
+      ],
+      "caseEvidence": [
+        {
+          "sourceId": "energy-review-2017",
+          "role": "mechanism-context",
+          "matchTerms": [
+            "energy"
+          ],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        },
+        {
+          "sourceId": "ai-cognition-2025",
+          "role": "measurement-or-verification-method",
+          "matchTerms": [],
+          "selection": "case-token-ranked-from-reviewed-pass-sources"
+        }
+      ]
+    }
+  ]
+}
