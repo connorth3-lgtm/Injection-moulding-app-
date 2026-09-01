@@ -1,0 +1,65 @@
+name: Learner problem
+description: Report a real learner-facing problem so corrective work can be prioritised before speculative features.
+title: "[Learner] "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for reporting a learner-facing problem. **Do not include learner names, email addresses, progress backups, notes, assessment answers, analytics exports, raw process-data files, customer/site identifiers, or other personal/confidential information.**
+
+        If the concern is potentially unsafe or technically incorrect, stop relying on the disputed item until it has been reviewed against current authoritative evidence and the exact machine/material/site context where relevant.
+  - type: dropdown
+    id: impact
+    attributes:
+      label: Learner impact
+      options:
+        - Safety or technical-content concern
+        - Blocked from loading or continuing learning
+        - App crashed or a control failed
+        - Update, installed-PWA or offline problem
+        - Progress or local learner-data problem
+        - Assessment wording or feedback was unclear
+        - Accessibility, navigation or readability problem
+        - Repeated learning/diagnostic confusion
+        - Other learner-facing problem
+    validations:
+      required: true
+  - type: textarea
+    id: task
+    attributes:
+      label: What was the learner trying to do?
+      description: Describe the learning task, not the learner's identity.
+      placeholder: "Example: Reopen the installed PWA offline and continue the current diagnostic case."
+    validations:
+      required: true
+  - type: textarea
+    id: happened
+    attributes:
+      label: What happened?
+      description: Describe the observable problem and its learner impact. Avoid personal/confidential information.
+    validations:
+      required: true
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: Reproduction steps
+      description: Include only the minimum steps needed to reproduce the problem.
+      placeholder: |
+        1. Open ...
+        2. Select ...
+        3. Observe ...
+  - type: textarea
+    id: diagnostics
+    attributes:
+      label: Safe diagnostics (optional)
+      description: Paste the JSON copied from Support → Copy safe diagnostics. Review it before posting. Do not attach broader app exports or process-data files.
+      render: json
+  - type: checkboxes
+    id: confirmation
+    attributes:
+      label: Confirmation
+      options:
+        - label: This describes a real learner-facing experience or directly observed learner problem, not only a feature idea.
+          required: true
+        - label: I checked that this public report contains no learner personal information, backups, answers, raw process data, or confidential site/customer information.
+          required: true
