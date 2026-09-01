@@ -9,6 +9,7 @@ on:
 
 permissions:
   contents: read
+  actions: write
   pages: write
   id-token: write
 
@@ -17,11 +18,31 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  build:
+  publisher-guard:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v7
+      - name: Contain competing legacy branch Pages publisher
+        if: github.event_name != 'pull_request'
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: >-
+          python3 tools/quarantine_legacy_pages.py
+          --repository "${{ github.repository }}"
+          --source-sha "${{ github.sha }}"
+      - name: PRs build but never publish
+        if: github.event_name == 'pull_request'
+        run: echo "PR validation does not mutate Pages settings or cancel deployment runs."
+
+  build:
+    needs: publisher-guard
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+      - name: Pages single-publisher QA
+        run: python3 qa_pages_single_publisher.py
       - name: Build production-only Pages artifact
         run: python3 tools/build_pages_artifact.py
       - name: Upload Pages artifact
@@ -59,3 +80,11 @@ jobs:
           python3 tools/verify_pages_deployment.py
           --base-url "${{ needs.deploy.outputs.page_url }}"
           --source-sha "${{ github.sha }}"
+      - name: Verify deployment remains stable after race window
+        run: |
+          sleep 15
+          python3 tools/verify_pages_deployment.py \
+            --base-url "${{ needs.deploy.outputs.page_url }}" \
+            --source-sha "${{ github.sha }}" \
+            --convergence-attempts 6 \
+            --convergence-delay 2
