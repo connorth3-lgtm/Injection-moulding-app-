@@ -1,0 +1,45 @@
+name: MouldMaster Maturity Hardening v2
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  maturity-hardening:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22.12.0'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: New runtime JavaScript syntax
+        run: |
+          node --check runtime-v2.js
+          node --check assessment-runtime-v2.js
+          node --check lesson-deep-authoring-v2.js
+          node --check assessment-multimodal.js
+          node --check accessibility-hardening.js
+          node --check service-worker.js
+      - name: Maturity hardening gates
+        run: |
+          python qa_runtime_v2.py
+          python qa_assessment_runtime_v2.py
+          python qa_lesson_deep_authoring_v2.py
+          python qa_assessment_multimodal.py
+          python qa_authorised_site_pilot_framework.py
+          python qa_accessibility_hardening.py
+          python qa_release_immutability.py
+          python qa_runtime_hardening.py
+          python qa_release.py
+          python qa_open_desktop.py
+      - name: Build deterministic public Pages artifact
+        run: python tools/build_pages_artifact.py
