@@ -1,12 +1,13 @@
-/* MouldMaster local process intelligence UI — 2026.09.02.1 */
+/* MouldMaster local process intelligence UI — 2026.09.02.2 */
 (function(){
 'use strict';
 
-const VERSION='2026.09.02.1';
+const VERSION='2026.09.02.2';
 const DB_NAME='mouldmaster-process-data-v1';
 const PASS=new Set(['pass','ok','good','accept','accepted','yes','true','1']);
 const FAIL=new Set(['fail','ng','bad','reject','rejected','no','false','0']);
 let queued=false;
+let lastPrivacyRules=[];
 
 function esc(v){return String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
 function fmt(v,d=3){return Number.isFinite(Number(v))?Number(v).toLocaleString(undefined,{maximumFractionDigits:d}):'—'}
@@ -80,9 +81,29 @@ function changeHtml(result){
 function ensureStyle(){
   if(document.getElementById('mm-process-intelligence-style'))return;
   const s=document.createElement('style');s.id='mm-process-intelligence-style';s.textContent=`
-  .pi-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px}.pi-table{display:grid;gap:5px}.pi-row{display:grid;grid-template-columns:minmax(180px,1.6fr) 1fr 1fr 1fr;gap:8px;align-items:center;padding:8px 10px;border:1px solid #304b69;border-radius:8px;background:#0e1d31;font-size:11px}.pi-row small{display:block;color:var(--muted)}.pi-high{color:#ff9da8}.pi-review{color:#ffd166}.pi-stable{color:#7ce6a3}.pi-kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}.pi-kpi{padding:10px;border:1px solid #304b69;border-radius:8px;background:#0e1d31}.pi-kpi b{display:block;font-size:18px}.pi-kpi small{color:var(--muted)}.pi-analysis-controls{display:flex;gap:8px;flex-wrap:wrap;align-items:end}.pi-analysis-controls label{min-width:160px}.pi-analysis-controls select,.pi-analysis-controls input{width:100%}
-  @media(max-width:800px){.pi-grid{grid-template-columns:1fr}.pi-row{grid-template-columns:1fr 1fr}.pi-kpis{grid-template-columns:1fr 1fr}}`;
+  .pi-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px}.pi-table{display:grid;gap:5px}.pi-row{display:grid;grid-template-columns:minmax(180px,1.6fr) 1fr 1fr 1fr;gap:8px;align-items:center;padding:8px 10px;border:1px solid #304b69;border-radius:8px;background:#0e1d31;font-size:11px}.pi-row small{display:block;color:var(--muted)}.pi-high{color:#ff9da8}.pi-review{color:#ffd166}.pi-stable{color:#7ce6a3}.pi-kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}.pi-kpi{padding:10px;border:1px solid #304b69;border-radius:8px;background:#0e1d31}.pi-kpi b{display:block;font-size:18px}.pi-kpi small{color:var(--muted)}.pi-analysis-controls{display:flex;gap:8px;flex-wrap:wrap;align-items:end}.pi-analysis-controls label{min-width:160px}.pi-analysis-controls select,.pi-analysis-controls input{width:100%}.pi-privacy-rules{display:grid;gap:6px}.pi-privacy-rule{display:grid;grid-template-columns:minmax(130px,1fr) 90px 2fr;gap:8px;padding:8px 10px;border:1px solid #304b69;border-radius:8px;background:#0e1d31;font-size:11px}.pi-privacy-rule b{text-transform:uppercase}.pi-privacy-rule .drop{color:#ff9da8}.pi-privacy-rule .alias{color:#69a8ff}.pi-privacy-rule .keep{color:#7ce6a3}.pi-privacy-rule .quality,.pi-privacy-rule .category{color:#ffd166}.pi-privacy-rule .unit{color:#c4d8ed}
+  @media(max-width:800px){.pi-grid{grid-template-columns:1fr}.pi-row{grid-template-columns:1fr 1fr}.pi-kpis{grid-template-columns:1fr 1fr}}@media(max-width:650px){.pi-privacy-rule{grid-template-columns:1fr}}`;
   document.head.appendChild(s)
+}
+function privacyRulesHtml(rules){
+  const items=Array.isArray(rules)?rules:[];
+  return `<div class="pi-privacy-rules pdi-rules">${items.map(r=>`<div class="pi-privacy-rule pdi-rule"><span>${esc(r.key)}</span><b class="${esc(r.action)}">${esc(r.action)}</b><span>${esc(r.reason)}</span></div>`).join('')}</div>`
+}
+function applyIntakeCompatibility(){
+  const root=document.querySelector('[data-di-root]');if(!root)return;
+  const heading=root.querySelector('.di-hero h2');if(heading&&heading.textContent==='Prepare, define and validate real shot data')heading.textContent='Prepare shot data without uploading it';
+  const input=root.querySelector('[data-di-file]');if(input&&!input.hasAttribute('data-pdi-file'))input.setAttribute('data-pdi-file','1');
+  root.querySelectorAll('.di-kpi').forEach(x=>x.classList.add('pdi-kpi'));
+  const csv=root.querySelector('[data-di-csv]');if(csv)csv.textContent='Export prepared CSV';
+  const dictionary=root.querySelector('[data-di-dictionary]');if(dictionary)dictionary.textContent='Export data dictionary';
+  if(lastPrivacyRules.length&&!root.querySelector('[data-pdi-privacy-rules]')){
+    const semantic=[...root.querySelectorAll('section')].find(x=>x.querySelector('h3')?.textContent?.includes('Channel semantic dictionary'));
+    if(semantic){const section=document.createElement('section');section.className='card di-panel';section.style.marginTop='12px';section.dataset.pdiPrivacyRules='1';section.innerHTML=`<h3>Privacy preparation decisions</h3><p class="muted">These keep/alias/drop decisions are applied before semantic analysis. Direct/person identifiers and timestamps are not retained in the prepared rows.</p>${privacyRulesHtml(lastPrivacyRules)}`;semantic.insertAdjacentElement('beforebegin',section)}
+  }
+}
+async function capturePrivacyRules(input){
+  const file=input?.files?.[0],api=window.MM_PROCESS_DATA_LOCAL_INTAKE;if(!file||!api)return;
+  try{const parsed=api.parseCsv(await file.text()),prepared=api.__rawPrepare?api.__rawPrepare(parsed):null;if(prepared?.rules){lastPrivacyRules=prepared.rules;schedule()}}catch(_){ }
 }
 async function openAnalysis(datasetId){
   const api=window.MM_CONNECTED_PROCESS_DATA;if(!api)return;
@@ -116,12 +137,13 @@ function enhanceLibrary(){
     const b=document.createElement('button');b.className='primary';b.dataset.piAnalyze=id;b.textContent='Analyze';b.addEventListener('click',()=>openAnalysis(id));actions.prepend(b)
   })
 }
-function schedule(){if(queued)return;queued=true;requestAnimationFrame(()=>{queued=false;enhanceLibrary()})}
+function schedule(){if(queued)return;queued=true;requestAnimationFrame(()=>{queued=false;enhanceLibrary();applyIntakeCompatibility()})}
 function install(){
   ensureStyle();
   const observer=new MutationObserver(schedule);observer.observe(document.documentElement,{childList:true,subtree:true});
+  document.addEventListener('change',e=>{const input=e.target?.closest?.('[data-di-file]');if(input)capturePrivacyRules(input)},{capture:true});
   schedule();
-  window.MM_PROCESS_INTELLIGENCE_UI={version:VERSION,openAnalysis,scope:'Local statistical evidence UI for baseline drift, before/after interventions, cavity comparison, quality associations and energy-per-good-part. No machine control or universal process limits.'}
+  window.MM_PROCESS_INTELLIGENCE_UI={version:VERSION,openAnalysis,scope:'Local statistical evidence UI for baseline drift, before/after interventions, cavity comparison, quality associations and energy-per-good-part. Connected intake keeps backward-compatible privacy transformation visibility without weakening semantic fail-closed gates. No machine control or universal process limits.'}
 }
 function wait(){
   if(window.MM_CONNECTED_PROCESS_DATA){install();return}
