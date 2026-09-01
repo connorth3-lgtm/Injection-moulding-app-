@@ -1,0 +1,37 @@
+name: Read Aloud QA
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: read-aloud-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  read-aloud-integrity:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: '22.12.0'
+          package-manager-cache: false
+      - uses: actions/setup-python@v7
+        with:
+          python-version: '3.12'
+      - name: JavaScript syntax
+        run: |
+          node --check read-aloud.js
+          node --check reading-patch.js
+          node --check service-worker.js
+      - name: Read Aloud privacy, accessibility and packaging integrity
+        run: python qa_read_aloud.py
+      - name: Production Pages allowlist still resolves
+        run: python tools/build_pages_artifact.py
