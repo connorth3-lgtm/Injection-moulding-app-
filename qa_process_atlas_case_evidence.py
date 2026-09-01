@@ -11,6 +11,7 @@ PACKS=[
 ]
 ATLAS='process-data-20-pass-atlas.js'
 OVERLAY='process-atlas-case-evidence.js'
+ARTIFACT=ROOT/'data'/'process-atlas-case-evidence-v1.json'
 
 
 def need(ok,msg):
@@ -52,6 +53,14 @@ for row in atlas['caseEvidence']:
         need(r.get('sourceId') in ids,f'{cid} evidence record references an unselected source')
         need(r.get('selection')=='case-token-ranked-from-reviewed-pass-sources',f'{cid} mapping mode drifted')
 
+need(ARTIFACT.exists(),'checked-in process-atlas case-evidence artifact is missing')
+check=subprocess.run(['python','tools/generate_process_case_evidence.py','--check'],cwd=ROOT,capture_output=True,text=True,encoding='utf-8',errors='replace')
+need(check.returncode==0,'checked-in process-atlas case-evidence artifact drifted: '+(check.stderr or check.stdout)[:8000])
+artifact=json.loads(ARTIFACT.read_text(encoding='utf-8'))
+need(artifact.get('schema')==1 and artifact.get('version')=='2026.09.02.1','case-evidence artifact schema/version drifted')
+need(len(artifact.get('cases',[]))==200 and artifact.get('meta',{}).get('cases')==200,'case-evidence artifact must contain 200 mappings')
+need(artifact.get('meta',{}).get('uniqueSourceSignatures')==meta.get('uniqueSourceSignatures'),'case-evidence artifact/runtime signature count mismatch')
+
 idx=(ROOT/'index.html').read_text(encoding='utf-8');sw=(ROOT/'service-worker.js').read_text(encoding='utf-8');pkg=json.loads((ROOT/'desktop/electron/package.json').read_text(encoding='utf-8'));integ=(ROOT/'desktop/electron/scripts/generate-integrity.cjs').read_text(encoding='utf-8')
 resources={x.get('from') for x in pkg['build']['extraResources'] if isinstance(x,dict)}
 need(OVERLAY in idx,'browser shell missing process-atlas-case-evidence.js')
@@ -59,4 +68,4 @@ need("'./process-atlas-case-evidence.js'" in sw,'offline cache missing process-a
 need('../../process-atlas-case-evidence.js' in resources,'desktop package missing process-atlas-case-evidence.js')
 need("'process-atlas-case-evidence.js'" in integ,'desktop integrity manifest missing process-atlas-case-evidence.js')
 need(idx.index("'./process-data-20-pass-atlas.js'") < idx.index("'./process-atlas-case-evidence.js'") < idx.index("'./process-data-local-intake.js'"),'case evidence overlay must load immediately after the atlas')
-print('Process-atlas case evidence QA passed: 200 explicit case mappings, reviewed-source subsets only, mechanism and verification roles separated.')
+print('Process-atlas case evidence QA passed: 200 explicit case mappings, reviewed-source subsets only, deterministic artifact current, mechanism and verification roles separated.')
