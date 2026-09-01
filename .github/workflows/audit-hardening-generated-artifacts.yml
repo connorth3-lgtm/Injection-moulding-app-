@@ -1,0 +1,50 @@
+name: Audit Hardening Generated Artifacts
+
+on:
+  push:
+    branches: [audit-hardening-20260902]
+    paths:
+      - 'assessment-discrimination-hardening.js'
+      - 'qa_assessment_discrimination.py'
+      - 'real-measured-data-assessment.js'
+      - 'process-data-20-pass-*.js'
+      - 'process-atlas-case-evidence.js'
+      - 'tools/generate_assessment_manifest.py'
+      - 'tools/generate_process_case_evidence.py'
+      - 'sources/QUESTION_REVISION_INDEX.json'
+      - '.github/workflows/audit-hardening-generated-artifacts.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: audit-hardening-20260902
+      - uses: actions/setup-python@v7
+        with:
+          python-version: '3.13'
+      - uses: actions/setup-node@v7
+        with:
+          node-version: '22'
+          package-manager-cache: false
+      - name: Generate canonical governance artifacts
+        run: |
+          python tools/generate_assessment_manifest.py
+          python tools/generate_process_case_evidence.py
+      - name: Commit deterministic generated artifacts
+        shell: bash
+        run: |
+          git add data/canonical-assessment-manifest-v1.json data/process-atlas-case-evidence-v1.json
+          if git diff --cached --quiet; then
+            echo 'Generated artifacts already current.'
+            exit 0
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m 'Generate canonical assessment and case evidence artifacts'
+          git push origin HEAD:audit-hardening-20260902
