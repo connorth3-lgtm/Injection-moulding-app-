@@ -19,11 +19,14 @@ def main() -> None:
     manifest = json.loads((ROOT / "current-data-manifest.json").read_text(encoding="utf-8"))
     closeout = json.loads((ROOT / "data/measured-data-collection-closeout-2026-08-30.json").read_text(encoding="utf-8"))
     registry = json.loads((ROOT / "process-data-semantic-registry.json").read_text(encoding="utf-8"))
+    version = json.loads((ROOT / "version.json").read_text(encoding="utf-8"))
     runtime = (ROOT / "data-integration-runtime.js").read_text(encoding="utf-8")
     intelligence_ui = (ROOT / "process-data-intelligence-ui.js").read_text(encoding="utf-8")
     shell = (ROOT / "app-shell-finalize.js").read_text(encoding="utf-8")
     worker = (ROOT / "service-worker.js").read_text(encoding="utf-8")
     builder = (ROOT / "tools/build_pages_artifact.py").read_text(encoding="utf-8")
+    desktop_pkg = json.loads((ROOT / "desktop/electron/package.json").read_text(encoding="utf-8"))
+    desktop_integrity = (ROOT / "desktop/electron/scripts/generate-integrity.cjs").read_text(encoding="utf-8")
 
     effective = closeout["canonicalEffectiveState"]
     require(manifest["effectiveMeasuredState"] == effective, "public current-data manifest must match governed effective closeout")
@@ -58,10 +61,12 @@ def main() -> None:
 
     require("script.src='./data-integration-runtime.js'" in shell, "app shell must load connected data runtime")
     require("ui.src='./process-data-intelligence-ui.js'" in shell, "app shell must load process intelligence UI")
+    require("MM_APP_SHELL_FINALIZED='2026.08.26.4'" in shell, "connected data must not change the canonical app-shell compatibility marker")
     require("'./data-integration-runtime.js'" in worker, "connected runtime must be a published worker asset")
     require("'./process-data-intelligence-ui.js'" in worker, "process intelligence UI must be a published worker asset")
     require("'./process-data-semantic-registry.json'" in worker, "semantic registry must be a published worker asset")
     require("'./current-data-manifest.json'" in worker, "current-data manifest must be a published worker asset")
+    require(f"CACHE_VERSION='{version['android_release']}'" in worker, "service-worker cache version must stay aligned with the audited Android release")
 
     core = re.search(r"const\s+CORE\s*=\s*\[(.*?)\]\s*;", worker, re.S)
     optional = re.search(r"const\s+OPTIONAL\s*=\s*\[(.*?)\]\s*;", worker, re.S)
@@ -82,12 +87,25 @@ def main() -> None:
         "Energy per good part",
         "compareToBaseline",
         "compareWindows",
+        "if(!dataset.quality?.analysisReady)",
+        "includes('blocked')",
     ]:
         require(token in intelligence_ui, f"process intelligence UI missing required behavior: {token}")
 
     require("extract_service_worker_assets" in builder, "Pages builder must publish both core and on-demand worker assets")
     require("on_demand_assets" in builder and "precache_assets" in builder, "Pages manifest must expose cache policy")
     require("FORBIDDEN_PREFIXES" in builder and '"data/"' in builder, "raw governed data must remain excluded from public Pages artifact")
+
+    desktop_from = {x.get("from") for x in desktop_pkg["build"]["extraResources"] if isinstance(x, dict)}
+    connected_assets = [
+        "data-integration-runtime.js",
+        "process-data-intelligence-ui.js",
+        "process-data-semantic-registry.json",
+        "current-data-manifest.json",
+    ]
+    for asset in connected_assets:
+        require(f"../../{asset}" in desktop_from, f"desktop package missing connected data asset: {asset}")
+        require(f"'{asset}'" in desktop_integrity, f"desktop integrity set missing connected data asset: {asset}")
 
     print(
         "Connected process-data QA passed: "
