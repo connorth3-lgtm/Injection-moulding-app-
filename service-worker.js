@@ -1,8 +1,8 @@
 const CACHE_VERSION='2026.08.26.2';
-const CACHE_REVISION='connected-data-runtime-v1-20260902';
+const CACHE_REVISION='maturity-hardening-v2-20260902';
 const STATIC_CACHE=`mouldmaster-static-${CACHE_VERSION}-${CACHE_REVISION}`;
 
-// Small fail-closed offline foundation. Feature packs are published but cached on demand.
+// Small fail-closed offline foundation. Feature packs are published but cached on runtime request.
 const CORE=[
   './index.html',
   './MouldMaster_Core_App.html',
@@ -127,7 +127,7 @@ async function fetchAndCache(event,url){
 }
 function criticalOfflineResponse(url){
   if(url.pathname.endsWith('.json'))return new Response(JSON.stringify({error:'mouldmaster-offline-asset-unavailable'}),{status:503,headers:{'Content-Type':'application/json; charset=utf-8','Cache-Control':'no-store'}});
-  return new Response('/* MouldMaster runtime asset is unavailable offline. Reconnect and reopen the app to cache this optional feature pack. */\n',{status:503,headers:{'Content-Type':'text/javascript; charset=utf-8','Cache-Control':'no-store','X-Content-Type-Options':'nosniff'}})
+  return new Response('/* MouldMaster runtime asset is unavailable offline. Reconnect and reopen the app to cache this runtime feature pack. */\n',{status:503,headers:{'Content-Type':'text/javascript; charset=utf-8','Cache-Control':'no-store','X-Content-Type-Options':'nosniff'}})
 }
 
 self.addEventListener('fetch',event=>{
@@ -141,7 +141,7 @@ self.addEventListener('fetch',event=>{
         const r=await fetch(event.request,{cache:'no-store'});
         if(r&&r.ok){if(isShell){const c=await caches.open(STATIC_CACHE);await c.put('./index.html',r.clone())}return r}
       }catch(_){}
-      return await caches.match(event.request,{ignoreSearch:true})||await caches.match('./index.html')||new Response('<!doctype html><meta name="viewport" content="width=device-width,initial-scale=1"><title>MouldMaster offline</title><main style="font:16px system-ui;padding:24px;max-width:680px"><h1>MouldMaster is not fully installed offline yet</h1><p>Reconnect once and reopen the app. The core shell installs atomically; optional learning and specialist packs are cached after they are used online.</p></main>',{status:503,headers:{'Content-Type':'text/html; charset=utf-8','Cache-Control':'no-store'}});
+      return await caches.match(event.request,{ignoreSearch:true})||await caches.match('./index.html')||new Response('<!doctype html><meta name="viewport" content="width=device-width,initial-scale=1"><title>MouldMaster offline</title><main style="font:16px system-ui;padding:24px;max-width:680px"><h1>MouldMaster is not fully installed offline yet</h1><p>Reconnect once and reopen the app. The core shell installs atomically; additional learning and specialist packs are cached after the runtime requests them online.</p></main>',{status:503,headers:{'Content-Type':'text/html; charset=utf-8','Cache-Control':'no-store'}});
     })());
     return;
   }
