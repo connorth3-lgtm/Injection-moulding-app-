@@ -11,7 +11,8 @@
   "assessment_storage_scope_version": "2026.08.24.4",
   "assessment_evidence_version": "2026.08.25.2",
   "production_observability_version": "2026.09.01.1",
-  "published": "2026-08-27",
+  "read_aloud_version": "2026.09.01.1",
+  "published": "2026-09-01",
   "repository": "connorth3-lgtm/Injection-moulding-app-",
   "pages_url": "https://connorth3-lgtm.github.io/Injection-moulding-app-/"
 }
