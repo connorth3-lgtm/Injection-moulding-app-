@@ -1,6 +1,6 @@
 {
   "name": "mouldmaster-academy-desktop",
-  "version": "2026.9.1",
+  "version": "2026.8.26",
   "description": "Open-source Windows desktop wrapper for MouldMaster Academy.",
   "author": "MouldMaster Academy contributors",
   "license": "Apache-2.0",
@@ -20,8 +20,8 @@
   "build": {
     "appId": "org.mouldmaster.academy",
     "productName": "MouldMaster Academy",
-    "buildNumber": "1",
-    "buildVersion": "2026.9.1.1",
+    "buildNumber": "6",
+    "buildVersion": "2026.8.26.6",
     "asar": true,
     "electronFuses": {"runAsNode": false,"enableNodeOptionsEnvironmentVariable": false,"enableNodeCliInspectArguments": false,"enableEmbeddedAsarIntegrityValidation": true,"onlyLoadAppFromAsar": true},
     "directories": {"output": "dist"},
