@@ -36,6 +36,7 @@
       {"from": "../../version.json", "to": "mouldmaster/version.json"},
       {"from": "../../reading-patch.css", "to": "mouldmaster/reading-patch.css"},
       {"from": "../../reading-patch.js", "to": "mouldmaster/reading-patch.js"},
+      {"from": "../../read-aloud.js", "to": "mouldmaster/read-aloud.js"},
       {"from": "../../training-upgrade.js", "to": "mouldmaster/training-upgrade.js"},
       {"from": "../../training-qa-fix.js", "to": "mouldmaster/training-qa-fix.js"},
       {"from": "../../assessment-100-pass.js", "to": "mouldmaster/assessment-100-pass.js"},
