@@ -49,12 +49,12 @@ for asset in ['./assessment-psychometric-hardening.js','./assessment-evidence-in
     need(asset in idx,f'browser shell missing {asset}')
 need(idx.index("'./evidence-maturity-formal-bridge.js'") < idx.index("'./assessment-psychometric-hardening.js'") < idx.index("'./assessment-evidence-integrity-upgrade.js'") < idx.index("'./assessment-evidence-approval.js'") < idx.index("'./assessment-psychometric-approval.js'") < idx.index("'./app-shell-registry.js'"),'psychometric/evidence browser load order is wrong')
 need(idx.index("'./process-data-diagnostics.js'") < idx.index("'./real-measured-data-assessment.js'"),'real measured assessment load order is wrong')
-need('20260826.15-assessment-evidence-integrity' in idx,'browser runtime token was not advanced for evidence integrity')
+need('20260826.16-assessment-evidence-observability' in idx,'browser runtime token must retain evidence-integrity family and advance for production observability')
 
 sw=text('service-worker.js')
 for asset in ["'./assessment-psychometric-hardening.js'","'./assessment-evidence-integrity-upgrade.js'","'./assessment-psychometric-approval.js'","'./real-measured-data-assessment.js'"]:
     need(asset in sw,f'offline cache missing {asset}')
-need("CACHE_REVISION='assessment-evidence-integrity-20260826'" in sw,'PWA cache revision was not advanced for evidence integrity')
+need("CACHE_REVISION='assessment-evidence-observability-20260901'" in sw,'PWA cache revision must retain evidence-integrity lineage and advance for production observability')
 
 pkg=json.loads(text('desktop/electron/package.json'))
 froms={x.get('from') for x in pkg['build']['extraResources'] if isinstance(x,dict)}
