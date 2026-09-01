@@ -24,11 +24,15 @@ on:
       - 'qa_measured_evidence_decision_workflows.py'
       - 'learning-analytics.js'
       - 'pwa-shell.js'
+      - 'reading-patch.js'
+      - 'read-aloud.js'
+      - 'qa_read_aloud.py'
       - 'service-worker.js'
       - 'qa_app_shell_registry.py'
       - 'qa_mould_master_workspace.py'
       - 'qa/mobile-viewport.spec.js'
       - 'qa/measured-evidence-decision.spec.js'
+      - 'qa/read-aloud.spec.js'
       - 'playwright.config.cjs'
       - '.github/workflows/mobile-browser-qa.yml'
   workflow_dispatch:
@@ -55,6 +59,7 @@ jobs:
           python qa_mould_master_workspace.py
           python qa_measured_evidence_integration.py
           python qa_measured_evidence_decision_workflows.py
+          python qa_read_aloud.py
       - name: Install pinned Playwright test runtime
         run: |
           npm install --no-save --no-package-lock @playwright/test@1.55.0

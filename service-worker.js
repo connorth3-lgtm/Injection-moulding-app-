@@ -11,6 +11,7 @@ const CORE=[
   './version.json',
   './reading-patch.css',
   './reading-patch.js',
+  './read-aloud.js',
   './training-upgrade.js',
   './training-qa-fix.js',
   './assessment-100-pass.js',
