@@ -83,5 +83,5 @@ if(geometryStyle&&geometryStyle.parentNode===document.head)document.head.appendC
 window.addEventListener('popstate',()=>window.MM_APP_SHELL.navigation?.sync?.());
 requestAnimationFrame(()=>{window.MM_APP_SHELL.geometry?.sync?.();patchEvidenceUi()});
 // Preserve the canonical shell compatibility marker. Evidence-status bridging and connected-data runtime have their own versions above.
-window.MM_APP_SHELL_FINALIZED='2026.09.02.1';
+window.MM_APP_SHELL_FINALIZED='2026.08.26.4';
 })();
