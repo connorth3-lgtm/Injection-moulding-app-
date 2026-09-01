@@ -87,8 +87,8 @@ p=subprocess.run(['node','-e',node_test],capture_output=True,text=True)
 need(p.returncode==0,f'all-question runtime QA failed: {p.stderr or p.stdout}')
 
 reg=text(REGISTER)
-for marker in ['all 57 live exam questions','All 30 technical questions','27 regional','five evidence-reasoning modes','Insufficient evidence is a valid expert answer','ISO 20430:2020','OSHA 29 CFR 1910.147','WorkSafe New Zealand']:
-    need(marker in reg,f'question deep-dive register marker missing: {marker}')
+for marker in ['209 unique keyed learner decisions','30 technical exam questions','27 regional UK/US/NZ safety/compliance questions','five evidence-reasoning modes','Insufficient evidence remains a valid expert answer','ISO 20430:2020','OSHA 29 CFR 1910.147','WorkSafe New Zealand']:
+    need(marker.lower() in reg.lower(),f'question deep-dive register marker missing: {marker}')
 
 idx=text('index.html')
 need(idx.index('assessment-deep-dive.js')<idx.index('assessment-answer-cue-fix.js')<idx.index('assessment-quality-suite.js'),'assessment rewrite load order wrong')
@@ -100,4 +100,4 @@ qy=text('.github/workflows/qa.yml');need('node --check assessment-deep-dive.js' 
 need('python qa_question_deep_dive.py' in text('.github/workflows/open-desktop-build.yml'),'desktop workflow missing question QA')
 need('python qa_question_deep_dive.py' in text('.github/workflows/microsoft-store-msix.yml'),'Store workflow missing question QA')
 
-print('MouldMaster question-and-answer deep dive passed: 30 technical + 27 regional live exam rewrites; 8 deepened scenarios; 0 regional key changes')
+print('MouldMaster question-and-answer deep dive passed: canonical 209-decision register retained; 30 technical + 27 regional live exam rewrites; 8 deepened scenarios; 0 regional key changes')
