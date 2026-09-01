@@ -20,8 +20,7 @@ function apply(){
  for(const s of rows){const p=PATCH[s.title];if(!p)continue;const [situation,choices,correct,why]=p;Object.assign(s,{situation,choices:choices.slice(),correct,why,feedback:feedback(choices,correct,why)});applied++}
  if(applied!==EXPECTED)throw new Error(`Guided-scenario deep-dive finalization mismatch: ${applied}/${EXPECTED}`);
  D.assessmentQA=D.assessmentQA||{};D.assessmentQA.questionDeepDive={...(D.assessmentQA.questionDeepDive||{}),scenarioItemsRewritten:applied,scenarioFinalizerVersion:VERSION};
- window.MM_SCENARIO_DEEP_DIVE_FINALIZED={version:VERSION,applied,scope:'Applies the eight reviewed assessment-deep-dive scenario rewrites after training-upgrade inserts the guided scenarios and before psychometric hardening.'};
+ window.MM_SCENARIO_DEEP_DIVE_FINALIZED={version:VERSION,applied,scope:'Applies the eight reviewed assessment-deep-dive scenario rewrites synchronously after training-upgrade inserts the guided scenarios and before psychometric hardening.'};
 }
-function schedule(){if(typeof document==='undefined'){apply();return}if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',apply,{once:true});else apply()}
-schedule();
+apply();
 })();
