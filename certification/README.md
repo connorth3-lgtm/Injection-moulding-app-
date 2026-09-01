@@ -2,11 +2,11 @@
 
 Status: **repository preparation is advanced, but MouldMaster Academy is not yet accredited by NZQA or IACET and is not yet Microsoft Store certified**.
 
-Current product baselines are recorded in `../version.json`. As of 2026-08-27:
+Current product baselines are recorded in `../version.json`. As of 2026-09-01:
 - PWA / browser shell: `2026.08.26.2`
-- Open Windows desktop: `2026.08.26.5`
+- Open Windows desktop: `2026.08.26.6`
 - Training content: `2026.08.26.1`
-- Audited question bank: `2026.08.24.2`
+- Audited question bank: `2026.08.30.1`
 - Assessment quality / analytics hardening: `2026.08.24.3`
 - Learner-scoped assessment storage: `2026.08.24.4`
 - Question evidence approval: `2026.08.25.2`
