@@ -98,8 +98,9 @@ idx=text('index.html')
 need("['./learning-experience.js','<script src=\"./learning-experience.js\">']" in idx,'browser shell does not load learning-experience.js')
 need(idx.index("'./pwa-shell.js'") < idx.index("'./learning-experience.js'"),'learning experience must load after the existing runtime patches')
 
-# Runtime coherence is structural, not a hard-coded feature-bundle token. This lets data modules
-# advance the runtime family without creating false learner-UX failures.
+# Runtime coherence is structural. Runtime-only hardening may advance independently
+# of the audited shell release, while the shell version itself must continue to match
+# the service-worker cache version and the runtime/cache feature families must match.
 sw=text('service-worker.js')
 shell_release=js_const(idx,'SHELL_RELEASE')
 runtime_asset=js_const(idx,'RUNTIME_ASSET_VERSION')
@@ -108,7 +109,7 @@ cache_version=js_const(sw,'CACHE_VERSION')
 cache_revision=js_const(sw,'CACHE_REVISION')
 need(shell_release==cache_version,'learning UX shell release must match PWA cache version')
 need(expected_cache==f'mouldmaster-static-{cache_version}-{cache_revision}','learning UX expected cache must match service-worker cache identity')
-need(runtime_asset[:8]==''.join(cache_version.split('.')[:3]),'learning UX runtime date must align with PWA release date')
+need(re.fullmatch(r'\d{8}\.\d+-[a-z0-9-]+',runtime_asset) is not None,'learning UX runtime token must retain dated revision + feature-family format')
 need(runtime_asset.split('-',1)[1]==re.sub(r'-\d{8}$','',cache_revision),'learning UX runtime family must match PWA cache family')
 need("'./learning-experience.js'" in sw,'learning experience missing from offline cache')
 need("'./pwa-shell.js'" in sw,'PWA shell/mobile layout guard missing from offline cache')
