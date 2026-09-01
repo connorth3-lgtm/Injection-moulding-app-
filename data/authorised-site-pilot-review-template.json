@@ -1,0 +1,20 @@
+{
+  "schema": 1,
+  "case_alias": "CASE-01",
+  "site_authorisation_confirmed": false,
+  "approved_learning_research_use_confirmed": false,
+  "raw_data_retained_outside_public_repository": true,
+  "prepared_data_human_reviewed_for_reidentification_risk": false,
+  "independent_reviewer_role": "",
+  "independent_finding_category": "",
+  "mouldmaster_ranked_mechanisms": [],
+  "independent_finding_compared": false,
+  "top_rank_alignment": "not-reviewed",
+  "evidence_requested_before_setting_change": false,
+  "root_cause_separated_from_compensation": false,
+  "recovery_checked_against_mechanism": false,
+  "ambiguities_or_missing_signals": [],
+  "content_or_data_actions": [],
+  "evidence_retention_governance_confirmed": false,
+  "notes_boundary": "Do not include customer, person, site, machine serial, part number, free-text production identifiers or raw record values in this review file. Use aliases/categories only."
+}
