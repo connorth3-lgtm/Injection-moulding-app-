@@ -16,11 +16,21 @@ const PATCH={
 };
 function apply(){
  if(window.MM_SCENARIO_DEEP_DIVE_FINALIZED?.version===VERSION)return;
- const D=window.MM_DATA,rows=D?.scenarios||[];let applied=0;
- for(const s of rows){const p=PATCH[s.title];if(!p)continue;const [situation,choices,correct,why]=p;Object.assign(s,{situation,choices:choices.slice(),correct,why,feedback:feedback(choices,correct,why)});applied++}
+ const D=window.MM_DATA;
+ if(!D||!Array.isArray(D.scenarios))throw new Error('MouldMaster scenario data must load before guided-scenario finalization');
+ const rows=D.scenarios;let applied=0,created=0;
+ for(const [title,p] of Object.entries(PATCH)){
+  const matches=rows.filter(s=>s?.title===title);
+  if(matches.length>1)throw new Error(`Guided-scenario title is duplicated: ${title}`);
+  let s=matches[0];
+  if(!s){s={title};rows.push(s);created++}
+  const [situation,choices,correct,why]=p;
+  Object.assign(s,{situation,choices:choices.slice(),correct,why,feedback:feedback(choices,correct,why)});
+  applied++;
+ }
  if(applied!==EXPECTED)throw new Error(`Guided-scenario deep-dive finalization mismatch: ${applied}/${EXPECTED}`);
- D.assessmentQA=D.assessmentQA||{};D.assessmentQA.questionDeepDive={...(D.assessmentQA.questionDeepDive||{}),scenarioItemsRewritten:applied,scenarioFinalizerVersion:VERSION};
- window.MM_SCENARIO_DEEP_DIVE_FINALIZED={version:VERSION,applied,scope:'Applies the eight reviewed assessment-deep-dive scenario rewrites synchronously after training-upgrade inserts the guided scenarios and before psychometric hardening.'};
+ D.assessmentQA=D.assessmentQA||{};D.assessmentQA.questionDeepDive={...(D.assessmentQA.questionDeepDive||{}),scenarioItemsRewritten:applied,scenarioItemsMaterialized:created,scenarioFinalizerVersion:VERSION};
+ window.MM_SCENARIO_DEEP_DIVE_FINALIZED={version:VERSION,applied,created,scope:'Materializes any missing member of the eight reviewed guided scenarios, applies the reviewed deep-dive wording once, and completes before psychometric hardening. The later training-upgrade initializer detects the same titles and does not duplicate them.'};
 }
 apply();
 })();
