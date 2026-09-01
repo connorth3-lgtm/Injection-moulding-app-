@@ -1,4 +1,4 @@
-/* MouldMaster lesson-reading enhancement — 2026.08.23.6 */
+/* MouldMaster lesson-reading enhancement — 2026.09.01.1 */
 (function(){
   'use strict';
   function norm(s){return String(s||'').replace(/\s+/g,' ').trim().toLowerCase();}
@@ -46,8 +46,16 @@
     if(next&&/^complete\s*&\s*continue/i.test(next.textContent||''))next.textContent='Finished reading — next lesson →';
     article.dataset.readEnhanced='1';
   }
+  function loadReadAloud(){
+    if(window.MMReadAloud||document.querySelector('script[data-mm-read-aloud-runtime]'))return;
+    const script=document.createElement('script');
+    script.src='./read-aloud.js';
+    script.dataset.mmReadAloudRuntime='1';
+    script.async=false;
+    document.head.appendChild(script);
+  }
   const run=()=>enhanceLesson();
   const mo=new MutationObserver(()=>requestAnimationFrame(run));
   mo.observe(document.documentElement,{subtree:true,childList:true});
-  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',run);else run();
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',()=>{run();loadReadAloud();},{once:true});else{run();loadReadAloud();}
 })();
