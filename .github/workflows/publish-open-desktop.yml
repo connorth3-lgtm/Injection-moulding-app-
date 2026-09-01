@@ -43,12 +43,18 @@ jobs:
           node --check assessment-stable-review-bridge.js
           node --check assessment-analytics-ui.js
           node --check assessment-final-hardening.js
+          node --check runtime-v2.js
+          node --check assessment-runtime-v2.js
           node --check assessment-ux.js
           node --check assessment-evidence-sources.js
           node --check evidence-maturity-deep-dive.js
           node --check evidence-maturity-formal-bridge.js
+          node --check assessment-psychometric-hardening.js
+          node --check assessment-evidence-integrity-upgrade.js
           node --check lesson-evidence-depth.js
+          node --check lesson-deep-authoring-v2.js
           node --check assessment-evidence-approval.js
+          node --check assessment-psychometric-approval.js
           node --check source-library.js
           node --check reference-data.js
           node --check reference-deep-dive.js
@@ -60,6 +66,7 @@ jobs:
           node --check diagnostic-learning-labs.js
           node --check material-behaviour-labs.js
           node --check app-shell-registry.js
+          node --check assessment-multimodal.js
           node --check pwa-shell.js
           node --check learning-experience.js
           node --check process-data-diagnostics.js
@@ -77,9 +84,11 @@ jobs:
           node --check process-data-local-intake.js
           node --check curriculum-integration.js
           node --check specialist-curriculum.js
+          node --check specialist-evidence-gap-extension.js
           node --check mould-master-workspace.js
           node --check app-shell-finalize.js
           node --check learning-analytics.js
+          node --check accessibility-hardening.js
           node --check desktop/electron/src/main.cjs
           node --check desktop/electron/scripts/generate-integrity.cjs
           node --check desktop/electron/scripts/generate-licenses.cjs
@@ -99,6 +108,8 @@ jobs:
         run: |
           python qa_release.py
           python qa_runtime_hardening.py
+          python qa_runtime_v2.py
+          python qa_assessment_runtime_v2.py
           python qa_release_docs.py
           python qa_diagnostic_learning.py
           python qa_material_behaviour.py
@@ -106,7 +117,9 @@ jobs:
           python qa_question_deep_dive.py
           python qa_assessment_quality.py
           python qa_assessment_evidence.py
+          python qa_assessment_multimodal.py
           python qa_evidence_maturity.py
+          python qa_lesson_deep_authoring_v2.py
           python qa_process_data_diagnostics.py
           python qa_process_data_deep_dive_50.py
           python qa_process_data_20_pass.py
@@ -114,6 +127,7 @@ jobs:
           python qa_measured_evidence_50_pass.py
           python qa_process_data_local_intake.py
           python qa_real_process_data_pilot.py
+          python qa_authorised_site_pilot_framework.py
           python qa_learning_experience.py
           python qa_app_shell_registry.py
           python qa_mould_master_workspace.py
@@ -124,6 +138,8 @@ jobs:
           python qa_stable_review_bridge.py
           python qa_assessment_final_hardening.py
           python qa_assessment_ux.py
+          python qa_accessibility_hardening.py
+          python qa_release_immutability.py
           python qa_source_freshness.py
           python qa_research_source_freshness.py
           python qa_reference.py
@@ -171,12 +187,14 @@ jobs:
           - CycloneDX SBOM
           - assessment, evidence-maturity, process-data-sweep, measured-evidence and source-freshness QA reports
 
+          Release publication is one-shot: an existing tag/release is never overwritten. Repository-level GitHub immutable releases should be enabled before the next release so the published tag/assets and GitHub release attestation are platform-enforced as immutable.
+
           This unsigned GitHub release is intended for transparent/open-source distribution and testing. Microsoft Store signing/certification remains a separate external process and must not be claimed until Microsoft grants it.
           "@ | Set-Content "$releaseDir/RELEASE_NOTES.md"
           "MM_RELEASE_VERSION=$version" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
           "MM_RELEASE_TAG=$tag" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
           "MM_RELEASE_DIR=$releaseDir" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
-      - name: Publish immutable GitHub release
+      - name: Publish one-shot release without asset replacement
         shell: pwsh
         env:
           GH_TOKEN: ${{ github.token }}
@@ -185,12 +203,41 @@ jobs:
           if ($tagSha -and $tagSha -ne $env:GITHUB_SHA) {
             throw "Release tag $env:MM_RELEASE_TAG already points to $tagSha. Bump desktop_release before publishing different source."
           }
-          $assets = Get-ChildItem $env:MM_RELEASE_DIR -File | Where-Object { $_.Name -ne 'RELEASE_NOTES.md' } | ForEach-Object { $_.FullName }
+          $localAssets = Get-ChildItem $env:MM_RELEASE_DIR -File | Where-Object { $_.Name -ne 'RELEASE_NOTES.md' }
           gh release view $env:MM_RELEASE_TAG *> $null
           if ($LASTEXITCODE -eq 0) {
-            gh release upload $env:MM_RELEASE_TAG @assets --clobber
+            if (-not $tagSha) { throw "Release $env:MM_RELEASE_TAG exists but its tag could not be resolved." }
+            $verifyDir = Join-Path $env:RUNNER_TEMP "mouldmaster-existing-release-$env:MM_RELEASE_VERSION"
+            if (Test-Path $verifyDir) { Remove-Item -Recurse -Force $verifyDir }
+            New-Item -ItemType Directory -Force -Path $verifyDir | Out-Null
+            gh release download $env:MM_RELEASE_TAG --dir $verifyDir
+            if ($LASTEXITCODE -ne 0) { throw "Existing release could not be downloaded for immutability verification." }
+            $expectedNames = @($localAssets | ForEach-Object Name | Sort-Object)
+            $publishedNames = @(Get-ChildItem $verifyDir -File | ForEach-Object Name | Sort-Object)
+            if (($expectedNames -join "`n") -ne ($publishedNames -join "`n")) {
+              throw "Existing release asset set differs from the locally staged immutable asset set. Bump desktop_release; never replace published assets."
+            }
+            $localSums = (Get-Content (Join-Path $env:MM_RELEASE_DIR 'SHA256SUMS.txt') -Raw).Trim()
+            $publishedSums = (Get-Content (Join-Path $verifyDir 'SHA256SUMS.txt') -Raw).Trim()
+            if ($localSums -ne $publishedSums) {
+              throw "Existing release SHA256SUMS differs from this source build. Bump desktop_release; never clobber a published release."
+            }
+            foreach ($line in (Get-Content (Join-Path $verifyDir 'SHA256SUMS.txt'))) {
+              if ($line -notmatch '^([a-f0-9]{64})\s\s(.+)$') { throw "Malformed published SHA256SUMS entry: $line" }
+              $expectedHash=$Matches[1];$name=$Matches[2];$file=Join-Path $verifyDir $name
+              if (-not (Test-Path $file)) { throw "Published release asset missing: $name" }
+              $actualHash=(Get-FileHash $file -Algorithm SHA256).Hash.ToLower()
+              if ($actualHash -ne $expectedHash) { throw "Published release hash mismatch: $name" }
+            }
+            Write-Host "Existing release is byte-identical to the staged build. No upload or replacement performed."
           } else {
-            gh release create $env:MM_RELEASE_TAG @assets --target $env:GITHUB_SHA --title "MouldMaster Academy Desktop $env:MM_RELEASE_VERSION" --notes-file "$env:MM_RELEASE_DIR/RELEASE_NOTES.md"
+            gh release create $env:MM_RELEASE_TAG --draft --target $env:GITHUB_SHA --title "MouldMaster Academy Desktop $env:MM_RELEASE_VERSION" --notes-file "$env:MM_RELEASE_DIR/RELEASE_NOTES.md"
+            if ($LASTEXITCODE -ne 0) { throw "Could not create draft release." }
+            $paths=@($localAssets | ForEach-Object FullName)
+            gh release upload $env:MM_RELEASE_TAG @paths
+            if ($LASTEXITCODE -ne 0) { throw "Could not upload the complete draft release asset set." }
+            gh release edit $env:MM_RELEASE_TAG --draft=false
+            if ($LASTEXITCODE -ne 0) { throw "Could not publish the complete draft release." }
           }
       - uses: actions/upload-artifact@v4
         with:
