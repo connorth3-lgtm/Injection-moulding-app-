@@ -1,30 +1,25 @@
-name: Audit Hardening Generated Artifacts
+name: Assessment and Evidence Hardening QA
 
 on:
   push:
-    branches: [audit-hardening-20260902]
-    paths:
-      - 'assessment-discrimination-hardening.js'
-      - 'qa_assessment_discrimination.py'
-      - 'real-measured-data-assessment.js'
-      - 'process-data-20-pass-*.js'
-      - 'process-atlas-case-evidence.js'
-      - 'tools/generate_assessment_manifest.py'
-      - 'tools/generate_process_case_evidence.py'
-      - 'sources/QUESTION_REVISION_INDEX.json'
-      - '.github/workflows/audit-hardening-generated-artifacts.yml'
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
 
 permissions:
-  contents: write
+  contents: read
+
+concurrency:
+  group: assessment-evidence-hardening-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
-  generate:
+  hardening:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 20
     steps:
       - uses: actions/checkout@v7
-        with:
-          ref: audit-hardening-20260902
       - uses: actions/setup-python@v7
         with:
           python-version: '3.13'
@@ -32,19 +27,27 @@ jobs:
         with:
           node-version: '22'
           package-manager-cache: false
-      - name: Generate canonical governance artifacts
+      - name: New runtime syntax
         run: |
-          python tools/generate_assessment_manifest.py
-          python tools/generate_process_case_evidence.py
-      - name: Commit deterministic generated artifacts
+          node --check assessment-discrimination-hardening.js
+          node --check process-atlas-case-evidence.js
+      - name: Assessment discrimination integrity
+        run: python qa_assessment_discrimination.py
+      - name: Canonical assessment manifest integrity
+        run: |
+          python tools/generate_assessment_manifest.py --check
+          python qa_canonical_assessment_manifest.py
+      - name: Case-level process-atlas evidence integrity
+        run: |
+          python qa_process_atlas_case_evidence.py
+          python tools/generate_process_case_evidence.py --check
+      - name: Legacy retirement state integrity
+        run: python qa_legacy_retirement.py
+      - name: Competing Pages branch must remain absent
         shell: bash
         run: |
-          git add data/canonical-assessment-manifest-v1.json data/process-atlas-case-evidence-v1.json
-          if git diff --cached --quiet; then
-            echo 'Generated artifacts already current.'
-            exit 0
+          if git ls-remote --exit-code --heads origin gh-pages >/dev/null 2>&1; then
+            echo 'A gh-pages branch exists. MouldMaster requires the hardened Actions Pages workflow to remain the sole supported repository publication lane.' >&2
+            exit 1
           fi
-          git config user.name 'github-actions[bot]'
-          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git commit -m 'Generate canonical assessment and case evidence artifacts'
-          git push origin HEAD:audit-hardening-20260902
+          echo 'No gh-pages branch is present.'
