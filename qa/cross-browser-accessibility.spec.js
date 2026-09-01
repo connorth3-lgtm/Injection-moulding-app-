@@ -8,6 +8,7 @@ async function openApp(page){
   });
   await page.goto(BASE,{waitUntil:'domcontentloaded'});
   await page.waitForFunction(()=>window.MM_APP_SHELL_FINALIZED==='2026.08.26.4'&&!document.getElementById('mmBootstrap'));
+  await page.waitForFunction(()=>['approved','review-required'].includes(window.MM_ASSESSMENT_DISCRIMINATION_HARDENING?.status),null,{timeout:10000});
   await expect(page.locator('#mmStartupFailure')).toHaveCount(0);
 }
 
