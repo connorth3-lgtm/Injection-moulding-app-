@@ -23,6 +23,7 @@ def main() -> None:
     runtime = (ROOT / "data-integration-runtime.js").read_text(encoding="utf-8")
     intelligence_ui = (ROOT / "process-data-intelligence-ui.js").read_text(encoding="utf-8")
     shell = (ROOT / "app-shell-finalize.js").read_text(encoding="utf-8")
+    index = (ROOT / "index.html").read_text(encoding="utf-8")
     worker = (ROOT / "service-worker.js").read_text(encoding="utf-8")
     builder = (ROOT / "tools/build_pages_artifact.py").read_text(encoding="utf-8")
     desktop_pkg = json.loads((ROOT / "desktop/electron/package.json").read_text(encoding="utf-8"))
@@ -67,6 +68,12 @@ def main() -> None:
     require("'./process-data-semantic-registry.json'" in worker, "semantic registry must be a published worker asset")
     require("'./current-data-manifest.json'" in worker, "current-data manifest must be a published worker asset")
     require(f"CACHE_VERSION='{version['android_release']}'" in worker, "service-worker cache version must stay aligned with the audited Android release")
+    cache_version = re.search(r"CACHE_VERSION='([^']+)'", worker)
+    cache_revision = re.search(r"CACHE_REVISION='([^']+)'", worker)
+    require(cache_version is not None and cache_revision is not None, "service-worker cache metadata missing")
+    expected_cache = f"mouldmaster-static-{cache_version.group(1)}-{cache_revision.group(1)}"
+    require(f'const EXPECTED_STATIC_CACHE="{expected_cache}"' in index, "bootstrap expected cache must match the service-worker cache exactly")
+    require('const RUNTIME_ASSET_VERSION="20260902.1-connected-data"' in index, "connected-data bootstrap runtime version is stale")
 
     core = re.search(r"const\s+CORE\s*=\s*\[(.*?)\]\s*;", worker, re.S)
     optional = re.search(r"const\s+OPTIONAL\s*=\s*\[(.*?)\]\s*;", worker, re.S)
@@ -74,7 +81,7 @@ def main() -> None:
     core_assets = set(re.findall(r"['\"]\./([^'\"]+)['\"]", core.group(1)))
     optional_assets = set(re.findall(r"['\"]\./([^'\"]+)['\"]", optional.group(1)))
     require(not (core_assets & optional_assets), "service-worker core and optional assets must not overlap")
-    require("reference-20x-extension.js" in optional_assets, "large specialist/reference packs should be on-demand")
+    require("reference-20x-extension.js" in optional_assets, "large specialist/reference packs should not be part of the atomic offline install")
     require("data-integration-runtime.js" in core_assets, "connected process-data layer should be available in offline core")
     require("process-data-intelligence-ui.js" in core_assets, "process intelligence UI should be available in offline core")
     require(len(optional_assets) >= 20, "offline split did not materially reduce atomic pre-cache scope")
@@ -92,7 +99,7 @@ def main() -> None:
     ]:
         require(token in intelligence_ui, f"process intelligence UI missing required behavior: {token}")
 
-    require("extract_service_worker_assets" in builder, "Pages builder must publish both core and on-demand worker assets")
+    require("extract_service_worker_assets" in builder, "Pages builder must publish both atomic-core and runtime-fetched worker assets")
     require("on_demand_assets" in builder and "precache_assets" in builder, "Pages manifest must expose cache policy")
     require("FORBIDDEN_PREFIXES" in builder and '"data/"' in builder, "raw governed data must remain excluded from public Pages artifact")
 
@@ -112,7 +119,7 @@ def main() -> None:
         f"{effective['inventoriedMeasuredSources']} inventoried sources, "
         f"{effective['fullyProfiledMeasuredFamilies']} profiled families, "
         f"{effective['acceptedInjectionProcessTimeSeriesValues']:,} accepted time-series values; "
-        f"{len(core_assets)} offline-core assets and {len(optional_assets)} on-demand assets."
+        f"{len(core_assets)} atomic offline-core assets and {len(optional_assets)} runtime-fetched assets."
     )
 
 
