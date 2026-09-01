@@ -2,25 +2,18 @@
 (function(){
 'use strict';
 if(window.MM_ASSESSMENT_RUNTIME_V2)return;
-const VERSION='2026.09.01.1';
+const VERSION='2026.09.01.2';
 const STORAGE_BASE='mm_assessment_membership_history_v2';
 const BLUEPRINT=['materials','machine','tooling','process','quality','troubleshooting'];
-const D=window.MM_DATA;
+const D=window.MM_DATA,R=window.MM_RUNTIME_V2;
 if(!D||!D.exams||!D.regionalQuestions)throw new Error('assessment-runtime-v2.js requires the canonical assessment bank');
+if(!R||typeof R.setImplementation!=='function')throw new Error('assessment-runtime-v2.js requires runtime-v2.js');
 if(typeof window.getExamQuestions!=='function')throw new Error('assessment-runtime-v2.js requires the audited assessment selector');
-
-function activeLearner(){
-  try{if(window.db?.activeUser)return String(window.db.activeUser)}catch(_){}
-  try{if(window.user?.id)return String(window.user.id)}catch(_){}
-  return 'anonymous';
-}
-function hash(raw){let h=2166136261;for(const c of String(raw||'anonymous')){h^=c.charCodeAt(0);h=Math.imul(h,16777619)}return (h>>>0).toString(36)}
-function storageKey(){return `${STORAGE_BASE}::${hash(activeLearner())}`}
+function storageKey(){return R.storage.key(STORAGE_BASE)}
 function emptyHistory(){return {schema:1,version:VERSION,attempts:{},items:{}}}
-function readHistory(){try{const x=JSON.parse(localStorage.getItem(storageKey())||'null');if(x&&x.schema===1&&x.items&&x.attempts)return x}catch(_){}return emptyHistory()}
-function writeHistory(x){try{x.version=VERSION;localStorage.setItem(storageKey(),JSON.stringify(x));return true}catch(_){return false}}
-function resetHistory(){try{localStorage.removeItem(storageKey())}catch(_){}return true}
-
+function readHistory(){const x=R.storage.get(STORAGE_BASE,null);return x&&x.schema===1&&x.items&&x.attempts?x:emptyHistory()}
+function writeHistory(x){x.version=VERSION;return R.storage.set(STORAGE_BASE,x)}
+function resetHistory(){return R.storage.remove(STORAGE_BASE)}
 function norm(v){return String(v??'').trim().toLowerCase().replace(/\s+/g,' ')}
 function competencies(text){
   const t=norm(text),out=[];
@@ -54,64 +47,34 @@ function seeded(seed){let x=2166136261;for(const c of String(seed)){x^=c.charCod
 function shuffle(a,rng){const x=a.slice();for(let i=x.length-1;i>0;i--){const j=Math.floor(rng()*(i+1));[x[i],x[j]]=[x[j],x[i]]}return x}
 function shuffleOptions(item,rng){const rows=item.options.map((text,i)=>({text,correct:i===item.correct,feedback:item.optionFeedback?.[i]??null}));const mixed=shuffle(rows,rng);return {...item,options:mixed.map(x=>x.text),optionFeedback:mixed.map(x=>x.feedback),correct:mixed.findIndex(x=>x.correct)}}
 function exposure(history,id){return history.items[id]||{count:0,last:-1}}
-function rank(pool,history,attempt,rng){
-  return pool.slice().sort((a,b)=>{
-    const ea=exposure(history,a.stableId),eb=exposure(history,b.stableId);
-    return ea.count-eb.count||ea.last-eb.last||(rng()-.5)
-  })
+function rank(pool,history,rng){
+  const tie=new Map(pool.map(x=>[x.stableId,rng()]));
+  return pool.slice().sort((a,b)=>{const ea=exposure(history,a.stableId),eb=exposure(history,b.stableId);return ea.count-eb.count||ea.last-eb.last||tie.get(a.stableId)-tie.get(b.stableId)})
 }
 function selectTechnical(level,history,attempt,rng){
   const pool=(D.exams[level]||[]).map((q,i)=>tech(level,i,q));
   if(pool.length!==10)throw new Error(`assessment runtime v2 expects 10 technical items for ${level}; found ${pool.length}`);
-  const chosen=[],used=new Set();
-  const add=item=>{if(!item||used.has(item.stableId))return false;chosen.push(item);used.add(item.stableId);return true};
-  for(const domain of BLUEPRINT){
-    const candidates=pool.filter(x=>!used.has(x.stableId)&&x.competencies.includes(domain));
-    if(candidates.length)add(rank(candidates,history,attempt,rng)[0]);
-  }
-  while(chosen.length<7){
-    const remaining=pool.filter(x=>!used.has(x.stableId));
-    if(!remaining.length)break;
-    const concepts=new Set(chosen.map(x=>x.concept));
-    const diverse=remaining.filter(x=>!concepts.has(x.concept));
-    add(rank(diverse.length?diverse:remaining,history,attempt,rng)[0]);
-  }
+  const chosen=[],used=new Set(),add=item=>{if(!item||used.has(item.stableId))return false;chosen.push(item);used.add(item.stableId);return true};
+  for(const domain of BLUEPRINT){const candidates=pool.filter(x=>!used.has(x.stableId)&&x.competencies.includes(domain));if(candidates.length)add(rank(candidates,history,rng)[0])}
+  while(chosen.length<7){const remaining=pool.filter(x=>!used.has(x.stableId));if(!remaining.length)break;const concepts=new Set(chosen.map(x=>x.concept)),diverse=remaining.filter(x=>!concepts.has(x.concept));add(rank(diverse.length?diverse:remaining,history,rng)[0])}
   if(chosen.length!==7)throw new Error(`assessment runtime v2 could select only ${chosen.length}/7 technical items for ${level}`);
-  const covered=new Set();for(const q of chosen)for(const c of q.competencies)covered.add(c);
-  const missing=BLUEPRINT.filter(x=>!covered.has(x));
-  if(missing.length)throw new Error(`assessment runtime v2 blueprint incomplete for ${level}: ${missing.join(', ')}`);
+  const covered=new Set();for(const q of chosen)for(const c of q.competencies)covered.add(c);const missing=BLUEPRINT.filter(x=>!covered.has(x));if(missing.length)throw new Error(`assessment runtime v2 blueprint incomplete for ${level}: ${missing.join(', ')}`);
   return chosen
 }
 function selectRegional(region,level,rng){
-  if(region==='ALL'){
-    const out=[];for(const r of ['UK','US','NZ'])for(let i=0;i<(D.regionalQuestions[r]?.[level]||[]).length;i++)out.push(regional(r,level,i,D.regionalQuestions[r][level][i]));return out
-  }
-  const rows=(D.regionalQuestions[region]?.[level]||[]).map((q,i)=>regional(region,level,i,q));
-  return shuffle(rows,rng).slice(0,3)
+  if(region==='ALL'){const out=[];for(const r of ['UK','US','NZ'])for(let i=0;i<(D.regionalQuestions[r]?.[level]||[]).length;i++)out.push(regional(r,level,i,D.regionalQuestions[r][level][i]));return out}
+  return shuffle((D.regionalQuestions[region]?.[level]||[]).map((q,i)=>regional(region,level,i,q)),rng).slice(0,3)
 }
 function nextExam(level,region){
-  const history=readHistory(),attempt=(Number(history.attempts[level]||0)+1),rng=seeded(`${hash(activeLearner())}:${level}:${region}:${attempt}`);
-  const technical=selectTechnical(level,history,attempt,rng),regs=selectRegional(region,level,rng),selected=[...technical,...regs];
-  history.attempts[level]=attempt;
-  for(const q of technical){const e=exposure(history,q.stableId);history.items[q.stableId]={count:e.count+1,last:attempt}}
-  writeHistory(history);
+  const history=readHistory(),attempt=Number(history.attempts[level]||0)+1,rng=seeded(`${R.storage.learnerToken()}:${level}:${region}:${attempt}`);
+  const technical=selectTechnical(level,history,attempt,rng),regs=selectRegional(region,level,rng),selected=[...technical,...regs];history.attempts[level]=attempt;
+  for(const q of technical){const e=exposure(history,q.stableId);history.items[q.stableId]={count:e.count+1,last:attempt}}writeHistory(history);
   return shuffle(selected,rng).map(q=>shuffleOptions(q,rng))
 }
-
 const legacySelector=window.getExamQuestions;
-window.getExamQuestions=function(level,region){
-  if(!['Beginner','Intermediate','Advanced'].includes(level))return legacySelector.apply(this,arguments);
-  if(!['UK','US','NZ','ALL'].includes(region))return legacySelector.apply(this,arguments);
-  return nextExam(level,region)
-};
-
-function coverageSimulation(level,attempts=3){
-  const history=emptyHistory(),seen=new Set();
-  for(let n=1;n<=attempts;n++){
-    const rng=seeded(`qa:${level}:${n}`),rows=selectTechnical(level,history,n,rng);
-    for(const q of rows){seen.add(q.stableId);const e=exposure(history,q.stableId);history.items[q.stableId]={count:e.count+1,last:n}}
-  }
-  return {level,attempts,seen:[...seen],coverage:seen.size,total:(D.exams[level]||[]).length}
-}
+function selector(level,region){if(!['Beginner','Intermediate','Advanced'].includes(level)||!['UK','US','NZ','ALL'].includes(region))return legacySelector.apply(this,arguments);return nextExam(level,region)}
+R.setImplementation('getExamQuestions',selector,'assessment-runtime-v2');
+R.registerModule('assessment-runtime-v2',{version:VERSION,type:'assessment-selector',owns:'getExamQuestions'});
+function coverageSimulation(level,attempts=3){const history=emptyHistory(),seen=new Set();for(let n=1;n<=attempts;n++){const rng=seeded(`qa:${level}:${n}`),rows=selectTechnical(level,history,n,rng);for(const q of rows){seen.add(q.stableId);const e=exposure(history,q.stableId);history.items[q.stableId]={count:e.count+1,last:n}}}return {level,attempts,seen:[...seen],coverage:seen.size,total:(D.exams[level]||[]).length}}
 window.MM_ASSESSMENT_RUNTIME_V2=Object.freeze({version:VERSION,blueprint:[...BLUEPRINT],technicalPerExam:7,technicalBankPerLevel:10,membershipHistory:'learner-scoped persistent exposure counts',selectionPolicy:'least-exposed blueprint-preserving stable IDs; all six domains required every attempt',storageKey,resetHistory,history:()=>JSON.parse(JSON.stringify(readHistory())),coverageSimulation});
 })();
