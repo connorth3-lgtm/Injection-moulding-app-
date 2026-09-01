@@ -42,7 +42,7 @@ def fetch(base_url: str, path: str, source_sha: str, timeout: float = 20.0) -> t
         headers={
             "Cache-Control": "no-cache, no-store, max-age=0",
             "Pragma": "no-cache",
-            "User-Agent": "MouldMaster-Pages-Deployment-Verifier/1",
+            "User-Agent": "MouldMaster-Pages-Deployment-Verifier/2",
         },
     )
     try:
@@ -54,7 +54,12 @@ def fetch(base_url: str, path: str, source_sha: str, timeout: float = 20.0) -> t
         raise RuntimeError(f"Network error for {path}: {exc}") from exc
 
 
-def wait_for_source(base_url: str, source_sha: str, attempts: int = 24) -> dict:
+def wait_for_source(
+    base_url: str,
+    source_sha: str,
+    attempts: int = 36,
+    delay: float = 5.0,
+) -> dict:
     last = ""
     for attempt in range(1, attempts + 1):
         status, body = fetch(base_url, "deployment.json", source_sha)
@@ -70,10 +75,26 @@ def wait_for_source(base_url: str, source_sha: str, attempts: int = 24) -> dict:
         else:
             last = f"HTTP {status}"
         if attempt < attempts:
-            time.sleep(5)
+            time.sleep(delay)
+
+    exposed = []
+    for probe in FORBIDDEN_PROBES:
+        try:
+            status, _ = fetch(base_url, probe, source_sha)
+        except Exception:
+            continue
+        if status == 200:
+            exposed.append(probe)
+    hint = ""
+    if exposed:
+        hint = (
+            "; forbidden repository paths are publicly reachable "
+            f"({', '.join(exposed[:3])}), so a competing legacy branch Pages publisher is likely active"
+        )
+
     raise SystemExit(
         f"Live deployment did not converge to source {source_sha} "
-        f"after {attempts} checks; last result: {last}"
+        f"after {attempts} checks; last result: {last}{hint}"
     )
 
 
@@ -82,7 +103,14 @@ def main() -> None:
     parser.add_argument("--base-url", required=True)
     parser.add_argument("--source-sha", required=True)
     parser.add_argument("--dist", default=".pages-dist")
+    parser.add_argument("--convergence-attempts", type=int, default=36)
+    parser.add_argument("--convergence-delay", type=float, default=5.0)
     args = parser.parse_args()
+
+    if args.convergence_attempts < 1:
+        raise SystemExit("--convergence-attempts must be >= 1")
+    if args.convergence_delay < 0:
+        raise SystemExit("--convergence-delay must be >= 0")
 
     dist = Path(args.dist)
     local_manifest_path = dist / "pages-manifest.json"
@@ -99,7 +127,12 @@ def main() -> None:
     if local_deployment.get("source_sha") != args.source_sha:
         raise SystemExit("Local deployment metadata source SHA does not match requested deployment")
 
-    live_deployment = wait_for_source(args.base_url, args.source_sha)
+    live_deployment = wait_for_source(
+        args.base_url,
+        args.source_sha,
+        attempts=args.convergence_attempts,
+        delay=args.convergence_delay,
+    )
     for key in (
         "source_sha",
         "assessment_runtime",
