@@ -1,5 +1,5 @@
 const CACHE_VERSION='2026.08.26.2';
-const CACHE_REVISION='maturity-hardening-v2-20260901';
+const CACHE_REVISION='audit-hardening-20260902';
 const STATIC_CACHE=`mouldmaster-static-${CACHE_VERSION}-${CACHE_REVISION}`;
 const CORE=[
   './index.html',
@@ -42,6 +42,7 @@ const CORE=[
   './evidence-maturity-deep-dive.js',
   './evidence-maturity-formal-bridge.js',
   './assessment-psychometric-hardening.js',
+  './assessment-discrimination-hardening.js',
   './assessment-evidence-integrity-upgrade.js',
   './lesson-evidence-depth.js',
   './lesson-deep-authoring-v2.js',
@@ -64,6 +65,7 @@ const CORE=[
   './process-data-20-pass-11-15.js',
   './process-data-20-pass-16-20.js',
   './process-data-20-pass-atlas.js',
+  './process-atlas-case-evidence.js',
   './process-data-local-intake.js',
   './curriculum-integration.js',
   './specialist-curriculum.js',
