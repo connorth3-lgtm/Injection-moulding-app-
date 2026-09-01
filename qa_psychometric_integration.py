@@ -49,13 +49,13 @@ for asset in ['./assessment-psychometric-hardening.js','./assessment-evidence-in
     need(asset in idx,f'browser shell missing {asset}')
 need(idx.index("'./evidence-maturity-formal-bridge.js'") < idx.index("'./assessment-psychometric-hardening.js'") < idx.index("'./assessment-evidence-integrity-upgrade.js'") < idx.index("'./assessment-evidence-approval.js'") < idx.index("'./assessment-psychometric-approval.js'") < idx.index("'./app-shell-registry.js'"),'psychometric/evidence browser load order is wrong')
 need(idx.index("'./process-data-diagnostics.js'") < idx.index("'./real-measured-data-assessment.js'"),'real measured assessment load order is wrong')
-need('RUNTIME_ASSET_VERSION="20260901.17-maturity-hardening-v2"' in idx,'browser runtime token must advance to the maturity-hardening v2 bundle')
+need('RUNTIME_ASSET_VERSION="20260902.1-maturity-hardening-v2"' in idx,'browser runtime token must match the active maturity-hardening v2 bundle')
 need("'./runtime-v2.js'" in idx and "'./assessment-runtime-v2.js'" in idx,'maturity runtime must preserve psychometric bank while replacing only exam membership selection')
 
 sw=text('service-worker.js')
 for asset in ["'./assessment-psychometric-hardening.js'","'./assessment-evidence-integrity-upgrade.js'","'./assessment-psychometric-approval.js'","'./real-measured-data-assessment.js'"]:
     need(asset in sw,f'offline cache missing {asset}')
-need("CACHE_REVISION='maturity-hardening-v2-20260901'" in sw,'PWA cache revision must advance with the maturity-hardening runtime while retaining the approved psychometric assets')
+need("CACHE_REVISION='maturity-hardening-v2-20260902'" in sw,'PWA cache revision must match the active maturity-hardening runtime while retaining the approved psychometric assets')
 need("'./runtime-v2.js'" in sw and "'./assessment-runtime-v2.js'" in sw,'PWA cache must include assessment runtime v2')
 
 pkg=json.loads(text('desktop/electron/package.json'))
