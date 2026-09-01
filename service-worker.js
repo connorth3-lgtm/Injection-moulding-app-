@@ -1,4 +1,4 @@
-const CACHE_VERSION='2026.09.02.1';
+const CACHE_VERSION='2026.08.26.2';
 const CACHE_REVISION='connected-data-runtime-v1-20260902';
 const STATIC_CACHE=`mouldmaster-static-${CACHE_VERSION}-${CACHE_REVISION}`;
 
