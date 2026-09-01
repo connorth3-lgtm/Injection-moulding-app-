@@ -30,7 +30,7 @@ function flags(options,key){const out=[];if(!Array.isArray(options)||options.len
  return out}
 function softenDistractor(v){let t=clean(v);if(UNSAFE.test(t))return t;
  t=t.replace(/^Ignore\s+(.+)$/i,'Treat $1 as normal variation during the next controlled comparison');
- t=t.replace(/^Assume\s+(.+)$/i,'Use $1 as the provisional working explanation during the next comparison');
+ t=t.replace(/^Assume\s+(.+)$/i,'Treat the proposition that $1 as a provisional hypothesis for the next controlled comparison');
  t=t.replace(/\b(always|never|automatically)\b/gi,m=>m.toLowerCase()==='always'?'normally':m.toLowerCase()==='never'?'not normally':'typically');
  return t}
 function addSuffix(v,s){const core=clean(v);return PREFIX+core+(core.endsWith(';')?' ':'; ')+s}
@@ -39,6 +39,7 @@ function rebalance(options,key,preFlags){let out=options.map((x,i)=>wrap(i===key
  if(preFlags.includes('correct-qualification-density')){const kq=profile(out[key]).qualifiers;for(const i of wrongIdx){if(profile(out[i]).qualifiers<Math.max(1,kq-1))out[i]=addSuffix(out[i],'verify it with a controlled comparison against the stated evidence')}}
  if(preFlags.includes('negation-key-cue')&&!wrongIdx.some(i=>profile(out[i]).negations>0)){const i=wrongIdx.slice().sort((a,b)=>profile(out[a]).chars-profile(out[b]).chars)[0];out[i]=addSuffix(out[i],'this does not by itself establish a universal production rule')}
  let guard=0;while(guard++<6){const f=flags(out,key);if(!f.includes('correct-length-salience-moderate')&&!f.includes('implausibly-short-distractor'))break;const i=wrongIdx.slice().sort((a,b)=>profile(out[a]).chars-profile(out[b]).chars)[0];out[i]=addSuffix(out[i],'compare the same observation window before accepting the interpretation')}
+ for(const i of wrongIdx)if(tokens(clean(out[i])).length<4)out[i]=addSuffix(out[i],'compare it against the stated evidence before acting');
  return out.map(x=>x.replace(/[.]$/,''))}
 function wrongFeedback(text){return `Plausible competing response, but not the strongest supported decision. “${clean(text)}” should be rejected because the stated observation window discriminates more strongly toward the keyed response.`}
 function collect(){const D=window.MM_DATA,DIAG=window.MM_DIAGNOSTIC_LABS,MAT=window.MM_MATERIAL_BEHAVIOUR_LABS,OPT=window.MM_MATERIAL_PRACTICE_EXTENSIONS,out=[];
