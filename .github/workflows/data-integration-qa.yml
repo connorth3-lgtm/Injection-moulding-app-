@@ -5,6 +5,7 @@ on:
     branches: [main]
     paths:
       - 'data-integration-runtime.js'
+      - 'process-data-intelligence-ui.js'
       - 'process-data-semantic-registry.json'
       - 'current-data-manifest.json'
       - 'app-shell-finalize.js'
@@ -33,6 +34,7 @@ jobs:
       - name: JavaScript syntax
         run: |
           node --check data-integration-runtime.js
+          node --check process-data-intelligence-ui.js
           node --check app-shell-finalize.js
           node --check service-worker.js
       - name: Current manifest is generated from governed ledger
@@ -44,6 +46,7 @@ jobs:
       - name: Confirm governed raw data is absent from public artifact
         run: |
           test -f .pages-dist/data-integration-runtime.js
+          test -f .pages-dist/process-data-intelligence-ui.js
           test -f .pages-dist/process-data-semantic-registry.json
           test -f .pages-dist/current-data-manifest.json
           test ! -e .pages-dist/data
