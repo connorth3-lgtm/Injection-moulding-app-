@@ -14,6 +14,7 @@ WORKFLOWS = [
     ".github/workflows/real-site-pilot-preflight.yml",
     ".github/workflows/specialist-evidence-gaps.yml",
     ".github/workflows/deep-dive-v2.yml",
+    ".github/workflows/audit-hardening-generated-artifacts.yml",
 ]
 CORE = {"checkout", "setup-python", "setup-node", "upload-artifact"}
 
