@@ -12,7 +12,7 @@ for marker in [
     "STORAGE_BASE='mm_assessment_membership_history_v2'",
     "BLUEPRINT=['materials','machine','tooling','process','quality','troubleshooting']",
     'technicalPerExam:7','technicalBankPerLevel:10','least-exposed blueprint-preserving stable IDs',
-    'coverageSimulation','window.getExamQuestions=function'
+    'coverageSimulation',"R.setImplementation('getExamQuestions',selector,'assessment-runtime-v2')"
 ]: need(marker in src,f'assessment runtime v2 marker missing: {marker}')
 
 node=textwrap.dedent(r'''
@@ -39,7 +39,9 @@ node=textwrap.dedent(r'''
     MM_DATA.exams[level]=texts.map((t,i)=>mk(level,i,t));
     for(const r of ['UK','US','NZ'])MM_DATA.regionalQuestions[r][level]=[0,1,2].map(i=>[`Safety ${r} ${i}`,[1,2,3,4],0,'why','law','https://example.com',[],true]);
   }
+  for(const n of ['renderLesson','renderDashboard','switchView','startExam','gradeExam'])global[n]=()=>{};
   global.getExamQuestions=()=>[];
+  require('./runtime-v2.js');
   require('./assessment-runtime-v2.js');
   for(const level of ['Beginner','Intermediate','Advanced']){
     const seen=new Set();
@@ -61,8 +63,10 @@ node=textwrap.dedent(r'''
   global.getExamQuestions('Beginner','NZ');
   if(!backing[keyB])throw new Error('learner B history not persisted');
   if(JSON.parse(backing[keyB]).attempts.Beginner!==1)throw new Error('learner B inherited learner A attempts');
+  const snap=MM_RUNTIME_V2.snapshot();
+  if(snap.core.getExamQuestions.owner!=='assessment-runtime-v2')throw new Error('assessment selector does not own runtime v2 slot');
   console.log('assessment runtime v2 node QA passed');
 ''')
 proc=subprocess.run(['node','-e',node],cwd=ROOT,text=True,capture_output=True)
 need(proc.returncode==0,f'assessment runtime v2 execution failed: {proc.stderr or proc.stdout}')
-print('MouldMaster assessment runtime v2 QA passed (six-domain blueprint each attempt; 10/10 technical stable IDs exposed within three attempts; learner-scoped history)')
+print('MouldMaster assessment runtime v2 QA passed (six-domain blueprint each attempt; 10/10 technical stable IDs exposed within three attempts; learner-scoped history; single runtime owner)')
