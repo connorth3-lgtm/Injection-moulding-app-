@@ -32,6 +32,7 @@ const CORE=[
   './app-shell-finalize.js',
   './production-health.js',
   './data-integration-runtime.js',
+  './process-data-intelligence-ui.js',
   './process-data-semantic-registry.json',
   './current-data-manifest.json',
   './repair.html',
