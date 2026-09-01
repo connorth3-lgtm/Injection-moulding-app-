@@ -18,7 +18,7 @@ jobs:
       MM_STORE_PUBLISHER: ${{ vars.MM_STORE_PUBLISHER }}
       MM_STORE_PUBLISHER_DISPLAY_NAME: ${{ vars.MM_STORE_PUBLISHER_DISPLAY_NAME }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - name: Require Partner Center identity
         shell: pwsh
         run: |
@@ -37,12 +37,12 @@ jobs:
           if ($env:MM_STORE_PUBLISHER -notmatch '^CN=.+') {
             Write-Error 'MM_STORE_PUBLISHER must be the Partner Center Identity/Publisher value (normally beginning with CN=).'
           }
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v7
         with:
           node-version: '22.12.0'
           cache: 'npm'
           cache-dependency-path: desktop/electron/package-lock.json
-      - uses: actions/setup-python@v5
+      - uses: actions/setup-python@v7
         with:
           python-version: '3.12'
       - name: Install exact locked dependencies
@@ -61,6 +61,16 @@ jobs:
       - name: Validate Microsoft Store submission readiness
         working-directory: .
         run: python qa_store_submission.py
+      - name: Validate maturity runtime and release boundaries
+        working-directory: .
+        run: |
+          python qa_runtime_hardening.py
+          python qa_runtime_v2.py
+          python qa_assessment_runtime_v2.py
+          python qa_assessment_multimodal.py
+          python qa_lesson_deep_authoring_v2.py
+          python qa_authorised_site_pilot_framework.py
+          python qa_accessibility_hardening.py
       - name: Validate material behaviour learning
         working-directory: .
         run: python qa_material_behaviour.py
@@ -167,7 +177,7 @@ jobs:
         run: |
           git rev-parse HEAD | Set-Content 'desktop/electron/dist/SOURCE_COMMIT.txt'
           Get-ChildItem 'desktop/electron/dist' -File | Where-Object { $_.Extension -in '.msix','.msixbundle','.msixupload' } | Get-FileHash -Algorithm SHA256 | ForEach-Object { "$($_.Hash.ToLower())  $($_.Path | Split-Path -Leaf)" } | Set-Content 'desktop/electron/dist/SHA256SUMS-STORE.txt'
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: mouldmaster-microsoft-store-msix
           path: |
