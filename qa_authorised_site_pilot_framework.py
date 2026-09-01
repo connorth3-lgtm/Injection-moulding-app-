@@ -35,23 +35,62 @@ accepted={
 }
 with tempfile.TemporaryDirectory() as td:
     td=Path(td);csv_path=td/'prepared.csv';review_path=td/'review.json';out=td/'report.json'
-    with csv_path.open('w',encoding='utf-8',newline='') as f:
-        w=csv.writer(f);w.writerow(headers);w.writerows(rows)
-    review_path.write_text(json.dumps(accepted),encoding='utf-8')
-    proc=subprocess.run([sys.executable,str(TOOL),'--prepared-csv',str(csv_path),'--review-json',str(review_path),'--output',str(out)],cwd=ROOT,text=True,capture_output=True)
+    def write_rows(data):
+        with csv_path.open('w',encoding='utf-8',newline='') as f:
+            w=csv.writer(f);w.writerow(headers);w.writerows(data)
+    def run(review_data):
+        review_path.write_text(json.dumps(review_data),encoding='utf-8')
+        return subprocess.run([sys.executable,str(TOOL),'--prepared-csv',str(csv_path),'--review-json',str(review_path),'--output',str(out)],cwd=ROOT,text=True,capture_output=True)
+
+    write_rows(rows)
+    proc=run(accepted)
     need(proc.returncode==0,f'accepted synthetic governance fixture failed evaluator: {proc.stderr or proc.stdout}')
     report=json.loads(out.read_text(encoding='utf-8'))
+    need(report['schema']==2,'hardened pilot report schema must be 2')
     need(report['status']=='accepted-real-site-pilot','accepted fixture did not reach bounded pilot status')
+    need(report['prepared_input']['shot_index_validated'] is True,'accepted fixture did not validate shot sequence')
+    need(len(report['prepared_input']['phase_spanning_numeric_fields'])>=3,'accepted fixture did not prove three numeric evidence fields across all phases')
+    need(report['prepared_input']['phase_row_counts']=={'baseline':2,'fault':2,'recovery':1},'aggregate phase row counts are wrong')
     need(report['prepared_input']['raw_rows_emitted'] is False and report['prepared_input']['raw_values_emitted'] is False,'pilot report leaked raw data')
     text=json.dumps(report)
-    for forbidden in ['"raw_rows":','"minimum":','"maximum":','cavity-01']:
-        need(forbidden not in text,f'pilot report leaked source detail: {forbidden}')
+    for forbidden in ['"raw_rows":','"minimum":','"maximum":','cavity-01','maintenance-01','no cavity-pressure trace','retain ambiguity note']:
+        need(forbidden not in text,f'pilot report leaked source detail/free text: {forbidden}')
+
     blocked=dict(accepted);blocked['site_authorisation_confirmed']=False
-    review_path.write_text(json.dumps(blocked),encoding='utf-8')
-    proc=subprocess.run([sys.executable,str(TOOL),'--prepared-csv',str(csv_path),'--review-json',str(review_path),'--output',str(out)],cwd=ROOT,text=True,capture_output=True)
+    proc=run(blocked)
     need(proc.returncode==2,'evaluator must fail closed when site authorisation is absent')
     report=json.loads(out.read_text(encoding='utf-8'))
     need(report['status']=='pilot-review-incomplete','blocked fixture must remain pilot-review-incomplete')
     need(report['claim_allowed']=='pilot-ready','blocked fixture must not claim real-site completion')
 
-print('MouldMaster authorised site-pilot framework QA passed (bounded acceptance possible only with explicit authorisation + independent review; no raw rows/values emitted)')
+    blank_evidence=[list(r) for r in rows]
+    for r in blank_evidence:
+        r[3]=r[4]=r[5]=''
+    write_rows(blank_evidence)
+    proc=run(accepted)
+    need(proc.returncode==2,'blank evidence columns must not satisfy real-site acceptance')
+    report=json.loads(out.read_text(encoding='utf-8'))
+    need(any('numeric evidence fields span baseline, fault and recovery' in x for x in report['acceptance']['reasons']),'blank-evidence failure reason missing')
+
+    bad_numeric=[list(r) for r in rows];bad_numeric[2][3]='not-a-number'
+    write_rows(bad_numeric)
+    proc=run(accepted)
+    need(proc.returncode==2,'non-numeric populated evidence must fail closed')
+    report=json.loads(out.read_text(encoding='utf-8'))
+    need(any('non-numeric or non-finite' in x for x in report['acceptance']['reasons']),'non-numeric evidence failure reason missing')
+
+    duplicate_shot=[list(r) for r in rows];duplicate_shot[3][0]=duplicate_shot[2][0]
+    write_rows(duplicate_shot)
+    proc=run(accepted)
+    need(proc.returncode==2,'duplicate shot_index must fail closed')
+    report=json.loads(out.read_text(encoding='utf-8'))
+    need(any('shot_index values are not unique' in x for x in report['acceptance']['reasons']),'duplicate-shot failure reason missing')
+
+    write_rows(rows)
+    unsafe_alias=dict(accepted);unsafe_alias['case_alias']='Customer-X-machine-2'
+    proc=run(unsafe_alias)
+    need(proc.returncode==2,'identifier-like case alias must fail closed')
+    report=json.loads(out.read_text(encoding='utf-8'))
+    need(report['case_alias']=='CASE-REDACTED','unsafe case alias must not be copied to report')
+
+print('MouldMaster authorised site-pilot framework QA passed (bounded acceptance requires numeric phase-spanning evidence + valid shot sequence + explicit authorisation/independent review; raw rows/values/free text stay out)')

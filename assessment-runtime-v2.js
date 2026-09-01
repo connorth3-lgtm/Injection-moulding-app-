@@ -2,7 +2,7 @@
 (function(){
 'use strict';
 if(window.MM_ASSESSMENT_RUNTIME_V2)return;
-const VERSION='2026.09.01.2';
+const VERSION='2026.09.01.3';
 const STORAGE_BASE='mm_assessment_membership_history_v2';
 const BLUEPRINT=['materials','machine','tooling','process','quality','troubleshooting'];
 const D=window.MM_DATA,R=window.MM_RUNTIME_V2;
@@ -10,8 +10,8 @@ if(!D||!D.exams||!D.regionalQuestions)throw new Error('assessment-runtime-v2.js 
 if(!R||typeof R.setImplementation!=='function')throw new Error('assessment-runtime-v2.js requires runtime-v2.js');
 if(typeof window.getExamQuestions!=='function')throw new Error('assessment-runtime-v2.js requires the audited assessment selector');
 function storageKey(){return R.storage.key(STORAGE_BASE)}
-function emptyHistory(){return {schema:1,version:VERSION,attempts:{},items:{}}}
-function readHistory(){const x=R.storage.get(STORAGE_BASE,null);return x&&x.schema===1&&x.items&&x.attempts?x:emptyHistory()}
+function emptyHistory(){return {schema:2,version:VERSION,forms:{},items:{}}}
+function readHistory(){const x=R.storage.get(STORAGE_BASE,null);return x&&x.schema===2&&x.version===VERSION&&x.items&&x.forms?x:emptyHistory()}
 function writeHistory(x){x.version=VERSION;return R.storage.set(STORAGE_BASE,x)}
 function resetHistory(){return R.storage.remove(STORAGE_BASE)}
 function norm(v){return String(v??'').trim().toLowerCase().replace(/\s+/g,' ')}
@@ -51,7 +51,7 @@ function rank(pool,history,rng){
   const tie=new Map(pool.map(x=>[x.stableId,rng()]));
   return pool.slice().sort((a,b)=>{const ea=exposure(history,a.stableId),eb=exposure(history,b.stableId);return ea.count-eb.count||ea.last-eb.last||tie.get(a.stableId)-tie.get(b.stableId)})
 }
-function selectTechnical(level,history,attempt,rng){
+function selectTechnical(level,history,formNumber,rng){
   const pool=(D.exams[level]||[]).map((q,i)=>tech(level,i,q));
   if(pool.length!==10)throw new Error(`assessment runtime v2 expects 10 technical items for ${level}; found ${pool.length}`);
   const chosen=[],used=new Set(),add=item=>{if(!item||used.has(item.stableId))return false;chosen.push(item);used.add(item.stableId);return true};
@@ -66,9 +66,9 @@ function selectRegional(region,level,rng){
   return shuffle((D.regionalQuestions[region]?.[level]||[]).map((q,i)=>regional(region,level,i,q)),rng).slice(0,3)
 }
 function nextExam(level,region){
-  const history=readHistory(),attempt=Number(history.attempts[level]||0)+1,rng=seeded(`${R.storage.learnerToken()}:${level}:${region}:${attempt}`);
-  const technical=selectTechnical(level,history,attempt,rng),regs=selectRegional(region,level,rng),selected=[...technical,...regs];history.attempts[level]=attempt;
-  for(const q of technical){const e=exposure(history,q.stableId);history.items[q.stableId]={count:e.count+1,last:attempt}}writeHistory(history);
+  const history=readHistory(),formNumber=Number(history.forms[level]||0)+1,rng=seeded(`${R.storage.learnerToken()}:${level}:${region}:${formNumber}`);
+  const technical=selectTechnical(level,history,formNumber,rng),regs=selectRegional(region,level,rng),selected=[...technical,...regs];history.forms[level]=formNumber;
+  for(const q of technical){const e=exposure(history,q.stableId);history.items[q.stableId]={count:e.count+1,last:formNumber}}writeHistory(history);
   return shuffle(selected,rng).map(q=>shuffleOptions(q,rng))
 }
 const legacySelector=window.getExamQuestions;
@@ -76,5 +76,5 @@ function selector(level,region){if(!['Beginner','Intermediate','Advanced'].inclu
 R.setImplementation('getExamQuestions',selector,'assessment-runtime-v2');
 R.registerModule('assessment-runtime-v2',{version:VERSION,type:'assessment-selector',owns:'getExamQuestions'});
 function coverageSimulation(level,attempts=3){const history=emptyHistory(),seen=new Set();for(let n=1;n<=attempts;n++){const rng=seeded(`qa:${level}:${n}`),rows=selectTechnical(level,history,n,rng);for(const q of rows){seen.add(q.stableId);const e=exposure(history,q.stableId);history.items[q.stableId]={count:e.count+1,last:n}}}return {level,attempts,seen:[...seen],coverage:seen.size,total:(D.exams[level]||[]).length}}
-window.MM_ASSESSMENT_RUNTIME_V2=Object.freeze({version:VERSION,blueprint:[...BLUEPRINT],technicalPerExam:7,technicalBankPerLevel:10,membershipHistory:'learner-scoped persistent exposure counts',selectionPolicy:'least-exposed blueprint-preserving stable IDs; all six domains required every attempt',storageKey,resetHistory,history:()=>JSON.parse(JSON.stringify(readHistory())),coverageSimulation});
+window.MM_ASSESSMENT_RUNTIME_V2=Object.freeze({version:VERSION,blueprint:[...BLUEPRINT],technicalPerExam:7,technicalBankPerLevel:10,membershipHistory:'learner-scoped persistent exposure counts; each generated form advances exposure because displaying an item is itself exposure',selectionPolicy:'least-exposed blueprint-preserving stable IDs; all six domains required every generated form',storageKey,resetHistory,history:()=>JSON.parse(JSON.stringify(readHistory())),coverageSimulation});
 })();

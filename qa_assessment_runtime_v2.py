@@ -12,8 +12,10 @@ for marker in [
     "STORAGE_BASE='mm_assessment_membership_history_v2'",
     "BLUEPRINT=['materials','machine','tooling','process','quality','troubleshooting']",
     'technicalPerExam:7','technicalBankPerLevel:10','least-exposed blueprint-preserving stable IDs',
+    'each generated form advances exposure', 'x.version===VERSION', 'forms:{}',
     'coverageSimulation',"R.setImplementation('getExamQuestions',selector,'assessment-runtime-v2')"
 ]: need(marker in src,f'assessment runtime v2 marker missing: {marker}')
+need('attempts:{}' not in src,'generated-form exposure history must not be mislabeled as submitted attempts')
 
 node=textwrap.dedent(r'''
   global.window=global;
@@ -43,9 +45,15 @@ node=textwrap.dedent(r'''
   global.getExamQuestions=()=>[];
   require('./runtime-v2.js');
   require('./assessment-runtime-v2.js');
+  const keyA=MM_ASSESSMENT_RUNTIME_V2.storageKey();
+  backing[keyA]=JSON.stringify({schema:2,version:'stale-bank-runtime',forms:{Beginner:99},items:{'tech:Beginner:0':{count:99,last:99}}});
+  global.getExamQuestions('Beginner','NZ');
+  let h=JSON.parse(backing[keyA]);
+  if(h.forms.Beginner!==1)throw new Error('stale selection history was not reset when the assessment runtime/bank version changed');
+  MM_ASSESSMENT_RUNTIME_V2.resetHistory();
   for(const level of ['Beginner','Intermediate','Advanced']){
     const seen=new Set();
-    for(let attempt=0;attempt<3;attempt++){
+    for(let form=0;form<3;form++){
       const rows=global.getExamQuestions(level,'NZ');
       const tech=rows.filter(x=>x.kind==='technical');
       if(tech.length!==7)throw new Error(`${level} did not select 7 technical items`);
@@ -53,20 +61,21 @@ node=textwrap.dedent(r'''
       for(const domain of MM_ASSESSMENT_RUNTIME_V2.blueprint)if(!covered.has(domain))throw new Error(`${level} missing ${domain}`);
       tech.forEach(x=>seen.add(x.stableId));
     }
-    if(seen.size!==10)throw new Error(`${level} bank coverage ${seen.size}/10 after 3 attempts`);
+    if(seen.size!==10)throw new Error(`${level} bank coverage ${seen.size}/10 after 3 generated forms`);
   }
-  const keyA=MM_ASSESSMENT_RUNTIME_V2.storageKey();
   if(!backing[keyA])throw new Error('learner A membership history not persisted');
+  h=JSON.parse(backing[keyA]);
+  if(h.schema!==2||h.version!==MM_ASSESSMENT_RUNTIME_V2.version)throw new Error('current membership history schema/version not persisted');
   learner='B';
   const keyB=MM_ASSESSMENT_RUNTIME_V2.storageKey();
   if(keyA===keyB)throw new Error('membership history is not learner scoped');
   global.getExamQuestions('Beginner','NZ');
   if(!backing[keyB])throw new Error('learner B history not persisted');
-  if(JSON.parse(backing[keyB]).attempts.Beginner!==1)throw new Error('learner B inherited learner A attempts');
+  if(JSON.parse(backing[keyB]).forms.Beginner!==1)throw new Error('learner B inherited learner A generated-form history');
   const snap=MM_RUNTIME_V2.snapshot();
   if(snap.core.getExamQuestions.owner!=='assessment-runtime-v2')throw new Error('assessment selector does not own runtime v2 slot');
   console.log('assessment runtime v2 node QA passed');
 ''')
 proc=subprocess.run(['node','-e',node],cwd=ROOT,text=True,capture_output=True)
 need(proc.returncode==0,f'assessment runtime v2 execution failed: {proc.stderr or proc.stdout}')
-print('MouldMaster assessment runtime v2 QA passed (six-domain blueprint each attempt; 10/10 technical stable IDs exposed within three attempts; learner-scoped history; single runtime owner)')
+print('MouldMaster assessment runtime v2 QA passed (six-domain blueprint each generated form; 10/10 technical stable IDs exposed within three forms; learner-scoped/versioned exposure history; single runtime owner)')
