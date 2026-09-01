@@ -70,10 +70,14 @@ def main() -> None:
     require(f"CACHE_VERSION='{version['android_release']}'" in worker, "service-worker cache version must stay aligned with the audited Android release")
     cache_version = re.search(r"CACHE_VERSION='([^']+)'", worker)
     cache_revision = re.search(r"CACHE_REVISION='([^']+)'", worker)
-    require(cache_version is not None and cache_revision is not None, "service-worker cache metadata missing")
+    runtime_version = re.search(r'RUNTIME_ASSET_VERSION="([^"]+)"', index)
+    require(cache_version is not None and cache_revision is not None and runtime_version is not None, "runtime/cache metadata missing")
     expected_cache = f"mouldmaster-static-{cache_version.group(1)}-{cache_revision.group(1)}"
     require(f'const EXPECTED_STATIC_CACHE="{expected_cache}"' in index, "bootstrap expected cache must match the service-worker cache exactly")
-    require('const RUNTIME_ASSET_VERSION="20260902.1-connected-data"' in index, "connected-data bootstrap runtime version is stale")
+    revision_date = re.search(r"(\d{8})$", cache_revision.group(1))
+    require(revision_date is not None and runtime_version.group(1).startswith(revision_date.group(1)), "bootstrap/runtime and worker cache revision dates must match")
+    require(runtime_version.group(1).endswith("-maturity-hardening-v2"), "connected-data changes must retain the repository runtime family")
+    require(cache_revision.group(1).startswith("maturity-hardening-v2-"), "connected-data changes must retain the repository cache family")
 
     core = re.search(r"const\s+CORE\s*=\s*\[(.*?)\]\s*;", worker, re.S)
     optional = re.search(r"const\s+OPTIONAL\s*=\s*\[(.*?)\]\s*;", worker, re.S)
