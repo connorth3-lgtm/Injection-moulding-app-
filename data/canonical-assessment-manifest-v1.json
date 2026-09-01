@@ -25,7 +25,7 @@
     "cueWarningsAfter": 0,
     "answerKeysChanged": 0
   },
-  "runtimeFingerprint": "sha256-66df3720d3480746d292bb21bfc2ff09964bf2ad53cf81ef6aef0586e69aae6f",
+  "runtimeFingerprint": "sha256-4d18f66ed8ee328a21754ca2799e6c1d51f136c0758c74f3f990f34f13314764",
   "items": [
     {
       "id": "tech:Beginner:0",
@@ -2811,7 +2811,7 @@
       "critical": false,
       "stem": "Dimension drifts by shift: A critical dimension shifts between day and night shift, but the saved recipe values are identical.",
       "options": [
-        "Response — Use the recipe strongly indicates the process is equivalent and investigate inspection primarily as the provisional working explanation during the next comparison",
+        "Response — Treat the proposition that the recipe strongly indicates the process is equivalent and investigate inspection primarily as a provisional hypothesis for the next controlled comparison",
         "Response — Change shot size on the shift with the larger dimension",
         "Response — Trend cooling, material, process and measurement evidence by shift",
         "Response — Change hold pressure until both shifts average the same dimension"
@@ -2819,7 +2819,7 @@
       "answerKey": 2,
       "rationale": "Identical setpoints do not prove identical thermal conditions, actual machine response, material state or measurement practice.",
       "feedback": [
-        "Plausible competing response, but not the strongest supported decision. “Use the recipe strongly indicates the process is equivalent and investigate inspection primarily as the provisional working explanation during the next comparison” should be rejected because the stated observation window discriminates more strongly toward the keyed response.",
+        "Plausible competing response, but not the strongest supported decision. “Treat the proposition that the recipe strongly indicates the process is equivalent and investigate inspection primarily as a provisional hypothesis for the next controlled comparison” should be rejected because the stated observation window discriminates more strongly toward the keyed response.",
         "Plausible competing response, but not the strongest supported decision. “Change shot size on the shift with the larger dimension” should be rejected because the stated observation window discriminates more strongly toward the keyed response.",
         "Correct: this compares the main evidence categories that can differ despite identical recipe values.",
         "Plausible competing response, but not the strongest supported decision. “Change hold pressure until both shifts average the same dimension” should be rejected because the stated observation window discriminates more strongly toward the keyed response."
@@ -2842,7 +2842,7 @@
         "assessment-psychometric-hardening.js",
         "assessment-discrimination-hardening.js"
       ],
-      "fingerprint": "sha256-2505d0edf84422fcc57152d6205ecd84e8a9654870944d6f091a3e880f8d345d"
+      "fingerprint": "sha256-20ce2af594f0092e884608bdca1e10c5064e14762d62912583bc7cdd910d762f"
     },
     {
       "id": "scenario:08",
@@ -3306,16 +3306,16 @@
       "options": [
         "Response — Reduce total cycle time",
         "Response — Check coolant flow",
-        "Response — Increase packing pressure",
-        "Response — Change injection speed"
+        "Response — Increase packing pressure; compare it against the stated evidence before acting",
+        "Response — Change injection speed; compare it against the stated evidence before acting"
       ],
       "answerKey": 1,
       "rationale": "The hydraulic and thermal evidence points directly to the affected cooling circuit.",
       "feedback": [
         "Plausible competing response, but not the strongest supported decision. “Reduce total cycle time” should be rejected because the stated observation window discriminates more strongly toward the keyed response.",
         "Correct. The hydraulic and thermal evidence points directly to the affected cooling circuit.",
-        "Plausible competing response, but not the strongest supported decision. “Increase packing pressure” should be rejected because the stated observation window discriminates more strongly toward the keyed response.",
-        "Plausible competing response, but not the strongest supported decision. “Change injection speed” should be rejected because the stated observation window discriminates more strongly toward the keyed response."
+        "Plausible competing response, but not the strongest supported decision. “Increase packing pressure; compare it against the stated evidence before acting” should be rejected because the stated observation window discriminates more strongly toward the keyed response.",
+        "Plausible competing response, but not the strongest supported decision. “Change injection speed; compare it against the stated evidence before acting” should be rejected because the stated observation window discriminates more strongly toward the keyed response."
       ],
       "evidence": {
         "mode": "mapped-or-direct-authoritative-source",
@@ -3335,7 +3335,7 @@
         "assessment-psychometric-hardening.js",
         "assessment-discrimination-hardening.js"
       ],
-      "fingerprint": "sha256-bbcc9d366eef3bb6b773bb823a7ca8c2742540764c3a1ee808f1bc7d01f0c195"
+      "fingerprint": "sha256-98602d247d7ae8476fdaeb765f933b0fcb21d0072447f88d10747b868ccc3c60"
     },
     {
       "id": "scenario:19",
@@ -3349,18 +3349,18 @@
       "critical": false,
       "stem": "Check-ring sealing trend changes: Part mass and cushion become less repeatable while recovery is normal and material feed appears stable.",
       "options": [
-        "Response — Increase mould temperature",
+        "Response — Increase mould temperature; compare it against the stated evidence before acting",
         "Response — Change robot take-out timing",
         "Response — Test check-ring sealing",
-        "Response — Increase cooling time"
+        "Response — Increase cooling time; compare it against the stated evidence before acting"
       ],
       "answerKey": 2,
       "rationale": "Variation that links cushion and delivered mass with otherwise normal recovery supports a shot-sealing investigation.",
       "feedback": [
-        "Plausible competing response, but not the strongest supported decision. “Increase mould temperature” should be rejected because the stated observation window discriminates more strongly toward the keyed response.",
+        "Plausible competing response, but not the strongest supported decision. “Increase mould temperature; compare it against the stated evidence before acting” should be rejected because the stated observation window discriminates more strongly toward the keyed response.",
         "Plausible competing response, but not the strongest supported decision. “Change robot take-out timing” should be rejected because the stated observation window discriminates more strongly toward the keyed response.",
         "Correct. Variation that links cushion and delivered mass with otherwise normal recovery supports a shot-sealing investigation.",
-        "Plausible competing response, but not the strongest supported decision. “Increase cooling time” should be rejected because the stated observation window discriminates more strongly toward the keyed response."
+        "Plausible competing response, but not the strongest supported decision. “Increase cooling time; compare it against the stated evidence before acting” should be rejected because the stated observation window discriminates more strongly toward the keyed response."
       ],
       "evidence": {
         "mode": "mapped-or-direct-authoritative-source",
@@ -3380,7 +3380,7 @@
         "assessment-psychometric-hardening.js",
         "assessment-discrimination-hardening.js"
       ],
-      "fingerprint": "sha256-edd7236a342e3d5f005045ac483aaf1107e622c8159ff3efc5dcbb45c3f1faeb"
+      "fingerprint": "sha256-6dd257e08046f3407b45875a79482b52c5f9aff43e8737805feaf2b4e8b6598b"
     },
     {
       "id": "scenario:20",
@@ -3395,16 +3395,16 @@
       "stem": "Black specks after a long shutdown: Black specks appear during restart after material remained hot in the barrel longer than the normal validated residence condition.",
       "options": [
         "Response — Increase barrel temperature to flush faster",
-        "Response — Increase packing pressure",
-        "Response — Reduce clamp force",
+        "Response — Increase packing pressure; compare it against the stated evidence before acting",
+        "Response — Reduce clamp force; compare it against the stated evidence before acting",
         "Response — Purge safely and check degraded hold-up"
       ],
       "answerKey": 3,
       "rationale": "The timing supports degraded or stagnant material as a hypothesis; use the approved purge/startup method rather than adding heat.",
       "feedback": [
         "Plausible competing response, but not the strongest supported decision. “Increase barrel temperature to flush faster” should be rejected because the stated observation window discriminates more strongly toward the keyed response.",
-        "Plausible competing response, but not the strongest supported decision. “Increase packing pressure” should be rejected because the stated observation window discriminates more strongly toward the keyed response.",
-        "Plausible competing response, but not the strongest supported decision. “Reduce clamp force” should be rejected because the stated observation window discriminates more strongly toward the keyed response.",
+        "Plausible competing response, but not the strongest supported decision. “Increase packing pressure; compare it against the stated evidence before acting” should be rejected because the stated observation window discriminates more strongly toward the keyed response.",
+        "Plausible competing response, but not the strongest supported decision. “Reduce clamp force; compare it against the stated evidence before acting” should be rejected because the stated observation window discriminates more strongly toward the keyed response.",
         "Correct. The timing supports degraded or stagnant material as a hypothesis; use the approved purge/startup method rather than adding heat."
       ],
       "evidence": {
@@ -3425,7 +3425,7 @@
         "assessment-psychometric-hardening.js",
         "assessment-discrimination-hardening.js"
       ],
-      "fingerprint": "sha256-d6f62ee99dd1349edf01635fc660ecd48899107993cb6e4cbacb7a0cb9385c26"
+      "fingerprint": "sha256-be4fc13f232e7fd859bc81dd9e5bdf6feb3cc90f37ebd32e4912e3ad246dc50b"
     },
     {
       "id": "scenario:21",
@@ -3440,17 +3440,17 @@
       "stem": "End-of-fill burn repeats: A burn mark repeatedly appears at the same end-of-fill location while fill time remains stable.",
       "options": [
         "Response — Check local venting",
-        "Response — Increase hold time",
-        "Response — Increase clamp force",
-        "Response — Change cooling time"
+        "Response — Increase hold time; compare it against the stated evidence before acting",
+        "Response — Increase clamp force; compare it against the stated evidence before acting",
+        "Response — Change cooling time; compare it against the stated evidence before acting"
       ],
       "answerKey": 0,
       "rationale": "A repeatable end-of-fill burn strongly supports trapped/compressed gas or local venting evidence.",
       "feedback": [
         "Correct. A repeatable end-of-fill burn strongly supports trapped/compressed gas or local venting evidence.",
-        "Plausible competing response, but not the strongest supported decision. “Increase hold time” should be rejected because the stated observation window discriminates more strongly toward the keyed response.",
-        "Plausible competing response, but not the strongest supported decision. “Increase clamp force” should be rejected because the stated observation window discriminates more strongly toward the keyed response.",
-        "Plausible competing response, but not the strongest supported decision. “Change cooling time” should be rejected because the stated observation window discriminates more strongly toward the keyed response."
+        "Plausible competing response, but not the strongest supported decision. “Increase hold time; compare it against the stated evidence before acting” should be rejected because the stated observation window discriminates more strongly toward the keyed response.",
+        "Plausible competing response, but not the strongest supported decision. “Increase clamp force; compare it against the stated evidence before acting” should be rejected because the stated observation window discriminates more strongly toward the keyed response.",
+        "Plausible competing response, but not the strongest supported decision. “Change cooling time; compare it against the stated evidence before acting” should be rejected because the stated observation window discriminates more strongly toward the keyed response."
       ],
       "evidence": {
         "mode": "mapped-or-direct-authoritative-source",
@@ -3470,7 +3470,7 @@
         "assessment-psychometric-hardening.js",
         "assessment-discrimination-hardening.js"
       ],
-      "fingerprint": "sha256-58920b08c7631f6962b31d0d8a7ee26c5551977984b93ccbbf75bee6a0e6c3c0"
+      "fingerprint": "sha256-f89a8c50b1ca60a140587be86582f34d7e79654e3aa558fa929675a4ceab9b0e"
     },
     {
       "id": "scenario:22",
@@ -3486,7 +3486,7 @@
       "options": [
         "Response — Approve it because the line is cosmetic",
         "Response — Validate weld-line flow and mechanics",
-        "Response — Increase clamp force",
+        "Response — Increase clamp force; compare it against the stated evidence before acting",
         "Response — Polish the opposite mould half"
       ],
       "answerKey": 1,
@@ -3494,7 +3494,7 @@
       "feedback": [
         "Plausible competing response, but not the strongest supported decision. “Approve it because the line is cosmetic” should be rejected because the stated observation window discriminates more strongly toward the keyed response.",
         "Correct. Structural weld-line performance depends on local joining and reinforcement orientation, not appearance alone.",
-        "Plausible competing response, but not the strongest supported decision. “Increase clamp force” should be rejected because the stated observation window discriminates more strongly toward the keyed response.",
+        "Plausible competing response, but not the strongest supported decision. “Increase clamp force; compare it against the stated evidence before acting” should be rejected because the stated observation window discriminates more strongly toward the keyed response.",
         "Plausible competing response, but not the strongest supported decision. “Polish the opposite mould half” should be rejected because the stated observation window discriminates more strongly toward the keyed response."
       ],
       "evidence": {
@@ -3515,7 +3515,7 @@
         "assessment-psychometric-hardening.js",
         "assessment-discrimination-hardening.js"
       ],
-      "fingerprint": "sha256-ffefec9a3957fa746ae7fdc9610c572ca99b9b797e90b5cfdd7bb6cf3bb90cef"
+      "fingerprint": "sha256-ac1aa0ac2ae6bb06c612a3df9068abff759eaf6be3258beadc96494dff99c650"
     },
     {
       "id": "scenario:23",
@@ -3666,7 +3666,7 @@
         "Response — Change moulding pressure until the camera passes parts",
         "Response — Verify vision metrology before changing moulding",
         "Response — Disable most rejects permanently",
-        "Response — Increase cooling time"
+        "Response — Increase cooling time; compare it against the stated evidence before acting"
       ],
       "answerKey": 1,
       "rationale": "The inspection input distribution changed; verify the measurement/vision system before moving a stable process.",
@@ -3674,7 +3674,7 @@
         "Plausible competing response, but not the strongest supported decision. “Change moulding pressure until the camera passes parts” should be rejected because the stated observation window discriminates more strongly toward the keyed response.",
         "Correct. The inspection input distribution changed; verify the measurement/vision system before moving a stable process.",
         "Plausible competing response, but not the strongest supported decision. “Disable most rejects permanently” should be rejected because the stated observation window discriminates more strongly toward the keyed response.",
-        "Plausible competing response, but not the strongest supported decision. “Increase cooling time” should be rejected because the stated observation window discriminates more strongly toward the keyed response."
+        "Plausible competing response, but not the strongest supported decision. “Increase cooling time; compare it against the stated evidence before acting” should be rejected because the stated observation window discriminates more strongly toward the keyed response."
       ],
       "evidence": {
         "mode": "mapped-or-direct-authoritative-source",
@@ -3694,7 +3694,7 @@
         "assessment-psychometric-hardening.js",
         "assessment-discrimination-hardening.js"
       ],
-      "fingerprint": "sha256-c2a4c9d5e0c04359eb817bbe50abe975e8de6cb5f120a54236a3d9d51dfca9a6"
+      "fingerprint": "sha256-05aa33a447a44ce1828a2ddc99068d16848c27e4ea6421a67ff4059fa4aaa6c4"
     },
     {
       "id": "scenario:27",
@@ -3709,7 +3709,7 @@
       "stem": "Cavity sensor becomes noisy after service: A cavity-pressure trace becomes noisy immediately after cable routing and connector service.",
       "options": [
         "Response — Retrain most quality model first",
-        "Response — Increase injection pressure",
+        "Response — Increase injection pressure; compare it against the stated evidence before acting",
         "Response — Check sensor zero and acquisition path",
         "Response — Treat the signal if part mass is stable as normal variation during the next controlled comparison"
       ],
@@ -3717,7 +3717,7 @@
       "rationale": "A change immediately after instrumentation work makes the measurement chain a primary hypothesis.",
       "feedback": [
         "Plausible competing response, but not the strongest supported decision. “Retrain most quality model first” should be rejected because the stated observation window discriminates more strongly toward the keyed response.",
-        "Plausible competing response, but not the strongest supported decision. “Increase injection pressure” should be rejected because the stated observation window discriminates more strongly toward the keyed response.",
+        "Plausible competing response, but not the strongest supported decision. “Increase injection pressure; compare it against the stated evidence before acting” should be rejected because the stated observation window discriminates more strongly toward the keyed response.",
         "Correct. A change immediately after instrumentation work makes the measurement chain a primary hypothesis.",
         "Plausible competing response, but not the strongest supported decision. “Treat the signal if part mass is stable as normal variation during the next controlled comparison” should be rejected because the stated observation window discriminates more strongly toward the keyed response."
       ],
@@ -3739,7 +3739,7 @@
         "assessment-psychometric-hardening.js",
         "assessment-discrimination-hardening.js"
       ],
-      "fingerprint": "sha256-259b658849d41a72fde5b216b0d69d5a41793f6d09b4e8ed0a49667f17cdcb93"
+      "fingerprint": "sha256-1cc4ecb09e457a4e0b124c64649dba482e6c1940624c17289912ef582efe389a"
     },
     {
       "id": "scenario:28",
@@ -3753,17 +3753,17 @@
       "critical": false,
       "stem": "Robot delay increases cycle only: Overall cycle time increases, but moulding phase times and part quality remain unchanged while robot-clear time is longer.",
       "options": [
-        "Response — Change cooling time",
-        "Response — Increase injection speed",
-        "Response — Change hold pressure",
+        "Response — Change cooling time; compare it against the stated evidence before acting",
+        "Response — Increase injection speed; compare it against the stated evidence before acting",
+        "Response — Change hold pressure; compare it against the stated evidence before acting",
         "Response — Check robot handshake"
       ],
       "answerKey": 3,
       "rationale": "The changed phase is automation time, so diagnose the automation sequence while preserving validated process phases.",
       "feedback": [
-        "Plausible competing response, but not the strongest supported decision. “Change cooling time” should be rejected because the stated observation window discriminates more strongly toward the keyed response.",
-        "Plausible competing response, but not the strongest supported decision. “Increase injection speed” should be rejected because the stated observation window discriminates more strongly toward the keyed response.",
-        "Plausible competing response, but not the strongest supported decision. “Change hold pressure” should be rejected because the stated observation window discriminates more strongly toward the keyed response.",
+        "Plausible competing response, but not the strongest supported decision. “Change cooling time; compare it against the stated evidence before acting” should be rejected because the stated observation window discriminates more strongly toward the keyed response.",
+        "Plausible competing response, but not the strongest supported decision. “Increase injection speed; compare it against the stated evidence before acting” should be rejected because the stated observation window discriminates more strongly toward the keyed response.",
+        "Plausible competing response, but not the strongest supported decision. “Change hold pressure; compare it against the stated evidence before acting” should be rejected because the stated observation window discriminates more strongly toward the keyed response.",
         "Correct. The changed phase is automation time, so diagnose the automation sequence while preserving validated process phases."
       ],
       "evidence": {
@@ -3784,7 +3784,7 @@
         "assessment-psychometric-hardening.js",
         "assessment-discrimination-hardening.js"
       ],
-      "fingerprint": "sha256-b464e41943913f86ff5c5121c627a65173e269f7cc3f2254d7a64ecaef3c5547"
+      "fingerprint": "sha256-293812d059f205fe92ff3b3be3ca6e3013c11dd798117eeda7909e11cc5640f9"
     },
     {
       "id": "scenario:29",
@@ -3800,7 +3800,7 @@
       "options": [
         "Response — Check energy phases and boundary",
         "Response — Change injection speed immediately",
-        "Response — Increase shot size",
+        "Response — Increase shot size; compare it against the stated evidence before acting",
         "Response — Reduce most heater setpoints"
       ],
       "answerKey": 0,
@@ -3808,7 +3808,7 @@
       "feedback": [
         "Correct. Locate the energy increase before changing a stable moulding process.",
         "Plausible competing response, but not the strongest supported decision. “Change injection speed immediately” should be rejected because the stated observation window discriminates more strongly toward the keyed response.",
-        "Plausible competing response, but not the strongest supported decision. “Increase shot size” should be rejected because the stated observation window discriminates more strongly toward the keyed response.",
+        "Plausible competing response, but not the strongest supported decision. “Increase shot size; compare it against the stated evidence before acting” should be rejected because the stated observation window discriminates more strongly toward the keyed response.",
         "Plausible competing response, but not the strongest supported decision. “Reduce most heater setpoints” should be rejected because the stated observation window discriminates more strongly toward the keyed response."
       ],
       "evidence": {
@@ -3829,7 +3829,7 @@
         "assessment-psychometric-hardening.js",
         "assessment-discrimination-hardening.js"
       ],
-      "fingerprint": "sha256-69d87ec0bd4615f4a6d0d7a786aa78e6cd835d5920c7aa1a6f7649f57b02df79"
+      "fingerprint": "sha256-d8c794db9873e3808e7bc2fecb229d99082971f81586e3ecac1d0f1b6dfc5501"
     },
     {
       "id": "scenario:30",
@@ -3843,18 +3843,18 @@
       "critical": false,
       "stem": "Overmould bond weak far from gate: A hard/soft overmould joint has good bond near the gate but lower peel strength at the far end.",
       "options": [
-        "Response — Use the material pair is incompatible everywhere as the provisional working explanation during the next comparison",
+        "Response — Treat the proposition that the material pair is incompatible everywhere as a provisional hypothesis for the next controlled comparison",
         "Response — Map the interface history first",
-        "Response — Increase clamp force",
-        "Response — Shorten cooling primarily"
+        "Response — Increase clamp force; compare it against the stated evidence before acting",
+        "Response — Shorten cooling primarily; compare it against the stated evidence before acting"
       ],
       "answerKey": 1,
       "rationale": "Position-dependent bond strength supports a local interface thermal/flow history investigation.",
       "feedback": [
-        "Plausible competing response, but not the strongest supported decision. “Use the material pair is incompatible everywhere as the provisional working explanation during the next comparison” should be rejected because the stated observation window discriminates more strongly toward the keyed response.",
+        "Plausible competing response, but not the strongest supported decision. “Treat the proposition that the material pair is incompatible everywhere as a provisional hypothesis for the next controlled comparison” should be rejected because the stated observation window discriminates more strongly toward the keyed response.",
         "Correct. Position-dependent bond strength supports a local interface thermal/flow history investigation.",
-        "Plausible competing response, but not the strongest supported decision. “Increase clamp force” should be rejected because the stated observation window discriminates more strongly toward the keyed response.",
-        "Plausible competing response, but not the strongest supported decision. “Shorten cooling primarily” should be rejected because the stated observation window discriminates more strongly toward the keyed response."
+        "Plausible competing response, but not the strongest supported decision. “Increase clamp force; compare it against the stated evidence before acting” should be rejected because the stated observation window discriminates more strongly toward the keyed response.",
+        "Plausible competing response, but not the strongest supported decision. “Shorten cooling primarily; compare it against the stated evidence before acting” should be rejected because the stated observation window discriminates more strongly toward the keyed response."
       ],
       "evidence": {
         "mode": "mapped-or-direct-authoritative-source",
@@ -3874,7 +3874,7 @@
         "assessment-psychometric-hardening.js",
         "assessment-discrimination-hardening.js"
       ],
-      "fingerprint": "sha256-7f3136780a06386f31571645024cf2b3a9e3cf2bf5df4c8e271ff8957fcbf545"
+      "fingerprint": "sha256-97bf60a8081aab128bcc60389beb8f6661a703389fd9d2f5a48381c281df933f"
     },
     {
       "id": "scenario:31",
@@ -3889,7 +3889,7 @@
       "stem": "Insert temperature varies: Overmould bond results vary with the delay between insert heating and mould close.",
       "options": [
         "Response — Increase injection speed without measuring insert temperature",
-        "Response — Change part specification",
+        "Response — Change part specification; compare it against the stated evidence before acting",
         "Response — Record insert/interface thermal state and transfer delay",
         "Response — Treat the delay because heater setpoint is fixed as normal variation during the next controlled comparison"
       ],
@@ -3897,7 +3897,7 @@
       "rationale": "Heater setpoint does not prove the insert reaches the same interface temperature at injection.",
       "feedback": [
         "Plausible competing response, but not the strongest supported decision. “Increase injection speed without measuring insert temperature” should be rejected because the stated observation window discriminates more strongly toward the keyed response.",
-        "Plausible competing response, but not the strongest supported decision. “Change part specification” should be rejected because the stated observation window discriminates more strongly toward the keyed response.",
+        "Plausible competing response, but not the strongest supported decision. “Change part specification; compare it against the stated evidence before acting” should be rejected because the stated observation window discriminates more strongly toward the keyed response.",
         "Correct. Heater setpoint does not prove the insert reaches the same interface temperature at injection.",
         "Plausible competing response, but not the strongest supported decision. “Treat the delay because heater setpoint is fixed as normal variation during the next controlled comparison” should be rejected because the stated observation window discriminates more strongly toward the keyed response."
       ],
@@ -3919,7 +3919,7 @@
         "assessment-psychometric-hardening.js",
         "assessment-discrimination-hardening.js"
       ],
-      "fingerprint": "sha256-c038ca9bb2d8ab69cdd7bda59eda463fcaad5fbeb0aea6ab109cf1fdc074698a"
+      "fingerprint": "sha256-e492637de3422cf72d39538716d9b671a471f92754200acaeb47d7de7c04c65f"
     },
     {
       "id": "scenario:32",
@@ -3934,7 +3934,7 @@
       "stem": "Microfeature underfills while bulk part fills: Overall part mass and cavity fill are acceptable but microgrooves are incompletely replicated.",
       "options": [
         "Response — Increase hold pressure globally first",
-        "Response — Increase clamp force",
+        "Response — Increase clamp force; compare it against the stated evidence before acting",
         "Response — Treat total part mass as proof the microfeatures are full",
         "Response — Check local thermal, venting and microflow evidence"
       ],
@@ -3942,7 +3942,7 @@
       "rationale": "Microfeatures can be limited by local freeze-off, gas escape and scale-dependent flow even when the bulk part is full.",
       "feedback": [
         "Plausible competing response, but not the strongest supported decision. “Increase hold pressure globally first” should be rejected because the stated observation window discriminates more strongly toward the keyed response.",
-        "Plausible competing response, but not the strongest supported decision. “Increase clamp force” should be rejected because the stated observation window discriminates more strongly toward the keyed response.",
+        "Plausible competing response, but not the strongest supported decision. “Increase clamp force; compare it against the stated evidence before acting” should be rejected because the stated observation window discriminates more strongly toward the keyed response.",
         "Plausible competing response, but not the strongest supported decision. “Treat total part mass as proof the microfeatures are full” should be rejected because the stated observation window discriminates more strongly toward the keyed response.",
         "Correct. Microfeatures can be limited by local freeze-off, gas escape and scale-dependent flow even when the bulk part is full."
       ],
@@ -3964,7 +3964,7 @@
         "assessment-psychometric-hardening.js",
         "assessment-discrimination-hardening.js"
       ],
-      "fingerprint": "sha256-64a5c8e9da8141c6657d039a556bc88405101b4271434b3084039b45efbcf915"
+      "fingerprint": "sha256-00eb926946a0b63ea9c50d3b81c736d141bae865ca2dc1e36656017fadec1502"
     },
     {
       "id": "scenario:33",
@@ -3981,7 +3981,7 @@
         "Response — Check cell structure and mechanics",
         "Response — Accept it because weight target is the process objective",
         "Response — Increase gas dose typically",
-        "Response — Reduce clamp force"
+        "Response — Reduce clamp force; compare it against the stated evidence before acting"
       ],
       "answerKey": 0,
       "rationale": "Foam acceptance needs structure/property evidence, not mass reduction alone.",
@@ -3989,7 +3989,7 @@
         "Correct. Foam acceptance needs structure/property evidence, not mass reduction alone.",
         "Plausible competing response, but not the strongest supported decision. “Accept it because weight target is the process objective” should be rejected because the stated observation window discriminates more strongly toward the keyed response.",
         "Plausible competing response, but not the strongest supported decision. “Increase gas dose typically” should be rejected because the stated observation window discriminates more strongly toward the keyed response.",
-        "Plausible competing response, but not the strongest supported decision. “Reduce clamp force” should be rejected because the stated observation window discriminates more strongly toward the keyed response."
+        "Plausible competing response, but not the strongest supported decision. “Reduce clamp force; compare it against the stated evidence before acting” should be rejected because the stated observation window discriminates more strongly toward the keyed response."
       ],
       "evidence": {
         "mode": "mapped-or-direct-authoritative-source",
@@ -4009,7 +4009,7 @@
         "assessment-psychometric-hardening.js",
         "assessment-discrimination-hardening.js"
       ],
-      "fingerprint": "sha256-e1dc2d786b9401bdf0100c9dd03de54f3eb43992138c5833e2168a9b703dbc59"
+      "fingerprint": "sha256-b9a7d7ad378d0e4d737fbfbe77d74e19174e7268f2e3b1d329ad63f0c39847d5"
     },
     {
       "id": "scenario:34",
@@ -4114,7 +4114,7 @@
       "stem": "Gate erosion changes balance: A fibre-filled multicavity mould slowly develops a branch imbalance and gate dimensions show measurable wear.",
       "options": [
         "Response — Correct the imbalance permanently with cavity-independent machine settings",
-        "Response — Increase cooling time",
+        "Response — Increase cooling time; compare it against the stated evidence before acting",
         "Response — Treat wear if average part mass passes as normal variation during the next controlled comparison",
         "Response — Restore worn flow geometry, then reconfirm process balance"
       ],
@@ -4122,7 +4122,7 @@
       "rationale": "Abrasive wear can change local pressure drop; repair the physical cause before locking in compensation.",
       "feedback": [
         "Plausible competing response, but not the strongest supported decision. “Correct the imbalance permanently with cavity-independent machine settings” should be rejected because the stated observation window discriminates more strongly toward the keyed response.",
-        "Plausible competing response, but not the strongest supported decision. “Increase cooling time” should be rejected because the stated observation window discriminates more strongly toward the keyed response.",
+        "Plausible competing response, but not the strongest supported decision. “Increase cooling time; compare it against the stated evidence before acting” should be rejected because the stated observation window discriminates more strongly toward the keyed response.",
         "Plausible competing response, but not the strongest supported decision. “Treat wear if average part mass passes as normal variation during the next controlled comparison” should be rejected because the stated observation window discriminates more strongly toward the keyed response.",
         "Correct. Abrasive wear can change local pressure drop; repair the physical cause before locking in compensation."
       ],
@@ -4144,7 +4144,7 @@
         "assessment-psychometric-hardening.js",
         "assessment-discrimination-hardening.js"
       ],
-      "fingerprint": "sha256-2c6e16a0eb3d2e998844554e9df0d9cd80137cfa0229f627f08359f185a58c57"
+      "fingerprint": "sha256-78d07e4b3900458f532aebfb877c4ab9091c348f98aa5926d2090e5ac34fc24b"
     },
     {
       "id": "scenario:37",
@@ -4246,7 +4246,7 @@
       "critical": false,
       "stem": "Mass prediction stays good but dimension model worsens: A quality model still predicts part mass accurately but its dimension prediction error increases after a material-lot change.",
       "options": [
-        "Response — Use most model outputs remain valid because one target is accurate as the provisional working explanation during the next comparison",
+        "Response — Treat the proposition that most model outputs remain valid because one target is accurate as a provisional hypothesis for the next controlled comparison",
         "Response — Change the dimension specification",
         "Response — Check target-specific model drift and independent dimensional truth",
         "Response — Retrain using the failed predictions as ground truth"
@@ -4254,7 +4254,7 @@
       "answerKey": 2,
       "rationale": "Different quality targets can depend on different signal features; one accurate output does not validate another.",
       "feedback": [
-        "Plausible competing response, but not the strongest supported decision. “Use most model outputs remain valid because one target is accurate as the provisional working explanation during the next comparison” should be rejected because the stated observation window discriminates more strongly toward the keyed response.",
+        "Plausible competing response, but not the strongest supported decision. “Treat the proposition that most model outputs remain valid because one target is accurate as a provisional hypothesis for the next controlled comparison” should be rejected because the stated observation window discriminates more strongly toward the keyed response.",
         "Plausible competing response, but not the strongest supported decision. “Change the dimension specification” should be rejected because the stated observation window discriminates more strongly toward the keyed response.",
         "Correct. Different quality targets can depend on different signal features; one accurate output does not validate another.",
         "Plausible competing response, but not the strongest supported decision. “Retrain using the failed predictions as ground truth” should be rejected because the stated observation window discriminates more strongly toward the keyed response."
@@ -4277,7 +4277,7 @@
         "assessment-psychometric-hardening.js",
         "assessment-discrimination-hardening.js"
       ],
-      "fingerprint": "sha256-9f59e60eb0b482174a167a3c73ea92b455881b64c4345fd13eee3ba9a1a777f8"
+      "fingerprint": "sha256-cc48074bc80489ef9bfef46cc064e7c5ba5849def9240bfef0973443cc838f2a"
     },
     {
       "id": "scenario:40",
@@ -6365,7 +6365,7 @@
       "critical": false,
       "stem": "If warpage follows the fibre-flow direction, what is the better learning response?",
       "options": [
-        "Response — Use moisture alone explains most warped dimension as the provisional working explanation during the next comparison",
+        "Response — Treat the proposition that moisture alone explains most warped dimension as a provisional hypothesis for the next controlled comparison",
         "Response — Increase clamp force globally even though clamp load does not alter the fibre orientation already frozen into the part",
         "Response — Investigate orientation, thermal balance and anisotropy before compensation",
         "Response — Treat PA66-GF30 like unfilled PP and ignore reinforcement"
@@ -6373,7 +6373,7 @@
       "answerKey": 2,
       "rationale": "Correct. Reinforced semi-crystalline materials can have strongly directional shrinkage and stiffness.",
       "feedback": [
-        "Plausible competing response, but not the strongest supported decision. “Use moisture alone explains most warped dimension as the provisional working explanation during the next comparison” should be rejected because the stated observation window discriminates more strongly toward the keyed response.",
+        "Plausible competing response, but not the strongest supported decision. “Treat the proposition that moisture alone explains most warped dimension as a provisional hypothesis for the next controlled comparison” should be rejected because the stated observation window discriminates more strongly toward the keyed response.",
         "Plausible competing response, but not the strongest supported decision. “Increase clamp force globally even though clamp load does not alter the fibre orientation already frozen into the part” should be rejected because the stated observation window discriminates more strongly toward the keyed response.",
         "Correct. Reinforced semi-crystalline materials can have strongly directional shrinkage and stiffness.",
         "Plausible competing response, but not the strongest supported decision. “Treat PA66-GF30 like unfilled PP and ignore reinforcement” should be rejected because the stated observation window discriminates more strongly toward the keyed response."
@@ -6399,7 +6399,7 @@
         "assessment-psychometric-hardening.js",
         "assessment-discrimination-hardening.js"
       ],
-      "fingerprint": "sha256-f2d034d91b43c0ac276a401c3f4b427ad373691a690c31a171df213dafb5a993"
+      "fingerprint": "sha256-26dcd1b2ec8eb791c1a4e47e11270f8361dc3e072a36d69bbeba48cd2d83ff5f"
     },
     {
       "id": "material:pa66-gf30-dry-conditioned:3",
@@ -6828,7 +6828,7 @@
       "stem": "What is the strongest first hypothesis?",
       "options": [
         "Response — Treat the unchanged machine recipe as proof that the controller or stored settings must be corrupted",
-        "Response — Use recycled PP behaves identically whenever the material label says PP, regardless of lot history or composition as the provisional working explanation during the next comparison",
+        "Response — Treat the proposition that recycled PP behaves identically whenever the material label says PP, regardless of lot history or composition as a provisional hypothesis for the next controlled comparison",
         "Response — Verify the new feedstock’s rheological/material state before blaming the machine",
         "Response — Use clamp force as the primary explanation for melt-viscosity and pressure changes during filling"
       ],
@@ -6836,7 +6836,7 @@
       "rationale": "Correct. The lot timing plus pressure/flow shift makes material variability a strong hypothesis.",
       "feedback": [
         "Plausible competing response, but not the strongest supported decision. “Treat the unchanged machine recipe as proof that the controller or stored settings must be corrupted” should be rejected because the stated observation window discriminates more strongly toward the keyed response.",
-        "Plausible competing response, but not the strongest supported decision. “Use recycled PP behaves identically whenever the material label says PP, regardless of lot history or composition as the provisional working explanation during the next comparison” should be rejected because the stated observation window discriminates more strongly toward the keyed response.",
+        "Plausible competing response, but not the strongest supported decision. “Treat the proposition that recycled PP behaves identically whenever the material label says PP, regardless of lot history or composition as a provisional hypothesis for the next controlled comparison” should be rejected because the stated observation window discriminates more strongly toward the keyed response.",
         "Correct. The lot timing plus pressure/flow shift makes material variability a strong hypothesis.",
         "Plausible competing response, but not the strongest supported decision. “Use clamp force as the primary explanation for melt-viscosity and pressure changes during filling” should be rejected because the stated observation window discriminates more strongly toward the keyed response."
       ],
@@ -6861,7 +6861,7 @@
         "assessment-psychometric-hardening.js",
         "assessment-discrimination-hardening.js"
       ],
-      "fingerprint": "sha256-2f5ec74ca924c403d7ab497a8dcfcf09915e1cf4c7895c13c6a34b28d4d6c3e1"
+      "fingerprint": "sha256-2cc4063e60d67d8438b15a8a70c8344738e970bee66f4728327a44e3b11d2612"
     },
     {
       "id": "material:recycled-pp-lot-rheology:1",
@@ -6974,7 +6974,7 @@
         "Response — Treat one MFR value as a complete description of high-shear; this does not by itself establish a universal production rule",
         "Response — MFR is useful incoming evidence but not the whole moulding rheology",
         "Response — Treat MFR for recycled material as normal variation during the next controlled comparison",
-        "Response — Use matching MFR strongly indicates contamination as the provisional working explanation during the next comparison"
+        "Response — Treat the proposition that matching MFR strongly indicates contamination as a provisional hypothesis for the next controlled comparison"
       ],
       "answerKey": 1,
       "rationale": "Exactly. Combine material tests with process actuals and part responses.",
@@ -6982,7 +6982,7 @@
         "Plausible competing response, but not the strongest supported decision. “Treat one MFR value as a complete description of high-shear; this does not by itself establish a universal production rule” should be rejected because the stated observation window discriminates more strongly toward the keyed response.",
         "Exactly. Combine material tests with process actuals and part responses.",
         "Plausible competing response, but not the strongest supported decision. “Treat MFR for recycled material as normal variation during the next controlled comparison” should be rejected because the stated observation window discriminates more strongly toward the keyed response.",
-        "Plausible competing response, but not the strongest supported decision. “Use matching MFR strongly indicates contamination as the provisional working explanation during the next comparison” should be rejected because the stated observation window discriminates more strongly toward the keyed response."
+        "Plausible competing response, but not the strongest supported decision. “Treat the proposition that matching MFR strongly indicates contamination as a provisional hypothesis for the next controlled comparison” should be rejected because the stated observation window discriminates more strongly toward the keyed response."
       ],
       "evidence": {
         "mode": "explicit-source-ids",
@@ -7005,7 +7005,7 @@
         "assessment-psychometric-hardening.js",
         "assessment-discrimination-hardening.js"
       ],
-      "fingerprint": "sha256-8358530663276aea8cf9fca5651a91c3f7c2c4c7b8fd84b5086f4a8300bf7c6c"
+      "fingerprint": "sha256-7f859bc2f7d7eb78a3cf15e7b33e1ddcae6accd37d6168b04f702bcf24667ce3"
     },
     {
       "id": "optional-material:pbt-hydrolysis:0",
@@ -7021,16 +7021,16 @@
       "options": [
         "Response — Measure actual resin moisture",
         "Response — Increase clamp force while holding the remaining conditions at the known baseline",
-        "Response — Polish the cavity",
-        "Response — Increase hold time"
+        "Response — Polish the cavity; compare it against the stated evidence before acting",
+        "Response — Increase hold time; compare it against the stated evidence before acting"
       ],
       "answerKey": 0,
       "rationale": "Correct. Measure actual resin moisture. This directly addresses polyester hydrolysis and moisture verification.",
       "feedback": [
         "Correct. Measure actual resin moisture. This directly addresses polyester hydrolysis and moisture verification.",
         "Plausible competing response, but not the strongest supported decision. “Increase clamp force while holding the remaining conditions at the known baseline” should be rejected because the stated observation window discriminates more strongly toward the keyed response.",
-        "Plausible competing response, but not the strongest supported decision. “Polish the cavity” should be rejected because the stated observation window discriminates more strongly toward the keyed response.",
-        "Plausible competing response, but not the strongest supported decision. “Increase hold time” should be rejected because the stated observation window discriminates more strongly toward the keyed response."
+        "Plausible competing response, but not the strongest supported decision. “Polish the cavity; compare it against the stated evidence before acting” should be rejected because the stated observation window discriminates more strongly toward the keyed response.",
+        "Plausible competing response, but not the strongest supported decision. “Increase hold time; compare it against the stated evidence before acting” should be rejected because the stated observation window discriminates more strongly toward the keyed response."
       ],
       "evidence": {
         "mode": "explicit-source-ids",
@@ -7052,7 +7052,7 @@
         "assessment-psychometric-hardening.js",
         "assessment-discrimination-hardening.js"
       ],
-      "fingerprint": "sha256-d10f91759173b04c61ed89b336e7808306877c15d6f152dcecbe69985ac02437"
+      "fingerprint": "sha256-117a8c530333f2019819bcad25a779469b5de9899f055387fbed999cd30d840f"
     },
     {
       "id": "optional-material:pbt-hydrolysis:1",
@@ -7255,7 +7255,7 @@
         "Response — primarily barrel setpoints under a controlled repeat with a documented acceptance rule",
         "Response — Compare grade identity, moisture needs and product requirements",
         "Response — primarily mould temperature under a controlled repeat with a documented acceptance rule",
-        "Response — primarily cycle time"
+        "Response — primarily cycle time; compare it against the stated evidence before acting"
       ],
       "answerKey": 1,
       "rationale": "Correct. Compare grade identity, moisture needs and product requirements. This directly addresses drying, hydrolysis and crystallinity differences.",
@@ -7263,7 +7263,7 @@
         "Plausible competing response, but not the strongest supported decision. “primarily barrel setpoints under a controlled repeat with a documented acceptance rule” should be rejected because the stated observation window discriminates more strongly toward the keyed response.",
         "Correct. Compare grade identity, moisture needs and product requirements. This directly addresses drying, hydrolysis and crystallinity differences.",
         "Plausible competing response, but not the strongest supported decision. “primarily mould temperature under a controlled repeat with a documented acceptance rule” should be rejected because the stated observation window discriminates more strongly toward the keyed response.",
-        "Plausible competing response, but not the strongest supported decision. “primarily cycle time” should be rejected because the stated observation window discriminates more strongly toward the keyed response."
+        "Plausible competing response, but not the strongest supported decision. “primarily cycle time; compare it against the stated evidence before acting” should be rejected because the stated observation window discriminates more strongly toward the keyed response."
       ],
       "evidence": {
         "mode": "explicit-source-ids",
@@ -7285,7 +7285,7 @@
         "assessment-psychometric-hardening.js",
         "assessment-discrimination-hardening.js"
       ],
-      "fingerprint": "sha256-446f2a4481519c1d57ccd2b584431ef61af3a29966735d4d335326a431a9f20b"
+      "fingerprint": "sha256-257e5e0b55fd8e5266ab54e5c9d4f619a46c79a3bb966f4da0b1e8628b7a5961"
     },
     {
       "id": "optional-material:pet-vs-copolyester:2",
@@ -7393,7 +7393,7 @@
       "options": [
         "Response — Verify moisture in the resin entering the screw",
         "Response — Clamp force while holding the remaining conditions at the known baseline",
-        "Response — Robot speed",
+        "Response — Robot speed; compare it against the stated evidence before acting",
         "Response — Gate vestige while holding the remaining conditions at the known baseline"
       ],
       "answerKey": 0,
@@ -7401,7 +7401,7 @@
       "feedback": [
         "Correct. Verify moisture in the resin entering the screw. This directly addresses moisture, reabsorption and property loss.",
         "Plausible competing response, but not the strongest supported decision. “Clamp force while holding the remaining conditions at the known baseline” should be rejected because the stated observation window discriminates more strongly toward the keyed response.",
-        "Plausible competing response, but not the strongest supported decision. “Robot speed” should be rejected because the stated observation window discriminates more strongly toward the keyed response.",
+        "Plausible competing response, but not the strongest supported decision. “Robot speed; compare it against the stated evidence before acting” should be rejected because the stated observation window discriminates more strongly toward the keyed response.",
         "Plausible competing response, but not the strongest supported decision. “Gate vestige while holding the remaining conditions at the known baseline” should be rejected because the stated observation window discriminates more strongly toward the keyed response."
       ],
       "evidence": {
@@ -7424,7 +7424,7 @@
         "assessment-psychometric-hardening.js",
         "assessment-discrimination-hardening.js"
       ],
-      "fingerprint": "sha256-c6a15ebe3998935bca000cbe2d4fe90dbf3bc4a37d2e7c8d91efc80e7c1b288d"
+      "fingerprint": "sha256-1e186b4495b1c8600bfd5784b3a6769893056ee961cb597acb9bfa359d1b1b5a"
     },
     {
       "id": "optional-material:tpu-moisture-reabsorption:1",
@@ -7440,7 +7440,7 @@
       "options": [
         "Response — Increase injection speed under a controlled repeat with a documented acceptance rule",
         "Response — Measure moisture and inspect the protected transfer path",
-        "Response — Lower cooling time",
+        "Response — Lower cooling time; compare it against the stated evidence before acting",
         "Response — Add more back pressure under a controlled repeat with a documented acceptance rule"
       ],
       "answerKey": 1,
@@ -7448,7 +7448,7 @@
       "feedback": [
         "Plausible competing response, but not the strongest supported decision. “Increase injection speed under a controlled repeat with a documented acceptance rule” should be rejected because the stated observation window discriminates more strongly toward the keyed response.",
         "Correct. Measure moisture and inspect the protected transfer path. This directly addresses moisture, reabsorption and property loss.",
-        "Plausible competing response, but not the strongest supported decision. “Lower cooling time” should be rejected because the stated observation window discriminates more strongly toward the keyed response.",
+        "Plausible competing response, but not the strongest supported decision. “Lower cooling time; compare it against the stated evidence before acting” should be rejected because the stated observation window discriminates more strongly toward the keyed response.",
         "Plausible competing response, but not the strongest supported decision. “Add more back pressure under a controlled repeat with a documented acceptance rule” should be rejected because the stated observation window discriminates more strongly toward the keyed response."
       ],
       "evidence": {
@@ -7471,7 +7471,7 @@
         "assessment-psychometric-hardening.js",
         "assessment-discrimination-hardening.js"
       ],
-      "fingerprint": "sha256-8f3233e6d127f5e46764ea724c3c1d9ba467f38a309c08e57497146c288d8716"
+      "fingerprint": "sha256-760bff1f20dc62f4eb4bf01ac0624e83055e2e5d27794eb3771dad82cacb2c4b"
     },
     {
       "id": "optional-material:tpu-moisture-reabsorption:2",
@@ -7486,7 +7486,7 @@
       "stem": "If reabsorption is confirmed, what is the right response?",
       "options": [
         "Response — Keep moulding until splay reduces then verify the result against the same baseline evidence",
-        "Response — Increase melt temperature",
+        "Response — Increase melt temperature; compare it against the stated evidence before acting",
         "Response — Restore approved drying and transfer, then verify moisture",
         "Response — Open the hopper more often then verify the result against the same baseline evidence"
       ],
@@ -7494,7 +7494,7 @@
       "rationale": "Correct. Restore approved drying and transfer, then verify moisture. This directly addresses moisture, reabsorption and property loss.",
       "feedback": [
         "Plausible competing response, but not the strongest supported decision. “Keep moulding until splay reduces then verify the result against the same baseline evidence” should be rejected because the stated observation window discriminates more strongly toward the keyed response.",
-        "Plausible competing response, but not the strongest supported decision. “Increase melt temperature” should be rejected because the stated observation window discriminates more strongly toward the keyed response.",
+        "Plausible competing response, but not the strongest supported decision. “Increase melt temperature; compare it against the stated evidence before acting” should be rejected because the stated observation window discriminates more strongly toward the keyed response.",
         "Correct. Restore approved drying and transfer, then verify moisture. This directly addresses moisture, reabsorption and property loss.",
         "Plausible competing response, but not the strongest supported decision. “Open the hopper more often then verify the result against the same baseline evidence” should be rejected because the stated observation window discriminates more strongly toward the keyed response."
       ],
@@ -7518,7 +7518,7 @@
         "assessment-psychometric-hardening.js",
         "assessment-discrimination-hardening.js"
       ],
-      "fingerprint": "sha256-e4cc52cab3ceb61a71b71cd8f7593bfd54f5118dc65da0fc2f5e4c12925bc5b9"
+      "fingerprint": "sha256-9c06dd0cbaabfea3bdac2a37ff9c7c67b09ff05c373cc0a93d1a708bf1951080"
     },
     {
       "id": "optional-material:tpu-moisture-reabsorption:3",
@@ -7672,7 +7672,7 @@
       "critical": false,
       "stem": "If parts improve after material verification but still crack under the relevant load, what next?",
       "options": [
-        "Response — Dry indefinitely",
+        "Response — Dry indefinitely; compare it against the stated evidence before acting",
         "Response — Increase clamp force then verify the result against the same baseline evidence",
         "Response — Investigate filling, packing and cooling stress history",
         "Response — Accept the part because clarity passed then verify the result against the same baseline evidence"
@@ -7680,7 +7680,7 @@
       "answerKey": 2,
       "rationale": "Correct. Investigate filling, packing and cooling stress history. This directly addresses optical defects, moisture and moulded-in stress.",
       "feedback": [
-        "Plausible competing response, but not the strongest supported decision. “Dry indefinitely” should be rejected because the stated observation window discriminates more strongly toward the keyed response.",
+        "Plausible competing response, but not the strongest supported decision. “Dry indefinitely; compare it against the stated evidence before acting” should be rejected because the stated observation window discriminates more strongly toward the keyed response.",
         "Plausible competing response, but not the strongest supported decision. “Increase clamp force then verify the result against the same baseline evidence” should be rejected because the stated observation window discriminates more strongly toward the keyed response.",
         "Correct. Investigate filling, packing and cooling stress history. This directly addresses optical defects, moisture and moulded-in stress.",
         "Plausible competing response, but not the strongest supported decision. “Accept the part because clarity passed then verify the result against the same baseline evidence” should be rejected because the stated observation window discriminates more strongly toward the keyed response."
@@ -7705,7 +7705,7 @@
         "assessment-psychometric-hardening.js",
         "assessment-discrimination-hardening.js"
       ],
-      "fingerprint": "sha256-ee7d82b19384f691a101bbc8a6959cf96b2a25e1be03b954b8d6e6a00939b928"
+      "fingerprint": "sha256-b89ef955dfcb6a863f11c80dac65de98244187e304abd5154e7f1f37ed3aaf88"
     },
     {
       "id": "optional-material:pmma-optical-stress:3",
@@ -7813,7 +7813,7 @@
       "critical": true,
       "stem": "What should be verified before a process study?",
       "options": [
-        "Response — primarily shot size",
+        "Response — primarily shot size; compare it against the stated evidence before acting",
         "Response — Verify machine/tool thermal capability and exact grade needs",
         "Response — primarily mould-open speed under a controlled repeat with a documented acceptance rule",
         "Response — primarily part colour under a controlled repeat with a documented acceptance rule"
@@ -7821,7 +7821,7 @@
       "answerKey": 1,
       "rationale": "Correct. Verify machine/tool thermal capability and exact grade needs. This directly addresses high-temperature capability, cleanliness and crystallinity.",
       "feedback": [
-        "Plausible competing response, but not the strongest supported decision. “primarily shot size” should be rejected because the stated observation window discriminates more strongly toward the keyed response.",
+        "Plausible competing response, but not the strongest supported decision. “primarily shot size; compare it against the stated evidence before acting” should be rejected because the stated observation window discriminates more strongly toward the keyed response.",
         "Correct. Verify machine/tool thermal capability and exact grade needs. This directly addresses high-temperature capability, cleanliness and crystallinity.",
         "Plausible competing response, but not the strongest supported decision. “primarily mould-open speed under a controlled repeat with a documented acceptance rule” should be rejected because the stated observation window discriminates more strongly toward the keyed response.",
         "Plausible competing response, but not the strongest supported decision. “primarily part colour under a controlled repeat with a documented acceptance rule” should be rejected because the stated observation window discriminates more strongly toward the keyed response."
@@ -7846,7 +7846,7 @@
         "assessment-psychometric-hardening.js",
         "assessment-discrimination-hardening.js"
       ],
-      "fingerprint": "sha256-dcc127f4d58f1563a31056e8751f98575a4256ee820712f2ac6a2318c29841a3"
+      "fingerprint": "sha256-5ef4ad20851ac87f5a4fe901bc79e79ac135bc37064815594b2e51a296901826"
     },
     {
       "id": "optional-material:peek-crystallinity-capability:2",
@@ -7955,7 +7955,7 @@
       "stem": "A glass/mineral-filled PPS job shows black inclusions after a long campaign. What evidence should be separated?",
       "options": [
         "Response — Separate contamination history from equipment wear",
-        "Response — primarily moisture",
+        "Response — primarily moisture; compare it against the stated evidence before acting",
         "Response — primarily clamp force while holding the remaining conditions at the known baseline",
         "Response — primarily robot timing while holding the remaining conditions at the known baseline"
       ],
@@ -7963,7 +7963,7 @@
       "rationale": "Correct. Separate contamination history from equipment wear. This directly addresses high-temperature reinforced processing and equipment condition.",
       "feedback": [
         "Correct. Separate contamination history from equipment wear. This directly addresses high-temperature reinforced processing and equipment condition.",
-        "Plausible competing response, but not the strongest supported decision. “primarily moisture” should be rejected because the stated observation window discriminates more strongly toward the keyed response.",
+        "Plausible competing response, but not the strongest supported decision. “primarily moisture; compare it against the stated evidence before acting” should be rejected because the stated observation window discriminates more strongly toward the keyed response.",
         "Plausible competing response, but not the strongest supported decision. “primarily clamp force while holding the remaining conditions at the known baseline” should be rejected because the stated observation window discriminates more strongly toward the keyed response.",
         "Plausible competing response, but not the strongest supported decision. “primarily robot timing while holding the remaining conditions at the known baseline” should be rejected because the stated observation window discriminates more strongly toward the keyed response."
       ],
@@ -7987,7 +7987,7 @@
         "assessment-psychometric-hardening.js",
         "assessment-discrimination-hardening.js"
       ],
-      "fingerprint": "sha256-e2bb35ec0a7c582db133d6b00f780b6190b365efbae9ffcc68afb05a95e69431"
+      "fingerprint": "sha256-3836d6f113809e9a36c71aea5c403a91fbdd91523646ce7939b3fba9ec09c871"
     },
     {
       "id": "optional-material:pps-contamination-wear:1",
@@ -8051,7 +8051,7 @@
         "Response — Increase screw speed permanently",
         "Response — Treat wear until the machine fails then verify the result against the same baseline evidence as normal variation during the next controlled comparison",
         "Response — Correct equipment wear and revalidate the process",
-        "Response — Use more regrind"
+        "Response — Use more regrind; compare it against the stated evidence before acting"
       ],
       "answerKey": 2,
       "rationale": "Correct. Correct equipment wear and revalidate the process. This directly addresses high-temperature reinforced processing and equipment condition.",
@@ -8059,7 +8059,7 @@
         "Plausible competing response, but not the strongest supported decision. “Increase screw speed permanently” should be rejected because the stated observation window discriminates more strongly toward the keyed response.",
         "Plausible competing response, but not the strongest supported decision. “Treat wear until the machine fails then verify the result against the same baseline evidence as normal variation during the next controlled comparison” should be rejected because the stated observation window discriminates more strongly toward the keyed response.",
         "Correct. Correct equipment wear and revalidate the process. This directly addresses high-temperature reinforced processing and equipment condition.",
-        "Plausible competing response, but not the strongest supported decision. “Use more regrind” should be rejected because the stated observation window discriminates more strongly toward the keyed response."
+        "Plausible competing response, but not the strongest supported decision. “Use more regrind; compare it against the stated evidence before acting” should be rejected because the stated observation window discriminates more strongly toward the keyed response."
       ],
       "evidence": {
         "mode": "explicit-source-ids",
@@ -8081,7 +8081,7 @@
         "assessment-psychometric-hardening.js",
         "assessment-discrimination-hardening.js"
       ],
-      "fingerprint": "sha256-5bc24bc31fea9bde6afc61235c5d87500def5660d97eeacae5695df40145d436"
+      "fingerprint": "sha256-a55d09fd5f41ac84d1367c6afa228f4c53ba8e5eda494c927503aec0cb69fff6"
     },
     {
       "id": "optional-material:pps-contamination-wear:3",
@@ -8188,7 +8188,7 @@
       "critical": false,
       "stem": "What should be mapped?",
       "options": [
-        "Response — primarily cycle time",
+        "Response — primarily cycle time; compare it against the stated evidence before acting",
         "Response — Map flow direction, welds, thickness and directional response",
         "Response — primarily barrel rear-zone temperature under a controlled repeat with a documented acceptance rule",
         "Response — primarily ejector stroke under a controlled repeat with a documented acceptance rule"
@@ -8196,7 +8196,7 @@
       "answerKey": 1,
       "rationale": "Correct. Map flow direction, welds, thickness and directional response. This directly addresses thin-wall filling, orientation and anisotropy.",
       "feedback": [
-        "Plausible competing response, but not the strongest supported decision. “primarily cycle time” should be rejected because the stated observation window discriminates more strongly toward the keyed response.",
+        "Plausible competing response, but not the strongest supported decision. “primarily cycle time; compare it against the stated evidence before acting” should be rejected because the stated observation window discriminates more strongly toward the keyed response.",
         "Correct. Map flow direction, welds, thickness and directional response. This directly addresses thin-wall filling, orientation and anisotropy.",
         "Plausible competing response, but not the strongest supported decision. “primarily barrel rear-zone temperature under a controlled repeat with a documented acceptance rule” should be rejected because the stated observation window discriminates more strongly toward the keyed response.",
         "Plausible competing response, but not the strongest supported decision. “primarily ejector stroke under a controlled repeat with a documented acceptance rule” should be rejected because the stated observation window discriminates more strongly toward the keyed response."
@@ -8221,7 +8221,7 @@
         "assessment-psychometric-hardening.js",
         "assessment-discrimination-hardening.js"
       ],
-      "fingerprint": "sha256-5be73535d84550f5e02d918538c15d51919cc9114800d863e37a42eb74cb01d7"
+      "fingerprint": "sha256-fd2cca628c2f69b428c913123eb79f0dd936b343e424bf459124193f54e5dfed"
     },
     {
       "id": "optional-material:lcp-orientation:2",
@@ -8235,7 +8235,7 @@
       "critical": false,
       "stem": "If the weak direction aligns with a weld/orientation feature, what should be studied next?",
       "options": [
-        "Response — Raise clamp tonnage",
+        "Response — Raise clamp tonnage; compare it against the stated evidence before acting",
         "Response — Increase cooling equally everywhere then verify the result against the same baseline evidence",
         "Response — Study gate/tool design and orientation before global compensation",
         "Response — Change measurement direction until it passes then verify the result against the same baseline evidence"
@@ -8243,7 +8243,7 @@
       "answerKey": 2,
       "rationale": "Correct. Study gate/tool design and orientation before global compensation. This directly addresses thin-wall filling, orientation and anisotropy.",
       "feedback": [
-        "Plausible competing response, but not the strongest supported decision. “Raise clamp tonnage” should be rejected because the stated observation window discriminates more strongly toward the keyed response.",
+        "Plausible competing response, but not the strongest supported decision. “Raise clamp tonnage; compare it against the stated evidence before acting” should be rejected because the stated observation window discriminates more strongly toward the keyed response.",
         "Plausible competing response, but not the strongest supported decision. “Increase cooling equally everywhere then verify the result against the same baseline evidence” should be rejected because the stated observation window discriminates more strongly toward the keyed response.",
         "Correct. Study gate/tool design and orientation before global compensation. This directly addresses thin-wall filling, orientation and anisotropy.",
         "Plausible competing response, but not the strongest supported decision. “Change measurement direction until it passes then verify the result against the same baseline evidence” should be rejected because the stated observation window discriminates more strongly toward the keyed response."
@@ -8268,7 +8268,7 @@
         "assessment-psychometric-hardening.js",
         "assessment-discrimination-hardening.js"
       ],
-      "fingerprint": "sha256-917dc408a460207c1f2630849844e18b9537dfa14c605b6c870ddcb058ed8fb5"
+      "fingerprint": "sha256-706a507fbaee166e48a9c141b052adefb178e6959df7d85e65c66874de57aea4"
     },
     {
       "id": "optional-material:lcp-orientation:3",
@@ -8374,7 +8374,7 @@
       "critical": false,
       "stem": "What belongs in the comparison?",
       "options": [
-        "Response — primarily colour",
+        "Response — primarily colour; compare it against the stated evidence before acting",
         "Response — Compare grade data, moisture, rheology, shrinkage and product needs",
         "Response — primarily shot size under a controlled repeat with a documented acceptance rule",
         "Response — primarily mould temperature under a controlled repeat with a documented acceptance rule"
@@ -8382,7 +8382,7 @@
       "answerKey": 1,
       "rationale": "Correct. Compare grade data, moisture, rheology, shrinkage and product needs. This directly addresses blend grade identity, moisture and property balance.",
       "feedback": [
-        "Plausible competing response, but not the strongest supported decision. “primarily colour” should be rejected because the stated observation window discriminates more strongly toward the keyed response.",
+        "Plausible competing response, but not the strongest supported decision. “primarily colour; compare it against the stated evidence before acting” should be rejected because the stated observation window discriminates more strongly toward the keyed response.",
         "Correct. Compare grade data, moisture, rheology, shrinkage and product needs. This directly addresses blend grade identity, moisture and property balance.",
         "Plausible competing response, but not the strongest supported decision. “primarily shot size under a controlled repeat with a documented acceptance rule” should be rejected because the stated observation window discriminates more strongly toward the keyed response.",
         "Plausible competing response, but not the strongest supported decision. “primarily mould temperature under a controlled repeat with a documented acceptance rule” should be rejected because the stated observation window discriminates more strongly toward the keyed response."
@@ -8407,7 +8407,7 @@
         "assessment-psychometric-hardening.js",
         "assessment-discrimination-hardening.js"
       ],
-      "fingerprint": "sha256-41c9926b0b3c931803cdac62d08a8deab06586133d43558893234d21d865e2a4"
+      "fingerprint": "sha256-77b2925e6d03b61f49913ff803991dd0800daa8ffe2a66a5c30d836935394bb7"
     },
     {
       "id": "optional-material:pcabs-grade-identity:2",
@@ -8517,7 +8517,7 @@
         "Response — Check lot rheology/density with process and cooling evidence",
         "Response — Dryer dew point primarily while holding the remaining conditions at the known baseline",
         "Response — Clamp force primarily while holding the remaining conditions at the known baseline",
-        "Response — Robot speed primarily"
+        "Response — Robot speed primarily; compare it against the stated evidence before acting"
       ],
       "answerKey": 0,
       "rationale": "Correct. Check lot rheology/density with process and cooling evidence. This directly addresses crystallinity, shrinkage and lot rheology.",
@@ -8525,7 +8525,7 @@
         "Correct. Check lot rheology/density with process and cooling evidence. This directly addresses crystallinity, shrinkage and lot rheology.",
         "Plausible competing response, but not the strongest supported decision. “Dryer dew point primarily while holding the remaining conditions at the known baseline” should be rejected because the stated observation window discriminates more strongly toward the keyed response.",
         "Plausible competing response, but not the strongest supported decision. “Clamp force primarily while holding the remaining conditions at the known baseline” should be rejected because the stated observation window discriminates more strongly toward the keyed response.",
-        "Plausible competing response, but not the strongest supported decision. “Robot speed primarily” should be rejected because the stated observation window discriminates more strongly toward the keyed response."
+        "Plausible competing response, but not the strongest supported decision. “Robot speed primarily; compare it against the stated evidence before acting” should be rejected because the stated observation window discriminates more strongly toward the keyed response."
       ],
       "evidence": {
         "mode": "explicit-source-ids",
@@ -8547,7 +8547,7 @@
         "assessment-psychometric-hardening.js",
         "assessment-discrimination-hardening.js"
       ],
-      "fingerprint": "sha256-a24329da046cd047eae6e61ecd98aae33dd5cc2ce851ed135743530d1783277d"
+      "fingerprint": "sha256-9d1ca94ceefcb09c3ef3c240795e33aa06a767b9d31550b28aebe8c828a6adbf"
     },
     {
       "id": "optional-material:hdpe-lot-shrink:1",
@@ -8564,7 +8564,7 @@
         "Response — Change five settings at once",
         "Response — Compare material data and in-mould response at fixed conditions",
         "Response — Use colour as a proxy for viscosity under a controlled repeat with a documented acceptance rule",
-        "Response — Use most HDPE grades shrink identically under a controlled repeat with a documented acceptance rule as the provisional working explanation during the next comparison"
+        "Response — Treat the proposition that most HDPE grades shrink identically under a controlled repeat with a documented acceptance rule as a provisional hypothesis for the next controlled comparison"
       ],
       "answerKey": 1,
       "rationale": "Correct. Compare material data and in-mould response at fixed conditions. This directly addresses crystallinity, shrinkage and lot rheology.",
@@ -8572,7 +8572,7 @@
         "Plausible competing response, but not the strongest supported decision. “Change five settings at once” should be rejected because the stated observation window discriminates more strongly toward the keyed response.",
         "Correct. Compare material data and in-mould response at fixed conditions. This directly addresses crystallinity, shrinkage and lot rheology.",
         "Plausible competing response, but not the strongest supported decision. “Use colour as a proxy for viscosity under a controlled repeat with a documented acceptance rule” should be rejected because the stated observation window discriminates more strongly toward the keyed response.",
-        "Plausible competing response, but not the strongest supported decision. “Use most HDPE grades shrink identically under a controlled repeat with a documented acceptance rule as the provisional working explanation during the next comparison” should be rejected because the stated observation window discriminates more strongly toward the keyed response."
+        "Plausible competing response, but not the strongest supported decision. “Treat the proposition that most HDPE grades shrink identically under a controlled repeat with a documented acceptance rule as a provisional hypothesis for the next controlled comparison” should be rejected because the stated observation window discriminates more strongly toward the keyed response."
       ],
       "evidence": {
         "mode": "explicit-source-ids",
@@ -8594,7 +8594,7 @@
         "assessment-psychometric-hardening.js",
         "assessment-discrimination-hardening.js"
       ],
-      "fingerprint": "sha256-11523b951fa977ff1670424f0070a86e1ae64e984451f4cf746644402663cfaf"
+      "fingerprint": "sha256-c4bc08a2f5259914d679315ddbe5d521ddd180e1d62b836fcd7b94f247f0aa91"
     },
     {
       "id": "optional-material:hdpe-lot-shrink:2",
@@ -8751,7 +8751,7 @@
         "Response — Increase clamp force under a controlled repeat with a documented acceptance rule",
         "Response — Verify the material pair, surface and bond strength under controlled conditions",
         "Response — Judge adhesion by appearance under a controlled repeat with a documented acceptance rule",
-        "Response — Shorten cooling primarily"
+        "Response — Shorten cooling primarily; compare it against the stated evidence before acting"
       ],
       "answerKey": 1,
       "rationale": "Correct. Verify the material pair, surface and bond strength under controlled conditions. This directly addresses interface thermal history and material compatibility.",
@@ -8759,7 +8759,7 @@
         "Plausible competing response, but not the strongest supported decision. “Increase clamp force under a controlled repeat with a documented acceptance rule” should be rejected because the stated observation window discriminates more strongly toward the keyed response.",
         "Correct. Verify the material pair, surface and bond strength under controlled conditions. This directly addresses interface thermal history and material compatibility.",
         "Plausible competing response, but not the strongest supported decision. “Judge adhesion by appearance under a controlled repeat with a documented acceptance rule” should be rejected because the stated observation window discriminates more strongly toward the keyed response.",
-        "Plausible competing response, but not the strongest supported decision. “Shorten cooling primarily” should be rejected because the stated observation window discriminates more strongly toward the keyed response."
+        "Plausible competing response, but not the strongest supported decision. “Shorten cooling primarily; compare it against the stated evidence before acting” should be rejected because the stated observation window discriminates more strongly toward the keyed response."
       ],
       "evidence": {
         "mode": "explicit-source-ids",
@@ -8781,7 +8781,7 @@
         "assessment-psychometric-hardening.js",
         "assessment-discrimination-hardening.js"
       ],
-      "fingerprint": "sha256-d1b53b00e2b9f9682c3cff0f8830efb19ebfa9fd9091781b2e3f8a00413796bc"
+      "fingerprint": "sha256-e917d849238c8c7648fd94ec7c253915e615c9751b9656eb28c75f00b08d4eed"
     },
     {
       "id": "optional-material:tpe-overmould-compatibility:2",
