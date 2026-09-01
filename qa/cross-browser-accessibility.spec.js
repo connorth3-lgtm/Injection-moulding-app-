@@ -17,15 +17,17 @@ test('runtime starts coherently with the audited hardening layers',async({page,b
   const state=await page.evaluate(()=>({
     discrimination:window.MM_ASSESSMENT_DISCRIMINATION_HARDENING||null,
     atlasEvidence:window.MM_PROCESS_ATLAS_CASE_EVIDENCE||null,
+    psychometric:window.MM_PSYCHOMETRIC_HARDENING||null,
     shell:window.MM_APP_SHELL_FINALIZED,
     browser:navigator.userAgent
   }));
   expect(state.shell).toBe('2026.08.26.4');
-  expect(state.discrimination?.status).toBe('approved');
+  expect(state.discrimination?.status,`${browserName} discrimination metadata: ${JSON.stringify(state.discrimination)}`).toBe('approved');
   expect(state.discrimination?.targetedItems).toBe(111);
   expect(state.discrimination?.cueWarningsAfter).toBe(0);
   expect(state.atlasEvidence?.status).toBe('approved');
   expect(state.atlasEvidence?.cases).toBe(200);
+  expect(state.psychometric?.itemsHardened).toBe(197);
   expect(errors,`${browserName} page errors`).toEqual([]);
 });
 
