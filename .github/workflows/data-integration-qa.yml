@@ -10,6 +10,8 @@ on:
       - 'current-data-manifest.json'
       - 'app-shell-finalize.js'
       - 'service-worker.js'
+      - 'desktop/electron/package.json'
+      - 'desktop/electron/scripts/generate-integrity.cjs'
       - 'tools/build_pages_artifact.py'
       - 'tools/generate_current_data_manifest.py'
       - 'qa_data_integration.py'
@@ -37,6 +39,7 @@ jobs:
           node --check process-data-intelligence-ui.js
           node --check app-shell-finalize.js
           node --check service-worker.js
+          node --check desktop/electron/scripts/generate-integrity.cjs
       - name: Current manifest is generated from governed ledger
         run: python tools/generate_current_data_manifest.py --check
       - name: Connected process-data architecture
