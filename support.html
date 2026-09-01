@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="theme-color" content="#08101d">
 <title>MouldMaster Academy — Support</title>
-<style>body{max-width:850px;margin:40px auto;padding:0 20px;background:#08101d;color:#edf5ff;font:16px/1.65 system-ui,-apple-system,"Segoe UI",sans-serif}a{color:#69a8ff}h1,h2{line-height:1.2}.box{padding:14px;border:1px solid #355474;border-radius:12px;background:#101c2f}.muted{color:#a9bdd6}</style>
+<style>body{max-width:850px;margin:40px auto;padding:0 20px;background:#08101d;color:#edf5ff;font:16px/1.65 system-ui,-apple-system,"Segoe UI",sans-serif}a{color:#69a8ff}h1,h2{line-height:1.2}.box{padding:14px;border:1px solid #355474;border-radius:12px;background:#101c2f}.muted{color:#a9bdd6}.actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}button,.action{display:inline-block;padding:9px 12px;border:1px solid #41658d;border-radius:9px;background:#182b45;color:#edf5ff;font:inherit;text-decoration:none;cursor:pointer}button:hover,.action:hover{background:#203a5d}.status{font-weight:700}</style>
 </head>
 <body>
 <h1>MouldMaster Academy — Support</h1>
@@ -17,23 +17,44 @@ Audited question bank: <span id="mmBank">2026.08.30.1</span><br>
 Assessment quality layer: <span id="mmQuality">2026.08.24.3</span><br>
 Learner-scoped analytics storage: <span id="mmScope">2026.08.24.4</span><br>
 Question evidence approval: <span id="mmEvidence">2026.08.25.2</span><br>
+Production observability: <span id="mmObservability">2026.09.01.1</span><br>
 Legacy Windows recovery content: <span id="mmRecovery">2026.08.21.1</span><br>
 <span class="muted" id="mmVersionStatus">Release values are synchronised from version.json when available.</span></div>
+<h2>App health and learner problem report</h2>
+<div class="box">
+<p class="status" id="mmHealthStatus" aria-live="polite">Checking this app copy…</p>
+<p>Production health diagnostics stay on this device. They record bounded technical categories such as app/runtime errors, failed same-origin assets, online/offline transitions, service-worker update state and public deployment coherence. They do not record learner names, notes, answer text, raw process data, full URLs/query strings or free-text error messages.</p>
+<div class="actions">
+<button type="button" id="mmHealthRun">Run health check</button>
+<button type="button" id="mmHealthCopy">Copy safe diagnostics</button>
+<button type="button" id="mmHealthClear">Clear local diagnostics</button>
+<a class="action" href="https://github.com/connorth3-lgtm/Injection-moulding-app-/issues/new?template=learner-problem.yml" rel="noopener">Report a learner problem</a>
+</div>
+<p class="muted">If you copy diagnostics, review the JSON before posting it. Do not attach progress backups, analytics exports, assessment answers or process-data files to a public issue.</p>
+</div>
 <h2>App does not update</h2><p>For the installed PWA, connect to the internet, open MouldMaster, close it fully and reopen it. Offline content is refreshed through the service worker after a successful online check.</p>
 <h2>Windows update blocked safely</h2><p>The legacy recovery launcher and the open Electron desktop are separate release lanes. If the legacy Windows updater says an update was blocked, keep the current installed recovery copy. The updater is designed to reject content that fails validation rather than replace a known-good copy.</p>
 <h2>Progress, analytics and backups</h2><p>Use the app's progress export before changing browser profiles, clearing site data or moving devices. Imported progress backups are validated and certificates are intentionally re-earned on the receiving device. Assessment analytics are a separate, learner-scoped, device-local diagnostic store and are not part of the progress backup; a successful progress import resets local assessment analytics to avoid mixing histories.</p>
 <h2>Certificates</h2><p>Current certificates are MouldMaster learning-completion records. They are not yet NZQA-approved qualifications, IACET CEUs, statutory authorisation or proof of machine-specific workplace competence.</p>
 <h2>Safety or technical concern</h2><p>Do not use the app to override a machine safeguard, site isolation procedure, resin supplier instruction or applicable legal requirement. If you identify a potentially incorrect safety or technical item, stop relying on that item until it has been reviewed against the cited/current source.</p>
-<h2>Publisher support contact</h2><p>For non-sensitive technical reports, use the public repository issue tracker: <a href="https://github.com/connorth3-lgtm/Injection-moulding-app-/issues" rel="noopener">MouldMaster GitHub Issues</a>. Do not post learner names, exported backups or other personal information in a public issue. A private publisher contact method must be supplied before any future service centrally collects learner personal information or where a distribution/accreditation process specifically requires one.</p>
+<h2>Publisher support contact</h2><p>For non-sensitive technical reports, use the learner-problem form above or the public repository issue tracker: <a href="https://github.com/connorth3-lgtm/Injection-moulding-app-/issues" rel="noopener">MouldMaster GitHub Issues</a>. Do not post learner names, exported backups or other personal information in a public issue. A private publisher contact method must be supplied before any future service centrally collects learner personal information or where a distribution/accreditation process specifically requires one.</p>
 <p><a href="./">Return to MouldMaster Academy</a> · <a href="./privacy.html">Privacy notice</a></p>
+<script src="./production-health.js"></script>
 <script>
 (async()=>{
- const ids={android_release:'mmPwa',desktop_release:'mmDesktop',content_version:'mmContent',question_bank_version:'mmBank',assessment_quality_version:'mmQuality',assessment_storage_scope_version:'mmScope',assessment_evidence_version:'mmEvidence',windows_recovery_release:'mmRecovery'};
+ const ids={android_release:'mmPwa',desktop_release:'mmDesktop',content_version:'mmContent',question_bank_version:'mmBank',assessment_quality_version:'mmQuality',assessment_storage_scope_version:'mmScope',assessment_evidence_version:'mmEvidence',production_observability_version:'mmObservability',windows_recovery_release:'mmRecovery'};
  try{
   const r=await fetch('./version.json',{cache:'no-store'});if(!r.ok)throw new Error('version fetch failed');const v=await r.json();
   for(const [k,id] of Object.entries(ids)){const el=document.getElementById(id);if(el&&v[k])el.textContent=v[k]}
   const s=document.getElementById('mmVersionStatus');if(s)s.textContent='Release values loaded from version.json.';
  }catch(_){const s=document.getElementById('mmVersionStatus');if(s)s.textContent='Showing the bundled release snapshot because version.json could not be refreshed.'}
+ const status=document.getElementById('mmHealthStatus');
+ const label=result=>result.status==='ok'?`Deployment health: current (${result.source_sha?.slice(0,12)||'verified'}, runtime ${result.assessment_runtime||'unknown'}).`:result.status==='offline'?'Deployment health: offline — using the local app copy.':result.status==='not-applicable'?'Deployment health: local desktop/development copy; public Pages check is not applicable.':result.status==='mismatch'?'Deployment health: mismatch detected. Reopen online and report this if it persists.':'Deployment health: current public metadata could not be reached.';
+ async function runHealth(){if(!window.MM_PRODUCTION_HEALTH){status.textContent='Local production diagnostics are unavailable in this copy.';return}status.textContent='Checking this app copy…';const result=await window.MM_PRODUCTION_HEALTH.checkDeployment();status.textContent=label(result)}
+ document.getElementById('mmHealthRun')?.addEventListener('click',runHealth);
+ document.getElementById('mmHealthCopy')?.addEventListener('click',async()=>{if(!window.MM_PRODUCTION_HEALTH){status.textContent='Local production diagnostics are unavailable in this copy.';return}const ok=await window.MM_PRODUCTION_HEALTH.copySafeSnapshot();status.textContent=ok?'Safe diagnostics copied. Review them before posting.':'Could not copy diagnostics automatically on this device.'});
+ document.getElementById('mmHealthClear')?.addEventListener('click',()=>{window.MM_PRODUCTION_HEALTH?.clear();status.textContent='Local production diagnostics cleared.'});
+ runHealth();
 })();
 </script>
 </body>

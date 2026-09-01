@@ -50,6 +50,10 @@ function patchEvidenceUi(){
   const panel=document.getElementById('mmSpecialistDashboard');
   if(panel){const meta=panel.querySelector('.mm-specialist-meta');let summary=meta?.querySelector('[data-evidence-summary]');if(meta&&!summary){meta.insertAdjacentHTML('beforeend','<span data-evidence-summary></span>');summary=meta.querySelector('[data-evidence-summary]')}if(summary)summary.textContent=`${GAP.evidenceSummary.promoted} promoted evidence lessons · ${GAP.evidenceSummary.provisional} provisional`}
 }
+function loadProductionHealth(){
+  if(window.MM_PRODUCTION_HEALTH||document.querySelector('script[data-mm-production-health]'))return;
+  const script=document.createElement('script');script.src='./production-health.js';script.async=true;script.dataset.mmProductionHealth='1';document.head.appendChild(script);
+}
 syncEvidenceExports();
 const originalSpecialistOpen=window.mmSpecialistOpen;
 const originalGapLesson=window.mmSpecialistGapLesson;
@@ -57,6 +61,7 @@ window.mmSpecialistOpen=function(){const result=originalSpecialistOpen?.();queue
 window.mmSpecialistGapLesson=function(id){const result=originalGapLesson?.(id);queueMicrotask(patchEvidenceUi);return result};
 window.MM_SPECIALIST_EVIDENCE_STATUS={version:'2026.08.29.1',statuses:{...EVIDENCE_STATUS},summary:{...GAP.evidenceSummary},scope:'Resolved display state from the historical mechanism registry plus the formal promotion overlay; no assessment, certificate, process-setting or production authority.'};
 
+loadProductionHealth();
 window.MM_APP_SHELL.finalize();
 const geometryStyle=document.getElementById('mm-app-shell-registry-style');
 if(geometryStyle&&geometryStyle.parentNode===document.head)document.head.appendChild(geometryStyle);

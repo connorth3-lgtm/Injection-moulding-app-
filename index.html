@@ -23,9 +23,9 @@
   (async function(){
     "use strict";
     const SHELL_RELEASE="2026.08.26.2";
-    const RUNTIME_ASSET_VERSION="20260826.15-assessment-evidence-integrity";
+    const RUNTIME_ASSET_VERSION="20260826.16-assessment-evidence-observability";
     const CORE_URL="./MouldMaster_Core_App.html";
-    const EXPECTED_STATIC_CACHE="mouldmaster-static-2026.08.26.2-assessment-evidence-integrity-20260826";
+    const EXPECTED_STATIC_CACHE="mouldmaster-static-2026.08.26.2-assessment-evidence-observability-20260901";
     const HEAD_ASSETS=[
       ['manifest.webmanifest','<link rel="manifest" href="./manifest.webmanifest">'],
       ['rel="icon" type="image/png" sizes="192x192"','<link rel="icon" type="image/png" sizes="192x192" href="./mouldmaster-192.png">'],
@@ -34,6 +34,7 @@
       ['mm-shell-release','<meta name="mm-shell-release" content="'+SHELL_RELEASE+'">']
     ];
     const BODY_SCRIPTS=[
+      ['./production-health.js','<script src="./production-health.js">'],
       ['./reading-patch.js','<script src="./reading-patch.js">'],
       ['./training-upgrade.js','<script src="./training-upgrade.js">'],
       ['./training-qa-fix.js','<script src="./training-qa-fix.js">'],

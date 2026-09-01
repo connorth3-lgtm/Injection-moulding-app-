@@ -1,5 +1,5 @@
 const CACHE_VERSION='2026.08.26.2';
-const CACHE_REVISION='assessment-evidence-integrity-20260826';
+const CACHE_REVISION='assessment-evidence-observability-20260901';
 const STATIC_CACHE=`mouldmaster-static-${CACHE_VERSION}-${CACHE_REVISION}`;
 const CORE=[
   './index.html',
@@ -65,6 +65,7 @@ const CORE=[
   './specialist-evidence-gap-extension.js',
   './mould-master-workspace.js',
   './app-shell-finalize.js',
+  './production-health.js',
   './learning-analytics.js',
   './repair.html',
   './privacy.html',
