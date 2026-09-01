@@ -2,7 +2,7 @@ const CACHE_VERSION='2026.08.26.2';
 const CACHE_REVISION='maturity-hardening-v2-20260902';
 const STATIC_CACHE=`mouldmaster-static-${CACHE_VERSION}-${CACHE_REVISION}`;
 
-// Small fail-closed offline foundation. Feature packs are published but cached on runtime request.
+// Small fail-closed offline foundation. Remaining feature packs are warmed best-effort and never block activation.
 const CORE=[
   './index.html',
   './MouldMaster_Core_App.html',
@@ -87,21 +87,25 @@ const OPTIONAL=[
   './process-data-20-pass-atlas.js'
 ];
 
+async function cacheAsset(cache,url){
+  const request=new Request(url,{cache:'reload'});
+  const response=await fetch(request);
+  if(!response||!response.ok)throw new Error(`${url} returned ${response?.status||'no-response'}`);
+  await cache.put(url,response.clone());
+  return url;
+}
+
 self.addEventListener('install',event=>{
   event.waitUntil((async()=>{
     const cache=await caches.open(STATIC_CACHE);
-    const results=await Promise.allSettled(CORE.map(async url=>{
-      const request=new Request(url,{cache:'reload'});
-      const response=await fetch(request);
-      if(!response||!response.ok)throw new Error(`${url} returned ${response?.status||'no-response'}`);
-      await cache.put(url,response.clone());
-      return url;
-    }));
-    const failed=results.map((x,i)=>x.status==='rejected'?CORE[i]:null).filter(Boolean);
+    const coreResults=await Promise.allSettled(CORE.map(url=>cacheAsset(cache,url)));
+    const failed=coreResults.map((x,i)=>x.status==='rejected'?CORE[i]:null).filter(Boolean);
     if(failed.length){
       await caches.delete(STATIC_CACHE);
       throw new Error(`MouldMaster offline core update is incomplete; keeping the previous worker. Missing: ${failed.join(', ')}`);
     }
+    // Best-effort warmup preserves broad offline coverage, but a niche feature-pack failure no longer rejects an otherwise coherent core update.
+    await Promise.allSettled(OPTIONAL.map(url=>cacheAsset(cache,url)));
     await self.skipWaiting();
   })());
 });
@@ -141,7 +145,7 @@ self.addEventListener('fetch',event=>{
         const r=await fetch(event.request,{cache:'no-store'});
         if(r&&r.ok){if(isShell){const c=await caches.open(STATIC_CACHE);await c.put('./index.html',r.clone())}return r}
       }catch(_){}
-      return await caches.match(event.request,{ignoreSearch:true})||await caches.match('./index.html')||new Response('<!doctype html><meta name="viewport" content="width=device-width,initial-scale=1"><title>MouldMaster offline</title><main style="font:16px system-ui;padding:24px;max-width:680px"><h1>MouldMaster is not fully installed offline yet</h1><p>Reconnect once and reopen the app. The core shell installs atomically; additional learning and specialist packs are cached after the runtime requests them online.</p></main>',{status:503,headers:{'Content-Type':'text/html; charset=utf-8','Cache-Control':'no-store'}});
+      return await caches.match(event.request,{ignoreSearch:true})||await caches.match('./index.html')||new Response('<!doctype html><meta name="viewport" content="width=device-width,initial-scale=1"><title>MouldMaster offline</title><main style="font:16px system-ui;padding:24px;max-width:680px"><h1>MouldMaster is not fully installed offline yet</h1><p>Reconnect once and reopen the app. The core shell installs atomically; additional learning and specialist packs are warmed best-effort and cached again when requested online.</p></main>',{status:503,headers:{'Content-Type':'text/html; charset=utf-8','Cache-Control':'no-store'}});
     })());
     return;
   }
