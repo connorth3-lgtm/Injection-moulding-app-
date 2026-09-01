@@ -1,6 +1,8 @@
-const CACHE_VERSION='2026.08.26.2';
-const CACHE_REVISION='maturity-hardening-v2-20260901';
+const CACHE_VERSION='2026.09.02.1';
+const CACHE_REVISION='connected-data-runtime-v1-20260902';
 const STATIC_CACHE=`mouldmaster-static-${CACHE_VERSION}-${CACHE_REVISION}`;
+
+// Small fail-closed offline foundation. Feature packs are published but cached on demand.
 const CORE=[
   './index.html',
   './MouldMaster_Core_App.html',
@@ -14,6 +16,30 @@ const CORE=[
   './read-aloud.js',
   './training-upgrade.js',
   './training-qa-fix.js',
+  './runtime-v2.js',
+  './assessment-runtime-v2.js',
+  './app-shell-registry.js',
+  './pwa-shell.js',
+  './learning-experience.js',
+  './process-data-diagnostics.js',
+  './process-data-local-intake.js',
+  './curriculum-integration.js',
+  './specialist-curriculum.js',
+  './specialist-evidence-gap-extension.js',
+  './mould-master-workspace.js',
+  './learning-analytics.js',
+  './accessibility-hardening.js',
+  './app-shell-finalize.js',
+  './production-health.js',
+  './data-integration-runtime.js',
+  './process-data-semantic-registry.json',
+  './current-data-manifest.json',
+  './repair.html',
+  './privacy.html',
+  './support.html'
+];
+
+const OPTIONAL=[
   './assessment-100-pass.js',
   './assessment-deep-dive.js',
   './assessment-answer-cue-fix.js',
@@ -22,8 +48,6 @@ const CORE=[
   './assessment-stable-review-bridge.js',
   './assessment-analytics-ui.js',
   './assessment-final-hardening.js',
-  './runtime-v2.js',
-  './assessment-runtime-v2.js',
   './assessment-ux.js',
   './source-library.js',
   './measured-evidence-integration.js',
@@ -47,11 +71,7 @@ const CORE=[
   './lesson-deep-authoring-v2.js',
   './assessment-evidence-approval.js',
   './assessment-psychometric-approval.js',
-  './app-shell-registry.js',
   './assessment-multimodal.js',
-  './pwa-shell.js',
-  './learning-experience.js',
-  './process-data-diagnostics.js',
   './real-measured-data-assessment.js',
   './process-data-deep-dive-machine.js',
   './process-data-deep-dive-tooling.js',
@@ -63,19 +83,7 @@ const CORE=[
   './process-data-20-pass-06-10.js',
   './process-data-20-pass-11-15.js',
   './process-data-20-pass-16-20.js',
-  './process-data-20-pass-atlas.js',
-  './process-data-local-intake.js',
-  './curriculum-integration.js',
-  './specialist-curriculum.js',
-  './specialist-evidence-gap-extension.js',
-  './mould-master-workspace.js',
-  './app-shell-finalize.js',
-  './production-health.js',
-  './learning-analytics.js',
-  './accessibility-hardening.js',
-  './repair.html',
-  './privacy.html',
-  './support.html'
+  './process-data-20-pass-atlas.js'
 ];
 
 self.addEventListener('install',event=>{
@@ -91,7 +99,7 @@ self.addEventListener('install',event=>{
     const failed=results.map((x,i)=>x.status==='rejected'?CORE[i]:null).filter(Boolean);
     if(failed.length){
       await caches.delete(STATIC_CACHE);
-      throw new Error(`MouldMaster offline update is incomplete; keeping the previous worker. Missing: ${failed.join(', ')}`);
+      throw new Error(`MouldMaster offline core update is incomplete; keeping the previous worker. Missing: ${failed.join(', ')}`);
     }
     await self.skipWaiting();
   })());
@@ -118,7 +126,7 @@ async function fetchAndCache(event,url){
 }
 function criticalOfflineResponse(url){
   if(url.pathname.endsWith('.json'))return new Response(JSON.stringify({error:'mouldmaster-offline-asset-unavailable'}),{status:503,headers:{'Content-Type':'application/json; charset=utf-8','Cache-Control':'no-store'}});
-  return new Response('/* MouldMaster runtime asset is unavailable offline. Reconnect and reopen the app to complete the current update. */\n',{status:503,headers:{'Content-Type':'text/javascript; charset=utf-8','Cache-Control':'no-store','X-Content-Type-Options':'nosniff'}})
+  return new Response('/* MouldMaster runtime asset is unavailable offline. Reconnect and reopen the app to cache this optional feature pack. */\n',{status:503,headers:{'Content-Type':'text/javascript; charset=utf-8','Cache-Control':'no-store','X-Content-Type-Options':'nosniff'}})
 }
 
 self.addEventListener('fetch',event=>{
@@ -132,7 +140,7 @@ self.addEventListener('fetch',event=>{
         const r=await fetch(event.request,{cache:'no-store'});
         if(r&&r.ok){if(isShell){const c=await caches.open(STATIC_CACHE);await c.put('./index.html',r.clone())}return r}
       }catch(_){}
-      return await caches.match(event.request,{ignoreSearch:true})||await caches.match('./index.html')||new Response('<!doctype html><meta name="viewport" content="width=device-width,initial-scale=1"><title>MouldMaster offline</title><main style="font:16px system-ui;padding:24px;max-width:680px"><h1>MouldMaster is not fully installed offline yet</h1><p>Reconnect once and reopen the app. A partial update is never activated; if you previously installed MouldMaster, the last complete worker remains the safe fallback.</p></main>',{status:503,headers:{'Content-Type':'text/html; charset=utf-8','Cache-Control':'no-store'}});
+      return await caches.match(event.request,{ignoreSearch:true})||await caches.match('./index.html')||new Response('<!doctype html><meta name="viewport" content="width=device-width,initial-scale=1"><title>MouldMaster offline</title><main style="font:16px system-ui;padding:24px;max-width:680px"><h1>MouldMaster is not fully installed offline yet</h1><p>Reconnect once and reopen the app. The core shell installs atomically; optional learning and specialist packs are cached after they are used online.</p></main>',{status:503,headers:{'Content-Type':'text/html; charset=utf-8','Cache-Control':'no-store'}});
     })());
     return;
   }
