@@ -20,7 +20,7 @@ const EVIDENCE_STATUS=Object.freeze({
 });
 const GAP=window.MM_SPECIALIST_EVIDENCE_GAPS;
 const BASE=window.MM_SPECIALIST_CURRICULUM;
-function esc(v){return String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot',"'":'&#39;'}[c]))}
+function esc(v){return String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
 function syncEvidenceExports(){
   for(const lesson of GAP.lessons){
     const state=EVIDENCE_STATUS[lesson.evidenceArea]||'Provisional';
@@ -60,6 +60,10 @@ function loadConnectedDataRuntime(){
   script.src='./data-integration-runtime.js';
   script.async=true;
   script.dataset.mmConnectedData='1';
+  script.addEventListener('load',()=>{
+    if(window.MM_PROCESS_INTELLIGENCE_UI||document.querySelector('script[data-mm-process-intelligence]'))return;
+    const ui=document.createElement('script');ui.src='./process-data-intelligence-ui.js';ui.async=true;ui.dataset.mmProcessIntelligence='1';document.head.appendChild(ui);
+  });
   script.addEventListener('error',()=>console.error('MouldMaster connected process-data runtime could not be loaded'));
   document.head.appendChild(script);
 }
