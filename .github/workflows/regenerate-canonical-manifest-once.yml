@@ -1,0 +1,40 @@
+name: Regenerate Canonical Manifest Once
+
+on:
+  push:
+    branches: [audit-hardening-20260902]
+    paths:
+      - '.github/workflows/regenerate-canonical-manifest-once.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  regenerate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: audit-hardening-20260902
+      - uses: actions/setup-python@v7
+        with:
+          python-version: '3.13'
+      - uses: actions/setup-node@v7
+        with:
+          node-version: '22'
+          package-manager-cache: false
+      - name: Regenerate canonical manifest
+        run: python tools/generate_assessment_manifest.py
+      - name: Commit regenerated manifest if changed
+        shell: bash
+        run: |
+          git add data/canonical-assessment-manifest-v1.json
+          if git diff --cached --quiet; then
+            echo 'Canonical manifest already current.'
+            exit 0
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m 'Regenerate canonical assessment manifest'
+          git push origin HEAD:audit-hardening-20260902
