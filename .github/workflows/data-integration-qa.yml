@@ -8,6 +8,8 @@ on:
       - 'process-data-intelligence-ui.js'
       - 'process-data-semantic-registry.json'
       - 'current-data-manifest.json'
+      - 'data/measured-data-collection-closeout-2026-08-30.json'
+      - 'index.html'
       - 'app-shell-finalize.js'
       - 'service-worker.js'
       - 'desktop/electron/package.json'
