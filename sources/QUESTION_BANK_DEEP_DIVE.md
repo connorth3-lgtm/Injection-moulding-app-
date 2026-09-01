@@ -1,18 +1,39 @@
 # MouldMaster question-and-answer deep dive
 
-Reviewed: 30 August 2026
+Reviewed: 2 September 2026
 
 ## Scope
 
-This review now covers the complete keyed learner-assessment surface: **all 57 live exam questions** plus **100 optional practice questions**, for **157 evidence-approved keyed questions** in total.
+The canonical keyed learner-assessment inventory is `data/canonical-assessment-manifest-v1.json`, generated from the actual hardened runtime by `tools/generate_assessment_manifest.py`. It currently contains **209 unique keyed learner decisions**:
 
-The 57 live items comprise **30 technical questions** and **27 regional UK/US/NZ safety/compliance questions**. The optional practice bank comprises **40 shop-floor scenario drills**, **36 Diagnostic Learning Lab decisions** across nine four-stage labs, and **24 Material Behaviour Lab decisions** across six four-stage labs.
+- 30 technical exam questions;
+- 27 regional UK/US/NZ safety/compliance questions;
+- 40 scenario drills;
+- 36 Diagnostic Learning Lab decisions across nine four-stage labs;
+- 24 Material Behaviour Lab decisions across six four-stage labs;
+- 40 optional Material Practice decisions;
+- 12 Real Measured-Data Evidence decisions across four pinned data-contract cases.
 
-All regional safety/compliance stems and options were upgraded from rule-name recall to applied workplace decisions. **Regional answer changes remain 0**: the existing safety-critical key positions were preserved and are guarded at runtime. Current official-source checks continue to support the keyed jurisdiction logic.
+The standardized assessment/practice bank is therefore **197 decisions**, with the measured-data evidence module adding **12**, for **209 total**. The generated manifest, not a prose count in this document, is the release source of truth.
 
-**All 30 technical questions are now evidence-reasoning questions.** They require interpretation, diagnosis, discrimination, verification or a justified insufficient-evidence conclusion rather than simple definition spotting.
+All regional safety/compliance stems and options remain applied workplace decisions rather than rule-name recall. Regional answer changes remain zero in this hardening wave: safety-critical key positions are preserved and governed by direct official sources.
 
-The optional bank is not treated as second-class content. Its release gates require one defensible answer, four distinct choices, aligned feedback, safe educational boundaries and evidence approval. The Diagnostic Learning Labs deliberately use the sequence **Observe → Best next test → Controlled response → Explain**; Material Behaviour Labs require exactly one correct decision per four-choice stage and explicit evidence-source mappings; all 40 scenarios retain stable identities, four choices, a valid key, feedback, category and difficulty metadata.
+All 30 technical questions remain evidence-reasoning questions requiring interpretation, diagnosis, discrimination, verification or a justified insufficient-evidence conclusion rather than simple definition spotting.
+
+## 2 September discrimination hardening
+
+The adversarial question audit identified wording/testwiseness cues rather than incorrect answer keys. The reviewed population was exactly **179 cue warnings across 111 unique standardized items**:
+
+- 77 evidence/action-verb key cues;
+- 45 parameter-change distractor cues;
+- 24 correct-answer qualification-density cues;
+- 16 moderate correct-answer length-salience cues;
+- 15 negation key cues;
+- 2 implausibly short distractors.
+
+`assessment-discrimination-hardening.js` is fail-closed against that exact pre-rewrite population. It changes option wording only if all reviewed counts match. It preserves every correct index and assessed proposition, keeps unsafe safeguard-bypass distractors explicitly unacceptable, balances visible option framing, and improves weak distractor feedback. `qa_assessment_discrimination.py` verifies **111 targeted items, 179 audited cue warnings before, zero after, and zero answer-key changes**.
+
+The rewrite does not claim empirical psychometric validity. It removes known language cues so future learner performance is less likely to be inflated by recognising MouldMaster's preferred wording patterns. Real learner item statistics remain necessary for difficulty/discrimination calibration.
 
 ## Five evidence-reasoning modes
 
@@ -24,54 +45,51 @@ The bank deliberately covers five evidence-reasoning modes:
 4. **Verification** — identify recovery, confirmation or repeatability evidence that supports or challenges a conclusion.
 5. **Insufficient evidence** — fail closed when units, references, signal semantics, confounding or measurement adequacy do not support a defensible conclusion.
 
-## Main findings and corrections
+## Main content findings retained
 
-- Definition spotting was too easy in the old technical bank; all 30 technical questions now require applied evidence reasoning.
-- All **27 regional** items now ask what action or interpretation follows from the applicable safety/compliance evidence rather than testing statute-name recall. Their safety-critical keys remain unchanged.
-- Single-signal root-cause claims were weakened in favour of linked evidence, repeatability and known-good comparison.
-- Setpoints are explicitly separated from physical process actuals.
+- Single-signal root-cause claims are avoided in favour of linked evidence, repeatability and known-good comparison.
+- Setpoints are separated from physical process actuals.
 - Cavity and branch identity are preserved instead of being averaged away before local causes are investigated.
-- Gate-seal wording remains qualified to the tested stable condition and measurement resolution.
+- Gate-seal wording is qualified to the tested stable condition and measurement resolution.
 - Cooling questions use circuit, thermal and product evidence rather than unrelated compensation.
-- MFR is treated as a specified-condition material measure, not a complete moulding rheology description.
+- MFR is treated as a specified-condition material measure, not a complete moulding-rheology description.
 - Capability questions require stability, measurement adequacy and process-structure awareness.
 - DOE questions test interactions, confounding and independent confirmation.
-- **Insufficient evidence is a valid expert answer.** Quantitative pressure-loss claims are blocked when channel location, unit/reference or timing semantics are unresolved.
+- **Insufficient evidence remains a valid expert answer.** Quantitative pressure-loss claims are blocked when channel location, unit/reference or timing semantics are unresolved.
 - Machine transfer is framed around reproducing validated physical outputs, not copying machine-specific recipe numbers.
-- Optional scenarios and labs are evidence-led practice. Their distractors are learning contrasts, not authorised operating instructions, and safeguard bypass is explicitly rejected.
+- Wrong answers are learning contrasts, not authorised operating instructions, and safeguard bypass remains explicitly rejected.
 
-## Optional-question release coverage
+## Release coverage
 
-The additional 100 keyed questions are release-gated as follows:
+The 209-item canonical manifest requires stable identity, four distinct choices, one valid key, rationale/feedback, evidence metadata, internal approval metadata, revision and a deterministic content fingerprint.
 
-- **40 scenario drills** — exact stable-ID/title uniqueness, four-choice/key/feedback integrity, category/difficulty metadata, evidence approval and answer-cue/near-duplicate review.
-- **36 Diagnostic Learning Lab decisions** — nine labs × four reasoning stages, exact one-best-answer structure, four distinct choices, feedback for every choice, evidence-first learning loop, local-only progress, no universal recipes and explicit safeguard-bypass rejection.
-- **24 Material Behaviour Lab decisions** — six labs × four reasoning stages, exact one correct answer among four choices, explicit material/source mappings, grade-specific processing boundaries and safety controls.
-- **157/157 evidence approval** — the evidence-approval gate covers the 57 live items plus all 100 optional questions and fails closed if a keyed item loses suitable evidence.
+The historical evidence-approval runtime directly models 157 technical/regional/scenario/diagnostic/material decisions. The canonical manifest extends complete governance to the 40 optional Material Practice decisions and 12 measured-data decisions, so the historical 157 count must no longer be described as the complete question bank.
 
-Good optional questions were retained rather than mechanically rewritten. Items are changed only when a stronger question, distractor, explanation or evidence boundary is needed; unchanged strong items remain covered by the same structural and evidence gates.
+The optional practice bank is release-gated, not second-class content. Diagnostic Learning Labs deliberately use the sequence **Observe → Best next test → Controlled response → Explain**. Material Behaviour and optional Material Practice decisions use explicit source mappings and grade-specific/safety boundaries.
 
-## Measured-evidence connection
+## Measured-data connection
 
-Questions use the **types of evidence** represented in MouldMaster's audited measured-data layer—pressure, flow, cavity pressure, thermal/cooling behaviour, shot/cycle actuals, machine/mould sensing and quality outcomes—to teach interpretation. No raw third-party rows are copied into the question bank and study-specific values are not converted into universal production settings.
+The 12 Real Measured-Data Evidence decisions use audited aggregate contracts from real public datasets. They teach the distinction between measured values, commands, time samples/cycles, source-defined units, unresolved semantics and bounded experimental evidence.
 
-## Current source anchors
+The current upper-workpiece pressure unit and state-code semantics remain deliberately unresolved; the questions require exclusion/fail-closed interpretation rather than guessing by analogy. No study-specific values are converted into universal production settings.
+
+## Source anchors
 
 Peer-reviewed and technical evidence includes AVAPS/scatimdata pressure/flow evidence, Jansen/Pantani/Titomanlio gate-seal evidence, Hamdi MFR/flow-length work, Tsou oil/nozzle/cavity-pressure work, Araújo in-cavity failure diagnosis, Liew real-time sensing, Zhao shrinkage/warpage evidence, and NIST process-capability/DOE/confirmation guidance.
 
-Current safety anchors include:
-
-- **ISO 20430:2020** — injection moulding machine safety requirements: https://www.iso.org/standard/68000.html
-- **OSHA 29 CFR 1910.147** — hazardous-energy control and its narrow minor-servicing exception: https://www.osha.gov/laws-regs/regulations/standardnumber/1910/1910.147
-- **WorkSafe New Zealand** — machine lockout/isolation guidance: https://www.worksafe.govt.nz/topic-and-industry/machinery/keeping-workers-safe-with-machine-lockouts/
+Current safety anchors include ISO 20430:2020, OSHA 29 CFR 1910.147 and WorkSafe New Zealand machinery isolation/lockout guidance. Jurisdiction-dependent content remains subject to source-freshness review rather than being treated as timeless engineering fact.
 
 ## Question-design rules retained
 
 - One defensible best answer and four distinct options per keyed item.
 - Regional questions remain safety-critical and jurisdiction-specific.
-- Wrong answers are distractors, not authorised procedures.
+- Wrong answers are plausible competing interpretations but are not authorised procedures.
 - No universal drying, temperature, pressure, speed, clamp or cooling setting is taught as a rule.
 - Explanations identify why the nearest competing answer is weaker.
 - Research results support mechanisms and methods, not automatic local production settings.
 - Unresolved measurement units, references, semantics or provenance fail closed.
 - Supplier grade data, machine/mould documentation, approved procedures, applicable law and product-specific validation remain controlling.
+
+## Remaining validation boundary
+
+Automated structural, evidence, cue and cross-browser checks do not replace real learner psychometrics or formal accessibility validation. Item difficulty/discrimination must be monitored from privacy-appropriate learner evidence, and any formal accessibility claim remains subject to the manual NVDA/VoiceOver/real-device protocol in `sources/ACCESSIBILITY_MANUAL_VALIDATION.md`.
