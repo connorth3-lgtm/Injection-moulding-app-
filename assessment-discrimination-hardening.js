@@ -59,5 +59,10 @@ function run(attempt=0){if(window.MM_ASSESSMENT_DISCRIMINATION_HARDENING?.versio
  for(const {r,x,fs} of targets){const options=rebalance(x.options,x.key,fs),feedback=options.map((text,i)=>i===x.key?String(x.feedback?.[i]||'Correct. This is the strongest response supported by the stated evidence.'):wrongFeedback(text));r.set({options,key:x.key,feedback})}
  const afterCounts=Object.fromEntries(Object.keys(EXPECTED_COUNTS).map(k=>[k,0]));let afterWarnings=0;for(const r of records){const x=r.get();for(const f of flags(x.options,x.key))if(f in afterCounts){afterCounts[f]++;afterWarnings++}}
  const status=afterWarnings===0?'approved':'review-required';window.MM_ASSESSMENT_DISCRIMINATION_HARDENING={version:VERSION,status,targetedItems:targets.length,targetIds:targets.map(x=>x.r.id),cueWarningsBefore:beforeWarnings,cueWarningsAfter:afterWarnings,warningCountsBefore:beforeCounts,warningCountsAfter:afterCounts,answerKeysChanged:0,scope:'Rephrases only the audited cue-warning population after psychometric hardening. Correct indices and assessed propositions remain unchanged; safety-bypass distractors are never softened into acceptable actions.'};if(status!=='approved')console.warn('[MouldMaster] assessment discrimination hardening left review warnings',window.MM_ASSESSMENT_DISCRIMINATION_HARDENING)}
-run();
+function start(){
+ const begin=()=>{if(typeof setTimeout==='function')setTimeout(()=>run(),0);else run()};
+ if(typeof document!=='undefined'&&document&&document.readyState!=='complete'&&typeof window.addEventListener==='function')window.addEventListener('load',begin,{once:true});
+ else begin();
+}
+start();
 })();
