@@ -1,0 +1,49 @@
+name: Connected Process Data QA
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'data-integration-runtime.js'
+      - 'process-data-semantic-registry.json'
+      - 'current-data-manifest.json'
+      - 'app-shell-finalize.js'
+      - 'service-worker.js'
+      - 'tools/build_pages_artifact.py'
+      - 'tools/generate_current_data_manifest.py'
+      - 'qa_data_integration.py'
+      - '.github/workflows/data-integration-qa.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  connected-data:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: '22.12.0'
+          package-manager-cache: false
+      - uses: actions/setup-python@v7
+        with:
+          python-version: '3.12'
+      - name: JavaScript syntax
+        run: |
+          node --check data-integration-runtime.js
+          node --check app-shell-finalize.js
+          node --check service-worker.js
+      - name: Current manifest is generated from governed ledger
+        run: python tools/generate_current_data_manifest.py --check
+      - name: Connected process-data architecture
+        run: python qa_data_integration.py
+      - name: Public Pages artifact boundary
+        run: python tools/build_pages_artifact.py
+      - name: Confirm governed raw data is absent from public artifact
+        run: |
+          test -f .pages-dist/data-integration-runtime.js
+          test -f .pages-dist/process-data-semantic-registry.json
+          test -f .pages-dist/current-data-manifest.json
+          test ! -e .pages-dist/data
