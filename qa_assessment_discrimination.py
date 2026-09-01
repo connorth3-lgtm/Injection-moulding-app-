@@ -8,6 +8,7 @@ import qa_question_quality_extreme_runtime as psychometric
 
 ROOT=Path(__file__).resolve().parent
 SCRIPT=ROOT/'assessment-discrimination-hardening.js'
+FINALIZER=ROOT/'assessment-scenario-deep-dive-finalize.js'
 EXPECTED_COUNTS={
     'evidence-verb-key-cue':77,
     'parameter-change-distractor-cue':45,
@@ -63,8 +64,19 @@ process.stdout.write(JSON.stringify({items:out,meta:window.MM_ASSESSMENT_DISCRIM
 
 def main():
     need(SCRIPT.exists(),'assessment discrimination runtime is missing')
-    p=subprocess.run(['node','--check',str(SCRIPT)],capture_output=True,text=True)
-    need(p.returncode==0,'assessment-discrimination-hardening.js syntax error: '+(p.stderr or p.stdout))
+    need(FINALIZER.exists(),'guided-scenario deep-dive finalizer is missing')
+    for path in [SCRIPT,FINALIZER]:
+        p=subprocess.run(['node','--check',str(path)],capture_output=True,text=True)
+        need(p.returncode==0,f'{path.name} syntax error: '+(p.stderr or p.stdout))
+    finalizer=FINALIZER.read_text(encoding='utf-8')
+    need("const EXPECTED=8" in finalizer and "MM_SCENARIO_DEEP_DIVE_FINALIZED" in finalizer,'guided-scenario finalizer must fail closed on all eight reviewed scenarios')
+    idx=(ROOT/'index.html').read_text(encoding='utf-8');sw=(ROOT/'service-worker.js').read_text(encoding='utf-8')
+    pkg=json.loads((ROOT/'desktop/electron/package.json').read_text(encoding='utf-8'));integ=(ROOT/'desktop/electron/scripts/generate-integrity.cjs').read_text(encoding='utf-8')
+    resources={x.get('from') for x in pkg['build']['extraResources'] if isinstance(x,dict)}
+    need(idx.index("'./assessment-deep-dive.js'") < idx.index("'./assessment-scenario-deep-dive-finalize.js'") < idx.index("'./assessment-psychometric-hardening.js'"),'guided scenario finalizer must register after deep-dive and before psychometric hardening')
+    need("'./assessment-scenario-deep-dive-finalize.js'" in sw,'guided scenario finalizer missing from PWA cache')
+    need('../../assessment-scenario-deep-dive-finalize.js' in resources,'guided scenario finalizer missing from desktop package')
+    need("'assessment-scenario-deep-dive-finalize.js'" in integ,'guided scenario finalizer missing from desktop integrity manifest')
     before,after,meta=load_discrimination_runtime()
     need(meta and meta.get('status')=='approved',f'discrimination hardening did not approve: {meta}')
     need(meta.get('targetedItems')==111,f'expected 111 cue-warning items, got {meta.get("targetedItems")}')
@@ -87,7 +99,7 @@ def main():
                 core=re.sub(r'^Response\s*[—-]\s*','',str(o),flags=re.I)
                 need(not re.match(r'^(Ignore|Assume)\b',core,re.I),f"implausible distractor lead remains: {b['id']} option {i+1}")
                 need(len(re.findall(r"[A-Za-z0-9]+(?:[-'][A-Za-z0-9]+)?",core))>=4,f"distractor too thin: {b['id']} option {i+1}")
-    print('Assessment discrimination QA passed: 111 audited cue-warning items rewritten; 179 cue warnings reduced to 0; answer keys unchanged.')
+    print('Assessment discrimination QA passed: eight guided scenario rewrites finalized before psychometric hardening; 111 audited cue-warning items rewritten; 179 cue warnings reduced to 0; answer keys unchanged.')
 
 
 if __name__=='__main__':
