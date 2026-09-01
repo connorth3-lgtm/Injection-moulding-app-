@@ -36,6 +36,11 @@ training = read("training-upgrade.js")
 sbom = read("desktop/electron/scripts/generate-sbom.cjs")
 assessment_qa = read("qa_assessment_quality.py")
 question_runtime = read("qa_question_quality_50_pass_runtime.py")
+runtime_v2 = read("runtime-v2.js")
+assessment_runtime_v2 = read("assessment-runtime-v2.js")
+lesson_v2 = read("lesson-deep-authoring-v2.js")
+multimodal = read("assessment-multimodal.js")
+a11y = read("accessibility-hardening.js")
 
 shell_release = js_const(index, "SHELL_RELEASE")
 runtime_asset_version = js_const(index, "RUNTIME_ASSET_VERSION")
@@ -45,10 +50,10 @@ cache_revision = js_const(service_worker, "CACHE_REVISION")
 require(shell_release == cache_version, "browser shell release and PWA cache version must match")
 require(expected_static_cache == f"mouldmaster-static-{cache_version}-{cache_revision}", "bootstrap expected cache must exactly match the service-worker cache identity")
 require(re.fullmatch(r"\d{8}\.\d+-[a-z0-9-]+", runtime_asset_version) is not None, "runtime bundle token must retain dated revision + family format")
-require(runtime_asset_version[:8] == ''.join(cache_version.split('.')[:3]), "runtime bundle date must align with the PWA release date")
-runtime_family = runtime_asset_version.split('-', 1)[1]
-cache_family = re.sub(r"-\d{8}$", "", cache_revision)
-require(runtime_family == cache_family, "runtime asset family and PWA cache revision family must match")
+revision_date = re.search(r"(\d{8})$", cache_revision)
+require(revision_date is not None and runtime_asset_version[:8] == revision_date.group(1), "runtime bundle date must align with the active PWA cache revision date")
+require(runtime_asset_version.split('-', 1)[1] == "maturity-hardening-v2", "runtime bundle must identify the maturity-hardening-v2 family")
+require(cache_revision.startswith("maturity-hardening-v2-"), "PWA cache revision must identify the maturity-hardening-v2 family")
 
 must(index, [
     "viewport-fit=cover", "HEAD_ASSETS", "BODY_SCRIPTS",
@@ -60,11 +65,22 @@ must(index, [
     "owned.map(k=>caches.delete(k))", "fresh.searchParams.set('mmBundle',RUNTIME_ASSET_VERSION)",
     "if(await ensureCoherentRuntime())return;", "clearStaleRuntimeCaches",
     "k.startsWith('mouldmaster-static-')&&k!==EXPECTED_STATIC_CACHE", "await clearStaleRuntimeCaches();",
+    "Content-Security-Policy", "default-src 'self'", "object-src 'none'", "frame-src 'none'", "connect-src 'self'", "worker-src 'self'",
+    "'./runtime-v2.js'", "'./assessment-runtime-v2.js'", "'./lesson-deep-authoring-v2.js'", "'./assessment-multimodal.js'", "'./accessibility-hardening.js'",
     "'./assessment-psychometric-hardening.js'", "'./assessment-evidence-integrity-upgrade.js'", "'./assessment-psychometric-approval.js'",
     "'./real-measured-data-assessment.js'"
 ], "bootstrap hardening")
-require(index.index("'./evidence-maturity-formal-bridge.js'") < index.index("'./assessment-psychometric-hardening.js'") < index.index("'./assessment-evidence-integrity-upgrade.js'") < index.index("'./assessment-evidence-approval.js'") < index.index("'./assessment-psychometric-approval.js'") < index.index("'./app-shell-registry.js'"), "psychometric/evidence assets must load in deterministic approval order")
+require(index.index("'./assessment-final-hardening.js'") < index.index("'./runtime-v2.js'") < index.index("'./assessment-runtime-v2.js'") < index.index("'./assessment-ux.js'"), "runtime v2 must capture the audited assessment functions before the new selector owns getExamQuestions and before assessment UX decorates it")
+require(index.index("'./evidence-maturity-formal-bridge.js'") < index.index("'./assessment-psychometric-hardening.js'") < index.index("'./assessment-evidence-integrity-upgrade.js'") < index.index("'./lesson-evidence-depth.js'") < index.index("'./lesson-deep-authoring-v2.js'") < index.index("'./assessment-evidence-approval.js'") < index.index("'./assessment-psychometric-approval.js'") < index.index("'./app-shell-registry.js'") < index.index("'./assessment-multimodal.js'"), "psychometric/evidence/deep-authoring/multimodal assets must load in deterministic order")
 require(index.index("'./process-data-diagnostics.js'") < index.index("'./real-measured-data-assessment.js'"), "real measured assessment must load after the process-data navigation surface")
+require(index.rindex("'./accessibility-hardening.js'") > index.index("'./learning-analytics.js'"), "accessibility hardening must run after learner-facing runtime modules are installed")
+
+must(runtime_v2, ["const CORE=['renderLesson','renderDashboard','switchView','startExam','gradeExam','getExamQuestions']", "setImplementation", "already owned by", "before:new Set(),after:new Set()", "scopedKey", "registerModule", "one owner at a time"], "runtime v2")
+must(assessment_runtime_v2, ["technicalBankPerLevel:10", "technicalPerExam:7", "least-exposed blueprint-preserving stable IDs", "R.setImplementation('getExamQuestions',selector,'assessment-runtime-v2')", "BLUEPRINT=['materials','machine','tooling','process','quality','troubleshooting']", "coverageSimulation"], "assessment runtime v2")
+must(lesson_v2, ["D.lessons.length!==120", "duplicate lesson records", "Mechanism → evidence → decision", "Teach-back", "R.after('renderLesson'", "R.registerModule('lesson-deep-authoring-v2'"], "lesson deep authoring v2")
+require("window.renderLesson=function" not in lesson_v2, "new lesson depth must use runtime-v2 hooks rather than adding another renderLesson wrapper")
+must(multimodal, ["Multimodal formative assessment", "type:'chart'", "type:'table'", "type:'calculation'", "type:'sequence'", "formal certificate answer keys", "production setpoint", "machinery authorisation"], "multimodal assessment")
+must(a11y, ["aria-modal", "focusTrap:true", "focusRestore:true", "forced-colors:active", "prefers-contrast:more", "noopener", "noreferrer", "formal WCAG conformance still requires manual"], "accessibility hardening")
 
 must(shell, [
     "new MutationObserver(scheduleSync)", "el.textContent!==value", "syncUpdateCard", "[data-mm-update-card]",
@@ -102,9 +118,14 @@ must(service_worker, [
     "${CACHE_VERSION}-${CACHE_REVISION}", "'./repair.html'", "runtimeCritical=url.pathname.endsWith('.js')||url.pathname.endsWith('.json')",
     "const network=await fetchAndCache(event,url)", "if(network&&network.ok)return network", "'./reference-data.html'", "'./reference-2026-expansion.js'", "'./diagnostic-learning-labs.js'",
     "'./material-behaviour-labs.js'", "'./assessment-evidence-sources.js'", "'./evidence-maturity-deep-dive.js'", "'./evidence-maturity-formal-bridge.js'",
-    "'./assessment-psychometric-hardening.js'", "'./assessment-evidence-integrity-upgrade.js'", "'./lesson-evidence-depth.js'", "'./assessment-evidence-approval.js'", "'./assessment-psychometric-approval.js'",
-    "'./process-data-diagnostics.js'", "'./real-measured-data-assessment.js'", "'./curriculum-integration.js'", "'./specialist-curriculum.js'", "'./learning-analytics.js'"
+    "'./assessment-psychometric-hardening.js'", "'./assessment-evidence-integrity-upgrade.js'", "'./lesson-evidence-depth.js'", "'./lesson-deep-authoring-v2.js'", "'./assessment-evidence-approval.js'", "'./assessment-psychometric-approval.js'",
+    "'./runtime-v2.js'", "'./assessment-runtime-v2.js'", "'./assessment-multimodal.js'", "'./accessibility-hardening.js'",
+    "'./process-data-diagnostics.js'", "'./real-measured-data-assessment.js'", "'./curriculum-integration.js'", "'./specialist-curriculum.js'", "'./learning-analytics.js'",
+    "Promise.allSettled", "if(failed.length)", "await caches.delete(STATIC_CACHE)", "keeping the previous worker", "mouldmaster-offline-asset-unavailable"
 ], "PWA hardening")
+install = service_worker[service_worker.index("self.addEventListener('install'"):service_worker.index("self.addEventListener('activate'")]
+require("cache.addAll" not in install, "service-worker install should identify the exact failed assets rather than use opaque addAll failure")
+require("throw new Error" in install and "skipWaiting" in install, "service-worker install must fail closed before activation when any core asset is incomplete")
 
 must(approval, ["const coverageOk=!(summary.total!==157", "status:coverageOk?'approved':'update-required'", "function scheduleApproval()", "DOMContentLoaded',()=>setTimeout(buildApproval,0)", "Evidence metadata could not finish loading.", "showUpdateWarning"], "evidence approval hardening")
 must(psychometric_hardening, [
@@ -127,4 +148,4 @@ require("document.addEventListener('DOMContentLoaded',init)" in training, "train
 require("npm_execpath" in sbom and "result.error" in sbom, "desktop SBOM generation must use the npm CLI entry point and report spawn failures")
 require("NamedTemporaryFile" in assessment_qa and "['node','-e',node]" not in assessment_qa, "assessment runtime QA must not exceed OS command-line limits")
 
-print(f"MouldMaster runtime hardening QA passed ({runtime_asset_version}; {expected_static_cache}; proposition evidence + real measured assessment enabled)")
+print(f"MouldMaster runtime hardening QA passed ({runtime_asset_version}; {expected_static_cache}; runtime v2 + bank rotation + lesson depth + multimodal + accessibility enabled)")

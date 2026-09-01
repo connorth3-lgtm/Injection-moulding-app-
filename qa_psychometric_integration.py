@@ -49,16 +49,18 @@ for asset in ['./assessment-psychometric-hardening.js','./assessment-evidence-in
     need(asset in idx,f'browser shell missing {asset}')
 need(idx.index("'./evidence-maturity-formal-bridge.js'") < idx.index("'./assessment-psychometric-hardening.js'") < idx.index("'./assessment-evidence-integrity-upgrade.js'") < idx.index("'./assessment-evidence-approval.js'") < idx.index("'./assessment-psychometric-approval.js'") < idx.index("'./app-shell-registry.js'"),'psychometric/evidence browser load order is wrong')
 need(idx.index("'./process-data-diagnostics.js'") < idx.index("'./real-measured-data-assessment.js'"),'real measured assessment load order is wrong')
-need('20260826.16-assessment-evidence-observability' in idx,'browser runtime token must retain evidence-integrity family and advance for production observability')
+need('RUNTIME_ASSET_VERSION="20260901.17-maturity-hardening-v2"' in idx,'browser runtime token must advance to the maturity-hardening v2 bundle')
+need("'./runtime-v2.js'" in idx and "'./assessment-runtime-v2.js'" in idx,'maturity runtime must preserve psychometric bank while replacing only exam membership selection')
 
 sw=text('service-worker.js')
 for asset in ["'./assessment-psychometric-hardening.js'","'./assessment-evidence-integrity-upgrade.js'","'./assessment-psychometric-approval.js'","'./real-measured-data-assessment.js'"]:
     need(asset in sw,f'offline cache missing {asset}')
-need("CACHE_REVISION='assessment-evidence-observability-20260901'" in sw,'PWA cache revision must retain evidence-integrity lineage and advance for production observability')
+need("CACHE_REVISION='maturity-hardening-v2-20260901'" in sw,'PWA cache revision must advance with the maturity-hardening runtime while retaining the approved psychometric assets')
+need("'./runtime-v2.js'" in sw and "'./assessment-runtime-v2.js'" in sw,'PWA cache must include assessment runtime v2')
 
 pkg=json.loads(text('desktop/electron/package.json'))
 froms={x.get('from') for x in pkg['build']['extraResources'] if isinstance(x,dict)}
-for asset in ['assessment-psychometric-hardening.js','assessment-evidence-integrity-upgrade.js','assessment-psychometric-approval.js','real-measured-data-assessment.js']:
+for asset in ['assessment-psychometric-hardening.js','assessment-evidence-integrity-upgrade.js','assessment-psychometric-approval.js','real-measured-data-assessment.js','runtime-v2.js','assessment-runtime-v2.js']:
     need('../../'+asset in froms,f'desktop package missing {asset}')
     need("'"+asset+"'" in text('desktop/electron/scripts/generate-integrity.cjs'),f'desktop integrity manifest missing {asset}')
 
@@ -77,4 +79,4 @@ standard=text('qa_question_quality_50_pass_runtime.py')
 need('_evaluate_balanced_length' in standard and "hard.remove('correct-longest-or-tied')" in standard,'standard runtime still creates a longest-is-wrong inverse cue')
 need("zero learner-visible quality warnings" in standard and "need(not report.get('warning_types')" in standard,'standard runtime does not fail closed on learner-visible warnings')
 
-print(f'MouldMaster psychometric integration QA passed: 197 keyed decisions retain keyed propositions and technical vocabulary; four-rank answer-length balancing removes the inverse longest-is-wrong cue; extreme hard gate uses only relative length and terminal punctuation; proposition evidence is loaded before approval; 12 real-measured decisions are delivered; blob pin={actual}')
+print(f'MouldMaster psychometric integration QA passed: 197 keyed decisions retain keyed propositions and technical vocabulary; four-rank answer-length balancing removes the inverse longest-is-wrong cue; extreme hard gate uses only relative length and terminal punctuation; proposition evidence is loaded before approval; 12 real-measured decisions are delivered; maturity assessment runtime changes membership exposure only; blob pin={actual}')

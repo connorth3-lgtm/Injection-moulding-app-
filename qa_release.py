@@ -64,6 +64,8 @@ index = text("index.html")
 assert f'const SHELL_RELEASE="{ANDROID_RELEASE}"' in index
 assert 'const CORE_URL="./MouldMaster_Core_App.html"' in index
 assert "BODY_SCRIPTS" in index and "'./source-library.js'" in index, "source library not loaded by shell"
+for marker in ["Content-Security-Policy", "default-src 'self'", "object-src 'none'", "frame-src 'none'", "connect-src 'self'", "worker-src 'self'"]:
+    assert marker in index, f"browser CSP boundary missing: {marker}"
 for asset in [
     "learning-experience.js",
     "process-data-diagnostics.js",
@@ -73,8 +75,14 @@ for asset in [
     "mould-master-workspace.js",
     "app-shell-finalize.js",
     "learning-analytics.js",
+    "runtime-v2.js",
+    "assessment-runtime-v2.js",
+    "lesson-deep-authoring-v2.js",
+    "assessment-multimodal.js",
+    "accessibility-hardening.js",
 ]:
     assert f"'./{asset}'" in index, f"current learner-facing runtime asset not loaded by shell: {asset}"
+assert index.index("'./assessment-final-hardening.js'") < index.index("'./runtime-v2.js'") < index.index("'./assessment-runtime-v2.js'") < index.index("'./assessment-ux.js'"), "runtime-v2 assessment ownership load order is wrong"
 assert index.index("'./specialist-curriculum.js'") < index.index("'./specialist-evidence-gap-extension.js'") < index.index("'./mould-master-workspace.js'") < index.index("'./app-shell-finalize.js'"), "specialist evidence/runtime finalizer load order is wrong"
 
 sw = text("service-worker.js")
@@ -84,13 +92,34 @@ for asset in [
     "mouldmaster-192.png", "mouldmaster-512.png", "version.json", "reading-patch.css", "reading-patch.js",
     "training-upgrade.js", "training-qa-fix.js", "source-library.js", "pwa-shell.js", "learning-experience.js",
     "process-data-diagnostics.js", "curriculum-integration.js", "specialist-curriculum.js",
-    "specialist-evidence-gap-extension.js", "mould-master-workspace.js", "app-shell-finalize.js", "learning-analytics.js"
+    "specialist-evidence-gap-extension.js", "mould-master-workspace.js", "app-shell-finalize.js", "learning-analytics.js",
+    "runtime-v2.js", "assessment-runtime-v2.js", "lesson-deep-authoring-v2.js", "assessment-multimodal.js", "accessibility-hardening.js"
 ]:
     assert f"'./{asset}'" in sw, f"offline asset missing: {asset}"
 install = sw[sw.index("self.addEventListener('install'"):sw.index("self.addEventListener('activate'")]
-assert "cache.addAll" in install, "install must fail if any core asset cannot be cached"
-assert "catch" not in install, "install must not swallow missing asset failures"
+assert "Promise.allSettled" in install, "install must inspect every required offline asset"
+assert "if(failed.length)" in install and "await caches.delete(STATIC_CACHE)" in install, "incomplete new cache must be deleted"
+assert "throw new Error" in install, "install must fail if any core asset cannot be cached"
+assert "cache.addAll" not in install, "install must report exact missing assets rather than an opaque addAll failure"
+assert "skipWaiting" in install, "complete worker should still activate promptly"
 assert "if(isShell)" in sw and "c.put('./index.html'" in sw, "only shell navigation may refresh offline index"
+assert "mouldmaster-offline-asset-unavailable" in sw, "critical offline failure response must be explicit"
+
+runtime_v2 = text("runtime-v2.js")
+for marker in ["one owner at a time", "setImplementation", "before:new Set(),after:new Set()", "registerModule", "scopedKey"]:
+    assert marker in runtime_v2, f"runtime v2 invariant missing: {marker}"
+assessment_v2 = text("assessment-runtime-v2.js")
+for marker in ["technicalPerExam:7", "technicalBankPerLevel:10", "least-exposed blueprint-preserving stable IDs", "R.setImplementation('getExamQuestions',selector,'assessment-runtime-v2')"]:
+    assert marker in assessment_v2, f"assessment membership rotation invariant missing: {marker}"
+lesson_v2 = text("lesson-deep-authoring-v2.js")
+assert "D.lessons.length!==120" in lesson_v2 and "duplicate lesson records" in lesson_v2, "lesson deep authoring must cover 120 unique records"
+assert "R.after('renderLesson'" in lesson_v2 and "window.renderLesson=function" not in lesson_v2, "lesson deep authoring must use canonical runtime hook"
+multimodal = text("assessment-multimodal.js")
+for marker in ["type:'chart'", "type:'table'", "type:'calculation'", "type:'sequence'", "formal certificate answer keys"]:
+    assert marker in multimodal, f"multimodal assessment invariant missing: {marker}"
+a11y = text("accessibility-hardening.js")
+for marker in ["aria-modal", "focusTrap:true", "focusRestore:true", "forced-colors:active", "prefers-contrast:more"]:
+    assert marker in a11y, f"accessibility runtime invariant missing: {marker}"
 
 training = text("training-upgrade.js")
 assert f"const BANK_VERSION='{LEGACY_REVIEW_ID_VERSION}'" in training, "legacy spaced-review identifier changed without migration"
@@ -163,6 +192,9 @@ dpkg = json.loads((desktop_root / "package.json").read_text(encoding="utf-8"))
 assert dpkg["license"] == "Apache-2.0", "desktop package must use Apache-2.0"
 for dep in ["electron", "electron-builder"]:
     assert re.fullmatch(r"\d+\.\d+\.\d+", dpkg["devDependencies"][dep]), f"{dep} must be exact-version pinned"
+from_paths = {x.get("from") for x in dpkg["build"].get("extraResources", []) if isinstance(x, dict)}
+for asset in ["runtime-v2.js", "assessment-runtime-v2.js", "lesson-deep-authoring-v2.js", "assessment-multimodal.js", "accessibility-hardening.js"]:
+    assert f"../../{asset}" in from_paths, f"desktop bundle missing maturity-hardening asset: {asset}"
 dmain = (desktop_root / "src" / "main.cjs").read_text(encoding="utf-8")
 for marker in ["nodeIntegration: false", "contextIsolation: true", "sandbox: true", "webSecurity: true", "allowRunningInsecureContent: false", "setPermissionRequestHandler", "setPermissionCheckHandler", "will-attach-webview", "setWindowOpenHandler", "server.listen(0, '127.0.0.1'", "SHA-256 verification failed"]:
     assert marker in dmain, f"open desktop security control missing: {marker}"
@@ -177,6 +209,7 @@ for js_name in [
     "service-worker.js", "reading-patch.js", "training-upgrade.js", "training-qa-fix.js",
     "assessment-quality-suite.js", "source-library.js", "pwa-shell.js", "specialist-curriculum.js",
     "specialist-evidence-gap-extension.js", "mould-master-workspace.js", "app-shell-finalize.js",
+    "runtime-v2.js", "assessment-runtime-v2.js", "lesson-deep-authoring-v2.js", "assessment-multimodal.js", "accessibility-hardening.js",
     "desktop/electron/src/main.cjs", "desktop/electron/scripts/generate-integrity.cjs", "desktop/electron/scripts/qa.cjs"
 ]:
     p = subprocess.run([NODE, "--check", js_name], capture_output=True, text=True)

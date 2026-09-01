@@ -1,5 +1,5 @@
 const CACHE_VERSION='2026.08.26.2';
-const CACHE_REVISION='assessment-evidence-observability-20260901';
+const CACHE_REVISION='maturity-hardening-v2-20260901';
 const STATIC_CACHE=`mouldmaster-static-${CACHE_VERSION}-${CACHE_REVISION}`;
 const CORE=[
   './index.html',
@@ -22,6 +22,8 @@ const CORE=[
   './assessment-stable-review-bridge.js',
   './assessment-analytics-ui.js',
   './assessment-final-hardening.js',
+  './runtime-v2.js',
+  './assessment-runtime-v2.js',
   './assessment-ux.js',
   './source-library.js',
   './measured-evidence-integration.js',
@@ -42,9 +44,11 @@ const CORE=[
   './assessment-psychometric-hardening.js',
   './assessment-evidence-integrity-upgrade.js',
   './lesson-evidence-depth.js',
+  './lesson-deep-authoring-v2.js',
   './assessment-evidence-approval.js',
   './assessment-psychometric-approval.js',
   './app-shell-registry.js',
+  './assessment-multimodal.js',
   './pwa-shell.js',
   './learning-experience.js',
   './process-data-diagnostics.js',
@@ -68,6 +72,7 @@ const CORE=[
   './app-shell-finalize.js',
   './production-health.js',
   './learning-analytics.js',
+  './accessibility-hardening.js',
   './repair.html',
   './privacy.html',
   './support.html'
@@ -76,7 +81,18 @@ const CORE=[
 self.addEventListener('install',event=>{
   event.waitUntil((async()=>{
     const cache=await caches.open(STATIC_CACHE);
-    await cache.addAll(CORE.map(url=>new Request(url,{cache:'reload'})));
+    const results=await Promise.allSettled(CORE.map(async url=>{
+      const request=new Request(url,{cache:'reload'});
+      const response=await fetch(request);
+      if(!response||!response.ok)throw new Error(`${url} returned ${response?.status||'no-response'}`);
+      await cache.put(url,response.clone());
+      return url;
+    }));
+    const failed=results.map((x,i)=>x.status==='rejected'?CORE[i]:null).filter(Boolean);
+    if(failed.length){
+      await caches.delete(STATIC_CACHE);
+      throw new Error(`MouldMaster offline update is incomplete; keeping the previous worker. Missing: ${failed.join(', ')}`);
+    }
     await self.skipWaiting();
   })());
 });
@@ -100,6 +116,10 @@ async function fetchAndCache(event,url){
     return r;
   }catch(_){return null}
 }
+function criticalOfflineResponse(url){
+  if(url.pathname.endsWith('.json'))return new Response(JSON.stringify({error:'mouldmaster-offline-asset-unavailable'}),{status:503,headers:{'Content-Type':'application/json; charset=utf-8','Cache-Control':'no-store'}});
+  return new Response('/* MouldMaster runtime asset is unavailable offline. Reconnect and reopen the app to complete the current update. */\n',{status:503,headers:{'Content-Type':'text/javascript; charset=utf-8','Cache-Control':'no-store','X-Content-Type-Options':'nosniff'}})
+}
 
 self.addEventListener('fetch',event=>{
   if(event.request.method!=='GET')return;
@@ -112,7 +132,7 @@ self.addEventListener('fetch',event=>{
         const r=await fetch(event.request,{cache:'no-store'});
         if(r&&r.ok){if(isShell){const c=await caches.open(STATIC_CACHE);await c.put('./index.html',r.clone())}return r}
       }catch(_){}
-      return await caches.match(event.request,{ignoreSearch:true})||await caches.match('./index.html')||new Response('<h1>MouldMaster is offline</h1><p>Reconnect once to finish installing the offline copy.</p>',{status:503,headers:{'Content-Type':'text/html; charset=utf-8'}});
+      return await caches.match(event.request,{ignoreSearch:true})||await caches.match('./index.html')||new Response('<!doctype html><meta name="viewport" content="width=device-width,initial-scale=1"><title>MouldMaster offline</title><main style="font:16px system-ui;padding:24px;max-width:680px"><h1>MouldMaster is not fully installed offline yet</h1><p>Reconnect once and reopen the app. A partial update is never activated; if you previously installed MouldMaster, the last complete worker remains the safe fallback.</p></main>',{status:503,headers:{'Content-Type':'text/html; charset=utf-8','Cache-Control':'no-store'}});
     })());
     return;
   }
@@ -121,7 +141,7 @@ self.addEventListener('fetch',event=>{
     event.respondWith((async()=>{
       const network=await fetchAndCache(event,url);
       if(network&&network.ok)return network;
-      return await caches.match(event.request,{ignoreSearch:true})||new Response('',{status:504});
+      return await caches.match(event.request,{ignoreSearch:true})||criticalOfflineResponse(url);
     })());
     return;
   }
@@ -129,6 +149,6 @@ self.addEventListener('fetch',event=>{
     const cached=await caches.match(event.request,{ignoreSearch:true});
     const network=fetchAndCache(event,url);
     if(cached){event.waitUntil(network);return cached}
-    return await network||new Response('',{status:504});
+    return await network||new Response('MouldMaster asset unavailable offline',{status:503,headers:{'Content-Type':'text/plain; charset=utf-8','Cache-Control':'no-store'}});
   })());
 });

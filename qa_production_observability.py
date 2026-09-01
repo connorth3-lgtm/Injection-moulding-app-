@@ -9,8 +9,8 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent
 VERSION = "2026.09.01.1"
-RUNTIME_TOKEN = "20260826.16-assessment-evidence-observability"
-CACHE_REVISION = "assessment-evidence-observability-20260901"
+RUNTIME_TOKEN = "20260901.17-maturity-hardening-v2"
+CACHE_REVISION = "maturity-hardening-v2-20260901"
 
 
 def text(path: str) -> str:
@@ -53,14 +53,16 @@ require(not re.search(r"fetch\s*\(\s*['\"]https?://", health), "Production healt
 require(not re.search(r"method\s*:\s*['\"](?:POST|PUT|PATCH|DELETE)['\"]", health, re.I),
         "Production health must not upload diagnostics")
 
-require(f'RUNTIME_ASSET_VERSION="{RUNTIME_TOKEN}"' in index, "Browser runtime token was not advanced for observability")
+require(f'RUNTIME_ASSET_VERSION="{RUNTIME_TOKEN}"' in index, "Browser runtime token was not advanced for maturity hardening")
 require("['./production-health.js','<script src=\"./production-health.js\">']" in index,
         "Browser runtime does not load production health before learner modules")
 require(index.index("'./production-health.js'") < index.index("'./reading-patch.js'"),
         "Production health must load before learner runtime modules")
-require(f"CACHE_REVISION='{CACHE_REVISION}'" in worker, "Service-worker observability cache revision mismatch")
+require(f"CACHE_REVISION='{CACHE_REVISION}'" in worker, "Service-worker maturity cache revision mismatch")
 require(f'EXPECTED_STATIC_CACHE="mouldmaster-static-2026.08.26.2-{CACHE_REVISION}"' in index,
-        "Bootstrap expected cache does not match observability service-worker cache")
+        "Bootstrap expected cache does not match maturity service-worker cache")
+require("Promise.allSettled" in worker and "await caches.delete(STATIC_CACHE)" in worker,
+        "Observability must coexist with fail-closed service-worker install rather than a partially active cache")
 require("production-health.js" in finalize, "App-shell observability fallback loader missing")
 require("./production-health.js" in worker, "Production health is missing from the offline/public core")
 require("production-health.js" in package, "Desktop package does not include production health diagnostics")
@@ -81,4 +83,4 @@ require("Learner problem" in issue_template and "Safe diagnostics" in issue_temp
         "Learner issue template is incomplete")
 require("Do not include" in issue_template, "Learner issue template lacks privacy warning")
 
-print(f"Production observability QA passed: local-only diagnostics {VERSION}, safe learner issue loop, coherent browser/PWA cache identity, deployment/update/error probes, desktop/PWA coverage.")
+print(f"Production observability QA passed: local-only diagnostics {VERSION}, safe learner issue loop, coherent maturity browser/PWA cache identity, deployment/update/error probes, desktop/PWA coverage.")
