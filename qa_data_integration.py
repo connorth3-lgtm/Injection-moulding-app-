@@ -20,6 +20,7 @@ def main() -> None:
     closeout = json.loads((ROOT / "data/measured-data-collection-closeout-2026-08-30.json").read_text(encoding="utf-8"))
     registry = json.loads((ROOT / "process-data-semantic-registry.json").read_text(encoding="utf-8"))
     runtime = (ROOT / "data-integration-runtime.js").read_text(encoding="utf-8")
+    intelligence_ui = (ROOT / "process-data-intelligence-ui.js").read_text(encoding="utf-8")
     shell = (ROOT / "app-shell-finalize.js").read_text(encoding="utf-8")
     worker = (ROOT / "service-worker.js").read_text(encoding="utf-8")
     builder = (ROOT / "tools/build_pages_artifact.py").read_text(encoding="utf-8")
@@ -56,7 +57,9 @@ def main() -> None:
         require(token in runtime, f"connected runtime missing required behavior: {token}")
 
     require("script.src='./data-integration-runtime.js'" in shell, "app shell must load connected data runtime")
+    require("ui.src='./process-data-intelligence-ui.js'" in shell, "app shell must load process intelligence UI")
     require("'./data-integration-runtime.js'" in worker, "connected runtime must be a published worker asset")
+    require("'./process-data-intelligence-ui.js'" in worker, "process intelligence UI must be a published worker asset")
     require("'./process-data-semantic-registry.json'" in worker, "semantic registry must be a published worker asset")
     require("'./current-data-manifest.json'" in worker, "current-data manifest must be a published worker asset")
 
@@ -68,7 +71,19 @@ def main() -> None:
     require(not (core_assets & optional_assets), "service-worker core and optional assets must not overlap")
     require("reference-20x-extension.js" in optional_assets, "large specialist/reference packs should be on-demand")
     require("data-integration-runtime.js" in core_assets, "connected process-data layer should be available in offline core")
+    require("process-data-intelligence-ui.js" in core_assets, "process intelligence UI should be available in offline core")
     require(len(optional_assets) >= 20, "offline split did not materially reduce atomic pre-cache scope")
+
+    for token in [
+        "Golden baseline / drift",
+        "Before / after intervention",
+        "Cavity intelligence",
+        "Quality associations",
+        "Energy per good part",
+        "compareToBaseline",
+        "compareWindows",
+    ]:
+        require(token in intelligence_ui, f"process intelligence UI missing required behavior: {token}")
 
     require("extract_service_worker_assets" in builder, "Pages builder must publish both core and on-demand worker assets")
     require("on_demand_assets" in builder and "precache_assets" in builder, "Pages manifest must expose cache policy")
