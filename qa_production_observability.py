@@ -9,8 +9,6 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent
 VERSION = "2026.09.01.1"
-RUNTIME_TOKEN = "20260901.17-maturity-hardening-v2"
-CACHE_REVISION = "maturity-hardening-v2-20260901"
 
 
 def text(path: str) -> str:
@@ -20,6 +18,12 @@ def text(path: str) -> str:
 def require(condition: bool, message: str) -> None:
     if not condition:
         raise SystemExit(message)
+
+
+def js_const(source: str, name: str) -> str:
+    match = re.search(rf"const\s+{re.escape(name)}\s*=\s*['\"]([^'\"]+)['\"]", source)
+    require(match is not None, f"Missing JavaScript constant: {name}")
+    return match.group(1)
 
 
 health = text("production-health.js")
@@ -53,16 +57,24 @@ require(not re.search(r"fetch\s*\(\s*['\"]https?://", health), "Production healt
 require(not re.search(r"method\s*:\s*['\"](?:POST|PUT|PATCH|DELETE)['\"]", health, re.I),
         "Production health must not upload diagnostics")
 
-require(f'RUNTIME_ASSET_VERSION="{RUNTIME_TOKEN}"' in index, "Browser runtime token was not advanced for maturity hardening")
+runtime_token = js_const(index, "RUNTIME_ASSET_VERSION")
+cache_version = js_const(worker, "CACHE_VERSION")
+cache_revision = js_const(worker, "CACHE_REVISION")
+expected_static_cache = js_const(index, "EXPECTED_STATIC_CACHE")
+require(re.fullmatch(r"\d{8}\.\d+-maturity-hardening-v2", runtime_token) is not None,
+        "Browser runtime token must retain dated maturity-hardening-v2 family format")
+require(re.fullmatch(r"maturity-hardening-v2-\d{8}", cache_revision) is not None,
+        "Service-worker cache revision must retain maturity-hardening-v2 family format")
+require(runtime_token[:8] == cache_revision.rsplit("-", 1)[-1],
+        "Browser runtime token and service-worker cache revision dates must advance together")
+require(expected_static_cache == f"mouldmaster-static-{cache_version}-{cache_revision}",
+        "Bootstrap expected cache does not exactly match the service-worker cache identity")
 require("['./production-health.js','<script src=\"./production-health.js\">']" in index,
         "Browser runtime does not load production health before learner modules")
 require(index.index("'./production-health.js'") < index.index("'./reading-patch.js'"),
         "Production health must load before learner runtime modules")
-require(f"CACHE_REVISION='{CACHE_REVISION}'" in worker, "Service-worker maturity cache revision mismatch")
-require(f'EXPECTED_STATIC_CACHE="mouldmaster-static-2026.08.26.2-{CACHE_REVISION}"' in index,
-        "Bootstrap expected cache does not match maturity service-worker cache")
 require("Promise.allSettled" in worker and "await caches.delete(STATIC_CACHE)" in worker,
-        "Observability must coexist with fail-closed service-worker install rather than a partially active cache")
+        "Observability must coexist with fail-closed service-worker install rather than a partially active core cache")
 require("production-health.js" in finalize, "App-shell observability fallback loader missing")
 require("./production-health.js" in worker, "Production health is missing from the offline/public core")
 require("production-health.js" in package, "Desktop package does not include production health diagnostics")
@@ -83,4 +95,8 @@ require("Learner problem" in issue_template and "Safe diagnostics" in issue_temp
         "Learner issue template is incomplete")
 require("Do not include" in issue_template, "Learner issue template lacks privacy warning")
 
-print(f"Production observability QA passed: local-only diagnostics {VERSION}, safe learner issue loop, coherent maturity browser/PWA cache identity, deployment/update/error probes, desktop/PWA coverage.")
+print(
+    "Production observability QA passed: "
+    f"local-only diagnostics {VERSION}, safe learner issue loop, coherent runtime {runtime_token} / "
+    f"cache {cache_version}-{cache_revision}, deployment/update/error probes, desktop/PWA coverage."
+)
