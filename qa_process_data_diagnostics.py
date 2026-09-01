@@ -51,14 +51,16 @@ idx=text('index.html')
 need("['./process-data-diagnostics.js','<script src=\"./process-data-diagnostics.js\">']" in idx,'browser shell does not load guided data diagnostics')
 need(idx.index("'./evidence-maturity-deep-dive.js'") < idx.index("'./process-data-diagnostics.js'"),'guided data diagnostics must load after the canonical dataset pack')
 
-# Runtime coherence is structural, not tied to one hard-coded feature bundle.
+# Runtime coherence is structural. Runtime-only hardening may advance independently
+# of the audited shell release, but the runtime bundle and service-worker cache must
+# still share one explicit feature family and exact expected cache identity.
 sw=text('service-worker.js')
 runtime_asset=js_const(idx,'RUNTIME_ASSET_VERSION')
 expected_cache=js_const(idx,'EXPECTED_STATIC_CACHE')
 cache_version=js_const(sw,'CACHE_VERSION')
 cache_revision=js_const(sw,'CACHE_REVISION')
 need(expected_cache==f'mouldmaster-static-{cache_version}-{cache_revision}','browser expected PWA cache must match the service-worker cache identity')
-need(runtime_asset[:8]==''.join(cache_version.split('.')[:3]),'guided data runtime date must align with the PWA release date')
+need(re.fullmatch(r'\d{8}\.\d+-[a-z0-9-]+',runtime_asset) is not None,'guided data runtime token must retain dated revision + feature-family format')
 need(runtime_asset.split('-',1)[1]==re.sub(r'-\d{8}$','',cache_revision),'guided data runtime family must match the PWA cache family')
 need("'./process-data-diagnostics.js'" in sw,'guided data diagnostics missing from offline cache')
 
