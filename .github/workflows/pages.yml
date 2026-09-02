@@ -9,6 +9,7 @@ on:
 
 permissions:
   contents: read
+  pull-requests: read
   actions: write
   pages: write
   id-token: write
@@ -23,6 +24,11 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v7
+      - name: Require protected fully validated production source
+        if: github.event_name != 'pull_request'
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: python3 tools/verify_production_source.py --evidence-out production-source-evidence.json
       - name: Contain competing legacy branch Pages publisher
         if: github.event_name != 'pull_request'
         env:
@@ -43,8 +49,19 @@ jobs:
         uses: actions/checkout@v7
       - name: Pages single-publisher QA
         run: python3 qa_pages_single_publisher.py
+      - name: Validate physical PWA evidence template
+        run: >-
+          python3 tools/verify_pwa_physical_evidence.py
+          --validate-template
+          --evidence qa/pwa-physical-validation.example.json
       - name: Build production-only Pages artifact
         run: python3 tools/build_pages_artifact.py
+      - name: Require current physical iOS and Android PWA evidence
+        if: github.event_name != 'pull_request'
+        run: >-
+          python3 tools/verify_pwa_physical_evidence.py
+          --artifact .pages-dist
+          --evidence qa/pwa-physical-validation.json
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v4
         with:
@@ -75,6 +92,11 @@ jobs:
         uses: actions/checkout@v7
       - name: Rebuild expected production artifact
         run: python3 tools/build_pages_artifact.py
+      - name: Verify physical evidence still matches rebuilt runtime
+        run: >-
+          python3 tools/verify_pwa_physical_evidence.py
+          --artifact .pages-dist
+          --evidence qa/pwa-physical-validation.json
       - name: Verify exact live deployment
         run: >-
           python3 tools/verify_pages_deployment.py
