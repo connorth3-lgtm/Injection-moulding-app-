@@ -1,0 +1,19 @@
+# Generated dependency/build outputs
+node_modules/
+desktop/electron/node_modules/
+desktop/electron/dist/
+desktop/electron/release-assets/
+.pages-dist/
+qa-artifacts/
+playwright-report/
+test-results/
+
+# Desktop installers/packages are CI/release artifacts, never source files.
+*.exe
+*.msi
+*.msix
+*.msixupload
+*.dmg
+*.AppImage
+*.deb
+*.rpm
