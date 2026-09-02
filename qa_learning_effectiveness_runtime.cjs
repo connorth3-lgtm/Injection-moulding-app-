@@ -44,18 +44,16 @@ s=api.itemStats('moisture-drying-degradation','integration');assert(s.eligible);
 
 // Delayed transfer should become due only after mastery in two distinct contexts.
 sandbox.db={activeUser:'retention-user'};
-const masteredAt='2026-08-20T00:00:00Z';store('retention-user',[
+const masteredAt='2026-08-20T00:00:00Z';const mastered=[
   complete('liquid-silicone-rubber','evidence','ctx1',true,'2026-08-19T23:59:00Z'),
   complete('liquid-silicone-rubber','evidence','ctx2',true,masteredAt)
-]);
+];store('retention-user',mastered);
 let due=api.dueTransferChecks(Date.parse('2026-08-26T23:59:59Z'));assert.equal(due.length,0,'7-day check became due too early');
 due=api.dueTransferChecks(Date.parse('2026-08-27T00:00:01Z'));assert(due.some(x=>x.mechanismId==='liquid-silicone-rubber'&&x.stage==='evidence'&&x.intervalDays===7),'7-day check not due');
 due=api.dueTransferChecks(Date.parse('2026-09-19T00:00:01Z'));assert(due.some(x=>x.intervalDays===7)&&due.some(x=>x.intervalDays===30),'7/30-day checks not both due after 30 days');
-const retentionEvents=[
-  complete('liquid-silicone-rubber','evidence','ctx1',true,'2026-08-19T23:59:00Z'),complete('liquid-silicone-rubber','evidence','ctx2',true,masteredAt),
-  {t:'2026-08-27T01:00:00Z',type:'retention_check',module:'process-data',id:id('liquid-silicone-rubber','evidence','ctx3'),reason:'7d:evidence',score:100,correct:true}
-];store('retention-user',retentionEvents);due=api.dueTransferChecks(Date.parse('2026-08-28T00:00:00Z'));assert(!due.some(x=>x.intervalDays===7),'completed 7-day retention check stayed due');
+const failed=[...mastered,{t:'2026-08-27T01:00:00Z',type:'retention_check',module:'process-data',id:id('liquid-silicone-rubber','evidence','ctx3'),reason:'7d:evidence',score:0,correct:false}];store('retention-user',failed);due=api.dueTransferChecks(Date.parse('2026-08-28T00:00:00Z'));assert(due.some(x=>x.intervalDays===7),'failed 7-day retention check incorrectly cleared the due state');
+const passed=[...failed,{t:'2026-08-28T01:00:00Z',type:'retention_check',module:'process-data',id:id('liquid-silicone-rubber','evidence','ctx4'),reason:'7d:evidence',score:100,correct:true}];store('retention-user',passed);due=api.dueTransferChecks(Date.parse('2026-08-29T00:00:00Z'));assert(!due.some(x=>x.intervalDays===7),'passed 7-day retention check stayed due');
 
 // Aggregate export may contain item-level statistics, never profile identifiers or raw event histories.
 const report=api.anonymousReport(),serialized=JSON.stringify(report);assert(Array.isArray(report.items));assert(!('profiles' in report));assert(!serialized.includes('retention-user'));assert(!serialized.includes('small-a'));assert(!serialized.includes('practice_complete'));assert(/no names/i.test(report.privacy));
-console.log('Learning effectiveness runtime QA passed: sample thresholds, support/stretch calibration, positive cohort discrimination, 7/30-day retention scheduling and anonymous aggregate export verified.');
+console.log('Learning effectiveness runtime QA passed: sample thresholds, support/stretch calibration, positive cohort discrimination, 7/30-day retention scheduling, failed-check persistence and anonymous aggregate export verified.');
