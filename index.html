@@ -23,9 +23,9 @@
   (async function(){
     "use strict";
     const SHELL_RELEASE="2026.08.26.2";
-    const RUNTIME_ASSET_VERSION="20260902.1-maturity-hardening-v2";
+    const RUNTIME_ASSET_VERSION="20260902.2-research-utilisation-v1";
     const CORE_URL="./MouldMaster_Core_App.html";
-    const EXPECTED_STATIC_CACHE="mouldmaster-static-2026.08.26.2-maturity-hardening-v2-20260902";
+    const EXPECTED_STATIC_CACHE="mouldmaster-static-2026.08.26.2-research-utilisation-v1-20260902";
     const CSP="default-src 'self'; base-uri 'none'; object-src 'none'; frame-src 'none'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self' data:; connect-src 'self'; worker-src 'self'; manifest-src 'self'; form-action 'self'";
     const HEAD_ASSETS=[
       ['manifest.webmanifest','<link rel="manifest" href="./manifest.webmanifest">'],
@@ -54,6 +54,13 @@
       ['./source-library.js','<script src="./source-library.js">'],
       ['./measured-evidence-integration.js','<script src="./measured-evidence-integration.js">'],
       ['./measured-evidence-decision.js','<script src="./measured-evidence-decision.js">'],
+      ['./research-evidence-engine.js','<script src="./research-evidence-engine.js">'],
+      ['./research-evidence-adapter.js','<script src="./research-evidence-adapter.js">'],
+      ['./research-evidence-workspace.js','<script src="./research-evidence-workspace.js">'],
+      ['./research-evidence-microlearning.js','<script src="./research-evidence-microlearning.js">'],
+      ['./research-utilisation-analytics.js','<script src="./research-utilisation-analytics.js">'],
+      ['./research-gap-feedback.js','<script src="./research-gap-feedback.js">'],
+      ['./research-claim-freshness.js','<script src="./research-claim-freshness.js">'],
       ['./reference-data.js','<script src="./reference-data.js">'],
       ['./reference-deep-dive.js','<script src="./reference-deep-dive.js">'],
       ['./reference-research-extension.js','<script src="./reference-research-extension.js">'],
@@ -70,6 +77,7 @@
       ['./assessment-evidence-integrity-upgrade.js','<script src="./assessment-evidence-integrity-upgrade.js">'],
       ['./lesson-evidence-depth.js','<script src="./lesson-evidence-depth.js">'],
       ['./lesson-deep-authoring-v2.js','<script src="./lesson-deep-authoring-v2.js">'],
+      ['./research-evidence-ui.js','<script src="./research-evidence-ui.js">'],
       ['./assessment-evidence-approval.js','<script src="./assessment-evidence-approval.js">'],
       ['./assessment-psychometric-approval.js','<script src="./assessment-psychometric-approval.js">'],
       ['./app-shell-registry.js','<script src="./app-shell-registry.js">'],
@@ -90,13 +98,17 @@
       ['./process-data-20-pass-16-20.js','<script src="./process-data-20-pass-16-20.js">'],
       ['./process-data-20-pass-atlas.js','<script src="./process-data-20-pass-atlas.js">'],
       ['./process-data-local-intake.js','<script src="./process-data-local-intake.js">'],
+      ['./data-integration-runtime.js','<script src="./data-integration-runtime.js">'],
+      ['./process-data-intelligence-ui.js','<script src="./process-data-intelligence-ui.js">'],
+      ['./research-data-context.js','<script src="./research-data-context.js">'],
       ['./curriculum-integration.js','<script src="./curriculum-integration.js">'],
       ['./specialist-curriculum.js','<script src="./specialist-curriculum.js">'],
       ['./specialist-evidence-gap-extension.js','<script src="./specialist-evidence-gap-extension.js">'],
       ['./mould-master-workspace.js','<script src="./mould-master-workspace.js">'],
       ['./app-shell-finalize.js','<script src="./app-shell-finalize.js">'],
       ['./learning-analytics.js','<script src="./learning-analytics.js">'],
-      ['./accessibility-hardening.js','<script src="./accessibility-hardening.js">']
+      ['./accessibility-hardening.js','<script src="./accessibility-hardening.js">'],
+      ['./research-evidence-runtime-health.js','<script src="./research-evidence-runtime-health.js">']
     ];
     const closeScript='</scr'+'ipt>';
     const standalone=!!window.matchMedia?.('(display-mode: standalone)').matches;
