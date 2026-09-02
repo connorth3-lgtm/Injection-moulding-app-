@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "version": "2026.09.02.2",
+  "version": "2026.09.02.3",
   "generatedFrom": "data/measured-data-collection-closeout-2026-08-30.json",
   "generatedFromVersion": "2026.08.30.1",
   "effectiveMeasuredState": {
@@ -17,8 +17,14 @@
     "evidenceQualitySeparatedFromApplicability": true,
     "supportsFalsification": true,
     "supportsVerificationPlans": true,
+    "supportsDelayedTransferChecks": true,
+    "supportsPrivacyThresholdedDifficultyCalibration": true,
+    "supportsAggregateItemDiscrimination": true,
     "activeSurfaces": [
       "lessons",
+      "learning insights",
+      "learning effectiveness",
+      "specialist transfer practice",
       "measured-evidence panels",
       "process diagnostic labs",
       "semantic process-data intake",
@@ -55,7 +61,10 @@
       "structured troubleshooting links",
       "similar-case support",
       "research applicability context",
-      "learner recommendation bridge"
+      "learner recommendation bridge",
+      "delayed transfer retention checks",
+      "anonymous item-quality calibration",
+      "specialist transfer practice"
     ]
   }
 }
