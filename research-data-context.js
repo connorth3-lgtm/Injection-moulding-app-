@@ -1,7 +1,7 @@
-/* MouldMaster research ↔ local data context bridge — 2026.09.02.2 */
+/* MouldMaster research ↔ semantic process-data context bridge — 2026.09.02.3 */
 (function(){
 'use strict';
-const VERSION='2026.09.02.2';
+const VERSION='2026.09.02.3';
 let queued=false;
 const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const clean=v=>String(v??'').trim();
@@ -112,5 +112,5 @@ function run(){queued=false;wireIntake();wireProcessIntelligence();wireWorkspace
 function schedule(){if(queued)return;queued=true;(window.requestAnimationFrame||setTimeout)(run,0)}
 new MutationObserver(schedule).observe(document.documentElement,{subtree:true,childList:true});
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',schedule);else schedule();
-window.MM_RESEARCH_DATA_CONTEXT={version:VERSION,datasetContext,forDataset,intakeContext,renderRunInsights,scope:'Connects promoted research mechanisms to local semantic dataset metadata and troubleshooting cases. Site-process views are technician-first: measured change, likely explanation, next check and rule-out evidence appear before detailed research. No raw rows are exposed and no production authority is created.'};
+window.MM_RESEARCH_DATA_CONTEXT={version:VERSION,datasetContext,forDataset,intakeContext,renderRunInsights,scope:'Connects promoted research mechanisms to semantic process-data metadata and troubleshooting cases. Site-process views are technician-first: measured change, likely explanation, next check and rule-out evidence appear before detailed research. No raw rows are exposed and no production authority is created.'};
 })();
