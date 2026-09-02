@@ -54,25 +54,31 @@ need((ROOT / ".gitattributes").is_file(), ".gitattributes missing")
 attrs = (ROOT / ".gitattributes").read_text(encoding="utf-8")
 need("MouldMaster_Core_App.html -text" in attrs, "audited core byte-preservation attribute missing")
 
-# Architecture budget. The parser-sensitive legacy core currently has one
-# deliberate document replacement bootstrap in index.html. It may be retired by
-# a separately validated loader migration, but no other module is allowed to
-# copy this technique. Late-loading is likewise limited to the two reviewed
-# strangler-integration layers; new features should register with the canonical
-# shell/integration APIs rather than adding another loader/wrapper chain.
-index = (ROOT / "index.html").read_text(encoding="utf-8")
-need(index.count("document.write(") == 1, "index.html must contain exactly one legacy bootstrap document.write")
-need(index.count("document.open()") == 1 and index.count("document.close()") == 1,
-     "legacy document replacement must remain one bounded open/write/close bootstrap")
+# Architecture budget. Two historical compatibility bootstraps use parser-level
+# document replacement: index.html (current shell assembly) and the frozen
+# MouldMaster_Academy_App.html recovery loader. Both are capped exactly and may
+# only shrink in a separately validated migration. No JS module or third HTML
+# surface may copy the technique. Late-loading is likewise limited to the two
+# reviewed strangler-integration layers.
+legacy_document_replacement = {
+    "index.html": {"write": 1, "open": 1, "close": 1},
+    "MouldMaster_Academy_App.html": {"write": 1, "open": 1, "close": 1},
+}
+for rel, expected in legacy_document_replacement.items():
+    body = (ROOT / rel).read_text(encoding="utf-8")
+    need(body.count("document.write(") == expected["write"],
+         f"{rel} document.write budget drifted")
+    need(body.count("document.open()") == expected["open"] and body.count("document.close()") == expected["close"],
+         f"{rel} document open/close budget drifted")
 for rel in paths:
-    if rel == "index.html" or not rel.lower().endswith((".js", ".html")):
+    if rel in legacy_document_replacement or not rel.lower().endswith((".js", ".html")):
         continue
     try:
         body = (ROOT / rel).read_text(encoding="utf-8")
     except UnicodeDecodeError:
         continue
     need("document.write(" not in body and "document.open()" not in body and "document.close()" not in body,
-         f"legacy document replacement technique spread outside index bootstrap: {rel}")
+         f"legacy document replacement technique spread outside audited bootstraps: {rel}")
 
 finalizer = (ROOT / "app-shell-finalize.js").read_text(encoding="utf-8")
 late_assets = re.findall(r"loadAsset\('([^']+\.js)'", finalizer)
@@ -152,6 +158,6 @@ need(publisher.count("contents: write") == 1 and "publish-release:" in publisher
 
 print(
     f"MouldMaster repository hygiene QA passed ({len(paths)} tracked paths; {len(workflows)} workflows; "
-    "no generated installers/build outputs, bounded legacy loader/late assets, local-only data transports, "
-    "and only three reviewed contents-write workflows)."
+    "no generated installers/build outputs, two capped legacy document-replacement bootstraps, bounded late assets, "
+    "local-only data transports, and only three reviewed contents-write workflows)."
 )
