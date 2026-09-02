@@ -4,6 +4,8 @@ import json, re
 ROOT=Path(__file__).resolve().parent
 ENGINE=ROOT/'research-evidence-engine.js'
 UI=ROOT/'research-evidence-ui.js'
+MICRO=ROOT/'research-evidence-microlearning.js'
+CONTEXT=ROOT/'research-data-context.js'
 
 
 def need(ok,msg):
@@ -13,8 +15,12 @@ def need(ok,msg):
 def main():
     need(ENGINE.exists(),'research-evidence-engine.js missing')
     need(UI.exists(),'research-evidence-ui.js missing')
+    need(MICRO.exists(),'research-evidence-microlearning.js missing')
+    need(CONTEXT.exists(),'research-data-context.js missing')
     text=ENGINE.read_text(encoding='utf-8')
     ui=UI.read_text(encoding='utf-8')
+    micro=MICRO.read_text(encoding='utf-8')
+    context=CONTEXT.read_text(encoding='utf-8')
     ids=re.findall(r"id:'([a-z0-9-]+)'",text)
     # Only count mechanism object IDs before SOURCE_META. Runtime method/property IDs are not in this literal form.
     mechanism_ids=[]
@@ -38,6 +44,15 @@ def main():
     need('data-mm-research-plan' in ui and 'verificationPlan(context,r.id)' in ui,'UI must expose verification-plan workflow')
     need('Plan the next evidence check' in ui,'verification workflow needs clear end-user action copy')
     need('do not override local measured evidence' in ui.lower(),'UI must preserve local-evidence boundary')
-    print(f'MouldMaster research evidence engine QA passed ({len(expected)} mechanisms; {len(dois)} primary-source links)')
+
+    for token in ['buildPractice','strongest discriminating evidence','weakeningQuestion','correctIndex','Formative practice only','outside the formal assessment bank']:
+        need(token in micro,f'contextual microlearning behavior missing: {token}')
+    need("hash(r.id)%options.length" in micro,'formative answer position must not be fixed across mechanisms')
+    for forbidden in ['MM_DATA.exams=', 'regionalQuestions=', 'correctIndex=', 'question_bank_version=']:
+        need(forbidden not in micro,f'microlearning must not mutate formal assessment truth: {forbidden}')
+    for token in ['Reason it through','data-mm-ri-choice','practice_miss','practice_complete','What recovery should look like','Run-linked practice stays outside the formal assessment bank']:
+        need(token in context,f'Run Insights learning loop missing: {token}')
+
+    print(f'MouldMaster research evidence engine QA passed ({len(expected)} mechanisms; {len(dois)} primary-source links; contextual formative evidence practice guarded)')
 
 if __name__=='__main__': main()
