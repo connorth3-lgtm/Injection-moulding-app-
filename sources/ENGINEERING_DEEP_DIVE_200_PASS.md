@@ -5,53 +5,54 @@ Branch: `deep-dive/calculation-material-engineering`
 
 ## Purpose
 
-This pass deliberately attacks boundary semantics rather than repeating a small set of known-answer examples. The calculation engine is exercised with 200 deterministic pseudo-random engineering scenarios and adversarial cases so every failure is reproducible from a fixed seed.
+This pass attacks boundary semantics rather than repeating a small set of known-answer examples. The calculation engine is exercised with deterministic pseudo-random engineering scenarios and adversarial cases so failures are reproducible from fixed seeds.
 
 ## Calculation findings hardened
 
 1. **Zero feasible cavities must be a failure.** A mathematically valid cavity-count floor of zero cannot be presented as a passing machine/cavity result.
-2. **Cavity-count confidence requires constraint coverage.** Three arbitrary limits are not enough for `PASS_VERIFIED`; verified cavity-count status requires shot, clamp, mould-fit and at least one flow/plasticising constraint.
-3. **Pressure domains are not interchangeable.** Clamp-force and clamp-limited cavity calculations require an explicitly domain-qualified `CAVITY` pressure. Bare numeric pressure is rejected because its hydraulic/specific/cavity meaning is unknowable.
+2. **Cavity-count confidence requires constraint coverage.** Verified cavity-count status requires shot, clamp, mould-fit and at least one flow/plasticising constraint.
+3. **Cavity pressure must be domain-qualified.** Bare numeric pressure is rejected for clamp/cavity calculations; hydraulic and specific-plastic pressure are never silently interpreted as cavity pressure.
 4. **Pressure conversion validates source domain.** A value tagged as one pressure domain cannot be declared as another `fromDomain` without rejection.
 5. **Calibration outranks geometric pressure ratio.** If a calibration factor is supplied and differs materially from the geometric intensification ratio, the calibrated factor is used and a warning is emitted.
-6. **Invalid numerics cannot silently become zero.** Hot-runner inventory and reserve factors reject non-finite values rather than being coerced into harmless-looking numbers.
-7. **Suitability checks validate status vocabulary and critical coverage.** Unknown check states are rejected, and a machine-suitability result with no critical checks returns `INSUFFICIENT_DATA` rather than a pass/warning summary.
-8. **Near-limit checks have bounded semantics.** Direction, evidence confidence and near-limit fractions are validated, and zero-capacity utilisation no longer becomes `NaN`.
+6. **Invalid numerics cannot silently become zero.** Hot-runner inventory and reserve factors reject non-finite values.
+7. **Suitability checks fail closed.** Unknown check states are rejected and a suitability set with no critical checks returns insufficient data.
+8. **Near-limit checks have bounded semantics.** Direction, evidence confidence and near-limit fractions are validated, and zero-capacity utilisation does not become `NaN`.
 
-The deterministic calculation stress suite is `qa-engineering-stress-200.js`; the current fail-closed version performs 4,418 assertions across 200 deterministic scenarios plus adversarial boundary checks.
+## Material coverage
 
-## Material coverage expansion
+The material system is now split into three evidence layers:
 
-The deep extension adds nine injection-moulding material families while preserving the policy that missing exact-grade values remain null. Combined coverage is now 33 families and 34 grade/supplier records.
+- Base grade-level database.
+- Deep specialty extension.
+- Common-material catalog extension.
 
-| Family | Grade / supplier anchor | Evidence retained |
-|---|---|---|
-| PVDF | Arkema Kynar 720 | Primary product identity, 1.78 g/cm³, primary processing-guide barrel zones and directional shrinkage. The current Arkema HTML renders the terminal 50–90 °C injection-table column as `DIE`; the database deliberately does not rename it to mould temperature without stronger evidence. |
-| PSU | Syensqo Udel P-1700 WH 7407 | Primary grade identity plus supplier-family guidance: injection moisture <500 ppm (0.05%), 135 °C / 4 h drying, and minimum 140–150 °C tool-surface guidance. Hot runners are generally not recommended except under specific supplier conditions. |
-| PESU | Syensqo Veradel HC A-301 | Primary identity and injection-moulding suitability; numeric production setpoints remain null. |
-| PAI | Syensqo Torlon 4203 L HF | Primary identity and injection-moulding suitability; supplier FAQ requirement for post-cure and special screw/check-ring guidance retained as process flags, not invented temperatures. |
-| PAEK | Syensqo AvaSpire AV-651 NT | Primary identity and conventional injection-moulding suitability; numeric setpoints remain null. |
-| PEKK | Arkema Kepstan 8010C30 | Primary exact-grade identity, CF30, density 1.39 g/cm³ and injection-moulding suitability; numeric setpoints remain null. |
-| COC | TOPAS 6013S-04 | Primary supplier performance note explicitly identifies 6013S-04 as an injection-moulding grade; numeric setpoints remain null. |
-| Copolyester | Eastman Tritan TX1001 | Primary exact-product identity and mouldability; Eastman links processing/mould-design resources, but numbers remain null until current guidance is captured and bounded. |
-| PARA | Syensqo Ixef GS-1022 WH01 | Primary exact-grade identity, 50% glass fibre and injection-moulding process; numeric setpoints remain null. |
+Combined coverage is **50 material families and 51 representative supplier/grade records**.
 
-## Primary web anchors retained in the executable extension
+The common selector exposes **50 day-to-day material choices**, including commodity polymers, engineering plastics, common blends, reinforced variants and elastomer classes. A separate **14-item specialty selector** covers PPS, PEEK, PPA, PEI, PPSU, PSU, PESU, LCP, PVDF, PAI, PAEK, PEKK, PARA and COC.
 
-- Arkema Kynar 720 product page and Kynar PVDF processing guidelines.
-- Syensqo Udel PSU FAQ and Udel P-1700 WH 7407 product page.
-- Syensqo Veradel HC A-301 PESU page.
-- Syensqo Torlon 4203 L HF page and Torlon PAI FAQ.
-- Syensqo AvaSpire AV-651 NT page.
-- Arkema Kepstan 8010C30 page and PEKK injection-moulding guide.
-- TOPAS 6013S-04 performance note.
-- Eastman Tritan TX1001 product page.
-- Syensqo Ixef GS-1022 WH01 page.
+### New common-family anchors
 
-## New audit policy
+The 50-family expansion adds MDPE, LLDPE, EVA, POE, TPO, TPV, TPC-ET, PEBA, ionomer, PLA, PA11, PA12, PVC, CPVC, PC/PBT, PC/PET and PPE/PS. Representative sources include Chevron Phillips Chemical Marlex MDPE, Dow DOWLEX/ENGAGE/SURLYN, LyondellBasell Hifax TPO, ExxonMobil Santoprene/EVA, Celanese Hytrel, Arkema Pebax/Rilsan, NatureWorks Ingeo, EMS-GRIVORY PA12, Teknor Apex PVC, Lubrizol Corzan CPVC, Covestro Makroblend and SABIC NORYL.
 
-`material-engineering-deep-extension.js` adds a `deepAudit()` routine that checks duplicate family/grade IDs, family referential integrity, HTTPS source URLs, known evidence levels, process/range ordering, optimal-within-range rules, and discrete drying schedule validity. `qa-material-engineering-deep-200.js` performs a second deterministic 200-case sample over the combined material database and re-checks provenance/range invariants.
+### Evidence discipline
+
+- Exact-grade primary supplier data outrank family-level guides.
+- Family-guide values remain labelled guide-level evidence.
+- Missing exact-grade values remain null rather than being borrowed from another material.
+- Formulation-class selector names such as PP-GF, ABS-FR, TPU-ether or flexible PVC are navigation choices, not production setpoints.
+- Specialty and common records use the same provenance/audit rules.
+
+## QA
+
+- `qa-engineering.js`
+- `qa-engineering-stress-200.js`
+- `qa-material-engineering.js`
+- `qa-material-engineering-deep-200.js`
+- `qa-material-common-catalog-200.js`
+- `Engineering deep dive QA` GitHub Action
+
+The common-catalog QA enforces exactly 50 material families, 51 representative records, 50 common selections and 14 specialty selections, then samples the combined selector/provenance graph deterministically.
 
 ## Production boundary
 
-This work improves evidence discipline and rejects more false-positive calculations. It does **not** turn supplier starting guidance into a validated process. Production still requires the current exact-grade documentation/revision, actual machine OEM limits and calibration, mould/hot-runner documentation, material handling controls, validated process window, site procedures, and applicable safety requirements.
+This work improves engineering coverage and evidence discipline. It does **not** convert supplier starting guidance into a validated production process. Production still requires the current exact grade/revision, actual machine OEM limits and calibration, mould/hot-runner documentation, material handling controls, validated process window, site procedures and applicable safety requirements.
