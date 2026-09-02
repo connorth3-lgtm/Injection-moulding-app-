@@ -48,7 +48,7 @@ def main():
     for token in ['buildPractice','strongest discriminating evidence','weakeningQuestion','correctIndex','Formative practice only','outside the formal assessment bank']:
         need(token in micro,f'contextual microlearning behavior missing: {token}')
     need("hash(r.id)%options.length" in micro,'formative answer position must not be fixed across mechanisms')
-    for forbidden in ['MM_DATA.exams=', 'regionalQuestions=', 'correctIndex=', 'question_bank_version=']:
+    for forbidden in ['MM_DATA.exams=', 'regionalQuestions=', 'question_bank_version=', 'window.getExamQuestions=']:
         need(forbidden not in micro,f'microlearning must not mutate formal assessment truth: {forbidden}')
     for token in ['Reason it through','data-mm-ri-choice','practice_miss','practice_complete','What recovery should look like','Run-linked practice stays outside the formal assessment bank']:
         need(token in context,f'Run Insights learning loop missing: {token}')
