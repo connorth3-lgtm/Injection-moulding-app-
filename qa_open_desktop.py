@@ -26,6 +26,7 @@ for path in [
     DESKTOP / "scripts" / "generate-integrity.cjs",
     DESKTOP / "scripts" / "generate-licenses.cjs",
     DESKTOP / "scripts" / "generate-sbom.cjs",
+    DESKTOP / "scripts" / "signing-status.cjs",
     DESKTOP / "scripts" / "generate-msix-assets.ps1",
     DESKTOP / "scripts" / "verify-real-windows-release.ps1",
     DESKTOP / "scripts" / "qa.cjs",
@@ -45,6 +46,13 @@ for dep in ("electron", "electron-builder"):
 msix_cmd = pkg.get("scripts", {}).get("dist:msix", "")
 require("electron-builder@27.0.0-alpha.7" in msix_cmd, "local MSIX command must pin the approved beta toolchain")
 require("--config.msix.setBuildNumber=true" in msix_cmd, "local MSIX command must preserve the desktop release build number")
+require(pkg.get("scripts", {}).get("signing") == "node scripts/signing-status.cjs", "desktop signing-readiness command must remain explicit")
+for script_name in ("start", "dist:portable", "dist:nsis", "dist:msix"):
+    require("npm run signing" in pkg.get("scripts", {}).get(script_name, ""), f"{script_name} must record Windows signing readiness before launch/package")
+require("generated/signing-status.json" in pkg.get("build", {}).get("files", []), "packaged desktop build must retain its signing-readiness record")
+signing = (DESKTOP / "scripts" / "signing-status.cjs").read_text(encoding="utf-8")
+for marker in ["MM_REQUIRE_WINDOWS_SIGNING", "CSC_LINK", "CSC_KEY_PASSWORD", "signing-status.json", "required&&!configured", "PR/development build may be unsigned"]:
+    require(marker in signing, f"Windows signing-readiness gate missing: {marker}")
 
 version = json.loads((ROOT / "version.json").read_text(encoding="utf-8"))
 release = version.get("desktop_release", "")
@@ -67,8 +75,8 @@ require(version["desktop_release"] != version["windows_recovery_release"], "open
 
 desktop_readme = (DESKTOP / "README.md").read_text(encoding="utf-8")
 require(f"Current desktop release: `{release}`" in desktop_readme, "desktop README current release is stale")
-for marker in ["REAL_WINDOWS_VALIDATION.md", "verify-real-windows-release.ps1", "normal Windows 10/11"]:
-    require(marker in desktop_readme, f"desktop README real-Windows validation marker missing: {marker}")
+for marker in ["REAL_WINDOWS_VALIDATION.md", "verify-real-windows-release.ps1", "normal Windows 10/11", "It is unsigned unless explicitly stated otherwise", "preferred signed public Windows distribution"]:
+    require(marker in desktop_readme, f"desktop README real-Windows/signing marker missing: {marker}")
 
 fuses = pkg["build"].get("electronFuses", {})
 for name, expected in {
@@ -178,4 +186,4 @@ for marker in [
 ]:
     require(marker in migration, f"legacy migration safeguard missing: {marker}")
 
-print("MouldMaster open desktop release QA passed")
+print("MouldMaster open desktop release QA passed (including explicit Windows signing-readiness provenance)")
