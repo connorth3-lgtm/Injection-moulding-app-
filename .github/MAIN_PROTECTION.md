@@ -2,13 +2,16 @@
 
 Status: repository-side preparation complete; GitHub still has to apply the native server-side ruleset.
 
-The repository already has a compensating `Main PR Provenance Guard` that verifies merged-PR provenance and the required PR workflow results after a push reaches `main`. Native GitHub protection is still preferred because it rejects an invalid merge/push **before** the branch changes.
+The repository already has a compensating `Main PR Provenance Guard` that verifies merged-PR provenance and required PR workflow results after a push reaches `main`. Native GitHub protection is still required because it rejects an invalid merge/push **before** the branch changes.
+
+Production publishers now also fail closed unless the reviewed native ruleset is live. That means an unprotected `main` must not be able to publish a new Pages production build or public desktop release even if a direct push reaches the branch.
 
 ## Intended native policy
 
 Apply one active branch ruleset to `refs/heads/main` with no bypass actors:
 
 - require a pull request before merge;
+- require unresolved review conversations to be resolved before merge;
 - require the branch to be up to date with `main` before merge;
 - require the GitHub Actions checks:
   - `integrity` — job from **MouldMaster Release QA**;
@@ -18,9 +21,10 @@ Apply one active branch ruleset to `refs/heads/main` with no bypass actors:
 - require linear history and allow squash merge only;
 - block branch deletion;
 - block non-fast-forward/force updates;
+- apply to repository administrators as well as contributors by keeping bypass actors empty;
 - do not require a second approving reviewer by default (`required_approving_review_count: 0`).
 
-The zero-review setting makes the server require a PR and the four technical gates without inventing a second human reviewer where one is not available. It can be tightened later if the contributor/reviewer model changes.
+The zero-review setting makes the server require a PR, resolved conversations and the four technical gates without inventing a second human reviewer where one is not available. It can be tightened later if the contributor/reviewer model changes.
 
 ## One-command helper
 
@@ -44,27 +48,30 @@ For a fork or renamed repository:
 REPO=owner/repository .github/scripts/apply-main-ruleset.sh --apply
 ```
 
-The helper is idempotent by ruleset name: it updates the existing `Protect main — MouldMaster required gates` ruleset if present, otherwise it creates it. It then reads the ruleset back and fails unless GitHub reports `main` as `protected=true`.
+The helper is idempotent by ruleset name: it updates the existing `Protect main — MouldMaster required gates` ruleset if present, otherwise it creates it. It then reads the ruleset back and runs `tools/verify_production_source.py --protection-only`; the command fails unless GitHub reports the complete reviewed policy active.
 
 ## Required verification after applying
 
 Do not treat script execution alone as proof of protection. Verify all of the following:
 
 1. `GET /repos/<owner>/<repo>/branches/main` reports `protected: true`.
-2. The repository ruleset is `active`, targets only `refs/heads/main`, and has no bypass actors.
+2. The `Protect main — MouldMaster required gates` ruleset is `active`, targets only `refs/heads/main`, requires PRs/resolved conversations/linear history/current required checks, and has no bypass actors.
 3. Open a harmless test PR and confirm merge is blocked while any of `integrity`, `mobile-browser`, `build-windows`, or `question-quality-50-pass` is pending or failing.
-4. Confirm a normal squash merge succeeds once all four are green.
-5. Confirm `Main PR Provenance Guard` still runs successfully after the merge.
-6. Confirm `Prune Fully Merged Branches` still runs only after the provenance guard succeeds.
+4. Confirm unresolved review conversations block merge.
+5. Confirm a normal squash merge succeeds once all requirements are satisfied.
+6. Confirm `Main PR Provenance Guard` still runs successfully after the merge.
+7. Confirm `Prune Fully Merged Branches` still runs only after the provenance guard succeeds.
+8. Confirm production Pages and desktop release source gates accept the protected merged-PR source.
 
-## Interaction with the provenance guard
+## Defense in depth
 
-Native protection and the repository guard have different jobs:
+Native protection, provenance validation and release-source validation have different jobs:
 
 - **Native ruleset:** prevents invalid changes from reaching `main`.
-- **Provenance guard:** independently checks that a landed commit came from a merged PR whose exact head had all four required workflows green.
+- **Main PR Provenance Guard:** independently checks a landed commit came from a validated merged PR.
+- **Production source gate:** refuses Pages/desktop publication unless live native protection is present and the exact merged PR head passed the complete release workflow set.
 
-The guard retains an emergency rollback attempt for the current unprotected state. Once the native `non_fast_forward` rule is active, GitHub may reject that force-update rollback. That is acceptable defense in depth because the native rule should already have prevented the unauthorised/non-compliant update. A guard failure under native protection should therefore be investigated rather than bypassed.
+The provenance guard retains an emergency rollback attempt for the current unprotected state. Once the native `non_fast_forward` rule is active, GitHub may reject that force-update rollback. That is acceptable defense in depth because the native rule should already have prevented the unauthorised/non-compliant update. A guard failure under native protection should therefore be investigated rather than bypassed.
 
 ## Why this is not applied automatically in CI
 
