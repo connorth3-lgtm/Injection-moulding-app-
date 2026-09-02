@@ -1,0 +1,1 @@
+Inspect script include locations before modifying shipped HTML.
