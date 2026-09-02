@@ -29,7 +29,13 @@ need(!MAIN.includes("process.resourcesPath, 'mouldmaster', 'integrity.json'"),'p
 need(INTEGRITY.schema===1,'integrity schema mismatch');
 need(INTEGRITY.release===VERSION.desktop_release,'integrity release must match desktop_release');
 need(Object.keys(INTEGRITY.files||{}).length>=15,'integrity manifest is incomplete');
-for(const [name,hash] of Object.entries(INTEGRITY.files)){need(/^[a-f0-9]{64}$/.test(hash),`bad SHA-256 for ${name}`);need(fs.existsSync(path.join(ROOT,name)),`integrity asset missing: ${name}`)}
+const extraFrom=new Set((PKG.build?.extraResources||[]).filter(x=>x&&typeof x==='object').map(x=>x.from));
+for(const [name,hash] of Object.entries(INTEGRITY.files)){
+  need(/^[a-f0-9]{64}$/.test(hash),`bad SHA-256 for ${name}`);
+  need(fs.existsSync(path.join(ROOT,name)),`integrity asset missing: ${name}`);
+  need(extraFrom.has(`../../${name}`),`integrity-protected browser asset is missing from desktop extraResources: ${name}`);
+}
+need(Object.prototype.hasOwnProperty.call(INTEGRITY.files,'process-statistics-v2.js'),'advanced process-statistics runtime must be integrity protected');
 for(const req of ['generated/dependency-licenses.json','generated/sbom.cdx.json','THREAT_MODEL.md'])need(fs.existsSync(path.join(DESKTOP,req)),`desktop transparency artifact missing: ${req}`);
 const licences=JSON.parse(fs.readFileSync(path.join(DESKTOP,'generated','dependency-licenses.json'),'utf8'));
 need(licences.schema===1 && Array.isArray(licences.packages),'dependency licence inventory invalid');
@@ -41,4 +47,4 @@ need(fs.existsSync(path.join(ROOT,'LICENSE')),'repository Apache-2.0 licence mis
 need(fs.existsSync(path.join(ROOT,'OPEN_SOURCE_AND_PATENT_POLICY.md')),'open-source/patent policy missing');
 need(fs.existsSync(path.join(ROOT,'THIRD_PARTY_NOTICES.md')),'third-party notices missing');
 need(fs.existsSync(path.join(ROOT,'.github','workflows','microsoft-store-msix.yml')),'Microsoft Store build workflow missing');
-console.log('MouldMaster open desktop QA passed');
+console.log(`MouldMaster open desktop QA passed (${Object.keys(INTEGRITY.files).length} integrity-protected browser assets packaged with exact resource parity)`);
