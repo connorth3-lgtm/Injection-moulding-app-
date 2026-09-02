@@ -35,6 +35,7 @@ const CORE=[
   './process-data-intelligence-ui.js',
   './process-data-semantic-registry.json',
   './current-data-manifest.json',
+  './research-utilisation-manifest.json',
   './repair.html',
   './privacy.html',
   './support.html'
