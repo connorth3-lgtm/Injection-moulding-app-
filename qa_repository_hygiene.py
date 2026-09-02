@@ -1,4 +1,5 @@
 from pathlib import Path
+import re
 import subprocess
 
 ROOT = Path(__file__).resolve().parent
@@ -53,6 +54,68 @@ need((ROOT / ".gitattributes").is_file(), ".gitattributes missing")
 attrs = (ROOT / ".gitattributes").read_text(encoding="utf-8")
 need("MouldMaster_Core_App.html -text" in attrs, "audited core byte-preservation attribute missing")
 
+# Architecture budget. The parser-sensitive legacy core currently has one
+# deliberate document replacement bootstrap in index.html. It may be retired by
+# a separately validated loader migration, but no other module is allowed to
+# copy this technique. Late-loading is likewise limited to the two reviewed
+# strangler-integration layers; new features should register with the canonical
+# shell/integration APIs rather than adding another loader/wrapper chain.
+index = (ROOT / "index.html").read_text(encoding="utf-8")
+need(index.count("document.write(") == 1, "index.html must contain exactly one legacy bootstrap document.write")
+need(index.count("document.open()") == 1 and index.count("document.close()") == 1,
+     "legacy document replacement must remain one bounded open/write/close bootstrap")
+for rel in paths:
+    if rel == "index.html" or not rel.lower().endswith((".js", ".html")):
+        continue
+    try:
+        body = (ROOT / rel).read_text(encoding="utf-8")
+    except UnicodeDecodeError:
+        continue
+    need("document.write(" not in body and "document.open()" not in body and "document.close()" not in body,
+         f"legacy document replacement technique spread outside index bootstrap: {rel}")
+
+finalizer = (ROOT / "app-shell-finalize.js").read_text(encoding="utf-8")
+late_assets = re.findall(r"loadAsset\('([^']+\.js)'", finalizer)
+need(late_assets == ["assessment-bank-expansion.js", "app-integration-v3.js"],
+     f"late integration asset budget drifted: {late_assets}")
+need("window.MM_APP_INTEGRATION_READY=p" in finalizer,
+     "late integration readiness must remain explicit and observable")
+
+# Local-first privacy boundary. Static same-origin reads are permitted where the
+# process runtime loads its registry/manifest, but learner/process/diagnostic
+# modules may not introduce upload/socket primitives or POST-style transports.
+local_only_modules = (
+    "data-integration-runtime.js",
+    "process-data-intelligence-ui.js",
+    "app-integration-v3.js",
+    "learning-analytics.js",
+    "learning-effectiveness.js",
+    "research-utilisation-analytics.js",
+    "production-health.js",
+)
+network_write_markers = (
+    "XMLHttpRequest(",
+    "new XMLHttpRequest",
+    "new WebSocket",
+    "WebSocket(",
+    "new EventSource",
+    "EventSource(",
+    "sendBeacon(",
+    "FormData(",
+    "method:'POST'",
+    'method:"POST"',
+    "method: 'POST'",
+    'method: "POST"',
+    "method:'PUT'",
+    'method:"PUT"',
+    "method:'PATCH'",
+    'method:"PATCH"',
+)
+for rel in local_only_modules:
+    body = (ROOT / rel).read_text(encoding="utf-8")
+    for marker in network_write_markers:
+        need(marker not in body, f"local-first module gained a network-write primitive ({marker}): {rel}")
+
 # Workflow privilege budget: destructive/publishing write authority is limited to
 # three explicitly reviewed workflows. Fork-context execution and write-all are
 # forbidden repository-wide. This turns least privilege into a regression gate
@@ -89,5 +152,6 @@ need(publisher.count("contents: write") == 1 and "publish-release:" in publisher
 
 print(
     f"MouldMaster repository hygiene QA passed ({len(paths)} tracked paths; {len(workflows)} workflows; "
-    "no generated installers/build outputs and only three reviewed contents-write workflows)."
+    "no generated installers/build outputs, bounded legacy loader/late assets, local-only data transports, "
+    "and only three reviewed contents-write workflows)."
 )
