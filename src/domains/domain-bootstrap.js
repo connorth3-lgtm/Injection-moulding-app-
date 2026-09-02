@@ -2,8 +2,8 @@
 (function(){
 'use strict';
 if(window.MM_DOMAIN_BOOTSTRAP)return;
-const VERSION='2026.09.03.1';
-const MANIFEST='./data/runtime-domain-manifest.json';
+const VERSION='2026.09.03.2';
+const MANIFEST='./runtime-domain-manifest.json';
 
 function loadScript(src){return new Promise((resolve,reject)=>{const s=document.createElement('script');s.src=src;s.async=false;s.dataset.mmDomainAsset='1';s.onload=()=>resolve(src);s.onerror=()=>reject(new Error(`Domain asset failed: ${src}`));document.body.appendChild(s)})}
 async function boot(){
