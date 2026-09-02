@@ -6,11 +6,13 @@ on:
       - 'engineering-calculation-engine.js'
       - 'material-engineering-database.js'
       - 'material-engineering-deep-extension.js'
+      - 'material-common-catalog-extension.js'
       - 'engineering-workbench.js'
       - 'qa-engineering.js'
       - 'qa-engineering-stress-200.js'
       - 'qa-material-engineering.js'
       - 'qa-material-engineering-deep-200.js'
+      - 'qa-material-common-catalog-200.js'
       - 'app-shell-finalize.js'
       - '.github/workflows/engineering-deep-dive.yml'
   push:
@@ -20,11 +22,13 @@ on:
       - 'engineering-calculation-engine.js'
       - 'material-engineering-database.js'
       - 'material-engineering-deep-extension.js'
+      - 'material-common-catalog-extension.js'
       - 'engineering-workbench.js'
       - 'qa-engineering.js'
       - 'qa-engineering-stress-200.js'
       - 'qa-material-engineering.js'
       - 'qa-material-engineering-deep-200.js'
+      - 'qa-material-common-catalog-200.js'
       - 'app-shell-finalize.js'
       - '.github/workflows/engineering-deep-dive.yml'
 
@@ -47,11 +51,14 @@ jobs:
         run: node qa-material-engineering.js
       - name: Deterministic 200-case deep material suite
         run: node qa-material-engineering-deep-200.js
+      - name: Deterministic 200-case 50-material catalog suite
+        run: node qa-material-common-catalog-200.js
       - name: Static runtime integration checks
         shell: bash
         run: |
           grep -q "engineering-calculation-engine.js" app-shell-finalize.js
           grep -q "material-engineering-database.js" app-shell-finalize.js
           grep -q "material-engineering-deep-extension.js" app-shell-finalize.js
+          grep -q "material-common-catalog-extension.js" app-shell-finalize.js
           grep -q "engineering-workbench.js" app-shell-finalize.js
           grep -q "MM_APP_SHELL_FINALIZED='2026.08.26.4'" app-shell-finalize.js
