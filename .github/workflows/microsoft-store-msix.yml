@@ -13,12 +13,26 @@ concurrency:
 jobs:
   store-package:
     runs-on: windows-latest
+    permissions:
+      contents: read
+      pull-requests: read
+      actions: read
     env:
       MM_STORE_IDENTITY_NAME: ${{ vars.MM_STORE_IDENTITY_NAME }}
       MM_STORE_PUBLISHER: ${{ vars.MM_STORE_PUBLISHER }}
       MM_STORE_PUBLISHER_DISPLAY_NAME: ${{ vars.MM_STORE_PUBLISHER_DISPLAY_NAME }}
     steps:
       - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-python@v7
+        with:
+          python-version: '3.12'
+      - name: Require protected fully validated production source
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: python tools/verify_production_source.py --evidence-out desktop/electron/generated/production-source-evidence.json
       - name: Require Partner Center identity
         shell: pwsh
         run: |
@@ -42,9 +56,6 @@ jobs:
           node-version: '22.12.0'
           cache: 'npm'
           cache-dependency-path: desktop/electron/package-lock.json
-      - uses: actions/setup-python@v7
-        with:
-          python-version: '3.12'
       - name: Install exact locked dependencies
         working-directory: desktop/electron
         run: npm ci --no-audit --fund=false
@@ -176,16 +187,18 @@ jobs:
         shell: pwsh
         run: |
           git rev-parse HEAD | Set-Content 'desktop/electron/dist/SOURCE_COMMIT.txt'
+          Copy-Item 'desktop/electron/generated/production-source-evidence.json' 'desktop/electron/dist/production-source-evidence.json'
           Get-ChildItem 'desktop/electron/dist' -File | Where-Object { $_.Extension -in '.msix','.msixbundle','.msixupload' } | Get-FileHash -Algorithm SHA256 | ForEach-Object { "$($_.Hash.ToLower())  $($_.Path | Split-Path -Leaf)" } | Set-Content 'desktop/electron/dist/SHA256SUMS-STORE.txt'
       - uses: actions/upload-artifact@v7
         with:
-          name: mouldmaster-microsoft-store-msix
+          name: mouldmaster-microsoft-store-msix-${{ github.sha }}
           path: |
             desktop/electron/dist/*.msix
             desktop/electron/dist/*.msixbundle
             desktop/electron/dist/*.msixupload
             desktop/electron/dist/SHA256SUMS-STORE.txt
             desktop/electron/dist/SOURCE_COMMIT.txt
+            desktop/electron/dist/production-source-evidence.json
             desktop/electron/generated/integrity.json
             desktop/electron/generated/dependency-licenses.json
             desktop/electron/generated/sbom.cdx.json
