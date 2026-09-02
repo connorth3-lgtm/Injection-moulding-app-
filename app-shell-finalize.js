@@ -1,4 +1,4 @@
-/* MouldMaster app-shell finalizer — 2026.09.02.3 */
+/* MouldMaster app-shell finalizer — 2026.09.02.4 */
 (function(){
 'use strict';
 if(!window.MM_APP_SHELL)throw new Error('app-shell-finalize.js requires app-shell-registry.js');
@@ -20,7 +20,7 @@ const EVIDENCE_STATUS=Object.freeze({
 });
 const GAP=window.MM_SPECIALIST_EVIDENCE_GAPS;
 const BASE=window.MM_SPECIALIST_CURRICULUM;
-function esc(v){return String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function esc(v){return String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot',"'":'&#39;'}[c]))}
 function syncEvidenceExports(){
   for(const lesson of GAP.lessons){
     const state=EVIDENCE_STATUS[lesson.evidenceArea]||'Provisional';
@@ -72,13 +72,14 @@ function loadEngineeringWorkbench(){
   const assets=[
     ['./engineering-calculation-engine.js','mmEngineeringCalculation'],
     ['./material-engineering-database.js','mmMaterialEngineering'],
+    ['./material-engineering-deep-extension.js','mmMaterialEngineeringDeep'],
     ['./engineering-workbench.js','mmEngineeringWorkbench']
   ];
   let index=0;
   const next=()=>{
     if(index>=assets.length)return;
     const [src,key]=assets[index++];
-    const script=document.createElement('script');script.src=`${src}?v=20260902.1-engineering`;script.async=false;script.dataset[key]='1';
+    const script=document.createElement('script');script.src=`${src}?v=20260902.2-deep200`;script.async=false;script.dataset[key]='1';
     script.addEventListener('load',next,{once:true});
     script.addEventListener('error',()=>console.error(`MouldMaster engineering asset could not be loaded: ${src}`),{once:true});
     document.head.appendChild(script);
