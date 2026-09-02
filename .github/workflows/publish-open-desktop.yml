@@ -112,18 +112,22 @@ jobs:
       - name: Install exact locked dependencies
         working-directory: desktop/electron
         run: npm ci --no-audit --fund=false
-      - name: Require signing credentials and generate release evidence
+      - name: Generate integrity, licence and SBOM evidence
+        working-directory: desktop/electron
+        run: |
+          npm run integrity
+          npm run licenses
+          npm run sbom
+      - name: Require production signing credentials
         working-directory: desktop/electron
         env:
           MM_REQUIRE_WINDOWS_SIGNING: '1'
           CSC_LINK: ${{ secrets.WINDOWS_CSC_LINK }}
           CSC_KEY_PASSWORD: ${{ secrets.WINDOWS_CSC_KEY_PASSWORD }}
-        run: |
-          npm run integrity
-          npm run licenses
-          npm run sbom
-          npm run signing
-          npm run qa
+        run: npm run signing
+      - name: Desktop package QA without signing secrets
+        working-directory: desktop/electron
+        run: npm run qa
       - name: Full release QA gates
         run: |
           python qa_release.py
@@ -175,7 +179,7 @@ jobs:
           MM_REQUIRE_WINDOWS_SIGNING: '1'
           CSC_LINK: ${{ secrets.WINDOWS_CSC_LINK }}
           CSC_KEY_PASSWORD: ${{ secrets.WINDOWS_CSC_KEY_PASSWORD }}
-        run: npm run dist:portable
+        run: npx electron-builder --win portable
       - name: Verify valid timestamped Authenticode signature
         shell: pwsh
         run: |
