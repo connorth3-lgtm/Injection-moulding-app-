@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "version": "2026.09.02.1",
+  "version": "2026.09.02.2",
   "reviewed": "2026-09-02",
   "purpose": "Machine-readable manifest for turning governed research into contextual decision support without converting research into universal production authority.",
   "resolvedEvidenceState": {
@@ -15,6 +15,8 @@
     "supportsFalsification": true,
     "supportsAlternativeExplanations": true,
     "supportsVerificationPlan": true,
+    "supportsResearchGapFeedback": true,
+    "supportsClaimFreshnessReview": true,
     "universalSetpointsAllowed": false,
     "researchCanOverrideApprovedLimits": false
   },
@@ -26,19 +28,41 @@
     "signal",
     "physical-outcome"
   ],
+  "connectedDataInfrastructure": {
+    "semanticReadinessGate": true,
+    "indexedDbLocalStore": true,
+    "goldenBaseline": true,
+    "driftComparison": true,
+    "beforeAfterIntervention": true,
+    "cavityIntelligence": true,
+    "qualityAssociations": true,
+    "energyPerGoodPart": true,
+    "workspaceDatasetLinks": true,
+    "researchContextBridge": true
+  },
   "runtimeFiles": [
     "research-evidence-engine.js",
-    "research-evidence-ui.js"
+    "research-evidence-adapter.js",
+    "research-evidence-workspace.js",
+    "research-evidence-microlearning.js",
+    "research-utilisation-analytics.js",
+    "research-gap-feedback.js",
+    "research-claim-freshness.js",
+    "research-evidence-ui.js",
+    "research-data-context.js",
+    "research-evidence-runtime-health.js"
   ],
   "qa": [
-    "qa_research_evidence_engine.py"
+    "qa_research_evidence_engine.py",
+    "qa_research_utilisation_manifest.py"
   ],
-  "intendedSurfaces": [
+  "activeSurfaces": [
     "measured-evidence panels",
     "process-data diagnostic labs",
-    "lessons and contextual microlearning",
-    "future workspace case reasoning",
-    "future imported real-process data reasoning"
+    "lesson contextual microlearning",
+    "semantic process-data intake",
+    "site-local process intelligence",
+    "workspace troubleshooting cases"
   ],
   "boundary": "Research evidence supplies mechanism priors, applicability context, falsifying evidence and next-measurement suggestions. Production decisions remain governed by local measured evidence, validated process limits, machine/tool/material documentation, approved site procedures and applicable safety controls."
 }
