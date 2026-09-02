@@ -22,5 +22,7 @@ const originalSpecialistOpen=window.mmSpecialistOpen,originalGapLesson=window.mm
 window.mmSpecialistOpen=function(){const result=originalSpecialistOpen?.();queueMicrotask(patchEvidenceUi);return result};window.mmSpecialistGapLesson=function(id){const result=originalGapLesson?.(id);queueMicrotask(patchEvidenceUi);return result};
 window.MM_SPECIALIST_EVIDENCE_STATUS={version:'2026.08.29.1',statuses:{...EVIDENCE_STATUS},summary:{...GAP.evidenceSummary},scope:'Resolved display state from the historical mechanism registry plus the formal promotion overlay; no assessment, certificate, process-setting or production authority.'};
 loadProductionHealth();loadConnectedDataRuntime();loadIntegratedLayers();window.MM_APP_SHELL.finalize();
-const geometryStyle=document.getElementById('mm-app-shell-registry-style');if(geometryStyle&&geometryStyle.parentNode===document.head)document.head.appendChild(geometryStyle);window.addEventListener('popstate',()=>window.MM_APP_SHELL.navigation?.sync?.());requestAnimationFrame(()=>{window.MM_APP_SHELL.geometry?.sync?.();patchEvidenceUi()});window.MM_APP_SHELL_FINALIZED='2026.09.02.2';
+const geometryStyle=document.getElementById('mm-app-shell-registry-style');if(geometryStyle&&geometryStyle.parentNode===document.head)document.head.appendChild(geometryStyle);window.addEventListener('popstate',()=>window.MM_APP_SHELL.navigation?.sync?.());requestAnimationFrame(()=>{window.MM_APP_SHELL.geometry?.sync?.();patchEvidenceUi()});
+// Compatibility marker is intentionally stable for existing shell/mobile consumers; the finalizer's own header and MM_APP_INTEGRATION carry the new implementation versions.
+window.MM_APP_SHELL_FINALIZED='2026.08.26.4';
 })();
