@@ -5,13 +5,18 @@ This is intentionally a production-time gate, not a PR-time branch-protection
 substitute. It requires GitHub's live native main ruleset and, unless
 --protection-only is used, verifies that the current main SHA came from a merged
 PR whose exact source head passed every release-critical PR workflow.
+
+CI supplies a scoped GITHUB_TOKEN. A trusted local administrator may instead use
+an existing authenticated GitHub CLI session; this verifier invokes `gh api`
+directly and never extracts the stored credential into a shell variable.
 """
 from __future__ import annotations
 
 import argparse
 import json
 import os
-import sys
+import shutil
+import subprocess
 import urllib.error
 import urllib.parse
 import urllib.request
@@ -44,12 +49,29 @@ REQUIRED_WORKFLOWS = (
 )
 
 
-def fail(message: str) -> "NoReturn":
+def fail(message: str):
     raise SystemExit(f"production source gate failed: {message}")
 
 
-def api(repo: str, token: str, path: str):
-    url = f"https://api.github.com/repos/{repo}/{path.lstrip('/')}"
+def api(repo: str, token: str | None, path: str):
+    endpoint = f"repos/{repo}/{path.lstrip('/')}"
+    if not token:
+        if not shutil.which("gh"):
+            fail("GITHUB_TOKEN/GH_TOKEN is absent and authenticated GitHub CLI is unavailable")
+        run = subprocess.run(
+            ["gh", "api", endpoint],
+            capture_output=True,
+            text=True,
+            timeout=30,
+        )
+        if run.returncode != 0:
+            fail(f"GitHub CLI API failed for {path}: {(run.stderr or run.stdout).strip()[:500]}")
+        try:
+            return json.loads(run.stdout)
+        except json.JSONDecodeError as exc:
+            fail(f"GitHub CLI returned invalid JSON for {path}: {exc}")
+
+    url = f"https://api.github.com/{endpoint}"
     request = urllib.request.Request(
         url,
         headers={
@@ -69,7 +91,7 @@ def api(repo: str, token: str, path: str):
         fail(f"GitHub API unavailable for {path}: {exc}")
 
 
-def verify_protection(repo: str, token: str) -> dict:
+def verify_protection(repo: str, token: str | None) -> dict:
     branch = api(repo, token, "branches/main")
     if branch.get("protected") is not True:
         fail("GitHub does not report main as protected")
@@ -140,7 +162,7 @@ def latest_successful_runs(runs: list[dict]) -> dict[str, dict]:
     return latest
 
 
-def verify_release_source(repo: str, token: str, source_sha: str) -> dict:
+def verify_release_source(repo: str, token: str | None, source_sha: str) -> dict:
     ref = api(repo, token, "git/ref/heads/main")
     main_sha = ref.get("object", {}).get("sha")
     if main_sha != source_sha:
@@ -200,8 +222,6 @@ def main() -> None:
     token = os.environ.get("GITHUB_TOKEN") or os.environ.get("GH_TOKEN")
     if not repo or "/" not in repo:
         fail("repository must be supplied with --repo or GITHUB_REPOSITORY")
-    if not token:
-        fail("GITHUB_TOKEN or GH_TOKEN is required")
 
     protection = verify_protection(repo, token)
     result = {
