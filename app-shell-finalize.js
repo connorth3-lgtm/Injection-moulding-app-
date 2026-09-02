@@ -1,4 +1,4 @@
-/* MouldMaster app-shell finalizer — 2026.09.02.4 */
+/* MouldMaster app-shell finalizer — 2026.09.02.5 */
 (function(){
 'use strict';
 if(!window.MM_APP_SHELL)throw new Error('app-shell-finalize.js requires app-shell-registry.js');
@@ -73,13 +73,14 @@ function loadEngineeringWorkbench(){
     ['./engineering-calculation-engine.js','mmEngineeringCalculation'],
     ['./material-engineering-database.js','mmMaterialEngineering'],
     ['./material-engineering-deep-extension.js','mmMaterialEngineeringDeep'],
+    ['./material-common-catalog-extension.js','mmMaterialCommonCatalog'],
     ['./engineering-workbench.js','mmEngineeringWorkbench']
   ];
   let index=0;
   const next=()=>{
     if(index>=assets.length)return;
     const [src,key]=assets[index++];
-    const script=document.createElement('script');script.src=`${src}?v=20260902.2-deep200`;script.async=false;script.dataset[key]='1';
+    const script=document.createElement('script');script.src=`${src}?v=20260902.3-material50`;script.async=false;script.dataset[key]='1';
     script.addEventListener('load',next,{once:true});
     script.addEventListener('error',()=>console.error(`MouldMaster engineering asset could not be loaded: ${src}`),{once:true});
     document.head.appendChild(script);
