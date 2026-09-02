@@ -44,11 +44,11 @@ def main():
     need('Plan the next evidence check' in ui,'verification workflow needs clear end-user action copy')
     need('do not override local measured evidence' in ui.lower(),'UI must preserve local-evidence boundary')
 
-    for token in ['buildPractice','weakeningQuestion','correctIndex','Formative practice only','choiceMeta','formal assessment','contextKey']:
+    for token in ['buildPractice','weakeningQuestion','correctIndex','Formative practice only','choiceMeta','formal assessment','contextKey','contextFingerprint']:
         need(token in micro,f'contextual microlearning behavior missing: {token}')
     need('strongest discriminating evidence' in micro,'evidence-selection stage missing')
-    need('hash(`${r.id}:${stage}:${contextKey}`)%options.length' in micro,'formative answer position must vary by mechanism, difficulty stage and run context')
-    need('distinct run contexts' in micro,'contextual microlearning must describe transfer-based progression')
+    need('hash(`${r.id}:${stage}:${contextKey}`)%options.length' in micro,'formative answer position must vary by mechanism, difficulty stage and structured run context')
+    need('distinct structured run contexts' in micro,'contextual microlearning must describe transfer-based progression')
     for stage in ['evidence','falsification','recovery','integration']:
         need(stage in micro,f'adaptive formative stage missing: {stage}')
     for forbidden in ['MM_DATA.exams=', 'regionalQuestions=', 'question_bank_version=', 'window.getExamQuestions=']:
@@ -56,6 +56,6 @@ def main():
     for token in ['Reason it through','data-mm-ri-choice','practice_miss','practice_complete','What recovery should look like','Run-linked practice stays outside the formal assessment bank']:
         need(token in context,f'Run Insights learning loop missing: {token}')
 
-    print(f'MouldMaster research evidence engine QA passed ({len(expected)} mechanisms; {len(dois)} primary-source links; transfer-based staged contextual formative practice guarded)')
+    print(f'MouldMaster research evidence engine QA passed ({len(expected)} mechanisms; {len(dois)} primary-source links; structured-context transfer practice guarded)')
 
 if __name__=='__main__': main()
