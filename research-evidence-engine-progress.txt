@@ -1,1 +1,0 @@
-Core implementation created. Integration and validation pending.

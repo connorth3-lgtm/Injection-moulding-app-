@@ -1,1 +1,0 @@
-Do not merge until both HTML builds and service-worker include the new research modules.
