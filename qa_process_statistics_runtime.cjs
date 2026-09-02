@@ -24,6 +24,8 @@ const twoOfThree=stats.spcRunRules([2.2,2.4,0],0,1);
 assert.ok(twoOfThree.flags.includes('2-of-3-beyond-2sigma'));
 const fourOfFive=stats.spcRunRules([1.2,1.3,1.4,1.5,0],0,1);
 assert.ok(fourOfFive.flags.includes('4-of-5-beyond-1sigma'));
+const alternating=stats.spcRunRules([1,0,1,0,1,0,1,0,1,0,1,0,1,0],0.5,0.25);
+assert.ok(alternating.flags.includes('14-alternating'),'alternating-cycle screen should be reachable and correctly indexed');
 
 const diff=stats.meanDifference([1,2,3,4,5],[3,4,5,6,7]);
 close(diff.difference,2);
@@ -66,4 +68,4 @@ assert.ok(markup.includes('Cavity B/W'));
 assert.ok(markup.includes('95% approx CI'));
 assert.ok(markup.includes('not specification limits'));
 
-console.log('Advanced process statistics QA passed: missingness, approximate uncertainty/effect size, lag-1 autocorrelation, five run-rule screens, machine/mould/material/job stratification, cavity variance decomposition and UI boundaries verified.');
+console.log('Advanced process statistics QA passed: missingness, approximate uncertainty/effect size, lag-1 autocorrelation, six run-rule screens, machine/mould/material/job stratification, cavity variance decomposition and UI boundaries verified.');
