@@ -1,0 +1,43 @@
+{
+  "schema": 1,
+  "version": "2026.09.02.2",
+  "reviewed": "2026-09-02",
+  "evidence": {
+    "promotedMechanisms": 12,
+    "publisherVerifiedPrimaryMeasuredStudies": 70,
+    "runtimePrimarySourceLinks": 24
+  },
+  "decisionModel": {
+    "separateEvidenceQualityFromApplicability": true,
+    "requiresLocalMeasuredConfirmation": true,
+    "supportsFalsification": true,
+    "supportsAlternativeExplanations": true,
+    "supportsVerificationPlan": true,
+    "universalSetpointsAllowed": false,
+    "researchCanOverrideApprovedLimits": false
+  },
+  "connectedData": {
+    "semanticReadinessGate": true,
+    "localStorage": "IndexedDB",
+    "rawUpload": false,
+    "intelligence": [
+      "site-local baseline",
+      "drift comparison",
+      "before-after intervention comparison",
+      "cavity intelligence",
+      "quality association support",
+      "energy per good part",
+      "structured troubleshooting links",
+      "research applicability context"
+    ]
+  },
+  "activeSurfaces": [
+    "lessons",
+    "measured-evidence panels",
+    "process diagnostic labs",
+    "semantic process-data intake",
+    "site-local process intelligence",
+    "workspace troubleshooting cases"
+  ],
+  "boundary": "Research evidence supplies mechanism context, applicability, falsifying evidence and next-measurement suggestions. Production decisions remain governed by local measured evidence, validated process limits, machine/tool/material documentation, approved site procedures and applicable safety controls."
+}
