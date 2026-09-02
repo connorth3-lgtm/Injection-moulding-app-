@@ -9,6 +9,8 @@ on:
 
 permissions:
   contents: write
+  pull-requests: read
+  actions: read
 
 concurrency:
   group: publish-open-desktop-${{ github.ref }}
@@ -17,6 +19,10 @@ concurrency:
 jobs:
   publish-windows:
     runs-on: windows-latest
+    env:
+      MM_REQUIRE_WINDOWS_SIGNING: '1'
+      CSC_LINK: ${{ secrets.WINDOWS_CSC_LINK }}
+      CSC_KEY_PASSWORD: ${{ secrets.WINDOWS_CSC_KEY_PASSWORD }}
     steps:
       - uses: actions/checkout@v7
         with:
@@ -29,6 +35,10 @@ jobs:
       - uses: actions/setup-python@v7
         with:
           python-version: '3.12'
+      - name: Require protected fully validated production source
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: python tools/verify_production_source.py --evidence-out desktop/electron/generated/production-source-evidence.json
       - name: Application JavaScript syntax
         run: |
           node --check service-worker.js
@@ -87,22 +97,26 @@ jobs:
           node --check specialist-evidence-gap-extension.js
           node --check mould-master-workspace.js
           node --check app-shell-finalize.js
+          node --check app-integration-v3.js
+          node --check assessment-bank-expansion.js
           node --check learning-analytics.js
           node --check accessibility-hardening.js
           node --check desktop/electron/src/main.cjs
           node --check desktop/electron/scripts/generate-integrity.cjs
           node --check desktop/electron/scripts/generate-licenses.cjs
           node --check desktop/electron/scripts/generate-sbom.cjs
+          node --check desktop/electron/scripts/signing-status.cjs
           node --check desktop/electron/scripts/qa.cjs
       - name: Install exact locked dependencies
         working-directory: desktop/electron
         run: npm ci --no-audit --fund=false
-      - name: Generate integrity, licence and SBOM evidence
+      - name: Require signing credentials and generate release evidence
         working-directory: desktop/electron
         run: |
           npm run integrity
           npm run licenses
           npm run sbom
+          npm run signing
           npm run qa
       - name: Full release QA gates
         run: |
@@ -149,9 +163,35 @@ jobs:
           python qa_store_submission.py
           python qa_nzqa_readiness.py
           python qa_iacet_readiness.py
-      - name: Build unsigned portable Windows package
+      - name: Build signed portable Windows package
         working-directory: desktop/electron
         run: npm run dist:portable
+      - name: Verify valid timestamped Authenticode signature
+        shell: pwsh
+        run: |
+          $exe = Get-ChildItem 'desktop/electron/dist' -Filter '*.exe' -File | Select-Object -First 1
+          if (-not $exe) { throw 'Portable Windows executable was not produced.' }
+          $signature = Get-AuthenticodeSignature -FilePath $exe.FullName
+          if ($signature.Status -ne 'Valid') {
+            throw "Authenticode signature is not valid: $($signature.Status) $($signature.StatusMessage)"
+          }
+          if (-not $signature.SignerCertificate) { throw 'Authenticode signer certificate is missing.' }
+          if (-not $signature.TimeStamperCertificate) { throw 'Authenticode timestamp certificate is missing.' }
+          $evidence = [ordered]@{
+            schema = 1
+            file = $exe.Name
+            sha256 = (Get-FileHash $exe.FullName -Algorithm SHA256).Hash.ToLower()
+            status = [string]$signature.Status
+            signer_subject = $signature.SignerCertificate.Subject
+            signer_thumbprint = $signature.SignerCertificate.Thumbprint
+            signer_not_after = $signature.SignerCertificate.NotAfter.ToUniversalTime().ToString('o')
+            timestamp_subject = $signature.TimeStamperCertificate.Subject
+            timestamp_thumbprint = $signature.TimeStamperCertificate.Thumbprint
+            source_commit = $env:GITHUB_SHA
+            verified_at = (Get-Date).ToUniversalTime().ToString('o')
+          }
+          $evidence | ConvertTo-Json -Depth 5 | Set-Content 'desktop/electron/generated/authenticode-status.json'
+          Write-Host "Verified timestamped Authenticode signature: $($signature.SignerCertificate.Thumbprint)"
       - name: Stage release evidence
         shell: pwsh
         run: |
@@ -165,6 +205,9 @@ jobs:
           Copy-Item 'desktop/electron/generated/integrity.json' $releaseDir
           Copy-Item 'desktop/electron/generated/dependency-licenses.json' $releaseDir
           Copy-Item 'desktop/electron/generated/sbom.cdx.json' $releaseDir
+          Copy-Item 'desktop/electron/generated/signing-status.json' $releaseDir
+          Copy-Item 'desktop/electron/generated/authenticode-status.json' $releaseDir
+          Copy-Item 'desktop/electron/generated/production-source-evidence.json' $releaseDir
           Copy-Item 'assessment-quality-report.json' $releaseDir
           Copy-Item 'evidence-maturity-report.json' $releaseDir
           Copy-Item 'process-data-sweep-report.json' $releaseDir
@@ -176,20 +219,23 @@ jobs:
           @"
           # MouldMaster Academy Desktop $version
 
-          Open-source Windows desktop release built from this repository.
+          Signed Windows desktop release built from the protected, fully validated `main` source.
 
           Included evidence:
-          - portable Windows executable
+          - Authenticode-signed portable Windows executable with timestamp
+          - Authenticode signer/timestamp verification record
+          - production-source protection and merged-PR workflow evidence
           - SHA-256 release hashes
           - source commit record
           - bundled-asset integrity manifest
+          - signing-readiness record
           - dependency licence inventory
           - CycloneDX SBOM
           - assessment, evidence-maturity, process-data-sweep, measured-evidence and source-freshness QA reports
 
-          Release publication is one-shot: an existing tag/release is never overwritten. Repository-level GitHub immutable releases should be enabled before the next release so the published tag/assets and GitHub release attestation are platform-enforced as immutable.
+          Release publication is one-shot: an existing tag/release is never overwritten. Repository-level GitHub immutable releases should be enabled when available so the published tag/assets and GitHub release attestation are platform-enforced as immutable.
 
-          This unsigned GitHub release is intended for transparent/open-source distribution and testing. Microsoft Store signing/certification remains a separate external process and must not be claimed until Microsoft grants it.
+          The GitHub production release is not published unless native main protection, exact merged-PR validation, signing credentials, a valid Authenticode signature and a timestamp certificate are all verified in the release workflow.
           "@ | Set-Content "$releaseDir/RELEASE_NOTES.md"
           "MM_RELEASE_VERSION=$version" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
           "MM_RELEASE_TAG=$tag" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
