@@ -47,7 +47,7 @@ function spcRunRules(values,centre=null,sigma=null){
   }
   for(let i=0;i<=a.length-5;i++){
     const w=a.slice(i,i+5),hi=w.filter(v=>sideBeyond(v,c,1,s)===1).length,lo=w.filter(v=>sideBeyond(v,c,1,s)===-1).length;
-    if(hi>=4||lo>=4)push('4-of-5-beyond-1sigma',i,i+4,hi>=4?'high':'low','Four of five consecutive points are beyond 1 local standard deviation on the same side.');
+    if(hi>=4||lo>=4)push('4-of-5-beyond-1sigma',i,i+4,hi>=4?'high':'low','Four of five consecutive points are beyond 1 local standard deviations on the same side.');
   }
   for(let i=0;i<=a.length-8;i++){
     const w=a.slice(i,i+8),hi=w.every(v=>v>c),lo=w.every(v=>v<c);if(hi||lo)push('8-same-side',i,i+7,hi?'high':'low','Eight consecutive points lie on the same side of the reference centre.');
@@ -107,7 +107,7 @@ function windowDiagnostics(rows,channel,splitIndex,windowSize=20){
   const beforeRows=source.slice(Math.max(0,i-n),i),afterRows=source.slice(i,Math.min(source.length,i+n)),before=beforeRows.map(r=>r?.[channel]),after=afterRows.map(r=>r?.[channel]),bs=summary(before,beforeRows.length);
   return{...meanDifference(before,after),before:channelDiagnostics(beforeRows,channel),after:channelDiagnostics(afterRows,channel,{centre:bs.mean,sigma:bs.sd}),sampleBalance:beforeRows.length&&afterRows.length?Math.min(beforeRows.length,afterRows.length)/Math.max(beforeRows.length,afterRows.length):null,boundary:BOUNDARY}
 }
-function esc(v){return String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot',"'":'&#39;'}[c]))}
+function esc(v){return String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
 function fmt(v,d=2){return Number.isFinite(Number(v))?Number(v).toLocaleString(undefined,{maximumFractionDigits:d}):'—'}
 function ci(ci95){return Array.isArray(ci95)&&ci95.length===2?`${fmt(ci95[0])} to ${fmt(ci95[1])}`:'—'}
 function compactStrata(x){const names=Object.entries(x||{}).map(([k,v])=>`${k}: ${v.groupCount}`);return names.length?names.join(' · '):'none detected'}
