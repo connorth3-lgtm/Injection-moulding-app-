@@ -45,17 +45,24 @@ actual=git_blob_sha('assessment-psychometric-hardening.js')
 need(actual==m.group(1),f'psychometric approval stale: pinned {m.group(1)}, current {actual}')
 
 idx=text('index.html')
+sw=text('service-worker.js')
 for asset in ['./assessment-psychometric-hardening.js','./assessment-evidence-integrity-upgrade.js','./assessment-psychometric-approval.js','./real-measured-data-assessment.js']:
     need(asset in idx,f'browser shell missing {asset}')
 need(idx.index("'./evidence-maturity-formal-bridge.js'") < idx.index("'./assessment-psychometric-hardening.js'") < idx.index("'./assessment-evidence-integrity-upgrade.js'") < idx.index("'./assessment-evidence-approval.js'") < idx.index("'./assessment-psychometric-approval.js'") < idx.index("'./app-shell-registry.js'"),'psychometric/evidence browser load order is wrong')
 need(idx.index("'./process-data-diagnostics.js'") < idx.index("'./real-measured-data-assessment.js'"),'real measured assessment load order is wrong')
-need('RUNTIME_ASSET_VERSION="20260901.17-maturity-hardening-v2"' in idx,'browser runtime token must advance to the maturity-hardening v2 bundle')
+runtime_match=re.search(r'const RUNTIME_ASSET_VERSION="([^"]+)"',idx)
+cache_match=re.search(r"const CACHE_REVISION='([^']+)'",sw)
+need(runtime_match is not None,'browser runtime token missing')
+need(cache_match is not None,'PWA cache revision missing')
+runtime_token=runtime_match.group(1)
+cache_revision=cache_match.group(1)
+need(re.fullmatch(r'\d{8}\.\d+-maturity-hardening-v2',runtime_token) is not None,'browser runtime token must retain dated maturity-hardening-v2 family format')
+need(re.fullmatch(r'maturity-hardening-v2-\d{8}',cache_revision) is not None,'PWA cache revision must retain maturity-hardening-v2 family format')
+need(runtime_token[:8]==cache_revision.rsplit('-',1)[-1],'browser runtime token and PWA cache revision dates must advance together')
 need("'./runtime-v2.js'" in idx and "'./assessment-runtime-v2.js'" in idx,'maturity runtime must preserve psychometric bank while replacing only exam membership selection')
 
-sw=text('service-worker.js')
 for asset in ["'./assessment-psychometric-hardening.js'","'./assessment-evidence-integrity-upgrade.js'","'./assessment-psychometric-approval.js'","'./real-measured-data-assessment.js'"]:
     need(asset in sw,f'offline cache missing {asset}')
-need("CACHE_REVISION='maturity-hardening-v2-20260901'" in sw,'PWA cache revision must advance with the maturity-hardening runtime while retaining the approved psychometric assets')
 need("'./runtime-v2.js'" in sw and "'./assessment-runtime-v2.js'" in sw,'PWA cache must include assessment runtime v2')
 
 pkg=json.loads(text('desktop/electron/package.json'))
@@ -79,4 +86,4 @@ standard=text('qa_question_quality_50_pass_runtime.py')
 need('_evaluate_balanced_length' in standard and "hard.remove('correct-longest-or-tied')" in standard,'standard runtime still creates a longest-is-wrong inverse cue')
 need("zero learner-visible quality warnings" in standard and "need(not report.get('warning_types')" in standard,'standard runtime does not fail closed on learner-visible warnings')
 
-print(f'MouldMaster psychometric integration QA passed: 197 keyed decisions retain keyed propositions and technical vocabulary; four-rank answer-length balancing removes the inverse longest-is-wrong cue; extreme hard gate uses only relative length and terminal punctuation; proposition evidence is loaded before approval; 12 real-measured decisions are delivered; maturity assessment runtime changes membership exposure only; blob pin={actual}')
+print(f'MouldMaster psychometric integration QA passed: 197 keyed decisions retain keyed propositions and technical vocabulary; four-rank answer-length balancing removes the inverse longest-is-wrong cue; extreme hard gate uses only relative length and terminal punctuation; proposition evidence is loaded before approval; 12 real-measured decisions are delivered; maturity assessment runtime changes membership exposure only; runtime={runtime_token}; cache={cache_revision}; blob pin={actual}')

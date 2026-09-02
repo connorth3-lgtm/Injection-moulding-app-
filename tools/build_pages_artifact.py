@@ -67,15 +67,23 @@ def sha256(path: Path) -> str:
     return digest.hexdigest()
 
 
-def extract_service_worker_core() -> list[str]:
-    source = (ROOT / "service-worker.js").read_text(encoding="utf-8")
-    match = re.search(r"const\s+CORE\s*=\s*\[(.*?)\]\s*;", source, flags=re.S)
+def extract_worker_array(source: str, name: str) -> list[str]:
+    match = re.search(rf"const\s+{re.escape(name)}\s*=\s*\[(.*?)\]\s*;", source, flags=re.S)
     if not match:
-        raise SystemExit("Could not locate service-worker CORE asset list")
-    assets = re.findall(r"""['\"]\./([^'\"]+)['\"]""", match.group(1))
-    if not assets:
+        raise SystemExit(f"Could not locate service-worker {name} asset list")
+    return re.findall(r"""['\"]\./([^'\"]+)['\"]""", match.group(1))
+
+
+def extract_service_worker_assets() -> tuple[list[str], list[str]]:
+    source = (ROOT / "service-worker.js").read_text(encoding="utf-8")
+    core = extract_worker_array(source, "CORE")
+    optional = extract_worker_array(source, "OPTIONAL")
+    if not core:
         raise SystemExit("Service-worker CORE asset list is empty")
-    return assets
+    overlap = sorted(set(core) & set(optional))
+    if overlap:
+        raise SystemExit("Assets cannot be both CORE and OPTIONAL: " + ", ".join(overlap))
+    return core, optional
 
 
 def normalise_local_reference(raw: str) -> str | None:
@@ -158,8 +166,8 @@ def extract_runtime_metadata() -> tuple[str, str, str]:
 
 
 def main() -> None:
-    public_files = set(extract_service_worker_core())
-    public_files.update(EXTRA_FILES)
+    core_files, optional_files = extract_service_worker_assets()
+    public_files = set(core_files) | set(optional_files) | set(EXTRA_FILES)
 
     for rel in sorted(public_files):
         validate_boundary(rel)
@@ -182,13 +190,15 @@ def main() -> None:
     runtime_version, cache_version, cache_revision = extract_runtime_metadata()
     source_sha = os.environ.get("GITHUB_SHA", "local")
     deployment = {
-        "schema": 1,
+        "schema": 2,
         "source_sha": source_sha,
         "source_ref": os.environ.get("GITHUB_REF_NAME", "local"),
         "assessment_runtime": runtime_version,
         "service_worker_cache_version": cache_version,
         "service_worker_cache_revision": cache_revision,
-        "artifact_policy": "service-worker-core-plus-minimal-public-metadata",
+        "artifact_policy": "service-worker-core-plus-on-demand-runtime-plus-minimal-public-metadata",
+        "precache_asset_count": len(core_files),
+        "on_demand_asset_count": len(optional_files),
     }
     (OUT / "deployment.json").write_text(
         json.dumps(deployment, indent=2, sort_keys=True) + "\n",
@@ -197,9 +207,11 @@ def main() -> None:
 
     manifest_files = sorted(public_files | {"deployment.json"})
     manifest = {
-        "schema": 1,
+        "schema": 2,
         "source_sha": source_sha,
         "asset_count": len(manifest_files),
+        "precache_assets": sorted(core_files),
+        "on_demand_assets": sorted(optional_files),
         "assets": {
             rel: {
                 "sha256": sha256(OUT / rel),
@@ -215,7 +227,8 @@ def main() -> None:
 
     print(
         f"Pages artifact ready: {len(manifest_files)} public assets "
-        f"(assessment runtime {runtime_version}, source {source_sha[:12]})."
+        f"({len(core_files)} pre-cached, {len(optional_files)} on demand; "
+        f"assessment runtime {runtime_version}, source {source_sha[:12]})."
     )
     print("Excluded repository areas: " + ", ".join(FORBIDDEN_PREFIXES))
 

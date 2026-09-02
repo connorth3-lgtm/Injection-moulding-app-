@@ -1,4 +1,4 @@
-/* MouldMaster app-shell finalizer — 2026.08.29.1 */
+/* MouldMaster app-shell finalizer — 2026.09.02.1 */
 (function(){
 'use strict';
 if(!window.MM_APP_SHELL)throw new Error('app-shell-finalize.js requires app-shell-registry.js');
@@ -54,6 +54,20 @@ function loadProductionHealth(){
   if(window.MM_PRODUCTION_HEALTH||document.querySelector('script[data-mm-production-health]'))return;
   const script=document.createElement('script');script.src='./production-health.js';script.async=true;script.dataset.mmProductionHealth='1';document.head.appendChild(script);
 }
+function loadConnectedDataRuntime(){
+  if(window.MM_CONNECTED_PROCESS_DATA||document.querySelector('script[data-mm-connected-data]'))return;
+  const script=document.createElement('script');
+  script.src='./data-integration-runtime.js';
+  script.async=true;
+  script.dataset.mmConnectedData='1';
+  script.addEventListener('load',()=>{
+    if(window.MM_PROCESS_INTELLIGENCE_UI||document.querySelector('script[data-mm-process-intelligence]'))return;
+    const ui=document.createElement('script');ui.src='./process-data-intelligence-ui.js';ui.async=true;ui.dataset.mmProcessIntelligence='1';document.head.appendChild(ui);
+  });
+  script.addEventListener('error',()=>console.error('MouldMaster connected process-data runtime could not be loaded'));
+  document.head.appendChild(script);
+}
+
 syncEvidenceExports();
 const originalSpecialistOpen=window.mmSpecialistOpen;
 const originalGapLesson=window.mmSpecialistGapLesson;
@@ -62,11 +76,12 @@ window.mmSpecialistGapLesson=function(id){const result=originalGapLesson?.(id);q
 window.MM_SPECIALIST_EVIDENCE_STATUS={version:'2026.08.29.1',statuses:{...EVIDENCE_STATUS},summary:{...GAP.evidenceSummary},scope:'Resolved display state from the historical mechanism registry plus the formal promotion overlay; no assessment, certificate, process-setting or production authority.'};
 
 loadProductionHealth();
+loadConnectedDataRuntime();
 window.MM_APP_SHELL.finalize();
 const geometryStyle=document.getElementById('mm-app-shell-registry-style');
 if(geometryStyle&&geometryStyle.parentNode===document.head)document.head.appendChild(geometryStyle);
 window.addEventListener('popstate',()=>window.MM_APP_SHELL.navigation?.sync?.());
 requestAnimationFrame(()=>{window.MM_APP_SHELL.geometry?.sync?.();patchEvidenceUi()});
-// Preserve the canonical shell compatibility marker. Evidence-status bridging has its own version above.
+// Preserve the canonical shell compatibility marker. Evidence-status bridging and connected-data runtime have their own versions above.
 window.MM_APP_SHELL_FINALIZED='2026.08.26.4';
 })();
