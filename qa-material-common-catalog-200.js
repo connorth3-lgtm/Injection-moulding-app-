@@ -1,4 +1,5 @@
 /* Deterministic 200-case QA for common-material catalog extension */
+/* Manual rerun marker: 2026-09-02T21:48+12:00 */
 'use strict';
 const assert=require('assert'),D=require('./material-common-catalog-extension.js');
 let assertions=0;const ok=(v,m)=>{assert.ok(v,m);assertions++},eq=(a,b,m)=>{assert.strictEqual(a,b,m);assertions++};
