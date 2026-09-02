@@ -8,25 +8,27 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: write
-  pull-requests: read
-  actions: read
+  contents: read
 
 concurrency:
   group: publish-open-desktop-${{ github.ref }}
   cancel-in-progress: false
 
 jobs:
-  publish-windows:
+  build-signed-windows:
     runs-on: windows-latest
-    env:
-      MM_REQUIRE_WINDOWS_SIGNING: '1'
-      CSC_LINK: ${{ secrets.WINDOWS_CSC_LINK }}
-      CSC_KEY_PASSWORD: ${{ secrets.WINDOWS_CSC_KEY_PASSWORD }}
+    permissions:
+      contents: read
+      pull-requests: read
+      actions: read
+    outputs:
+      release-version: ${{ steps.release-meta.outputs.version }}
+      release-tag: ${{ steps.release-meta.outputs.tag }}
     steps:
       - uses: actions/checkout@v7
         with:
           fetch-depth: 0
+          persist-credentials: false
       - uses: actions/setup-node@v7
         with:
           node-version: '22.12.0'
@@ -112,6 +114,10 @@ jobs:
         run: npm ci --no-audit --fund=false
       - name: Require signing credentials and generate release evidence
         working-directory: desktop/electron
+        env:
+          MM_REQUIRE_WINDOWS_SIGNING: '1'
+          CSC_LINK: ${{ secrets.WINDOWS_CSC_LINK }}
+          CSC_KEY_PASSWORD: ${{ secrets.WINDOWS_CSC_KEY_PASSWORD }}
         run: |
           npm run integrity
           npm run licenses
@@ -165,6 +171,10 @@ jobs:
           python qa_iacet_readiness.py
       - name: Build signed portable Windows package
         working-directory: desktop/electron
+        env:
+          MM_REQUIRE_WINDOWS_SIGNING: '1'
+          CSC_LINK: ${{ secrets.WINDOWS_CSC_LINK }}
+          CSC_KEY_PASSWORD: ${{ secrets.WINDOWS_CSC_KEY_PASSWORD }}
         run: npm run dist:portable
       - name: Verify valid timestamped Authenticode signature
         shell: pwsh
@@ -193,6 +203,7 @@ jobs:
           $evidence | ConvertTo-Json -Depth 5 | Set-Content 'desktop/electron/generated/authenticode-status.json'
           Write-Host "Verified timestamped Authenticode signature: $($signature.SignerCertificate.Thumbprint)"
       - name: Stage release evidence
+        id: release-meta
         shell: pwsh
         run: |
           $version = (Get-Content 'version.json' -Raw | ConvertFrom-Json).desktop_release
@@ -237,15 +248,69 @@ jobs:
 
           The GitHub production release is not published unless native main protection, exact merged-PR validation, signing credentials, a valid Authenticode signature and a timestamp certificate are all verified in the release workflow.
           "@ | Set-Content "$releaseDir/RELEASE_NOTES.md"
-          "MM_RELEASE_VERSION=$version" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
-          "MM_RELEASE_TAG=$tag" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
-          "MM_RELEASE_DIR=$releaseDir" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+          "version=$version" | Out-File -FilePath $env:GITHUB_OUTPUT -Encoding utf8 -Append
+          "tag=$tag" | Out-File -FilePath $env:GITHUB_OUTPUT -Encoding utf8 -Append
+      - uses: actions/upload-artifact@v7
+        with:
+          name: mouldmaster-open-desktop-release-${{ github.sha }}
+          path: desktop/electron/release-assets/*
+          if-no-files-found: error
+          retention-days: 14
+
+  publish-release:
+    needs: build-signed-windows
+    runs-on: windows-latest
+    permissions:
+      contents: write
+      actions: read
+    env:
+      MM_RELEASE_VERSION: ${{ needs.build-signed-windows.outputs.release-version }}
+      MM_RELEASE_TAG: ${{ needs.build-signed-windows.outputs.release-tag }}
+      MM_RELEASE_DIR: release-assets
+    steps:
+      - uses: actions/download-artifact@v7
+        with:
+          name: mouldmaster-open-desktop-release-${{ github.sha }}
+          path: release-assets
+      - name: Re-verify transferred signed release evidence
+        shell: pwsh
+        run: |
+          if (-not $env:MM_RELEASE_VERSION -or -not $env:MM_RELEASE_TAG) { throw 'Release metadata outputs are missing.' }
+          $sourceCommit = (Get-Content "$env:MM_RELEASE_DIR/SOURCE_COMMIT.txt" -Raw).Trim()
+          if ($sourceCommit -ne $env:GITHUB_SHA) { throw "Transferred release source mismatch: $sourceCommit" }
+          $sourceEvidence = Get-Content "$env:MM_RELEASE_DIR/production-source-evidence.json" -Raw | ConvertFrom-Json
+          if ($sourceEvidence.main_sha -ne $env:GITHUB_SHA) { throw 'Production-source evidence does not match the publishing source SHA.' }
+          $signing = Get-Content "$env:MM_RELEASE_DIR/signing-status.json" -Raw | ConvertFrom-Json
+          if (-not $signing.required -or -not $signing.configured) { throw 'Transferred signing-readiness evidence is not production-ready.' }
+          $authEvidence = Get-Content "$env:MM_RELEASE_DIR/authenticode-status.json" -Raw | ConvertFrom-Json
+          if ($authEvidence.status -ne 'Valid' -or $authEvidence.source_commit -ne $env:GITHUB_SHA) { throw 'Transferred Authenticode evidence is invalid or belongs to another source.' }
+          $exe = Get-ChildItem $env:MM_RELEASE_DIR -Filter '*.exe' -File | Select-Object -First 1
+          if (-not $exe) { throw 'Signed Windows executable is missing from transferred release assets.' }
+          $exeHash = (Get-FileHash $exe.FullName -Algorithm SHA256).Hash.ToLower()
+          if ($authEvidence.sha256 -ne $exeHash) { throw 'Transferred executable hash does not match Authenticode evidence.' }
+          $signature = Get-AuthenticodeSignature -FilePath $exe.FullName
+          if ($signature.Status -ne 'Valid' -or -not $signature.SignerCertificate -or -not $signature.TimeStamperCertificate) {
+            throw "Transferred executable failed independent Authenticode verification: $($signature.Status)"
+          }
+          foreach ($line in (Get-Content "$env:MM_RELEASE_DIR/SHA256SUMS.txt")) {
+            if ($line -notmatch '^([a-f0-9]{64})\s\s(.+)$') { throw "Malformed staged SHA256SUMS entry: $line" }
+            $expectedHash = $Matches[1]
+            $name = $Matches[2]
+            $file = Join-Path $env:MM_RELEASE_DIR $name
+            if (-not (Test-Path $file)) { throw "Staged release asset missing: $name" }
+            $actualHash = (Get-FileHash $file -Algorithm SHA256).Hash.ToLower()
+            if ($actualHash -ne $expectedHash) { throw "Staged release hash mismatch: $name" }
+          }
+          Write-Host 'Transferred signed release evidence independently verified.'
       - name: Publish one-shot release without asset replacement
         shell: pwsh
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          $tagSha = (git ls-remote --tags origin "refs/tags/$env:MM_RELEASE_TAG" | ForEach-Object { ($_ -split "`t")[0] } | Select-Object -First 1)
+          $repo = $env:GITHUB_REPOSITORY
+          $tagSha = $null
+          $tagResult = gh api "repos/$repo/git/ref/tags/$env:MM_RELEASE_TAG" --jq '.object.sha' 2>$null
+          if ($LASTEXITCODE -eq 0) { $tagSha = ($tagResult | Select-Object -First 1).Trim() }
           if ($tagSha -and $tagSha -ne $env:GITHUB_SHA) {
             throw "Release tag $env:MM_RELEASE_TAG already points to $tagSha. Bump desktop_release before publishing different source."
           }
@@ -257,36 +322,33 @@ jobs:
             if (Test-Path $verifyDir) { Remove-Item -Recurse -Force $verifyDir }
             New-Item -ItemType Directory -Force -Path $verifyDir | Out-Null
             gh release download $env:MM_RELEASE_TAG --dir $verifyDir
-            if ($LASTEXITCODE -ne 0) { throw "Existing release could not be downloaded for immutability verification." }
+            if ($LASTEXITCODE -ne 0) { throw 'Existing release could not be downloaded for immutability verification.' }
             $expectedNames = @($localAssets | ForEach-Object Name | Sort-Object)
             $publishedNames = @(Get-ChildItem $verifyDir -File | ForEach-Object Name | Sort-Object)
             if (($expectedNames -join "`n") -ne ($publishedNames -join "`n")) {
-              throw "Existing release asset set differs from the locally staged immutable asset set. Bump desktop_release; never replace published assets."
+              throw 'Existing release asset set differs from the locally staged immutable asset set. Bump desktop_release; never replace published assets.'
             }
             $localSums = (Get-Content (Join-Path $env:MM_RELEASE_DIR 'SHA256SUMS.txt') -Raw).Trim()
             $publishedSums = (Get-Content (Join-Path $verifyDir 'SHA256SUMS.txt') -Raw).Trim()
             if ($localSums -ne $publishedSums) {
-              throw "Existing release SHA256SUMS differs from this source build. Bump desktop_release; never clobber a published release."
+              throw 'Existing release SHA256SUMS differs from this source build. Bump desktop_release; never clobber a published release.'
             }
             foreach ($line in (Get-Content (Join-Path $verifyDir 'SHA256SUMS.txt'))) {
               if ($line -notmatch '^([a-f0-9]{64})\s\s(.+)$') { throw "Malformed published SHA256SUMS entry: $line" }
-              $expectedHash=$Matches[1];$name=$Matches[2];$file=Join-Path $verifyDir $name
+              $expectedHash = $Matches[1]
+              $name = $Matches[2]
+              $file = Join-Path $verifyDir $name
               if (-not (Test-Path $file)) { throw "Published release asset missing: $name" }
-              $actualHash=(Get-FileHash $file -Algorithm SHA256).Hash.ToLower()
+              $actualHash = (Get-FileHash $file -Algorithm SHA256).Hash.ToLower()
               if ($actualHash -ne $expectedHash) { throw "Published release hash mismatch: $name" }
             }
-            Write-Host "Existing release is byte-identical to the staged build. No upload or replacement performed."
+            Write-Host 'Existing release is byte-identical to the staged build. No upload or replacement performed.'
           } else {
             gh release create $env:MM_RELEASE_TAG --draft --target $env:GITHUB_SHA --title "MouldMaster Academy Desktop $env:MM_RELEASE_VERSION" --notes-file "$env:MM_RELEASE_DIR/RELEASE_NOTES.md"
-            if ($LASTEXITCODE -ne 0) { throw "Could not create draft release." }
-            $paths=@($localAssets | ForEach-Object FullName)
+            if ($LASTEXITCODE -ne 0) { throw 'Could not create draft release.' }
+            $paths = @($localAssets | ForEach-Object FullName)
             gh release upload $env:MM_RELEASE_TAG @paths
-            if ($LASTEXITCODE -ne 0) { throw "Could not upload the complete draft release asset set." }
+            if ($LASTEXITCODE -ne 0) { throw 'Could not upload the complete draft release asset set.' }
             gh release edit $env:MM_RELEASE_TAG --draft=false
-            if ($LASTEXITCODE -ne 0) { throw "Could not publish the complete draft release." }
+            if ($LASTEXITCODE -ne 0) { throw 'Could not publish the complete draft release.' }
           }
-      - uses: actions/upload-artifact@v7
-        with:
-          name: mouldmaster-open-desktop-release-${{ github.sha }}
-          path: desktop/electron/release-assets/*
-          if-no-files-found: error
