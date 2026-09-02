@@ -35,7 +35,8 @@ def main():
     need('applicability' in text and 'evidenceQuality' in text,'engine must separate applicability from evidence quality')
     need('verificationPlan' in text,'verification plan API missing')
     need('Would weaken it' in ui,'UI must expose falsifying/weakening evidence')
-    need('Build verification plan' in ui,'UI must expose verification-plan workflow')
+    need('data-mm-research-plan' in ui and 'verificationPlan(context,r.id)' in ui,'UI must expose verification-plan workflow')
+    need('Plan the next evidence check' in ui,'verification workflow needs clear end-user action copy')
     need('do not override local measured evidence' in ui.lower(),'UI must preserve local-evidence boundary')
     print(f'MouldMaster research evidence engine QA passed ({len(expected)} mechanisms; {len(dois)} primary-source links)')
 
