@@ -78,8 +78,23 @@ need("fetch('./version.json',{cache:'no-store'})" in support,'support page must 
 need('MouldMaster GitHub Issues' in support and 'Do not post learner names' in support,'support contact/privacy warning missing')
 
 privacy=text('privacy.html')
-for marker in ['assessment analytics','scoped to the active learner profile','first meaningful question exposure','does not currently upload','deliberately not included in the progress backup','successful progress-backup import resets local assessment analytics','Reset local analytics','confirmed factory reset']:
+for marker in [
+    'assessment analytics',
+    'scoped to the active learner profile',
+    'first meaningful question exposure',
+    'does not currently upload',
+    'deliberately not included in the progress backup',
+    'successful progress-backup import resets local assessment analytics',
+    'Reset local analytics',
+    'Reset learner data',
+    'do not imply deletion of the separate device/site process workspace',
+    'Browser/app site-data controls can remove both local-storage and IndexedDB records',
+]:
     need(marker in privacy,f'privacy disclosure missing: {marker}')
+need(
+    'A confirmed factory reset removes MouldMaster-owned learner/training, analytics and local workspace stores' not in privacy,
+    'privacy notice must not overstate learner reset as a process-workspace reset',
+)
 
 sw=text('service-worker.js')
 for marker in ["'./privacy.html'","'./support.html'","'./assessment-storage-scope.js'","'./assessment-evidence-sources.js'","'./assessment-evidence-approval.js'","'./curriculum-integration.js'","'./specialist-curriculum.js'","'./specialist-evidence-gap-extension.js'","'./app-shell-registry.js'","'./mould-master-workspace.js'","'./app-shell-finalize.js'"]:
