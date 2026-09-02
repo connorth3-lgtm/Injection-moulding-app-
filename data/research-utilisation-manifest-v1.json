@@ -1,8 +1,8 @@
 {
   "schema": 1,
-  "version": "2026.09.02.4",
+  "version": "2026.09.02.5",
   "reviewed": "2026-09-02",
-  "purpose": "Machine-readable manifest for turning governed research into contextual decision support and adaptive evidence-reasoning practice without converting research into universal production authority.",
+  "purpose": "Machine-readable manifest for turning governed research into contextual decision support, adaptive evidence-reasoning practice and privacy-thresholded learning-effectiveness validation without converting research into universal production authority.",
   "publicManifest": "research-utilisation-manifest.json",
   "resolvedEvidenceState": {
     "promotedMechanisms": 12,
@@ -22,6 +22,13 @@
     "supportsMisconceptionTargeting": true,
     "supportsDifficultyProgression": true,
     "requiresTransferAcrossDistinctContexts": true,
+    "supportsDelayedTransferChecks": true,
+    "delayedTransferIntervalsDays": [7, 30],
+    "supportsPrivacyThresholdedDifficultyCalibration": true,
+    "difficultyCalibrationMinimumAnonymousProfiles": 5,
+    "difficultyCalibrationMinimumAttempts": 12,
+    "supportsAggregateItemDiscrimination": true,
+    "supportsSpecialistTransferPractice": true,
     "generatedQuestionQualityMatrix": true,
     "formalAssessmentIsolation": true,
     "universalSetpointsAllowed": false,
@@ -53,6 +60,8 @@
     "research-evidence-workspace.js",
     "research-evidence-microlearning.js",
     "adaptive-learning.js",
+    "learning-effectiveness.js",
+    "specialist-learning-quality.js",
     "research-utilisation-analytics.js",
     "research-gap-feedback.js",
     "research-claim-freshness.js",
@@ -63,6 +72,7 @@
   "qa": [
     "qa_research_evidence_engine.py",
     "qa_adaptive_learning.py",
+    "qa_learning_effectiveness.py",
     "qa_contextual_learning_runtime.cjs",
     "qa_research_utilisation_manifest.py",
     "qa_research_runtime_wiring.py"
@@ -73,9 +83,11 @@
     "lesson contextual microlearning",
     "adaptive lesson reasoning challenges",
     "learning-insights reinforcement",
+    "learning-effectiveness retention and item-quality panel",
+    "specialist S17/S18/S20 transfer practice",
     "semantic process-data intake",
     "site-local process intelligence",
     "workspace troubleshooting cases"
   ],
-  "boundary": "Research evidence supplies mechanism priors, applicability context, falsifying evidence and next-measurement suggestions. Adaptive practice uses learner-scoped local aggregate events and never changes formal assessment content or production authority. Progression requires demonstrated transfer across distinct structured run contexts. Production decisions remain governed by local measured evidence, validated process limits, machine/tool/material documentation, approved site procedures and applicable safety controls."
+  "boundary": "Research evidence supplies mechanism priors, applicability context, falsifying evidence and next-measurement suggestions. Adaptive practice uses learner-scoped local aggregate events and never changes formal assessment content or production authority. Progression requires demonstrated transfer across distinct structured run contexts, delayed 7/30-day checks test retention, and formative difficulty calibration is disabled until anonymous device-local sample thresholds are met. Aggregate effectiveness exports contain no learner tokens, names, answer text, notes or event timestamps. Production decisions remain governed by local measured evidence, validated process limits, machine/tool/material documentation, approved site procedures and applicable safety controls."
 }
