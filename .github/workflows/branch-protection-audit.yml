@@ -12,19 +12,8 @@ jobs:
   protection:
     runs-on: ubuntu-latest
     steps:
-      - name: Check live main protection
+      - uses: actions/checkout@v7
+      - name: Verify live reviewed main protection
         env:
-          GH_TOKEN: ${{ github.token }}
-          REPO: ${{ github.repository }}
-        run: |
-          set -euo pipefail
-          branch_json="$(curl -fsSL -H "Authorization: Bearer $GH_TOKEN" -H 'Accept: application/vnd.github+json' "https://api.github.com/repos/$REPO/branches/main")"
-          protected="$(python -c 'import json,sys; print(str(json.load(sys.stdin).get("protected",False)).lower())' <<<"$branch_json")"
-          rulesets_json="$(curl -fsSL -H "Authorization: Bearer $GH_TOKEN" -H 'Accept: application/vnd.github+json' "https://api.github.com/repos/$REPO/rulesets" || printf '[]')"
-          ruleset_count="$(python -c 'import json,sys; x=json.load(sys.stdin); print(len(x) if isinstance(x,list) else 0)' <<<"$rulesets_json")"
-          echo "main protected=$protected active_rulesets=$ruleset_count"
-          if [[ "$protected" != "true" && "$ruleset_count" == "0" ]]; then
-            echo '::error::main is not protected. Enable the contract in BRANCH_PROTECTION.md.'
-            exit 1
-          fi
-          echo 'main has live GitHub protection/ruleset coverage.'
+          GITHUB_TOKEN: ${{ github.token }}
+        run: python3 tools/verify_production_source.py --protection-only
