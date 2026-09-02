@@ -1,0 +1,40 @@
+{
+  "schema": 1,
+  "status": "pending",
+  "runtime_fingerprint": "sha256:replace-with-current-public-runtime-fingerprint",
+  "tested_at": "replace-with-ISO-8601-timezone",
+  "tester_reference": "release-tester-reference",
+  "ios": {
+    "device_model": "replace-with-physical-iPhone-or-iPad-model",
+    "os_version": "replace-with-iOS-or-iPadOS-version",
+    "browser_version": "replace-with-Safari-version",
+    "installed_mode": "pending",
+    "checks": {
+      "install_standalone": "pending",
+      "safe_area_navigation": "pending",
+      "workspace_portrait": "pending",
+      "offline_restart": "pending",
+      "offline_reboot": "pending",
+      "update_recovery": "pending",
+      "storage_pressure": "pending",
+      "screen_reader": "pending"
+    }
+  },
+  "android": {
+    "device_model": "replace-with-physical-Android-model",
+    "os_version": "replace-with-Android-version",
+    "browser_version": "replace-with-Chrome-version",
+    "installed_mode": "pending",
+    "checks": {
+      "install_standalone": "pending",
+      "fixed_navigation_clearance": "pending",
+      "offline_restart": "pending",
+      "offline_reboot": "pending",
+      "update_recovery": "pending",
+      "storage_pressure": "pending",
+      "screen_reader": "pending"
+    }
+  },
+  "failures": [],
+  "notes": "Do not include learner names, customer identifiers, raw process data, private screenshots, email addresses, or other personal/site-sensitive information in this public evidence file."
+}
