@@ -1,0 +1,45 @@
+name: Engineering deep dive QA
+
+on:
+  pull_request:
+    paths:
+      - 'engineering-calculation-engine.js'
+      - 'material-engineering-database.js'
+      - 'engineering-workbench.js'
+      - 'qa-engineering.js'
+      - 'qa-material-engineering.js'
+      - 'app-shell-finalize.js'
+      - '.github/workflows/engineering-deep-dive.yml'
+  push:
+    branches:
+      - deep-dive/calculation-material-engineering
+    paths:
+      - 'engineering-calculation-engine.js'
+      - 'material-engineering-database.js'
+      - 'engineering-workbench.js'
+      - 'qa-engineering.js'
+      - 'qa-material-engineering.js'
+      - 'app-shell-finalize.js'
+      - '.github/workflows/engineering-deep-dive.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  engineering-qa:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Calculation regression suite
+        run: node qa-engineering.js
+      - name: Material database coverage and provenance suite
+        run: node qa-material-engineering.js
+      - name: Static runtime integration checks
+        shell: bash
+        run: |
+          grep -q "engineering-calculation-engine.js" app-shell-finalize.js
+          grep -q "material-engineering-database.js" app-shell-finalize.js
+          grep -q "engineering-workbench.js" app-shell-finalize.js
