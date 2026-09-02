@@ -58,6 +58,7 @@ const OPTIONAL=[
   './research-evidence-adapter.js',
   './research-evidence-workspace.js',
   './research-evidence-microlearning.js',
+  './adaptive-learning.js',
   './research-utilisation-analytics.js',
   './research-gap-feedback.js',
   './research-claim-freshness.js',
