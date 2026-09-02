@@ -3,6 +3,7 @@
   "version": "2026.09.02.2",
   "reviewed": "2026-09-02",
   "purpose": "Machine-readable manifest for turning governed research into contextual decision support without converting research into universal production authority.",
+  "publicManifest": "research-utilisation-manifest.json",
   "resolvedEvidenceState": {
     "promotedMechanisms": 12,
     "publisherVerifiedPrimaryMeasuredStudies": 70,
@@ -54,7 +55,8 @@
   ],
   "qa": [
     "qa_research_evidence_engine.py",
-    "qa_research_utilisation_manifest.py"
+    "qa_research_utilisation_manifest.py",
+    "qa_research_runtime_wiring.py"
   ],
   "activeSurfaces": [
     "measured-evidence panels",
