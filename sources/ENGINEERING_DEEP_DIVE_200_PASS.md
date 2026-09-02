@@ -11,18 +11,18 @@ This pass deliberately attacks boundary semantics rather than repeating a small 
 
 1. **Zero feasible cavities must be a failure.** A mathematically valid cavity-count floor of zero cannot be presented as a passing machine/cavity result.
 2. **Cavity-count confidence requires constraint coverage.** Three arbitrary limits are not enough for `PASS_VERIFIED`; verified cavity-count status requires shot, clamp, mould-fit and at least one flow/plasticising constraint.
-3. **Pressure domains are not interchangeable.** Cavity-pressure inputs used for clamp/cavity calculations are domain-checked; hydraulic and specific-plastic conversions remain isolated from cavity pressure.
+3. **Pressure domains are not interchangeable.** Clamp-force and clamp-limited cavity calculations require an explicitly domain-qualified `CAVITY` pressure. Bare numeric pressure is rejected because its hydraulic/specific/cavity meaning is unknowable.
 4. **Pressure conversion validates source domain.** A value tagged as one pressure domain cannot be declared as another `fromDomain` without rejection.
 5. **Calibration outranks geometric pressure ratio.** If a calibration factor is supplied and differs materially from the geometric intensification ratio, the calibrated factor is used and a warning is emitted.
 6. **Invalid numerics cannot silently become zero.** Hot-runner inventory and reserve factors reject non-finite values rather than being coerced into harmless-looking numbers.
-7. **Suitability checks validate status vocabulary.** Unknown check states are rejected rather than silently contributing to a pass.
+7. **Suitability checks validate status vocabulary and critical coverage.** Unknown check states are rejected, and a machine-suitability result with no critical checks returns `INSUFFICIENT_DATA` rather than a pass/warning summary.
 8. **Near-limit checks have bounded semantics.** Direction, evidence confidence and near-limit fractions are validated, and zero-capacity utilisation no longer becomes `NaN`.
 
-The deterministic calculation stress suite is `qa-engineering-stress-200.js`.
+The deterministic calculation stress suite is `qa-engineering-stress-200.js`; the current fail-closed version performs 4,418 assertions across 200 deterministic scenarios plus adversarial boundary checks.
 
 ## Material coverage expansion
 
-The deep extension adds nine injection-moulding material families while preserving the policy that missing exact-grade values remain null.
+The deep extension adds nine injection-moulding material families while preserving the policy that missing exact-grade values remain null. Combined coverage is now 33 families and 34 grade/supplier records.
 
 | Family | Grade / supplier anchor | Evidence retained |
 |---|---|---|
@@ -50,7 +50,7 @@ The deep extension adds nine injection-moulding material families while preservi
 
 ## New audit policy
 
-`material-engineering-deep-extension.js` adds a `deepAudit()` routine that checks duplicate family/grade IDs, family referential integrity, HTTPS source URLs, known evidence levels, process/range ordering, optimal-within-range rules, and discrete drying schedule validity. The 200-case material QA randomly samples the combined database with a fixed seed and re-checks provenance/range invariants.
+`material-engineering-deep-extension.js` adds a `deepAudit()` routine that checks duplicate family/grade IDs, family referential integrity, HTTPS source URLs, known evidence levels, process/range ordering, optimal-within-range rules, and discrete drying schedule validity. `qa-material-engineering-deep-200.js` performs a second deterministic 200-case sample over the combined material database and re-checks provenance/range invariants.
 
 ## Production boundary
 
