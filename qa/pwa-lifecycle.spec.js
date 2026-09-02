@@ -12,7 +12,10 @@ test('installed PWA atomically caches the integrated core and recovers offline/o
 });
 
 test('app-wide integration keeps cohort imports aggregate and process missingness honest',async({page})=>{
- await standalone(page);await page.goto(BASE,{waitUntil:'load'});
+ // This test owns data/integration semantics only. Keep it in browser mode so
+ // service-worker installation cannot replace the execution context mid-probe;
+ // installed/offline lifecycle is independently covered by the test above.
+ await page.goto(BASE,{waitUntil:'load'});
  await page.waitForFunction(()=>window.MM_APP_INTEGRATION?.version&&window.MM_CONNECTED_PROCESS_DATA?.intelligence?.__mmEvidenceEnhanced===true,{timeout:30000});
  const result=await page.evaluate(async()=>{
    const payload={schema:1,generatedAt:new Date().toISOString(),privacy:'Anonymous aggregate report: no learner tokens, names, answer text, notes or event timestamps are exported.',anonymousProfiles:5,thresholds:{minimumProfiles:5,minimumAttempts:12},items:[{mechanismId:'ejection-demoulding',stage:'evidence',anonymousProfiles:5,attempts:12,correct:9,successRate:.75,averageDurationSec:18,topMisconception:{reason:'command-vs-actual',count:2},discrimination:.25,difficultyQuality:'in-range',calibratedChallenge:'standard'}]};
