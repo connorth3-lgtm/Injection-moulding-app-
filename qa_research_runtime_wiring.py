@@ -23,11 +23,14 @@ def extract_assets(text: str, name: str) -> set[str]:
 
 def main() -> None:
     manifest = json.loads((ROOT / 'data/research-utilisation-manifest-v1.json').read_text(encoding='utf-8'))
+    public_manifest = json.loads((ROOT / 'research-utilisation-manifest.json').read_text(encoding='utf-8'))
     current = json.loads((ROOT / 'current-data-manifest.json').read_text(encoding='utf-8'))
     index = (ROOT / 'index.html').read_text(encoding='utf-8')
     worker = (ROOT / 'service-worker.js').read_text(encoding='utf-8')
     engine = (ROOT / 'research-evidence-engine.js').read_text(encoding='utf-8')
     context = (ROOT / 'research-data-context.js').read_text(encoding='utf-8')
+    desktop_pkg = json.loads((ROOT / 'desktop/electron/package.json').read_text(encoding='utf-8'))
+    desktop_integrity = (ROOT / 'desktop/electron/scripts/generate-integrity.cjs').read_text(encoding='utf-8')
 
     runtime_files = manifest.get('runtimeFiles') or []
     need(len(runtime_files) >= 10, 'research runtime manifest unexpectedly small')
@@ -39,8 +42,8 @@ def main() -> None:
     core = extract_assets(worker, 'CORE')
     for rel in runtime_files:
         need(rel in optional, f'research runtime should be optional offline asset: {rel}')
-    for rel in ['data-integration-runtime.js', 'process-data-intelligence-ui.js', 'process-data-semantic-registry.json', 'current-data-manifest.json']:
-        need(rel in core, f'connected process-data core asset missing: {rel}')
+    for rel in ['data-integration-runtime.js', 'process-data-intelligence-ui.js', 'process-data-semantic-registry.json', 'current-data-manifest.json', 'research-utilisation-manifest.json']:
+        need(rel in core, f'connected process-data/research core asset missing: {rel}')
     for rel in ['data-integration-runtime.js', 'process-data-intelligence-ui.js']:
         need(f"['./{rel}'" in index, f'bootstrap does not explicitly load connected data runtime: {rel}')
 
@@ -55,11 +58,15 @@ def main() -> None:
     need(expected_cache.group(1) == f"mouldmaster-static-2026.08.26.2-{cache_revision.group(1)}", 'bootstrap expected cache does not match worker')
 
     research = current.get('researchUtilisation') or {}
+    need(research.get('manifest') == './research-utilisation-manifest.json', 'current manifest must point to public research utilisation manifest')
     need(research.get('promotedMechanisms') == 12, 'current manifest promoted mechanism total must be 12')
     need(research.get('publisherVerifiedPrimaryMeasuredStudies') == 70, 'current manifest verified primary measured total must be 70')
     need(research.get('evidenceQualitySeparatedFromApplicability') is True, 'evidence quality/applicability separation missing')
     need(research.get('supportsFalsification') is True, 'falsification support missing')
     need(research.get('supportsVerificationPlans') is True, 'verification-plan support missing')
+    need(public_manifest['evidence']['promotedMechanisms'] == research['promotedMechanisms'], 'public research manifest promoted total drifted')
+    need(public_manifest['evidence']['publisherVerifiedPrimaryMeasuredStudies'] == research['publisherVerifiedPrimaryMeasuredStudies'], 'public research manifest primary-study total drifted')
+    need(public_manifest['connectedData']['rawUpload'] is False, 'public research manifest must preserve no-upload boundary')
 
     need(engine.count("status:'promoted'") >= 12, 'runtime engine must retain all 12 promoted mechanisms')
     need(len(set(re.findall(r"doi:10\.[0-9]{4,9}/[^'\"]+", engine))) >= 24, 'runtime engine needs at least 24 primary source links')
@@ -69,6 +76,12 @@ def main() -> None:
     need(current['boundaries']['researchDoesNotMeanUniversal'] is True, 'research boundary missing')
     need(current['boundaries']['predictionIsNotCausation'] is True, 'prediction/causation boundary missing')
     need(current['localProcessData']['rawUpload'] is False, 'local process data must remain no-upload')
+
+    desktop_from = {x.get('from') for x in desktop_pkg['build']['extraResources'] if isinstance(x, dict)}
+    desktop_required = runtime_files + ['measured-evidence-integration.js', 'measured-evidence-decision.js', 'research-utilisation-manifest.json']
+    for rel in desktop_required:
+        need(f'../../{rel}' in desktop_from, f'desktop package missing research/evidence asset: {rel}')
+        need(f"'{rel}'" in desktop_integrity, f'desktop integrity set missing research/evidence asset: {rel}')
 
     print(
         'Research runtime wiring QA passed: '
