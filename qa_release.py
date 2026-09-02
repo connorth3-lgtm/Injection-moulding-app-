@@ -43,7 +43,8 @@ assert latest["version"] == WINDOWS_RECOVERY_VERSION, "Windows recovery version 
 assert latest["sha256"] == CORE_SHA256, "Windows recovery feed must use audited core SHA-256"
 assert latest["app_url"].endswith("/MouldMaster_Core_App.html"), "Windows recovery feed must point to audited full core"
 assert sha256("MouldMaster_Core_App.html") == latest["sha256"], "Windows recovery content hash mismatch"
-assert sha256("MouldMasterAcademy.exe") == latest["launcher_sha256"] == EXE_SHA256, "Windows recovery launcher hash mismatch"
+assert latest["launcher_sha256"] == EXE_SHA256, "Frozen Windows recovery launcher hash metadata changed unexpectedly"
+assert not Path("MouldMasterAcademy.exe").exists(), "Legacy recovery launcher binary must not be tracked in source; release metadata preserves its audited hash"
 
 icon_sizes = {icon["src"].removeprefix("./"): icon["sizes"] for icon in manifest["icons"]}
 for name, size in [("mouldmaster-192.png", 192), ("mouldmaster-512.png", 512)]:
@@ -74,6 +75,7 @@ for asset in [
     "specialist-evidence-gap-extension.js",
     "mould-master-workspace.js",
     "app-shell-finalize.js",
+    "process-statistics-v2.js",
     "learning-analytics.js",
     "runtime-v2.js",
     "assessment-runtime-v2.js",
@@ -83,7 +85,7 @@ for asset in [
 ]:
     assert f"'./{asset}'" in index, f"current learner-facing runtime asset not loaded by shell: {asset}"
 assert index.index("'./assessment-final-hardening.js'") < index.index("'./runtime-v2.js'") < index.index("'./assessment-runtime-v2.js'") < index.index("'./assessment-ux.js'"), "runtime-v2 assessment ownership load order is wrong"
-assert index.index("'./specialist-curriculum.js'") < index.index("'./specialist-evidence-gap-extension.js'") < index.index("'./mould-master-workspace.js'") < index.index("'./app-shell-finalize.js'"), "specialist evidence/runtime finalizer load order is wrong"
+assert index.index("'./specialist-curriculum.js'") < index.index("'./specialist-evidence-gap-extension.js'") < index.index("'./mould-master-workspace.js'") < index.index("'./app-shell-finalize.js'") < index.index("'./process-statistics-v2.js'"), "specialist evidence/runtime finalizer/statistics load order is wrong"
 
 finalizer = text("app-shell-finalize.js")
 for asset in ["assessment-bank-expansion.js", "app-integration-v3.js"]:
@@ -97,7 +99,7 @@ for asset in [
     "mouldmaster-192.png", "mouldmaster-512.png", "version.json", "reading-patch.css", "reading-patch.js",
     "training-upgrade.js", "training-qa-fix.js", "source-library.js", "pwa-shell.js", "learning-experience.js",
     "process-data-diagnostics.js", "curriculum-integration.js", "specialist-curriculum.js",
-    "specialist-evidence-gap-extension.js", "mould-master-workspace.js", "app-shell-finalize.js", "learning-analytics.js",
+    "specialist-evidence-gap-extension.js", "mould-master-workspace.js", "app-shell-finalize.js", "process-statistics-v2.js", "learning-analytics.js",
     "runtime-v2.js", "assessment-runtime-v2.js", "assessment-bank-expansion.js", "app-integration-v3.js",
     "lesson-deep-authoring-v2.js", "assessment-multimodal.js", "accessibility-hardening.js"
 ]:
@@ -209,7 +211,7 @@ assert dpkg["license"] == "Apache-2.0", "desktop package must use Apache-2.0"
 for dep in ["electron", "electron-builder"]:
     assert re.fullmatch(r"\d+\.\d+\.\d+", dpkg["devDependencies"][dep]), f"{dep} must be exact-version pinned"
 from_paths = {x.get("from") for x in dpkg["build"].get("extraResources", []) if isinstance(x, dict)}
-for asset in ["runtime-v2.js", "assessment-runtime-v2.js", "assessment-bank-expansion.js", "app-integration-v3.js", "lesson-deep-authoring-v2.js", "assessment-multimodal.js", "accessibility-hardening.js"]:
+for asset in ["runtime-v2.js", "assessment-runtime-v2.js", "assessment-bank-expansion.js", "app-integration-v3.js", "process-statistics-v2.js", "lesson-deep-authoring-v2.js", "assessment-multimodal.js", "accessibility-hardening.js"]:
     assert f"../../{asset}" in from_paths, f"desktop bundle missing required runtime asset: {asset}"
 dmain = (desktop_root / "src" / "main.cjs").read_text(encoding="utf-8")
 for marker in ["nodeIntegration: false", "contextIsolation: true", "sandbox: true", "webSecurity: true", "allowRunningInsecureContent: false", "setPermissionRequestHandler", "setPermissionCheckHandler", "will-attach-webview", "setWindowOpenHandler", "server.listen(0, '127.0.0.1'", "SHA-256 verification failed"]:
@@ -225,7 +227,7 @@ for js_name in [
     "service-worker.js", "reading-patch.js", "training-upgrade.js", "training-qa-fix.js",
     "assessment-quality-suite.js", "source-library.js", "pwa-shell.js", "specialist-curriculum.js",
     "specialist-evidence-gap-extension.js", "mould-master-workspace.js", "app-shell-finalize.js",
-    "runtime-v2.js", "assessment-runtime-v2.js", "assessment-bank-expansion.js", "app-integration-v3.js",
+    "runtime-v2.js", "assessment-runtime-v2.js", "assessment-bank-expansion.js", "app-integration-v3.js", "process-statistics-v2.js",
     "lesson-deep-authoring-v2.js", "assessment-multimodal.js", "accessibility-hardening.js",
     "desktop/electron/src/main.cjs", "desktop/electron/scripts/generate-integrity.cjs", "desktop/electron/scripts/qa.cjs"
 ]:
