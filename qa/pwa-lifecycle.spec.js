@@ -12,9 +12,14 @@ test('installed PWA atomically caches the integrated core and recovers offline/o
 });
 
 test('app-wide integration keeps cohort imports aggregate and process missingness honest',async({page})=>{
- // This test owns data/integration semantics only. Keep it in browser mode so
- // service-worker installation cannot replace the execution context mid-probe;
- // installed/offline lifecycle is independently covered by the test above.
+ // Own data/integration semantics only. Clear any origin-level PWA residue from
+ // a neutral same-origin page before loading index.html so browser cache
+ // retirement cannot replace the execution context during the async probe.
+ await page.goto('http://127.0.0.1:4173/privacy.html',{waitUntil:'load'});
+ await page.evaluate(async()=>{
+   if('serviceWorker' in navigator){const regs=await navigator.serviceWorker.getRegistrations();await Promise.all(regs.map(reg=>reg.unregister()))}
+   if('caches' in window){const keys=await caches.keys();await Promise.all(keys.filter(key=>key.startsWith('mouldmaster-static-')).map(key=>caches.delete(key)))}
+ });
  await page.goto(BASE,{waitUntil:'load'});
  await page.waitForFunction(()=>window.MM_APP_INTEGRATION?.version&&window.MM_CONNECTED_PROCESS_DATA?.intelligence?.__mmEvidenceEnhanced===true,{timeout:30000});
  const result=await page.evaluate(async()=>{
