@@ -1,5 +1,5 @@
 const CACHE_VERSION='2026.08.26.2';
-const CACHE_REVISION='domain-foundation-v1-20260903';
+const CACHE_REVISION='maturity-hardening-v2-20260903';
 const STATIC_CACHE=`mouldmaster-static-${CACHE_VERSION}-${CACHE_REVISION}`;
 
 // Small fail-closed offline foundation. Remaining feature packs are warmed best-effort and never block activation.
@@ -110,7 +110,6 @@ self.addEventListener('install',event=>{
       await caches.delete(STATIC_CACHE);
       throw new Error(`MouldMaster offline core update is incomplete; keeping the previous worker. Missing: ${failed.join(', ')}`);
     }
-    // Best-effort warmup preserves broad offline coverage, but a niche feature-pack failure no longer rejects an otherwise coherent core update.
     await Promise.allSettled(OPTIONAL.map(url=>cacheAsset(cache,url)));
     await self.skipWaiting();
   })());
