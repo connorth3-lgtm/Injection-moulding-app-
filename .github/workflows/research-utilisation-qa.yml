@@ -6,6 +6,7 @@ on:
     paths:
       - 'research-evidence-*.js'
       - 'research-data-context.js'
+      - 'adaptive-learning.js'
       - 'research-utilisation-analytics.js'
       - 'research-gap-feedback.js'
       - 'research-claim-freshness.js'
@@ -19,6 +20,7 @@ on:
       - 'desktop/electron/package.json'
       - 'desktop/electron/scripts/generate-integrity.cjs'
       - 'qa_research_evidence_engine.py'
+      - 'qa_adaptive_learning.py'
       - 'qa_research_utilisation_manifest.py'
       - 'qa_research_runtime_wiring.py'
       - '.github/workflows/research-utilisation-qa.yml'
@@ -45,6 +47,7 @@ jobs:
           node --check research-evidence-adapter.js
           node --check research-evidence-workspace.js
           node --check research-evidence-microlearning.js
+          node --check adaptive-learning.js
           node --check research-utilisation-analytics.js
           node --check research-gap-feedback.js
           node --check research-claim-freshness.js
@@ -54,6 +57,8 @@ jobs:
           node --check desktop/electron/scripts/generate-integrity.cjs
       - name: Contextual evidence model
         run: python qa_research_evidence_engine.py
+      - name: Adaptive learning quality
+        run: python qa_adaptive_learning.py
       - name: Research utilisation manifest
         run: python qa_research_utilisation_manifest.py
       - name: Runtime wiring
@@ -68,6 +73,7 @@ jobs:
           test -f .pages-dist/research-evidence-engine.js
           test -f .pages-dist/research-evidence-ui.js
           test -f .pages-dist/research-data-context.js
+          test -f .pages-dist/adaptive-learning.js
           test -f .pages-dist/research-utilisation-manifest.json
           test -f .pages-dist/data-integration-runtime.js
           test -f .pages-dist/current-data-manifest.json
