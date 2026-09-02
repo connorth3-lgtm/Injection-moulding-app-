@@ -1,7 +1,7 @@
-/* MouldMaster contextual research microlearning bridge — 2026.09.02.3 */
+/* MouldMaster contextual research microlearning bridge — 2026.09.02.4 */
 (function(){
 'use strict';
-const VERSION='2026.09.02.3';
+const VERSION='2026.09.02.4';
 const PRACTICES=new Map();
 function build(input,limit=2){const e=window.MM_RESEARCH_EVIDENCE;if(!e)return[];return e.retrieve(input,limit).map(r=>({mechanismId:r.id,title:r.title,evidenceState:r.status,applicability:r.applicability.label,lesson:`Why it matters: ${r.claim}`,lookFor:(r.supports||[])[0]||r.nextEvidence,dontAssume:r.limitation,nextCheck:r.nextEvidence}))}
 function hash(text){let h=2166136261;for(const ch of String(text||'')){h^=ch.charCodeAt(0);h=Math.imul(h,16777619)}return h>>>0}
@@ -25,7 +25,7 @@ function falsificationOptions(r,plan,alternate){
     opt('unchanged-command','The saved recipe and displayed setpoints remain unchanged.',false,'Unchanged commands do not prove unchanged actual process behaviour, material state, tooling condition or measurement response.','command-vs-actual'),
     opt('appearance-improves','One part looks better after an uncontrolled adjustment.',false,'A one-part cosmetic improvement after an uncontrolled change does not falsify or verify a mechanism. The evidence needs a controlled comparison and the relevant physical outcome.','premature-verification')
   ];
-  if(alternate?.weakens?.[0]&&different(alternate.weakens[0],weakening))options[3]=opt('alternative-weakening',alternate.weakens[0],false,`That finding mainly challenges the competing “${alternate.title}” mechanism. It is useful evidence, but it does not most directly test the leading explanation.`, 'alternative-mechanism');
+  if(alternate?.weakens?.[0]&&different(alternate.weakens[0],weakening))options[3]=opt('alternative-weakening',alternate.weakens[0],false,`That finding mainly challenges the competing “${alternate.title}” mechanism. It is useful evidence, but it does not most directly test the leading explanation.`,'alternative-mechanism');
   return options
 }
 function recoveryOptions(r,plan){
@@ -51,6 +51,7 @@ function buildPractice(input,extra={}){
   const plan=e.verificationPlan(input,r.id);if(!plan)return null;
   const alternate=ranked.find(x=>x.id!==r.id)||null;
   const observed=String(extra.observed||'A site-local process signal has moved away from its known-good reference.').trim();
+  const contextKey=hash(`${r.id}|${observed}`).toString(36);
   const requested=String(extra.stage||window.MM_ADAPTIVE_LEARNING?.stageForMechanism?.(r.id)||'evidence');
   const stage=['evidence','falsification','recovery','integration'].includes(requested)?requested:'evidence';
   let prompt,options,rationale;
@@ -67,9 +68,9 @@ function buildPractice(input,extra={}){
     prompt=`${observed} Which next step gives the strongest discriminating evidence?`;
     options=evidenceOptions(r,plan,alternate);rationale='The aim is not to guess a setting. The aim is to choose the measurement or controlled check that can distinguish this explanation from realistic alternatives.';
   }
-  const shuffled=rotate(options,hash(`${r.id}:${stage}`)%options.length),correctIndex=shuffled.findIndex(x=>x.correct);
+  const shuffled=rotate(options,hash(`${r.id}:${stage}:${contextKey}`)%options.length),correctIndex=shuffled.findIndex(x=>x.correct);
   const practice={
-    id:`run-insight-${r.id}-${stage}`,mechanismId:r.id,title:r.title,stage,
+    id:`run-insight-${r.id}-${stage}-${contextKey}`,contextKey,mechanismId:r.id,title:r.title,stage,
     prompt,options:shuffled,correctIndex,rationale,
     weakeningQuestion:'What finding would most weaken this explanation?',
     weakeningAnswer:(r.weakens||[])[0]||'Independent actual measurements remain stable while the physical outcome changes.',
@@ -79,5 +80,5 @@ function buildPractice(input,extra={}){
   PRACTICES.set(practice.id,practice);return practice
 }
 function choiceMeta(practiceId,index){const p=PRACTICES.get(String(practiceId||''));return p?.options?.[Number(index)]||null}
-window.MM_RESEARCH_MICROLEARNING={version:VERSION,build,buildPractice,choiceMeta,scope:'Contextual microlearning generated only from promoted mechanism claims. Difficulty progresses from evidence choice to falsification, recovery and integrated uncertainty. Misconception tags support local adaptive reinforcement; formal assessment questions and answer keys remain separate.'};
+window.MM_RESEARCH_MICROLEARNING={version:VERSION,build,buildPractice,choiceMeta,scope:'Contextual microlearning generated only from promoted mechanism claims. Difficulty progresses from evidence choice to falsification, recovery and integrated uncertainty. Advancement requires transfer across distinct run contexts, while misconception tags support local adaptive reinforcement. Formal assessment questions and answer keys remain separate.'};
 })();
