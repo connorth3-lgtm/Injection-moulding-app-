@@ -47,7 +47,7 @@ function spcRunRules(values,centre=null,sigma=null){
   }
   for(let i=0;i<=a.length-5;i++){
     const w=a.slice(i,i+5),hi=w.filter(v=>sideBeyond(v,c,1,s)===1).length,lo=w.filter(v=>sideBeyond(v,c,1,s)===-1).length;
-    if(hi>=4||lo>=4)push('4-of-5-beyond-1sigma',i,i+4,hi>=4?'high':'low','Four of five consecutive points are beyond 1 local standard deviations on the same side.');
+    if(hi>=4||lo>=4)push('4-of-5-beyond-1sigma',i,i+4,hi>=4?'high':'low','Four of five consecutive points are beyond 1 local standard deviation on the same side.');
   }
   for(let i=0;i<=a.length-8;i++){
     const w=a.slice(i,i+8),hi=w.every(v=>v>c),lo=w.every(v=>v<c);if(hi||lo)push('8-same-side',i,i+7,hi?'high':'low','Eight consecutive points lie on the same side of the reference centre.');
