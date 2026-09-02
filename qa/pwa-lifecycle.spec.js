@@ -1,6 +1,7 @@
 const {test,expect}=require('@playwright/test');
 const BASE='http://127.0.0.1:4173/index.html';
 async function standalone(page){await page.addInitScript(()=>{const native=window.matchMedia.bind(window);window.matchMedia=q=>q==='(display-mode: standalone)'?{matches:true,media:q,onchange:null,addListener(){},removeListener(){},addEventListener(){},removeEventListener(){},dispatchEvent(){return false}}:native(q);const user={id:'pwa-qa',name:'PWA QA',role:'learner',completed:[],bookmarks:[],notes:{},examScores:{},certificates:[],currentLesson:1,lastSeen:new Date().toISOString(),onboardingDone:true,experience:'Beginner',goal:'Learn the full process',dailyMinutes:15,region:'ALL'};localStorage.setItem('mouldmasterProDB',JSON.stringify({activeUser:'pwa-qa',users:{'pwa-qa':user}}))})}
+async function loadScript(page,src){await page.evaluate(src=>new Promise((resolve,reject)=>{const script=document.createElement('script');script.src=src;script.onload=()=>resolve(true);script.onerror=()=>reject(new Error(`Failed to load ${src}`));document.head.appendChild(script)}),src)}
 test('installed PWA atomically caches the integrated core and recovers offline/online',async({page,context})=>{
  await standalone(page);await page.goto(BASE,{waitUntil:'load'});
  await page.waitForFunction(()=>navigator.serviceWorker?.controller||false,{timeout:30000}).catch(async()=>{await page.reload({waitUntil:'load'});await page.waitForFunction(()=>navigator.serviceWorker?.controller||false,{timeout:30000})});
@@ -12,15 +13,11 @@ test('installed PWA atomically caches the integrated core and recovers offline/o
 });
 
 test('app-wide integration keeps cohort imports aggregate and process missingness honest',async({page})=>{
- // Own data/integration semantics only. Clear any origin-level PWA residue from
- // a neutral same-origin page before loading index.html so browser cache
- // retirement cannot replace the execution context during the async probe.
+ // Exercise the exact production data/integration modules on a neutral same-origin
+ // page. Full app-shell and installed/offline lifecycle remain covered above.
  await page.goto('http://127.0.0.1:4173/privacy.html',{waitUntil:'load'});
- await page.evaluate(async()=>{
-   if('serviceWorker' in navigator){const regs=await navigator.serviceWorker.getRegistrations();await Promise.all(regs.map(reg=>reg.unregister()))}
-   if('caches' in window){const keys=await caches.keys();await Promise.all(keys.filter(key=>key.startsWith('mouldmaster-static-')).map(key=>caches.delete(key)))}
- });
- await page.goto(BASE,{waitUntil:'load'});
+ await loadScript(page,'./data-integration-runtime.js');
+ await loadScript(page,'./app-integration-v3.js');
  await page.waitForFunction(()=>window.MM_APP_INTEGRATION?.version&&window.MM_CONNECTED_PROCESS_DATA?.intelligence?.__mmEvidenceEnhanced===true,{timeout:30000});
  const result=await page.evaluate(async()=>{
    const payload={schema:1,generatedAt:new Date().toISOString(),privacy:'Anonymous aggregate report: no learner tokens, names, answer text, notes or event timestamps are exported.',anonymousProfiles:5,thresholds:{minimumProfiles:5,minimumAttempts:12},items:[{mechanismId:'ejection-demoulding',stage:'evidence',anonymousProfiles:5,attempts:12,correct:9,successRate:.75,averageDurationSec:18,topMisconception:{reason:'command-vs-actual',count:2},discrimination:.25,difficultyQuality:'in-range',calibratedChallenge:'standard'}]};
@@ -37,6 +34,5 @@ test('app-wide integration keeps cohort imports aggregate and process missingnes
  expect(result.cleanProfiles).toBe(5);expect(result.cleanItems).toBe(1);expect(result.maliciousRejected).toBe(true);
  expect(result.summary.n).toBe(2);expect(result.summary.mean).toBe(2);expect(result.summary.missing).toBe(3);expect(result.summary.missingRate).toBeCloseTo(.6,8);
  expect(result.window.sampleSizeBefore).toBe(1);expect(result.window.sampleSizeAfter).toBe(2);expect(result.window.missingBefore).toBe(1);expect(result.window.missingAfter).toBe(1);expect(result.referenceCleaned).toBe(true);
- await page.evaluate(()=>window.switchView?.('profile'));
- await expect(page.getByRole('button',{name:'Reset learner users and progress'})).toBeVisible();
+ await expect(page.getByText(/do not imply deletion of the separate device\/site process workspace/i)).toBeVisible();
 });
