@@ -9,12 +9,15 @@ on:
       - 'research-utilisation-analytics.js'
       - 'research-gap-feedback.js'
       - 'research-claim-freshness.js'
+      - 'research-utilisation-manifest.json'
       - 'research-evidence-data-contract.md'
       - 'data/research-utilisation-manifest-v1.json'
       - 'current-data-manifest.json'
       - 'tools/generate_current_data_manifest.py'
       - 'index.html'
       - 'service-worker.js'
+      - 'desktop/electron/package.json'
+      - 'desktop/electron/scripts/generate-integrity.cjs'
       - 'qa_research_evidence_engine.py'
       - 'qa_research_utilisation_manifest.py'
       - 'qa_research_runtime_wiring.py'
@@ -48,6 +51,7 @@ jobs:
           node --check research-evidence-ui.js
           node --check research-data-context.js
           node --check research-evidence-runtime-health.js
+          node --check desktop/electron/scripts/generate-integrity.cjs
       - name: Contextual evidence model
         run: python qa_research_evidence_engine.py
       - name: Research utilisation manifest
@@ -64,6 +68,7 @@ jobs:
           test -f .pages-dist/research-evidence-engine.js
           test -f .pages-dist/research-evidence-ui.js
           test -f .pages-dist/research-data-context.js
+          test -f .pages-dist/research-utilisation-manifest.json
           test -f .pages-dist/data-integration-runtime.js
           test -f .pages-dist/current-data-manifest.json
           test ! -e .pages-dist/data
