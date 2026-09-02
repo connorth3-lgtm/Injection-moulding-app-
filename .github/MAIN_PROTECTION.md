@@ -34,7 +34,7 @@ The reviewed helper is:
 .github/scripts/apply-main-ruleset.sh --dry-run
 ```
 
-The default is a dry run and prints the exact JSON that would be sent to GitHub. It requires `gh` and `jq` and uses the current local GitHub CLI authentication. It does not read, generate, or store a token in the repository.
+The default is a dry run and prints the exact JSON that would be sent to GitHub. It requires `gh` and `jq` and uses the current local GitHub CLI authentication. It does not read, generate, extract or store a token in the repository or a shell variable.
 
 After reviewing the payload, an administrator can apply it from a trusted local shell:
 
@@ -48,7 +48,7 @@ For a fork or renamed repository:
 REPO=owner/repository .github/scripts/apply-main-ruleset.sh --apply
 ```
 
-The helper is idempotent by ruleset name: it updates the existing `Protect main — MouldMaster required gates` ruleset if present, otherwise it creates it. It then reads the ruleset back and runs `tools/verify_production_source.py --protection-only`; the command fails unless GitHub reports the complete reviewed policy active.
+The helper is idempotent by ruleset name: it updates the existing `Protect main — MouldMaster required gates` ruleset if present, otherwise it creates it. It then reads the ruleset back and runs `tools/verify_production_source.py --protection-only`; the verifier uses the already authenticated `gh` session locally and fails unless GitHub reports the complete reviewed policy active.
 
 ## Required verification after applying
 
@@ -58,8 +58,8 @@ Do not treat script execution alone as proof of protection. Verify all of the fo
 2. The `Protect main — MouldMaster required gates` ruleset is `active`, targets only `refs/heads/main`, requires PRs/resolved conversations/linear history/current required checks, and has no bypass actors.
 3. Open a harmless test PR and confirm merge is blocked while any of `integrity`, `mobile-browser`, `build-windows`, or `question-quality-50-pass` is pending or failing.
 4. Confirm unresolved review conversations block merge.
-5. Confirm a normal squash merge succeeds once all requirements are satisfied.
-6. Confirm `Main PR Provenance Guard` still runs successfully after the merge.
+5. Confirm a normal squash merge succeeds only after **all four are green**.
+6. Confirm `Main PR Provenance Guard` still runs successfully after the merge and records **all four required workflows green** for the merged PR head.
 7. Confirm `Prune Fully Merged Branches` still runs only after the provenance guard succeeds.
 8. Confirm production Pages and desktop release source gates accept the protected merged-PR source.
 
@@ -68,8 +68,8 @@ Do not treat script execution alone as proof of protection. Verify all of the fo
 Native protection, provenance validation and release-source validation have different jobs:
 
 - **Native ruleset:** prevents invalid changes from reaching `main`.
-- **Main PR Provenance Guard:** independently checks a landed commit came from a validated merged PR.
-- **Production source gate:** refuses Pages/desktop publication unless live native protection is present and the exact merged PR head passed the complete release workflow set.
+- **Main PR Provenance Guard:** independently checks a landed commit came from a validated merged PR with the four native pre-merge technical gates green.
+- **Production source gate:** refuses Pages/desktop publication unless live native protection is present and the exact merged PR head passed the complete 15-workflow release set.
 
 The provenance guard retains an emergency rollback attempt for the current unprotected state. Once the native `non_fast_forward` rule is active, GitHub may reject that force-update rollback. That is acceptable defense in depth because the native rule should already have prevented the unauthorised/non-compliant update. A guard failure under native protection should therefore be investigated rather than bypassed.
 
