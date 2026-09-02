@@ -92,6 +92,7 @@
       {"from": "../../mould-master-workspace.js", "to": "mouldmaster/mould-master-workspace.js"},
       {"from": "../../app-shell-finalize.js", "to": "mouldmaster/app-shell-finalize.js"},
       {"from": "../../app-integration-v3.js", "to": "mouldmaster/app-integration-v3.js"},
+      {"from": "../../process-statistics-v2.js", "to": "mouldmaster/process-statistics-v2.js"},
       {"from": "../../production-health.js", "to": "mouldmaster/production-health.js"},
       {"from": "../../data-integration-runtime.js", "to": "mouldmaster/data-integration-runtime.js"},
       {"from": "../../process-data-intelligence-ui.js", "to": "mouldmaster/process-data-intelligence-ui.js"},
