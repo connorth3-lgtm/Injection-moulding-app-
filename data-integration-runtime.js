@@ -15,7 +15,7 @@ let preparedSession=null;
 let activeWorkspaceCaseId='';
 let installQueued=false;
 
-function esc(v){return String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function esc(v){return String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot',"'":'&#39;'}[c]))}
 function safeToken(v,max=96){return String(v??'').replace(/[^a-zA-Z0-9:_\-. /]/g,'').slice(0,max)}
 function uid(prefix='id'){try{return `${prefix}-${crypto.randomUUID()}`}catch(_){return `${prefix}-${Date.now().toString(36)}-${Math.random().toString(36).slice(2,9)}`}}
 function num(v){const n=Number(v);return Number.isFinite(n)?n:null}
@@ -86,16 +86,24 @@ async function rowsForDataset(datasetId){
   })
 }
 async function deleteDataset(id){
-  const db=await openDb(),tx=db.transaction(['datasets','shots','baselines'],'readwrite');
-  tx.objectStore('datasets').delete(id);
-  const shots=tx.objectStore('shots').index('datasetId'),range=IDBKeyRange.only(id);
-  await new Promise((resolve,reject)=>{
-    const r=shots.openCursor(range);r.onsuccess=()=>{const c=r.result;if(!c){resolve();return}c.delete();c.continue()};r.onerror=()=>reject(r.error)
-  });
-  await new Promise((resolve,reject)=>{
-    const r=tx.objectStore('baselines').openCursor();r.onsuccess=()=>{const c=r.result;if(!c){resolve();return}if(c.value.datasetId===id)c.delete();c.continue()};r.onerror=()=>reject(r.error)
-  });
-  await txDone(tx);db.close();return true;
+  const db=await openDb();
+  try{
+    const tx=db.transaction(['datasets','shots','baselines'],'readwrite'),done=txDone(tx);
+    tx.objectStore('datasets').delete(id);
+    const range=IDBKeyRange.only(id);
+    const deleteShots=new Promise((resolve,reject)=>{
+      const r=tx.objectStore('shots').index('datasetId').openCursor(range);
+      r.onsuccess=()=>{const c=r.result;if(!c){resolve();return}c.delete();c.continue()};
+      r.onerror=()=>reject(r.error||new Error('Shot deletion failed'));
+    });
+    const deleteBaselines=new Promise((resolve,reject)=>{
+      const r=tx.objectStore('baselines').openCursor();
+      r.onsuccess=()=>{const c=r.result;if(!c){resolve();return}if(c.value.datasetId===id)c.delete();c.continue()};
+      r.onerror=()=>reject(r.error||new Error('Baseline deletion failed'));
+    });
+    await Promise.all([deleteShots,deleteBaselines,done]);
+    return true;
+  }finally{db.close()}
 }
 
 function knownDefinition(column){
