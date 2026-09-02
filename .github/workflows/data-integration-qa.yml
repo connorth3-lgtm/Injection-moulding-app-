@@ -6,17 +6,20 @@ on:
     paths:
       - 'data-integration-runtime.js'
       - 'process-data-intelligence-ui.js'
+      - 'process-statistics-v2.js'
       - 'process-data-semantic-registry.json'
       - 'current-data-manifest.json'
       - 'data/measured-data-collection-closeout-2026-08-30.json'
       - 'index.html'
       - 'app-shell-finalize.js'
+      - 'app-integration-v3.js'
       - 'service-worker.js'
       - 'desktop/electron/package.json'
       - 'desktop/electron/scripts/generate-integrity.cjs'
       - 'tools/build_pages_artifact.py'
       - 'tools/generate_current_data_manifest.py'
       - 'qa_data_integration.py'
+      - 'qa_process_statistics_runtime.cjs'
       - '.github/workflows/data-integration-qa.yml'
   workflow_dispatch:
 
@@ -39,9 +42,13 @@ jobs:
         run: |
           node --check data-integration-runtime.js
           node --check process-data-intelligence-ui.js
+          node --check process-statistics-v2.js
+          node --check app-integration-v3.js
           node --check app-shell-finalize.js
           node --check service-worker.js
           node --check desktop/electron/scripts/generate-integrity.cjs
+      - name: Advanced process-statistics runtime
+        run: node qa_process_statistics_runtime.cjs
       - name: Current manifest is generated from governed ledger
         run: python tools/generate_current_data_manifest.py --check
       - name: Connected process-data architecture
@@ -52,6 +59,7 @@ jobs:
         run: |
           test -f .pages-dist/data-integration-runtime.js
           test -f .pages-dist/process-data-intelligence-ui.js
+          test -f .pages-dist/process-statistics-v2.js
           test -f .pages-dist/process-data-semantic-registry.json
           test -f .pages-dist/current-data-manifest.json
           test ! -e .pages-dist/data
