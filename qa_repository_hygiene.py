@@ -128,29 +128,50 @@ for rel in local_only_modules:
     for marker in network_write_markers:
         need(marker not in body, f"local-first module gained a network-write primitive ({marker}): {rel}")
 
-# Workflow privilege budget: destructive/publishing write authority is limited to
-# three explicitly reviewed workflows. Fork-context execution and write-all are
-# forbidden repository-wide. This turns least privilege into a regression gate
-# instead of a convention reviewers have to remember.
+# Workflow privilege budget. The three release/governance writers are reviewed
+# individually. Any other contents writer must be a tightly bounded aggregate
+# data profiler: no PR trigger, no secrets, fixed data/* checkout and pushes only
+# to that same fixed data/* branch. This prevents profiling tokens from ever
+# becoming a path to main while retaining deterministic aggregate-generation jobs.
 workflow_dir = ROOT / ".github" / "workflows"
 workflows = sorted(workflow_dir.glob("*.yml"))
 need(len(workflows) >= 20, f"workflow audit unexpectedly small: {len(workflows)}")
-allowed_contents_write = {
+reviewed_privileged_writers = {
     "main-pr-provenance-guard.yml",
     "prune-merged-branches.yml",
     "publish-open-desktop.yml",
 }
 writers = []
+data_writers = []
 for path in workflows:
     body = path.read_text(encoding="utf-8")
     need("write-all" not in body, f"workflow may not request write-all permission: {path.name}")
     need("pull_request_target:" not in body, f"pull_request_target is forbidden because repository code and privileged context must stay separated: {path.name}")
-    if "contents: write" in body:
-        writers.append(path.name)
-        need(path.name in allowed_contents_write, f"unexpected repository contents write authority: {path.name}")
+    if "contents: write" not in body:
+        continue
+    writers.append(path.name)
+    if path.name in reviewed_privileged_writers:
+        continue
+    need("pull_request:" not in body,
+         f"data-branch contents writer must never execute with pull-request code: {path.name}")
+    need("${{ secrets." not in body,
+         f"data-branch contents writer may not combine repository secrets with write authority: {path.name}")
+    checkout_refs = re.findall(r"^\s+ref:\s*(data/[A-Za-z0-9._/-]+)\s*$", body, flags=re.M)
+    push_targets = re.findall(r"git push origin HEAD:(data/[A-Za-z0-9._/-]+)", body)
+    need(len(set(checkout_refs)) == 1 and len(set(push_targets)) == 1,
+         f"data-branch writer must have one fixed data/* checkout and one fixed data/* push target: {path.name}")
+    checkout_ref = checkout_refs[0]
+    push_target = push_targets[0]
+    need(checkout_ref == push_target,
+         f"data-branch writer checkout/push target mismatch: {path.name}: {checkout_ref} != {push_target}")
+    need("HEAD:main" not in body and "refs/heads/main" not in body and "branches: [main]" not in body,
+         f"data-branch writer contains a main-branch write/trigger path: {path.name}")
+    need("gh release" not in body and "git push --force" not in body and "-f sha=" not in body,
+         f"data-branch writer contains release/force-update primitives: {path.name}")
+    data_writers.append(path.name)
 
-need(set(writers) == allowed_contents_write,
-     f"reviewed contents-write workflow set drifted: expected {sorted(allowed_contents_write)}, got {sorted(writers)}")
+need(reviewed_privileged_writers <= set(writers),
+     f"reviewed privileged writer set is incomplete: expected {sorted(reviewed_privileged_writers)}, got {sorted(writers)}")
 
 main_guard = (workflow_dir / "main-pr-provenance-guard.yml").read_text(encoding="utf-8")
 need("branches: [main]" in main_guard and "rollback_main" in main_guard,
@@ -164,6 +185,6 @@ need(publisher.count("contents: write") == 1 and "publish-release:" in publisher
 
 print(
     f"MouldMaster repository hygiene QA passed ({len(paths)} tracked paths; {len(workflows)} workflows; "
-    "no generated installers/build outputs, two capped app-document bootstraps, popup printing distinguished, "
-    "bounded late assets, local-only data transports, and only three reviewed contents-write workflows)."
+    f"no generated installers/build outputs; two capped app-document bootstraps; local-only data transports; "
+    f"{len(reviewed_privileged_writers)} reviewed privileged writers and {len(data_writers)} structurally bounded data-branch writer(s))."
 )
