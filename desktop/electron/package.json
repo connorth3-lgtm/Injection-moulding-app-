@@ -58,6 +58,8 @@
       {"from": "../../research-evidence-workspace.js", "to": "mouldmaster/research-evidence-workspace.js"},
       {"from": "../../research-evidence-microlearning.js", "to": "mouldmaster/research-evidence-microlearning.js"},
       {"from": "../../adaptive-learning.js", "to": "mouldmaster/adaptive-learning.js"},
+      {"from": "../../learning-effectiveness.js", "to": "mouldmaster/learning-effectiveness.js"},
+      {"from": "../../specialist-learning-quality.js", "to": "mouldmaster/specialist-learning-quality.js"},
       {"from": "../../research-utilisation-analytics.js", "to": "mouldmaster/research-utilisation-analytics.js"},
       {"from": "../../research-gap-feedback.js", "to": "mouldmaster/research-gap-feedback.js"},
       {"from": "../../research-claim-freshness.js", "to": "mouldmaster/research-claim-freshness.js"},
