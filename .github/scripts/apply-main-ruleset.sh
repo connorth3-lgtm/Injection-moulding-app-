@@ -73,7 +73,7 @@ cat >"$payload" <<JSON
         "require_code_owner_review": false,
         "require_last_push_approval": false,
         "required_approving_review_count": 0,
-        "required_review_thread_resolution": false
+        "required_review_thread_resolution": true
       }
     },
     {
@@ -110,11 +110,13 @@ jq -e '
   .enforcement == "active" and
   .bypass_actors == [] and
   .conditions.ref_name.include == ["refs/heads/main"] and
+  .conditions.ref_name.exclude == [] and
   ([.rules[].type] | index("pull_request")) != null and
   ([.rules[].type] | index("required_status_checks")) != null and
   ([.rules[].type] | index("deletion")) != null and
   ([.rules[].type] | index("non_fast_forward")) != null and
   ([.rules[] | select(.type == "pull_request") | .parameters.required_approving_review_count] | .[0]) == 0 and
+  ([.rules[] | select(.type == "pull_request") | .parameters.required_review_thread_resolution] | .[0]) == true and
   ([.rules[] | select(.type == "required_status_checks") | .parameters.strict_required_status_checks_policy] | .[0]) == true and
   ([.rules[] | select(.type == "required_status_checks") | .parameters.required_status_checks[].context] | sort) == (["build-windows","integrity","mobile-browser","question-quality-50-pass"] | sort)
 ' "$payload" >/dev/null
@@ -155,5 +157,7 @@ if [[ "$protected" != "true" ]]; then
   exit 1
 fi
 
-echo "Verified: GitHub reports main protected=true."
-echo "Next: open a test PR and confirm all four required checks block merge while pending/failing."
+GITHUB_TOKEN="$(gh auth token)" GITHUB_REPOSITORY="$REPO" python3 tools/verify_production_source.py --protection-only
+
+echo "Verified: GitHub reports the reviewed main protection contract active."
+echo "Next: open a test PR and confirm all four native required checks block merge while pending/failing."
