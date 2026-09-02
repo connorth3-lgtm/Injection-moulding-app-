@@ -29,6 +29,7 @@ def main() -> None:
     worker = (ROOT / 'service-worker.js').read_text(encoding='utf-8')
     engine = (ROOT / 'research-evidence-engine.js').read_text(encoding='utf-8')
     context = (ROOT / 'research-data-context.js').read_text(encoding='utf-8')
+    micro = (ROOT / 'research-evidence-microlearning.js').read_text(encoding='utf-8')
     desktop_pkg = json.loads((ROOT / 'desktop/electron/package.json').read_text(encoding='utf-8'))
     desktop_integrity = (ROOT / 'desktop/electron/scripts/generate-integrity.cjs').read_text(encoding='utf-8')
 
@@ -78,6 +79,10 @@ def main() -> None:
         'What would weaken this explanation', 'The decision brief follows the user-selected local baseline'
     ]:
         need(token in context, f'technician-first Run Insights behavior missing: {token}')
+    for token in ['buildPractice','strongest discriminating evidence','correctIndex','weakeningAnswer','outside the formal assessment bank']:
+        need(token in micro, f'contextual formative-practice behavior missing: {token}')
+    for token in ['Reason it through','data-mm-ri-choice','practice_miss','practice_complete','Run-linked practice stays outside the formal assessment bank']:
+        need(token in context, f'Run Insights formative learning integration missing: {token}')
 
     need(current['boundaries']['researchDoesNotMeanUniversal'] is True, 'research boundary missing')
     need(current['boundaries']['predictionIsNotCausation'] is True, 'prediction/causation boundary missing')
@@ -93,7 +98,7 @@ def main() -> None:
         'Research runtime wiring QA passed: '
         f"{research['promotedMechanisms']} promoted mechanisms, "
         f"{research['publisherVerifiedPrimaryMeasuredStudies']} verified primary studies, "
-        f"{len(runtime_files)} research runtime modules; technician-first directional Run Insights guarded."
+        f"{len(runtime_files)} research runtime modules; technician-first directional Run Insights and formative evidence reasoning guarded."
     )
 
 
