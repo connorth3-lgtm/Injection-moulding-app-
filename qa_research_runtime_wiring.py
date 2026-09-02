@@ -72,6 +72,12 @@ def main() -> None:
     need(len(set(re.findall(r"doi:10\.[0-9]{4,9}/[^'\"]+", engine))) >= 24, 'runtime engine needs at least 24 primary source links')
     for token in ['datasetContext', 'semantic process-data', 'site-process-data', 'workspace-case', 'similarEvidence']:
         need(token in context, f'research/data bridge missing behavior: {token}')
+    for token in [
+        'What changed — and what to check next', 'changeSentence', 'Baseline ${fmt(f.baseline)} → current ${fmt(f.current)}',
+        "baselineSelect?.value", "baselineSelect.addEventListener('change'", 'Save as troubleshooting case',
+        'What would weaken this explanation', 'The decision brief follows the user-selected local baseline'
+    ]:
+        need(token in context, f'technician-first Run Insights behavior missing: {token}')
 
     need(current['boundaries']['researchDoesNotMeanUniversal'] is True, 'research boundary missing')
     need(current['boundaries']['predictionIsNotCausation'] is True, 'prediction/causation boundary missing')
@@ -87,7 +93,7 @@ def main() -> None:
         'Research runtime wiring QA passed: '
         f"{research['promotedMechanisms']} promoted mechanisms, "
         f"{research['publisherVerifiedPrimaryMeasuredStudies']} verified primary studies, "
-        f"{len(runtime_files)} research runtime modules."
+        f"{len(runtime_files)} research runtime modules; technician-first directional Run Insights guarded."
     )
 
 
