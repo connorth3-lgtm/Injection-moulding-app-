@@ -10,6 +10,12 @@ def need(ok, message):
         raise AssertionError(message)
 
 
+def global_document_calls(body, method):
+    # Match application-global document.method(...), but not scoped popup/frame
+    # calls such as w.document.write(...) used to print a certificate.
+    return len(re.findall(rf"(?<![\w.])document\.{re.escape(method)}\s*\(", body))
+
+
 ignore = (ROOT / ".gitignore").read_text(encoding="utf-8")
 for marker in (
     "desktop/electron/dist/",
@@ -55,21 +61,20 @@ attrs = (ROOT / ".gitattributes").read_text(encoding="utf-8")
 need("MouldMaster_Core_App.html -text" in attrs, "audited core byte-preservation attribute missing")
 
 # Architecture budget. Two historical compatibility bootstraps use parser-level
-# document replacement: index.html (current shell assembly) and the frozen
-# MouldMaster_Academy_App.html recovery loader. Both are capped exactly and may
-# only shrink in a separately validated migration. No JS module or third HTML
-# surface may copy the technique. Late-loading is likewise limited to the two
-# reviewed strangler-integration layers.
+# replacement of the application document: index.html (current shell assembly)
+# and the frozen MouldMaster_Academy_App.html recovery loader. Both are capped
+# exactly and may only shrink in a separately validated migration. Scoped popup
+# documents (for example w.document.write in certificate printing) are not app
+# replacement and are deliberately distinguished here.
 legacy_document_replacement = {
     "index.html": {"write": 1, "open": 1, "close": 1},
     "MouldMaster_Academy_App.html": {"write": 1, "open": 1, "close": 1},
 }
 for rel, expected in legacy_document_replacement.items():
     body = (ROOT / rel).read_text(encoding="utf-8")
-    need(body.count("document.write(") == expected["write"],
-         f"{rel} document.write budget drifted")
-    need(body.count("document.open()") == expected["open"] and body.count("document.close()") == expected["close"],
-         f"{rel} document open/close budget drifted")
+    for method in ("write", "open", "close"):
+        need(global_document_calls(body, method) == expected[method],
+             f"{rel} global document.{method} budget drifted")
 for rel in paths:
     if rel in legacy_document_replacement or not rel.lower().endswith((".js", ".html")):
         continue
@@ -77,8 +82,9 @@ for rel in paths:
         body = (ROOT / rel).read_text(encoding="utf-8")
     except UnicodeDecodeError:
         continue
-    need("document.write(" not in body and "document.open()" not in body and "document.close()" not in body,
-         f"legacy document replacement technique spread outside audited bootstraps: {rel}")
+    counts = {method: global_document_calls(body, method) for method in ("write", "open", "close")}
+    need(not any(counts.values()),
+         f"application document replacement technique spread outside audited bootstraps: {rel} {counts}")
 
 finalizer = (ROOT / "app-shell-finalize.js").read_text(encoding="utf-8")
 late_assets = re.findall(r"loadAsset\('([^']+\.js)'", finalizer)
@@ -158,6 +164,6 @@ need(publisher.count("contents: write") == 1 and "publish-release:" in publisher
 
 print(
     f"MouldMaster repository hygiene QA passed ({len(paths)} tracked paths; {len(workflows)} workflows; "
-    "no generated installers/build outputs, two capped legacy document-replacement bootstraps, bounded late assets, "
-    "local-only data transports, and only three reviewed contents-write workflows)."
+    "no generated installers/build outputs, two capped app-document bootstraps, popup printing distinguished, "
+    "bounded late assets, local-only data transports, and only three reviewed contents-write workflows)."
 )
