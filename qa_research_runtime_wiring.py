@@ -31,11 +31,13 @@ def main() -> None:
     context = (ROOT / 'research-data-context.js').read_text(encoding='utf-8')
     micro = (ROOT / 'research-evidence-microlearning.js').read_text(encoding='utf-8')
     adaptive = (ROOT / 'adaptive-learning.js').read_text(encoding='utf-8')
+    effectiveness = (ROOT / 'learning-effectiveness.js').read_text(encoding='utf-8')
+    specialist_quality = (ROOT / 'specialist-learning-quality.js').read_text(encoding='utf-8')
     desktop_pkg = json.loads((ROOT / 'desktop/electron/package.json').read_text(encoding='utf-8'))
     desktop_integrity = (ROOT / 'desktop/electron/scripts/generate-integrity.cjs').read_text(encoding='utf-8')
 
     runtime_files = manifest.get('runtimeFiles') or []
-    need(len(runtime_files) >= 11, 'research/adaptive runtime manifest unexpectedly small')
+    need(len(runtime_files) >= 13, 'research/adaptive/effectiveness runtime manifest unexpectedly small')
     for rel in runtime_files:
         need((ROOT / rel).exists(), f'research runtime file missing: {rel}')
         need(f"['./{rel}'" in index, f'bootstrap does not load research runtime: {rel}')
@@ -66,10 +68,21 @@ def main() -> None:
     need(research.get('evidenceQualitySeparatedFromApplicability') is True, 'evidence quality/applicability separation missing')
     need(research.get('supportsFalsification') is True, 'falsification support missing')
     need(research.get('supportsVerificationPlans') is True, 'verification-plan support missing')
+    need(research.get('supportsDelayedTransferChecks') is True, 'delayed transfer support missing')
+    need(research.get('supportsPrivacyThresholdedDifficultyCalibration') is True, 'privacy-thresholded difficulty calibration missing')
+    need(research.get('supportsAggregateItemDiscrimination') is True, 'aggregate item discrimination support missing')
     need(public_manifest['evidence']['promotedMechanisms'] == research['promotedMechanisms'], 'public research manifest promoted total drifted')
     need(public_manifest['evidence']['publisherVerifiedPrimaryMeasuredStudies'] == research['publisherVerifiedPrimaryMeasuredStudies'], 'public research manifest primary-study total drifted')
     need(public_manifest['connectedData']['rawUpload'] is False, 'public research manifest must preserve no-upload boundary')
-    need(public_manifest.get('learning',{}).get('formalAssessmentUnchanged') is True,'public adaptive learning boundary missing')
+    learning = public_manifest.get('learning', {})
+    need(learning.get('formalAssessmentUnchanged') is True, 'public adaptive learning boundary missing')
+    need(learning.get('delayedTransferIntervalsDays') == [7, 30], 'public retention intervals drifted')
+    need(learning.get('difficultyCalibrationMinimumAnonymousProfiles') == 5, 'public calibration profile threshold drifted')
+    need(learning.get('difficultyCalibrationMinimumAttempts') == 12, 'public calibration attempt threshold drifted')
+    need(learning.get('calibratedChallengeLevels') == ['support', 'standard', 'stretch'], 'public challenge levels drifted')
+    need(learning.get('specialistTransferLessons', {}).get('liquid-silicone-rubber') == 'S17', 'LSR specialist route missing')
+    need(learning.get('specialistTransferLessons', {}).get('fluid-assisted-moulding') == 'S18', 'assisted-moulding specialist route missing')
+    need(learning.get('specialistTransferLessons', {}).get('injection-compression-precision-optics') == 'S20', 'precision-optics specialist route missing')
 
     need(engine.count("status:'promoted'") >= 12, 'runtime engine must retain all 12 promoted mechanisms')
     need(len(set(re.findall(r"doi:10\.[0-9]{4,9}/[^'\"]+", engine))) >= 24, 'runtime engine needs at least 24 primary source links')
@@ -81,10 +94,14 @@ def main() -> None:
         'What would weaken this explanation', 'The decision brief follows the user-selected local baseline'
     ]:
         need(token in context, f'technician-first Run Insights behavior missing: {token}')
-    for token in ['buildPractice','strongest discriminating evidence','correctIndex','weakeningAnswer','choiceMeta','formal assessment']:
+    for token in ['buildPractice','strongest discriminating evidence','correctIndex','weakeningAnswer','choiceMeta','formal assessment','retentionIntervalDays','challenge']:
         need(token in micro, f'contextual formative-practice behavior missing: {token}')
-    for token in ['stageForMechanism','reasoningProfile','practice_misconception','SPECIALIST_GAPS','lessonChallenge']:
+    for token in ['stageForMechanism','reasoningProfile','practice_misconception','SPECIALIST_GAPS','SPECIALIST_LESSONS','lessonChallenge']:
         need(token in adaptive,f'adaptive learning runtime behavior missing: {token}')
+    for token in ['itemStats','challengeFor','dueTransferChecks','practiceIntent','anonymousReport','MIN_PROFILES=5','MIN_ATTEMPTS=12','RETENTION_DAYS=[7,30]']:
+        need(token in effectiveness, f'learning effectiveness runtime behavior missing: {token}')
+    for token in ['S17','S18','S20','Evidence reasoning mastery','openForMechanism','practice_complete']:
+        need(token in specialist_quality, f'specialist transfer runtime behavior missing: {token}')
     for token in ['Reason it through','data-mm-ri-choice','practice_miss','practice_complete','Run-linked practice stays outside the formal assessment bank']:
         need(token in context, f'Run Insights formative learning integration missing: {token}')
 
@@ -102,7 +119,7 @@ def main() -> None:
         'Research runtime wiring QA passed: '
         f"{research['promotedMechanisms']} promoted mechanisms, "
         f"{research['publisherVerifiedPrimaryMeasuredStudies']} verified primary studies, "
-        f"{len(runtime_files)} research/adaptive runtime modules; technician-first Run Insights, staged formative reasoning and adaptive reinforcement guarded."
+        f"{len(runtime_files)} research/adaptive/effectiveness runtime modules; Run Insights, calibrated staged reasoning, delayed retention, specialist transfer and local-only learning effectiveness guarded."
     )
 
 
