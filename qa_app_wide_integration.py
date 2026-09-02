@@ -16,6 +16,7 @@ runtime=need('app-integration-v3.js',
     'duePractice','mode:\'retention\'','Review still due.',
     'device/site process workspace','rawRowsIncluded:false',
     'effectSizeApprox','approxMeanDifference95CI','missingRateBaseline',
+    'Evidence strength','Sample / missingness','data-mm-evidence-strength','Descriptive local evidence only',
     'importCohort','exportCohort','cohortChallenge','At least 5 anonymous profiles are required',
     'assessmentAudit','minimumTarget:30','accessibilityAudit')
 
@@ -39,4 +40,4 @@ manifest=json.loads((ROOT/'current-data-manifest.json').read_text(encoding='utf-
 if manifest.get('researchUtilisation',{}).get('promotedMechanisms')!=12:
     raise SystemExit('canonical research mechanism count changed')
 
-print('App-wide integration QA passed: canonical routing/state, seven competency evidence states, standalone due reviews, explicit process-workspace privacy, synchronous statistical evidence wrappers, cohort aggregates and clean research-health separation are wired.')
+print('App-wide integration QA passed: canonical routing/state, seven competency evidence states, standalone due reviews, explicit process-workspace privacy, visible synchronous statistical evidence strength, cohort aggregates and clean research-health separation are wired.')
