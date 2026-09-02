@@ -6,26 +6,30 @@ on:
     paths:
       - 'src/domains/**'
       - 'data/materials/**'
-      - 'data/runtime-domain-manifest.json'
+      - 'runtime-domain-manifest.json'
+      - 'material-catalog-v1.json'
       - 'tools/material_catalog.py'
       - 'tools/generate_runtime_manifest.py'
       - 'qa_material_catalog.py'
       - 'docs/DOMAIN_ARCHITECTURE_V1.md'
       - 'index.html'
       - 'service-worker.js'
+      - 'desktop/electron/**'
       - '.github/workflows/domain-foundation-qa.yml'
   pull_request:
     branches: [main]
     paths:
       - 'src/domains/**'
       - 'data/materials/**'
-      - 'data/runtime-domain-manifest.json'
+      - 'runtime-domain-manifest.json'
+      - 'material-catalog-v1.json'
       - 'tools/material_catalog.py'
       - 'tools/generate_runtime_manifest.py'
       - 'qa_material_catalog.py'
       - 'docs/DOMAIN_ARCHITECTURE_V1.md'
       - 'index.html'
       - 'service-worker.js'
+      - 'desktop/electron/**'
       - '.github/workflows/domain-foundation-qa.yml'
   workflow_dispatch:
 
@@ -54,5 +58,7 @@ jobs:
         run: python tools/generate_runtime_manifest.py --check
       - name: Material and domain foundation QA
         run: python qa_material_catalog.py
+      - name: Public Pages boundary still resolves
+        run: python tools/build_pages_artifact.py
       - name: App-wide runtime/offline reconciliation
         run: python qa_app_wide_audit.py
