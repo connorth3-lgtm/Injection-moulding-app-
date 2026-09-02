@@ -10,7 +10,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 SOURCE = ROOT / "data/measured-data-collection-closeout-2026-08-30.json"
 OUTPUT = ROOT / "current-data-manifest.json"
-VERSION = "2026.09.02.1"
+VERSION = "2026.09.02.2"
 
 
 def build() -> dict:
@@ -28,11 +28,29 @@ def build() -> dict:
             "acceptedInjectionProcessTimeSeriesValues": int(effective["acceptedInjectionProcessTimeSeriesValues"]),
         },
         "semanticRegistry": "./process-data-semantic-registry.json",
+        "researchUtilisation": {
+            "manifest": "data/research-utilisation-manifest-v1.json",
+            "promotedMechanisms": 12,
+            "publisherVerifiedPrimaryMeasuredStudies": 70,
+            "evidenceQualitySeparatedFromApplicability": True,
+            "supportsFalsification": True,
+            "supportsVerificationPlans": True,
+            "activeSurfaces": [
+                "lessons",
+                "measured-evidence panels",
+                "process diagnostic labs",
+                "semantic process-data intake",
+                "site-local process intelligence",
+                "workspace troubleshooting cases",
+            ],
+        },
         "evidenceStates": ["measured", "synthetic", "research-derived", "draft-unvalidated"],
         "boundaries": {
             "measuredDoesNotMeanUniversal": True,
+            "researchDoesNotMeanUniversal": True,
             "unresolvedSemanticsFailClosed": True,
             "commandsAndSetpointsAreNotMeasuredActuals": True,
+            "predictionIsNotCausation": True,
             "rawThirdPartyNumericPayloadShippedToPublicRuntime": False,
             "siteLocalPreparedDataIsNotAutomaticallyPromotedToRepositoryMeasuredEvidence": True,
         },
@@ -44,7 +62,12 @@ def build() -> dict:
                 "site-local baseline",
                 "drift comparison",
                 "before-after intervention comparison",
+                "cavity intelligence",
+                "quality association support",
+                "energy per good part",
                 "structured troubleshooting links",
+                "similar-case support",
+                "research applicability context",
                 "learner recommendation bridge",
             ],
         },
