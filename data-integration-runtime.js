@@ -391,7 +391,7 @@ async function learningRecommendationPanel(){
   const linked=[];for(const c of cases.slice(0,12)){const l=await caseLink(c.id).catch(()=>null);if(l?.datasetId||l?.machine||l?.mould||l?.materialGrade)linked.push({c,l})}
   const recent=linked.slice(0,5);if(!recent.length)return;
   const panel=document.createElement('section');panel.className='la-panel card';panel.dataset.diLearningPanel='1';panel.innerHTML=`<h3>From your process work</h3><p class="la-note">Use recent structured troubleshooting context to revisit relevant evidence and data-reading skills. This stays learner-scoped and local.</p><div class="la-list">${recent.map(x=>`<div class="la-row"><div><b>${esc(x.c.title||x.c.defect||'Troubleshooting case')}</b><small>${esc([x.l.machine,x.l.mould,x.l.materialGrade].filter(Boolean).join(' · '))}</small></div><button class="ghost" data-di-learn-case="${esc(x.c.id)}">Open case</button></div>`).join('')}</div>`;
-  (host.querySelector('.la-grid')||host).appendChild(panel;
+  (host.querySelector('.la-grid')||host).appendChild(panel);
   panel.querySelectorAll('[data-di-learn-case]').forEach(b=>b.addEventListener('click',()=>window.MM_MOULD_MASTER_WORKSPACE?.open?.(b.dataset.diLearnCase)))
 }
 
