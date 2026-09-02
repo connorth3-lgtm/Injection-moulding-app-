@@ -10,7 +10,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 SOURCE = ROOT / "data/measured-data-collection-closeout-2026-08-30.json"
 OUTPUT = ROOT / "current-data-manifest.json"
-VERSION = "2026.09.02.2"
+VERSION = "2026.09.02.3"
 
 
 def build() -> dict:
@@ -35,8 +35,14 @@ def build() -> dict:
             "evidenceQualitySeparatedFromApplicability": True,
             "supportsFalsification": True,
             "supportsVerificationPlans": True,
+            "supportsDelayedTransferChecks": True,
+            "supportsPrivacyThresholdedDifficultyCalibration": True,
+            "supportsAggregateItemDiscrimination": True,
             "activeSurfaces": [
                 "lessons",
+                "learning insights",
+                "learning effectiveness",
+                "specialist transfer practice",
                 "measured-evidence panels",
                 "process diagnostic labs",
                 "semantic process-data intake",
@@ -69,6 +75,9 @@ def build() -> dict:
                 "similar-case support",
                 "research applicability context",
                 "learner recommendation bridge",
+                "delayed transfer retention checks",
+                "anonymous item-quality calibration",
+                "specialist transfer practice",
             ],
         },
     }
