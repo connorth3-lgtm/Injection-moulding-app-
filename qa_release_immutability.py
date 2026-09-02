@@ -16,7 +16,9 @@ for marker in [
     'Existing release SHA256SUMS differs from this source build',
     'Bump desktop_release; never clobber a published release.',
     'Published release hash mismatch',
-    'Repository-level GitHub immutable releases should be enabled before the next release',
+    'Repository-level GitHub immutable releases should be enabled',
 ]: need(marker in wf,f'desktop release immutability safeguard missing: {marker}')
 need(wf.find('gh release create $env:MM_RELEASE_TAG --draft') < wf.find('gh release upload $env:MM_RELEASE_TAG @paths') < wf.find('gh release edit $env:MM_RELEASE_TAG --draft=false'),'immutable release flow must be draft -> asset upload -> publish')
-print('MouldMaster desktop release immutability QA passed (no clobber; existing release hash verification; draft-first one-shot publication)')
+need('Get-AuthenticodeSignature' in wf and 'TimeStamperCertificate' in wf,'immutable public Windows release must also retain verified signing/timestamp provenance')
+need('production-source-evidence.json' in wf,'immutable public Windows release must retain governed source provenance')
+print('MouldMaster desktop release immutability QA passed (no clobber; existing release hash verification; signed/provenanced draft-first one-shot publication)')
