@@ -1,4 +1,4 @@
-/* MouldMaster app-shell finalizer — 2026.09.02.2 */
+/* MouldMaster app-shell finalizer — 2026.09.02.3 */
 (function(){
 'use strict';
 if(!window.MM_APP_SHELL)throw new Error('app-shell-finalize.js requires app-shell-registry.js');
@@ -20,7 +20,7 @@ const EVIDENCE_STATUS=Object.freeze({
 });
 const GAP=window.MM_SPECIALIST_EVIDENCE_GAPS;
 const BASE=window.MM_SPECIALIST_CURRICULUM;
-function esc(v){return String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot',"'":'&#39;'}[c]))}
+function esc(v){return String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
 function syncEvidenceExports(){
   for(const lesson of GAP.lessons){
     const state=EVIDENCE_STATUS[lesson.evidenceArea]||'Provisional';
@@ -78,7 +78,7 @@ function loadEngineeringWorkbench(){
   const next=()=>{
     if(index>=assets.length)return;
     const [src,key]=assets[index++];
-    const script=document.createElement('script');script.src=src;script.async=false;script.dataset[key]='1';
+    const script=document.createElement('script');script.src=`${src}?v=20260902.1-engineering`;script.async=false;script.dataset[key]='1';
     script.addEventListener('load',next,{once:true});
     script.addEventListener('error',()=>console.error(`MouldMaster engineering asset could not be loaded: ${src}`),{once:true});
     document.head.appendChild(script);
@@ -102,5 +102,5 @@ if(geometryStyle&&geometryStyle.parentNode===document.head)document.head.appendC
 window.addEventListener('popstate',()=>window.MM_APP_SHELL.navigation?.sync?.());
 requestAnimationFrame(()=>{window.MM_APP_SHELL.geometry?.sync?.();patchEvidenceUi()});
 // Preserve the canonical shell compatibility marker. Evidence-status bridging and connected-data runtime have their own versions above.
-window.MM_APP_SHELL_FINALIZED='2026.09.02.2';
+window.MM_APP_SHELL_FINALIZED='2026.09.02.3';
 })();
