@@ -28,8 +28,10 @@ test('app-wide integration keeps cohort imports aggregate and process missingnes
    const rows=[{x:1},{x:''},{x:null},{x:'  '},{x:3}];
    const summary=window.MM_CONNECTED_PROCESS_DATA.intelligence.summarizeRows(rows,semantics).x;
    const windows=window.MM_CONNECTED_PROCESS_DATA.intelligence.compareWindows([{x:1},{x:''},{x:3},{x:null},{x:5}],semantics,2,4);
-   const referenceCleaned=await new Promise((resolve,reject)=>{const req=indexedDB.open('mouldmaster-process-data-v1',1);req.onerror=()=>reject(req.error);req.onsuccess=()=>{const db=req.result,tx=db.transaction('caseLinks','readwrite');tx.objectStore('caseLinks').put({caseId:'audit-case',datasetId:'audit-dataset',machine:'M1'});tx.oncomplete=()=>{db.close();(async()=>{await window.MM_CONNECTED_PROCESS_DATA.storage.deleteDataset('audit-dataset');const verify=indexedDB.open('mouldmaster-process-data-v1',1);verify.onerror=()=>reject(verify.error);verify.onsuccess=()=>{const vdb=verify.result,vtx=vdb.transaction('caseLinks','readonly'),get=vtx.objectStore('caseLinks').get('audit-case');get.onsuccess=()=>{const value=get.result;vdb.close();resolve(value?.datasetId===null&&value?.machine==='M1')};get.onerror=()=>{vdb.close();reject(get.error)}}})().catch(reject)};tx.onerror=()=>{db.close();reject(tx.error)}}});
-   return{cleanProfiles:clean.anonymousProfiles,cleanItems:clean.items.length,maliciousRejected,summary,window:windows.changes[0]?.uncertainty||null,referenceCleaned};
+   await window.MM_CONNECTED_PROCESS_DATA.cases.linkCase('audit-case',{datasetId:'audit-dataset',machine:'M1'});
+   await window.MM_CONNECTED_PROCESS_DATA.storage.deleteDataset('audit-dataset');
+   const linked=await window.MM_CONNECTED_PROCESS_DATA.cases.caseLink('audit-case');
+   return{cleanProfiles:clean.anonymousProfiles,cleanItems:clean.items.length,maliciousRejected,summary,window:windows.changes[0]?.uncertainty||null,referenceCleaned:linked?.datasetId===null&&linked?.machine==='M1'};
  });
  expect(result.cleanProfiles).toBe(5);expect(result.cleanItems).toBe(1);expect(result.maliciousRejected).toBe(true);
  expect(result.summary.n).toBe(2);expect(result.summary.mean).toBe(2);expect(result.summary.missing).toBe(3);expect(result.summary.missingRate).toBeCloseTo(.6,8);
