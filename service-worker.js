@@ -30,6 +30,7 @@ const CORE=[
   './mould-master-workspace.js',
   './learning-analytics.js',
   './app-integration-v3.js',
+  './process-statistics-v2.js',
   './accessibility-hardening.js',
   './app-shell-finalize.js',
   './production-health.js',
