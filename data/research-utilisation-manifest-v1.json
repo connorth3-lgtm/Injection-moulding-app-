@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "version": "2026.09.02.5",
+  "version": "2026.09.02.6",
   "reviewed": "2026-09-02",
   "purpose": "Machine-readable manifest for turning governed research into contextual decision support, adaptive evidence-reasoning practice and privacy-thresholded learning-effectiveness validation without converting research into universal production authority.",
   "publicManifest": "research-utilisation-manifest.json",
@@ -30,6 +30,7 @@
     "supportsAggregateItemDiscrimination": true,
     "supportsSpecialistTransferPractice": true,
     "generatedQuestionQualityMatrix": true,
+    "dynamicEffectivenessRuntimeQA": true,
     "formalAssessmentIsolation": true,
     "universalSetpointsAllowed": false,
     "researchCanOverrideApprovedLimits": false
@@ -73,6 +74,7 @@
     "qa_research_evidence_engine.py",
     "qa_adaptive_learning.py",
     "qa_learning_effectiveness.py",
+    "qa_learning_effectiveness_runtime.cjs",
     "qa_contextual_learning_runtime.cjs",
     "qa_research_utilisation_manifest.py",
     "qa_research_runtime_wiring.py"
