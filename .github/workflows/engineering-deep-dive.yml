@@ -10,6 +10,7 @@ on:
       - 'material-expanded-catalog-extension.js'
       - 'material-100-catalog-extension.js'
       - 'material-elastomer-rubber-extension.js'
+      - 'material-korea-grade-extension.js'
       - 'elastomer-rubber-workbench.js'
       - 'engineering-workbench.js'
       - 'qa-engineering.js'
@@ -20,7 +21,9 @@ on:
       - 'qa-material-expanded-catalog-200.js'
       - 'qa-material-100-catalog-200.js'
       - 'qa-elastomer-rubber-200.js'
+      - 'qa-material-korea-200.js'
       - 'sources/ELASTOMER_RUBBER_PROCESS_MODEL.md'
+      - 'sources/SOUTH_KOREA_MATERIAL_DEEP_DIVE.md'
       - 'app-shell-finalize.js'
       - '.github/workflows/engineering-deep-dive.yml'
   push:
@@ -34,6 +37,7 @@ on:
       - 'material-expanded-catalog-extension.js'
       - 'material-100-catalog-extension.js'
       - 'material-elastomer-rubber-extension.js'
+      - 'material-korea-grade-extension.js'
       - 'elastomer-rubber-workbench.js'
       - 'engineering-workbench.js'
       - 'qa-engineering.js'
@@ -44,7 +48,9 @@ on:
       - 'qa-material-expanded-catalog-200.js'
       - 'qa-material-100-catalog-200.js'
       - 'qa-elastomer-rubber-200.js'
+      - 'qa-material-korea-200.js'
       - 'sources/ELASTOMER_RUBBER_PROCESS_MODEL.md'
+      - 'sources/SOUTH_KOREA_MATERIAL_DEEP_DIVE.md'
       - 'app-shell-finalize.js'
       - '.github/workflows/engineering-deep-dive.yml'
 
@@ -75,6 +81,8 @@ jobs:
         run: node qa-material-100-catalog-200.js
       - name: Deterministic 200-case PVC TPE and rubber process-model suite
         run: node qa-elastomer-rubber-200.js
+      - name: Deterministic 200-case South Korea material grade-source suite
+        run: node qa-material-korea-200.js
       - name: Static runtime integration checks
         shell: bash
         run: |
@@ -85,6 +93,7 @@ jobs:
           grep -q "material-expanded-catalog-extension.js" app-shell-finalize.js
           grep -q "material-100-catalog-extension.js" app-shell-finalize.js
           grep -q "material-elastomer-rubber-extension.js" app-shell-finalize.js
+          grep -q "material-korea-grade-extension.js" app-shell-finalize.js
           grep -q "elastomer-rubber-workbench.js" app-shell-finalize.js
           grep -q "engineering-workbench.js" app-shell-finalize.js
           grep -q "MM_APP_SHELL_FINALIZED='2026.08.26.4'" app-shell-finalize.js
