@@ -1,0 +1,1 @@
+Generated runtime modules only; raw research registries stay outside public Pages artifact.
