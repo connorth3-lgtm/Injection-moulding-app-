@@ -75,7 +75,8 @@ for(let i=0;i<200;i++){
   eq(chk.status,C.STATUS.PASS_VERIFIED);
   ok(Number.isFinite(chk.utilisation),'finite utilisation');
 }
-assert.throws(()=>C.clampForce({projectedAreaMm2:100,effectiveCavityPressureMpa:{value:40,origin:C.ORIGINS.MEASURED}}),/explicit CAVITY domain/i);assertions++;
+assert.throws(()=>C.clampForce({projectedAreaMm2:100,effectiveCavityPressureMpa:{value:40,origin:C.ORIGINS.MEASURED}}),/domain-qualified CAVITY pressure/i);assertions++;
+assert.throws(()=>C.clampForce({projectedAreaMm2:100,effectiveCavityPressureMpa:40}),/domain-qualified CAVITY pressure/i);assertions++;
 assert.throws(()=>C.clampForce({projectedAreaMm2:100,effectiveCavityPressureMpa:40,reserveFactor:NaN}),/finite/i);assertions++;
 assert.throws(()=>C.pressureConvert({pressure:10,fromDomain:'FOO',toDomain:'FOO'}),/unknown pressure domain/i);assertions++;
 assert.throws(()=>C.pressureConvert({pressure:{value:10,domain:C.PRESSURE_DOMAINS.CAVITY},fromDomain:C.PRESSURE_DOMAINS.HYDRAULIC,toDomain:C.PRESSURE_DOMAINS.SPECIFIC_PLASTIC,intensificationRatio:10}),/does not match/i);assertions++;
@@ -83,7 +84,7 @@ assert.throws(()=>C.recurringShot({partMassG:10,hotRunnerInventoryMassG:'bad'}),
 assert.throws(()=>C.evaluateCheck('bad-direction',1,2,{direction:'sideways'}),/direction/i);assertions++;
 assert.throws(()=>C.evaluateCheck('bad-confidence',1,2,{evidenceConfidence:1.2}),/between 0 and 1/i);assertions++;
 const zero=C.evaluateCheck('zero-capacity',0,0,{direction:'max'});eq(zero.utilisation,0);eq(zero.status,C.STATUS.PASS_VERIFIED);
-const nonCriticalFail=C.machineSuitability({checks:[C.evaluateCheck('optional',11,10,{critical:false})]});eq(nonCriticalFail.status,C.STATUS.WARNING);
+const nonCriticalFail=C.machineSuitability({checks:[C.evaluateCheck('optional',11,10,{critical:false})]});eq(nonCriticalFail.status,C.STATUS.INSUFFICIENT_DATA);ok(nonCriticalFail.warnings.some(x=>x.code==='NO_CRITICAL_CHECKS'),'no critical checks warning');
 const noCavity=C.maxCavities({shotAllowableVolumeCm3:5,partVolumeCm3:10});eq(noCavity.outputs.candidateMaxCavities.value,0);eq(noCavity.status,C.STATUS.FAIL);ok(noCavity.warnings.some(x=>x.code==='NO_FEASIBLE_CAVITY'),'zero cavity warning');
 const thinCoverage=C.maxCavities({flowMaxCavities:8,plasticisingMaxCavities:9,mouldFitMaxCavities:10});eq(thinCoverage.status,C.STATUS.PASS_PROVISIONAL);ok(thinCoverage.warnings.some(x=>x.code==='CAVITY_CONSTRAINT_COVERAGE'),'coverage warning');
 const calibrated=C.pressureConvert({pressure:{value:10,domain:C.PRESSURE_DOMAINS.HYDRAULIC},fromDomain:C.PRESSURE_DOMAINS.HYDRAULIC,toDomain:C.PRESSURE_DOMAINS.SPECIFIC_PLASTIC,intensificationRatio:10,calibrationFactor:12});ok(calibrated.warnings.some(x=>x.code==='CALIBRATION_OVERRIDES_GEOMETRIC_RATIO'),'calibration warning');
