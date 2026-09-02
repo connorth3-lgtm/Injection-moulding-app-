@@ -1,0 +1,1 @@
+No more standalone research modules; proceed only with integration edits and validation.
