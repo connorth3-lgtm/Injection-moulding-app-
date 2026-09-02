@@ -22,7 +22,7 @@ runtime=need('app-integration-v3.js',
 # Synchronous process-window comparisons are consumed synchronously by the existing UI.
 if re.search(r'intel\.compareWindows\s*=\s*async\s+function',runtime):
     raise SystemExit('compareWindows contract was changed to async')
-if 'intel.compareWindows=function()' not in runtime:
+if not re.search(r'intel\.compareWindows\s*=\s*function\s*\(',runtime):
     raise SystemExit('synchronous compareWindows evidence wrapper missing')
 
 # The integration layer must not introduce network uploads, machine control, or production recipes.
