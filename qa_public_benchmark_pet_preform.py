@@ -72,7 +72,7 @@ for bad in ['git add','git commit','git push','pickle.load','read_pickle']:
     need(bad not in t,f'forbidden operation: {bad}')
 if W.exists():
     w=W.read_text(encoding='utf-8')
-    for marker in ['MouldMaster Public Measured Benchmark — PET preform v2','qa_public_benchmark_pet_preform.py','run_public_benchmark_pet_preform.py','actions/upload-artifact@v4','pet-preform-semantic-review-2026-08-30.json']:
+    for marker in ['MouldMaster Public Measured Benchmark — PET preform v2','qa_public_benchmark_pet_preform.py','run_public_benchmark_pet_preform.py','actions/upload-artifact@v7','pet-preform-semantic-review-2026-08-30.json']:
         need(marker in w,f'workflow marker missing: {marker}')
     for bad in ['*.csv','*.xlsx','*.zip','publisher/**']:
         need(bad not in w,f'workflow must not upload raw data: {bad}')
