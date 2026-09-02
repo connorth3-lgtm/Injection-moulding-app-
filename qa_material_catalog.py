@@ -33,6 +33,9 @@ need(all(not x.get("gradeRecords") for x in pilot["manufacturers"]), "pilot foun
 errors = validate_staging()
 need(not errors, "material staging semantic QA failed:\n" + "\n".join(errors))
 
+# Runtime catalog is a generated/validated public snapshot at repository root;
+# source schemas and staging remain under data/ and outside the Pages allowlist.
+need(CATALOG == ROOT / "material-catalog-v1.json", "runtime catalog must remain outside private data/ staging tree")
 catalog = load_json(CATALOG)
 need(catalog.get("schemaVersion") == 1, "material catalog schema version drift")
 need(isinstance(catalog.get("grades"), list), "material catalog grades must be a list")
@@ -49,7 +52,7 @@ need("migrateLegacyMouldMasterCases" in store, "engineering store lacks additive
 need("destructive:false" in store, "legacy migration must remain explicitly non-destructive")
 
 registry = (ROOT / "src/domains/materials/material-registry.js").read_text(encoding="utf-8")
-need("catalog-v1.json" in registry, "material registry is not backed by canonical catalog")
+need("./material-catalog-v1.json" in registry, "material registry is not backed by validated public catalog")
 need("comparisonReady" in registry, "material registry must expose semantic comparison readiness")
 need("startMouldMasterCase" in registry and "materialGradeId" in registry, "exact-grade Materials -> Mould Master bridge missing")
 need("mmExactMaterialCatalog" in registry, "exact-grade material catalogue is not visible in Materials UI")
@@ -64,9 +67,11 @@ index = (ROOT / "index.html").read_text(encoding="utf-8")
 need(index.count("./src/domains/domain-bootstrap.js") == 2, "shell must contain exactly one bootstrap source pair")
 need("./src/domains/engineering/engineering-store.js" not in index, "shell must not hand-list individual domain modules")
 
-# 9) Runtime domain manifest must enumerate the new modules without hand-copying
-# the giant legacy BODY_SCRIPTS list.
-manifest = load_json(ROOT / "data/runtime-domain-manifest.json")
+# 9) Runtime domain manifest enumerates new modules without hand-copying the
+# giant legacy BODY_SCRIPTS list. It and the validated catalog are public root
+# snapshots; internal data/ schemas and staging are not served.
+manifest_path = ROOT / "runtime-domain-manifest.json"
+manifest = load_json(manifest_path)
 assets = manifest.get("assets", [])
 for required in [
     "./src/domains/engineering/engineering-store.js",
@@ -74,21 +79,29 @@ for required in [
     "./src/domains/shell/product-areas.js",
 ]:
     need(required in assets, f"runtime domain manifest missing {required}")
+need(manifest.get("dataAssets") == ["./material-catalog-v1.json"], "runtime manifest must expose only validated material catalog")
 service_worker = (ROOT / "service-worker.js").read_text(encoding="utf-8")
-for required in ["./src/domains/domain-bootstrap.js", "./data/runtime-domain-manifest.json", *assets, "./data/materials/catalog-v1.json"]:
+for required in ["./src/domains/domain-bootstrap.js", "./runtime-domain-manifest.json", *assets, "./material-catalog-v1.json"]:
     need(required in service_worker, f"offline core missing domain asset {required}")
+need("./data/materials/" not in service_worker and "./data/runtime-domain-manifest.json" not in service_worker, "service worker must not publish material staging/schema tree")
 
 # Desktop remains integrity-verified while allowing only explicitly allow-listed
 # safe relative nested paths.
 desktop_main = (ROOT / "desktop/electron/src/main.cjs").read_text(encoding="utf-8")
 need("safeRelativeAsset" in desktop_main and "allowedFiles.has(name)" in desktop_main, "desktop nested domain serving is not allow-list constrained")
 integrity_generator = (ROOT / "desktop/electron/scripts/generate-integrity.cjs").read_text(encoding="utf-8")
-for required in ["src/domains/domain-bootstrap.js", "data/runtime-domain-manifest.json", "src/domains/engineering/engineering-store.js", "src/domains/materials/material-registry.js", "src/domains/shell/product-areas.js", "data/materials/catalog-v1.json"]:
+for required in ["src/domains/domain-bootstrap.js", "runtime-domain-manifest.json", "src/domains/engineering/engineering-store.js", "src/domains/materials/material-registry.js", "src/domains/shell/product-areas.js", "material-catalog-v1.json"]:
     need(required in integrity_generator, f"desktop integrity generation missing {required}")
 package = load_json(ROOT / "desktop/electron/package.json")
 extra_from = {x.get("from") for x in package["build"]["extraResources"] if isinstance(x, dict)}
-for required in ["../../src/domains", "../../data/runtime-domain-manifest.json", "../../data/materials/catalog-v1.json"]:
+for required in ["../../src/domains", "../../runtime-domain-manifest.json", "../../material-catalog-v1.json"]:
     need(required in extra_from, f"desktop package missing domain resource {required}")
+
+# Public Pages builder intentionally excludes data/. New runtime assets must be
+# compatible with that established boundary rather than weakening it.
+pages_builder = (ROOT / "tools/build_pages_artifact.py").read_text(encoding="utf-8")
+need('"data/",' in pages_builder, "Pages private-data boundary unexpectedly removed")
+need("./data/" not in registry, "runtime material registry must not fetch private data/ assets")
 
 # 10) Five canonical product areas.
 areas = (ROOT / "src/domains/shell/product-areas.js").read_text(encoding="utf-8")
