@@ -29,7 +29,7 @@ def build() -> dict:
         },
         "semanticRegistry": "./process-data-semantic-registry.json",
         "researchUtilisation": {
-            "manifest": "data/research-utilisation-manifest-v1.json",
+            "manifest": "./research-utilisation-manifest.json",
             "promotedMechanisms": 12,
             "publisherVerifiedPrimaryMeasuredStudies": 70,
             "evidenceQualitySeparatedFromApplicability": True,
