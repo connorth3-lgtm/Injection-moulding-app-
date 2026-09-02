@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "version": "2026.09.02.3",
+  "version": "2026.09.02.4",
   "reviewed": "2026-09-02",
   "purpose": "Machine-readable manifest for turning governed research into contextual decision support and adaptive evidence-reasoning practice without converting research into universal production authority.",
   "publicManifest": "research-utilisation-manifest.json",
@@ -21,6 +21,8 @@
     "supportsAdaptiveReasoningPractice": true,
     "supportsMisconceptionTargeting": true,
     "supportsDifficultyProgression": true,
+    "requiresTransferAcrossDistinctContexts": true,
+    "generatedQuestionQualityMatrix": true,
     "formalAssessmentIsolation": true,
     "universalSetpointsAllowed": false,
     "researchCanOverrideApprovedLimits": false
@@ -61,6 +63,7 @@
   "qa": [
     "qa_research_evidence_engine.py",
     "qa_adaptive_learning.py",
+    "qa_contextual_learning_runtime.cjs",
     "qa_research_utilisation_manifest.py",
     "qa_research_runtime_wiring.py"
   ],
@@ -74,5 +77,5 @@
     "site-local process intelligence",
     "workspace troubleshooting cases"
   ],
-  "boundary": "Research evidence supplies mechanism priors, applicability context, falsifying evidence and next-measurement suggestions. Adaptive practice uses learner-scoped local aggregate events and never changes formal assessment content or production authority. Production decisions remain governed by local measured evidence, validated process limits, machine/tool/material documentation, approved site procedures and applicable safety controls."
+  "boundary": "Research evidence supplies mechanism priors, applicability context, falsifying evidence and next-measurement suggestions. Adaptive practice uses learner-scoped local aggregate events and never changes formal assessment content or production authority. Progression requires demonstrated transfer across distinct structured run contexts. Production decisions remain governed by local measured evidence, validated process limits, machine/tool/material documentation, approved site procedures and applicable safety controls."
 }
