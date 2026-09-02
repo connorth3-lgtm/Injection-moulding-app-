@@ -1,7 +1,7 @@
-/* MouldMaster adaptive evidence-reasoning reinforcement — 2026.09.02.2 */
+/* MouldMaster adaptive evidence-reasoning reinforcement — 2026.09.02.3 */
 (function(){
 'use strict';
-const VERSION='2026.09.02.2';
+const VERSION='2026.09.02.3';
 const STORAGE_PREFIX='mm_learning_analytics_v1::';
 const STAGES=['evidence','falsification','recovery','integration'];
 const STAGE_LABELS={evidence:'Choose discriminating evidence',falsification:'Try to disprove the hypothesis',recovery:'Verify recovery',integration:'Integrate competing explanations'};
@@ -37,7 +37,7 @@ const SPECIALIST_GAPS={
   'fluid-assisted-moulding':'No dedicated core-path lesson yet; use specialist evidence and process-family-specific practice rather than collapsing assisted moulding into a generic recipe.',
   'injection-compression-precision-optics':'No dedicated core-path lesson yet; use the promoted precision-process evidence and treat this as a curriculum-depth gap.'
 };
-const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot',"'":'&#39;'}[c]));
+const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 function tokenFor(raw){let h=2166136261;for(const ch of String(raw||'anonymous')){h^=ch.charCodeAt(0);h=Math.imul(h,16777619)}return (h>>>0).toString(36)}
 function activeUserId(){try{if(typeof db!=='undefined'&&db?.activeUser)return String(db.activeUser)}catch(_){}try{if(typeof user!=='undefined'&&user?.id)return String(user.id)}catch(_){}return'anonymous'}
 function events(){try{const x=JSON.parse(localStorage.getItem(STORAGE_PREFIX+tokenFor(activeUserId()))||'null');return Array.isArray(x?.events)?x.events:[]}catch(_){return[]}}
@@ -45,30 +45,31 @@ function completedIds(){try{return new Set((user?.completed||[]).map(Number))}ca
 function completedCount(){return completedIds().size}
 function parsePracticeId(id){
   let raw=String(id||'');if(!raw.startsWith('run-insight-'))return null;raw=raw.slice(12);
-  let stage='evidence';for(const s of STAGES)if(raw.endsWith('-'+s)){stage=s;raw=raw.slice(0,-s.length-1);break}
-  return raw?{mechanismId:raw,stage}:null
+  const m=raw.match(/-(evidence|falsification|recovery|integration)(?:-([a-z0-9]+))?$/);
+  if(m)return {mechanismId:raw.slice(0,m.index),stage:m[1],contextKey:m[2]||'legacy'};
+  return raw?{mechanismId:raw,stage:'evidence',contextKey:'legacy'}:null
 }
 function mechanismStageStats(mechanismId){
-  const out=Object.fromEntries(STAGES.map(s=>[s,{attempts:0,correct:0,misses:0}]));
+  const out=Object.fromEntries(STAGES.map(s=>[s,{attempts:0,correct:0,misses:0,correctContexts:new Set()}]));
   for(const x of events()){
     const p=parsePracticeId(x.id);if(!p||p.mechanismId!==mechanismId)continue;const s=out[p.stage]||out.evidence;
-    if(x.type==='practice_complete'){s.attempts++;if(Number(x.score)>=100||x.correct===true)s.correct++}
+    if(x.type==='practice_complete'){s.attempts++;if(Number(x.score)>=100||x.correct===true){s.correct++;s.correctContexts.add(p.contextKey||'legacy')}}
     if(x.type==='practice_miss')s.misses++
   }
   return out
 }
 function stageForMechanism(mechanismId){
   const s=mechanismStageStats(mechanismId);
-  if(s.evidence.correct<2)return'evidence';
-  if(s.falsification.correct<2)return'falsification';
-  if(s.recovery.correct<2)return'recovery';
+  if(s.evidence.correctContexts.size<2)return'evidence';
+  if(s.falsification.correctContexts.size<2)return'falsification';
+  if(s.recovery.correctContexts.size<2)return'recovery';
   return'integration'
 }
 function reasoningProfile(){
   const recent=events().slice(-160),steps=[0,1,2,3].map(step=>({step,label:STEP_LABELS[step],misses:0,completions:0})),misconceptions={},mechanisms={};
   for(const x of recent){
     if(x.module==='process-data'&&x.type==='practice_miss'&&Number.isInteger(Number(x.step))&&steps[Number(x.step)])steps[Number(x.step)].misses++;
-    if(x.module==='process-data'&&x.type==='practice_complete'){const p=parsePracticeId(x.id);if(p){steps[p.stage==='evidence'?2:p.stage==='falsification'?1:p.stage==='recovery'?3:1].completions++;const m=mechanisms[p.mechanismId]||(mechanisms[p.mechanismId]={attempts:0,correct:0});m.attempts++;if(Number(x.score)>=100||x.correct===true)m.correct++}}
+    if(x.module==='process-data'&&x.type==='practice_complete'){const p=parsePracticeId(x.id);if(p){steps[p.stage==='evidence'?2:p.stage==='falsification'?1:p.stage==='recovery'?3:1].completions++;const m=mechanisms[p.mechanismId]||(mechanisms[p.mechanismId]={attempts:0,correct:0,contexts:new Set()});m.attempts++;m.contexts.add(p.contextKey||'legacy');if(Number(x.score)>=100||x.correct===true)m.correct++}}
     if(x.type==='practice_misconception'&&x.reason){misconceptions[x.reason]=(misconceptions[x.reason]||0)+1}
   }
   const weakest=steps.slice().sort((a,b)=>b.misses-a.misses||a.step-b.step)[0];
@@ -87,7 +88,7 @@ function recommendation(mechanismId=null){
   const gap=mechanismId?SPECIALIST_GAPS[mechanismId]||null:null;
   if(!skillLesson&&!mechanismLesson&&!gap)return null;
   const reason=reasonKey?`Your recent choices show a recurring ${reasonKey.replace(/-/g,' ')} reasoning trap.`:p.weakest?`Recent practice shows the most friction at “${p.weakest.label}”.`:'Reinforce the mechanism with a linked lesson before the next case.';
-  return {reasonKey,reason,primary:skillLesson||mechanismLesson,mechanismLesson:mechanismLesson&&skillLesson&&mechanismLesson.id!==skillLesson.id?mechanismLesson:null,gap,stage:mechanismId?stageForMechanism(mechanismId):'evidence',mastery:'Move on after two correct decisions at this reasoning stage, then the next Run Insight increases the challenge.'}
+  return {reasonKey,reason,primary:skillLesson||mechanismLesson,mechanismLesson:mechanismLesson&&skillLesson&&mechanismLesson.id!==skillLesson.id?mechanismLesson:null,gap,stage:mechanismId?stageForMechanism(mechanismId):'evidence',mastery:'Move on after correct decisions in two distinct run contexts at this reasoning stage; the next comparable Run Insight then increases the challenge.'}
 }
 function lessonChallenge(lesson){
   if(!lesson)return null;const course=Number(lesson.course)||1,title=lesson.title||'this topic';
@@ -103,7 +104,7 @@ function recommendationHtml(rec){if(!rec)return'';const l=rec.primary;return `<s
 function decorateInsights(){const root=document.getElementById('learningInsights');if(!root||root.classList.contains('hidden')||root.querySelector('[data-mm-adaptive-recommendation]'))return;ensureStyle();const rec=recommendation();if(!rec)return;const hero=root.querySelector('.la-hero');hero?.insertAdjacentHTML('afterend',recommendationHtml(rec))}
 function decorateLesson(){const root=document.getElementById('lesson'),article=root?.querySelector('.lesson-body');if(!article||article.querySelector('[data-mm-adaptive-lesson-challenge]'))return;let lesson=null;try{lesson=typeof currentLesson==='function'?currentLesson():null}catch(_){}const c=lessonChallenge(lesson);if(!c)return;ensureStyle();const section=document.createElement('section');section.className='mm-adaptive-card';section.dataset.mmAdaptiveLessonChallenge='1';section.innerHTML=`<span class="mm-adaptive-stage">${esc(c.stage)} challenge</span><h4>Make this lesson harder than the last one</h4><div class="mm-adaptive-grid"><div class="mm-adaptive-step"><b>Reasoning task</b>${esc(c.task)}</div><div class="mm-adaptive-step"><b>Evidence standard</b>${esc(c.standard)}</div><div class="mm-adaptive-step"><b>Stretch</b>${esc(c.stretch)}</div></div>`;const jumps=article.querySelector('.mm-learning-jumps');jumps?.insertAdjacentElement('afterend',section)||article.insertAdjacentElement('afterbegin',section)}
 function annotatePractice(){document.querySelectorAll('[data-mm-ri-practice]').forEach(host=>{if(host.dataset.mmAdaptiveAnnotated==='1')return;host.dataset.mmAdaptiveAnnotated='1';const p=parsePracticeId(host.dataset.mmRiPractice);if(!p)return;const title=host.querySelector('h4'),label=STAGE_LABELS[p.stage]||p.stage;if(title)title.textContent=label;title?.insertAdjacentHTML('beforebegin',`<span class="mm-adaptive-stage">${esc(label)}</span>`)})}
-function appendUnlock(host,p){const feedback=host?.querySelector('[data-mm-ri-feedback]');if(!feedback||feedback.querySelector('[data-mm-adaptive-unlock]'))return;const next=stageForMechanism(p.mechanismId);if(next===p.stage)return;const box=document.createElement('div');box.className='mm-adaptive-unlock';box.dataset.mmAdaptiveUnlock='1';box.innerHTML=`<b>Next reasoning challenge unlocked</b><br>${esc(STAGE_LABELS[next]||next)}. The next comparable Run Insight will test a harder form of the same mechanism reasoning.`;feedback.appendChild(box)}
+function appendUnlock(host,p){const feedback=host?.querySelector('[data-mm-ri-feedback]');if(!feedback||feedback.querySelector('[data-mm-adaptive-unlock]'))return;const next=stageForMechanism(p.mechanismId);if(next===p.stage)return;const box=document.createElement('div');box.className='mm-adaptive-unlock';box.dataset.mmAdaptiveUnlock='1';box.innerHTML=`<b>Transfer demonstrated · next challenge unlocked</b><br>${esc(STAGE_LABELS[next]||next)}. You reached this after correct reasoning in distinct run contexts, not by repeating the same item.`;feedback.appendChild(box)}
 function recordChoice(button){
   const host=button.closest('[data-mm-ri-practice]');if(!host||host.dataset.mmAdaptiveChoiceRecorded==='1')return;const id=host.dataset.mmRiPractice,index=Number(button.dataset.mmRiChoice),meta=window.MM_RESEARCH_MICROLEARNING?.choiceMeta?.(id,index);if(!meta)return;host.dataset.mmAdaptiveChoiceRecorded='1';const p=parsePracticeId(id);
   if(meta.correct){setTimeout(()=>{if(p)appendUnlock(host,p)},0);return}
@@ -112,5 +113,5 @@ function recordChoice(button){
 document.addEventListener('click',e=>{const choice=e.target.closest?.('[data-mm-ri-choice]');if(choice)recordChoice(choice);const lesson=e.target.closest?.('[data-mm-adaptive-lesson]');if(lesson){e.preventDefault();goLesson(lesson.dataset.mmAdaptiveLesson)}} ,true);
 let queued=false;function run(){queued=false;decorateInsights();decorateLesson();annotatePractice()}function schedule(){if(queued)return;queued=true;(window.requestAnimationFrame||setTimeout)(run,0)}
 new MutationObserver(schedule).observe(document.documentElement,{childList:true,subtree:true});if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',schedule);else schedule();
-window.MM_ADAPTIVE_LEARNING={version:VERSION,reasoningProfile,stageForMechanism,recommendation,lessonChallenge,parsePracticeId,scope:'Learner-scoped adaptive reinforcement from local aggregate practice events only. No names, free text, formal assessment answers or network upload. Recommendations do not change formal assessment content or production authority.'};
+window.MM_ADAPTIVE_LEARNING={version:VERSION,reasoningProfile,stageForMechanism,recommendation,lessonChallenge,parsePracticeId,scope:'Learner-scoped adaptive reinforcement from local aggregate practice events only. No names, free text, formal assessment answers or network upload. Progression requires transfer across distinct run contexts. Recommendations do not change formal assessment content or production authority.'};
 })();
