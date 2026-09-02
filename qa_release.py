@@ -125,7 +125,7 @@ for marker in [
 ]:
     assert marker in assessment_v2, f"assessment membership rotation invariant missing: {marker}"
 bank_expansion = text("assessment-bank-expansion.js")
-for marker in ["MM_ASSESSMENT_BANK_EXPANSION", "targetPerLevel:30", "addedPerLevel:20"]:
+for marker in ["MM_ASSESSMENT_BANK_EXPANSION", "addedItems:60", "technicalItems:90", "perLevel:counts()"]:
     assert marker in bank_expansion, f"formal bank expansion invariant missing: {marker}"
 lesson_v2 = text("lesson-deep-authoring-v2.js")
 assert "D.lessons.length!==120" in lesson_v2 and "duplicate lesson records" in lesson_v2, "lesson deep authoring must cover 120 unique records"
