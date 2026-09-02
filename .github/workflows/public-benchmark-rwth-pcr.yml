@@ -28,8 +28,8 @@ jobs:
   runner-qa:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
         with:
           python-version: '3.12'
       - run: python -m pip install --disable-pip-version-check numpy pandas openpyxl xlrd scipy h5py
@@ -41,8 +41,8 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 25
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
         with:
           python-version: '3.12'
       - run: python -m pip install --disable-pip-version-check numpy pandas openpyxl xlrd scipy h5py
@@ -80,7 +80,7 @@ jobs:
               assert all(a.get('rawResponseBodyEmitted') is False for a in x['source']['retrievalAttempts'])
           PY
       - name: Upload aggregate RWTH profile only
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: mouldmaster-public-measured-benchmark-rwth-pcr-2025
           path: benchmark-results/rwth-pcr-2025-stage1-profile.json

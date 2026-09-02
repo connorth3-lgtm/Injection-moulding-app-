@@ -18,8 +18,8 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
         with:
           python-version: '3.12'
       - run: python -m pip install --disable-pip-version-check openpyxl
@@ -53,7 +53,7 @@ jobs:
           print(json.dumps({'directRecordLevelInjectionMeasuredValues':x['profile']['directRecordLevelInjectionMeasuredValues'],'selectedInjectionBlocks':x['profile']['selectedInjectionBlocks'],'duplicateGroups':len(x['profile']['duplicateWorksheetGroupsExcluded'])},indent=2))
           PY
       - name: Upload aggregate profile only
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: mouldmaster-public-measured-benchmark-yxz2w7ctnh
           path: benchmark-results/yxz2w7ctnh-v1.json

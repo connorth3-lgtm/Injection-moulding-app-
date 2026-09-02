@@ -28,8 +28,8 @@ jobs:
   runner-qa:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
         with:
           python-version: '3.12'
       - run: python -m pip install --disable-pip-version-check pandas openpyxl
@@ -41,8 +41,8 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
         with:
           python-version: '3.12'
       - run: python -m pip install --disable-pip-version-check pandas openpyxl
@@ -64,7 +64,7 @@ jobs:
           print(x['status'], x['profile']['rows'], x['profile']['columns'], x['profile']['materialGrouping'])
           PY
       - name: Upload aggregate supplement evidence only
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: mouldmaster-public-measured-benchmark-su13148102
           path: benchmark-results/su13148102-supplement-profile.json
