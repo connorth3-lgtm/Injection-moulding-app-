@@ -1,7 +1,7 @@
-/* MouldMaster research evidence runtime health — 2026.09.02.2 */
+/* MouldMaster research evidence runtime health — 2026.09.02.3 */
 (function(){
 'use strict';
-const VERSION='2026.09.02.2';
+const VERSION='2026.09.02.3';
 function check(){
   const e=window.MM_RESEARCH_EVIDENCE;
   const modules={
@@ -9,6 +9,9 @@ function check(){
     adapter:window.MM_RESEARCH_ADAPTER,
     workspace:window.MM_RESEARCH_WORKSPACE,
     microlearning:window.MM_RESEARCH_MICROLEARNING,
+    adaptiveLearning:window.MM_ADAPTIVE_LEARNING,
+    learningEffectiveness:window.MM_LEARNING_EFFECTIVENESS,
+    specialistLearningQuality:window.MM_SPECIALIST_LEARNING_QUALITY,
     utilisation:window.MM_RESEARCH_UTILISATION,
     gaps:window.MM_RESEARCH_GAPS,
     freshness:window.MM_RESEARCH_CLAIM_FRESHNESS,
@@ -27,7 +30,8 @@ function check(){
   for(const [name,value] of Object.entries(modules))if(!value)issues.push(`${name}-missing`);
   const manifest=window.MM_CONNECTED_PROCESS_DATA?.currentManifest?.();
   if(manifest&&manifest.researchUtilisation?.promotedMechanisms!==12)issues.push('manifest-research-state');
-  return {version:VERSION,ok:issues.length===0,issues,coverage:e?.sourceCoverage?.()||null,scope:'Runtime coherence only; it does not validate a production diagnosis.'}
+  if(manifest&&manifest.researchUtilisation?.supportsDelayedTransferChecks!==true)issues.push('manifest-delayed-transfer-state');
+  return {version:VERSION,ok:issues.length===0,issues,coverage:e?.sourceCoverage?.()||null,scope:'Runtime coherence only; it validates evidence/adaptive/effectiveness module presence, not a production diagnosis or learning-effectiveness claim.'}
 }
 window.MM_RESEARCH_EVIDENCE_HEALTH={version:VERSION,check};
 })();
