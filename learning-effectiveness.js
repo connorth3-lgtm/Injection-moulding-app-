@@ -1,8 +1,8 @@
-/* MouldMaster empirical learning-effectiveness layer — 2026.09.02.2 */
+/* MouldMaster empirical learning-effectiveness layer — 2026.09.02.3 */
 (function(){
 'use strict';
 if(window.MM_LEARNING_EFFECTIVENESS)return;
-const VERSION='2026.09.02.2';
+const VERSION='2026.09.02.3';
 const PREFIX='mm_learning_analytics_v1::';
 const STAGES=['evidence','falsification','recovery','integration'];
 const MIN_PROFILES=5,MIN_ATTEMPTS=12,RETENTION_DAYS=[7,30];
@@ -38,7 +38,7 @@ function masteryAt(mechanismId,stage,events=currentEvents()){
   const seen=new Set();for(const x of contextualCompletes(events).slice().sort((a,b)=>String(a.t||'').localeCompare(String(b.t||'')))){const p=parsePracticeId(x.id);if(p?.mechanismId!==mechanismId||p.stage!==stage||!(Number(x.score)>=100||x.correct===true))continue;seen.add(p.contextKey||'legacy');if(seen.size>=2)return x.t||null}return null
 }
 function retentionDone(mechanismId,stage,days,events=currentEvents()){
-  return events.some(x=>x.type==='retention_check'&&x.module==='process-data'&&x.reason===`${days}d:${stage}`&&parsePracticeId(x.id)?.mechanismId===mechanismId)
+  return events.some(x=>x.type==='retention_check'&&x.module==='process-data'&&x.reason===`${days}d:${stage}`&&parsePracticeId(x.id)?.mechanismId===mechanismId&&(Number(x.score)>=100||x.correct===true))
 }
 function dueTransferChecks(now=Date.now()){
   const events=currentEvents(),mechanisms=new Set(contextualCompletes(events).map(x=>parsePracticeId(x.id)?.mechanismId).filter(Boolean)),due=[];
@@ -71,5 +71,5 @@ function recordRetentionChoice(button){
 }
 document.addEventListener('click',e=>{const exportButton=e.target.closest?.('[data-mm-effectiveness-export]');if(exportButton)exportReport();const choice=e.target.closest?.('[data-mm-ri-choice]');if(choice)recordRetentionChoice(choice)});
 let queued=false;function schedule(){if(queued)return;queued=true;(window.requestAnimationFrame||setTimeout)(()=>{queued=false;renderCard();annotatePractices()},0)}new MutationObserver(schedule).observe(document.documentElement,{childList:true,subtree:true});if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',schedule);else schedule();
-window.MM_LEARNING_EFFECTIVENESS={version:VERSION,itemStats,allItemStats,challengeFor,masteryAt,dueTransferChecks,practiceIntent,recordOutcome,anonymousReport,scope:'Empirical learning-quality analysis from learner-scoped local analytics. Difficulty calibration requires anonymous device-local cohort thresholds; exports contain aggregate item statistics only and no learner tokens, names, answer text, notes or event timestamps.'};
+window.MM_LEARNING_EFFECTIVENESS={version:VERSION,itemStats,allItemStats,challengeFor,masteryAt,dueTransferChecks,practiceIntent,recordOutcome,anonymousReport,scope:'Empirical learning-quality analysis from learner-scoped local analytics. Difficulty calibration requires anonymous device-local cohort thresholds; failed delayed checks remain due for another comparable context, and aggregate exports contain item statistics only with no learner tokens, names, answer text, notes or event timestamps.'};
 })();
