@@ -157,7 +157,7 @@ if [[ "$protected" != "true" ]]; then
   exit 1
 fi
 
-GITHUB_TOKEN="$(gh auth token)" GITHUB_REPOSITORY="$REPO" python3 tools/verify_production_source.py --protection-only
+python3 tools/verify_production_source.py --protection-only --repo "$REPO"
 
-echo "Verified: GitHub reports the reviewed main protection contract active."
-echo "Next: open a test PR and confirm all four native required checks block merge while pending/failing."
+echo "Verified: GitHub reports the reviewed main protection contract active with all four required checks."
+echo "Next: open a test PR and confirm all four required checks block merge while pending/failing."
