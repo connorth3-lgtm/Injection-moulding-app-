@@ -81,6 +81,7 @@ jobs:
           node --check specialist-evidence-gap-extension.js
           node --check mould-master-workspace.js
           node --check app-shell-finalize.js
+          node --check process-statistics-v2.js
           node --check learning-analytics.js
           node --check desktop/electron/src/main.cjs
           node --check desktop/electron/scripts/generate-integrity.cjs
@@ -103,6 +104,8 @@ jobs:
         run: python qa_app_wide_audit.py
       - name: App-wide integration contract
         run: python qa_app_wide_integration.py
+      - name: Advanced process-statistics integrity
+        run: node qa_process_statistics_runtime.cjs
       - name: Production release fail-closed gates
         run: python qa_production_release_gates.py
       - name: Canonical master-data reconciliation
