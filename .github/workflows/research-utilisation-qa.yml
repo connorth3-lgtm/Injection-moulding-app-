@@ -24,6 +24,7 @@ on:
       - 'qa_research_evidence_engine.py'
       - 'qa_adaptive_learning.py'
       - 'qa_learning_effectiveness.py'
+      - 'qa_learning_effectiveness_runtime.cjs'
       - 'qa_contextual_learning_runtime.cjs'
       - 'qa_research_utilisation_manifest.py'
       - 'qa_research_runtime_wiring.py'
@@ -61,13 +62,16 @@ jobs:
           node --check research-data-context.js
           node --check research-evidence-runtime-health.js
           node --check qa_contextual_learning_runtime.cjs
+          node --check qa_learning_effectiveness_runtime.cjs
           node --check desktop/electron/scripts/generate-integrity.cjs
       - name: Contextual evidence model
         run: python qa_research_evidence_engine.py
       - name: Adaptive learning quality
         run: python qa_adaptive_learning.py
-      - name: Empirical learning effectiveness
+      - name: Empirical learning effectiveness contract
         run: python qa_learning_effectiveness.py
+      - name: Empirical learning effectiveness runtime
+        run: node qa_learning_effectiveness_runtime.cjs
       - name: Generated contextual question matrix
         run: node qa_contextual_learning_runtime.cjs
       - name: Research utilisation manifest
