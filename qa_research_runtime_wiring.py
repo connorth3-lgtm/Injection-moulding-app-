@@ -30,11 +30,12 @@ def main() -> None:
     engine = (ROOT / 'research-evidence-engine.js').read_text(encoding='utf-8')
     context = (ROOT / 'research-data-context.js').read_text(encoding='utf-8')
     micro = (ROOT / 'research-evidence-microlearning.js').read_text(encoding='utf-8')
+    adaptive = (ROOT / 'adaptive-learning.js').read_text(encoding='utf-8')
     desktop_pkg = json.loads((ROOT / 'desktop/electron/package.json').read_text(encoding='utf-8'))
     desktop_integrity = (ROOT / 'desktop/electron/scripts/generate-integrity.cjs').read_text(encoding='utf-8')
 
     runtime_files = manifest.get('runtimeFiles') or []
-    need(len(runtime_files) >= 10, 'research runtime manifest unexpectedly small')
+    need(len(runtime_files) >= 11, 'research/adaptive runtime manifest unexpectedly small')
     for rel in runtime_files:
         need((ROOT / rel).exists(), f'research runtime file missing: {rel}')
         need(f"['./{rel}'" in index, f'bootstrap does not load research runtime: {rel}')
@@ -68,6 +69,7 @@ def main() -> None:
     need(public_manifest['evidence']['promotedMechanisms'] == research['promotedMechanisms'], 'public research manifest promoted total drifted')
     need(public_manifest['evidence']['publisherVerifiedPrimaryMeasuredStudies'] == research['publisherVerifiedPrimaryMeasuredStudies'], 'public research manifest primary-study total drifted')
     need(public_manifest['connectedData']['rawUpload'] is False, 'public research manifest must preserve no-upload boundary')
+    need(public_manifest.get('learning',{}).get('formalAssessmentUnchanged') is True,'public adaptive learning boundary missing')
 
     need(engine.count("status:'promoted'") >= 12, 'runtime engine must retain all 12 promoted mechanisms')
     need(len(set(re.findall(r"doi:10\.[0-9]{4,9}/[^'\"]+", engine))) >= 24, 'runtime engine needs at least 24 primary source links')
@@ -79,8 +81,10 @@ def main() -> None:
         'What would weaken this explanation', 'The decision brief follows the user-selected local baseline'
     ]:
         need(token in context, f'technician-first Run Insights behavior missing: {token}')
-    for token in ['buildPractice','strongest discriminating evidence','correctIndex','weakeningAnswer','outside the formal assessment bank']:
+    for token in ['buildPractice','strongest discriminating evidence','correctIndex','weakeningAnswer','choiceMeta','formal assessment']:
         need(token in micro, f'contextual formative-practice behavior missing: {token}')
+    for token in ['stageForMechanism','reasoningProfile','practice_misconception','SPECIALIST_GAPS','lessonChallenge']:
+        need(token in adaptive,f'adaptive learning runtime behavior missing: {token}')
     for token in ['Reason it through','data-mm-ri-choice','practice_miss','practice_complete','Run-linked practice stays outside the formal assessment bank']:
         need(token in context, f'Run Insights formative learning integration missing: {token}')
 
@@ -98,7 +102,7 @@ def main() -> None:
         'Research runtime wiring QA passed: '
         f"{research['promotedMechanisms']} promoted mechanisms, "
         f"{research['publisherVerifiedPrimaryMeasuredStudies']} verified primary studies, "
-        f"{len(runtime_files)} research runtime modules; technician-first directional Run Insights and formative evidence reasoning guarded."
+        f"{len(runtime_files)} research/adaptive runtime modules; technician-first Run Insights, staged formative reasoning and adaptive reinforcement guarded."
     )
 
 
