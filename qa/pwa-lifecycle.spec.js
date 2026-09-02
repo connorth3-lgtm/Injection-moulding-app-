@@ -1,0 +1,12 @@
+const {test,expect}=require('@playwright/test');
+const BASE='http://127.0.0.1:4173/index.html';
+async function standalone(page){await page.addInitScript(()=>{const native=window.matchMedia.bind(window);window.matchMedia=q=>q==='(display-mode: standalone)'?{matches:true,media:q,onchange:null,addListener(){},removeListener(){},addEventListener(){},removeEventListener(){},dispatchEvent(){return false}}:native(q);const user={id:'pwa-qa',name:'PWA QA',role:'learner',completed:[],bookmarks:[],notes:{},examScores:{},certificates:[],currentLesson:1,lastSeen:new Date().toISOString(),onboardingDone:true,experience:'Beginner',goal:'Learn the full process',dailyMinutes:15,region:'ALL'};localStorage.setItem('mouldmasterProDB',JSON.stringify({activeUser:'pwa-qa',users:{'pwa-qa':user}}))})}
+test('installed PWA atomically caches the integrated core and recovers offline/online',async({page,context})=>{
+ await standalone(page);await page.goto(BASE,{waitUntil:'load'});
+ await page.waitForFunction(()=>navigator.serviceWorker?.controller||false,{timeout:30000}).catch(async()=>{await page.reload({waitUntil:'load'});await page.waitForFunction(()=>navigator.serviceWorker?.controller||false,{timeout:30000})});
+ const cached=await page.evaluate(async()=>{const keys=await caches.keys(),key=keys.find(k=>k.startsWith('mouldmaster-static-'));if(!key)return{key:null,missing:['cache']};const cache=await caches.open(key),targets=['./index.html','./assessment-bank-expansion.js','./app-integration-v3.js','./assessment-runtime-v2.js','./privacy.html'];const missing=[];for(const t of targets)if(!await cache.match(t))missing.push(t);return{key,missing}});
+ expect(cached.key).toBeTruthy();expect(cached.missing).toEqual([]);
+ await page.waitForFunction(()=>window.MM_ASSESSMENT_BANK_EXPANSION?.technicalItems===90&&window.MM_APP_INTEGRATION?.version);
+ await context.setOffline(true);await page.reload({waitUntil:'domcontentloaded'});await expect(page.locator('#mmStartupFailure')).toHaveCount(0);await page.waitForFunction(()=>window.MM_ASSESSMENT_BANK_EXPANSION?.technicalItems===90&&window.MM_APP_INTEGRATION?.version,{timeout:30000});await expect(page.getByRole('button',{name:/Diagnose a moulding problem/i})).toBeVisible();
+ await context.setOffline(false);await page.reload({waitUntil:'load'});await page.waitForFunction(()=>window.MM_APP_INTEGRATION?.assessmentAudit?.().ok===true,{timeout:30000});
+});
