@@ -1,0 +1,1 @@
+Integration inspection starts from existing script tags near measured-evidence modules.
