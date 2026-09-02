@@ -30,14 +30,27 @@ function sha256(file) {
   return hash.digest('hex');
 }
 
+function safeRelativeAsset(name) {
+  return typeof name === 'string' &&
+    name.length > 0 && name.length <= 240 &&
+    !name.includes('\\') && !name.split('/').includes('..') &&
+    /^(?:[A-Za-z0-9._-]+\/)*[A-Za-z0-9._-]+$/.test(name);
+}
+function assetPath(name) {
+  if (!safeRelativeAsset(name)) throw new Error(`Unsafe integrity entry: ${name}`);
+  const file = path.resolve(APP_ROOT, ...name.split('/'));
+  const root = path.resolve(APP_ROOT) + path.sep;
+  if (!file.startsWith(root)) throw new Error(`Asset escapes application root: ${name}`);
+  return file;
+}
+
 function verifyBundledAssets() {
   const manifest = JSON.parse(fs.readFileSync(INTEGRITY_PATH, 'utf8'));
   if (!manifest || manifest.schema !== 1 || !manifest.files || typeof manifest.files !== 'object') {
     throw new Error('Invalid integrity manifest');
   }
   for (const [name, expected] of Object.entries(manifest.files)) {
-    if (!/^[A-Za-z0-9._-]+$/.test(name)) throw new Error(`Unsafe integrity entry: ${name}`);
-    const file = path.join(APP_ROOT, name);
+    const file = assetPath(name);
     if (!fs.existsSync(file)) throw new Error(`Required asset is missing: ${name}`);
     const actual = sha256(file);
     if (actual !== expected) throw new Error(`SHA-256 verification failed: ${name}`);
@@ -57,12 +70,12 @@ function startLoopbackServer(allowedFiles) {
         }
         const u = new URL(req.url || '/', 'http://127.0.0.1');
         const name = decodeURIComponent(u.pathname.replace(/^\/+/, '')) || 'index.html';
-        if (name.includes('/') || name.includes('\\') || !allowedFiles.has(name)) {
+        if (!safeRelativeAsset(name) || !allowedFiles.has(name)) {
           res.writeHead(404, {'Content-Type': 'text/plain; charset=utf-8'});
           res.end('Not found');
           return;
         }
-        const file = path.join(APP_ROOT, name);
+        const file = assetPath(name);
         const type = MIME[path.extname(file).toLowerCase()] || 'application/octet-stream';
         res.writeHead(200, {
           'Content-Type': type,

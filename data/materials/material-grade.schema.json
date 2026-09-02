@@ -1,0 +1,157 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://mouldmaster.local/schema/material-grade-v1.json",
+  "title": "MouldMaster exact commercial material grade",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "id", "manufacturer", "grade", "polymer", "lifecycle", "sources"],
+  "properties": {
+    "schemaVersion": {"const": 1},
+    "id": {"type": "string", "pattern": "^mat-[a-z0-9][a-z0-9._-]{2,95}$"},
+    "manufacturer": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "name"],
+      "properties": {
+        "id": {"type": "string", "pattern": "^mfr-[a-z0-9][a-z0-9._-]{1,63}$"},
+        "name": {"type": "string", "minLength": 2, "maxLength": 160},
+        "country": {"type": ["string", "null"], "maxLength": 80},
+        "website": {"type": ["string", "null"], "format": "uri"}
+      }
+    },
+    "brand": {"type": ["string", "null"], "maxLength": 120},
+    "grade": {"type": "string", "minLength": 1, "maxLength": 160},
+    "aliases": {"type": "array", "items": {"type": "string", "maxLength": 160}, "uniqueItems": true},
+    "polymer": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["family"],
+      "properties": {
+        "family": {"type": "string", "minLength": 1, "maxLength": 80},
+        "blend": {"type": ["string", "null"], "maxLength": 120},
+        "morphology": {"enum": ["amorphous", "semi-crystalline", "elastomeric", "thermoset", "unknown"]}
+      }
+    },
+    "composition": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "glassFibrePct": {"type": ["number", "null"], "minimum": 0, "maximum": 100},
+        "carbonFibrePct": {"type": ["number", "null"], "minimum": 0, "maximum": 100},
+        "mineralPct": {"type": ["number", "null"], "minimum": 0, "maximum": 100},
+        "recycledContentPct": {"type": ["number", "null"], "minimum": 0, "maximum": 100},
+        "flameRetardant": {"type": ["boolean", "null"]},
+        "uvStabilised": {"type": ["boolean", "null"]},
+        "impactModified": {"type": ["boolean", "null"]},
+        "lubricated": {"type": ["boolean", "null"]},
+        "notes": {"type": ["string", "null"], "maxLength": 600}
+      }
+    },
+    "properties": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/propertyObservation"}
+    },
+    "processing": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/processingObservation"}
+    },
+    "approvals": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["scheme", "claim", "sourceId"],
+        "properties": {
+          "scheme": {"type": "string", "minLength": 1, "maxLength": 120},
+          "claim": {"type": "string", "minLength": 1, "maxLength": 300},
+          "rating": {"type": ["string", "null"], "maxLength": 120},
+          "sourceId": {"type": "string", "minLength": 3, "maxLength": 120}
+        }
+      }
+    },
+    "lifecycle": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status"],
+      "properties": {
+        "status": {"enum": ["active", "restricted", "superseded", "discontinued", "unknown"]},
+        "regions": {"type": "array", "items": {"type": "string", "maxLength": 80}, "uniqueItems": true},
+        "supersededBy": {"type": ["string", "null"], "maxLength": 96},
+        "checkedAt": {"type": ["string", "null"], "format": "date"}
+      }
+    },
+    "sources": {
+      "type": "array",
+      "minItems": 1,
+      "items": {"$ref": "#/$defs/sourceDocument"}
+    },
+    "provenance": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "stage": {"enum": ["staging", "validated", "published"]},
+        "ingestedAt": {"type": ["string", "null"], "format": "date-time"},
+        "reviewedAt": {"type": ["string", "null"], "format": "date-time"},
+        "reviewer": {"type": ["string", "null"], "maxLength": 120},
+        "notes": {"type": ["string", "null"], "maxLength": 800}
+      }
+    }
+  },
+  "$defs": {
+    "sourceDocument": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "publisher", "title", "url", "kind", "retrievedAt"],
+      "properties": {
+        "id": {"type": "string", "pattern": "^src-[a-z0-9][a-z0-9._-]{2,95}$"},
+        "publisher": {"type": "string", "minLength": 2, "maxLength": 160},
+        "title": {"type": "string", "minLength": 2, "maxLength": 300},
+        "url": {"type": "string", "format": "uri"},
+        "kind": {"enum": ["manufacturer-datasheet", "manufacturer-processing-guide", "manufacturer-certificate", "regulatory", "standard", "research", "other"]},
+        "revision": {"type": ["string", "null"], "maxLength": 120},
+        "documentDate": {"type": ["string", "null"], "format": "date"},
+        "retrievedAt": {"type": "string", "format": "date"},
+        "sha256": {"type": ["string", "null"], "pattern": "^[a-f0-9]{64}$"}
+      }
+    },
+    "propertyObservation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "property", "value", "unit", "sourceId", "comparisonReady"],
+      "properties": {
+        "id": {"type": "string", "pattern": "^obs-[a-z0-9][a-z0-9._-]{2,95}$"},
+        "property": {"type": "string", "minLength": 2, "maxLength": 100},
+        "value": {"type": ["number", "string"]},
+        "unit": {"type": "string", "minLength": 1, "maxLength": 40},
+        "testMethod": {"type": ["string", "null"], "maxLength": 120},
+        "temperatureC": {"type": ["number", "null"]},
+        "loadKg": {"type": ["number", "null"], "minimum": 0},
+        "specimen": {"type": ["string", "null"], "maxLength": 180},
+        "conditioning": {"type": ["string", "null"], "maxLength": 180},
+        "direction": {"enum": ["flow", "transverse", "isotropic", "not-applicable", "unknown"]},
+        "sourceId": {"type": "string", "minLength": 3, "maxLength": 120},
+        "sourcePage": {"type": ["string", "null"], "maxLength": 40},
+        "comparisonReady": {"type": "boolean"},
+        "limitations": {"type": ["string", "null"], "maxLength": 500}
+      }
+    },
+    "processingObservation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "parameter", "sourceId", "claimType"],
+      "properties": {
+        "id": {"type": "string", "pattern": "^proc-[a-z0-9][a-z0-9._-]{2,95}$"},
+        "parameter": {"type": "string", "minLength": 2, "maxLength": 100},
+        "min": {"type": ["number", "null"]},
+        "max": {"type": ["number", "null"]},
+        "value": {"type": ["number", "string", "null"]},
+        "unit": {"type": ["string", "null"], "maxLength": 40},
+        "condition": {"type": ["string", "null"], "maxLength": 300},
+        "claimType": {"enum": ["supplier-guidance", "supplier-limit", "site-validated", "study-observation", "unknown"]},
+        "sourceId": {"type": "string", "minLength": 3, "maxLength": 120},
+        "sourcePage": {"type": ["string", "null"], "maxLength": 40},
+        "productionRecipe": {"const": false}
+      }
+    }
+  }
+}

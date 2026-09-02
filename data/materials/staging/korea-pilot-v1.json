@@ -1,0 +1,52 @@
+{
+  "schemaVersion": 1,
+  "pilotId": "korea-engineering-materials-v1",
+  "status": "discovery-pending",
+  "purpose": "Stress-test the canonical material-grade model against large commercial engineering-plastics catalogues without publishing unverified grade claims.",
+  "manufacturers": [
+    {
+      "id": "mfr-lotte-chemical",
+      "name": "LOTTE Chemical",
+      "country": "South Korea",
+      "stage": "discovery-pending",
+      "gradeRecords": [],
+      "sourceQueue": []
+    },
+    {
+      "id": "mfr-lg-chem",
+      "name": "LG Chem",
+      "country": "South Korea",
+      "stage": "discovery-pending",
+      "gradeRecords": [],
+      "sourceQueue": []
+    },
+    {
+      "id": "mfr-kep",
+      "name": "Korea Engineering Plastics (KEP)",
+      "country": "South Korea",
+      "stage": "discovery-pending",
+      "gradeRecords": [],
+      "sourceQueue": []
+    },
+    {
+      "id": "mfr-kolon-enp",
+      "name": "KOLON ENP",
+      "country": "South Korea",
+      "stage": "discovery-pending",
+      "gradeRecords": [],
+      "sourceQueue": []
+    }
+  ],
+  "publicationGate": {
+    "requiresExactCommercialGrade": true,
+    "requiresPrimaryManufacturerSource": true,
+    "requiresSourceRevisionOrRetrievalDate": true,
+    "requiresSemanticPropertyChecks": true,
+    "allowsDirectStagingToRuntime": false
+  },
+  "notes": [
+    "Manufacturer names are pilot targets only; this file intentionally contains no invented grade/property values.",
+    "Acquired source documents should be fingerprinted before extraction where redistribution/rights permit local retention.",
+    "Every extracted observation must reference a sourceId and retain its test conditions rather than collapsing datasheet tables into generic values."
+  ]
+}
