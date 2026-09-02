@@ -8,6 +8,7 @@ on:
       - 'material-engineering-deep-extension.js'
       - 'material-common-catalog-extension.js'
       - 'material-expanded-catalog-extension.js'
+      - 'material-100-catalog-extension.js'
       - 'engineering-workbench.js'
       - 'qa-engineering.js'
       - 'qa-engineering-stress-200.js'
@@ -15,6 +16,7 @@ on:
       - 'qa-material-engineering-deep-200.js'
       - 'qa-material-common-catalog-200.js'
       - 'qa-material-expanded-catalog-200.js'
+      - 'qa-material-100-catalog-200.js'
       - 'app-shell-finalize.js'
       - '.github/workflows/engineering-deep-dive.yml'
   push:
@@ -26,6 +28,7 @@ on:
       - 'material-engineering-deep-extension.js'
       - 'material-common-catalog-extension.js'
       - 'material-expanded-catalog-extension.js'
+      - 'material-100-catalog-extension.js'
       - 'engineering-workbench.js'
       - 'qa-engineering.js'
       - 'qa-engineering-stress-200.js'
@@ -33,6 +36,7 @@ on:
       - 'qa-material-engineering-deep-200.js'
       - 'qa-material-common-catalog-200.js'
       - 'qa-material-expanded-catalog-200.js'
+      - 'qa-material-100-catalog-200.js'
       - 'app-shell-finalize.js'
       - '.github/workflows/engineering-deep-dive.yml'
 
@@ -59,6 +63,8 @@ jobs:
         run: node qa-material-common-catalog-200.js
       - name: Deterministic 200-case expanded 60-common 20-specialty catalog suite
         run: node qa-material-expanded-catalog-200.js
+      - name: Deterministic 200-case 100-material catalog suite
+        run: node qa-material-100-catalog-200.js
       - name: Static runtime integration checks
         shell: bash
         run: |
@@ -67,5 +73,6 @@ jobs:
           grep -q "material-engineering-deep-extension.js" app-shell-finalize.js
           grep -q "material-common-catalog-extension.js" app-shell-finalize.js
           grep -q "material-expanded-catalog-extension.js" app-shell-finalize.js
+          grep -q "material-100-catalog-extension.js" app-shell-finalize.js
           grep -q "engineering-workbench.js" app-shell-finalize.js
           grep -q "MM_APP_SHELL_FINALIZED='2026.08.26.4'" app-shell-finalize.js
