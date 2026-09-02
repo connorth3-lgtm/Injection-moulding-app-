@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "version": "2026.09.02.1",
+  "version": "2026.09.02.2",
   "generatedFrom": "data/measured-data-collection-closeout-2026-08-30.json",
   "generatedFromVersion": "2026.08.30.1",
   "effectiveMeasuredState": {
@@ -10,6 +10,22 @@
     "acceptedInjectionProcessTimeSeriesValues": 85569824
   },
   "semanticRegistry": "./process-data-semantic-registry.json",
+  "researchUtilisation": {
+    "manifest": "data/research-utilisation-manifest-v1.json",
+    "promotedMechanisms": 12,
+    "publisherVerifiedPrimaryMeasuredStudies": 70,
+    "evidenceQualitySeparatedFromApplicability": true,
+    "supportsFalsification": true,
+    "supportsVerificationPlans": true,
+    "activeSurfaces": [
+      "lessons",
+      "measured-evidence panels",
+      "process diagnostic labs",
+      "semantic process-data intake",
+      "site-local process intelligence",
+      "workspace troubleshooting cases"
+    ]
+  },
   "evidenceStates": [
     "measured",
     "synthetic",
@@ -18,8 +34,10 @@
   ],
   "boundaries": {
     "measuredDoesNotMeanUniversal": true,
+    "researchDoesNotMeanUniversal": true,
     "unresolvedSemanticsFailClosed": true,
     "commandsAndSetpointsAreNotMeasuredActuals": true,
+    "predictionIsNotCausation": true,
     "rawThirdPartyNumericPayloadShippedToPublicRuntime": false,
     "siteLocalPreparedDataIsNotAutomaticallyPromotedToRepositoryMeasuredEvidence": true
   },
@@ -31,7 +49,12 @@
       "site-local baseline",
       "drift comparison",
       "before-after intervention comparison",
+      "cavity intelligence",
+      "quality association support",
+      "energy per good part",
       "structured troubleshooting links",
+      "similar-case support",
+      "research applicability context",
       "learner recommendation bridge"
     ]
   }
