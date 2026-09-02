@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "version": "2026.09.02.2",
+  "version": "2026.09.02.3",
   "reviewed": "2026-09-02",
   "evidence": {
     "promotedMechanisms": 12,
@@ -13,6 +13,10 @@
     "supportsFalsification": true,
     "supportsAlternativeExplanations": true,
     "supportsVerificationPlan": true,
+    "supportsAdaptiveReasoningPractice": true,
+    "supportsMisconceptionTargeting": true,
+    "supportsDifficultyProgression": true,
+    "formalAssessmentIsolation": true,
     "universalSetpointsAllowed": false,
     "researchCanOverrideApprovedLimits": false
   },
@@ -28,16 +32,25 @@
       "quality association support",
       "energy per good part",
       "structured troubleshooting links",
-      "research applicability context"
+      "research applicability context",
+      "adaptive evidence-reasoning practice"
     ]
+  },
+  "learning": {
+    "localOnly": true,
+    "difficultyStages": ["evidence", "falsification", "recovery", "integration"],
+    "misconceptionAware": true,
+    "lessonReasoningChallengeLadder": true,
+    "formalAssessmentUnchanged": true
   },
   "activeSurfaces": [
     "lessons",
+    "learning insights",
     "measured-evidence panels",
     "process diagnostic labs",
     "semantic process-data intake",
     "site-local process intelligence",
     "workspace troubleshooting cases"
   ],
-  "boundary": "Research evidence supplies mechanism context, applicability, falsifying evidence and next-measurement suggestions. Production decisions remain governed by local measured evidence, validated process limits, machine/tool/material documentation, approved site procedures and applicable safety controls."
+  "boundary": "Research evidence supplies mechanism context, applicability, falsifying evidence and next-measurement suggestions. Adaptive practice remains learner-scoped and local and does not alter formal assessment content. Production decisions remain governed by local measured evidence, validated process limits, machine/tool/material documentation, approved site procedures and applicable safety controls."
 }
