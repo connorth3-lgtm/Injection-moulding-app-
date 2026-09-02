@@ -85,6 +85,11 @@ for asset in [
 assert index.index("'./assessment-final-hardening.js'") < index.index("'./runtime-v2.js'") < index.index("'./assessment-runtime-v2.js'") < index.index("'./assessment-ux.js'"), "runtime-v2 assessment ownership load order is wrong"
 assert index.index("'./specialist-curriculum.js'") < index.index("'./specialist-evidence-gap-extension.js'") < index.index("'./mould-master-workspace.js'") < index.index("'./app-shell-finalize.js'"), "specialist evidence/runtime finalizer load order is wrong"
 
+finalizer = text("app-shell-finalize.js")
+for asset in ["assessment-bank-expansion.js", "app-integration-v3.js"]:
+    assert f"loadAsset('{asset}'" in finalizer, f"late integrated runtime asset not loaded by finalizer: {asset}"
+assert "MM_APP_INTEGRATION_READY" in finalizer, "integrated runtime readiness promise missing"
+
 sw = text("service-worker.js")
 assert f"CACHE_VERSION='{ANDROID_RELEASE}'" in sw
 for asset in [
@@ -93,7 +98,8 @@ for asset in [
     "training-upgrade.js", "training-qa-fix.js", "source-library.js", "pwa-shell.js", "learning-experience.js",
     "process-data-diagnostics.js", "curriculum-integration.js", "specialist-curriculum.js",
     "specialist-evidence-gap-extension.js", "mould-master-workspace.js", "app-shell-finalize.js", "learning-analytics.js",
-    "runtime-v2.js", "assessment-runtime-v2.js", "lesson-deep-authoring-v2.js", "assessment-multimodal.js", "accessibility-hardening.js"
+    "runtime-v2.js", "assessment-runtime-v2.js", "assessment-bank-expansion.js", "app-integration-v3.js",
+    "lesson-deep-authoring-v2.js", "assessment-multimodal.js", "accessibility-hardening.js"
 ]:
     assert f"'./{asset}'" in sw, f"offline asset missing: {asset}"
 install = sw[sw.index("self.addEventListener('install'"):sw.index("self.addEventListener('activate'")]
@@ -109,8 +115,18 @@ runtime_v2 = text("runtime-v2.js")
 for marker in ["one owner at a time", "setImplementation", "before:new Set(),after:new Set()", "registerModule", "scopedKey"]:
     assert marker in runtime_v2, f"runtime v2 invariant missing: {marker}"
 assessment_v2 = text("assessment-runtime-v2.js")
-for marker in ["technicalPerExam:7", "technicalBankPerLevel:10", "least-exposed blueprint-preserving stable IDs", "R.setImplementation('getExamQuestions',selector,'assessment-runtime-v2')"]:
+for marker in [
+    "MIN_BANK_PER_LEVEL=30",
+    "technicalPerExam:7",
+    "minimumTechnicalBankPerLevel:MIN_BANK_PER_LEVEL",
+    "technicalBankPerLevel:()=>",
+    "Least-exposed, blueprint-preserving stable IDs",
+    "R.setImplementation('getExamQuestions',selector,'assessment-runtime-v2')",
+]:
     assert marker in assessment_v2, f"assessment membership rotation invariant missing: {marker}"
+bank_expansion = text("assessment-bank-expansion.js")
+for marker in ["MM_ASSESSMENT_BANK_EXPANSION", "targetPerLevel:30", "addedPerLevel:20"]:
+    assert marker in bank_expansion, f"formal bank expansion invariant missing: {marker}"
 lesson_v2 = text("lesson-deep-authoring-v2.js")
 assert "D.lessons.length!==120" in lesson_v2 and "duplicate lesson records" in lesson_v2, "lesson deep authoring must cover 120 unique records"
 assert "R.after('renderLesson'" in lesson_v2 and "window.renderLesson=function" not in lesson_v2, "lesson deep authoring must use canonical runtime hook"
@@ -193,8 +209,8 @@ assert dpkg["license"] == "Apache-2.0", "desktop package must use Apache-2.0"
 for dep in ["electron", "electron-builder"]:
     assert re.fullmatch(r"\d+\.\d+\.\d+", dpkg["devDependencies"][dep]), f"{dep} must be exact-version pinned"
 from_paths = {x.get("from") for x in dpkg["build"].get("extraResources", []) if isinstance(x, dict)}
-for asset in ["runtime-v2.js", "assessment-runtime-v2.js", "lesson-deep-authoring-v2.js", "assessment-multimodal.js", "accessibility-hardening.js"]:
-    assert f"../../{asset}" in from_paths, f"desktop bundle missing maturity-hardening asset: {asset}"
+for asset in ["runtime-v2.js", "assessment-runtime-v2.js", "assessment-bank-expansion.js", "app-integration-v3.js", "lesson-deep-authoring-v2.js", "assessment-multimodal.js", "accessibility-hardening.js"]:
+    assert f"../../{asset}" in from_paths, f"desktop bundle missing required runtime asset: {asset}"
 dmain = (desktop_root / "src" / "main.cjs").read_text(encoding="utf-8")
 for marker in ["nodeIntegration: false", "contextIsolation: true", "sandbox: true", "webSecurity: true", "allowRunningInsecureContent: false", "setPermissionRequestHandler", "setPermissionCheckHandler", "will-attach-webview", "setWindowOpenHandler", "server.listen(0, '127.0.0.1'", "SHA-256 verification failed"]:
     assert marker in dmain, f"open desktop security control missing: {marker}"
@@ -209,7 +225,8 @@ for js_name in [
     "service-worker.js", "reading-patch.js", "training-upgrade.js", "training-qa-fix.js",
     "assessment-quality-suite.js", "source-library.js", "pwa-shell.js", "specialist-curriculum.js",
     "specialist-evidence-gap-extension.js", "mould-master-workspace.js", "app-shell-finalize.js",
-    "runtime-v2.js", "assessment-runtime-v2.js", "lesson-deep-authoring-v2.js", "assessment-multimodal.js", "accessibility-hardening.js",
+    "runtime-v2.js", "assessment-runtime-v2.js", "assessment-bank-expansion.js", "app-integration-v3.js",
+    "lesson-deep-authoring-v2.js", "assessment-multimodal.js", "accessibility-hardening.js",
     "desktop/electron/src/main.cjs", "desktop/electron/scripts/generate-integrity.cjs", "desktop/electron/scripts/qa.cjs"
 ]:
     p = subprocess.run([NODE, "--check", js_name], capture_output=True, text=True)
