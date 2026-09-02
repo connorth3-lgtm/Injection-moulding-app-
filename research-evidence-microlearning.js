@@ -1,32 +1,83 @@
-/* MouldMaster contextual research microlearning bridge — 2026.09.02.2 */
+/* MouldMaster contextual research microlearning bridge — 2026.09.02.3 */
 (function(){
 'use strict';
-const VERSION='2026.09.02.2';
+const VERSION='2026.09.02.3';
+const PRACTICES=new Map();
 function build(input,limit=2){const e=window.MM_RESEARCH_EVIDENCE;if(!e)return[];return e.retrieve(input,limit).map(r=>({mechanismId:r.id,title:r.title,evidenceState:r.status,applicability:r.applicability.label,lesson:`Why it matters: ${r.claim}`,lookFor:(r.supports||[])[0]||r.nextEvidence,dontAssume:r.limitation,nextCheck:r.nextEvidence}))}
 function hash(text){let h=2166136261;for(const ch of String(text||'')){h^=ch.charCodeAt(0);h=Math.imul(h,16777619)}return h>>>0}
 function rotate(items,offset){const xs=items.slice(),n=xs.length;if(!n)return xs;const k=((Number(offset)||0)%n+n)%n;return xs.slice(k).concat(xs.slice(0,k))}
+function different(a,b){const x=String(a||'').toLowerCase().replace(/[^a-z0-9]+/g,' ').trim(),y=String(b||'').toLowerCase().replace(/[^a-z0-9]+/g,' ').trim();if(!x||!y)return false;if(x===y)return false;const ax=new Set(x.split(/\s+/)),ay=new Set(y.split(/\s+/));let shared=0;for(const t of ax)if(ay.has(t))shared++;return shared/Math.max(1,Math.min(ax.size,ay.size))<.72}
+function opt(key,text,correct,feedback,misconception=null){return{key,text:String(text||''),correct:!!correct,feedback,misconception}}
+function evidenceOptions(r,plan,alternate){
+  const options=[opt('discriminating-check',plan.strongestNextCheck,true,'This is the strongest answer because it collects independent local evidence that can support or weaken the proposed mechanism before a production conclusion is made.')];
+  if(alternate?.nextEvidence&&different(alternate.nextEvidence,plan.strongestNextCheck))options.push(opt('alternative-check',alternate.nextEvidence,false,`This is a legitimate check for the competing “${alternate.title}” mechanism, but it is less discriminating for the leading mechanism in this run. Keep the alternative open; do not confuse a plausible check with the best next check.`,'alternative-mechanism'));
+  options.push(opt('display-only','Recheck only the displayed command or setpoint and assume it represents the actual process response.',false,'Displayed commands and setpoints are not the same as measured actual behaviour. A useful check should observe the relevant actual or physical outcome.','command-vs-actual'));
+  options.push(opt('broad-adjustment','Make a broad process adjustment and judge success from appearance alone.',false,'A broad adjustment changes several variables at once and appearance may not represent the physical outcome. It weakens diagnosis rather than discriminating between explanations.','premature-adjustment'));
+  options.push(opt('assume-cause','Treat the research match as the confirmed root cause because the signal moved.',false,'Research fit ranks explanations; it does not prove causation. Local measured evidence, a controlled check and recovery evidence are still required.','causation-overreach'));
+  return options.slice(0,4)
+}
+function falsificationOptions(r,plan,alternate){
+  const weakening=(r.weakens||[])[0]||'Independent actual measurements remain stable while the physical outcome changes.';
+  const support=(r.supports||[])[0]||r.claim;
+  const options=[
+    opt('weakening-evidence',weakening,true,'This is the strongest falsification answer because it describes evidence expected to stay coupled if the hypothesis is correct. If it remains stable while the outcome changes, confidence in the hypothesis should fall.'),
+    opt('supporting-only',support,false,'This pattern would support the mechanism; it does not challenge it. Good troubleshooting actively looks for evidence that could make the preferred explanation less likely.','confirmation-bias'),
+    opt('unchanged-command','The saved recipe and displayed setpoints remain unchanged.',false,'Unchanged commands do not prove unchanged actual process behaviour, material state, tooling condition or measurement response.','command-vs-actual'),
+    opt('appearance-improves','One part looks better after an uncontrolled adjustment.',false,'A one-part cosmetic improvement after an uncontrolled change does not falsify or verify a mechanism. The evidence needs a controlled comparison and the relevant physical outcome.','premature-verification')
+  ];
+  if(alternate?.weakens?.[0]&&different(alternate.weakens[0],weakening))options[3]=opt('alternative-weakening',alternate.weakens[0],false,`That finding mainly challenges the competing “${alternate.title}” mechanism. It is useful evidence, but it does not most directly test the leading explanation.`, 'alternative-mechanism');
+  return options
+}
+function recoveryOptions(r,plan){
+  return [
+    opt('recovery-evidence',plan.recoveryCriterion,true,'Recovery should be demonstrated by the relevant actual and physical outcome moving back toward the validated local reference together, not by a setting or appearance alone.'),
+    opt('setpoint-recovers','The displayed setpoint returns to the value stored in the saved recipe.',false,'A command returning to its nominal value does not prove that the actual process or physical quality recovered.','command-vs-actual'),
+    opt('appearance-only','The next visible part looks acceptable, without checking the measured actual or physical quality response.',false,'A single cosmetic observation is weak recovery evidence and may miss structural, dimensional or cavity-specific effects.','appearance-only'),
+    opt('rank-stays-high','The research mechanism remains the highest-ranked explanation after the change.',false,'A research ranking is not recovery evidence. Recovery must be shown by local measured behaviour and the linked physical outcome.','causation-overreach')
+  ]
+}
+function integrationOptions(r,plan,alternate){
+  const alt=alternate?.title||r.alternatives?.[0]||'a realistic competing explanation';
+  return [
+    opt('bounded-conclusion',`${r.title} remains a plausible hypothesis. Compare its discriminating evidence and recovery pattern with ${alt} before assigning root cause.`,true,'This keeps observation, hypothesis, competing explanations and verification separate. That is the strongest expert conclusion from incomplete evidence.'),
+    opt('confirmed-cause',`${r.title} is confirmed because the research applicability score is highest.`,false,'Applicability helps rank where research may transfer; it is not proof of causation in the local process.','causation-overreach'),
+    opt('change-to-test',`Change several settings that should influence ${r.title}; if quality improves, treat that as confirmation.`,false,'Changing several variables together makes the result difficult to interpret and can hide the true mechanism.','premature-adjustment'),
+    opt('ignore-alternative',`Ignore ${alt} because it ranked second rather than first.`,false,'Rank order is a prioritisation aid, not a reason to discard a realistic alternative without discriminating evidence.','alternative-mechanism')
+  ]
+}
 function buildPractice(input,extra={}){
   const e=window.MM_RESEARCH_EVIDENCE;if(!e)return null;
-  const r=e.retrieve(input,1)?.[0];if(!r)return null;
+  const ranked=e.retrieve(input,3)||[],r=ranked[0];if(!r)return null;
   const plan=e.verificationPlan(input,r.id);if(!plan)return null;
+  const alternate=ranked.find(x=>x.id!==r.id)||null;
   const observed=String(extra.observed||'A site-local process signal has moved away from its known-good reference.').trim();
-  const options=[
-    {key:'discriminating-check',text:plan.strongestNextCheck,correct:true,feedback:'This is the strongest answer because it collects independent local evidence that can support or weaken the proposed mechanism before a production conclusion is made.'},
-    {key:'display-only',text:'Recheck only the displayed command or setpoint and assume it represents the actual process response.',correct:false,feedback:'Displayed commands and setpoints are not the same as measured actual behaviour. A useful check should observe the relevant actual or physical outcome.'},
-    {key:'broad-adjustment',text:'Make a broad process adjustment and judge success from appearance alone.',correct:false,feedback:'A broad adjustment changes several variables at once and appearance may not represent the physical outcome. It weakens diagnosis rather than discriminating between explanations.'},
-    {key:'assume-cause',text:'Treat the research match as the confirmed root cause because the signal moved.',correct:false,feedback:'Research fit ranks explanations; it does not prove causation. Local measured evidence, a controlled check and recovery evidence are still required.'}
-  ];
-  const shuffled=rotate(options,hash(r.id)%options.length),correctIndex=shuffled.findIndex(x=>x.correct);
-  return {
-    id:`run-insight-${r.id}`,mechanismId:r.id,title:r.title,
-    prompt:`${observed} Which next step gives the strongest discriminating evidence?`,
-    options:shuffled,correctIndex,
-    rationale:`The aim is not to guess a setting. The aim is to choose the measurement or controlled check that can distinguish this explanation from realistic alternatives.`,
+  const requested=String(extra.stage||window.MM_ADAPTIVE_LEARNING?.stageForMechanism?.(r.id)||'evidence');
+  const stage=['evidence','falsification','recovery','integration'].includes(requested)?requested:'evidence';
+  let prompt,options,rationale;
+  if(stage==='falsification'){
+    prompt=`${observed} ${r.title} is currently the leading explanation. Which finding would most directly weaken that hypothesis?`;
+    options=falsificationOptions(r,plan,alternate);rationale='High-quality troubleshooting tries to disprove a preferred explanation as well as support it.';
+  }else if(stage==='recovery'){
+    prompt=`${observed} A controlled correction has now been made. Which result is the strongest evidence that the mechanism has actually recovered?`;
+    options=recoveryOptions(r,plan);rationale='Recovery evidence should reconnect the relevant process actual with the physical quality response and the known-good local reference.';
+  }else if(stage==='integration'){
+    prompt=`${observed} Multiple explanations remain plausible. Which conclusion best reflects the strength and limits of the available evidence?`;
+    options=integrationOptions(r,plan,alternate);rationale='Expert reasoning preserves uncertainty, compares alternatives and verifies recovery before assigning root cause.';
+  }else{
+    prompt=`${observed} Which next step gives the strongest discriminating evidence?`;
+    options=evidenceOptions(r,plan,alternate);rationale='The aim is not to guess a setting. The aim is to choose the measurement or controlled check that can distinguish this explanation from realistic alternatives.';
+  }
+  const shuffled=rotate(options,hash(`${r.id}:${stage}`)%options.length),correctIndex=shuffled.findIndex(x=>x.correct);
+  const practice={
+    id:`run-insight-${r.id}-${stage}`,mechanismId:r.id,title:r.title,stage,
+    prompt,options:shuffled,correctIndex,rationale,
     weakeningQuestion:'What finding would most weaken this explanation?',
     weakeningAnswer:(r.weakens||[])[0]||'Independent actual measurements remain stable while the physical outcome changes.',
     recoveryAnswer:plan.recoveryCriterion,
     boundary:'Formative practice only. It does not change formal assessment results, authorize production changes or convert research relevance into proof of root cause.'
-  }
+  };
+  PRACTICES.set(practice.id,practice);return practice
 }
-window.MM_RESEARCH_MICROLEARNING={version:VERSION,build,buildPractice,scope:'Contextual microlearning generated only from promoted mechanism claims. Run-linked practice teaches evidence discrimination and rule-out reasoning; it remains outside the formal assessment bank and exposes no formal answer keys before grading.'};
+function choiceMeta(practiceId,index){const p=PRACTICES.get(String(practiceId||''));return p?.options?.[Number(index)]||null}
+window.MM_RESEARCH_MICROLEARNING={version:VERSION,build,buildPractice,choiceMeta,scope:'Contextual microlearning generated only from promoted mechanism claims. Difficulty progresses from evidence choice to falsification, recovery and integrated uncertainty. Misconception tags support local adaptive reinforcement; formal assessment questions and answer keys remain separate.'};
 })();
