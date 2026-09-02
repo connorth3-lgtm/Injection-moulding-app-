@@ -10,11 +10,12 @@
     "integrity": "node scripts/generate-integrity.cjs",
     "licenses": "node scripts/generate-licenses.cjs",
     "sbom": "node scripts/generate-sbom.cjs",
+    "signing": "node scripts/signing-status.cjs",
     "qa": "node scripts/qa.cjs",
-    "start": "npm run integrity && npm run licenses && npm run sbom && npm run qa && electron .",
-    "dist:portable": "npm run integrity && npm run licenses && npm run sbom && npm run qa && electron-builder --win portable",
-    "dist:nsis": "npm run integrity && npm run licenses && npm run sbom && npm run qa && electron-builder --win nsis",
-    "dist:msix": "npm run integrity && npm run licenses && npm run sbom && npm run qa && npx --yes electron-builder@27.0.0-alpha.7 --win msix --config.msix.setBuildNumber=true"
+    "start": "npm run integrity && npm run licenses && npm run sbom && npm run signing && npm run qa && electron .",
+    "dist:portable": "npm run integrity && npm run licenses && npm run sbom && npm run signing && npm run qa && electron-builder --win portable",
+    "dist:nsis": "npm run integrity && npm run licenses && npm run sbom && npm run signing && npm run qa && electron-builder --win nsis",
+    "dist:msix": "npm run integrity && npm run licenses && npm run sbom && npm run signing && npm run qa && npx --yes electron-builder@27.0.0-alpha.7 --win msix --config.msix.setBuildNumber=true"
   },
   "devDependencies": {"electron": "43.4.1", "electron-builder": "26.15.7"},
   "build": {
@@ -25,7 +26,7 @@
     "asar": true,
     "electronFuses": {"runAsNode": false,"enableNodeOptionsEnvironmentVariable": false,"enableNodeCliInspectArguments": false,"enableEmbeddedAsarIntegrityValidation": true,"onlyLoadAppFromAsar": true},
     "directories": {"output": "dist"},
-    "files": ["src/**/*","generated/integrity.json","generated/dependency-licenses.json","generated/sbom.cdx.json","package.json","README.md","THREAT_MODEL.md"],
+    "files": ["src/**/*","generated/integrity.json","generated/dependency-licenses.json","generated/sbom.cdx.json","generated/signing-status.json","package.json","README.md","THREAT_MODEL.md"],
     "extraResources": [
       {"from": "../../index.html", "to": "mouldmaster/index.html"},
       {"from": "../../MouldMaster_Core_App.html", "to": "mouldmaster/MouldMaster_Core_App.html"},
@@ -49,6 +50,7 @@
       {"from": "../../assessment-final-hardening.js", "to": "mouldmaster/assessment-final-hardening.js"},
       {"from": "../../runtime-v2.js", "to": "mouldmaster/runtime-v2.js"},
       {"from": "../../assessment-runtime-v2.js", "to": "mouldmaster/assessment-runtime-v2.js"},
+      {"from": "../../assessment-bank-expansion.js", "to": "mouldmaster/assessment-bank-expansion.js"},
       {"from": "../../assessment-ux.js", "to": "mouldmaster/assessment-ux.js"},
       {"from": "../../source-library.js", "to": "mouldmaster/source-library.js"},
       {"from": "../../measured-evidence-integration.js", "to": "mouldmaster/measured-evidence-integration.js"},
@@ -89,6 +91,7 @@
       {"from": "../../specialist-evidence-gap-extension.js", "to": "mouldmaster/specialist-evidence-gap-extension.js"},
       {"from": "../../mould-master-workspace.js", "to": "mouldmaster/mould-master-workspace.js"},
       {"from": "../../app-shell-finalize.js", "to": "mouldmaster/app-shell-finalize.js"},
+      {"from": "../../app-integration-v3.js", "to": "mouldmaster/app-integration-v3.js"},
       {"from": "../../production-health.js", "to": "mouldmaster/production-health.js"},
       {"from": "../../data-integration-runtime.js", "to": "mouldmaster/data-integration-runtime.js"},
       {"from": "../../process-data-intelligence-ui.js", "to": "mouldmaster/process-data-intelligence-ui.js"},
@@ -123,7 +126,8 @@
       {"from": "../../THIRD_PARTY_NOTICES.md", "to": "THIRD_PARTY_NOTICES.md"},
       {"from": "generated/integrity.json", "to": "mouldmaster/integrity.json"},
       {"from": "generated/dependency-licenses.json", "to": "dependency-licenses.json"},
-      {"from": "generated/sbom.cdx.json", "to": "sbom.cdx.json"}
+      {"from": "generated/sbom.cdx.json", "to": "sbom.cdx.json"},
+      {"from": "generated/signing-status.json", "to": "signing-status.json"}
     ],
     "win": {"icon": "../../mouldmaster-512.png","artifactName": "MouldMaster-Academy-${buildVersion}-${arch}.${ext}"},
     "nsis": {"oneClick": false,"allowToChangeInstallationDirectory": true,"createDesktopShortcut": true,"createStartMenuShortcut": true},
