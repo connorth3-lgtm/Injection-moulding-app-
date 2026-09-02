@@ -9,7 +9,7 @@ const localStorage={
   get length(){return data.size},key(i){return [...data.keys()][i]??null},
   getItem(k){return data.has(k)?data.get(k):null},setItem(k,v){data.set(String(k),String(v))},removeItem(k){data.delete(String(k))}
 };
-const document={readyState:'complete',documentElement:{},getElementById(){return null},addEventListener(){},body:{appendChild(){}}};
+const document={readyState:'complete',documentElement:{},getElementById(){return null},querySelectorAll(){return[]},addEventListener(){},body:{appendChild(){}}};
 function MutationObserver(){this.observe=()=>{}}
 const sandbox={window:{},document,localStorage,MutationObserver,Blob:function(){},URL:{createObjectURL(){return'blob:test'},revokeObjectURL(){}},setTimeout(fn){fn()},clearTimeout(){},Date,console};
 sandbox.window.window=sandbox.window;sandbox.window.document=document;sandbox.window.localStorage=localStorage;sandbox.window.requestAnimationFrame=fn=>fn();sandbox.window.MM_LEARNING_ANALYTICS={record(){return true}};sandbox.global=sandbox;
