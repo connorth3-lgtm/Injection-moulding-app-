@@ -1,0 +1,44 @@
+{
+  "schema": 1,
+  "version": "2026.09.02.1",
+  "reviewed": "2026-09-02",
+  "purpose": "Machine-readable manifest for turning governed research into contextual decision support without converting research into universal production authority.",
+  "resolvedEvidenceState": {
+    "promotedMechanisms": 12,
+    "publisherVerifiedPrimaryMeasuredStudies": 70,
+    "runtimeMechanisms": 12,
+    "runtimePrimarySourceLinks": 24
+  },
+  "decisionModel": {
+    "separateEvidenceQualityFromApplicability": true,
+    "requiresLocalMeasuredConfirmation": true,
+    "supportsFalsification": true,
+    "supportsAlternativeExplanations": true,
+    "supportsVerificationPlan": true,
+    "universalSetpointsAllowed": false,
+    "researchCanOverrideApprovedLimits": false
+  },
+  "contextDimensions": [
+    "material",
+    "process-family",
+    "tooling",
+    "sensor-or-measurement",
+    "signal",
+    "physical-outcome"
+  ],
+  "runtimeFiles": [
+    "research-evidence-engine.js",
+    "research-evidence-ui.js"
+  ],
+  "qa": [
+    "qa_research_evidence_engine.py"
+  ],
+  "intendedSurfaces": [
+    "measured-evidence panels",
+    "process-data diagnostic labs",
+    "lessons and contextual microlearning",
+    "future workspace case reasoning",
+    "future imported real-process data reasoning"
+  ],
+  "boundary": "Research evidence supplies mechanism priors, applicability context, falsifying evidence and next-measurement suggestions. Production decisions remain governed by local measured evidence, validated process limits, machine/tool/material documentation, approved site procedures and applicable safety controls."
+}
