@@ -17,12 +17,18 @@ def main():
     need(state.get('promotedMechanisms')==12,'resolved promoted mechanism total must be 12')
     need(state.get('publisherVerifiedPrimaryMeasuredStudies')==70,'resolved primary measured study total must be 70')
     model=data.get('decisionModel') or {}
-    for key in ['separateEvidenceQualityFromApplicability','requiresLocalMeasuredConfirmation','supportsFalsification','supportsAlternativeExplanations','supportsVerificationPlan']:
+    for key in ['separateEvidenceQualityFromApplicability','requiresLocalMeasuredConfirmation','supportsFalsification','supportsAlternativeExplanations','supportsVerificationPlan','supportsAdaptiveReasoningPractice','requiresTransferAcrossDistinctContexts','supportsDelayedTransferChecks','supportsPrivacyThresholdedDifficultyCalibration','supportsAggregateItemDiscrimination','supportsSpecialistTransferPractice','formalAssessmentIsolation']:
         need(model.get(key) is True,f'{key} must be enabled')
+    need(model.get('delayedTransferIntervalsDays')==[7,30],'delayed transfer intervals must remain 7 and 30 days')
+    need(model.get('difficultyCalibrationMinimumAnonymousProfiles')==5,'difficulty calibration minimum profile threshold drifted')
+    need(model.get('difficultyCalibrationMinimumAttempts')==12,'difficulty calibration minimum attempt threshold drifted')
     need(model.get('universalSetpointsAllowed') is False,'universal setpoints must remain disabled')
     need(model.get('researchCanOverrideApprovedLimits') is False,'research must not override approved limits')
     for rel in data.get('runtimeFiles') or []: need((ROOT/rel).exists(),f'missing runtime file: {rel}')
     for rel in data.get('qa') or []: need((ROOT/rel).exists(),f'missing QA file: {rel}')
+    for rel in ['learning-effectiveness.js','specialist-learning-quality.js']:
+        need(rel in (data.get('runtimeFiles') or []),f'empirical learning runtime missing from manifest: {rel}')
+    need('qa_learning_effectiveness.py' in (data.get('qa') or []),'learning effectiveness QA missing from manifest')
     print('MouldMaster research utilisation manifest QA passed')
 
 if __name__=='__main__': main()
