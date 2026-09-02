@@ -159,8 +159,20 @@ for marker in [
 
 publish = (ROOT / ".github" / "workflows" / "publish-open-desktop.yml").read_text(encoding="utf-8")
 for marker in [
+    "permissions:\n  contents: read",
+    "build-signed-windows:",
+    "publish-release:",
+    "needs: build-signed-windows",
     "contents: write",
-    "npm run dist:portable",
+    "persist-credentials: false",
+    "npx electron-builder --win portable",
+    "Require protected fully validated production source",
+    "python tools/verify_production_source.py --evidence-out desktop/electron/generated/production-source-evidence.json",
+    "Require production signing credentials",
+    "Desktop package QA without signing secrets",
+    "Re-verify transferred signed release evidence",
+    "Get-AuthenticodeSignature",
+    "TimeStamperCertificate",
     "python qa_release.py",
     "python qa_open_desktop.py",
     "python qa_real_process_data_pilot.py",
@@ -168,12 +180,18 @@ for marker in [
     "SOURCE_COMMIT.txt",
     "dependency-licenses.json",
     "sbom.cdx.json",
-    "git ls-remote --tags",
+    "authenticode-status.json",
+    "production-source-evidence.json",
+    "gh api \"repos/$repo/git/ref/tags/$env:MM_RELEASE_TAG\"",
     "gh release create",
     "gh release upload",
     "--target $env:GITHUB_SHA",
 ]:
     require(marker in publish, f"open desktop publish gate missing: {marker}")
+require(publish.count("contents: write") == 1, "desktop publication write authority must exist only in the publish job")
+require(publish.count("secrets.WINDOWS_CSC_LINK") == 2, "signing certificate secret must be exposed only to readiness and signed-build steps")
+require(publish.count("GH_TOKEN: ${{ github.token }}") == 1, "release token must be exposed only to the publication step")
+require("npm run dist:portable" not in publish, "production publisher must not route signing secrets through the broad dist:portable QA wrapper")
 require("paths:\n      - 'version.json'" in publish, "desktop publishing must be driven by an explicit release-version change")
 
 migration = (DESKTOP / "LEGACY_MIGRATION.md").read_text(encoding="utf-8")
@@ -186,4 +204,4 @@ for marker in [
 ]:
     require(marker in migration, f"legacy migration safeguard missing: {marker}")
 
-print("MouldMaster open desktop release QA passed (including explicit Windows signing-readiness provenance)")
+print("MouldMaster open desktop release QA passed (least-privilege signed build/publish split; explicit Windows signing-readiness provenance)")
