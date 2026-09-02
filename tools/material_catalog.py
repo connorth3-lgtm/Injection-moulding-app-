@@ -7,7 +7,7 @@ from typing import Any
 
 ROOT = Path(__file__).resolve().parents[1]
 STAGING = ROOT / "data" / "materials" / "staging"
-CATALOG = ROOT / "data" / "materials" / "catalog-v1.json"
+CATALOG = ROOT / "material-catalog-v1.json"
 
 
 def load_json(path: Path) -> Any:
@@ -71,13 +71,11 @@ def validate_grade(grade: dict[str, Any], context: str = "grade") -> list[str]:
         need(str(obs.get("sourceId", "")) in source_ids, f"{context}: property {oid} references unknown sourceId", errors)
         need(isinstance(obs.get("comparisonReady"), bool), f"{context}: property {oid} comparisonReady must be boolean", errors)
 
-        # Melt-flow values are meaningless for comparison without their test condition.
         if prop in {"mfr", "mfi", "melt_flow_rate", "melt_mass_flow_rate", "melt_volume_flow_rate", "mvr"}:
             complete = bool(obs.get("testMethod")) and is_number(obs.get("temperatureC")) and is_number(obs.get("loadKg"))
             if obs.get("comparisonReady") is True:
                 need(complete, f"{context}: {oid} melt-flow observation marked comparisonReady without method + temperatureC + loadKg", errors)
 
-        # Direction-sensitive shrinkage must declare direction when comparison-ready.
         if "shrink" in prop and obs.get("comparisonReady") is True:
             need(obs.get("direction") in {"flow", "transverse", "isotropic", "not-applicable"}, f"{context}: {oid} shrinkage requires resolved direction", errors)
 
@@ -135,11 +133,7 @@ def compile_catalog(output: Path = CATALOG) -> dict[str, Any]:
         payload = load_json(path)
         for manufacturer in payload.get("manufacturers") or []:
             mid = manufacturer["id"]
-            manufacturers[mid] = {
-                "id": mid,
-                "name": manufacturer["name"],
-                "country": manufacturer.get("country"),
-            }
+            manufacturer_grades = []
             for grade in manufacturer.get("gradeRecords") or []:
                 if (grade.get("provenance") or {}).get("stage") not in {"validated", "published"}:
                     continue
@@ -152,13 +146,16 @@ def compile_catalog(output: Path = CATALOG) -> dict[str, Any]:
                     raise SystemExit(f"duplicate exact-grade identity: {identity}")
                 seen_identity.add(identity)
                 grades.append(grade)
+                manufacturer_grades.append(grade)
+            if manufacturer_grades:
+                manufacturers[mid] = {"id": mid, "name": manufacturer["name"], "country": manufacturer.get("country")}
 
     catalog = {
         "schemaVersion": 1,
         "catalogVersion": "generated",
         "generated": True,
         "status": "validated",
-        "boundary": "Compiled only from staged exact-grade records whose provenance stage is validated/published and which pass semantic QA.",
+        "boundary": "Compiled only from staged exact-grade records whose provenance stage is validated/published and which pass semantic QA. Internal staging/schema files are not part of the public runtime artifact.",
         "manufacturers": sorted(manufacturers.values(), key=lambda x: x["name"].lower()),
         "grades": sorted(grades, key=lambda x: (x["manufacturer"]["name"].lower(), str(x.get("brand") or "").lower(), x["grade"].lower())),
     }
