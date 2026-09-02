@@ -54,11 +54,20 @@ for marker in ["PNG", "1366×768", "50 MB", "minimum count: 1", "recommended cou
 for marker in ["actual application build", "no real learner PII", "Do not use generated, composited or mock UI as certification evidence"]:
     require(marker in assets, f"Store screenshot evidence safeguard missing: {marker}")
 
-# Store package identity/build mechanics must remain tied to real Partner Center values.
+# Store package identity/build mechanics must remain tied to real Partner Center values
+# and may only be generated from the same governed, fully validated main source as
+# the public desktop/Pages releases. The workflow produces a submission artifact;
+# it does not grant Store approval or publish through Partner Center.
 for marker in [
     "MM_STORE_IDENTITY_NAME",
     "MM_STORE_PUBLISHER",
     "MM_STORE_PUBLISHER_DISPLAY_NAME",
+    "pull-requests: read",
+    "actions: read",
+    "persist-credentials: false",
+    "Require protected fully validated production source",
+    "python tools/verify_production_source.py --evidence-out desktop/electron/generated/production-source-evidence.json",
+    "production-source-evidence.json",
     "--x64 --arm64",
     "createMsixbundle=true",
     "createMsixupload=true",
@@ -67,8 +76,10 @@ for marker in [
     "10.0.19041.0",
     "SOURCE_COMMIT.txt",
     "SHA256SUMS-STORE.txt",
+    "mouldmaster-microsoft-store-msix-${{ github.sha }}",
 ]:
     require(marker in workflow, f"Store package workflow safeguard missing: {marker}")
+require("contents: write" not in workflow, "Store package workflow must not have repository write authority")
 
 # Current Microsoft Store trust boundary: Store MSIX gets Microsoft signing only after certification.
 for marker in ["re-signs the package with a Microsoft certificate", "Windows App Certification Kit", "must never be guessed"]:
@@ -88,4 +99,4 @@ for body, name in [(listing, "listing"), (submission, "submission"), (roadmap, "
                 f"premature external approval claim in {name}: {match.group(0)}",
             )
 
-print(f"MouldMaster Microsoft Store submission QA passed (desktop {desktop_release})")
+print(f"MouldMaster Microsoft Store submission QA passed (desktop {desktop_release}; governed-main source required for package generation)")
