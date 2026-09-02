@@ -1,5 +1,5 @@
 const CACHE_VERSION='2026.08.26.2';
-const CACHE_REVISION='maturity-hardening-v2-20260902';
+const CACHE_REVISION='research-utilisation-v1-20260902';
 const STATIC_CACHE=`mouldmaster-static-${CACHE_VERSION}-${CACHE_REVISION}`;
 
 // Small fail-closed offline foundation. Remaining feature packs are warmed best-effort and never block activation.
@@ -53,6 +53,16 @@ const OPTIONAL=[
   './source-library.js',
   './measured-evidence-integration.js',
   './measured-evidence-decision.js',
+  './research-evidence-engine.js',
+  './research-evidence-adapter.js',
+  './research-evidence-workspace.js',
+  './research-evidence-microlearning.js',
+  './research-utilisation-analytics.js',
+  './research-gap-feedback.js',
+  './research-claim-freshness.js',
+  './research-evidence-ui.js',
+  './research-data-context.js',
+  './research-evidence-runtime-health.js',
   './reference-data.js',
   './reference-data.html',
   './reference-deep-dive.js',
