@@ -5,9 +5,12 @@ on:
     paths:
       - 'engineering-calculation-engine.js'
       - 'material-engineering-database.js'
+      - 'material-engineering-deep-extension.js'
       - 'engineering-workbench.js'
       - 'qa-engineering.js'
+      - 'qa-engineering-stress-200.js'
       - 'qa-material-engineering.js'
+      - 'qa-material-engineering-deep-200.js'
       - 'app-shell-finalize.js'
       - '.github/workflows/engineering-deep-dive.yml'
   push:
@@ -16,9 +19,12 @@ on:
     paths:
       - 'engineering-calculation-engine.js'
       - 'material-engineering-database.js'
+      - 'material-engineering-deep-extension.js'
       - 'engineering-workbench.js'
       - 'qa-engineering.js'
+      - 'qa-engineering-stress-200.js'
       - 'qa-material-engineering.js'
+      - 'qa-material-engineering-deep-200.js'
       - 'app-shell-finalize.js'
       - '.github/workflows/engineering-deep-dive.yml'
 
@@ -35,11 +41,17 @@ jobs:
           node-version: '22'
       - name: Calculation regression suite
         run: node qa-engineering.js
+      - name: Deterministic 200-case calculation stress suite
+        run: node qa-engineering-stress-200.js
       - name: Material database coverage and provenance suite
         run: node qa-material-engineering.js
+      - name: Deterministic 200-case deep material suite
+        run: node qa-material-engineering-deep-200.js
       - name: Static runtime integration checks
         shell: bash
         run: |
           grep -q "engineering-calculation-engine.js" app-shell-finalize.js
           grep -q "material-engineering-database.js" app-shell-finalize.js
+          grep -q "material-engineering-deep-extension.js" app-shell-finalize.js
           grep -q "engineering-workbench.js" app-shell-finalize.js
+          grep -q "MM_APP_SHELL_FINALIZED='2026.08.26.4'" app-shell-finalize.js
