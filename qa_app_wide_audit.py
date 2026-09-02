@@ -63,17 +63,36 @@ for path in root_js:
     run = subprocess.run(["node", "--check", path.name], cwd=ROOT, capture_output=True, text=True)
     need(run.returncode == 0, f"JavaScript syntax failure in {path.name}: {run.stderr}")
 
-# Exact browser-runtime/offline parity: every JS file dynamically injected by
-# index.html must exist and must be part of the service-worker install set.
+# Exact browser-runtime/offline parity. Cover both scripts assembled directly
+# from index.html and the two deliberately late-loaded integration assets.
 index = text("index.html")
+finalizer = text("app-shell-finalize.js")
 service_worker = text("service-worker.js")
 body_scripts = set(re.findall(r"\['(\./[^']+\.js)'\s*,\s*'<script", index))
+late_scripts = {f"./{name}" for name in re.findall(r"loadAsset\('([^']+\.js)'", finalizer)}
+runtime_scripts = body_scripts | late_scripts
 offline_assets = set(re.findall(r"^\s*'(\./[^']+)'\s*,?\s*$", service_worker, flags=re.M))
 need(len(body_scripts) >= 40, f"runtime BODY_SCRIPTS extraction unexpectedly small: {len(body_scripts)}")
-missing_files = sorted(src for src in body_scripts if not (ROOT / src.removeprefix("./")).is_file())
-need(not missing_files, f"runtime scripts referenced by index.html are missing: {missing_files}")
-missing_offline = sorted(body_scripts - offline_assets)
-need(not missing_offline, f"runtime scripts missing from service-worker CORE: {missing_offline}")
+need({'./assessment-bank-expansion.js', './app-integration-v3.js'} <= late_scripts, f"expected late integration assets not discovered: {sorted(late_scripts)}")
+missing_files = sorted(src for src in runtime_scripts if not (ROOT / src.removeprefix("./")).is_file())
+need(not missing_files, f"browser runtime scripts are missing: {missing_files}")
+missing_offline = sorted(runtime_scripts - offline_assets)
+need(not missing_offline, f"browser runtime scripts missing from service-worker install set: {missing_offline}")
+
+# App-wide audit hardening must preserve blank/missing process values as missing,
+# make anonymous cohort export/import structurally round-trip safe, and keep
+# learner reset wording separate from the device/site process workspace.
+integration = text("app-integration-v3.js")
+for marker in [
+    "presentSignalValue",
+    "missingBefore:Math.max(0,beforeRows.length-before.length)",
+    "FORBIDDEN_COHORT_KEYS",
+    "rejectCohortFields(payload)",
+    "cleanupDatasetReferences",
+    "Reset learner data",
+]:
+    need(marker in integration, f"app-wide audit hardening marker missing: {marker}")
+need("const text=JSON.stringify(payload);if(/learner" not in integration, "cohort import must not reject its own privacy prose by scanning the entire JSON string")
 
 # Frozen legacy recovery feed must stay tied to its recovery lane without a
 # duplicated desktop release number that inevitably becomes stale.
@@ -190,13 +209,14 @@ need(ztkc.get("alternateSource") == "https://doi.org/10.17632/47k6jswwg7.1", "Si
 need(ztkc["count"]["acceptedRecordLevelMeasuredValues"] == 40, "SiC/Nylon-6 recovered measured-value count drifted")
 need(sum(1 for did in inv if did == "mendeley-ztkc87d6sr-v1") == 1, "alternate SiC/Nylon-6 release must not create a second family")
 
-# CI governance: the required general integrity gate must include this audit and
-# canonical master reconciliation. Post-merge data workflows must also run on
-# main, because native branch protection is not currently enabled.
+# CI governance: the required general integrity gate must include both the deep
+# repository audit and the focused cross-app integration contract. Post-merge
+# data workflows must also run on main while native protection is external.
 release_qa = text(".github/workflows/qa.yml")
 master_workflow = text(".github/workflows/master-data-compile.yml")
 ledger_workflow = text(".github/workflows/measured-dataset-wave2-ledger.yml")
 need("run: python qa_app_wide_audit.py" in release_qa, "Release QA does not run app-wide data/runtime audit")
+need("run: python qa_app_wide_integration.py" in release_qa, "Release QA does not run focused app-wide integration audit")
 need("run: python qa_master_data_compile.py" in release_qa, "Release QA required integrity gate does not run canonical master-data reconciliation")
 need("\n  push:\n    branches: [main]" in master_workflow, "master-data compilation lacks post-merge main trigger")
 need("data/measured-dataset-wave2-batch5-extension-v1.json" in master_workflow, "master-data workflow does not track batch-5 extension")
@@ -211,6 +231,6 @@ for marker in [
 print(
     "MouldMaster app-wide deep audit passed: "
     f"{len(tracked_json)} strict JSON/webmanifest files; {len(root_js)} root JS files; "
-    f"{len(body_scripts)} runtime scripts offline-covered; effective measured state "
+    f"{len(runtime_scripts)} assembled/late runtime scripts offline-covered; effective measured state "
     "34 inventoried / 21 rights-executable / 17 fully profiled / 85,569,824 waveform values"
 )
