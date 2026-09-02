@@ -110,10 +110,12 @@ require("process.resourcesPath, 'mouldmaster', 'integrity.json'" not in main, "p
 
 integrity_script = (DESKTOP / "scripts" / "generate-integrity.cjs").read_text(encoding="utf-8")
 require("MouldMaster_Academy_App.html" in integrity_script, "desktop integrity set must include the file expected by the existing service worker")
+require("process-statistics-v2.js" in integrity_script, "desktop integrity set must hash the advanced process-statistics runtime")
 
 extra = pkg["build"]["extraResources"]
 from_paths = {x.get("from") for x in extra if isinstance(x, dict)}
 require("../../MouldMaster_Academy_App.html" in from_paths, "desktop bundle must include service-worker compatibility loader")
+require("../../process-statistics-v2.js" in from_paths, "desktop bundle must include advanced process-statistics runtime")
 require("generated/integrity.json" in from_paths, "packaged integrity manifest missing")
 require("generated/dependency-licenses.json" in from_paths, "dependency licence inventory missing")
 require("generated/sbom.cdx.json" in from_paths, "SBOM missing from package")
@@ -204,4 +206,4 @@ for marker in [
 ]:
     require(marker in migration, f"legacy migration safeguard missing: {marker}")
 
-print("MouldMaster open desktop release QA passed (least-privilege signed build/publish split; explicit Windows signing-readiness provenance)")
+print("MouldMaster open desktop release QA passed (least-privilege signed build/publish split; explicit Windows signing-readiness provenance; browser/offline/desktop process-statistics parity)")
