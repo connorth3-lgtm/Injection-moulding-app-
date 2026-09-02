@@ -78,6 +78,8 @@ External material data moves through three states:
 
 No scraper or importer writes directly to the published catalogue.
 
+Schemas and source/staging manifests remain under `data/materials/` and are intentionally outside the GitHub Pages public allowlist. The compiler emits only the validated runtime snapshot `material-catalog-v1.json` at the public root. This keeps acquisition/staging state separate from learner-visible exact-grade facts.
+
 ## Korean catalogue pilot
 
 The first scale/stress-test manufacturers are:
@@ -91,7 +93,7 @@ The pilot manifest intentionally contains no invented commercial-grade facts. Gr
 
 ## Runtime migration
 
-New modules are grouped under `src/domains/`. The current HTML bootstrap remains compatible during migration. A generated runtime asset manifest becomes the source for new domain assets and is audited against the shell/offline package.
+New modules are grouped under `src/domains/`. The current HTML bootstrap remains compatible during migration. A generated public runtime asset manifest becomes the source for new domain assets and is audited against the Pages/offline/desktop packages. Internal schemas/staging are not runtime assets.
 
 ## 1→10 implementation mapping
 
@@ -103,7 +105,7 @@ New modules are grouped under `src/domains/`. The current HTML bootstrap remains
 6. IndexedDB engineering persistence — `src/domains/engineering/engineering-store.js`.
 7. Material semantic QA — `qa_material_catalog.py`.
 8. Module consolidation — domain directory rule and runtime domain bridge.
-9. Generated runtime manifest — `tools/generate_runtime_manifest.py` and `data/runtime-domain-manifest.json`.
+9. Generated runtime manifest — `tools/generate_runtime_manifest.py` and public `runtime-domain-manifest.json`.
 10. Product IA — `src/domains/shell/product-areas.js` exposes the five canonical areas for shell migration.
 
 ## Non-goals for this foundation
