@@ -1,5 +1,5 @@
 const CACHE_VERSION='2026.08.26.2';
-const CACHE_REVISION='maturity-hardening-v2-20260902';
+const CACHE_REVISION='domain-foundation-v1-20260903';
 const STATIC_CACHE=`mouldmaster-static-${CACHE_VERSION}-${CACHE_REVISION}`;
 
 // Small fail-closed offline foundation. Remaining feature packs are warmed best-effort and never block activation.
@@ -27,6 +27,12 @@ const CORE=[
   './specialist-curriculum.js',
   './specialist-evidence-gap-extension.js',
   './mould-master-workspace.js',
+  './src/domains/domain-bootstrap.js',
+  './data/runtime-domain-manifest.json',
+  './src/domains/engineering/engineering-store.js',
+  './src/domains/materials/material-registry.js',
+  './src/domains/shell/product-areas.js',
+  './data/materials/catalog-v1.json',
   './learning-analytics.js',
   './accessibility-hardening.js',
   './app-shell-finalize.js',
@@ -123,8 +129,9 @@ async function fetchAndCache(event,url){
     const r=await fetch(event.request,{cache:'no-store'});
     if(r&&r.ok){
       const c=await caches.open(STATIC_CACHE);
-      const name=url.pathname.split('/').pop();
-      await c.put(name?`./${name}`:event.request,r.clone());
+      const scopePath=new URL('./',self.location.href).pathname;
+      const key=url.pathname.startsWith(scopePath)?`./${url.pathname.slice(scopePath.length)}`:event.request;
+      await c.put(key,r.clone());
     }
     return r;
   }catch(_){return null}
