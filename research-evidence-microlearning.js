@@ -1,12 +1,18 @@
-/* MouldMaster contextual research microlearning bridge — 2026.09.02.4 */
+/* MouldMaster contextual research microlearning bridge — 2026.09.02.5 */
 (function(){
 'use strict';
-const VERSION='2026.09.02.4';
+const VERSION='2026.09.02.5';
 const PRACTICES=new Map();
 function build(input,limit=2){const e=window.MM_RESEARCH_EVIDENCE;if(!e)return[];return e.retrieve(input,limit).map(r=>({mechanismId:r.id,title:r.title,evidenceState:r.status,applicability:r.applicability.label,lesson:`Why it matters: ${r.claim}`,lookFor:(r.supports||[])[0]||r.nextEvidence,dontAssume:r.limitation,nextCheck:r.nextEvidence}))}
 function hash(text){let h=2166136261;for(const ch of String(text||'')){h^=ch.charCodeAt(0);h=Math.imul(h,16777619)}return h>>>0}
 function rotate(items,offset){const xs=items.slice(),n=xs.length;if(!n)return xs;const k=((Number(offset)||0)%n+n)%n;return xs.slice(k).concat(xs.slice(0,k))}
 function different(a,b){const x=String(a||'').toLowerCase().replace(/[^a-z0-9]+/g,' ').trim(),y=String(b||'').toLowerCase().replace(/[^a-z0-9]+/g,' ').trim();if(!x||!y)return false;if(x===y)return false;const ax=new Set(x.split(/\s+/)),ay=new Set(y.split(/\s+/));let shared=0;for(const t of ax)if(ay.has(t))shared++;return shared/Math.max(1,Math.min(ax.size,ay.size))<.72}
+function contextFingerprint(input,observed){
+  const c=input&&typeof input==='object'?input:{};
+  const normal=x=>Array.isArray(x)?x.map(v=>String(v||'').trim().toLowerCase()).filter(Boolean).sort().slice(0,24):[];
+  const payload={materials:normal(c.materials),process:normal(c.process),tooling:normal(c.tooling),sensors:normal(c.sensors),signals:normal(c.signals),outcomes:normal(c.outcomes),observed:String(observed||'').trim().toLowerCase().slice(0,320)};
+  return hash(JSON.stringify(payload)).toString(36)
+}
 function opt(key,text,correct,feedback,misconception=null){return{key,text:String(text||''),correct:!!correct,feedback,misconception}}
 function evidenceOptions(r,plan,alternate){
   const options=[opt('discriminating-check',plan.strongestNextCheck,true,'This is the strongest answer because it collects independent local evidence that can support or weaken the proposed mechanism before a production conclusion is made.')];
@@ -51,7 +57,7 @@ function buildPractice(input,extra={}){
   const plan=e.verificationPlan(input,r.id);if(!plan)return null;
   const alternate=ranked.find(x=>x.id!==r.id)||null;
   const observed=String(extra.observed||'A site-local process signal has moved away from its known-good reference.').trim();
-  const contextKey=hash(`${r.id}|${observed}`).toString(36);
+  const contextKey=contextFingerprint(input,observed);
   const requested=String(extra.stage||window.MM_ADAPTIVE_LEARNING?.stageForMechanism?.(r.id)||'evidence');
   const stage=['evidence','falsification','recovery','integration'].includes(requested)?requested:'evidence';
   let prompt,options,rationale;
@@ -80,5 +86,5 @@ function buildPractice(input,extra={}){
   PRACTICES.set(practice.id,practice);return practice
 }
 function choiceMeta(practiceId,index){const p=PRACTICES.get(String(practiceId||''));return p?.options?.[Number(index)]||null}
-window.MM_RESEARCH_MICROLEARNING={version:VERSION,build,buildPractice,choiceMeta,scope:'Contextual microlearning generated only from promoted mechanism claims. Difficulty progresses from evidence choice to falsification, recovery and integrated uncertainty. Advancement requires transfer across distinct run contexts, while misconception tags support local adaptive reinforcement. Formal assessment questions and answer keys remain separate.'};
+window.MM_RESEARCH_MICROLEARNING={version:VERSION,build,buildPractice,choiceMeta,scope:'Contextual microlearning generated only from promoted mechanism claims. Difficulty progresses from evidence choice to falsification, recovery and integrated uncertainty. Advancement requires transfer across distinct structured run contexts, represented only by a local one-way context hash. Misconception tags support local adaptive reinforcement. Formal assessment questions and answer keys remain separate.'};
 })();
