@@ -74,7 +74,7 @@ jobs:
           $packages = @(Get-ChildItem 'dist-msix-smoke' -Recurse -File -Filter '*.msix')
           if ($packages.Count -lt 1) { throw 'Locked MSIX smoke build produced no .msix package.' }
           $packages | Get-FileHash -Algorithm SHA256 | Format-Table -AutoSize
-      - name: Commit permanent locked toolchain changes
+      - name: Commit non-workflow locked toolchain changes
         shell: bash
         run: |
           set -euo pipefail
@@ -84,8 +84,6 @@ jobs:
           git add desktop/electron/msix-toolchain/package.json
           git add desktop/electron/msix-toolchain/package-lock.json
           git add desktop/electron/scripts/run-msix-builder.cjs
-          git add .github/workflows/microsoft-store-msix.yml
-          git add .github/workflows/desktop-dependency-lock.yml
           git add qa_store_submission.py
           git commit -m "Lock and isolate MSIX packaging toolchain"
           git push origin HEAD:build/lock-msix-toolchain-v1
