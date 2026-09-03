@@ -7,6 +7,7 @@ on:
     paths:
       - .github/workflows/apply-style-csp-v1.yml
       - .github/scripts/migrate_style_csp_v1.py
+      - .github/scripts/fix_style_csp_comparator.py
   workflow_dispatch:
 
 permissions:
@@ -28,7 +29,9 @@ jobs:
         with:
           python-version: '3.13'
       - name: Apply permanent migration
-        run: python .github/scripts/migrate_style_csp_v1.py
+        run: |
+          python .github/scripts/migrate_style_csp_v1.py
+          python .github/scripts/fix_style_csp_comparator.py
       - name: Regenerate hardened core runtime
         run: python tools/externalize_core_scripts.py
       - name: Generate exact style CSP hashes
