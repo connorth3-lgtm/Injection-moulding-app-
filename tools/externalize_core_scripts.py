@@ -1,11 +1,13 @@
 #!/usr/bin/env python3
-"""Generate runtime copies of the frozen core's inline script blocks.
+"""Generate hardened runtime copies of the frozen core's inline script blocks.
 
 `MouldMaster_Core_App.html` is also the immutable legacy Windows recovery payload,
 so its bytes are intentionally not rewritten. The browser bootstrap replaces those
-inline blocks with these same-origin generated assets during runtime assembly.
-Legacy inline event-handler attributes remain a separate debt class and are
-currently isolated under `script-src-attr`.
+inline blocks with same-origin generated assets during runtime assembly.
+
+A narrowly reviewed runtime-only transform removes the recovery core's historical
+certificate-print `document.write` call. Legacy inline event-handler attributes are
+a separate debt class and remain temporarily isolated under `script-src-attr`.
 """
 
 from __future__ import annotations
@@ -25,6 +27,26 @@ DESKTOP_INTEGRITY = ROOT / "desktop/electron/scripts/generate-integrity.cjs"
 INLINE_SCRIPT_RE = re.compile(r"<script(?P<attrs>[^>]*)>(?P<body>.*?)</script\s*>", re.I | re.S)
 SRC_ATTR_RE = re.compile(r"\bsrc\s*=", re.I)
 INDEX_RUNTIME_REF_RE = re.compile(r"['\"]\./src/core-runtime/(core-inline-\d{3}\.js)['\"]")
+PRINT_CERTIFICATE_RE = re.compile(
+    r"function printCertificate\(level,region\)\{.*?\n\}\n\n/\* Instructor dashboard understands regional score keys\. \*/",
+    re.S,
+)
+
+HARDENED_PRINT_CERTIFICATE = r'''function printCertificate(level,region){
+  const key=level+"-"+region,date=certificateDateText(key);
+  const w=window.open("","_blank","width=900,height=650"); if(!w){toast("Allow pop-ups to print a single certificate");return}
+  w.opener=null;
+  const d=w.document;
+  d.title="MouldMaster Certificate";
+  const meta=d.createElement("meta");meta.setAttribute("charset","utf-8");d.head.appendChild(meta);
+  const style=d.createElement("style");style.textContent="body{font-family:system-ui;padding:45px;text-align:center}.box{border:10px double #24364d;padding:50px;max-width:760px;margin:auto}.seal{font-size:48px}.muted{color:#555}";d.head.appendChild(style);
+  const box=d.createElement("div");box.className="box";
+  box.innerHTML=`<div class="seal">MM</div><h1>${esc(level)} ${region==="US"?"Injection Molding":"Injection Moulding"}</h1><p>This records that <b>${esc(user.name)}</b> passed the MouldMaster Academy ${esc(level)} assessment in <b>${esc(regionName(region))}</b> standards mode.</p><p class="muted">Local learning record · Not an accredited compliance qualification<br>${esc(date)}</p>`;
+  d.body.appendChild(box);
+  setTimeout(()=>{w.focus();w.print()},0);
+}
+
+/* Instructor dashboard understands regional score keys. */'''
 
 
 def fail(message: str) -> None:
@@ -39,11 +61,28 @@ def inline_blocks(core: str) -> list[str]:
     ]
 
 
+def runtime_transform(name: str, source: str) -> str:
+    if name != "core-inline-004.js":
+        return source
+    if source.count("document.write(") != 1 or "function printCertificate(level,region)" not in source:
+        fail("frozen certificate print source drifted; review the runtime hardening transform")
+    transformed, count = PRINT_CERTIFICATE_RE.subn(HARDENED_PRINT_CERTIFICATE, source, count=1)
+    if count != 1:
+        fail("certificate print runtime transform did not match exactly once")
+    if "document.write(" in transformed or "document.writeln(" in transformed:
+        fail("certificate print runtime transform left document.write active")
+    return transformed
+
+
 def expected_assets(core: str) -> dict[str, str]:
     blocks = inline_blocks(core)
     if not blocks:
         fail("frozen core has no inline script blocks to externalize at runtime")
-    return {f"core-inline-{index:03d}.js": body for index, body in enumerate(blocks, start=1)}
+    result: dict[str, str] = {}
+    for index, source in enumerate(blocks, start=1):
+        name = f"core-inline-{index:03d}.js"
+        result[name] = runtime_transform(name, source)
+    return result
 
 
 def tighten_script_csp(index: str) -> str:
@@ -137,6 +176,13 @@ def check_state() -> None:
     extras = sorted(path.name for path in OUT_DIR.glob("core-inline-*.js") if path.name not in expected)
     if extras:
         fail("stale generated core runtime assets remain: " + ", ".join(extras))
+    active_source = "\n".join(expected.values())
+    if "document.write(" in active_source or "document.writeln(" in active_source:
+        fail("active generated core runtime still contains document.write")
+    hardened = expected.get("core-inline-004.js", "")
+    for marker in ("w.opener=null", "d.createElement(\"style\")", "d.body.appendChild(box)", "w.print()"):
+        if marker not in hardened:
+            fail(f"certificate print runtime hardening marker missing: {marker}")
     if "script-src 'self'; script-src-attr 'unsafe-inline';" not in index:
         fail("script CSP has not been narrowed to self + legacy handler attribute isolation")
     if "script-src 'self' 'unsafe-inline'" in index:
@@ -152,8 +198,8 @@ def check_state() -> None:
     if "STATIC_RUNTIME_DIRS=['src/core-runtime']" not in integrity or "...staticRuntimeFiles" not in integrity:
         fail("desktop integrity does not derive generated core runtime files")
     print(
-        f"Core CSP script migration check passed: {len(expected_names)} frozen inline blocks have exact generated runtime copies; "
-        "runtime assembly externalizes them; script-src is self-only; handler attributes remain isolated."
+        f"Core CSP script migration check passed: {len(expected_names)} frozen inline blocks have deterministic generated runtime copies; "
+        "certificate print document.write is transformed out; script-src is self-only; handler attributes remain isolated."
     )
 
 
