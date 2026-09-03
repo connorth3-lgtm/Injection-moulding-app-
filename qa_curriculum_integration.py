@@ -94,7 +94,7 @@ need('../../curriculum-integration.js' in froms,'curriculum integration missing 
 need("'curriculum-integration.js'" in text('desktop/electron/scripts/generate-integrity.cjs'),'curriculum integration missing from desktop integrity manifest')
 
 qa=text('.github/workflows/qa.yml')
-need('node --check curriculum-integration.js' in qa,'Release QA missing curriculum JavaScript syntax gate')
+need("find . -maxdepth 1 -type f -name '*.js' -print0 | sort -z | xargs -0 -n1 node --check" in qa,'Release QA missing filesystem JavaScript syntax gate')
 need('python qa_curriculum_integration.py' in qa,'Release QA missing curriculum integration gate')
 
 win=text('.github/workflows/open-desktop-build.yml')

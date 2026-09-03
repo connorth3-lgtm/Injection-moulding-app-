@@ -119,6 +119,17 @@ need("jobs:\n  build-windows:" in desktop_build, "required status context 'build
 need("jobs:\n  question-quality-50-pass:" in question_quality, "required status context 'question-quality-50-pass' is no longer the question-quality job")
 need("pull_request:\n    branches: [main]" in question_quality, "question-quality required check must run on every PR to main")
 
+# Release QA must discover executable JavaScript from the filesystem instead of
+# maintaining another hand-written copy of the bootstrap list. The architecture
+# debt ceiling is a required release gate as well as a domain-foundation gate.
+for marker in [
+    "find . -maxdepth 1 -type f -name '*.js'",
+    "find src/domains -type f -name '*.js'",
+    "find desktop/electron/src desktop/electron/scripts -type f -name '*.cjs'",
+    "run: python qa_architecture_debt.py",
+]:
+    need(marker in release_qa, f"release QA cleanup contract missing marker: {marker}")
+
 # Dependency-lock generation must be a verification gate, never a privileged
 # direct writer to main. Both package.json and package-lock.json changes are
 # covered on PRs and on main as a post-merge consistency check.
@@ -180,5 +191,6 @@ need("run: python qa_repo_governance.py" in release_qa, "release QA must run rep
 
 print(
     "MouldMaster repository governance QA passed "
-    "(four required-check rollback; no direct-main bot write; reviewed native-ruleset helper; guard-gated safe pruning)"
+    "(four required-check rollback; no direct-main bot write; reviewed native-ruleset helper; "
+    "guard-gated safe pruning; filesystem-driven release syntax QA; architecture debt gate)"
 )

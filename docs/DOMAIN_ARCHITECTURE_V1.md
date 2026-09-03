@@ -8,6 +8,21 @@ New product capabilities must not be added as new root-level `*-fix.js`, `*-hard
 
 Existing root-level layers remain supported during migration. This is an incremental consolidation, not a big-bang rewrite.
 
+### Enforced architecture-debt budget
+
+The 2026-09-03 deep-dive audit converted the freeze from documentation into a monotonic CI contract. `qa_architecture_debt.py`, backed by `qa/architecture-debt-baseline.json`, allows the legacy bootstrap to shrink but not silently grow.
+
+Current ceilings are:
+
+- at most 62 scripts in the ordered `BODY_SCRIPTS` bootstrap list;
+- at most 61 directly injected root-level runtime scripts;
+- no new root runtime script outside the captured grandfathered set;
+- no new root `*-fix.js`, `*-hardening.js`, `*-finalize.js`, or `*-extension.js` compatibility layer outside the captured grandfathered set;
+- at most one legacy `document.write` bootstrap call;
+- no `eval()`, `new Function()`, remote runtime script tags, CSP `unsafe-eval`, or external `connect-src` endpoints in the active runtime.
+
+The budget is a ceiling, not a target. Removing a root layer, moving capability under `src/domains/`, removing `document.write`, or replacing `unsafe-inline` with a stricter nonce/hash design is always an improvement and remains allowed.
+
 ## Five user-facing product areas
 
 1. **Learn** — Academy, lessons, specialist learning, assessments and certificates.
@@ -82,29 +97,37 @@ Schemas and source/staging manifests remain under `data/materials/` and are inte
 
 ## Korean catalogue pilot
 
-The first scale/stress-test manufacturers are:
+The scale/stress-test manufacturers are:
 
 - LOTTE Chemical
 - LG Chem
 - Korea Engineering Plastics (KEP)
 - KOLON ENP / KOLON engineering-plastics catalogue family
 
-The pilot manifest intentionally contains no invented commercial-grade facts. Grade records are added only after source-backed extraction and semantic validation.
+Pilot progress as of 2026-09-03:
+
+- LOTTE Chemical has one validated source-backed pilot dataset with four exact commercial grades published in `material-catalog-v1.json`: NH-1033, NH-1034R, AE-3060 H and XP-2140C.
+- LG Chem, KEP and KOLON ENP remain discovery-pending and must not be represented as validated until primary-source exact-grade records pass the same semantic and provenance gates.
+- `korea-pilot-v1.json` is an umbrella progress manifest, not a second source of material claims; its `gradeRecords` arrays stay empty and its LOTTE metadata points to the separately validated dataset and runtime grade IDs.
+
+No glass-fibre percentage, lifecycle state, approval, property condition or processing value is inferred when the primary source does not establish it.
 
 ## Runtime migration
 
 New modules are grouped under `src/domains/`. The current HTML bootstrap remains compatible during migration. A generated public runtime asset manifest becomes the source for new domain assets and is audited against the Pages/offline/desktop packages. Internal schemas/staging are not runtime assets.
+
+The remaining bootstrap migration is deliberately staged: retire root layers by domain, preserve browser/PWA/Desktop parity at every step, and only then replace the single legacy core-document rewrite. The architecture-debt budget ensures intermediate work cannot make the root/global stack larger.
 
 ## 1→10 implementation mapping
 
 1. Architecture expansion freeze — this contract and CI guard.
 2. Canonical material-grade schema — `data/materials/material-grade.schema.json`.
 3. Staged material ingestion — `tools/material_catalog.py` plus staging manifests.
-4. Korea stress test — `data/materials/staging/korea-pilot-v1.json`.
+4. Korea stress test — `data/materials/staging/korea-pilot-v1.json` plus validated manufacturer datasets.
 5. Materials → Mould Master links — material registry and engineering-store `materialGradeId`/case links.
 6. IndexedDB engineering persistence — `src/domains/engineering/engineering-store.js`.
 7. Material semantic QA — `qa_material_catalog.py`.
-8. Module consolidation — domain directory rule and runtime domain bridge.
+8. Module consolidation — domain directory rule, runtime domain bridge and architecture debt ceiling.
 9. Generated runtime manifest — `tools/generate_runtime_manifest.py` and public `runtime-domain-manifest.json`.
 10. Product IA — `src/domains/shell/product-areas.js` exposes the five canonical areas for shell migration.
 

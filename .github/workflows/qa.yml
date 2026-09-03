@@ -28,65 +28,9 @@ jobs:
           python-version: '3.12'
       - name: JavaScript syntax
         run: |
-          node --check service-worker.js
-          node --check reading-patch.js
-          node --check training-upgrade.js
-          node --check training-qa-fix.js
-          node --check assessment-100-pass.js
-          node --check assessment-deep-dive.js
-          node --check assessment-answer-cue-fix.js
-          node --check assessment-storage-scope.js
-          node --check assessment-quality-suite.js
-          node --check assessment-stable-review-bridge.js
-          node --check assessment-analytics-ui.js
-          node --check assessment-final-hardening.js
-          node --check assessment-ux.js
-          node --check assessment-evidence-sources.js
-          node --check evidence-maturity-deep-dive.js
-          node --check evidence-maturity-formal-bridge.js
-          node --check assessment-psychometric-hardening.js
-          node --check lesson-evidence-depth.js
-          node --check assessment-evidence-approval.js
-          node --check assessment-psychometric-approval.js
-          node --check source-library.js
-          node --check measured-evidence-integration.js
-          node --check measured-evidence-decision.js
-          node --check reference-data.js
-          node --check reference-deep-dive.js
-          node --check reference-research-extension.js
-          node --check reference-20x-extension.js
-          node --check reference-2026-expansion.js
-          node --check reference-sources.js
-          node --check reference-browser-ui.js
-          node --check diagnostic-learning-labs.js
-          node --check material-behaviour-labs.js
-          node --check app-shell-registry.js
-          node --check pwa-shell.js
-          node --check learning-experience.js
-          node --check process-data-diagnostics.js
-          node --check process-data-deep-dive-machine.js
-          node --check process-data-deep-dive-tooling.js
-          node --check process-data-deep-dive-material.js
-          node --check process-data-deep-dive-scientific.js
-          node --check process-data-deep-dive-quality.js
-          node --check process-data-deep-dive-50.js
-          node --check process-data-20-pass-01-05.js
-          node --check process-data-20-pass-06-10.js
-          node --check process-data-20-pass-11-15.js
-          node --check process-data-20-pass-16-20.js
-          node --check process-data-20-pass-atlas.js
-          node --check process-data-local-intake.js
-          node --check curriculum-integration.js
-          node --check specialist-curriculum.js
-          node --check specialist-evidence-gap-extension.js
-          node --check mould-master-workspace.js
-          node --check app-shell-finalize.js
-          node --check learning-analytics.js
-          node --check desktop/electron/src/main.cjs
-          node --check desktop/electron/scripts/generate-integrity.cjs
-          node --check desktop/electron/scripts/generate-licenses.cjs
-          node --check desktop/electron/scripts/generate-sbom.cjs
-          node --check desktop/electron/scripts/qa.cjs
+          find . -maxdepth 1 -type f -name '*.js' -print0 | sort -z | xargs -0 -n1 node --check
+          find src/domains -type f -name '*.js' -print0 | sort -z | xargs -0 -n1 node --check
+          find desktop/electron/src desktop/electron/scripts -type f -name '*.cjs' -print0 | sort -z | xargs -0 -n1 node --check
       - name: Release and assessment integrity
         run: python qa_release.py
       - name: Runtime shell hardening
@@ -97,6 +41,8 @@ jobs:
         run: python qa_repo_governance.py
       - name: Critical GitHub Actions version integrity
         run: python qa_critical_actions_versions.py
+      - name: Architecture debt ceiling
+        run: python qa_architecture_debt.py
       - name: App-wide data and runtime deep audit
         run: python qa_app_wide_audit.py
       - name: Canonical master-data reconciliation

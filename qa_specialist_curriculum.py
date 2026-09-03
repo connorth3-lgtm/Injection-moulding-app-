@@ -116,7 +116,7 @@ need('../../specialist-curriculum.js' in froms,'specialist curriculum missing fr
 need("'specialist-curriculum.js'" in text('desktop/electron/scripts/generate-integrity.cjs'),'specialist curriculum missing from desktop integrity manifest')
 
 qa=text('.github/workflows/qa.yml')
-need('node --check specialist-curriculum.js' in qa,'Release QA missing specialist JavaScript syntax gate')
+need("find . -maxdepth 1 -type f -name '*.js' -print0 | sort -z | xargs -0 -n1 node --check" in qa,'Release QA missing filesystem JavaScript syntax gate')
 need('python qa_specialist_curriculum.py' in qa,'Release QA missing specialist curriculum gate')
 
 win=text('.github/workflows/open-desktop-build.yml')

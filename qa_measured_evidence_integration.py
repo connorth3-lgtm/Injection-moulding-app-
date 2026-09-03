@@ -90,8 +90,9 @@ need("raw third-party" in js.lower(), "runtime scope must state raw third-party 
 
 need("./measured-evidence-integration.js" in index, "index runtime loader missing measured-evidence-integration.js")
 need("./measured-evidence-integration.js" in sw, "offline CORE missing measured-evidence-integration.js")
-need("node --check measured-evidence-integration.js" in (ROOT / ".github/workflows/qa.yml").read_text(encoding="utf-8"), "Release QA JavaScript syntax gate missing measured-evidence integration")
-need("python qa_measured_evidence_integration.py" in (ROOT / ".github/workflows/qa.yml").read_text(encoding="utf-8"), "Release QA integration gate missing")
+release_qa = (ROOT / ".github/workflows/qa.yml").read_text(encoding="utf-8")
+need("find . -maxdepth 1 -type f -name '*.js'" in release_qa, "Release QA filesystem JavaScript syntax gate missing")
+need("python qa_measured_evidence_integration.py" in release_qa, "Release QA integration gate missing")
 
 # Metadata-only safeguard: runtime may contain counts and labels, but no third-party row arrays or sampled signal arrays.
 for forbidden in ["rawRows:[", "samples:[", "signalValues:[", "measurements:[["]:
