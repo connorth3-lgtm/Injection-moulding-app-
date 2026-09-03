@@ -7,6 +7,7 @@ module.exports=defineConfig({
     /material-grade-detail\.spec\.js/,
     /measured-evidence-decision\.spec\.js/,
     /read-aloud\.spec\.js/,
+    /performance-budget\.spec\.js/,
     /engineering-case-store\.spec\.js/,
     /inline-handler-bridge\.spec\.js/,
     /inline-style-csp\.spec\.js/
