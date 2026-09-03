@@ -1,0 +1,91 @@
+{
+  "schemaVersion": 1,
+  "datasetId": "kolon-enp-exact-grade-pilot-v1",
+  "status": "source-reviewed-staging",
+  "manufacturers": [
+    {
+      "id": "mfr-kolon-enp",
+      "name": "KOLON ENP",
+      "country": "South Korea",
+      "stage": "source-reviewed-staging",
+      "gradeRecords": [
+        {
+          "schemaVersion": 1,
+          "id": "mat-kolon-kocetal-k300",
+          "manufacturer": {"id": "mfr-kolon-enp", "name": "KOLON ENP", "country": "South Korea", "website": "https://www.kolonplastics.com/en/"},
+          "brand": "KOCETAL",
+          "grade": "K300",
+          "aliases": [],
+          "polymer": {"family": "POM", "morphology": "semi-crystalline"},
+          "composition": {"notes": "KOLON ENP current KOCETAL catalogue describes K300 as the standard medium-viscosity grade."},
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {"status": "unknown", "checkedAt": "2026-09-03"},
+          "sources": [
+            {"id": "src-kolon-k300-catalog-2026", "publisher": "KOLON ENP", "title": "KOCETAL Polyoxymethylene (POM) catalogue 2026 — K300", "url": "https://www.kolonplastics.com/en/theme/basic/img/02_KOCETAL%28EN%29_2026.pdf", "kind": "other", "revision": null, "documentDate": null, "retrievedAt": "2026-09-03"},
+            {"id": "src-kolon-k300-iso-index-20260903", "publisher": "KOLON ENP", "title": "KOCETAL K300 ISO property-table listing", "url": "https://www.kolonplastics.com/cn/sub/product-table.php?page=6", "kind": "manufacturer-datasheet", "revision": null, "documentDate": null, "retrievedAt": "2026-09-03"}
+          ],
+          "provenance": {"stage": "staging", "ingestedAt": "2026-09-03T00:00:00Z", "reviewedAt": "2026-09-03T00:00:00Z", "reviewer": "primary-source-web-review", "notes": "Current KOLON ENP KOCETAL catalogue and live exact-grade ISO property-table index reviewed. The catalogue states MFR 9 g/10min, but the required test temperature/load were not resolved from the current exact-grade ISO sheet, so no melt-flow observation is published or staged as comparison data."}
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-kolon-kocetal-k700",
+          "manufacturer": {"id": "mfr-kolon-enp", "name": "KOLON ENP", "country": "South Korea", "website": "https://www.kolonplastics.com/en/"},
+          "brand": "KOCETAL",
+          "grade": "K700",
+          "aliases": [],
+          "polymer": {"family": "POM", "morphology": "semi-crystalline"},
+          "composition": {"notes": "KOLON ENP current KOCETAL catalogue describes K700 as a low-viscosity grade."},
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {"status": "unknown", "checkedAt": "2026-09-03"},
+          "sources": [
+            {"id": "src-kolon-k700-catalog-2026", "publisher": "KOLON ENP", "title": "KOCETAL Polyoxymethylene (POM) catalogue 2026 — K700", "url": "https://www.kolonplastics.com/en/theme/basic/img/02_KOCETAL%28EN%29_2026.pdf", "kind": "other", "revision": null, "documentDate": null, "retrievedAt": "2026-09-03"},
+            {"id": "src-kolon-k700-iso-index-20260903", "publisher": "KOLON ENP", "title": "KOCETAL K700 ISO property-table listing", "url": "https://www.kolonplastics.com/cn/sub/product-table.php?page=6", "kind": "manufacturer-datasheet", "revision": null, "documentDate": null, "retrievedAt": "2026-09-03"}
+          ],
+          "provenance": {"stage": "staging", "ingestedAt": "2026-09-03T00:00:00Z", "reviewedAt": "2026-09-03T00:00:00Z", "reviewer": "primary-source-web-review", "notes": "Current KOLON ENP KOCETAL catalogue and live exact-grade ISO property-table index reviewed. The catalogue states MFR 27 g/10min, but the required test temperature/load were not resolved from the current exact-grade ISO sheet, so no melt-flow observation is published or staged as comparison data."}
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-kolon-kocetal-k100hs",
+          "manufacturer": {"id": "mfr-kolon-enp", "name": "KOLON ENP", "country": "South Korea", "website": "https://www.kolonplastics.com/en/"},
+          "brand": "KOCETAL",
+          "grade": "K100HS",
+          "aliases": [],
+          "polymer": {"family": "POM", "morphology": "semi-crystalline"},
+          "composition": {"notes": "KOLON ENP current KOCETAL catalogue describes K100HS as a high-strength, high-viscosity grade; no reinforcement percentage is inferred."},
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {"status": "unknown", "checkedAt": "2026-09-03"},
+          "sources": [
+            {"id": "src-kolon-k100hs-catalog-2026", "publisher": "KOLON ENP", "title": "KOCETAL Polyoxymethylene (POM) catalogue 2026 — K100HS", "url": "https://www.kolonplastics.com/en/theme/basic/img/02_KOCETAL%28EN%29_2026.pdf", "kind": "other", "revision": null, "documentDate": null, "retrievedAt": "2026-09-03"},
+            {"id": "src-kolon-k100hs-iso-index-20260903", "publisher": "KOLON ENP", "title": "KOCETAL K100HS ISO property-table listing", "url": "https://www.kolonplastics.com/cn/sub/product-table.php?page=6", "kind": "manufacturer-datasheet", "revision": null, "documentDate": null, "retrievedAt": "2026-09-03"}
+          ],
+          "provenance": {"stage": "staging", "ingestedAt": "2026-09-03T00:00:00Z", "reviewedAt": "2026-09-03T00:00:00Z", "reviewer": "primary-source-web-review", "notes": "Current KOLON ENP KOCETAL catalogue and live exact-grade ISO property-table index reviewed. The catalogue states MFR 3 g/10min, but the required test temperature/load were not resolved from the current exact-grade ISO sheet, so no melt-flow observation is published or staged as comparison data."}
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-kolon-kocetal-gf702",
+          "manufacturer": {"id": "mfr-kolon-enp", "name": "KOLON ENP", "country": "South Korea", "website": "https://www.kolonplastics.com/en/"},
+          "brand": "KOCETAL",
+          "grade": "GF702",
+          "aliases": [],
+          "polymer": {"family": "POM", "morphology": "semi-crystalline"},
+          "composition": {"glassFibrePct": 10, "notes": "KOLON ENP current KOCETAL catalogue explicitly describes GF702 as glass-fibre 10% reinforced."},
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {"status": "unknown", "checkedAt": "2026-09-03"},
+          "sources": [
+            {"id": "src-kolon-gf702-catalog-2026", "publisher": "KOLON ENP", "title": "KOCETAL Polyoxymethylene (POM) catalogue 2026 — GF702", "url": "https://www.kolonplastics.com/en/theme/basic/img/02_KOCETAL%28EN%29_2026.pdf", "kind": "other", "revision": null, "documentDate": null, "retrievedAt": "2026-09-03"},
+            {"id": "src-kolon-gf702-iso-index-20260903", "publisher": "KOLON ENP", "title": "KOCETAL GF702 ISO property-table listing", "url": "https://www.kolonplastics.com/cn/sub/product-table.php?page=6", "kind": "manufacturer-datasheet", "revision": null, "documentDate": null, "retrievedAt": "2026-09-03"}
+          ],
+          "provenance": {"stage": "staging", "ingestedAt": "2026-09-03T00:00:00Z", "reviewedAt": "2026-09-03T00:00:00Z", "reviewer": "primary-source-web-review", "notes": "Current KOLON ENP KOCETAL catalogue and live exact-grade ISO property-table index reviewed. GF10% is explicit in the current catalogue. No melt-flow or other numeric property is staged until the current exact-grade ISO sheet can be retrieved with complete test context."}
+        }
+      ]
+    }
+  ]
+}
