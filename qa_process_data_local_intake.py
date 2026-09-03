@@ -132,6 +132,7 @@ need(idx.index("'./process-data-20-pass-atlas.js'") < idx.index(f"'./{MODULE}'")
 
 for wf in ['.github/workflows/qa.yml','.github/workflows/open-desktop-build.yml','.github/workflows/publish-open-desktop.yml','.github/workflows/microsoft-store-msix.yml']:
     need('python qa_process_data_local_intake.py' in text(wf),f'{wf} must gate local process-data intake')
-need(f'node --check {MODULE}' in text('.github/workflows/qa.yml'),'release syntax gate missing local intake module')
+release_workflow=text('.github/workflows/qa.yml')
+need("find . -maxdepth 1 -type f -name '*.js' -print0 | sort -z | xargs -0 -n1 node --check" in release_workflow,'release filesystem JavaScript syntax gate missing')
 
 print('MouldMaster local process-data intake QA passed (numeric moulding signals preserved; numeric IDs pseudonymised; unique/preserved shot index; pre-drop sequence audit; pilot phase/unit retention; identifier stripping/aliasing; local-only; browser/PWA/desktop packaged)')
