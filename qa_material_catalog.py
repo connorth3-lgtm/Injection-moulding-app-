@@ -48,11 +48,28 @@ need(kep_target.get("validatedDatasetId") == "kepital-exact-grade-pilot-v1", "KE
 need(kep_target.get("publishedRuntimeCatalog") == "material-catalog-v1.json", "KEPITAL runtime catalog pointer drift")
 need(kep_target.get("name") == "Korea Polyacetal (KPAC)", "KEPITAL pilot must identify the current KPAC primary-source owner while retaining mfr-kep")
 
-need(pilot_by_id["mfr-kolon-enp"].get("stage") == "discovery-pending", "unsourced KOLON ENP pilot target must remain discovery-pending")
+kolon_target = pilot_by_id["mfr-kolon-enp"]
+need(kolon_target.get("stage") == "source-reviewed-staging", "KOLON ENP umbrella state must reflect completed primary-source review without implying validation")
+need(kolon_target.get("stagingDatasetId") == "kolon-enp-exact-grade-pilot-v1", "KOLON ENP staging dataset pointer drift")
+kolon_pilot = load_json(STAGING / "kolon-enp-exact-grade-pilot-v1.json")
+need(kolon_pilot.get("status") == "source-reviewed-staging", "KOLON ENP exact-grade dataset status drift")
+kolon_grades = [g for m in kolon_pilot.get("manufacturers") or [] for g in m.get("gradeRecords") or []]
+need({g.get("grade") for g in kolon_grades} == {"K300", "K700", "K100HS", "GF702"}, "KOLON ENP source-reviewed exact-grade set drift")
+kolon_grade_ids = {g.get("id") for g in kolon_grades}
+need(set(kolon_target.get("sourceReviewedGradeIds") or []) == kolon_grade_ids, "KOLON ENP umbrella grade IDs do not match reviewed staging dataset")
+need(kolon_target.get("sourceReviewedGradeCount") == len(kolon_grade_ids) == 4, "KOLON ENP source-reviewed grade count drift")
+for grade in kolon_grades:
+    gid = grade.get("id")
+    need((grade.get("provenance") or {}).get("stage") == "staging", f"KOLON ENP reviewed grade must remain non-validated staging: {gid}")
+    need(not (grade.get("properties") or []), f"KOLON ENP numeric properties must remain withheld pending complete test context: {gid}")
+    need(all(str(source.get("url", "")).startswith("https://www.kolonplastics.com/") for source in grade.get("sources") or []), f"KOLON ENP reviewed grade has a non-primary source: {gid}")
+
 progress = pilot.get("progress") or {}
 need(progress.get("targetManufacturers") == 4, "Korean pilot target-manufacturer count drift")
-need(progress.get("validatedManufacturers") == 3, "Korean pilot validated-manufacturer count must reflect LOTTE + LG Chem + KEPITAL")
-need(progress.get("publishedExactGrades") == 11, "Korean pilot published exact-grade count must reflect LOTTE + LG Chem + KEPITAL pilots")
+need(progress.get("sourceReviewedManufacturers") == 4, "Korean pilot source-reviewed manufacturer count must include KOLON ENP")
+need(progress.get("validatedManufacturers") == 3, "Korean pilot validated-manufacturer count must reflect LOTTE + LG Chem + KEPITAL only")
+need(progress.get("sourceReviewedExactGrades") == 15, "Korean pilot source-reviewed exact-grade count must include four KOLON staging identities")
+need(progress.get("publishedExactGrades") == 11, "Korean pilot published exact-grade count must remain LOTTE + LG Chem + KEPITAL only")
 
 errors = validate_staging()
 need(not errors, "material staging semantic QA failed:\n" + "\n".join(errors))
@@ -86,6 +103,7 @@ for staging_path in sorted(STAGING.glob("*.json")):
 runtime_grade_ids = {grade.get("id") for grade in catalog.get("grades") or []}
 need(staged_grade_ids == runtime_grade_ids, f"runtime/staging material drift: staged={sorted(staged_grade_ids)} runtime={sorted(runtime_grade_ids)}")
 need(len(runtime_grade_ids) == 11, "runtime exact-grade count must remain eleven for the three-manufacturer Korean pilot")
+need(kolon_grade_ids.isdisjoint(runtime_grade_ids), "source-reviewed KOLON staging identities must not leak into the validated runtime catalog")
 
 # Pilot proof: current primary-source LOTTE records remain unchanged while the
 # umbrella manifest records progress without copying exact-grade claims.
