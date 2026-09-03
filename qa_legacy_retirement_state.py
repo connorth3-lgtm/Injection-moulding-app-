@@ -28,16 +28,16 @@ for marker in [
 ]:
     need(marker in protocol, f'real-Windows retirement prerequisite missing: {marker}')
 
-need(COMPAT_LOADER.exists(), 'legacy compatibility loader is missing; retirement guard only governs the frozen recovery executable')
-need(LATEST.exists(), 'legacy recovery feed is missing')
-latest = json.loads(LATEST.read_text(encoding='utf-8'))
-
 if not EVIDENCE.exists():
     need(RECOVERY.exists(), 'legacy recovery executable was removed before approved real-Windows retirement evidence existed')
+    need(COMPAT_LOADER.exists(), 'legacy compatibility loader was removed before approved real-Windows retirement evidence existed')
+    need(LATEST.exists(), 'legacy recovery feed was removed before approved real-Windows retirement evidence existed')
+    latest = json.loads(LATEST.read_text(encoding='utf-8'))
     digest = str(latest.get('launcher_sha256', ''))
     need(re.fullmatch(r'[0-9a-fA-F]{64}', digest) is not None, 'pending recovery feed must retain a valid launcher SHA-256')
+    need(str(latest.get('launcher_url', '')).strip(), 'pending recovery feed must retain a launcher URL')
     need(str(latest.get('version', '')).strip(), 'pending recovery feed must retain an explicit recovery version')
-    print('Legacy retirement state QA passed: pending real-Windows evidence; frozen recovery executable remains present and hash-governed.')
+    print('Legacy retirement state QA passed: pending real-Windows evidence; frozen recovery executable and feed remain present and hash-governed.')
 else:
     data = json.loads(EVIDENCE.read_text(encoding='utf-8'))
     need(data.get('schema') == 1, 'legacy retirement evidence schema must be 1')
@@ -64,4 +64,8 @@ else:
     leaked = forbidden.intersection(data.keys())
     need(not leaked, f'retirement evidence contains forbidden sensitive-content fields: {sorted(leaked)}')
     need(not RECOVERY.exists(), 'approved retirement evidence exists but the frozen recovery executable is still present')
-    print('Legacy retirement state QA passed: approved non-sensitive real-Windows evidence exists and the frozen recovery executable has been removed.')
+    if LATEST.exists():
+        latest = json.loads(LATEST.read_text(encoding='utf-8'))
+        stale = [key for key in ('launcher_url', 'launcher_sha256', 'launcher_version') if latest.get(key)]
+        need(not stale, f'approved retirement evidence exists but recovery feed still exposes launcher fields: {stale}')
+    print('Legacy retirement state QA passed: approved non-sensitive real-Windows evidence exists; frozen recovery executable and launcher feed references are retired.')
