@@ -27,6 +27,7 @@ worker = text("service-worker.js")
 materials = text("src/domains/materials/material-registry.js")
 engineering = text("src/domains/engineering/engineering-store.js")
 bridge = text("src/domains/engineering/store-bridge.js")
+workspace = text("mould-master-workspace.js")
 a11y = text("accessibility-hardening.js")
 pages = text(".github/workflows/pages.yml")
 mobile = text(".github/workflows/mobile-browser-qa.yml")
@@ -50,7 +51,7 @@ need("MouldMaster_Academy_App.html" not in integrity_script, "frozen legacy Acad
 extra = desktop_pkg["build"]["extraResources"]
 need("../../MouldMaster_Academy_App.html" not in {x.get("from") for x in extra if isinstance(x, dict)}, "frozen legacy Academy app remains in desktop package")
 
-# Engineering case ownership and legacy parity.
+# Engineering case ownership and explicit legacy parity without browser-global Storage monkey-patching.
 for marker in (
     "Engineering case belongs to a different learner profile",
     "String(record.learnerToken)===tokenValue(token)",
@@ -59,8 +60,10 @@ for marker in (
     "repairLegacyLinkOwnership",
 ):
     need(marker in engineering, f"engineering learner/case invariant missing: {marker}")
-for marker in ("mm_mould_master_cases_v1::", "store.syncLegacySnapshot", "MM_CASE_STORE_BRIDGE"):
+for marker in ("mm_mould_master_cases_v1::", "store.syncLegacySnapshot", "MM_CASE_STORE_BRIDGE", "mm:mould-master-cases-changed"):
     need(marker in bridge, f"legacy workspace parity bridge missing marker: {marker}")
+need("mm:mould-master-cases-changed" in workspace and "publishCasesChanged" in workspace, "Mould Master workspace does not publish explicit persistence-change events")
+need("Storage?.prototype" not in bridge and "Object.defineProperty" not in bridge, "engineering bridge must not monkey-patch browser Storage.prototype")
 assets = manifest.get("assets", [])
 need("./src/domains/engineering/engineering-store.js" in assets, "engineering store missing from domain manifest")
 need("./src/domains/engineering/store-bridge.js" in assets, "engineering store bridge missing from domain manifest")
@@ -98,4 +101,4 @@ need("new MutationObserver" not in pwa, "PWA shell still uses document-wide muta
 need("new MutationObserver" not in materials, "Materials domain still uses document-wide mutation polling")
 need("mutationScope:'changed-subtrees'" in a11y, "accessibility safety net is not constrained to changed subtrees")
 
-print("MouldMaster app-wide remediation QA passed: production gate, storage ownership/parity, variant-safe materials, PWA lifecycle, legacy distribution separation, deterministic browser matrix and targeted observers")
+print("MouldMaster app-wide remediation QA passed: production gate, storage ownership/explicit parity, variant-safe materials, PWA lifecycle, legacy distribution separation, deterministic browser matrix and targeted observers")
