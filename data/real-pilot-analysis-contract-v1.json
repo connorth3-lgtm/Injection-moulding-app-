@@ -1,0 +1,11 @@
+{
+  "schema":1,
+  "version":"2026.09.04.1",
+  "status":"pilot-ready",
+  "requiredColumns":["shot_index","phase","quality_result"],
+  "phaseOrder":["baseline","fault","recovery"],
+  "allowedPhases":["baseline","fault","recovery","verification","study"],
+  "minimumNumericSignals":2,
+  "privacyBoundary":"Prepared pseudonymised data only. No person/customer/free-text/timestamp fields. Raw production files stay outside the repository.",
+  "analysisBoundary":"Aggregate evidence comparison only. No result authorises a production change or claims causal validation without independent engineering review."
+}
