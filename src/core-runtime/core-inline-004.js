@@ -1504,8 +1504,16 @@ certificateCard=function(level,region){
 };
 function printCertificate(level,region){
   const key=level+"-"+region,date=certificateDateText(key);
-  const w=window.open("","_blank","noopener,noreferrer,width=900,height=650"); if(!w){toast("Allow pop-ups to print a single certificate");return}
-  w.document.write(`<!doctype html><meta charset="utf-8"><title>MouldMaster Certificate</title><style>body{font-family:system-ui;padding:45px;text-align:center}.box{border:10px double #24364d;padding:50px;max-width:760px;margin:auto}.seal{font-size:48px}.muted{color:#555}</style><div class="box"><div class="seal">MM</div><h1>${esc(level)} ${region==="US"?"Injection Molding":"Injection Moulding"}</h1><p>This records that <b>${esc(user.name)}</b> passed the MouldMaster Academy ${esc(level)} assessment in <b>${esc(regionName(region))}</b> standards mode.</p><p class="muted">Local learning record · Not an accredited compliance qualification<br>${esc(date)}</p></div><script>window.onload=()=>window.print()<\/script>`);w.document.close();
+  const w=window.open("","_blank","width=900,height=650"); if(!w){toast("Allow pop-ups to print a single certificate");return}
+  w.opener=null;
+  const d=w.document;
+  d.title="MouldMaster Certificate";
+  const meta=d.createElement("meta");meta.setAttribute("charset","utf-8");d.head.appendChild(meta);
+  const style=d.createElement("style");style.textContent="body{font-family:system-ui;padding:45px;text-align:center}.box{border:10px double #24364d;padding:50px;max-width:760px;margin:auto}.seal{font-size:48px}.muted{color:#555}";d.head.appendChild(style);
+  const box=d.createElement("div");box.className="box";
+  box.innerHTML=`<div class="seal">MM</div><h1>${esc(level)} ${region==="US"?"Injection Molding":"Injection Moulding"}</h1><p>This records that <b>${esc(user.name)}</b> passed the MouldMaster Academy ${esc(level)} assessment in <b>${esc(regionName(region))}</b> standards mode.</p><p class="muted">Local learning record · Not an accredited compliance qualification<br>${esc(date)}</p>`;
+  d.body.appendChild(box);
+  setTimeout(()=>{w.focus();w.print()},0);
 }
 
 /* Instructor dashboard understands regional score keys. */
