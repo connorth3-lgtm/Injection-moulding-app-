@@ -90,6 +90,23 @@ for marker in (
 run = subprocess.run(["python", "tools/verify_production_source.py", "--self-test"], cwd=ROOT, capture_output=True, text=True)
 need(run.returncode == 0, f"production-source verifier self-test failed: {run.stdout}\n{run.stderr}")
 
+# Pages and the post-merge guard must use the same GitHub CLI authenticated transport.
+# Raw urllib transport previously returned empty PR indexes in the Pages Actions job while
+# `gh api` with the same workflow permissions resolved exact provenance successfully.
+for marker in (
+    'shutil.which("gh")',
+    'env["GH_TOKEN"] = token',
+    '"gh",',
+    '"api",',
+    '"X-GitHub-Api-Version:',
+    "api_endpoint",
+    'parsed.netloc != "api.github.com"',
+):
+    need(marker in production_source, f"production-source canonical GitHub CLI transport missing: {marker}")
+for forbidden in ("urllib.request", "urlopen(", "Request(", 'Authorization": f"Bearer'):
+    need(forbidden not in production_source, f"production-source raw HTTP transport returned: {forbidden}")
+need("gh api" in main_guard, "post-merge provenance guard must retain GitHub CLI API transport")
+
 # Production provenance cannot rely on the eventually-consistent commit->PR index alone.
 # Both publication and the post-merge guard independently inspect recently closed main PRs,
 # accept one exact merged candidate, and deduplicate the same PR observed through both endpoints.
@@ -137,4 +154,4 @@ need("new MutationObserver" not in pwa, "PWA shell still uses document-wide muta
 need("new MutationObserver" not in materials, "Materials domain still uses document-wide mutation polling")
 need("mutationScope:'changed-subtrees'" in a11y, "accessibility safety net is not constrained to changed subtrees")
 
-print("MouldMaster app-wide remediation QA passed: cross-index production provenance in both release guards, storage ownership/explicit parity, variant-safe materials, PWA lifecycle, legacy distribution separation, deterministic browser matrix and targeted observers")
+print("MouldMaster app-wide remediation QA passed: canonical GitHub CLI + cross-index production provenance, storage ownership/explicit parity, variant-safe materials, PWA lifecycle, legacy distribution separation, deterministic browser matrix and targeted observers")
