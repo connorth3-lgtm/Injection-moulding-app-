@@ -35,6 +35,46 @@ def normalize_property(name: str) -> str:
     return "_".join(str(name or "").strip().lower().replace("/", " ").replace("-", " ").split())
 
 
+def clean_text(value: Any) -> str:
+    return " ".join(str(value or "").strip().lower().split())
+
+
+def identity_payload(grade: dict[str, Any]) -> dict[str, Any]:
+    identity = grade.get("identity") or {}
+    production = grade.get("production") or {}
+    lifecycle = grade.get("lifecycle") or {}
+    composition = grade.get("composition") or {}
+    source_revisions = sorted(
+        {
+            clean_text(source.get("revision") or source.get("documentDate"))
+            for source in grade.get("sources") or []
+            if source.get("kind") in {"manufacturer-datasheet", "manufacturer-processing-guide"}
+            and clean_text(source.get("revision") or source.get("documentDate"))
+        }
+    )
+    return {
+        "variantId": clean_text(identity.get("variantId")),
+        "regionalVariant": clean_text(identity.get("regionalVariant")),
+        "formulationRevision": clean_text(identity.get("formulationRevision")),
+        "productionCountry": clean_text(production.get("country")),
+        "productionPlant": clean_text(production.get("plant")),
+        "productionRegion": clean_text(production.get("region")),
+        "regions": sorted(clean_text(x) for x in lifecycle.get("regions") or [] if clean_text(x)),
+        "composition": composition,
+        "sourceRevisions": source_revisions,
+    }
+
+
+def material_identity_key(manufacturer_id: str, grade: dict[str, Any]) -> tuple[str, str, str, str]:
+    variant = json.dumps(identity_payload(grade), sort_keys=True, separators=(",", ":"), ensure_ascii=False)
+    return (
+        clean_text(manufacturer_id),
+        clean_text(grade.get("brand")),
+        clean_text(grade.get("grade")),
+        variant,
+    )
+
+
 def validate_grade(grade: dict[str, Any], context: str = "grade") -> list[str]:
     errors: list[str] = []
     need(grade.get("schemaVersion") == 1, f"{context}: schemaVersion must be 1", errors)
@@ -44,6 +84,15 @@ def validate_grade(grade: dict[str, Any], context: str = "grade") -> list[str]:
     need(bool(str(manufacturer.get("name", "")).strip()), f"{context}: manufacturer.name required", errors)
     need(bool(str(grade.get("grade", "")).strip()), f"{context}: exact commercial grade required", errors)
     need(bool(str((grade.get("polymer") or {}).get("family", "")).strip()), f"{context}: polymer.family required", errors)
+
+    identity = grade.get("identity") or {}
+    for field in ("variantId", "regionalVariant", "formulationRevision"):
+        value = identity.get(field)
+        need(value is None or isinstance(value, str), f"{context}: identity.{field} must be string/null", errors)
+    production = grade.get("production") or {}
+    for field in ("country", "plant", "region"):
+        value = production.get(field)
+        need(value is None or isinstance(value, str), f"{context}: production.{field} must be string/null", errors)
 
     sources = grade.get("sources") or []
     need(bool(sources), f"{context}: at least one source document required", errors)
@@ -93,8 +142,7 @@ def validate_grade(grade: dict[str, Any], context: str = "grade") -> list[str]:
         if any(is_number(obs.get(k)) for k in ("value", "min", "max")):
             need(bool(str(obs.get("unit") or "").strip()), f"{context}: numeric processing {oid} requires unit", errors)
 
-    approval_source_ids = [str(a.get("sourceId", "")) for a in grade.get("approvals") or []]
-    for sid in approval_source_ids:
+    for sid in [str(a.get("sourceId", "")) for a in grade.get("approvals") or []]:
         need(sid in source_ids, f"{context}: approval references unknown sourceId {sid}", errors)
 
     stage = (grade.get("provenance") or {}).get("stage", "staging")
@@ -127,7 +175,7 @@ def compile_catalog(output: Path = CATALOG) -> dict[str, Any]:
     manufacturers: dict[str, dict[str, Any]] = {}
     grades: list[dict[str, Any]] = []
     seen_grade_ids: set[str] = set()
-    seen_identity: set[tuple[str, str, str]] = set()
+    seen_identity: set[tuple[str, str, str, str]] = set()
 
     for path in sorted(STAGING.glob("*.json")):
         payload = load_json(path)
@@ -141,9 +189,12 @@ def compile_catalog(output: Path = CATALOG) -> dict[str, Any]:
                 if gid in seen_grade_ids:
                     raise SystemExit(f"duplicate material grade id: {gid}")
                 seen_grade_ids.add(gid)
-                identity = (mid.lower(), str(grade.get("brand") or "").strip().lower(), str(grade["grade"]).strip().lower())
+                identity = material_identity_key(mid, grade)
                 if identity in seen_identity:
-                    raise SystemExit(f"duplicate exact-grade identity: {identity}")
+                    raise SystemExit(
+                        "duplicate exact-grade variant identity: "
+                        f"{identity[:3]}; add identity.variantId, production/region, composition or source revision metadata"
+                    )
                 seen_identity.add(identity)
                 grades.append(grade)
                 manufacturer_grades.append(grade)
@@ -155,9 +206,9 @@ def compile_catalog(output: Path = CATALOG) -> dict[str, Any]:
         "catalogVersion": "generated",
         "generated": True,
         "status": "validated",
-        "boundary": "Compiled only from staged exact-grade records whose provenance stage is validated/published and which pass semantic QA. Internal staging/schema files are not part of the public runtime artifact.",
+        "boundary": "Compiled only from staged exact-grade records whose provenance stage is validated/published and which pass semantic QA. Internal staging/schema files are not part of the public runtime artifact. Commercial grade names may legitimately coexist when variant/revision/production identity differs.",
         "manufacturers": sorted(manufacturers.values(), key=lambda x: x["name"].lower()),
-        "grades": sorted(grades, key=lambda x: (x["manufacturer"]["name"].lower(), str(x.get("brand") or "").lower(), x["grade"].lower())),
+        "grades": sorted(grades, key=lambda x: (x["manufacturer"]["name"].lower(), str(x.get("brand") or "").lower(), x["grade"].lower(), str((x.get("identity") or {}).get("variantId") or "").lower())),
     }
     output.write_text(json.dumps(catalog, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
     return catalog
