@@ -25,6 +25,7 @@ SERVICE_WORKER = ROOT / "service-worker.js"
 DESKTOP_PACKAGE = ROOT / "desktop/electron/package.json"
 DESKTOP_INTEGRITY = ROOT / "desktop/electron/scripts/generate-integrity.cjs"
 HANDLER_BRIDGE_PATH = OUT_DIR / "inline-handler-bridge.js"
+STYLE_BRIDGE_PATH = OUT_DIR / "inline-style-bridge.js"
 
 INLINE_SCRIPT_RE = re.compile(r"<script(?P<attrs>[^>]*)>(?P<body>.*?)</script\s*>", re.I | re.S)
 SRC_ATTR_RE = re.compile(r"\bsrc\s*=", re.I)
@@ -73,6 +74,25 @@ def retire_handler_attrs(source: str) -> str:
 
 def runtime_transform(name: str, source: str) -> str:
     transformed = source
+    if name == "core-inline-001.js":
+        old = '''    box.style.cssText =
+      "position:fixed;inset:16px;z-index:999999;background:#20151a;color:#fff;" +
+      "border:2px solid #ff7b86;border-radius:14px;padding:18px;overflow:auto;" +
+      "font-family:system-ui,sans-serif;box-shadow:0 20px 60px rgba(0,0,0,.5)";'''
+        new = '''    box.style.position = "fixed";
+    box.style.inset = "16px";
+    box.style.zIndex = "999999";
+    box.style.background = "#20151a";
+    box.style.color = "#fff";
+    box.style.border = "2px solid #ff7b86";
+    box.style.borderRadius = "14px";
+    box.style.padding = "18px";
+    box.style.overflow = "auto";
+    box.style.fontFamily = "system-ui,sans-serif";
+    box.style.boxShadow = "0 20px 60px rgba(0,0,0,.5)";'''
+        if transformed.count(old) != 1:
+            fail("frozen startup failure cssText source drifted; review the runtime hardening transform")
+        transformed = transformed.replace(old, new, 1)
     if name == "core-inline-004.js":
         if source.count("document.write(") != 1 or "function printCertificate(level,region)" not in source:
             fail("frozen certificate print source drifted; review the runtime hardening transform")
@@ -90,6 +110,8 @@ def expected_assets(core: str) -> dict[str, str]:
         fail("frozen core has no inline script blocks to externalize at runtime")
     if not HANDLER_BRIDGE_PATH.is_file():
         fail("strict handler bridge source is missing")
+    if not STYLE_BRIDGE_PATH.is_file():
+        fail("strict style bridge source is missing")
     bridge = HANDLER_BRIDGE_PATH.read_text(encoding="utf-8").rstrip() + "\n"
     result: dict[str, str] = {}
     for index, source in enumerate(blocks, start=1):
@@ -102,20 +124,20 @@ def expected_assets(core: str) -> dict[str, str]:
 
 
 def tighten_script_csp(index: str) -> str:
-    old = "script-src 'self'; script-src-attr 'unsafe-inline'; style-src 'self' 'unsafe-inline';"
-    new = "script-src 'self'; script-src-attr 'none'; style-src 'self' 'unsafe-inline';"
+    old = "script-src 'self'; script-src-attr 'unsafe-inline';"
+    new = "script-src 'self'; script-src-attr 'none';"
     if old in index:
         return index.replace(old, new, 1)
     if new in index:
         return index
-    fail("index.html CSP shape was not recognised")
+    fail("index.html script CSP shape was not recognised")
 
 
 def bump_cache(index: str, worker: str) -> tuple[str, str]:
-    old_revision = "maturity-hardening-v2-r4-20260903"
-    new_revision = "maturity-hardening-v2-r5-20260903"
-    old_cache = "mouldmaster-static-2026.08.26.2-maturity-hardening-v2-r4-20260903"
-    new_cache = "mouldmaster-static-2026.08.26.2-maturity-hardening-v2-r5-20260903"
+    old_revision = "maturity-hardening-v2-r5-20260903"
+    new_revision = "maturity-hardening-v2-r6-20260904"
+    old_cache = "mouldmaster-static-2026.09.03.1-maturity-hardening-v2-r5-20260903"
+    new_cache = "mouldmaster-static-2026.09.03.1-maturity-hardening-v2-r6-20260904"
     if old_revision in worker:
         worker = worker.replace(old_revision, new_revision, 1)
     elif new_revision not in worker:
@@ -194,8 +216,10 @@ def check_state() -> None:
         fail(f"index CORE_INLINE_SCRIPTS drifted: {refs} != {expected_names}")
     if "function externalizeCoreScripts(out)" not in index or "out=externalizeCoreScripts(out)" not in index:
         fail("browser bootstrap does not externalize frozen core scripts during assembly")
-    if "function retireInlineHandlerAttrs(parsed)" not in index or "retireInlineHandlerAttrs(parsed);const scripts=[]" not in index:
+    if "function retireInlineHandlerAttrs(parsed)" not in index or "retireInlineHandlerAttrs(parsed);retireInlineStyleAttrs(parsed);const scripts=[]" not in index:
         fail("browser bootstrap does not retire static frozen-core handler attributes before installation")
+    if "function retireInlineStyleAttrs(parsed)" not in index or "./src/core-runtime/inline-style-bridge.js" not in index:
+        fail("browser bootstrap strict style bridge is missing")
     body_scripts = re.findall(r"\['(\./[^']+\.js)'\s*,\s*'<script", index)
     if len(body_scripts) > 39:
         fail(f"handler bridge increased bootstrap debt: {len(body_scripts)} BODY_SCRIPTS > 39")
@@ -229,6 +253,8 @@ def check_state() -> None:
     for name in expected_names:
         if f"'./src/core-runtime/{name}'" not in worker:
             fail(f"service-worker CORE missing generated runtime asset: {name}")
+    if "'./src/core-runtime/inline-style-bridge.js'" not in worker:
+        fail("service-worker CORE missing strict style bridge")
     package = DESKTOP_PACKAGE.read_text(encoding="utf-8")
     if '"../../src/core-runtime"' not in package:
         fail("desktop package does not include src/core-runtime")
@@ -255,7 +281,7 @@ def apply() -> None:
     index = ensure_static_handler_retirement(index)
     worker = SERVICE_WORKER.read_text(encoding="utf-8")
     index, worker = bump_cache(index, worker)
-    worker = insert_worker_assets(worker, list(expected))
+    worker = insert_worker_assets(worker, list(expected) + [STYLE_BRIDGE_PATH.name])
     INDEX.write_text(index, encoding="utf-8")
     SERVICE_WORKER.write_text(worker, encoding="utf-8")
 

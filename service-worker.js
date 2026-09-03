@@ -1,5 +1,5 @@
 const CACHE_VERSION='2026.09.03.1';
-const CACHE_REVISION='maturity-hardening-v2-r5-20260903';
+const CACHE_REVISION='maturity-hardening-v2-r6-20260904';
 const STATIC_CACHE=`mouldmaster-static-${CACHE_VERSION}-${CACHE_REVISION}`;
 const LEGACY_RECOVERY_SOURCE_ONLY='./MouldMaster_Academy_App.html';
 
@@ -7,6 +7,7 @@ const LEGACY_RECOVERY_SOURCE_ONLY='./MouldMaster_Academy_App.html';
 const CORE=[
   './index.html',
   './MouldMaster_Core_App.html',
+  './src/core-runtime/inline-style-bridge.js',
   './src/core-runtime/core-inline-010.js',
   './src/core-runtime/core-inline-009.js',
   './src/core-runtime/core-inline-008.js',
