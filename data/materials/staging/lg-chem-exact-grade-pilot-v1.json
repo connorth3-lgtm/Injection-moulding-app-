@@ -79,19 +79,13 @@
             {"id": "obs-lgchem-gp1000l-shrink-flow", "property": "Mould Shrinkage", "value": "0.6-0.8", "unit": "%", "testMethod": "ISO 294-4", "specimen": "2.0 mm", "direction": "flow", "sourceId": "src-lgchem-gp1000l-tds-20251202", "sourcePage": "1", "comparisonReady": true, "limitations": "LG Chem typical value for material selection only; not a specification and not for part or tool design."},
             {"id": "obs-lgchem-gp1000l-shrink-transverse", "property": "Mould Shrinkage", "value": "0.6-0.8", "unit": "%", "testMethod": "ISO 294-4", "specimen": "2.0 mm", "direction": "transverse", "sourceId": "src-lgchem-gp1000l-tds-20251202", "sourcePage": "1", "comparisonReady": true, "limitations": "LG Chem typical value for material selection only; not a specification and not for part or tool design."}
           ],
-          "processing": [
-            {"id": "proc-lgchem-gp1000l-dry-temp", "parameter": "Drying temperature", "min": 100, "max": 120, "unit": "°C", "condition": "LG Chem injection-moulding guidance; may need adjustment for specific situations such as low shot sizes, thin walls or gas-assist moulding.", "claimType": "supplier-guidance", "sourceId": "src-lgchem-gp1000l-tds-20251202", "sourcePage": "3", "productionRecipe": false},
-            {"id": "proc-lgchem-gp1000l-dry-time", "parameter": "Drying time", "min": 3, "max": 5, "unit": "hr", "condition": "LG Chem injection-moulding guidance; verify against the current exact-grade TDS and site conditions.", "claimType": "supplier-guidance", "sourceId": "src-lgchem-gp1000l-tds-20251202", "sourcePage": "3", "productionRecipe": false},
-            {"id": "proc-lgchem-gp1000l-max-moisture", "parameter": "Maximum moisture content", "value": 0.02, "unit": "%", "condition": "Maximum moisture content in LG Chem injection-moulding guidance; not a production recipe.", "claimType": "supplier-limit", "sourceId": "src-lgchem-gp1000l-tds-20251202", "sourcePage": "3", "productionRecipe": false},
-            {"id": "proc-lgchem-gp1000l-melt-temp", "parameter": "Melt temperature", "min": 300, "max": 320, "unit": "°C", "condition": "LG Chem injection-moulding guidance; may need adjustment for specific moulding situations.", "claimType": "supplier-guidance", "sourceId": "src-lgchem-gp1000l-tds-20251202", "sourcePage": "3", "productionRecipe": false},
-            {"id": "proc-lgchem-gp1000l-mould-temp", "parameter": "Mould temperature", "min": 80, "max": 120, "unit": "°C", "condition": "LG Chem injection-moulding guidance; may need adjustment for specific moulding situations.", "claimType": "supplier-guidance", "sourceId": "src-lgchem-gp1000l-tds-20251202", "sourcePage": "3", "productionRecipe": false}
-          ],
+          "processing": [],
           "approvals": [],
           "lifecycle": {"status": "unknown", "checkedAt": "2026-09-03"},
           "sources": [
             {"id": "src-lgchem-gp1000l-tds-20251202", "publisher": "LG Chem", "title": "LUPOY GP1000L Technical Data Sheet (ISO)", "url": "https://www.lgchemon.com/sfc/servlet.shepherd/document/download/0692x00000DHBHwAAP", "kind": "manufacturer-datasheet", "revision": null, "documentDate": "2025-12-02", "retrievedAt": "2026-09-03"}
           ],
-          "provenance": {"stage": "validated", "ingestedAt": "2026-09-03T00:00:00Z", "reviewedAt": "2026-09-03T00:00:00Z", "reviewer": "primary-source-web-review", "notes": "Official LG Chem/LG Chem On exact-grade ISO TDS indexed with issue date 2025-12-02. Current document endpoint intermittently redirects to a processing-error page, so only values visible in the official indexed TDS record are retained."}
+          "provenance": {"stage": "validated", "ingestedAt": "2026-09-03T00:00:00Z", "reviewedAt": "2026-09-03T00:00:00Z", "reviewer": "primary-source-web-review", "notes": "Official LG Chem/LG Chem On exact-grade ISO TDS indexed with issue date 2025-12-02. Current document endpoint intermittently redirects to a processing-error page; processing guidance is therefore omitted rather than inferred from a related grade."}
         }
       ]
     }
