@@ -84,8 +84,11 @@ need('../../mould-master-workspace.js' in froms,'Mould Master workspace missing 
 need('../../src/domains' in froms,'domain runtime directory missing from desktop package')
 integ=text('desktop/electron/scripts/generate-integrity.cjs')
 need('mould-master-workspace.js' in integ,'Mould Master workspace missing from desktop integrity manifest')
-need('src/domains/engineering/engineering-store.js' in integ,'canonical engineering store missing from desktop integrity manifest')
+for marker in ["RUNTIME_MANIFEST='runtime-domain-manifest.json'",'runtimeManifest.assets','runtimeManifest.dataAssets','manifestFiles']:
+    need(marker in integ,f'desktop integrity generator does not derive canonical domain assets from runtime manifest: {marker}')
 need('src/domains/engineering/store-bridge.js' not in integ,'retired engineering bridge remains in desktop integrity manifest')
+desktop_qa=text('desktop/electron/scripts/qa.cjs')
+need('runtime manifest asset is not integrity-hashed/servable by desktop' in desktop_qa,'desktop QA does not enforce manifest-derived serving coverage')
 
 browser=text('qa/engineering-case-store.spec.js')
 for marker in ['legacy-engineering-case','switchUser','mat-lotte-infino-nh-1033','localStorage.getItem','MM_ENGINEERING_STORE.getCase','materialGradeId']:
@@ -96,4 +99,4 @@ mobile=text('.github/workflows/mobile-browser-qa.yml')
 need('qa/engineering-case-store.spec.js' in mobile,'canonical engineering browser regression missing from Mobile Browser QA triggers')
 need('engineering-store and PWA regression tests' in mobile,'Mobile Browser QA step no longer names engineering-store regression coverage')
 
-print('MouldMaster workspace QA passed (single owner-scoped IndexedDB authority, one-time non-destructive legacy import, learner-aware hydration, browser persistence regression, local evidence chain, controlled-test/verification flow, learning links, no production-control or assessment authority)')
+print('MouldMaster workspace QA passed (single owner-scoped IndexedDB authority, one-time non-destructive legacy import, learner-aware hydration, manifest-derived desktop serving, browser persistence regression, local evidence chain, controlled-test/verification flow, learning links, no production-control or assessment authority)')
