@@ -39,10 +39,10 @@ function switchMaterialTab(tab){
 }
 function materialTabsHTML(){
   return `<div class="mat-tabs">
-    <button class="${materialTab==="learn"?"active":""}" onclick="switchMaterialTab('learn')">Learn</button>
-    <button class="${materialTab==="explorer"?"active":""}" onclick="switchMaterialTab('explorer')">Material explorer</button>
-    <button class="${materialTab==="labs"?"active":""}" onclick="switchMaterialTab('labs')">Interactive labs</button>
-    <button class="${materialTab==="quiz"?"active":""}" onclick="switchMaterialTab('quiz')">Knowledge check</button>
+    <button class="${materialTab==="learn"?"active":""}" data-mm-onclick="switchMaterialTab('learn')">Learn</button>
+    <button class="${materialTab==="explorer"?"active":""}" data-mm-onclick="switchMaterialTab('explorer')">Material explorer</button>
+    <button class="${materialTab==="labs"?"active":""}" data-mm-onclick="switchMaterialTab('labs')">Interactive labs</button>
+    <button class="${materialTab==="quiz"?"active":""}" data-mm-onclick="switchMaterialTab('quiz')">Knowledge check</button>
   </div>`;
 }
 function renderMaterials(){
@@ -60,7 +60,7 @@ function renderMaterialLearn(){
       <span class="eyebrow">Material Science · Injection Moulding</span>
       <h2>Understand what the polymer is doing — not just what the machine is set to.</h2>
       <p>Learn structure, morphology, rheology, heat transfer, moisture, degradation, mechanical behaviour, shrinkage, fibre orientation, additives, recyclate and material selection. The content deliberately avoids universal temperature/drying recipes because those belong to the actual resin grade and supplier documentation.</p>
-      <div class="hero-buttons"><button class="primary" onclick="openMaterialLesson(${m.currentLesson||1})">Continue material science →</button><button class="ghost" onclick="switchMaterialTab('labs')">Try an interactive lab</button></div>
+      <div class="hero-buttons"><button class="primary" data-mm-onclick="openMaterialLesson(${m.currentLesson||1})">Continue material science →</button><button class="ghost" data-mm-onclick="switchMaterialTab('labs')">Try an interactive lab</button></div>
     </div>
     <div class="mat-kpis">
       <div class="card mat-kpi"><span>Material lessons</span><strong>${MAT_LESSONS.length}</strong></div>
@@ -72,7 +72,7 @@ function renderMaterialLearn(){
     <div class="section-head"><div><h2>9 material-science chapters</h2><p>From molecules to real component behaviour.</p></div></div>
     <div class="mat-chapters">${MATERIALS.chapters.map(c=>{
       const p=matChapterProgress(c);
-      return `<div class="card mat-chapter"><span class="eyebrow">${esc(c.level)}</span><h3>${c.id}. ${esc(c.name)}</h3><p>${esc(c.description)}</p><div class="mini-bar"><span style="width:${p.pct}%"></span></div><div class="course-bottom"><span class="pill">${p.done}/${p.total} complete</span><button class="secondary" onclick="openMaterialChapter(${c.id})">${p.pct?"Continue":"Start"}</button></div></div>`;
+      return `<div class="card mat-chapter"><span class="eyebrow">${esc(c.level)}</span><h3>${c.id}. ${esc(c.name)}</h3><p>${esc(c.description)}</p><div class="mini-bar"><span style="width:${p.pct}%"></span></div><div class="course-bottom"><span class="pill">${p.done}/${p.total} complete</span><button class="secondary" data-mm-onclick="openMaterialChapter(${c.id})">${p.pct?"Continue":"Start"}</button></div></div>`;
     }).join("")}</div>
   </div>`;
 }
@@ -84,7 +84,7 @@ function openMaterialLesson(id){
   materialLessonId=id;ensureMaterialState().currentLesson=id;persist();
   const l=MAT_LESSONS.find(x=>x.id===id),c=MATERIALS.chapters.find(x=>x.id===l.chapter);
   $("#materials").innerHTML=`${materialTabsHTML()}<div class="mat-learn-layout">
-    <aside class="card mat-side"><span class="eyebrow">Chapter ${c.id}</span><h3 style="margin:6px 0">${esc(c.name)}</h3><div class="mini-bar"><span style="width:${matChapterProgress(c).pct}%"></span></div><div class="mat-lesson-list">${MAT_LESSONS.filter(x=>x.chapter===c.id).map(x=>`<button class="${x.id===l.id?"active":""}" onclick="openMaterialLesson(${x.id})">${ensureMaterialState().completed.includes(x.id)?"✓ ":""}${esc(x.title)}</button>`).join("")}</div><button class="ghost" style="width:100%;margin-top:10px" onclick="switchMaterialTab('learn')">← All chapters</button></aside>
+    <aside class="card mat-side"><span class="eyebrow">Chapter ${c.id}</span><h3 style="margin:6px 0">${esc(c.name)}</h3><div class="mini-bar"><span style="width:${matChapterProgress(c).pct}%"></span></div><div class="mat-lesson-list">${MAT_LESSONS.filter(x=>x.chapter===c.id).map(x=>`<button class="${x.id===l.id?"active":""}" data-mm-onclick="openMaterialLesson(${x.id})">${ensureMaterialState().completed.includes(x.id)?"✓ ":""}${esc(x.title)}</button>`).join("")}</div><button class="ghost" style="width:100%;margin-top:10px" data-mm-onclick="switchMaterialTab('learn')">← All chapters</button></aside>
     <article class="card mat-lesson">
       <span class="eyebrow">${esc(l.level)} · Material lesson ${l.id}/${MAT_LESSONS.length}</span><h2>${esc(l.title)}</h2>
       <p>${esc(l.intro)}</p>
@@ -93,8 +93,8 @@ function openMaterialLesson(id){
       <div class="mat-trap"><b>Common trap:</b><br>${esc(l.trap)}</div>
       <div class="mat-disclaimer"><b>Production boundary:</b> apply this science using the actual grade's current supplier documentation, your machine/mould limits, site procedures and approved quality requirements.</div>
       <div class="lesson-actions-sticky">
-        ${l.id>1?`<button class="ghost" onclick="openMaterialLesson(${l.id-1})">← Previous</button>`:""}
-        <button class="primary" onclick="completeMaterialLesson(${l.id})">${ensureMaterialState().completed.includes(l.id)?"Next lesson →":"Complete & continue →"}</button>
+        ${l.id>1?`<button class="ghost" data-mm-onclick="openMaterialLesson(${l.id-1})">← Previous</button>`:""}
+        <button class="primary" data-mm-onclick="completeMaterialLesson(${l.id})">${ensureMaterialState().completed.includes(l.id)?"Next lesson →":"Complete & continue →"}</button>
       </div>
     </article>
   </div>`;
@@ -114,10 +114,10 @@ function renderMaterialExplorer(){
     <div class="card mat-hero"><span class="eyebrow">Material explorer</span><h2>Compare polymer-family tendencies.</h2><p>Use this as a learning map, not as a material-approval tool. Ratings are deliberately relative and qualitative because actual grades vary widely.</p></div>
     <div class="mat-disclaimer"><b>Do not select a production material from this screen alone.</b> Confirm the actual grade against product requirements, supplier TDS/SDS, applicable regulations and component testing.</div>
     <div class="mat-explorer-controls">
-      <label>Morphology<select id="matMorph" onchange="filterMaterialExplorer()"><option value="">Any</option><option>Amorphous</option><option>Semi-crystalline</option></select></label>
-      <label>Moisture sensitivity<select id="matMoist" onchange="filterMaterialExplorer()"><option value="">Any</option><option>Low</option><option>Medium</option><option>High</option></select></label>
-      <label>Need<select id="matNeed" onchange="filterMaterialExplorer()"><option value="">Any</option><option value="impact">Higher impact tendency</option><option value="optical">Optical/clarity tendency</option><option value="chemical">Chemical-resistance tendency</option><option value="stiff">Higher stiffness tendency</option></select></label>
-      <label>Search<input id="matSearch" placeholder="PP, nylon, optical..." oninput="filterMaterialExplorer()"></label>
+      <label>Morphology<select id="matMorph" data-mm-onchange="filterMaterialExplorer()"><option value="">Any</option><option>Amorphous</option><option>Semi-crystalline</option></select></label>
+      <label>Moisture sensitivity<select id="matMoist" data-mm-onchange="filterMaterialExplorer()"><option value="">Any</option><option>Low</option><option>Medium</option><option>High</option></select></label>
+      <label>Need<select id="matNeed" data-mm-onchange="filterMaterialExplorer()"><option value="">Any</option><option value="impact">Higher impact tendency</option><option value="optical">Optical/clarity tendency</option><option value="chemical">Chemical-resistance tendency</option><option value="stiff">Higher stiffness tendency</option></select></label>
+      <label>Search<input id="matSearch" placeholder="PP, nylon, optical..." data-mm-oninput="filterMaterialExplorer()"></label>
     </div>
     <div class="mat-material-grid" id="matMaterialGrid">${MATERIALS.families.map(materialCard).join("")}</div>
   </div>`;
@@ -145,22 +145,22 @@ function renderMaterialLabs(){
     <div class="card mat-hero"><span class="eyebrow">Interactive material labs</span><h2>Experiment with concepts without turning them into production recipes.</h2><p>Every output is a relative teaching model. No lab gives an approved melt temperature, drying setpoint, pressure or material limit.</p></div>
     <div class="mat-labs">
       <div class="card mat-lab"><span class="eyebrow">Lab 1</span><h3>Rheology: shear-thinning</h3><p>Change relative shear rate, melt-temperature offset and filler tendency. Watch the illustrative viscosity index move.</p>
-        <label>Relative shear rate<input id="rheoShear" type="range" min="0" max="100" value="45" oninput="updateRheologyLab()"></label>
-        <label>Relative melt-temperature offset<input id="rheoTemp" type="range" min="-20" max="20" value="0" oninput="updateRheologyLab()"></label>
-        <label>Relative filler effect<input id="rheoFill" type="range" min="0" max="40" value="0" oninput="updateRheologyLab()"></label>
+        <label>Relative shear rate<input id="rheoShear" type="range" min="0" max="100" value="45" data-mm-oninput="updateRheologyLab()"></label>
+        <label>Relative melt-temperature offset<input id="rheoTemp" type="range" min="-20" max="20" value="0" data-mm-oninput="updateRheologyLab()"></label>
+        <label>Relative filler effect<input id="rheoFill" type="range" min="0" max="40" value="0" data-mm-oninput="updateRheologyLab()"></label>
         <div class="mat-curve" id="rheoCurve"></div><div class="mat-lab-output" id="rheoOut"></div></div>
 
       <div class="card mat-lab"><span class="eyebrow">Lab 2</span><h3>Crystallisation tendency</h3><p>Conceptual semi-crystalline model: change cooling severity and relative mould thermal level.</p>
-        <label>Cooling severity<input id="crCool" type="range" min="0" max="100" value="50" oninput="updateCrystalLab()"></label>
-        <label>Relative mould thermal level<input id="crMould" type="range" min="0" max="100" value="50" oninput="updateCrystalLab()"></label>
+        <label>Cooling severity<input id="crCool" type="range" min="0" max="100" value="50" data-mm-oninput="updateCrystalLab()"></label>
+        <label>Relative mould thermal level<input id="crMould" type="range" min="0" max="100" value="50" data-mm-oninput="updateCrystalLab()"></label>
         <div class="mat-lab-output" id="crystalOut"></div></div>
 
       <div class="card mat-lab"><span class="eyebrow">Lab 3</span><h3>Fibre orientation</h3><p>Visualise why a filled part can behave differently along and across the main flow direction.</p>
-        <label>Orientation tendency<input id="fibOrient" type="range" min="10" max="100" value="65" oninput="updateFibreLab()"></label>
+        <label>Orientation tendency<input id="fibOrient" type="range" min="10" max="100" value="65" data-mm-oninput="updateFibreLab()"></label>
         <div class="mat-arrow-field" id="fibreField"></div><div class="mat-lab-output" id="fibreOut"></div></div>
 
       <div class="card mat-lab"><span class="eyebrow">Lab 4</span><h3>Moisture-control reasoning</h3><p>Select a family and see the correct learning priority. No generic drying temperatures are provided.</p>
-        <label>Material family<select id="dryFamily" onchange="updateDryLab()">${MATERIALS.families.map(m=>`<option value="${esc(m.name)}">${esc(m.name)} · ${esc(m.full)}</option>`).join("")}</select></label>
+        <label>Material family<select id="dryFamily" data-mm-onchange="updateDryLab()">${MATERIALS.families.map(m=>`<option value="${esc(m.name)}">${esc(m.name)} · ${esc(m.full)}</option>`).join("")}</select></label>
         <div class="mat-lab-output" id="dryOut"></div></div>
     </div>
     <div class="mat-disclaimer"><b>Lab boundary:</b> these models demonstrate direction-of-effect and reasoning only. Real resin behaviour is nonlinear and grade-specific. Production parameters must come from the actual grade's supplier guidance and validated process development.</div>
@@ -207,7 +207,7 @@ function renderMaterialQuiz(){
     <div class="card mat-quiz-card"><div id="materialQuizQuestions">${materialQuizOrder.map((item,qi)=>{
       const q=item.q;const opts=shuffleMaterial(q[1].map((text,idx)=>({text,idx})));
       return `<div class="mat-q" data-source="${item.i}"><b>${qi+1}. ${esc(q[0])}</b>${opts.map(o=>`<label><input type="radio" name="mq${qi}" value="${o.idx}"> ${esc(o.text)}</label>`).join("")}</div>`;
-    }).join("")}</div><button class="primary" onclick="gradeMaterialQuiz()">Grade & review</button><div id="materialQuizResult" class="callout hidden"></div><div id="materialQuizReview"></div></div>
+    }).join("")}</div><button class="primary" data-mm-onclick="gradeMaterialQuiz()">Grade & review</button><div id="materialQuizResult" class="callout hidden"></div><div id="materialQuizReview"></div></div>
   </div>`;
 }
 function gradeMaterialQuiz(){
@@ -252,7 +252,7 @@ renderDashboard=function(){
   materialBaseDashboard();
   const grid=$("#dashboard .quick-grid");
   if(grid&&!grid.querySelector("[data-material-action]")){
-    grid.insertAdjacentHTML("beforeend",`<button class="quick-action" data-material-action onclick="switchView('materials')"><span class="icon">🧬</span><b>Explore material science</b><small>Polymers, rheology, moisture, crystallisation, properties and material selection.</small></button>`);
+    grid.insertAdjacentHTML("beforeend",`<button class="quick-action" data-material-action data-mm-onclick="switchView('materials')"><span class="icon">🧬</span><b>Explore material science</b><small>Polymers, rheology, moisture, crystallisation, properties and material selection.</small></button>`);
   }
 };
 
@@ -262,18 +262,18 @@ doSearch=function(){
   materialBaseDoSearch();
   const q=($("#globalSearch")?.value||"").toLowerCase().trim();if(q.length<2)return;
   const hits=MAT_LESSONS.filter(l=>(l.title+" "+l.intro+" "+l.points.join(" ")).toLowerCase().includes(q)).slice(0,6);
-  if(hits.length&&$("#searchResults"))$("#searchResults").insertAdjacentHTML("beforeend",hits.map(l=>`<button class="search-item" onclick="closeModal();switchView('materials');openMaterialLesson(${l.id})"><b>Material science:</b> ${esc(l.title)}<br><span class="muted tiny">${esc(l.chapterName)}</span></button>`).join(""));
+  if(hits.length&&$("#searchResults"))$("#searchResults").insertAdjacentHTML("beforeend",hits.map(l=>`<button class="search-item" data-mm-onclick="closeModal();switchView('materials');openMaterialLesson(${l.id})"><b>Material science:</b> ${esc(l.title)}<br><span class="muted tiny">${esc(l.chapterName)}</span></button>`).join(""));
 };
 
 /* Add material science to the mobile More menu. */
 openMobileMenu=function(){openModal(`<span class="eyebrow">More</span><h2>Tools & progress</h2><div class="grid2">
-  <button class="quick-action" onclick="closeModal();switchView('materials')"><span class="icon">🧬</span><b>Material science</b><small>Polymer behaviour and interactive labs.</small></button>
-  <button class="quick-action" onclick="closeModal();switchView('simulator')"><span class="icon">⚙</span><b>Process simulator</b><small>Relative training model.</small></button>
-  <button class="quick-action" onclick="closeModal();switchView('defects')"><span class="icon">◇</span><b>Defect finder</b><small>Mechanisms and evidence checks.</small></button>
-  <button class="quick-action" onclick="closeModal();switchView('coach')"><span class="icon">✦</span><b>Troubleshooting coach</b><small>Structured offline guidance.</small></button>
-  <button class="quick-action" onclick="closeModal();switchView('exams')"><span class="icon">✓</span><b>Knowledge checks</b><small>Safety-gated assessments.</small></button>
-  <button class="quick-action" onclick="closeModal();switchView('standards')"><span class="icon">§</span><b>Standards & safety</b><small>UK, US and NZ references.</small></button>
-  <button class="quick-action" onclick="closeModal();switchView('profile')"><span class="icon">⚙</span><b>Profile & data</b><small>Preferences and backup.</small></button>
+  <button class="quick-action" data-mm-onclick="closeModal();switchView('materials')"><span class="icon">🧬</span><b>Material science</b><small>Polymer behaviour and interactive labs.</small></button>
+  <button class="quick-action" data-mm-onclick="closeModal();switchView('simulator')"><span class="icon">⚙</span><b>Process simulator</b><small>Relative training model.</small></button>
+  <button class="quick-action" data-mm-onclick="closeModal();switchView('defects')"><span class="icon">◇</span><b>Defect finder</b><small>Mechanisms and evidence checks.</small></button>
+  <button class="quick-action" data-mm-onclick="closeModal();switchView('coach')"><span class="icon">✦</span><b>Troubleshooting coach</b><small>Structured offline guidance.</small></button>
+  <button class="quick-action" data-mm-onclick="closeModal();switchView('exams')"><span class="icon">✓</span><b>Knowledge checks</b><small>Safety-gated assessments.</small></button>
+  <button class="quick-action" data-mm-onclick="closeModal();switchView('standards')"><span class="icon">§</span><b>Standards & safety</b><small>UK, US and NZ references.</small></button>
+  <button class="quick-action" data-mm-onclick="closeModal();switchView('profile')"><span class="icon">⚙</span><b>Profile & data</b><small>Preferences and backup.</small></button>
 </div>`)}
 
 /* Material-science progress in profile. */
@@ -282,7 +282,7 @@ renderProfile=function(){
   materialBaseProfile();
   const m=ensureMaterialState();
   const head=$("#profile .section-head");
-  if(head)head.insertAdjacentHTML("beforebegin",`<div class="card form-card" style="margin-top:14px"><span class="eyebrow">Material Science</span><h2>${materialProgress()}% complete</h2><p class="muted">${m.completed.length}/${MAT_LESSONS.length} lessons · Best knowledge check: ${m.bestQuiz==null?"—":m.bestQuiz+"%"}</p><div class="mini-bar"><span style="width:${materialProgress()}%"></span></div><button class="secondary" style="margin-top:12px" onclick="switchView('materials')">Open material science</button></div>`);
+  if(head)head.insertAdjacentHTML("beforebegin",`<div class="card form-card" style="margin-top:14px"><span class="eyebrow">Material Science</span><h2>${materialProgress()}% complete</h2><p class="muted">${m.completed.length}/${MAT_LESSONS.length} lessons · Best knowledge check: ${m.bestQuiz==null?"—":m.bestQuiz+"%"}</p><div class="mini-bar"><span style="width:${materialProgress()}%"></span></div><button class="secondary" style="margin-top:12px" data-mm-onclick="switchView('materials')">Open material science</button></div>`);
 };
 
 ensureMaterialState();

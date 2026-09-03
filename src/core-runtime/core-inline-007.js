@@ -135,7 +135,7 @@ safeSlider=function(label,key,min,max,val,help){
   const units={speed:"%",transfer:"%",hold:"%",holdTime:"s",melt:"",mould:"",cooling:"s",clamp:"%",vent:"%",moisture:"%"};
   return `<label>${esc(label)}
     <div class="range-row">
-      <input aria-label="${esc(label)}" type="range" min="${min}" max="${max}" value="${val}" oninput="simChange('${key}',this.value)">
+      <input aria-label="${esc(label)}" type="range" min="${min}" max="${max}" value="${val}" data-mm-oninput="simChange('${key}',this.value)">
       <input aria-label="${esc(label)} current display" id="sim_${key}" value="${val}${units[key]||""}" readonly>
     </div>
     ${help?`<small class="muted">${esc(help)}</small>`:""}

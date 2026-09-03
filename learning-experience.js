@@ -150,10 +150,10 @@ function decorateLesson(){
       <div class="mini-bar" aria-hidden="true"><span style="width:${coursePct}%"></span></div>
     </div>
     <nav class="mm-learning-jumps" aria-label="Lesson sections">
-      <button type="button" onclick="mmLearningJump('mmObjectives')">Objectives</button>
-      <button type="button" onclick="mmLearningJump('mmKeyPoints')">Key points</button>
-      <button type="button" onclick="mmLearningJump('mmExercise')">Practice</button>
-      <button type="button" onclick="mmLearningJump('mmNotes')">Notes</button>
+      <button type="button" data-mm-onclick="mmLearningJump('mmObjectives')">Objectives</button>
+      <button type="button" data-mm-onclick="mmLearningJump('mmKeyPoints')">Key points</button>
+      <button type="button" data-mm-onclick="mmLearningJump('mmExercise')">Practice</button>
+      <button type="button" data-mm-onclick="mmLearningJump('mmNotes')">Notes</button>
     </nav>`);
 
   const headings=[...article.querySelectorAll('h3')];
@@ -189,8 +189,8 @@ function decorateLesson(){
         <span class="eyebrow">Up next</span><h3>${nextTitle}</h3>
         <p>${c.next?'Complete this lesson when you can explain the key points in your own words and identify what evidence you would check in practice.':'Review your bookmarks, scenarios and knowledge checks to reinforce the full pathway.'}</p>
         <div class="mm-next-actions">
-          ${c.previous?'<button class="ghost" type="button" onclick="mmPreviousLesson()">← Previous lesson</button>':''}
-          ${c.next?`<button class="secondary" type="button" onclick="mmNextLesson()">Preview next lesson</button>`:'<button class="secondary" type="button" onclick="switchView(\'dashboard\')">Return home</button>'}
+          ${c.previous?'<button class="ghost" type="button" data-mm-onclick="mmPreviousLesson()">← Previous lesson</button>':''}
+          ${c.next?`<button class="secondary" type="button" data-mm-onclick="mmNextLesson()">Preview next lesson</button>`:'<button class="secondary" type="button" data-mm-onclick="switchView(\'dashboard\')">Return home</button>'}
         </div>
       </section>`);
   }
@@ -209,8 +209,8 @@ function decorateLesson(){
 
   root.insertAdjacentHTML('beforeend',`
     <div class="mm-mobile-actions" aria-label="Mobile lesson actions">
-      <button class="ghost" type="button" onclick="mmPreviousLesson()" ${c.previous?'':'disabled'} aria-label="Previous lesson">←</button>
-      <button class="primary" type="button" onclick="mmCompleteAndContinue(${c.lesson.id})">${complete?'Continue →':'Complete & continue →'}</button>
+      <button class="ghost" type="button" data-mm-onclick="mmPreviousLesson()" ${c.previous?'':'disabled'} aria-label="Previous lesson">←</button>
+      <button class="primary" type="button" data-mm-onclick="mmCompleteAndContinue(${c.lesson.id})">${complete?'Continue →':'Complete & continue →'}</button>
     </div>`);
   installAutosave(c.lesson);
 }
@@ -232,17 +232,17 @@ function decorateDashboard(){
         <p>Track ${c.course.id}: ${esc(c.course.name)} · Lesson ${c.position+1}/${c.course.lessonIds.length}. Pick up exactly where you left off.</p>
         <div class="mm-today-meta"><span class="pill">${c.lesson.duration} min lesson</span><span class="pill">${user.dailyMinutes||15} min daily goal</span><span class="pill">${overall}% overall</span></div>
       </div>
-      <button class="primary" type="button" onclick="switchView('lesson')">Continue lesson →</button>
+      <button class="primary" type="button" data-mm-onclick="switchView('lesson')">Continue lesson →</button>
     </section>
     <section class="mm-home-task-hub" aria-label="MouldMaster quick actions">
       <span class="eyebrow">What do you need help with?</span>
       <h2>Choose your next task</h2>
       <p>Go straight to diagnosis, process evidence or practice without searching through the course catalogue.</p>
       <div class="mm-home-actions">
-        <button class="mm-home-action mm-home-action-primary" type="button" onclick="mmOpenMouldMaster()"><span class="mm-home-action-icon">◇</span><span><strong>Diagnose a moulding problem</strong><small>Mould Master · start from the defect, rank mechanisms and check evidence.</small></span></button>
-        <button class="mm-home-action" type="button" onclick="mmOpenDataDiagnosis()"><span class="mm-home-action-icon">⌁</span><span><strong>Analyse process data</strong><small>Read baseline, fault and recovery trends before changing settings.</small></span></button>
-        <button class="mm-home-action" type="button" onclick="switchView('scenarios')"><span class="mm-home-action-icon">⚠</span><span><strong>Practice a scenario</strong><small>Build shop-floor judgement with evidence-first decisions.</small></span></button>
-        <button class="mm-home-action" type="button" onclick="switchView('path')"><span class="mm-home-action-icon">▦</span><span><strong>Explore your learning</strong><small>Open the 120-lesson pathway, progress and linked practice.</small></span></button>
+        <button class="mm-home-action mm-home-action-primary" type="button" data-mm-onclick="mmOpenMouldMaster()"><span class="mm-home-action-icon">◇</span><span><strong>Diagnose a moulding problem</strong><small>Mould Master · start from the defect, rank mechanisms and check evidence.</small></span></button>
+        <button class="mm-home-action" type="button" data-mm-onclick="mmOpenDataDiagnosis()"><span class="mm-home-action-icon">⌁</span><span><strong>Analyse process data</strong><small>Read baseline, fault and recovery trends before changing settings.</small></span></button>
+        <button class="mm-home-action" type="button" data-mm-onclick="switchView('scenarios')"><span class="mm-home-action-icon">⚠</span><span><strong>Practice a scenario</strong><small>Build shop-floor judgement with evidence-first decisions.</small></span></button>
+        <button class="mm-home-action" type="button" data-mm-onclick="switchView('path')"><span class="mm-home-action-icon">▦</span><span><strong>Explore your learning</strong><small>Open the 120-lesson pathway, progress and linked practice.</small></span></button>
       </div>
     </section>`);
 }

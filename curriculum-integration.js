@@ -212,7 +212,7 @@ function cardHtml(rec,index,lessonId){
   const meta=TYPE_META[rec.type];
   const title=rec.item.title||rec.id;
   const detail=index===0?'Best fit for this lesson':'Evidence extension';
-  return `<article class="mm-curriculum-card"><span class="mm-curriculum-type">${esc(meta.label)} · ${detail}</span><h4>${esc(title)}</h4><p>${esc(rec.why||meta.detail)}</p><div class="mm-next-actions"><button class="secondary" type="button" onclick="mmCurriculumOpen('${esc(rec.type)}','${esc(rec.id)}',${Number(lessonId)})">Open linked practice →</button></div></article>`;
+  return `<article class="mm-curriculum-card"><span class="mm-curriculum-type">${esc(meta.label)} · ${detail}</span><h4>${esc(title)}</h4><p>${esc(rec.why||meta.detail)}</p><div class="mm-next-actions"><button class="secondary" type="button" data-mm-onclick="mmCurriculumOpen('${esc(rec.type)}','${esc(rec.id)}',${Number(lessonId)})">Open linked practice →</button></div></article>`;
 }
 function decorateLesson(){
   const root=document.getElementById('lesson');
@@ -222,7 +222,7 @@ function decorateLesson(){
   const recs=recommendationsFor(lesson);
   notes.insertAdjacentHTML('beforebegin',`<section class="mm-curriculum-section" id="mmCurriculumPractice" aria-label="Linked curriculum practice"><div class="mm-curriculum-head"><div><span class="eyebrow">Theory → practice → evidence</span><h3>Apply this lesson</h3><p>Use the concept you just studied in two guided activities. The first is the closest fit; the second strengthens the evidence habit from another angle.</p></div><span class="pill">2 linked activities</span></div><div class="mm-curriculum-loop"><span><b>1</b> Learn the mechanism</span><span><b>2</b> Make a diagnosis</span><span><b>3</b> Read the evidence</span><span><b>4</b> Return and explain</span></div><div class="mm-curriculum-grid">${recs.map((rec,index)=>cardHtml(rec,index,lesson.id)).join('')}</div><div class="mm-curriculum-boundary"><b>Learning boundary:</b> linked practice is optional formative learning. It does not change formal assessment answers, certificate rules or production setpoints.</div></section>`);
   const jumps=root.querySelector('.mm-learning-jumps');
-  if(jumps&&!jumps.querySelector('[data-mm-curriculum-jump]'))jumps.insertAdjacentHTML('beforeend','<button type="button" data-mm-curriculum-jump onclick="mmLearningJump(\'mmCurriculumPractice\')">Linked practice</button>');
+  if(jumps&&!jumps.querySelector('[data-mm-curriculum-jump]'))jumps.insertAdjacentHTML('beforeend','<button type="button" data-mm-curriculum-jump data-mm-onclick="mmLearningJump(\'mmCurriculumPractice\')">Linked practice</button>');
   const origin=getReturn();
   if(origin&&Number(origin.lessonId)===lesson.id)clearReturn();
 }
@@ -233,7 +233,7 @@ function decorateDashboard(){
   const rec=recommendationsFor(lesson)[0];
   if(!rec)return;
   const focus=root.querySelector('.mm-today-focus');
-  const html=`<section class="mm-curriculum-focus" aria-label="Current lesson practice connection"><div><span class="eyebrow">Learning loop</span><b>After ${esc(lesson.title)}: ${esc(rec.item.title||rec.id)}</b><p>Move from the lesson explanation into guided practice, then return to explain what evidence changed your conclusion.</p></div><button class="ghost" type="button" onclick="mmCurriculumOpen('${esc(rec.type)}','${esc(rec.id)}',${Number(lesson.id)})">Open linked practice</button></section>`;
+  const html=`<section class="mm-curriculum-focus" aria-label="Current lesson practice connection"><div><span class="eyebrow">Learning loop</span><b>After ${esc(lesson.title)}: ${esc(rec.item.title||rec.id)}</b><p>Move from the lesson explanation into guided practice, then return to explain what evidence changed your conclusion.</p></div><button class="ghost" type="button" data-mm-onclick="mmCurriculumOpen('${esc(rec.type)}','${esc(rec.id)}',${Number(lesson.id)})">Open linked practice</button></section>`;
   if(focus)focus.insertAdjacentHTML('afterend',html);else root.insertAdjacentHTML('afterbegin',html);
 }
 
