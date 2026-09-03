@@ -37,6 +37,7 @@ on:
       - 'qa/measured-evidence-decision.spec.js'
       - 'qa/read-aloud.spec.js'
       - 'qa/pwa-lifecycle.spec.js'
+      - 'qa/engineering-case-store.spec.js'
       - 'qa/cross-browser-smoke.spec.js'
       - 'playwright.config.cjs'
       - 'playwright.cross-browser.config.cjs'
@@ -77,7 +78,7 @@ jobs:
           for i in {1..20}; do curl -fsS http://127.0.0.1:4173/index.html >/dev/null && exit 0; sleep 1; done
           cat /tmp/mouldmaster-http.log
           exit 1
-      - name: Chromium mobile, material, evidence and PWA regression tests
+      - name: Chromium mobile, material, evidence, engineering-store and PWA regression tests
         run: npx playwright test --config=playwright.config.cjs
       - name: Cross-browser desktop and tablet smoke tests
         run: npx playwright test --config=playwright.cross-browser.config.cjs
