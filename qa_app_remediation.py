@@ -30,6 +30,8 @@ bridge = text("src/domains/engineering/store-bridge.js")
 workspace = text("mould-master-workspace.js")
 a11y = text("accessibility-hardening.js")
 pages = text(".github/workflows/pages.yml")
+main_guard = text(".github/workflows/main-pr-provenance-guard.yml")
+production_source = text("tools/verify_production_source.py")
 mobile = text(".github/workflows/mobile-browser-qa.yml")
 desktop_pkg = json.loads(text("desktop/electron/package.json"))
 integrity_script = text("desktop/electron/scripts/generate-integrity.cjs")
@@ -88,6 +90,27 @@ for marker in (
 run = subprocess.run(["python", "tools/verify_production_source.py", "--self-test"], cwd=ROOT, capture_output=True, text=True)
 need(run.returncode == 0, f"production-source verifier self-test failed: {run.stdout}\n{run.stderr}")
 
+# GitHub's commit->PR association is eventually consistent immediately after squash merge.
+# Both production publication and the post-merge guard must retry temporary invisibility,
+# but exact merge SHA/base matching and ambiguity remain fail-closed.
+for marker in (
+    "PROVENANCE_ATTEMPTS = 20",
+    "matching_merged_prs",
+    "resolve_merged_pr",
+    "len(matches) > 1",
+    "merge_commit_sha",
+    "time.sleep(3)",
+):
+    need(marker in production_source, f"production-source eventual-consistency guard missing: {marker}")
+for marker in (
+    "for attempt in {1..20}",
+    "match_count",
+    "ambiguously attributable",
+    "Merged-PR association is not visible yet",
+    "merge_commit_sha == $sha",
+):
+    need(marker in main_guard, f"post-merge provenance visibility guard missing: {marker}")
+
 # Browser matrix and lifecycle regression coverage.
 for marker in ("chromium firefox webkit", "playwright.cross-browser.config.cjs", "qa/pwa-lifecycle.spec.js", "qa/cross-browser-smoke.spec.js"):
     need(marker in mobile, f"browser-matrix QA coverage missing: {marker}")
@@ -101,4 +124,4 @@ need("new MutationObserver" not in pwa, "PWA shell still uses document-wide muta
 need("new MutationObserver" not in materials, "Materials domain still uses document-wide mutation polling")
 need("mutationScope:'changed-subtrees'" in a11y, "accessibility safety net is not constrained to changed subtrees")
 
-print("MouldMaster app-wide remediation QA passed: production gate, storage ownership/explicit parity, variant-safe materials, PWA lifecycle, legacy distribution separation, deterministic browser matrix and targeted observers")
+print("MouldMaster app-wide remediation QA passed: production gate + post-merge visibility retry, storage ownership/explicit parity, variant-safe materials, PWA lifecycle, legacy distribution separation, deterministic browser matrix and targeted observers")
