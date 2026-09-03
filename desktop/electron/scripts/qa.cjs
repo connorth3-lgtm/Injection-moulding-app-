@@ -7,6 +7,7 @@ const MAIN=fs.readFileSync(path.join(DESKTOP,'src','main.cjs'),'utf8');
 const PKG=JSON.parse(fs.readFileSync(path.join(DESKTOP,'package.json'),'utf8'));
 const LOCK=JSON.parse(fs.readFileSync(path.join(DESKTOP,'package-lock.json'),'utf8'));
 const VERSION=JSON.parse(fs.readFileSync(path.join(ROOT,'version.json'),'utf8'));
+const DOMAIN_MANIFEST=JSON.parse(fs.readFileSync(path.join(ROOT,'runtime-domain-manifest.json'),'utf8'));
 const INTEGRITY=JSON.parse(fs.readFileSync(path.join(DESKTOP,'generated','integrity.json'),'utf8'));
 function need(cond,msg){if(!cond)throw new Error(msg)}
 need(PKG.license==='Apache-2.0','desktop package must remain Apache-2.0');
@@ -30,6 +31,12 @@ need(INTEGRITY.schema===1,'integrity schema mismatch');
 need(INTEGRITY.release===VERSION.desktop_release,'integrity release must match desktop_release');
 need(Object.keys(INTEGRITY.files||{}).length>=15,'integrity manifest is incomplete');
 for(const [name,hash] of Object.entries(INTEGRITY.files)){need(/^[a-f0-9]{64}$/.test(hash),`bad SHA-256 for ${name}`);need(fs.existsSync(path.join(ROOT,name)),`integrity asset missing: ${name}`)}
+need(DOMAIN_MANIFEST?.schemaVersion===1&&Array.isArray(DOMAIN_MANIFEST.assets)&&Array.isArray(DOMAIN_MANIFEST.dataAssets),'runtime domain manifest invalid for desktop QA');
+for(const raw of [...DOMAIN_MANIFEST.assets,...DOMAIN_MANIFEST.dataAssets]){
+  need(typeof raw==='string'&&raw.startsWith('./'),`unsafe runtime manifest path in desktop QA: ${raw}`);
+  const name=raw.slice(2);
+  need(Object.prototype.hasOwnProperty.call(INTEGRITY.files,name),`runtime manifest asset is not integrity-hashed/servable by desktop: ${raw}`);
+}
 for(const req of ['generated/dependency-licenses.json','generated/sbom.cdx.json','THREAT_MODEL.md'])need(fs.existsSync(path.join(DESKTOP,req)),`desktop transparency artifact missing: ${req}`);
 const licences=JSON.parse(fs.readFileSync(path.join(DESKTOP,'generated','dependency-licenses.json'),'utf8'));
 need(licences.schema===1 && Array.isArray(licences.packages),'dependency licence inventory invalid');
@@ -41,4 +48,4 @@ need(fs.existsSync(path.join(ROOT,'LICENSE')),'repository Apache-2.0 licence mis
 need(fs.existsSync(path.join(ROOT,'OPEN_SOURCE_AND_PATENT_POLICY.md')),'open-source/patent policy missing');
 need(fs.existsSync(path.join(ROOT,'THIRD_PARTY_NOTICES.md')),'third-party notices missing');
 need(fs.existsSync(path.join(ROOT,'.github','workflows','microsoft-store-msix.yml')),'Microsoft Store build workflow missing');
-console.log('MouldMaster open desktop QA passed');
+console.log('MouldMaster open desktop QA passed (runtime manifest assets integrity-hashed and desktop-servable)');
