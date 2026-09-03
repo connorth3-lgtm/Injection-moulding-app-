@@ -87,13 +87,14 @@ require(locked_msix is not None and locked_msix.get('version') == '27.0.0-alpha.
 require(bool(locked_msix.get('resolved')) and bool(locked_msix.get('integrity')), 'MSIX electron-builder lock entry must include resolved tarball and integrity')
 require(re.fullmatch(r'sha512-[A-Za-z0-9+/=]+', locked_msix.get('integrity', '')) is not None, 'MSIX electron-builder lock integrity must be SHA-512')
 require("EXPECTED_VERSION = '27.0.0-alpha.7'" in msix_runner, 'MSIX runner must fail closed on builder version drift')
+require("args.length === 1 && args[0] === '--verify-toolchain'" in msix_runner and 'electron-builder ${pkg.version}' in msix_runner, 'MSIX runner must expose explicit checked toolchain verification')
 require('msix-toolchain' in msix_runner and 'node_modules' in msix_runner and 'spawnSync' in msix_runner, 'MSIX runner must execute only the isolated installed toolchain')
 require('npx --yes electron-builder' not in workflow, 'Store workflow must not download electron-builder at package time')
 require('desktop/electron/msix-toolchain/package-lock.json' in workflow, 'Store workflow cache must include the MSIX lockfile')
 require('working-directory: desktop/electron/msix-toolchain' in workflow and 'npm ci --no-audit --fund=false' in workflow, 'Store workflow must install the isolated MSIX toolchain with npm ci')
-require('node scripts/run-msix-builder.cjs --version' in workflow and 'node scripts/run-msix-builder.cjs --win msix --x64 --arm64' in workflow, 'Store workflow must verify and use the locked local MSIX runner')
+require('node scripts/run-msix-builder.cjs --verify-toolchain' in workflow and 'node scripts/run-msix-builder.cjs --win msix --x64 --arm64' in workflow, 'Store workflow must verify and use the locked local MSIX runner')
 require('npm ci --prefix desktop/electron' in dependency_lock_workflow and 'npm ci --prefix desktop/electron/msix-toolchain' in dependency_lock_workflow, 'dependency-lock CI must prove both npm lockfiles with npm ci')
-require('root electron-builder drift' in dependency_lock_workflow and 'run-msix-builder.cjs --version' in dependency_lock_workflow, 'dependency-lock CI must prove builder isolation')
+require('root electron-builder drift' in dependency_lock_workflow and 'run-msix-builder.cjs --verify-toolchain' in dependency_lock_workflow, 'dependency-lock CI must prove builder isolation')
 
 # Current Microsoft Store trust boundary: Store MSIX gets Microsoft signing only after certification.
 for marker in ["re-signs the package with a Microsoft certificate", "Windows App Certification Kit", "must never be guessed"]:
