@@ -1,0 +1,18 @@
+{
+  "schemaVersion": 1,
+  "status": "pending-real-at-validation",
+  "boundary": "Automated browser and accessibility regressions do not substitute for real assistive-technology interaction by a human reviewer. This contract must remain pending until each required matrix row has dated evidence from the named platform/AT/browser combination.",
+  "requiredMatrix": [
+    {"id":"nvda-firefox-windows","assistiveTechnology":"NVDA","browser":"Firefox","platform":"Windows","status":"pending","testedAt":null,"reviewer":null,"evidenceRef":null},
+    {"id":"nvda-chromium-windows","assistiveTechnology":"NVDA","browser":"Chrome or Chromium","platform":"Windows","status":"pending","testedAt":null,"reviewer":null,"evidenceRef":null},
+    {"id":"voiceover-safari-macos","assistiveTechnology":"VoiceOver","browser":"Safari","platform":"macOS","status":"pending","testedAt":null,"reviewer":null,"evidenceRef":null},
+    {"id":"voiceover-safari-ios","assistiveTechnology":"VoiceOver","browser":"Safari","platform":"iOS","status":"pending","testedAt":null,"reviewer":null,"evidenceRef":null}
+  ],
+  "requiredTasks": [
+    "Navigate primary product areas and return focus predictably",
+    "Search and paginate exact commercial material grades",
+    "Open sourced exact-grade details and understand property/process evidence boundaries",
+    "Complete core learner assessment interactions with announced state and errors",
+    "Create or edit a Mould Master evidence case without losing semantic context"
+  ]
+}
