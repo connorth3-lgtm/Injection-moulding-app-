@@ -1,10 +1,12 @@
 #!/usr/bin/env python3
 """Fail closed unless a production SHA came from a fully-green merged PR.
 
-GitHub's commit-to-pull association can be eventually consistent immediately after a
-squash merge. Provenance therefore retries only the *visibility* of the exact merged
-PR association; ambiguity, a wrong base/merge SHA, failed checks, and policy failures
-still fail closed.
+GitHub's commit-to-pull association can lag immediately after a squash merge. Production
+provenance therefore cross-checks that association with the recent closed pull-request
+collection for `main`, where `merge_commit_sha` is an independent exact identifier. A
+candidate is accepted only when it is merged, targets `main`, and its merge SHA exactly
+matches the production SHA. Duplicate observations of the same PR are deduplicated;
+multiple distinct exact matches, failed checks, and policy failures still fail closed.
 
 Native branch protection is reported separately because GitHub's repository setting is
 an administrator-side control. The provenance/check gate is sufficient to stop a
@@ -24,6 +26,7 @@ from urllib.request import Request, urlopen
 API = "https://api.github.com"
 API_VERSION = "2026-03-10"
 PROVENANCE_ATTEMPTS = 20
+RECENT_MAIN_PULL_LIMIT = 100
 REQUIRED_WORKFLOWS = (
     "MouldMaster Release QA",
     "Mobile Browser QA",
@@ -39,7 +42,7 @@ def request_json(token: str, url: str) -> object:
             "Accept": "application/vnd.github+json",
             "Authorization": f"Bearer {token}",
             "X-GitHub-Api-Version": API_VERSION,
-            "User-Agent": "MouldMaster-Production-Source-Guard/2",
+            "User-Agent": "MouldMaster-Production-Source-Guard/3",
         },
     )
     try:
@@ -63,11 +66,36 @@ def matching_merged_prs(payload: object, source_sha: str) -> list[dict]:
     ]
 
 
+def unique_matching_merged_prs(payloads: tuple[object, ...], source_sha: str) -> list[dict]:
+    """Deduplicate the same exact PR observed through independent GitHub endpoints."""
+    by_number: dict[int, dict] = {}
+    for payload in payloads:
+        for row in matching_merged_prs(payload, source_sha):
+            try:
+                number = int(row.get("number"))
+            except (TypeError, ValueError):
+                raise SystemExit("GitHub returned an exact merged-PR candidate without a usable PR number")
+            by_number[number] = row
+    return list(by_number.values())
+
+
 def resolve_merged_pr(token: str, repository: str, source_sha: str) -> dict:
-    """Resolve exactly one merged-main PR, tolerating only temporary API invisibility."""
+    """Resolve exactly one merged-main PR without trusting a single association index."""
+    recent_query = urlencode(
+        {
+            "state": "closed",
+            "base": "main",
+            "sort": "updated",
+            "direction": "desc",
+            "per_page": RECENT_MAIN_PULL_LIMIT,
+        }
+    )
+    recent_url = f"{API}/repos/{repository}/pulls?{recent_query}"
+
     for attempt in range(1, PROVENANCE_ATTEMPTS + 1):
-        pulls = request_json(token, f"{API}/repos/{repository}/commits/{source_sha}/pulls")
-        matches = matching_merged_prs(pulls, source_sha)
+        associated = request_json(token, f"{API}/repos/{repository}/commits/{source_sha}/pulls")
+        recent_main = request_json(token, recent_url)
+        matches = unique_matching_merged_prs((associated, recent_main), source_sha)
         if len(matches) > 1:
             raise SystemExit(
                 f"Production source {source_sha} is ambiguously attributable to {len(matches)} merged PRs targeting main"
@@ -76,13 +104,13 @@ def resolve_merged_pr(token: str, repository: str, source_sha: str) -> dict:
             return matches[0]
         if attempt < PROVENANCE_ATTEMPTS:
             print(
-                f"Merged-PR association for {source_sha} is not visible yet; "
+                f"Exact merged-PR provenance for {source_sha} is not visible through either GitHub index yet; "
                 f"retrying ({attempt}/{PROVENANCE_ATTEMPTS})."
             )
             time.sleep(3)
     raise SystemExit(
         f"Production source {source_sha} is not uniquely attributable to a merged PR targeting main "
-        f"after {PROVENANCE_ATTEMPTS} visibility checks"
+        f"after {PROVENANCE_ATTEMPTS} cross-index checks"
     )
 
 
@@ -143,13 +171,19 @@ def self_test() -> None:
     }
     ok, states = successful_required_workflows(sample)
     assert ok and len(states) == 4
+
     source = "a" * 40
     exact = {"number": 1, "merged_at": "x", "base": {"ref": "main"}, "merge_commit_sha": source}
+    same_exact = dict(exact)
     wrong_base = {"number": 2, "merged_at": "x", "base": {"ref": "dev"}, "merge_commit_sha": source}
     wrong_sha = {"number": 3, "merged_at": "x", "base": {"ref": "main"}, "merge_commit_sha": "b" * 40}
+    second_exact = dict(exact, number=4)
+
     assert matching_merged_prs([], source) == []
     assert matching_merged_prs([wrong_base, wrong_sha, exact], source) == [exact]
-    assert len(matching_merged_prs([exact, dict(exact, number=4)], source)) == 2
+    assert unique_matching_merged_prs(([], [exact]), source) == [exact]
+    assert unique_matching_merged_prs(([exact], [same_exact]), source) == [same_exact]
+    assert len(unique_matching_merged_prs(([exact], [second_exact]), source)) == 2
     print("Production source verifier self-test passed")
 
 
