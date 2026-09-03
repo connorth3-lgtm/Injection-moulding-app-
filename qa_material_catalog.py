@@ -36,12 +36,18 @@ lotte_target = pilot_by_id["mfr-lotte-chemical"]
 need(lotte_target.get("stage") == "validated-published-pilot", "LOTTE Korean-pilot progress must reflect the validated published pilot")
 need(lotte_target.get("validatedDatasetId") == "lotte-exact-grade-pilot-v1", "LOTTE pilot dataset pointer drift")
 need(lotte_target.get("publishedRuntimeCatalog") == "material-catalog-v1.json", "LOTTE runtime catalog pointer drift")
-for pending_id in ("mfr-lg-chem", "mfr-kep", "mfr-kolon-enp"):
+
+lg_target = pilot_by_id["mfr-lg-chem"]
+need(lg_target.get("stage") == "validated-published-pilot", "LG Chem Korean-pilot progress must reflect the validated published pilot")
+need(lg_target.get("validatedDatasetId") == "lg-chem-exact-grade-pilot-v1", "LG Chem pilot dataset pointer drift")
+need(lg_target.get("publishedRuntimeCatalog") == "material-catalog-v1.json", "LG Chem runtime catalog pointer drift")
+
+for pending_id in ("mfr-kep", "mfr-kolon-enp"):
     need(pilot_by_id[pending_id].get("stage") == "discovery-pending", f"unsourced Korean pilot target must remain discovery-pending: {pending_id}")
 progress = pilot.get("progress") or {}
 need(progress.get("targetManufacturers") == 4, "Korean pilot target-manufacturer count drift")
-need(progress.get("validatedManufacturers") == 1, "Korean pilot validated-manufacturer count must reflect LOTTE only")
-need(progress.get("publishedExactGrades") == 4, "Korean pilot published exact-grade count must reflect current LOTTE pilot")
+need(progress.get("validatedManufacturers") == 2, "Korean pilot validated-manufacturer count must reflect LOTTE + LG Chem")
+need(progress.get("publishedExactGrades") == 7, "Korean pilot published exact-grade count must reflect LOTTE + LG Chem pilots")
 
 errors = validate_staging()
 need(not errors, "material staging semantic QA failed:\n" + "\n".join(errors))
@@ -51,6 +57,9 @@ need(not errors, "material staging semantic QA failed:\n" + "\n".join(errors))
 need(CATALOG == ROOT / "material-catalog-v1.json", "runtime catalog must remain outside private data/ staging tree")
 catalog = load_json(CATALOG)
 need(catalog.get("schemaVersion") == 1, "material catalog schema version drift")
+need(catalog.get("catalogVersion") == "generated", "material catalog must use the compiler-owned generated version marker")
+need("variant/revision/production identity differs" in str(catalog.get("boundary") or ""), "material catalog boundary does not describe variant-safe identity")
+need({m.get("id") for m in catalog.get("manufacturers") or []} == {"mfr-lg-chem", "mfr-lotte-chemical"}, "runtime manufacturer set drift")
 need(isinstance(catalog.get("grades"), list), "material catalog grades must be a list")
 for idx, grade in enumerate(catalog["grades"]):
     grade_errors = validate_grade(grade, f"catalog grade[{idx}]")
@@ -71,9 +80,10 @@ for staging_path in sorted(STAGING.glob("*.json")):
                 staged_grade_ids.add(gid)
 runtime_grade_ids = {grade.get("id") for grade in catalog.get("grades") or []}
 need(staged_grade_ids == runtime_grade_ids, f"runtime/staging material drift: staged={sorted(staged_grade_ids)} runtime={sorted(runtime_grade_ids)}")
+need(len(runtime_grade_ids) == 7, "runtime exact-grade count must remain seven for the two-manufacturer Korean pilot")
 
-# Pilot proof: exact-grade rollout has begun with current primary-source LOTTE
-# records while the umbrella manifest records progress without copying claims.
+# Pilot proof: current primary-source LOTTE records remain unchanged while the
+# umbrella manifest records progress without copying exact-grade claims.
 lotte_pilot = load_json(STAGING / "lotte-exact-grade-pilot-v1.json")
 lotte_grades = [g for m in lotte_pilot.get("manufacturers") or [] for g in m.get("gradeRecords") or []]
 need({g.get("grade") for g in lotte_grades} == {"NH-1033", "NH-1034R", "AE-3060 H", "XP-2140C"}, "LOTTE exact-grade pilot set drift")
@@ -84,6 +94,92 @@ need(lotte_grade_ids.issubset(runtime_grade_ids), "Korean pilot LOTTE validated 
 for grade in lotte_grades:
     need((grade.get("provenance") or {}).get("stage") == "validated", f"LOTTE pilot grade is not validated: {grade.get('id')}")
     need(all(str(source.get("url", "")).startswith("https://product.lottechem.com/") for source in grade.get("sources") or []), f"LOTTE pilot grade has a non-primary source: {grade.get('id')}")
+
+# LG Chem pilot proof: three exact LUPOY grades come only from current LG Chem
+# / LG Chem On primary TDS records. Numeric comparison values are pinned here so
+# source/staging/runtime drift cannot silently alter their engineering meaning.
+lg_pilot = load_json(STAGING / "lg-chem-exact-grade-pilot-v1.json")
+need(lg_pilot.get("datasetId") == "lg-chem-exact-grade-pilot-v1", "LG Chem exact-grade dataset id drift")
+need(lg_pilot.get("status") == "validated-pilot", "LG Chem exact-grade dataset status drift")
+lg_grades = [g for m in lg_pilot.get("manufacturers") or [] for g in m.get("gradeRecords") or []]
+need({g.get("grade") for g in lg_grades} == {"GP1000L", "GP1000ML", "GP5206F"}, "LG Chem exact-grade pilot set drift")
+lg_grade_ids = {g.get("id") for g in lg_grades}
+need(set(lg_target.get("validatedGradeIds") or []) == lg_grade_ids, "Korean pilot LG Chem grade-ID progress does not match validated dataset")
+need(lg_target.get("publishedGradeCount") == len(lg_grade_ids) == 3, "Korean pilot LG Chem published-grade count drift")
+need(lg_grade_ids.issubset(runtime_grade_ids), "Korean pilot LG Chem validated grades are not all published in runtime catalog")
+
+lg_by_grade = {g["grade"]: g for g in lg_grades}
+for grade in lg_grades:
+    gid = grade.get("id")
+    need((grade.get("provenance") or {}).get("stage") == "validated", f"LG Chem pilot grade is not validated: {gid}")
+    need((grade.get("lifecycle") or {}).get("status") == "unknown", f"LG Chem lifecycle must remain conservative/unknown: {gid}")
+    sources = grade.get("sources") or []
+    need(len(sources) == 1, f"LG Chem pilot grade must retain exactly one reviewed exact-grade TDS: {gid}")
+    source = sources[0]
+    need(source.get("publisher") == "LG Chem", f"LG Chem source publisher drift: {gid}")
+    need(source.get("kind") == "manufacturer-datasheet", f"LG Chem source kind drift: {gid}")
+    need(str(source.get("url", "")).startswith("https://www.lgchemon.com/"), f"LG Chem pilot grade has a non-primary source: {gid}")
+    need(bool(source.get("documentDate")), f"LG Chem exact-grade source must retain documentDate: {gid}")
+    need(source.get("retrievedAt") == "2026-09-03", f"LG Chem source retrieval date drift: {gid}")
+    need(all(obs.get("productionRecipe") is False for obs in grade.get("processing") or []), f"LG Chem processing guidance became a production recipe: {gid}")
+
+
+def observation(grade, oid):
+    matches = [x for x in grade.get("properties") or [] if x.get("id") == oid]
+    need(len(matches) == 1, f"expected exactly one property observation {oid}")
+    return matches[0]
+
+
+def processing(grade, oid):
+    matches = [x for x in grade.get("processing") or [] if x.get("id") == oid]
+    need(len(matches) == 1, f"expected exactly one processing observation {oid}")
+    return matches[0]
+
+
+def assert_mfr(grade, oid, value, temp, load):
+    obs = observation(grade, oid)
+    need(obs.get("property") == "Melt Flow Rate", f"LG Chem MFR property name drift: {oid}")
+    need(obs.get("value") == value and obs.get("unit") == "g/10min", f"LG Chem MFR value/unit drift: {oid}")
+    need(obs.get("testMethod") == "ISO 1133", f"LG Chem MFR method drift: {oid}")
+    need(obs.get("temperatureC") == temp and obs.get("loadKg") == load, f"LG Chem MFR test condition drift: {oid}")
+    need(obs.get("comparisonReady") is True, f"LG Chem MFR must remain comparison-ready: {oid}")
+
+
+def assert_shrinkage_pair(grade, stem, value):
+    flow = observation(grade, f"{stem}-flow")
+    transverse = observation(grade, f"{stem}-transverse")
+    for obs, direction in ((flow, "flow"), (transverse, "transverse")):
+        need(obs.get("property") == "Mould Shrinkage", f"LG Chem shrinkage property name drift: {obs.get('id')}")
+        need(obs.get("value") == value and obs.get("unit") == "%", f"LG Chem shrinkage value/unit drift: {obs.get('id')}")
+        need(obs.get("testMethod") == "ISO 294-4" and obs.get("specimen") == "2.0 mm", f"LG Chem shrinkage method/specimen drift: {obs.get('id')}")
+        need(obs.get("direction") == direction and obs.get("comparisonReady") is True, f"LG Chem shrinkage direction/readiness drift: {obs.get('id')}")
+
+
+gp1000l = lg_by_grade["GP1000L"]
+assert_mfr(gp1000l, "obs-lgchem-gp1000l-mfr", 23.4, 300, 1.2)
+assert_shrinkage_pair(gp1000l, "obs-lgchem-gp1000l-shrink", "0.6-0.8")
+need((gp1000l.get("sources") or [])[0].get("documentDate") == "2025-12-02", "GP1000L TDS document date drift")
+need("intermittently redirects" in str((gp1000l.get("provenance") or {}).get("notes") or ""), "GP1000L endpoint limitation note missing")
+
+gp1000ml = lg_by_grade["GP1000ML"]
+assert_mfr(gp1000ml, "obs-lgchem-gp1000ml-mfr", 15.0, 300, 1.2)
+assert_shrinkage_pair(gp1000ml, "obs-lgchem-gp1000ml-shrink", "0.6-0.8")
+need((gp1000ml.get("sources") or [])[0].get("documentDate") == "2025-02-10", "GP1000ML TDS document date drift")
+need((processing(gp1000ml, "proc-lgchem-gp1000ml-dry-temp").get("min"), processing(gp1000ml, "proc-lgchem-gp1000ml-dry-temp").get("max")) == (100, 120), "GP1000ML drying-temperature range drift")
+need((processing(gp1000ml, "proc-lgchem-gp1000ml-melt-temp").get("min"), processing(gp1000ml, "proc-lgchem-gp1000ml-melt-temp").get("max")) == (300, 320), "GP1000ML melt-temperature range drift")
+need((processing(gp1000ml, "proc-lgchem-gp1000ml-mould-temp").get("min"), processing(gp1000ml, "proc-lgchem-gp1000ml-mould-temp").get("max")) == (80, 120), "GP1000ML mould-temperature range drift")
+need(processing(gp1000ml, "proc-lgchem-gp1000ml-max-moisture").get("value") == 0.02, "GP1000ML maximum-moisture limit drift")
+
+gp5206f = lg_by_grade["GP5206F"]
+assert_mfr(gp5206f, "obs-lgchem-gp5206f-mfr", 3.0, 250, 2.16)
+assert_shrinkage_pair(gp5206f, "obs-lgchem-gp5206f-shrink", "0.2-0.4")
+need((gp5206f.get("sources") or [])[0].get("documentDate") == "2025-02-10", "GP5206F TDS document date drift")
+need((gp5206f.get("composition") or {}).get("glassFibrePct") == 20, "GP5206F exact GF20% composition drift")
+need((gp5206f.get("composition") or {}).get("flameRetardant") is True, "GP5206F flame-retardant claim drift")
+need((processing(gp5206f, "proc-lgchem-gp5206f-dry-temp").get("min"), processing(gp5206f, "proc-lgchem-gp5206f-dry-temp").get("max")) == (75, 85), "GP5206F drying-temperature range drift")
+need((processing(gp5206f, "proc-lgchem-gp5206f-melt-temp").get("min"), processing(gp5206f, "proc-lgchem-gp5206f-melt-temp").get("max")) == (235, 265), "GP5206F melt-temperature range drift")
+need((processing(gp5206f, "proc-lgchem-gp5206f-mould-temp").get("min"), processing(gp5206f, "proc-lgchem-gp5206f-mould-temp").get("max")) == (50, 80), "GP5206F mould-temperature range drift")
+need(processing(gp5206f, "proc-lgchem-gp5206f-max-moisture").get("value") == 0.02, "GP5206F maximum-moisture limit drift")
 
 # 5-6) Cross-domain material links and IndexedDB engineering store.
 store = (ROOT / "src/domains/engineering/engineering-store.js").read_text(encoding="utf-8")
@@ -153,7 +249,7 @@ need("What do you need to do?" in areas, "task-first product-area UI missing")
 print(
     "MouldMaster domain/material foundation QA passed: "
     f"{len(pilot['manufacturers'])} Korean pilot manufacturers; "
-    f"{progress['validatedManufacturers']} validated manufacturer; "
+    f"{progress['validatedManufacturers']} validated manufacturers; "
     f"{len(catalog['grades'])} published exact grades; "
     f"{len(foundation_domain_files)} domain modules"
 )

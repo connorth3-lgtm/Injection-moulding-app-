@@ -14,13 +14,13 @@ async function openApp(page){
 }
 
 for(const viewport of [{name:'android-412x915',width:412,height:915},{name:'small-360x800',width:360,height:800}]){
-  test(`${viewport.name}: exact LOTTE grade keeps property, processing and provenance context visible`,async({page})=>{
+  test(`${viewport.name}: exact LOTTE and LG Chem grades keep property, processing and provenance context visible`,async({page})=>{
     await page.setViewportSize({width:viewport.width,height:viewport.height});
     await openApp(page);
     await page.locator('[data-mm-product-area="materials"]').click();
     await expect(page.locator('#materials')).toBeVisible();
     await expect(page.locator('#mmExactMaterialCatalog')).toBeVisible();
-    await expect(page.locator('[data-mm-material-grade]')).toHaveCount(4);
+    await expect(page.locator('[data-mm-material-grade]')).toHaveCount(7);
 
     const search=page.locator('[data-mm-exact-query]');
     await search.fill('NH-1033');
@@ -55,6 +55,42 @@ for(const viewport of [{name:'android-412x915',width:412,height:915},{name:'smal
     await expect(sources.first()).toHaveAttribute('target','_blank');
     await expect(sources.first()).toHaveAttribute('rel',/noopener/);
     await expect(card.getByRole('button',{name:'Start Mould Master case'})).toBeVisible();
+
+    await search.fill('GP5206F');
+    const lgCard=page.locator('[data-mm-material-grade="mat-lgchem-lupoy-gp5206f"]');
+    await expect(lgCard).toBeVisible();
+    await expect(page.locator('[data-mm-material-grade]')).toHaveCount(1);
+    await expect(lgCard).toContainText('LG Chem · LUPOY · GP5206F');
+    await expect(lgCard).toContainText('Melt Flow Rate · 3 g/10min');
+    await expect(lgCard).toContainText('ISO 1133 · 250°C · 2.16 kg');
+    await expect(lgCard).toContainText('3 sourced properties · 5 processing observations');
+
+    const lgDetails=lgCard.locator('details.mm-exact-detail');
+    await lgDetails.locator('summary').click();
+    await expect(lgDetails).toHaveAttribute('open','');
+    await expect(lgDetails).toContainText('Mould Shrinkage');
+    await expect(lgDetails).toContainText('0.2-0.4 %');
+    await expect(lgDetails).toContainText('ISO 294-4 · 2.0 mm · flow direction');
+    await expect(lgDetails).toContainText('ISO 294-4 · 2.0 mm · transverse direction');
+    await expect(lgDetails).toContainText('Supplier processing guidance');
+    await expect(lgDetails).toContainText('Starting evidence, not a production recipe.');
+    await expect(lgDetails).toContainText('Drying temperature');
+    await expect(lgDetails).toContainText('75–85 °C');
+    await expect(lgDetails).toContainText('Maximum moisture content');
+    await expect(lgDetails).toContainText('0.02 %');
+    await expect(lgDetails).toContainText('Melt temperature');
+    await expect(lgDetails).toContainText('235–265 °C');
+    await expect(lgDetails).toContainText('Mould temperature');
+    await expect(lgDetails).toContainText('50–80 °C');
+    await expect(lgDetails).toContainText('Lifecycle status: unknown');
+    await expect(lgDetails).toContainText('provenance validated');
+
+    const lgSources=lgDetails.locator('.mm-exact-sources a');
+    await expect(lgSources).toHaveCount(1);
+    await expect(lgSources.first()).toHaveAttribute('href',/https:\/\/www\.lgchemon\.com\/sfc\/servlet\.shepherd\/document\/download\//);
+    await expect(lgSources.first()).toHaveAttribute('target','_blank');
+    await expect(lgSources.first()).toHaveAttribute('rel',/noopener/);
+    await expect(lgCard.getByRole('button',{name:'Start Mould Master case'})).toBeVisible();
 
     const geometry=await page.evaluate(()=>({viewport:document.documentElement.clientWidth,page:document.documentElement.scrollWidth,wrappers:[...document.querySelectorAll('.mm-exact-table-wrap')].map(x=>({client:x.clientWidth,scroll:x.scrollWidth}))}));
     expect(geometry.page).toBeLessThanOrEqual(geometry.viewport+1);

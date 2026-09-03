@@ -5,8 +5,8 @@
   "purpose": "Stress-test the canonical material-grade model against large commercial engineering-plastics catalogues without publishing unverified grade claims.",
   "progress": {
     "targetManufacturers": 4,
-    "validatedManufacturers": 1,
-    "publishedExactGrades": 4,
+    "validatedManufacturers": 2,
+    "publishedExactGrades": 7,
     "lastReviewedAt": "2026-09-03"
   },
   "manufacturers": [
@@ -31,8 +31,16 @@
       "id": "mfr-lg-chem",
       "name": "LG Chem",
       "country": "South Korea",
-      "stage": "discovery-pending",
+      "stage": "validated-published-pilot",
       "gradeRecords": [],
+      "validatedDatasetId": "lg-chem-exact-grade-pilot-v1",
+      "validatedGradeIds": [
+        "mat-lgchem-lupoy-gp1000ml",
+        "mat-lgchem-lupoy-gp5206f",
+        "mat-lgchem-lupoy-gp1000l"
+      ],
+      "publishedRuntimeCatalog": "material-catalog-v1.json",
+      "publishedGradeCount": 3,
       "sourceQueue": []
     },
     {
@@ -62,7 +70,8 @@
   "notes": [
     "This umbrella manifest tracks pilot progress without duplicating exact-grade records; gradeRecords intentionally remains empty here.",
     "LOTTE pilot progress points to the separately validated lotte-exact-grade-pilot-v1 dataset and the published runtime catalog.",
-    "LG Chem, KEP and KOLON ENP remain discovery targets until primary-source exact-grade records pass the same staging and semantic gates.",
+    "LG Chem pilot progress points to the separately validated lg-chem-exact-grade-pilot-v1 dataset; exact-grade claims come only from current LG Chem/LG Chem On primary TDS records.",
+    "KEP and KOLON ENP remain discovery targets until primary-source exact-grade records pass the same staging and semantic gates.",
     "Acquired source documents should be fingerprinted before extraction where redistribution/rights permit local retention.",
     "Every extracted observation must reference a sourceId and retain its test conditions rather than collapsing datasheet tables into generic values."
   ]

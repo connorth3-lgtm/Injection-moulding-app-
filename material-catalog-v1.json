@@ -1,13 +1,92 @@
 {
   "schemaVersion": 1,
-  "catalogVersion": "2026.09.03-lotte-pilot.1",
+  "catalogVersion": "generated",
   "generated": true,
   "status": "validated",
-  "boundary": "Compiled only from staged exact-grade records whose provenance stage is validated/published and which pass semantic QA. Internal staging/schema files are not part of the public runtime artifact.",
+  "boundary": "Compiled only from staged exact-grade records whose provenance stage is validated/published and which pass semantic QA. Internal staging/schema files are not part of the public runtime artifact. Commercial grade names may legitimately coexist when variant/revision/production identity differs.",
   "manufacturers": [
+    {"id": "mfr-lg-chem", "name": "LG Chem", "country": "South Korea"},
     {"id": "mfr-lotte-chemical", "name": "LOTTE Chemical", "country": "South Korea"}
   ],
   "grades": [
+    {
+      "schemaVersion": 1,
+      "id": "mat-lgchem-lupoy-gp1000l",
+      "manufacturer": {"id": "mfr-lg-chem", "name": "LG Chem", "country": "South Korea", "website": "https://www.lgchem.com/"},
+      "brand": "LUPOY",
+      "grade": "GP1000L",
+      "aliases": [],
+      "polymer": {"family": "PC"},
+      "composition": {"flameRetardant": false, "notes": "LG Chem exact-grade TDS describes injection-moulding PC with non-flame retardancy."},
+      "properties": [
+        {"id": "obs-lgchem-gp1000l-mfr", "property": "Melt Flow Rate", "value": 23.4, "unit": "g/10min", "testMethod": "ISO 1133", "temperatureC": 300, "loadKg": 1.2, "direction": "not-applicable", "sourceId": "src-lgchem-gp1000l-tds-20251202", "sourcePage": "1", "comparisonReady": true, "limitations": "LG Chem typical value for material selection only; not a specification and not for part or tool design."},
+        {"id": "obs-lgchem-gp1000l-shrink-flow", "property": "Mould Shrinkage", "value": "0.6-0.8", "unit": "%", "testMethod": "ISO 294-4", "specimen": "2.0 mm", "direction": "flow", "sourceId": "src-lgchem-gp1000l-tds-20251202", "sourcePage": "1", "comparisonReady": true, "limitations": "LG Chem typical value for material selection only; not a specification and not for part or tool design."},
+        {"id": "obs-lgchem-gp1000l-shrink-transverse", "property": "Mould Shrinkage", "value": "0.6-0.8", "unit": "%", "testMethod": "ISO 294-4", "specimen": "2.0 mm", "direction": "transverse", "sourceId": "src-lgchem-gp1000l-tds-20251202", "sourcePage": "1", "comparisonReady": true, "limitations": "LG Chem typical value for material selection only; not a specification and not for part or tool design."}
+      ],
+      "processing": [],
+      "approvals": [],
+      "lifecycle": {"status": "unknown", "checkedAt": "2026-09-03"},
+      "sources": [
+        {"id": "src-lgchem-gp1000l-tds-20251202", "publisher": "LG Chem", "title": "LUPOY GP1000L Technical Data Sheet (ISO)", "url": "https://www.lgchemon.com/sfc/servlet.shepherd/document/download/0692x00000DHBHwAAP", "kind": "manufacturer-datasheet", "revision": null, "documentDate": "2025-12-02", "retrievedAt": "2026-09-03"}
+      ],
+      "provenance": {"stage": "validated", "ingestedAt": "2026-09-03T00:00:00Z", "reviewedAt": "2026-09-03T00:00:00Z", "reviewer": "primary-source-web-review", "notes": "Official LG Chem/LG Chem On exact-grade ISO TDS indexed with issue date 2025-12-02. Current document endpoint intermittently redirects to a processing-error page; processing guidance is therefore omitted rather than inferred from a related grade."}
+    },
+    {
+      "schemaVersion": 1,
+      "id": "mat-lgchem-lupoy-gp1000ml",
+      "manufacturer": {"id": "mfr-lg-chem", "name": "LG Chem", "country": "South Korea", "website": "https://www.lgchem.com/"},
+      "brand": "LUPOY",
+      "grade": "GP1000ML",
+      "aliases": [],
+      "polymer": {"family": "PC"},
+      "composition": {"flameRetardant": false, "notes": "LG Chem exact-grade TDS describes injection-moulding PC with non-flame retardancy."},
+      "properties": [
+        {"id": "obs-lgchem-gp1000ml-mfr", "property": "Melt Flow Rate", "value": 15.0, "unit": "g/10min", "testMethod": "ISO 1133", "temperatureC": 300, "loadKg": 1.2, "direction": "not-applicable", "sourceId": "src-lgchem-gp1000ml-tds-20250210", "sourcePage": "1", "comparisonReady": true, "limitations": "LG Chem typical value for material selection only; not a specification and not for part or tool design."},
+        {"id": "obs-lgchem-gp1000ml-shrink-flow", "property": "Mould Shrinkage", "value": "0.6-0.8", "unit": "%", "testMethod": "ISO 294-4", "specimen": "2.0 mm", "direction": "flow", "sourceId": "src-lgchem-gp1000ml-tds-20250210", "sourcePage": "1", "comparisonReady": true, "limitations": "LG Chem typical value for material selection only; not a specification and not for part or tool design."},
+        {"id": "obs-lgchem-gp1000ml-shrink-transverse", "property": "Mould Shrinkage", "value": "0.6-0.8", "unit": "%", "testMethod": "ISO 294-4", "specimen": "2.0 mm", "direction": "transverse", "sourceId": "src-lgchem-gp1000ml-tds-20250210", "sourcePage": "1", "comparisonReady": true, "limitations": "LG Chem typical value for material selection only; not a specification and not for part or tool design."}
+      ],
+      "processing": [
+        {"id": "proc-lgchem-gp1000ml-dry-temp", "parameter": "Drying temperature", "min": 100, "max": 120, "unit": "°C", "condition": "LG Chem injection-moulding guidance; may need adjustment for specific situations such as low shot sizes, thin walls or gas-assist moulding.", "claimType": "supplier-guidance", "sourceId": "src-lgchem-gp1000ml-tds-20250210", "sourcePage": "3", "productionRecipe": false},
+        {"id": "proc-lgchem-gp1000ml-dry-time", "parameter": "Drying time", "min": 3, "max": 5, "unit": "hr", "condition": "LG Chem injection-moulding guidance; verify against the current exact-grade TDS and site conditions.", "claimType": "supplier-guidance", "sourceId": "src-lgchem-gp1000ml-tds-20250210", "sourcePage": "3", "productionRecipe": false},
+        {"id": "proc-lgchem-gp1000ml-max-moisture", "parameter": "Maximum moisture content", "value": 0.02, "unit": "%", "condition": "Maximum moisture content in LG Chem injection-moulding guidance; not a production recipe.", "claimType": "supplier-limit", "sourceId": "src-lgchem-gp1000ml-tds-20250210", "sourcePage": "3", "productionRecipe": false},
+        {"id": "proc-lgchem-gp1000ml-melt-temp", "parameter": "Melt temperature", "min": 300, "max": 320, "unit": "°C", "condition": "LG Chem injection-moulding guidance; may need adjustment for specific moulding situations.", "claimType": "supplier-guidance", "sourceId": "src-lgchem-gp1000ml-tds-20250210", "sourcePage": "3", "productionRecipe": false},
+        {"id": "proc-lgchem-gp1000ml-mould-temp", "parameter": "Mould temperature", "min": 80, "max": 120, "unit": "°C", "condition": "LG Chem injection-moulding guidance; may need adjustment for specific moulding situations.", "claimType": "supplier-guidance", "sourceId": "src-lgchem-gp1000ml-tds-20250210", "sourcePage": "3", "productionRecipe": false}
+      ],
+      "approvals": [],
+      "lifecycle": {"status": "unknown", "checkedAt": "2026-09-03"},
+      "sources": [
+        {"id": "src-lgchem-gp1000ml-tds-20250210", "publisher": "LG Chem", "title": "LUPOY GP1000ML Technical Data Sheet (ISO)", "url": "https://www.lgchemon.com/sfc/servlet.shepherd/document/download/0692x00000DHBMoAAP", "kind": "manufacturer-datasheet", "revision": null, "documentDate": "2025-02-10", "retrievedAt": "2026-09-03"}
+      ],
+      "provenance": {"stage": "validated", "ingestedAt": "2026-09-03T00:00:00Z", "reviewedAt": "2026-09-03T00:00:00Z", "reviewer": "primary-source-web-review", "notes": "Official LG Chem/LG Chem On exact-grade ISO TDS. Only explicitly sourced comparison and processing observations are published; typical-value and processing-adjustment limitations are retained."}
+    },
+    {
+      "schemaVersion": 1,
+      "id": "mat-lgchem-lupoy-gp5206f",
+      "manufacturer": {"id": "mfr-lg-chem", "name": "LG Chem", "country": "South Korea", "website": "https://www.lgchem.com/"},
+      "brand": "LUPOY",
+      "grade": "GP5206F",
+      "aliases": [],
+      "polymer": {"family": "PC/ABS", "blend": "PC/ABS"},
+      "composition": {"glassFibrePct": 20, "flameRetardant": true, "notes": "LG Chem exact-grade TDS explicitly identifies PC/ABS+GF20% and flame retardancy."},
+      "properties": [
+        {"id": "obs-lgchem-gp5206f-mfr", "property": "Melt Flow Rate", "value": 3.0, "unit": "g/10min", "testMethod": "ISO 1133", "temperatureC": 250, "loadKg": 2.16, "direction": "not-applicable", "sourceId": "src-lgchem-gp5206f-tds-20250210", "sourcePage": "1", "comparisonReady": true, "limitations": "LG Chem typical value for material selection only; not a specification and not for part or tool design."},
+        {"id": "obs-lgchem-gp5206f-shrink-flow", "property": "Mould Shrinkage", "value": "0.2-0.4", "unit": "%", "testMethod": "ISO 294-4", "specimen": "2.0 mm", "direction": "flow", "sourceId": "src-lgchem-gp5206f-tds-20250210", "sourcePage": "1", "comparisonReady": true, "limitations": "LG Chem typical value for material selection only; not a specification and not for part or tool design."},
+        {"id": "obs-lgchem-gp5206f-shrink-transverse", "property": "Mould Shrinkage", "value": "0.2-0.4", "unit": "%", "testMethod": "ISO 294-4", "specimen": "2.0 mm", "direction": "transverse", "sourceId": "src-lgchem-gp5206f-tds-20250210", "sourcePage": "1", "comparisonReady": true, "limitations": "LG Chem typical value for material selection only; not a specification and not for part or tool design."}
+      ],
+      "processing": [
+        {"id": "proc-lgchem-gp5206f-dry-temp", "parameter": "Drying temperature", "min": 75, "max": 85, "unit": "°C", "condition": "LG Chem injection-moulding guidance; may need adjustment for specific situations such as low shot sizes, thin walls or gas-assist moulding.", "claimType": "supplier-guidance", "sourceId": "src-lgchem-gp5206f-tds-20250210", "sourcePage": "3", "productionRecipe": false},
+        {"id": "proc-lgchem-gp5206f-dry-time", "parameter": "Drying time", "min": 3, "max": 5, "unit": "hr", "condition": "LG Chem injection-moulding guidance; verify against the current exact-grade TDS and site conditions.", "claimType": "supplier-guidance", "sourceId": "src-lgchem-gp5206f-tds-20250210", "sourcePage": "3", "productionRecipe": false},
+        {"id": "proc-lgchem-gp5206f-max-moisture", "parameter": "Maximum moisture content", "value": 0.02, "unit": "%", "condition": "Maximum moisture content in LG Chem injection-moulding guidance; not a production recipe.", "claimType": "supplier-limit", "sourceId": "src-lgchem-gp5206f-tds-20250210", "sourcePage": "3", "productionRecipe": false},
+        {"id": "proc-lgchem-gp5206f-melt-temp", "parameter": "Melt temperature", "min": 235, "max": 265, "unit": "°C", "condition": "LG Chem injection-moulding guidance; may need adjustment for specific moulding situations.", "claimType": "supplier-guidance", "sourceId": "src-lgchem-gp5206f-tds-20250210", "sourcePage": "3", "productionRecipe": false},
+        {"id": "proc-lgchem-gp5206f-mould-temp", "parameter": "Mould temperature", "min": 50, "max": 80, "unit": "°C", "condition": "LG Chem injection-moulding guidance; may need adjustment for specific moulding situations.", "claimType": "supplier-guidance", "sourceId": "src-lgchem-gp5206f-tds-20250210", "sourcePage": "3", "productionRecipe": false}
+      ],
+      "approvals": [],
+      "lifecycle": {"status": "unknown", "checkedAt": "2026-09-03"},
+      "sources": [
+        {"id": "src-lgchem-gp5206f-tds-20250210", "publisher": "LG Chem", "title": "LUPOY GP5206F Technical Data Sheet (ISO)", "url": "https://www.lgchemon.com/sfc/servlet.shepherd/document/download/0692x00000DHBG7AAP", "kind": "manufacturer-datasheet", "revision": null, "documentDate": "2025-02-10", "retrievedAt": "2026-09-03"}
+      ],
+      "provenance": {"stage": "validated", "ingestedAt": "2026-09-03T00:00:00Z", "reviewedAt": "2026-09-03T00:00:00Z", "reviewer": "primary-source-web-review", "notes": "Official LG Chem/LG Chem On exact-grade ISO TDS. GF20% and flame retardancy are explicit exact-grade claims; no other composition percentage is inferred."}
+    },
     {
       "schemaVersion": 1,
       "id": "mat-lotte-infino-ae-3060-h",
