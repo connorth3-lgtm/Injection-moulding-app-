@@ -155,8 +155,7 @@ for wf in ['.github/workflows/qa.yml','.github/workflows/open-desktop-build.yml'
     body=text(wf)
     need('python qa_process_data_20_pass.py' in body,f'{wf} must gate the 20-pass atlas')
 qa=text('.github/workflows/qa.yml')
-for f in ALL:
-    need(f'node --check {f}' in qa,f'release syntax gate missing {f}')
+need("find . -maxdepth 1 -type f -name '*.js'" in qa,'release syntax gate must discover root JavaScript dynamically')
 
 workspace=text('mould-master-workspace.js')
 need('MM_PROCESS_DATA_DEEP_DIVE_50' in workspace and 'MM_PROCESS_DATA_20_PASS_ATLAS' in workspace,'Mould Master casebook must search guided, 50-case and 20-pass data libraries')
