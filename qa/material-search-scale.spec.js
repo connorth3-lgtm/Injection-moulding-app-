@@ -33,6 +33,7 @@ async function openMaterials(page){
   await page.waitForFunction(()=>window.MM_APP_SHELL_FINALIZED==='2026.08.26.4'&&window.MM_MATERIAL_REGISTRY&&window.MM_MATERIAL_SEARCH&&window.MM_MATERIAL_SEARCH_PAGINATION);
   await page.waitForFunction(()=>!document.getElementById('mmBootstrap'));
   await page.locator('[data-mm-product-area="materials"]').click();
+  await expect(page.locator('#mmExactMaterialCatalog')).toHaveCount(1);
   await expect(page.locator('#mmExactMaterialCatalog')).toBeVisible();
   await expect(page.locator('#mmExactMaterialCatalog')).toHaveAttribute('data-mm-material-search-mode','indexed');
 }
