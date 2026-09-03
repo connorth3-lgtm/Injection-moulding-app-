@@ -1,8 +1,8 @@
-/* MouldMaster explicit process-case evidence granularity — 2026.09.04.2 */
+/* MouldMaster explicit process-case evidence granularity — 2026.09.04.3 */
 (function(){
 'use strict';
 if(window.MM_PROCESS_CASE_EVIDENCE)return;
-const VERSION='2026.09.04.2';
+const VERSION='2026.09.04.3';
 const ATLAS_GRANULARITY='case-context-subset-from-pass-reviewed-pool';
 const ATLAS_FALLBACK='explicit-pass-inherited';
 const ATLAS_RELATIONSHIP='context-support-not-direct-validation';
@@ -19,9 +19,10 @@ function atlasRecord(ds){
   const passSourceIds=(ds.sourceIds||[]).slice(),registry=window.MM_EVIDENCE_SOURCES;
   if(passSourceIds.length<2)return fallbackAtlas(ds,passSourceIds,'fewer-than-two-pass-sources');
   if(!registry?.sources)return fallbackAtlas(ds,passSourceIds,'evidence-registry-unavailable');
-  if(passSourceIds.some(id=>!registry.sources[id]))return fallbackAtlas(ds,passSourceIds,'pass-source-missing-from-evidence-registry');
-  const mechanism=choose(passSourceIds,[ds.title,ds.domain,ds.fault,ds.diagnosis].join(' '),registry,ds.id,null);
-  const method=choose(passSourceIds,[ds.next,ds.verification,...Object.keys(ds.signals||{})].join(' '),registry,ds.id,mechanism?.sourceId);
+  const rankedPool=passSourceIds.filter(id=>registry.sources[id]);
+  if(rankedPool.length<2)return fallbackAtlas(ds,passSourceIds,'fewer-than-two-registry-known-pass-sources');
+  const mechanism=choose(rankedPool,[ds.title,ds.domain,ds.fault,ds.diagnosis].join(' '),registry,ds.id,null);
+  const method=choose(rankedPool,[ds.next,ds.verification,...Object.keys(ds.signals||{})].join(' '),registry,ds.id,mechanism?.sourceId);
   if(!mechanism||!method||mechanism.sourceId===method.sourceId)return fallbackAtlas(ds,passSourceIds,'could-not-select-two-distinct-context-sources');
   const selected=[mechanism,method],sourceIds=selected.map(x=>x.sourceId);
   const caseEvidence=selected.map((ranked,index)=>({sourceId:ranked.sourceId,role:index===0?'mechanism-context':'measurement-or-verification-method',matchTerms:ranked.matchTerms.slice(),selection:SELECTION}));
@@ -45,5 +46,5 @@ function summary(){
   const r=records(),atlas=r.filter(x=>x.passId),signatures=new Set(atlas.filter(x=>x.granularity===ATLAS_GRANULARITY).map(x=>x.sourceIds.slice().sort().join('|')));
   return{version:VERSION,total:r.length,caseSupported:r.filter(x=>x.granularity==='case').length,atlasContextSubsets:atlas.filter(x=>x.granularity===ATLAS_GRANULARITY).length,explicitPassInherited:r.filter(x=>x.granularity===ATLAS_FALLBACK).length,uniqueAtlasSourceSignatures:signatures.size,directValidationClaimed:r.filter(x=>x.relationship==='direct-validation').length};
 }
-window.MM_PROCESS_CASE_EVIDENCE=Object.freeze({version:VERSION,records,summary,boundary:'Guided and deep-dive cases retain their authored case-support relationships. Atlas cases may receive a deterministic case-context source subset only from their already reviewed pass source pool; token ranking is a relevance aid, not a new scientific claim, source review, causal proof or direct case validation. If source semantics are unavailable, atlas evidence remains explicit pass-inherited context.'});
+window.MM_PROCESS_CASE_EVIDENCE=Object.freeze({version:VERSION,records,summary,boundary:'Guided and deep-dive cases retain their authored case-support relationships. Atlas cases may receive a deterministic case-context source subset only from registry-known members of their already reviewed pass source pool; token ranking is a relevance aid, not a new scientific claim, source review, causal proof or direct case validation. If fewer than two reviewed pass sources have usable registry metadata, atlas evidence remains explicit pass-inherited context.'});
 })();
