@@ -18,7 +18,9 @@ ROOT = Path(__file__).resolve().parents[1]
 INDEX = ROOT / "index.html"
 CORE = ROOT / "MouldMaster_Core_App.html"
 MANIFEST = ROOT / "runtime-domain-manifest.json"
-HANDLER_RE = re.compile(r"\bon(?P<event>[a-z][a-z0-9_-]*)\s*=\s*(?P<q>['\"])(?P<body>.*?)(?P=q)", re.I | re.S)
+# Require an HTML-style attribute boundary so inert data-mm-on* attributes are not
+# accidentally counted as native on* event-handler attributes.
+HANDLER_RE = re.compile(r"(?P<prefix>[\s<])on(?P<event>[a-z][a-z0-9_-]*)\s*=\s*(?P<q>['\"])(?P<body>.*?)(?P=q)", re.I | re.S)
 BODY_SCRIPT_RE = re.compile(r"\['(?P<src>\./[^']+\.js)'\s*,\s*'<script")
 
 
