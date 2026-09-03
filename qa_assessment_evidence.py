@@ -134,6 +134,6 @@ need(idx.index('material-behaviour-labs.js')<idx.index('assessment-evidence-sour
 sw=text('service-worker.js'); need("'./material-behaviour-labs.js'" in sw and "'./assessment-evidence-sources.js'" in sw and "'./assessment-evidence-approval.js'" in sw,'evidence/material assets missing from offline cache')
 pkg=text('desktop/electron/package.json'); need('../../material-behaviour-labs.js' in pkg and '../../assessment-evidence-sources.js' in pkg and '../../assessment-evidence-approval.js' in pkg,'evidence/material assets missing from desktop package')
 integ=text('desktop/electron/scripts/generate-integrity.cjs'); need("'material-behaviour-labs.js'" in integ and "'assessment-evidence-sources.js'" in integ and "'assessment-evidence-approval.js'" in integ,'evidence/material assets missing from integrity manifest')
-workflow=text('.github/workflows/qa.yml'); need('node --check material-behaviour-labs.js' in workflow,'workflow must syntax-check material labs'); need('python qa_assessment_evidence.py' in workflow,'workflow must enforce evidence approval gate')
+workflow=text('.github/workflows/qa.yml'); need("find . -maxdepth 1 -type f -name '*.js'" in workflow,'workflow must syntax-check root JavaScript dynamically'); need('python qa_assessment_evidence.py' in workflow,'workflow must enforce evidence approval gate')
 
 print(f"MouldMaster evidence approval QA passed: {s['approved']}/{s['total']} keyed questions approved, including {s['materialLabs']} material-lab decisions")
