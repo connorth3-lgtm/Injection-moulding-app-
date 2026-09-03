@@ -34,6 +34,8 @@ for(const viewport of [{name:'android-412x915',width:412,height:915},{name:'smal
     await details.locator('summary').click();
     await expect(details).toHaveAttribute('open','');
     await expect(details).toContainText('Properties');
+    await expect(details).toContainText('Supplier limitation');
+    await expect(details).toContainText('not an official material specification or mould-design value');
     await expect(details).toContainText('Comparable when conditions match');
     await expect(details).toContainText('Context only');
     await expect(details).toContainText('Supplier processing guidance');
