@@ -51,21 +51,18 @@ idx=text('index.html')
 need("['./process-data-diagnostics.js','<script src=\"./process-data-diagnostics.js\">']" in idx,'browser shell does not load guided data diagnostics')
 need(idx.index("'./evidence-maturity-deep-dive.js'") < idx.index("'./process-data-diagnostics.js'"),'guided data diagnostics must load after the canonical dataset pack')
 
-# Runtime coherence is structural. Runtime-only hardening may advance independently
-# of the audited shell release, while the runtime bundle and service-worker cache
-# retain one explicit feature family, date and exact expected cache identity.
+# Runtime coherence is structural. Browser/runtime asset identity derives from the canonical
+# web release, while CACHE_REVISION remains an independent invalidation token.
 sw=text('service-worker.js')
-runtime_asset=js_const(idx,'RUNTIME_ASSET_VERSION')
+runtime_asset=js_const(idx,'SHELL_RELEASE')
 expected_cache=js_const(idx,'EXPECTED_STATIC_CACHE')
 cache_version=js_const(sw,'CACHE_VERSION')
 cache_revision=js_const(sw,'CACHE_REVISION')
+need('const RUNTIME_ASSET_VERSION=SHELL_RELEASE;' in idx,'guided data runtime identity must derive from canonical shell/web release')
+need(re.fullmatch(r'\d{4}\.\d{2}\.\d{2}\.\d+',runtime_asset) is not None,'guided data web release must use YYYY.MM.DD.N')
+need(cache_version==runtime_asset,'guided data service-worker cache version must equal canonical web release')
+need(bool(cache_revision.strip()),'guided data cache revision must remain an explicit independent invalidation token')
 need(expected_cache==f'mouldmaster-static-{cache_version}-{cache_revision}','browser expected PWA cache must match the service-worker cache identity')
-need(re.fullmatch(r'\d{8}\.\d+-[a-z0-9-]+',runtime_asset) is not None,'guided data runtime token must retain dated revision + feature-family format')
-runtime_date=runtime_asset.split('.',1)[0]
-runtime_family=runtime_asset.split('-',1)[1]
-need(cache_revision.startswith(runtime_family+'-'),'guided data cache revision must retain the active runtime feature family')
-need(re.search(r'-\d{8}$',cache_revision) is not None,'guided data cache revision must end with a dated revision token')
-need(cache_revision.rsplit('-',1)[-1]==runtime_date,'guided data runtime and PWA cache revision dates must match')
 need("'./process-data-diagnostics.js'" in sw,'guided data diagnostics missing from offline cache')
 
 pkg=json.loads(text('desktop/electron/package.json'))

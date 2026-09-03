@@ -100,23 +100,19 @@ idx=text('index.html')
 need("['./learning-experience.js','<script src=\"./learning-experience.js\">']" in idx,'browser shell does not load learning-experience.js')
 need(idx.index("'./pwa-shell.js'") < idx.index("'./learning-experience.js'"),'learning experience must load after the existing runtime patches')
 
-# Runtime coherence is structural. Runtime-only hardening may advance independently
-# of the audited shell release, while the shell version itself must continue to match
-# the service-worker cache version and the runtime/cache feature family/date must match.
+# Runtime coherence is structural. Browser/runtime asset identity derives from the canonical
+# web release, while CACHE_REVISION remains an independent invalidation token.
 sw=text('service-worker.js')
 shell_release=js_const(idx,'SHELL_RELEASE')
-runtime_asset=js_const(idx,'RUNTIME_ASSET_VERSION')
+runtime_asset=shell_release
 expected_cache=js_const(idx,'EXPECTED_STATIC_CACHE')
 cache_version=js_const(sw,'CACHE_VERSION')
 cache_revision=js_const(sw,'CACHE_REVISION')
+need(re.fullmatch(r'\d{4}\.\d{2}\.\d{2}\.\d+',shell_release) is not None,'learning UX web release must use YYYY.MM.DD.N')
+need('const RUNTIME_ASSET_VERSION=SHELL_RELEASE;' in idx,'learning UX runtime identity must derive from canonical shell/web release')
 need(shell_release==cache_version,'learning UX shell release must match PWA cache version')
+need(bool(cache_revision.strip()),'learning UX cache revision must remain an explicit independent invalidation token')
 need(expected_cache==f'mouldmaster-static-{cache_version}-{cache_revision}','learning UX expected cache must match service-worker cache identity')
-need(re.fullmatch(r'\d{8}\.\d+-[a-z0-9-]+',runtime_asset) is not None,'learning UX runtime token must retain dated revision + feature-family format')
-runtime_date=runtime_asset.split('.',1)[0]
-runtime_family=runtime_asset.split('-',1)[1]
-need(cache_revision.startswith(runtime_family+'-'),'learning UX cache revision must retain the active runtime feature family')
-need(re.search(r'-\d{8}$',cache_revision) is not None,'learning UX cache revision must end with a dated revision token')
-need(cache_revision.rsplit('-',1)[-1]==runtime_date,'learning UX runtime and PWA cache revision dates must match')
 need("'./learning-experience.js'" in sw,'learning experience missing from offline cache')
 need("'./pwa-shell.js'" in sw,'PWA shell/mobile layout guard missing from offline cache')
 need("url.pathname.endsWith('.js')" in sw,'PWA shell must remain on the network-first runtime-critical path so installed apps receive mobile layout fixes')

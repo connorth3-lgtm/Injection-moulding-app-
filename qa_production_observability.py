@@ -57,19 +57,19 @@ require(not re.search(r"fetch\s*\(\s*['\"]https?://", health), "Production healt
 require(not re.search(r"method\s*:\s*['\"](?:POST|PUT|PATCH|DELETE)['\"]", health, re.I),
         "Production health must not upload diagnostics")
 
-runtime_token = js_const(index, "RUNTIME_ASSET_VERSION")
+shell_release = js_const(index, "SHELL_RELEASE")
+runtime_token = shell_release
 cache_version = js_const(worker, "CACHE_VERSION")
 cache_revision = js_const(worker, "CACHE_REVISION")
 expected_static_cache = js_const(index, "EXPECTED_STATIC_CACHE")
-require(re.fullmatch(r"\d{8}\.\d+-[a-z0-9-]+", runtime_token) is not None,
-        "Browser runtime token must retain dated feature-family format")
-runtime_date, runtime_family = runtime_token.split('.', 1)[0], runtime_token.split('-', 1)[1]
-require(cache_revision.startswith(runtime_family + "-"),
-        "Service-worker cache revision must retain the active runtime feature family")
-require(re.search(r"-\d{8}$", cache_revision) is not None,
-        "Service-worker cache revision must end with a dated revision token")
-require(runtime_date == cache_revision.rsplit("-", 1)[-1],
-        "Browser runtime token and service-worker cache revision dates must advance together")
+require(re.fullmatch(r"\d{4}\.\d{2}\.\d{2}\.\d+", shell_release) is not None,
+        "Canonical browser release must use YYYY.MM.DD.N")
+require("const RUNTIME_ASSET_VERSION=SHELL_RELEASE;" in index,
+        "Production observability runtime identity must derive from canonical shell/web release")
+require(cache_version == shell_release,
+        "Production observability browser shell and service-worker cache version must share web_release")
+require(bool(cache_revision.strip()),
+        "Service-worker cache revision must remain an explicit independent invalidation token")
 require(expected_static_cache == f"mouldmaster-static-{cache_version}-{cache_revision}",
         "Bootstrap expected cache does not exactly match the service-worker cache identity")
 require("['./production-health.js','<script src=\"./production-health.js\">']" in index,

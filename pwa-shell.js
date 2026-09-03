@@ -1,7 +1,7 @@
 /* MouldMaster PWA shell controller — 2026.09.03 */
 (function(){
 'use strict';
-const RELEASE='2026.08.26.2';
+const RELEASE='2026.09.03.1';
 const CONTENT='2026.08.26.1';
 const REFERENCE_DATA_URL='./reference-data.html';
 function setText(el,value){if(el&&el.textContent!==value)el.textContent=value}

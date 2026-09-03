@@ -7,6 +7,7 @@ import struct
 import subprocess
 import tempfile
 
+WEB_RELEASE = "2026.09.03.1"
 ANDROID_RELEASE = "2026.08.26.2"
 CONTENT_VERSION = "2026.08.26.1"
 WINDOWS_RECOVERY_VERSION = "2026.08.21.1"
@@ -35,7 +36,9 @@ def png_size(name):
 version = json.loads(text("version.json"))
 latest = json.loads(text("latest.json"))
 manifest = json.loads(text("manifest.webmanifest"))
+assert version["web_release"] == WEB_RELEASE
 assert version["android_release"] == ANDROID_RELEASE
+subprocess.run(["python", "qa_web_release_identity.py"], check=True)
 assert version["content_version"] == CONTENT_VERSION
 assert version["question_bank_version"] == QUESTION_BANK_VERSION
 assert version["legacy_review_id_version"] == LEGACY_REVIEW_ID_VERSION
@@ -61,7 +64,8 @@ assert "criticalWrong===0" in core, "zero-wrong safety-critical gate missing"
 assert "Compare All assesses ALL 9 regional items" in core, "Compare All regional rule missing"
 
 index = text("index.html")
-assert f'const SHELL_RELEASE="{ANDROID_RELEASE}"' in index
+assert f'const SHELL_RELEASE="{WEB_RELEASE}"' in index
+assert 'const RUNTIME_ASSET_VERSION=SHELL_RELEASE;' in index
 assert 'const CORE_URL="./MouldMaster_Core_App.html"' in index
 assert "BODY_SCRIPTS" in index and "'./source-library.js'" in index, "source library not loaded by shell"
 for marker in ["Content-Security-Policy", "default-src 'self'", "object-src 'none'", "frame-src 'none'", "connect-src 'self'", "worker-src 'self'"]:
@@ -86,7 +90,7 @@ assert index.index("'./assessment-final-hardening.js'") < index.index("'./runtim
 assert index.index("'./specialist-curriculum.js'") < index.index("'./specialist-evidence-gap-extension.js'") < index.index("'./mould-master-workspace.js'") < index.index("'./app-shell-finalize.js'"), "specialist evidence/runtime finalizer load order is wrong"
 
 sw = text("service-worker.js")
-assert f"CACHE_VERSION='{ANDROID_RELEASE}'" in sw
+assert f"CACHE_VERSION='{WEB_RELEASE}'" in sw
 for asset in [
     "index.html", "MouldMaster_Core_App.html", "MouldMaster_Academy_App.html", "manifest.webmanifest",
     "mouldmaster-192.png", "mouldmaster-512.png", "version.json", "reading-patch.css", "reading-patch.js",
@@ -159,7 +163,7 @@ memory_commit = bridge.index("db=proposed;user=db.users[db.activeUser]")
 assert storage_commit < memory_commit, "memory must change only after all storage writes succeed"
 
 shell = text("pwa-shell.js")
-assert f"const RELEASE='{ANDROID_RELEASE}'" in shell
+assert f"const RELEASE='{WEB_RELEASE}'" in shell
 assert f"const CONTENT='{CONTENT_VERSION}'" in shell
 assert "NZ source-status (?:note|clarification)" in shell, "duplicate NZ note prevention missing"
 

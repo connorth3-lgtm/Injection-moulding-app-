@@ -50,18 +50,15 @@ for asset in ['./assessment-psychometric-hardening.js','./assessment-evidence-in
     need(asset in idx,f'browser shell missing {asset}')
 need(idx.index("'./evidence-maturity-formal-bridge.js'") < idx.index("'./assessment-psychometric-hardening.js'") < idx.index("'./assessment-evidence-integrity-upgrade.js'") < idx.index("'./assessment-evidence-approval.js'") < idx.index("'./assessment-psychometric-approval.js'") < idx.index("'./app-shell-registry.js'"),'psychometric/evidence browser load order is wrong')
 need(idx.index("'./process-data-diagnostics.js'") < idx.index("'./real-measured-data-assessment.js'"),'real measured assessment load order is wrong')
-runtime_match=re.search(r'const RUNTIME_ASSET_VERSION="([^"]+)"',idx)
+shell_match=re.search(r'const SHELL_RELEASE="([^"]+)"',idx)
 cache_match=re.search(r"const CACHE_REVISION='([^']+)'",sw)
-need(runtime_match is not None,'browser runtime token missing')
+need(shell_match is not None,'canonical browser shell release missing')
+need('const RUNTIME_ASSET_VERSION=SHELL_RELEASE;' in idx,'browser runtime asset identity must derive from canonical shell/web release')
 need(cache_match is not None,'PWA cache revision missing')
-runtime_token=runtime_match.group(1)
+runtime_token=shell_match.group(1)
 cache_revision=cache_match.group(1)
-need(re.fullmatch(r'\d{8}\.\d+-maturity-hardening-v2',runtime_token) is not None,'browser runtime token must retain dated maturity-hardening-v2 family format')
-runtime_date=runtime_token.split('.',1)[0]
-runtime_family=runtime_token.split('-',1)[1]
-need(cache_revision.startswith(runtime_family+'-'),'PWA cache revision must retain the active psychometric runtime family')
-need(re.search(r'-\d{8}$',cache_revision) is not None,'PWA cache revision must end with a dated revision token')
-need(runtime_date==cache_revision.rsplit('-',1)[-1],'browser runtime token and PWA cache revision dates must advance together')
+need(re.fullmatch(r'\d{4}\.\d{2}\.\d{2}\.\d+',runtime_token) is not None,'canonical browser release must use YYYY.MM.DD.N')
+need(bool(cache_revision.strip()),'PWA cache revision must remain an explicit independent invalidation token')
 need("'./runtime-v2.js'" in idx and "'./assessment-runtime-v2.js'" in idx,'maturity runtime must preserve psychometric bank while replacing only exam membership selection')
 
 for asset in ["'./assessment-psychometric-hardening.js'","'./assessment-evidence-integrity-upgrade.js'","'./assessment-psychometric-approval.js'","'./real-measured-data-assessment.js'"]:
