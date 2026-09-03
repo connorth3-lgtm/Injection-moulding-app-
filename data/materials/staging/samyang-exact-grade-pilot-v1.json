@@ -1,0 +1,123 @@
+{
+  "schemaVersion": 1,
+  "datasetId": "samyang-exact-grade-pilot-v1",
+  "status": "source-reviewed-staging",
+  "manufacturers": [
+    {
+      "id": "mfr-samyang",
+      "name": "Samyang Corporation",
+      "country": "South Korea",
+      "stage": "source-reviewed-staging",
+      "gradeRecords": [
+        {
+          "schemaVersion": 1,
+          "id": "mat-samyang-trirex-vb3025g10",
+          "manufacturer": {"id": "mfr-samyang", "name": "Samyang Corporation", "country": "South Korea", "website": "https://www.samyangcorp.com/en/"},
+          "brand": "TRIREX",
+          "grade": "VB3025G10",
+          "aliases": [],
+          "polymer": {"family": "PC", "morphology": "unknown"},
+          "composition": {"flameRetardant": true, "notes": "Samyang's current grade listing identifies VB3025G10 as GF reinforced and flame-retardant V-2. No glass-fibre percentage is inferred from the grade name."},
+          "properties": [
+            {"id": "obs-samyang-vb3025g10-mfr", "property": "Melt Flow Rate", "value": 18, "unit": "g/10min", "testMethod": "ASTM D1238", "temperatureC": 300, "loadKg": 1.2, "direction": "not-applicable", "sourceId": "src-samyang-vb3025g10-exact", "sourcePage": "web", "comparisonReady": true, "limitations": "Samyang typical value obtained under the stated standard test method; may not apply under different application conditions."},
+            {"id": "obs-samyang-vb3025g10-shrink", "property": "Mould Shrinkage", "value": "0.3-0.5", "unit": "%", "testMethod": "ASTM D955", "specimen": "3 mm thickness", "direction": "unknown", "sourceId": "src-samyang-vb3025g10-exact", "sourcePage": "web", "comparisonReady": false, "limitations": "Exact-grade D955 typical value; flow/transverse direction is not stated on the current Samyang page, so it is context-only rather than directly comparison-ready."}
+          ],
+          "processing": [
+            {"id": "proc-samyang-vb3025g10-dry-temp", "parameter": "Drying temperature", "value": 120, "unit": "°C", "condition": "Samyang exact-grade general processing guidance; drying prior to processing is stated as essential for appearance and property performance.", "claimType": "supplier-guidance", "sourceId": "src-samyang-vb3025g10-exact", "sourcePage": "web", "productionRecipe": false},
+            {"id": "proc-samyang-vb3025g10-dry-time", "parameter": "Drying time", "min": 3, "max": 4, "unit": "hr", "condition": "Samyang exact-grade general processing guidance; verify current supplier guidance and site material handling.", "claimType": "supplier-guidance", "sourceId": "src-samyang-vb3025g10-exact", "sourcePage": "web", "productionRecipe": false},
+            {"id": "proc-samyang-vb3025g10-max-moisture", "parameter": "Maximum moisture content", "value": 0.02, "unit": "%", "condition": "Maximum moisture content in Samyang exact-grade processing guidance; not a production recipe.", "claimType": "supplier-limit", "sourceId": "src-samyang-vb3025g10-exact", "sourcePage": "web", "productionRecipe": false},
+            {"id": "proc-samyang-vb3025g10-melt-temp", "parameter": "Melt temperature", "min": 290, "max": 310, "unit": "°C", "condition": "Samyang exact-grade general processing range; machine, mould and part conditions govern final settings.", "claimType": "supplier-guidance", "sourceId": "src-samyang-vb3025g10-exact", "sourcePage": "web", "productionRecipe": false},
+            {"id": "proc-samyang-vb3025g10-mould-temp", "parameter": "Mould temperature", "min": 80, "max": 100, "unit": "°C", "condition": "Samyang exact-grade general processing range; machine, mould and part conditions govern final settings.", "claimType": "supplier-guidance", "sourceId": "src-samyang-vb3025g10-exact", "sourcePage": "web", "productionRecipe": false}
+          ],
+          "approvals": [],
+          "lifecycle": {"status": "unknown", "checkedAt": "2026-09-03"},
+          "sources": [
+            {"id": "src-samyang-vb3025g10-exact", "publisher": "Samyang Corporation", "title": "TRIREX VB3025G10 exact-grade typical data and processing guide", "url": "https://samyangep.com/en/library/physical-table/view?brand=TRIREX&grade=VB3025G10", "kind": "manufacturer-datasheet", "revision": null, "documentDate": null, "retrievedAt": "2026-09-03"}
+          ],
+          "provenance": {"stage": "staging", "ingestedAt": "2026-09-03T00:00:00Z", "reviewedAt": "2026-09-03T00:00:00Z", "reviewer": "primary-source-web-review", "notes": "Current Samyang Advanced Materials exact-grade page reviewed. MFR retains ASTM D1238 temperature/load. D955 shrinkage remains context-only because the page does not state flow/transverse direction. Only core processing guidance is staged."}
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-samyang-trirex-3025u",
+          "manufacturer": {"id": "mfr-samyang", "name": "Samyang Corporation", "country": "South Korea", "website": "https://www.samyangcorp.com/en/"},
+          "brand": "TRIREX",
+          "grade": "3025U",
+          "aliases": [],
+          "polymer": {"family": "PC", "morphology": "unknown"},
+          "composition": {"notes": "Samyang current exact-grade page identifies TRIREX 3025U as PC; no modifier percentage is inferred."},
+          "properties": [
+            {"id": "obs-samyang-3025u-mfr", "property": "Melt Flow Rate", "value": 10, "unit": "g/10min", "testMethod": "ASTM D1238", "temperatureC": 300, "loadKg": 1.2, "direction": "not-applicable", "sourceId": "src-samyang-3025u-exact", "sourcePage": "web", "comparisonReady": true, "limitations": "Samyang typical value obtained under the stated standard test method; may not apply under different application conditions."},
+            {"id": "obs-samyang-3025u-shrink", "property": "Mould Shrinkage", "value": "0.5-0.7", "unit": "%", "testMethod": "ASTM D955", "specimen": "3 mm thickness", "direction": "unknown", "sourceId": "src-samyang-3025u-exact", "sourcePage": "web", "comparisonReady": false, "limitations": "Exact-grade D955 typical value; flow/transverse direction is not stated on the current Samyang page, so it is context-only rather than directly comparison-ready."}
+          ],
+          "processing": [
+            {"id": "proc-samyang-3025u-dry-temp", "parameter": "Drying temperature", "value": 120, "unit": "°C", "condition": "Samyang exact-grade general processing guidance; drying prior to processing is stated as essential.", "claimType": "supplier-guidance", "sourceId": "src-samyang-3025u-exact", "sourcePage": "web", "productionRecipe": false},
+            {"id": "proc-samyang-3025u-dry-time", "parameter": "Drying time", "min": 3, "max": 4, "unit": "hr", "condition": "Samyang exact-grade general processing guidance; verify current supplier guidance and site material handling.", "claimType": "supplier-guidance", "sourceId": "src-samyang-3025u-exact", "sourcePage": "web", "productionRecipe": false},
+            {"id": "proc-samyang-3025u-max-moisture", "parameter": "Maximum moisture content", "value": 0.02, "unit": "%", "condition": "Maximum moisture content in Samyang exact-grade processing guidance; not a production recipe.", "claimType": "supplier-limit", "sourceId": "src-samyang-3025u-exact", "sourcePage": "web", "productionRecipe": false},
+            {"id": "proc-samyang-3025u-melt-temp", "parameter": "Melt temperature", "min": 290, "max": 320, "unit": "°C", "condition": "Samyang exact-grade general processing range; machine, mould and part conditions govern final settings.", "claimType": "supplier-guidance", "sourceId": "src-samyang-3025u-exact", "sourcePage": "web", "productionRecipe": false},
+            {"id": "proc-samyang-3025u-mould-temp", "parameter": "Mould temperature", "min": 80, "max": 100, "unit": "°C", "condition": "Samyang exact-grade general processing range; machine, mould and part conditions govern final settings.", "claimType": "supplier-guidance", "sourceId": "src-samyang-3025u-exact", "sourcePage": "web", "productionRecipe": false}
+          ],
+          "approvals": [],
+          "lifecycle": {"status": "unknown", "checkedAt": "2026-09-03"},
+          "sources": [
+            {"id": "src-samyang-3025u-exact", "publisher": "Samyang Corporation", "title": "TRIREX 3025U exact-grade typical data and processing guide", "url": "https://www.samyangep.com/en/library/physical-table/view?brand=TRIREX&grade=3025U", "kind": "manufacturer-datasheet", "revision": null, "documentDate": null, "retrievedAt": "2026-09-03"}
+          ],
+          "provenance": {"stage": "staging", "ingestedAt": "2026-09-03T00:00:00Z", "reviewedAt": "2026-09-03T00:00:00Z", "reviewer": "primary-source-web-review", "notes": "Current Samyang Advanced Materials exact-grade page reviewed. MFR retains ASTM D1238 temperature/load; shrinkage direction is unresolved and therefore not comparison-ready."}
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-samyang-triloy-210",
+          "manufacturer": {"id": "mfr-samyang", "name": "Samyang Corporation", "country": "South Korea", "website": "https://www.samyangcorp.com/en/"},
+          "brand": "TRILOY",
+          "grade": "210",
+          "aliases": [],
+          "polymer": {"family": "PC/ABS", "blend": "PC/ABS", "morphology": "unknown"},
+          "composition": {"notes": "Samyang current exact-grade page identifies TRILOY 210 as PC/ABS; no constituent percentages are inferred."},
+          "properties": [
+            {"id": "obs-samyang-triloy210-mfr", "property": "Melt Flow Rate", "value": 6, "unit": "g/10min", "testMethod": "ASTM D1238", "temperatureC": 250, "loadKg": 5, "direction": "not-applicable", "sourceId": "src-samyang-triloy210-exact", "sourcePage": "web", "comparisonReady": true, "limitations": "Samyang typical value obtained under the stated standard test method; may not apply under different application conditions."},
+            {"id": "obs-samyang-triloy210-shrink", "property": "Mould Shrinkage", "value": "0.5-0.7", "unit": "%", "testMethod": "ASTM D955", "specimen": "3 mm thickness", "direction": "unknown", "sourceId": "src-samyang-triloy210-exact", "sourcePage": "web", "comparisonReady": false, "limitations": "Exact-grade D955 typical value; flow/transverse direction is not stated on the current Samyang page, so it is context-only."}
+          ],
+          "processing": [
+            {"id": "proc-samyang-triloy210-dry-temp", "parameter": "Drying temperature", "min": 90, "max": 100, "unit": "°C", "condition": "Samyang exact-grade general processing guidance; drying prior to processing is stated as essential.", "claimType": "supplier-guidance", "sourceId": "src-samyang-triloy210-exact", "sourcePage": "web", "productionRecipe": false},
+            {"id": "proc-samyang-triloy210-dry-time", "parameter": "Drying time", "min": 3, "max": 5, "unit": "hr", "condition": "Samyang exact-grade general processing guidance; verify current supplier guidance and site material handling.", "claimType": "supplier-guidance", "sourceId": "src-samyang-triloy210-exact", "sourcePage": "web", "productionRecipe": false},
+            {"id": "proc-samyang-triloy210-max-moisture", "parameter": "Maximum moisture content", "value": 0.02, "unit": "%", "condition": "Maximum moisture content in Samyang exact-grade processing guidance; not a production recipe.", "claimType": "supplier-limit", "sourceId": "src-samyang-triloy210-exact", "sourcePage": "web", "productionRecipe": false},
+            {"id": "proc-samyang-triloy210-melt-temp", "parameter": "Melt temperature", "min": 260, "max": 280, "unit": "°C", "condition": "Samyang exact-grade general processing range; machine, mould and part conditions govern final settings.", "claimType": "supplier-guidance", "sourceId": "src-samyang-triloy210-exact", "sourcePage": "web", "productionRecipe": false},
+            {"id": "proc-samyang-triloy210-mould-temp", "parameter": "Mould temperature", "min": 60, "max": 90, "unit": "°C", "condition": "Samyang exact-grade general processing range; machine, mould and part conditions govern final settings.", "claimType": "supplier-guidance", "sourceId": "src-samyang-triloy210-exact", "sourcePage": "web", "productionRecipe": false}
+          ],
+          "approvals": [],
+          "lifecycle": {"status": "unknown", "checkedAt": "2026-09-03"},
+          "sources": [
+            {"id": "src-samyang-triloy210-exact", "publisher": "Samyang Corporation", "title": "TRILOY 210 exact-grade typical data and processing guide", "url": "https://www.samyangep.com/en/product-finder/view?brand=TRILOY&grade=210", "kind": "manufacturer-datasheet", "revision": null, "documentDate": null, "retrievedAt": "2026-09-03"}
+          ],
+          "provenance": {"stage": "staging", "ingestedAt": "2026-09-03T00:00:00Z", "reviewedAt": "2026-09-03T00:00:00Z", "reviewer": "primary-source-web-review", "notes": "Current Samyang Advanced Materials exact-grade page reviewed. MFR retains ASTM D1238 temperature/load; shrinkage direction is unresolved and therefore not comparison-ready."}
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-samyang-triloy-410",
+          "manufacturer": {"id": "mfr-samyang", "name": "Samyang Corporation", "country": "South Korea", "website": "https://www.samyangcorp.com/en/"},
+          "brand": "TRILOY",
+          "grade": "410",
+          "aliases": [],
+          "polymer": {"family": "PC/PET", "blend": "PC/PET", "morphology": "unknown"},
+          "composition": {"notes": "Samyang current exact-grade page identifies TRILOY 410 as PC/PET; no constituent percentages are inferred."},
+          "properties": [
+            {"id": "obs-samyang-triloy410-mfr", "property": "Melt Flow Rate", "value": 17, "unit": "g/10min", "testMethod": "ASTM D1238", "temperatureC": 250, "loadKg": 3.8, "direction": "not-applicable", "sourceId": "src-samyang-triloy410-exact", "sourcePage": "web", "comparisonReady": true, "limitations": "Samyang typical value obtained under the stated standard test method; may not apply under different application conditions."},
+            {"id": "obs-samyang-triloy410-shrink", "property": "Mould Shrinkage", "value": "0.7-1.2", "unit": "%", "testMethod": "ASTM D955", "specimen": "3 mm thickness", "direction": "unknown", "sourceId": "src-samyang-triloy410-exact", "sourcePage": "web", "comparisonReady": false, "limitations": "Exact-grade D955 typical value; flow/transverse direction is not stated on the current Samyang page, so it is context-only."}
+          ],
+          "processing": [
+            {"id": "proc-samyang-triloy410-dry-temp", "parameter": "Drying temperature", "min": 100, "max": 110, "unit": "°C", "condition": "Samyang exact-grade general processing guidance; drying prior to processing is stated as essential.", "claimType": "supplier-guidance", "sourceId": "src-samyang-triloy410-exact", "sourcePage": "web", "productionRecipe": false},
+            {"id": "proc-samyang-triloy410-dry-time", "parameter": "Drying time", "min": 3, "max": 4, "unit": "hr", "condition": "Samyang exact-grade general processing guidance; verify current supplier guidance and site material handling.", "claimType": "supplier-guidance", "sourceId": "src-samyang-triloy410-exact", "sourcePage": "web", "productionRecipe": false},
+            {"id": "proc-samyang-triloy410-max-moisture", "parameter": "Maximum moisture content", "value": 0.02, "unit": "%", "condition": "Maximum moisture content in Samyang exact-grade processing guidance; not a production recipe.", "claimType": "supplier-limit", "sourceId": "src-samyang-triloy410-exact", "sourcePage": "web", "productionRecipe": false},
+            {"id": "proc-samyang-triloy410-melt-temp", "parameter": "Melt temperature", "min": 260, "max": 280, "unit": "°C", "condition": "Samyang exact-grade general processing range; machine, mould and part conditions govern final settings.", "claimType": "supplier-guidance", "sourceId": "src-samyang-triloy410-exact", "sourcePage": "web", "productionRecipe": false},
+            {"id": "proc-samyang-triloy410-mould-temp", "parameter": "Mould temperature", "min": 60, "max": 90, "unit": "°C", "condition": "Samyang exact-grade general processing range; machine, mould and part conditions govern final settings.", "claimType": "supplier-guidance", "sourceId": "src-samyang-triloy410-exact", "sourcePage": "web", "productionRecipe": false}
+          ],
+          "approvals": [],
+          "lifecycle": {"status": "unknown", "checkedAt": "2026-09-03"},
+          "sources": [
+            {"id": "src-samyang-triloy410-exact", "publisher": "Samyang Corporation", "title": "TRILOY 410 exact-grade typical data and processing guide", "url": "https://www.samyangep.com/en/product-finder/view?brand=TRILOY&grade=410", "kind": "manufacturer-datasheet", "revision": null, "documentDate": null, "retrievedAt": "2026-09-03"}
+          ],
+          "provenance": {"stage": "staging", "ingestedAt": "2026-09-03T00:00:00Z", "reviewedAt": "2026-09-03T00:00:00Z", "reviewer": "primary-source-web-review", "notes": "Current Samyang Advanced Materials exact-grade page reviewed. MFR retains ASTM D1238 temperature/load; shrinkage direction is unresolved and therefore not comparison-ready."}
+        }
+      ]
+    }
+  ]
+}
