@@ -69,7 +69,12 @@ index = text("index.html")
 service_worker = text("service-worker.js")
 body_scripts = set(re.findall(r"\['(\./[^']+\.js)'\s*,\s*'<script", index))
 offline_assets = set(re.findall(r"^\s*'(\./[^']+)'\s*,?\s*$", service_worker, flags=re.M))
-need(len(body_scripts) >= 40, f"runtime BODY_SCRIPTS extraction unexpectedly small: {len(body_scripts)}")
+need(len(body_scripts) >= 39, f"runtime BODY_SCRIPTS extraction unexpectedly small: {len(body_scripts)}")
+runtime_packs = {
+    "./src/domains/runtime-packs/evidence-runtime-pack.js",
+    "./src/domains/runtime-packs/process-data-runtime-pack.js",
+}
+need(runtime_packs <= body_scripts, f"required deterministic runtime packs missing from BODY_SCRIPTS: {sorted(runtime_packs - body_scripts)}")
 missing_files = sorted(src for src in body_scripts if not (ROOT / src.removeprefix("./")).is_file())
 need(not missing_files, f"runtime scripts referenced by index.html are missing: {missing_files}")
 missing_offline = sorted(body_scripts - offline_assets)
