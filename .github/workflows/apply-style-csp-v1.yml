@@ -1,0 +1,55 @@
+name: Apply Strict Style CSP v1
+
+on:
+  push:
+    branches:
+      - refactor/csp-style-self-v1
+    paths:
+      - .github/workflows/apply-style-csp-v1.yml
+      - .github/scripts/migrate_style_csp_v1.py
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  migrate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: refactor/csp-style-self-v1
+          fetch-depth: 0
+      - uses: actions/setup-node@v7
+        with:
+          node-version: '22.12.0'
+          package-manager-cache: false
+      - uses: actions/setup-python@v7
+        with:
+          python-version: '3.13'
+      - name: Apply permanent migration
+        run: python .github/scripts/migrate_style_csp_v1.py
+      - name: Regenerate hardened core runtime
+        run: python tools/externalize_core_scripts.py
+      - name: Generate exact style CSP hashes
+        run: node tools/generate_style_csp.cjs
+      - name: Determinism and architecture checks
+        run: |
+          set -euo pipefail
+          python tools/externalize_core_scripts.py --check
+          node tools/generate_style_csp.cjs --check
+          node --check src/core-runtime/inline-style-bridge.js
+          node --check tools/generate_style_csp.cjs
+          python qa_architecture_debt.py
+          python tools/build_pages_artifact.py --output .style-csp-pages
+      - name: Commit permanent non-workflow outputs
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html service-worker.js
+          git add tools/externalize_core_scripts.py qa_architecture_debt.py qa/architecture-debt-baseline.json playwright.config.cjs
+          git add src/core-runtime/core-inline-*.js
+          git diff --cached --quiet && exit 0
+          git commit -m "Remove unsafe-inline from runtime style CSP"
+          git push origin HEAD:refactor/csp-style-self-v1
