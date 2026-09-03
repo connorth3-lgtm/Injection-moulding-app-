@@ -47,7 +47,7 @@ jobs:
           npm ci --prefix desktop/electron --ignore-scripts --no-audit --fund=false
           npm ci --prefix desktop/electron/msix-toolchain --ignore-scripts --no-audit --fund=false
           node -e "const p=require('./desktop/electron/node_modules/electron-builder/package.json'); if(p.version!=='26.15.7') throw new Error('root electron-builder drift: '+p.version)"
-          node desktop/electron/scripts/run-msix-builder.cjs --version
+          node desktop/electron/scripts/run-msix-builder.cjs --verify-toolchain
           git ls-files --error-unmatch desktop/electron/package-lock.json >/dev/null
           git ls-files --error-unmatch desktop/electron/msix-toolchain/package-lock.json >/dev/null
           git diff --exit-code -- desktop/electron/package-lock.json desktop/electron/msix-toolchain/package-lock.json
