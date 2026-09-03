@@ -16,7 +16,7 @@
           "brand": "TRIREX",
           "grade": "VB3025G10",
           "aliases": [],
-          "polymer": {"family": "PC", "morphology": "amorphous"},
+          "polymer": {"family": "PC", "morphology": "unknown"},
           "composition": {"flameRetardant": true, "notes": "Samyang's current grade listing identifies VB3025G10 as GF reinforced and flame-retardant V-2. No glass-fibre percentage is inferred from the grade name."},
           "properties": [
             {"id": "obs-samyang-vb3025g10-mfr", "property": "Melt Flow Rate", "value": 18, "unit": "g/10min", "testMethod": "ASTM D1238", "temperatureC": 300, "loadKg": 1.2, "direction": "not-applicable", "sourceId": "src-samyang-vb3025g10-exact", "sourcePage": "web", "comparisonReady": true, "limitations": "Samyang typical value obtained under the stated standard test method; may not apply under different application conditions."},
@@ -43,7 +43,7 @@
           "brand": "TRIREX",
           "grade": "3025U",
           "aliases": [],
-          "polymer": {"family": "PC", "morphology": "amorphous"},
+          "polymer": {"family": "PC", "morphology": "unknown"},
           "composition": {"notes": "Samyang current exact-grade page identifies TRIREX 3025U as PC; no modifier percentage is inferred."},
           "properties": [
             {"id": "obs-samyang-3025u-mfr", "property": "Melt Flow Rate", "value": 10, "unit": "g/10min", "testMethod": "ASTM D1238", "temperatureC": 300, "loadKg": 1.2, "direction": "not-applicable", "sourceId": "src-samyang-3025u-exact", "sourcePage": "web", "comparisonReady": true, "limitations": "Samyang typical value obtained under the stated standard test method; may not apply under different application conditions."},
@@ -70,7 +70,7 @@
           "brand": "TRILOY",
           "grade": "210",
           "aliases": [],
-          "polymer": {"family": "PC/ABS", "blend": "PC/ABS", "morphology": "amorphous"},
+          "polymer": {"family": "PC/ABS", "blend": "PC/ABS", "morphology": "unknown"},
           "composition": {"notes": "Samyang current exact-grade page identifies TRILOY 210 as PC/ABS; no constituent percentages are inferred."},
           "properties": [
             {"id": "obs-samyang-triloy210-mfr", "property": "Melt Flow Rate", "value": 6, "unit": "g/10min", "testMethod": "ASTM D1238", "temperatureC": 250, "loadKg": 5, "direction": "not-applicable", "sourceId": "src-samyang-triloy210-exact", "sourcePage": "web", "comparisonReady": true, "limitations": "Samyang typical value obtained under the stated standard test method; may not apply under different application conditions."},
@@ -97,7 +97,7 @@
           "brand": "TRILOY",
           "grade": "410",
           "aliases": [],
-          "polymer": {"family": "PC/PET", "blend": "PC/PET", "morphology": "amorphous"},
+          "polymer": {"family": "PC/PET", "blend": "PC/PET", "morphology": "unknown"},
           "composition": {"notes": "Samyang current exact-grade page identifies TRILOY 410 as PC/PET; no constituent percentages are inferred."},
           "properties": [
             {"id": "obs-samyang-triloy410-mfr", "property": "Melt Flow Rate", "value": 17, "unit": "g/10min", "testMethod": "ASTM D1238", "temperatureC": 250, "loadKg": 3.8, "direction": "not-applicable", "sourceId": "src-samyang-triloy410-exact", "sourcePage": "web", "comparisonReady": true, "limitations": "Samyang typical value obtained under the stated standard test method; may not apply under different application conditions."},
