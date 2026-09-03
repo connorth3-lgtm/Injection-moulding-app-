@@ -1,8 +1,8 @@
-/* MouldMaster privacy-preserving learning analytics — 2026.08.26.1 */
+/* MouldMaster privacy-preserving learning analytics — 2026.09.03.2 */
 (function(){
 'use strict';
 
-const VERSION='2026.08.26.1';
+const VERSION='2026.09.03.2';
 const STORAGE_PREFIX='mm_learning_analytics_v1::';
 const MAX_EVENTS=1500;
 const IDLE_MS=5*60*1000;
@@ -10,16 +10,14 @@ const PRACTICE_LABELS={
   diagnostic:['Observe','Best next test','Controlled response','Explain'],
   'process-data':['Read pattern','Diagnose','Next evidence','Recovery']
 };
+const learnerScope=window.MM_LEARNER_SCOPE;
+if(!learnerScope)throw new Error('MM_LEARNER_SCOPE must load before Learning Analytics');
 
 function esc(v){return String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
-function activeUserId(){
-  try{if(typeof db!=='undefined'&&db?.activeUser)return String(db.activeUser)}catch(_){}
-  try{if(typeof user!=='undefined'&&user?.id)return String(user.id)}catch(_){}
-  return 'anonymous';
-}
-function tokenFor(raw){let h=2166136261;for(const ch of String(raw||'anonymous')){h^=ch.charCodeAt(0);h=Math.imul(h,16777619)}return (h>>>0).toString(36)}
-function learnerToken(){return tokenFor(activeUserId())}
-function storageKey(token=learnerToken()){return STORAGE_PREFIX+token}
+function activeUserId(){return learnerScope.activeId()}
+function tokenFor(raw){return learnerScope.tokenFor(raw)}
+function learnerToken(){return learnerScope.token()}
+function storageKey(token=learnerToken()){return learnerScope.storageKey(STORAGE_PREFIX,token)}
 function emptyStore(){return {schema:1,version:VERSION,events:[],createdAt:new Date().toISOString(),updatedAt:new Date().toISOString()}}
 function readStore(token=learnerToken()){
   try{const x=JSON.parse(localStorage.getItem(storageKey(token))||'null');if(x&&x.schema===1&&Array.isArray(x.events))return x}catch(_){}
