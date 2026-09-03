@@ -25,7 +25,7 @@ const BASE_FILES=[
   'process-data-deep-dive-quality.js','process-data-deep-dive-50.js','process-data-20-pass-01-05.js','process-data-20-pass-06-10.js',
   'process-data-20-pass-11-15.js','process-data-20-pass-16-20.js','process-data-20-pass-atlas.js','process-data-local-intake.js',
   'curriculum-integration.js','specialist-curriculum.js','specialist-evidence-gap-extension.js','mould-master-workspace.js',
-  'src/domains/domain-bootstrap.js',RUNTIME_MANIFEST,'app-shell-finalize.js','production-health.js','data-integration-runtime.js',
+  'src/domains/domain-bootstrap.js',RUNTIME_MANIFEST,'src/domains/runtime-packs/evidence-runtime-pack.js','src/domains/runtime-packs/process-data-runtime-pack.js','app-shell-finalize.js','production-health.js','data-integration-runtime.js',
   'process-data-intelligence-ui.js','process-data-semantic-registry.json','current-data-manifest.json','learning-analytics.js','accessibility-hardening.js',
   'source-library.js','reference-data.js','reference-data.html','reference-deep-dive.js','reference-research-extension.js','reference-20x-extension.js',
   'reference-2026-expansion.js','reference-sources.js','reference-browser-ui.js','diagnostic-learning-labs.js','material-behaviour-labs.js',

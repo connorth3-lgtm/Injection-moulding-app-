@@ -82,5 +82,7 @@
     "This is a ceiling, not a target. Removing root runtime scripts or compatibility layers is always allowed.",
     "New product capabilities belong under src/domains/<domain>/ and should replace legacy root layers rather than increasing the bootstrap count.",
     "The single document.write bootstrap is grandfathered only while the legacy core HTML shell is migrated."
-  ]
+  ],
+  "maxRuntimeScripts": 39,
+  "maxRootRuntimeScripts": 36
 }

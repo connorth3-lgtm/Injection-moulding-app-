@@ -14,14 +14,14 @@ The 2026-09-03 deep-dive audit converted the freeze from documentation into a mo
 
 Current ceilings are:
 
-- at most 62 scripts in the ordered `BODY_SCRIPTS` bootstrap list;
-- at most 61 directly injected root-level runtime scripts;
+- at most 39 scripts in the ordered `BODY_SCRIPTS` bootstrap list;
+- at most 36 directly injected root-level runtime scripts;
 - no new root runtime script outside the captured grandfathered set;
 - no new root `*-fix.js`, `*-hardening.js`, `*-finalize.js`, or `*-extension.js` compatibility layer outside the captured grandfathered set;
 - at most one legacy `document.write` bootstrap call;
 - no `eval()`, `new Function()`, remote runtime script tags, CSP `unsafe-eval`, or external `connect-src` endpoints in the active runtime.
 
-The budget is a ceiling, not a target. Removing a root layer, moving capability under `src/domains/`, removing `document.write`, or replacing `unsafe-inline` with a stricter nonce/hash design is always an improvement and remains allowed.
+The budget is a ceiling, not a target. On 2026-09-03 the first deterministic runtime-pack tranche retired 23 direct evidence/process-data bootstrap entries into two ordered generated packs, reducing BODY_SCRIPTS from 60 to 39 and direct root runtime scripts from 59 to 36 without changing source execution order. Removing a root layer, moving capability under `src/domains/`, removing `document.write`, or replacing `unsafe-inline` with a stricter nonce/hash design is always an improvement and remains allowed.
 
 ## Five user-facing product areas
 
