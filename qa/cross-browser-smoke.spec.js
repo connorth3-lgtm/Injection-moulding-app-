@@ -1,11 +1,27 @@
 const {test,expect}=require('@playwright/test');
 const BASE='http://127.0.0.1:4173/';
 
+async function seedLearner(page){
+  await page.addInitScript(()=>{
+    const user={id:'cross-browser-qa',name:'Cross Browser QA',role:'learner',completed:[],bookmarks:[],notes:{},examScores:{},certificates:[],currentLesson:1,lastSeen:new Date().toISOString(),onboardingDone:true,experience:'Beginner',goal:'Learn the full process',dailyMinutes:15,region:'ALL'};
+    localStorage.setItem('mouldmasterProDB',JSON.stringify({activeUser:'cross-browser-qa',users:{'cross-browser-qa':user}}));
+  });
+}
+
+async function openApp(page){
+  await seedLearner(page);
+  await page.goto(BASE,{waitUntil:'domcontentloaded'});
+  await page.waitForFunction(()=>window.MM_APP_SHELL_FINALIZED==='2026.08.26.4'&&document.querySelector('#dashboard .mm-home-task-hub'),{timeout:30000});
+  await page.waitForFunction(()=>!document.getElementById('mmBootstrap'),{timeout:30000});
+  await expect(page.locator('#mmStartupFailure')).toHaveCount(0);
+  await expect(page.locator('#modal')).toBeHidden();
+  await page.evaluate(()=>new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve))));
+}
+
 test('core shell and exact-grade Materials work without layout overflow',async({page})=>{
   const errors=[];
   page.on('pageerror',err=>errors.push(String(err.message||err)));
-  await page.goto(BASE,{waitUntil:'load'});
-  await expect(page.locator('#dashboard')).toBeVisible({timeout:30000});
+  await openApp(page);
   await page.locator('#nav button[data-view="materials"]').click();
   await expect(page.locator('#materials')).toBeVisible();
   await expect(page.locator('#mmExactMaterialCatalog')).toBeVisible({timeout:30000});
@@ -16,7 +32,7 @@ test('core shell and exact-grade Materials work without layout overflow',async({
 });
 
 test('engineering store enforces learner ownership for direct case reads',async({page})=>{
-  await page.goto(BASE,{waitUntil:'load'});
+  await openApp(page);
   await page.waitForFunction(()=>!!window.MM_ENGINEERING_STORE,{timeout:30000});
   const result=await page.evaluate(async()=>{
     const s=window.MM_ENGINEERING_STORE;
