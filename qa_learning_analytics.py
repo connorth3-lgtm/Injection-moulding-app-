@@ -9,7 +9,8 @@ def need(ok,msg):
 
 required=[
     'learning-analytics.js','learning-experience.js','diagnostic-learning-labs.js','process-data-diagnostics.js',
-    'src/domains/shared/learner-scope.js','index.html','service-worker.js','desktop/electron/package.json','desktop/electron/scripts/generate-integrity.cjs'
+    'src/domains/shared/learner-scope.js','src/domains/learning/learning-analytics-loader.js',
+    'index.html','service-worker.js','desktop/electron/package.json','desktop/electron/scripts/generate-integrity.cjs'
 ]
 for name in required:
     need((ROOT/name).exists(),f'learning analytics dependency missing: {name}')
@@ -73,18 +74,25 @@ need('idleTimer=setTimeout(pauseLesson,IDLE_MS)' in js,'lesson timing must enfor
 need("window.addEventListener('beforeunload'" in js,'active timing must flush on unload')
 
 idx=text('index.html')
-need("['./learning-analytics.js','<script src=\"./learning-analytics.js\">']" in idx,'browser shell does not load learning analytics')
-need(idx.index("'./learning-experience.js'") < idx.index("'./learning-analytics.js'"),'analytics must load after learner-flow hooks')
-need(idx.index("'./process-data-diagnostics.js'") < idx.index("'./learning-analytics.js'"),'analytics must load after guided process-data practice')
+need("['./learning-analytics.js','<script src=\"./learning-analytics.js\">']" not in idx,'learning analytics must not execute before the domain dependency graph is ready')
+need(idx.index("'./learning-experience.js'") < idx.index("'./src/domains/domain-bootstrap.js'"),'domain bootstrap must remain after learner-flow hooks')
+need(idx.index("'./process-data-diagnostics.js'") < idx.index("'./src/domains/domain-bootstrap.js'"),'domain bootstrap must remain after guided process-data practice')
 
 manifest=json.loads(text('runtime-domain-manifest.json'))
 assets=manifest.get('assets',[])
 need(assets and assets[0]=='./src/domains/shared/learner-scope.js','shared learner scope must load before domain stores')
 need(assets.index('./src/domains/shared/learner-scope.js') < assets.index('./src/domains/engineering/engineering-store.js'),'engineering store must load after shared learner scope')
+need('./src/domains/learning/learning-analytics-loader.js' in assets,'analytics domain bridge missing from runtime manifest')
+need(assets.index('./src/domains/shared/learner-scope.js') < assets.index('./src/domains/learning/learning-analytics-loader.js'),'analytics bridge must load after shared learner scope')
+
+bridge=text('src/domains/learning/learning-analytics-loader.js')
+for marker in ['MM_LEARNER_SCOPE','learning-analytics.js','MM_LEARNING_ANALYTICS_LOADING','mmDomainBridge']:
+    need(marker in bridge,f'learning analytics domain bridge marker missing: {marker}')
 
 sw=text('service-worker.js')
 need("'./learning-analytics.js'" in sw,'learning analytics missing from installed-PWA offline cache')
 need("'./src/domains/shared/learner-scope.js'" in sw,'shared learner scope missing from installed-PWA offline cache')
+need("'./src/domains/learning/learning-analytics-loader.js'" in sw,'analytics domain bridge missing from installed-PWA offline cache')
 
 pkg=json.loads(text('desktop/electron/package.json'))
 froms={x.get('from') for x in pkg['build']['extraResources'] if isinstance(x,dict)}
@@ -92,4 +100,4 @@ need('../../learning-analytics.js' in froms,'learning analytics missing from des
 need('../../src/domains' in froms,'shared learner scope is not covered by desktop domain resources')
 need("'learning-analytics.js'" in text('desktop/electron/scripts/generate-integrity.cjs'),'learning analytics missing from desktop integrity manifest')
 
-print('MouldMaster learning analytics QA passed (shared learner scope, local-only, bounded, time-on-task, retry improvement, diagnostic/process-data misses, anonymous instructor summary)')
+print('MouldMaster learning analytics QA passed (shared learner scope, domain-ordered analytics startup, local-only, bounded, time-on-task, retry improvement, diagnostic/process-data misses, anonymous instructor summary)')
