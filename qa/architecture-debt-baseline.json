@@ -3,7 +3,7 @@
   "capturedAt": "2026-09-03",
   "runtimeBodyScriptCeiling": 39,
   "rootRuntimeScriptCeiling": 36,
-  "documentWriteCeiling": 1,
+  "documentWriteCeiling": 0,
   "grandfatheredRootRuntimeScripts": [
     "./production-health.js",
     "./reading-patch.js",
@@ -81,7 +81,8 @@
   "notes": [
     "This is a ceiling, not a target. Removing root runtime scripts or compatibility layers is always allowed.",
     "New product capabilities belong under src/domains/<domain>/ and should replace legacy root layers rather than increasing the bootstrap count.",
-    "The single document.write bootstrap is grandfathered only while the legacy core HTML shell is migrated.",
-    "2026-09-03 runtime-pack tranche reduced BODY_SCRIPTS from 60 to 39 and directly injected root runtime scripts from 59 to 36 while preserving source execution order."
+    "document.write is retired from the browser bootstrap; whole-document installation must use DOM APIs and explicit deterministic script execution.",
+    "2026-09-03 runtime-pack tranche reduced BODY_SCRIPTS from 60 to 39 and directly injected root runtime scripts from 59 to 36 while preserving source execution order.",
+    "2026-09-03 bootstrap tranche replaced document.open/write/close with inert DOM parsing, whole-document DOM replacement, sequential script replay and lifecycle replay."
   ]
 }
