@@ -6,6 +6,12 @@ const crypto=require('crypto');
 const ROOT=path.resolve(__dirname,'..','..','..');
 const OUT=path.resolve(__dirname,'..','generated','integrity.json');
 const RUNTIME_MANIFEST='runtime-domain-manifest.json';
+const REQUIRED_MANIFEST_FILES=[
+  'src/domains/engineering/engineering-store.js',
+  'src/domains/materials/material-registry.js',
+  'src/domains/shell/product-areas.js',
+  'material-catalog-v1.json'
+];
 
 const BASE_FILES=[
   'index.html','MouldMaster_Core_App.html','manifest.webmanifest','mouldmaster-192.png','mouldmaster-512.png','version.json',
@@ -37,6 +43,7 @@ function runtimeAssetPath(raw){
 const runtimeManifest=JSON.parse(fs.readFileSync(path.join(ROOT,RUNTIME_MANIFEST),'utf8'));
 if(runtimeManifest?.schemaVersion!==1||!Array.isArray(runtimeManifest.assets)||!Array.isArray(runtimeManifest.dataAssets))throw new Error('Invalid runtime-domain-manifest.json');
 const manifestFiles=[...runtimeManifest.assets,...runtimeManifest.dataAssets].map(runtimeAssetPath);
+for(const required of REQUIRED_MANIFEST_FILES){if(!manifestFiles.includes(required))throw new Error(`Canonical runtime manifest asset missing: ${required}`)}
 const FILES=[...new Set([...BASE_FILES,...manifestFiles])];
 
 const version=JSON.parse(fs.readFileSync(path.join(ROOT,'version.json'),'utf8'));
