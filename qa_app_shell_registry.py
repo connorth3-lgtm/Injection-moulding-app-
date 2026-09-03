@@ -43,6 +43,8 @@ for marker in [
     '--mm-mobile-nav-height',
     '--mm-mobile-nav-clearance',
     '--mm-mobile-content-clearance',
+    'data-mm-onclick*=\"openMobileMenu\"',
+    "button.getAttribute('data-mm-onclick')",
     '.mm-mobile-actions{bottom:var(--mm-mobile-nav-clearance)!important',
     'aria-current',
     'visibleCoreView',
