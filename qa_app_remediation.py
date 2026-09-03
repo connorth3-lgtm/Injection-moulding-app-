@@ -53,23 +53,33 @@ need("MouldMaster_Academy_App.html" not in integrity_script, "frozen legacy Acad
 extra = desktop_pkg["build"]["extraResources"]
 need("../../MouldMaster_Academy_App.html" not in {x.get("from") for x in extra if isinstance(x, dict)}, "frozen legacy Academy app remains in desktop package")
 
-# Engineering case ownership and explicit legacy parity without browser-global Storage monkey-patching.
+# Engineering cases have one live authority: owner-scoped IndexedDB. Legacy localStorage is import-only.
 for marker in (
     "Engineering case belongs to a different learner profile",
     "String(record.learnerToken)===tokenValue(token)",
     "learnerToken:owner",
-    "syncLegacySnapshot",
+    "importLegacyCases",
+    "if(prior?.complete)return",
+    "preservedExisting",
+    "destructive:false",
     "repairLegacyLinkOwnership",
 ):
     need(marker in engineering, f"engineering learner/case invariant missing: {marker}")
-for marker in ("mm_mould_master_cases_v1::", "store.syncLegacySnapshot", "MM_CASE_STORE_BRIDGE", "mm:mould-master-cases-changed"):
-    need(marker in bridge, f"legacy workspace parity bridge missing marker: {marker}")
-need("mm:mould-master-cases-changed" in workspace and "publishCasesChanged" in workspace, "Mould Master workspace does not publish explicit persistence-change events")
+need("syncLegacySnapshot" not in engineering, "engineering store still exposes live legacy snapshot parity")
+for marker in ("store.bootstrap()", "workspace.hydrate", "legacyMode:'one-time-import-only'", "canonicalStore:'indexeddb-v2'", "MM_CASE_STORE_BRIDGE"):
+    need(marker in bridge, f"one-time legacy migration bridge missing marker: {marker}")
+for forbidden in ("localStorage", "syncLegacySnapshot", "mm:mould-master-cases-changed", "addEventListener(EVENT"):
+    need(forbidden not in bridge, f"migration bridge still contains live parity behavior: {forbidden}")
+for marker in ("MM_ENGINEERING_STORE", "await store.saveCase", "await store.deleteCase", "canonicalStore:'indexeddb-v2'", "legacy localStorage is migration input only"):
+    need(marker in workspace, f"Mould Master canonical IndexedDB contract missing: {marker}")
+for forbidden in ("localStorage", "mm:mould-master-cases-changed", "publishCasesChanged", "STORAGE_BASE"):
+    need(forbidden not in workspace, f"Mould Master workspace still writes/coordinates a second live store: {forbidden}")
+need("await workspace.newCase" in materials and "materialGradeId" in materials and "linkCaseMaterial" in materials, "exact material case creation is not durably linked through the canonical case store")
 need("Storage?.prototype" not in bridge and "Object.defineProperty" not in bridge, "engineering bridge must not monkey-patch browser Storage.prototype")
 assets = manifest.get("assets", [])
 need("./src/domains/engineering/engineering-store.js" in assets, "engineering store missing from domain manifest")
-need("./src/domains/engineering/store-bridge.js" in assets, "engineering store bridge missing from domain manifest")
-need(assets.index("./src/domains/engineering/engineering-store.js") < assets.index("./src/domains/engineering/store-bridge.js"), "engineering bridge must load after canonical store")
+need("./src/domains/engineering/store-bridge.js" in assets, "engineering migration bridge missing from domain manifest")
+need(assets.index("./src/domains/engineering/engineering-store.js") < assets.index("./src/domains/engineering/store-bridge.js"), "engineering migration bridge must load after canonical store")
 
 # Material variants/revisions must not collapse on display grade name alone.
 compiler = text("tools/material_catalog.py")
@@ -172,4 +182,4 @@ need("new MutationObserver" not in pwa, "PWA shell still uses document-wide muta
 need("new MutationObserver" not in materials, "Materials domain still uses document-wide mutation polling")
 need("mutationScope:'changed-subtrees'" in a11y, "accessibility safety net is not constrained to changed subtrees")
 
-print("MouldMaster app-wide remediation QA passed: pre-merge live Pages provenance, aligned gh api negotiation, cross-index fail-closed provenance, storage ownership/explicit parity, variant-safe materials, PWA lifecycle, legacy distribution separation, deterministic browser matrix and targeted observers")
+print("MouldMaster app-wide remediation QA passed: pre-merge live Pages provenance, aligned gh api negotiation, cross-index fail-closed provenance, single authoritative owner-scoped engineering case store, variant-safe materials, PWA lifecycle, legacy distribution separation, deterministic browser matrix and targeted observers")
