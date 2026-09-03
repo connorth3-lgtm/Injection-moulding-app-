@@ -1,13 +1,13 @@
 {
   "schemaVersion": 1,
   "datasetId": "kepital-exact-grade-pilot-v1",
-  "status": "source-reviewed-staging",
+  "status": "validated-pilot",
   "manufacturers": [
     {
       "id": "mfr-kep",
       "name": "Korea Polyacetal (KPAC)",
       "country": "South Korea",
-      "stage": "source-reviewed-staging",
+      "stage": "validated-pilot",
       "gradeRecords": [
         {
           "schemaVersion": 1,
@@ -34,7 +34,7 @@
             {"id": "src-kepital-f2003-iso", "publisher": "Korea Polyacetal (KPAC)", "title": "KEPITAL F20-03 Property Sheet (ISO)", "url": "https://gpac-kpac.com/tcpdf/kepital/download.php?Lang=En&Seq=10", "kind": "manufacturer-datasheet", "revision": "8", "documentDate": "2020-04-03", "retrievedAt": "2026-09-03"},
             {"id": "src-kepital-f2003-processing", "publisher": "Korea Polyacetal (KPAC)", "title": "KEPITAL F20-03 exact-grade processing guidance", "url": "https://gpac-kpac.com/jp/product/pop_grade.php?Lang=Jp&Level=0&Seq=10", "kind": "manufacturer-processing-guide", "revision": null, "documentDate": null, "retrievedAt": "2026-09-03"}
           ],
-          "provenance": {"stage": "staging", "ingestedAt": "2026-09-03T00:00:00Z", "reviewedAt": "2026-09-03T00:00:00Z", "reviewer": "primary-source-web-review", "notes": "Current KPAC exact-grade property and processing pages reviewed. Melt-flow value is intentionally omitted because the current KPAC sheet states ISO 1133 but does not expose the required test temperature/load. KPAC states that it sustains the KEPITAL brand."}
+          "provenance": {"stage": "validated", "ingestedAt": "2026-09-03T00:00:00Z", "reviewedAt": "2026-09-03T00:00:00Z", "reviewer": "primary-source-web-review", "notes": "Current KPAC exact-grade property and processing pages reviewed. Melt-flow value is intentionally omitted because the current KPAC sheet states ISO 1133 but does not expose the required test temperature/load. KPAC states that it sustains the KEPITAL brand."}
         },
         {
           "schemaVersion": 1,
@@ -61,7 +61,7 @@
             {"id": "src-kepital-f3003-iso", "publisher": "Korea Polyacetal (KPAC)", "title": "KEPITAL F30-03 Property Sheet (ISO)", "url": "https://www.gpac-kpac.com/tcpdf/kepital/download.php?Lang=En&Level=0&Seq=13", "kind": "manufacturer-datasheet", "revision": "8", "documentDate": "2020-04-03", "retrievedAt": "2026-09-03"},
             {"id": "src-kepital-f3003-processing", "publisher": "Korea Polyacetal (KPAC)", "title": "KEPITAL F30-03 exact-grade processing guidance", "url": "https://www.gpac-kpac.com/en/product/pop_grade.php?Lang=En&Level=0&Seq=13", "kind": "manufacturer-processing-guide", "revision": null, "documentDate": null, "retrievedAt": "2026-09-03"}
           ],
-          "provenance": {"stage": "staging", "ingestedAt": "2026-09-03T00:00:00Z", "reviewedAt": "2026-09-03T00:00:00Z", "reviewer": "primary-source-web-review", "notes": "Current KPAC exact-grade property and processing pages reviewed. Melt-flow value is intentionally omitted because the current KPAC sheet states ISO 1133 but does not expose the required test temperature/load. F30-03 is described by KPAC as suitable for multi-cavity moulds and thin-walled parts."}
+          "provenance": {"stage": "validated", "ingestedAt": "2026-09-03T00:00:00Z", "reviewedAt": "2026-09-03T00:00:00Z", "reviewer": "primary-source-web-review", "notes": "Current KPAC exact-grade property and processing pages reviewed. Melt-flow value is intentionally omitted because the current KPAC sheet states ISO 1133 but does not expose the required test temperature/load. F30-03 is described by KPAC as suitable for multi-cavity moulds and thin-walled parts."}
         },
         {
           "schemaVersion": 1,
@@ -88,7 +88,7 @@
             {"id": "src-kepital-f1003h-iso", "publisher": "Korea Polyacetal (KPAC)", "title": "KEPITAL F10-03H Property Sheet (ISO)", "url": "https://gpac-kpac.com/tcpdf/kepital/download.php?Lang=En&Seq=8", "kind": "manufacturer-datasheet", "revision": "9", "documentDate": "2020-04-03", "retrievedAt": "2026-09-03"},
             {"id": "src-kepital-f1003h-processing", "publisher": "Korea Polyacetal (KPAC)", "title": "KEPITAL F10-03H exact-grade processing guidance", "url": "https://www.gpac-kpac.com/en/product/pop_grade.php?Lang=En&Level=0&Seq=8", "kind": "manufacturer-processing-guide", "revision": null, "documentDate": null, "retrievedAt": "2026-09-03"}
           ],
-          "provenance": {"stage": "staging", "ingestedAt": "2026-09-03T00:00:00Z", "reviewedAt": "2026-09-03T00:00:00Z", "reviewer": "primary-source-web-review", "notes": "Current KPAC exact-grade property and processing pages reviewed. Melt-flow value is intentionally omitted because the current KPAC sheet states ISO 1133 but does not expose the required test temperature/load. KPAC explicitly classifies F10-03H as a stiffness-improved high-viscosity grade."}
+          "provenance": {"stage": "validated", "ingestedAt": "2026-09-03T00:00:00Z", "reviewedAt": "2026-09-03T00:00:00Z", "reviewer": "primary-source-web-review", "notes": "Current KPAC exact-grade property and processing pages reviewed. Melt-flow value is intentionally omitted because the current KPAC sheet states ISO 1133 but does not expose the required test temperature/load. KPAC explicitly classifies F10-03H as a stiffness-improved high-viscosity grade."}
         },
         {
           "schemaVersion": 1,
@@ -115,7 +115,7 @@
             {"id": "src-kepital-fg2025-iso", "publisher": "Korea Polyacetal (KPAC)", "title": "KEPITAL FG2025 Property Sheet (ISO)", "url": "https://www.gpac-kpac.com/tcpdf/kepital/download.php?Lang=En&Level=0&Seq=17", "kind": "manufacturer-datasheet", "revision": "6", "documentDate": "2020-07-21", "retrievedAt": "2026-09-03"},
             {"id": "src-kepital-fg2025-processing", "publisher": "Korea Polyacetal (KPAC)", "title": "KEPITAL FG2025 exact-grade processing guidance", "url": "https://www.gpac-kpac.com/en/product/pop_grade.php?Lang=En&Level=0&Seq=17", "kind": "manufacturer-processing-guide", "revision": null, "documentDate": null, "retrievedAt": "2026-09-03"}
           ],
-          "provenance": {"stage": "staging", "ingestedAt": "2026-09-03T00:00:00Z", "reviewedAt": "2026-09-03T00:00:00Z", "reviewer": "primary-source-web-review", "notes": "Current KPAC exact-grade property and processing pages reviewed. Melt-flow value is intentionally omitted because the current KPAC sheet states ISO 1133 but does not expose the required test temperature/load. KPAC explicitly identifies FG2025 as POM-GF25 / 25% glass-fibre reinforced."}
+          "provenance": {"stage": "validated", "ingestedAt": "2026-09-03T00:00:00Z", "reviewedAt": "2026-09-03T00:00:00Z", "reviewer": "primary-source-web-review", "notes": "Current KPAC exact-grade property and processing pages reviewed. Melt-flow value is intentionally omitted because the current KPAC sheet states ISO 1133 but does not expose the required test temperature/load. KPAC explicitly identifies FG2025 as POM-GF25 / 25% glass-fibre reinforced."}
         }
       ]
     }
