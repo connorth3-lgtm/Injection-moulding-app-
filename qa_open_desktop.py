@@ -102,7 +102,8 @@ require("process.resourcesPath, 'mouldmaster', 'integrity.json'" not in main, "p
 
 integrity_script = (DESKTOP / "scripts" / "generate-integrity.cjs").read_text(encoding="utf-8")
 require("MouldMaster_Academy_App.html" not in integrity_script, "frozen legacy Academy shadow app must not be part of current desktop integrity set")
-require("src/domains/engineering/store-bridge.js" in integrity_script, "canonical engineering compatibility bridge missing from desktop integrity set")
+require("src/domains/engineering/engineering-store.js" in integrity_script, "canonical engineering store missing from desktop integrity set")
+require("src/domains/engineering/store-bridge.js" not in integrity_script, "retired engineering compatibility bridge remains in desktop integrity set")
 
 extra = pkg["build"]["extraResources"]
 from_paths = {x.get("from") for x in extra if isinstance(x, dict)}
@@ -180,4 +181,4 @@ for marker in [
 ]:
     require(marker in migration, f"legacy migration safeguard missing: {marker}")
 
-print("MouldMaster open desktop release QA passed (current bundle excludes frozen legacy shadow app; recovery lane remains separate)")
+print("MouldMaster open desktop release QA passed (current bundle excludes frozen legacy shadow app; canonical engineering store retained; retired compatibility bridge excluded; recovery lane remains separate)")
