@@ -26,7 +26,6 @@ pwa = text("pwa-shell.js")
 worker = text("service-worker.js")
 materials = text("src/domains/materials/material-registry.js")
 engineering = text("src/domains/engineering/engineering-store.js")
-bridge = text("src/domains/engineering/store-bridge.js")
 workspace = text("mould-master-workspace.js")
 a11y = text("accessibility-hardening.js")
 pages = text(".github/workflows/pages.yml")
@@ -53,23 +52,46 @@ need("MouldMaster_Academy_App.html" not in integrity_script, "frozen legacy Acad
 extra = desktop_pkg["build"]["extraResources"]
 need("../../MouldMaster_Academy_App.html" not in {x.get("from") for x in extra if isinstance(x, dict)}, "frozen legacy Academy app remains in desktop package")
 
-# Engineering case ownership and explicit legacy parity without browser-global Storage monkey-patching.
+# Engineering cases have one live authority: owner-scoped IndexedDB. Legacy localStorage is import-only.
 for marker in (
     "Engineering case belongs to a different learner profile",
     "String(record.learnerToken)===tokenValue(token)",
     "learnerToken:owner",
-    "syncLegacySnapshot",
+    "importLegacyCases",
+    "if(prior?.complete)return",
+    "preservedExisting",
+    "destructive:false",
     "repairLegacyLinkOwnership",
 ):
     need(marker in engineering, f"engineering learner/case invariant missing: {marker}")
-for marker in ("mm_mould_master_cases_v1::", "store.syncLegacySnapshot", "MM_CASE_STORE_BRIDGE", "mm:mould-master-cases-changed"):
-    need(marker in bridge, f"legacy workspace parity bridge missing marker: {marker}")
-need("mm:mould-master-cases-changed" in workspace and "publishCasesChanged" in workspace, "Mould Master workspace does not publish explicit persistence-change events")
-need("Storage?.prototype" not in bridge and "Object.defineProperty" not in bridge, "engineering bridge must not monkey-patch browser Storage.prototype")
+need("syncLegacySnapshot" not in engineering, "engineering store still exposes live legacy snapshot parity")
+need(not (ROOT / "src/domains/engineering/store-bridge.js").exists(), "retired engineering store bridge still exists")
+for marker in (
+    "MM_ENGINEERING_STORE",
+    "await store.saveCase(c,{token:owner})",
+    "await store.deleteCase(id,owner)",
+    "canonicalStore:'indexeddb-v2'",
+    "legacy localStorage is migration input only",
+    "hydratedLearnerToken",
+    "store.learnerToken()",
+):
+    need(marker in workspace, f"Mould Master canonical IndexedDB contract missing: {marker}")
+for forbidden in (
+    "localStorage.getItem(",
+    "localStorage.setItem(",
+    "localStorage.removeItem(",
+    "localStorage.clear(",
+    "mm:mould-master-cases-changed",
+    "publishCasesChanged",
+    "STORAGE_BASE",
+):
+    need(forbidden not in workspace, f"Mould Master workspace still writes/coordinates a second live store: {forbidden}")
+need("await workspace.newCase" in materials and "materialGradeId" in materials and "linkCaseMaterial" in materials, "exact material case creation is not durably linked through the canonical case store")
 assets = manifest.get("assets", [])
 need("./src/domains/engineering/engineering-store.js" in assets, "engineering store missing from domain manifest")
-need("./src/domains/engineering/store-bridge.js" in assets, "engineering store bridge missing from domain manifest")
-need(assets.index("./src/domains/engineering/engineering-store.js") < assets.index("./src/domains/engineering/store-bridge.js"), "engineering bridge must load after canonical store")
+need("./src/domains/engineering/store-bridge.js" not in assets, "retired engineering bridge remains in domain manifest")
+need("./src/domains/engineering/store-bridge.js" not in public_worker_assets, "retired engineering bridge remains in PWA runtime")
+need("src/domains/engineering/store-bridge.js" not in integrity_script, "retired engineering bridge remains in Desktop integrity runtime")
 
 # Material variants/revisions must not collapse on display grade name alone.
 compiler = text("tools/material_catalog.py")
@@ -166,10 +188,13 @@ cross = text("playwright.cross-browser.config.cjs")
 need("firefox-desktop" in cross and "webkit-tablet" in cross and "chromium-desktop" in cross, "cross-browser project matrix incomplete")
 smoke = text("qa/cross-browser-smoke.spec.js")
 need("onboardingDone:true" in smoke and "mouldmasterProDB" in smoke, "cross-browser matrix does not establish deterministic learner/onboarding state")
+need("&&!!window.MM_CASE_STORE_BRIDGE" not in smoke, "cross-browser smoke still waits for the retired engineering compatibility bridge")
+for marker in ("without a compatibility bridge", "canonicalStore:'indexeddb-v2'", "bridgePresent:false"):
+    need(marker in smoke, f"cross-browser canonical engineering-store smoke invariant missing: {marker}")
 
 # Broad document polling should be retired where canonical lifecycle hooks exist.
 need("new MutationObserver" not in pwa, "PWA shell still uses document-wide mutation polling")
 need("new MutationObserver" not in materials, "Materials domain still uses document-wide mutation polling")
 need("mutationScope:'changed-subtrees'" in a11y, "accessibility safety net is not constrained to changed subtrees")
 
-print("MouldMaster app-wide remediation QA passed: pre-merge live Pages provenance, aligned gh api negotiation, cross-index fail-closed provenance, storage ownership/explicit parity, variant-safe materials, PWA lifecycle, legacy distribution separation, deterministic browser matrix and targeted observers")
+print("MouldMaster app-wide remediation QA passed: pre-merge live Pages provenance, aligned gh api negotiation, cross-index fail-closed provenance, single authoritative owner-scoped engineering case store, variant-safe materials, PWA lifecycle, legacy distribution separation, deterministic browser matrix and targeted observers")

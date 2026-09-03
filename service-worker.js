@@ -30,7 +30,6 @@ const CORE=[
   './src/domains/domain-bootstrap.js',
   './runtime-domain-manifest.json',
   './src/domains/engineering/engineering-store.js',
-  './src/domains/engineering/store-bridge.js',
   './src/domains/materials/material-registry.js',
   './src/domains/shell/product-areas.js',
   './material-catalog-v1.json',

@@ -1,25 +1,53 @@
-/* MouldMaster evidence-led troubleshooting workspace — 2026.08.26.1 */
+/* MouldMaster evidence-led troubleshooting workspace — 2026.09.03.3 */
 (function(){
 'use strict';
-const VERSION='2026.08.26.1';
-const STORAGE_BASE='mm_mould_master_cases_v1::';
+const VERSION='2026.09.03.3';
 const MAX_CASES=80;
 let activeId='';
+let caseCache=[];
+let hydrationPromise=null;
+let hydratedLearnerToken='';
+let storageFailure='';
 
 function esc(v){return String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
-function learnerId(){try{return String((typeof db!=='undefined'&&db?.activeUser)||user?.id||'anonymous')}catch(_){return'anonymous'}}
-function token(raw=learnerId()){let h=2166136261;for(const ch of String(raw)){h^=ch.charCodeAt(0);h=Math.imul(h,16777619)}return(h>>>0).toString(36)}
-function storageKey(){return STORAGE_BASE+token()}
-function read(){try{const x=JSON.parse(localStorage.getItem(storageKey())||'[]');return Array.isArray(x)?x:[]}catch(_){return[]}}
-function publishCasesChanged(cases){try{window.dispatchEvent(new CustomEvent('mm:mould-master-cases-changed',{detail:{learnerToken:token(),storageKey:storageKey(),cases:cases.map(x=>({...x}))}}))}catch(_){}}
-function write(cases){const snapshot=cases.slice(0,MAX_CASES);try{localStorage.setItem(storageKey(),JSON.stringify(snapshot))}catch(_){}publishCasesChanged(snapshot)}
+function engineeringStore(){return window.MM_ENGINEERING_STORE||null}
+async function resolveStore(){
+  let store=engineeringStore();if(store)return store;
+  try{if(window.MM_DOMAIN_BOOTSTRAP?.ready)await window.MM_DOMAIN_BOOTSTRAP.ready}catch(_){}
+  return engineeringStore()
+}
 function uid(){try{return crypto.randomUUID()}catch(_){return 'case-'+Date.now().toString(36)+'-'+Math.random().toString(36).slice(2,8)}}
 function now(){return new Date().toISOString()}
-function blank(){return{id:uid(),createdAt:now(),updatedAt:now(),title:'',defect:'',material:'',machine:'',mould:'',onset:'Unknown / not yet defined',location:'',baseline:'',evidence:'',hypothesis:'',controlledTest:'',testResult:'',afterChange:'',verification:'',conclusion:'',status:'Investigating'}}
-function all(){return read().sort((a,b)=>String(b.updatedAt||'').localeCompare(String(a.updatedAt||'')))}
+function blank(){return{id:uid(),createdAt:now(),updatedAt:now(),title:'',defectId:null,defect:'',materialGradeId:null,material:'',machineId:null,machine:'',mouldId:null,mould:'',cavityId:null,onset:'Unknown / not yet defined',location:'',baseline:'',evidence:'',hypothesis:'',controlledTest:'',testResult:'',afterChange:'',verification:'',conclusion:'',status:'Investigating'}}
+function all(){return caseCache.slice().sort((a,b)=>String(b.updatedAt||'').localeCompare(String(a.updatedAt||'')))}
 function get(id){return all().find(x=>x.id===id)||null}
-function saveCase(c){const cases=all().filter(x=>x.id!==c.id);c.updatedAt=now();cases.unshift(c);write(cases);return c}
-function deleteCase(id){write(all().filter(x=>x.id!==id));if(activeId===id)activeId=''}
+function replaceCache(cases){caseCache=(Array.isArray(cases)?cases:[]).slice(0,MAX_CASES).map(x=>({...x}));return all()}
+async function hydrate({force=false}={}){
+  const store=await resolveStore();if(!store)throw new Error('Engineering case store unavailable');
+  const owner=store.learnerToken();
+  if(!force&&hydrationPromise&&hydratedLearnerToken===owner)return hydrationPromise;
+  if(hydratedLearnerToken!==owner){activeId='';caseCache=[]}
+  hydratedLearnerToken=owner;
+  hydrationPromise=(async()=>{
+    await store.bootstrap?.();
+    const cases=await store.listCases(owner);
+    if(hydratedLearnerToken!==owner)return all();
+    storageFailure='';return replaceCache(cases)
+  })().catch(err=>{if(hydratedLearnerToken===owner){storageFailure=String(err?.message||err);console.warn('[MouldMaster workspace] canonical case store unavailable',err)}return all()});
+  return hydrationPromise
+}
+async function saveCase(c){
+  await hydrate();const store=await resolveStore();if(!store)throw new Error(storageFailure||'Engineering case store unavailable');
+  let owner=store.learnerToken();if(hydratedLearnerToken!==owner){await hydrate({force:true});owner=store.learnerToken()}
+  c.status=status(c);c.updatedAt=now();
+  const saved=await store.saveCase(c,{token:owner}),cases=all().filter(x=>x.id!==saved.id);caseCache=[{...saved},...cases].slice(0,MAX_CASES);return saved
+}
+async function deleteCase(id){
+  await hydrate();const store=await resolveStore();if(!store)throw new Error(storageFailure||'Engineering case store unavailable');
+  let owner=store.learnerToken();if(hydratedLearnerToken!==owner){await hydrate({force:true});owner=store.learnerToken()}
+  const removed=await store.deleteCase(id,owner);if(removed)caseCache=all().filter(x=>x.id!==id);if(activeId===id)activeId='';return removed
+}
+function persistenceError(err){storageFailure=String(err?.message||err);console.warn('[MouldMaster workspace] case persistence failed',err);window.toast?.('Case could not be saved locally')}
 
 function defects(){try{return Array.isArray(D?.defects)?D.defects:[]}catch(_){return[]}}
 function lessons(){try{return Array.isArray(D?.lessons)?D.lessons:[]}catch(_){return[]}}
@@ -105,11 +133,11 @@ function renderCase(c){activeId=c.id;const host=section();c.status=status(c);con
 
 function collect(c){document.querySelectorAll('#mmMouldMasterWorkspace [data-mw-field]').forEach(el=>{c[el.dataset.mwField]=el.value});c.status=status(c);return c}
 function wire(host,c){
-  let timer=null;host.querySelectorAll('[data-mw-field]').forEach(el=>el.addEventListener('input',()=>{clearTimeout(timer);timer=setTimeout(()=>{collect(c);saveCase(c)},500)}));
-  host.querySelector('[data-mw-save]')?.addEventListener('click',()=>{collect(c);saveCase(c);renderCase(c);window.toast?.('Mould Master case saved')});
-  host.querySelector('[data-mw-new]')?.addEventListener('click',()=>{const n=saveCase(blank());renderCase(n)});
-  host.querySelector('[data-mw-list]')?.addEventListener('click',renderList);
-  host.querySelector('[data-mw-delete]')?.addEventListener('click',()=>{if(!confirm('Delete this local troubleshooting case?'))return;deleteCase(c.id);renderList()});
+  let timer=null;host.querySelectorAll('[data-mw-field]').forEach(el=>el.addEventListener('input',()=>{clearTimeout(timer);timer=setTimeout(async()=>{try{await saveCase(collect(c))}catch(err){persistenceError(err)}},500)}));
+  host.querySelector('[data-mw-save]')?.addEventListener('click',async()=>{try{const saved=await saveCase(collect(c));renderCase(saved);window.toast?.('Mould Master case saved')}catch(err){persistenceError(err)}});
+  host.querySelector('[data-mw-new]')?.addEventListener('click',async()=>{try{const n=await saveCase(blank());renderCase(n)}catch(err){persistenceError(err)}});
+  host.querySelector('[data-mw-list]')?.addEventListener('click',()=>renderList());
+  host.querySelector('[data-mw-delete]')?.addEventListener('click',async()=>{if(!confirm('Delete this local troubleshooting case?'))return;try{await deleteCase(c.id);renderList()}catch(err){persistenceError(err)}});
   host.querySelector('[data-mw-export]')?.addEventListener('click',()=>exportCase(collect(c)));
   host.querySelectorAll('[data-mw-lesson]').forEach(b=>b.addEventListener('click',()=>{try{user.currentLesson=Number(b.dataset.mwLesson);persist();switchView('lesson')}catch(_){}}));
   host.querySelector('[data-mw-defects]')?.addEventListener('click',()=>switchView('defects'));
@@ -129,14 +157,15 @@ function wire(host,c){
     setTimeout(()=>document.querySelector(`[data-pd-start="${CSS.escape(id)}"]`)?.click(),0)
   }));
   host.querySelectorAll('[data-mw-material]').forEach(b=>b.addEventListener('click',()=>{window.MM_MATERIAL_BEHAVIOUR_LABS?.open?.();setTimeout(()=>document.querySelector(`[data-ml-start="${CSS.escape(b.dataset.mwMaterial)}"]`)?.click(),0)}));
-  host.querySelector('[data-mw-field="defect"]')?.addEventListener('change',()=>{collect(c);saveCase(c);renderCase(c)})
+  host.querySelector('[data-mw-field="defect"]')?.addEventListener('change',async()=>{try{const saved=await saveCase(collect(c));renderCase(saved)}catch(err){persistenceError(err)}})
 }
 function exportCase(c){const payload={schema:1,version:VERSION,exportedAt:now(),trainingBoundary:'Evidence record only; not a universal production recipe or machine authorisation.',case:c};const blob=new Blob([JSON.stringify(payload,null,2)],{type:'application/json;charset=utf-8'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=`mouldmaster-case-${String(c.title||c.id).replace(/[^a-z0-9]+/gi,'-').toLowerCase().slice(0,48)}.json`;document.body.appendChild(a);a.click();a.remove();URL.revokeObjectURL(url)}
-function renderList(){activeId='';const host=section();host.innerHTML=`<div class="mw-hero card"><div class="eyebrow">Mould Master</div><h2>Troubleshooting casebook</h2><p>Keep diagnosis tied to the evidence chain rather than a sequence of unrecorded machine adjustments.</p><div class="mw-boundary"><b>Local-only record:</b> cases stay in this browser/desktop profile unless you explicitly export a case JSON file. No case data is uploaded by this module.</div></div><div class="mw-toolbar"><div><h2 style="margin:0">Saved cases</h2><p class="muted" style="margin:4px 0 0">${all().length} local case${all().length===1?'':'s'}</p></div><button class="primary" type="button" data-mw-new>New case</button></div><div class="mw-panel card">${casesHtml('')}</div>`;host.querySelector('[data-mw-new]')?.addEventListener('click',()=>{const c=saveCase(blank());renderCase(c)});host.querySelectorAll('[data-mw-open]').forEach(b=>b.addEventListener('click',()=>{const c=get(b.dataset.mwOpen);if(c)renderCase(c)}))}
-function open(id){style();const host=section();hideViews();host.classList.remove('hidden');header();mark();const c=id&&get(id)||get(activeId);if(c)renderCase(c);else renderList();window.scrollTo?.({top:0,behavior:'smooth'})}
-function newCase(seed={}){const c=saveCase({...blank(),...seed,id:uid(),createdAt:now(),updatedAt:now()});open(c.id);return c.id}
+function renderList(){activeId='';const host=section();host.innerHTML=`<div class="mw-hero card"><div class="eyebrow">Mould Master</div><h2>Troubleshooting casebook</h2><p>Keep diagnosis tied to the evidence chain rather than a sequence of unrecorded machine adjustments.</p><div class="mw-boundary"><b>Local-only record:</b> cases stay in this browser/desktop profile unless you explicitly export a case JSON file. No case data is uploaded by this module.</div></div><div class="mw-toolbar"><div><h2 style="margin:0">Saved cases</h2><p class="muted" style="margin:4px 0 0">${all().length} local case${all().length===1?'':'s'}</p></div><button class="primary" type="button" data-mw-new>New case</button></div><div class="mw-panel card">${casesHtml('')}</div>`;host.querySelector('[data-mw-new]')?.addEventListener('click',async()=>{try{const c=await saveCase(blank());renderCase(c)}catch(err){persistenceError(err)}});host.querySelectorAll('[data-mw-open]').forEach(b=>b.addEventListener('click',()=>{const c=get(b.dataset.mwOpen);if(c)renderCase(c)}))}
+async function open(id){style();await hydrate();const host=section();hideViews();host.classList.remove('hidden');header();mark();const c=id&&get(id)||get(activeId);if(c)renderCase(c);else renderList();window.scrollTo?.({top:0,behavior:'smooth'})}
+async function newCase(seed={}){await hydrate();const c=await saveCase({...blank(),...seed,id:uid(),createdAt:now(),updatedAt:now()});await open(c.id);return c.id}
 
 style();section();
 window.mmOpenMouldMaster=()=>open();
-window.MM_MOULD_MASTER_WORKSPACE={version:VERSION,open,newCase,cases:()=>all().map(x=>({...x})),getCase:id=>{const c=get(id);return c?{...c}:null},scope:'Learner-scoped local evidence casebook; no network upload, universal production setpoints, assessment mutation or machine authorisation.'};
+window.MM_MOULD_MASTER_WORKSPACE={version:VERSION,canonicalStore:'indexeddb-v2',hydrate,open,newCase,cases:()=>all().map(x=>({...x})),getCase:id=>{const c=get(id);return c?{...c}:null},learnerToken:()=>hydratedLearnerToken,storageError:()=>storageFailure,scope:'Learner-scoped local IndexedDB evidence casebook; legacy localStorage is migration input only; no network upload, universal production setpoints, assessment mutation or machine authorisation.'};
+window.addEventListener('mm:domains-ready',()=>hydrate({force:true}),{once:true});
 })();

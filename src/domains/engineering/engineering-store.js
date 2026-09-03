@@ -3,7 +3,7 @@
 'use strict';
 if(window.MM_ENGINEERING_STORE)return;
 
-const VERSION='2026.09.03.3';
+const VERSION='2026.09.03.4';
 const DB_NAME='mouldmaster-engineering-v2';
 const DB_VERSION=2;
 const LEGACY_CASE_BASE='mm_mould_master_cases_v1::';
@@ -13,6 +13,7 @@ function learnerId(){try{return String((typeof db!=='undefined'&&db?.activeUser)
 function learnerToken(raw=learnerId()){let h=2166136261;for(const ch of String(raw)){h^=ch.charCodeAt(0);h=Math.imul(h,16777619)}return(h>>>0).toString(36)}
 function now(){return new Date().toISOString()}
 function tokenValue(token){return String(token||learnerToken())}
+function timeValue(value){const n=Date.parse(String(value||''));return Number.isFinite(n)?n:0}
 
 function openDb(){
   return new Promise((resolve,reject)=>{
@@ -116,16 +117,24 @@ async function linkCaseDataset(caseId,datasetId,label='',token=learnerToken()){r
 
 function legacyKey(token=learnerToken()){return LEGACY_CASE_BASE+tokenValue(token)}
 function readLegacyCases(token=learnerToken()){try{const raw=JSON.parse(localStorage.getItem(legacyKey(token))||'[]');return Array.isArray(raw)?raw:[]}catch(_){return[]}}
-async function syncLegacySnapshot(cases,token=learnerToken()){
-  const owner=tokenValue(token),incoming=Array.isArray(cases)?cases:[],ids=new Set();
-  for(const old of incoming){if(!old?.id)continue;ids.add(String(old.id));const prior=await getRaw('cases',String(old.id));const preservedGrade=prior&&String(prior.learnerToken)===owner?prior.materialGradeId:null;await saveCase({...old,learnerToken:owner,materialGradeId:old.materialGradeId||preservedGrade||null,legacySource:'mm_mould_master_cases_v1'},{token:owner})}
-  for(const record of await listCases(owner))if(record.legacySource==='mm_mould_master_cases_v1'&&!ids.has(String(record.id)))await deleteCase(record.id,owner);
-  return {learnerToken:owner,count:ids.size,syncedAt:now()}
+async function importLegacyCases(cases,token=learnerToken()){
+  const owner=tokenValue(token),incoming=Array.isArray(cases)?cases:[];
+  let imported=0,preservedExisting=0,conflicts=0;
+  for(const old of incoming){
+    if(!old?.id)continue;
+    const id=String(old.id),prior=await getRaw('cases',id);
+    if(prior&&String(prior.learnerToken)!==owner){conflicts++;continue}
+    if(prior&&timeValue(prior.updatedAt)>=timeValue(old.updatedAt||old.createdAt)){preservedExisting++;continue}
+    await saveCase({...old,learnerToken:owner,materialGradeId:old.materialGradeId||prior?.materialGradeId||null,legacySource:'mm_mould_master_cases_v1'},{token:owner});
+    imported++
+  }
+  return {learnerToken:owner,legacyCount:incoming.length,imported,preservedExisting,conflicts,importedAt:now(),destructive:false}
 }
 async function migrateLegacyMouldMasterCases(token=learnerToken()){
-  const owner=tokenValue(token),migrationId=`legacy-mould-master-v1::${owner}`,legacy=readLegacyCases(owner),prior=await getRaw('migrations',migrationId);
-  const synced=await syncLegacySnapshot(legacy,owner);
-  const result={id:migrationId,complete:true,migrated:synced.count,legacyCount:legacy.length,completedAt:now(),destructive:false,alreadyComplete:!!prior?.complete};
+  const owner=tokenValue(token),migrationId=`legacy-mould-master-v1::${owner}`,prior=await getRaw('migrations',migrationId);
+  if(prior?.complete)return {...prior,alreadyComplete:true};
+  const legacy=readLegacyCases(owner),summary=await importLegacyCases(legacy,owner);
+  const result={id:migrationId,complete:true,...summary,completedAt:now(),alreadyComplete:false};
   await put('migrations',result);return result
 }
 async function repairLegacyLinkOwnership(token=learnerToken()){
@@ -135,6 +144,6 @@ async function repairLegacyLinkOwnership(token=learnerToken()){
 }
 async function bootstrap(){try{const migration=await migrateLegacyMouldMasterCases();await repairLegacyLinkOwnership();return migration}catch(err){console.warn('[MouldMaster engineering store] legacy migration skipped',err);return null}}
 
-window.MM_ENGINEERING_STORE=Object.freeze({version:VERSION,dbName:DB_NAME,normalizeCase,saveCase,listCases,getCase,deleteCase,linkCase,linksForCase,linkCaseMaterial,linkCaseDataset,syncLegacySnapshot,migrateLegacyMouldMasterCases,repairLegacyLinkOwnership,bootstrap,learnerToken,legacyKey});
+window.MM_ENGINEERING_STORE=Object.freeze({version:VERSION,dbName:DB_NAME,normalizeCase,saveCase,listCases,getCase,deleteCase,linkCase,linksForCase,linkCaseMaterial,linkCaseDataset,importLegacyCases,migrateLegacyMouldMasterCases,repairLegacyLinkOwnership,bootstrap,learnerToken,legacyKey});
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',bootstrap,{once:true});else bootstrap();
 })();
