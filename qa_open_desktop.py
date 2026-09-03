@@ -102,8 +102,38 @@ require("process.resourcesPath, 'mouldmaster', 'integrity.json'" not in main, "p
 
 integrity_script = (DESKTOP / "scripts" / "generate-integrity.cjs").read_text(encoding="utf-8")
 require("MouldMaster_Academy_App.html" not in integrity_script, "frozen legacy Academy shadow app must not be part of current desktop integrity set")
-require("src/domains/engineering/engineering-store.js" in integrity_script, "canonical engineering store missing from desktop integrity set")
+for marker in [
+    "RUNTIME_MANIFEST='runtime-domain-manifest.json'",
+    "runtimeManifest.assets",
+    "runtimeManifest.dataAssets",
+    "runtimeAssetPath",
+    "manifestFiles",
+]:
+    require(marker in integrity_script, f"desktop integrity generator does not derive the domain allowlist from runtime manifest: {marker}")
 require("src/domains/engineering/store-bridge.js" not in integrity_script, "retired engineering compatibility bridge remains in desktop integrity set")
+
+desktop_qa = (DESKTOP / "scripts" / "qa.cjs").read_text(encoding="utf-8")
+for marker in [
+    "runtime-domain-manifest.json",
+    "DOMAIN_MANIFEST.assets",
+    "DOMAIN_MANIFEST.dataAssets",
+    "runtime manifest asset is not integrity-hashed/servable by desktop",
+]:
+    require(marker in desktop_qa, f"desktop QA does not prove runtime-manifest serving coverage: {marker}")
+
+runtime_manifest = json.loads((ROOT / "runtime-domain-manifest.json").read_text(encoding="utf-8"))
+require(runtime_manifest.get("schemaVersion") == 1, "desktop QA runtime-domain manifest schema drift")
+required_domain_assets = {
+    "./src/domains/shared/learner-scope.js",
+    "./src/domains/engineering/engineering-store.js",
+    "./src/domains/learning/learning-analytics-loader.js",
+    "./src/domains/materials/material-registry.js",
+    "./src/domains/materials/material-search-index.js",
+    "./src/domains/shell/accessibility-loader.js",
+    "./src/domains/shell/product-areas.js",
+}
+require(required_domain_assets.issubset(set(runtime_manifest.get("assets") or [])), "desktop QA expected domain asset set drift")
+require("./material-catalog-v1.json" in (runtime_manifest.get("dataAssets") or []), "desktop QA material runtime data asset missing")
 
 extra = pkg["build"]["extraResources"]
 from_paths = {x.get("from") for x in extra if isinstance(x, dict)}
@@ -181,4 +211,4 @@ for marker in [
 ]:
     require(marker in migration, f"legacy migration safeguard missing: {marker}")
 
-print("MouldMaster open desktop release QA passed (current bundle excludes frozen legacy shadow app; canonical engineering store retained; retired compatibility bridge excluded; recovery lane remains separate)")
+print("MouldMaster open desktop release QA passed (runtime domain manifest is the canonical desktop serving allowlist; frozen legacy shadow app excluded; recovery lane remains separate)")
