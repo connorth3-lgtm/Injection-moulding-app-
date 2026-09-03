@@ -70,13 +70,22 @@ write_count = index.count("document.write(")
 need(write_count <= int(baseline["documentWriteCeiling"]), f"document.write bootstrap debt grew: {write_count}")
 need("document.writeln(" not in index, "document.writeln is not permitted in the runtime bootstrap")
 
-# Executable inline script blocks are retired from the fetched core. Legacy inline
-# event-handler attributes remain isolated under script-src-attr until their own
-# migration tranche; they must not force unsafe-inline back into script-src.
-inline_core_script = re.compile(r"<script\b(?![^>]*\bsrc\s*=)[^>]*>", re.I)
-need(inline_core_script.search(core) is None, "MouldMaster core contains an inline executable script block")
+# The frozen recovery core retains its historical inline script bytes. Browser/PWA
+# runtime assembly must replace each block with an exact same-origin generated copy
+# before the stricter CSP is installed.
+inline_core_script_re = re.compile(r"<script\b(?![^>]*\bsrc\s*=)[^>]*>(.*?)</script\s*>", re.I | re.S)
+inline_core_scripts = inline_core_script_re.findall(core)
 core_runtime_scripts = sorted(CORE_RUNTIME_DIR.glob("core-inline-*.js"))
-need(core_runtime_scripts, "externalized core runtime scripts are missing")
+need(inline_core_scripts, "frozen recovery core unexpectedly has no inline scripts")
+need(len(inline_core_scripts) == len(core_runtime_scripts), f"core runtime externalization count drifted: {len(inline_core_scripts)} source / {len(core_runtime_scripts)} generated")
+for number, (source, path) in enumerate(zip(inline_core_scripts, core_runtime_scripts), start=1):
+    need(path.name == f"core-inline-{number:03d}.js", f"core runtime ordering drifted at slot {number}: {path.name}")
+    need(path.read_text(encoding="utf-8") == source, f"externalized core runtime is stale at slot {number}: {path.name}")
+need("const CORE_INLINE_SCRIPTS=[" in index, "runtime core script externalization registry missing")
+need("function externalizeCoreScripts(out)" in index, "runtime core script externalization function missing")
+need("out=externalizeCoreScripts(out)" in index, "runtime assembly does not externalize frozen core scripts")
+for path in core_runtime_scripts:
+    need(f"'./src/core-runtime/{path.name}'" in index, f"runtime core script missing from bootstrap registry: {path.name}")
 
 # CSP may become stricter, but it may not add unsafe-eval, remote script origins,
 # or external runtime connections.
@@ -104,7 +113,7 @@ need(remote_script_tag.search(index) is None, "index.html contains a remote runt
 need(remote_script_tag.search(core) is None, "MouldMaster_Core_App.html contains a remote runtime script tag")
 
 # Active application JavaScript must not gain string-to-code execution. Scan all
-# directly injected scripts, the externalized core runtime, and every domain module.
+# directly injected scripts, exact externalized core runtime copies, and every domain module.
 scan_paths: set[Path] = set(core_runtime_scripts)
 for src in body_scripts:
     path = ROOT / src.removeprefix("./")
@@ -126,6 +135,6 @@ print(
     f"{len(root_runtime_scripts)}/{baseline['rootRuntimeScriptCeiling']} grandfathered root scripts; "
     f"{len(actual_compat)}/{len(grandfathered_compat)} compatibility layers; "
     f"document.write {write_count}/{baseline['documentWriteCeiling']}; "
-    f"{len(core_runtime_scripts)} externalized core scripts; script-src self-only; "
+    f"{len(core_runtime_scripts)} exact runtime-externalized frozen core scripts; script-src self-only; "
     "legacy handler attributes isolated; no remote scripts, unsafe-eval, eval(), or new Function()"
 )
