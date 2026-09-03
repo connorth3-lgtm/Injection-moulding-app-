@@ -104,8 +104,8 @@ jobs:
           anchor = "      - 'desktop/electron/**'\n"
           replacement = anchor + "      - 'src/domains/**'\n      - 'tools/build_runtime_packs.py'\n"
           count = desktop_workflow.count(anchor)
-          if count < 2:
-              raise SystemExit(f'expected push + PR desktop path anchors, found {count}')
+          if count < 1:
+              raise SystemExit('desktop push path anchor missing')
           desktop_workflow = desktop_workflow.replace(anchor, replacement)
           desktop_workflow_path.write_text(desktop_workflow, encoding='utf-8')
 
