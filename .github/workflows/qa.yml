@@ -47,6 +47,8 @@ jobs:
         run: python qa_architecture_debt.py
       - name: App-wide data and runtime deep audit
         run: python qa_app_wide_audit.py
+      - name: Data activation v1 integrity
+        run: python qa_data_activation_v1.py
       - name: Canonical master-data reconciliation
         run: python qa_master_data_compile.py
       - name: Diagnostic learning integrity
