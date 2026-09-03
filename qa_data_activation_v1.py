@@ -14,8 +14,9 @@ required=[
  'src/domains/learning/content-intelligence.js','src/domains/materials/material-observation-v2.js',
  'src/domains/engineering/evidence-chain.js','src/domains/process/evidence-granularity.js',
  'data/materials/material-grade-v2.schema.json','data/real-pilot-analysis-contract-v1.json',
+ 'data/assessment-decision-manifest-v1.json','tools/generate_assessment_decision_manifest.py',
  'tools/analyze_real_pilot.py','qa/fixtures/real-pilot-analysis-synthetic.csv',
- 'qa_process_evidence_granularity.py'
+ 'qa_process_evidence_granularity.py','qa_assessment_decision_manifest.py'
 ]
 for p in required: need((ROOT/p).exists(),f'data activation asset missing: {p}')
 for p in [x for x in required if x.endswith('.js')]:
@@ -34,7 +35,7 @@ for m in ['process-data-semantic-registry.json','actualness','confirm-source-sem
     need(m in signals,f'canonical signal semantic alignment missing: {m}')
 
 assessment=text('src/domains/assessment/assessment-analytics-v2.js')
-for m in ['questionRevision','bankVersion','choiceFingerprint','authoredDifficulty','observedDifficulty','stable question ID plus explicit revision']:
+for m in ['questionRevision','bankVersion','choiceFingerprint','choiceFingerprint(questionId,revision,text)','question-and-revision-scoped fingerprints','authoredDifficulty','observedDifficulty','stable question ID plus explicit revision']:
     need(m in assessment,f'assessment analytics v2 marker missing: {m}')
 
 activity=text('src/domains/learning/activity-events-v2.js')
@@ -89,6 +90,10 @@ atlas_qa=subprocess.run(['python',str(ROOT/'qa_process_evidence_granularity.py')
 need(atlas_qa.returncode==0,'atlas contextual evidence QA failed: '+(atlas_qa.stderr or atlas_qa.stdout)[:8000])
 print(atlas_qa.stdout.strip())
 
+decision_qa=subprocess.run(['python',str(ROOT/'qa_assessment_decision_manifest.py')],cwd=ROOT,capture_output=True,text=True,encoding='utf-8',errors='replace')
+need(decision_qa.returncode==0,'canonical assessment decision identity QA failed: '+(decision_qa.stderr or decision_qa.stdout)[:8000])
+print(decision_qa.stdout.strip())
+
 contract=json.loads(text('data/real-pilot-analysis-contract-v1.json'))
 need(contract.get('status')=='pilot-ready','real pilot analysis must not claim completed validation')
 need('No result authorises a production change' in contract.get('analysisBoundary',''),'pilot production-authority boundary missing')
@@ -101,4 +106,4 @@ with tempfile.TemporaryDirectory() as td:
     need(report['source']['rows']==6,'synthetic pilot row count drifted')
     need('fill_time_s' in report['comparisons'] and 'part_mass_g' in report['comparisons'],'pilot comparison signals missing')
 
-print('MouldMaster data activation v1 QA passed (data spine, revision-safe assessment analytics, unified local events, learner model, typed materials, canonical signal semantics, contextual atlas evidence relevance, engineering evidence chain, CSP-safe desktop/mobile content intelligence, real-pilot aggregate harness)')
+print('MouldMaster data activation v1 QA passed (data spine, canonical governed decision manifest, question/revision-scoped assessment analytics, unified local events, learner model, typed materials, canonical signal semantics, contextual atlas evidence relevance, engineering evidence chain, CSP-safe desktop/mobile content intelligence, real-pilot aggregate harness)')
