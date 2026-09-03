@@ -68,7 +68,8 @@ need("for attempt in {1..60}" in guard, "read-only workflow audit must tolerate 
 
 # Production publication must require GitHub's effective native protection.
 need("--require-native-protection" in pages, "Pages publication does not require native main protection")
-need("Require merged-PR provenance and native protection before publication" in pages, "Pages native-protection gate is not explicit")
+need("Require merged-PR provenance before publication" in pages, "Pages stable provenance gate label is missing")
+need("native protection mandatory" in pages, "Pages native-protection requirement is not explicit")
 need("if: github.event_name != 'pull_request'" in pages, "Pages publication guard must remain push/manual only")
 
 # The native-protection helper is an explicit administrator action, defaults to
