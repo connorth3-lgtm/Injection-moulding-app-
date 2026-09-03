@@ -1,0 +1,12 @@
+{
+  "name": "mouldmaster-msix-toolchain",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Isolated reproducible MSIX packaging toolchain for MouldMaster Academy.",
+  "engines": {
+    "node": ">=22.12.0"
+  },
+  "devDependencies": {
+    "electron-builder": "27.0.0-alpha.7"
+  }
+}

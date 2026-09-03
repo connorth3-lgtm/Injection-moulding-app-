@@ -22,11 +22,14 @@ for path in [
     DESKTOP / "THREAT_MODEL.md",
     DESKTOP / "package.json",
     DESKTOP / "package-lock.json",
+    DESKTOP / "msix-toolchain" / "package.json",
+    DESKTOP / "msix-toolchain" / "package-lock.json",
     DESKTOP / "src" / "main.cjs",
     DESKTOP / "scripts" / "generate-integrity.cjs",
     DESKTOP / "scripts" / "generate-licenses.cjs",
     DESKTOP / "scripts" / "generate-sbom.cjs",
     DESKTOP / "scripts" / "generate-msix-assets.ps1",
+    DESKTOP / "scripts" / "run-msix-builder.cjs",
     DESKTOP / "scripts" / "verify-real-windows-release.ps1",
     DESKTOP / "scripts" / "qa.cjs",
     ROOT / ".github" / "workflows" / "desktop-dependency-lock.yml",
@@ -38,12 +41,22 @@ for path in [
 
 pkg = json.loads((DESKTOP / "package.json").read_text(encoding="utf-8"))
 lock = json.loads((DESKTOP / "package-lock.json").read_text(encoding="utf-8"))
+msix_pkg = json.loads((DESKTOP / "msix-toolchain" / "package.json").read_text(encoding="utf-8"))
+msix_lock = json.loads((DESKTOP / "msix-toolchain" / "package-lock.json").read_text(encoding="utf-8"))
+msix_runner = (DESKTOP / "scripts" / "run-msix-builder.cjs").read_text(encoding="utf-8")
 require(pkg.get("license") == "Apache-2.0", "desktop package must remain Apache-2.0")
 require(lock.get("lockfileVersion", 0) >= 3, "desktop npm lockfile must be v3+")
 for dep in ("electron", "electron-builder"):
     require(lock["packages"][""]["devDependencies"][dep] == pkg["devDependencies"][dep], f"locked {dep} version mismatch")
+require(pkg["devDependencies"].get("electron-builder") == "26.15.7", "portable/NSIS builder must remain pinned to 26.15.7")
+require(msix_pkg.get("devDependencies", {}).get("electron-builder") == "27.0.0-alpha.7", "isolated MSIX builder must be pinned to 27.0.0-alpha.7")
+locked_msix_builder = msix_lock.get("packages", {}).get("node_modules/electron-builder")
+require(locked_msix_builder is not None and locked_msix_builder.get("version") == "27.0.0-alpha.7", "isolated MSIX lock must resolve electron-builder 27.0.0-alpha.7")
+require("EXPECTED_VERSION = '27.0.0-alpha.7'" in msix_runner, "MSIX runner must fail closed on approved builder version")
+require("--verify-toolchain" in msix_runner and "msix-toolchain" in msix_runner, "MSIX runner must verify the isolated installed toolchain")
 msix_cmd = pkg.get("scripts", {}).get("dist:msix", "")
-require("electron-builder@27.0.0-alpha.7" in msix_cmd, "local MSIX command must pin the approved beta toolchain")
+require("node scripts/run-msix-builder.cjs --win msix" in msix_cmd, "local MSIX command must use the isolated locked runner")
+require("npx --yes electron-builder" not in msix_cmd, "local MSIX command must not resolve a builder from the network")
 require("--config.msix.setBuildNumber=true" in msix_cmd, "local MSIX command must preserve the desktop release build number")
 
 version = json.loads((ROOT / "version.json").read_text(encoding="utf-8"))
@@ -173,7 +186,9 @@ for marker in [
     "MM_STORE_IDENTITY_NAME",
     "MM_STORE_PUBLISHER",
     "MM_STORE_PUBLISHER_DISPLAY_NAME",
-    "electron-builder@27.0.0-alpha.7",
+    "desktop/electron/msix-toolchain/package-lock.json",
+    "node scripts/run-msix-builder.cjs --verify-toolchain",
+    "node scripts/run-msix-builder.cjs --win msix --x64 --arm64",
     "--config.msix.publisher=",
     "--config.msix.setBuildNumber=true",
     "createMsixupload=true",
@@ -181,6 +196,7 @@ for marker in [
     "${buildVersion}",
 ]:
     require(marker in store, f"Store package gate missing: {marker}")
+require("npx --yes electron-builder" not in store, "Store package gate must not resolve electron-builder from the network")
 
 publish = (ROOT / ".github" / "workflows" / "publish-open-desktop.yml").read_text(encoding="utf-8")
 for marker in [
@@ -211,4 +227,4 @@ for marker in [
 ]:
     require(marker in migration, f"legacy migration safeguard missing: {marker}")
 
-print("MouldMaster open desktop release QA passed (runtime domain manifest is the canonical desktop serving allowlist; frozen legacy shadow app excluded; recovery lane remains separate)")
+print("MouldMaster open desktop release QA passed (runtime domain manifest is the canonical desktop serving allowlist; stable portable/NSIS and isolated MSIX builder locks verified; frozen legacy shadow app excluded; recovery lane remains separate)")
