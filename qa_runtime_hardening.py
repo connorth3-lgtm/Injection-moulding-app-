@@ -49,18 +49,14 @@ multimodal = read("assessment-multimodal.js")
 a11y = read("accessibility-hardening.js")
 
 shell_release = js_const(index, "SHELL_RELEASE")
-runtime_asset_version = js_const(index, "RUNTIME_ASSET_VERSION")
+runtime_asset_version = shell_release
 expected_static_cache = js_const(index, "EXPECTED_STATIC_CACHE")
 cache_version = js_const(service_worker, "CACHE_VERSION")
 cache_revision = js_const(service_worker, "CACHE_REVISION")
 require(shell_release == cache_version, "browser shell release and PWA cache version must match")
+require("const RUNTIME_ASSET_VERSION=SHELL_RELEASE;" in index, "runtime asset query identity must derive from the canonical shell/web release")
 require(expected_static_cache == f"mouldmaster-static-{cache_version}-{cache_revision}", "bootstrap expected cache must exactly match the service-worker cache identity")
-require(re.fullmatch(r"\d{8}\.\d+-[a-z0-9-]+", runtime_asset_version) is not None, "runtime bundle token must retain dated revision + family format")
-runtime_date = runtime_asset_version.split('.', 1)[0]
-runtime_family = runtime_asset_version.split('-', 1)[1]
-require(cache_revision.startswith(runtime_family + "-"), "PWA cache revision must retain the active runtime family")
-revision_date = re.search(r"(\d{8})$", cache_revision)
-require(revision_date is not None and runtime_date == revision_date.group(1), "runtime bundle date must align with the active PWA cache revision date")
+require(bool(cache_revision.strip()), "PWA cache revision must remain an explicit independent invalidation token")
 
 # Bootstrap hardening: preserve fail-closed content assembly and CSP while no longer
 # treating an ordinary browser visit as a reason to destroy the installed PWA state.
