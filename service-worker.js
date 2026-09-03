@@ -1,6 +1,7 @@
-const CACHE_VERSION='2026.09.03.1';
-const CACHE_REVISION='app-wide-remediation-20260903';
+const CACHE_VERSION='2026.08.26.2';
+const CACHE_REVISION='maturity-hardening-v2-r2-20260903';
 const STATIC_CACHE=`mouldmaster-static-${CACHE_VERSION}-${CACHE_REVISION}`;
+const LEGACY_RECOVERY_SOURCE_ONLY='./MouldMaster_Academy_App.html';
 
 // Small fail-closed offline foundation. Remaining feature packs are warmed best-effort and never block activation.
 const CORE=[
