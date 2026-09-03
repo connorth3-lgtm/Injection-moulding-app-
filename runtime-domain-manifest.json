@@ -4,6 +4,7 @@
   "assets": [
     "./src/domains/shared/learner-scope.js",
     "./src/domains/engineering/engineering-store.js",
+    "./src/domains/learning/learning-analytics-loader.js",
     "./src/domains/materials/material-registry.js",
     "./src/domains/shell/product-areas.js"
   ],
