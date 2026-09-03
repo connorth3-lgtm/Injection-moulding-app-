@@ -34,35 +34,60 @@ test('Read Aloud renders and reads only visible learner text', async ({ page }) 
       }
     }
     const qaSynth={
+      speaking:false,
+      paused:false,
+      pending:false,
+      getVoices(){return[];},
       speak(utterance){
+        this.speaking=true;
+        this.paused=false;
         window.__mmReadAloudSpoken=String(utterance.text||'');
         window.__mmReadAloudRate=Number(utterance.rate||1);
         queueMicrotask(()=>utterance.onstart?.());
       },
-      cancel(){},
-      pause(){window.__mmReadAloudPaused=true;},
-      resume(){window.__mmReadAloudResumed=true;}
+      cancel(){this.speaking=false;this.paused=false;},
+      pause(){this.speaking=false;this.paused=true;window.__mmReadAloudPaused=true;},
+      resume(){this.speaking=true;this.paused=false;window.__mmReadAloudResumed=true;}
     };
-    const install=(name,value)=>{
+    const pin=(name,value)=>{
+      if(window[name]===value)return true;
       try{
-        Object.defineProperty(window,name,{configurable:true,enumerable:true,writable:true,value});
-        return window[name]===value;
-      }catch(_){
-        try{window[name]=value;return window[name]===value}catch(__){return false}
-      }
+        Object.defineProperty(window,name,{configurable:false,enumerable:true,writable:false,value});
+        if(window[name]===value)return true;
+      }catch(_){ }
+      const proto=Object.getPrototypeOf(window);
+      try{
+        const own=Object.getOwnPropertyDescriptor(window,name);
+        if(own?.configurable)delete window[name];
+        Object.defineProperty(proto,name,{configurable:true,enumerable:true,get:()=>value});
+        if(window[name]===value)return true;
+      }catch(_){ }
+      try{window[name]=value;return window[name]===value}catch(_){return false}
     };
-    window.__mmReadAloudFixtureInstalled=
-      install('SpeechSynthesisUtterance',QaSpeechSynthesisUtterance)&&
-      install('speechSynthesis',qaSynth);
+    const utteranceInstalled=pin('SpeechSynthesisUtterance',QaSpeechSynthesisUtterance);
+    const synthInstalled=pin('speechSynthesis',qaSynth);
+    window.__mmReadAloudFixtureInstalled=utteranceInstalled&&synthInstalled;
+    window.__mmReadAloudFixtureState={utteranceInstalled,synthInstalled};
   });
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto(APP, { waitUntil: 'domcontentloaded' });
 
   const fixture=await page.evaluate(()=>({
     installed:window.__mmReadAloudFixtureInstalled===true,
+    utteranceInstalled:window.__mmReadAloudFixtureState?.utteranceInstalled===true,
+    synthInstalled:window.__mmReadAloudFixtureState?.synthInstalled===true,
+    utteranceType:typeof window.SpeechSynthesisUtterance,
+    synthPresent:!!window.speechSynthesis,
     supported:window.MMReadAloud?.supported===true
   }));
-  expect(fixture).toEqual({installed:true,supported:true});
+  expect(fixture).toEqual({
+    installed:true,
+    utteranceInstalled:true,
+    synthInstalled:true,
+    utteranceType:'function',
+    synthPresent:true,
+    supported:true
+  });
 
   const host=page.locator('.mm-read-aloud');
   await expect(host).toBeVisible();
