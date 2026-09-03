@@ -31,10 +31,26 @@ for marker in (
     "dynamic/pages/pages-build-deployment",
     "/actions/runs/{run_id}/cancel",
     "legacy race contained for this SHA",
+    'shutil.which("gh")',
+    'env["GH_TOKEN"] = token',
+    '"gh",',
+    '"api",',
+    '"Accept: application/vnd.github+json"',
+    "api_endpoint",
 ):
     need(marker in guard, f"legacy Pages containment safeguard missing: {marker}")
+
+for forbidden in (
+    "X-GitHub-Api-Version",
+    "API_VERSION =",
+    "urllib.request",
+    "urlopen(",
+    "Request(",
+    'Authorization": f"Bearer',
+):
+    need(forbidden not in guard, f"legacy Pages guard transport divergence returned: {forbidden}")
 
 for marker in ("--convergence-attempts", "--convergence-delay", "FORBIDDEN_PROBES"):
     need(marker in verifier, f"live deployment verifier safeguard missing: {marker}")
 
-print("MouldMaster Pages single-publisher QA passed (legacy race containment, production-only artifact, stable live verification)")
+print("MouldMaster Pages single-publisher QA passed (unified gh api transport, legacy race containment, production-only artifact, stable live verification)")
