@@ -5,10 +5,119 @@
   "status": "validated",
   "boundary": "Compiled only from staged exact-grade records whose provenance stage is validated/published and which pass semantic QA. Internal staging/schema files are not part of the public runtime artifact. Commercial grade names may legitimately coexist when variant/revision/production identity differs.",
   "manufacturers": [
+    {"id": "mfr-kep", "name": "Korea Polyacetal (KPAC)", "country": "South Korea"},
     {"id": "mfr-lg-chem", "name": "LG Chem", "country": "South Korea"},
     {"id": "mfr-lotte-chemical", "name": "LOTTE Chemical", "country": "South Korea"}
   ],
   "grades": [
+    {
+      "schemaVersion": 1,
+      "id": "mat-kepital-f1003h",
+      "manufacturer": {"id": "mfr-kep", "name": "Korea Polyacetal (KPAC)", "country": "South Korea", "website": "https://www.gpac-kpac.com/en/"},
+      "brand": "KEPITAL",
+      "grade": "F10-03H",
+      "aliases": [],
+      "polymer": {"family": "POM", "morphology": "semi-crystalline"},
+      "composition": {"notes": "KPAC classifies this as a high-stiffness POM grade; no reinforcement percentage is inferred."},
+      "properties": [
+        {"id": "obs-kepital-f1003h-shrink-flow", "property": "Mould Shrinkage", "value": 2.0, "unit": "%", "testMethod": "ISO 294-4", "specimen": "2.0 mm", "direction": "flow", "sourceId": "src-kepital-f1003h-iso", "sourcePage": "1", "comparisonReady": true, "limitations": "KPAC typical property-sheet value for material selection; not a production specification or mould-design value."}
+      ],
+      "processing": [
+        {"id": "proc-kepital-f1003h-dry-temp", "parameter": "Pre-drying temperature", "min": 80, "max": 90, "unit": "°C", "condition": "KPAC exact-grade injection-moulding guidance; supplier recommends oven drying before moulding.", "claimType": "supplier-guidance", "sourceId": "src-kepital-f1003h-processing", "sourcePage": "web", "productionRecipe": false},
+        {"id": "proc-kepital-f1003h-dry-time", "parameter": "Pre-drying time", "min": 3, "max": 4, "unit": "hr", "condition": "KPAC exact-grade injection-moulding guidance; verify against site material handling and current supplier guidance.", "claimType": "supplier-guidance", "sourceId": "src-kepital-f1003h-processing", "sourcePage": "web", "productionRecipe": false},
+        {"id": "proc-kepital-f1003h-max-moisture", "parameter": "Maximum moisture content", "value": 0.1, "unit": "%", "condition": "Maximum moisture content stated in KPAC pre-drying guidance; not a production recipe.", "claimType": "supplier-limit", "sourceId": "src-kepital-f1003h-processing", "sourcePage": "web", "productionRecipe": false},
+        {"id": "proc-kepital-f1003h-mould-temp", "parameter": "Mould temperature", "min": 60, "max": 80, "unit": "°C", "condition": "KPAC exact-grade typical injection-moulding guidance; machine, mould and part conditions still govern final settings.", "claimType": "supplier-guidance", "sourceId": "src-kepital-f1003h-processing", "sourcePage": "web", "productionRecipe": false},
+        {"id": "proc-kepital-f1003h-barrel-temp", "parameter": "Barrel temperature", "min": 170, "max": 210, "unit": "°C", "condition": "KPAC exact-grade typical barrel-temperature envelope; zone settings are separately listed by the supplier.", "claimType": "supplier-guidance", "sourceId": "src-kepital-f1003h-processing", "sourcePage": "web", "productionRecipe": false}
+      ],
+      "approvals": [],
+      "lifecycle": {"status": "unknown", "checkedAt": "2026-09-03"},
+      "sources": [
+        {"id": "src-kepital-f1003h-iso", "publisher": "Korea Polyacetal (KPAC)", "title": "KEPITAL F10-03H Property Sheet (ISO)", "url": "https://gpac-kpac.com/tcpdf/kepital/download.php?Lang=En&Seq=8", "kind": "manufacturer-datasheet", "revision": "9", "documentDate": "2020-04-03", "retrievedAt": "2026-09-03"},
+        {"id": "src-kepital-f1003h-processing", "publisher": "Korea Polyacetal (KPAC)", "title": "KEPITAL F10-03H exact-grade processing guidance", "url": "https://www.gpac-kpac.com/en/product/pop_grade.php?Lang=En&Level=0&Seq=8", "kind": "manufacturer-processing-guide", "revision": null, "documentDate": null, "retrievedAt": "2026-09-03"}
+      ],
+      "provenance": {"stage": "validated", "ingestedAt": "2026-09-03T00:00:00Z", "reviewedAt": "2026-09-03T00:00:00Z", "reviewer": "primary-source-web-review", "notes": "Current KPAC exact-grade property and processing pages reviewed. Melt-flow value is intentionally omitted because the current KPAC sheet states ISO 1133 but does not expose the required test temperature/load. KPAC explicitly classifies F10-03H as a stiffness-improved high-viscosity grade."}
+    },
+    {
+      "schemaVersion": 1,
+      "id": "mat-kepital-f2003",
+      "manufacturer": {"id": "mfr-kep", "name": "Korea Polyacetal (KPAC)", "country": "South Korea", "website": "https://www.gpac-kpac.com/en/"},
+      "brand": "KEPITAL",
+      "grade": "F20-03",
+      "aliases": [],
+      "polymer": {"family": "POM", "morphology": "semi-crystalline"},
+      "composition": {"notes": "KPAC exact-grade catalogue classifies this as a standard unfilled KEPITAL POM grade."},
+      "properties": [
+        {"id": "obs-kepital-f2003-shrink-flow", "property": "Mould Shrinkage", "value": 2.0, "unit": "%", "testMethod": "ISO 294-4", "specimen": "2.0 mm", "direction": "flow", "sourceId": "src-kepital-f2003-iso", "sourcePage": "1", "comparisonReady": true, "limitations": "KPAC typical property-sheet value for material selection; not a production specification or mould-design value."}
+      ],
+      "processing": [
+        {"id": "proc-kepital-f2003-dry-temp", "parameter": "Pre-drying temperature", "min": 80, "max": 90, "unit": "°C", "condition": "KPAC exact-grade injection-moulding guidance; supplier recommends oven drying before moulding.", "claimType": "supplier-guidance", "sourceId": "src-kepital-f2003-processing", "sourcePage": "web", "productionRecipe": false},
+        {"id": "proc-kepital-f2003-dry-time", "parameter": "Pre-drying time", "min": 3, "max": 4, "unit": "hr", "condition": "KPAC exact-grade injection-moulding guidance; verify against site material handling and current supplier guidance.", "claimType": "supplier-guidance", "sourceId": "src-kepital-f2003-processing", "sourcePage": "web", "productionRecipe": false},
+        {"id": "proc-kepital-f2003-max-moisture", "parameter": "Maximum moisture content", "value": 0.1, "unit": "%", "condition": "Maximum moisture content stated in KPAC pre-drying guidance; not a production recipe.", "claimType": "supplier-limit", "sourceId": "src-kepital-f2003-processing", "sourcePage": "web", "productionRecipe": false},
+        {"id": "proc-kepital-f2003-mould-temp", "parameter": "Mould temperature", "min": 60, "max": 80, "unit": "°C", "condition": "KPAC exact-grade typical injection-moulding guidance; machine, mould and part conditions still govern final settings.", "claimType": "supplier-guidance", "sourceId": "src-kepital-f2003-processing", "sourcePage": "web", "productionRecipe": false},
+        {"id": "proc-kepital-f2003-barrel-temp", "parameter": "Barrel temperature", "min": 170, "max": 210, "unit": "°C", "condition": "KPAC exact-grade typical barrel-temperature envelope; zone settings are separately listed by the supplier.", "claimType": "supplier-guidance", "sourceId": "src-kepital-f2003-processing", "sourcePage": "web", "productionRecipe": false}
+      ],
+      "approvals": [],
+      "lifecycle": {"status": "unknown", "checkedAt": "2026-09-03"},
+      "sources": [
+        {"id": "src-kepital-f2003-iso", "publisher": "Korea Polyacetal (KPAC)", "title": "KEPITAL F20-03 Property Sheet (ISO)", "url": "https://gpac-kpac.com/tcpdf/kepital/download.php?Lang=En&Seq=10", "kind": "manufacturer-datasheet", "revision": "8", "documentDate": "2020-04-03", "retrievedAt": "2026-09-03"},
+        {"id": "src-kepital-f2003-processing", "publisher": "Korea Polyacetal (KPAC)", "title": "KEPITAL F20-03 exact-grade processing guidance", "url": "https://gpac-kpac.com/jp/product/pop_grade.php?Lang=Jp&Level=0&Seq=10", "kind": "manufacturer-processing-guide", "revision": null, "documentDate": null, "retrievedAt": "2026-09-03"}
+      ],
+      "provenance": {"stage": "validated", "ingestedAt": "2026-09-03T00:00:00Z", "reviewedAt": "2026-09-03T00:00:00Z", "reviewer": "primary-source-web-review", "notes": "Current KPAC exact-grade property and processing pages reviewed. Melt-flow value is intentionally omitted because the current KPAC sheet states ISO 1133 but does not expose the required test temperature/load. KPAC states that it sustains the KEPITAL brand."}
+    },
+    {
+      "schemaVersion": 1,
+      "id": "mat-kepital-f3003",
+      "manufacturer": {"id": "mfr-kep", "name": "Korea Polyacetal (KPAC)", "country": "South Korea", "website": "https://www.gpac-kpac.com/en/"},
+      "brand": "KEPITAL",
+      "grade": "F30-03",
+      "aliases": [],
+      "polymer": {"family": "POM", "morphology": "semi-crystalline"},
+      "composition": {"notes": "KPAC exact-grade catalogue classifies this as a standard unfilled low-viscosity KEPITAL POM grade."},
+      "properties": [
+        {"id": "obs-kepital-f3003-shrink-flow", "property": "Mould Shrinkage", "value": 2.0, "unit": "%", "testMethod": "ISO 294-4", "specimen": "2.0 mm", "direction": "flow", "sourceId": "src-kepital-f3003-iso", "sourcePage": "1", "comparisonReady": true, "limitations": "KPAC typical property-sheet value for material selection; not a production specification or mould-design value."}
+      ],
+      "processing": [
+        {"id": "proc-kepital-f3003-dry-temp", "parameter": "Pre-drying temperature", "min": 80, "max": 90, "unit": "°C", "condition": "KPAC exact-grade injection-moulding guidance; supplier recommends oven drying before moulding.", "claimType": "supplier-guidance", "sourceId": "src-kepital-f3003-processing", "sourcePage": "web", "productionRecipe": false},
+        {"id": "proc-kepital-f3003-dry-time", "parameter": "Pre-drying time", "min": 3, "max": 4, "unit": "hr", "condition": "KPAC exact-grade injection-moulding guidance; verify against site material handling and current supplier guidance.", "claimType": "supplier-guidance", "sourceId": "src-kepital-f3003-processing", "sourcePage": "web", "productionRecipe": false},
+        {"id": "proc-kepital-f3003-max-moisture", "parameter": "Maximum moisture content", "value": 0.1, "unit": "%", "condition": "Maximum moisture content stated in KPAC pre-drying guidance; not a production recipe.", "claimType": "supplier-limit", "sourceId": "src-kepital-f3003-processing", "sourcePage": "web", "productionRecipe": false},
+        {"id": "proc-kepital-f3003-mould-temp", "parameter": "Mould temperature", "min": 60, "max": 80, "unit": "°C", "condition": "KPAC exact-grade typical injection-moulding guidance; machine, mould and part conditions still govern final settings.", "claimType": "supplier-guidance", "sourceId": "src-kepital-f3003-processing", "sourcePage": "web", "productionRecipe": false},
+        {"id": "proc-kepital-f3003-barrel-temp", "parameter": "Barrel temperature", "min": 170, "max": 210, "unit": "°C", "condition": "KPAC exact-grade typical barrel-temperature envelope; zone settings are separately listed by the supplier.", "claimType": "supplier-guidance", "sourceId": "src-kepital-f3003-processing", "sourcePage": "web", "productionRecipe": false}
+      ],
+      "approvals": [],
+      "lifecycle": {"status": "unknown", "checkedAt": "2026-09-03"},
+      "sources": [
+        {"id": "src-kepital-f3003-iso", "publisher": "Korea Polyacetal (KPAC)", "title": "KEPITAL F30-03 Property Sheet (ISO)", "url": "https://www.gpac-kpac.com/tcpdf/kepital/download.php?Lang=En&Level=0&Seq=13", "kind": "manufacturer-datasheet", "revision": "8", "documentDate": "2020-04-03", "retrievedAt": "2026-09-03"},
+        {"id": "src-kepital-f3003-processing", "publisher": "Korea Polyacetal (KPAC)", "title": "KEPITAL F30-03 exact-grade processing guidance", "url": "https://www.gpac-kpac.com/en/product/pop_grade.php?Lang=En&Level=0&Seq=13", "kind": "manufacturer-processing-guide", "revision": null, "documentDate": null, "retrievedAt": "2026-09-03"}
+      ],
+      "provenance": {"stage": "validated", "ingestedAt": "2026-09-03T00:00:00Z", "reviewedAt": "2026-09-03T00:00:00Z", "reviewer": "primary-source-web-review", "notes": "Current KPAC exact-grade property and processing pages reviewed. Melt-flow value is intentionally omitted because the current KPAC sheet states ISO 1133 but does not expose the required test temperature/load. F30-03 is described by KPAC as suitable for multi-cavity moulds and thin-walled parts."}
+    },
+    {
+      "schemaVersion": 1,
+      "id": "mat-kepital-fg2025",
+      "manufacturer": {"id": "mfr-kep", "name": "Korea Polyacetal (KPAC)", "country": "South Korea", "website": "https://www.gpac-kpac.com/en/"},
+      "brand": "KEPITAL",
+      "grade": "FG2025",
+      "aliases": [],
+      "polymer": {"family": "POM", "morphology": "semi-crystalline"},
+      "composition": {"glassFibrePct": 25, "notes": "KPAC exact-grade sheet identifies POM-GF25 and explicitly describes 25% glass-fibre reinforcement."},
+      "properties": [
+        {"id": "obs-kepital-fg2025-shrink-flow", "property": "Mould Shrinkage", "value": 0.7, "unit": "%", "testMethod": "ISO 294-4", "specimen": "2.0 mm", "direction": "flow", "sourceId": "src-kepital-fg2025-iso", "sourcePage": "1", "comparisonReady": true, "limitations": "KPAC typical property-sheet value for material selection; not a production specification or mould-design value."}
+      ],
+      "processing": [
+        {"id": "proc-kepital-fg2025-dry-temp", "parameter": "Pre-drying temperature", "min": 80, "max": 90, "unit": "°C", "condition": "KPAC exact-grade injection-moulding guidance; supplier recommends oven drying before moulding.", "claimType": "supplier-guidance", "sourceId": "src-kepital-fg2025-processing", "sourcePage": "web", "productionRecipe": false},
+        {"id": "proc-kepital-fg2025-dry-time", "parameter": "Pre-drying time", "min": 3, "max": 4, "unit": "hr", "condition": "KPAC exact-grade injection-moulding guidance; verify against site material handling and current supplier guidance.", "claimType": "supplier-guidance", "sourceId": "src-kepital-fg2025-processing", "sourcePage": "web", "productionRecipe": false},
+        {"id": "proc-kepital-fg2025-max-moisture", "parameter": "Maximum moisture content", "value": 0.1, "unit": "%", "condition": "Maximum moisture content stated in KPAC pre-drying guidance; not a production recipe.", "claimType": "supplier-limit", "sourceId": "src-kepital-fg2025-processing", "sourcePage": "web", "productionRecipe": false},
+        {"id": "proc-kepital-fg2025-mould-temp", "parameter": "Mould temperature", "min": 60, "max": 80, "unit": "°C", "condition": "KPAC exact-grade typical injection-moulding guidance; machine, mould and part conditions still govern final settings.", "claimType": "supplier-guidance", "sourceId": "src-kepital-fg2025-processing", "sourcePage": "web", "productionRecipe": false},
+        {"id": "proc-kepital-fg2025-barrel-temp", "parameter": "Barrel temperature", "min": 170, "max": 210, "unit": "°C", "condition": "KPAC exact-grade typical barrel-temperature envelope; zone settings are separately listed by the supplier.", "claimType": "supplier-guidance", "sourceId": "src-kepital-fg2025-processing", "sourcePage": "web", "productionRecipe": false}
+      ],
+      "approvals": [],
+      "lifecycle": {"status": "unknown", "checkedAt": "2026-09-03"},
+      "sources": [
+        {"id": "src-kepital-fg2025-iso", "publisher": "Korea Polyacetal (KPAC)", "title": "KEPITAL FG2025 Property Sheet (ISO)", "url": "https://www.gpac-kpac.com/tcpdf/kepital/download.php?Lang=En&Level=0&Seq=17", "kind": "manufacturer-datasheet", "revision": "6", "documentDate": "2020-07-21", "retrievedAt": "2026-09-03"},
+        {"id": "src-kepital-fg2025-processing", "publisher": "Korea Polyacetal (KPAC)", "title": "KEPITAL FG2025 exact-grade processing guidance", "url": "https://www.gpac-kpac.com/en/product/pop_grade.php?Lang=En&Level=0&Seq=17", "kind": "manufacturer-processing-guide", "revision": null, "documentDate": null, "retrievedAt": "2026-09-03"}
+      ],
+      "provenance": {"stage": "validated", "ingestedAt": "2026-09-03T00:00:00Z", "reviewedAt": "2026-09-03T00:00:00Z", "reviewer": "primary-source-web-review", "notes": "Current KPAC exact-grade property and processing pages reviewed. Melt-flow value is intentionally omitted because the current KPAC sheet states ISO 1133 but does not expose the required test temperature/load. KPAC explicitly identifies FG2025 as POM-GF25 / 25% glass-fibre reinforced."}
+    },
     {
       "schemaVersion": 1,
       "id": "mat-lgchem-lupoy-gp1000l",
