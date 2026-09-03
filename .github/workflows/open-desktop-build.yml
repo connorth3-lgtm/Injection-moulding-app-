@@ -5,6 +5,8 @@ on:
     branches: [main]
     paths:
       - 'desktop/electron/**'
+      - 'src/domains/**'
+      - 'tools/build_runtime_packs.py'
       - 'index.html'
       - 'MouldMaster_Core_App.html'
       - 'MouldMaster_Academy_App.html'
