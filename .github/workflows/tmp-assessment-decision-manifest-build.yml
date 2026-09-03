@@ -29,7 +29,7 @@ jobs:
           python tools/generate_assessment_decision_manifest.py --check
       - name: Commit generated artifact if changed
         run: |
-          if git diff --quiet -- data/assessment-decision-manifest-v1.json; then
+          if [ -z "$(git status --porcelain -- data/assessment-decision-manifest-v1.json)" ]; then
             echo 'Manifest already current.'
             exit 0
           fi
