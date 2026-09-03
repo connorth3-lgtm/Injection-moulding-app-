@@ -6,6 +6,7 @@ on:
     paths:
       - '*.js'
       - 'MouldMaster_Core_App.html'
+      - 'src/core-runtime/**'
       - 'src/domains/**'
       - 'data/materials/**'
       - 'runtime-domain-manifest.json'
@@ -13,6 +14,7 @@ on:
       - 'tools/material_catalog.py'
       - 'tools/generate_runtime_manifest.py'
       - 'tools/build_runtime_packs.py'
+      - 'tools/externalize_core_scripts.py'
       - 'tools/verify_production_source.py'
       - 'qa_material_catalog.py'
       - 'qa_material_identity.py'
@@ -34,6 +36,7 @@ on:
     paths:
       - '*.js'
       - 'MouldMaster_Core_App.html'
+      - 'src/core-runtime/**'
       - 'src/domains/**'
       - 'data/materials/**'
       - 'runtime-domain-manifest.json'
@@ -41,6 +44,7 @@ on:
       - 'tools/material_catalog.py'
       - 'tools/generate_runtime_manifest.py'
       - 'tools/build_runtime_packs.py'
+      - 'tools/externalize_core_scripts.py'
       - 'tools/verify_production_source.py'
       - 'qa_material_catalog.py'
       - 'qa_material_identity.py'
@@ -74,12 +78,15 @@ jobs:
       - uses: actions/setup-python@v7
         with:
           python-version: '3.12'
-      - name: Domain JavaScript syntax
+      - name: Domain and externalized core JavaScript syntax
         run: |
           node --check src/domains/domain-bootstrap.js
           find src/domains -mindepth 2 -name '*.js' -print0 | sort -z | xargs -0 -n1 node --check
+          find src/core-runtime -type f -name '*.js' -print0 | sort -z | xargs -0 -n1 node --check
       - name: Runtime pack determinism
         run: python tools/build_runtime_packs.py --check
+      - name: Core script CSP migration
+        run: python tools/externalize_core_scripts.py --check
       - name: Architecture debt ceiling
         run: python qa_architecture_debt.py
       - name: Material staging semantics

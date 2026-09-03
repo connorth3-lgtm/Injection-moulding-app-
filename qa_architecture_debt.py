@@ -6,6 +6,7 @@ import re
 
 ROOT = Path(__file__).resolve().parent
 BASELINE_PATH = ROOT / "qa/architecture-debt-baseline.json"
+CORE_RUNTIME_DIR = ROOT / "src/core-runtime"
 
 
 def need(ok: bool, message: str) -> None:
@@ -28,7 +29,7 @@ def parse_csp(raw: str) -> dict[str, list[str]]:
 
 
 def local_script_token(token: str) -> bool:
-    return token in {"'self'", "'unsafe-inline'", "'unsafe-hashes'", "'strict-dynamic'"} or token.startswith("'nonce-") or token.startswith("'sha256-") or token.startswith("'sha384-") or token.startswith("'sha512-")
+    return token in {"'self'", "'unsafe-hashes'", "'strict-dynamic'"} or token.startswith("'nonce-") or token.startswith("'sha256-") or token.startswith("'sha384-") or token.startswith("'sha512-")
 
 
 def local_style_token(token: str) -> bool:
@@ -64,14 +65,38 @@ grandfathered_compat = set(baseline["grandfatheredCompatibilityLayers"])
 unknown_compat = sorted(actual_compat - grandfathered_compat)
 need(not unknown_compat, f"new root compatibility layers are frozen; consolidate under src/domains/: {unknown_compat}")
 
-# The legacy shell still rewrites the fetched core document once. That is a migration
-# debt ceiling, not permission to introduce document.write elsewhere or more often.
+# document.write has been retired. The zero ceiling prevents it from returning.
 write_count = index.count("document.write(")
 need(write_count <= int(baseline["documentWriteCeiling"]), f"document.write bootstrap debt grew: {write_count}")
 need("document.writeln(" not in index, "document.writeln is not permitted in the runtime bootstrap")
 
-# CSP may become stricter (for example by replacing unsafe-inline with nonces/hashes),
-# but it may not add unsafe-eval, remote script origins, or external runtime connections.
+# The frozen recovery core retains its historical inline script bytes. Browser/PWA
+# runtime assembly replaces each block with a same-origin generated copy before the
+# stricter CSP is installed. Slot 004 has one reviewed runtime-only transform that
+# removes the recovery payload's historical certificate-print document.write call.
+inline_core_script_re = re.compile(r"<script\b(?![^>]*\bsrc\s*=)[^>]*>(.*?)</script\s*>", re.I | re.S)
+inline_core_scripts = inline_core_script_re.findall(core)
+core_runtime_scripts = sorted(CORE_RUNTIME_DIR.glob("core-inline-*.js"))
+need(inline_core_scripts, "frozen recovery core unexpectedly has no inline scripts")
+need(len(inline_core_scripts) == len(core_runtime_scripts), f"core runtime externalization count drifted: {len(inline_core_scripts)} source / {len(core_runtime_scripts)} generated")
+for number, (source, path) in enumerate(zip(inline_core_scripts, core_runtime_scripts), start=1):
+    need(path.name == f"core-inline-{number:03d}.js", f"core runtime ordering drifted at slot {number}: {path.name}")
+    generated = path.read_text(encoding="utf-8")
+    if path.name == "core-inline-004.js":
+        need(source.count("document.write(") == 1, "frozen certificate print debt drifted; review runtime transform")
+        need("document.write(" not in generated and "document.writeln(" not in generated, "active certificate print runtime still uses document.write")
+        for marker in ("w.opener=null", 'd.createElement("style")', "d.body.appendChild(box)", "w.print()"):
+            need(marker in generated, f"certificate print runtime hardening marker missing: {marker}")
+    else:
+        need(generated == source, f"externalized core runtime is stale at slot {number}: {path.name}")
+need("const CORE_INLINE_SCRIPTS=[" in index, "runtime core script externalization registry missing")
+need("function externalizeCoreScripts(out)" in index, "runtime core script externalization function missing")
+need("out=externalizeCoreScripts(out)" in index, "runtime assembly does not externalize frozen core scripts")
+for path in core_runtime_scripts:
+    need(f"'./src/core-runtime/{path.name}'" in index, f"runtime core script missing from bootstrap registry: {path.name}")
+
+# CSP may become stricter, but it may not add unsafe-eval, remote script origins,
+# or external runtime connections.
 csp_match = re.search(r'const\s+CSP="([^"]+)"', index)
 need(csp_match is not None, "runtime CSP constant missing from index bootstrap")
 csp_raw = csp_match.group(1)
@@ -81,9 +106,13 @@ need(csp.get("base-uri") == ["'none'"], "CSP base-uri must remain none")
 need(csp.get("object-src") == ["'none'"], "CSP object-src must remain none")
 need(csp.get("frame-src") == ["'none'"], "CSP frame-src must remain none")
 script_src = csp.get("script-src") or []
+script_src_attr = csp.get("script-src-attr") or []
 style_src = csp.get("style-src") or []
 connect_src = csp.get("connect-src") or []
-need(script_src and all(local_script_token(token) for token in script_src), f"CSP script-src added a non-local source: {script_src}")
+need(script_src == ["'self'"], f"CSP executable script-src must remain self-only: {script_src}")
+need("'unsafe-inline'" not in script_src, "CSP script-src must not restore unsafe-inline executable blocks")
+need(script_src_attr == ["'unsafe-inline'"], f"legacy handler debt must remain isolated to script-src-attr: {script_src_attr}")
+need(all(local_script_token(token) for token in script_src), f"CSP script-src added a non-local source: {script_src}")
 need(style_src and all(local_style_token(token) for token in style_src), f"CSP style-src added a non-local source: {style_src}")
 need(set(connect_src).issubset({"'self'", "'none'"}) and connect_src, f"CSP connect-src added an external source: {connect_src}")
 
@@ -92,9 +121,8 @@ need(remote_script_tag.search(index) is None, "index.html contains a remote runt
 need(remote_script_tag.search(core) is None, "MouldMaster_Core_App.html contains a remote runtime script tag")
 
 # Active application JavaScript must not gain string-to-code execution. Scan all
-# directly injected scripts plus every domain module because the domain bootstrap
-# loads those from the generated manifest.
-scan_paths: set[Path] = set()
+# directly injected scripts, hardened core runtime copies, and every domain module.
+scan_paths: set[Path] = set(core_runtime_scripts)
 for src in body_scripts:
     path = ROOT / src.removeprefix("./")
     need(path.is_file(), f"runtime script missing while checking architecture debt: {src}")
@@ -104,16 +132,17 @@ for path in sorted(scan_paths):
     source = path.read_text(encoding="utf-8")
     need(re.search(r"\beval\s*\(", source) is None, f"eval() is forbidden in active runtime code: {path.relative_to(ROOT)}")
     need(re.search(r"\bnew\s+Function\s*\(", source) is None, f"new Function() is forbidden in active runtime code: {path.relative_to(ROOT)}")
-    if path.name != "index.html":
-        need("document.write(" not in source and "document.writeln(" not in source, f"document.write is confined to the grandfathered bootstrap: {path.relative_to(ROOT)}")
+    need("document.write(" not in source and "document.writeln(" not in source, f"document.write is forbidden in active runtime code: {path.relative_to(ROOT)}")
 
-need(re.search(r"\beval\s*\(", core) is None, "eval() is forbidden in the active core HTML")
-need(re.search(r"\bnew\s+Function\s*\(", core) is None, "new Function() is forbidden in the active core HTML")
+need(re.search(r"\beval\s*\(", core) is None, "eval() is forbidden in the frozen core HTML")
+need(re.search(r"\bnew\s+Function\s*\(", core) is None, "new Function() is forbidden in the frozen core HTML")
 
 print(
     "MouldMaster architecture debt guard passed: "
     f"{len(body_scripts)}/{baseline['runtimeBodyScriptCeiling']} bootstrap scripts; "
     f"{len(root_runtime_scripts)}/{baseline['rootRuntimeScriptCeiling']} grandfathered root scripts; "
     f"{len(actual_compat)}/{len(grandfathered_compat)} compatibility layers; "
-    f"document.write {write_count}/{baseline['documentWriteCeiling']}; no remote scripts, unsafe-eval, eval(), or new Function()"
+    f"document.write {write_count}/{baseline['documentWriteCeiling']}; "
+    f"{len(core_runtime_scripts)} runtime-externalized frozen core scripts with certificate print hardened; script-src self-only; "
+    "legacy handler attributes isolated; no remote scripts, unsafe-eval, eval(), or new Function() in active runtime"
 )
