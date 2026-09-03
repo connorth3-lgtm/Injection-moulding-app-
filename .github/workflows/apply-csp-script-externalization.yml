@@ -1,0 +1,48 @@
+name: Apply CSP Script Externalization
+
+on:
+  push:
+    branches:
+      - refactor/csp-unsafe-inline-v1
+    paths:
+      - tools/externalize_core_scripts.py
+      - .github/workflows/apply-csp-script-externalization.yml
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  migrate:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: refactor/csp-unsafe-inline-v1
+          fetch-depth: 0
+      - uses: actions/setup-python@v7
+        with:
+          python-version: '3.12'
+      - uses: actions/setup-node@v7
+        with:
+          node-version: '22.12.0'
+          package-manager-cache: false
+      - name: Externalize core inline scripts
+        run: python tools/externalize_core_scripts.py
+      - name: Validate generated JavaScript
+        run: find src/core-runtime -type f -name '*.js' -print0 | sort -z | xargs -0 -n1 node --check
+      - name: Validate CSP migration state
+        run: python tools/externalize_core_scripts.py --check
+      - name: Validate Pages artifact boundary
+        run: python tools/build_pages_artifact.py
+      - name: Commit migration output
+        run: |
+          if git diff --quiet && [ -z "$(git ls-files --others --exclude-standard)" ]; then
+            echo "No migration changes to commit"
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add MouldMaster_Core_App.html index.html service-worker.js src/core-runtime desktop/electron/package.json desktop/electron/scripts/generate-integrity.cjs
+          git commit -m "Externalize core inline scripts for stricter CSP"
+          git push origin HEAD:refactor/csp-unsafe-inline-v1
