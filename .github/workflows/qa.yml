@@ -51,6 +51,8 @@ jobs:
         run: python qa_diagnostic_learning.py
       - name: Material behaviour integrity
         run: python qa_material_behaviour.py
+      - name: Exact material identity behaviour
+        run: python qa_material_identity.py
       - name: 100-pass data and assessment audit
         run: python qa_100_pass.py
       - name: Deep question and answer integrity
