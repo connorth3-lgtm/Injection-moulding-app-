@@ -55,7 +55,7 @@ jobs:
         run: npm ci --no-audit --fund=false
       - name: Verify exact locked MSIX builder
         working-directory: desktop/electron
-        run: node scripts/run-msix-builder.cjs --version
+        run: node scripts/run-msix-builder.cjs --verify-toolchain
       - name: Generate verified application evidence
         working-directory: desktop/electron
         run: |
