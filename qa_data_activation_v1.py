@@ -24,10 +24,13 @@ for p in [x for x in required if x.endswith('.js')]:
 spine=text('src/domains/shared/data-spine.js')
 for m in ['canonicalId','fingerprint','registerEvidenceRecord','ingestMaterials','MM_DATA_SPINE']:
     need(m in spine,f'data spine marker missing: {m}')
+need('function stable(value)' in spine,'data spine fingerprints must include deterministic nested object structure')
 
 signals=text('src/domains/shared/signal-registry.js')
 for m in ['injection_pressure_actual','injection_pressure_target','cavity_pressure','resin_moisture_ppm','unknown_source_semantics','review-required']:
     need(m in signals,f'signal dictionary marker missing: {m}')
+for m in ['process-data-semantic-registry.json','actualness','confirm-source-semantics','unit-must-be-confirmed','confirmed=false']:
+    need(m in signals,f'canonical signal semantic alignment missing: {m}')
 
 assessment=text('src/domains/assessment/assessment-analytics-v2.js')
 for m in ['questionRevision','bankVersion','choiceFingerprint','authoredDifficulty','observedDifficulty','stable question ID plus explicit revision']:
@@ -55,11 +58,12 @@ process=text('src/domains/process/evidence-granularity.js')
 for m in ['explicit-pass-inherited','context-support-not-direct-validation','directValidationClaimed']:
     need(m in process,f'process evidence granularity marker missing: {m}')
 engineering=text('src/domains/engineering/evidence-chain.js')
-for m in ['addObservation','addHypothesis','addControlledTest','addVerification','semanticStatus']:
+for m in ['addObservation','addHypothesis','addControlledTest','addVerification','semanticStatus','sourceSemanticsConfirmed']:
     need(m in engineering,f'engineering evidence marker missing: {m}')
 content=text('src/domains/learning/content-intelligence.js')
 for m in ['Next learner actions','Content review queue','evidenceFingerprint','MM_CONTENT_INTELLIGENCE']:
     need(m in content,f'content intelligence marker missing: {m}')
+need('style=' not in content,'Data Intelligence must not emit inline style attributes under style-src-attr none')
 
 manifest=json.loads(text('runtime-domain-manifest.json'));assets=manifest['assets']
 for p in [x for x in required if x.startswith('src/domains/') and x.endswith('.js')]:
@@ -75,6 +79,10 @@ order=[
 ]
 need(all(assets.index(order[i])<assets.index(order[i+1]) for i in range(len(order)-1)),'data activation runtime dependency order drifted')
 
+service_worker=text('service-worker.js')
+for asset in [x for x in assets if x.startswith('./src/domains/')]:
+    need(asset in service_worker,f'offline core missing data/domain asset {asset}')
+
 contract=json.loads(text('data/real-pilot-analysis-contract-v1.json'))
 need(contract.get('status')=='pilot-ready','real pilot analysis must not claim completed validation')
 need('No result authorises a production change' in contract.get('analysisBoundary',''),'pilot production-authority boundary missing')
@@ -87,4 +95,4 @@ with tempfile.TemporaryDirectory() as td:
     need(report['source']['rows']==6,'synthetic pilot row count drifted')
     need('fill_time_s' in report['comparisons'] and 'part_mass_g' in report['comparisons'],'pilot comparison signals missing')
 
-print('MouldMaster data activation v1 QA passed (data spine, revision-safe assessment analytics, unified local events, learner model, typed materials, signal semantics, explicit process evidence, engineering evidence chain, content intelligence, real-pilot aggregate harness)')
+print('MouldMaster data activation v1 QA passed (data spine, revision-safe assessment analytics, unified local events, learner model, typed materials, canonical signal semantics, explicit process evidence, engineering evidence chain, CSP-safe content intelligence, real-pilot aggregate harness)')
