@@ -10,12 +10,19 @@ OUTPUT = ROOT / "runtime-domain-manifest.json"
 PRIORITY_ASSETS = [
     "./src/domains/shared/learner-scope.js",
 ]
+# Generated classic-script packs are injected synchronously by index.html at
+# specific legacy ordering boundaries. Loading them again through the async
+# domain manifest would execute their source parts twice.
+EXCLUDED_DIRS = {"runtime-packs"}
 
 
 def build_manifest() -> dict:
     discovered = []
     for path in sorted(DOMAINS.rglob("*.js")):
         if path.name == "domain-bootstrap.js":
+            continue
+        relative = path.relative_to(DOMAINS)
+        if any(part in EXCLUDED_DIRS for part in relative.parts[:-1]):
             continue
         discovered.append("./" + path.relative_to(ROOT).as_posix())
     priority = [asset for asset in PRIORITY_ASSETS if asset in discovered]
