@@ -51,11 +51,11 @@ function updateRheologyLab(){
 
 function materialTabsHTML(){
   return `<div class="mat-tabs">
-    <button class="${materialTab==="learn"?"active":""}" onclick="switchMaterialTab('learn')">Learn</button>
-    <button class="${materialTab==="explorer"?"active":""}" onclick="switchMaterialTab('explorer')">Material explorer</button>
-    <button class="${materialTab==="labs"?"active":""}" onclick="switchMaterialTab('labs')">Interactive labs</button>
-    <button class="${materialTab==="quiz"?"active":""}" onclick="switchMaterialTab('quiz')">Knowledge check</button>
-    <button class="${materialTab==="references"?"active":""}" onclick="switchMaterialTab('references')">Evidence & references</button>
+    <button class="${materialTab==="learn"?"active":""}" data-mm-onclick="switchMaterialTab('learn')">Learn</button>
+    <button class="${materialTab==="explorer"?"active":""}" data-mm-onclick="switchMaterialTab('explorer')">Material explorer</button>
+    <button class="${materialTab==="labs"?"active":""}" data-mm-onclick="switchMaterialTab('labs')">Interactive labs</button>
+    <button class="${materialTab==="quiz"?"active":""}" data-mm-onclick="switchMaterialTab('quiz')">Knowledge check</button>
+    <button class="${materialTab==="references"?"active":""}" data-mm-onclick="switchMaterialTab('references')">Evidence & references</button>
   </div>`;
 }
 const FTC2_renderMaterials_base=renderMaterials;

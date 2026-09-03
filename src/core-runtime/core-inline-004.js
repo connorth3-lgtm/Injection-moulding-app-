@@ -104,9 +104,9 @@ function renderDashboard(){
       <h2>From first moulding cycle to advanced process engineering.</h2>
       <p>Train machine fundamentals, material behaviour, tooling, process development, scientific moulding, validation, DOE, automation, simulation and expert root-cause thinking.</p>
       <div class="hero-buttons">
-        <button class="primary" onclick="switchView('lesson')">Continue: ${esc(c.title)}</button>
-        <button class="secondary" onclick="switchView('simulator')">Open process simulator</button>
-        <button class="ghost" onclick="switchView('scenarios')">Practice troubleshooting</button>
+        <button class="primary" data-mm-onclick="switchView('lesson')">Continue: ${esc(c.title)}</button>
+        <button class="secondary" data-mm-onclick="switchView('simulator')">Open process simulator</button>
+        <button class="ghost" data-mm-onclick="switchView('scenarios')">Practice troubleshooting</button>
       </div>
     </div>
     <div class="card statbox">
@@ -121,7 +121,7 @@ function renderDashboard(){
     <div class="card kpi"><span>Defects in lab</span><b>${D.defects.length}</b></div>
     <div class="card kpi"><span>Scenario drills</span><b>${D.scenarios.length}</b></div>
   </div>
-  <div class="section-head"><div><h2>Continue your path</h2><p>Progress moves from core concepts toward evidence-based engineering.</p></div><button class="ghost" onclick="switchView('path')">View all tracks</button></div>
+  <div class="section-head"><div><h2>Continue your path</h2><p>Progress moves from core concepts toward evidence-based engineering.</p></div><button class="ghost" data-mm-onclick="switchView('path')">View all tracks</button></div>
   <div class="grid">${D.courses.slice(0,6).map(courseCard).join("")}</div>`;
 }
 function courseCard(c){
@@ -129,7 +129,7 @@ function courseCard(c){
   return `<div class="card course-card">
     <span class="eyebrow">${esc(c.level)}</span><h3>${c.id}. ${esc(c.name)}</h3><p>${esc(c.description)}</p>
     <div class="mini-bar"><span style="width:${p.pct}%"></span></div>
-    <div class="course-bottom"><span class="pill">${p.done}/${p.total} complete</span><button class="secondary" onclick="openCourse(${c.id})">${p.pct?"Resume":"Start"}</button></div>
+    <div class="course-bottom"><span class="pill">${p.done}/${p.total} complete</span><button class="secondary" data-mm-onclick="openCourse(${c.id})">${p.pct?"Resume":"Start"}</button></div>
   </div>`;
 }
 function openCourse(id){
@@ -139,7 +139,7 @@ function openCourse(id){
 }
 function renderPath(){
   $("#path").innerHTML=`<div class="section-head"><div><h2>Beginner → Expert pathway</h2><p>Each track contains 10 concise lessons plus practical exercises.</p></div><span class="pill">120 lessons</span></div>
-  <div class="learning-map">${D.courses.map(c=>{const p=courseProgress(c);return `<div class="card track-row"><div><span class="eyebrow">${esc(c.level)}</span><h3 style="margin:6px 0">${c.id}. ${esc(c.name)}</h3></div><div><p class="muted">${esc(c.description)}</p><div class="mini-bar"><span style="width:${p.pct}%"></span></div></div><div><b>${p.pct}% complete</b><div style="margin-top:8px"><button class="secondary" onclick="openCourse(${c.id})">Open track</button></div></div></div>`}).join("")}</div>`;
+  <div class="learning-map">${D.courses.map(c=>{const p=courseProgress(c);return `<div class="card track-row"><div><span class="eyebrow">${esc(c.level)}</span><h3 style="margin:6px 0">${c.id}. ${esc(c.name)}</h3></div><div><p class="muted">${esc(c.description)}</p><div class="mini-bar"><span style="width:${p.pct}%"></span></div></div><div><b>${p.pct}% complete</b><div style="margin-top:8px"><button class="secondary" data-mm-onclick="openCourse(${c.id})">Open track</button></div></div></div>`}).join("")}</div>`;
 }
 function renderLesson(){
   const l=currentLesson(), c=D.courses.find(x=>x.id===l.course);
@@ -157,16 +157,16 @@ function renderLesson(){
       <h3>Your lesson notes</h3>
       <textarea class="note-area" id="lessonNotes" placeholder="Record observations, machine examples, questions or formulas...">${esc(user.notes?.[l.id]||"")}</textarea>
       <div class="hero-buttons">
-        <button class="primary" onclick="completeLesson(${l.id})">${user.completed.includes(l.id)?"Completed ✓":"Mark complete"}</button>
-        <button class="secondary" onclick="saveLessonNote(${l.id})">Save notes</button>
-        <button class="ghost" onclick="toggleBookmark(${l.id})">${bookmarked?"★ Bookmarked":"☆ Bookmark"}</button>
+        <button class="primary" data-mm-onclick="completeLesson(${l.id})">${user.completed.includes(l.id)?"Completed ✓":"Mark complete"}</button>
+        <button class="secondary" data-mm-onclick="saveLessonNote(${l.id})">Save notes</button>
+        <button class="ghost" data-mm-onclick="toggleBookmark(${l.id})">${bookmarked?"★ Bookmarked":"☆ Bookmark"}</button>
       </div>
     </article>
     <aside class="card lesson-side">
       <span class="eyebrow">Track ${c.id}: ${esc(c.name)}</span>
       <div class="mini-bar"><span style="width:${courseProgress(c).pct}%"></span></div>
-      <div class="lesson-list">${c.lessonIds.map(id=>{const x=D.lessons.find(q=>q.id===id);return `<button class="${id===l.id?"active":""}" onclick="goLesson(${id})">${user.completed.includes(id)?"✓ ":""}${id}. ${esc(x.title)}</button>`}).join("")}</div>
-      <button class="secondary" style="width:100%;margin-top:12px" onclick="nextLesson()">Next lesson →</button>
+      <div class="lesson-list">${c.lessonIds.map(id=>{const x=D.lessons.find(q=>q.id===id);return `<button class="${id===l.id?"active":""}" data-mm-onclick="goLesson(${id})">${user.completed.includes(id)?"✓ ":""}${id}. ${esc(x.title)}</button>`}).join("")}</div>
+      <button class="secondary" style="width:100%;margin-top:12px" data-mm-onclick="nextLesson()">Next lesson →</button>
     </aside>
   </div>`;
 }
@@ -183,7 +183,7 @@ function renderVisuals(){
      <span class="eyebrow">Animated cycle visual</span><h2>Injection moulding cycle</h2>
      <div class="machine-scene"><div class="barrel"></div><div class="screw"></div><div class="nozzle"></div><div class="mould"><div></div><div></div></div><div class="cavity"></div><div class="flow-dot"></div></div>
      <div class="phase-tabs">
-       <button onclick="phaseExplain('Plasticising')">Plasticising</button><button onclick="phaseExplain('Filling')">Filling</button><button onclick="phaseExplain('Pack / hold')">Pack / hold</button><button onclick="phaseExplain('Cooling')">Cooling</button><button onclick="phaseExplain('Ejection')">Ejection</button>
+       <button data-mm-onclick="phaseExplain('Plasticising')">Plasticising</button><button data-mm-onclick="phaseExplain('Filling')">Filling</button><button data-mm-onclick="phaseExplain('Pack / hold')">Pack / hold</button><button data-mm-onclick="phaseExplain('Cooling')">Cooling</button><button data-mm-onclick="phaseExplain('Ejection')">Ejection</button>
      </div>
      <div class="callout" id="phaseText"><b>Watch the animation:</b> the screw prepares and delivers melt, the cavity fills, pressure is held while the gate is effective, then the part cools.</div>
    </div>
@@ -234,7 +234,7 @@ function renderSimulator(){
    ${slider("Venting quality","vent",10,100,simulatorState.vent,"%")}
    ${slider("Moisture risk","moisture",0,100,simulatorState.moisture,"%")}
   </div>
-  <div class="hero-buttons"><button class="secondary" onclick="resetSimulator()">Reset</button><button class="ghost" onclick="simPreset('robust')">Robust preset</button><button class="ghost" onclick="simPreset('trouble')">Trouble preset</button></div>
+  <div class="hero-buttons"><button class="secondary" data-mm-onclick="resetSimulator()">Reset</button><button class="ghost" data-mm-onclick="simPreset('robust')">Robust preset</button><button class="ghost" data-mm-onclick="simPreset('trouble')">Trouble preset</button></div>
  </div>
  <div class="card output-panel">
    <span class="eyebrow">Predicted response</span><h2>Relative defect risk</h2>
@@ -245,7 +245,7 @@ function renderSimulator(){
  updateSimulator();
 }
 function slider(label,key,min,max,val,unit){
- return `<label>${label}<div class="range-row"><input type="range" min="${min}" max="${max}" value="${val}" oninput="simChange('${key}',this.value)"><input id="sim_${key}" value="${val}${unit}" readonly></div></label>`;
+ return `<label>${label}<div class="range-row"><input type="range" min="${min}" max="${max}" value="${val}" data-mm-oninput="simChange('${key}',this.value)"><input id="sim_${key}" value="${val}${unit}" readonly></div></label>`;
 }
 function simChange(k,v){simulatorState[k]=+v;const units={speed:"%",transfer:"%",hold:"%",holdTime:"s",melt:"°C",mould:"°C",cooling:"s",clamp:"%",vent:"%",moisture:"%"};$("#sim_"+k).value=v+units[k];updateSimulator()}
 function clamp01(x){return Math.max(0,Math.min(100,x))}
@@ -279,17 +279,17 @@ function simPreset(p){
 }
 
 function renderDefects(){
- $("#defects").innerHTML=`<div class="section-head"><div><h2>Defect diagnosis library</h2><p>Start with the physical mechanism and evidence before adjusting the process.</p></div><input id="defectSearch" style="max-width:320px" placeholder="Search defects..." oninput="filterDefects()"></div><div class="grid" id="defectGrid">${D.defects.map(defectCard).join("")}</div>`;
+ $("#defects").innerHTML=`<div class="section-head"><div><h2>Defect diagnosis library</h2><p>Start with the physical mechanism and evidence before adjusting the process.</p></div><input id="defectSearch" style="max-width:320px" placeholder="Search defects..." data-mm-oninput="filterDefects()"></div><div class="grid" id="defectGrid">${D.defects.map(defectCard).join("")}</div>`;
 }
-function defectCard(d,i){return `<div class="card defect-card" data-defect="${esc((d.name+" "+d.symptom+" "+d.mechanisms.join(" ")).toLowerCase())}"><span class="eyebrow">Defect ${i+1}</span><h3>${esc(d.name)}</h3><p>${esc(d.symptom)}</p><button class="secondary" onclick="openDefect(${i})">Diagnose</button></div>`}
+function defectCard(d,i){return `<div class="card defect-card" data-defect="${esc((d.name+" "+d.symptom+" "+d.mechanisms.join(" ")).toLowerCase())}"><span class="eyebrow">Defect ${i+1}</span><h3>${esc(d.name)}</h3><p>${esc(d.symptom)}</p><button class="secondary" data-mm-onclick="openDefect(${i})">Diagnose</button></div>`}
 function filterDefects(){const q=$("#defectSearch").value.toLowerCase();$$("[data-defect]").forEach(x=>x.classList.toggle("hidden",!x.dataset.defect.includes(q)))}
 function openDefect(i){
  const d=D.defects[i];
- openModal(`<span class="eyebrow">Defect lab</span><h2>${esc(d.name)}</h2><p class="muted">${esc(d.symptom)}</p><div class="grid2"><div><h3>Likely mechanisms</h3><div class="cause-list">${d.mechanisms.map(x=>`<div class="cause">${esc(x)}</div>`).join("")}</div></div><div><h3>Evidence / checks</h3><div class="cause-list">${d.checks.map(x=>`<div class="cause">${esc(x)}</div>`).join("")}</div></div></div><div class="callout"><b>Best practice:</b> rank mechanisms by evidence, then run the smallest controlled test that distinguishes between them.</div><button class="primary" onclick="closeModal();switchView('coach');setCoachPrompt('${esc(d.name).replace(/'/g,"\\'")}')">Ask coach about ${esc(d.name)}</button>`);
+ openModal(`<span class="eyebrow">Defect lab</span><h2>${esc(d.name)}</h2><p class="muted">${esc(d.symptom)}</p><div class="grid2"><div><h3>Likely mechanisms</h3><div class="cause-list">${d.mechanisms.map(x=>`<div class="cause">${esc(x)}</div>`).join("")}</div></div><div><h3>Evidence / checks</h3><div class="cause-list">${d.checks.map(x=>`<div class="cause">${esc(x)}</div>`).join("")}</div></div></div><div class="callout"><b>Best practice:</b> rank mechanisms by evidence, then run the smallest controlled test that distinguishes between them.</div><button class="primary" data-mm-onclick="closeModal();switchView('coach');setCoachPrompt('${esc(d.name).replace(/'/g,"\\'")}')">Ask coach about ${esc(d.name)}</button>`);
 }
 
 function renderScenarios(){
- $("#scenarios").innerHTML=`<div class="section-head"><div><h2>Shop-floor decision drills</h2><p>Choose the strongest next action based on the evidence provided.</p></div><span class="pill">${D.scenarios.length} scenarios</span></div><div class="grid2">${D.scenarios.map((s,i)=>`<div class="card scenario"><span class="eyebrow">Scenario ${i+1}</span><h3>${esc(s.title)}</h3><p>${esc(s.situation)}</p>${s.choices.map((c,ci)=>`<button class="choice" onclick="answerScenario(${i},${ci},this)">${esc(c)}</button>`).join("")}<div id="sf${i}" class="feedback hidden"></div></div>`).join("")}</div>`;
+ $("#scenarios").innerHTML=`<div class="section-head"><div><h2>Shop-floor decision drills</h2><p>Choose the strongest next action based on the evidence provided.</p></div><span class="pill">${D.scenarios.length} scenarios</span></div><div class="grid2">${D.scenarios.map((s,i)=>`<div class="card scenario"><span class="eyebrow">Scenario ${i+1}</span><h3>${esc(s.title)}</h3><p>${esc(s.situation)}</p>${s.choices.map((c,ci)=>`<button class="choice" data-mm-onclick="answerScenario(${i},${ci},this)">${esc(c)}</button>`).join("")}<div id="sf${i}" class="feedback hidden"></div></div>`).join("")}</div>`;
 }
 function answerScenario(i,ci,el){
  const s=D.scenarios[i],f=$("#sf"+i);f.classList.remove("hidden");
@@ -299,9 +299,9 @@ function answerScenario(i,ci,el){
 
 let coachHistory=[];
 function renderCoach(){
- $("#coach").innerHTML=`<div class="grid2"><div class="card chat"><span class="eyebrow">Offline reasoning engine</span><h2>Troubleshooting Coach</h2><p class="muted">This version uses a transparent rule-based expert system in your browser. It does not send production data to an external AI service.</p><div class="chat-log" id="chatLog"></div><div class="chat-form"><input id="coachInput" placeholder="Describe a defect or ask a learning question..." onkeydown="if(event.key==='Enter')coachSend()"><button class="primary" onclick="coachSend()">Send</button></div></div>
+ $("#coach").innerHTML=`<div class="grid2"><div class="card chat"><span class="eyebrow">Offline reasoning engine</span><h2>Troubleshooting Coach</h2><p class="muted">This version uses a transparent rule-based expert system in your browser. It does not send production data to an external AI service.</p><div class="chat-log" id="chatLog"></div><div class="chat-form"><input id="coachInput" placeholder="Describe a defect or ask a learning question..." data-mm-onkeydown="if(event.key==='Enter')coachSend()"><button class="primary" data-mm-onclick="coachSend()">Send</button></div></div>
  <div class="card form-card"><span class="eyebrow">Structured prompt builder</span><h2>Give the coach better evidence</h2>
- <div class="form-grid" style="grid-template-columns:1fr"><label>Defect<select id="coachDefect"><option value="">Select...</option>${D.defects.map(d=>`<option>${esc(d.name)}</option>`).join("")}</select></label><label>When did it start?<select id="coachWhen"><option>Just started</option><option>After material change</option><option>After mould maintenance</option><option>After machine change</option><option>Gradually over time</option></select></label><label>Evidence<textarea id="coachEvidence" placeholder="e.g. peak pressure up 18%, cushion varies, dryer alarm, one cavity only..."></textarea></label></div><button class="secondary" style="margin-top:12px" onclick="coachBuild()">Build diagnosis</button>
+ <div class="form-grid" style="grid-template-columns:1fr"><label>Defect<select id="coachDefect"><option value="">Select...</option>${D.defects.map(d=>`<option>${esc(d.name)}</option>`).join("")}</select></label><label>When did it start?<select id="coachWhen"><option>Just started</option><option>After material change</option><option>After mould maintenance</option><option>After machine change</option><option>Gradually over time</option></select></label><label>Evidence<textarea id="coachEvidence" placeholder="e.g. peak pressure up 18%, cushion varies, dryer alarm, one cavity only..."></textarea></label></div><button class="secondary" style="margin-top:12px" data-mm-onclick="coachBuild()">Build diagnosis</button>
  <div class="callout"><b>For production:</b> verify recommendations against the resin supplier, machine limits, mould documentation, validated process requirements and your site's safety procedures.</div></div></div>`;
  if(!coachHistory.length)coachHistory=[{role:"bot",text:"Describe the symptom, when it started, and any measured changes. I’ll structure the likely mechanisms and the next evidence to collect."}];
  drawChat();
@@ -330,11 +330,11 @@ function coachReply(q){
 
 function renderExams(){
  $("#exams").innerHTML=`<div class="section-head"><div><h2>Certification ladder</h2><p>Pass each exam at 80% or better. Certificates are stored locally for this learner.</p></div></div>
- <div class="grid">${Object.keys(D.exams).map(level=>{const score=user.examScores?.[level];return `<div class="card exam-card"><span class="eyebrow">${level}</span><h3>${level} Injection Moulding Certificate</h3><p class="muted">10 questions · pass mark 80%</p><div class="course-bottom"><span class="pill">${score==null?"Not attempted":"Best: "+score+"%"}</span><button class="secondary" onclick="startExam('${level}')">Start exam</button></div></div>`}).join("")}</div>`;
+ <div class="grid">${Object.keys(D.exams).map(level=>{const score=user.examScores?.[level];return `<div class="card exam-card"><span class="eyebrow">${level}</span><h3>${level} Injection Moulding Certificate</h3><p class="muted">10 questions · pass mark 80%</p><div class="course-bottom"><span class="pill">${score==null?"Not attempted":"Best: "+score+"%"}</span><button class="secondary" data-mm-onclick="startExam('${level}')">Start exam</button></div></div>`}).join("")}</div>`;
 }
 function startExam(level){
  const q=D.exams[level];
- openModal(`<span class="eyebrow">${level} certification</span><h2>${level} exam</h2><div id="examQuestions">${q.map((x,i)=>`<div class="question"><b>${i+1}. ${esc(x[0])}</b>${x[1].map((o,j)=>`<label class="option"><input type="radio" name="ex${i}" value="${j}"> ${esc(o)}</label>`).join("")}</div>`).join("")}</div><button class="primary" onclick="gradeExam('${level}')">Grade exam</button><div id="examResult" class="callout hidden"></div>`);
+ openModal(`<span class="eyebrow">${level} certification</span><h2>${level} exam</h2><div id="examQuestions">${q.map((x,i)=>`<div class="question"><b>${i+1}. ${esc(x[0])}</b>${x[1].map((o,j)=>`<label class="option"><input type="radio" name="ex${i}" value="${j}"> ${esc(o)}</label>`).join("")}</div>`).join("")}</div><button class="primary" data-mm-onclick="gradeExam('${level}')">Grade exam</button><div id="examResult" class="callout hidden"></div>`);
 }
 function gradeExam(level){
  const q=D.exams[level];let n=0;q.forEach((x,i)=>{const r=document.querySelector(`input[name=ex${i}]:checked`);if(r&&+r.value===x[2])n++});
@@ -345,20 +345,20 @@ function gradeExam(level){
 }
 function renderCertificates(){
  const levels=["Beginner","Intermediate","Advanced"];
- $("#certificates").innerHTML=`<div class="section-head"><div><h2>Your certificates</h2><p>Certificates are local learning records, not third-party accredited qualifications.</p></div></div><div class="grid">${levels.map(l=>user.certificates.includes(l)?certificateCard(l):`<div class="card cert"><div class="seal">MM</div><h2>${l}</h2><p class="muted">Not yet earned</p><button class="secondary no-print" onclick="switchView('exams')">Take exam</button></div>`).join("")}</div>`;
+ $("#certificates").innerHTML=`<div class="section-head"><div><h2>Your certificates</h2><p>Certificates are local learning records, not third-party accredited qualifications.</p></div></div><div class="grid">${levels.map(l=>user.certificates.includes(l)?certificateCard(l):`<div class="card cert"><div class="seal">MM</div><h2>${l}</h2><p class="muted">Not yet earned</p><button class="secondary no-print" data-mm-onclick="switchView('exams')">Take exam</button></div>`).join("")}</div>`;
 }
 function certificateCard(l){
- return `<div class="card cert"><div class="seal">MM</div><span class="eyebrow">Certificate of completion</span><h2>${l} Injection Moulding</h2><p>This certifies that <b>${esc(user.name)}</b> passed the MouldMaster Academy ${l} knowledge assessment.</p><p class="muted">Local learning record · ${new Date().toLocaleDateString()}</p><button class="secondary no-print" onclick="window.print()">Print / Save as PDF</button></div>`;
+ return `<div class="card cert"><div class="seal">MM</div><span class="eyebrow">Certificate of completion</span><h2>${l} Injection Moulding</h2><p>This certifies that <b>${esc(user.name)}</b> passed the MouldMaster Academy ${l} knowledge assessment.</p><p class="muted">Local learning record · ${new Date().toLocaleDateString()}</p><button class="secondary no-print" data-mm-onclick="window.print()">Print / Save as PDF</button></div>`;
 }
 
 function renderInstructor(){
  const users=Object.values(db.users);
  $("#instructor").innerHTML=`<div class="kpis"><div class="card kpi"><span>Local learners</span><b>${users.length}</b></div><div class="card kpi"><span>Total completions</span><b>${users.reduce((n,u)=>n+(u.completed?.length||0),0)}</b></div><div class="card kpi"><span>Certificates</span><b>${users.reduce((n,u)=>n+(u.certificates?.length||0),0)}</b></div><div class="card kpi"><span>Course size</span><b>120</b></div></div>
- <div class="section-head"><div><h2>Learner overview</h2><p>This offline version manages profiles stored on this device.</p></div><button class="primary" onclick="newLearner()">Add learner</button></div>
- <div class="card table-wrap"><table class="table"><thead><tr><th>Learner</th><th>Progress</th><th>Beginner</th><th>Intermediate</th><th>Advanced</th><th>Last activity</th><th></th></tr></thead><tbody>${users.map(u=>`<tr><td><b>${esc(u.name)}</b></td><td>${Math.round((u.completed?.length||0)/D.lessons.length*100)}%</td><td>${u.examScores?.Beginner??"—"}</td><td>${u.examScores?.Intermediate??"—"}</td><td>${u.examScores?.Advanced??"—"}</td><td>${new Date(u.lastSeen||Date.now()).toLocaleDateString()}</td><td><button class="ghost" onclick="switchUser('${u.id}')">${u.id===db.activeUser?"Active":"Open"}</button></td></tr>`).join("")}</tbody></table></div>`;
+ <div class="section-head"><div><h2>Learner overview</h2><p>This offline version manages profiles stored on this device.</p></div><button class="primary" data-mm-onclick="newLearner()">Add learner</button></div>
+ <div class="card table-wrap"><table class="table"><thead><tr><th>Learner</th><th>Progress</th><th>Beginner</th><th>Intermediate</th><th>Advanced</th><th>Last activity</th><th></th></tr></thead><tbody>${users.map(u=>`<tr><td><b>${esc(u.name)}</b></td><td>${Math.round((u.completed?.length||0)/D.lessons.length*100)}%</td><td>${u.examScores?.Beginner??"—"}</td><td>${u.examScores?.Intermediate??"—"}</td><td>${u.examScores?.Advanced??"—"}</td><td>${new Date(u.lastSeen||Date.now()).toLocaleDateString()}</td><td><button class="ghost" data-mm-onclick="switchUser('${u.id}')">${u.id===db.activeUser?"Active":"Open"}</button></td></tr>`).join("")}</tbody></table></div>`;
 }
 function newLearner(){
- openModal(`<span class="eyebrow">Instructor</span><h2>Add learner</h2><label>Learner name<input id="newLearnerName" placeholder="e.g. Sam Taylor"></label><button class="primary" style="margin-top:12px" onclick="createLearner()">Create profile</button>`);
+ openModal(`<span class="eyebrow">Instructor</span><h2>Add learner</h2><label>Learner name<input id="newLearnerName" placeholder="e.g. Sam Taylor"></label><button class="primary" style="margin-top:12px" data-mm-onclick="createLearner()">Create profile</button>`);
 }
 function createLearner(){
  const name=$("#newLearnerName").value.trim();if(!name)return;
@@ -367,14 +367,14 @@ function createLearner(){
 function switchUser(id){persist();db.activeUser=id;user=db.users[id];persist();updateGlobalProgress();renderInstructor();toast("Switched learner")}
 
 function renderGlossary(){
- $("#glossary").innerHTML=`<div class="section-head"><div><h2>Injection moulding glossary</h2><p>Search terms used throughout the platform.</p></div><input id="glossarySearch" style="max-width:340px" placeholder="Search..." oninput="filterGlossary()"></div><div class="glossary-grid" id="glossaryGrid">${Object.entries(D.glossary).map(([k,v])=>`<div class="card term" data-term="${esc((k+" "+v).toLowerCase())}"><b>${esc(k)}</b><p>${esc(v)}</p></div>`).join("")}</div>`;
+ $("#glossary").innerHTML=`<div class="section-head"><div><h2>Injection moulding glossary</h2><p>Search terms used throughout the platform.</p></div><input id="glossarySearch" style="max-width:340px" placeholder="Search..." data-mm-oninput="filterGlossary()"></div><div class="glossary-grid" id="glossaryGrid">${Object.entries(D.glossary).map(([k,v])=>`<div class="card term" data-term="${esc((k+" "+v).toLowerCase())}"><b>${esc(k)}</b><p>${esc(v)}</p></div>`).join("")}</div>`;
 }
 function filterGlossary(){const q=$("#glossarySearch").value.toLowerCase();$$("[data-term]").forEach(x=>x.classList.toggle("hidden",!x.dataset.term.includes(q)))}
 
 function renderProfile(){
- $("#profile").innerHTML=`<div class="grid2"><div class="card form-card"><span class="eyebrow">Learner profile</span><h2>${esc(user.name)}</h2><label>Name<input id="profileName" value="${esc(user.name)}"></label><label style="display:block;margin-top:10px">Role<select id="profileRole"><option ${user.role==="learner"?"selected":""}>learner</option><option ${user.role==="instructor"?"selected":""}>instructor</option></select></label><button class="primary" style="margin-top:12px" onclick="saveProfile()">Save profile</button></div>
- <div class="card form-card"><span class="eyebrow">Local data</span><h2>Backup & reset</h2><p class="muted">Export progress as JSON for backup, or import it later on the same or another browser.</p><div class="hero-buttons"><button class="secondary" onclick="exportData()">Export JSON</button><label class="ghost" style="display:inline-block">Import JSON<input type="file" accept=".json" onchange="importData(this.files[0])" style="display:none"></label><button class="danger" onclick="resetData()">Reset all local data</button></div></div></div>
- <div class="section-head"><div><h2>Bookmarks</h2><p>Saved lessons for review.</p></div></div><div class="grid">${(user.bookmarks||[]).map(id=>{const l=D.lessons.find(x=>x.id===id);return l?`<div class="card course-card"><span class="eyebrow">${esc(l.level)}</span><h3>${esc(l.title)}</h3><p>${esc(l.summary)}</p><button class="secondary" onclick="goLesson(${id});switchView('lesson')">Open lesson</button></div>`:""}).join("")||`<div class="card form-card"><p class="muted">No bookmarks yet.</p></div>`}`;
+ $("#profile").innerHTML=`<div class="grid2"><div class="card form-card"><span class="eyebrow">Learner profile</span><h2>${esc(user.name)}</h2><label>Name<input id="profileName" value="${esc(user.name)}"></label><label style="display:block;margin-top:10px">Role<select id="profileRole"><option ${user.role==="learner"?"selected":""}>learner</option><option ${user.role==="instructor"?"selected":""}>instructor</option></select></label><button class="primary" style="margin-top:12px" data-mm-onclick="saveProfile()">Save profile</button></div>
+ <div class="card form-card"><span class="eyebrow">Local data</span><h2>Backup & reset</h2><p class="muted">Export progress as JSON for backup, or import it later on the same or another browser.</p><div class="hero-buttons"><button class="secondary" data-mm-onclick="exportData()">Export JSON</button><label class="ghost" style="display:inline-block">Import JSON<input type="file" accept=".json" data-mm-onchange="importData(this.files[0])" style="display:none"></label><button class="danger" data-mm-onclick="resetData()">Reset all local data</button></div></div></div>
+ <div class="section-head"><div><h2>Bookmarks</h2><p>Saved lessons for review.</p></div></div><div class="grid">${(user.bookmarks||[]).map(id=>{const l=D.lessons.find(x=>x.id===id);return l?`<div class="card course-card"><span class="eyebrow">${esc(l.level)}</span><h3>${esc(l.title)}</h3><p>${esc(l.summary)}</p><button class="secondary" data-mm-onclick="goLesson(${id});switchView('lesson')">Open lesson</button></div>`:""}).join("")||`<div class="card form-card"><p class="muted">No bookmarks yet.</p></div>`}`;
 }
 function saveProfile(){user.name=$("#profileName").value.trim()||user.name;user.role=$("#profileRole").value;persist();updateGlobalProgress();renderProfile();toast("Profile updated")}
 function exportData(){
@@ -386,14 +386,14 @@ function importData(file){
 function resetData(){if(confirm("Reset all local MouldMaster users and progress?")){db=JSON.parse(JSON.stringify(defaultDB));user=db.users[db.activeUser];persist();updateGlobalProgress();renderProfile();toast("Data reset")}}
 
 function openSearch(){
- openModal(`<span class="eyebrow">Global search</span><h2>Search the academy</h2><input id="globalSearch" placeholder="Try: gate seal, warpage, Cpk, venting..." oninput="doSearch()" autofocus><div id="searchResults" class="search-results" style="margin-top:12px"></div>`);
+ openModal(`<span class="eyebrow">Global search</span><h2>Search the academy</h2><input id="globalSearch" placeholder="Try: gate seal, warpage, Cpk, venting..." data-mm-oninput="doSearch()" autofocus><div id="searchResults" class="search-results" style="margin-top:12px"></div>`);
  setTimeout(()=>$("#globalSearch")?.focus(),50)
 }
 function doSearch(){
  const q=$("#globalSearch").value.toLowerCase().trim();if(q.length<2){$("#searchResults").innerHTML="";return}
  const ls=D.lessons.filter(l=>(l.title+" "+l.summary+" "+l.courseName).toLowerCase().includes(q)).slice(0,8);
  const ds=D.defects.filter(d=>(d.name+" "+d.symptom+" "+d.mechanisms.join(" ")).toLowerCase().includes(q)).slice(0,4);
- $("#searchResults").innerHTML=ls.map(l=>`<button class="search-item" onclick="closeModal();goLesson(${l.id});switchView('lesson')"><b>Lesson:</b> ${esc(l.title)}<br><span class="muted tiny">${esc(l.courseName)}</span></button>`).join("")+ds.map(d=>`<div class="search-item"><b>Defect:</b> ${esc(d.name)}<br><span class="muted tiny">${esc(d.symptom)}</span></div>`).join("")||`<div class="muted">No matches.</div>`
+ $("#searchResults").innerHTML=ls.map(l=>`<button class="search-item" data-mm-onclick="closeModal();goLesson(${l.id});switchView('lesson')"><b>Lesson:</b> ${esc(l.title)}<br><span class="muted tiny">${esc(l.courseName)}</span></button>`).join("")+ds.map(d=>`<div class="search-item"><b>Defect:</b> ${esc(d.name)}<br><span class="muted tiny">${esc(d.symptom)}</span></div>`).join("")||`<div class="muted">No matches.</div>`
 }
 function openModal(html){$("#modalBody").innerHTML=html;$("#modal").classList.remove("hidden")}
 function closeModal(){$("#modal").classList.add("hidden");$("#modalBody").innerHTML=""}
@@ -437,8 +437,8 @@ function renderDashboard(){
         <div class="mini-bar" style="max-width:520px"><span style="width:${cp.pct}%"></span></div>
         <div class="track-status" style="margin-top:8px"><span class="status-dot active"></span>${cp.done} of ${cp.total} lessons complete in this track</div>
         <div class="hero-buttons">
-          <button class="primary" onclick="switchView('lesson')">${pct===0?"Start first lesson":"Continue learning"} →</button>
-          <button class="ghost" onclick="switchView('path')">See my full path</button>
+          <button class="primary" data-mm-onclick="switchView('lesson')">${pct===0?"Start first lesson":"Continue learning"} →</button>
+          <button class="ghost" data-mm-onclick="switchView('path')">See my full path</button>
         </div>
       </div>
       <div class="card progress-card">
@@ -450,13 +450,13 @@ function renderDashboard(){
 
     <div class="section-head"><div><h2>What would you like to do?</h2><p>Use these when you want something other than your next lesson.</p></div></div>
     <div class="quick-grid">
-      <button class="quick-action" onclick="switchView('scenarios')"><span class="icon">⚠</span><b>Practice a problem</b><small>Make decisions in realistic shop-floor scenarios.</small></button>
-      <button class="quick-action" onclick="switchView('defects')"><span class="icon">◇</span><b>Find a defect</b><small>Look up likely mechanisms and useful checks.</small></button>
-      <button class="quick-action" onclick="switchView('simulator')"><span class="icon">⚙</span><b>Try the simulator</b><small>See how process variables influence relative risk.</small></button>
-      <button class="quick-action" onclick="switchView('coach')"><span class="icon">✦</span><b>Ask the coach</b><small>Turn a symptom or technical question into a structured next step.</small></button>
+      <button class="quick-action" data-mm-onclick="switchView('scenarios')"><span class="icon">⚠</span><b>Practice a problem</b><small>Make decisions in realistic shop-floor scenarios.</small></button>
+      <button class="quick-action" data-mm-onclick="switchView('defects')"><span class="icon">◇</span><b>Find a defect</b><small>Look up likely mechanisms and useful checks.</small></button>
+      <button class="quick-action" data-mm-onclick="switchView('simulator')"><span class="icon">⚙</span><b>Try the simulator</b><small>See how process variables influence relative risk.</small></button>
+      <button class="quick-action" data-mm-onclick="switchView('coach')"><span class="icon">✦</span><b>Ask the coach</b><small>Turn a symptom or technical question into a structured next step.</small></button>
     </div>
 
-    <div class="section-head"><div><h2>Your next learning tracks</h2><p>Only the most relevant tracks are shown here.</p></div><button class="ghost" onclick="switchView('path')">Show all 12</button></div>
+    <div class="section-head"><div><h2>Your next learning tracks</h2><p>Only the most relevant tracks are shown here.</p></div><button class="ghost" data-mm-onclick="switchView('path')">Show all 12</button></div>
     <div class="grid">${recommendedCourses().map(courseCard).join("")}</div>
 
     <div class="section-head"><div><h2>How MouldMaster works</h2></div></div>
@@ -480,7 +480,7 @@ function renderPath(){
             <span class="pill">${esc(c.level)}</span>
           </div>
           <div><p class="muted">${esc(c.description)}</p><div class="mini-bar"><span style="width:${p.pct}%"></span></div></div>
-          <div><b>${p.done}/${p.total}</b><div class="tiny muted" style="margin:3px 0 9px">lessons complete</div><button class="${active?"primary":"secondary"}" onclick="openCourse(${c.id})">${done?"Review":active?"Continue":"Open track"}</button></div>
+          <div><b>${p.done}/${p.total}</b><div class="tiny muted" style="margin:3px 0 9px">lessons complete</div><button class="${active?"primary":"secondary"}" data-mm-onclick="openCourse(${c.id})">${done?"Review":active?"Continue":"Open track"}</button></div>
         </div>`;
       }).join("")}
     </div>`;
@@ -490,7 +490,7 @@ function renderLesson(){
   const bookmarked=user.bookmarks?.includes(l.id);
   const previous=l.id>1?l.id-1:null, next=l.id<D.lessons.length?l.id+1:null;
   $("#lesson").innerHTML=`
-    <div class="lesson-breadcrumb"><button onclick="switchView('path')">My learning path</button><span>›</span><span>${esc(c.name)}</span><span>›</span><b>${esc(l.title)}</b></div>
+    <div class="lesson-breadcrumb"><button data-mm-onclick="switchView('path')">My learning path</button><span>›</span><span>${esc(c.name)}</span><span>›</span><b>${esc(l.title)}</b></div>
     <div class="card lesson-header-card">
       <span class="eyebrow">${esc(l.level)}</span>
       <h2>${esc(l.title)}</h2>
@@ -522,13 +522,13 @@ function renderLesson(){
           <h3>Your notes</h3>
           <p class="muted tiny">Save examples from your own machines, moulds or materials here.</p>
           <textarea class="note-area" id="lessonNotes" placeholder="Type notes here...">${esc(user.notes?.[l.id]||"")}</textarea>
-          <button class="secondary" style="margin-top:8px" onclick="saveLessonNote(${l.id})">Save notes</button>
+          <button class="secondary" style="margin-top:8px" data-mm-onclick="saveLessonNote(${l.id})">Save notes</button>
         </div>
 
         <div class="lesson-actions-sticky">
-          ${previous?`<button class="ghost" onclick="goLesson(${previous})">← Previous</button>`:""}
-          <button class="ghost" onclick="toggleBookmark(${l.id})">${bookmarked?"★ Saved":"☆ Save lesson"}</button>
-          <button class="primary" onclick="completeAndNext(${l.id})">${user.completed.includes(l.id)?"Next lesson →":"Complete & continue →"}</button>
+          ${previous?`<button class="ghost" data-mm-onclick="goLesson(${previous})">← Previous</button>`:""}
+          <button class="ghost" data-mm-onclick="toggleBookmark(${l.id})">${bookmarked?"★ Saved":"☆ Save lesson"}</button>
+          <button class="primary" data-mm-onclick="completeAndNext(${l.id})">${user.completed.includes(l.id)?"Next lesson →":"Complete & continue →"}</button>
         </div>
       </article>
 
@@ -538,7 +538,7 @@ function renderLesson(){
         <p class="tiny muted">Choose another lesson whenever you need it.</p>
         <div class="lesson-list">${c.lessonIds.map(id=>{
           const x=D.lessons.find(q=>q.id===id);
-          return `<button class="${id===l.id?"active":""}" onclick="goLesson(${id})">${user.completed.includes(id)?"✓ ":""}${esc(x.title)}</button>`;
+          return `<button class="${id===l.id?"active":""}" data-mm-onclick="goLesson(${id})">${user.completed.includes(id)?"✓ ":""}${esc(x.title)}</button>`;
         }).join("")}</div>
       </aside>
     </div>`;
@@ -582,8 +582,8 @@ function showOnboarding(){
     </div>
 
     <div class="hero-buttons" style="margin-top:18px">
-      <button class="primary" onclick="finishOnboarding()">Build my path →</button>
-      <button class="ghost" onclick="skipOnboarding()">Use defaults</button>
+      <button class="primary" data-mm-onclick="finishOnboarding()">Build my path →</button>
+      <button class="ghost" data-mm-onclick="skipOnboarding()">Use defaults</button>
     </div>
   </div>`);
 }
@@ -620,18 +620,18 @@ function renderProfile(){
           ${[10,15,30].map(x=>`<option value="${x}" ${user.dailyMinutes==x?"selected":""}>${x} minutes</option>`).join("")}
         </select></label>
         <label style="display:block;margin-top:10px">Role<select id="profileRole"><option ${user.role==="learner"?"selected":""}>learner</option><option ${user.role==="instructor"?"selected":""}>instructor</option></select></label>
-        <button class="primary" style="margin-top:12px" onclick="saveFriendlyProfile()">Save preferences</button>
+        <button class="primary" style="margin-top:12px" data-mm-onclick="saveFriendlyProfile()">Save preferences</button>
       </div>
       <div class="card form-card">
         <span class="eyebrow">Your progress</span><h2>${completedPct()}% complete</h2>
         <p class="muted">${user.completed.length} lessons completed · ${user.certificates.length} certificates earned</p>
         <div class="mini-bar"><span style="width:${completedPct()}%"></span></div>
-        <div class="hero-buttons"><button class="secondary" onclick="exportData()">Export backup</button><label class="ghost" style="display:inline-block">Import backup<input type="file" accept=".json" onchange="importData(this.files[0])" style="display:none"></label></div>
-        <details style="margin-top:18px"><summary class="muted tiny" style="cursor:pointer">Advanced data options</summary><button class="danger" style="margin-top:10px" onclick="resetData()">Reset all local data</button></details>
+        <div class="hero-buttons"><button class="secondary" data-mm-onclick="exportData()">Export backup</button><label class="ghost" style="display:inline-block">Import backup<input type="file" accept=".json" data-mm-onchange="importData(this.files[0])" style="display:none"></label></div>
+        <details style="margin-top:18px"><summary class="muted tiny" style="cursor:pointer">Advanced data options</summary><button class="danger" style="margin-top:10px" data-mm-onclick="resetData()">Reset all local data</button></details>
       </div>
     </div>
     <div class="section-head"><div><h2>Saved lessons</h2><p>Lessons you bookmarked for quick review.</p></div></div>
-    <div class="grid">${(user.bookmarks||[]).map(id=>{const l=D.lessons.find(x=>x.id===id);return l?`<div class="card course-card"><span class="eyebrow">${esc(l.level)}</span><h3>${esc(l.title)}</h3><p>${esc(l.summary)}</p><button class="secondary" onclick="goLesson(${id});switchView('lesson')">Open lesson</button></div>`:""}).join("")||`<div class="card empty-friendly"><div class="big-icon">☆</div><b>No saved lessons yet</b><p class="muted">Use “Save lesson” while studying and it will appear here.</p></div>`}
+    <div class="grid">${(user.bookmarks||[]).map(id=>{const l=D.lessons.find(x=>x.id===id);return l?`<div class="card course-card"><span class="eyebrow">${esc(l.level)}</span><h3>${esc(l.title)}</h3><p>${esc(l.summary)}</p><button class="secondary" data-mm-onclick="goLesson(${id});switchView('lesson')">Open lesson</button></div>`:""}).join("")||`<div class="card empty-friendly"><div class="big-icon">☆</div><b>No saved lessons yet</b><p class="muted">Use “Save lesson” while studying and it will appear here.</p></div>`}
     </div>`;
 }
 function saveFriendlyProfile(){
@@ -665,7 +665,7 @@ function regionSpelling(){
 function standardsBanner(){
   return `<div class="region-banner">
     <div><b>Standards mode: ${esc(regionName(user.region||"ALL"))}</b><div class="tiny muted">References reviewed ${esc(D.standards.verified)}. Technical process questions are universal; legal/safety questions are jurisdiction-specific.</div></div>
-    <button class="ghost" onclick="switchView('standards')">View references</button>
+    <button class="ghost" data-mm-onclick="switchView('standards')">View references</button>
   </div>`;
 }
 function setRegion(code){
@@ -676,7 +676,7 @@ function setRegion(code){
 }
 function regionButtons(){
   return `<div class="region-switch">
-    ${["ALL","UK","US","NZ"].map(r=>`<button class="${user.region===r?"active":""}" onclick="setRegion('${r}')">${r==="ALL"?"Compare all":r}</button>`).join("")}
+    ${["ALL","UK","US","NZ"].map(r=>`<button class="${user.region===r?"active":""}" data-mm-onclick="setRegion('${r}')">${r==="ALL"?"Compare all":r}</button>`).join("")}
   </div>`;
 }
 function renderStandards(){
@@ -729,7 +729,7 @@ function renderExams(){
     <div class="grid">${Object.keys(D.exams).map(level=>{
       const key=level+"-"+region;
       const score=user.examScores?.[key] ?? user.examScores?.[level];
-      return `<div class="card exam-card"><span class="eyebrow">${level}</span><h3>${level} ${region==="US"?"Injection Molding":"Injection Moulding"} Knowledge Check</h3><p class="muted">10 questions · 80% pass mark · ${esc(regionName(region))}</p><div class="course-bottom"><span class="pill">${score==null?"Not attempted":"Best: "+score+"%"}</span><button class="secondary" onclick="startExam('${level}')">Start</button></div></div>`;
+      return `<div class="card exam-card"><span class="eyebrow">${level}</span><h3>${level} ${region==="US"?"Injection Molding":"Injection Moulding"} Knowledge Check</h3><p class="muted">10 questions · 80% pass mark · ${esc(regionName(region))}</p><div class="course-bottom"><span class="pill">${score==null?"Not attempted":"Best: "+score+"%"}</span><button class="secondary" data-mm-onclick="startExam('${level}')">Start</button></div></div>`;
     }).join("")}</div>`;
 }
 function startExam(level){
@@ -739,7 +739,7 @@ function startExam(level){
   openModal(`${standardsBanner()}<span class="eyebrow">${esc(level)} · ${esc(regionName(region))}</span><h2>${esc(level)} knowledge check</h2>
     <p class="muted">For compliance questions, answer according to the jurisdiction shown. “Compare all” includes one UK, one US and one NZ safety question.</p>
     <div id="examQuestions">${q.map((x,i)=>`<div class="question"><b>${i+1}. ${esc(x.q)}</b>${x.options.map((o,j)=>`<label class="option"><input type="radio" name="ex${i}" value="${j}"> ${esc(o)}</label>`).join("")}</div>`).join("")}</div>
-    <button class="primary" onclick="gradeExam('${level}')">Grade & review answers</button>
+    <button class="primary" data-mm-onclick="gradeExam('${level}')">Grade & review answers</button>
     <div id="examResult" class="callout hidden"></div>
     <div id="answerReview" class="answer-review"></div>`);
 }
@@ -772,11 +772,11 @@ function renderCertificates(){
   const levels=["Beginner","Intermediate","Advanced"], region=user.region||"ALL";
   $("#certificates").innerHTML=`${standardsBanner()}<div class="section-head"><div><h2>Your certificates</h2><p>Local learning records only — not accredited legal-compliance qualifications.</p></div></div><div class="grid">${levels.map(l=>{
     const key=l+"-"+region;
-    return user.certificates.includes(key)?certificateCard(l,region):`<div class="card cert"><div class="seal">MM</div><h2>${l}</h2><p class="muted">${esc(regionName(region))}<br>Not yet earned in this standards mode</p><button class="secondary no-print" onclick="switchView('exams')">Take knowledge check</button></div>`;
+    return user.certificates.includes(key)?certificateCard(l,region):`<div class="card cert"><div class="seal">MM</div><h2>${l}</h2><p class="muted">${esc(regionName(region))}<br>Not yet earned in this standards mode</p><button class="secondary no-print" data-mm-onclick="switchView('exams')">Take knowledge check</button></div>`;
   }).join("")}</div>`;
 }
 function certificateCard(level,region){
-  return `<div class="card cert"><div class="seal">MM</div><span class="eyebrow">Local learning certificate</span><h2>${esc(level)} ${region==="US"?"Injection Molding":"Injection Moulding"}</h2><p>This records that <b>${esc(user.name)}</b> passed the MouldMaster Academy ${esc(level)} assessment in <b>${esc(regionName(region))}</b> standards mode.</p><p class="muted">Not an accredited compliance qualification · ${new Date().toLocaleDateString()}</p><button class="secondary no-print" onclick="window.print()">Print / Save as PDF</button></div>`;
+  return `<div class="card cert"><div class="seal">MM</div><span class="eyebrow">Local learning certificate</span><h2>${esc(level)} ${region==="US"?"Injection Molding":"Injection Moulding"}</h2><p>This records that <b>${esc(user.name)}</b> passed the MouldMaster Academy ${esc(level)} assessment in <b>${esc(regionName(region))}</b> standards mode.</p><p class="muted">Not an accredited compliance qualification · ${new Date().toLocaleDateString()}</p><button class="secondary no-print" data-mm-onclick="window.print()">Print / Save as PDF</button></div>`;
 }
 
 /* Regionalise coach answers for safety/compliance topics. */
@@ -919,7 +919,7 @@ startExam=function(level){
     <p class="muted">Questions and answer order are randomised. Regional safety questions are labelled in Compare All mode and include an official source in the answer review.</p>
     <div class="legal-note"><b>Assessment quality review:</b> ${esc(D.assessmentQA.reviewed)}. One best answer is intended for every item. If site instructions or a current official source conflict with this training, stop and use the current authorised requirement.</div>
     <div id="examQuestions">${q.map((x,i)=>`<div class="question"><b>${i+1}. ${x.region?`[${x.region}] `:""}${esc(x.q)}</b>${x.options.map((o,j)=>`<label class="option"><input type="radio" name="ex${i}" value="${j}"> ${esc(o)}</label>`).join("")}</div>`).join("")}</div>
-    <button class="primary" onclick="gradeExam('${level}')">Grade & review answers</button>
+    <button class="primary" data-mm-onclick="gradeExam('${level}')">Grade & review answers</button>
     <div id="examResult" class="callout hidden"></div><div id="answerReview" class="answer-review"></div>`);
 };
 gradeExam=function(level){
@@ -978,7 +978,7 @@ startExam=function(level){
     <div class="legal-note"><b>Safety-first assessment:</b> Wrong options are testing distractors, not recommended procedures. To pass, you need at least 80% overall <b>and every regional safety/compliance question correct</b>.</div>
     <p class="muted">Question and answer order are randomised. After grading, every incorrect selection is debriefed and regional items link to an official source.</p>
     <div id="examQuestions">${q.map((x,i)=>`<div class="question"><b>${i+1}. ${x.region?`[${x.region}] `:""}${esc(x.q)}</b>${x.options.map((o,j)=>`<label class="option"><input type="radio" name="ex${i}" value="${j}"> ${esc(o)}</label>`).join("")}</div>`).join("")}</div>
-    <button class="primary" onclick="gradeExam('${level}')">Grade & review every answer</button><div id="examResult" class="callout hidden"></div><div id="answerReview" class="answer-review"></div>`);
+    <button class="primary" data-mm-onclick="gradeExam('${level}')">Grade & review every answer</button><div id="examResult" class="callout hidden"></div><div id="answerReview" class="answer-review"></div>`);
 };
 gradeExam=function(level){
   if(!activeExam||activeExam.level!==level)return;
@@ -1171,7 +1171,7 @@ function openDailyChallenge(){
   openModal(`<span class="eyebrow">Daily 5-minute challenge</span><h2>${esc(s.title)}</h2>
     <p class="muted">${esc(s.situation)}</p>
     <div class="exam-integrity">The scenario and recommended reasoning come from the audited training content. XP is only an engagement reward; it does not affect certificates.</div>
-    ${s.choices.map((c,ci)=>`<button class="choice" onclick="answerDailyChallenge(${i},${ci},this)">${esc(c)}</button>`).join("")}
+    ${s.choices.map((c,ci)=>`<button class="choice" data-mm-onclick="answerDailyChallenge(${i},${ci},this)">${esc(c)}</button>`).join("")}
     <div id="dailyFeedback" class="feedback hidden"></div>`);
 }
 function answerDailyChallenge(i,ci,el){
@@ -1190,8 +1190,8 @@ function funDashboardPanel(){
       <h2>${dailyDone()?"Daily challenge complete ✓":"Solve one real moulding decision"}</h2>
       <p>${dailyDone()?"Nice work. Your next best move is to continue the learning path or try a boss round.":"A short scenario keeps troubleshooting judgement sharp without changing any of the audited assessment rules."}</p>
       <div class="hero-buttons">
-        <button class="primary" onclick="${dailyDone()?"switchView('lesson')":"openDailyChallenge()"}">${dailyDone()?"Continue learning →":"Take daily challenge +40 XP"}</button>
-        <button class="ghost" onclick="switchView('scenarios')">Open Troubleshooting Arena</button>
+        <button class="primary" data-mm-onclick="${dailyDone()?"switchView('lesson')":"openDailyChallenge()"}">${dailyDone()?"Continue learning →":"Take daily challenge +40 XP"}</button>
+        <button class="ghost" data-mm-onclick="switchView('scenarios')">Open Troubleshooting Arena</button>
       </div>
     </div>
     <div class="card level-card">
@@ -1248,7 +1248,7 @@ renderScenarios=function(){
       <div class="scorebox"><strong>${f.bossWins}</strong><span>Boss wins</span></div>
       <div class="scorebox"><strong>${f.xp}</strong><span>Total XP</span></div>
     </div>
-    <button class="primary" onclick="startBossRound()">👑 Start 3-scenario boss round</button>
+    <button class="primary" data-mm-onclick="startBossRound()">👑 Start 3-scenario boss round</button>
   </div>`;
   if(banner)banner.insertAdjacentHTML("afterend",html);else s.insertAdjacentHTML("afterbegin",html);
 };
@@ -1275,7 +1275,7 @@ function drawBossRound(){
   openModal(`<span class="eyebrow">Boss round · ${bossState.pos+1}/3</span><h2>${esc(s.title)}</h2>
     <div class="boss-progress">${[0,1,2].map(x=>`<span class="${x<bossState.pos?"done":""}"></span>`).join("")}</div>
     <p class="muted">${esc(s.situation)}</p>
-    ${s.choices.map((c,ci)=>`<button class="choice" onclick="answerBoss(${ci},this)">${esc(c)}</button>`).join("")}
+    ${s.choices.map((c,ci)=>`<button class="choice" data-mm-onclick="answerBoss(${ci},this)">${esc(c)}</button>`).join("")}
     <div id="bossFeedback" class="feedback hidden"></div>`);
 }
 function answerBoss(ci,el){
@@ -1285,7 +1285,7 @@ function answerBoss(ci,el){
   if(ok)bossState.score++;
   f.classList.remove("hidden");
   const detail=s.feedback?.[ci]||s.why;
-  f.innerHTML=`<b>${ok?"Strong call ✓":"Evidence check"}</b><br>${esc(detail)}${ok?"":`<br><br><b>Recommended reasoning:</b> ${esc(s.why)}`}<br><br><button class="secondary" onclick="nextBoss()">${bossState.pos===2?"See result":"Next scenario →"}</button>`;
+  f.innerHTML=`<b>${ok?"Strong call ✓":"Evidence check"}</b><br>${esc(detail)}${ok?"":`<br><br><b>Recommended reasoning:</b> ${esc(s.why)}`}<br><br><button class="secondary" data-mm-onclick="nextBoss()">${bossState.pos===2?"See result":"Next scenario →"}</button>`;
   [...el.parentNode.querySelectorAll(".choice")].forEach((b,j)=>b.style.borderColor=j===s.correct?"#55d6be":"");
 }
 function nextBoss(){
@@ -1297,7 +1297,7 @@ function nextBoss(){
   }else if(score===2)awardXP(45,"boss-practice-"+Date.now(),"Boss practice");
   openModal(`<span class="eyebrow">Boss round complete</span><h2>${score===3?"Perfect process judgement 👑":score===2?"Strong run":"Good practice round"}</h2>
     <p class="muted">You solved <b>${score}/3</b>. ${score===3?"All three decisions matched the audited evidence-based reasoning.":"Review any missed reasoning and try another random set when ready."}</p>
-    <div class="hero-buttons"><button class="primary" onclick="closeModal();startBossRound()">Play another round</button><button class="ghost" onclick="closeModal()">Back to scenarios</button></div>`);
+    <div class="hero-buttons"><button class="primary" data-mm-onclick="closeModal();startBossRound()">Play another round</button><button class="ghost" data-mm-onclick="closeModal()">Back to scenarios</button></div>`);
 }
 
 /* Simulator rescue mini-game: engagement only, explicitly simulation-based. */
@@ -1309,8 +1309,8 @@ renderSimulator=function(){
   if(left)left.insertAdjacentHTML("afterbegin",`<div class="sim-challenge">
     <span class="eyebrow">Process Rescue</span><h3>Can you stabilise the simulated process?</h3>
     <p>Start from a deliberately poor simulated condition. Bring every displayed relative defect-risk score below 45. This is a game using the educational model — not a production recipe.</p>
-    <button class="secondary" onclick="startRescueChallenge()">Start rescue</button>
-    <button class="ghost" onclick="checkRescueChallenge()">Check my process</button>
+    <button class="secondary" data-mm-onclick="startRescueChallenge()">Start rescue</button>
+    <button class="ghost" data-mm-onclick="checkRescueChallenge()">Check my process</button>
   </div>`);
 };
 function startRescueChallenge(){
@@ -1366,8 +1366,8 @@ renderProfile=function(){
     const f=funEnsure();
     card.insertAdjacentHTML("beforeend",`<div class="fun-settings">
       <h3 style="margin-bottom:0">Experience settings</h3>
-      <div class="toggle-row"><div><b>Celebrations</b><div class="tiny muted">Confetti for milestones and challenges.</div></div><input type="checkbox" ${f.celebrations?"checked":""} onchange="toggleFunSetting('celebrations',this.checked)"></div>
-      <div class="toggle-row"><div><b>Optional sound</b><div class="tiny muted">Short success tones only.</div></div><input type="checkbox" ${f.sound?"checked":""} onchange="toggleFunSetting('sound',this.checked)"></div>
+      <div class="toggle-row"><div><b>Celebrations</b><div class="tiny muted">Confetti for milestones and challenges.</div></div><input type="checkbox" ${f.celebrations?"checked":""} data-mm-onchange="toggleFunSetting('celebrations',this.checked)"></div>
+      <div class="toggle-row"><div><b>Optional sound</b><div class="tiny muted">Short success tones only.</div></div><input type="checkbox" ${f.sound?"checked":""} data-mm-onchange="toggleFunSetting('sound',this.checked)"></div>
     </div>`);
   }
   $("#profile").insertAdjacentHTML("beforeend",`<div class="section-head"><div><h2>Achievements</h2><p>Designed to reward learning behaviour, not replace assessment.</p></div></div>${achievementsHTML()}`);
@@ -1476,7 +1476,7 @@ renderExams=function(){
     <div class="grid">${Object.keys(D.exams).map(level=>{
       const key=level+"-"+region,score=user.examScores?.[key],passed=!!user.examPassStatus[key]||user.certificates.includes(key);
       const status=score==null?"Not attempted":passed?`Passed · best ${score}%`:`Not passed · best ${score}%`;
-      return `<div class="card exam-card"><span class="eyebrow">${level}</span><h3>${level} ${region==="US"?"Injection Molding":"Injection Moulding"} Knowledge Check</h3><p class="muted">${qCount} questions · ${rCount} safety-critical · ${esc(regionName(region))}</p><div class="course-bottom"><span class="pill">${status}</span><button class="secondary" onclick="startExam('${level}')">Start</button></div></div>`;
+      return `<div class="card exam-card"><span class="eyebrow">${level}</span><h3>${level} ${region==="US"?"Injection Molding":"Injection Moulding"} Knowledge Check</h3><p class="muted">${qCount} questions · ${rCount} safety-critical · ${esc(regionName(region))}</p><div class="course-bottom"><span class="pill">${status}</span><button class="secondary" data-mm-onclick="startExam('${level}')">Start</button></div></div>`;
     }).join("")}</div>`;
 };
 
@@ -1500,7 +1500,7 @@ function certificateDateText(key){
 }
 certificateCard=function(level,region){
   const key=level+"-"+region;
-  return `<div class="card cert"><div class="seal">MM</div><span class="eyebrow">Local learning certificate</span><h2>${esc(level)} ${region==="US"?"Injection Molding":"Injection Moulding"}</h2><p>This records that <b>${esc(user.name)}</b> passed the MouldMaster Academy ${esc(level)} assessment in <b>${esc(regionName(region))}</b> standards mode.</p><p class="muted">Not an accredited compliance qualification · ${esc(certificateDateText(key))}</p><button class="secondary no-print" onclick="printCertificate('${level}','${region}')">Print this certificate</button></div>`;
+  return `<div class="card cert"><div class="seal">MM</div><span class="eyebrow">Local learning certificate</span><h2>${esc(level)} ${region==="US"?"Injection Molding":"Injection Moulding"}</h2><p>This records that <b>${esc(user.name)}</b> passed the MouldMaster Academy ${esc(level)} assessment in <b>${esc(regionName(region))}</b> standards mode.</p><p class="muted">Not an accredited compliance qualification · ${esc(certificateDateText(key))}</p><button class="secondary no-print" data-mm-onclick="printCertificate('${level}','${region}')">Print this certificate</button></div>`;
 };
 function printCertificate(level,region){
   const key=level+"-"+region,date=certificateDateText(key);
@@ -1524,8 +1524,8 @@ renderInstructor=function(){
   if(user.role!=="instructor"){$("#instructor").innerHTML=`<div class="card empty-friendly"><div class="big-icon">🔒</div><b>Instructor view is hidden for learner profiles</b><p class="muted">Change the local profile role only if this device is being used for instructor administration.</p></div>`;return}
   const users=Object.values(db.users);
   $("#instructor").innerHTML=`<div class="kpis"><div class="card kpi"><span>Local learners</span><b>${users.length}</b></div><div class="card kpi"><span>Total lesson completions</span><b>${users.reduce((n,u)=>n+(u.completed?.length||0),0)}</b></div><div class="card kpi"><span>Certificates</span><b>${users.reduce((n,u)=>n+(u.certificates?.length||0),0)}</b></div><div class="card kpi"><span>Course size</span><b>${D.lessons.length}</b></div></div>
-  <div class="section-head"><div><h2>Learner overview</h2><p>Local device profiles only; this is not a secure LMS identity system.</p></div><button class="primary" onclick="newLearner()">Add learner</button></div>
-  <div class="card table-wrap"><table class="table"><thead><tr><th>Learner</th><th>Progress</th><th>Beginner best</th><th>Intermediate best</th><th>Advanced best</th><th>Certificates</th><th>Last activity</th><th></th></tr></thead><tbody>${users.map(u=>`<tr><td><b>${esc(u.name)}</b></td><td>${Math.round((u.completed?.length||0)/D.lessons.length*100)}%</td><td>${bestRegionalScore(u,"Beginner")??"—"}</td><td>${bestRegionalScore(u,"Intermediate")??"—"}</td><td>${bestRegionalScore(u,"Advanced")??"—"}</td><td>${u.certificates?.length||0}</td><td>${new Date(u.lastSeen||Date.now()).toLocaleDateString()}</td><td><button class="ghost" onclick="switchUser('${u.id}')">${u.id===db.activeUser?"Active":"Open"}</button></td></tr>`).join("")}</tbody></table></div>`;
+  <div class="section-head"><div><h2>Learner overview</h2><p>Local device profiles only; this is not a secure LMS identity system.</p></div><button class="primary" data-mm-onclick="newLearner()">Add learner</button></div>
+  <div class="card table-wrap"><table class="table"><thead><tr><th>Learner</th><th>Progress</th><th>Beginner best</th><th>Intermediate best</th><th>Advanced best</th><th>Certificates</th><th>Last activity</th><th></th></tr></thead><tbody>${users.map(u=>`<tr><td><b>${esc(u.name)}</b></td><td>${Math.round((u.completed?.length||0)/D.lessons.length*100)}%</td><td>${bestRegionalScore(u,"Beginner")??"—"}</td><td>${bestRegionalScore(u,"Intermediate")??"—"}</td><td>${bestRegionalScore(u,"Advanced")??"—"}</td><td>${u.certificates?.length||0}</td><td>${new Date(u.lastSeen||Date.now()).toLocaleDateString()}</td><td><button class="ghost" data-mm-onclick="switchUser('${u.id}')">${u.id===db.activeUser?"Active":"Open"}</button></td></tr>`).join("")}</tbody></table></div>`;
 };
 
 /* Simulator: relative-to-validated-baseline model. No universal resin temperature recipe. */
@@ -1538,7 +1538,7 @@ function safeSimLabel(k,v){
   if(k==="clampMargin")return `${v}% modelled margin`;
   return `${v}/100`;
 }
-function safeSlider(label,key,min,max,val,help){return `<label>${label}<div class="range-row"><input type="range" min="${min}" max="${max}" value="${val}" oninput="simChange('${key}',this.value)"><input id="sim_${key}" value="${esc(safeSimLabel(key,val))}" readonly></div><span class="tiny muted">${help}</span></label>`}
+function safeSlider(label,key,min,max,val,help){return `<label>${label}<div class="range-row"><input type="range" min="${min}" max="${max}" value="${val}" data-mm-oninput="simChange('${key}',this.value)"><input id="sim_${key}" value="${esc(safeSimLabel(key,val))}" readonly></div><span class="tiny muted">${help}</span></label>`}
 simRisks=function(){
   const s=simulatorState;
   const short=clamp01(8+(45-s.fillAgg)*.7+(47-s.transfer)*1.7+Math.max(0,-s.meltOffset)*1.5+(45-s.pack)*.35);
@@ -1558,7 +1558,7 @@ resetSimulator=function(){simulatorState={fillAgg:50,transfer:50,pack:50,hold:50
 renderSimulator=function(){
   $("#simulator").innerHTML=`<div class="legal-note"><b>Training model — not a processing recipe:</b> every setting below is relative to a material-, mould- and machine-specific validated/known-good baseline. This simulator intentionally does not provide universal melt, mould, transfer, packing or cooling targets.</div>
   <div class="grid2" style="margin-top:14px"><div class="card form-card">
-  <div class="sim-challenge"><span class="eyebrow">Process Rescue</span><h3>Can you stabilise the simulated process?</h3><p>Start from a deliberately poor relative condition. Bring every displayed training-risk indicator below 45. The indicators are educational scores, not probabilities, specifications or safe production limits.</p><button class="secondary" onclick="startRescueChallenge()">Start rescue</button> <button class="ghost" onclick="checkRescueChallenge()">Check my process</button></div>
+  <div class="sim-challenge"><span class="eyebrow">Process Rescue</span><h3>Can you stabilise the simulated process?</h3><p>Start from a deliberately poor relative condition. Bring every displayed training-risk indicator below 45. The indicators are educational scores, not probabilities, specifications or safe production limits.</p><button class="secondary" data-mm-onclick="startRescueChallenge()">Start rescue</button> <button class="ghost" data-mm-onclick="checkRescueChallenge()">Check my process</button></div>
   <span class="eyebrow">Relative process model</span><h2>Move away from or back toward a known-good baseline</h2><div class="form-grid">
   ${safeSlider("Fill aggressiveness","fillAgg",0,100,simulatorState.fillAgg,"Relative training index; not a machine speed setting.")}
   ${safeSlider("V/P transfer timing","transfer",0,100,simulatorState.transfer,"50 = known-good baseline; left earlier, right later.")}
@@ -1570,7 +1570,7 @@ renderSimulator=function(){
   ${safeSlider("Clamp margin","clampMargin",0,50,simulatorState.clampMargin,"Conceptual margin above the modelled opening-force requirement; verify real calculations separately.")}
   ${safeSlider("Venting condition","vent",0,100,simulatorState.vent,"Qualitative condition indicator, not a vent dimension.")}
   ${safeSlider("Moisture-control confidence","moistureConfidence",0,100,simulatorState.moistureConfidence,"Confidence in material-specific drying/handling control where applicable.")}
-  </div><div class="hero-buttons"><button class="secondary" onclick="resetSimulator()">Reset to baseline</button><button class="ghost" onclick="simPreset('robust')">Balanced example</button><button class="ghost" onclick="simPreset('trouble')">Unstable example</button></div></div>
+  </div><div class="hero-buttons"><button class="secondary" data-mm-onclick="resetSimulator()">Reset to baseline</button><button class="ghost" data-mm-onclick="simPreset('robust')">Balanced example</button><button class="ghost" data-mm-onclick="simPreset('trouble')">Unstable example</button></div></div>
   <div class="card output-panel"><span class="eyebrow">Educational response</span><h2>Relative defect-risk indicators</h2><div class="part-visual"><div class="part-shape"></div><div id="simOverlay" class="defect-overlay"></div></div><div id="riskList"></div><div class="callout" id="simAdvice"></div><p class="tiny muted">These scores show direction-of-effect in a simplified training model. They are not defect probabilities and must not be used to set a production process.</p></div></div>`;
   updateSimulator();
 };
@@ -1596,10 +1596,10 @@ doSearch=function(){
   const ds=D.defects.filter(d=>(d.name+" "+d.symptom+" "+d.mechanisms.join(" ")).toLowerCase().includes(q)).slice(0,3);
   const gs=Object.entries(D.glossary).filter(([k,v])=>(k+" "+v).toLowerCase().includes(q)).slice(0,4);
   const ss=[...D.standards.common,...D.standards.UK,...D.standards.US,...D.standards.NZ].filter(x=>(x.name+" "+x.scope).toLowerCase().includes(q)).slice(0,3);
-  const html=ls.map(l=>`<button class="search-item" onclick="closeModal();goLesson(${l.id});switchView('lesson')"><b>Lesson:</b> ${esc(l.title)}<br><span class="muted tiny">${esc(l.courseName)}</span></button>`).join("")+
-  ds.map(d=>`<button class="search-item" onclick="closeModal();switchView('defects')"><b>Defect:</b> ${esc(d.name)}<br><span class="muted tiny">${esc(d.symptom)}</span></button>`).join("")+
-  gs.map(([k,v])=>`<button class="search-item" onclick="closeModal();switchView('glossary')"><b>Glossary:</b> ${esc(k)}<br><span class="muted tiny">${esc(v)}</span></button>`).join("")+
-  ss.map(x=>`<button class="search-item" onclick="closeModal();switchView('standards')"><b>Standard:</b> ${esc(x.name)}<br><span class="muted tiny">${esc(x.scope)}</span></button>`).join("");
+  const html=ls.map(l=>`<button class="search-item" data-mm-onclick="closeModal();goLesson(${l.id});switchView('lesson')"><b>Lesson:</b> ${esc(l.title)}<br><span class="muted tiny">${esc(l.courseName)}</span></button>`).join("")+
+  ds.map(d=>`<button class="search-item" data-mm-onclick="closeModal();switchView('defects')"><b>Defect:</b> ${esc(d.name)}<br><span class="muted tiny">${esc(d.symptom)}</span></button>`).join("")+
+  gs.map(([k,v])=>`<button class="search-item" data-mm-onclick="closeModal();switchView('glossary')"><b>Glossary:</b> ${esc(k)}<br><span class="muted tiny">${esc(v)}</span></button>`).join("")+
+  ss.map(x=>`<button class="search-item" data-mm-onclick="closeModal();switchView('standards')"><b>Standard:</b> ${esc(x.name)}<br><span class="muted tiny">${esc(x.scope)}</span></button>`).join("");
   $("#searchResults").innerHTML=html||`<div class="muted">No matches.</div>`;
 };
 
@@ -1611,12 +1611,12 @@ document.addEventListener("keydown",e=>{if(e.key==="Escape"&&!$("#modal").classL
 
 /* Mobile More menu gives access to all major tools. */
 function openMobileMenu(){openModal(`<span class="eyebrow">More</span><h2>Tools & progress</h2><div class="grid2">
-  <button class="quick-action" onclick="closeModal();switchView('simulator')"><span class="icon">⚙</span><b>Process simulator</b><small>Relative training model.</small></button>
-  <button class="quick-action" onclick="closeModal();switchView('defects')"><span class="icon">◇</span><b>Defect finder</b><small>Mechanisms and evidence checks.</small></button>
-  <button class="quick-action" onclick="closeModal();switchView('coach')"><span class="icon">✦</span><b>Troubleshooting coach</b><small>Structured offline guidance.</small></button>
-  <button class="quick-action" onclick="closeModal();switchView('exams')"><span class="icon">✓</span><b>Knowledge checks</b><small>Safety-gated assessments.</small></button>
-  <button class="quick-action" onclick="closeModal();switchView('standards')"><span class="icon">§</span><b>Standards & safety</b><small>UK, US and NZ references.</small></button>
-  <button class="quick-action" onclick="closeModal();switchView('profile')"><span class="icon">⚙</span><b>Profile & data</b><small>Preferences and backup.</small></button>
+  <button class="quick-action" data-mm-onclick="closeModal();switchView('simulator')"><span class="icon">⚙</span><b>Process simulator</b><small>Relative training model.</small></button>
+  <button class="quick-action" data-mm-onclick="closeModal();switchView('defects')"><span class="icon">◇</span><b>Defect finder</b><small>Mechanisms and evidence checks.</small></button>
+  <button class="quick-action" data-mm-onclick="closeModal();switchView('coach')"><span class="icon">✦</span><b>Troubleshooting coach</b><small>Structured offline guidance.</small></button>
+  <button class="quick-action" data-mm-onclick="closeModal();switchView('exams')"><span class="icon">✓</span><b>Knowledge checks</b><small>Safety-gated assessments.</small></button>
+  <button class="quick-action" data-mm-onclick="closeModal();switchView('standards')"><span class="icon">§</span><b>Standards & safety</b><small>UK, US and NZ references.</small></button>
+  <button class="quick-action" data-mm-onclick="closeModal();switchView('profile')"><span class="icon">⚙</span><b>Profile & data</b><small>Preferences and backup.</small></button>
 </div>`)}
 
 /* Ensure new learner objects receive current schema defaults. */

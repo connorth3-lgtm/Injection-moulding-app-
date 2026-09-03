@@ -15,6 +15,8 @@ on:
       - 'tools/generate_runtime_manifest.py'
       - 'tools/build_runtime_packs.py'
       - 'tools/externalize_core_scripts.py'
+      - 'tools/retire_inline_handler_attrs.py'
+      - 'tools/audit_inline_handlers.py'
       - 'tools/verify_production_source.py'
       - 'qa_material_catalog.py'
       - 'qa_material_identity.py'
@@ -45,6 +47,8 @@ on:
       - 'tools/generate_runtime_manifest.py'
       - 'tools/build_runtime_packs.py'
       - 'tools/externalize_core_scripts.py'
+      - 'tools/retire_inline_handler_attrs.py'
+      - 'tools/audit_inline_handlers.py'
       - 'tools/verify_production_source.py'
       - 'qa_material_catalog.py'
       - 'qa_material_identity.py'
@@ -87,6 +91,10 @@ jobs:
         run: python tools/build_runtime_packs.py --check
       - name: Core script CSP migration
         run: python tools/externalize_core_scripts.py --check
+      - name: Inline handler CSP retirement
+        run: |
+          python tools/retire_inline_handler_attrs.py --check
+          python tools/audit_inline_handlers.py --check
       - name: Architecture debt ceiling
         run: python qa_architecture_debt.py
       - name: Material staging semantics
