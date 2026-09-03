@@ -1,6 +1,7 @@
 'use strict';
 const fs=require('fs');
 const path=require('path');
+const {spawnSync}=require('child_process');
 const ROOT=path.resolve(__dirname,'..','..','..');
 const DESKTOP=path.resolve(__dirname,'..');
 const MAIN=fs.readFileSync(path.join(DESKTOP,'src','main.cjs'),'utf8');
@@ -20,7 +21,7 @@ const releaseParts=String(VERSION.desktop_release||'').split('.');
 need(releaseParts.length===4&&releaseParts.every(x=>/^\d+$/.test(x)),'desktop_release must be a four-part numeric version');
 const normalized=releaseParts.map(x=>String(Number(x)));
 need(PKG.version===normalized.slice(0,3).join('.'),'desktop package version does not match desktop_release');
-need(String(PKG.build?.buildNumber)===normalized[3],'desktop buildNumber does not match desktop_release');
+need(String(PKG.build?.buildNumber)===normalized[3],'desktop buildNumber does not match desktop_release fourth component');
 need(PKG.build?.buildVersion===normalized.join('.'),'desktop buildVersion does not match desktop_release');
 need(String(PKG.build?.win?.artifactName||'').includes('${buildVersion}'),'Windows artifact name must include buildVersion');
 const fuses=PKG.build?.electronFuses||{};
@@ -48,4 +49,8 @@ need(fs.existsSync(path.join(ROOT,'LICENSE')),'repository Apache-2.0 licence mis
 need(fs.existsSync(path.join(ROOT,'OPEN_SOURCE_AND_PATENT_POLICY.md')),'open-source/patent policy missing');
 need(fs.existsSync(path.join(ROOT,'THIRD_PARTY_NOTICES.md')),'third-party notices missing');
 need(fs.existsSync(path.join(ROOT,'.github','workflows','microsoft-store-msix.yml')),'Microsoft Store build workflow missing');
-console.log('MouldMaster open desktop QA passed (runtime manifest assets integrity-hashed and desktop-servable)');
+const legacyGuard=spawnSync(process.env.MM_PYTHON||'python',[path.join(ROOT,'qa_legacy_retirement_state.py')],{cwd:ROOT,encoding:'utf8'});
+if(legacyGuard.stdout)process.stdout.write(legacyGuard.stdout);
+if(legacyGuard.stderr)process.stderr.write(legacyGuard.stderr);
+need(legacyGuard.status===0,`legacy retirement state QA failed with exit ${legacyGuard.status}`);
+console.log('MouldMaster open desktop QA passed (runtime manifest assets integrity-hashed and desktop-servable; legacy recovery retirement remains fail-closed)');
