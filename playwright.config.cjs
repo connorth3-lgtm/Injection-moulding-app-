@@ -1,7 +1,7 @@
 const { defineConfig } = require('@playwright/test');
 module.exports=defineConfig({
   testDir:'./qa',
-  testMatch:[/mobile-viewport\.spec\.js/,/measured-evidence-decision\.spec\.js/,/read-aloud\.spec\.js/],
+  testMatch:[/mobile-viewport\.spec\.js/,/material-grade-detail\.spec\.js/,/measured-evidence-decision\.spec\.js/,/read-aloud\.spec\.js/],
   timeout:45000,
   expect:{timeout:10000},
   retries:1,
