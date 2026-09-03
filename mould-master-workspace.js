@@ -1,11 +1,12 @@
-/* MouldMaster evidence-led troubleshooting workspace — 2026.09.03.2 */
+/* MouldMaster evidence-led troubleshooting workspace — 2026.09.03.3 */
 (function(){
 'use strict';
-const VERSION='2026.09.03.2';
+const VERSION='2026.09.03.3';
 const MAX_CASES=80;
 let activeId='';
 let caseCache=[];
 let hydrationPromise=null;
+let hydratedLearnerToken='';
 let storageFailure='';
 
 function esc(v){return String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
@@ -21,23 +22,30 @@ function blank(){return{id:uid(),createdAt:now(),updatedAt:now(),title:'',defect
 function all(){return caseCache.slice().sort((a,b)=>String(b.updatedAt||'').localeCompare(String(a.updatedAt||'')))}
 function get(id){return all().find(x=>x.id===id)||null}
 function replaceCache(cases){caseCache=(Array.isArray(cases)?cases:[]).slice(0,MAX_CASES).map(x=>({...x}));return all()}
-async function hydrate(){
-  if(hydrationPromise)return hydrationPromise;
+async function hydrate({force=false}={}){
+  const store=await resolveStore();if(!store)throw new Error('Engineering case store unavailable');
+  const owner=store.learnerToken();
+  if(!force&&hydrationPromise&&hydratedLearnerToken===owner)return hydrationPromise;
+  if(hydratedLearnerToken!==owner){activeId='';caseCache=[]}
+  hydratedLearnerToken=owner;
   hydrationPromise=(async()=>{
-    const store=await resolveStore();if(!store)throw new Error('Engineering case store unavailable');
     await store.bootstrap?.();
-    const cases=await store.listCases();storageFailure='';return replaceCache(cases)
-  })().catch(err=>{storageFailure=String(err?.message||err);console.warn('[MouldMaster workspace] canonical case store unavailable',err);return all()});
+    const cases=await store.listCases(owner);
+    if(hydratedLearnerToken!==owner)return all();
+    storageFailure='';return replaceCache(cases)
+  })().catch(err=>{if(hydratedLearnerToken===owner){storageFailure=String(err?.message||err);console.warn('[MouldMaster workspace] canonical case store unavailable',err)}return all()});
   return hydrationPromise
 }
 async function saveCase(c){
   await hydrate();const store=await resolveStore();if(!store)throw new Error(storageFailure||'Engineering case store unavailable');
+  let owner=store.learnerToken();if(hydratedLearnerToken!==owner){await hydrate({force:true});owner=store.learnerToken()}
   c.status=status(c);c.updatedAt=now();
-  const saved=await store.saveCase(c),cases=all().filter(x=>x.id!==saved.id);caseCache=[{...saved},...cases].slice(0,MAX_CASES);return saved
+  const saved=await store.saveCase(c,{token:owner}),cases=all().filter(x=>x.id!==saved.id);caseCache=[{...saved},...cases].slice(0,MAX_CASES);return saved
 }
 async function deleteCase(id){
   await hydrate();const store=await resolveStore();if(!store)throw new Error(storageFailure||'Engineering case store unavailable');
-  const removed=await store.deleteCase(id);if(removed)caseCache=all().filter(x=>x.id!==id);if(activeId===id)activeId='';return removed
+  let owner=store.learnerToken();if(hydratedLearnerToken!==owner){await hydrate({force:true});owner=store.learnerToken()}
+  const removed=await store.deleteCase(id,owner);if(removed)caseCache=all().filter(x=>x.id!==id);if(activeId===id)activeId='';return removed
 }
 function persistenceError(err){storageFailure=String(err?.message||err);console.warn('[MouldMaster workspace] case persistence failed',err);window.toast?.('Case could not be saved locally')}
 
@@ -158,6 +166,6 @@ async function newCase(seed={}){await hydrate();const c=await saveCase({...blank
 
 style();section();
 window.mmOpenMouldMaster=()=>open();
-window.MM_MOULD_MASTER_WORKSPACE={version:VERSION,canonicalStore:'indexeddb-v2',hydrate,open,newCase,cases:()=>all().map(x=>({...x})),getCase:id=>{const c=get(id);return c?{...c}:null},storageError:()=>storageFailure,scope:'Learner-scoped local IndexedDB evidence casebook; legacy localStorage is migration input only; no network upload, universal production setpoints, assessment mutation or machine authorisation.'};
-window.addEventListener('mm:domains-ready',()=>hydrate(),{once:true});
+window.MM_MOULD_MASTER_WORKSPACE={version:VERSION,canonicalStore:'indexeddb-v2',hydrate,open,newCase,cases:()=>all().map(x=>({...x})),getCase:id=>{const c=get(id);return c?{...c}:null},learnerToken:()=>hydratedLearnerToken,storageError:()=>storageFailure,scope:'Learner-scoped local IndexedDB evidence casebook; legacy localStorage is migration input only; no network upload, universal production setpoints, assessment mutation or machine authorisation.'};
+window.addEventListener('mm:domains-ready',()=>hydrate({force:true}),{once:true});
 })();
