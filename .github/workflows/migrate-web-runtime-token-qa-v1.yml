@@ -1,0 +1,83 @@
+name: Migrate Web Runtime Token QA v1
+
+on:
+  push:
+    branches:
+      - release/web-identity-v1
+    paths:
+      - .github/workflows/migrate-web-runtime-token-qa-v1.yml
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  migrate:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: release/web-identity-v1
+          fetch-depth: 0
+      - uses: actions/setup-node@v7
+        with:
+          node-version: '22.12.0'
+          package-manager-cache: false
+      - uses: actions/setup-python@v7
+        with:
+          python-version: '3.13'
+      - name: Migrate psychometric and assessment UX identity contracts
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          p=Path('qa_psychometric_integration.py')
+          text=p.read_text(encoding='utf-8')
+          old='''runtime_match=re.search(r'const RUNTIME_ASSET_VERSION="([^\"]+)"',idx)\ncache_match=re.search(r"const CACHE_REVISION='([^']+)'",sw)\nneed(runtime_match is not None,'browser runtime token missing')\nneed(cache_match is not None,'PWA cache revision missing')\nruntime_token=runtime_match.group(1)\ncache_revision=cache_match.group(1)\nneed(re.fullmatch(r'\\d{8}\\.\\d+-maturity-hardening-v2',runtime_token) is not None,'browser runtime token must retain dated maturity-hardening-v2 family format')\nruntime_date=runtime_token.split('.',1)[0]\nruntime_family=runtime_token.split('-',1)[1]\nneed(cache_revision.startswith(runtime_family+'-'),'PWA cache revision must retain the active psychometric runtime family')\nneed(re.search(r'-\\d{8}$',cache_revision) is not None,'PWA cache revision must end with a dated revision token')\nneed(runtime_date==cache_revision.rsplit('-',1)[-1],'browser runtime token and PWA cache revision dates must advance together')\n'''
+          new='''shell_match=re.search(r'const SHELL_RELEASE="([^\"]+)"',idx)\ncache_match=re.search(r"const CACHE_REVISION='([^']+)'",sw)\nneed(shell_match is not None,'canonical browser shell release missing')\nneed('const RUNTIME_ASSET_VERSION=SHELL_RELEASE;' in idx,'browser runtime asset identity must derive from canonical shell/web release')\nneed(cache_match is not None,'PWA cache revision missing')\nruntime_token=shell_match.group(1)\ncache_revision=cache_match.group(1)\nneed(re.fullmatch(r'\\d{4}\\.\\d{2}\\.\\d{2}\\.\\d+',runtime_token) is not None,'canonical browser release must use YYYY.MM.DD.N')\nneed(bool(cache_revision.strip()),'PWA cache revision must remain an explicit independent invalidation token')\n'''
+          if old not in text:
+              raise SystemExit('Psychometric legacy runtime-token block not found exactly')
+          p.write_text(text.replace(old,new,1),encoding='utf-8')
+
+          p=Path('qa_assessment_ux.py')
+          text=p.read_text(encoding='utf-8')
+          old='''# The rotation fix remains mandatory, but later coherent runtime releases are allowed to\n# advance the cache family. Protect the behavior itself plus a dated/revisioned runtime bump\n# instead of pinning the entire app forever to the original August 31 cache token.\nruntime = re.search(r'const RUNTIME_ASSET_VERSION="([^\"]+)"', index)\ncache = re.search(r"const CACHE_REVISION='([^']+)'", sw)\nrequire(runtime is not None and re.fullmatch(r'\\d{8}\\.\\d+-[a-z0-9-]+', runtime.group(1)), 'runtime bundle must retain a dated revision token after the rotation fix')\nrequire(cache is not None and re.fullmatch(r'[a-z0-9-]+-\\d{8}', cache.group(1)), 'offline cache must retain a dated revision token after the rotation fix')\nrequire('assessment-question-rotation-20260831' not in index or runtime.group(1).endswith('assessment-question-rotation'), 'legacy rotation token must not be malformed')\n'''
+          new='''# The rotation fix remains mandatory, while browser asset identity is now the canonical\n# web release. CACHE_REVISION remains a separate operational invalidation token.\nshell_release = re.search(r'const SHELL_RELEASE="([^\"]+)"', index)\ncache = re.search(r"const CACHE_REVISION='([^']+)'", sw)\nrequire(shell_release is not None and re.fullmatch(r'\\d{4}\\.\\d{2}\\.\\d{2}\\.\\d+', shell_release.group(1)), 'canonical browser release must use YYYY.MM.DD.N after the rotation fix')\nrequire('const RUNTIME_ASSET_VERSION=SHELL_RELEASE;' in index, 'assessment runtime asset identity must derive from canonical shell/web release')\nrequire(cache is not None and bool(cache.group(1).strip()), 'offline cache must retain an explicit independent revision token after the rotation fix')\nrequire('assessment-question-rotation-20260831' not in index, 'legacy rotation token must be retired from canonical web release identity')\n'''
+          if old not in text:
+              raise SystemExit('Assessment UX legacy runtime-token block not found exactly')
+          p.write_text(text.replace(old,new,1),encoding='utf-8')
+          PY
+      - name: Reject remaining legacy runtime-token QA parsing
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          forbidden=(
+              'js_const(index, "RUNTIME_ASSET_VERSION")',
+              "re.search(r'const RUNTIME_ASSET_VERSION=\"",
+              'runtime bundle must retain a dated revision token',
+              'browser runtime token must retain dated',
+          )
+          hits=[]
+          for p in sorted(Path('.').glob('qa*.py')):
+              text=p.read_text(encoding='utf-8')
+              for marker in forbidden:
+                  if marker in text:
+                      hits.append(f'{p}: {marker}')
+          if hits:
+              raise SystemExit('Legacy web runtime-token QA contracts remain:\n'+'\n'.join(hits))
+          print('No legacy quoted/datetime runtime-token QA contracts remain')
+          PY
+      - name: Validate migrated QA contracts
+        run: |
+          python qa_psychometric_integration.py
+          python qa_assessment_ux.py
+          python qa_runtime_hardening.py
+          python qa_release.py
+          python tools/sync_web_release.py --check
+      - name: Commit migrated QA contracts
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add qa_psychometric_integration.py qa_assessment_ux.py
+          git commit -m "Migrate assessment QA to canonical web identity"
+          git push origin HEAD:release/web-identity-v1
