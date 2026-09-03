@@ -2,10 +2,13 @@
 """Inventory inline HTML event-handler attributes across active MouldMaster runtime sources.
 
 The frozen recovery core is reported separately from active browser/PWA/Electron
-runtime sources so CSP debt is not double-counted.
+runtime sources so CSP debt is not double-counted. `--check` requires the active
+runtime source inventory to be zero while allowing the immutable recovery payload
+to retain its historical attributes.
 """
 from __future__ import annotations
 
+import argparse
 import json
 import re
 from collections import Counter, defaultdict
@@ -72,10 +75,23 @@ def scan(paths: list[Path]) -> dict:
 
 
 def main() -> None:
+    parser=argparse.ArgumentParser()
+    parser.add_argument("--check",action="store_true")
+    args=parser.parse_args()
     report = {
         "active_runtime": scan(active_files()),
         "frozen_recovery_core": scan([CORE]),
     }
+    if args.check:
+        active=report["active_runtime"]
+        if active["total"]:
+            details=", ".join(f"{path}:{count}" for path,count in active["files"].items())
+            raise SystemExit(f"Active runtime still contains {active['total']} inline handler attribute occurrence(s): {details}")
+        frozen=report["frozen_recovery_core"]
+        if not frozen["total"]:
+            raise SystemExit("Frozen recovery handler inventory unexpectedly reached zero; verify recovery payload provenance")
+        print(f"Inline handler CSP audit passed: active runtime 0; frozen recovery payload unchanged with {frozen['total']} historical handler occurrence(s).")
+        return
     print(json.dumps(report, indent=2, ensure_ascii=False))
 
 
