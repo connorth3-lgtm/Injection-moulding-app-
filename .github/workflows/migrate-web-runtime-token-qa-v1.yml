@@ -26,7 +26,7 @@ jobs:
       - uses: actions/setup-python@v7
         with:
           python-version: '3.13'
-      - name: Migrate psychometric and assessment UX identity contracts
+      - name: Migrate identity-sensitive QA contracts
         run: |
           python - <<'PY'
           from pathlib import Path
@@ -46,6 +46,14 @@ jobs:
           if old not in text:
               raise SystemExit('Assessment UX legacy runtime-token block not found exactly')
           p.write_text(text.replace(old,new,1),encoding='utf-8')
+
+          p=Path('qa_production_observability.py')
+          text=p.read_text(encoding='utf-8')
+          old='''runtime_token = js_const(index, "RUNTIME_ASSET_VERSION")\ncache_version = js_const(worker, "CACHE_VERSION")\ncache_revision = js_const(worker, "CACHE_REVISION")\nexpected_static_cache = js_const(index, "EXPECTED_STATIC_CACHE")\nrequire(re.fullmatch(r"\\d{8}\\.\\d+-[a-z0-9-]+", runtime_token) is not None,\n        "Browser runtime token must retain dated feature-family format")\nruntime_date, runtime_family = runtime_token.split('.', 1)[0], runtime_token.split('-', 1)[1]\nrequire(cache_revision.startswith(runtime_family + "-"),\n        "Service-worker cache revision must retain the active runtime feature family")\nrequire(re.search(r"-\\d{8}$", cache_revision) is not None,\n        "Service-worker cache revision must end with a dated revision token")\nrequire(runtime_date == cache_revision.rsplit("-", 1)[-1],\n        "Browser runtime token and service-worker cache revision dates must advance together")\nrequire(expected_static_cache == f"mouldmaster-static-{cache_version}-{cache_revision}",\n        "Bootstrap expected cache does not exactly match the service-worker cache identity")\n'''
+          new='''shell_release = js_const(index, "SHELL_RELEASE")\nruntime_token = shell_release\ncache_version = js_const(worker, "CACHE_VERSION")\ncache_revision = js_const(worker, "CACHE_REVISION")\nexpected_static_cache = js_const(index, "EXPECTED_STATIC_CACHE")\nrequire(re.fullmatch(r"\\d{4}\\.\\d{2}\\.\\d{2}\\.\\d+", shell_release) is not None,\n        "Canonical browser release must use YYYY.MM.DD.N")\nrequire("const RUNTIME_ASSET_VERSION=SHELL_RELEASE;" in index,\n        "Production observability runtime identity must derive from canonical shell/web release")\nrequire(cache_version == shell_release,\n        "Production observability browser shell and service-worker cache version must share web_release")\nrequire(bool(cache_revision.strip()),\n        "Service-worker cache revision must remain an explicit independent invalidation token")\nrequire(expected_static_cache == f"mouldmaster-static-{cache_version}-{cache_revision}",\n        "Bootstrap expected cache does not exactly match the service-worker cache identity")\n'''
+          if old not in text:
+              raise SystemExit('Production observability legacy runtime-token block not found exactly')
+          p.write_text(text.replace(old,new,1),encoding='utf-8')
           PY
       - name: Reject remaining legacy runtime-token QA parsing
         run: |
@@ -56,6 +64,7 @@ jobs:
               "re.search(r'const RUNTIME_ASSET_VERSION=\"",
               'runtime bundle must retain a dated revision token',
               'browser runtime token must retain dated',
+              'Browser runtime token must retain dated',
           )
           hits=[]
           for p in sorted(Path('.').glob('qa*.py')):
@@ -71,6 +80,7 @@ jobs:
         run: |
           python qa_psychometric_integration.py
           python qa_assessment_ux.py
+          python qa_production_observability.py
           python qa_runtime_hardening.py
           python qa_release.py
           python tools/sync_web_release.py --check
@@ -78,6 +88,6 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add qa_psychometric_integration.py qa_assessment_ux.py
-          git commit -m "Migrate assessment QA to canonical web identity"
+          git add qa_psychometric_integration.py qa_assessment_ux.py qa_production_observability.py
+          git commit -m "Migrate identity-sensitive QA to web release"
           git push origin HEAD:release/web-identity-v1
