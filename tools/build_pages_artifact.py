@@ -188,9 +188,16 @@ def main() -> None:
         shutil.copy2(src, dst)
 
     runtime_version, cache_version, cache_revision = extract_runtime_metadata()
+    version_metadata = json.loads((ROOT / "version.json").read_text(encoding="utf-8"))
+    web_release = str(version_metadata.get("web_release", ""))
+    if not re.fullmatch(r"\d{4}\.\d{2}\.\d{2}\.\d+", web_release):
+        raise SystemExit("version.json web_release is missing or invalid")
+    if cache_version != web_release:
+        raise SystemExit(f"Service-worker cache version {cache_version} does not match web_release {web_release}")
     source_sha = os.environ.get("GITHUB_SHA", "local")
     deployment = {
-        "schema": 2,
+        "schema": 3,
+        "web_release": web_release,
         "source_sha": source_sha,
         "source_ref": os.environ.get("GITHUB_REF_NAME", "local"),
         "assessment_runtime": runtime_version,
@@ -207,7 +214,8 @@ def main() -> None:
 
     manifest_files = sorted(public_files | {"deployment.json"})
     manifest = {
-        "schema": 2,
+        "schema": 3,
+        "web_release": web_release,
         "source_sha": source_sha,
         "asset_count": len(manifest_files),
         "precache_assets": sorted(core_files),
@@ -228,7 +236,7 @@ def main() -> None:
     print(
         f"Pages artifact ready: {len(manifest_files)} public assets "
         f"({len(core_files)} pre-cached, {len(optional_files)} on demand; "
-        f"assessment runtime {runtime_version}, source {source_sha[:12]})."
+        f"web release {web_release}, assessment runtime {runtime_version}, source {source_sha[:12]})."
     )
     print("Excluded repository areas: " + ", ".join(FORBIDDEN_PREFIXES))
 
