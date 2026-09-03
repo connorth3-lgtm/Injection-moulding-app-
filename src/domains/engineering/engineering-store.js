@@ -3,16 +3,18 @@
 'use strict';
 if(window.MM_ENGINEERING_STORE)return;
 
-const VERSION='2026.09.03.4';
+const VERSION='2026.09.03.5';
 const DB_NAME='mouldmaster-engineering-v2';
 const DB_VERSION=2;
 const LEGACY_CASE_BASE='mm_mould_master_cases_v1::';
+const learnerScope=window.MM_LEARNER_SCOPE;
+if(!learnerScope)throw new Error('MM_LEARNER_SCOPE must load before the engineering store');
 
 function uid(prefix='id'){try{return `${prefix}-${crypto.randomUUID()}`}catch(_){return `${prefix}-${Date.now().toString(36)}-${Math.random().toString(36).slice(2,9)}`}}
-function learnerId(){try{return String((typeof db!=='undefined'&&db?.activeUser)||window.user?.id||'anonymous')}catch(_){return'anonymous'}}
-function learnerToken(raw=learnerId()){let h=2166136261;for(const ch of String(raw)){h^=ch.charCodeAt(0);h=Math.imul(h,16777619)}return(h>>>0).toString(36)}
+function learnerId(){return learnerScope.activeId()}
+function learnerToken(raw=learnerId()){return learnerScope.tokenFor(raw)}
 function now(){return new Date().toISOString()}
-function tokenValue(token){return String(token||learnerToken())}
+function tokenValue(token){return learnerScope.normalizeToken(token||learnerToken())}
 function timeValue(value){const n=Date.parse(String(value||''));return Number.isFinite(n)?n:0}
 
 function openDb(){
@@ -115,7 +117,7 @@ async function linkCaseMaterial(caseId,materialGradeId,displayName='',token=lear
 }
 async function linkCaseDataset(caseId,datasetId,label='',token=learnerToken()){return linkCase(caseId,'process-dataset',datasetId,{label:String(label||'')},token)}
 
-function legacyKey(token=learnerToken()){return LEGACY_CASE_BASE+tokenValue(token)}
+function legacyKey(token=learnerToken()){return learnerScope.storageKey(LEGACY_CASE_BASE,tokenValue(token))}
 function readLegacyCases(token=learnerToken()){try{const raw=JSON.parse(localStorage.getItem(legacyKey(token))||'[]');return Array.isArray(raw)?raw:[]}catch(_){return[]}}
 async function importLegacyCases(cases,token=learnerToken()){
   const owner=tokenValue(token),incoming=Array.isArray(cases)?cases:[];

@@ -94,17 +94,16 @@
       ['./specialist-curriculum.js','<script src="./specialist-curriculum.js">'],
       ['./specialist-evidence-gap-extension.js','<script src="./specialist-evidence-gap-extension.js">'],
       ['./mould-master-workspace.js','<script src="./mould-master-workspace.js">'],
-      ['./src/domains/domain-bootstrap.js','<script src="./src/domains/domain-bootstrap.js">'],
       ['./app-shell-finalize.js','<script src="./app-shell-finalize.js">'],
-      ['./learning-analytics.js','<script src="./learning-analytics.js">'],
-      ['./accessibility-hardening.js','<script src="./accessibility-hardening.js">']
+      ['./src/domains/domain-bootstrap.js','<script src="./src/domains/domain-bootstrap.js">']
     ];
+    const DOMAIN_DELEGATED_ASSETS=['./learning-analytics.js','./accessibility-hardening.js'];
     const closeScript='</scr'+'ipt>';
     function versionMarkup(markup){return String(markup).replace(/(src|href)="(\.\/[^"?]+)(?:\?[^" ]*)?"/g,(_m,attr,url)=>`${attr}="${url}?v=${RUNTIME_ASSET_VERSION}"`)}
     function ensureViewportFit(out){let found=false;out=out.replace(/<meta\b[^>]*\bname=["']viewport["'][^>]*>/i,tag=>{found=true;if(/viewport-fit\s*=\s*cover/i.test(tag))return tag;if(/\bcontent=["']/i.test(tag))return tag.replace(/\bcontent=(["'])(.*?)\1/i,(_m,q,value)=>`content=${q}${value},viewport-fit=cover${q}`);return tag.replace(/>$/, ' content="width=device-width,initial-scale=1,viewport-fit=cover">')});if(!found)out=out.replace(/<\/head>/i,'<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">\n</head>');return out}
     function assemble(html){let out=String(html||"");if(!/<\/head>/i.test(out)||!/<\/body>/i.test(out))throw new Error("Core training content is incomplete");out=ensureViewportFit(out);for(const [needle,markup] of HEAD_ASSETS)if(!out.includes(needle))out=out.replace(/<\/head>/i,versionMarkup(markup)+'\n</head>');for(const [src,tag] of BODY_SCRIPTS)if(!out.includes(src))out=out.replace(/<\/body>/i,versionMarkup(tag)+closeScript+'\n</body>');return out}
     async function getCore(){try{const r=await fetch(`${CORE_URL}?v=${RUNTIME_ASSET_VERSION}`,{cache:"no-store"});if(r&&r.ok)return await r.text()}catch(_){ }if("caches" in window){const c=await caches.match(CORE_URL,{ignoreSearch:true});if(c)return await c.text()}throw new Error("Core training content is unavailable")}
-    try{const html=assemble(await getCore());window.MM_RUNTIME_ASSET_VERSION=RUNTIME_ASSET_VERSION;document.open();document.write(html);document.close()}catch(err){const box=document.getElementById("mmBootstrap");if(box)box.innerHTML='<b>MouldMaster could not finish loading</b><p>Connect to the internet and reopen MouldMaster so the current training bundle can load.</p><button onclick="location.reload()" style="padding:10px 14px;border-radius:10px;border:1px solid #41658d;background:#1a2b45;color:#fff">Try again</button>';console.error("MouldMaster bootstrap failed",err)}
+    try{const html=assemble(await getCore());window.MM_RUNTIME_ASSET_VERSION=RUNTIME_ASSET_VERSION;window.MM_DOMAIN_DELEGATED_ASSETS=Object.freeze(DOMAIN_DELEGATED_ASSETS.slice());document.open();document.write(html);document.close()}catch(err){const box=document.getElementById("mmBootstrap");if(box)box.innerHTML='<b>MouldMaster could not finish loading</b><p>Connect to the internet and reopen MouldMaster so the current training bundle can load.</p><button onclick="location.reload()" style="padding:10px 14px;border-radius:10px;border:1px solid #41658d;background:#1a2b45;color:#fff">Try again</button>';console.error("MouldMaster bootstrap failed",err)}
   })();
   </script>
 </body>

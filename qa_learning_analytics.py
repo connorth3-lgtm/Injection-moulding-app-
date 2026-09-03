@@ -9,6 +9,7 @@ def need(ok,msg):
 
 required=[
     'learning-analytics.js','learning-experience.js','diagnostic-learning-labs.js','process-data-diagnostics.js',
+    'src/domains/shared/learner-scope.js','src/domains/learning/learning-analytics-loader.js',
     'index.html','service-worker.js','desktop/electron/package.json','desktop/electron/scripts/generate-integrity.cjs'
 ]
 for name in required:
@@ -19,10 +20,13 @@ p=subprocess.run(['node','--check',str(ROOT/'learning-analytics.js')],capture_ou
 need(p.returncode==0,'learning-analytics.js syntax error: '+(p.stderr or p.stdout))
 
 for marker in [
-    "const VERSION='2026.08.26.1'",
+    "const VERSION='2026.09.03.2'",
     "const STORAGE_PREFIX='mm_learning_analytics_v1::'",
     'const MAX_EVENTS=1500',
     'const IDLE_MS=5*60*1000',
+    'const learnerScope=window.MM_LEARNER_SCOPE',
+    'learnerScope.token()',
+    'learnerScope.storageKey(STORAGE_PREFIX,token)',
     "record('lesson_complete'",
     "record('lesson_time'",
     "record('practice_start'",
@@ -40,12 +44,16 @@ for marker in [
 ]:
     need(marker in js,f'learning analytics marker missing: {marker}')
 
+scope=text('src/domains/shared/learner-scope.js')
+for marker in ['MM_LEARNER_SCOPE','activeId','tokenFor','normalizeToken','storageKey','2166136261','16777619']:
+    need(marker in scope,f'shared learner scope marker missing: {marker}')
+need('Math.imul' not in js,'learning analytics must not carry a second learner-token hash implementation')
+
 # Privacy boundary: analytics records use a strict allow-list and remain local-only.
 need("for(const key of ['module','id','reason'])" in js,'analytics string field allow-list missing')
 need("for(const key of ['step','score','durationSec','attempt'])" in js,'analytics numeric field allow-list missing')
 need("if(typeof data.correct==='boolean')" in js,'analytics boolean field allow-list missing')
 need('slice(-MAX_EVENTS)' in js,'analytics event log must be bounded')
-need('tokenFor(activeUserId())' in js,'analytics storage must be learner-scoped with a hashed local token')
 for forbidden_transport in ['fetch(', 'XMLHttpRequest', 'WebSocket', 'sendBeacon(', 'navigator.sendBeacon']:
     need(forbidden_transport not in js,f'learning analytics must have no network transport: {forbidden_transport}')
 for forbidden_personal in ['user.name', 'user.email', 'user.notes', 'lessonNotes.value']:
@@ -66,16 +74,30 @@ need('idleTimer=setTimeout(pauseLesson,IDLE_MS)' in js,'lesson timing must enfor
 need("window.addEventListener('beforeunload'" in js,'active timing must flush on unload')
 
 idx=text('index.html')
-need("['./learning-analytics.js','<script src=\"./learning-analytics.js\">']" in idx,'browser shell does not load learning analytics')
-need(idx.index("'./learning-experience.js'") < idx.index("'./learning-analytics.js'"),'analytics must load after learner-flow hooks')
-need(idx.index("'./process-data-diagnostics.js'") < idx.index("'./learning-analytics.js'"),'analytics must load after guided process-data practice')
+need("['./learning-analytics.js','<script src=\"./learning-analytics.js\">']" not in idx,'learning analytics must not execute before the domain dependency graph is ready')
+need(idx.index("'./learning-experience.js'") < idx.index("'./src/domains/domain-bootstrap.js'"),'domain bootstrap must remain after learner-flow hooks')
+need(idx.index("'./process-data-diagnostics.js'") < idx.index("'./src/domains/domain-bootstrap.js'"),'domain bootstrap must remain after guided process-data practice')
+
+manifest=json.loads(text('runtime-domain-manifest.json'))
+assets=manifest.get('assets',[])
+need(assets and assets[0]=='./src/domains/shared/learner-scope.js','shared learner scope must load before domain stores')
+need(assets.index('./src/domains/shared/learner-scope.js') < assets.index('./src/domains/engineering/engineering-store.js'),'engineering store must load after shared learner scope')
+need('./src/domains/learning/learning-analytics-loader.js' in assets,'analytics domain bridge missing from runtime manifest')
+need(assets.index('./src/domains/shared/learner-scope.js') < assets.index('./src/domains/learning/learning-analytics-loader.js'),'analytics bridge must load after shared learner scope')
+
+bridge=text('src/domains/learning/learning-analytics-loader.js')
+for marker in ['MM_LEARNER_SCOPE','learning-analytics.js','MM_LEARNING_ANALYTICS_LOADING','mmDomainBridge']:
+    need(marker in bridge,f'learning analytics domain bridge marker missing: {marker}')
 
 sw=text('service-worker.js')
 need("'./learning-analytics.js'" in sw,'learning analytics missing from installed-PWA offline cache')
+need("'./src/domains/shared/learner-scope.js'" in sw,'shared learner scope missing from installed-PWA offline cache')
+need("'./src/domains/learning/learning-analytics-loader.js'" in sw,'analytics domain bridge missing from installed-PWA offline cache')
 
 pkg=json.loads(text('desktop/electron/package.json'))
 froms={x.get('from') for x in pkg['build']['extraResources'] if isinstance(x,dict)}
 need('../../learning-analytics.js' in froms,'learning analytics missing from desktop package')
+need('../../src/domains' in froms,'shared learner scope is not covered by desktop domain resources')
 need("'learning-analytics.js'" in text('desktop/electron/scripts/generate-integrity.cjs'),'learning analytics missing from desktop integrity manifest')
 
-print('MouldMaster learning analytics QA passed (local-only, learner-scoped, bounded, time-on-task, retry improvement, diagnostic/process-data misses, anonymous instructor summary)')
+print('MouldMaster learning analytics QA passed (shared learner scope, domain-ordered analytics startup, local-only, bounded, time-on-task, retry improvement, diagnostic/process-data misses, anonymous instructor summary)')

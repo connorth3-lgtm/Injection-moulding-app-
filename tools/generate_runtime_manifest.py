@@ -7,14 +7,19 @@ import json
 ROOT = Path(__file__).resolve().parents[1]
 DOMAINS = ROOT / "src" / "domains"
 OUTPUT = ROOT / "runtime-domain-manifest.json"
+PRIORITY_ASSETS = [
+    "./src/domains/shared/learner-scope.js",
+]
 
 
 def build_manifest() -> dict:
-    assets = []
+    discovered = []
     for path in sorted(DOMAINS.rglob("*.js")):
         if path.name == "domain-bootstrap.js":
             continue
-        assets.append("./" + path.relative_to(ROOT).as_posix())
+        discovered.append("./" + path.relative_to(ROOT).as_posix())
+    priority = [asset for asset in PRIORITY_ASSETS if asset in discovered]
+    assets = priority + [asset for asset in discovered if asset not in priority]
     return {
         "schemaVersion": 1,
         "generatedBy": "tools/generate_runtime_manifest.py",
