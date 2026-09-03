@@ -1,12 +1,12 @@
 const CACHE_VERSION='2026.08.26.2';
-const CACHE_REVISION='maturity-hardening-v2-20260903';
+const CACHE_REVISION='maturity-hardening-v2-r2-20260903';
 const STATIC_CACHE=`mouldmaster-static-${CACHE_VERSION}-${CACHE_REVISION}`;
+const LEGACY_RECOVERY_SOURCE_ONLY='./MouldMaster_Academy_App.html';
 
 // Small fail-closed offline foundation. Remaining feature packs are warmed best-effort and never block activation.
 const CORE=[
   './index.html',
   './MouldMaster_Core_App.html',
-  './MouldMaster_Academy_App.html',
   './manifest.webmanifest',
   './mouldmaster-192.png',
   './mouldmaster-512.png',
@@ -30,6 +30,7 @@ const CORE=[
   './src/domains/domain-bootstrap.js',
   './runtime-domain-manifest.json',
   './src/domains/engineering/engineering-store.js',
+  './src/domains/engineering/store-bridge.js',
   './src/domains/materials/material-registry.js',
   './src/domains/shell/product-areas.js',
   './material-catalog-v1.json',

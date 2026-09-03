@@ -29,7 +29,6 @@
     "extraResources": [
       {"from": "../../index.html", "to": "mouldmaster/index.html"},
       {"from": "../../MouldMaster_Core_App.html", "to": "mouldmaster/MouldMaster_Core_App.html"},
-      {"from": "../../MouldMaster_Academy_App.html", "to": "mouldmaster/MouldMaster_Academy_App.html"},
       {"from": "../../manifest.webmanifest", "to": "mouldmaster/manifest.webmanifest"},
       {"from": "../../mouldmaster-192.png", "to": "mouldmaster/mouldmaster-192.png"},
       {"from": "../../mouldmaster-512.png", "to": "mouldmaster/mouldmaster-512.png"},

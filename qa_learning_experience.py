@@ -86,7 +86,9 @@ for marker in mobile_markers:
     need(marker in shell,f'mobile layout regression guard missing: {marker}')
 need(shell.index('installMobileLayoutGuard()') < shell.index('dockReferenceLauncher()'),'mobile layout guard must install before shell docking work')
 need(shell.index('syncVisibleViewChrome()') < shell.index('dockReferenceLauncher()'),'visible-view chrome sync must run before shell docking work')
-need("attributeFilter:['class']" in shell,'mobile Home chrome must react when core views toggle visibility')
+need("shell?.events?.onViewChange?.(scheduleSync)" in shell,'mobile Home chrome must react through canonical app-shell view lifecycle events')
+need("shell?.events?.onRender?.(view,scheduleSync)" in shell,'mobile Home chrome must react when canonical views render')
+need('new MutationObserver' not in shell,'mobile Home chrome must not depend on document-wide mutation polling')
 need("button.setAttribute('aria-current','page')" in shell,'mobile navigation must expose the active page to assistive technology')
 
 # The UX layer must remain a presentation/progression enhancement, not an assessment rewrite.
@@ -100,7 +102,7 @@ need(idx.index("'./pwa-shell.js'") < idx.index("'./learning-experience.js'"),'le
 
 # Runtime coherence is structural. Runtime-only hardening may advance independently
 # of the audited shell release, while the shell version itself must continue to match
-# the service-worker cache version and the runtime/cache feature families must match.
+# the service-worker cache version and the runtime/cache feature family/date must match.
 sw=text('service-worker.js')
 shell_release=js_const(idx,'SHELL_RELEASE')
 runtime_asset=js_const(idx,'RUNTIME_ASSET_VERSION')
@@ -110,7 +112,11 @@ cache_revision=js_const(sw,'CACHE_REVISION')
 need(shell_release==cache_version,'learning UX shell release must match PWA cache version')
 need(expected_cache==f'mouldmaster-static-{cache_version}-{cache_revision}','learning UX expected cache must match service-worker cache identity')
 need(re.fullmatch(r'\d{8}\.\d+-[a-z0-9-]+',runtime_asset) is not None,'learning UX runtime token must retain dated revision + feature-family format')
-need(runtime_asset.split('-',1)[1]==re.sub(r'-\d{8}$','',cache_revision),'learning UX runtime family must match PWA cache family')
+runtime_date=runtime_asset.split('.',1)[0]
+runtime_family=runtime_asset.split('-',1)[1]
+need(cache_revision.startswith(runtime_family+'-'),'learning UX cache revision must retain the active runtime feature family')
+need(re.search(r'-\d{8}$',cache_revision) is not None,'learning UX cache revision must end with a dated revision token')
+need(cache_revision.rsplit('-',1)[-1]==runtime_date,'learning UX runtime and PWA cache revision dates must match')
 need("'./learning-experience.js'" in sw,'learning experience missing from offline cache')
 need("'./pwa-shell.js'" in sw,'PWA shell/mobile layout guard missing from offline cache')
 need("url.pathname.endsWith('.js')" in sw,'PWA shell must remain on the network-first runtime-critical path so installed apps receive mobile layout fixes')
@@ -128,4 +134,4 @@ need(re.search(r"const next=D\.lessons\[index\+1\]\|\|null",js) is not None,'com
 need("user.currentLesson=next.id" in js,'complete-and-continue must advance currentLesson')
 need("toast('Learning path complete ✓')" in js,'final lesson must terminate the learning path rather than wrap')
 
-print(f'MouldMaster learning experience QA passed (task-first Home, evidence-first diagnosis/data access, compact mobile hierarchy, complete-and-continue, autosave notes, fixed-nav clearance, coherent runtime={runtime_asset}, offline/desktop packaging)')
+print(f'MouldMaster learning experience QA passed (task-first Home, evidence-first diagnosis/data access, event-driven compact mobile hierarchy, complete-and-continue, autosave notes, fixed-nav clearance, coherent runtime={runtime_asset}, offline/desktop packaging)')

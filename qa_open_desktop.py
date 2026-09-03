@@ -101,11 +101,13 @@ for marker in [
 require("process.resourcesPath, 'mouldmaster', 'integrity.json'" not in main, "packaged integrity manifest must not be read from the writable asset directory")
 
 integrity_script = (DESKTOP / "scripts" / "generate-integrity.cjs").read_text(encoding="utf-8")
-require("MouldMaster_Academy_App.html" in integrity_script, "desktop integrity set must include the file expected by the existing service worker")
+require("MouldMaster_Academy_App.html" not in integrity_script, "frozen legacy Academy shadow app must not be part of current desktop integrity set")
+require("src/domains/engineering/store-bridge.js" in integrity_script, "canonical engineering compatibility bridge missing from desktop integrity set")
 
 extra = pkg["build"]["extraResources"]
 from_paths = {x.get("from") for x in extra if isinstance(x, dict)}
-require("../../MouldMaster_Academy_App.html" in from_paths, "desktop bundle must include service-worker compatibility loader")
+require("../../MouldMaster_Academy_App.html" not in from_paths, "frozen legacy Academy shadow app must not ship in current desktop bundle")
+require("../../src/domains" in from_paths, "canonical domain modules must ship in current desktop bundle")
 require("generated/integrity.json" in from_paths, "packaged integrity manifest missing")
 require("generated/dependency-licenses.json" in from_paths, "dependency licence inventory missing")
 require("generated/sbom.cdx.json" in from_paths, "SBOM missing from package")
@@ -178,4 +180,4 @@ for marker in [
 ]:
     require(marker in migration, f"legacy migration safeguard missing: {marker}")
 
-print("MouldMaster open desktop release QA passed")
+print("MouldMaster open desktop release QA passed (current bundle excludes frozen legacy shadow app; recovery lane remains separate)")

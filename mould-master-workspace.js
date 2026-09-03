@@ -11,7 +11,8 @@ function learnerId(){try{return String((typeof db!=='undefined'&&db?.activeUser)
 function token(raw=learnerId()){let h=2166136261;for(const ch of String(raw)){h^=ch.charCodeAt(0);h=Math.imul(h,16777619)}return(h>>>0).toString(36)}
 function storageKey(){return STORAGE_BASE+token()}
 function read(){try{const x=JSON.parse(localStorage.getItem(storageKey())||'[]');return Array.isArray(x)?x:[]}catch(_){return[]}}
-function write(cases){try{localStorage.setItem(storageKey(),JSON.stringify(cases.slice(0,MAX_CASES)))}catch(_){}}
+function publishCasesChanged(cases){try{window.dispatchEvent(new CustomEvent('mm:mould-master-cases-changed',{detail:{learnerToken:token(),storageKey:storageKey(),cases:cases.map(x=>({...x}))}}))}catch(_){}}
+function write(cases){const snapshot=cases.slice(0,MAX_CASES);try{localStorage.setItem(storageKey(),JSON.stringify(snapshot))}catch(_){}publishCasesChanged(snapshot)}
 function uid(){try{return crypto.randomUUID()}catch(_){return 'case-'+Date.now().toString(36)+'-'+Math.random().toString(36).slice(2,8)}}
 function now(){return new Date().toISOString()}
 function blank(){return{id:uid(),createdAt:now(),updatedAt:now(),title:'',defect:'',material:'',machine:'',mould:'',onset:'Unknown / not yet defined',location:'',baseline:'',evidence:'',hypothesis:'',controlledTest:'',testResult:'',afterChange:'',verification:'',conclusion:'',status:'Investigating'}}

@@ -10,11 +10,19 @@ on:
       - 'material-catalog-v1.json'
       - 'tools/material_catalog.py'
       - 'tools/generate_runtime_manifest.py'
+      - 'tools/verify_production_source.py'
       - 'qa_material_catalog.py'
+      - 'qa_app_remediation.py'
       - 'docs/DOMAIN_ARCHITECTURE_V1.md'
       - 'index.html'
+      - 'pwa-shell.js'
+      - 'accessibility-hardening.js'
       - 'service-worker.js'
       - 'desktop/electron/**'
+      - '.github/workflows/pages.yml'
+      - '.github/workflows/mobile-browser-qa.yml'
+      - 'qa/**'
+      - 'playwright*.cjs'
       - '.github/workflows/domain-foundation-qa.yml'
   pull_request:
     branches: [main]
@@ -25,11 +33,19 @@ on:
       - 'material-catalog-v1.json'
       - 'tools/material_catalog.py'
       - 'tools/generate_runtime_manifest.py'
+      - 'tools/verify_production_source.py'
       - 'qa_material_catalog.py'
+      - 'qa_app_remediation.py'
       - 'docs/DOMAIN_ARCHITECTURE_V1.md'
       - 'index.html'
+      - 'pwa-shell.js'
+      - 'accessibility-hardening.js'
       - 'service-worker.js'
       - 'desktop/electron/**'
+      - '.github/workflows/pages.yml'
+      - '.github/workflows/mobile-browser-qa.yml'
+      - 'qa/**'
+      - 'playwright*.cjs'
       - '.github/workflows/domain-foundation-qa.yml'
   workflow_dispatch:
 
@@ -58,6 +74,8 @@ jobs:
         run: python tools/generate_runtime_manifest.py --check
       - name: Material and domain foundation QA
         run: python qa_material_catalog.py
+      - name: App-wide remediation invariants
+        run: python qa_app_remediation.py
       - name: Public Pages boundary still resolves
         run: python tools/build_pages_artifact.py
       - name: App-wide runtime/offline reconciliation

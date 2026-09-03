@@ -23,9 +23,9 @@
   (async function(){
     "use strict";
     const SHELL_RELEASE="2026.08.26.2";
-    const RUNTIME_ASSET_VERSION="20260903.1-maturity-hardening-v2";
+    const RUNTIME_ASSET_VERSION="20260903.2-maturity-hardening-v2";
     const CORE_URL="./MouldMaster_Core_App.html";
-    const EXPECTED_STATIC_CACHE="mouldmaster-static-2026.08.26.2-maturity-hardening-v2-20260903";
+    const EXPECTED_STATIC_CACHE="mouldmaster-static-2026.08.26.2-maturity-hardening-v2-r2-20260903";
     const CSP="default-src 'self'; base-uri 'none'; object-src 'none'; frame-src 'none'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self' data:; connect-src 'self'; worker-src 'self'; manifest-src 'self'; form-action 'self'";
     const HEAD_ASSETS=[
       ['manifest.webmanifest','<link rel="manifest" href="./manifest.webmanifest">'],
@@ -100,14 +100,11 @@
       ['./accessibility-hardening.js','<script src="./accessibility-hardening.js">']
     ];
     const closeScript='</scr'+'ipt>';
-    const standalone=!!window.matchMedia?.('(display-mode: standalone)').matches;
     function versionMarkup(markup){return String(markup).replace(/(src|href)="(\.\/[^"?]+)(?:\?[^" ]*)?"/g,(_m,attr,url)=>`${attr}="${url}?v=${RUNTIME_ASSET_VERSION}"`)}
     function ensureViewportFit(out){let found=false;out=out.replace(/<meta\b[^>]*\bname=["']viewport["'][^>]*>/i,tag=>{found=true;if(/viewport-fit\s*=\s*cover/i.test(tag))return tag;if(/\bcontent=["']/i.test(tag))return tag.replace(/\bcontent=(["'])(.*?)\1/i,(_m,q,value)=>`content=${q}${value},viewport-fit=cover${q}`);return tag.replace(/>$/, ' content="width=device-width,initial-scale=1,viewport-fit=cover">')});if(!found)out=out.replace(/<\/head>/i,'<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">\n</head>');return out}
     function assemble(html){let out=String(html||"");if(!/<\/head>/i.test(out)||!/<\/body>/i.test(out))throw new Error("Core training content is incomplete");out=ensureViewportFit(out);for(const [needle,markup] of HEAD_ASSETS)if(!out.includes(needle))out=out.replace(/<\/head>/i,versionMarkup(markup)+'\n</head>');for(const [src,tag] of BODY_SCRIPTS)if(!out.includes(src))out=out.replace(/<\/body>/i,versionMarkup(tag)+closeScript+'\n</body>');return out}
-    async function ensureCoherentRuntime(){if(!navigator.onLine||location.hostname==='127.0.0.1'||standalone)return false;let changed=false;try{if("serviceWorker" in navigator){const scope=new URL('./',location.href).href;const regs=await navigator.serviceWorker.getRegistrations();const owned=regs.filter(r=>r.scope.startsWith(scope));if(owned.length){changed=true;await Promise.all(owned.map(r=>r.unregister()))}}if("caches" in window){const keys=await caches.keys();const owned=keys.filter(k=>k.startsWith('mouldmaster-static-'));if(owned.length){changed=true;await Promise.all(owned.map(k=>caches.delete(k)))}}if(changed){const fresh=new URL(location.href);fresh.searchParams.set('mmBundle',RUNTIME_ASSET_VERSION);location.replace(fresh.href);return true}}catch(_){ }return false}
-    async function clearStaleRuntimeCaches(){if(!navigator.onLine||standalone||!("caches" in window))return;try{const keys=await caches.keys();await Promise.all(keys.filter(k=>k.startsWith('mouldmaster-static-')&&k!==EXPECTED_STATIC_CACHE).map(k=>caches.delete(k)))}catch(_){ }}
     async function getCore(){try{const r=await fetch(`${CORE_URL}?v=${RUNTIME_ASSET_VERSION}`,{cache:"no-store"});if(r&&r.ok)return await r.text()}catch(_){ }if("caches" in window){const c=await caches.match(CORE_URL,{ignoreSearch:true});if(c)return await c.text()}throw new Error("Core training content is unavailable")}
-    try{if(await ensureCoherentRuntime())return;await clearStaleRuntimeCaches();const html=assemble(await getCore());window.MM_RUNTIME_ASSET_VERSION=RUNTIME_ASSET_VERSION;document.open();document.write(html);document.close()}catch(err){const box=document.getElementById("mmBootstrap");if(box)box.innerHTML='<b>MouldMaster could not finish loading</b><p>Connect to the internet and reopen MouldMaster so the current training bundle can load.</p><button onclick="location.reload()" style="padding:10px 14px;border-radius:10px;border:1px solid #41658d;background:#1a2b45;color:#fff">Try again</button>';console.error("MouldMaster bootstrap failed",err)}
+    try{const html=assemble(await getCore());window.MM_RUNTIME_ASSET_VERSION=RUNTIME_ASSET_VERSION;document.open();document.write(html);document.close()}catch(err){const box=document.getElementById("mmBootstrap");if(box)box.innerHTML='<b>MouldMaster could not finish loading</b><p>Connect to the internet and reopen MouldMaster so the current training bundle can load.</p><button onclick="location.reload()" style="padding:10px 14px;border-radius:10px;border:1px solid #41658d;background:#1a2b45;color:#fff">Try again</button>';console.error("MouldMaster bootstrap failed",err)}
   })();
   </script>
 </body>

@@ -61,11 +61,14 @@ runtime_token = js_const(index, "RUNTIME_ASSET_VERSION")
 cache_version = js_const(worker, "CACHE_VERSION")
 cache_revision = js_const(worker, "CACHE_REVISION")
 expected_static_cache = js_const(index, "EXPECTED_STATIC_CACHE")
-require(re.fullmatch(r"\d{8}\.\d+-maturity-hardening-v2", runtime_token) is not None,
-        "Browser runtime token must retain dated maturity-hardening-v2 family format")
-require(re.fullmatch(r"maturity-hardening-v2-\d{8}", cache_revision) is not None,
-        "Service-worker cache revision must retain maturity-hardening-v2 family format")
-require(runtime_token[:8] == cache_revision.rsplit("-", 1)[-1],
+require(re.fullmatch(r"\d{8}\.\d+-[a-z0-9-]+", runtime_token) is not None,
+        "Browser runtime token must retain dated feature-family format")
+runtime_date, runtime_family = runtime_token.split('.', 1)[0], runtime_token.split('-', 1)[1]
+require(cache_revision.startswith(runtime_family + "-"),
+        "Service-worker cache revision must retain the active runtime feature family")
+require(re.search(r"-\d{8}$", cache_revision) is not None,
+        "Service-worker cache revision must end with a dated revision token")
+require(runtime_date == cache_revision.rsplit("-", 1)[-1],
         "Browser runtime token and service-worker cache revision dates must advance together")
 require(expected_static_cache == f"mouldmaster-static-{cache_version}-{cache_revision}",
         "Bootstrap expected cache does not exactly match the service-worker cache identity")
