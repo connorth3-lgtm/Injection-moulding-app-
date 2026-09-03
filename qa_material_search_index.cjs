@@ -37,7 +37,7 @@ api._buildForTest(grades);
   assert(filtered.total>0&&filtered.items.every(x=>x.manufacturer.id==='mfr-alpha'&&x.polymer.family==='PC/ABS'));
 
   const alias=await api.searchPage('hero grade');
-  assert.deepStrictEqual(alias.items.map(x=>x.id),['mat-example-006']);
+  assert.strictEqual(JSON.stringify(alias.items.map(x=>x.id)),JSON.stringify(['mat-example-006']));
 
   console.log(`MouldMaster material search QA passed (${first.total} indexed fixtures, ${first.pageCount} pages).`);
 })().catch(err=>{console.error(err);process.exitCode=1});
