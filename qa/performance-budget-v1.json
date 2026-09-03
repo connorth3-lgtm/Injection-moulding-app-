@@ -1,0 +1,12 @@
+{
+  "schema": 1,
+  "max_public_asset_count": 110,
+  "max_public_bytes": 18874368,
+  "max_precache_bytes": 9437184,
+  "max_javascript_bytes": 14680064,
+  "max_css_bytes": 786432,
+  "max_single_asset_bytes": 5242880,
+  "max_shell_ready_ms": 12000,
+  "max_startup_resource_count": 100,
+  "max_startup_decoded_bytes": 12582912
+}
