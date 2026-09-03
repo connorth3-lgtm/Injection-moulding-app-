@@ -1,0 +1,37 @@
+name: Probe Electron 44.1.1 lock
+
+on:
+  push:
+    branches: [test/electron-44-1-1]
+    paths:
+      - '.github/workflows/probe-electron-44-lock.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  regenerate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: test/electron-44-1-1
+      - uses: actions/setup-node@v7
+        with:
+          node-version: '22.12.0'
+          package-manager-cache: false
+      - name: Regenerate exact Electron 44.1.1 lock
+        working-directory: desktop/electron
+        run: npm install --package-lock-only --save-dev --save-exact --ignore-scripts --no-audit --fund=false electron@44.1.1
+      - name: Verify exact Electron 44.1.1 lock
+        working-directory: desktop/electron
+        run: |
+          node -e "const p=require('./package.json'),l=require('./package-lock.json'); if(p.devDependencies.electron!=='44.1.1'||l.packages[''].devDependencies.electron!=='44.1.1'||l.packages['node_modules/electron'].version!=='44.1.1') process.exit(1)"
+      - name: Commit generated package metadata
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add desktop/electron/package.json desktop/electron/package-lock.json
+          git diff --cached --quiet && exit 0
+          git commit -m 'Probe Electron 44.1.1 compatibility'
+          git push origin HEAD:test/electron-44-1-1
