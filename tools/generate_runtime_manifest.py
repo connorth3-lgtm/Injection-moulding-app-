@@ -9,6 +9,18 @@ DOMAINS = ROOT / "src" / "domains"
 OUTPUT = ROOT / "runtime-domain-manifest.json"
 PRIORITY_ASSETS = [
     "./src/domains/shared/learner-scope.js",
+    "./src/domains/shared/data-spine.js",
+    "./src/domains/shared/signal-registry.js",
+    "./src/domains/engineering/engineering-store.js",
+    "./src/domains/engineering/evidence-chain.js",
+    "./src/domains/learning/learning-analytics-loader.js",
+    "./src/domains/learning/activity-events-v2.js",
+    "./src/domains/learning/learner-model.js",
+    "./src/domains/materials/material-registry.js",
+    "./src/domains/materials/material-search-index.js",
+    "./src/domains/materials/material-observation-v2.js",
+    "./src/domains/process/evidence-granularity.js",
+    "./src/domains/learning/content-intelligence.js",
 ]
 # Generated classic-script packs are injected synchronously by index.html at
 # specific legacy ordering boundaries. Loading them again through the async
