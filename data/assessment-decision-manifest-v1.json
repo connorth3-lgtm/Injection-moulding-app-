@@ -1,0 +1,4128 @@
+{
+  "boundary": "Audit-only canonical identity manifest. It contains no question stems, option text, rationales or raw answer text. Evidence-approved learning decisions remain distinct from measured-dataset contract decisions; neither scope grants production authority.",
+  "choiceIdentity": {
+    "algorithm": "fnv1a(question_id + '@r' + revision + '|' + collapsed_whitespace_option_text)",
+    "questionScoped": true,
+    "rawChoiceTextStored": false
+  },
+  "counts": {
+    "byKind": {
+      "diagnostic-lab-question": 36,
+      "material-lab-question": 24,
+      "real-measured-decision": 12,
+      "regional-exam": 27,
+      "scenario": 40,
+      "technical-exam": 30
+    },
+    "evidenceApproved": 157,
+    "measuredEvidence": 12,
+    "total": 169
+  },
+  "decisions": [
+    {
+      "bankVersion": null,
+      "choiceFingerprints": [
+        "fnv1a-082dd7b9",
+        "fnv1a-e8470d0b",
+        "fnv1a-082d2540",
+        "fnv1a-d5198bbf"
+      ],
+      "contentFingerprint": "fnv1a-4af22ec4",
+      "correctChoiceFingerprint": "fnv1a-e8470d0b",
+      "critical": false,
+      "decisionScope": "evidence-approved-learning",
+      "evidenceSourceMode": "mapped-authoritative-source",
+      "evidenceStatus": "approved",
+      "id": "lab:cavity-short-shot:0",
+      "kind": "diagnostic-lab-question",
+      "revision": 1,
+      "sourceFingerprint": "fnv1a-b3c8dd5c",
+      "sourceIds": [
+        "autodesk-fill-pack",
+        "zhao-2022"
+      ]
+    },
+    {
+      "bankVersion": null,
+      "choiceFingerprints": [
+        "fnv1a-943b8251",
+        "fnv1a-97d546e3",
+        "fnv1a-38fead43",
+        "fnv1a-6cff2ca3"
+      ],
+      "contentFingerprint": "fnv1a-d05566a7",
+      "correctChoiceFingerprint": "fnv1a-6cff2ca3",
+      "critical": false,
+      "decisionScope": "evidence-approved-learning",
+      "evidenceSourceMode": "mapped-authoritative-source",
+      "evidenceStatus": "approved",
+      "id": "lab:cavity-short-shot:1",
+      "kind": "diagnostic-lab-question",
+      "revision": 1,
+      "sourceFingerprint": "fnv1a-b3c8dd5c",
+      "sourceIds": [
+        "autodesk-fill-pack",
+        "zhao-2022"
+      ]
+    },
+    {
+      "bankVersion": null,
+      "choiceFingerprints": [
+        "fnv1a-80c9b898",
+        "fnv1a-93724681",
+        "fnv1a-9f904b54",
+        "fnv1a-1fed8302"
+      ],
+      "contentFingerprint": "fnv1a-a57f4146",
+      "correctChoiceFingerprint": "fnv1a-80c9b898",
+      "critical": false,
+      "decisionScope": "evidence-approved-learning",
+      "evidenceSourceMode": "mapped-authoritative-source",
+      "evidenceStatus": "approved",
+      "id": "lab:cavity-short-shot:2",
+      "kind": "diagnostic-lab-question",
+      "revision": 1,
+      "sourceFingerprint": "fnv1a-b3c8dd5c",
+      "sourceIds": [
+        "autodesk-fill-pack",
+        "zhao-2022"
+      ]
+    },
+    {
+      "bankVersion": null,
+      "choiceFingerprints": [
+        "fnv1a-fcdb7445",
+        "fnv1a-47a701e9",
+        "fnv1a-6845f33e",
+        "fnv1a-6ef23624"
+      ],
+      "contentFingerprint": "fnv1a-c13d1599",
+      "correctChoiceFingerprint": "fnv1a-6845f33e",
+      "critical": false,
+      "decisionScope": "evidence-approved-learning",
+      "evidenceSourceMode": "mapped-authoritative-source",
+      "evidenceStatus": "approved",
+      "id": "lab:cavity-short-shot:3",
+      "kind": "diagnostic-lab-question",
+      "revision": 1,
+      "sourceFingerprint": "fnv1a-b3c8dd5c",
+      "sourceIds": [
+        "autodesk-fill-pack",
+        "zhao-2022"
+      ]
+    },
+    {
+      "bankVersion": null,
+      "choiceFingerprints": [
+        "fnv1a-6a7487e8",
+        "fnv1a-e32bb160",
+        "fnv1a-90fd6f53",
+        "fnv1a-4235c77a"
+      ],
+      "contentFingerprint": "fnv1a-5557b6d1",
+      "correctChoiceFingerprint": "fnv1a-6a7487e8",
+      "critical": false,
+      "decisionScope": "evidence-approved-learning",
+      "evidenceSourceMode": "mapped-authoritative-source",
+      "evidenceStatus": "approved",
+      "id": "lab:check-ring-repeatability:0",
+      "kind": "diagnostic-lab-question",
+      "revision": 1,
+      "sourceFingerprint": "fnv1a-195d6e95",
+      "sourceIds": [
+        "liew-2022"
+      ]
+    },
+    {
+      "bankVersion": null,
+      "choiceFingerprints": [
+        "fnv1a-9f2bffc3",
+        "fnv1a-531ed9c0",
+        "fnv1a-049a7f2e",
+        "fnv1a-5167dc13"
+      ],
+      "contentFingerprint": "fnv1a-5db85928",
+      "correctChoiceFingerprint": "fnv1a-049a7f2e",
+      "critical": false,
+      "decisionScope": "evidence-approved-learning",
+      "evidenceSourceMode": "mapped-authoritative-source",
+      "evidenceStatus": "approved",
+      "id": "lab:check-ring-repeatability:1",
+      "kind": "diagnostic-lab-question",
+      "revision": 1,
+      "sourceFingerprint": "fnv1a-195d6e95",
+      "sourceIds": [
+        "liew-2022"
+      ]
+    },
+    {
+      "bankVersion": null,
+      "choiceFingerprints": [
+        "fnv1a-0942032f",
+        "fnv1a-8ca31c05",
+        "fnv1a-620249de",
+        "fnv1a-e5d2ad81"
+      ],
+      "contentFingerprint": "fnv1a-2e91020f",
+      "correctChoiceFingerprint": "fnv1a-8ca31c05",
+      "critical": false,
+      "decisionScope": "evidence-approved-learning",
+      "evidenceSourceMode": "mapped-authoritative-source",
+      "evidenceStatus": "approved",
+      "id": "lab:check-ring-repeatability:2",
+      "kind": "diagnostic-lab-question",
+      "revision": 1,
+      "sourceFingerprint": "fnv1a-195d6e95",
+      "sourceIds": [
+        "liew-2022"
+      ]
+    },
+    {
+      "bankVersion": null,
+      "choiceFingerprints": [
+        "fnv1a-1834c23b",
+        "fnv1a-f35fb074",
+        "fnv1a-5b24639b",
+        "fnv1a-d45785b2"
+      ],
+      "contentFingerprint": "fnv1a-1c3d00ee",
+      "correctChoiceFingerprint": "fnv1a-d45785b2",
+      "critical": false,
+      "decisionScope": "evidence-approved-learning",
+      "evidenceSourceMode": "mapped-authoritative-source",
+      "evidenceStatus": "approved",
+      "id": "lab:check-ring-repeatability:3",
+      "kind": "diagnostic-lab-question",
+      "revision": 1,
+      "sourceFingerprint": "fnv1a-195d6e95",
+      "sourceIds": [
+        "liew-2022"
+      ]
+    },
+    {
+      "bankVersion": null,
+      "choiceFingerprints": [
+        "fnv1a-d91de444",
+        "fnv1a-518ca53d",
+        "fnv1a-ecc68c8d",
+        "fnv1a-e2bb4d3b"
+      ],
+      "contentFingerprint": "fnv1a-666d0e5f",
+      "correctChoiceFingerprint": "fnv1a-518ca53d",
+      "critical": false,
+      "decisionScope": "evidence-approved-learning",
+      "evidenceSourceMode": "mapped-authoritative-source",
+      "evidenceStatus": "approved",
+      "id": "lab:cooling-warpage:0",
+      "kind": "diagnostic-lab-question",
+      "revision": 1,
+      "sourceFingerprint": "fnv1a-b5e9d71c",
+      "sourceIds": [
+        "zhao-2022",
+        "autodesk-cooling",
+        "autodesk-fill-pack"
+      ]
+    },
+    {
+      "bankVersion": null,
+      "choiceFingerprints": [
+        "fnv1a-a783a018",
+        "fnv1a-f25ecb47",
+        "fnv1a-2bfea735",
+        "fnv1a-5cb0cced"
+      ],
+      "contentFingerprint": "fnv1a-54a21f5e",
+      "correctChoiceFingerprint": "fnv1a-5cb0cced",
+      "critical": false,
+      "decisionScope": "evidence-approved-learning",
+      "evidenceSourceMode": "mapped-authoritative-source",
+      "evidenceStatus": "approved",
+      "id": "lab:cooling-warpage:1",
+      "kind": "diagnostic-lab-question",
+      "revision": 1,
+      "sourceFingerprint": "fnv1a-b5e9d71c",
+      "sourceIds": [
+        "zhao-2022",
+        "autodesk-cooling",
+        "autodesk-fill-pack"
+      ]
+    },
+    {
+      "bankVersion": null,
+      "choiceFingerprints": [
+        "fnv1a-f23fb65e",
+        "fnv1a-c1e1e323",
+        "fnv1a-376f4308",
+        "fnv1a-55f1ba07"
+      ],
+      "contentFingerprint": "fnv1a-93d0aff5",
+      "correctChoiceFingerprint": "fnv1a-f23fb65e",
+      "critical": false,
+      "decisionScope": "evidence-approved-learning",
+      "evidenceSourceMode": "mapped-authoritative-source",
+      "evidenceStatus": "approved",
+      "id": "lab:cooling-warpage:2",
+      "kind": "diagnostic-lab-question",
+      "revision": 1,
+      "sourceFingerprint": "fnv1a-b5e9d71c",
+      "sourceIds": [
+        "zhao-2022",
+        "autodesk-cooling",
+        "autodesk-fill-pack"
+      ]
+    },
+    {
+      "bankVersion": null,
+      "choiceFingerprints": [
+        "fnv1a-f9965ee9",
+        "fnv1a-748589f0",
+        "fnv1a-a9e61185",
+        "fnv1a-7bc73b69"
+      ],
+      "contentFingerprint": "fnv1a-cb77d71c",
+      "correctChoiceFingerprint": "fnv1a-a9e61185",
+      "critical": false,
+      "decisionScope": "evidence-approved-learning",
+      "evidenceSourceMode": "mapped-authoritative-source",
+      "evidenceStatus": "approved",
+      "id": "lab:cooling-warpage:3",
+      "kind": "diagnostic-lab-question",
+      "revision": 1,
+      "sourceFingerprint": "fnv1a-b5e9d71c",
+      "sourceIds": [
+        "zhao-2022",
+        "autodesk-cooling",
+        "autodesk-fill-pack"
+      ]
+    },
+    {
+      "bankVersion": null,
+      "choiceFingerprints": [
+        "fnv1a-4eaa04a1",
+        "fnv1a-cf3d4775",
+        "fnv1a-eb195338",
+        "fnv1a-1fe2de88"
+      ],
+      "contentFingerprint": "fnv1a-1efca83e",
+      "correctChoiceFingerprint": "fnv1a-eb195338",
+      "critical": false,
+      "decisionScope": "evidence-approved-learning",
+      "evidenceSourceMode": "mapped-authoritative-source",
+      "evidenceStatus": "approved",
+      "id": "lab:gate-seal-study:0",
+      "kind": "diagnostic-lab-question",
+      "revision": 1,
+      "sourceFingerprint": "fnv1a-86365307",
+      "sourceIds": [
+        "jansen-1998",
+        "autodesk-packing",
+        "autodesk-fill-pack",
+        "zhao-2022"
+      ]
+    },
+    {
+      "bankVersion": null,
+      "choiceFingerprints": [
+        "fnv1a-1f7d62a5",
+        "fnv1a-be91f2b2",
+        "fnv1a-6959f42e",
+        "fnv1a-eed67d95"
+      ],
+      "contentFingerprint": "fnv1a-edc4ff75",
+      "correctChoiceFingerprint": "fnv1a-1f7d62a5",
+      "critical": false,
+      "decisionScope": "evidence-approved-learning",
+      "evidenceSourceMode": "mapped-authoritative-source",
+      "evidenceStatus": "approved",
+      "id": "lab:gate-seal-study:1",
+      "kind": "diagnostic-lab-question",
+      "revision": 1,
+      "sourceFingerprint": "fnv1a-86365307",
+      "sourceIds": [
+        "jansen-1998",
+        "autodesk-packing",
+        "autodesk-fill-pack",
+        "zhao-2022"
+      ]
+    },
+    {
+      "bankVersion": null,
+      "choiceFingerprints": [
+        "fnv1a-b76f20ec",
+        "fnv1a-d4dc6401",
+        "fnv1a-721e9752",
+        "fnv1a-edfbf353"
+      ],
+      "contentFingerprint": "fnv1a-8a9846c0",
+      "correctChoiceFingerprint": "fnv1a-edfbf353",
+      "critical": false,
+      "decisionScope": "evidence-approved-learning",
+      "evidenceSourceMode": "mapped-authoritative-source",
+      "evidenceStatus": "approved",
+      "id": "lab:gate-seal-study:2",
+      "kind": "diagnostic-lab-question",
+      "revision": 1,
+      "sourceFingerprint": "fnv1a-86365307",
+      "sourceIds": [
+        "jansen-1998",
+        "autodesk-packing",
+        "autodesk-fill-pack",
+        "zhao-2022"
+      ]
+    },
+    {
+      "bankVersion": null,
+      "choiceFingerprints": [
+        "fnv1a-795f5380",
+        "fnv1a-859bf3d9",
+        "fnv1a-8c17be3d",
+        "fnv1a-7bdd46fb"
+      ],
+      "contentFingerprint": "fnv1a-cc396e5f",
+      "correctChoiceFingerprint": "fnv1a-859bf3d9",
+      "critical": false,
+      "decisionScope": "evidence-approved-learning",
+      "evidenceSourceMode": "mapped-authoritative-source",
+      "evidenceStatus": "approved",
+      "id": "lab:gate-seal-study:3",
+      "kind": "diagnostic-lab-question",
+      "revision": 1,
+      "sourceFingerprint": "fnv1a-86365307",
+      "sourceIds": [
+        "jansen-1998",
+        "autodesk-packing",
+        "autodesk-fill-pack",
+        "zhao-2022"
+      ]
+    },
+    {
+      "bankVersion": null,
+      "choiceFingerprints": [
+        "fnv1a-fc7ef152",
+        "fnv1a-c778a565",
+        "fnv1a-aa54d394",
+        "fnv1a-0a702c74"
+      ],
+      "contentFingerprint": "fnv1a-fe4f4b1a",
+      "correctChoiceFingerprint": "fnv1a-fc7ef152",
+      "critical": false,
+      "decisionScope": "evidence-approved-learning",
+      "evidenceSourceMode": "mapped-authoritative-source",
+      "evidenceStatus": "approved",
+      "id": "lab:hot-runner-imbalance:0",
+      "kind": "diagnostic-lab-question",
+      "revision": 1,
+      "sourceFingerprint": "fnv1a-4d7e5910",
+      "sourceIds": [
+        "hotrunner-2024",
+        "autodesk-fill-pack",
+        "zhao-2022"
+      ]
+    },
+    {
+      "bankVersion": null,
+      "choiceFingerprints": [
+        "fnv1a-1d711836",
+        "fnv1a-b2935a49",
+        "fnv1a-ab50487b",
+        "fnv1a-0dc1718f"
+      ],
+      "contentFingerprint": "fnv1a-0625e71f",
+      "correctChoiceFingerprint": "fnv1a-ab50487b",
+      "critical": false,
+      "decisionScope": "evidence-approved-learning",
+      "evidenceSourceMode": "mapped-authoritative-source",
+      "evidenceStatus": "approved",
+      "id": "lab:hot-runner-imbalance:1",
+      "kind": "diagnostic-lab-question",
+      "revision": 1,
+      "sourceFingerprint": "fnv1a-4d7e5910",
+      "sourceIds": [
+        "hotrunner-2024",
+        "autodesk-fill-pack",
+        "zhao-2022"
+      ]
+    },
+    {
+      "bankVersion": null,
+      "choiceFingerprints": [
+        "fnv1a-604b4f83",
+        "fnv1a-4a6da68f",
+        "fnv1a-dc55ba8f",
+        "fnv1a-e1abe96c"
+      ],
+      "contentFingerprint": "fnv1a-33323d50",
+      "correctChoiceFingerprint": "fnv1a-4a6da68f",
+      "critical": false,
+      "decisionScope": "evidence-approved-learning",
+      "evidenceSourceMode": "mapped-authoritative-source",
+      "evidenceStatus": "approved",
+      "id": "lab:hot-runner-imbalance:2",
+      "kind": "diagnostic-lab-question",
+      "revision": 1,
+      "sourceFingerprint": "fnv1a-4d7e5910",
+      "sourceIds": [
+        "hotrunner-2024",
+        "autodesk-fill-pack",
+        "zhao-2022"
+      ]
+    },
+    {
+      "bankVersion": null,
+      "choiceFingerprints": [
+        "fnv1a-ec206e21",
+        "fnv1a-e06bb8ce",
+        "fnv1a-70250bb6",
+        "fnv1a-247950e0"
+      ],
+      "contentFingerprint": "fnv1a-d63f3ae5",
+      "correctChoiceFingerprint": "fnv1a-247950e0",
+      "critical": false,
+      "decisionScope": "evidence-approved-learning",
+      "evidenceSourceMode": "mapped-authoritative-source",
+      "evidenceStatus": "approved",
+      "id": "lab:hot-runner-imbalance:3",
+      "kind": "diagnostic-lab-question",
+      "revision": 1,
+      "sourceFingerprint": "fnv1a-4d7e5910",
+      "sourceIds": [
+        "hotrunner-2024",
+        "autodesk-fill-pack",
+        "zhao-2022"
+      ]
+    },
+    {
+      "bankVersion": null,
+      "choiceFingerprints": [
+        "fnv1a-bd49f994",
+        "fnv1a-e744d5c7",
+        "fnv1a-e574259d",
+        "fnv1a-7b3cd07d"
+      ],
+      "contentFingerprint": "fnv1a-a4223a3d",
+      "correctChoiceFingerprint": "fnv1a-e744d5c7",
+      "critical": false,
+      "decisionScope": "evidence-approved-learning",
+      "evidenceSourceMode": "mapped-authoritative-source",
+      "evidenceStatus": "approved",
+      "id": "lab:local-flash:0",
+      "kind": "diagnostic-lab-question",
+      "revision": 1,
+      "sourceFingerprint": "fnv1a-ba327bbc",
+      "sourceIds": [
+        "autodesk-flash",
+        "autodesk-clamp"
+      ]
+    },
+    {
+      "bankVersion": null,
+      "choiceFingerprints": [
+        "fnv1a-948531ca",
+        "fnv1a-16436671",
+        "fnv1a-d3112666",
+        "fnv1a-4c556841"
+      ],
+      "contentFingerprint": "fnv1a-13eb9080",
+      "correctChoiceFingerprint": "fnv1a-4c556841",
+      "critical": false,
+      "decisionScope": "evidence-approved-learning",
+      "evidenceSourceMode": "mapped-authoritative-source",
+      "evidenceStatus": "approved",
+      "id": "lab:local-flash:1",
+      "kind": "diagnostic-lab-question",
+      "revision": 1,
+      "sourceFingerprint": "fnv1a-ba327bbc",
+      "sourceIds": [
+        "autodesk-flash",
+        "autodesk-clamp"
+      ]
+    },
+    {
+      "bankVersion": null,
+      "choiceFingerprints": [
+        "fnv1a-3b9bb2ee",
+        "fnv1a-f021f790",
+        "fnv1a-2aa0c387",
+        "fnv1a-a200f324"
+      ],
+      "contentFingerprint": "fnv1a-ab072ce3",
+      "correctChoiceFingerprint": "fnv1a-3b9bb2ee",
+      "critical": false,
+      "decisionScope": "evidence-approved-learning",
+      "evidenceSourceMode": "mapped-authoritative-source",
+      "evidenceStatus": "approved",
+      "id": "lab:local-flash:2",
+      "kind": "diagnostic-lab-question",
+      "revision": 1,
+      "sourceFingerprint": "fnv1a-ba327bbc",
+      "sourceIds": [
+        "autodesk-flash",
+        "autodesk-clamp"
+      ]
+    },
+    {
+      "bankVersion": null,
+      "choiceFingerprints": [
+        "fnv1a-28afe82c",
+        "fnv1a-22b9720d",
+        "fnv1a-d38d6019",
+        "fnv1a-4e7ebd48"
+      ],
+      "contentFingerprint": "fnv1a-204cb9f6",
+      "correctChoiceFingerprint": "fnv1a-d38d6019",
+      "critical": false,
+      "decisionScope": "evidence-approved-learning",
+      "evidenceSourceMode": "mapped-authoritative-source",
+      "evidenceStatus": "approved",
+      "id": "lab:local-flash:3",
+      "kind": "diagnostic-lab-question",
+      "revision": 1,
+      "sourceFingerprint": "fnv1a-ba327bbc",
+      "sourceIds": [
+        "autodesk-flash",
+        "autodesk-clamp"
+      ]
+    },
+    {
+      "bankVersion": null,
+      "choiceFingerprints": [
+        "fnv1a-07c28d5f",
+        "fnv1a-ac020687",
+        "fnv1a-79d8619e",
+        "fnv1a-55cdd387"
+      ],
+      "contentFingerprint": "fnv1a-b96d3f71",
+      "correctChoiceFingerprint": "fnv1a-55cdd387",
+      "critical": false,
+      "decisionScope": "evidence-approved-learning",
+      "evidenceSourceMode": "mapped-authoritative-source",
+      "evidenceStatus": "approved",
+      "id": "lab:measurement-noise:0",
+      "kind": "diagnostic-lab-question",
+      "revision": 1,
+      "sourceFingerprint": "fnv1a-646818ab",
+      "sourceIds": [
+        "nist-capability",
+        "nist-handbook"
+      ]
+    },
+    {
+      "bankVersion": null,
+      "choiceFingerprints": [
+        "fnv1a-e81c88cf",
+        "fnv1a-fa0a034f",
+        "fnv1a-ac640a77",
+        "fnv1a-6df3eedf"
+      ],
+      "contentFingerprint": "fnv1a-d919ed54",
+      "correctChoiceFingerprint": "fnv1a-fa0a034f",
+      "critical": false,
+      "decisionScope": "evidence-approved-learning",
+      "evidenceSourceMode": "mapped-authoritative-source",
+      "evidenceStatus": "approved",
+      "id": "lab:measurement-noise:1",
+      "kind": "diagnostic-lab-question",
+      "revision": 1,
+      "sourceFingerprint": "fnv1a-646818ab",
+      "sourceIds": [
+        "nist-capability",
+        "nist-handbook"
+      ]
+    },
+    {
+      "bankVersion": null,
+      "choiceFingerprints": [
+        "fnv1a-d6b1e09f",
+        "fnv1a-03d628a6",
+        "fnv1a-194e29fd",
+        "fnv1a-d79932ff"
+      ],
+      "contentFingerprint": "fnv1a-0e8337cf",
+      "correctChoiceFingerprint": "fnv1a-194e29fd",
+      "critical": false,
+      "decisionScope": "evidence-approved-learning",
+      "evidenceSourceMode": "mapped-authoritative-source",
+      "evidenceStatus": "approved",
+      "id": "lab:measurement-noise:2",
+      "kind": "diagnostic-lab-question",
+      "revision": 1,
+      "sourceFingerprint": "fnv1a-646818ab",
+      "sourceIds": [
+        "nist-capability",
+        "nist-handbook"
+      ]
+    },
+    {
+      "bankVersion": null,
+      "choiceFingerprints": [
+        "fnv1a-68313630",
+        "fnv1a-2923190a",
+        "fnv1a-9f3b9aa7",
+        "fnv1a-65142e78"
+      ],
+      "contentFingerprint": "fnv1a-ca7db78a",
+      "correctChoiceFingerprint": "fnv1a-68313630",
+      "critical": false,
+      "decisionScope": "evidence-approved-learning",
+      "evidenceSourceMode": "mapped-authoritative-source",
+      "evidenceStatus": "approved",
+      "id": "lab:measurement-noise:3",
+      "kind": "diagnostic-lab-question",
+      "revision": 1,
+      "sourceFingerprint": "fnv1a-646818ab",
+      "sourceIds": [
+        "nist-capability",
+        "nist-handbook"
+      ]
+    },
+    {
+      "bankVersion": null,
+      "choiceFingerprints": [
+        "fnv1a-5c6b22be",
+        "fnv1a-03508343",
+        "fnv1a-24db8fff",
+        "fnv1a-9b4f7707"
+      ],
+      "contentFingerprint": "fnv1a-b2907463",
+      "correctChoiceFingerprint": "fnv1a-9b4f7707",
+      "critical": false,
+      "decisionScope": "evidence-approved-learning",
+      "evidenceSourceMode": "mapped-authoritative-source",
+      "evidenceStatus": "approved",
+      "id": "lab:pressure-limited-fill:0",
+      "kind": "diagnostic-lab-question",
+      "revision": 1,
+      "sourceFingerprint": "fnv1a-1f79575c",
+      "sourceIds": [
+        "autodesk-fill-pack",
+        "zhao-2022",
+        "liew-2022"
+      ]
+    },
+    {
+      "bankVersion": null,
+      "choiceFingerprints": [
+        "fnv1a-1530f5fd",
+        "fnv1a-c366248b",
+        "fnv1a-d430cb1d",
+        "fnv1a-173e66f2"
+      ],
+      "contentFingerprint": "fnv1a-245f60b2",
+      "correctChoiceFingerprint": "fnv1a-c366248b",
+      "critical": false,
+      "decisionScope": "evidence-approved-learning",
+      "evidenceSourceMode": "mapped-authoritative-source",
+      "evidenceStatus": "approved",
+      "id": "lab:pressure-limited-fill:1",
+      "kind": "diagnostic-lab-question",
+      "revision": 1,
+      "sourceFingerprint": "fnv1a-1f79575c",
+      "sourceIds": [
+        "autodesk-fill-pack",
+        "zhao-2022",
+        "liew-2022"
+      ]
+    },
+    {
+      "bankVersion": null,
+      "choiceFingerprints": [
+        "fnv1a-deee1513",
+        "fnv1a-ff15c971",
+        "fnv1a-67ae4a33",
+        "fnv1a-4865e8ed"
+      ],
+      "contentFingerprint": "fnv1a-f5aa4cf9",
+      "correctChoiceFingerprint": "fnv1a-67ae4a33",
+      "critical": false,
+      "decisionScope": "evidence-approved-learning",
+      "evidenceSourceMode": "mapped-authoritative-source",
+      "evidenceStatus": "approved",
+      "id": "lab:pressure-limited-fill:2",
+      "kind": "diagnostic-lab-question",
+      "revision": 1,
+      "sourceFingerprint": "fnv1a-1f79575c",
+      "sourceIds": [
+        "autodesk-fill-pack",
+        "zhao-2022",
+        "liew-2022"
+      ]
+    },
+    {
+      "bankVersion": null,
+      "choiceFingerprints": [
+        "fnv1a-19c64ee5",
+        "fnv1a-d41c58b1",
+        "fnv1a-c0ba7b92",
+        "fnv1a-5f06059e"
+      ],
+      "contentFingerprint": "fnv1a-55389768",
+      "correctChoiceFingerprint": "fnv1a-19c64ee5",
+      "critical": false,
+      "decisionScope": "evidence-approved-learning",
+      "evidenceSourceMode": "mapped-authoritative-source",
+      "evidenceStatus": "approved",
+      "id": "lab:pressure-limited-fill:3",
+      "kind": "diagnostic-lab-question",
+      "revision": 1,
+      "sourceFingerprint": "fnv1a-1f79575c",
+      "sourceIds": [
+        "autodesk-fill-pack",
+        "zhao-2022",
+        "liew-2022"
+      ]
+    },
+    {
+      "bankVersion": null,
+      "choiceFingerprints": [
+        "fnv1a-a27718d2",
+        "fnv1a-183577f5",
+        "fnv1a-6bd7a0d3",
+        "fnv1a-c2ed8ac9"
+      ],
+      "contentFingerprint": "fnv1a-6e76429e",
+      "correctChoiceFingerprint": "fnv1a-6bd7a0d3",
+      "critical": false,
+      "decisionScope": "evidence-approved-learning",
+      "evidenceSourceMode": "mapped-authoritative-source",
+      "evidenceStatus": "approved",
+      "id": "lab:splay-moisture:0",
+      "kind": "diagnostic-lab-question",
+      "revision": 1,
+      "sourceFingerprint": "fnv1a-091f9f4e",
+      "sourceIds": [
+        "covestro-drying",
+        "iso-15512"
+      ]
+    },
+    {
+      "bankVersion": null,
+      "choiceFingerprints": [
+        "fnv1a-157a69fa",
+        "fnv1a-20f55b69",
+        "fnv1a-a0942d4b",
+        "fnv1a-b0cabc7d"
+      ],
+      "contentFingerprint": "fnv1a-d4843771",
+      "correctChoiceFingerprint": "fnv1a-157a69fa",
+      "critical": false,
+      "decisionScope": "evidence-approved-learning",
+      "evidenceSourceMode": "mapped-authoritative-source",
+      "evidenceStatus": "approved",
+      "id": "lab:splay-moisture:1",
+      "kind": "diagnostic-lab-question",
+      "revision": 1,
+      "sourceFingerprint": "fnv1a-091f9f4e",
+      "sourceIds": [
+        "covestro-drying",
+        "iso-15512"
+      ]
+    },
+    {
+      "bankVersion": null,
+      "choiceFingerprints": [
+        "fnv1a-97b45f50",
+        "fnv1a-ade8fe77",
+        "fnv1a-b5b11b4b",
+        "fnv1a-59d3f3a2"
+      ],
+      "contentFingerprint": "fnv1a-fab54570",
+      "correctChoiceFingerprint": "fnv1a-59d3f3a2",
+      "critical": false,
+      "decisionScope": "evidence-approved-learning",
+      "evidenceSourceMode": "mapped-authoritative-source",
+      "evidenceStatus": "approved",
+      "id": "lab:splay-moisture:2",
+      "kind": "diagnostic-lab-question",
+      "revision": 1,
+      "sourceFingerprint": "fnv1a-091f9f4e",
+      "sourceIds": [
+        "covestro-drying",
+        "iso-15512"
+      ]
+    },
+    {
+      "bankVersion": null,
+      "choiceFingerprints": [
+        "fnv1a-15e44820",
+        "fnv1a-231fe588",
+        "fnv1a-738318f6",
+        "fnv1a-41eae711"
+      ],
+      "contentFingerprint": "fnv1a-d0b9e2ab",
+      "correctChoiceFingerprint": "fnv1a-231fe588",
+      "critical": false,
+      "decisionScope": "evidence-approved-learning",
+      "evidenceSourceMode": "mapped-authoritative-source",
+      "evidenceStatus": "approved",
+      "id": "lab:splay-moisture:3",
+      "kind": "diagnostic-lab-question",
+      "revision": 1,
+      "sourceFingerprint": "fnv1a-091f9f4e",
+      "sourceIds": [
+        "covestro-drying",
+        "iso-15512"
+      ]
+    },
+    {
+      "bankVersion": null,
+      "choiceFingerprints": [
+        "fnv1a-334e2abb",
+        "fnv1a-d146c5fc",
+        "fnv1a-e1e2e164",
+        "fnv1a-d6a7dc96"
+      ],
+      "contentFingerprint": "fnv1a-b74fb16e",
+      "correctChoiceFingerprint": "fnv1a-334e2abb",
+      "critical": false,
+      "decisionScope": "evidence-approved-learning",
+      "evidenceSourceMode": "mapped-authoritative-source",
+      "evidenceStatus": "approved",
+      "id": "material:abs-thermal-history:0",
+      "kind": "material-lab-question",
+      "revision": 1,
+      "sourceFingerprint": "fnv1a-99ab428a",
+      "sourceIds": [
+        "sabic-cycolac",
+        "basf-troubleshooter"
+      ]
+    },
+    {
+      "bankVersion": null,
+      "choiceFingerprints": [
+        "fnv1a-0fd42f0b",
+        "fnv1a-6f50a042",
+        "fnv1a-76b007c7",
+        "fnv1a-f61fb82e"
+      ],
+      "contentFingerprint": "fnv1a-df6ab540",
+      "correctChoiceFingerprint": "fnv1a-76b007c7",
+      "critical": false,
+      "decisionScope": "evidence-approved-learning",
+      "evidenceSourceMode": "mapped-authoritative-source",
+      "evidenceStatus": "approved",
+      "id": "material:abs-thermal-history:1",
+      "kind": "material-lab-question",
+      "revision": 1,
+      "sourceFingerprint": "fnv1a-99ab428a",
+      "sourceIds": [
+        "sabic-cycolac",
+        "basf-troubleshooter"
+      ]
+    },
+    {
+      "bankVersion": null,
+      "choiceFingerprints": [
+        "fnv1a-390351b0",
+        "fnv1a-6568798b",
+        "fnv1a-b6ebbb51",
+        "fnv1a-37cd36c2"
+      ],
+      "contentFingerprint": "fnv1a-349db1a2",
+      "correctChoiceFingerprint": "fnv1a-6568798b",
+      "critical": false,
+      "decisionScope": "evidence-approved-learning",
+      "evidenceSourceMode": "mapped-authoritative-source",
+      "evidenceStatus": "approved",
+      "id": "material:abs-thermal-history:2",
+      "kind": "material-lab-question",
+      "revision": 1,
+      "sourceFingerprint": "fnv1a-99ab428a",
+      "sourceIds": [
+        "sabic-cycolac",
+        "basf-troubleshooter"
+      ]
+    },
+    {
+      "bankVersion": null,
+      "choiceFingerprints": [
+        "fnv1a-eb670297",
+        "fnv1a-5aabe425",
+        "fnv1a-fe0a38e4",
+        "fnv1a-ed752ed7"
+      ],
+      "contentFingerprint": "fnv1a-cb47e543",
+      "correctChoiceFingerprint": "fnv1a-ed752ed7",
+      "critical": false,
+      "decisionScope": "evidence-approved-learning",
+      "evidenceSourceMode": "mapped-authoritative-source",
+      "evidenceStatus": "approved",
+      "id": "material:abs-thermal-history:3",
+      "kind": "material-lab-question",
+      "revision": 1,
+      "sourceFingerprint": "fnv1a-99ab428a",
+      "sourceIds": [
+        "sabic-cycolac",
+        "basf-troubleshooter"
+      ]
+    },
+    {
+      "bankVersion": null,
+      "choiceFingerprints": [
+        "fnv1a-4b5e776a",
+        "fnv1a-a4c2aaaf",
+        "fnv1a-bc9b2c7a",
+        "fnv1a-918e5631"
+      ],
+      "contentFingerprint": "fnv1a-29dbdb20",
+      "correctChoiceFingerprint": "fnv1a-918e5631",
+      "critical": false,
+      "decisionScope": "evidence-approved-learning",
+      "evidenceSourceMode": "mapped-authoritative-source",
+      "evidenceStatus": "approved",
+      "id": "material:pa66-gf30-dry-conditioned:0",
+      "kind": "material-lab-question",
+      "revision": 1,
+      "sourceFingerprint": "fnv1a-ac7399c1",
+      "sourceIds": [
+        "basf-pa66-gf30",
+        "basf-ultramid",
+        "iso-15512"
+      ]
+    },
+    {
+      "bankVersion": null,
+      "choiceFingerprints": [
+        "fnv1a-f1dc3cba",
+        "fnv1a-05c45e12",
+        "fnv1a-cd8adab3",
+        "fnv1a-43fa15a5"
+      ],
+      "contentFingerprint": "fnv1a-09baa31d",
+      "correctChoiceFingerprint": "fnv1a-05c45e12",
+      "critical": false,
+      "decisionScope": "evidence-approved-learning",
+      "evidenceSourceMode": "mapped-authoritative-source",
+      "evidenceStatus": "approved",
+      "id": "material:pa66-gf30-dry-conditioned:1",
+      "kind": "material-lab-question",
+      "revision": 1,
+      "sourceFingerprint": "fnv1a-ac7399c1",
+      "sourceIds": [
+        "basf-pa66-gf30",
+        "basf-ultramid",
+        "iso-15512"
+      ]
+    },
+    {
+      "bankVersion": null,
+      "choiceFingerprints": [
+        "fnv1a-b5dbd9a7",
+        "fnv1a-6771dd7f",
+        "fnv1a-9b64f56c",
+        "fnv1a-8c69aaf4"
+      ],
+      "contentFingerprint": "fnv1a-618b20e8",
+      "correctChoiceFingerprint": "fnv1a-9b64f56c",
+      "critical": false,
+      "decisionScope": "evidence-approved-learning",
+      "evidenceSourceMode": "mapped-authoritative-source",
+      "evidenceStatus": "approved",
+      "id": "material:pa66-gf30-dry-conditioned:2",
+      "kind": "material-lab-question",
+      "revision": 1,
+      "sourceFingerprint": "fnv1a-ac7399c1",
+      "sourceIds": [
+        "basf-pa66-gf30",
+        "basf-ultramid",
+        "iso-15512"
+      ]
+    },
+    {
+      "bankVersion": null,
+      "choiceFingerprints": [
+        "fnv1a-a34664d4",
+        "fnv1a-1afb2835",
+        "fnv1a-eb8fdf8c",
+        "fnv1a-d8f4eb28"
+      ],
+      "contentFingerprint": "fnv1a-be4c50be",
+      "correctChoiceFingerprint": "fnv1a-a34664d4",
+      "critical": false,
+      "decisionScope": "evidence-approved-learning",
+      "evidenceSourceMode": "mapped-authoritative-source",
+      "evidenceStatus": "approved",
+      "id": "material:pa66-gf30-dry-conditioned:3",
+      "kind": "material-lab-question",
+      "revision": 1,
+      "sourceFingerprint": "fnv1a-ac7399c1",
+      "sourceIds": [
+        "basf-pa66-gf30",
+        "basf-ultramid",
+        "iso-15512"
+      ]
+    },
+    {
+      "bankVersion": null,
+      "choiceFingerprints": [
+        "fnv1a-67e5dbe5",
+        "fnv1a-a1665a7d",
+        "fnv1a-2e4c8131",
+        "fnv1a-0b68c16c"
+      ],
+      "contentFingerprint": "fnv1a-76eac8a9",
+      "correctChoiceFingerprint": "fnv1a-2e4c8131",
+      "critical": false,
+      "decisionScope": "evidence-approved-learning",
+      "evidenceSourceMode": "mapped-authoritative-source",
+      "evidenceStatus": "approved",
+      "id": "material:pc-wet-vs-dry:0",
+      "kind": "material-lab-question",
+      "revision": 1,
+      "sourceFingerprint": "fnv1a-091f9f4e",
+      "sourceIds": [
+        "covestro-drying",
+        "iso-15512"
+      ]
+    },
+    {
+      "bankVersion": null,
+      "choiceFingerprints": [
+        "fnv1a-8872e3e4",
+        "fnv1a-b3302847",
+        "fnv1a-00a31e92",
+        "fnv1a-f3c92b19"
+      ],
+      "contentFingerprint": "fnv1a-58fbd2f7",
+      "correctChoiceFingerprint": "fnv1a-8872e3e4",
+      "critical": false,
+      "decisionScope": "evidence-approved-learning",
+      "evidenceSourceMode": "mapped-authoritative-source",
+      "evidenceStatus": "approved",
+      "id": "material:pc-wet-vs-dry:1",
+      "kind": "material-lab-question",
+      "revision": 1,
+      "sourceFingerprint": "fnv1a-091f9f4e",
+      "sourceIds": [
+        "covestro-drying",
+        "iso-15512"
+      ]
+    },
+    {
+      "bankVersion": null,
+      "choiceFingerprints": [
+        "fnv1a-efc5a151",
+        "fnv1a-22d57acd",
+        "fnv1a-a5421fef",
+        "fnv1a-8ab6e00a"
+      ],
+      "contentFingerprint": "fnv1a-4889d30e",
+      "correctChoiceFingerprint": "fnv1a-8ab6e00a",
+      "critical": false,
+      "decisionScope": "evidence-approved-learning",
+      "evidenceSourceMode": "mapped-authoritative-source",
+      "evidenceStatus": "approved",
+      "id": "material:pc-wet-vs-dry:2",
+      "kind": "material-lab-question",
+      "revision": 1,
+      "sourceFingerprint": "fnv1a-091f9f4e",
+      "sourceIds": [
+        "covestro-drying",
+        "iso-15512"
+      ]
+    },
+    {
+      "bankVersion": null,
+      "choiceFingerprints": [
+        "fnv1a-826337dd",
+        "fnv1a-ff8b41d5",
+        "fnv1a-91bafe15",
+        "fnv1a-be2a2e7b"
+      ],
+      "contentFingerprint": "fnv1a-74b4abdb",
+      "correctChoiceFingerprint": "fnv1a-ff8b41d5",
+      "critical": false,
+      "decisionScope": "evidence-approved-learning",
+      "evidenceSourceMode": "mapped-authoritative-source",
+      "evidenceStatus": "approved",
+      "id": "material:pc-wet-vs-dry:3",
+      "kind": "material-lab-question",
+      "revision": 1,
+      "sourceFingerprint": "fnv1a-091f9f4e",
+      "sourceIds": [
+        "covestro-drying",
+        "iso-15512"
+      ]
+    },
+    {
+      "bankVersion": null,
+      "choiceFingerprints": [
+        "fnv1a-8cde2b43",
+        "fnv1a-b2cce078",
+        "fnv1a-b7844a8b",
+        "fnv1a-cb54346c"
+      ],
+      "contentFingerprint": "fnv1a-a2c17b54",
+      "correctChoiceFingerprint": "fnv1a-b2cce078",
+      "critical": false,
+      "decisionScope": "evidence-approved-learning",
+      "evidenceSourceMode": "mapped-authoritative-source",
+      "evidenceStatus": "approved",
+      "id": "material:pom-thermal-safety:0",
+      "kind": "material-lab-question",
+      "revision": 1,
+      "sourceFingerprint": "fnv1a-8112989c",
+      "sourceIds": [
+        "celanese-pom-processing"
+      ]
+    },
+    {
+      "bankVersion": null,
+      "choiceFingerprints": [
+        "fnv1a-a299791c",
+        "fnv1a-c6322dc2",
+        "fnv1a-dd92dd7d",
+        "fnv1a-edeecfda"
+      ],
+      "contentFingerprint": "fnv1a-f6f805f2",
+      "correctChoiceFingerprint": "fnv1a-edeecfda",
+      "critical": false,
+      "decisionScope": "evidence-approved-learning",
+      "evidenceSourceMode": "mapped-authoritative-source",
+      "evidenceStatus": "approved",
+      "id": "material:pom-thermal-safety:1",
+      "kind": "material-lab-question",
+      "revision": 1,
+      "sourceFingerprint": "fnv1a-8112989c",
+      "sourceIds": [
+        "celanese-pom-processing"
+      ]
+    },
+    {
+      "bankVersion": null,
+      "choiceFingerprints": [
+        "fnv1a-d6095c6f",
+        "fnv1a-df74728e",
+        "fnv1a-d92b0c92",
+        "fnv1a-b4c72d59"
+      ],
+      "contentFingerprint": "fnv1a-2ed2653f",
+      "correctChoiceFingerprint": "fnv1a-d6095c6f",
+      "critical": false,
+      "decisionScope": "evidence-approved-learning",
+      "evidenceSourceMode": "mapped-authoritative-source",
+      "evidenceStatus": "approved",
+      "id": "material:pom-thermal-safety:2",
+      "kind": "material-lab-question",
+      "revision": 1,
+      "sourceFingerprint": "fnv1a-8112989c",
+      "sourceIds": [
+        "celanese-pom-processing"
+      ]
+    },
+    {
+      "bankVersion": null,
+      "choiceFingerprints": [
+        "fnv1a-88c633ee",
+        "fnv1a-f42c9651",
+        "fnv1a-ee827d71",
+        "fnv1a-ec7a2c0f"
+      ],
+      "contentFingerprint": "fnv1a-9b248310",
+      "correctChoiceFingerprint": "fnv1a-ee827d71",
+      "critical": false,
+      "decisionScope": "evidence-approved-learning",
+      "evidenceSourceMode": "mapped-authoritative-source",
+      "evidenceStatus": "approved",
+      "id": "material:pom-thermal-safety:3",
+      "kind": "material-lab-question",
+      "revision": 1,
+      "sourceFingerprint": "fnv1a-8112989c",
+      "sourceIds": [
+        "celanese-pom-processing"
+      ]
+    },
+    {
+      "bankVersion": null,
+      "choiceFingerprints": [
+        "fnv1a-44fe2775",
+        "fnv1a-a81b6f09",
+        "fnv1a-cc12c5d8",
+        "fnv1a-d7828200"
+      ],
+      "contentFingerprint": "fnv1a-b2a71c0d",
+      "correctChoiceFingerprint": "fnv1a-a81b6f09",
+      "critical": false,
+      "decisionScope": "evidence-approved-learning",
+      "evidenceSourceMode": "mapped-authoritative-source",
+      "evidenceStatus": "approved",
+      "id": "material:pp-vs-pc-drying:0",
+      "kind": "material-lab-question",
+      "revision": 1,
+      "sourceFingerprint": "fnv1a-f50d52ff",
+      "sourceIds": [
+        "exxon-pp-processing",
+        "covestro-drying"
+      ]
+    },
+    {
+      "bankVersion": null,
+      "choiceFingerprints": [
+        "fnv1a-2030dca5",
+        "fnv1a-29bbab61",
+        "fnv1a-a9e13628",
+        "fnv1a-9e930af1"
+      ],
+      "contentFingerprint": "fnv1a-dd735a06",
+      "correctChoiceFingerprint": "fnv1a-9e930af1",
+      "critical": false,
+      "decisionScope": "evidence-approved-learning",
+      "evidenceSourceMode": "mapped-authoritative-source",
+      "evidenceStatus": "approved",
+      "id": "material:pp-vs-pc-drying:1",
+      "kind": "material-lab-question",
+      "revision": 1,
+      "sourceFingerprint": "fnv1a-f50d52ff",
+      "sourceIds": [
+        "exxon-pp-processing",
+        "covestro-drying"
+      ]
+    },
+    {
+      "bankVersion": null,
+      "choiceFingerprints": [
+        "fnv1a-654f4512",
+        "fnv1a-72b3f4b9",
+        "fnv1a-4265ea68",
+        "fnv1a-13b22551"
+      ],
+      "contentFingerprint": "fnv1a-ccb28e12",
+      "correctChoiceFingerprint": "fnv1a-654f4512",
+      "critical": false,
+      "decisionScope": "evidence-approved-learning",
+      "evidenceSourceMode": "mapped-authoritative-source",
+      "evidenceStatus": "approved",
+      "id": "material:pp-vs-pc-drying:2",
+      "kind": "material-lab-question",
+      "revision": 1,
+      "sourceFingerprint": "fnv1a-f50d52ff",
+      "sourceIds": [
+        "exxon-pp-processing",
+        "covestro-drying"
+      ]
+    },
+    {
+      "bankVersion": null,
+      "choiceFingerprints": [
+        "fnv1a-39019a9f",
+        "fnv1a-2c152295",
+        "fnv1a-43c66e85",
+        "fnv1a-b1d2003b"
+      ],
+      "contentFingerprint": "fnv1a-c09492d0",
+      "correctChoiceFingerprint": "fnv1a-43c66e85",
+      "critical": false,
+      "decisionScope": "evidence-approved-learning",
+      "evidenceSourceMode": "mapped-authoritative-source",
+      "evidenceStatus": "approved",
+      "id": "material:pp-vs-pc-drying:3",
+      "kind": "material-lab-question",
+      "revision": 1,
+      "sourceFingerprint": "fnv1a-f50d52ff",
+      "sourceIds": [
+        "exxon-pp-processing",
+        "covestro-drying"
+      ]
+    },
+    {
+      "bankVersion": null,
+      "choiceFingerprints": [
+        "fnv1a-b9176a8f",
+        "fnv1a-303514a9",
+        "fnv1a-8b71dede",
+        "fnv1a-c969f450"
+      ],
+      "contentFingerprint": "fnv1a-53cde3e9",
+      "correctChoiceFingerprint": "fnv1a-8b71dede",
+      "critical": false,
+      "decisionScope": "evidence-approved-learning",
+      "evidenceSourceMode": "mapped-authoritative-source",
+      "evidenceStatus": "approved",
+      "id": "material:recycled-pp-lot-rheology:0",
+      "kind": "material-lab-question",
+      "revision": 1,
+      "sourceFingerprint": "fnv1a-f3203cfa",
+      "sourceIds": [
+        "krantz-rpp-2024",
+        "iso-1133",
+        "exxon-pp-processing"
+      ]
+    },
+    {
+      "bankVersion": null,
+      "choiceFingerprints": [
+        "fnv1a-b1e5546a",
+        "fnv1a-16bb1503",
+        "fnv1a-aeef3296",
+        "fnv1a-77006623"
+      ],
+      "contentFingerprint": "fnv1a-e00da56b",
+      "correctChoiceFingerprint": "fnv1a-b1e5546a",
+      "critical": false,
+      "decisionScope": "evidence-approved-learning",
+      "evidenceSourceMode": "mapped-authoritative-source",
+      "evidenceStatus": "approved",
+      "id": "material:recycled-pp-lot-rheology:1",
+      "kind": "material-lab-question",
+      "revision": 1,
+      "sourceFingerprint": "fnv1a-f3203cfa",
+      "sourceIds": [
+        "krantz-rpp-2024",
+        "iso-1133",
+        "exxon-pp-processing"
+      ]
+    },
+    {
+      "bankVersion": null,
+      "choiceFingerprints": [
+        "fnv1a-d5e8a87a",
+        "fnv1a-4b3c303f",
+        "fnv1a-6b40733a",
+        "fnv1a-5571e43e"
+      ],
+      "contentFingerprint": "fnv1a-45c4686f",
+      "correctChoiceFingerprint": "fnv1a-5571e43e",
+      "critical": false,
+      "decisionScope": "evidence-approved-learning",
+      "evidenceSourceMode": "mapped-authoritative-source",
+      "evidenceStatus": "approved",
+      "id": "material:recycled-pp-lot-rheology:2",
+      "kind": "material-lab-question",
+      "revision": 1,
+      "sourceFingerprint": "fnv1a-f3203cfa",
+      "sourceIds": [
+        "krantz-rpp-2024",
+        "iso-1133",
+        "exxon-pp-processing"
+      ]
+    },
+    {
+      "bankVersion": null,
+      "choiceFingerprints": [
+        "fnv1a-15087370",
+        "fnv1a-30e912c0",
+        "fnv1a-39bc2851",
+        "fnv1a-7e8c0dd9"
+      ],
+      "contentFingerprint": "fnv1a-0d297be3",
+      "correctChoiceFingerprint": "fnv1a-30e912c0",
+      "critical": false,
+      "decisionScope": "evidence-approved-learning",
+      "evidenceSourceMode": "mapped-authoritative-source",
+      "evidenceStatus": "approved",
+      "id": "material:recycled-pp-lot-rheology:3",
+      "kind": "material-lab-question",
+      "revision": 1,
+      "sourceFingerprint": "fnv1a-f3203cfa",
+      "sourceIds": [
+        "krantz-rpp-2024",
+        "iso-1133",
+        "exxon-pp-processing"
+      ]
+    },
+    {
+      "bankVersion": null,
+      "choiceFingerprints": [
+        "fnv1a-b6f6fc61",
+        "fnv1a-1e0fa10c",
+        "fnv1a-ddd66dec",
+        "fnv1a-8eaa0751"
+      ],
+      "contentFingerprint": "fnv1a-21320988",
+      "contract": {
+        "blob": "7692f3f029cd4ab1227db1f39e0376023c0eebbf",
+        "license": "CC BY 4.0",
+        "path": "data/public-benchmark-results/scatimdata-avaps-v1.json"
+      },
+      "correctChoiceFingerprint": "fnv1a-b6f6fc61",
+      "critical": false,
+      "decisionScope": "measured-evidence-learning",
+      "evidenceSourceMode": "measured-dataset-contract",
+      "evidenceStatus": "contract-audited",
+      "id": "measured:avaps-delivered-traces:0",
+      "kind": "real-measured-decision",
+      "revision": 1,
+      "sourceFingerprint": "fnv1a-74d35337",
+      "sourceIds": [
+        "scatimdata-avaps"
+      ]
+    },
+    {
+      "bankVersion": null,
+      "choiceFingerprints": [
+        "fnv1a-1fd5ff30",
+        "fnv1a-904ab096",
+        "fnv1a-94ee9275",
+        "fnv1a-3e800188"
+      ],
+      "contentFingerprint": "fnv1a-082baa27",
+      "contract": {
+        "blob": "7692f3f029cd4ab1227db1f39e0376023c0eebbf",
+        "license": "CC BY 4.0",
+        "path": "data/public-benchmark-results/scatimdata-avaps-v1.json"
+      },
+      "correctChoiceFingerprint": "fnv1a-1fd5ff30",
+      "critical": false,
+      "decisionScope": "measured-evidence-learning",
+      "evidenceSourceMode": "measured-dataset-contract",
+      "evidenceStatus": "contract-audited",
+      "id": "measured:avaps-delivered-traces:1",
+      "kind": "real-measured-decision",
+      "revision": 1,
+      "sourceFingerprint": "fnv1a-74d35337",
+      "sourceIds": [
+        "scatimdata-avaps"
+      ]
+    },
+    {
+      "bankVersion": null,
+      "choiceFingerprints": [
+        "fnv1a-a7a85b60",
+        "fnv1a-74263a91",
+        "fnv1a-6c23ec25",
+        "fnv1a-78bddcff"
+      ],
+      "contentFingerprint": "fnv1a-0a2f9e31",
+      "contract": {
+        "blob": "7692f3f029cd4ab1227db1f39e0376023c0eebbf",
+        "license": "CC BY 4.0",
+        "path": "data/public-benchmark-results/scatimdata-avaps-v1.json"
+      },
+      "correctChoiceFingerprint": "fnv1a-a7a85b60",
+      "critical": false,
+      "decisionScope": "measured-evidence-learning",
+      "evidenceSourceMode": "measured-dataset-contract",
+      "evidenceStatus": "contract-audited",
+      "id": "measured:avaps-delivered-traces:2",
+      "kind": "real-measured-decision",
+      "revision": 1,
+      "sourceFingerprint": "fnv1a-74d35337",
+      "sourceIds": [
+        "scatimdata-avaps"
+      ]
+    },
+    {
+      "bankVersion": null,
+      "choiceFingerprints": [
+        "fnv1a-df0cf07e",
+        "fnv1a-46d417b0",
+        "fnv1a-5ba166f4",
+        "fnv1a-34b113cd"
+      ],
+      "contentFingerprint": "fnv1a-d63703ea",
+      "contract": {
+        "blob": "94bea551aa3e4755c435b663d2553b53bcc0c6c2",
+        "license": "CC BY 4.0",
+        "path": "data/public-benchmark-results/cross-process-lower-workpiece-source-contract-v1.json"
+      },
+      "correctChoiceFingerprint": "fnv1a-df0cf07e",
+      "critical": false,
+      "decisionScope": "measured-evidence-learning",
+      "evidenceSourceMode": "measured-dataset-contract",
+      "evidenceStatus": "contract-audited",
+      "id": "measured:cross-process-lower-contract:0",
+      "kind": "real-measured-decision",
+      "revision": 1,
+      "sourceFingerprint": "fnv1a-c6333e2b",
+      "sourceIds": [
+        "cross-process-chain-17240390"
+      ]
+    },
+    {
+      "bankVersion": null,
+      "choiceFingerprints": [
+        "fnv1a-52a40dbc",
+        "fnv1a-762b2f9b",
+        "fnv1a-67ba3a59",
+        "fnv1a-61264de9"
+      ],
+      "contentFingerprint": "fnv1a-a38e6cba",
+      "contract": {
+        "blob": "94bea551aa3e4755c435b663d2553b53bcc0c6c2",
+        "license": "CC BY 4.0",
+        "path": "data/public-benchmark-results/cross-process-lower-workpiece-source-contract-v1.json"
+      },
+      "correctChoiceFingerprint": "fnv1a-52a40dbc",
+      "critical": false,
+      "decisionScope": "measured-evidence-learning",
+      "evidenceSourceMode": "measured-dataset-contract",
+      "evidenceStatus": "contract-audited",
+      "id": "measured:cross-process-lower-contract:1",
+      "kind": "real-measured-decision",
+      "revision": 1,
+      "sourceFingerprint": "fnv1a-c6333e2b",
+      "sourceIds": [
+        "cross-process-chain-17240390"
+      ]
+    },
+    {
+      "bankVersion": null,
+      "choiceFingerprints": [
+        "fnv1a-62f99e9e",
+        "fnv1a-7c7c8af0",
+        "fnv1a-998959ef",
+        "fnv1a-39a6aef5"
+      ],
+      "contentFingerprint": "fnv1a-f03eeca8",
+      "contract": {
+        "blob": "94bea551aa3e4755c435b663d2553b53bcc0c6c2",
+        "license": "CC BY 4.0",
+        "path": "data/public-benchmark-results/cross-process-lower-workpiece-source-contract-v1.json"
+      },
+      "correctChoiceFingerprint": "fnv1a-62f99e9e",
+      "critical": false,
+      "decisionScope": "measured-evidence-learning",
+      "evidenceSourceMode": "measured-dataset-contract",
+      "evidenceStatus": "contract-audited",
+      "id": "measured:cross-process-lower-contract:2",
+      "kind": "real-measured-decision",
+      "revision": 1,
+      "sourceFingerprint": "fnv1a-c6333e2b",
+      "sourceIds": [
+        "cross-process-chain-17240390"
+      ]
+    },
+    {
+      "bankVersion": null,
+      "choiceFingerprints": [
+        "fnv1a-429638d1",
+        "fnv1a-da697b18",
+        "fnv1a-637cc34c",
+        "fnv1a-037167e6"
+      ],
+      "contentFingerprint": "fnv1a-d85a7f5d",
+      "contract": {
+        "blob": "a3e23a0ecd5711158c3937f47a031212e7d1de8d",
+        "license": "CC BY 4.0",
+        "path": "data/public-benchmark-results/cross-process-upper-workpiece-source-contract-v1.json"
+      },
+      "correctChoiceFingerprint": "fnv1a-429638d1",
+      "critical": false,
+      "decisionScope": "measured-evidence-learning",
+      "evidenceSourceMode": "measured-dataset-contract",
+      "evidenceStatus": "contract-audited",
+      "id": "measured:cross-process-upper-boundary:0",
+      "kind": "real-measured-decision",
+      "revision": 1,
+      "sourceFingerprint": "fnv1a-81124b5b",
+      "sourceIds": [
+        "cross-process-chain-17240390"
+      ]
+    },
+    {
+      "bankVersion": null,
+      "choiceFingerprints": [
+        "fnv1a-4c259188",
+        "fnv1a-341e1566",
+        "fnv1a-114d9bb7",
+        "fnv1a-7c6f87ea"
+      ],
+      "contentFingerprint": "fnv1a-72d9b638",
+      "contract": {
+        "blob": "a3e23a0ecd5711158c3937f47a031212e7d1de8d",
+        "license": "CC BY 4.0",
+        "path": "data/public-benchmark-results/cross-process-upper-workpiece-source-contract-v1.json"
+      },
+      "correctChoiceFingerprint": "fnv1a-4c259188",
+      "critical": false,
+      "decisionScope": "measured-evidence-learning",
+      "evidenceSourceMode": "measured-dataset-contract",
+      "evidenceStatus": "contract-audited",
+      "id": "measured:cross-process-upper-boundary:1",
+      "kind": "real-measured-decision",
+      "revision": 1,
+      "sourceFingerprint": "fnv1a-81124b5b",
+      "sourceIds": [
+        "cross-process-chain-17240390"
+      ]
+    },
+    {
+      "bankVersion": null,
+      "choiceFingerprints": [
+        "fnv1a-5c799a7d",
+        "fnv1a-8ec34f45",
+        "fnv1a-68609b55",
+        "fnv1a-1b4a5dbc"
+      ],
+      "contentFingerprint": "fnv1a-63cc107e",
+      "contract": {
+        "blob": "a3e23a0ecd5711158c3937f47a031212e7d1de8d",
+        "license": "CC BY 4.0",
+        "path": "data/public-benchmark-results/cross-process-upper-workpiece-source-contract-v1.json"
+      },
+      "correctChoiceFingerprint": "fnv1a-5c799a7d",
+      "critical": false,
+      "decisionScope": "measured-evidence-learning",
+      "evidenceSourceMode": "measured-dataset-contract",
+      "evidenceStatus": "contract-audited",
+      "id": "measured:cross-process-upper-boundary:2",
+      "kind": "real-measured-decision",
+      "revision": 1,
+      "sourceFingerprint": "fnv1a-81124b5b",
+      "sourceIds": [
+        "cross-process-chain-17240390"
+      ]
+    },
+    {
+      "bankVersion": null,
+      "choiceFingerprints": [
+        "fnv1a-b8cb9979",
+        "fnv1a-3307a3ce",
+        "fnv1a-fc6bf172",
+        "fnv1a-3726c7f3"
+      ],
+      "contentFingerprint": "fnv1a-8ecd4180",
+      "contract": {
+        "blob": "b1ae42ff8af7926e08bf5aabc1d6b3a99afc4208",
+        "license": "BSD-3-Clause",
+        "path": "data/public-benchmark-results/openmms-t4g-v1.json"
+      },
+      "correctChoiceFingerprint": "fnv1a-b8cb9979",
+      "critical": false,
+      "decisionScope": "measured-evidence-learning",
+      "evidenceSourceMode": "measured-dataset-contract",
+      "evidenceStatus": "contract-audited",
+      "id": "measured:openmms-time-samples:0",
+      "kind": "real-measured-decision",
+      "revision": 1,
+      "sourceFingerprint": "fnv1a-ea53b7a7",
+      "sourceIds": [
+        "openmms-t4g"
+      ]
+    },
+    {
+      "bankVersion": null,
+      "choiceFingerprints": [
+        "fnv1a-629a5a93",
+        "fnv1a-7a7c0a37",
+        "fnv1a-3d3d9e44",
+        "fnv1a-9e86bda6"
+      ],
+      "contentFingerprint": "fnv1a-b09b4c91",
+      "contract": {
+        "blob": "b1ae42ff8af7926e08bf5aabc1d6b3a99afc4208",
+        "license": "BSD-3-Clause",
+        "path": "data/public-benchmark-results/openmms-t4g-v1.json"
+      },
+      "correctChoiceFingerprint": "fnv1a-629a5a93",
+      "critical": false,
+      "decisionScope": "measured-evidence-learning",
+      "evidenceSourceMode": "measured-dataset-contract",
+      "evidenceStatus": "contract-audited",
+      "id": "measured:openmms-time-samples:1",
+      "kind": "real-measured-decision",
+      "revision": 1,
+      "sourceFingerprint": "fnv1a-ea53b7a7",
+      "sourceIds": [
+        "openmms-t4g"
+      ]
+    },
+    {
+      "bankVersion": null,
+      "choiceFingerprints": [
+        "fnv1a-ba229bf9",
+        "fnv1a-9b525d06",
+        "fnv1a-7b511b31",
+        "fnv1a-9b9e1374"
+      ],
+      "contentFingerprint": "fnv1a-728fd96b",
+      "contract": {
+        "blob": "b1ae42ff8af7926e08bf5aabc1d6b3a99afc4208",
+        "license": "BSD-3-Clause",
+        "path": "data/public-benchmark-results/openmms-t4g-v1.json"
+      },
+      "correctChoiceFingerprint": "fnv1a-ba229bf9",
+      "critical": false,
+      "decisionScope": "measured-evidence-learning",
+      "evidenceSourceMode": "measured-dataset-contract",
+      "evidenceStatus": "contract-audited",
+      "id": "measured:openmms-time-samples:2",
+      "kind": "real-measured-decision",
+      "revision": 1,
+      "sourceFingerprint": "fnv1a-ea53b7a7",
+      "sourceIds": [
+        "openmms-t4g"
+      ]
+    },
+    {
+      "bankVersion": "2026.08.30.1",
+      "choiceFingerprints": [
+        "fnv1a-e860e676",
+        "fnv1a-3ff285ef",
+        "fnv1a-230b9906",
+        "fnv1a-0e4a894f"
+      ],
+      "contentFingerprint": "fnv1a-199267ab",
+      "correctChoiceFingerprint": "fnv1a-230b9906",
+      "critical": true,
+      "decisionScope": "evidence-approved-learning",
+      "evidenceSourceMode": "direct-question-source",
+      "evidenceStatus": "approved",
+      "id": "reg:NZ:Advanced:0",
+      "kind": "regional-exam",
+      "revision": 2,
+      "sourceFingerprint": "fnv1a-1b03a7f5",
+      "sourceIds": [
+        "direct-49592248",
+        "jansen-1998",
+        "autodesk-packing",
+        "liew-2022",
+        "autodesk-fill-pack"
+      ]
+    },
+    {
+      "bankVersion": "2026.08.30.1",
+      "choiceFingerprints": [
+        "fnv1a-1a5c9342",
+        "fnv1a-4d64d776",
+        "fnv1a-dc2aac5e",
+        "fnv1a-1270f0f9"
+      ],
+      "contentFingerprint": "fnv1a-bedda5f7",
+      "correctChoiceFingerprint": "fnv1a-1270f0f9",
+      "critical": true,
+      "decisionScope": "evidence-approved-learning",
+      "evidenceSourceMode": "direct-question-source",
+      "evidenceStatus": "approved",
+      "id": "reg:NZ:Advanced:1",
+      "kind": "regional-exam",
+      "revision": 2,
+      "sourceFingerprint": "fnv1a-4f95fc65",
+      "sourceIds": [
+        "direct-ec7d99b5",
+        "euromap-79",
+        "iso-20430",
+        "autodesk-fill-pack",
+        "zhao-2022"
+      ]
+    },
+    {
+      "bankVersion": "2026.08.30.1",
+      "choiceFingerprints": [
+        "fnv1a-764303c2",
+        "fnv1a-c8f027e1",
+        "fnv1a-f44cbe1b",
+        "fnv1a-26a0c1b0"
+      ],
+      "contentFingerprint": "fnv1a-24ccd71f",
+      "correctChoiceFingerprint": "fnv1a-764303c2",
+      "critical": true,
+      "decisionScope": "evidence-approved-learning",
+      "evidenceSourceMode": "direct-question-source",
+      "evidenceStatus": "approved",
+      "id": "reg:NZ:Advanced:2",
+      "kind": "regional-exam",
+      "revision": 2,
+      "sourceFingerprint": "fnv1a-94086ca3",
+      "sourceIds": [
+        "direct-147f96c9",
+        "iso-20430"
+      ]
+    },
+    {
+      "bankVersion": "2026.08.30.1",
+      "choiceFingerprints": [
+        "fnv1a-ffd584ef",
+        "fnv1a-ff7a9c6b",
+        "fnv1a-78a1808d",
+        "fnv1a-29fd3692"
+      ],
+      "contentFingerprint": "fnv1a-ee9dcf53",
+      "correctChoiceFingerprint": "fnv1a-ffd584ef",
+      "critical": true,
+      "decisionScope": "evidence-approved-learning",
+      "evidenceSourceMode": "direct-question-source",
+      "evidenceStatus": "approved",
+      "id": "reg:NZ:Beginner:0",
+      "kind": "regional-exam",
+      "revision": 2,
+      "sourceFingerprint": "fnv1a-0e9f6305",
+      "sourceIds": [
+        "direct-9e4c1c03",
+        "jansen-1998",
+        "autodesk-packing",
+        "autodesk-fill-pack",
+        "zhao-2022"
+      ]
+    },
+    {
+      "bankVersion": "2026.08.30.1",
+      "choiceFingerprints": [
+        "fnv1a-fb6922b7",
+        "fnv1a-eeabe1bc",
+        "fnv1a-5671624d",
+        "fnv1a-0833ed26"
+      ],
+      "contentFingerprint": "fnv1a-20cf90a1",
+      "correctChoiceFingerprint": "fnv1a-eeabe1bc",
+      "critical": true,
+      "decisionScope": "evidence-approved-learning",
+      "evidenceSourceMode": "direct-question-source",
+      "evidenceStatus": "approved",
+      "id": "reg:NZ:Beginner:1",
+      "kind": "regional-exam",
+      "revision": 2,
+      "sourceFingerprint": "fnv1a-5e0e5600",
+      "sourceIds": [
+        "direct-ec7d99b5",
+        "iso-20430"
+      ]
+    },
+    {
+      "bankVersion": "2026.08.30.1",
+      "choiceFingerprints": [
+        "fnv1a-485f5a98",
+        "fnv1a-1627d0b8",
+        "fnv1a-932c6a0c",
+        "fnv1a-b2ff88e6"
+      ],
+      "contentFingerprint": "fnv1a-adc5aab8",
+      "correctChoiceFingerprint": "fnv1a-932c6a0c",
+      "critical": true,
+      "decisionScope": "evidence-approved-learning",
+      "evidenceSourceMode": "direct-question-source",
+      "evidenceStatus": "approved",
+      "id": "reg:NZ:Beginner:2",
+      "kind": "regional-exam",
+      "revision": 2,
+      "sourceFingerprint": "fnv1a-91ad0bc9",
+      "sourceIds": [
+        "direct-f0b9256d",
+        "autodesk-fill-pack",
+        "zhao-2022",
+        "iso-20430"
+      ]
+    },
+    {
+      "bankVersion": "2026.08.30.1",
+      "choiceFingerprints": [
+        "fnv1a-edfe8677",
+        "fnv1a-da6e3b78",
+        "fnv1a-35c114de",
+        "fnv1a-ff24fb0e"
+      ],
+      "contentFingerprint": "fnv1a-b4cbdc9b",
+      "correctChoiceFingerprint": "fnv1a-ff24fb0e",
+      "critical": true,
+      "decisionScope": "evidence-approved-learning",
+      "evidenceSourceMode": "direct-question-source",
+      "evidenceStatus": "approved",
+      "id": "reg:NZ:Intermediate:0",
+      "kind": "regional-exam",
+      "revision": 2,
+      "sourceFingerprint": "fnv1a-93a4f3b5",
+      "sourceIds": [
+        "direct-49592248",
+        "euromap-60",
+        "iso-20430"
+      ]
+    },
+    {
+      "bankVersion": "2026.08.30.1",
+      "choiceFingerprints": [
+        "fnv1a-f5335bf0",
+        "fnv1a-b098d561",
+        "fnv1a-43fb86fb",
+        "fnv1a-60a1a35f"
+      ],
+      "contentFingerprint": "fnv1a-79cfafc2",
+      "correctChoiceFingerprint": "fnv1a-f5335bf0",
+      "critical": true,
+      "decisionScope": "evidence-approved-learning",
+      "evidenceSourceMode": "direct-question-source",
+      "evidenceStatus": "approved",
+      "id": "reg:NZ:Intermediate:1",
+      "kind": "regional-exam",
+      "revision": 2,
+      "sourceFingerprint": "fnv1a-97cfc0a3",
+      "sourceIds": [
+        "direct-49592248",
+        "liew-2022",
+        "autodesk-fill-pack",
+        "iso-20430"
+      ]
+    },
+    {
+      "bankVersion": "2026.08.30.1",
+      "choiceFingerprints": [
+        "fnv1a-83494409",
+        "fnv1a-d4d06f73",
+        "fnv1a-d966463e",
+        "fnv1a-9985f632"
+      ],
+      "contentFingerprint": "fnv1a-990327b5",
+      "correctChoiceFingerprint": "fnv1a-d4d06f73",
+      "critical": true,
+      "decisionScope": "evidence-approved-learning",
+      "evidenceSourceMode": "direct-question-source",
+      "evidenceStatus": "approved",
+      "id": "reg:NZ:Intermediate:2",
+      "kind": "regional-exam",
+      "revision": 2,
+      "sourceFingerprint": "fnv1a-d0b819b9",
+      "sourceIds": [
+        "direct-49592248",
+        "iso-20430"
+      ]
+    },
+    {
+      "bankVersion": "2026.08.30.1",
+      "choiceFingerprints": [
+        "fnv1a-647176a2",
+        "fnv1a-0f4d8ce9",
+        "fnv1a-5e7aff2a",
+        "fnv1a-6b44792e"
+      ],
+      "contentFingerprint": "fnv1a-4dc790aa",
+      "correctChoiceFingerprint": "fnv1a-647176a2",
+      "critical": true,
+      "decisionScope": "evidence-approved-learning",
+      "evidenceSourceMode": "direct-question-source",
+      "evidenceStatus": "approved",
+      "id": "reg:UK:Advanced:0",
+      "kind": "regional-exam",
+      "revision": 2,
+      "sourceFingerprint": "fnv1a-85fee13d",
+      "sourceIds": [
+        "direct-b9135934",
+        "euromap-79",
+        "iso-20430",
+        "autodesk-fill-pack",
+        "zhao-2022"
+      ]
+    },
+    {
+      "bankVersion": "2026.08.30.1",
+      "choiceFingerprints": [
+        "fnv1a-6bdba2de",
+        "fnv1a-059e1ac9",
+        "fnv1a-5231c80a",
+        "fnv1a-47a8ae8d"
+      ],
+      "contentFingerprint": "fnv1a-7d90096b",
+      "correctChoiceFingerprint": "fnv1a-059e1ac9",
+      "critical": true,
+      "decisionScope": "evidence-approved-learning",
+      "evidenceSourceMode": "direct-question-source",
+      "evidenceStatus": "approved",
+      "id": "reg:UK:Advanced:1",
+      "kind": "regional-exam",
+      "revision": 2,
+      "sourceFingerprint": "fnv1a-4de986be",
+      "sourceIds": [
+        "direct-b9135934",
+        "jansen-1998",
+        "autodesk-packing"
+      ]
+    },
+    {
+      "bankVersion": "2026.08.30.1",
+      "choiceFingerprints": [
+        "fnv1a-c9527576",
+        "fnv1a-a669e33d",
+        "fnv1a-8dfad961",
+        "fnv1a-2e9a55c2"
+      ],
+      "contentFingerprint": "fnv1a-c4560032",
+      "correctChoiceFingerprint": "fnv1a-8dfad961",
+      "critical": true,
+      "decisionScope": "evidence-approved-learning",
+      "evidenceSourceMode": "direct-question-source",
+      "evidenceStatus": "approved",
+      "id": "reg:UK:Advanced:2",
+      "kind": "regional-exam",
+      "revision": 2,
+      "sourceFingerprint": "fnv1a-9baa4b0f",
+      "sourceIds": [
+        "direct-dfb805e9",
+        "nist-capability",
+        "nist-handbook",
+        "nist-doe",
+        "autodesk-fill-pack"
+      ]
+    },
+    {
+      "bankVersion": "2026.08.30.1",
+      "choiceFingerprints": [
+        "fnv1a-30dd8a3a",
+        "fnv1a-d91e83c6",
+        "fnv1a-8ed42268",
+        "fnv1a-a47b399d"
+      ],
+      "contentFingerprint": "fnv1a-36b2ae6a",
+      "correctChoiceFingerprint": "fnv1a-8ed42268",
+      "critical": true,
+      "decisionScope": "evidence-approved-learning",
+      "evidenceSourceMode": "direct-question-source",
+      "evidenceStatus": "approved",
+      "id": "reg:UK:Beginner:0",
+      "kind": "regional-exam",
+      "revision": 2,
+      "sourceFingerprint": "fnv1a-a09c7118",
+      "sourceIds": [
+        "direct-dfb805e9",
+        "autodesk-fill-pack",
+        "zhao-2022",
+        "iso-20430"
+      ]
+    },
+    {
+      "bankVersion": "2026.08.30.1",
+      "choiceFingerprints": [
+        "fnv1a-1baf573c",
+        "fnv1a-9e9ab192",
+        "fnv1a-2c2c0630",
+        "fnv1a-a24b8e4e"
+      ],
+      "contentFingerprint": "fnv1a-9a87d5b7",
+      "correctChoiceFingerprint": "fnv1a-a24b8e4e",
+      "critical": true,
+      "decisionScope": "evidence-approved-learning",
+      "evidenceSourceMode": "direct-question-source",
+      "evidenceStatus": "approved",
+      "id": "reg:UK:Beginner:1",
+      "kind": "regional-exam",
+      "revision": 2,
+      "sourceFingerprint": "fnv1a-fa684cf5",
+      "sourceIds": [
+        "direct-a1f21571",
+        "autodesk-fill-pack",
+        "zhao-2022",
+        "iso-20430"
+      ]
+    },
+    {
+      "bankVersion": "2026.08.30.1",
+      "choiceFingerprints": [
+        "fnv1a-a5d76bc7",
+        "fnv1a-1f201c1e",
+        "fnv1a-72efe2d1",
+        "fnv1a-d2de729a"
+      ],
+      "contentFingerprint": "fnv1a-2b93dd0d",
+      "correctChoiceFingerprint": "fnv1a-a5d76bc7",
+      "critical": true,
+      "decisionScope": "evidence-approved-learning",
+      "evidenceSourceMode": "direct-question-source",
+      "evidenceStatus": "approved",
+      "id": "reg:UK:Beginner:2",
+      "kind": "regional-exam",
+      "revision": 2,
+      "sourceFingerprint": "fnv1a-a50f30ef",
+      "sourceIds": [
+        "direct-df5c6486"
+      ]
+    },
+    {
+      "bankVersion": "2026.08.30.1",
+      "choiceFingerprints": [
+        "fnv1a-157130fe",
+        "fnv1a-fb2eccc3",
+        "fnv1a-342809a9",
+        "fnv1a-e6dff304"
+      ],
+      "contentFingerprint": "fnv1a-d05db0a3",
+      "correctChoiceFingerprint": "fnv1a-fb2eccc3",
+      "critical": true,
+      "decisionScope": "evidence-approved-learning",
+      "evidenceSourceMode": "direct-question-source",
+      "evidenceStatus": "approved",
+      "id": "reg:UK:Intermediate:0",
+      "kind": "regional-exam",
+      "revision": 2,
+      "sourceFingerprint": "fnv1a-a366041d",
+      "sourceIds": [
+        "direct-a3465b83"
+      ]
+    },
+    {
+      "bankVersion": "2026.08.30.1",
+      "choiceFingerprints": [
+        "fnv1a-175a3147",
+        "fnv1a-38b555a0",
+        "fnv1a-8cf5fe26",
+        "fnv1a-65a84941"
+      ],
+      "contentFingerprint": "fnv1a-bc0c6665",
+      "correctChoiceFingerprint": "fnv1a-8cf5fe26",
+      "critical": true,
+      "decisionScope": "evidence-approved-learning",
+      "evidenceSourceMode": "direct-question-source",
+      "evidenceStatus": "approved",
+      "id": "reg:UK:Intermediate:1",
+      "kind": "regional-exam",
+      "revision": 2,
+      "sourceFingerprint": "fnv1a-fe383e7c",
+      "sourceIds": [
+        "direct-e7b81281",
+        "euromap-60",
+        "iso-20430"
+      ]
+    },
+    {
+      "bankVersion": "2026.08.30.1",
+      "choiceFingerprints": [
+        "fnv1a-b111c180",
+        "fnv1a-44097a31",
+        "fnv1a-6e3b4992",
+        "fnv1a-c9be791d"
+      ],
+      "contentFingerprint": "fnv1a-71cbf510",
+      "correctChoiceFingerprint": "fnv1a-c9be791d",
+      "critical": true,
+      "decisionScope": "evidence-approved-learning",
+      "evidenceSourceMode": "direct-question-source",
+      "evidenceStatus": "approved",
+      "id": "reg:UK:Intermediate:2",
+      "kind": "regional-exam",
+      "revision": 2,
+      "sourceFingerprint": "fnv1a-2decd9d4",
+      "sourceIds": [
+        "direct-8d22db4a",
+        "autodesk-fill-pack",
+        "zhao-2022",
+        "iso-20430"
+      ]
+    },
+    {
+      "bankVersion": "2026.08.30.1",
+      "choiceFingerprints": [
+        "fnv1a-c31f1344",
+        "fnv1a-e6ad35d5",
+        "fnv1a-c83f8a78",
+        "fnv1a-0dc7b2d0"
+      ],
+      "contentFingerprint": "fnv1a-3bc48420",
+      "correctChoiceFingerprint": "fnv1a-e6ad35d5",
+      "critical": true,
+      "decisionScope": "evidence-approved-learning",
+      "evidenceSourceMode": "direct-question-source",
+      "evidenceStatus": "approved",
+      "id": "reg:US:Advanced:0",
+      "kind": "regional-exam",
+      "revision": 2,
+      "sourceFingerprint": "fnv1a-0fa97694",
+      "sourceIds": [
+        "direct-3426f4ac",
+        "autodesk-fill-pack",
+        "zhao-2022",
+        "iso-20430"
+      ]
+    },
+    {
+      "bankVersion": "2026.08.30.1",
+      "choiceFingerprints": [
+        "fnv1a-d49f985b",
+        "fnv1a-58bb2fc8",
+        "fnv1a-004e4ecd",
+        "fnv1a-1dd051ae"
+      ],
+      "contentFingerprint": "fnv1a-7d1b29aa",
+      "correctChoiceFingerprint": "fnv1a-004e4ecd",
+      "critical": true,
+      "decisionScope": "evidence-approved-learning",
+      "evidenceSourceMode": "direct-question-source",
+      "evidenceStatus": "approved",
+      "id": "reg:US:Advanced:1",
+      "kind": "regional-exam",
+      "revision": 2,
+      "sourceFingerprint": "fnv1a-7df76c51",
+      "sourceIds": [
+        "direct-abf7e6e1",
+        "iso-20430"
+      ]
+    },
+    {
+      "bankVersion": "2026.08.30.1",
+      "choiceFingerprints": [
+        "fnv1a-9e147a3c",
+        "fnv1a-baa47c67",
+        "fnv1a-f4a3e045",
+        "fnv1a-8e1f2a5b"
+      ],
+      "contentFingerprint": "fnv1a-e0aeed2e",
+      "correctChoiceFingerprint": "fnv1a-8e1f2a5b",
+      "critical": true,
+      "decisionScope": "evidence-approved-learning",
+      "evidenceSourceMode": "direct-question-source",
+      "evidenceStatus": "approved",
+      "id": "reg:US:Advanced:2",
+      "kind": "regional-exam",
+      "revision": 2,
+      "sourceFingerprint": "fnv1a-dfb23c8e",
+      "sourceIds": [
+        "direct-a58aeaf9",
+        "euromap-79",
+        "iso-20430",
+        "euromap-60",
+        "autodesk-fill-pack"
+      ]
+    },
+    {
+      "bankVersion": "2026.08.30.1",
+      "choiceFingerprints": [
+        "fnv1a-c1d76f7f",
+        "fnv1a-4dac3dba",
+        "fnv1a-4a39022b",
+        "fnv1a-6d945262"
+      ],
+      "contentFingerprint": "fnv1a-2f7ff710",
+      "correctChoiceFingerprint": "fnv1a-6d945262",
+      "critical": true,
+      "decisionScope": "evidence-approved-learning",
+      "evidenceSourceMode": "direct-question-source",
+      "evidenceStatus": "approved",
+      "id": "reg:US:Beginner:0",
+      "kind": "regional-exam",
+      "revision": 2,
+      "sourceFingerprint": "fnv1a-9284ce40",
+      "sourceIds": [
+        "direct-6deeee8e",
+        "autodesk-fill-pack",
+        "zhao-2022",
+        "iso-20430"
+      ]
+    },
+    {
+      "bankVersion": "2026.08.30.1",
+      "choiceFingerprints": [
+        "fnv1a-8e71e5ba",
+        "fnv1a-476a1371",
+        "fnv1a-ceae4603",
+        "fnv1a-714533ee"
+      ],
+      "contentFingerprint": "fnv1a-af83166f",
+      "correctChoiceFingerprint": "fnv1a-8e71e5ba",
+      "critical": true,
+      "decisionScope": "evidence-approved-learning",
+      "evidenceSourceMode": "direct-question-source",
+      "evidenceStatus": "approved",
+      "id": "reg:US:Beginner:1",
+      "kind": "regional-exam",
+      "revision": 2,
+      "sourceFingerprint": "fnv1a-1f3831de",
+      "sourceIds": [
+        "direct-c2264723",
+        "autodesk-fill-pack",
+        "zhao-2022",
+        "iso-20430"
+      ]
+    },
+    {
+      "bankVersion": "2026.08.30.1",
+      "choiceFingerprints": [
+        "fnv1a-ed6d968f",
+        "fnv1a-17e43c34",
+        "fnv1a-68289649",
+        "fnv1a-99b51ccd"
+      ],
+      "contentFingerprint": "fnv1a-5bc93f66",
+      "correctChoiceFingerprint": "fnv1a-17e43c34",
+      "critical": true,
+      "decisionScope": "evidence-approved-learning",
+      "evidenceSourceMode": "direct-question-source",
+      "evidenceStatus": "approved",
+      "id": "reg:US:Beginner:2",
+      "kind": "regional-exam",
+      "revision": 2,
+      "sourceFingerprint": "fnv1a-d32f03e0",
+      "sourceIds": [
+        "direct-afd6d496",
+        "basf-troubleshooter",
+        "iso-20430"
+      ]
+    },
+    {
+      "bankVersion": "2026.08.30.1",
+      "choiceFingerprints": [
+        "fnv1a-1dff2546",
+        "fnv1a-e8da2aa9",
+        "fnv1a-ef4f67ed",
+        "fnv1a-fe486ae9"
+      ],
+      "contentFingerprint": "fnv1a-7350fed8",
+      "correctChoiceFingerprint": "fnv1a-ef4f67ed",
+      "critical": true,
+      "decisionScope": "evidence-approved-learning",
+      "evidenceSourceMode": "direct-question-source",
+      "evidenceStatus": "approved",
+      "id": "reg:US:Intermediate:0",
+      "kind": "regional-exam",
+      "revision": 2,
+      "sourceFingerprint": "fnv1a-2b1d715d",
+      "sourceIds": [
+        "direct-abf7e6e1",
+        "euromap-60",
+        "iso-20430"
+      ]
+    },
+    {
+      "bankVersion": "2026.08.30.1",
+      "choiceFingerprints": [
+        "fnv1a-069e9422",
+        "fnv1a-8c2f3f8f",
+        "fnv1a-12e77e01",
+        "fnv1a-400e822e"
+      ],
+      "contentFingerprint": "fnv1a-3e81d5d3",
+      "correctChoiceFingerprint": "fnv1a-400e822e",
+      "critical": true,
+      "decisionScope": "evidence-approved-learning",
+      "evidenceSourceMode": "direct-question-source",
+      "evidenceStatus": "approved",
+      "id": "reg:US:Intermediate:1",
+      "kind": "regional-exam",
+      "revision": 2,
+      "sourceFingerprint": "fnv1a-2b1d715d",
+      "sourceIds": [
+        "direct-abf7e6e1",
+        "euromap-60",
+        "iso-20430"
+      ]
+    },
+    {
+      "bankVersion": "2026.08.30.1",
+      "choiceFingerprints": [
+        "fnv1a-31b74072",
+        "fnv1a-814d998d",
+        "fnv1a-39828436",
+        "fnv1a-7ce7a757"
+      ],
+      "contentFingerprint": "fnv1a-f4c86623",
+      "correctChoiceFingerprint": "fnv1a-31b74072",
+      "critical": true,
+      "decisionScope": "evidence-approved-learning",
+      "evidenceSourceMode": "direct-question-source",
+      "evidenceStatus": "approved",
+      "id": "reg:US:Intermediate:2",
+      "kind": "regional-exam",
+      "revision": 2,
+      "sourceFingerprint": "fnv1a-8a4a208a",
+      "sourceIds": [
+        "direct-1c4243d3",
+        "iso-20430"
+      ]
+    },
+    {
+      "bankVersion": null,
+      "choiceFingerprints": [
+        "fnv1a-375b4fff",
+        "fnv1a-561adaf0",
+        "fnv1a-637c6a09",
+        "fnv1a-f5c1fbc7"
+      ],
+      "contentFingerprint": "fnv1a-bbf708b1",
+      "correctChoiceFingerprint": "fnv1a-561adaf0",
+      "critical": false,
+      "decisionScope": "evidence-approved-learning",
+      "evidenceSourceMode": "mapped-authoritative-source",
+      "evidenceStatus": "approved",
+      "id": "scenario:01",
+      "kind": "scenario",
+      "revision": 1,
+      "sourceFingerprint": "fnv1a-f68ed5f8",
+      "sourceIds": [
+        "liew-2022",
+        "jansen-1998",
+        "autodesk-packing",
+        "autodesk-fill-pack"
+      ]
+    },
+    {
+      "bankVersion": null,
+      "choiceFingerprints": [
+        "fnv1a-be1e2fb3",
+        "fnv1a-1eb356f6",
+        "fnv1a-de9f52d1",
+        "fnv1a-57ac2c3f"
+      ],
+      "contentFingerprint": "fnv1a-2b072a1b",
+      "correctChoiceFingerprint": "fnv1a-be1e2fb3",
+      "critical": false,
+      "decisionScope": "evidence-approved-learning",
+      "evidenceSourceMode": "mapped-authoritative-source",
+      "evidenceStatus": "approved",
+      "id": "scenario:02",
+      "kind": "scenario",
+      "revision": 1,
+      "sourceFingerprint": "fnv1a-b3c8dd5c",
+      "sourceIds": [
+        "autodesk-fill-pack",
+        "zhao-2022"
+      ]
+    },
+    {
+      "bankVersion": null,
+      "choiceFingerprints": [
+        "fnv1a-93bc6f66",
+        "fnv1a-398419a5",
+        "fnv1a-8317c99d",
+        "fnv1a-795ee89f"
+      ],
+      "contentFingerprint": "fnv1a-bb68078b",
+      "correctChoiceFingerprint": "fnv1a-93bc6f66",
+      "critical": false,
+      "decisionScope": "evidence-approved-learning",
+      "evidenceSourceMode": "mapped-authoritative-source",
+      "evidenceStatus": "approved",
+      "id": "scenario:03",
+      "kind": "scenario",
+      "revision": 1,
+      "sourceFingerprint": "fnv1a-039729bd",
+      "sourceIds": [
+        "autodesk-flash",
+        "autodesk-clamp",
+        "autodesk-fill-pack",
+        "zhao-2022"
+      ]
+    },
+    {
+      "bankVersion": null,
+      "choiceFingerprints": [
+        "fnv1a-cbeb43b8",
+        "fnv1a-06e641b9",
+        "fnv1a-11e60900",
+        "fnv1a-4942f208"
+      ],
+      "contentFingerprint": "fnv1a-614fbbe4",
+      "correctChoiceFingerprint": "fnv1a-cbeb43b8",
+      "critical": false,
+      "decisionScope": "evidence-approved-learning",
+      "evidenceSourceMode": "mapped-authoritative-source",
+      "evidenceStatus": "approved",
+      "id": "scenario:04",
+      "kind": "scenario",
+      "revision": 1,
+      "sourceFingerprint": "fnv1a-bbdf861c",
+      "sourceIds": [
+        "zhao-2022",
+        "autodesk-cooling",
+        "autodesk-fill-pack",
+        "liew-2022"
+      ]
+    },
+    {
+      "bankVersion": null,
+      "choiceFingerprints": [
+        "fnv1a-dcdda72b",
+        "fnv1a-2f3c582b",
+        "fnv1a-cbeafcdc",
+        "fnv1a-f8e0f958"
+      ],
+      "contentFingerprint": "fnv1a-43100738",
+      "correctChoiceFingerprint": "fnv1a-dcdda72b",
+      "critical": false,
+      "decisionScope": "evidence-approved-learning",
+      "evidenceSourceMode": "mapped-authoritative-source",
+      "evidenceStatus": "approved",
+      "id": "scenario:05",
+      "kind": "scenario",
+      "revision": 1,
+      "sourceFingerprint": "fnv1a-091f9f4e",
+      "sourceIds": [
+        "covestro-drying",
+        "iso-15512"
+      ]
+    },
+    {
+      "bankVersion": null,
+      "choiceFingerprints": [
+        "fnv1a-aa6de70e",
+        "fnv1a-5d977b58",
+        "fnv1a-01cd74c2",
+        "fnv1a-197ef631"
+      ],
+      "contentFingerprint": "fnv1a-a467e2b4",
+      "correctChoiceFingerprint": "fnv1a-aa6de70e",
+      "critical": false,
+      "decisionScope": "evidence-approved-learning",
+      "evidenceSourceMode": "mapped-authoritative-source",
+      "evidenceStatus": "approved",
+      "id": "scenario:06",
+      "kind": "scenario",
+      "revision": 1,
+      "sourceFingerprint": "fnv1a-b3c8dd5c",
+      "sourceIds": [
+        "autodesk-fill-pack",
+        "zhao-2022"
+      ]
+    },
+    {
+      "bankVersion": null,
+      "choiceFingerprints": [
+        "fnv1a-3d6315f0",
+        "fnv1a-84b91c54",
+        "fnv1a-bfa33848",
+        "fnv1a-79b204a5"
+      ],
+      "contentFingerprint": "fnv1a-8e737b1d",
+      "correctChoiceFingerprint": "fnv1a-3d6315f0",
+      "critical": false,
+      "decisionScope": "evidence-approved-learning",
+      "evidenceSourceMode": "mapped-authoritative-source",
+      "evidenceStatus": "approved",
+      "id": "scenario:07",
+      "kind": "scenario",
+      "revision": 1,
+      "sourceFingerprint": "fnv1a-52213d31",
+      "sourceIds": [
+        "nist-capability",
+        "nist-handbook",
+        "liew-2022",
+        "autodesk-fill-pack"
+      ]
+    },
+    {
+      "bankVersion": null,
+      "choiceFingerprints": [
+        "fnv1a-fe669776",
+        "fnv1a-4323d26a",
+        "fnv1a-a7b79278",
+        "fnv1a-2ade15fa"
+      ],
+      "contentFingerprint": "fnv1a-8af5ceb0",
+      "correctChoiceFingerprint": "fnv1a-4323d26a",
+      "critical": false,
+      "decisionScope": "evidence-approved-learning",
+      "evidenceSourceMode": "mapped-authoritative-source",
+      "evidenceStatus": "approved",
+      "id": "scenario:08",
+      "kind": "scenario",
+      "revision": 1,
+      "sourceFingerprint": "fnv1a-86365307",
+      "sourceIds": [
+        "jansen-1998",
+        "autodesk-packing",
+        "autodesk-fill-pack",
+        "zhao-2022"
+      ]
+    },
+    {
+      "bankVersion": null,
+      "choiceFingerprints": [
+        "fnv1a-d24a5f19",
+        "fnv1a-eb1235f5",
+        "fnv1a-aadd8236",
+        "fnv1a-56371c8c"
+      ],
+      "contentFingerprint": "fnv1a-c26658f9",
+      "correctChoiceFingerprint": "fnv1a-eb1235f5",
+      "critical": false,
+      "decisionScope": "evidence-approved-learning",
+      "evidenceSourceMode": "mapped-authoritative-source",
+      "evidenceStatus": "approved",
+      "id": "scenario:09",
+      "kind": "scenario",
+      "revision": 1,
+      "sourceFingerprint": "fnv1a-1f79575c",
+      "sourceIds": [
+        "autodesk-fill-pack",
+        "zhao-2022",
+        "liew-2022"
+      ]
+    },
+    {
+      "bankVersion": null,
+      "choiceFingerprints": [
+        "fnv1a-0285bf39",
+        "fnv1a-cba88ae9",
+        "fnv1a-3801fd0b",
+        "fnv1a-ed407968"
+      ],
+      "contentFingerprint": "fnv1a-d1e84036",
+      "correctChoiceFingerprint": "fnv1a-cba88ae9",
+      "critical": false,
+      "decisionScope": "evidence-approved-learning",
+      "evidenceSourceMode": "mapped-authoritative-source",
+      "evidenceStatus": "approved",
+      "id": "scenario:10",
+      "kind": "scenario",
+      "revision": 1,
+      "sourceFingerprint": "fnv1a-b3c8dd5c",
+      "sourceIds": [
+        "autodesk-fill-pack",
+        "zhao-2022"
+      ]
+    },
+    {
+      "bankVersion": null,
+      "choiceFingerprints": [
+        "fnv1a-a73fbf5f",
+        "fnv1a-c7747c99",
+        "fnv1a-a28af91a",
+        "fnv1a-d2305d2a"
+      ],
+      "contentFingerprint": "fnv1a-9103b4ba",
+      "correctChoiceFingerprint": "fnv1a-a73fbf5f",
+      "critical": false,
+      "decisionScope": "evidence-approved-learning",
+      "evidenceSourceMode": "mapped-authoritative-source",
+      "evidenceStatus": "approved",
+      "id": "scenario:11",
+      "kind": "scenario",
+      "revision": 1,
+      "sourceFingerprint": "fnv1a-bbdf861c",
+      "sourceIds": [
+        "liew-2022",
+        "zhao-2022",
+        "autodesk-cooling",
+        "autodesk-fill-pack"
+      ]
+    },
+    {
+      "bankVersion": null,
+      "choiceFingerprints": [
+        "fnv1a-1e202aac",
+        "fnv1a-74238819",
+        "fnv1a-ad28d783",
+        "fnv1a-b1c17cd8"
+      ],
+      "contentFingerprint": "fnv1a-996e51e9",
+      "correctChoiceFingerprint": "fnv1a-74238819",
+      "critical": false,
+      "decisionScope": "evidence-approved-learning",
+      "evidenceSourceMode": "mapped-authoritative-source",
+      "evidenceStatus": "approved",
+      "id": "scenario:12",
+      "kind": "scenario",
+      "revision": 1,
+      "sourceFingerprint": "fnv1a-cbef3d89",
+      "sourceIds": [
+        "zhao-2022",
+        "autodesk-cooling",
+        "jansen-1998",
+        "autodesk-packing"
+      ]
+    },
+    {
+      "bankVersion": null,
+      "choiceFingerprints": [
+        "fnv1a-a8ab8fae",
+        "fnv1a-8ea19f06",
+        "fnv1a-975b90b6",
+        "fnv1a-09c521e0"
+      ],
+      "contentFingerprint": "fnv1a-6188959b",
+      "correctChoiceFingerprint": "fnv1a-a8ab8fae",
+      "critical": false,
+      "decisionScope": "evidence-approved-learning",
+      "evidenceSourceMode": "mapped-authoritative-source",
+      "evidenceStatus": "approved",
+      "id": "scenario:13",
+      "kind": "scenario",
+      "revision": 1,
+      "sourceFingerprint": "fnv1a-b3c8dd5c",
+      "sourceIds": [
+        "autodesk-fill-pack",
+        "zhao-2022"
+      ]
+    },
+    {
+      "bankVersion": null,
+      "choiceFingerprints": [
+        "fnv1a-f4e56861",
+        "fnv1a-64fcacda",
+        "fnv1a-26829ac1",
+        "fnv1a-18cc50ca"
+      ],
+      "contentFingerprint": "fnv1a-91c5f3e4",
+      "correctChoiceFingerprint": "fnv1a-64fcacda",
+      "critical": false,
+      "decisionScope": "evidence-approved-learning",
+      "evidenceSourceMode": "mapped-authoritative-source",
+      "evidenceStatus": "approved",
+      "id": "scenario:14",
+      "kind": "scenario",
+      "revision": 1,
+      "sourceFingerprint": "fnv1a-81b6dc5a",
+      "sourceIds": [
+        "nist-capability",
+        "nist-handbook",
+        "autodesk-fill-pack",
+        "zhao-2022"
+      ]
+    },
+    {
+      "bankVersion": null,
+      "choiceFingerprints": [
+        "fnv1a-4a226b7b",
+        "fnv1a-9904ec68",
+        "fnv1a-7812e319",
+        "fnv1a-0aa965f2"
+      ],
+      "contentFingerprint": "fnv1a-26685e88",
+      "correctChoiceFingerprint": "fnv1a-9904ec68",
+      "critical": false,
+      "decisionScope": "evidence-approved-learning",
+      "evidenceSourceMode": "mapped-authoritative-source",
+      "evidenceStatus": "approved",
+      "id": "scenario:15",
+      "kind": "scenario",
+      "revision": 1,
+      "sourceFingerprint": "fnv1a-6d7f006e",
+      "sourceIds": [
+        "nist-doe"
+      ]
+    },
+    {
+      "bankVersion": null,
+      "choiceFingerprints": [
+        "fnv1a-ddc1ecc9",
+        "fnv1a-81bfab7c",
+        "fnv1a-0e0dd829",
+        "fnv1a-af9425fe"
+      ],
+      "contentFingerprint": "fnv1a-963ef1d2",
+      "correctChoiceFingerprint": "fnv1a-81bfab7c",
+      "critical": false,
+      "decisionScope": "evidence-approved-learning",
+      "evidenceSourceMode": "mapped-authoritative-source",
+      "evidenceStatus": "approved",
+      "id": "scenario:16",
+      "kind": "scenario",
+      "revision": 1,
+      "sourceFingerprint": "fnv1a-4711028b",
+      "sourceIds": [
+        "nist-capability",
+        "nist-handbook",
+        "araujo-2023",
+        "liew-2022"
+      ]
+    },
+    {
+      "bankVersion": null,
+      "choiceFingerprints": [
+        "fnv1a-70be15d2",
+        "fnv1a-c9b13d09",
+        "fnv1a-8dbe6bbc",
+        "fnv1a-62b20f15"
+      ],
+      "contentFingerprint": "fnv1a-7421a88c",
+      "correctChoiceFingerprint": "fnv1a-c9b13d09",
+      "critical": false,
+      "decisionScope": "evidence-approved-learning",
+      "evidenceSourceMode": "direct-question-source",
+      "evidenceStatus": "approved",
+      "id": "scenario:17",
+      "kind": "scenario",
+      "revision": 1,
+      "sourceFingerprint": "fnv1a-58fe7fd4",
+      "sourceIds": [
+        "hotrunner-2024",
+        "covestro-drying",
+        "iso-15512",
+        "araujo-2023",
+        "liew-2022"
+      ]
+    },
+    {
+      "bankVersion": null,
+      "choiceFingerprints": [
+        "fnv1a-db4cb4bc",
+        "fnv1a-04cff67b",
+        "fnv1a-b98c62fd",
+        "fnv1a-c06fdb27"
+      ],
+      "contentFingerprint": "fnv1a-5439c674",
+      "correctChoiceFingerprint": "fnv1a-04cff67b",
+      "critical": false,
+      "decisionScope": "evidence-approved-learning",
+      "evidenceSourceMode": "direct-question-source",
+      "evidenceStatus": "approved",
+      "id": "scenario:18",
+      "kind": "scenario",
+      "revision": 1,
+      "sourceFingerprint": "fnv1a-8c9118f6",
+      "sourceIds": [
+        "direct-0e8e7528",
+        "zhao-2022",
+        "autodesk-cooling",
+        "autodesk-fill-pack"
+      ]
+    },
+    {
+      "bankVersion": null,
+      "choiceFingerprints": [
+        "fnv1a-2cfe4a6c",
+        "fnv1a-c627a897",
+        "fnv1a-ba3d35be",
+        "fnv1a-d02b12f2"
+      ],
+      "contentFingerprint": "fnv1a-6f5df854",
+      "correctChoiceFingerprint": "fnv1a-2cfe4a6c",
+      "critical": false,
+      "decisionScope": "evidence-approved-learning",
+      "evidenceSourceMode": "direct-question-source",
+      "evidenceStatus": "approved",
+      "id": "scenario:19",
+      "kind": "scenario",
+      "revision": 1,
+      "sourceFingerprint": "fnv1a-195d6e95",
+      "sourceIds": [
+        "liew-2022"
+      ]
+    },
+    {
+      "bankVersion": null,
+      "choiceFingerprints": [
+        "fnv1a-86488274",
+        "fnv1a-2649625b",
+        "fnv1a-93752188",
+        "fnv1a-a63a05dc"
+      ],
+      "contentFingerprint": "fnv1a-871c63bb",
+      "correctChoiceFingerprint": "fnv1a-2649625b",
+      "critical": false,
+      "decisionScope": "evidence-approved-learning",
+      "evidenceSourceMode": "mapped-authoritative-source",
+      "evidenceStatus": "approved",
+      "id": "scenario:20",
+      "kind": "scenario",
+      "revision": 1,
+      "sourceFingerprint": "fnv1a-5f806373",
+      "sourceIds": [
+        "basf-troubleshooter"
+      ]
+    },
+    {
+      "bankVersion": null,
+      "choiceFingerprints": [
+        "fnv1a-5622e8e5",
+        "fnv1a-d2e72b0f",
+        "fnv1a-eba7309d",
+        "fnv1a-b4afb03f"
+      ],
+      "contentFingerprint": "fnv1a-f27342c1",
+      "correctChoiceFingerprint": "fnv1a-5622e8e5",
+      "critical": false,
+      "decisionScope": "evidence-approved-learning",
+      "evidenceSourceMode": "direct-question-source",
+      "evidenceStatus": "approved",
+      "id": "scenario:21",
+      "kind": "scenario",
+      "revision": 1,
+      "sourceFingerprint": "fnv1a-8b647c62",
+      "sourceIds": [
+        "direct-fdf83887",
+        "autodesk-fill-pack",
+        "zhao-2022",
+        "liew-2022"
+      ]
+    },
+    {
+      "bankVersion": null,
+      "choiceFingerprints": [
+        "fnv1a-7849c46e",
+        "fnv1a-53d449bf",
+        "fnv1a-1bcad70c",
+        "fnv1a-984787f9"
+      ],
+      "contentFingerprint": "fnv1a-5813c1d6",
+      "correctChoiceFingerprint": "fnv1a-53d449bf",
+      "critical": false,
+      "decisionScope": "evidence-approved-learning",
+      "evidenceSourceMode": "direct-question-source",
+      "evidenceStatus": "approved",
+      "id": "scenario:22",
+      "kind": "scenario",
+      "revision": 1,
+      "sourceFingerprint": "fnv1a-e071afc0",
+      "sourceIds": [
+        "direct-70ceeb17",
+        "autodesk-fill-pack",
+        "zhao-2022"
+      ]
+    },
+    {
+      "bankVersion": null,
+      "choiceFingerprints": [
+        "fnv1a-e9c6f244",
+        "fnv1a-fdde9eee",
+        "fnv1a-a92b22e0",
+        "fnv1a-47e36dab"
+      ],
+      "contentFingerprint": "fnv1a-71860f22",
+      "correctChoiceFingerprint": "fnv1a-fdde9eee",
+      "critical": false,
+      "decisionScope": "evidence-approved-learning",
+      "evidenceSourceMode": "mapped-authoritative-source",
+      "evidenceStatus": "approved",
+      "id": "scenario:23",
+      "kind": "scenario",
+      "revision": 1,
+      "sourceFingerprint": "fnv1a-039729bd",
+      "sourceIds": [
+        "autodesk-flash",
+        "autodesk-clamp",
+        "autodesk-fill-pack",
+        "zhao-2022"
+      ]
+    },
+    {
+      "bankVersion": null,
+      "choiceFingerprints": [
+        "fnv1a-07225a62",
+        "fnv1a-b073b9b8",
+        "fnv1a-5c47229a",
+        "fnv1a-0b144cb3"
+      ],
+      "contentFingerprint": "fnv1a-61fcd597",
+      "correctChoiceFingerprint": "fnv1a-b073b9b8",
+      "critical": false,
+      "decisionScope": "evidence-approved-learning",
+      "evidenceSourceMode": "mapped-authoritative-source",
+      "evidenceStatus": "approved",
+      "id": "scenario:24",
+      "kind": "scenario",
+      "revision": 1,
+      "sourceFingerprint": "fnv1a-6e947421",
+      "sourceIds": [
+        "autodesk-valve-gate",
+        "hotrunner-2024",
+        "autodesk-fill-pack",
+        "zhao-2022"
+      ]
+    },
+    {
+      "bankVersion": null,
+      "choiceFingerprints": [
+        "fnv1a-7d0a85c0",
+        "fnv1a-37eabd0a",
+        "fnv1a-d5c93cb9",
+        "fnv1a-580baa52"
+      ],
+      "contentFingerprint": "fnv1a-64fe8537",
+      "correctChoiceFingerprint": "fnv1a-37eabd0a",
+      "critical": false,
+      "decisionScope": "evidence-approved-learning",
+      "evidenceSourceMode": "direct-question-source",
+      "evidenceStatus": "approved",
+      "id": "scenario:25",
+      "kind": "scenario",
+      "revision": 1,
+      "sourceFingerprint": "fnv1a-b76695d0",
+      "sourceIds": [
+        "araujo-2023",
+        "liew-2022",
+        "tsou-2023"
+      ]
+    },
+    {
+      "bankVersion": null,
+      "choiceFingerprints": [
+        "fnv1a-88796b11",
+        "fnv1a-47bd026e",
+        "fnv1a-44de47fa",
+        "fnv1a-ed7f1908"
+      ],
+      "contentFingerprint": "fnv1a-ed33a003",
+      "correctChoiceFingerprint": "fnv1a-47bd026e",
+      "critical": false,
+      "decisionScope": "evidence-approved-learning",
+      "evidenceSourceMode": "direct-question-source",
+      "evidenceStatus": "approved",
+      "id": "scenario:26",
+      "kind": "scenario",
+      "revision": 1,
+      "sourceFingerprint": "fnv1a-29ef71e2",
+      "sourceIds": [
+        "direct-da43ff81",
+        "nist-capability",
+        "nist-handbook"
+      ]
+    },
+    {
+      "bankVersion": null,
+      "choiceFingerprints": [
+        "fnv1a-148329fd",
+        "fnv1a-00ad650e",
+        "fnv1a-622a3ccd",
+        "fnv1a-2d18ea51"
+      ],
+      "contentFingerprint": "fnv1a-f70d22a6",
+      "correctChoiceFingerprint": "fnv1a-00ad650e",
+      "critical": false,
+      "decisionScope": "evidence-approved-learning",
+      "evidenceSourceMode": "direct-question-source",
+      "evidenceStatus": "approved",
+      "id": "scenario:27",
+      "kind": "scenario",
+      "revision": 1,
+      "sourceFingerprint": "fnv1a-3419f443",
+      "sourceIds": [
+        "direct-88336d7a",
+        "nist-capability",
+        "nist-handbook",
+        "araujo-2023",
+        "liew-2022"
+      ]
+    },
+    {
+      "bankVersion": null,
+      "choiceFingerprints": [
+        "fnv1a-1c87f62a",
+        "fnv1a-8b99d0ff",
+        "fnv1a-0ff9f350",
+        "fnv1a-2b1460a6"
+      ],
+      "contentFingerprint": "fnv1a-cff6a5be",
+      "correctChoiceFingerprint": "fnv1a-8b99d0ff",
+      "critical": false,
+      "decisionScope": "evidence-approved-learning",
+      "evidenceSourceMode": "mapped-authoritative-source",
+      "evidenceStatus": "approved",
+      "id": "scenario:28",
+      "kind": "scenario",
+      "revision": 1,
+      "sourceFingerprint": "fnv1a-2efb249d",
+      "sourceIds": [
+        "euromap-79",
+        "iso-20430",
+        "autodesk-fill-pack",
+        "zhao-2022"
+      ]
+    },
+    {
+      "bankVersion": null,
+      "choiceFingerprints": [
+        "fnv1a-6b51dead",
+        "fnv1a-0bb35598",
+        "fnv1a-c8f35390",
+        "fnv1a-1a2ebefe"
+      ],
+      "contentFingerprint": "fnv1a-0c4f1e8b",
+      "correctChoiceFingerprint": "fnv1a-0bb35598",
+      "critical": false,
+      "decisionScope": "evidence-approved-learning",
+      "evidenceSourceMode": "mapped-authoritative-source",
+      "evidenceStatus": "approved",
+      "id": "scenario:29",
+      "kind": "scenario",
+      "revision": 1,
+      "sourceFingerprint": "fnv1a-d3d8c5be",
+      "sourceIds": [
+        "euromap-60",
+        "autodesk-fill-pack",
+        "zhao-2022"
+      ]
+    },
+    {
+      "bankVersion": null,
+      "choiceFingerprints": [
+        "fnv1a-8b128b0a",
+        "fnv1a-7da9de4c",
+        "fnv1a-9dbadd4f",
+        "fnv1a-2ed42f57"
+      ],
+      "contentFingerprint": "fnv1a-e7bf676d",
+      "correctChoiceFingerprint": "fnv1a-7da9de4c",
+      "critical": false,
+      "decisionScope": "evidence-approved-learning",
+      "evidenceSourceMode": "direct-question-source",
+      "evidenceStatus": "approved",
+      "id": "scenario:30",
+      "kind": "scenario",
+      "revision": 1,
+      "sourceFingerprint": "fnv1a-f1aafca0",
+      "sourceIds": [
+        "overmould-2020",
+        "autodesk-fill-pack",
+        "zhao-2022"
+      ]
+    },
+    {
+      "bankVersion": null,
+      "choiceFingerprints": [
+        "fnv1a-f65cd9e7",
+        "fnv1a-a0470eb0",
+        "fnv1a-f8c8b418",
+        "fnv1a-5e96197b"
+      ],
+      "contentFingerprint": "fnv1a-b4fb7467",
+      "correctChoiceFingerprint": "fnv1a-f65cd9e7",
+      "critical": false,
+      "decisionScope": "evidence-approved-learning",
+      "evidenceSourceMode": "mapped-authoritative-source",
+      "evidenceStatus": "approved",
+      "id": "scenario:31",
+      "kind": "scenario",
+      "revision": 1,
+      "sourceFingerprint": "fnv1a-cd9a8aa0",
+      "sourceIds": [
+        "overmould-2020",
+        "autodesk-fill-pack",
+        "zhao-2022",
+        "liew-2022"
+      ]
+    },
+    {
+      "bankVersion": null,
+      "choiceFingerprints": [
+        "fnv1a-62a14941",
+        "fnv1a-678ed136",
+        "fnv1a-f736b82d",
+        "fnv1a-91c4839f"
+      ],
+      "contentFingerprint": "fnv1a-f5c578b4",
+      "correctChoiceFingerprint": "fnv1a-678ed136",
+      "critical": false,
+      "decisionScope": "evidence-approved-learning",
+      "evidenceSourceMode": "direct-question-source",
+      "evidenceStatus": "approved",
+      "id": "scenario:32",
+      "kind": "scenario",
+      "revision": 1,
+      "sourceFingerprint": "fnv1a-3c1d458b",
+      "sourceIds": [
+        "direct-01f545df",
+        "autodesk-fill-pack",
+        "zhao-2022"
+      ]
+    },
+    {
+      "bankVersion": null,
+      "choiceFingerprints": [
+        "fnv1a-2c271b3b",
+        "fnv1a-23b6d53d",
+        "fnv1a-ba58e389",
+        "fnv1a-d73826ac"
+      ],
+      "contentFingerprint": "fnv1a-4afa45e1",
+      "correctChoiceFingerprint": "fnv1a-23b6d53d",
+      "critical": false,
+      "decisionScope": "evidence-approved-learning",
+      "evidenceSourceMode": "direct-question-source",
+      "evidenceStatus": "approved",
+      "id": "scenario:33",
+      "kind": "scenario",
+      "revision": 1,
+      "sourceFingerprint": "fnv1a-4569bc94",
+      "sourceIds": [
+        "direct-5f0b1fc4"
+      ]
+    },
+    {
+      "bankVersion": null,
+      "choiceFingerprints": [
+        "fnv1a-491e6096",
+        "fnv1a-cadceadd",
+        "fnv1a-0a985acf",
+        "fnv1a-fe97aa20"
+      ],
+      "contentFingerprint": "fnv1a-5a8e8ec1",
+      "correctChoiceFingerprint": "fnv1a-cadceadd",
+      "critical": false,
+      "decisionScope": "evidence-approved-learning",
+      "evidenceSourceMode": "direct-question-source",
+      "evidenceStatus": "approved",
+      "id": "scenario:34",
+      "kind": "scenario",
+      "revision": 1,
+      "sourceFingerprint": "fnv1a-ed8b54a4",
+      "sourceIds": [
+        "direct-552b92b4",
+        "covestro-drying",
+        "iso-15512",
+        "autodesk-fill-pack",
+        "zhao-2022"
+      ]
+    },
+    {
+      "bankVersion": null,
+      "choiceFingerprints": [
+        "fnv1a-d5de0a74",
+        "fnv1a-fa0b9b73",
+        "fnv1a-27cace7b",
+        "fnv1a-737bacf1"
+      ],
+      "contentFingerprint": "fnv1a-d59e9961",
+      "correctChoiceFingerprint": "fnv1a-fa0b9b73",
+      "critical": false,
+      "decisionScope": "evidence-approved-learning",
+      "evidenceSourceMode": "direct-question-source",
+      "evidenceStatus": "approved",
+      "id": "scenario:35",
+      "kind": "scenario",
+      "revision": 1,
+      "sourceFingerprint": "fnv1a-055ee55b",
+      "sourceIds": [
+        "direct-e76bf61a",
+        "nist-capability",
+        "nist-handbook",
+        "krantz-rpp-2024",
+        "iso-1133"
+      ]
+    },
+    {
+      "bankVersion": null,
+      "choiceFingerprints": [
+        "fnv1a-e64d958a",
+        "fnv1a-3b4fd2c0",
+        "fnv1a-ebfbe83b",
+        "fnv1a-9e0ea69a"
+      ],
+      "contentFingerprint": "fnv1a-3a72fc6a",
+      "correctChoiceFingerprint": "fnv1a-3b4fd2c0",
+      "critical": false,
+      "decisionScope": "evidence-approved-learning",
+      "evidenceSourceMode": "direct-question-source",
+      "evidenceStatus": "approved",
+      "id": "scenario:36",
+      "kind": "scenario",
+      "revision": 1,
+      "sourceFingerprint": "fnv1a-a5fd432a",
+      "sourceIds": [
+        "direct-91d2a711",
+        "autodesk-fill-pack",
+        "zhao-2022"
+      ]
+    },
+    {
+      "bankVersion": null,
+      "choiceFingerprints": [
+        "fnv1a-65f9fe45",
+        "fnv1a-65e03167",
+        "fnv1a-4c0b80e6",
+        "fnv1a-83610e72"
+      ],
+      "contentFingerprint": "fnv1a-6a90ccb8",
+      "correctChoiceFingerprint": "fnv1a-65e03167",
+      "critical": false,
+      "decisionScope": "evidence-approved-learning",
+      "evidenceSourceMode": "mapped-authoritative-source",
+      "evidenceStatus": "approved",
+      "id": "scenario:37",
+      "kind": "scenario",
+      "revision": 1,
+      "sourceFingerprint": "fnv1a-d60623a2",
+      "sourceIds": [
+        "hotrunner-2024",
+        "basf-troubleshooter",
+        "autodesk-fill-pack",
+        "zhao-2022"
+      ]
+    },
+    {
+      "bankVersion": null,
+      "choiceFingerprints": [
+        "fnv1a-b107cf8a",
+        "fnv1a-a1d58eec",
+        "fnv1a-5d517249",
+        "fnv1a-5e967691"
+      ],
+      "contentFingerprint": "fnv1a-eb16f855",
+      "correctChoiceFingerprint": "fnv1a-a1d58eec",
+      "critical": false,
+      "decisionScope": "evidence-approved-learning",
+      "evidenceSourceMode": "mapped-authoritative-source",
+      "evidenceStatus": "approved",
+      "id": "scenario:38",
+      "kind": "scenario",
+      "revision": 1,
+      "sourceFingerprint": "fnv1a-4d7e5910",
+      "sourceIds": [
+        "hotrunner-2024",
+        "autodesk-fill-pack",
+        "zhao-2022"
+      ]
+    },
+    {
+      "bankVersion": null,
+      "choiceFingerprints": [
+        "fnv1a-24c2814b",
+        "fnv1a-e4073ec1",
+        "fnv1a-6680f77a",
+        "fnv1a-66c067c3"
+      ],
+      "contentFingerprint": "fnv1a-e1240e86",
+      "correctChoiceFingerprint": "fnv1a-e4073ec1",
+      "critical": false,
+      "decisionScope": "evidence-approved-learning",
+      "evidenceSourceMode": "mapped-authoritative-source",
+      "evidenceStatus": "approved",
+      "id": "scenario:39",
+      "kind": "scenario",
+      "revision": 1,
+      "sourceFingerprint": "fnv1a-4d02b994",
+      "sourceIds": [
+        "nist-ai-drift"
+      ]
+    },
+    {
+      "bankVersion": null,
+      "choiceFingerprints": [
+        "fnv1a-4d3843a2",
+        "fnv1a-cc310b3f",
+        "fnv1a-2a8c1bc6",
+        "fnv1a-bdbb77c3"
+      ],
+      "contentFingerprint": "fnv1a-10fc0fb2",
+      "correctChoiceFingerprint": "fnv1a-cc310b3f",
+      "critical": false,
+      "decisionScope": "evidence-approved-learning",
+      "evidenceSourceMode": "direct-question-source",
+      "evidenceStatus": "approved",
+      "id": "scenario:40",
+      "kind": "scenario",
+      "revision": 1,
+      "sourceFingerprint": "fnv1a-d87b2ab1",
+      "sourceIds": [
+        "direct-3f1d3226",
+        "zhao-2022",
+        "autodesk-cooling",
+        "autodesk-fill-pack",
+        "liew-2022"
+      ]
+    },
+    {
+      "bankVersion": "2026.08.30.1",
+      "choiceFingerprints": [
+        "fnv1a-73e982a4",
+        "fnv1a-d3655785",
+        "fnv1a-c8e84eef",
+        "fnv1a-80bcae77"
+      ],
+      "contentFingerprint": "fnv1a-8bd0f301",
+      "correctChoiceFingerprint": "fnv1a-73e982a4",
+      "critical": false,
+      "decisionScope": "evidence-approved-learning",
+      "evidenceSourceMode": "direct-question-source",
+      "evidenceStatus": "approved",
+      "id": "tech:Advanced:0",
+      "kind": "technical-exam",
+      "revision": 3,
+      "sourceFingerprint": "fnv1a-646818ab",
+      "sourceIds": [
+        "nist-capability",
+        "nist-handbook"
+      ]
+    },
+    {
+      "bankVersion": "2026.08.30.1",
+      "choiceFingerprints": [
+        "fnv1a-a0574819",
+        "fnv1a-c5344346",
+        "fnv1a-5fd4e180",
+        "fnv1a-64fffe70"
+      ],
+      "contentFingerprint": "fnv1a-ff52dfd1",
+      "correctChoiceFingerprint": "fnv1a-c5344346",
+      "critical": false,
+      "decisionScope": "evidence-approved-learning",
+      "evidenceSourceMode": "direct-question-source",
+      "evidenceStatus": "approved",
+      "id": "tech:Advanced:1",
+      "kind": "technical-exam",
+      "revision": 2,
+      "sourceFingerprint": "fnv1a-81b6dc5a",
+      "sourceIds": [
+        "nist-capability",
+        "nist-handbook",
+        "autodesk-fill-pack",
+        "zhao-2022"
+      ]
+    },
+    {
+      "bankVersion": "2026.08.30.1",
+      "choiceFingerprints": [
+        "fnv1a-54bb36ad",
+        "fnv1a-ba4dfbfa",
+        "fnv1a-5529b3b8",
+        "fnv1a-2db14782"
+      ],
+      "contentFingerprint": "fnv1a-8a34bdf8",
+      "correctChoiceFingerprint": "fnv1a-54bb36ad",
+      "critical": false,
+      "decisionScope": "evidence-approved-learning",
+      "evidenceSourceMode": "direct-question-source",
+      "evidenceStatus": "approved",
+      "id": "tech:Advanced:2",
+      "kind": "technical-exam",
+      "revision": 3,
+      "sourceFingerprint": "fnv1a-750deb38",
+      "sourceIds": [
+        "nist-doe",
+        "zhao-2022",
+        "autodesk-cooling",
+        "jansen-1998"
+      ]
+    },
+    {
+      "bankVersion": "2026.08.30.1",
+      "choiceFingerprints": [
+        "fnv1a-b2873081",
+        "fnv1a-a3ac6c96",
+        "fnv1a-391e962d",
+        "fnv1a-4191c530"
+      ],
+      "contentFingerprint": "fnv1a-5a193092",
+      "correctChoiceFingerprint": "fnv1a-b2873081",
+      "critical": false,
+      "decisionScope": "evidence-approved-learning",
+      "evidenceSourceMode": "direct-question-source",
+      "evidenceStatus": "approved",
+      "id": "tech:Advanced:3",
+      "kind": "technical-exam",
+      "revision": 2,
+      "sourceFingerprint": "fnv1a-1e6184fb",
+      "sourceIds": [
+        "nist-doe",
+        "autodesk-fill-pack",
+        "zhao-2022"
+      ]
+    },
+    {
+      "bankVersion": "2026.08.30.1",
+      "choiceFingerprints": [
+        "fnv1a-ff4ac4cc",
+        "fnv1a-7bb20ae5",
+        "fnv1a-c81f5e3e",
+        "fnv1a-a07b5f65"
+      ],
+      "contentFingerprint": "fnv1a-7bc46e8b",
+      "correctChoiceFingerprint": "fnv1a-7bb20ae5",
+      "critical": false,
+      "decisionScope": "evidence-approved-learning",
+      "evidenceSourceMode": "direct-question-source",
+      "evidenceStatus": "approved",
+      "id": "tech:Advanced:4",
+      "kind": "technical-exam",
+      "revision": 2,
+      "sourceFingerprint": "fnv1a-34a4082e",
+      "sourceIds": [
+        "tsou-2023",
+        "araujo-2023",
+        "liew-2022",
+        "autodesk-fill-pack"
+      ]
+    },
+    {
+      "bankVersion": "2026.08.30.1",
+      "choiceFingerprints": [
+        "fnv1a-e4608835",
+        "fnv1a-22a8caba",
+        "fnv1a-8eda488c",
+        "fnv1a-d15c92d0"
+      ],
+      "contentFingerprint": "fnv1a-4acaec64",
+      "correctChoiceFingerprint": "fnv1a-22a8caba",
+      "critical": false,
+      "decisionScope": "evidence-approved-learning",
+      "evidenceSourceMode": "direct-question-source",
+      "evidenceStatus": "approved",
+      "id": "tech:Advanced:5",
+      "kind": "technical-exam",
+      "revision": 3,
+      "sourceFingerprint": "fnv1a-6818d37a",
+      "sourceIds": [
+        "nist-doe",
+        "autodesk-molding-window",
+        "trotta-2021",
+        "iso-1133"
+      ]
+    },
+    {
+      "bankVersion": "2026.08.30.1",
+      "choiceFingerprints": [
+        "fnv1a-d3b76d58",
+        "fnv1a-f9edf91d",
+        "fnv1a-7df7a490",
+        "fnv1a-46cb9e84"
+      ],
+      "contentFingerprint": "fnv1a-5e9b4a68",
+      "correctChoiceFingerprint": "fnv1a-f9edf91d",
+      "critical": false,
+      "decisionScope": "evidence-approved-learning",
+      "evidenceSourceMode": "direct-question-source",
+      "evidenceStatus": "approved",
+      "id": "tech:Advanced:6",
+      "kind": "technical-exam",
+      "revision": 3,
+      "sourceFingerprint": "fnv1a-866abf5b",
+      "sourceIds": [
+        "direct-d20ed02f",
+        "nist-capability",
+        "nist-handbook",
+        "nist-doe",
+        "autodesk-fill-pack"
+      ]
+    },
+    {
+      "bankVersion": "2026.08.30.1",
+      "choiceFingerprints": [
+        "fnv1a-b75ad729",
+        "fnv1a-7e302635",
+        "fnv1a-86b7d840",
+        "fnv1a-7eca70e6"
+      ],
+      "contentFingerprint": "fnv1a-afef1a15",
+      "correctChoiceFingerprint": "fnv1a-86b7d840",
+      "critical": false,
+      "decisionScope": "evidence-approved-learning",
+      "evidenceSourceMode": "mapped-authoritative-source",
+      "evidenceStatus": "approved",
+      "id": "tech:Advanced:7",
+      "kind": "technical-exam",
+      "revision": 2,
+      "sourceFingerprint": "fnv1a-1f79575c",
+      "sourceIds": [
+        "autodesk-fill-pack",
+        "zhao-2022",
+        "liew-2022"
+      ]
+    },
+    {
+      "bankVersion": "2026.08.30.1",
+      "choiceFingerprints": [
+        "fnv1a-8648f9b4",
+        "fnv1a-506745d5",
+        "fnv1a-ed0a837c",
+        "fnv1a-4ba8229d"
+      ],
+      "contentFingerprint": "fnv1a-55b10a1c",
+      "correctChoiceFingerprint": "fnv1a-506745d5",
+      "critical": false,
+      "decisionScope": "evidence-approved-learning",
+      "evidenceSourceMode": "direct-question-source",
+      "evidenceStatus": "approved",
+      "id": "tech:Advanced:8",
+      "kind": "technical-exam",
+      "revision": 2,
+      "sourceFingerprint": "fnv1a-63559e49",
+      "sourceIds": [
+        "direct-e76bf61a",
+        "trotta-2021",
+        "iso-1133",
+        "basf-troubleshooter",
+        "autodesk-fill-pack"
+      ]
+    },
+    {
+      "bankVersion": "2026.08.30.1",
+      "choiceFingerprints": [
+        "fnv1a-91fbd051",
+        "fnv1a-8b07e437",
+        "fnv1a-1f22c932",
+        "fnv1a-1a477a35"
+      ],
+      "contentFingerprint": "fnv1a-74f6b49b",
+      "correctChoiceFingerprint": "fnv1a-1f22c932",
+      "critical": false,
+      "decisionScope": "evidence-approved-learning",
+      "evidenceSourceMode": "direct-question-source",
+      "evidenceStatus": "approved",
+      "id": "tech:Advanced:9",
+      "kind": "technical-exam",
+      "revision": 3,
+      "sourceFingerprint": "fnv1a-ec39afef",
+      "sourceIds": [
+        "tsou-2023",
+        "nist-capability",
+        "nist-handbook",
+        "autodesk-fill-pack",
+        "zhao-2022"
+      ]
+    },
+    {
+      "bankVersion": "2026.08.30.1",
+      "choiceFingerprints": [
+        "fnv1a-5fa63e9e",
+        "fnv1a-02bb16b1",
+        "fnv1a-7d49b2c0",
+        "fnv1a-9d88bbc0"
+      ],
+      "contentFingerprint": "fnv1a-dad505dc",
+      "correctChoiceFingerprint": "fnv1a-5fa63e9e",
+      "critical": false,
+      "decisionScope": "evidence-approved-learning",
+      "evidenceSourceMode": "direct-question-source",
+      "evidenceStatus": "approved",
+      "id": "tech:Beginner:0",
+      "kind": "technical-exam",
+      "revision": 3,
+      "sourceFingerprint": "fnv1a-36af43d1",
+      "sourceIds": [
+        "jansen-1998",
+        "liew-2022",
+        "zhao-2022",
+        "autodesk-cooling"
+      ]
+    },
+    {
+      "bankVersion": "2026.08.30.1",
+      "choiceFingerprints": [
+        "fnv1a-4932d3da",
+        "fnv1a-3146713d",
+        "fnv1a-126ae11f",
+        "fnv1a-da206ce0"
+      ],
+      "contentFingerprint": "fnv1a-3e6fc795",
+      "correctChoiceFingerprint": "fnv1a-126ae11f",
+      "critical": false,
+      "decisionScope": "evidence-approved-learning",
+      "evidenceSourceMode": "mapped-authoritative-source",
+      "evidenceStatus": "approved",
+      "id": "tech:Beginner:1",
+      "kind": "technical-exam",
+      "revision": 3,
+      "sourceFingerprint": "fnv1a-1f79575c",
+      "sourceIds": [
+        "liew-2022",
+        "autodesk-fill-pack",
+        "zhao-2022"
+      ]
+    },
+    {
+      "bankVersion": "2026.08.30.1",
+      "choiceFingerprints": [
+        "fnv1a-886d4338",
+        "fnv1a-1f4a4adb",
+        "fnv1a-405d441c",
+        "fnv1a-57594567"
+      ],
+      "contentFingerprint": "fnv1a-24380e05",
+      "correctChoiceFingerprint": "fnv1a-1f4a4adb",
+      "critical": false,
+      "decisionScope": "evidence-approved-learning",
+      "evidenceSourceMode": "direct-question-source",
+      "evidenceStatus": "approved",
+      "id": "tech:Beginner:2",
+      "kind": "technical-exam",
+      "revision": 3,
+      "sourceFingerprint": "fnv1a-7cc5339c",
+      "sourceIds": [
+        "direct-a06adfc3",
+        "autodesk-fill-pack",
+        "zhao-2022",
+        "liew-2022"
+      ]
+    },
+    {
+      "bankVersion": "2026.08.30.1",
+      "choiceFingerprints": [
+        "fnv1a-1b132856",
+        "fnv1a-47ee7ab3",
+        "fnv1a-d5d6b741",
+        "fnv1a-4622ee86"
+      ],
+      "contentFingerprint": "fnv1a-ec71bdf7",
+      "correctChoiceFingerprint": "fnv1a-47ee7ab3",
+      "critical": false,
+      "decisionScope": "evidence-approved-learning",
+      "evidenceSourceMode": "mapped-authoritative-source",
+      "evidenceStatus": "approved",
+      "id": "tech:Beginner:3",
+      "kind": "technical-exam",
+      "revision": 2,
+      "sourceFingerprint": "fnv1a-44e56d72",
+      "sourceIds": [
+        "covestro-drying",
+        "iso-15512",
+        "trotta-2021",
+        "iso-1133"
+      ]
+    },
+    {
+      "bankVersion": "2026.08.30.1",
+      "choiceFingerprints": [
+        "fnv1a-149636b0",
+        "fnv1a-9e08e1af",
+        "fnv1a-1ac834c3",
+        "fnv1a-fdf036d4"
+      ],
+      "contentFingerprint": "fnv1a-9431db61",
+      "correctChoiceFingerprint": "fnv1a-9e08e1af",
+      "critical": false,
+      "decisionScope": "evidence-approved-learning",
+      "evidenceSourceMode": "mapped-authoritative-source",
+      "evidenceStatus": "approved",
+      "id": "tech:Beginner:4",
+      "kind": "technical-exam",
+      "revision": 2,
+      "sourceFingerprint": "fnv1a-6d6a773c",
+      "sourceIds": [
+        "covestro-drying",
+        "iso-15512",
+        "liew-2022",
+        "autodesk-fill-pack"
+      ]
+    },
+    {
+      "bankVersion": "2026.08.30.1",
+      "choiceFingerprints": [
+        "fnv1a-b1cdef29",
+        "fnv1a-23604b37",
+        "fnv1a-86bc93cb",
+        "fnv1a-f666dfc3"
+      ],
+      "contentFingerprint": "fnv1a-96cb5a9c",
+      "correctChoiceFingerprint": "fnv1a-23604b37",
+      "critical": false,
+      "decisionScope": "evidence-approved-learning",
+      "evidenceSourceMode": "direct-question-source",
+      "evidenceStatus": "approved",
+      "id": "tech:Beginner:5",
+      "kind": "technical-exam",
+      "revision": 3,
+      "sourceFingerprint": "fnv1a-ef98ac47",
+      "sourceIds": [
+        "direct-a06adfc3",
+        "jansen-1998",
+        "autodesk-packing",
+        "autodesk-fill-pack",
+        "zhao-2022"
+      ]
+    },
+    {
+      "bankVersion": "2026.08.30.1",
+      "choiceFingerprints": [
+        "fnv1a-df09fc28",
+        "fnv1a-7eef35fb",
+        "fnv1a-7aed54d6",
+        "fnv1a-f3591aed"
+      ],
+      "contentFingerprint": "fnv1a-67105fe7",
+      "correctChoiceFingerprint": "fnv1a-7eef35fb",
+      "critical": false,
+      "decisionScope": "evidence-approved-learning",
+      "evidenceSourceMode": "mapped-authoritative-source",
+      "evidenceStatus": "approved",
+      "id": "tech:Beginner:6",
+      "kind": "technical-exam",
+      "revision": 3,
+      "sourceFingerprint": "fnv1a-039729bd",
+      "sourceIds": [
+        "autodesk-flash",
+        "autodesk-clamp",
+        "autodesk-fill-pack",
+        "zhao-2022"
+      ]
+    },
+    {
+      "bankVersion": "2026.08.30.1",
+      "choiceFingerprints": [
+        "fnv1a-0249e24f",
+        "fnv1a-c1aa6121",
+        "fnv1a-c0a68eb1",
+        "fnv1a-b453a213"
+      ],
+      "contentFingerprint": "fnv1a-6aa6de51",
+      "correctChoiceFingerprint": "fnv1a-0249e24f",
+      "critical": false,
+      "decisionScope": "evidence-approved-learning",
+      "evidenceSourceMode": "direct-question-source",
+      "evidenceStatus": "approved",
+      "id": "tech:Beginner:7",
+      "kind": "technical-exam",
+      "revision": 3,
+      "sourceFingerprint": "fnv1a-a4619674",
+      "sourceIds": [
+        "araujo-2023",
+        "autodesk-fill-pack",
+        "zhao-2022"
+      ]
+    },
+    {
+      "bankVersion": "2026.08.30.1",
+      "choiceFingerprints": [
+        "fnv1a-9c79ccb8",
+        "fnv1a-0f974bab",
+        "fnv1a-9c5203cf",
+        "fnv1a-23d235ed"
+      ],
+      "contentFingerprint": "fnv1a-08012b43",
+      "correctChoiceFingerprint": "fnv1a-9c79ccb8",
+      "critical": false,
+      "decisionScope": "evidence-approved-learning",
+      "evidenceSourceMode": "direct-question-source",
+      "evidenceStatus": "approved",
+      "id": "tech:Beginner:8",
+      "kind": "technical-exam",
+      "revision": 3,
+      "sourceFingerprint": "fnv1a-bbdf861c",
+      "sourceIds": [
+        "zhao-2022",
+        "autodesk-cooling",
+        "autodesk-fill-pack",
+        "liew-2022"
+      ]
+    },
+    {
+      "bankVersion": "2026.08.30.1",
+      "choiceFingerprints": [
+        "fnv1a-222e6946",
+        "fnv1a-a8fe5cc8",
+        "fnv1a-e1d179ae",
+        "fnv1a-f60247b5"
+      ],
+      "contentFingerprint": "fnv1a-106504d6",
+      "correctChoiceFingerprint": "fnv1a-e1d179ae",
+      "critical": false,
+      "decisionScope": "evidence-approved-learning",
+      "evidenceSourceMode": "mapped-authoritative-source",
+      "evidenceStatus": "approved",
+      "id": "tech:Beginner:9",
+      "kind": "technical-exam",
+      "revision": 2,
+      "sourceFingerprint": "fnv1a-81b6dc5a",
+      "sourceIds": [
+        "nist-capability",
+        "nist-handbook",
+        "autodesk-fill-pack",
+        "zhao-2022"
+      ]
+    },
+    {
+      "bankVersion": "2026.08.30.1",
+      "choiceFingerprints": [
+        "fnv1a-a75a616e",
+        "fnv1a-0d08521c",
+        "fnv1a-5d3cbcbd",
+        "fnv1a-3dd914a3"
+      ],
+      "contentFingerprint": "fnv1a-8e40b5b6",
+      "correctChoiceFingerprint": "fnv1a-5d3cbcbd",
+      "critical": false,
+      "decisionScope": "evidence-approved-learning",
+      "evidenceSourceMode": "direct-question-source",
+      "evidenceStatus": "approved",
+      "id": "tech:Intermediate:0",
+      "kind": "technical-exam",
+      "revision": 2,
+      "sourceFingerprint": "fnv1a-86365307",
+      "sourceIds": [
+        "jansen-1998",
+        "autodesk-packing",
+        "autodesk-fill-pack",
+        "zhao-2022"
+      ]
+    },
+    {
+      "bankVersion": "2026.08.30.1",
+      "choiceFingerprints": [
+        "fnv1a-1a13a893",
+        "fnv1a-f6de1717",
+        "fnv1a-435a48ff",
+        "fnv1a-0c7e62c3"
+      ],
+      "contentFingerprint": "fnv1a-f510bfe4",
+      "correctChoiceFingerprint": "fnv1a-1a13a893",
+      "critical": false,
+      "decisionScope": "evidence-approved-learning",
+      "evidenceSourceMode": "direct-question-source",
+      "evidenceStatus": "approved",
+      "id": "tech:Intermediate:1",
+      "kind": "technical-exam",
+      "revision": 3,
+      "sourceFingerprint": "fnv1a-a7fcfeaa",
+      "sourceIds": [
+        "direct-fdf83887",
+        "nist-capability",
+        "nist-handbook",
+        "zhao-2022",
+        "autodesk-cooling"
+      ]
+    },
+    {
+      "bankVersion": "2026.08.30.1",
+      "choiceFingerprints": [
+        "fnv1a-6e492be2",
+        "fnv1a-0ce73d2a",
+        "fnv1a-ee14d821",
+        "fnv1a-a908607e"
+      ],
+      "contentFingerprint": "fnv1a-61f3cd87",
+      "correctChoiceFingerprint": "fnv1a-6e492be2",
+      "critical": false,
+      "decisionScope": "evidence-approved-learning",
+      "evidenceSourceMode": "mapped-authoritative-source",
+      "evidenceStatus": "approved",
+      "id": "tech:Intermediate:2",
+      "kind": "technical-exam",
+      "revision": 3,
+      "sourceFingerprint": "fnv1a-cd4a12ab",
+      "sourceIds": [
+        "covestro-drying",
+        "iso-15512",
+        "autodesk-fill-pack",
+        "zhao-2022"
+      ]
+    },
+    {
+      "bankVersion": "2026.08.30.1",
+      "choiceFingerprints": [
+        "fnv1a-182928fd",
+        "fnv1a-8a41865a",
+        "fnv1a-65f6553d",
+        "fnv1a-92cf9e23"
+      ],
+      "contentFingerprint": "fnv1a-31eef55a",
+      "correctChoiceFingerprint": "fnv1a-182928fd",
+      "critical": false,
+      "decisionScope": "evidence-approved-learning",
+      "evidenceSourceMode": "mapped-authoritative-source",
+      "evidenceStatus": "approved",
+      "id": "tech:Intermediate:3",
+      "kind": "technical-exam",
+      "revision": 3,
+      "sourceFingerprint": "fnv1a-039729bd",
+      "sourceIds": [
+        "autodesk-flash",
+        "autodesk-clamp",
+        "autodesk-fill-pack",
+        "zhao-2022"
+      ]
+    },
+    {
+      "bankVersion": "2026.08.30.1",
+      "choiceFingerprints": [
+        "fnv1a-f46d7f71",
+        "fnv1a-e5302660",
+        "fnv1a-db81c3d0",
+        "fnv1a-b056dc28"
+      ],
+      "contentFingerprint": "fnv1a-9edca544",
+      "correctChoiceFingerprint": "fnv1a-f46d7f71",
+      "critical": false,
+      "decisionScope": "evidence-approved-learning",
+      "evidenceSourceMode": "direct-question-source",
+      "evidenceStatus": "approved",
+      "id": "tech:Intermediate:4",
+      "kind": "technical-exam",
+      "revision": 3,
+      "sourceFingerprint": "fnv1a-6cd5ca8f",
+      "sourceIds": [
+        "araujo-2023",
+        "trotta-2021",
+        "iso-1133",
+        "liew-2022"
+      ]
+    },
+    {
+      "bankVersion": "2026.08.30.1",
+      "choiceFingerprints": [
+        "fnv1a-76056a45",
+        "fnv1a-133b0c27",
+        "fnv1a-6f609781",
+        "fnv1a-bd5b4879"
+      ],
+      "contentFingerprint": "fnv1a-e29bd500",
+      "correctChoiceFingerprint": "fnv1a-133b0c27",
+      "critical": false,
+      "decisionScope": "evidence-approved-learning",
+      "evidenceSourceMode": "mapped-authoritative-source",
+      "evidenceStatus": "approved",
+      "id": "tech:Intermediate:5",
+      "kind": "technical-exam",
+      "revision": 2,
+      "sourceFingerprint": "fnv1a-f68ed5f8",
+      "sourceIds": [
+        "liew-2022",
+        "jansen-1998",
+        "autodesk-packing",
+        "autodesk-fill-pack"
+      ]
+    },
+    {
+      "bankVersion": "2026.08.30.1",
+      "choiceFingerprints": [
+        "fnv1a-d3db146d",
+        "fnv1a-c06c7f81",
+        "fnv1a-5ec21028",
+        "fnv1a-946b1772"
+      ],
+      "contentFingerprint": "fnv1a-6b1f00b7",
+      "correctChoiceFingerprint": "fnv1a-d3db146d",
+      "critical": false,
+      "decisionScope": "evidence-approved-learning",
+      "evidenceSourceMode": "mapped-authoritative-source",
+      "evidenceStatus": "approved",
+      "id": "tech:Intermediate:6",
+      "kind": "technical-exam",
+      "revision": 3,
+      "sourceFingerprint": "fnv1a-cbef3d89",
+      "sourceIds": [
+        "zhao-2022",
+        "autodesk-cooling",
+        "jansen-1998",
+        "autodesk-packing"
+      ]
+    },
+    {
+      "bankVersion": "2026.08.30.1",
+      "choiceFingerprints": [
+        "fnv1a-be4d67aa",
+        "fnv1a-3d308854",
+        "fnv1a-8753249f",
+        "fnv1a-c52b487b"
+      ],
+      "contentFingerprint": "fnv1a-3a061fcc",
+      "correctChoiceFingerprint": "fnv1a-8753249f",
+      "critical": false,
+      "decisionScope": "evidence-approved-learning",
+      "evidenceSourceMode": "direct-question-source",
+      "evidenceStatus": "approved",
+      "id": "tech:Intermediate:7",
+      "kind": "technical-exam",
+      "revision": 2,
+      "sourceFingerprint": "fnv1a-b5e9d71c",
+      "sourceIds": [
+        "zhao-2022",
+        "autodesk-cooling",
+        "autodesk-fill-pack"
+      ]
+    },
+    {
+      "bankVersion": "2026.08.30.1",
+      "choiceFingerprints": [
+        "fnv1a-882daeb9",
+        "fnv1a-a753bd18",
+        "fnv1a-d1b647ca",
+        "fnv1a-fa020d2d"
+      ],
+      "contentFingerprint": "fnv1a-eacc6fa7",
+      "correctChoiceFingerprint": "fnv1a-882daeb9",
+      "critical": false,
+      "decisionScope": "evidence-approved-learning",
+      "evidenceSourceMode": "direct-question-source",
+      "evidenceStatus": "approved",
+      "id": "tech:Intermediate:8",
+      "kind": "technical-exam",
+      "revision": 3,
+      "sourceFingerprint": "fnv1a-bbdf861c",
+      "sourceIds": [
+        "zhao-2022",
+        "autodesk-cooling",
+        "autodesk-fill-pack",
+        "liew-2022"
+      ]
+    },
+    {
+      "bankVersion": "2026.08.30.1",
+      "choiceFingerprints": [
+        "fnv1a-a8f82a07",
+        "fnv1a-8557a08b",
+        "fnv1a-a17f1853",
+        "fnv1a-6521d1b6"
+      ],
+      "contentFingerprint": "fnv1a-9350d241",
+      "correctChoiceFingerprint": "fnv1a-8557a08b",
+      "critical": false,
+      "decisionScope": "evidence-approved-learning",
+      "evidenceSourceMode": "direct-question-source",
+      "evidenceStatus": "approved",
+      "id": "tech:Intermediate:9",
+      "kind": "technical-exam",
+      "revision": 2,
+      "sourceFingerprint": "fnv1a-6d7f006e",
+      "sourceIds": [
+        "nist-doe"
+      ]
+    }
+  ],
+  "evidenceApprovalVersion": "2026.08.30.3",
+  "generated": true,
+  "measuredAssessmentVersion": "2026.09.01.1",
+  "questionBankVersion": "2026.08.30.1",
+  "schema": 1,
+  "version": "2026.09.04.1"
+}
