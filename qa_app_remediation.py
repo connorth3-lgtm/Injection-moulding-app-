@@ -1,5 +1,6 @@
 from pathlib import Path
 import json
+import re
 import subprocess
 
 ROOT = Path(__file__).resolve().parent
@@ -12,6 +13,12 @@ def need(ok, message):
 
 def text(path):
     return (ROOT / path).read_text(encoding="utf-8")
+
+
+def worker_assets(source, name):
+    match = re.search(rf"const\s+{re.escape(name)}\s*=\s*\[(.*?)\]\s*;", source, re.S)
+    need(match is not None, f"service-worker asset array missing: {name}")
+    return set(re.findall(r"['\"](\./[^'\"]+)['\"]", match.group(1)))
 
 
 index = text("index.html")
@@ -35,12 +42,13 @@ for forbidden in ("ensureCoherentRuntime", ".unregister()", "mmBundle"):
 need("MM_BROWSER_UPDATE_MODE='shared-origin-service-worker'" in pwa, "browser/PWA shared service-worker mode is not explicit")
 need("serviceWorker.register('./service-worker.js'" in pwa, "same-origin service worker is no longer registered by the shell")
 
-# Legacy recovery files may remain in source, but current web/desktop products cannot ship them.
-need("./MouldMaster_Academy_App.html" not in worker, "frozen legacy Academy app remains in current PWA cache")
+# Legacy recovery files may remain documented/source-only, but current web/desktop products cannot ship them.
+public_worker_assets = worker_assets(worker, "CORE") | worker_assets(worker, "OPTIONAL")
+need("./MouldMaster_Academy_App.html" not in public_worker_assets, "frozen legacy Academy app remains in current PWA cache")
+need("./MouldMasterAcademy.exe" not in public_worker_assets, "legacy recovery executable must never be a PWA asset")
 need("MouldMaster_Academy_App.html" not in integrity_script, "frozen legacy Academy app remains in desktop integrity set")
 extra = desktop_pkg["build"]["extraResources"]
 need("../../MouldMaster_Academy_App.html" not in {x.get("from") for x in extra if isinstance(x, dict)}, "frozen legacy Academy app remains in desktop package")
-need("MouldMasterAcademy.exe" not in worker, "legacy recovery executable must never be a PWA asset")
 
 # Engineering case ownership and legacy parity.
 for marker in (
@@ -82,10 +90,12 @@ for marker in ("chromium firefox webkit", "playwright.cross-browser.config.cjs",
     need(marker in mobile, f"browser-matrix QA coverage missing: {marker}")
 cross = text("playwright.cross-browser.config.cjs")
 need("firefox-desktop" in cross and "webkit-tablet" in cross and "chromium-desktop" in cross, "cross-browser project matrix incomplete")
+smoke = text("qa/cross-browser-smoke.spec.js")
+need("onboardingDone:true" in smoke and "mouldmasterProDB" in smoke, "cross-browser matrix does not establish deterministic learner/onboarding state")
 
 # Broad document polling should be retired where canonical lifecycle hooks exist.
 need("new MutationObserver" not in pwa, "PWA shell still uses document-wide mutation polling")
 need("new MutationObserver" not in materials, "Materials domain still uses document-wide mutation polling")
 need("mutationScope:'changed-subtrees'" in a11y, "accessibility safety net is not constrained to changed subtrees")
 
-print("MouldMaster app-wide remediation QA passed: production gate, storage ownership/parity, variant-safe materials, PWA lifecycle, legacy distribution separation, browser matrix and targeted observers")
+print("MouldMaster app-wide remediation QA passed: production gate, storage ownership/parity, variant-safe materials, PWA lifecycle, legacy distribution separation, deterministic browser matrix and targeted observers")
