@@ -5,9 +5,9 @@
 so its bytes are intentionally not rewritten. The browser bootstrap replaces those
 inline blocks with same-origin generated assets during runtime assembly.
 
-A narrowly reviewed runtime-only transform removes the recovery core's historical
-certificate-print `document.write` call. Legacy inline event-handler attributes are
-a separate debt class and remain temporarily isolated under `script-src-attr`.
+Runtime-only transforms remove the recovery core's historical certificate-print
+`document.write` call and rewrite generated inline event-handler markup to inert
+`data-mm-on*` attributes consumed by the strict delegated handler bridge.
 """
 
 from __future__ import annotations
@@ -23,10 +23,12 @@ OUT_DIR = ROOT / "src/core-runtime"
 SERVICE_WORKER = ROOT / "service-worker.js"
 DESKTOP_PACKAGE = ROOT / "desktop/electron/package.json"
 DESKTOP_INTEGRITY = ROOT / "desktop/electron/scripts/generate-integrity.cjs"
+HANDLER_BRIDGE = "inline-handler-bridge.js"
 
 INLINE_SCRIPT_RE = re.compile(r"<script(?P<attrs>[^>]*)>(?P<body>.*?)</script\s*>", re.I | re.S)
 SRC_ATTR_RE = re.compile(r"\bsrc\s*=", re.I)
 INDEX_RUNTIME_REF_RE = re.compile(r"['\"]\./src/core-runtime/(core-inline-\d{3}\.js)['\"]")
+HANDLER_ATTR_RE = re.compile(r"(?P<prefix>[\s<])on(?P<event>click|change|input|keydown)\s*=", re.I)
 PRINT_CERTIFICATE_RE = re.compile(
     r"function printCertificate\(level,region\)\{.*?\n\}\n\n/\* Instructor dashboard understands regional score keys\. \*/",
     re.S,
@@ -61,17 +63,24 @@ def inline_blocks(core: str) -> list[str]:
     ]
 
 
+def retire_handler_attrs(source: str) -> str:
+    return HANDLER_ATTR_RE.sub(
+        lambda match: f"{match.group('prefix')}data-mm-on{match.group('event').lower()}=",
+        source,
+    )
+
+
 def runtime_transform(name: str, source: str) -> str:
-    if name != "core-inline-004.js":
-        return source
-    if source.count("document.write(") != 1 or "function printCertificate(level,region)" not in source:
-        fail("frozen certificate print source drifted; review the runtime hardening transform")
-    transformed, count = PRINT_CERTIFICATE_RE.subn(HARDENED_PRINT_CERTIFICATE, source, count=1)
-    if count != 1:
-        fail("certificate print runtime transform did not match exactly once")
-    if "document.write(" in transformed or "document.writeln(" in transformed:
-        fail("certificate print runtime transform left document.write active")
-    return transformed
+    transformed = source
+    if name == "core-inline-004.js":
+        if source.count("document.write(") != 1 or "function printCertificate(level,region)" not in source:
+            fail("frozen certificate print source drifted; review the runtime hardening transform")
+        transformed, count = PRINT_CERTIFICATE_RE.subn(HARDENED_PRINT_CERTIFICATE, source, count=1)
+        if count != 1:
+            fail("certificate print runtime transform did not match exactly once")
+        if "document.write(" in transformed or "document.writeln(" in transformed:
+            fail("certificate print runtime transform left document.write active")
+    return retire_handler_attrs(transformed)
 
 
 def expected_assets(core: str) -> dict[str, str]:
@@ -86,8 +95,8 @@ def expected_assets(core: str) -> dict[str, str]:
 
 
 def tighten_script_csp(index: str) -> str:
-    old = "script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline';"
-    new = "script-src 'self'; script-src-attr 'unsafe-inline'; style-src 'self' 'unsafe-inline';"
+    old = "script-src 'self'; script-src-attr 'unsafe-inline'; style-src 'self' 'unsafe-inline';"
+    new = "script-src 'self'; script-src-attr 'none'; style-src 'self' 'unsafe-inline';"
     if old in index:
         return index.replace(old, new, 1)
     if new in index:
@@ -96,10 +105,10 @@ def tighten_script_csp(index: str) -> str:
 
 
 def bump_cache(index: str, worker: str) -> tuple[str, str]:
-    old_revision = "maturity-hardening-v2-r3-20260903"
-    new_revision = "maturity-hardening-v2-r4-20260903"
-    old_cache = "mouldmaster-static-2026.08.26.2-maturity-hardening-v2-r3-20260903"
-    new_cache = "mouldmaster-static-2026.08.26.2-maturity-hardening-v2-r4-20260903"
+    old_revision = "maturity-hardening-v2-r4-20260903"
+    new_revision = "maturity-hardening-v2-r5-20260903"
+    old_cache = "mouldmaster-static-2026.08.26.2-maturity-hardening-v2-r4-20260903"
+    new_cache = "mouldmaster-static-2026.08.26.2-maturity-hardening-v2-r5-20260903"
     if old_revision in worker:
         worker = worker.replace(old_revision, new_revision, 1)
     elif new_revision not in worker:
@@ -111,11 +120,23 @@ def bump_cache(index: str, worker: str) -> tuple[str, str]:
     return index, worker
 
 
+def ensure_handler_bridge(index: str) -> str:
+    src = "./src/core-runtime/inline-handler-bridge.js"
+    if f"['{src}'" in index:
+        return index
+    marker = "    const BODY_SCRIPTS=[\n"
+    if marker not in index:
+        fail("index BODY_SCRIPTS insertion point missing")
+    entry = f"      ['{src}','<script src=\"{src}\">'],\n"
+    return index.replace(marker, marker + entry, 1)
+
+
 def insert_worker_assets(worker: str, names: list[str]) -> str:
     marker = "  './MouldMaster_Core_App.html',\n"
     if marker not in worker:
         fail("service-worker CORE insertion point missing")
-    missing = [f"./src/core-runtime/{name}" for name in names if f"'./src/core-runtime/{name}'" not in worker]
+    assets = [f"./src/core-runtime/{HANDLER_BRIDGE}", *[f"./src/core-runtime/{name}" for name in names]]
+    missing = [asset for asset in assets if f"'{asset}'" not in worker]
     if not missing:
         return worker
     block = "".join(f"  '{asset}',\n" for asset in missing)
@@ -167,12 +188,21 @@ def check_state() -> None:
         fail(f"index CORE_INLINE_SCRIPTS drifted: {refs} != {expected_names}")
     if "function externalizeCoreScripts(out)" not in index or "out=externalizeCoreScripts(out)" not in index:
         fail("browser bootstrap does not externalize frozen core scripts during assembly")
+    if "function retireInlineHandlerAttrs(parsed)" not in index or "retireInlineHandlerAttrs(parsed)" not in index:
+        fail("browser bootstrap does not retire static frozen-core handler attributes before installation")
+    if "['./src/core-runtime/inline-handler-bridge.js'" not in index:
+        fail("strict inline-handler bridge is not loaded by BODY_SCRIPTS")
+    bridge = OUT_DIR / HANDLER_BRIDGE
+    if not bridge.is_file():
+        fail("strict inline-handler bridge asset is missing")
     for name, body in expected.items():
         path = OUT_DIR / name
         if not path.is_file():
             fail(f"missing generated core runtime asset: {name}")
         if path.read_text(encoding="utf-8") != body:
             fail(f"generated core runtime asset is stale: {name}")
+        if HANDLER_ATTR_RE.search(body):
+            fail(f"generated core runtime still emits inline handler attributes: {name}")
     extras = sorted(path.name for path in OUT_DIR.glob("core-inline-*.js") if path.name not in expected)
     if extras:
         fail("stale generated core runtime assets remain: " + ", ".join(extras))
@@ -183,14 +213,14 @@ def check_state() -> None:
     for marker in ("w.opener=null", "d.createElement(\"style\")", "d.body.appendChild(box)", "w.print()"):
         if marker not in hardened:
             fail(f"certificate print runtime hardening marker missing: {marker}")
-    if "script-src 'self'; script-src-attr 'unsafe-inline';" not in index:
-        fail("script CSP has not been narrowed to self + legacy handler attribute isolation")
-    if "script-src 'self' 'unsafe-inline'" in index:
-        fail("script-src still permits unsafe-inline executable blocks")
+    if "script-src 'self'; script-src-attr 'none';" not in index:
+        fail("script-src-attr has not been tightened to none")
+    if "script-src-attr 'unsafe-inline'" in index or "script-src 'self' 'unsafe-inline'" in index:
+        fail("runtime CSP still permits inline script execution")
     worker = SERVICE_WORKER.read_text(encoding="utf-8")
-    for name in expected_names:
+    for name in [HANDLER_BRIDGE, *expected_names]:
         if f"'./src/core-runtime/{name}'" not in worker:
-            fail(f"service-worker CORE missing generated script: {name}")
+            fail(f"service-worker CORE missing generated runtime asset: {name}")
     package = DESKTOP_PACKAGE.read_text(encoding="utf-8")
     if '"../../src/core-runtime"' not in package:
         fail("desktop package does not include src/core-runtime")
@@ -198,8 +228,8 @@ def check_state() -> None:
     if "STATIC_RUNTIME_DIRS=['src/core-runtime']" not in integrity or "...staticRuntimeFiles" not in integrity:
         fail("desktop integrity does not derive generated core runtime files")
     print(
-        f"Core CSP script migration check passed: {len(expected_names)} frozen inline blocks have deterministic generated runtime copies; "
-        "certificate print document.write is transformed out; script-src is self-only; handler attributes remain isolated."
+        f"Core CSP migration check passed: {len(expected_names)} frozen inline blocks have deterministic generated runtime copies; "
+        "document.write and generated handler attributes are transformed out; script-src self-only; script-src-attr none."
     )
 
 
@@ -214,6 +244,7 @@ def apply() -> None:
         (OUT_DIR / name).write_text(body, encoding="utf-8")
 
     index = tighten_script_csp(INDEX.read_text(encoding="utf-8"))
+    index = ensure_handler_bridge(index)
     worker = SERVICE_WORKER.read_text(encoding="utf-8")
     index, worker = bump_cache(index, worker)
     worker = insert_worker_assets(worker, list(expected))
