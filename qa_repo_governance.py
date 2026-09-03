@@ -130,9 +130,9 @@ for marker in [
 ]:
     need(marker in release_qa, f"release QA cleanup contract missing marker: {marker}")
 
-# Dependency-lock generation must be a verification gate, never a privileged
-# direct writer to main. Both package.json and package-lock.json changes are
-# covered on PRs and on main as a post-merge consistency check.
+# Desktop dependency locks are verification gates, never privileged direct
+# writers to main. The stable portable/NSIS toolchain and isolated MSIX
+# toolchain must both be installed exactly from committed lockfiles with npm ci.
 for marker in [
     "name: Desktop Dependency Lock",
     "pull_request:",
@@ -140,10 +140,17 @@ for marker in [
     "branches: [main]",
     "desktop/electron/package.json",
     "desktop/electron/package-lock.json",
+    "desktop/electron/msix-toolchain/package.json",
+    "desktop/electron/msix-toolchain/package-lock.json",
+    "desktop/electron/scripts/run-msix-builder.cjs",
     "contents: read",
-    "npm install --package-lock-only",
-    "git diff --exit-code -- package-lock.json",
-    "package-lock.json is not synchronized with package.json",
+    "actions/checkout@v7",
+    "actions/setup-node@v7",
+    "npm ci --prefix desktop/electron",
+    "npm ci --prefix desktop/electron/msix-toolchain",
+    "root electron-builder drift",
+    "run-msix-builder.cjs --verify-toolchain",
+    "git diff --exit-code -- desktop/electron/package-lock.json desktop/electron/msix-toolchain/package-lock.json",
 ]:
     need(marker in dep_lock, f"dependency-lock verification missing marker: {marker}")
 
@@ -152,9 +159,10 @@ for forbidden in [
     "git push",
     "git commit",
     "git add",
+    "npm install --package-lock-only",
     "Lock open desktop dependencies",
 ]:
-    need(forbidden not in dep_lock, f"dependency-lock workflow must not write directly to main: {forbidden}")
+    need(forbidden not in dep_lock, f"dependency-lock workflow must not write or regenerate locks: {forbidden}")
 
 # Branch pruning must happen only after the main provenance guard succeeds (or
 # by explicit manual dispatch), so an unauthorised transient main push cannot
@@ -192,5 +200,5 @@ need("run: python qa_repo_governance.py" in release_qa, "release QA must run rep
 print(
     "MouldMaster repository governance QA passed "
     "(four required-check rollback; no direct-main bot write; reviewed native-ruleset helper; "
-    "guard-gated safe pruning; filesystem-driven release syntax QA; architecture debt gate)"
+    "dual locked desktop toolchains; guard-gated safe pruning; filesystem-driven release syntax QA; architecture debt gate)"
 )
