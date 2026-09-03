@@ -6,6 +6,7 @@ on:
       - build/lock-msix-toolchain-v1
     paths:
       - .github/workflows/migrate-locked-msix-toolchain-v1.yml
+      - .github/scripts/migrate_locked_msix_toolchain_v1.py
   workflow_dispatch:
 
 permissions:
@@ -26,209 +27,29 @@ jobs:
       - uses: actions/setup-python@v7
         with:
           python-version: '3.13'
-
-      - name: Create isolated locked MSIX toolchain
+      - name: Prepare permanent migration
         shell: bash
-        run: |
-          set -euo pipefail
-          mkdir -p desktop/electron/msix-toolchain
-          cat > desktop/electron/msix-toolchain/package.json <<'JSON'
-          {
-            "name": "mouldmaster-msix-toolchain",
-            "version": "1.0.0",
-            "private": true,
-            "description": "Isolated reproducible MSIX packaging toolchain for MouldMaster Academy.",
-            "engines": {
-              "node": ">=22.12.0"
-            },
-            "devDependencies": {
-              "electron-builder": "27.0.0-alpha.7"
-            }
-          }
-          JSON
-          (
-            cd desktop/electron/msix-toolchain
-            npm install --package-lock-only --ignore-scripts --no-audit --fund=false
-          )
-
-      - name: Route MSIX builds through the isolated toolchain
+        run: python .github/scripts/migrate_locked_msix_toolchain_v1.py
+      - name: Generate exact MSIX toolchain lock
         shell: bash
-        run: |
-          set -euo pipefail
-          python - <<'PY'
-          from pathlib import Path
-
-          pkg = Path('desktop/electron/package.json')
-          text = pkg.read_text(encoding='utf-8')
-          old = 'npx --yes electron-builder@27.0.0-alpha.7 --win msix'
-          new = 'node scripts/run-msix-builder.cjs --win msix'
-          if text.count(old) != 1:
-              raise SystemExit(f'Expected exactly one root MSIX npx command, found {text.count(old)}')
-          pkg.write_text(text.replace(old, new, 1), encoding='utf-8')
-
-          workflow = Path('.github/workflows/microsoft-store-msix.yml')
-          text = workflow.read_text(encoding='utf-8')
-          old_cache = "          cache-dependency-path: desktop/electron/package-lock.json\n"
-          new_cache = "          cache-dependency-path: |\n            desktop/electron/package-lock.json\n            desktop/electron/msix-toolchain/package-lock.json\n"
-          if old_cache not in text:
-              raise SystemExit('Store workflow cache dependency marker missing')
-          text = text.replace(old_cache, new_cache, 1)
-          install_marker = "      - name: Generate verified application evidence\n"
-          install_step = "      - name: Install exact locked MSIX toolchain\n        working-directory: desktop/electron/msix-toolchain\n        run: npm ci --no-audit --fund=false\n      - name: Verify exact locked MSIX builder\n        working-directory: desktop/electron\n        run: node scripts/run-msix-builder.cjs --version\n"
-          if install_marker not in text:
-              raise SystemExit('Store workflow evidence marker missing')
-          text = text.replace(install_marker, install_step + install_marker, 1)
-          old = 'npx --yes electron-builder@27.0.0-alpha.7 --win msix --x64 --arm64'
-          new = 'node scripts/run-msix-builder.cjs --win msix --x64 --arm64'
-          if text.count(old) != 1:
-              raise SystemExit(f'Expected exactly one Store MSIX npx command, found {text.count(old)}')
-          workflow.write_text(text.replace(old, new, 1), encoding='utf-8')
-          PY
-
-          cat > desktop/electron/scripts/run-msix-builder.cjs <<'JS'
-          'use strict';
-
-          const fs = require('fs');
-          const path = require('path');
-          const { spawnSync } = require('child_process');
-
-          const EXPECTED_VERSION = '27.0.0-alpha.7';
-          const toolchainRoot = path.resolve(__dirname, '..', 'msix-toolchain');
-          const packageJsonPath = path.join(toolchainRoot, 'node_modules', 'electron-builder', 'package.json');
-
-          if (!fs.existsSync(packageJsonPath)) {
-            console.error('Locked MSIX toolchain is not installed. Run npm ci in desktop/electron/msix-toolchain first.');
-            process.exit(2);
-          }
-
-          const pkg = JSON.parse(fs.readFileSync(packageJsonPath, 'utf8'));
-          if (pkg.version !== EXPECTED_VERSION) {
-            console.error(`MSIX builder version mismatch: expected ${EXPECTED_VERSION}, got ${pkg.version || '<missing>'}`);
-            process.exit(2);
-          }
-
-          const bin = typeof pkg.bin === 'string' ? pkg.bin : pkg.bin && pkg.bin['electron-builder'];
-          if (!bin) {
-            console.error('Locked MSIX electron-builder package does not expose the electron-builder CLI.');
-            process.exit(2);
-          }
-
-          const cliPath = path.resolve(path.dirname(packageJsonPath), bin);
-          if (!fs.existsSync(cliPath)) {
-            console.error(`Locked MSIX electron-builder CLI is missing: ${cliPath}`);
-            process.exit(2);
-          }
-
-          const result = spawnSync(process.execPath, [cliPath, ...process.argv.slice(2)], {
-            cwd: process.cwd(),
-            env: process.env,
-            stdio: 'inherit',
-          });
-          if (result.error) {
-            console.error(result.error);
-            process.exit(2);
-          }
-          process.exit(result.status == null ? 1 : result.status);
-          JS
-
-      - name: Strengthen dependency-lock CI and Store QA
+        working-directory: desktop/electron/msix-toolchain
+        run: npm install --package-lock-only --ignore-scripts --no-audit --fund=false
+      - name: Install stable desktop dependencies
         shell: bash
-        run: |
-          set -euo pipefail
-          python - <<'PY'
-          from pathlib import Path
-
-          lock_wf = Path('.github/workflows/desktop-dependency-lock.yml')
-          text = lock_wf.read_text(encoding='utf-8')
-          text = text.replace("      - 'desktop/electron/package-lock.json'\n", "      - 'desktop/electron/package-lock.json'\n      - 'desktop/electron/msix-toolchain/package.json'\n      - 'desktop/electron/msix-toolchain/package-lock.json'\n      - 'desktop/electron/scripts/run-msix-builder.cjs'\n", 2)
-          text = text.replace('actions/checkout@v4', 'actions/checkout@v7')
-          text = text.replace('actions/setup-node@v4', 'actions/setup-node@v7')
-          old_setup = "      - uses: actions/setup-node@v7\n        with:\n          node-version: '22.12.0'\n"
-          new_setup = "      - uses: actions/setup-node@v7\n        with:\n          node-version: '22.12.0'\n          cache: 'npm'\n          cache-dependency-path: |\n            desktop/electron/package-lock.json\n            desktop/electron/msix-toolchain/package-lock.json\n"
-          if old_setup not in text:
-              raise SystemExit('Desktop dependency lock setup-node block missing')
-          text = text.replace(old_setup, new_setup, 1)
-          old_step = '''      - name: Verify exact npm dependency lock
         working-directory: desktop/electron
+        run: npm ci --no-audit --fund=false
+      - name: Install isolated MSIX dependencies
+        shell: bash
+        working-directory: desktop/electron/msix-toolchain
+        run: npm ci --no-audit --fund=false
+      - name: Verify isolated builder versions and QAs
         shell: bash
         run: |
           set -euo pipefail
-          npm install --package-lock-only --ignore-scripts --no-audit --fund=false
-          if ! git diff --exit-code -- package-lock.json; then
-            echo '::error::desktop/electron/package-lock.json is not synchronized with package.json. Regenerate it in the same pull request.'
-            exit 1
-          fi
-          git ls-files --error-unmatch package-lock.json >/dev/null
-          echo 'desktop/electron/package-lock.json is committed and synchronized.'
-'''
-          new_step = '''      - name: Verify exact npm dependency locks and isolated builders
-        shell: bash
-        run: |
-          set -euo pipefail
-          npm ci --prefix desktop/electron --ignore-scripts --no-audit --fund=false
-          npm ci --prefix desktop/electron/msix-toolchain --ignore-scripts --no-audit --fund=false
-          node -e "const p=require('./desktop/electron/node_modules/electron-builder/package.json'); if(p.version!=='26.15.7') throw new Error('root electron-builder drift: '+p.version)"
-          node desktop/electron/scripts/run-msix-builder.cjs --version
-          git ls-files --error-unmatch desktop/electron/package-lock.json >/dev/null
-          git ls-files --error-unmatch desktop/electron/msix-toolchain/package-lock.json >/dev/null
-          git diff --exit-code -- desktop/electron/package-lock.json desktop/electron/msix-toolchain/package-lock.json
-          echo 'Desktop portable/NSIS and isolated MSIX dependency locks are committed and reproducible.'
-'''
-          if old_step not in text:
-              raise SystemExit('Desktop dependency lock verification block missing')
-          lock_wf.write_text(text.replace(old_step, new_step, 1), encoding='utf-8')
-
-          qa = Path('qa_store_submission.py')
-          text = qa.read_text(encoding='utf-8')
-          marker = 'workflow = text(store_workflow_path)\n'
-          block = '''workflow = text(store_workflow_path)
-desktop_pkg = json.loads(text(ROOT / "desktop/electron/package.json"))
-desktop_lock = json.loads(text(ROOT / "desktop/electron/package-lock.json"))
-msix_pkg = json.loads(text(ROOT / "desktop/electron/msix-toolchain/package.json"))
-msix_lock = json.loads(text(ROOT / "desktop/electron/msix-toolchain/package-lock.json"))
-msix_runner = text(ROOT / "desktop/electron/scripts/run-msix-builder.cjs")
-dependency_lock_workflow = text(ROOT / ".github/workflows/desktop-dependency-lock.yml")
-'''
-          if text.count(marker) != 1:
-              raise SystemExit('Store QA workflow load marker missing')
-          text = text.replace(marker, block, 1)
-          inject_before = '# Current Microsoft Store trust boundary: Store MSIX gets Microsoft signing only after certification.\n'
-          checks = '''# MSIX packaging must be reproducible and isolated from the stable portable/NSIS builder.
-require(desktop_pkg["devDependencies"].get("electron-builder") == "26.15.7", "portable/NSIS electron-builder pin changed unexpectedly")
-require("node scripts/run-msix-builder.cjs --win msix" in desktop_pkg["scripts"].get("dist:msix", ""), "desktop MSIX script must use the locked local runner")
-require("npx --yes electron-builder" not in desktop_pkg["scripts"].get("dist:msix", ""), "desktop MSIX script must not resolve a builder from the network at execution time")
-require(desktop_lock["packages"][""]["devDependencies"].get("electron-builder") == "26.15.7", "root desktop lock must preserve electron-builder 26.15.7")
-require(msix_pkg.get("devDependencies", {}).get("electron-builder") == "27.0.0-alpha.7", "MSIX toolchain must pin electron-builder 27.0.0-alpha.7 exactly")
-locked_msix = msix_lock.get("packages", {}).get("node_modules/electron-builder")
-require(locked_msix is not None and locked_msix.get("version") == "27.0.0-alpha.7", "MSIX lockfile must resolve electron-builder 27.0.0-alpha.7 exactly")
-require(bool(locked_msix.get("resolved")) and bool(locked_msix.get("integrity")), "MSIX electron-builder lock entry must include resolved tarball and integrity")
-require(re.fullmatch(r"sha512-[A-Za-z0-9+/=]+", locked_msix.get("integrity", "")) is not None, "MSIX electron-builder lock integrity must be SHA-512")
-require("EXPECTED_VERSION = '27.0.0-alpha.7'" in msix_runner, "MSIX runner must fail closed on builder version drift")
-require("msix-toolchain" in msix_runner and "node_modules" in msix_runner and "spawnSync" in msix_runner, "MSIX runner must execute only the isolated installed toolchain")
-require("npx --yes electron-builder" not in workflow, "Store workflow must not download electron-builder at package time")
-require("desktop/electron/msix-toolchain/package-lock.json" in workflow, "Store workflow cache must include the MSIX lockfile")
-require("working-directory: desktop/electron/msix-toolchain" in workflow and "npm ci --no-audit --fund=false" in workflow, "Store workflow must install the isolated MSIX toolchain with npm ci")
-require("node scripts/run-msix-builder.cjs --version" in workflow and "node scripts/run-msix-builder.cjs --win msix --x64 --arm64" in workflow, "Store workflow must verify and use the locked local MSIX runner")
-require("npm ci --prefix desktop/electron" in dependency_lock_workflow and "npm ci --prefix desktop/electron/msix-toolchain" in dependency_lock_workflow, "dependency-lock CI must prove both npm lockfiles with npm ci")
-require("root electron-builder drift" in dependency_lock_workflow and "run-msix-builder.cjs --version" in dependency_lock_workflow, "dependency-lock CI must prove builder isolation")
-
-'''
-          if inject_before not in text:
-              raise SystemExit('Store QA trust-boundary marker missing')
-          qa.write_text(text.replace(inject_before, checks + inject_before, 1), encoding='utf-8')
-          PY
-
-      - name: Install and verify both locked toolchains
-        shell: bash
-        run: |
-          set -euo pipefail
-          npm ci --prefix desktop/electron --no-audit --fund=false
-          npm ci --prefix desktop/electron/msix-toolchain --no-audit --fund=false
           node -e "const p=require('./desktop/electron/node_modules/electron-builder/package.json'); if(p.version!=='26.15.7') throw new Error('root electron-builder drift: '+p.version)"
           node desktop/electron/scripts/run-msix-builder.cjs --version
           python qa_store_submission.py
           python qa_release.py
-
       - name: Build locked x64 MSIX smoke package
         shell: pwsh
         working-directory: desktop/electron
@@ -249,25 +70,22 @@ require("root electron-builder drift" in dependency_lock_workflow and "run-msix-
             --config.msix.displayName='MouldMaster Academy Test' `
             --config.msix.setBuildNumber=true `
             --config.msix.minVersion='10.0.19041.0' `
-            --config.msix.enforcePackageIntegrity=true `
-            --config.msix.artifactName='MouldMaster-Academy-MSIX-Smoke-${buildVersion}.${ext}'
-          $packages = @(Get-ChildItem 'dist-msix-smoke' -File -Filter '*.msix')
+            --config.msix.enforcePackageIntegrity=true
+          $packages = @(Get-ChildItem 'dist-msix-smoke' -Recurse -File -Filter '*.msix')
           if ($packages.Count -lt 1) { throw 'Locked MSIX smoke build produced no .msix package.' }
           $packages | Get-FileHash -Algorithm SHA256 | Format-Table -AutoSize
-
       - name: Commit permanent locked toolchain changes
         shell: bash
         run: |
           set -euo pipefail
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add \
-            desktop/electron/package.json \
-            desktop/electron/msix-toolchain/package.json \
-            desktop/electron/msix-toolchain/package-lock.json \
-            desktop/electron/scripts/run-msix-builder.cjs \
-            .github/workflows/microsoft-store-msix.yml \
-            .github/workflows/desktop-dependency-lock.yml \
-            qa_store_submission.py
+          git add desktop/electron/package.json
+          git add desktop/electron/msix-toolchain/package.json
+          git add desktop/electron/msix-toolchain/package-lock.json
+          git add desktop/electron/scripts/run-msix-builder.cjs
+          git add .github/workflows/microsoft-store-msix.yml
+          git add .github/workflows/desktop-dependency-lock.yml
+          git add qa_store_submission.py
           git commit -m "Lock and isolate MSIX packaging toolchain"
           git push origin HEAD:build/lock-msix-toolchain-v1
