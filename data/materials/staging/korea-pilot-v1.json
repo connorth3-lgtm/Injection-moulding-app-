@@ -5,7 +5,9 @@
   "purpose": "Stress-test the canonical material-grade model against large commercial engineering-plastics catalogues without publishing unverified grade claims.",
   "progress": {
     "targetManufacturers": 4,
+    "sourceReviewedManufacturers": 4,
     "validatedManufacturers": 3,
+    "sourceReviewedExactGrades": 15,
     "publishedExactGrades": 11,
     "lastReviewedAt": "2026-09-03"
   },
@@ -64,8 +66,16 @@
       "id": "mfr-kolon-enp",
       "name": "KOLON ENP",
       "country": "South Korea",
-      "stage": "discovery-pending",
+      "stage": "source-reviewed-staging",
       "gradeRecords": [],
+      "stagingDatasetId": "kolon-enp-exact-grade-pilot-v1",
+      "sourceReviewedGradeIds": [
+        "mat-kolon-kocetal-k300",
+        "mat-kolon-kocetal-k700",
+        "mat-kolon-kocetal-k100hs",
+        "mat-kolon-kocetal-gf702"
+      ],
+      "sourceReviewedGradeCount": 4,
       "sourceQueue": []
     }
   ],
@@ -82,7 +92,7 @@
     "LG Chem pilot progress points to the separately validated lg-chem-exact-grade-pilot-v1 dataset; exact-grade claims come only from current LG Chem/LG Chem On primary TDS records.",
     "KEPITAL pilot progress points to the separately validated kepital-exact-grade-pilot-v1 dataset. The stable mfr-kep identifier is retained while the current primary brand-owner source is identified as Korea Polyacetal (KPAC), which states that it sustains the KEPITAL brand.",
     "KEPITAL melt-flow values remain omitted because the reviewed current KPAC exact-grade sheets do not expose the temperature/load required for engineering comparison.",
-    "KOLON ENP remains a discovery target until primary-source exact-grade records pass the same staging and semantic gates.",
+    "KOLON ENP now has four primary-source-reviewed exact KOCETAL grade identities in kolon-enp-exact-grade-pilot-v1. They remain source-reviewed staging only: no numeric property is validated or published until complete test context and the stronger source-identity requirements are satisfied.",
     "Acquired source documents should be fingerprinted before extraction where redistribution/rights permit local retention.",
     "Every extracted observation must reference a sourceId and retain its test conditions rather than collapsing datasheet tables into generic values."
   ]
