@@ -34,37 +34,43 @@ jobs:
             exit 1
           }
 
-          # GitHub's commit-to-PR association can lag for a short period immediately
-          # after a squash merge. Retry only temporary invisibility; ambiguity still
-          # fails closed and triggers the existing defense-in-depth rollback path.
+          # GitHub's commit-to-PR association can lag immediately after a squash merge.
+          # Cross-check it with the recent closed-main PR collection, where the exact
+          # merge_commit_sha is an independent provenance identifier. The same PR may
+          # appear through both endpoints, so deduplicate by PR number. Multiple distinct
+          # exact matches remain a fail-closed ambiguity.
           merged_pr_json="null"
           for attempt in {1..20}; do
-            pulls_json=$(gh api \
+            associated_json=$(gh api \
               -H "Accept: application/vnd.github+json" \
               "repos/$GH_REPO/commits/$HEAD_SHA/pulls")
-            match_count=$(jq --arg sha "$HEAD_SHA" \
-              '[.[] | select(.merged_at != null and .base.ref == "main" and .merge_commit_sha == $sha)] | length' \
-              <<<"$pulls_json")
+            recent_main_json=$(gh api \
+              -H "Accept: application/vnd.github+json" \
+              "repos/$GH_REPO/pulls?state=closed&base=main&sort=updated&direction=desc&per_page=100")
+            matches_json=$(
+              { printf '%s\n' "$associated_json"; printf '%s\n' "$recent_main_json"; } |
+                jq -s --arg sha "$HEAD_SHA" \
+                  'add | map(select(.merged_at != null and .base.ref == "main" and .merge_commit_sha == $sha)) | unique_by(.number)'
+            )
+            match_count=$(jq 'length' <<<"$matches_json")
 
             if [[ "$match_count" -gt 1 ]]; then
               rollback_main "Push to main is ambiguously attributable to multiple merged pull requests."
             fi
 
             if [[ "$match_count" -eq 1 ]]; then
-              merged_pr_json=$(jq --arg sha "$HEAD_SHA" \
-                '[.[] | select(.merged_at != null and .base.ref == "main" and .merge_commit_sha == $sha)][0]' \
-                <<<"$pulls_json")
+              merged_pr_json=$(jq '.[0]' <<<"$matches_json")
               break
             fi
 
             if [[ "$attempt" -lt 20 ]]; then
-              echo "Merged-PR association is not visible yet; retrying ($attempt/20)."
+              echo "Exact merged-PR provenance is not visible through either GitHub index yet; retrying ($attempt/20)."
               sleep 3
             fi
           done
 
           if [[ -z "$merged_pr_json" || "$merged_pr_json" == "null" ]]; then
-            rollback_main "Push to main did not originate from a merged pull request after provenance visibility retries."
+            rollback_main "Push to main did not originate from a uniquely attributable merged pull request after cross-index provenance retries."
           fi
 
           PR_NUMBER=$(jq -r '.number' <<<"$merged_pr_json")
