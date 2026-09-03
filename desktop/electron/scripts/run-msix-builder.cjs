@@ -31,7 +31,13 @@ if (!fs.existsSync(cliPath)) {
   process.exit(2);
 }
 
-const result = spawnSync(process.execPath, [cliPath, ...process.argv.slice(2)], {
+const args = process.argv.slice(2);
+if (args.length === 1 && args[0] === '--verify-toolchain') {
+  console.log(`electron-builder ${pkg.version} (${cliPath})`);
+  process.exit(0);
+}
+
+const result = spawnSync(process.execPath, [cliPath, ...args], {
   cwd: process.cwd(),
   env: process.env,
   stdio: 'inherit',
