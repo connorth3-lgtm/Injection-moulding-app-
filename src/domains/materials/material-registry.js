@@ -2,7 +2,7 @@
 (function(){
 'use strict';
 if(window.MM_MATERIAL_REGISTRY)return;
-const VERSION='2026.09.03.6';
+const VERSION='2026.09.03.7';
 const CATALOG_URL='./material-catalog-v1.json';
 let catalog=null;
 let readyPromise=null;
@@ -53,9 +53,9 @@ async function stats(){const c=await load();return {catalogVersion:c.catalogVers
 async function startMouldMasterCase(materialGradeId){
   const grade=await get(materialGradeId);if(!grade)throw new Error(`Unknown exact material grade ${materialGradeId}`);
   const workspace=window.MM_MOULD_MASTER_WORKSPACE;if(!workspace?.newCase)throw new Error('Mould Master workspace unavailable');
-  const name=displayName(grade),caseId=workspace.newCase({title:`${grade.grade} material investigation`,material:name});
-  const legacy=workspace.getCase?.(caseId)||{id:caseId,title:`${grade.grade} material investigation`,material:name};
-  const store=window.MM_ENGINEERING_STORE;if(store?.saveCase){await store.saveCase({...legacy,materialGradeId});await store.linkCaseMaterial(caseId,materialGradeId,name)}
+  const name=displayName(grade);
+  const caseId=await workspace.newCase({title:`${grade.grade} material investigation`,material:name,materialGradeId});
+  const store=window.MM_ENGINEERING_STORE;if(store?.linkCaseMaterial)await store.linkCaseMaterial(caseId,materialGradeId,name);
   return caseId;
 }
 
