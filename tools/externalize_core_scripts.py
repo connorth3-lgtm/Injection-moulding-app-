@@ -7,7 +7,8 @@ inline blocks with same-origin generated assets during runtime assembly.
 
 Runtime-only transforms remove the recovery core's historical certificate-print
 `document.write` call and rewrite generated inline event-handler markup to inert
-`data-mm-on*` attributes consumed by the strict delegated handler bridge.
+`data-mm-on*` attributes. A strict delegated bridge is concatenated into the final
+generated core slot so this hardening does not increase BODY_SCRIPTS above 39.
 """
 
 from __future__ import annotations
@@ -23,7 +24,7 @@ OUT_DIR = ROOT / "src/core-runtime"
 SERVICE_WORKER = ROOT / "service-worker.js"
 DESKTOP_PACKAGE = ROOT / "desktop/electron/package.json"
 DESKTOP_INTEGRITY = ROOT / "desktop/electron/scripts/generate-integrity.cjs"
-HANDLER_BRIDGE = "inline-handler-bridge.js"
+HANDLER_BRIDGE_PATH = OUT_DIR / "inline-handler-bridge.js"
 
 INLINE_SCRIPT_RE = re.compile(r"<script(?P<attrs>[^>]*)>(?P<body>.*?)</script\s*>", re.I | re.S)
 SRC_ATTR_RE = re.compile(r"\bsrc\s*=", re.I)
@@ -87,10 +88,16 @@ def expected_assets(core: str) -> dict[str, str]:
     blocks = inline_blocks(core)
     if not blocks:
         fail("frozen core has no inline script blocks to externalize at runtime")
+    if not HANDLER_BRIDGE_PATH.is_file():
+        fail("strict handler bridge source is missing")
+    bridge = HANDLER_BRIDGE_PATH.read_text(encoding="utf-8").rstrip() + "\n"
     result: dict[str, str] = {}
     for index, source in enumerate(blocks, start=1):
         name = f"core-inline-{index:03d}.js"
-        result[name] = runtime_transform(name, source)
+        transformed = runtime_transform(name, source)
+        if index == len(blocks):
+            transformed = transformed.rstrip() + "\n\n/* ===== strict delegated handler bridge ===== */\n" + bridge
+        result[name] = transformed
     return result
 
 
@@ -120,17 +127,6 @@ def bump_cache(index: str, worker: str) -> tuple[str, str]:
     return index, worker
 
 
-def ensure_handler_bridge(index: str) -> str:
-    src = "./src/core-runtime/inline-handler-bridge.js"
-    if f"['{src}'" in index:
-        return index
-    marker = "    const BODY_SCRIPTS=[\n"
-    if marker not in index:
-        fail("index BODY_SCRIPTS insertion point missing")
-    entry = f"      ['{src}','<script src=\"{src}\">'],\n"
-    return index.replace(marker, marker + entry, 1)
-
-
 def ensure_static_handler_retirement(index: str) -> str:
     if "function retireInlineHandlerAttrs(parsed)" in index:
         return index
@@ -145,7 +141,7 @@ def insert_worker_assets(worker: str, names: list[str]) -> str:
     marker = "  './MouldMaster_Core_App.html',\n"
     if marker not in worker:
         fail("service-worker CORE insertion point missing")
-    assets = [f"./src/core-runtime/{HANDLER_BRIDGE}", *[f"./src/core-runtime/{name}" for name in names]]
+    assets = [f"./src/core-runtime/{name}" for name in names]
     missing = [asset for asset in assets if f"'{asset}'" not in worker]
     if not missing:
         return worker
@@ -200,11 +196,9 @@ def check_state() -> None:
         fail("browser bootstrap does not externalize frozen core scripts during assembly")
     if "function retireInlineHandlerAttrs(parsed)" not in index or "retireInlineHandlerAttrs(parsed);const scripts=[]" not in index:
         fail("browser bootstrap does not retire static frozen-core handler attributes before installation")
-    if "['./src/core-runtime/inline-handler-bridge.js'" not in index:
-        fail("strict inline-handler bridge is not loaded by BODY_SCRIPTS")
-    bridge = OUT_DIR / HANDLER_BRIDGE
-    if not bridge.is_file():
-        fail("strict inline-handler bridge asset is missing")
+    body_scripts = re.findall(r"\['(\./[^']+\.js)'\s*,\s*'<script", index)
+    if len(body_scripts) > 39:
+        fail(f"handler bridge increased bootstrap debt: {len(body_scripts)} BODY_SCRIPTS > 39")
     for name, body in expected.items():
         path = OUT_DIR / name
         if not path.is_file():
@@ -223,12 +217,16 @@ def check_state() -> None:
     for marker in ("w.opener=null", "d.createElement(\"style\")", "d.body.appendChild(box)", "w.print()"):
         if marker not in hardened:
             fail(f"certificate print runtime hardening marker missing: {marker}")
+    final_slot = expected[expected_names[-1]]
+    for marker in ("MM_INLINE_HANDLER_BRIDGE", "ALLOWED_CALLS", "executeHandler"):
+        if marker not in final_slot:
+            fail(f"strict handler bridge missing from final generated core slot: {marker}")
     if "script-src 'self'; script-src-attr 'none';" not in index:
         fail("script-src-attr has not been tightened to none")
     if "script-src-attr 'unsafe-inline'" in index or "script-src 'self' 'unsafe-inline'" in index:
         fail("runtime CSP still permits inline script execution")
     worker = SERVICE_WORKER.read_text(encoding="utf-8")
-    for name in [HANDLER_BRIDGE, *expected_names]:
+    for name in expected_names:
         if f"'./src/core-runtime/{name}'" not in worker:
             fail(f"service-worker CORE missing generated runtime asset: {name}")
     package = DESKTOP_PACKAGE.read_text(encoding="utf-8")
@@ -238,8 +236,8 @@ def check_state() -> None:
     if "STATIC_RUNTIME_DIRS=['src/core-runtime']" not in integrity or "...staticRuntimeFiles" not in integrity:
         fail("desktop integrity does not derive generated core runtime files")
     print(
-        f"Core CSP migration check passed: {len(expected_names)} frozen inline blocks have deterministic generated runtime copies; "
-        "document.write and generated handler attributes are transformed out; script-src self-only; script-src-attr none."
+        f"Core CSP migration check passed: {len(expected_names)} deterministic core runtime slots; bridge folded into final slot; "
+        "document.write and generated handler attributes transformed out; 39 BODY_SCRIPTS; script-src-attr none."
     )
 
 
@@ -254,7 +252,6 @@ def apply() -> None:
         (OUT_DIR / name).write_text(body, encoding="utf-8")
 
     index = tighten_script_csp(INDEX.read_text(encoding="utf-8"))
-    index = ensure_handler_bridge(index)
     index = ensure_static_handler_retirement(index)
     worker = SERVICE_WORKER.read_text(encoding="utf-8")
     index, worker = bump_cache(index, worker)
