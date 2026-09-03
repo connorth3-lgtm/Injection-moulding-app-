@@ -1,27 +1,28 @@
 #!/usr/bin/env python3
 """Fail closed unless a production SHA came from a fully-green merged PR.
 
-GitHub's commit-to-pull association can lag immediately after a squash merge. Production
-provenance therefore cross-checks that association with the recent closed pull-request
-collection for `main`, where `merge_commit_sha` is an independent exact identifier. A
-candidate is accepted only when it is merged, targets `main`, and its merge SHA exactly
-matches the production SHA. Duplicate observations of the same PR are deduplicated;
-multiple distinct exact matches, failed checks, and policy failures still fail closed.
+Production provenance intentionally uses the GitHub CLI transport in Actions. The
+post-merge provenance guard already proved that `gh api` can resolve exact merged-PR
+state with the workflow token, while raw urllib calls in the Pages job repeatedly saw
+empty PR indexes with the same nominal permissions. Keeping one authenticated GitHub
+transport removes that release-path divergence.
 
-Native branch protection is reported separately because GitHub's repository setting is
-an administrator-side control. The provenance/check gate is sufficient to stop a
-transient direct main push from reaching the Pages deploy job while the post-push
-defense remains in depth.
+Provenance is still cross-checked through the commit association and recent closed-main
+PR indexes. A candidate is accepted only when it is merged, targets `main`, and its
+`merge_commit_sha` exactly matches the production SHA. Duplicate observations of the
+same PR are deduplicated; multiple distinct exact matches, failed checks, and policy
+failures still fail closed.
 """
 from __future__ import annotations
 
 import argparse
 import json
 import os
+from pathlib import Path
+import shutil
+import subprocess
 import time
-from urllib.error import HTTPError
-from urllib.parse import urlencode
-from urllib.request import Request, urlopen
+from urllib.parse import urlsplit, urlencode
 
 API = "https://api.github.com"
 API_VERSION = "2026-03-10"
@@ -35,23 +36,44 @@ REQUIRED_WORKFLOWS = (
 )
 
 
+def api_endpoint(url: str) -> str:
+    parsed = urlsplit(url)
+    if parsed.scheme != "https" or parsed.netloc != "api.github.com":
+        raise SystemExit(f"Refusing non-GitHub API URL: {url}")
+    endpoint = parsed.path.lstrip("/")
+    if parsed.query:
+        endpoint += "?" + parsed.query
+    if not endpoint.startswith("repos/"):
+        raise SystemExit(f"Refusing unsupported GitHub API endpoint: {endpoint}")
+    return endpoint
+
+
 def request_json(token: str, url: str) -> object:
-    req = Request(
-        url,
-        headers={
-            "Accept": "application/vnd.github+json",
-            "Authorization": f"Bearer {token}",
-            "X-GitHub-Api-Version": API_VERSION,
-            "User-Agent": "MouldMaster-Production-Source-Guard/3",
-        },
-    )
+    """Read GitHub REST JSON through the same authenticated transport as the main guard."""
+    if not shutil.which("gh"):
+        raise SystemExit("GitHub CLI (gh) is required for production-source verification")
+    env = os.environ.copy()
+    env["GH_TOKEN"] = token
+    env["GITHUB_TOKEN"] = token
+    command = [
+        "gh",
+        "api",
+        "--method",
+        "GET",
+        "-H",
+        "Accept: application/vnd.github+json",
+        "-H",
+        f"X-GitHub-Api-Version: {API_VERSION}",
+        api_endpoint(url),
+    ]
+    result = subprocess.run(command, capture_output=True, text=True, env=env)
+    if result.returncode != 0:
+        detail = (result.stderr or result.stdout).strip()
+        raise SystemExit(f"GitHub production-source query failed via gh api: {detail}")
     try:
-        with urlopen(req, timeout=20) as response:
-            if int(response.status) != 200:
-                raise SystemExit(f"GitHub production-source query failed: HTTP {response.status}")
-            return json.loads(response.read().decode("utf-8"))
-    except HTTPError as exc:
-        raise SystemExit(f"GitHub production-source query failed: HTTP {exc.code}") from exc
+        return json.loads(result.stdout)
+    except json.JSONDecodeError as exc:
+        raise SystemExit("GitHub production-source query returned invalid JSON") from exc
 
 
 def matching_merged_prs(payload: object, source_sha: str) -> list[dict]:
@@ -105,7 +127,8 @@ def resolve_merged_pr(token: str, repository: str, source_sha: str) -> dict:
         if attempt < PROVENANCE_ATTEMPTS:
             print(
                 f"Exact merged-PR provenance for {source_sha} is not visible through either GitHub index yet; "
-                f"retrying ({attempt}/{PROVENANCE_ATTEMPTS})."
+                f"retrying ({attempt}/{PROVENANCE_ATTEMPTS}).",
+                flush=True,
             )
             time.sleep(3)
     raise SystemExit(
@@ -171,6 +194,15 @@ def self_test() -> None:
     }
     ok, states = successful_required_workflows(sample)
     assert ok and len(states) == 4
+
+    assert api_endpoint("https://api.github.com/repos/example/project/pulls?state=closed") == "repos/example/project/pulls?state=closed"
+    for invalid in ("http://api.github.com/repos/a/b", "https://example.com/repos/a/b", "https://api.github.com/user"):
+        try:
+            api_endpoint(invalid)
+        except SystemExit:
+            pass
+        else:
+            raise AssertionError(f"unsafe API endpoint was accepted: {invalid}")
 
     source = "a" * 40
     exact = {"number": 1, "merged_at": "x", "base": {"ref": "main"}, "merge_commit_sha": source}
