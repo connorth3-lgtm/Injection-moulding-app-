@@ -27,8 +27,21 @@ pilot = load_json(STAGING / "korea-pilot-v1.json")
 expected = {"mfr-lotte-chemical", "mfr-lg-chem", "mfr-kep", "mfr-kolon-enp"}
 actual = {x.get("id") for x in pilot.get("manufacturers", [])}
 need(expected == actual, f"Korean pilot manufacturer set drift: {actual}")
+need(pilot.get("status") == "pilot-in-progress", "Korean pilot top-level progress state is stale")
 need(pilot.get("publicationGate", {}).get("allowsDirectStagingToRuntime") is False, "staging must not publish directly to runtime")
-need(all(not x.get("gradeRecords") for x in pilot["manufacturers"]), "discovery target manifest must not contain source-free grade records")
+need(all(not x.get("gradeRecords") for x in pilot["manufacturers"]), "umbrella Korean pilot manifest must not duplicate exact-grade records")
+
+pilot_by_id = {x["id"]: x for x in pilot["manufacturers"]}
+lotte_target = pilot_by_id["mfr-lotte-chemical"]
+need(lotte_target.get("stage") == "validated-published-pilot", "LOTTE Korean-pilot progress must reflect the validated published pilot")
+need(lotte_target.get("validatedDatasetId") == "lotte-exact-grade-pilot-v1", "LOTTE pilot dataset pointer drift")
+need(lotte_target.get("publishedRuntimeCatalog") == "material-catalog-v1.json", "LOTTE runtime catalog pointer drift")
+for pending_id in ("mfr-lg-chem", "mfr-kep", "mfr-kolon-enp"):
+    need(pilot_by_id[pending_id].get("stage") == "discovery-pending", f"unsourced Korean pilot target must remain discovery-pending: {pending_id}")
+progress = pilot.get("progress") or {}
+need(progress.get("targetManufacturers") == 4, "Korean pilot target-manufacturer count drift")
+need(progress.get("validatedManufacturers") == 1, "Korean pilot validated-manufacturer count must reflect LOTTE only")
+need(progress.get("publishedExactGrades") == 4, "Korean pilot published exact-grade count must reflect current LOTTE pilot")
 
 errors = validate_staging()
 need(not errors, "material staging semantic QA failed:\n" + "\n".join(errors))
@@ -60,10 +73,14 @@ runtime_grade_ids = {grade.get("id") for grade in catalog.get("grades") or []}
 need(staged_grade_ids == runtime_grade_ids, f"runtime/staging material drift: staged={sorted(staged_grade_ids)} runtime={sorted(runtime_grade_ids)}")
 
 # Pilot proof: exact-grade rollout has begun with current primary-source LOTTE
-# records without changing the source-free discovery target manifest.
+# records while the umbrella manifest records progress without copying claims.
 lotte_pilot = load_json(STAGING / "lotte-exact-grade-pilot-v1.json")
 lotte_grades = [g for m in lotte_pilot.get("manufacturers") or [] for g in m.get("gradeRecords") or []]
 need({g.get("grade") for g in lotte_grades} == {"NH-1033", "NH-1034R", "AE-3060 H", "XP-2140C"}, "LOTTE exact-grade pilot set drift")
+lotte_grade_ids = {g.get("id") for g in lotte_grades}
+need(set(lotte_target.get("validatedGradeIds") or []) == lotte_grade_ids, "Korean pilot LOTTE grade-ID progress does not match validated dataset")
+need(lotte_target.get("publishedGradeCount") == len(lotte_grade_ids) == 4, "Korean pilot LOTTE published-grade count drift")
+need(lotte_grade_ids.issubset(runtime_grade_ids), "Korean pilot LOTTE validated grades are not all published in runtime catalog")
 for grade in lotte_grades:
     need((grade.get("provenance") or {}).get("stage") == "validated", f"LOTTE pilot grade is not validated: {grade.get('id')}")
     need(all(str(source.get("url", "")).startswith("https://product.lottechem.com/") for source in grade.get("sources") or []), f"LOTTE pilot grade has a non-primary source: {grade.get('id')}")
@@ -136,6 +153,7 @@ need("What do you need to do?" in areas, "task-first product-area UI missing")
 print(
     "MouldMaster domain/material foundation QA passed: "
     f"{len(pilot['manufacturers'])} Korean pilot manufacturers; "
+    f"{progress['validatedManufacturers']} validated manufacturer; "
     f"{len(catalog['grades'])} published exact grades; "
     f"{len(foundation_domain_files)} domain modules"
 )
