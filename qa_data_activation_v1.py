@@ -30,7 +30,7 @@ for m in ['injection_pressure_actual','injection_pressure_target','cavity_pressu
     need(m in signals,f'signal dictionary marker missing: {m}')
 
 assessment=text('src/domains/assessment/assessment-analytics-v2.js')
-for m in ['questionRevision','bankVersion','choiceFingerprint','authoredDifficulty','observedDifficulty','questionId plus explicit revision']:
+for m in ['questionRevision','bankVersion','choiceFingerprint','authoredDifficulty','observedDifficulty','stable question ID plus explicit revision']:
     need(m in assessment,f'assessment analytics v2 marker missing: {m}')
 
 activity=text('src/domains/learning/activity-events-v2.js')
