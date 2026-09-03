@@ -90,18 +90,29 @@ for marker in (
 run = subprocess.run(["python", "tools/verify_production_source.py", "--self-test"], cwd=ROOT, capture_output=True, text=True)
 need(run.returncode == 0, f"production-source verifier self-test failed: {run.stdout}\n{run.stderr}")
 
-# GitHub's commit->PR association is eventually consistent immediately after squash merge.
-# Both production publication and the post-merge guard must retry temporary invisibility,
-# but exact merge SHA/base matching and ambiguity remain fail-closed.
+# Production provenance cannot rely on the eventually-consistent commit->PR index alone.
+# It must independently inspect recently closed main PRs and accept only one exact merged
+# candidate, deduplicating the same PR observed through both endpoints.
 for marker in (
     "PROVENANCE_ATTEMPTS = 20",
+    "RECENT_MAIN_PULL_LIMIT = 100",
     "matching_merged_prs",
+    "unique_matching_merged_prs",
     "resolve_merged_pr",
+    '"state": "closed"',
+    '"base": "main"',
+    '"sort": "updated"',
+    '"direction": "desc"',
+    "commits/{source_sha}/pulls",
+    "pulls?{recent_query}",
     "len(matches) > 1",
     "merge_commit_sha",
     "time.sleep(3)",
 ):
-    need(marker in production_source, f"production-source eventual-consistency guard missing: {marker}")
+    need(marker in production_source, f"production-source cross-index provenance guard missing: {marker}")
+
+# The post-merge provenance guard still retries temporary association invisibility before
+# taking its rollback path. Exact merge SHA/base matching and ambiguity remain fail-closed.
 for marker in (
     "for attempt in {1..20}",
     "match_count",
@@ -124,4 +135,4 @@ need("new MutationObserver" not in pwa, "PWA shell still uses document-wide muta
 need("new MutationObserver" not in materials, "Materials domain still uses document-wide mutation polling")
 need("mutationScope:'changed-subtrees'" in a11y, "accessibility safety net is not constrained to changed subtrees")
 
-print("MouldMaster app-wide remediation QA passed: production gate + post-merge visibility retry, storage ownership/explicit parity, variant-safe materials, PWA lifecycle, legacy distribution separation, deterministic browser matrix and targeted observers")
+print("MouldMaster app-wide remediation QA passed: cross-index production provenance, post-merge visibility retry, storage ownership/explicit parity, variant-safe materials, PWA lifecycle, legacy distribution separation, deterministic browser matrix and targeted observers")
