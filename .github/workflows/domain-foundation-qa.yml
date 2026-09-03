@@ -24,6 +24,7 @@ on:
       - 'qa_material_identity.py'
       - 'qa_app_remediation.py'
       - 'qa_architecture_debt.py'
+      - 'qa_webkit_regression.py'
       - 'docs/DOMAIN_ARCHITECTURE_V1.md'
       - 'index.html'
       - 'pwa-shell.js'
@@ -58,6 +59,7 @@ on:
       - 'qa_material_identity.py'
       - 'qa_app_remediation.py'
       - 'qa_architecture_debt.py'
+      - 'qa_webkit_regression.py'
       - 'docs/DOMAIN_ARCHITECTURE_V1.md'
       - 'index.html'
       - 'pwa-shell.js'
@@ -103,6 +105,8 @@ jobs:
           python tools/audit_inline_handlers.py --check
       - name: Architecture debt ceiling
         run: python qa_architecture_debt.py
+      - name: WebKit regression coverage contract
+        run: python qa_webkit_regression.py
       - name: Material staging semantics
         run: python tools/material_catalog.py validate
       - name: Material identity behaviour
