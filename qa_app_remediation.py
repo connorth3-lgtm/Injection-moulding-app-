@@ -90,21 +90,39 @@ for marker in (
 run = subprocess.run(["python", "tools/verify_production_source.py", "--self-test"], cwd=ROOT, capture_output=True, text=True)
 need(run.returncode == 0, f"production-source verifier self-test failed: {run.stdout}\n{run.stderr}")
 
-# Pages and the post-merge guard must use the same GitHub CLI authenticated transport.
-# Raw urllib transport previously returned empty PR indexes in the Pages Actions job while
-# `gh api` with the same workflow permissions resolved exact provenance successfully.
+# The exact Pages Actions token/request contract must be exercised before merge against
+# the current main base commit, not discovered for the first time after a squash merge.
+for marker in (
+    "Validate production-source guard and live API contract on PRs",
+    'GITHUB_TOKEN: ${{ github.token }}',
+    '--source-sha "${{ github.event.pull_request.base.sha }}"',
+    "contents: read",
+    "pull-requests: read",
+    "actions: read",
+):
+    need(marker in pages, f"Pages live provenance preflight missing: {marker}")
+
+# Pages and the post-merge guard must use the same GitHub CLI API negotiation contract.
+# The verifier may not add a separate REST-version header or raw HTTP transport.
 for marker in (
     'shutil.which("gh")',
     'env["GH_TOKEN"] = token',
     '"gh",',
     '"api",',
-    '"X-GitHub-Api-Version:',
+    '"Accept: application/vnd.github+json"',
     "api_endpoint",
     'parsed.netloc != "api.github.com"',
 ):
     need(marker in production_source, f"production-source canonical GitHub CLI transport missing: {marker}")
-for forbidden in ("urllib.request", "urlopen(", "Request(", 'Authorization": f"Bearer'):
-    need(forbidden not in production_source, f"production-source raw HTTP transport returned: {forbidden}")
+for forbidden in (
+    "X-GitHub-Api-Version",
+    "API_VERSION =",
+    "urllib.request",
+    "urlopen(",
+    "Request(",
+    'Authorization": f"Bearer',
+):
+    need(forbidden not in production_source, f"production-source transport divergence returned: {forbidden}")
 need("gh api" in main_guard, "post-merge provenance guard must retain GitHub CLI API transport")
 
 # Production provenance cannot rely on the eventually-consistent commit->PR index alone.
@@ -154,4 +172,4 @@ need("new MutationObserver" not in pwa, "PWA shell still uses document-wide muta
 need("new MutationObserver" not in materials, "Materials domain still uses document-wide mutation polling")
 need("mutationScope:'changed-subtrees'" in a11y, "accessibility safety net is not constrained to changed subtrees")
 
-print("MouldMaster app-wide remediation QA passed: canonical GitHub CLI + cross-index production provenance, storage ownership/explicit parity, variant-safe materials, PWA lifecycle, legacy distribution separation, deterministic browser matrix and targeted observers")
+print("MouldMaster app-wide remediation QA passed: pre-merge live Pages provenance, aligned gh api negotiation, cross-index fail-closed provenance, storage ownership/explicit parity, variant-safe materials, PWA lifecycle, legacy distribution separation, deterministic browser matrix and targeted observers")
