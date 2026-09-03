@@ -15,6 +15,7 @@ def text(path):
 
 
 guard = text(".github/workflows/main-pr-provenance-guard.yml")
+pages = text(".github/workflows/pages.yml")
 pruner = text(".github/workflows/prune-merged-branches.yml")
 dep_lock = text(".github/workflows/desktop-dependency-lock.yml")
 release_qa = text(".github/workflows/qa.yml")
@@ -24,38 +25,51 @@ question_quality = text(".github/workflows/question-quality-50-pass.yml")
 protection_helper = text(".github/scripts/apply-main-ruleset.sh")
 protection_doc = text(".github/MAIN_PROTECTION.md")
 
-# Main must be continuously checked for merged-PR provenance and for the same
-# four pre-merge workflows intended for native branch protection. This is a
-# repository-level compensating control; it does not claim GitHub's native
-# branch-protection/ruleset setting is enabled.
+# Main provenance is now a read-only post-push audit. Prevention belongs to
+# GitHub's native ruleset. The audit may report a policy failure, but it must
+# never rewrite history in reaction to slow or eventually-consistent CI state.
 for marker in [
     "name: Main PR Provenance Guard",
     "push:",
     "branches: [main]",
-    "contents: write",
+    "contents: read",
     "pull-requests: read",
     "actions: read",
     "HEAD_SHA: ${{ github.sha }}",
-    "BEFORE_SHA: ${{ github.event.before }}",
     "commits/$HEAD_SHA/pulls",
     "merged_at != null",
     "merge_commit_sha",
-    "rollback_main",
+    "fail_audit",
+    "GitHub reports main protected=false",
+    "this audit will not mutate or roll back main",
     "MouldMaster Release QA",
     "Mobile Browser QA",
     "Open Desktop Build",
     "Question Quality 50-Pass",
     "actions/runs?head_sha=$PR_HEAD_SHA&event=pull_request",
     "all_required_success",
-    "git/refs/heads/main",
-    "force=true",
+    "native protection is authoritative",
 ]:
     need(marker in guard, f"main provenance guard missing marker: {marker}")
 
-need("github-actions[bot]" not in guard, "main provenance guard must not exempt direct bot pushes")
-need("Lock open desktop dependencies" not in guard, "legacy dependency-lock direct-push exemption remains")
-need("conclusion\" != \"success" in guard, "required PR workflows must fail closed when not successful")
-need("exit 1" in guard, "unauthorised or unverified main pushes must fail after rollback")
+for forbidden in [
+    "contents: write",
+    "BEFORE_SHA",
+    "rollback_main",
+    "git/refs/heads/main",
+    "force=true",
+    "--method PATCH",
+    "github-actions[bot]",
+    "Lock open desktop dependencies",
+]:
+    need(forbidden not in guard, f"post-push provenance audit must never mutate or exempt main: {forbidden}")
+need("conclusion\" != \"success" in guard, "required PR workflows must still fail audit when completed unsuccessfully")
+need("for attempt in {1..60}" in guard, "read-only workflow audit must tolerate long-running required checks")
+
+# Production publication must require GitHub's effective native protection.
+need("--require-native-protection" in pages, "Pages publication does not require native main protection")
+need("Require merged-PR provenance and native protection before publication" in pages, "Pages native-protection gate is not explicit")
+need("if: github.event_name != 'pull_request'" in pages, "Pages publication guard must remain push/manual only")
 
 # The native-protection helper is an explicit administrator action, defaults to
 # a credential-free dry run, has no bypass actors, and mirrors the exact CI job
@@ -87,7 +101,6 @@ for marker in [
     'all four required checks',
 ]:
     need(marker in protection_helper, f"native-protection helper missing marker: {marker}")
-
 need('if [[ "$MODE" == "--apply" ]]' in protection_helper, "GitHub auth/network access must be apply-only")
 need("gh auth token" not in protection_helper, "native-protection helper must not extract a GitHub token")
 need("GITHUB_TOKEN=" not in protection_helper, "native-protection helper must not embed or assign a repository token")
@@ -112,16 +125,15 @@ for marker in [
 ]:
     need(marker in protection_doc, f"native-protection documentation missing marker: {marker}")
 
-# Ensure the protection helper's context names remain real job names.
+# Ensure protection helper contexts remain real PR job names.
 need("jobs:\n  integrity:" in release_qa, "required status context 'integrity' is no longer the Release QA job")
 need("jobs:\n  mobile-browser:" in mobile_qa, "required status context 'mobile-browser' is no longer the mobile QA job")
 need("jobs:\n  build-windows:" in desktop_build, "required status context 'build-windows' is no longer the desktop build job")
 need("jobs:\n  question-quality-50-pass:" in question_quality, "required status context 'question-quality-50-pass' is no longer the question-quality job")
 need("pull_request:\n    branches: [main]" in question_quality, "question-quality required check must run on every PR to main")
 
-# Release QA must discover executable JavaScript from the filesystem instead of
-# maintaining another hand-written copy of the bootstrap list. The architecture
-# debt ceiling is a required release gate as well as a domain-foundation gate.
+# Release QA must discover executable JavaScript from the filesystem and keep
+# the architecture debt ceiling as a release gate.
 for marker in [
     "find . -maxdepth 1 -type f -name '*.js'",
     "find src/domains -type f -name '*.js'",
@@ -130,9 +142,7 @@ for marker in [
 ]:
     need(marker in release_qa, f"release QA cleanup contract missing marker: {marker}")
 
-# Desktop dependency locks are verification gates, never privileged direct
-# writers to main. The stable portable/NSIS toolchain and isolated MSIX
-# toolchain must both be installed exactly from committed lockfiles with npm ci.
+# Desktop lock maintenance is verification-only and never a privileged main writer.
 for marker in [
     "name: Desktop Dependency Lock",
     "pull_request:",
@@ -153,21 +163,11 @@ for marker in [
     "git diff --exit-code -- desktop/electron/package-lock.json desktop/electron/msix-toolchain/package-lock.json",
 ]:
     need(marker in dep_lock, f"dependency-lock verification missing marker: {marker}")
-
-for forbidden in [
-    "contents: write",
-    "git push",
-    "git commit",
-    "git add",
-    "npm install --package-lock-only",
-    "Lock open desktop dependencies",
-]:
+for forbidden in ["contents: write", "git push", "git commit", "git add", "npm install --package-lock-only", "Lock open desktop dependencies"]:
     need(forbidden not in dep_lock, f"dependency-lock workflow must not write or regenerate locks: {forbidden}")
 
-# Branch pruning must happen only after the main provenance guard succeeds (or
-# by explicit manual dispatch), so an unauthorised transient main push cannot
-# drive destructive cleanup. A branch is removable only when it has no commits
-# ahead of main or its exact current head is proven as a merged PR head.
+# Branch pruning remains downstream of a successful provenance audit. A failed
+# audit (including missing native protection) therefore cannot trigger deletion.
 for marker in [
     "name: Prune Fully Merged Branches",
     "workflow_dispatch:",
@@ -184,8 +184,7 @@ for marker in [
     'git/refs/heads/$branch',
 ]:
     need(marker in pruner, f"merged-branch pruner missing marker: {marker}")
-
-need("\n  push:\n" not in pruner, "pruner must not race the provenance guard on raw main pushes")
+need("\n  push:\n" not in pruner, "pruner must not race the provenance audit on raw main pushes")
 need("superseded" not in pruner.lower(), "one-time superseded-branch deletion allowlist must not remain")
 for stale_branch in [
     "codex/source-freshness-coherence-20260826",
@@ -199,6 +198,6 @@ need("run: python qa_repo_governance.py" in release_qa, "release QA must run rep
 
 print(
     "MouldMaster repository governance QA passed "
-    "(four required-check rollback; no direct-main bot write; reviewed native-ruleset helper; "
-    "dual locked desktop toolchains; guard-gated safe pruning; filesystem-driven release syntax QA; architecture debt gate)"
+    "(native protection authoritative; post-push audit read-only; Pages requires native protection; "
+    "four required checks audited; dual locked desktop toolchains; guard-gated pruning; architecture debt gate)"
 )
