@@ -8,7 +8,7 @@ on:
       - 'desktop/electron/package-lock.json'
       - '.github/workflows/desktop-dependency-lock.yml'
   push:
-    branches: [main, chore/electron-43-5-1]
+    branches: [main]
     paths:
       - 'desktop/electron/package.json'
       - 'desktop/electron/package-lock.json'
@@ -16,7 +16,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: write
+  contents: read
 
 concurrency:
   group: desktop-dependency-lock-${{ github.ref }}
@@ -30,27 +30,15 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22.12.0'
-      - name: Regenerate Electron 43.5.1 lock on migration branch
-        if: github.ref == 'refs/heads/chore/electron-43-5-1'
-        working-directory: desktop/electron
-        shell: bash
-        run: npm install --package-lock-only --save-dev --save-exact --ignore-scripts --no-audit --fund=false electron@43.5.1
       - name: Verify exact npm dependency lock
         working-directory: desktop/electron
         shell: bash
         run: |
           set -euo pipefail
           npm install --package-lock-only --ignore-scripts --no-audit --fund=false
+          if ! git diff --exit-code -- package-lock.json; then
+            echo '::error::desktop/electron/package-lock.json is not synchronized with package.json. Regenerate it in the same pull request.'
+            exit 1
+          fi
           git ls-files --error-unmatch package-lock.json >/dev/null
-          echo 'desktop/electron/package-lock.json is committed and synchronized in the checkout.'
-      - name: Commit npm-generated metadata on migration branch
-        if: github.ref == 'refs/heads/chore/electron-43-5-1'
-        shell: bash
-        run: |
-          set -euo pipefail
-          git config user.name 'github-actions[bot]'
-          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add desktop/electron/package.json desktop/electron/package-lock.json
-          git diff --cached --quiet && exit 0
-          git commit -m 'Update Electron lock to 43.5.1'
-          git push origin HEAD:chore/electron-43-5-1
+          echo 'desktop/electron/package-lock.json is committed and synchronized.'
