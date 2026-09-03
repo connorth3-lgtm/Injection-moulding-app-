@@ -38,6 +38,7 @@ latest = json.loads(text("latest.json"))
 manifest = json.loads(text("manifest.webmanifest"))
 assert version["web_release"] == WEB_RELEASE
 assert version["android_release"] == ANDROID_RELEASE
+subprocess.run(["python", "qa_web_release_identity.py"], check=True)
 assert version["content_version"] == CONTENT_VERSION
 assert version["question_bank_version"] == QUESTION_BANK_VERSION
 assert version["legacy_review_id_version"] == LEGACY_REVIEW_ID_VERSION
