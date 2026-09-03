@@ -77,21 +77,22 @@ function casesHtml(active){const cs=all();if(!cs.length)return '<div class="mw-e
 
 function renderCase(c){activeId=c.id;const host=section();c.status=status(c);const pct=completeness(c);host.innerHTML=`
 <div class="mw-hero card"><div class="eyebrow">Evidence-led troubleshooting workspace</div><h2>Mould Master case</h2><p>Define the symptom, localise where and when it occurs, compare against a known-good baseline, rank mechanisms, run the smallest controlled discriminating test, then verify the before/after result.</p><div class="mw-loop"><span>1 Define</span><span>2 Localise</span><span>3 Collect evidence</span><span>4 Rank mechanism</span><span>5 Controlled test</span><span>6 Verify</span></div><div class="mw-boundary"><b>Production boundary:</b> this workspace organises evidence and learning. It does not provide universal temperatures, pressures, speeds, force limits or authorisation to defeat safeguards. Verify the exact resin, machine, mould, validated process, approved site procedure and applicable safety requirements before real changes.</div></div>
-<div class="mw-toolbar"><div><b>${esc(c.title||c.defect||'Untitled case')}</b><div class="mw-help">Saved locally for this learner only.</div></div><div class="mw-actions"><button class="secondary" type="button" data-mw-list>All cases</button><button class="secondary" type="button" data-mw-new>New case</button><button class="secondary" type="button" data-mw-export>Export case</button></div></div>
-<div class="mw-layout"><div class="mw-panel card"><h3>Case evidence</h3><div class="mw-form">
-    ${textField('Case title','title',c,true,'Use a local technical description. Do not enter customer names, employee names, emails, phone numbers or personal identifiers.')}
-    <label>Defect / symptom<select data-mw-field="defect">${defectOptions(c)}</select><div class="mw-help">Start with the observable condition, not a guessed cause.</div></label>
-    <label>Onset<select data-mw-field="onset">${onsetOptions(c)}</select><div class="mw-help">When did the condition first appear?</div></label>
-    ${textField('Material','material',c,false,'Grade/family and known condition if relevant; avoid supplier contact details.')}
-    ${textField('Machine','machine',c,false,'Local equipment label only; do not enter operator identity.')}
-    ${textField('Mould / tooling','mould',c,false,'Tool or cavity reference if useful.')}
-    ${textField('Location / cavity / zone','location',c,false,'Where is the symptom strongest or absent?')}
-    ${area('Known-good baseline','baseline',c,'What does stable acceptable production look like? Capture approved settings/results or measured behaviour only if authorised at your site.')}
-    ${area('Evidence collected','evidence',c,'Record observations, measurements, samples, timing and comparisons. Separate actual values from setpoints and note units/source when known.',true)}
-    ${area('Ranked mechanism / hypothesis','hypothesis',c,'State the mechanism and what observation would support or weaken it.')}
-    ${area('Controlled discriminating test','controlledTest',c,'Change one approved variable or perform one inspection/measurement that distinguishes competing causes. Follow site controls and authorised process windows.')}
-    ${area('Test result','testResult',c,'Record what actually happened, including no-change results.')}
-    ${area('After-change evidence','afterChange',c,'Compare with the same quality/process evidence used for the baseline.')}
+<div class="mw-toolbar"><div><b>${esc(c.title||c.defect||'Untitled case')}</b><div class="mw-help">Saved locally for this learner only.</div></div><div class="mw-actions"><button class="secondary" type="button" data-mw-new>New case</button><button class="ghost" type="button" data-mw-list>Case list</button><button class="ghost" type="button" data-mw-export>Export case</button></div></div>
+<div class="mw-layout">
+  <div class="mw-panel card"><h3>Case evidence record</h3><div class="mw-form">
+    ${textField('Case title','title',c,false,'Use a short identifier such as “Cavity 3 flash after insert change”.')}
+    <label>Defect / symptom<select data-mw-field="defect">${defectOptions(c)}</select><div class="mw-help">Select the closest visible symptom; the mechanism still has to be proven.</div></label>
+    ${textField('Material / grade','material',c,false,'Record the exact grade and lot when known.')}
+    ${textField('Machine / cell','machine',c,false,'Record the actual machine/cell, not only a recipe name.')}
+    ${textField('Mould / tool / cavity','mould',c,false,'Include cavity, gate, insert or local area where relevant.')}
+    <label>When did it start?<select data-mw-field="onset">${onsetOptions(c)}</select><div class="mw-help">Timing around a change event is often strong localisation evidence.</div></label>
+    ${textField('Where / how often','location',c,true,'e.g. cavity-specific, one side of part, every cycle, intermittent, after warm-up.')}
+    ${area('Known-good baseline','baseline',c,'Record the last verified-good condition: actuals, material state, tool/cooling condition and part response as applicable.')}
+    ${area('Current measured evidence','evidence',c,'Use actual measurements, alarms, trends, part location/pattern and physical inspection. Separate facts from assumptions.',true)}
+    ${area('Ranked mechanism / hypothesis','hypothesis',c,'State the mechanism and why the evidence supports it more strongly than alternatives. Do not write a setting change as the diagnosis.')}
+    ${area('Smallest controlled discriminating test','controlledTest',c,'Define one safe test or inspection that separates plausible mechanisms while staying inside approved limits.',true)}
+    ${area('Test result','testResult',c,'Record what actually changed and whether the result supported or weakened the mechanism.')}
+    ${area('After-change / recovery evidence','afterChange',c,'Compare the same signals and part response used in the baseline. Recovery toward baseline strengthens causal confidence.')}
     ${area('Verification & repeatability','verification',c,'Record repeat cycles, independent quality checks, measurement confidence and any maintenance/tooling confirmation.')}
     ${area('Conclusion / standardisation','conclusion',c,'State what was proven, what remains uncertain, and what approved standard/work instruction/change-control action follows.',true)}
   </div><div class="mw-actions"><button class="primary" type="button" data-mw-save>Save case</button><button class="danger mw-danger" type="button" data-mw-delete>Delete case</button></div></div>
