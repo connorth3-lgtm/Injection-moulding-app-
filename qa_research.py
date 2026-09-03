@@ -101,15 +101,15 @@ for marker in [
     need(marker in register, f"20-pass source register marker missing: {marker}")
 
 index = text("index.html")
-for asset in ASSETS:
-    need(f'<script src="./{asset}">' in index, f"research extension not loaded by shell: {asset}")
-need(
-    index.index("reference-deep-dive.js")
-    < index.index("reference-research-extension.js")
-    < index.index("reference-20x-extension.js")
-    < index.index("reference-sources.js"),
-    "research extension load order is wrong",
-)
+evidence_pack = text("src/domains/runtime-packs/evidence-runtime-pack.js")
+pack_marker = '<script src="./src/domains/runtime-packs/evidence-runtime-pack.js">'
+need(pack_marker in index, "research evidence runtime pack not loaded by shell")
+positions = []
+for asset in ["reference-deep-dive.js", *ASSETS, "reference-sources.js"]:
+    marker = f"/* >>> {asset} */"
+    need(marker in evidence_pack, f"research runtime-pack member missing: {asset}")
+    positions.append(evidence_pack.index(marker))
+need(positions == sorted(positions), "research extension order is wrong inside evidence runtime pack")
 
 sw = text("service-worker.js")
 for asset in ASSETS:
