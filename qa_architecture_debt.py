@@ -71,8 +71,9 @@ need(write_count <= int(baseline["documentWriteCeiling"]), f"document.write boot
 need("document.writeln(" not in index, "document.writeln is not permitted in the runtime bootstrap")
 
 # The frozen recovery core retains its historical inline script bytes. Browser/PWA
-# runtime assembly must replace each block with an exact same-origin generated copy
-# before the stricter CSP is installed.
+# runtime assembly replaces each block with a same-origin generated copy before the
+# stricter CSP is installed. Slot 004 has one reviewed runtime-only transform that
+# removes the recovery payload's historical certificate-print document.write call.
 inline_core_script_re = re.compile(r"<script\b(?![^>]*\bsrc\s*=)[^>]*>(.*?)</script\s*>", re.I | re.S)
 inline_core_scripts = inline_core_script_re.findall(core)
 core_runtime_scripts = sorted(CORE_RUNTIME_DIR.glob("core-inline-*.js"))
@@ -80,7 +81,14 @@ need(inline_core_scripts, "frozen recovery core unexpectedly has no inline scrip
 need(len(inline_core_scripts) == len(core_runtime_scripts), f"core runtime externalization count drifted: {len(inline_core_scripts)} source / {len(core_runtime_scripts)} generated")
 for number, (source, path) in enumerate(zip(inline_core_scripts, core_runtime_scripts), start=1):
     need(path.name == f"core-inline-{number:03d}.js", f"core runtime ordering drifted at slot {number}: {path.name}")
-    need(path.read_text(encoding="utf-8") == source, f"externalized core runtime is stale at slot {number}: {path.name}")
+    generated = path.read_text(encoding="utf-8")
+    if path.name == "core-inline-004.js":
+        need(source.count("document.write(") == 1, "frozen certificate print debt drifted; review runtime transform")
+        need("document.write(" not in generated and "document.writeln(" not in generated, "active certificate print runtime still uses document.write")
+        for marker in ("w.opener=null", 'd.createElement("style")', "d.body.appendChild(box)", "w.print()"):
+            need(marker in generated, f"certificate print runtime hardening marker missing: {marker}")
+    else:
+        need(generated == source, f"externalized core runtime is stale at slot {number}: {path.name}")
 need("const CORE_INLINE_SCRIPTS=[" in index, "runtime core script externalization registry missing")
 need("function externalizeCoreScripts(out)" in index, "runtime core script externalization function missing")
 need("out=externalizeCoreScripts(out)" in index, "runtime assembly does not externalize frozen core scripts")
@@ -113,7 +121,7 @@ need(remote_script_tag.search(index) is None, "index.html contains a remote runt
 need(remote_script_tag.search(core) is None, "MouldMaster_Core_App.html contains a remote runtime script tag")
 
 # Active application JavaScript must not gain string-to-code execution. Scan all
-# directly injected scripts, exact externalized core runtime copies, and every domain module.
+# directly injected scripts, hardened core runtime copies, and every domain module.
 scan_paths: set[Path] = set(core_runtime_scripts)
 for src in body_scripts:
     path = ROOT / src.removeprefix("./")
@@ -126,8 +134,8 @@ for path in sorted(scan_paths):
     need(re.search(r"\bnew\s+Function\s*\(", source) is None, f"new Function() is forbidden in active runtime code: {path.relative_to(ROOT)}")
     need("document.write(" not in source and "document.writeln(" not in source, f"document.write is forbidden in active runtime code: {path.relative_to(ROOT)}")
 
-need(re.search(r"\beval\s*\(", core) is None, "eval() is forbidden in the active core HTML")
-need(re.search(r"\bnew\s+Function\s*\(", core) is None, "new Function() is forbidden in the active core HTML")
+need(re.search(r"\beval\s*\(", core) is None, "eval() is forbidden in the frozen core HTML")
+need(re.search(r"\bnew\s+Function\s*\(", core) is None, "new Function() is forbidden in the frozen core HTML")
 
 print(
     "MouldMaster architecture debt guard passed: "
@@ -135,6 +143,6 @@ print(
     f"{len(root_runtime_scripts)}/{baseline['rootRuntimeScriptCeiling']} grandfathered root scripts; "
     f"{len(actual_compat)}/{len(grandfathered_compat)} compatibility layers; "
     f"document.write {write_count}/{baseline['documentWriteCeiling']}; "
-    f"{len(core_runtime_scripts)} exact runtime-externalized frozen core scripts; script-src self-only; "
-    "legacy handler attributes isolated; no remote scripts, unsafe-eval, eval(), or new Function()"
+    f"{len(core_runtime_scripts)} runtime-externalized frozen core scripts with certificate print hardened; script-src self-only; "
+    "legacy handler attributes isolated; no remote scripts, unsafe-eval, eval(), or new Function() in active runtime"
 )
