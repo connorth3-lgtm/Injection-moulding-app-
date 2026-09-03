@@ -188,6 +188,9 @@ cross = text("playwright.cross-browser.config.cjs")
 need("firefox-desktop" in cross and "webkit-tablet" in cross and "chromium-desktop" in cross, "cross-browser project matrix incomplete")
 smoke = text("qa/cross-browser-smoke.spec.js")
 need("onboardingDone:true" in smoke and "mouldmasterProDB" in smoke, "cross-browser matrix does not establish deterministic learner/onboarding state")
+need("&&!!window.MM_CASE_STORE_BRIDGE" not in smoke, "cross-browser smoke still waits for the retired engineering compatibility bridge")
+for marker in ("without a compatibility bridge", "canonicalStore:'indexeddb-v2'", "bridgePresent:false"):
+    need(marker in smoke, f"cross-browser canonical engineering-store smoke invariant missing: {marker}")
 
 # Broad document polling should be retired where canonical lifecycle hooks exist.
 need("new MutationObserver" not in pwa, "PWA shell still uses document-wide mutation polling")
