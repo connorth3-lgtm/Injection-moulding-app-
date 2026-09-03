@@ -14,6 +14,7 @@ on:
       - 'tools/generate_runtime_manifest.py'
       - 'tools/verify_production_source.py'
       - 'qa_material_catalog.py'
+      - 'qa_material_identity.py'
       - 'qa_app_remediation.py'
       - 'qa_architecture_debt.py'
       - 'docs/DOMAIN_ARCHITECTURE_V1.md'
@@ -40,6 +41,7 @@ on:
       - 'tools/generate_runtime_manifest.py'
       - 'tools/verify_production_source.py'
       - 'qa_material_catalog.py'
+      - 'qa_material_identity.py'
       - 'qa_app_remediation.py'
       - 'qa_architecture_debt.py'
       - 'docs/DOMAIN_ARCHITECTURE_V1.md'
@@ -78,6 +80,8 @@ jobs:
         run: python qa_architecture_debt.py
       - name: Material staging semantics
         run: python tools/material_catalog.py validate
+      - name: Material identity behaviour
+        run: python qa_material_identity.py
       - name: Generated domain manifest
         run: python tools/generate_runtime_manifest.py --check
       - name: Material and domain foundation QA
