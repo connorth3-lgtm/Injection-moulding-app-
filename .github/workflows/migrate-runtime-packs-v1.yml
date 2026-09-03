@@ -1,0 +1,150 @@
+name: Migrate runtime packs v1
+
+on:
+  push:
+    branches: [refactor/runtime-packs-v1]
+    paths:
+      - '.github/workflows/migrate-runtime-packs-v1.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  migrate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: refactor/runtime-packs-v1
+      - uses: actions/setup-node@v7
+        with:
+          node-version: '22.12.0'
+          package-manager-cache: false
+      - uses: actions/setup-python@v7
+        with:
+          python-version: '3.12'
+      - name: Build packs and migrate bootstrap metadata
+        shell: bash
+        run: |
+          set -euo pipefail
+          python tools/build_runtime_packs.py
+          python - <<'PY'
+          from pathlib import Path
+          import json
+
+          evidence = [
+              'reference-data.js','reference-deep-dive.js','reference-research-extension.js','reference-20x-extension.js',
+              'reference-2026-expansion.js','reference-sources.js','reference-browser-ui.js','diagnostic-learning-labs.js',
+              'material-behaviour-labs.js','assessment-evidence-sources.js','evidence-maturity-deep-dive.js','evidence-maturity-formal-bridge.js',
+          ]
+          process = [
+              'process-data-deep-dive-machine.js','process-data-deep-dive-tooling.js','process-data-deep-dive-material.js',
+              'process-data-deep-dive-scientific.js','process-data-deep-dive-quality.js','process-data-deep-dive-50.js',
+              'process-data-20-pass-01-05.js','process-data-20-pass-06-10.js','process-data-20-pass-11-15.js',
+              'process-data-20-pass-16-20.js','process-data-20-pass-atlas.js',
+          ]
+
+          index_path = Path('index.html')
+          index = index_path.read_text(encoding='utf-8')
+          def direct_block(names):
+              return ''.join(f"      ['./{name}','<script src=\"./{name}\">'],\n" for name in names)
+          def packed_block(names, pack):
+              comments = ''.join(f"      // packed source './{name}'\n" for name in names)
+              return comments + f"      ['./{pack}','<script src=\"./{pack}\">'],\n"
+          old = direct_block(evidence)
+          if index.count(old) != 1:
+              raise SystemExit('Evidence BODY_SCRIPTS block did not match exactly once')
+          index = index.replace(old, packed_block(evidence, 'src/domains/runtime-packs/evidence-runtime-pack.js'))
+          old = direct_block(process)
+          if index.count(old) != 1:
+              raise SystemExit('Process BODY_SCRIPTS block did not match exactly once')
+          index = index.replace(old, packed_block(process, 'src/domains/runtime-packs/process-data-runtime-pack.js'))
+          index = index.replace(
+              'const EXPECTED_STATIC_CACHE="mouldmaster-static-2026.08.26.2-maturity-hardening-v2-r2-20260903";',
+              'const EXPECTED_STATIC_CACHE="mouldmaster-static-2026.08.26.2-maturity-hardening-v2-r3-20260903";'
+          )
+          index_path.write_text(index, encoding='utf-8')
+
+          worker_path = Path('service-worker.js')
+          worker = worker_path.read_text(encoding='utf-8')
+          worker = worker.replace("const CACHE_REVISION='maturity-hardening-v2-r2-20260903';", "const CACHE_REVISION='maturity-hardening-v2-r3-20260903';")
+          optional_anchor = "const OPTIONAL=[\n"
+          pack_assets = (
+              "  './src/domains/runtime-packs/evidence-runtime-pack.js',\n"
+              "  './src/domains/runtime-packs/process-data-runtime-pack.js',\n"
+          )
+          if worker.count(optional_anchor) != 1:
+              raise SystemExit('service-worker OPTIONAL anchor drift')
+          worker = worker.replace(optional_anchor, optional_anchor + pack_assets, 1)
+          worker_path.write_text(worker, encoding='utf-8')
+
+          integrity_path = Path('desktop/electron/scripts/generate-integrity.cjs')
+          integrity = integrity_path.read_text(encoding='utf-8')
+          anchor = "  'src/domains/domain-bootstrap.js',RUNTIME_MANIFEST,'app-shell-finalize.js'"
+          replacement = (
+              "  'src/domains/domain-bootstrap.js',RUNTIME_MANIFEST,'src/domains/runtime-packs/evidence-runtime-pack.js',"
+              "'src/domains/runtime-packs/process-data-runtime-pack.js','app-shell-finalize.js'"
+          )
+          if integrity.count(anchor) != 1:
+              raise SystemExit('desktop integrity BASE_FILES anchor drift')
+          integrity_path.write_text(integrity.replace(anchor, replacement, 1), encoding='utf-8')
+
+          workflow_path = Path('.github/workflows/domain-foundation-qa.yml')
+          workflow = workflow_path.read_text(encoding='utf-8')
+          workflow = workflow.replace("      - 'tools/generate_runtime_manifest.py'\n", "      - 'tools/generate_runtime_manifest.py'\n      - 'tools/build_runtime_packs.py'\n")
+          syntax_anchor = "      - name: Architecture debt ceiling\n        run: python qa_architecture_debt.py\n"
+          pack_check = "      - name: Runtime pack determinism\n        run: python tools/build_runtime_packs.py --check\n"
+          if workflow.count(syntax_anchor) != 1:
+              raise SystemExit('domain workflow architecture step anchor drift')
+          workflow = workflow.replace(syntax_anchor, pack_check + syntax_anchor, 1)
+          workflow_path.write_text(workflow, encoding='utf-8')
+
+          desktop_workflow_path = Path('.github/workflows/open-desktop-build.yml')
+          desktop_workflow = desktop_workflow_path.read_text(encoding='utf-8')
+          anchor = "      - 'desktop/electron/**'\n"
+          replacement = anchor + "      - 'src/domains/**'\n      - 'tools/build_runtime_packs.py'\n"
+          count = desktop_workflow.count(anchor)
+          if count < 2:
+              raise SystemExit(f'expected push + PR desktop path anchors, found {count}')
+          desktop_workflow = desktop_workflow.replace(anchor, replacement)
+          desktop_workflow_path.write_text(desktop_workflow, encoding='utf-8')
+
+          baseline_path = Path('qa/architecture-debt-baseline.json')
+          baseline = json.loads(baseline_path.read_text(encoding='utf-8'))
+          baseline['maxRuntimeScripts'] = 39
+          baseline['maxRootRuntimeScripts'] = 36
+          baseline_path.write_text(json.dumps(baseline, indent=2, ensure_ascii=False) + '\n', encoding='utf-8')
+
+          docs_path = Path('docs/DOMAIN_ARCHITECTURE_V1.md')
+          docs = docs_path.read_text(encoding='utf-8')
+          docs = docs.replace('at most 62 scripts in the ordered `BODY_SCRIPTS` bootstrap list;', 'at most 39 scripts in the ordered `BODY_SCRIPTS` bootstrap list;')
+          docs = docs.replace('at most 61 directly injected root-level runtime scripts;', 'at most 36 directly injected root-level runtime scripts;')
+          docs = docs.replace(
+              'The budget is a ceiling, not a target. Removing a root layer, moving capability under `src/domains/`, removing `document.write`, or replacing `unsafe-inline` with a stricter nonce/hash design is always an improvement and remains allowed.',
+              'The budget is a ceiling, not a target. On 2026-09-03 the first deterministic runtime-pack tranche retired 23 direct evidence/process-data bootstrap entries into two ordered generated packs, reducing BODY_SCRIPTS from 60 to 39 and direct root runtime scripts from 59 to 36 without changing source execution order. Removing a root layer, moving capability under `src/domains/`, removing `document.write`, or replacing `unsafe-inline` with a stricter nonce/hash design is always an improvement and remains allowed.'
+          )
+          docs_path.write_text(docs, encoding='utf-8')
+          PY
+      - name: Validate generated packs and migration invariants
+        shell: bash
+        run: |
+          set -euo pipefail
+          python tools/build_runtime_packs.py --check
+          node --check src/domains/runtime-packs/evidence-runtime-pack.js
+          node --check src/domains/runtime-packs/process-data-runtime-pack.js
+          python tools/generate_runtime_manifest.py --check
+          python qa_architecture_debt.py
+          python tools/build_pages_artifact.py
+      - name: Commit migration result
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add index.html service-worker.js desktop/electron/scripts/generate-integrity.cjs \
+            src/domains/runtime-packs tools/build_runtime_packs.py tools/generate_runtime_manifest.py \
+            .github/workflows/domain-foundation-qa.yml .github/workflows/open-desktop-build.yml \
+            qa/architecture-debt-baseline.json docs/DOMAIN_ARCHITECTURE_V1.md
+          git diff --cached --quiet && exit 0
+          git commit -m 'Retire evidence and process scripts into deterministic runtime packs'
+          git push origin HEAD:refactor/runtime-packs-v1
