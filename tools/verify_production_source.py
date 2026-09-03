@@ -1,10 +1,15 @@
 #!/usr/bin/env python3
 """Fail closed unless a production SHA came from a fully-green merged PR.
 
+GitHub's commit-to-pull association can be eventually consistent immediately after a
+squash merge. Provenance therefore retries only the *visibility* of the exact merged
+PR association; ambiguity, a wrong base/merge SHA, failed checks, and policy failures
+still fail closed.
+
 Native branch protection is reported separately because GitHub's repository setting is
 an administrator-side control. The provenance/check gate is sufficient to stop a
 transient direct main push from reaching the Pages deploy job while the post-push
-rollback guard is still defense in depth.
+defense remains in depth.
 """
 from __future__ import annotations
 
@@ -18,6 +23,7 @@ from urllib.request import Request, urlopen
 
 API = "https://api.github.com"
 API_VERSION = "2026-03-10"
+PROVENANCE_ATTEMPTS = 20
 REQUIRED_WORKFLOWS = (
     "MouldMaster Release QA",
     "Mobile Browser QA",
@@ -33,7 +39,7 @@ def request_json(token: str, url: str) -> object:
             "Accept": "application/vnd.github+json",
             "Authorization": f"Bearer {token}",
             "X-GitHub-Api-Version": API_VERSION,
-            "User-Agent": "MouldMaster-Production-Source-Guard/1",
+            "User-Agent": "MouldMaster-Production-Source-Guard/2",
         },
     )
     try:
@@ -45,9 +51,9 @@ def request_json(token: str, url: str) -> object:
         raise SystemExit(f"GitHub production-source query failed: HTTP {exc.code}") from exc
 
 
-def merged_pr(payload: object, source_sha: str) -> dict:
+def matching_merged_prs(payload: object, source_sha: str) -> list[dict]:
     rows = payload if isinstance(payload, list) else []
-    matches = [
+    return [
         row
         for row in rows
         if isinstance(row, dict)
@@ -55,11 +61,29 @@ def merged_pr(payload: object, source_sha: str) -> dict:
         and (row.get("base") or {}).get("ref") == "main"
         and row.get("merge_commit_sha") == source_sha
     ]
-    if len(matches) != 1:
-        raise SystemExit(
-            f"Production source {source_sha} is not uniquely attributable to a merged PR targeting main"
-        )
-    return matches[0]
+
+
+def resolve_merged_pr(token: str, repository: str, source_sha: str) -> dict:
+    """Resolve exactly one merged-main PR, tolerating only temporary API invisibility."""
+    for attempt in range(1, PROVENANCE_ATTEMPTS + 1):
+        pulls = request_json(token, f"{API}/repos/{repository}/commits/{source_sha}/pulls")
+        matches = matching_merged_prs(pulls, source_sha)
+        if len(matches) > 1:
+            raise SystemExit(
+                f"Production source {source_sha} is ambiguously attributable to {len(matches)} merged PRs targeting main"
+            )
+        if len(matches) == 1:
+            return matches[0]
+        if attempt < PROVENANCE_ATTEMPTS:
+            print(
+                f"Merged-PR association for {source_sha} is not visible yet; "
+                f"retrying ({attempt}/{PROVENANCE_ATTEMPTS})."
+            )
+            time.sleep(3)
+    raise SystemExit(
+        f"Production source {source_sha} is not uniquely attributable to a merged PR targeting main "
+        f"after {PROVENANCE_ATTEMPTS} visibility checks"
+    )
 
 
 def successful_required_workflows(payload: object) -> tuple[bool, dict[str, tuple[str, str]]]:
@@ -74,8 +98,7 @@ def successful_required_workflows(payload: object) -> tuple[bool, dict[str, tupl
 
 
 def verify(token: str, repository: str, source_sha: str, require_native_protection: bool) -> None:
-    pulls = request_json(token, f"{API}/repos/{repository}/commits/{source_sha}/pulls")
-    pr = merged_pr(pulls, source_sha)
+    pr = resolve_merged_pr(token, repository, source_sha)
     pr_number = int(pr["number"])
     pr_head = str((pr.get("head") or {}).get("sha") or "")
     if len(pr_head) != 40:
@@ -120,10 +143,13 @@ def self_test() -> None:
     }
     ok, states = successful_required_workflows(sample)
     assert ok and len(states) == 4
-    assert merged_pr(
-        [{"number": 1, "merged_at": "x", "base": {"ref": "main"}, "merge_commit_sha": "a" * 40}],
-        "a" * 40,
-    )["number"] == 1
+    source = "a" * 40
+    exact = {"number": 1, "merged_at": "x", "base": {"ref": "main"}, "merge_commit_sha": source}
+    wrong_base = {"number": 2, "merged_at": "x", "base": {"ref": "dev"}, "merge_commit_sha": source}
+    wrong_sha = {"number": 3, "merged_at": "x", "base": {"ref": "main"}, "merge_commit_sha": "b" * 40}
+    assert matching_merged_prs([], source) == []
+    assert matching_merged_prs([wrong_base, wrong_sha, exact], source) == [exact]
+    assert len(matching_merged_prs([exact, dict(exact, number=4)], source)) == 2
     print("Production source verifier self-test passed")
 
 
