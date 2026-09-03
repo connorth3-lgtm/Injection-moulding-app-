@@ -20,6 +20,8 @@ on:
       - 'src/domains/**'
       - 'src/core-runtime/**'
       - 'material-catalog-v1.json'
+      - 'data/accessibility-real-at-validation-v1.json'
+      - 'qa_accessibility_real_at_contract.py'
       - 'measured-evidence-integration.js'
       - 'measured-evidence-decision.js'
       - 'data/measured-evidence-decision-scenarios-v1.json'
@@ -37,6 +39,7 @@ on:
       - 'qa_webkit_regression.py'
       - 'qa/mobile-viewport.spec.js'
       - 'qa/material-grade-detail.spec.js'
+      - 'qa/material-search-scale.spec.js'
       - 'qa/measured-evidence-decision.spec.js'
       - 'qa/read-aloud.spec.js'
       - 'qa/pwa-lifecycle.spec.js'
@@ -74,6 +77,7 @@ jobs:
           python qa_measured_evidence_decision_workflows.py
           python qa_read_aloud.py
           python qa_webkit_regression.py
+          python qa_accessibility_real_at_contract.py
       - name: Install pinned Playwright browser matrix
         run: |
           npm install --no-save --no-package-lock @playwright/test@1.55.0

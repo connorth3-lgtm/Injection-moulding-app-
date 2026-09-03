@@ -101,8 +101,9 @@ async function renderResults(root){
   host.querySelectorAll('[data-mm-exact-case]').forEach(b=>b.addEventListener('click',async()=>{b.disabled=true;try{await startMouldMasterCase(b.dataset.mmExactCase)}catch(err){console.error('[MouldMaster materials]',err);b.disabled=false}}));
 }
 async function installPanel(){
-  const host=document.getElementById('materials');if(!host||host.querySelector('#mmExactMaterialCatalog'))return false;
+  let host=document.getElementById('materials');if(!host||host.querySelector('#mmExactMaterialCatalog'))return false;
   style();const c=await load();
+  host=document.getElementById('materials');if(!host||host.querySelector('#mmExactMaterialCatalog'))return false;
   const section=document.createElement('section');section.id='mmExactMaterialCatalog';section.className='card mm-exact-materials';
   section.innerHTML=`<div class="mm-exact-head"><div><span class="eyebrow">Canonical material domain</span><h2>Exact commercial grades</h2><p>Search source-backed exact grades separately from generic resin-family learning.</p></div><span class="pill">${(c.grades||[]).length} published</span></div><div class="mm-exact-search"><label>Search manufacturer, brand or grade<input data-mm-exact-query placeholder="e.g. manufacturer, PC/ABS, grade"></label><label>Manufacturer<select data-mm-exact-manufacturer><option value="">All manufacturers</option>${(c.manufacturers||[]).map(m=>`<option value="${esc(m.id)}">${esc(m.name)}</option>`).join('')}</select></label></div><div class="mm-exact-results" data-mm-exact-results></div><div class="mm-exact-boundary">Only validated exact-grade records are shown here. Property values retain their test context; processing observations retain their primary source and are not universal production recipes.</div>`;
   host.appendChild(section);

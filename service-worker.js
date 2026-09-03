@@ -51,6 +51,7 @@ const CORE=[
   './src/domains/learning/learner-model.js',
   './src/domains/materials/material-registry.js',
   './src/domains/materials/material-search-index.js',
+  './src/domains/materials/material-search-pagination.js',
   './src/domains/materials/material-observation-v2.js',
   './src/domains/process/evidence-granularity.js',
   './src/domains/learning/content-intelligence.js',
