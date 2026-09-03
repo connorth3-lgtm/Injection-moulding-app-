@@ -43,7 +43,7 @@ need('../../assessment-stable-review-bridge.js' in froms,'stable-review bridge m
 need("'assessment-stable-review-bridge.js'" in text('desktop/electron/scripts/generate-integrity.cjs'),'stable-review bridge missing from integrity set')
 
 qy=text('.github/workflows/qa.yml')
-need('node --check assessment-stable-review-bridge.js' in qy and 'python qa_stable_review_bridge.py' in qy,'release workflow missing stable-review bridge QA')
+need("find . -maxdepth 1 -type f -name '*.js' -print0 | sort -z | xargs -0 -n1 node --check" in qy and 'python qa_stable_review_bridge.py' in qy,'release workflow missing stable-review filesystem syntax/QA contract')
 ow=text('.github/workflows/open-desktop-build.yml')
 need("- 'assessment-stable-review-bridge.js'" in ow and "- 'qa_stable_review_bridge.py'" in ow and 'python qa_stable_review_bridge.py' in ow,'desktop workflow missing stable-review bridge QA')
 need('python qa_stable_review_bridge.py' in text('.github/workflows/microsoft-store-msix.yml'),'Store workflow missing stable-review bridge QA')
