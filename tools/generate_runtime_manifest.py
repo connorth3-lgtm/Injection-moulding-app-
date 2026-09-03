@@ -11,6 +11,7 @@ PRIORITY_ASSETS = [
     "./src/domains/shared/learner-scope.js",
     "./src/domains/shared/data-spine.js",
     "./src/domains/shared/signal-registry.js",
+    "./src/domains/assessment/assessment-analytics-v2.js",
     "./src/domains/engineering/engineering-store.js",
     "./src/domains/engineering/evidence-chain.js",
     "./src/domains/learning/learning-analytics-loader.js",
