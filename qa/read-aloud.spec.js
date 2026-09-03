@@ -4,6 +4,25 @@ const APP='http://127.0.0.1:4173/index.html';
 
 test('Read Aloud renders and reads only visible learner text', async ({ page }) => {
   await page.addInitScript(() => {
+    const user={
+      id:'read-aloud-qa',
+      name:'Read Aloud QA',
+      role:'learner',
+      completed:[],
+      bookmarks:[],
+      notes:{},
+      examScores:{},
+      certificates:[],
+      currentLesson:1,
+      lastSeen:new Date().toISOString(),
+      onboardingDone:true,
+      experience:'Beginner',
+      goal:'Learn the full process',
+      dailyMinutes:15,
+      region:'ALL'
+    };
+    localStorage.setItem('mouldmasterProDB',JSON.stringify({activeUser:'read-aloud-qa',users:{'read-aloud-qa':user}}));
+
     const synth=window.speechSynthesis;
     if(synth){
       synth.speak=(utterance)=>{
