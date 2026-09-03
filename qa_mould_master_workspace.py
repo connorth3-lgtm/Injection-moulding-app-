@@ -86,4 +86,13 @@ need('mould-master-workspace.js' in integ,'Mould Master workspace missing from d
 need('src/domains/engineering/engineering-store.js' in integ,'canonical engineering store missing from desktop integrity manifest')
 need('src/domains/engineering/store-bridge.js' not in integ,'retired engineering bridge remains in desktop integrity manifest')
 
-print('MouldMaster workspace QA passed (single owner-scoped IndexedDB authority, one-time non-destructive legacy import, learner-aware hydration, local evidence chain, controlled-test/verification flow, learning links, no production-control or assessment authority)')
+browser=text('qa/engineering-case-store.spec.js')
+for marker in ['legacy-engineering-case','switchUser','mat-lotte-infino-nh-1033','localStorage.getItem','MM_ENGINEERING_STORE.getCase','materialGradeId']:
+    need(marker in browser,f'canonical engineering browser regression missing marker: {marker}')
+playwright=text('playwright.config.cjs')
+need('engineering-case-store\\.spec\\.js' in playwright,'canonical engineering browser regression missing from Playwright config')
+mobile=text('.github/workflows/mobile-browser-qa.yml')
+need('qa/engineering-case-store.spec.js' in mobile,'canonical engineering browser regression missing from Mobile Browser QA triggers')
+need('engineering-store and PWA regression tests' in mobile,'Mobile Browser QA step no longer names engineering-store regression coverage')
+
+print('MouldMaster workspace QA passed (single owner-scoped IndexedDB authority, one-time non-destructive legacy import, learner-aware hydration, browser persistence regression, local evidence chain, controlled-test/verification flow, learning links, no production-control or assessment authority)')
