@@ -1,7 +1,7 @@
 /* MouldMaster PWA shell controller — 2026.09.03 */
 (function(){
 'use strict';
-const RELEASE='2026.09.03.1';
+const RELEASE='2026.08.26.2';
 const CONTENT='2026.08.26.1';
 const REFERENCE_DATA_URL='./reference-data.html';
 function setText(el,value){if(el&&el.textContent!==value)el.textContent=value}
@@ -131,7 +131,8 @@ function bindLifecycle(){
   for(const view of ['dashboard','standards','materials','profile'])shell?.events?.onRender?.(view,scheduleSync);
   window.addEventListener('mm:domains-ready',scheduleSync,{once:true});
 }
-patchStandards();runSync();bindLifecycle();
+patchStandards();bindLifecycle();
+runSync();
 window.addEventListener('resize',scheduleSync,{passive:true});
 window.addEventListener('load',()=>{runSync();register();setTimeout(scheduleSync,250)},{once:true});
 document.addEventListener('visibilitychange',()=>{if(!document.hidden)scheduleSync()});
