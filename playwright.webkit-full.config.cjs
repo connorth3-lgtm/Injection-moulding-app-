@@ -5,6 +5,7 @@ module.exports=defineConfig({
   testMatch:[
     /mobile-viewport\.spec\.js/,
     /material-grade-detail\.spec\.js/,
+    /material-search-scale\.spec\.js/,
     /measured-evidence-decision\.spec\.js/,
     /read-aloud\.spec\.js/,
     /engineering-case-store\.spec\.js/,
