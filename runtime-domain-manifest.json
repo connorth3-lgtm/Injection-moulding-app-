@@ -2,8 +2,8 @@
   "schemaVersion": 1,
   "generatedBy": "tools/generate_runtime_manifest.py",
   "assets": [
-    "./src/domains/engineering/case-store-bridge.js",
     "./src/domains/engineering/engineering-store.js",
+    "./src/domains/engineering/store-bridge.js",
     "./src/domains/materials/material-registry.js",
     "./src/domains/shell/product-areas.js"
   ],
