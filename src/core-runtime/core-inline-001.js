@@ -8,10 +8,17 @@
     }
     var box = document.createElement("div");
     box.id = "mmStartupFailure";
-    box.style.cssText =
-      "position:fixed;inset:16px;z-index:999999;background:#20151a;color:#fff;" +
-      "border:2px solid #ff7b86;border-radius:14px;padding:18px;overflow:auto;" +
-      "font-family:system-ui,sans-serif;box-shadow:0 20px 60px rgba(0,0,0,.5)";
+    box.style.position = "fixed";
+    box.style.inset = "16px";
+    box.style.zIndex = "999999";
+    box.style.background = "#20151a";
+    box.style.color = "#fff";
+    box.style.border = "2px solid #ff7b86";
+    box.style.borderRadius = "14px";
+    box.style.padding = "18px";
+    box.style.overflow = "auto";
+    box.style.fontFamily = "system-ui,sans-serif";
+    box.style.boxShadow = "0 20px 60px rgba(0,0,0,.5)";
     box.innerHTML =
       "<h2 style='margin-top:0'>MouldMaster could not start</h2>" +
       "<p>The standalone file caught a startup error instead of leaving dead buttons.</p>" +

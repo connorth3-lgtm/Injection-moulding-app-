@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from pathlib import Path
+from tools.externalize_core_scripts import runtime_transform as core_runtime_transform
 import json
 import re
 
@@ -8,6 +9,7 @@ ROOT = Path(__file__).resolve().parent
 BASELINE_PATH = ROOT / "qa/architecture-debt-baseline.json"
 CORE_RUNTIME_DIR = ROOT / "src/core-runtime"
 HANDLER_BRIDGE_PATH = CORE_RUNTIME_DIR / "inline-handler-bridge.js"
+STYLE_BRIDGE_PATH = CORE_RUNTIME_DIR / "inline-style-bridge.js"
 HANDLER_ATTR_RE = re.compile(r"(?P<prefix>[\s<])on(?P<event>click|change|input|keydown)\s*=", re.I)
 
 
@@ -35,7 +37,7 @@ def local_script_token(token: str) -> bool:
 
 
 def local_style_token(token: str) -> bool:
-    return token in {"'self'", "'unsafe-inline'", "'unsafe-hashes'"} or token.startswith("'nonce-") or token.startswith("'sha256-") or token.startswith("'sha384-") or token.startswith("'sha512-")
+    return token == "'self'" or token.startswith("'sha256-") or token.startswith("'sha384-") or token.startswith("'sha512-")
 
 
 def retire_handler_attrs(source: str) -> str:
@@ -89,10 +91,11 @@ core_runtime_scripts = sorted(CORE_RUNTIME_DIR.glob("core-inline-*.js"))
 need(inline_core_scripts, "frozen recovery core unexpectedly has no inline scripts")
 need(len(inline_core_scripts) == len(core_runtime_scripts), f"core runtime externalization count drifted: {len(inline_core_scripts)} source / {len(core_runtime_scripts)} generated")
 need(HANDLER_BRIDGE_PATH.is_file(), "strict delegated handler bridge source is missing")
+need(STYLE_BRIDGE_PATH.is_file(), "strict inline-style bridge source is missing")
 for number, (source, path) in enumerate(zip(inline_core_scripts, core_runtime_scripts), start=1):
     need(path.name == f"core-inline-{number:03d}.js", f"core runtime ordering drifted at slot {number}: {path.name}")
     generated = path.read_text(encoding="utf-8")
-    expected_handler_free = retire_handler_attrs(source)
+    expected_handler_free = core_runtime_transform(path.name, source)
     need(HANDLER_ATTR_RE.search(generated) is None, f"active generated core runtime still emits inline handler attributes: {path.name}")
     if path.name == "core-inline-004.js":
         need(source.count("document.write(") == 1, "frozen certificate print debt drifted; review runtime transform")
@@ -109,7 +112,9 @@ need("const CORE_INLINE_SCRIPTS=[" in index, "runtime core script externalizatio
 need("function externalizeCoreScripts(out)" in index, "runtime core script externalization function missing")
 need("out=externalizeCoreScripts(out)" in index, "runtime assembly does not externalize frozen core scripts")
 need("function retireInlineHandlerAttrs(parsed)" in index, "runtime static frozen-core handler retirement is missing")
-need("retireInlineHandlerAttrs(parsed);const scripts=[]" in index, "static handler retirement does not run before document installation")
+need("retireInlineHandlerAttrs(parsed);retireInlineStyleAttrs(parsed);const scripts=[]" in index, "static handler retirement does not run before document installation")
+need("function retireInlineStyleAttrs(parsed)" in index, "runtime frozen-core style-attribute retirement is missing")
+need("./src/core-runtime/inline-style-bridge.js" in index, "strict inline-style bridge is not loaded before core replay")
 for path in core_runtime_scripts:
     need(f"'./src/core-runtime/{path.name}'" in index, f"runtime core script missing from bootstrap registry: {path.name}")
 
@@ -120,18 +125,22 @@ need(csp_match is not None, "runtime CSP constant missing from index bootstrap")
 csp_raw = csp_match.group(1)
 csp = parse_csp(csp_raw)
 need("'unsafe-eval'" not in csp_raw, "CSP must never permit unsafe-eval")
+need("'unsafe-inline'" not in csp_raw, "CSP must not permit unsafe-inline scripts or styles")
 need(csp.get("base-uri") == ["'none'"], "CSP base-uri must remain none")
 need(csp.get("object-src") == ["'none'"], "CSP object-src must remain none")
 need(csp.get("frame-src") == ["'none'"], "CSP frame-src must remain none")
 script_src = csp.get("script-src") or []
 script_src_attr = csp.get("script-src-attr") or []
 style_src = csp.get("style-src") or []
+style_src_attr = csp.get("style-src-attr") or []
 connect_src = csp.get("connect-src") or []
 need(script_src == ["'self'"], f"CSP executable script-src must remain self-only: {script_src}")
 need("'unsafe-inline'" not in script_src, "CSP script-src must not restore unsafe-inline executable blocks")
 need(script_src_attr == ["'none'"], f"CSP inline handler execution must remain disabled: {script_src_attr}")
 need(all(local_script_token(token) for token in script_src), f"CSP script-src added a non-local source: {script_src}")
-need(style_src and all(local_style_token(token) for token in style_src), f"CSP style-src added a non-local source: {style_src}")
+need(style_src and style_src[0] == "'self'" and all(local_style_token(token) for token in style_src), f"CSP style-src added a non-local source: {style_src}")
+need(any(token.startswith("'sha256-") for token in style_src), "CSP style-src must include exact hashes for deterministic runtime style blocks")
+need(style_src_attr == ["'none'"], f"CSP inline style attributes must remain disabled: {style_src_attr}")
 need(set(connect_src).issubset({"'self'", "'none'"}) and connect_src, f"CSP connect-src added an external source: {connect_src}")
 
 remote_script_tag = re.compile(r"<script\b[^>]*\bsrc\s*=\s*['\"]\s*(?:https?:)?//", re.I)
@@ -154,6 +163,8 @@ for path in sorted(scan_paths):
     need(re.search(r"\bnew\s+Function\s*\(", source) is None, f"new Function() is forbidden in active runtime code: {path.relative_to(ROOT)}")
     need("document.write(" not in source and "document.writeln(" not in source, f"document.write is forbidden in active runtime code: {path.relative_to(ROOT)}")
     need(HANDLER_ATTR_RE.search(source) is None, f"inline handler attribute is forbidden in active runtime source: {path.relative_to(ROOT)}")
+    need(re.search(r"\.style\.cssText\s*=", source) is None, f"style.cssText is forbidden under strict style CSP: {path.relative_to(ROOT)}")
+    need(re.search(r"\.setAttribute\(\s*['\"]style['\"]", source) is None, f"setAttribute(style) is forbidden under strict style CSP: {path.relative_to(ROOT)}")
 
 need(re.search(r"\beval\s*\(", core) is None, "eval() is forbidden in the frozen core HTML")
 need(re.search(r"\bnew\s+Function\s*\(", core) is None, "new Function() is forbidden in the frozen core HTML")
@@ -165,5 +176,5 @@ print(
     f"{len(actual_compat)}/{len(grandfathered_compat)} compatibility layers; "
     f"document.write {write_count}/{baseline['documentWriteCeiling']}; "
     f"{len(core_runtime_scripts)} runtime-externalized frozen core scripts with handler bridge folded into final slot; "
-    "script-src self-only; script-src-attr none; no active inline handlers, remote scripts, unsafe-eval, eval(), or new Function()"
+    "script-src self-only; script-src-attr none; style-src exact-hash/self-only with style-src-attr none; no unsafe-inline, cssText, setAttribute(style), active inline handlers, remote scripts, unsafe-eval, eval(), or new Function()"
 )
