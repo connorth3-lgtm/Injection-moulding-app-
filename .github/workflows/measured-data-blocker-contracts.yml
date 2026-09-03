@@ -11,6 +11,8 @@ on:
       - 'tools/profile_cross_process_upper_workpiece.py'
       - 'qa_cross_process_upper_contract.py'
       - 'qa_cross_process_upper_clarification.py'
+      - 'data/measured-data-five-action-recheck-2026-09-03.json'
+      - 'qa_measured_data_five_action_recheck.py'
       - 'data/impure-pascoe-channel-dictionary-v1.json'
       - 'data/warwick-demoulding-source-contract-v1.json'
       - 'data/warwick-origin-export-manifest-template-v1.json'
@@ -42,6 +44,8 @@ on:
       - 'tools/profile_cross_process_upper_workpiece.py'
       - 'qa_cross_process_upper_contract.py'
       - 'qa_cross_process_upper_clarification.py'
+      - 'data/measured-data-five-action-recheck-2026-09-03.json'
+      - 'qa_measured_data_five_action_recheck.py'
       - 'data/impure-pascoe-channel-dictionary-v1.json'
       - 'data/warwick-demoulding-source-contract-v1.json'
       - 'data/warwick-origin-export-manifest-template-v1.json'
@@ -82,6 +86,7 @@ jobs:
           python -m py_compile tools/profile_cross_process_upper_workpiece.py
           python -m py_compile qa_cross_process_upper_contract.py
           python -m py_compile qa_cross_process_upper_clarification.py
+          python -m py_compile qa_measured_data_five_action_recheck.py
           python -m py_compile qa_kamp_foxconn_rights.py
           python -m py_compile qa_inqcim_request_contract.py
           python -m py_compile qa_inqcim_author_response_validator.py
@@ -95,6 +100,8 @@ jobs:
         run: python qa_cross_process_upper_contract.py
       - name: Validate upper semantic clarification boundary
         run: python qa_cross_process_upper_clarification.py
+      - name: Validate five-action measured-data recheck
+        run: python qa_measured_data_five_action_recheck.py
       - name: Validate KAMP and Foxconn rights contracts
         run: python qa_kamp_foxconn_rights.py
       - name: Validate INQCIM request-only contract
