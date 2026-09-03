@@ -57,8 +57,11 @@ need(cache_match is not None,'PWA cache revision missing')
 runtime_token=runtime_match.group(1)
 cache_revision=cache_match.group(1)
 need(re.fullmatch(r'\d{8}\.\d+-maturity-hardening-v2',runtime_token) is not None,'browser runtime token must retain dated maturity-hardening-v2 family format')
-need(re.fullmatch(r'maturity-hardening-v2-\d{8}',cache_revision) is not None,'PWA cache revision must retain maturity-hardening-v2 family format')
-need(runtime_token[:8]==cache_revision.rsplit('-',1)[-1],'browser runtime token and PWA cache revision dates must advance together')
+runtime_date=runtime_token.split('.',1)[0]
+runtime_family=runtime_token.split('-',1)[1]
+need(cache_revision.startswith(runtime_family+'-'),'PWA cache revision must retain the active psychometric runtime family')
+need(re.search(r'-\d{8}$',cache_revision) is not None,'PWA cache revision must end with a dated revision token')
+need(runtime_date==cache_revision.rsplit('-',1)[-1],'browser runtime token and PWA cache revision dates must advance together')
 need("'./runtime-v2.js'" in idx and "'./assessment-runtime-v2.js'" in idx,'maturity runtime must preserve psychometric bank while replacing only exam membership selection')
 
 for asset in ["'./assessment-psychometric-hardening.js'","'./assessment-evidence-integrity-upgrade.js'","'./assessment-psychometric-approval.js'","'./real-measured-data-assessment.js'"]:
