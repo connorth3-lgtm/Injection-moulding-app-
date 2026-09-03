@@ -1,8 +1,11 @@
 #!/usr/bin/env python3
-"""Externalize legacy inline core <script> blocks for a stricter CSP.
+"""Generate runtime copies of the frozen core's inline script blocks.
 
-The migration is intentionally narrow: inline event-handler attributes remain a
-separate debt class and are temporarily isolated under script-src-attr.
+`MouldMaster_Core_App.html` is also the immutable legacy Windows recovery payload,
+so its bytes are intentionally not rewritten. The browser bootstrap replaces those
+inline blocks with these same-origin generated assets during runtime assembly.
+Legacy inline event-handler attributes remain a separate debt class and are
+currently isolated under `script-src-attr`.
 """
 
 from __future__ import annotations
@@ -21,33 +24,26 @@ DESKTOP_INTEGRITY = ROOT / "desktop/electron/scripts/generate-integrity.cjs"
 
 INLINE_SCRIPT_RE = re.compile(r"<script(?P<attrs>[^>]*)>(?P<body>.*?)</script\s*>", re.I | re.S)
 SRC_ATTR_RE = re.compile(r"\bsrc\s*=", re.I)
-GENERATED_REF_RE = re.compile(r"\./src/core-runtime/(core-inline-\d{3}\.js)")
+INDEX_RUNTIME_REF_RE = re.compile(r"['\"]\./src/core-runtime/(core-inline-\d{3}\.js)['\"]")
 
 
 def fail(message: str) -> None:
     raise SystemExit(message)
 
 
-def generated_refs(core: str) -> list[str]:
-    return list(dict.fromkeys(GENERATED_REF_RE.findall(core)))
+def inline_blocks(core: str) -> list[str]:
+    return [
+        match.group("body")
+        for match in INLINE_SCRIPT_RE.finditer(core)
+        if not SRC_ATTR_RE.search(match.group("attrs") or "")
+    ]
 
 
-def externalize_core(core: str) -> tuple[str, dict[str, str]]:
-    generated: dict[str, str] = {}
-    index = 0
-
-    def repl(match: re.Match[str]) -> str:
-        nonlocal index
-        attrs = match.group("attrs") or ""
-        if SRC_ATTR_RE.search(attrs):
-            return match.group(0)
-        index += 1
-        name = f"core-inline-{index:03d}.js"
-        generated[name] = match.group("body")
-        clean_attrs = attrs.rstrip()
-        return f'<script{clean_attrs} src="./src/core-runtime/{name}"></script>'
-
-    return INLINE_SCRIPT_RE.sub(repl, core), generated
+def expected_assets(core: str) -> dict[str, str]:
+    blocks = inline_blocks(core)
+    if not blocks:
+        fail("frozen core has no inline script blocks to externalize at runtime")
+    return {f"core-inline-{index:03d}.js": body for index, body in enumerate(blocks, start=1)}
 
 
 def tighten_script_csp(index: str) -> str:
@@ -76,16 +72,15 @@ def bump_cache(index: str, worker: str) -> tuple[str, str]:
     return index, worker
 
 
-def insert_worker_assets(worker: str, refs: list[str]) -> str:
-    assets = ["./src/core-runtime/" + name for name in refs]
-    for asset in assets:
-        if f"'{asset}'" in worker:
-            continue
-        marker = "  './MouldMaster_Core_App.html',\n"
-        if marker not in worker:
-            fail("service-worker CORE insertion point missing")
-        worker = worker.replace(marker, marker + f"  '{asset}',\n", 1)
-    return worker
+def insert_worker_assets(worker: str, names: list[str]) -> str:
+    marker = "  './MouldMaster_Core_App.html',\n"
+    if marker not in worker:
+        fail("service-worker CORE insertion point missing")
+    missing = [f"./src/core-runtime/{name}" for name in names if f"'./src/core-runtime/{name}'" not in worker]
+    if not missing:
+        return worker
+    block = "".join(f"  '{asset}',\n" for asset in missing)
+    return worker.replace(marker, marker + block, 1)
 
 
 def insert_desktop_resources(package: str) -> str:
@@ -126,21 +121,28 @@ def enable_integrity_directory(integrity: str) -> str:
 def check_state() -> None:
     core = CORE.read_text(encoding="utf-8")
     index = INDEX.read_text(encoding="utf-8")
-    inline = [m for m in INLINE_SCRIPT_RE.finditer(core) if not SRC_ATTR_RE.search(m.group("attrs") or "")]
-    if inline:
-        fail(f"core still contains {len(inline)} inline script block(s)")
-    refs = generated_refs(core)
-    if not refs:
-        fail("core has no generated core-runtime script references")
-    missing = [name for name in refs if not (OUT_DIR / name).is_file()]
-    if missing:
-        fail("missing generated core runtime assets: " + ", ".join(missing))
+    expected = expected_assets(core)
+    refs = list(dict.fromkeys(INDEX_RUNTIME_REF_RE.findall(index)))
+    expected_names = list(expected)
+    if refs != expected_names:
+        fail(f"index CORE_INLINE_SCRIPTS drifted: {refs} != {expected_names}")
+    if "function externalizeCoreScripts(out)" not in index or "out=externalizeCoreScripts(out)" not in index:
+        fail("browser bootstrap does not externalize frozen core scripts during assembly")
+    for name, body in expected.items():
+        path = OUT_DIR / name
+        if not path.is_file():
+            fail(f"missing generated core runtime asset: {name}")
+        if path.read_text(encoding="utf-8") != body:
+            fail(f"generated core runtime asset is stale: {name}")
+    extras = sorted(path.name for path in OUT_DIR.glob("core-inline-*.js") if path.name not in expected)
+    if extras:
+        fail("stale generated core runtime assets remain: " + ", ".join(extras))
     if "script-src 'self'; script-src-attr 'unsafe-inline';" not in index:
         fail("script CSP has not been narrowed to self + legacy handler attribute isolation")
     if "script-src 'self' 'unsafe-inline'" in index:
         fail("script-src still permits unsafe-inline executable blocks")
     worker = SERVICE_WORKER.read_text(encoding="utf-8")
-    for name in refs:
+    for name in expected_names:
         if f"'./src/core-runtime/{name}'" not in worker:
             fail(f"service-worker CORE missing generated script: {name}")
     package = DESKTOP_PACKAGE.read_text(encoding="utf-8")
@@ -149,36 +151,31 @@ def check_state() -> None:
     integrity = DESKTOP_INTEGRITY.read_text(encoding="utf-8")
     if "STATIC_RUNTIME_DIRS=['src/core-runtime']" not in integrity or "...staticRuntimeFiles" not in integrity:
         fail("desktop integrity does not derive generated core runtime files")
-    print(f"Core CSP script migration check passed: {len(refs)} inline blocks externalized; script-src self-only; handler attributes isolated.")
+    print(
+        f"Core CSP script migration check passed: {len(expected_names)} frozen inline blocks have exact generated runtime copies; "
+        "runtime assembly externalizes them; script-src is self-only; handler attributes remain isolated."
+    )
 
 
 def apply() -> None:
     core = CORE.read_text(encoding="utf-8")
-    transformed, generated = externalize_core(core)
-    if generated:
-        OUT_DIR.mkdir(parents=True, exist_ok=True)
-        for old in OUT_DIR.glob("core-inline-*.js"):
+    expected = expected_assets(core)
+    OUT_DIR.mkdir(parents=True, exist_ok=True)
+    for old in OUT_DIR.glob("core-inline-*.js"):
+        if old.name not in expected:
             old.unlink()
-        for name, body in generated.items():
-            (OUT_DIR / name).write_text(body, encoding="utf-8")
-        CORE.write_text(transformed, encoding="utf-8")
-        refs = list(generated)
-    else:
-        refs = generated_refs(core)
-        if not refs:
-            fail("no inline core scripts found and no generated core-runtime references exist")
+    for name, body in expected.items():
+        (OUT_DIR / name).write_text(body, encoding="utf-8")
 
     index = tighten_script_csp(INDEX.read_text(encoding="utf-8"))
     worker = SERVICE_WORKER.read_text(encoding="utf-8")
     index, worker = bump_cache(index, worker)
-    worker = insert_worker_assets(worker, refs)
+    worker = insert_worker_assets(worker, list(expected))
     INDEX.write_text(index, encoding="utf-8")
     SERVICE_WORKER.write_text(worker, encoding="utf-8")
 
-    package = insert_desktop_resources(DESKTOP_PACKAGE.read_text(encoding="utf-8"))
-    DESKTOP_PACKAGE.write_text(package, encoding="utf-8")
-    integrity = enable_integrity_directory(DESKTOP_INTEGRITY.read_text(encoding="utf-8"))
-    DESKTOP_INTEGRITY.write_text(integrity, encoding="utf-8")
+    DESKTOP_PACKAGE.write_text(insert_desktop_resources(DESKTOP_PACKAGE.read_text(encoding="utf-8")), encoding="utf-8")
+    DESKTOP_INTEGRITY.write_text(enable_integrity_directory(DESKTOP_INTEGRITY.read_text(encoding="utf-8")), encoding="utf-8")
     check_state()
 
 
