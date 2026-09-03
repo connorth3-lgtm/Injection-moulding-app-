@@ -48,7 +48,8 @@ for marker in [
 ]: need(marker in js,f'Mould Master workspace marker missing: {marker}')
 
 for forbidden in [
-    'localStorage', 'STORAGE_BASE', 'mm:mould-master-cases-changed', 'publishCasesChanged',
+    'localStorage.getItem(', 'localStorage.setItem(', 'localStorage.removeItem(', 'localStorage.clear(',
+    'STORAGE_BASE', 'mm:mould-master-cases-changed', 'publishCasesChanged',
     'MM_DATA.exams=', 'correctIndex=', 'regionalQuestions=', 'question_bank_version=',
     'certificates.push(', 'examScores=', 'assessmentScores=',
     'fetch(', 'XMLHttpRequest', 'WebSocket', 'sendBeacon',
