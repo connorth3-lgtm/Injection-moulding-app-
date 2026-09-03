@@ -2,14 +2,14 @@
 (function(){
 'use strict';
 if(window.MM_MATERIAL_REGISTRY)return;
-const VERSION='2026.09.03.5';
+const VERSION='2026.09.03.6';
 const CATALOG_URL='./material-catalog-v1.json';
 let catalog=null;
 let readyPromise=null;
 
 function clean(v){return String(v??'').trim()}
 function norm(v){return clean(v).toLowerCase().replace(/[^a-z0-9]+/g,' ').trim()}
-function esc(v){return String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function esc(v){return String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot',"'":'&#39;'}[c]))}
 function safeUrl(v){try{const u=new URL(clean(v),location.href);return u.protocol==='https:'?u.href:''}catch(_){return''}}
 function humanKind(v){return clean(v).replace(/-/g,' ').replace(/\b\w/g,c=>c.toUpperCase())}
 async function load(){
@@ -18,7 +18,7 @@ async function load(){
   return readyPromise;
 }
 function displayName(g){return [g?.manufacturer?.name,g?.brand,g?.grade].map(clean).filter(Boolean).join(' · ')}
-function searchable(g){return norm([g?.manufacturer?.name,g?.brand,g?.grade,...(g?.aliases||[]),g?.polymer?.family,g?.polymer?.blend].filter(Boolean).join(' '))}
+function searchable(g){return norm([g?.manufacturer?.name,g?.brand,g?.grade,...(g?.aliases||[]),g?.polymer?.family,g?.polymer?.blend,g?.identity?.variantId,g?.identity?.regionalVariant,g?.production?.country,g?.production?.plant].filter(Boolean).join(' '))}
 async function all(){return (await load()).grades.slice()}
 async function get(id){return (await load()).grades.find(x=>x.id===id)||null}
 async function search(query,{manufacturerId=null,polymerFamily=null,limit=50}={}){
@@ -86,8 +86,8 @@ function renderPropertyLimitations(g){const notes=[...new Set((g.properties||[])
 function renderProcessingRows(g){return (g.processing||[]).map(o=>`<tr><th scope="row">${esc(o.parameter)}</th><td><strong>${esc(processValue(o))}</strong></td><td>${esc(o.condition||'Supplier guidance; verify current exact-grade source and site conditions.')}</td><td>${sourceLink(g,o.sourceId)}</td></tr>`).join('')}
 function renderSources(g){return (g.sources||[]).map(s=>{const url=safeUrl(s.url);return `<li><b>${esc(s.title)}</b><span>${esc(humanKind(s.kind))}${s.retrievedAt?` · retrieved ${esc(s.retrievedAt)}`:''}</span>${url?`<a href="${esc(url)}" target="_blank" rel="noopener noreferrer">Open primary source</a>`:''}</li>`}).join('')}
 function renderGrade(g){
-  const key=preferredProperty(g),properties=g.properties||[],processing=g.processing||[];
-  return `<article class="mm-exact-grade" data-mm-material-grade="${esc(g.id)}"><span class="eyebrow">Exact commercial grade</span><h3>${esc(displayName(g))}</h3><p>${esc(g.polymer?.family||'Unknown polymer family')}${g.polymer?.blend&&g.polymer.blend!==g.polymer.family?` · ${esc(g.polymer.blend)}`:''}</p>${key?`<div class="mm-exact-key"><span>Key sourced property</span><strong>${esc(key.property)} · ${esc(valueText(key))}</strong><small>${esc(propertyCondition(key))}</small></div>`:''}<p>${properties.length} sourced properties · ${processing.length} processing observations</p><details class="mm-exact-detail"><summary>View sourced grade details</summary><div class="mm-exact-detail-body">${properties.length?`<h4>Properties</h4>${renderPropertyLimitations(g)}<div class="mm-exact-table-wrap"><table class="mm-exact-table"><thead><tr><th>Property</th><th>Value</th><th>Test / condition</th><th>Evidence use</th></tr></thead><tbody>${renderPropertyRows(g)}</tbody></table></div>`:'<p class="mm-exact-empty">No property observations have been published for this exact grade yet.</p>'}${processing.length?`<h4>Supplier processing guidance</h4><p class="mm-exact-caution"><b>Starting evidence, not a production recipe.</b> Confirm the current supplier document, machine/tool constraints and site validation before making production changes.</p><div class="mm-exact-table-wrap"><table class="mm-exact-table"><thead><tr><th>Parameter</th><th>Guidance</th><th>Boundary / condition</th><th>Source</th></tr></thead><tbody>${renderProcessingRows(g)}</tbody></table></div>`:''}<h4>Primary sources</h4><ul class="mm-exact-sources">${renderSources(g)}</ul><p class="mm-exact-provenance">Lifecycle status: ${esc(g.lifecycle?.status||'unknown')} · checked ${esc(g.lifecycle?.checkedAt||'not recorded')} · provenance ${esc(g.provenance?.stage||'unknown')}.</p></div></details><div class="mm-exact-actions"><button type="button" class="secondary" data-mm-exact-case="${esc(g.id)}">Start Mould Master case</button></div></article>`;
+  const key=preferredProperty(g),properties=g.properties||[],processing=g.processing||[],variant=[g?.identity?.variantId,g?.identity?.regionalVariant,g?.production?.country,g?.production?.plant].map(clean).filter(Boolean).join(' · ');
+  return `<article class="mm-exact-grade" data-mm-material-grade="${esc(g.id)}"><span class="eyebrow">Exact commercial grade</span><h3>${esc(displayName(g))}</h3><p>${esc(g.polymer?.family||'Unknown polymer family')}${g.polymer?.blend&&g.polymer.blend!==g.polymer.family?` · ${esc(g.polymer.blend)}`:''}${variant?` · ${esc(variant)}`:''}</p>${key?`<div class="mm-exact-key"><span>Key sourced property</span><strong>${esc(key.property)} · ${esc(valueText(key))}</strong><small>${esc(propertyCondition(key))}</small></div>`:''}<p>${properties.length} sourced properties · ${processing.length} processing observations</p><details class="mm-exact-detail"><summary>View sourced grade details</summary><div class="mm-exact-detail-body">${properties.length?`<h4>Properties</h4>${renderPropertyLimitations(g)}<div class="mm-exact-table-wrap"><table class="mm-exact-table"><thead><tr><th>Property</th><th>Value</th><th>Test / condition</th><th>Evidence use</th></tr></thead><tbody>${renderPropertyRows(g)}</tbody></table></div>`:'<p class="mm-exact-empty">No property observations have been published for this exact grade yet.</p>'}${processing.length?`<h4>Supplier processing guidance</h4><p class="mm-exact-caution"><b>Starting evidence, not a production recipe.</b> Confirm the current supplier document, machine/tool constraints and site validation before making production changes.</p><div class="mm-exact-table-wrap"><table class="mm-exact-table"><thead><tr><th>Parameter</th><th>Guidance</th><th>Boundary / condition</th><th>Source</th></tr></thead><tbody>${renderProcessingRows(g)}</tbody></table></div>`:''}<h4>Primary sources</h4><ul class="mm-exact-sources">${renderSources(g)}</ul><p class="mm-exact-provenance">Lifecycle status: ${esc(g.lifecycle?.status||'unknown')} · checked ${esc(g.lifecycle?.checkedAt||'not recorded')} · provenance ${esc(g.provenance?.stage||'unknown')}.</p></div></details><div class="mm-exact-actions"><button type="button" class="secondary" data-mm-exact-case="${esc(g.id)}">Start Mould Master case</button></div></article>`;
 }
 
 function style(){if(document.getElementById('mm-exact-material-style'))return;const s=document.createElement('style');s.id='mm-exact-material-style';s.textContent=`
@@ -111,8 +111,15 @@ async function installPanel(){
   section.querySelector('[data-mm-exact-manufacturer]')?.addEventListener('change',rerender);
   await renderResults(section);return true;
 }
-function watchMaterials(){installPanel().catch(()=>{});const observer=new MutationObserver(()=>installPanel().catch(()=>{}));observer.observe(document.documentElement,{childList:true,subtree:true})}
+function bindMaterialsLifecycle(){
+  const install=()=>installPanel().catch(err=>console.warn('[MouldMaster materials]',err));
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',install,{once:true});else install();
+  const shell=window.MM_APP_SHELL;
+  shell?.events?.onRender?.('materials',install);
+  shell?.events?.onViewChange?.(view=>{if(view==='materials')install()});
+  window.addEventListener('mm:domains-ready',install,{once:true});
+}
 
 window.MM_MATERIAL_REGISTRY=Object.freeze({version:VERSION,catalogUrl:CATALOG_URL,load,all,get,search,displayName,manufacturers,propertyObservations,compareProperty,stats,startMouldMasterCase,installPanel});
-load().then(watchMaterials).catch(err=>console.warn('[MouldMaster materials] exact-grade catalog unavailable',err));
+load().then(bindMaterialsLifecycle).catch(err=>console.warn('[MouldMaster materials] exact-grade catalog unavailable',err));
 })();
