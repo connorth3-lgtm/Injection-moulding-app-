@@ -61,8 +61,8 @@ engineering=text('src/domains/engineering/evidence-chain.js')
 for m in ['addObservation','addHypothesis','addControlledTest','addVerification','semanticStatus','sourceSemanticsConfirmed']:
     need(m in engineering,f'engineering evidence marker missing: {m}')
 content=text('src/domains/learning/content-intelligence.js')
-for m in ['Next learner actions','Content review queue','evidenceFingerprint','MM_CONTENT_INTELLIGENCE']:
-    need(m in content,f'content intelligence marker missing: {m}')
+for m in ['Next learner actions','Content review queue','evidenceFingerprint','MM_CONTENT_INTELLIGENCE','openMobileMenu','data-mm-data-intelligence-menu','__MM_DATA_INTELLIGENCE_MORE__']:
+    need(m in content,f'content intelligence/mobile access marker missing: {m}')
 need('style=' not in content,'Data Intelligence must not emit inline style attributes under style-src-attr none')
 
 manifest=json.loads(text('runtime-domain-manifest.json'));assets=manifest['assets']
@@ -95,4 +95,4 @@ with tempfile.TemporaryDirectory() as td:
     need(report['source']['rows']==6,'synthetic pilot row count drifted')
     need('fill_time_s' in report['comparisons'] and 'part_mass_g' in report['comparisons'],'pilot comparison signals missing')
 
-print('MouldMaster data activation v1 QA passed (data spine, revision-safe assessment analytics, unified local events, learner model, typed materials, canonical signal semantics, explicit process evidence, engineering evidence chain, CSP-safe content intelligence, real-pilot aggregate harness)')
+print('MouldMaster data activation v1 QA passed (data spine, revision-safe assessment analytics, unified local events, learner model, typed materials, canonical signal semantics, explicit process evidence, engineering evidence chain, CSP-safe desktop/mobile content intelligence, real-pilot aggregate harness)')
