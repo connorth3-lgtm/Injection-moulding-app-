@@ -65,8 +65,11 @@ for lab in data['labs']:
 need(not length_flags,'correct answer is longest/tied-longest in material labs: '+json.dumps(length_flags,ensure_ascii=False))
 
 idx=text('index.html'); sw=text('service-worker.js'); pkg=text('desktop/electron/package.json'); integ=text('desktop/electron/scripts/generate-integrity.cjs')
-need("['./material-behaviour-labs.js'" in idx,'browser shell does not load material labs')
-need(idx.index('material-behaviour-labs.js')<idx.index('assessment-evidence-sources.js'),'material labs must load before evidence approval')
+pack_builder=text('tools/build_runtime_packs.py'); evidence_pack=text('src/domains/runtime-packs/evidence-runtime-pack.js')
+need("['./src/domains/runtime-packs/evidence-runtime-pack.js'" in idx,'browser shell does not load evidence runtime pack')
+need('"material-behaviour-labs.js"' in pack_builder,'material labs missing from deterministic evidence pack definition')
+need('/* >>> material-behaviour-labs.js */' in evidence_pack,'material labs missing from generated evidence pack')
+need(evidence_pack.index('/* >>> material-behaviour-labs.js */')<evidence_pack.index('/* >>> assessment-evidence-sources.js */'),'material labs must execute before evidence approval within the evidence pack')
 need("'./material-behaviour-labs.js'" in sw,'material labs missing from offline cache')
 need('../../material-behaviour-labs.js' in pkg,'material labs missing from desktop package')
 need("'material-behaviour-labs.js'" in integ,'material labs missing from desktop integrity manifest')
