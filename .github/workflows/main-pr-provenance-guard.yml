@@ -34,13 +34,37 @@ jobs:
             exit 1
           }
 
-          merged_pr_json=$(gh api \
-            -H "Accept: application/vnd.github+json" \
-            "repos/$GH_REPO/commits/$HEAD_SHA/pulls" \
-            --jq "[.[] | select(.merged_at != null and .base.ref == \"main\" and .merge_commit_sha == \"$HEAD_SHA\")][0] // null")
+          # GitHub's commit-to-PR association can lag for a short period immediately
+          # after a squash merge. Retry only temporary invisibility; ambiguity still
+          # fails closed and triggers the existing defense-in-depth rollback path.
+          merged_pr_json="null"
+          for attempt in {1..20}; do
+            pulls_json=$(gh api \
+              -H "Accept: application/vnd.github+json" \
+              "repos/$GH_REPO/commits/$HEAD_SHA/pulls")
+            match_count=$(jq --arg sha "$HEAD_SHA" \
+              '[.[] | select(.merged_at != null and .base.ref == "main" and .merge_commit_sha == $sha)] | length' \
+              <<<"$pulls_json")
+
+            if [[ "$match_count" -gt 1 ]]; then
+              rollback_main "Push to main is ambiguously attributable to multiple merged pull requests."
+            fi
+
+            if [[ "$match_count" -eq 1 ]]; then
+              merged_pr_json=$(jq --arg sha "$HEAD_SHA" \
+                '[.[] | select(.merged_at != null and .base.ref == "main" and .merge_commit_sha == $sha)][0]' \
+                <<<"$pulls_json")
+              break
+            fi
+
+            if [[ "$attempt" -lt 20 ]]; then
+              echo "Merged-PR association is not visible yet; retrying ($attempt/20)."
+              sleep 3
+            fi
+          done
 
           if [[ -z "$merged_pr_json" || "$merged_pr_json" == "null" ]]; then
-            rollback_main "Push to main did not originate from a merged pull request."
+            rollback_main "Push to main did not originate from a merged pull request after provenance visibility retries."
           fi
 
           PR_NUMBER=$(jq -r '.number' <<<"$merged_pr_json")
