@@ -131,6 +131,16 @@ def ensure_handler_bridge(index: str) -> str:
     return index.replace(marker, marker + entry, 1)
 
 
+def ensure_static_handler_retirement(index: str) -> str:
+    if "function retireInlineHandlerAttrs(parsed)" in index:
+        return index
+    old = '    function prepareDocument(html){const parsed=new DOMParser().parseFromString(html,"text/html");if(!parsed.documentElement||!parsed.head||!parsed.body)throw new Error("Core training document could not be parsed");const scripts=[];'
+    new = '    function retireInlineHandlerAttrs(parsed){for(const eventName of ["click","change","input","keydown"]){const attr="on"+eventName;for(const element of Array.from(parsed.querySelectorAll(`[${attr}]`))){element.setAttribute(`data-mm-on${eventName}`,element.getAttribute(attr)||"");element.removeAttribute(attr)}}return parsed}\n    function prepareDocument(html){const parsed=new DOMParser().parseFromString(html,"text/html");if(!parsed.documentElement||!parsed.head||!parsed.body)throw new Error("Core training document could not be parsed");retireInlineHandlerAttrs(parsed);const scripts=[];'
+    if old not in index:
+        fail("index prepareDocument insertion point drifted")
+    return index.replace(old, new, 1)
+
+
 def insert_worker_assets(worker: str, names: list[str]) -> str:
     marker = "  './MouldMaster_Core_App.html',\n"
     if marker not in worker:
@@ -188,7 +198,7 @@ def check_state() -> None:
         fail(f"index CORE_INLINE_SCRIPTS drifted: {refs} != {expected_names}")
     if "function externalizeCoreScripts(out)" not in index or "out=externalizeCoreScripts(out)" not in index:
         fail("browser bootstrap does not externalize frozen core scripts during assembly")
-    if "function retireInlineHandlerAttrs(parsed)" not in index or "retireInlineHandlerAttrs(parsed)" not in index:
+    if "function retireInlineHandlerAttrs(parsed)" not in index or "retireInlineHandlerAttrs(parsed);const scripts=[]" not in index:
         fail("browser bootstrap does not retire static frozen-core handler attributes before installation")
     if "['./src/core-runtime/inline-handler-bridge.js'" not in index:
         fail("strict inline-handler bridge is not loaded by BODY_SCRIPTS")
@@ -245,6 +255,7 @@ def apply() -> None:
 
     index = tighten_script_csp(INDEX.read_text(encoding="utf-8"))
     index = ensure_handler_bridge(index)
+    index = ensure_static_handler_retirement(index)
     worker = SERVICE_WORKER.read_text(encoding="utf-8")
     index, worker = bump_cache(index, worker)
     worker = insert_worker_assets(worker, list(expected))
