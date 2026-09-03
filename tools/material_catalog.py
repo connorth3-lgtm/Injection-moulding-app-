@@ -71,7 +71,7 @@ def validate_grade(grade: dict[str, Any], context: str = "grade") -> list[str]:
         need(str(obs.get("sourceId", "")) in source_ids, f"{context}: property {oid} references unknown sourceId", errors)
         need(isinstance(obs.get("comparisonReady"), bool), f"{context}: property {oid} comparisonReady must be boolean", errors)
 
-        if prop in {"mfr", "mfi", "melt_flow_rate", "melt_mass_flow_rate", "melt_volume_flow_rate", "mvr"}:
+        if prop in {"mfr", "mfi", "melt_flow_index", "melt_flow_rate", "melt_mass_flow_rate", "melt_volume_flow_rate", "mvr"}:
             complete = bool(obs.get("testMethod")) and is_number(obs.get("temperatureC")) and is_number(obs.get("loadKg"))
             if obs.get("comparisonReady") is True:
                 need(complete, f"{context}: {oid} melt-flow observation marked comparisonReady without method + temperatureC + loadKg", errors)

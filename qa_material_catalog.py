@@ -28,7 +28,7 @@ expected = {"mfr-lotte-chemical", "mfr-lg-chem", "mfr-kep", "mfr-kolon-enp"}
 actual = {x.get("id") for x in pilot.get("manufacturers", [])}
 need(expected == actual, f"Korean pilot manufacturer set drift: {actual}")
 need(pilot.get("publicationGate", {}).get("allowsDirectStagingToRuntime") is False, "staging must not publish directly to runtime")
-need(all(not x.get("gradeRecords") for x in pilot["manufacturers"]), "pilot foundation must not invent/source-free Korean grade records")
+need(all(not x.get("gradeRecords") for x in pilot["manufacturers"]), "discovery target manifest must not contain source-free grade records")
 
 errors = validate_staging()
 need(not errors, "material staging semantic QA failed:\n" + "\n".join(errors))
@@ -43,6 +43,30 @@ for idx, grade in enumerate(catalog["grades"]):
     grade_errors = validate_grade(grade, f"catalog grade[{idx}]")
     need(not grade_errors, "published material catalog failed semantic QA:\n" + "\n".join(grade_errors))
     need((grade.get("provenance") or {}).get("stage") in {"validated", "published"}, "runtime catalog contains non-validated grade")
+
+# Publication drift gate: every validated/published staging record must appear
+# exactly once in the public runtime snapshot, and no extra runtime grade may
+# bypass staging. This turns the compile boundary into an auditable invariant.
+staged_grade_ids = set()
+for staging_path in sorted(STAGING.glob("*.json")):
+    staging_payload = load_json(staging_path)
+    for manufacturer in staging_payload.get("manufacturers") or []:
+        for grade in manufacturer.get("gradeRecords") or []:
+            if (grade.get("provenance") or {}).get("stage") in {"validated", "published"}:
+                gid = grade.get("id")
+                need(gid not in staged_grade_ids, f"duplicate validated staging grade id: {gid}")
+                staged_grade_ids.add(gid)
+runtime_grade_ids = {grade.get("id") for grade in catalog.get("grades") or []}
+need(staged_grade_ids == runtime_grade_ids, f"runtime/staging material drift: staged={sorted(staged_grade_ids)} runtime={sorted(runtime_grade_ids)}")
+
+# Pilot proof: exact-grade rollout has begun with current primary-source LOTTE
+# records without changing the source-free discovery target manifest.
+lotte_pilot = load_json(STAGING / "lotte-exact-grade-pilot-v1.json")
+lotte_grades = [g for m in lotte_pilot.get("manufacturers") or [] for g in m.get("gradeRecords") or []]
+need({g.get("grade") for g in lotte_grades} == {"NH-1033", "NH-1034R", "AE-3060 H", "XP-2140C"}, "LOTTE exact-grade pilot set drift")
+for grade in lotte_grades:
+    need((grade.get("provenance") or {}).get("stage") == "validated", f"LOTTE pilot grade is not validated: {grade.get('id')}")
+    need(all(str(source.get("url", "")).startswith("https://product.lottechem.com/") for source in grade.get("sources") or []), f"LOTTE pilot grade has a non-primary source: {grade.get('id')}")
 
 # 5-6) Cross-domain material links and IndexedDB engineering store.
 store = (ROOT / "src/domains/engineering/engineering-store.js").read_text(encoding="utf-8")

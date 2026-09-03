@@ -1,9 +1,121 @@
 {
   "schemaVersion": 1,
-  "catalogVersion": "2026.09.03.1",
-  "generated": false,
-  "status": "foundation-empty",
-  "boundary": "Only exact-grade records that pass material semantic QA may be published here. Family-level Academy reference material remains separate and is not relabelled as an exact commercial grade.",
-  "manufacturers": [],
-  "grades": []
+  "catalogVersion": "2026.09.03-lotte-pilot.1",
+  "generated": true,
+  "status": "validated",
+  "boundary": "Compiled only from staged exact-grade records whose provenance stage is validated/published and which pass semantic QA. Internal staging/schema files are not part of the public runtime artifact.",
+  "manufacturers": [
+    {"id": "mfr-lotte-chemical", "name": "LOTTE Chemical", "country": "South Korea"}
+  ],
+  "grades": [
+    {
+      "schemaVersion": 1,
+      "id": "mat-lotte-infino-ae-3060-h",
+      "manufacturer": {"id": "mfr-lotte-chemical", "name": "LOTTE Chemical", "country": "South Korea", "website": "https://www.lottechem.com/"},
+      "brand": "INFINO",
+      "grade": "AE-3060 H",
+      "aliases": ["AE-3060  H", "AE-3060++H"],
+      "polymer": {"family": "PC/PBT", "blend": "PC/PBT"},
+      "composition": {"notes": "Official LOTTE page describes Automotive, General."},
+      "properties": [
+        {"id": "obs-lotte-ae3060h-mfi", "property": "Melt Flow Index", "value": 13, "unit": "g/10min", "testMethod": "ISO 1133", "temperatureC": 250, "loadKg": 5, "direction": "not-applicable", "sourceId": "src-lotte-ae3060h-iso", "comparisonReady": true, "limitations": "LOTTE representative value for material selection only; not an official material specification or mould-design value."},
+        {"id": "obs-lotte-ae3060h-shrink-md", "property": "Mould Shrinkage", "value": "0.4-0.6", "unit": "%", "testMethod": "ISO 294-4", "specimen": "2 mm", "direction": "flow", "sourceId": "src-lotte-ae3060h-iso", "comparisonReady": true, "limitations": "LOTTE representative value for material selection only; not an official material specification or mould-design value."},
+        {"id": "obs-lotte-ae3060h-shrink-td", "property": "Mould Shrinkage", "value": "0.4-0.6", "unit": "%", "testMethod": "ISO 294-4", "specimen": "2 mm", "direction": "transverse", "sourceId": "src-lotte-ae3060h-iso", "comparisonReady": true, "limitations": "LOTTE representative value for material selection only; not an official material specification or mould-design value."},
+        {"id": "obs-lotte-ae3060h-hdt", "property": "Heat Deflection Temperature (unannealed)", "value": 92, "unit": "°C", "testMethod": "ISO 75-2", "specimen": "4.0 mm; 1.8 MPa", "direction": "not-applicable", "sourceId": "src-lotte-ae3060h-iso", "comparisonReady": false, "limitations": "LOTTE representative value for material selection only; not an official material specification or mould-design value."}
+      ],
+      "processing": [
+        {"id": "proc-lotte-ae3060h-mould-temp", "parameter": "Mould temperature", "min": 40, "max": 60, "unit": "°C", "condition": "Standard moulding representative range. LOTTE guidance is for material selection and is not an official specification or production recipe.", "claimType": "supplier-guidance", "sourceId": "src-lotte-ae3060h-processing", "productionRecipe": false},
+        {"id": "proc-lotte-ae3060h-dry-temp", "parameter": "Dehumidifier drying temperature", "value": 100, "unit": "°C", "condition": "LOTTE representative supplier guidance; verify against current exact-grade source and site conditions.", "claimType": "supplier-guidance", "sourceId": "src-lotte-ae3060h-processing", "productionRecipe": false},
+        {"id": "proc-lotte-ae3060h-dry-time", "parameter": "Dehumidifier drying time", "value": 4, "unit": "hr", "condition": "LOTTE representative supplier guidance; verify against current exact-grade source and site conditions.", "claimType": "supplier-guidance", "sourceId": "src-lotte-ae3060h-processing", "productionRecipe": false},
+        {"id": "proc-lotte-ae3060h-moisture", "parameter": "Moisture after drying", "value": "<0.05", "unit": "%", "condition": "LOTTE representative supplier guidance; verify against current exact-grade source and site conditions.", "claimType": "supplier-guidance", "sourceId": "src-lotte-ae3060h-processing", "productionRecipe": false}
+      ],
+      "approvals": [],
+      "lifecycle": {"status": "unknown", "checkedAt": "2026-09-03"},
+      "sources": [
+        {"id": "src-lotte-ae3060h-iso", "publisher": "LOTTE Chemical", "title": "INFINO AE-3060 H ISO Property", "url": "https://product.lottechem.com/en/advanced_materials/iso.do?grade=AE-3060++H", "kind": "manufacturer-datasheet", "retrievedAt": "2026-09-03"},
+        {"id": "src-lotte-ae3060h-processing", "publisher": "LOTTE Chemical", "title": "INFINO AE-3060 H Processing Guide", "url": "https://product.lottechem.com/en/advanced_materials/terms.do?grade=AE-3060++H", "kind": "manufacturer-processing-guide", "retrievedAt": "2026-09-03"}
+      ],
+      "provenance": {"stage": "validated", "ingestedAt": "2026-09-03T00:00:00Z", "reviewedAt": "2026-09-03T00:00:00Z", "reviewer": "primary-source-web-review", "notes": "Official LOTTE English product-page pilot; unresolved values are omitted rather than inferred."}
+    },
+    {
+      "schemaVersion": 1,
+      "id": "mat-lotte-infino-nh-1033",
+      "manufacturer": {"id": "mfr-lotte-chemical", "name": "LOTTE Chemical", "country": "South Korea", "website": "https://www.lottechem.com/"},
+      "brand": "INFINO",
+      "grade": "NH-1033",
+      "aliases": [],
+      "polymer": {"family": "PC/ABS", "blend": "PC/ABS"},
+      "composition": {"flameRetardant": true, "notes": "Official LOTTE page describes E&E, Flame Retardant."},
+      "properties": [
+        {"id": "obs-lotte-nh1033-mfi", "property": "Melt Flow Index", "value": 35, "unit": "g/10min", "testMethod": "ISO 1133", "temperatureC": 220, "loadKg": 10, "direction": "not-applicable", "sourceId": "src-lotte-nh1033-iso", "comparisonReady": true, "limitations": "LOTTE representative value for material selection only; not an official material specification or mould-design value."},
+        {"id": "obs-lotte-nh1033-tensile-yield", "property": "Tensile Strength at Yield", "value": 60, "unit": "MPa", "testMethod": "ISO 527", "conditioning": "50 mm/min", "direction": "not-applicable", "sourceId": "src-lotte-nh1033-iso", "comparisonReady": false, "limitations": "LOTTE representative value for material selection only; not an official material specification or mould-design value."},
+        {"id": "obs-lotte-nh1033-hdt", "property": "Heat Deflection Temperature (unannealed)", "value": 86, "unit": "°C", "testMethod": "ISO 75-2", "specimen": "4.0 mm; 1.8 MPa", "direction": "not-applicable", "sourceId": "src-lotte-nh1033-iso", "comparisonReady": false, "limitations": "LOTTE representative value for material selection only; not an official material specification or mould-design value."}
+      ],
+      "processing": [
+        {"id": "proc-lotte-nh1033-mould-temp", "parameter": "Mould temperature", "min": 60, "max": 90, "unit": "°C", "condition": "Standard moulding representative range. LOTTE guidance is for material selection and is not an official specification or production recipe.", "claimType": "supplier-guidance", "sourceId": "src-lotte-nh1033-processing", "productionRecipe": false},
+        {"id": "proc-lotte-nh1033-dry-temp", "parameter": "Dehumidifier drying temperature", "value": 80, "unit": "°C", "condition": "LOTTE representative supplier guidance; verify against current exact-grade source and site conditions.", "claimType": "supplier-guidance", "sourceId": "src-lotte-nh1033-processing", "productionRecipe": false},
+        {"id": "proc-lotte-nh1033-dry-time", "parameter": "Dehumidifier drying time", "value": 3, "unit": "hr", "condition": "LOTTE representative supplier guidance; verify against current exact-grade source and site conditions.", "claimType": "supplier-guidance", "sourceId": "src-lotte-nh1033-processing", "productionRecipe": false},
+        {"id": "proc-lotte-nh1033-moisture", "parameter": "Moisture after drying", "value": 0.04, "unit": "%", "condition": "LOTTE representative supplier guidance; verify against current exact-grade source and site conditions.", "claimType": "supplier-guidance", "sourceId": "src-lotte-nh1033-processing", "productionRecipe": false}
+      ],
+      "approvals": [],
+      "lifecycle": {"status": "unknown", "checkedAt": "2026-09-03"},
+      "sources": [
+        {"id": "src-lotte-nh1033-iso", "publisher": "LOTTE Chemical", "title": "INFINO NH-1033 ISO Property", "url": "https://product.lottechem.com/en/advanced_materials/iso.do?grade=NH-1033", "kind": "manufacturer-datasheet", "retrievedAt": "2026-09-03"},
+        {"id": "src-lotte-nh1033-processing", "publisher": "LOTTE Chemical", "title": "INFINO NH-1033 Processing Guide", "url": "https://product.lottechem.com/en/advanced_materials/terms.do?grade=NH-1033", "kind": "manufacturer-processing-guide", "retrievedAt": "2026-09-03"}
+      ],
+      "provenance": {"stage": "validated", "ingestedAt": "2026-09-03T00:00:00Z", "reviewedAt": "2026-09-03T00:00:00Z", "reviewer": "primary-source-web-review", "notes": "Official LOTTE English product-page pilot; unresolved values are omitted rather than inferred."}
+    },
+    {
+      "schemaVersion": 1,
+      "id": "mat-lotte-infino-nh-1034r",
+      "manufacturer": {"id": "mfr-lotte-chemical", "name": "LOTTE Chemical", "country": "South Korea", "website": "https://www.lottechem.com/"},
+      "brand": "INFINO",
+      "grade": "NH-1034R",
+      "aliases": [],
+      "polymer": {"family": "PC/ABS", "blend": "PC/ABS"},
+      "composition": {"flameRetardant": true, "notes": "Official LOTTE page describes E&E, Flame retardant."},
+      "properties": [
+        {"id": "obs-lotte-nh1034r-mfi", "property": "Melt Flow Index", "value": 40, "unit": "g/10min", "testMethod": "ISO 1133", "temperatureC": 220, "loadKg": 10, "direction": "not-applicable", "sourceId": "src-lotte-nh1034r-iso", "comparisonReady": true, "limitations": "LOTTE representative value for material selection only; not an official material specification or mould-design value."},
+        {"id": "obs-lotte-nh1034r-shrink-md", "property": "Mould Shrinkage", "value": "0.4-0.7", "unit": "%", "testMethod": "ISO 294-4", "specimen": "2 mm", "direction": "flow", "sourceId": "src-lotte-nh1034r-iso", "comparisonReady": true, "limitations": "LOTTE representative value for material selection only; not an official material specification or mould-design value."},
+        {"id": "obs-lotte-nh1034r-shrink-td", "property": "Mould Shrinkage", "value": "0.4-0.7", "unit": "%", "testMethod": "ISO 294-4", "specimen": "2 mm", "direction": "transverse", "sourceId": "src-lotte-nh1034r-iso", "comparisonReady": true, "limitations": "LOTTE representative value for material selection only; not an official material specification or mould-design value."},
+        {"id": "obs-lotte-nh1034r-tensile-yield", "property": "Tensile Strength at Yield", "value": 55, "unit": "MPa", "testMethod": "ISO 527", "conditioning": "50 mm/min", "direction": "not-applicable", "sourceId": "src-lotte-nh1034r-iso", "comparisonReady": false, "limitations": "LOTTE representative value for material selection only; not an official material specification or mould-design value."}
+      ],
+      "processing": [],
+      "approvals": [],
+      "lifecycle": {"status": "unknown", "checkedAt": "2026-09-03"},
+      "sources": [
+        {"id": "src-lotte-nh1034r-iso", "publisher": "LOTTE Chemical", "title": "INFINO NH-1034R ISO Property", "url": "https://product.lottechem.com/en/advanced_materials/iso.do?grade=NH-1034R", "kind": "manufacturer-datasheet", "retrievedAt": "2026-09-03"}
+      ],
+      "provenance": {"stage": "validated", "ingestedAt": "2026-09-03T00:00:00Z", "reviewedAt": "2026-09-03T00:00:00Z", "reviewer": "primary-source-web-review", "notes": "Official LOTTE English product-page pilot; unresolved values are omitted rather than inferred."}
+    },
+    {
+      "schemaVersion": 1,
+      "id": "mat-lotte-infino-xp-2140c",
+      "manufacturer": {"id": "mfr-lotte-chemical", "name": "LOTTE Chemical", "country": "South Korea", "website": "https://www.lottechem.com/"},
+      "brand": "INFINO",
+      "grade": "XP-2140C",
+      "aliases": [],
+      "polymer": {"family": "PPS/GF", "blend": "PPS/GF"},
+      "composition": {"notes": "Official LOTTE resin type is PPS/GF; glass-fibre percentage is not inferred without a primary-source percentage claim."},
+      "properties": [
+        {"id": "obs-lotte-xp2140c-mfi", "property": "Melt Flow Index", "value": 83, "unit": "g/10min", "testMethod": "ISO 1133", "temperatureC": 316, "loadKg": 5, "direction": "not-applicable", "sourceId": "src-lotte-xp2140c-iso", "comparisonReady": true, "limitations": "LOTTE representative value for material selection only; not an official material specification or mould-design value."},
+        {"id": "obs-lotte-xp2140c-tensile-yield", "property": "Tensile Strength at Yield", "value": 180, "unit": "MPa", "testMethod": "ISO 527", "conditioning": "5 mm/min", "direction": "not-applicable", "sourceId": "src-lotte-xp2140c-iso", "comparisonReady": false, "limitations": "LOTTE representative value for material selection only; not an official material specification or mould-design value."},
+        {"id": "obs-lotte-xp2140c-tensile-modulus", "property": "Tensile Modulus", "value": 11400, "unit": "MPa", "testMethod": "ISO 527", "conditioning": "5 mm/min", "direction": "not-applicable", "sourceId": "src-lotte-xp2140c-iso", "comparisonReady": false, "limitations": "LOTTE representative value for material selection only; not an official material specification or mould-design value."},
+        {"id": "obs-lotte-xp2140c-hdt", "property": "Heat Deflection Temperature (unannealed)", "value": 267, "unit": "°C", "testMethod": "ISO 75-2", "specimen": "4.0 mm; 1.8 MPa", "direction": "not-applicable", "sourceId": "src-lotte-xp2140c-iso", "comparisonReady": false, "limitations": "LOTTE representative value for material selection only; not an official material specification or mould-design value."}
+      ],
+      "processing": [
+        {"id": "proc-lotte-xp2140c-mould-temp", "parameter": "Mould temperature", "min": 120, "max": 150, "unit": "°C", "condition": "LOTTE page displays 150 ~ 120; normalized to min/max ordering only. Representative guidance is not an official material specification or production recipe.", "claimType": "supplier-guidance", "sourceId": "src-lotte-xp2140c-processing", "productionRecipe": false},
+        {"id": "proc-lotte-xp2140c-dry-temp", "parameter": "Dehumidifier drying temperature", "value": 120, "unit": "°C", "condition": "LOTTE representative supplier guidance; verify against current exact-grade source and site conditions.", "claimType": "supplier-guidance", "sourceId": "src-lotte-xp2140c-processing", "productionRecipe": false},
+        {"id": "proc-lotte-xp2140c-dry-time", "parameter": "Dehumidifier drying time", "value": 4, "unit": "hr", "condition": "LOTTE representative supplier guidance; verify against current exact-grade source and site conditions.", "claimType": "supplier-guidance", "sourceId": "src-lotte-xp2140c-processing", "productionRecipe": false},
+        {"id": "proc-lotte-xp2140c-moisture", "parameter": "Moisture after drying", "value": "<0.05", "unit": "%", "condition": "LOTTE representative supplier guidance; verify against current exact-grade source and site conditions.", "claimType": "supplier-guidance", "sourceId": "src-lotte-xp2140c-processing", "productionRecipe": false}
+      ],
+      "approvals": [],
+      "lifecycle": {"status": "unknown", "checkedAt": "2026-09-03"},
+      "sources": [
+        {"id": "src-lotte-xp2140c-iso", "publisher": "LOTTE Chemical", "title": "INFINO XP-2140C ISO Property", "url": "https://product.lottechem.com/en/advanced_materials/iso.do?grade=XP-2140C", "kind": "manufacturer-datasheet", "retrievedAt": "2026-09-03"},
+        {"id": "src-lotte-xp2140c-processing", "publisher": "LOTTE Chemical", "title": "INFINO XP-2140C Processing Guide", "url": "https://product.lottechem.com/en/advanced_materials/terms.do?grade=XP-2140C", "kind": "manufacturer-processing-guide", "retrievedAt": "2026-09-03"}
+      ],
+      "provenance": {"stage": "validated", "ingestedAt": "2026-09-03T00:00:00Z", "reviewedAt": "2026-09-03T00:00:00Z", "reviewer": "primary-source-web-review", "notes": "Official LOTTE English product-page pilot; unresolved values are omitted rather than inferred."}
+    }
+  ]
 }
