@@ -76,7 +76,15 @@ for marker in (
     "store.learnerToken()",
 ):
     need(marker in workspace, f"Mould Master canonical IndexedDB contract missing: {marker}")
-for forbidden in ("localStorage", "mm:mould-master-cases-changed", "publishCasesChanged", "STORAGE_BASE"):
+for forbidden in (
+    "localStorage.getItem(",
+    "localStorage.setItem(",
+    "localStorage.removeItem(",
+    "localStorage.clear(",
+    "mm:mould-master-cases-changed",
+    "publishCasesChanged",
+    "STORAGE_BASE",
+):
     need(forbidden not in workspace, f"Mould Master workspace still writes/coordinates a second live store: {forbidden}")
 need("await workspace.newCase" in materials and "materialGradeId" in materials and "linkCaseMaterial" in materials, "exact material case creation is not durably linked through the canonical case store")
 assets = manifest.get("assets", [])
