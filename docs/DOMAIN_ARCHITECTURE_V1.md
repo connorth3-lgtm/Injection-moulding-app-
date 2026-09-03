@@ -101,14 +101,17 @@ The scale/stress-test manufacturers are:
 
 - LOTTE Chemical
 - LG Chem
-- Korea Engineering Plastics (KEP)
+- Korea Polyacetal (KPAC), retaining the stable `mfr-kep` identifier for KEPITAL continuity
 - KOLON ENP / KOLON engineering-plastics catalogue family
 
 Pilot progress as of 2026-09-03:
 
-- LOTTE Chemical has one validated source-backed pilot dataset with four exact commercial grades published in `material-catalog-v1.json`: NH-1033, NH-1034R, AE-3060 H and XP-2140C.
-- LG Chem, KEP and KOLON ENP remain discovery-pending and must not be represented as validated until primary-source exact-grade records pass the same semantic and provenance gates.
-- `korea-pilot-v1.json` is an umbrella progress manifest, not a second source of material claims; its `gradeRecords` arrays stay empty and its LOTTE metadata points to the separately validated dataset and runtime grade IDs.
+- LOTTE Chemical has four validated exact commercial grades published in `material-catalog-v1.json`: NH-1033, NH-1034R, AE-3060 H and XP-2140C.
+- LG Chem has three validated LUPOY exact grades published in `material-catalog-v1.json`: GP1000L, GP1000ML and GP5206F.
+- Korea Polyacetal (KPAC) has four validated KEPITAL exact grades published in `material-catalog-v1.json`: F10-03H, F20-03, F30-03 and FG2025.
+- KOLON ENP has four primary-source-reviewed exact KOCETAL identities in `kolon-enp-exact-grade-pilot-v1`: K300, K700, K100HS and GF702. These remain `source-reviewed-staging`; no KOLON numeric property is validated or published until comparison-critical test context and the stronger source revision/fingerprint identity requirements are satisfied.
+- The runtime catalogue therefore remains at 11 published exact grades across three validated manufacturers. KOLON source review increases acquisition coverage without being counted as validation or publication.
+- `korea-pilot-v1.json` is an umbrella progress manifest, not a second source of material claims; its `gradeRecords` arrays stay empty and point to separately reviewed/validated datasets.
 
 No glass-fibre percentage, lifecycle state, approval, property condition or processing value is inferred when the primary source does not establish it.
 
@@ -123,7 +126,7 @@ The remaining bootstrap migration is deliberately staged: retire root layers by 
 1. Architecture expansion freeze — this contract and CI guard.
 2. Canonical material-grade schema — `data/materials/material-grade.schema.json`.
 3. Staged material ingestion — `tools/material_catalog.py` plus staging manifests.
-4. Korea stress test — `data/materials/staging/korea-pilot-v1.json` plus validated manufacturer datasets.
+4. Korea stress test — `data/materials/staging/korea-pilot-v1.json` plus reviewed/validated manufacturer datasets.
 5. Materials → Mould Master links — material registry and engineering-store `materialGradeId`/case links.
 6. IndexedDB engineering persistence — `src/domains/engineering/engineering-store.js`.
 7. Material semantic QA — `qa_material_catalog.py`.
