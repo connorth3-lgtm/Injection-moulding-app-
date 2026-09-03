@@ -37,7 +37,7 @@ jobs:
           python3 tools/verify_production_source.py \
             --repository "${{ github.repository }}" \
             --source-sha "${{ github.event.pull_request.base.sha }}"
-      - name: Require merged-PR provenance before publication
+      - name: Require merged-PR provenance before publication (native protection mandatory)
         if: github.event_name != 'pull_request'
         env:
           GITHUB_TOKEN: ${{ github.token }}
@@ -45,6 +45,7 @@ jobs:
           python3 tools/verify_production_source.py
           --repository "${{ github.repository }}"
           --source-sha "${{ github.sha }}"
+          --require-native-protection
 
   publisher-guard:
     needs: production-source

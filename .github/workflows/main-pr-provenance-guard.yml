@@ -5,7 +5,7 @@ on:
     branches: [main]
 
 permissions:
-  contents: write
+  contents: read
   pull-requests: read
   actions: read
 
@@ -13,32 +13,32 @@ jobs:
   enforce-pr-provenance:
     runs-on: ubuntu-latest
     steps:
-      - name: Require merged-PR provenance and successful required checks
+      - name: Audit merged-PR provenance, native protection and required checks
         env:
           GH_TOKEN: ${{ github.token }}
           GH_REPO: ${{ github.repository }}
           HEAD_SHA: ${{ github.sha }}
-          BEFORE_SHA: ${{ github.event.before }}
         shell: bash
         run: |
           set -euo pipefail
 
-          rollback_main() {
-            local reason="$1"
-            if [[ -z "$BEFORE_SHA" || "$BEFORE_SHA" =~ ^0+$ ]]; then
-              echo "::error::$reason Previous main SHA is unavailable, so automatic rollback cannot run safely."
-              exit 1
-            fi
-            echo "::error::$reason Restoring main to $BEFORE_SHA."
-            gh api --method PATCH "repos/$GH_REPO/git/refs/heads/main" -f sha="$BEFORE_SHA" -F force=true
+          fail_audit() {
+            echo "::error::$1"
             exit 1
           }
 
-          # GitHub's commit-to-PR association can lag immediately after a squash merge.
-          # Cross-check it with the recent closed-main PR collection, where the exact
-          # merge_commit_sha is an independent provenance identifier. The same PR may
-          # appear through both endpoints, so deduplicate by PR number. Multiple distinct
-          # exact matches remain a fail-closed ambiguity.
+          # This workflow is deliberately read-only. Native GitHub branch/ruleset
+          # protection must prevent invalid writes before they reach main. A
+          # post-push audit must never rewrite branch history in response to
+          # eventual-consistency or long-running CI state.
+          branch_json=$(gh api -H "Accept: application/vnd.github+json" "repos/$GH_REPO/branches/main")
+          protected=$(jq -r '.protected // false' <<<"$branch_json")
+          if [[ "$protected" != "true" ]]; then
+            fail_audit "GitHub reports main protected=false. Native main protection is required; this audit will not mutate or roll back main."
+          fi
+
+          # GitHub's commit-to-PR association can lag immediately after a merge.
+          # Cross-check the exact merge SHA through two read-only indexes.
           merged_pr_json="null"
           for attempt in {1..20}; do
             associated_json=$(gh api \
@@ -55,14 +55,12 @@ jobs:
             match_count=$(jq 'length' <<<"$matches_json")
 
             if [[ "$match_count" -gt 1 ]]; then
-              rollback_main "Push to main is ambiguously attributable to multiple merged pull requests."
+              fail_audit "Push to main is ambiguously attributable to multiple merged pull requests."
             fi
-
             if [[ "$match_count" -eq 1 ]]; then
               merged_pr_json=$(jq '.[0]' <<<"$matches_json")
               break
             fi
-
             if [[ "$attempt" -lt 20 ]]; then
               echo "Exact merged-PR provenance is not visible through either GitHub index yet; retrying ($attempt/20)."
               sleep 3
@@ -70,7 +68,7 @@ jobs:
           done
 
           if [[ -z "$merged_pr_json" || "$merged_pr_json" == "null" ]]; then
-            rollback_main "Push to main did not originate from a uniquely attributable merged pull request after cross-index provenance retries."
+            fail_audit "Push to main is not uniquely attributable to a merged pull request. Native protection should have prevented this write."
           fi
 
           PR_NUMBER=$(jq -r '.number' <<<"$merged_pr_json")
@@ -85,7 +83,7 @@ jobs:
           )
 
           all_required_success=false
-          for attempt in {1..10}; do
+          for attempt in {1..60}; do
             runs_json=$(gh api "repos/$GH_REPO/actions/runs?head_sha=$PR_HEAD_SHA&event=pull_request&per_page=100")
             all_seen=true
 
@@ -98,11 +96,9 @@ jobs:
                 <<<"$runs_json")
 
               echo "$workflow: status=$status conclusion=$conclusion"
-
               if [[ "$status" == "completed" && "$conclusion" != "success" ]]; then
-                rollback_main "Required PR workflow '$workflow' did not succeed on $PR_HEAD_SHA (conclusion=$conclusion)."
+                fail_audit "Required PR workflow '$workflow' did not succeed on $PR_HEAD_SHA (conclusion=$conclusion)."
               fi
-
               if [[ "$status" != "completed" || "$conclusion" != "success" ]]; then
                 all_seen=false
               fi
@@ -112,13 +108,14 @@ jobs:
               all_required_success=true
               break
             fi
-
-            echo "Required PR workflow state is not fully visible yet; retrying ($attempt/10)."
-            sleep 3
+            if [[ "$attempt" -lt 60 ]]; then
+              echo "Required PR workflow state is not fully green yet; read-only audit retrying ($attempt/60)."
+              sleep 5
+            fi
           done
 
           if [[ "$all_required_success" != "true" ]]; then
-            rollback_main "Required PR workflows are missing, pending, or not successful for merged PR #$PR_NUMBER."
+            fail_audit "Required PR workflows are not all successful for merged PR #$PR_NUMBER. No rollback was attempted; native protection is authoritative."
           fi
 
-          echo "Merged PR provenance and all required pre-merge workflows are verified."
+          echo "Native main protection, merged PR provenance and all required pre-merge workflows are verified."
