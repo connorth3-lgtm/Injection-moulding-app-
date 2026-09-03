@@ -1,0 +1,49 @@
+name: Fix Web Runtime Identity QA v1
+
+on:
+  push:
+    branches:
+      - release/web-identity-v1
+    paths:
+      - .github/workflows/fix-web-runtime-identity-qa-v1.yml
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  fix:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: release/web-identity-v1
+          fetch-depth: 0
+      - uses: actions/setup-python@v7
+        with:
+          python-version: '3.13'
+      - name: Align runtime hardening with canonical web identity
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p=Path('qa_runtime_hardening.py')
+          text=p.read_text(encoding='utf-8')
+          old='''shell_release = js_const(index, "SHELL_RELEASE")\nruntime_asset_version = js_const(index, "RUNTIME_ASSET_VERSION")\nexpected_static_cache = js_const(index, "EXPECTED_STATIC_CACHE")\ncache_version = js_const(service_worker, "CACHE_VERSION")\ncache_revision = js_const(service_worker, "CACHE_REVISION")\nrequire(shell_release == cache_version, "browser shell release and PWA cache version must match")\nrequire(expected_static_cache == f"mouldmaster-static-{cache_version}-{cache_revision}", "bootstrap expected cache must exactly match the service-worker cache identity")\nrequire(re.fullmatch(r"\\d{8}\\.\\d+-[a-z0-9-]+", runtime_asset_version) is not None, "runtime bundle token must retain dated revision + family format")\nruntime_date = runtime_asset_version.split('.', 1)[0]\nruntime_family = runtime_asset_version.split('-', 1)[1]\nrequire(cache_revision.startswith(runtime_family + "-"), "PWA cache revision must retain the active runtime family")\nrevision_date = re.search(r"(\\d{8})$", cache_revision)\nrequire(revision_date is not None and runtime_date == revision_date.group(1), "runtime bundle date must align with the active PWA cache revision date")\n'''
+          new='''shell_release = js_const(index, "SHELL_RELEASE")\nexpected_static_cache = js_const(index, "EXPECTED_STATIC_CACHE")\ncache_version = js_const(service_worker, "CACHE_VERSION")\ncache_revision = js_const(service_worker, "CACHE_REVISION")\nrequire(shell_release == cache_version, "browser shell release and PWA cache version must match")\nrequire("const RUNTIME_ASSET_VERSION=SHELL_RELEASE;" in index, "runtime asset query identity must derive from the canonical shell/web release")\nrequire(expected_static_cache == f"mouldmaster-static-{cache_version}-{cache_revision}", "bootstrap expected cache must exactly match the service-worker cache identity")\nrequire(bool(cache_revision.strip()), "PWA cache revision must remain an explicit independent invalidation token")\n'''
+          if old not in text:
+              raise SystemExit('Legacy runtime-token hardening block not found exactly')
+          p.write_text(text.replace(old,new,1),encoding='utf-8')
+          PY
+      - name: Validate corrected identity invariants
+        run: |
+          python qa_runtime_hardening.py
+          python qa_release.py
+          python qa_architecture_debt.py
+          python tools/sync_web_release.py --check
+      - name: Commit corrected runtime identity QA
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add qa_runtime_hardening.py
+          git commit -m "Align runtime hardening with canonical web identity"
+          git push origin HEAD:release/web-identity-v1
