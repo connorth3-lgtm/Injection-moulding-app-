@@ -64,9 +64,19 @@
       "id": "mfr-kolon-enp",
       "name": "KOLON ENP",
       "country": "South Korea",
-      "stage": "discovery-pending",
+      "stage": "source-reviewed-staging",
       "gradeRecords": [],
-      "sourceQueue": []
+      "stagingDatasetId": "kolon-enp-exact-grade-pilot-v1",
+      "sourceReviewedGradeIds": [
+        "mat-kolon-kocetal-k300",
+        "mat-kolon-kocetal-k700",
+        "mat-kolon-kocetal-k100hs",
+        "mat-kolon-kocetal-gf702"
+      ],
+      "publishedGradeCount": 0,
+      "sourceQueue": [
+        "Resolve current exact-grade ISO PDF payloads/test conditions before promotion; do not infer MFR temperature/load from family-level material."
+      ]
     }
   ],
   "publicationGate": {
@@ -82,7 +92,8 @@
     "LG Chem pilot progress points to the separately validated lg-chem-exact-grade-pilot-v1 dataset; exact-grade claims come only from current LG Chem/LG Chem On primary TDS records.",
     "KEPITAL pilot progress points to the separately validated kepital-exact-grade-pilot-v1 dataset. The stable mfr-kep identifier is retained while the current primary brand-owner source is identified as Korea Polyacetal (KPAC), which states that it sustains the KEPITAL brand.",
     "KEPITAL melt-flow values remain omitted because the reviewed current KPAC exact-grade sheets do not expose the temperature/load required for engineering comparison.",
-    "KOLON ENP remains a discovery target until primary-source exact-grade records pass the same staging and semantic gates.",
+    "KOLON ENP source-reviewed staging points to kolon-enp-exact-grade-pilot-v1. K300, K700, K100HS and GF702 are confirmed by the current KOCETAL catalogue and live exact-grade ISO property-table index; GF702 glass-fibre 10% is explicit.",
+    "KOLON ENP melt-flow and other numeric properties remain omitted until current exact-grade ISO sheet payloads expose complete test conditions; the published runtime therefore remains at 11 grades from three validated manufacturers.",
     "Acquired source documents should be fingerprinted before extraction where redistribution/rights permit local retention.",
     "Every extracted observation must reference a sourceId and retain its test conditions rather than collapsing datasheet tables into generic values."
   ]
