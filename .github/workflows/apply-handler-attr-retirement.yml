@@ -6,6 +6,7 @@ on:
       - refactor/csp-handler-attrs-v1
     paths:
       - .github/workflows/apply-handler-attr-retirement.yml
+      - tools/audit_inline_handlers.py
   workflow_dispatch:
 
 permissions:
