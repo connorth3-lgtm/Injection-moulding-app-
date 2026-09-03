@@ -45,9 +45,9 @@ test('engineering store enforces learner ownership for direct case reads',async(
   expect(result).toEqual({own:true,foreign:false});
 });
 
-test('Mould Master case changes reach the canonical engineering store without Storage prototype interception',async({page})=>{
+test('Mould Master case changes reach the canonical engineering store without a compatibility bridge',async({page})=>{
   await openApp(page);
-  await page.waitForFunction(()=>!!window.MM_ENGINEERING_STORE&&!!window.MM_CASE_STORE_BRIDGE&&!!window.MM_MOULD_MASTER_WORKSPACE,{timeout:30000});
+  await page.waitForFunction(()=>!!window.MM_ENGINEERING_STORE&&!!window.MM_MOULD_MASTER_WORKSPACE,{timeout:30000});
   const id=await page.evaluate(()=>window.MM_MOULD_MASTER_WORKSPACE.newCase({title:'Cross-browser parity test',material:'PC/ABS'}));
   await page.waitForFunction(async caseId=>{
     const record=await window.MM_ENGINEERING_STORE.getCase(caseId);
@@ -55,8 +55,9 @@ test('Mould Master case changes reach the canonical engineering store without St
   },id,{timeout:10000});
   const result=await page.evaluate(async caseId=>{
     const store=window.MM_ENGINEERING_STORE;
+    const workspace=window.MM_MOULD_MASTER_WORKSPACE;
     const record=await store.getCase(caseId);
-    return {synced:!!record,title:record?.title||'',material:record?.material||'',bridgeEvent:window.MM_CASE_STORE_BRIDGE.event||''};
+    return {persisted:!!record,title:record?.title||'',material:record?.material||'',canonicalStore:workspace.canonicalStore||'',bridgePresent:!!window.MM_CASE_STORE_BRIDGE};
   },id);
-  expect(result).toEqual({synced:true,title:'Cross-browser parity test',material:'PC/ABS',bridgeEvent:'mm:mould-master-cases-changed'});
+  expect(result).toEqual({persisted:true,title:'Cross-browser parity test',material:'PC/ABS',canonicalStore:'indexeddb-v2',bridgePresent:false});
 });
