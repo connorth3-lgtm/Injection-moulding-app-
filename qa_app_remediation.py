@@ -91,8 +91,8 @@ run = subprocess.run(["python", "tools/verify_production_source.py", "--self-tes
 need(run.returncode == 0, f"production-source verifier self-test failed: {run.stdout}\n{run.stderr}")
 
 # Production provenance cannot rely on the eventually-consistent commit->PR index alone.
-# It must independently inspect recently closed main PRs and accept only one exact merged
-# candidate, deduplicating the same PR observed through both endpoints.
+# Both publication and the post-merge guard independently inspect recently closed main PRs,
+# accept one exact merged candidate, and deduplicate the same PR observed through both endpoints.
 for marker in (
     "PROVENANCE_ATTEMPTS = 20",
     "RECENT_MAIN_PULL_LIMIT = 100",
@@ -111,16 +111,18 @@ for marker in (
 ):
     need(marker in production_source, f"production-source cross-index provenance guard missing: {marker}")
 
-# The post-merge provenance guard still retries temporary association invisibility before
-# taking its rollback path. Exact merge SHA/base matching and ambiguity remain fail-closed.
 for marker in (
     "for attempt in {1..20}",
+    "associated_json",
+    "recent_main_json",
+    "state=closed&base=main&sort=updated&direction=desc&per_page=100",
+    "unique_by(.number)",
     "match_count",
     "ambiguously attributable",
-    "Merged-PR association is not visible yet",
+    "Exact merged-PR provenance is not visible through either GitHub index yet",
     "merge_commit_sha == $sha",
 ):
-    need(marker in main_guard, f"post-merge provenance visibility guard missing: {marker}")
+    need(marker in main_guard, f"post-merge cross-index provenance guard missing: {marker}")
 
 # Browser matrix and lifecycle regression coverage.
 for marker in ("chromium firefox webkit", "playwright.cross-browser.config.cjs", "qa/pwa-lifecycle.spec.js", "qa/cross-browser-smoke.spec.js"):
@@ -135,4 +137,4 @@ need("new MutationObserver" not in pwa, "PWA shell still uses document-wide muta
 need("new MutationObserver" not in materials, "Materials domain still uses document-wide mutation polling")
 need("mutationScope:'changed-subtrees'" in a11y, "accessibility safety net is not constrained to changed subtrees")
 
-print("MouldMaster app-wide remediation QA passed: cross-index production provenance, post-merge visibility retry, storage ownership/explicit parity, variant-safe materials, PWA lifecycle, legacy distribution separation, deterministic browser matrix and targeted observers")
+print("MouldMaster app-wide remediation QA passed: cross-index production provenance in both release guards, storage ownership/explicit parity, variant-safe materials, PWA lifecycle, legacy distribution separation, deterministic browser matrix and targeted observers")
