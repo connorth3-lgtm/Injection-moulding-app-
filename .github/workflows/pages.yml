@@ -20,13 +20,23 @@ concurrency:
 
 jobs:
   production-source:
+    permissions:
+      contents: read
+      pull-requests: read
+      actions: read
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v7
-      - name: Validate production-source guard code on PRs
+      - name: Validate production-source guard and live API contract on PRs
         if: github.event_name == 'pull_request'
-        run: python3 tools/verify_production_source.py --self-test
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: |
+          python3 tools/verify_production_source.py --self-test
+          python3 tools/verify_production_source.py \
+            --repository "${{ github.repository }}" \
+            --source-sha "${{ github.event.pull_request.base.sha }}"
       - name: Require merged-PR provenance before publication
         if: github.event_name != 'pull_request'
         env:
