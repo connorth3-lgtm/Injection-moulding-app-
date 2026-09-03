@@ -3,59 +3,7 @@ const { test, expect } = require('@playwright/test');
 const APP='http://127.0.0.1:4173/index.html';
 test.use({serviceWorkers:'block'});
 
-const SPEECH_FIXTURE=`
-(() => {
-  class QaSpeechSynthesisUtterance {
-    constructor(text=''){
-      this.text=String(text);
-      this.lang='';
-      this.rate=1;
-      this.onstart=null;
-      this.onend=null;
-      this.onerror=null;
-    }
-  }
-  const qaSynth={
-    speaking:false,
-    paused:false,
-    pending:false,
-    getVoices(){return[];},
-    speak(utterance){
-      this.speaking=true;
-      this.paused=false;
-      window.__mmReadAloudSpoken=String(utterance.text||'');
-      window.__mmReadAloudRate=Number(utterance.rate||1);
-      queueMicrotask(()=>utterance.onstart?.());
-    },
-    cancel(){this.speaking=false;this.paused=false;},
-    pause(){this.speaking=false;this.paused=true;window.__mmReadAloudPaused=true;},
-    resume(){this.speaking=true;this.paused=false;window.__mmReadAloudResumed=true;}
-  };
-  const install=(name,value)=>{
-    try{
-      Object.defineProperty(window,name,{configurable:true,enumerable:true,writable:true,value});
-      return window[name]===value;
-    }catch(_){
-      try{window[name]=value;return window[name]===value}catch(__){return false}
-    }
-  };
-  const utteranceInstalled=install('SpeechSynthesisUtterance',QaSpeechSynthesisUtterance);
-  let synthInstalled=install('speechSynthesis',qaSynth);
-  if(!synthInstalled&&window.speechSynthesis){
-    try{
-      const native=window.speechSynthesis;
-      native.speak=qaSynth.speak.bind(qaSynth);
-      native.cancel=qaSynth.cancel.bind(qaSynth);
-      native.pause=qaSynth.pause.bind(qaSynth);
-      native.resume=qaSynth.resume.bind(qaSynth);
-      synthInstalled=true;
-    }catch(_){ }
-  }
-  window.__mmReadAloudFixtureInstalled=utteranceInstalled&&synthInstalled;
-})();
-`;
-
-test('Read Aloud renders and reads only visible learner text', async ({ page }) => {
+async function seedLearner(page){
   await page.addInitScript(() => {
     const user={
       id:'read-aloud-qa',
@@ -76,25 +24,17 @@ test('Read Aloud renders and reads only visible learner text', async ({ page }) 
     };
     localStorage.setItem('mouldmasterProDB',JSON.stringify({activeUser:'read-aloud-qa',users:{'read-aloud-qa':user}}));
   });
+}
 
-  await page.route('**/read-aloud.js*', async route => {
-    const response=await route.fetch();
-    const source=await response.text();
-    await route.fulfill({response,body:`${SPEECH_FIXTURE}\n${source}`});
-  });
-
+test('Read Aloud integrates with the real shell and scopes itself to visible learner text', async ({ page }) => {
+  await seedLearner(page);
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto(APP, { waitUntil: 'domcontentloaded' });
-
-  const fixture=await page.evaluate(()=>({
-    installed:window.__mmReadAloudFixtureInstalled===true,
-    supported:window.MMReadAloud?.supported===true
-  }));
-  expect(fixture).toEqual({installed:true,supported:true});
 
   const host=page.locator('.mm-read-aloud');
   await expect(host).toBeVisible();
   await expect(host).toHaveAttribute('data-version','2026.09.01.1');
+  await expect.poll(()=>page.evaluate(()=>window.MMReadAloud?.version||'')).toBe('2026.09.01.1');
   await host.locator('details').evaluate(el=>{el.open=true;});
 
   await expect(host.locator('[data-mm-read="play"]')).toBeVisible();
@@ -115,6 +55,72 @@ test('Read Aloud renders and reads only visible learner text', async ({ page }) 
     root.append(visible,hidden);
     const texts=(window.MMReadAloud?.refresh?.()||[]).map(item=>item.text);
     visible.remove();hidden.remove();
+    return {
+      visible:texts.includes('Read aloud visible sentinel sentence.'),
+      hidden:texts.includes('Read aloud hidden sentinel sentence.'),
+      supported:window.MMReadAloud?.supported===true
+    };
+  });
+  expect(visibilityCheck.visible).toBeTruthy();
+  expect(visibilityCheck.hidden).toBeFalsy();
+
+  const capability=host.locator('summary span');
+  const status=host.locator('.mm-read-status');
+  if(visibilityCheck.supported){
+    await expect(capability).toHaveText('Device voice');
+    await expect(status).toHaveText('Ready');
+  }else{
+    await expect(capability).toHaveText('Unavailable');
+    await expect(status).toHaveText('Read Aloud is not available in this browser/device.');
+    await host.locator('[data-mm-read="play"]').click();
+    await expect(status).toHaveText('Read Aloud is not available in this browser/device.');
+  }
+});
+
+test('Read Aloud supported-path controls execute the exact product runtime in a deterministic speech harness', async ({ page }) => {
+  await page.setContent(`<!doctype html><html lang="en"><head><meta charset="utf-8"><title>Read Aloud QA</title></head><body><main class="main"><h1>Read Aloud harness</h1><p id="mmQaVisibleSpeech">Read aloud visible sentinel sentence.</p><p id="mmQaHiddenSpeech" hidden>Read aloud hidden sentinel sentence.</p></main></body></html>`);
+
+  await page.evaluate(() => {
+    class QaSpeechSynthesisUtterance {
+      constructor(text=''){
+        this.text=String(text);
+        this.lang='';
+        this.rate=1;
+        this.onstart=null;
+        this.onend=null;
+        this.onerror=null;
+      }
+    }
+    const synth={
+      speaking:false,
+      paused:false,
+      pending:false,
+      getVoices(){return[];},
+      speak(utterance){
+        this.speaking=true;
+        this.paused=false;
+        window.__mmReadAloudSpoken=String(utterance.text||'');
+        window.__mmReadAloudRate=Number(utterance.rate||1);
+        queueMicrotask(()=>utterance.onstart?.());
+      },
+      cancel(){this.speaking=false;this.paused=false;},
+      pause(){this.speaking=false;this.paused=true;window.__mmReadAloudPaused=true;},
+      resume(){this.speaking=true;this.paused=false;window.__mmReadAloudResumed=true;}
+    };
+    Object.defineProperty(window,'SpeechSynthesisUtterance',{configurable:true,writable:true,value:QaSpeechSynthesisUtterance});
+    Object.defineProperty(window,'speechSynthesis',{configurable:true,writable:true,value:synth});
+  });
+
+  await page.addScriptTag({path:'read-aloud.js'});
+  await expect.poll(()=>page.evaluate(()=>window.MMReadAloud?.supported===true)).toBeTruthy();
+
+  const host=page.locator('.mm-read-aloud');
+  await expect(host).toBeVisible();
+  await expect(host).toHaveAttribute('data-version','2026.09.01.1');
+  await host.locator('details').evaluate(el=>{el.open=true;});
+
+  const visibilityCheck=await page.evaluate(() => {
+    const texts=(window.MMReadAloud?.refresh?.()||[]).map(item=>item.text);
     return {
       visible:texts.includes('Read aloud visible sentinel sentence.'),
       hidden:texts.includes('Read aloud hidden sentinel sentence.')
