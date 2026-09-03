@@ -83,6 +83,7 @@
     "New product capabilities belong under src/domains/<domain>/ and should replace legacy root layers rather than increasing the bootstrap count.",
     "document.write is retired from the browser bootstrap; whole-document installation must use DOM APIs and explicit deterministic script execution.",
     "2026-09-03 runtime-pack tranche reduced BODY_SCRIPTS from 60 to 39 and directly injected root runtime scripts from 59 to 36 while preserving source execution order.",
-    "2026-09-03 bootstrap tranche replaced document.open/write/close with inert DOM parsing, whole-document DOM replacement, sequential script replay and lifecycle replay."
+    "2026-09-03 bootstrap tranche replaced document.open/write/close with inert DOM parsing, whole-document DOM replacement, sequential script replay and lifecycle replay.",
+    "2026-09-03 CSP tranche externalized all 10 executable inline script blocks from MouldMaster_Core_App.html and made script-src self-only; legacy inline handler attributes remain explicitly isolated under script-src-attr until migrated."
   ]
 }
