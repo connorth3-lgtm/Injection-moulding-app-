@@ -4,6 +4,8 @@ on:
   push:
     branches: [main]
     paths:
+      - '*.js'
+      - 'MouldMaster_Core_App.html'
       - 'src/domains/**'
       - 'data/materials/**'
       - 'runtime-domain-manifest.json'
@@ -13,6 +15,7 @@ on:
       - 'tools/verify_production_source.py'
       - 'qa_material_catalog.py'
       - 'qa_app_remediation.py'
+      - 'qa_architecture_debt.py'
       - 'docs/DOMAIN_ARCHITECTURE_V1.md'
       - 'index.html'
       - 'pwa-shell.js'
@@ -27,6 +30,8 @@ on:
   pull_request:
     branches: [main]
     paths:
+      - '*.js'
+      - 'MouldMaster_Core_App.html'
       - 'src/domains/**'
       - 'data/materials/**'
       - 'runtime-domain-manifest.json'
@@ -36,6 +41,7 @@ on:
       - 'tools/verify_production_source.py'
       - 'qa_material_catalog.py'
       - 'qa_app_remediation.py'
+      - 'qa_architecture_debt.py'
       - 'docs/DOMAIN_ARCHITECTURE_V1.md'
       - 'index.html'
       - 'pwa-shell.js'
@@ -68,6 +74,8 @@ jobs:
         run: |
           node --check src/domains/domain-bootstrap.js
           find src/domains -mindepth 2 -name '*.js' -print0 | sort -z | xargs -0 -n1 node --check
+      - name: Architecture debt ceiling
+        run: python qa_architecture_debt.py
       - name: Material staging semantics
         run: python tools/material_catalog.py validate
       - name: Generated domain manifest
