@@ -29,6 +29,7 @@ const CORE=[
   './mould-master-workspace.js',
   './src/domains/domain-bootstrap.js',
   './runtime-domain-manifest.json',
+  './src/domains/shared/learner-scope.js',
   './src/domains/engineering/engineering-store.js',
   './src/domains/materials/material-registry.js',
   './src/domains/shell/product-areas.js',
