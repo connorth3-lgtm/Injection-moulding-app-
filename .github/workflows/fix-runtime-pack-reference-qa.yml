@@ -25,34 +25,27 @@ jobs:
           set -euo pipefail
           python - <<'PY'
           from pathlib import Path
-
           path = Path('qa_reference.py')
-          src = path.read_text(encoding='utf-8')
-          old = '''index = text("index.html")
-positions = []
-for asset in REFERENCE_ASSETS:
-    marker = f'<script src="./{asset}">'
-    require(marker in index, f"reference shell asset missing: {asset}")
-    positions.append(index.index(marker))
-require(positions == sorted(positions), "reference scripts must load source library, base data, deep-dive data, source browser, then reference UI")
-'''
-          new = '''index = text("index.html")
-evidence_pack = text("src/domains/runtime-packs/evidence-runtime-pack.js")
-source_library_marker = '<script src="./source-library.js">'
-evidence_pack_marker = '<script src="./src/domains/runtime-packs/evidence-runtime-pack.js">'
-require(source_library_marker in index, "reference source library missing from browser shell")
-require(evidence_pack_marker in index, "reference evidence runtime pack missing from browser shell")
-require(index.index(source_library_marker) < index.index(evidence_pack_marker), "reference source library must load before evidence runtime pack")
-positions = []
-for asset in REFERENCE_ASSETS[1:]:
-    marker = f"/* >>> {asset} */"
-    require(marker in evidence_pack, f"reference asset missing from deterministic evidence pack: {asset}")
-    positions.append(evidence_pack.index(marker))
-require(positions == sorted(positions), "packed reference scripts must preserve base data, deep-dive data, source browser, then reference UI order")
-'''
-          if src.count(old) != 1:
-              raise SystemExit('reference shell assertion anchor drift')
-          path.write_text(src.replace(old, new, 1), encoding='utf-8')
+          lines = path.read_text(encoding='utf-8').splitlines()
+          start = lines.index('index = text("index.html")')
+          end = lines.index('sw = text("service-worker.js")')
+          replacement = [
+              'index = text("index.html")',
+              'evidence_pack = text("src/domains/runtime-packs/evidence-runtime-pack.js")',
+              'source_library_marker = \'<script src="./source-library.js">\'',
+              'evidence_pack_marker = \'<script src="./src/domains/runtime-packs/evidence-runtime-pack.js">\'',
+              'require(source_library_marker in index, "reference source library missing from browser shell")',
+              'require(evidence_pack_marker in index, "reference evidence runtime pack missing from browser shell")',
+              'require(index.index(source_library_marker) < index.index(evidence_pack_marker), "reference source library must load before evidence runtime pack")',
+              'positions = []',
+              'for asset in REFERENCE_ASSETS[1:]:',
+              '    marker = f"/* >>> {asset} */"',
+              '    require(marker in evidence_pack, f"reference asset missing from deterministic evidence pack: {asset}")',
+              '    positions.append(evidence_pack.index(marker))',
+              'require(positions == sorted(positions), "packed reference scripts must preserve base data, deep-dive data, source browser, then reference UI order")',
+              '',
+          ]
+          path.write_text('\n'.join(lines[:start] + replacement + lines[end:]) + '\n', encoding='utf-8')
           PY
           python -m py_compile qa_reference.py
           git config user.name 'github-actions[bot]'
