@@ -9,6 +9,7 @@ def need(ok,msg):
 
 required=[
  'src/domains/shared/data-spine.js','src/domains/shared/signal-registry.js',
+ 'src/domains/assessment/assessment-analytics-v2.js',
  'src/domains/learning/activity-events-v2.js','src/domains/learning/learner-model.js',
  'src/domains/learning/content-intelligence.js','src/domains/materials/material-observation-v2.js',
  'src/domains/engineering/evidence-chain.js','src/domains/process/evidence-granularity.js',
@@ -27,6 +28,10 @@ for m in ['canonicalId','fingerprint','registerEvidenceRecord','ingestMaterials'
 signals=text('src/domains/shared/signal-registry.js')
 for m in ['injection_pressure_actual','injection_pressure_target','cavity_pressure','resin_moisture_ppm','unknown_source_semantics','review-required']:
     need(m in signals,f'signal dictionary marker missing: {m}')
+
+assessment=text('src/domains/assessment/assessment-analytics-v2.js')
+for m in ['questionRevision','bankVersion','choiceFingerprint','authoredDifficulty','observedDifficulty','questionId plus explicit revision']:
+    need(m in assessment,f'assessment analytics v2 marker missing: {m}')
 
 activity=text('src/domains/learning/activity-events-v2.js')
 for m in ['mm_activity_events_v2::','material-lab','assessmentSnapshot','choiceFingerprints','No names, notes, free text, raw answer text']:
@@ -61,6 +66,7 @@ for p in [x for x in required if x.startswith('src/domains/') and x.endswith('.j
     need('./'+p in assets,f'runtime manifest missing {p}')
 order=[
  './src/domains/shared/learner-scope.js','./src/domains/shared/data-spine.js','./src/domains/shared/signal-registry.js',
+ './src/domains/assessment/assessment-analytics-v2.js',
  './src/domains/engineering/engineering-store.js','./src/domains/engineering/evidence-chain.js',
  './src/domains/learning/learning-analytics-loader.js','./src/domains/learning/activity-events-v2.js',
  './src/domains/learning/learner-model.js','./src/domains/materials/material-registry.js',
@@ -81,4 +87,4 @@ with tempfile.TemporaryDirectory() as td:
     need(report['source']['rows']==6,'synthetic pilot row count drifted')
     need('fill_time_s' in report['comparisons'] and 'part_mass_g' in report['comparisons'],'pilot comparison signals missing')
 
-print('MouldMaster data activation v1 QA passed (data spine, unified local events, learner model, typed materials, signal semantics, explicit process evidence, engineering evidence chain, content intelligence, real-pilot aggregate harness)')
+print('MouldMaster data activation v1 QA passed (data spine, revision-safe assessment analytics, unified local events, learner model, typed materials, signal semantics, explicit process evidence, engineering evidence chain, content intelligence, real-pilot aggregate harness)')
