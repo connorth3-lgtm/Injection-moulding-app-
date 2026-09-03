@@ -1,4 +1,7 @@
 from copy import deepcopy
+from pathlib import Path
+import runpy
+import subprocess
 
 from tools.material_catalog import identity_payload, material_identity_key
 
@@ -103,3 +106,9 @@ print(
     "MouldMaster material identity QA passed "
     f"({len(variants)} legitimate same-name variant dimensions remain distinct; cosmetic/retrieval changes remain stable)"
 )
+
+# Keep the stronger v2 contract and search-scale regression in the existing
+# required material-identity QA job so these files cannot become unexercised specs.
+ROOT = Path(__file__).resolve().parent
+runpy.run_path(str(ROOT / "qa_material_schema_v2.py"), run_name="__main__")
+subprocess.run(["node", str(ROOT / "qa_material_search_index.cjs")], cwd=ROOT, check=True)

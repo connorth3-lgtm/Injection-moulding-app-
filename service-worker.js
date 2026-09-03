@@ -31,6 +31,7 @@ const CORE=[
   './runtime-domain-manifest.json',
   './src/domains/engineering/engineering-store.js',
   './src/domains/materials/material-registry.js',
+  './src/domains/materials/material-search-index.js',
   './src/domains/shell/product-areas.js',
   './material-catalog-v1.json',
   './learning-analytics.js',
