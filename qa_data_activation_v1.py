@@ -14,7 +14,8 @@ required=[
  'src/domains/learning/content-intelligence.js','src/domains/materials/material-observation-v2.js',
  'src/domains/engineering/evidence-chain.js','src/domains/process/evidence-granularity.js',
  'data/materials/material-grade-v2.schema.json','data/real-pilot-analysis-contract-v1.json',
- 'tools/analyze_real_pilot.py','qa/fixtures/real-pilot-analysis-synthetic.csv'
+ 'tools/analyze_real_pilot.py','qa/fixtures/real-pilot-analysis-synthetic.csv',
+ 'qa_process_evidence_granularity.py'
 ]
 for p in required: need((ROOT/p).exists(),f'data activation asset missing: {p}')
 for p in [x for x in required if x.endswith('.js')]:
@@ -55,8 +56,9 @@ need('oneOf' in quantity and any(x.get('properties',{}).get('kind',{}).get('cons
 need('fingerprint' in schema.get('$defs',{}).get('sourceDocument',{}).get('properties',{}),'material v2 schema must retain source fingerprints')
 
 process=text('src/domains/process/evidence-granularity.js')
-for m in ['explicit-pass-inherited','context-support-not-direct-validation','directValidationClaimed']:
+for m in ['explicit-pass-inherited','case-context-subset-from-pass-reviewed-pool','case-token-ranked-from-reviewed-pass-sources','passSourceIds','context-support-not-direct-validation','uniqueAtlasSourceSignatures','directValidationClaimed']:
     need(m in process,f'process evidence granularity marker missing: {m}')
+need('relevance aid, not a new scientific claim' in process,'atlas source ranking boundary must reject promotion to scientific validation')
 engineering=text('src/domains/engineering/evidence-chain.js')
 for m in ['addObservation','addHypothesis','addControlledTest','addVerification','semanticStatus','sourceSemanticsConfirmed']:
     need(m in engineering,f'engineering evidence marker missing: {m}')
@@ -83,6 +85,10 @@ service_worker=text('service-worker.js')
 for asset in [x for x in assets if x.startswith('./src/domains/')]:
     need(asset in service_worker,f'offline core missing data/domain asset {asset}')
 
+atlas_qa=subprocess.run(['python',str(ROOT/'qa_process_evidence_granularity.py')],cwd=ROOT,capture_output=True,text=True,encoding='utf-8',errors='replace')
+need(atlas_qa.returncode==0,'atlas contextual evidence QA failed: '+(atlas_qa.stderr or atlas_qa.stdout)[:8000])
+print(atlas_qa.stdout.strip())
+
 contract=json.loads(text('data/real-pilot-analysis-contract-v1.json'))
 need(contract.get('status')=='pilot-ready','real pilot analysis must not claim completed validation')
 need('No result authorises a production change' in contract.get('analysisBoundary',''),'pilot production-authority boundary missing')
@@ -95,4 +101,4 @@ with tempfile.TemporaryDirectory() as td:
     need(report['source']['rows']==6,'synthetic pilot row count drifted')
     need('fill_time_s' in report['comparisons'] and 'part_mass_g' in report['comparisons'],'pilot comparison signals missing')
 
-print('MouldMaster data activation v1 QA passed (data spine, revision-safe assessment analytics, unified local events, learner model, typed materials, canonical signal semantics, explicit process evidence, engineering evidence chain, CSP-safe desktop/mobile content intelligence, real-pilot aggregate harness)')
+print('MouldMaster data activation v1 QA passed (data spine, revision-safe assessment analytics, unified local events, learner model, typed materials, canonical signal semantics, contextual atlas evidence relevance, engineering evidence chain, CSP-safe desktop/mobile content intelligence, real-pilot aggregate harness)')
