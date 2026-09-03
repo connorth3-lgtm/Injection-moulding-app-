@@ -6,7 +6,8 @@ This directory contains the normal open-source Windows desktop implementation fo
 
 - Current desktop release: `2026.08.26.6`
 - Source licence: Apache-2.0
-- Desktop runtime: Electron
+- Desktop runtime: Electron 44.1.1
+- Supported OS/architecture: Windows 10/11 64-bit
 - Packaging: electron-builder
 - Targets: portable EXE, NSIS installer, MSIX / Microsoft Store upload package
 - Public open-source release lane: tagged GitHub Release with hashes/provenance/evidence
@@ -18,6 +19,8 @@ This directory contains the normal open-source Windows desktop implementation fo
 - Renderer permissions: denied by default
 - External HTTPS links: opened in the user's normal browser
 
+The Electron 44 supported-platform decision and breaking-change review are recorded in `ELECTRON_44_SUPPORT.md`. The GitHub portable/NSIS validation lane is x64; the Microsoft Store MSIX lane packages x64 and arm64. Windows ia32 is not a supported MouldMaster target.
+
 The legacy Windows executable is frozen as a recovery-only compatibility component. It is not the normal Windows release and must not be represented as fully open source. See `LEGACY_MIGRATION.md` and `REAL_WINDOWS_VALIDATION.md` for the final real-machine backup/import and persistence evidence required before deleting that frozen legacy component.
 
 ## Validation milestone
@@ -28,7 +31,7 @@ GitHub-hosted Windows validation does not prove a learner's specific hardware/st
 
 ## Build prerequisites
 
-- Windows 10/11 for Windows/MSIX packaging
+- Windows 10/11 64-bit for Windows/MSIX packaging
 - Node.js 22.12.0 or newer for the current CI/MSIX toolchain
 - npm
 
@@ -62,7 +65,7 @@ npm run dist:nsis
 npm run dist:msix
 ```
 
-Portable and NSIS builds use the stable `electron-builder` version pinned in `package.json` and `package-lock.json`. MSIX support is not present in that stable v26 line, so the `dist:msix` command and Store workflow invoke the exact `electron-builder@27.0.0-alpha.7` MSIX beta separately. Do not silently change either packaging version; run release QA and Windows validation when updating them.
+Portable and NSIS builds use the stable `electron-builder` version pinned in `package.json` and `package-lock.json`. MSIX support is isolated in `msix-toolchain/`, where `electron-builder@27.0.0-alpha.7` has its own committed lockfile and is invoked only through `scripts/run-msix-builder.cjs`. Do not silently change either packaging toolchain; run release QA and Windows validation when updating them.
 
 The tagged GitHub Release is the transparent open-source distribution/testing lane. It includes a portable executable plus SHA-256 sums, source commit, integrity manifest, dependency licence inventory, CycloneDX SBOM and QA reports. It is unsigned unless explicitly stated otherwise.
 
@@ -85,13 +88,13 @@ Do not invent a publisher certificate subject or substitute the display name for
 ## Reproducibility
 
 - Direct runtime/desktop build dependencies are pinned to exact versions.
-- `package-lock.json` is generated and committed by the dependency-lock workflow and portable/NSIS builds use `npm ci`.
-- The MSIX builder beta is invoked by exact version in the local command and Store workflow; it is build tooling rather than packaged runtime code.
+- `package-lock.json` is committed and the Desktop Dependency Lock workflow proves it with `npm ci`; portable/NSIS builds also use `npm ci`.
+- The isolated MSIX toolchain has its own exact committed lockfile and fail-closed version check.
 - GitHub Actions records the source commit used for every package.
 - The generated integrity manifest records SHA-256 for the full bundled learning application.
 - The publish workflow refuses to reuse a desktop release tag for different source, requiring a version bump instead.
 
-Byte-for-byte reproducibility of signed Microsoft Store packages is not claimed because signing/timestamps and some packaging metadata are controlled externally. Builds should nevertheless remain traceable to exact source, application dependency lock, asset hashes, and the explicitly selected MSIX builder version.
+Byte-for-byte reproducibility of signed Microsoft Store packages is not claimed because signing/timestamps and some packaging metadata are controlled externally. Builds should nevertheless remain traceable to exact source, application dependency locks, asset hashes, and the explicitly selected MSIX builder version.
 
 ## Security boundary
 

@@ -43,10 +43,47 @@ need(V.get('desktop_release_tag')==f"desktop-v{V['desktop_release']}",'desktop r
 need(V.get('desktop_release_url')==f"https://github.com/{V['repository']}/releases/tag/{V['desktop_release_tag']}",'desktop release URL/tag mismatch')
 
 pkg=json.loads(text('desktop/electron/package.json'))
+lock=json.loads(text('desktop/electron/package-lock.json'))
 release_parts=[str(int(x)) for x in V['desktop_release'].split('.')]
 need(pkg.get('version')=='.'.join(release_parts[:3]),'desktop package version must match desktop_release')
 need(str(pkg.get('build',{}).get('buildNumber'))==release_parts[3],'desktop buildNumber must match desktop_release')
 need(pkg.get('build',{}).get('buildVersion')=='.'.join(release_parts),'desktop buildVersion must match desktop_release')
+
+# Electron 44 is an explicit supported-platform decision, not just a package bump.
+need(pkg.get('devDependencies',{}).get('electron')=='44.1.1','desktop runtime must remain pinned to reviewed Electron 44.1.1')
+need(lock.get('packages',{}).get('',{}).get('devDependencies',{}).get('electron')=='44.1.1','desktop lock must resolve reviewed Electron 44.1.1')
+electron_support=text('desktop/electron/ELECTRON_44_SUPPORT.md')
+for marker in [
+ 'Electron `44.1.1`',
+ 'Windows 10/11, 64-bit only',
+ 'GitHub portable/NSIS validation lane is x64',
+ 'Microsoft Store MSIX lane packages x64 and arm64',
+ 'Windows ia32 is not a supported MouldMaster target',
+ 'clipboard',
+ 'net.request',
+ 'select-client-certificate',
+ 'setLoginItemSettings',
+ 'ANGLE is statically linked',
+ 'https://www.electronjs.org/blog/electron-44-0',
+ 'https://releases.electronjs.org/release/v44.1.1',
+]:
+    need(marker in electron_support,f'Electron 44 support policy missing marker: {marker}')
+
+desktop_readme=text('desktop/electron/README.md')
+for marker in ['Electron 44.1.1','Windows 10/11 64-bit','ELECTRON_44_SUPPORT.md']:
+    need(marker in desktop_readme,f'desktop README Electron 44 support marker missing: {marker}')
+
+privileged_parts=[]
+for folder in [ROOT/'desktop/electron/src', ROOT/'desktop/electron/scripts']:
+    for path in sorted(folder.rglob('*')):
+        if path.is_file() and path.suffix in {'.cjs','.js'}:
+            privileged_parts.append(path.read_text(encoding='utf-8'))
+privileged_code='\n'.join(privileged_parts)
+for token in ['clipboard', 'net.request', 'select-client-certificate', 'setLoginItemSettings']:
+    need(token not in privileged_code,f'Electron 44 affected API introduced without compatibility review: {token}')
+store_workflow=text('.github/workflows/microsoft-store-msix.yml')
+need('node scripts/run-msix-builder.cjs --win msix --x64 --arm64' in store_workflow,'Store MSIX lane must preserve x64+arm64 Electron 44 targets')
+need('--ia32' not in store_workflow,'Store MSIX lane must not reintroduce removed Electron 44 ia32 targeting')
 
 android=text('ANDROID_INSTALL_README.txt')
 for marker in [
