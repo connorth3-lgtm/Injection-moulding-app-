@@ -26,7 +26,6 @@ pwa = text("pwa-shell.js")
 worker = text("service-worker.js")
 materials = text("src/domains/materials/material-registry.js")
 engineering = text("src/domains/engineering/engineering-store.js")
-bridge = text("src/domains/engineering/store-bridge.js")
 workspace = text("mould-master-workspace.js")
 a11y = text("accessibility-hardening.js")
 pages = text(".github/workflows/pages.yml")
@@ -66,20 +65,25 @@ for marker in (
 ):
     need(marker in engineering, f"engineering learner/case invariant missing: {marker}")
 need("syncLegacySnapshot" not in engineering, "engineering store still exposes live legacy snapshot parity")
-for marker in ("store.bootstrap()", "workspace.hydrate", "legacyMode:'one-time-import-only'", "canonicalStore:'indexeddb-v2'", "MM_CASE_STORE_BRIDGE"):
-    need(marker in bridge, f"one-time legacy migration bridge missing marker: {marker}")
-for forbidden in ("localStorage", "syncLegacySnapshot", "mm:mould-master-cases-changed", "addEventListener(EVENT"):
-    need(forbidden not in bridge, f"migration bridge still contains live parity behavior: {forbidden}")
-for marker in ("MM_ENGINEERING_STORE", "await store.saveCase", "await store.deleteCase", "canonicalStore:'indexeddb-v2'", "legacy localStorage is migration input only"):
+need(not (ROOT / "src/domains/engineering/store-bridge.js").exists(), "retired engineering store bridge still exists")
+for marker in (
+    "MM_ENGINEERING_STORE",
+    "await store.saveCase(c,{token:owner})",
+    "await store.deleteCase(id,owner)",
+    "canonicalStore:'indexeddb-v2'",
+    "legacy localStorage is migration input only",
+    "hydratedLearnerToken",
+    "store.learnerToken()",
+):
     need(marker in workspace, f"Mould Master canonical IndexedDB contract missing: {marker}")
 for forbidden in ("localStorage", "mm:mould-master-cases-changed", "publishCasesChanged", "STORAGE_BASE"):
     need(forbidden not in workspace, f"Mould Master workspace still writes/coordinates a second live store: {forbidden}")
 need("await workspace.newCase" in materials and "materialGradeId" in materials and "linkCaseMaterial" in materials, "exact material case creation is not durably linked through the canonical case store")
-need("Storage?.prototype" not in bridge and "Object.defineProperty" not in bridge, "engineering bridge must not monkey-patch browser Storage.prototype")
 assets = manifest.get("assets", [])
 need("./src/domains/engineering/engineering-store.js" in assets, "engineering store missing from domain manifest")
-need("./src/domains/engineering/store-bridge.js" in assets, "engineering migration bridge missing from domain manifest")
-need(assets.index("./src/domains/engineering/engineering-store.js") < assets.index("./src/domains/engineering/store-bridge.js"), "engineering migration bridge must load after canonical store")
+need("./src/domains/engineering/store-bridge.js" not in assets, "retired engineering bridge remains in domain manifest")
+need("./src/domains/engineering/store-bridge.js" not in public_worker_assets, "retired engineering bridge remains in PWA runtime")
+need("src/domains/engineering/store-bridge.js" not in integrity_script, "retired engineering bridge remains in Desktop integrity runtime")
 
 # Material variants/revisions must not collapse on display grade name alone.
 compiler = text("tools/material_catalog.py")
