@@ -42,12 +42,17 @@ need(lg_target.get("stage") == "validated-published-pilot", "LG Chem Korean-pilo
 need(lg_target.get("validatedDatasetId") == "lg-chem-exact-grade-pilot-v1", "LG Chem pilot dataset pointer drift")
 need(lg_target.get("publishedRuntimeCatalog") == "material-catalog-v1.json", "LG Chem runtime catalog pointer drift")
 
-for pending_id in ("mfr-kep", "mfr-kolon-enp"):
-    need(pilot_by_id[pending_id].get("stage") == "discovery-pending", f"unsourced Korean pilot target must remain discovery-pending: {pending_id}")
+kep_target = pilot_by_id["mfr-kep"]
+need(kep_target.get("stage") == "validated-published-pilot", "KEPITAL Korean-pilot progress must reflect the validated published pilot")
+need(kep_target.get("validatedDatasetId") == "kepital-exact-grade-pilot-v1", "KEPITAL pilot dataset pointer drift")
+need(kep_target.get("publishedRuntimeCatalog") == "material-catalog-v1.json", "KEPITAL runtime catalog pointer drift")
+need(kep_target.get("name") == "Korea Polyacetal (KPAC)", "KEPITAL pilot must identify the current KPAC primary-source owner while retaining mfr-kep")
+
+need(pilot_by_id["mfr-kolon-enp"].get("stage") == "discovery-pending", "unsourced KOLON ENP pilot target must remain discovery-pending")
 progress = pilot.get("progress") or {}
 need(progress.get("targetManufacturers") == 4, "Korean pilot target-manufacturer count drift")
-need(progress.get("validatedManufacturers") == 2, "Korean pilot validated-manufacturer count must reflect LOTTE + LG Chem")
-need(progress.get("publishedExactGrades") == 7, "Korean pilot published exact-grade count must reflect LOTTE + LG Chem pilots")
+need(progress.get("validatedManufacturers") == 3, "Korean pilot validated-manufacturer count must reflect LOTTE + LG Chem + KEPITAL")
+need(progress.get("publishedExactGrades") == 11, "Korean pilot published exact-grade count must reflect LOTTE + LG Chem + KEPITAL pilots")
 
 errors = validate_staging()
 need(not errors, "material staging semantic QA failed:\n" + "\n".join(errors))
@@ -59,7 +64,7 @@ catalog = load_json(CATALOG)
 need(catalog.get("schemaVersion") == 1, "material catalog schema version drift")
 need(catalog.get("catalogVersion") == "generated", "material catalog must use the compiler-owned generated version marker")
 need("variant/revision/production identity differs" in str(catalog.get("boundary") or ""), "material catalog boundary does not describe variant-safe identity")
-need({m.get("id") for m in catalog.get("manufacturers") or []} == {"mfr-lg-chem", "mfr-lotte-chemical"}, "runtime manufacturer set drift")
+need({m.get("id") for m in catalog.get("manufacturers") or []} == {"mfr-kep", "mfr-lg-chem", "mfr-lotte-chemical"}, "runtime manufacturer set drift")
 need(isinstance(catalog.get("grades"), list), "material catalog grades must be a list")
 for idx, grade in enumerate(catalog["grades"]):
     grade_errors = validate_grade(grade, f"catalog grade[{idx}]")
@@ -80,7 +85,7 @@ for staging_path in sorted(STAGING.glob("*.json")):
                 staged_grade_ids.add(gid)
 runtime_grade_ids = {grade.get("id") for grade in catalog.get("grades") or []}
 need(staged_grade_ids == runtime_grade_ids, f"runtime/staging material drift: staged={sorted(staged_grade_ids)} runtime={sorted(runtime_grade_ids)}")
-need(len(runtime_grade_ids) == 7, "runtime exact-grade count must remain seven for the two-manufacturer Korean pilot")
+need(len(runtime_grade_ids) == 11, "runtime exact-grade count must remain eleven for the three-manufacturer Korean pilot")
 
 # Pilot proof: current primary-source LOTTE records remain unchanged while the
 # umbrella manifest records progress without copying exact-grade claims.
@@ -180,6 +185,58 @@ need((processing(gp5206f, "proc-lgchem-gp5206f-dry-temp").get("min"), processing
 need((processing(gp5206f, "proc-lgchem-gp5206f-melt-temp").get("min"), processing(gp5206f, "proc-lgchem-gp5206f-melt-temp").get("max")) == (235, 265), "GP5206F melt-temperature range drift")
 need((processing(gp5206f, "proc-lgchem-gp5206f-mould-temp").get("min"), processing(gp5206f, "proc-lgchem-gp5206f-mould-temp").get("max")) == (50, 80), "GP5206F mould-temperature range drift")
 need(processing(gp5206f, "proc-lgchem-gp5206f-max-moisture").get("value") == 0.02, "GP5206F maximum-moisture limit drift")
+
+# KEPITAL pilot proof: the current KPAC brand-owner pages supply exact-grade
+# shrinkage, composition and processing context. Melt-flow is deliberately not
+# published because the reviewed sheets do not expose ISO 1133 temperature/load.
+kep_pilot = load_json(STAGING / "kepital-exact-grade-pilot-v1.json")
+need(kep_pilot.get("datasetId") == "kepital-exact-grade-pilot-v1", "KEPITAL exact-grade dataset id drift")
+need(kep_pilot.get("status") == "validated-pilot", "KEPITAL exact-grade dataset status drift")
+kep_grades = [g for m in kep_pilot.get("manufacturers") or [] for g in m.get("gradeRecords") or []]
+need({g.get("grade") for g in kep_grades} == {"F20-03", "F30-03", "F10-03H", "FG2025"}, "KEPITAL exact-grade pilot set drift")
+kep_grade_ids = {g.get("id") for g in kep_grades}
+need(set(kep_target.get("validatedGradeIds") or []) == kep_grade_ids, "Korean pilot KEPITAL grade-ID progress does not match validated dataset")
+need(kep_target.get("publishedGradeCount") == len(kep_grade_ids) == 4, "Korean pilot KEPITAL published-grade count drift")
+need(kep_grade_ids.issubset(runtime_grade_ids), "Korean pilot KEPITAL validated grades are not all published in runtime catalog")
+
+kep_by_grade = {g["grade"]: g for g in kep_grades}
+expected_revisions = {
+    "F20-03": ("8", "2020-04-03"),
+    "F30-03": ("8", "2020-04-03"),
+    "F10-03H": ("9", "2020-04-03"),
+    "FG2025": ("6", "2020-07-21"),
+}
+for grade_name, grade in kep_by_grade.items():
+    gid = grade.get("id")
+    need((grade.get("provenance") or {}).get("stage") == "validated", f"KEPITAL pilot grade is not validated: {gid}")
+    need((grade.get("lifecycle") or {}).get("status") == "unknown", f"KEPITAL lifecycle must remain conservative/unknown: {gid}")
+    need((grade.get("manufacturer") or {}).get("name") == "Korea Polyacetal (KPAC)", f"KEPITAL current manufacturer/source-owner name drift: {gid}")
+    sources = grade.get("sources") or []
+    need(len(sources) == 2, f"KEPITAL pilot grade must retain property-sheet and processing sources: {gid}")
+    need(all(s.get("publisher") == "Korea Polyacetal (KPAC)" for s in sources), f"KEPITAL source publisher drift: {gid}")
+    need(all(str(s.get("url", "")).startswith(("https://gpac-kpac.com/", "https://www.gpac-kpac.com/")) for s in sources), f"KEPITAL pilot grade has a non-KPAC primary source: {gid}")
+    datasheets = [s for s in sources if s.get("kind") == "manufacturer-datasheet"]
+    need(len(datasheets) == 1, f"KEPITAL grade must retain exactly one exact-grade property sheet: {gid}")
+    revision, document_date = expected_revisions[grade_name]
+    need(datasheets[0].get("revision") == revision and datasheets[0].get("documentDate") == document_date, f"KEPITAL property-sheet revision/date drift: {gid}")
+    need(datasheets[0].get("retrievedAt") == "2026-09-03", f"KEPITAL source retrieval date drift: {gid}")
+    need(not any("melt flow" in str(obs.get("property", "")).lower() for obs in grade.get("properties") or []), f"KEPITAL under-conditioned melt-flow value was published: {gid}")
+    need("required test temperature/load" in str((grade.get("provenance") or {}).get("notes") or ""), f"KEPITAL melt-flow omission rationale missing: {gid}")
+    need(all(obs.get("productionRecipe") is False for obs in grade.get("processing") or []), f"KEPITAL processing guidance became a production recipe: {gid}")
+    shrink = [obs for obs in grade.get("properties") or [] if obs.get("property") == "Mould Shrinkage"]
+    need(len(shrink) == 1, f"KEPITAL grade must retain exactly one reviewed flow-shrinkage observation: {gid}")
+    need(shrink[0].get("testMethod") == "ISO 294-4" and shrink[0].get("specimen") == "2.0 mm" and shrink[0].get("direction") == "flow", f"KEPITAL shrinkage method/specimen/direction drift: {gid}")
+    need(shrink[0].get("comparisonReady") is True, f"KEPITAL conditioned flow shrinkage must remain comparison-ready: {gid}")
+    need((processing(grade, f"proc-kepital-{gid.removeprefix('mat-kepital-')}-dry-temp").get("min"), processing(grade, f"proc-kepital-{gid.removeprefix('mat-kepital-')}-dry-temp").get("max")) == (80, 90), f"KEPITAL drying-temperature range drift: {gid}")
+    need((processing(grade, f"proc-kepital-{gid.removeprefix('mat-kepital-')}-mould-temp").get("min"), processing(grade, f"proc-kepital-{gid.removeprefix('mat-kepital-')}-mould-temp").get("max")) == (60, 80), f"KEPITAL mould-temperature range drift: {gid}")
+    need((processing(grade, f"proc-kepital-{gid.removeprefix('mat-kepital-')}-barrel-temp").get("min"), processing(grade, f"proc-kepital-{gid.removeprefix('mat-kepital-')}-barrel-temp").get("max")) == (170, 210), f"KEPITAL barrel-temperature range drift: {gid}")
+    need(processing(grade, f"proc-kepital-{gid.removeprefix('mat-kepital-')}-max-moisture").get("value") == 0.1, f"KEPITAL maximum-moisture limit drift: {gid}")
+
+need(observation(kep_by_grade["F20-03"], "obs-kepital-f2003-shrink-flow").get("value") == 2.0, "F20-03 flow shrinkage drift")
+need(observation(kep_by_grade["F30-03"], "obs-kepital-f3003-shrink-flow").get("value") == 2.0, "F30-03 flow shrinkage drift")
+need(observation(kep_by_grade["F10-03H"], "obs-kepital-f1003h-shrink-flow").get("value") == 2.0, "F10-03H flow shrinkage drift")
+need(observation(kep_by_grade["FG2025"], "obs-kepital-fg2025-shrink-flow").get("value") == 0.7, "FG2025 flow shrinkage drift")
+need((kep_by_grade["FG2025"].get("composition") or {}).get("glassFibrePct") == 25, "FG2025 exact GF25% composition drift")
 
 # 5-6) Cross-domain material links and IndexedDB engineering store.
 store = (ROOT / "src/domains/engineering/engineering-store.js").read_text(encoding="utf-8")

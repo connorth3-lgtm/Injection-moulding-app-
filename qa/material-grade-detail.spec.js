@@ -14,13 +14,13 @@ async function openApp(page){
 }
 
 for(const viewport of [{name:'android-412x915',width:412,height:915},{name:'small-360x800',width:360,height:800}]){
-  test(`${viewport.name}: exact LOTTE and LG Chem grades keep property, processing and provenance context visible`,async({page})=>{
+  test(`${viewport.name}: exact LOTTE, LG Chem and KEPITAL grades keep property, processing and provenance context visible`,async({page})=>{
     await page.setViewportSize({width:viewport.width,height:viewport.height});
     await openApp(page);
     await page.locator('[data-mm-product-area="materials"]').click();
     await expect(page.locator('#materials')).toBeVisible();
     await expect(page.locator('#mmExactMaterialCatalog')).toBeVisible();
-    await expect(page.locator('[data-mm-material-grade]')).toHaveCount(7);
+    await expect(page.locator('[data-mm-material-grade]')).toHaveCount(11);
 
     const search=page.locator('[data-mm-exact-query]');
     await search.fill('NH-1033');
@@ -91,6 +91,43 @@ for(const viewport of [{name:'android-412x915',width:412,height:915},{name:'smal
     await expect(lgSources.first()).toHaveAttribute('target','_blank');
     await expect(lgSources.first()).toHaveAttribute('rel',/noopener/);
     await expect(lgCard.getByRole('button',{name:'Start Mould Master case'})).toBeVisible();
+
+    await search.fill('FG2025');
+    const kepCard=page.locator('[data-mm-material-grade="mat-kepital-fg2025"]');
+    await expect(kepCard).toBeVisible();
+    await expect(page.locator('[data-mm-material-grade]')).toHaveCount(1);
+    await expect(kepCard).toContainText('Korea Polyacetal (KPAC) · KEPITAL · FG2025');
+    await expect(kepCard).toContainText('Mould Shrinkage · 0.7 %');
+    await expect(kepCard).toContainText('ISO 294-4 · 2.0 mm · flow direction');
+    await expect(kepCard).toContainText('1 sourced properties · 5 processing observations');
+    await expect(kepCard).not.toContainText('Melt Flow');
+
+    const kepDetails=kepCard.locator('details.mm-exact-detail');
+    await kepDetails.locator('summary').click();
+    await expect(kepDetails).toHaveAttribute('open','');
+    await expect(kepDetails).toContainText('Supplier limitation');
+    await expect(kepDetails).toContainText('not a production specification or mould-design value');
+    await expect(kepDetails).toContainText('Pre-drying temperature');
+    await expect(kepDetails).toContainText('80–90 °C');
+    await expect(kepDetails).toContainText('Pre-drying time');
+    await expect(kepDetails).toContainText('3–4 hr');
+    await expect(kepDetails).toContainText('Maximum moisture content');
+    await expect(kepDetails).toContainText('0.1 %');
+    await expect(kepDetails).toContainText('Mould temperature');
+    await expect(kepDetails).toContainText('60–80 °C');
+    await expect(kepDetails).toContainText('Barrel temperature');
+    await expect(kepDetails).toContainText('170–210 °C');
+    await expect(kepDetails).toContainText('Starting evidence, not a production recipe.');
+    await expect(kepDetails).toContainText('Lifecycle status: unknown');
+    await expect(kepDetails).toContainText('provenance validated');
+
+    const kepSources=kepDetails.locator('.mm-exact-sources a');
+    await expect(kepSources).toHaveCount(2);
+    await expect(kepSources.first()).toHaveAttribute('href',/https:\/\/www\.gpac-kpac\.com\/tcpdf\/kepital\/download\.php|https:\/\/gpac-kpac\.com\/tcpdf\/kepital\/download\.php/);
+    await expect(kepSources.nth(1)).toHaveAttribute('href',/https:\/\/www\.gpac-kpac\.com\/en\/product\/pop_grade\.php/);
+    await expect(kepSources.first()).toHaveAttribute('target','_blank');
+    await expect(kepSources.first()).toHaveAttribute('rel',/noopener/);
+    await expect(kepCard.getByRole('button',{name:'Start Mould Master case'})).toBeVisible();
 
     const geometry=await page.evaluate(()=>({viewport:document.documentElement.clientWidth,page:document.documentElement.scrollWidth,wrappers:[...document.querySelectorAll('.mm-exact-table-wrap')].map(x=>({client:x.clientWidth,scroll:x.scrollWidth}))}));
     expect(geometry.page).toBeLessThanOrEqual(geometry.viewport+1);
