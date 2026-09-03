@@ -2,6 +2,58 @@ const { test, expect } = require('@playwright/test');
 
 const APP='http://127.0.0.1:4173/index.html';
 
+const SPEECH_FIXTURE=`
+(() => {
+  class QaSpeechSynthesisUtterance {
+    constructor(text=''){
+      this.text=String(text);
+      this.lang='';
+      this.rate=1;
+      this.onstart=null;
+      this.onend=null;
+      this.onerror=null;
+    }
+  }
+  const qaSynth={
+    speaking:false,
+    paused:false,
+    pending:false,
+    getVoices(){return[];},
+    speak(utterance){
+      this.speaking=true;
+      this.paused=false;
+      window.__mmReadAloudSpoken=String(utterance.text||'');
+      window.__mmReadAloudRate=Number(utterance.rate||1);
+      queueMicrotask(()=>utterance.onstart?.());
+    },
+    cancel(){this.speaking=false;this.paused=false;},
+    pause(){this.speaking=false;this.paused=true;window.__mmReadAloudPaused=true;},
+    resume(){this.speaking=true;this.paused=false;window.__mmReadAloudResumed=true;}
+  };
+  const install=(name,value)=>{
+    try{
+      Object.defineProperty(window,name,{configurable:true,enumerable:true,writable:true,value});
+      return window[name]===value;
+    }catch(_){
+      try{window[name]=value;return window[name]===value}catch(__){return false}
+    }
+  };
+  const utteranceInstalled=install('SpeechSynthesisUtterance',QaSpeechSynthesisUtterance);
+  let synthInstalled=install('speechSynthesis',qaSynth);
+  if(!synthInstalled&&window.speechSynthesis){
+    try{
+      const native=window.speechSynthesis;
+      native.speak=qaSynth.speak.bind(qaSynth);
+      native.cancel=qaSynth.cancel.bind(qaSynth);
+      native.pause=qaSynth.pause.bind(qaSynth);
+      native.resume=qaSynth.resume.bind(qaSynth);
+      synthInstalled=true;
+    }catch(_){ }
+  }
+  window.__mmReadAloudFixtureInstalled=utteranceInstalled&&synthInstalled;
+})();
+`;
+
 test('Read Aloud renders and reads only visible learner text', async ({ page }) => {
   await page.addInitScript(() => {
     const user={
@@ -22,72 +74,22 @@ test('Read Aloud renders and reads only visible learner text', async ({ page }) 
       region:'ALL'
     };
     localStorage.setItem('mouldmasterProDB',JSON.stringify({activeUser:'read-aloud-qa',users:{'read-aloud-qa':user}}));
-
-    class QaSpeechSynthesisUtterance {
-      constructor(text=''){
-        this.text=String(text);
-        this.lang='';
-        this.rate=1;
-        this.onstart=null;
-        this.onend=null;
-        this.onerror=null;
-      }
-    }
-    const qaSynth={
-      speaking:false,
-      paused:false,
-      pending:false,
-      getVoices(){return[];},
-      speak(utterance){
-        this.speaking=true;
-        this.paused=false;
-        window.__mmReadAloudSpoken=String(utterance.text||'');
-        window.__mmReadAloudRate=Number(utterance.rate||1);
-        queueMicrotask(()=>utterance.onstart?.());
-      },
-      cancel(){this.speaking=false;this.paused=false;},
-      pause(){this.speaking=false;this.paused=true;window.__mmReadAloudPaused=true;},
-      resume(){this.speaking=true;this.paused=false;window.__mmReadAloudResumed=true;}
-    };
-    const pin=(name,value)=>{
-      if(window[name]===value)return true;
-      try{
-        Object.defineProperty(window,name,{configurable:false,enumerable:true,writable:false,value});
-        if(window[name]===value)return true;
-      }catch(_){ }
-      const proto=Object.getPrototypeOf(window);
-      try{
-        const own=Object.getOwnPropertyDescriptor(window,name);
-        if(own?.configurable)delete window[name];
-        Object.defineProperty(proto,name,{configurable:true,enumerable:true,get:()=>value});
-        if(window[name]===value)return true;
-      }catch(_){ }
-      try{window[name]=value;return window[name]===value}catch(_){return false}
-    };
-    const utteranceInstalled=pin('SpeechSynthesisUtterance',QaSpeechSynthesisUtterance);
-    const synthInstalled=pin('speechSynthesis',qaSynth);
-    window.__mmReadAloudFixtureInstalled=utteranceInstalled&&synthInstalled;
-    window.__mmReadAloudFixtureState={utteranceInstalled,synthInstalled};
   });
+
+  await page.route('**/read-aloud.js*', async route => {
+    const response=await route.fetch();
+    const source=await response.text();
+    await route.fulfill({response,body:`${SPEECH_FIXTURE}\n${source}`});
+  });
+
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto(APP, { waitUntil: 'domcontentloaded' });
 
   const fixture=await page.evaluate(()=>({
     installed:window.__mmReadAloudFixtureInstalled===true,
-    utteranceInstalled:window.__mmReadAloudFixtureState?.utteranceInstalled===true,
-    synthInstalled:window.__mmReadAloudFixtureState?.synthInstalled===true,
-    utteranceType:typeof window.SpeechSynthesisUtterance,
-    synthPresent:!!window.speechSynthesis,
     supported:window.MMReadAloud?.supported===true
   }));
-  expect(fixture).toEqual({
-    installed:true,
-    utteranceInstalled:true,
-    synthInstalled:true,
-    utteranceType:'function',
-    synthPresent:true,
-    supported:true
-  });
+  expect(fixture).toEqual({installed:true,supported:true});
 
   const host=page.locator('.mm-read-aloud');
   await expect(host).toBeVisible();
