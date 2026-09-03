@@ -53,14 +53,14 @@ extra = pkg['build']['extraResources']
 from_paths = {x.get('from') for x in extra if isinstance(x, dict)}
 require('../../assessment-ux.js' in from_paths, 'desktop bundle must include assessment UX')
 
-# The rotation fix remains mandatory, but later coherent runtime releases are allowed to
-# advance the cache family. Protect the behavior itself plus a dated/revisioned runtime bump
-# instead of pinning the entire app forever to the original August 31 cache token.
-runtime = re.search(r'const RUNTIME_ASSET_VERSION="([^"]+)"', index)
+# The rotation fix remains mandatory, while browser asset identity is now the canonical
+# web release. CACHE_REVISION remains a separate operational invalidation token.
+shell_release = re.search(r'const SHELL_RELEASE="([^"]+)"', index)
 cache = re.search(r"const CACHE_REVISION='([^']+)'", sw)
-require(runtime is not None and re.fullmatch(r'\d{8}\.\d+-[a-z0-9-]+', runtime.group(1)), 'runtime bundle must retain a dated revision token after the rotation fix')
-require(cache is not None and re.fullmatch(r'[a-z0-9-]+-\d{8}', cache.group(1)), 'offline cache must retain a dated revision token after the rotation fix')
-require('assessment-question-rotation-20260831' not in index or runtime.group(1).endswith('assessment-question-rotation'), 'legacy rotation token must not be malformed')
+require(shell_release is not None and re.fullmatch(r'\d{4}\.\d{2}\.\d{2}\.\d+', shell_release.group(1)), 'canonical browser release must use YYYY.MM.DD.N after the rotation fix')
+require('const RUNTIME_ASSET_VERSION=SHELL_RELEASE;' in index, 'assessment runtime asset identity must derive from canonical shell/web release')
+require(cache is not None and bool(cache.group(1).strip()), 'offline cache must retain an explicit independent revision token after the rotation fix')
+require('assessment-question-rotation-20260831' not in index, 'legacy rotation token must be retired from canonical web release identity')
 
 # Execute the real browser layer in Node with a minimal DOM shim. The underlying generator
 # deliberately returns the same order every time. Storage is learner-scoped in the shim so
