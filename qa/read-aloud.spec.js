@@ -23,20 +23,46 @@ test('Read Aloud renders and reads only visible learner text', async ({ page }) 
     };
     localStorage.setItem('mouldmasterProDB',JSON.stringify({activeUser:'read-aloud-qa',users:{'read-aloud-qa':user}}));
 
-    const synth=window.speechSynthesis;
-    if(synth){
-      synth.speak=(utterance)=>{
+    class QaSpeechSynthesisUtterance {
+      constructor(text=''){
+        this.text=String(text);
+        this.lang='';
+        this.rate=1;
+        this.onstart=null;
+        this.onend=null;
+        this.onerror=null;
+      }
+    }
+    const qaSynth={
+      speak(utterance){
         window.__mmReadAloudSpoken=String(utterance.text||'');
         window.__mmReadAloudRate=Number(utterance.rate||1);
         queueMicrotask(()=>utterance.onstart?.());
-      };
-      synth.cancel=()=>{};
-      synth.pause=()=>{};
-      synth.resume=()=>{};
-    }
+      },
+      cancel(){},
+      pause(){window.__mmReadAloudPaused=true;},
+      resume(){window.__mmReadAloudResumed=true;}
+    };
+    const install=(name,value)=>{
+      try{
+        Object.defineProperty(window,name,{configurable:true,enumerable:true,writable:true,value});
+        return window[name]===value;
+      }catch(_){
+        try{window[name]=value;return window[name]===value}catch(__){return false}
+      }
+    };
+    window.__mmReadAloudFixtureInstalled=
+      install('SpeechSynthesisUtterance',QaSpeechSynthesisUtterance)&&
+      install('speechSynthesis',qaSynth);
   });
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto(APP, { waitUntil: 'domcontentloaded' });
+
+  const fixture=await page.evaluate(()=>({
+    installed:window.__mmReadAloudFixtureInstalled===true,
+    supported:window.MMReadAloud?.supported===true
+  }));
+  expect(fixture).toEqual({installed:true,supported:true});
 
   const host=page.locator('.mm-read-aloud');
   await expect(host).toBeVisible();
@@ -76,8 +102,10 @@ test('Read Aloud renders and reads only visible learner text', async ({ page }) 
 
   await host.locator('[data-mm-read="play"]').click();
   await expect(host.locator('[data-mm-read="play"]')).toHaveText('Resume');
+  expect(await page.evaluate(()=>window.__mmReadAloudPaused===true)).toBeTruthy();
   await host.locator('[data-mm-read="play"]').click();
   await expect(host.locator('[data-mm-read="play"]')).toHaveText('Pause');
+  expect(await page.evaluate(()=>window.__mmReadAloudResumed===true)).toBeTruthy();
 
   await host.locator('[data-mm-read="speed"]').selectOption('1.25');
   await expect.poll(()=>page.evaluate(()=>window.__mmReadAloudRate)).toBe(1.25);
