@@ -1,24 +1,25 @@
-/* MouldMaster engineering domain store v2 — 2026.09.03 */
+/* MouldMaster engineering domain store v3 — 2026.09.03 */
 (function(){
 'use strict';
 if(window.MM_ENGINEERING_STORE)return;
 
-const VERSION='2026.09.03.1';
+const VERSION='2026.09.03.3';
 const DB_NAME='mouldmaster-engineering-v2';
-const DB_VERSION=1;
+const DB_VERSION=2;
 const LEGACY_CASE_BASE='mm_mould_master_cases_v1::';
 
 function uid(prefix='id'){try{return `${prefix}-${crypto.randomUUID()}`}catch(_){return `${prefix}-${Date.now().toString(36)}-${Math.random().toString(36).slice(2,9)}`}}
 function learnerId(){try{return String((typeof db!=='undefined'&&db?.activeUser)||window.user?.id||'anonymous')}catch(_){return'anonymous'}}
 function learnerToken(raw=learnerId()){let h=2166136261;for(const ch of String(raw)){h^=ch.charCodeAt(0);h=Math.imul(h,16777619)}return(h>>>0).toString(36)}
 function now(){return new Date().toISOString()}
+function tokenValue(token){return String(token||learnerToken())}
 
 function openDb(){
   return new Promise((resolve,reject)=>{
     if(!('indexedDB' in window)){reject(new Error('IndexedDB unavailable'));return}
     const req=indexedDB.open(DB_NAME,DB_VERSION);
     req.onupgradeneeded=()=>{
-      const db=req.result;
+      const db=req.result,tx=req.transaction;
       if(!db.objectStoreNames.contains('cases')){
         const s=db.createObjectStore('cases',{keyPath:'id'});
         s.createIndex('learnerToken','learnerToken',{unique:false});
@@ -30,6 +31,10 @@ function openDb(){
         s.createIndex('caseId','caseId',{unique:false});
         s.createIndex('kind','kind',{unique:false});
         s.createIndex('targetId','targetId',{unique:false});
+        s.createIndex('learnerToken','learnerToken',{unique:false});
+      }else if(tx){
+        const s=tx.objectStore('caseLinks');
+        if(!s.indexNames.contains('learnerToken'))s.createIndex('learnerToken','learnerToken',{unique:false});
       }
       if(!db.objectStoreNames.contains('migrations'))db.createObjectStore('migrations',{keyPath:'id'});
     };
@@ -38,14 +43,14 @@ function openDb(){
   });
 }
 function txDone(tx){return new Promise((resolve,reject)=>{tx.oncomplete=()=>resolve();tx.onerror=()=>reject(tx.error||new Error('engineering transaction failed'));tx.onabort=()=>reject(tx.error||new Error('engineering transaction aborted'))})}
-
 async function put(storeName,value){const db=await openDb(),tx=db.transaction(storeName,'readwrite');tx.objectStore(storeName).put(value);await txDone(tx);db.close();return value}
-async function get(storeName,key){const db=await openDb();return new Promise((resolve,reject)=>{const tx=db.transaction(storeName,'readonly'),r=tx.objectStore(storeName).get(key);r.onsuccess=()=>{resolve(r.result||null);db.close()};r.onerror=()=>{reject(r.error);db.close()}})}
+async function remove(storeName,key){const db=await openDb(),tx=db.transaction(storeName,'readwrite');tx.objectStore(storeName).delete(key);await txDone(tx);db.close();return true}
+async function getRaw(storeName,key){const db=await openDb();return new Promise((resolve,reject)=>{const tx=db.transaction(storeName,'readonly'),r=tx.objectStore(storeName).get(key);r.onsuccess=()=>{resolve(r.result||null);db.close()};r.onerror=()=>{reject(r.error);db.close()}})}
 async function getAllByIndex(storeName,indexName,value){const db=await openDb();return new Promise((resolve,reject)=>{const tx=db.transaction(storeName,'readonly'),idx=tx.objectStore(storeName).index(indexName),r=idx.getAll(IDBKeyRange.only(value));r.onsuccess=()=>{resolve(r.result||[]);db.close()};r.onerror=()=>{reject(r.error);db.close()}})}
 
 function normalizeCase(input={}){
   return {
-    schemaVersion:2,
+    schemaVersion:3,
     id:String(input.id||uid('case')),
     learnerToken:String(input.learnerToken||learnerToken()),
     createdAt:String(input.createdAt||now()),
@@ -75,67 +80,61 @@ function normalizeCase(input={}){
   };
 }
 
-async function saveCase(input){const record=normalizeCase(input);record.updatedAt=now();return put('cases',record)}
-async function listCases(token=learnerToken()){return (await getAllByIndex('cases','learnerToken',String(token))).sort((a,b)=>String(b.updatedAt).localeCompare(String(a.updatedAt)))}
-async function getCase(id){return get('cases',String(id))}
+async function saveCase(input,{token=null,allowForeignId=false}={}){
+  const owner=tokenValue(token||input?.learnerToken),record=normalizeCase({...input,learnerToken:owner});
+  const prior=await getRaw('cases',record.id);
+  if(prior&&String(prior.learnerToken)!==owner&&!allowForeignId)throw new Error('Engineering case belongs to a different learner profile');
+  record.createdAt=String(prior?.createdAt||record.createdAt||now());record.updatedAt=now();
+  return put('cases',record)
+}
+async function listCases(token=learnerToken()){return (await getAllByIndex('cases','learnerToken',tokenValue(token))).sort((a,b)=>String(b.updatedAt).localeCompare(String(a.updatedAt)))}
+async function getCase(id,token=learnerToken()){const record=await getRaw('cases',String(id));return record&&String(record.learnerToken)===tokenValue(token)?record:null}
+async function deleteCase(id,token=learnerToken()){
+  const owner=tokenValue(token),record=await getCase(id,owner);if(!record)return false;
+  const links=await getAllByIndex('caseLinks','caseId',String(id));
+  for(const link of links)if(String(link.learnerToken||owner)===owner)await remove('caseLinks',link.id);
+  await remove('cases',String(id));return true
+}
 
-async function linkCase(caseId,kind,targetId,meta={}){
+async function linkCase(caseId,kind,targetId,meta={},token=learnerToken()){
   if(!caseId||!kind||!targetId)throw new Error('caseId, kind and targetId are required');
+  const owner=tokenValue(token),c=await getCase(caseId,owner);if(!c)throw new Error(`Unknown engineering case for active learner: ${caseId}`);
   const id=`${caseId}::${kind}::${targetId}`;
-  const record={id,caseId:String(caseId),kind:String(kind),targetId:String(targetId),meta:{...meta},updatedAt:now()};
-  await put('caseLinks',record);
-  return record;
+  const record={id,caseId:String(caseId),learnerToken:owner,kind:String(kind),targetId:String(targetId),meta:{...meta},updatedAt:now()};
+  await put('caseLinks',record);return record
 }
-async function linksForCase(caseId){return getAllByIndex('caseLinks','caseId',String(caseId))}
-
-async function linkCaseMaterial(caseId,materialGradeId,displayName=''){
-  const c=await getCase(caseId);
-  if(!c)throw new Error(`Unknown engineering case ${caseId}`);
-  c.materialGradeId=String(materialGradeId);
-  if(displayName)c.material=String(displayName);
-  await saveCase(c);
-  return linkCase(caseId,'material-grade',materialGradeId,{displayName:String(displayName||'')});
+async function linksForCase(caseId,token=learnerToken()){
+  const owner=tokenValue(token),c=await getCase(caseId,owner);if(!c)return[];
+  return (await getAllByIndex('caseLinks','caseId',String(caseId))).filter(x=>String(x.learnerToken||owner)===owner)
 }
-async function linkCaseDataset(caseId,datasetId,label=''){return linkCase(caseId,'process-dataset',datasetId,{label:String(label||'')})}
+async function linkCaseMaterial(caseId,materialGradeId,displayName='',token=learnerToken()){
+  const owner=tokenValue(token),c=await getCase(caseId,owner);if(!c)throw new Error(`Unknown engineering case ${caseId}`);
+  c.materialGradeId=String(materialGradeId);if(displayName)c.material=String(displayName);
+  await saveCase(c,{token:owner});return linkCase(caseId,'material-grade',materialGradeId,{displayName:String(displayName||'')},owner)
+}
+async function linkCaseDataset(caseId,datasetId,label='',token=learnerToken()){return linkCase(caseId,'process-dataset',datasetId,{label:String(label||'')},token)}
 
-function legacyKey(token=learnerToken()){return LEGACY_CASE_BASE+String(token)}
-function readLegacyCases(token=learnerToken()){
-  try{const raw=JSON.parse(localStorage.getItem(legacyKey(token))||'[]');return Array.isArray(raw)?raw:[]}catch(_){return[]}
+function legacyKey(token=learnerToken()){return LEGACY_CASE_BASE+tokenValue(token)}
+function readLegacyCases(token=learnerToken()){try{const raw=JSON.parse(localStorage.getItem(legacyKey(token))||'[]');return Array.isArray(raw)?raw:[]}catch(_){return[]}}
+async function syncLegacySnapshot(cases,token=learnerToken()){
+  const owner=tokenValue(token),incoming=Array.isArray(cases)?cases:[],ids=new Set();
+  for(const old of incoming){if(!old?.id)continue;ids.add(String(old.id));const prior=await getRaw('cases',String(old.id));const preservedGrade=prior&&String(prior.learnerToken)===owner?prior.materialGradeId:null;await saveCase({...old,learnerToken:owner,materialGradeId:old.materialGradeId||preservedGrade||null,legacySource:'mm_mould_master_cases_v1'},{token:owner})}
+  for(const record of await listCases(owner))if(record.legacySource==='mm_mould_master_cases_v1'&&!ids.has(String(record.id)))await deleteCase(record.id,owner);
+  return {learnerToken:owner,count:ids.size,syncedAt:now()}
 }
 async function migrateLegacyMouldMasterCases(token=learnerToken()){
-  const migrationId=`legacy-mould-master-v1::${token}`;
-  const prior=await get('migrations',migrationId);
-  if(prior?.complete)return {...prior,alreadyComplete:true};
-  const legacy=readLegacyCases(token);
-  let migrated=0;
-  for(const old of legacy){
-    const existing=old?.id?await getCase(old.id):null;
-    if(existing)continue;
-    await saveCase({...old,learnerToken:String(token),legacySource:'mm_mould_master_cases_v1'});
-    migrated++;
-  }
-  const result={id:migrationId,complete:true,migrated,legacyCount:legacy.length,completedAt:now(),destructive:false};
-  await put('migrations',result);
-  return result;
+  const owner=tokenValue(token),migrationId=`legacy-mould-master-v1::${owner}`,legacy=readLegacyCases(owner),prior=await getRaw('migrations',migrationId);
+  const synced=await syncLegacySnapshot(legacy,owner);
+  const result={id:migrationId,complete:true,migrated:synced.count,legacyCount:legacy.length,completedAt:now(),destructive:false,alreadyComplete:!!prior?.complete};
+  await put('migrations',result);return result
 }
+async function repairLegacyLinkOwnership(token=learnerToken()){
+  const owner=tokenValue(token),cases=await listCases(owner);let repaired=0;
+  for(const c of cases){for(const link of await getAllByIndex('caseLinks','caseId',String(c.id))){if(!link.learnerToken){link.learnerToken=owner;link.updatedAt=now();await put('caseLinks',link);repaired++}}}
+  return repaired
+}
+async function bootstrap(){try{const migration=await migrateLegacyMouldMasterCases();await repairLegacyLinkOwnership();return migration}catch(err){console.warn('[MouldMaster engineering store] legacy migration skipped',err);return null}}
 
-async function bootstrap(){try{return await migrateLegacyMouldMasterCases()}catch(err){console.warn('[MouldMaster engineering store] legacy migration skipped',err);return null}}
-
-window.MM_ENGINEERING_STORE=Object.freeze({
-  version:VERSION,
-  dbName:DB_NAME,
-  normalizeCase,
-  saveCase,
-  listCases,
-  getCase,
-  linkCase,
-  linksForCase,
-  linkCaseMaterial,
-  linkCaseDataset,
-  migrateLegacyMouldMasterCases,
-  bootstrap,
-  learnerToken
-});
-
+window.MM_ENGINEERING_STORE=Object.freeze({version:VERSION,dbName:DB_NAME,normalizeCase,saveCase,listCases,getCase,deleteCase,linkCase,linksForCase,linkCaseMaterial,linkCaseDataset,syncLegacySnapshot,migrateLegacyMouldMasterCases,repairLegacyLinkOwnership,bootstrap,learnerToken,legacyKey});
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',bootstrap,{once:true});else bootstrap();
 })();
