@@ -16,103 +16,381 @@
     "dist:nsis": "npm run integrity && npm run licenses && npm run sbom && npm run qa && electron-builder --win nsis",
     "dist:msix": "npm run integrity && npm run licenses && npm run sbom && npm run qa && npx --yes electron-builder@27.0.0-alpha.7 --win msix --config.msix.setBuildNumber=true"
   },
-  "devDependencies": {"electron": "43.5.1", "electron-builder": "26.15.7"},
+  "devDependencies": {
+    "electron": "44.1.1",
+    "electron-builder": "26.15.7"
+  },
   "build": {
     "appId": "org.mouldmaster.academy",
     "productName": "MouldMaster Academy",
     "buildNumber": "6",
     "buildVersion": "2026.8.26.6",
     "asar": true,
-    "electronFuses": {"runAsNode": false,"enableNodeOptionsEnvironmentVariable": false,"enableNodeCliInspectArguments": false,"enableEmbeddedAsarIntegrityValidation": true,"onlyLoadAppFromAsar": true},
-    "directories": {"output": "dist"},
-    "files": ["src/**/*","generated/integrity.json","generated/dependency-licenses.json","generated/sbom.cdx.json","package.json","README.md","THREAT_MODEL.md"],
-    "extraResources": [
-      {"from": "../../index.html", "to": "mouldmaster/index.html"},
-      {"from": "../../MouldMaster_Core_App.html", "to": "mouldmaster/MouldMaster_Core_App.html"},
-      {"from": "../../manifest.webmanifest", "to": "mouldmaster/manifest.webmanifest"},
-      {"from": "../../mouldmaster-192.png", "to": "mouldmaster/mouldmaster-192.png"},
-      {"from": "../../mouldmaster-512.png", "to": "mouldmaster/mouldmaster-512.png"},
-      {"from": "../../version.json", "to": "mouldmaster/version.json"},
-      {"from": "../../reading-patch.css", "to": "mouldmaster/reading-patch.css"},
-      {"from": "../../reading-patch.js", "to": "mouldmaster/reading-patch.js"},
-      {"from": "../../read-aloud.js", "to": "mouldmaster/read-aloud.js"},
-      {"from": "../../training-upgrade.js", "to": "mouldmaster/training-upgrade.js"},
-      {"from": "../../training-qa-fix.js", "to": "mouldmaster/training-qa-fix.js"},
-      {"from": "../../assessment-100-pass.js", "to": "mouldmaster/assessment-100-pass.js"},
-      {"from": "../../assessment-deep-dive.js", "to": "mouldmaster/assessment-deep-dive.js"},
-      {"from": "../../assessment-answer-cue-fix.js", "to": "mouldmaster/assessment-answer-cue-fix.js"},
-      {"from": "../../assessment-storage-scope.js", "to": "mouldmaster/assessment-storage-scope.js"},
-      {"from": "../../assessment-quality-suite.js", "to": "mouldmaster/assessment-quality-suite.js"},
-      {"from": "../../assessment-stable-review-bridge.js", "to": "mouldmaster/assessment-stable-review-bridge.js"},
-      {"from": "../../assessment-analytics-ui.js", "to": "mouldmaster/assessment-analytics-ui.js"},
-      {"from": "../../assessment-final-hardening.js", "to": "mouldmaster/assessment-final-hardening.js"},
-      {"from": "../../runtime-v2.js", "to": "mouldmaster/runtime-v2.js"},
-      {"from": "../../assessment-runtime-v2.js", "to": "mouldmaster/assessment-runtime-v2.js"},
-      {"from": "../../assessment-ux.js", "to": "mouldmaster/assessment-ux.js"},
-      {"from": "../../app-shell-registry.js", "to": "mouldmaster/app-shell-registry.js"},
-      {"from": "../../assessment-multimodal.js", "to": "mouldmaster/assessment-multimodal.js"},
-      {"from": "../../pwa-shell.js", "to": "mouldmaster/pwa-shell.js"},
-      {"from": "../../learning-experience.js", "to": "mouldmaster/learning-experience.js"},
-      {"from": "../../process-data-diagnostics.js", "to": "mouldmaster/process-data-diagnostics.js"},
-      {"from": "../../real-measured-data-assessment.js", "to": "mouldmaster/real-measured-data-assessment.js"},
-      {"from": "../../process-data-deep-dive-machine.js", "to": "mouldmaster/process-data-deep-dive-machine.js"},
-      {"from": "../../process-data-deep-dive-tooling.js", "to": "mouldmaster/process-data-deep-dive-tooling.js"},
-      {"from": "../../process-data-deep-dive-material.js", "to": "mouldmaster/process-data-deep-dive-material.js"},
-      {"from": "../../process-data-deep-dive-scientific.js", "to": "mouldmaster/process-data-deep-dive-scientific.js"},
-      {"from": "../../process-data-deep-dive-quality.js", "to": "mouldmaster/process-data-deep-dive-quality.js"},
-      {"from": "../../process-data-deep-dive-50.js", "to": "mouldmaster/process-data-deep-dive-50.js"},
-      {"from": "../../process-data-20-pass-01-05.js", "to": "mouldmaster/process-data-20-pass-01-05.js"},
-      {"from": "../../process-data-20-pass-06-10.js", "to": "mouldmaster/process-data-20-pass-06-10.js"},
-      {"from": "../../process-data-20-pass-11-15.js", "to": "mouldmaster/process-data-20-pass-11-15.js"},
-      {"from": "../../process-data-20-pass-16-20.js", "to": "mouldmaster/process-data-20-pass-16-20.js"},
-      {"from": "../../process-data-20-pass-atlas.js", "to": "mouldmaster/process-data-20-pass-atlas.js"},
-      {"from": "../../process-data-local-intake.js", "to": "mouldmaster/process-data-local-intake.js"},
-      {"from": "../../curriculum-integration.js", "to": "mouldmaster/curriculum-integration.js"},
-      {"from": "../../specialist-curriculum.js", "to": "mouldmaster/specialist-curriculum.js"},
-      {"from": "../../specialist-evidence-gap-extension.js", "to": "mouldmaster/specialist-evidence-gap-extension.js"},
-      {"from": "../../mould-master-workspace.js", "to": "mouldmaster/mould-master-workspace.js"},
-      {"from": "../../src/domains", "to": "mouldmaster/src/domains"},
-      {"from": "../../runtime-domain-manifest.json", "to": "mouldmaster/runtime-domain-manifest.json"},
-      {"from": "../../material-catalog-v1.json", "to": "mouldmaster/material-catalog-v1.json"},
-      {"from": "../../app-shell-finalize.js", "to": "mouldmaster/app-shell-finalize.js"},
-      {"from": "../../production-health.js", "to": "mouldmaster/production-health.js"},
-      {"from": "../../data-integration-runtime.js", "to": "mouldmaster/data-integration-runtime.js"},
-      {"from": "../../process-data-intelligence-ui.js", "to": "mouldmaster/process-data-intelligence-ui.js"},
-      {"from": "../../process-data-semantic-registry.json", "to": "mouldmaster/process-data-semantic-registry.json"},
-      {"from": "../../current-data-manifest.json", "to": "mouldmaster/current-data-manifest.json"},
-      {"from": "../../learning-analytics.js", "to": "mouldmaster/learning-analytics.js"},
-      {"from": "../../accessibility-hardening.js", "to": "mouldmaster/accessibility-hardening.js"},
-      {"from": "../../source-library.js", "to": "mouldmaster/source-library.js"},
-      {"from": "../../reference-data.js", "to": "mouldmaster/reference-data.js"},
-      {"from": "../../reference-data.html", "to": "mouldmaster/reference-data.html"},
-      {"from": "../../reference-deep-dive.js", "to": "mouldmaster/reference-deep-dive.js"},
-      {"from": "../../reference-research-extension.js", "to": "mouldmaster/reference-research-extension.js"},
-      {"from": "../../reference-20x-extension.js", "to": "mouldmaster/reference-20x-extension.js"},
-      {"from": "../../reference-2026-expansion.js", "to": "mouldmaster/reference-2026-expansion.js"},
-      {"from": "../../reference-sources.js", "to": "mouldmaster/reference-sources.js"},
-      {"from": "../../reference-browser-ui.js", "to": "mouldmaster/reference-browser-ui.js"},
-      {"from": "../../diagnostic-learning-labs.js", "to": "mouldmaster/diagnostic-learning-labs.js"},
-      {"from": "../../material-behaviour-labs.js", "to": "mouldmaster/material-behaviour-labs.js"},
-      {"from": "../../assessment-evidence-sources.js", "to": "mouldmaster/assessment-evidence-sources.js"},
-      {"from": "../../evidence-maturity-deep-dive.js", "to": "mouldmaster/evidence-maturity-deep-dive.js"},
-      {"from": "../../evidence-maturity-formal-bridge.js", "to": "mouldmaster/evidence-maturity-formal-bridge.js"},
-      {"from": "../../assessment-psychometric-hardening.js", "to": "mouldmaster/assessment-psychometric-hardening.js"},
-      {"from": "../../assessment-evidence-integrity-upgrade.js", "to": "mouldmaster/assessment-evidence-integrity-upgrade.js"},
-      {"from": "../../lesson-evidence-depth.js", "to": "mouldmaster/lesson-evidence-depth.js"},
-      {"from": "../../lesson-deep-authoring-v2.js", "to": "mouldmaster/lesson-deep-authoring-v2.js"},
-      {"from": "../../assessment-evidence-approval.js", "to": "mouldmaster/assessment-evidence-approval.js"},
-      {"from": "../../assessment-psychometric-approval.js", "to": "mouldmaster/assessment-psychometric-approval.js"},
-      {"from": "../../service-worker.js", "to": "mouldmaster/service-worker.js"},
-      {"from": "../../privacy.html", "to": "mouldmaster/privacy.html"},
-      {"from": "../../support.html", "to": "mouldmaster/support.html"},
-      {"from": "../../LICENSE", "to": "LICENSE"},
-      {"from": "../../THIRD_PARTY_NOTICES.md", "to": "THIRD_PARTY_NOTICES.md"},
-      {"from": "generated/integrity.json", "to": "mouldmaster/integrity.json"},
-      {"from": "generated/dependency-licenses.json", "to": "dependency-licenses.json"},
-      {"from": "generated/sbom.cdx.json", "to": "sbom.cdx.json"}
+    "electronFuses": {
+      "runAsNode": false,
+      "enableNodeOptionsEnvironmentVariable": false,
+      "enableNodeCliInspectArguments": false,
+      "enableEmbeddedAsarIntegrityValidation": true,
+      "onlyLoadAppFromAsar": true
+    },
+    "directories": {
+      "output": "dist"
+    },
+    "files": [
+      "src/**/*",
+      "generated/integrity.json",
+      "generated/dependency-licenses.json",
+      "generated/sbom.cdx.json",
+      "package.json",
+      "README.md",
+      "THREAT_MODEL.md"
     ],
-    "win": {"icon": "../../mouldmaster-512.png","artifactName": "MouldMaster-Academy-${buildVersion}-${arch}.${ext}"},
-    "nsis": {"oneClick": false,"allowToChangeInstallationDirectory": true,"createDesktopShortcut": true,"createStartMenuShortcut": true},
-    "toolsets": {"winCodeSign": "1.1.0"}
+    "extraResources": [
+      {
+        "from": "../../index.html",
+        "to": "mouldmaster/index.html"
+      },
+      {
+        "from": "../../MouldMaster_Core_App.html",
+        "to": "mouldmaster/MouldMaster_Core_App.html"
+      },
+      {
+        "from": "../../manifest.webmanifest",
+        "to": "mouldmaster/manifest.webmanifest"
+      },
+      {
+        "from": "../../mouldmaster-192.png",
+        "to": "mouldmaster/mouldmaster-192.png"
+      },
+      {
+        "from": "../../mouldmaster-512.png",
+        "to": "mouldmaster/mouldmaster-512.png"
+      },
+      {
+        "from": "../../version.json",
+        "to": "mouldmaster/version.json"
+      },
+      {
+        "from": "../../reading-patch.css",
+        "to": "mouldmaster/reading-patch.css"
+      },
+      {
+        "from": "../../reading-patch.js",
+        "to": "mouldmaster/reading-patch.js"
+      },
+      {
+        "from": "../../read-aloud.js",
+        "to": "mouldmaster/read-aloud.js"
+      },
+      {
+        "from": "../../training-upgrade.js",
+        "to": "mouldmaster/training-upgrade.js"
+      },
+      {
+        "from": "../../training-qa-fix.js",
+        "to": "mouldmaster/training-qa-fix.js"
+      },
+      {
+        "from": "../../assessment-100-pass.js",
+        "to": "mouldmaster/assessment-100-pass.js"
+      },
+      {
+        "from": "../../assessment-deep-dive.js",
+        "to": "mouldmaster/assessment-deep-dive.js"
+      },
+      {
+        "from": "../../assessment-answer-cue-fix.js",
+        "to": "mouldmaster/assessment-answer-cue-fix.js"
+      },
+      {
+        "from": "../../assessment-storage-scope.js",
+        "to": "mouldmaster/assessment-storage-scope.js"
+      },
+      {
+        "from": "../../assessment-quality-suite.js",
+        "to": "mouldmaster/assessment-quality-suite.js"
+      },
+      {
+        "from": "../../assessment-stable-review-bridge.js",
+        "to": "mouldmaster/assessment-stable-review-bridge.js"
+      },
+      {
+        "from": "../../assessment-analytics-ui.js",
+        "to": "mouldmaster/assessment-analytics-ui.js"
+      },
+      {
+        "from": "../../assessment-final-hardening.js",
+        "to": "mouldmaster/assessment-final-hardening.js"
+      },
+      {
+        "from": "../../runtime-v2.js",
+        "to": "mouldmaster/runtime-v2.js"
+      },
+      {
+        "from": "../../assessment-runtime-v2.js",
+        "to": "mouldmaster/assessment-runtime-v2.js"
+      },
+      {
+        "from": "../../assessment-ux.js",
+        "to": "mouldmaster/assessment-ux.js"
+      },
+      {
+        "from": "../../app-shell-registry.js",
+        "to": "mouldmaster/app-shell-registry.js"
+      },
+      {
+        "from": "../../assessment-multimodal.js",
+        "to": "mouldmaster/assessment-multimodal.js"
+      },
+      {
+        "from": "../../pwa-shell.js",
+        "to": "mouldmaster/pwa-shell.js"
+      },
+      {
+        "from": "../../learning-experience.js",
+        "to": "mouldmaster/learning-experience.js"
+      },
+      {
+        "from": "../../process-data-diagnostics.js",
+        "to": "mouldmaster/process-data-diagnostics.js"
+      },
+      {
+        "from": "../../real-measured-data-assessment.js",
+        "to": "mouldmaster/real-measured-data-assessment.js"
+      },
+      {
+        "from": "../../process-data-deep-dive-machine.js",
+        "to": "mouldmaster/process-data-deep-dive-machine.js"
+      },
+      {
+        "from": "../../process-data-deep-dive-tooling.js",
+        "to": "mouldmaster/process-data-deep-dive-tooling.js"
+      },
+      {
+        "from": "../../process-data-deep-dive-material.js",
+        "to": "mouldmaster/process-data-deep-dive-material.js"
+      },
+      {
+        "from": "../../process-data-deep-dive-scientific.js",
+        "to": "mouldmaster/process-data-deep-dive-scientific.js"
+      },
+      {
+        "from": "../../process-data-deep-dive-quality.js",
+        "to": "mouldmaster/process-data-deep-dive-quality.js"
+      },
+      {
+        "from": "../../process-data-deep-dive-50.js",
+        "to": "mouldmaster/process-data-deep-dive-50.js"
+      },
+      {
+        "from": "../../process-data-20-pass-01-05.js",
+        "to": "mouldmaster/process-data-20-pass-01-05.js"
+      },
+      {
+        "from": "../../process-data-20-pass-06-10.js",
+        "to": "mouldmaster/process-data-20-pass-06-10.js"
+      },
+      {
+        "from": "../../process-data-20-pass-11-15.js",
+        "to": "mouldmaster/process-data-20-pass-11-15.js"
+      },
+      {
+        "from": "../../process-data-20-pass-16-20.js",
+        "to": "mouldmaster/process-data-20-pass-16-20.js"
+      },
+      {
+        "from": "../../process-data-20-pass-atlas.js",
+        "to": "mouldmaster/process-data-20-pass-atlas.js"
+      },
+      {
+        "from": "../../process-data-local-intake.js",
+        "to": "mouldmaster/process-data-local-intake.js"
+      },
+      {
+        "from": "../../curriculum-integration.js",
+        "to": "mouldmaster/curriculum-integration.js"
+      },
+      {
+        "from": "../../specialist-curriculum.js",
+        "to": "mouldmaster/specialist-curriculum.js"
+      },
+      {
+        "from": "../../specialist-evidence-gap-extension.js",
+        "to": "mouldmaster/specialist-evidence-gap-extension.js"
+      },
+      {
+        "from": "../../mould-master-workspace.js",
+        "to": "mouldmaster/mould-master-workspace.js"
+      },
+      {
+        "from": "../../src/domains",
+        "to": "mouldmaster/src/domains"
+      },
+      {
+        "from": "../../runtime-domain-manifest.json",
+        "to": "mouldmaster/runtime-domain-manifest.json"
+      },
+      {
+        "from": "../../material-catalog-v1.json",
+        "to": "mouldmaster/material-catalog-v1.json"
+      },
+      {
+        "from": "../../app-shell-finalize.js",
+        "to": "mouldmaster/app-shell-finalize.js"
+      },
+      {
+        "from": "../../production-health.js",
+        "to": "mouldmaster/production-health.js"
+      },
+      {
+        "from": "../../data-integration-runtime.js",
+        "to": "mouldmaster/data-integration-runtime.js"
+      },
+      {
+        "from": "../../process-data-intelligence-ui.js",
+        "to": "mouldmaster/process-data-intelligence-ui.js"
+      },
+      {
+        "from": "../../process-data-semantic-registry.json",
+        "to": "mouldmaster/process-data-semantic-registry.json"
+      },
+      {
+        "from": "../../current-data-manifest.json",
+        "to": "mouldmaster/current-data-manifest.json"
+      },
+      {
+        "from": "../../learning-analytics.js",
+        "to": "mouldmaster/learning-analytics.js"
+      },
+      {
+        "from": "../../accessibility-hardening.js",
+        "to": "mouldmaster/accessibility-hardening.js"
+      },
+      {
+        "from": "../../source-library.js",
+        "to": "mouldmaster/source-library.js"
+      },
+      {
+        "from": "../../reference-data.js",
+        "to": "mouldmaster/reference-data.js"
+      },
+      {
+        "from": "../../reference-data.html",
+        "to": "mouldmaster/reference-data.html"
+      },
+      {
+        "from": "../../reference-deep-dive.js",
+        "to": "mouldmaster/reference-deep-dive.js"
+      },
+      {
+        "from": "../../reference-research-extension.js",
+        "to": "mouldmaster/reference-research-extension.js"
+      },
+      {
+        "from": "../../reference-20x-extension.js",
+        "to": "mouldmaster/reference-20x-extension.js"
+      },
+      {
+        "from": "../../reference-2026-expansion.js",
+        "to": "mouldmaster/reference-2026-expansion.js"
+      },
+      {
+        "from": "../../reference-sources.js",
+        "to": "mouldmaster/reference-sources.js"
+      },
+      {
+        "from": "../../reference-browser-ui.js",
+        "to": "mouldmaster/reference-browser-ui.js"
+      },
+      {
+        "from": "../../diagnostic-learning-labs.js",
+        "to": "mouldmaster/diagnostic-learning-labs.js"
+      },
+      {
+        "from": "../../material-behaviour-labs.js",
+        "to": "mouldmaster/material-behaviour-labs.js"
+      },
+      {
+        "from": "../../assessment-evidence-sources.js",
+        "to": "mouldmaster/assessment-evidence-sources.js"
+      },
+      {
+        "from": "../../evidence-maturity-deep-dive.js",
+        "to": "mouldmaster/evidence-maturity-deep-dive.js"
+      },
+      {
+        "from": "../../evidence-maturity-formal-bridge.js",
+        "to": "mouldmaster/evidence-maturity-formal-bridge.js"
+      },
+      {
+        "from": "../../assessment-psychometric-hardening.js",
+        "to": "mouldmaster/assessment-psychometric-hardening.js"
+      },
+      {
+        "from": "../../assessment-evidence-integrity-upgrade.js",
+        "to": "mouldmaster/assessment-evidence-integrity-upgrade.js"
+      },
+      {
+        "from": "../../lesson-evidence-depth.js",
+        "to": "mouldmaster/lesson-evidence-depth.js"
+      },
+      {
+        "from": "../../lesson-deep-authoring-v2.js",
+        "to": "mouldmaster/lesson-deep-authoring-v2.js"
+      },
+      {
+        "from": "../../assessment-evidence-approval.js",
+        "to": "mouldmaster/assessment-evidence-approval.js"
+      },
+      {
+        "from": "../../assessment-psychometric-approval.js",
+        "to": "mouldmaster/assessment-psychometric-approval.js"
+      },
+      {
+        "from": "../../service-worker.js",
+        "to": "mouldmaster/service-worker.js"
+      },
+      {
+        "from": "../../privacy.html",
+        "to": "mouldmaster/privacy.html"
+      },
+      {
+        "from": "../../support.html",
+        "to": "mouldmaster/support.html"
+      },
+      {
+        "from": "../../LICENSE",
+        "to": "LICENSE"
+      },
+      {
+        "from": "../../THIRD_PARTY_NOTICES.md",
+        "to": "THIRD_PARTY_NOTICES.md"
+      },
+      {
+        "from": "generated/integrity.json",
+        "to": "mouldmaster/integrity.json"
+      },
+      {
+        "from": "generated/dependency-licenses.json",
+        "to": "dependency-licenses.json"
+      },
+      {
+        "from": "generated/sbom.cdx.json",
+        "to": "sbom.cdx.json"
+      }
+    ],
+    "win": {
+      "icon": "../../mouldmaster-512.png",
+      "artifactName": "MouldMaster-Academy-${buildVersion}-${arch}.${ext}"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true
+    },
+    "toolsets": {
+      "winCodeSign": "1.1.0"
+    }
   }
 }
