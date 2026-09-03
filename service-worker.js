@@ -1,5 +1,5 @@
 const CACHE_VERSION='2026.08.26.2';
-const CACHE_REVISION='maturity-hardening-v2-r2-20260903';
+const CACHE_REVISION='maturity-hardening-v2-r3-20260903';
 const STATIC_CACHE=`mouldmaster-static-${CACHE_VERSION}-${CACHE_REVISION}`;
 const LEGACY_RECOVERY_SOURCE_ONLY='./MouldMaster_Academy_App.html';
 
@@ -51,6 +51,8 @@ const CORE=[
 ];
 
 const OPTIONAL=[
+  './src/domains/runtime-packs/evidence-runtime-pack.js',
+  './src/domains/runtime-packs/process-data-runtime-pack.js',
   './assessment-100-pass.js',
   './assessment-deep-dive.js',
   './assessment-answer-cue-fix.js',

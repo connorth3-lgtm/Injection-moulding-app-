@@ -12,6 +12,7 @@ on:
       - 'material-catalog-v1.json'
       - 'tools/material_catalog.py'
       - 'tools/generate_runtime_manifest.py'
+      - 'tools/build_runtime_packs.py'
       - 'tools/verify_production_source.py'
       - 'qa_material_catalog.py'
       - 'qa_material_identity.py'
@@ -39,6 +40,7 @@ on:
       - 'material-catalog-v1.json'
       - 'tools/material_catalog.py'
       - 'tools/generate_runtime_manifest.py'
+      - 'tools/build_runtime_packs.py'
       - 'tools/verify_production_source.py'
       - 'qa_material_catalog.py'
       - 'qa_material_identity.py'
@@ -76,6 +78,8 @@ jobs:
         run: |
           node --check src/domains/domain-bootstrap.js
           find src/domains -mindepth 2 -name '*.js' -print0 | sort -z | xargs -0 -n1 node --check
+      - name: Runtime pack determinism
+        run: python tools/build_runtime_packs.py --check
       - name: Architecture debt ceiling
         run: python qa_architecture_debt.py
       - name: Material staging semantics

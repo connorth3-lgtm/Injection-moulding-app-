@@ -149,12 +149,18 @@ for marker in [
     require(marker in deep_register, f"deep-dive source register coverage missing: {marker}")
 
 index = text("index.html")
+evidence_pack = text("src/domains/runtime-packs/evidence-runtime-pack.js")
+source_library_marker = '<script src="./source-library.js">'
+evidence_pack_marker = '<script src="./src/domains/runtime-packs/evidence-runtime-pack.js">'
+require(source_library_marker in index, "reference source library missing from browser shell")
+require(evidence_pack_marker in index, "reference evidence runtime pack missing from browser shell")
+require(index.index(source_library_marker) < index.index(evidence_pack_marker), "reference source library must load before evidence runtime pack")
 positions = []
-for asset in REFERENCE_ASSETS:
-    marker = f'<script src="./{asset}">'
-    require(marker in index, f"reference shell asset missing: {asset}")
-    positions.append(index.index(marker))
-require(positions == sorted(positions), "reference scripts must load source library, base data, deep-dive data, source browser, then reference UI")
+for asset in REFERENCE_ASSETS[1:]:
+    marker = f"/* >>> {asset} */"
+    require(marker in evidence_pack, f"reference asset missing from deterministic evidence pack: {asset}")
+    positions.append(evidence_pack.index(marker))
+require(positions == sorted(positions), "packed reference scripts must preserve base data, deep-dive data, source browser, then reference UI order")
 
 sw = text("service-worker.js")
 for asset in REFERENCE_ASSETS:

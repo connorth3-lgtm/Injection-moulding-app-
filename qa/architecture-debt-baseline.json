@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
   "capturedAt": "2026-09-03",
-  "runtimeBodyScriptCeiling": 62,
-  "rootRuntimeScriptCeiling": 61,
+  "runtimeBodyScriptCeiling": 39,
+  "rootRuntimeScriptCeiling": 36,
   "documentWriteCeiling": 1,
   "grandfatheredRootRuntimeScripts": [
     "./production-health.js",
@@ -81,6 +81,7 @@
   "notes": [
     "This is a ceiling, not a target. Removing root runtime scripts or compatibility layers is always allowed.",
     "New product capabilities belong under src/domains/<domain>/ and should replace legacy root layers rather than increasing the bootstrap count.",
-    "The single document.write bootstrap is grandfathered only while the legacy core HTML shell is migrated."
+    "The single document.write bootstrap is grandfathered only while the legacy core HTML shell is migrated.",
+    "2026-09-03 runtime-pack tranche reduced BODY_SCRIPTS from 60 to 39 and directly injected root runtime scripts from 59 to 36 while preserving source execution order."
   ]
 }
