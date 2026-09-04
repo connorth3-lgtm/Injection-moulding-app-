@@ -10,7 +10,7 @@ def need(ok,msg):
 scope=ROOT/'assessment-storage-scope.js'
 need(scope.exists(),'assessment-storage-scope.js missing')
 js=text('assessment-storage-scope.js')
-for marker in ["VERSION='2026.08.24.4'","ANALYTICS_BASE='mm_assessment_analytics_v1'","TIMING_BASE='mm_assessment_exposure_timing_v1'","ROTATION_BASE='mm_assessment_opening_history_v1'","BASES=[ANALYTICS_BASE,TIMING_BASE,ROTATION_BASE]","rotationKey:()=>scopedKey(ROTATION_BASE)","learnerScoped:true","hashScope","migrateLegacy","clearAll","cancelInMemoryAttempt","wrapLearnerChange('switchUser')","wrapLearnerChange('createLearner')","after!==before){cancelInMemoryAttempt();clearAll()"]:
+for marker in ["VERSION='2026.09.05.1'","ANALYTICS_BASE='mm_assessment_analytics_v1'","TIMING_BASE='mm_assessment_exposure_timing_v1'","ROTATION_BASE='mm_assessment_opening_history_v1'","BASES=[ANALYTICS_BASE,TIMING_BASE,ROTATION_BASE]","rotationKey:()=>scopedKey(ROTATION_BASE)","learnerScoped:true","MM_LEARNER_SCOPE","function hashScope","Compatibility-only hash","migrateFallbackScopes","partial-fail-closed","scopeProvider","migrateLegacy","clearAll","cancelInMemoryAttempt","wrapLearnerChange('switchUser')","wrapLearnerChange('createLearner')","after!==before){cancelInMemoryAttempt();clearAll()"]:
     need(marker in js,f'assessment storage scope marker missing: {marker}')
 p=subprocess.run(['node','--check',str(scope)],capture_output=True,text=True)
 need(p.returncode==0,f'assessment-storage-scope.js syntax error: {p.stderr}')
@@ -24,11 +24,13 @@ localStorage.setItem('mouldmasterProDB','before');
 const db={activeUser:'learner-a',users:{'learner-a':{id:'learner-a'}}};
 let user=db.users[db.activeUser];
 let activeExam={level:'Beginner'};
-const window={activeExam,__doReset:false,resetData(){if(this.__doReset)localStorage.setItem('mouldmasterProDB','after')},switchUser(id){if(db.users[id]){db.activeUser=id;user=db.users[id]}},createLearner(){const id='learner-c';db.users[id]={id};db.activeUser=id;user=db.users[id]}};
+const listeners={};
+const window={activeExam,__doReset:false,addEventListener(type,fn){listeners[type]=fn},resetData(){if(this.__doReset)localStorage.setItem('mouldmasterProDB','after')},switchUser(id){if(db.users[id]){db.activeUser=id;user=db.users[id]}},createLearner(){const id='learner-c';db.users[id]={id};db.activeUser=id;user=db.users[id]}};
 const sandbox={window,Storage,localStorage,db,user,activeExam,Math,Object,String,Date,setTimeout:fn=>{if(typeof fn==='function')fn()},console};
 window.window=window;window.localStorage=localStorage;
 vm.createContext(sandbox);vm.runInContext(fs.readFileSync(%s,'utf8'),sandbox,{filename:'assessment-storage-scope.js'});
 const api=window.MM_ASSESSMENT_STORAGE_SCOPE;
+if(api.scopeProvider()!=='compatibility-hash')throw new Error('assessment storage did not start on compatibility scope before shared service loaded');
 const aKey=api.analyticsKey(),aRotationKey=api.rotationKey();
 if(localStorage.getItem('mm_assessment_analytics_v1')!=='legacy-one-profile')throw new Error('single-profile legacy analytics not migrated into learner scope');
 localStorage.setItem('mm_assessment_analytics_v1','A');
@@ -43,14 +45,27 @@ if(localStorage.getItem('mm_assessment_opening_history_v1')!==null)throw new Err
 localStorage.setItem('mm_assessment_analytics_v1','B');
 localStorage.setItem('mm_assessment_opening_history_v1',JSON.stringify({'Beginner::NZ':['q4']}));
 const bKey=api.analyticsKey(),bRotationKey=api.rotationKey();
-if(aKey===bKey||aRotationKey===bRotationKey)throw new Error('learner scope keys collide');
+if(aKey===bKey||aRotationKey===bRotationKey)throw new Error('compatibility learner scope keys collide');
 let createAttempt={level:'Intermediate'};sandbox.activeExam=createAttempt;window.activeExam=createAttempt;window.createLearner();
 if(sandbox.activeExam!==null||window.activeExam!==null||db.activeUser!=='learner-c')throw new Error('new learner transition did not cancel in-memory exam attempt');
 if(localStorage.getItem('mm_assessment_opening_history_v1')!==null)throw new Error('new learner inherited another learner opening history');
+
+// Shared learner scope arrives later in the real bootstrap. Existing assessment
+// buckets must migrate only after ownership can be resolved from the profile registry.
+window.MM_LEARNER_SCOPE={tokenFor:id=>'strong-'+String(id)};
+if(typeof listeners['mm:domains-ready']!=='function')throw new Error('shared learner-scope migration listener missing');
+listeners['mm:domains-ready']();
+if(api.scopeProvider()!=='MM_LEARNER_SCOPE')throw new Error('assessment storage did not switch to shared learner scope');
 db.activeUser='learner-a';
-if(localStorage.getItem('mm_assessment_analytics_v1')!=='A')throw new Error('learner A analytics not isolated');
+const strongAKey=api.analyticsKey(),strongARotationKey=api.rotationKey();
+if(!strongAKey.endsWith('strong-learner-a')||!strongARotationKey.endsWith('strong-learner-a'))throw new Error('shared learner scope token not used for learner A');
+if(localStorage.getItem('mm_assessment_analytics_v1')!=='A')throw new Error('learner A analytics lost during shared-scope migration');
 const restored=JSON.parse(localStorage.getItem('mm_assessment_opening_history_v1')||'{}');
-if((restored['Beginner::NZ']||[]).join(',')!=='q1,q2,q3')throw new Error('learner A opening history not isolated/restored');
+if((restored['Beginner::NZ']||[]).join(',')!=='q1,q2,q3')throw new Error('learner A opening history lost during shared-scope migration');
+db.activeUser='learner-b';
+if(localStorage.getItem('mm_assessment_analytics_v1')!=='B')throw new Error('learner B analytics lost during shared-scope migration');
+if(api.sharedMigration.migrated<4)throw new Error('expected assessment compatibility buckets were not migrated to shared scope');
+
 let keepAttempt={level:'Advanced'};sandbox.activeExam=keepAttempt;window.activeExam=keepAttempt;window.__doReset=false;window.resetData();
 if(sandbox.activeExam!==keepAttempt||window.activeExam!==keepAttempt)throw new Error('cancelled/no-op reset cancelled the active exam');
 window.__doReset=true;window.resetData();
@@ -58,11 +73,13 @@ if(sandbox.activeExam!==null||window.activeExam!==null)throw new Error('confirme
 if(localStorage.getItem('mm_assessment_analytics_v1')!==null)throw new Error('confirmed reset did not clear learner analytics');
 if(localStorage.getItem('mm_assessment_opening_history_v1')!==null)throw new Error('confirmed reset did not clear learner opening history');
 localStorage.setItem('unrelated','keep');api.clearAll();if(localStorage.getItem('unrelated')!=='keep')throw new Error('clearAll removed unrelated storage');
-process.stdout.write(JSON.stringify({version:api.version,learnerScoped:api.learnerScoped,aKey,bKey,aRotationKey,bRotationKey}));
+process.stdout.write(JSON.stringify({version:api.version,learnerScoped:api.learnerScoped,aKey,bKey,strongAKey,sharedMigration:api.sharedMigration}));
 '''%json.dumps(str(scope))
 p=subprocess.run(['node','-e',node],capture_output=True,text=True)
 need(p.returncode==0,f'assessment storage scope runtime QA failed: {p.stderr or p.stdout}')
-r=json.loads(p.stdout);need(r['version']=='2026.08.24.4' and r['learnerScoped'] is True,'assessment storage scope runtime metadata mismatch')
+r=json.loads(p.stdout);need(r['version']=='2026.09.05.1' and r['learnerScoped'] is True,'assessment storage scope runtime metadata mismatch')
+need(r['strongAKey'].endswith('strong-learner-a'),'assessment storage runtime did not use shared learner-scope token')
+need(r['sharedMigration']['conflicts']==0 and r['sharedMigration']['ambiguous']==0,'normal shared-scope migration unexpectedly failed closed')
 
 idx=text('index.html');need('<script src="./assessment-storage-scope.js">' in idx,'storage scope not loaded by shell')
 need(idx.index('assessment-deep-dive.js')<idx.index('assessment-storage-scope.js')<idx.index('assessment-quality-suite.js'),'storage scope load order must precede analytics suite')
@@ -75,7 +92,9 @@ bridge=text('training-qa-fix.js')
 for marker in ['clearAssessmentAnalyticsStores','cancelActiveExam','mm_assessment_analytics_v1','mm_assessment_exposure_timing_v1','mm_assessment_opening_history_v1','committed=true;cancelActiveExam();clearAssessmentAnalyticsStores()','clearAssessmentAnalyticsStores();cancelActiveExam()']:
     need(marker in bridge,f'training reset/import assessment cleanup missing: {marker}')
 
-V=json.loads(text('version.json'));need(V.get('assessment_storage_scope_version')=='2026.08.24.4','assessment storage scope version missing')
+V=json.loads(text('version.json'))
+need(V.get('assessment_storage_scope_version')=='2026.08.24.4','published assessment storage release lane drifted during migration-only hardening')
+need(V.get('assessment_storage_migration_version')=='2026.09.05.1','assessment storage migration hardening version missing')
 for wf in ['.github/workflows/qa.yml','.github/workflows/open-desktop-build.yml','.github/workflows/microsoft-store-msix.yml']:
     w=text(wf);need('python qa_assessment_storage_scope.py' in w,f'{wf} missing learner-scoped analytics QA')
-print('MouldMaster learner-scoped assessment storage QA passed (analytics, timing and opening-question history)')
+print('MouldMaster learner-scoped assessment storage QA passed (shared 128-bit learner scope with fail-closed compatibility migration)')

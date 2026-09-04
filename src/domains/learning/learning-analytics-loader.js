@@ -1,4 +1,4 @@
-/* MouldMaster domain bridge for legacy Learning Analytics — 2026.09.04.2 */
+/* MouldMaster domain bridge for legacy Learning Analytics — 2026.09.05.1 */
 (function(){
 'use strict';
 if(window.MM_LEARNING_ANALYTICS||window.MM_LEARNING_ANALYTICS_LOADING)return;
@@ -11,10 +11,18 @@ const scope=window.MM_LEARNER_SCOPE;
 scope.registerStoragePrefix?.(STORAGE_PREFIX);
 function currentRole(){try{return String(typeof user!=='undefined'&&user?.role||'learner').trim().toLowerCase()}catch(_){return'learner'}}
 function isInstructor(){return currentRole()==='instructor'}
+function localModeBoundary(){return 'Local instructor view is a device-local convenience mode, not authenticated identity or an authorization boundary. Anyone able to control this browser profile can change local application state.'}
 function enforceExportAccess(root=document){
   const allowed=isInstructor();
   for(const node of root.querySelectorAll?.('[data-la-export]')||[]){node.hidden=!allowed;if(!allowed)node.setAttribute?.('aria-hidden','true');else node.removeAttribute?.('aria-hidden')}
   return allowed
+}
+function decorateRoleControl(root=document){
+  const select=root.getElementById?.('profileRole')||root.querySelector?.('#profileRole');if(!select)return false;
+  let note=root.getElementById?.('mmLocalRoleBoundary')||root.querySelector?.('#mmLocalRoleBoundary');
+  if(!note){note=document.createElement('small');note.id='mmLocalRoleBoundary';note.dataset.mmLocalRoleBoundary='1';note.className='tiny muted';note.textContent='Local view mode only. Choosing instructor enables anonymous cross-profile summaries stored in this browser; it is not login, identity verification or a security boundary.';select.insertAdjacentElement?.('afterend',note)}
+  select.setAttribute?.('aria-describedby','mmLocalRoleBoundary');
+  return true
 }
 function storageKey(token=scope.token()){return scope.storageKey(STORAGE_PREFIX,token)}
 function readEvents(token=scope.token()){
@@ -46,11 +54,11 @@ function cohort(){
   return {tokens,perProfile,aggregate:aggregate(namespaced)};
 }
 function stageLabel(key){const [module,raw]=String(key).split(':');const labels={diagnostic:['Observe','Best next test','Controlled response','Explain'],'process-data':['Read pattern','Diagnose','Next evidence','Recovery']};const step=Number(raw)||0;return `${module==='diagnostic'?'Diagnostic lab':'Process-data case'} · ${labels[module]?.[step]||`Step ${step+1}`}`}
-function requireInstructor(){if(!isInstructor())throw new Error('Cross-profile analytics export requires instructor role')}
+function requireInstructor(){if(!isInstructor())throw new Error('Cross-profile analytics export requires local instructor view mode on this device; this mode is not authentication')}
 function exportAnonymousSummary(){
   requireInstructor();
   const c=cohort(),combined=c.aggregate;
-  const payload={schema:2,version:version||'domain-quality-v1',generatedAt:new Date().toISOString(),privacy:'Anonymous aggregate only; profile boundaries are preserved for retry metrics; ambiguous or unowned legacy learner buckets are quarantined/excluded; no names, notes, answer text or event timestamps.',anonymousProfiles:c.tokens.length,aggregate:{activeLearningSeconds:combined.activeTime,practiceAttempts:combined.practiceAttempts,practiceCompleted:combined.practiceCompleted,averagePracticeScore:+combined.avgScore.toFixed(2),repeatedCases:combined.repeatedCases,averageRetryGain:+combined.avgGain.toFixed(2),improvedCases:combined.improvedCases,missesByStage:combined.difficult.map(([k,n])=>({stage:stageLabel(k),count:n}))},profiles:c.perProfile.map((x,i)=>({anonymousProfile:i+1,activeLearningSeconds:x.activeTime,practiceAttempts:x.practiceAttempts,practiceCompleted:x.practiceCompleted,averagePracticeScore:+x.avgScore.toFixed(2),repeatedCases:x.repeatedCases,averageRetryGain:+x.avgGain.toFixed(2),improvedCases:x.improvedCases}))};
+  const payload={schema:2,version:version||'domain-quality-v1',generatedAt:new Date().toISOString(),privacy:'Anonymous aggregate only; profile boundaries are preserved for retry metrics; ambiguous or unowned legacy learner buckets are quarantined/excluded; no names, notes, answer text or event timestamps. Local instructor view is a device-local convenience mode, not authenticated identity or a security boundary.',anonymousProfiles:c.tokens.length,aggregate:{activeLearningSeconds:combined.activeTime,practiceAttempts:combined.practiceAttempts,practiceCompleted:combined.practiceCompleted,averagePracticeScore:+combined.avgScore.toFixed(2),repeatedCases:combined.repeatedCases,averageRetryGain:+combined.avgGain.toFixed(2),improvedCases:combined.improvedCases,missesByStage:combined.difficult.map(([k,n])=>({stage:stageLabel(k),count:n}))},profiles:c.perProfile.map((x,i)=>({anonymousProfile:i+1,activeLearningSeconds:x.activeTime,practiceAttempts:x.practiceAttempts,practiceCompleted:x.practiceCompleted,averagePracticeScore:+x.avgScore.toFixed(2),repeatedCases:x.repeatedCases,averageRetryGain:+x.avgGain.toFixed(2),improvedCases:x.improvedCases}))};
   const blob=new Blob([JSON.stringify(payload,null,2)],{type:'application/json;charset=utf-8'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='mouldmaster-anonymous-learning-summary.json';document.body.appendChild(a);a.click();a.remove();URL.revokeObjectURL(url);return payload
 }
 function setMetric(label,value,index=0){const matches=[...(document.querySelectorAll?.('#learningInsights .la-kpi span')||[])].filter(x=>x.textContent?.trim()===label);const node=matches[index]?.parentElement?.querySelector?.('strong');if(node)node.textContent=value}
@@ -61,38 +69,41 @@ function patchRenderedMetrics(){
   const rows=[...(document.querySelectorAll?.('#learningInsights .la-row span')||[])];
   const improved=rows.find(x=>x.textContent?.trim()==='Cases with a higher later best score'||x.textContent?.trim()==='Cases with a higher latest score');
   if(improved){improved.textContent='Cases with a higher latest score';const strong=improved.parentElement?.querySelector?.('strong');if(strong)strong.textContent=String(current.improvedCases)}
+  const instructorHeading=[...(document.querySelectorAll?.('#learningInsights .eyebrow')||[])].find(x=>/^Instructor view\b/.test(x.textContent?.trim()||''));if(instructorHeading)instructorHeading.textContent='Local instructor view · this device only';
   if(isInstructor()){const c=cohort().aggregate;setMetric('Average retry gain',c.repeatedCases?`${c.avgGain.toFixed(1)} pts`:'—',1)}
+  decorateRoleControl();
 }
 function installQuality(){
   const api=window.MM_LEARNING_ANALYTICS;if(!api||api.__mmQualityCorrected)return;
   const baseOpen=api.open;
   api.summary=()=>aggregate(readEvents());
-  api.cohortSummary=()=>{requireInstructor();const c=cohort();return {anonymousProfiles:c.tokens.length,aggregate:c.aggregate,profiles:c.perProfile}};
+  api.cohortSummary=()=>{requireInstructor();const c=cohort();return {anonymousProfiles:c.tokens.length,aggregate:c.aggregate,profiles:c.perProfile,boundary:localModeBoundary()}};
   api.exportAnonymousSummary=exportAnonymousSummary;
   api.open=function(){const r=baseOpen?.apply(this,arguments);queueMicrotask(patchRenderedMetrics);return r};
   api.__mmQualityCorrected=true;
-  window.MM_LEARNING_ANALYTICS_QUALITY=Object.freeze({aggregate,cohortSummary:api.cohortSummary,exportAnonymousSummary,scope:'Retry gain is latest completed attempt minus first completed attempt. Cross-profile aggregation namespaces case sequences by anonymous learner profile and preserves anonymous learner boundaries. Legacy learner buckets with ambiguous or unproven local ownership are excluded rather than assigned to a profile.'});
+  window.MM_LEARNING_ANALYTICS_QUALITY=Object.freeze({aggregate,cohortSummary:api.cohortSummary,exportAnonymousSummary,localModeBoundary,scope:'Retry gain is latest completed attempt minus first completed attempt. Cross-profile aggregation namespaces case sequences by anonymous learner profile and preserves anonymous learner boundaries. Legacy learner buckets with ambiguous or unproven local ownership are excluded rather than assigned to a profile. Local instructor view is not authenticated identity or an authorization boundary.'});
   queueMicrotask(patchRenderedMetrics);
 }
 function guardExport(event){
-  queueMicrotask(()=>{enforceExportAccess();patchRenderedMetrics()});
+  queueMicrotask(()=>{enforceExportAccess();patchRenderedMetrics();decorateRoleControl()});
   const target=event.target?.closest?.('[data-la-export]');
   if(!target)return;
   if(!isInstructor()){
-    event.preventDefault?.();event.stopImmediatePropagation?.();window.toast?.('Instructor role required for cross-profile analytics export');return;
+    event.preventDefault?.();event.stopImmediatePropagation?.();window.toast?.('Enable local instructor view to use the anonymous cross-profile summary');return;
   }
   if(window.MM_LEARNING_ANALYTICS_QUALITY){event.preventDefault?.();event.stopImmediatePropagation?.();try{window.MM_LEARNING_ANALYTICS_QUALITY.exportAnonymousSummary()}catch(err){window.toast?.(err?.message||String(err))}}
 }
 document.addEventListener('click',guardExport,true);
-window.addEventListener('load',()=>{enforceExportAccess();installQuality();patchRenderedMetrics()});
-window.addEventListener('mm:domains-ready',()=>{enforceExportAccess();installQuality();patchRenderedMetrics()});
-window.MM_LEARNING_ANALYTICS_ACCESS=Object.freeze({isInstructor,enforce:enforceExportAccess,scope:'Cross-profile learning analytics export is instructor-only. Learner-scoped analytics remain available to the active learner.'});
+window.MM_APP_SHELL?.events?.onRender?.('profile',()=>decorateRoleControl());
+window.addEventListener('load',()=>{enforceExportAccess();installQuality();patchRenderedMetrics();decorateRoleControl()});
+window.addEventListener('mm:domains-ready',()=>{enforceExportAccess();installQuality();patchRenderedMetrics();decorateRoleControl()});
+window.MM_LEARNING_ANALYTICS_ACCESS=Object.freeze({isInstructor,isLocalInstructorMode:isInstructor,enforce:enforceExportAccess,localModeBoundary,scope:'Cross-profile learning analytics are available only while this device is in local instructor view. That local view is a convenience mode, not authenticated identity or a security boundary. Learner-scoped analytics remain available to the active learner.'});
 const ready=new Promise((resolve,reject)=>{
   const s=document.createElement('script');
   s.src=src;
   s.async=false;
   s.dataset.mmDomainBridge='learning-analytics';
-  s.onload=()=>{enforceExportAccess();installQuality();resolve(window.MM_LEARNING_ANALYTICS||null)};
+  s.onload=()=>{enforceExportAccess();installQuality();decorateRoleControl();resolve(window.MM_LEARNING_ANALYTICS||null)};
   s.onerror=()=>reject(new Error(`Learning Analytics asset failed: ${base}`));
   document.body.appendChild(s);
 });
