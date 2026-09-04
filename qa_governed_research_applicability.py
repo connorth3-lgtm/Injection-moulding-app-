@@ -29,7 +29,7 @@ const m=require('./src/domains/research/governed-mechanisms.js');
 const out={catalog:m.catalog,tests:{}};
 out.tests.multi=m.retrieve({text:'multicavity runner imbalance',signals:['cavity pressure'],outcomes:['cavity-specific part quality']},3);
 out.tests.moisture=m.retrieve({text:'dryer moisture hydrolysis',signals:['measured moisture'],outcomes:['impact strength']},3);
-out.tests.unknown=m.retrieve('completely unrelated astronomy telescope context',3);
+out.tests.unknown=m.retrieve('astronomy telescope nebula quasar',3);
 out.tests.plan=m.localEvidencePlan({text:'cavity pressure runner imbalance'},'runner-gate-multicavity-imbalance');
 out.tests.empty=m.localEvidencePlan({},'not-a-mechanism');
 console.log(JSON.stringify(out));
