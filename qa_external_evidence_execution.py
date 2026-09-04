@@ -4,8 +4,6 @@ from __future__ import annotations
 import copy
 import importlib.util
 import json
-import subprocess
-import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent
@@ -119,7 +117,8 @@ for marker in (
     "readonly=True",
     '"status": "exported-awaiting-semantic-review"',
     '"acceptedMeasuredValues": 0',
-    "validate_warwick_origin_export",
+    "unexpected OPJU files present",
+    "semantic review still required",
 ):
     need(marker in origin_exporter, f"Warwick real-Origin automation marker missing: {marker}")
 
