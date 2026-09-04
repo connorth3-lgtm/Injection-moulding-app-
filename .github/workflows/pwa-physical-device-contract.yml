@@ -1,0 +1,30 @@
+name: MouldMaster Physical PWA Contract QA
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: pwa-physical-device-contract-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  physical-pwa-contract:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: '3.12'
+      - name: Physical-device contract and fail-closed verifier QA
+        run: python qa_pwa_physical_device.py
+      - name: Build current production-only Pages artifact
+        run: python tools/build_pages_artifact.py
+      - name: Check physical-device evidence against exact public runtime
+        run: python tools/verify_pwa_physical_evidence.py --artifact .pages-dist
