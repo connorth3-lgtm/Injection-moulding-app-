@@ -10,7 +10,7 @@ def need(ok,msg):
 V=json.loads(text('version.json'))
 expected={
  'android_release':'2026.08.26.2',
- 'desktop_release':'2026.08.26.6',
+ 'desktop_release':'2026.08.26.7',
  'content_version':'2026.08.26.1',
  'question_bank_version':'2026.08.30.1',
  'assessment_quality_version':'2026.08.24.3',
@@ -70,8 +70,8 @@ for marker in [
     need(marker in electron_support,f'Electron 44 support policy missing marker: {marker}')
 
 desktop_readme=text('desktop/electron/README.md')
-for marker in ['Electron 44.1.1','Windows 10/11 64-bit','ELECTRON_44_SUPPORT.md']:
-    need(marker in desktop_readme,f'desktop README Electron 44 support marker missing: {marker}')
+for marker in ['Electron 44.1.1','Windows 10/11 64-bit','ELECTRON_44_SUPPORT.md','127.0.0.1:43139']:
+    need(marker in desktop_readme,f'desktop README Electron 44/stable-origin marker missing: {marker}')
 
 # The manual retirement guide is release evidence too. Keep its human test target
 # tied to version.json so a desktop release bump cannot leave operators testing stale bytes.
@@ -125,9 +125,10 @@ for k,id_ in {'android_release':'mmPwa','desktop_release':'mmDesktop','content_v
     need(f"{k}:'{id_}'" in support,f'support dynamic version mapping missing: {k}')
 need("fetch('./version.json',{cache:'no-store'})" in support,'support page must synchronise from version.json')
 need('MouldMaster GitHub Issues' in support and 'Do not post learner names' in support,'support contact/privacy warning missing')
+need('Learning insights events' in support and 'resets both analytics histories' in support,'support import analytics lifecycle disclosure is stale')
 
 privacy=text('privacy.html')
-for marker in ['assessment analytics','scoped to the active learner profile','first meaningful question exposure','does not currently upload','deliberately not included in the progress backup','successful progress-backup import resets local assessment analytics','Reset local analytics','confirmed factory reset']:
+for marker in ['assessment analytics','scoped to the active learner profile','first meaningful question exposure','does not currently upload','deliberately not included in the progress backup','successful progress-backup import resets local assessment analytics and Learning insights analytics','orphaned buckets','Reset local analytics','confirmed factory reset']:
     need(marker in privacy,f'privacy disclosure missing: {marker}')
 
 sw=text('service-worker.js')

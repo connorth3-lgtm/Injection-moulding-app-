@@ -1,14 +1,14 @@
 # Real Windows validation and legacy-retirement evidence
 
 Status: **manual evidence required**  
-Target release family: open desktop `2026.08.26.6`  
+Target release family: open desktop `2026.08.26.7`  
 Purpose: produce defensible evidence before deleting the frozen legacy recovery launcher.
 
 GitHub-hosted Windows CI proves the package builds and passes automated QA. It does **not** prove that a normal user machine preserves local learner state, launches offline after first use, or successfully imports a real legacy learner backup. These checks must be performed on a normal Windows 10/11 environment with an actual legacy backup.
 
 ## Required inputs
 
-- the published `MouldMaster-Academy-2026.8.26.6-x64.exe` from the tagged GitHub Release;
+- the published `MouldMaster-Academy-2026.8.26.7-x64.exe` from the tagged GitHub Release;
 - the same release's `SHA256SUMS.txt`;
 - one real progress-backup export from the legacy runtime whose expected learner progress/notes/history are known;
 - a normal Windows 10 or Windows 11 test machine or VM representative of the supported user environment.
@@ -21,7 +21,7 @@ From PowerShell in the repository checkout:
 
 ```powershell
 ./desktop/electron/scripts/verify-real-windows-release.ps1 `
-  -ExePath 'C:\path\MouldMaster-Academy-2026.8.26.6-x64.exe' `
+  -ExePath 'C:\path\MouldMaster-Academy-2026.8.26.7-x64.exe' `
   -Sha256SumsPath 'C:\path\SHA256SUMS.txt' `
   -LegacyBackupPath 'C:\path\legacy-progress-backup.json' `
   -EvidenceOut 'C:\path\mouldmaster-windows-validation-evidence.json'
@@ -32,7 +32,7 @@ The script must report a matching executable SHA-256 before continuing. It also 
 ## Step 2 — launch and persistence
 
 1. Launch the verified open desktop executable.
-2. Confirm the displayed desktop release is `2026.08.26.6`.
+2. Confirm the displayed desktop release is `2026.08.26.7`.
 3. Create or use a test learner profile.
 4. Open a lesson and save a distinctive non-sensitive note.
 5. Complete one non-critical practice action.
@@ -61,6 +61,7 @@ Do not treat external reference links being unavailable while offline as an appl
 4. Confirm the expected learner profile/progress/notes/history are present.
 5. Close and reopen the open desktop runtime and confirm imported state persists.
 6. Confirm imported certificate/pass state is **not** trusted as current completion authority and that certificates must be re-earned under current gates.
+7. Confirm the import resets device-local assessment and Learning Insights analytics so evidence from old device profiles is not attributed to the imported learners.
 
 If any expected data are missing, stop retirement of the legacy recovery launcher and open a repository issue containing only non-sensitive reproduction details.
 
@@ -88,6 +89,7 @@ The frozen legacy launcher may be removed from the recovery lane only after all 
 - [ ] offline launch passes after first successful launch;
 - [ ] a real legacy backup imports with expected profile/progress/notes/history;
 - [ ] imported certificate/pass state is not trusted;
+- [ ] imported analytics are reset rather than attributed to new/imported profiles;
 - [ ] keyboard/navigation smoke checks pass;
 - [ ] evidence is retained outside the public repository under appropriate controls.
 

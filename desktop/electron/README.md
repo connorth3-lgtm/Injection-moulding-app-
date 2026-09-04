@@ -4,7 +4,7 @@ This directory contains the normal open-source Windows desktop implementation fo
 
 ## Status
 
-- Current desktop release: `2026.08.26.6`
+- Current desktop release: `2026.08.26.7`
 - Source licence: Apache-2.0
 - Desktop runtime: Electron 44.1.1
 - Supported OS/architecture: Windows 10/11 64-bit
@@ -12,7 +12,7 @@ This directory contains the normal open-source Windows desktop implementation fo
 - Targets: portable EXE, NSIS installer, MSIX / Microsoft Store upload package
 - Public open-source release lane: tagged GitHub Release with hashes/provenance/evidence
 - Training assets: bundled from the repository and SHA-256 verified before launch
-- Local application origin: loopback-only `127.0.0.1` server bound to a random port
+- Local application origin: stable loopback-only `127.0.0.1:43139` server so browser-origin learner storage persists across launches
 - Node integration: disabled in renderer
 - Context isolation: enabled
 - Electron sandbox: enabled
@@ -83,7 +83,7 @@ Do not invent a publisher certificate subject or substitute the display name for
 
 ## Versioning
 
-`version.json` is the repository release record. `desktop_release` is four-part (for example `2026.08.26.6`). `desktop_release_tag` and `desktop_release_url` identify the corresponding GitHub Release. npm `package.json` keeps the first three numeric components as its package version, while `build.buildNumber` and `build.buildVersion` carry the fourth Windows release component. QA rejects drift between these values. Windows artifacts use `${buildVersion}` so package filenames and Windows metadata retain the complete desktop release number. Local MSIX builds and the Store workflow both enable MSIX build-number propagation, so the manifest also retains the fourth component.
+`version.json` is the repository release record. `desktop_release` is four-part (for example `2026.08.26.7`). `desktop_release_tag` and `desktop_release_url` identify the corresponding GitHub Release. npm `package.json` keeps the first three numeric components as its package version, while `build.buildNumber` and `build.buildVersion` carry the fourth Windows release component. QA rejects drift between these values. Windows artifacts use `${buildVersion}` so package filenames and Windows metadata retain the complete desktop release number. Local MSIX builds and the Store workflow both enable MSIX build-number propagation, so the manifest also retains the fourth component.
 
 ## Reproducibility
 
@@ -98,7 +98,7 @@ Byte-for-byte reproducibility of signed Microsoft Store packages is not claimed 
 
 ## Security boundary
 
-The training web application does not receive Node.js APIs. The Electron main process is the only privileged component. It serves only the SHA-256-verified allow list on `127.0.0.1`, accepts only GET/HEAD requests, rejects webviews, denies renderer permission requests, and sends external HTTPS links to the system browser. The integrity manifest used for startup verification is read from inside the packaged application rather than from the external asset directory it verifies.
+The training web application does not receive Node.js APIs. The Electron main process is the only privileged component. It serves only the SHA-256-verified allow list on `127.0.0.1:43139`, accepts only GET/HEAD requests, rejects webviews, denies renderer permission requests, and sends external HTTPS links to the system browser. A single-instance lock prevents normal duplicate MouldMaster processes from competing for the stable port. If another process already owns the required port, startup fails closed instead of silently changing the browser origin. The integrity manifest used for startup verification is read from inside the packaged application rather than from the external asset directory it verifies.
 
 ## Open-source dependency notice
 

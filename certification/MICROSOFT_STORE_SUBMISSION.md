@@ -10,7 +10,7 @@ Use the repository's open Electron desktop implementation under `desktop/electro
 
 The active Store route is the **open Electron/MSIX desktop package**, not the PWA wrapper. The PWA remains a supported browser/installable-web lane and can still be evaluated separately with PWABuilder, but Store metadata and certification notes must describe the package actually being submitted.
 
-Current open desktop baseline: `2026.08.26.6`.
+Current open desktop baseline: `2026.08.26.7`.
 
 ## What Microsoft currently requires
 
@@ -39,11 +39,11 @@ Microsoft recommends running the Windows App Certification Kit before submission
 - [x] Electron renderer has Node integration disabled, context isolation enabled and sandbox enabled
 - [x] Renderer permissions are denied by default and webviews are blocked
 - [x] External HTTPS references open in the system browser
-- [x] Local app content is served from loopback-only `127.0.0.1`
+- [x] Local app content is served from stable loopback-only `127.0.0.1:43139`
 - [x] Dependency licence inventory is generated
 - [x] CycloneDX SBOM is generated
 - [x] GitHub Windows CI builds the portable open desktop package
-- [x] Tagged open desktop release lane is configured for `desktop-v2026.08.26.6`
+- [x] Tagged open desktop release lane is configured for `desktop-v2026.08.26.7`
 - [x] Store workflow builds x64 + arm64 MSIX, MSIX bundle and MSIX upload output
 - [x] Store workflow preserves the four-part desktop release version
 - [x] Store workflow enforces package integrity
@@ -64,10 +64,10 @@ Do not substitute a friendly publisher name for the `Identity/Publisher` certifi
 ## Pre-submission technical checklist
 
 ### Source/release provenance
-- [x] MouldMaster Release QA is configured for desktop release `2026.08.26.6`
-- [x] Open Desktop Build is configured for desktop release `2026.08.26.6`
+- [x] MouldMaster Release QA is configured for desktop release `2026.08.26.7`
+- [x] Open Desktop Build is configured for desktop release `2026.08.26.7`
 - [x] Question evidence approval is a required package gate
-- [ ] Confirm the final `2026.08.26.6` release workflow is green on the exact intended source commit
+- [ ] Confirm the final `2026.08.26.7` release workflow is green on the exact intended source commit
 - [ ] Record the exact commit selected for Store submission
 - [ ] Confirm the Store workflow is run from that same intended source commit
 
@@ -87,6 +87,7 @@ Do not substitute a friendly publisher name for the `Identity/Publisher` certifi
 - [ ] Import into the open desktop runtime
 - [ ] Confirm intended learner profile/progress/notes/history are present
 - [ ] Confirm certificates/pass state are not incorrectly trusted through import
+- [ ] Confirm successful import resets assessment and Learning Insights analytics rather than attributing old device/profile evidence to imported learners
 
 See `../desktop/electron/LEGACY_MIGRATION.md`.
 

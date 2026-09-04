@@ -52,7 +52,7 @@ const assert=require('assert');
   assert.match(sandbox.window.MM_LEARNING_ANALYTICS_ACCESS.localModeBoundary(),/not authenticated identity or an authorization boundary/i);
   assert(sandbox.window.MM_LEARNING_ANALYTICS_QUALITY,'corrected analytics quality bridge did not install');
   assert.strictEqual(sandbox.window.MM_LEARNING_ANALYTICS_QUALITY.minimumAggregateProfiles,5,'canonical cohort minimum drifted');
-  assert.throws(()=>sandbox.window.MM_LEARNING_ANALYTICS_QUALITY.exportAnonymousSummary(),/at least 5 local learner profiles/i,'undersized cohort export did not fail closed');
+  assert.throws(()=>sandbox.window.MM_LEARNING_ANALYTICS_QUALITY.exportAnonymousSummary(),/at least 5 current local learner profiles/i,'undersized cohort export did not fail closed');
   const instructorEvent={target:{closest:()=>exportNode},prevented:false,stopped:false,preventDefault(){this.prevented=true},stopImmediatePropagation(){this.stopped=true}};
   listeners.document.click.fn(instructorEvent);
   assert.strictEqual(instructorEvent.prevented,true,'local instructor export was not intercepted before the legacy handler');

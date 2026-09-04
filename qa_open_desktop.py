@@ -80,8 +80,8 @@ require(version["desktop_release"] != version["windows_recovery_release"], "open
 
 desktop_readme = (DESKTOP / "README.md").read_text(encoding="utf-8")
 require(f"Current desktop release: `{release}`" in desktop_readme, "desktop README current release is stale")
-for marker in ["REAL_WINDOWS_VALIDATION.md", "verify-real-windows-release.ps1", "normal Windows 10/11"]:
-    require(marker in desktop_readme, f"desktop README real-Windows validation marker missing: {marker}")
+for marker in ["REAL_WINDOWS_VALIDATION.md", "verify-real-windows-release.ps1", "normal Windows 10/11", "127.0.0.1:43139"]:
+    require(marker in desktop_readme, f"desktop README real-Windows/stable-origin marker missing: {marker}")
 
 fuses = pkg["build"].get("electronFuses", {})
 for name, expected in {
@@ -104,13 +104,16 @@ for marker in [
     "setPermissionCheckHandler",
     "will-attach-webview",
     "setWindowOpenHandler",
-    "server.listen(0, '127.0.0.1'",
+    "const DESKTOP_PORT = 43139",
+    "server.listen(DESKTOP_PORT, '127.0.0.1'",
+    "requestSingleInstanceLock()",
     "const INTEGRITY_PATH = path.join(__dirname, '..', 'generated', 'integrity.json')",
     "const allowed = new Set(Object.keys(integrity.files))",
     "method !== 'GET' && method !== 'HEAD'",
     "SHA-256 verification failed",
 ]:
     require(marker in main, f"desktop security invariant missing: {marker}")
+require("server.listen(0, '127.0.0.1'" not in main, "desktop must not bind an ephemeral port because browser storage is origin-scoped")
 require("process.resourcesPath, 'mouldmaster', 'integrity.json'" not in main, "packaged integrity manifest must not be read from the writable asset directory")
 
 integrity_script = (DESKTOP / "scripts" / "generate-integrity.cjs").read_text(encoding="utf-8")
@@ -166,6 +169,7 @@ for marker in [
     "real legacy backup",
     "offline launch",
     "imported certificate/pass state is not trusted",
+    "imported analytics are reset",
     "learner names, backup content, customer identifiers",
 ]:
     require(marker in real_windows, f"real-Windows retirement safeguard missing: {marker}")
@@ -227,4 +231,4 @@ for marker in [
 ]:
     require(marker in migration, f"legacy migration safeguard missing: {marker}")
 
-print("MouldMaster open desktop release QA passed (runtime domain manifest is the canonical desktop serving allowlist; stable portable/NSIS and isolated MSIX builder locks verified; frozen legacy shadow app excluded; recovery lane remains separate)")
+print("MouldMaster open desktop release QA passed (stable origin persistence, runtime domain manifest as canonical serving allowlist, locked packaging toolchains, recovery lane separate)")
