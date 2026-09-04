@@ -1,0 +1,60 @@
+name: External Evidence Execution QA
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'data/cross-process-upper-author-response-template-v1.json'
+      - 'data/impure-pascoe-author-response-template-v1.json'
+      - 'data/real-pilot-public-candidate-review-2026-09-05.json'
+      - 'data/warwick-origin-export-manifest-template-v1.json'
+      - 'tools/validate_cross_process_upper_clarification.py'
+      - 'tools/validate_impure_pascoe_clarification.py'
+      - 'tools/evaluate_public_pilot_candidate.py'
+      - 'tools/export_warwick_origin.py'
+      - 'tools/validate_warwick_origin_export.py'
+      - 'qa_external_evidence_execution.py'
+      - '.github/workflows/external-evidence-execution.yml'
+  pull_request:
+    branches: [main]
+    paths:
+      - 'data/cross-process-upper-author-response-template-v1.json'
+      - 'data/impure-pascoe-author-response-template-v1.json'
+      - 'data/real-pilot-public-candidate-review-2026-09-05.json'
+      - 'data/warwick-origin-export-manifest-template-v1.json'
+      - 'tools/validate_cross_process_upper_clarification.py'
+      - 'tools/validate_impure_pascoe_clarification.py'
+      - 'tools/evaluate_public_pilot_candidate.py'
+      - 'tools/export_warwick_origin.py'
+      - 'tools/validate_warwick_origin_export.py'
+      - 'qa_external_evidence_execution.py'
+      - '.github/workflows/external-evidence-execution.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  external-evidence-execution:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: '3.12'
+      - name: Python syntax
+        run: |
+          python -m py_compile \
+            tools/validate_cross_process_upper_clarification.py \
+            tools/validate_impure_pascoe_clarification.py \
+            tools/evaluate_public_pilot_candidate.py \
+            tools/export_warwick_origin.py \
+            qa_external_evidence_execution.py
+      - name: External evidence execution contracts
+        run: python qa_external_evidence_execution.py
+      - name: Pending source responses remain non-promoting
+        run: |
+          python tools/validate_cross_process_upper_clarification.py
+          python tools/validate_impure_pascoe_clarification.py
+          python tools/evaluate_public_pilot_candidate.py
+          python tools/validate_warwick_origin_export.py --manifest data/warwick-origin-export-manifest-template-v1.json

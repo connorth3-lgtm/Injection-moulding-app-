@@ -1,0 +1,39 @@
+{
+  "schema": 1,
+  "candidateId": "impure-pascoe-zenodo-6913660",
+  "issue": 50,
+  "status": "not-eligible-to-close-authorised-site-pilot",
+  "source": {
+    "datasetDoi": "10.5281/zenodo.6913660",
+    "datasetLicense": "CC BY 4.0",
+    "peerReviewedStudyDoi": "10.1051/matecconf/202440108011",
+    "realInjectionMouldingData": true,
+    "publicReuseAllowed": true
+  },
+  "evidence": {
+    "sourceDefinedInstrumentation": true,
+    "controlledParameterChangesDocumented": true,
+    "qualityLabelsDocumented": true,
+    "baselineKnownGoodPeriodEstablishedForIssue50": false,
+    "faultOrDriftPeriodEstablishedForIssue50": false,
+    "interventionAlignedToShotSequenceForIssue50": false,
+    "recoveryOrVerificationPeriodEstablishedForIssue50": false,
+    "independentlyInvestigatedEngineeringCauseAvailable": false,
+    "siteAuthorisationForMouldMasterPilotRecorded": false,
+    "approvedPilotEvidenceRetentionOwnerRecorded": false,
+    "mouldMasterDiagnosticComparedWithIndependentFinding": false
+  },
+  "decision": {
+    "mayExercisePublicBenchmarkPipeline": true,
+    "mayClaimValidatedOnRealProductionData": false,
+    "mayCloseIssue50": false,
+    "nextEvidenceRequired": [
+      "an authorised site or data owner approves the bounded MouldMaster pilot use",
+      "a prepared case establishes baseline, fault/drift and recovery/verification in shot order",
+      "an independent engineering finding is available for comparison",
+      "MouldMaster reasoning is compared with that finding and recovery behaviour",
+      "evidence-retention governance is recorded outside the public repository"
+    ]
+  },
+  "boundary": "Open measured benchmark data are valuable for schema, unit, missing-data and process/quality testing, but public reuse permission and a peer-reviewed experiment do not by themselves constitute the authorised real-site pilot and independent engineering comparison required by issue #50."
+}
