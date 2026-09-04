@@ -32,7 +32,7 @@
     "sizeBytes": 248,
     "responseSha256": "4681fa6e4303ecc351521fa1c7c836c9f3d6774b11725d39885ec3bf8ff16561",
     "zipStructureValid": false,
-    "result": "the exact version-1 publisher URL and both download query variants still returned the same 248-byte HTML response"
+    "result": "the exact version-1 publisher URL and both download query variants returned the same 248-byte HTML response"
   },
   "publicSourceRecheck": {
     "date": "2026-09-05",
@@ -40,14 +40,29 @@
     "repositoryAction": "machine retrieval contract retargeted to the bare advertised path while retaining publisher file version 1 as separate provenance metadata",
     "promotionAllowedBeforeArchiveAndSemanticValidation": false
   },
-  "decision": "reexecute-current-authoritative-bare-route-fail-closed",
+  "currentBareRouteExecution": {
+    "workflowRun": 33929397387,
+    "artifactId": 9957993770,
+    "artifactDigest": "sha256:445facacfbff51b9e21f5e2becb1bcab04accb4207e004a9762188b1a0ae214c",
+    "headSha": "6ca776e5675d28070adfbd5c93ad00d4ff7349cd",
+    "testedBarePublisherUrl": true,
+    "testedDownloadQueryVariants": true,
+    "httpStatus": 200,
+    "contentType": "text/html; charset=UTF-8",
+    "sizeBytes": 248,
+    "responseSha256": "4681fa6e4303ecc351521fa1c7c836c9f3d6774b11725d39885ec3bf8ff16561",
+    "zipStructureValid": false,
+    "result": "the current advertised bare route and both download query variants still returned the same 248-byte HTML response",
+    "rawResponseBodyEmitted": false
+  },
+  "decision": "publisher-openaccess-file-listing-confirmed-machine-delivery-still-blocked",
   "nextEvidenceRequired": [
-    "A source execution must receive a structurally valid ZIP from the currently advertised first-party bare archive path.",
+    "A first-party RWTH delivery change that serves the advertised ZIP bytes to a non-interactive research client.",
     "After delivery succeeds, exact archive/member fingerprints and delivered-schema semantics must pass the existing stage-1 and final acceptance gates."
   ],
   "countingBoundary": {
     "countsAsFullyProfiledMeasuredDataset": false,
     "acceptedMeasuredTimeSeriesSamples": 0,
-    "reason": "The publisher visibly lists an OpenAccess version-1 ZIP. Prior automated executions received HTML instead of ZIP bytes; the newly re-pinned current bare route must still prove actual archive delivery before any data are accepted."
+    "reason": "The publisher visibly lists an OpenAccess version-1 ZIP, but the fresh 2026-09-05 bare-route GitHub Actions execution still receives the same HTML blocker. No source data are accepted until actual archive delivery succeeds."
   }
 }
