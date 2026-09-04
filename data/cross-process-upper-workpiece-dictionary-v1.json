@@ -1,7 +1,7 @@
 {
   "schema": 1,
-  "version": "2026.08.29.3",
-  "reviewed": "2026-08-29",
+  "version": "2026.09.05.1",
+  "reviewed": "2026-09-05",
   "datasetId": "cross-process-chain-17240390",
   "streamId": "upper-workpiece-injection-moulding",
   "status": "partially-accepted-pressure-and-state-blocked",
@@ -58,7 +58,7 @@
       "promotionEligible": true,
       "promotionEligibleAfterDeterministicProfile": true,
       "unitEvidence": "Same-author upper-workpiece fabrication documentation expresses switching-point/melt-volume settings in cm3.",
-      "note": "This field may enter accepted measured totals only after the specialist parser validates the exact delivered schema and time vector archive-wide."
+      "note": "This field enters accepted measured totals only after the specialist parser validates the exact delivered schema and time vector archive-wide."
     },
     {
       "column": "injection_velocity",
@@ -68,20 +68,14 @@
       "promotionEligible": true,
       "promotionEligibleAfterDeterministicProfile": true,
       "unitEvidence": "Same-author upper-workpiece fabrication documentation expresses primary and secondary injection velocity in cm3/s.",
-      "note": "This field may enter accepted measured totals only after the specialist parser validates the exact delivered schema and time vector archive-wide."
+      "note": "This field enters accepted measured totals only after the specialist parser validates the exact delivered schema and time vector archive-wide."
     },
     {
       "column": "state",
       "role": "categorical machine/process-state code",
       "engineeringUnit": null,
       "sourceDefinedMeaning": null,
-      "observedCodesInCheckedAuthorExample": [
-        0,
-        1,
-        2,
-        4,
-        8
-      ],
+      "observedCodesInCheckedAuthorExample": [0, 1, 2, 4, 8],
       "promotionEligible": false,
       "promotionEligibleAfterDeterministicProfile": false,
       "blocker": "authoritative semantic mapping for state codes 0/1/2/4/8 not found in public author/publisher material",
@@ -93,16 +87,8 @@
     "expectedSerialFilesFromStructuralInventory": 10697,
     "expectedCsvColumnsIncludingUnlabelledIndex": 7,
     "acceptedMeasuredChannelsPerRow": 2,
-    "acceptedMeasuredColumns": [
-      "melt_volume",
-      "injection_velocity"
-    ],
-    "parsedButNonCountingColumns": [
-      "time",
-      "injection_pressure_target",
-      "injection_pressure_actual",
-      "state"
-    ],
+    "acceptedMeasuredColumns": ["melt_volume", "injection_velocity"],
+    "parsedButNonCountingColumns": ["time", "injection_pressure_target", "injection_pressure_actual", "state"],
     "rules": [
       "The first CSV header field must be the delivered unlabelled row index and the remaining six fields must match exactDeliveredSchema in exact order.",
       "Every non-empty data row must contain exactly seven finite numeric fields including the delivered row index.",
@@ -122,6 +108,19 @@
     "resolutionRule": "Preserve and validate each delivered file's explicit time vector. Do not assign a time engineering unit or impose the publisher's approximate global frequency where the source file differs.",
     "samplingRateAcceptedAsSingleArchiveConstant": false
   },
+  "publicSourceRecheck": {
+    "date": "2026-09-05",
+    "contactOrEmailUsed": false,
+    "sourcesRechecked": [
+      "authoritative Zenodo record",
+      "current cpc-data author repository and loader",
+      "same-author PyScrew upper-workpiece documentation",
+      "publicly reachable linked software-repository routes"
+    ],
+    "pressureUnitLocated": false,
+    "stateCodeDictionaryLocated": false,
+    "decision": "Keep pressure actual and state fail-closed. Machine-family conventions, lower-workpiece units, numeric ranges and bit-like state transitions are insufficient source-specific evidence."
+  },
   "evidenceBoundary": {
     "doNotInferPressureUnitFromLowerWorkpiece": true,
     "doNotInferStateSemanticsFromObservedTransitions": true,
@@ -130,12 +129,12 @@
     "staticDataRemainsOutsideSpecialistTimeSeriesParser": true,
     "additionalAcceptedMeasuredTimeSeriesSamples": 43814748,
     "fullyProfiledFamily": false,
-    "projectAcceptedMeasuredBaselineRemains": 65171059,
-    "fullyProfiledFamiliesRemain": 7
+    "canonicalEffectiveProjectAcceptedMeasuredBaseline": 85569824,
+    "canonicalEffectiveFullyProfiledFamilies": 17
   },
   "remainingAuthoritativeEvidenceRequired": [
-    "engineering unit for upper-workpiece injection_pressure_target and injection_pressure_actual",
-    "semantic mapping for upper-workpiece state codes"
+    "source-specific engineering unit for upper-workpiece injection_pressure_target and injection_pressure_actual",
+    "source-specific semantic mapping for upper-workpiece state codes"
   ],
   "specialistParserResult": {
     "path": "data/public-benchmark-results/cross-process-upper-workpiece-source-contract-v1.json",
