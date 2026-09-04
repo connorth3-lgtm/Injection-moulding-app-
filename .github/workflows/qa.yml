@@ -49,6 +49,8 @@ jobs:
         run: python qa_app_wide_audit.py
       - name: Data activation v1 integrity
         run: python qa_data_activation_v1.py
+      - name: Delayed transfer review integrity
+        run: python qa_delayed_transfer_reviews.py
       - name: Indexed material search hardening
         run: python qa_material_search_hardening.py
       - name: Real assistive-technology validation contract
