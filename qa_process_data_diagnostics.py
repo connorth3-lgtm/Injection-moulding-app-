@@ -13,6 +13,7 @@ def js_const(source,name):
 
 required=[
     'process-data-diagnostics.js','evidence-maturity-deep-dive.js','index.html','service-worker.js',
+    'src/domains/process/process-statistics.js','qa_process_statistics_current.cjs','runtime-domain-manifest.json',
     'desktop/electron/package.json','desktop/electron/scripts/generate-integrity.cjs'
 ]
 for name in required:
@@ -21,6 +22,11 @@ for name in required:
 js=text('process-data-diagnostics.js')
 p=subprocess.run(['node','--check',str(ROOT/'process-data-diagnostics.js')],capture_output=True,text=True)
 need(p.returncode==0,'process-data-diagnostics.js syntax error: '+(p.stderr or p.stdout))
+stat_js=text('src/domains/process/process-statistics.js')
+p=subprocess.run(['node','--check',str(ROOT/'src/domains/process/process-statistics.js')],capture_output=True,text=True)
+need(p.returncode==0,'process-statistics.js syntax error: '+(p.stderr or p.stdout))
+p=subprocess.run(['node',str(ROOT/'qa_process_statistics_current.cjs')],cwd=ROOT,capture_output=True,text=True)
+need(p.returncode==0,'current process statistics runtime QA failed: '+(p.stderr or p.stdout))
 
 need("const VERSION='2026.08.26.1'" in js,'guided data diagnostic version marker missing')
 need("const PACK=window.MM_PROCESS_EVIDENCE_DATASETS" in js,'guided UI must consume the canonical evidence dataset pack')
@@ -34,6 +40,12 @@ need("outside the formal assessment bank" in js,'guided cases must remain explic
 need('fetch(' not in js,'guided process-data module must remain local-only')
 for forbidden in ['MM_DATA.exams=', 'regionalQuestions=', 'MM_EVIDENCE_APPROVAL.records=', 'question_bank_version=', 'correctIndex=']:
     need(forbidden not in js,f'guided data diagnostics must not mutate formal assessment truth: {forbidden}')
+
+# Advanced statistics remain descriptive and fail closed on engineering semantics.
+for marker in ['lag1Autocorrelation','spcRunRules','meanDifference','stratify','cavityVariance','engineeringEvidenceReady','MM_SIGNAL_REGISTRY','not specification limits','not automatic production-change authority']:
+    need(marker in stat_js,f'current process statistics invariant missing: {marker}')
+need("raw[i]===null" in stat_js and 'contiguousSegments(values)' in stat_js,'missing values must break lag/run sequences instead of being coerced or bridged')
+need('fetch(' not in stat_js and 'XMLHttpRequest' not in stat_js and 'WebSocket' not in stat_js and 'sendBeacon' not in stat_js,'process statistics service must remain local-only')
 
 # Every canonical synthetic dataset must have exactly one guide.
 evidence=text('evidence-maturity-deep-dive.js')
@@ -64,10 +76,16 @@ need(cache_version==runtime_asset,'guided data service-worker cache version must
 need(bool(cache_revision.strip()),'guided data cache revision must remain an explicit independent invalidation token')
 need(expected_cache==f'mouldmaster-static-{cache_version}-{cache_revision}','browser expected PWA cache must match the service-worker cache identity')
 need("'./process-data-diagnostics.js'" in sw,'guided data diagnostics missing from offline cache')
+need("'./src/domains/process/process-statistics.js'" in sw,'current process statistics service missing from atomic offline cache')
+manifest=json.loads(text('runtime-domain-manifest.json'))
+assets=manifest.get('assets') or []
+need('./src/domains/shared/signal-registry.js' in assets and './src/domains/process/process-statistics.js' in assets,'signal/statistics domain assets missing from runtime manifest')
+need(assets.index('./src/domains/shared/signal-registry.js') < assets.index('./src/domains/process/process-statistics.js'),'canonical signal registry must load before process statistics')
 
 pkg=json.loads(text('desktop/electron/package.json'))
 froms={x.get('from') for x in pkg['build']['extraResources'] if isinstance(x,dict)}
 need('../../process-data-diagnostics.js' in froms,'guided data diagnostics missing from desktop package')
+need('../../src/domains' in froms,'desktop package must bundle the current domain runtime tree')
 need("'process-data-diagnostics.js'" in text('desktop/electron/scripts/generate-integrity.cjs'),'guided data diagnostics missing from desktop integrity manifest')
 
-print(f'MouldMaster guided process-data diagnostics QA passed (14/14 canonical datasets; baseline/fault/recovery reasoning; local-only; outside formal assessment; coherent runtime={runtime_asset})')
+print(f'MouldMaster guided process-data diagnostics QA passed (14/14 canonical datasets; descriptive statistics service with missingness-safe sequence logic and fail-closed signal semantics; local-only; coherent runtime={runtime_asset})')
