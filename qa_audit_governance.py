@@ -17,6 +17,8 @@ def need(ok, message):
 
 pages = text(".github/workflows/pages.yml")
 physical = text("tools/verify_pwa_physical_evidence.py")
+hold_builder = text("tools/build_pages_hold.py")
+hold_verifier = text("tools/verify_pages_hold.py")
 pruner = text(".github/workflows/prune-merged-branches.yml")
 ruleset = text("tools/verify_main_ruleset.py")
 attestation = json.loads(text(".github/main-ruleset-attestation.json"))
@@ -36,9 +38,9 @@ need(pages.count("actions: write") == 1, "actions:write must be limited to the p
 need(pages.count("pages: write") == 2, "pages:write must be limited to publisher containment and deploy")
 need(pages.count("id-token: write") == 1, "OIDC write permission must be limited to deploy")
 
-# PRs may validate a pending evidence contract. On main, pending valid evidence is
-# a non-error "not ready" state for the hardened publisher. Legacy branch publishing
-# must separately be disabled/confirmed as workflow mode before publication is safe.
+# PRs may validate a pending evidence contract. On main, pending valid evidence never
+# publishes the learner application. Instead a deterministic three-file release-hold
+# artifact quarantines the Pages origin and removes stale legacy/non-public content.
 # Invalid, stale or mismatched validated evidence must still fail the build.
 for marker in (
     "Validate physical PWA evidence contract on PRs",
@@ -52,12 +54,20 @@ for marker in (
     "--artifact .pages-dist --require-validated",
     'echo "production_ready=true" >> "$GITHUB_OUTPUT"',
     'echo "production_ready=false" >> "$GITHUB_OUTPUT"',
-    "Pages release not ready",
-    "The hardened publisher will not deploy; legacy branch publishing must also be disabled in repository Pages settings.",
+    "Pages application release not ready",
+    "The learner application will not be published. A minimal release-hold site is used only to quarantine the Pages origin",
     "needs: [production-source, publisher-guard]",
+    "Build release-hold Pages artifact",
+    "python3 tools/build_pages_hold.py",
+    "Upload production Pages artifact",
     "github.event_name == 'pull_request' || steps.physical-readiness.outputs.production_ready == 'true'",
-    "github.event_name != 'pull_request' && needs.build.outputs.production_ready == 'true'",
+    "Upload release-hold Pages artifact",
+    "github.event_name != 'pull_request' && steps.physical-readiness.outputs.production_ready != 'true'",
+    "path: .pages-hold",
+    "if: github.event_name != 'pull_request'\n    needs: build",
     "Reconfirm validated physical PWA evidence against rebuilt runtime",
+    "Verify release-hold deployment removed legacy publication",
+    "python3 tools/verify_pages_hold.py",
 ):
     need(marker in pages, f"physical-device release policy missing from Pages workflow: {marker}")
 for marker in (
@@ -65,18 +75,33 @@ for marker in (
     'if args.require_validated and data["status"] != "validated":',
     "validated physical iOS/iPadOS and Android evidence is required for production publication",
 ):
-    need(marker in physical, f"physical-device verifier does not fail closed for publication: {marker}")
+    need(marker in physical, f"physical-device verifier does not fail closed for production app publication: {marker}")
 
-# Pending evidence must never be allowed to reach hardened artifact publication on a main push.
+# Pending evidence must never select the learner application artifact for a main deploy.
+false_index = pages.index('echo "production_ready=false" >> "$GITHUB_OUTPUT"')
+hold_index = pages.index("- name: Build release-hold Pages artifact")
+need(false_index < hold_index, "pending readiness decision must occur before release-hold construction")
 need(
-    pages.index('echo "production_ready=false" >> "$GITHUB_OUTPUT"')
-    < pages.index("- name: Upload Pages artifact"),
-    "pending readiness decision must occur before artifact upload",
+    "if: github.event_name == 'pull_request' || steps.physical-readiness.outputs.production_ready == 'true'" in pages,
+    "production app artifact must require PR validation or validated production readiness",
 )
 need(
-    "if: github.event_name != 'pull_request' && needs.build.outputs.production_ready == 'true'" in pages,
-    "deploy must require the validated production-ready output",
+    "if: github.event_name != 'pull_request' && steps.physical-readiness.outputs.production_ready != 'true'" in pages,
+    "pending main release must select the quarantine artifact",
 )
+for marker in (
+    "ALLOWED_FILES = {\"index.html\", \"404.html\", \".nojekyll\"}",
+    "No learner application runtime",
+    "release-hold artifact boundary mismatch",
+):
+    need(marker in hold_builder, f"release-hold builder does not enforce the minimal public boundary: {marker}")
+for marker in (
+    "FORBIDDEN_PATHS",
+    "MouldMasterAcademy.exe",
+    "tools/quarantine_legacy_pages.py",
+    "probe_status != 404",
+):
+    need(marker in hold_verifier, f"release-hold live verifier does not prove stale content removal: {marker}")
 
 # Branch deletion must reconfirm the ref has not moved after safety evaluation.
 for marker in (
@@ -121,4 +146,4 @@ self_test = subprocess.run(
 )
 need(self_test.returncode == 0, f"ruleset verifier self-test failed: {self_test.stderr or self_test.stdout}")
 
-print("Audit governance QA passed: least-privilege Pages permissions, physical-test runtime fingerprint reporting, hardened pending-release gating plus workflow-only Pages prerequisite, live branch-prune SHA recheck and fail-closed ruleset bypass verification are enforced.")
+print("Audit governance QA passed: least-privilege Pages permissions, physical-test runtime fingerprint reporting, production-app fail-closed gating with minimal release-hold quarantine, live branch-prune SHA recheck and fail-closed ruleset bypass verification are enforced.")
