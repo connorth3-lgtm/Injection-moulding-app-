@@ -64,7 +64,7 @@ Do not treat script execution alone as proof of protection. Verify all of the fo
 2. The active MouldMaster ruleset targets exactly `refs/heads/main`, has no bypass actors, and contains the reviewed PR/squash/status-check policy.
 3. No active branch ruleset targets `~ALL` unless that broader policy is separately reviewed and intentionally required.
 4. Open a harmless test PR and confirm merge is blocked while any of `integrity`, `mobile-browser`, `build-windows`, or `question-quality-50-pass` is pending or failing.
-5. Confirm a normal squash merge succeeds once all four are green.
+5. Confirm a normal squash merge succeeds once all four are green; the successful source must have all four required workflows green.
 6. Confirm `Main PR Provenance Guard` still runs successfully after the merge.
 7. Confirm `Prune Fully Merged Branches` still runs only after the provenance guard succeeds.
 
