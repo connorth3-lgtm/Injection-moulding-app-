@@ -1,0 +1,10 @@
+{
+  "schema": 1,
+  "source": "admin-verified-ruleset-detail",
+  "repository": "connorth3-lgtm/Injection-moulding-app-",
+  "ruleset_id": 22155472,
+  "ruleset_updated_at": "2026-09-04T14:28:19.562+12:00",
+  "bypass_actors": [],
+  "current_user_can_bypass": "never",
+  "note": "Fallback proof used only when GitHub Actions redacts bypass_actors from the ruleset detail response. Any live ruleset update invalidates this attestation until an administrator-readable detail response is re-verified."
+}
