@@ -114,7 +114,10 @@ jq -e '
   ([.rules[].type] | index("required_status_checks")) != null and
   ([.rules[].type] | index("deletion")) != null and
   ([.rules[].type] | index("non_fast_forward")) != null and
+  ([.rules[].type] | index("required_linear_history")) != null and
+  ([.rules[] | select(.type == "pull_request") | .parameters.allowed_merge_methods] | .[0]) == ["squash"] and
   ([.rules[] | select(.type == "pull_request") | .parameters.required_approving_review_count] | .[0]) == 0 and
+  ([.rules[] | select(.type == "required_status_checks") | .parameters.do_not_enforce_on_create] | .[0]) == false and
   ([.rules[] | select(.type == "required_status_checks") | .parameters.strict_required_status_checks_policy] | .[0]) == true and
   ([.rules[] | select(.type == "required_status_checks") | .parameters.required_status_checks[].context] | sort) == (["build-windows","integrity","mobile-browser","question-quality-50-pass"] | sort)
 ' "$payload" >/dev/null
@@ -145,15 +148,43 @@ else
 fi
 
 echo "Applied ruleset id=$ruleset_id. Verifying effective configuration..."
+effective="$(gh api "repos/$REPO/rulesets/$ruleset_id")"
+printf '%s\n' "$effective" | jq '{id,name,target,enforcement,conditions,rules,bypass_actors}'
 
-gh api "repos/$REPO/rulesets/$ruleset_id" --jq '{id,name,target,enforcement,conditions,rules,bypass_actors}'
+printf '%s\n' "$effective" | jq -e --arg name "$RULESET_NAME" --argjson app "$GITHUB_ACTIONS_APP_ID" '
+  .name == $name and
+  .target == "branch" and
+  .enforcement == "active" and
+  .bypass_actors == [] and
+  .conditions.ref_name.include == ["refs/heads/main"] and
+  .conditions.ref_name.exclude == [] and
+  ([.rules[].type] | index("deletion")) != null and
+  ([.rules[].type] | index("non_fast_forward")) != null and
+  ([.rules[].type] | index("required_linear_history")) != null and
+  ([.rules[] | select(.type == "pull_request") | .parameters.allowed_merge_methods] | .[0]) == ["squash"] and
+  ([.rules[] | select(.type == "pull_request") | .parameters.required_approving_review_count] | .[0]) == 0 and
+  ([.rules[] | select(.type == "required_status_checks") | .parameters.do_not_enforce_on_create] | .[0]) == false and
+  ([.rules[] | select(.type == "required_status_checks") | .parameters.strict_required_status_checks_policy] | .[0]) == true and
+  ([.rules[] | select(.type == "required_status_checks") | .parameters.required_status_checks[].context] | sort) == (["build-windows","integrity","mobile-browser","question-quality-50-pass"] | sort) and
+  ([.rules[] | select(.type == "required_status_checks") | .parameters.required_status_checks[].integration_id] | all(. == $app))
+' >/dev/null || {
+  echo "Applied ruleset does not exactly satisfy the reviewed MouldMaster main policy." >&2
+  exit 1
+}
+
+for active_id in $(gh api "repos/$REPO/rulesets" --jq '.[] | select(.target == "branch" and .enforcement == "active") | .id'); do
+  if gh api "repos/$REPO/rulesets/$active_id" --jq '.conditions.ref_name.include[]?' | grep -Fxq '~ALL'; then
+    echo "Active branch ruleset id=$active_id targets ~ALL branches. Narrow or disable it before continuing." >&2
+    exit 1
+  fi
+done
 
 protected="$(gh api "repos/$REPO/branches/main" --jq '.protected')"
 if [[ "$protected" != "true" ]]; then
-  echo "GitHub does not yet report main as protected after applying the ruleset." >&2
-  echo "Do not close the native-protection tracker until the API reports protected=true." >&2
+  echo "GitHub does not yet report lowercase main as protected after applying the ruleset." >&2
+  echo "Check the ref condition is exactly refs/heads/main; ref matching is case-sensitive." >&2
   exit 1
 fi
 
-echo "Verified: GitHub reports main protected=true."
+echo "Verified: exact MouldMaster ruleset is active on lowercase main and GitHub reports protected=true."
 echo "Next: open a test PR and confirm all four required checks block merge while pending/failing."

@@ -1,4 +1,6 @@
 from pathlib import Path
+import subprocess
+import sys
 
 ROOT = Path(__file__).resolve().parent
 
@@ -24,6 +26,8 @@ desktop_build = text(".github/workflows/open-desktop-build.yml")
 question_quality = text(".github/workflows/question-quality-50-pass.yml")
 protection_helper = text(".github/scripts/apply-main-ruleset.sh")
 protection_doc = text(".github/MAIN_PROTECTION.md")
+ruleset_verifier = text("tools/verify_main_ruleset.py")
+production_verifier = text("tools/verify_production_source.py")
 
 # Main provenance is now a read-only post-push audit. Prevention belongs to
 # GitHub's native ruleset. The audit may report a policy failure, but it must
@@ -35,6 +39,8 @@ for marker in [
     "contents: read",
     "pull-requests: read",
     "actions: read",
+    "actions/checkout@v7",
+    "GITHUB_TOKEN: ${{ github.token }}",
     "HEAD_SHA: ${{ github.sha }}",
     "commits/$HEAD_SHA/pulls",
     "merged_at != null",
@@ -42,6 +48,7 @@ for marker in [
     "fail_audit",
     "GitHub reports main protected=false",
     "this audit will not mutate or roll back main",
+    "tools/verify_main_ruleset.py --repository",
     "MouldMaster Release QA",
     "Mobile Browser QA",
     "Open Desktop Build",
@@ -65,6 +72,42 @@ for forbidden in [
     need(forbidden not in guard, f"post-push provenance audit must never mutate or exempt main: {forbidden}")
 need("conclusion\" != \"success" in guard, "required PR workflows must still fail audit when completed unsuccessfully")
 need("for attempt in {1..60}" in guard, "read-only workflow audit must tolerate long-running required checks")
+
+# Effective ruleset verification must reject the two real failure modes seen in
+# repository administration: overbroad ~ALL protection and case-mismatched Main.
+for marker in [
+    'RULESET_NAME = "Protect main — MouldMaster required gates"',
+    'MAIN_REF = "refs/heads/main"',
+    '"integrity"',
+    '"mobile-browser"',
+    '"build-windows"',
+    '"question-quality-50-pass"',
+    '"deletion"',
+    '"non_fast_forward"',
+    '"required_linear_history"',
+    '"pull_request"',
+    '"required_status_checks"',
+    'allowed_merge_methods',
+    'required_approving_review_count',
+    'strict_required_status_checks_policy',
+    'do_not_enforce_on_create',
+    '"~ALL"',
+    'refs/heads/Main',
+    'branch.get("protected") is not True',
+]:
+    need(marker in ruleset_verifier, f"effective main ruleset verifier missing marker: {marker}")
+need("from verify_main_ruleset import verify as verify_main_ruleset" in production_verifier,
+     "production verifier must import the effective main ruleset verifier")
+need("verify_main_ruleset(repository)" in production_verifier,
+     "production verifier must validate the exact effective ruleset when native protection is required")
+
+self_test = subprocess.run(
+    [sys.executable, str(ROOT / "tools/verify_main_ruleset.py"), "--self-test"],
+    cwd=ROOT,
+    capture_output=True,
+    text=True,
+)
+need(self_test.returncode == 0, f"effective main ruleset verifier self-test failed: {(self_test.stderr or self_test.stdout).strip()}")
 
 # Production publication must require GitHub's effective native protection.
 need("--require-native-protection" in pages, "Pages publication does not require native main protection")
@@ -199,6 +242,6 @@ need("run: python qa_repo_governance.py" in release_qa, "release QA must run rep
 
 print(
     "MouldMaster repository governance QA passed "
-    "(native protection authoritative; post-push audit read-only; Pages requires native protection; "
+    "(exact main-only ruleset semantics; post-push audit read-only; Pages requires exact native protection; "
     "four required checks audited; dual locked desktop toolchains; guard-gated pruning; architecture debt gate)"
 )
