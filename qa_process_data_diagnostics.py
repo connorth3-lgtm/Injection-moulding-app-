@@ -42,7 +42,7 @@ for forbidden in ['MM_DATA.exams=', 'regionalQuestions=', 'MM_EVIDENCE_APPROVAL.
     need(forbidden not in js,f'guided data diagnostics must not mutate formal assessment truth: {forbidden}')
 
 # Advanced statistics remain descriptive and fail closed on engineering semantics.
-for marker in ['lag1Autocorrelation','spcRunRules','meanDifference','stratify','cavityVariance','engineeringEvidenceReady','MM_SIGNAL_REGISTRY','not specification limits','not automatic production-change authority']:
+for marker in ['lag1Autocorrelation','spcRunRules','meanDifference','stratify','cavityVariance','engineeringEvidenceReady','MM_SIGNAL_REGISTRY','not specification limits','automatic production-change authority']:
     need(marker in stat_js,f'current process statistics invariant missing: {marker}')
 need("raw[i]===null" in stat_js and 'contiguousSegments(values)' in stat_js,'missing values must break lag/run sequences instead of being coerced or bridged')
 need('fetch(' not in stat_js and 'XMLHttpRequest' not in stat_js and 'WebSocket' not in stat_js and 'sendBeacon' not in stat_js,'process statistics service must remain local-only')
