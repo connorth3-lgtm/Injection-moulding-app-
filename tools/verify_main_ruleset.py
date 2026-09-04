@@ -68,8 +68,9 @@ def valid_main_ruleset(detail: object) -> tuple[bool, list[str]]:
         errors.append("target must be branch")
     if detail.get("enforcement") != "active":
         errors.append("enforcement must be active")
-    if detail.get("bypass_actors") not in ([], None):
-        errors.append("bypass_actors must be empty")
+    bypass = detail.get("bypass_actors", "__missing__")
+    if bypass != []:
+        errors.append("bypass_actors must be present and empty")
 
     ref_name = ((detail.get("conditions") or {}).get("ref_name") or {})
     include = ref_name.get("include") or []
@@ -191,6 +192,12 @@ def self_test() -> None:
     renamed = json.loads(json.dumps(good))
     renamed["name"] = "connor"
     assert valid_main_ruleset(renamed)[0], "ruleset display name must not affect semantic validity"
+    missing_bypass = json.loads(json.dumps(good))
+    missing_bypass.pop("bypass_actors")
+    assert not valid_main_ruleset(missing_bypass)[0], "missing bypass metadata must fail closed"
+    null_bypass = json.loads(json.dumps(good))
+    null_bypass["bypass_actors"] = None
+    assert not valid_main_ruleset(null_bypass)[0], "null bypass metadata must fail closed"
     bad_case = json.loads(json.dumps(good))
     bad_case["conditions"]["ref_name"]["include"] = ["refs/heads/Main"]
     assert not valid_main_ruleset(bad_case)[0]
