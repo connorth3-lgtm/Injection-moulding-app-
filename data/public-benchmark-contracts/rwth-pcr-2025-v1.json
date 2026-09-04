@@ -50,7 +50,7 @@
     "rawThirdPartyDataCommitted": false,
     "artifactPolicy": "aggregate profile only",
     "promotionOnWorkflowSuccessAlone": false,
-    "reason": "A PR-only runner QA success does not prove that the publisher archive was retrieved. Dataset promotion requires a source execution plus inspection of its aggregate artifact."
+    "reason": "A workflow success does not prove that the publisher archive was retrieved because safe blocked-source diagnostics are also successful. Dataset promotion requires inspection of the aggregate source-execution result plus semantic acceptance."
   },
   "stage1Acceptance": {
     "sourceArchiveRetrieved": true,
@@ -64,8 +64,16 @@
   },
   "currentExecutionState": {
     "archiveRetrieved": false,
-    "lastBlockedExecutionDate": "2026-08-29",
-    "lastBlockedReason": "Earlier bare/versioned/query variants returned a 248-byte HTML response instead of ZIP bytes. The bare authoritative route is being re-executed after the 2026-09-05 source recheck.",
+    "workflowRun": 33929397387,
+    "artifactId": 9957993770,
+    "artifactDigest": "sha256:445facacfbff51b9e21f5e2becb1bcab04accb4207e004a9762188b1a0ae214c",
+    "retrievedDateUtc": "2026-09-04",
+    "httpStatus": 200,
+    "contentType": "text/html; charset=UTF-8",
+    "sizeBytes": 248,
+    "responseSha256": "4681fa6e4303ecc351521fa1c7c836c9f3d6774b11725d39885ec3bf8ff16561",
+    "zipStructureValid": false,
+    "lastBlockedReason": "The currently advertised bare archive path and both download-query variants returned the same 248-byte HTML response instead of ZIP bytes.",
     "acceptedMeasuredTimeSeriesSamples": 0
   },
   "finalAcceptanceRequires": [
@@ -77,5 +85,5 @@
     "Accepted measured-sample totals are computed only from delivered measured arrays/columns with ordering/time basis established.",
     "No raw third-party rows, arrays or cell values are committed or uploaded as workflow artifacts."
   ],
-  "evidenceBoundary": "The authoritative RWTH dataset record is CC BY 4.0 and explicitly describes real injection-moulding experiments with time-resolved pressures, controller output, screw velocity and screw-antechamber volume, plus part-mass-control iterations. The publisher Files page pins ExperimentalData.zip version 1 as an OpenAccess file and currently advertises the bare file path. Stage 1 only fingerprints and inventories the delivered archive. No dataset-family promotion or measured-sample count is allowed until delivered experiment grouping, time bases, signal semantics and measured-versus-command/reference boundaries are established."
+  "evidenceBoundary": "The authoritative RWTH dataset record is CC BY 4.0 and explicitly describes real injection-moulding experiments with time-resolved pressures, controller output, screw velocity and screw-antechamber volume, plus part-mass-control iterations. The publisher Files page pins ExperimentalData.zip version 1 as an OpenAccess file and currently advertises the bare file path. The current 2026-09-05 repository execution still receives HTML instead of ZIP bytes. No dataset-family promotion or measured-sample count is allowed until actual archive delivery, delivered experiment grouping, time bases, signal semantics and measured-versus-command/reference boundaries are established."
 }
