@@ -36,13 +36,23 @@ need(pages.count("actions: write") == 1, "actions:write must be limited to the p
 need(pages.count("pages: write") == 2, "pages:write must be limited to publisher containment and deploy")
 need(pages.count("id-token: write") == 1, "OIDC write permission must be limited to deploy")
 
-# PRs may validate a pending evidence contract, but production publication must
-# fail closed until exact-runtime physical iOS/iPadOS and Android evidence is validated.
+# PRs may validate a pending evidence contract. On main, pending valid evidence is
+# a non-error "not ready" state: artifact upload and deployment remain fail-closed.
+# Invalid, stale or mismatched validated evidence must still fail the build.
 for marker in (
     "Validate physical PWA evidence contract on PRs",
     "--contract-only",
-    "Require validated physical iOS and Android evidence for production publication",
+    "Evaluate physical-device production readiness",
+    'production_ready: ${{ steps.physical-readiness.outputs.production_ready }}',
+    'id: physical-readiness',
+    'if [[ "$status" == "validated" ]]; then',
     "--artifact .pages-dist --require-validated",
+    'echo "production_ready=true" >> "$GITHUB_OUTPUT"',
+    'echo "production_ready=false" >> "$GITHUB_OUTPUT"',
+    "Pages release not ready",
+    "expected readiness state, not a CI error; publication remains fail-closed",
+    "github.event_name == 'pull_request' || steps.physical-readiness.outputs.production_ready == 'true'",
+    "github.event_name != 'pull_request' && needs.build.outputs.production_ready == 'true'",
     "Reconfirm validated physical PWA evidence against rebuilt runtime",
 ):
     need(marker in pages, f"physical-device release policy missing from Pages workflow: {marker}")
@@ -52,6 +62,17 @@ for marker in (
     "validated physical iOS/iPadOS and Android evidence is required for production publication",
 ):
     need(marker in physical, f"physical-device verifier does not fail closed for publication: {marker}")
+
+# Pending evidence must never be allowed to reach artifact publication on a main push.
+need(
+    pages.index('echo "production_ready=false" >> "$GITHUB_OUTPUT"')
+    < pages.index("- name: Upload Pages artifact"),
+    "pending readiness decision must occur before artifact upload",
+)
+need(
+    "if: github.event_name != 'pull_request' && needs.build.outputs.production_ready == 'true'" in pages,
+    "deploy must require the validated production-ready output",
+)
 
 # Branch deletion must reconfirm the ref has not moved after safety evaluation.
 for marker in (
@@ -96,4 +117,4 @@ self_test = subprocess.run(
 )
 need(self_test.returncode == 0, f"ruleset verifier self-test failed: {self_test.stderr or self_test.stdout}")
 
-print("Audit governance QA passed: least-privilege Pages permissions, validated physical-device publication gate, live branch-prune SHA recheck and fail-closed ruleset bypass verification (including exact-instant redaction attestation) are enforced.")
+print("Audit governance QA passed: least-privilege Pages permissions, non-error pending release readiness with fail-closed publication, live branch-prune SHA recheck and fail-closed ruleset bypass verification are enforced.")
