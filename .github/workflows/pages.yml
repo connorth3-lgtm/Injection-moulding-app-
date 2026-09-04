@@ -70,6 +70,8 @@ jobs:
       contents: read
     needs: publisher-guard
     runs-on: ubuntu-latest
+    outputs:
+      production_ready: ${{ steps.physical-readiness.outputs.production_ready }}
     steps:
       - name: Checkout
         uses: actions/checkout@v7
@@ -80,10 +82,42 @@ jobs:
         run: python3 tools/verify_pwa_physical_evidence.py --contract-only
       - name: Build production-only Pages artifact
         run: python3 tools/build_pages_artifact.py
-      - name: Require validated physical iOS and Android evidence for production publication
+      - name: Evaluate physical-device production readiness
+        id: physical-readiness
         if: github.event_name != 'pull_request'
-        run: python3 tools/verify_pwa_physical_evidence.py --artifact .pages-dist --require-validated
+        shell: bash
+        run: |
+          # Invalid/malformed evidence is still a hard CI failure.
+          python3 tools/verify_pwa_physical_evidence.py --contract-only
+          status="$(python3 - <<'PY'
+          import json
+          from pathlib import Path
+          data = json.loads(Path('data/pwa-physical-device-validation-v1.json').read_text(encoding='utf-8'))
+          print(data['status'])
+          PY
+          )"
+          if [[ "$status" == "validated" ]]; then
+            # Validated evidence must also match the exact built public runtime.
+            python3 tools/verify_pwa_physical_evidence.py --artifact .pages-dist --require-validated
+            echo "production_ready=true" >> "$GITHUB_OUTPUT"
+            {
+              echo "### Pages release ready"
+              echo "Validated physical iOS/iPadOS and Android evidence matches the exact production artifact."
+            } >> "$GITHUB_STEP_SUMMARY"
+          else
+            # A structurally valid pending contract is a release-readiness state, not a CI defect.
+            # Still compute/report the exact runtime fingerprint and fail to publish by output gating.
+            python3 tools/verify_pwa_physical_evidence.py --artifact .pages-dist
+            echo "production_ready=false" >> "$GITHUB_OUTPUT"
+            echo "::notice title=Pages release not ready::Validated physical iOS/iPadOS and Android evidence is pending; no Pages artifact will be uploaded or deployed."
+            {
+              echo "### Pages release not ready"
+              echo "Physical iOS/iPadOS and Android validation is still pending."
+              echo "This is an expected readiness state, not a CI error; publication remains fail-closed."
+            } >> "$GITHUB_STEP_SUMMARY"
+          fi
       - name: Upload Pages artifact
+        if: github.event_name == 'pull_request' || steps.physical-readiness.outputs.production_ready == 'true'
         uses: actions/upload-pages-artifact@v4
         with:
           path: .pages-dist
@@ -92,7 +126,7 @@ jobs:
     permissions:
       pages: write
       id-token: write
-    if: github.event_name != 'pull_request'
+    if: github.event_name != 'pull_request' && needs.build.outputs.production_ready == 'true'
     needs: build
     environment:
       name: github-pages
