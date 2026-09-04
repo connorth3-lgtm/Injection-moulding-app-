@@ -26,6 +26,7 @@ for required in [
     "analyzeCaseById",
     "evidencePlan",
     "evidencePlanById",
+    "PLAN_APPLICABILITY",
     "not-supported-by-case-context",
     "excludedReasoningFields",
     "not a diagnosis or local root-cause finding",
@@ -48,6 +49,7 @@ globalThis.MM_ENGINEERING_STORE={
   deleteCase:()=>{writes++;throw new Error('write path must not be called')}
 };
 const adapter=require('./src/domains/engineering/research-context.js');
+assert.deepStrictEqual([...adapter.planApplicability],['high','moderate']);
 
 const multicavity={
   id:'case-multi',
@@ -74,14 +76,18 @@ assert(!adapter.rankingFields.includes('hypothesis'));
 assert(!adapter.rankingFields.includes('controlledTest'));
 assert(!adapter.rankingFields.includes('conclusion'));
 
-const multi=adapter.analyzeCase(multicavity,5);
+const multi=adapter.analyzeCase(multicavity,12);
 assert.strictEqual(JSON.stringify(multicavity),before,'adapter mutated engineering case');
 assert.strictEqual(multi.status,'candidates');
 assert(multi.candidates.length>0);
 assert.strictEqual(multi.candidates[0].mechanismId,'runner-gate-multicavity-imbalance');
+assert(adapter.planApplicability.includes(multi.candidates[0].applicability));
 assert(multi.candidates.every(x=>x.evidenceState==='promoted'));
 assert(/not a diagnosis/i.test(multi.boundary));
 assert(/excluded from research ranking/i.test(multi.biasBoundary));
+const weakLsr=multi.candidates.find(x=>x.mechanismId==='liquid-silicone-rubber');
+assert(weakLsr,'expected low-relevance LSR comparison candidate');
+assert.strictEqual(weakLsr.applicability,'low');
 
 const moisture={
   id:'case-moisture',
@@ -92,6 +98,7 @@ const moisture={
 };
 const wet=adapter.analyzeCase(moisture,4);
 assert.strictEqual(wet.candidates[0].mechanismId,'moisture-drying-degradation');
+assert(adapter.planApplicability.includes(wet.candidates[0].applicability));
 
 const hypothesisOnly=adapter.analyzeCase({id:'case-empty',hypothesis:'weld line mechanical strength'},5);
 assert.strictEqual(hypothesisOnly.status,'no-context');
@@ -104,11 +111,13 @@ assert.strictEqual(unrelated.candidates.length,0);
 
 const plan=adapter.evidencePlan(multicavity,'runner-gate-multicavity-imbalance');
 assert.strictEqual(plan.status,'candidate-plan');
+assert(adapter.planApplicability.includes(plan.applicability));
 assert(plan.plan.collect.includes('cavity-specific pressure/fill response'));
 assert(plan.plan.sources.length>=2);
 assert(/not a diagnosis/i.test(plan.boundary));
 const blocked=adapter.evidencePlan(multicavity,'liquid-silicone-rubber');
 assert.strictEqual(blocked.status,'not-supported-by-case-context');
+assert.strictEqual(blocked.applicability,'low');
 assert.strictEqual(blocked.plan,null);
 
 cases.set(multicavity.id,multicavity);
