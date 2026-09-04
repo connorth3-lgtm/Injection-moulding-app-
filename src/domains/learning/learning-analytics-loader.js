@@ -1,4 +1,4 @@
-/* MouldMaster domain bridge for legacy Learning Analytics — 2026.09.04.1 */
+/* MouldMaster domain bridge for legacy Learning Analytics — 2026.09.04.2 */
 (function(){
 'use strict';
 if(window.MM_LEARNING_ANALYTICS||window.MM_LEARNING_ANALYTICS_LOADING)return;
@@ -8,6 +8,7 @@ const version=String(window.MM_RUNTIME_ASSET_VERSION||'').trim();
 const src=version?`${base}?v=${encodeURIComponent(version)}`:base;
 const STORAGE_PREFIX='mm_learning_analytics_v1::';
 const scope=window.MM_LEARNER_SCOPE;
+scope.registerStoragePrefix?.(STORAGE_PREFIX);
 function currentRole(){try{return String(typeof user!=='undefined'&&user?.role||'learner').trim().toLowerCase()}catch(_){return'learner'}}
 function isInstructor(){return currentRole()==='instructor'}
 function enforceExportAccess(root=document){
@@ -19,7 +20,7 @@ function storageKey(token=scope.token()){return scope.storageKey(STORAGE_PREFIX,
 function readEvents(token=scope.token()){
   try{const x=JSON.parse(localStorage.getItem(storageKey(token))||'null');return x?.schema===1&&Array.isArray(x.events)?x.events:[]}catch(_){return[]}
 }
-function allTokens(){const out=[];try{for(let i=0;i<localStorage.length;i++){const k=localStorage.key(i);if(k?.startsWith(STORAGE_PREFIX))out.push(k.slice(STORAGE_PREFIX.length))}}catch(_){}return [...new Set(out)]}
+function allTokens(){const out=[];try{for(let i=0;i<localStorage.length;i++){const k=localStorage.key(i);if(k?.startsWith(STORAGE_PREFIX)){const t=k.slice(STORAGE_PREFIX.length);if(scope.includeStorageToken?.(STORAGE_PREFIX,t)!==false)out.push(t)}}}catch(_){}return [...new Set(out)]}
 function aggregate(events){
   const e=Array.isArray(events)?events:[];
   const lessonTime=e.filter(x=>x.type==='lesson_time').reduce((s,x)=>s+(Number(x.durationSec)||0),0);
@@ -49,7 +50,7 @@ function requireInstructor(){if(!isInstructor())throw new Error('Cross-profile a
 function exportAnonymousSummary(){
   requireInstructor();
   const c=cohort(),combined=c.aggregate;
-  const payload={schema:2,version:version||'domain-quality-v1',generatedAt:new Date().toISOString(),privacy:'Anonymous aggregate only; profile boundaries are preserved for retry metrics; no names, notes, answer text or event timestamps.',anonymousProfiles:c.tokens.length,aggregate:{activeLearningSeconds:combined.activeTime,practiceAttempts:combined.practiceAttempts,practiceCompleted:combined.practiceCompleted,averagePracticeScore:+combined.avgScore.toFixed(2),repeatedCases:combined.repeatedCases,averageRetryGain:+combined.avgGain.toFixed(2),improvedCases:combined.improvedCases,missesByStage:combined.difficult.map(([k,n])=>({stage:stageLabel(k),count:n}))},profiles:c.perProfile.map((x,i)=>({anonymousProfile:i+1,activeLearningSeconds:x.activeTime,practiceAttempts:x.practiceAttempts,practiceCompleted:x.practiceCompleted,averagePracticeScore:+x.avgScore.toFixed(2),repeatedCases:x.repeatedCases,averageRetryGain:+x.avgGain.toFixed(2),improvedCases:x.improvedCases}))};
+  const payload={schema:2,version:version||'domain-quality-v1',generatedAt:new Date().toISOString(),privacy:'Anonymous aggregate only; profile boundaries are preserved for retry metrics; ambiguous or unowned legacy learner buckets are quarantined/excluded; no names, notes, answer text or event timestamps.',anonymousProfiles:c.tokens.length,aggregate:{activeLearningSeconds:combined.activeTime,practiceAttempts:combined.practiceAttempts,practiceCompleted:combined.practiceCompleted,averagePracticeScore:+combined.avgScore.toFixed(2),repeatedCases:combined.repeatedCases,averageRetryGain:+combined.avgGain.toFixed(2),improvedCases:combined.improvedCases,missesByStage:combined.difficult.map(([k,n])=>({stage:stageLabel(k),count:n}))},profiles:c.perProfile.map((x,i)=>({anonymousProfile:i+1,activeLearningSeconds:x.activeTime,practiceAttempts:x.practiceAttempts,practiceCompleted:x.practiceCompleted,averagePracticeScore:+x.avgScore.toFixed(2),repeatedCases:x.repeatedCases,averageRetryGain:+x.avgGain.toFixed(2),improvedCases:x.improvedCases}))};
   const blob=new Blob([JSON.stringify(payload,null,2)],{type:'application/json;charset=utf-8'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='mouldmaster-anonymous-learning-summary.json';document.body.appendChild(a);a.click();a.remove();URL.revokeObjectURL(url);return payload
 }
 function setMetric(label,value,index=0){const matches=[...(document.querySelectorAll?.('#learningInsights .la-kpi span')||[])].filter(x=>x.textContent?.trim()===label);const node=matches[index]?.parentElement?.querySelector?.('strong');if(node)node.textContent=value}
@@ -70,7 +71,7 @@ function installQuality(){
   api.exportAnonymousSummary=exportAnonymousSummary;
   api.open=function(){const r=baseOpen?.apply(this,arguments);queueMicrotask(patchRenderedMetrics);return r};
   api.__mmQualityCorrected=true;
-  window.MM_LEARNING_ANALYTICS_QUALITY=Object.freeze({aggregate,cohortSummary:api.cohortSummary,exportAnonymousSummary,scope:'Retry gain is latest completed attempt minus first completed attempt. Cross-profile cohort aggregation namespaces case sequences by anonymous learner profile before computing retry metrics.'});
+  window.MM_LEARNING_ANALYTICS_QUALITY=Object.freeze({aggregate,cohortSummary:api.cohortSummary,exportAnonymousSummary,scope:'Retry gain is latest completed attempt minus first completed attempt. Cross-profile aggregation preserves anonymous learner boundaries. Legacy learner buckets with ambiguous or unproven local ownership are excluded rather than assigned to a profile.'});
   queueMicrotask(patchRenderedMetrics);
 }
 function guardExport(event){
