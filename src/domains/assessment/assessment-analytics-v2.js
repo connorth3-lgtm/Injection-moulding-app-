@@ -37,7 +37,7 @@ function exportV2(){
   const legacy=legacyExport(),catalogBankVersion=window.MM_QUESTION_REVISIONS?.bankVersion||window.MM_ASSESSMENT_FINAL_HARDENING?.bankVersion||'unknown',store=readStore(legacy),questions={},baseline=store?.legacyBaseline||legacy.questions||{};
   for(const q of Object.values(baseline)){const row=legacyRow(q,catalogBankVersion);questions[row.analyticsKey]=row}
   for(const x of Object.values(store?.revisions||{})){const row=revisionRow(x,catalogBankVersion);questions[row.analyticsKey]=row}
-  return{schema:2,version:VERSION,bankVersion:catalogBankVersion,catalogBankVersion,responseTimingBasis:legacy.responseTimingBasis||null,questions,exams:legacy.exams||{},baselineCapturedAt:store?.baselineCapturedAt||null,boundary:'Pre-ledger stable-ID counters are frozen as legacy-unversioned. New assessment attempts are recorded per learner and per proven question revision. Historical counters are never reassigned to the current catalog revision; current catalog metadata remains separate.'}
+  return{schema:2,version:VERSION,bankVersion:catalogBankVersion,catalogBankVersion,responseTimingBasis:legacy.responseTimingBasis||null,questions,exams:legacy.exams||{},baselineCapturedAt:store?.baselineCapturedAt||null,boundary:'Pre-ledger stable-ID counters are frozen as legacy-unversioned. New proven attempts use stable question ID plus explicit revision and question-and-revision-scoped fingerprints. Historical counters are never reassigned to the current catalog revision; current catalog metadata remains separate.'}
 }
 function activeExamSnapshot(level){
   let exam=null;try{if(typeof activeExam!=='undefined')exam=activeExam}catch(_){}
