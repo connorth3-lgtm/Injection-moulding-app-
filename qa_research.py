@@ -138,4 +138,7 @@ for asset in ASSETS:
 p = subprocess.run([sys.executable, str(ROOT / "qa_governed_research_applicability.py")], cwd=ROOT, capture_output=True, text=True)
 need(p.returncode == 0, "governed research applicability QA failed: " + (p.stderr or p.stdout))
 
-print(f"MouldMaster research QA passed ({len(passes)} research passes + governed mechanism applicability)")
+p = subprocess.run([sys.executable, str(ROOT / "qa_engineering_research_context.py")], cwd=ROOT, capture_output=True, text=True)
+need(p.returncode == 0, "engineering research context QA failed: " + (p.stderr or p.stdout))
+
+print(f"MouldMaster research QA passed ({len(passes)} research passes + governed mechanism applicability + engineering case context)")
