@@ -50,11 +50,11 @@ const assert=require('assert');
   vm.createContext(sandbox);vm.runInContext(learnerSource,sandbox,{filename:'learner-model.js'});
   let model=window.MM_LEARNER_MODEL.build();
   for(const key of ['competency:process-control','concept:fill-balance']){
-    const row=model.topics.find(x=>x.key===key);assert(row,`formal assessment topic missing: ${key}`);assert.strictEqual(row.last,assessedAt,`assessment recency timestamp was lost for ${key}`);assert(row.activityTypes.includes('formal-assessment'));
+    const row=model.topics.find(x=>x.key===key);assert(row,`formal assessment topic missing: ${key}`);assert.strictEqual(row.last,assessedAt,`assessment recency timestamp was lost for ${key}`);assert(row.activityTypes.includes('formal-assessment'));assert.strictEqual(row.recencyKnown,true);
   }
   window.MM_ACTIVITY_EVENTS_V2={events:()=>[],assessmentSnapshot:()=>({questions:[{attempts:1,correct:1,wrong:0,competency:'legacy-topic',concept:'',last:null}]})};
   model=window.MM_LEARNER_MODEL.build();
-  const legacy=model.topics.find(x=>x.key==='competency:legacy-topic');assert(legacy);assert.strictEqual(legacy.last,null,'legacy assessment recency was fabricated from the current time');
+  const legacy=model.topics.find(x=>x.key==='competency:legacy-topic');assert(legacy);assert.strictEqual(legacy.last,null,'legacy assessment recency was fabricated from the current time');assert.strictEqual(legacy.recencyKnown,false,'legacy assessment recency was incorrectly treated as known');assert.strictEqual(legacy.forgettingRisk,null,'legacy assessment recency was converted into synthetic forgetting risk');
   const activitySource=fs.readFileSync('src/domains/learning/activity-events-v2.js','utf8');
   assert(activitySource.includes('last:q.last||null'),'assessment activity projection no longer preserves analytics timestamps');
 }
@@ -77,3 +77,7 @@ const assert=require('assert');
 }
 
 console.log('Audit remediation runtime QA passed: instructor-only cross-profile export, persisted formal-assessment recency and fail-closed inadequate-sample confidence intervals verified.');
+
+// Keep the next-stage learner-model decision pipeline inside the mandatory Release QA
+// context that originally caught the audited data-quality regressions.
+require('./qa_learner_recommendation_pipeline.cjs');
