@@ -22,7 +22,7 @@ const assert=require('assert');
   };
   const sandbox={
     user:{role:'learner'},document,console,encodeURIComponent,queueMicrotask:fn=>fn(),Blob:function(){},URL:{createObjectURL:()=> 'blob:test',revokeObjectURL:()=>{}},
-    window:{MM_LEARNER_SCOPE:{token:()=> 'learner',storageKey:(prefix,token)=>`${prefix}${token}`},addEventListener(type,fn){listeners.window[type]=fn}},
+    window:{MM_LEARNER_SCOPE:{token:()=> 'learner',storageKey:(prefix,token)=>`${prefix}${token}`,registerStoragePrefix:()=>{},includeStorageToken:()=>true},addEventListener(type,fn){listeners.window[type]=fn}},
     localStorage:{length:0,key:()=>null,getItem:()=>null},
   };
   sandbox.window.window=sandbox.window;sandbox.window.document=document;sandbox.window.toast=()=>{};
@@ -81,7 +81,8 @@ const assert=require('assert');
 
 console.log('Audit remediation runtime QA passed: instructor-only cross-profile export, persisted formal-assessment recency and fail-closed inadequate-sample confidence intervals verified.');
 
-// Keep the next-stage learner-model and analytics-quality decision pipelines inside the
-// mandatory Release QA context that originally caught the audited data-quality regressions.
+// Keep the next-stage learner-model, analytics-quality and data-provenance decision
+// pipelines inside the mandatory Release QA context that caught the audited regressions.
 require('./qa_learner_recommendation_pipeline.cjs');
 require('./qa_learning_analytics_quality.cjs');
+require('./qa_deep_dive_data_provenance.cjs');
