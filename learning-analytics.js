@@ -41,7 +41,9 @@ function allAnalyticsTokens(){
 }
 function eventsFor(token=learnerToken()){return readStore(token).events||[]}
 function durationLabel(seconds){const s=Math.max(0,Math.round(Number(seconds)||0));if(s<60)return `${s}s`;const m=Math.floor(s/60),r=s%60;return r?`${m}m ${r}s`:`${m}m`}
-function currentRole(){try{return String(typeof user!=='undefined'&&user?.role||'learner')}catch(_){return 'learner'}}
+function currentRole(){try{return String(typeof user!=='undefined'&&user?.role||'learner').trim().toLowerCase()}catch(_){return 'learner'}}
+function isInstructor(){return currentRole()==='instructor'}
+function requireInstructor(action='Cross-profile analytics export'){if(!isInstructor())throw new Error(`${action} requires instructor role`)}
 function currentCompletedLessons(){try{return Array.isArray(user?.completed)?user.completed.length:0}catch(_){return 0}}
 
 function aggregate(events){
@@ -208,19 +210,20 @@ function instructorPanel(){
   return `<div class="la-panel card" style="margin-top:14px"><div class="eyebrow">Instructor view · this device only</div><h3 style="margin-top:6px">Anonymous pilot summary</h3><div class="la-kpis" style="margin-bottom:0"><div class="la-kpi card"><span>Anonymous learner profiles</span><strong>${tokens.length}</strong></div><div class="la-kpi card"><span>Tracked practice attempts</span><strong>${a.practiceAttempts}</strong></div><div class="la-kpi card"><span>Completed practice cases</span><strong>${a.practiceCompleted}</strong></div><div class="la-kpi card"><span>Average retry gain</span><strong>${a.repeatedCases?a.avgGain.toFixed(1)+' pts':'—'}</strong></div></div><p class="la-note">Profiles are represented only by local hashed storage tokens. No learner names are displayed or included in the exported pilot summary.</p></div>`
 }
 function exportAnonymousSummary(){
+  requireInstructor();
   const tokens=allAnalyticsTokens(),perProfile=tokens.map(t=>aggregate(eventsFor(t))),combined=aggregate(tokens.flatMap(t=>eventsFor(t)));
   const payload={schema:1,version:VERSION,generatedAt:new Date().toISOString(),privacy:'Anonymous aggregate only; no names, notes, answer text or event timestamps.',anonymousProfiles:tokens.length,aggregate:{activeLearningSeconds:combined.activeTime,practiceAttempts:combined.practiceAttempts,practiceCompleted:combined.practiceCompleted,averagePracticeScore:+combined.avgScore.toFixed(2),repeatedCases:combined.repeatedCases,averageRetryGain:+combined.avgGain.toFixed(2),missesByStage:combined.difficult.map(([k,n])=>({stage:stepLabel(k),count:n}))},profiles:perProfile.map((x,i)=>({anonymousProfile:i+1,activeLearningSeconds:x.activeTime,practiceAttempts:x.practiceAttempts,practiceCompleted:x.practiceCompleted,averagePracticeScore:+x.avgScore.toFixed(2),repeatedCases:x.repeatedCases,averageRetryGain:+x.avgGain.toFixed(2)}))};
   const blob=new Blob([JSON.stringify(payload,null,2)],{type:'application/json;charset=utf-8'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='mouldmaster-anonymous-learning-summary.json';document.body.appendChild(a);a.click();a.remove();URL.revokeObjectURL(url)
 }
 function clearCurrentAnalytics(){if(!confirm('Clear tracked learning analytics for this local profile? Lesson progress, notes and assessment records are not changed.'))return;try{localStorage.removeItem(storageKey())}catch(_){}renderInsights()}
 function renderInsights(){
-  const host=ensureSection(),events=eventsFor();if(!host)return;host.innerHTML=`<div class="la-hero card"><div class="eyebrow">Privacy-preserving learner validation</div><h2>Learning insights</h2><p>Use real learning behaviour to see whether MouldMaster is helping: completion, active time, retries, missed reasoning stages and improvement across repeat attempts.</p><div class="la-privacy"><b>Local-only by design:</b> analytics stay on this device. MouldMaster does not store names, email addresses, notes, free-text responses, formal assessment answers or selected answer text in this analytics log, and this module has no network upload path.</div><div class="la-actions"><button class="secondary" type="button" data-la-export>Export anonymous summary</button><button class="ghost" type="button" data-la-clear>Clear my analytics</button></div></div>${learnerPanel(events)}${currentRole()==='instructor'?instructorPanel():''}`
+  const host=ensureSection(),events=eventsFor();if(!host)return;host.innerHTML=`<div class="la-hero card"><div class="eyebrow">Privacy-preserving learner validation</div><h2>Learning insights</h2><p>Use real learning behaviour to see whether MouldMaster is helping: completion, active time, retries, missed reasoning stages and improvement across repeat attempts.</p><div class="la-privacy"><b>Local-only by design:</b> analytics stay on this device. MouldMaster does not store names, email addresses, notes, free-text responses, formal assessment answers or selected answer text in this analytics log, and this module has no network upload path.</div><div class="la-actions">${isInstructor()?'<button class="secondary" type="button" data-la-export>Export anonymous summary</button>':''}<button class="ghost" type="button" data-la-clear>Clear my analytics</button></div></div>${learnerPanel(events)}${isInstructor()?instructorPanel():''}`
 }
 function openInsights(){closeLessonSession('insights');ensureStyle();const host=ensureSection();if(!host)return;hideOtherViews();host.classList.remove('hidden');markNav();setHeader();renderInsights();window.scrollTo?.({top:0,behavior:'smooth'})}
 
 function install(){ensureStyle();ensureSection();ensureNav();patchMobileMore();installCoreHooks()}
 
-document.addEventListener('click',e=>{handlePracticeClick(e);const t=e.target.closest?.('[data-la-export],[data-la-clear]');if(t?.hasAttribute('data-la-export'))exportAnonymousSummary();if(t?.hasAttribute('data-la-clear'))clearCurrentAnalytics()});
+document.addEventListener('click',e=>{handlePracticeClick(e);const t=e.target.closest?.('[data-la-export],[data-la-clear]');if(t?.hasAttribute('data-la-export')){try{exportAnonymousSummary()}catch(err){window.toast?.(err?.message||String(err))}}if(t?.hasAttribute('data-la-clear'))clearCurrentAnalytics()});
 document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='hidden')pauseLesson();else touchActivity()});
 window.addEventListener('beforeunload',()=>{closeLessonSession('unload');abandonPractice('diagnostic',currentDiagnostic);abandonPractice('process-data',currentProcessData)});
 document.addEventListener('pointerdown',touchActivity,{passive:true});document.addEventListener('keydown',touchActivity);document.addEventListener('scroll',touchActivity,{passive:true});
@@ -229,5 +232,5 @@ let queued=false;function schedule(){if(queued)return;queued=true;(window.reques
 const observer=new MutationObserver(schedule);if(document.documentElement)observer.observe(document.documentElement,{childList:true,subtree:true});install();window.addEventListener('load',schedule);
 try{if(typeof currentView!=='undefined'&&currentView==='lesson')startLessonSession()}catch(_){}
 
-window.MM_LEARNING_ANALYTICS={version:VERSION,record,summary:()=>aggregate(eventsFor()),open:openInsights,scope:'Learner-scoped local analytics only; no names, notes, free text, assessment answers or network upload.'};
+window.MM_LEARNING_ANALYTICS={version:VERSION,record,summary:()=>aggregate(eventsFor()),open:openInsights,canExportCrossProfile:isInstructor,scope:'Learner-scoped local analytics only; cross-profile aggregate export is instructor-only; no names, notes, free text, assessment answers or network upload.'};
 })();
