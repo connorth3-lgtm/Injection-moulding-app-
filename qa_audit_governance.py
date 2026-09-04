@@ -39,9 +39,10 @@ need(pages.count("pages: write") == 2, "pages:write must be limited to publisher
 need(pages.count("id-token: write") == 1, "OIDC write permission must be limited to deploy")
 
 # PRs may validate a pending evidence contract. On main, pending valid evidence never
-# publishes the learner application. Instead a deterministic three-file release-hold
-# artifact quarantines the Pages origin and removes stale legacy/non-public content.
-# Invalid, stale or mismatched validated evidence must still fail the build.
+# publishes the learner application. Instead a deterministic two-file release-hold
+# artifact (index.html + 404.html) quarantines the Pages origin and removes stale
+# legacy/non-public content. Invalid, stale or mismatched validated evidence must
+# still fail the build.
 for marker in (
     "Validate physical PWA evidence contract on PRs",
     "--contract-only",
@@ -90,11 +91,12 @@ need(
     "pending main release must select the quarantine artifact",
 )
 for marker in (
-    "ALLOWED_FILES = {\"index.html\", \"404.html\", \".nojekyll\"}",
+    'ALLOWED_FILES = {"index.html", "404.html"}',
+    "Pages upload action excludes dotfiles",
     "No learner application runtime",
     "release-hold artifact boundary mismatch",
 ):
-    need(marker in hold_builder, f"release-hold builder does not enforce the minimal public boundary: {marker}")
+    need(marker in hold_builder, f"release-hold builder does not enforce the exact deployed public boundary: {marker}")
 for marker in (
     "FORBIDDEN_PATHS",
     "MouldMasterAcademy.exe",
@@ -146,4 +148,4 @@ self_test = subprocess.run(
 )
 need(self_test.returncode == 0, f"ruleset verifier self-test failed: {self_test.stderr or self_test.stdout}")
 
-print("Audit governance QA passed: least-privilege Pages permissions, physical-test runtime fingerprint reporting, production-app fail-closed gating with minimal release-hold quarantine, live branch-prune SHA recheck and fail-closed ruleset bypass verification are enforced.")
+print("Audit governance QA passed: least-privilege Pages permissions, physical-test runtime fingerprint reporting, production-app fail-closed gating with exact two-file release-hold quarantine, live branch-prune SHA recheck and fail-closed ruleset bypass verification are enforced.")
