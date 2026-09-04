@@ -17,6 +17,7 @@ const stores={
   ]}),
 };
 const keys=Object.keys(stores);
+const liveIds=['alpha','beta'];
 const localStorage={get length(){return keys.length},key:i=>keys[i]??null,getItem:key=>stores[key]??null};
 const listeners={};
 const document={
@@ -25,7 +26,16 @@ const document={
   createElement(tag){return tag==='script'?{dataset:{},async:true,onload:null,onerror:null,src:''}:{href:'',download:'',click(){},remove(){} }},
   body:{appendChild(node){if(node.dataset?.mmDomainBridge==='learning-analytics'){sandbox.window.MM_LEARNING_ANALYTICS={version:'legacy',summary:()=>({wrong:true}),open:()=>{}};node.onload?.()}}},
 };
-const scope={token:()=> 'alpha',storageKey:(p,t)=>`${p}${t}`};
+const scope={
+  token:()=> 'alpha',
+  storageKey:(p,t)=>`${p}${t}`,
+  registerStoragePrefix:()=>{},
+  knownIds:()=>liveIds.slice(),
+  tokenFor:id=>String(id),
+  legacyTokenFor:id=>`legacy-${id}`,
+  isLegacyToken:()=>false,
+  includeStorageToken:()=>true,
+};
 const sandbox={
   user:{role:'instructor'},localStorage,document,console,encodeURIComponent,queueMicrotask:fn=>fn(),Blob:function(){},URL:{createObjectURL:()=> 'blob:test',revokeObjectURL:()=>{}},
   window:{MM_LEARNER_SCOPE:scope,addEventListener(){},toast(){}},
@@ -49,21 +59,23 @@ const current=sandbox.window.MM_LEARNING_ANALYTICS.summary();
 assert.strictEqual(current.avgGain,20,'public learner analytics summary did not use corrected retry gain');
 const cohort=sandbox.window.MM_LEARNING_ANALYTICS.cohortSummary();
 assert.strictEqual(cohort.anonymousProfiles,2);
-assert.strictEqual(cohort.aggregate.repeatedCases,2,'same case across two profiles was merged into one retry sequence');
-assert.strictEqual(cohort.aggregate.avgGain,0,'cohort retry gain did not preserve per-profile case boundaries internally');
+assert.strictEqual(cohort.aggregate.repeatedCases,2,'same case across two current profiles was merged into one retry sequence');
+assert.strictEqual(cohort.aggregate.avgGain,0,'cohort retry gain did not preserve current-profile case boundaries internally');
 assert.strictEqual(cohort.aggregate.improvedCases,1);
 assert(!Object.prototype.hasOwnProperty.call(cohort,'profiles'),'public cohort summary exposed per-profile records');
-assert.throws(()=>quality.exportAnonymousSummary(),/at least 5 local learner profiles/i,'undersized cohort export did not fail closed');
+assert.throws(()=>quality.exportAnonymousSummary(),/at least 5 current local learner profiles/i,'undersized current-profile cohort export did not fail closed');
 
 for(const token of ['gamma','delta','epsilon']){
+  liveIds.push(token);
   const key=`${prefix}${token}`;keys.push(key);stores[key]=JSON.stringify({schema:1,events:[]});
 }
 const payload=quality.exportAnonymousSummary();
-assert.strictEqual(payload.anonymousProfiles,5,'eligible cohort export did not report its aggregate cohort size');
+assert.strictEqual(payload.anonymousProfiles,5,'eligible current-profile cohort export did not report its aggregate cohort size');
 assert(!Object.prototype.hasOwnProperty.call(payload,'profiles'),'cohort export exposed per-profile rows');
 assert(payload.aggregate&&payload.aggregate.repeatedCases===2,'cohort export lost aggregate retry evidence');
 assert.match(payload.privacy,/no per-profile rows/i,'cohort export privacy declaration is not explicit');
+assert.match(payload.privacy,/orphaned, ambiguous or unowned learner buckets are excluded/i,'cohort export no longer declares orphan-bucket exclusion');
 assert.match(quality.scope,/cohort-level aggregate data only/i);
-assert.match(quality.scope,/preserve anonymous learner boundaries internally/i);
+assert.match(quality.scope,/map to current local learner profiles/i,'quality scope no longer binds cohort metrics to current profiles');
 
-console.log('Learning analytics quality QA passed: latest-vs-first retry gain, internal profile separation, minimum cohort size and cohort-only export verified.');
+console.log('Learning analytics quality QA passed: latest-vs-first retry gain, current-profile separation, orphan exclusion, minimum cohort size and cohort-only export verified.');
