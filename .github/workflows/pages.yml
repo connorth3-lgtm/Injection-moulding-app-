@@ -1,4 +1,4 @@
-name: Deploy MouldMaster to GitHub Pages
+name: MouldMaster Pages Release Readiness
 
 on:
   push:
@@ -7,12 +7,8 @@ on:
     branches: [main]
   workflow_dispatch:
 
-permissions:
-  contents: read
-  pull-requests: read
-  actions: write
-  pages: write
-  id-token: write
+# Deny by default; each job receives only the token capabilities it actually uses.
+permissions: {}
 
 concurrency:
   group: pages-${{ github.ref }}
@@ -48,6 +44,10 @@ jobs:
           --require-native-protection
 
   publisher-guard:
+    permissions:
+      contents: read
+      actions: write
+      pages: write
     needs: production-source
     runs-on: ubuntu-latest
     steps:
@@ -61,11 +61,13 @@ jobs:
           python3 tools/quarantine_legacy_pages.py
           --repository "${{ github.repository }}"
           --source-sha "${{ github.sha }}"
-      - name: PRs build but never publish
+      - name: PRs validate release readiness but never publish
         if: github.event_name == 'pull_request'
-        run: echo "PR validation does not mutate Pages settings or cancel deployment runs."
+        run: echo "PR validation checks production provenance, the physical-device contract and exact build behavior without claiming device evidence, mutating Pages settings or publishing."
 
   build:
+    permissions:
+      contents: read
     needs: publisher-guard
     runs-on: ubuntu-latest
     steps:
@@ -73,16 +75,23 @@ jobs:
         uses: actions/checkout@v7
       - name: Pages single-publisher QA
         run: python3 qa_pages_single_publisher.py
+      - name: Validate physical PWA evidence contract on PRs
+        if: github.event_name == 'pull_request'
+        run: python3 tools/verify_pwa_physical_evidence.py --contract-only
       - name: Build production-only Pages artifact
         run: python3 tools/build_pages_artifact.py
-      - name: Physical PWA evidence gate for exact public runtime
-        run: python3 tools/verify_pwa_physical_evidence.py --artifact .pages-dist
+      - name: Require validated physical iOS and Android evidence for production publication
+        if: github.event_name != 'pull_request'
+        run: python3 tools/verify_pwa_physical_evidence.py --artifact .pages-dist --require-validated
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v4
         with:
           path: .pages-dist
 
   deploy:
+    permissions:
+      pages: write
+      id-token: write
     if: github.event_name != 'pull_request'
     needs: build
     environment:
@@ -99,6 +108,8 @@ jobs:
         uses: actions/deploy-pages@v4
 
   verify:
+    permissions:
+      contents: read
     if: github.event_name != 'pull_request'
     needs: deploy
     runs-on: ubuntu-latest
@@ -107,8 +118,8 @@ jobs:
         uses: actions/checkout@v7
       - name: Rebuild expected production artifact
         run: python3 tools/build_pages_artifact.py
-      - name: Reconfirm physical PWA evidence against rebuilt runtime
-        run: python3 tools/verify_pwa_physical_evidence.py --artifact .pages-dist
+      - name: Reconfirm validated physical PWA evidence against rebuilt runtime
+        run: python3 tools/verify_pwa_physical_evidence.py --artifact .pages-dist --require-validated
       - name: Verify exact live deployment
         run: >-
           python3 tools/verify_pages_deployment.py

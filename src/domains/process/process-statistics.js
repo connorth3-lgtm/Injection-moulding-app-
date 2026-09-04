@@ -50,7 +50,7 @@ function spcRunRules(values,centre=null,sigma=null){
   const a=seg.map(x=>x.value),idx=j=>seg[j].index;
   for(let i=0;i<a.length;i++)if(Math.abs(a[i]-c)>3*s)push('1-beyond-3sigma',idx(i),idx(i),a[i]>c?'high':'low','One point lies more than 3 local standard deviations from the reference centre.');
   for(let i=0;i<=a.length-3;i++){const w=a.slice(i,i+3),hi=w.filter(v=>sideBeyond(v,c,2,s)===1).length,lo=w.filter(v=>sideBeyond(v,c,2,s)===-1).length;if(hi>=2||lo>=2)push('2-of-3-beyond-2sigma',idx(i),idx(i+2),hi>=2?'high':'low','Two of three consecutive valid points are beyond 2 local standard deviations on the same side.');}
-  for(let i=0;i<=a.length-5;i++){const w=a.slice(i,i+5),hi=w.filter(v=>sideBeyond(v,c,1,s)===1).length,lo=w.filter(v=>sideBeyond(v,c,1,s)===-1).length;if(hi>=4||lo>=4)push('4-of-5-beyond-1sigma',idx(i),idx(i+4),hi>=4?'high':'low','Four of five consecutive valid points are beyond 1 local standard deviation on the same side.');}
+  for(let i=0;i<=a.length-5;i++){const w=a.slice(i,i+5),hi=w.filter(v=>sideBeyond(v,c,1,s)===1).length,lo=w.filter(v=>sideBeyond(v,c,1,s)===-1).length;if(hi>=4||lo>=4)push('4-of-5-beyond-1sigma',idx(i),idx(i+4),hi>=4?'high':'low','Four of five consecutive valid points are beyond 1 local standard deviations on the same side.');}
   for(let i=0;i<=a.length-8;i++){const w=a.slice(i,i+8),hi=w.every(v=>v>c),lo=w.every(v=>v<c);if(hi||lo)push('8-same-side',idx(i),idx(i+7),hi?'high':'low','Eight consecutive valid points lie on the same side of the reference centre.');}
   for(let i=0;i<=a.length-6;i++){const w=a.slice(i,i+6),up=w.every((v,j)=>j===0||v>w[j-1]),down=w.every((v,j)=>j===0||v<w[j-1]);if(up||down)push('6-trend',idx(i),idx(i+5),up?'increasing':'decreasing','Six consecutive valid points move monotonically in one direction.');}
   for(let i=0;i<=a.length-14;i++){const w=a.slice(i,i+14),alternating=w.slice(2).every((v,j)=>{const p=w[j+1]-w[j],q=v-w[j+1];return p!==0&&q!==0&&p*q<0});if(alternating)push('14-alternating',idx(i),idx(i+13),'alternating','Fourteen consecutive valid points alternate direction; investigate cyclic or over-control patterns before interpreting independence.');}
@@ -61,8 +61,10 @@ function spcRunRules(values,centre=null,sigma=null){
 function meanDifference(before,after){
  const a=finite(before),b=finite(after),ma=mean(a),mb=mean(b),sa=sd(a),sb=sd(b);
  if(!a.length||!b.length)return{nBefore:a.length,nAfter:b.length,meanBefore:ma,meanAfter:mb,difference:null,ci95:null,effectSize:null,boundary:BOUNDARY};
- const difference=mb-ma,se=Math.sqrt((Number(sa)||0)**2/Math.max(1,a.length)+(Number(sb)||0)**2/Math.max(1,b.length)),ci95=Number.isFinite(se)?[difference-1.96*se,difference+1.96*se]:null;
- const pooledDen=a.length+b.length-2,pooled=pooledDen>0?Math.sqrt(((a.length-1)*(Number(sa)||0)**2+(b.length-1)*(Number(sb)||0)**2)/pooledDen):null,effectSize=Number.isFinite(pooled)&&pooled>0?difference/pooled:null;
+ const difference=mb-ma,adequate=a.length>=2&&b.length>=2&&Number.isFinite(sa)&&Number.isFinite(sb);
+ if(!adequate)return{nBefore:a.length,nAfter:b.length,meanBefore:ma,meanAfter:mb,difference,ci95:null,effectSize:null,boundary:'Approximate 95% mean-difference interval unavailable: at least two finite observations in each group are required to estimate sampling variability. '+BOUNDARY};
+ const se=Math.sqrt((sa*sa)/a.length+(sb*sb)/b.length),ci95=Number.isFinite(se)?[difference-1.96*se,difference+1.96*se]:null;
+ const pooledDen=a.length+b.length-2,pooled=pooledDen>0?Math.sqrt(((a.length-1)*sa*sa+(b.length-1)*sb*sb)/pooledDen):null,effectSize=Number.isFinite(pooled)&&pooled>0?difference/pooled:null;
  return{nBefore:a.length,nAfter:b.length,meanBefore:ma,meanAfter:mb,difference,ci95,effectSize,boundary:'Approximate 95% normal mean-difference interval and standardized mean difference. Serial correlation, non-stationarity, unequal sampling and small samples can invalidate the approximation. '+BOUNDARY};
 }
 function dimensionKey(rows,candidates){return candidates.find(k=>(rows||[]).some(r=>present(r?.[k])))||null}
