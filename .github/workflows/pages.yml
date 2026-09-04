@@ -43,17 +43,19 @@ jobs:
           --source-sha "${{ github.sha }}"
           --require-native-protection
 
+  # Start independently of production-source so a competing GitHub-managed legacy
+  # Pages run gets the earliest possible cancellation attempt. This remains damage
+  # limitation only: if workflow mode cannot be confirmed, the guard fails closed.
   publisher-guard:
     permissions:
       contents: read
       actions: write
       pages: write
-    needs: production-source
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v7
-      - name: Contain competing legacy branch Pages publisher
+      - name: Block competing legacy branch Pages publisher
         if: github.event_name != 'pull_request'
         env:
           GITHUB_TOKEN: ${{ github.token }}
@@ -68,7 +70,7 @@ jobs:
   build:
     permissions:
       contents: read
-    needs: publisher-guard
+    needs: [production-source, publisher-guard]
     runs-on: ubuntu-latest
     outputs:
       production_ready: ${{ steps.physical-readiness.outputs.production_ready }}
@@ -111,11 +113,11 @@ jobs:
             # Still compute/report the exact runtime fingerprint and fail to publish by output gating.
             python3 tools/verify_pwa_physical_evidence.py --artifact .pages-dist
             echo "production_ready=false" >> "$GITHUB_OUTPUT"
-            echo "::notice title=Pages release not ready::Validated physical iOS/iPadOS and Android evidence is pending; no Pages artifact will be uploaded or deployed."
+            echo "::notice title=Pages release not ready::Validated physical iOS/iPadOS and Android evidence is pending; hardened Pages artifact upload/deploy is disabled."
             {
               echo "### Pages release not ready"
               echo "Physical iOS/iPadOS and Android validation is still pending."
-              echo "This is an expected readiness state, not a CI error; publication remains fail-closed."
+              echo "The hardened publisher will not deploy; legacy branch publishing must also be disabled in repository Pages settings."
             } >> "$GITHUB_STEP_SUMMARY"
           fi
       - name: Upload Pages artifact
