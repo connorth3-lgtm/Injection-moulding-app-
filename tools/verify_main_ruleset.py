@@ -4,7 +4,7 @@
 GitHub Actions' repository-scoped GITHUB_TOKEN can read the effective ruleset but may
 redact ``bypass_actors`` even when an administrator-readable ruleset detail response
 contains the field. Missing bypass metadata therefore uses a repository attestation
-only when it is bound to the exact live ruleset id + updated_at value. Any live
+only when it is bound to the exact live ruleset id + updated_at instant. Any live
 ruleset update invalidates the attestation and fails closed until re-verified.
 """
 from __future__ import annotations
@@ -14,6 +14,7 @@ import json
 import os
 import shutil
 import subprocess
+from datetime import datetime, timezone
 from pathlib import Path
 
 RULESET_NAME = "Protect main — MouldMaster required gates"
@@ -73,6 +74,22 @@ def load_attestation(path: Path = ATTESTATION_PATH) -> dict | None:
     return payload
 
 
+def normalized_timestamp(value: object) -> datetime | None:
+    """Parse GitHub ISO-8601 timestamps and normalize equivalent offsets to UTC."""
+    if not isinstance(value, str) or not value.strip():
+        return None
+    raw = value.strip()
+    if raw.endswith("Z"):
+        raw = raw[:-1] + "+00:00"
+    try:
+        parsed = datetime.fromisoformat(raw)
+    except ValueError:
+        return None
+    if parsed.tzinfo is None:
+        return None
+    return parsed.astimezone(timezone.utc)
+
+
 def rule_by_type(detail: dict, rule_type: str) -> dict | None:
     for rule in detail.get("rules") or []:
         if isinstance(rule, dict) and rule.get("type") == rule_type:
@@ -102,9 +119,10 @@ def bypass_errors(detail: dict, attestation: dict | None, repository: str | None
         errors.append("bypass attestation repository does not match the repository being verified")
     if attestation.get("ruleset_id") != detail.get("id"):
         errors.append("bypass attestation ruleset_id does not match the live ruleset")
-    live_updated = detail.get("updated_at")
-    if not live_updated or attestation.get("ruleset_updated_at") != live_updated:
-        errors.append("bypass attestation does not match the live ruleset updated_at value")
+    live_updated = normalized_timestamp(detail.get("updated_at"))
+    attested_updated = normalized_timestamp(attestation.get("ruleset_updated_at"))
+    if live_updated is None or attested_updated is None or attested_updated != live_updated:
+        errors.append("bypass attestation does not match the live ruleset updated_at instant")
     if attestation.get("bypass_actors", "__missing__") != []:
         errors.append("bypass attestation must explicitly record an empty bypass_actors list")
     if attestation.get("current_user_can_bypass") != "never":
@@ -257,16 +275,18 @@ def self_test() -> None:
         "source": "admin-verified-ruleset-detail",
         "repository": "example/project",
         "ruleset_id": 123,
-        "ruleset_updated_at": "2026-09-04T00:00:00Z",
+        "ruleset_updated_at": "2026-09-04T12:00:00+12:00",
         "bypass_actors": [],
         "current_user_can_bypass": "never",
     }
     missing_bypass = json.loads(json.dumps(good))
     missing_bypass.pop("bypass_actors")
     assert not valid_main_ruleset(missing_bypass)[0], "missing bypass metadata without attestation must fail closed"
-    assert valid_main_ruleset(missing_bypass, matching_attestation, "example/project")[0], "exact-version attestation must cover Actions API redaction"
-    stale_attestation = dict(matching_attestation, ruleset_updated_at="2026-09-03T00:00:00Z")
+    assert valid_main_ruleset(missing_bypass, matching_attestation, "example/project")[0], "equivalent timestamp offsets must match the same ruleset update instant"
+    stale_attestation = dict(matching_attestation, ruleset_updated_at="2026-09-03T12:00:00+12:00")
     assert not valid_main_ruleset(missing_bypass, stale_attestation, "example/project")[0], "stale bypass attestation must fail closed"
+    malformed_attestation = dict(matching_attestation, ruleset_updated_at="not-a-timestamp")
+    assert not valid_main_ruleset(missing_bypass, malformed_attestation, "example/project")[0], "malformed bypass attestation timestamp must fail closed"
     wrong_ruleset = dict(matching_attestation, ruleset_id=999)
     assert not valid_main_ruleset(missing_bypass, wrong_ruleset, "example/project")[0], "attestation for another ruleset must fail closed"
     nonempty_attestation = dict(matching_attestation, bypass_actors=[{"actor_type": "RepositoryRole", "actor_id": 5}])

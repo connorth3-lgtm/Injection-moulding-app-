@@ -64,17 +64,20 @@ for marker in (
 
 # Ruleset bypass verification must fail closed. If GitHub Actions redacts the
 # bypass_actors field, only an administrator-verified attestation tied to the
-# exact live ruleset id + updated_at value may cover that API limitation.
+# exact live ruleset id + updated_at instant may cover that API limitation.
 for marker in (
     'bypass = detail.get("bypass_actors", "__missing__")',
     'if bypass != []:',
     "bypass_actors must be present and empty",
     "ATTESTATION_PATH",
     'attestation.get("ruleset_id") != detail.get("id")',
-    'attestation.get("ruleset_updated_at") != live_updated',
+    "normalized_timestamp",
+    'normalized_timestamp(attestation.get("ruleset_updated_at"))',
     'missing_bypass.pop("bypass_actors")',
     'null_bypass["bypass_actors"] = None',
+    "equivalent timestamp offsets must match the same ruleset update instant",
     "stale bypass attestation must fail closed",
+    "malformed bypass attestation timestamp must fail closed",
 ):
     need(marker in ruleset, f"ruleset bypass fail-closed contract missing: {marker}")
 need(attestation.get("schema") == 1, "ruleset attestation schema must be 1")
@@ -93,4 +96,4 @@ self_test = subprocess.run(
 )
 need(self_test.returncode == 0, f"ruleset verifier self-test failed: {self_test.stderr or self_test.stdout}")
 
-print("Audit governance QA passed: least-privilege Pages permissions, validated physical-device publication gate, live branch-prune SHA recheck and fail-closed ruleset bypass verification (including exact-version redaction attestation) are enforced.")
+print("Audit governance QA passed: least-privilege Pages permissions, validated physical-device publication gate, live branch-prune SHA recheck and fail-closed ruleset bypass verification (including exact-instant redaction attestation) are enforced.")
