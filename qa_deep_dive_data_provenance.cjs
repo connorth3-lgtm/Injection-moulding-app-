@@ -27,11 +27,11 @@ function loadScope({users,activeUser,storage}){
 // token must separate them, and a legacy bucket with two known owners must be
 // quarantined rather than copied into either learner's current history.
 {
-  const a='learner-q79jhhgk6ehf',b='learner-jf994s6gsyyq',prefix='mm_learning_analytics_v1::';
+  const a='learner-r2c9qcdfks2g',b='learner-8b62nqgdhctb',prefix='mm_learning_analytics_v1::';
   const storage=memoryStorage();
   const {sandbox,scope}=loadScope({users:{[a]:{id:a},[b]:{id:b}},activeUser:a,storage});
   assert.strictEqual(scope.legacyTokenFor(a),scope.legacyTokenFor(b),'deterministic legacy collision fixture no longer collides');
-  assert.strictEqual(scope.legacyTokenFor(a),'1rwit4f','legacy collision fixture changed unexpectedly');
+  assert.strictEqual(scope.legacyTokenFor(a),'10ru0ym','legacy collision fixture changed unexpectedly');
   assert.notStrictEqual(scope.tokenFor(a),scope.tokenFor(b),'strong learner tokens still collide for the regression fixture');
   assert.match(scope.tokenFor(a),/^[0-9a-f]{32}$/,'new learner token is not a 128-bit hex identity');
   const legacyKey=prefix+scope.legacyTokenFor(a),payload=JSON.stringify({schema:1,events:[{type:'practice_complete',score:77}]});
