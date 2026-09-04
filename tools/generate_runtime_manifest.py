@@ -15,6 +15,7 @@ PRIORITY_ASSETS = [
     "./src/domains/assessment/assessment-analytics-v2.js",
     "./src/domains/engineering/engineering-store.js",
     "./src/domains/engineering/evidence-chain.js",
+    "./src/domains/engineering/research-context.js",
     "./src/domains/learning/learning-analytics-loader.js",
     "./src/domains/learning/activity-events-v2.js",
     "./src/domains/learning/learner-model.js",
