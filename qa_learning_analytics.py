@@ -20,10 +20,11 @@ p=subprocess.run(['node','--check',str(ROOT/'learning-analytics.js')],capture_ou
 need(p.returncode==0,'learning-analytics.js syntax error: '+(p.stderr or p.stdout))
 
 for marker in [
-    "const VERSION='2026.09.03.2'",
+    "const VERSION='2026.09.05.2'",
     "const STORAGE_PREFIX='mm_learning_analytics_v1::'",
     'const MAX_EVENTS=1500',
     'const IDLE_MS=5*60*1000',
+    'const MIN_EXPORT_PROFILES=5',
     'const learnerScope=window.MM_LEARNER_SCOPE',
     'learnerScope.token()',
     'learnerScope.storageKey(STORAGE_PREFIX,token)',
@@ -37,8 +38,8 @@ for marker in [
     'avgGain',
     'improvedCases',
     'Instructor view · this device only',
-    'Anonymous pilot summary',
-    'Export anonymous summary',
+    'Cohort aggregate summary',
+    'Export cohort aggregate',
     'Clear my analytics',
     'MM_LEARNING_ANALYTICS'
 ]:
@@ -58,8 +59,16 @@ for forbidden_transport in ['fetch(', 'XMLHttpRequest', 'WebSocket', 'sendBeacon
     need(forbidden_transport not in js,f'learning analytics must have no network transport: {forbidden_transport}')
 for forbidden_personal in ['user.name', 'user.email', 'user.notes', 'lessonNotes.value']:
     need(forbidden_personal not in js,f'learning analytics must not collect personal/free-text data: {forbidden_personal}')
-need("privacy:'Anonymous aggregate only; no names, notes, answer text or event timestamps.'" in js,'anonymous export privacy declaration missing')
-need("anonymousProfile:i+1" in js and 'tokens.length' in js,'instructor export must use anonymous profiles rather than learner identity')
+need('no per-profile rows, names, hashed learner tokens' in js,'cohort export privacy declaration missing')
+need('profiles:' not in js and 'anonymousProfile:i+1' not in js,'cohort export must not contain per-profile records')
+need('tokens.length<MIN_EXPORT_PROFILES' in js,'cohort export must fail closed below the minimum profile threshold')
+need("a[a.length-1]-a[0]" in js,'retry gain must compare latest completed attempt with the first attempt')
+need('Math.max(...a)-a[0]' not in js,'retry gain must not use best-ever score because that hides later regression')
+
+# Storage failures must be visible rather than silently treated as successful analytics persistence.
+for marker in ['setStorageError','analytics-read-failed','analytics-write-failed','analytics-index-read-failed','Analytics storage needs attention.','storageHealth:()=>']:
+    need(marker in js,f'analytics storage-health marker missing: {marker}')
+need("catch(_){}\n  return emptyStore()" not in js,'analytics storage failures must not be swallowed silently')
 
 # Education and assessment boundary: no formal question, answer-key, scoring or approval mutation.
 for forbidden in [
@@ -100,4 +109,4 @@ need('../../learning-analytics.js' in froms,'learning analytics missing from des
 need('../../src/domains' in froms,'shared learner scope is not covered by desktop domain resources')
 need("'learning-analytics.js'" in text('desktop/electron/scripts/generate-integrity.cjs'),'learning analytics missing from desktop integrity manifest')
 
-print('MouldMaster learning analytics QA passed (shared learner scope, domain-ordered analytics startup, local-only, bounded, time-on-task, retry improvement, diagnostic/process-data misses, anonymous instructor summary)')
+print('MouldMaster learning analytics QA passed (shared learner scope, local-only bounded events, latest-vs-first retry gain, visible storage failures, cohort-only minimum-size instructor export)')
