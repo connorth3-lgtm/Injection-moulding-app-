@@ -53,7 +53,7 @@ for marker in (
 
 # Branch deletion must reconfirm the ref has not moved after safety evaluation.
 for marker in (
-    'live_sha=$(gh api "repos/$GH_REPO/git/ref/heads/$branch" --jq ".object.sha" 2>/dev/null || true)',
+    "live_sha=$(gh api \"repos/$GH_REPO/git/ref/heads/$branch\" --jq '.object.sha' 2>/dev/null || true)",
     '[[ -z "$live_sha" || "$live_sha" != "$sha" ]]',
     "Keeping branch whose head moved during prune evaluation",
     "live SHA rechecked",
