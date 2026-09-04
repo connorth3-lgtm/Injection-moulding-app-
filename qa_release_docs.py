@@ -10,7 +10,7 @@ def need(ok,msg):
 V=json.loads(text('version.json'))
 expected={
  'android_release':'2026.08.26.2',
- 'desktop_release':'2026.08.26.7',
+ 'desktop_release':'2026.08.26.8',
  'content_version':'2026.08.26.1',
  'question_bank_version':'2026.08.30.1',
  'assessment_quality_version':'2026.08.24.3',
@@ -130,6 +130,7 @@ need('Learning insights events' in support and 'resets both analytics histories'
 privacy=text('privacy.html')
 for marker in ['assessment analytics','scoped to the active learner profile','first meaningful question exposure','does not currently upload','deliberately not included in the progress backup','successful progress-backup import resets local assessment analytics and Learning insights analytics','orphaned buckets','Reset local analytics','confirmed factory reset']:
     need(marker in privacy,f'privacy disclosure missing: {marker}')
+need('cleanup cannot be verified' in privacy,'privacy notice must disclose fail-closed reset/import cleanup behavior')
 
 sw=text('service-worker.js')
 for marker in ["'./privacy.html'","'./support.html'","'./assessment-storage-scope.js'","'./assessment-evidence-sources.js'","'./assessment-evidence-approval.js'","'./curriculum-integration.js'","'./specialist-curriculum.js'","'./specialist-evidence-gap-extension.js'","'./app-shell-registry.js'","'./mould-master-workspace.js'","'./app-shell-finalize.js'"]:

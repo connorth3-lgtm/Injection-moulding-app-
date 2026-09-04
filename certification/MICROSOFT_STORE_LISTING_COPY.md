@@ -93,14 +93,14 @@ Keep important interface content in the top two-thirds of each screenshot becaus
 See `MICROSOFT_STORE_ASSET_CHECKLIST.md` for the capture/QA checklist.
 
 ## Certification notes for Microsoft reviewer
-MouldMaster Academy is an open-source Electron desktop application for injection moulding education. The submitted Store package is built from the repository's `desktop/electron/` source and bundles the MouldMaster learning application. Bundled application assets are checked against a SHA-256 integrity manifest before launch. The renderer runs without Node integration, with context isolation and Electron sandboxing enabled. Local application content is served only over a loopback `127.0.0.1` origin; external HTTPS references open in the user's normal browser.
+MouldMaster Academy is an open-source Electron desktop application for injection moulding education. The submitted Store package is built from the repository's `desktop/electron/` source and bundles the MouldMaster learning application. Bundled application assets are checked against a SHA-256 integrity manifest before launch. The renderer runs without Node integration, with context isolation and Electron sandboxing enabled. Local application content is served only over a stable loopback `127.0.0.1:43139` origin; external HTTPS references open in the user's normal browser.
 
-The application provides local learner progress, notes and learning-completion records. It does not claim that its completion certificate is a regulated qualification, government certification, IACET CEU or proof of machine-specific workplace competence.
+The application provides local learner progress, notes and learning-completion records. Progress import and factory reset verify local assessment/Learning Insights cleanup before replacing the active learner registry; if that cleanup cannot be verified, the operation fails closed rather than reporting a clean learner state. It does not claim that its completion certificate is a regulated qualification, government certification, IACET CEU or proof of machine-specific workplace competence.
 
 The repository's public privacy and support pages are listed above. Any owner/legal contact details required by Partner Center must be supplied from the actual developer account and must not be fabricated in source control.
 
 ## Current Store package baseline
-- Open desktop release: `2026.08.26.7`
+- Open desktop release: `2026.08.26.8`
 - Intended package route: MSIX / MSIX bundle / MSIX upload package
 - Architecture workflow: x64 + arm64
 - Store identity: supplied at workflow runtime from the exact Partner Center product values

@@ -89,12 +89,12 @@ need('../../assessment-storage-scope.js' in froms,'storage scope missing from de
 need("'assessment-storage-scope.js'" in text('desktop/electron/scripts/generate-integrity.cjs'),'storage scope missing from integrity set')
 
 bridge=text('training-qa-fix.js')
-for marker in ['clearAssessmentAnalyticsStores','clearLearningAnalyticsStores','clearAllAnalyticsStores','cancelActiveExam','mm_assessment_analytics_v1','mm_assessment_exposure_timing_v1','mm_assessment_opening_history_v1','mm_learning_analytics_v1::','committed=true;cancelActiveExam();clearAllAnalyticsStores()','clearAllAnalyticsStores();cancelActiveExam()']:
-    need(marker in bridge,f'training reset/import analytics cleanup missing: {marker}')
+for marker in ['clearAssessmentAnalyticsStores','clearLearningAnalyticsStores','clearAllAnalyticsStores','clearTrainingExtrasStores','cancelActiveExam','mm_assessment_analytics_v1','mm_assessment_exposure_timing_v1','mm_assessment_opening_history_v1','mm_learning_analytics_v1::','ANALYTICS_CLEANUP_CODE','remaining key(s):','restoreSnapshot(before)','clearAllAnalyticsStores();clearTrainingExtrasStores()','const proposedReset=JSON.parse(JSON.stringify(defaultDB))']:
+    need(marker in bridge,f'training reset/import verified analytics cleanup missing: {marker}')
 
 V=json.loads(text('version.json'))
 need(V.get('assessment_storage_scope_version')=='2026.08.24.4','published assessment storage release lane drifted during migration-only hardening')
 need(V.get('assessment_storage_migration_version')=='2026.09.05.1','assessment storage migration hardening version missing')
 for wf in ['.github/workflows/qa.yml','.github/workflows/open-desktop-build.yml','.github/workflows/microsoft-store-msix.yml']:
     w=text(wf);need('python qa_assessment_storage_scope.py' in w,f'{wf} missing learner-scoped analytics QA')
-print('MouldMaster learner-scoped assessment storage QA passed (shared 128-bit learner scope with fail-closed compatibility migration and full reset/import analytics cleanup)')
+print('MouldMaster learner-scoped assessment storage QA passed (shared 128-bit learner scope with fail-closed compatibility migration and verified reset/import analytics cleanup)')

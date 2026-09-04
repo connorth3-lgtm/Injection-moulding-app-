@@ -18,7 +18,7 @@ The project maintainers do not intend to seek patent protection over implementat
 ## Current release lanes
 
 - PWA / browser shell: `2026.08.26.2`
-- Open Windows desktop: `2026.08.26.7`
+- Open Windows desktop: `2026.08.26.8`
 - Training content: `2026.08.26.1`
 - Audited assessment bank: `2026.08.30.1`
 - Assessment quality / analytics hardening: `2026.08.24.3`
@@ -34,7 +34,7 @@ The hosted PWA is published through GitHub Pages:
 
 `https://connorth3-lgtm.github.io/Injection-moulding-app-/`
 
-The PWA uses an installable web manifest and a service worker for offline support after a successful initial load. The current shell caches the audited core, assessment/runtime layers, guided learning, specialist curriculum, reference data and the privacy/support pages required by the public app. Governed learner-runtime changes must advance the web release/cache identity; mandatory Release QA compares each change with its parent so an installed PWA cannot silently reuse the previous cache generation after runtime bytes change.
+The PWA uses an installable web manifest and a service worker for offline support after a successful initial load. The current shell caches the audited core, assessment/runtime layers, guided learning, specialist curriculum, reference data and the privacy/support pages required by the public app. Governed learner-runtime changes must advance the web release/cache identity; mandatory Release QA compares each change with its parent so an installed PWA cannot silently reuse the previous cache generation after runtime bytes change. Release QA also derives the browser shell/domain load graph independently and rejects any shell/runtime asset that is not present in the service-worker governance set.
 
 ## Assessment system
 
@@ -74,7 +74,9 @@ Specialist completion is device-local and separate from the core pathway. These 
 
 ## Learning validation analytics
 
-Learning Insights keeps bounded learner-scoped event logs locally. Cohort export is available only in the device-local instructor convenience view and contains aggregate metrics only. Cohort discovery is derived from the current learner registry: analytics buckets that no longer map to a current profile are excluded and cannot satisfy the minimum-five export threshold. Successful progress import and confirmed factory reset clear Learning Insights analytics as well as the relevant assessment analytics so old device/profile evidence is not attributed to a new profile set.
+Learning Insights keeps bounded learner-scoped event logs locally. Cohort export is available only in the device-local instructor convenience view and contains aggregate metrics only. Cohort discovery is derived from the current learner registry: analytics buckets that no longer map to a current profile are excluded and cannot satisfy the minimum-five export threshold.
+
+Progress import and factory reset treat analytics deletion as a verified lifecycle boundary. Assessment and Learning Insights stores are deleted and re-enumerated before an imported/default learner registry becomes active. If cleanup cannot be verified, the operation fails closed and warns the learner rather than reporting a clean import/reset. Release QA fault-injects both thrown and silent local-storage deletion failures so this boundary is not tested only on the happy path.
 
 ## Open Windows desktop release
 
@@ -82,7 +84,7 @@ The normal open-source Windows desktop implementation is under:
 
 `desktop/electron/`
 
-Desktop `2026.08.26.7` is the next tagged open release identity from the exact repository source after merge of the current remediation. `.github/workflows/publish-open-desktop.yml` publishes the versioned tagged GitHub Release when `version.json` changes on protected `main`; release artifacts include the portable Windows executable, SHA-256 hashes, source commit, bundled-asset integrity manifest, dependency licence inventory, CycloneDX SBOM and assessment/evidence/source-freshness QA reports.
+Desktop `2026.08.26.8` is the tagged open release identity for the verified analytics-cleanup/runtime-governance hardening. `.github/workflows/publish-open-desktop.yml` publishes the versioned tagged GitHub Release when `version.json` changes on protected `main`; release artifacts include the portable Windows executable, SHA-256 hashes, source commit, bundled-asset integrity manifest, dependency licence inventory, CycloneDX SBOM and assessment/evidence/source-freshness QA reports.
 
 Security controls include:
 - SHA-256 verification of bundled MouldMaster application assets before launch;
