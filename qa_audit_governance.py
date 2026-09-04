@@ -1,4 +1,5 @@
 from pathlib import Path
+import json
 import subprocess
 import sys
 
@@ -18,6 +19,7 @@ pages = text(".github/workflows/pages.yml")
 physical = text("tools/verify_pwa_physical_evidence.py")
 pruner = text(".github/workflows/prune-merged-branches.yml")
 ruleset = text("tools/verify_main_ruleset.py")
+attestation = json.loads(text(".github/main-ruleset-attestation.json"))
 
 # Pages permissions are deny-by-default and granted only per job.
 need("name: MouldMaster Pages Release Readiness" in pages, "Pages workflow name does not describe release-readiness policy")
@@ -60,16 +62,28 @@ for marker in (
 ):
     need(marker in pruner, f"branch-prune live-SHA recheck missing: {marker}")
 
-# Ruleset bypass verification must require an explicit empty list; missing/null
-# API data is not equivalent to verified absence of bypass actors.
+# Ruleset bypass verification must fail closed. If GitHub Actions redacts the
+# bypass_actors field, only an administrator-verified attestation tied to the
+# exact live ruleset id + updated_at value may cover that API limitation.
 for marker in (
     'bypass = detail.get("bypass_actors", "__missing__")',
     'if bypass != []:',
     "bypass_actors must be present and empty",
+    "ATTESTATION_PATH",
+    'attestation.get("ruleset_id") != detail.get("id")',
+    'attestation.get("ruleset_updated_at") != live_updated',
     'missing_bypass.pop("bypass_actors")',
     'null_bypass["bypass_actors"] = None',
+    "stale bypass attestation must fail closed",
 ):
     need(marker in ruleset, f"ruleset bypass fail-closed contract missing: {marker}")
+need(attestation.get("schema") == 1, "ruleset attestation schema must be 1")
+need(attestation.get("source") == "admin-verified-ruleset-detail", "ruleset attestation must identify administrator-readable source")
+need(attestation.get("repository") == "connorth3-lgtm/Injection-moulding-app-", "ruleset attestation repository mismatch")
+need(attestation.get("ruleset_id") == 22155472, "ruleset attestation must identify the verified live ruleset")
+need(attestation.get("ruleset_updated_at") == "2026-09-04T14:28:19.562+12:00", "ruleset attestation must be bound to the verified live ruleset version")
+need(attestation.get("bypass_actors") == [], "ruleset attestation must explicitly record no bypass actors")
+need(attestation.get("current_user_can_bypass") == "never", "ruleset attestation must record no current-user bypass")
 
 self_test = subprocess.run(
     [sys.executable, str(ROOT / "tools/verify_main_ruleset.py"), "--self-test"],
@@ -79,4 +93,4 @@ self_test = subprocess.run(
 )
 need(self_test.returncode == 0, f"ruleset verifier self-test failed: {self_test.stderr or self_test.stdout}")
 
-print("Audit governance QA passed: least-privilege Pages permissions, validated physical-device publication gate, live branch-prune SHA recheck and fail-closed bypass verification are enforced.")
+print("Audit governance QA passed: least-privilege Pages permissions, validated physical-device publication gate, live branch-prune SHA recheck and fail-closed ruleset bypass verification (including exact-version redaction attestation) are enforced.")
