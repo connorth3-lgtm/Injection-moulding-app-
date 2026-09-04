@@ -6,7 +6,7 @@
     "datasetDoi": "10.18154/RWTH-2025-06809",
     "recordUrl": "https://publications.rwth-aachen.de/record/1016199",
     "filesPageUrl": "https://publications.rwth-aachen.de/record/1016199/files/",
-    "downloadUrl": "https://publications.rwth-aachen.de/record/1016199/files/ExperimentalData.zip?version=1",
+    "downloadUrl": "https://publications.rwth-aachen.de/record/1016199/files/ExperimentalData.zip",
     "publisherFileName": "ExperimentalData.zip",
     "publisherFileVersion": 1,
     "publisherDisplayedSize": "1,007.55 KB",
@@ -14,7 +14,9 @@
     "license": "CC BY 4.0",
     "licenseEvidenceUrl": "https://publications.rwth-aachen.de/record/1016199?ln=de",
     "peerReviewedCompanion": "10.1016/j.jprocont.2026.103725",
-    "recordLastModified": "2026-04-16"
+    "recordLastModified": "2026-04-16",
+    "routeReviewed": "2026-09-05",
+    "routeEvidence": "The authoritative RWTH record currently advertises the bare ExperimentalData.zip path; file version 1 remains pinned separately as publisher metadata rather than being forced into the machine-download URL."
   },
   "experimentContext": {
     "process": "injection moulding",
@@ -48,7 +50,7 @@
     "rawThirdPartyDataCommitted": false,
     "artifactPolicy": "aggregate profile only",
     "promotionOnWorkflowSuccessAlone": false,
-    "reason": "A PR-only runner QA success does not prove that the publisher archive was retrieved. Dataset promotion requires a non-pull-request source execution plus inspection of its aggregate artifact."
+    "reason": "A PR-only runner QA success does not prove that the publisher archive was retrieved. Dataset promotion requires a source execution plus inspection of its aggregate artifact."
   },
   "stage1Acceptance": {
     "sourceArchiveRetrieved": true,
@@ -60,6 +62,12 @@
     "rawPublisherFilesCommitted": false,
     "rawRowsOrCellValuesEmitted": false
   },
+  "currentExecutionState": {
+    "archiveRetrieved": false,
+    "lastBlockedExecutionDate": "2026-08-29",
+    "lastBlockedReason": "Earlier bare/versioned/query variants returned a 248-byte HTML response instead of ZIP bytes. The bare authoritative route is being re-executed after the 2026-09-05 source recheck.",
+    "acceptedMeasuredTimeSeriesSamples": 0
+  },
   "finalAcceptanceRequires": [
     "Exact source archive identity and file fingerprints are recorded.",
     "Internal experiment and cycle grouping is established from delivered files rather than inferred from the paper alone.",
@@ -69,5 +77,5 @@
     "Accepted measured-sample totals are computed only from delivered measured arrays/columns with ordering/time basis established.",
     "No raw third-party rows, arrays or cell values are committed or uploaded as workflow artifacts."
   ],
-  "evidenceBoundary": "The authoritative RWTH dataset record is CC BY 4.0 and explicitly describes real injection-moulding experiments with time-resolved pressures, controller output, screw velocity and screw-antechamber volume, plus part-mass-control iterations. The publisher Files page now pins ExperimentalData.zip version 1 as an OpenAccess file. Stage 1 only fingerprints and inventories the delivered archive. No dataset-family promotion or measured-sample count is allowed until delivered experiment grouping, time bases, signal semantics and measured-versus-command/reference boundaries are established."
+  "evidenceBoundary": "The authoritative RWTH dataset record is CC BY 4.0 and explicitly describes real injection-moulding experiments with time-resolved pressures, controller output, screw velocity and screw-antechamber volume, plus part-mass-control iterations. The publisher Files page pins ExperimentalData.zip version 1 as an OpenAccess file and currently advertises the bare file path. Stage 1 only fingerprints and inventories the delivered archive. No dataset-family promotion or measured-sample count is allowed until delivered experiment grouping, time bases, signal semantics and measured-versus-command/reference boundaries are established."
 }
