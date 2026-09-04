@@ -4,7 +4,7 @@ Status: security model for the open Electron replacement.
 
 ## Security objective
 
-The desktop wrapper must not turn ordinary MouldMaster training HTML/JavaScript into privileged native code. It must fail closed if bundled training assets are altered, keep learner-facing web content in a sandboxed renderer, and prevent external web pages from inheriting desktop privileges.
+The desktop wrapper must not turn ordinary MouldMaster training HTML/JavaScript into privileged native code. It must fail closed if bundled training assets are altered, keep learner-facing web content in a sandboxed renderer, prevent external web pages from inheriting desktop privileges, and preserve a stable browser origin so local learner storage remains available across launches.
 
 ## Trust boundaries
 
@@ -19,7 +19,9 @@ Controls:
 - `ELECTRON_RUN_AS_NODE`, `NODE_OPTIONS`, and command-line Node inspector support are disabled through Electron fuses;
 - only the integrity-manifest allow list of local application files is served;
 - the local server accepts only GET and HEAD requests;
-- local serving binds to `127.0.0.1` on a random ephemeral port;
+- local serving binds only to `127.0.0.1` on fixed private port `43139` so the renderer has the same browser origin on every launch and origin-scoped learner storage is not fragmented by random ports;
+- the application uses Electron's single-instance lock so two MouldMaster processes do not compete for that fixed loopback port;
+- if the fixed port cannot be bound, startup fails closed rather than changing origin or falling back to an unverified location;
 - the loopback server does not bind to LAN/public interfaces;
 - path traversal is rejected;
 - the server uses `nosniff`, no-store caching and same-origin resource policy headers.
@@ -86,7 +88,9 @@ Controls:
 | Remote site embedded as privileged webview | webviews blocked |
 | Local path traversal through loopback server | strict single-filename allow list |
 | Unexpected HTTP method against local server | GET/HEAD only |
-| LAN access to local content server | bind only to 127.0.0.1, random port |
+| LAN access to local content server | bind only to 127.0.0.1 |
+| Learner storage fragmented between launches | fixed loopback port + single-instance lock; no random-port fallback |
+| Fixed loopback port occupied by another local process | fail closed; do not move the renderer to a different origin |
 | Dependency drift | exact direct versions + package-lock + npm ci |
 | Compromised release provenance | source commit + SHA256SUMS + integrity manifest + SBOM artifacts |
 | Tampered Store-installed package | Store signing plus MSIX package integrity where enabled |
@@ -103,6 +107,6 @@ The wrapper does not claim to:
 
 ## Security regression gates
 
-Repository QA must fail if core controls such as renderer sandboxing, context isolation, disabled Node integration, permission denial, webview blocking, loopback-only binding, trusted-manifest placement, ASAR-integrity fuses or asset hash verification are removed.
+Repository QA must fail if core controls such as renderer sandboxing, context isolation, disabled Node integration, permission denial, webview blocking, loopback-only binding, stable loopback origin, single-instance locking, trusted-manifest placement, ASAR-integrity fuses or asset hash verification are removed.
 
 Any future native feature should be exposed through a minimal, explicitly validated preload/API surface. Do not enable generic Node integration as a shortcut.
