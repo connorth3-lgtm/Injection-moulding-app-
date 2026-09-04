@@ -1,5 +1,5 @@
 const CACHE_VERSION='2026.09.03.1';
-const CACHE_REVISION='maturity-hardening-v2-r6-20260904';
+const CACHE_REVISION='maturity-hardening-v2-r7-20260904';
 const STATIC_CACHE=`mouldmaster-static-${CACHE_VERSION}-${CACHE_REVISION}`;
 const LEGACY_RECOVERY_SOURCE_ONLY='./MouldMaster_Academy_App.html';
 
@@ -47,6 +47,7 @@ const CORE=[
   './src/domains/assessment/assessment-analytics-v2.js',
   './src/domains/engineering/engineering-store.js',
   './src/domains/engineering/evidence-chain.js',
+  './src/domains/engineering/research-context.js',
   './src/domains/learning/learning-analytics-loader.js',
   './src/domains/learning/activity-events-v2.js',
   './src/domains/learning/learner-model.js',
