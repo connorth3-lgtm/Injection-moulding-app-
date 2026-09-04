@@ -1,7 +1,7 @@
 {
   "schema": 1,
-  "version": "2026.08.30.1",
-  "reviewed": "2026-08-30",
+  "version": "2026.09.05.1",
+  "reviewed": "2026-09-05",
   "datasetId": "warwick-demoulding",
   "source": {
     "datasetTitle": "Demoulding behaviour of material jetted surfaces",
@@ -15,31 +15,11 @@
     "companionStudyDoi": "10.1108/RPJ-03-2024-0129"
   },
   "publisherFiles": [
-    {
-      "fileName": "data1_09.06.2023_Material_Jetting.opju",
-      "format": "opju",
-      "publisherDisplaySize": "3.95 MB"
-    },
-    {
-      "fileName": "data1_16.06.2023_b2b.opju",
-      "format": "opju",
-      "publisherDisplaySize": "258 KB"
-    },
-    {
-      "fileName": "data_visualisation.opju",
-      "format": "opju",
-      "publisherDisplaySize": "10.9 MB"
-    },
-    {
-      "fileName": "representative_curves_14.06.2023.opju",
-      "format": "opju",
-      "publisherDisplaySize": "4.64 MB"
-    },
-    {
-      "fileName": "surface_parameters_27.10.2023.opju",
-      "format": "opju",
-      "publisherDisplaySize": "698 KB"
-    }
+    {"fileName": "data1_09.06.2023_Material_Jetting.opju", "format": "opju", "publisherDisplaySize": "3.95 MB"},
+    {"fileName": "data1_16.06.2023_b2b.opju", "format": "opju", "publisherDisplaySize": "258 KB"},
+    {"fileName": "data_visualisation.opju", "format": "opju", "publisherDisplaySize": "10.9 MB"},
+    {"fileName": "representative_curves_14.06.2023.opju", "format": "opju", "publisherDisplaySize": "4.64 MB"},
+    {"fileName": "surface_parameters_27.10.2023.opju", "format": "opju", "publisherDisplaySize": "698 KB"}
   ],
   "retrievedState": {
     "publisherProjectFiles": 5,
@@ -63,8 +43,16 @@
     "reportedAnalogOutput": "0-10 V",
     "derivedQuantity": "demoulding energy derived/integrated from force data in the study"
   },
+  "originViewerLane": {
+    "contract": "data/warwick-origin-viewer-extraction-contract-v1.json",
+    "source": "https://cloud.originlab.com/viewer/",
+    "availableUse": "A pre-existing local free Origin Viewer can inspect current OPJU files and export visible active-sheet data for non-counting reconciliation.",
+    "promotionEligible": false,
+    "reason": "Origin Viewer is useful for extraction but cannot establish all Origin project semantics; OriginLab documents Viewer limitations including unsupported worksheet cell formulas. Viewer evidence alone therefore cannot distinguish every direct/derived field with promotion-grade certainty.",
+    "emailOrRegistrationUsedForThisPass": false
+  },
   "originExportAcceptance": [
-    "Export all five named verified OPJU projects using a validated Windows Origin/OriginPro workflow.",
+    "For promotion, export all five named verified OPJU projects using a validated Windows Origin/OriginPro workflow.",
     "Preserve project, workbook, worksheet/matrix and trial identity in the export manifest.",
     "Identify direct force waveforms separately from formulas, derived columns and integrated demoulding-energy outputs.",
     "Preserve source time/order and verify the 10 kHz sampling basis where the waveform is present.",
@@ -76,9 +64,12 @@
   "executionContract": {
     "manifestTemplate": "data/warwick-origin-export-manifest-template-v1.json",
     "validator": "tools/validate_warwick_origin_export.py",
+    "viewerExtractionContract": "data/warwick-origin-viewer-extraction-contract-v1.json",
     "pendingManifestMustRemainNonCounting": true,
+    "viewerExtractionMustRemainNonCounting": true,
     "completedManifestRequiresRealSourceAndExportSha256": true,
-    "readyForCountingRequiresZeroSkippedDataBearingObjects": true
+    "readyForCountingRequiresZeroSkippedDataBearingObjects": true,
+    "readyForCountingRequiresFullOriginOrOriginPro": true
   },
-  "boundary": "Companion-study moulding settings are study-specific context and must not be promoted into universal production setpoints, validated process windows or machine/mould/material limits. Accepted sample counts remain zero until all five named OPJU projects are actually exported, reconciled and pass the post-export validator."
+  "boundary": "Companion-study moulding settings are study-specific context and must not be promoted into universal production setpoints, validated process windows or machine/mould/material limits. Accepted sample counts remain zero until all five named OPJU projects are actually exported, reconciled and pass the promotion-grade Origin/OriginPro validator. Origin Viewer may reduce extraction work but remains a zero-count evidence lane."
 }

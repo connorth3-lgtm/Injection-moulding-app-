@@ -24,7 +24,8 @@ c = load(CONTRACT)
 i = load(INVENTORY)
 
 need(d.get('schema') == 1 and d.get('datasetId') == 'impure-pascoe-2022', 'ImPure channel dictionary identity drifted')
-need(d.get('version') == '2026.08.30.1', 'ImPure channel dictionary version drifted')
+need(d.get('version') == '2026.09.05.1', 'ImPure channel dictionary version drifted')
+need(d.get('reviewed') == '2026-09-05', 'ImPure public-source recheck date drifted')
 need(r.get('decision') == 'partial-measured-channel-acceptance', 'ImPure review decision drifted')
 need(c.get('status') == 'accepted-profiled-partially-semantic-resolved', 'ImPure contract partial-acceptance state drifted')
 
@@ -51,8 +52,10 @@ for column, (unit, meaning) in accepted.items():
 need(by_column['Time'].get('status') == 'accepted-ordering-not-counted', 'ImPure time-basis status drifted')
 need('seconds' in str(by_column['Time'].get('engineeringUnit')), 'ImPure time-delta interpretation missing')
 need(by_column['HydPressure[IRT/Pascoe]'].get('engineeringUnit') is None, 'do not invent ImPure hydraulic-pressure export unit')
+need('4262A' in str(by_column['HydPressure[IRT/Pascoe]'].get('measurementLocation')), 'ImPure hydraulic-pressure sensor model evidence missing')
 need('export-unit-required' in by_column['HydPressure[IRT/Pascoe]'].get('status', ''), 'ImPure hydraulic-pressure unit gate missing')
 need(by_column['ScrewPosition[IRT/Pascoe]'].get('engineeringUnit') is None, 'do not invent ImPure screw-position export unit')
+need('P510' in str(by_column['ScrewPosition[IRT/Pascoe]'].get('measurementLocation')), 'ImPure screw-position sensor model evidence missing')
 need('unit-reference-required' in by_column['ScrewPosition[IRT/Pascoe]'].get('status', ''), 'ImPure screw-position unit/reference gate missing')
 need(by_column['Analog Input[1]'].get('engineeringUnit') is None, 'do not infer a unit for ImPure Analog Input[1]')
 need(by_column['Analog Input[1]'].get('status') == 'exact-signal-definition-required', 'ImPure Analog Input[1] gate drifted')
@@ -67,6 +70,14 @@ need(profile.get('profiledNumericValues') == 2376696, 'ImPure profiled numeric-v
 need(profile.get('acceptedMeasuredChannels') == 4, 'ImPure accepted-channel count drifted')
 need(profile.get('acceptedMeasuredTimeSeriesSamples') == 1188348, 'ImPure accepted measured-value count drifted')
 need(profile.get('acceptedCountFormula') == '4 * 297087', 'ImPure accepted-count formula drifted')
+
+public = d.get('publicSourceRecheck') or {}
+need(public.get('emailSent') is False and public.get('contactAttempted') is False, 'ImPure recheck must remain public-source/no-contact')
+need(public.get('additionalColumnsPromoted') == 0, 'Unresolved ImPure columns cannot be promoted by source-family inference')
+need(len(public.get('sourcesRechecked') or []) >= 5, 'ImPure public-source recheck coverage too narrow')
+effective = d.get('canonicalEffectiveProjectState') or {}
+need(effective.get('fullyProfiledMeasuredFamilies') == 17, 'canonical fully-profiled family count drifted')
+need(effective.get('acceptedInjectionProcessTimeSeriesValues') == 85569824, 'canonical accepted waveform count drifted')
 
 review_accepted = {x['column'] for x in r.get('acceptedColumns') or []}
 need(review_accepted == set(accepted), 'ImPure review accepted-column set drifted')
@@ -101,4 +112,4 @@ need('trial-stage metadata' in status_note and 'changes measurement purpose' in 
      'ImPure inventory must preserve the stage-dependent analogue exclusion')
 need(impure.get('peerReviewedCompanion') == '10.1051/matecconf/202440108011', 'ImPure peer-reviewed companion drifted')
 
-print('MouldMaster ImPure semantic QA passed (307 cycle files / 297,087 rows; four source-backed cavity channels accepted = 1,188,348 measured values; hydraulic, screw-position and analogue channels remain fail-closed where definitions are incomplete or stage-dependent)')
+print('MouldMaster ImPure semantic QA passed (307 cycle files / 297,087 rows; four source-backed cavity channels accepted = 1,188,348 measured values; four remaining numeric fields stay fail-closed after public-source/no-contact recheck)')

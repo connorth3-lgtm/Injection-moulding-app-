@@ -1,7 +1,7 @@
 {
   "schema": 1,
-  "version": "2026.08.30.1",
-  "reviewed": "2026-08-30",
+  "version": "2026.09.05.1",
+  "reviewed": "2026-09-05",
   "datasetId": "impure-pascoe-2022",
   "scope": "Exact delivered nine-column cycle CSV schema. Four cavity-sensor channels are accepted from source-backed instrumentation and engineering-unit evidence; unresolved or stage-dependent channels remain non-counting.",
   "sources": {
@@ -34,7 +34,7 @@
       "column": "ScrewPosition[IRT/Pascoe]",
       "meaning": "measured screw position",
       "engineeringUnit": null,
-      "measurementLocation": "injection unit screw position",
+      "measurementLocation": "injection unit screw position; PASCOE instrumentation uses a Kistler P510 position transducer",
       "commandActualSemantics": "measured",
       "status": "source-meaning-resolved-unit-reference-required"
     },
@@ -90,16 +90,10 @@
     }
   ],
   "sourceBackedInstrumentation": {
-    "pascoeMachineSignals": [
-      "hydraulic pressure",
-      "screw position",
-      "nozzle temperature",
-      "heating/cooling-water temperature"
-    ],
-    "pascoeMouldSignals": [
-      "pressure and temperature from cavity 1",
-      "pressure and temperature from cavity 2"
-    ],
+    "pascoeMachineSignals": ["hydraulic pressure", "screw position", "nozzle temperature", "heating/cooling-water temperature"],
+    "pascoeMouldSignals": ["pressure and temperature from cavity 1", "pressure and temperature from cavity 2"],
+    "hydraulicPressureSensorModel": "Kistler 4262A",
+    "screwPositionSensorModel": "Kistler P510",
     "cavitySensorModel": "Kistler 6188A",
     "cavitySensorPressureRange": "0 to 2000 bar",
     "cavitySensorTemperatureRange": "0 to 200 degC, Type K"
@@ -114,11 +108,29 @@
     "acceptedMeasuredTimeSeriesSamples": 1188348,
     "acceptedCountFormula": "4 * 297087"
   },
+  "publicSourceRecheck": {
+    "date": "2026-09-05",
+    "emailSent": false,
+    "contactAttempted": false,
+    "sourcesRechecked": [
+      "authoritative Zenodo record",
+      "PASCOE instrumentation paper",
+      "PASCOE machine-learning paper",
+      "public sensor-model documentation",
+      "existing trial-stage metadata and aggregate profile"
+    ],
+    "additionalColumnsPromoted": 0,
+    "decision": "The remaining four columns stay non-counting because sensor-family capability or plausible units do not prove the delivered CSV scaling/reference, and Analog Input[2] is demonstrably reconfigured across trial stages."
+  },
   "remainingResolution": [
     "Pin the exact engineering unit/export scaling for HydPressure[IRT/Pascoe].",
     "Pin the exact engineering unit and position origin/reference for ScrewPosition[IRT/Pascoe].",
     "Bind Analog Input[1] to an exact source-defined sensor/configuration before counting it.",
-    "If Analog Input[2] is to be reused, reconstruct stage-specific sensor assignments and units rather than assigning one global definition."
+    "If Analog Input[2] is to be reused, reconstruct source-defined stage-specific sensor assignments and units rather than assigning one global definition."
   ],
-  "acceptanceRule": "Only delivered direct-measurement columns with source-backed physical meaning, engineering unit, measurement location/role and usable source ordering enter the accepted measured-sample total. Stage-dependent or unit-unresolved fields remain excluded rather than inferred."
+  "acceptanceRule": "Only delivered direct-measurement columns with source-backed physical meaning, engineering unit, measurement location/role and usable source ordering enter the accepted measured-sample total. Stage-dependent or unit-unresolved fields remain excluded rather than inferred.",
+  "canonicalEffectiveProjectState": {
+    "fullyProfiledMeasuredFamilies": 17,
+    "acceptedInjectionProcessTimeSeriesValues": 85569824
+  }
 }

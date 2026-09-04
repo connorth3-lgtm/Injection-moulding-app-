@@ -1,0 +1,50 @@
+{
+  "schema": 1,
+  "version": "2026.09.05.1",
+  "reviewed": "2026-09-05",
+  "datasetId": "warwick-demoulding",
+  "datasetDoi": "10.17632/x9hc7hf6xd.2",
+  "status": "available-noncounting-extraction-lane",
+  "purpose": "Allow the five verified OPJU projects to be inspected/exported with a pre-existing local copy of the free Origin Viewer when Origin/OriginPro is unavailable, without treating Viewer extraction as sufficient evidence for measured-data promotion.",
+  "authoritativeProductEvidence": {
+    "viewerPage": "https://cloud.originlab.com/viewer/",
+    "originFileTypeDocumentation": "https://docs.originlab.com/user-guide/origin-file-types/",
+    "facts": [
+      "OriginLab distributes a standalone free Viewer that supports current OPJU project files.",
+      "Origin Viewer can expose/copy worksheet and matrix data and current Viewer releases support active-sheet CSV export.",
+      "OriginLab documents limitations in Viewer compared with full Origin, including unsupported worksheet cell formulas; therefore Viewer cannot prove complete formula/derivation semantics."
+    ]
+  },
+  "noContactBoundary": {
+    "emailSentForThisPass": false,
+    "registrationFormSubmittedForThisPass": false,
+    "downloadPerformedForThisPass": false,
+    "rule": "Use this lane only when an Origin Viewer executable is already lawfully available locally. Do not submit contact/registration details merely to satisfy this repository task."
+  },
+  "sourceProjects": [
+    "data1_09.06.2023_Material_Jetting.opju",
+    "data1_16.06.2023_b2b.opju",
+    "data_visualisation.opju",
+    "representative_curves_14.06.2023.opju",
+    "surface_parameters_27.10.2023.opju"
+  ],
+  "allowedUse": [
+    "Open each exact SHA-256-verified OPJU read-only in Origin Viewer.",
+    "Inventory visible project folders, workbooks, worksheets, matrices and sheet names.",
+    "Export visible active sheets to CSV without resampling or recalculation where the Viewer provides that operation.",
+    "Hash each exported CSV and retain row/column/header metadata in a private/local reconciliation record.",
+    "Use the extraction to identify what still requires full Origin/OriginPro semantic verification."
+  ],
+  "forbiddenPromotion": [
+    "Do not mark any Viewer-exported column direct-measured solely because numeric values are visible.",
+    "Do not infer missing units, sampling basis, trial identity, formulas or voltage-to-force conversion from the companion paper alone.",
+    "Do not claim all data-bearing objects are semantically reconciled when Viewer limitations could hide worksheet cell formulas or other project operations.",
+    "Do not add Viewer-exported numeric cells to accepted measured-value totals.",
+    "Do not set the canonical Warwick Origin manifest to reconciled-ready-for-counting from Viewer evidence alone."
+  ],
+  "promotionPath": {
+    "viewerAcceptedMeasuredValues": 0,
+    "fullPromotionStillRequires": "A validated Windows Origin/OriginPro review satisfying data/warwick-origin-export-manifest-template-v1.json and tools/validate_warwick_origin_export.py, including formula/role/unit/time-basis and all-object reconciliation.",
+    "rawRowsCommittedToPublicRepository": false
+  }
+}

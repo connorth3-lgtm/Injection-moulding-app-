@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "reviewed": "2026-08-30",
+  "reviewed": "2026-09-05",
   "datasetId": "rwth-pcr-2025",
   "sourceRecord": "https://publications.rwth-aachen.de/record/1016199",
   "filesPage": "https://publications.rwth-aachen.de/record/1016199/files/",
@@ -10,7 +10,8 @@
     "publisherDisplayedSize": "1,007.55 KB",
     "publisherDisplayedDate": "2026-04-14",
     "accessLabel": "OpenAccess",
-    "versionedDownloadUrl": "https://publications.rwth-aachen.de/record/1016199/files/ExperimentalData.zip?version=1"
+    "currentAdvertisedDownloadUrl": "https://publications.rwth-aachen.de/record/1016199/files/ExperimentalData.zip",
+    "historicalVersionedDownloadUrl": "https://publications.rwth-aachen.de/record/1016199/files/ExperimentalData.zip?version=1"
   },
   "priorExecution": {
     "workflowRun": 33229910280,
@@ -31,16 +32,37 @@
     "sizeBytes": 248,
     "responseSha256": "4681fa6e4303ecc351521fa1c7c836c9f3d6774b11725d39885ec3bf8ff16561",
     "zipStructureValid": false,
-    "result": "the exact version-1 publisher URL and both download query variants still returned the same 248-byte HTML response"
+    "result": "the exact version-1 publisher URL and both download query variants returned the same 248-byte HTML response"
   },
-  "decision": "publisher-file-listing-confirmed-but-machine-download-still-blocked",
+  "publicSourceRecheck": {
+    "date": "2026-09-05",
+    "result": "authoritative record currently advertises the bare ExperimentalData.zip file path",
+    "repositoryAction": "machine retrieval contract retargeted to the bare advertised path while retaining publisher file version 1 as separate provenance metadata",
+    "promotionAllowedBeforeArchiveAndSemanticValidation": false
+  },
+  "currentBareRouteExecution": {
+    "workflowRun": 33929397387,
+    "artifactId": 9957993770,
+    "artifactDigest": "sha256:445facacfbff51b9e21f5e2becb1bcab04accb4207e004a9762188b1a0ae214c",
+    "headSha": "6ca776e5675d28070adfbd5c93ad00d4ff7349cd",
+    "testedBarePublisherUrl": true,
+    "testedDownloadQueryVariants": true,
+    "httpStatus": 200,
+    "contentType": "text/html; charset=UTF-8",
+    "sizeBytes": 248,
+    "responseSha256": "4681fa6e4303ecc351521fa1c7c836c9f3d6774b11725d39885ec3bf8ff16561",
+    "zipStructureValid": false,
+    "result": "the current advertised bare route and both download query variants still returned the same 248-byte HTML response",
+    "rawResponseBodyEmitted": false
+  },
+  "decision": "publisher-openaccess-file-listing-confirmed-machine-delivery-still-blocked",
   "nextEvidenceRequired": [
-    "A first-party RWTH download endpoint that serves the advertised ZIP bytes to a non-interactive research client, or publisher guidance explaining the access mechanism required for this file.",
-    "After delivery succeeds, exact archive/member fingerprints and delivered-schema semantics must still pass the existing stage-1 and final acceptance gates."
+    "A first-party RWTH delivery change that serves the advertised ZIP bytes to a non-interactive research client.",
+    "After delivery succeeds, exact archive/member fingerprints and delivered-schema semantics must pass the existing stage-1 and final acceptance gates."
   ],
   "countingBoundary": {
     "countsAsFullyProfiledMeasuredDataset": false,
     "acceptedMeasuredTimeSeriesSamples": 0,
-    "reason": "The publisher visibly lists an OpenAccess version-1 ZIP, but two independent GitHub Actions executions have received HTML instead of ZIP bytes. No source data are accepted until actual archive delivery succeeds."
+    "reason": "The publisher visibly lists an OpenAccess version-1 ZIP, but the fresh 2026-09-05 bare-route GitHub Actions execution still receives the same HTML blocker. No source data are accepted until actual archive delivery succeeds."
   }
 }

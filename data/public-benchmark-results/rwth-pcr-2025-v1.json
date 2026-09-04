@@ -1,27 +1,27 @@
 {
   "schema_version": 1,
   "status": "retrieval-blocked-non-archive-response",
-  "retrieved_date": "2026-08-29",
-  "sourceWorkflowRun": 33275082399,
+  "retrieved_date": "2026-09-04",
+  "sourceWorkflowRun": 33929397387,
   "sourceArtifact": {
-    "id": 9721253363,
+    "id": 9957993770,
     "name": "mouldmaster-public-measured-benchmark-rwth-pcr-2025",
-    "digest": "sha256:a401d66147a8e803d1b2af9c0d1ea71d3c36ec9e7ba56730542e25e6594eba1b"
+    "digest": "sha256:445facacfbff51b9e21f5e2becb1bcab04accb4207e004a9762188b1a0ae214c"
   },
   "source": {
     "datasetId": "rwth-pcr-2025",
     "datasetDoi": "10.18154/RWTH-2025-06809",
     "recordUrl": "https://publications.rwth-aachen.de/record/1016199",
-    "downloadUrl": "https://publications.rwth-aachen.de/record/1016199/files/ExperimentalData.zip?version=1",
+    "downloadUrl": "https://publications.rwth-aachen.de/record/1016199/files/ExperimentalData.zip",
     "publisherFileName": "ExperimentalData.zip",
     "license": "CC BY 4.0",
     "licenseEvidenceUrl": "https://publications.rwth-aachen.de/record/1016199?ln=de",
     "peerReviewedCompanion": "10.1016/j.jprocont.2026.103725",
     "retrievalAttempts": [
       {
-        "url": "https://publications.rwth-aachen.de/record/1016199/files/ExperimentalData.zip?version=1",
+        "url": "https://publications.rwth-aachen.de/record/1016199/files/ExperimentalData.zip",
         "httpStatus": 200,
-        "finalUrl": "https://publications.rwth-aachen.de/record/1016199/files/ExperimentalData.zip?version=1",
+        "finalUrl": "https://publications.rwth-aachen.de/record/1016199/files/ExperimentalData.zip",
         "contentType": "text/html; charset=UTF-8",
         "contentLengthHeader": "248",
         "contentDisposition": null,
@@ -32,9 +32,9 @@
         "rawResponseBodyEmitted": false
       },
       {
-        "url": "https://publications.rwth-aachen.de/record/1016199/files/ExperimentalData.zip?version=1&download=1",
+        "url": "https://publications.rwth-aachen.de/record/1016199/files/ExperimentalData.zip?download=1",
         "httpStatus": 200,
-        "finalUrl": "https://publications.rwth-aachen.de/record/1016199/files/ExperimentalData.zip?version=1&download=1",
+        "finalUrl": "https://publications.rwth-aachen.de/record/1016199/files/ExperimentalData.zip?download=1",
         "contentType": "text/html; charset=UTF-8",
         "contentLengthHeader": "248",
         "contentDisposition": null,
@@ -45,9 +45,9 @@
         "rawResponseBodyEmitted": false
       },
       {
-        "url": "https://publications.rwth-aachen.de/record/1016199/files/ExperimentalData.zip?version=1&download=true",
+        "url": "https://publications.rwth-aachen.de/record/1016199/files/ExperimentalData.zip?download=true",
         "httpStatus": 200,
-        "finalUrl": "https://publications.rwth-aachen.de/record/1016199/files/ExperimentalData.zip?version=1&download=true",
+        "finalUrl": "https://publications.rwth-aachen.de/record/1016199/files/ExperimentalData.zip?download=true",
         "contentType": "text/html; charset=UTF-8",
         "contentLengthHeader": "248",
         "contentDisposition": null,
@@ -64,7 +64,7 @@
     "stage1ProfileComplete": false,
     "countsAsFullyProfiledMeasuredDataset": false,
     "acceptedMeasuredTimeSeriesSamples": 0,
-    "reason": "The exact first-party version-1 archive URL and both download query variants still returned the same 248-byte HTML response; no structurally valid ZIP was delivered to the GitHub Actions runner."
+    "reason": "The currently advertised first-party bare archive path and both download-query variants still returned the same 248-byte HTML response; no structurally valid ZIP was delivered to the GitHub Actions runner."
   },
   "retrieval": {
     "rawPublisherArchiveCommitted": false,
@@ -72,5 +72,5 @@
     "rawRowsOrArraysUploadedAsArtifact": false,
     "rawResponseBodiesUploadedAsArtifact": false
   },
-  "evidenceBoundary": "RWTH reuse rights and the visible version-1 OpenAccess file listing are confirmed, but the exact machine retrieval still receives HTML rather than the advertised ZIP. The source remains non-counting until a first-party delivery mechanism returns the real archive and its internal measurement semantics are profiled."
+  "evidenceBoundary": "RWTH reuse rights and the visible version-1 OpenAccess file listing are confirmed, but the current advertised bare machine-download path still serves HTML rather than the advertised ZIP to GitHub Actions. The source remains non-counting until a first-party delivery mechanism returns the real archive and its internal measurement semantics are profiled."
 }
