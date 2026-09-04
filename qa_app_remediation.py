@@ -101,14 +101,19 @@ schema = json.loads(text("data/materials/material-grade.schema.json"))
 need("identity" in schema["properties"], "material schema missing identity variant object")
 need("production" in schema["properties"], "material schema missing production provenance object")
 
-# Production publication must be gated before Pages publisher/deploy work begins.
+# Production artifact/build work must wait for both provenance verification and the
+# independently-started legacy Pages publisher guard. The guard itself must not wait
+# behind provenance because cancellation latency is release-safety critical.
 for marker in (
     "production-source:",
+    "publisher-guard:",
     "tools/verify_production_source.py",
     "Require merged-PR provenance before publication",
-    "needs: production-source",
+    "needs: [production-source, publisher-guard]",
 ):
-    need(marker in pages, f"Pages pre-deploy provenance gate missing: {marker}")
+    need(marker in pages, f"Pages pre-deploy provenance/publisher gate missing: {marker}")
+publisher_block = pages.split("  publisher-guard:", 1)[1].split("\n  build:", 1)[0]
+need("needs:" not in publisher_block, "legacy Pages publisher guard must start independently of production-source")
 run = subprocess.run(["python", "tools/verify_production_source.py", "--self-test"], cwd=ROOT, capture_output=True, text=True)
 need(run.returncode == 0, f"production-source verifier self-test failed: {run.stdout}\n{run.stderr}")
 
@@ -197,4 +202,4 @@ need("new MutationObserver" not in pwa, "PWA shell still uses document-wide muta
 need("new MutationObserver" not in materials, "Materials domain still uses document-wide mutation polling")
 need("mutationScope:'changed-subtrees'" in a11y, "accessibility safety net is not constrained to changed subtrees")
 
-print("MouldMaster app-wide remediation QA passed: pre-merge live Pages provenance, aligned gh api negotiation, cross-index fail-closed provenance, single authoritative owner-scoped engineering case store, variant-safe materials, PWA lifecycle, legacy distribution separation, deterministic browser matrix and targeted observers")
+print("MouldMaster app-wide remediation QA passed: pre-merge live Pages provenance plus earliest-start legacy publisher guard, aligned gh api negotiation, cross-index fail-closed provenance, single authoritative owner-scoped engineering case store, variant-safe materials, PWA lifecycle, legacy distribution separation, deterministic browser matrix and targeted observers")
