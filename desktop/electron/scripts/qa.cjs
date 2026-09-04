@@ -27,7 +27,7 @@ need(String(PKG.build?.win?.artifactName||'').includes('${buildVersion}'),'Windo
 const fuses=PKG.build?.electronFuses||{};
 for(const [name,expected] of Object.entries({runAsNode:false,enableNodeOptionsEnvironmentVariable:false,enableNodeCliInspectArguments:false,enableEmbeddedAsarIntegrityValidation:true,onlyLoadAppFromAsar:true}))need(fuses[name]===expected,`Electron fuse must remain ${name}=${expected}`);
 for(const marker of ['nodeIntegration: false','contextIsolation: true','sandbox: true','webSecurity: true','allowRunningInsecureContent: false','setPermissionRequestHandler','setPermissionCheckHandler','will-attach-webview','setWindowOpenHandler',"server.listen(DESKTOP_PORT, '127.0.0.1'",'app.requestSingleInstanceLock()','const DESKTOP_PORT = 43139','const INTEGRITY_PATH = path.join(__dirname, \'..\', \'generated\', \'integrity.json\')','const allowed = new Set(Object.keys(integrity.files))','method !== \'GET\' && method !== \'HEAD\'','SHA-256 verification failed'])need(MAIN.includes(marker),`desktop security marker missing: ${marker}`);
-need(!MAIN.includes('server.listen(0'),'desktop loopback origin must not use an ephemeral port because browser storage is origin-scoped');
+need(!MAIN.includes("server.listen(0, '127.0.0.1', () =>"),'desktop loopback origin must not use the legacy executable ephemeral-port call because browser storage is origin-scoped');
 need(MAIN.includes('http://127.0.0.1:${DESKTOP_PORT}'),'desktop renderer origin must be derived from the stable port');
 need(!MAIN.includes("process.resourcesPath, 'mouldmaster', 'integrity.json'"),'packaged integrity manifest must not be read from writable asset directory');
 need(INTEGRITY.schema===1,'integrity schema mismatch');
