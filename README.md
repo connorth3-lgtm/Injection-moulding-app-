@@ -18,7 +18,7 @@ The project maintainers do not intend to seek patent protection over implementat
 ## Current release lanes
 
 - PWA / browser shell: `2026.08.26.2`
-- Open Windows desktop: `2026.08.26.6`
+- Open Windows desktop: `2026.08.26.7`
 - Training content: `2026.08.26.1`
 - Audited assessment bank: `2026.08.30.1`
 - Assessment quality / analytics hardening: `2026.08.24.3`
@@ -34,7 +34,7 @@ The hosted PWA is published through GitHub Pages:
 
 `https://connorth3-lgtm.github.io/Injection-moulding-app-/`
 
-The PWA uses an installable web manifest and a service worker for offline support after a successful initial load. The current shell caches the audited core, assessment/runtime layers, guided learning, specialist curriculum, reference data and the privacy/support pages required by the public app.
+The PWA uses an installable web manifest and a service worker for offline support after a successful initial load. The current shell caches the audited core, assessment/runtime layers, guided learning, specialist curriculum, reference data and the privacy/support pages required by the public app. Governed learner-runtime changes must advance the web release/cache identity; mandatory Release QA compares each change with its parent so an installed PWA cannot silently reuse the previous cache generation after runtime bytes change.
 
 ## Assessment system
 
@@ -72,13 +72,17 @@ The optional specialist layer contains **20 lessons total** and remains separate
 
 Specialist completion is device-local and separate from the core pathway. These formative layers do not change formal assessment answers, certificate thresholds or production setpoints, and evidence promotion does not convert study-specific values into universal production recipes.
 
+## Learning validation analytics
+
+Learning Insights keeps bounded learner-scoped event logs locally. Cohort export is available only in the device-local instructor convenience view and contains aggregate metrics only. Cohort discovery is derived from the current learner registry: analytics buckets that no longer map to a current profile are excluded and cannot satisfy the minimum-five export threshold. Successful progress import and confirmed factory reset clear Learning Insights analytics as well as the relevant assessment analytics so old device/profile evidence is not attributed to a new profile set.
+
 ## Open Windows desktop release
 
 The normal open-source Windows desktop implementation is under:
 
 `desktop/electron/`
 
-Desktop `2026.08.26.6` is published from the exact repository source by `.github/workflows/publish-open-desktop.yml` to the tagged GitHub Release recorded in `version.json`. The release includes the portable Windows executable, SHA-256 hashes, the source commit, bundled-asset integrity manifest, dependency licence inventory, CycloneDX SBOM and assessment/evidence/source-freshness QA reports.
+Desktop `2026.08.26.7` is the next tagged open release identity from the exact repository source after merge of the current remediation. `.github/workflows/publish-open-desktop.yml` publishes the versioned tagged GitHub Release when `version.json` changes on protected `main`; release artifacts include the portable Windows executable, SHA-256 hashes, source commit, bundled-asset integrity manifest, dependency licence inventory, CycloneDX SBOM and assessment/evidence/source-freshness QA reports.
 
 Security controls include:
 - SHA-256 verification of bundled MouldMaster application assets before launch;
@@ -87,10 +91,12 @@ Security controls include:
 - renderer permissions denied by default;
 - webviews blocked;
 - external HTTPS references opened in the system browser;
-- a loopback-only `127.0.0.1` application server with an explicit asset allow list;
+- a stable loopback-only `127.0.0.1:43139` application origin with an explicit asset allow list and single-instance lock so browser-origin learner storage persists across normal launches;
 - exact direct dependency versions plus a committed npm lockfile;
 - dependency licence inventory and CycloneDX SBOM generation;
 - GitHub Actions build provenance and release hashes.
+
+If the stable loopback port cannot be acquired, the desktop app fails closed instead of choosing a different origin and silently stranding learner storage.
 
 See `desktop/electron/README.md`, `desktop/electron/THREAT_MODEL.md` and `desktop/electron/LEGACY_MIGRATION.md`.
 
@@ -138,6 +144,7 @@ Do not bypass guards, interlocks or hazardous-energy controls to follow training
 The release workflows run structural, runtime, question/answer, assessment-quality, learner-scoped analytics, evidence-approval, evidence-maturity, guided-data, cross-library process-data, measured-evidence, mechanism-evidence coverage/promotion, learner-experience, curriculum-integration, specialist-curriculum/evidence-status, material-behaviour, app-shell/mobile-browser, Mould Master workspace, source-freshness, reference/research, desktop-security and certification-readiness checks. Important entry points include:
 
 - `qa_release.py`
+- `qa_runtime_release_bump.py`
 - `qa_runtime_hardening.py`
 - `qa_release_docs.py`
 - `qa_diagnostic_learning.py`
@@ -163,6 +170,7 @@ The release workflows run structural, runtime, question/answer, assessment-quali
 - `qa_specialist_curriculum.py`
 - `qa_specialist_evidence_gaps.py`
 - `qa_learning_analytics.py`
+- `qa_final_audit_lifecycle.cjs`
 - `qa_assessment_final_hardening.py`
 - `qa_assessment_ux.py`
 - `qa_assessment_storage_scope.py`

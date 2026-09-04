@@ -14,8 +14,6 @@ const INTEGRITY_PATH = path.join(__dirname, '..', 'generated', 'integrity.json')
 // The renderer persists learner state in browser-origin storage. Keep the loopback
 // origin stable across launches; an ephemeral port would create a different origin
 // and strand localStorage/IndexedDB data on every restart.
-// Legacy release-QA compatibility marker only: server.listen(0, '127.0.0.1' is the
-// prohibited pre-fix form; executable code below must bind DESKTOP_PORT instead.
 const DESKTOP_PORT = 43139;
 const singleInstanceLock = app.requestSingleInstanceLock();
 if (!singleInstanceLock) app.quit();

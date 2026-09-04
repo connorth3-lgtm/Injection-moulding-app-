@@ -7,7 +7,7 @@ import struct
 import subprocess
 import tempfile
 
-WEB_RELEASE = "2026.09.03.1"
+WEB_RELEASE = "2026.09.05.1"
 ANDROID_RELEASE = "2026.08.26.2"
 CONTENT_VERSION = "2026.08.26.1"
 WINDOWS_RECOVERY_VERSION = "2026.08.21.1"
@@ -156,8 +156,8 @@ assert "lesson()" in source_lib and "standards()" in source_lib, "sources must b
 assert Path("sources/AUTHORITATIVE_SOURCE_REGISTER.md").exists(), "authoritative source register missing"
 
 bridge = text("training-qa-fix.js")
-for marker in ["file.size>10*1024*1024", "clean.id=sid", "clean.certificates=[]", "clean.certificateMeta={}", "clean.examPassStatus={}", "before[k]===null?localStorage.removeItem(k):localStorage.setItem(k,before[k])", "Certificates must be re-earned", "db!==beforeDb"]:
-    assert marker in bridge, f"import hardening missing: {marker}"
+for marker in ["file.size>10*1024*1024", "clean.id=sid", "clean.certificates=[]", "clean.certificateMeta={}", "clean.examPassStatus={}", "before[k]===null?localStorage.removeItem(k):localStorage.setItem(k,before[k])", "Certificates must be re-earned", "db!==beforeDb", "LEARNING_ANALYTICS_PREFIX", "clearAllAnalyticsStores()"]:
+    assert marker in bridge, f"import/reset hardening missing: {marker}"
 storage_commit = bridge.index("for(const [k,v] of Object.entries(writes))localStorage.setItem(k,v)")
 memory_commit = bridge.index("db=proposed;user=db.users[db.activeUser]")
 assert storage_commit < memory_commit, "memory must change only after all storage writes succeed"
@@ -200,8 +200,9 @@ from_paths = {x.get("from") for x in dpkg["build"].get("extraResources", []) if 
 for asset in ["runtime-v2.js", "assessment-runtime-v2.js", "lesson-deep-authoring-v2.js", "assessment-multimodal.js", "accessibility-hardening.js"]:
     assert f"../../{asset}" in from_paths, f"desktop bundle missing maturity-hardening asset: {asset}"
 dmain = (desktop_root / "src" / "main.cjs").read_text(encoding="utf-8")
-for marker in ["nodeIntegration: false", "contextIsolation: true", "sandbox: true", "webSecurity: true", "allowRunningInsecureContent: false", "setPermissionRequestHandler", "setPermissionCheckHandler", "will-attach-webview", "setWindowOpenHandler", "server.listen(0, '127.0.0.1'", "SHA-256 verification failed"]:
+for marker in ["nodeIntegration: false", "contextIsolation: true", "sandbox: true", "webSecurity: true", "allowRunningInsecureContent: false", "setPermissionRequestHandler", "setPermissionCheckHandler", "will-attach-webview", "setWindowOpenHandler", "const DESKTOP_PORT = 43139", "server.listen(DESKTOP_PORT, '127.0.0.1'", "requestSingleInstanceLock()", "SHA-256 verification failed"]:
     assert marker in dmain, f"open desktop security control missing: {marker}"
+assert "server.listen(0, '127.0.0.1'" not in dmain, "desktop must not use an ephemeral origin because browser storage is origin-scoped"
 assert Path(".github/workflows/desktop-dependency-lock.yml").exists(), "desktop dependency lock workflow missing"
 assert Path(".github/workflows/open-desktop-build.yml").exists(), "open desktop build workflow missing"
 lock = desktop_root / "package-lock.json"

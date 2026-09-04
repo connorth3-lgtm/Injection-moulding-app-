@@ -1,4 +1,4 @@
-/* MouldMaster domain bridge for legacy Learning Analytics — 2026.09.05.2 */
+/* MouldMaster domain bridge for legacy Learning Analytics — 2026.09.05.3 */
 (function(){
 'use strict';
 if(window.MM_LEARNING_ANALYTICS||window.MM_LEARNING_ANALYTICS_LOADING)return;
@@ -37,11 +37,29 @@ function readEvents(token=scope.token()){
     return storageFailure('invalid-analytics-store')
   }catch(err){if(/Learning analytics storage unavailable/.test(String(err?.message||'')))throw err;return storageFailure('analytics-read-failed')}
 }
+function knownTokenSets(){
+  const ids=scope.knownIds?.()||[];
+  const strong=new Set(),legacy=new Set();
+  for(const id of ids){try{strong.add(scope.tokenFor(id))}catch(_){}try{if(scope.legacyTokenFor)legacy.add(scope.legacyTokenFor(id))}catch(_){}}
+  return {ids,strong,legacy}
+}
+function liveToken(token,known=knownTokenSets()){
+  const t=String(token||'').toLowerCase();
+  if(known.strong.has(t))return true;
+  if(scope.isLegacyToken?.(t)&&known.legacy.has(t)&&scope.includeStorageToken?.(STORAGE_PREFIX,t)!==false)return true;
+  return false
+}
 function allTokens(){
-  const out=[];
-  try{for(let i=0;i<localStorage.length;i++){const k=localStorage.key(i);if(k?.startsWith(STORAGE_PREFIX)){const t=k.slice(STORAGE_PREFIX.length);if(scope.includeStorageToken?.(STORAGE_PREFIX,t)!==false)out.push(t)}}}
+  const out=[],known=knownTokenSets();
+  try{for(let i=0;i<localStorage.length;i++){const k=localStorage.key(i);if(k?.startsWith(STORAGE_PREFIX)){const t=k.slice(STORAGE_PREFIX.length);if(liveToken(t,known))out.push(t)}}}
   catch(_){return storageFailure('analytics-index-read-failed')}
   return [...new Set(out)]
+}
+function clearAllAnalytics(){
+  let removed=0;
+  try{for(let i=localStorage.length-1;i>=0;i--){const k=localStorage.key(i);if(k?.startsWith(STORAGE_PREFIX)){localStorage.removeItem(k);removed++}}}
+  catch(_){return storageFailure('analytics-clear-all-failed')}
+  return removed
 }
 function aggregate(events){
   const e=Array.isArray(events)?events:[];
@@ -69,14 +87,21 @@ function cohort(){
 }
 function stageLabel(key){const [module,raw]=String(key).split(':');const labels={diagnostic:['Observe','Best next test','Controlled response','Explain'],'process-data':['Read pattern','Diagnose','Next evidence','Recovery']};const step=Number(raw)||0;return `${module==='diagnostic'?'Diagnostic lab':'Process-data case'} · ${labels[module]?.[step]||`Step ${step+1}`}`}
 function requireInstructor(){if(!isInstructor())throw new Error('Cohort analytics export requires local instructor view mode on this device; this mode is not authentication')}
-function requireExportCohort(c){if(c.tokens.length<MIN_EXPORT_PROFILES)throw new Error(`Cohort aggregate export requires at least ${MIN_EXPORT_PROFILES} local learner profiles.`);return c}
+function requireExportCohort(c){if(c.tokens.length<MIN_EXPORT_PROFILES)throw new Error(`Cohort aggregate export requires at least ${MIN_EXPORT_PROFILES} current local learner profiles.`);return c}
 function exportAnonymousSummary(){
   requireInstructor();
   const c=requireExportCohort(cohort()),combined=c.aggregate;
-  const payload={schema:2,version:version||'domain-quality-v2',generatedAt:new Date().toISOString(),privacy:`Cohort aggregate only; minimum ${MIN_EXPORT_PROFILES} local profiles; no per-profile rows, names, hashed learner tokens, notes, answer text or event timestamps. Ambiguous or unowned legacy learner buckets are quarantined/excluded. Local instructor view is a device-local convenience mode, not authenticated identity or a security boundary.`,anonymousProfiles:c.tokens.length,aggregate:{activeLearningSeconds:combined.activeTime,practiceAttempts:combined.practiceAttempts,practiceCompleted:combined.practiceCompleted,averagePracticeScore:+combined.avgScore.toFixed(2),repeatedCases:combined.repeatedCases,averageRetryGain:+combined.avgGain.toFixed(2),improvedCases:combined.improvedCases,missesByStage:combined.difficult.map(([k,n])=>({stage:stageLabel(k),count:n}))}};
+  const payload={schema:2,version:version||'domain-quality-v2',generatedAt:new Date().toISOString(),privacy:`Cohort aggregate only; minimum ${MIN_EXPORT_PROFILES} current local profiles; no per-profile rows, names, hashed learner tokens, notes, answer text or event timestamps. Orphaned, ambiguous or unowned learner buckets are excluded. Local instructor view is a device-local convenience mode, not authenticated identity or a security boundary.`,anonymousProfiles:c.tokens.length,aggregate:{activeLearningSeconds:combined.activeTime,practiceAttempts:combined.practiceAttempts,practiceCompleted:combined.practiceCompleted,averagePracticeScore:+combined.avgScore.toFixed(2),repeatedCases:combined.repeatedCases,averageRetryGain:+combined.avgGain.toFixed(2),improvedCases:combined.improvedCases,missesByStage:combined.difficult.map(([k,n])=>({stage:stageLabel(k),count:n}))}};
   const blob=new Blob([JSON.stringify(payload,null,2)],{type:'application/json;charset=utf-8'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='mouldmaster-cohort-learning-summary.json';document.body.appendChild(a);a.click();a.remove();URL.revokeObjectURL(url);return payload
 }
 function setMetric(label,value,index=0){const matches=[...(document.querySelectorAll?.('#learningInsights .la-kpi span')||[])].filter(x=>x.textContent?.trim()===label);const node=matches[index]?.parentElement?.querySelector?.('strong');if(node)node.textContent=value}
+function patchCohortNote(count){
+  const heading=[...(document.querySelectorAll?.('#learningInsights .eyebrow')||[])].find(x=>/^Instructor view\b|^Local instructor view\b/.test(x.textContent?.trim()||''));
+  if(!heading)return;
+  heading.textContent='Local instructor view · this device only';
+  const panel=heading.closest?.('.la-panel');const note=panel?.querySelector?.('.la-note');if(!note)return;
+  note.textContent=`The export contains cohort-level aggregate metrics only and requires at least ${MIN_EXPORT_PROFILES} current local learner profiles. Orphaned analytics buckets from removed/imported profiles are excluded. It does not include per-profile rows, learner names, hashed learner tokens, notes or event timestamps. Local instructor view is a convenience mode, not authenticated authorization.${count>=MIN_EXPORT_PROFILES?'':' More current local learner profiles are needed before export is enabled by policy.'}`
+}
 function patchRenderedMetrics(){
   if(!window.MM_LEARNING_ANALYTICS)return;
   try{
@@ -85,8 +110,14 @@ function patchRenderedMetrics(){
     const rows=[...(document.querySelectorAll?.('#learningInsights .la-row span')||[])];
     const improved=rows.find(x=>x.textContent?.trim()==='Cases with a higher later best score'||x.textContent?.trim()==='Cases with a higher latest score');
     if(improved){improved.textContent='Cases with a higher latest score';const strong=improved.parentElement?.querySelector?.('strong');if(strong)strong.textContent=String(current.improvedCases)}
-    const instructorHeading=[...(document.querySelectorAll?.('#learningInsights .eyebrow')||[])].find(x=>/^Instructor view\b/.test(x.textContent?.trim()||''));if(instructorHeading)instructorHeading.textContent='Local instructor view · this device only';
-    if(isInstructor()){const c=cohort().aggregate;setMetric('Average retry gain',c.repeatedCases?`${c.avgGain.toFixed(1)} pts`:'—',1)}
+    if(isInstructor()){
+      const c=cohort();
+      setMetric('Local learner profiles',String(c.tokens.length));
+      setMetric('Tracked practice attempts',String(c.aggregate.practiceAttempts));
+      setMetric('Completed practice cases',String(c.aggregate.practiceCompleted));
+      setMetric('Average retry gain',c.aggregate.repeatedCases?`${c.aggregate.avgGain.toFixed(1)} pts`:'—',1);
+      patchCohortNote(c.tokens.length);
+    }
   }catch(err){window.toast?.(err?.message||String(err))}
   decorateRoleControl();
 }
@@ -96,10 +127,11 @@ function installQuality(){
   api.summary=()=>aggregate(readEvents());
   api.cohortSummary=()=>{requireInstructor();const c=cohort();return {anonymousProfiles:c.tokens.length,aggregate:c.aggregate,boundary:localModeBoundary()}};
   api.exportAnonymousSummary=exportAnonymousSummary;
+  api.clearAllAnalytics=clearAllAnalytics;
   api.minimumAggregateProfiles=MIN_EXPORT_PROFILES;
   api.open=function(){const r=baseOpen?.apply(this,arguments);queueMicrotask(patchRenderedMetrics);return r};
   api.__mmQualityCorrected=true;
-  window.MM_LEARNING_ANALYTICS_QUALITY=Object.freeze({aggregate,cohortSummary:api.cohortSummary,exportAnonymousSummary,minimumAggregateProfiles:MIN_EXPORT_PROFILES,localModeBoundary,scope:'Retry gain is latest completed attempt minus first completed attempt. Cross-profile metrics preserve anonymous learner boundaries internally but exports contain cohort-level aggregate data only and require a minimum cohort size. Legacy learner buckets with ambiguous or unproven local ownership are excluded rather than assigned to a profile. Storage read/index failures fail closed. Local instructor view is not authenticated identity or an authorization boundary.'});
+  window.MM_LEARNING_ANALYTICS_QUALITY=Object.freeze({aggregate,cohortSummary:api.cohortSummary,exportAnonymousSummary,clearAllAnalytics,liveTokens:()=>allTokens().slice(),minimumAggregateProfiles:MIN_EXPORT_PROFILES,localModeBoundary,scope:'Retry gain is latest completed attempt minus first completed attempt. Cross-profile metrics use only analytics buckets that map to current local learner profiles; orphaned strong-token buckets and ambiguous/unowned legacy buckets are excluded. Exports contain cohort-level aggregate data only and require a minimum cohort size. Storage read/index failures fail closed. Local instructor view is not authenticated identity or an authorization boundary.'});
   queueMicrotask(patchRenderedMetrics);
 }
 function guardExport(event){

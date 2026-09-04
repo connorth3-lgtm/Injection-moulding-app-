@@ -11,7 +11,7 @@
 <h1>MouldMaster Academy — Support</h1>
 <div class="box"><b>Current release family</b><br>
 PWA shell: <span id="mmPwa">2026.08.26.2</span><br>
-Open desktop: <span id="mmDesktop">2026.08.26.6</span><br>
+Open desktop: <span id="mmDesktop">2026.08.26.7</span><br>
 Training content: <span id="mmContent">2026.08.26.1</span><br>
 Audited question bank: <span id="mmBank">2026.08.30.1</span><br>
 Assessment quality layer: <span id="mmQuality">2026.08.24.3</span><br>
@@ -34,7 +34,7 @@ Legacy Windows recovery content: <span id="mmRecovery">2026.08.21.1</span><br>
 </div>
 <h2>App does not update</h2><p>For the installed PWA, connect to the internet, open MouldMaster, close it fully and reopen it. Offline content is refreshed through the service worker after a successful online check.</p>
 <h2>Windows update blocked safely</h2><p>The legacy recovery launcher and the open Electron desktop are separate release lanes. If the legacy Windows updater says an update was blocked, keep the current installed recovery copy. The updater is designed to reject content that fails validation rather than replace a known-good copy.</p>
-<h2>Progress, analytics and backups</h2><p>Use the app's progress export before changing browser profiles, clearing site data or moving devices. Imported progress backups are validated and certificates are intentionally re-earned on the receiving device. Assessment analytics are a separate, learner-scoped, device-local diagnostic store and are not part of the progress backup; a successful progress import resets local assessment analytics to avoid mixing histories.</p>
+<h2>Progress, analytics and backups</h2><p>Use the app's progress export before changing browser profiles, clearing site data or moving devices. Imported progress backups are validated and certificates are intentionally re-earned on the receiving device. Assessment analytics and Learning insights events are separate learner-scoped, device-local stores and are not part of the progress backup; a successful progress import resets both analytics histories to avoid attributing old device/profile evidence to imported learners.</p>
 <h2>Certificates</h2><p>Current certificates are MouldMaster learning-completion records. They are not yet NZQA-approved qualifications, IACET CEUs, statutory authorisation or proof of machine-specific workplace competence.</p>
 <h2>Safety or technical concern</h2><p>Do not use the app to override a machine safeguard, site isolation procedure, resin supplier instruction or applicable legal requirement. If you identify a potentially incorrect safety or technical item, stop relying on that item until it has been reviewed against the cited/current source.</p>
 <h2>Publisher support contact</h2><p>For non-sensitive technical reports, use the learner-problem form above or the public repository issue tracker: <a href="https://github.com/connorth3-lgtm/Injection-moulding-app-/issues" rel="noopener">MouldMaster GitHub Issues</a>. Do not post learner names, exported backups or other personal information in a public issue. A private publisher contact method must be supplied before any future service centrally collects learner personal information or where a distribution/accreditation process specifically requires one.</p>
