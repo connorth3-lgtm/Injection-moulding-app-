@@ -8,12 +8,14 @@ on:
       - 'data/impure-pascoe-author-response-template-v1.json'
       - 'data/real-pilot-public-candidate-review-2026-09-05.json'
       - 'data/warwick-origin-export-manifest-template-v1.json'
+      - 'data/warwick-origin-viewer-extraction-contract-v1.json'
       - 'tools/validate_cross_process_upper_clarification.py'
       - 'tools/validate_impure_pascoe_clarification.py'
       - 'tools/evaluate_public_pilot_candidate.py'
       - 'tools/export_warwick_origin.py'
       - 'tools/validate_warwick_origin_export.py'
       - 'qa_external_evidence_execution.py'
+      - 'qa_warwick_origin_viewer_contract.py'
       - '.github/workflows/external-evidence-execution.yml'
   pull_request:
     branches: [main]
@@ -22,12 +24,14 @@ on:
       - 'data/impure-pascoe-author-response-template-v1.json'
       - 'data/real-pilot-public-candidate-review-2026-09-05.json'
       - 'data/warwick-origin-export-manifest-template-v1.json'
+      - 'data/warwick-origin-viewer-extraction-contract-v1.json'
       - 'tools/validate_cross_process_upper_clarification.py'
       - 'tools/validate_impure_pascoe_clarification.py'
       - 'tools/evaluate_public_pilot_candidate.py'
       - 'tools/export_warwick_origin.py'
       - 'tools/validate_warwick_origin_export.py'
       - 'qa_external_evidence_execution.py'
+      - 'qa_warwick_origin_viewer_contract.py'
       - '.github/workflows/external-evidence-execution.yml'
   workflow_dispatch:
 
@@ -49,9 +53,12 @@ jobs:
             tools/validate_impure_pascoe_clarification.py \
             tools/evaluate_public_pilot_candidate.py \
             tools/export_warwick_origin.py \
-            qa_external_evidence_execution.py
+            qa_external_evidence_execution.py \
+            qa_warwick_origin_viewer_contract.py
       - name: External evidence execution contracts
-        run: python qa_external_evidence_execution.py
+        run: |
+          python qa_external_evidence_execution.py
+          python qa_warwick_origin_viewer_contract.py
       - name: Pending source responses remain non-promoting
         run: |
           python tools/validate_cross_process_upper_clarification.py
