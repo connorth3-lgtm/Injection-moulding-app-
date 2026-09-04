@@ -3,12 +3,13 @@
 'use strict';
 if(window.MM_ENGINEERING_STORE)return;
 
-const VERSION='2026.09.03.5';
+const VERSION='2026.09.04.1';
 const DB_NAME='mouldmaster-engineering-v2';
 const DB_VERSION=2;
 const LEGACY_CASE_BASE='mm_mould_master_cases_v1::';
 const learnerScope=window.MM_LEARNER_SCOPE;
 if(!learnerScope)throw new Error('MM_LEARNER_SCOPE must load before the engineering store');
+learnerScope.registerStoragePrefix?.(LEGACY_CASE_BASE);
 
 function uid(prefix='id'){try{return `${prefix}-${crypto.randomUUID()}`}catch(_){return `${prefix}-${Date.now().toString(36)}-${Math.random().toString(36).slice(2,9)}`}}
 function learnerId(){return learnerScope.activeId()}
