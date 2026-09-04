@@ -1,11 +1,13 @@
 {
   "schema":1,
-  "version":"2026.09.04.1",
+  "version":"2026.09.04.2",
   "status":"pilot-ready",
   "requiredColumns":["shot_index","phase","quality_result"],
   "phaseOrder":["baseline","fault","recovery"],
   "allowedPhases":["baseline","fault","recovery","verification","study"],
+  "allowedQualityValues":["pass","fail","ok","ng","good","bad","accept","accepted","reject","rejected","yes","no","0","1","true","false"],
+  "qualityAliasPattern":"quality-result-[0-9]{2,}",
   "minimumNumericSignals":2,
-  "privacyBoundary":"Prepared pseudonymised data only. No person/customer/free-text/timestamp fields. Raw production files stay outside the repository.",
+  "privacyBoundary":"Prepared pseudonymised data only. No person/customer/free-text/timestamp fields. quality_result must be a controlled value or local-preparer alias. Raw production files stay outside the repository.",
   "analysisBoundary":"Aggregate evidence comparison only. No result authorises a production change or claims causal validation without independent engineering review."
 }
