@@ -26,7 +26,9 @@ need(PKG.build?.buildVersion===normalized.join('.'),'desktop buildVersion does n
 need(String(PKG.build?.win?.artifactName||'').includes('${buildVersion}'),'Windows artifact name must include buildVersion');
 const fuses=PKG.build?.electronFuses||{};
 for(const [name,expected] of Object.entries({runAsNode:false,enableNodeOptionsEnvironmentVariable:false,enableNodeCliInspectArguments:false,enableEmbeddedAsarIntegrityValidation:true,onlyLoadAppFromAsar:true}))need(fuses[name]===expected,`Electron fuse must remain ${name}=${expected}`);
-for(const marker of ['nodeIntegration: false','contextIsolation: true','sandbox: true','webSecurity: true','allowRunningInsecureContent: false','setPermissionRequestHandler','setPermissionCheckHandler','will-attach-webview','setWindowOpenHandler','server.listen(0, \'127.0.0.1\'','const INTEGRITY_PATH = path.join(__dirname, \'..\', \'generated\', \'integrity.json\')','const allowed = new Set(Object.keys(integrity.files))','method !== \'GET\' && method !== \'HEAD\'','SHA-256 verification failed'])need(MAIN.includes(marker),`desktop security marker missing: ${marker}`);
+for(const marker of ['nodeIntegration: false','contextIsolation: true','sandbox: true','webSecurity: true','allowRunningInsecureContent: false','setPermissionRequestHandler','setPermissionCheckHandler','will-attach-webview','setWindowOpenHandler',"server.listen(DESKTOP_PORT, '127.0.0.1'",'app.requestSingleInstanceLock()','const DESKTOP_PORT = 43139','const INTEGRITY_PATH = path.join(__dirname, \'..\', \'generated\', \'integrity.json\')','const allowed = new Set(Object.keys(integrity.files))','method !== \'GET\' && method !== \'HEAD\'','SHA-256 verification failed'])need(MAIN.includes(marker),`desktop security marker missing: ${marker}`);
+need(!MAIN.includes('server.listen(0'),'desktop loopback origin must not use an ephemeral port because browser storage is origin-scoped');
+need(MAIN.includes('http://127.0.0.1:${DESKTOP_PORT}'),'desktop renderer origin must be derived from the stable port');
 need(!MAIN.includes("process.resourcesPath, 'mouldmaster', 'integrity.json'"),'packaged integrity manifest must not be read from writable asset directory');
 need(INTEGRITY.schema===1,'integrity schema mismatch');
 need(INTEGRITY.release===VERSION.desktop_release,'integrity release must match desktop_release');
@@ -53,4 +55,4 @@ const legacyGuard=spawnSync(process.env.MM_PYTHON||'python',[path.join(ROOT,'qa_
 if(legacyGuard.stdout)process.stdout.write(legacyGuard.stdout);
 if(legacyGuard.stderr)process.stderr.write(legacyGuard.stderr);
 need(legacyGuard.status===0,`legacy retirement state QA failed with exit ${legacyGuard.status}`);
-console.log('MouldMaster open desktop QA passed (runtime manifest assets integrity-hashed and desktop-servable; legacy recovery retirement remains fail-closed)');
+console.log('MouldMaster open desktop QA passed (stable single-instance loopback origin preserves browser storage across launches; runtime manifest assets integrity-hashed and desktop-servable; legacy recovery retirement remains fail-closed)');
