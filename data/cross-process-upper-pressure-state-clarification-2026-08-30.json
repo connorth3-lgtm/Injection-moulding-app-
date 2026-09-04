@@ -1,10 +1,10 @@
 {
   "schema": 1,
-  "version": "2026.08.30.1",
-  "reviewed": "2026-08-30",
+  "version": "2026.09.05.1",
+  "reviewed": "2026-09-05",
   "datasetId": "cross-process-chain-17240390",
   "streamId": "upper-workpiece-injection-moulding",
-  "status": "blocked-pending-source-author-pressure-unit-and-state-definition",
+  "status": "blocked-pending-source-specific-pressure-unit-and-state-definition",
   "source": {
     "datasetDoi": "10.5281/zenodo.17240390",
     "publisherRecord": "https://zenodo.org/records/17240390",
@@ -17,25 +17,12 @@
   },
   "authoritativeEvidence": {
     "publisherDescription": {
-      "upperMeasurements": [
-        "pressure target",
-        "pressure actual",
-        "velocity",
-        "volume",
-        "state"
-      ],
+      "upperMeasurements": ["pressure target", "pressure actual", "velocity", "volume", "state"],
       "pressureUnitPublished": false,
       "stateCodeMappingPublished": false
     },
     "authorLoader": {
-      "exactUpperColumns": [
-        "time",
-        "injection_pressure_target",
-        "injection_pressure_actual",
-        "melt_volume",
-        "injection_velocity",
-        "state"
-      ],
+      "exactUpperColumns": ["time", "injection_pressure_target", "injection_pressure_actual", "melt_volume", "injection_velocity", "state"],
       "upperCsvColumnsReadDirectlyWithoutUnitConversion": true,
       "pressureActualSourceRole": "actual",
       "pressureTargetSourceRole": "target/command",
@@ -55,22 +42,13 @@
     },
     "authorStaticExport": {
       "path": "data/injection_molding/upper_workpiece/static_data.csv",
-      "observedParameterIdentifiersInclude": [
-        "Q311",
-        "Q312",
-        "Q313",
-        "p311",
-        "p312",
-        "p313",
-        "V301I"
-      ],
+      "observedParameterIdentifiersInclude": ["Q311", "Q312", "Q313", "p311", "p312", "p313", "V301I"],
       "interpretationBoundary": "These identifiers are consistent with an ARBURG control namespace, but the public repository does not map the upper serial injection_pressure_actual column to a specific raw ARBURG parameter identifier."
     },
     "publicAuthorRepositoryIssueAnswerLocated": false
   },
   "supportingButNonAuthoritativeEvidence": {
     "machineFamilyDocumentation": {
-      "sourceType": "third-party-hosted copy of an ARBURG ALLROUNDER operating manual",
       "observedMappings": [
         "p301I -> current injection/holding pressure, bar",
         "Q301I -> current injection flow, cm3/s",
@@ -78,11 +56,23 @@
         "p311/p312/p313 -> holding-pressure setpoints, bar"
       ],
       "whyNotSufficientForPromotion": [
-        "The located copy is not hosted on an authoritative ARBURG first-party domain.",
         "The public cross-process repository does not prove that upper injection_pressure_actual was exported from p301I or another pressure tag governed by that exact definition.",
         "Machine-family conventions cannot substitute for a source-specific channel mapping when tens of millions of values would be promoted."
       ]
     }
+  },
+  "publicSourceOnlyRecheck": {
+    "date": "2026-09-05",
+    "emailSent": false,
+    "contactAttempted": false,
+    "methods": [
+      "authoritative publisher metadata review",
+      "public author repository/source-code search",
+      "same-author public documentation review",
+      "public linked-repository route review"
+    ],
+    "result": "No source-specific upper pressure engineering unit, raw-tag mapping, or state-code dictionary was located in public material.",
+    "nextExternalStateChange": "A source-controlled public clarification, publisher metadata update, or other authoritative source-specific definition is required before promotion. No direct outreach was performed."
   },
   "unsafeInferencesExplicitlyRejected": [
     "Do not infer the upper pressure unit from the lower-workpiece TXT preamble, even though lower injection pressure is source-defined as bar.",
@@ -90,20 +80,6 @@
     "Do not assign phase names to state codes 0, 1, 2, 4, 8 from their bit-like values or transition timing.",
     "Do not count injection_pressure_target as a measured channel even if its engineering unit is later confirmed."
   ],
-  "clarificationRequest": {
-    "preferredRoute": "Nikolai West / source-author repository contact",
-    "publicContactEvidence": "The same-author PyScrew scenario documentation invites questions to nikolai.west@tu-dortmund.de.",
-    "questions": [
-      "For the upper-workpiece serial CSVs, what is the engineering unit of injection_pressure_actual and injection_pressure_target?",
-      "Does injection_pressure_actual correspond directly to an ARBURG parameter such as p301I (or another named raw machine tag)? If so, please provide the exact source tag/mapping.",
-      "What do the upper-workpiece state codes 0, 1, 2, 4 and 8 mean? Are they process phases, machine states, bit flags, or another categorical encoding?",
-      "Is state a single categorical code or a bitmask/combined flag field?"
-    ],
-    "readyOutreachDraft": {
-      "subject": "Cross-process dataset: upper injection-pressure unit and state-code definitions",
-      "body": "Hello Nikolai, we are profiling the CC BY 4.0 cross-process-chain dataset (Zenodo 10.5281/zenodo.17240390) and are keeping unresolved fields fail-closed. Could you confirm the engineering unit of the upper-workpiece CSV columns injection_pressure_actual and injection_pressure_target, and whether injection_pressure_actual maps to a specific raw ARBURG parameter such as p301I (or another tag)? Could you also define the state codes 0, 1, 2, 4 and 8 and confirm whether state is categorical or a bitmask? We only need the source definitions; no raw data are required. Thank you."
-    }
-  },
   "acceptanceGate": {
     "pressureActualMayBePromotedOnlyIf": [
       "A source author, publisher metadata, source-controlled documentation, or machine-specific export directly states the upper injection_pressure_actual engineering unit.",
@@ -122,8 +98,8 @@
     "pressureActualCurrentlyAccepted": false,
     "stateCurrentlyAccepted": false,
     "acceptedCountChangeFromThisReview": 0,
-    "projectAcceptedMeasuredBaselineRemains": 65171059,
-    "fullyProfiledFamiliesRemain": 7
+    "canonicalEffectiveProjectAcceptedMeasuredBaseline": 85569824,
+    "canonicalEffectiveFullyProfiledFamilies": 17
   },
   "evidenceBoundary": "Public source code establishes the upper pressure field as an actual signal and preserves the exact CSV mapping, but no source-specific upper pressure engineering unit or state-code dictionary was located. ARBURG-style static parameter identifiers and machine-family documentation make bar plausible, not proven. The upper pressure channel therefore remains non-counting until a source-specific definition is captured."
 }
