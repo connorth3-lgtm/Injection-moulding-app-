@@ -1,0 +1,44 @@
+{
+  "schemaVersion": 1,
+  "status": "pending-physical-device-validation",
+  "boundary": "Automated browser, service-worker and assistive-technology regressions do not substitute for installing and exercising the production PWA on physical iOS/iPadOS and Android devices. This contract remains pending until both platform records have reviewed human evidence. Screen-reader conformance remains governed separately by data/accessibility-real-at-validation-v1.json.",
+  "runtimeFingerprint": null,
+  "testedAt": null,
+  "testerReference": null,
+  "evidenceReference": null,
+  "maxEvidenceAgeDays": 30,
+  "platforms": {
+    "ios": {
+      "status": "pending",
+      "deviceModel": null,
+      "osVersion": null,
+      "browserVersion": null,
+      "installedMode": null,
+      "checks": {
+        "installStandalone": "pending",
+        "safeAreaNavigation": "pending",
+        "workspacePortrait": "pending",
+        "offlineRestart": "pending",
+        "offlineReboot": "pending",
+        "updateRecovery": "pending",
+        "storagePressure": "pending"
+      }
+    },
+    "android": {
+      "status": "pending",
+      "deviceModel": null,
+      "osVersion": null,
+      "browserVersion": null,
+      "installedMode": null,
+      "checks": {
+        "installStandalone": "pending",
+        "fixedNavigationClearance": "pending",
+        "offlineRestart": "pending",
+        "offlineReboot": "pending",
+        "updateRecovery": "pending",
+        "storagePressure": "pending"
+      }
+    }
+  },
+  "privacyBoundary": "Public contract metadata must not include learner names, customer/site identifiers, email addresses, private screenshots, raw process data, backup content, filesystem/user paths or other personal/proprietary evidence. Keep detailed device evidence outside the public repository and reference it only with a non-sensitive review identifier."
+}
