@@ -4,9 +4,14 @@ const vm=require('vm');
 const assert=require('assert');
 
 // Finding 1: a learner must not be able to activate the cross-profile analytics export,
-// even if code manufactures a click on the legacy export control.
+// even if code manufactures a click on the legacy export control. The exporter itself
+// also carries an internal role assertion, so authorization is not only a UI convention.
 {
   const source=fs.readFileSync('src/domains/learning/learning-analytics-loader.js','utf8');
+  const legacySource=fs.readFileSync('learning-analytics.js','utf8');
+  assert(legacySource.includes("function requireInstructor(action='Cross-profile analytics export')"),'legacy analytics exporter lost its internal instructor assertion');
+  assert(legacySource.includes('function exportAnonymousSummary(){\n  requireInstructor();'),'cross-profile export no longer fails closed inside the exporter');
+  assert(legacySource.includes('canExportCrossProfile:isInstructor'),'analytics API no longer exposes the instructor export capability boundary');
   const listeners={document:{},window:{}};
   const exportNode={hidden:false,attrs:new Map(),setAttribute(k,v){this.attrs.set(k,String(v))},removeAttribute(k){this.attrs.delete(k)}};
   const document={
