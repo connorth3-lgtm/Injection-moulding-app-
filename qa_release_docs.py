@@ -46,7 +46,7 @@ pkg=json.loads(text('desktop/electron/package.json'))
 lock=json.loads(text('desktop/electron/package-lock.json'))
 release_parts=[str(int(x)) for x in V['desktop_release'].split('.')]
 need(pkg.get('version')=='.'.join(release_parts[:3]),'desktop package version must match desktop_release')
-need(str(pkg.get('build',{}).get('buildNumber'))==release_parts[3],'desktop buildNumber must match desktop_release')
+need(str(pkg.get('build',{}).get('buildNumber'))==release_parts[3],'desktop buildNumber must match desktop_release fourth component')
 need(pkg.get('build',{}).get('buildVersion')=='.'.join(release_parts),'desktop buildVersion must match desktop_release')
 
 # Electron 44 is an explicit supported-platform decision, not just a package bump.
@@ -72,6 +72,18 @@ for marker in [
 desktop_readme=text('desktop/electron/README.md')
 for marker in ['Electron 44.1.1','Windows 10/11 64-bit','ELECTRON_44_SUPPORT.md']:
     need(marker in desktop_readme,f'desktop README Electron 44 support marker missing: {marker}')
+
+# The manual retirement guide is release evidence too. Keep its human test target
+# tied to version.json so a desktop release bump cannot leave operators testing stale bytes.
+real_windows_validation=text('desktop/electron/REAL_WINDOWS_VALIDATION.md')
+desktop_build_version='.'.join(release_parts)
+for marker in [
+    f"Target release family: open desktop `{V['desktop_release']}`",
+    f"`MouldMaster-Academy-{desktop_build_version}-x64.exe`",
+    f"displayed desktop release is `{V['desktop_release']}`",
+]:
+    need(marker in real_windows_validation,f'real Windows validation guide stale/missing: {marker}')
+need('2026.08.26.5' not in real_windows_validation and '2026.8.26.5' not in real_windows_validation,'real Windows validation guide still targets superseded desktop .5 bytes')
 
 privileged_parts=[]
 for folder in [ROOT/'desktop/electron/src', ROOT/'desktop/electron/scripts']:
