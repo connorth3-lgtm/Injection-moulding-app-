@@ -6,6 +6,10 @@ replace any stale/legacy Pages publication while production PWA release evidence
 still pending. The production runtime continues to be built separately for exact
 fingerprinting and is not published until the governed physical-device contract is
 validated.
+
+The Pages upload action excludes dotfiles, so this builder intentionally emits only
+the two HTML documents that are actually archived and deployed. Keeping the local
+boundary identical to the uploaded boundary avoids a false three-file invariant.
 """
 
 from __future__ import annotations
@@ -14,7 +18,7 @@ import argparse
 import shutil
 from pathlib import Path
 
-ALLOWED_FILES = {"index.html", "404.html", ".nojekyll"}
+ALLOWED_FILES = {"index.html", "404.html"}
 MARKER = 'data-mm-release-hold="true"'
 
 
@@ -50,7 +54,6 @@ def build(target: Path) -> set[str]:
     target.mkdir(parents=True)
     (target / "index.html").write_text(document(), encoding="utf-8")
     (target / "404.html").write_text(document(not_found=True), encoding="utf-8")
-    (target / ".nojekyll").write_text("", encoding="utf-8")
 
     files = {path.relative_to(target).as_posix() for path in target.rglob("*") if path.is_file()}
     if files != ALLOWED_FILES:
