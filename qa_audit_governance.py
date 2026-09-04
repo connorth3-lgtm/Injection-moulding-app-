@@ -37,7 +37,8 @@ need(pages.count("pages: write") == 2, "pages:write must be limited to publisher
 need(pages.count("id-token: write") == 1, "OIDC write permission must be limited to deploy")
 
 # PRs may validate a pending evidence contract. On main, pending valid evidence is
-# a non-error "not ready" state: artifact upload and deployment remain fail-closed.
+# a non-error "not ready" state for the hardened publisher. Legacy branch publishing
+# must separately be disabled/confirmed as workflow mode before publication is safe.
 # Invalid, stale or mismatched validated evidence must still fail the build.
 for marker in (
     "Validate physical PWA evidence contract on PRs",
@@ -52,7 +53,8 @@ for marker in (
     'echo "production_ready=true" >> "$GITHUB_OUTPUT"',
     'echo "production_ready=false" >> "$GITHUB_OUTPUT"',
     "Pages release not ready",
-    "expected readiness state, not a CI error; publication remains fail-closed",
+    "The hardened publisher will not deploy; legacy branch publishing must also be disabled in repository Pages settings.",
+    "needs: [production-source, publisher-guard]",
     "github.event_name == 'pull_request' || steps.physical-readiness.outputs.production_ready == 'true'",
     "github.event_name != 'pull_request' && needs.build.outputs.production_ready == 'true'",
     "Reconfirm validated physical PWA evidence against rebuilt runtime",
@@ -65,7 +67,7 @@ for marker in (
 ):
     need(marker in physical, f"physical-device verifier does not fail closed for publication: {marker}")
 
-# Pending evidence must never be allowed to reach artifact publication on a main push.
+# Pending evidence must never be allowed to reach hardened artifact publication on a main push.
 need(
     pages.index('echo "production_ready=false" >> "$GITHUB_OUTPUT"')
     < pages.index("- name: Upload Pages artifact"),
@@ -119,4 +121,4 @@ self_test = subprocess.run(
 )
 need(self_test.returncode == 0, f"ruleset verifier self-test failed: {self_test.stderr or self_test.stdout}")
 
-print("Audit governance QA passed: least-privilege Pages permissions, physical-test runtime fingerprint reporting, non-error pending release readiness with fail-closed publication, live branch-prune SHA recheck and fail-closed ruleset bypass verification are enforced.")
+print("Audit governance QA passed: least-privilege Pages permissions, physical-test runtime fingerprint reporting, hardened pending-release gating plus workflow-only Pages prerequisite, live branch-prune SHA recheck and fail-closed ruleset bypass verification are enforced.")
