@@ -19,6 +19,7 @@ PRIORITY_ASSETS = [
     "./src/domains/learning/learning-analytics-loader.js",
     "./src/domains/learning/activity-events-v2.js",
     "./src/domains/learning/learner-model.js",
+    "./src/domains/learning/delayed-transfer-reviews.js",
     "./src/domains/materials/material-registry.js",
     "./src/domains/materials/material-search-index.js",
     "./src/domains/materials/material-search-pagination.js",
