@@ -36,6 +36,7 @@ on:
       - 'tools/generate_style_csp.cjs'
       - 'qa_app_shell_registry.py'
       - 'qa_mould_master_workspace.py'
+      - 'qa_delayed_transfer_reviews.py'
       - 'qa_webkit_regression.py'
       - 'qa/mobile-viewport.spec.js'
       - 'qa/material-grade-detail.spec.js'
@@ -76,6 +77,7 @@ jobs:
           python qa_measured_evidence_integration.py
           python qa_measured_evidence_decision_workflows.py
           python qa_read_aloud.py
+          python qa_delayed_transfer_reviews.py
           python qa_webkit_regression.py
           python qa_accessibility_real_at_contract.py
       - name: Install pinned Playwright browser matrix
