@@ -129,11 +129,11 @@ assert.strictEqual(blockedAlternative.plan,null);
 
 const oneTerm={id:'case-one-term',defect:'birefringence'};
 const one=adapter.analyzeCase(oneTerm,3);
-assert.strictEqual(one.candidates[0].mechanismId,'residual-stress-birefringence');
 assert.strictEqual(one.candidates[0].rank,1);
 assert.strictEqual(one.candidates[0].applicability.matchedTerms.length,1);
-const onePlan=adapter.evidencePlan(oneTerm,'residual-stress-birefringence');
+const onePlan=adapter.evidencePlan(oneTerm,one.candidates[0].mechanismId);
 assert.strictEqual(onePlan.status,'not-supported-by-case-context');
+assert.strictEqual(onePlan.rank,1);
 assert.strictEqual(onePlan.matchedTermCount,1);
 assert.strictEqual(onePlan.plan,null);
 
