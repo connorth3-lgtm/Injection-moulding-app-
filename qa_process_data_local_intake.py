@@ -14,17 +14,20 @@ need(p.returncode==0,'local process-data intake syntax error: '+(p.stderr or p.s
 
 body=text(MODULE)
 for marker in [
-    'Prepare real shot CSV locally','Prepare shot data without uploading it','pseudonymisation','not guaranteed anonymisation',
+    "VERSION='2026.09.05.2'",'Prepare real shot CSV locally','Prepare shot data without uploading it','pseudonymisation','not guaranteed anonymisation',
     'Raw file contents stay in memory only','Export prepared CSV','Export data dictionary','Download CSV template',
     'shot_index','direct/person identifier','operational identifier replaced with stable per-file alias','numeric process/quality signal',
     'unknown labels aliased per file','MM_PROCESS_DATA_LOCAL_INTAKE','MAX_ROWS=50000','operator_id','employee_id',
     'Sequence review required','Sequence check','sourceShotIndex','timestampChecks','strictly increasing','structured measurement unit',
-    'explicitOperationalIdentifier','ALIAS_ID_TOKEN_RE','ALIAS_EXACT_RE'
+    'explicitOperationalIdentifier','ALIAS_ID_TOKEN_RE','ALIAS_EXACT_RE','enforceRowLimit','rejected rather than silently truncated',
+    'invalidNumericValues','invalidNumericByColumn','omitted rather than converted to NaN'
 ]:
     need(marker in body,f'local intake marker missing: {marker}')
 for forbidden in ['fetch(', 'XMLHttpRequest', 'WebSocket', 'localStorage', 'sessionStorage', 'indexedDB', 'MM_DATA.exams=', 'correctIndex=', 'regionalQuestions=']:
     need(forbidden not in body,f'local intake must not upload/persist raw data or mutate formal assessment: {forbidden}')
 need('no upload/storage/machine control' in body.lower(),'local intake must preserve explicit no-upload/no-storage/no-control scope')
+need('rows.slice(1,MAX_ROWS+1)' not in body and 'rows=(parsed?.rows||[]).slice(0,MAX_ROWS)' not in body,'oversized process data must not be silently truncated')
+need("row[rule.key]=v===''?'':Number(v)" not in body,'predominantly numeric columns must not convert malformed values to NaN')
 
 node=f"""
 const fs=require('fs'),vm=require('vm');
@@ -41,15 +44,21 @@ const pilot='shot_index,cavity_alias,machine_alias,mould_alias,material_alias,lo
 const pilotPrepared=api.prepare(api.parseCsv(pilot));
 const numericIds='machine_id,cavity_id,material_grade,peak_cavity_pressure_mpa,mould_temp_c,machine_pressure_mpa,resin_moisture_ppm\\n101,1,66,83.4,45,72,320\\n102,2,67,84.0,46,74,330\\n';
 const numericIdPrepared=api.prepare(api.parseCsv(numericIds));
-process.stdout.write(JSON.stringify({{parsed,prepared,csv:api.toCsv(prepared),template:api.templateCsv(),scope:api.scope,maxRows:api.maxRows,badPrepared,badCsv:api.toCsv(badPrepared),pilotPrepared,numericIdPrepared}}));
+const malformedNumeric='fill_time_s,cycle_time_s\\n1.0,20\\n1.1,21\\n1.2,22\\n1.3,23\\n1.4,24\\n1.5,25\\n1.6,26\\n1.7,27\\n1.8,28\\nBAD,29\\n';
+const malformedPrepared=api.prepare(api.parseCsv(malformedNumeric));
+let oversizedError='';
+try{{const oversized='fill_time_s\\n'+Array.from({{length:50001}},(_,i)=>String(i+1)).join('\\n')+'\\n';api.parseCsv(oversized)}}catch(err){{oversizedError=String(err&&err.message||err)}}
+process.stdout.write(JSON.stringify({{parsed,prepared,csv:api.toCsv(prepared),template:api.templateCsv(),scope:api.scope,maxRows:api.maxRows,badPrepared,badCsv:api.toCsv(badPrepared),pilotPrepared,numericIdPrepared,malformedPrepared,malformedCsv:api.toCsv(malformedPrepared),oversizedError}}));
 """
 p=subprocess.run(['node','-e',node],capture_output=True,text=True)
 need(p.returncode==0,'local intake runtime failed: '+p.stderr)
 r=json.loads(p.stdout)
 prepared=r['prepared']
 need(r['maxRows']==50000,'local intake row cap drifted')
-need(prepared['schema']==2,'local intake prepared schema must be version 2 after sequence hardening')
-need(prepared['summary']['inputRows']==2 and prepared['summary']['outputRows']==2,'local intake must prepare both sample rows')
+need(prepared['schema']==3,'local intake prepared schema must be version 3 after truncation/numeric validation hardening')
+need(prepared['summary']['sourceRows']==2 and prepared['summary']['inputRows']==2 and prepared['summary']['outputRows']==2,'local intake must report and prepare both sample rows')
+need(prepared['summary']['truncated'] is False,'prepared output must explicitly state it was not truncated')
+need(prepared['summary']['invalidNumericValues']==0,'clean numeric sample must not report invalid values')
 need(prepared['summary']['aliased']>=4,'machine/tool/material/lot identifiers must be aliased')
 need(prepared['summary']['keptNumeric']>=7,'process, cavity, mould, machine and material-state numeric signals must be retained as evidence')
 need(prepared['summary']['quality']>=2,'quality result and defect category must remain usable without leaking labels')
@@ -83,6 +92,14 @@ need(rule_actions['machine_id']=='alias' and rule_actions['cavity_id']=='alias' 
 for signal in ['peak_cavity_pressure_mpa','mould_temp_c','machine_pressure_mpa','resin_moisture_ppm']:
     need(rule_actions[signal]=='keep',f'{signal} must classify as a numeric signal, not an identifier')
 
+malformed=r['malformedPrepared']
+need(malformed['rules'][0]['action']=='keep','90% numeric column must remain available as a numeric signal')
+need(malformed['rows'][-1]['fill_time_s']=='','malformed nonblank numeric value must be omitted rather than converted to NaN')
+need(malformed['validation']['reviewRequired'] is True and malformed['validation']['invalidNumericValues']==1,'malformed numeric values must require explicit review')
+need(malformed['validation']['invalidNumericByColumn']==[{'column':'fill_time_s','count':1}],'invalid numeric count must identify the affected column without retaining raw bad text')
+need('NaN' not in r['malformedCsv'] and 'BAD' not in r['malformedCsv'],'prepared CSV must contain neither NaN nor the malformed raw value')
+need('exceeds the 50,000 data-row safety limit' in r['oversizedError'],'50,001-row source must be rejected rather than silently truncated')
+
 bad=r['badPrepared']
 need(bad['headers'].count('shot_index')==1,'pre-existing shot_index must not create a duplicate output header')
 need(bad['rows'][0]['shot_index']==12 and bad['rows'][1]['shot_index']==11,'usable source shot_index values must be preserved rather than renumbered')
@@ -107,6 +124,8 @@ need('test-01' not in json.dumps(pilot).lower(),'raw intervention labels must no
 need('timestamp' in r['template'] and 'shot_index' in r['template'] and 'peak_cavity_pressure_mpa' in r['template'] and 'part_mass_g' in r['template'],'template must request sequence plus high-value shot evidence fields')
 need('phase' in r['template'] and 'intervention_code' in r['template'] and 'dimension_unit' in r['template'],'local template must map cleanly toward the prepared pilot schema')
 need('pseudonym' in prepared['boundary'].lower() and 'not proof of anonymity' in prepared['boundary'].lower(),'prepared output must preserve the privacy limitation')
+need('files over the row safety limit are rejected rather than silently truncated' in prepared['boundary'].lower(),'prepared boundary must disclose fail-closed oversized-file handling')
+need('malformed nonblank values in retained numeric columns are omitted and reported by column rather than converted to nan' in prepared['boundary'].lower(),'prepared boundary must disclose invalid numeric handling')
 need('timestamp and source shot-index values may be inspected in-session only' in prepared['boundary'].lower(),'prepared boundary must disclose transient sequence checking')
 need('unknown categorical quality/phase labels are aliased only within the current prepared file' in prepared['boundary'].lower(),'prepared boundary must explain per-file category aliasing')
 need('no upload/storage/machine control' in r['scope'].lower(),'runtime scope must preserve local-only/no-control boundary')
@@ -135,4 +154,4 @@ for wf in ['.github/workflows/qa.yml','.github/workflows/open-desktop-build.yml'
 release_workflow=text('.github/workflows/qa.yml')
 need("find . -maxdepth 1 -type f -name '*.js' -print0 | sort -z | xargs -0 -n1 node --check" in release_workflow,'release filesystem JavaScript syntax gate missing')
 
-print('MouldMaster local process-data intake QA passed (numeric moulding signals preserved; numeric IDs pseudonymised; unique/preserved shot index; pre-drop sequence audit; pilot phase/unit retention; identifier stripping/aliasing; local-only; browser/PWA/desktop packaged)')
+print('MouldMaster local process-data intake QA passed (oversized files rejected; malformed numeric values omitted/reported; numeric moulding signals preserved; numeric IDs pseudonymised; sequence audit; local-only packaging)')
