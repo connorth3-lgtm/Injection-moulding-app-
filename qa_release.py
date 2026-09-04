@@ -7,7 +7,7 @@ import struct
 import subprocess
 import tempfile
 
-WEB_RELEASE = "2026.09.05.1"
+WEB_RELEASE = "2026.09.05.2"
 ANDROID_RELEASE = "2026.08.26.2"
 CONTENT_VERSION = "2026.08.26.1"
 WINDOWS_RECOVERY_VERSION = "2026.08.21.1"
@@ -156,11 +156,12 @@ assert "lesson()" in source_lib and "standards()" in source_lib, "sources must b
 assert Path("sources/AUTHORITATIVE_SOURCE_REGISTER.md").exists(), "authoritative source register missing"
 
 bridge = text("training-qa-fix.js")
-for marker in ["file.size>10*1024*1024", "clean.id=sid", "clean.certificates=[]", "clean.certificateMeta={}", "clean.examPassStatus={}", "before[k]===null?localStorage.removeItem(k):localStorage.setItem(k,before[k])", "Certificates must be re-earned", "db!==beforeDb", "LEARNING_ANALYTICS_PREFIX", "clearAllAnalyticsStores()"]:
+for marker in ["file.size>10*1024*1024", "clean.id=sid", "clean.certificates=[]", "clean.certificateMeta={}", "clean.examPassStatus={}", "restoreSnapshot(before)", "Certificates must be re-earned", "db!==beforeDb", "LEARNING_ANALYTICS_PREFIX", "ANALYTICS_CLEANUP_CODE", "remaining key(s):", "clearAllAnalyticsStores();clearTrainingExtrasStores()", "analytics were cleared and verified"]:
     assert marker in bridge, f"import/reset hardening missing: {marker}"
 storage_commit = bridge.index("for(const [k,v] of Object.entries(writes))localStorage.setItem(k,v)")
+cleanup_commit = bridge.index("clearAllAnalyticsStores();", storage_commit)
 memory_commit = bridge.index("db=proposed;user=db.users[db.activeUser]")
-assert storage_commit < memory_commit, "memory must change only after all storage writes succeed"
+assert storage_commit < cleanup_commit < memory_commit, "imported learner registry must activate only after staged writes and verified analytics cleanup"
 
 shell = text("pwa-shell.js")
 assert f"const RELEASE='{WEB_RELEASE}'" in shell
