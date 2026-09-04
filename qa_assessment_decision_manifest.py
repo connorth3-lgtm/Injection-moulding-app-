@@ -99,13 +99,15 @@ need(all(r.get("critical") is True for r in formal if r.get("kind") == "regional
 
 analytics = text(ANALYTICS)
 for marker in [
-    "const VERSION='2026.09.04.2'",
+    "const LEGACY_REVISION='legacy-unversioned'",
     "function normalChoice(v)",
     "choiceFingerprint(questionId,revision,text)",
-    "choiceFingerprint(id,revision,text)",
+    "choiceFingerprint(id,meta.revision,answer)",
     "question-and-revision-scoped fingerprints",
+    "questionRevision:null",
+    "revisionStatus:LEGACY_REVISION",
 ]:
-    need(marker in analytics, f"assessment analytics scoped-choice marker missing: {marker}")
+    need(marker in analytics, f"assessment analytics provenance marker missing: {marker}")
 need("choiceFingerprint:fp(text)" not in analytics, "legacy globally text-scoped choice fingerprint must not return")
 
 node = r'''
@@ -125,13 +127,17 @@ need(proc.returncode == 0, "assessment analytics identity runtime failed: " + (p
 runtime = json.loads(proc.stdout)
 expected = fnv1a("tech:Beginner:0@r2|Same displayed option")
 need(runtime["same"] == expected == runtime["collapsed"], "analytics choice fingerprint algorithm differs from canonical manifest algorithm")
-need(runtime["same"] != runtime["otherQuestion"] and runtime["same"] != runtime["otherRevision"], "choice fingerprints must separate question and revision identity")
+need(runtime["same"] != runtime["otherQuestion"] and runtime["same"] != runtime["otherRevision"], "choice fingerprints must separate question and proven revision identity")
 serialized = json.dumps(runtime["exported"])
 need("Same displayed option" not in serialized and "Same   displayed option" not in serialized, "analytics v2 export leaked displayed answer text")
-row = runtime["exported"]["questions"].get("tech:Beginner:0@r2")
-need(row and row["choiceSelections"][0]["choiceFingerprint"] == expected and row["choiceSelections"][0]["count"] == 2, "analytics export did not apply scoped choice identity")
+row = runtime["exported"]["questions"].get("tech:Beginner:0@legacy-unversioned")
+legacy_expected = fnv1a("tech:Beginner:0@legacy-unversioned|Same displayed option")
+need(row is not None, "legacy stable-ID counters were not retained in an explicit unversioned analytics bucket")
+need(row.get("questionRevision") is None and row.get("revisionStatus") == "legacy-unversioned", "legacy counters were assigned a fabricated proven revision")
+need(row.get("catalogRevision") == 2, "current catalog revision metadata was not kept separate from historical analytics provenance")
+need(row["choiceSelections"][0]["choiceFingerprint"] == legacy_expected and row["choiceSelections"][0]["count"] == 2, "legacy analytics export did not apply explicit unversioned choice identity")
 
 runtime_manifest = json.loads((ROOT / "runtime-domain-manifest.json").read_text(encoding="utf-8"))
 need("./data/assessment-decision-manifest-v1.json" not in (runtime_manifest.get("dataAssets") or []), "audit-only decision manifest must not become a public runtime data asset")
 
-print("MouldMaster assessment decision identity QA passed: 169 governed decisions, 157 evidence-approved + 12 measured-contract decisions, 676 globally unique question/revision-scoped choices, no raw question/answer text.")
+print("MouldMaster assessment decision identity QA passed: 169 governed decisions, 157 evidence-approved + 12 measured-contract decisions, 676 globally unique question/revision-scoped choices, explicit legacy-unversioned analytics provenance, no raw question/answer text.")
