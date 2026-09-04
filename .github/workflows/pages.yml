@@ -9,10 +9,6 @@ on:
 
 permissions:
   contents: read
-  pull-requests: read
-  actions: write
-  pages: write
-  id-token: write
 
 concurrency:
   group: pages-${{ github.ref }}
@@ -48,25 +44,43 @@ jobs:
           --require-native-protection
 
   publisher-guard:
+    if: github.event_name != 'pull_request'
     needs: production-source
+    permissions:
+      contents: read
+      actions: write
+      pages: write
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v7
       - name: Contain competing legacy branch Pages publisher
-        if: github.event_name != 'pull_request'
         env:
           GITHUB_TOKEN: ${{ github.token }}
         run: >-
           python3 tools/quarantine_legacy_pages.py
           --repository "${{ github.repository }}"
           --source-sha "${{ github.sha }}"
+
+  pr-publisher-boundary:
+    if: github.event_name == 'pull_request'
+    needs: production-source
+    permissions:
+      contents: read
+    runs-on: ubuntu-latest
+    steps:
       - name: PRs build but never publish
-        if: github.event_name == 'pull_request'
-        run: echo "PR validation does not mutate Pages settings or cancel deployment runs."
+        run: echo "PR validation has read-only repository permissions and cannot mutate Pages settings, cancel deployment runs or mint a Pages deployment OIDC token."
 
   build:
-    needs: publisher-guard
+    if: >-
+      always() &&
+      needs.production-source.result == 'success' &&
+      ((github.event_name == 'pull_request' && needs.pr-publisher-boundary.result == 'success') ||
+       (github.event_name != 'pull_request' && needs.publisher-guard.result == 'success'))
+    needs: [production-source, publisher-guard, pr-publisher-boundary]
+    permissions:
+      contents: read
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -85,6 +99,10 @@ jobs:
   deploy:
     if: github.event_name != 'pull_request'
     needs: build
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
@@ -101,6 +119,8 @@ jobs:
   verify:
     if: github.event_name != 'pull_request'
     needs: deploy
+    permissions:
+      contents: read
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
