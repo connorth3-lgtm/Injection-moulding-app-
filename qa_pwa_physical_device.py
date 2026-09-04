@@ -32,6 +32,14 @@ need(base["runtimeFingerprint"] is None, "pending physical-device evidence must 
 need("physical iOS/iPadOS and Android devices" in base["boundary"], "physical-device boundary must remain explicit")
 need("accessibility-real-at-validation-v1.json" in base["boundary"], "screen-reader evidence must remain separately governed")
 
+pending_prod = subprocess.run(
+    [sys.executable, str(TOOL), "--contract", str(CONTRACT), "--contract-only", "--require-validated"],
+    capture_output=True,
+    text=True,
+)
+need(pending_prod.returncode != 0, "production validation accepted pending physical-device evidence")
+need("required for production publication" in (pending_prod.stderr + pending_prod.stdout), "pending production rejection must be explicit")
+
 with tempfile.TemporaryDirectory() as td:
     artifact = Path(td) / "pages"
     artifact.mkdir()
@@ -65,7 +73,7 @@ with tempfile.TemporaryDirectory() as td:
     contract_path = Path(td) / "validated.json"
     contract_path.write_text(json.dumps(validated), encoding="utf-8")
     passed = subprocess.run(
-        [sys.executable, str(TOOL), "--artifact", str(artifact), "--contract", str(contract_path)],
+        [sys.executable, str(TOOL), "--artifact", str(artifact), "--contract", str(contract_path), "--require-validated"],
         capture_output=True,
         text=True,
     )
@@ -76,7 +84,7 @@ with tempfile.TemporaryDirectory() as td:
     mismatch_path = Path(td) / "mismatch.json"
     mismatch_path.write_text(json.dumps(mismatched), encoding="utf-8")
     failed = subprocess.run(
-        [sys.executable, str(TOOL), "--artifact", str(artifact), "--contract", str(mismatch_path)],
+        [sys.executable, str(TOOL), "--artifact", str(artifact), "--contract", str(mismatch_path), "--require-validated"],
         capture_output=True,
         text=True,
     )
@@ -92,4 +100,4 @@ except SystemExit as exc:
 else:
     raise AssertionError("public physical-device contract accepted a forbidden personal-data field")
 
-print("MouldMaster physical PWA device contract QA passed: pending evidence stays non-claiming; validated evidence is fresh, privacy-safe and exact-runtime fingerprint gated across iOS/iPadOS + Android.")
+print("MouldMaster physical PWA device contract QA passed: pending evidence remains valid for review but fails production publication; validated evidence is fresh, privacy-safe and exact-runtime fingerprint gated across iOS/iPadOS + Android.")
