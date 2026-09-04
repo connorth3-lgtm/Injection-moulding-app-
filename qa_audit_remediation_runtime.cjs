@@ -6,15 +6,24 @@ const assert=require('assert');
 // Finding 1: cross-profile analytics remain unavailable in learner view, while
 // the runtime must explicitly disclose that the locally editable instructor flag
 // is a convenience/view mode rather than authenticated identity or authorization.
+// Any instructor export must be cohort-only and fail closed below the minimum size.
 {
   const source=fs.readFileSync('src/domains/learning/learning-analytics-loader.js','utf8');
   const legacySource=fs.readFileSync('learning-analytics.js','utf8');
   const privacy=fs.readFileSync('privacy.html','utf8');
   assert(legacySource.includes("function requireInstructor(action='Cross-profile analytics export')"),'legacy analytics exporter lost its internal local-view assertion');
-  assert(legacySource.includes('function exportAnonymousSummary(){\n  requireInstructor();'),'legacy cross-profile export no longer fails closed outside instructor view');
+  assert(legacySource.includes("requireInstructor('Cohort aggregate analytics export')"),'legacy cohort export no longer fails closed outside instructor view');
+  assert(legacySource.includes('const MIN_EXPORT_PROFILES=5'),'legacy cohort export minimum-size policy is missing');
+  assert(source.includes('const MIN_EXPORT_PROFILES=5'),'canonical analytics override minimum-size policy is missing');
+  assert(source.includes('requireExportCohort(cohort())'),'canonical analytics override no longer enforces minimum cohort size');
+  assert(!source.includes('profiles:c.perProfile')&&!source.includes('anonymousProfile:i+1'),'canonical analytics override reintroduced per-profile export rows');
+  assert(!legacySource.includes('profiles:perProfile')&&!legacySource.includes('anonymousProfile:i+1'),'legacy analytics export reintroduced per-profile rows');
+  assert(source.includes('no per-profile rows, names, hashed learner tokens'),'canonical cohort export privacy boundary is missing');
+  assert(source.includes('storageFailure')&&source.includes('analytics-read-failed')&&source.includes('analytics-index-read-failed'),'canonical analytics override must fail closed on storage read/index failures');
   assert(source.includes('not authenticated identity or an authorization boundary'),'analytics access API no longer discloses the local role boundary');
   assert(source.includes('Local view mode only.'),'profile role control no longer receives an explicit local-mode disclosure');
   assert(/not login, identity verification or a security\/authorization boundary/i.test(privacy),'privacy notice overstates local instructor view as authenticated authorization');
+  assert(/cohort-level aggregate data only/i.test(privacy),'privacy notice no longer states the cohort-only Learning insights export boundary');
   const listeners={document:{},window:{}};
   const exportNode={hidden:false,attrs:new Map(),setAttribute(k,v){this.attrs.set(k,String(v))},removeAttribute(k){this.attrs.delete(k)}};
   const document={
@@ -42,10 +51,12 @@ const assert=require('assert');
   assert.strictEqual(exportNode.hidden,false,'local instructor export control remained hidden');
   assert.match(sandbox.window.MM_LEARNING_ANALYTICS_ACCESS.localModeBoundary(),/not authenticated identity or an authorization boundary/i);
   assert(sandbox.window.MM_LEARNING_ANALYTICS_QUALITY,'corrected analytics quality bridge did not install');
+  assert.strictEqual(sandbox.window.MM_LEARNING_ANALYTICS_QUALITY.minimumAggregateProfiles,5,'canonical cohort minimum drifted');
+  assert.throws(()=>sandbox.window.MM_LEARNING_ANALYTICS_QUALITY.exportAnonymousSummary(),/at least 5 local learner profiles/i,'undersized cohort export did not fail closed');
   const instructorEvent={target:{closest:()=>exportNode},prevented:false,stopped:false,preventDefault(){this.prevented=true},stopImmediatePropagation(){this.stopped=true}};
   listeners.document.click.fn(instructorEvent);
-  assert.strictEqual(instructorEvent.prevented,true,'local instructor export was not intercepted before the legacy mixed-profile exporter');
-  assert.strictEqual(instructorEvent.stopped,true,'local instructor export reached the legacy mixed-profile handler');
+  assert.strictEqual(instructorEvent.prevented,true,'local instructor export was not intercepted before the legacy handler');
+  assert.strictEqual(instructorEvent.stopped,true,'local instructor export reached the legacy handler');
 }
 
 // Finding 2: formal assessment evidence must carry the real persisted assessment
@@ -137,7 +148,7 @@ const assert=require('assert');
   assert.strictEqual(rel.id,'lesson:left|depends-on|lesson:right');assert.strictEqual(rel.from,'lesson:left');assert.strictEqual(rel.to,'lesson:right');assert.strictEqual(rel.type,'depends-on');
 }
 
-console.log('Audit remediation runtime QA passed: local-role semantics, persisted assessment recency, fail-closed inadequate-sample statistics, retry-safe bounded activity scoring and canonical graph collision safety verified.');
+console.log('Audit remediation runtime QA passed: local-role/cohort-export semantics, persisted assessment recency, fail-closed inadequate-sample statistics, retry-safe bounded activity scoring and canonical graph collision safety verified.');
 
 // Keep the next-stage learner-model, analytics-quality and data-provenance decision
 // pipelines inside the mandatory Release QA context that caught the audited regressions.
