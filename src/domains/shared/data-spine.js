@@ -1,8 +1,8 @@
-/* MouldMaster canonical data spine — 2026.09.04.2 */
+/* MouldMaster canonical data spine — 2026.09.05.1 */
 (function(){
 'use strict';
 if(window.MM_DATA_SPINE)return;
-const VERSION='2026.09.04.2';
+const VERSION='2026.09.05.1';
 const nodes=new Map(),edges=new Map();
 const KIND_ALIASES=Object.freeze({question:'assessment-question',case:'process-case',material:'material-grade',source:'evidence-source',signal:'process-signal'});
 function clean(v){return String(v??'').trim()}
@@ -11,8 +11,13 @@ function kind(v){const k=slug(v);return KIND_ALIASES[k]||k}
 function stable(value){if(value===null||typeof value!=='object')return JSON.stringify(value);if(Array.isArray(value))return '['+value.map(stable).join(',')+']';return '{'+Object.keys(value).sort().map(k=>JSON.stringify(k)+':'+stable(value[k])).join(',')+'}'}
 function fingerprint(value){const text=typeof value==='string'?value:stable(value);let h=2166136261;for(const ch of String(text)){h^=ch.charCodeAt(0);h=Math.imul(h,16777619)}return `fnv1a-${(h>>>0).toString(16).padStart(8,'0')}`}
 function canonicalId(nodeKind,value){const k=kind(nodeKind),raw=clean(value);if(!raw)throw new Error('Canonical data-spine id requires a value');if(raw.startsWith(k+':'))return raw;return `${k}:${slug(raw)}`}
-function register(nodeKind,value,meta={}){const k=kind(nodeKind),id=canonicalId(k,value),prior=nodes.get(id)||{};const record=Object.freeze({id,kind:k,key:clean(value),...prior,...meta,updatedAt:meta.updatedAt||prior.updatedAt||new Date().toISOString()});nodes.set(id,record);return record}
-function relation(fromKind,fromValue,toKind,toValue,type,meta={}){const from=register(fromKind,fromValue),to=register(toKind,toValue),rel=slug(type),id=`${from.id}|${rel}|${to.id}`,record=Object.freeze({id,from:from.id,to:to.id,type:rel,...meta});edges.set(id,record);return record}
+function register(nodeKind,value,meta={}){
+  const k=kind(nodeKind),key=clean(value),id=canonicalId(k,key),prior=nodes.get(id)||null;
+  if(prior&&prior.key!==key)throw new Error(`Canonical data-spine id collision: ${id} maps both ${prior.key} and ${key}`);
+  const updatedAt=meta.updatedAt||prior?.updatedAt||new Date().toISOString();
+  const record=Object.freeze({...prior,...meta,id,kind:k,key,updatedAt});nodes.set(id,record);return record
+}
+function relation(fromKind,fromValue,toKind,toValue,type,meta={}){const from=register(fromKind,fromValue),to=register(toKind,toValue),rel=slug(type),id=`${from.id}|${rel}|${to.id}`,record=Object.freeze({...meta,id,from:from.id,to:to.id,type:rel});edges.set(id,record);return record}
 function get(nodeKind,value){return nodes.get(canonicalId(nodeKind,value))||null}
 function list(nodeKind=null){const k=nodeKind?kind(nodeKind):null;return [...nodes.values()].filter(x=>!k||x.kind===k)}
 function relationsFor(nodeKind,value,{type=null,direction='both'}={}){const id=canonicalId(nodeKind,value),wanted=type?slug(type):null;return [...edges.values()].filter(e=>(!wanted||e.type===wanted)&&((direction==='out'||direction==='both')&&e.from===id||(direction==='in'||direction==='both')&&e.to===id))}
