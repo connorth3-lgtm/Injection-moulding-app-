@@ -39,14 +39,31 @@ for m in ['questionRevision','bankVersion','choiceFingerprint','choiceFingerprin
     need(m in assessment,f'assessment analytics v2 marker missing: {m}')
 
 activity=text('src/domains/learning/activity-events-v2.js')
-for m in ['mm_activity_events_v2::','material-lab','assessmentSnapshot','choiceFingerprints','No names, notes, free text, raw answer text']:
+for m in ['mm_activity_events_v2::','material-lab','assessmentSnapshot','choiceFingerprints','last:q.last||null','No names, notes, free text, raw answer text']:
     need(m in activity,f'activity v2 marker missing: {m}')
 for forbidden in ['fetch(','XMLHttpRequest','WebSocket','sendBeacon(']:
     need(forbidden not in activity,f'activity events must remain local-only: {forbidden}')
 
 learner=text('src/domains/learning/learner-model.js')
-for m in ['mastery','confidence','forgettingRisk','stuckness','learningVelocity','transferStrength','recommendations']:
+for m in ['mastery','confidence','forgettingRisk','stuckness','learningVelocity','transferStrength','recommendations','last:q.last||null']:
     need(m in learner,f'learner model marker missing: {m}')
+recency_node=f"""
+const fs=require('fs'),vm=require('vm');
+const source=fs.readFileSync({json.dumps(str(ROOT/'src/domains/learning/learner-model.js'))},'utf8');
+function risk(last){{
+  const context={{window:{{MM_ACTIVITY_EVENTS_V2:{{events:()=>[],assessmentSnapshot:()=>({{questions:[{{competency:'recency-test',concept:'recency-concept',attempts:5,correct:5,wrong:0,last}}]}})}}}}}}}};
+  vm.createContext(context);vm.runInContext(source,context);
+  return context.window.MM_LEARNER_MODEL.build().topics.find(x=>x.key==='competency:recency-test').forgettingRisk;
+}}
+const fresh=risk(new Date().toISOString());
+const stale=risk(new Date(Date.now()-40*86400000).toISOString());
+process.stdout.write(JSON.stringify({{fresh,stale}}));
+"""
+r=subprocess.run(['node','-e',recency_node],capture_output=True,text=True)
+need(r.returncode==0,'learner assessment recency runtime failed: '+(r.stderr or r.stdout))
+recency=json.loads(r.stdout)
+need(recency['fresh']<45,'fresh formal assessment must not be classified as spaced-retrieval overdue')
+need(recency['stale']>=45,'stale formal assessment must still become spaced-retrieval due')
 
 material=text('src/domains/materials/material-observation-v2.js')
 for m in ['quantity','propertyKey','semanticStatus','range','scalar','existing material-grade v2']:
@@ -97,13 +114,30 @@ print(decision_qa.stdout.strip())
 contract=json.loads(text('data/real-pilot-analysis-contract-v1.json'))
 need(contract.get('status')=='pilot-ready','real pilot analysis must not claim completed validation')
 need('No result authorises a production change' in contract.get('analysisBoundary',''),'pilot production-authority boundary missing')
+need('pass' in contract.get('allowedQualityValues',[]) and contract.get('qualityAliasPattern')=='quality-result-[0-9]{2,}','pilot quality-output privacy contract drifted')
 with tempfile.TemporaryDirectory() as td:
-    out=Path(td)/'report.json'
+    td=Path(td);out=td/'report.json'
     r=subprocess.run(['python',str(ROOT/'tools/analyze_real_pilot.py'),'--input',str(ROOT/'qa/fixtures/real-pilot-analysis-synthetic.csv'),'--output',str(out),'--synthetic-fixture'],capture_output=True,text=True)
     need(r.returncode==0,f'synthetic pilot analysis failed: {r.stderr or r.stdout}')
     report=json.loads(out.read_text(encoding='utf-8'))
     need(report['rawValuesEmitted'] is False,'pilot analysis emitted raw values')
     need(report['source']['rows']==6,'synthetic pilot row count drifted')
     need('fill_time_s' in report['comparisons'] and 'part_mass_g' in report['comparisons'],'pilot comparison signals missing')
+    need(set(report['qualityCounts']).issubset({'pass','fail'}),'synthetic pilot quality counts must remain controlled labels')
 
-print('MouldMaster data activation v1 QA passed (data spine, canonical governed decision manifest, question/revision-scoped assessment analytics, unified local events, learner model, typed materials, canonical signal semantics, contextual atlas evidence relevance, engineering evidence chain, CSP-safe desktop/mobile content intelligence, real-pilot aggregate harness)')
+    source=(ROOT/'qa/fixtures/real-pilot-analysis-synthetic.csv').read_text(encoding='utf-8')
+    unsafe=td/'unsafe-quality.csv';unsafe.write_text(source.replace(',PASS,',',Customer X reject,',1),encoding='utf-8')
+    unsafe_out=td/'unsafe-report.json'
+    bad=subprocess.run(['python',str(ROOT/'tools/analyze_real_pilot.py'),'--input',str(unsafe),'--output',str(unsafe_out),'--synthetic-fixture'],capture_output=True,text=True)
+    need(bad.returncode!=0,'pilot analyzer must reject uncontrolled/free-text quality_result values')
+    need('uncontrolled/free-text quality_result' in (bad.stderr+bad.stdout),'pilot quality-label rejection must be explicit')
+    need(not unsafe_out.exists(),'pilot analyzer must fail before writing an aggregate report containing uncontrolled quality labels')
+
+    aliased=td/'aliased-quality.csv';aliased.write_text(source.replace(',PASS,',',quality-result-01,',1),encoding='utf-8')
+    aliased_out=td/'aliased-report.json'
+    alias_run=subprocess.run(['python',str(ROOT/'tools/analyze_real_pilot.py'),'--input',str(aliased),'--output',str(aliased_out),'--synthetic-fixture'],capture_output=True,text=True)
+    need(alias_run.returncode==0,'pilot analyzer must accept local-preparer pseudonymous quality aliases')
+    alias_report=json.loads(aliased_out.read_text(encoding='utf-8'))
+    need('quality-result-01' in alias_report['qualityCounts'],'pseudonymous quality alias must survive only as its governed alias')
+
+print('MouldMaster data activation v1 QA passed (data spine, canonical governed decision manifest, question/revision-scoped assessment analytics with recency, unified local events, learner model, typed materials, canonical signal semantics, contextual atlas evidence relevance, engineering evidence chain, CSP-safe desktop/mobile content intelligence, privacy-gated real-pilot aggregate harness)')
