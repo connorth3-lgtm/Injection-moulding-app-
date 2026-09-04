@@ -26,7 +26,8 @@ for required in [
     "analyzeCaseById",
     "evidencePlan",
     "evidencePlanById",
-    "PLAN_APPLICABILITY",
+    "MIN_PLAN_MATCH_TERMS",
+    "candidate.rank===1",
     "not-supported-by-case-context",
     "excludedReasoningFields",
     "not a diagnosis or local root-cause finding",
@@ -49,7 +50,7 @@ globalThis.MM_ENGINEERING_STORE={
   deleteCase:()=>{writes++;throw new Error('write path must not be called')}
 };
 const adapter=require('./src/domains/engineering/research-context.js');
-assert.deepStrictEqual([...adapter.planApplicability],['high','moderate']);
+assert.strictEqual(adapter.minPlanMatchTerms,2);
 
 const multicavity={
   id:'case-multi',
@@ -80,14 +81,18 @@ const multi=adapter.analyzeCase(multicavity,12);
 assert.strictEqual(JSON.stringify(multicavity),before,'adapter mutated engineering case');
 assert.strictEqual(multi.status,'candidates');
 assert(multi.candidates.length>0);
+assert.strictEqual(multi.candidates[0].rank,1);
 assert.strictEqual(multi.candidates[0].mechanismId,'runner-gate-multicavity-imbalance');
-assert(adapter.planApplicability.includes(multi.candidates[0].applicability));
+assert(multi.candidates[0].applicability && typeof multi.candidates[0].applicability==='object');
+assert(Array.isArray(multi.candidates[0].applicability.matchedTerms));
+assert(multi.candidates[0].applicability.matchedTerms.length>=adapter.minPlanMatchTerms);
 assert(multi.candidates.every(x=>x.evidenceState==='promoted'));
 assert(/not a diagnosis/i.test(multi.boundary));
 assert(/excluded from research ranking/i.test(multi.biasBoundary));
-const weakLsr=multi.candidates.find(x=>x.mechanismId==='liquid-silicone-rubber');
-assert(weakLsr,'expected low-relevance LSR comparison candidate');
-assert.strictEqual(weakLsr.applicability,'low');
+assert(/top governed research match/i.test(multi.planBoundary));
+const lsr=multi.candidates.find(x=>x.mechanismId==='liquid-silicone-rubber');
+assert(lsr,'expected LSR comparison candidate');
+assert(lsr.rank>1,'LSR should not outrank observed multicavity evidence');
 
 const moisture={
   id:'case-moisture',
@@ -97,8 +102,9 @@ const moisture={
   material:'hygroscopic engineering resin'
 };
 const wet=adapter.analyzeCase(moisture,4);
+assert.strictEqual(wet.candidates[0].rank,1);
 assert.strictEqual(wet.candidates[0].mechanismId,'moisture-drying-degradation');
-assert(adapter.planApplicability.includes(wet.candidates[0].applicability));
+assert(wet.candidates[0].applicability.matchedTerms.length>=adapter.minPlanMatchTerms);
 
 const hypothesisOnly=adapter.analyzeCase({id:'case-empty',hypothesis:'weld line mechanical strength'},5);
 assert.strictEqual(hypothesisOnly.status,'no-context');
@@ -111,14 +117,25 @@ assert.strictEqual(unrelated.candidates.length,0);
 
 const plan=adapter.evidencePlan(multicavity,'runner-gate-multicavity-imbalance');
 assert.strictEqual(plan.status,'candidate-plan');
-assert(adapter.planApplicability.includes(plan.applicability));
+assert.strictEqual(plan.rank,1);
+assert(plan.matchedTermCount>=adapter.minPlanMatchTerms);
 assert(plan.plan.collect.includes('cavity-specific pressure/fill response'));
 assert(plan.plan.sources.length>=2);
 assert(/not a diagnosis/i.test(plan.boundary));
-const blocked=adapter.evidencePlan(multicavity,'liquid-silicone-rubber');
-assert.strictEqual(blocked.status,'not-supported-by-case-context');
-assert.strictEqual(blocked.applicability,'low');
-assert.strictEqual(blocked.plan,null);
+const blockedAlternative=adapter.evidencePlan(multicavity,'liquid-silicone-rubber');
+assert.strictEqual(blockedAlternative.status,'not-supported-by-case-context');
+assert(blockedAlternative.rank>1);
+assert.strictEqual(blockedAlternative.plan,null);
+
+const oneTerm={id:'case-one-term',defect:'birefringence'};
+const one=adapter.analyzeCase(oneTerm,3);
+assert.strictEqual(one.candidates[0].mechanismId,'residual-stress-birefringence');
+assert.strictEqual(one.candidates[0].rank,1);
+assert.strictEqual(one.candidates[0].applicability.matchedTerms.length,1);
+const onePlan=adapter.evidencePlan(oneTerm,'residual-stress-birefringence');
+assert.strictEqual(onePlan.status,'not-supported-by-case-context');
+assert.strictEqual(onePlan.matchedTermCount,1);
+assert.strictEqual(onePlan.plan,null);
 
 cases.set(multicavity.id,multicavity);
 (async()=>{
