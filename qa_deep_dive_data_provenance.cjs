@@ -59,37 +59,49 @@ function loadScope({users,activeUser,storage}){
   assert.strictEqual(storage.getItem(oldKey),null,'legacy key remained after verified migration');
 }
 
-// Finding 2: stable-ID-only legacy question counters do not prove which question
-// revision produced them. Current catalog metadata must therefore be separate from
-// the analytics revision identity.
+// Finding 2: pre-ledger stable-ID counters remain explicitly unversioned, while the
+// next real grade is captured in a proven revision bucket without changing that
+// frozen legacy baseline.
 {
   const source=fs.readFileSync('src/domains/assessment/assessment-analytics-v2.js','utf8');
-  const legacyQuestion={stableId:'tech:Advanced:2',attempts:6,correct:4,wrong:2,unanswered:0,difficulty:'Advanced',optionSelections:{Alpha:4,Beta:2},totalResponseMs:6000,last:'2026-08-20T12:00:00.000Z'};
+  const storage=memoryStorage();
+  const legacyQuestion={stableId:'tech:Advanced:2',attempts:6,correct:4,wrong:2,unanswered:0,difficulty:'Advanced',competency:'process-control',concept:'interaction',optionSelections:{Alpha:4,Beta:2},totalResponseMs:6000,last:'2026-08-20T12:00:00.000Z'};
+  const exportLegacy=()=>({questions:{q:JSON.parse(JSON.stringify(legacyQuestion))},exams:{},responseTimingBasis:'legacy'});
+  const scope={registerStoragePrefix(){},token:()=> '0123456789abcdef0123456789abcdef',storageKey:(prefix,token)=>prefix+token};
+  const question={stableId:'tech:Advanced:2',correct:0,options:['Alpha','Beta'],difficulty:'Advanced',competency:'process-control',concept:'interaction'};
+  const activeExam={level:'Advanced',questions:[question]};
+  const document={querySelector:sel=>sel==='input[name=ex0]:checked'?{value:'0'}:null};
   const window={
+    MM_LEARNER_SCOPE:scope,
     MM_DATA_SPINE:{fingerprint:v=>String(v)},
     MM_QUESTION_REVISIONS:{bankVersion:'bank-current',forId:()=>({revision:7,date:'2026-09-04'})},
-    MM_ASSESSMENT_ANALYTICS:{export:()=>({questions:{q:legacyQuestion},exams:{},responseTimingBasis:'legacy'})}
+    MM_ASSESSMENT_ANALYTICS:{export:exportLegacy},
+    addEventListener(){},
+    gradeExam(){legacyQuestion.attempts++;legacyQuestion.correct++;legacyQuestion.optionSelections.Alpha++;return 'graded'}
   };
-  const sandbox={window,console,Math,Object,Number,String};window.window=window;
+  const sandbox={window,localStorage:storage,activeExam,document,console,Math,Object,Number,String,Date,WeakSet};window.window=window;
   vm.createContext(sandbox);vm.runInContext(source,sandbox,{filename:'assessment-analytics-v2.js'});
-  let out=window.MM_ASSESSMENT_ANALYTICS_V2.export();
-  let row=out.questions['tech:Advanced:2@legacy-unversioned'];
-  assert(row,'legacy stable-ID counters were not kept in an unversioned analytics bucket');
-  assert.strictEqual(row.questionRevision,null,'legacy counters were assigned a fabricated current question revision');
-  assert.strictEqual(row.revisionStatus,'legacy-unversioned');
-  assert.strictEqual(row.catalogRevision,7,'current catalog revision metadata was lost');
-  assert.strictEqual(row.questionRevisionDate,null,'current revision date was attached to unversioned historical counters');
-  assert(row.choiceSelections.every(x=>x.choiceFingerprint.includes('@legacy-unversioned|')),'legacy choice counters were fingerprinted as a current revision');
-  assert.strictEqual(window.MM_ASSESSMENT_ANALYTICS_V2.summary().revisionProvenQuestions,0);
-
-  legacyQuestion.questionRevision=3;
-  out=window.MM_ASSESSMENT_ANALYTICS_V2.export();row=out.questions['tech:Advanced:2@r3'];
-  assert(row,'explicit source revision did not produce a revision-scoped analytics bucket');
-  assert.strictEqual(row.questionRevision,3);
-  assert.strictEqual(row.revisionStatus,'proven');
-  assert.strictEqual(row.catalogRevision,7,'catalog revision should remain distinct from the proven historical revision');
-  assert.strictEqual(row.questionRevisionDate,null,'current catalog date was attached to a different proven historical revision');
+  assert.strictEqual(window.gradeExam('Advanced'),'graded','revision-aware wrapper changed gradeExam return value');
+  const out=window.MM_ASSESSMENT_ANALYTICS_V2.export();
+  const legacy=out.questions['tech:Advanced:2@legacy-unversioned'];
+  const current=out.questions['tech:Advanced:2@r7'];
+  assert(legacy,'pre-ledger stable-ID counters were not preserved as legacy-unversioned');
+  assert.strictEqual(legacy.attempts,6,'legacy baseline was not frozen before the first revision-aware grade');
+  assert.strictEqual(legacy.questionRevision,null,'legacy counters were assigned the current question revision');
+  assert.strictEqual(legacy.revisionStatus,'legacy-unversioned');
+  assert.strictEqual(legacy.catalogRevision,7,'current catalog revision metadata was lost');
+  assert.strictEqual(legacy.questionRevisionDate,null,'current revision date was attached to unversioned historical counters');
+  assert(legacy.choiceSelections.every(x=>x.choiceFingerprint.includes('@legacy-unversioned|')),'legacy choice counters were fingerprinted as current revision data');
+  assert(current,'new grade was not written to a revision-aware analytics bucket');
+  assert.strictEqual(current.questionRevision,7);
+  assert.strictEqual(current.revisionStatus,'proven');
+  assert.strictEqual(current.attempts,1,'revision-aware ledger did not isolate the new attempt');
+  assert.strictEqual(current.correct,1);
+  assert.strictEqual(current.catalogRevision,7);
   assert.strictEqual(window.MM_ASSESSMENT_ANALYTICS_V2.summary().revisionProvenQuestions,1);
+  assert.strictEqual(window.MM_ASSESSMENT_ANALYTICS_V2.summary().legacyUnversionedQuestions,1);
+  window.gradeExam('Advanced');
+  assert.strictEqual(window.MM_ASSESSMENT_ANALYTICS_V2.export().questions['tech:Advanced:2@r7'].attempts,1,'duplicate grade activation double-counted the revision-aware attempt');
 }
 
 // Integration contracts: the learner analytics and activity bridges must register
@@ -104,4 +116,4 @@ function loadScope({users,activeUser,storage}){
   assert(activity.includes("revision:null,revisionStatus:'legacy-unversioned'"),'legacy assessment snapshot regained a fabricated current revision');
 }
 
-console.log('Deep-dive data provenance QA passed: learner-token collisions fail closed with safe migration/quarantine and assessment revision lineage remains explicit.');
+console.log('Deep-dive data provenance QA passed: learner-token collisions fail closed with safe migration/quarantine, legacy assessment baselines freeze unversioned, and future grades are revision-aware.');
