@@ -175,7 +175,7 @@ def verify(token: str, repository: str, source_sha: str, require_native_protecti
             raise SystemExit("Native main protection is required for this production operation but GitHub reports protected=false")
         verify_main_ruleset(repository)
     elif not protected:
-        print("::warning::GitHub still reports main protected=false; merged-PR provenance is enforced here before publication, but native prevention remains pending issue #43.")
+        print("::warning::GitHub reports main protected=false for this verification. Merged-PR provenance is still enforced here, but this operation is not backed by native pre-merge protection.")
 
     print(
         f"Production source verified: main SHA {source_sha} is merged PR #{pr_number}; "
