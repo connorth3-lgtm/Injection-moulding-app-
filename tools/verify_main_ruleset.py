@@ -60,11 +60,10 @@ def rule_by_type(detail: dict, rule_type: str) -> dict | None:
 
 
 def valid_main_ruleset(detail: object) -> tuple[bool, list[str]]:
+    """Validate protection semantics; the human-readable ruleset name is not authoritative."""
     if not isinstance(detail, dict):
         return False, ["ruleset detail is not an object"]
     errors: list[str] = []
-    if detail.get("name") != RULESET_NAME:
-        errors.append(f"name must be {RULESET_NAME!r}")
     if detail.get("target") != "branch":
         errors.append("target must be branch")
     if detail.get("enforcement") != "active":
@@ -125,27 +124,44 @@ def verify(repository: str) -> None:
     if not active_branch_rows:
         fail("no active branch rulesets are visible")
 
-    failures: list[str] = []
-    matched = False
+    overbroad: list[str] = []
+    candidates: list[tuple[str, list[str]]] = []
+    matches: list[str] = []
     for row in active_branch_rows:
         ruleset_id = row.get("id")
         if not ruleset_id:
             continue
         detail = gh_json(f"repos/{repository}/rulesets/{ruleset_id}")
-        if isinstance(detail, dict):
-            include = (((detail.get("conditions") or {}).get("ref_name") or {}).get("include") or [])
-            if "~ALL" in include:
-                failures.append(f"active ruleset {detail.get('name')!r} targets ~ALL branches")
-            ok, errors = valid_main_ruleset(detail)
-            if ok:
-                matched = True
-            elif detail.get("name") == RULESET_NAME:
-                failures.extend(errors)
-    if failures:
-        fail("; ".join(failures))
-    if not matched:
-        fail(f"no active ruleset exactly matches {RULESET_NAME!r}")
-    print(f"Verified effective native policy: {RULESET_NAME} on {MAIN_REF} with all four required checks.")
+        if not isinstance(detail, dict):
+            continue
+        name = str(detail.get("name") or f"ruleset-{ruleset_id}")
+        ref_name = ((detail.get("conditions") or {}).get("ref_name") or {})
+        include = ref_name.get("include") or []
+        exclude = ref_name.get("exclude") or []
+        if "~ALL" in include:
+            overbroad.append(f"active ruleset {name!r} targets ~ALL branches")
+            continue
+        if include != [MAIN_REF] or exclude:
+            continue
+        ok, errors = valid_main_ruleset(detail)
+        if ok:
+            matches.append(name)
+        else:
+            candidates.append((name, errors))
+
+    if overbroad:
+        fail("; ".join(overbroad))
+    if not matches:
+        detail_text = "; ".join(
+            f"{name!r}: {', '.join(errors)}" for name, errors in candidates
+        )
+        suffix = f" ({detail_text})" if detail_text else ""
+        fail(f"no active ruleset exactly matches required MouldMaster main policy{suffix}")
+
+    print(
+        f"Verified effective native policy on {MAIN_REF} via active ruleset(s): "
+        f"{', '.join(repr(name) for name in matches)}; all four required checks."
+    )
 
 
 def self_test() -> None:
@@ -172,6 +188,9 @@ def self_test() -> None:
     }
     ok, errors = valid_main_ruleset(good)
     assert ok and not errors
+    renamed = json.loads(json.dumps(good))
+    renamed["name"] = "connor"
+    assert valid_main_ruleset(renamed)[0], "ruleset display name must not affect semantic validity"
     bad_case = json.loads(json.dumps(good))
     bad_case["conditions"]["ref_name"]["include"] = ["refs/heads/Main"]
     assert not valid_main_ruleset(bad_case)[0]
