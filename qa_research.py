@@ -2,6 +2,7 @@ from pathlib import Path
 import json
 import re
 import subprocess
+import sys
 
 ROOT = Path(__file__).resolve().parent
 ASSETS = ["reference-research-extension.js", "reference-20x-extension.js"]
@@ -134,4 +135,7 @@ for asset in ASSETS:
     p = subprocess.run(["node", "--check", str(ROOT / asset)], capture_output=True, text=True)
     need(p.returncode == 0, f"{asset}: {p.stderr}")
 
-print(f"MouldMaster research QA passed ({len(passes)} research passes)")
+p = subprocess.run([sys.executable, str(ROOT / "qa_governed_research_applicability.py")], cwd=ROOT, capture_output=True, text=True)
+need(p.returncode == 0, "governed research applicability QA failed: " + (p.stderr or p.stdout))
+
+print(f"MouldMaster research QA passed ({len(passes)} research passes + governed mechanism applicability)")
