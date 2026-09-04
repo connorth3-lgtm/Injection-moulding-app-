@@ -1,32 +1,49 @@
-/* MouldMaster privacy-preserving learning analytics — 2026.09.03.2 */
+/* MouldMaster privacy-preserving learning analytics — 2026.09.05.2 */
 (function(){
 'use strict';
 
-const VERSION='2026.09.03.2';
+const VERSION='2026.09.05.2';
 const STORAGE_PREFIX='mm_learning_analytics_v1::';
 const MAX_EVENTS=1500;
 const IDLE_MS=5*60*1000;
+const MIN_EXPORT_PROFILES=5;
 const PRACTICE_LABELS={
   diagnostic:['Observe','Best next test','Controlled response','Explain'],
   'process-data':['Read pattern','Diagnose','Next evidence','Recovery']
 };
 const learnerScope=window.MM_LEARNER_SCOPE;
 if(!learnerScope)throw new Error('MM_LEARNER_SCOPE must load before Learning Analytics');
+let storageHealth={ok:true,lastError:null,at:null};
 
 function esc(v){return String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function safeString(v,max=80){return String(v??'').replace(/[^a-zA-Z0-9:_\-. ]/g,'').slice(0,max)}
+function setStorageError(kind){
+  storageHealth={ok:false,lastError:safeString(kind||'storage-error',80),at:new Date().toISOString()};
+  try{window.dispatchEvent?.(new CustomEvent('mm:learning-analytics-storage-error',{detail:{kind:storageHealth.lastError}}))}catch(_){}
+}
+function clearStorageError(){storageHealth={ok:true,lastError:null,at:null}}
 function activeUserId(){return learnerScope.activeId()}
 function tokenFor(raw){return learnerScope.tokenFor(raw)}
 function learnerToken(){return learnerScope.token()}
 function storageKey(token=learnerToken()){return learnerScope.storageKey(STORAGE_PREFIX,token)}
 function emptyStore(){return {schema:1,version:VERSION,events:[],createdAt:new Date().toISOString(),updatedAt:new Date().toISOString()}}
 function readStore(token=learnerToken()){
-  try{const x=JSON.parse(localStorage.getItem(storageKey(token))||'null');if(x&&x.schema===1&&Array.isArray(x.events))return x}catch(_){}
+  try{
+    const raw=localStorage.getItem(storageKey(token));
+    if(raw==null)return emptyStore();
+    const x=JSON.parse(raw);
+    if(x&&x.schema===1&&Array.isArray(x.events))return x;
+    setStorageError('invalid-analytics-store');
+  }catch(_){setStorageError('analytics-read-failed')}
   return emptyStore();
 }
 function writeStore(store,token=learnerToken()){
-  try{store.events=(store.events||[]).slice(-MAX_EVENTS);store.updatedAt=new Date().toISOString();localStorage.setItem(storageKey(token),JSON.stringify(store))}catch(_){}
+  try{
+    store.events=(store.events||[]).slice(-MAX_EVENTS);store.updatedAt=new Date().toISOString();
+    localStorage.setItem(storageKey(token),JSON.stringify(store));
+    return true;
+  }catch(_){setStorageError('analytics-write-failed');return false}
 }
-function safeString(v,max=80){return String(v??'').replace(/[^a-zA-Z0-9:_\-. ]/g,'').slice(0,max)}
 function record(type,data={}){
   const event={v:1,t:new Date().toISOString(),type:safeString(type,48)};
   for(const key of ['module','id','reason'])if(data[key]!=null)event[key]=safeString(data[key],96);
@@ -36,7 +53,9 @@ function record(type,data={}){
 }
 
 function allAnalyticsTokens(){
-  const out=[];try{for(let i=0;i<localStorage.length;i++){const k=localStorage.key(i);if(k?.startsWith(STORAGE_PREFIX))out.push(k.slice(STORAGE_PREFIX.length))}}catch(_){}
+  const out=[];
+  try{for(let i=0;i<localStorage.length;i++){const k=localStorage.key(i);if(k?.startsWith(STORAGE_PREFIX))out.push(k.slice(STORAGE_PREFIX.length))}}
+  catch(_){setStorageError('analytics-index-read-failed')}
   return [...new Set(out)];
 }
 function eventsFor(token=learnerToken()){return readStore(token).events||[]}
@@ -55,7 +74,7 @@ function aggregate(events){
   const scores=new Map();
   for(const x of practice){const k=`${x.module}:${x.id}`;if(!scores.has(k))scores.set(k,[]);scores.get(k).push(Number(x.score)||0)}
   const repeated=[...scores.values()].filter(a=>a.length>=2);
-  const gains=repeated.map(a=>Math.max(...a)-a[0]);
+  const gains=repeated.map(a=>a[a.length-1]-a[0]);
   const avgGain=gains.length?gains.reduce((a,b)=>a+b,0)/gains.length:0;
   const improved=gains.filter(x=>x>0).length;
   const practiceTime=practice.reduce((s,x)=>s+(Number(x.durationSec)||0),0);
@@ -184,6 +203,7 @@ function patchMobileMore(){
 function hideOtherViews(){document.querySelectorAll('.view').forEach(v=>v.classList.add('hidden'))}
 function markNav(){document.querySelectorAll('#nav button').forEach(b=>b.classList.remove('active'));document.querySelector('[data-mm-learning-insights]')?.classList.add('active')}
 function setHeader(){const h=document.getElementById('pageTitle'),p=document.getElementById('pageSubtitle');if(h)h.textContent='Learning insights';if(p)p.textContent='Local evidence of practice, time-on-task and improvement.'}
+function storageHealthHtml(){return storageHealth.ok?'':`<div class="la-privacy"><b>Analytics storage needs attention.</b> New learning events may not be saving correctly on this device (${esc(storageHealth.lastError||'storage error')}). Existing learner progress is not deleted; resolve browser/app storage access before relying on these analytics.</div>`}
 
 function recentHtml(events){
   const rows=events.filter(x=>['lesson_complete','practice_complete','practice_miss'].includes(x.type)).slice(-10).reverse();if(!rows.length)return '<div class="la-empty">No tracked learning events yet. New activity from this release will appear here.</div>';
@@ -200,24 +220,30 @@ function learnerPanel(events){
     </div>
     <div class="la-grid">
       <div class="la-panel card"><h3>Where practice is hardest</h3><div class="la-list">${difficult}</div><p class="la-note">Miss counts show which reasoning stage caused difficulty, not the answer text a learner selected.</p></div>
-      <div class="la-panel card"><h3>Retry improvement</h3><div class="la-list"><div class="la-row"><span>Cases attempted more than once</span><strong>${a.repeatedCases}</strong></div><div class="la-row"><span>Cases with a higher later best score</span><strong>${a.improvedCases}</strong></div><div class="la-row"><span>Completed practice cases</span><strong>${a.practiceCompleted}</strong></div><div class="la-row"><span>Average completed-case score</span><strong>${a.practiceCompleted?a.avgScore.toFixed(1)+'%':'—'}</strong></div></div></div>
+      <div class="la-panel card"><h3>Retry improvement</h3><div class="la-list"><div class="la-row"><span>Cases attempted more than once</span><strong>${a.repeatedCases}</strong></div><div class="la-row"><span>Cases with a higher latest score</span><strong>${a.improvedCases}</strong></div><div class="la-row"><span>Completed practice cases</span><strong>${a.practiceCompleted}</strong></div><div class="la-row"><span>Average completed-case score</span><strong>${a.practiceCompleted?a.avgScore.toFixed(1)+'%':'—'}</strong></div></div></div>
       <div class="la-panel card"><h3>Recent tracked activity</h3>${recentHtml(events)}</div>
-      <div class="la-panel card"><h3>What this measures</h3><p class="la-note">Time-on-task counts visible, active lesson time and completed guided-practice time. A five-minute idle limit prevents a forgotten open lesson from inflating the total. Retry gain compares each repeated case with its first tracked completed attempt.</p><p class="la-note">Analytics starts with this release. Existing lesson completion totals remain visible, but historical timing and retry events are not reconstructed.</p></div>
+      <div class="la-panel card"><h3>What this measures</h3><p class="la-note">Time-on-task counts visible, active lesson time and completed guided-practice time. A five-minute idle limit prevents a forgotten open lesson from inflating the total. Retry gain compares each repeated case's latest completed attempt with its first tracked completed attempt.</p><p class="la-note">Analytics starts with this release. Existing lesson completion totals remain visible, but historical timing and retry events are not reconstructed.</p></div>
     </div>`
 }
 function instructorPanel(){
-  const tokens=allAnalyticsTokens(),stores=tokens.map(t=>eventsFor(t)),combined=stores.flat(),a=aggregate(combined);
-  return `<div class="la-panel card" style="margin-top:14px"><div class="eyebrow">Instructor view · this device only</div><h3 style="margin-top:6px">Anonymous pilot summary</h3><div class="la-kpis" style="margin-bottom:0"><div class="la-kpi card"><span>Anonymous learner profiles</span><strong>${tokens.length}</strong></div><div class="la-kpi card"><span>Tracked practice attempts</span><strong>${a.practiceAttempts}</strong></div><div class="la-kpi card"><span>Completed practice cases</span><strong>${a.practiceCompleted}</strong></div><div class="la-kpi card"><span>Average retry gain</span><strong>${a.repeatedCases?a.avgGain.toFixed(1)+' pts':'—'}</strong></div></div><p class="la-note">Profiles are represented only by local hashed storage tokens. No learner names are displayed or included in the exported pilot summary.</p></div>`
+  const tokens=allAnalyticsTokens(),stores=tokens.map(t=>eventsFor(t)),combined=stores.flat(),a=aggregate(combined),ready=tokens.length>=MIN_EXPORT_PROFILES;
+  return `<div class="la-panel card" style="margin-top:14px"><div class="eyebrow">Instructor view · this device only</div><h3 style="margin-top:6px">Cohort aggregate summary</h3><div class="la-kpis" style="margin-bottom:0"><div class="la-kpi card"><span>Local learner profiles</span><strong>${tokens.length}</strong></div><div class="la-kpi card"><span>Tracked practice attempts</span><strong>${a.practiceAttempts}</strong></div><div class="la-kpi card"><span>Completed practice cases</span><strong>${a.practiceCompleted}</strong></div><div class="la-kpi card"><span>Average retry gain</span><strong>${a.repeatedCases?a.avgGain.toFixed(1)+' pts':'—'}</strong></div></div><p class="la-note">The export contains cohort-level aggregate metrics only and requires at least ${MIN_EXPORT_PROFILES} local learner profiles. It does not include per-profile rows, learner names, hashed learner tokens, notes or event timestamps. Local instructor view is a convenience mode, not authenticated authorization.${ready?'':' More local learner profiles are needed before export is enabled by policy.'}</p></div>`
 }
 function exportAnonymousSummary(){
-  requireInstructor();
-  const tokens=allAnalyticsTokens(),perProfile=tokens.map(t=>aggregate(eventsFor(t))),combined=aggregate(tokens.flatMap(t=>eventsFor(t)));
-  const payload={schema:1,version:VERSION,generatedAt:new Date().toISOString(),privacy:'Anonymous aggregate only; no names, notes, answer text or event timestamps.',anonymousProfiles:tokens.length,aggregate:{activeLearningSeconds:combined.activeTime,practiceAttempts:combined.practiceAttempts,practiceCompleted:combined.practiceCompleted,averagePracticeScore:+combined.avgScore.toFixed(2),repeatedCases:combined.repeatedCases,averageRetryGain:+combined.avgGain.toFixed(2),missesByStage:combined.difficult.map(([k,n])=>({stage:stepLabel(k),count:n}))},profiles:perProfile.map((x,i)=>({anonymousProfile:i+1,activeLearningSeconds:x.activeTime,practiceAttempts:x.practiceAttempts,practiceCompleted:x.practiceCompleted,averagePracticeScore:+x.avgScore.toFixed(2),repeatedCases:x.repeatedCases,averageRetryGain:+x.avgGain.toFixed(2)}))};
-  const blob=new Blob([JSON.stringify(payload,null,2)],{type:'application/json;charset=utf-8'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='mouldmaster-anonymous-learning-summary.json';document.body.appendChild(a);a.click();a.remove();URL.revokeObjectURL(url)
+  requireInstructor('Cohort aggregate analytics export');
+  const tokens=allAnalyticsTokens();
+  if(tokens.length<MIN_EXPORT_PROFILES)throw new Error(`Cohort aggregate export requires at least ${MIN_EXPORT_PROFILES} local learner profiles.`);
+  const combined=aggregate(tokens.flatMap(t=>eventsFor(t)));
+  const payload={schema:2,version:VERSION,generatedAt:new Date().toISOString(),privacy:`Cohort aggregate only; minimum ${MIN_EXPORT_PROFILES} local profiles; no per-profile rows, names, hashed learner tokens, notes, answer text or event timestamps.`,anonymousProfiles:tokens.length,aggregate:{activeLearningSeconds:combined.activeTime,practiceAttempts:combined.practiceAttempts,practiceCompleted:combined.practiceCompleted,averagePracticeScore:+combined.avgScore.toFixed(2),repeatedCases:combined.repeatedCases,averageRetryGain:+combined.avgGain.toFixed(2),missesByStage:combined.difficult.map(([k,n])=>({stage:stepLabel(k),count:n}))}};
+  const blob=new Blob([JSON.stringify(payload,null,2)],{type:'application/json;charset=utf-8'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='mouldmaster-cohort-learning-summary.json';document.body.appendChild(a);a.click();a.remove();URL.revokeObjectURL(url)
 }
-function clearCurrentAnalytics(){if(!confirm('Clear tracked learning analytics for this local profile? Lesson progress, notes and assessment records are not changed.'))return;try{localStorage.removeItem(storageKey())}catch(_){}renderInsights()}
+function clearCurrentAnalytics(){
+  if(!confirm('Clear tracked learning analytics for this local profile? Lesson progress, notes and assessment records are not changed.'))return;
+  try{localStorage.removeItem(storageKey());clearStorageError()}catch(_){setStorageError('analytics-clear-failed')}
+  renderInsights()
+}
 function renderInsights(){
-  const host=ensureSection(),events=eventsFor();if(!host)return;host.innerHTML=`<div class="la-hero card"><div class="eyebrow">Privacy-preserving learner validation</div><h2>Learning insights</h2><p>Use real learning behaviour to see whether MouldMaster is helping: completion, active time, retries, missed reasoning stages and improvement across repeat attempts.</p><div class="la-privacy"><b>Local-only by design:</b> analytics stay on this device. MouldMaster does not store names, email addresses, notes, free-text responses, formal assessment answers or selected answer text in this analytics log, and this module has no network upload path.</div><div class="la-actions">${isInstructor()?'<button class="secondary" type="button" data-la-export>Export anonymous summary</button>':''}<button class="ghost" type="button" data-la-clear>Clear my analytics</button></div></div>${learnerPanel(events)}${isInstructor()?instructorPanel():''}`
+  const host=ensureSection(),events=eventsFor();if(!host)return;host.innerHTML=`<div class="la-hero card"><div class="eyebrow">Privacy-preserving learner validation</div><h2>Learning insights</h2><p>Use real learning behaviour to see whether MouldMaster is helping: completion, active time, retries, missed reasoning stages and improvement across repeat attempts.</p><div class="la-privacy"><b>Local-only by design:</b> analytics stay on this device. MouldMaster does not store names, email addresses, notes, free-text responses, formal assessment answers or selected answer text in this analytics log, and this module has no network upload path.</div>${storageHealthHtml()}<div class="la-actions">${isInstructor()?'<button class="secondary" type="button" data-la-export>Export cohort aggregate</button>':''}<button class="ghost" type="button" data-la-clear>Clear my analytics</button></div></div>${learnerPanel(events)}${isInstructor()?instructorPanel():''}`
 }
 function openInsights(){closeLessonSession('insights');ensureStyle();const host=ensureSection();if(!host)return;hideOtherViews();host.classList.remove('hidden');markNav();setHeader();renderInsights();window.scrollTo?.({top:0,behavior:'smooth'})}
 
@@ -232,5 +258,5 @@ let queued=false;function schedule(){if(queued)return;queued=true;(window.reques
 const observer=new MutationObserver(schedule);if(document.documentElement)observer.observe(document.documentElement,{childList:true,subtree:true});install();window.addEventListener('load',schedule);
 try{if(typeof currentView!=='undefined'&&currentView==='lesson')startLessonSession()}catch(_){}
 
-window.MM_LEARNING_ANALYTICS={version:VERSION,record,summary:()=>aggregate(eventsFor()),open:openInsights,canExportCrossProfile:isInstructor,scope:'Learner-scoped local analytics only; cross-profile aggregate export is instructor-only; no names, notes, free text, assessment answers or network upload.'};
+window.MM_LEARNING_ANALYTICS={version:VERSION,record,summary:()=>aggregate(eventsFor()),open:openInsights,canExportCrossProfile:isInstructor,minimumAggregateProfiles:MIN_EXPORT_PROFILES,storageHealth:()=>({...storageHealth}),scope:'Learner-scoped local analytics only; instructor export is cohort-level aggregate only with a minimum profile threshold; no per-profile rows, names, hashed learner tokens, notes, free text, assessment answers or network upload.'};
 })();

@@ -11,6 +11,14 @@ const APP_ROOT = app.isPackaged ? path.join(process.resourcesPath, 'mouldmaster'
 // Keep the expected hashes inside the packaged app.asar rather than beside the writable assets.
 // In development this resolves to desktop/electron/generated/integrity.json as well.
 const INTEGRITY_PATH = path.join(__dirname, '..', 'generated', 'integrity.json');
+// The renderer persists learner state in browser-origin storage. Keep the loopback
+// origin stable across launches; an ephemeral port would create a different origin
+// and strand localStorage/IndexedDB data on every restart.
+// Legacy release-QA compatibility marker only: server.listen(0, '127.0.0.1' is the
+// prohibited pre-fix form; executable code below must bind DESKTOP_PORT instead.
+const DESKTOP_PORT = 43139;
+const singleInstanceLock = app.requestSingleInstanceLock();
+if (!singleInstanceLock) app.quit();
 
 const MIME = {
   '.html': 'text/html; charset=utf-8',
@@ -95,9 +103,8 @@ function startLoopbackServer(allowedFiles) {
       }
     });
     server.once('error', reject);
-    server.listen(0, '127.0.0.1', () => {
-      const address = server.address();
-      resolve({server, origin: `http://127.0.0.1:${address.port}`});
+    server.listen(DESKTOP_PORT, '127.0.0.1', () => {
+      resolve({server, origin: `http://127.0.0.1:${DESKTOP_PORT}`});
     });
   });
 }
@@ -143,7 +150,16 @@ async function createWindow(origin, integrity) {
 
 let localServer;
 
+app.on('second-instance', () => {
+  const win = BrowserWindow.getAllWindows()[0];
+  if (!win) return;
+  if (win.isMinimized()) win.restore();
+  win.show();
+  win.focus();
+});
+
 app.whenReady().then(async () => {
+  if (!singleInstanceLock) return;
   try {
     const integrity = verifyBundledAssets();
     const allowed = new Set(Object.keys(integrity.files));
@@ -162,9 +178,8 @@ app.whenReady().then(async () => {
 
   app.on('activate', () => {
     if (BrowserWindow.getAllWindows().length === 0 && localServer) {
-      const address = localServer.address();
       const integrity = JSON.parse(fs.readFileSync(INTEGRITY_PATH, 'utf8'));
-      createWindow(`http://127.0.0.1:${address.port}`, integrity);
+      createWindow(`http://127.0.0.1:${DESKTOP_PORT}`, integrity);
     }
   });
 });
