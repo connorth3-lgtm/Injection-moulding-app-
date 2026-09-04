@@ -209,10 +209,13 @@ def main() -> None:
     parser.add_argument("--contract", default=str(CONTRACT))
     parser.add_argument("--contract-only", action="store_true")
     parser.add_argument("--print-fingerprint", action="store_true")
+    parser.add_argument("--require-validated", action="store_true")
     args = parser.parse_args()
 
     data = read_contract(Path(args.contract))
     validate_contract(data)
+    if args.require_validated and data["status"] != "validated":
+        fail("validated physical iOS/iPadOS and Android evidence is required for production publication")
     if args.contract_only:
         print(f"Physical PWA device contract is structurally valid ({data['status']}).")
         return
