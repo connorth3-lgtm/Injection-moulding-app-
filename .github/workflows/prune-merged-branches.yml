@@ -52,7 +52,13 @@ jobs:
             fi
 
             if [[ -n "$reason" ]]; then
-              echo "Deleting merged branch: $branch ($reason)"
+              live_sha=$(gh api "repos/$GH_REPO/git/ref/heads/$branch" --jq '.object.sha' 2>/dev/null || true)
+              if [[ -z "$live_sha" || "$live_sha" != "$sha" ]]; then
+                echo "Keeping branch whose head moved during prune evaluation: $branch (expected $sha, now ${live_sha:-missing})"
+                kept=$((kept+1))
+                continue
+              fi
+              echo "Deleting merged branch: $branch ($reason; live SHA rechecked)"
               gh api --method DELETE "repos/$GH_REPO/git/refs/heads/$branch"
               deleted=$((deleted+1))
             else
