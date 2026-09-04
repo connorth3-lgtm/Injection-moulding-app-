@@ -12,11 +12,12 @@ Screen-reader conformance is governed separately by `data/accessibility-real-at-
 
 ## Before testing
 
-1. Build the production-only Pages artifact with `python tools/build_pages_artifact.py`.
-2. Run `python tools/verify_pwa_physical_evidence.py --artifact .pages-dist --print-fingerprint`.
-3. Record that exact `sha256:...` fingerprint in the governed physical-device review record.
+1. Build the production-only Pages artifact with `python tools/build_pages_artifact.py`, or use the artifact from the exact reviewed PR/main SHA.
+2. Obtain the runtime fingerprint either from `python tools/verify_pwa_physical_evidence.py --artifact .pages-dist --print-fingerprint` or from the **Report exact public-runtime fingerprint for physical-device validation** step in the Pages Release Readiness workflow.
+3. Record that exact `sha256:...` fingerprint in the governed physical-device review record. Do not reuse a fingerprint from a different learner-facing runtime.
 4. Install or update the public PWA from the matching deployment on both a physical iOS/iPadOS device and a physical Android device.
 5. Record device model, OS version and browser version without adding a person, learner, customer or site identity.
+6. Confirm the tested runtime fingerprint still matches the release candidate immediately before changing the public contract to `validated`.
 
 ## iOS / iPadOS
 
@@ -45,14 +46,16 @@ All checks must pass:
 
 Only after every governed check passes on both platforms:
 
-1. Change top-level `status` to `validated`.
-2. Set `runtimeFingerprint` to the exact current public-runtime fingerprint.
-3. Set `testedAt` to an ISO-8601 timestamp with timezone.
-4. Set non-personal `testerReference` and non-sensitive `evidenceReference` values.
-5. Set both platform statuses to `validated` and fill device/OS/browser metadata.
-6. Set `installedMode` to `standalone` for both platforms.
-7. Set every governed platform check to `pass`.
-8. Run `python qa_pwa_physical_device.py`.
-9. Build `.pages-dist` and run `python tools/verify_pwa_physical_evidence.py --artifact .pages-dist`.
+1. Reconfirm the runtime fingerprint from the exact candidate you physically tested.
+2. Change top-level `status` to `validated`.
+3. Set `runtimeFingerprint` to that exact current public-runtime fingerprint.
+4. Set `testedAt` to an ISO-8601 timestamp with timezone.
+5. Set non-personal `testerReference` and non-sensitive `evidenceReference` values.
+6. Set both platform statuses to `validated` and fill device/OS/browser metadata.
+7. Set `installedMode` to `standalone` for both platforms.
+8. Set every governed platform check to `pass`.
+9. Run `python qa_pwa_physical_device.py`.
+10. Build `.pages-dist` and run `python tools/verify_pwa_physical_evidence.py --artifact .pages-dist --require-validated`.
+11. Submit the evidence-contract change through the protected PR path; do not bypass the production-readiness workflow.
 
 Validated evidence expires after the contract's `maxEvidenceAgeDays` window and fails closed if learner-facing public runtime bytes change. Source-SHA-only deployment metadata changes do not invalidate otherwise identical runtime evidence.
