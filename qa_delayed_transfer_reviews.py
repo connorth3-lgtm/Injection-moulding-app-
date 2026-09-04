@@ -40,15 +40,13 @@ node_qa = r'''
 const fs=require('fs'),vm=require('vm'),assert=require('assert');
 const DAY=86400000,T0=Date.parse('2026-01-01T00:00:00.000Z');
 let now=T0+7*DAY;
+class MockDate extends Date { static now(){return now;} }
 const store=[];
 const api={
   events:()=>store.slice(),
-  record:(type,data)=>{const e={v:2,t:new Date(now).toISOString(),type,...data};store.push(e);return e;}
+  record:(type,data)=>{const e={v:2,t:new MockDate(now).toISOString(),type,...data};store.push(e);return e;}
 };
-const context={window:{MM_ACTIVITY_EVENTS_V2:api},Date:Object.create(Date),console};
-context.Date.now=()=>now;
-context.Date.parse=Date.parse;
-context.Date.prototype=Date.prototype;
+const context={window:{MM_ACTIVITY_EVENTS_V2:api},Date:MockDate,console};
 vm.createContext(context);
 vm.runInContext(fs.readFileSync('src/domains/learning/delayed-transfer-reviews.js','utf8'),context);
 const dtr=context.window.MM_DELAYED_TRANSFER_REVIEWS;
@@ -60,7 +58,9 @@ assert.equal(q.items.length,2);
 assert.equal(q.summary.upcoming,2);
 assert.equal(q.items.find(x=>x.window==='7d').status,'upcoming');
 const stable=q.items.map(x=>x.reviewKey);
+assert(stable.every(x=>/^dtr:[0-9a-f]{16}:(7d|30d)$/.test(x)));
 assert.deepEqual(stable,dtr.project({events:[anchor],nowMs:T0+6*DAY}).items.map(x=>x.reviewKey));
+assert.equal(dtr.project({events:[anchor,{...anchor}],nowMs:T0+6*DAY}).items.length,2);
 q=dtr.project({events:[anchor],nowMs:T0+7*DAY});
 assert.equal(q.items.find(x=>x.window==='7d').status,'due');
 assert.equal(q.items.find(x=>x.window==='30d').status,'upcoming');
