@@ -22,6 +22,8 @@ import subprocess
 import time
 from urllib.parse import urlsplit, urlencode
 
+from verify_main_ruleset import verify as verify_main_ruleset
+
 API = "https://api.github.com"
 PROVENANCE_ATTEMPTS = 20
 RECENT_MAIN_PULL_LIMIT = 100
@@ -168,9 +170,11 @@ def verify(token: str, repository: str, source_sha: str, require_native_protecti
 
     branch = request_json(token, f"{API}/repos/{repository}/branches/main")
     protected = bool((branch or {}).get("protected")) if isinstance(branch, dict) else False
-    if require_native_protection and not protected:
-        raise SystemExit("Native main protection is required for this production operation but GitHub reports protected=false")
-    if not protected:
+    if require_native_protection:
+        if not protected:
+            raise SystemExit("Native main protection is required for this production operation but GitHub reports protected=false")
+        verify_main_ruleset(repository)
+    elif not protected:
         print("::warning::GitHub still reports main protected=false; merged-PR provenance is enforced here before publication, but native prevention remains pending issue #43.")
 
     print(
