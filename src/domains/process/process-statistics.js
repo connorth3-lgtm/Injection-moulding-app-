@@ -1,12 +1,12 @@
-/* MouldMaster site-local process statistics — 2026.09.04.1 */
+/* MouldMaster site-local process statistics — 2026.09.04.2 */
 (function(root,factory){
 'use strict';
 const api=factory(root||null);
 if(typeof module==='object'&&module.exports)module.exports=api;
-if(root&&!root.MM_PROCESS_STATISTICS)root.MM_PROCESS_STATISTICS=Object.freeze({...api,version:'2026.09.04.1'});
+if(root&&!root.MM_PROCESS_STATISTICS)root.MM_PROCESS_STATISTICS=Object.freeze({...api,version:'2026.09.04.2'});
 })(typeof window!=='undefined'?window:(typeof globalThis!=='undefined'?globalThis:null),function(root){
 'use strict';
-const VERSION='2026.09.04.1';
+const VERSION='2026.09.04.2';
 const BOUNDARY='Descriptive site-local statistical evidence only. Missingness, run rules, autocorrelation, approximate confidence intervals, effect sizes, stratification and variance decomposition are attention aids; they are not specification limits, validated process windows, causal proof, machine safety limits or automatic production-change authority.';
 const DIMENSIONS=Object.freeze({
  machine:['machine','machine_id'],
@@ -21,7 +21,7 @@ function mean(a){return a.length?a.reduce((s,x)=>s+x,0)/a.length:null}
 function variance(a,m=mean(a)){if(a.length<2||m==null)return null;return a.reduce((s,x)=>s+(x-m)*(x-m),0)/(a.length-1)}
 function sd(a){const v=variance(a);return v==null?null:Math.sqrt(v)}
 function summary(values,totalRows=null){
- const source=values||[],a=finite(source),rows=Number.isFinite(Number(totalRows))?Number(totalRows):source.length,m=mean(a),s=sd(a);
+ const source=values||[],a=finite(source),explicitRows=number(totalRows),rows=explicitRows!==null?explicitRows:source.length,m=mean(a),s=sd(a);
  return{n:a.length,rows,missing:Math.max(0,rows-a.length),missingRate:rows?Math.max(0,rows-a.length)/rows:null,mean:m,sd:s,min:a.length?Math.min(...a):null,max:a.length?Math.max(...a):null};
 }
 function lag1Autocorrelation(values){
@@ -43,7 +43,7 @@ function contiguousSegments(values){
 }
 function sideBeyond(v,c,multiple,s){return v>c+multiple*s?1:v<c-multiple*s?-1:0}
 function spcRunRules(values,centre=null,sigma=null){
- const numeric=finite(values),c=Number.isFinite(Number(centre))?Number(centre):mean(numeric),s=Number.isFinite(Number(sigma))&&Number(sigma)>0?Number(sigma):sd(numeric),events=[];
+ const numeric=finite(values),suppliedCentre=number(centre),suppliedSigma=number(sigma),c=suppliedCentre!==null?suppliedCentre:mean(numeric),s=suppliedSigma!==null&&suppliedSigma>0?suppliedSigma:sd(numeric),events=[];
  if(numeric.length<2||!Number.isFinite(c)||!Number.isFinite(s)||s<=0)return{n:numeric.length,centre:c,sigma:s,events,flags:[],missingBreaks:(values||[]).length-numeric.length,boundary:'Insufficient variation/sample for run-rule screening. '+BOUNDARY};
  const push=(rule,a,b,side,detail)=>events.push({rule,startIndex:a,endIndex:b,side,detail});
  for(const seg of contiguousSegments(values)){
@@ -85,8 +85,7 @@ function cavityVariance(rows,channel){
 }
 function semanticStatus(channel,options={}){
  const registry=options.signalRegistry||root?.MM_SIGNAL_REGISTRY||null;if(!registry?.resolve)return{status:'review-required',canonicalId:null,reason:'Canonical signal registry is unavailable; statistics are not engineering-ready evidence.'};
- const resolved=registry.resolve(channel,{unit:options.unit??null,role:options.role??null,confirmed:options.confirmed===true});
- return resolved;
+ return registry.resolve(channel,{unit:options.unit??null,role:options.role??null,confirmed:options.confirmed===true});
 }
 function channelDiagnostics(rows,channel,options={}){
  const values=(rows||[]).map(r=>r?.[channel]),s=summary(values,(rows||[]).length),semantics=semanticStatus(channel,options.semantic||options),acf=lag1Autocorrelation(values),spc=spcRunRules(values,options.centre,options.sigma),strata=stratify(rows,channel),cavity=cavityVariance(rows,channel);
