@@ -21,8 +21,9 @@ const assert=require('assert');
     body:{appendChild(script){sandbox.window.MM_LEARNING_ANALYTICS={version:'test'};script.onload?.()}},
   };
   const sandbox={
-    user:{role:'learner'},document,console,encodeURIComponent,queueMicrotask:fn=>fn(),
-    window:{MM_LEARNER_SCOPE:{},addEventListener(type,fn){listeners.window[type]=fn}},
+    user:{role:'learner'},document,console,encodeURIComponent,queueMicrotask:fn=>fn(),Blob:function(){},URL:{createObjectURL:()=> 'blob:test',revokeObjectURL:()=>{}},
+    window:{MM_LEARNER_SCOPE:{token:()=> 'learner',storageKey:(prefix,token)=>`${prefix}${token}`},addEventListener(type,fn){listeners.window[type]=fn}},
+    localStorage:{length:0,key:()=>null,getItem:()=>null},
   };
   sandbox.window.window=sandbox.window;sandbox.window.document=document;sandbox.window.toast=()=>{};
   vm.createContext(sandbox);vm.runInContext(source,sandbox,{filename:'learning-analytics-loader.js'});
@@ -35,9 +36,11 @@ const assert=require('assert');
   sandbox.user.role='instructor';
   assert.strictEqual(sandbox.window.MM_LEARNING_ANALYTICS_ACCESS.enforce(),true,'instructor role was not recognized');
   assert.strictEqual(exportNode.hidden,false,'instructor export control remained hidden');
+  assert(sandbox.window.MM_LEARNING_ANALYTICS_QUALITY,'corrected analytics quality bridge did not install');
   const instructorEvent={target:{closest:()=>exportNode},prevented:false,stopped:false,preventDefault(){this.prevented=true},stopImmediatePropagation(){this.stopped=true}};
   listeners.document.click.fn(instructorEvent);
-  assert.strictEqual(instructorEvent.prevented,false,'instructor export activation was incorrectly blocked');
+  assert.strictEqual(instructorEvent.prevented,true,'instructor export was not intercepted before the legacy mixed-profile exporter');
+  assert.strictEqual(instructorEvent.stopped,true,'instructor export reached the legacy mixed-profile handler');
 }
 
 // Finding 2: formal assessment evidence must carry the real persisted assessment
@@ -50,11 +53,11 @@ const assert=require('assert');
   vm.createContext(sandbox);vm.runInContext(learnerSource,sandbox,{filename:'learner-model.js'});
   let model=window.MM_LEARNER_MODEL.build();
   for(const key of ['competency:process-control','concept:fill-balance']){
-    const row=model.topics.find(x=>x.key===key);assert(row,`formal assessment topic missing: ${key}`);assert.strictEqual(row.last,assessedAt,`assessment recency timestamp was lost for ${key}`);assert(row.activityTypes.includes('formal-assessment'));
+    const row=model.topics.find(x=>x.key===key);assert(row,`formal assessment topic missing: ${key}`);assert.strictEqual(row.last,assessedAt,`assessment recency timestamp was lost for ${key}`);assert(row.activityTypes.includes('formal-assessment'));assert.strictEqual(row.recencyKnown,true);
   }
   window.MM_ACTIVITY_EVENTS_V2={events:()=>[],assessmentSnapshot:()=>({questions:[{attempts:1,correct:1,wrong:0,competency:'legacy-topic',concept:'',last:null}]})};
   model=window.MM_LEARNER_MODEL.build();
-  const legacy=model.topics.find(x=>x.key==='competency:legacy-topic');assert(legacy);assert.strictEqual(legacy.last,null,'legacy assessment recency was fabricated from the current time');
+  const legacy=model.topics.find(x=>x.key==='competency:legacy-topic');assert(legacy);assert.strictEqual(legacy.last,null,'legacy assessment recency was fabricated from the current time');assert.strictEqual(legacy.recencyKnown,false,'legacy assessment recency was incorrectly treated as known');assert.strictEqual(legacy.forgettingRisk,null,'legacy assessment recency was converted into synthetic forgetting risk');
   const activitySource=fs.readFileSync('src/domains/learning/activity-events-v2.js','utf8');
   assert(activitySource.includes('last:q.last||null'),'assessment activity projection no longer preserves analytics timestamps');
 }
@@ -77,3 +80,8 @@ const assert=require('assert');
 }
 
 console.log('Audit remediation runtime QA passed: instructor-only cross-profile export, persisted formal-assessment recency and fail-closed inadequate-sample confidence intervals verified.');
+
+// Keep the next-stage learner-model and analytics-quality decision pipelines inside the
+// mandatory Release QA context that originally caught the audited data-quality regressions.
+require('./qa_learner_recommendation_pipeline.cjs');
+require('./qa_learning_analytics_quality.cjs');

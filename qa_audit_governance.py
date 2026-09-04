@@ -42,6 +42,8 @@ need(pages.count("id-token: write") == 1, "OIDC write permission must be limited
 for marker in (
     "Validate physical PWA evidence contract on PRs",
     "--contract-only",
+    "Report exact public-runtime fingerprint for physical-device validation",
+    "--artifact .pages-dist --print-fingerprint",
     "Evaluate physical-device production readiness",
     'production_ready: ${{ steps.physical-readiness.outputs.production_ready }}',
     'id: physical-readiness',
@@ -117,4 +119,4 @@ self_test = subprocess.run(
 )
 need(self_test.returncode == 0, f"ruleset verifier self-test failed: {self_test.stderr or self_test.stdout}")
 
-print("Audit governance QA passed: least-privilege Pages permissions, non-error pending release readiness with fail-closed publication, live branch-prune SHA recheck and fail-closed ruleset bypass verification are enforced.")
+print("Audit governance QA passed: least-privilege Pages permissions, physical-test runtime fingerprint reporting, non-error pending release readiness with fail-closed publication, live branch-prune SHA recheck and fail-closed ruleset bypass verification are enforced.")
