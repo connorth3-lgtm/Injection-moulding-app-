@@ -71,7 +71,7 @@ function installQuality(){
   api.exportAnonymousSummary=exportAnonymousSummary;
   api.open=function(){const r=baseOpen?.apply(this,arguments);queueMicrotask(patchRenderedMetrics);return r};
   api.__mmQualityCorrected=true;
-  window.MM_LEARNING_ANALYTICS_QUALITY=Object.freeze({aggregate,cohortSummary:api.cohortSummary,exportAnonymousSummary,scope:'Retry gain is latest completed attempt minus first completed attempt. Cross-profile aggregation preserves anonymous learner boundaries. Legacy learner buckets with ambiguous or unproven local ownership are excluded rather than assigned to a profile.'});
+  window.MM_LEARNING_ANALYTICS_QUALITY=Object.freeze({aggregate,cohortSummary:api.cohortSummary,exportAnonymousSummary,scope:'Retry gain is latest completed attempt minus first completed attempt. Cross-profile aggregation namespaces case sequences by anonymous learner profile and preserves anonymous learner boundaries. Legacy learner buckets with ambiguous or unproven local ownership are excluded rather than assigned to a profile.'});
   queueMicrotask(patchRenderedMetrics);
 }
 function guardExport(event){
