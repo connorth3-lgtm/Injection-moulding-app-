@@ -104,18 +104,34 @@ assets = manifest.get("assets", [])
 activity_asset = "./src/domains/learning/activity-events-v2.js"
 learner_asset = "./src/domains/learning/learner-model.js"
 review_asset = "./src/domains/learning/delayed-transfer-reviews.js"
+content_asset = "./src/domains/learning/content-intelligence.js"
 need(review_asset in assets, "delayed transfer module missing from runtime manifest")
 need(assets.index(activity_asset) < assets.index(review_asset), "activity events must load before delayed transfer reviews")
 need(assets.index(learner_asset) < assets.index(review_asset), "learner model must load before delayed transfer reviews")
+need(assets.index(review_asset) < assets.index(content_asset), "delayed transfer reviews must load before content intelligence")
 
 generator = (ROOT / "tools/generate_runtime_manifest.py").read_text(encoding="utf-8")
 need(review_asset in generator, "runtime manifest generator missing delayed transfer priority asset")
 sw = (ROOT / "service-worker.js").read_text(encoding="utf-8")
 need(f"'{review_asset}'" in sw, "delayed transfer module missing from atomic offline core")
 
+content = (ROOT / "src/domains/learning/content-intelligence.js").read_text(encoding="utf-8")
+for marker in [
+    "MM_DELAYED_TRANSFER_REVIEWS?.project",
+    "Delayed reviews due",
+    "Delayed transfer reviews",
+    "7-day and 30-day retrieval checks",
+    "not competence sign-off",
+    "status==='due'||x.status==='overdue'",
+]:
+    need(marker in content, f"content intelligence delayed-review marker missing: {marker}")
+need("reviewKey" not in content, "data intelligence UI must not expose internal delayed-review keys")
+p = subprocess.run(["node", "--check", str(ROOT / "src/domains/learning/content-intelligence.js")], capture_output=True, text=True)
+need(p.returncode == 0, "content intelligence syntax failed: " + p.stderr)
+
 release = (ROOT / ".github/workflows/qa.yml").read_text(encoding="utf-8")
 mobile = (ROOT / ".github/workflows/mobile-browser-qa.yml").read_text(encoding="utf-8")
 need("python qa_delayed_transfer_reviews.py" in release, "release QA does not run delayed transfer review QA")
 need("python qa_delayed_transfer_reviews.py" in mobile, "mobile QA does not run delayed transfer review QA")
 
-print("MouldMaster delayed transfer review QA passed (deterministic 7d/30d projection + local outcome evidence)")
+print("MouldMaster delayed transfer review QA passed (deterministic 7d/30d projection + local Data Intelligence surface)")
