@@ -13,9 +13,12 @@ jobs:
   enforce-pr-provenance:
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout policy verifier
+        uses: actions/checkout@v7
       - name: Audit merged-PR provenance, native protection and required checks
         env:
           GH_TOKEN: ${{ github.token }}
+          GITHUB_TOKEN: ${{ github.token }}
           GH_REPO: ${{ github.repository }}
           HEAD_SHA: ${{ github.sha }}
         shell: bash
@@ -36,6 +39,7 @@ jobs:
           if [[ "$protected" != "true" ]]; then
             fail_audit "GitHub reports main protected=false. Native main protection is required; this audit will not mutate or roll back main."
           fi
+          python3 tools/verify_main_ruleset.py --repository "$GH_REPO"
 
           # GitHub's commit-to-PR association can lag immediately after a merge.
           # Cross-check the exact merge SHA through two read-only indexes.
@@ -118,4 +122,4 @@ jobs:
             fail_audit "Required PR workflows are not all successful for merged PR #$PR_NUMBER. No rollback was attempted; native protection is authoritative."
           fi
 
-          echo "Native main protection, merged PR provenance and all required pre-merge workflows are verified."
+          echo "Exact native main ruleset, merged PR provenance and all required pre-merge workflows are verified."
