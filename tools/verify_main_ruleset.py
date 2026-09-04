@@ -1,5 +1,12 @@
 #!/usr/bin/env python3
-"""Verify that GitHub's effective native ruleset matches MouldMaster main policy."""
+"""Verify that GitHub's effective native ruleset matches MouldMaster main policy.
+
+GitHub Actions' repository-scoped GITHUB_TOKEN can read the effective ruleset but may
+redact ``bypass_actors`` even when an administrator-readable ruleset detail response
+contains the field. Missing bypass metadata therefore uses a repository attestation
+only when it is bound to the exact live ruleset id + updated_at value. Any live
+ruleset update invalidates the attestation and fails closed until re-verified.
+"""
 from __future__ import annotations
 
 import argparse
@@ -7,10 +14,12 @@ import json
 import os
 import shutil
 import subprocess
+from pathlib import Path
 
 RULESET_NAME = "Protect main — MouldMaster required gates"
 MAIN_REF = "refs/heads/main"
 GITHUB_ACTIONS_APP_ID = 15368
+ATTESTATION_PATH = Path(__file__).resolve().parents[1] / ".github" / "main-ruleset-attestation.json"
 REQUIRED_CONTEXTS = {
     "integrity",
     "mobile-browser",
@@ -52,6 +61,18 @@ def gh_json(endpoint: str) -> object:
         raise SystemExit("Native main ruleset verification failed: GitHub returned invalid JSON") from exc
 
 
+def load_attestation(path: Path = ATTESTATION_PATH) -> dict | None:
+    if not path.exists():
+        return None
+    try:
+        payload = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError) as exc:
+        fail(f"ruleset bypass attestation is unreadable or invalid JSON: {path}")
+    if not isinstance(payload, dict):
+        fail("ruleset bypass attestation must be a JSON object")
+    return payload
+
+
 def rule_by_type(detail: dict, rule_type: str) -> dict | None:
     for rule in detail.get("rules") or []:
         if isinstance(rule, dict) and rule.get("type") == rule_type:
@@ -59,7 +80,43 @@ def rule_by_type(detail: dict, rule_type: str) -> dict | None:
     return None
 
 
-def valid_main_ruleset(detail: object) -> tuple[bool, list[str]]:
+def bypass_errors(detail: dict, attestation: dict | None, repository: str | None) -> list[str]:
+    """Verify no bypass actors, using exact-version attestation only for API redaction."""
+    errors: list[str] = []
+    bypass = detail.get("bypass_actors", "__missing__")
+    if bypass != "__missing__":
+        if bypass != []:
+            errors.append("bypass_actors must be present and empty")
+        current = detail.get("current_user_can_bypass")
+        if current is not None and current != "never":
+            errors.append(f"current_user_can_bypass must be 'never' when reported, got {current!r}")
+        return errors
+
+    if not isinstance(attestation, dict):
+        return ["bypass_actors is redacted/missing and no exact-version administrator attestation is available"]
+    if attestation.get("schema") != 1:
+        errors.append("bypass attestation schema must be 1")
+    if attestation.get("source") != "admin-verified-ruleset-detail":
+        errors.append("bypass attestation source is not administrator-verified ruleset detail")
+    if repository is not None and attestation.get("repository") != repository:
+        errors.append("bypass attestation repository does not match the repository being verified")
+    if attestation.get("ruleset_id") != detail.get("id"):
+        errors.append("bypass attestation ruleset_id does not match the live ruleset")
+    live_updated = detail.get("updated_at")
+    if not live_updated or attestation.get("ruleset_updated_at") != live_updated:
+        errors.append("bypass attestation does not match the live ruleset updated_at value")
+    if attestation.get("bypass_actors", "__missing__") != []:
+        errors.append("bypass attestation must explicitly record an empty bypass_actors list")
+    if attestation.get("current_user_can_bypass") != "never":
+        errors.append("bypass attestation must record current_user_can_bypass='never'")
+    return errors
+
+
+def valid_main_ruleset(
+    detail: object,
+    attestation: dict | None = None,
+    repository: str | None = None,
+) -> tuple[bool, list[str]]:
     """Validate protection semantics; the human-readable ruleset name is not authoritative."""
     if not isinstance(detail, dict):
         return False, ["ruleset detail is not an object"]
@@ -68,9 +125,7 @@ def valid_main_ruleset(detail: object) -> tuple[bool, list[str]]:
         errors.append("target must be branch")
     if detail.get("enforcement") != "active":
         errors.append("enforcement must be active")
-    bypass = detail.get("bypass_actors", "__missing__")
-    if bypass != []:
-        errors.append("bypass_actors must be present and empty")
+    errors.extend(bypass_errors(detail, attestation, repository))
 
     ref_name = ((detail.get("conditions") or {}).get("ref_name") or {})
     include = ref_name.get("include") or []
@@ -125,6 +180,7 @@ def verify(repository: str) -> None:
     if not active_branch_rows:
         fail("no active branch rulesets are visible")
 
+    attestation = load_attestation()
     overbroad: list[str] = []
     candidates: list[tuple[str, list[str]]] = []
     matches: list[str] = []
@@ -144,7 +200,7 @@ def verify(repository: str) -> None:
             continue
         if include != [MAIN_REF] or exclude:
             continue
-        ok, errors = valid_main_ruleset(detail)
+        ok, errors = valid_main_ruleset(detail, attestation, repository)
         if ok:
             matches.append(name)
         else:
@@ -167,10 +223,13 @@ def verify(repository: str) -> None:
 
 def self_test() -> None:
     good = {
+        "id": 123,
+        "updated_at": "2026-09-04T00:00:00Z",
         "name": RULESET_NAME,
         "target": "branch",
         "enforcement": "active",
         "bypass_actors": [],
+        "current_user_can_bypass": "never",
         "conditions": {"ref_name": {"include": [MAIN_REF], "exclude": []}},
         "rules": [
             {"type": "deletion"},
@@ -192,12 +251,34 @@ def self_test() -> None:
     renamed = json.loads(json.dumps(good))
     renamed["name"] = "connor"
     assert valid_main_ruleset(renamed)[0], "ruleset display name must not affect semantic validity"
+
+    matching_attestation = {
+        "schema": 1,
+        "source": "admin-verified-ruleset-detail",
+        "repository": "example/project",
+        "ruleset_id": 123,
+        "ruleset_updated_at": "2026-09-04T00:00:00Z",
+        "bypass_actors": [],
+        "current_user_can_bypass": "never",
+    }
     missing_bypass = json.loads(json.dumps(good))
     missing_bypass.pop("bypass_actors")
-    assert not valid_main_ruleset(missing_bypass)[0], "missing bypass metadata must fail closed"
+    assert not valid_main_ruleset(missing_bypass)[0], "missing bypass metadata without attestation must fail closed"
+    assert valid_main_ruleset(missing_bypass, matching_attestation, "example/project")[0], "exact-version attestation must cover Actions API redaction"
+    stale_attestation = dict(matching_attestation, ruleset_updated_at="2026-09-03T00:00:00Z")
+    assert not valid_main_ruleset(missing_bypass, stale_attestation, "example/project")[0], "stale bypass attestation must fail closed"
+    wrong_ruleset = dict(matching_attestation, ruleset_id=999)
+    assert not valid_main_ruleset(missing_bypass, wrong_ruleset, "example/project")[0], "attestation for another ruleset must fail closed"
+    nonempty_attestation = dict(matching_attestation, bypass_actors=[{"actor_type": "RepositoryRole", "actor_id": 5}])
+    assert not valid_main_ruleset(missing_bypass, nonempty_attestation, "example/project")[0], "non-empty bypass attestation must fail closed"
+
     null_bypass = json.loads(json.dumps(good))
     null_bypass["bypass_actors"] = None
-    assert not valid_main_ruleset(null_bypass)[0], "null bypass metadata must fail closed"
+    assert not valid_main_ruleset(null_bypass, matching_attestation, "example/project")[0], "explicit null bypass metadata must fail closed"
+    nonempty_bypass = json.loads(json.dumps(good))
+    nonempty_bypass["bypass_actors"] = [{"actor_type": "RepositoryRole", "actor_id": 5}]
+    assert not valid_main_ruleset(nonempty_bypass, matching_attestation, "example/project")[0], "explicit bypass actors must fail closed"
+
     bad_case = json.loads(json.dumps(good))
     bad_case["conditions"]["ref_name"]["include"] = ["refs/heads/Main"]
     assert not valid_main_ruleset(bad_case)[0]
