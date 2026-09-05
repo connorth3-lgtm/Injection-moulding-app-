@@ -3,8 +3,8 @@
 
 Only injection-moulding records are selected using the source-documented I/INY machine
 prefix rule already used by the governed benchmark. Raw workbook rows and product names
-are never emitted. The outputs are numeric source-order representations for later review,
-not promoted learner cases.
+are never emitted. Candidate windows must also meet an explicit numeric-evidence floor
+for every learner-facing channel; record count alone never makes a group eligible.
 """
 from __future__ import annotations
 
@@ -22,6 +22,8 @@ from prove_mendeley_open_sources import SOURCES, public_files, resolve_file, dow
 
 OUT=Path('measured-source-proof/gtnb-unreviewed-learning-candidates.json')
 EXPECTED_ROWS=4502
+WINDOW_SIZE=400
+MIN_NUMERIC_PER_REQUIRED_CHANNEL=20
 HEADER_MAP={
     'Maquina':'machine', 'Nombre_producto':'product', 'Peso_producto_gramos':'Product_Weight',
     'Peso_prom_bruto':'Avg_Gross_Weight', 'Consumo_PP_kilos':'PP_Consumption',
@@ -47,6 +49,10 @@ CHANNEL_META={
     'Ejection_Time_Injection':('recorded-injection-ejection-time','s'),
     'Retention_Time_Injection':('recorded-holding-time','s'), 'Injection_Speed':('recorded-injection-speed','mm/s'),
 }
+GROUP_CHANNELS=['Product_Weight','Cycle_Time','Injection_Pressure','Melt_Temp']
+QUALITY_CHANNELS=['Injection_Pressure','Retention_Pressure','Mold_Temp','Flash_kg','Defective_kg','%Flash','%Defective']
+PROCESS_CHANNELS=['Cycle_Time','Cooling_Time_Injection','Ejection_Time_Injection','Retention_Time_Injection','Injection_Speed','Product_Weight']
+
 
 def canonical_sha(value):
     raw=json.dumps(value,sort_keys=True,separators=(',',':'),ensure_ascii=False).encode('utf-8')
@@ -63,16 +69,45 @@ def download_verified():
     if digest!=expected_sha: td.cleanup(); raise RuntimeError(f'GTNB SHA mismatch: {digest}')
     return path,td,'sha256:'+digest
 
-def uniform_sample(rows, limit=400):
-    if len(rows)<=limit: return rows
-    idx=sorted({round(i*(len(rows)-1)/(limit-1)) for i in range(limit)})
-    return [rows[i] for i in idx]
+def numeric_counts(rows, channels):
+    return {ch:sum(1 for r in rows if finite(r.get(ch))) for ch in channels}
+
+def best_contiguous_window(rows, channels, size=WINDOW_SIZE):
+    """Return the source-order window maximizing weakest-channel coverage, then total coverage.
+
+    Ties resolve to the earliest source-order window. This is deterministic and does not
+    sort observations by measured values.
+    """
+    if not rows: return [], {}, 0
+    if len(rows)<=size:
+        counts=numeric_counts(rows,channels)
+        return list(rows),counts,0
+    counts={ch:0 for ch in channels}
+    for r in rows[:size]:
+        for ch in channels:
+            counts[ch]+=int(finite(r.get(ch)))
+    best_start=0; best_counts=dict(counts); best_score=(min(counts.values()),sum(counts.values()))
+    for start in range(1,len(rows)-size+1):
+        outgoing=rows[start-1]; incoming=rows[start+size-1]
+        for ch in channels:
+            counts[ch]-=int(finite(outgoing.get(ch)))
+            counts[ch]+=int(finite(incoming.get(ch)))
+        score=(min(counts.values()),sum(counts.values()))
+        if score>best_score:
+            best_start=start; best_counts=dict(counts); best_score=score
+    return rows[best_start:best_start+size],best_counts,best_start
+
+def require_numeric_floor(label, counts):
+    weak={ch:n for ch,n in counts.items() if n<MIN_NUMERIC_PER_REQUIRED_CHANNEL}
+    if weak:
+        raise RuntimeError(f'{label}: numeric evidence floor {MIN_NUMERIC_PER_REQUIRED_CHANNEL} not met: {weak}')
 
 def signal(channel, rows):
     semantic,unit=CHANNEL_META[channel]; points=[r for r in rows if finite(r[channel])]
     xs=[float(r['_sourceRow']) for r in points]; ys=[float(r[channel]) for r in points]
-    if len(xs)<2: raise RuntimeError(f'{channel}: insufficient numeric values')
-    rep={'xSemantic':'observation-index','xUnit':'index','xDirection':'increasing','reductionMethod':'deterministic-source-row-selection-no-interpolation','originalPointCount':len(rows),'x':xs,'y':ys}
+    if len(xs)<MIN_NUMERIC_PER_REQUIRED_CHANNEL:
+        raise RuntimeError(f'{channel}: expected >= {MIN_NUMERIC_PER_REQUIRED_CHANNEL} numeric values, got {len(xs)}')
+    rep={'xSemantic':'observation-index','xUnit':'index','xDirection':'increasing','reductionMethod':'coverage-qualified-source-order-window-no-interpolation','originalPointCount':len(rows),'x':xs,'y':ys}
     return {'id':channel.lower().replace('%','pct-'),'label':channel.replace('_',' '),'sourceChannel':channel,'semantic':semantic,'unit':unit,'representation':rep,'representationFingerprint':canonical_sha(rep)}
 def candidate(cid, rows, channels, suggested, selection, source_fp):
     sigs=[signal(ch,rows) for ch in channels]
@@ -103,18 +138,45 @@ def main():
                 row[canonical]=float(v) if finite(v) else None
             rows.append(row); groups[(machine,product)].append(row)
         if len(rows)!=EXPECTED_ROWS: raise RuntimeError(f'GTNB injection-row count drift: {len(rows)}')
-        largest_key,largest_rows=max(groups.items(),key=lambda kv:(len(kv[1]),kv[0][0],kv[0][1]))
+
+        eligible_groups=[]; best_failed=None
+        for key,group_source_rows in groups.items():
+            displayed,counts,start=best_contiguous_window(group_source_rows,GROUP_CHANNELS)
+            score=(min(counts.values()),sum(counts.values()),len(group_source_rows))
+            if best_failed is None or score>best_failed[0]: best_failed=(score,counts,len(group_source_rows))
+            if min(counts.values())>=MIN_NUMERIC_PER_REQUIRED_CHANNEL:
+                eligible_groups.append((key,group_source_rows,displayed,counts,start))
+        if not eligible_groups:
+            summary={'bestWindowCounts':best_failed[1] if best_failed else {},'bestGroupRecordCount':best_failed[2] if best_failed else 0}
+            raise RuntimeError(f'GTNB no machine/product group meets numeric evidence floor {MIN_NUMERIC_PER_REQUIRED_CHANNEL}: {summary}')
+        largest_key,largest_source_rows,group_rows,group_counts,group_start=max(
+            eligible_groups,key=lambda item:(len(item[1]),min(item[3].values()),sum(item[3].values()),item[0][0],item[0][1]))
+        require_numeric_floor('GTNB selected product group',group_counts)
         group_alias='sha256:'+hashlib.sha256(('\u241f'.join(largest_key)).encode('utf-8')).hexdigest()
-        group_rows=uniform_sample(largest_rows,400); all_rows=uniform_sample(rows,400)
-        middle_start=max(0,(len(rows)-400)//2); middle_rows=rows[middle_start:middle_start+400]
+
+        quality_rows,quality_counts,quality_start=best_contiguous_window(rows,QUALITY_CHANNELS)
+        require_numeric_floor('GTNB quality window',quality_counts)
+        process_rows,process_counts,process_start=best_contiguous_window(rows,PROCESS_CHANNELS)
+        require_numeric_floor('GTNB process window',process_counts)
+
         candidates=[
-            candidate('GTNB-LARGEST-PRODUCT-GROUP-01',group_rows,['Product_Weight','Cycle_Time','Injection_Pressure','Melt_Temp'],['MLM-004','MLM-007','MLM-019','MLM-067'],{'selection':'largest injection machine/product group by delivered record count','groupAlias':group_alias,'groupSourceRecordCount':len(largest_rows),'displayedRecords':len(group_rows)},fp),
-            candidate('GTNB-QUALITY-ASSOCIATION-01',all_rows,['Injection_Pressure','Retention_Pressure','Mold_Temp','Flash_kg','Defective_kg','%Flash','%Defective'],['MLM-038','MLM-040'],{'selection':'uniform deterministic sample across all delivered injection records','sourceInjectionRecords':len(rows),'displayedRecords':len(all_rows)},fp),
-            candidate('GTNB-MIDDLE-PROCESS-WINDOW-01',middle_rows,['Cycle_Time','Cooling_Time_Injection','Ejection_Time_Injection','Retention_Time_Injection','Injection_Speed','Product_Weight'],['MLM-019','MLM-038','MLM-067'],{'selection':'contiguous middle 400 injection records in delivered source order','injectionOrdinalStart':middle_start,'injectionOrdinalEndExclusive':middle_start+len(middle_rows)},fp),
+            candidate('GTNB-LARGEST-PRODUCT-GROUP-01',group_rows,GROUP_CHANNELS,['MLM-004','MLM-007','MLM-019','MLM-067'],{
+                'selection':'largest injection machine/product group whose best bounded source-order window meets the numeric evidence floor for every required learner channel',
+                'minimumNumericValuesPerRequiredChannel':MIN_NUMERIC_PER_REQUIRED_CHANNEL,'groupAlias':group_alias,
+                'groupSourceRecordCount':len(largest_source_rows),'selectedGroupOrdinalStart':group_start,
+                'displayedRecords':len(group_rows),'numericCountsByChannel':group_counts},fp),
+            candidate('GTNB-QUALITY-ASSOCIATION-01',quality_rows,QUALITY_CHANNELS,['MLM-038','MLM-040'],{
+                'selection':'bounded contiguous injection-record window maximizing weakest required-channel numeric coverage without sorting measured values',
+                'minimumNumericValuesPerRequiredChannel':MIN_NUMERIC_PER_REQUIRED_CHANNEL,'sourceInjectionRecords':len(rows),
+                'selectedInjectionOrdinalStart':quality_start,'displayedRecords':len(quality_rows),'numericCountsByChannel':quality_counts},fp),
+            candidate('GTNB-PROCESS-WINDOW-01',process_rows,PROCESS_CHANNELS,['MLM-019','MLM-038','MLM-067'],{
+                'selection':'bounded contiguous injection-record window maximizing weakest required-channel numeric coverage without sorting measured values',
+                'minimumNumericValuesPerRequiredChannel':MIN_NUMERIC_PER_REQUIRED_CHANNEL,'sourceInjectionRecords':len(rows),
+                'selectedInjectionOrdinalStart':process_start,'displayedRecords':len(process_rows),'numericCountsByChannel':process_counts},fp),
         ]
-        result={'schemaVersion':1,'status':'unreviewed-source-derived-candidates','promotionEligible':False,'candidateCount':len(candidates),'candidates':candidates,'boundary':'Authoring evidence only. Product and machine identifiers are not emitted; the largest group is represented only by a one-way hash alias. Independent engineering review and case-specific binding remain mandatory.'}
+        result={'schemaVersion':1,'status':'unreviewed-source-derived-candidates','promotionEligible':False,'candidateCount':len(candidates),'numericEvidenceFloorPerRequiredChannel':MIN_NUMERIC_PER_REQUIRED_CHANNEL,'candidates':candidates,'boundary':'Authoring evidence only. Product and machine identifiers are not emitted; the selected group is represented only by a one-way hash alias. Candidate selection is based on bounded numeric evidence coverage, not outcome magnitude. Independent engineering review and case-specific binding remain mandatory.'}
         OUT.parent.mkdir(parents=True,exist_ok=True); OUT.write_text(json.dumps(result,indent=2,ensure_ascii=False)+'\n',encoding='utf-8')
-        print(json.dumps({'status':result['status'],'candidateCount':len(candidates),'candidateIds':[c['candidateId'] for c in candidates]},separators=(',',':')))
+        print(json.dumps({'status':result['status'],'candidateCount':len(candidates),'candidateIds':[c['candidateId'] for c in candidates],'selectedGroupNumericCounts':group_counts,'qualityWindowNumericCounts':quality_counts,'processWindowNumericCounts':process_counts},separators=(',',':')))
     finally: td.cleanup()
     return 0
 if __name__=='__main__': raise SystemExit(main())
