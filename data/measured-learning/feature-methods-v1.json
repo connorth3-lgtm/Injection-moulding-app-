@@ -1,0 +1,28 @@
+{
+  "schemaVersion": 1,
+  "registryId": "measured-learning-feature-methods-v1",
+  "methods": [
+    {"id": "mean", "version": 1, "requiresNumeric": true},
+    {"id": "median", "version": 1, "requiresNumeric": true},
+    {"id": "standard_deviation", "version": 1, "requiresNumeric": true},
+    {"id": "interquartile_range", "version": 1, "requiresNumeric": true},
+    {"id": "coefficient_of_variation", "version": 1, "requiresNumeric": true},
+    {"id": "percentile_range", "version": 1, "requiresNumeric": true},
+    {"id": "robust_slope", "version": 1, "requiresNumeric": true},
+    {"id": "early_late_shift", "version": 1, "requiresNumeric": true},
+    {"id": "outlier_frequency", "version": 1, "requiresNumeric": true},
+    {"id": "cycle_to_cycle_delta", "version": 1, "requiresNumeric": true},
+    {"id": "pearson_correlation", "version": 1, "requiresNumeric": true},
+    {"id": "spearman_correlation", "version": 1, "requiresNumeric": true},
+    {"id": "peak_value", "version": 1, "requiresNumeric": true},
+    {"id": "peak_position", "version": 1, "requiresNumeric": true},
+    {"id": "range", "version": 1, "requiresNumeric": true}
+  ],
+  "featureContract": {
+    "methodAndVersionRequired": true,
+    "calculationScopeRequired": true,
+    "inputFingerprintRequired": true,
+    "calculationFingerprintRequired": true,
+    "featureMustNotImplyCausality": true
+  }
+}
