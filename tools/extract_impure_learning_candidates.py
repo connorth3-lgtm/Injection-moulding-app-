@@ -14,13 +14,16 @@ import time
 from datetime import datetime
 from pathlib import Path
 from urllib.error import HTTPError
+from urllib.parse import quote
 from urllib.request import Request, urlopen
 
 ROOT = Path(__file__).resolve().parents[1]
 REGISTRY = ROOT / "data/measured-learning/source-artifacts-v2.json"
 OUT = Path("measured-source-proof/impure-unreviewed-learning-candidates.json")
-RECORD_API = "https://zenodo.org/api/records/6913660"
-USER_AGENT = "MouldMaster-Measured-Learning-ImPure/1.0"
+RECORD_ID = "6913660"
+RECORD_API = f"https://zenodo.org/api/records/{RECORD_ID}"
+DOWNLOAD_BASE = f"https://zenodo.org/records/{RECORD_ID}/files/"
+USER_AGENT = "MouldMaster-Measured-Learning-ImPure/1.1"
 DATASET = "impure-pascoe-2022"
 SELECTED = [250, 251, 252, 253, 254, 255]
 EXPECTED_HEADERS = [
@@ -42,6 +45,8 @@ def canonical_sha(value) -> str:
 
 
 def fetch_json(url: str) -> dict:
+    if url != RECORD_API:
+        raise RuntimeError("ImPure metadata retrieval must use the pinned Zenodo record endpoint")
     for attempt in range(6):
         try:
             with urlopen(Request(url,headers={"User-Agent":USER_AGENT}),timeout=90) as response:
@@ -52,11 +57,22 @@ def fetch_json(url: str) -> dict:
     raise AssertionError("unreachable")
 
 
+def fixed_download_url(name: str) -> str:
+    if not name or "/" in name or "\\" in name or name in {".", ".."}:
+        raise RuntimeError(f"unsafe ImPure publisher filename: {name!r}")
+    return f"{DOWNLOAD_BASE}{quote(name, safe='')}?download=1"
+
+
 def download(url: str, target: Path, expected_size: int | None) -> str:
+    if not url.startswith(DOWNLOAD_BASE):
+        raise RuntimeError("ImPure download destination escaped the pinned Zenodo record")
     digest=hashlib.sha256()
     for attempt in range(6):
         try:
             with urlopen(Request(url,headers={"User-Agent":USER_AGENT}),timeout=120) as response, target.open("wb") as out:
+                final=response.geturl()
+                if not final.startswith(DOWNLOAD_BASE):
+                    raise RuntimeError(f"ImPure download redirected outside the pinned Zenodo record: {final}")
                 for chunk in iter(lambda:response.read(1024*1024),b""):
                     out.write(chunk); digest.update(chunk)
             break
@@ -154,7 +170,7 @@ def main() -> int:
         for cycle,name in zip(SELECTED,expected_names):
             if name not in publisher: raise RuntimeError(f"ImPure publisher file missing: {name}")
             item=publisher[name]; target=root/name
-            digest=download(item["links"]["self"],target,item.get("size"))
+            digest=download(fixed_download_url(name),target,item.get("size"))
             expected=governed_artifacts[name]["sha256"]
             if digest != expected: raise RuntimeError(f"ImPure SHA mismatch: {name}")
             parsed[cycle]=parse_cycle(target); selected.append({"name":name,"sha256":expected})
