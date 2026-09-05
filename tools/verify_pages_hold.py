@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 """Verify the live GitHub Pages release-hold boundary.
 
-The hold publication is intentionally tiny and non-application content. Verification
-proves that the hold marker is live, the privacy-safe on-device metadata helper is
-available, and representative files from the previously leaked legacy branch artifact
-remain inaccessible.
+The root publication remains a production release hold. Verification proves that the
+hold marker is live, the privacy-safe on-device metadata helper is available, the
+separate non-production /preview/ learner runtime is reachable, and representative
+legacy/non-public repository paths remain inaccessible.
 """
 
 from __future__ import annotations
@@ -17,6 +17,7 @@ from urllib.request import Request, urlopen
 
 MARKER = 'data-mm-release-hold="true"'
 HELPER_MARKER = 'data-mm-device-metadata-helper="true"'
+PREVIEW_MARKER = 'content="non-production-preview"'
 FORBIDDEN_PATHS = (
     "MouldMasterAcademy.exe",
     "MouldMaster_Academy_App.html",
@@ -45,6 +46,8 @@ def verify_once(base_url: str) -> None:
         raise AssertionError(f"release-hold root mismatch: HTTP {status}")
     if 'href="device-validation.html"' not in text:
         raise AssertionError("release-hold root does not expose the device metadata helper")
+    if 'href="preview/"' not in text:
+        raise AssertionError("release-hold root does not expose the non-production preview")
 
     helper_status, helper_body = fetch(urljoin(root, "device-validation.html"))
     helper_text = helper_body.decode("utf-8", errors="replace")
@@ -66,6 +69,15 @@ def verify_once(base_url: str) -> None:
     if present:
         raise AssertionError("device metadata helper violates local-only boundary: " + ", ".join(present))
 
+    preview_status, preview_body = fetch(urljoin(root, "preview/"))
+    preview_text = preview_body.decode("utf-8", errors="replace")
+    if preview_status != 200 or PREVIEW_MARKER not in preview_text:
+        raise AssertionError(f"non-production preview mismatch: HTTP {preview_status}")
+    for path in ("manifest.webmanifest", "service-worker.js", "version.json"):
+        probe_status, _ = fetch(urljoin(root, f"preview/{path}"))
+        if probe_status != 200:
+            raise AssertionError(f"non-production preview runtime asset unavailable: {path} -> HTTP {probe_status}")
+
     for path in FORBIDDEN_PATHS:
         probe_status, _ = fetch(urljoin(root, path))
         if probe_status != 404:
@@ -85,8 +97,8 @@ def main() -> None:
         try:
             verify_once(args.base_url)
             print(
-                "Pages release-hold verification passed: minimal hold page and local-only "
-                "device metadata helper are live; legacy/non-public probes return 404."
+                "Pages release-hold verification passed: production root remains held, local-only "
+                "device metadata helper and non-production /preview/ are live, and legacy/non-public probes return 404."
             )
             return
         except (AssertionError, RuntimeError) as exc:
