@@ -7,7 +7,7 @@ import struct
 import subprocess
 import tempfile
 
-WEB_RELEASE = "2026.09.05.5"
+WEB_RELEASE = "2026.09.06.3"
 ANDROID_RELEASE = "2026.08.26.2"
 CONTENT_VERSION = "2026.08.26.1"
 WINDOWS_RECOVERY_VERSION = "2026.08.21.1"
