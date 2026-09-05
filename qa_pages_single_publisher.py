@@ -125,25 +125,30 @@ need(
     "cancelled-before-deploy fixture was falsely classified as a completed publication",
 )
 
-# actions/upload-pages-artifact excludes dotfiles. Keep the local hold artifact exactly
-# equal to the two HTML files that are actually archived/deployed so the boundary QA
-# describes real public bytes rather than a pre-upload superset.
+# Keep the local hold artifact exactly equal to the three HTML files that are actually
+# archived/deployed: the two hold documents plus the inline-only metadata helper.
 hold_spec = importlib.util.spec_from_file_location("build_pages_hold", hold_builder_path)
 hold_module = importlib.util.module_from_spec(hold_spec)
 hold_spec.loader.exec_module(hold_module)
 with tempfile.TemporaryDirectory() as tmp:
     target = Path(tmp) / "hold"
     files = hold_module.build(target)
-    need(files == {"index.html", "404.html"}, "release-hold artifact must contain exactly the two deployed safe HTML files")
+    expected = {"index.html", "404.html", "device-validation.html"}
+    need(files == expected, "release-hold artifact must contain exactly the two safe hold HTML files plus the local metadata helper")
     index = (target / "index.html").read_text(encoding="utf-8")
+    helper = (target / "device-validation.html").read_text(encoding="utf-8")
     need('data-mm-release-hold="true"' in index, "release-hold marker missing")
     need("No learner application runtime" in index, "release-hold boundary is not explicit")
+    need('href="device-validation.html"' in index, "release-hold page must link the device metadata helper")
     need("<script" not in index.lower() and "<link" not in index.lower(), "release-hold page must not load active assets")
+    need('data-mm-device-metadata-helper="true"' in helper, "device metadata helper marker missing")
+    need("mouldmaster-on-device-metadata-helper" in helper, "device metadata helper output identity missing")
     need(not any(path.name.startswith(".") for path in target.iterdir()), "release-hold artifact must not rely on dotfiles excluded by the Pages upload action")
 
 for marker in (
-    'ALLOWED_FILES = {"index.html", "404.html"}',
-    "Pages upload action excludes dotfiles",
+    'ALLOWED_FILES = {"index.html", "404.html", "device-validation.html"}',
+    'HELPER_MARKER = \'data-mm-device-metadata-helper="true"\'',
+    "validate_helper(helper_payload)",
     'data-mm-release-hold="true"',
     "No learner application runtime",
     "release-hold artifact boundary mismatch",
@@ -158,6 +163,8 @@ for marker in (
     "data/pwa-physical-device-validation-v1.json",
     "probe_status != 404",
     "release-hold root mismatch",
+    'fetch(urljoin(root, "device-validation.html"))',
+    "device metadata helper violates local-only boundary",
 ):
     need(marker in hold_verifier, f"release-hold live verifier safeguard missing: {marker}")
 
@@ -166,5 +173,6 @@ for marker in ("--convergence-attempts", "--convergence-delay", "FORBIDDEN_PROBE
 
 print(
     "MouldMaster Pages single-publisher QA passed (workflow-only source, successful legacy-deploy detection, "
-    "earliest-start guard, production-runtime gate, exact two-file release-hold quarantine and live 404 verification)"
+    "earliest-start guard, production-runtime gate, exact three-file release-hold quarantine with local-only metadata helper, "
+    "and live 404 verification)"
 )
