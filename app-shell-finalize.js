@@ -67,6 +67,15 @@ function loadConnectedDataRuntime(){
   script.addEventListener('error',()=>console.error('MouldMaster connected process-data runtime could not be loaded'));
   document.head.appendChild(script);
 }
+function loadMeasuredLearningRuntime(){
+  if(window.MM_MEASURED_LEARNING_LIBRARY||document.querySelector('script[data-mm-measured-learning]'))return;
+  const script=document.createElement('script');
+  script.src='./measured-learning-library.js';
+  script.async=true;
+  script.dataset.mmMeasuredLearning='1';
+  script.addEventListener('error',()=>console.warn('[MouldMaster] Measured Learning runtime unavailable; learner navigation remains disabled.'));
+  document.head.appendChild(script);
+}
 
 syncEvidenceExports();
 const originalSpecialistOpen=window.mmSpecialistOpen;
@@ -78,6 +87,7 @@ window.MM_SPECIALIST_EVIDENCE_STATUS={version:'2026.08.29.1',statuses:{...EVIDEN
 loadProductionHealth();
 loadConnectedDataRuntime();
 window.MM_APP_SHELL.finalize();
+loadMeasuredLearningRuntime();
 const geometryStyle=document.getElementById('mm-app-shell-registry-style');
 if(geometryStyle&&geometryStyle.parentNode===document.head)document.head.appendChild(geometryStyle);
 window.addEventListener('popstate',()=>window.MM_APP_SHELL.navigation?.sync?.());
