@@ -111,16 +111,16 @@ jobs:
               echo "Validated physical iOS/iPadOS and Android evidence matches the exact production artifact."
             } >> "$GITHUB_STEP_SUMMARY"
           else
-            # Pending evidence never publishes the learner application. A minimal
-            # release-hold artifact is deployed instead so stale legacy content is
-            # actively removed from the public Pages origin.
+            # Pending evidence keeps the production root fail-closed. The already-built
+            # governed public artifact may still be exposed under /preview/ as an
+            # explicitly non-production usability path while the root remains held.
             python3 tools/verify_pwa_physical_evidence.py --artifact .pages-dist
             echo "production_ready=false" >> "$GITHUB_OUTPUT"
-            echo "::notice title=Pages app release not ready::Validated physical iOS/iPadOS and Android evidence is pending; the production app artifact remains blocked and a minimal release-hold site will replace stale Pages content."
+            echo "::notice title=Pages production release not ready::Validated physical iOS/iPadOS and Android evidence is pending; the production root remains held while the current governed learner build is available only under /preview/."
             {
-              echo "### Pages application release not ready"
+              echo "### Pages production release not ready"
               echo "Physical iOS/iPadOS and Android validation is still pending."
-              echo "The learner application will not be published. A minimal release-hold site is used only to quarantine the Pages origin and remove stale legacy files."
+              echo "The production root remains release-held. A clearly separated non-production /preview/ path serves the current governed learner artifact for normal use and device validation without changing production readiness."
             } >> "$GITHUB_STEP_SUMMARY"
           fi
       - name: Stage protected-main physical-device test candidate
@@ -146,7 +146,7 @@ jobs:
           include-hidden-files: false
       - name: Build release-hold Pages artifact
         if: github.event_name != 'pull_request' && steps.physical-readiness.outputs.production_ready != 'true'
-        run: python3 tools/build_pages_hold.py
+        run: python3 tools/build_pages_hold.py --preview-source .pages-dist
       - name: Upload production Pages artifact
         if: github.event_name == 'pull_request' || steps.physical-readiness.outputs.production_ready == 'true'
         uses: actions/upload-pages-artifact@v4
