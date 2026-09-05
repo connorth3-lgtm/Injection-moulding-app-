@@ -11,6 +11,7 @@ FILES=[
  '4h98-direct-unreviewed-learning-candidate.json',
  '6k8-pressure-unreviewed-learning-candidate.json',
  'gtnb-unreviewed-learning-candidates.json',
+ 'gtnb-rejection-unreviewed-learning-candidate.json',
  'sustainability-unreviewed-learning-candidates.json',
  'openmms-unreviewed-learning-candidates.json',
 ]
@@ -53,7 +54,7 @@ def main():
             assert not (suggested-set(by_id)), f'{cid}: unknown catalogue ids'
             assert all(by_id[i]['sourceFamily']==dataset for i in suggested), f'{cid}: mapped to wrong source family'
             numeric_coverage.update(suggested)
-            direct=True; reasons=[]
+            direct=True; reasons=list(c.get('bindingBlockers',[]))
             governed=channels.get(dataset,{})
             for s in signals:
                 rep=s.get('representation',{}); xs=rep.get('x',[]); ys=rep.get('y',[])
@@ -67,13 +68,15 @@ def main():
                     direct=False; reasons.append(f'transformed-semantic:{source_channel}')
                 if rep.get('xSemantic')!=g.get('coordinateSemantic') or rep.get('xUnit')!=g.get('coordinateUnit'):
                     direct=False; reasons.append(f'coordinate-review:{source_channel}')
+            if c.get('bindingBlockers'): direct=False
             if direct: direct_coverage.update(suggested)
             source_counts[dataset]=source_counts.get(dataset,0)+1
             details.append({'candidateId':cid,'datasetId':dataset,'suggestedCatalogueCases':sorted(suggested),'directBindingShapeReady':direct,'directBindingBlockers':sorted(set(reasons))})
     assert numeric_coverage<=ready_slots, 'candidate coverage includes a source-blocked catalogue case'
     missing_numeric=sorted(ready_slots-numeric_coverage)
     missing_direct=sorted(ready_slots-direct_coverage)
-    assert missing_numeric==['MLM-039'], f'unexpected numeric candidate gaps: {missing_numeric}'
+    assert not missing_numeric, f'unexpected numeric candidate gaps: {missing_numeric}'
+    assert 'MLM-039' in missing_direct, 'GTNB rejection-rate slot must remain binding-blocked until count channels and rate feature are governed'
     assert len(direct_coverage)>=20, f'direct-binding-shape coverage unexpectedly low: {len(direct_coverage)}'
     report={'schemaVersion':1,'status':'authoring-coverage-qa-passed','promotionReadySourceFamilies':sorted(ready),'sourceReadyCatalogueSlots':len(ready_slots),'numericAuthoringCandidateCount':len(candidate_ids),'numericCandidateCatalogueCoverage':len(numeric_coverage),'numericCandidateCaseIds':sorted(numeric_coverage),'numericCandidateGaps':missing_numeric,'directBindingShapeCatalogueCoverage':len(direct_coverage),'directBindingShapeCaseIds':sorted(direct_coverage),'directBindingShapeGaps':missing_direct,'candidateCountBySource':source_counts,'candidates':details,'promotedLearnerCases':0,'boundary':'Numeric authoring coverage is not learner promotion. Candidate data remain unreviewed and cannot count as a learner case until case-specific evidence wording, novelty and independent engineering review pass the promotion builder/QA.'}
     REPORT.write_text(json.dumps(report,indent=2)+'\n',encoding='utf-8')
