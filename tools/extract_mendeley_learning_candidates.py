@@ -64,6 +64,32 @@ def reduce_points(x: list[float], y: list[float], limit: int=400) -> tuple[list[
     return [x[i] for i in idx],[y[i] for i in idx]
 
 
+def maximal_decreasing_branch(x: list[float], y: list[float], *, maximum_terminal_reversal_points: int=2):
+    """Select the source-ordered decreasing branch without sorting or interpolating.
+
+    Figure2's three isobaric series currently contain one terminal point after the
+    minimum-temperature sample that reverses X direction. The learner candidate is the
+    maximal non-increasing prefix only. Any future change to a larger/non-terminal
+    reversal fails closed instead of silently changing the evidence window.
+    """
+    if len(x)!=len(y) or len(x)<3:
+        raise RuntimeError("decreasing branch requires aligned source pairs")
+    cut=len(x)
+    for i,(a,b) in enumerate(zip(x,x[1:])):
+        if float(b)>float(a):
+            cut=i+1
+            break
+    selected_x=x[:cut]; selected_y=y[:cut]
+    excluded=len(x)-cut
+    if not all(float(a)>=float(b) for a,b in zip(selected_x,selected_x[1:])):
+        raise RuntimeError("source series is not monotonic before terminal reversal")
+    if excluded>maximum_terminal_reversal_points:
+        raise RuntimeError(f"source series terminal reversal grew to {excluded} points")
+    if cut < len(x)-maximum_terminal_reversal_points:
+        raise RuntimeError("source series reversal is not confined to the terminal tail")
+    return selected_x,selected_y,{"sourceNumericPairCount":len(x),"selectedDecreasingPairCount":cut,"excludedTerminalReversalPairCount":excluded}
+
+
 def experiment_replicate_summary(ws, cols: list[str], start: int, end: int) -> tuple[list[float],list[float],list[float]]:
     x=[]; medians=[]; spreads=[]
     for row in range(start,end+1):
@@ -75,8 +101,10 @@ def experiment_replicate_summary(ws, cols: list[str], start: int, end: int) -> t
     return x,medians,spreads
 
 
-def signal(id_,source_channel,semantic,unit,x_semantic,x_unit,x,y,reduction,original):
+def signal(id_,source_channel,semantic,unit,x_semantic,x_unit,x,y,reduction,original,x_direction=None):
     rep={"xSemantic":x_semantic,"xUnit":x_unit,"reductionMethod":reduction,"originalPointCount":original,"x":x,"y":y}
+    if x_direction is not None:
+        rep["xDirection"]=x_direction
     return {"id":id_,"sourceChannel":source_channel,"semantic":semantic,"unit":unit,"representation":rep,"representationFingerprint":sha256_json(rep)}
 
 
@@ -94,8 +122,8 @@ def four_h98(source):
             ("toughness",list("QRSTU"),"toughness-replicate-summary","J")]:
             x,median,spread=experiment_replicate_summary(ws,cols,4,38)
             if len(x)!=35: raise RuntimeError(f"4h98 {ident}: expected 35 experiment summaries, got {len(x)}")
-            series.append(signal(f"{ident}-median",f"Sheet1!{cols[0]}:{cols[-1]}",semantic+"-median",unit,"experiment-index","index",x,median,"per-experiment-median-of-five-direct-replicates",175))
-            series.append(signal(f"{ident}-spread",f"Sheet1!{cols[0]}:{cols[-1]}",semantic+"-range",unit,"experiment-index","index",x,spread,"per-experiment-max-minus-min-of-five-direct-replicates",175))
+            series.append(signal(f"{ident}-median",f"Sheet1!{cols[0]}:{cols[-1]}",semantic+"-median",unit,"experiment-index","index",x,median,"per-experiment-median-of-five-direct-replicates",175,"increasing"))
+            series.append(signal(f"{ident}-spread",f"Sheet1!{cols[0]}:{cols[-1]}",semantic+"-range",unit,"experiment-index","index",x,spread,"per-experiment-max-minus-min-of-five-direct-replicates",175,"increasing"))
         return {"candidateId":"MEND-4H98-REPLICATE-SUMMARY-01","datasetId":source["datasetId"],"sourceArtifact":"Raw Data.xlsx","sourceFingerprint":fp,"sourceScope":{"sheet":"Sheet1","rows":"4:38","excludedDerivedColumns":["J","P","V"]},"signals":series,"candidateFingerprint":sha256_json(series),"suggestedCatalogueCases":["MLM-030","MLM-049","MLM-056"],"evidenceBoundary":"Per-experiment summaries of direct replicate measurements. Derived publisher average columns are excluded; these data do not establish production root cause."}
     finally: td.cleanup()
 
@@ -117,20 +145,24 @@ def six_k8(source):
         rx,rp=reduce_points(xs,pressure); rx2,rv=reduce_points(xs,volume)
         if rx!=rx2: raise RuntimeError("6k8 Figure7 reduction axis mismatch")
         signals=[
-            signal("pressure","Figure7!B","pressure-special-isothermal","MPa","time","s",rx,rp,"deterministic-endpoint-preserving-index-reduction",len(xs)),
-            signal("specific-volume","Figure7!C","specific-volume-special-isothermal","mm3/g","time","s",rx,rv,"deterministic-endpoint-preserving-index-reduction",len(xs))]
+            signal("pressure","Figure7!B","pressure-special-isothermal","MPa","time","s",rx,rp,"deterministic-endpoint-preserving-index-reduction",len(xs),"increasing"),
+            signal("specific-volume","Figure7!C","specific-volume-special-isothermal","mm3/g","time","s",rx,rv,"deterministic-endpoint-preserving-index-reduction",len(xs),"increasing")]
         candidates.append({"candidateId":"MEND-6K8-FIGURE7-01","datasetId":source["datasetId"],"sourceArtifact":"Data.xlsx","sourceFingerprint":fp,"sourceScope":{"sheet":"Figure7","columns":["A","B","C"]},"signals":signals,"candidateFingerprint":sha256_json(signals),"suggestedCatalogueCases":["MLM-050"],"evidenceBoundary":"Polypropylene pvT material-characterization trace; not an injection-machine cycle trace."})
 
-        ws=wb["Figure2"]; series=[]
+        ws=wb["Figure2"]; series=[]; branch_selection={}
         for ident,xcol,ycol,semantic in [("200bar","A","B","specific-volume-200bar-isobaric-cooling"),("400bar","E","F","specific-volume-400bar-isobaric-cooling"),("800bar","I","J","specific-volume-800bar-isobaric-cooling")]:
             xs=[]; ys=[]
             for row in range(1,ws.max_row+1):
                 a,b=ws[f"{xcol}{row}"].value,ws[f"{ycol}{row}"].value
                 if isnum(a) and isnum(b): xs.append(float(a)); ys.append(float(b))
             if not xs: raise RuntimeError(f"6k8 Figure2 no numeric pair for {ident}")
-            rx,ry=reduce_points(xs,ys)
-            series.append(signal(ident,f"Figure2!{ycol}",semantic,"mm3/g","temperature","degC",rx,ry,"deterministic-endpoint-preserving-index-reduction",len(xs)))
-        candidates.append({"candidateId":"MEND-6K8-FIGURE2-01","datasetId":source["datasetId"],"sourceArtifact":"Data.xlsx","sourceFingerprint":fp,"sourceScope":{"sheet":"Figure2","pressureSeriesBar":[200,400,800]},"signals":series,"candidateFingerprint":sha256_json(series),"suggestedCatalogueCases":["MLM-051"],"evidenceBoundary":"Specific-volume response across three source-labelled isobaric cooling series; material characterization only."})
+            branch_x,branch_y,selection=maximal_decreasing_branch(xs,ys)
+            if selection["excludedTerminalReversalPairCount"]!=1:
+                raise RuntimeError(f"6k8 Figure2 {ident}: expected exactly one terminal reversal pair, got {selection['excludedTerminalReversalPairCount']}")
+            branch_selection[ident]=selection
+            rx,ry=reduce_points(branch_x,branch_y)
+            series.append(signal(ident,f"Figure2!{ycol}",semantic,"mm3/g","temperature","degC",rx,ry,"source-order-maximal-decreasing-branch-then-deterministic-index-reduction",len(xs),"decreasing"))
+        candidates.append({"candidateId":"MEND-6K8-FIGURE2-01","datasetId":source["datasetId"],"sourceArtifact":"Data.xlsx","sourceFingerprint":fp,"sourceScope":{"sheet":"Figure2","pressureSeriesBar":[200,400,800],"branchSelection":branch_selection},"signals":series,"candidateFingerprint":sha256_json(series),"suggestedCatalogueCases":["MLM-051"],"evidenceBoundary":"Specific-volume response is limited to the source-ordered decreasing-temperature branch for each source-labelled isobaric series. One terminal temperature-reversal pair per series is explicitly excluded from this cooling-branch candidate; no causal interpretation is assigned to that reversal."})
         return candidates
     finally: td.cleanup()
 
@@ -150,7 +182,7 @@ def yxz(source):
             for col,semantic,unit in zip(cols,semantics,units):
                 vals=numeric_column(ws,col,rows[0],rows[1]); x=[float(i+1) for i in range(len(vals))]
                 if not vals: raise RuntimeError(f"yxz no direct values in {sheet}!{col}")
-                sigs.append(signal(col,f"{sheet}!{col}",semantic,unit,"observation-index","index",x,vals,"direct-injection-block-values-no-interpolation",len(vals)))
+                sigs.append(signal(col,f"{sheet}!{col}",semantic,unit,"observation-index","index",x,vals,"direct-injection-block-values-no-interpolation",len(vals),"increasing"))
             results.append({"candidateId":f"MEND-YXZ-{sheet.upper()}-01","datasetId":source["datasetId"],"sourceArtifact":name,"sourceFingerprint":fp,"sourceScope":{"sheet":sheet,"marker":marker_text,"columns":cols,"rows":list(rows)},"signals":sigs,"candidateFingerprint":sha256_json(sigs),"suggestedCatalogueCases":cases,"evidenceBoundary":"Only the explicitly labelled injection-moulded block is included; FDM, energy, impact and formula-derived content remain excluded."})
         finally: td.cleanup()
     return results
