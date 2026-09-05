@@ -1,0 +1,46 @@
+{
+  "schemaVersion": 1,
+  "registryId": "measured-learning-source-channels-forinfpro-v2",
+  "datasetId": "forinfpro-himd-v1",
+  "channelResolution": "partial-governed",
+  "evidenceRefs": [
+    "data/forinfpro-himd-semantic-review-2026-08-30.json",
+    "data/public-benchmark-results/forinfpro-himd-v1.json",
+    "doi:10.5281/zenodo.20744054",
+    "ENGEL Digital Solutions User Guide - Data Interfaces, May 2026"
+  ],
+  "coordinatePolicy": {
+    "sourceChannel": "Datum/Zeit",
+    "semantic": "elapsed-time-from-cycle-start",
+    "unit": "s",
+    "transform": "parse delivered source timestamp, subtract first timestamp, preserve strictly increasing delivered timing; do not assume a fixed sample interval"
+  },
+  "channels": [
+    {"sourceChannel":"Heating.sv_Zone14.rActualTemp","semantic":"engel-heating-zone-14-actual-temperature","unit":"degC","role":"actual-measured-value","coordinateChannel":"Datum/Zeit","coordinateSemantic":"elapsed-time-from-cycle-start","coordinateUnit":"s","promotionReady":true},
+    {"sourceChannel":"Heating.sv_Zone13.rActualTemp","semantic":"engel-heating-zone-13-actual-temperature","unit":"degC","role":"actual-measured-value","coordinateChannel":"Datum/Zeit","coordinateSemantic":"elapsed-time-from-cycle-start","coordinateUnit":"s","promotionReady":true},
+    {"sourceChannel":"Heating.sv_Zone12.rActualTemp","semantic":"engel-heating-zone-12-actual-temperature","unit":"degC","role":"actual-measured-value","coordinateChannel":"Datum/Zeit","coordinateSemantic":"elapsed-time-from-cycle-start","coordinateUnit":"s","promotionReady":true},
+    {"sourceChannel":"Heating.sv_Zone11.rActualTemp","semantic":"engel-heating-zone-11-actual-temperature","unit":"degC","role":"actual-measured-value","coordinateChannel":"Datum/Zeit","coordinateSemantic":"elapsed-time-from-cycle-start","coordinateUnit":"s","promotionReady":true},
+    {"sourceChannel":"Heating.sv_Zone10.rActualTemp","semantic":"engel-heating-zone-10-actual-temperature","unit":"degC","role":"actual-measured-value","coordinateChannel":"Datum/Zeit","coordinateSemantic":"elapsed-time-from-cycle-start","coordinateUnit":"s","promotionReady":true},
+    {"sourceChannel":"Heating.sv_Zone9.rActualTemp","semantic":"engel-heating-zone-9-actual-temperature","unit":"degC","role":"actual-measured-value","coordinateChannel":"Datum/Zeit","coordinateSemantic":"elapsed-time-from-cycle-start","coordinateUnit":"s","promotionReady":true},
+    {"sourceChannel":"Heating.sv_Zone15.rActualTemp","semantic":"engel-heating-zone-15-actual-temperature","unit":"degC","role":"actual-measured-value","coordinateChannel":"Datum/Zeit","coordinateSemantic":"elapsed-time-from-cycle-start","coordinateUnit":"s","promotionReady":true},
+    {"sourceChannel":"Heating.sv_Zone16.rActualTemp","semantic":"engel-heating-zone-16-actual-temperature","unit":"degC","role":"actual-measured-value","coordinateChannel":"Datum/Zeit","coordinateSemantic":"elapsed-time-from-cycle-start","coordinateUnit":"s","promotionReady":true},
+    {"sourceChannel":"Heating.sv_Zone17.rActualTemp","semantic":"engel-heating-zone-17-actual-temperature","unit":"degC","role":"actual-measured-value","coordinateChannel":"Datum/Zeit","coordinateSemantic":"elapsed-time-from-cycle-start","coordinateUnit":"s","promotionReady":true},
+    {"sourceChannel":"Heating.sv_Zone18.rActualTemp","semantic":"engel-heating-zone-18-actual-temperature","unit":"degC","role":"actual-measured-value","coordinateChannel":"Datum/Zeit","coordinateSemantic":"elapsed-time-from-cycle-start","coordinateUnit":"s","promotionReady":true},
+    {"sourceChannel":"Heating.sv_Zone19.rActualTemp","semantic":"engel-heating-zone-19-actual-temperature","unit":"degC","role":"actual-measured-value","coordinateChannel":"Datum/Zeit","coordinateSemantic":"elapsed-time-from-cycle-start","coordinateUnit":"s","promotionReady":true},
+    {"sourceChannel":"Heating.sv_Zone20.rActualTemp","semantic":"engel-heating-zone-20-actual-temperature","unit":"degC","role":"actual-measured-value","coordinateChannel":"Datum/Zeit","coordinateSemantic":"elapsed-time-from-cycle-start","coordinateUnit":"s","promotionReady":true},
+    {"sourceChannel":"Heating.sv_Zone21.rActualTemp","semantic":"engel-heating-zone-21-actual-temperature","unit":"degC","role":"actual-measured-value","coordinateChannel":"Datum/Zeit","coordinateSemantic":"elapsed-time-from-cycle-start","coordinateUnit":"s","promotionReady":true},
+    {"sourceChannel":"Heating.sv_Zone22.rActualTemp","semantic":"engel-heating-zone-22-actual-temperature","unit":"degC","role":"actual-measured-value","coordinateChannel":"Datum/Zeit","coordinateSemantic":"elapsed-time-from-cycle-start","coordinateUnit":"s","promotionReady":true},
+    {"sourceChannel":"Heating.sv_Zone23.rActualTemp","semantic":"engel-heating-zone-23-actual-temperature","unit":"degC","role":"actual-measured-value","coordinateChannel":"Datum/Zeit","coordinateSemantic":"elapsed-time-from-cycle-start","coordinateUnit":"s","promotionReady":true},
+    {"sourceChannel":"Heating.sv_Zone24.rActualTemp","semantic":"engel-heating-zone-24-actual-temperature","unit":"degC","role":"actual-measured-value","coordinateChannel":"Datum/Zeit","coordinateSemantic":"elapsed-time-from-cycle-start","coordinateUnit":"s","promotionReady":true}
+  ],
+  "sharedLimitations": [
+    "The visible publisher release contains one cycle only; these channels cannot establish cycle-to-cycle repeatability.",
+    "ENGEL documents rActualTemp as actual temperature in degC, but physical zone affiliation is machine-specific. Preserve delivered zone identifiers rather than relabelling them as universal barrel/nozzle/oven positions."
+  ],
+  "excludedGroups": [
+    "HeatingOven1 actual-temperature-like fields without the same first-party unit namespace contract",
+    "other machine fields whose exact engineering units/roles are not source-pinned",
+    "cycle_001_pt.csv pressure/temperature because delivered engineering units remain unresolved",
+    "cycle_001_us_rms.csv because RMS channels are derived/unit-limited"
+  ]
+}
