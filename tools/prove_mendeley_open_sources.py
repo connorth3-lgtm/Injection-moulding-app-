@@ -2,11 +2,11 @@
 """Retrieve benchmark-pinned open Mendeley workbooks and emit text/schema-only proof.
 
 No numeric worksheet values are emitted. Every publisher file ID, filename and SHA-256 is
-stored locally. Remote metadata is used only to confirm that the pinned ID/name still exists;
-it never supplies any part of a network destination.
+stored locally. Remote metadata is consistency evidence only. Downloads start from a fixed
+Mendeley URL and redirects are checked before following them against an exact host allow-list.
 """
 from __future__ import annotations
-import hashlib, json, re, tempfile, urllib.parse, urllib.request, zipfile
+import hashlib, json, re, tempfile, urllib.error, urllib.parse, urllib.request, zipfile
 from pathlib import Path
 from xml.etree import ElementTree as ET
 
@@ -25,24 +25,33 @@ NS={'m':'http://schemas.openxmlformats.org/spreadsheetml/2006/main','r':'http://
 RELNS='{http://schemas.openxmlformats.org/package/2006/relationships}'
 MENDELEY_API='https://data.mendeley.com/public-api/datasets/'
 MENDELEY_DOWNLOAD='https://data.mendeley.com/public-files/datasets/'
+MENDELEY_HOST='data.mendeley.com'
+MENDELEY_FILE_HOST='prod-dcd-datasets-public-files-eu-west-1.s3.eu-west-1.amazonaws.com'
 FILE_ID_RE=re.compile(r'^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$')
 SHORT_ID_RE=re.compile(r'^[a-z0-9]{10}$')
 
 
-def assert_mendeley_url(url):
+def assert_https_host(url,allowed_hosts):
     parsed=urllib.parse.urlsplit(url)
-    if parsed.scheme!='https' or parsed.hostname!='data.mendeley.com':
-        raise RuntimeError(f'Mendeley retrieval escaped fixed HTTPS host: {url}')
+    if parsed.scheme!='https' or parsed.hostname not in allowed_hosts or parsed.username or parsed.password:
+        raise RuntimeError(f'Mendeley retrieval escaped fixed HTTPS hosts: {url}')
     return url
 
 
+class AllowlistedRedirect(urllib.request.HTTPRedirectHandler):
+    def redirect_request(self,req,fp,code,msg,headers,newurl):
+        assert_https_host(newurl,{MENDELEY_HOST,MENDELEY_FILE_HOST})
+        return super().redirect_request(req,fp,code,msg,headers,newurl)
+
+
+DOWNLOAD_OPENER=urllib.request.build_opener(AllowlistedRedirect())
+
+
 def get_json(url):
-    assert_mendeley_url(url)
-    req=urllib.request.Request(url,headers={'User-Agent':'MouldMaster-measured-learning/2.2'})
+    assert_https_host(url,{MENDELEY_HOST})
+    req=urllib.request.Request(url,headers={'User-Agent':'MouldMaster-measured-learning/2.3'})
     with urllib.request.urlopen(req,timeout=60) as r:
-        final=urllib.parse.urlsplit(r.geturl())
-        if final.scheme!='https' or final.hostname!='data.mendeley.com':
-            raise RuntimeError(f'Mendeley metadata redirected outside fixed host: {r.geturl()}')
+        assert_https_host(r.geturl(),{MENDELEY_HOST})
         return json.load(r)
 
 
@@ -89,8 +98,8 @@ def pinned_download_urls(short_id,version,file_id):
         raise RuntimeError('invalid locally pinned Mendeley file id')
     encoded_id=urllib.parse.quote(file_id,safe='')
     return [
-        assert_mendeley_url(f'{MENDELEY_DOWNLOAD}{short_id}/files/{encoded_id}/file_downloaded'),
-        assert_mendeley_url(f'{MENDELEY_DOWNLOAD}{short_id}/versions/{version}/files/{encoded_id}/file_downloaded'),
+        assert_https_host(f'{MENDELEY_DOWNLOAD}{short_id}/files/{encoded_id}/file_downloaded',{MENDELEY_HOST}),
+        assert_https_host(f'{MENDELEY_DOWNLOAD}{short_id}/versions/{version}/files/{encoded_id}/file_downloaded',{MENDELEY_HOST}),
     ]
 
 
@@ -98,12 +107,10 @@ def download_first(urls,destination):
     errors=[]
     for url in urls:
         try:
-            assert_mendeley_url(url)
-            req=urllib.request.Request(url,headers={'User-Agent':'MouldMaster-measured-learning/2.2'})
-            with urllib.request.urlopen(req,timeout=90) as r, open(destination,'wb') as out:
-                final=urllib.parse.urlsplit(r.geturl())
-                if final.scheme!='https' or final.hostname!='data.mendeley.com':
-                    raise RuntimeError(f'Mendeley download redirected outside fixed host: {r.geturl()}')
+            assert_https_host(url,{MENDELEY_HOST})
+            req=urllib.request.Request(url,headers={'User-Agent':'MouldMaster-measured-learning/2.3'})
+            with DOWNLOAD_OPENER.open(req,timeout=90) as r, open(destination,'wb') as out:
+                assert_https_host(r.geturl(),{MENDELEY_HOST,MENDELEY_FILE_HOST})
                 while True:
                     chunk=r.read(1024*1024)
                     if not chunk: break
@@ -172,7 +179,7 @@ def main():
             source_proof['files'].append({'name':name,'resolvedFileId':file_id,'sha256':'sha256:'+digest,'downloadRoute':used,'sheets':schema})
         source_proof['status']='source-proof-passed'; source_proof['rawNumericValuesEmitted']=False; proofs.append(source_proof)
         print(json.dumps({'status':'source-proof-passed','datasetId':source['datasetId'],'files':[f['name'] for f in source_proof['files']]},separators=(',',':')))
-    result={'schemaVersion':2,'status':'source-proofs-passed','sources':proofs,'boundary':'Workbook IDs, names, exact hashes, sheet names and bounded text/header labels only. Remote metadata is consistency evidence only and cannot control any download destination. Numeric worksheet values are not emitted.'}
+    result={'schemaVersion':2,'status':'source-proofs-passed','sources':proofs,'boundary':'Workbook IDs, names, exact hashes, sheet names and bounded text/header labels only. Remote metadata is consistency evidence only. Download redirects are checked before following and restricted to Mendeley plus its exact public-file S3 host. Numeric worksheet values are not emitted.'}
     (out/'mendeley-open-workbook-source-proofs.json').write_text(json.dumps(result,indent=2)+'\n',encoding='utf-8')
     return 0
 if __name__=='__main__': raise SystemExit(main())
