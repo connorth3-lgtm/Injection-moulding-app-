@@ -3,7 +3,9 @@
 
 No raw third-party rows are committed. The proof binds the exact public archive to the
 peer-reviewed Dataset 1 description using source-native structure plus published aggregate
-anchors. It does not invent a uniform time axis, root cause, or production setting.
+anchors. It quantifies pressure same-scale agreement and flow perturbation consistency;
+it does not claim exact peak identity, invent a uniform time axis, infer root cause, or
+turn numerical plausibility into an engineering-unit decision by itself.
 """
 from __future__ import annotations
 
@@ -29,6 +31,15 @@ PAPER_SAMPLE_INTERVAL_S = 0.006
 PAPER_WEIGHT_MEAN_G = 58.92
 PAPER_DISTANCE_A_MEAN_MM = 84.9372
 
+# Table 1 of doi:10.3390/polym15040978 prints +10% as cycles 385-467 and
+# +20% as 458-528, creating a ten-cycle overlap. This proof refuses to decide which
+# label owns the overlap and uses only the unambiguous non-overlapping core windows.
+FLOW_PERTURBATION_WINDOWS = {
+    "minus10pct": {"start": 324, "end": 384, "multiplier": 0.90, "paperLabel": "-10%"},
+    "plus10pct_nonoverlap": {"start": 385, "end": 457, "multiplier": 1.10, "paperLabel": "+10%"},
+    "plus20pct_nonoverlap": {"start": 468, "end": 528, "multiplier": 1.20, "paperLabel": "+20%"},
+}
+
 
 def as_float(value: str) -> float | None:
     text = str(value).strip().replace("\u00a0", "")
@@ -41,6 +52,17 @@ def as_float(value: str) -> float | None:
     except ValueError:
         return None
     return number if math.isfinite(number) else None
+
+
+def cycle_number(value: str) -> int | None:
+    text = str(value).strip()
+    if not text:
+        return None
+    try:
+        number = int(float(text.replace(",", ".")))
+    except ValueError:
+        return None
+    return number if number > 0 else None
 
 
 def parse_csv(payload: bytes) -> list[list[str]]:
@@ -184,7 +206,7 @@ def waveform_profile(rows: list[list[str]], label: str) -> dict:
     }
 
 
-def pressure_peak_equivalence(scalar: dict[str, float], pressure: dict) -> dict:
+def pressure_peak_agreement(scalar: dict[str, float], pressure: dict) -> dict:
     pairs=[]
     for cycle, peak in zip(pressure["cycleIds"], pressure["maxima"]):
         if cycle in scalar and math.isfinite(peak):
@@ -201,7 +223,8 @@ def pressure_peak_equivalence(scalar: dict[str, float], pressure: dict) -> dict:
         raise RuntimeError(
             f"AVAPS pressure waveform does not remain on the scalar max-pressure scale: medianRel={median_rel}, maxRel={max_rel}, ratio={median_ratio}"
         )
-    thresholds=(1e-9,1e-6,1e-3,0.1,1.0)
+    absolute_thresholds=(1e-9,1e-6,1e-3,0.1,1.0)
+    relative_thresholds=(0.001,0.0025,0.005,0.01,0.02)
     return {
         "linkedCycleCount":len(pairs),
         "scalarOnlyCycleCount":len(set(scalar)-{c for c,_,_ in pairs}),
@@ -211,10 +234,55 @@ def pressure_peak_equivalence(scalar: dict[str, float], pressure: dict) -> dict:
         "medianRelativeDifference":median_rel,
         "maximumRelativeDifference":max_rel,
         "medianWaveformToScalarRatio":median_ratio,
-        "matchCountsByAbsoluteTolerance":{str(t):sum(error<=t for error in abs_errors) for t in thresholds},
-        "matchFractionsByAbsoluteTolerance":{str(t):sum(error<=t for error in abs_errors)/len(abs_errors) for t in thresholds},
-        "relationship":"For each linked cycle, compare max(ds1_timeseries_injectionpressure) with ds1_scalar_and_quality.maximaler_spritzdruck. No scaling, interpolation or unit conversion is applied.",
+        "matchCountsByAbsoluteTolerance":{str(t):sum(error<=t for error in abs_errors) for t in absolute_thresholds},
+        "matchFractionsByAbsoluteTolerance":{str(t):sum(error<=t for error in abs_errors)/len(abs_errors) for t in absolute_thresholds},
+        "matchFractionsByRelativeTolerance":{str(t):sum(error<=t for error in rel_errors)/len(rel_errors) for t in relative_thresholds},
+        "relationship":"For each linked cycle, compare max(ds1_timeseries_injectionpressure) with ds1_scalar_and_quality.maximaler_spritzdruck. No scaling, interpolation or unit conversion is applied. Close agreement supports a shared source scale; exact identity is not asserted.",
         "scaleDecision":"same engineering scale supported: median relative peak difference <=1%, maximum <=5%, and median waveform/scalar ratio within 1% of unity"
+    }
+
+
+def flow_perturbation_consistency(flow: dict) -> dict:
+    by_cycle={}
+    invalid_cycle_headers=0
+    for cycle_id, peak in zip(flow["cycleIds"], flow["maxima"]):
+        number=cycle_number(cycle_id)
+        if number is None or not math.isfinite(peak):
+            invalid_cycle_headers += 1
+            continue
+        by_cycle[number]=float(peak)
+    windows={}
+    inferred_baselines=[]
+    for key,spec in FLOW_PERTURBATION_WINDOWS.items():
+        values=[by_cycle[n] for n in range(spec["start"],spec["end"]+1) if n in by_cycle]
+        if not values:
+            raise RuntimeError(f"AVAPS flow perturbation window {key} contains no delivered waveform cycles")
+        median_peak=statistics.median(values)
+        inferred_baseline=median_peak/spec["multiplier"]
+        inferred_baselines.append(inferred_baseline)
+        windows[key]={
+            "paperLabel":spec["paperLabel"],
+            "paperMultiplier":spec["multiplier"],
+            "nonOverlappingCycleStart":spec["start"],
+            "nonOverlappingCycleEnd":spec["end"],
+            "deliveredCycleCount":len(values),
+            "medianWaveformPeak":median_peak,
+            "minimumWaveformPeak":min(values),
+            "maximumWaveformPeak":max(values),
+            "impliedUnperturbedBaseline":inferred_baseline,
+        }
+    baseline_mean=statistics.fmean(inferred_baselines)
+    baseline_cv=statistics.pstdev(inferred_baselines)/abs(baseline_mean) if baseline_mean else None
+    normalized={key:entry["medianWaveformPeak"]/baseline_mean for key,entry in windows.items()}
+    return {
+        "publishedTable":"doi:10.3390/polym15040978 Table 1",
+        "publishedOverlapHandling":"The printed +10% and +20% ranges overlap at cycles 458-467. Those ten cycles are excluded from this check rather than assigned to either condition.",
+        "invalidCycleHeadersExcluded":invalid_cycle_headers,
+        "windows":windows,
+        "meanImpliedUnperturbedBaseline":baseline_mean,
+        "coefficientOfVariationAcrossImpliedBaselines":baseline_cv,
+        "normalizedMedianPeaksUsingMeanImpliedBaseline":normalized,
+        "interpretationBoundary":"Agreement with the paper's relative perturbations can show that the waveform represents the manipulated injection-flow quantity on a consistent source scale. It does not, by itself, establish the engineering unit."
     }
 
 
@@ -255,43 +323,48 @@ def main() -> int:
     scalar_map,scalar_stats=scalar_profiles(scalar_rows)
     pressure=waveform_profile(pressure_rows,"injection-pressure")
     flow=waveform_profile(flow_rows,"injection-flow")
-    pressure_equivalence=pressure_peak_equivalence(scalar_map,pressure)
+    pressure_agreement=pressure_peak_agreement(scalar_map,pressure)
+    flow_consistency=flow_perturbation_consistency(flow)
 
     pressure_summary={k:v for k,v in pressure.items() if k not in {"cycleIds","maxima"}}
     flow_summary={k:v for k,v in flow.items() if k not in {"cycleIds","maxima"}}
     proof={
-        "schemaVersion":3,"status":"source-proof-passed","datasetId":"scatimdata-avaps",
+        "schemaVersion":4,"status":"source-proof-passed","datasetId":"scatimdata-avaps",
         "sourceArtifact":"dataset1.zip","url":URL,"sha256":"sha256:"+digest,
         "members":members,"rawSourceRetained":False,
         "scalarProfile":scalar_stats,
         "pressureWaveformProfile":pressure_summary,
         "flowWaveformProfile":flow_summary,
-        "pressurePeakScalarEquivalence":pressure_equivalence,
+        "pressurePeakScalarAgreement":pressure_agreement,
+        "flowPerturbationConsistency":flow_consistency,
         "unitEvidenceContext":{
             "peerReviewedDatasetPaper":"doi:10.3390/polym15040978",
-            "datasetPaperEvidence":"AVAPS exports high-resolution injection-pressure and injection-flow curves directly from the standard injection-molding machine control; Dataset 1 paper reports mean part weight 58.92 g and mean Distance A 84.9372 mm.",
+            "datasetPaperEvidence":"AVAPS exports high-resolution injection-pressure and injection-flow curves directly from the standard Allrounder 520E 1500-800 machine control; Dataset 1 paper reports the flow perturbation schedule and quality anchors.",
             "machineQuantityConventionReference":"doi:10.3390/polym16010054",
-            "machineQuantityConvention":"Arburg Allrounder 520 E engineering data reports injection pressure in bar and injection flow rate in cm3/s.",
-            "pressureDecision":"Pressure waveform is additionally tied to the source maximaler_spritzdruck scalar on a near-1:1 scale over 1167 linked cycles.",
-            "flowDecisionBoundary":"Flow is identified by the source and paper as injection flow from the machine control and is consistent with the 520 E engineering quantity convention. There is no independent scalar flow channel in Dataset 1 for a second numerical-scale cross-check."
+            "machineQuantityConvention":"Arburg Allrounder 520 E engineering data reports injection pressure in bar and injection flow rate in cm3/s; the referenced machine has the same 1500 kN class and 45 mm screw as the AVAPS experiment.",
+            "pressureDecision":"Pressure waveform is additionally tied to source maximaler_spritzdruck on a near-1:1 scale across linked Dataset 1 cycles.",
+            "flowDecisionBoundary":"Flow is identified by the source and paper as the manipulated injection-flow quantity from the same machine control. Relative perturbation consistency is checked here, but Dataset 1 contains no independent scalar flow channel for a second absolute-scale cross-check."
         },
-        "boundary":"Source proof only. No raw third-party rows or traces are retained. Unit/scale evidence can support governed authoring, but does not authorize a learner case, production recipe or causal diagnosis without case-specific review."
+        "boundary":"Source proof only. No raw third-party rows or traces are retained. Scale-consistency metrics can inform a governed unit decision but do not authorize a learner case, production recipe or causal diagnosis."
     }
     path=out_dir/'avaps-dataset1-source-proof.json'
     path.write_text(json.dumps(proof,indent=2)+"\n",encoding='utf-8')
     print(json.dumps({
         "status":proof["status"],"datasetId":proof["datasetId"],"sha256":proof["sha256"],
-        "memberCount":len(members),"pressureLinkedCycles":pressure_equivalence["linkedCycleCount"],
-        "pressureMedianRelativeDifference":pressure_equivalence["medianRelativeDifference"],
-        "pressureMaximumRelativeDifference":pressure_equivalence["maximumRelativeDifference"],
-        "pressureMedianWaveformToScalarRatio":pressure_equivalence["medianWaveformToScalarRatio"],
+        "memberCount":len(members),"pressureLinkedCycles":pressure_agreement["linkedCycleCount"],
+        "pressureMedianRelativeDifference":pressure_agreement["medianRelativeDifference"],
+        "pressureMaximumRelativeDifference":pressure_agreement["maximumRelativeDifference"],
+        "pressureMedianWaveformToScalarRatio":pressure_agreement["medianWaveformToScalarRatio"],
+        "pressureWithin1Pct":pressure_agreement["matchFractionsByRelativeTolerance"]["0.01"],
+        "pressureWithin2Pct":pressure_agreement["matchFractionsByRelativeTolerance"]["0.02"],
         "weightMeanG":scalar_stats["qualityAnchors"]["weight"]["deliveredMean"],
-        "distanceRawMean":scalar_stats["qualityAnchors"]["distanceA"]["deliveredRawMean"],
         "distanceScaledMeanMm":scalar_stats["qualityAnchors"]["distanceA"]["scaledMeanMm"],
         "pressureCycleMaxRange":[pressure_summary["globalMinimumOfCycleMaxima"],pressure_summary["globalMaximumOfCycleMaxima"]],
         "flowCycleMaxRange":[flow_summary["globalMinimumOfCycleMaxima"],flow_summary["globalMaximumOfCycleMaxima"]],
+        "flowImpliedBaseline":flow_consistency["meanImpliedUnperturbedBaseline"],
+        "flowImpliedBaselineCV":flow_consistency["coefficientOfVariationAcrossImpliedBaselines"],
+        "flowNormalizedMedians":flow_consistency["normalizedMedianPeaksUsingMeanImpliedBaseline"],
         "pressureTimeDeltaRange":[pressure_summary["deliveredMinimumSampleIntervalS"],pressure_summary["deliveredMaximumSampleIntervalS"]],
-        "flowTimeDeltaRange":[flow_summary["deliveredMinimumSampleIntervalS"],flow_summary["deliveredMaximumSampleIntervalS"]],
     },separators=(',',':')))
     return 0
 
