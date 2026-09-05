@@ -144,6 +144,8 @@ def main():
             for case_id in suggested:
                 missing=required_channels(by_id[case_id])-source_channels
                 assert not missing, f'{cid}/{case_id}: missing required source channels {sorted(missing)}'
+                if "multi-signal" in by_id[case_id].get("coverageTags",[]):
+                    assert len(signals)>=2, f'{cid}/{case_id}: multi-signal case requires at least two bound signals'
             numeric_coverage.update(suggested)
 
             direct=True; reasons=list(c.get("bindingBlockers",[])); governed=channels.get(dataset,{}); signal_ids={s.get("id") for s in signals}; governed_members=set()
@@ -194,13 +196,13 @@ def main():
     assert not missing_direct, f'unexpected direct-binding gaps: {missing_direct}'
     assert len(direct_coverage)==70, f'direct-binding-shape coverage drifted: {len(direct_coverage)}'
     report={
-        "schemaVersion":5,"status":"authoring-coverage-qa-passed","promotionReadySourceFamilies":sorted(ready),
+        "schemaVersion":6,"status":"authoring-coverage-qa-passed","promotionReadySourceFamilies":sorted(ready),
         "sourceAndChannelReadyCatalogueSlots":len(ready_slots),"sourceAndChannelReadyCaseIds":sorted(ready_slots),
         "numericAuthoringCandidateCount":len(candidate_ids),"numericCandidateCatalogueCoverage":len(numeric_coverage),"numericCandidateCaseIds":sorted(numeric_coverage),"numericCandidateGaps":missing_numeric,
         "directBindingShapeCatalogueCoverage":len(direct_coverage),"directBindingShapeCaseIds":sorted(direct_coverage),"directBindingShapeGaps":missing_direct,
         "candidateCountBySource":source_counts,"candidates":details,"promotedLearnerCases":0,
         "releaseCatalogueSourceBlockedCases":[],
-        "boundary":"All 70 release catalogue objectives now have direct-binding-shaped authoring evidence from governed open/licence-compatible source channels. This is not learner promotion: case wording, novelty, exact promotion-window identity and independent engineering review still have to pass for every learner-visible case. FORinFPRO remains one-cycle evidence and PMC remains material-test rather than production-waveform evidence."
+        "boundary":"All 70 release catalogue objectives now have direct-binding-shaped authoring evidence from governed open/licence-compatible source channels. Multi-signal catalogue cases additionally require at least two bound signals at authoring QA. This is not learner promotion: case wording, novelty, exact promotion-window identity and independent engineering review still have to pass for every learner-visible case. FORinFPRO remains one-cycle evidence and PMC remains material-test rather than production-waveform evidence."
     }
     REPORT.write_text(json.dumps(report,indent=2)+"\n",encoding="utf-8")
     print(json.dumps({k:report[k] for k in ("status","sourceAndChannelReadyCatalogueSlots","numericAuthoringCandidateCount","numericCandidateCatalogueCoverage","numericCandidateGaps","directBindingShapeCatalogueCoverage","directBindingShapeGaps")},separators=(",",":")))
