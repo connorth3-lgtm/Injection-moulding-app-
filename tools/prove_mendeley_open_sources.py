@@ -6,7 +6,7 @@ stored locally. Remote metadata is consistency evidence only. Downloads start fr
 Mendeley URL and redirects are checked before following them against an exact host allow-list.
 """
 from __future__ import annotations
-import hashlib, json, re, tempfile, urllib.error, urllib.parse, urllib.request, zipfile
+import hashlib, json, re, tempfile, urllib.parse, urllib.request, zipfile
 from pathlib import Path
 from xml.etree import ElementTree as ET
 
@@ -49,7 +49,7 @@ DOWNLOAD_OPENER=urllib.request.build_opener(AllowlistedRedirect())
 
 def get_json(url):
     assert_https_host(url,{MENDELEY_HOST})
-    req=urllib.request.Request(url,headers={'User-Agent':'MouldMaster-measured-learning/2.3'})
+    req=urllib.request.Request(url,headers={'User-Agent':'MouldMaster-measured-learning/2.4'})
     with urllib.request.urlopen(req,timeout=60) as r:
         assert_https_host(r.geturl(),{MENDELEY_HOST})
         return json.load(r)
@@ -103,10 +103,9 @@ def pinned_download_urls(short_id,version,file_id):
     ]
 
 
-def resolve_file(meta,file_id,name,short_id,version):
-    """Compatibility resolver that never returns remote-controlled network values."""
+def resolve_file(_meta,file_id,name,short_id,version):
+    """Legacy call shape; resolution is intentionally local-only and metadata-independent."""
     validate_pinned_identity(file_id,name)
-    verify_metadata_identity(meta,file_id,name,short_id)
     urls=pinned_download_urls(short_id,version,file_id)
     local_identity={'id':file_id,'filename':name,'identitySource':'repository-pinned'}
     return local_identity,file_id,urls
@@ -117,7 +116,7 @@ def download_first(urls,destination):
     for url in urls:
         try:
             assert_https_host(url,{MENDELEY_HOST})
-            req=urllib.request.Request(url,headers={'User-Agent':'MouldMaster-measured-learning/2.3'})
+            req=urllib.request.Request(url,headers={'User-Agent':'MouldMaster-measured-learning/2.4'})
             with DOWNLOAD_OPENER.open(req,timeout=90) as r, open(destination,'wb') as out:
                 assert_https_host(r.geturl(),{MENDELEY_HOST,MENDELEY_FILE_HOST})
                 while True:
@@ -150,8 +149,7 @@ def workbook_text_schema(path):
             name=sheet.attrib['name']; target=rels[sheet.attrib[f'{{{NS["r"]}}}id']]
             target='xl/'+target.lstrip('/') if not target.startswith('xl/') else target
             xml=ET.fromstring(z.read(target))
-            labels=[]
-            max_col=0; max_row=0
+            labels=[]; max_col=0; max_row=0
             for row in xml.findall('.//m:sheetData/m:row',NS):
                 rnum=int(row.attrib.get('r','0')); max_row=max(max_row,rnum)
                 if rnum>25: continue
@@ -162,8 +160,7 @@ def workbook_text_schema(path):
                         v=cell.find('m:v',NS)
                         if v is not None and v.text is not None:
                             idx=int(v.text); text=shared[idx] if 0<=idx<len(shared) else None
-                    elif typ=='inlineStr':
-                        text=''.join(t.text or '' for t in cell.iterfind('.//m:t',NS))
+                    elif typ=='inlineStr': text=''.join(t.text or '' for t in cell.iterfind('.//m:t',NS))
                     elif typ=='str':
                         v=cell.find('m:v',NS); text=v.text if v is not None else None
                     if text and text.strip(): labels.append({'cell':ref,'text':text.strip()[:240]})
@@ -172,13 +169,13 @@ def workbook_text_schema(path):
 
 
 def main():
-    out=Path('measured-source-proof'); out.mkdir(exist_ok=True)
-    proofs=[]
+    out=Path('measured-source-proof'); out.mkdir(exist_ok=True); proofs=[]
     for source in SOURCES:
         endpoint,meta=public_files(source['shortId'],source['version'])
         source_proof={'datasetId':source['datasetId'],'metadataEndpoint':endpoint,'files':[]}
         for file_id,name,expected_sha in source['files']:
-            _identity,resolved_id,urls=resolve_file(meta,file_id,name,source['shortId'],source['version'])
+            verify_metadata_identity(meta,file_id,name,source['shortId'])
+            _identity,resolved_id,urls=resolve_file(None,file_id,name,source['shortId'],source['version'])
             with tempfile.NamedTemporaryFile(suffix='.xlsx') as tmp:
                 used=download_first(urls,tmp.name)
                 digest=hashlib.sha256(Path(tmp.name).read_bytes()).hexdigest()
@@ -187,7 +184,7 @@ def main():
             source_proof['files'].append({'name':name,'resolvedFileId':resolved_id,'sha256':'sha256:'+digest,'downloadRoute':used,'sheets':schema})
         source_proof['status']='source-proof-passed'; source_proof['rawNumericValuesEmitted']=False; proofs.append(source_proof)
         print(json.dumps({'status':'source-proof-passed','datasetId':source['datasetId'],'files':[f['name'] for f in source_proof['files']]},separators=(',',':')))
-    result={'schemaVersion':2,'status':'source-proofs-passed','sources':proofs,'boundary':'Workbook IDs, names, exact hashes, sheet names and bounded text/header labels only. Remote metadata is consistency evidence only. Download redirects are checked before following and restricted to Mendeley plus its exact public-file S3 host. Numeric worksheet values are not emitted.'}
+    result={'schemaVersion':2,'status':'source-proofs-passed','sources':proofs,'boundary':'Workbook IDs, names, exact hashes, sheet names and bounded text/header labels only. Remote metadata is checked separately and cannot influence URL construction. Download redirects are checked before following and restricted to Mendeley plus its exact public-file S3 host. Numeric worksheet values are not emitted.'}
     (out/'mendeley-open-workbook-source-proofs.json').write_text(json.dumps(result,indent=2)+'\n',encoding='utf-8')
     return 0
 if __name__=='__main__': raise SystemExit(main())
