@@ -7,7 +7,7 @@ import struct
 import subprocess
 import tempfile
 
-WEB_RELEASE = "2026.09.06.4"
+WEB_RELEASE = "2026.09.06.5"
 ANDROID_RELEASE = "2026.08.26.2"
 CONTENT_VERSION = "2026.08.26.1"
 WINDOWS_RECOVERY_VERSION = "2026.08.21.1"
@@ -184,6 +184,8 @@ assert f"const CONTENT='{CONTENT_VERSION}'" in shell
 assert "NZ source-status (?:note|clarification)" in shell, "duplicate NZ note prevention missing"
 for marker in ["function isIOSFamily()", "syncPlatformClasses", "mm-ios-webkit", "MM_IOS_LAYOUT_PATCH='safe-area-viewport-profile-v1'"]:
     assert marker in shell, f"iOS/iPadOS shell regression guard missing: {marker}"
+for marker in [".scenario-scoreboard .scorebox", "mm-question-collapsed", "data-mm-scenario-toggle", "data-mm-exam-question-toggle", "function patchQuestionListRenderers()"]:
+    assert marker in shell, f"mobile troubleshooting/question disclosure guard missing: {marker}"
 
 legacy_loader = text("MouldMaster_Academy_App.html")
 assert 'crypto.subtle.digest("SHA-256",bytes)' in legacy_loader, "legacy loader SHA-256 verification removed"
