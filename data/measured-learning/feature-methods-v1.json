@@ -16,7 +16,16 @@
     {"id": "spearman_correlation", "version": 1, "requiresNumeric": true},
     {"id": "peak_value", "version": 1, "requiresNumeric": true},
     {"id": "peak_position", "version": 1, "requiresNumeric": true},
-    {"id": "range", "version": 1, "requiresNumeric": true}
+    {"id": "range", "version": 1, "requiresNumeric": true},
+    {
+      "id": "ratio_of_sums_percent",
+      "version": 1,
+      "requiresNumeric": true,
+      "inputContract": "exactly two aligned signals: numerator first, denominator second",
+      "calculation": "100 * sum(numerator) / sum(denominator)",
+      "denominatorPolicy": "aggregate denominator must be strictly greater than zero",
+      "unit": "%"
+    }
   ],
   "featureContract": {
     "methodAndVersionRequired": true,
