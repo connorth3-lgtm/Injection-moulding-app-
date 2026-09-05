@@ -33,12 +33,7 @@ def normalize_text(value: str) -> str:
 
 
 def x_direction(values: list[float], declared: str | None = None) -> str:
-    """Validate a monotonic numeric axis without forcing source order to be ascending.
-
-    Existing bindings may omit xDirection; omission keeps the historical increasing-axis
-    contract. A source whose physical coordinate legitimately runs downward (for example
-    a cooling trace plotted against temperature) must explicitly declare ``decreasing``.
-    """
+    """Validate a monotonic numeric axis without forcing source order to be ascending."""
     direction = declared or "increasing"
     if direction not in {"increasing", "decreasing"}:
         raise ValueError("xDirection must be increasing or decreasing")
@@ -282,11 +277,29 @@ def normalized_window(extraction: dict) -> dict:
     return {"kind":"id_set","axis":str(axis),"scope":scope,"ids":sorted({str(v) for v in ids})}
 
 
-def raw_window_fingerprint(source_fingerprint: str, source_artifact: str, source_member: str | None, extraction: dict) -> str:
+def normalize_source_members(source_members: Any) -> list[str]:
+    """Normalize a legacy single member or a multi-member source set."""
+    if source_members in (None, ""):
+        return []
+    if isinstance(source_members, str):
+        values = [source_members]
+    elif isinstance(source_members, list):
+        values = source_members
+    else:
+        raise ValueError("sourceMember/sourceMembers must be a string or list of strings")
+    clean = [str(value).strip() for value in values]
+    if not clean or any(not value for value in clean):
+        raise ValueError("source members must be non-empty strings")
+    if len(clean) != len(set(clean)):
+        raise ValueError("source members must be unique")
+    return sorted(clean)
+
+
+def raw_window_fingerprint(source_fingerprint: str, source_artifact: str, source_members: Any, extraction: dict) -> str:
     return canonical_sha({
         "sourceFingerprint": source_fingerprint,
         "sourceArtifact": source_artifact,
-        "sourceMember": source_member,
+        "sourceMembers": normalize_source_members(source_members),
         "window": normalized_window(extraction),
     })
 
