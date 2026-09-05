@@ -8,6 +8,7 @@ raw workbooks and full raw rows are never retained or uploaded.
 """
 from __future__ import annotations
 
+import copy
 import hashlib
 import json
 import math
@@ -65,13 +66,7 @@ def reduce_points(x: list[float], y: list[float], limit: int=400) -> tuple[list[
 
 
 def maximal_decreasing_branch(x: list[float], y: list[float], *, maximum_terminal_reversal_points: int=2):
-    """Select the source-ordered decreasing branch without sorting or interpolating.
-
-    Figure2's three isobaric series currently contain one terminal point after the
-    minimum-temperature sample that reverses X direction. The learner candidate is the
-    maximal non-increasing prefix only. Any future change to a larger/non-terminal
-    reversal fails closed instead of silently changing the evidence window.
-    """
+    """Select the source-ordered decreasing branch without sorting or interpolating."""
     if len(x)!=len(y) or len(x)<3:
         raise RuntimeError("decreasing branch requires aligned source pairs")
     cut=len(x)
@@ -167,11 +162,17 @@ def six_k8(source):
     finally: td.cleanup()
 
 
+def _copy_signal_with_artifact(candidate: dict, source_channel: str) -> dict:
+    selected=copy.deepcopy(next(s for s in candidate["signals"] if s["sourceChannel"]==source_channel))
+    selected["sourceArtifact"]=candidate["sourceArtifact"]
+    return selected
+
+
 def yxz(source):
     results=[]
     for name,sheet,marker,cols,semantics,units,rows,cases in [
-        ("data_tensile_3d_print_d_ryan.xlsx","tensile_PLA","M1",list("OPQR"),["pla-injection-tensile-modulus","pla-injection-maximum-force","pla-injection-maximum-stress","pla-injection-elongation-at-maximum"],["GPa","N","MPa","%"],(4,22),["MLM-033","MLM-055"]),
-        ("data_3pbending_3d_print_d_ryan.xlsx","bending_PLA","O1",list("PQRS"),["pla-injection-bending-thickness","pla-injection-bending-width","pla-injection-bending-maximum-force","pla-injection-bending-deflection-at-max"],["mm","mm","N","mm"],(4,34),["MLM-034","MLM-055"])]:
+        ("data_tensile_3d_print_d_ryan.xlsx","tensile_PLA","M1",list("OPQR"),["pla-injection-tensile-modulus","pla-injection-maximum-force","pla-injection-maximum-stress","pla-injection-elongation-at-maximum"],["GPa","N","MPa","%"],(4,22),["MLM-033"]),
+        ("data_3pbending_3d_print_d_ryan.xlsx","bending_PLA","O1",list("PQRS"),["pla-injection-bending-thickness","pla-injection-bending-width","pla-injection-bending-maximum-force","pla-injection-bending-deflection-at-max"],["mm","mm","N","mm"],(4,34),["MLM-034"])]:
         path,td,fp=download_verified(source,name)
         try:
             wb=load_workbook(path,read_only=False,data_only=False); ws=wb[sheet]
@@ -185,6 +186,33 @@ def yxz(source):
                 sigs.append(signal(col,f"{sheet}!{col}",semantic,unit,"observation-index","index",x,vals,"direct-injection-block-values-no-interpolation",len(vals),"increasing"))
             results.append({"candidateId":f"MEND-YXZ-{sheet.upper()}-01","datasetId":source["datasetId"],"sourceArtifact":name,"sourceFingerprint":fp,"sourceScope":{"sheet":sheet,"marker":marker_text,"columns":cols,"rows":list(rows)},"signals":sigs,"candidateFingerprint":sha256_json(sigs),"suggestedCatalogueCases":cases,"evidenceBoundary":"Only the explicitly labelled injection-moulded block is included; FDM, energy, impact and formula-derived content remain excluded."})
         finally: td.cleanup()
+
+    tensile,bending=results
+    combined_signals=[
+        _copy_signal_with_artifact(tensile,"tensile_PLA!P"),
+        _copy_signal_with_artifact(bending,"bending_PLA!R"),
+    ]
+    combined={
+        "candidateId":"MEND-YXZ-TENSILE-BENDING-FORCE-01",
+        "datasetId":source["datasetId"],
+        "sourceArtifacts":[
+            {"name":tensile["sourceArtifact"],"sha256":tensile["sourceFingerprint"]},
+            {"name":bending["sourceArtifact"],"sha256":bending["sourceFingerprint"]},
+        ],
+        "sourceScope":{
+            "comparison":"injection-moulded PLA tensile versus three-point-bending maximum-force measurements",
+            "components":[
+                {"artifact":tensile["sourceArtifact"],"sheet":"tensile_PLA","sourceChannel":"tensile_PLA!P"},
+                {"artifact":bending["sourceArtifact"],"sheet":"bending_PLA","sourceChannel":"bending_PLA!R"},
+            ],
+            "coordinateBoundary":"Each signal retains its own source-order observation index; the records are not paired specimen-by-specimen.",
+        },
+        "signals":combined_signals,
+        "candidateFingerprint":sha256_json(combined_signals),
+        "suggestedCatalogueCases":["MLM-055"],
+        "evidenceBoundary":"Both measurements are direct injection-moulded PLA maximum-force outcomes in N, but tensile and bending tests use different loading modes and specimen contexts. Equal units do not make them the same mechanical property, and the comparison does not establish a production root cause.",
+    }
+    results.append(combined)
     return results
 
 
