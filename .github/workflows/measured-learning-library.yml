@@ -2,7 +2,6 @@ name: MouldMaster Measured Learning Library
 
 on:
   pull_request:
-    branches: [main]
     paths:
       - 'data/measured-learning/**'
       - 'measured-learning-library.js'
@@ -10,6 +9,7 @@ on:
       - 'tools/build_measured_learning_case.py'
       - 'qa_measured_learning_library.py'
       - 'sources/MEASURED_LEARNING_LIBRARY_V1.md'
+      - 'sources/MEASURED_LEARNING_LIBRARY_V2.md'
       - '.github/workflows/measured-learning-library.yml'
   push:
     branches: [main]
@@ -20,6 +20,7 @@ on:
       - 'tools/build_measured_learning_case.py'
       - 'qa_measured_learning_library.py'
       - 'sources/MEASURED_LEARNING_LIBRARY_V1.md'
+      - 'sources/MEASURED_LEARNING_LIBRARY_V2.md'
       - '.github/workflows/measured-learning-library.yml'
   workflow_dispatch:
 
@@ -31,19 +32,36 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
-      - name: Compile promotion tooling
+      - name: Compile V2 promotion tooling
         run: python -m py_compile tools/build_measured_learning_case.py qa_measured_learning_library.py
-      - name: Validate 70-case catalogue and promoted evidence
+      - name: Check V2 learner runtime syntax
+        run: node --check measured-learning-library.js
+      - name: Validate governance JSON
+        run: |
+          python -m json.tool data/measured-learning/v2-policy.json >/dev/null
+          python -m json.tool data/measured-learning/source-readiness-v2.json >/dev/null
+          python -m json.tool data/measured-learning/feature-methods-v1.json >/dev/null
+          python -m json.tool data/measured-learning/binding-template-v2.json >/dev/null
+      - name: Validate 70-case release catalogue and 100-case V2 capacity
         run: python qa_measured_learning_library.py
-      - name: Enforce no raw measured source payloads in learner directory
+      - name: Enforce learner payload boundaries
         run: |
           python - <<'PY'
+          import json
           from pathlib import Path
-          allowed={'.json'}
+          policy=json.loads(Path('data/measured-learning/v2-policy.json').read_text())
+          hard=policy['payloadBudget']['hardCaseBytes']
+          aggregate=policy['payloadBudget']['aggregatePromotedBytes']
           root=Path('data/measured-learning')
+          allowed={'.json'}
           bad=[str(p) for p in root.rglob('*') if p.is_file() and p.suffix.lower() not in allowed]
           assert not bad, f'Unexpected learner-data file types: {bad}'
-          for p in root.rglob('*'):
-              if p.is_file():
-                  assert p.stat().st_size <= 1024*1024, f'Individual measured learner asset exceeds 1 MiB: {p}'
+          cases=root/'cases'
+          total=0
+          if cases.exists():
+              for p in cases.glob('MLM-*.json'):
+                  size=p.stat().st_size
+                  assert size <= hard, f'Individual measured learner asset exceeds {hard} bytes: {p}'
+                  total += size
+          assert total <= aggregate, f'Aggregate measured learner payload exceeds {aggregate} bytes: {total}'
           PY
