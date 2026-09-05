@@ -140,7 +140,7 @@ need(attestation.get("schema") == 1, "ruleset attestation schema must be 1")
 need(attestation.get("source") == "admin-verified-ruleset-detail", "ruleset attestation must identify administrator-readable source")
 need(attestation.get("repository") == "connorth3-lgtm/Injection-moulding-app-", "ruleset attestation repository mismatch")
 need(attestation.get("ruleset_id") == 22155472, "ruleset attestation must identify the verified live ruleset")
-need(attestation.get("ruleset_updated_at") == "2026-09-04T14:28:19.562+12:00", "ruleset attestation must be bound to the verified live ruleset version")
+need(attestation.get("ruleset_updated_at") == "2026-09-05T22:06:27.191+12:00", "ruleset attestation must be bound to the verified live ruleset version")
 need(attestation.get("bypass_actors") == [], "ruleset attestation must explicitly record no bypass actors")
 need(attestation.get("current_user_can_bypass") == "never", "ruleset attestation must record no current-user bypass")
 
