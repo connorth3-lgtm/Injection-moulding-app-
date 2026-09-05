@@ -62,17 +62,20 @@ jobs:
           python -m json.tool data/measured-learning/expansion-manifest-v2.json >/dev/null
       - name: Run positive and negative V2 evidence tests
         run: python -m unittest -v tests.test_measured_learning_v2
-      - name: Prove pinned public OpenMMS source and extract unreviewed compact candidate
+      - name: Prove required OpenMMS source
         run: python tools/prove_openmms_measured_source.py
-      - name: Prove pinned AVAPS dataset1 archive schema
+      - name: Prove AVAPS source structure for unit/channel recovery
         run: python tools/prove_avaps_measured_source.py
-      - name: Prove pinned Sustainability publisher supplement
+      - name: Prove required Sustainability publisher supplement
         run: python tools/prove_sustainability_measured_source.py
       - name: Prove benchmark-pinned open Mendeley workbook schemas
         run: python tools/prove_mendeley_open_sources.py
-      - name: Prove PMC4753395 tensile workbook schema
+      - name: Probe blocked PMC source for future channel unlock
+        id: pmc_probe
+        continue-on-error: true
         run: python tools/prove_pmc_hdpe_source.py
-      - name: Upload compact source proofs only
+      - name: Upload compact source proofs
+        if: always()
         uses: actions/upload-artifact@v6
         with:
           name: measured-learning-source-proofs
