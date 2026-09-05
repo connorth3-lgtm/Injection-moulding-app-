@@ -1,4 +1,6 @@
 from pathlib import Path
+import subprocess
+import sys
 
 ROOT = Path(__file__).resolve().parent
 WORKFLOW = ROOT / ".github" / "workflows" / "pages.yml"
@@ -35,5 +37,7 @@ for marker in (
 
 need("path: .pages-dist\n          retention-days: 30" not in block, "generic artifact uploader must not target dot-prefixed .pages-dist directly")
 need("actions/upload-pages-artifact" not in block, "retained physical candidate must remain a generic non-deployable Actions artifact")
+
+subprocess.run([sys.executable, str(ROOT / "qa_device_metadata_helper.py")], check=True)
 
 print("MouldMaster physical PWA candidate handoff QA passed")
