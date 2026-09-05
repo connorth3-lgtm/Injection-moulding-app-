@@ -1,0 +1,77 @@
+{
+  "schemaVersion": 2,
+  "caseId": "MLM-001",
+  "sourceFamily": "scatimdata-avaps",
+  "datasetId": "scatimdata-avaps",
+  "sourceReference": "exact publisher/repository reference",
+  "sourceFingerprint": null,
+  "licenceOrAccessStatus": "must exactly match governed source readiness scope",
+  "extraction": {
+    "description": "exact raw selection description",
+    "sourceArtifacts": [
+      {"name":"exact registered publisher artifact name","sha256":"sha256:EXACT_HASH_FOR_THIS_ARTIFACT"}
+    ],
+    "sourceMembers": [],
+    "sourceOrderingPreserved": true,
+    "window": {
+      "kind": "range",
+      "axis": "row-index",
+      "scope": "sheet/member/table/cycle-set scope or null",
+      "start": 0,
+      "endExclusive": 100,
+      "unit": "row"
+    }
+  },
+  "signals": [
+    {
+      "id": "signal-id",
+      "sourceChannel": "exact source column/channel name",
+      "sourceArtifact": "artifact name from extraction.sourceArtifacts when the signal comes from one selected file",
+      "label": "Learner label",
+      "semantic": "must exactly match the governed source-channel registry",
+      "unit": "must exactly match the governed source-channel registry",
+      "representation": {
+        "originalPointCount": 100,
+        "reductionMethod": "deterministic-reviewed-method-v1",
+        "xSemantic": "must match governed coordinate semantic",
+        "xUnit": "must match governed coordinate unit",
+        "x": [0, 1],
+        "y": [0.0, 0.0]
+      }
+    }
+  ],
+  "features": [
+    {
+      "id": "feature-id",
+      "label": "Reviewed feature",
+      "method": "mean",
+      "methodVersion": 1,
+      "inputs": ["signal:signal-id"],
+      "params": {},
+      "calculationScope": "displayed-reviewed-representation",
+      "unit": null
+    }
+  ],
+  "observations": [
+    {"id":"OBS-1","text":"Reviewed observation limited to what the measurements support.","support":["signal:signal-id","feature:feature-id"]}
+  ],
+  "learnerTask": {
+    "observePrompt": "What can you establish from these measurements?",
+    "investigatePrompt": "What evidence would best discriminate between the remaining explanations?",
+    "explanation": "Reviewed engineering explanation.",
+    "takeaway": "State the evidence lesson without converting association into root cause."
+  },
+  "supportedConclusions": ["Directly supported conclusion."],
+  "unsupportedConclusions": ["Tempting conclusion that the selected evidence does not establish."],
+  "limitations": ["Study, sampling, context and generalisation limitation."],
+  "novelty": {"learningObjective":"specific evidence skill this case adds","sourceWindowReuse":false,"reuseJustification":null},
+  "sourceEstablishesCausality": false,
+  "claimScope": "observation_only",
+  "reviewed": false,
+  "authorId": "stable author identity",
+  "reviewerId": "different stable reviewer identity",
+  "reviewerRole": "engineering-evidence-review",
+  "reviewRecordType": "github-pr",
+  "reviewRecord": "stable resolvable review reference",
+  "reviewedAt": null
+}

@@ -1,222 +1,366 @@
 #!/usr/bin/env python3
-"""Fail-closed QA for the MouldMaster Measured Learning Library.
-
-The 70-row catalogue is a curriculum target, not proof that 70 measured learner
-cases have been built. A case becomes learner-visible only when a promoted
-per-case JSON asset exists, is listed in the promotion index and satisfies the
-provenance/evidence contract below.
-"""
+"""Fail-closed QA for MouldMaster Measured Learning Library V2."""
 from __future__ import annotations
 
-import hashlib
 import json
+import math
 import re
+import sys
 from collections import Counter
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent
-MANIFEST = ROOT / "data" / "measured-learning" / "manifest-v1.json"
-PROMOTION_INDEX = ROOT / "data" / "measured-learning" / "promoted-v1.json"
-LEDGER = ROOT / "data" / "measured-dataset-execution-ledger-v1.json"
-CASE_DIR = ROOT / "data" / "measured-learning" / "cases"
-REPORT = ROOT / "measured-learning-library-report.json"
-
-EXPECTED_DIFFICULTY = {"foundation": 20, "intermediate": 30, "advanced": 20}
-MIN_TAGS = {
-    "insufficient-evidence": 10,
-    "multi-signal": 10,
-    "quality-outcome": 10,
-    "time-series-interpretation": 10,
-    "material-physical": 8,
-}
-CAUSAL_PATTERNS = (
-    r"\bcaused by\b",
-    r"\broot cause (?:is|was)\b",
-    r"\bproves? that\b",
-    r"\bconfirmed (?:fault|failure|cause)\b",
-    r"\bresulted from\b",
+TOOLS = ROOT / "tools"
+if str(TOOLS) not in sys.path:
+    sys.path.insert(0, str(TOOLS))
+from measured_learning_core import (  # noqa: E402
+    calculate_feature, canonical_sha, finite_number, load_json,
+    normalize_source_artifacts, normalize_source_members, normalize_text,
+    raw_window_fingerprint, representation_fingerprint, window_overlap, x_direction,
 )
 
-
-def load_json(path: Path):
-    return json.loads(path.read_text(encoding="utf-8"))
-
-
-def sha256_json(value) -> str:
-    payload = json.dumps(value, sort_keys=True, separators=(",", ":"), ensure_ascii=False).encode("utf-8")
-    return hashlib.sha256(payload).hexdigest()
-
-
-def accepted_families(ledger: dict) -> set[str]:
-    accepted = set()
-    for source in ledger.get("sources", []):
-        state = str(source.get("state", ""))
-        # Fully profiled families only. Partial, retrieved-not-accepted, rights-blocked,
-        # embargoed, request-only and confidential families remain ineligible.
-        if state.startswith("accepted-profiled"):
-            accepted.add(source["datasetId"])
-    return accepted
-
-
-def expand_row(fields: list[str], row: list) -> dict:
-    if len(fields) != len(row):
-        raise AssertionError(f"catalogue row field mismatch: expected {len(fields)}, got {len(row)}")
-    return dict(zip(fields, row))
+MANIFEST = ROOT / "data/measured-learning/manifest-v1.json"
+EXPANSION = ROOT / "data/measured-learning/expansion-manifest-v2.json"
+PROMOTION_INDEX = ROOT / "data/measured-learning/promoted-v1.json"
+POLICY = ROOT / "data/measured-learning/v2-policy.json"
+READINESS = ROOT / "data/measured-learning/source-readiness-v2.json"
+ARTIFACTS = ROOT / "data/measured-learning/source-artifacts-v2.json"
+CHANNELS = ROOT / "data/measured-learning/source-channels-v2.json"
+REQUIREMENTS = ROOT / "data/measured-learning/case-requirements-v2.json"
+FEATURE_METHODS = ROOT / "data/measured-learning/feature-methods-v1.json"
+LEDGER = ROOT / "data/measured-dataset-execution-ledger-v1.json"
+CASE_DIR = ROOT / "data/measured-learning/cases"
+REPORT = ROOT / "measured-learning-library-report.json"
+EXPECTED_DIFFICULTY = {"foundation":20,"intermediate":30,"advanced":20}
+MIN_TAGS = {"insufficient-evidence":10,"multi-signal":10,"quality-outcome":10,"time-series-interpretation":10,"material-physical":8}
+CAUSAL_PATTERNS = (r"\bcaused by\b", r"\broot cause (?:is|was)\b", r"\bproves? that\b", r"\bconfirmed (?:fault|failure|cause)\b", r"\bresulted from\b")
+SHA256_RE = re.compile(r"sha256:[0-9a-f]{64}")
+HEX64_RE = re.compile(r"[0-9a-f]{64}")
+REVIEW_TYPES = {"github-pr","github-issue","signed-review","external-record","test-fixture"}
 
 
-def assert_catalogue(manifest: dict, eligible: set[str]) -> list[dict]:
-    assert manifest.get("schemaVersion") == 1
-    assert manifest.get("libraryId") == "measured-learning-library-v1"
-    assert manifest.get("targetCaseCount") == 70
-    assert manifest.get("learnerVisibleOnlyWhenPromoted") is True
-    assert manifest.get("evidencePolicy", {}).get("unboundCandidatesAreNotLearnerCases") is True
-    assert manifest.get("evidencePolicy", {}).get("rawThirdPartyRowsCommitted") is False
-
+def expand_rows(manifest: dict) -> list[dict]:
     fields = manifest.get("fields", [])
-    cases = [expand_row(fields, row) for row in manifest.get("cases", [])]
-    assert len(cases) == 70, f"expected exactly 70 catalogue cases, got {len(cases)}"
+    rows = []
+    for row in manifest.get("cases", []):
+        assert len(row) == len(fields), "catalogue row field mismatch"
+        rows.append(dict(zip(fields, row)))
+    return rows
 
-    expected_ids = [f"MLM-{i:03d}" for i in range(1, 71)]
-    ids = [c["id"] for c in cases]
-    assert ids == expected_ids, "case IDs must be unique, ordered and contiguous MLM-001..MLM-070"
-    assert len(set(c["title"] for c in cases)) == 70, "case titles must be unique"
 
-    difficulty = Counter(c["difficulty"] for c in cases)
-    assert difficulty == Counter(EXPECTED_DIFFICULTY), f"difficulty mix drifted: {dict(difficulty)}"
+def ledger_map() -> dict[str, dict]:
+    return {s["datasetId"]:s for s in load_json(LEDGER).get("sources", [])}
 
-    sources = Counter(c["sourceFamily"] for c in cases)
-    unknown = sorted(set(sources) - eligible)
-    assert not unknown, f"catalogue references non-eligible measured families: {unknown}"
-    assert max(sources.values(), default=0) <= 14, f"one source exceeds 20% of 70 cases: {dict(sources)}"
 
+def readiness_map() -> dict[str, dict]:
+    return {s["datasetId"]:s for s in load_json(READINESS).get("sources", [])}
+
+
+def _channel_docs() -> list[dict]:
+    docs = [load_json(CHANNELS)]
+    for path in sorted((ROOT / "data/measured-learning").glob("source-channels-*-v2.json")):
+        doc = load_json(path)
+        if "datasetId" in doc:
+            docs.append({"sources":[{"datasetId":doc["datasetId"],"channels":doc.get("channels", [])}]})
+        else:
+            docs.append(doc)
+    return docs
+
+
+def channels_map() -> dict[str, dict[str, dict]]:
+    result: dict[str, dict[str, dict]] = {}
+    for doc in _channel_docs():
+        for source in doc.get("sources", []):
+            dataset_id = source["datasetId"]
+            bucket = result.setdefault(dataset_id, {})
+            for channel in source.get("channels", []):
+                key = channel["sourceChannel"]
+                assert key not in bucket, f"duplicate governed source channel: {dataset_id}/{key}"
+                bucket[key] = channel
+    return result
+
+
+def artifacts_map() -> dict[str, dict[str, dict]]:
+    return {s["datasetId"]:{a["name"]:a for a in s.get("artifacts", [])} for s in load_json(ARTIFACTS).get("sources", [])}
+
+
+def methods_map() -> dict[str, int]:
+    return {m["id"]:int(m["version"]) for m in load_json(FEATURE_METHODS).get("methods", [])}
+
+
+def requirements_doc() -> dict:
+    return load_json(REQUIREMENTS)
+
+
+def collect_hashes(value, key="") -> set[str]:
+    found = set()
+    if isinstance(value, dict):
+        for k, v in value.items():
+            found |= collect_hashes(v, str(k))
+    elif isinstance(value, list):
+        for v in value:
+            found |= collect_hashes(v, key)
+    elif isinstance(value, str):
+        text = value.lower()
+        if SHA256_RE.fullmatch(text):
+            found.add(text)
+        elif HEX64_RE.fullmatch(text) and any(t in key.lower() for t in ("sha256","digest","hash","checksum")):
+            found.add("sha256:" + text)
+    return found
+
+
+def case_required_capabilities(candidate: dict) -> set[str]:
+    registry = requirements_doc()
+    required = set()
+    for tag in candidate.get("coverageTags", []):
+        required.update(registry.get("requirementsByCoverageTag", {}).get(tag, []))
+    required.update(registry.get("caseOverrides", {}).get(candidate["id"], []))
+    return required
+
+
+def case_required_source_channels(candidate: dict) -> set[str]:
+    return set(requirements_doc().get("requiredSourceChannelsByCase", {}).get(candidate["id"], []))
+
+
+def case_source_gate_ready(candidate: dict, readiness: dict, channels: dict) -> bool:
+    family = candidate["sourceFamily"]
+    gate = readiness.get(family, {})
+    if gate.get("promotionReady") is not True:
+        return False
+    if any(gate.get("capabilities", {}).get(cap) is not True for cap in case_required_capabilities(candidate)):
+        return False
+    governed = channels.get(family, {})
+    return all(governed.get(ch, {}).get("promotionReady") is True for ch in case_required_source_channels(candidate))
+
+
+def assert_registries() -> tuple[dict, dict, dict, dict]:
+    ledger = ledger_map(); readiness = readiness_map(); channels = channels_map(); artifacts = artifacts_map()
+    registry = {s["datasetId"]:s for s in load_json(ARTIFACTS).get("sources", [])}
+    assert len(readiness) == len(set(readiness)), "duplicate source readiness entries"
+    for dataset_id, gate in readiness.items():
+        assert dataset_id in ledger, f"readiness source absent from ledger: {dataset_id}"
+        assert gate.get("ledgerState") == ledger[dataset_id].get("state"), f"ledger-state drift: {dataset_id}"
+        if gate.get("promotionReady"):
+            assert gate.get("unitsResolved") is True and gate.get("semanticsResolved") is True, f"ready source unresolved: {dataset_id}"
+            assert artifacts.get(dataset_id), f"ready source lacks exact artifact registry: {dataset_id}"
+            assert channels.get(dataset_id), f"ready source lacks promotable channel registry: {dataset_id}"
+            assert any(c.get("promotionReady") for c in channels[dataset_id].values()), f"ready source lacks ready channels: {dataset_id}"
+    for dataset_id, source in registry.items():
+        benchmark_path = ROOT / source.get("benchmarkResult", "")
+        assert benchmark_path.is_file(), f"artifact benchmark missing: {dataset_id}"
+        benchmark_hashes = collect_hashes(load_json(benchmark_path))
+        names = set()
+        for artifact in source.get("artifacts", []):
+            name = artifact.get("name")
+            assert name and name not in names, f"duplicate artifact name: {dataset_id}/{name}"
+            names.add(name)
+            assert SHA256_RE.fullmatch(str(artifact.get("sha256", ""))), f"invalid artifact SHA: {dataset_id}/{name}"
+            assert artifact["sha256"] in benchmark_hashes, f"artifact SHA is not evidenced by benchmark: {dataset_id}/{name}"
+    return ledger, readiness, artifacts, channels
+
+
+def assert_base_catalogue(manifest: dict, ledger: dict) -> list[dict]:
+    assert manifest.get("schemaVersion") == 1 and manifest.get("targetCaseCount") == 70
+    cases = expand_rows(manifest)
+    assert [c["id"] for c in cases] == [f"MLM-{i:03d}" for i in range(1,71)]
+    assert len({c["title"] for c in cases}) == 70
+    assert Counter(c["difficulty"] for c in cases) == Counter(EXPECTED_DIFFICULTY)
+    accepted = {k for k,v in ledger.items() if str(v.get("state","")).startswith("accepted-profiled")}
+    assert not sorted({c["sourceFamily"] for c in cases} - accepted), "base catalogue uses non-profiled families"
+    assert max(Counter(c["sourceFamily"] for c in cases).values()) <= 14
     tags = Counter(tag for c in cases for tag in c.get("coverageTags", []))
     for tag, minimum in MIN_TAGS.items():
-        assert tags[tag] >= minimum, f"coverage tag {tag} requires >= {minimum}, found {tags[tag]}"
-
+        assert tags[tag] >= minimum, f"coverage {tag} below minimum"
     return cases
 
 
-def assert_promotion_index(index: dict, catalogue_ids: set[str]) -> list[str]:
-    assert index.get("schemaVersion") == 1, "promotion index schemaVersion must be 1"
-    assert index.get("libraryId") == "measured-learning-library-v1", "promotion index libraryId drift"
-    ids = index.get("caseIds", [])
-    assert isinstance(ids, list), "promotion index caseIds must be an array"
-    assert len(ids) == len(set(ids)), "promotion index contains duplicate case IDs"
-    unknown = sorted(set(ids) - catalogue_ids)
-    assert not unknown, f"promotion index contains unknown catalogue IDs: {unknown}"
-    return ids
+def assert_expansion_manifest(expansion: dict, unlocked: bool) -> list[dict]:
+    assert expansion.get("schemaVersion") == 2
+    ids = [f"MLM-{i:03d}" for i in range(71,101)]
+    assert expansion.get("capacityCaseIds") == ids
+    cases = expand_rows(expansion)
+    if not cases:
+        return []
+    assert unlocked, "expansion manifest must remain empty until expansion gate passes"
+    assert [c["id"] for c in cases] == ids and len({c["title"] for c in cases}) == 30
+    return cases
 
 
-def validate_promoted_case(path: Path, catalogue: dict, eligible: set[str]) -> dict:
-    case = load_json(path)
-    assert case.get("schemaVersion") == 1, f"{path}: schemaVersion must be 1"
-    assert case.get("id") == catalogue["id"], f"{path}: ID does not match catalogue"
-    assert case.get("title") == catalogue["title"], f"{path}: title does not match catalogue"
-    assert case.get("promotionState") == "promoted", f"{path}: learner case must declare promotionState=promoted"
-    assert case.get("source", {}).get("familyId") == catalogue["sourceFamily"], f"{path}: source family drift"
-    assert case.get("source", {}).get("familyId") in eligible, f"{path}: source family is not fully profiled"
-    assert case.get("evidenceTier") in {"measured", "site_validated"}, f"{path}: invalid evidence tier"
-    assert case.get("claimScope") in {"observation_only", "association", "validated_mechanism"}
-    if case.get("evidenceTier") == "measured":
-        assert case.get("claimScope") != "validated_mechanism", f"{path}: public measured case cannot self-promote a validated mechanism"
+def validate_trace(path: Path, signal: dict, governed: dict) -> None:
+    for key in ("id","label","sourceChannel","semantic","unit","representation"):
+        assert signal.get(key) not in (None,""), f"{path}: signal missing {key}"
+    assert signal["semantic"] == governed.get("semantic"), f"{path}: source-channel semantic mismatch"
+    assert signal["unit"] == governed.get("unit"), f"{path}: source-channel unit mismatch"
+    assert governed.get("promotionReady") is True, f"{path}: source channel is not promotion-ready"
+    rep = signal["representation"]
+    assert rep.get("xSemantic") == governed.get("coordinateSemantic"), f"{path}: x semantic mismatch"
+    assert rep.get("xUnit") == governed.get("coordinateUnit"), f"{path}: x unit mismatch"
+    assert rep.get("reductionMethod"), f"{path}: reduction method missing"
+    x, y = rep.get("x", []), rep.get("y", [])
+    assert len(x) == len(y) and len(x) > 1 and len(y) <= 600 and rep.get("originalPointCount",0) >= len(y)
+    assert all(finite_number(v) for v in x+y)
+    try:
+        x_direction(x, rep.get("xDirection"))
+    except ValueError as exc:
+        raise AssertionError(f"{path}: {exc}") from exc
 
-    source = case.get("source", {})
-    for key in ("datasetId", "sourceReference", "sourceFingerprint", "sourceWindowFingerprint", "licenceOrAccessStatus", "extraction"):
-        assert source.get(key), f"{path}: missing source.{key}"
-    assert re.fullmatch(r"sha256:[0-9a-f]{64}", source["sourceFingerprint"]), f"{path}: invalid source fingerprint"
-    assert re.fullmatch(r"sha256:[0-9a-f]{64}", source["sourceWindowFingerprint"]), f"{path}: invalid window fingerprint"
 
-    signals = case.get("signals", [])
-    assert signals, f"{path}: promoted case requires signals/outcomes"
+def normalized_case_source_artifacts(source: dict) -> list[dict]:
+    if source.get("sourceArtifacts") is not None:
+        assert source.get("sourceArtifact") in (None, "") and source.get("sourceFingerprint") in (None, ""), "multi-artifact source must not also declare legacy singular artifact fields"
+        try:
+            return normalize_source_artifacts(source["sourceArtifacts"])
+        except ValueError as exc:
+            raise AssertionError(str(exc)) from exc
+    try:
+        return normalize_source_artifacts(source.get("sourceArtifact"), source.get("sourceFingerprint"))
+    except ValueError as exc:
+        raise AssertionError(str(exc)) from exc
+
+
+def validate_case_object(case: dict, candidate: dict, readiness: dict, artifacts: dict, channels: dict, methods: dict, path: Path = Path("<case>")) -> dict:
+    assert case.get("schemaVersion") == 3 and case.get("architectureId") == "measured-learning-library-v2"
+    assert case.get("id") == candidate["id"] and case.get("title") == candidate["title"]
+    assert case.get("promotionState") == "promoted" and case.get("evidenceTier") == "measured"
+    assert case.get("claimScope") in {"observation_only","association"}
+    source = case.get("source", {}); family = source.get("familyId")
+    assert family == candidate["sourceFamily"] and readiness.get(family, {}).get("promotionReady") is True
+    required = case_required_capabilities(candidate); required_channels = case_required_source_channels(candidate)
+    assert set(case.get("requiredCapabilities", [])) == required
+    assert set(case.get("requiredSourceChannels", [])) == required_channels
+    assert not [cap for cap in required if readiness[family].get("capabilities", {}).get(cap) is not True], f"{path}: source capability mismatch"
+
+    selected_artifacts = normalized_case_source_artifacts(source)
+    governed_artifacts = artifacts.get(family, {})
+    for item in selected_artifacts:
+        assert item["name"] in governed_artifacts, f"{path}: unregistered source artifact {item['name']}"
+        assert item["sha256"] == governed_artifacts[item["name"]].get("sha256"), f"{path}: artifact/hash mismatch {item['name']}"
+    try:
+        source_members = normalize_source_members(source.get("sourceMembers", source.get("sourceMember")))
+    except ValueError as exc:
+        raise AssertionError(f"{path}: {exc}") from exc
+    assert source.get("licenceOrAccessStatus") == readiness[family].get("rightsScope")
+    extraction = source.get("extraction", {})
+    assert extraction.get("description") and extraction.get("sourceOrderingPreserved") is True
+    if source.get("sourceArtifacts") is not None:
+        raw_fp = raw_window_fingerprint(None, selected_artifacts, source_members, extraction)
+    else:
+        raw_fp = raw_window_fingerprint(source["sourceFingerprint"], source["sourceArtifact"], source_members, extraction)
+    assert source.get("rawWindowFingerprint") == raw_fp, f"{path}: raw-window fingerprint mismatch"
+
+    governed_channels = channels.get(family, {}); signals = case.get("signals", [])
+    assert signals and len({s.get("id") for s in signals}) == len(signals)
+    bound_channels = set(); governed_member_set = set()
+    selected_names = {a["name"] for a in selected_artifacts}
     for signal in signals:
-        for key in ("id", "label", "semantic", "unit", "representation"):
-            assert key in signal and signal[key] not in (None, ""), f"{path}: signal missing {key}"
-        rep = signal["representation"]
-        x, y = rep.get("x", []), rep.get("y", [])
-        assert len(x) == len(y) and len(x) > 1, f"{path}: x/y trace mismatch"
-        assert rep.get("originalPointCount", 0) >= len(y), f"{path}: displayed trace exceeds original count"
-        assert len(y) <= 600, f"{path}: learner trace exceeds 600-point budget"
-        assert rep.get("reductionMethod"), f"{path}: missing deterministic reduction method"
+        ch = signal.get("sourceChannel")
+        assert ch in governed_channels, f"{path}: unregistered source channel"
+        governed = governed_channels[ch]; validate_trace(path, signal, governed); bound_channels.add(ch)
+        if governed.get("sourceMember"):
+            governed_member_set.add(governed["sourceMember"])
+        if signal.get("sourceArtifact"):
+            assert signal["sourceArtifact"] in selected_names, f"{path}: signal references unselected source artifact"
+    assert required_channels <= bound_channels, f"{path}: missing required source channels"
+    if governed_member_set:
+        assert set(source_members) == governed_member_set, f"{path}: sourceMembers do not match bound channel members"
+    elif source_members:
+        assert len(selected_artifacts) == 1, f"{path}: archive members require one selected archive artifact"
+        assert set(source_members) <= set(governed_artifacts[selected_artifacts[0]["name"]].get("members", [])), f"{path}: unregistered archive member"
+    if "multi-signal" in candidate.get("coverageTags", []):
+        assert len(signals) >= 2
+    assert source.get("representationFingerprint") == representation_fingerprint(raw_fp, signals), f"{path}: representation fingerprint mismatch"
 
-    features = case.get("features", [])
+    signals_by_id = {s["id"]:s for s in signals}; features = case.get("features", [])
+    assert len({f.get("id") for f in features}) == len(features)
     for feature in features:
-        for key in ("id", "method", "methodVersion", "value"):
-            assert key in feature, f"{path}: feature missing {key}"
-
-    observations = case.get("observations", [])
-    assert observations, f"{path}: promoted case requires supported observations"
+        recalculated = calculate_feature({"id":feature["id"],"label":feature.get("label"),"method":feature["method"],"methodVersion":feature["methodVersion"],"inputs":feature.get("inputs"),"params":feature.get("params"),"calculationScope":feature.get("calculationScope"),"unit":feature.get("unit")}, signals_by_id, methods)
+        assert math.isclose(float(feature["value"]), float(recalculated["value"]), rel_tol=1e-12, abs_tol=1e-12), f"{path}: feature value not reproducible"
+        assert feature.get("inputFingerprint") == recalculated["inputFingerprint"] and feature.get("calculationFingerprint") == recalculated["calculationFingerprint"], f"{path}: feature fingerprint mismatch"
+    signal_ids = {f"signal:{s['id']}" for s in signals}; feature_ids = {f"feature:{f['id']}" for f in features}
+    observations = case.get("observations", []); assert observations
     for obs in observations:
-        assert obs.get("text") and obs.get("support"), f"{path}: every observation must link to supporting evidence"
-
-    evidence = case.get("evidence", {})
-    assert evidence.get("limitations"), f"{path}: limitations are mandatory"
-    assert evidence.get("supportedConclusions"), f"{path}: supported conclusions are mandatory"
-    assert evidence.get("unsupportedConclusions"), f"{path}: unsupported conclusions are mandatory"
-
+        assert obs.get("id") and obs.get("text") and obs.get("support")
+        assert not (set(obs["support"]) - signal_ids - feature_ids), f"{path}: unknown observation support"
+    evidence = case.get("evidence", {}); assert evidence.get("sourceEstablishesCausality") is False
+    for key in ("supportedConclusions","unsupportedConclusions","limitations"):
+        assert evidence.get(key), f"{path}: evidence.{key} required"
     learner = case.get("learnerTask", {})
-    for key in ("observePrompt", "investigatePrompt", "explanation", "takeaway"):
-        assert learner.get(key), f"{path}: learnerTask.{key} is mandatory"
-
-    visible_text = json.dumps({"observations": observations, "learnerTask": learner, "evidence": evidence}, ensure_ascii=False).lower()
-    if case.get("claimScope") != "validated_mechanism":
-        for pattern in CAUSAL_PATTERNS:
-            assert not re.search(pattern, visible_text), f"{path}: unsupported causal language matches {pattern}"
-
-    declared = case.get("caseFingerprint")
-    assert declared and re.fullmatch(r"sha256:[0-9a-f]{64}", declared), f"{path}: missing/invalid caseFingerprint"
-    fingerprint_input = {k: v for k, v in case.items() if k != "caseFingerprint"}
-    actual = "sha256:" + sha256_json(fingerprint_input)
-    assert declared == actual, f"{path}: caseFingerprint is not reproducible"
+    for key in ("observePrompt","investigatePrompt","explanation","takeaway"):
+        assert learner.get(key)
+    visible = json.dumps({"observations":observations,"learnerTask":learner,"evidence":evidence}, ensure_ascii=False).lower()
+    for pattern in CAUSAL_PATTERNS:
+        assert not re.search(pattern, visible), f"{path}: unsupported causal wording"
+    novelty = case.get("novelty", {}); assert novelty.get("learningObjective") and isinstance(novelty.get("sourceWindowReuse"), bool)
+    if novelty["sourceWindowReuse"]:
+        assert novelty.get("reuseJustification")
+    review = case.get("review", {})
+    for key in ("authorId","reviewerId","reviewerRole","reviewRecordType","reviewRecord","reviewedAt"):
+        assert review.get(key), f"{path}: review.{key} required"
+    assert review.get("reviewed") is True and review["authorId"] != review["reviewerId"] and review["reviewRecordType"] in REVIEW_TYPES
+    declared = case.get("caseFingerprint"); assert SHA256_RE.fullmatch(str(declared or ""))
+    assert declared == canonical_sha({k:v for k,v in case.items() if k != "caseFingerprint"}), f"{path}: case fingerprint mismatch"
     return case
 
 
+def source_identity(source: dict) -> tuple:
+    artifacts = tuple((a["name"], a["sha256"]) for a in normalized_case_source_artifacts(source))
+    members = tuple(normalize_source_members(source.get("sourceMembers", source.get("sourceMember"))))
+    return source["familyId"], artifacts, members
+
+
 def main() -> int:
-    manifest = load_json(MANIFEST)
-    promotion_index = load_json(PROMOTION_INDEX)
-    ledger = load_json(LEDGER)
-    eligible = accepted_families(ledger)
-    catalogue = assert_catalogue(manifest, eligible)
-    by_id = {c["id"]: c for c in catalogue}
-    indexed_ids = assert_promotion_index(promotion_index, set(by_id))
+    policy = load_json(POLICY)
+    assert policy.get("schemaVersion") == 2 and policy.get("catalogueCapacity") == 100 and policy.get("releaseTargetCaseCount") == 70
+    ledger, readiness, artifacts, channels = assert_registries(); methods = methods_map(); base_cases = assert_base_catalogue(load_json(MANIFEST), ledger)
+    ready_families = {k for k,v in readiness.items() if v.get("promotionReady")}
+    promoted_paths = sorted(CASE_DIR.glob("MLM-*.json")) if CASE_DIR.exists() else []
+    gate = policy["expansionGate"]; pre_count = sum(1 for p in promoted_paths if int(p.stem.split("-")[1]) <= 70)
+    pre_unlocked = pre_count >= int(gate["minimumPromotedCasesBeforeAuthoringExpansion"]) and len(ready_families) >= int(gate["minimumPromotionReadySourceFamilies"])
+    expansion_cases = assert_expansion_manifest(load_json(EXPANSION), pre_unlocked); catalogue = base_cases + expansion_cases; by_id = {c["id"]:c for c in catalogue}
+    if expansion_cases:
+        counts = Counter(c["sourceFamily"] for c in catalogue)
+        assert max(counts.values())/100 <= float(gate["maximumLargestFamilyShareAt100"])
+        assert sum(v for _,v in counts.most_common(4))/100 <= float(gate["maximumTopFourFamilyShareAt100"])
 
-    promoted = []
-    duplicate_keys = set()
-    if CASE_DIR.exists():
-        for path in sorted(CASE_DIR.glob("MLM-*.json")):
-            case_id = path.stem
-            assert case_id in by_id, f"unexpected promoted case asset {path.name}"
-            case = validate_promoted_case(path, by_id[case_id], eligible)
-            duplicate_key = (
-                case["source"]["sourceWindowFingerprint"],
-                tuple(s["id"] for s in case["signals"]),
-                by_id[case_id]["analysisLens"],
-            )
-            assert duplicate_key not in duplicate_keys, f"duplicate source-window/signal/lens case: {case_id}"
-            duplicate_keys.add(duplicate_key)
-            promoted.append(case_id)
+    hard = int(policy["payloadBudget"]["hardCaseBytes"]); aggregate = 0; promoted_cases = []
+    for path in promoted_paths:
+        assert path.stem in by_id, f"unexpected or gated case asset {path.name}"
+        assert path.stat().st_size <= hard, f"{path}: hard payload budget exceeded"
+        aggregate += path.stat().st_size
+        promoted_cases.append(validate_case_object(load_json(path), by_id[path.stem], readiness, artifacts, channels, methods, path))
+    assert aggregate <= int(policy["payloadBudget"]["aggregatePromotedBytes"])
+    indexed = load_json(PROMOTION_INDEX).get("caseIds", []); promoted_ids = [c["id"] for c in promoted_cases]
+    assert indexed == promoted_ids, f"promotion index mismatch: indexed={indexed}, assets={promoted_ids}"
 
-    assert set(indexed_ids) == set(promoted), (
-        "promotion index must exactly match QA-valid promoted case assets: "
-        f"index_only={sorted(set(indexed_ids)-set(promoted))}, "
-        f"asset_only={sorted(set(promoted)-set(indexed_ids))}"
-    )
-    assert indexed_ids == promoted, "promotion index must use the same stable order as promoted case files"
+    objectives = set(); substantial_cases = set(); threshold = float(gate["substantialWindowOverlapThreshold"])
+    for i, a in enumerate(promoted_cases):
+        objective = normalize_text(a["novelty"]["learningObjective"]); assert objective not in objectives, f"duplicate normalized learning objective: {a['id']}"; objectives.add(objective)
+        for b in promoted_cases[i+1:]:
+            if source_identity(a["source"]) != source_identity(b["source"]):
+                continue
+            overlap = window_overlap(a["source"]["extraction"]["window"], b["source"]["extraction"]["window"])
+            if overlap >= threshold:
+                substantial_cases.update((a["id"],b["id"]))
+                assert a["novelty"]["sourceWindowReuse"] and b["novelty"]["sourceWindowReuse"]
+                assert a["novelty"].get("reuseJustification") and b["novelty"].get("reuseJustification")
+    reuse_rate = len(substantial_cases)/len(promoted_cases) if promoted_cases else 0.0
+    assert reuse_rate <= float(gate["maximumSubstantialWindowReuseRate"]), f"substantial window reuse rate too high: {reuse_rate:.3f}"
+    expansion_unlocked = len([c for c in promoted_cases if int(c["id"].split("-")[1]) <= 70]) >= int(gate["minimumPromotedCasesBeforeAuthoringExpansion"]) and len(ready_families) >= int(gate["minimumPromotionReadySourceFamilies"]) and reuse_rate <= float(gate["maximumSubstantialWindowReuseRate"])
 
+    ready_case_ids = [c["id"] for c in base_cases if case_source_gate_ready(c, readiness, channels)]; ready_set = set(ready_case_ids)
+    blocked_case_ids = [c["id"] for c in base_cases if c["id"] not in ready_set]
     report = {
-        "schemaVersion": 1,
-        "libraryId": manifest["libraryId"],
-        "targetCases": 70,
-        "catalogueCases": len(catalogue),
-        "promotedLearnerCases": len(promoted),
-        "promotedCaseIds": promoted,
-        "promotionIndexMatchesAssets": True,
-        "eligibleFullyProfiledFamilies": sorted(eligible),
-        "releaseComplete": len(promoted) == 70,
-        "boundary": "Catalogue rows are not learner-visible measured cases until exact source/window binding and promoted-case QA pass.",
+        "schemaVersion":5,"architectureId":"measured-learning-library-v2","releaseTargetCases":70,"catalogueCapacity":100,
+        "baseCatalogueCases":len(base_cases),"expansionCatalogueCases":len(expansion_cases),"promotedLearnerCases":len(promoted_cases),"promotedCaseIds":promoted_ids,
+        "promotionReadySourceFamilies":sorted(ready_families),"promotionReadySourceFamilyCount":len(ready_families),
+        "baseCasesOnSourceGateReadyFamilies":sum(1 for c in base_cases if c["sourceFamily"] in ready_families),
+        "baseCasesSourceAndChannelReady":len(ready_case_ids),"baseCaseSourceAndChannelReadyIds":ready_case_ids,
+        "baseCasesBlockedBySourceOrChannelGate":len(blocked_case_ids),"baseCaseBlockedIds":blocked_case_ids,
+        "aggregatePromotedPayloadBytes":aggregate,"substantialWindowReuseRate":reuse_rate,"capacityExpansionUnlocked":expansion_unlocked,
+        "releaseComplete":len([i for i in promoted_ids if int(i.split("-")[1]) <= 70]) == 70,
+        "boundary":"Family readiness is necessary but not sufficient. Every case requires its exact governed channels and exact publisher artifact identity; independently fingerprinted multi-file selections are represented explicitly rather than collapsed into a synthetic source file."
     }
-    REPORT.write_text(json.dumps(report, indent=2) + "\n", encoding="utf-8")
-    print(json.dumps(report, indent=2))
-    return 0
+    REPORT.write_text(json.dumps(report, indent=2)+"\n", encoding="utf-8"); print(json.dumps(report, indent=2)); return 0
 
 
 if __name__ == "__main__":
