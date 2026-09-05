@@ -14,9 +14,9 @@ TOOLS = ROOT / "tools"
 if str(TOOLS) not in sys.path:
     sys.path.insert(0, str(TOOLS))
 from measured_learning_core import (  # noqa: E402
-    calculate_feature, canonical_sha, finite_number, load_json, normalize_source_members,
-    normalize_text, raw_window_fingerprint, representation_fingerprint, window_overlap,
-    x_direction,
+    calculate_feature, canonical_sha, finite_number, load_json,
+    normalize_source_artifacts, normalize_source_members, normalize_text,
+    raw_window_fingerprint, representation_fingerprint, window_overlap, x_direction,
 )
 
 MANIFEST = ROOT / "data/measured-learning/manifest-v1.json"
@@ -26,13 +26,11 @@ POLICY = ROOT / "data/measured-learning/v2-policy.json"
 READINESS = ROOT / "data/measured-learning/source-readiness-v2.json"
 ARTIFACTS = ROOT / "data/measured-learning/source-artifacts-v2.json"
 CHANNELS = ROOT / "data/measured-learning/source-channels-v2.json"
-AVAPS_CHANNELS = ROOT / "data/measured-learning/source-channels-avaps-v2.json"
 REQUIREMENTS = ROOT / "data/measured-learning/case-requirements-v2.json"
 FEATURE_METHODS = ROOT / "data/measured-learning/feature-methods-v1.json"
 LEDGER = ROOT / "data/measured-dataset-execution-ledger-v1.json"
 CASE_DIR = ROOT / "data/measured-learning/cases"
 REPORT = ROOT / "measured-learning-library-report.json"
-
 EXPECTED_DIFFICULTY = {"foundation":20,"intermediate":30,"advanced":20}
 MIN_TAGS = {"insufficient-evidence":10,"multi-signal":10,"quality-outcome":10,"time-series-interpretation":10,"material-physical":8}
 CAUSAL_PATTERNS = (r"\bcaused by\b", r"\broot cause (?:is|was)\b", r"\bproves? that\b", r"\bconfirmed (?:fault|failure|cause)\b", r"\bresulted from\b")
@@ -43,28 +41,35 @@ REVIEW_TYPES = {"github-pr","github-issue","signed-review","external-record","te
 
 def expand_rows(manifest: dict) -> list[dict]:
     fields = manifest.get("fields", [])
-    cases = []
+    rows = []
     for row in manifest.get("cases", []):
         assert len(row) == len(fields), "catalogue row field mismatch"
-        cases.append(dict(zip(fields, row)))
-    return cases
+        rows.append(dict(zip(fields, row)))
+    return rows
 
 
 def ledger_map() -> dict[str, dict]:
-    return {s["datasetId"]: s for s in load_json(LEDGER).get("sources", [])}
+    return {s["datasetId"]:s for s in load_json(LEDGER).get("sources", [])}
 
 
 def readiness_map() -> dict[str, dict]:
-    return {s["datasetId"]: s for s in load_json(READINESS).get("sources", [])}
+    return {s["datasetId"]:s for s in load_json(READINESS).get("sources", [])}
+
+
+def _channel_docs() -> list[dict]:
+    docs = [load_json(CHANNELS)]
+    for path in sorted((ROOT / "data/measured-learning").glob("source-channels-*-v2.json")):
+        doc = load_json(path)
+        if "datasetId" in doc:
+            docs.append({"sources":[{"datasetId":doc["datasetId"],"channels":doc.get("channels", [])}]})
+        else:
+            docs.append(doc)
+    return docs
 
 
 def channels_map() -> dict[str, dict[str, dict]]:
     result: dict[str, dict[str, dict]] = {}
-    docs = [load_json(CHANNELS)]
-    if AVAPS_CHANNELS.is_file():
-        avaps = load_json(AVAPS_CHANNELS)
-        docs.append({"sources": [{"datasetId":avaps["datasetId"], "channels":avaps.get("channels", [])}]})
-    for doc in docs:
+    for doc in _channel_docs():
         for source in doc.get("sources", []):
             dataset_id = source["datasetId"]
             bucket = result.setdefault(dataset_id, {})
@@ -122,19 +127,15 @@ def case_source_gate_ready(candidate: dict, readiness: dict, channels: dict) -> 
     gate = readiness.get(family, {})
     if gate.get("promotionReady") is not True:
         return False
-    capabilities = gate.get("capabilities", {})
-    if any(capabilities.get(cap) is not True for cap in case_required_capabilities(candidate)):
+    if any(gate.get("capabilities", {}).get(cap) is not True for cap in case_required_capabilities(candidate)):
         return False
     governed = channels.get(family, {})
-    return all(governed.get(channel, {}).get("promotionReady") is True for channel in case_required_source_channels(candidate))
+    return all(governed.get(ch, {}).get("promotionReady") is True for ch in case_required_source_channels(candidate))
 
 
 def assert_registries() -> tuple[dict, dict, dict, dict]:
-    ledger = ledger_map()
-    readiness = readiness_map()
-    channels = channels_map()
-    artifacts = artifacts_map()
-    source_artifact_registry = {s["datasetId"]:s for s in load_json(ARTIFACTS).get("sources", [])}
+    ledger = ledger_map(); readiness = readiness_map(); channels = channels_map(); artifacts = artifacts_map()
+    registry = {s["datasetId"]:s for s in load_json(ARTIFACTS).get("sources", [])}
     assert len(readiness) == len(set(readiness)), "duplicate source readiness entries"
     for dataset_id, gate in readiness.items():
         assert dataset_id in ledger, f"readiness source absent from ledger: {dataset_id}"
@@ -144,7 +145,7 @@ def assert_registries() -> tuple[dict, dict, dict, dict]:
             assert artifacts.get(dataset_id), f"ready source lacks exact artifact registry: {dataset_id}"
             assert channels.get(dataset_id), f"ready source lacks promotable channel registry: {dataset_id}"
             assert any(c.get("promotionReady") for c in channels[dataset_id].values()), f"ready source lacks ready channels: {dataset_id}"
-    for dataset_id, source in source_artifact_registry.items():
+    for dataset_id, source in registry.items():
         benchmark_path = ROOT / source.get("benchmarkResult", "")
         assert benchmark_path.is_file(), f"artifact benchmark missing: {dataset_id}"
         benchmark_hashes = collect_hashes(load_json(benchmark_path))
@@ -165,10 +166,8 @@ def assert_base_catalogue(manifest: dict, ledger: dict) -> list[dict]:
     assert len({c["title"] for c in cases}) == 70
     assert Counter(c["difficulty"] for c in cases) == Counter(EXPECTED_DIFFICULTY)
     accepted = {k for k,v in ledger.items() if str(v.get("state","")).startswith("accepted-profiled")}
-    unknown = sorted({c["sourceFamily"] for c in cases} - accepted)
-    assert not unknown, f"base catalogue uses non-profiled families: {unknown}"
-    source_counts = Counter(c["sourceFamily"] for c in cases)
-    assert max(source_counts.values()) <= 14
+    assert not sorted({c["sourceFamily"] for c in cases} - accepted), "base catalogue uses non-profiled families"
+    assert max(Counter(c["sourceFamily"] for c in cases).values()) <= 14
     tags = Counter(tag for c in cases for tag in c.get("coverageTags", []))
     for tag, minimum in MIN_TAGS.items():
         assert tags[tag] >= minimum, f"coverage {tag} below minimum"
@@ -177,14 +176,13 @@ def assert_base_catalogue(manifest: dict, ledger: dict) -> list[dict]:
 
 def assert_expansion_manifest(expansion: dict, unlocked: bool) -> list[dict]:
     assert expansion.get("schemaVersion") == 2
-    capacity_ids = [f"MLM-{i:03d}" for i in range(71,101)]
-    assert expansion.get("capacityCaseIds") == capacity_ids
+    ids = [f"MLM-{i:03d}" for i in range(71,101)]
+    assert expansion.get("capacityCaseIds") == ids
     cases = expand_rows(expansion)
     if not cases:
         return []
     assert unlocked, "expansion manifest must remain empty until expansion gate passes"
-    assert [c["id"] for c in cases] == capacity_ids, "expansion must propose the full ordered MLM-071..MLM-100 set"
-    assert len({c["title"] for c in cases}) == 30
+    assert [c["id"] for c in cases] == ids and len({c["title"] for c in cases}) == 30
     return cases
 
 
@@ -199,8 +197,7 @@ def validate_trace(path: Path, signal: dict, governed: dict) -> None:
     assert rep.get("xUnit") == governed.get("coordinateUnit"), f"{path}: x unit mismatch"
     assert rep.get("reductionMethod"), f"{path}: reduction method missing"
     x, y = rep.get("x", []), rep.get("y", [])
-    assert len(x) == len(y) and len(x) > 1
-    assert len(y) <= 600 and rep.get("originalPointCount", 0) >= len(y)
+    assert len(x) == len(y) and len(x) > 1 and len(y) <= 600 and rep.get("originalPointCount",0) >= len(y)
     assert all(finite_number(v) for v in x+y)
     try:
         x_direction(x, rep.get("xDirection"))
@@ -208,26 +205,36 @@ def validate_trace(path: Path, signal: dict, governed: dict) -> None:
         raise AssertionError(f"{path}: {exc}") from exc
 
 
+def normalized_case_source_artifacts(source: dict) -> list[dict]:
+    if source.get("sourceArtifacts") is not None:
+        assert source.get("sourceArtifact") in (None, "") and source.get("sourceFingerprint") in (None, ""), "multi-artifact source must not also declare legacy singular artifact fields"
+        try:
+            return normalize_source_artifacts(source["sourceArtifacts"])
+        except ValueError as exc:
+            raise AssertionError(str(exc)) from exc
+    try:
+        return normalize_source_artifacts(source.get("sourceArtifact"), source.get("sourceFingerprint"))
+    except ValueError as exc:
+        raise AssertionError(str(exc)) from exc
+
+
 def validate_case_object(case: dict, candidate: dict, readiness: dict, artifacts: dict, channels: dict, methods: dict, path: Path = Path("<case>")) -> dict:
-    assert case.get("schemaVersion") == 3, f"{path}: case schema must be 3"
-    assert case.get("architectureId") == "measured-learning-library-v2"
+    assert case.get("schemaVersion") == 3 and case.get("architectureId") == "measured-learning-library-v2"
     assert case.get("id") == candidate["id"] and case.get("title") == candidate["title"]
     assert case.get("promotionState") == "promoted" and case.get("evidenceTier") == "measured"
     assert case.get("claimScope") in {"observation_only","association"}
-    family = case.get("source", {}).get("familyId")
+    source = case.get("source", {}); family = source.get("familyId")
     assert family == candidate["sourceFamily"] and readiness.get(family, {}).get("promotionReady") is True
-    required = case_required_capabilities(candidate)
+    required = case_required_capabilities(candidate); required_channels = case_required_source_channels(candidate)
     assert set(case.get("requiredCapabilities", [])) == required
-    required_channels = case_required_source_channels(candidate)
     assert set(case.get("requiredSourceChannels", [])) == required_channels
-    capabilities = readiness[family].get("capabilities", {})
-    assert not [cap for cap in required if capabilities.get(cap) is not True], f"{path}: source capability mismatch"
+    assert not [cap for cap in required if readiness[family].get("capabilities", {}).get(cap) is not True], f"{path}: source capability mismatch"
 
-    source = case["source"]
-    artifact_name = source.get("sourceArtifact")
-    assert artifact_name in artifacts.get(family, {}), f"{path}: unregistered source artifact"
-    artifact = artifacts[family][artifact_name]
-    assert source.get("sourceFingerprint") == artifact.get("sha256"), f"{path}: artifact/hash mismatch"
+    selected_artifacts = normalized_case_source_artifacts(source)
+    governed_artifacts = artifacts.get(family, {})
+    for item in selected_artifacts:
+        assert item["name"] in governed_artifacts, f"{path}: unregistered source artifact {item['name']}"
+        assert item["sha256"] == governed_artifacts[item["name"]].get("sha256"), f"{path}: artifact/hash mismatch {item['name']}"
     try:
         source_members = normalize_source_members(source.get("sourceMembers", source.get("sourceMember")))
     except ValueError as exc:
@@ -235,56 +242,46 @@ def validate_case_object(case: dict, candidate: dict, readiness: dict, artifacts
     assert source.get("licenceOrAccessStatus") == readiness[family].get("rightsScope")
     extraction = source.get("extraction", {})
     assert extraction.get("description") and extraction.get("sourceOrderingPreserved") is True
-    raw_fp = raw_window_fingerprint(source["sourceFingerprint"], artifact_name, source_members, extraction)
+    if source.get("sourceArtifacts") is not None:
+        raw_fp = raw_window_fingerprint(None, selected_artifacts, source_members, extraction)
+    else:
+        raw_fp = raw_window_fingerprint(source["sourceFingerprint"], source["sourceArtifact"], source_members, extraction)
     assert source.get("rawWindowFingerprint") == raw_fp, f"{path}: raw-window fingerprint mismatch"
 
-    governed_channels = channels.get(family, {})
-    signals = case.get("signals", [])
-    assert signals
-    assert len({s.get("id") for s in signals}) == len(signals)
-    bound_channels = set()
-    governed_member_set = set()
+    governed_channels = channels.get(family, {}); signals = case.get("signals", [])
+    assert signals and len({s.get("id") for s in signals}) == len(signals)
+    bound_channels = set(); governed_member_set = set()
+    selected_names = {a["name"] for a in selected_artifacts}
     for signal in signals:
-        source_channel = signal.get("sourceChannel")
-        assert source_channel in governed_channels, f"{path}: unregistered source channel"
-        governed = governed_channels[source_channel]
-        validate_trace(path, signal, governed)
-        bound_channels.add(source_channel)
+        ch = signal.get("sourceChannel")
+        assert ch in governed_channels, f"{path}: unregistered source channel"
+        governed = governed_channels[ch]; validate_trace(path, signal, governed); bound_channels.add(ch)
         if governed.get("sourceMember"):
             governed_member_set.add(governed["sourceMember"])
+        if signal.get("sourceArtifact"):
+            assert signal["sourceArtifact"] in selected_names, f"{path}: signal references unselected source artifact"
     assert required_channels <= bound_channels, f"{path}: missing required source channels"
     if governed_member_set:
         assert set(source_members) == governed_member_set, f"{path}: sourceMembers do not match bound channel members"
     elif source_members:
-        assert set(source_members) <= set(artifact.get("members", [])), f"{path}: unregistered archive member"
+        assert len(selected_artifacts) == 1, f"{path}: archive members require one selected archive artifact"
+        assert set(source_members) <= set(governed_artifacts[selected_artifacts[0]["name"]].get("members", [])), f"{path}: unregistered archive member"
     if "multi-signal" in candidate.get("coverageTags", []):
         assert len(signals) >= 2
-    rep_fp = representation_fingerprint(raw_fp, signals)
-    assert source.get("representationFingerprint") == rep_fp, f"{path}: representation fingerprint mismatch"
+    assert source.get("representationFingerprint") == representation_fingerprint(raw_fp, signals), f"{path}: representation fingerprint mismatch"
 
-    signals_by_id = {s["id"]:s for s in signals}
-    features = case.get("features", [])
+    signals_by_id = {s["id"]:s for s in signals}; features = case.get("features", [])
     assert len({f.get("id") for f in features}) == len(features)
     for feature in features:
-        recalculated = calculate_feature({
-            "id":feature["id"], "label":feature.get("label"), "method":feature["method"],
-            "methodVersion":feature["methodVersion"], "inputs":feature.get("inputs"),
-            "params":feature.get("params"), "calculationScope":feature.get("calculationScope"),
-            "unit":feature.get("unit"),
-        }, signals_by_id, methods)
+        recalculated = calculate_feature({"id":feature["id"],"label":feature.get("label"),"method":feature["method"],"methodVersion":feature["methodVersion"],"inputs":feature.get("inputs"),"params":feature.get("params"),"calculationScope":feature.get("calculationScope"),"unit":feature.get("unit")}, signals_by_id, methods)
         assert math.isclose(float(feature["value"]), float(recalculated["value"]), rel_tol=1e-12, abs_tol=1e-12), f"{path}: feature value not reproducible"
-        assert feature.get("inputFingerprint") == recalculated["inputFingerprint"], f"{path}: feature input fingerprint mismatch"
-        assert feature.get("calculationFingerprint") == recalculated["calculationFingerprint"], f"{path}: feature calculation fingerprint mismatch"
-
-    signal_ids = {f"signal:{s['id']}" for s in signals}
-    feature_ids = {f"feature:{f['id']}" for f in features}
-    observations = case.get("observations", [])
-    assert observations
+        assert feature.get("inputFingerprint") == recalculated["inputFingerprint"] and feature.get("calculationFingerprint") == recalculated["calculationFingerprint"], f"{path}: feature fingerprint mismatch"
+    signal_ids = {f"signal:{s['id']}" for s in signals}; feature_ids = {f"feature:{f['id']}" for f in features}
+    observations = case.get("observations", []); assert observations
     for obs in observations:
         assert obs.get("id") and obs.get("text") and obs.get("support")
         assert not (set(obs["support"]) - signal_ids - feature_ids), f"{path}: unknown observation support"
-    evidence = case.get("evidence", {})
-    assert evidence.get("sourceEstablishesCausality") is False
+    evidence = case.get("evidence", {}); assert evidence.get("sourceEstablishesCausality") is False
     for key in ("supportedConclusions","unsupportedConclusions","limitations"):
         assert evidence.get(key), f"{path}: evidence.{key} required"
     learner = case.get("learnerTask", {})
@@ -293,109 +290,77 @@ def validate_case_object(case: dict, candidate: dict, readiness: dict, artifacts
     visible = json.dumps({"observations":observations,"learnerTask":learner,"evidence":evidence}, ensure_ascii=False).lower()
     for pattern in CAUSAL_PATTERNS:
         assert not re.search(pattern, visible), f"{path}: unsupported causal wording"
-    novelty = case.get("novelty", {})
-    assert novelty.get("learningObjective") and isinstance(novelty.get("sourceWindowReuse"), bool)
+    novelty = case.get("novelty", {}); assert novelty.get("learningObjective") and isinstance(novelty.get("sourceWindowReuse"), bool)
     if novelty["sourceWindowReuse"]:
         assert novelty.get("reuseJustification")
     review = case.get("review", {})
     for key in ("authorId","reviewerId","reviewerRole","reviewRecordType","reviewRecord","reviewedAt"):
         assert review.get(key), f"{path}: review.{key} required"
-    assert review.get("reviewed") is True and review["authorId"] != review["reviewerId"]
-    assert review["reviewRecordType"] in REVIEW_TYPES
-    declared = case.get("caseFingerprint")
-    assert SHA256_RE.fullmatch(str(declared or ""))
+    assert review.get("reviewed") is True and review["authorId"] != review["reviewerId"] and review["reviewRecordType"] in REVIEW_TYPES
+    declared = case.get("caseFingerprint"); assert SHA256_RE.fullmatch(str(declared or ""))
     assert declared == canonical_sha({k:v for k,v in case.items() if k != "caseFingerprint"}), f"{path}: case fingerprint mismatch"
     return case
+
+
+def source_identity(source: dict) -> tuple:
+    artifacts = tuple((a["name"], a["sha256"]) for a in normalized_case_source_artifacts(source))
+    members = tuple(normalize_source_members(source.get("sourceMembers", source.get("sourceMember"))))
+    return source["familyId"], artifacts, members
 
 
 def main() -> int:
     policy = load_json(POLICY)
     assert policy.get("schemaVersion") == 2 and policy.get("catalogueCapacity") == 100 and policy.get("releaseTargetCaseCount") == 70
-    ledger, readiness, artifacts, channels = assert_registries()
-    methods = methods_map()
-    base_cases = assert_base_catalogue(load_json(MANIFEST), ledger)
+    ledger, readiness, artifacts, channels = assert_registries(); methods = methods_map(); base_cases = assert_base_catalogue(load_json(MANIFEST), ledger)
     ready_families = {k for k,v in readiness.items() if v.get("promotionReady")}
-
     promoted_paths = sorted(CASE_DIR.glob("MLM-*.json")) if CASE_DIR.exists() else []
-    pre_promoted_count = sum(1 for p in promoted_paths if int(p.stem.split("-")[1]) <= 70)
-    gate = policy["expansionGate"]
-    pre_unlocked = pre_promoted_count >= int(gate["minimumPromotedCasesBeforeAuthoringExpansion"]) and len(ready_families) >= int(gate["minimumPromotionReadySourceFamilies"])
-    expansion_cases = assert_expansion_manifest(load_json(EXPANSION), pre_unlocked)
-    catalogue = base_cases + expansion_cases
-    by_id = {c["id"]:c for c in catalogue}
-
+    gate = policy["expansionGate"]; pre_count = sum(1 for p in promoted_paths if int(p.stem.split("-")[1]) <= 70)
+    pre_unlocked = pre_count >= int(gate["minimumPromotedCasesBeforeAuthoringExpansion"]) and len(ready_families) >= int(gate["minimumPromotionReadySourceFamilies"])
+    expansion_cases = assert_expansion_manifest(load_json(EXPANSION), pre_unlocked); catalogue = base_cases + expansion_cases; by_id = {c["id"]:c for c in catalogue}
     if expansion_cases:
-        source_counts = Counter(c["sourceFamily"] for c in catalogue)
-        largest = max(source_counts.values()) / 100
-        top4 = sum(v for _,v in source_counts.most_common(4)) / 100
-        assert largest <= float(gate["maximumLargestFamilyShareAt100"]), "100-case largest-family concentration too high"
-        assert top4 <= float(gate["maximumTopFourFamilyShareAt100"]), "100-case top-four concentration too high"
+        counts = Counter(c["sourceFamily"] for c in catalogue)
+        assert max(counts.values())/100 <= float(gate["maximumLargestFamilyShareAt100"])
+        assert sum(v for _,v in counts.most_common(4))/100 <= float(gate["maximumTopFourFamilyShareAt100"])
 
-    hard = int(policy["payloadBudget"]["hardCaseBytes"])
-    aggregate = 0
-    promoted_cases = []
+    hard = int(policy["payloadBudget"]["hardCaseBytes"]); aggregate = 0; promoted_cases = []
     for path in promoted_paths:
         assert path.stem in by_id, f"unexpected or gated case asset {path.name}"
         assert path.stat().st_size <= hard, f"{path}: hard payload budget exceeded"
         aggregate += path.stat().st_size
         promoted_cases.append(validate_case_object(load_json(path), by_id[path.stem], readiness, artifacts, channels, methods, path))
     assert aggregate <= int(policy["payloadBudget"]["aggregatePromotedBytes"])
-
-    index = load_json(PROMOTION_INDEX)
-    indexed = index.get("caseIds", [])
-    promoted_ids = [c["id"] for c in promoted_cases]
+    indexed = load_json(PROMOTION_INDEX).get("caseIds", []); promoted_ids = [c["id"] for c in promoted_cases]
     assert indexed == promoted_ids, f"promotion index mismatch: indexed={indexed}, assets={promoted_ids}"
 
-    objectives = set()
-    substantial_cases = set()
-    overlap_threshold = float(gate["substantialWindowOverlapThreshold"])
+    objectives = set(); substantial_cases = set(); threshold = float(gate["substantialWindowOverlapThreshold"])
     for i, a in enumerate(promoted_cases):
-        objective = normalize_text(a["novelty"]["learningObjective"])
-        assert objective not in objectives, f"duplicate normalized learning objective: {a['id']}"
-        objectives.add(objective)
+        objective = normalize_text(a["novelty"]["learningObjective"]); assert objective not in objectives, f"duplicate normalized learning objective: {a['id']}"; objectives.add(objective)
         for b in promoted_cases[i+1:]:
-            sa, sb = a["source"], b["source"]
-            key_a = (sa["familyId"], sa["sourceArtifact"], tuple(normalize_source_members(sa.get("sourceMembers", sa.get("sourceMember")))))
-            key_b = (sb["familyId"], sb["sourceArtifact"], tuple(normalize_source_members(sb.get("sourceMembers", sb.get("sourceMember")))))
-            if key_a != key_b:
+            if source_identity(a["source"]) != source_identity(b["source"]):
                 continue
-            overlap = window_overlap(sa["extraction"]["window"], sb["extraction"]["window"])
-            if overlap >= overlap_threshold:
+            overlap = window_overlap(a["source"]["extraction"]["window"], b["source"]["extraction"]["window"])
+            if overlap >= threshold:
                 substantial_cases.update((a["id"],b["id"]))
-                assert a["novelty"]["sourceWindowReuse"] and b["novelty"]["sourceWindowReuse"], f"substantial overlapping windows require reuse declaration: {a['id']}/{b['id']}"
+                assert a["novelty"]["sourceWindowReuse"] and b["novelty"]["sourceWindowReuse"]
                 assert a["novelty"].get("reuseJustification") and b["novelty"].get("reuseJustification")
-    reuse_rate = len(substantial_cases) / len(promoted_cases) if promoted_cases else 0.0
+    reuse_rate = len(substantial_cases)/len(promoted_cases) if promoted_cases else 0.0
     assert reuse_rate <= float(gate["maximumSubstantialWindowReuseRate"]), f"substantial window reuse rate too high: {reuse_rate:.3f}"
-
     expansion_unlocked = len([c for c in promoted_cases if int(c["id"].split("-")[1]) <= 70]) >= int(gate["minimumPromotedCasesBeforeAuthoringExpansion"]) and len(ready_families) >= int(gate["minimumPromotionReadySourceFamilies"]) and reuse_rate <= float(gate["maximumSubstantialWindowReuseRate"])
 
-    ready_case_ids = [c["id"] for c in base_cases if case_source_gate_ready(c, readiness, channels)]
-    blocked_case_ids = [c["id"] for c in base_cases if c["id"] not in set(ready_case_ids)]
+    ready_case_ids = [c["id"] for c in base_cases if case_source_gate_ready(c, readiness, channels)]; ready_set = set(ready_case_ids)
+    blocked_case_ids = [c["id"] for c in base_cases if c["id"] not in ready_set]
     report = {
-        "schemaVersion":4,
-        "architectureId":"measured-learning-library-v2",
-        "releaseTargetCases":70,
-        "catalogueCapacity":100,
-        "baseCatalogueCases":len(base_cases),
-        "expansionCatalogueCases":len(expansion_cases),
-        "promotedLearnerCases":len(promoted_cases),
-        "promotedCaseIds":promoted_ids,
-        "promotionReadySourceFamilies":sorted(ready_families),
-        "promotionReadySourceFamilyCount":len(ready_families),
+        "schemaVersion":5,"architectureId":"measured-learning-library-v2","releaseTargetCases":70,"catalogueCapacity":100,
+        "baseCatalogueCases":len(base_cases),"expansionCatalogueCases":len(expansion_cases),"promotedLearnerCases":len(promoted_cases),"promotedCaseIds":promoted_ids,
+        "promotionReadySourceFamilies":sorted(ready_families),"promotionReadySourceFamilyCount":len(ready_families),
         "baseCasesOnSourceGateReadyFamilies":sum(1 for c in base_cases if c["sourceFamily"] in ready_families),
-        "baseCasesSourceAndChannelReady":len(ready_case_ids),
-        "baseCaseSourceAndChannelReadyIds":ready_case_ids,
-        "baseCasesBlockedBySourceOrChannelGate":len(blocked_case_ids),
-        "baseCaseBlockedIds":blocked_case_ids,
-        "aggregatePromotedPayloadBytes":aggregate,
-        "substantialWindowReuseRate":reuse_rate,
-        "capacityExpansionUnlocked":expansion_unlocked,
+        "baseCasesSourceAndChannelReady":len(ready_case_ids),"baseCaseSourceAndChannelReadyIds":ready_case_ids,
+        "baseCasesBlockedBySourceOrChannelGate":len(blocked_case_ids),"baseCaseBlockedIds":blocked_case_ids,
+        "aggregatePromotedPayloadBytes":aggregate,"substantialWindowReuseRate":reuse_rate,"capacityExpansionUnlocked":expansion_unlocked,
         "releaseComplete":len([i for i in promoted_ids if int(i.split("-")[1]) <= 70]) == 70,
-        "boundary":"Family readiness is necessary but not sufficient. Case readiness also requires its exact governed source channels; unresolved channels such as AVAPS distanceA remain blocked without suppressing independently governed channels from the same source."
+        "boundary":"Family readiness is necessary but not sufficient. Every case requires its exact governed channels and exact publisher artifact identity; independently fingerprinted multi-file selections are represented explicitly rather than collapsed into a synthetic source file."
     }
-    REPORT.write_text(json.dumps(report, indent=2) + "\n", encoding="utf-8")
-    print(json.dumps(report, indent=2))
-    return 0
+    REPORT.write_text(json.dumps(report, indent=2)+"\n", encoding="utf-8"); print(json.dumps(report, indent=2)); return 0
 
 
 if __name__ == "__main__":
