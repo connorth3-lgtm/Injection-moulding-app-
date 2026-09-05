@@ -3,7 +3,8 @@
 
 The 70-row catalogue is a curriculum target, not proof that 70 measured learner
 cases have been built. A case becomes learner-visible only when a promoted
-per-case JSON asset exists and satisfies the provenance/evidence contract below.
+per-case JSON asset exists, is listed in the promotion index and satisfies the
+provenance/evidence contract below.
 """
 from __future__ import annotations
 
@@ -15,6 +16,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent
 MANIFEST = ROOT / "data" / "measured-learning" / "manifest-v1.json"
+PROMOTION_INDEX = ROOT / "data" / "measured-learning" / "promoted-v1.json"
 LEDGER = ROOT / "data" / "measured-dataset-execution-ledger-v1.json"
 CASE_DIR = ROOT / "data" / "measured-learning" / "cases"
 REPORT = ROOT / "measured-learning-library-report.json"
@@ -34,7 +36,6 @@ CAUSAL_PATTERNS = (
     r"\bconfirmed (?:fault|failure|cause)\b",
     r"\bresulted from\b",
 )
-PROMOTED_STATES = {"promoted", "site_validated"}
 
 
 def load_json(path: Path):
@@ -95,11 +96,23 @@ def assert_catalogue(manifest: dict, eligible: set[str]) -> list[dict]:
     return cases
 
 
+def assert_promotion_index(index: dict, catalogue_ids: set[str]) -> list[str]:
+    assert index.get("schemaVersion") == 1, "promotion index schemaVersion must be 1"
+    assert index.get("libraryId") == "measured-learning-library-v1", "promotion index libraryId drift"
+    ids = index.get("caseIds", [])
+    assert isinstance(ids, list), "promotion index caseIds must be an array"
+    assert len(ids) == len(set(ids)), "promotion index contains duplicate case IDs"
+    unknown = sorted(set(ids) - catalogue_ids)
+    assert not unknown, f"promotion index contains unknown catalogue IDs: {unknown}"
+    return ids
+
+
 def validate_promoted_case(path: Path, catalogue: dict, eligible: set[str]) -> dict:
     case = load_json(path)
     assert case.get("schemaVersion") == 1, f"{path}: schemaVersion must be 1"
     assert case.get("id") == catalogue["id"], f"{path}: ID does not match catalogue"
     assert case.get("title") == catalogue["title"], f"{path}: title does not match catalogue"
+    assert case.get("promotionState") == "promoted", f"{path}: learner case must declare promotionState=promoted"
     assert case.get("source", {}).get("familyId") == catalogue["sourceFamily"], f"{path}: source family drift"
     assert case.get("source", {}).get("familyId") in eligible, f"{path}: source family is not fully profiled"
     assert case.get("evidenceTier") in {"measured", "site_validated"}, f"{path}: invalid evidence tier"
@@ -108,7 +121,7 @@ def validate_promoted_case(path: Path, catalogue: dict, eligible: set[str]) -> d
         assert case.get("claimScope") != "validated_mechanism", f"{path}: public measured case cannot self-promote a validated mechanism"
 
     source = case.get("source", {})
-    for key in ("datasetId", "sourceFingerprint", "sourceWindowFingerprint", "extraction"):
+    for key in ("datasetId", "sourceReference", "sourceFingerprint", "sourceWindowFingerprint", "licenceOrAccessStatus", "extraction"):
         assert source.get(key), f"{path}: missing source.{key}"
     assert re.fullmatch(r"sha256:[0-9a-f]{64}", source["sourceFingerprint"]), f"{path}: invalid source fingerprint"
     assert re.fullmatch(r"sha256:[0-9a-f]{64}", source["sourceWindowFingerprint"]), f"{path}: invalid window fingerprint"
@@ -159,10 +172,12 @@ def validate_promoted_case(path: Path, catalogue: dict, eligible: set[str]) -> d
 
 def main() -> int:
     manifest = load_json(MANIFEST)
+    promotion_index = load_json(PROMOTION_INDEX)
     ledger = load_json(LEDGER)
     eligible = accepted_families(ledger)
     catalogue = assert_catalogue(manifest, eligible)
     by_id = {c["id"]: c for c in catalogue}
+    indexed_ids = assert_promotion_index(promotion_index, set(by_id))
 
     promoted = []
     duplicate_keys = set()
@@ -180,6 +195,13 @@ def main() -> int:
             duplicate_keys.add(duplicate_key)
             promoted.append(case_id)
 
+    assert set(indexed_ids) == set(promoted), (
+        "promotion index must exactly match QA-valid promoted case assets: "
+        f"index_only={sorted(set(indexed_ids)-set(promoted))}, "
+        f"asset_only={sorted(set(promoted)-set(indexed_ids))}"
+    )
+    assert indexed_ids == promoted, "promotion index must use the same stable order as promoted case files"
+
     report = {
         "schemaVersion": 1,
         "libraryId": manifest["libraryId"],
@@ -187,6 +209,7 @@ def main() -> int:
         "catalogueCases": len(catalogue),
         "promotedLearnerCases": len(promoted),
         "promotedCaseIds": promoted,
+        "promotionIndexMatchesAssets": True,
         "eligibleFullyProfiledFamilies": sorted(eligible),
         "releaseComplete": len(promoted) == 70,
         "boundary": "Catalogue rows are not learner-visible measured cases until exact source/window binding and promoted-case QA pass.",
