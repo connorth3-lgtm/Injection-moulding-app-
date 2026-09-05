@@ -42,7 +42,17 @@ need(attested_fingerprint.startswith("sha256:") and len(attested_fingerprint) ==
 need(set(attestation.get("platforms", {})) == {"ios", "android"}, "attestation must cover exactly iOS/iPadOS and Android")
 for platform, record in attestation["platforms"].items():
     need(record.get("result") == "pass-attested", f"{platform} attestation must record only the human pass statement")
-    need(record.get("deviceMetadataStatus") == "not-provided", f"{platform} metadata must remain explicitly not provided")
+
+ios_attestation = attestation["platforms"]["ios"]
+need(ios_attestation.get("deviceMetadataStatus") == "not-provided", "iOS/iPadOS metadata must remain explicitly pending")
+
+android_attestation = attestation["platforms"]["android"]
+need(android_attestation.get("deviceMetadataStatus") == "provided", "Android metadata progress must be explicitly recorded")
+for key in ("deviceModel", "osVersion", "browserVersion", "metadataCapturedAt", "metadataSource"):
+    need(str(android_attestation.get(key) or "").strip(), f"Android attestation metadata is missing {key}")
+need(android_attestation.get("metadataSource") == "mouldmaster-on-device-metadata-helper", "Android metadata source must remain the local-only helper")
+need(android_attestation.get("helperInstalledMode") == "browser", "helper installed mode must record the helper session, not claim learner standalone mode")
+need("iOS/iPadOS" in str(attestation.get("remainingProductionRequirement", "")), "attestation must state that iOS/iPadOS remains required")
 need(
     "pwa-physical-device-attestation-v1.json" not in TOOL.read_text(encoding="utf-8"),
     "human attestation file must remain separate from the production validation verifier",
@@ -116,4 +126,4 @@ except SystemExit as exc:
 else:
     raise AssertionError("public physical-device contract accepted a forbidden personal-data field")
 
-print("MouldMaster physical PWA device contract QA passed: the human two-platform pass attestation is recorded separately and remains metadata-incomplete/non-production-eligible; pending evidence still fails production publication; validated evidence remains fresh, privacy-safe and exact-runtime fingerprint gated across iOS/iPadOS + Android.")
+print("MouldMaster physical PWA device contract QA passed: Android metadata progress is recorded separately from the production verifier, iOS/iPadOS remains pending, the attestation remains non-production-eligible, and production still fails closed until both governed physical-platform records are validated.")
