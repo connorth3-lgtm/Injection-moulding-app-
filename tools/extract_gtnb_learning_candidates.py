@@ -13,7 +13,7 @@ import json
 import math
 import re
 import tempfile
-from collections import Counter, defaultdict
+from collections import defaultdict
 from pathlib import Path
 
 from openpyxl import load_workbook
@@ -73,6 +73,8 @@ def canonical_sha(value):
 
 def finite(v): return isinstance(v,(int,float)) and not isinstance(v,bool) and math.isfinite(float(v))
 
+def header_text(v): return str(v or '').strip()
+
 
 def source_spec():
     return next(s for s in SOURCES if s['datasetId']=='mendeley-gtnb4j7bfx-v1')
@@ -116,18 +118,23 @@ def main():
         wb=load_workbook(path,read_only=True,data_only=False)
         if 'nicky' not in wb.sheetnames: raise RuntimeError('GTNB nicky worksheet missing')
         ws=wb['nicky']
-        actual=[ws.cell(1,c).value for c in range(1,34)]
+        # The source-proof layer records stripped header text. Use the same bounded
+        # whitespace normalization here, while still requiring every exact governed
+        # header token after stripping and rejecting duplicate normalized headers.
+        actual=[header_text(ws.cell(1,c).value) for c in range(1,ws.max_column+1)]
+        nonempty=[h for h in actual if h]
+        if len(nonempty)!=len(set(nonempty)): raise RuntimeError('GTNB duplicate normalized headers')
         expected=list(HEADER_MAP)
         missing=[h for h in expected if h not in actual]
-        if missing: raise RuntimeError(f'GTNB header drift: {missing}')
+        if missing: raise RuntimeError(f'GTNB header drift after whitespace normalization: {missing}')
         col={h:actual.index(h)+1 for h in expected}
         rows=[]
         groups=defaultdict(list)
         for r in range(2,ws.max_row+1):
-            machine=str(ws.cell(r,col['Maquina']).value or '').strip().upper()
+            machine=header_text(ws.cell(r,col['Maquina']).value).upper()
             if not (re.fullmatch(r'I(?:-|_)?\d+',machine) or machine.startswith('INY')):
                 continue
-            row={'_sourceRow':r,'_machine':machine,'_product':str(ws.cell(r,col['Nombre_producto']).value or '')}
+            row={'_sourceRow':r,'_machine':machine,'_product':header_text(ws.cell(r,col['Nombre_producto']).value)}
             for source_header,canonical in HEADER_MAP.items():
                 if canonical in {'machine','product'}: continue
                 v=ws.cell(r,col[source_header]).value
