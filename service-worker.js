@@ -1,4 +1,4 @@
-const CACHE_VERSION='2026.09.05.2';
+const CACHE_VERSION='2026.09.05.3';
 const CACHE_REVISION='verified-cleanup-governance-r1-20260905';
 const STATIC_CACHE=`mouldmaster-static-${CACHE_VERSION}-${CACHE_REVISION}`;
 const LEGACY_RECOVERY_SOURCE_ONLY='./MouldMaster_Academy_App.html';
@@ -90,6 +90,13 @@ const OPTIONAL=[
   './source-library.js',
   './measured-evidence-integration.js',
   './measured-evidence-decision.js',
+  './measured-learning-library.js',
+  './measured-learning-library.css',
+  './data/measured-learning/promoted-v1.json',
+  './data/measured-learning/manifest-v1.json',
+  './data/measured-learning/expansion-manifest-v2.json',
+  './data/measured-learning/v2-policy.json',
+  './data/measured-learning/source-readiness-v2.json',
   './reference-data.js',
   './reference-data.html',
   './reference-deep-dive.js',

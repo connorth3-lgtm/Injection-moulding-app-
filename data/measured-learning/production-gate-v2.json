@@ -1,0 +1,23 @@
+{
+  "schemaVersion": 2,
+  "gateId": "measured-learning-production-gate-v2",
+  "reviewedBindingRegistry": "data/measured-learning/reviewed-bindings-index-v2.json",
+  "bindingDirectory": "data/measured-learning/reviewed-bindings",
+  "promotionIndex": "data/measured-learning/promoted-v1.json",
+  "caseDirectory": "data/measured-learning/cases",
+  "requiredReviewerRole": "engineering-evidence-review",
+  "allowedProductionReviewRecordTypes": [
+    "github-pr",
+    "github-issue",
+    "signed-review",
+    "external-record"
+  ],
+  "forbiddenProductionReviewRecordTypes": [
+    "test-fixture"
+  ],
+  "requireIndependentReviewer": true,
+  "requireExplicitNonCausalSource": true,
+  "requireBindingFingerprintPin": true,
+  "requireCanonicalCaseRebuild": true,
+  "boundary": "A learner-visible measured case must be reproducible from one canonical source-controlled V2 binding that records completed independent engineering review. Generated review packets and test fixtures cannot enter this gate."
+}

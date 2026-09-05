@@ -1,0 +1,7 @@
+{
+  "schemaVersion": 2,
+  "registryId": "measured-learning-reviewed-bindings-v2",
+  "bindingDirectory": "data/measured-learning/reviewed-bindings",
+  "bindings": [],
+  "boundary": "Only completed independently reviewed V2 bindings registered here may be materialized into learner cases. An empty registry intentionally means zero production-reviewed measured learner cases."
+}

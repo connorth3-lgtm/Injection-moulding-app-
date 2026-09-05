@@ -1,0 +1,29 @@
+{
+  "schemaVersion": 1,
+  "trancheId": "measured-learning-launch-review-v1",
+  "purpose": "First independent engineering-review tranche for the measured-learning release. This file schedules review only; it is not a review record and cannot authorize promotion.",
+  "targetReviewCount": 12,
+  "rolloutMilestones": [12, 30, 50, 70],
+  "reviewRecordsStoredHere": false,
+  "promotionAuthority": false,
+  "coverageRequirements": {
+    "allPromotionReadySourceFamilies": true,
+    "difficultyBands": ["foundation", "intermediate", "advanced"],
+    "requiredCoverageTags": ["time-series", "multi-signal", "material-physical", "quality-outcome", "insufficient-evidence"]
+  },
+  "cases": [
+    {"caseId":"MLM-003","sourceFamily":"scatimdata-avaps","evidencePattern":"paired pressure/flow repeatability","reviewState":"unreviewed","reviewerId":null,"decision":null,"reviewedAt":null,"promotionEligible":false},
+    {"caseId":"MLM-021","sourceFamily":"openmms-t4g","evidencePattern":"force/pressure event alignment","reviewState":"unreviewed","reviewerId":null,"decision":null,"reviewedAt":null,"promotionEligible":false},
+    {"caseId":"MLM-023","sourceFamily":"impure-pascoe-2022","evidencePattern":"cavity pressure/contact-temperature comparison","reviewState":"unreviewed","reviewerId":null,"decision":null,"reviewedAt":null,"promotionEligible":false},
+    {"caseId":"MLM-030","sourceFamily":"mendeley-4h98rz9f92-v3","evidencePattern":"replicate mechanical-property outlier review","reviewState":"unreviewed","reviewerId":null,"decision":null,"reviewedAt":null,"promotionEligible":false},
+    {"caseId":"MLM-037","sourceFamily":"su13148102-supplement","evidencePattern":"process variables and measured specimen thickness","reviewState":"unreviewed","reviewerId":null,"decision":null,"reviewedAt":null,"promotionEligible":false},
+    {"caseId":"MLM-039","sourceFamily":"mendeley-gtnb4j7bfx-v1","evidencePattern":"process variables and derived rejection rate","reviewState":"unreviewed","reviewerId":null,"decision":null,"reviewedAt":null,"promotionEligible":false},
+    {"caseId":"MLM-050","sourceFamily":"mendeley-6k8fpbrd9s-v1","evidencePattern":"measured pvT relationship","reviewState":"unreviewed","reviewerId":null,"decision":null,"reviewedAt":null,"promotionEligible":false},
+    {"caseId":"MLM-054","sourceFamily":"pmc4753395-hdpe-cenosphere-v1","evidencePattern":"composition versus stress/strain response","reviewState":"unreviewed","reviewerId":null,"decision":null,"reviewedAt":null,"promotionEligible":false},
+    {"caseId":"MLM-055","sourceFamily":"mendeley-yxz2w7ctnh-v1","evidencePattern":"multi-artifact tensile versus bending comparison","reviewState":"unreviewed","reviewerId":null,"decision":null,"reviewedAt":null,"promotionEligible":false},
+    {"caseId":"MLM-057","sourceFamily":"openmms-t4g","evidencePattern":"dual measured time-base reconciliation","reviewState":"unreviewed","reviewerId":null,"decision":null,"reviewedAt":null,"promotionEligible":false},
+    {"caseId":"MLM-064","sourceFamily":"scatimdata-avaps","evidencePattern":"correlation without causal overclaim","reviewState":"unreviewed","reviewerId":null,"decision":null,"reviewedAt":null,"promotionEligible":false},
+    {"caseId":"MLM-068","sourceFamily":"forinfpro-himd-v1","evidencePattern":"one-cycle repeatability boundary","reviewState":"unreviewed","reviewerId":null,"decision":null,"reviewedAt":null,"promotionEligible":false}
+  ],
+  "boundary": "Selection into this tranche means only that a technically authoring-ready case has been prioritized for independent engineering review. Human observations, interpretation, novelty judgment, reviewer identity and approval remain external to this scheduling file."
+}

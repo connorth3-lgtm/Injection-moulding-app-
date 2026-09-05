@@ -42,6 +42,15 @@ FORBIDDEN_SUFFIXES = (
     ".cjs",
 )
 
+MEASURED_LEARNING_PUBLIC_GOVERNANCE = {
+    "data/measured-learning/promoted-v1.json",
+    "data/measured-learning/manifest-v1.json",
+    "data/measured-learning/expansion-manifest-v2.json",
+    "data/measured-learning/v2-policy.json",
+    "data/measured-learning/source-readiness-v2.json",
+}
+MEASURED_CASE_ID_RE = re.compile(r"MLM-(?:00[1-9]|0[1-9]\d|100)\Z")
+
 LOCAL_FETCH_RE = re.compile(r"""fetch\s*\(\s*(['\"])([^'\"]+)\1""")
 SERVICE_WORKER_RE = re.compile(r"""serviceWorker\.register\s*\(\s*(['\"])([^'\"]+)\1""")
 CSS_URL_RE = re.compile(r"""url\(\s*(['\"]?)([^)'\"]+)\1\s*\)""")
@@ -86,6 +95,24 @@ def extract_service_worker_assets() -> tuple[list[str], list[str]]:
     return core, optional
 
 
+def measured_learning_public_data_files() -> set[str]:
+    promoted_path = ROOT / "data" / "measured-learning" / "promoted-v1.json"
+    promoted = json.loads(promoted_path.read_text(encoding="utf-8"))
+    if promoted.get("schemaVersion") != 1 or promoted.get("libraryId") != "measured-learning-library-v1":
+        raise SystemExit("Measured-learning promotion index identity is invalid")
+    case_ids = promoted.get("caseIds")
+    if not isinstance(case_ids, list):
+        raise SystemExit("Measured-learning promotion index caseIds must be a list")
+    if len(case_ids) != len(set(case_ids)):
+        raise SystemExit("Measured-learning promotion index contains duplicate case IDs")
+    files = set(MEASURED_LEARNING_PUBLIC_GOVERNANCE)
+    for case_id in case_ids:
+        if not isinstance(case_id, str) or not MEASURED_CASE_ID_RE.fullmatch(case_id):
+            raise SystemExit(f"Invalid measured-learning promoted case ID: {case_id!r}")
+        files.add(f"data/measured-learning/cases/{case_id}.json")
+    return files
+
+
 def normalise_local_reference(raw: str) -> str | None:
     raw = raw.strip()
     if not raw or raw.startswith(("#", "data:", "mailto:", "tel:", "javascript:")):
@@ -108,8 +135,12 @@ def normalise_local_reference(raw: str) -> str | None:
     return "/".join(bits)
 
 
-def validate_boundary(rel: str) -> None:
+def validate_boundary(rel: str, allowed_data_files: set[str]) -> None:
     lower = rel.lower()
+    if lower.startswith("data/"):
+        if rel not in allowed_data_files:
+            raise SystemExit(f"Forbidden repository data asset selected for Pages: {rel}")
+        return
     if any(lower.startswith(prefix) for prefix in FORBIDDEN_PREFIXES):
         raise SystemExit(f"Forbidden repository area selected for Pages: {rel}")
     if any(lower.endswith(suffix) for suffix in FORBIDDEN_SUFFIXES):
@@ -167,10 +198,11 @@ def extract_runtime_metadata() -> tuple[str, str, str]:
 
 def main() -> None:
     core_files, optional_files = extract_service_worker_assets()
-    public_files = set(core_files) | set(optional_files) | set(EXTRA_FILES)
+    allowed_data_files = measured_learning_public_data_files()
+    public_files = set(core_files) | set(optional_files) | set(EXTRA_FILES) | allowed_data_files
 
     for rel in sorted(public_files):
-        validate_boundary(rel)
+        validate_boundary(rel, allowed_data_files)
         path = ROOT / rel
         if not path.exists() or not path.is_file():
             raise SystemExit(f"Required public asset is missing: {rel}")
@@ -206,6 +238,8 @@ def main() -> None:
         "artifact_policy": "service-worker-core-plus-on-demand-runtime-plus-minimal-public-metadata",
         "precache_asset_count": len(core_files),
         "on_demand_asset_count": len(optional_files),
+        "measured_learning_public_governance_count": len(MEASURED_LEARNING_PUBLIC_GOVERNANCE),
+        "measured_learning_promoted_case_count": len(allowed_data_files - MEASURED_LEARNING_PUBLIC_GOVERNANCE),
     }
     (OUT / "deployment.json").write_text(
         json.dumps(deployment, indent=2, sort_keys=True) + "\n",
@@ -238,7 +272,7 @@ def main() -> None:
         f"({len(core_files)} pre-cached, {len(optional_files)} on demand; "
         f"web release {web_release}, assessment runtime {runtime_version}, source {source_sha[:12]})."
     )
-    print("Excluded repository areas: " + ", ".join(FORBIDDEN_PREFIXES))
+    print("Excluded repository areas remain fail-closed; measured-learning exposes only governed runtime JSON and promoted learner cases.")
 
 
 if __name__ == "__main__":

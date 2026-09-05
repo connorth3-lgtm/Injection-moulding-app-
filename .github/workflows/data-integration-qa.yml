@@ -9,6 +9,9 @@ on:
       - 'process-data-semantic-registry.json'
       - 'current-data-manifest.json'
       - 'data/measured-data-collection-closeout-2026-08-30.json'
+      - 'data/measured-learning/**'
+      - 'measured-learning-library.js'
+      - 'measured-learning-library.css'
       - 'index.html'
       - 'app-shell-finalize.js'
       - 'service-worker.js'
@@ -54,4 +57,33 @@ jobs:
           test -f .pages-dist/process-data-intelligence-ui.js
           test -f .pages-dist/process-data-semantic-registry.json
           test -f .pages-dist/current-data-manifest.json
-          test ! -e .pages-dist/data
+          python - <<'PY'
+          import json
+          import re
+          from pathlib import Path
+
+          data_root = Path('.pages-dist/data')
+          files = {
+              path.relative_to(Path('.pages-dist')).as_posix()
+              for path in data_root.rglob('*')
+              if path.is_file()
+          } if data_root.exists() else set()
+          allowed = {
+              'data/measured-learning/promoted-v1.json',
+              'data/measured-learning/manifest-v1.json',
+              'data/measured-learning/expansion-manifest-v2.json',
+              'data/measured-learning/v2-policy.json',
+              'data/measured-learning/source-readiness-v2.json',
+          }
+          promoted = json.loads(Path('.pages-dist/data/measured-learning/promoted-v1.json').read_text(encoding='utf-8'))
+          case_ids = promoted.get('caseIds') or []
+          assert len(case_ids) == len(set(case_ids)), 'public promotion index contains duplicate case IDs'
+          for case_id in case_ids:
+              assert re.fullmatch(r'MLM-(?:00[1-9]|0[1-9]\d|100)', case_id), f'invalid public promoted case ID: {case_id!r}'
+              allowed.add(f'data/measured-learning/cases/{case_id}.json')
+          unexpected = sorted(files - allowed)
+          missing = sorted(allowed - files)
+          assert not unexpected, f'governed/raw data leaked into Pages artifact: {unexpected}'
+          assert not missing, f'expected measured-learning public assets missing: {missing}'
+          print(f'Public data boundary clean: {len(files)} governed measured-learning files, 0 raw/source/review artifacts.')
+          PY
