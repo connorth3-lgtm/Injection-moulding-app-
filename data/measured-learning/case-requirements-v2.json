@@ -1,5 +1,5 @@
 {
-  "schemaVersion": 4,
+  "schemaVersion": 5,
   "registryId": "measured-learning-case-requirements-v2",
   "policy": {
     "requirementsAreDerivedPerCatalogueCase": true,
@@ -61,11 +61,15 @@
     "MLM-022": ["dataset1/ds1_timeseries_injectionpressure.csv:value", "dataset1/ds1_timeseries_injectionflow.csv:value"],
     "MLM-023": ["Pressure1[IRT/Pascoe]", "TempMold1[IRT/Pascoe]"],
     "MLM-024": ["Pressure1[IRT/Pascoe]", "Pressure2[IRT/Pascoe]"],
+    "MLM-028": ["Heating.sv_Zone14.rActualTemp", "Heating.sv_Zone13.rActualTemp", "Heating.sv_Zone12.rActualTemp"],
     "MLM-032": ["Pressure1[IRT/Pascoe]", "Pressure2[IRT/Pascoe]"],
     "MLM-036": ["dataset1/ds1_timeseries_injectionpressure.csv:value", "dataset1/ds1_timeseries_injectionflow.csv:value", "dataset1/ds1_scalar_and_quality.csv:weight"],
     "MLM-037": ["dataset1/ds1_timeseries_injectionpressure.csv:value", "dataset1/ds1_timeseries_injectionflow.csv:value", "dataset1/ds1_scalar_and_quality.csv:distanceA"],
     "MLM-060": ["Pressure1[IRT/Pascoe]", "Pressure2[IRT/Pascoe]", "TempMold1[IRT/Pascoe]", "TempMold2[IRT/Pascoe]"],
     "MLM-061": ["Pressure1[IRT/Pascoe]", "TempMold1[IRT/Pascoe]"],
-    "MLM-064": ["dataset1/ds1_timeseries_injectionpressure.csv:value", "dataset1/ds1_timeseries_injectionflow.csv:value"]
+    "MLM-062": ["Heating.sv_Zone14.rActualTemp", "Heating.sv_Zone13.rActualTemp"],
+    "MLM-063": ["Heating.sv_Zone14.rActualTemp", "Heating.sv_Zone13.rActualTemp", "Heating.sv_Zone12.rActualTemp", "Heating.sv_Zone11.rActualTemp"],
+    "MLM-064": ["dataset1/ds1_timeseries_injectionpressure.csv:value", "dataset1/ds1_timeseries_injectionflow.csv:value"],
+    "MLM-068": ["Heating.sv_Zone14.rActualTemp", "Heating.sv_Zone13.rActualTemp"]
   }
 }
