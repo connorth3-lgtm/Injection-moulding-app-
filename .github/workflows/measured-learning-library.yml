@@ -66,6 +66,7 @@ jobs:
             tools/prove_pmc_hdpe_source.py \
             tools/extract_avaps_learning_candidates.py \
             tools/extract_impure_learning_candidates.py \
+            tools/extract_forinfpro_learning_candidates.py \
             tools/extract_mendeley_learning_candidates.py \
             tools/extract_4h98_direct_candidate.py \
             tools/extract_6k8_pressure_candidate.py \
@@ -87,6 +88,7 @@ jobs:
           python -m json.tool data/measured-learning/source-channels-v2.json >/dev/null
           python -m json.tool data/measured-learning/source-channels-avaps-v2.json >/dev/null
           python -m json.tool data/measured-learning/source-channels-impure-v2.json >/dev/null
+          python -m json.tool data/measured-learning/source-channels-forinfpro-v2.json >/dev/null
           python -m json.tool data/measured-learning/case-requirements-v2.json >/dev/null
           python -m json.tool data/measured-learning/feature-methods-v1.json >/dev/null
           python -m json.tool data/measured-learning/binding-template-v2.json >/dev/null
@@ -101,6 +103,8 @@ jobs:
         run: python tools/extract_avaps_learning_candidates.py
       - name: Extract governed ImPure source-derived authoring candidates
         run: python tools/extract_impure_learning_candidates.py
+      - name: Extract governed FORinFPRO source-derived authoring candidate
+        run: python tools/extract_forinfpro_learning_candidates.py
       - name: Prove required Sustainability publisher supplement
         run: python tools/prove_sustainability_measured_source.py
       - name: Prove benchmark-pinned open Mendeley workbook schemas
