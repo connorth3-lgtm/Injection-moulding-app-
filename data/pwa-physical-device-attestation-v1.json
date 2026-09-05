@@ -11,10 +11,17 @@
     },
     "android": {
       "result": "pass-attested",
-      "deviceMetadataStatus": "not-provided"
+      "deviceMetadataStatus": "provided",
+      "deviceModel": "OPPO Find X9",
+      "osVersion": "Android 10",
+      "browserVersion": "Chrome 152.0.0.0",
+      "metadataCapturedAt": "2026-09-05T08:43:07.446Z",
+      "metadataSource": "mouldmaster-on-device-metadata-helper",
+      "helperInstalledMode": "browser"
     }
   },
   "productionValidationEligible": false,
-  "boundary": "This file records the repository owner's explicit human statement that both physical iOS/iPadOS and Android candidates worked. It is not the governed production validation contract and must not be used to bypass missing device/OS/browser metadata required by data/pwa-physical-device-validation-v1.json.",
+  "remainingProductionRequirement": "iOS/iPadOS device metadata and governed evidence review are still required before the production PWA can be published.",
+  "boundary": "This file records the repository owner's explicit human statement that both physical iOS/iPadOS and Android candidates worked. Android device metadata is now recorded from the local-only metadata helper, while iOS/iPadOS metadata remains pending. This is not the governed production validation contract and must not be used to bypass data/pwa-physical-device-validation-v1.json.",
   "privacyBoundary": "No learner, customer, site, email, screenshot, filesystem, raw process-data or other personal/proprietary evidence is stored here."
 }
