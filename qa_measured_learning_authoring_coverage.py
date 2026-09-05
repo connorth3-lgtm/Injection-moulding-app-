@@ -16,7 +16,8 @@ FILES=[
  'openmms-unreviewed-learning-candidates.json',
 ]
 REPORT=PROOF/'measured-learning-authoring-coverage-v2.json'
-SUSTAINABILITY_COORDINATE_REVIEW_CASES={'MLM-043','MLM-044','MLM-045','MLM-046','MLM-047','MLM-066'}
+SUSTAINABILITY='su13148102-supplement'
+GENERATED_INDEX_MODE='generated-source-order-observation-index-v1'
 
 def load(p): return json.loads(p.read_text(encoding='utf-8'))
 def sha(v): return 'sha256:'+hashlib.sha256(json.dumps(v,sort_keys=True,separators=(',',':'),ensure_ascii=False).encode()).hexdigest()
@@ -71,6 +72,18 @@ def main():
                     direct=False; reasons.append(f'transformed-semantic:{source_channel}')
                 if rep.get('xSemantic')!=g.get('coordinateSemantic') or rep.get('xUnit')!=g.get('coordinateUnit'):
                     direct=False; reasons.append(f'coordinate-review:{source_channel}')
+                if dataset==SUSTAINABILITY:
+                    assert g.get('coordinateChannel')=='generated-observation-index', f'{cid}/{source_channel}: Sustainability registry must use generated observation index'
+                    assert rep.get('coordinateMode')==GENERATED_INDEX_MODE, f'{cid}/{source_channel}: generated coordinate mode missing or drifted'
+                    expected=[float(i) for i in range(1,len(xs)+1)]
+                    assert xs==expected, f'{cid}/{source_channel}: generated observation index must be exact 1..N'
+                    assert rep.get('xSemantic')=='observation-index' and rep.get('xUnit')=='index' and rep.get('xDirection')=='increasing', f'{cid}/{source_channel}: generated observation coordinate declaration drifted'
+                    reduction=str(rep.get('reductionMethod','')).lower()
+                    assert 'source-order' in reduction and 'sort' not in reduction, f'{cid}/{source_channel}: generated index must preserve source order without sorting'
+                    assert s.get('coordinateRequiresBindingReview') is False, f'{cid}/{source_channel}: governed generated observation index must not remain coordinate-review-blocked'
+            if dataset==SUSTAINABILITY:
+                assert c.get('sourceScope',{}).get('coordinateMode')==GENERATED_INDEX_MODE, f'{cid}: Sustainability source scope must declare generated coordinate mode'
+                assert c.get('sourceScope',{}).get('selectedSourceRowFingerprint','').startswith('sha256:'), f'{cid}: selected source-row identity fingerprint required'
             recommended_features=c.get('recommendedFeatures',[])
             for feature in recommended_features:
                 method_id=feature.get('method'); registered=methods.get(method_id)
@@ -94,10 +107,9 @@ def main():
     missing_numeric=sorted(ready_slots-numeric_coverage)
     missing_direct=sorted(ready_slots-direct_coverage)
     assert not missing_numeric, f'unexpected numeric candidate gaps: {missing_numeric}'
-    assert 'MLM-039' not in missing_direct, 'GTNB rejection-rate slot should be direct-binding-shaped after governed count channels and rate feature'
-    assert set(missing_direct)==SUSTAINABILITY_COORDINATE_REVIEW_CASES, f'unexpected direct-binding gaps: {missing_direct}'
-    assert len(direct_coverage)==24, f'direct-binding-shape coverage drifted: {len(direct_coverage)}'
-    report={'schemaVersion':1,'status':'authoring-coverage-qa-passed','promotionReadySourceFamilies':sorted(ready),'sourceReadyCatalogueSlots':len(ready_slots),'numericAuthoringCandidateCount':len(candidate_ids),'numericCandidateCatalogueCoverage':len(numeric_coverage),'numericCandidateCaseIds':sorted(numeric_coverage),'numericCandidateGaps':missing_numeric,'directBindingShapeCatalogueCoverage':len(direct_coverage),'directBindingShapeCaseIds':sorted(direct_coverage),'directBindingShapeGaps':missing_direct,'candidateCountBySource':source_counts,'candidates':details,'promotedLearnerCases':0,'boundary':'Numeric authoring coverage is not learner promotion. Candidate data remain unreviewed and cannot count as a learner case until case-specific evidence wording, novelty and independent engineering review pass the promotion builder/QA.'}
+    assert not missing_direct, f'unexpected direct-binding gaps: {missing_direct}'
+    assert len(direct_coverage)==30, f'direct-binding-shape coverage drifted: {len(direct_coverage)}'
+    report={'schemaVersion':1,'status':'authoring-coverage-qa-passed','promotionReadySourceFamilies':sorted(ready),'sourceReadyCatalogueSlots':len(ready_slots),'numericAuthoringCandidateCount':len(candidate_ids),'numericCandidateCatalogueCoverage':len(numeric_coverage),'numericCandidateCaseIds':sorted(numeric_coverage),'numericCandidateGaps':missing_numeric,'directBindingShapeCatalogueCoverage':len(direct_coverage),'directBindingShapeCaseIds':sorted(direct_coverage),'directBindingShapeGaps':missing_direct,'candidateCountBySource':source_counts,'candidates':details,'promotedLearnerCases':0,'boundary':'Numeric and direct-binding-shape authoring coverage are not learner promotion. Candidate data remain unreviewed and cannot count as learner cases until case-specific wording, novelty and independent engineering review pass the promotion builder/QA.'}
     REPORT.write_text(json.dumps(report,indent=2)+'\n',encoding='utf-8')
     print(json.dumps({k:report[k] for k in ('status','sourceReadyCatalogueSlots','numericAuthoringCandidateCount','numericCandidateCatalogueCoverage','numericCandidateGaps','directBindingShapeCatalogueCoverage','directBindingShapeGaps')},separators=(',',':')))
     return 0
