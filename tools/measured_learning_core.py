@@ -33,7 +33,6 @@ def normalize_text(value: str) -> str:
 
 
 def x_direction(values: list[float], declared: str | None = None) -> str:
-    """Validate a monotonic numeric axis without forcing source order to be ascending."""
     direction = declared or "increasing"
     if direction not in {"increasing", "decreasing"}:
         raise ValueError("xDirection must be increasing or decreasing")
@@ -121,211 +120,140 @@ def calculate_method(method: str, inputs: list[dict], params: dict | None = None
         y = [float(v) for v in signal["representation"]["y"]]
         x = [float(v) for v in signal["representation"]["x"]]
         unit = signal.get("unit")
-        if method == "mean":
-            return statistics.fmean(y), unit
-        if method == "median":
-            return statistics.median(y), unit
-        if method == "standard_deviation":
-            return statistics.pstdev(y), unit
-        if method == "interquartile_range":
-            return percentile(y, 0.75) - percentile(y, 0.25), unit
+        if method == "mean": return statistics.fmean(y), unit
+        if method == "median": return statistics.median(y), unit
+        if method == "standard_deviation": return statistics.pstdev(y), unit
+        if method == "interquartile_range": return percentile(y, 0.75) - percentile(y, 0.25), unit
         if method == "coefficient_of_variation":
             mean = statistics.fmean(y)
-            if mean == 0:
-                raise ValueError("coefficient_of_variation undefined for zero mean")
+            if mean == 0: raise ValueError("coefficient_of_variation undefined for zero mean")
             return statistics.pstdev(y) / abs(mean), None
         if method == "percentile_range":
-            low = float(params.get("low", 0.10))
-            high = float(params.get("high", 0.90))
-            if not 0 <= low < high <= 1:
-                raise ValueError("percentile_range requires 0 <= low < high <= 1")
+            low = float(params.get("low", 0.10)); high = float(params.get("high", 0.90))
+            if not 0 <= low < high <= 1: raise ValueError("percentile_range requires 0 <= low < high <= 1")
             return percentile(y, high) - percentile(y, low), unit
         if method == "robust_slope":
             slopes = []
             for i in range(len(x)):
                 for j in range(i + 1, len(x)):
                     dx = x[j] - x[i]
-                    if dx != 0:
-                        slopes.append((y[j] - y[i]) / dx)
-            if not slopes:
-                raise ValueError("robust_slope requires at least two distinct x values")
+                    if dx != 0: slopes.append((y[j] - y[i]) / dx)
+            if not slopes: raise ValueError("robust_slope requires at least two distinct x values")
             x_unit = signal["representation"].get("xUnit")
             return statistics.median(slopes), f"{unit}/{x_unit}" if unit and x_unit else None
         if method == "early_late_shift":
             fraction = float(params.get("fraction", 0.20))
-            if not 0 < fraction <= 0.5:
-                raise ValueError("early_late_shift fraction must be in (0, 0.5]")
+            if not 0 < fraction <= 0.5: raise ValueError("early_late_shift fraction must be in (0, 0.5]")
             n = max(1, int(math.ceil(len(y) * fraction)))
             return statistics.fmean(y[-n:]) - statistics.fmean(y[:n]), unit
         if method == "outlier_frequency":
-            multiplier = float(params.get("iqrMultiplier", 1.5))
-            q1, q3 = percentile(y, 0.25), percentile(y, 0.75)
-            iqr = q3 - q1
-            low, high = q1 - multiplier * iqr, q3 + multiplier * iqr
+            multiplier = float(params.get("iqrMultiplier", 1.5)); q1, q3 = percentile(y, 0.25), percentile(y, 0.75); iqr = q3-q1
+            low, high = q1-multiplier*iqr, q3+multiplier*iqr
             return sum(1 for v in y if v < low or v > high) / len(y), None
         if method == "cycle_to_cycle_delta":
-            if len(y) < 2:
-                raise ValueError("cycle_to_cycle_delta requires at least two values")
-            return statistics.fmean(abs(b - a) for a, b in zip(y, y[1:])), unit
-        if method == "peak_value":
-            return max(y), unit
+            if len(y) < 2: raise ValueError("cycle_to_cycle_delta requires at least two values")
+            return statistics.fmean(abs(b-a) for a,b in zip(y,y[1:])), unit
+        if method == "peak_value": return max(y), unit
         if method == "peak_position":
-            idx = max(range(len(y)), key=y.__getitem__)
-            return x[idx], signal["representation"].get("xUnit")
-        if method == "range":
-            return max(y) - min(y), unit
-
+            idx = max(range(len(y)), key=y.__getitem__); return x[idx], signal["representation"].get("xUnit")
+        if method == "range": return max(y)-min(y), unit
     if method in {"pearson_correlation", "spearman_correlation"}:
-        a, b = _two_aligned_signals(inputs)
-        ay = [float(v) for v in a["representation"]["y"]]
-        by = [float(v) for v in b["representation"]["y"]]
-        if method == "pearson_correlation":
-            return pearson(ay, by), None
-        return pearson(rankdata(ay), rankdata(by)), None
-
+        a,b = _two_aligned_signals(inputs); ay=[float(v) for v in a["representation"]["y"]]; by=[float(v) for v in b["representation"]["y"]]
+        return (pearson(ay,by),None) if method == "pearson_correlation" else (pearson(rankdata(ay),rankdata(by)),None)
     if method == "ratio_of_sums_percent":
         numerator, denominator = _two_aligned_signals(inputs)
-        numerator_values = [float(v) for v in numerator["representation"]["y"]]
-        denominator_values = [float(v) for v in denominator["representation"]["y"]]
-        denominator_sum = sum(denominator_values)
-        if denominator_sum <= 0:
-            raise ValueError("ratio_of_sums_percent requires aggregate denominator > 0")
-        return 100.0 * sum(numerator_values) / denominator_sum, "%"
-
+        n=[float(v) for v in numerator["representation"]["y"]]; d=[float(v) for v in denominator["representation"]["y"]]; ds=sum(d)
+        if ds <= 0: raise ValueError("ratio_of_sums_percent requires aggregate denominator > 0")
+        return 100.0*sum(n)/ds, "%"
     raise ValueError(f"unsupported feature method: {method}")
 
 
 def calculate_feature(feature_spec: dict, signals_by_id: dict[str, dict], method_versions: dict[str, int]) -> dict:
-    feature_id = feature_spec.get("id")
-    method = feature_spec.get("method")
-    version = int(feature_spec.get("methodVersion", 0))
-    if method not in method_versions:
-        raise ValueError(f"feature {feature_id}: unregistered method {method}")
-    if version != int(method_versions[method]):
-        raise ValueError(f"feature {feature_id}: method version drift")
-    input_refs = feature_spec.get("inputs") or []
-    if not input_refs:
-        raise ValueError(f"feature {feature_id}: inputs are required")
-    inputs = []
-    for ref in input_refs:
-        if not isinstance(ref, str) or not ref.startswith("signal:"):
-            raise ValueError(f"feature {feature_id}: only signal:<id> inputs are supported")
-        signal_id = ref.split(":", 1)[1]
-        if signal_id not in signals_by_id:
-            raise ValueError(f"feature {feature_id}: unknown input signal {signal_id}")
-        inputs.append(signals_by_id[signal_id])
-    params = feature_spec.get("params") or {}
-    input_payload = {
-        "signals": [
-            {
-                "id": s["id"], "semantic": s["semantic"], "unit": s["unit"],
-                "xSemantic": s["representation"]["xSemantic"], "xUnit": s["representation"]["xUnit"],
-                "xDirection": s["representation"].get("xDirection", "increasing"),
-                "x": s["representation"]["x"], "y": s["representation"]["y"],
-            }
-            for s in inputs
-        ],
-        "params": params,
-    }
-    input_fingerprint = canonical_sha(input_payload)
-    value, inferred_unit = calculate_method(method, inputs, params)
-    if not finite_number(value):
-        raise ValueError(f"feature {feature_id}: calculation produced a non-finite value")
-    declared_unit = feature_spec.get("unit")
-    if declared_unit not in (None, "") and inferred_unit not in (None, declared_unit):
-        raise ValueError(f"feature {feature_id}: declared unit {declared_unit!r} does not match inferred {inferred_unit!r}")
-    unit = declared_unit if declared_unit not in ("",) else inferred_unit
-    calculation_fingerprint = canonical_sha({
-        "method": method, "methodVersion": version, "inputFingerprint": input_fingerprint,
-        "params": params, "value": value, "unit": unit,
-    })
-    return {
-        "id": feature_id,
-        "label": feature_spec.get("label", feature_id),
-        "method": method,
-        "methodVersion": version,
-        "inputs": input_refs,
-        "params": params,
-        "calculationScope": feature_spec.get("calculationScope", "displayed-reviewed-representation"),
-        "inputFingerprint": input_fingerprint,
-        "calculationFingerprint": calculation_fingerprint,
-        "value": value,
-        "unit": unit,
-    }
+    feature_id=feature_spec.get("id"); method=feature_spec.get("method"); version=int(feature_spec.get("methodVersion",0))
+    if method not in method_versions: raise ValueError(f"feature {feature_id}: unregistered method {method}")
+    if version != int(method_versions[method]): raise ValueError(f"feature {feature_id}: method version drift")
+    refs=feature_spec.get("inputs") or []
+    if not refs: raise ValueError(f"feature {feature_id}: inputs are required")
+    inputs=[]
+    for ref in refs:
+        if not isinstance(ref,str) or not ref.startswith("signal:"): raise ValueError(f"feature {feature_id}: only signal:<id> inputs are supported")
+        sid=ref.split(":",1)[1]
+        if sid not in signals_by_id: raise ValueError(f"feature {feature_id}: unknown input signal {sid}")
+        inputs.append(signals_by_id[sid])
+    params=feature_spec.get("params") or {}
+    payload={"signals":[{"id":s["id"],"semantic":s["semantic"],"unit":s["unit"],"xSemantic":s["representation"]["xSemantic"],"xUnit":s["representation"]["xUnit"],"xDirection":s["representation"].get("xDirection","increasing"),"x":s["representation"]["x"],"y":s["representation"]["y"]} for s in inputs],"params":params}
+    input_fp=canonical_sha(payload); value,inferred_unit=calculate_method(method,inputs,params)
+    if not finite_number(value): raise ValueError(f"feature {feature_id}: calculation produced a non-finite value")
+    declared=feature_spec.get("unit")
+    if declared not in (None,"") and inferred_unit not in (None,declared): raise ValueError(f"feature {feature_id}: declared unit {declared!r} does not match inferred {inferred_unit!r}")
+    unit=declared if declared not in ("",) else inferred_unit
+    calc_fp=canonical_sha({"method":method,"methodVersion":version,"inputFingerprint":input_fp,"params":params,"value":value,"unit":unit})
+    return {"id":feature_id,"label":feature_spec.get("label",feature_id),"method":method,"methodVersion":version,"inputs":refs,"params":params,"calculationScope":feature_spec.get("calculationScope","displayed-reviewed-representation"),"inputFingerprint":input_fp,"calculationFingerprint":calc_fp,"value":value,"unit":unit}
 
 
 def normalized_window(extraction: dict) -> dict:
-    window = extraction.get("window")
-    if not isinstance(window, dict):
-        raise ValueError("extraction.window is required")
-    kind = window.get("kind")
-    axis = window.get("axis")
-    if kind not in {"range", "id_set"}:
-        raise ValueError("window.kind must be range or id_set")
-    if not axis:
-        raise ValueError("window.axis is required")
-    scope = window.get("scope")
+    window=extraction.get("window")
+    if not isinstance(window,dict): raise ValueError("extraction.window is required")
+    kind=window.get("kind"); axis=window.get("axis")
+    if kind not in {"range","id_set"}: raise ValueError("window.kind must be range or id_set")
+    if not axis: raise ValueError("window.axis is required")
+    scope=window.get("scope")
     if kind == "range":
-        start = window.get("start")
-        end = window.get("endExclusive")
-        if not finite_number(start) or not finite_number(end) or float(end) <= float(start):
-            raise ValueError("range window requires finite start < endExclusive")
+        start=window.get("start"); end=window.get("endExclusive")
+        if not finite_number(start) or not finite_number(end) or float(end)<=float(start): raise ValueError("range window requires finite start < endExclusive")
         return {"kind":"range","axis":str(axis),"scope":scope,"start":float(start),"endExclusive":float(end),"unit":window.get("unit")}
-    ids = window.get("ids")
-    if not isinstance(ids, list) or not ids:
-        raise ValueError("id_set window requires non-empty ids")
+    ids=window.get("ids")
+    if not isinstance(ids,list) or not ids: raise ValueError("id_set window requires non-empty ids")
     return {"kind":"id_set","axis":str(axis),"scope":scope,"ids":sorted({str(v) for v in ids})}
 
 
 def normalize_source_members(source_members: Any) -> list[str]:
-    """Normalize a legacy single member or a multi-member source set."""
-    if source_members in (None, "") or source_members == []:
-        return []
-    if isinstance(source_members, str):
-        values = [source_members]
-    elif isinstance(source_members, list):
-        values = source_members
-    else:
-        raise ValueError("sourceMember/sourceMembers must be a string or list of strings")
-    clean = [str(value).strip() for value in values]
-    if any(not value for value in clean):
-        raise ValueError("source members must be non-empty strings")
-    if len(clean) != len(set(clean)):
-        raise ValueError("source members must be unique")
+    if source_members in (None,"") or source_members == []: return []
+    if isinstance(source_members,str): values=[source_members]
+    elif isinstance(source_members,list): values=source_members
+    else: raise ValueError("sourceMember/sourceMembers must be a string or list of strings")
+    clean=[str(v).strip() for v in values]
+    if any(not v for v in clean): raise ValueError("source members must be non-empty strings")
+    if len(clean)!=len(set(clean)): raise ValueError("source members must be unique")
     return sorted(clean)
 
 
-def raw_window_fingerprint(source_fingerprint: str, source_artifact: str, source_members: Any, extraction: dict) -> str:
-    return canonical_sha({
-        "sourceFingerprint": source_fingerprint,
-        "sourceArtifact": source_artifact,
-        "sourceMembers": normalize_source_members(source_members),
-        "window": normalized_window(extraction),
-    })
+def normalize_source_artifacts(source_artifacts: Any, legacy_fingerprint: str | None = None) -> list[dict]:
+    """Normalize one publisher file or an exact set of independently fingerprinted files."""
+    if isinstance(source_artifacts,str):
+        if not legacy_fingerprint: raise ValueError("legacy source artifact requires sourceFingerprint")
+        values=[{"name":source_artifacts,"sha256":legacy_fingerprint}]
+    elif isinstance(source_artifacts,list) and source_artifacts:
+        values=source_artifacts
+    else:
+        raise ValueError("sourceArtifact/sourceArtifacts must identify at least one source file")
+    result=[]; names=set()
+    for item in values:
+        if not isinstance(item,dict): raise ValueError("sourceArtifacts entries must be objects")
+        name=str(item.get("name","")).strip(); digest=str(item.get("sha256","")).strip()
+        if not name or not digest: raise ValueError("each source artifact requires name and sha256")
+        if name in names: raise ValueError("source artifact names must be unique")
+        if not digest.startswith(SHA256_PREFIX) or len(digest)!=71: raise ValueError("source artifact sha256 must use sha256:<64hex>")
+        try: int(digest.split(":",1)[1],16)
+        except ValueError as exc: raise ValueError("source artifact sha256 must use sha256:<64hex>") from exc
+        names.add(name); result.append({"name":name,"sha256":digest})
+    return sorted(result,key=lambda item:item["name"])
+
+
+def raw_window_fingerprint(source_fingerprint: str | None, source_artifact: Any, source_members: Any, extraction: dict) -> str:
+    artifacts=normalize_source_artifacts(source_artifact,source_fingerprint)
+    return canonical_sha({"sourceArtifacts":artifacts,"sourceMembers":normalize_source_members(source_members),"window":normalized_window(extraction)})
 
 
 def representation_fingerprint(raw_window_fp: str, signals: list[dict]) -> str:
-    return canonical_sha({
-        "rawWindowFingerprint": raw_window_fp,
-        "signals": [
-            {"id": signal["id"], "sourceChannel": signal["sourceChannel"], "representation": signal["representation"]}
-            for signal in sorted(signals, key=lambda item: item["id"])
-        ],
-    })
+    return canonical_sha({"rawWindowFingerprint":raw_window_fp,"signals":[{"id":s["id"],"sourceChannel":s["sourceChannel"],"sourceArtifact":s.get("sourceArtifact"),"representation":s["representation"]} for s in sorted(signals,key=lambda item:item["id"])]})
 
 
 def window_overlap(a: dict, b: dict) -> float:
-    """Overlap coefficient in [0,1], or 0 for incomparable windows."""
-    a = normalized_window({"window": a})
-    b = normalized_window({"window": b})
-    if a["kind"] != b["kind"] or a["axis"] != b["axis"] or a.get("scope") != b.get("scope"):
-        return 0.0
-    if a["kind"] == "range":
-        left = max(a["start"], b["start"])
-        right = min(a["endExclusive"], b["endExclusive"])
-        intersection = max(0.0, right - left)
-        denom = min(a["endExclusive"] - a["start"], b["endExclusive"] - b["start"])
-        return intersection / denom if denom else 0.0
-    aset, bset = set(a["ids"]), set(b["ids"])
-    denom = min(len(aset), len(bset))
-    return len(aset & bset) / denom if denom else 0.0
+    a=normalized_window({"window":a}); b=normalized_window({"window":b})
+    if a["kind"]!=b["kind"] or a["axis"]!=b["axis"] or a.get("scope")!=b.get("scope"): return 0.0
+    if a["kind"]=="range":
+        left=max(a["start"],b["start"]); right=min(a["endExclusive"],b["endExclusive"]); intersection=max(0.0,right-left); denom=min(a["endExclusive"]-a["start"],b["endExclusive"]-b["start"])
+        return intersection/denom if denom else 0.0
+    aset,bset=set(a["ids"]),set(b["ids"]); denom=min(len(aset),len(bset))
+    return len(aset & bset)/denom if denom else 0.0
