@@ -64,6 +64,7 @@ jobs:
             tools/prove_sustainability_measured_source.py \
             tools/prove_mendeley_open_sources.py \
             tools/prove_pmc_hdpe_source.py \
+            tools/extract_avaps_learning_candidates.py \
             tools/extract_mendeley_learning_candidates.py \
             tools/extract_4h98_direct_candidate.py \
             tools/extract_6k8_pressure_candidate.py \
@@ -83,6 +84,7 @@ jobs:
           python -m json.tool data/measured-learning/source-readiness-v2.json >/dev/null
           python -m json.tool data/measured-learning/source-artifacts-v2.json >/dev/null
           python -m json.tool data/measured-learning/source-channels-v2.json >/dev/null
+          python -m json.tool data/measured-learning/source-channels-avaps-v2.json >/dev/null
           python -m json.tool data/measured-learning/case-requirements-v2.json >/dev/null
           python -m json.tool data/measured-learning/feature-methods-v1.json >/dev/null
           python -m json.tool data/measured-learning/binding-template-v2.json >/dev/null
@@ -91,8 +93,10 @@ jobs:
         run: python -m unittest -v tests.test_measured_learning_v2
       - name: Prove required OpenMMS source
         run: python tools/prove_openmms_measured_source.py
-      - name: Prove AVAPS source structure for unit/channel recovery
+      - name: Prove AVAPS source structure and governed channel evidence
         run: python tools/prove_avaps_measured_source.py
+      - name: Extract AVAPS source-derived authoring candidates
+        run: python tools/extract_avaps_learning_candidates.py
       - name: Prove required Sustainability publisher supplement
         run: python tools/prove_sustainability_measured_source.py
       - name: Prove benchmark-pinned open Mendeley workbook schemas
