@@ -1,11 +1,12 @@
 #!/usr/bin/env python3
 """Extract compact, unreviewed Sustainability DOE measured-learning candidates.
 
-Each source-defined material group can contain separate production/experimental runs whose
-Cycle # values restart. Learner authoring candidates therefore use only the largest
-contiguous source-row run with a non-decreasing source Cycle #. Resets are excluded and
-reported explicitly; rows are never sorted by measured values and no generated X axis is
-substituted for the governed cycle coordinate.
+The source interleaves material groups, so gaps in original CSV row numbers are expected
+inside a filtered material sequence and are not run boundaries. Within each source-defined
+material group we preserve delivered source order and split only when source Cycle #
+decreases/restarts. The largest non-decreasing cycle run is used for authoring; rows are
+never sorted by measured values and no generated X axis replaces the governed cycle
+coordinate.
 """
 from __future__ import annotations
 import csv, hashlib, io, json, math, tempfile, zipfile
@@ -40,30 +41,41 @@ def uniform(rows,limit=190):
     idx=sorted({round(i*(len(rows)-1)/(limit-1)) for i in range(limit)})
     return [rows[i] for i in idx]
 
-def monotonic_contiguous_runs(material_rows):
-    runs=[]; current=[]; previous_cycle=None; previous_source_row=None
+def monotonic_material_runs(material_rows):
+    """Preserve filtered material source order; split only on missing/reset Cycle #."""
+    runs=[]; current=[]; previous_cycle=None
     for row in material_rows:
-        cycle=row['_cycle']; source_row=row['_sourceRow']
+        cycle=row['_cycle']
         if not finite(cycle):
             if current: runs.append(current); current=[]
-            previous_cycle=None; previous_source_row=None
+            previous_cycle=None
             continue
-        breaks_source_contiguity=previous_source_row is not None and source_row != previous_source_row+1
         resets_cycle=previous_cycle is not None and cycle < previous_cycle
-        if current and (breaks_source_contiguity or resets_cycle):
+        if current and resets_cycle:
             runs.append(current); current=[]
-        current.append(row); previous_cycle=cycle; previous_source_row=source_row
+        current.append(row); previous_cycle=cycle
     if current: runs.append(current)
     return runs
 
 def select_run(material_rows):
-    runs=monotonic_contiguous_runs(material_rows)
+    runs=monotonic_material_runs(material_rows)
     if not runs: raise SystemExit('material group has no finite Cycle # run')
     selected=max(runs,key=lambda r:(len(r),-r[0]['_sourceRow']))
     if len(selected)<MIN_RUN_RECORDS:
-        raise SystemExit(f'largest monotonic material run below {MIN_RUN_RECORDS} records: {len(selected)}')
-    reset_boundaries=max(0,len(runs)-1)
-    return selected,{'materialSourceRecords':len(material_rows),'monotonicContiguousRunCount':len(runs),'excludedRunCount':max(0,len(runs)-1),'selectedRunRecords':len(selected),'selectedSourceRowStart':selected[0]['_sourceRow'],'selectedSourceRowEnd':selected[-1]['_sourceRow'],'selectedCycleStart':selected[0]['_cycle'],'selectedCycleEnd':selected[-1]['_cycle'],'cycleResetOrSourceGapBoundaries':reset_boundaries}
+        diagnostics=[{'records':len(r),'sourceRowStart':r[0]['_sourceRow'],'sourceRowEnd':r[-1]['_sourceRow'],'cycleStart':r[0]['_cycle'],'cycleEnd':r[-1]['_cycle']} for r in runs]
+        raise SystemExit(f'largest monotonic material run below {MIN_RUN_RECORDS} records: {len(selected)}; runs={diagnostics}')
+    return selected,{
+        'materialSourceRecords':len(material_rows),
+        'nondecreasingCycleRunCount':len(runs),
+        'excludedRunCount':max(0,len(runs)-1),
+        'selectedRunRecords':len(selected),
+        'selectedSourceRowStart':selected[0]['_sourceRow'],
+        'selectedSourceRowEnd':selected[-1]['_sourceRow'],
+        'selectedCycleStart':selected[0]['_cycle'],
+        'selectedCycleEnd':selected[-1]['_cycle'],
+        'cycleResetBoundaries':max(0,len(runs)-1),
+        'sourceRowsWithinMaterialNeedNotBeContiguous':True,
+    }
 
 def make_signal(field,rows):
     semantic,unit=META[field]
@@ -71,7 +83,11 @@ def make_signal(field,rows):
     xs=[r['_cycle'] for r in points]; ys=[r[field] for r in points]
     if len(xs)<MIN_RUN_RECORDS: raise SystemExit(f'{field}: fewer than {MIN_RUN_RECORDS} numeric points in selected cycle run')
     if not all(a<=b for a,b in zip(xs,xs[1:])): raise SystemExit(f'{field}: selected Cycle # axis is not non-decreasing')
-    rep={'xSemantic':'cycle-index','xUnit':'cycle','xDirection':'increasing','reductionMethod':'largest-contiguous-nondecreasing-source-cycle-run-then-uniform-source-order-subset','originalPointCount':len(rows),'x':xs,'y':ys}
+    rep={
+        'xSemantic':'cycle-index','xUnit':'cycle','xDirection':'increasing',
+        'reductionMethod':'largest-source-ordered-nondecreasing-material-cycle-run-then-uniform-source-order-subset',
+        'originalPointCount':len(rows),'x':xs,'y':ys,
+    }
     return {'id':field.lower().replace(' ','-').replace(',','').replace('/','-'),'label':field,'sourceChannel':field,'semantic':semantic,'unit':unit,'coordinateRequiresBindingReview':False,'representation':rep,'representationFingerprint':canonical_sha(rep)}
 
 def main():
@@ -98,9 +114,17 @@ def main():
         selected_run,run_summary=select_run(material_rows); sampled=uniform(selected_run)
         sigs=[make_signal(f,sampled) for f in channel_set]
         alias='sha256:'+hashlib.sha256(material.encode('utf-8')).hexdigest(); run_summary['materialGroupAlias']=alias; run_summary['displayedRecords']=len(sampled); run_summaries.append(run_summary)
-        candidates.append({'candidateId':f'SUST-MATERIAL-GROUP-{idx+1:02d}','datasetId':'su13148102-supplement','sourceArtifact':'sustainability-13-08102-s001.zip','sourceMember':MEMBER,'sourceFingerprint':'sha256:'+digest,'sourceScope':{'selection':'largest contiguous source-row run within one source-defined Material # group whose source Cycle # remains non-decreasing','materialGroupAlias':alias,'runSelection':run_summary,'retrievalUrl':used_url},'signals':sigs,'candidateFingerprint':canonical_sha(sigs),'suggestedCatalogueCases':case_map[idx],'evidenceBoundary':'One bounded source-defined material/run segment from the measured DOE/tensile-linked supplement. Cycle-number resets and discontiguous material blocks are excluded rather than reordered. The candidate supports comparison and variability teaching only; experimental associations are not universal production settings or root-cause proof.'})
-    result={'schemaVersion':1,'status':'unreviewed-source-derived-candidates','promotionEligible':False,'candidateCount':len(candidates),'materialGroupCount':len(groups),'runSelectionSummaries':run_summaries,'candidates':candidates,'boundary':'Authoring evidence only. Material identifiers are emitted only as one-way aliases; raw rows are not retained. Every signal uses the governed source Cycle # coordinate from one explicit monotonic contiguous run; resets are excluded and reported rather than silently sorted.'}
+        candidates.append({
+            'candidateId':f'SUST-MATERIAL-GROUP-{idx+1:02d}','datasetId':'su13148102-supplement',
+            'sourceArtifact':'sustainability-13-08102-s001.zip','sourceMember':MEMBER,'sourceFingerprint':'sha256:'+digest,
+            'sourceScope':{'selection':'largest source-ordered non-decreasing Cycle # run within one source-defined Material # group; material rows may be interleaved with other groups in the delivered CSV','materialGroupAlias':alias,'runSelection':run_summary,'retrievalUrl':used_url},
+            'signals':sigs,'candidateFingerprint':canonical_sha(sigs),'suggestedCatalogueCases':case_map[idx],
+            'evidenceBoundary':'One bounded source-defined material/run segment from the measured DOE/tensile-linked supplement. Cycle-number resets are excluded rather than reordered; interleaving with other material rows does not alter within-material source order. The candidate supports comparison and variability teaching only; experimental associations are not universal production settings or root-cause proof.'})
+    result={
+        'schemaVersion':1,'status':'unreviewed-source-derived-candidates','promotionEligible':False,
+        'candidateCount':len(candidates),'materialGroupCount':len(groups),'runSelectionSummaries':run_summaries,'candidates':candidates,
+        'boundary':'Authoring evidence only. Material identifiers are emitted only as one-way aliases; raw rows are not retained. Every signal uses the governed source Cycle # coordinate from one source-ordered non-decreasing run; cycle resets are excluded and reported rather than silently sorted.'}
     OUT.write_text(json.dumps(result,indent=2,ensure_ascii=False)+'\n',encoding='utf-8')
-    print(json.dumps({'status':result['status'],'candidateCount':len(candidates),'candidateIds':[c['candidateId'] for c in candidates],'selectedRunRecords':[s['selectedRunRecords'] for s in run_summaries],'runCounts':[s['monotonicContiguousRunCount'] for s in run_summaries]},separators=(',',':')))
+    print(json.dumps({'status':result['status'],'candidateCount':len(candidates),'candidateIds':[c['candidateId'] for c in candidates],'selectedRunRecords':[s['selectedRunRecords'] for s in run_summaries],'runCounts':[s['nondecreasingCycleRunCount'] for s in run_summaries]},separators=(',',':')))
     return 0
 if __name__=='__main__': raise SystemExit(main())
