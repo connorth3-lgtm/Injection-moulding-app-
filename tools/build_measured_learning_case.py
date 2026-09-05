@@ -16,7 +16,7 @@ from pathlib import Path
 
 from measured_learning_core import (
     calculate_feature, canonical_sha, finite_number, load_json,
-    raw_window_fingerprint, representation_fingerprint,
+    raw_window_fingerprint, representation_fingerprint, x_direction,
 )
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -113,14 +113,20 @@ def validate_signal(signal: dict, governed_channels: dict[str, dict]) -> dict:
     require(rep.get("originalPointCount", 0) >= len(y), f"signal {signal_id}: invalid originalPointCount")
     require(all(finite_number(v) for v in x), f"signal {signal_id}: x values must be finite numeric")
     require(all(finite_number(v) for v in y), f"signal {signal_id}: y values must be finite numeric")
-    require(all(float(a) <= float(b) for a, b in zip(x, x[1:])), f"signal {signal_id}: x axis must be monotonic non-decreasing")
+    try:
+        direction = x_direction(x, rep.get("xDirection"))
+    except ValueError as exc:
+        raise SystemExit(f"signal {signal_id}: {exc}") from exc
     clean = dict(signal)
     clean["sourceChannel"] = source_channel
+    clean_rep = dict(rep)
+    clean_rep["xDirection"] = direction
+    clean["representation"] = clean_rep
     return clean
 
 
 def build(candidate: dict, binding: dict) -> dict:
-    policy = load_json(POLICY)
+    load_json(POLICY)
     require(binding.get("schemaVersion") == 2, "binding schemaVersion must be 2")
     require(binding.get("caseId") == candidate["id"], "binding caseId does not match candidate")
     require(binding.get("sourceFamily") == candidate["sourceFamily"], "binding sourceFamily does not match catalogue")
@@ -272,7 +278,6 @@ def main() -> int:
         ids.sort(key=lambda value: int(value.split("-")[1]))
         index["caseIds"] = ids
         index_text = json.dumps(index, indent=2, ensure_ascii=False) + "\n"
-        # Both documents are fully rendered and validated before either canonical file is replaced.
         write_staged(out, rendered)
         write_staged(PROMOTION_INDEX, index_text)
     print(out)
