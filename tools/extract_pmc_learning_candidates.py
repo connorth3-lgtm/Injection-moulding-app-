@@ -60,7 +60,6 @@ def compact_pair(ws, xcol: str, ycol: str, target: int=400):
     if len(monotonic)<=target:
         selected=monotonic; method="source-order-nondecreasing-strain-subsequence-no-interpolation"
     else:
-        # Reserve one slot for the measured peak stress, then sample source order uniformly.
         slots=target-1
         idx={round(i*(len(monotonic)-1)/(slots-1)) for i in range(slots)}
         peak=max(range(len(monotonic)),key=lambda i:monotonic[i][2]); idx.add(peak)
@@ -118,7 +117,10 @@ def candidate(workbook, cid: str, cases: list[str], channels: list[str], boundar
 def main() -> int:
     _,_,blob,_,_=retrieve_workbook()
     if sha256(blob)!=EXPECTED_WORKBOOK_SHA: raise AssertionError("PMC workbook identity drift")
-    workbook=load_workbook(io.BytesIO(blob),read_only=True,data_only=True)
+    # Normal worksheet mode is intentional here: bounded random access over six
+    # known column pairs is substantially faster and more predictable than
+    # repeatedly seeking within openpyxl's streaming read-only worksheets.
+    workbook=load_workbook(io.BytesIO(blob),read_only=False,data_only=True)
     candidates=[
         candidate(workbook,"PMC-HDPE-TRACE-EXCURSION-01",["MLM-031"],["HDPE!A:B"],"One direct HDPE tensile stress-versus-strain trace. A trace excursion is observable; it does not identify a production-process cause."),
         candidate(workbook,"PMC-HDPE-REPLICATE-TRACES-01",["MLM-053"],["HDPE!A:B","HDPE!C:D","HDPE!E:F"],"Three direct HDPE specimen traces support repeatability comparison. Specimen-to-specimen differences remain material-test evidence, not production root-cause proof."),
