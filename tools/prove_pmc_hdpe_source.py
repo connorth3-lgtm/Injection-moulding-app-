@@ -198,7 +198,7 @@ def main() -> int:
         "schemaVersion": 5,
         "status": "source-proof-passed",
         "datasetId": "pmc4753395-hdpe-cenosphere-v1",
-        "distributionRoute": "PMC Article Datasets AWS" if "amazonaws.com" in url else "legacy PMC fallback",
+        "distributionRoute": "PMC Article Datasets AWS" if url == CURRENT_OBJECT_URL else "legacy PMC fallback",
         "retrievalUrl": url,
         "pinnedCurrentObjectKey": CURRENT_OBJECT_KEY,
         "historicalWorkbookName": HISTORICAL_WORKBOOK_NAME,
