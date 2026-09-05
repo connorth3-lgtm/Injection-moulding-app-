@@ -2,11 +2,10 @@
 """Retrieve PMC4753395 supplementary data and prove the benchmarked tensile workbook.
 
 PMC completed its article-dataset distribution migration in August 2026. The
-current primary distribution route is the public ``pmc-oa-opendata`` S3 bucket,
-where article-version directories expose media and supplementary objects. This
-probe discovers the current objects for PMC4753395, then still requires the
-historically benchmarked SHA-256 of ``Tensile-Data.xlsx`` before emitting any
-schema evidence. Legacy article-bin URLs remain diagnostic fallbacks only.
+current primary distribution route is the public ``pmc-oa-opendata`` S3 bucket.
+Container/member names are distribution metadata, not measurement identity, so
+this proof locates the workbook by the immutable SHA-256 already accepted by the
+MouldMaster benchmark. No workbook numeric values are emitted by this proof.
 """
 from __future__ import annotations
 
@@ -26,8 +25,8 @@ LEGACY_URLS = [
     "https://pmc.ncbi.nlm.nih.gov/articles/instance/4753395/bin/mmc1.zip",
 ]
 EXPECTED_WORKBOOK_SHA = "6e376e0acdfc614b6c16e0fef99e0e74cace8bc4d931a08a729e05dfc2cd7783"
-WORKBOOK = "Tensile-Data.xlsx"
-USER_AGENT = "MouldMaster-measured-learning/2.1"
+HISTORICAL_WORKBOOK_NAME = "Tensile-Data.xlsx"
+USER_AGENT = "MouldMaster-measured-learning/2.2"
 NS = {
     "m": "http://schemas.openxmlformats.org/spreadsheetml/2006/main",
     "r": "http://schemas.openxmlformats.org/officeDocument/2006/relationships",
@@ -43,10 +42,8 @@ def fetch(url: str, timeout: int = 90) -> bytes:
 
 
 def list_current_pmc_objects() -> list[str]:
-    # Prefix with PMCID plus '.' so all article versions (e.g. .1, .2) are visible.
     query = urllib.parse.urlencode({"list-type": "2", "prefix": PMCID + "."})
-    xml = fetch(f"{S3_BASE}/?{query}")
-    root = ET.fromstring(xml)
+    root = ET.fromstring(fetch(f"{S3_BASE}/?{query}"))
     keys = [node.text for node in root.findall(f".//{S3NS}Key") if node.text]
     if not keys:
         raise RuntimeError(f"PMC AWS listing returned no objects for {PMCID}")
@@ -57,69 +54,66 @@ def object_url(key: str) -> str:
     return f"{S3_BASE}/{urllib.parse.quote(key, safe='/')}"
 
 
-def workbook_from_object(key: str, data: bytes) -> tuple[bytes, str | None]:
-    if key.lower().endswith("/" + WORKBOOK.lower()) or key.lower().endswith(WORKBOOK.lower()):
-        return data, None
-    if data.startswith(b"PK") and key.lower().endswith((".zip", ".xlsx")):
-        # An XLSX is itself a ZIP; only treat it as the target workbook when the
-        # object name matched above. Otherwise inspect ordinary ZIP supplements.
-        if key.lower().endswith(".zip"):
-            with zipfile.ZipFile(io.BytesIO(data)) as archive:
-                matches = [
-                    name for name in archive.namelist()
-                    if name.lower().endswith("/" + WORKBOOK.lower()) or name.lower() == WORKBOOK.lower()
-                ]
-                if len(matches) == 1:
-                    return archive.read(matches[0]), matches[0]
-    raise LookupError("object does not contain the benchmarked tensile workbook")
+def sha256(data: bytes) -> str:
+    return hashlib.sha256(data).hexdigest()
 
 
-def retrieve_workbook() -> tuple[str, str | None, bytes, list[str]]:
+def workbook_from_object(key: str, data: bytes) -> tuple[bytes, str | None, list[str]]:
+    """Return the exact benchmarked workbook regardless of current package name."""
+    if sha256(data) == EXPECTED_WORKBOOK_SHA:
+        return data, None, [key.rsplit("/", 1)[-1]]
+
+    member_names: list[str] = []
+    if data.startswith(b"PK") and key.lower().endswith(".zip"):
+        with zipfile.ZipFile(io.BytesIO(data)) as archive:
+            members = [info for info in archive.infolist() if not info.is_dir()]
+            member_names = [info.filename for info in members]
+            for info in members:
+                # mmc1.zip is small. The ceiling protects this diagnostic probe
+                # from unexpectedly hashing a huge unrelated packaged object.
+                if info.file_size > 64 * 1024 * 1024:
+                    continue
+                payload = archive.read(info)
+                if sha256(payload) == EXPECTED_WORKBOOK_SHA:
+                    return payload, info.filename, member_names
+    preview = member_names[:40]
+    raise LookupError(
+        "object does not contain benchmarked workbook SHA "
+        f"{EXPECTED_WORKBOOK_SHA}; members={preview}"
+    )
+
+
+def retrieve_workbook() -> tuple[str, str | None, bytes, list[str], list[str]]:
     errors: list[str] = []
     discovered: list[str] = []
     try:
         discovered = list_current_pmc_objects()
-        # Prefer a direct workbook, then likely supplementary archives, then any
-        # other ZIP object. This remains fail-closed on the final workbook SHA.
         ranked = sorted(
             discovered,
             key=lambda key: (
-                0 if key.lower().endswith(WORKBOOK.lower()) else
+                0 if key.lower().endswith((".xlsx", ".xls")) else
                 1 if "mmc1" in key.lower() else
                 2 if key.lower().endswith(".zip") else 3,
                 key,
             ),
         )
         for key in ranked:
-            if not (key.lower().endswith(WORKBOOK.lower()) or key.lower().endswith(".zip")):
+            if not key.lower().endswith((".xlsx", ".xls", ".zip")):
                 continue
             try:
                 url = object_url(key)
-                data = fetch(url, timeout=120)
-                workbook, member = workbook_from_object(key, data)
-                return url, member, workbook, discovered
-            except Exception as exc:  # keep trying other article objects
+                workbook, member, members = workbook_from_object(key, fetch(url, timeout=120))
+                return url, member, workbook, discovered, members
+            except Exception as exc:
                 errors.append(f"AWS {key}: {exc}")
     except Exception as exc:
         errors.append(f"AWS listing: {exc}")
 
-    # Diagnostic fallback for pre-migration paths. These are not expected to be
-    # durable after August 2026 but keep the proof usable if PMC redirects them.
     for url in LEGACY_URLS:
         try:
             data = fetch(url)
-            if not data.startswith(b"PK"):
-                errors.append(f"{url}: not zip ({len(data)} bytes)")
-                continue
-            with zipfile.ZipFile(io.BytesIO(data)) as archive:
-                matches = [
-                    name for name in archive.namelist()
-                    if name.lower().endswith("/" + WORKBOOK.lower()) or name.lower() == WORKBOOK.lower()
-                ]
-                if len(matches) != 1:
-                    errors.append(f"{url}: expected one {WORKBOOK}, found {matches}")
-                    continue
-                return url, matches[0], archive.read(matches[0]), discovered
+            workbook, member, members = workbook_from_object(url, data)
+            return url, member, workbook, discovered, members
         except Exception as exc:
             errors.append(f"{url}: {exc}")
     raise SystemExit("PMC supplementary retrieval failed: " + "; ".join(errors[-12:]))
@@ -134,7 +128,7 @@ def string_schema(blob: bytes) -> list[dict]:
                 shared.append("".join(t.text or "" for t in si.iterfind(".//m:t", NS)))
         wb = ET.fromstring(archive.read("xl/workbook.xml"))
         relroot = ET.fromstring(archive.read("xl/_rels/workbook.xml.rels"))
-        rels = {r.attrib["Id"]: r.attrib["Target"] for r in relroot.findall(f"{RELNS}Relationship")}
+        rels = {rel.attrib["Id"]: rel.attrib["Target"] for rel in relroot.findall(f"{RELNS}Relationship")}
         sheets: list[dict] = []
         for sheet in wb.find("m:sheets", NS):
             name = sheet.attrib["name"]
@@ -166,21 +160,25 @@ def string_schema(blob: bytes) -> list[dict]:
 def main() -> int:
     out = Path("measured-source-proof")
     out.mkdir(exist_ok=True)
-    url, source_member, workbook, discovered = retrieve_workbook()
-    digest = hashlib.sha256(workbook).hexdigest()
+    url, source_member, workbook, discovered, package_members = retrieve_workbook()
+    digest = sha256(workbook)
     if digest != EXPECTED_WORKBOOK_SHA:
         raise SystemExit(f"PMC measured workbook SHA mismatch: {digest}")
     schema = string_schema(workbook)
     proof = {
-        "schemaVersion": 2,
+        "schemaVersion": 3,
         "status": "source-proof-passed",
         "datasetId": "pmc4753395-hdpe-cenosphere-v1",
         "distributionRoute": "PMC Article Datasets AWS" if "amazonaws.com" in url else "legacy PMC fallback",
         "retrievalUrl": url,
-        "sourceMember": source_member,
+        "historicalWorkbookName": HISTORICAL_WORKBOOK_NAME,
+        "currentSourceMember": source_member,
         "workbookSha256": "sha256:" + digest,
+        "identityRule": "workbook bytes must match the benchmarked SHA-256; package/member naming may change across PMC distribution migrations",
         "discoveredObjectCount": len(discovered),
         "discoveredObjectNames": [key.rsplit("/", 1)[-1] for key in discovered[:80]],
+        "selectedPackageMemberCount": len(package_members),
+        "selectedPackageMemberNames": package_members[:80],
         "sheets": schema,
         "rawNumericValuesEmitted": False,
         "rawSourceRetained": False,
@@ -190,6 +188,7 @@ def main() -> int:
         "status": proof["status"],
         "datasetId": proof["datasetId"],
         "distributionRoute": proof["distributionRoute"],
+        "currentSourceMember": proof["currentSourceMember"],
         "workbookSha256": proof["workbookSha256"],
         "sheets": [sheet["name"] for sheet in schema],
     }, separators=(",", ":")))
