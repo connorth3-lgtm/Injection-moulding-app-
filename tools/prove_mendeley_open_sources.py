@@ -2,7 +2,8 @@
 """Retrieve benchmark-pinned open Mendeley workbooks and emit text/schema-only proof.
 
 No numeric worksheet values are emitted. Exact file SHA-256 is verified before workbook
-sheet names and bounded string/header labels are inspected.
+sheet names and bounded string/header labels are inspected. Remote metadata may identify
+an exact file ID/name, but it never controls the download host or scheme.
 """
 from __future__ import annotations
 import hashlib, json, re, tempfile, urllib.parse, urllib.request, zipfile
@@ -22,15 +23,31 @@ SOURCES=[
 ]
 NS={'m':'http://schemas.openxmlformats.org/spreadsheetml/2006/main','r':'http://schemas.openxmlformats.org/officeDocument/2006/relationships'}
 RELNS='{http://schemas.openxmlformats.org/package/2006/relationships}'
+MENDELEY_API='https://data.mendeley.com/public-api/datasets/'
+MENDELEY_DOWNLOAD='https://data.mendeley.com/public-files/datasets/'
+FILE_ID_RE=re.compile(r'^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$')
+SHORT_ID_RE=re.compile(r'^[a-z0-9]{10}$')
+
+
+def fixed_url(url):
+    parsed=urllib.parse.urlsplit(url)
+    if parsed.scheme!='https' or parsed.hostname!='data.mendeley.com':
+        raise RuntimeError(f'Mendeley retrieval escaped fixed HTTPS host: {url}')
+    return url
 
 
 def get_json(url):
-    req=urllib.request.Request(url,headers={'User-Agent':'MouldMaster-measured-learning/2'})
-    with urllib.request.urlopen(req,timeout=60) as r: return json.load(r)
+    fixed_url(url)
+    req=urllib.request.Request(url,headers={'User-Agent':'MouldMaster-measured-learning/2.1'})
+    with urllib.request.urlopen(req,timeout=60) as r:
+        final=urllib.parse.urlsplit(r.geturl())
+        if final.scheme!='https' or final.hostname!='data.mendeley.com':
+            raise RuntimeError(f'Mendeley metadata redirected outside fixed host: {r.geturl()}')
+        return json.load(r)
+
 
 def walk_files(value):
     if isinstance(value,dict):
-        # Yield any object that looks file-like before walking children.
         name=value.get('filename') or value.get('file_name') or value.get('name')
         file_id=value.get('id') or value.get('file_id')
         if name or file_id: yield value
@@ -38,26 +55,20 @@ def walk_files(value):
     elif isinstance(value,list):
         for child in value: yield from walk_files(child)
 
-def find_url(value):
-    urls=[]
-    def rec(v,key=''):
-        if isinstance(v,dict):
-            for k,c in v.items(): rec(c,str(k))
-        elif isinstance(v,list):
-            for c in v: rec(c,key)
-        elif isinstance(v,str) and v.startswith('http'):
-            score=0
-            kl=key.lower(); vl=v.lower()
-            if 'download' in kl: score+=5
-            if 'download' in vl or 'file_downloaded' in vl: score+=4
-            if 'public-files' in vl: score+=2
-            urls.append((score,v))
-    rec(value)
-    return max(urls,default=(0,None))[1]
 
 def public_files(short_id,version):
-    endpoint=f'https://data.mendeley.com/public-api/datasets/{short_id}/files?folder_id=root&version={version}'
+    if not SHORT_ID_RE.fullmatch(short_id) or not isinstance(version,int) or version<1:
+        raise RuntimeError('invalid locally governed Mendeley dataset identity')
+    endpoint=f'{MENDELEY_API}{short_id}/files?folder_id=root&version={version}'
     return endpoint,get_json(endpoint)
+
+
+def normalize_file_id(value):
+    file_id=str(value or '')
+    if not FILE_ID_RE.fullmatch(file_id):
+        raise RuntimeError(f'invalid Mendeley file id: {file_id!r}')
+    return file_id
+
 
 def resolve_file(meta,file_id,name,short_id,version):
     candidates=list(walk_files(meta))
@@ -65,30 +76,36 @@ def resolve_file(meta,file_id,name,short_id,version):
     for obj in candidates:
         obj_id=str(obj.get('id') or obj.get('file_id') or '')
         obj_name=str(obj.get('filename') or obj.get('file_name') or obj.get('name') or '')
-        if file_id and obj_id==file_id: chosen=obj; break
-        if obj_name==name: chosen=obj
-    if chosen:
-        resolved_id=str(chosen.get('id') or chosen.get('file_id') or file_id or '')
-        url=find_url(chosen)
-    else:
-        resolved_id=str(file_id or '')
-        url=None
-    direct=[]
-    if resolved_id:
-        direct.extend([
-            f'https://data.mendeley.com/public-files/datasets/{short_id}/files/{resolved_id}/file_downloaded',
-            f'https://data.mendeley.com/public-files/datasets/{short_id}/versions/{version}/files/{resolved_id}/file_downloaded',
-        ])
-    if url: direct.insert(0,url)
-    if not direct: raise RuntimeError(f'could not resolve file id/url for {short_id}/{name}')
-    return chosen,resolved_id,direct
+        if file_id and obj_id==file_id:
+            chosen=obj
+            break
+        if obj_name==name:
+            chosen=obj
+    if chosen is None:
+        raise RuntimeError(f'could not resolve pinned Mendeley file for {short_id}/{name}')
+    resolved_id=normalize_file_id(chosen.get('id') or chosen.get('file_id') or file_id)
+    if file_id and resolved_id!=file_id:
+        raise RuntimeError(f'Mendeley file id drift for {short_id}/{name}')
+    if str(chosen.get('filename') or chosen.get('file_name') or chosen.get('name') or '')!=name:
+        raise RuntimeError(f'Mendeley filename drift for {short_id}/{name}')
+    encoded_id=urllib.parse.quote(resolved_id,safe='')
+    direct=[
+        f'{MENDELEY_DOWNLOAD}{short_id}/files/{encoded_id}/file_downloaded',
+        f'{MENDELEY_DOWNLOAD}{short_id}/versions/{version}/files/{encoded_id}/file_downloaded',
+    ]
+    return chosen,resolved_id,[fixed_url(url) for url in direct]
+
 
 def download_first(urls,destination):
     errors=[]
     for url in urls:
         try:
-            req=urllib.request.Request(url,headers={'User-Agent':'MouldMaster-measured-learning/2'})
+            fixed_url(url)
+            req=urllib.request.Request(url,headers={'User-Agent':'MouldMaster-measured-learning/2.1'})
             with urllib.request.urlopen(req,timeout=90) as r, open(destination,'wb') as out:
+                final=urllib.parse.urlsplit(r.geturl())
+                if final.scheme!='https' or final.hostname!='data.mendeley.com':
+                    raise RuntimeError(f'Mendeley download redirected outside fixed host: {r.geturl()}')
                 while True:
                     chunk=r.read(1024*1024)
                     if not chunk: break
@@ -98,10 +115,12 @@ def download_first(urls,destination):
             errors.append(f'{url}: {exc}')
     raise RuntimeError('; '.join(errors))
 
+
 def col_index(ref):
     letters=''.join(ch for ch in ref if ch.isalpha()).upper(); n=0
     for ch in letters: n=n*26+(ord(ch)-64)
     return n
+
 
 def workbook_text_schema(path):
     with zipfile.ZipFile(path) as z:
@@ -136,6 +155,7 @@ def workbook_text_schema(path):
                     if text and text.strip(): labels.append({'cell':ref,'text':text.strip()[:240]})
             sheets.append({'name':name,'boundedTextLabels':labels[:120],'maxObservedTextColumnIndexFirst25Rows':max_col,'maxRowFromWorksheetXml':max_row})
         return sheets
+
 
 def main():
     out=Path('measured-source-proof'); out.mkdir(exist_ok=True)
