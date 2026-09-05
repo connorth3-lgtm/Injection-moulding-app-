@@ -3,7 +3,8 @@
 
 Numeric values follow the established GTNB benchmark policy: publisher-stored direct cell
 values and cached formula results are read from the exact SHA-pinned workbook. Formula-
-backed cells are counted explicitly; no rejection rate is computed in this candidate layer.
+backed cells are counted explicitly. A reproducible rejection-rate feature recipe is
+emitted, but no learner-facing conclusion is promoted by this candidate layer.
 """
 from __future__ import annotations
 import hashlib, json, math, re, tempfile
@@ -59,15 +60,25 @@ def main():
         if len(valid)<400: raise RuntimeError(f'GTNB insufficient valid rejection records: {len(valid)}')
         start=max(0,(len(valid)-400)//2); selected=valid[start:start+400]
         signals=[
-            signal('rejected-products','Rejected_Products','recorded-rejected-product-count','count',selected,'rejected',formula_counts['rejected']),
-            signal('production-total','Production_Total','recorded-total-production-count','count',selected,'production',formula_counts['production']),
+            signal('rejected-products','Rejected_Products','recorded-rejected-product-count','units',selected,'rejected',formula_counts['rejected']),
+            signal('production-total','Total_Production','recorded-total-production-count','units',selected,'production',formula_counts['production']),
             signal('injection-pressure','Injection_Pressure','recorded-injection-pressure','bar',selected,'pressure',formula_counts['pressure']),
             signal('cycle-time','Cycle_Time','recorded-cycle-time','s',selected,'cycle',formula_counts['cycle']),
         ]
-        candidate={'candidateId':'GTNB-REJECTION-NUMERATOR-DENOMINATOR-01','datasetId':source['datasetId'],'sourceArtifact':'modelo.xlsx','sourceFingerprint':'sha256:'+digest,'sourceScope':{'selection':'bounded 400-record interval from injection records with finite rejection/production values and non-zero production totals','validInjectionRecords':len(valid),'selectedOrdinalStart':start,'selectedOrdinalEndExclusive':start+len(selected),'sourceValueMode':'publisher-workbook-stored-values-consistent-with-existing-benchmark-reader','sourceInjectionFormulaCellCounts':formula_counts},'signals':signals,'candidateFingerprint':sha(signals),'suggestedCatalogueCases':['MLM-039'],'bindingBlockers':['Rejected_Products and Production_Total require explicit V2 source-channel registry entries','A versioned rejection-rate feature must define aggregation and zero-denominator handling before promotion'],'evidenceBoundary':'The source workbook supplies recorded rejected-product and total-production counts as stored values, which may include publisher-cached formula results. This supports a governed rejection-rate feature only after channel and calculation governance; no rate or root-cause claim is invented in this authoring artifact.'}
-        result={'schemaVersion':1,'status':'unreviewed-source-derived-candidates','promotionEligible':False,'candidateCount':1,'candidates':[candidate],'boundary':'Numeric source evidence recovered under the existing GTNB benchmark value policy; intentionally not direct-binding-ready until count-channel and feature governance are added.'}
+        recommended_features=[{
+            'id':'rejection-rate-percent',
+            'label':'Rejected products as a share of total production',
+            'method':'ratio_of_sums_percent',
+            'methodVersion':1,
+            'inputs':['signal:rejected-products','signal:production-total'],
+            'params':{},
+            'calculationScope':'displayed-reviewed-representation',
+            'unit':'%'
+        }]
+        candidate={'candidateId':'GTNB-REJECTION-NUMERATOR-DENOMINATOR-01','datasetId':source['datasetId'],'sourceArtifact':'modelo.xlsx','sourceFingerprint':'sha256:'+digest,'sourceScope':{'selection':'bounded 400-record interval from injection records with finite rejection/production values and non-zero production totals','validInjectionRecords':len(valid),'selectedOrdinalStart':start,'selectedOrdinalEndExclusive':start+len(selected),'sourceValueMode':'publisher-workbook-stored-values-consistent-with-existing-benchmark-reader','sourceInjectionFormulaCellCounts':formula_counts},'signals':signals,'candidateFingerprint':sha(signals),'suggestedCatalogueCases':['MLM-039'],'recommendedFeatures':recommended_features,'bindingBlockers':[],'evidenceBoundary':'The source workbook supplies recorded rejected-product and total-production counts as stored values, including publisher-cached formula results. The governed ratio-of-sums feature can quantify their aggregate association in the selected records; it does not establish a process mechanism or root cause.'}
+        result={'schemaVersion':1,'status':'unreviewed-source-derived-candidates','promotionEligible':False,'candidateCount':1,'candidates':[candidate],'boundary':'Numeric source evidence, count-channel governance and a versioned feature recipe are available. This remains authoring evidence only: case-specific wording, novelty review and independent engineering review are still required before learner promotion.'}
         OUT.parent.mkdir(parents=True,exist_ok=True); OUT.write_text(json.dumps(result,indent=2,ensure_ascii=False)+'\n',encoding='utf-8')
-        print(json.dumps({'status':result['status'],'candidateId':candidate['candidateId'],'validInjectionRecords':len(valid),'formulaCounts':formula_counts,'bindingBlockers':candidate['bindingBlockers']},separators=(',',':')))
+        print(json.dumps({'status':result['status'],'candidateId':candidate['candidateId'],'validInjectionRecords':len(valid),'formulaCounts':formula_counts,'recommendedFeatureMethods':[f['method'] for f in recommended_features],'bindingBlockers':candidate['bindingBlockers']},separators=(',',':')))
     finally: td.cleanup()
     return 0
 if __name__=='__main__': raise SystemExit(main())
