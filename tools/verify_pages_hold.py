@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
 """Verify the live GitHub Pages release-hold boundary.
 
-The hold page is intentionally tiny and non-application content. Verification proves
-that the hold marker is live and that representative files from the previously leaked
-legacy branch artifact are no longer publicly served.
+The hold publication is intentionally tiny and non-application content. Verification
+proves that the hold marker is live, the privacy-safe on-device metadata helper is
+available, and representative files from the previously leaked legacy branch artifact
+remain inaccessible.
 """
 
 from __future__ import annotations
@@ -15,6 +16,7 @@ from urllib.parse import urljoin
 from urllib.request import Request, urlopen
 
 MARKER = 'data-mm-release-hold="true"'
+HELPER_MARKER = 'data-mm-device-metadata-helper="true"'
 FORBIDDEN_PATHS = (
     "MouldMasterAcademy.exe",
     "MouldMaster_Academy_App.html",
@@ -41,6 +43,28 @@ def verify_once(base_url: str) -> None:
     text = body.decode("utf-8", errors="replace")
     if status != 200 or MARKER not in text or "No learner application runtime" not in text:
         raise AssertionError(f"release-hold root mismatch: HTTP {status}")
+    if 'href="device-validation.html"' not in text:
+        raise AssertionError("release-hold root does not expose the device metadata helper")
+
+    helper_status, helper_body = fetch(urljoin(root, "device-validation.html"))
+    helper_text = helper_body.decode("utf-8", errors="replace")
+    if helper_status != 200 or HELPER_MARKER not in helper_text:
+        raise AssertionError(f"device metadata helper mismatch: HTTP {helper_status}")
+    helper_lower = helper_text.lower()
+    forbidden_helper_tokens = (
+        "fetch(",
+        "xmlhttprequest",
+        "sendbeacon",
+        "websocket",
+        "serviceworker",
+        "localstorage",
+        "sessionstorage",
+        "indexeddb",
+        "mouldmaster_core_app.html",
+    )
+    present = [token for token in forbidden_helper_tokens if token in helper_lower]
+    if present:
+        raise AssertionError("device metadata helper violates local-only boundary: " + ", ".join(present))
 
     for path in FORBIDDEN_PATHS:
         probe_status, _ = fetch(urljoin(root, path))
@@ -60,7 +84,10 @@ def main() -> None:
     for attempt in range(1, attempts + 1):
         try:
             verify_once(args.base_url)
-            print("Pages release-hold verification passed: minimal hold page live; legacy/non-public probes return 404.")
+            print(
+                "Pages release-hold verification passed: minimal hold page and local-only "
+                "device metadata helper are live; legacy/non-public probes return 404."
+            )
             return
         except (AssertionError, RuntimeError) as exc:
             last_error = exc
