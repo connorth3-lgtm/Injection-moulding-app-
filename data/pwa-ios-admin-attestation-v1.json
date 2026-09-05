@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "status": "owner-admin-pass-attested",
+  "recordedAt": "2026-09-05T22:29+12:00",
+  "attestationReference": "owner-admin-ios-attestation-2026-09-05",
+  "platform": "ios",
+  "functionalChecks": {
+    "installStandalone": "pass-attested",
+    "safeAreaNavigation": "pass-attested",
+    "workspacePortrait": "pass-attested",
+    "offlineRestart": "pass-attested",
+    "offlineReboot": "pass-attested",
+    "updateRecovery": "pass-attested",
+    "storagePressure": "pass-attested"
+  },
+  "metadataEvidenceStatus": "owner-admin-asserted-present-external",
+  "metadataValuesTranscribed": false,
+  "governedEvidenceValuesTranscribed": false,
+  "productionValidationEligible": false,
+  "boundary": "This record captures the repository owner's/admin's explicit blanket statement that all governed physical iOS/iPadOS functional checks passed and that supporting metadata/evidence is present externally. It does not invent or transcribe device model, OS version, browser version, exact testedAt, testerReference or evidenceReference values, and it must not be used to bypass data/pwa-physical-device-validation-v1.json or tools/verify_pwa_physical_evidence.py.",
+  "privacyBoundary": "No learner, customer, site, email, screenshot, filesystem, raw process-data or other personal/proprietary evidence is stored here."
+}
