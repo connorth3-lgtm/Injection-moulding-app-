@@ -1,4 +1,4 @@
-const CACHE_VERSION='2026.09.06.3';
+const CACHE_VERSION='2026.09.06.4';
 const CACHE_REVISION='verified-cleanup-governance-r1-20260905';
 const STATIC_CACHE=`mouldmaster-static-${CACHE_VERSION}-${CACHE_REVISION}`;
 const LEGACY_RECOVERY_SOURCE_ONLY='./MouldMaster_Academy_App.html';
@@ -23,6 +23,7 @@ const CORE=[
   './mouldmaster-512.png',
   './version.json',
   './reading-patch.css',
+  './ui-shell.css',
   './reading-patch.js',
   './read-aloud.js',
   './training-upgrade.js',
