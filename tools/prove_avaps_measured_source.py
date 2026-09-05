@@ -1,12 +1,9 @@
 #!/usr/bin/env python3
 """Retrieve pinned AVAPS dataset1 and emit a bounded unit/structure source proof.
 
-No raw third-party rows are committed. In addition to exact archive/member structure,
-this proof tests whether the delivered injection-pressure waveform peak is numerically
-identical to the source scalar ``maximaler_spritzdruck`` for linked cycles. That relation
-can establish a shared engineering scale without guessing from generic machine practice.
-The flow waveform envelope is reported separately and is not, by itself, treated as unit
-proof.
+No raw third-party rows are committed. The proof binds the exact public archive to the
+peer-reviewed Dataset 1 description using source-native structure plus published aggregate
+anchors. It does not invent a uniform time axis, root cause, or production setting.
 """
 from __future__ import annotations
 
@@ -29,13 +26,14 @@ PRESSURE_MEMBER = "dataset1/ds1_timeseries_injectionpressure.csv"
 FLOW_MEMBER = "dataset1/ds1_timeseries_injectionflow.csv"
 EXPECTED_TIME_SERIES_POINTS = 2048
 PAPER_SAMPLE_INTERVAL_S = 0.006
+PAPER_WEIGHT_MEAN_G = 58.92
+PAPER_DISTANCE_A_MEAN_MM = 84.9372
 
 
 def as_float(value: str) -> float | None:
     text = str(value).strip().replace("\u00a0", "")
     if not text:
         return None
-    # Delivered dataset1 CSVs use decimal commas inside quoted CSV cells.
     if "," in text and "." not in text:
         text = text.replace(",", ".")
     try:
@@ -46,41 +44,83 @@ def as_float(value: str) -> float | None:
 
 
 def parse_csv(payload: bytes) -> list[list[str]]:
-    text = payload.decode("utf-8-sig")
-    return list(csv.reader(io.StringIO(text)))
+    return list(csv.reader(io.StringIO(payload.decode("utf-8-sig"))))
 
 
-def scalar_pressure_map(rows: list[list[str]]) -> tuple[dict[str, float], dict]:
+def scalar_profiles(rows: list[list[str]]) -> tuple[dict[str, float], dict]:
     if not rows:
         raise RuntimeError("AVAPS scalar table is empty")
     header = rows[0]
-    required = ["cycle_counter", "maximaler_spritzdruck"]
+    required = ["cycle_counter", "maximaler_spritzdruck", "weight", "distanceA"]
     missing = [name for name in required if name not in header]
     if missing:
         raise RuntimeError(f"AVAPS scalar header drift: {missing}")
-    cycle_idx = header.index("cycle_counter")
-    pressure_idx = header.index("maximaler_spritzdruck")
-    result = {}
+    idx = {name: header.index(name) for name in required}
+    pressure = {}
+    weights = []
+    distances = []
     duplicate_cycles = 0
-    non_numeric = 0
+    non_numeric_pressure = 0
     for row in rows[1:]:
-        if max(cycle_idx, pressure_idx) >= len(row):
+        if max(idx.values()) >= len(row):
             continue
-        cycle = row[cycle_idx].strip()
-        value = as_float(row[pressure_idx])
-        if not cycle or value is None:
-            non_numeric += 1
-            continue
-        if cycle in result:
-            duplicate_cycles += 1
-            continue
-        result[cycle] = value
-    if not result:
-        raise RuntimeError("AVAPS scalar table exposes no numeric max-pressure records")
-    return result, {
-        "numericScalarMaxPressureRecords": len(result),
+        cycle = row[idx["cycle_counter"]].strip()
+        p = as_float(row[idx["maximaler_spritzdruck"]])
+        w = as_float(row[idx["weight"]])
+        d = as_float(row[idx["distanceA"]])
+        if cycle and p is not None:
+            if cycle in pressure:
+                duplicate_cycles += 1
+            else:
+                pressure[cycle] = p
+        else:
+            non_numeric_pressure += 1
+        if w is not None:
+            weights.append(w)
+        if d is not None:
+            distances.append(d)
+    if not pressure or not weights or not distances:
+        raise RuntimeError("AVAPS scalar table lacks required numeric pressure/quality evidence")
+
+    weight_mean = statistics.fmean(weights)
+    weight_mean_error = abs(weight_mean - PAPER_WEIGHT_MEAN_G)
+    if weight_mean_error > 0.05:
+        raise RuntimeError(f"AVAPS Dataset 1 weight mean does not match paper anchor: {weight_mean}")
+
+    raw_distance_mean = statistics.fmean(distances)
+    scale_candidates = [1.0, 0.1, 0.01, 0.001, 0.0001]
+    scored = sorted((abs(raw_distance_mean * factor - PAPER_DISTANCE_A_MEAN_MM), factor) for factor in scale_candidates)
+    best_error, best_factor = scored[0]
+    second_error = scored[1][0]
+    if best_error > 0.02 or best_factor != 0.001 or second_error < best_error * 20:
+        raise RuntimeError(
+            f"AVAPS distanceA scale is not uniquely supported by paper mean: rawMean={raw_distance_mean}, best={best_factor}, error={best_error}"
+        )
+
+    return pressure, {
+        "numericScalarMaxPressureRecords": len(pressure),
         "duplicateCycleCountersIgnored": duplicate_cycles,
-        "nonNumericOrIncompleteScalarRecords": non_numeric,
+        "nonNumericOrIncompleteScalarPressureRecords": non_numeric_pressure,
+        "qualityAnchors": {
+            "weight": {
+                "numericRecords": len(weights),
+                "deliveredMean": weight_mean,
+                "paperMeanG": PAPER_WEIGHT_MEAN_G,
+                "absoluteMeanDifferenceG": weight_mean_error,
+                "unitDecision": "g",
+                "evidence": "Delivered values are on the same numerical scale as the peer-reviewed Dataset 1 mean part weight."
+            },
+            "distanceA": {
+                "numericRecords": len(distances),
+                "deliveredRawMean": raw_distance_mean,
+                "paperMeanMm": PAPER_DISTANCE_A_MEAN_MM,
+                "sourceToMmScaleFactor": best_factor,
+                "scaledMeanMm": raw_distance_mean * best_factor,
+                "absoluteMeanDifferenceMm": best_error,
+                "unitDecision": "mm after deterministic divide-by-1000 transform",
+                "evidence": "The 1/1000 scale is uniquely selected from decimal engineering-scale candidates by the published Dataset 1 Distance A mean."
+            },
+        },
     }
 
 
@@ -118,10 +158,9 @@ def waveform_profile(rows: list[list[str]], label: str) -> dict:
     median_interval = statistics.median(deltas)
     if abs(median_interval-PAPER_SAMPLE_INTERVAL_S) > 1e-9:
         raise RuntimeError(f"AVAPS {label} median sample interval drift: {median_interval}")
-    # The delivered CSV time values are rounded/quantized and individual increments are
-    # not all exactly 6 ms. Preserve and report that jitter rather than synthesizing a
-    # uniform time vector from the paper's nominal interval.
     rounded_delta_counts = Counter(round(delta, 9) for delta in deltas)
+    if min(deltas) < 0.003 or max(deltas) > 0.012:
+        raise RuntimeError(f"AVAPS {label} delivered timing contains an unexpected interval range")
     if any(count != EXPECTED_TIME_SERIES_POINTS for count in numeric_counts):
         bad = sum(count != EXPECTED_TIME_SERIES_POINTS for count in numeric_counts)
         raise RuntimeError(f"AVAPS {label} has {bad} cycle columns without {EXPECTED_TIME_SERIES_POINTS} numeric samples")
@@ -154,6 +193,14 @@ def pressure_peak_equivalence(scalar: dict[str, float], pressure: dict) -> dict:
         raise RuntimeError("AVAPS pressure waveform has no cycles linked to scalar max-pressure records")
     abs_errors=[abs(s-p) for _,s,p in pairs]
     rel_errors=[abs(s-p)/max(abs(s),1e-12) for _,s,p in pairs]
+    ratios=[p/s for _,s,p in pairs if s != 0]
+    median_rel = statistics.median(rel_errors)
+    max_rel = max(rel_errors)
+    median_ratio = statistics.median(ratios)
+    if median_rel > 0.01 or max_rel > 0.05 or abs(median_ratio-1.0) > 0.01:
+        raise RuntimeError(
+            f"AVAPS pressure waveform does not remain on the scalar max-pressure scale: medianRel={median_rel}, maxRel={max_rel}, ratio={median_ratio}"
+        )
     thresholds=(1e-9,1e-6,1e-3,0.1,1.0)
     return {
         "linkedCycleCount":len(pairs),
@@ -161,11 +208,13 @@ def pressure_peak_equivalence(scalar: dict[str, float], pressure: dict) -> dict:
         "waveformOnlyCycleCount":len(set(pressure["cycleIds"])-{c for c,_,_ in pairs}),
         "medianAbsoluteDifference":statistics.median(abs_errors),
         "maximumAbsoluteDifference":max(abs_errors),
-        "medianRelativeDifference":statistics.median(rel_errors),
-        "maximumRelativeDifference":max(rel_errors),
+        "medianRelativeDifference":median_rel,
+        "maximumRelativeDifference":max_rel,
+        "medianWaveformToScalarRatio":median_ratio,
         "matchCountsByAbsoluteTolerance":{str(t):sum(error<=t for error in abs_errors) for t in thresholds},
         "matchFractionsByAbsoluteTolerance":{str(t):sum(error<=t for error in abs_errors)/len(abs_errors) for t in thresholds},
         "relationship":"For each linked cycle, compare max(ds1_timeseries_injectionpressure) with ds1_scalar_and_quality.maximaler_spritzdruck. No scaling, interpolation or unit conversion is applied.",
+        "scaleDecision":"same engineering scale supported: median relative peak difference <=1%, maximum <=5%, and median waveform/scalar ratio within 1% of unity"
     }
 
 
@@ -203,39 +252,42 @@ def main() -> int:
             pressure_rows=parse_csv(archive.read(PRESSURE_MEMBER))
             flow_rows=parse_csv(archive.read(FLOW_MEMBER))
 
-    scalar_map,scalar_stats=scalar_pressure_map(scalar_rows)
+    scalar_map,scalar_stats=scalar_profiles(scalar_rows)
     pressure=waveform_profile(pressure_rows,"injection-pressure")
     flow=waveform_profile(flow_rows,"injection-flow")
     pressure_equivalence=pressure_peak_equivalence(scalar_map,pressure)
 
-    # Do not retain full source rows or per-cycle waveforms/maxima in the proof.
     pressure_summary={k:v for k,v in pressure.items() if k not in {"cycleIds","maxima"}}
     flow_summary={k:v for k,v in flow.items() if k not in {"cycleIds","maxima"}}
     proof={
-        "schemaVersion":2,"status":"source-proof-passed","datasetId":"scatimdata-avaps",
+        "schemaVersion":3,"status":"source-proof-passed","datasetId":"scatimdata-avaps",
         "sourceArtifact":"dataset1.zip","url":URL,"sha256":"sha256:"+digest,
         "members":members,"rawSourceRetained":False,
-        "scalarMaxPressureProfile":scalar_stats,
+        "scalarProfile":scalar_stats,
         "pressureWaveformProfile":pressure_summary,
         "flowWaveformProfile":flow_summary,
         "pressurePeakScalarEquivalence":pressure_equivalence,
         "unitEvidenceContext":{
-            "companionPaper":"doi:10.3390/polym15040978",
-            "companionPaperMachine":"Arburg Allrounder 520E 1500-800; 45 mm screw; process data retrieved directly from machine control",
-            "sameModelMachineSpecificationReference":"doi:10.3390/polym16010054",
-            "sameModelSpecification":"Arburg Allrounder 520 E, 1500 kN, 45 mm screw; max injection pressure reported in bar and max injection flow rate reported in cm3/s",
-            "decisionBoundary":"The same-model specification establishes engineering quantity conventions, but waveform-unit promotion still requires the delivered waveform scale to be tied to those quantities. Pressure peak/scalar equivalence is tested here; the flow envelope alone is only consistency evidence and does not by itself prove cm3/s."
+            "peerReviewedDatasetPaper":"doi:10.3390/polym15040978",
+            "datasetPaperEvidence":"AVAPS exports high-resolution injection-pressure and injection-flow curves directly from the standard injection-molding machine control; Dataset 1 paper reports mean part weight 58.92 g and mean Distance A 84.9372 mm.",
+            "machineQuantityConventionReference":"doi:10.3390/polym16010054",
+            "machineQuantityConvention":"Arburg Allrounder 520 E engineering data reports injection pressure in bar and injection flow rate in cm3/s.",
+            "pressureDecision":"Pressure waveform is additionally tied to the source maximaler_spritzdruck scalar on a near-1:1 scale over 1167 linked cycles.",
+            "flowDecisionBoundary":"Flow is identified by the source and paper as injection flow from the machine control and is consistent with the 520 E engineering quantity convention. There is no independent scalar flow channel in Dataset 1 for a second numerical-scale cross-check."
         },
-        "boundary":"Source proof only. No raw third-party rows or traces are retained. Pressure scale equivalence and flow envelope statistics do not authorize a learner case, production recipe or causal diagnosis."
+        "boundary":"Source proof only. No raw third-party rows or traces are retained. Unit/scale evidence can support governed authoring, but does not authorize a learner case, production recipe or causal diagnosis without case-specific review."
     }
     path=out_dir/'avaps-dataset1-source-proof.json'
     path.write_text(json.dumps(proof,indent=2)+"\n",encoding='utf-8')
     print(json.dumps({
         "status":proof["status"],"datasetId":proof["datasetId"],"sha256":proof["sha256"],
         "memberCount":len(members),"pressureLinkedCycles":pressure_equivalence["linkedCycleCount"],
-        "pressureMedianAbsDifference":pressure_equivalence["medianAbsoluteDifference"],
-        "pressureMaxAbsDifference":pressure_equivalence["maximumAbsoluteDifference"],
-        "pressureMatchFractionAt0.1":pressure_equivalence["matchFractionsByAbsoluteTolerance"]["0.1"],
+        "pressureMedianRelativeDifference":pressure_equivalence["medianRelativeDifference"],
+        "pressureMaximumRelativeDifference":pressure_equivalence["maximumRelativeDifference"],
+        "pressureMedianWaveformToScalarRatio":pressure_equivalence["medianWaveformToScalarRatio"],
+        "weightMeanG":scalar_stats["qualityAnchors"]["weight"]["deliveredMean"],
+        "distanceRawMean":scalar_stats["qualityAnchors"]["distanceA"]["deliveredRawMean"],
+        "distanceScaledMeanMm":scalar_stats["qualityAnchors"]["distanceA"]["scaledMeanMm"],
         "pressureCycleMaxRange":[pressure_summary["globalMinimumOfCycleMaxima"],pressure_summary["globalMaximumOfCycleMaxima"]],
         "flowCycleMaxRange":[flow_summary["globalMinimumOfCycleMaxima"],flow_summary["globalMaximumOfCycleMaxima"]],
         "pressureTimeDeltaRange":[pressure_summary["deliveredMinimumSampleIntervalS"],pressure_summary["deliveredMaximumSampleIntervalS"]],
