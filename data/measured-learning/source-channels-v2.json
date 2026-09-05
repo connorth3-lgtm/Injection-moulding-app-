@@ -1,0 +1,79 @@
+{
+  "schemaVersion": 2,
+  "registryId": "measured-learning-source-channels-v2",
+  "policy": {
+    "promotionRequiresRegisteredSourceChannel": true,
+    "semanticAndUnitMustMatchRegistry": true,
+    "xAxisMustUseRegisteredCoordinateOrExplicitGeneratedIndex": true,
+    "unresolvedChannelsRemainBlocked": true
+  },
+  "sources": [
+    {
+      "datasetId": "openmms-t4g",
+      "evidenceRefs": ["data/public-benchmark-results/openmms-t4g-v1.json", "doi:10.3390/s23073569"],
+      "channels": [
+        {"sourceChannel":"T1","semantic":"temperature-1","unit":"degC","role":"measured","coordinateChannel":"t","coordinateSemantic":"time","coordinateUnit":"s","promotionReady":true},
+        {"sourceChannel":"T2","semantic":"temperature-2","unit":"degC","role":"measured","coordinateChannel":"t","coordinateSemantic":"time","coordinateUnit":"s","promotionReady":true},
+        {"sourceChannel":"P","semantic":"cavity-pressure","unit":"bar","role":"measured","coordinateChannel":"t","coordinateSemantic":"time","coordinateUnit":"s","promotionReady":true},
+        {"sourceChannel":"F","semantic":"extraction-force","unit":"N","role":"measured","coordinateChannel":"t","coordinateSemantic":"time","coordinateUnit":"s","promotionReady":true},
+        {"sourceChannel":"Ax","semantic":"acceleration-x","unit":"g","role":"measured","coordinateChannel":"t2","coordinateSemantic":"time","coordinateUnit":"s","promotionReady":true},
+        {"sourceChannel":"Ay","semantic":"acceleration-y","unit":"g","role":"measured","coordinateChannel":"t2","coordinateSemantic":"time","coordinateUnit":"s","promotionReady":true},
+        {"sourceChannel":"Az","semantic":"acceleration-z","unit":"g","role":"measured","coordinateChannel":"t2","coordinateSemantic":"time","coordinateUnit":"s","promotionReady":true},
+        {"sourceChannel":"Gx","semantic":"angular-velocity-x","unit":"dps/1000","role":"measured","coordinateChannel":"t2","coordinateSemantic":"time","coordinateUnit":"s","promotionReady":true},
+        {"sourceChannel":"Gy","semantic":"angular-velocity-y","unit":"dps/1000","role":"measured","coordinateChannel":"t2","coordinateSemantic":"time","coordinateUnit":"s","promotionReady":true},
+        {"sourceChannel":"Gz","semantic":"angular-velocity-z","unit":"dps/1000","role":"measured","coordinateChannel":"t2","coordinateSemantic":"time","coordinateUnit":"s","promotionReady":true}
+      ]
+    },
+    {
+      "datasetId": "mendeley-gtnb4j7bfx-v1",
+      "evidenceRefs": ["data/public-benchmark-results/gtnb4j7bfx-v1.json", "doi:10.3390/su17167445"],
+      "channels": [
+        {"sourceChannel":"Product_Weight","semantic":"recorded-product-unit-weight","unit":"g","role":"historical-production-record","coordinateChannel":"row-index","coordinateSemantic":"observation-index","coordinateUnit":"index","promotionReady":true,"limitation":"Production-order/run-level record; not assumed shot-resolved."},
+        {"sourceChannel":"Avg_Gross_Weight","semantic":"recorded-average-gross-weight","unit":"g","role":"historical-production-record","coordinateChannel":"row-index","coordinateSemantic":"observation-index","coordinateUnit":"index","promotionReady":true},
+        {"sourceChannel":"PP_Consumption","semantic":"recorded-polypropylene-consumption","unit":"kg","role":"historical-production-record","coordinateChannel":"row-index","coordinateSemantic":"observation-index","coordinateUnit":"index","promotionReady":true},
+        {"sourceChannel":"Pigment_Consumption","semantic":"recorded-pigment-consumption","unit":"kg","role":"historical-production-record","coordinateChannel":"row-index","coordinateSemantic":"observation-index","coordinateUnit":"index","promotionReady":true},
+        {"sourceChannel":"Flash_kg","semantic":"recorded-flash-mass","unit":"kg","role":"quality-outcome","coordinateChannel":"row-index","coordinateSemantic":"observation-index","coordinateUnit":"index","promotionReady":true},
+        {"sourceChannel":"Defective_kg","semantic":"recorded-defective-product-mass","unit":"kg","role":"quality-outcome","coordinateChannel":"row-index","coordinateSemantic":"observation-index","coordinateUnit":"index","promotionReady":true},
+        {"sourceChannel":"%Flash","semantic":"recorded-flash-percentage","unit":"%","role":"quality-outcome","coordinateChannel":"row-index","coordinateSemantic":"observation-index","coordinateUnit":"index","promotionReady":true},
+        {"sourceChannel":"%Defective","semantic":"recorded-defective-percentage","unit":"%","role":"quality-outcome","coordinateChannel":"row-index","coordinateSemantic":"observation-index","coordinateUnit":"index","promotionReady":true},
+        {"sourceChannel":"%Reprocess","semantic":"recorded-reprocess-percentage","unit":"%","role":"quality-outcome","coordinateChannel":"row-index","coordinateSemantic":"observation-index","coordinateUnit":"index","promotionReady":true},
+        {"sourceChannel":"Injection_Pressure","semantic":"recorded-injection-pressure","unit":"bar","role":"historical-process-record","coordinateChannel":"row-index","coordinateSemantic":"observation-index","coordinateUnit":"index","promotionReady":true,"limitation":"Recorded process parameter; command-versus-actual status is not asserted."},
+        {"sourceChannel":"Retention_Pressure","semantic":"recorded-holding-pressure","unit":"bar","role":"historical-process-record","coordinateChannel":"row-index","coordinateSemantic":"observation-index","coordinateUnit":"index","promotionReady":true,"limitation":"Recorded process parameter; command-versus-actual status is not asserted."},
+        {"sourceChannel":"Melt_Temp","semantic":"recorded-melt-temperature","unit":"degC","role":"historical-process-record","coordinateChannel":"row-index","coordinateSemantic":"observation-index","coordinateUnit":"index","promotionReady":true},
+        {"sourceChannel":"Mold_Temp","semantic":"recorded-mould-temperature","unit":"degC","role":"historical-process-record","coordinateChannel":"row-index","coordinateSemantic":"observation-index","coordinateUnit":"index","promotionReady":true},
+        {"sourceChannel":"Cycle_Time","semantic":"recorded-cycle-time","unit":"s","role":"historical-process-record","coordinateChannel":"row-index","coordinateSemantic":"observation-index","coordinateUnit":"index","promotionReady":true},
+        {"sourceChannel":"Cooling_Time_Injection","semantic":"recorded-injection-cooling-time","unit":"s","role":"historical-process-record","coordinateChannel":"row-index","coordinateSemantic":"observation-index","coordinateUnit":"index","promotionReady":true},
+        {"sourceChannel":"Ejection_Time_Injection","semantic":"recorded-injection-ejection-time","unit":"s","role":"historical-process-record","coordinateChannel":"row-index","coordinateSemantic":"observation-index","coordinateUnit":"index","promotionReady":true},
+        {"sourceChannel":"Retention_Time_Injection","semantic":"recorded-holding-time","unit":"s","role":"historical-process-record","coordinateChannel":"row-index","coordinateSemantic":"observation-index","coordinateUnit":"index","promotionReady":true},
+        {"sourceChannel":"Injection_Speed","semantic":"recorded-injection-speed","unit":"mm/s","role":"historical-process-record","coordinateChannel":"row-index","coordinateSemantic":"observation-index","coordinateUnit":"index","promotionReady":true}
+      ]
+    },
+    {
+      "datasetId": "su13148102-supplement",
+      "evidenceRefs": ["data/public-benchmark-results/su13148102-supplement-v1.json", "doi:10.3390/su13148102"],
+      "channels": [
+        {"sourceChannel":"Cycle Time, s","semantic":"cycle-time","unit":"s","role":"measured-process-record","coordinateChannel":"Cycle #","coordinateSemantic":"cycle-index","coordinateUnit":"cycle","promotionReady":true},
+        {"sourceChannel":"Max Inj Pres, MPa","semantic":"maximum-injection-pressure","unit":"MPa","role":"measured-process-record","coordinateChannel":"Cycle #","coordinateSemantic":"cycle-index","coordinateUnit":"cycle","promotionReady":true},
+        {"sourceChannel":"Max Cav1 Pres, MPa","semantic":"maximum-cavity-1-pressure","unit":"MPa","role":"measured-process-record","coordinateChannel":"Cycle #","coordinateSemantic":"cycle-index","coordinateUnit":"cycle","promotionReady":true},
+        {"sourceChannel":"Inj Flow Rate, ccps","semantic":"injection-flow-rate","unit":"cm3/s","role":"measured-process-record","coordinateChannel":"Cycle #","coordinateSemantic":"cycle-index","coordinateUnit":"cycle","promotionReady":true},
+        {"sourceChannel":"Melt Temp, C","semantic":"melt-temperature","unit":"degC","role":"measured-process-record","coordinateChannel":"Cycle #","coordinateSemantic":"cycle-index","coordinateUnit":"cycle","promotionReady":true},
+        {"sourceChannel":"Thickness, mm","semantic":"specimen-thickness","unit":"mm","role":"mechanical-outcome","coordinateChannel":"Cycle #","coordinateSemantic":"cycle-index","coordinateUnit":"cycle","promotionReady":true},
+        {"sourceChannel":"Max Strain, pct","semantic":"maximum-strain","unit":"%","role":"mechanical-outcome","coordinateChannel":"Cycle #","coordinateSemantic":"cycle-index","coordinateUnit":"cycle","promotionReady":true},
+        {"sourceChannel":"Ult Stress, MPa","semantic":"ultimate-stress","unit":"MPa","role":"mechanical-outcome","coordinateChannel":"Cycle #","coordinateSemantic":"cycle-index","coordinateUnit":"cycle","promotionReady":true},
+        {"sourceChannel":"Modulus, MPa","semantic":"tensile-modulus","unit":"MPa","role":"mechanical-outcome","coordinateChannel":"Cycle #","coordinateSemantic":"cycle-index","coordinateUnit":"cycle","promotionReady":true},
+        {"sourceChannel":"Toughness, MJ/m^3","semantic":"toughness","unit":"MJ/m3","role":"mechanical-outcome","coordinateChannel":"Cycle #","coordinateSemantic":"cycle-index","coordinateUnit":"cycle","promotionReady":true}
+      ]
+    }
+  ],
+  "pendingSourceFamilies": [
+    "scatimdata-avaps",
+    "impure-pascoe-2022",
+    "iguzzini-road-lenses",
+    "forinfpro-himd-v1",
+    "mendeley-fhj5p7ww9v-v1",
+    "mendeley-6k8fpbrd9s-v1",
+    "mendeley-4h98rz9f92-v3",
+    "pmc4753395-hdpe-cenosphere-v1",
+    "mendeley-yxz2w7ctnh-v1"
+  ]
+}
