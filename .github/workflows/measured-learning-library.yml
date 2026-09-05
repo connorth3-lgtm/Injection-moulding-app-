@@ -11,6 +11,7 @@ on:
       - 'tools/measured_learning_core.py'
       - 'tools/build_measured_learning_case.py'
       - 'tools/build_measured_learning_review_queue.py'
+      - 'tools/build_measured_learning_review_packets.py'
       - 'tools/prove_*_measured_source.py'
       - 'tools/prove_mendeley_open_sources.py'
       - 'tools/prove_pmc_hdpe_source.py'
@@ -20,6 +21,7 @@ on:
       - 'qa_measured_learning_candidates.py'
       - 'qa_measured_learning_authoring_coverage.py'
       - 'qa_measured_learning_review_queue.py'
+      - 'qa_measured_learning_review_packets.py'
       - 'sources/MEASURED_LEARNING_LIBRARY_V1.md'
       - 'sources/MEASURED_LEARNING_LIBRARY_V2.md'
       - '.github/workflows/measured-learning-library.yml'
@@ -34,6 +36,7 @@ on:
       - 'tools/measured_learning_core.py'
       - 'tools/build_measured_learning_case.py'
       - 'tools/build_measured_learning_review_queue.py'
+      - 'tools/build_measured_learning_review_packets.py'
       - 'tools/prove_*_measured_source.py'
       - 'tools/prove_mendeley_open_sources.py'
       - 'tools/prove_pmc_hdpe_source.py'
@@ -43,6 +46,7 @@ on:
       - 'qa_measured_learning_candidates.py'
       - 'qa_measured_learning_authoring_coverage.py'
       - 'qa_measured_learning_review_queue.py'
+      - 'qa_measured_learning_review_packets.py'
       - 'sources/MEASURED_LEARNING_LIBRARY_V1.md'
       - 'sources/MEASURED_LEARNING_LIBRARY_V2.md'
       - '.github/workflows/measured-learning-library.yml'
@@ -64,6 +68,7 @@ jobs:
             tools/measured_learning_core.py \
             tools/build_measured_learning_case.py \
             tools/build_measured_learning_review_queue.py \
+            tools/build_measured_learning_review_packets.py \
             tools/prove_openmms_measured_source.py \
             tools/prove_avaps_measured_source.py \
             tools/prove_sustainability_measured_source.py \
@@ -85,6 +90,7 @@ jobs:
             qa_measured_learning_candidates.py \
             qa_measured_learning_authoring_coverage.py \
             qa_measured_learning_review_queue.py \
+            qa_measured_learning_review_packets.py \
             tests/test_measured_learning_v2.py
       - name: Check V2 learner runtime syntax
         run: node --check measured-learning-library.js
@@ -147,7 +153,11 @@ jobs:
         run: python tools/build_measured_learning_review_queue.py
       - name: Validate independent-review queue remains unreviewed and non-promotional
         run: python qa_measured_learning_review_queue.py
-      - name: Upload compact source proofs, authoring candidates and review queue
+      - name: Build 70 case-specific engineering-review packets
+        run: python tools/build_measured_learning_review_packets.py
+      - name: Validate review packets remain unreviewed and non-promotional
+        run: python qa_measured_learning_review_packets.py
+      - name: Upload compact source proofs, authoring candidates, review queue and packets
         if: always()
         uses: actions/upload-artifact@v6
         with:
