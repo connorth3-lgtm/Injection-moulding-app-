@@ -13,7 +13,7 @@ sys.path.insert(0, str(TOOLS))
 
 import build_measured_learning_case as builder  # noqa: E402
 import qa_measured_learning_library as qa  # noqa: E402
-from measured_learning_core import canonical_sha, raw_window_fingerprint, representation_fingerprint, window_overlap  # noqa: E402
+from measured_learning_core import calculate_method, canonical_sha, raw_window_fingerprint, representation_fingerprint, window_overlap  # noqa: E402
 
 
 class MeasuredLearningV2Tests(unittest.TestCase):
@@ -56,6 +56,16 @@ class MeasuredLearningV2Tests(unittest.TestCase):
 
     def candidate(self):
         return builder.catalogue_by_id()["MLM-021"]
+
+    @staticmethod
+    def ratio_signal(signal_id, values, x=None):
+        x = x or list(range(1, len(values) + 1))
+        return {
+            "id": signal_id,
+            "semantic": "recorded-count",
+            "unit": "units",
+            "representation": {"x": x, "y": values, "xSemantic": "observation-index", "xUnit": "index"},
+        }
 
     def test_valid_fixture_builds_and_revalidates(self):
         case = builder.build(self.candidate(), self.binding())
@@ -105,6 +115,25 @@ class MeasuredLearningV2Tests(unittest.TestCase):
 
     def test_expansion_is_not_available_while_gate_is_locked(self):
         self.assertNotIn("MLM-071", builder.catalogue_by_id())
+
+    def test_ratio_of_sums_percent_uses_aggregate_counts(self):
+        rejected = self.ratio_signal("rejected", [2, 3, 5])
+        production = self.ratio_signal("production", [100, 100, 200])
+        value, unit = calculate_method("ratio_of_sums_percent", [rejected, production])
+        self.assertAlmostEqual(value, 2.5)
+        self.assertEqual(unit, "%")
+
+    def test_ratio_of_sums_percent_rejects_zero_aggregate_denominator(self):
+        rejected = self.ratio_signal("rejected", [1, 2, 3])
+        production = self.ratio_signal("production", [0, 0, 0])
+        with self.assertRaisesRegex(ValueError, "aggregate denominator > 0"):
+            calculate_method("ratio_of_sums_percent", [rejected, production])
+
+    def test_ratio_of_sums_percent_requires_aligned_coordinates(self):
+        rejected = self.ratio_signal("rejected", [1, 2, 3], [1, 2, 3])
+        production = self.ratio_signal("production", [100, 100, 100], [1, 2, 4])
+        with self.assertRaisesRegex(ValueError, "identical aligned x values"):
+            calculate_method("ratio_of_sums_percent", [rejected, production])
 
 
 if __name__ == "__main__":
