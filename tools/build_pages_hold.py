@@ -126,7 +126,7 @@ def build(target: Path, preview_source: Path | None = None) -> set[str]:
 
     root_files = {path.name for path in target.iterdir() if path.is_file()}
     if root_files != ALLOWED_FILES:
-        raise SystemExit(f"release-hold root boundary mismatch: {sorted(root_files)}")
+        raise SystemExit(f"release-hold artifact boundary mismatch (root files): {sorted(root_files)}")
 
     if preview_source is not None:
         stage_preview(preview_source, target / "preview")
