@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "status": "human-pass-attested-metadata-incomplete",
+  "recordedAt": "2026-09-05T20:10:00+12:00",
+  "attestationReference": "owner-attestation-2026-09-05",
+  "runtimeFingerprint": "sha256:6c898802cac616cb16305461c47f60c9a62944bd6690889787e698265be938be",
+  "platforms": {
+    "ios": {
+      "result": "pass-attested",
+      "deviceMetadataStatus": "not-provided"
+    },
+    "android": {
+      "result": "pass-attested",
+      "deviceMetadataStatus": "not-provided"
+    }
+  },
+  "productionValidationEligible": false,
+  "boundary": "This file records the repository owner's explicit human statement that both physical iOS/iPadOS and Android candidates worked. It is not the governed production validation contract and must not be used to bypass missing device/OS/browser metadata required by data/pwa-physical-device-validation-v1.json.",
+  "privacyBoundary": "No learner, customer, site, email, screenshot, filesystem, raw process-data or other personal/proprietary evidence is stored here."
+}
