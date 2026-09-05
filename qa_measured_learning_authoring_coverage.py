@@ -20,6 +20,8 @@ FILES = [
     "avaps-unreviewed-learning-candidates.json",
     "impure-unreviewed-learning-candidates.json",
     "forinfpro-unreviewed-learning-candidates.json",
+    "rebalanced-unreviewed-learning-candidates.json",
+    "pmc-unreviewed-learning-candidates.json",
 ]
 REPORT = PROOF / "measured-learning-authoring-coverage-v2.json"
 SUSTAINABILITY = "su13148102-supplement"
@@ -93,19 +95,34 @@ def candidate_artifacts(candidate, registry):
     return [{"name":name,"sha256":digest}]
 
 
+def assert_rebalance(manifest_by_id):
+    rebalance=load(ROOT/"data/measured-learning/source-rebalance-v2.json")
+    decisions={d["caseId"]:d for d in rebalance.get("decisions",[])}
+    assert len(decisions)==10, f'rebalance decision count drifted: {len(decisions)}'
+    for case_id,decision in decisions.items():
+        case=manifest_by_id[case_id]
+        assert case["sourceFamily"]==decision["replacementSourceFamily"], f'{case_id}: manifest/source rebalance drift'
+        if decision.get("replacementTitle"): assert case["title"]==decision["replacementTitle"], f'{case_id}: replacement title drift'
+        if decision.get("replacementCoverageTags"): assert case["coverageTags"]==decision["replacementCoverageTags"], f'{case_id}: replacement coverage-tag drift'
+        assert required_channels(case)==set(decision["requiredSourceChannels"]), f'{case_id}: rebalance required-channel drift'
+    blocked_families={"iguzzini-road-lenses","mendeley-fhj5p7ww9v-v1"}
+    assert not [c["id"] for c in manifest_by_id.values() if c["sourceFamily"] in blocked_families], "release catalogue still depends on product-rights-blocked source"
+
+
 def main():
     manifest=rows(load(ROOT/"data/measured-learning/manifest-v1.json")); by_id={c["id"]:c for c in manifest}
+    assert_rebalance(by_id)
     readiness={s["datasetId"]:s for s in load(ROOT/"data/measured-learning/source-readiness-v2.json")["sources"]}
     ready={k for k,v in readiness.items() if v.get("promotionReady")}
     artifacts={s["datasetId"]:{a["name"]:a for a in s.get("artifacts",[])} for s in load(ROOT/"data/measured-learning/source-artifacts-v2.json")["sources"]}
     channels=merged_channels(); methods={m["id"]:m for m in load(ROOT/"data/measured-learning/feature-methods-v1.json")["methods"]}
     ready_slots={c["id"] for c in manifest if case_ready(c,readiness,channels)}
-    assert len(ready_slots)==57, f'current case-level source/channel-ready catalogue slot count drifted: {len(ready_slots)}'
-    assert "MLM-037" not in ready_slots, "AVAPS dimension case must remain blocked while distanceA transform is unresolved"
+    assert len(ready_slots)==70, f'expected all 70 release cases source/channel ready, found {len(ready_slots)}'
+    assert ready_slots==set(by_id), f'blocked release cases remain: {sorted(set(by_id)-ready_slots)}'
     impure_ids={"MLM-005","MLM-006","MLM-011","MLM-012","MLM-020","MLM-023","MLM-024","MLM-032","MLM-060","MLM-061"}
-    assert impure_ids <= ready_slots, f'ImPure governed case set incomplete: {sorted(impure_ids-ready_slots)}'
-    forinfpro_ids={"MLM-028","MLM-062","MLM-063","MLM-068"}
-    assert forinfpro_ids <= ready_slots, f'FORinFPRO governed case set incomplete: {sorted(forinfpro_ids-ready_slots)}'
+    assert impure_ids <= ready_slots
+    forinfpro_ids={"MLM-028","MLM-062","MLM-063","MLM-068"}; assert forinfpro_ids <= ready_slots
+    pmc_ids={"MLM-031","MLM-053","MLM-054"}; assert pmc_ids <= ready_slots
 
     candidate_ids=set(); candidate_fps=set(); numeric_coverage=set(); direct_coverage=set(); source_counts={}; details=[]
     for filename in FILES:
@@ -175,15 +192,15 @@ def main():
     missing_numeric=sorted(ready_slots-numeric_coverage); missing_direct=sorted(ready_slots-direct_coverage)
     assert not missing_numeric, f'unexpected numeric candidate gaps: {missing_numeric}'
     assert not missing_direct, f'unexpected direct-binding gaps: {missing_direct}'
-    assert len(direct_coverage)==57, f'direct-binding-shape coverage drifted: {len(direct_coverage)}'
+    assert len(direct_coverage)==70, f'direct-binding-shape coverage drifted: {len(direct_coverage)}'
     report={
-        "schemaVersion":4,"status":"authoring-coverage-qa-passed","promotionReadySourceFamilies":sorted(ready),
+        "schemaVersion":5,"status":"authoring-coverage-qa-passed","promotionReadySourceFamilies":sorted(ready),
         "sourceAndChannelReadyCatalogueSlots":len(ready_slots),"sourceAndChannelReadyCaseIds":sorted(ready_slots),
         "numericAuthoringCandidateCount":len(candidate_ids),"numericCandidateCatalogueCoverage":len(numeric_coverage),"numericCandidateCaseIds":sorted(numeric_coverage),"numericCandidateGaps":missing_numeric,
         "directBindingShapeCatalogueCoverage":len(direct_coverage),"directBindingShapeCaseIds":sorted(direct_coverage),"directBindingShapeGaps":missing_direct,
         "candidateCountBySource":source_counts,"candidates":details,"promotedLearnerCases":0,
-        "blockedKnownCaseReasons":{"MLM-037":"AVAPS distanceA source transform remains unresolved; pressure/flow/weight readiness does not authorize the dimension channel."},
-        "boundary":"Numeric and direct-binding-shape authoring coverage are not learner promotion. FORinFPRO remains explicitly one-cycle evidence: accepted actual-temperature traces support within-cycle lessons but cannot establish cycle-to-cycle repeatability."
+        "releaseCatalogueSourceBlockedCases":[],
+        "boundary":"All 70 release catalogue objectives now have direct-binding-shaped authoring evidence from governed open/licence-compatible source channels. This is not learner promotion: case wording, novelty, exact promotion-window identity and independent engineering review still have to pass for every learner-visible case. FORinFPRO remains one-cycle evidence and PMC remains material-test rather than production-waveform evidence."
     }
     REPORT.write_text(json.dumps(report,indent=2)+"\n",encoding="utf-8")
     print(json.dumps({k:report[k] for k in ("status","sourceAndChannelReadyCatalogueSlots","numericAuthoringCandidateCount","numericCandidateCatalogueCoverage","numericCandidateGaps","directBindingShapeCatalogueCoverage","directBindingShapeGaps")},separators=(",",":")))
