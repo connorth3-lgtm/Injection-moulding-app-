@@ -1,0 +1,48 @@
+{
+  "caseId": "MLM-001",
+  "sourceFamily": "scatimdata-avaps",
+  "datasetId": "scatimdata-avaps",
+  "sourceReference": "exact publisher/repository reference",
+  "sourceFingerprint": "sha256:REPLACE_WITH_EXACT_SOURCE_SHA256",
+  "licenceOrAccessStatus": "recorded source terms",
+  "extraction": {
+    "description": "exact cycle/row/window selection",
+    "sourceOrderingPreserved": true
+  },
+  "signals": [
+    {
+      "id": "signal-id",
+      "label": "Measured signal",
+      "semantic": "resolved engineering semantic",
+      "unit": "resolved engineering unit",
+      "representation": {
+        "originalPointCount": 0,
+        "reductionMethod": "deterministic-reviewed-method-v1",
+        "x": [],
+        "y": []
+      }
+    }
+  ],
+  "features": [],
+  "observations": [
+    {
+      "id": "OBS-1",
+      "text": "Reviewed statement describing only what the measurements support.",
+      "support": ["signal:signal-id"]
+    }
+  ],
+  "learnerTask": {
+    "observePrompt": "What can you establish from these measurements?",
+    "investigatePrompt": "What evidence would best discriminate between the remaining explanations?",
+    "explanation": "Reviewed engineering explanation.",
+    "takeaway": "State the evidence lesson without converting association into root cause."
+  },
+  "supportedConclusions": ["One or more conclusions directly supported by the selected measured evidence."],
+  "unsupportedConclusions": ["One or more tempting conclusions the selected evidence does not establish."],
+  "limitations": ["Study, sampling, context and generalisation limitations."],
+  "sourceEstablishesCausality": false,
+  "claimScope": "observation_only",
+  "reviewed": false,
+  "reviewerRole": "engineering-evidence-review",
+  "reviewedAt": null
+}
