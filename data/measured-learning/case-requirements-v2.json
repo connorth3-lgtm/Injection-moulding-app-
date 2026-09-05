@@ -1,5 +1,5 @@
 {
-  "schemaVersion": 5,
+  "schemaVersion": 6,
   "registryId": "measured-learning-case-requirements-v2",
   "policy": {
     "requirementsAreDerivedPerCatalogueCase": true,
@@ -30,7 +30,6 @@
     "MLM-028": ["processWaveform"],
     "MLM-032": ["processWaveform"],
     "MLM-036": ["processWaveform", "qualityOutcome"],
-    "MLM-037": ["processWaveform", "qualityOutcome"],
     "MLM-057": ["dualTimeBase"],
     "MLM-058": ["dualTimeBase"],
     "MLM-059": ["dualTimeBase"],
@@ -53,6 +52,7 @@
     "MLM-010": ["dataset1/ds1_timeseries_injectionpressure.csv:value", "dataset1/ds1_timeseries_injectionflow.csv:value"],
     "MLM-011": ["TempMold1[IRT/Pascoe]", "TempMold2[IRT/Pascoe]"],
     "MLM-012": ["Pressure1[IRT/Pascoe]", "Pressure2[IRT/Pascoe]"],
+    "MLM-013": ["Injection_Pressure", "%Defective"],
     "MLM-015": ["dataset1/ds1_timeseries_injectionpressure.csv:value", "dataset1/ds1_timeseries_injectionflow.csv:value"],
     "MLM-016": ["dataset1/ds1_timeseries_injectionpressure.csv:value"],
     "MLM-017": ["dataset1/ds1_timeseries_injectionflow.csv:value"],
@@ -62,14 +62,25 @@
     "MLM-023": ["Pressure1[IRT/Pascoe]", "TempMold1[IRT/Pascoe]"],
     "MLM-024": ["Pressure1[IRT/Pascoe]", "Pressure2[IRT/Pascoe]"],
     "MLM-028": ["Heating.sv_Zone14.rActualTemp", "Heating.sv_Zone13.rActualTemp", "Heating.sv_Zone12.rActualTemp"],
+    "MLM-029": ["Sheet1!E:I"],
+    "MLM-031": ["HDPE!A:B"],
     "MLM-032": ["Pressure1[IRT/Pascoe]", "Pressure2[IRT/Pascoe]"],
+    "MLM-035": ["Injection_Pressure", "Retention_Pressure", "Mold_Temp", "%Defective"],
     "MLM-036": ["dataset1/ds1_timeseries_injectionpressure.csv:value", "dataset1/ds1_timeseries_injectionflow.csv:value", "dataset1/ds1_scalar_and_quality.csv:weight"],
-    "MLM-037": ["dataset1/ds1_timeseries_injectionpressure.csv:value", "dataset1/ds1_timeseries_injectionflow.csv:value", "dataset1/ds1_scalar_and_quality.csv:distanceA"],
+    "MLM-037": ["Max Inj Pres, MPa", "Melt Temp, C", "Thickness, mm"],
+    "MLM-041": ["Injection_Pressure", "Mold_Temp", "%Defective"],
+    "MLM-042": ["Injection_Pressure", "Retention_Pressure", "%Defective"],
+    "MLM-048": ["Sheet1!E:I", "Sheet1!Q:U"],
+    "MLM-053": ["HDPE!A:B", "HDPE!C:D", "HDPE!E:F"],
+    "MLM-054": ["HDPE!A:B", "HDPE20!A:B", "HDPE40!A:B", "HDPE60!A:B"],
     "MLM-060": ["Pressure1[IRT/Pascoe]", "Pressure2[IRT/Pascoe]", "TempMold1[IRT/Pascoe]", "TempMold2[IRT/Pascoe]"],
     "MLM-061": ["Pressure1[IRT/Pascoe]", "TempMold1[IRT/Pascoe]"],
     "MLM-062": ["Heating.sv_Zone14.rActualTemp", "Heating.sv_Zone13.rActualTemp"],
     "MLM-063": ["Heating.sv_Zone14.rActualTemp", "Heating.sv_Zone13.rActualTemp", "Heating.sv_Zone12.rActualTemp", "Heating.sv_Zone11.rActualTemp"],
     "MLM-064": ["dataset1/ds1_timeseries_injectionpressure.csv:value", "dataset1/ds1_timeseries_injectionflow.csv:value"],
-    "MLM-068": ["Heating.sv_Zone14.rActualTemp", "Heating.sv_Zone13.rActualTemp"]
+    "MLM-065": ["Injection_Pressure", "%Defective", "%Flash"],
+    "MLM-068": ["Heating.sv_Zone14.rActualTemp", "Heating.sv_Zone13.rActualTemp"],
+    "MLM-069": ["Sheet1!K:O", "Sheet1!Q:U"],
+    "MLM-070": ["Injection_Pressure", "Cycle_Time", "Product_Weight"]
   }
 }
