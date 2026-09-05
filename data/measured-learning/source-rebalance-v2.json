@@ -1,9 +1,10 @@
 {
-  "schemaVersion": 1,
-  "decisionId": "measured-learning-rights-safe-rebalance-v2",
+  "schemaVersion": 2,
+  "decisionId": "measured-learning-evidence-and-rights-rebalance-v2",
   "status": "approved-for-authoring-not-promotion",
   "policy": {
     "restrictedSourceRightsAreNeverBroadenedByCatalogueUse": true,
+    "unresolvedSourceTransformsAreNeverInferredToFillCatalogueSlots": true,
     "learningObjectiveMayBePreservedWhileSourceFamilyChanges": true,
     "replacementSourceMustAlreadyBePromotionReadyAndChannelGoverned": true,
     "sourceConcentrationCapCases": 14,
@@ -18,12 +19,28 @@
       "requiredSourceChannels": ["Injection_Pressure", "%Defective"]
     },
     {
+      "caseId": "MLM-029",
+      "originalSourceFamily": "mendeley-fhj5p7ww9v-v1",
+      "replacementSourceFamily": "mendeley-4h98rz9f92-v3",
+      "reason": "FHJ is CC BY-NC and product-scope use is not assumed. 4h98 is CC BY 4.0 and contains direct repeated mechanical-property replicates suitable for spread/repeatability teaching.",
+      "requiredSourceChannels": ["Sheet1!E:I"]
+    },
+    {
       "caseId": "MLM-035",
       "replacementTitle": "Multivariate process-feature outlier review",
       "originalSourceFamily": "iguzzini-road-lenses",
       "replacementSourceFamily": "mendeley-gtnb4j7bfx-v1",
       "reason": "The learning skill is multivariate anomaly review, not a source-specific quality class. Governed GTNB process/quality channels support a fail-closed outlier lesson under CC BY 4.0.",
       "requiredSourceChannels": ["Injection_Pressure", "Retention_Pressure", "Mold_Temp", "%Defective"]
+    },
+    {
+      "caseId": "MLM-037",
+      "replacementTitle": "Process measurements and measured specimen thickness",
+      "originalSourceFamily": "scatimdata-avaps",
+      "replacementSourceFamily": "su13148102-supplement",
+      "replacementCoverageTags": ["quality-outcome", "material-physical"],
+      "reason": "AVAPS distanceA remains measured but its delivered transform does not reproduce the paper's reported dimension statistics, so no offset or scale is inferred. The Sustainability DOE supplement directly exposes unit-bearing process measurements and specimen thickness under CC BY 4.0, preserving the process-to-physical-outcome teaching objective without an unsupported transform.",
+      "requiredSourceChannels": ["Max Inj Pres, MPa", "Melt Temp, C", "Thickness, mm"]
     },
     {
       "caseId": "MLM-041",
@@ -41,27 +58,6 @@
       "requiredSourceChannels": ["Injection_Pressure", "Retention_Pressure", "%Defective"]
     },
     {
-      "caseId": "MLM-065",
-      "originalSourceFamily": "iguzzini-road-lenses",
-      "replacementSourceFamily": "mendeley-gtnb4j7bfx-v1",
-      "reason": "The evidence-boundary lesson is stronger with open process/quality records: measured association can be shown while root cause remains unsupported.",
-      "requiredSourceChannels": ["Injection_Pressure", "%Defective", "%Flash"]
-    },
-    {
-      "caseId": "MLM-070",
-      "originalSourceFamily": "iguzzini-road-lenses",
-      "replacementSourceFamily": "mendeley-gtnb4j7bfx-v1",
-      "reason": "Choosing the next discriminating measurement can be taught from an incomplete open process/quality record without relying on research/education-only production data.",
-      "requiredSourceChannels": ["Injection_Pressure", "Cycle_Time", "%Defective"]
-    },
-    {
-      "caseId": "MLM-029",
-      "originalSourceFamily": "mendeley-fhj5p7ww9v-v1",
-      "replacementSourceFamily": "mendeley-4h98rz9f92-v3",
-      "reason": "FHJ is CC BY-NC and product-scope use is not assumed. 4h98 is CC BY 4.0 and contains direct repeated mechanical-property replicates suitable for spread/repeatability teaching.",
-      "requiredSourceChannels": ["Sheet1!E:I"]
-    },
-    {
       "caseId": "MLM-048",
       "originalSourceFamily": "mendeley-fhj5p7ww9v-v1",
       "replacementSourceFamily": "mendeley-4h98rz9f92-v3",
@@ -69,12 +65,26 @@
       "requiredSourceChannels": ["Sheet1!E:I", "Sheet1!Q:U"]
     },
     {
+      "caseId": "MLM-065",
+      "originalSourceFamily": "iguzzini-road-lenses",
+      "replacementSourceFamily": "mendeley-gtnb4j7bfx-v1",
+      "reason": "The evidence-boundary lesson is stronger with open process/quality records: measured association can be shown while root cause remains unsupported.",
+      "requiredSourceChannels": ["Injection_Pressure", "%Defective", "%Flash"]
+    },
+    {
       "caseId": "MLM-069",
       "originalSourceFamily": "mendeley-fhj5p7ww9v-v1",
       "replacementSourceFamily": "mendeley-4h98rz9f92-v3",
       "reason": "The evidence-boundary objective is that material/mechanical test evidence cannot by itself establish a production root cause. Direct 4h98 mechanical replicates support that lesson under CC BY 4.0.",
       "requiredSourceChannels": ["Sheet1!K:O", "Sheet1!Q:U"]
+    },
+    {
+      "caseId": "MLM-070",
+      "originalSourceFamily": "iguzzini-road-lenses",
+      "replacementSourceFamily": "mendeley-gtnb4j7bfx-v1",
+      "reason": "Choosing the next discriminating measurement can be taught from an incomplete open process/outcome record without relying on research/education-only production data.",
+      "requiredSourceChannels": ["Injection_Pressure", "Cycle_Time", "Product_Weight"]
     }
   ],
-  "boundary": "This file does not promote any learner case. Rebalancing removes licence-blocked dependencies from the release curriculum while preserving the original sources in the evidence ledger and retaining their rights restrictions. Each replacement case still needs a distinct source window, case-specific wording, novelty review and independent engineering review."
+  "boundary": "This file does not promote any learner case. Rebalancing removes licence-blocked or transform-blocked dependencies from the release curriculum while preserving those original sources in the evidence ledger with their restrictions and unresolved fields intact. Each replacement case still needs a distinct source window, case-specific wording, novelty review and independent engineering review."
 }
