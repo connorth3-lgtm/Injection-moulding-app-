@@ -115,7 +115,7 @@ def candidate(workbook, cid: str, cases: list[str], channels: list[str], boundar
 
 
 def main() -> int:
-    _,_,blob,_,_=retrieve_workbook()
+    _,_,blob,_=retrieve_workbook()
     if sha256(blob)!=EXPECTED_WORKBOOK_SHA: raise AssertionError("PMC workbook identity drift")
     # Normal worksheet mode is intentional here: bounded random access over six
     # known column pairs is substantially faster and more predictable than
