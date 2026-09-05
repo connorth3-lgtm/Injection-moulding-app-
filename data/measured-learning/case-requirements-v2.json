@@ -1,5 +1,5 @@
 {
-  "schemaVersion": 7,
+  "schemaVersion": 8,
   "registryId": "measured-learning-case-requirements-v2",
   "policy": {
     "requirementsAreDerivedPerCatalogueCase": true,
@@ -68,6 +68,7 @@
     "MLM-035": ["Injection_Pressure", "Retention_Pressure", "Mold_Temp", "%Defective"],
     "MLM-036": ["dataset1/ds1_timeseries_injectionpressure.csv:value", "dataset1/ds1_timeseries_injectionflow.csv:value", "dataset1/ds1_scalar_and_quality.csv:weight"],
     "MLM-037": ["Max Inj Pres, MPa", "Melt Temp, C", "Thickness, mm"],
+    "MLM-038": ["Cycle_Time", "Injection_Speed", "Product_Weight"],
     "MLM-041": ["Injection_Pressure", "Mold_Temp", "%Defective"],
     "MLM-042": ["Injection_Pressure", "Retention_Pressure", "%Defective"],
     "MLM-048": ["Sheet1!E:I", "Sheet1!Q:U"],
