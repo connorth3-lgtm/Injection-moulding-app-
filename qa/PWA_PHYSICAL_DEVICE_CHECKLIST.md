@@ -12,12 +12,13 @@ Screen-reader conformance is governed separately by `data/accessibility-real-at-
 
 ## Before testing
 
-1. Build the production-only Pages artifact with `python tools/build_pages_artifact.py`, or use the artifact from the exact reviewed PR/main SHA.
-2. Obtain the runtime fingerprint either from `python tools/verify_pwa_physical_evidence.py --artifact .pages-dist --print-fingerprint` or from the **Report exact public-runtime fingerprint for physical-device validation** step in the Pages Release Readiness workflow.
-3. Record that exact `sha256:...` fingerprint in the governed physical-device review record. Do not reuse a fingerprint from a different learner-facing runtime.
-4. Install or update the public PWA from the matching deployment on both a physical iOS/iPadOS device and a physical Android device.
-5. Record device model, OS version and browser version without adding a person, learner, customer or site identity.
-6. Confirm the tested runtime fingerprint still matches the release candidate immediately before changing the public contract to `validated`.
+1. For a pending protected-`main` release, download the `physical-pwa-candidate-<HEAD_SHA>` artifact from the latest successful **MouldMaster Pages Release Readiness** run. It contains the exact `.pages-dist` candidate built from that protected-main SHA, is retained for 30 days, and is never selected by `actions/deploy-pages`. If that artifact is unavailable, rebuild the production-only Pages artifact locally with `python tools/build_pages_artifact.py` from the exact protected-main SHA.
+2. Obtain the runtime fingerprint either from `python tools/verify_pwa_physical_evidence.py --artifact .pages-dist --print-fingerprint` or from the **Report exact public-runtime fingerprint for physical-device validation** step in the same Pages Release Readiness workflow.
+3. Confirm the candidate artifact name identifies the protected-main SHA you intend to test and record that exact `sha256:...` fingerprint in the governed physical-device review record. Do not reuse a candidate or fingerprint from a different learner-facing runtime.
+4. Serve those exact `.pages-dist` bytes from a trusted HTTPS test origin suitable for installation on physical devices. Do not use the public release-hold Pages origin as the learner runtime while validation is pending.
+5. Install or update that matching candidate on both a physical iOS/iPadOS device and a physical Android device.
+6. Record device model, OS version and browser version without adding a person, learner, customer or site identity.
+7. Confirm the tested runtime fingerprint still matches the release candidate immediately before changing the public contract to `validated`.
 
 ## iOS / iPadOS
 
