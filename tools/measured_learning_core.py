@@ -32,6 +32,26 @@ def normalize_text(value: str) -> str:
     return " ".join(str(value).strip().lower().split())
 
 
+def x_direction(values: list[float], declared: str | None = None) -> str:
+    """Validate a monotonic numeric axis without forcing source order to be ascending.
+
+    Existing bindings may omit xDirection; omission keeps the historical increasing-axis
+    contract. A source whose physical coordinate legitimately runs downward (for example
+    a cooling trace plotted against temperature) must explicitly declare ``decreasing``.
+    """
+    direction = declared or "increasing"
+    if direction not in {"increasing", "decreasing"}:
+        raise ValueError("xDirection must be increasing or decreasing")
+    pairs = list(zip(values, values[1:]))
+    if direction == "increasing":
+        if not all(float(a) <= float(b) for a, b in pairs):
+            raise ValueError("x axis does not match declared increasing direction")
+    else:
+        if not all(float(a) >= float(b) for a, b in pairs):
+            raise ValueError("x axis does not match declared decreasing direction")
+    return direction
+
+
 def percentile(values: list[float], q: float) -> float:
     if not values:
         raise ValueError("percentile requires values")
@@ -195,6 +215,7 @@ def calculate_feature(feature_spec: dict, signals_by_id: dict[str, dict], method
             {
                 "id": s["id"], "semantic": s["semantic"], "unit": s["unit"],
                 "xSemantic": s["representation"]["xSemantic"], "xUnit": s["representation"]["xUnit"],
+                "xDirection": s["representation"].get("xDirection", "increasing"),
                 "x": s["representation"]["x"], "y": s["representation"]["y"],
             }
             for s in inputs
