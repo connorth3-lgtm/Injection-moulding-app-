@@ -102,6 +102,7 @@ def main() -> int:
             "semantic":f"engel-heating-zone-{zone}-actual-temperature","unit":"degC",
             "representation":rep,"representationFingerprint":canonical_sha(rep),
         })
+    boundary="Only accepted ENGEL Heating.sv_Zone*.rActualTemp actual-temperature channels are emitted. The visible release contains one measured cycle, so these data support within-cycle relationships only and cannot establish cycle-to-cycle repeatability. Other unit-limited machine, cavity and ultrasonic channels remain excluded; no causal production diagnosis is implied."
     candidate={
         "candidateId":"FORINFPRO-CYCLE001-HEATING-ACTUAL-01","datasetId":"forinfpro-himd-v1",
         "sourceReference":"doi:10.5281/zenodo.20744054","sourceArtifact":NAME,"sourceFingerprint":"sha256:"+SHA,
@@ -114,11 +115,13 @@ def main() -> int:
         "signals":signals,"recommendedFeatures":[],
         "suggestedCatalogueCases":["MLM-028","MLM-062","MLM-063","MLM-068"],
         "bindingBlockers":[],"candidateFingerprint":canonical_sha(signals),
+        "evidenceBoundary":boundary,
     }
     doc={
         "schemaVersion":1,"status":"unreviewed-source-derived-candidates","datasetId":"forinfpro-himd-v1","promotionEligible":False,
         "candidateCount":1,"candidates":[candidate],
-        "sourceBoundary":"Only accepted ENGEL Heating.sv_Zone*.rActualTemp actual-temperature channels are emitted. One visible cycle cannot establish repeatability; other unit-limited machine, cavity and ultrasonic channels remain excluded.",
+        "boundary":boundary,
+        "sourceBoundary":boundary,
     }
     OUT.parent.mkdir(parents=True,exist_ok=True); OUT.write_text(json.dumps(doc,indent=2)+"\n",encoding="utf-8")
     print(json.dumps({"status":doc["status"],"candidateCount":1,"catalogueCoverage":candidate["suggestedCatalogueCases"],"selectedChannels":SELECTED,"displayedPointsPerSignal":len(keep)},separators=(",",":")))
