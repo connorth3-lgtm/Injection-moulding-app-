@@ -15,7 +15,7 @@ if str(TOOLS) not in sys.path:
     sys.path.insert(0, str(TOOLS))
 from measured_learning_core import (  # noqa: E402
     calculate_feature, canonical_sha, finite_number, load_json, normalize_text,
-    raw_window_fingerprint, representation_fingerprint, window_overlap,
+    raw_window_fingerprint, representation_fingerprint, window_overlap, x_direction,
 )
 
 MANIFEST = ROOT / "data/measured-learning/manifest-v1.json"
@@ -167,7 +167,10 @@ def validate_trace(path: Path, signal: dict, governed: dict) -> None:
     assert len(x) == len(y) and len(x) > 1
     assert len(y) <= 600 and rep.get("originalPointCount", 0) >= len(y)
     assert all(finite_number(v) for v in x+y)
-    assert all(float(a) <= float(b) for a,b in zip(x,x[1:])), f"{path}: x must be monotonic"
+    try:
+        x_direction(x, rep.get("xDirection"))
+    except ValueError as exc:
+        raise AssertionError(f"{path}: {exc}") from exc
 
 
 def validate_case_object(case: dict, candidate: dict, readiness: dict, artifacts: dict, channels: dict, methods: dict, path: Path = Path("<case>")) -> dict:
@@ -261,10 +264,8 @@ def main() -> int:
     ledger, readiness, artifacts, channels = assert_registries()
     methods = methods_map()
     base_cases = assert_base_catalogue(load_json(MANIFEST), ledger)
-    base_by_id = {c["id"]:c for c in base_cases}
     ready_families = {k for k,v in readiness.items() if v.get("promotionReady")}
 
-    # Evaluate current promoted base corpus before deciding whether the expansion manifest may be authored.
     promoted_paths = sorted(CASE_DIR.glob("MLM-*.json")) if CASE_DIR.exists() else []
     pre_promoted_count = sum(1 for p in promoted_paths if int(p.stem.split("-")[1]) <= 70)
     gate = policy["expansionGate"]
@@ -306,7 +307,7 @@ def main() -> int:
             sa, sb = a["source"], b["source"]
             if (sa["familyId"],sa["sourceArtifact"],sa.get("sourceMember")) != (sb["familyId"],sb["sourceArtifact"],sb.get("sourceMember")):
                 continue
-            overlap = window_overlap(sa["extraction"]["window"], sb["extraction"]["window"])
+            overlap = window_overlap(sa["extraction"]["window"], sb["source"]["extraction"]["window"] if "source" in sb else sb["extraction"]["window"])
             if overlap >= overlap_threshold:
                 substantial_cases.update((a["id"],b["id"]))
                 assert a["novelty"]["sourceWindowReuse"] and b["novelty"]["sourceWindowReuse"], f"substantial overlapping windows require reuse declaration: {a['id']}/{b['id']}"
