@@ -103,6 +103,15 @@ def pinned_download_urls(short_id,version,file_id):
     ]
 
 
+def resolve_file(meta,file_id,name,short_id,version):
+    """Compatibility resolver that never returns remote-controlled network values."""
+    validate_pinned_identity(file_id,name)
+    verify_metadata_identity(meta,file_id,name,short_id)
+    urls=pinned_download_urls(short_id,version,file_id)
+    local_identity={'id':file_id,'filename':name,'identitySource':'repository-pinned'}
+    return local_identity,file_id,urls
+
+
 def download_first(urls,destination):
     errors=[]
     for url in urls:
@@ -169,14 +178,13 @@ def main():
         endpoint,meta=public_files(source['shortId'],source['version'])
         source_proof={'datasetId':source['datasetId'],'metadataEndpoint':endpoint,'files':[]}
         for file_id,name,expected_sha in source['files']:
-            verify_metadata_identity(meta,file_id,name,source['shortId'])
-            urls=pinned_download_urls(source['shortId'],source['version'],file_id)
+            _identity,resolved_id,urls=resolve_file(meta,file_id,name,source['shortId'],source['version'])
             with tempfile.NamedTemporaryFile(suffix='.xlsx') as tmp:
                 used=download_first(urls,tmp.name)
                 digest=hashlib.sha256(Path(tmp.name).read_bytes()).hexdigest()
                 if digest!=expected_sha: raise SystemExit(f'{source["datasetId"]}/{name} SHA mismatch: {digest}')
                 schema=workbook_text_schema(tmp.name)
-            source_proof['files'].append({'name':name,'resolvedFileId':file_id,'sha256':'sha256:'+digest,'downloadRoute':used,'sheets':schema})
+            source_proof['files'].append({'name':name,'resolvedFileId':resolved_id,'sha256':'sha256:'+digest,'downloadRoute':used,'sheets':schema})
         source_proof['status']='source-proof-passed'; source_proof['rawNumericValuesEmitted']=False; proofs.append(source_proof)
         print(json.dumps({'status':'source-proof-passed','datasetId':source['datasetId'],'files':[f['name'] for f in source_proof['files']]},separators=(',',':')))
     result={'schemaVersion':2,'status':'source-proofs-passed','sources':proofs,'boundary':'Workbook IDs, names, exact hashes, sheet names and bounded text/header labels only. Remote metadata is consistency evidence only. Download redirects are checked before following and restricted to Mendeley plus its exact public-file S3 host. Numeric worksheet values are not emitted.'}
