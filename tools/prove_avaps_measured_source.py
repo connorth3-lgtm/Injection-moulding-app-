@@ -2,7 +2,7 @@
 """Retrieve pinned AVAPS Dataset 1 and emit bounded source/unit diagnostics.
 
 The proof verifies the exact archive, delivered timing, pressure same-scale agreement and
-published flow perturbation consistency. Quality means are compared across source-defined
+published flow perturbation consistency. Quality moments are compared across source-defined
 waveform intersections instead of choosing rows merely because they match the paper.
 Paper perturbation cycle numbers are treated as 1-based experiment-sequence positions,
 not as the machine cycle_counter identifiers delivered in the CSV headers.
@@ -22,7 +22,9 @@ FLOW_MEMBER="dataset1/ds1_timeseries_injectionflow.csv"
 EXPECTED_TIME_SERIES_POINTS=2048
 PAPER_SAMPLE_INTERVAL_S=0.006
 PAPER_WEIGHT_MEAN_G=58.92
+PAPER_WEIGHT_VARIANCE_G2=0.0024
 PAPER_DISTANCE_A_MEAN_MM=84.9372
+PAPER_DISTANCE_A_VARIANCE_MM2=0.00043
 FLOW_PERTURBATION_WINDOWS={
  "minus10pct":{"start":324,"end":384,"multiplier":0.90,"paperLabel":"-10%"},
  "plus10pct_nonoverlap":{"start":385,"end":457,"multiplier":1.10,"paperLabel":"+10%"},
@@ -69,15 +71,42 @@ def waveform_profile(rows,label):
       "timeCoordinatePolicy":"Preserve delivered strictly increasing time values; do not synthesize a uniform 6 ms axis.",
       "globalMinimumOfCycleMaxima":min(finite_maxima),"globalMaximumOfCycleMaxima":max(finite_maxima),"medianOfCycleMaxima":statistics.median(finite_maxima)}
 
+def moments(values):
+    if not values:return {}
+    out={"mean":statistics.fmean(values),"minimum":min(values),"maximum":max(values)}
+    if len(values)>1:
+        out["populationVariance"]=statistics.pvariance(values)
+        out["sampleVariance"]=statistics.variance(values)
+        out["populationStdDev"]=statistics.pstdev(values)
+        out["sampleStdDev"]=statistics.stdev(values)
+    return out
+
 def quality_subset_summary(records,name):
     weights=[r["weight"] for r in records if r["weight"] is not None]; distances=[r["distanceA"] for r in records if r["distanceA"] is not None]
     both=[r for r in records if r["weight"] is not None and r["distanceA"] is not None]
     out={"name":name,"records":len(records),"weightNumericRecords":len(weights),"distanceNumericRecords":len(distances),"completeQualityRecords":len(both)}
     if weights:
-        mean=statistics.fmean(weights); out.update({"weightMeanDelivered":mean,"weightPaperMeanG":PAPER_WEIGHT_MEAN_G,"weightMeanDifferenceFromPaper":mean-PAPER_WEIGHT_MEAN_G})
+        w=moments(weights); out.update({
+          "weightMeanDelivered":w["mean"],"weightPaperMeanG":PAPER_WEIGHT_MEAN_G,"weightMeanDifferenceFromPaper":w["mean"]-PAPER_WEIGHT_MEAN_G,
+          "weightPopulationVarianceDeliveredG2":w.get("populationVariance"),"weightSampleVarianceDeliveredG2":w.get("sampleVariance"),"weightPaperVarianceG2":PAPER_WEIGHT_VARIANCE_G2,
+          "weightPopulationVarianceDifferenceFromPaperG2":None if w.get("populationVariance") is None else w["populationVariance"]-PAPER_WEIGHT_VARIANCE_G2,
+          "weightSampleVarianceDifferenceFromPaperG2":None if w.get("sampleVariance") is None else w["sampleVariance"]-PAPER_WEIGHT_VARIANCE_G2,
+          "weightMinimumDelivered":w["minimum"],"weightMaximumDelivered":w["maximum"]})
     if distances:
-        raw=statistics.fmean(distances); scaled=raw/1000.0
-        out.update({"distanceRawMean":raw,"distanceMeanIfDividedBy1000Mm":scaled,"distancePaperMeanMm":PAPER_DISTANCE_A_MEAN_MM,"distanceScaledMeanDifferenceFromPaperMm":scaled-PAPER_DISTANCE_A_MEAN_MM})
+        d=moments(distances); scaled=[v/1000.0 for v in distances]; s=moments(scaled)
+        raw_var=d.get("populationVariance"); implied_scale=math.sqrt(PAPER_DISTANCE_A_VARIANCE_MM2/raw_var) if raw_var and raw_var>0 else None
+        offset=PAPER_DISTANCE_A_MEAN_MM-s["mean"]
+        out.update({
+          "distanceRawMean":d["mean"],"distanceRawPopulationVariance":raw_var,"distanceRawSampleVariance":d.get("sampleVariance"),
+          "distanceMeanIfDividedBy1000Mm":s["mean"],"distancePaperMeanMm":PAPER_DISTANCE_A_MEAN_MM,"distanceScaledMeanDifferenceFromPaperMm":s["mean"]-PAPER_DISTANCE_A_MEAN_MM,
+          "distancePopulationVarianceIfDividedBy1000Mm2":s.get("populationVariance"),"distanceSampleVarianceIfDividedBy1000Mm2":s.get("sampleVariance"),"distancePaperVarianceMm2":PAPER_DISTANCE_A_VARIANCE_MM2,
+          "distancePopulationVarianceDifferenceFromPaperMm2":None if s.get("populationVariance") is None else s["populationVariance"]-PAPER_DISTANCE_A_VARIANCE_MM2,
+          "distanceSampleVarianceDifferenceFromPaperMm2":None if s.get("sampleVariance") is None else s["sampleVariance"]-PAPER_DISTANCE_A_VARIANCE_MM2,
+          "distanceScaleFactorImpliedByPaperVarianceUsingPopulationVariance":implied_scale,
+          "distanceScaleFactorCandidateFromDecimalExport":0.001,
+          "constantOffsetNeededAfterDivideBy1000ToMatchPaperMeanMm":offset,
+          "distanceMinimumIfDividedBy1000Mm":s["minimum"],"distanceMaximumIfDividedBy1000Mm":s["maximum"],
+          "offsetDecisionBoundary":"The offset required to force the source mean to the paper mean is diagnostic only. It must not be applied unless independently supported by source/export/calibration evidence."})
     return out
 
 def scalar_profiles(rows,pressure_cycle_ids,flow_cycle_ids):
@@ -101,7 +130,7 @@ def scalar_profiles(rows,pressure_cycle_ids,flow_cycle_ids):
     complete=[r for r in pressure_linked if r["pressure"] is not None and r["weight"] is not None and r["distanceA"] is not None]
     return pressure_map,{"scalarRecordCount":len(records),"numericScalarMaxPressureRecords":len(pressure_map),"duplicateCycleCountersIgnored":duplicate,
       "sourceDefinedQualitySubsets":[quality_subset_summary(records,"all-scalar-records"),quality_subset_summary(pressure_linked,"pressure-waveform-linked"),quality_subset_summary(flow_linked,"flow-waveform-linked"),quality_subset_summary(both,"both-waveforms-linked"),quality_subset_summary(pressure_plus_scalar,"pressure-waveform-plus-scalar-pressure"),quality_subset_summary(complete,"pressure-linked-complete-quality")],
-      "qualityDecisionBoundary":"Paper aggregate means are diagnostics, not row-selection criteria. A unit/transform decision must be supported by a source-defined subset, not cherry-picked rows."}
+      "qualityDecisionBoundary":"Paper aggregate moments are diagnostics, not row-selection or calibration criteria. A unit/transform decision must be supported by a source-defined subset and independent source evidence, not fitted to the paper mean."}
 
 def pressure_peak_agreement(scalar,pressure):
     pairs=[(cycle,scalar[cycle],peak) for cycle,peak in zip(pressure["cycleIds"],pressure["maxima"]) if cycle in scalar and math.isfinite(peak)]
@@ -152,8 +181,8 @@ def main():
     scalar_map,scalar_stats=scalar_profiles(scalar_rows,set(pressure["cycleIds"]),set(flow["cycleIds"]))
     pressure_agreement=pressure_peak_agreement(scalar_map,pressure); flow_consistency=flow_perturbation_consistency(flow)
     pressure_summary={k:v for k,v in pressure.items() if k not in {"cycleIds","maxima"}}; flow_summary={k:v for k,v in flow.items() if k not in {"cycleIds","maxima"}}
-    proof={"schemaVersion":6,"status":"source-proof-passed-with-unit-diagnostics","datasetId":"scatimdata-avaps","sourceArtifact":"dataset1.zip","url":URL,"sha256":"sha256:"+digest,"members":members,"rawSourceRetained":False,"scalarProfile":scalar_stats,"pressureWaveformProfile":pressure_summary,"flowWaveformProfile":flow_summary,"pressurePeakScalarAgreement":pressure_agreement,"flowPerturbationConsistency":flow_consistency,
-      "unitEvidenceContext":{"peerReviewedDatasetPaper":"doi:10.3390/polym15040978","paperReportedDataset1WeightMeanG":PAPER_WEIGHT_MEAN_G,"paperReportedDataset1DistanceAMeanMm":PAPER_DISTANCE_A_MEAN_MM,"machineQuantityConventionReference":"doi:10.3390/polym16010054","machineQuantityConvention":"Arburg Allrounder 520 E engineering data reports injection pressure in bar and injection flow rate in cm3/s.","decisionBoundary":"Pressure has a same-cycle scale cross-check. Quality fields are diagnosed on source-defined intersections. Flow has ordinal perturbation consistency but no independent scalar absolute-scale channel in Dataset 1."},
+    proof={"schemaVersion":7,"status":"source-proof-passed-with-unit-diagnostics","datasetId":"scatimdata-avaps","sourceArtifact":"dataset1.zip","url":URL,"sha256":"sha256:"+digest,"members":members,"rawSourceRetained":False,"scalarProfile":scalar_stats,"pressureWaveformProfile":pressure_summary,"flowWaveformProfile":flow_summary,"pressurePeakScalarAgreement":pressure_agreement,"flowPerturbationConsistency":flow_consistency,
+      "unitEvidenceContext":{"peerReviewedDatasetPaper":"doi:10.3390/polym15040978","paperReportedDataset1WeightMeanG":PAPER_WEIGHT_MEAN_G,"paperReportedDataset1WeightVarianceG2":PAPER_WEIGHT_VARIANCE_G2,"paperReportedDataset1DistanceAMeanMm":PAPER_DISTANCE_A_MEAN_MM,"paperReportedDataset1DistanceAVarianceMm2":PAPER_DISTANCE_A_VARIANCE_MM2,"distanceMeasurementInstrument":"Keyence IM-7020 digital measurement projector; paper defines Distance A as inside diameter","machineQuantityConventionReference":"doi:10.3390/polym16010054","machineQuantityConvention":"Arburg Allrounder 520 E engineering data reports injection pressure in bar and injection flow rate in cm3/s.","decisionBoundary":"Pressure has a same-cycle scale cross-check. Quality moments are diagnosed on source-defined intersections. A matching centered variance can support a scale hypothesis but cannot independently justify a constant offset or calibration transform."},
       "boundary":"Diagnostic source proof only. AVAPS promotion readiness remains fail-closed until channel-level unit/transform decisions are explicitly governed; no learner case, recipe or causal diagnosis is authorized here."}
     (out_dir/"avaps-dataset1-source-proof.json").write_text(json.dumps(proof,indent=2)+"\n",encoding="utf-8")
     print(json.dumps({"status":proof["status"],"datasetId":proof["datasetId"],"sha256":proof["sha256"],"pressureLinkedCycles":pressure_agreement["linkedCycleCount"],"pressureMedianRelativeDifference":pressure_agreement["medianRelativeDifference"],"pressureMaximumRelativeDifference":pressure_agreement["maximumRelativeDifference"],"pressureMedianWaveformToScalarRatio":pressure_agreement["medianWaveformToScalarRatio"],"qualitySubsets":scalar_stats["sourceDefinedQualitySubsets"],"flowImpliedBaselineCV":flow_consistency["coefficientOfVariationAcrossImpliedBaselines"],"flowNormalizedMedians":flow_consistency["normalizedMedianPeaksUsingMeanImpliedBaseline"],"pressureTimeDeltaRange":[pressure_summary["deliveredMinimumSampleIntervalS"],pressure_summary["deliveredMaximumSampleIntervalS"]]},separators=(",",":")))
