@@ -66,21 +66,24 @@ for marker in [
 need("switchView('defects')" in js,'Mould Master Home action must open the evidence-first defect diagnosis view')
 need('window.MM_PROCESS_DATA_DIAGNOSTICS?.open' in js,'Home process-data action must use the guided data-diagnosis module')
 
-# Mobile Home must not leave a tall translucent sticky topbar over dashboard cards,
-# and scrolling content must reserve enough room for the fixed bottom navigation/safe area.
+# Mobile Home keeps a compact non-sticky topbar and enough fixed-nav/safe-area clearance
+# without the previous oversized dead space. Touch targets stay at least 44px.
 mobile_markers=[
     'mm-mobile-layout-guard-style',
     'installMobileLayoutGuard',
     'syncVisibleViewChrome',
-    '--mm-mobile-nav-clearance:124px',
+    '--mm-mobile-nav-clearance:104px',
     'body{padding-bottom:0!important}',
-    '.main{padding:16px 16px calc(var(--mm-mobile-nav-clearance) + env(safe-area-inset-bottom))!important}',
+    '.main{padding:14px 14px calc(var(--mm-mobile-nav-clearance) + env(safe-area-inset-bottom))!important}',
     '.topbar{position:relative!important;top:auto!important',
     '.mobile-nav{position:fixed!important;left:0!important;right:0!important;bottom:0!important',
+    '.mobile-nav button{min-height:48px!important',
+    '.top-actions button{min-height:44px!important',
     'body.mm-home-visible #continueBtn{display:none!important}',
     'body.mm-home-visible #searchBtn{flex:0 0 auto!important',
     'scroll-padding-bottom:calc(var(--mm-mobile-nav-clearance) + env(safe-area-inset-bottom))',
-    "window.MM_MOBILE_LAYOUT_GUARD='home-task-first-fixed-nav-clearance-v2'"
+    "window.MM_MOBILE_LAYOUT_GUARD='home-task-first-fixed-nav-clearance-v2'",
+    "window.MM_UI_POLISH='compact-shell-no-gamification-v1'"
 ]
 for marker in mobile_markers:
     need(marker in shell,f'mobile layout regression guard missing: {marker}')
@@ -90,6 +93,23 @@ need("shell?.events?.onViewChange?.(scheduleSync)" in shell,'mobile Home chrome 
 need("shell?.events?.onRender?.(view,scheduleSync)" in shell,'mobile Home chrome must react when canonical views render')
 need('new MutationObserver' not in shell,'mobile Home chrome must not depend on document-wide mutation polling')
 need("button.setAttribute('aria-current','page')" in shell,'mobile navigation must expose the active page to assistive technology')
+
+# Learner-facing gamification is retired without deleting normal completion bookkeeping.
+for marker in [
+    'rewardWithoutGamification',
+    'window.awardXP=rewardWithoutGamification',
+    'window.checkAchievements=function(){return []}',
+    "window.achievementsHTML=function(){return ''}",
+    'TODAY\'S PRACTICE',
+    'scrubLegacyGamification',
+    '#xpPop,.xp-pop,.achievement-grid,.fun-settings,.fun-dashboard .level-card,#profileMini .fun-hud',
+    "window.MM_GAMIFICATION_MODE='retired'"
+]:
+    need(marker in shell,f'gamification retirement marker missing: {marker}')
+need('+40 XP' not in shell,'daily practice must not advertise an XP reward after gamification retirement')
+need('f.rewarded[key]=Date.now()' in shell,'gamification retirement must preserve keyed completion bookkeeping')
+need('if(f.xp!==0){f.xp=0;changed=true}' in shell,'legacy XP state must be retired from active learner profiles')
+need('if(Array.isArray(f.achievements)&&f.achievements.length){f.achievements=[];changed=true}' in shell,'legacy achievement state must be retired from active learner profiles')
 
 # The UX layer must remain a presentation/progression enhancement, not an assessment rewrite.
 for forbidden in ['MM_EVIDENCE_APPROVAL.records=', 'correctIndex=', 'question_bank_version=', 'MM_DATA.exams=', 'regionalQuestions=']:
@@ -130,4 +150,4 @@ need(re.search(r"const next=D\.lessons\[index\+1\]\|\|null",js) is not None,'com
 need("user.currentLesson=next.id" in js,'complete-and-continue must advance currentLesson')
 need("toast('Learning path complete ✓')" in js,'final lesson must terminate the learning path rather than wrap')
 
-print(f'MouldMaster learning experience QA passed (task-first Home, evidence-first diagnosis/data access, event-driven compact mobile hierarchy, complete-and-continue, autosave notes, fixed-nav clearance, coherent runtime={runtime_asset}, offline/desktop packaging)')
+print(f'MouldMaster learning experience QA passed (task-first Home, gamification retired, compact event-driven mobile hierarchy, complete-and-continue, autosave notes, fixed-nav clearance, coherent runtime={runtime_asset}, offline/desktop packaging)')
