@@ -39,10 +39,10 @@ need(pages.count("pages: write") == 2, "pages:write must be limited to publisher
 need(pages.count("id-token: write") == 1, "OIDC write permission must be limited to deploy")
 
 # PRs may validate a pending evidence contract. On main, pending valid evidence never
-# publishes the learner application. Instead a deterministic three-file release-hold
-# artifact (index.html + 404.html + a local-only device metadata helper) quarantines
-# the Pages origin and removes stale legacy/non-public content. Invalid, stale or
-# mismatched validated evidence must still fail the build.
+# selects the learner artifact as the production-root publication. Instead the root
+# remains a deterministic release hold; the exact already-governed public artifact may
+# also be copied under /preview/ as an explicitly non-production usability path. Invalid,
+# stale or mismatched validated evidence must still fail the production build.
 for marker in (
     "Validate physical PWA evidence contract on PRs",
     "--contract-only",
@@ -55,11 +55,11 @@ for marker in (
     "--artifact .pages-dist --require-validated",
     'echo "production_ready=true" >> "$GITHUB_OUTPUT"',
     'echo "production_ready=false" >> "$GITHUB_OUTPUT"',
-    "Pages application release not ready",
-    "The learner application will not be published. A minimal release-hold site is used only to quarantine the Pages origin",
+    "Pages production release not ready",
+    "The production root remains release-held. A clearly separated non-production /preview/ path serves the current governed learner artifact",
     "needs: [production-source, publisher-guard]",
     "Build release-hold Pages artifact",
-    "python3 tools/build_pages_hold.py",
+    "python3 tools/build_pages_hold.py --preview-source .pages-dist",
     "Upload production Pages artifact",
     "github.event_name == 'pull_request' || steps.physical-readiness.outputs.production_ready == 'true'",
     "Upload release-hold Pages artifact",
@@ -78,7 +78,9 @@ for marker in (
 ):
     need(marker in physical, f"physical-device verifier does not fail closed for production app publication: {marker}")
 
-# Pending evidence must never select the learner application artifact for a main deploy.
+# Pending evidence must never select the learner application artifact as the production
+# root deployment. The hold artifact may include only the governed .pages-dist copy under
+# a clearly separated /preview/ subtree.
 false_index = pages.index('echo "production_ready=false" >> "$GITHUB_OUTPUT"')
 hold_index = pages.index("- name: Build release-hold Pages artifact")
 need(false_index < hold_index, "pending readiness decision must occur before release-hold construction")
@@ -93,21 +95,27 @@ need(
 for marker in (
     'ALLOWED_FILES = {"index.html", "404.html", "device-validation.html"}',
     'HELPER_MARKER = \'data-mm-device-metadata-helper="true"\'',
+    'PREVIEW_MARKER = \'content="non-production-preview"\'',
+    'PREVIEW_REQUIRED = {"index.html", "manifest.webmanifest", "service-worker.js", "version.json"}',
+    "stage_preview(preview_source, target / \"preview\")",
     "validate_helper(helper_payload)",
     "No learner application runtime",
     "release-hold artifact boundary mismatch",
 ):
-    need(marker in hold_builder, f"release-hold builder does not enforce the exact deployed public boundary: {marker}")
+    need(marker in hold_builder, f"release-hold builder does not enforce the deployed public boundary: {marker}")
 for marker in (
     "FORBIDDEN_PATHS",
     "MouldMasterAcademy.exe",
     "tools/quarantine_legacy_pages.py",
     "probe_status != 404",
     'HELPER_MARKER = \'data-mm-device-metadata-helper="true"\'',
+    'PREVIEW_MARKER = \'content="non-production-preview"\'',
     'fetch(urljoin(root, "device-validation.html"))',
+    'fetch(urljoin(root, "preview/"))',
+    "non-production preview runtime asset unavailable",
     "device metadata helper violates local-only boundary",
 ):
-    need(marker in hold_verifier, f"release-hold live verifier does not prove stale-content removal and helper isolation: {marker}")
+    need(marker in hold_verifier, f"release-hold live verifier does not prove preview isolation, stale-content removal and helper isolation: {marker}")
 
 # Branch deletion must reconfirm the ref has not moved after safety evaluation.
 for marker in (
@@ -154,6 +162,6 @@ need(self_test.returncode == 0, f"ruleset verifier self-test failed: {self_test.
 
 print(
     "Audit governance QA passed: least-privilege Pages permissions, physical-test runtime fingerprint reporting, "
-    "production-app fail-closed gating with exact three-file release-hold quarantine and local-only device metadata helper, "
+    "production-root fail-closed gating with a separated non-production learner preview and local-only device metadata helper, "
     "live branch-prune SHA recheck and fail-closed ruleset bypass verification are enforced."
 )
