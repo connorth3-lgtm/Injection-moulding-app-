@@ -15,7 +15,7 @@ import tempfile
 from pathlib import Path
 
 from measured_learning_core import (
-    calculate_feature, canonical_sha, finite_number, load_json,
+    calculate_feature, canonical_sha, finite_number, load_json, normalize_source_members,
     raw_window_fingerprint, representation_fingerprint, x_direction,
 )
 
@@ -27,6 +27,7 @@ POLICY = ROOT / "data/measured-learning/v2-policy.json"
 READINESS = ROOT / "data/measured-learning/source-readiness-v2.json"
 ARTIFACTS = ROOT / "data/measured-learning/source-artifacts-v2.json"
 CHANNELS = ROOT / "data/measured-learning/source-channels-v2.json"
+AVAPS_CHANNELS = ROOT / "data/measured-learning/source-channels-avaps-v2.json"
 REQUIREMENTS = ROOT / "data/measured-learning/case-requirements-v2.json"
 FEATURE_METHODS = ROOT / "data/measured-learning/feature-methods-v1.json"
 OUT_DIR = ROOT / "data/measured-learning/cases"
@@ -62,21 +63,32 @@ def catalogue_by_id() -> dict[str, dict]:
     if extra:
         require(expansion_gate_preconditions(), "MLM-071..MLM-100 cannot be authored until the V2 expansion gate preconditions pass")
         require([c["id"] for c in extra] == [f"MLM-{i:03d}" for i in range(71, 101)], "expansion manifest must contain the full ordered MLM-071..MLM-100 set")
-    all_cases = base + extra
-    return {c["id"]: c for c in all_cases}
+    return {c["id"]: c for c in base + extra}
 
 
 def artifact_registry() -> dict[str, dict[str, dict]]:
-    result = {}
-    for source in load_json(ARTIFACTS).get("sources", []):
-        result[source["datasetId"]] = {a["name"]: a for a in source.get("artifacts", [])}
-    return result
+    return {
+        source["datasetId"]: {a["name"]: a for a in source.get("artifacts", [])}
+        for source in load_json(ARTIFACTS).get("sources", [])
+    }
 
 
 def channel_registry() -> dict[str, dict[str, dict]]:
-    result = {}
-    for source in load_json(CHANNELS).get("sources", []):
-        result[source["datasetId"]] = {c["sourceChannel"]: c for c in source.get("channels", [])}
+    result: dict[str, dict[str, dict]] = {}
+    docs = [load_json(CHANNELS)]
+    if AVAPS_CHANNELS.is_file():
+        docs.append({"sources": [{
+            "datasetId": load_json(AVAPS_CHANNELS)["datasetId"],
+            "channels": load_json(AVAPS_CHANNELS).get("channels", []),
+        }]})
+    for doc in docs:
+        for source in doc.get("sources", []):
+            dataset_id = source["datasetId"]
+            bucket = result.setdefault(dataset_id, {})
+            for channel in source.get("channels", []):
+                key = channel["sourceChannel"]
+                require(key not in bucket, f"duplicate governed source channel: {dataset_id}/{key}")
+                bucket[key] = channel
     return result
 
 
@@ -84,13 +96,21 @@ def feature_methods() -> dict[str, int]:
     return {m["id"]: int(m["version"]) for m in load_json(FEATURE_METHODS).get("methods", [])}
 
 
+def requirements_doc() -> dict:
+    return load_json(REQUIREMENTS)
+
+
 def case_required_capabilities(candidate: dict) -> set[str]:
-    rules = load_json(REQUIREMENTS)
+    rules = requirements_doc()
     required = set()
     for tag in candidate.get("coverageTags", []):
         required.update(rules.get("requirementsByCoverageTag", {}).get(tag, []))
     required.update(rules.get("caseOverrides", {}).get(candidate["id"], []))
     return required
+
+
+def case_required_source_channels(candidate: dict) -> set[str]:
+    return set(requirements_doc().get("requiredSourceChannelsByCase", {}).get(candidate["id"], []))
 
 
 def validate_signal(signal: dict, governed_channels: dict[str, dict]) -> dict:
@@ -118,7 +138,6 @@ def validate_signal(signal: dict, governed_channels: dict[str, dict]) -> dict:
     except ValueError as exc:
         raise SystemExit(f"signal {signal_id}: {exc}") from exc
     clean = dict(signal)
-    clean["sourceChannel"] = source_channel
     clean_rep = dict(rep)
     clean_rep["xDirection"] = direction
     clean["representation"] = clean_rep
@@ -133,11 +152,11 @@ def build(candidate: dict, binding: dict) -> dict:
 
     readiness = ready_sources()
     family = candidate["sourceFamily"]
-    require(family in readiness and readiness[family].get("promotionReady") is True, f"source family is not promotion-ready: {readiness.get(family, {}).get('gateReason', 'missing readiness')}" )
+    require(family in readiness and readiness[family].get("promotionReady") is True, f"source family is not promotion-ready: {readiness.get(family, {}).get('gateReason', 'missing readiness')}")
     source_gate = readiness[family]
-    required = case_required_capabilities(candidate)
+    required_capabilities = case_required_capabilities(candidate)
     capabilities = source_gate.get("capabilities", {})
-    missing = sorted(cap for cap in required if capabilities.get(cap) is not True)
+    missing = sorted(cap for cap in required_capabilities if capabilities.get(cap) is not True)
     require(not missing, f"source family lacks required case capabilities: {missing}")
 
     artifacts = artifact_registry().get(family, {})
@@ -147,11 +166,16 @@ def build(candidate: dict, binding: dict) -> dict:
     artifact = artifacts[source_artifact]
     require(binding.get("sourceFingerprint") == artifact.get("sha256"), "sourceFingerprint must match the exact registered sourceArtifact")
     require(SHA256_RE.fullmatch(str(binding.get("sourceFingerprint", ""))) is not None, "sourceFingerprint must be SHA-256")
-    source_member = extraction.get("sourceMember")
-    if source_member is not None:
-        require(source_member in artifact.get("members", []), "sourceMember is not governed for the selected artifact")
     require(bool(extraction.get("description")), "extraction.description is required")
     require(extraction.get("sourceOrderingPreserved") is True, "source ordering must be explicitly preserved")
+
+    legacy_member = extraction.get("sourceMember")
+    listed_members = extraction.get("sourceMembers")
+    require(not (legacy_member is not None and listed_members is not None), "use sourceMember or sourceMembers, not both")
+    try:
+        source_members = normalize_source_members(listed_members if listed_members is not None else legacy_member)
+    except ValueError as exc:
+        raise SystemExit(str(exc)) from exc
 
     governed_channels = channel_registry().get(family, {})
     signals = [validate_signal(signal, governed_channels) for signal in binding.get("signals", [])]
@@ -161,7 +185,24 @@ def build(candidate: dict, binding: dict) -> dict:
     if "multi-signal" in candidate.get("coverageTags", []):
         require(len(signals) >= 2, "multi-signal case requires at least two bound signals")
 
-    raw_window_fp = raw_window_fingerprint(binding["sourceFingerprint"], source_artifact, source_member, extraction)
+    required_source_channels = case_required_source_channels(candidate)
+    bound_source_channels = {s["sourceChannel"] for s in signals}
+    missing_channels = sorted(required_source_channels - bound_source_channels)
+    require(not missing_channels, f"case is missing required governed source channels: {missing_channels}")
+    for source_channel in required_source_channels:
+        require(source_channel in governed_channels and governed_channels[source_channel].get("promotionReady") is True, f"required source channel is not promotion-ready: {source_channel}")
+
+    channel_members = {
+        governed_channels[s["sourceChannel"]].get("sourceMember")
+        for s in signals if governed_channels[s["sourceChannel"]].get("sourceMember")
+    }
+    if channel_members:
+        require(set(source_members) == channel_members, f"extraction sourceMembers must exactly match bound channel members: {sorted(channel_members)}")
+    elif source_members:
+        artifact_members = set(artifact.get("members", []))
+        require(artifact_members and set(source_members) <= artifact_members, "source member is not governed for the selected artifact")
+
+    raw_window_fp = raw_window_fingerprint(binding["sourceFingerprint"], source_artifact, source_members, extraction)
     representation_fp = representation_fingerprint(raw_window_fp, signals)
 
     methods = feature_methods()
@@ -210,12 +251,13 @@ def build(candidate: dict, binding: dict) -> dict:
         "architectureId": "measured-learning-library-v2",
         "id": candidate["id"], "title": candidate["title"], "difficulty": candidate["difficulty"],
         "analysisLens": candidate["analysisLens"], "coverageTags": candidate["coverageTags"],
-        "requiredCapabilities": sorted(required),
+        "requiredCapabilities": sorted(required_capabilities),
+        "requiredSourceChannels": sorted(required_source_channels),
         "evidenceTier": "measured", "claimScope": claim_scope, "promotionState": "promoted",
         "source": {
             "familyId": family, "datasetId": binding.get("datasetId", family),
             "sourceReference": binding["sourceReference"], "sourceArtifact": source_artifact,
-            "sourceMember": source_member, "sourceFingerprint": binding["sourceFingerprint"],
+            "sourceMembers": source_members, "sourceFingerprint": binding["sourceFingerprint"],
             "rawWindowFingerprint": raw_window_fp, "representationFingerprint": representation_fp,
             "licenceOrAccessStatus": binding["licenceOrAccessStatus"], "extraction": extraction,
         },
@@ -277,9 +319,8 @@ def main() -> int:
             ids.append(args.case_id)
         ids.sort(key=lambda value: int(value.split("-")[1]))
         index["caseIds"] = ids
-        index_text = json.dumps(index, indent=2, ensure_ascii=False) + "\n"
         write_staged(out, rendered)
-        write_staged(PROMOTION_INDEX, index_text)
+        write_staged(PROMOTION_INDEX, json.dumps(index, indent=2, ensure_ascii=False) + "\n")
     print(out)
     return 0
 
