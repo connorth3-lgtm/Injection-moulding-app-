@@ -39,10 +39,10 @@ need(pages.count("pages: write") == 2, "pages:write must be limited to publisher
 need(pages.count("id-token: write") == 1, "OIDC write permission must be limited to deploy")
 
 # PRs may validate a pending evidence contract. On main, pending valid evidence never
-# publishes the learner application. Instead a deterministic two-file release-hold
-# artifact (index.html + 404.html) quarantines the Pages origin and removes stale
-# legacy/non-public content. Invalid, stale or mismatched validated evidence must
-# still fail the build.
+# publishes the learner application. Instead a deterministic three-file release-hold
+# artifact (index.html + 404.html + a local-only device metadata helper) quarantines
+# the Pages origin and removes stale legacy/non-public content. Invalid, stale or
+# mismatched validated evidence must still fail the build.
 for marker in (
     "Validate physical PWA evidence contract on PRs",
     "--contract-only",
@@ -91,8 +91,9 @@ need(
     "pending main release must select the quarantine artifact",
 )
 for marker in (
-    'ALLOWED_FILES = {"index.html", "404.html"}',
-    "Pages upload action excludes dotfiles",
+    'ALLOWED_FILES = {"index.html", "404.html", "device-validation.html"}',
+    'HELPER_MARKER = \'data-mm-device-metadata-helper="true"\'',
+    "validate_helper(helper_payload)",
     "No learner application runtime",
     "release-hold artifact boundary mismatch",
 ):
@@ -102,8 +103,11 @@ for marker in (
     "MouldMasterAcademy.exe",
     "tools/quarantine_legacy_pages.py",
     "probe_status != 404",
+    'HELPER_MARKER = \'data-mm-device-metadata-helper="true"\'',
+    'fetch(urljoin(root, "device-validation.html"))',
+    "device metadata helper violates local-only boundary",
 ):
-    need(marker in hold_verifier, f"release-hold live verifier does not prove stale content removal: {marker}")
+    need(marker in hold_verifier, f"release-hold live verifier does not prove stale-content removal and helper isolation: {marker}")
 
 # Branch deletion must reconfirm the ref has not moved after safety evaluation.
 for marker in (
@@ -148,4 +152,8 @@ self_test = subprocess.run(
 )
 need(self_test.returncode == 0, f"ruleset verifier self-test failed: {self_test.stderr or self_test.stdout}")
 
-print("Audit governance QA passed: least-privilege Pages permissions, physical-test runtime fingerprint reporting, production-app fail-closed gating with exact two-file release-hold quarantine, live branch-prune SHA recheck and fail-closed ruleset bypass verification are enforced.")
+print(
+    "Audit governance QA passed: least-privilege Pages permissions, physical-test runtime fingerprint reporting, "
+    "production-app fail-closed gating with exact three-file release-hold quarantine and local-only device metadata helper, "
+    "live branch-prune SHA recheck and fail-closed ruleset bypass verification are enforced."
+)
