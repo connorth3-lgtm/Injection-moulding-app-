@@ -176,10 +176,12 @@ def main() -> int:
         candidate("IMPURE-C250-255-THERMAL-01",["MLM-006","MLM-011"],selected,thermal,"Six exact consecutive publisher cycle files; both source-backed cavity contact-temperature traces retained as bounded source-order representations."),
         candidate("IMPURE-C250-MULTISIGNAL-01",["MLM-020","MLM-023","MLM-024","MLM-060","MLM-061"],single_artifact,event,"One exact publisher cycle file with the four source-backed Kistler cavity channels on the source-derived elapsed-time coordinate."),
     ]
+    source_boundary="Only the four previously accepted Kistler cavity channels are emitted: cavity 1/2 pressure and cavity 1/2 contact temperature. HydPressure, ScrewPosition and Analog Input[1]/[2] remain excluded. The traces support bounded measured comparisons only and do not establish a causal production diagnosis. Raw publisher rows/files are not retained."
     doc={
         "schemaVersion":1,"status":"unreviewed-source-derived-candidates","datasetId":DATASET,
         "promotionEligible":False,"candidateCount":len(candidates),"candidates":candidates,
-        "sourceBoundary":"Only four previously accepted cavity channels are emitted. HydPressure, ScrewPosition and Analog Input[1]/[2] remain excluded. Raw publisher rows/files are not retained.",
+        "boundary":source_boundary,
+        "sourceBoundary":source_boundary,
     }
     OUT.parent.mkdir(parents=True,exist_ok=True); OUT.write_text(json.dumps(doc,indent=2)+"\n",encoding="utf-8")
     print(json.dumps({"status":doc["status"],"candidateCount":len(candidates),"catalogueCoverage":sorted({i for c in candidates for i in c["suggestedCatalogueCases"]}),"selectedArtifacts":expected_names},separators=(",",":")))
