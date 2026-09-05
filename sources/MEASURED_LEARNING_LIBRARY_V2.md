@@ -2,9 +2,22 @@
 
 ## Decision
 
-V2 keeps **70 cases as the current release curriculum** and provides a governed path to **100-case capacity**. The current release catalogue remains `MLM-001..MLM-070`. `MLM-071..MLM-100` are represented by a separate, empty `expansion-manifest-v2.json`; the expansion manifest may only be populated with the full ordered 30-case proposal after the V2 expansion gate passes.
+V2 keeps **70 cases as the current release curriculum** and provides a governed path to **100-case capacity**. The current release catalogue remains `MLM-001..MLM-070`. `MLM-071..MLM-100` live in a separate, empty `expansion-manifest-v2.json` and remain locked until the V2 expansion gate passes.
 
-Capacity is not a case count. Only QA-valid promoted case assets in `promoted-v1.json` are learner cases.
+Capacity is not a learner-case count. Only QA-valid, independently reviewed case assets listed in `promoted-v1.json` are learner cases.
+
+## Current release status
+
+The V2 authoring pipeline now establishes all 70 release objectives as source/channel ready and direct-binding-shaped for engineering review. The current workflow produces **40 distinct transient source-derived authoring candidates** from **10 promotion-ready source families**, then builds an ordered **70-case independent-review queue**. Because some authoring candidates legitimately support more than one learning objective, the queue pins one explicit evidence bundle per case rather than claiming 70 independent source windows already exist.
+
+The review queue is deliberately non-promotional: every review state is `unreviewed`, and author, reviewer, decision and timestamp fields remain empty. The current promoted learner count therefore remains **0**.
+
+The four numbers must stay distinct:
+
+1. **100** — governed architecture capacity;
+2. **70** — current release curriculum and review-queue entries;
+3. **40** — current transient source-derived authoring candidates produced by CI;
+4. **0** — current independently reviewed/promoted learner cases.
 
 ## Hardened evidence chain
 
@@ -24,17 +37,17 @@ Changing downsampling therefore changes the representation fingerprint without p
 
 ## Exact artifact verification
 
-`source-artifacts-v2.json` binds an exact source artifact name to an exact SHA-256. QA also verifies that each registered SHA-256 is present in the corresponding committed benchmark result.
+`source-artifacts-v2.json` binds an exact source artifact name to an exact SHA-256. QA verifies that each registered SHA-256 is present in the corresponding committed benchmark evidence.
 
-A hash from another file in the same dataset family is not interchangeable. For example, an AVAPS `dataset1.zip` binding must use the registered `dataset1.zip` SHA-256; a hash belonging to `dataset2.zip`, `dataset3.zip`, or a GitHub Actions aggregate artifact cannot satisfy that binding.
+A hash from another file in the same dataset family is not interchangeable. Multi-artifact evidence bundles preserve every component artifact and hash explicitly; they are not collapsed into a synthetic combined source file.
 
 Raw third-party source files remain outside the repository.
 
 ## Field-level source governance
 
-Catalogue eligibility does not imply learner promotion readiness. `source-readiness-v2.json` is the source-level gate, while `source-channels-v2.json` is the field-level gate.
+Catalogue eligibility does not imply learner promotion readiness. `source-readiness-v2.json` is the source-level gate, while the `source-channels-*-v2.json` registries are the field-level gate.
 
-A signal can be promoted only when:
+A signal can move into authoring/review only when:
 
 1. its source family passes the source-level rights/profile gate;
 2. its selected artifact is registered and hash-matched;
@@ -43,56 +56,101 @@ A signal can be promoted only when:
 5. its X coordinate semantic/unit match the governed coordinate;
 6. finite numeric and ordering checks pass.
 
-A fully profiled family may therefore remain blocked when its exact learner-facing channel units are not yet resolved. Header names alone are not treated as proof of engineering units.
+The release curriculum currently uses ten promotion-ready families:
 
-Current source retrieval work deliberately moved several previously optimistic source-level `promotionReady` flags back to false until their delivered channel maps are recovered.
+- AVAPS;
+- GTNB historical injection-production records;
+- Sustainability DOE/tensile records;
+- ImPure governed Kistler cavity channels;
+- OpenMMS;
+- FORinFPRO governed ENGEL heating-zone actual-temperature channels;
+- 4h98 injection/property replicates;
+- 6k8 pvT material characterization;
+- YXZ injection-moulded mechanical testing;
+- PMC4753395 HDPE/cenosphere stress-strain traces.
+
+This family readiness is still not learner approval: every promoted case needs its own governed binding and independent review.
+
+## Rights-safe curriculum rebalance
+
+Research/education-only iGuzzini data and CC BY-NC FHJ data remain in the evidence ledger but are no longer release dependencies. Their learning objectives were reassigned to licence-compatible governed sources rather than widening their rights.
+
+The unresolved AVAPS `distanceA` transform also remains blocked. MouldMaster does not apply the diagnostic offset needed to force the delivered values toward the paper mean. The former dimension lesson was rebalanced to direct Sustainability process/thickness measurements instead.
+
+`source-rebalance-v2.json` makes these decisions machine-checkable, and QA rejects a release catalogue that silently reintroduces the rights-blocked families or drifts from the approved replacement channels.
+
+## PMC source recovery
+
+PMC4753395 was recovered through the current PMC Article Datasets distribution path rather than by trusting an obsolete filename URL. The live chain is:
+
+**PMC Article Datasets AWS → `PMC4753395.1/mmc1.zip` → `mmc1.rar` → `Data Files/Tensile-Data.xlsx`**
+
+Container naming is treated as distribution metadata. The workbook is accepted only when its bytes match the previously benchmarked SHA-256:
+
+`6e376e0acdfc614b6c16e0fef99e0e74cace8bc4d931a08a729e05dfc2cd7783`
+
+The workbook itself proves repeated `Strain (%)` / `Stress (MPa)` pairs on `HDPE`, `HDPE20`, `HDPE40` and `HDPE60`. Only those governed stress-strain pairs are exposed to measured-learning authoring. These are material-test traces parameterized by strain, not production time histories.
 
 ## Source capabilities and case requirements
 
-`case-requirements-v2.json` converts each case's coverage tags and explicit overrides into required source capabilities. A source family must satisfy those capabilities before a case can bind to it. Multi-signal cases additionally require at least two governed signals.
+`case-requirements-v2.json` converts coverage tags and explicit case overrides into required source capabilities and exact source channels where the lesson needs them.
 
-This prevents, for example, a material test trace from silently satisfying a process-waveform case merely because both contain numeric arrays.
+This prevents, for example, a material-test trace from satisfying a process-waveform case merely because both contain numeric arrays. Authoring QA also requires a `multi-signal` catalogue case to bind at least two signals.
+
+Two cases received additional semantic hardening during the 70-case audit:
+
+- `MLM-055` now requires one explicit multi-artifact YXZ bundle containing injection-moulded PLA tensile maximum force and bending maximum force, rather than allowing either modality alone to satisfy “Tensile versus bending measurements.”
+- `MLM-038` now requires GTNB cycle time, injection speed and product weight, so a quality-only window cannot satisfy “Process variables and product weight.”
 
 ## Deterministic feature calculations
 
-`tools/measured_learning_core.py` is the calculation authority for V2 descriptive features. The current method registry includes mean, median, population standard deviation, interquartile range, coefficient of variation, percentile range, robust slope, early/late shift, outlier frequency, cycle-to-cycle delta, Pearson/Spearman correlation, peak value/position and range.
+`tools/measured_learning_core.py` is the calculation authority for V2 descriptive features. The method registry includes mean, median, population standard deviation, interquartile range, coefficient of variation, percentile range, robust slope, early/late shift, outlier frequency, cycle-to-cycle delta, Pearson/Spearman correlation, peak value/position, range and the governed aggregate rejection-rate calculation.
 
-Binding packages specify the method, version, input signals and parameters. They do **not** supply trusted feature results. The builder calculates the value and fingerprints; QA independently recalculates the result and rejects tampering.
+Binding packages specify method, version, input signals and parameters. They do **not** supply trusted feature results. The builder calculates values and fingerprints; QA independently recalculates them and rejects tampering.
 
-Correlation methods require aligned X coordinates. Calculated features remain descriptive evidence and carry no automatic causal meaning.
+Calculated features remain descriptive evidence and carry no automatic causal meaning.
 
 ## Raw-window overlap and novelty
 
-Raw windows have canonical `range` or `id_set` definitions. QA compares windows from the same source artifact/member and treats an overlap coefficient at or above the policy threshold as substantial reuse.
+Raw windows have canonical `range` or `id_set` definitions. QA compares windows from the same source artifact/member and treats overlap at or above the policy threshold as substantial reuse.
 
-Substantially overlapping cases must explicitly declare source-window reuse and justify it. Corpus-wide substantial reuse remains capped by policy. Merely changing a title, analysis lens, signal ordering or downsampling cannot create a new raw measurement window.
+Substantially overlapping promoted cases must explicitly declare source-window reuse and justify it. Corpus-wide substantial reuse remains capped by policy. Changing a title, analysis lens, signal ordering or downsampling cannot create a new raw measurement window.
 
-## Independent review identity
+The current 70-case review queue is an authoring worklist, not proof that 70 distinct promotion windows already satisfy this rule. Final binding/review still has to establish the exact promotion window and novelty of every learner-visible case.
 
-Promotion requires both an `authorId` and a different `reviewerId`, plus reviewer role, review-record type, stable review reference and review timestamp. Supported review-record types are governed by the builder/QA contract.
+## Independent review queue
 
-This makes review separation machine-checkable instead of relying on `reviewed: true` alone.
+`tools/build_measured_learning_review_queue.py` runs only after 70/70 authoring coverage passes. It selects one explicit direct-binding-shaped candidate per release case. When more than one candidate is technically valid, the pedagogical selection is explicit rather than determined by lexical ordering.
+
+The queue contains compact signal summaries, exact source artifact hashes, required channels, source scope and evidence boundaries. It also carries a seven-part review checklist covering:
+
+- direct measurement support;
+- claim/causality boundaries;
+- channel semantics and units;
+- reproducible promotion-window identity;
+- novelty and source-window reuse;
+- rights scope;
+- the appropriate next discriminating measurement where evidence is insufficient.
+
+`qa_measured_learning_review_queue.py` requires all 70 entries to remain `unreviewed` and rejects fabricated author/reviewer identity, decisions or timestamps. This automation organizes human review; it does not replace it.
+
+## Independent review identity for promotion
+
+Actual promotion requires both an `authorId` and a different `reviewerId`, plus reviewer role, governed review-record type, stable review reference and review timestamp. The V2 builder/QA contract enforces that separation.
+
+A generated review queue therefore cannot satisfy promotion by itself.
 
 ## Numerical and learner-view integrity
 
-Every promoted trace requires finite numeric X/Y values, equal lengths, monotonic non-decreasing X, a governed X semantic/unit, a deterministic reduction method and the original point count.
+Every promoted trace requires finite numeric X/Y values, equal lengths, monotonic governed X, deterministic reduction metadata and the original point count.
 
-The learner runtime lazy-loads individual cases. It uses actual X values for horizontal spacing. Signals with compatible X semantic/unit share one comparison X domain; incompatible time bases remain separate. Y scaling remains per signal and is stated explicitly so equal chart height is not mistaken for equal engineering magnitude.
+The learner runtime lazy-loads individual cases and uses actual X values for horizontal spacing. Signals with compatible X semantic/unit share one comparison X domain; incompatible time bases remain separate. Y scaling remains per signal and is stated explicitly so equal chart height is not mistaken for equal engineering magnitude.
 
 ## Live source proof
 
-The measured-library workflow no longer validates only an empty corpus. It runs positive and negative case fixtures and also retrieves pinned public measured sources on GitHub Actions runners.
+The measured-library workflow retrieves pinned public measured sources on GitHub Actions runners, validates exact hashes/schema, creates compact transient authoring candidates, runs 70-case authoring QA, builds the independent-review queue, validates that the queue contains no fabricated approvals, and only then runs the release-library and payload checks.
 
-The OpenMMS proof:
-
-- downloads the exact pinned `Case_Study_Raw_Data.csv`;
-- verifies the full source SHA-256 already recorded by MouldMaster;
-- verifies the delivered 29,808-row schema and both ordered time bases;
-- records measured pressure and force ranges;
-- extracts only a compact, explicitly unreviewed candidate window;
-- discards the raw source file.
-
-The AVAPS proof retrieves the pinned `dataset1.zip`, verifies its archive SHA-256 and emits only schema/header evidence needed to resolve delivered source channels. These proof artifacts are temporary CI artifacts, not learner cases.
+Source proof/candidate artifacts are temporary CI artifacts. They are not committed learner data and are not promoted cases.
 
 ## Expansion gate
 
@@ -108,11 +166,7 @@ Before cases 71-100 may be authored, policy requires at least:
 - real/shared X-domain rendering where applicable;
 - explicit novelty review.
 
-When the expansion manifest is eventually populated, the full 100-case proposal must also satisfy the final concentration caps for largest-family and top-four-family share.
-
-## Rights boundaries
-
-Research/education-only and noncommercial source terms are not widened by transforming data into compact learning cases. Those families remain blocked until product-scope use is explicitly supported. Public availability alone is not treated as a licence grant.
+The current release has ten promotion-ready source families and zero promoted cases, so expansion remains locked. When the expansion manifest is eventually populated, the full 100-case proposal must also satisfy final concentration caps for largest-family and top-four-family share.
 
 ## Relationship to site validation
 
