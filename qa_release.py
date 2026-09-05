@@ -7,7 +7,7 @@ import struct
 import subprocess
 import tempfile
 
-WEB_RELEASE = "2026.09.05.3"
+WEB_RELEASE = "2026.09.05.4"
 ANDROID_RELEASE = "2026.08.26.2"
 CONTENT_VERSION = "2026.08.26.1"
 WINDOWS_RECOVERY_VERSION = "2026.08.21.1"
@@ -147,6 +147,14 @@ for marker in ["mm-reading-guide", "READ THIS FIRST", "READ NEXT", "MAIN POINTS"
 for marker in ["mm-extra-help", "Finished reading — next lesson", "lesson-actions-sticky"]:
     assert marker in reading or marker in text("reading-patch.css"), f"lesson mobile-clarity cue missing: {marker}"
 assert "Open <b>Extra help</b> only if you want examples or a simpler explanation" in reading
+
+reading_css = text("reading-patch.css")
+for marker in [
+    "Android profile/data layout clearance",
+    'body[data-mm-view="profile"] .top-actions',
+    "padding-bottom:calc(174px + env(safe-area-inset-bottom))",
+]:
+    assert marker in reading_css, f"Android profile mobile layout regression guard missing: {marker}"
 
 source_lib = text("source-library.js")
 for marker in ["ISO 20430:2020", "HSE PPIS4(rev1)", "OSHA 1910.147", "WorkSafe NZ — Machine lockouts", "ISO 1133-1:2022", "ISO 22514-2:2026", "NIST — Experimental design", "More authoritative sources"]:
