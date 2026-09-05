@@ -68,6 +68,7 @@ jobs:
             tools/extract_4h98_direct_candidate.py \
             tools/extract_6k8_pressure_candidate.py \
             tools/extract_gtnb_learning_candidates.py \
+            tools/extract_gtnb_rejection_candidate.py \
             tools/extract_sustainability_learning_candidates.py \
             tools/extract_openmms_learning_candidates.py \
             qa_measured_learning_library.py \
@@ -106,6 +107,8 @@ jobs:
         run: python tools/extract_6k8_pressure_candidate.py
       - name: Extract GTNB historical-production candidates
         run: python tools/extract_gtnb_learning_candidates.py
+      - name: Recover GTNB rejection numerator and denominator
+        run: python tools/extract_gtnb_rejection_candidate.py
       - name: Extract Sustainability DOE candidates
         run: python tools/extract_sustainability_learning_candidates.py
       - name: Extract distinct OpenMMS sensor candidates
