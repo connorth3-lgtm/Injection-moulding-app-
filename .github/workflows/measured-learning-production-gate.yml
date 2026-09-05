@@ -1,0 +1,50 @@
+name: MouldMaster Measured Learning Production Gate
+
+on:
+  pull_request:
+    paths:
+      - 'data/measured-learning/**'
+      - 'tools/measured_learning_core.py'
+      - 'tools/build_measured_learning_case.py'
+      - 'tools/promote_measured_learning_release.py'
+      - 'qa_measured_learning_production_gate.py'
+      - 'tests/test_measured_learning_production_gate.py'
+      - 'sources/MEASURED_LEARNING_PRODUCTION_GATE_V2.md'
+      - '.github/workflows/measured-learning-production-gate.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'data/measured-learning/**'
+      - 'tools/measured_learning_core.py'
+      - 'tools/build_measured_learning_case.py'
+      - 'tools/promote_measured_learning_release.py'
+      - 'qa_measured_learning_production_gate.py'
+      - 'tests/test_measured_learning_production_gate.py'
+      - 'sources/MEASURED_LEARNING_PRODUCTION_GATE_V2.md'
+      - '.github/workflows/measured-learning-production-gate.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  production-gate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - name: Compile production-gate tooling
+        run: |
+          python -m py_compile \
+            tools/promote_measured_learning_release.py \
+            qa_measured_learning_production_gate.py \
+            tests/test_measured_learning_production_gate.py
+      - name: Validate production-gate JSON
+        run: |
+          python -m json.tool data/measured-learning/production-gate-v2.json >/dev/null
+          python -m json.tool data/measured-learning/reviewed-bindings-index-v2.json >/dev/null
+      - name: Run production-gate negative tests
+        run: python -m unittest -v tests.test_measured_learning_production_gate
+      - name: Dry-run every registered reviewed binding through the V2 builder
+        run: python tools/promote_measured_learning_release.py
+      - name: Enforce reviewed-binding, learner-case and promotion-index synchronization
+        run: python qa_measured_learning_production_gate.py
