@@ -1,0 +1,103 @@
+{
+  "schemaVersion": 2,
+  "registryId": "measured-learning-source-artifacts-v2",
+  "policy": {
+    "exactArtifactHashPairRequired": true,
+    "artifactHashMustAppearInBenchmarkEvidence": true,
+    "aggregateWorkflowArtifactDigestsAreNotSourceArtifacts": true,
+    "rawThirdPartyArtifactsCommitted": false
+  },
+  "sources": [
+    {
+      "datasetId": "mendeley-gtnb4j7bfx-v1",
+      "benchmarkResult": "data/public-benchmark-results/gtnb4j7bfx-v1.json",
+      "artifacts": [
+        {"artifactId":"modelo-xlsx","name":"modelo.xlsx","sha256":"sha256:b231af5d49c0a258b5625d6e2ab2c324c233017c5c010e326a3ca485387ecc9f"}
+      ]
+    },
+    {
+      "datasetId": "scatimdata-avaps",
+      "benchmarkResult": "data/public-benchmark-results/scatimdata-avaps-v1.json",
+      "artifacts": [
+        {"artifactId":"dataset1-zip","name":"dataset1.zip","sha256":"sha256:f8c7f6363ecbd541735b374746ce8549aaa50dae754aaaa2efa980c227b19c09"},
+        {"artifactId":"dataset2-zip","name":"dataset2.zip","sha256":"sha256:69294087889a52791c296734051d6b21b30847c2859613e4178074182150c491"},
+        {"artifactId":"dataset3-zip","name":"dataset3.zip","sha256":"sha256:b6baa4f5f5dbdf0c1bbe23a7b854358967d9004b75de4a16502730a77aed316e"}
+      ]
+    },
+    {
+      "datasetId": "su13148102-supplement",
+      "benchmarkResult": "data/public-benchmark-results/su13148102-supplement-v1.json",
+      "artifacts": [
+        {"artifactId":"publisher-supplement-zip","name":"sustainability-13-08102-s001.zip","sha256":"sha256:b546abea4eb9f14b6736dec415dc43c00240965b91de4c7ca92b2494321c6ace","members":["sustainability-1272832-supplementary.csv"]}
+      ]
+    },
+    {
+      "datasetId": "impure-pascoe-2022",
+      "benchmarkResult": "data/public-benchmark-results/impure-pascoe-2022-v1.json",
+      "artifactsPendingChannelResolution": true,
+      "benchmarkCollection": {"path":"manifest","nameKey":"name","shaKey":"sha256"},
+      "artifacts": []
+    },
+    {
+      "datasetId": "iguzzini-road-lenses",
+      "benchmarkResult": "data/public-benchmark-results/iguzzini-road-lenses-v1.json",
+      "artifacts": [
+        {"artifactId":"data-csv","name":"dataset/data.csv","sha256":"sha256:c8424a6a47cb793383e19e646212b09f5b63b66147a9397f26fdd8760b6889e0"}
+      ]
+    },
+    {
+      "datasetId": "openmms-t4g",
+      "benchmarkResult": "data/public-benchmark-results/openmms-t4g-v1.json",
+      "artifacts": [
+        {"artifactId":"case-study-raw-data","name":"Real_World_Test/Case_Study_Raw_Data.csv","sha256":"sha256:aa78e659bc4b7a0361882d2eaa516a0010bfb573d413a3600baad98aae397bf6"}
+      ]
+    },
+    {
+      "datasetId": "forinfpro-himd-v1",
+      "benchmarkResult": "data/public-benchmark-results/forinfpro-himd-v1.json",
+      "artifacts": [
+        {"artifactId":"cycle-001-pt","name":"cycle_001_pt.csv","sha256":"sha256:9c8dff7f18c531d447a7b2e0ca3420c3a8a30b9771dd373c4f3433f1acd27538"},
+        {"artifactId":"cycle-001-us-rms","name":"cycle_001_us_rms.csv","sha256":"sha256:0e7d1610202d05177d0a3f8d44a783a9d6268a8b7df59abc268f41d97c360628"},
+        {"artifactId":"cycle-001-machine-data","name":"cycle_001_machine_data.csv","sha256":"sha256:d249cbe4980b00f1565a100c3363dde4cf621c490233a4c184d47ad8d202e480"}
+      ]
+    },
+    {
+      "datasetId": "mendeley-fhj5p7ww9v-v1",
+      "benchmarkResult": "data/public-benchmark-results/fhj5p7ww9v-v1.json",
+      "artifacts": [
+        {"artifactId":"data-cost-xlsx","name":"DATA - COST.xlsx","sha256":"sha256:1cf9f038f2f9b968c7a78787ce6f9c684d50108542002e491f5979357725ce5e"}
+      ]
+    },
+    {
+      "datasetId": "mendeley-6k8fpbrd9s-v1",
+      "benchmarkResult": "data/public-benchmark-results/6k8fpbrd9s-v1.json",
+      "artifacts": [
+        {"artifactId":"data-xlsx","name":"Data.xlsx","sha256":"sha256:14c056dd86e11cc47e1e97834174631f9dc0806442917a7149ddf5856dc9b11c"}
+      ]
+    },
+    {
+      "datasetId": "mendeley-4h98rz9f92-v3",
+      "benchmarkResult": "data/public-benchmark-results/4h98rz9f92-v3.json",
+      "artifacts": [
+        {"artifactId":"raw-data-xlsx","name":"Raw Data.xlsx","sha256":"sha256:39210169aac62a1455603d37cdffaca93cf0c46189ea4258c5f3c0a4a37255c9"}
+      ]
+    },
+    {
+      "datasetId": "pmc4753395-hdpe-cenosphere-v1",
+      "benchmarkResult": "data/public-benchmark-results/pmc4753395-hdpe-cenosphere-v1.json",
+      "artifacts": [
+        {"artifactId":"tensile-data-xlsx","name":"Tensile-Data.xlsx","sha256":"sha256:6e376e0acdfc614b6c16e0fef99e0e74cace8bc4d931a08a729e05dfc2cd7783"}
+      ]
+    },
+    {
+      "datasetId": "mendeley-yxz2w7ctnh-v1",
+      "benchmarkResult": "data/public-benchmark-results/yxz2w7ctnh-v1.json",
+      "artifacts": [
+        {"artifactId":"bending-xlsx","name":"data_3pbending_3d_print_d_ryan.xlsx","sha256":"sha256:5c8e5967a95d90a9652ed9167885118bc4ffe4792bf9167c19254ff526fa6742"},
+        {"artifactId":"energy-xlsx","name":"data_energy_3d_print_d_ryan.xlsx","sha256":"sha256:378f371f7d3b2a31902d59e4d654b8de3a7be6d057ba73dc8f1bd819b9cfcda0"},
+        {"artifactId":"impact-xlsx","name":"data_impact_3d_print_d_ryan.xlsx","sha256":"sha256:2eba6818e340e963f88dcb03729aac793d5686c9c1416e81b00c104da3e41196"},
+        {"artifactId":"tensile-xlsx","name":"data_tensile_3d_print_d_ryan.xlsx","sha256":"sha256:670fb27b14e34f68ee17de115c4f14b22c4aa4b9887ff8c73a42eb7b2a7e3b79"}
+      ]
+    }
+  ]
+}
