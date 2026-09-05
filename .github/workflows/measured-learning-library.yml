@@ -74,6 +74,8 @@ jobs:
             tools/extract_gtnb_rejection_candidate.py \
             tools/extract_sustainability_learning_candidates.py \
             tools/extract_openmms_learning_candidates.py \
+            tools/extract_pmc_learning_candidates.py \
+            tools/extract_rebalanced_learning_candidates.py \
             qa_measured_learning_library.py \
             qa_measured_learning_candidates.py \
             qa_measured_learning_authoring_coverage.py \
@@ -89,6 +91,8 @@ jobs:
           python -m json.tool data/measured-learning/source-channels-avaps-v2.json >/dev/null
           python -m json.tool data/measured-learning/source-channels-impure-v2.json >/dev/null
           python -m json.tool data/measured-learning/source-channels-forinfpro-v2.json >/dev/null
+          python -m json.tool data/measured-learning/source-channels-pmc-v2.json >/dev/null
+          python -m json.tool data/measured-learning/source-rebalance-v2.json >/dev/null
           python -m json.tool data/measured-learning/case-requirements-v2.json >/dev/null
           python -m json.tool data/measured-learning/feature-methods-v1.json >/dev/null
           python -m json.tool data/measured-learning/binding-template-v2.json >/dev/null
@@ -125,12 +129,14 @@ jobs:
         run: python tools/extract_sustainability_learning_candidates.py
       - name: Extract distinct OpenMMS sensor candidates
         run: python tools/extract_openmms_learning_candidates.py
-      - name: Validate numeric authoring coverage separately from promotion
-        run: python qa_measured_learning_authoring_coverage.py
-      - name: Probe blocked PMC source for future channel unlock
-        id: pmc_probe
-        continue-on-error: true
+      - name: Prove required PMC material-test workbook
         run: python tools/prove_pmc_hdpe_source.py
+      - name: Extract governed PMC stress-strain candidates
+        run: python tools/extract_pmc_learning_candidates.py
+      - name: Extract rights-safe rebalanced candidates
+        run: python tools/extract_rebalanced_learning_candidates.py
+      - name: Validate 70-case numeric authoring coverage separately from promotion
+        run: python qa_measured_learning_authoring_coverage.py
       - name: Upload compact source proofs and authoring candidates
         if: always()
         uses: actions/upload-artifact@v6
