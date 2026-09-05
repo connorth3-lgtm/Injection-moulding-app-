@@ -78,7 +78,9 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v7
       - name: Pages single-publisher QA
-        run: python3 qa_pages_single_publisher.py
+        run: |
+          python3 qa_pages_single_publisher.py
+          python3 qa_pages_candidate_handoff.py
       - name: Validate physical PWA evidence contract on PRs
         if: github.event_name == 'pull_request'
         run: python3 tools/verify_pwa_physical_evidence.py --contract-only
