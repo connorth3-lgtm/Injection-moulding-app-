@@ -123,17 +123,22 @@ def main() -> int:
 
     candidates: dict[str, dict] = {}
     candidate_file: dict[str, str] = {}
+    candidate_boundary: dict[str, str] = {}
     case_candidates: dict[str, list[str]] = defaultdict(list)
     for filename in CANDIDATE_FILES:
         doc = load(PROOF / filename)
         if doc.get("promotionEligible") is not False:
             raise AssertionError(f"{filename}: review input must remain non-promotional")
+        document_boundary = str(doc.get("boundary") or "").strip()
         for candidate in doc.get("candidates", []):
             cid = candidate["candidateId"]
             if cid in candidates:
                 raise AssertionError(f"duplicate review candidate id: {cid}")
             candidates[cid] = candidate
             candidate_file[cid] = filename
+            candidate_boundary[cid] = str(candidate.get("evidenceBoundary") or document_boundary).strip()
+            if not candidate_boundary[cid]:
+                raise AssertionError(f"{cid}: neither candidate nor document provides an evidence boundary")
             for case_id in candidate.get("suggestedCatalogueCases", []):
                 if cid in direct_ids:
                     case_candidates[case_id].append(cid)
@@ -175,7 +180,7 @@ def main() -> int:
                 "sourceScope": candidate.get("sourceScope", {}),
                 "requiredSourceChannels": sorted(required),
                 "signalSummaries": [signal_summary(signal) for signal in candidate["signals"]],
-                "evidenceBoundary": candidate.get("evidenceBoundary", ""),
+                "evidenceBoundary": candidate_boundary[chosen_id],
             },
             "review": {
                 "state": "unreviewed",
