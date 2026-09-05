@@ -279,7 +279,7 @@ def normalized_window(extraction: dict) -> dict:
 
 def normalize_source_members(source_members: Any) -> list[str]:
     """Normalize a legacy single member or a multi-member source set."""
-    if source_members in (None, ""):
+    if source_members in (None, "") or source_members == []:
         return []
     if isinstance(source_members, str):
         values = [source_members]
@@ -288,7 +288,7 @@ def normalize_source_members(source_members: Any) -> list[str]:
     else:
         raise ValueError("sourceMember/sourceMembers must be a string or list of strings")
     clean = [str(value).strip() for value in values]
-    if not clean or any(not value for value in clean):
+    if any(not value for value in clean):
         raise ValueError("source members must be non-empty strings")
     if len(clean) != len(set(clean)):
         raise ValueError("source members must be unique")
