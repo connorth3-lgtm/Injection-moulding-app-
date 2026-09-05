@@ -21,6 +21,12 @@ def canonical_sha(value):
 
 def finite(v): return isinstance(v,(int,float)) and not isinstance(v,bool) and math.isfinite(float(v))
 
+def monotonic_direction(xs):
+    increasing=all(float(a)<=float(b) for a,b in zip(xs,xs[1:]))
+    decreasing=all(float(a)>=float(b) for a,b in zip(xs,xs[1:]))
+    assert increasing or decreasing, 'x axis is not monotonic in source order'
+    return 'increasing' if increasing else 'decreasing'
+
 def main():
     x=json.loads(CANDIDATES.read_text(encoding='utf-8'))
     assert x.get('status')=='unreviewed-source-derived-candidates'
@@ -48,10 +54,11 @@ def main():
             assert 1 < len(xs)==len(ys)<=400, f"{c['candidateId']}/{s.get('id')}: invalid compact vector length"
             assert rep.get('originalPointCount',0)>=len(ys), f"{c['candidateId']}/{s.get('id')}: invalid source count"
             assert all(finite(v) for v in xs+ys), f"{c['candidateId']}/{s.get('id')}: non-finite value"
-            assert all(float(a)<=float(b) for a,b in zip(xs,xs[1:])), f"{c['candidateId']}/{s.get('id')}: x axis not monotonic"
+            direction=monotonic_direction(xs)
+            if rep.get('xDirection') is not None:
+                assert rep['xDirection']==direction, f"{c['candidateId']}/{s.get('id')}: declared xDirection mismatch"
             assert s.get('representationFingerprint')==canonical_sha(rep), f"{c['candidateId']}/{s.get('id')}: representation fingerprint drift"
             assert s.get('sourceChannel') and s.get('semantic') and s.get('unit'), f"{c['candidateId']}/{s.get('id')}: provenance metadata missing"
-    # Guard expected physical domains without turning them into causal claims.
     by_id={c['candidateId']:c for c in cases}
     fig7=by_id['MEND-6K8-FIGURE7-01']
     assert {s['semantic'] for s in fig7['signals']}=={'pressure-special-isothermal','specific-volume-special-isothermal'}
