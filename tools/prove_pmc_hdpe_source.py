@@ -1,12 +1,9 @@
 #!/usr/bin/env python3
 """Retrieve PMC4753395 supplementary data and prove the benchmarked tensile workbook.
 
-PMC completed its article-dataset distribution migration in August 2026. The
-current primary distribution route is the public ``pmc-oa-opendata`` S3 bucket.
-Container/member names are distribution metadata, not measurement identity. The
-proof therefore follows current nested packaging and only accepts a workbook
-whose bytes match the immutable SHA-256 already accepted by the benchmark.
-Raw supplementary archives and workbook numeric values are never uploaded.
+PMC's current Article Datasets object and the historical fallback routes are local constants.
+No remote listing or metadata can select a network destination. Package/member names remain
+distribution metadata; measurement identity is the immutable benchmarked workbook SHA-256.
 """
 from __future__ import annotations
 
@@ -24,39 +21,45 @@ from xml.etree import ElementTree as ET
 
 PMCID = "PMC4753395"
 S3_BASE = "https://pmc-oa-opendata.s3.amazonaws.com"
+CURRENT_OBJECT_KEY = "PMC4753395.1/mmc1.zip"
+CURRENT_OBJECT_URL = f"{S3_BASE}/{CURRENT_OBJECT_KEY}"
 LEGACY_URLS = [
     "https://pmc.ncbi.nlm.nih.gov/articles/PMC4753395/bin/mmc1.zip",
     "https://pmc.ncbi.nlm.nih.gov/articles/instance/4753395/bin/mmc1.zip",
 ]
 EXPECTED_WORKBOOK_SHA = "6e376e0acdfc614b6c16e0fef99e0e74cace8bc4d931a08a729e05dfc2cd7783"
 HISTORICAL_WORKBOOK_NAME = "Tensile-Data.xlsx"
-USER_AGENT = "MouldMaster-measured-learning/2.3"
+USER_AGENT = "MouldMaster-measured-learning/2.4"
 MAX_MEMBER_BYTES = 64 * 1024 * 1024
 NS = {
     "m": "http://schemas.openxmlformats.org/spreadsheetml/2006/main",
     "r": "http://schemas.openxmlformats.org/officeDocument/2006/relationships",
 }
 RELNS = "{http://schemas.openxmlformats.org/package/2006/relationships}"
-S3NS = "{http://s3.amazonaws.com/doc/2006-03-01/}"
+
+
+def assert_allowed_url(url: str) -> str:
+    parsed = urllib.parse.urlsplit(url)
+    allowed = {
+        "pmc-oa-opendata.s3.amazonaws.com",
+        "pmc.ncbi.nlm.nih.gov",
+    }
+    if parsed.scheme != "https" or parsed.hostname not in allowed:
+        raise RuntimeError(f"PMC retrieval escaped the fixed HTTPS hosts: {url}")
+    return url
 
 
 def fetch(url: str, timeout: int = 90) -> bytes:
+    assert_allowed_url(url)
     req = urllib.request.Request(url, headers={"User-Agent": USER_AGENT})
     with urllib.request.urlopen(req, timeout=timeout) as response:
+        final = urllib.parse.urlsplit(response.geturl())
+        if final.scheme != "https" or final.hostname not in {
+            "pmc-oa-opendata.s3.amazonaws.com",
+            "pmc.ncbi.nlm.nih.gov",
+        }:
+            raise RuntimeError(f"PMC retrieval redirected outside fixed hosts: {response.geturl()}")
         return response.read()
-
-
-def list_current_pmc_objects() -> list[str]:
-    query = urllib.parse.urlencode({"list-type": "2", "prefix": PMCID + "."})
-    root = ET.fromstring(fetch(f"{S3_BASE}/?{query}"))
-    keys = [node.text for node in root.findall(f".//{S3NS}Key") if node.text]
-    if not keys:
-        raise RuntimeError(f"PMC AWS listing returned no objects for {PMCID}")
-    return sorted(keys)
-
-
-def object_url(key: str) -> str:
-    return f"{S3_BASE}/{urllib.parse.quote(key, safe='/')}"
 
 
 def sha256(data: bytes) -> str:
@@ -92,6 +95,7 @@ def workbook_from_rar(rar_bytes: bytes, outer_member: str) -> tuple[bytes, str, 
             stderr=subprocess.STDOUT,
             text=True,
             timeout=120,
+            check=False,
         )
         if proc.returncode != 0:
             tail = "\n".join(proc.stdout.splitlines()[-12:])
@@ -100,13 +104,12 @@ def workbook_from_rar(rar_bytes: bytes, outer_member: str) -> tuple[bytes, str, 
         return payload, f"{outer_member}!{member}", names
 
 
-def workbook_from_object(key: str, data: bytes) -> tuple[bytes, str | None, list[str]]:
-    """Return the exact benchmarked workbook regardless of current package name."""
+def workbook_from_object(data: bytes) -> tuple[bytes, str | None, list[str]]:
     if sha256(data) == EXPECTED_WORKBOOK_SHA:
-        return data, None, [key.rsplit("/", 1)[-1]]
+        return data, None, [HISTORICAL_WORKBOOK_NAME]
 
     member_names: list[str] = []
-    if data.startswith(b"PK") and key.lower().endswith(".zip"):
+    if data.startswith(b"PK"):
         with zipfile.ZipFile(io.BytesIO(data)) as archive:
             members = [info for info in archive.infolist() if not info.is_dir()]
             member_names = [info.filename for info in members]
@@ -134,39 +137,15 @@ def workbook_from_object(key: str, data: bytes) -> tuple[bytes, str | None, list
     )
 
 
-def retrieve_workbook() -> tuple[str, str | None, bytes, list[str], list[str]]:
+def retrieve_workbook() -> tuple[str, str | None, bytes, list[str]]:
     errors: list[str] = []
-    discovered: list[str] = []
-    try:
-        discovered = list_current_pmc_objects()
-        ranked = sorted(
-            discovered,
-            key=lambda key: (
-                0 if key.lower().endswith((".xlsx", ".xls")) else
-                1 if "mmc1" in key.lower() else
-                2 if key.lower().endswith(".zip") else 3,
-                key,
-            ),
-        )
-        for key in ranked:
-            if not key.lower().endswith((".xlsx", ".xls", ".zip")):
-                continue
-            try:
-                url = object_url(key)
-                workbook, member, members = workbook_from_object(key, fetch(url, timeout=120))
-                return url, member, workbook, discovered, members
-            except Exception as exc:
-                errors.append(f"AWS {key}: {exc}")
-    except Exception as exc:
-        errors.append(f"AWS listing: {exc}")
-
-    for url in LEGACY_URLS:
+    for url in [CURRENT_OBJECT_URL, *LEGACY_URLS]:
         try:
-            workbook, member, members = workbook_from_object(url, fetch(url))
-            return url, member, workbook, discovered, members
+            workbook, member, members = workbook_from_object(fetch(url, timeout=120))
+            return url, member, workbook, members
         except Exception as exc:
             errors.append(f"{url}: {exc}")
-    raise SystemExit("PMC supplementary retrieval failed: " + "; ".join(errors[-12:]))
+    raise SystemExit("PMC supplementary retrieval failed: " + "; ".join(errors))
 
 
 def string_schema(blob: bytes) -> list[dict]:
@@ -210,23 +189,22 @@ def string_schema(blob: bytes) -> list[dict]:
 def main() -> int:
     out = Path("measured-source-proof")
     out.mkdir(exist_ok=True)
-    url, source_member, workbook, discovered, package_members = retrieve_workbook()
+    url, source_member, workbook, package_members = retrieve_workbook()
     digest = sha256(workbook)
     if digest != EXPECTED_WORKBOOK_SHA:
         raise SystemExit(f"PMC measured workbook SHA mismatch: {digest}")
     schema = string_schema(workbook)
     proof = {
-        "schemaVersion": 4,
+        "schemaVersion": 5,
         "status": "source-proof-passed",
         "datasetId": "pmc4753395-hdpe-cenosphere-v1",
         "distributionRoute": "PMC Article Datasets AWS" if "amazonaws.com" in url else "legacy PMC fallback",
         "retrievalUrl": url,
+        "pinnedCurrentObjectKey": CURRENT_OBJECT_KEY,
         "historicalWorkbookName": HISTORICAL_WORKBOOK_NAME,
         "currentSourceMember": source_member,
         "workbookSha256": "sha256:" + digest,
-        "identityRule": "workbook bytes must match the benchmarked SHA-256; package/member naming and nesting may change across PMC distribution migrations",
-        "discoveredObjectCount": len(discovered),
-        "discoveredObjectNames": [key.rsplit("/", 1)[-1] for key in discovered[:80]],
+        "identityRule": "network destinations are locally pinned; workbook bytes must match the benchmarked SHA-256; inner package/member naming may change without changing measurement identity",
         "selectedPackageMemberCount": len(package_members),
         "selectedPackageMemberNames": package_members[:80],
         "sheets": schema,
