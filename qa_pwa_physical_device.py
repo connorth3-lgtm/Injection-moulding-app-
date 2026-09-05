@@ -13,6 +13,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent
 TOOL = ROOT / "tools" / "verify_pwa_physical_evidence.py"
 CONTRACT = ROOT / "data" / "pwa-physical-device-validation-v1.json"
+ATTESTATION = ROOT / "data" / "pwa-physical-device-attestation-v1.json"
 
 
 def need(ok, message):
@@ -31,6 +32,21 @@ need(base["status"] == "pending-physical-device-validation", "repository contrac
 need(base["runtimeFingerprint"] is None, "pending physical-device evidence must not claim a runtime fingerprint")
 need("physical iOS/iPadOS and Android devices" in base["boundary"], "physical-device boundary must remain explicit")
 need("accessibility-real-at-validation-v1.json" in base["boundary"], "screen-reader evidence must remain separately governed")
+
+attestation = json.loads(ATTESTATION.read_text(encoding="utf-8"))
+need(attestation.get("schemaVersion") == 1, "physical-device attestation schemaVersion must be 1")
+need(attestation.get("status") == "human-pass-attested-metadata-incomplete", "attestation must remain explicitly metadata-incomplete")
+need(attestation.get("productionValidationEligible") is False, "metadata-incomplete attestation must never be production-validation eligible")
+attested_fingerprint = str(attestation.get("runtimeFingerprint") or "")
+need(attested_fingerprint.startswith("sha256:") and len(attested_fingerprint) == 71, "attestation runtime fingerprint format is invalid")
+need(set(attestation.get("platforms", {})) == {"ios", "android"}, "attestation must cover exactly iOS/iPadOS and Android")
+for platform, record in attestation["platforms"].items():
+    need(record.get("result") == "pass-attested", f"{platform} attestation must record only the human pass statement")
+    need(record.get("deviceMetadataStatus") == "not-provided", f"{platform} metadata must remain explicitly not provided")
+need(
+    "pwa-physical-device-attestation-v1.json" not in TOOL.read_text(encoding="utf-8"),
+    "human attestation file must remain separate from the production validation verifier",
+)
 
 pending_prod = subprocess.run(
     [sys.executable, str(TOOL), "--contract", str(CONTRACT), "--contract-only", "--require-validated"],
@@ -100,4 +116,4 @@ except SystemExit as exc:
 else:
     raise AssertionError("public physical-device contract accepted a forbidden personal-data field")
 
-print("MouldMaster physical PWA device contract QA passed: pending evidence remains valid for review but fails production publication; validated evidence is fresh, privacy-safe and exact-runtime fingerprint gated across iOS/iPadOS + Android.")
+print("MouldMaster physical PWA device contract QA passed: the human two-platform pass attestation is recorded separately and remains metadata-incomplete/non-production-eligible; pending evidence still fails production publication; validated evidence remains fresh, privacy-safe and exact-runtime fingerprint gated across iOS/iPadOS + Android.")
