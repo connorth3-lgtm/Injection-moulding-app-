@@ -30,6 +30,10 @@ def isnum(v):
     return isinstance(v,(int,float)) and not isinstance(v,bool) and math.isfinite(float(v))
 
 
+def norm(v) -> str:
+    return "".join(str(v or "").strip().lower().split())
+
+
 def download_verified(source: dict, expected_name: str) -> tuple[Path, tempfile.TemporaryDirectory, str]:
     file_spec=next(x for x in source["files"] if x[1]==expected_name)
     file_id,name,expected_sha=file_spec
@@ -48,8 +52,7 @@ def numeric_column(ws, col: str, start: int, end: int) -> list[float]:
     values=[]
     for row in range(start,end+1):
         cell=ws[f"{col}{row}"]
-        if cell.data_type=="f":
-            continue
+        if cell.data_type=="f": continue
         if isnum(cell.value): values.append(float(cell.value))
     return values
 
@@ -57,7 +60,6 @@ def numeric_column(ws, col: str, start: int, end: int) -> list[float]:
 def reduce_points(x: list[float], y: list[float], limit: int=400) -> tuple[list[float],list[float]]:
     if len(x)!=len(y): raise ValueError("x/y mismatch")
     if len(x)<=limit: return x,y
-    # Deterministic index reduction preserving both endpoints. No interpolation or invented values.
     idx=sorted({round(i*(len(x)-1)/(limit-1)) for i in range(limit)})
     return [x[i] for i in idx],[y[i] for i in idx]
 
@@ -103,12 +105,15 @@ def six_k8(source):
     try:
         wb=load_workbook(path,read_only=False,data_only=False); candidates=[]
         ws=wb["Figure7"]
-        if str(ws["A2"].value or "").strip().lower()!="time(s)" or "p(mpa)" not in str(ws["B2"].value or "").replace(" ","").lower() or "vsp" not in str(ws["C2"].value or "").lower():
-            raise RuntimeError("6k8 Figure7 header drift")
+        expected7={"A2":"time(s)","B2":"p(mpa)","C2":"vsp(mm³/g)"}
+        actual7={cell:norm(ws[cell].value) for cell in expected7}
+        if any(actual7[cell]!=expected for cell,expected in expected7.items()):
+            raise RuntimeError(f"6k8 Figure7 header drift: {actual7}")
         xs=[]; pressure=[]; volume=[]
         for row in range(3,ws.max_row+1):
             a,b,c=ws[f"A{row}"].value,ws[f"B{row}"].value,ws[f"C{row}"].value
             if isnum(a) and isnum(b) and isnum(c): xs.append(float(a)); pressure.append(float(b)); volume.append(float(c))
+        if len(xs)!=2818: raise RuntimeError(f"6k8 Figure7 row count drift: {len(xs)}")
         rx,rp=reduce_points(xs,pressure); rx2,rv=reduce_points(xs,volume)
         if rx!=rx2: raise RuntimeError("6k8 Figure7 reduction axis mismatch")
         signals=[
@@ -122,6 +127,7 @@ def six_k8(source):
             for row in range(1,ws.max_row+1):
                 a,b=ws[f"{xcol}{row}"].value,ws[f"{ycol}{row}"].value
                 if isnum(a) and isnum(b): xs.append(float(a)); ys.append(float(b))
+            if not xs: raise RuntimeError(f"6k8 Figure2 no numeric pair for {ident}")
             rx,ry=reduce_points(xs,ys)
             series.append(signal(ident,f"Figure2!{ycol}",semantic,"mm3/g","temperature","degC",rx,ry,"deterministic-endpoint-preserving-index-reduction",len(xs)))
         candidates.append({"candidateId":"MEND-6K8-FIGURE2-01","datasetId":source["datasetId"],"sourceArtifact":"Data.xlsx","sourceFingerprint":fp,"sourceScope":{"sheet":"Figure2","pressureSeriesBar":[200,400,800]},"signals":series,"candidateFingerprint":sha256_json(series),"suggestedCatalogueCases":["MLM-051"],"evidenceBoundary":"Specific-volume response across three source-labelled isobaric cooling series; material characterization only."})
@@ -137,14 +143,15 @@ def yxz(source):
         path,td,fp=download_verified(source,name)
         try:
             wb=load_workbook(path,read_only=False,data_only=False); ws=wb[sheet]
-            if "injection" not in str(ws[marker].value or "").lower() and "inke ction" not in str(ws[marker].value or "").lower().replace(" ","") and "inke" not in str(ws[marker].value or "").lower():
-                raise RuntimeError(f"yxz injection marker drift {sheet}/{marker}: {ws[marker].value!r}")
+            marker_text=str(ws[marker].value or "")
+            if "moulded" not in marker_text.lower() or ("injection" not in marker_text.lower() and "inke" not in marker_text.lower()):
+                raise RuntimeError(f"yxz injection marker drift {sheet}/{marker}: {marker_text!r}")
             sigs=[]
             for col,semantic,unit in zip(cols,semantics,units):
                 vals=numeric_column(ws,col,rows[0],rows[1]); x=[float(i+1) for i in range(len(vals))]
                 if not vals: raise RuntimeError(f"yxz no direct values in {sheet}!{col}")
                 sigs.append(signal(col,f"{sheet}!{col}",semantic,unit,"observation-index","index",x,vals,"direct-injection-block-values-no-interpolation",len(vals)))
-            results.append({"candidateId":f"MEND-YXZ-{sheet.upper()}-01","datasetId":source["datasetId"],"sourceArtifact":name,"sourceFingerprint":fp,"sourceScope":{"sheet":sheet,"marker":str(ws[marker].value),"columns":cols,"rows":list(rows)},"signals":sigs,"candidateFingerprint":sha256_json(sigs),"suggestedCatalogueCases":cases,"evidenceBoundary":"Only the explicitly labelled injection-moulded block is included; FDM, energy, impact and formula-derived content remain excluded."})
+            results.append({"candidateId":f"MEND-YXZ-{sheet.upper()}-01","datasetId":source["datasetId"],"sourceArtifact":name,"sourceFingerprint":fp,"sourceScope":{"sheet":sheet,"marker":marker_text,"columns":cols,"rows":list(rows)},"signals":sigs,"candidateFingerprint":sha256_json(sigs),"suggestedCatalogueCases":cases,"evidenceBoundary":"Only the explicitly labelled injection-moulded block is included; FDM, energy, impact and formula-derived content remain excluded."})
         finally: td.cleanup()
     return results
 
