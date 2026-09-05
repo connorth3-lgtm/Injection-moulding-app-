@@ -121,6 +121,17 @@ jobs:
               echo "The learner application will not be published. A minimal release-hold site is used only to quarantine the Pages origin and remove stale legacy files."
             } >> "$GITHUB_STEP_SUMMARY"
           fi
+      - name: Retain protected-main physical-device test candidate
+        if: github.event_name != 'pull_request' && steps.physical-readiness.outputs.production_ready != 'true'
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: physical-pwa-candidate-${{ github.sha }}
+          path: .pages-dist
+          retention-days: 30
+          if-no-files-found: error
+          compression-level: 6
+          overwrite: false
+          include-hidden-files: false
       - name: Build release-hold Pages artifact
         if: github.event_name != 'pull_request' && steps.physical-readiness.outputs.production_ready != 'true'
         run: python3 tools/build_pages_hold.py
