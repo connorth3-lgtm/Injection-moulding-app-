@@ -96,7 +96,7 @@ must(shell, [
     ".mmsrc.mm-reference-drawer .mmsrc-panel{width:min(430px", "pointer-events:auto!important",
     "calc(82px + env(safe-area-inset-bottom))", "max-height:48dvh",
     "REFERENCE_DATA_URL='./reference-data.html'", "openStandaloneReferenceData", "location.assign(REFERENCE_DATA_URL)",
-    "patchMobileMoreForReferenceData", "data-mm-reference-data-menu", "Reference data",
+    "patchMobileMoreForReferenceData", "data-mm-reference-data-menu", "References",
     "dockReferenceDataLauncher", "getElementById('mmrd-open')", "open.dataset.mmDocked='mobile-more-standalone-page'",
     "open.style.display='none'", ".mmrd.mm-reference-data-drawer,.mmrd.mm-reference-data-drawer[data-open=\"1\"]{display:none!important",
     "MM_REFERENCE_DATA_LAUNCHER_DOCK='mobile-more-standalone-page'",
@@ -116,7 +116,7 @@ require("ensureReferenceDataPage" not in shell and "openReferenceDataPage" not i
 must(repair, ["MouldMaster browser repair", "navigator.serviceWorker.getRegistrations()", "r=>r.unregister()", "k=>k.startsWith('mouldmaster-static-')", "caches.delete(k)", "mmFresh", "location.replace(target.href)"], "repair route")
 require("localStorage.clear" not in repair and "sessionStorage.clear" not in repair, "repair page must not delete learner storage")
 
-must(reference_page, ['<script src="./reference-data.js"></script>', '<script src="./reference-2026-expansion.js"></script>', 'id="mm-reference-back"', "history.back()", "position:static!important", ".mmrd-close{display:none!important}", "modal.setAttribute('role','main')", "MM_REFERENCE_DATA_PAGE_MODE='standalone-document-full-library'"], "standalone Reference Data")
+must(reference_page, ['<script src="./reference-data.js"></script>', '<script src="./reference-2026-expansion.js"></script>', 'id="mm-reference-back"', "history.back()", "position:static!important", ".mmrd-close{display:none!important}", "modal.setAttribute('role','main')", "MM_REFERENCE_DATA_PAGE_MODE='standalone-document-unified-library'"], "standalone References")
 
 # Service-worker install remains atomic for CORE and best-effort for optional packs.
 must(service_worker, [
