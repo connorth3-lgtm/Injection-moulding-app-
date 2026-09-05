@@ -1,8 +1,12 @@
 #!/usr/bin/env python3
-"""Extract compact, unreviewed Sustainability DOE measured-learning candidates."""
+"""Extract compact, unreviewed Sustainability DOE measured-learning candidates.
+
+The source repeats Cycle # (typically 10/20/30) within DOE conditions. For material-level
+learning cases, the source-defined DOE Run # is therefore tested as the primary ordering
+coordinate. Source order is always preserved; no rows are sorted by measured values.
+"""
 from __future__ import annotations
 import csv, hashlib, io, json, math, tempfile, zipfile
-from collections import Counter
 from pathlib import Path
 
 from prove_sustainability_measured_source import retrieve, EXPECTED_SHA, MEMBER, EXPECTED_ROWS
@@ -38,19 +42,26 @@ def uniform(rows,limit=190):
 
 def make_signal(field,rows):
     semantic,unit=META[field]
-    points=[r for r in rows if finite(r['_cycle']) and finite(r[field])]
-    xs=[r['_cycle'] for r in points]; ys=[r[field] for r in points]
-    increasing=all(a<=b for a,b in zip(xs,xs[1:])); decreasing=all(a>=b for a,b in zip(xs,xs[1:]))
-    if not (increasing or decreasing):
-        # The source repeatedly resets Cycle # (10, 20, 30) between DOE conditions.
-        # Preserve delivered source order with an explicit source-row axis; final
-        # promotion must choose a governed condition/observation coordinate or a
-        # reviewed condition-level feature representation rather than silently sort.
+    points=[r for r in rows if finite(r[field])]
+    if len(points)<20: raise SystemExit(f'{field}: fewer than 20 numeric source values in selected material group')
+    doe_ready=all(finite(r['_doeRun']) for r in points)
+    if doe_ready:
+        doe_x=[r['_doeRun'] for r in points]
+        doe_inc=all(a<=b for a,b in zip(doe_x,doe_x[1:])); doe_dec=all(a>=b for a,b in zip(doe_x,doe_x[1:]))
+    else:
+        doe_x=[]; doe_inc=doe_dec=False
+    if doe_ready and (doe_inc or doe_dec):
+        xs=doe_x
+        xsem,xunit='doe-run-index','run'; direction='increasing' if doe_inc else 'decreasing'; coordinate_review=False
+        reduction='source-order-subset-indexed-by-source-doe-run-no-interpolation'
+    else:
+        # Fail visibly back to delivered record order rather than sort or synthesize a
+        # cross-condition Cycle # axis. This remains authoring-only until reviewed.
         xs=[float(r['_sourceRow']) for r in points]
         xsem,xunit='source-row-index','index'; direction='increasing'; coordinate_review=True
-    else:
-        xsem,xunit='cycle-index','cycle'; direction='increasing' if increasing else 'decreasing'; coordinate_review=False
-    rep={'xSemantic':xsem,'xUnit':xunit,'xDirection':direction,'reductionMethod':'source-order-subset-no-interpolation','originalPointCount':len(rows),'x':xs,'y':ys}
+        reduction='source-order-subset-no-interpolation-coordinate-review-required'
+    ys=[r[field] for r in points]
+    rep={'xSemantic':xsem,'xUnit':xunit,'xDirection':direction,'reductionMethod':reduction,'originalPointCount':len(rows),'x':xs,'y':ys}
     return {'id':field.lower().replace(' ','-').replace(',','').replace('/','-'),'label':field,'sourceChannel':field,'semantic':semantic,'unit':unit,'coordinateRequiresBindingReview':coordinate_review,'representation':rep,'representationFingerprint':canonical_sha(rep)}
 
 def main():
@@ -62,25 +73,35 @@ def main():
             raw=z.read(MEMBER).decode('utf-8-sig')
     reader=csv.DictReader(io.StringIO(raw)); raw_rows=list(reader)
     if len(raw_rows)!=EXPECTED_ROWS: raise SystemExit(f'Sustainability row count drift: {len(raw_rows)}')
+    required_headers={'Material #','DOE Run #','Cycle #'}|set(META)
+    missing=sorted(required_headers-set(reader.fieldnames or []))
+    if missing: raise SystemExit(f'Sustainability required header drift: {missing}')
     rows=[]
     for i,r in enumerate(raw_rows,2):
-        material=str(r['Material #']).strip(); cycle=parse_float(r['Cycle #'])
-        row={'_sourceRow':i,'_material':material,'_cycle':cycle}
+        material=str(r['Material #']).strip(); cycle=parse_float(r['Cycle #']); doe_run=parse_float(r['DOE Run #'])
+        row={'_sourceRow':i,'_material':material,'_cycle':cycle,'_doeRun':doe_run}
         for f in META: row[f]=parse_float(r[f])
         rows.append(row)
     groups=sorted({r['_material'] for r in rows})
     if len(groups)!=5: raise SystemExit(f'expected 5 material groups, got {groups}')
     candidates=[]
-    channel_set=['Cycle Time, s','Max Inj Pres, MPa','Max Cav1 Pres, MPa','Inj Flow Rate, ccps','Melt Temp, C','Thickness, mm','Max Strain, pct','Ult Stress, MPa','Modulus, MPa','Toughness, MJ/m^3']
+    channel_set=list(META)
     case_map=[['MLM-043','MLM-046'],['MLM-044'],['MLM-045'],['MLM-047'],['MLM-066']]
+    coordinate_summary=[]
     for idx,material in enumerate(groups):
         material_rows=[r for r in rows if r['_material']==material]
         sampled=uniform(material_rows)
         sigs=[make_signal(f,sampled) for f in channel_set]
         alias='sha256:'+hashlib.sha256(material.encode('utf-8')).hexdigest()
-        candidates.append({'candidateId':f'SUST-MATERIAL-GROUP-{idx+1:02d}','datasetId':'su13148102-supplement','sourceArtifact':'sustainability-13-08102-s001.zip','sourceMember':MEMBER,'sourceFingerprint':'sha256:'+digest,'sourceScope':{'selection':'one source-defined Material # group','materialGroupAlias':alias,'sourceRecords':len(material_rows),'displayedRecords':len(sampled),'retrievalUrl':used_url,'cycleStructure':'source Cycle # repeats 10,20,30 across DOE conditions; no cross-condition monotonic cycle axis is asserted'},'signals':sigs,'candidateFingerprint':canonical_sha(sigs),'suggestedCatalogueCases':case_map[idx],'evidenceBoundary':'One source-defined material group from the measured DOE/tensile-linked supplement. The candidate supports bounded comparison and variability teaching only. Repeated 10/20/30 Cycle # blocks mean the full material-group representation requires coordinate review before promotion; experimental associations are not universal production settings or root-cause proof.'})
-    result={'schemaVersion':1,'status':'unreviewed-source-derived-candidates','promotionEligible':False,'candidateCount':len(candidates),'materialGroupCount':len(groups),'candidates':candidates,'boundary':'Authoring evidence only. Material identifiers are emitted only as one-way aliases; raw rows are not retained. Source Cycle # resets between DOE conditions are not reordered or disguised: non-monotonic full-group candidates use source-row order and are explicitly flagged for binding-coordinate review.'}
+        finite_doe=[r['_doeRun'] for r in material_rows if finite(r['_doeRun'])]
+        finite_cycle=[r['_cycle'] for r in material_rows if finite(r['_cycle'])]
+        doe_inc=bool(finite_doe) and all(a<=b for a,b in zip(finite_doe,finite_doe[1:])); doe_dec=bool(finite_doe) and all(a>=b for a,b in zip(finite_doe,finite_doe[1:]))
+        coord_ready=all(not s['coordinateRequiresBindingReview'] for s in sigs)
+        coord_info={'materialGroupAlias':alias,'sourceRecords':len(material_rows),'finiteDoeRunRecords':len(finite_doe),'doeRunMin':min(finite_doe) if finite_doe else None,'doeRunMax':max(finite_doe) if finite_doe else None,'doeRunSourceOrderMonotonic':doe_inc or doe_dec,'distinctCycleNumbers':sorted(set(finite_cycle)),'allCandidateSignalsUseDoeRunCoordinate':coord_ready}
+        coordinate_summary.append(coord_info)
+        candidates.append({'candidateId':f'SUST-MATERIAL-GROUP-{idx+1:02d}','datasetId':'su13148102-supplement','sourceArtifact':'sustainability-13-08102-s001.zip','sourceMember':MEMBER,'sourceFingerprint':'sha256:'+digest,'sourceScope':{'selection':'one source-defined Material # group, preserving delivered source order','materialGroupAlias':alias,'sourceRecords':len(material_rows),'displayedRecords':len(sampled),'retrievalUrl':used_url,'cycleStructure':'source Cycle # repeats within DOE conditions; DOE Run # is evaluated as the source-native material-level ordering coordinate','coordinateDiagnostics':coord_info},'signals':sigs,'candidateFingerprint':canonical_sha(sigs),'suggestedCatalogueCases':case_map[idx],'evidenceBoundary':'One source-defined material group from the measured DOE/tensile-linked supplement. DOE Run # is used only when it is complete and monotonic in delivered source order. Experimental associations remain bounded to this dataset and do not establish universal settings or production root cause.'})
+    result={'schemaVersion':1,'status':'unreviewed-source-derived-candidates','promotionEligible':False,'candidateCount':len(candidates),'materialGroupCount':len(groups),'coordinateDiagnostics':coordinate_summary,'candidates':candidates,'boundary':'Authoring evidence only. Material identifiers are emitted only as one-way aliases; raw rows are not retained. Repeated Cycle # blocks are not flattened. Source-defined DOE Run # is accepted only when it provides a complete monotonic coordinate in delivered material-group order; otherwise the candidate stays coordinate-review-blocked.'}
     OUT.write_text(json.dumps(result,indent=2,ensure_ascii=False)+'\n',encoding='utf-8')
-    print(json.dumps({'status':result['status'],'candidateCount':len(candidates),'candidateIds':[c['candidateId'] for c in candidates]},separators=(',',':')))
+    print(json.dumps({'status':result['status'],'candidateCount':len(candidates),'candidateIds':[c['candidateId'] for c in candidates],'coordinateDiagnostics':coordinate_summary},separators=(',',':')))
     return 0
 if __name__=='__main__': raise SystemExit(main())
