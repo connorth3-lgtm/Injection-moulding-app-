@@ -77,10 +77,23 @@ rewardWithoutGamification.mmGamificationRetired=true;
 function dailyChallengePanel(){
   let done=false;
   try{done=typeof window.dailyDone==='function'&&window.dailyDone()}catch(_){}
-  return `<div class="fun-dashboard mm-daily-only"><div class="card mission-card"><div class="mission-label"><span class="mission-dot"></span> TODAY'S PRACTICE</div><h2>${done?'Daily challenge complete ✓':'Solve one real moulding decision'}</h2><p>${done?'Continue the learning path or practise another troubleshooting scenario.':'A short scenario keeps troubleshooting judgement sharp without adding points, ranks or badges.'}</p><div class="hero-buttons"><button class="primary" onclick="${done?"switchView('lesson')":"openDailyChallenge()"}">${done?'Continue learning →':'Take daily challenge'}</button><button class="ghost" onclick="switchView('scenarios')">Open Troubleshooting Arena</button></div></div></div>`;
+  const primaryAction=done?'continue':'daily';
+  return `<div class="fun-dashboard mm-daily-only"><div class="card mission-card"><div class="mission-label"><span class="mission-dot"></span> TODAY'S PRACTICE</div><h2>${done?'Daily challenge complete ✓':'Solve one real moulding decision'}</h2><p>${done?'Continue the learning path or practise another troubleshooting scenario.':'A short scenario keeps troubleshooting judgement sharp without adding points, ranks or badges.'}</p><div class="hero-buttons"><button type="button" class="primary" data-mm-practice-action="${primaryAction}">${done?'Continue learning →':'Take daily challenge'}</button><button type="button" class="ghost" data-mm-practice-action="scenarios">Open Troubleshooting Arena</button></div></div></div>`;
 }
 dailyChallengePanel.mmGamificationRetired=true;
+function bindPracticeActions(){
+  if(window.__MM_PRACTICE_ACTIONS_BOUND__)return;
+  document.addEventListener('click',event=>{
+    const button=event.target?.closest?.('[data-mm-practice-action]');if(!button)return;
+    const action=button.dataset.mmPracticeAction;
+    if(action==='daily'){try{window.openDailyChallenge?.()}catch(_){}}
+    else if(action==='continue'){try{window.switchView?.('lesson')}catch(_){}}
+    else if(action==='scenarios'){try{window.switchView?.('scenarios')}catch(_){}}
+  });
+  window.__MM_PRACTICE_ACTIONS_BOUND__=true;
+}
 function retireLegacyGamification(){
+  bindPracticeActions();
   window.awardXP=rewardWithoutGamification;
   window.xpPop=function(){};
   window.checkAchievements=function(){return []};
