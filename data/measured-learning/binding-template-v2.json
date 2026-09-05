@@ -4,17 +4,19 @@
   "sourceFamily": "scatimdata-avaps",
   "datasetId": "scatimdata-avaps",
   "sourceReference": "exact publisher/repository reference",
-  "sourceFingerprint": "sha256:EXACT_HASH_FOR_SELECTED_SOURCE_ARTIFACT",
+  "sourceFingerprint": null,
   "licenceOrAccessStatus": "must exactly match governed source readiness scope",
   "extraction": {
     "description": "exact raw selection description",
-    "sourceArtifact": "exact registered artifact name",
-    "sourceMember": null,
+    "sourceArtifacts": [
+      {"name":"exact registered publisher artifact name","sha256":"sha256:EXACT_HASH_FOR_THIS_ARTIFACT"}
+    ],
+    "sourceMembers": [],
     "sourceOrderingPreserved": true,
     "window": {
       "kind": "range",
       "axis": "row-index",
-      "scope": "sheet/member/table or null",
+      "scope": "sheet/member/table/cycle-set scope or null",
       "start": 0,
       "endExclusive": 100,
       "unit": "row"
@@ -24,9 +26,10 @@
     {
       "id": "signal-id",
       "sourceChannel": "exact source column/channel name",
+      "sourceArtifact": "artifact name from extraction.sourceArtifacts when the signal comes from one selected file",
       "label": "Learner label",
-      "semantic": "must exactly match source-channels-v2.json",
-      "unit": "must exactly match source-channels-v2.json",
+      "semantic": "must exactly match the governed source-channel registry",
+      "unit": "must exactly match the governed source-channel registry",
       "representation": {
         "originalPointCount": 100,
         "reductionMethod": "deterministic-reviewed-method-v1",
