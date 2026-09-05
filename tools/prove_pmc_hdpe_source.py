@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Retrieve PMC4753395 supplementary data and prove the benchmarked tensile workbook."""
 from __future__ import annotations
-import hashlib, json, tempfile, urllib.request, zipfile
+import hashlib, io, json, urllib.request, zipfile
 from pathlib import Path
 from xml.etree import ElementTree as ET
 
@@ -53,9 +53,6 @@ def string_schema(blob):
 def main():
     out=Path('measured-source-proof'); out.mkdir(exist_ok=True)
     url,data=retrieve()
-    with zipfile.ZipFile(tempfile.SpooledTemporaryFile()) as _:
-        pass
-    import io
     with zipfile.ZipFile(io.BytesIO(data)) as z:
         matches=[n for n in z.namelist() if n.endswith('/'+WORKBOOK) or n==WORKBOOK]
         if len(matches)!=1: raise SystemExit(f'expected exactly one {WORKBOOK}, found {matches}')
