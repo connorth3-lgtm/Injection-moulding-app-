@@ -1,0 +1,49 @@
+name: MouldMaster Measured Learning Library
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'data/measured-learning/**'
+      - 'measured-learning-library.js'
+      - 'measured-learning-library.css'
+      - 'tools/build_measured_learning_case.py'
+      - 'qa_measured_learning_library.py'
+      - 'sources/MEASURED_LEARNING_LIBRARY_V1.md'
+      - '.github/workflows/measured-learning-library.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'data/measured-learning/**'
+      - 'measured-learning-library.js'
+      - 'measured-learning-library.css'
+      - 'tools/build_measured_learning_case.py'
+      - 'qa_measured_learning_library.py'
+      - 'sources/MEASURED_LEARNING_LIBRARY_V1.md'
+      - '.github/workflows/measured-learning-library.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  measured-learning:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - name: Compile promotion tooling
+        run: python -m py_compile tools/build_measured_learning_case.py qa_measured_learning_library.py
+      - name: Validate 70-case catalogue and promoted evidence
+        run: python qa_measured_learning_library.py
+      - name: Enforce no raw measured source payloads in learner directory
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          allowed={'.json'}
+          root=Path('data/measured-learning')
+          bad=[str(p) for p in root.rglob('*') if p.is_file() and p.suffix.lower() not in allowed]
+          assert not bad, f'Unexpected learner-data file types: {bad}'
+          for p in root.rglob('*'):
+              if p.is_file():
+                  assert p.stat().st_size <= 1024*1024, f'Individual measured learner asset exceeds 1 MiB: {p}'
+          PY
