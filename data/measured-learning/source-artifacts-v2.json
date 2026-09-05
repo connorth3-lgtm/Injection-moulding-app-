@@ -1,9 +1,10 @@
 {
-  "schemaVersion": 2,
+  "schemaVersion": 3,
   "registryId": "measured-learning-source-artifacts-v2",
   "policy": {
     "exactArtifactHashPairRequired": true,
     "artifactHashMustAppearInBenchmarkEvidence": true,
+    "multiArtifactSelectionsMustListEveryExactArtifact": true,
     "aggregateWorkflowArtifactDigestsAreNotSourceArtifacts": true,
     "rawThirdPartyArtifactsCommitted": false
   },
@@ -34,9 +35,16 @@
     {
       "datasetId": "impure-pascoe-2022",
       "benchmarkResult": "data/public-benchmark-results/impure-pascoe-2022-v1.json",
-      "artifactsPendingChannelResolution": true,
       "benchmarkCollection": {"path":"manifest","nameKey":"name","shaKey":"sha256"},
-      "artifacts": []
+      "selectionBoundary": "Only cycles 250-255 are registered for the first measured-learning authoring bundle. Other publisher files remain outside this registry until explicitly required and revalidated.",
+      "artifacts": [
+        {"artifactId":"cycle-250","name":"Pascoe_17_05_2022_Cycle250.csv","sha256":"sha256:6540833910970eda4d66ab7b13a06da6afbdd2dc2a45587c9528ab9dac3e8652"},
+        {"artifactId":"cycle-251","name":"Pascoe_17_05_2022_Cycle251.csv","sha256":"sha256:729c07e572bdaa6901f372fac811aeab4e9631ebdc92ef1314a1159305eb9e6f"},
+        {"artifactId":"cycle-252","name":"Pascoe_17_05_2022_Cycle252.csv","sha256":"sha256:0525b0adeb026d12e5817ce4276e667b24ffa934eaf918561f64ac9ec1a24f85"},
+        {"artifactId":"cycle-253","name":"Pascoe_17_05_2022_Cycle253.csv","sha256":"sha256:b65d753b965e7d0e104af20328fc7353cd791349fe8562fa439d20fe59f29fa6"},
+        {"artifactId":"cycle-254","name":"Pascoe_17_05_2022_Cycle254.csv","sha256":"sha256:5461a7085d0ff253134e81d20963a2bca59e5d81c19ec2db0bc94508f0bd4318"},
+        {"artifactId":"cycle-255","name":"Pascoe_17_05_2022_Cycle255.csv","sha256":"sha256:eec45ed9cf3ebfbd535f1b722fb2eba8e5ae69ad2e855720cb05ebb2fd241e3b"}
+      ]
     },
     {
       "datasetId": "iguzzini-road-lenses",
