@@ -1,0 +1,71 @@
+{
+  "schemaVersion": 2,
+  "caseId": "MLM-001",
+  "sourceFamily": "scatimdata-avaps",
+  "datasetId": "scatimdata-avaps",
+  "sourceReference": "exact publisher/repository artifact reference",
+  "sourceFingerprint": "sha256:REPLACE_WITH_FINGERPRINT_RECORDED_IN_BENCHMARK_EVIDENCE",
+  "licenceOrAccessStatus": "must match governed source terms",
+  "extraction": {
+    "description": "exact cycle/row/window selection",
+    "sourceArtifact": "exact filename/archive/member/table identity",
+    "sourceOrderingPreserved": true
+  },
+  "signals": [
+    {
+      "id": "signal-id",
+      "label": "Measured signal",
+      "semantic": "resolved engineering semantic",
+      "unit": "resolved engineering unit",
+      "representation": {
+        "originalPointCount": 0,
+        "reductionMethod": "deterministic-reviewed-method-v1",
+        "xSemantic": "time|cycle-index|observation-index|strain|other-resolved-axis",
+        "xUnit": "s|ms|cycle|index|%|other-resolved-unit",
+        "x": [],
+        "y": []
+      }
+    }
+  ],
+  "features": [
+    {
+      "id": "feature-id",
+      "label": "Reviewed feature",
+      "method": "mean",
+      "methodVersion": 1,
+      "calculationScope": "exact source/window or named signal scope",
+      "inputFingerprint": "sha256:REPLACE_WITH_FEATURE_INPUT_FINGERPRINT",
+      "calculationFingerprint": "sha256:REPLACE_WITH_CALCULATION_FINGERPRINT",
+      "value": 0.0,
+      "unit": "resolved unit or null"
+    }
+  ],
+  "observations": [
+    {
+      "id": "OBS-1",
+      "text": "Reviewed statement describing only what the measurements support.",
+      "support": ["signal:signal-id"]
+    }
+  ],
+  "learnerTask": {
+    "observePrompt": "What can you establish from these measurements?",
+    "investigatePrompt": "What evidence would best discriminate between the remaining explanations?",
+    "explanation": "Reviewed engineering explanation.",
+    "takeaway": "State the evidence lesson without converting association into root cause."
+  },
+  "supportedConclusions": ["One or more conclusions directly supported by the selected measured evidence."],
+  "unsupportedConclusions": ["One or more tempting conclusions the selected evidence does not establish."],
+  "limitations": ["Study, sampling, context and generalisation limitations."],
+  "novelty": {
+    "learningObjective": "specific evidence skill this case adds to the library",
+    "sourceWindowReuse": false,
+    "reuseJustification": null
+  },
+  "sourceEstablishesCausality": false,
+  "claimScope": "observation_only",
+  "reviewed": false,
+  "reviewerId": "stable reviewer identity or review-system identity",
+  "reviewerRole": "engineering-evidence-review",
+  "reviewRecord": "stable review reference",
+  "reviewedAt": null
+}
