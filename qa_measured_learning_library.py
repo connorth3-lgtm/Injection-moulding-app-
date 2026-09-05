@@ -307,7 +307,7 @@ def main() -> int:
             sa, sb = a["source"], b["source"]
             if (sa["familyId"],sa["sourceArtifact"],sa.get("sourceMember")) != (sb["familyId"],sb["sourceArtifact"],sb.get("sourceMember")):
                 continue
-            overlap = window_overlap(sa["extraction"]["window"], sb["source"]["extraction"]["window"] if "source" in sb else sb["extraction"]["window"])
+            overlap = window_overlap(sa["extraction"]["window"], sb["extraction"]["window"])
             if overlap >= overlap_threshold:
                 substantial_cases.update((a["id"],b["id"]))
                 assert a["novelty"]["sourceWindowReuse"] and b["novelty"]["sourceWindowReuse"], f"substantial overlapping windows require reuse declaration: {a['id']}/{b['id']}"
