@@ -1,1 +1,149 @@
-{"schemaVersion":2,"registryId":"measured-learning-source-readiness-v2","policy":{"promotionIsFailClosed":true,"catalogueEligibilityDoesNotImplyPromotionReadiness":true,"promotionRequiresRegisteredArtifactAndChannel":true,"restrictedRightsRequireExplicitProductScopeApproval":true,"unresolvedUnitsOrSemanticsBlockPromotion":true,"sourceArtifactFingerprintMustMatchExactArtifact":true},"sources":[{"datasetId":"mendeley-gtnb4j7bfx-v1","ledgerState":"accepted-profiled","benchmarkResult":"data/public-benchmark-results/gtnb4j7bfx-v1.json","promotionReady":true,"rightsScope":"cc-by-4.0","unitsResolved":true,"semanticsResolved":true,"capabilities":{"timeSeries":false,"multiCycle":true,"processWaveform":false,"recordLevelProcess":true,"qualityOutcome":true,"materialPhysical":false,"dualTimeBase":false},"gateReason":"Exact workbook and process separation are fingerprinted. Units and bounded historical-record semantics are governed per source channel; command-versus-actual status is not overstated."},{"datasetId":"scatimdata-avaps","ledgerState":"accepted-profiled","benchmarkResult":"data/public-benchmark-results/scatimdata-avaps-v1.json","promotionReady":false,"rightsScope":"cc-by-4.0","unitsResolved":false,"semanticsResolved":true,"capabilities":{"timeSeries":true,"multiCycle":true,"processWaveform":true,"recordLevelProcess":true,"qualityOutcome":true,"materialPhysical":false,"dualTimeBase":false},"gateReason":"The three archives and waveform semantics are fingerprinted. The companion paper establishes machine injection-flow and injection-pressure quantity conventions, but V2 still requires an explicit source-channel unit decision tied to the delivered waveform tables before promotion."},{"datasetId":"su13148102-supplement","ledgerState":"accepted-profiled","benchmarkResult":"data/public-benchmark-results/su13148102-supplement-v1.json","promotionReady":true,"rightsScope":"cc-by-4.0","unitsResolved":true,"semanticsResolved":true,"capabilities":{"timeSeries":false,"multiCycle":true,"processWaveform":false,"recordLevelProcess":true,"qualityOutcome":true,"materialPhysical":true,"dualTimeBase":false},"gateReason":"Exact publisher supplement is fingerprinted and selected unit-bearing process/mechanical channels are governed explicitly."},{"datasetId":"impure-pascoe-2022","ledgerState":"accepted-profiled-unit-limited","benchmarkResult":"data/public-benchmark-results/impure-pascoe-2022-v1.json","promotionReady":false,"rightsScope":"cc-by-4.0","unitsResolved":false,"semanticsResolved":false,"capabilities":{"timeSeries":true,"multiCycle":true,"processWaveform":true,"recordLevelProcess":false,"qualityOutcome":false,"materialPhysical":false,"dualTimeBase":false},"gateReason":"Cycle files are exact and fingerprinted, but analogue channel engineering units/semantics remain unresolved. Header names alone are not treated as proof."},{"datasetId":"iguzzini-road-lenses","ledgerState":"accepted-profiled-restricted-research-education","benchmarkResult":"data/public-benchmark-results/iguzzini-road-lenses-v1.json","promotionReady":false,"rightsScope":"research-education-only","unitsResolved":true,"semanticsResolved":true,"capabilities":{"timeSeries":false,"multiCycle":true,"processWaveform":false,"recordLevelProcess":true,"qualityOutcome":true,"materialPhysical":false,"dualTimeBase":false},"gateReason":"Exact production CSV is profiled, but recorded release terms are research/education-only and raw redistribution is not widened into product learner rights."},{"datasetId":"openmms-t4g","ledgerState":"accepted-profiled","benchmarkResult":"data/public-benchmark-results/openmms-t4g-v1.json","promotionReady":true,"rightsScope":"bsd-3-clause","unitsResolved":true,"semanticsResolved":true,"capabilities":{"timeSeries":true,"multiCycle":true,"processWaveform":true,"recordLevelProcess":false,"qualityOutcome":false,"materialPhysical":false,"dualTimeBase":true},"gateReason":"Pinned CSV has exact SHA-256 and source-defined units/semantics for ten measured channels across two governed time bases."},{"datasetId":"forinfpro-himd-v1","ledgerState":"accepted-profiled","benchmarkResult":"data/public-benchmark-results/forinfpro-himd-v1.json","promotionReady":false,"rightsScope":"cc-by-4.0","unitsResolved":false,"semanticsResolved":true,"capabilities":{"timeSeries":true,"multiCycle":false,"processWaveform":true,"recordLevelProcess":false,"qualityOutcome":false,"materialPhysical":false,"dualTimeBase":false},"gateReason":"Three exact public files are fingerprinted, but the visible release contains one cycle and selected channel units are not yet fully governed."},{"datasetId":"mendeley-fhj5p7ww9v-v1","ledgerState":"accepted-profiled-restricted-noncommercial","benchmarkResult":"data/public-benchmark-results/fhj5p7ww9v-v1.json","promotionReady":false,"rightsScope":"cc-by-nc-3.0","unitsResolved":true,"semanticsResolved":true,"capabilities":{"timeSeries":false,"multiCycle":true,"processWaveform":false,"recordLevelProcess":false,"qualityOutcome":true,"materialPhysical":true,"dualTimeBase":false},"gateReason":"Direct outcomes are profiled, but CC BY-NC product-scope use is not assumed. Explicit approval is required before promotion."},{"datasetId":"mendeley-6k8fpbrd9s-v1","ledgerState":"accepted-profiled-material-characterization","benchmarkResult":"data/public-benchmark-results/6k8fpbrd9s-v1.json","promotionReady":true,"rightsScope":"cc-by-4.0","unitsResolved":true,"semanticsResolved":true,"capabilities":{"timeSeries":false,"multiCycle":true,"processWaveform":false,"recordLevelProcess":false,"qualityOutcome":false,"materialPhysical":true,"dualTimeBase":false},"gateReason":"Exact pvT workbook was re-retrieved by publisher file identity and SHA-256. Figure headers explicitly govern time, pressure, temperature and specific-volume units for the selected learning channels."},{"datasetId":"mendeley-4h98rz9f92-v3","ledgerState":"accepted-profiled-record-level-injection-moulding","benchmarkResult":"data/public-benchmark-results/4h98rz9f92-v3.json","promotionReady":true,"rightsScope":"cc-by-4.0","unitsResolved":true,"semanticsResolved":true,"capabilities":{"timeSeries":false,"multiCycle":true,"processWaveform":false,"recordLevelProcess":true,"qualityOutcome":true,"materialPhysical":true,"dualTimeBase":false},"gateReason":"Exact Raw Data.xlsx was re-retrieved and SHA-256 matched. Sheet1 explicitly identifies process inputs and direct replicate outcome columns with units; derived average columns remain excluded."},{"datasetId":"pmc4753395-hdpe-cenosphere-v1","ledgerState":"accepted-profiled-material-test-traces","benchmarkResult":"data/public-benchmark-results/pmc4753395-hdpe-cenosphere-v1.json","promotionReady":false,"rightsScope":"cc-by-4.0","unitsResolved":false,"semanticsResolved":true,"capabilities":{"timeSeries":true,"multiCycle":true,"processWaveform":false,"recordLevelProcess":false,"qualityOutcome":true,"materialPhysical":true,"dualTimeBase":false},"gateReason":"Measured stress/strain workbook is fingerprinted, but the current PMC delivery route returns an interstitial and exact worksheet channel units/headers have not yet been re-proven in V2."},{"datasetId":"mendeley-yxz2w7ctnh-v1","ledgerState":"accepted-profiled-record-level-injection-mechanical-testing","benchmarkResult":"data/public-benchmark-results/yxz2w7ctnh-v1.json","promotionReady":true,"rightsScope":"cc-by-4.0","unitsResolved":true,"semanticsResolved":true,"capabilities":{"timeSeries":false,"multiCycle":true,"processWaveform":false,"recordLevelProcess":true,"qualityOutcome":true,"materialPhysical":true,"dualTimeBase":false},"gateReason":"All four publisher workbooks were re-retrieved and SHA-256 matched. Explicit injection-moulded tensile and bending blocks expose source column units for governed direct measurements; FDM and ambiguous impact content remain excluded."}]}
+{
+  "schemaVersion": 3,
+  "registryId": "measured-learning-source-readiness-v2",
+  "policy": {
+    "promotionIsFailClosed": true,
+    "catalogueEligibilityDoesNotImplyPromotionReadiness": true,
+    "promotionRequiresRegisteredArtifactAndChannel": true,
+    "restrictedRightsRequireExplicitProductScopeApproval": true,
+    "unresolvedUnitsOrSemanticsBlockThatChannel": true,
+    "familyPromotionReadyMeansAtLeastOneGovernedPromotableChannel": true,
+    "casePromotionRequiresAllCaseRequiredChannelsReady": true,
+    "sourceArtifactFingerprintMustMatchExactArtifact": true
+  },
+  "sources": [
+    {
+      "datasetId": "mendeley-gtnb4j7bfx-v1",
+      "ledgerState": "accepted-profiled",
+      "benchmarkResult": "data/public-benchmark-results/gtnb4j7bfx-v1.json",
+      "promotionReady": true,
+      "rightsScope": "cc-by-4.0",
+      "unitsResolved": true,
+      "semanticsResolved": true,
+      "capabilities": {"timeSeries":false,"multiCycle":true,"processWaveform":false,"recordLevelProcess":true,"qualityOutcome":true,"materialPhysical":false,"dualTimeBase":false},
+      "gateReason": "Exact workbook and process separation are fingerprinted. Units and bounded historical-record semantics are governed per source channel; command-versus-actual status is not overstated."
+    },
+    {
+      "datasetId": "scatimdata-avaps",
+      "ledgerState": "accepted-profiled",
+      "benchmarkResult": "data/public-benchmark-results/scatimdata-avaps-v1.json",
+      "promotionReady": true,
+      "rightsScope": "cc-by-4.0",
+      "unitsResolved": true,
+      "semanticsResolved": true,
+      "channelResolution": "partial-governed",
+      "capabilities": {"timeSeries":true,"multiCycle":true,"processWaveform":true,"recordLevelProcess":true,"qualityOutcome":true,"materialPhysical":false,"dualTimeBase":false},
+      "gateReason": "Dataset1.zip is exact and fingerprinted. Injection pressure, injection flow and part weight are governed at channel level from the source, peer-reviewed experiment and same-machine engineering context. distanceA remains explicitly non-promotable because its source transform does not reproduce the paper's reported mean; cases requiring that channel remain blocked."
+    },
+    {
+      "datasetId": "su13148102-supplement",
+      "ledgerState": "accepted-profiled",
+      "benchmarkResult": "data/public-benchmark-results/su13148102-supplement-v1.json",
+      "promotionReady": true,
+      "rightsScope": "cc-by-4.0",
+      "unitsResolved": true,
+      "semanticsResolved": true,
+      "capabilities": {"timeSeries":false,"multiCycle":true,"processWaveform":false,"recordLevelProcess":true,"qualityOutcome":true,"materialPhysical":true,"dualTimeBase":false},
+      "gateReason": "Exact publisher supplement is fingerprinted and selected unit-bearing process/mechanical channels are governed explicitly."
+    },
+    {
+      "datasetId": "impure-pascoe-2022",
+      "ledgerState": "accepted-profiled-unit-limited",
+      "benchmarkResult": "data/public-benchmark-results/impure-pascoe-2022-v1.json",
+      "promotionReady": false,
+      "rightsScope": "cc-by-4.0",
+      "unitsResolved": false,
+      "semanticsResolved": false,
+      "capabilities": {"timeSeries":true,"multiCycle":true,"processWaveform":true,"recordLevelProcess":false,"qualityOutcome":false,"materialPhysical":false,"dualTimeBase":false},
+      "gateReason": "Cycle files are exact and fingerprinted, but analogue channel engineering units/semantics remain unresolved. Header names alone are not treated as proof."
+    },
+    {
+      "datasetId": "iguzzini-road-lenses",
+      "ledgerState": "accepted-profiled-restricted-research-education",
+      "benchmarkResult": "data/public-benchmark-results/iguzzini-road-lenses-v1.json",
+      "promotionReady": false,
+      "rightsScope": "research-education-only",
+      "unitsResolved": true,
+      "semanticsResolved": true,
+      "capabilities": {"timeSeries":false,"multiCycle":true,"processWaveform":false,"recordLevelProcess":true,"qualityOutcome":true,"materialPhysical":false,"dualTimeBase":false},
+      "gateReason": "Exact production CSV is profiled, but recorded release terms are research/education-only and raw redistribution is not widened into product learner rights."
+    },
+    {
+      "datasetId": "openmms-t4g",
+      "ledgerState": "accepted-profiled",
+      "benchmarkResult": "data/public-benchmark-results/openmms-t4g-v1.json",
+      "promotionReady": true,
+      "rightsScope": "bsd-3-clause",
+      "unitsResolved": true,
+      "semanticsResolved": true,
+      "capabilities": {"timeSeries":true,"multiCycle":true,"processWaveform":true,"recordLevelProcess":false,"qualityOutcome":false,"materialPhysical":false,"dualTimeBase":true},
+      "gateReason": "Pinned CSV has exact SHA-256 and source-defined units/semantics for ten measured channels across two governed time bases."
+    },
+    {
+      "datasetId": "forinfpro-himd-v1",
+      "ledgerState": "accepted-profiled",
+      "benchmarkResult": "data/public-benchmark-results/forinfpro-himd-v1.json",
+      "promotionReady": false,
+      "rightsScope": "cc-by-4.0",
+      "unitsResolved": false,
+      "semanticsResolved": true,
+      "capabilities": {"timeSeries":true,"multiCycle":false,"processWaveform":true,"recordLevelProcess":false,"qualityOutcome":false,"materialPhysical":false,"dualTimeBase":false},
+      "gateReason": "Three exact public files are fingerprinted, but the visible release contains one cycle and selected channel units are not yet fully governed."
+    },
+    {
+      "datasetId": "mendeley-fhj5p7ww9v-v1",
+      "ledgerState": "accepted-profiled-restricted-noncommercial",
+      "benchmarkResult": "data/public-benchmark-results/fhj5p7ww9v-v1.json",
+      "promotionReady": false,
+      "rightsScope": "cc-by-nc-3.0",
+      "unitsResolved": true,
+      "semanticsResolved": true,
+      "capabilities": {"timeSeries":false,"multiCycle":true,"processWaveform":false,"recordLevelProcess":false,"qualityOutcome":true,"materialPhysical":true,"dualTimeBase":false},
+      "gateReason": "Direct outcomes are profiled, but CC BY-NC product-scope use is not assumed. Explicit approval is required before promotion."
+    },
+    {
+      "datasetId": "mendeley-6k8fpbrd9s-v1",
+      "ledgerState": "accepted-profiled-material-characterization",
+      "benchmarkResult": "data/public-benchmark-results/6k8fpbrd9s-v1.json",
+      "promotionReady": true,
+      "rightsScope": "cc-by-4.0",
+      "unitsResolved": true,
+      "semanticsResolved": true,
+      "capabilities": {"timeSeries":false,"multiCycle":true,"processWaveform":false,"recordLevelProcess":false,"qualityOutcome":false,"materialPhysical":true,"dualTimeBase":false},
+      "gateReason": "Exact pvT workbook was re-retrieved by publisher file identity and SHA-256. Figure headers explicitly govern time, pressure, temperature and specific-volume units for the selected learning channels."
+    },
+    {
+      "datasetId": "mendeley-4h98rz9f92-v3",
+      "ledgerState": "accepted-profiled-record-level-injection-moulding",
+      "benchmarkResult": "data/public-benchmark-results/4h98rz9f92-v3.json",
+      "promotionReady": true,
+      "rightsScope": "cc-by-4.0",
+      "unitsResolved": true,
+      "semanticsResolved": true,
+      "capabilities": {"timeSeries":false,"multiCycle":true,"processWaveform":false,"recordLevelProcess":true,"qualityOutcome":true,"materialPhysical":true,"dualTimeBase":false},
+      "gateReason": "Exact Raw Data.xlsx was re-retrieved and SHA-256 matched. Sheet1 explicitly identifies process inputs and direct replicate outcome columns with units; derived average columns remain excluded."
+    },
+    {
+      "datasetId": "pmc4753395-hdpe-cenosphere-v1",
+      "ledgerState": "accepted-profiled-material-test-traces",
+      "benchmarkResult": "data/public-benchmark-results/pmc4753395-hdpe-cenosphere-v1.json",
+      "promotionReady": false,
+      "rightsScope": "cc-by-4.0",
+      "unitsResolved": false,
+      "semanticsResolved": true,
+      "capabilities": {"timeSeries":true,"multiCycle":true,"processWaveform":false,"recordLevelProcess":false,"qualityOutcome":true,"materialPhysical":true,"dualTimeBase":false},
+      "gateReason": "Measured stress/strain workbook is fingerprinted, but the current PMC delivery route returns an interstitial and exact worksheet channel units/headers have not yet been re-proven in V2."
+    },
+    {
+      "datasetId": "mendeley-yxz2w7ctnh-v1",
+      "ledgerState": "accepted-profiled-record-level-injection-mechanical-testing",
+      "benchmarkResult": "data/public-benchmark-results/yxz2w7ctnh-v1.json",
+      "promotionReady": true,
+      "rightsScope": "cc-by-4.0",
+      "unitsResolved": true,
+      "semanticsResolved": true,
+      "capabilities": {"timeSeries":false,"multiCycle":true,"processWaveform":false,"recordLevelProcess":true,"qualityOutcome":true,"materialPhysical":true,"dualTimeBase":false},
+      "gateReason": "All four publisher workbooks were re-retrieved and SHA-256 matched. Explicit injection-moulded tensile and bending blocks expose source column units for governed direct measurements; FDM and ambiguous impact content remain excluded."
+    }
+  ]
+}
