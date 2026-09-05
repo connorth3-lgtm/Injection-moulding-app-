@@ -1,7 +1,7 @@
 /* MouldMaster PWA shell controller — 2026.09.06 */
 (function(){
 'use strict';
-const RELEASE='2026.09.06.4';
+const RELEASE='2026.09.06.5';
 const CONTENT='2026.08.26.1';
 const REFERENCE_DATA_URL='./reference-data.html';
 function setText(el,value){if(el&&el.textContent!==value)el.textContent=value}
@@ -112,6 +112,7 @@ function retireLegacyGamification(){
 }
 function scrubLegacyGamification(){
   document.querySelectorAll('#xpPop,.xp-pop,.achievement-grid,.fun-settings,.fun-dashboard .level-card,#profileMini .fun-hud').forEach(el=>el.remove());
+  document.querySelectorAll('.scenario-scoreboard .scorebox').forEach(box=>{if(/\bXP\b/i.test(box.textContent||''))box.remove()});
   document.querySelectorAll('.section-head h2,.section-head h3').forEach(heading=>{
     if(/^Achievements$/i.test((heading.textContent||'').trim())){
       const head=heading.closest('.section-head');
@@ -127,8 +128,74 @@ function scrubLegacyGamification(){
   document.querySelectorAll('.exam-integrity').forEach(el=>{
     el.childNodes.forEach(node=>{
       if(node.nodeType===Node.TEXT_NODE&&/XP and achievements cannot change this rule/i.test(node.nodeValue||''))node.nodeValue=(node.nodeValue||'').replace(/XP and achievements cannot change this rule\./i,'Practice rewards cannot change this rule.');
+      if(node.nodeType===Node.TEXT_NODE&&/XP is only an engagement reward/i.test(node.nodeValue||''))node.nodeValue=(node.nodeValue||'').replace(/XP is only an engagement reward; it does not affect certificates\./i,'Practice activity does not affect certificates.');
     });
   });
+  document.querySelectorAll('.lesson-quest small').forEach(el=>{if(/Complete the lesson for \d+ XP\./i.test(el.textContent||''))setText(el,(el.textContent||'').replace(/Complete the lesson for \d+ XP\./i,'Complete the lesson when you are ready.'))});
+}
+function setQuestionCollapsed(elements,collapsed){elements.forEach(el=>el.classList.toggle('mm-question-collapsed',collapsed))}
+function enhanceScenarioQuestionLists(){
+  const cards=Array.from(document.querySelectorAll('#scenarios .scenario'));
+  if(!cards.length)return;
+  cards.forEach((card,index)=>{
+    const collapsible=Array.from(card.children).filter(el=>el.matches('p,.choice,.feedback'));
+    if(!collapsible.length)return;
+    collapsible.forEach(el=>el.classList.add('mm-scenario-collapsible'));
+    let toggle=card.querySelector('[data-mm-scenario-toggle]');
+    if(!isMobileNav()){
+      setQuestionCollapsed(collapsible,false);
+      if(toggle){toggle.hidden=true;toggle.setAttribute('aria-expanded','true');setText(toggle,'Hide scenario')}
+      return;
+    }
+    if(!toggle){
+      const heading=card.querySelector('h3');if(!heading)return;
+      const collapsed=index>0;
+      toggle=document.createElement('button');toggle.type='button';toggle.className='ghost mm-question-toggle';toggle.dataset.mmScenarioToggle='1';toggle.setAttribute('aria-expanded',String(!collapsed));toggle.textContent=collapsed?'Show scenario':'Hide scenario';
+      heading.insertAdjacentElement('afterend',toggle);
+      setQuestionCollapsed(collapsible,collapsed);
+      toggle.addEventListener('click',()=>{
+        const expanded=toggle.getAttribute('aria-expanded')==='true';
+        toggle.setAttribute('aria-expanded',String(!expanded));
+        setText(toggle,expanded?'Show scenario':'Hide scenario');
+        setQuestionCollapsed(collapsible,expanded);
+      });
+    }else toggle.hidden=false;
+  });
+}
+function enhanceExamQuestionList(){
+  const host=document.getElementById('examQuestions');if(!host)return;
+  const questions=Array.from(host.children).filter(el=>el.classList.contains('question'));
+  const existing=document.querySelector('[data-mm-exam-question-toggle]');
+  if(!isMobileNav()||questions.length<=5){
+    questions.forEach(q=>q.classList.remove('mm-question-collapsed'));
+    if(existing)existing.hidden=true;
+    return;
+  }
+  if(host.dataset.mmQuestionDisclosure==='1')return;
+  host.dataset.mmQuestionDisclosure='1';
+  const extra=questions.slice(5);setQuestionCollapsed(extra,true);
+  const toggle=document.createElement('button');toggle.type='button';toggle.className='secondary mm-question-toggle';toggle.dataset.mmExamQuestionToggle='1';toggle.setAttribute('aria-expanded','false');toggle.textContent=`Show questions 6–${questions.length}`;
+  host.insertAdjacentElement('afterend',toggle);
+  toggle.addEventListener('click',()=>{
+    const expanded=toggle.getAttribute('aria-expanded')==='true';
+    toggle.setAttribute('aria-expanded',String(!expanded));
+    setText(toggle,expanded?`Show questions 6–${questions.length}`:`Hide questions 6–${questions.length}`);
+    setQuestionCollapsed(extra,expanded);
+  });
+}
+function installQuestionDisclosures(){enhanceScenarioQuestionLists();enhanceExamQuestionList()}
+function scheduleQuestionDisclosures(){(window.requestAnimationFrame||function(fn){return setTimeout(fn,0)})(()=>{scrubLegacyGamification();installQuestionDisclosures()})}
+function patchQuestionListRenderers(){
+  if(window.__MM_QUESTION_LIST_RENDER_PATCH__)return;
+  if(typeof window.renderScenarios==='function'){
+    const baseScenarios=window.renderScenarios;
+    window.renderScenarios=function(){const r=baseScenarios.apply(this,arguments);scheduleQuestionDisclosures();return r};
+  }
+  if(typeof window.startExam==='function'){
+    const baseStartExam=window.startExam;
+    window.startExam=function(){const r=baseStartExam.apply(this,arguments);scheduleQuestionDisclosures();return r};
+  }
+  window.__MM_QUESTION_LIST_RENDER_PATCH__=true;
 }
 function installMobileLayoutGuard(){
   if(document.getElementById('mm-mobile-layout-guard-style'))return;
@@ -152,6 +219,8 @@ function installMobileLayoutGuard(){
 .lesson-read-primary{border-width:1px!important;box-shadow:none!important}
 .fun-dashboard.mm-daily-only{grid-template-columns:1fr!important;margin-bottom:14px!important}
 .fun-dashboard.mm-daily-only .mission-card{min-height:0!important;padding:18px!important}
+.mm-question-collapsed{display:none!important}.mm-question-toggle{width:100%;margin:10px 0 5px!important;min-height:42px!important}
+#examQuestions + .mm-question-toggle{margin:8px 0 14px!important}
 @media(max-width:700px){
   :root{--mm-mobile-nav-clearance:104px}
   html{scroll-padding-bottom:calc(var(--mm-mobile-nav-clearance) + env(safe-area-inset-bottom))}
@@ -175,6 +244,7 @@ function installMobileLayoutGuard(){
   .course-card{min-height:0!important;padding:14px!important}
   .lesson-body{padding:14px!important}
   .section-head{margin:18px 0 9px!important}
+  .scenario .mm-question-toggle{margin:6px 0 10px!important}
   .toast{bottom:calc(84px + env(safe-area-inset-bottom))!important}
   html body[data-mm-view="profile"] .topbar{gap:10px!important;margin-bottom:14px!important;padding:0 0 4px!important}
   html body[data-mm-view="profile"] .top-actions{width:100%!important;display:flex!important;flex-wrap:wrap!important;gap:8px!important;align-items:stretch!important;margin:0!important}
@@ -234,12 +304,12 @@ async function register(){
   try{const reg=await navigator.serviceWorker.register('./service-worker.js',{scope:'./'});await reg.update();return reg}catch(e){console.warn('[MouldMaster] Offline/update support unavailable:',e);return null}
 }
 let syncQueued=false;
-function runSync(){syncQueued=false;syncPlatformClasses();syncLabels();syncStandardsReviewDate();syncUpdateCard();hideInternalQaProvenance();retireLegacyGamification();installMobileLayoutGuard();scrubLegacyGamification();syncVisibleViewChrome();dockReferenceLauncher();configureReferenceDrawer();dockReferenceDataLauncher();configureReferenceDataDrawer();addNZLegacyNote()}
+function runSync(){syncQueued=false;syncPlatformClasses();syncLabels();syncStandardsReviewDate();syncUpdateCard();hideInternalQaProvenance();patchQuestionListRenderers();retireLegacyGamification();installMobileLayoutGuard();scrubLegacyGamification();installQuestionDisclosures();syncVisibleViewChrome();dockReferenceLauncher();configureReferenceDrawer();dockReferenceDataLauncher();configureReferenceDataDrawer();addNZLegacyNote()}
 function scheduleSync(){if(syncQueued)return;syncQueued=true;(window.requestAnimationFrame||function(fn){return setTimeout(fn,0)})(runSync)}
 function bindLifecycle(){
   const shell=window.MM_APP_SHELL;
   shell?.events?.onViewChange?.(scheduleSync);
-  for(const view of ['dashboard','standards','materials','profile','exams'])shell?.events?.onRender?.(view,scheduleSync);
+  for(const view of ['dashboard','scenarios','standards','materials','profile','exams'])shell?.events?.onRender?.(view,scheduleSync);
   window.addEventListener('mm:domains-ready',scheduleSync,{once:true});
 }
 patchStandards();bindLifecycle();
@@ -247,5 +317,5 @@ runSync();
 window.addEventListener('resize',scheduleSync,{passive:true});
 window.addEventListener('load',()=>{runSync();register();setTimeout(scheduleSync,250)},{once:true});
 document.addEventListener('visibilitychange',()=>{if(!document.hidden)scheduleSync()});
-window.MM_SHELL_RELEASE=RELEASE;window.MM_CONTENT_RELEASE=CONTENT;window.MM_DISPLAY_CONTEXT=displayContext;window.MM_REFERENCE_LAUNCHER_DOCK='sidebar-first-normal-flow';window.MM_REFERENCE_DRAWER_MODE='non-blocking';window.MM_REFERENCE_DATA_URL=REFERENCE_DATA_URL;window.MM_REFERENCE_DATA_LAUNCHER_DOCK='mobile-more-standalone-page';window.MM_REFERENCE_DATA_DRAWER_MODE='standalone-mobile-page-desktop-drawer';window.MM_BROWSER_UPDATE_MODE='shared-origin-service-worker';window.MM_MOBILE_LAYOUT_GUARD='home-task-first-fixed-nav-clearance-v2';window.MM_IOS_LAYOUT_PATCH='safe-area-viewport-profile-v1';window.MM_UI_POLISH='compact-shell-no-gamification-v1';window.MM_GAMIFICATION_MODE='retired';
+window.MM_SHELL_RELEASE=RELEASE;window.MM_CONTENT_RELEASE=CONTENT;window.MM_DISPLAY_CONTEXT=displayContext;window.MM_REFERENCE_LAUNCHER_DOCK='sidebar-first-normal-flow';window.MM_REFERENCE_DRAWER_MODE='non-blocking';window.MM_REFERENCE_DATA_URL=REFERENCE_DATA_URL;window.MM_REFERENCE_DATA_LAUNCHER_DOCK='mobile-more-standalone-page';window.MM_REFERENCE_DATA_DRAWER_MODE='standalone-mobile-page-desktop-drawer';window.MM_BROWSER_UPDATE_MODE='shared-origin-service-worker';window.MM_MOBILE_LAYOUT_GUARD='home-task-first-fixed-nav-clearance-v2';window.MM_IOS_LAYOUT_PATCH='safe-area-viewport-profile-v1';window.MM_UI_POLISH='compact-shell-no-gamification-v1';window.MM_QUESTION_DISCLOSURES='mobile-scenario-and-exam-v1';window.MM_GAMIFICATION_MODE='retired';
 })();
