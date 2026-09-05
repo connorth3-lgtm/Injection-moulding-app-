@@ -20,6 +20,8 @@
     .mmrd-head{position:static!important;padding-top:16px!important}
     .mmrd-body{overflow:visible!important;padding-bottom:28px!important}
     .mmrd-close{display:none!important}
+    .mm-ref-kind{margin:0 0 5px!important;color:#72e6cd!important;font-size:11px!important;font-weight:800!important;text-transform:uppercase!important;letter-spacing:.06em!important}
+    .mmrd-card a{display:inline-flex;min-height:40px;align-items:center;color:#8ee8d7;font-weight:800;text-decoration:none}.mmrd-card a:hover{text-decoration:underline}
     @media(max-width:650px){
       .mmrd{padding:10px!important}
       .mmrd-panel{height:auto!important;max-height:none!important;border:1px solid #304866!important;border-radius:14px!important}
@@ -72,7 +74,7 @@
     }
     function card(row){
       const source=row.kind==='source';
-      return `<article class="mmrd-card" data-mm-reference-kind="${esc(row.kind)}"><p style="margin:0 0 5px;color:#72e6cd;font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.06em">${esc(source?`Source · ${row.category}`:row.category)}</p><h3>${esc(row.title)}</h3><p>${esc(row.description)}</p>${source?`<p><a href="${esc(row.url)}" target="_blank" rel="noopener">Open source ↗</a></p>`:''}</article>`;
+      return `<article class="mmrd-card" data-mm-reference-kind="${esc(row.kind)}"><p class="mm-ref-kind">${esc(source?`Source · ${row.category}`:row.category)}</p><h3>${esc(row.title)}</h3><p>${esc(row.description)}</p>${source?`<p><a href="${esc(row.url)}" target="_blank" rel="noopener">Open source ↗</a></p>`:''}</article>`;
     }
     function enhance(){
       const modal=document.querySelector('.mmrd'),tabsBox=modal?.querySelector('.mmrd-tabs'),search=modal?.querySelector('.mmrd-search'),grid=modal?.querySelector('.mmrd-grid'),count=modal?.querySelector('.mmrd-count');
