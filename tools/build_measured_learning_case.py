@@ -1,58 +1,37 @@
 #!/usr/bin/env python3
-"""Promote one governed measured-learning candidate under the V2 contract.
+"""Build one governed measured-learning case under the hardened V2 contract.
 
-The builder does not download third-party datasets and does not infer root cause.
-It consumes a reviewed compact binding, verifies that its source is promotion-ready,
-checks the source fingerprint against committed benchmark evidence, enforces numeric
-trace integrity, and atomically updates the promotion index.
+The binding supplies reviewed teaching intent and compact measured signals. The builder
+verifies exact source artifact/channel governance, computes feature values/fingerprints,
+and separates raw-window identity from learner-representation identity.
 """
 from __future__ import annotations
 
 import argparse
-import hashlib
 import json
-import math
+import os
 import re
+import tempfile
 from pathlib import Path
 
+from measured_learning_core import (
+    calculate_feature, canonical_sha, finite_number, load_json,
+    raw_window_fingerprint, representation_fingerprint,
+)
+
 ROOT = Path(__file__).resolve().parents[1]
-MANIFEST = ROOT / "data" / "measured-learning" / "manifest-v1.json"
-PROMOTION_INDEX = ROOT / "data" / "measured-learning" / "promoted-v1.json"
-POLICY = ROOT / "data" / "measured-learning" / "v2-policy.json"
-SOURCE_READINESS = ROOT / "data" / "measured-learning" / "source-readiness-v2.json"
-FEATURE_METHODS = ROOT / "data" / "measured-learning" / "feature-methods-v1.json"
-OUT_DIR = ROOT / "data" / "measured-learning" / "cases"
+MANIFEST = ROOT / "data/measured-learning/manifest-v1.json"
+EXPANSION = ROOT / "data/measured-learning/expansion-manifest-v2.json"
+PROMOTION_INDEX = ROOT / "data/measured-learning/promoted-v1.json"
+POLICY = ROOT / "data/measured-learning/v2-policy.json"
+READINESS = ROOT / "data/measured-learning/source-readiness-v2.json"
+ARTIFACTS = ROOT / "data/measured-learning/source-artifacts-v2.json"
+CHANNELS = ROOT / "data/measured-learning/source-channels-v2.json"
+REQUIREMENTS = ROOT / "data/measured-learning/case-requirements-v2.json"
+FEATURE_METHODS = ROOT / "data/measured-learning/feature-methods-v1.json"
+OUT_DIR = ROOT / "data/measured-learning/cases"
 SHA256_RE = re.compile(r"sha256:[0-9a-f]{64}")
-HEX64_RE = re.compile(r"[0-9a-f]{64}")
-
-
-def canonical_sha(value) -> str:
-    payload = json.dumps(value, sort_keys=True, separators=(",", ":"), ensure_ascii=False).encode("utf-8")
-    return "sha256:" + hashlib.sha256(payload).hexdigest()
-
-
-def load(path: Path):
-    return json.loads(path.read_text(encoding="utf-8"))
-
-
-def write_json(path: Path, value: dict):
-    path.write_text(json.dumps(value, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
-
-
-def catalogue_by_id() -> dict[str, dict]:
-    manifest = load(MANIFEST)
-    fields = manifest["fields"]
-    return {row[0]: dict(zip(fields, row)) for row in manifest["cases"]}
-
-
-def readiness_by_id() -> dict[str, dict]:
-    registry = load(SOURCE_READINESS)
-    return {source["datasetId"]: source for source in registry.get("sources", [])}
-
-
-def feature_methods() -> dict[str, int]:
-    registry = load(FEATURE_METHODS)
-    return {method["id"]: int(method["version"]) for method in registry.get("methods", [])}
+REVIEW_TYPES = {"github-pr", "github-issue", "signed-review", "external-record", "test-fixture"}
 
 
 def require(condition: bool, message: str):
@@ -60,220 +39,242 @@ def require(condition: bool, message: str):
         raise SystemExit(message)
 
 
-def finite_number(value) -> bool:
-    return isinstance(value, (int, float)) and not isinstance(value, bool) and math.isfinite(float(value))
+def expand_rows(manifest: dict) -> list[dict]:
+    fields = manifest["fields"]
+    return [dict(zip(fields, row)) for row in manifest.get("cases", [])]
 
 
-def collect_authoritative_fingerprints(value, key: str = "") -> set[str]:
-    found: set[str] = set()
-    if isinstance(value, dict):
-        for child_key, child in value.items():
-            found |= collect_authoritative_fingerprints(child, str(child_key))
-    elif isinstance(value, list):
-        for child in value:
-            found |= collect_authoritative_fingerprints(child, key)
-    elif isinstance(value, str):
-        lower = value.lower()
-        if SHA256_RE.fullmatch(lower):
-            found.add(lower)
-        elif HEX64_RE.fullmatch(lower) and any(token in key.lower() for token in ("sha256", "digest", "hash", "checksum")):
-            found.add("sha256:" + lower)
-    return found
+def ready_sources() -> dict[str, dict]:
+    return {s["datasetId"]: s for s in load_json(READINESS).get("sources", [])}
 
 
-def authoritative_fingerprints(source_gate: dict) -> set[str]:
-    path = ROOT / source_gate.get("benchmarkResult", "")
-    require(path.is_file(), f"benchmark evidence file is missing: {path}")
-    return collect_authoritative_fingerprints(load(path))
+def expansion_gate_preconditions() -> bool:
+    policy = load_json(POLICY)["expansionGate"]
+    promoted = load_json(PROMOTION_INDEX).get("caseIds", [])
+    ready_count = sum(1 for s in ready_sources().values() if s.get("promotionReady"))
+    return len(promoted) >= int(policy["minimumPromotedCasesBeforeAuthoringExpansion"]) and ready_count >= int(policy["minimumPromotionReadySourceFamilies"])
 
 
-def validate_signal(signal: dict):
+def catalogue_by_id() -> dict[str, dict]:
+    base = expand_rows(load_json(MANIFEST))
+    expansion = load_json(EXPANSION)
+    extra = expand_rows(expansion)
+    if extra:
+        require(expansion_gate_preconditions(), "MLM-071..MLM-100 cannot be authored until the V2 expansion gate preconditions pass")
+        require([c["id"] for c in extra] == [f"MLM-{i:03d}" for i in range(71, 101)], "expansion manifest must contain the full ordered MLM-071..MLM-100 set")
+    all_cases = base + extra
+    return {c["id"]: c for c in all_cases}
+
+
+def artifact_registry() -> dict[str, dict[str, dict]]:
+    result = {}
+    for source in load_json(ARTIFACTS).get("sources", []):
+        result[source["datasetId"]] = {a["name"]: a for a in source.get("artifacts", [])}
+    return result
+
+
+def channel_registry() -> dict[str, dict[str, dict]]:
+    result = {}
+    for source in load_json(CHANNELS).get("sources", []):
+        result[source["datasetId"]] = {c["sourceChannel"]: c for c in source.get("channels", [])}
+    return result
+
+
+def feature_methods() -> dict[str, int]:
+    return {m["id"]: int(m["version"]) for m in load_json(FEATURE_METHODS).get("methods", [])}
+
+
+def case_required_capabilities(candidate: dict) -> set[str]:
+    rules = load_json(REQUIREMENTS)
+    required = set()
+    for tag in candidate.get("coverageTags", []):
+        required.update(rules.get("requirementsByCoverageTag", {}).get(tag, []))
+    required.update(rules.get("caseOverrides", {}).get(candidate["id"], []))
+    return required
+
+
+def validate_signal(signal: dict, governed_channels: dict[str, dict]) -> dict:
     signal_id = signal.get("id")
     require(bool(signal_id), "every signal requires a stable id")
-    require(bool(signal.get("label")), f"signal {signal_id} lacks a learner label")
-    require(bool(signal.get("semantic")), f"signal {signal_id} lacks resolved semantic")
-    require(bool(signal.get("unit")), f"signal {signal_id} lacks resolved unit")
+    source_channel = signal.get("sourceChannel")
+    require(source_channel in governed_channels, f"signal {signal_id}: unregistered or blocked sourceChannel {source_channel!r}")
+    governed = governed_channels[source_channel]
+    require(governed.get("promotionReady") is True, f"signal {signal_id}: source channel is not promotion-ready")
+    require(signal.get("semantic") == governed.get("semantic"), f"signal {signal_id}: semantic must exactly match governed source channel")
+    require(signal.get("unit") == governed.get("unit"), f"signal {signal_id}: unit must exactly match governed source channel")
+    require(bool(signal.get("label")), f"signal {signal_id}: label is required")
     rep = signal.get("representation", {})
-    require(bool(rep.get("xSemantic")), f"signal {signal_id} lacks xSemantic")
-    require(bool(rep.get("xUnit")), f"signal {signal_id} lacks xUnit")
-    require(bool(rep.get("reductionMethod")), f"signal {signal_id} lacks reduction method")
+    require(rep.get("xSemantic") == governed.get("coordinateSemantic"), f"signal {signal_id}: xSemantic must match governed coordinate")
+    require(rep.get("xUnit") == governed.get("coordinateUnit"), f"signal {signal_id}: xUnit must match governed coordinate")
+    require(bool(rep.get("reductionMethod")), f"signal {signal_id}: reductionMethod is required")
     x, y = rep.get("x", []), rep.get("y", [])
-    require(len(x) == len(y) and len(x) > 1, f"signal {signal_id} has invalid x/y representation")
-    require(len(y) <= 600, f"signal {signal_id} exceeds 600 displayed points")
-    require(rep.get("originalPointCount", 0) >= len(y), f"signal {signal_id} originalPointCount is invalid")
-    require(all(finite_number(v) for v in x), f"signal {signal_id} x values must be finite numeric")
-    require(all(finite_number(v) for v in y), f"signal {signal_id} y values must be finite numeric")
-    require(all(float(a) <= float(b) for a, b in zip(x, x[1:])), f"signal {signal_id} x axis must be monotonic non-decreasing")
-
-
-def validate_feature(feature: dict, methods: dict[str, int]):
-    feature_id = feature.get("id")
-    require(bool(feature_id), "every feature requires a stable id")
-    for key in ("method", "methodVersion", "calculationScope", "inputFingerprint", "calculationFingerprint", "value"):
-        require(key in feature and feature[key] not in (None, ""), f"feature {feature_id} missing {key}")
-    method = feature["method"]
-    require(method in methods, f"feature {feature_id} uses unregistered method {method}")
-    require(int(feature["methodVersion"]) == methods[method], f"feature {feature_id} method version drift")
-    require(bool(SHA256_RE.fullmatch(str(feature["inputFingerprint"]))), f"feature {feature_id} invalid inputFingerprint")
-    require(bool(SHA256_RE.fullmatch(str(feature["calculationFingerprint"]))), f"feature {feature_id} invalid calculationFingerprint")
-    require(finite_number(feature["value"]), f"feature {feature_id} value must be finite numeric")
+    require(len(x) == len(y) and len(x) > 1, f"signal {signal_id}: invalid x/y representation")
+    require(len(y) <= 600, f"signal {signal_id}: exceeds 600 displayed points")
+    require(rep.get("originalPointCount", 0) >= len(y), f"signal {signal_id}: invalid originalPointCount")
+    require(all(finite_number(v) for v in x), f"signal {signal_id}: x values must be finite numeric")
+    require(all(finite_number(v) for v in y), f"signal {signal_id}: y values must be finite numeric")
+    require(all(float(a) <= float(b) for a, b in zip(x, x[1:])), f"signal {signal_id}: x axis must be monotonic non-decreasing")
+    clean = dict(signal)
+    clean["sourceChannel"] = source_channel
+    return clean
 
 
 def build(candidate: dict, binding: dict) -> dict:
-    policy = load(POLICY)
-    require(policy.get("schemaVersion") == 2, "V2 policy is unavailable or invalid")
+    policy = load_json(POLICY)
     require(binding.get("schemaVersion") == 2, "binding schemaVersion must be 2")
-    require(binding.get("caseId") == candidate["id"], "binding caseId does not match requested candidate")
-    require(binding.get("sourceFamily") == candidate["sourceFamily"], "binding source family does not match catalogue")
-    require(binding.get("caseId") not in set(policy.get("reservedCaseIds", [])), "MLM-071..MLM-100 are reserved until expansion is unlocked")
+    require(binding.get("caseId") == candidate["id"], "binding caseId does not match candidate")
+    require(binding.get("sourceFamily") == candidate["sourceFamily"], "binding sourceFamily does not match catalogue")
 
-    readiness = readiness_by_id()
-    require(candidate["sourceFamily"] in readiness, "source family is missing from V2 readiness registry")
-    source_gate = readiness[candidate["sourceFamily"]]
-    require(source_gate.get("promotionReady") is True, f"source family is not promotion-ready: {source_gate.get('gateReason')}")
-    require(source_gate.get("unitsResolved") is True, "source family has unresolved units")
-    require(source_gate.get("semanticsResolved") is True, "source family has unresolved semantics")
+    readiness = ready_sources()
+    family = candidate["sourceFamily"]
+    require(family in readiness and readiness[family].get("promotionReady") is True, f"source family is not promotion-ready: {readiness.get(family, {}).get('gateReason', 'missing readiness')}" )
+    source_gate = readiness[family]
+    required = case_required_capabilities(candidate)
+    capabilities = source_gate.get("capabilities", {})
+    missing = sorted(cap for cap in required if capabilities.get(cap) is not True)
+    require(not missing, f"source family lacks required case capabilities: {missing}")
 
-    require(binding.get("reviewed") is True, "binding must be explicitly engineering-reviewed")
-    for key in ("reviewedAt", "reviewerId", "reviewerRole", "reviewRecord"):
-        require(bool(binding.get(key)), f"binding {key} is required")
-    require(bool(binding.get("sourceReference")), "exact source reference is required")
-    require(binding.get("licenceOrAccessStatus") == source_gate.get("rightsScope"), "binding licence/access status must match V2 source readiness registry")
-    require(bool(SHA256_RE.fullmatch(str(binding.get("sourceFingerprint", "")))), "exact source SHA-256 is required")
-    authoritative = authoritative_fingerprints(source_gate)
-    require(binding["sourceFingerprint"] in authoritative, "source SHA-256 is not present in committed benchmark evidence")
-
+    artifacts = artifact_registry().get(family, {})
     extraction = binding.get("extraction", {})
-    require(bool(extraction.get("description")), "an exact extraction/window description is required")
-    require(bool(extraction.get("sourceArtifact")), "exact source artifact identity is required")
+    source_artifact = extraction.get("sourceArtifact")
+    require(source_artifact in artifacts, f"exact source artifact is not registered for {family}: {source_artifact!r}")
+    artifact = artifacts[source_artifact]
+    require(binding.get("sourceFingerprint") == artifact.get("sha256"), "sourceFingerprint must match the exact registered sourceArtifact")
+    require(SHA256_RE.fullmatch(str(binding.get("sourceFingerprint", ""))) is not None, "sourceFingerprint must be SHA-256")
+    source_member = extraction.get("sourceMember")
+    if source_member is not None:
+        require(source_member in artifact.get("members", []), "sourceMember is not governed for the selected artifact")
+    require(bool(extraction.get("description")), "extraction.description is required")
     require(extraction.get("sourceOrderingPreserved") is True, "source ordering must be explicitly preserved")
 
-    signals = binding.get("signals", [])
-    require(bool(signals), "at least one governed measured signal/outcome is required")
-    signal_ids = [signal.get("id") for signal in signals]
+    governed_channels = channel_registry().get(family, {})
+    signals = [validate_signal(signal, governed_channels) for signal in binding.get("signals", [])]
+    require(signals, "at least one governed measured signal/outcome is required")
+    signal_ids = [s["id"] for s in signals]
     require(len(signal_ids) == len(set(signal_ids)), "signal IDs must be unique")
-    for signal in signals:
-        validate_signal(signal)
+    if "multi-signal" in candidate.get("coverageTags", []):
+        require(len(signals) >= 2, "multi-signal case requires at least two bound signals")
+
+    raw_window_fp = raw_window_fingerprint(binding["sourceFingerprint"], source_artifact, source_member, extraction)
+    representation_fp = representation_fingerprint(raw_window_fp, signals)
 
     methods = feature_methods()
-    features = binding.get("features", [])
-    feature_ids = [feature.get("id") for feature in features]
+    signals_by_id = {s["id"]: s for s in signals}
+    features = []
+    for spec in binding.get("features", []):
+        try:
+            features.append(calculate_feature(spec, signals_by_id, methods))
+        except ValueError as exc:
+            raise SystemExit(str(exc)) from exc
+    feature_ids = [f["id"] for f in features]
     require(len(feature_ids) == len(set(feature_ids)), "feature IDs must be unique")
-    for feature in features:
-        validate_feature(feature, methods)
 
     observations = binding.get("observations", [])
-    require(bool(observations), "reviewed observations are required")
-    valid_support = {f"signal:{value}" for value in signal_ids} | {f"feature:{value}" for value in feature_ids}
+    require(observations, "reviewed observations are required")
+    valid_support = {f"signal:{v}" for v in signal_ids} | {f"feature:{v}" for v in feature_ids}
     for observation in observations:
-        require(bool(observation.get("id")), "every observation requires a stable id")
-        require(bool(observation.get("text")), "every observation requires text")
-        require(bool(observation.get("support")), "every observation requires evidence links")
+        require(observation.get("id") and observation.get("text") and observation.get("support"), "every observation requires id, text and evidence links")
         unknown = sorted(set(observation["support"]) - valid_support)
         require(not unknown, f"observation contains unknown evidence links: {unknown}")
 
-    require(bool(binding.get("limitations")), "evidence limitations are required")
-    require(bool(binding.get("supportedConclusions")), "supported conclusions are required")
-    require(bool(binding.get("unsupportedConclusions")), "unsupported conclusions are required")
+    for key in ("supportedConclusions", "unsupportedConclusions", "limitations"):
+        require(binding.get(key), f"{key} is required")
     learner = binding.get("learnerTask", {})
     for key in ("observePrompt", "investigatePrompt", "explanation", "takeaway"):
-        require(bool(learner.get(key)), f"learnerTask.{key} is required")
+        require(learner.get(key), f"learnerTask.{key} is required")
 
     novelty = binding.get("novelty", {})
-    require(bool(novelty.get("learningObjective")), "novelty.learningObjective is required")
+    require(novelty.get("learningObjective"), "novelty.learningObjective is required")
     require(isinstance(novelty.get("sourceWindowReuse"), bool), "novelty.sourceWindowReuse must be boolean")
     if novelty["sourceWindowReuse"]:
-        require(bool(novelty.get("reuseJustification")), "source-window reuse requires explicit reuseJustification")
+        require(novelty.get("reuseJustification"), "source-window reuse requires reuseJustification")
 
-    ordered_representations = [
-        {"id": signal["id"], "representation": signal["representation"]}
-        for signal in sorted(signals, key=lambda item: item["id"])
-    ]
-    extraction_fingerprint_input = {
-        "sourceFingerprint": binding["sourceFingerprint"],
-        "extraction": extraction,
-        "representations": ordered_representations,
-    }
-    source_window_fingerprint = canonical_sha(extraction_fingerprint_input)
+    require(binding.get("reviewed") is True, "binding must be explicitly reviewed")
+    for key in ("authorId", "reviewerId", "reviewerRole", "reviewRecordType", "reviewRecord", "reviewedAt"):
+        require(binding.get(key), f"binding {key} is required")
+    require(binding["authorId"] != binding["reviewerId"], "reviewerId must differ from authorId")
+    require(binding["reviewRecordType"] in REVIEW_TYPES, "unsupported reviewRecordType")
+
+    claim_scope = binding.get("claimScope", "observation_only")
+    require(claim_scope in {"observation_only", "association"}, "public measured promotion permits observation_only or association")
+    require(binding.get("licenceOrAccessStatus") == source_gate.get("rightsScope"), "licence/access status must match source readiness registry")
 
     case = {
-        "schemaVersion": 2,
+        "schemaVersion": 3,
         "architectureId": "measured-learning-library-v2",
-        "id": candidate["id"],
-        "title": candidate["title"],
-        "difficulty": candidate["difficulty"],
-        "analysisLens": candidate["analysisLens"],
-        "coverageTags": candidate["coverageTags"],
-        "evidenceTier": "measured",
-        "claimScope": binding.get("claimScope", "observation_only"),
-        "promotionState": "promoted",
+        "id": candidate["id"], "title": candidate["title"], "difficulty": candidate["difficulty"],
+        "analysisLens": candidate["analysisLens"], "coverageTags": candidate["coverageTags"],
+        "requiredCapabilities": sorted(required),
+        "evidenceTier": "measured", "claimScope": claim_scope, "promotionState": "promoted",
         "source": {
-            "familyId": candidate["sourceFamily"],
-            "datasetId": binding.get("datasetId", candidate["sourceFamily"]),
-            "sourceReference": binding["sourceReference"],
-            "sourceFingerprint": binding["sourceFingerprint"],
-            "sourceWindowFingerprint": source_window_fingerprint,
-            "licenceOrAccessStatus": binding["licenceOrAccessStatus"],
-            "extraction": extraction,
+            "familyId": family, "datasetId": binding.get("datasetId", family),
+            "sourceReference": binding["sourceReference"], "sourceArtifact": source_artifact,
+            "sourceMember": source_member, "sourceFingerprint": binding["sourceFingerprint"],
+            "rawWindowFingerprint": raw_window_fp, "representationFingerprint": representation_fp,
+            "licenceOrAccessStatus": binding["licenceOrAccessStatus"], "extraction": extraction,
         },
-        "signals": signals,
-        "features": features,
-        "observations": observations,
-        "learnerTask": learner,
-        "novelty": novelty,
+        "signals": signals, "features": features, "observations": observations,
+        "learnerTask": learner, "novelty": novelty,
         "evidence": {
-            "sourceEstablishesCausality": bool(binding.get("sourceEstablishesCausality", False)),
+            "sourceEstablishesCausality": False,
             "supportedConclusions": binding["supportedConclusions"],
             "unsupportedConclusions": binding["unsupportedConclusions"],
             "limitations": binding["limitations"],
         },
         "review": {
-            "reviewed": True,
-            "reviewerId": binding["reviewerId"],
-            "reviewerRole": binding["reviewerRole"],
-            "reviewRecord": binding["reviewRecord"],
-            "reviewedAt": binding["reviewedAt"],
+            "reviewed": True, "authorId": binding["authorId"], "reviewerId": binding["reviewerId"],
+            "reviewerRole": binding["reviewerRole"], "reviewRecordType": binding["reviewRecordType"],
+            "reviewRecord": binding["reviewRecord"], "reviewedAt": binding["reviewedAt"],
         },
     }
-    require(case["claimScope"] in {"observation_only", "association"}, "public measured promotion permits only observation_only or association")
     case["caseFingerprint"] = canonical_sha(case)
     return case
 
 
-def promote_index(case_id: str):
-    index = load(PROMOTION_INDEX)
-    require(index.get("libraryId") == "measured-learning-library-v1", "promotion index libraryId drift")
-    ids = list(index.get("caseIds", []))
-    if case_id not in ids:
-        ids.append(case_id)
-    ids.sort(key=lambda value: int(value.split("-")[1]))
-    index["caseIds"] = ids
-    write_json(PROMOTION_INDEX, index)
+def write_staged(path: Path, text: str):
+    path.parent.mkdir(parents=True, exist_ok=True)
+    fd, temp_name = tempfile.mkstemp(prefix=path.name + ".", suffix=".tmp", dir=path.parent)
+    try:
+        with os.fdopen(fd, "w", encoding="utf-8") as handle:
+            handle.write(text)
+            handle.flush()
+            os.fsync(handle.fileno())
+        os.replace(temp_name, path)
+    finally:
+        if os.path.exists(temp_name):
+            os.unlink(temp_name)
 
 
 def main() -> int:
     parser = argparse.ArgumentParser()
-    parser.add_argument("case_id", help="MLM-001..MLM-070 under the current V2 release gate")
-    parser.add_argument("binding", type=Path, help="reviewed V2 local binding JSON")
+    parser.add_argument("case_id")
+    parser.add_argument("binding", type=Path)
     parser.add_argument("--output-dir", type=Path, default=OUT_DIR)
-    parser.add_argument("--no-index", action="store_true", help="do not update promoted-v1.json (scratch/test output only)")
+    parser.add_argument("--no-index", action="store_true")
     args = parser.parse_args()
 
     catalogue = catalogue_by_id()
-    require(args.case_id in catalogue, f"unknown release-catalogue case {args.case_id}")
-    binding = load(args.binding)
-    case = build(catalogue[args.case_id], binding)
-
-    hard_case_bytes = int(load(POLICY)["payloadBudget"]["hardCaseBytes"])
+    require(args.case_id in catalogue, f"unknown or gated catalogue case {args.case_id}")
+    case = build(catalogue[args.case_id], load_json(args.binding))
     rendered = json.dumps(case, indent=2, ensure_ascii=False) + "\n"
-    require(len(rendered.encode("utf-8")) <= hard_case_bytes, f"promoted case exceeds V2 hard payload budget of {hard_case_bytes} bytes")
+    hard = int(load_json(POLICY)["payloadBudget"]["hardCaseBytes"])
+    require(len(rendered.encode("utf-8")) <= hard, f"promoted case exceeds hard payload budget of {hard} bytes")
 
-    args.output_dir.mkdir(parents=True, exist_ok=True)
     out = args.output_dir / f"{args.case_id}.json"
-    out.write_text(rendered, encoding="utf-8")
-    if not args.no_index:
-        require(args.output_dir.resolve() == OUT_DIR.resolve(), "promotion index can only be updated for the canonical cases directory")
-        promote_index(args.case_id)
+    if args.no_index:
+        write_staged(out, rendered)
+    else:
+        require(args.output_dir.resolve() == OUT_DIR.resolve(), "promotion index may only be updated with canonical case output")
+        index = load_json(PROMOTION_INDEX)
+        ids = list(index.get("caseIds", []))
+        if args.case_id not in ids:
+            ids.append(args.case_id)
+        ids.sort(key=lambda value: int(value.split("-")[1]))
+        index["caseIds"] = ids
+        index_text = json.dumps(index, indent=2, ensure_ascii=False) + "\n"
+        # Both documents are fully rendered and validated before either canonical file is replaced.
+        write_staged(out, rendered)
+        write_staged(PROMOTION_INDEX, index_text)
     print(out)
     return 0
 
