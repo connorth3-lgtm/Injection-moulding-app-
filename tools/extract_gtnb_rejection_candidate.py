@@ -10,6 +10,7 @@ OUT=Path('measured-source-proof/gtnb-rejection-unreviewed-learning-candidate.jso
 
 def sha(v): return 'sha256:'+hashlib.sha256(json.dumps(v,sort_keys=True,separators=(',',':'),ensure_ascii=False).encode()).hexdigest()
 def finite(v): return isinstance(v,(int,float)) and not isinstance(v,bool) and math.isfinite(float(v))
+def header_text(v): return str(v or '').strip()
 def signal(sid,source_channel,semantic,unit,rows,key):
     points=[r for r in rows if finite(r[key])]; x=[float(r['_sourceRow']) for r in points]; y=[float(r[key]) for r in points]
     rep={'xSemantic':'observation-index','xUnit':'index','xDirection':'increasing','reductionMethod':'contiguous-source-order-window-no-interpolation','originalPointCount':len(rows),'x':x,'y':y}
@@ -22,13 +23,16 @@ def main():
         download_first(urls,path); digest=hashlib.sha256(path.read_bytes()).hexdigest()
         if digest!=expected: raise RuntimeError(f'GTNB SHA mismatch: {digest}')
         wb=load_workbook(path,read_only=True,data_only=False); ws=wb['nicky']
-        headers=[ws.cell(1,c).value for c in range(1,34)]; col={str(h):i+1 for i,h in enumerate(headers)}
+        headers=[header_text(ws.cell(1,c).value) for c in range(1,ws.max_column+1)]
+        nonempty=[h for h in headers if h]
+        if len(nonempty)!=len(set(nonempty)): raise RuntimeError('GTNB rejection duplicate normalized headers')
+        col={h:i+1 for i,h in enumerate(headers) if h}
         required=['Maquina','Producto_rechazados','Produccion_total','Presion_inyeccion_bares','Tiempo_ciclo']
         missing=[h for h in required if h not in col]
-        if missing: raise RuntimeError(f'GTNB rejection header drift: {missing}')
+        if missing: raise RuntimeError(f'GTNB rejection header drift after whitespace normalization: {missing}')
         rows=[]
         for r in range(2,ws.max_row+1):
-            machine=str(ws.cell(r,col['Maquina']).value or '').strip().upper()
+            machine=header_text(ws.cell(r,col['Maquina']).value).upper()
             if not (re.fullmatch(r'I(?:-|_)?\d+',machine) or machine.startswith('INY')): continue
             row={'_sourceRow':r}
             for h,key in [('Producto_rechazados','rejected'),('Produccion_total','production'),('Presion_inyeccion_bares','pressure'),('Tiempo_ciclo','cycle')]:
