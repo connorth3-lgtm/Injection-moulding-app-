@@ -1,5 +1,5 @@
 {
-  "schemaVersion": 4,
+  "schemaVersion": 5,
   "registryId": "measured-learning-source-readiness-v2",
   "policy": {
     "promotionIsFailClosed": true,
@@ -50,9 +50,9 @@
     },
     {
       "datasetId": "forinfpro-himd-v1", "ledgerState": "accepted-profiled", "benchmarkResult": "data/public-benchmark-results/forinfpro-himd-v1.json",
-      "promotionReady": false, "rightsScope": "cc-by-4.0", "unitsResolved": false, "semanticsResolved": true,
+      "promotionReady": true, "rightsScope": "cc-by-4.0", "unitsResolved": true, "semanticsResolved": true, "channelResolution": "partial-governed",
       "capabilities": {"timeSeries":true,"multiCycle":false,"processWaveform":true,"recordLevelProcess":false,"qualityOutcome":false,"materialPhysical":false,"dualTimeBase":false},
-      "gateReason": "Three exact public files are fingerprinted, but the visible release contains one cycle and selected channel units are not yet fully governed."
+      "gateReason": "The exact machine-data CSV is fingerprinted. The accepted FORinFPRO semantic review and first-party ENGEL data-interface documentation govern 16 Heating.sv_Zone*.rActualTemp channels as actual heating-zone temperatures in degC over 10,132 strictly ordered machine rows. The release contains one cycle only, and all other unit-limited machine, cavity and ultrasonic fields remain excluded."
     },
     {
       "datasetId": "mendeley-fhj5p7ww9v-v1", "ledgerState": "accepted-profiled-restricted-noncommercial", "benchmarkResult": "data/public-benchmark-results/fhj5p7ww9v-v1.json",
