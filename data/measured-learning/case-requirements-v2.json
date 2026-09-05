@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 2,
+  "registryId": "measured-learning-case-requirements-v2",
+  "policy": {
+    "requirementsAreDerivedPerCatalogueCase": true,
+    "sourceCapabilitiesMustSatisfyRequirementsBeforePromotion": true,
+    "multiSignalTagRequiresAtLeastTwoBoundSignals": true
+  },
+  "requirementsByCoverageTag": {
+    "time-series": ["timeSeries"],
+    "time-series-interpretation": ["timeSeries"],
+    "quality-outcome": ["qualityOutcome"],
+    "material-physical": ["materialPhysical"]
+  },
+  "caseOverrides": {
+    "MLM-003": ["processWaveform"],
+    "MLM-021": ["processWaveform"],
+    "MLM-022": ["processWaveform"],
+    "MLM-023": ["processWaveform"],
+    "MLM-024": ["processWaveform"],
+    "MLM-025": ["processWaveform"],
+    "MLM-026": ["processWaveform"],
+    "MLM-027": ["processWaveform"],
+    "MLM-028": ["processWaveform"],
+    "MLM-036": ["processWaveform", "qualityOutcome"],
+    "MLM-037": ["processWaveform", "qualityOutcome"],
+    "MLM-057": ["dualTimeBase"],
+    "MLM-058": ["dualTimeBase"],
+    "MLM-059": ["dualTimeBase"],
+    "MLM-062": ["processWaveform"],
+    "MLM-063": ["processWaveform"],
+    "MLM-064": ["processWaveform"],
+    "MLM-067": ["recordLevelProcess"],
+    "MLM-068": ["processWaveform"]
+  }
+}
