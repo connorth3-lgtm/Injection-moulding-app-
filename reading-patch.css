@@ -24,3 +24,38 @@
 .mm-signoff{margin-top:22px;padding:22px}.mm-signoff h2{margin:6px 0 8px}.mm-signoff>p{color:#aabfd7;line-height:1.6}.mm-sign-progress{display:inline-flex;gap:7px;padding:8px 10px;margin:8px 0 14px;border-radius:999px;background:#17304d;color:#dff0ff}.mm-signoff>label{display:flex;gap:10px;align-items:flex-start;padding:10px 0;border-bottom:1px solid #263d59}.mm-signoff>label input[type=checkbox]{width:auto;margin-top:3px}.mm-sign-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:14px 0}.mm-signoff textarea{min-height:90px}.mm-signoff button{margin-top:12px}
 .mm-mobile-lessons{display:none;margin-bottom:12px}
 @media(max-width:700px){.lesson-body{padding:14px}.lesson-actions-sticky{position:static!important;margin-top:22px;padding-bottom:calc(8px + env(safe-area-inset-bottom))}.lesson-actions-sticky .primary{width:100%}.mm-reading-guide{grid-template-columns:1fr;gap:10px;padding:14px}.mm-reading-guide>span{justify-self:start}.mm-reading-guide strong{font-size:17px}.lesson-read-block,.lesson-source-box,.question-reference{padding:14px}.lesson-source-link,.question-ref-link,.mm-ref-panel>a,.mm-ref-link{grid-template-columns:1fr}.lesson-source-link span:last-child,.question-ref-link span:last-child,.mm-ref-panel>a em{display:none}.question{padding:14px!important}.option{font-size:15px}.mm-teaching-grid{grid-template-columns:1fr}.mm-extra-help summary{align-items:flex-start;flex-direction:column}.mm-review-card{grid-template-columns:1fr}.mm-sign-grid{grid-template-columns:1fr}.mm-mobile-lessons{display:inline-block}.lesson-side{display:none}.lesson-side.mm-open{display:block}.mm-confidence{display:grid;grid-template-columns:1fr 1fr 1fr}.mm-confidence>b{grid-column:1/-1}}
+
+
+/* Android profile/data layout clearance — physical OPPO regression 2026-09-05 */
+@media(max-width:700px){
+  html body[data-mm-view="profile"] .topbar{
+    gap:12px!important;
+    margin-bottom:20px!important;
+    padding:0 0 4px!important;
+  }
+  html body[data-mm-view="profile"] .topbar>div:first-child{min-width:0}
+  html body[data-mm-view="profile"] .top-actions{
+    width:100%!important;
+    display:grid!important;
+    grid-template-columns:minmax(0,1fr) minmax(0,1fr)!important;
+    gap:10px!important;
+    align-items:stretch!important;
+    margin:0!important;
+  }
+  html body[data-mm-view="profile"] .top-actions button{
+    width:100%!important;
+    min-width:0!important;
+    min-height:50px!important;
+    padding:10px 12px!important;
+    white-space:normal!important;
+  }
+  html body[data-mm-view="profile"] .main{
+    padding-bottom:calc(174px + env(safe-area-inset-bottom))!important;
+  }
+  html body[data-mm-view="profile"] #profile{padding-bottom:48px!important}
+  html body[data-mm-view="profile"] #profile>*:last-child{margin-bottom:36px!important}
+}
+@media(max-width:390px){
+  html body[data-mm-view="profile"] .top-actions{grid-template-columns:1fr!important}
+  html body[data-mm-view="profile"] .top-actions button{min-height:46px!important}
+}
