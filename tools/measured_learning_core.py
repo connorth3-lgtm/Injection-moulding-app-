@@ -187,6 +187,16 @@ def calculate_method(method: str, inputs: list[dict], params: dict | None = None
         if method == "pearson_correlation":
             return pearson(ay, by), None
         return pearson(rankdata(ay), rankdata(by)), None
+
+    if method == "ratio_of_sums_percent":
+        numerator, denominator = _two_aligned_signals(inputs)
+        numerator_values = [float(v) for v in numerator["representation"]["y"]]
+        denominator_values = [float(v) for v in denominator["representation"]["y"]]
+        denominator_sum = sum(denominator_values)
+        if denominator_sum <= 0:
+            raise ValueError("ratio_of_sums_percent requires aggregate denominator > 0")
+        return 100.0 * sum(numerator_values) / denominator_sum, "%"
+
     raise ValueError(f"unsupported feature method: {method}")
 
 
