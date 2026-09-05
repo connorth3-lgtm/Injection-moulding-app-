@@ -3,15 +3,19 @@
 
 PMC completed its article-dataset distribution migration in August 2026. The
 current primary distribution route is the public ``pmc-oa-opendata`` S3 bucket.
-Container/member names are distribution metadata, not measurement identity, so
-this proof locates the workbook by the immutable SHA-256 already accepted by the
-MouldMaster benchmark. No workbook numeric values are emitted by this proof.
+Container/member names are distribution metadata, not measurement identity. The
+proof therefore follows current nested packaging and only accepts a workbook
+whose bytes match the immutable SHA-256 already accepted by the benchmark.
+Raw supplementary archives and workbook numeric values are never uploaded.
 """
 from __future__ import annotations
 
 import hashlib
 import io
 import json
+import shutil
+import subprocess
+import tempfile
 import urllib.parse
 import urllib.request
 import zipfile
@@ -26,7 +30,8 @@ LEGACY_URLS = [
 ]
 EXPECTED_WORKBOOK_SHA = "6e376e0acdfc614b6c16e0fef99e0e74cace8bc4d931a08a729e05dfc2cd7783"
 HISTORICAL_WORKBOOK_NAME = "Tensile-Data.xlsx"
-USER_AGENT = "MouldMaster-measured-learning/2.2"
+USER_AGENT = "MouldMaster-measured-learning/2.3"
+MAX_MEMBER_BYTES = 64 * 1024 * 1024
 NS = {
     "m": "http://schemas.openxmlformats.org/spreadsheetml/2006/main",
     "r": "http://schemas.openxmlformats.org/officeDocument/2006/relationships",
@@ -58,6 +63,43 @@ def sha256(data: bytes) -> str:
     return hashlib.sha256(data).hexdigest()
 
 
+def match_extracted_tree(root: Path) -> tuple[bytes, str, list[str]]:
+    names: list[str] = []
+    for path in sorted(p for p in root.rglob("*") if p.is_file()):
+        relative = path.relative_to(root).as_posix()
+        names.append(relative)
+        if path.stat().st_size > MAX_MEMBER_BYTES:
+            continue
+        payload = path.read_bytes()
+        if sha256(payload) == EXPECTED_WORKBOOK_SHA:
+            return payload, relative, names
+    raise LookupError(f"nested archive did not contain benchmarked workbook SHA; extracted={names[:80]}")
+
+
+def workbook_from_rar(rar_bytes: bytes, outer_member: str) -> tuple[bytes, str, list[str]]:
+    seven_zip = shutil.which("7z") or shutil.which("7zz")
+    if not seven_zip:
+        raise LookupError("nested RAR detected but 7z/7zz is unavailable on runner")
+    with tempfile.TemporaryDirectory(prefix="mouldmaster-pmc-rar-") as temp:
+        root = Path(temp)
+        archive_path = root / "source.rar"
+        extract_dir = root / "extracted"
+        archive_path.write_bytes(rar_bytes)
+        extract_dir.mkdir()
+        proc = subprocess.run(
+            [seven_zip, "x", "-y", f"-o{extract_dir}", str(archive_path)],
+            stdout=subprocess.PIPE,
+            stderr=subprocess.STDOUT,
+            text=True,
+            timeout=120,
+        )
+        if proc.returncode != 0:
+            tail = "\n".join(proc.stdout.splitlines()[-12:])
+            raise LookupError(f"7z could not extract {outer_member}: {tail}")
+        payload, member, names = match_extracted_tree(extract_dir)
+        return payload, f"{outer_member}!{member}", names
+
+
 def workbook_from_object(key: str, data: bytes) -> tuple[bytes, str | None, list[str]]:
     """Return the exact benchmarked workbook regardless of current package name."""
     if sha256(data) == EXPECTED_WORKBOOK_SHA:
@@ -68,18 +110,27 @@ def workbook_from_object(key: str, data: bytes) -> tuple[bytes, str | None, list
         with zipfile.ZipFile(io.BytesIO(data)) as archive:
             members = [info for info in archive.infolist() if not info.is_dir()]
             member_names = [info.filename for info in members]
+            nested_errors: list[str] = []
             for info in members:
-                # mmc1.zip is small. The ceiling protects this diagnostic probe
-                # from unexpectedly hashing a huge unrelated packaged object.
-                if info.file_size > 64 * 1024 * 1024:
+                if info.file_size > MAX_MEMBER_BYTES:
                     continue
                 payload = archive.read(info)
                 if sha256(payload) == EXPECTED_WORKBOOK_SHA:
                     return payload, info.filename, member_names
-    preview = member_names[:40]
+                if info.filename.lower().endswith(".rar"):
+                    try:
+                        workbook, member, nested_names = workbook_from_rar(payload, info.filename)
+                        return workbook, member, member_names + [f"{info.filename}!{name}" for name in nested_names]
+                    except Exception as exc:
+                        nested_errors.append(str(exc))
+            if nested_errors:
+                raise LookupError(
+                    "object contains nested archive but benchmarked workbook was not recovered: "
+                    + "; ".join(nested_errors)
+                )
     raise LookupError(
         "object does not contain benchmarked workbook SHA "
-        f"{EXPECTED_WORKBOOK_SHA}; members={preview}"
+        f"{EXPECTED_WORKBOOK_SHA}; members={member_names[:40]}"
     )
 
 
@@ -111,8 +162,7 @@ def retrieve_workbook() -> tuple[str, str | None, bytes, list[str], list[str]]:
 
     for url in LEGACY_URLS:
         try:
-            data = fetch(url)
-            workbook, member, members = workbook_from_object(url, data)
+            workbook, member, members = workbook_from_object(url, fetch(url))
             return url, member, workbook, discovered, members
         except Exception as exc:
             errors.append(f"{url}: {exc}")
@@ -166,7 +216,7 @@ def main() -> int:
         raise SystemExit(f"PMC measured workbook SHA mismatch: {digest}")
     schema = string_schema(workbook)
     proof = {
-        "schemaVersion": 3,
+        "schemaVersion": 4,
         "status": "source-proof-passed",
         "datasetId": "pmc4753395-hdpe-cenosphere-v1",
         "distributionRoute": "PMC Article Datasets AWS" if "amazonaws.com" in url else "legacy PMC fallback",
@@ -174,7 +224,7 @@ def main() -> int:
         "historicalWorkbookName": HISTORICAL_WORKBOOK_NAME,
         "currentSourceMember": source_member,
         "workbookSha256": "sha256:" + digest,
-        "identityRule": "workbook bytes must match the benchmarked SHA-256; package/member naming may change across PMC distribution migrations",
+        "identityRule": "workbook bytes must match the benchmarked SHA-256; package/member naming and nesting may change across PMC distribution migrations",
         "discoveredObjectCount": len(discovered),
         "discoveredObjectNames": [key.rsplit("/", 1)[-1] for key in discovered[:80]],
         "selectedPackageMemberCount": len(package_members),
