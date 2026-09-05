@@ -22,8 +22,7 @@ on:
       - 'qa_measured_learning_authoring_coverage.py'
       - 'qa_measured_learning_review_queue.py'
       - 'qa_measured_learning_review_packets.py'
-      - 'sources/MEASURED_LEARNING_LIBRARY_V1.md'
-      - 'sources/MEASURED_LEARNING_LIBRARY_V2.md'
+      - 'sources/MEASURED_LEARNING_*.md'
       - '.github/workflows/measured-learning-library.yml'
   push:
     branches: [main]
@@ -47,8 +46,7 @@ on:
       - 'qa_measured_learning_authoring_coverage.py'
       - 'qa_measured_learning_review_queue.py'
       - 'qa_measured_learning_review_packets.py'
-      - 'sources/MEASURED_LEARNING_LIBRARY_V1.md'
-      - 'sources/MEASURED_LEARNING_LIBRARY_V2.md'
+      - 'sources/MEASURED_LEARNING_*.md'
       - '.github/workflows/measured-learning-library.yml'
   workflow_dispatch:
 
