@@ -78,7 +78,9 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v7
       - name: Pages single-publisher QA
-        run: python3 qa_pages_single_publisher.py
+        run: |
+          python3 qa_pages_single_publisher.py
+          python3 qa_pages_candidate_handoff.py
       - name: Validate physical PWA evidence contract on PRs
         if: github.event_name == 'pull_request'
         run: python3 tools/verify_pwa_physical_evidence.py --contract-only
@@ -121,12 +123,22 @@ jobs:
               echo "The learner application will not be published. A minimal release-hold site is used only to quarantine the Pages origin and remove stale legacy files."
             } >> "$GITHUB_STEP_SUMMARY"
           fi
+      - name: Stage protected-main physical-device test candidate
+        if: github.event_name != 'pull_request' && steps.physical-readiness.outputs.production_ready != 'true'
+        shell: bash
+        run: |
+          rm -rf physical-pwa-candidate
+          mkdir -p physical-pwa-candidate
+          cp -a .pages-dist/. physical-pwa-candidate/
+          source_fp="$(python3 tools/verify_pwa_physical_evidence.py --artifact .pages-dist --print-fingerprint)"
+          staged_fp="$(python3 tools/verify_pwa_physical_evidence.py --artifact physical-pwa-candidate --print-fingerprint)"
+          test "$source_fp" = "$staged_fp"
       - name: Retain protected-main physical-device test candidate
         if: github.event_name != 'pull_request' && steps.physical-readiness.outputs.production_ready != 'true'
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:
           name: physical-pwa-candidate-${{ github.sha }}
-          path: .pages-dist
+          path: physical-pwa-candidate
           retention-days: 30
           if-no-files-found: error
           compression-level: 6
