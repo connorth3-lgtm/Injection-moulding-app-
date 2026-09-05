@@ -14,8 +14,9 @@ TOOLS = ROOT / "tools"
 if str(TOOLS) not in sys.path:
     sys.path.insert(0, str(TOOLS))
 from measured_learning_core import (  # noqa: E402
-    calculate_feature, canonical_sha, finite_number, load_json, normalize_text,
-    raw_window_fingerprint, representation_fingerprint, window_overlap, x_direction,
+    calculate_feature, canonical_sha, finite_number, load_json, normalize_source_members,
+    normalize_text, raw_window_fingerprint, representation_fingerprint, window_overlap,
+    x_direction,
 )
 
 MANIFEST = ROOT / "data/measured-learning/manifest-v1.json"
@@ -25,6 +26,7 @@ POLICY = ROOT / "data/measured-learning/v2-policy.json"
 READINESS = ROOT / "data/measured-learning/source-readiness-v2.json"
 ARTIFACTS = ROOT / "data/measured-learning/source-artifacts-v2.json"
 CHANNELS = ROOT / "data/measured-learning/source-channels-v2.json"
+AVAPS_CHANNELS = ROOT / "data/measured-learning/source-channels-avaps-v2.json"
 REQUIREMENTS = ROOT / "data/measured-learning/case-requirements-v2.json"
 FEATURE_METHODS = ROOT / "data/measured-learning/feature-methods-v1.json"
 LEDGER = ROOT / "data/measured-dataset-execution-ledger-v1.json"
@@ -57,7 +59,20 @@ def readiness_map() -> dict[str, dict]:
 
 
 def channels_map() -> dict[str, dict[str, dict]]:
-    return {s["datasetId"]:{c["sourceChannel"]:c for c in s.get("channels", [])} for s in load_json(CHANNELS).get("sources", [])}
+    result: dict[str, dict[str, dict]] = {}
+    docs = [load_json(CHANNELS)]
+    if AVAPS_CHANNELS.is_file():
+        avaps = load_json(AVAPS_CHANNELS)
+        docs.append({"sources": [{"datasetId":avaps["datasetId"], "channels":avaps.get("channels", [])}]})
+    for doc in docs:
+        for source in doc.get("sources", []):
+            dataset_id = source["datasetId"]
+            bucket = result.setdefault(dataset_id, {})
+            for channel in source.get("channels", []):
+                key = channel["sourceChannel"]
+                assert key not in bucket, f"duplicate governed source channel: {dataset_id}/{key}"
+                bucket[key] = channel
+    return result
 
 
 def artifacts_map() -> dict[str, dict[str, dict]]:
@@ -66,6 +81,10 @@ def artifacts_map() -> dict[str, dict[str, dict]]:
 
 def methods_map() -> dict[str, int]:
     return {m["id"]:int(m["version"]) for m in load_json(FEATURE_METHODS).get("methods", [])}
+
+
+def requirements_doc() -> dict:
+    return load_json(REQUIREMENTS)
 
 
 def collect_hashes(value, key="") -> set[str]:
@@ -86,12 +105,28 @@ def collect_hashes(value, key="") -> set[str]:
 
 
 def case_required_capabilities(candidate: dict) -> set[str]:
-    registry = load_json(REQUIREMENTS)
+    registry = requirements_doc()
     required = set()
     for tag in candidate.get("coverageTags", []):
         required.update(registry.get("requirementsByCoverageTag", {}).get(tag, []))
     required.update(registry.get("caseOverrides", {}).get(candidate["id"], []))
     return required
+
+
+def case_required_source_channels(candidate: dict) -> set[str]:
+    return set(requirements_doc().get("requiredSourceChannelsByCase", {}).get(candidate["id"], []))
+
+
+def case_source_gate_ready(candidate: dict, readiness: dict, channels: dict) -> bool:
+    family = candidate["sourceFamily"]
+    gate = readiness.get(family, {})
+    if gate.get("promotionReady") is not True:
+        return False
+    capabilities = gate.get("capabilities", {})
+    if any(capabilities.get(cap) is not True for cap in case_required_capabilities(candidate)):
+        return False
+    governed = channels.get(family, {})
+    return all(governed.get(channel, {}).get("promotionReady") is True for channel in case_required_source_channels(candidate))
 
 
 def assert_registries() -> tuple[dict, dict, dict, dict]:
@@ -183,6 +218,8 @@ def validate_case_object(case: dict, candidate: dict, readiness: dict, artifacts
     assert family == candidate["sourceFamily"] and readiness.get(family, {}).get("promotionReady") is True
     required = case_required_capabilities(candidate)
     assert set(case.get("requiredCapabilities", [])) == required
+    required_channels = case_required_source_channels(candidate)
+    assert set(case.get("requiredSourceChannels", [])) == required_channels
     capabilities = readiness[family].get("capabilities", {})
     assert not [cap for cap in required if capabilities.get(cap) is not True], f"{path}: source capability mismatch"
 
@@ -191,22 +228,35 @@ def validate_case_object(case: dict, candidate: dict, readiness: dict, artifacts
     assert artifact_name in artifacts.get(family, {}), f"{path}: unregistered source artifact"
     artifact = artifacts[family][artifact_name]
     assert source.get("sourceFingerprint") == artifact.get("sha256"), f"{path}: artifact/hash mismatch"
-    member = source.get("sourceMember")
-    if member is not None:
-        assert member in artifact.get("members", []), f"{path}: unregistered archive member"
+    try:
+        source_members = normalize_source_members(source.get("sourceMembers", source.get("sourceMember")))
+    except ValueError as exc:
+        raise AssertionError(f"{path}: {exc}") from exc
     assert source.get("licenceOrAccessStatus") == readiness[family].get("rightsScope")
     extraction = source.get("extraction", {})
     assert extraction.get("description") and extraction.get("sourceOrderingPreserved") is True
-    raw_fp = raw_window_fingerprint(source["sourceFingerprint"], artifact_name, member, extraction)
+    raw_fp = raw_window_fingerprint(source["sourceFingerprint"], artifact_name, source_members, extraction)
     assert source.get("rawWindowFingerprint") == raw_fp, f"{path}: raw-window fingerprint mismatch"
 
     governed_channels = channels.get(family, {})
     signals = case.get("signals", [])
     assert signals
     assert len({s.get("id") for s in signals}) == len(signals)
+    bound_channels = set()
+    governed_member_set = set()
     for signal in signals:
-        assert signal.get("sourceChannel") in governed_channels, f"{path}: unregistered source channel"
-        validate_trace(path, signal, governed_channels[signal["sourceChannel"]])
+        source_channel = signal.get("sourceChannel")
+        assert source_channel in governed_channels, f"{path}: unregistered source channel"
+        governed = governed_channels[source_channel]
+        validate_trace(path, signal, governed)
+        bound_channels.add(source_channel)
+        if governed.get("sourceMember"):
+            governed_member_set.add(governed["sourceMember"])
+    assert required_channels <= bound_channels, f"{path}: missing required source channels"
+    if governed_member_set:
+        assert set(source_members) == governed_member_set, f"{path}: sourceMembers do not match bound channel members"
+    elif source_members:
+        assert set(source_members) <= set(artifact.get("members", [])), f"{path}: unregistered archive member"
     if "multi-signal" in candidate.get("coverageTags", []):
         assert len(signals) >= 2
     rep_fp = representation_fingerprint(raw_fp, signals)
@@ -305,7 +355,9 @@ def main() -> int:
         objectives.add(objective)
         for b in promoted_cases[i+1:]:
             sa, sb = a["source"], b["source"]
-            if (sa["familyId"],sa["sourceArtifact"],sa.get("sourceMember")) != (sb["familyId"],sb["sourceArtifact"],sb.get("sourceMember")):
+            key_a = (sa["familyId"], sa["sourceArtifact"], tuple(normalize_source_members(sa.get("sourceMembers", sa.get("sourceMember")))))
+            key_b = (sb["familyId"], sb["sourceArtifact"], tuple(normalize_source_members(sb.get("sourceMembers", sb.get("sourceMember")))))
+            if key_a != key_b:
                 continue
             overlap = window_overlap(sa["extraction"]["window"], sb["extraction"]["window"])
             if overlap >= overlap_threshold:
@@ -317,9 +369,10 @@ def main() -> int:
 
     expansion_unlocked = len([c for c in promoted_cases if int(c["id"].split("-")[1]) <= 70]) >= int(gate["minimumPromotedCasesBeforeAuthoringExpansion"]) and len(ready_families) >= int(gate["minimumPromotionReadySourceFamilies"]) and reuse_rate <= float(gate["maximumSubstantialWindowReuseRate"])
 
-    source_gate_candidate_counts = Counter(c["sourceFamily"] in ready_families for c in base_cases)
+    ready_case_ids = [c["id"] for c in base_cases if case_source_gate_ready(c, readiness, channels)]
+    blocked_case_ids = [c["id"] for c in base_cases if c["id"] not in set(ready_case_ids)]
     report = {
-        "schemaVersion":3,
+        "schemaVersion":4,
         "architectureId":"measured-learning-library-v2",
         "releaseTargetCases":70,
         "catalogueCapacity":100,
@@ -329,13 +382,16 @@ def main() -> int:
         "promotedCaseIds":promoted_ids,
         "promotionReadySourceFamilies":sorted(ready_families),
         "promotionReadySourceFamilyCount":len(ready_families),
-        "baseCasesOnSourceGateReadyFamilies":source_gate_candidate_counts[True],
-        "baseCasesOnSourceGateBlockedFamilies":source_gate_candidate_counts[False],
+        "baseCasesOnSourceGateReadyFamilies":sum(1 for c in base_cases if c["sourceFamily"] in ready_families),
+        "baseCasesSourceAndChannelReady":len(ready_case_ids),
+        "baseCaseSourceAndChannelReadyIds":ready_case_ids,
+        "baseCasesBlockedBySourceOrChannelGate":len(blocked_case_ids),
+        "baseCaseBlockedIds":blocked_case_ids,
         "aggregatePromotedPayloadBytes":aggregate,
         "substantialWindowReuseRate":reuse_rate,
         "capacityExpansionUnlocked":expansion_unlocked,
         "releaseComplete":len([i for i in promoted_ids if int(i.split("-")[1]) <= 70]) == 70,
-        "boundary":"A source-level gate is necessary but not sufficient: every promoted case must also match an exact artifact hash, governed source channels, reproducible feature calculations and independent review metadata."
+        "boundary":"Family readiness is necessary but not sufficient. Case readiness also requires its exact governed source channels; unresolved channels such as AVAPS distanceA remain blocked without suppressing independently governed channels from the same source."
     }
     REPORT.write_text(json.dumps(report, indent=2) + "\n", encoding="utf-8")
     print(json.dumps(report, indent=2))
