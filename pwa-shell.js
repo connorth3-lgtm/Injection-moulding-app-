@@ -1,12 +1,14 @@
 /* MouldMaster PWA shell controller — 2026.09.05 */
 (function(){
 'use strict';
-const RELEASE='2026.09.05.4';
+const RELEASE='2026.09.05.5';
 const CONTENT='2026.08.26.1';
 const REFERENCE_DATA_URL='./reference-data.html';
 function setText(el,value){if(el&&el.textContent!==value)el.textContent=value}
 function setAttr(el,name,value){if(el&&el.getAttribute(name)!==value)el.setAttribute(name,value)}
 function isMobileNav(){return !!window.matchMedia?.('(max-width:680px)').matches}
+function isIOSFamily(){const ua=navigator.userAgent||'';return /iPad|iPhone|iPod/.test(ua)||(/Macintosh/.test(ua)&&Number(navigator.maxTouchPoints||0)>1)}
+function syncPlatformClasses(){const ios=isIOSFamily(),standalone=ios&&!!window.matchMedia?.('(display-mode: standalone)').matches;document.documentElement.classList.toggle('mm-ios-webkit',ios);document.documentElement.classList.toggle('mm-ios-standalone',standalone)}
 function displayContext(){
   const requested=new URLSearchParams(location.search).get('desktopRelease')||'';
   const desktop=location.hostname==='127.0.0.1'&&/\bElectron\//.test(navigator.userAgent||'')?requested:'';
@@ -123,7 +125,7 @@ async function register(){
   try{const reg=await navigator.serviceWorker.register('./service-worker.js',{scope:'./'});await reg.update();return reg}catch(e){console.warn('[MouldMaster] Offline/update support unavailable:',e);return null}
 }
 let syncQueued=false;
-function runSync(){syncQueued=false;syncLabels();syncStandardsReviewDate();syncUpdateCard();hideInternalQaProvenance();installMobileLayoutGuard();syncVisibleViewChrome();dockReferenceLauncher();configureReferenceDrawer();dockReferenceDataLauncher();configureReferenceDataDrawer();addNZLegacyNote()}
+function runSync(){syncQueued=false;syncPlatformClasses();syncLabels();syncStandardsReviewDate();syncUpdateCard();hideInternalQaProvenance();installMobileLayoutGuard();syncVisibleViewChrome();dockReferenceLauncher();configureReferenceDrawer();dockReferenceDataLauncher();configureReferenceDataDrawer();addNZLegacyNote()}
 function scheduleSync(){if(syncQueued)return;syncQueued=true;(window.requestAnimationFrame||function(fn){return setTimeout(fn,0)})(runSync)}
 function bindLifecycle(){
   const shell=window.MM_APP_SHELL;
@@ -136,5 +138,5 @@ runSync();
 window.addEventListener('resize',scheduleSync,{passive:true});
 window.addEventListener('load',()=>{runSync();register();setTimeout(scheduleSync,250)},{once:true});
 document.addEventListener('visibilitychange',()=>{if(!document.hidden)scheduleSync()});
-window.MM_SHELL_RELEASE=RELEASE;window.MM_CONTENT_RELEASE=CONTENT;window.MM_DISPLAY_CONTEXT=displayContext;window.MM_REFERENCE_LAUNCHER_DOCK='sidebar-first-normal-flow';window.MM_REFERENCE_DRAWER_MODE='non-blocking';window.MM_REFERENCE_DATA_URL=REFERENCE_DATA_URL;window.MM_REFERENCE_DATA_LAUNCHER_DOCK='mobile-more-standalone-page';window.MM_REFERENCE_DATA_DRAWER_MODE='standalone-mobile-page-desktop-drawer';window.MM_BROWSER_UPDATE_MODE='shared-origin-service-worker';window.MM_MOBILE_LAYOUT_GUARD='home-task-first-fixed-nav-clearance-v2';
+window.MM_SHELL_RELEASE=RELEASE;window.MM_CONTENT_RELEASE=CONTENT;window.MM_DISPLAY_CONTEXT=displayContext;window.MM_REFERENCE_LAUNCHER_DOCK='sidebar-first-normal-flow';window.MM_REFERENCE_DRAWER_MODE='non-blocking';window.MM_REFERENCE_DATA_URL=REFERENCE_DATA_URL;window.MM_REFERENCE_DATA_LAUNCHER_DOCK='mobile-more-standalone-page';window.MM_REFERENCE_DATA_DRAWER_MODE='standalone-mobile-page-desktop-drawer';window.MM_BROWSER_UPDATE_MODE='shared-origin-service-worker';window.MM_MOBILE_LAYOUT_GUARD='home-task-first-fixed-nav-clearance-v2';window.MM_IOS_LAYOUT_PATCH='safe-area-viewport-profile-v1';
 })();
