@@ -1,0 +1,80 @@
+{
+  "schemaVersion": 1,
+  "decisionId": "measured-learning-rights-safe-rebalance-v2",
+  "status": "approved-for-authoring-not-promotion",
+  "policy": {
+    "restrictedSourceRightsAreNeverBroadenedByCatalogueUse": true,
+    "learningObjectiveMayBePreservedWhileSourceFamilyChanges": true,
+    "replacementSourceMustAlreadyBePromotionReadyAndChannelGoverned": true,
+    "sourceConcentrationCapCases": 14,
+    "rebalancedCasesStillRequireDistinctReviewedWindowsBeforePromotion": true
+  },
+  "decisions": [
+    {
+      "caseId": "MLM-013",
+      "originalSourceFamily": "iguzzini-road-lenses",
+      "replacementSourceFamily": "mendeley-gtnb4j7bfx-v1",
+      "reason": "The original release is restricted to research/education use. GTNB provides CC BY 4.0 historical injection-production process and quality records that can teach distribution shift without widening iGuzzini rights.",
+      "requiredSourceChannels": ["Injection_Pressure", "%Defective"]
+    },
+    {
+      "caseId": "MLM-035",
+      "replacementTitle": "Multivariate process-feature outlier review",
+      "originalSourceFamily": "iguzzini-road-lenses",
+      "replacementSourceFamily": "mendeley-gtnb4j7bfx-v1",
+      "reason": "The learning skill is multivariate anomaly review, not a source-specific quality class. Governed GTNB process/quality channels support a fail-closed outlier lesson under CC BY 4.0.",
+      "requiredSourceChannels": ["Injection_Pressure", "Retention_Pressure", "Mold_Temp", "%Defective"]
+    },
+    {
+      "caseId": "MLM-041",
+      "replacementTitle": "Process-feature patterns and quality outcomes",
+      "originalSourceFamily": "iguzzini-road-lenses",
+      "replacementSourceFamily": "mendeley-gtnb4j7bfx-v1",
+      "reason": "A source-native categorical quality class is not required for the intended association lesson. GTNB exposes governed process variables and direct/source-derived quality outcomes without inventing a class label.",
+      "requiredSourceChannels": ["Injection_Pressure", "Mold_Temp", "%Defective"]
+    },
+    {
+      "caseId": "MLM-042",
+      "originalSourceFamily": "iguzzini-road-lenses",
+      "replacementSourceFamily": "mendeley-gtnb4j7bfx-v1",
+      "reason": "GTNB can support comparison of similar historical process records with different quality outcomes while keeping causal claims explicitly unsupported.",
+      "requiredSourceChannels": ["Injection_Pressure", "Retention_Pressure", "%Defective"]
+    },
+    {
+      "caseId": "MLM-065",
+      "originalSourceFamily": "iguzzini-road-lenses",
+      "replacementSourceFamily": "mendeley-gtnb4j7bfx-v1",
+      "reason": "The evidence-boundary lesson is stronger with open process/quality records: measured association can be shown while root cause remains unsupported.",
+      "requiredSourceChannels": ["Injection_Pressure", "%Defective", "%Flash"]
+    },
+    {
+      "caseId": "MLM-070",
+      "originalSourceFamily": "iguzzini-road-lenses",
+      "replacementSourceFamily": "mendeley-gtnb4j7bfx-v1",
+      "reason": "Choosing the next discriminating measurement can be taught from an incomplete open process/quality record without relying on research/education-only production data.",
+      "requiredSourceChannels": ["Injection_Pressure", "Cycle_Time", "%Defective"]
+    },
+    {
+      "caseId": "MLM-029",
+      "originalSourceFamily": "mendeley-fhj5p7ww9v-v1",
+      "replacementSourceFamily": "mendeley-4h98rz9f92-v3",
+      "reason": "FHJ is CC BY-NC and product-scope use is not assumed. 4h98 is CC BY 4.0 and contains direct repeated mechanical-property replicates suitable for spread/repeatability teaching.",
+      "requiredSourceChannels": ["Sheet1!E:I"]
+    },
+    {
+      "caseId": "MLM-048",
+      "originalSourceFamily": "mendeley-fhj5p7ww9v-v1",
+      "replacementSourceFamily": "mendeley-4h98rz9f92-v3",
+      "reason": "4h98 provides multiple direct physical outcome replicate families under CC BY 4.0, supporting measured outcome comparison without importing noncommercial rights into the product.",
+      "requiredSourceChannels": ["Sheet1!E:I", "Sheet1!Q:U"]
+    },
+    {
+      "caseId": "MLM-069",
+      "originalSourceFamily": "mendeley-fhj5p7ww9v-v1",
+      "replacementSourceFamily": "mendeley-4h98rz9f92-v3",
+      "reason": "The evidence-boundary objective is that material/mechanical test evidence cannot by itself establish a production root cause. Direct 4h98 mechanical replicates support that lesson under CC BY 4.0.",
+      "requiredSourceChannels": ["Sheet1!K:O", "Sheet1!Q:U"]
+    }
+  ],
+  "boundary": "This file does not promote any learner case. Rebalancing removes licence-blocked dependencies from the release curriculum while preserving the original sources in the evidence ledger and retaining their rights restrictions. Each replacement case still needs a distinct source window, case-specific wording, novelty review and independent engineering review."
+}
