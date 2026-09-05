@@ -4,34 +4,57 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
   <meta name="robots" content="noindex,nofollow,noarchive">
-  <title>MouldMaster device validation helper</title>
+  <title>MouldMaster physical validation helper</title>
   <style>
     :root { color-scheme: light dark; font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
     body { margin: 0; padding: max(20px, env(safe-area-inset-top)) max(20px, env(safe-area-inset-right)) max(24px, env(safe-area-inset-bottom)) max(20px, env(safe-area-inset-left)); line-height: 1.45; }
     main { max-width: 760px; margin: 0 auto; }
     h1 { font-size: 1.65rem; margin-top: 0; }
+    h2 { font-size: 1.15rem; margin: 24px 0 8px; }
     .note { border: 1px solid currentColor; border-radius: 10px; padding: 12px 14px; opacity: .92; }
     label { display: block; margin-top: 14px; font-weight: 650; }
     input, textarea, button { box-sizing: border-box; width: 100%; font: inherit; }
     input, textarea { margin-top: 5px; padding: 10px; border: 1px solid #8888; border-radius: 8px; background: transparent; color: inherit; }
-    textarea { min-height: 180px; resize: vertical; }
+    textarea { min-height: 240px; resize: vertical; }
     button { margin-top: 14px; padding: 11px 14px; border-radius: 8px; border: 1px solid currentColor; cursor: pointer; }
     small { display: block; margin-top: 5px; opacity: .75; }
+    .checks { display: grid; gap: 8px; margin-top: 10px; }
+    .check { display: grid; grid-template-columns: auto 1fr; gap: 9px; align-items: start; margin: 0; font-weight: 500; }
+    .check input { width: auto; margin: 4px 0 0; }
     .status { margin-top: 10px; min-height: 1.5em; }
   </style>
 </head>
 <body>
-  <main data-mm-device-metadata-helper="true">
-    <h1>MouldMaster device validation helper</h1>
-    <p>This page collects only browser-visible device metadata on this device. Nothing is uploaded, transmitted, stored, or sent automatically.</p>
-    <p class="note"><strong>Use this page on each physical device.</strong> Auto-detected values are editable because iOS/iPadOS browsers may hide the exact hardware model or OS detail. If a value says it is unavailable, replace it only with information you can verify on the device.</p>
+  <main data-mm-device-metadata-helper="true" data-mm-physical-validation-packet="true">
+    <h1>MouldMaster physical validation helper</h1>
+    <p>This page prepares a local review packet for the governed physical-device validation contract. Nothing is uploaded, transmitted, stored, or sent automatically.</p>
+    <p class="note"><strong>Use this page on the same physical device used to exercise the candidate.</strong> Browser-detected values are editable because iOS/iPadOS can hide exact hardware details. Replace unavailable values only with information you can verify on the device. This helper never marks production validated by itself.</p>
 
+    <h2>Candidate and review references</h2>
+    <label for="runtimeFingerprint">Runtime fingerprint</label>
+    <input id="runtimeFingerprint" autocomplete="off" placeholder="sha256:…">
+    <small>Paste the exact fingerprint reported for the protected-main physical candidate you tested.</small>
+
+    <label for="testedAt">Physical test completed at</label>
+    <input id="testedAt" autocomplete="off" placeholder="2026-09-05T22:30:00+12:00">
+    <small>Use the real completion time for the physical test, including timezone.</small>
+    <button id="testedNow" type="button">Set test time to now</button>
+
+    <label for="testerReference">Tester reference</label>
+    <input id="testerReference" autocomplete="off" placeholder="owner-physical-test-2026-09-05">
+    <small>Use a non-sensitive review label; do not enter an email address.</small>
+
+    <label for="evidenceReference">Evidence reference</label>
+    <input id="evidenceReference" autocomplete="off" placeholder="physical-pwa-review-2026-09-05">
+    <small>Use a non-sensitive reference to the external review evidence.</small>
+
+    <h2>Device metadata</h2>
     <label for="platform">Platform</label>
     <input id="platform" autocomplete="off">
 
     <label for="deviceModel">Device model</label>
     <input id="deviceModel" autocomplete="off">
-    <small>Android often exposes a model string. Safari commonly exposes only iPhone/iPad family, not the exact model.</small>
+    <small>Safari commonly exposes only iPhone/iPad family. Enter the exact model manually only when you can verify it on the device.</small>
 
     <label for="osVersion">OS version</label>
     <input id="osVersion" autocomplete="off">
@@ -41,13 +64,17 @@
 
     <label for="installedMode">Installed mode</label>
     <input id="installedMode" autocomplete="off">
-    <small>For production validation this must be <code>standalone</code> after launching the installed PWA.</small>
+    <small>Production physical validation requires <code>standalone</code> after launching the installed PWA.</small>
 
-    <button id="generate" type="button">Generate validation metadata</button>
+    <h2>Governed physical checks</h2>
+    <p>Tick a check only after you actually exercised it on this physical device against the candidate fingerprint above.</p>
+    <div id="checks" class="checks"></div>
 
-    <label for="output">Copyable result</label>
+    <button id="generate" type="button">Generate review packet</button>
+
+    <label for="output">Copyable review packet</label>
     <textarea id="output" readonly spellcheck="false"></textarea>
-    <button id="copy" type="button">Copy result</button>
+    <button id="copy" type="button">Copy review packet</button>
     <div id="status" class="status" role="status" aria-live="polite"></div>
   </main>
 
@@ -60,6 +87,18 @@
       const isIPadDesktopMode = /Mac/.test(navPlatform) && maxTouchPoints > 1;
       const isIOS = /iPhone|iPad|iPod/i.test(ua + ' ' + navPlatform) || isIPadDesktopMode;
       const isAndroid = /Android/i.test(ua);
+      const IOS_CHECKS = ['installStandalone', 'safeAreaNavigation', 'workspacePortrait', 'offlineRestart', 'offlineReboot', 'updateRecovery', 'storagePressure'];
+      const ANDROID_CHECKS = ['installStandalone', 'fixedNavigationClearance', 'offlineRestart', 'offlineReboot', 'updateRecovery', 'storagePressure'];
+      const CHECK_LABELS = {
+        installStandalone: 'Installed app launches in standalone mode',
+        safeAreaNavigation: 'Safe-area navigation is clear and usable',
+        workspacePortrait: 'Workspace is usable in portrait orientation',
+        fixedNavigationClearance: 'Fixed navigation does not cover page content',
+        offlineRestart: 'Offline restart works after closing and reopening the app',
+        offlineReboot: 'Offline use works after a device reboot',
+        updateRecovery: 'App recovers cleanly after an updated candidate is available',
+        storagePressure: 'App fails/recoveries safely under storage pressure'
+      };
 
       function iosVersion() {
         const match = ua.match(/OS\s+(\d+(?:[_\.]\d+)*)/i);
@@ -112,42 +151,83 @@
         installedMode: installedMode()
       };
 
-      for (const [id, value] of Object.entries(values)) {
-        document.getElementById(id).value = value;
-      }
+      for (const [id, value] of Object.entries(values)) document.getElementById(id).value = value;
 
+      const checksRoot = document.getElementById('checks');
       const output = document.getElementById('output');
       const status = document.getElementById('status');
 
+      function currentCheckKeys() {
+        return document.getElementById('platform').value.trim().toLowerCase() === 'ios' ? IOS_CHECKS : ANDROID_CHECKS;
+      }
+
+      function renderChecks() {
+        const previous = {};
+        for (const input of checksRoot.querySelectorAll('input[type="checkbox"]')) previous[input.dataset.key] = input.checked;
+        checksRoot.textContent = '';
+        for (const key of currentCheckKeys()) {
+          const label = document.createElement('label');
+          label.className = 'check';
+          const input = document.createElement('input');
+          input.type = 'checkbox';
+          input.dataset.key = key;
+          input.checked = Boolean(previous[key]);
+          const text = document.createElement('span');
+          text.textContent = CHECK_LABELS[key];
+          label.append(input, text);
+          checksRoot.append(label);
+        }
+      }
+
       function buildRecord() {
+        const checks = {};
+        for (const input of checksRoot.querySelectorAll('input[type="checkbox"]')) checks[input.dataset.key] = input.checked ? 'pass' : 'pending';
         const record = {
           schemaVersion: 1,
+          packetType: 'physical-validation-review-packet',
           capturedAt: new Date().toISOString(),
           source: 'mouldmaster-on-device-metadata-helper',
+          runtimeFingerprint: document.getElementById('runtimeFingerprint').value.trim(),
+          testedAt: document.getElementById('testedAt').value.trim(),
+          testerReference: document.getElementById('testerReference').value.trim(),
+          evidenceReference: document.getElementById('evidenceReference').value.trim(),
           platform: document.getElementById('platform').value.trim(),
           deviceModel: document.getElementById('deviceModel').value.trim(),
           osVersion: document.getElementById('osVersion').value.trim(),
           browserVersion: document.getElementById('browserVersion').value.trim(),
           installedMode: document.getElementById('installedMode').value.trim(),
+          checks,
+          reviewStatus: 'requires-human-review',
           privacy: 'No user-agent string, identity, screenshot, filesystem path, learner data, customer/site data, or process data is included.'
         };
         output.value = JSON.stringify(record, null, 2);
-        status.textContent = 'Validation metadata generated locally.';
+        const allPass = Object.values(checks).length > 0 && Object.values(checks).every(value => value === 'pass');
+        const refsPresent = record.runtimeFingerprint && record.testedAt && record.testerReference && record.evidenceReference;
+        const metadataPresent = record.deviceModel && record.osVersion && record.browserVersion && record.installedMode === 'standalone';
+        status.textContent = allPass && refsPresent && metadataPresent
+          ? 'Review packet is complete for human review. It is not production validation until reviewed and merged through the governed contract.'
+          : 'Review packet generated locally. Complete all genuine fields/checks before using it for governed review.';
       }
 
+      document.getElementById('platform').addEventListener('input', renderChecks);
+      document.getElementById('testedNow').addEventListener('click', () => {
+        document.getElementById('testedAt').value = new Date().toISOString();
+        status.textContent = 'Test time set to the current device time. Keep it only if this is the real physical-test completion time.';
+      });
       document.getElementById('generate').addEventListener('click', buildRecord);
       document.getElementById('copy').addEventListener('click', async () => {
         if (!output.value) buildRecord();
         try {
           await navigator.clipboard.writeText(output.value);
-          status.textContent = 'Copied. Paste the result into the validation record or chat.';
+          status.textContent = 'Copied. Paste this review packet into the governed review or chat.';
         } catch (error) {
           output.focus();
           output.select();
-          status.textContent = 'Clipboard access was blocked. The result is selected for manual copy.';
+          status.textContent = 'Clipboard access was blocked. The review packet is selected for manual copy.';
         }
       });
 
+      renderChecks();
       buildRecord();
     })();
   </script>
