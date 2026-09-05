@@ -19,6 +19,7 @@ import statistics
 import tempfile
 import urllib.request
 import zipfile
+from collections import Counter
 from pathlib import Path
 
 URL = "https://raw.githubusercontent.com/sc4t1m/scatimdata/7bd35941d75c97a3f276439377dc430ab47402be/dataset1.zip"
@@ -114,9 +115,13 @@ def waveform_profile(rows: list[list[str]], label: str) -> dict:
     if not all(a < b for a, b in zip(times, times[1:])):
         raise RuntimeError(f"AVAPS {label} time coordinate is not strictly increasing")
     deltas = [b-a for a,b in zip(times,times[1:])]
-    max_interval_error = max(abs(delta-PAPER_SAMPLE_INTERVAL_S) for delta in deltas)
-    if max_interval_error > 1e-9:
-        raise RuntimeError(f"AVAPS {label} sample interval drift: max error {max_interval_error}")
+    median_interval = statistics.median(deltas)
+    if abs(median_interval-PAPER_SAMPLE_INTERVAL_S) > 1e-9:
+        raise RuntimeError(f"AVAPS {label} median sample interval drift: {median_interval}")
+    # The delivered CSV time values are rounded/quantized and individual increments are
+    # not all exactly 6 ms. Preserve and report that jitter rather than synthesizing a
+    # uniform time vector from the paper's nominal interval.
+    rounded_delta_counts = Counter(round(delta, 9) for delta in deltas)
     if any(count != EXPECTED_TIME_SERIES_POINTS for count in numeric_counts):
         bad = sum(count != EXPECTED_TIME_SERIES_POINTS for count in numeric_counts)
         raise RuntimeError(f"AVAPS {label} has {bad} cycle columns without {EXPECTED_TIME_SERIES_POINTS} numeric samples")
@@ -128,8 +133,12 @@ def waveform_profile(rows: list[list[str]], label: str) -> dict:
         "pointsPerSeries": len(times),
         "timeStartS": times[0],
         "timeEndS": times[-1],
-        "sampleIntervalS": PAPER_SAMPLE_INTERVAL_S,
-        "maxSampleIntervalErrorS": max_interval_error,
+        "paperReportedSampleIntervalS": PAPER_SAMPLE_INTERVAL_S,
+        "deliveredMedianSampleIntervalS": median_interval,
+        "deliveredMinimumSampleIntervalS": min(deltas),
+        "deliveredMaximumSampleIntervalS": max(deltas),
+        "deliveredSampleIntervalCounts": {str(key): rounded_delta_counts[key] for key in sorted(rounded_delta_counts)},
+        "timeCoordinatePolicy": "Preserve delivered strictly increasing time values. Do not replace quantized/jittered increments with a synthetic uniform 6 ms axis.",
         "globalMinimumOfCycleMaxima": min(finite_maxima),
         "globalMaximumOfCycleMaxima": max(finite_maxima),
         "medianOfCycleMaxima": statistics.median(finite_maxima),
@@ -229,6 +238,8 @@ def main() -> int:
         "pressureMatchFractionAt0.1":pressure_equivalence["matchFractionsByAbsoluteTolerance"]["0.1"],
         "pressureCycleMaxRange":[pressure_summary["globalMinimumOfCycleMaxima"],pressure_summary["globalMaximumOfCycleMaxima"]],
         "flowCycleMaxRange":[flow_summary["globalMinimumOfCycleMaxima"],flow_summary["globalMaximumOfCycleMaxima"]],
+        "pressureTimeDeltaRange":[pressure_summary["deliveredMinimumSampleIntervalS"],pressure_summary["deliveredMaximumSampleIntervalS"]],
+        "flowTimeDeltaRange":[flow_summary["deliveredMinimumSampleIntervalS"],flow_summary["deliveredMaximumSampleIntervalS"]],
     },separators=(',',':')))
     return 0
 
