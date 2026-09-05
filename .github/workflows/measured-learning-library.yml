@@ -13,6 +13,7 @@ on:
       - 'tools/prove_*_measured_source.py'
       - 'tools/prove_mendeley_open_sources.py'
       - 'tools/prove_pmc_hdpe_source.py'
+      - 'tools/extract_mendeley_learning_candidates.py'
       - 'tests/test_measured_learning_v2.py'
       - 'qa_measured_learning_library.py'
       - 'sources/MEASURED_LEARNING_LIBRARY_V1.md'
@@ -31,6 +32,7 @@ on:
       - 'tools/prove_*_measured_source.py'
       - 'tools/prove_mendeley_open_sources.py'
       - 'tools/prove_pmc_hdpe_source.py'
+      - 'tools/extract_mendeley_learning_candidates.py'
       - 'tests/test_measured_learning_v2.py'
       - 'qa_measured_learning_library.py'
       - 'sources/MEASURED_LEARNING_LIBRARY_V1.md'
@@ -46,8 +48,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
+      - name: Install pinned workbook reader for candidate extraction
+        run: python -m pip install --disable-pip-version-check 'openpyxl==3.1.5'
       - name: Compile V2 promotion and source-proof tooling
-        run: python -m py_compile tools/measured_learning_core.py tools/build_measured_learning_case.py tools/prove_openmms_measured_source.py tools/prove_avaps_measured_source.py tools/prove_sustainability_measured_source.py tools/prove_mendeley_open_sources.py tools/prove_pmc_hdpe_source.py qa_measured_learning_library.py tests/test_measured_learning_v2.py
+        run: python -m py_compile tools/measured_learning_core.py tools/build_measured_learning_case.py tools/prove_openmms_measured_source.py tools/prove_avaps_measured_source.py tools/prove_sustainability_measured_source.py tools/prove_mendeley_open_sources.py tools/prove_pmc_hdpe_source.py tools/extract_mendeley_learning_candidates.py qa_measured_learning_library.py tests/test_measured_learning_v2.py
       - name: Check V2 learner runtime syntax
         run: node --check measured-learning-library.js
       - name: Validate governance JSON
@@ -70,11 +74,13 @@ jobs:
         run: python tools/prove_sustainability_measured_source.py
       - name: Prove benchmark-pinned open Mendeley workbook schemas
         run: python tools/prove_mendeley_open_sources.py
+      - name: Extract compact unreviewed Mendeley learning candidates
+        run: python tools/extract_mendeley_learning_candidates.py
       - name: Probe blocked PMC source for future channel unlock
         id: pmc_probe
         continue-on-error: true
         run: python tools/prove_pmc_hdpe_source.py
-      - name: Upload compact source proofs
+      - name: Upload compact source proofs and authoring candidates
         if: always()
         uses: actions/upload-artifact@v6
         with:
