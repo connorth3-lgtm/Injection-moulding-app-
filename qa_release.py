@@ -7,7 +7,7 @@ import struct
 import subprocess
 import tempfile
 
-WEB_RELEASE = "2026.09.05.4"
+WEB_RELEASE = "2026.09.05.5"
 ANDROID_RELEASE = "2026.08.26.2"
 CONTENT_VERSION = "2026.08.26.1"
 WINDOWS_RECOVERY_VERSION = "2026.08.21.1"
@@ -155,6 +155,13 @@ for marker in [
     "padding-bottom:calc(174px + env(safe-area-inset-bottom))",
 ]:
     assert marker in reading_css, f"Android profile mobile layout regression guard missing: {marker}"
+for marker in [
+    "iOS/iPadOS WebKit safe-area + profile viewport hardening",
+    "html.mm-ios-webkit",
+    "safe-area-inset-top",
+    "html.mm-ios-standalone .mobile-nav",
+]:
+    assert marker in reading_css, f"iOS/iPadOS mobile layout regression guard missing: {marker}"
 
 source_lib = text("source-library.js")
 for marker in ["ISO 20430:2020", "HSE PPIS4(rev1)", "OSHA 1910.147", "WorkSafe NZ — Machine lockouts", "ISO 1133-1:2022", "ISO 22514-2:2026", "NIST — Experimental design", "More authoritative sources"]:
@@ -175,6 +182,8 @@ shell = text("pwa-shell.js")
 assert f"const RELEASE='{WEB_RELEASE}'" in shell
 assert f"const CONTENT='{CONTENT_VERSION}'" in shell
 assert "NZ source-status (?:note|clarification)" in shell, "duplicate NZ note prevention missing"
+for marker in ["function isIOSFamily()", "syncPlatformClasses", "mm-ios-webkit", "MM_IOS_LAYOUT_PATCH='safe-area-viewport-profile-v1'"]:
+    assert marker in shell, f"iOS/iPadOS shell regression guard missing: {marker}"
 
 legacy_loader = text("MouldMaster_Academy_App.html")
 assert 'crypto.subtle.digest("SHA-256",bytes)' in legacy_loader, "legacy loader SHA-256 verification removed"
