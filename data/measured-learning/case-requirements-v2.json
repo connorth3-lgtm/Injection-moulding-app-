@@ -1,9 +1,10 @@
 {
-  "schemaVersion": 2,
+  "schemaVersion": 3,
   "registryId": "measured-learning-case-requirements-v2",
   "policy": {
     "requirementsAreDerivedPerCatalogueCase": true,
     "sourceCapabilitiesMustSatisfyRequirementsBeforePromotion": true,
+    "requiredSourceChannelsMustBePromotionReadyAndBound": true,
     "multiSignalTagRequiresAtLeastTwoBoundSignals": true
   },
   "requirementsByCoverageTag": {
@@ -32,5 +33,21 @@
     "MLM-064": ["processWaveform"],
     "MLM-067": ["recordLevelProcess"],
     "MLM-068": ["processWaveform"]
+  },
+  "requiredSourceChannelsByCase": {
+    "MLM-001": ["dataset1/ds1_timeseries_injectionpressure.csv:value"],
+    "MLM-002": ["dataset1/ds1_timeseries_injectionflow.csv:value"],
+    "MLM-003": ["dataset1/ds1_timeseries_injectionpressure.csv:value", "dataset1/ds1_timeseries_injectionflow.csv:value"],
+    "MLM-008": ["dataset1/ds1_timeseries_injectionpressure.csv:value"],
+    "MLM-009": ["dataset1/ds1_timeseries_injectionflow.csv:value"],
+    "MLM-010": ["dataset1/ds1_timeseries_injectionpressure.csv:value", "dataset1/ds1_timeseries_injectionflow.csv:value"],
+    "MLM-015": ["dataset1/ds1_timeseries_injectionpressure.csv:value", "dataset1/ds1_timeseries_injectionflow.csv:value"],
+    "MLM-016": ["dataset1/ds1_timeseries_injectionpressure.csv:value"],
+    "MLM-017": ["dataset1/ds1_timeseries_injectionflow.csv:value"],
+    "MLM-018": ["dataset1/ds1_timeseries_injectionpressure.csv:value", "dataset1/ds1_timeseries_injectionflow.csv:value"],
+    "MLM-022": ["dataset1/ds1_timeseries_injectionpressure.csv:value", "dataset1/ds1_timeseries_injectionflow.csv:value"],
+    "MLM-036": ["dataset1/ds1_timeseries_injectionpressure.csv:value", "dataset1/ds1_timeseries_injectionflow.csv:value", "dataset1/ds1_scalar_and_quality.csv:weight"],
+    "MLM-037": ["dataset1/ds1_timeseries_injectionpressure.csv:value", "dataset1/ds1_timeseries_injectionflow.csv:value", "dataset1/ds1_scalar_and_quality.csv:distanceA"],
+    "MLM-064": ["dataset1/ds1_timeseries_injectionpressure.csv:value", "dataset1/ds1_timeseries_injectionflow.csv:value"]
   }
 }
