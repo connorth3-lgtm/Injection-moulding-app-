@@ -59,3 +59,29 @@
   html body[data-mm-view="profile"] .top-actions{grid-template-columns:1fr!important}
   html body[data-mm-view="profile"] .top-actions button{min-height:46px!important}
 }
+
+
+/* iOS/iPadOS WebKit safe-area + profile viewport hardening — 2026-09-05 */
+html.mm-ios-webkit{height:100%;min-height:-webkit-fill-available}
+html.mm-ios-webkit body{min-height:100dvh;min-height:-webkit-fill-available;-webkit-text-size-adjust:100%}
+@media(max-width:700px){
+  html.mm-ios-webkit body[data-mm-view="profile"] .main{
+    padding-top:calc(16px + env(safe-area-inset-top))!important;
+    padding-left:max(16px,env(safe-area-inset-left))!important;
+    padding-right:max(16px,env(safe-area-inset-right))!important;
+    padding-bottom:calc(184px + env(safe-area-inset-bottom))!important;
+  }
+  html.mm-ios-webkit body[data-mm-view="profile"] .topbar{
+    margin-bottom:22px!important;
+    scroll-margin-top:calc(12px + env(safe-area-inset-top));
+  }
+  html.mm-ios-webkit .mobile-nav{
+    padding-left:max(8px,env(safe-area-inset-left))!important;
+    padding-right:max(8px,env(safe-area-inset-right))!important;
+    padding-bottom:calc(10px + env(safe-area-inset-bottom))!important;
+    -webkit-transform:translateZ(0);
+    transform:translateZ(0);
+  }
+  html.mm-ios-standalone .mobile-nav{bottom:0!important}
+  html.mm-ios-standalone body[data-mm-view="profile"] #profile{padding-bottom:64px!important}
+}
