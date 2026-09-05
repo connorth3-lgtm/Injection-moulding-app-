@@ -14,10 +14,12 @@ FILES=[
  'gtnb-rejection-unreviewed-learning-candidate.json',
  'sustainability-unreviewed-learning-candidates.json',
  'openmms-unreviewed-learning-candidates.json',
+ 'avaps-unreviewed-learning-candidates.json',
 ]
 REPORT=PROOF/'measured-learning-authoring-coverage-v2.json'
 SUSTAINABILITY='su13148102-supplement'
 GENERATED_INDEX_MODE='generated-source-order-observation-index-v1'
+AVAPS_CHANNELS=ROOT/'data/measured-learning/source-channels-avaps-v2.json'
 
 def load(p): return json.loads(p.read_text(encoding='utf-8'))
 def sha(v): return 'sha256:'+hashlib.sha256(json.dumps(v,sort_keys=True,separators=(',',':'),ensure_ascii=False).encode()).hexdigest()
@@ -29,15 +31,48 @@ def monotonic(xs,declared=None):
     if not (inc or dec): return False
     actual='increasing' if inc else 'decreasing'
     return declared in (None,actual)
+def merged_channels():
+    result={}
+    docs=[load(ROOT/'data/measured-learning/source-channels-v2.json')]
+    if AVAPS_CHANNELS.is_file():
+        a=load(AVAPS_CHANNELS); docs.append({'sources':[{'datasetId':a['datasetId'],'channels':a.get('channels',[])}]})
+    for doc in docs:
+        for source in doc.get('sources',[]):
+            bucket=result.setdefault(source['datasetId'],{})
+            for channel in source.get('channels',[]):
+                key=channel['sourceChannel']; assert key not in bucket, f'duplicate channel {source["datasetId"]}/{key}'; bucket[key]=channel
+    return result
+def requirements(): return load(ROOT/'data/measured-learning/case-requirements-v2.json')
+def required_capabilities(case):
+    r=requirements(); result=set()
+    for tag in case.get('coverageTags',[]): result.update(r.get('requirementsByCoverageTag',{}).get(tag,[]))
+    result.update(r.get('caseOverrides',{}).get(case['id'],[])); return result
+def required_channels(case): return set(requirements().get('requiredSourceChannelsByCase',{}).get(case['id'],[]))
+def case_ready(case,readiness,channels):
+    gate=readiness.get(case['sourceFamily'],{})
+    if gate.get('promotionReady') is not True:return False
+    caps=gate.get('capabilities',{})
+    if any(caps.get(cap) is not True for cap in required_capabilities(case)):return False
+    governed=channels.get(case['sourceFamily'],{})
+    return all(governed.get(ch,{}).get('promotionReady') is True for ch in required_channels(case))
+def candidate_members(candidate):
+    raw=candidate.get('sourceMembers')
+    if raw is None:
+        single=candidate.get('sourceMember'); raw=[] if single is None else [single]
+    assert isinstance(raw,list) and all(isinstance(v,str) and v for v in raw), f'{candidate.get("candidateId")}: invalid sourceMembers'
+    assert len(raw)==len(set(raw)), f'{candidate.get("candidateId")}: duplicate sourceMembers'
+    return set(raw)
+
 def main():
     manifest=rows(load(ROOT/'data/measured-learning/manifest-v1.json')); by_id={c['id']:c for c in manifest}
     readiness={s['datasetId']:s for s in load(ROOT/'data/measured-learning/source-readiness-v2.json')['sources']}
     ready={k for k,v in readiness.items() if v.get('promotionReady')}
     artifacts={s['datasetId']:{a['name']:a for a in s.get('artifacts',[])} for s in load(ROOT/'data/measured-learning/source-artifacts-v2.json')['sources']}
-    channels={s['datasetId']:{c['sourceChannel']:c for c in s.get('channels',[])} for s in load(ROOT/'data/measured-learning/source-channels-v2.json')['sources']}
+    channels=merged_channels()
     methods={m['id']:m for m in load(ROOT/'data/measured-learning/feature-methods-v1.json')['methods']}
-    ready_slots={c['id'] for c in manifest if c['sourceFamily'] in ready}
-    assert len(ready_slots)==30, f'current source-ready catalogue slot count drifted: {len(ready_slots)}'
+    ready_slots={c['id'] for c in manifest if case_ready(c,readiness,channels)}
+    assert len(ready_slots)==43, f'current case-level source/channel-ready catalogue slot count drifted: {len(ready_slots)}'
+    assert 'MLM-037' not in ready_slots, 'AVAPS dimension case must remain blocked while distanceA transform is unresolved'
     candidate_ids=set(); candidate_fps=set(); numeric_coverage=set(); direct_coverage=set(); source_counts={}; details=[]
     for filename in FILES:
         path=PROOF/filename; assert path.is_file(), f'missing authoring candidate artifact: {filename}'
@@ -49,17 +84,21 @@ def main():
             assert dataset in ready, f'{cid}: candidate source is not promotion-ready: {dataset}'
             assert artifact in artifacts.get(dataset,{}), f'{cid}: unregistered artifact {artifact}'
             assert c['sourceFingerprint']==artifacts[dataset][artifact]['sha256'], f'{cid}: artifact hash mismatch'
-            member=c.get('sourceMember')
-            if member is not None: assert member in artifacts[dataset][artifact].get('members',[]), f'{cid}: unregistered archive member'
             signals=c.get('signals',[]); assert signals and c.get('candidateFingerprint')==sha(signals)
             assert c['candidateFingerprint'] not in candidate_fps, f'{cid}: duplicate numeric representation'; candidate_fps.add(c['candidateFingerprint'])
             suggested=set(c.get('suggestedCatalogueCases',[])); assert suggested, f'{cid}: no catalogue mapping'
             assert not (suggested-set(by_id)), f'{cid}: unknown catalogue ids'
             assert all(by_id[i]['sourceFamily']==dataset for i in suggested), f'{cid}: mapped to wrong source family'
+            assert suggested<=ready_slots, f'{cid}: candidate maps to source/channel-blocked cases: {sorted(suggested-ready_slots)}'
+            signal_source_channels={s.get('sourceChannel') for s in signals}
+            for case_id in suggested:
+                missing_required=required_channels(by_id[case_id])-signal_source_channels
+                assert not missing_required, f'{cid}/{case_id}: missing required source channels {sorted(missing_required)}'
             numeric_coverage.update(suggested)
             direct=True; reasons=list(c.get('bindingBlockers',[]))
             governed=channels.get(dataset,{})
             signal_ids={s.get('id') for s in signals}
+            governed_member_set=set()
             for s in signals:
                 rep=s.get('representation',{}); xs=rep.get('x',[]); ys=rep.get('y',[])
                 assert 1<len(xs)==len(ys)<=600 and all(finite(v) for v in xs+ys), f'{cid}/{s.get("id")}: invalid numeric representation'
@@ -68,10 +107,13 @@ def main():
                 source_channel=s.get('sourceChannel'); g=governed.get(source_channel)
                 if not g:
                     direct=False; reasons.append(f'unregistered-channel:{source_channel}'); continue
+                if g.get('promotionReady') is not True:
+                    direct=False; reasons.append(f'blocked-channel:{source_channel}')
                 if s.get('semantic')!=g.get('semantic') or s.get('unit')!=g.get('unit'):
                     direct=False; reasons.append(f'transformed-semantic:{source_channel}')
                 if rep.get('xSemantic')!=g.get('coordinateSemantic') or rep.get('xUnit')!=g.get('coordinateUnit'):
                     direct=False; reasons.append(f'coordinate-review:{source_channel}')
+                if g.get('sourceMember'): governed_member_set.add(g['sourceMember'])
                 if dataset==SUSTAINABILITY:
                     assert g.get('coordinateChannel')=='generated-observation-index', f'{cid}/{source_channel}: Sustainability registry must use generated observation index'
                     assert rep.get('coordinateMode')==GENERATED_INDEX_MODE, f'{cid}/{source_channel}: generated coordinate mode missing or drifted'
@@ -81,6 +123,11 @@ def main():
                     reduction=str(rep.get('reductionMethod','')).lower()
                     assert 'source-order' in reduction and 'sort' not in reduction, f'{cid}/{source_channel}: generated index must preserve source order without sorting'
                     assert s.get('coordinateRequiresBindingReview') is False, f'{cid}/{source_channel}: governed generated observation index must not remain coordinate-review-blocked'
+            members=candidate_members(c)
+            if governed_member_set:
+                assert members==governed_member_set, f'{cid}: sourceMembers must exactly match governed bound-channel members'
+            elif members:
+                assert members<=set(artifacts[dataset][artifact].get('members',[])), f'{cid}: unregistered archive member'
             if dataset==SUSTAINABILITY:
                 assert c.get('sourceScope',{}).get('coordinateMode')==GENERATED_INDEX_MODE, f'{cid}: Sustainability source scope must declare generated coordinate mode'
                 assert c.get('sourceScope',{}).get('selectedSourceRowFingerprint','').startswith('sha256:'), f'{cid}: selected source-row identity fingerprint required'
@@ -103,14 +150,14 @@ def main():
             if direct: direct_coverage.update(suggested)
             source_counts[dataset]=source_counts.get(dataset,0)+1
             details.append({'candidateId':cid,'datasetId':dataset,'suggestedCatalogueCases':sorted(suggested),'directBindingShapeReady':direct,'directBindingBlockers':sorted(set(reasons)),'recommendedFeatureMethods':[f.get('method') for f in recommended_features]})
-    assert numeric_coverage<=ready_slots, 'candidate coverage includes a source-blocked catalogue case'
+    assert numeric_coverage<=ready_slots, 'candidate coverage includes a source/channel-blocked catalogue case'
     missing_numeric=sorted(ready_slots-numeric_coverage)
     missing_direct=sorted(ready_slots-direct_coverage)
     assert not missing_numeric, f'unexpected numeric candidate gaps: {missing_numeric}'
     assert not missing_direct, f'unexpected direct-binding gaps: {missing_direct}'
-    assert len(direct_coverage)==30, f'direct-binding-shape coverage drifted: {len(direct_coverage)}'
-    report={'schemaVersion':1,'status':'authoring-coverage-qa-passed','promotionReadySourceFamilies':sorted(ready),'sourceReadyCatalogueSlots':len(ready_slots),'numericAuthoringCandidateCount':len(candidate_ids),'numericCandidateCatalogueCoverage':len(numeric_coverage),'numericCandidateCaseIds':sorted(numeric_coverage),'numericCandidateGaps':missing_numeric,'directBindingShapeCatalogueCoverage':len(direct_coverage),'directBindingShapeCaseIds':sorted(direct_coverage),'directBindingShapeGaps':missing_direct,'candidateCountBySource':source_counts,'candidates':details,'promotedLearnerCases':0,'boundary':'Numeric and direct-binding-shape authoring coverage are not learner promotion. Candidate data remain unreviewed and cannot count as learner cases until case-specific wording, novelty and independent engineering review pass the promotion builder/QA.'}
+    assert len(direct_coverage)==43, f'direct-binding-shape coverage drifted: {len(direct_coverage)}'
+    report={'schemaVersion':2,'status':'authoring-coverage-qa-passed','promotionReadySourceFamilies':sorted(ready),'sourceAndChannelReadyCatalogueSlots':len(ready_slots),'sourceAndChannelReadyCaseIds':sorted(ready_slots),'numericAuthoringCandidateCount':len(candidate_ids),'numericCandidateCatalogueCoverage':len(numeric_coverage),'numericCandidateCaseIds':sorted(numeric_coverage),'numericCandidateGaps':missing_numeric,'directBindingShapeCatalogueCoverage':len(direct_coverage),'directBindingShapeCaseIds':sorted(direct_coverage),'directBindingShapeGaps':missing_direct,'candidateCountBySource':source_counts,'candidates':details,'promotedLearnerCases':0,'blockedKnownCaseReasons':{'MLM-037':'AVAPS distanceA source transform remains unresolved; pressure/flow/weight readiness does not authorize the dimension channel.'},'boundary':'Numeric and direct-binding-shape authoring coverage are not learner promotion. Readiness is case-specific and requires the exact governed source channels; candidate data remain unreviewed until independent engineering review passes promotion.'}
     REPORT.write_text(json.dumps(report,indent=2)+'\n',encoding='utf-8')
-    print(json.dumps({k:report[k] for k in ('status','sourceReadyCatalogueSlots','numericAuthoringCandidateCount','numericCandidateCatalogueCoverage','numericCandidateGaps','directBindingShapeCatalogueCoverage','directBindingShapeGaps')},separators=(',',':')))
+    print(json.dumps({k:report[k] for k in ('status','sourceAndChannelReadyCatalogueSlots','numericAuthoringCandidateCount','numericCandidateCatalogueCoverage','numericCandidateGaps','directBindingShapeCatalogueCoverage','directBindingShapeGaps')},separators=(',',':')))
     return 0
 if __name__=='__main__': raise SystemExit(main())
