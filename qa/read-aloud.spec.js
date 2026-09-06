@@ -26,17 +26,26 @@ async function seedLearner(page){
   });
 }
 
-test('Read Aloud integrates with the real shell and scopes itself to visible learner text', async ({ page }) => {
+test('Read Aloud integrates with the real shell, stays above mobile navigation, and scopes itself to visible learner text', async ({ page }) => {
   await seedLearner(page);
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto(APP, { waitUntil: 'domcontentloaded' });
 
   const host=page.locator('.mm-read-aloud');
   await expect(host).toBeVisible();
-  await expect(host).toHaveAttribute('data-version','2026.09.01.1');
-  await expect.poll(()=>page.evaluate(()=>window.MMReadAloud?.version||'')).toBe('2026.09.01.1');
-  await host.locator('details').evaluate(el=>{el.open=true;});
+  await expect(host).toHaveAttribute('data-version','2026.09.07.1');
+  await expect.poll(()=>page.evaluate(()=>window.MMReadAloud?.version||'')).toBe('2026.09.07.1');
+  await expect(host.locator('summary')).toContainText('Listen');
 
+  const placement=await page.evaluate(()=>{
+    const listen=document.querySelector('.mm-read-aloud details')?.getBoundingClientRect();
+    const nav=document.querySelector('.mobile-nav')?.getBoundingClientRect();
+    return listen&&nav?{listenBottom:listen.bottom,navTop:nav.top}:null;
+  });
+  expect(placement).not.toBeNull();
+  expect(placement.listenBottom).toBeLessThanOrEqual(placement.navTop+1);
+
+  await host.locator('details').evaluate(el=>{el.open=true;});
   await expect(host.locator('[data-mm-read="play"]')).toBeVisible();
   await expect(host.locator('[data-mm-read="prev"]')).toBeVisible();
   await expect(host.locator('[data-mm-read="next"]')).toBeVisible();
@@ -116,7 +125,7 @@ test('Read Aloud supported-path controls execute the exact product runtime in a 
 
   const host=page.locator('.mm-read-aloud');
   await expect(host).toBeVisible();
-  await expect(host).toHaveAttribute('data-version','2026.09.01.1');
+  await expect(host).toHaveAttribute('data-version','2026.09.07.1');
   await host.locator('details').evaluate(el=>{el.open=true;});
 
   const visibilityCheck=await page.evaluate(() => {
