@@ -33,6 +33,8 @@ const CORE=[
   './app-shell-registry.js',
   './pwa-shell.js',
   './learning-experience.js',
+  './lesson-simple-experience.js',
+  './primary-learning-practice-hubs.js',
   './process-data-diagnostics.js',
   './process-data-local-intake.js',
   './curriculum-integration.js',
