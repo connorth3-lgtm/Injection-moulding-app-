@@ -56,8 +56,9 @@ async function openApp(page,url,id){
   await page.evaluate(()=>new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve))));
 }
 
-async function resetTransientUi(page){
+async function clearTransientUi(page){
   await page.evaluate(()=>{
+    document.querySelectorAll('.toast').forEach(node=>node.remove());
     try{window.closeModal?.()}catch(_){}
     const details=document.querySelector('.mm-read-aloud details');
     if(details)details.open=false;
@@ -69,7 +70,7 @@ async function resetTransientUi(page){
 }
 
 async function prepareSurface(page,surface){
-  await resetTransientUi(page);
+  await clearTransientUi(page);
   if(surface==='home'){
     await page.evaluate(()=>switchView('dashboard'));
     await expect(page.locator('#dashboard .mm-today-focus')).toBeVisible();
@@ -100,6 +101,7 @@ async function prepareSurface(page,surface){
     throw new Error(`Unknown visual surface: ${surface}`);
   }
   await page.evaluate(()=>new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve))));
+  await page.evaluate(()=>document.querySelectorAll('.toast').forEach(node=>node.remove()));
 }
 
 async function capture(page,file){
@@ -124,8 +126,9 @@ for(const viewport of manifest.viewports){
     const baselineContext=await browser.newContext({viewport:{width:viewport.width,height:viewport.height},serviceWorkers:'block'});
     const candidate=await candidateContext.newPage();
     const baseline=await baselineContext.newPage();
-    await openApp(candidate,CANDIDATE_URL,`candidate-${viewport.name}`);
-    await openApp(baseline,BASELINE_URL,`baseline-${viewport.name}`);
+    const learnerId=`visual-${viewport.name}`;
+    await openApp(candidate,CANDIDATE_URL,learnerId);
+    await openApp(baseline,BASELINE_URL,learnerId);
 
     try{
       for(const surface of manifest.surfaces){
