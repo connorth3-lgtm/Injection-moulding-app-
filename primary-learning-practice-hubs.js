@@ -1,4 +1,4 @@
-/* MouldMaster primary Learn / Practice hubs — 2026.09.06.3 */
+/* MouldMaster primary Learn / Practice hubs — 2026.09.06.4 */
 (function(){
 'use strict';
 if(window.MM_PRIMARY_HUBS)return;
@@ -7,7 +7,7 @@ if(typeof renderPath!=='function'||typeof renderScenarios!=='function'||typeof s
   return;
 }
 
-const VERSION='2026.09.06.3';
+const VERSION='2026.09.06.4';
 const originalRenderPath=renderPath;
 const originalRenderScenarios=renderScenarios;
 const originalMore=typeof window.openMobileMenu==='function'?window.openMobileMenu:null;
@@ -25,6 +25,70 @@ function ensureHubStylesheet(){
   document.head.appendChild(link);
 }
 ensureHubStylesheet();
+
+/* Blocking app modals must own the scroll gesture. Freezing the page here
+   prevents the Home/Learn/Practice view moving behind More, search and picker
+   screens, including iOS where overflow:hidden alone can still leak scroll. */
+const modalScrollState={locked:false,scrollY:0,rootOverflow:'',bodyOverflow:'',bodyOverscroll:'',bodyPosition:'',bodyTop:'',bodyWidth:'',mainOverflow:'',modalOverscroll:'',cardOverscroll:'',cardWebkitScroll:''};
+function modalIsOpen(){const modal=document.getElementById('modal');return !!(modal&&!modal.classList.contains('hidden'))}
+function isIOSFamily(){const ua=navigator.userAgent||'';return /iPad|iPhone|iPod/.test(ua)||(/Macintosh/.test(ua)&&Number(navigator.maxTouchPoints||0)>1)}
+function lockModalBackground(){
+  if(modalScrollState.locked||!modalIsOpen())return;
+  const root=document.documentElement,body=document.body,main=document.querySelector('main.main')||document.querySelector('.main');
+  const modal=document.getElementById('modal'),card=modal?.querySelector('.modal-card');
+  modalScrollState.scrollY=window.scrollY||document.scrollingElement?.scrollTop||0;
+  modalScrollState.rootOverflow=root.style.overflow;
+  modalScrollState.bodyOverflow=body.style.overflow;
+  modalScrollState.bodyOverscroll=body.style.overscrollBehavior;
+  modalScrollState.bodyPosition=body.style.position;
+  modalScrollState.bodyTop=body.style.top;
+  modalScrollState.bodyWidth=body.style.width;
+  modalScrollState.mainOverflow=main?.style.overflow||'';
+  modalScrollState.modalOverscroll=modal?.style.overscrollBehavior||'';
+  modalScrollState.cardOverscroll=card?.style.overscrollBehavior||'';
+  modalScrollState.cardWebkitScroll=card?.style.webkitOverflowScrolling||'';
+  root.style.overflow='hidden';
+  body.style.overflow='hidden';
+  body.style.overscrollBehavior='none';
+  if(main)main.style.overflow='hidden';
+  if(modal)modal.style.overscrollBehavior='none';
+  if(card){card.style.overscrollBehavior='contain';card.style.webkitOverflowScrolling='touch'}
+  if(isIOSFamily()){
+    body.style.position='fixed';
+    body.style.top=`-${modalScrollState.scrollY}px`;
+    body.style.width='100%';
+  }
+  root.dataset.mmModalScrollLock='1';
+  modalScrollState.locked=true;
+}
+function unlockModalBackground(){
+  if(!modalScrollState.locked)return;
+  const root=document.documentElement,body=document.body,main=document.querySelector('main.main')||document.querySelector('.main');
+  const modal=document.getElementById('modal'),card=modal?.querySelector('.modal-card');
+  root.style.overflow=modalScrollState.rootOverflow;
+  body.style.overflow=modalScrollState.bodyOverflow;
+  body.style.overscrollBehavior=modalScrollState.bodyOverscroll;
+  body.style.position=modalScrollState.bodyPosition;
+  body.style.top=modalScrollState.bodyTop;
+  body.style.width=modalScrollState.bodyWidth;
+  if(main)main.style.overflow=modalScrollState.mainOverflow;
+  if(modal)modal.style.overscrollBehavior=modalScrollState.modalOverscroll;
+  if(card){card.style.overscrollBehavior=modalScrollState.cardOverscroll;card.style.webkitOverflowScrolling=modalScrollState.cardWebkitScroll}
+  delete root.dataset.mmModalScrollLock;
+  const restoreY=modalScrollState.scrollY;
+  modalScrollState.locked=false;
+  if(isIOSFamily())window.scrollTo(0,restoreY);
+}
+function syncModalScrollLock(){if(modalIsOpen())lockModalBackground();else unlockModalBackground()}
+function installModalScrollLock(){
+  const modal=document.getElementById('modal');
+  if(!modal||window.__MM_MODAL_SCROLL_LOCK__)return;
+  const observer=new MutationObserver(syncModalScrollLock);
+  observer.observe(modal,{attributes:true,attributeFilter:['class']});
+  window.__MM_MODAL_SCROLL_LOCK__=Object.freeze({version:VERSION,sync:syncModalScrollLock});
+  syncModalScrollLock();
+}
+installModalScrollLock();
 
 function esc(value){return String(value??'').replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]))}
 function lessonContext(){
