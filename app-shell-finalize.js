@@ -1,4 +1,4 @@
-/* MouldMaster app-shell finalizer — 2026.09.06.9 */
+/* MouldMaster app-shell finalizer — 2026.09.06.10 */
 (function(){
 'use strict';
 if(!window.MM_APP_SHELL)throw new Error('app-shell-finalize.js requires app-shell-registry.js');
@@ -189,18 +189,14 @@ function stabilizeRetiredChrome(){
 function installRetiredChromeGuard(){
   if(window.__MM_RETIRED_CHROME_GUARD__)return;
   stabilizeRetiredChrome();
-  const observer=new MutationObserver(()=>stabilizeRetiredChrome());
-  const home=document.getElementById('dashboard'),nav=document.querySelector('.mobile-nav');
-  if(home)observer.observe(home,{childList:true,subtree:true});
-  if(nav)observer.observe(nav,{childList:true});
   window.addEventListener('resize',stabilizeRetiredChrome,{passive:true});
-  window.__MM_RETIRED_CHROME_GUARD__={version:'2026.09.06.9',observer};
+  window.__MM_RETIRED_CHROME_GUARD__={version:'2026.09.06.10'};
 }
 function installHomeScreenSimplification(){
   if(window.__MM_HOME_SIMPLIFICATION__||typeof window.renderDashboard!=='function')return;
   const base=window.renderDashboard;
   window.renderDashboard=function(){const result=base.apply(this,arguments);simplifyHomeScreen();stabilizeRetiredChrome();return result};
-  window.__MM_HOME_SIMPLIFICATION__='2026.09.06.9';
+  window.__MM_HOME_SIMPLIFICATION__='2026.09.06.10';
   simplifyHomeScreen();
 }
 
@@ -214,11 +210,11 @@ window.MM_SPECIALIST_EVIDENCE_STATUS={version:'2026.08.29.1',statuses:{...EVIDEN
 loadProductionHealth();
 loadConnectedDataRuntime();
 window.MM_APP_SHELL.finalize();
+loadMeasuredLearningRuntime();
 installHomeScreenSimplification();
 installRetiredChromeGuard();
 loadSimpleLessonRuntime();
 window.MM_APP_SHELL.navigation?.sync?.();
-loadMeasuredLearningRuntime();
 const geometryStyle=document.getElementById('mm-app-shell-registry-style');
 if(geometryStyle&&geometryStyle.parentNode===document.head)document.head.appendChild(geometryStyle);
 window.addEventListener('popstate',()=>window.MM_APP_SHELL.navigation?.sync?.());
