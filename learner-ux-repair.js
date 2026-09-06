@@ -1,8 +1,8 @@
-/* MouldMaster learner UX repair — 2026.09.06.19 */
+/* MouldMaster learner UX repair — 2026.09.06.20 */
 (function(){
 'use strict';
 if(window.MM_LEARNER_UX_REPAIR)return;
-const VERSION='2026.09.06.19';
+const VERSION='2026.09.06.20';
 const ASSESSMENT_BANK_VERSION='assessment-2026.08.30.1';
 const ASSESSMENT_HISTORY_KEY='mm-assessment-question-history-v4';
 const ASSESSMENT_RESULT_META_KEY='mm-assessment-result-meta-v1';
@@ -22,7 +22,6 @@ function ensureStyles(){
   document.head.appendChild(link);
 }
 function mobile(){return !!window.matchMedia?.('(max-width:760px)').matches}
-function examDisclosureMobile(){return !!window.matchMedia?.('(max-width:680px)').matches}
 function lessonVisible(){const root=document.getElementById('lesson');return !!(root&&!root.classList.contains('hidden'))}
 function currentLessonId(){
   try{return typeof currentLesson==='function'?String(currentLesson()?.id??''):''}catch(_){return ''}
@@ -70,33 +69,15 @@ function repairReferenceLauncherAccessibility(){
     }
   }
 }
-function examDisclosureSignature(questions){
-  return questions.map((q,index)=>`${index}:${String(q.querySelector('h3,p,strong,label')?.textContent||q.textContent||'').replace(/\s+/g,' ').trim().slice(0,90)}`).join('|');
-}
-function repairExamQuestionDisclosure(){
+function syncExamDisclosureGeneration(){
   const host=document.getElementById('examQuestions');if(!host)return;
   const questions=Array.from(host.children).filter(el=>el.classList.contains('question'));
   if(!questions.length)return;
-  const signature=examDisclosureSignature(questions);
-  const existing=document.querySelector('[data-mm-exam-question-toggle]');
-  const ours=existing?.dataset.mmUxExamToggle==='1';
-  if(host.dataset.mmUxExamDisclosureSignature===signature&&(!examDisclosureMobile()||questions.length<=5||ours))return;
-  if(existing)existing.remove();
-  questions.forEach(q=>q.classList.remove('mm-question-collapsed'));
+  const signature=questions.map(q=>normaliseQuestionText(q.querySelector('h3,h4,strong,p')?.textContent||q.textContent).slice(0,180)).join('|');
+  if(!signature||host.dataset.mmUxExamFormSignature===signature)return;
+  host.dataset.mmUxExamFormSignature=signature;
   delete host.dataset.mmQuestionDisclosure;
-  host.dataset.mmUxExamDisclosureSignature=signature;
-  if(!examDisclosureMobile()||questions.length<=5)return;
-  const extra=questions.slice(5);extra.forEach(q=>q.classList.add('mm-question-collapsed'));
-  const toggle=document.createElement('button');
-  toggle.type='button';toggle.className='secondary mm-question-toggle';toggle.dataset.mmExamQuestionToggle='1';toggle.dataset.mmUxExamToggle='1';toggle.setAttribute('aria-expanded','false');toggle.textContent=`Show questions 6–${questions.length}`;
-  host.insertAdjacentElement('afterend',toggle);
-  host.dataset.mmQuestionDisclosure='1';
-  toggle.addEventListener('click',()=>{
-    const expanded=toggle.getAttribute('aria-expanded')==='true';
-    toggle.setAttribute('aria-expanded',String(!expanded));
-    toggle.textContent=expanded?`Show questions 6–${questions.length}`:`Hide questions 6–${questions.length}`;
-    extra.forEach(q=>q.classList.toggle('mm-question-collapsed',expanded));
-  });
+  document.querySelectorAll('[data-mm-exam-question-toggle]').forEach(toggle=>toggle.remove());
 }
 function repairLessonChrome(){
   const root=document.getElementById('lesson');
@@ -138,7 +119,6 @@ function ensurePreviewWarning(){
 function runRepair(reset){
   repairLessonChrome();
   repairReferenceLauncherAccessibility();
-  repairExamQuestionDisclosure();
   ensurePreviewWarning();
   if(reset)resetLessonScroll();
 }
@@ -151,9 +131,9 @@ function scheduleRepair(reset=false){
     const shouldReset=resetQueued;resetQueued=false;
     runRepair(shouldReset);
     requestAnimationFrame(()=>{
-      repairLessonChrome();repairReferenceLauncherAccessibility();repairExamQuestionDisclosure();ensurePreviewWarning();
+      repairLessonChrome();repairReferenceLauncherAccessibility();ensurePreviewWarning();
       if(shouldReset)resetLessonScroll();
-      requestAnimationFrame(()=>{repairLessonChrome();repairReferenceLauncherAccessibility();repairExamQuestionDisclosure();ensurePreviewWarning();if(shouldReset)resetLessonScroll()});
+      requestAnimationFrame(()=>{repairLessonChrome();repairReferenceLauncherAccessibility();ensurePreviewWarning();if(shouldReset)resetLessonScroll()});
     });
   });
 }
@@ -260,15 +240,15 @@ window.MM_APP_SHELL?.events?.onViewChange?.(id=>{if(id==='lesson')scheduleRepair
 window.addEventListener('resize',()=>scheduleRepair(false),{passive:true});
 
 const observer=new MutationObserver(()=>{
+  syncExamDisclosureGeneration();
   if(lessonVisible())scheduleRepair(false);
-  if(document.getElementById('examQuestions'))scheduleRepair(false);
   if(isPreviewPublication())ensurePreviewWarning();
 });
 if(document.body)observer.observe(document.body,{childList:true,subtree:true});
 lastLessonId=currentLessonId()||null;
+syncExamDisclosureGeneration();
 scheduleRepair(lessonVisible());
 repairReferenceLauncherAccessibility();
-repairExamQuestionDisclosure();
 ensurePreviewWarning();
 installAssessmentRotation();
 window.MM_LEARNER_UX_REPAIR=Object.freeze({version:VERSION,repair:()=>scheduleRepair(false),resetLesson:()=>scheduleRepair(true),assessmentRotation:window.__MM_ASSESSMENT_ROTATION_V4__||null,preview:isPreviewPublication()});
