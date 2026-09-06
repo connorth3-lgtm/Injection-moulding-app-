@@ -43,10 +43,20 @@ async function exerciseCurrentExamNavigation(page,mode){
   const questions=page.locator('#examQuestions .question');
   await expect(questions).toHaveCount(16);
   const q6=page.getByRole('button',{name:'Go to question 6'});
+  await expect(q6).toHaveCount(1);
   await expect(q6).toBeVisible();
-  await q6.click();
+  await q6.focus();
+  await page.keyboard.press('Enter');
   await expect(questions.nth(5)).toBeVisible();
   await expect(questions.nth(0)).toBeHidden();
+  await expect(questions.nth(5).locator('.mm-question-stem')).toBeFocused();
+  await page.setViewportSize({width:800,height:600});
+  await expect(q6).toHaveAttribute('aria-current','step');
+  await expect(questions.nth(5)).toBeVisible();
+  await expect(questions.nth(5).locator('.mm-question-stem')).toBeFocused();
+  await expect(page.locator('[data-mm-exam-question-toggle]')).toHaveCount(0);
+  await expect(page.locator('button[aria-label^="Go to question "]')).toHaveCount(16);
+  await page.setViewportSize({width:412,height:915});
 }
 
 for(const viewport of [{name:'android-412x915',width:412,height:915},{name:'small-360x800',width:360,height:800}]){
@@ -168,6 +178,7 @@ test('learner UX repair preserves the governed selector and adds audited rotatio
 test('mobile exam uses one governed navigator and rebinds it on a second attempt',async({page})=>{
   await page.setViewportSize({width:412,height:915});
   await open(page);
+  expect(await page.evaluate(()=>window.MM_RUNTIME_ASSET_VERSION)).toBe('2026.09.06.15');
   const firstForm=await page.evaluate(()=>{startExam('Beginner');return window.MM_ACTIVE_QUESTION_FORM?.formFingerprint||''});
   const firstMode=await waitForExamNavigation(page);
   expect(firstForm).not.toBe('');
