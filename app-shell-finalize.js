@@ -88,15 +88,14 @@ function removeHomeJobRouter(root){
     return (text.includes('one platform')&&text.includes('five jobs'))||text.includes('what do you need to do');
   };
 
-  for(const block of Array.from(root.querySelectorAll('.mm-dashboard-slot,section,.card,[class*="router"],[class*="job"]'))){
-    if(block.classList?.contains('mm-home-task-hub'))continue;
+  for(const block of Array.from(root.querySelectorAll('.mm-dashboard-slot,section,.card,.mm-home-task-hub,[class*="router"],[class*="job"]'))){
     if(isLegacyRouterText(block.textContent))block.remove();
   }
 
   for(const node of Array.from(root.querySelectorAll('h1,h2,h3,.eyebrow,[class*="eyebrow"],[class*="kicker"]'))){
     if(!isLegacyRouterText(node.textContent))continue;
-    const block=node.closest('.mm-dashboard-slot,section,.card,[class*="router"],[class*="job"]')||node.parentElement;
-    if(block&&block!==root&&!block.classList?.contains('mm-home-task-hub'))block.remove();
+    const block=node.closest('.mm-dashboard-slot,section,.card,.mm-home-task-hub,[class*="router"],[class*="job"]')||node.parentElement;
+    if(block&&block!==root)block.remove();
   }
 }
 function removeHomeSecondaryBlocks(root){
