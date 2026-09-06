@@ -1,4 +1,4 @@
-const CACHE_VERSION='2026.09.06.21';
+const CACHE_VERSION='2026.09.06.22';
 const CACHE_REVISION='assessment-rotation-immutable-r2-20260906';
 const STATIC_CACHE=`mouldmaster-static-${CACHE_VERSION}-${CACHE_REVISION}`;
 

@@ -1,11 +1,11 @@
-/* MouldMaster Read Aloud — 2026.09.07.1
+/* MouldMaster Read Aloud — 2026.09.07.2
  * Learner-controlled text-to-speech using the browser/device speech-synthesis service.
  * No microphone access, recording, speech recognition, network upload, or learner-content storage.
  */
 (function(){
   'use strict';
 
-  const VERSION='2026.09.07.1';
+  const VERSION='2026.09.07.2';
   const synth=window.speechSynthesis;
   const supported=!!(synth&&window.SpeechSynthesisUtterance);
   const SPEEDS=[0.75,1,1.25,1.5];
@@ -184,7 +184,7 @@
       .mm-read-aloud details{border:1px solid #3b5575;border-radius:14px;background:#0c1929;box-shadow:0 12px 36px rgba(0,0,0,.35);overflow:hidden}
       .mm-read-aloud details:not([open]){width:max-content;margin-left:auto}
       .mm-read-aloud summary{list-style:none;display:flex;align-items:center;justify-content:space-between;gap:10px;min-height:48px;padding:10px 13px;cursor:pointer;font-weight:800;background:#12243a}
-      .mm-read-aloud details:not([open]) summary{min-width:118px;justify-content:center;border-radius:13px}
+      .mm-read-aloud details:not([open]) summary{min-width:102px;min-height:44px;padding:8px 10px;justify-content:center;border-radius:13px;font-size:13px}
       .mm-read-aloud details:not([open]) summary span{display:none}
       .mm-read-aloud summary::-webkit-details-marker{display:none}.mm-read-aloud summary span{color:#a9bdd6;font-size:12px;font-weight:600}
       .mm-read-panel{padding:12px;display:grid;gap:10px}.mm-read-controls{display:grid;grid-template-columns:1fr 1.35fr 1fr 1fr;gap:7px}
