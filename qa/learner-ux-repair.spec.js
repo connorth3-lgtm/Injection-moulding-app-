@@ -6,6 +6,13 @@ async function seed(page){
   await page.addInitScript(()=>{
     const user={id:'ux-repair-qa',name:'UX Repair QA',role:'learner',completed:[1,2,3,4,5],bookmarks:[],notes:{},examScores:{},certificates:[],currentLesson:6,lastSeen:new Date().toISOString(),onboardingDone:true,experience:'Beginner',goal:'Learn the full process',dailyMinutes:15,region:'ALL'};
     localStorage.setItem('mouldmasterProDB',JSON.stringify({activeUser:'ux-repair-qa',users:{'ux-repair-qa':user}}));
+    localStorage.removeItem('mm-assessment-question-history-v4');
+    localStorage.removeItem('mm-assessment-result-meta-v1');
+    localStorage.removeItem('mm_assessment_opening_history_v1');
+    for(let i=localStorage.length-1;i>=0;i--){
+      const key=localStorage.key(i);
+      if(key&&key.startsWith('mm_assessment_membership_history_v2::'))localStorage.removeItem(key);
+    }
   });
 }
 async function open(page){
@@ -14,6 +21,42 @@ async function open(page){
   await page.waitForFunction(()=>window.MM_APP_SHELL_FINALIZED==='2026.08.26.4'&&window.MM_PRIMARY_HUBS&&window.MM_LEARNER_UX_REPAIR&&window.MM_SIMPLE_LESSON_EXPERIENCE);
   await page.waitForFunction(()=>!document.getElementById('mmBootstrap'));
   await expect(page.locator('#mmStartupFailure')).toHaveCount(0);
+}
+async function waitForExamNavigation(page,priorSignature=''){
+  await page.waitForFunction(prior=>{
+    const host=document.getElementById('examQuestions');
+    const questions=host?[...host.children].filter(el=>el.classList.contains('question')):[];
+    const signature=host?.dataset.mmUxExamFormSignature||'';
+    const fallback=document.querySelectorAll('[data-mm-exam-question-toggle]').length;
+    const governed=[...document.querySelectorAll('button')].some(button=>(button.getAttribute('aria-label')||button.textContent||'').trim()==='Go to question 6');
+    return questions.length===16&&signature&&signature!==prior&&governed&&fallback===0;
+  },priorSignature);
+  return page.evaluate(()=>({
+    signature:document.getElementById('examQuestions')?.dataset.mmUxExamFormSignature||'',
+    fallback:document.querySelectorAll('[data-mm-exam-question-toggle]').length,
+    governed:[...document.querySelectorAll('button')].filter(button=>(button.getAttribute('aria-label')||'').startsWith('Go to question ')).length
+  }));
+}
+async function exerciseCurrentExamNavigation(page,mode){
+  expect(mode.fallback).toBe(0);
+  expect(mode.governed).toBe(16);
+  const questions=page.locator('#examQuestions .question');
+  await expect(questions).toHaveCount(16);
+  const q6=page.getByRole('button',{name:'Go to question 6'});
+  await expect(q6).toHaveCount(1);
+  await expect(q6).toBeVisible();
+  await q6.focus();
+  await page.keyboard.press('Enter');
+  await expect(questions.nth(5)).toBeVisible();
+  await expect(questions.nth(0)).toBeHidden();
+  await expect(questions.nth(5).locator('.mm-question-stem')).toBeFocused();
+  await page.setViewportSize({width:800,height:600});
+  await expect(q6).toHaveAttribute('aria-current','step');
+  await expect(questions.nth(5)).toBeVisible();
+  await expect(questions.nth(5).locator('.mm-question-stem')).toBeFocused();
+  await expect(page.locator('[data-mm-exam-question-toggle]')).toHaveCount(0);
+  await expect(page.locator('button[aria-label^="Go to question "]')).toHaveCount(16);
+  await page.setViewportSize({width:412,height:915});
 }
 
 for(const viewport of [{name:'android-412x915',width:412,height:915},{name:'small-360x800',width:360,height:800}]){
@@ -54,21 +97,163 @@ for(const viewport of [{name:'android-412x915',width:412,height:915},{name:'smal
   });
 }
 
-test('learner UX repair leaves the governed assessment selector in control',async({page})=>{
+test('mobile lesson cleanup is reversible after widening to desktop',async({page})=>{
+  await page.setViewportSize({width:412,height:915});
+  await open(page);
+  await page.locator('.mobile-nav > button').filter({hasText:'Learn'}).click();
+  await page.getByRole('button',{name:/Continue lesson/i}).first().click();
+  await page.waitForFunction(()=>document.querySelectorAll('#lesson [data-mm-ux-hidden-by-repair="1"]').length>0);
+  const mobileState=await page.evaluate(()=>{
+    const launcher=document.getElementById('mm-src-open')||document.getElementById('mmrd-open');
+    return {
+      hiddenByRepair:document.querySelectorAll('#lesson [data-mm-ux-hidden-by-repair="1"]').length,
+      repaired:document.getElementById('lesson')?.classList.contains('mm-learner-ux-repaired')||false,
+      launcherPresent:!!launcher,
+      launcherAria:launcher?.getAttribute('aria-hidden')||null,
+      launcherTabIndex:launcher?.tabIndex??null
+    };
+  });
+  expect(mobileState.hiddenByRepair).toBeGreaterThan(0);
+  expect(mobileState.repaired).toBe(true);
+  if(mobileState.launcherPresent){expect(mobileState.launcherAria).toBe('true');expect(mobileState.launcherTabIndex).toBe(-1)}
+
+  await page.setViewportSize({width:1280,height:900});
+  await page.waitForFunction(()=>document.querySelectorAll('#lesson [data-mm-ux-hidden-by-repair="1"]').length===0&&!document.getElementById('lesson')?.classList.contains('mm-learner-ux-repaired'));
+  if(mobileState.launcherPresent)await page.waitForFunction(()=>{
+    const launcher=document.getElementById('mm-src-open')||document.getElementById('mmrd-open');
+    return !!launcher&&launcher.getAttribute('aria-hidden')!=='true'&&launcher.tabIndex!==-1;
+  });
+  const desktopState=await page.evaluate(()=>{
+    const launcher=document.getElementById('mm-src-open')||document.getElementById('mmrd-open');
+    return {
+      hiddenByRepair:document.querySelectorAll('#lesson [data-mm-ux-hidden-by-repair="1"]').length,
+      forcedAriaHidden:document.querySelectorAll('#lesson [aria-hidden="true"][data-mm-ux-prev-hidden]').length,
+      repaired:document.getElementById('lesson')?.classList.contains('mm-learner-ux-repaired')||false,
+      launcherAria:launcher?.getAttribute('aria-hidden')||null,
+      launcherTabIndex:launcher?.tabIndex??null
+    };
+  });
+  expect(desktopState.hiddenByRepair).toBe(0);
+  expect(desktopState.forcedAriaHidden).toBe(0);
+  expect(desktopState.repaired).toBe(false);
+  if(mobileState.launcherPresent){expect(desktopState.launcherAria).not.toBe('true');expect(desktopState.launcherTabIndex).not.toBe(-1)}
+});
+
+test('open mobile modal stays above the fixed primary navigation',async({page})=>{
+  await page.setViewportSize({width:412,height:915});
+  await open(page);
+  await page.locator('.mobile-nav > button').filter({hasText:/More/i}).click();
+  await expect(page.locator('#modal')).not.toHaveClass(/hidden/);
+  const layers=await page.evaluate(()=>{
+    const modal=document.getElementById('modal');
+    const nav=document.querySelector('.mobile-nav');
+    return {modal:Number.parseInt(getComputedStyle(modal).zIndex,10)||0,nav:Number.parseInt(getComputedStyle(nav).zIndex,10)||0};
+  });
+  expect(layers.modal).toBeGreaterThan(layers.nav);
+});
+
+test('learner UX repair preserves the governed selector and adds audited rotation',async({page})=>{
   await page.setViewportSize({width:412,height:915});
   await open(page);
   await page.waitForFunction(()=>{
     const snapshot=window.MM_RUNTIME_V2?.snapshot?.();
-    return snapshot?.core?.getExamQuestions?.owner==='assessment-runtime-v2'&&window.MM_ASSESSMENT_RUNTIME_V2?.technicalPerExam===7;
+    return snapshot?.core?.getExamQuestions?.owner==='assessment-runtime-v2'&&window.MM_ASSESSMENT_RUNTIME_V2?.technicalPerExam===7&&window.__MM_ASSESSMENT_ROTATION_V4__;
   });
   const assessment=await page.evaluate(()=>({
     owner:window.MM_RUNTIME_V2.snapshot().core.getExamQuestions.owner,
     technicalPerExam:window.MM_ASSESSMENT_RUNTIME_V2.technicalPerExam,
     technicalBankPerLevel:window.MM_ASSESSMENT_RUNTIME_V2.technicalBankPerLevel,
-    repairOwnsRotation:!!window.startExam?.__mmQuestionRotation
+    rotationVersion:window.__MM_ASSESSMENT_ROTATION_V4__.version,
+    bankVersion:window.__MM_ASSESSMENT_ROTATION_V4__.bankVersion,
+    baseCallsPerAttempt:window.__MM_ASSESSMENT_ROTATION_V4__.baseCallsPerAttempt
   }));
   expect(assessment.owner).toBe('assessment-runtime-v2');
   expect(assessment.technicalPerExam).toBe(7);
-  expect(assessment.technicalBankPerLevel).toBe(10);
-  expect(assessment.repairOwnsRotation).toBe(false);
+  expect(assessment.technicalBankPerLevel).toBeGreaterThanOrEqual(10);
+  expect(assessment.rotationVersion).toBe('2026.09.06.21');
+  expect(assessment.bankVersion).toBe('assessment-2026.08.30.1');
+  expect(assessment.baseCallsPerAttempt).toBe(1);
+});
+
+test('mobile exam uses one governed navigator and rebinds it on a second attempt',async({page})=>{
+  await page.setViewportSize({width:412,height:915});
+  await open(page);
+  expect(await page.evaluate(()=>window.MM_RUNTIME_ASSET_VERSION)).toBe('2026.09.06.15');
+  const firstForm=await page.evaluate(()=>{startExam('Beginner');return window.MM_ACTIVE_QUESTION_FORM?.formFingerprint||''});
+  const firstMode=await waitForExamNavigation(page);
+  expect(firstForm).not.toBe('');
+  expect(firstMode.signature).not.toBe('');
+  await exerciseCurrentExamNavigation(page,firstMode);
+
+  const secondForm=await page.evaluate(()=>{closeModal();startExam('Beginner');return window.MM_ACTIVE_QUESTION_FORM?.formFingerprint||''});
+  expect(secondForm).not.toBe(firstForm);
+  const secondMode=await waitForExamNavigation(page,firstMode.signature);
+  expect(secondMode.signature).not.toBe(firstMode.signature);
+  await exerciseCurrentExamNavigation(page,secondMode);
+});
+
+test('consecutive assessment attempts do not repeat the opening question and advance membership once per attempt',async({page})=>{
+  await page.setViewportSize({width:412,height:915});
+  await open(page);
+
+  const result=await page.evaluate(()=>{
+    const inspect=()=>{
+      const form=window.activeExam?.questions||[];
+      const keys=form.map(q=>String(q.q||'').replace(/\s+/g,' ').trim().toLowerCase());
+      return {
+        first:keys[0]||'',
+        keys,
+        valid:form.every(q=>Array.isArray(q.options)&&q.options.length>=2&&Number.isInteger(q.correct)&&q.correct>=0&&q.correct<q.options.length),
+        meta:window.MM_ACTIVE_QUESTION_FORM
+      };
+    };
+    startExam('Beginner');
+    const first=inspect();
+    const firstMembership=window.MM_ASSESSMENT_RUNTIME_V2.history().forms.Beginner||0;
+    closeModal();
+    startExam('Beginner');
+    const second=inspect();
+    const secondMembership=window.MM_ASSESSMENT_RUNTIME_V2.history().forms.Beginner||0;
+    return {
+      first,second,firstMembership,secondMembership,
+      history:JSON.parse(localStorage.getItem('mm-assessment-question-history-v4')||'{}'),
+      legacyOpeningHistory:localStorage.getItem('mm_assessment_opening_history_v1')
+    };
+  });
+
+  expect(result.first.first).not.toBe('');
+  expect(result.second.first).not.toBe('');
+  expect(result.second.first).not.toBe(result.first.first);
+  expect(new Set(result.first.keys).size).toBe(result.first.keys.length);
+  expect(new Set(result.second.keys).size).toBe(result.second.keys.length);
+  expect(result.first.valid).toBe(true);
+  expect(result.second.valid).toBe(true);
+  expect(result.firstMembership).toBe(1);
+  expect(result.secondMembership).toBe(2);
+  expect(result.legacyOpeningHistory).toBeNull();
+  expect(result.second.meta.bankVersion).toBe('assessment-2026.08.30.1');
+  expect(result.second.meta.formFingerprint).toMatch(/^form-[0-9a-f]{8}$/);
+  const attempts=Object.values(result.history).find(value=>Array.isArray(value)&&value.length>=2);
+  expect(attempts).toBeTruthy();
+});
+
+test('graded assessment records the exact bank and form metadata used for the attempt',async({page})=>{
+  await page.setViewportSize({width:412,height:915});
+  await open(page);
+  const meta=await page.evaluate(()=>{
+    startExam('Beginner');
+    const form=window.activeExam?.questions||[];
+    form.forEach((q,i)=>{
+      const input=document.querySelector(`input[name=ex${i}][value="${q.correct}"]`);
+      if(input)input.checked=true;
+    });
+    gradeExam('Beginner');
+    const records=JSON.parse(localStorage.getItem('mm-assessment-result-meta-v1')||'[]');
+    return {record:records[0]||null,form:window.MM_ACTIVE_QUESTION_FORM};
+  });
+  expect(meta.record).toBeTruthy();
+  expect(meta.record.bankVersion).toBe('assessment-2026.08.30.1');
+  expect(meta.record.formFingerprint).toBe(meta.form.formFingerprint);
+  expect(meta.record.questionKeys).toEqual(meta.form.questionKeys);
+  expect(meta.record.score).toBe(100);
 });

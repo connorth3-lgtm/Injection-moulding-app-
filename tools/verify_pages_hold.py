@@ -3,14 +3,16 @@
 
 The root publication remains a production release hold. Verification proves that the
 hold marker is live, the privacy-safe on-device metadata helper is available, the
-separate non-production /preview/ learner runtime is reachable, stale installed root
-PWAs are migrated to that preview, and representative legacy/non-public repository
-paths remain inaccessible.
+separate non-production /preview/ learner runtime is internally version-consistent,
+stale installed MouldMaster root-entry PWAs are migrated to that preview without
+capturing helper/unrelated pages, and non-public repository paths remain inaccessible.
 """
 
 from __future__ import annotations
 
 import argparse
+import json
+import re
 import time
 from urllib.error import HTTPError, URLError
 from urllib.parse import urljoin
@@ -31,7 +33,7 @@ FORBIDDEN_PATHS = (
 
 
 def fetch(url: str) -> tuple[int, bytes]:
-    request = Request(url, headers={"User-Agent": "MouldMaster-Pages-Hold-Verifier/1"})
+    request = Request(url, headers={"User-Agent": "MouldMaster-Pages-Hold-Verifier/2"})
     try:
         with urlopen(request, timeout=15) as response:
             return int(response.status), response.read()
@@ -39,6 +41,13 @@ def fetch(url: str) -> tuple[int, bytes]:
         return int(exc.code), exc.read()
     except URLError as exc:
         raise RuntimeError(f"could not fetch {url}: {exc}") from exc
+
+
+def require_match(pattern: str, text: str, label: str) -> str:
+    match = re.search(pattern, text)
+    if not match:
+        raise AssertionError(f"could not determine {label}")
+    return match.group(1)
 
 
 def verify_once(base_url: str) -> None:
@@ -60,6 +69,8 @@ def verify_once(base_url: str) -> None:
         raise AssertionError(f"release-hold migration worker mismatch: HTTP {worker_status}")
     for marker in (
         "./preview/",
+        "LEGACY_ENTRY_FILES",
+        "MouldMaster_Academy_App.html",
         "self.skipWaiting()",
         "self.clients.claim()",
         "client.navigate(preview.href)",
@@ -70,6 +81,12 @@ def verify_once(base_url: str) -> None:
     worker_lower = worker_text.lower()
     if "caches.open" in worker_lower or ".put(" in worker_lower or "mouldmaster_core_app" in worker_lower:
         raise AssertionError("release-hold migration worker must not cache or serve learner runtime assets")
+    if "!url.pathname.startsWith(preview.pathname)" in worker_text:
+        raise AssertionError("release-hold migration worker still contains the broad same-origin redirect predicate")
+    if "device-validation.html" in worker_text:
+        raise AssertionError("device-validation helper must not be part of the migration allowlist")
+    if "new Set(['','index.html','MouldMaster_Academy_App.html'])" not in worker_text:
+        raise AssertionError("release-hold migration allowlist is not the exact approved MouldMaster entry set")
 
     helper_status, helper_body = fetch(urljoin(root, "device-validation.html"))
     helper_text = helper_body.decode("utf-8", errors="replace")
@@ -95,7 +112,54 @@ def verify_once(base_url: str) -> None:
     preview_text = preview_body.decode("utf-8", errors="replace")
     if preview_status != 200 or PREVIEW_MARKER not in preview_text:
         raise AssertionError(f"non-production preview mismatch: HTTP {preview_status}")
-    for path in ("manifest.webmanifest", "service-worker.js", "version.json"):
+
+    version_status, version_body = fetch(urljoin(root, "preview/version.json"))
+    if version_status != 200:
+        raise AssertionError(f"non-production preview version.json unavailable: HTTP {version_status}")
+    try:
+        version = json.loads(version_body.decode("utf-8"))
+    except json.JSONDecodeError as exc:
+        raise AssertionError("non-production preview version.json is invalid JSON") from exc
+    web_release = str(version.get("web_release") or "")
+    question_bank_version = str(version.get("question_bank_version") or "")
+    if not web_release or not question_bank_version:
+        raise AssertionError("preview version.json is missing web_release or question_bank_version")
+
+    shell_release = require_match(r'const\s+SHELL_RELEASE="([^"]+)"', preview_text, "preview shell release")
+    if shell_release != web_release:
+        raise AssertionError(f"preview shell/version mismatch: index={shell_release} version.json={web_release}")
+
+    preview_worker_status, preview_worker_body = fetch(urljoin(root, "preview/service-worker.js"))
+    preview_worker_text = preview_worker_body.decode("utf-8", errors="replace")
+    if preview_worker_status != 200:
+        raise AssertionError(f"non-production preview service worker unavailable: HTTP {preview_worker_status}")
+    worker_release = require_match(r"const\s+CACHE_VERSION='([^']+)'", preview_worker_text, "preview service-worker release")
+    if worker_release != web_release:
+        raise AssertionError(f"preview worker/version mismatch: worker={worker_release} version.json={web_release}")
+    fetch_section = preview_worker_text.split("self.addEventListener('fetch'", 1)
+    if len(fetch_section) != 2:
+        raise AssertionError("preview service worker has no fetch handler")
+    if ".put(" in fetch_section[1]:
+        raise AssertionError("preview service worker mutates its validated release cache during runtime fetches")
+    if "fetchNetwork(event)" not in fetch_section[1]:
+        raise AssertionError("preview service worker is missing immutable-cache network handling")
+
+    learner_status, learner_body = fetch(urljoin(root, "preview/learner-ux-repair.js"))
+    learner_text = learner_body.decode("utf-8", errors="replace")
+    if learner_status != 200:
+        raise AssertionError(f"non-production preview learner runtime unavailable: HTTP {learner_status}")
+    if f"ASSESSMENT_BANK_VERSION='assessment-{question_bank_version}'" not in learner_text:
+        raise AssertionError("preview assessment runtime/question_bank_version mismatch")
+    for marker in (
+        "mmNonProductionPreviewWarning",
+        "Non-production preview",
+        "__MM_ASSESSMENT_ROTATION_V4__",
+        "ASSESSMENT_RESULT_META_KEY",
+    ):
+        if marker not in learner_text:
+            raise AssertionError(f"preview learner runtime is missing required integrity marker: {marker}")
+
+    for path in ("manifest.webmanifest",):
         probe_status, _ = fetch(urljoin(root, f"preview/{path}"))
         if probe_status != 200:
             raise AssertionError(f"non-production preview runtime asset unavailable: {path} -> HTTP {probe_status}")
@@ -119,9 +183,10 @@ def main() -> None:
         try:
             verify_once(args.base_url)
             print(
-                "Pages release-hold verification passed: production root remains held, stale root PWAs migrate "
-                "to the non-production /preview/, the local-only device metadata helper is live, and "
-                "legacy/non-public probes return 404."
+                "Pages release-hold verification passed: production root remains held, migration is scoped to "
+                "approved MouldMaster entry paths, the preview release fingerprint is internally consistent, "
+                "the validated preview cache is immutable at runtime, the persistent preview warning is present, "
+                "the local-only device helper is live, and legacy/non-public probes return 404."
             )
             return
         except (AssertionError, RuntimeError) as exc:

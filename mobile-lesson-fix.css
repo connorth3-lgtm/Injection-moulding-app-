@@ -1,14 +1,18 @@
-/* Mobile lesson presentation fix — 2026.09.06.2
+/* Mobile lesson presentation fix — 2026.09.06.3
    Keep one completion control in lesson content. The learning-experience runtime
    also creates a second fixed action bar; hide that duplicate on phones so it
    cannot cover the lesson or stack on top of the primary bottom navigation.
 
    The legacy shell sets html scroll-behavior:smooth. Lesson navigation temporarily
    converts the shell's explicit smooth scroll to auto; make auto genuinely instant
-   on mobile so a lesson cannot be captured part-way through the old page scroll. */
+   on mobile so a lesson cannot be captured part-way through the old page scroll.
+
+   Blocking modals must sit above the fixed primary mobile navigation. The shell
+   navigation is intentionally z-index 40, so keep open modal surfaces above it. */
 @media (max-width:760px){
   html,body{scroll-behavior:auto!important}
   #lesson .mm-mobile-actions{display:none!important}
   #lesson .lesson-body{padding-bottom:24px!important}
   #lesson .lesson-side{margin-bottom:0!important}
+  #modal:not(.hidden){z-index:70!important}
 }

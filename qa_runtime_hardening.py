@@ -119,9 +119,11 @@ require("localStorage.clear" not in repair and "sessionStorage.clear" not in rep
 must(reference_page, ['<script src="./reference-data.js"></script>', '<script src="./reference-2026-expansion.js"></script>', 'id="mm-reference-back"', "history.back()", "position:static!important", ".mmrd-close{display:none!important}", "modal.setAttribute('role','main')", "MM_REFERENCE_DATA_PAGE_MODE='standalone-document-unified-library'"], "standalone References")
 
 # Service-worker install remains atomic for CORE and best-effort for optional packs.
+# After installation the validated release cache is immutable: normal network fetches
+# may serve fresher online bytes, but they must never write those bytes into STATIC_CACHE.
 must(service_worker, [
     "${CACHE_VERSION}-${CACHE_REVISION}", "'./repair.html'", "runtimeCritical=url.pathname.endsWith('.js')||url.pathname.endsWith('.json')",
-    "const network=await fetchAndCache(event,url)", "if(network&&network.ok)return network", "'./reference-data.html'", "'./reference-2026-expansion.js'", "'./diagnostic-learning-labs.js'",
+    "async function fetchNetwork(event)", "fetch(event.request,{cache:'no-store'})", "const network=await fetchNetwork(event)", "if(network&&network.ok)return network", "'./reference-data.html'", "'./reference-2026-expansion.js'", "'./diagnostic-learning-labs.js'",
     "'./material-behaviour-labs.js'", "'./assessment-evidence-sources.js'", "'./evidence-maturity-deep-dive.js'", "'./evidence-maturity-formal-bridge.js'",
     "'./assessment-psychometric-hardening.js'", "'./assessment-evidence-integrity-upgrade.js'", "'./lesson-evidence-depth.js'", "'./lesson-deep-authoring-v2.js'", "'./assessment-evidence-approval.js'", "'./assessment-psychometric-approval.js'",
     "'./runtime-v2.js'", "'./assessment-runtime-v2.js'", "'./assessment-multimodal.js'", "'./accessibility-hardening.js'",
@@ -136,6 +138,9 @@ for required_asset in ("./index.html", "./MouldMaster_Core_App.html", "./pwa-she
 install = service_worker[service_worker.index("self.addEventListener('install'"):service_worker.index("self.addEventListener('activate'")]
 require("cache.addAll" not in install, "service-worker install should identify the exact failed assets rather than use opaque addAll failure")
 require("throw new Error" in install and "skipWaiting" in install, "service-worker install must fail closed before activation when any core asset is incomplete")
+runtime_fetch = service_worker[service_worker.index("self.addEventListener('fetch'"):]
+require(".put(" not in runtime_fetch, "service-worker runtime fetches must never mutate the validated release cache")
+require("cacheAsset(" not in runtime_fetch, "service-worker install-only cache writer must not be reachable from runtime fetches")
 
 # Preserve the original assessment/evidence/security integrity assertions.
 must(approval, ["const coverageOk=!(summary.total!==157", "status:coverageOk?'approved':'update-required'", "function scheduleApproval()", "DOMContentLoaded',()=>setTimeout(buildApproval,0)", "Evidence metadata could not finish loading.", "showUpdateWarning"], "evidence approval hardening")
@@ -159,4 +164,4 @@ require("document.addEventListener('DOMContentLoaded',init)" in training, "train
 require("npm_execpath" in sbom and "result.error" in sbom, "desktop SBOM generation must use the npm CLI entry point and report spawn failures")
 require("NamedTemporaryFile" in assessment_qa and "['node','-e',node]" not in assessment_qa, "assessment runtime QA must not exceed OS command-line limits")
 
-print(f"MouldMaster runtime hardening QA passed ({runtime_asset_version}; {expected_static_cache}; shared-origin PWA + runtime v2 + bank rotation + lesson depth + multimodal + accessibility enabled)")
+print(f"MouldMaster runtime hardening QA passed ({runtime_asset_version}; {expected_static_cache}; shared-origin PWA + immutable validated runtime cache + runtime v2 + bank rotation + lesson depth + multimodal + accessibility enabled)")
