@@ -1,4 +1,4 @@
-/* MouldMaster app-shell finalizer — 2026.09.02.1 */
+/* MouldMaster app-shell finalizer — 2026.09.06.10 */
 (function(){
 'use strict';
 if(!window.MM_APP_SHELL)throw new Error('app-shell-finalize.js requires app-shell-registry.js');
@@ -76,6 +76,129 @@ function loadMeasuredLearningRuntime(){
   script.addEventListener('error',()=>console.warn('[MouldMaster] Measured Learning runtime unavailable; learner navigation remains disabled.'));
   document.head.appendChild(script);
 }
+function loadSimpleLessonRuntime(){
+  if(window.MM_SIMPLE_LESSON_EXPERIENCE||document.querySelector('script[data-mm-simple-lessons]'))return;
+  const script=document.createElement('script');
+  script.src='./lesson-simple-experience.js';
+  script.async=true;
+  script.dataset.mmSimpleLessons='1';
+  script.addEventListener('error',()=>console.warn('[MouldMaster] Simple lesson experience could not be loaded; the standard lesson layout remains available.'));
+  document.head.appendChild(script);
+}
+function removeHomeJobRouter(root){
+  if(!root)return;
+  const normalize=value=>String(value||'')
+    .replace(/[·•|–—-]/g,' ')
+    .replace(/\s+/g,' ')
+    .trim()
+    .toLowerCase();
+  const isLegacyRouterText=value=>{
+    const text=normalize(value);
+    return (text.includes('one platform')&&text.includes('five jobs'))||text.includes('what do you need to do');
+  };
+
+  for(const block of Array.from(root.querySelectorAll('.mm-dashboard-slot,section,.card,.mm-home-task-hub,[class*="router"],[class*="job"]'))){
+    if(isLegacyRouterText(block.textContent))block.remove();
+  }
+
+  for(const node of Array.from(root.querySelectorAll('h1,h2,h3,.eyebrow,[class*="eyebrow"],[class*="kicker"]'))){
+    if(!isLegacyRouterText(node.textContent))continue;
+    const block=node.closest('.mm-dashboard-slot,section,.card,.mm-home-task-hub,[class*="router"],[class*="job"]')||node.parentElement;
+    if(block&&block!==root)block.remove();
+  }
+}
+function removeHomeSecondaryBlocks(root){
+  if(!root)return;
+  root.querySelectorAll('.region-banner').forEach(el=>el.remove());
+  for(const slot of Array.from(root.querySelectorAll('.mm-dashboard-slot'))){
+    const text=(slot.textContent||'').replace(/\s+/g,' ').trim();
+    if(/^Standards mode:/i.test(text)||/^Process data labs\b/i.test(text))slot.remove();
+  }
+  for(const heading of Array.from(root.querySelectorAll('h2,h3'))){
+    const text=(heading.textContent||'').replace(/\s+/g,' ').trim();
+    if(!/^Process data labs$/i.test(text))continue;
+    const block=heading.closest('.mm-dashboard-slot')||heading.closest('section,.card')||heading.parentElement;
+    if(block&&block!==root)block.remove();
+  }
+}
+function simplifyHomeScreen(){
+  const root=document.getElementById('dashboard');
+  if(!root)return;
+
+  root.querySelectorAll('.mm-home-core-hero,.mm-home-kpis,.mm-home-course-head,.mm-home-course-grid,.hero,.friendly-hero,.kpis,.fun-dashboard').forEach(el=>el.remove());
+  removeHomeJobRouter(root);
+  removeHomeSecondaryBlocks(root);
+
+  const redundantHeadings=/^(What would you like to do\?|Your next learning tracks|Continue your path|How MouldMaster works|Achievements|Your achievements)$/i;
+  for(const head of Array.from(root.querySelectorAll('.section-head'))){
+    const title=(head.querySelector('h2,h3')?.textContent||'').trim();
+    if(!redundantHeadings.test(title))continue;
+    const next=head.nextElementSibling;
+    if(next?.matches('.grid,.grid2,.grid4,.quick-grid,.how-grid,.achievement-grid,.learning-map'))next.remove();
+    head.remove();
+  }
+
+  const oldQuickGrid=root.querySelector('.quick-grid');
+  if(oldQuickGrid)oldQuickGrid.remove();
+  root.querySelectorAll('.how-grid,.achievement-grid').forEach(el=>el.remove());
+
+  const actions=Array.from(root.querySelectorAll('.mm-home-action'));
+  const learningShortcut=actions.find(button=>/Explore your learning/i.test(button.textContent||''));
+  if(learningShortcut){
+    let done=false;
+    try{done=typeof window.dailyDone==='function'&&window.dailyDone()}catch(_){}
+    learningShortcut.removeAttribute('data-mm-onclick');
+    learningShortcut.dataset.mmPracticeAction=done?'scenarios':'daily';
+    learningShortcut.innerHTML=`<span class="mm-home-action-icon">✓</span><span><strong>${done?'Daily practice complete':'Daily practice'}</strong><small>${done?'Keep practising with another evidence-first scenario.':'Take one short evidence-first moulding decision for today.'}</small></span>`;
+  }
+}
+function stabilizeRetiredChrome(){
+  const root=document.getElementById('dashboard');
+  if(root){
+    removeHomeJobRouter(root);
+    removeHomeSecondaryBlocks(root);
+    root.querySelectorAll('.fun-dashboard:not(.mm-daily-only),.fun-dashboard .level-card,.achievement-grid,.fun-settings').forEach(el=>el.remove());
+    root.querySelectorAll('button').forEach(button=>{
+      const text=button.textContent||'';
+      if(/\+\s*\d+\s*XP\b/i.test(text))button.textContent=text.replace(/\s*\+\s*\d+\s*XP\b/ig,'');
+    });
+  }
+  document.querySelectorAll('#xpPop,.xp-pop,#profileMini .fun-hud').forEach(el=>el.remove());
+
+  const mobile=!!window.matchMedia?.('(max-width:700px)').matches;
+  for(const id of ['mm-src-open','mmrd-open']){
+    const launcher=document.getElementById(id);if(!launcher)continue;
+    if(mobile){
+      launcher.style.setProperty('display','none','important');
+      launcher.style.setProperty('visibility','hidden','important');
+      launcher.style.setProperty('pointer-events','none','important');
+      launcher.setAttribute('aria-hidden','true');launcher.tabIndex=-1;
+    }else{
+      if(launcher.style.getPropertyPriority('display')==='important')launcher.style.removeProperty('display');
+      launcher.style.removeProperty('visibility');launcher.style.removeProperty('pointer-events');
+    }
+  }
+  if(mobile){
+    const nav=document.querySelector('.mobile-nav');
+    nav?.querySelectorAll(':scope > button,:scope > a').forEach(item=>{
+      const text=(item.textContent||'').replace(/\s+/g,' ').trim();
+      if(/^(References|Reference Data)$/i.test(text)&&!item.dataset.view&&!/More/i.test(text))item.remove();
+    });
+  }
+}
+function installRetiredChromeGuard(){
+  if(window.__MM_RETIRED_CHROME_GUARD__)return;
+  stabilizeRetiredChrome();
+  window.addEventListener('resize',stabilizeRetiredChrome,{passive:true});
+  window.__MM_RETIRED_CHROME_GUARD__={version:'2026.09.06.10'};
+}
+function installHomeScreenSimplification(){
+  if(window.__MM_HOME_SIMPLIFICATION__||typeof window.renderDashboard!=='function')return;
+  const base=window.renderDashboard;
+  window.renderDashboard=function(){const result=base.apply(this,arguments);simplifyHomeScreen();stabilizeRetiredChrome();return result};
+  window.__MM_HOME_SIMPLIFICATION__='2026.09.06.10';
+  simplifyHomeScreen();
+}
 
 syncEvidenceExports();
 const originalSpecialistOpen=window.mmSpecialistOpen;
@@ -88,10 +211,14 @@ loadProductionHealth();
 loadConnectedDataRuntime();
 window.MM_APP_SHELL.finalize();
 loadMeasuredLearningRuntime();
+installHomeScreenSimplification();
+installRetiredChromeGuard();
+loadSimpleLessonRuntime();
+window.MM_APP_SHELL.navigation?.sync?.();
 const geometryStyle=document.getElementById('mm-app-shell-registry-style');
 if(geometryStyle&&geometryStyle.parentNode===document.head)document.head.appendChild(geometryStyle);
 window.addEventListener('popstate',()=>window.MM_APP_SHELL.navigation?.sync?.());
-requestAnimationFrame(()=>{window.MM_APP_SHELL.geometry?.sync?.();patchEvidenceUi()});
+requestAnimationFrame(()=>{window.MM_APP_SHELL.geometry?.sync?.();patchEvidenceUi();simplifyHomeScreen();stabilizeRetiredChrome();window.MM_APP_SHELL.navigation?.sync?.()});
 // Preserve the canonical shell compatibility marker. Evidence-status bridging and connected-data runtime have their own versions above.
 window.MM_APP_SHELL_FINALIZED='2026.08.26.4';
 })();

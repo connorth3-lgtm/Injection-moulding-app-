@@ -7,7 +7,7 @@ import struct
 import subprocess
 import tempfile
 
-WEB_RELEASE = "2026.09.06.7"
+WEB_RELEASE = "2026.09.06.8"
 ANDROID_RELEASE = "2026.08.26.2"
 CONTENT_VERSION = "2026.08.26.1"
 WINDOWS_RECOVERY_VERSION = "2026.08.21.1"
@@ -177,7 +177,6 @@ storage_commit = bridge.index("for(const [k,v] of Object.entries(writes))localSt
 cleanup_commit = bridge.index("clearAllAnalyticsStores();", storage_commit)
 memory_commit = bridge.index("db=proposed;user=db.users[db.activeUser]")
 assert storage_commit < cleanup_commit < memory_commit, "imported learner registry must activate only after staged writes and verified analytics cleanup"
-
 shell = text("pwa-shell.js")
 assert f"const RELEASE='{WEB_RELEASE}'" in shell
 assert f"const CONTENT='{CONTENT_VERSION}'" in shell
