@@ -7,7 +7,7 @@ import struct
 import subprocess
 import tempfile
 
-WEB_RELEASE = "2026.09.06.12"
+WEB_RELEASE = "2026.09.06.13"
 ANDROID_RELEASE = "2026.08.26.2"
 CONTENT_VERSION = "2026.08.26.1"
 WINDOWS_RECOVERY_VERSION = "2026.08.21.1"
@@ -97,7 +97,8 @@ for asset in [
     "training-upgrade.js", "training-qa-fix.js", "source-library.js", "pwa-shell.js", "learning-experience.js",
     "process-data-diagnostics.js", "curriculum-integration.js", "specialist-curriculum.js",
     "specialist-evidence-gap-extension.js", "mould-master-workspace.js", "app-shell-finalize.js", "learning-analytics.js",
-    "runtime-v2.js", "assessment-runtime-v2.js", "lesson-deep-authoring-v2.js", "assessment-multimodal.js", "accessibility-hardening.js"
+    "runtime-v2.js", "assessment-runtime-v2.js", "lesson-deep-authoring-v2.js", "assessment-multimodal.js", "accessibility-hardening.js",
+    "learner-ux-repair.css", "learner-ux-repair.js"
 ]:
     assert f"'./{asset}'" in sw, f"offline asset missing: {asset}"
 install = sw[sw.index("self.addEventListener('install'"):sw.index("self.addEventListener('activate'")]
