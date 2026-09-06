@@ -213,14 +213,12 @@ test('late dashboard modules recompose idempotently without making retired Home 
   await page.evaluate(()=>{window.MM_APP_SHELL.dashboard.compose();window.MM_APP_SHELL.dashboard.compose()});
   await expect(page.locator('[data-mm-dashboard-section="qa-late-dashboard"]')).toHaveCount(1);
   await expect(page.locator('#dashboard .mm-today-focus')).toHaveCount(1);
-  await expect(page.locator('#dashboard .mm-home-task-hub')).toHaveCount(1);
-  await expect(page.locator('#dashboard .mm-home-task-hub')).toBeHidden();
+  await expect(page.locator('#dashboard .mm-home-task-hub')).toHaveCount(0);
   expect(await page.evaluate(()=>window.__qaLateRenderCount)).toBeGreaterThanOrEqual(1);
   await page.evaluate(()=>window.__qaLateUnregister());
   await expect(page.locator('[data-mm-dashboard-section="qa-late-dashboard"]')).toHaveCount(0);
   await expect(page.locator('#dashboard .mm-today-focus')).toHaveCount(1);
-  await expect(page.locator('#dashboard .mm-home-task-hub')).toHaveCount(1);
-  await expect(page.locator('#dashboard .mm-home-task-hub')).toBeHidden();
+  await expect(page.locator('#dashboard .mm-home-task-hub')).toHaveCount(0);
 });
 
 test('capture Android-like Home regression artifact after bootstrap is gone and retired gamification is absent',async({page})=>{
