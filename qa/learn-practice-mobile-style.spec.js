@@ -64,13 +64,27 @@ async function expectReadableTiles(page,rootSelector){
   expect(result.overlap).toBe(false);
 }
 
+async function expectFullWidthPrimaryAction(page,rootSelector){
+  const geometry=await page.evaluate(rootSelector=>{
+    const root=document.querySelector(rootSelector);
+    const card=root.querySelector('.mm-hub-continue');
+    const button=root.querySelector('.mm-hub-continue-action');
+    const cr=card.getBoundingClientRect(),br=button.getBoundingClientRect();
+    const cs=getComputedStyle(card);
+    const inner=cr.width-parseFloat(cs.paddingLeft)-parseFloat(cs.paddingRight)-parseFloat(cs.borderLeftWidth)-parseFloat(cs.borderRightWidth);
+    return {buttonWidth:br.width,innerWidth:inner};
+  },rootSelector);
+  expect(geometry.buttonWidth).toBeGreaterThan(300);
+  expect(Math.abs(geometry.buttonWidth-geometry.innerWidth)).toBeLessThan(2);
+}
+
 test.use({viewport:{width:412,height:915}});
 
 test('Learn hub keeps compact left-aligned mobile cards under strict CSP',async({page})=>{
   await openApp(page);
   await openHub(page,'Learn','#path .mm-learn-hub');
   await expectReadableTiles(page,'#path .mm-learn-hub');
-  await expect(page.locator('#path .mm-hub-continue-action')).toHaveCSS('width','380px');
+  await expectFullWidthPrimaryAction(page,'#path .mm-learn-hub');
   await page.screenshot({path:'qa-artifacts/mobile-learn-hub-412x915.png',fullPage:true});
 });
 
@@ -78,6 +92,6 @@ test('Practice hub keeps compact left-aligned mobile cards under strict CSP',asy
   await openApp(page);
   await openHub(page,'Practice','#scenarios .mm-practice-hub');
   await expectReadableTiles(page,'#scenarios .mm-practice-hub');
-  await expect(page.locator('#scenarios .mm-hub-continue-action')).toBeVisible();
+  await expectFullWidthPrimaryAction(page,'#scenarios .mm-practice-hub');
   await page.screenshot({path:'qa-artifacts/mobile-practice-hub-412x915.png',fullPage:true});
 });
