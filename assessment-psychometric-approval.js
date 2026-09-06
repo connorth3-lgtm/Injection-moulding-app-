@@ -1,7 +1,7 @@
-/* MouldMaster psychometric approval bridge — 2026.09.06.2 */
+/* MouldMaster psychometric approval bridge — 2026.09.06.3 */
 (function(){
 'use strict';
-const VERSION='2026.09.06.2';
+const VERSION='2026.09.06.3';
 const REQUIRED_VERSION='2026.09.01.6';
 const INPUT_BLOB='fdcc6fc4d655e3a90a33acdc38712197ff040ebf';
 const EXPECTED={itemsHardened:197,optionsParallelised:788,semanticAnswerChanges:0,technicalTermSubstitutions:0,paddingApplied:false,keyedConciseEdits:3,technicalKeyPositions:[8,8,7,7],scenarioKeyPositions:[10,10,10,10]};
@@ -68,6 +68,22 @@ function neutraliseScenarioDistractors(){
    s.choices[i]=after;
    s.feedback[i]=`Not the strongest first decision. “${after}” is a plausible competing path, but it does not fit the stated evidence as directly as the keyed mechanism.`;
    edits++;
+  }
+  if(String(s.mmStableId||'')==='scenario:07'){
+   const alternatives=[
+    'Review measurement-system method and fixture consistency between shifts before changing the process',
+    'Compare shot-delivery, cushion and part-mass response between shifts before reviewing thermal conditions',
+    'Test packing response and dimensional trend between shifts before reviewing water and material state'
+   ];
+   let n=0;
+   for(let i=0;i<4;i++){
+    if(i===s.correct)continue;
+    const after=alternatives[n++],before=String(s.choices[i]||'');
+    if(before===after)continue;
+    s.choices[i]=after;
+    s.feedback[i]=`Not the strongest first decision. “${after}” is a plausible competing path, but the shift-linked evidence is broader than this single hypothesis.`;
+    edits++;
+   }
   }
  });
  return edits;
