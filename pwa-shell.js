@@ -1,7 +1,7 @@
 /* MouldMaster PWA shell controller — 2026.09.06 */
 (function(){
 'use strict';
-const RELEASE='2026.09.06.5';
+const RELEASE='2026.09.06.7';
 const CONTENT='2026.08.26.1';
 const REFERENCE_DATA_URL='./reference-data.html';
 function setText(el,value){if(el&&el.textContent!==value)el.textContent=value}
@@ -264,7 +264,9 @@ function syncVisibleViewChrome(){
   document.querySelectorAll('.mobile-nav button[data-view]').forEach(button=>{const target=button.dataset.view,view=target?document.getElementById(target):null,active=!!view&&!view.classList.contains('hidden');button.classList.toggle('active',active);if(active)button.setAttribute('aria-current','page');else button.removeAttribute('aria-current')})
 }
 function dockReferenceLauncher(){
-  const open=document.getElementById('mm-src-open');if(!open)return;const sidebar=document.querySelector('.sidebar-foot'),dock=sidebar||document.querySelector('.top-actions')||document.querySelector('.main');if(!dock)return;
+  const open=document.getElementById('mm-src-open');if(!open)return;
+  if(isMobileNav()){open.style.display='none';open.setAttribute('aria-hidden','true');open.tabIndex=-1;open.dataset.mmDocked='mobile-hidden-unified-reference-page';return}
+  open.removeAttribute('aria-hidden');open.tabIndex=0;const sidebar=document.querySelector('.sidebar-foot'),dock=sidebar||document.querySelector('.top-actions')||document.querySelector('.main');if(!dock)return;
   if(open.parentElement!==dock)dock.appendChild(open);open.style.position='static';open.style.left='auto';open.style.right='auto';open.style.top='auto';open.style.bottom='auto';open.style.zIndex='auto';open.style.pointerEvents='auto';open.style.width=sidebar?'100%':'auto';open.style.margin=sidebar?'12px 0 0':'0';open.style.display=sidebar?'flex':'inline-flex';open.style.justifyContent='center';open.dataset.mmDocked=sidebar?'sidebar':dock.classList.contains('top-actions')?'topbar':'content'
 }
 function configureReferenceDrawer(){
@@ -280,15 +282,15 @@ function configureReferenceDrawer(){
 function openStandaloneReferenceData(){location.assign(REFERENCE_DATA_URL)}
 function patchMobileMoreForReferenceData(){
   if(window.__MM_REFERENCE_DATA_MORE_PATCH__||typeof window.openMobileMenu!=='function')return;const base=window.openMobileMenu;
-  window.openMobileMenu=function(){const r=base.apply(this,arguments);requestAnimationFrame(()=>{const card=document.querySelector('#modal .modal-card'),grid=card?.querySelector('.grid2');if(!grid||grid.querySelector('[data-mm-reference-data-menu]'))return;const button=document.createElement('button');button.type='button';button.className='quick-action';button.dataset.mmReferenceDataMenu='1';button.innerHTML='<span class="icon">▤</span><b>Reference data</b><small>Materials, defects, signals and troubleshooting data.</small>';button.addEventListener('click',()=>{try{window.closeModal?.()}catch(_){}openStandaloneReferenceData()});grid.appendChild(button)});return r};window.__MM_REFERENCE_DATA_MORE_PATCH__=true
+  window.openMobileMenu=function(){const r=base.apply(this,arguments);requestAnimationFrame(()=>{const card=document.querySelector('#modal .modal-card'),grid=card?.querySelector('.grid2');if(!grid||grid.querySelector('[data-mm-reference-data-menu]'))return;const button=document.createElement('button');button.type='button';button.className='quick-action';button.dataset.mmReferenceDataMenu='1';button.innerHTML='<span class="icon">▤</span><b>References</b><small>Standards, materials, defects, process signals and troubleshooting.</small>';button.addEventListener('click',()=>{try{window.closeModal?.()}catch(_){}openStandaloneReferenceData()});grid.appendChild(button)});return r};window.__MM_REFERENCE_DATA_MORE_PATCH__=true
 }
 function dockReferenceDataLauncher(){
   const open=document.getElementById('mmrd-open');if(!open)return;open.style.position='static';open.style.left='auto';open.style.right='auto';open.style.top='auto';open.style.bottom='auto';open.style.zIndex='auto';open.style.pointerEvents='auto';
   if(isMobileNav()){open.style.display='none';open.style.width='auto';open.style.margin='0';open.dataset.mmDocked='mobile-more-standalone-page';patchMobileMoreForReferenceData();return}
-  const sidebar=document.querySelector('.sidebar-foot'),dock=sidebar||document.querySelector('.top-actions')||document.querySelector('.main');if(!dock)return;if(open.parentElement!==dock)dock.appendChild(open);open.style.width=sidebar?'100%':'auto';open.style.margin=sidebar?'8px 0 0':'0';open.style.display=sidebar?'flex':'inline-flex';open.style.justifyContent='center';open.dataset.mmDocked=sidebar?'sidebar':dock.classList.contains('top-actions')?'topbar':'content'
+  setText(open,'References');open.setAttribute('aria-label','Open References');const sidebar=document.querySelector('.sidebar-foot'),dock=sidebar||document.querySelector('.top-actions')||document.querySelector('.main');if(!dock)return;if(open.parentElement!==dock)dock.appendChild(open);open.style.width=sidebar?'100%':'auto';open.style.margin=sidebar?'8px 0 0':'0';open.style.display=sidebar?'flex':'inline-flex';open.style.justifyContent='center';open.dataset.mmDocked=sidebar?'sidebar':dock.classList.contains('top-actions')?'topbar':'content'
 }
 function configureReferenceDataDrawer(){
-  const modal=document.querySelector('.mmrd');if(!modal)return;modal.classList.add('mm-reference-data-drawer');modal.setAttribute('aria-modal','false');modal.setAttribute('aria-label','MouldMaster reference data');if(isMobileNav())modal.dataset.open='0';
+  const modal=document.querySelector('.mmrd');if(!modal)return;modal.classList.add('mm-reference-data-drawer');modal.setAttribute('aria-modal','false');modal.setAttribute('aria-label','MouldMaster references');if(isMobileNav())modal.dataset.open='0';
   if(!document.getElementById('mm-reference-data-drawer-style')){const style=document.createElement('style');style.id='mm-reference-data-drawer-style';style.textContent=`
 .mmrd.mm-reference-data-drawer{background:transparent!important;align-items:flex-end!important;justify-content:flex-end!important;padding:12px!important;pointer-events:none!important}.mmrd.mm-reference-data-drawer[data-open="1"]{display:flex!important}
 .mmrd.mm-reference-data-drawer .mmrd-panel{width:min(520px,calc(100vw - 24px))!important;max-height:min(74dvh,800px)!important;height:auto!important;border-radius:16px!important;pointer-events:auto!important;box-shadow:0 18px 52px rgba(0,0,0,.42)!important}.mmrd.mm-reference-data-drawer .mmrd-head{flex:0 0 auto!important}.mmrd.mm-reference-data-drawer .mmrd-body{min-height:0!important;overscroll-behavior:contain!important}

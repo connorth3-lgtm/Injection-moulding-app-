@@ -58,10 +58,10 @@ full_stack = [
 positions = []
 for asset in full_stack:
     marker = f'<script src="./{asset}"></script>'
-    require(marker in page, f"standalone Reference Data page missing full-library asset: {asset}")
+    require(marker in page, f"standalone References page missing full-library asset: {asset}")
     positions.append(page.index(marker))
-require(positions == sorted(positions), "standalone Reference Data scripts must load in dependency order")
-require("standalone-document-full-library" in page, "standalone Reference Data full-library runtime marker missing")
+require(positions == sorted(positions), "standalone References scripts must load in dependency order")
+require("standalone-document-unified-library" in page, "standalone References unified-library runtime marker missing")
 
 require("reference-2026-expansion.js" in index, "main app must load the 2026 reference expansion")
 revision_match = re.search(r"CACHE_REVISION='([^']+)'", sw)
