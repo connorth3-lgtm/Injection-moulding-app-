@@ -40,6 +40,7 @@ function style(){if(document.getElementById('mm-lesson-deep-v2-style'))return;co
 .mm-deep-v2{margin:18px 0;display:grid;gap:11px}.mm-deep-v2-head{padding:17px 18px;border:1px solid #33506f;border-radius:14px;background:linear-gradient(135deg,#10253d,#0d1c30)}.mm-deep-v2-head h3{margin:5px 0 7px}.mm-deep-v2-head p{margin:0;color:#c1d1e4;line-height:1.6}.mm-deep-v2-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.mm-deep-v2-card{padding:15px;border:1px solid #2e4968;border-radius:12px;background:#0e1d31}.mm-deep-v2-card h4{margin:5px 0 8px}.mm-deep-v2-card p,.mm-deep-v2-card li{font-size:13px;line-height:1.55;color:#c0d0e3}.mm-deep-v2-card ul{padding-left:19px;margin:7px 0}.mm-deep-v2-boundary{padding:11px 13px;border-left:3px solid #d4b25b;background:#292414;color:#f0e1ad;font-size:12px;line-height:1.55}.mm-deep-v2-id{font-size:10px;color:#7f98b8}@media(max-width:720px){.mm-deep-v2-grid{grid-template-columns:1fr}}
 `;document.head.appendChild(s)}
 function current(){try{return typeof window.currentLesson==='function'?window.currentLesson():null}catch(_){return null}}
+// The collapsed disclosure preserves the full Mechanism → evidence → decision chain and teach-back; only the default presentation is shortened.
 function markup(r){
   const takeaway=compact(r.evidence[0]||r.mechanism,165);
   const apply=compact(r.decision,175);
