@@ -1,8 +1,8 @@
-/* MouldMaster assessment experience — question-only focus mode 2026-09-06.9 */
+/* MouldMaster assessment experience — question-only focus mode 2026-09-07.1 */
 (function(){
 'use strict';
 
-const VERSION='2026.09.06.9';
+const VERSION='2026.09.07.1';
 const FIRST_HISTORY_LIMIT=3;
 const HISTORY_KEY='mm_assessment_opening_history_v1';
 const root=document.documentElement;
@@ -74,6 +74,7 @@ function addStyles(){
   .mm-exam-reviewed .answer-row{padding:15px 16px;border-radius:12px;line-height:1.5}
   .mm-exam-reviewed .answer-row.correct{background:#0d2925;border-color:#397466}
   .mm-exam-reviewed .answer-row.incorrect{background:#2a171d;border-color:#74424d}
+  .mm-assessment-next{margin-top:14px;padding:14px 15px;border:1px solid #34516e;border-radius:13px;background:#10243a}.mm-assessment-next strong{display:block;margin:3px 0 5px}.mm-assessment-next p{margin:0 0 10px;color:#b9cade;line-height:1.45}.mm-assessment-next button{min-height:44px}
   .scenario .choice.mm-choice-selected{border-color:#69a8ff;background:#17314f;box-shadow:inset 3px 0 0 #69a8ff}
   .scenario .choice.mm-choice-correct{border-color:#397466;background:#0d2925;box-shadow:inset 3px 0 0 #7ce6a3}
   .scenario .choice.mm-choice-review{border-color:#74424d;background:#2a171d;box-shadow:inset 3px 0 0 #ff7b7b}
@@ -201,6 +202,24 @@ function decorateExam(){
   state.next.addEventListener('click',()=>{if(state.current<state.cards.length-1)showQuestion(state.current+1,true);else{const i=firstUnanswered();if(i>=0)showQuestion(i,true)}});
   grade.disabled=true;showQuestion(0,false);
 }
+function assessmentNextTarget(modal,passed){
+  try{
+    const completed=Array.isArray(user?.completed)?user.completed:[];
+    const title=(modal?.querySelector('[id^="mmDialogTitle"],h2')?.textContent||'').toLowerCase();
+    const level=['beginner','intermediate','advanced'].find(value=>title.includes(value));
+    const courses=(D?.courses||[]).filter(course=>!level||String(course.level||'').toLowerCase().includes(level));
+    let id=null;
+    for(const course of courses){id=(course.lessonIds||[]).find(candidate=>!completed.includes(candidate));if(id)break}
+    if(!id)id=(D?.lessons||[]).find(item=>!completed.includes(item.id))?.id||user?.currentLesson;
+    const lesson=(D?.lessons||[]).find(item=>item.id===id);if(!lesson)return null;
+    return {lesson,passed};
+  }catch(_){return null}
+}
+window.mmAssessmentOpenNext=function(id){
+  const lesson=(D?.lessons||[]).find(item=>item.id===Number(id));if(!lesson)return;
+  user.currentLesson=lesson.id;persist();if(typeof closeModal==='function')closeModal();if(typeof switchView==='function')switchView('lesson');
+};
+
 function decorateReview(){
   const result=document.getElementById('examResult');const review=document.getElementById('answerReview');if(!result||result.classList.contains('hidden')||!review)return;
   const raw=(result.textContent||'').replace(/\s+/g,' ').trim();
@@ -245,6 +264,15 @@ function decorateReview(){
   summary.appendChild(message);
   if(earned){const note=document.createElement('p');note.className='mm-result-note';note.textContent='Certificate earned.';summary.appendChild(note)}
   if(safety){const warning=document.createElement('p');warning.className='mm-result-safety';warning.textContent=`${safety[1]} safety-critical answer${safety[1]==='1'?'':'s'} must be corrected before this assessment can pass.`;summary.appendChild(warning)}
+  const nextTarget=assessmentNextTarget(modal,passed);
+  if(nextTarget){
+    const next=document.createElement('section');next.className='mm-assessment-next';next.setAttribute('aria-label','Recommended next step');
+    const label=document.createElement('span');label.className='eyebrow';label.textContent='What next';
+    const heading=document.createElement('strong');heading.textContent=nextTarget.lesson.title;
+    const copy=document.createElement('p');copy.textContent=passed?'Keep the momentum: continue with the next incomplete lesson.':'Review this lesson, then retry with the rationale fresh in mind.';
+    const button=document.createElement('button');button.type='button';button.className='secondary';button.textContent='Open recommended lesson →';button.setAttribute('data-mm-onclick',`mmAssessmentOpenNext(${nextTarget.lesson.id})`);
+    next.append(label,heading,copy,button);summary.appendChild(next);
+  }
   result.replaceChildren(summary);result.setAttribute('role','status');result.tabIndex=-1;
   try{result.scrollIntoView({block:'start',behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth'})}catch(_){}
   setTimeout(()=>{try{result.focus({preventScroll:true})}catch(_){result.focus()}},0);

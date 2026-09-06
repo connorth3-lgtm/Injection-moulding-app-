@@ -187,7 +187,7 @@ function runAction(action){
     case 'learn-resources': return openPicker('learn-resources');
     case 'visuals': closePicker(); return switchView('visuals');
     case 'glossary': closePicker(); return switchView('glossary');
-    case 'saved': closePicker(); return switchView('profile');
+    case 'saved': closePicker(); return typeof window.mmOpenSavedLessons==='function'?window.mmOpenSavedLessons():switchView('profile');
     case 'daily': return openDaily();
     case 'troubleshooting': return openPicker('troubleshooting');
     case 'mould-master': closePicker(); return safeOpen('MM_MOULD_MASTER_WORKSPACE',()=>switchView('defects'));

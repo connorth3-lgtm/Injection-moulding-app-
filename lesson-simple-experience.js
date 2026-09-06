@@ -1,9 +1,9 @@
-/* MouldMaster simple lesson experience — 2026.09.07.3 */
+/* MouldMaster simple lesson experience — 2026.09.07.4 */
 (function(){
 'use strict';
 if(window.MM_SIMPLE_LESSON_EXPERIENCE)return;
 
-const VERSION='2026.09.07.3';
+const VERSION='2026.09.07.4';
 const style=document.createElement('style');
 style.id='mm-simple-lesson-style';
 style.textContent=`
@@ -167,6 +167,22 @@ function compactCompletionActions(article){
   const actions=article.querySelector('.lesson-actions-sticky');
   if(!actions)return;
   actions.classList.add('mm-simple-completion');
+  const primary=actions.querySelector(':scope > .primary');
+  const ctx=coreContext();
+  if(primary&&ctx){
+    const globalIndex=D.lessons.findIndex(item=>item.id===ctx.lesson.id);
+    const next=D.lessons[globalIndex+1]||null;
+    if(next){
+      const shortTitle=String(next.title||'Next lesson');
+      const visible=shortTitle.length>42?shortTitle.slice(0,39)+'…':shortTitle;
+      const nextText=`Next: ${visible} →`;
+      if(primary.textContent!==nextText)primary.textContent=nextText;
+      primary.setAttribute('aria-label',`Finished reading. Continue to ${shortTitle}`);
+    }else{
+      if(primary.textContent!=='Finish learning path ✓')primary.textContent='Finish learning path ✓';
+      primary.setAttribute('aria-label','Finished reading. Complete the learning path');
+    }
+  }
   const meta=article.querySelector('.mm-simple-lesson-hero .mm-simple-lesson-meta');
   const bookmark=[...actions.querySelectorAll('button')].find(button=>{
     const action=button.getAttribute('onclick')||button.getAttribute('data-mm-onclick')||'';

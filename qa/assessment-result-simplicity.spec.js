@@ -11,7 +11,7 @@ async function openAssessment(page){
     localStorage.removeItem('mm_assessment_opening_history_v1');
   });
   await page.goto(BASE,{waitUntil:'domcontentloaded'});
-  await page.waitForFunction(()=>window.MM_ASSESSMENT_UX?.version==='2026.09.06.9'&&typeof window.startExam==='function'&&typeof window.gradeExam==='function');
+  await page.waitForFunction(()=>window.MM_ASSESSMENT_UX?.version==='2026.09.07.1'&&typeof window.startExam==='function'&&typeof window.gradeExam==='function');
   await page.evaluate(()=>startExam('Beginner'));
   await page.waitForFunction(()=>Array.isArray(window.activeExam?.questions)&&window.activeExam.questions.length===16&&document.querySelectorAll('#examQuestions .question').length===16);
 }
