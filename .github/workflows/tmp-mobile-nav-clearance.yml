@@ -1,0 +1,55 @@
+name: One-shot mobile nav clearance alignment
+
+on:
+  push:
+    branches:
+      - fix/restore-listen-compact-lesson
+    paths:
+      - .github/workflows/tmp-mobile-nav-clearance.yml
+
+permissions:
+  contents: write
+
+jobs:
+  align:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: fix/restore-listen-compact-lesson
+          fetch-depth: 0
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 22.12.0
+          package-manager-cache: false
+      - uses: actions/setup-python@v7
+        with:
+          python-version: '3.12'
+      - name: Align shared mobile nav clearance with measured nav footprint
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p=Path('pwa-shell.js')
+          s=p.read_text(encoding='utf-8')
+          old='--mm-mobile-nav-clearance:104px'
+          count=s.count(old)
+          if count != 2:
+              raise SystemExit(f'expected exactly 2 canonical mobile-nav clearance tokens, found {count}')
+          p.write_text(s.replace(old,'--mm-mobile-nav-clearance:120px'),encoding='utf-8')
+          PY
+      - name: Regenerate deterministic style CSP
+        run: node tools/generate_style_csp.cjs
+      - name: Verify focused contracts
+        run: |
+          node tools/generate_style_csp.cjs --check
+          python qa_read_aloud.py
+          python qa_app_shell_registry.py
+          python qa_release.py
+      - name: Commit governed clearance and CSP
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add pwa-shell.js index.html
+          git diff --cached --quiet && { echo 'No update required'; exit 0; }
+          git commit -m "Align mobile nav clearance with rendered footprint"
+          git push origin HEAD:fix/restore-listen-compact-lesson
