@@ -1,8 +1,8 @@
-/* MouldMaster assessment experience — question-only focus mode 2026-09-06.7 */
+/* MouldMaster assessment experience — question-only focus mode 2026-09-06.8 */
 (function(){
 'use strict';
 
-const VERSION='2026.09.06.7';
+const VERSION='2026.09.06.8';
 const FIRST_HISTORY_LIMIT=3;
 const HISTORY_KEY='mm_assessment_opening_history_v1';
 const root=document.documentElement;
@@ -115,6 +115,8 @@ function rotateOpeningQuestion(rows,level,region){
 }
 function resetQuestionRotation(){firstQuestionHistory.clear();try{localStorage.removeItem(HISTORY_KEY)}catch(_){}}
 
+function hasAnswer(card){return !!card.querySelector('label.option input[type=radio]:checked')}
+function stripLegacyAttemptControls(card){card.querySelectorAll('.mm-confidence').forEach(control=>control.remove())}
 function optionLabels(card,index){
   const labels=[...card.querySelectorAll('label.option')];
   labels.forEach((label,j)=>{
@@ -128,7 +130,7 @@ function optionLabels(card,index){
     const sync=()=>{
       labels.forEach(x=>x.classList.toggle('mm-option-selected',!!x.querySelector('input[type=radio]:checked')));
       const step=document.querySelector(`.mm-step[data-mm-question="${index}"]`);
-      if(step)step.classList.toggle('mm-step-answered',!!card.querySelector('input[type=radio]:checked'));
+      if(step)step.classList.toggle('mm-step-answered',hasAnswer(card));
       updateAssessmentStatus();
     };
     input.addEventListener('change',sync,{passive:true});
@@ -138,13 +140,13 @@ function optionLabels(card,index){
 let state=null;
 function updateAssessmentStatus(){
   if(!state)return;
-  const answered=state.cards.filter(c=>!!c.querySelector('input[type=radio]:checked')).length;
+  const answered=state.cards.filter(hasAnswer).length;
   const remaining=state.cards.length-answered;
   state.answered.textContent=`${answered}/${state.cards.length} answered`;
   state.grade.disabled=remaining>0;
   state.grade.title=remaining?`Answer ${remaining} remaining question${remaining===1?'':'s'} before grading`:'Grade and review every answer';
   state.unanswered.textContent=remaining?`${remaining} unanswered`:'Ready to grade';
-  state.steps.forEach((step,i)=>step.classList.toggle('mm-step-answered',!!state.cards[i].querySelector('input[type=radio]:checked')));
+  state.steps.forEach((step,i)=>step.classList.toggle('mm-step-answered',hasAnswer(state.cards[i])));
   if(state.current===state.cards.length-1){state.next.textContent=remaining?'Review unanswered':'All questions answered';state.next.disabled=!remaining}
   else{state.next.textContent='Next question';state.next.disabled=false}
 }
@@ -163,7 +165,7 @@ function showQuestion(index,moveFocus){
     try{state.cards[state.current].scrollIntoView({block:'nearest',behavior:root.matches(':root')&&matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth'})}catch(_){}
   }
 }
-function firstUnanswered(){if(!state)return -1;return state.cards.findIndex(c=>!c.querySelector('input[type=radio]:checked'))}
+function firstUnanswered(){if(!state)return -1;return state.cards.findIndex(card=>!hasAnswer(card))}
 
 function decorateExam(){
   const host=document.getElementById('examQuestions');
@@ -180,6 +182,7 @@ function decorateExam(){
     node.querySelectorAll?.('button,a,input,select,textarea,[tabindex]').forEach(control=>control.tabIndex=-1);
   }
   cards.forEach((card,i)=>{
+    stripLegacyAttemptControls(card);
     const stem=card.querySelector('b');
     if(stem){
       stem.classList.add('mm-question-stem');stem.id=`mm-question-stem-${i}`;stem.tabIndex=-1;card.setAttribute('role','group');card.setAttribute('aria-labelledby',stem.id);
