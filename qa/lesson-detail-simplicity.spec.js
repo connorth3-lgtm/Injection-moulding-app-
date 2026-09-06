@@ -18,19 +18,18 @@ async function openLesson(page){
   await expect(page.locator('#mmLessonDeepV2')).toBeVisible();
 }
 
-test('lesson essentials use one compact panel and deeper reasoning stays collapsed',async({page})=>{
+test('lesson essentials keep only the minimum default teaching and deeper reasoning stays collapsed',async({page})=>{
   await openLesson(page);
   const section=page.locator('#mmLessonDeepV2');
   const essentials=section.locator('.mm-deep-v2-essentials');
   await expect(essentials).toBeVisible();
   const rows=essentials.locator('.mm-deep-v2-row');
-  await expect(rows).toHaveCount(3);
+  await expect(rows).toHaveCount(2);
   await expect(rows.nth(0).getByRole('heading',{name:'Key takeaway'})).toBeVisible();
   await expect(rows.nth(1).getByRole('heading',{name:'Apply'})).toBeVisible();
-  await expect(rows.nth(2).getByRole('heading',{name:'Watch out'})).toBeVisible();
 
   const visibleCopy=await rows.locator('p').allTextContents();
-  expect(visibleCopy).toHaveLength(3);
+  expect(visibleCopy).toHaveLength(2);
   for(const text of visibleCopy)expect(text.trim().length).toBeLessThanOrEqual(176);
   await expect(section.locator('.mm-deep-v2-grid')).toHaveCount(0);
 
@@ -41,8 +40,30 @@ test('lesson essentials use one compact panel and deeper reasoning stays collaps
   await expect(details.locator('.mm-deep-v2-detail')).toBeVisible();
   await expect(details.getByRole('heading',{name:'Mechanism'})).toBeVisible();
   await expect(details.getByRole('heading',{name:'Evidence chain'})).toBeVisible();
+  await expect(details.getByRole('heading',{name:'Plant decision'})).toBeVisible();
+  await expect(details.getByRole('heading',{name:'Misconception check'})).toBeVisible();
   await expect(details.getByRole('heading',{name:'Teach-back'})).toBeVisible();
   await expect(details.locator('.mm-deep-v2-boundary')).toBeVisible();
+});
+
+test('lesson notes are a small optional action until the learner opens them',async({page})=>{
+  await openLesson(page);
+  const notes=page.locator('#lesson .mm-simple-note-disclosure');
+  await expect(notes).toBeVisible();
+  expect(await notes.evaluate(el=>el.open)).toBe(false);
+  await expect(notes.locator('summary')).toContainText('Add note');
+  await expect(page.locator('#lessonNotes')).toBeHidden();
+
+  await notes.locator('summary').click();
+  await expect(page.locator('#lessonNotes')).toBeVisible();
+  await page.locator('#lessonNotes').fill('Check cushion repeatability on machine A.');
+  await expect(notes.locator('summary')).toContainText('Edit note');
+  await page.waitForTimeout(750);
+  const persisted=await page.evaluate(()=>{
+    const db=JSON.parse(localStorage.getItem('mouldmasterProDB')||'{}');
+    return db.users?.['lesson-simplicity-qa']?.notes?.['1']||db.users?.['lesson-simplicity-qa']?.notes?.[1]||'';
+  });
+  expect(persisted).toContain('Check cushion repeatability');
 });
 
 test('generic no-source references do not consume the mobile lesson screen',async({page})=>{
