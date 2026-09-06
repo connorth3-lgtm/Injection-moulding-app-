@@ -1,9 +1,9 @@
-/* MouldMaster simple lesson experience — 2026.09.07.1 */
+/* MouldMaster simple lesson experience — 2026.09.07.2 */
 (function(){
 'use strict';
 if(window.MM_SIMPLE_LESSON_EXPERIENCE)return;
 
-const VERSION='2026.09.07.1';
+const VERSION='2026.09.07.2';
 const style=document.createElement('style');
 style.id='mm-simple-lesson-style';
 style.textContent=`
@@ -26,6 +26,15 @@ style.textContent=`
 #lesson.mm-simple-lesson .content-block p,#lesson.mm-simple-lesson .content-block li,#lesson.mm-simple-lesson .mm-simple-section p,#lesson.mm-simple-lesson .mm-simple-section li,#lesson.mm-simple-lesson .callout{font-size:15px;line-height:1.65;color:#c7d6e8}
 #lesson.mm-simple-lesson ul{margin:8px 0 0;padding-left:21px}#lesson.mm-simple-lesson li+li{margin-top:7px}
 #lesson.mm-simple-lesson .note-area{min-height:120px;background:#0a1728;border-color:#36506d;font-size:15px;line-height:1.5}
+#lesson.mm-simple-lesson .content-block.mm-simple-note-section,#lesson.mm-simple-lesson .mm-simple-section.mm-simple-note-section{padding:0!important;border:0!important;background:transparent!important;box-shadow:none!important;margin-bottom:10px}
+#lesson.mm-simple-lesson .mm-simple-note-disclosure{overflow:hidden;border:1px solid #304a68;border-radius:14px;background:#0e1d31}
+#lesson.mm-simple-lesson .mm-simple-note-disclosure>summary{min-height:48px;display:flex;align-items:center;padding:11px 14px;cursor:pointer;list-style:none;color:#edf5ff;font-weight:800}
+#lesson.mm-simple-lesson .mm-simple-note-disclosure>summary::-webkit-details-marker{display:none}
+#lesson.mm-simple-lesson .mm-simple-note-disclosure>summary::before{content:'＋';margin-right:8px;color:#9fd8ff;font-weight:700}
+#lesson.mm-simple-lesson .mm-simple-note-disclosure[open]>summary::before{content:'−'}
+#lesson.mm-simple-lesson .mm-simple-note-body{padding:0 14px 14px;border-top:1px solid #263f5c}
+#lesson.mm-simple-lesson .mm-simple-note-body .note-area{min-height:96px;margin-top:12px}
+#lesson.mm-simple-lesson .mm-simple-note-body .mm-note-status{margin-top:6px}
 #lesson.mm-simple-lesson .hero-buttons{display:flex;gap:9px;flex-wrap:wrap;margin:15px 0}
 #lesson.mm-simple-lesson .hero-buttons .primary{min-height:48px;flex:1}
 #lesson.mm-simple-lesson .mm-next-card{margin-top:14px}
@@ -45,6 +54,9 @@ style.textContent=`
  #lesson.mm-simple-lesson{padding-bottom:78px}
  .mm-simple-lesson-hero{padding:21px 20px;margin-bottom:14px;border-radius:18px}.mm-simple-lesson-hero h1{font-size:31px}.mm-simple-lesson-summary{font-size:16px}
  #lesson.mm-simple-lesson .content-block,#lesson.mm-simple-lesson .mm-simple-section,#lesson.mm-simple-lesson .callout,#lesson.mm-simple-lesson .mm-next-card{padding:18px 19px;margin-bottom:12px;border-radius:16px}
+ #lesson.mm-simple-lesson .content-block.mm-simple-note-section,#lesson.mm-simple-lesson .mm-simple-section.mm-simple-note-section{padding:0!important;margin-bottom:9px}
+ #lesson.mm-simple-lesson .mm-simple-note-disclosure{border-radius:13px}
+ #lesson.mm-simple-lesson .mm-simple-note-disclosure>summary{min-height:46px;padding:10px 13px}
  #lesson.mm-simple-lesson .mm-mobile-actions{grid-template-columns:auto minmax(0,1fr)}
  .mm-simple-material-hero{padding:21px 20px;border-radius:18px}.mm-simple-material-lesson>h3,.mm-simple-material-lesson>.mat-evidence,.mm-simple-material-lesson>.mat-trap,.mm-simple-material-lesson>.mat-disclaimer{padding-left:18px;padding-right:18px}
 }
@@ -99,6 +111,40 @@ function suppressEmptyReferences(article){
     else if(panel.dataset.mmSimpleEmptyReference==='1'){delete panel.dataset.mmSimpleEmptyReference;panel.hidden=false;panel.removeAttribute('aria-hidden');panel.classList.remove('mm-simple-empty-reference')}
   }
 }
+function compactNotes(article){
+  const area=article.querySelector('#lessonNotes');
+  if(!area)return;
+  const section=area.closest('.content-block,.mm-simple-section');
+  if(!section)return;
+  section.classList.add('mm-simple-note-section');
+  let details=section.querySelector(':scope > .mm-simple-note-disclosure');
+  if(!details){
+    [...section.children].forEach(el=>{
+      const text=String(el.textContent||'').trim();
+      if(el.tagName==='H3'&&/^Your notes$/i.test(text))el.remove();
+      else if(el.tagName==='P'&&/Save examples from your own machines, moulds or materials here/i.test(text))el.remove();
+    });
+    const body=document.createElement('div');
+    body.className='mm-simple-note-body';
+    while(section.firstChild)body.appendChild(section.firstChild);
+    details=document.createElement('details');
+    details.className='mm-simple-note-disclosure';
+    const summary=document.createElement('summary');
+    summary.innerHTML='<span data-mm-simple-note-label>Add note</span>';
+    details.append(summary,body);
+    section.appendChild(details);
+  }
+  const label=details.querySelector('[data-mm-simple-note-label]');
+  const syncLabel=()=>{if(label)label.textContent=area.value.trim()?'Edit note':'Add note'};
+  syncLabel();
+  if(area.dataset.mmSimpleNoteBound!=='1'){
+    area.dataset.mmSimpleNoteBound='1';
+    area.addEventListener('input',syncLabel);
+  }
+  const explicitSave=details.querySelector('button[onclick*="saveLessonNote"]');
+  const autosave=details.querySelector('.mm-note-status');
+  if(explicitSave){explicitSave.textContent='Save now';explicitSave.hidden=!!autosave}
+}
 function simplifyCoreLesson(){
   const root=document.getElementById('lesson');
   const article=root?.querySelector('.lesson-body');
@@ -117,6 +163,7 @@ function simplifyCoreLesson(){
   article.querySelectorAll('h3').forEach(relabel);
   wrapLooseSections(article);
   suppressEmptyReferences(article);
+  compactNotes(article);
 
   if(context&&!article.querySelector(':scope > .mm-simple-lesson-hero')){
     const {lesson,course,position,pct}=context;
