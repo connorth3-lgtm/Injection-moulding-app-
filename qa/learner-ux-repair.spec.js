@@ -61,6 +61,31 @@ for(const viewport of [{name:'android-412x915',width:412,height:915},{name:'smal
   });
 }
 
+test('mobile lesson cleanup is reversible after widening to desktop',async({page})=>{
+  await page.setViewportSize({width:412,height:915});
+  await open(page);
+  await page.locator('.mobile-nav > button').filter({hasText:'Learn'}).click();
+  await page.getByRole('button',{name:/Continue lesson/i}).first().click();
+  await page.waitForFunction(()=>document.querySelectorAll('#lesson [data-mm-ux-hidden-by-repair="1"]').length>0);
+  const mobileState=await page.evaluate(()=>({
+    hiddenByRepair:document.querySelectorAll('#lesson [data-mm-ux-hidden-by-repair="1"]').length,
+    repaired:document.getElementById('lesson')?.classList.contains('mm-learner-ux-repaired')||false
+  }));
+  expect(mobileState.hiddenByRepair).toBeGreaterThan(0);
+  expect(mobileState.repaired).toBe(true);
+
+  await page.setViewportSize({width:1280,height:900});
+  await page.waitForFunction(()=>document.querySelectorAll('#lesson [data-mm-ux-hidden-by-repair="1"]').length===0&&!document.getElementById('lesson')?.classList.contains('mm-learner-ux-repaired'));
+  const desktopState=await page.evaluate(()=>({
+    hiddenByRepair:document.querySelectorAll('#lesson [data-mm-ux-hidden-by-repair="1"]').length,
+    forcedAriaHidden:document.querySelectorAll('#lesson [aria-hidden="true"][data-mm-ux-prev-hidden]').length,
+    repaired:document.getElementById('lesson')?.classList.contains('mm-learner-ux-repaired')||false
+  }));
+  expect(desktopState.hiddenByRepair).toBe(0);
+  expect(desktopState.forcedAriaHidden).toBe(0);
+  expect(desktopState.repaired).toBe(false);
+});
+
 test('open mobile modal stays above the fixed primary navigation',async({page})=>{
   await page.setViewportSize({width:412,height:915});
   await open(page);
@@ -92,7 +117,7 @@ test('learner UX repair preserves the governed selector and adds audited rotatio
   expect(assessment.owner).toBe('assessment-runtime-v2');
   expect(assessment.technicalPerExam).toBe(7);
   expect(assessment.technicalBankPerLevel).toBeGreaterThanOrEqual(10);
-  expect(assessment.rotationVersion).toBe('2026.09.06.16');
+  expect(assessment.rotationVersion).toBe('2026.09.06.17');
   expect(assessment.bankVersion).toBe('assessment-2026.08.30.1');
   expect(assessment.baseCallsPerAttempt).toBe(1);
 });
