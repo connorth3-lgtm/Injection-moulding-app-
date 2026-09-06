@@ -130,11 +130,14 @@ def parse_tested_at(value: str) -> datetime:
 
 
 def validate_contract(data: dict) -> None:
-    if data.get("schemaVersion") != 1:
-        fail("schemaVersion must be 1")
+    if data.get("schemaVersion") not in {1, 2}:
+        fail("schemaVersion must be 1 or 2")
     status = data.get("status")
-    if status not in {"pending-physical-device-validation", "validated"}:
-        fail("status must be pending-physical-device-validation or validated")
+    allowed_statuses = {"pending-physical-device-validation", "validated", "released-with-accepted-ios-risk"}
+    if status not in allowed_statuses:
+        fail("status must be pending-physical-device-validation, validated, or released-with-accepted-ios-risk")
+    if status == "released-with-accepted-ios-risk" and data.get("schemaVersion") != 2:
+        fail("accepted-risk releases require schemaVersion 2")
     if "physical iOS/iPadOS and Android devices" not in str(data.get("boundary", "")):
         fail("physical-device automation boundary is missing")
     if "accessibility-real-at-validation-v1.json" not in str(data.get("boundary", "")):
@@ -154,8 +157,8 @@ def validate_contract(data: dict) -> None:
         record = platforms.get(platform)
         if not isinstance(record, dict):
             fail(f"{platform} record must be an object")
-        if record.get("status") not in {"pending", "validated"}:
-            fail(f"{platform}.status must be pending or validated")
+        if record.get("status") not in {"pending", "validated", "owner-attested", "untested-risk-accepted"}:
+            fail(f"{platform}.status is invalid")
         checks = record.get("checks")
         if not isinstance(checks, dict) or set(checks) != expected_checks:
             fail(f"{platform}.checks must contain exactly the governed physical-device checks")
@@ -190,6 +193,37 @@ def validate_contract(data: dict) -> None:
         fail("validated testerReference must be a non-personal reference and not an email address")
     if not evidence or "@" in evidence:
         fail("validated evidenceReference must be a non-sensitive reference and not an email address")
+    if status == "released-with-accepted-ios-risk":
+        waiver = data.get("riskAcceptance")
+        if not isinstance(waiver, dict) or waiver.get("status") != "accepted":
+            fail("accepted-risk release requires an explicit riskAcceptance record")
+        if waiver.get("acceptedBy") != "repository-owner":
+            fail("accepted-risk release must be authorized by repository-owner")
+        parse_tested_at(waiver.get("acceptedAt"))
+        scope = str(waiver.get("scope") or "")
+        for marker in ("iOS/iPadOS validation was not performed", "WebKit", "2026.09.06.15"):
+            if marker not in scope:
+                fail(f"accepted-risk scope is missing: {marker}")
+        ios = platforms["ios"]
+        android = platforms["android"]
+        if ios.get("status") != "untested-risk-accepted":
+            fail("accepted-risk release must mark iOS/iPadOS untested-risk-accepted")
+        if any(ios.get(key) is not None for key in ("deviceModel", "osVersion", "browserVersion", "installedMode")):
+            fail("untested iOS/iPadOS record must not claim device metadata")
+        if any(value != "pending" for value in ios["checks"].values()):
+            fail("untested iOS/iPadOS checks must remain pending")
+        if android.get("status") != "owner-attested":
+            fail("accepted-risk release requires owner-attested Android validation")
+        for key in ("deviceModel", "osVersion", "browserVersion"):
+            if not str(android.get(key) or "").strip():
+                fail(f"owner-attested Android record is missing {key}")
+        if android.get("installedMode") != "standalone":
+            fail("owner-attested Android installedMode must be standalone")
+        failed = [name for name, value in android["checks"].items() if value != "pass"]
+        if failed:
+            fail("owner-attested Android checks are not passing: " + ", ".join(sorted(failed)))
+        return
+
     for platform, record in platforms.items():
         if record.get("status") != "validated":
             fail(f"top-level validated status requires {platform}.status=validated")
@@ -210,12 +244,15 @@ def main() -> None:
     parser.add_argument("--contract-only", action="store_true")
     parser.add_argument("--print-fingerprint", action="store_true")
     parser.add_argument("--require-validated", action="store_true")
+    parser.add_argument("--require-release-authorized", action="store_true")
     args = parser.parse_args()
 
     data = read_contract(Path(args.contract))
     validate_contract(data)
     if args.require_validated and data["status"] != "validated":
         fail("validated physical iOS/iPadOS and Android evidence is required for production publication")
+    if args.require_release_authorized and data["status"] not in {"validated", "released-with-accepted-ios-risk"}:
+        fail("validated physical evidence or an explicit governed platform-risk waiver is required for production publication")
     if args.contract_only:
         print(f"Physical PWA device contract is structurally valid ({data['status']}).")
         return
@@ -235,10 +272,16 @@ def main() -> None:
             "validated physical-device evidence applies to different public runtime bytes: "
             f"expected {fingerprint}, got {data['runtimeFingerprint']}"
         )
-    print(
-        "Verified physical PWA device evidence for exact public runtime "
-        f"{fingerprint} (iOS/iPadOS + Android, tested {data['testedAt']})."
-    )
+    if data["status"] == "released-with-accepted-ios-risk":
+        print(
+            "Verified explicit owner-authorized iOS/iPadOS risk waiver and Android attestation for exact public runtime "
+            f"{fingerprint} (accepted {data['riskAcceptance']['acceptedAt']})."
+        )
+    else:
+        print(
+            "Verified physical PWA device evidence for exact public runtime "
+            f"{fingerprint} (iOS/iPadOS + Android, tested {data['testedAt']})."
+        )
 
 
 if __name__ == "__main__":

@@ -1,15 +1,21 @@
 {
-  "schemaVersion": 1,
-  "status": "pending-physical-device-validation",
+  "schemaVersion": 2,
+  "status": "released-with-accepted-ios-risk",
   "boundary": "Automated browser, service-worker and assistive-technology regressions do not substitute for installing and exercising the production PWA on physical iOS/iPadOS and Android devices. This contract remains pending until both platform records have reviewed human evidence. Screen-reader conformance remains governed separately by data/accessibility-real-at-validation-v1.json.",
-  "runtimeFingerprint": null,
-  "testedAt": null,
-  "testerReference": null,
-  "evidenceReference": null,
+  "runtimeFingerprint": "sha256:9ea466e2cd70d36ac45678aca79d7967b8bdb107e9fb324d1f5a644d946fe6a2",
+  "testedAt": "2026-09-06T20:55:00+12:00",
+  "testerReference": "repository-owner-android-attestation",
+  "evidenceReference": "pr-234-release-risk-acceptance",
+  "riskAcceptance": {
+    "status": "accepted",
+    "acceptedAt": "2026-09-06T20:55:00+12:00",
+    "acceptedBy": "repository-owner",
+    "scope": "Physical iOS/iPadOS validation was not performed because no device was available. Automated WebKit coverage passed and is not represented as physical iOS validation. Release 2026.09.06.15 is authorized with this remaining risk explicitly accepted."
+  },
   "maxEvidenceAgeDays": 30,
   "platforms": {
     "ios": {
-      "status": "pending",
+      "status": "untested-risk-accepted",
       "deviceModel": null,
       "osVersion": null,
       "browserVersion": null,
@@ -25,18 +31,18 @@
       }
     },
     "android": {
-      "status": "pending",
-      "deviceModel": null,
-      "osVersion": null,
-      "browserVersion": null,
-      "installedMode": null,
+      "status": "owner-attested",
+      "deviceModel": "OPPO Find X9",
+      "osVersion": "Android 10",
+      "browserVersion": "Chrome 152.0.0.0",
+      "installedMode": "standalone",
       "checks": {
-        "installStandalone": "pending",
-        "fixedNavigationClearance": "pending",
-        "offlineRestart": "pending",
-        "offlineReboot": "pending",
-        "updateRecovery": "pending",
-        "storagePressure": "pending"
+        "installStandalone": "pass",
+        "fixedNavigationClearance": "pass",
+        "offlineRestart": "pass",
+        "offlineReboot": "pass",
+        "updateRecovery": "pass",
+        "storagePressure": "pass"
       }
     }
   },
