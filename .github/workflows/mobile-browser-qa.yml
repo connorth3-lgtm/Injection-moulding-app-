@@ -110,8 +110,10 @@ jobs:
           cat /tmp/mouldmaster-http.log
           cat /tmp/mouldmaster-baseline-http.log
           exit 1
-      - name: Chromium mobile, visual, material, evidence, engineering-store and PWA regression tests
-        run: npx playwright test --config=playwright.config.cjs
+      - name: Chromium .23 visual regression lock
+        run: npx playwright test qa/visual-regression.spec.js --config=playwright.config.cjs
+      - name: Chromium mobile, material, evidence, engineering-store and PWA regression tests
+        run: npx playwright test --config=playwright.config.cjs --grep-invert "matches immutable \.23 baseline across learner surfaces"
       - name: WebKit substantive learner regression tests
         run: npx playwright test --config=playwright.webkit-full.config.cjs
       - name: Cross-browser desktop and tablet smoke tests
