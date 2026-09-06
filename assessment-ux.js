@@ -69,30 +69,16 @@ function addStyles(){
   .mm-exam-actions button[disabled]{cursor:not-allowed;opacity:.48}
   .mm-unanswered-note{color:#ffd166;font-size:12px;margin-left:auto;text-align:right}
   .mm-exam-reviewed #examQuestions,.mm-exam-reviewed .mm-exam-nav,.mm-exam-reviewed .mm-exam-steps{display:none!important}
-  .mm-exam-reviewed #examResult{margin-top:18px;font-size:16px;line-height:1.5;outline:none}
-  .mm-result-summary{display:grid;gap:8px;padding:18px;border:1px solid #355171;border-radius:14px;background:#102039;box-shadow:none}
-  .mm-result-eyebrow{margin:0;color:#9fb4ce;font-size:11px;font-weight:800;letter-spacing:.09em;text-transform:uppercase}
-  .mm-result-main{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap}
-  .mm-result-score{font-size:clamp(32px,8vw,46px);line-height:1;font-weight:850;color:#f4f8ff}
-  .mm-result-status{font-size:17px;font-weight:800;color:#cfe2f7}
-  .mm-result-message,.mm-result-note,.mm-result-safety{margin:0}
-  .mm-result-message{color:#c9d7e8}
-  .mm-result-note{color:#a9d9c9;font-size:13px}
-  .mm-result-safety{padding:10px 12px;border:1px solid #745c2d;border-radius:10px;background:#2a2412;color:#f7e8ad;font-size:13px}
-  .mm-review-intro{margin:20px 0 9px}.mm-review-intro h3{margin:0 0 4px;font-size:18px}.mm-review-intro p{margin:0;color:#9fb4ce;font-size:13px}
-  .mm-exam-reviewed .answer-review{gap:10px;margin-top:0}
-  .mm-exam-reviewed .answer-row{padding:14px 15px;border-radius:12px;line-height:1.5;background:#152033!important;border-color:#4e6178!important;box-shadow:none!important;outline:none}
-  .mm-exam-reviewed .answer-row.correct,.mm-exam-reviewed .answer-row[hidden]{display:none!important}
-  .mm-exam-reviewed .answer-row.incorrect{background:#1f1d27!important;border-color:#6b5360!important}
-  .mm-review-source{margin-top:10px;padding-top:8px;border-top:1px solid rgba(148,163,184,.2)}
-  .mm-review-source summary{width:max-content;max-width:100%;cursor:pointer;color:#a9d8ff;font-size:12px;font-weight:750}
-  .mm-review-source .ref{margin:8px 0 0;padding:0;border:0}
+  .mm-exam-reviewed #examResult{margin-top:18px;font-size:16px;line-height:1.55}
+  .mm-exam-reviewed .answer-review{gap:12px}
+  .mm-exam-reviewed .answer-row{padding:15px 16px;border-radius:12px;line-height:1.5}
+  .mm-exam-reviewed .answer-row.correct{background:#0d2925;border-color:#397466}
+  .mm-exam-reviewed .answer-row.incorrect{background:#2a171d;border-color:#74424d}
   .scenario .choice.mm-choice-selected{border-color:#69a8ff;background:#17314f;box-shadow:inset 3px 0 0 #69a8ff}
   .scenario .choice.mm-choice-correct{border-color:#397466;background:#0d2925;box-shadow:inset 3px 0 0 #7ce6a3}
   .scenario .choice.mm-choice-review{border-color:#74424d;background:#2a171d;box-shadow:inset 3px 0 0 #ff7b7b}
   @media(max-width:680px){
     .modal{padding:0}.modal-card.mm-assessment-modal{width:100vw;max-width:none;max-height:100dvh;min-height:100dvh;border-radius:0;padding:18px 15px 120px}
-    .modal-card.mm-assessment-modal.mm-exam-reviewed{padding-bottom:28px}
     #examQuestions.mm-focus-mode .question{padding:18px 14px;border-radius:13px}
     .mm-question-stem{font-size:19px;line-height:1.5}
     .mm-option-card{grid-template-columns:20px 30px minmax(0,1fr);padding:12px 11px!important;font-size:14px}
