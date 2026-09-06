@@ -4,7 +4,7 @@
 const VERSION='2026.08.30.3',REVIEWED='2026-08-30',REVIEW_BY='2026-11-30';
 const SCOPE='Internal educational content approval; external accreditation or independent third-party SME endorsement is not implied.';
 const APPROVED_INPUTS={
- 'MouldMaster_Core_App.html':'4eb0412467d3e7ce19f3ca28caf44528a0f1a968',
+ 'MouldMaster_Core_App.html':'c6b258ccd37d98b2f591f538b34eb33c7705dda6',
  'training-upgrade.js':'ba3ed5cdab181e11359c2aff9f2dfa4d94b80cbb',
  'assessment-deep-dive.js':'79c02dcdaa5ba29d3405228f47e374ef53aaebe3',
  'assessment-answer-cue-fix.js':'513e92d56a01f27cd6be15f36b43c150bf0381d1',
