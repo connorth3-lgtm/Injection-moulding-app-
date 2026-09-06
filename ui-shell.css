@@ -1,11 +1,14 @@
 /* MouldMaster first-paint compact shell — 2026.09.06
    Loaded in <head> so the learner UI never paints the legacy roomy layout first. */
 :root{--mm-mobile-nav-clearance:104px;--shadow:0 7px 22px rgba(0,0,0,.18)}
-/* Retired gamification must never reach first paint. The runtime also removes
-   these nodes, but hiding them here prevents XP/rank/achievement flashes while
-   the startup scripts are still being evaluated. */
+/* Retired gamification and legacy Home blocks must never reach first paint. The
+   runtime also removes these nodes, but hiding them here prevents mission,
+   welcome, standards, XP/rank and achievement flashes during startup. */
 #xpPop,.xp-pop,.achievement-grid,.fun-settings,.fun-dashboard .level-card,#profileMini .fun-hud{display:none!important}
-#dashboard .fun-dashboard:not(.mm-daily-only){display:none!important}
+#dashboard .fun-dashboard,
+#dashboard .friendly-hero,
+#dashboard .hero,
+#dashboard .region-banner{display:none!important}
 .card{border-radius:14px!important;border-color:#263b58!important;box-shadow:var(--shadow)!important;background:linear-gradient(180deg,rgba(18,32,52,.96),rgba(13,25,42,.96))!important}
 .main{padding-top:20px}
 .topbar{margin-bottom:16px!important}
