@@ -219,6 +219,30 @@ def main() -> None:
         dst.parent.mkdir(parents=True, exist_ok=True)
         shutil.copy2(src, dst)
 
+    # Preserve the old release-hold preview bookmark after production moves to the
+    # root. This is a redirect, not a second application or service-worker scope.
+    preview_dir = OUT / "preview"
+    preview_dir.mkdir(parents=True, exist_ok=True)
+    (preview_dir / "index.html").write_text(
+        "<!doctype html>\n"
+        '<html lang="en"><head><meta charset="utf-8">'
+        '<meta name="viewport" content="width=device-width,initial-scale=1">'
+        '<meta http-equiv="refresh" content="0;url=../">'
+        '<link rel="canonical" href="../"><title>MouldMaster has moved</title></head>'
+        '<body><main><h1>MouldMaster has moved</h1>'
+        '<p>The validated learner app is now live at the main address.</p>'
+        '<p><a href="../">Open MouldMaster Academy</a></p></main></body></html>\n',
+        encoding="utf-8",
+    )
+    (preview_dir / "service-worker.js").write_text(
+        "self.addEventListener('install',()=>self.skipWaiting());\n"
+        "self.addEventListener('activate',event=>event.waitUntil(self.clients.claim()));\n"
+        "self.addEventListener('fetch',event=>{if(event.request.mode==='navigate')"
+        "event.respondWith(Promise.resolve(Response.redirect(new URL('../',self.registration.scope),302)));});\n",
+        encoding="utf-8",
+    )
+    public_files.update({"preview/index.html", "preview/service-worker.js"})
+
     runtime_version, cache_version, cache_revision = extract_runtime_metadata()
     version_metadata = json.loads((ROOT / "version.json").read_text(encoding="utf-8"))
     web_release = str(version_metadata.get("web_release", ""))
