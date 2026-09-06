@@ -1,0 +1,68 @@
+name: One-shot learner .24 migration
+
+on:
+  push:
+    branches: [feat/visual-regression-learner-next]
+    paths:
+      - 'tools/tmp_learner24_migration.py'
+      - '.github/workflows/tmp-learner24.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  migrate:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: feat/visual-regression-learner-next
+          fetch-depth: 0
+      - uses: actions/setup-python@v7
+        with:
+          python-version: '3.13'
+      - uses: actions/setup-node@v7
+        with:
+          node-version: '22'
+          package-manager-cache: false
+      - name: Apply governed .24 learner migration
+        run: python tools/tmp_learner24_migration.py
+      - name: Regenerate deterministic style CSP
+        run: |
+          node tools/generate_style_csp.cjs
+          node tools/generate_style_csp.cjs --check
+      - name: Static syntax and release checks
+        run: |
+          node --check learning-experience.js
+          node --check lesson-simple-experience.js
+          node --check assessment-ux.js
+          node --check primary-learning-practice-hubs.js
+          node --check qa/learner-next-flow.spec.js
+          node --check qa/ui-visual-regression.spec.js
+          python qa_release.py
+      - name: Install pinned Chromium for baseline generation
+        run: |
+          npm install --no-save --no-package-lock @playwright/test@1.55.0
+          npx playwright install --with-deps chromium
+      - name: Start exact candidate server
+        run: |
+          python -m http.server 4173 --bind 127.0.0.1 > /tmp/mouldmaster-http.log 2>&1 &
+          echo $! > /tmp/mouldmaster-http.pid
+          for i in {1..20}; do curl -fsS http://127.0.0.1:4173/index.html >/dev/null && exit 0; sleep 1; done
+          cat /tmp/mouldmaster-http.log
+          exit 1
+      - name: Generate pinned Chromium visual baselines
+        run: npx playwright test qa/ui-visual-regression.spec.js --config=playwright.config.cjs --update-snapshots
+      - name: Prove learner flow on generated baseline bytes
+        run: npx playwright test qa/learner-next-flow.spec.js --config=playwright.config.cjs
+      - name: Commit generated product and visual baseline
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add index.html pwa-shell.js service-worker.js version.json qa_release.py learning-experience.js lesson-simple-experience.js assessment-ux.js primary-learning-practice-hubs.js playwright.config.cjs .github/workflows/mobile-browser-qa.yml qa/learner-next-flow.spec.js qa/ui-visual-regression.spec.js qa/ui-visual-regression.spec.js-snapshots qa/*.spec.js
+          git diff --cached --check
+          git commit -m 'Add visual baselines and learner next-step flow'
+          git push origin HEAD:feat/visual-regression-learner-next
