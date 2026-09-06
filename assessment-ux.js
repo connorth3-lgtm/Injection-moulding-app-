@@ -1,8 +1,8 @@
-/* MouldMaster assessment experience — question-only focus mode 2026-09-06.8 */
+/* MouldMaster assessment experience — question-only focus mode 2026-09-06.9 */
 (function(){
 'use strict';
 
-const VERSION='2026.09.06.8';
+const VERSION='2026.09.06.9';
 const FIRST_HISTORY_LIMIT=3;
 const HISTORY_KEY='mm_assessment_opening_history_v1';
 const root=document.documentElement;
@@ -203,9 +203,51 @@ function decorateExam(){
 }
 function decorateReview(){
   const result=document.getElementById('examResult');const review=document.getElementById('answerReview');if(!result||result.classList.contains('hidden')||!review)return;
-  const modal=result.closest('.modal-card');if(modal)modal.classList.add('mm-exam-reviewed');review.setAttribute('aria-label','Assessment answer review');
-  [...review.querySelectorAll('.answer-row')].forEach((row,i)=>{row.tabIndex=0;row.setAttribute('aria-label',`Question ${i+1} review: ${row.classList.contains('correct')?'correct':'review needed'}`)});
+  const raw=(result.textContent||'').replace(/\s+/g,' ').trim();
+  const score=raw.match(/(\d+)\s*\/\s*(\d+)\s+correct\s*[—-]\s*(\d+)%/i);
+  const passed=/\bPass\s*✓/i.test(raw)&&!/\bNot passed/i.test(raw);
+  const safety=raw.match(/(\d+)\s+safety-critical regional answer\(s\) need correction/i);
+  const earned=/certificate earned/i.test(raw);
+  const modal=result.closest('.modal-card');if(modal)modal.classList.add('mm-exam-reviewed');
+  const rows=[...review.querySelectorAll('.answer-row')];
+  const wrong=rows.filter(row=>!row.classList.contains('correct'));
+  rows.forEach((row,i)=>{
+    const isCorrect=row.classList.contains('correct');
+    if(isCorrect){row.hidden=true;row.setAttribute('aria-hidden','true');row.tabIndex=-1;row.removeAttribute('role');return}
+    row.hidden=false;row.removeAttribute('aria-hidden');row.tabIndex=0;row.setAttribute('role','listitem');
+    const heading=row.querySelector(':scope > b');
+    const number=(heading?.textContent||'').match(/^\s*(\d+)\./)?.[1]||String(i+1);
+    if(heading)heading.textContent=`Question ${number}`;
+    const ref=row.querySelector(':scope > .ref');
+    if(ref&&!ref.closest('.mm-review-source')){
+      const details=document.createElement('details');details.className='mm-review-source';
+      const summary=document.createElement('summary');summary.textContent='Source';details.appendChild(summary);
+      ref.replaceWith(details);details.appendChild(ref);
+    }
+    row.setAttribute('aria-label',`Question ${number}: review needed`);
+  });
+  let intro=document.getElementById('mmReviewIntro');
+  if(!intro){intro=document.createElement('div');intro.id='mmReviewIntro';intro.className='mm-review-intro';review.insertAdjacentElement('beforebegin',intro)}
+  if(wrong.length){
+    intro.hidden=false;intro.innerHTML='<h3>Review these answers</h3><p></p>';intro.querySelector('p').textContent=`${wrong.length} answer${wrong.length===1?'':'s'} to check before your next attempt.`;
+    review.hidden=false;review.setAttribute('role','list');review.setAttribute('aria-label','Answers to review');
+  }else{
+    intro.hidden=true;review.hidden=true;review.removeAttribute('role');review.removeAttribute('aria-label');
+  }
+  const summary=document.createElement('section');summary.className='mm-result-summary';summary.setAttribute('aria-label','Assessment result');
+  const eyebrow=document.createElement('p');eyebrow.className='mm-result-eyebrow';eyebrow.textContent='Assessment result';summary.appendChild(eyebrow);
+  const main=document.createElement('div');main.className='mm-result-main';
+  const scoreEl=document.createElement('strong');scoreEl.className='mm-result-score';scoreEl.textContent=score?`${score[3]}%`:'Complete';
+  const status=document.createElement('span');status.className='mm-result-status';status.textContent=passed?'Passed':'Review needed';
+  main.append(scoreEl,status);summary.appendChild(main);
+  const message=document.createElement('p');message.className='mm-result-message';
+  message.textContent=wrong.length?(passed?`${wrong.length} answer${wrong.length===1?'':'s'} to review below.`:`Review ${wrong.length} answer${wrong.length===1?'':'s'} below, then try again.`):'All answers are correct. You’re done.';
+  summary.appendChild(message);
+  if(earned){const note=document.createElement('p');note.className='mm-result-note';note.textContent='Certificate earned.';summary.appendChild(note)}
+  if(safety){const warning=document.createElement('p');warning.className='mm-result-safety';warning.textContent=`${safety[1]} safety-critical answer${safety[1]==='1'?'':'s'} must be corrected before this assessment can pass.`;summary.appendChild(warning)}
+  result.replaceChildren(summary);result.setAttribute('role','status');result.tabIndex=-1;
   try{result.scrollIntoView({block:'start',behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth'})}catch(_){}
+  setTimeout(()=>{try{result.focus({preventScroll:true})}catch(_){result.focus()}},0);
 }
 function decorateScenario(i,ci,el){
   if(!el||!el.closest)return;const scenario=el.closest('.scenario');if(!scenario)return;
