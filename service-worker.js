@@ -1,5 +1,5 @@
 const CACHE_VERSION='2026.09.06.13';
-const CACHE_REVISION='verified-cleanup-governance-r1-20260905';
+const CACHE_REVISION='assessment-rotation-immutable-r2-20260906';
 const STATIC_CACHE=`mouldmaster-static-${CACHE_VERSION}-${CACHE_REVISION}`;
 const LEGACY_RECOVERY_SOURCE_ONLY='./MouldMaster_Academy_App.html';
 
