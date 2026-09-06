@@ -75,7 +75,7 @@ function coreContext(){
     return {lesson,course,position,completed,pct};
   }catch(_){return null}
 }
-function safe(value){return String(value??'').replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot',"'":'&#39;'}[ch]))}
+function safe(value){return String(value??'').replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]))}
 function relabel(head){
   const text=(head.textContent||'').trim();
   if(/^Learning objectives$/i.test(text)||/^By the end of this lesson/i.test(text))head.textContent='What you’ll be able to do';
