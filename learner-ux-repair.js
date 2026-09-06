@@ -1,13 +1,12 @@
-/* MouldMaster learner UX repair — 2026.09.06.15 */
+/* MouldMaster learner UX repair — 2026.09.06.16 */
 (function(){
 'use strict';
 if(window.MM_LEARNER_UX_REPAIR)return;
-const VERSION='2026.09.06.15';
+const VERSION='2026.09.06.16';
 const ASSESSMENT_BANK_VERSION='assessment-2026.08.30.1';
 const ASSESSMENT_HISTORY_KEY='mm-assessment-question-history-v4';
 const ASSESSMENT_RESULT_META_KEY='mm-assessment-result-meta-v1';
 const ASSESSMENT_HISTORY_LIMIT=8;
-const ASSESSMENT_CANDIDATES=12;
 let lastLessonId=null;
 let queued=false;
 let resetQueued=false;
@@ -118,16 +117,6 @@ function readAssessmentHistory(){
 function writeAssessmentHistory(history){
   try{localStorage.setItem(ASSESSMENT_HISTORY_KEY,JSON.stringify(history))}catch(_){}
 }
-function candidateScore(form,recent){
-  const keys=form.map(questionKey);
-  const last=recent[0]||[];
-  const recentCounts=new Map();
-  recent.forEach((attempt,age)=>attempt.forEach(key=>recentCounts.set(key,(recentCounts.get(key)||0)+(ASSESSMENT_HISTORY_LIMIT-age))));
-  const overlapLast=keys.reduce((sum,key)=>sum+(last.includes(key)?1:0),0);
-  const reuseWeight=keys.reduce((sum,key)=>sum+(recentCounts.get(key)||0),0);
-  const sameFirst=!!(keys[0]&&last[0]&&keys[0]===last[0]);
-  return (sameFirst?100000:0)+(overlapLast*1000)+reuseWeight;
-}
 function rotateAwayFromPreviousFirst(form,previousFirst){
   if(!previousFirst||form.length<2||questionKey(form[0])!==previousFirst)return form;
   const at=form.findIndex((item,index)=>index>0&&questionKey(item)!==previousFirst);
@@ -163,30 +152,21 @@ function persistAssessmentResultMeta(level){
 }
 function installAssessmentRotation(){
   if(window.__MM_ASSESSMENT_ROTATION_V4__)return;
+  // assessment-ux is a presentation compatibility layer and historically wrapped
+  // getExamQuestions. Rebind this one core function to runtime-v2 first so final
+  // learner selection has one active membership owner rather than a wrapper chain.
+  try{window.MM_RUNTIME_V2?.rebind?.('getExamQuestions')}catch(error){console.warn('[MouldMaster assessment] canonical selector rebind unavailable',error)}
   const base=window.getExamQuestions;
   if(typeof base!=='function')return;
   window.getExamQuestions=function(level,region){
     const scope=historyScope(level,region);
     const history=readAssessmentHistory();
     const recent=Array.isArray(history[scope])?history[scope].filter(Array.isArray).slice(0,ASSESSMENT_HISTORY_LIMIT):[];
-    const candidates=[];
-    let expectedLength=0;
-    for(let i=0;i<ASSESSMENT_CANDIDATES;i++){
-      let raw=[];
-      try{raw=base.apply(this,arguments)}catch(error){if(i===0)throw error;continue}
-      if(!Array.isArray(raw))continue;
-      if(!expectedLength)expectedLength=raw.length;
-      const clean=dedupeForm(raw);
-      if(clean.length===expectedLength)candidates.push(clean);
-    }
-    if(!candidates.length){
-      const fallback=dedupeForm(base.apply(this,arguments));
-      if(!fallback.length)throw new Error('Assessment question selector returned no valid questions.');
-      candidates.push(fallback);
-    }
-    candidates.sort((a,b)=>candidateScore(a,recent)-candidateScore(b,recent));
-    let chosen=candidates[0].slice();
-    chosen=rotateAwayFromPreviousFirst(chosen,recent[0]?.[0]);
+    const raw=base.apply(this,arguments);
+    if(!Array.isArray(raw)||!raw.length)throw new Error('Assessment question selector returned no questions.');
+    const clean=dedupeForm(raw);
+    if(clean.length!==raw.length)throw new Error('Assessment question selector returned duplicate or malformed questions.');
+    const chosen=rotateAwayFromPreviousFirst(clean,recent[0]?.[0]);
     const keys=chosen.map(questionKey);
     history[scope]=[keys,...recent].slice(0,ASSESSMENT_HISTORY_LIMIT);
     writeAssessmentHistory(history);
@@ -201,7 +181,7 @@ function installAssessmentRotation(){
       return result;
     };
   }
-  window.__MM_ASSESSMENT_ROTATION_V4__=Object.freeze({version:VERSION,bankVersion:ASSESSMENT_BANK_VERSION,historyKey:ASSESSMENT_HISTORY_KEY,resultMetaKey:ASSESSMENT_RESULT_META_KEY,candidates:ASSESSMENT_CANDIDATES,historyLimit:ASSESSMENT_HISTORY_LIMIT});
+  window.__MM_ASSESSMENT_ROTATION_V4__=Object.freeze({version:VERSION,bankVersion:ASSESSMENT_BANK_VERSION,historyKey:ASSESSMENT_HISTORY_KEY,resultMetaKey:ASSESSMENT_RESULT_META_KEY,baseCallsPerAttempt:1,historyLimit:ASSESSMENT_HISTORY_LIMIT,selectionPolicy:'one canonical generated form per learner attempt; only the opening order may be adjusted to avoid an immediate repeat'});
 }
 
 ensureStyles();
