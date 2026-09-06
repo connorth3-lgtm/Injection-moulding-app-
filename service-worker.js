@@ -167,17 +167,11 @@ self.addEventListener('activate',event=>{
   })());
 });
 
-async function fetchAndCache(event,url){
-  try{
-    const r=await fetch(event.request,{cache:'no-store'});
-    if(r&&r.ok){
-      const c=await caches.open(STATIC_CACHE);
-      const scopePath=new URL('./',self.location.href).pathname;
-      const key=url.pathname.startsWith(scopePath)?`./${url.pathname.slice(scopePath.length)}`:event.request;
-      await c.put(key,r.clone());
-    }
-    return r;
-  }catch(_){return null}
+// The validated release cache is immutable after install. Runtime network responses are
+// returned directly and are never written back into STATIC_CACHE. A new release must
+// install and validate its complete core before it can become active.
+async function fetchNetwork(event){
+  try{return await fetch(event.request,{cache:'no-store'})}catch(_){return null}
 }
 function criticalOfflineResponse(url){
   if(url.pathname.endsWith('.json'))return new Response(JSON.stringify({error:'mouldmaster-offline-asset-unavailable'}),{status:503,headers:{'Content-Type':'application/json; charset=utf-8','Cache-Control':'no-store'}});
@@ -190,10 +184,9 @@ self.addEventListener('fetch',event=>{
   if(url.origin!==self.location.origin)return;
   if(event.request.mode==='navigate'){
     event.respondWith((async()=>{
-      const isShell=url.pathname.endsWith('/')||url.pathname.endsWith('/index.html');
       try{
-        const r=await fetch(event.request,{cache:'no-store'});
-        if(r&&r.ok){if(isShell){const c=await caches.open(STATIC_CACHE);await c.put('./index.html',r.clone())}return r}
+        const r=await fetchNetwork(event);
+        if(r&&r.ok)return r;
       }catch(_){}
       return await caches.match(event.request,{ignoreSearch:true})||await caches.match('./index.html')||new Response('<!doctype html><meta name="viewport" content="width=device-width,initial-scale=1"><title>MouldMaster offline</title><main style="font:16px system-ui;padding:24px;max-width:680px"><h1>MouldMaster is not fully installed offline yet</h1><p>Reconnect once and reopen the app. The core shell installs atomically; additional learning and specialist packs are warmed best-effort and cached again when requested online.</p></main>',{status:503,headers:{'Content-Type':'text/html; charset=utf-8','Cache-Control':'no-store'}});
     })());
@@ -202,7 +195,7 @@ self.addEventListener('fetch',event=>{
   const runtimeCritical=url.pathname.endsWith('.js')||url.pathname.endsWith('.json');
   if(runtimeCritical){
     event.respondWith((async()=>{
-      const network=await fetchAndCache(event,url);
+      const network=await fetchNetwork(event);
       if(network&&network.ok)return network;
       return await caches.match(event.request,{ignoreSearch:true})||criticalOfflineResponse(url);
     })());
@@ -210,8 +203,7 @@ self.addEventListener('fetch',event=>{
   }
   event.respondWith((async()=>{
     const cached=await caches.match(event.request,{ignoreSearch:true});
-    const network=fetchAndCache(event,url);
-    if(cached){event.waitUntil(network);return cached}
-    return await network||new Response('MouldMaster asset unavailable offline',{status:503,headers:{'Content-Type':'text/plain; charset=utf-8','Cache-Control':'no-store'}});
+    if(cached)return cached;
+    return await fetchNetwork(event)||new Response('MouldMaster asset unavailable offline',{status:503,headers:{'Content-Type':'text/plain; charset=utf-8','Cache-Control':'no-store'}});
   })());
 });
