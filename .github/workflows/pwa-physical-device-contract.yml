@@ -26,5 +26,9 @@ jobs:
         run: python qa_pwa_physical_device.py
       - name: Build current production-only Pages artifact
         run: python tools/build_pages_artifact.py
-      - name: Check physical-device evidence against exact public runtime
-        run: python tools/verify_pwa_physical_evidence.py --artifact .pages-dist
+      - name: Report exact PR candidate fingerprint without claiming physical evidence
+        if: github.event_name == 'pull_request'
+        run: python tools/verify_pwa_physical_evidence.py --artifact .pages-dist --print-fingerprint
+      - name: Enforce physical-device authorization against exact main runtime
+        if: github.event_name != 'pull_request'
+        run: python tools/verify_pwa_physical_evidence.py --artifact .pages-dist --require-release-authorized

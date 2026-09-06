@@ -20,6 +20,24 @@ need(upload_name in workflow, "protected-main physical candidate retention step 
 need(hold_name in workflow, "release-hold build step is missing")
 need(workflow.index(stage_name) < workflow.index(upload_name) < workflow.index(hold_name), "candidate staging/upload must complete before the release-hold artifact is built")
 
+readiness_block = workflow.split("      - name: Evaluate physical-device production readiness", 1)[1].split(stage_name, 1)[0]
+need(
+    "if python3 tools/verify_pwa_physical_evidence.py --artifact .pages-dist --require-release-authorized; then" in readiness_block,
+    "previous-release physical authorization mismatch must be handled as a governed candidate state rather than aborting before candidate staging",
+)
+need(
+    'echo "production_ready=false" >> "$GITHUB_OUTPUT"' in readiness_block,
+    "mismatched exact-runtime authorization must keep production_ready false",
+)
+need(
+    "Existing governed evidence applies to a different public runtime" in readiness_block,
+    "candidate mismatch notice must make the evidence boundary explicit",
+)
+need(
+    "Existing physical-device evidence remains attached to its previously governed runtime and is not rewritten for this candidate." in readiness_block,
+    "candidate mismatch summary must prohibit relabelling previous physical evidence",
+)
+
 block = workflow.split(stage_name, 1)[1].split(hold_name, 1)[0]
 for marker in (
     "cp -a .pages-dist/. physical-pwa-candidate/",

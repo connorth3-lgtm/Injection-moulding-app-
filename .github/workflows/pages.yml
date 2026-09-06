@@ -93,7 +93,7 @@ jobs:
         if: github.event_name != 'pull_request'
         shell: bash
         run: |
-          # Invalid/malformed evidence is still a hard CI failure.
+          # Invalid, malformed or stale evidence is still a hard CI failure.
           python3 tools/verify_pwa_physical_evidence.py --contract-only
           status="$(python3 - <<'PY'
           import json
@@ -103,13 +103,24 @@ jobs:
           PY
           )"
           if [[ "$status" == "validated" || "$status" == "released-with-accepted-ios-risk" ]]; then
-            # Validated evidence must also match the exact built public runtime.
-            python3 tools/verify_pwa_physical_evidence.py --artifact .pages-dist --require-release-authorized
-            echo "production_ready=true" >> "$GITHUB_OUTPUT"
-            {
-              echo "### Pages release ready"
-              echo "Physical-device evidence or an explicit governed platform-risk waiver matches the exact production artifact."
-            } >> "$GITHUB_STEP_SUMMARY"
+            # Existing authorization may describe the previous production release. A
+            # fingerprint mismatch is therefore a governed candidate state, not a
+            # reason to relabel old device evidence. Production remains fail-closed.
+            if python3 tools/verify_pwa_physical_evidence.py --artifact .pages-dist --require-release-authorized; then
+              echo "production_ready=true" >> "$GITHUB_OUTPUT"
+              {
+                echo "### Pages release ready"
+                echo "Physical-device evidence or an explicit governed platform-risk waiver matches the exact production artifact."
+              } >> "$GITHUB_STEP_SUMMARY"
+            else
+              echo "production_ready=false" >> "$GITHUB_OUTPUT"
+              echo "::notice title=Pages candidate requires exact-runtime physical authorization::Existing governed evidence applies to a different public runtime; the current build will be staged for physical validation and production remains held."
+              {
+                echo "### Pages candidate awaiting exact-runtime physical authorization"
+                echo "Existing physical-device evidence remains attached to its previously governed runtime and is not rewritten for this candidate."
+                echo "The current build is retained as the protected-main physical-device candidate and exposed only under the non-production /preview/ path."
+              } >> "$GITHUB_STEP_SUMMARY"
+            fi
           else
             # Pending evidence keeps the production root fail-closed. The already-built
             # governed public artifact may still be exposed under /preview/ as an
