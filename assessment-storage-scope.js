@@ -1,12 +1,14 @@
-/* MouldMaster learner-scoped assessment storage — 2026-09-05.1 */
+/* MouldMaster learner-scoped assessment storage — 2026-09-06.1 */
 (function(){
 'use strict';
 if(typeof window==='undefined'||typeof Storage==='undefined'||typeof localStorage==='undefined')return;
-const VERSION='2026.09.05.1';
+const VERSION='2026.09.06.1';
 const ANALYTICS_BASE='mm_assessment_analytics_v1';
 const TIMING_BASE='mm_assessment_exposure_timing_v1';
 const ROTATION_BASE='mm_assessment_opening_history_v1';
-const BASES=[ANALYTICS_BASE,TIMING_BASE,ROTATION_BASE];
+const QUESTION_HISTORY_BASE='mm-assessment-question-history-v4';
+const RESULT_META_BASE='mm-assessment-result-meta-v1';
+const BASES=[ANALYTICS_BASE,TIMING_BASE,ROTATION_BASE,QUESTION_HISTORY_BASE,RESULT_META_BASE];
 const P=Storage.prototype;
 if(P.__mmAssessmentStorageScopeInstalled)return;
 const rawGet=P.getItem,rawSet=P.setItem,rawRemove=P.removeItem,rawKey=P.key;
@@ -19,8 +21,6 @@ function learnerId(){
  }catch(_){}
  return 'anonymous';
 }
-// Compatibility-only hash used for assessment buckets created before the shared
-// MM_LEARNER_SCOPE service became canonical. New reads/writes use tokenFor().
 function hashScope(value){
  const s=String(value||'anonymous');let h1=0xdeadbeef^s.length,h2=0x41c6ce57^s.length;
  for(let i=0;i<s.length;i++){const ch=s.charCodeAt(i);h1=Math.imul(h1^ch,2654435761);h2=Math.imul(h2^ch,1597334677)}
@@ -94,5 +94,5 @@ if(baseReset)window.resetData=function(){
  return r;
 };
 window.addEventListener?.('mm:domains-ready',()=>ensureSharedMigration(),{once:true});
-window.MM_ASSESSMENT_STORAGE_SCOPE={version:VERSION,scopeToken,analyticsKey:()=>scopedKey(ANALYTICS_BASE),timingKey:()=>scopedKey(TIMING_BASE),rotationKey:()=>scopedKey(ROTATION_BASE),clearAll,cancelInMemoryAttempt,migrateFallbackScopes:ensureSharedMigration,legacyMigration:{...legacy},get sharedMigration(){return {...sharedMigration}},scopeProvider:()=>sharedScope()?'MM_LEARNER_SCOPE':'compatibility-hash',learnerScoped:true,boundary:'Assessment analytics, exposure timing and opening-history stores use MM_LEARNER_SCOPE 128-bit tokens once the shared scope service is available. The previous assessment hash remains only for fail-closed migration; ambiguous or conflicting legacy buckets are never reassigned automatically.'};
+window.MM_ASSESSMENT_STORAGE_SCOPE={version:VERSION,scopeToken,analyticsKey:()=>scopedKey(ANALYTICS_BASE),timingKey:()=>scopedKey(TIMING_BASE),rotationKey:()=>scopedKey(ROTATION_BASE),questionHistoryKey:()=>scopedKey(QUESTION_HISTORY_BASE),resultMetaKey:()=>scopedKey(RESULT_META_BASE),clearAll,cancelInMemoryAttempt,migrateFallbackScopes:ensureSharedMigration,legacyMigration:{...legacy},get sharedMigration(){return {...sharedMigration}},scopeProvider:()=>sharedScope()?'MM_LEARNER_SCOPE':'compatibility-hash',learnerScoped:true,boundary:'Assessment analytics, exposure timing, opening history, recent-question rotation and graded-form metadata use MM_LEARNER_SCOPE 128-bit tokens once the shared scope service is available. The previous assessment hash remains only for fail-closed migration; ambiguous or conflicting legacy buckets are never reassigned automatically.'};
 })();
