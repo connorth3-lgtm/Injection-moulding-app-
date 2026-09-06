@@ -1,0 +1,39 @@
+name: One-shot recursive CSP regeneration
+
+on:
+  push:
+    branches:
+      - fix/restore-listen-compact-lesson
+    paths:
+      - .github/workflows/tmp-csp-regenerate.yml
+
+permissions:
+  contents: write
+
+jobs:
+  regenerate:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: fix/restore-listen-compact-lesson
+          fetch-depth: 0
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 22.12.0
+          package-manager-cache: false
+      - name: Regenerate deterministic style CSP
+        run: node tools/generate_style_csp.cjs
+      - name: Verify deterministic style CSP
+        run: node tools/generate_style_csp.cjs --check
+      - name: Commit regenerated CSP
+        run: |
+          if git diff --quiet -- index.html; then
+            echo "No CSP update required"
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html
+          git commit -m "Regenerate CSP for dynamic runtime styles"
+          git push origin HEAD:fix/restore-listen-compact-lesson
