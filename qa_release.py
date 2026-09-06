@@ -92,7 +92,7 @@ assert index.index("'./specialist-curriculum.js'") < index.index("'./specialist-
 sw = text("service-worker.js")
 assert f"CACHE_VERSION='{WEB_RELEASE}'" in sw
 for asset in [
-    "index.html", "MouldMaster_Core_App.html", "MouldMaster_Academy_App.html", "manifest.webmanifest",
+    "index.html", "MouldMaster_Core_App.html", "manifest.webmanifest",
     "mouldmaster-192.png", "mouldmaster-512.png", "version.json", "reading-patch.css", "reading-patch.js",
     "training-upgrade.js", "training-qa-fix.js", "source-library.js", "pwa-shell.js", "learning-experience.js",
     "process-data-diagnostics.js", "curriculum-integration.js", "specialist-curriculum.js",
@@ -101,13 +101,17 @@ for asset in [
     "learner-ux-repair.css", "learner-ux-repair.js"
 ]:
     assert f"'./{asset}'" in sw, f"offline asset missing: {asset}"
+assert "'./MouldMaster_Academy_App.html'" not in sw.split("const OPTIONAL=", 1)[0], "frozen legacy Academy app must not be a current core cache asset"
 install = sw[sw.index("self.addEventListener('install'"):sw.index("self.addEventListener('activate'")]
 assert "Promise.allSettled" in install, "install must inspect every required offline asset"
 assert "if(failed.length)" in install and "await caches.delete(STATIC_CACHE)" in install, "incomplete new cache must be deleted"
 assert "throw new Error" in install, "install must fail if any core asset cannot be cached"
 assert "cache.addAll" not in install, "install must report exact missing assets rather than an opaque addAll failure"
 assert "skipWaiting" in install, "complete worker should still activate promptly"
-assert "if(isShell)" in sw and "c.put('./index.html'" in sw, "only shell navigation may refresh offline index"
+runtime_fetch = sw[sw.index("self.addEventListener('fetch'"):]
+assert "async function fetchNetwork(event)" in sw and "fetch(event.request,{cache:'no-store'})" in sw, "runtime fetches must use uncached network reads"
+assert ".put(" not in runtime_fetch, "runtime fetches must never mutate the validated release cache"
+assert "cacheAsset(" not in runtime_fetch, "install-only cache writer must not be reachable from runtime fetches"
 assert "mouldmaster-offline-asset-unavailable" in sw, "critical offline failure response must be explicit"
 
 runtime_v2 = text("runtime-v2.js")
