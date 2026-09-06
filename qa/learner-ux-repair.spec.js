@@ -134,9 +134,36 @@ test('learner UX repair preserves the governed selector and adds audited rotatio
   expect(assessment.owner).toBe('assessment-runtime-v2');
   expect(assessment.technicalPerExam).toBe(7);
   expect(assessment.technicalBankPerLevel).toBeGreaterThanOrEqual(10);
-  expect(assessment.rotationVersion).toBe('2026.09.06.18');
+  expect(assessment.rotationVersion).toBe('2026.09.06.20');
   expect(assessment.bankVersion).toBe('assessment-2026.08.30.1');
   expect(assessment.baseCallsPerAttempt).toBe(1);
+});
+
+test('mobile exam disclosure rebinds to the current question nodes on a second attempt',async({page})=>{
+  await page.setViewportSize({width:412,height:915});
+  await open(page);
+  const firstForm=await page.evaluate(()=>{startExam('Beginner');return window.MM_ACTIVE_QUESTION_FORM?.formFingerprint||''});
+  await page.waitForFunction(()=>{
+    const host=document.getElementById('examQuestions'),questions=host?[...host.children].filter(el=>el.classList.contains('question')):[];
+    return questions.length>5&&document.querySelectorAll('[data-mm-exam-question-toggle]').length===1&&questions.slice(5).every(q=>q.classList.contains('mm-question-collapsed'));
+  });
+  const firstSignature=await page.evaluate(()=>document.getElementById('examQuestions')?.dataset.mmUxExamFormSignature||'');
+  expect(firstForm).not.toBe('');
+  expect(firstSignature).not.toBe('');
+
+  const secondForm=await page.evaluate(()=>{closeModal();startExam('Beginner');return window.MM_ACTIVE_QUESTION_FORM?.formFingerprint||''});
+  expect(secondForm).not.toBe(firstForm);
+  await page.waitForFunction(first=>{
+    const host=document.getElementById('examQuestions'),questions=host?[...host.children].filter(el=>el.classList.contains('question')):[];
+    const sig=host?.dataset.mmUxExamFormSignature||'';
+    return questions.length>5&&sig&&sig!==first&&document.querySelectorAll('[data-mm-exam-question-toggle]').length===1&&questions.slice(5).every(q=>q.classList.contains('mm-question-collapsed'));
+  },firstSignature);
+  const toggle=page.locator('[data-mm-exam-question-toggle]');
+  await expect(toggle).toHaveCount(1);
+  await expect(toggle).toHaveAttribute('aria-expanded','false');
+  await toggle.click();
+  await expect(toggle).toHaveAttribute('aria-expanded','true');
+  await page.waitForFunction(()=>document.querySelectorAll('#examQuestions .mm-question-collapsed').length===0);
 });
 
 test('consecutive assessment attempts do not repeat the opening question and advance membership once per attempt',async({page})=>{
