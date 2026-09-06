@@ -8,6 +8,11 @@ async function seed(page){
     localStorage.setItem('mouldmasterProDB',JSON.stringify({activeUser:'ux-repair-qa',users:{'ux-repair-qa':user}}));
     localStorage.removeItem('mm-assessment-question-history-v4');
     localStorage.removeItem('mm-assessment-result-meta-v1');
+    localStorage.removeItem('mm_assessment_opening_history_v1');
+    for(let i=localStorage.length-1;i>=0;i--){
+      const key=localStorage.key(i);
+      if(key&&key.startsWith('mm_assessment_membership_history_v2::'))localStorage.removeItem(key);
+    }
   });
 }
 async function open(page){
@@ -81,16 +86,18 @@ test('learner UX repair preserves the governed selector and adds audited rotatio
     technicalPerExam:window.MM_ASSESSMENT_RUNTIME_V2.technicalPerExam,
     technicalBankPerLevel:window.MM_ASSESSMENT_RUNTIME_V2.technicalBankPerLevel,
     rotationVersion:window.__MM_ASSESSMENT_ROTATION_V4__.version,
-    bankVersion:window.__MM_ASSESSMENT_ROTATION_V4__.bankVersion
+    bankVersion:window.__MM_ASSESSMENT_ROTATION_V4__.bankVersion,
+    baseCallsPerAttempt:window.__MM_ASSESSMENT_ROTATION_V4__.baseCallsPerAttempt
   }));
   expect(assessment.owner).toBe('assessment-runtime-v2');
   expect(assessment.technicalPerExam).toBe(7);
   expect(assessment.technicalBankPerLevel).toBeGreaterThanOrEqual(10);
-  expect(assessment.rotationVersion).toBe('2026.09.06.15');
+  expect(assessment.rotationVersion).toBe('2026.09.06.16');
   expect(assessment.bankVersion).toBe('assessment-2026.08.30.1');
+  expect(assessment.baseCallsPerAttempt).toBe(1);
 });
 
-test('consecutive assessment attempts do not repeat the opening question and forms stay valid',async({page})=>{
+test('consecutive assessment attempts do not repeat the opening question and advance membership once per attempt',async({page})=>{
   await page.setViewportSize({width:412,height:915});
   await open(page);
 
@@ -107,10 +114,16 @@ test('consecutive assessment attempts do not repeat the opening question and for
     };
     startExam('Beginner');
     const first=inspect();
+    const firstMembership=window.MM_ASSESSMENT_RUNTIME_V2.history().forms.Beginner||0;
     closeModal();
     startExam('Beginner');
     const second=inspect();
-    return {first,second,history:JSON.parse(localStorage.getItem('mm-assessment-question-history-v4')||'{}')};
+    const secondMembership=window.MM_ASSESSMENT_RUNTIME_V2.history().forms.Beginner||0;
+    return {
+      first,second,firstMembership,secondMembership,
+      history:JSON.parse(localStorage.getItem('mm-assessment-question-history-v4')||'{}'),
+      legacyOpeningHistory:localStorage.getItem('mm_assessment_opening_history_v1')
+    };
   });
 
   expect(result.first.first).not.toBe('');
@@ -120,6 +133,9 @@ test('consecutive assessment attempts do not repeat the opening question and for
   expect(new Set(result.second.keys).size).toBe(result.second.keys.length);
   expect(result.first.valid).toBe(true);
   expect(result.second.valid).toBe(true);
+  expect(result.firstMembership).toBe(1);
+  expect(result.secondMembership).toBe(2);
+  expect(result.legacyOpeningHistory).toBeNull();
   expect(result.second.meta.bankVersion).toBe('assessment-2026.08.30.1');
   expect(result.second.meta.formFingerprint).toMatch(/^form-[0-9a-f]{8}$/);
   const attempts=Object.values(result.history).find(value=>Array.isArray(value)&&value.length>=2);
