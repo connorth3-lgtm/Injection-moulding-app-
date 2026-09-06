@@ -12,6 +12,9 @@ on:
       - 'app-shell-finalize.js'
       - 'mould-master-workspace.js'
       - 'learning-experience.js'
+      - 'lesson-simple-experience.js'
+      - 'assessment-ux.js'
+      - 'primary-learning-practice-hubs.js'
       - 'curriculum-integration.js'
       - 'specialist-curriculum.js'
       - 'process-data-diagnostics.js'
@@ -47,6 +50,9 @@ on:
       - 'qa/engineering-case-store.spec.js'
       - 'qa/inline-handler-bridge.spec.js'
       - 'qa/inline-style-csp.spec.js'
+      - 'qa/learner-next-flow.spec.js'
+      - 'qa/ui-visual-regression.spec.js'
+      - 'qa/ui-visual-regression.spec.js-snapshots/**'
       - 'qa/cross-browser-smoke.spec.js'
       - 'playwright.config.cjs'
       - 'playwright.webkit-full.config.cjs'
@@ -91,7 +97,7 @@ jobs:
           for i in {1..20}; do curl -fsS http://127.0.0.1:4173/index.html >/dev/null && exit 0; sleep 1; done
           cat /tmp/mouldmaster-http.log
           exit 1
-      - name: Chromium mobile, material, evidence, engineering-store and PWA regression tests
+      - name: Chromium mobile, visual-baseline, learner-flow, material, evidence, engineering-store and PWA regression tests
         run: npx playwright test --config=playwright.config.cjs
       - name: WebKit substantive learner regression tests
         run: npx playwright test --config=playwright.webkit-full.config.cjs
