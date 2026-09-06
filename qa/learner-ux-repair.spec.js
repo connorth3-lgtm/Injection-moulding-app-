@@ -6,7 +6,6 @@ async function seed(page){
   await page.addInitScript(()=>{
     const user={id:'ux-repair-qa',name:'UX Repair QA',role:'learner',completed:[1,2,3,4,5],bookmarks:[],notes:{},examScores:{},certificates:[],currentLesson:6,lastSeen:new Date().toISOString(),onboardingDone:true,experience:'Beginner',goal:'Learn the full process',dailyMinutes:15,region:'ALL'};
     localStorage.setItem('mouldmasterProDB',JSON.stringify({activeUser:'ux-repair-qa',users:{'ux-repair-qa':user}}));
-    localStorage.removeItem('mm_exam_question_rotation_v2');
   });
 }
 async function open(page){
@@ -55,24 +54,21 @@ for(const viewport of [{name:'android-412x915',width:412,height:915},{name:'smal
   });
 }
 
-test('restarting a knowledge check rotates the core question set without changing its size',async({page})=>{
+test('learner UX repair leaves the governed assessment selector in control',async({page})=>{
   await page.setViewportSize({width:412,height:915});
   await open(page);
-  await page.evaluate(()=>switchView('exams'));
-  await expect(page.locator('#exams')).toBeVisible();
-  await page.waitForFunction(()=>window.startExam?.__mmQuestionRotation===true);
-
-  const start=page.locator('#exams button').filter({hasText:/^Start/}).first();
-  await start.click();
-  await expect(page.locator('#examQuestions .question')).toHaveCount(10);
-  const first=await page.locator('#examQuestions .question').evaluateAll(nodes=>nodes.map(node=>(node.querySelector('b')?.textContent||'').replace(/^\d+\.\s*/,'').trim()));
-  await page.evaluate(()=>closeModal());
-
-  await start.click();
-  await expect(page.locator('#examQuestions .question')).toHaveCount(10);
-  const second=await page.locator('#examQuestions .question').evaluateAll(nodes=>nodes.map(node=>(node.querySelector('b')?.textContent||'').replace(/^\d+\.\s*/,'').trim()));
-
-  expect(second).toHaveLength(first.length);
-  expect(second).not.toEqual(first);
-  expect(new Set(second).size).toBe(second.length);
+  await page.waitForFunction(()=>{
+    const snapshot=window.MM_RUNTIME_V2?.snapshot?.();
+    return snapshot?.core?.getExamQuestions?.owner==='assessment-runtime-v2'&&window.MM_ASSESSMENT_RUNTIME_V2?.technicalPerExam===7;
+  });
+  const assessment=await page.evaluate(()=>({
+    owner:window.MM_RUNTIME_V2.snapshot().core.getExamQuestions.owner,
+    technicalPerExam:window.MM_ASSESSMENT_RUNTIME_V2.technicalPerExam,
+    technicalBankPerLevel:window.MM_ASSESSMENT_RUNTIME_V2.technicalBankPerLevel,
+    repairOwnsRotation:!!window.startExam?.__mmQuestionRotation
+  }));
+  expect(assessment.owner).toBe('assessment-runtime-v2');
+  expect(assessment.technicalPerExam).toBe(7);
+  expect(assessment.technicalBankPerLevel).toBe(10);
+  expect(assessment.repairOwnsRotation).toBe(false);
 });
