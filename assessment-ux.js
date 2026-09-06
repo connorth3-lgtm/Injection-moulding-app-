@@ -1,8 +1,8 @@
-/* MouldMaster assessment experience — question-only focus mode 2026-09-06.6 */
+/* MouldMaster assessment experience — question-only focus mode 2026-09-06.7 */
 (function(){
 'use strict';
 
-const VERSION='2026.09.06.6';
+const VERSION='2026.09.06.7';
 const FIRST_HISTORY_LIMIT=3;
 const HISTORY_KEY='mm_assessment_opening_history_v1';
 const root=document.documentElement;
@@ -92,12 +92,8 @@ function addStyles(){
   document.head.appendChild(s);
 }
 
-function questionIdentity(item){
-  return String(item?.stableId||item?.mmId||item?.id||item?.q||'').trim();
-}
-function questionScope(level,region){
-  return `${String(level||'unknown')}::${String(region||'ALL')}`;
-}
+function questionIdentity(item){return String(item?.stableId||item?.mmId||item?.id||item?.q||'').trim()}
+function questionScope(level,region){return `${String(level||'unknown')}::${String(region||'ALL')}`}
 function rotateOpeningQuestion(rows,level,region){
   if(!Array.isArray(rows)||rows.length<2)return rows;
   readQuestionHistory();
@@ -117,10 +113,7 @@ function rotateOpeningQuestion(rows,level,region){
   }
   return rows;
 }
-function resetQuestionRotation(){
-  firstQuestionHistory.clear();
-  try{localStorage.removeItem(HISTORY_KEY)}catch(_){}
-}
+function resetQuestionRotation(){firstQuestionHistory.clear();try{localStorage.removeItem(HISTORY_KEY)}catch(_){}}
 
 function optionLabels(card,index){
   const labels=[...card.querySelectorAll('label.option')];
@@ -130,10 +123,7 @@ function optionLabels(card,index){
     if(!input)return;
     if(!label.querySelector('.mm-option-key')){
       const key=document.createElement('span');
-      key.className='mm-option-key';
-      key.setAttribute('aria-hidden','true');
-      key.textContent=String.fromCharCode(65+j);
-      input.insertAdjacentElement('afterend',key);
+      key.className='mm-option-key';key.setAttribute('aria-hidden','true');key.textContent=String.fromCharCode(65+j);input.insertAdjacentElement('afterend',key);
     }
     const sync=()=>{
       labels.forEach(x=>x.classList.toggle('mm-option-selected',!!x.querySelector('input[type=radio]:checked')));
@@ -155,28 +145,15 @@ function updateAssessmentStatus(){
   state.grade.title=remaining?`Answer ${remaining} remaining question${remaining===1?'':'s'} before grading`:'Grade and review every answer';
   state.unanswered.textContent=remaining?`${remaining} unanswered`:'Ready to grade';
   state.steps.forEach((step,i)=>step.classList.toggle('mm-step-answered',!!state.cards[i].querySelector('input[type=radio]:checked')));
-  if(state.current===state.cards.length-1){
-    state.next.textContent=remaining?'Review unanswered':'All questions answered';
-    state.next.disabled=!remaining;
-  }else{
-    state.next.textContent='Next question';
-    state.next.disabled=false;
-  }
+  if(state.current===state.cards.length-1){state.next.textContent=remaining?'Review unanswered':'All questions answered';state.next.disabled=!remaining}
+  else{state.next.textContent='Next question';state.next.disabled=false}
 }
-
 function showQuestion(index,moveFocus){
   if(!state)return;
   const max=state.cards.length-1;
   state.current=Math.max(0,Math.min(index,max));
-  state.cards.forEach((card,i)=>{
-    const on=i===state.current;
-    card.classList.toggle('mm-current-question',on);
-    card.setAttribute('aria-hidden',on?'false':'true');
-  });
-  state.steps.forEach((step,i)=>{
-    step.classList.toggle('mm-step-current',i===state.current);
-    if(i===state.current)step.setAttribute('aria-current','step'); else step.removeAttribute('aria-current');
-  });
+  state.cards.forEach((card,i)=>{const on=i===state.current;card.classList.toggle('mm-current-question',on);card.setAttribute('aria-hidden',on?'false':'true')});
+  state.steps.forEach((step,i)=>{step.classList.toggle('mm-step-current',i===state.current);if(i===state.current)step.setAttribute('aria-current','step');else step.removeAttribute('aria-current')});
   state.progress.textContent=`Question ${state.current+1} of ${state.cards.length}`;
   state.prev.disabled=state.current===0;
   updateAssessmentStatus();
@@ -186,131 +163,58 @@ function showQuestion(index,moveFocus){
     try{state.cards[state.current].scrollIntoView({block:'nearest',behavior:root.matches(':root')&&matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth'})}catch(_){}
   }
 }
-
-function firstUnanswered(){
-  if(!state)return -1;
-  return state.cards.findIndex(c=>!c.querySelector('input[type=radio]:checked'));
-}
+function firstUnanswered(){if(!state)return -1;return state.cards.findIndex(c=>!c.querySelector('input[type=radio]:checked'))}
 
 function decorateExam(){
   const host=document.getElementById('examQuestions');
   if(!host||host.dataset.mmAssessmentUx==='1')return;
-  const cards=[...host.querySelectorAll('.question')];
-  if(!cards.length)return;
-  const modal=host.closest('.modal-card')||host.parentElement;
-  if(!modal)return;
-  const grade=[...modal.querySelectorAll('button')].find(b=>/Grade\s*&?\s*review/i.test(b.textContent||''));
-  if(!grade)return;
-
-  host.dataset.mmAssessmentUx='1';
-  host.classList.add('mm-focus-mode');
-  modal.classList.add('mm-assessment-modal');
-  const title=modal.querySelector('[id^="mmDialogTitle"]');
-  if(title){
-    title.classList.remove('mm-exam-prelude');
-    title.removeAttribute('aria-hidden');
-  }
-
+  const cards=[...host.querySelectorAll('.question')];if(!cards.length)return;
+  const modal=host.closest('.modal-card')||host.parentElement;if(!modal)return;
+  const grade=[...modal.querySelectorAll('button')].find(b=>/Grade\s*&?\s*review/i.test(b.textContent||''));if(!grade)return;
+  host.dataset.mmAssessmentUx='1';host.classList.add('mm-focus-mode');modal.classList.add('mm-assessment-modal');
+  const title=modal.querySelector('[id^="mmDialogTitle"],h2');
+  if(title){title.classList.remove('mm-exam-prelude');title.removeAttribute('aria-hidden')}
   for(let node=host.previousElementSibling;node;node=node.previousElementSibling){
-    if(node.matches?.('[id^="mmDialogTitle"]'))continue;
-    node.classList.add('mm-exam-prelude');
-    node.setAttribute('aria-hidden','true');
+    if(node===title||node.matches?.('[id^="mmDialogTitle"]'))continue;
+    node.classList.add('mm-exam-prelude');node.setAttribute('aria-hidden','true');
     node.querySelectorAll?.('button,a,input,select,textarea,[tabindex]').forEach(control=>control.tabIndex=-1);
   }
-
   cards.forEach((card,i)=>{
     const stem=card.querySelector('b');
     if(stem){
-      stem.classList.add('mm-question-stem');
-      stem.id=`mm-question-stem-${i}`;
-      stem.tabIndex=-1;
-      card.setAttribute('role','group');
-      card.setAttribute('aria-labelledby',stem.id);
-      const meta=document.createElement('div');
-      meta.className='mm-question-meta';
-      meta.innerHTML=`<span>Question ${i+1}</span><span>${i===cards.length-1?'Final question':'Choose the best answer'}</span>`;
-      stem.insertAdjacentElement('beforebegin',meta);
+      stem.classList.add('mm-question-stem');stem.id=`mm-question-stem-${i}`;stem.tabIndex=-1;card.setAttribute('role','group');card.setAttribute('aria-labelledby',stem.id);
+      const meta=document.createElement('div');meta.className='mm-question-meta';meta.innerHTML=`<span>Question ${i+1}</span><span>${i===cards.length-1?'Final question':'Choose the best answer'}</span>`;stem.insertAdjacentElement('beforebegin',meta);
     }
     optionLabels(card,i);
   });
-
-  const steps=document.createElement('div');
-  steps.className='mm-exam-steps';
-  steps.setAttribute('aria-label','Assessment question navigation');
-  cards.forEach((_card,i)=>{
-    const b=document.createElement('button');
-    b.type='button';b.className='mm-step';b.dataset.mmQuestion=String(i);b.textContent=String(i+1);b.setAttribute('aria-label',`Go to question ${i+1}`);
-    b.addEventListener('click',()=>showQuestion(i,true));steps.appendChild(b);
-  });
+  const steps=document.createElement('div');steps.className='mm-exam-steps';steps.setAttribute('aria-label','Assessment question navigation');
+  cards.forEach((_card,i)=>{const b=document.createElement('button');b.type='button';b.className='mm-step';b.dataset.mmQuestion=String(i);b.textContent=String(i+1);b.setAttribute('aria-label',`Go to question ${i+1}`);b.addEventListener('click',()=>showQuestion(i,true));steps.appendChild(b)});
   host.insertAdjacentElement('beforebegin',steps);
-
-  const nav=document.createElement('div');
-  nav.className='mm-exam-nav';
-  nav.innerHTML=`<div class="mm-exam-nav-top"><div><div class="mm-exam-progress" aria-live="polite"></div><div class="mm-exam-answered"></div></div><div class="mm-unanswered-note" aria-live="polite"></div></div><div class="mm-exam-actions"><button type="button" class="secondary mm-exam-prev">Previous</button><button type="button" class="secondary mm-exam-next">Next question</button></div>`;
+  const nav=document.createElement('div');nav.className='mm-exam-nav';nav.innerHTML=`<div class="mm-exam-nav-top"><div><div class="mm-exam-progress" aria-live="polite"></div><div class="mm-exam-answered"></div></div><div class="mm-unanswered-note" aria-live="polite"></div></div><div class="mm-exam-actions"><button type="button" class="secondary mm-exam-prev">Previous</button><button type="button" class="secondary mm-exam-next">Next question</button></div>`;
   host.insertAdjacentElement('afterend',nav);
-  const actions=nav.querySelector('.mm-exam-actions');
-  grade.classList.add('mm-native-grade');
-  actions.appendChild(grade);
-
-  state={
-    modal,host,cards,steps:[...steps.querySelectorAll('.mm-step')],nav,grade,current:0,
-    progress:nav.querySelector('.mm-exam-progress'),answered:nav.querySelector('.mm-exam-answered'),unanswered:nav.querySelector('.mm-unanswered-note'),
-    prev:nav.querySelector('.mm-exam-prev'),next:nav.querySelector('.mm-exam-next')
-  };
+  const actions=nav.querySelector('.mm-exam-actions');grade.classList.add('mm-native-grade');actions.appendChild(grade);
+  state={modal,host,cards,steps:[...steps.querySelectorAll('.mm-step')],nav,grade,current:0,progress:nav.querySelector('.mm-exam-progress'),answered:nav.querySelector('.mm-exam-answered'),unanswered:nav.querySelector('.mm-unanswered-note'),prev:nav.querySelector('.mm-exam-prev'),next:nav.querySelector('.mm-exam-next')};
   state.prev.addEventListener('click',()=>showQuestion(state.current-1,true));
-  state.next.addEventListener('click',()=>{
-    if(state.current<state.cards.length-1)showQuestion(state.current+1,true);
-    else{const i=firstUnanswered();if(i>=0)showQuestion(i,true)}
-  });
-  grade.disabled=true;
-  showQuestion(0,false);
+  state.next.addEventListener('click',()=>{if(state.current<state.cards.length-1)showQuestion(state.current+1,true);else{const i=firstUnanswered();if(i>=0)showQuestion(i,true)}});
+  grade.disabled=true;showQuestion(0,false);
 }
-
 function decorateReview(){
-  const result=document.getElementById('examResult');
-  const review=document.getElementById('answerReview');
-  if(!result||result.classList.contains('hidden')||!review)return;
-  const modal=result.closest('.modal-card');
-  if(modal)modal.classList.add('mm-exam-reviewed');
-  review.setAttribute('aria-label','Assessment answer review');
-  [...review.querySelectorAll('.answer-row')].forEach((row,i)=>{
-    row.tabIndex=0;
-    row.setAttribute('aria-label',`Question ${i+1} review: ${row.classList.contains('correct')?'correct':'review needed'}`);
-  });
+  const result=document.getElementById('examResult');const review=document.getElementById('answerReview');if(!result||result.classList.contains('hidden')||!review)return;
+  const modal=result.closest('.modal-card');if(modal)modal.classList.add('mm-exam-reviewed');review.setAttribute('aria-label','Assessment answer review');
+  [...review.querySelectorAll('.answer-row')].forEach((row,i)=>{row.tabIndex=0;row.setAttribute('aria-label',`Question ${i+1} review: ${row.classList.contains('correct')?'correct':'review needed'}`)});
   try{result.scrollIntoView({block:'start',behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth'})}catch(_){}
 }
-
 function decorateScenario(i,ci,el){
-  if(!el||!el.closest)return;
-  const scenario=el.closest('.scenario');
-  if(!scenario)return;
-  const choices=[...scenario.querySelectorAll('.choice')];
-  choices.forEach(x=>x.classList.remove('mm-choice-selected','mm-choice-correct','mm-choice-review'));
-  el.classList.add('mm-choice-selected');
-  const D=window.MM_DATA;
-  const correct=D?.scenarios?.[i]?.correct;
-  if(Number.isInteger(correct))el.classList.add(ci===correct?'mm-choice-correct':'mm-choice-review');
+  if(!el||!el.closest)return;const scenario=el.closest('.scenario');if(!scenario)return;
+  const choices=[...scenario.querySelectorAll('.choice')];choices.forEach(x=>x.classList.remove('mm-choice-selected','mm-choice-correct','mm-choice-review'));el.classList.add('mm-choice-selected');
+  const D=window.MM_DATA;const correct=D?.scenarios?.[i]?.correct;if(Number.isInteger(correct))el.classList.add(ci===correct?'mm-choice-correct':'mm-choice-review');
 }
 
 addStyles();
-const baseQuestions=window.getExamQuestions;
-if(typeof baseQuestions==='function')window.getExamQuestions=function(level,region){
-  return rotateOpeningQuestion(baseQuestions.apply(this,arguments),level,region);
-};
-const baseStart=window.startExam;
-if(typeof baseStart==='function')window.startExam=function(){state=null;const r=baseStart.apply(this,arguments);setTimeout(decorateExam,0);return r};
-const baseGrade=window.gradeExam;
-if(typeof baseGrade==='function')window.gradeExam=function(){const r=baseGrade.apply(this,arguments);setTimeout(decorateReview,0);return r};
-const baseScenario=window.answerScenario;
-if(typeof baseScenario==='function')window.answerScenario=function(i,ci,el){const r=baseScenario.apply(this,arguments);setTimeout(()=>decorateScenario(i,ci,el),0);return r};
+const baseQuestions=window.getExamQuestions;if(typeof baseQuestions==='function')window.getExamQuestions=function(level,region){return rotateOpeningQuestion(baseQuestions.apply(this,arguments),level,region)};
+const baseStart=window.startExam;if(typeof baseStart==='function')window.startExam=function(){state=null;const r=baseStart.apply(this,arguments);setTimeout(decorateExam,0);return r};
+const baseGrade=window.gradeExam;if(typeof baseGrade==='function')window.gradeExam=function(){const r=baseGrade.apply(this,arguments);setTimeout(decorateReview,0);return r};
+const baseScenario=window.answerScenario;if(typeof baseScenario==='function')window.answerScenario=function(i,ci,el){const r=baseScenario.apply(this,arguments);setTimeout(()=>decorateScenario(i,ci,el),0);return r};
 
-window.MM_ASSESSMENT_UX={
-  version:VERSION,
-  decorateExam,
-  decorateReview,
-  showQuestion,
-  rotateOpeningQuestion,
-  resetQuestionRotation,
-  questionRotation:{historyLimit:FIRST_HISTORY_LIMIT,scope:'learner + level + region',persistence:'learner-scoped localStorage stable IDs only; no answers or personal data',storageKey:HISTORY_KEY,policy:'avoid the last three opening questions across starts, reloads and learner switches when another valid item is available'}
-};
+window.MM_ASSESSMENT_UX={version:VERSION,decorateExam,decorateReview,showQuestion,rotateOpeningQuestion,resetQuestionRotation,questionRotation:{historyLimit:FIRST_HISTORY_LIMIT,scope:'learner + level + region',persistence:'learner-scoped localStorage stable IDs only; no answers or personal data',storageKey:HISTORY_KEY,policy:'avoid the last three opening questions across starts, reloads and learner switches when another valid item is available'}};
 })();
