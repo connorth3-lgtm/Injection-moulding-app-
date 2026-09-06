@@ -21,7 +21,7 @@
     }
   },
   "productionValidationEligible": false,
-  "remainingProductionRequirement": "Physical iOS/iPadOS validation remains unperformed and is a known accepted release risk for 2026.09.06.17.",
+  "remainingProductionRequirement": "Physical iOS/iPadOS validation remains unperformed and is a known accepted release risk for 2026.09.06.16.",
   "boundary": "This file records the repository owner's physical Android pass statement. No physical iOS/iPadOS test occurred. The explicit release waiver is governed by data/pwa-physical-device-validation-v1.json and automated WebKit coverage is not represented as physical iOS validation.",
   "privacyBoundary": "No learner, customer, site, email, screenshot, filesystem, raw process-data or other personal/proprietary evidence is stored here."
 }
