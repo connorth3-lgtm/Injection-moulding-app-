@@ -1,4 +1,4 @@
-/* MouldMaster app-shell finalizer — 2026.09.06.8 */
+/* MouldMaster app-shell finalizer — 2026.09.06.9 */
 (function(){
 'use strict';
 if(!window.MM_APP_SHELL)throw new Error('app-shell-finalize.js requires app-shell-registry.js');
@@ -74,6 +74,15 @@ function loadMeasuredLearningRuntime(){
   script.async=true;
   script.dataset.mmMeasuredLearning='1';
   script.addEventListener('error',()=>console.warn('[MouldMaster] Measured Learning runtime unavailable; learner navigation remains disabled.'));
+  document.head.appendChild(script);
+}
+function loadSimpleLessonRuntime(){
+  if(window.MM_SIMPLE_LESSON_EXPERIENCE||document.querySelector('script[data-mm-simple-lessons]'))return;
+  const script=document.createElement('script');
+  script.src='./lesson-simple-experience.js';
+  script.async=true;
+  script.dataset.mmSimpleLessons='1';
+  script.addEventListener('error',()=>console.warn('[MouldMaster] Simple lesson experience could not be loaded; the standard lesson layout remains available.'));
   document.head.appendChild(script);
 }
 function removeHomeJobRouter(root){
@@ -185,13 +194,13 @@ function installRetiredChromeGuard(){
   if(home)observer.observe(home,{childList:true,subtree:true});
   if(nav)observer.observe(nav,{childList:true});
   window.addEventListener('resize',stabilizeRetiredChrome,{passive:true});
-  window.__MM_RETIRED_CHROME_GUARD__={version:'2026.09.06.8',observer};
+  window.__MM_RETIRED_CHROME_GUARD__={version:'2026.09.06.9',observer};
 }
 function installHomeScreenSimplification(){
   if(window.__MM_HOME_SIMPLIFICATION__||typeof window.renderDashboard!=='function')return;
   const base=window.renderDashboard;
   window.renderDashboard=function(){const result=base.apply(this,arguments);simplifyHomeScreen();stabilizeRetiredChrome();return result};
-  window.__MM_HOME_SIMPLIFICATION__='2026.09.06.8';
+  window.__MM_HOME_SIMPLIFICATION__='2026.09.06.9';
   simplifyHomeScreen();
 }
 
@@ -207,6 +216,7 @@ loadConnectedDataRuntime();
 window.MM_APP_SHELL.finalize();
 installHomeScreenSimplification();
 installRetiredChromeGuard();
+loadSimpleLessonRuntime();
 window.MM_APP_SHELL.navigation?.sync?.();
 loadMeasuredLearningRuntime();
 const geometryStyle=document.getElementById('mm-app-shell-registry-style');
