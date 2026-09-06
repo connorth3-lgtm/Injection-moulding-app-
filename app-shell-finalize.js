@@ -78,17 +78,25 @@ function loadMeasuredLearningRuntime(){
 }
 function removeHomeJobRouter(root){
   if(!root)return;
-  for(const heading of Array.from(root.querySelectorAll('h2,h3'))){
-    if(!/^What do you need to do\?$/i.test((heading.textContent||'').trim()))continue;
-    const slot=heading.closest('.mm-dashboard-slot');
-    const block=slot||heading.closest('section,.card,.mm-home-task-hub')||heading.parentElement;
-    if(block&&block!==root)block.remove();
+  const normalize=value=>String(value||'')
+    .replace(/[·•|–—-]/g,' ')
+    .replace(/\s+/g,' ')
+    .trim()
+    .toLowerCase();
+  const isLegacyRouterText=value=>{
+    const text=normalize(value);
+    return (text.includes('one platform')&&text.includes('five jobs'))||text.includes('what do you need to do');
+  };
+
+  for(const block of Array.from(root.querySelectorAll('.mm-dashboard-slot,section,.card,[class*="router"],[class*="job"]'))){
+    if(block.classList?.contains('mm-home-task-hub'))continue;
+    if(isLegacyRouterText(block.textContent))block.remove();
   }
-  for(const eyebrow of Array.from(root.querySelectorAll('.eyebrow'))){
-    if(!/^One platform\s*[·•-]\s*Five jobs$/i.test((eyebrow.textContent||'').trim()))continue;
-    const slot=eyebrow.closest('.mm-dashboard-slot');
-    const block=slot||eyebrow.closest('section,.card,.mm-home-task-hub')||eyebrow.parentElement;
-    if(block&&block!==root)block.remove();
+
+  for(const node of Array.from(root.querySelectorAll('h1,h2,h3,.eyebrow,[class*="eyebrow"],[class*="kicker"]'))){
+    if(!isLegacyRouterText(node.textContent))continue;
+    const block=node.closest('.mm-dashboard-slot,section,.card,[class*="router"],[class*="job"]')||node.parentElement;
+    if(block&&block!==root&&!block.classList?.contains('mm-home-task-hub'))block.remove();
   }
 }
 function removeHomeSecondaryBlocks(root){
