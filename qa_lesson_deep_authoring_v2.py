@@ -8,8 +8,10 @@ def need(ok,msg):
     if not ok: raise AssertionError(msg)
 
 src=(ROOT/'lesson-deep-authoring-v2.js').read_text(encoding='utf-8')
-for marker in ['requires the canonical 120-lesson pathway','Mechanism → evidence → decision','Misconception check','Teach-back','duplicate lesson records','substantively identical','pedagogicalPayload','Engineering boundary','Safety boundary',"R.after('renderLesson'","R.registerModule('lesson-deep-authoring-v2'"]:
+for marker in ['requires the canonical 120-lesson pathway','Key takeaway','Apply','Watch out','More detail','Mechanism','Evidence chain','Plant decision','Misconception check','Teach-back','duplicate lesson records','substantively identical','pedagogicalPayload','Engineering boundary','Safety boundary',"R.after('renderLesson'","R.registerModule('lesson-deep-authoring-v2'"]:
     need(marker in src,f'lesson deep authoring marker missing: {marker}')
+need('<details class="mm-deep-v2-card">' in src,'deeper lesson reasoning must remain collapsed behind a semantic disclosure')
+need('compact(r.evidence[0]||r.mechanism,165)' in src and 'compact(r.decision,175)' in src,'visible lesson essentials must remain intentionally concise')
 need('window.renderLesson=function' not in src,'v2 lesson layer must use runtime hooks instead of another renderLesson wrapper')
 
 node=textwrap.dedent(r'''
@@ -56,4 +58,4 @@ duplicate_node=textwrap.dedent(r'''
 dup=subprocess.run(['node','-e',duplicate_node],cwd=ROOT,text=True,capture_output=True)
 need(dup.returncode!=0,'substantively duplicate lesson content was accepted because identity metadata differed')
 need('substantively identical' in (dup.stderr+dup.stdout),'duplicate-content failure did not identify the substantive collision')
-print('MouldMaster lesson deep authoring v2 QA passed (120/120 substantively unique lesson-specific records through canonical runtime hook; duplicate identity masking rejected)')
+print('MouldMaster lesson deep authoring v2 QA passed (120/120 substantively unique lesson-specific records through canonical runtime hook; concise default presentation; deeper evidence preserved; duplicate identity masking rejected)')
