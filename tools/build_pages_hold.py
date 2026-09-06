@@ -8,8 +8,8 @@ the governed physical-device contract, or the production verifier.
 
 When a preview is staged, the hold root also publishes a tiny migration-only service
 worker. Its sole job is to replace an older installed root PWA worker and move stale
-root clients onto /preview/. It does not cache or serve learner runtime assets and does
-not change the release-hold status of the production root.
+MouldMaster root entry clients onto /preview/. It does not redirect helper pages or
+unrelated same-origin applications, cache learner assets, or change the release hold.
 
 The hold site also exposes one standalone, inline-only device metadata helper so a
 physical device can report the non-sensitive values needed by the governed validation
@@ -49,11 +49,23 @@ def migration_worker() -> str:
     return f"""/* {MIGRATION_WORKER_MARKER} */
 'use strict';
 const PREVIEW_PATH='./preview/';
+const LEGACY_ENTRY_FILES=new Set(['','index.html','MouldMaster_Academy_App.html']);
 
 function previewUrl(){{return new URL(PREVIEW_PATH,self.registration.scope)}}
+function scopeRoot(){{
+  const scope=new URL(self.registration.scope);
+  return scope.pathname.endsWith('/')?scope.pathname:scope.pathname+'/';
+}}
+function legacyEntryPath(url){{
+  const root=scopeRoot();
+  if(!url.pathname.startsWith(root))return null;
+  const relative=url.pathname.slice(root.length);
+  return relative.endsWith('/')?relative.slice(0,-1):relative;
+}}
 function shouldMove(url){{
-  const preview=previewUrl();
-  return url.origin===preview.origin&&!url.pathname.startsWith(preview.pathname);
+  const scope=new URL(self.registration.scope);
+  const relative=legacyEntryPath(url);
+  return url.origin===scope.origin&&relative!==null&&LEGACY_ENTRY_FILES.has(relative);
 }}
 
 self.addEventListener('install',event=>{{event.waitUntil(self.skipWaiting())}});
@@ -149,6 +161,8 @@ def validate_migration_worker(payload: str) -> None:
     required = (
         MIGRATION_WORKER_MARKER,
         "./preview/",
+        "LEGACY_ENTRY_FILES",
+        "MouldMaster_Academy_App.html",
         "self.skipWaiting()",
         "self.clients.claim()",
         "client.navigate(preview.href)",
@@ -160,6 +174,8 @@ def validate_migration_worker(payload: str) -> None:
     lowered = payload.lower()
     if "caches.open" in lowered or ".put(" in lowered or "mouldmaster_core_app" in lowered:
         raise SystemExit("release-hold migration worker must never cache or serve learner runtime assets")
+    if "!url.pathname.startswith(preview.pathname)" in lowered or "!url.pathname.startsWith(preview.pathname)" in lowered:
+        raise SystemExit("release-hold migration worker must use a legacy-entry allowlist, not a broad same-origin redirect")
 
 
 def stage_preview(preview_source: Path, preview_target: Path) -> None:
@@ -238,7 +254,7 @@ def main() -> None:
     args = parser.parse_args()
     preview_source = Path(args.preview_source) if args.preview_source else None
     files = build(Path(args.output), preview_source=preview_source)
-    preview_note = " with a separated non-production /preview/ learner runtime and stale-PWA migration worker" if preview_source else ""
+    preview_note = " with a separated non-production /preview/ learner runtime and scoped stale-PWA migration worker" if preview_source else ""
     print(
         f"Pages release-hold artifact ready: {len(files)} public files{preview_note}; "
         "production remains gated and the device metadata helper remains local-only."
