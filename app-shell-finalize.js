@@ -91,12 +91,27 @@ function removeHomeJobRouter(root){
     if(block&&block!==root)block.remove();
   }
 }
+function removeHomeSecondaryBlocks(root){
+  if(!root)return;
+  root.querySelectorAll('.region-banner').forEach(el=>el.remove());
+  for(const slot of Array.from(root.querySelectorAll('.mm-dashboard-slot'))){
+    const text=(slot.textContent||'').replace(/\s+/g,' ').trim();
+    if(/^Standards mode:/i.test(text)||/^Process data labs\b/i.test(text))slot.remove();
+  }
+  for(const heading of Array.from(root.querySelectorAll('h2,h3'))){
+    const text=(heading.textContent||'').replace(/\s+/g,' ').trim();
+    if(!/^Process data labs$/i.test(text))continue;
+    const block=heading.closest('.mm-dashboard-slot')||heading.closest('section,.card')||heading.parentElement;
+    if(block&&block!==root)block.remove();
+  }
+}
 function simplifyHomeScreen(){
   const root=document.getElementById('dashboard');
   if(!root)return;
 
   root.querySelectorAll('.mm-home-core-hero,.mm-home-kpis,.mm-home-course-head,.mm-home-course-grid,.hero,.friendly-hero,.kpis,.fun-dashboard').forEach(el=>el.remove());
   removeHomeJobRouter(root);
+  removeHomeSecondaryBlocks(root);
 
   const redundantHeadings=/^(What would you like to do\?|Your next learning tracks|Continue your path|How MouldMaster works|Achievements|Your achievements)$/i;
   for(const head of Array.from(root.querySelectorAll('.section-head'))){
@@ -125,6 +140,7 @@ function stabilizeRetiredChrome(){
   const root=document.getElementById('dashboard');
   if(root){
     removeHomeJobRouter(root);
+    removeHomeSecondaryBlocks(root);
     root.querySelectorAll('.fun-dashboard:not(.mm-daily-only),.fun-dashboard .level-card,.achievement-grid,.fun-settings').forEach(el=>el.remove());
     root.querySelectorAll('button').forEach(button=>{
       const text=button.textContent||'';
