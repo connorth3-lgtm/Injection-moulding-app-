@@ -1,12 +1,14 @@
-/* MouldMaster learner UX repair — 2026.09.06.16 */
+/* MouldMaster learner UX repair — 2026.09.06.17 */
 (function(){
 'use strict';
 if(window.MM_LEARNER_UX_REPAIR)return;
-const VERSION='2026.09.06.16';
+const VERSION='2026.09.06.17';
 const ASSESSMENT_BANK_VERSION='assessment-2026.08.30.1';
 const ASSESSMENT_HISTORY_KEY='mm-assessment-question-history-v4';
 const ASSESSMENT_RESULT_META_KEY='mm-assessment-result-meta-v1';
 const ASSESSMENT_HISTORY_LIMIT=8;
+const REDUNDANT_SELECTOR='.mm-mobile-actions,.mm-mobile-lessons,.mm-lesson-progress,.mm-reading-guide,.mm-read-marker';
+const FOCUSABLE_SELECTOR='button,a,input,select,textarea,[tabindex]';
 let lastLessonId=null;
 let queued=false;
 let resetQueued=false;
@@ -24,20 +26,49 @@ function lessonVisible(){const root=document.getElementById('lesson');return !!(
 function currentLessonId(){
   try{return typeof currentLesson==='function'?String(currentLesson()?.id??''):''}catch(_){return ''}
 }
+function rememberTabIndex(el){
+  if(!el||el.dataset.mmUxPrevTabindex!==undefined)return;
+  el.dataset.mmUxPrevTabindex=el.hasAttribute('tabindex')?String(el.getAttribute('tabindex')):'__none__';
+}
 function hideRedundant(el){
   if(!el)return;
+  if(el.dataset.mmUxHiddenByRepair!=='1'){
+    el.dataset.mmUxHiddenByRepair='1';
+    el.dataset.mmUxPrevHidden=el.hidden?'1':'0';
+    el.dataset.mmUxPrevAriaHidden=el.hasAttribute('aria-hidden')?String(el.getAttribute('aria-hidden')):'__none__';
+  }
   el.hidden=true;
   el.setAttribute('aria-hidden','true');
-  if(el.matches?.('button,a,input,select,textarea'))el.tabIndex=-1;
-  el.querySelectorAll?.('button,a,input,select,textarea').forEach(x=>x.tabIndex=-1);
+  const focusables=[...(el.matches?.(FOCUSABLE_SELECTOR)?[el]:[]),...el.querySelectorAll?.(FOCUSABLE_SELECTOR)||[]];
+  focusables.forEach(x=>{rememberTabIndex(x);x.tabIndex=-1});
+}
+function restoreRedundant(root){
+  root?.querySelectorAll?.('[data-mm-ux-hidden-by-repair="1"]').forEach(el=>{
+    el.hidden=el.dataset.mmUxPrevHidden==='1';
+    const aria=el.dataset.mmUxPrevAriaHidden;
+    if(aria==='__none__')el.removeAttribute('aria-hidden');else if(aria!==undefined)el.setAttribute('aria-hidden',aria);
+    const focusables=[...(el.matches?.('[data-mm-ux-prev-tabindex]')?[el]:[]),...el.querySelectorAll?.('[data-mm-ux-prev-tabindex]')||[]];
+    focusables.forEach(x=>{
+      const prior=x.dataset.mmUxPrevTabindex;
+      if(prior==='__none__')x.removeAttribute('tabindex');else if(prior!==undefined)x.setAttribute('tabindex',prior);
+      delete x.dataset.mmUxPrevTabindex;
+    });
+    delete el.dataset.mmUxHiddenByRepair;
+    delete el.dataset.mmUxPrevHidden;
+    delete el.dataset.mmUxPrevAriaHidden;
+  });
 }
 function repairLessonChrome(){
-  if(!mobile())return;
   const root=document.getElementById('lesson');
   const article=root?.querySelector('.lesson-body');
   if(!root||!article)return;
+  if(!mobile()){
+    restoreRedundant(root);
+    root.classList.remove('mm-learner-ux-repaired');
+    return;
+  }
   root.classList.add('mm-learner-ux-repaired');
-  root.querySelectorAll('.mm-mobile-actions,.mm-mobile-lessons,.mm-lesson-progress,.mm-reading-guide,.mm-read-marker').forEach(hideRedundant);
+  root.querySelectorAll(REDUNDANT_SELECTOR).forEach(hideRedundant);
   const hero=article.querySelector(':scope > .mm-simple-lesson-hero');
   if(hero&&article.firstElementChild!==hero)article.prepend(hero);
 }
@@ -152,9 +183,6 @@ function persistAssessmentResultMeta(level){
 }
 function installAssessmentRotation(){
   if(window.__MM_ASSESSMENT_ROTATION_V4__)return;
-  // assessment-ux is a presentation compatibility layer and historically wrapped
-  // getExamQuestions. Rebind this one core function to runtime-v2 first so final
-  // learner selection has one active membership owner rather than a wrapper chain.
   try{window.MM_RUNTIME_V2?.rebind?.('getExamQuestions')}catch(error){console.warn('[MouldMaster assessment] canonical selector rebind unavailable',error)}
   const base=window.getExamQuestions;
   if(typeof base!=='function')return;
