@@ -23,6 +23,7 @@ styles.textContent=`
 .mm-note-status{display:flex;justify-content:space-between;gap:10px;align-items:center;margin-top:7px;color:var(--muted);font-size:11px}.mm-note-status [data-state="saved"]{color:var(--good)}
 .mm-today-focus{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:14px;align-items:center;padding:17px 18px;margin-bottom:14px;border:1px solid #34516e;border-radius:15px;background:linear-gradient(135deg,#10233a,#122b3d)}
 .mm-today-focus h2{font-size:20px;margin:4px 0 5px}.mm-today-focus p{margin:0;color:#b9cade;line-height:1.45}.mm-today-meta{display:flex;gap:7px;flex-wrap:wrap;margin-top:9px}
+.mm-home-utility{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}.mm-home-utility button{min-height:44px;padding:8px 11px}
 .mm-home-task-hub{margin-bottom:16px;padding:18px;border:1px solid #2f4968;border-radius:16px;background:linear-gradient(180deg,#101f34,#0d1a2d)}
 .mm-home-task-hub h2{font-size:21px;margin:5px 0 5px}.mm-home-task-hub>p{margin:0;color:#aebfd4;line-height:1.45}
 .mm-home-actions{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-top:14px}
@@ -231,6 +232,7 @@ function decorateDashboard(){
         <h2>${esc(c.lesson.title)}</h2>
         <p>Track ${c.course.id}: ${esc(c.course.name)} · Lesson ${c.position+1}/${c.course.lessonIds.length}. Pick up exactly where you left off.</p>
         <div class="mm-today-meta"><span class="pill">${c.lesson.duration} min lesson</span><span class="pill">${user.dailyMinutes||15} min daily goal</span><span class="pill">${overall}% overall</span></div>
+        <div class="mm-home-utility" aria-label="Home shortcuts"><button class="ghost" type="button" data-mm-onclick="switchView('scenarios')">◎ Daily practice</button><button class="ghost" type="button" data-mm-onclick="switchView('profile')">☆ Saved lessons</button></div>
       </div>
       <button class="primary" type="button" data-mm-onclick="switchView('lesson')">Continue lesson →</button>
     </section>
@@ -241,7 +243,7 @@ function decorateDashboard(){
       <div class="mm-home-actions">
         <button class="mm-home-action mm-home-action-primary" type="button" data-mm-onclick="mmOpenMouldMaster()"><span class="mm-home-action-icon">◇</span><span><strong>Diagnose a moulding problem</strong><small>Mould Master · start from the defect, rank mechanisms and check evidence.</small></span></button>
         <button class="mm-home-action" type="button" data-mm-onclick="mmOpenDataDiagnosis()"><span class="mm-home-action-icon">⌁</span><span><strong>Analyse process data</strong><small>Read baseline, fault and recovery trends before changing settings.</small></span></button>
-        <button class="mm-home-action" type="button" data-mm-onclick="switchView('scenarios')"><span class="mm-home-action-icon">⚠</span><span><strong>Practice a scenario</strong><small>Build shop-floor judgement with evidence-first decisions.</small></span></button>
+        <button class="mm-home-action" type="button" data-mm-onclick="switchView('scenarios')"><span class="mm-home-action-icon">◎</span><span><strong>Practice a scenario</strong><small>Build shop-floor judgement with evidence-first decisions.</small></span></button>
         <button class="mm-home-action" type="button" data-mm-onclick="switchView('path')"><span class="mm-home-action-icon">▦</span><span><strong>Explore your learning</strong><small>Open the 120-lesson pathway, progress and linked practice.</small></span></button>
       </div>
     </section>`);

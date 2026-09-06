@@ -19,8 +19,7 @@ style.textContent=`
 .mm-simple-lesson-summary{margin:11px 0 0!important;color:#bfd0e4!important;font-size:17px;line-height:1.55!important;max-width:820px}
 .mm-simple-lesson-meta{display:flex;gap:8px;flex-wrap:wrap;margin-top:16px}
 .mm-simple-lesson-hero .mini-bar{margin:15px 0 0}
-.mm-simple-lesson-start{width:100%;margin-top:17px;min-height:50px;font-size:16px}
-.mm-simple-lesson-bookmark{width:42px;min-width:42px;height:42px;padding:0!important;display:inline-grid!important;place-items:center;border-radius:12px!important;font-size:20px!important;line-height:1!important}
+.mm-simple-lesson-bookmark{width:44px;min-width:44px;height:44px;padding:0!important;display:inline-grid!important;place-items:center;border-radius:12px!important;font-size:20px!important;line-height:1!important}
 #lesson.mm-simple-lesson .lesson-actions-sticky.mm-simple-completion{display:block;margin-top:12px}
 #lesson.mm-simple-lesson .lesson-actions-sticky.mm-simple-completion>button:not(.primary){display:none!important}
 #lesson.mm-simple-lesson .lesson-actions-sticky.mm-simple-completion>.primary{width:100%;min-height:52px;font-size:16px}
@@ -40,8 +39,8 @@ style.textContent=`
 #lesson.mm-simple-lesson .mm-simple-note-disclosure{overflow:hidden;border:1px solid #304a68;border-radius:14px;background:#0e1d31}
 #lesson.mm-simple-lesson .mm-simple-note-disclosure>summary{min-height:48px;display:flex;align-items:center;padding:11px 14px;cursor:pointer;list-style:none;color:#edf5ff;font-weight:800}
 #lesson.mm-simple-lesson .mm-simple-note-disclosure>summary::-webkit-details-marker{display:none}
-#lesson.mm-simple-lesson .mm-simple-note-disclosure>summary::before{content:'＋';margin-right:8px;color:#9fd8ff;font-weight:700}
-#lesson.mm-simple-lesson .mm-simple-note-disclosure[open]>summary::before{content:'−'}
+#lesson.mm-simple-lesson .mm-simple-note-disclosure>summary::before{content:'▸';margin-right:8px;color:#9fd8ff;font-weight:700}
+#lesson.mm-simple-lesson .mm-simple-note-disclosure[open]>summary::before{content:'▾'}
 #lesson.mm-simple-lesson .mm-simple-note-body{padding:0 14px 14px;border-top:1px solid #263f5c}
 #lesson.mm-simple-lesson .mm-simple-note-body .note-area{min-height:96px;margin-top:12px}
 #lesson.mm-simple-lesson .mm-simple-note-body .mm-note-status{margin-top:6px}
@@ -207,6 +206,7 @@ function simplifyCoreLesson(){
   if(!root||!article)return;
   const context=coreContext();
   root.classList.add('mm-simple-lesson');
+  root.querySelectorAll('.lesson-quest').forEach(el=>el.remove());
   root.querySelector('.lesson-breadcrumb')?.remove();
   root.querySelector('.lesson-header-card')?.remove();
   article.querySelectorAll(':scope > .mm-learning-progress,:scope > .mm-learning-jumps').forEach(el=>el.remove());
@@ -226,12 +226,8 @@ function simplifyCoreLesson(){
     const hero=document.createElement('section');
     hero.className='mm-simple-lesson-hero';
     hero.setAttribute('aria-label','Lesson overview');
-    hero.innerHTML=`<span class="eyebrow">Track ${course.id} · Lesson ${position+1}/${course.lessonIds.length}</span><h1>${safe(lesson.title)}</h1><p class="mm-simple-lesson-summary">${safe(lesson.summary||lesson.intro||'')}</p><div class="mm-simple-lesson-meta"><span class="pill">${lesson.duration} min lesson</span><span class="pill">${safe(course.name)}</span><span class="pill">${pct}% track</span></div><div class="mini-bar" aria-hidden="true"><span style="width:${pct}%"></span></div><button class="primary mm-simple-lesson-start" type="button">Start lesson ↓</button>`;
+    hero.innerHTML=`<span class="eyebrow">Track ${course.id} · Lesson ${position+1}/${course.lessonIds.length}</span><h1>${safe(lesson.title)}</h1><p class="mm-simple-lesson-summary">${safe(lesson.summary||lesson.intro||'')}</p><div class="mm-simple-lesson-meta"><span class="pill">${lesson.duration} min lesson</span><span class="pill">${safe(course.name)}</span><span class="pill">${pct}% track</span></div><div class="mini-bar" aria-hidden="true"><span style="width:${pct}%"></span></div>`;
     article.insertBefore(hero,article.firstChild);
-    hero.querySelector('.mm-simple-lesson-start')?.addEventListener('click',()=>{
-      const target=article.querySelector('.content-block,.mm-simple-section,.callout');
-      target?.scrollIntoView({behavior:'smooth',block:'start'});
-    });
   }
   compactCompletionActions(article);
   foldEvidenceCheck(article);
@@ -258,7 +254,8 @@ function apply(){simplifyCoreLesson();simplifyMaterialLesson();simplifySpecialis
 
 window.MM_APP_SHELL?.events?.onRender?.('lesson',()=>requestAnimationFrame(simplifyCoreLesson));
 const observer=new MutationObserver(()=>queueMicrotask(apply));
-if(document.body)observer.observe(document.body,{childList:true,subtree:true});
+const observedLesson=document.getElementById('lesson');
+if(observedLesson)observer.observe(observedLesson,{childList:true,subtree:true});
 apply();
 window.MM_SIMPLE_LESSON_EXPERIENCE={version:VERSION,apply,simplifyCoreLesson,simplifyMaterialLesson,observer};
 })();

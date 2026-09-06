@@ -26,24 +26,28 @@ async function seedLearner(page){
   });
 }
 
-test('Read Aloud integrates with the real shell, stays above mobile navigation, and scopes itself to visible learner text', async ({ page }) => {
+test('Read Aloud integrates with the real shell, docks in the header without covering learner content, and scopes itself to visible learner text', async ({ page }) => {
   await seedLearner(page);
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto(APP, { waitUntil: 'domcontentloaded' });
 
   const host=page.locator('.mm-read-aloud');
   await expect(host).toBeVisible();
-  await expect(host).toHaveAttribute('data-version','2026.09.07.2');
-  await expect.poll(()=>page.evaluate(()=>window.MMReadAloud?.version||'')).toBe('2026.09.07.2');
+  await expect(host).toHaveAttribute('data-version','2026.09.07.3');
+  await expect.poll(()=>page.evaluate(()=>window.MMReadAloud?.version||'')).toBe('2026.09.07.3');
   await expect(host.locator('summary')).toContainText('Listen');
 
   const placement=await page.evaluate(()=>{
-    const listen=document.querySelector('.mm-read-aloud details')?.getBoundingClientRect();
-    const nav=document.querySelector('.mobile-nav')?.getBoundingClientRect();
-    return listen&&nav?{listenBottom:listen.bottom,navTop:nav.top}:null;
+    const host=document.querySelector('.mm-read-aloud');
+    const actions=document.querySelector('.top-actions');
+    const details=host?.querySelector('details');
+    return host&&actions&&details?{parent:host.parentElement===actions,position:getComputedStyle(host).position,width:details.getBoundingClientRect().width,height:details.getBoundingClientRect().height}:null;
   });
   expect(placement).not.toBeNull();
-  expect(placement.listenBottom).toBeLessThanOrEqual(placement.navTop+1);
+  expect(placement.parent).toBeTruthy();
+  expect(placement.position).toBe('relative');
+  expect(placement.width).toBeLessThanOrEqual(48);
+  expect(placement.height).toBeGreaterThanOrEqual(44);
 
   await host.locator('details').evaluate(el=>{el.open=true;});
   await expect(host.locator('[data-mm-read="play"]')).toBeVisible();
@@ -125,7 +129,7 @@ test('Read Aloud supported-path controls execute the exact product runtime in a 
 
   const host=page.locator('.mm-read-aloud');
   await expect(host).toBeVisible();
-  await expect(host).toHaveAttribute('data-version','2026.09.07.2');
+  await expect(host).toHaveAttribute('data-version','2026.09.07.3');
   await host.locator('details').evaluate(el=>{el.open=true;});
 
   const visibilityCheck=await page.evaluate(() => {

@@ -235,3 +235,39 @@ test('capture Android-like Home regression artifact after bootstrap is gone and 
   await expect(page.locator('#dashboard')).not.toContainText(/workshop rank|learning streak|badges/i);
   await page.screenshot({path:'qa-artifacts/mobile-home-412x915.png',fullPage:true});
 });
+
+
+test('UI audit contract: one page title, compact header actions, useful Home, dense hubs, and unobstructed lesson content',async({page})=>{
+  await page.setViewportSize({width:412,height:915});
+  await openApp(page);
+  await expect(page.locator('#dashboard .mm-home-utility')).toBeVisible();
+  await expect(page.locator('#dashboard .mm-home-utility button')).toHaveCount(2);
+  const searchBox=await page.locator('#searchBtn').boundingBox();
+  expect(searchBox.width).toBeLessThanOrEqual(48);
+  expect(searchBox.height).toBeGreaterThanOrEqual(44);
+  const listen=page.locator('.mm-read-aloud');
+  await expect(listen).toBeVisible();
+  expect(await listen.evaluate(el=>el.parentElement?.classList.contains('top-actions'))).toBeTruthy();
+
+  await openLearnHub(page);
+  await expect(page.locator('body[data-mm-view="path"] .topbar>div:first-child')).toBeHidden();
+  await expect(page.locator('#path .mm-primary-hub-head h1')).toHaveCount(1);
+  expect(await page.locator('#path .mm-hub-grid').evaluate(el=>getComputedStyle(el).gridTemplateColumns.split(' ').length)).toBe(2);
+
+  await openPracticeHub(page);
+  await expect(page.locator('body[data-mm-view="scenarios"] .topbar>div:first-child')).toBeHidden();
+  expect(await page.locator('#scenarios .mm-hub-grid').evaluate(el=>getComputedStyle(el).gridTemplateColumns.split(' ').length)).toBe(2);
+
+  await openLearnHub(page);
+  await page.getByRole('button',{name:/Continue lesson/i}).first().click();
+  await expect(page.locator('#lesson .lesson-quest')).toHaveCount(0);
+  await expect(page.locator('#lesson .mm-simple-lesson-start')).toHaveCount(0);
+  await expect(page.locator('body[data-mm-view="lesson"] .topbar>div:first-child')).toBeHidden();
+  const overlap=await page.evaluate(()=>{
+    const a=document.querySelector('.mm-read-aloud details')?.getBoundingClientRect();
+    const lesson=document.querySelector('#lesson .mm-simple-lesson-hero')?.getBoundingClientRect();
+    if(!a||!lesson)return true;
+    return !(a.right<=lesson.left||a.left>=lesson.right||a.bottom<=lesson.top||a.top>=lesson.bottom);
+  });
+  expect(overlap).toBeFalsy();
+});
