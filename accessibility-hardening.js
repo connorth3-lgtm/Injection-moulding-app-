@@ -1,11 +1,11 @@
-/* MouldMaster accessibility/browser hardening — 2026-09-03 */
+/* MouldMaster accessibility/browser hardening — 2026-09-06 */
 (function(){
 'use strict';
 if(window.MM_ACCESSIBILITY_HARDENING)return;
-const VERSION='2026.09.03.1';
+const VERSION='2026.09.06.1';
 let lastFocus=null,activeModal=null;
 const FOCUSABLE='a[href],button:not([disabled]),input:not([disabled]),select:not([disabled]),textarea:not([disabled]),[tabindex]:not([tabindex="-1"])';
-function visible(el){if(!el||!el.isConnected)return false;const s=getComputedStyle(el);return s.display!=='none'&&s.visibility!=='hidden'}
+function visible(el){if(!el||!el.isConnected||el.closest?.('[aria-hidden="true"]'))return false;const s=getComputedStyle(el);return s.display!=='none'&&s.visibility!=='hidden'&&el.getClientRects().length>0}
 function focusables(root){return [...root.querySelectorAll(FOCUSABLE)].filter(visible)}
 function clean(v){return String(v??'').replace(/\s+/g,' ').trim()}
 function style(){if(document.getElementById('mm-a11y-hardening-style'))return;const s=document.createElement('style');s.id='mm-a11y-hardening-style';s.textContent=`
@@ -51,8 +51,8 @@ const observer=new MutationObserver(mutations=>{
   for(const root of roots)scan(root);
   if(!roots.size)syncModalState();
 });
-observer.observe(document.documentElement,{childList:true,subtree:true,attributes:true,attributeFilter:['class','hidden','style']});
+observer.observe(document.documentElement,{childList:true,subtree:true,attributes:true,attributeFilter:['class','hidden','style','aria-hidden']});
 window.addEventListener('pageshow',()=>scan(document));document.addEventListener('DOMContentLoaded',()=>scan(document),{once:true});
-window.MM_ACCESSIBILITY_HARDENING=Object.freeze({version:VERSION,focusTrap:true,focusRestore:true,forcedColors:true,moreContrast:true,externalLinkIsolation:true,mutationScope:'changed-subtrees',announce,scan,scope:'Runtime accessibility safeguards; formal WCAG conformance still requires manual assistive-technology and browser testing.'});
+window.MM_ACCESSIBILITY_HARDENING=Object.freeze({version:VERSION,focusTrap:true,focusRestore:true,hiddenDescendantsExcluded:true,forcedColors:true,moreContrast:true,externalLinkIsolation:true,mutationScope:'changed-subtrees',announce,scan,scope:'Runtime accessibility safeguards; formal WCAG conformance still requires manual assistive-technology and browser testing.'});
 scan(document);
 })();
