@@ -1,7 +1,6 @@
 const CACHE_VERSION='2026.09.06.13';
 const CACHE_REVISION='assessment-rotation-immutable-r2-20260906';
 const STATIC_CACHE=`mouldmaster-static-${CACHE_VERSION}-${CACHE_REVISION}`;
-const LEGACY_RECOVERY_SOURCE_ONLY='./MouldMaster_Academy_App.html';
 
 // Small fail-closed offline foundation. Remaining feature packs are warmed best-effort and never block activation.
 const CORE=[
