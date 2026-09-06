@@ -2,7 +2,9 @@ const CACHE_VERSION='2026.09.06.13';
 const CACHE_REVISION='assessment-rotation-immutable-r2-20260906';
 const STATIC_CACHE=`mouldmaster-static-${CACHE_VERSION}-${CACHE_REVISION}`;
 
-// Small fail-closed offline foundation. Remaining feature packs are warmed best-effort and never block activation.
+// Release assets are grouped for readability, but activation is atomic across both
+// groups. A new worker must cache the complete offline application before it can
+// replace the previous validated release.
 const CORE=[
   './index.html',
   './MouldMaster_Core_App.html',
@@ -135,6 +137,7 @@ const OPTIONAL=[
   './process-data-20-pass-16-20.js',
   './process-data-20-pass-atlas.js'
 ];
+const RELEASE_ASSETS=[...new Set([...CORE,...OPTIONAL])];
 
 async function cacheAsset(cache,url){
   const request=new Request(url,{cache:'reload'});
@@ -147,13 +150,12 @@ async function cacheAsset(cache,url){
 self.addEventListener('install',event=>{
   event.waitUntil((async()=>{
     const cache=await caches.open(STATIC_CACHE);
-    const coreResults=await Promise.allSettled(CORE.map(url=>cacheAsset(cache,url)));
-    const failed=coreResults.map((x,i)=>x.status==='rejected'?CORE[i]:null).filter(Boolean);
+    const results=await Promise.allSettled(RELEASE_ASSETS.map(url=>cacheAsset(cache,url)));
+    const failed=results.map((x,i)=>x.status==='rejected'?RELEASE_ASSETS[i]:null).filter(Boolean);
     if(failed.length){
       await caches.delete(STATIC_CACHE);
-      throw new Error(`MouldMaster offline core update is incomplete; keeping the previous worker. Missing: ${failed.join(', ')}`);
+      throw new Error(`MouldMaster offline release update is incomplete; keeping the previous worker. Missing: ${failed.join(', ')}`);
     }
-    await Promise.allSettled(OPTIONAL.map(url=>cacheAsset(cache,url)));
     await self.skipWaiting();
   })());
 });
@@ -168,7 +170,7 @@ self.addEventListener('activate',event=>{
 
 // The validated release cache is immutable after install. Runtime network responses are
 // returned directly and are never written back into STATIC_CACHE. A new release must
-// install and validate its complete core before it can become active.
+// install and validate its complete offline asset set before it can become active.
 async function fetchNetwork(event){
   try{return await fetch(event.request,{cache:'no-store'})}catch(_){return null}
 }
@@ -187,7 +189,7 @@ self.addEventListener('fetch',event=>{
         const r=await fetchNetwork(event);
         if(r&&r.ok)return r;
       }catch(_){}
-      return await caches.match(event.request,{ignoreSearch:true})||await caches.match('./index.html')||new Response('<!doctype html><meta name="viewport" content="width=device-width,initial-scale=1"><title>MouldMaster offline</title><main style="font:16px system-ui;padding:24px;max-width:680px"><h1>MouldMaster is not fully installed offline yet</h1><p>Reconnect once and reopen the app. The core shell installs atomically; additional learning and specialist packs are warmed best-effort and cached again when requested online.</p></main>',{status:503,headers:{'Content-Type':'text/html; charset=utf-8','Cache-Control':'no-store'}});
+      return await caches.match(event.request,{ignoreSearch:true})||await caches.match('./index.html')||new Response('<!doctype html><meta name="viewport" content="width=device-width,initial-scale=1"><title>MouldMaster offline</title><main style="font:16px system-ui;padding:24px;max-width:680px"><h1>MouldMaster is not fully installed offline yet</h1><p>Reconnect once and reopen the app. The complete offline release installs atomically before a new worker can replace the previous validated cache.</p></main>',{status:503,headers:{'Content-Type':'text/html; charset=utf-8','Cache-Control':'no-store'}});
     })());
     return;
   }
