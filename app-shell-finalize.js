@@ -20,7 +20,7 @@ const EVIDENCE_STATUS=Object.freeze({
 });
 const GAP=window.MM_SPECIALIST_EVIDENCE_GAPS;
 const BASE=window.MM_SPECIALIST_CURRICULUM;
-function esc(v){return String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function esc(v){return String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot',"'":'&#39;'}[c]))}
 function syncEvidenceExports(){
   for(const lesson of GAP.lessons){
     const state=EVIDENCE_STATUS[lesson.evidenceArea]||'Provisional';
@@ -76,11 +76,27 @@ function loadMeasuredLearningRuntime(){
   script.addEventListener('error',()=>console.warn('[MouldMaster] Measured Learning runtime unavailable; learner navigation remains disabled.'));
   document.head.appendChild(script);
 }
+function removeHomeJobRouter(root){
+  if(!root)return;
+  for(const heading of Array.from(root.querySelectorAll('h2,h3'))){
+    if(!/^What do you need to do\?$/i.test((heading.textContent||'').trim()))continue;
+    const slot=heading.closest('.mm-dashboard-slot');
+    const block=slot||heading.closest('section,.card,.mm-home-task-hub')||heading.parentElement;
+    if(block&&block!==root)block.remove();
+  }
+  for(const eyebrow of Array.from(root.querySelectorAll('.eyebrow'))){
+    if(!/^One platform\s*[·•-]\s*Five jobs$/i.test((eyebrow.textContent||'').trim()))continue;
+    const slot=eyebrow.closest('.mm-dashboard-slot');
+    const block=slot||eyebrow.closest('section,.card,.mm-home-task-hub')||eyebrow.parentElement;
+    if(block&&block!==root)block.remove();
+  }
+}
 function simplifyHomeScreen(){
   const root=document.getElementById('dashboard');
   if(!root)return;
 
   root.querySelectorAll('.mm-home-core-hero,.mm-home-kpis,.mm-home-course-head,.mm-home-course-grid,.hero,.friendly-hero,.kpis,.fun-dashboard').forEach(el=>el.remove());
+  removeHomeJobRouter(root);
 
   const redundantHeadings=/^(What would you like to do\?|Your next learning tracks|Continue your path|How MouldMaster works|Achievements|Your achievements)$/i;
   for(const head of Array.from(root.querySelectorAll('.section-head'))){
@@ -108,6 +124,7 @@ function simplifyHomeScreen(){
 function stabilizeRetiredChrome(){
   const root=document.getElementById('dashboard');
   if(root){
+    removeHomeJobRouter(root);
     root.querySelectorAll('.fun-dashboard:not(.mm-daily-only),.fun-dashboard .level-card,.achievement-grid,.fun-settings').forEach(el=>el.remove());
     root.querySelectorAll('button').forEach(button=>{
       const text=button.textContent||'';
