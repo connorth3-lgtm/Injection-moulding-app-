@@ -75,7 +75,7 @@ function coreContext(){
     return {lesson,course,position,completed,pct};
   }catch(_){return null}
 }
-function safe(value){return String(value??'').replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]))}
+function safe(value){return String(value??'').replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot',"'":'&#39;'}[ch]))}
 function relabel(head){
   const text=(head.textContent||'').trim();
   if(/^Learning objectives$/i.test(text)||/^By the end of this lesson/i.test(text))head.textContent='What you’ll be able to do';
@@ -135,7 +135,11 @@ function compactNotes(article){
     section.appendChild(details);
   }
   const label=details.querySelector('[data-mm-simple-note-label]');
-  const syncLabel=()=>{if(label)label.textContent=area.value.trim()?'Edit note':'Add note'};
+  const syncLabel=()=>{
+    if(!label)return;
+    const next=area.value.trim()?'Edit note':'Add note';
+    if(label.textContent!==next)label.textContent=next;
+  };
   syncLabel();
   if(area.dataset.mmSimpleNoteBound!=='1'){
     area.dataset.mmSimpleNoteBound='1';
@@ -143,7 +147,11 @@ function compactNotes(article){
   }
   const explicitSave=details.querySelector('button[onclick*="saveLessonNote"]');
   const autosave=details.querySelector('.mm-note-status');
-  if(explicitSave){explicitSave.textContent='Save now';explicitSave.hidden=!!autosave}
+  if(explicitSave){
+    if(explicitSave.textContent!=='Save now')explicitSave.textContent='Save now';
+    const shouldHide=!!autosave;
+    if(explicitSave.hidden!==shouldHide)explicitSave.hidden=shouldHide;
+  }
 }
 function simplifyCoreLesson(){
   const root=document.getElementById('lesson');
