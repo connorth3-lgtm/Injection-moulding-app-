@@ -33,8 +33,8 @@ test('Read Aloud integrates with the real shell, stays above mobile navigation, 
 
   const host=page.locator('.mm-read-aloud');
   await expect(host).toBeVisible();
-  await expect(host).toHaveAttribute('data-version','2026.09.07.1');
-  await expect.poll(()=>page.evaluate(()=>window.MMReadAloud?.version||'')).toBe('2026.09.07.1');
+  await expect(host).toHaveAttribute('data-version','2026.09.07.2');
+  await expect.poll(()=>page.evaluate(()=>window.MMReadAloud?.version||'')).toBe('2026.09.07.2');
   await expect(host.locator('summary')).toContainText('Listen');
 
   const placement=await page.evaluate(()=>{
@@ -125,7 +125,7 @@ test('Read Aloud supported-path controls execute the exact product runtime in a 
 
   const host=page.locator('.mm-read-aloud');
   await expect(host).toBeVisible();
-  await expect(host).toHaveAttribute('data-version','2026.09.07.1');
+  await expect(host).toHaveAttribute('data-version','2026.09.07.2');
   await host.locator('details').evaluate(el=>{el.open=true;});
 
   const visibilityCheck=await page.evaluate(() => {
