@@ -105,10 +105,52 @@ function simplifyHomeScreen(){
     learningShortcut.innerHTML=`<span class="mm-home-action-icon">✓</span><span><strong>${done?'Daily practice complete':'Daily practice'}</strong><small>${done?'Keep practising with another evidence-first scenario.':'Take one short evidence-first moulding decision for today.'}</small></span>`;
   }
 }
+function stabilizeRetiredChrome(){
+  const root=document.getElementById('dashboard');
+  if(root){
+    root.querySelectorAll('.fun-dashboard:not(.mm-daily-only),.fun-dashboard .level-card,.achievement-grid,.fun-settings').forEach(el=>el.remove());
+    root.querySelectorAll('button').forEach(button=>{
+      const text=button.textContent||'';
+      if(/\+\s*\d+\s*XP\b/i.test(text))button.textContent=text.replace(/\s*\+\s*\d+\s*XP\b/ig,'');
+    });
+  }
+  document.querySelectorAll('#xpPop,.xp-pop,#profileMini .fun-hud').forEach(el=>el.remove());
+
+  const mobile=!!window.matchMedia?.('(max-width:700px)').matches;
+  for(const id of ['mm-src-open','mmrd-open']){
+    const launcher=document.getElementById(id);if(!launcher)continue;
+    if(mobile){
+      launcher.style.setProperty('display','none','important');
+      launcher.style.setProperty('visibility','hidden','important');
+      launcher.style.setProperty('pointer-events','none','important');
+      launcher.setAttribute('aria-hidden','true');launcher.tabIndex=-1;
+    }else{
+      if(launcher.style.getPropertyPriority('display')==='important')launcher.style.removeProperty('display');
+      launcher.style.removeProperty('visibility');launcher.style.removeProperty('pointer-events');
+    }
+  }
+  if(mobile){
+    const nav=document.querySelector('.mobile-nav');
+    nav?.querySelectorAll(':scope > button,:scope > a').forEach(item=>{
+      const text=(item.textContent||'').replace(/\s+/g,' ').trim();
+      if(/^(References|Reference Data)$/i.test(text)&&!item.dataset.view&&!/More/i.test(text))item.remove();
+    });
+  }
+}
+function installRetiredChromeGuard(){
+  if(window.__MM_RETIRED_CHROME_GUARD__)return;
+  stabilizeRetiredChrome();
+  const observer=new MutationObserver(()=>stabilizeRetiredChrome());
+  const home=document.getElementById('dashboard'),nav=document.querySelector('.mobile-nav');
+  if(home)observer.observe(home,{childList:true,subtree:true});
+  if(nav)observer.observe(nav,{childList:true});
+  window.addEventListener('resize',stabilizeRetiredChrome,{passive:true});
+  window.__MM_RETIRED_CHROME_GUARD__={version:'2026.09.06.8',observer};
+}
 function installHomeScreenSimplification(){
   if(window.__MM_HOME_SIMPLIFICATION__||typeof window.renderDashboard!=='function')return;
   const base=window.renderDashboard;
-  window.renderDashboard=function(){const result=base.apply(this,arguments);simplifyHomeScreen();return result};
+  window.renderDashboard=function(){const result=base.apply(this,arguments);simplifyHomeScreen();stabilizeRetiredChrome();return result};
   window.__MM_HOME_SIMPLIFICATION__='2026.09.06.8';
   simplifyHomeScreen();
 }
@@ -124,11 +166,13 @@ loadProductionHealth();
 loadConnectedDataRuntime();
 window.MM_APP_SHELL.finalize();
 installHomeScreenSimplification();
+installRetiredChromeGuard();
+window.MM_APP_SHELL.navigation?.sync?.();
 loadMeasuredLearningRuntime();
 const geometryStyle=document.getElementById('mm-app-shell-registry-style');
 if(geometryStyle&&geometryStyle.parentNode===document.head)document.head.appendChild(geometryStyle);
 window.addEventListener('popstate',()=>window.MM_APP_SHELL.navigation?.sync?.());
-requestAnimationFrame(()=>{window.MM_APP_SHELL.geometry?.sync?.();patchEvidenceUi();simplifyHomeScreen()});
+requestAnimationFrame(()=>{window.MM_APP_SHELL.geometry?.sync?.();patchEvidenceUi();simplifyHomeScreen();stabilizeRetiredChrome();window.MM_APP_SHELL.navigation?.sync?.()});
 // Preserve the canonical shell compatibility marker. Evidence-status bridging and connected-data runtime have their own versions above.
 window.MM_APP_SHELL_FINALIZED='2026.08.26.4';
 })();
