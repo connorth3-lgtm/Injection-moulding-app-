@@ -1,8 +1,8 @@
-/* MouldMaster assessment experience — question-only focus mode 2026-09-06.8 */
+/* MouldMaster assessment experience — question-only focus mode 2026-09-06.9 */
 (function(){
 'use strict';
 
-const VERSION='2026.09.06.8';
+const VERSION='2026.09.06.9';
 const FIRST_HISTORY_LIMIT=3;
 const HISTORY_KEY='mm_assessment_opening_history_v1';
 const root=document.documentElement;
@@ -69,16 +69,30 @@ function addStyles(){
   .mm-exam-actions button[disabled]{cursor:not-allowed;opacity:.48}
   .mm-unanswered-note{color:#ffd166;font-size:12px;margin-left:auto;text-align:right}
   .mm-exam-reviewed #examQuestions,.mm-exam-reviewed .mm-exam-nav,.mm-exam-reviewed .mm-exam-steps{display:none!important}
-  .mm-exam-reviewed #examResult{margin-top:18px;font-size:16px;line-height:1.55}
-  .mm-exam-reviewed .answer-review{gap:12px}
-  .mm-exam-reviewed .answer-row{padding:15px 16px;border-radius:12px;line-height:1.5}
-  .mm-exam-reviewed .answer-row.correct{background:#0d2925;border-color:#397466}
-  .mm-exam-reviewed .answer-row.incorrect{background:#2a171d;border-color:#74424d}
+  .mm-exam-reviewed #examResult{margin-top:18px;font-size:16px;line-height:1.5;outline:none}
+  .mm-result-summary{display:grid;gap:8px;padding:18px;border:1px solid #355171;border-radius:14px;background:#102039;box-shadow:none}
+  .mm-result-eyebrow{margin:0;color:#9fb4ce;font-size:11px;font-weight:800;letter-spacing:.09em;text-transform:uppercase}
+  .mm-result-main{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap}
+  .mm-result-score{font-size:clamp(32px,8vw,46px);line-height:1;font-weight:850;color:#f4f8ff}
+  .mm-result-status{font-size:17px;font-weight:800;color:#cfe2f7}
+  .mm-result-message,.mm-result-note,.mm-result-safety{margin:0}
+  .mm-result-message{color:#c9d7e8}
+  .mm-result-note{color:#a9d9c9;font-size:13px}
+  .mm-result-safety{padding:10px 12px;border:1px solid #745c2d;border-radius:10px;background:#2a2412;color:#f7e8ad;font-size:13px}
+  .mm-review-intro{margin:20px 0 9px}.mm-review-intro h3{margin:0 0 4px;font-size:18px}.mm-review-intro p{margin:0;color:#9fb4ce;font-size:13px}
+  .mm-exam-reviewed .answer-review{gap:10px;margin-top:0}
+  .mm-exam-reviewed .answer-row{padding:14px 15px;border-radius:12px;line-height:1.5;background:#152033!important;border-color:#4e6178!important;box-shadow:none!important;outline:none}
+  .mm-exam-reviewed .answer-row.correct,.mm-exam-reviewed .answer-row[hidden]{display:none!important}
+  .mm-exam-reviewed .answer-row.incorrect{background:#1f1d27!important;border-color:#6b5360!important}
+  .mm-review-source{margin-top:10px;padding-top:8px;border-top:1px solid rgba(148,163,184,.2)}
+  .mm-review-source summary{width:max-content;max-width:100%;cursor:pointer;color:#a9d8ff;font-size:12px;font-weight:750}
+  .mm-review-source .ref{margin:8px 0 0;padding:0;border:0}
   .scenario .choice.mm-choice-selected{border-color:#69a8ff;background:#17314f;box-shadow:inset 3px 0 0 #69a8ff}
   .scenario .choice.mm-choice-correct{border-color:#397466;background:#0d2925;box-shadow:inset 3px 0 0 #7ce6a3}
   .scenario .choice.mm-choice-review{border-color:#74424d;background:#2a171d;box-shadow:inset 3px 0 0 #ff7b7b}
   @media(max-width:680px){
     .modal{padding:0}.modal-card.mm-assessment-modal{width:100vw;max-width:none;max-height:100dvh;min-height:100dvh;border-radius:0;padding:18px 15px 120px}
+    .modal-card.mm-assessment-modal.mm-exam-reviewed{padding-bottom:28px}
     #examQuestions.mm-focus-mode .question{padding:18px 14px;border-radius:13px}
     .mm-question-stem{font-size:19px;line-height:1.5}
     .mm-option-card{grid-template-columns:20px 30px minmax(0,1fr);padding:12px 11px!important;font-size:14px}
@@ -203,9 +217,51 @@ function decorateExam(){
 }
 function decorateReview(){
   const result=document.getElementById('examResult');const review=document.getElementById('answerReview');if(!result||result.classList.contains('hidden')||!review)return;
-  const modal=result.closest('.modal-card');if(modal)modal.classList.add('mm-exam-reviewed');review.setAttribute('aria-label','Assessment answer review');
-  [...review.querySelectorAll('.answer-row')].forEach((row,i)=>{row.tabIndex=0;row.setAttribute('aria-label',`Question ${i+1} review: ${row.classList.contains('correct')?'correct':'review needed'}`)});
+  const raw=(result.textContent||'').replace(/\s+/g,' ').trim();
+  const score=raw.match(/(\d+)\s*\/\s*(\d+)\s+correct\s*[—-]\s*(\d+)%/i);
+  const passed=/\bPass\s*✓/i.test(raw)&&!/\bNot passed/i.test(raw);
+  const safety=raw.match(/(\d+)\s+safety-critical regional answer\(s\) need correction/i);
+  const earned=/certificate earned/i.test(raw);
+  const modal=result.closest('.modal-card');if(modal)modal.classList.add('mm-exam-reviewed');
+  const rows=[...review.querySelectorAll('.answer-row')];
+  const wrong=rows.filter(row=>!row.classList.contains('correct'));
+  rows.forEach((row,i)=>{
+    const isCorrect=row.classList.contains('correct');
+    if(isCorrect){row.hidden=true;row.setAttribute('aria-hidden','true');row.tabIndex=-1;row.removeAttribute('role');return}
+    row.hidden=false;row.removeAttribute('aria-hidden');row.tabIndex=0;row.setAttribute('role','listitem');
+    const heading=row.querySelector(':scope > b');
+    const number=(heading?.textContent||'').match(/^\s*(\d+)\./)?.[1]||String(i+1);
+    if(heading)heading.textContent=`Question ${number}`;
+    const ref=row.querySelector(':scope > .ref');
+    if(ref&&!ref.closest('.mm-review-source')){
+      const details=document.createElement('details');details.className='mm-review-source';
+      const summary=document.createElement('summary');summary.textContent='Source';details.appendChild(summary);
+      ref.replaceWith(details);details.appendChild(ref);
+    }
+    row.setAttribute('aria-label',`Question ${number}: review needed`);
+  });
+  let intro=document.getElementById('mmReviewIntro');
+  if(!intro){intro=document.createElement('div');intro.id='mmReviewIntro';intro.className='mm-review-intro';review.insertAdjacentElement('beforebegin',intro)}
+  if(wrong.length){
+    intro.hidden=false;intro.innerHTML='<h3>Review these answers</h3><p></p>';intro.querySelector('p').textContent=`${wrong.length} answer${wrong.length===1?'':'s'} to check before your next attempt.`;
+    review.hidden=false;review.setAttribute('role','list');review.setAttribute('aria-label','Answers to review');
+  }else{
+    intro.hidden=true;review.hidden=true;review.removeAttribute('role');review.removeAttribute('aria-label');
+  }
+  const summary=document.createElement('section');summary.className='mm-result-summary';summary.setAttribute('aria-label','Assessment result');
+  const eyebrow=document.createElement('p');eyebrow.className='mm-result-eyebrow';eyebrow.textContent='Assessment result';summary.appendChild(eyebrow);
+  const main=document.createElement('div');main.className='mm-result-main';
+  const scoreEl=document.createElement('strong');scoreEl.className='mm-result-score';scoreEl.textContent=score?`${score[3]}%`:'Complete';
+  const status=document.createElement('span');status.className='mm-result-status';status.textContent=passed?'Passed':'Review needed';
+  main.append(scoreEl,status);summary.appendChild(main);
+  const message=document.createElement('p');message.className='mm-result-message';
+  message.textContent=wrong.length?(passed?`${wrong.length} answer${wrong.length===1?'':'s'} to review below.`:`Review ${wrong.length} answer${wrong.length===1?'':'s'} below, then try again.`):'All answers are correct. You’re done.';
+  summary.appendChild(message);
+  if(earned){const note=document.createElement('p');note.className='mm-result-note';note.textContent='Certificate earned.';summary.appendChild(note)}
+  if(safety){const warning=document.createElement('p');warning.className='mm-result-safety';warning.textContent=`${safety[1]} safety-critical answer${safety[1]==='1'?'':'s'} must be corrected before this assessment can pass.`;summary.appendChild(warning)}
+  result.replaceChildren(summary);result.setAttribute('role','status');result.tabIndex=-1;
   try{result.scrollIntoView({block:'start',behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth'})}catch(_){}
+  setTimeout(()=>{try{result.focus({preventScroll:true})}catch(_){result.focus()}},0);
 }
 function decorateScenario(i,ci,el){
   if(!el||!el.closest)return;const scenario=el.closest('.scenario');if(!scenario)return;
