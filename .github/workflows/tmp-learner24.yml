@@ -30,6 +30,23 @@ jobs:
           package-manager-cache: false
       - name: Apply governed .24 learner migration
         run: python tools/tmp_learner24_migration.py
+      - name: Bind Saved lessons without widening handler allowlist
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          path=Path('learning-experience.js')
+          text=path.read_text(encoding='utf-8')
+          old='data-mm-onclick="mmOpenSavedLessons()">☆ Saved lessons'
+          new='data-mm-home-saved="1">☆ Saved lessons'
+          if text.count(old)!=1:
+              raise SystemExit(f'expected one Saved lessons bridge binding, found {text.count(old)}')
+          text=text.replace(old,new,1)
+          anchor="    </section>`);\n}\n\nrenderLesson=function(){"
+          replacement="    </section>`);\n  const savedButton=root.querySelector('[data-mm-home-saved=\"1\"]');\n  if(savedButton&&savedButton.dataset.mmSavedBound!=='1'){\n    savedButton.dataset.mmSavedBound='1';\n    savedButton.addEventListener('click',openSavedLessons);\n  }\n}\n\nrenderLesson=function(){"
+          if text.count(anchor)!=1:
+              raise SystemExit(f'expected one dashboard decoration anchor, found {text.count(anchor)}')
+          path.write_text(text.replace(anchor,replacement,1),encoding='utf-8')
+          PY
       - name: Regenerate deterministic style CSP
         run: |
           node tools/generate_style_csp.cjs
