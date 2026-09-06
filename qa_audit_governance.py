@@ -51,8 +51,8 @@ for marker in (
     "Evaluate physical-device production readiness",
     'production_ready: ${{ steps.physical-readiness.outputs.production_ready }}',
     'id: physical-readiness',
-    'if [[ "$status" == "validated" ]]; then',
-    "--artifact .pages-dist --require-validated",
+    'if [[ "$status" == "validated" || "$status" == "released-with-accepted-ios-risk" ]]; then',
+    "--artifact .pages-dist --require-release-authorized",
     'echo "production_ready=true" >> "$GITHUB_OUTPUT"',
     'echo "production_ready=false" >> "$GITHUB_OUTPUT"',
     "Pages production release not ready",
@@ -73,8 +73,10 @@ for marker in (
     need(marker in pages, f"physical-device release policy missing from Pages workflow: {marker}")
 for marker in (
     'parser.add_argument("--require-validated", action="store_true")',
+    'parser.add_argument("--require-release-authorized", action="store_true")',
     'if args.require_validated and data["status"] != "validated":',
     "validated physical iOS/iPadOS and Android evidence is required for production publication",
+    "validated physical evidence or an explicit governed platform-risk waiver is required for production publication",
 ):
     need(marker in physical, f"physical-device verifier does not fail closed for production app publication: {marker}")
 

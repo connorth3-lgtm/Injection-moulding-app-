@@ -102,13 +102,13 @@ jobs:
           print(data['status'])
           PY
           )"
-          if [[ "$status" == "validated" ]]; then
+          if [[ "$status" == "validated" || "$status" == "released-with-accepted-ios-risk" ]]; then
             # Validated evidence must also match the exact built public runtime.
-            python3 tools/verify_pwa_physical_evidence.py --artifact .pages-dist --require-validated
+            python3 tools/verify_pwa_physical_evidence.py --artifact .pages-dist --require-release-authorized
             echo "production_ready=true" >> "$GITHUB_OUTPUT"
             {
               echo "### Pages release ready"
-              echo "Validated physical iOS/iPadOS and Android evidence matches the exact production artifact."
+              echo "Physical-device evidence or an explicit governed platform-risk waiver matches the exact production artifact."
             } >> "$GITHUB_STEP_SUMMARY"
           else
             # Pending evidence keeps the production root fail-closed. The already-built
@@ -191,7 +191,7 @@ jobs:
         run: python3 tools/build_pages_artifact.py
       - name: Reconfirm validated physical PWA evidence against rebuilt runtime
         if: needs.build.outputs.production_ready == 'true'
-        run: python3 tools/verify_pwa_physical_evidence.py --artifact .pages-dist --require-validated
+        run: python3 tools/verify_pwa_physical_evidence.py --artifact .pages-dist --require-release-authorized
       - name: Verify exact live production deployment
         if: needs.build.outputs.production_ready == 'true'
         run: >-
