@@ -22,6 +22,11 @@ async function openPracticeHub(page){
   await expect(page.locator('#scenarios .mm-practice-hub')).toBeVisible();
   await expectOnlyCurrent(page,'Practice');
 }
+async function openPracticeAction(page,action){
+  const button=page.locator(`#scenarios [data-mm-hub-action="${action}"]`);
+  await expect(button).toBeVisible();
+  await button.click();
+}
 async function openLearnHub(page){
   await page.locator('.mobile-nav > button').filter({hasText:'Learn'}).click();
   await expect(page.locator('#path .mm-learn-hub')).toBeVisible();
@@ -82,8 +87,7 @@ for(const viewport of [{name:'android-412x915',width:412,height:915},{name:'smal
       expect(geometry.lastBottom).toBeLessThanOrEqual(geometry.navTop+1);
 
       await openPracticeHub(page);
-      await expect(page.getByRole('button',{name:/Open troubleshooting/i})).toBeVisible();
-      await page.getByRole('button',{name:/Open troubleshooting/i}).click();
+      await openPracticeAction(page,'troubleshooting');
       await expect(page.locator('#modal .modal-card')).toBeVisible();
       await page.getByRole('button',{name:/Mould Master/i}).click();
       await expect(page.locator('#mmMouldMasterWorkspace')).toBeVisible();
@@ -94,7 +98,7 @@ for(const viewport of [{name:'android-412x915',width:412,height:915},{name:'smal
     test('Data diagnosis and the 50-case deep dive are directly reachable from Practice',async({page})=>{
       await openApp(page);
       await openPracticeHub(page);
-      await page.getByRole('button',{name:/Open data diagnosis/i}).click();
+      await openPracticeAction(page,'process-data');
       await expect(page.locator('#processDataLabs')).toBeVisible();
       await expect(page.getByRole('heading',{name:'Guided Data Diagnosis'})).toBeVisible();
       await expect(page.getByRole('button',{name:'Open 50-case data deep dive'})).toBeVisible();
@@ -117,7 +121,7 @@ for(const viewport of [{name:'android-412x915',width:412,height:915},{name:'smal
     test('Open 20-pass · 200-case atlas from Practice, filter a pass, and inspect the full evidence chain',async({page})=>{
       await openApp(page);
       await openPracticeHub(page);
-      await page.getByRole('button',{name:/Open data diagnosis/i}).click();
+      await openPracticeAction(page,'process-data');
       await expect(page.getByRole('button',{name:'Open 20-pass · 200-case atlas'})).toBeVisible();
       await page.getByRole('button',{name:'Open 20-pass · 200-case atlas'}).click();
       await expect(page.getByRole('heading',{name:'200 advanced process-data cases'})).toBeVisible();
@@ -138,7 +142,7 @@ for(const viewport of [{name:'android-412x915',width:412,height:915},{name:'smal
     test('Local shot CSV intake strips raw identifiers in the real UI',async({page})=>{
       await openApp(page);
       await openPracticeHub(page);
-      await page.getByRole('button',{name:/Open data diagnosis/i}).click();
+      await openPracticeAction(page,'process-data');
       await expect(page.getByRole('button',{name:'Prepare real shot CSV locally'})).toBeVisible();
       await page.getByRole('button',{name:'Prepare real shot CSV locally'}).click();
       await expect(page.getByRole('heading',{name:'Prepare shot data without uploading it'})).toBeVisible();
