@@ -200,7 +200,7 @@ function patchQuestionListRenderers(){
 function installMobileLayoutGuard(){
   if(document.getElementById('mm-mobile-layout-guard-style'))return;
   const style=document.createElement('style');style.id='mm-mobile-layout-guard-style';style.textContent=`
-:root{--mm-mobile-nav-clearance:104px;--shadow:0 7px 22px rgba(0,0,0,.18)}
+:root{--mm-mobile-nav-clearance:120px;--shadow:0 7px 22px rgba(0,0,0,.18)}
 .card{border-radius:14px!important;border-color:#263b58!important;box-shadow:var(--shadow)!important;background:linear-gradient(180deg,rgba(18,32,52,.96),rgba(13,25,42,.96))!important}
 .main{padding-top:20px}
 .topbar{margin-bottom:16px!important}
@@ -222,7 +222,7 @@ function installMobileLayoutGuard(){
 .mm-question-collapsed{display:none!important}.mm-question-toggle{width:100%;margin:10px 0 5px!important;min-height:42px!important}
 #examQuestions + .mm-question-toggle{margin:8px 0 14px!important}
 @media(max-width:700px){
-  :root{--mm-mobile-nav-clearance:104px}
+  :root{--mm-mobile-nav-clearance:120px}
   html{scroll-padding-bottom:calc(var(--mm-mobile-nav-clearance) + env(safe-area-inset-bottom))}
   body{padding-bottom:0!important}
   .main{padding:14px 14px calc(var(--mm-mobile-nav-clearance) + env(safe-area-inset-bottom))!important}
