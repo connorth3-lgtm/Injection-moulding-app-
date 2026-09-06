@@ -1,9 +1,11 @@
-/* MouldMaster learner UX repair — 2026.09.06.14 */
+/* MouldMaster learner UX repair — 2026.09.06.15 */
 (function(){
 'use strict';
 if(window.MM_LEARNER_UX_REPAIR)return;
-const VERSION='2026.09.06.14';
+const VERSION='2026.09.06.15';
+const ASSESSMENT_BANK_VERSION='assessment-2026.09.06.15';
 const ASSESSMENT_HISTORY_KEY='mm-assessment-question-history-v4';
+const ASSESSMENT_RESULT_META_KEY='mm-assessment-result-meta-v1';
 const ASSESSMENT_HISTORY_LIMIT=8;
 const ASSESSMENT_CANDIDATES=12;
 let lastLessonId=null;
@@ -46,8 +48,26 @@ function resetLessonScroll(){
   for(const node of nodes){if(!node)continue;try{node.scrollTop=0;node.scrollLeft=0}catch(_){}}
   try{window.scrollTo({top:0,left:0,behavior:'auto'})}catch(_){try{window.scrollTo(0,0)}catch(__){}}
 }
+function isPreviewPublication(){
+  return /\/preview(?:\/|$)/i.test(location.pathname)||document.querySelector('meta[name="mm-publication-boundary"][content="non-production-preview"]')!==null;
+}
+function ensurePreviewWarning(){
+  if(!isPreviewPublication())return;
+  let banner=document.getElementById('mmNonProductionPreviewWarning');
+  if(banner)return;
+  const host=document.querySelector('.main')||document.querySelector('main')||document.body;
+  if(!host)return;
+  banner=document.createElement('div');
+  banner.id='mmNonProductionPreviewWarning';
+  banner.className='callout';
+  banner.setAttribute('role','status');
+  banner.setAttribute('aria-live','polite');
+  banner.innerHTML='<strong>Non-production preview</strong><br>This preview is for learner review and validation only. It is not the production release and does not bypass the physical-device release gate.';
+  host.prepend(banner);
+}
 function runRepair(reset){
   repairLessonChrome();
+  ensurePreviewWarning();
   if(reset)resetLessonScroll();
 }
 function scheduleRepair(reset=false){
@@ -59,9 +79,9 @@ function scheduleRepair(reset=false){
     const shouldReset=resetQueued;resetQueued=false;
     runRepair(shouldReset);
     requestAnimationFrame(()=>{
-      repairLessonChrome();
+      repairLessonChrome();ensurePreviewWarning();
       if(shouldReset)resetLessonScroll();
-      requestAnimationFrame(()=>{repairLessonChrome();if(shouldReset)resetLessonScroll()});
+      requestAnimationFrame(()=>{repairLessonChrome();ensurePreviewWarning();if(shouldReset)resetLessonScroll()});
     });
   });
 }
@@ -83,7 +103,8 @@ function dedupeForm(items){
   const seen=new Set();
   return (Array.isArray(items)?items:[]).filter(item=>{
     const key=questionKey(item);
-    if(!validQuestion(item)||seen.has(key))return false;
+    if(!validQuestion(item)){console.warn('[MouldMaster assessment] malformed question excluded',item);return false}
+    if(seen.has(key)){console.warn('[MouldMaster assessment] duplicate question excluded',key);return false}
     seen.add(key);return true;
   });
 }
@@ -115,11 +136,30 @@ function rotateAwayFromPreviousFirst(form,previousFirst){
   const [replacement]=copy.splice(at,1);copy.unshift(replacement);
   return copy;
 }
-function assessmentFingerprint(form){
+function formFingerprint(form){
   const text=form.map(item=>`${questionKey(item)}|${String(item.options?.[item.correct]??item?.[1]?.[item?.[2]]??'')}`).sort().join('\n');
   let hash=2166136261;
   for(let i=0;i<text.length;i++){hash^=text.charCodeAt(i);hash=Math.imul(hash,16777619)}
-  return `qbank-${(hash>>>0).toString(16).padStart(8,'0')}`;
+  return `form-${(hash>>>0).toString(16).padStart(8,'0')}`;
+}
+function persistAssessmentResultMeta(level){
+  const form=window.MM_ACTIVE_QUESTION_FORM;
+  if(!form)return;
+  let region=form.region||'ALL';
+  let score=null;
+  try{
+    if(typeof activeExam!=='undefined'&&activeExam?.region)region=String(activeExam.region);
+    if(typeof user!=='undefined'&&user?.examScores){
+      const key=`${level}-${region}`;
+      score=user.examScores[key]??user.examScores[level]??null;
+    }
+  }catch(_){}
+  const record={bankVersion:ASSESSMENT_BANK_VERSION,formFingerprint:form.formFingerprint,level:String(level||form.level||''),region:String(region),score:Number.isFinite(Number(score))?Number(score):null,questionKeys:Array.from(form.questionKeys||[]),recordedAt:new Date().toISOString()};
+  try{
+    const prior=JSON.parse(localStorage.getItem(ASSESSMENT_RESULT_META_KEY)||'[]');
+    const list=Array.isArray(prior)?prior:[];
+    localStorage.setItem(ASSESSMENT_RESULT_META_KEY,JSON.stringify([record,...list].slice(0,100)));
+  }catch(_){}
 }
 function installAssessmentRotation(){
   if(window.__MM_ASSESSMENT_ROTATION_V4__)return;
@@ -150,11 +190,18 @@ function installAssessmentRotation(){
     const keys=chosen.map(questionKey);
     history[scope]=[keys,...recent].slice(0,ASSESSMENT_HISTORY_LIMIT);
     writeAssessmentHistory(history);
-    const bankVersion=assessmentFingerprint(chosen);
-    window.MM_ACTIVE_QUESTION_FORM=Object.freeze({version:VERSION,bankVersion,level:String(level||''),region:String(region||'ALL'),questionKeys:Object.freeze(keys.slice())});
+    window.MM_ACTIVE_QUESTION_FORM=Object.freeze({version:VERSION,bankVersion:ASSESSMENT_BANK_VERSION,formFingerprint:formFingerprint(chosen),level:String(level||''),region:String(region||'ALL'),questionKeys:Object.freeze(keys.slice())});
     return chosen;
   };
-  window.__MM_ASSESSMENT_ROTATION_V4__=Object.freeze({version:VERSION,historyKey:ASSESSMENT_HISTORY_KEY,candidates:ASSESSMENT_CANDIDATES,historyLimit:ASSESSMENT_HISTORY_LIMIT});
+  const baseGrade=window.gradeExam;
+  if(typeof baseGrade==='function'){
+    window.gradeExam=function(level){
+      const result=baseGrade.apply(this,arguments);
+      persistAssessmentResultMeta(level);
+      return result;
+    };
+  }
+  window.__MM_ASSESSMENT_ROTATION_V4__=Object.freeze({version:VERSION,bankVersion:ASSESSMENT_BANK_VERSION,historyKey:ASSESSMENT_HISTORY_KEY,resultMetaKey:ASSESSMENT_RESULT_META_KEY,candidates:ASSESSMENT_CANDIDATES,historyLimit:ASSESSMENT_HISTORY_LIMIT});
 }
 
 ensureStyles();
@@ -164,10 +211,12 @@ window.addEventListener('resize',()=>scheduleRepair(false),{passive:true});
 
 const observer=new MutationObserver(()=>{
   if(lessonVisible())scheduleRepair(false);
+  if(isPreviewPublication())ensurePreviewWarning();
 });
 if(document.body)observer.observe(document.body,{childList:true,subtree:true});
 lastLessonId=currentLessonId()||null;
 scheduleRepair(lessonVisible());
+ensurePreviewWarning();
 installAssessmentRotation();
-window.MM_LEARNER_UX_REPAIR=Object.freeze({version:VERSION,repair:()=>scheduleRepair(false),resetLesson:()=>scheduleRepair(true),assessmentRotation:window.__MM_ASSESSMENT_ROTATION_V4__||null});
+window.MM_LEARNER_UX_REPAIR=Object.freeze({version:VERSION,repair:()=>scheduleRepair(false),resetLesson:()=>scheduleRepair(true),assessmentRotation:window.__MM_ASSESSMENT_ROTATION_V4__||null,preview:isPreviewPublication()});
 })();
