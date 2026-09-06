@@ -4,6 +4,7 @@ module.exports=defineConfig({
   testDir:'./qa',
   testMatch:[
     /mobile-viewport\.spec\.js/,
+    /learn-practice-mobile-style\.spec\.js/,
     /material-grade-detail\.spec\.js/,
     /material-search-scale\.spec\.js/,
     /measured-evidence-decision\.spec\.js/,
