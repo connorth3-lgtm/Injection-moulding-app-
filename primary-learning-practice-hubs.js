@@ -1,4 +1,4 @@
-/* MouldMaster primary Learn / Practice hubs — 2026.09.06.5 */
+/* MouldMaster primary Learn / Practice hubs — 2026.09.06.6 */
 (function(){
 'use strict';
 if(window.MM_PRIMARY_HUBS)return;
@@ -7,7 +7,7 @@ if(typeof renderPath!=='function'||typeof renderScenarios!=='function'||typeof s
   return;
 }
 
-const VERSION='2026.09.06.5';
+const VERSION='2026.09.06.6';
 const PRACTICE_ROTATION_KEY='mm_practice_scenario_rotation_v1';
 const originalRenderPath=renderPath;
 const originalRenderScenarios=renderScenarios;
@@ -104,6 +104,14 @@ function scrollLessonTop(){
   const scrolling=document.scrollingElement;if(scrolling)scrolling.scrollTop=0;
   try{window.scrollTo({top:0,left:0,behavior:'auto'})}catch(_){window.scrollTo(0,0)}
 }
+function withoutSmoothScroll(fn){
+  const original=window.scrollTo;
+  window.scrollTo=function(leftOrOptions,top){
+    if(leftOrOptions&&typeof leftOrOptions==='object')return original.call(window,{...leftOrOptions,behavior:'auto'});
+    return original.call(window,leftOrOptions,top);
+  };
+  try{return fn()}finally{window.scrollTo=original}
+}
 function openCurrentLesson(){
   const active=document.activeElement;
   if(active&&typeof active.blur==='function')active.blur();
@@ -111,13 +119,11 @@ function openCurrentLesson(){
   const previousAnchor=root.style.overflowAnchor;
   root.style.overflowAnchor='none';
   scrollLessonTop();
-  const result=switchView('lesson');
+  const result=withoutSmoothScroll(()=>switchView('lesson'));
+  scrollLessonTop();
   requestAnimationFrame(()=>{
     scrollLessonTop();
-    requestAnimationFrame(()=>{
-      scrollLessonTop();
-      setTimeout(()=>{scrollLessonTop();root.style.overflowAnchor=previousAnchor},0);
-    });
+    requestAnimationFrame(()=>{scrollLessonTop();root.style.overflowAnchor=previousAnchor});
   });
   return result;
 }
