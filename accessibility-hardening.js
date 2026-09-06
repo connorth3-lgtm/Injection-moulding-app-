@@ -18,6 +18,9 @@ function announce(text){const r=liveRegion();r.textContent='';setTimeout(()=>{r.
 function labelDialog(modal){
   const card=modal.querySelector('.modal-card')||modal.firstElementChild;if(!card)return;
   modal.setAttribute('role','dialog');modal.setAttribute('aria-modal','true');
+  const labelledBy=clean(modal.getAttribute('aria-labelledby'));
+  const labelledTarget=labelledBy?document.getElementById(labelledBy):null;
+  if(labelledBy&&(!labelledTarget||!modal.contains(labelledTarget)))modal.removeAttribute('aria-labelledby');
   if(!modal.getAttribute('aria-label')&&!modal.getAttribute('aria-labelledby')){
     const heading=card.querySelector('h1,h2,h3');
     if(heading){if(!heading.id)heading.id=`mmDialogTitle${Date.now().toString(36)}`;modal.setAttribute('aria-labelledby',heading.id)}else modal.setAttribute('aria-label','MouldMaster dialog')
@@ -26,7 +29,8 @@ function labelDialog(modal){
   if(!card.hasAttribute('tabindex'))card.tabIndex=-1;
 }
 function openDialog(modal){
-  if(activeModal===modal)return;lastFocus=document.activeElement&&document.activeElement!==document.body?document.activeElement:lastFocus;activeModal=modal;labelDialog(modal);
+  labelDialog(modal);
+  if(activeModal===modal)return;lastFocus=document.activeElement&&document.activeElement!==document.body?document.activeElement:lastFocus;activeModal=modal;
   requestAnimationFrame(()=>{const card=modal.querySelector('.modal-card')||modal;const first=focusables(card)[0]||card;try{first.focus({preventScroll:true})}catch(_){first.focus?.()}announce(modal.querySelector('h1,h2,h3')?.textContent||'Dialog opened')})
 }
 function closeDialog(modal){if(activeModal!==modal)return;activeModal=null;requestAnimationFrame(()=>{if(lastFocus?.isConnected)try{lastFocus.focus({preventScroll:true})}catch(_){lastFocus.focus?.()}})}
