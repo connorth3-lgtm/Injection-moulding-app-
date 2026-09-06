@@ -1,8 +1,8 @@
-/* MouldMaster learner UX repair — 2026.09.06.17 */
+/* MouldMaster learner UX repair — 2026.09.06.18 */
 (function(){
 'use strict';
 if(window.MM_LEARNER_UX_REPAIR)return;
-const VERSION='2026.09.06.17';
+const VERSION='2026.09.06.18';
 const ASSESSMENT_BANK_VERSION='assessment-2026.08.30.1';
 const ASSESSMENT_HISTORY_KEY='mm-assessment-question-history-v4';
 const ASSESSMENT_RESULT_META_KEY='mm-assessment-result-meta-v1';
@@ -58,6 +58,17 @@ function restoreRedundant(root){
     delete el.dataset.mmUxPrevAriaHidden;
   });
 }
+function repairReferenceLauncherAccessibility(){
+  if(window.matchMedia?.('(max-width:700px)').matches)return;
+  for(const id of ['mm-src-open','mmrd-open']){
+    const launcher=document.getElementById(id);if(!launcher)continue;
+    const retiredMobileStylesCleared=launcher.style.getPropertyPriority('display')!=='important'&&!launcher.style.getPropertyValue('visibility')&&!launcher.style.getPropertyValue('pointer-events');
+    if(retiredMobileStylesCleared&&launcher.getAttribute('aria-hidden')==='true'&&launcher.tabIndex===-1){
+      launcher.removeAttribute('aria-hidden');
+      launcher.removeAttribute('tabindex');
+    }
+  }
+}
 function repairLessonChrome(){
   const root=document.getElementById('lesson');
   const article=root?.querySelector('.lesson-body');
@@ -97,6 +108,7 @@ function ensurePreviewWarning(){
 }
 function runRepair(reset){
   repairLessonChrome();
+  repairReferenceLauncherAccessibility();
   ensurePreviewWarning();
   if(reset)resetLessonScroll();
 }
@@ -109,9 +121,9 @@ function scheduleRepair(reset=false){
     const shouldReset=resetQueued;resetQueued=false;
     runRepair(shouldReset);
     requestAnimationFrame(()=>{
-      repairLessonChrome();ensurePreviewWarning();
+      repairLessonChrome();repairReferenceLauncherAccessibility();ensurePreviewWarning();
       if(shouldReset)resetLessonScroll();
-      requestAnimationFrame(()=>{repairLessonChrome();ensurePreviewWarning();if(shouldReset)resetLessonScroll()});
+      requestAnimationFrame(()=>{repairLessonChrome();repairReferenceLauncherAccessibility();ensurePreviewWarning();if(shouldReset)resetLessonScroll()});
     });
   });
 }
@@ -224,6 +236,7 @@ const observer=new MutationObserver(()=>{
 if(document.body)observer.observe(document.body,{childList:true,subtree:true});
 lastLessonId=currentLessonId()||null;
 scheduleRepair(lessonVisible());
+repairReferenceLauncherAccessibility();
 ensurePreviewWarning();
 installAssessmentRotation();
 window.MM_LEARNER_UX_REPAIR=Object.freeze({version:VERSION,repair:()=>scheduleRepair(false),resetLesson:()=>scheduleRepair(true),assessmentRotation:window.__MM_ASSESSMENT_ROTATION_V4__||null,preview:isPreviewPublication()});
