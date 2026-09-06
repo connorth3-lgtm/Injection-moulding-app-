@@ -71,3 +71,35 @@ test('generic no-source references do not consume the mobile lesson screen',asyn
   const generic=page.getByText(/No general external source was auto-selected for this topic/i);
   if(await generic.count())await expect(generic).toBeHidden();
 });
+
+
+test('lesson has one clear ending and optional evidence stays out of the default flow',async({page})=>{
+  await openLesson(page);
+  const details=page.locator('#mmLessonDeepV2 details');
+  const directEvidenceCount=await page.locator('#lesson .lesson-body > .content-block, #lesson .lesson-body > .mm-simple-section').evaluateAll(nodes=>nodes.filter(node=>/^Evidence check$/i.test(node.querySelector(':scope > h3')?.textContent?.trim()||'')).length);
+  expect(directEvidenceCount).toBe(0);
+  await details.locator('summary').click();
+  await expect(details.getByRole('heading',{name:'Evidence check'})).toBeVisible();
+  await expect(details.getByText(/^Capture:/)).toBeVisible();
+  await expect(details.getByText(/^Common trap:/)).toBeVisible();
+  await details.locator('summary').click();
+  const actions=page.locator('#lesson .lesson-actions-sticky.mm-simple-completion');
+  await expect(actions).toBeVisible();
+  await expect(actions.locator('button:visible')).toHaveCount(1);
+  await expect(actions.locator('button.primary')).toBeVisible();
+  const bookmark=page.locator('#lesson .mm-simple-lesson-meta .mm-simple-lesson-bookmark');
+  await expect(bookmark).toBeVisible();
+  const bookmarkBox=await bookmark.boundingBox();
+  expect(bookmarkBox?.width||999).toBeLessThanOrEqual(46);
+  expect(bookmarkBox?.height||999).toBeLessThanOrEqual(46);
+  const measured=page.locator('#lesson .mm-simple-measured-evidence');
+  await expect(measured).toBeVisible();
+  expect(await measured.evaluate(el=>el.open)).toBe(false);
+  await expect(measured.locator('> .mme-panel')).toBeHidden();
+  await expect(measured.locator('summary')).toHaveText('Measured evidence');
+  const listen=page.locator('.mm-read-aloud details:not([open]) summary');
+  await expect(listen).toBeVisible();
+  const listenBox=await listen.boundingBox();
+  expect(listenBox?.width||999).toBeLessThanOrEqual(112);
+  expect(listenBox?.height||999).toBeLessThanOrEqual(48);
+});

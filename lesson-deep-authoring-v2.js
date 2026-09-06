@@ -2,7 +2,7 @@
 (function(){
 'use strict';
 if(window.MM_LESSON_DEEP_AUTHORING_V2)return;
-const VERSION='2026.09.07.3';
+const VERSION='2026.09.07.4';
 const D=window.MM_DATA,R=window.MM_RUNTIME_V2;
 if(!D||!Array.isArray(D.lessons)||D.lessons.length!==120)throw new Error('lesson-deep-authoring-v2.js requires the canonical 120-lesson pathway');
 if(!R||typeof R.after!=='function')throw new Error('lesson-deep-authoring-v2.js requires runtime-v2.js');
@@ -19,6 +19,8 @@ function compact(v,max=175){
 function teachingRecord(l){
   const objectives=uniq(l.objectives||[]),points=uniq(l.keypoints||[]),summary=clean(l.summary||l.intro||''),exercise=clean(l.exercise||'');
   const guide=l.mmGuide||{};
+  const evidencePrompt=sentence(l.evidencePrompt||'');
+  const commonTrap=sentence(l.commonTrap||'');
   const mechanism=sentence(summary||points[0]||guide.plain||`This lesson develops the ${clean(l.title)} mechanism.`);
   const evidence=uniq([guide.evidence,...points.slice(0,3),...objectives.slice(0,2)]).slice(0,4);
   const decision=sentence(exercise||guide.example||objectives[0]||`Explain how you would recognise and verify ${clean(l.title)} in a real moulding process.`);
@@ -27,9 +29,9 @@ function teachingRecord(l){
   const boundary=/safe|guard|interlock|isolation|hazard|robot|fume/i.test([l.title,summary,...points].join(' '))?
     'Safety boundary: use current machine documentation, authorised site procedures and applicable jurisdiction requirements. This learning activity never authorises bypassing safeguards or entering a danger zone.':
     'Engineering boundary: this lesson teaches a mechanism and evidence chain, not a universal recipe. Exact grade data, machine/tool limits, validated site controls and product requirements govern production decisions.';
-  return {id:l.id,title:l.title,course:l.courseName,mechanism,evidence,decision,misconception,teachBack,boundary}
+  return {id:l.id,title:l.title,course:l.courseName,mechanism,evidence,decision,misconception,teachBack,evidencePrompt,commonTrap,boundary}
 }
-function pedagogicalPayload(r){return {mechanism:r.mechanism,evidence:r.evidence,decision:r.decision,misconception:r.misconception,teachBack:r.teachBack,boundary:r.boundary}}
+function pedagogicalPayload(r){return {mechanism:r.mechanism,evidence:r.evidence,decision:r.decision,misconception:r.misconception,teachBack:r.teachBack,evidencePrompt:r.evidencePrompt,commonTrap:r.commonTrap,boundary:r.boundary}}
 function fingerprintPayload(payload){let h=2166136261;for(const c of JSON.stringify(payload)){h^=c.charCodeAt(0);h=Math.imul(h,16777619)}return (h>>>0).toString(16).padStart(8,'0')}
 function contentFingerprint(r){return fingerprintPayload(pedagogicalPayload(r))}
 const records=D.lessons.map(teachingRecord);
@@ -48,7 +50,7 @@ function markup(r){
   const caution=compact(safety?r.boundary:r.misconception,175);
   const secondaryLabel=safety?'Watch out':'Apply';
   const secondaryText=safety?caution:apply;
-  return `<section class="mm-deep-v2" id="mmLessonDeepV2" aria-label="Lesson essentials"><article class="mm-deep-v2-card mm-deep-v2-essentials"><div class="mm-deep-v2-row"><h4>Key takeaway</h4><p>${esc(takeaway)}</p></div><div class="mm-deep-v2-row"><h4>${secondaryLabel}</h4><p>${esc(secondaryText)}</p></div></article><details class="mm-deep-v2-card"><summary><b>More detail</b></summary><div class="mm-deep-v2-detail"><h4>Mechanism</h4><p>${esc(r.mechanism)}</p><h4>Evidence chain</h4>${r.evidence.length?`<ul>${r.evidence.map(x=>`<li>${esc(sentence(x))}</li>`).join('')}</ul>`:'<p>Use the lesson objectives, current actuals and known-good comparison to build the evidence chain.</p>'}<h4>Plant decision</h4><p>${esc(r.decision)}</p><h4>Misconception check</h4><p>${esc(r.misconception)}</p><h4>Teach-back</h4><p>${esc(r.teachBack)}</p><div class="mm-deep-v2-boundary"><b>Boundary:</b> ${esc(r.boundary)}</div><div class="mm-deep-v2-id">Authoring record ${esc(String(r.id))} · ${esc(contentFingerprint(r))}</div></div></details></section>`;
+  return `<section class="mm-deep-v2" id="mmLessonDeepV2" aria-label="Lesson essentials"><article class="mm-deep-v2-card mm-deep-v2-essentials"><div class="mm-deep-v2-row"><h4>Key takeaway</h4><p>${esc(takeaway)}</p></div><div class="mm-deep-v2-row"><h4>${secondaryLabel}</h4><p>${esc(secondaryText)}</p></div></article><details class="mm-deep-v2-card"><summary><b>More detail</b></summary><div class="mm-deep-v2-detail"><h4>Mechanism</h4><p>${esc(r.mechanism)}</p><h4>Evidence chain</h4>${r.evidence.length?`<ul>${r.evidence.map(x=>`<li>${esc(sentence(x))}</li>`).join('')}</ul>`:'<p>Use the lesson objectives, current actuals and known-good comparison to build the evidence chain.</p>'}<h4>Evidence check</h4><p><b>Capture:</b> ${esc(r.evidencePrompt||'Compare the current setpoint, measured actuals and repeatability before drawing a conclusion.')}</p><p><b>Common trap:</b> ${esc(r.commonTrap||r.misconception)}</p><h4>Plant decision</h4><p>${esc(r.decision)}</p><h4>Misconception check</h4><p>${esc(r.misconception)}</p><h4>Teach-back</h4><p>${esc(r.teachBack)}</p><div class="mm-deep-v2-boundary"><b>Boundary:</b> ${esc(r.boundary)}</div><div class="mm-deep-v2-id">Authoring record ${esc(String(r.id))} · ${esc(contentFingerprint(r))}</div></div></details></section>`;
 }
 function enrich(){style();const l=current(),body=document.querySelector('#lesson article.lesson-body')||document.querySelector('#lesson .lesson-body');if(!l||!body||body.querySelector('#mmLessonDeepV2'))return;const r=byId[String(l.id)];if(!r)return;const anchor=body.querySelector('#mmTeaching')||body.querySelector('.mm-teaching-grid')||body.querySelector('.callout')||body.querySelector('h3');if(anchor)anchor.insertAdjacentHTML('afterend',markup(r));else body.insertAdjacentHTML('beforeend',markup(r))}
 R.after('renderLesson',()=>{try{enrich()}catch(e){console.warn('[MouldMaster lesson depth v2]',e)}});

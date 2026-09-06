@@ -1,9 +1,9 @@
-/* MouldMaster simple lesson experience — 2026.09.07.2 */
+/* MouldMaster simple lesson experience — 2026.09.07.3 */
 (function(){
 'use strict';
 if(window.MM_SIMPLE_LESSON_EXPERIENCE)return;
 
-const VERSION='2026.09.07.2';
+const VERSION='2026.09.07.3';
 const style=document.createElement('style');
 style.id='mm-simple-lesson-style';
 style.textContent=`
@@ -20,6 +20,16 @@ style.textContent=`
 .mm-simple-lesson-meta{display:flex;gap:8px;flex-wrap:wrap;margin-top:16px}
 .mm-simple-lesson-hero .mini-bar{margin:15px 0 0}
 .mm-simple-lesson-start{width:100%;margin-top:17px;min-height:50px;font-size:16px}
+.mm-simple-lesson-bookmark{width:42px;min-width:42px;height:42px;padding:0!important;display:inline-grid!important;place-items:center;border-radius:12px!important;font-size:20px!important;line-height:1!important}
+#lesson.mm-simple-lesson .lesson-actions-sticky.mm-simple-completion{display:block;margin-top:12px}
+#lesson.mm-simple-lesson .lesson-actions-sticky.mm-simple-completion>button:not(.primary){display:none!important}
+#lesson.mm-simple-lesson .lesson-actions-sticky.mm-simple-completion>.primary{width:100%;min-height:52px;font-size:16px}
+#lesson.mm-simple-lesson .mm-simple-measured-evidence{margin:10px 0 0;border:1px solid #304a68;border-radius:14px;background:#0e1d31;overflow:hidden}
+#lesson.mm-simple-lesson .mm-simple-measured-evidence>summary{min-height:46px;display:flex;align-items:center;padding:10px 13px;cursor:pointer;list-style:none;color:#d9e8f7;font-weight:750}
+#lesson.mm-simple-lesson .mm-simple-measured-evidence>summary::-webkit-details-marker{display:none}
+#lesson.mm-simple-lesson .mm-simple-measured-evidence>summary::before{content:'▸';margin-right:8px;color:#9fd8ff}
+#lesson.mm-simple-lesson .mm-simple-measured-evidence[open]>summary::before{content:'▾'}
+#lesson.mm-simple-lesson .mm-simple-measured-evidence>.mme-panel{margin:0!important;border:0!important;border-top:1px solid #263f5c!important;border-radius:0!important;background:transparent!important}
 #lesson.mm-simple-lesson .content-block,#lesson.mm-simple-lesson .mm-simple-section,#lesson.mm-simple-lesson .callout,#lesson.mm-simple-lesson .mm-next-card{padding:20px 21px;margin:0 0 14px;border:1px solid #304a68;border-radius:17px;background:linear-gradient(180deg,#112238,#0e1d31);box-shadow:none}
 #lesson.mm-simple-lesson .callout{border-left:1px solid #304a68;color:#d7e5f3}
 #lesson.mm-simple-lesson .content-block h3,#lesson.mm-simple-lesson .mm-simple-section h3,#lesson.mm-simple-lesson .mm-next-card h3{margin:0 0 10px;font-size:19px;line-height:1.25}
@@ -153,6 +163,44 @@ function compactNotes(article){
     if(explicitSave.hidden!==shouldHide)explicitSave.hidden=shouldHide;
   }
 }
+
+function compactCompletionActions(article){
+  const actions=article.querySelector('.lesson-actions-sticky');
+  if(!actions)return;
+  actions.classList.add('mm-simple-completion');
+  const meta=article.querySelector('.mm-simple-lesson-hero .mm-simple-lesson-meta');
+  const bookmark=[...actions.querySelectorAll('button')].find(button=>{
+    const action=button.getAttribute('onclick')||button.getAttribute('data-mm-onclick')||'';
+    return /toggleBookmark\(/.test(action);
+  });
+  if(bookmark&&meta){
+    const saved=/★|Saved/i.test(bookmark.textContent||'');
+    bookmark.className='ghost mm-simple-lesson-bookmark';
+    bookmark.textContent=saved?'★':'☆';
+    bookmark.setAttribute('aria-label',saved?'Remove saved lesson':'Save lesson');
+    bookmark.title=saved?'Remove saved lesson':'Save lesson';
+    meta.appendChild(bookmark);
+  }
+}
+function foldEvidenceCheck(article){
+  const detail=article.querySelector('#mmLessonDeepV2 .mm-deep-v2-detail');
+  if(!detail||![...detail.querySelectorAll('h4')].some(h=>/^Evidence check$/i.test(String(h.textContent||'').trim())))return;
+  for(const section of article.querySelectorAll(':scope > .content-block,:scope > .mm-simple-section')){
+    const heading=section.querySelector(':scope > h3');
+    if(heading&&/^Evidence check$/i.test(String(heading.textContent||'').trim()))section.remove();
+  }
+}
+function foldMeasuredEvidence(article){
+  for(const panel of article.querySelectorAll('[data-mm-measured-evidence="relevant"]')){
+    if(panel.closest('.mm-simple-measured-evidence'))continue;
+    const details=document.createElement('details');
+    details.className='mm-simple-measured-evidence';
+    const summary=document.createElement('summary');
+    summary.textContent='Measured evidence';
+    panel.before(details);
+    details.append(summary,panel);
+  }
+}
 function simplifyCoreLesson(){
   const root=document.getElementById('lesson');
   const article=root?.querySelector('.lesson-body');
@@ -185,6 +233,9 @@ function simplifyCoreLesson(){
       target?.scrollIntoView({behavior:'smooth',block:'start'});
     });
   }
+  compactCompletionActions(article);
+  foldEvidenceCheck(article);
+  foldMeasuredEvidence(article);
 }
 function simplifyMaterialLesson(){
   for(const article of document.querySelectorAll('.mat-lesson')){
