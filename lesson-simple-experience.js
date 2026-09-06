@@ -1,9 +1,9 @@
-/* MouldMaster simple lesson experience — 2026.09.06.2 */
+/* MouldMaster simple lesson experience — 2026.09.07.1 */
 (function(){
 'use strict';
 if(window.MM_SIMPLE_LESSON_EXPERIENCE)return;
 
-const VERSION='2026.09.06.2';
+const VERSION='2026.09.07.1';
 const style=document.createElement('style');
 style.id='mm-simple-lesson-style';
 style.textContent=`
@@ -12,6 +12,7 @@ style.textContent=`
 #lesson.mm-simple-lesson .lesson-layout{grid-template-columns:minmax(0,1fr) 260px;gap:18px;align-items:start}
 #lesson.mm-simple-lesson .lesson-body{padding:0;background:transparent;border:0;box-shadow:none}
 #lesson.mm-simple-lesson .lesson-body>.eyebrow,#lesson.mm-simple-lesson .lesson-body>h2{display:none!important}
+#lesson.mm-simple-lesson .mm-simple-empty-reference{display:none!important}
 .mm-simple-lesson-hero{padding:25px 27px;margin:0 0 18px;border:1px solid #36516f;border-radius:19px;background:linear-gradient(180deg,#13283e,#102338);box-shadow:var(--shadow)}
 .mm-simple-lesson-hero .eyebrow{display:block;margin-bottom:8px;font-size:12px;letter-spacing:.13em}
 .mm-simple-lesson-hero h1{margin:0;font-size:clamp(28px,4vw,40px);line-height:1.1;letter-spacing:-.025em}
@@ -87,6 +88,17 @@ function wrapLooseSections(article){
     }
   }
 }
+function suppressEmptyReferences(article){
+  for(const panel of article.querySelectorAll('.mm-ref-panel')){
+    const text=String(panel.textContent||'');
+    if(!/Evidence\s*&\s*further reading/i.test(text))continue;
+    const generic=/No general external source was auto-selected for this topic/i.test(text);
+    const hasLink=!!panel.querySelector('a[href]');
+    const hide=generic&&!hasLink;
+    if(hide){panel.dataset.mmSimpleEmptyReference='1';panel.hidden=true;panel.setAttribute('aria-hidden','true');panel.classList.add('mm-simple-empty-reference')}
+    else if(panel.dataset.mmSimpleEmptyReference==='1'){delete panel.dataset.mmSimpleEmptyReference;panel.hidden=false;panel.removeAttribute('aria-hidden');panel.classList.remove('mm-simple-empty-reference')}
+  }
+}
 function simplifyCoreLesson(){
   const root=document.getElementById('lesson');
   const article=root?.querySelector('.lesson-body');
@@ -104,6 +116,7 @@ function simplifyCoreLesson(){
 
   article.querySelectorAll('h3').forEach(relabel);
   wrapLooseSections(article);
+  suppressEmptyReferences(article);
 
   if(context&&!article.querySelector(':scope > .mm-simple-lesson-hero')){
     const {lesson,course,position,pct}=context;

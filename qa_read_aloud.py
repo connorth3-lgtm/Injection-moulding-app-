@@ -21,8 +21,8 @@ version = json.loads((ROOT / "version.json").read_text(encoding="utf-8"))
 package = json.loads((ROOT / "desktop/electron/package.json").read_text(encoding="utf-8"))
 integrity_generator = (ROOT / "desktop/electron/scripts/generate-integrity.cjs").read_text(encoding="utf-8")
 
-need(version.get("read_aloud_version") == "2026.09.01.1", "Read Aloud version marker mismatch")
-need("const VERSION='2026.09.01.1'" in runtime, "Read Aloud runtime version mismatch")
+need(version.get("read_aloud_version") == "2026.09.07.1", "Read Aloud version marker mismatch")
+need("const VERSION='2026.09.07.1'" in runtime, "Read Aloud runtime version mismatch")
 
 # The feature must be output-only speech synthesis. Microphone capture, recognition,
 # recording and application-controlled telemetry/network paths are forbidden here.
@@ -62,7 +62,7 @@ for marker in (
 ):
     need(marker in runtime, f"visible-content/navigation guard missing: {marker}")
 
-# Required learner controls and accessible state.
+# Required learner controls, accessible state and mobile-nav clearance.
 for marker in (
     'data-mm-read="prev"',
     'data-mm-read="play"',
@@ -73,6 +73,8 @@ for marker in (
     'role="status"',
     'aria-live="polite"',
     "Read Aloud is not available in this browser/device.",
+    "🔊 Listen",
+    "var(--mm-mobile-nav-clearance,104px)",
 ):
     need(marker in runtime, f"Read Aloud control/fallback missing: {marker}")
 
@@ -107,4 +109,4 @@ for marker in (
     need(marker in privacy, f"Read Aloud privacy disclosure missing: {marker}")
 need("entirely on-device" in privacy, "voice-processing limitation disclosure missing")
 
-print("MouldMaster Read Aloud QA passed: speech-synthesis-only, visible-content-scoped, offline/desktop-integrity wired, and privacy disclosed.")
+print("MouldMaster Read Aloud QA passed: speech-synthesis-only, visible-content-scoped, mobile-nav-clear, offline/desktop-integrity wired, and privacy disclosed.")
