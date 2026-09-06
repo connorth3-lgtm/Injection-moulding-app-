@@ -21,6 +21,7 @@ async function openHub(page,label,selector){
 async function expectReadableTiles(page,rootSelector){
   const result=await page.evaluate(rootSelector=>{
     const root=document.querySelector(rootSelector);
+    const grid=root.querySelector('.mm-hub-grid');
     const tiles=[...root.querySelectorAll('.mm-hub-tile')];
     const first=tiles[0];
     const tile=getComputedStyle(first);
@@ -32,6 +33,7 @@ async function expectReadableTiles(page,rootSelector){
     const boxes=tiles.map(x=>x.getBoundingClientRect());
     return {
       count:tiles.length,
+      columns:getComputedStyle(grid).gridTemplateColumns.split(' ').filter(Boolean).length,
       display:tile.display,
       direction:tile.flexDirection,
       align:tile.alignItems,
@@ -43,23 +45,28 @@ async function expectReadableTiles(page,rootSelector){
       copyDisplay:copy.display,
       actionDisplay:action.display,
       helperDisplay:helper?getComputedStyle(helper).display:null,
+      minHeight:Math.min(...boxes.map(x=>x.height)),
       maxWidth:Math.max(...boxes.map(x=>x.width)),
       minWidth:Math.min(...boxes.map(x=>x.width)),
       overlap:boxes.some((a,i)=>boxes.some((b,j)=>j>i&&a.top<b.bottom&&a.bottom>b.top&&a.left<b.right&&a.right>b.left))
     };
   },rootSelector);
   expect(result.count).toBe(4);
+  expect(result.columns).toBe(2);
   expect(result.display).toBe('flex');
   expect(result.direction).toBe('column');
   expect(result.align).toBe('flex-start');
   expect(result.textAlign).toBe('left');
   expect(result.whiteSpace).toBe('normal');
   expect(result.background).not.toBe('rgb(128, 128, 128)');
-  expect(result.eyebrowDisplay).toBe('block');
+  // The audit intentionally removes secondary eyebrow/copy/action text on phones.
+  // The tile title remains the clear accessible visual label and the whole tile is tappable.
+  expect(result.eyebrowDisplay).toBe('none');
   expect(result.titleDisplay).toBe('block');
-  expect(result.copyDisplay).toBe('block');
+  expect(result.copyDisplay).toBe('none');
   expect(result.actionDisplay).toBe('none');
   expect(result.helperDisplay).toBe('none');
+  expect(result.minHeight).toBeGreaterThanOrEqual(94);
   expect(result.maxWidth-result.minWidth).toBeLessThan(2);
   expect(result.overlap).toBe(false);
 }
