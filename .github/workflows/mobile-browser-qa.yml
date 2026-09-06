@@ -39,6 +39,8 @@ on:
       - 'qa_delayed_transfer_reviews.py'
       - 'qa_webkit_regression.py'
       - 'qa/mobile-viewport.spec.js'
+      - 'qa/visual-regression.spec.js'
+      - 'qa/visual-regression-baseline.json'
       - 'qa/material-grade-detail.spec.js'
       - 'qa/material-search-scale.spec.js'
       - 'qa/measured-evidence-decision.spec.js'
@@ -82,16 +84,33 @@ jobs:
           python qa_accessibility_real_at_contract.py
       - name: Install pinned Playwright browser matrix
         run: |
-          npm install --no-save --no-package-lock @playwright/test@1.55.0
+          npm install --no-save --no-package-lock @playwright/test@1.55.0 pixelmatch@5.3.0 pngjs@7.0.0
           npx playwright install --with-deps chromium firefox webkit
-      - name: Start local MouldMaster server
+      - name: Prepare immutable .23 visual baseline
+        run: |
+          BASELINE_SHA="$(python - <<'PY'
+          import json
+          print(json.load(open('qa/visual-regression-baseline.json', encoding='utf-8'))['commit'])
+          PY
+          )"
+          test "$BASELINE_SHA" = "3e7144b68c5dfe79232cf2ba0180060f1395ffcc"
+          git fetch --no-tags --depth=1 origin "$BASELINE_SHA"
+          rm -rf /tmp/mm-visual-baseline
+          git worktree add --detach /tmp/mm-visual-baseline "$BASELINE_SHA"
+      - name: Start candidate and baseline MouldMaster servers
         run: |
           python -m http.server 4173 --bind 127.0.0.1 > /tmp/mouldmaster-http.log 2>&1 &
           echo $! > /tmp/mouldmaster-http.pid
-          for i in {1..20}; do curl -fsS http://127.0.0.1:4173/index.html >/dev/null && exit 0; sleep 1; done
+          python -m http.server 4174 --bind 127.0.0.1 --directory /tmp/mm-visual-baseline > /tmp/mouldmaster-baseline-http.log 2>&1 &
+          echo $! > /tmp/mouldmaster-baseline-http.pid
+          for i in {1..20}; do
+            if curl -fsS http://127.0.0.1:4173/index.html >/dev/null && curl -fsS http://127.0.0.1:4174/index.html >/dev/null; then exit 0; fi
+            sleep 1
+          done
           cat /tmp/mouldmaster-http.log
+          cat /tmp/mouldmaster-baseline-http.log
           exit 1
-      - name: Chromium mobile, material, evidence, engineering-store and PWA regression tests
+      - name: Chromium mobile, visual, material, evidence, engineering-store and PWA regression tests
         run: npx playwright test --config=playwright.config.cjs
       - name: WebKit substantive learner regression tests
         run: npx playwright test --config=playwright.webkit-full.config.cjs
