@@ -3,7 +3,7 @@
 'use strict';
 if(window.MM_LEARNER_UX_REPAIR)return;
 const VERSION='2026.09.06.15';
-const ASSESSMENT_BANK_VERSION='assessment-2026.09.06.15';
+const ASSESSMENT_BANK_VERSION='assessment-2026.08.30.1';
 const ASSESSMENT_HISTORY_KEY='mm-assessment-question-history-v4';
 const ASSESSMENT_RESULT_META_KEY='mm-assessment-result-meta-v1';
 const ASSESSMENT_HISTORY_LIMIT=8;
