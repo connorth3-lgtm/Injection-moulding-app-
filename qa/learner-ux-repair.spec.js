@@ -58,6 +58,21 @@ async function exerciseCurrentExamNavigation(page,mode){
   await expect(page.locator('button[aria-label^="Go to question "]')).toHaveCount(16);
   await page.setViewportSize({width:412,height:915});
 }
+async function expectQuestionOnlyExam(page){
+  await expect(page.locator('.mm-assessment-modal [id^="mmDialogTitle"]')).toBeVisible();
+  await expect(page.locator('.mm-assessment-modal .mm-exam-prelude:visible')).toHaveCount(0);
+  await expect(page.locator('.mm-assessment-modal .mm-question-meta:visible')).toHaveCount(0);
+  await expect(page.locator('.mm-assessment-modal .mm-qmeta:visible')).toHaveCount(0);
+  await expect(page.locator('.mm-assessment-modal .question-plain-language:visible')).toHaveCount(0);
+  await expect(page.locator('.mm-assessment-modal .mm-confidence:visible')).toHaveCount(0);
+  const current=page.locator('#examQuestions .question.mm-current-question');
+  await expect(current).toHaveCount(1);
+  await expect(current.locator('.mm-question-stem')).toBeVisible();
+  await expect(current.locator('label')).toHaveCount(4);
+  await expect(page.locator('.mm-exam-prev')).toBeVisible();
+  await expect(page.locator('.mm-exam-next')).toBeVisible();
+  await expect(page.getByRole('button',{name:/Grade & review/i})).toBeVisible();
+}
 
 for(const viewport of [{name:'android-412x915',width:412,height:915},{name:'small-360x800',width:360,height:800}]){
   test.describe(viewport.name,()=>{
@@ -178,17 +193,19 @@ test('learner UX repair preserves the governed selector and adds audited rotatio
 test('mobile exam uses one governed navigator and rebinds it on a second attempt',async({page})=>{
   await page.setViewportSize({width:412,height:915});
   await open(page);
-  expect(await page.evaluate(()=>window.MM_RUNTIME_ASSET_VERSION)).toBe('2026.09.06.16');
+  expect(await page.evaluate(()=>window.MM_RUNTIME_ASSET_VERSION)).toBe('2026.09.06.17');
   const firstForm=await page.evaluate(()=>{startExam('Beginner');return window.MM_ACTIVE_QUESTION_FORM?.formFingerprint||''});
   const firstMode=await waitForExamNavigation(page);
   expect(firstForm).not.toBe('');
   expect(firstMode.signature).not.toBe('');
+  await expectQuestionOnlyExam(page);
   await exerciseCurrentExamNavigation(page,firstMode);
 
   const secondForm=await page.evaluate(()=>{closeModal();startExam('Beginner');return window.MM_ACTIVE_QUESTION_FORM?.formFingerprint||''});
   expect(secondForm).not.toBe(firstForm);
   const secondMode=await waitForExamNavigation(page,firstMode.signature);
   expect(secondMode.signature).not.toBe(firstMode.signature);
+  await expectQuestionOnlyExam(page);
   await exerciseCurrentExamNavigation(page,secondMode);
 });
 

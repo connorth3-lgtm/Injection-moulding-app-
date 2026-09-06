@@ -124,4 +124,4 @@ except SystemExit as exc:
 else:
     raise AssertionError("public physical-device contract accepted a forbidden personal-data field")
 
-print("MouldMaster physical PWA device contract QA passed: Android is owner-attested, physical iOS/iPadOS remains explicitly untested, automated WebKit is not substituted for device evidence, and the exact .16 runtime is released under a governed owner-authorized risk waiver.")
+print("MouldMaster physical PWA device contract QA passed: Android is owner-attested, physical iOS/iPadOS remains explicitly untested, automated WebKit is not substituted for device evidence, and the exact .17 runtime is released under a governed owner-authorized risk waiver.")

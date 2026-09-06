@@ -1,8 +1,8 @@
-/* MouldMaster assessment experience — persistent question rotation hardening 2026-08-31.4 */
+/* MouldMaster assessment experience — question-only focus mode 2026-09-06.5 */
 (function(){
 'use strict';
 
-const VERSION='2026.08.31.4';
+const VERSION='2026.09.06.5';
 const FIRST_HISTORY_LIMIT=3;
 const HISTORY_KEY='mm_assessment_opening_history_v1';
 const root=document.documentElement;
@@ -41,6 +41,8 @@ function addStyles(){
   s.id='mm-assessment-ux-style';
   s.textContent=`
   .modal-card.mm-assessment-modal{width:min(980px,96vw);padding:clamp(18px,3vw,30px);scroll-padding-bottom:110px}
+  .mm-assessment-modal .mm-exam-prelude,.mm-assessment-modal .mm-question-meta,.mm-assessment-modal .mm-qmeta,.mm-assessment-modal .question-plain-language,.mm-assessment-modal .mm-confidence{display:none!important}
+  .mm-assessment-modal [id^="mmDialogTitle"]{margin:0 42px 10px 0;font-size:clamp(20px,2.5vw,27px)}
   #examQuestions.mm-focus-mode{margin-top:18px}
   #examQuestions.mm-focus-mode .question{display:none!important;margin:0;padding:clamp(18px,3vw,28px);border:1px solid #314a69;border-radius:16px;background:linear-gradient(180deg,#10213a,#0c1a2e);box-shadow:0 14px 34px rgba(0,0,0,.18)}
   #examQuestions.mm-focus-mode .question.mm-current-question{display:block!important}
@@ -203,6 +205,13 @@ function decorateExam(){
   host.dataset.mmAssessmentUx='1';
   host.classList.add('mm-focus-mode');
   modal.classList.add('mm-assessment-modal');
+
+  for(let node=host.previousElementSibling;node;node=node.previousElementSibling){
+    if(node.matches?.('[id^="mmDialogTitle"]'))continue;
+    node.classList.add('mm-exam-prelude');
+    node.setAttribute('aria-hidden','true');
+    node.querySelectorAll?.('button,a,input,select,textarea,[tabindex]').forEach(control=>control.tabIndex=-1);
+  }
 
   cards.forEach((card,i)=>{
     const stem=card.querySelector('b');
