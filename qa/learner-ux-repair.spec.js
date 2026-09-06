@@ -22,6 +22,41 @@ async function open(page){
   await page.waitForFunction(()=>!document.getElementById('mmBootstrap'));
   await expect(page.locator('#mmStartupFailure')).toHaveCount(0);
 }
+async function waitForExamNavigation(page,priorSignature=''){
+  await page.waitForFunction(prior=>{
+    const host=document.getElementById('examQuestions');
+    const questions=host?[...host.children].filter(el=>el.classList.contains('question')):[];
+    const signature=host?.dataset.mmUxExamFormSignature||'';
+    const fallback=document.querySelectorAll('[data-mm-exam-question-toggle]').length===1;
+    const governed=[...document.querySelectorAll('button')].some(button=>(button.getAttribute('aria-label')||button.textContent||'').trim()==='Go to question 6');
+    return questions.length>5&&signature&&signature!==prior&&(fallback||governed);
+  },priorSignature);
+  return page.evaluate(()=>{
+    const host=document.getElementById('examQuestions');
+    const fallback=document.querySelectorAll('[data-mm-exam-question-toggle]').length===1;
+    const governed=[...document.querySelectorAll('button')].some(button=>(button.getAttribute('aria-label')||button.textContent||'').trim()==='Go to question 6');
+    return {signature:host?.dataset.mmUxExamFormSignature||'',fallback,governed};
+  });
+}
+async function exerciseCurrentExamNavigation(page,mode){
+  const questions=page.locator('#examQuestions .question');
+  await expect(questions).toHaveCount(16);
+  if(mode.fallback){
+    const toggle=page.locator('[data-mm-exam-question-toggle]');
+    await expect(toggle).toHaveCount(1);
+    await expect(toggle).toHaveAttribute('aria-expanded','false');
+    await page.waitForFunction(()=>[...document.querySelectorAll('#examQuestions .question')].slice(5).every(q=>q.classList.contains('mm-question-collapsed')));
+    await toggle.click();
+    await expect(toggle).toHaveAttribute('aria-expanded','true');
+    await page.waitForFunction(()=>document.querySelectorAll('#examQuestions .mm-question-collapsed').length===0);
+    return;
+  }
+  expect(mode.governed).toBe(true);
+  const q6=page.getByRole('button',{name:'Go to question 6'});
+  await expect(q6).toBeVisible();
+  await q6.click();
+  await expect(questions.nth(5)).toBeVisible();
+}
 
 for(const viewport of [{name:'android-412x915',width:412,height:915},{name:'small-360x800',width:360,height:800}]){
   test.describe(viewport.name,()=>{
@@ -139,31 +174,20 @@ test('learner UX repair preserves the governed selector and adds audited rotatio
   expect(assessment.baseCallsPerAttempt).toBe(1);
 });
 
-test('mobile exam disclosure rebinds to the current question nodes on a second attempt',async({page})=>{
+test('mobile exam navigation rebinds to the current question nodes on a second attempt',async({page})=>{
   await page.setViewportSize({width:412,height:915});
   await open(page);
   const firstForm=await page.evaluate(()=>{startExam('Beginner');return window.MM_ACTIVE_QUESTION_FORM?.formFingerprint||''});
-  await page.waitForFunction(()=>{
-    const host=document.getElementById('examQuestions'),questions=host?[...host.children].filter(el=>el.classList.contains('question')):[];
-    return questions.length>5&&document.querySelectorAll('[data-mm-exam-question-toggle]').length===1&&questions.slice(5).every(q=>q.classList.contains('mm-question-collapsed'));
-  });
-  const firstSignature=await page.evaluate(()=>document.getElementById('examQuestions')?.dataset.mmUxExamFormSignature||'');
+  const firstMode=await waitForExamNavigation(page);
   expect(firstForm).not.toBe('');
-  expect(firstSignature).not.toBe('');
+  expect(firstMode.signature).not.toBe('');
+  await exerciseCurrentExamNavigation(page,firstMode);
 
   const secondForm=await page.evaluate(()=>{closeModal();startExam('Beginner');return window.MM_ACTIVE_QUESTION_FORM?.formFingerprint||''});
   expect(secondForm).not.toBe(firstForm);
-  await page.waitForFunction(first=>{
-    const host=document.getElementById('examQuestions'),questions=host?[...host.children].filter(el=>el.classList.contains('question')):[];
-    const sig=host?.dataset.mmUxExamFormSignature||'';
-    return questions.length>5&&sig&&sig!==first&&document.querySelectorAll('[data-mm-exam-question-toggle]').length===1&&questions.slice(5).every(q=>q.classList.contains('mm-question-collapsed'));
-  },firstSignature);
-  const toggle=page.locator('[data-mm-exam-question-toggle]');
-  await expect(toggle).toHaveCount(1);
-  await expect(toggle).toHaveAttribute('aria-expanded','false');
-  await toggle.click();
-  await expect(toggle).toHaveAttribute('aria-expanded','true');
-  await page.waitForFunction(()=>document.querySelectorAll('#examQuestions .mm-question-collapsed').length===0);
+  const secondMode=await waitForExamNavigation(page,firstMode.signature);
+  expect(secondMode.signature).not.toBe(firstMode.signature);
+  await exerciseCurrentExamNavigation(page,secondMode);
 });
 
 test('consecutive assessment attempts do not repeat the opening question and advance membership once per attempt',async({page})=>{
