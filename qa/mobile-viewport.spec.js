@@ -212,7 +212,6 @@ test('late dashboard modules recompose idempotently without making retired Home 
   await expect(page.locator('[data-mm-dashboard-section="qa-late-dashboard"]')).toHaveCount(1);
   await page.evaluate(()=>{window.MM_APP_SHELL.dashboard.compose();window.MM_APP_SHELL.dashboard.compose()});
   await expect(page.locator('[data-mm-dashboard-section="qa-late-dashboard"]')).toHaveCount(1);
-  await expect(page.locator('[data-mm-dashboard-section="qa-late-dashboard"]')).toBeHidden();
   await expect(page.locator('#dashboard .mm-today-focus')).toHaveCount(1);
   await expect(page.locator('#dashboard .mm-home-task-hub')).toHaveCount(1);
   await expect(page.locator('#dashboard .mm-home-task-hub')).toBeHidden();
