@@ -193,7 +193,11 @@ test('learner UX repair preserves the governed selector and adds audited rotatio
 test('mobile exam uses one governed navigator and rebinds it on a second attempt',async({page})=>{
   await page.setViewportSize({width:412,height:915});
   await open(page);
-  expect(await page.evaluate(()=>window.MM_RUNTIME_ASSET_VERSION)).toBe('2026.09.06.17');
+  const canonicalRelease=await page.evaluate(async()=>{
+    const response=await fetch('./version.json',{cache:'no-store'});
+    return (await response.json()).web_release;
+  });
+  expect(await page.evaluate(()=>window.MM_RUNTIME_ASSET_VERSION)).toBe(canonicalRelease);
   const firstForm=await page.evaluate(()=>{startExam('Beginner');return window.MM_ACTIVE_QUESTION_FORM?.formFingerprint||''});
   const firstMode=await waitForExamNavigation(page);
   expect(firstForm).not.toBe('');
