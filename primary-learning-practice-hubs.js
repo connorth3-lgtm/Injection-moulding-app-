@@ -13,8 +13,18 @@ const originalRenderScenarios=renderScenarios;
 const originalMore=typeof window.openMobileMenu==='function'?window.openMobileMenu:null;
 
 /* Hub presentation lives in ui-shell.css. The app CSP intentionally blocks
-   runtime-created <style> elements, so keeping these rules external prevents
-   the unstyled grey-button fallback seen on mobile. */
+   runtime-created <style> elements, so keep the CSS external. The versioned
+   second link also refreshes already-installed clients that cached ui-shell.css
+   before these hub rules existed. */
+function ensureHubStylesheet(){
+  if(document.querySelector('link[data-mm-primary-hub-style]'))return;
+  const link=document.createElement('link');
+  link.rel='stylesheet';
+  link.href=`./ui-shell.css?hub=${encodeURIComponent(VERSION)}`;
+  link.dataset.mmPrimaryHubStyle=VERSION;
+  document.head.appendChild(link);
+}
+ensureHubStylesheet();
 
 function esc(value){return String(value??'').replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]))}
 function lessonContext(){
