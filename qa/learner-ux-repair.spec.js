@@ -67,23 +67,40 @@ test('mobile lesson cleanup is reversible after widening to desktop',async({page
   await page.locator('.mobile-nav > button').filter({hasText:'Learn'}).click();
   await page.getByRole('button',{name:/Continue lesson/i}).first().click();
   await page.waitForFunction(()=>document.querySelectorAll('#lesson [data-mm-ux-hidden-by-repair="1"]').length>0);
-  const mobileState=await page.evaluate(()=>({
-    hiddenByRepair:document.querySelectorAll('#lesson [data-mm-ux-hidden-by-repair="1"]').length,
-    repaired:document.getElementById('lesson')?.classList.contains('mm-learner-ux-repaired')||false
-  }));
+  const mobileState=await page.evaluate(()=>{
+    const launcher=document.getElementById('mm-src-open')||document.getElementById('mmrd-open');
+    return {
+      hiddenByRepair:document.querySelectorAll('#lesson [data-mm-ux-hidden-by-repair="1"]').length,
+      repaired:document.getElementById('lesson')?.classList.contains('mm-learner-ux-repaired')||false,
+      launcherPresent:!!launcher,
+      launcherAria:launcher?.getAttribute('aria-hidden')||null,
+      launcherTabIndex:launcher?.tabIndex??null
+    };
+  });
   expect(mobileState.hiddenByRepair).toBeGreaterThan(0);
   expect(mobileState.repaired).toBe(true);
+  if(mobileState.launcherPresent){expect(mobileState.launcherAria).toBe('true');expect(mobileState.launcherTabIndex).toBe(-1)}
 
   await page.setViewportSize({width:1280,height:900});
   await page.waitForFunction(()=>document.querySelectorAll('#lesson [data-mm-ux-hidden-by-repair="1"]').length===0&&!document.getElementById('lesson')?.classList.contains('mm-learner-ux-repaired'));
-  const desktopState=await page.evaluate(()=>({
-    hiddenByRepair:document.querySelectorAll('#lesson [data-mm-ux-hidden-by-repair="1"]').length,
-    forcedAriaHidden:document.querySelectorAll('#lesson [aria-hidden="true"][data-mm-ux-prev-hidden]').length,
-    repaired:document.getElementById('lesson')?.classList.contains('mm-learner-ux-repaired')||false
-  }));
+  if(mobileState.launcherPresent)await page.waitForFunction(()=>{
+    const launcher=document.getElementById('mm-src-open')||document.getElementById('mmrd-open');
+    return !!launcher&&launcher.getAttribute('aria-hidden')!=='true'&&launcher.tabIndex!==-1;
+  });
+  const desktopState=await page.evaluate(()=>{
+    const launcher=document.getElementById('mm-src-open')||document.getElementById('mmrd-open');
+    return {
+      hiddenByRepair:document.querySelectorAll('#lesson [data-mm-ux-hidden-by-repair="1"]').length,
+      forcedAriaHidden:document.querySelectorAll('#lesson [aria-hidden="true"][data-mm-ux-prev-hidden]').length,
+      repaired:document.getElementById('lesson')?.classList.contains('mm-learner-ux-repaired')||false,
+      launcherAria:launcher?.getAttribute('aria-hidden')||null,
+      launcherTabIndex:launcher?.tabIndex??null
+    };
+  });
   expect(desktopState.hiddenByRepair).toBe(0);
   expect(desktopState.forcedAriaHidden).toBe(0);
   expect(desktopState.repaired).toBe(false);
+  if(mobileState.launcherPresent){expect(desktopState.launcherAria).not.toBe('true');expect(desktopState.launcherTabIndex).not.toBe(-1)}
 });
 
 test('open mobile modal stays above the fixed primary navigation',async({page})=>{
@@ -117,7 +134,7 @@ test('learner UX repair preserves the governed selector and adds audited rotatio
   expect(assessment.owner).toBe('assessment-runtime-v2');
   expect(assessment.technicalPerExam).toBe(7);
   expect(assessment.technicalBankPerLevel).toBeGreaterThanOrEqual(10);
-  expect(assessment.rotationVersion).toBe('2026.09.06.17');
+  expect(assessment.rotationVersion).toBe('2026.09.06.18');
   expect(assessment.bankVersion).toBe('assessment-2026.08.30.1');
   expect(assessment.baseCallsPerAttempt).toBe(1);
 });
