@@ -1,9 +1,9 @@
-/* MouldMaster simple lesson experience — 2026.09.06.1 */
+/* MouldMaster simple lesson experience — 2026.09.06.2 */
 (function(){
 'use strict';
 if(window.MM_SIMPLE_LESSON_EXPERIENCE)return;
 
-const VERSION='2026.09.06.1';
+const VERSION='2026.09.06.2';
 const style=document.createElement('style');
 style.id='mm-simple-lesson-style';
 style.textContent=`
@@ -95,7 +95,7 @@ function simplifyCoreLesson(){
   root.classList.add('mm-simple-lesson');
   root.querySelector('.lesson-breadcrumb')?.remove();
   root.querySelector('.lesson-header-card')?.remove();
-  article.querySelectorAll(':scope > .mm-learning-progress,:scope > .mm-learning-jumps,:scope > .mm-simple-lesson-hero').forEach(el=>el.remove());
+  article.querySelectorAll(':scope > .mm-learning-progress,:scope > .mm-learning-jumps').forEach(el=>el.remove());
 
   const directEyebrow=Array.from(article.children).find(el=>el.classList?.contains('eyebrow'));
   const directTitle=Array.from(article.children).find(el=>el.tagName==='H2');
@@ -105,7 +105,7 @@ function simplifyCoreLesson(){
   article.querySelectorAll('h3').forEach(relabel);
   wrapLooseSections(article);
 
-  if(context){
+  if(context&&!article.querySelector(':scope > .mm-simple-lesson-hero')){
     const {lesson,course,position,pct}=context;
     const hero=document.createElement('section');
     hero.className='mm-simple-lesson-hero';
