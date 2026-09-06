@@ -1,0 +1,9 @@
+/* Mobile lesson presentation fix — 2026.09.06.1
+   Keep one completion control in lesson content. The learning-experience runtime
+   also creates a second fixed action bar; hide that duplicate on phones so it
+   cannot cover the lesson or stack on top of the primary bottom navigation. */
+@media (max-width:760px){
+  #lesson .mm-mobile-actions{display:none!important}
+  #lesson .lesson-body{padding-bottom:24px!important}
+  #lesson .lesson-side{margin-bottom:0!important}
+}
