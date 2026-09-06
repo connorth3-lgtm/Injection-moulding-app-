@@ -1,4 +1,4 @@
-/* MouldMaster app-shell finalizer — 2026.09.02.1 */
+/* MouldMaster app-shell finalizer — 2026.09.06.8 */
 (function(){
 'use strict';
 if(!window.MM_APP_SHELL)throw new Error('app-shell-finalize.js requires app-shell-registry.js');
@@ -76,6 +76,42 @@ function loadMeasuredLearningRuntime(){
   script.addEventListener('error',()=>console.warn('[MouldMaster] Measured Learning runtime unavailable; learner navigation remains disabled.'));
   document.head.appendChild(script);
 }
+function simplifyHomeScreen(){
+  const root=document.getElementById('dashboard');
+  if(!root)return;
+
+  root.querySelectorAll('.mm-home-core-hero,.mm-home-kpis,.mm-home-course-head,.mm-home-course-grid,.hero,.friendly-hero,.kpis,.fun-dashboard').forEach(el=>el.remove());
+
+  const redundantHeadings=/^(What would you like to do\?|Your next learning tracks|Continue your path|How MouldMaster works|Achievements|Your achievements)$/i;
+  for(const head of Array.from(root.querySelectorAll('.section-head'))){
+    const title=(head.querySelector('h2,h3')?.textContent||'').trim();
+    if(!redundantHeadings.test(title))continue;
+    const next=head.nextElementSibling;
+    if(next?.matches('.grid,.grid2,.grid4,.quick-grid,.how-grid,.achievement-grid,.learning-map'))next.remove();
+    head.remove();
+  }
+
+  const oldQuickGrid=root.querySelector('.quick-grid');
+  if(oldQuickGrid)oldQuickGrid.remove();
+  root.querySelectorAll('.how-grid,.achievement-grid').forEach(el=>el.remove());
+
+  const actions=Array.from(root.querySelectorAll('.mm-home-action'));
+  const learningShortcut=actions.find(button=>/Explore your learning/i.test(button.textContent||''));
+  if(learningShortcut){
+    let done=false;
+    try{done=typeof window.dailyDone==='function'&&window.dailyDone()}catch(_){}
+    learningShortcut.removeAttribute('data-mm-onclick');
+    learningShortcut.dataset.mmPracticeAction=done?'scenarios':'daily';
+    learningShortcut.innerHTML=`<span class="mm-home-action-icon">✓</span><span><strong>${done?'Daily practice complete':'Daily practice'}</strong><small>${done?'Keep practising with another evidence-first scenario.':'Take one short evidence-first moulding decision for today.'}</small></span>`;
+  }
+}
+function installHomeScreenSimplification(){
+  if(window.__MM_HOME_SIMPLIFICATION__||typeof window.renderDashboard!=='function')return;
+  const base=window.renderDashboard;
+  window.renderDashboard=function(){const result=base.apply(this,arguments);simplifyHomeScreen();return result};
+  window.__MM_HOME_SIMPLIFICATION__='2026.09.06.8';
+  simplifyHomeScreen();
+}
 
 syncEvidenceExports();
 const originalSpecialistOpen=window.mmSpecialistOpen;
@@ -87,11 +123,12 @@ window.MM_SPECIALIST_EVIDENCE_STATUS={version:'2026.08.29.1',statuses:{...EVIDEN
 loadProductionHealth();
 loadConnectedDataRuntime();
 window.MM_APP_SHELL.finalize();
+installHomeScreenSimplification();
 loadMeasuredLearningRuntime();
 const geometryStyle=document.getElementById('mm-app-shell-registry-style');
 if(geometryStyle&&geometryStyle.parentNode===document.head)document.head.appendChild(geometryStyle);
 window.addEventListener('popstate',()=>window.MM_APP_SHELL.navigation?.sync?.());
-requestAnimationFrame(()=>{window.MM_APP_SHELL.geometry?.sync?.();patchEvidenceUi()});
+requestAnimationFrame(()=>{window.MM_APP_SHELL.geometry?.sync?.();patchEvidenceUi();simplifyHomeScreen()});
 // Preserve the canonical shell compatibility marker. Evidence-status bridging and connected-data runtime have their own versions above.
 window.MM_APP_SHELL_FINALIZED='2026.08.26.4';
 })();
