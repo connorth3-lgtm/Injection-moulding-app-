@@ -11,11 +11,21 @@ async function seedLearner(page){
 async function openApp(page){
   await seedLearner(page);
   await page.goto(BASE,{waitUntil:'domcontentloaded'});
-  await page.waitForFunction(()=>window.MM_APP_SHELL_FINALIZED==='2026.08.26.4'&&document.querySelector('#dashboard .mm-home-task-hub'));
+  await page.waitForFunction(()=>window.MM_APP_SHELL_FINALIZED==='2026.08.26.4'&&window.MM_PRIMARY_HUBS);
   await page.waitForFunction(()=>!document.getElementById('mmBootstrap'));
   await expect(page.locator('#mmStartupFailure')).toHaveCount(0);
   await expect(page.locator('.mobile-nav > button')).toHaveCount(4);
   await page.evaluate(()=>new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve))));
+}
+async function openPracticeHub(page){
+  await page.locator('.mobile-nav > button').filter({hasText:'Practice'}).click();
+  await expect(page.locator('#scenarios .mm-practice-hub')).toBeVisible();
+  await expectOnlyCurrent(page,'Practice');
+}
+async function openLearnHub(page){
+  await page.locator('.mobile-nav > button').filter({hasText:'Learn'}).click();
+  await expect(page.locator('#path .mm-learn-hub')).toBeVisible();
+  await expectOnlyCurrent(page,'Learn');
 }
 async function scrollAppToBottom(page){
   await page.evaluate(()=>{
@@ -42,20 +52,19 @@ for(const viewport of [{name:'android-412x915',width:412,height:915},{name:'smal
   test.describe(viewport.name,()=>{
     test.use({viewport:{width:viewport.width,height:viewport.height}});
 
-    test('Home is task-first, clear of the fixed nav, and Mould Master is one tap away',async({page})=>{
+    test('Home is lean, XP-free, clear of duplicate reference launchers, and Practice owns troubleshooting',async({page})=>{
       await openApp(page);
       await expect(page.locator('#dashboard .mm-today-focus')).toBeVisible();
-      await expect(page.locator('#dashboard .mm-home-task-hub')).toBeVisible();
+      await expect(page.locator('#dashboard .mm-home-task-hub')).toBeHidden();
       await expect(page.locator('#continueBtn')).toBeHidden();
-      await expect(page.getByRole('button',{name:/Diagnose a moulding problem/i})).toBeVisible();
-      await expect(page.getByRole('button',{name:/Analyse process data/i})).toBeVisible();
       await expect(page.locator('#dashboard .mm-home-core-hero')).toBeHidden();
       await expect(page.locator('#dashboard .mm-home-kpis')).toBeHidden();
+      await expect(page.locator('#dashboard .fun-dashboard')).toHaveCount(0);
+      await expect(page.locator('#dashboard')).not.toContainText(/\bXP\b/i);
+      await expect(page.locator('#dashboard')).not.toContainText(/workshop rank|learning streak|badges/i);
+      await expect(page.locator('#mm-src-open')).toBeHidden();
+      await expect(page.locator('#mmrd-open')).toBeHidden();
       await expectOnlyCurrent(page,'Home');
-
-      const specialist=page.locator('#mmSpecialistDashboard');
-      await expect(specialist).toBeVisible();
-      await expect(page.locator('#mmSpecialistDashboard > p')).toBeHidden();
 
       await scrollAppToBottom(page);
       const geometry=await page.evaluate(()=>{
@@ -72,15 +81,20 @@ for(const viewport of [{name:'android-412x915',width:412,height:915},{name:'smal
       expect(geometry.mainPaddingBottom).not.toBe('0px');
       expect(geometry.lastBottom).toBeLessThanOrEqual(geometry.navTop+1);
 
-      await page.getByRole('button',{name:/Diagnose a moulding problem/i}).click();
+      await openPracticeHub(page);
+      await expect(page.getByRole('button',{name:/Open troubleshooting/i})).toBeVisible();
+      await page.getByRole('button',{name:/Open troubleshooting/i}).click();
+      await expect(page.locator('#modal .modal-card')).toBeVisible();
+      await page.getByRole('button',{name:/Mould Master/i}).click();
       await expect(page.locator('#mmMouldMasterWorkspace')).toBeVisible();
       await expect(page.getByRole('heading',{name:'Troubleshooting casebook'})).toBeVisible();
       await expectOnlyCurrent(page,'Practice');
     });
 
-    test('Data diagnosis and the 50-case deep dive are directly reachable',async({page})=>{
+    test('Data diagnosis and the 50-case deep dive are directly reachable from Practice',async({page})=>{
       await openApp(page);
-      await page.getByRole('button',{name:/Analyse process data/i}).click();
+      await openPracticeHub(page);
+      await page.getByRole('button',{name:/Open data diagnosis/i}).click();
       await expect(page.locator('#processDataLabs')).toBeVisible();
       await expect(page.getByRole('heading',{name:'Guided Data Diagnosis'})).toBeVisible();
       await expect(page.getByRole('button',{name:'Open 50-case data deep dive'})).toBeVisible();
@@ -100,9 +114,10 @@ for(const viewport of [{name:'android-412x915',width:412,height:915},{name:'smal
       await expectOnlyCurrent(page,'Practice');
     });
 
-    test('Open 20-pass · 200-case atlas, filter a pass, and inspect the full evidence chain',async({page})=>{
+    test('Open 20-pass · 200-case atlas from Practice, filter a pass, and inspect the full evidence chain',async({page})=>{
       await openApp(page);
-      await page.getByRole('button',{name:/Analyse process data/i}).click();
+      await openPracticeHub(page);
+      await page.getByRole('button',{name:/Open data diagnosis/i}).click();
       await expect(page.getByRole('button',{name:'Open 20-pass · 200-case atlas'})).toBeVisible();
       await page.getByRole('button',{name:'Open 20-pass · 200-case atlas'}).click();
       await expect(page.getByRole('heading',{name:'200 advanced process-data cases'})).toBeVisible();
@@ -122,7 +137,8 @@ for(const viewport of [{name:'android-412x915',width:412,height:915},{name:'smal
 
     test('Local shot CSV intake strips raw identifiers in the real UI',async({page})=>{
       await openApp(page);
-      await page.getByRole('button',{name:/Analyse process data/i}).click();
+      await openPracticeHub(page);
+      await page.getByRole('button',{name:/Open data diagnosis/i}).click();
       await expect(page.getByRole('button',{name:'Prepare real shot CSV locally'})).toBeVisible();
       await page.getByRole('button',{name:'Prepare real shot CSV locally'}).click();
       await expect(page.getByRole('heading',{name:'Prepare shot data without uploading it'})).toBeVisible();
@@ -143,6 +159,7 @@ for(const viewport of [{name:'android-412x915',width:412,height:915},{name:'smal
 
     test('Lesson action bar sits above the global mobile navigation',async({page})=>{
       await openApp(page);
+      await openLearnHub(page);
       await page.getByRole('button',{name:/Continue lesson/i}).first().click();
       await expect(page.locator('#lesson')).toBeVisible();
       await expect(page.locator('.mm-mobile-actions')).toBeVisible();
@@ -155,7 +172,7 @@ for(const viewport of [{name:'android-412x915',width:412,height:915},{name:'smal
       await expectOnlyCurrent(page,'Learn');
     });
 
-    test('Primary mobile navigation and More tools are keyboard reachable',async({page})=>{
+    test('Primary mobile navigation and the reduced More tools are keyboard reachable',async({page})=>{
       await openApp(page);
       const nav=page.locator('.mobile-nav > button');
       const expected=['Home','Learn','Practice','More'];
@@ -167,8 +184,10 @@ for(const viewport of [{name:'android-412x915',width:412,height:915},{name:'smal
       }
       await page.keyboard.press('Enter');
       await expect(page.locator('#modal .modal-card')).toBeVisible();
-      await expect(page.locator('[data-mm-registry-menu="mould-master"]')).toHaveCount(1);
-      await expect(page.locator('[data-mm-registry-menu="process-data"]')).toHaveCount(1);
+      await expect(page.locator('[data-mm-registry-menu="mould-master"]')).toHaveCount(0);
+      await expect(page.locator('[data-mm-registry-menu="process-data"]')).toHaveCount(0);
+      await expect(page.locator('[data-mm-registry-menu="diagnostic-labs"]')).toHaveCount(0);
+      await expect(page.locator('[data-mm-registry-menu="material-labs"]')).toHaveCount(0);
       await expect(page.locator('[data-mm-registry-menu="learning-insights"]')).toHaveCount(1);
       await expect(page.locator('[data-mm-registry-menu="repair-app-files"]')).toHaveCount(1);
       const insights=page.locator('[data-mm-registry-menu="learning-insights"]');
@@ -180,7 +199,7 @@ for(const viewport of [{name:'android-412x915',width:412,height:915},{name:'smal
   });
 }
 
-test('late dashboard modules recompose idempotently without duplicating adopted Home content',async({page})=>{
+test('late dashboard modules recompose idempotently without making retired Home sections visible',async({page})=>{
   await page.setViewportSize({width:412,height:915});
   await openApp(page);
   await page.evaluate(()=>{
@@ -193,19 +212,26 @@ test('late dashboard modules recompose idempotently without duplicating adopted 
   await expect(page.locator('[data-mm-dashboard-section="qa-late-dashboard"]')).toHaveCount(1);
   await page.evaluate(()=>{window.MM_APP_SHELL.dashboard.compose();window.MM_APP_SHELL.dashboard.compose()});
   await expect(page.locator('[data-mm-dashboard-section="qa-late-dashboard"]')).toHaveCount(1);
+  await expect(page.locator('[data-mm-dashboard-section="qa-late-dashboard"]')).toBeHidden();
   await expect(page.locator('#dashboard .mm-today-focus')).toHaveCount(1);
   await expect(page.locator('#dashboard .mm-home-task-hub')).toHaveCount(1);
+  await expect(page.locator('#dashboard .mm-home-task-hub')).toBeHidden();
   expect(await page.evaluate(()=>window.__qaLateRenderCount)).toBeGreaterThanOrEqual(1);
   await page.evaluate(()=>window.__qaLateUnregister());
   await expect(page.locator('[data-mm-dashboard-section="qa-late-dashboard"]')).toHaveCount(0);
   await expect(page.locator('#dashboard .mm-today-focus')).toHaveCount(1);
   await expect(page.locator('#dashboard .mm-home-task-hub')).toHaveCount(1);
+  await expect(page.locator('#dashboard .mm-home-task-hub')).toBeHidden();
 });
 
-test('capture Android-like Home regression artifact after bootstrap is gone',async({page})=>{
+test('capture Android-like Home regression artifact after bootstrap is gone and retired gamification is absent',async({page})=>{
   await page.setViewportSize({width:412,height:915});
   await openApp(page);
   await expect(page.locator('#mmBootstrap')).toHaveCount(0);
-  await expect(page.locator('#dashboard .mm-home-task-hub')).toBeVisible();
+  await expect(page.locator('#dashboard .mm-today-focus')).toBeVisible();
+  await expect(page.locator('#dashboard .mm-home-task-hub')).toBeHidden();
+  await expect(page.locator('#dashboard .fun-dashboard')).toHaveCount(0);
+  await expect(page.locator('#dashboard')).not.toContainText(/\bXP\b/i);
+  await expect(page.locator('#dashboard')).not.toContainText(/workshop rank|learning streak|badges/i);
   await page.screenshot({path:'qa-artifacts/mobile-home-412x915.png',fullPage:true});
 });
