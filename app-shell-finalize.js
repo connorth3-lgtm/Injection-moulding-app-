@@ -20,7 +20,7 @@ const EVIDENCE_STATUS=Object.freeze({
 });
 const GAP=window.MM_SPECIALIST_EVIDENCE_GAPS;
 const BASE=window.MM_SPECIALIST_CURRICULUM;
-function esc(v){return String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot',"'":'&#39;'}[c]))}
+function esc(v){return String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
 function syncEvidenceExports(){
   for(const lesson of GAP.lessons){
     const state=EVIDENCE_STATUS[lesson.evidenceArea]||'Provisional';
