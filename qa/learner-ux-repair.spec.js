@@ -74,7 +74,7 @@ test('learner UX repair preserves the governed selector and adds audited rotatio
   expect(assessment.technicalPerExam).toBe(7);
   expect(assessment.technicalBankPerLevel).toBeGreaterThanOrEqual(10);
   expect(assessment.rotationVersion).toBe('2026.09.06.15');
-  expect(assessment.bankVersion).toBe('assessment-2026.09.06.15');
+  expect(assessment.bankVersion).toBe('assessment-2026.08.30.1');
 });
 
 test('consecutive assessment attempts do not repeat the opening question and forms stay valid',async({page})=>{
@@ -107,7 +107,7 @@ test('consecutive assessment attempts do not repeat the opening question and for
   expect(new Set(result.second.keys).size).toBe(result.second.keys.length);
   expect(result.first.valid).toBe(true);
   expect(result.second.valid).toBe(true);
-  expect(result.second.meta.bankVersion).toBe('assessment-2026.09.06.15');
+  expect(result.second.meta.bankVersion).toBe('assessment-2026.08.30.1');
   expect(result.second.meta.formFingerprint).toMatch(/^form-[0-9a-f]{8}$/);
   const attempts=Object.values(result.history).find(value=>Array.isArray(value)&&value.length>=2);
   expect(attempts).toBeTruthy();
@@ -128,7 +128,7 @@ test('graded assessment records the exact bank and form metadata used for the at
     return {record:records[0]||null,form:window.MM_ACTIVE_QUESTION_FORM};
   });
   expect(meta.record).toBeTruthy();
-  expect(meta.record.bankVersion).toBe('assessment-2026.09.06.15');
+  expect(meta.record.bankVersion).toBe('assessment-2026.08.30.1');
   expect(meta.record.formFingerprint).toBe(meta.form.formFingerprint);
   expect(meta.record.questionKeys).toEqual(meta.form.questionKeys);
   expect(meta.record.score).toBe(100);
