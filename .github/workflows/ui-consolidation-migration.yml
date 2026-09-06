@@ -1,0 +1,56 @@
+name: One-shot UI consolidation migration
+
+on:
+  push:
+    branches: [fix/ui-consolidation-audit]
+    paths:
+      - 'tools/ui_consolidation_migration.py'
+      - '.github/workflows/ui-consolidation-migration.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  migrate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: fix/ui-consolidation-audit
+          fetch-depth: 0
+      - uses: actions/setup-python@v7
+        with:
+          python-version: '3.13'
+      - uses: actions/setup-node@v7
+        with:
+          node-version: '22'
+          package-manager-cache: false
+      - name: Apply UI consolidation
+        run: python tools/ui_consolidation_migration.py
+      - name: Regenerate deterministic style CSP
+        run: |
+          node tools/generate_style_csp.cjs --write
+          node tools/generate_style_csp.cjs --check
+      - name: Focused release and UI contracts
+        run: |
+          python qa_read_aloud.py
+          python qa_web_release_identity.py
+          python qa_release.py
+          node --check learning-experience.js
+          node --check lesson-simple-experience.js
+          node --check lesson-deep-authoring-v2.js
+          node --check read-aloud.js
+          node --check assessment-ux.js
+      - name: Commit migration output
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -A
+          git reset -- tools/ui_consolidation_migration.py .github/workflows/ui-consolidation-migration.yml
+          if git diff --cached --quiet; then
+            echo 'No migration changes to commit.'
+            exit 0
+          fi
+          git commit -m 'Consolidate learner UI after deep audit'
+          git push origin HEAD:fix/ui-consolidation-audit
