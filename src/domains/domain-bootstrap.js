@@ -2,7 +2,7 @@
 (function(){
 'use strict';
 if(window.MM_DOMAIN_BOOTSTRAP)return;
-const VERSION='2026.09.06.3';
+const VERSION='2026.09.06.4';
 const MANIFEST='./runtime-domain-manifest.json';
 
 function loadScript(src){return new Promise((resolve,reject)=>{const s=document.createElement('script');s.src=src;s.async=false;s.dataset.mmDomainAsset='1';s.onload=()=>resolve(src);s.onerror=()=>reject(new Error(`Domain asset failed: ${src}`));document.body.appendChild(s)})}
@@ -13,6 +13,15 @@ function loadPrimaryHubs(){
   s.async=true;
   s.dataset.mmPrimaryHubs='1';
   s.addEventListener('error',()=>console.warn('[MouldMaster] Condensed Learn / Practice hubs could not be loaded; standard views remain available.'));
+  document.body.appendChild(s);
+}
+function loadLearnerUxRepair(){
+  if(window.MM_LEARNER_UX_REPAIR||document.querySelector('script[data-mm-learner-ux-repair]'))return;
+  const s=document.createElement('script');
+  s.src='./learner-ux-repair.js';
+  s.async=true;
+  s.dataset.mmLearnerUxRepair='1';
+  s.addEventListener('error',()=>console.warn('[MouldMaster] Learner UX repair runtime could not be loaded; standard lesson and assessment views remain available.'));
   document.body.appendChild(s);
 }
 async function boot(){
@@ -29,6 +38,7 @@ async function boot(){
   return loaded;
 }
 loadPrimaryHubs();
+loadLearnerUxRepair();
 const ready=boot().catch(err=>{console.error('[MouldMaster domains]',err);window.dispatchEvent(new CustomEvent('mm:domains-failed',{detail:{message:String(err?.message||err)}}));throw err});
 window.MM_DOMAIN_BOOTSTRAP=Object.freeze({version:VERSION,manifest:MANIFEST,ready});
 })();
