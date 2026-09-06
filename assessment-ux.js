@@ -56,7 +56,7 @@ function addStyles(){
   .mm-option-card.mm-option-selected{border-color:#69a8ff!important;background:#17314f!important;box-shadow:inset 3px 0 0 #69a8ff}
   .mm-option-card.mm-option-selected .mm-option-key{background:#69a8ff;color:#07131b;border-color:#69a8ff}
   .mm-exam-steps{display:flex;gap:6px;flex-wrap:wrap;margin:16px 0 10px}
-  .mm-step{width:34px;height:34px;border-radius:10px;border:1px solid #355171;background:#102039;color:#a9bdd6;font-size:12px;font-weight:800;padding:0}
+  .mm-step{width:38px;height:38px;border-radius:10px;border:1px solid #355171;background:#102039;color:#a9bdd6;font-size:12px;font-weight:800;padding:0}
   .mm-step:hover{background:#172b46;color:#fff}
   .mm-step.mm-step-answered{border-color:#3e756b;color:#cffff5;background:#12302e}
   .mm-step.mm-step-current{outline:2px solid #69a8ff;outline-offset:2px;color:#fff}
@@ -82,7 +82,7 @@ function addStyles(){
     #examQuestions.mm-focus-mode .question{padding:18px 14px;border-radius:13px}
     .mm-question-stem{font-size:19px;line-height:1.5}
     .mm-option-card{grid-template-columns:20px 30px minmax(0,1fr);padding:12px 11px!important;font-size:14px}
-    .mm-exam-steps{gap:5px}.mm-step{width:31px;height:31px;border-radius:9px}
+    .mm-exam-steps{gap:5px}.mm-step{width:38px;height:38px;border-radius:9px}
     .mm-exam-nav{position:fixed;left:0;right:0;bottom:0;border-radius:14px 14px 0 0;margin:0;padding:10px 12px calc(10px + env(safe-area-inset-bottom));box-shadow:0 -14px 34px rgba(0,0,0,.34)}
     .mm-exam-nav-top{margin-bottom:8px}.mm-exam-actions{display:grid;grid-template-columns:1fr 1fr}.mm-exam-actions .mm-native-grade{grid-column:1/-1;width:100%;margin:0}
     .mm-unanswered-note{grid-column:1/-1;text-align:left;margin:0}

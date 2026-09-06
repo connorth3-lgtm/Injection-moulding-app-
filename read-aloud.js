@@ -5,7 +5,7 @@
 (function(){
   'use strict';
 
-  const VERSION='2026.09.07.2';
+  const VERSION='2026.09.07.3';
   const synth=window.speechSynthesis;
   const supported=!!(synth&&window.SpeechSynthesisUtterance);
   const SPEEDS=[0.75,1,1.25,1.5];
@@ -180,12 +180,14 @@
     const style=document.createElement('style');
     style.id='mmReadAloudStyles';
     style.textContent=`
-      .mm-read-aloud{position:fixed;right:max(12px,env(safe-area-inset-right));bottom:max(12px,env(safe-area-inset-bottom));z-index:2147482000;width:min(360px,calc(100vw - 24px));font:14px/1.35 system-ui,-apple-system,"Segoe UI",sans-serif;color:#edf5ff}
-      .mm-read-aloud details{border:1px solid #3b5575;border-radius:14px;background:#0c1929;box-shadow:0 12px 36px rgba(0,0,0,.35);overflow:hidden}
-      .mm-read-aloud details:not([open]){width:max-content;margin-left:auto}
-      .mm-read-aloud summary{list-style:none;display:flex;align-items:center;justify-content:space-between;gap:10px;min-height:48px;padding:10px 13px;cursor:pointer;font-weight:800;background:#12243a}
-      .mm-read-aloud details:not([open]) summary{min-width:102px;min-height:44px;padding:8px 10px;justify-content:center;border-radius:13px;font-size:13px}
+      .mm-read-aloud{position:relative;z-index:9;width:auto;font:14px/1.35 system-ui,-apple-system,"Segoe UI",sans-serif;color:#edf5ff}
+      .mm-read-aloud details{border:1px solid #3b5575;border-radius:12px;background:#0c1929;box-shadow:none;overflow:hidden}
+      .mm-read-aloud details:not([open]){width:44px;height:44px;margin:0}
+      .mm-read-aloud summary{list-style:none;display:flex;align-items:center;justify-content:space-between;gap:10px;min-height:44px;padding:8px 10px;cursor:pointer;font-weight:800;background:#12243a}
+      .mm-read-aloud details:not([open]) summary{width:44px;min-width:44px;height:44px;min-height:44px;padding:0;justify-content:center;border-radius:12px}
+      .mm-read-aloud details:not([open]) summary b{font-size:0}.mm-read-aloud details:not([open]) summary b::before{content:'🔊';font-size:18px;line-height:1}
       .mm-read-aloud details:not([open]) summary span{display:none}
+      .mm-read-aloud details[open]{position:fixed;right:12px;top:72px;z-index:2147482000;width:min(360px,calc(100vw - 24px));box-shadow:0 12px 36px rgba(0,0,0,.35)}
       .mm-read-aloud summary::-webkit-details-marker{display:none}.mm-read-aloud summary span{color:#a9bdd6;font-size:12px;font-weight:600}
       .mm-read-panel{padding:12px;display:grid;gap:10px}.mm-read-controls{display:grid;grid-template-columns:1fr 1.35fr 1fr 1fr;gap:7px}
       .mm-read-controls button,.mm-read-speed{min-height:44px;border:1px solid #3c5878;border-radius:9px;background:#162b46;color:#f5f9ff;padding:8px}.mm-read-controls button:disabled{opacity:.45;cursor:not-allowed}
@@ -193,7 +195,7 @@
       .mm-read-meta{display:flex;align-items:center;justify-content:space-between;gap:10px;color:#b8c9dd;font-size:12px}.mm-read-meta label{display:flex;align-items:center;gap:6px;color:#b8c9dd}
       .mm-read-speed{width:auto;min-height:38px;padding:6px 8px;margin:0}.mm-read-status{margin:0;color:#cbd8e7}.mm-read-current{margin:0;padding:9px 10px;border-radius:9px;background:#192f4b;color:#fff;border-left:3px solid #55d6be;max-height:92px;overflow:auto}
       .mm-read-source-active{outline:3px solid #55d6be!important;outline-offset:4px!important;border-radius:4px}.mm-read-note{margin:0;color:#95abc4;font-size:11px}
-      @media(max-width:680px){.mm-read-aloud{right:8px;bottom:calc(var(--mm-mobile-nav-clearance,104px) + env(safe-area-inset-bottom) + 8px);width:calc(100vw - 16px)}.mm-read-controls{grid-template-columns:1fr 1fr 1fr 1fr}}
+      @media(max-width:700px){.mm-read-aloud details[open]{top:auto;right:8px;bottom:calc(var(--mm-mobile-nav-clearance,104px) + env(safe-area-inset-bottom) + 10px);width:calc(100vw - 16px)}.mm-read-controls{grid-template-columns:1fr 1fr 1fr 1fr}}
       @media(prefers-reduced-motion:reduce){.mm-read-aloud *{scroll-behavior:auto!important}}
     `;
     document.head.appendChild(style);
@@ -207,16 +209,8 @@
     host.setAttribute('aria-label','Read Aloud');
     host.dataset.version=VERSION;
     host.innerHTML=`<details><summary><b>🔊 Listen</b><span>${supported?'Device voice':'Unavailable'}</span></summary><div class="mm-read-panel"><div class="mm-read-controls"><button type="button" data-mm-read="prev" aria-label="Previous sentence">◀</button><button type="button" class="mm-read-play" data-mm-read="play">Listen</button><button type="button" data-mm-read="next" aria-label="Next sentence">▶</button><button type="button" data-mm-read="stop">Stop</button></div><div class="mm-read-meta"><p class="mm-read-status" role="status" aria-live="polite">${supported?'Ready':'Speech synthesis is unavailable'}</p><label>Speed <select class="mm-read-speed" data-mm-read="speed" aria-label="Read aloud speed">${SPEEDS.map(v=>`<option value="${v}"${v===1?' selected':''}>${v}×</option>`).join('')}</select></label><span data-mm-read="position">0 / 0</span></div><p class="mm-read-current" data-mm-read="current" aria-live="off" hidden></p><p class="mm-read-note">Uses your device/browser speech-synthesis service. MouldMaster does not request microphone access or record audio.</p></div></details>`;
-    document.body.appendChild(host);
-    const syncMobileClearance=()=>{
-      if(window.matchMedia?.('(max-width:680px)').matches){
-        host.style.bottom='calc(var(--mm-mobile-nav-clearance,104px) + env(safe-area-inset-bottom) + 14px)';
-      }else{
-        host.style.removeProperty('bottom');
-      }
-    };
-    syncMobileClearance();
-    window.addEventListener('resize',syncMobileClearance,{passive:true});
+    const actions=document.querySelector('#app .top-actions,.top-actions');
+    (actions||document.body).appendChild(host);
     ui={
       host,
       play:host.querySelector('[data-mm-read="play"]'),
