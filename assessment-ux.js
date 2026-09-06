@@ -1,8 +1,8 @@
-/* MouldMaster assessment experience — question-only focus mode 2026-09-06.5 */
+/* MouldMaster assessment experience — question-only focus mode 2026-09-06.6 */
 (function(){
 'use strict';
 
-const VERSION='2026.09.06.5';
+const VERSION='2026.09.06.6';
 const FIRST_HISTORY_LIMIT=3;
 const HISTORY_KEY='mm_assessment_opening_history_v1';
 const root=document.documentElement;
@@ -205,6 +205,11 @@ function decorateExam(){
   host.dataset.mmAssessmentUx='1';
   host.classList.add('mm-focus-mode');
   modal.classList.add('mm-assessment-modal');
+  const title=modal.querySelector('[id^="mmDialogTitle"]');
+  if(title){
+    title.classList.remove('mm-exam-prelude');
+    title.removeAttribute('aria-hidden');
+  }
 
   for(let node=host.previousElementSibling;node;node=node.previousElementSibling){
     if(node.matches?.('[id^="mmDialogTitle"]'))continue;
