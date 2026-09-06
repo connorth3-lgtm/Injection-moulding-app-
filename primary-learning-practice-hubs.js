@@ -86,7 +86,7 @@ function installModalScrollLock(){
 }
 installModalScrollLock();
 
-function esc(value){return String(value??'').replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]))}
+function esc(value){return String(value??'').replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot',"'":'&#39;'}[ch]))}
 function lessonContext(){
   try{
     const lesson=currentLesson();
@@ -98,13 +98,27 @@ function lessonContext(){
   }catch(_){return null}
 }
 function scrollLessonTop(){
-  try{window.scrollTo({top:0,left:0,behavior:'auto'})}catch(_){window.scrollTo(0,0)}
+  const main=document.querySelector('main.main')||document.querySelector('.main');
+  if(main)main.scrollTop=0;
+  if(document.body)document.body.scrollTop=0;
   const scrolling=document.scrollingElement;if(scrolling)scrolling.scrollTop=0;
+  try{window.scrollTo({top:0,left:0,behavior:'auto'})}catch(_){window.scrollTo(0,0)}
 }
 function openCurrentLesson(){
+  const active=document.activeElement;
+  if(active&&typeof active.blur==='function')active.blur();
+  const root=document.documentElement;
+  const previousAnchor=root.style.overflowAnchor;
+  root.style.overflowAnchor='none';
   scrollLessonTop();
   const result=switchView('lesson');
-  requestAnimationFrame(()=>{scrollLessonTop();requestAnimationFrame(scrollLessonTop)});
+  requestAnimationFrame(()=>{
+    scrollLessonTop();
+    requestAnimationFrame(()=>{
+      scrollLessonTop();
+      setTimeout(()=>{scrollLessonTop();root.style.overflowAnchor=previousAnchor},0);
+    });
+  });
   return result;
 }
 function readPracticeRotation(){
