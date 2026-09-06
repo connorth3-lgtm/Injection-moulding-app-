@@ -8,16 +8,24 @@ async function openApp(page){
     localStorage.setItem('mouldmasterProDB',JSON.stringify({activeUser:'material-detail-qa',users:{'material-detail-qa':user}}));
   });
   await page.goto(BASE,{waitUntil:'domcontentloaded'});
-  await page.waitForFunction(()=>window.MM_APP_SHELL_FINALIZED==='2026.08.26.4'&&window.MM_MATERIAL_REGISTRY&&document.querySelector('[data-mm-product-area="materials"]'));
+  await page.waitForFunction(()=>window.MM_APP_SHELL_FINALIZED==='2026.08.26.4'&&window.MM_MATERIAL_REGISTRY&&window.MM_PRIMARY_HUBS);
   await page.waitForFunction(()=>!document.getElementById('mmBootstrap'));
   await expect(page.locator('#mmStartupFailure')).toHaveCount(0);
+}
+
+async function openMaterialsFromLearn(page){
+  await page.locator('.mobile-nav > button').filter({hasText:'Learn'}).click();
+  await expect(page.locator('#path .mm-learn-hub')).toBeVisible();
+  const materials=page.locator('#path [data-mm-hub-action="materials"]');
+  await expect(materials).toBeVisible();
+  await materials.click();
 }
 
 for(const viewport of [{name:'android-412x915',width:412,height:915},{name:'small-360x800',width:360,height:800}]){
   test(`${viewport.name}: exact LOTTE, LG Chem and KEPITAL grades keep property, processing and provenance context visible`,async({page})=>{
     await page.setViewportSize({width:viewport.width,height:viewport.height});
     await openApp(page);
-    await page.locator('[data-mm-product-area="materials"]').click();
+    await openMaterialsFromLearn(page);
     await expect(page.locator('#materials')).toBeVisible();
     await expect(page.locator('#mmExactMaterialCatalog')).toBeVisible();
     await expect(page.locator('[data-mm-material-grade]')).toHaveCount(11);
