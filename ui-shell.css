@@ -33,6 +33,10 @@
   .topbar{position:relative!important;top:auto!important;z-index:1!important;background:transparent!important;backdrop-filter:none!important;gap:8px!important;margin-bottom:10px!important;padding:0 0 4px!important;align-items:flex-start!important}
   .topbar h1{font-size:clamp(23px,7vw,27px)!important}.topbar p{font-size:12px!important;line-height:1.4!important;margin-top:3px!important}
 
+  /* References belong under More on mobile. Hide both legacy launchers before
+     runtime docking so neither can flash over the canonical bottom navigation. */
+  #mm-src-open,#mmrd-open{display:none!important;visibility:hidden!important;pointer-events:none!important}
+
   /* Keep only a compact Search affordance in the top bar. Continue is already the
      primary Home/Learn action, so duplicating it here creates noise. */
   #app .top-actions{gap:6px!important;flex:0 0 auto!important;align-items:flex-start!important}
