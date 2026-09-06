@@ -79,7 +79,7 @@ jobs:
         run: |
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add index.html pwa-shell.js service-worker.js version.json qa_release.py learning-experience.js lesson-simple-experience.js assessment-ux.js primary-learning-practice-hubs.js playwright.config.cjs .github/workflows/mobile-browser-qa.yml qa/learner-next-flow.spec.js qa/ui-visual-regression.spec.js qa/ui-visual-regression.spec.js-snapshots qa/*.spec.js
+          git add index.html pwa-shell.js service-worker.js version.json qa_release.py learning-experience.js lesson-simple-experience.js assessment-ux.js primary-learning-practice-hubs.js playwright.config.cjs qa/learner-next-flow.spec.js qa/ui-visual-regression.spec.js qa/ui-visual-regression.spec.js-snapshots qa/*.spec.js
           git diff --cached --check
           git commit -m 'Add visual baselines and learner next-step flow'
           git push origin HEAD:feat/visual-regression-learner-next
