@@ -1,0 +1,82 @@
+/* MouldMaster learner UX repair — 2026.09.06.13
+   Mobile lessons keep one overview, one content flow and one completion path. */
+@media (max-width:760px){
+  body[data-mm-view="lesson"] .main{
+    padding-top:max(16px,env(safe-area-inset-top))!important;
+    scroll-padding-top:max(16px,env(safe-area-inset-top))!important;
+  }
+
+  #lesson.mm-simple-lesson{
+    padding-top:0!important;
+    padding-bottom:calc(var(--mm-mobile-content-clearance,104px) + 18px)!important;
+  }
+
+  /* These are duplicate navigation/instruction layers added by older lesson
+     decorators. The simple lesson hero already carries the same progress and
+     the normal lesson flow already explains what to do next. */
+  #lesson .mm-mobile-actions,
+  #lesson .mm-mobile-lessons,
+  #lesson .mm-lesson-progress,
+  #lesson .mm-reading-guide,
+  #lesson .mm-read-marker{
+    display:none!important;
+  }
+
+  #lesson .lesson-side{display:none!important}
+
+  #lesson .mm-simple-lesson-hero{
+    margin:0 0 12px!important;
+    padding:18px!important;
+    border-radius:16px!important;
+  }
+  #lesson .mm-simple-lesson-hero .eyebrow{
+    margin-bottom:6px!important;
+    font-size:10px!important;
+  }
+  #lesson .mm-simple-lesson-hero h1{
+    margin:0!important;
+    font-size:clamp(27px,8.2vw,34px)!important;
+    line-height:1.08!important;
+  }
+  #lesson .mm-simple-lesson-summary{
+    margin-top:9px!important;
+    font-size:15px!important;
+    line-height:1.48!important;
+  }
+  #lesson .mm-simple-lesson-meta{margin-top:12px!important;gap:6px!important}
+  #lesson .mm-simple-lesson-meta .pill{font-size:11px!important;padding:6px 9px!important}
+  #lesson .mm-simple-lesson-hero .mini-bar{margin-top:12px!important}
+  #lesson .mm-simple-lesson-start{
+    width:100%!important;
+    min-height:48px!important;
+    margin-top:13px!important;
+  }
+
+  /* Remove the old numbered-reading visual hierarchy. The technical content
+     remains present in the same order, just as ordinary readable cards. */
+  #lesson .lesson-read-block,
+  #lesson .lesson-read-primary,
+  #lesson .lesson-read-task{
+    margin:0 0 11px!important;
+    padding:17px!important;
+    border:1px solid #304a68!important;
+    border-radius:15px!important;
+    background:linear-gradient(180deg,#112238,#0e1d31)!important;
+    box-shadow:none!important;
+  }
+  #lesson .lesson-read-block h3{margin-top:0!important}
+
+  #lesson .mm-extra-help{margin:11px 0!important;border-radius:15px!important}
+  #lesson .mm-extra-help summary{padding:14px 16px!important}
+
+  /* The in-content completion action is the only completion control on phone. */
+  #lesson .lesson-actions-sticky{
+    position:static!important;
+    margin-top:14px!important;
+    padding:0 0 8px!important;
+    background:transparent!important;
+    border:0!important;
+    box-shadow:none!important;
+  }
+  #lesson .lesson-actions-sticky .primary{width:100%!important;min-height:50px!important}
+}

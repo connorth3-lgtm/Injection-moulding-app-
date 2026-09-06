@@ -1,4 +1,4 @@
-const CACHE_VERSION='2026.09.06.12';
+const CACHE_VERSION='2026.09.06.13';
 const CACHE_REVISION='verified-cleanup-governance-r1-20260905';
 const STATIC_CACHE=`mouldmaster-static-${CACHE_VERSION}-${CACHE_REVISION}`;
 const LEGACY_RECOVERY_SOURCE_ONLY='./MouldMaster_Academy_App.html';
@@ -25,6 +25,7 @@ const CORE=[
   './reading-patch.css',
   './ui-shell.css',
   './mobile-lesson-fix.css',
+  './learner-ux-repair.css',
   './reading-patch.js',
   './read-aloud.js',
   './training-upgrade.js',
@@ -36,6 +37,7 @@ const CORE=[
   './learning-experience.js',
   './lesson-simple-experience.js',
   './primary-learning-practice-hubs.js',
+  './learner-ux-repair.js',
   './process-data-diagnostics.js',
   './process-data-local-intake.js',
   './curriculum-integration.js',
