@@ -6,6 +6,11 @@ Optionally, the already-built public learner artifact may be copied under /previ
 a clearly separated non-production preview. This does not change production readiness,
 the governed physical-device contract, or the production verifier.
 
+When a preview is staged, the hold root also publishes a tiny migration-only service
+worker. Its sole job is to replace an older installed root PWA worker and move stale
+root clients onto /preview/. It does not cache or serve learner runtime assets and does
+not change the release-hold status of the production root.
+
 The hold site also exposes one standalone, inline-only device metadata helper so a
 physical device can report the non-sensitive values needed by the governed validation
 contract. The helper does not load the learner runtime, register a service worker,
@@ -20,10 +25,57 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 ALLOWED_FILES = {"index.html", "404.html", "device-validation.html"}
+MIGRATION_FILE = "service-worker.js"
 MARKER = 'data-mm-release-hold="true"'
 HELPER_MARKER = 'data-mm-device-metadata-helper="true"'
 PREVIEW_MARKER = 'content="non-production-preview"'
+MIGRATION_REGISTER_MARKER = 'data-mm-release-hold-migration="true"'
+MIGRATION_WORKER_MARKER = "MouldMaster release-hold migration worker"
 PREVIEW_REQUIRED = {"index.html", "manifest.webmanifest", "service-worker.js", "version.json"}
+
+
+def migration_registration() -> str:
+    return f"""<script {MIGRATION_REGISTER_MARKER}>
+(function(){{
+  if(!('serviceWorker' in navigator))return;
+  navigator.serviceWorker.register('./service-worker.js',{{scope:'./'}})
+    .then(function(reg){{return reg.update();}})
+    .catch(function(){{}});
+}})();
+</script>"""
+
+
+def migration_worker() -> str:
+    return f"""/* {MIGRATION_WORKER_MARKER} */
+'use strict';
+const PREVIEW_PATH='./preview/';
+
+function previewUrl(){{return new URL(PREVIEW_PATH,self.registration.scope)}}
+function shouldMove(url){{
+  const preview=previewUrl();
+  return url.origin===preview.origin&&!url.pathname.startsWith(preview.pathname);
+}}
+
+self.addEventListener('install',event=>{{event.waitUntil(self.skipWaiting())}});
+self.addEventListener('activate',event=>{{
+  event.waitUntil((async()=>{{
+    await self.clients.claim();
+    const preview=previewUrl();
+    const windows=await self.clients.matchAll({{type:'window',includeUncontrolled:true}});
+    await Promise.all(windows.map(async client=>{{
+      try{{
+        const url=new URL(client.url);
+        if(shouldMove(url))await client.navigate(preview.href);
+      }}catch(_){{}}
+    }}));
+  }})());
+}});
+self.addEventListener('fetch',event=>{{
+  if(event.request.method!=='GET'||event.request.mode!=='navigate')return;
+  const url=new URL(event.request.url);
+  if(shouldMove(url))event.respondWith(Promise.resolve(Response.redirect(previewUrl().href,302)));
+}});
+"""
 
 
 def document(*, not_found: bool = False, preview_available: bool = False) -> str:
@@ -43,6 +95,7 @@ def document(*, not_found: bool = False, preview_available: bool = False) -> str
         if (preview_available and not not_found)
         else ""
     )
+    migration = migration_registration() if (preview_available and not not_found) else ""
     boundary = (
         "No learner application runtime is served from this root release-hold page. "
         "The separate /preview/ path is non-production and does not satisfy or bypass the production validation gate."
@@ -65,6 +118,7 @@ def document(*, not_found: bool = False, preview_available: bool = False) -> str
     {preview}
     {helper}
   </main>
+  {migration}
 </body>
 </html>
 """
@@ -89,6 +143,23 @@ def validate_helper(payload: str) -> None:
         raise SystemExit("device metadata helper must remain local-only; forbidden token(s): " + ", ".join(found))
     if '<script src=' in lowered or '<link ' in lowered:
         raise SystemExit("device metadata helper must not reference external runtime assets")
+
+
+def validate_migration_worker(payload: str) -> None:
+    required = (
+        MIGRATION_WORKER_MARKER,
+        "./preview/",
+        "self.skipWaiting()",
+        "self.clients.claim()",
+        "client.navigate(preview.href)",
+        "Response.redirect(previewUrl().href,302)",
+    )
+    missing = [token for token in required if token not in payload]
+    if missing:
+        raise SystemExit("release-hold migration worker is incomplete: " + ", ".join(missing))
+    lowered = payload.lower()
+    if "caches.open" in lowered or ".put(" in lowered or "mouldmaster_core_app" in lowered:
+        raise SystemExit("release-hold migration worker must never cache or serve learner runtime assets")
 
 
 def stage_preview(preview_source: Path, preview_target: Path) -> None:
@@ -124,8 +195,15 @@ def build(target: Path, preview_source: Path | None = None) -> set[str]:
     validate_helper(helper_payload)
     (target / "device-validation.html").write_text(helper_payload, encoding="utf-8")
 
+    allowed_root_files = set(ALLOWED_FILES)
+    if preview_available:
+        worker_payload = migration_worker()
+        validate_migration_worker(worker_payload)
+        (target / MIGRATION_FILE).write_text(worker_payload, encoding="utf-8")
+        allowed_root_files.add(MIGRATION_FILE)
+
     root_files = {path.name for path in target.iterdir() if path.is_file()}
-    if root_files != ALLOWED_FILES:
+    if root_files != allowed_root_files:
         raise SystemExit(f"release-hold artifact boundary mismatch (root files): {sorted(root_files)}")
 
     if preview_source is not None:
@@ -136,8 +214,18 @@ def build(target: Path, preview_source: Path | None = None) -> set[str]:
         if MARKER not in payload:
             raise SystemExit(f"release-hold marker missing from {name}")
         lowered = payload.lower()
-        if "<script" in lowered or "<link" in lowered or "service-worker" in lowered:
-            raise SystemExit(f"release-hold document unexpectedly references active runtime assets: {name}")
+        if "<link" in lowered:
+            raise SystemExit(f"release-hold document unexpectedly references active linked assets: {name}")
+        if name == "404.html" and "<script" in lowered:
+            raise SystemExit("release-hold 404 document must remain script-free")
+        if name == "index.html":
+            if preview_available:
+                if payload.count("<script") != 1 or MIGRATION_REGISTER_MARKER not in payload or "<script src=" in lowered:
+                    raise SystemExit("release-hold root may contain only the inline stale-PWA migration registration")
+                if "mouldmaster_core_app" in lowered or "manifest.webmanifest" in lowered:
+                    raise SystemExit("release-hold root must not load learner runtime assets")
+            elif "<script" in lowered:
+                raise SystemExit("release-hold root must remain script-free when no preview is staged")
 
     files = {path.relative_to(target).as_posix() for path in target.rglob("*") if path.is_file()}
     return files
@@ -150,7 +238,7 @@ def main() -> None:
     args = parser.parse_args()
     preview_source = Path(args.preview_source) if args.preview_source else None
     files = build(Path(args.output), preview_source=preview_source)
-    preview_note = " with a separated non-production /preview/ learner runtime" if preview_source else ""
+    preview_note = " with a separated non-production /preview/ learner runtime and stale-PWA migration worker" if preview_source else ""
     print(
         f"Pages release-hold artifact ready: {len(files)} public files{preview_note}; "
         "production remains gated and the device metadata helper remains local-only."

@@ -3,8 +3,9 @@
 
 The root publication remains a production release hold. Verification proves that the
 hold marker is live, the privacy-safe on-device metadata helper is available, the
-separate non-production /preview/ learner runtime is reachable, and representative
-legacy/non-public repository paths remain inaccessible.
+separate non-production /preview/ learner runtime is reachable, stale installed root
+PWAs are migrated to that preview, and representative legacy/non-public repository
+paths remain inaccessible.
 """
 
 from __future__ import annotations
@@ -18,6 +19,8 @@ from urllib.request import Request, urlopen
 MARKER = 'data-mm-release-hold="true"'
 HELPER_MARKER = 'data-mm-device-metadata-helper="true"'
 PREVIEW_MARKER = 'content="non-production-preview"'
+MIGRATION_REGISTER_MARKER = 'data-mm-release-hold-migration="true"'
+MIGRATION_WORKER_MARKER = "MouldMaster release-hold migration worker"
 FORBIDDEN_PATHS = (
     "MouldMasterAcademy.exe",
     "MouldMaster_Academy_App.html",
@@ -48,6 +51,25 @@ def verify_once(base_url: str) -> None:
         raise AssertionError("release-hold root does not expose the device metadata helper")
     if 'href="preview/"' not in text:
         raise AssertionError("release-hold root does not expose the non-production preview")
+    if MIGRATION_REGISTER_MARKER not in text:
+        raise AssertionError("release-hold root does not register the stale-PWA migration worker")
+
+    worker_status, worker_body = fetch(urljoin(root, "service-worker.js"))
+    worker_text = worker_body.decode("utf-8", errors="replace")
+    if worker_status != 200 or MIGRATION_WORKER_MARKER not in worker_text:
+        raise AssertionError(f"release-hold migration worker mismatch: HTTP {worker_status}")
+    for marker in (
+        "./preview/",
+        "self.skipWaiting()",
+        "self.clients.claim()",
+        "client.navigate(preview.href)",
+        "Response.redirect(previewUrl().href,302)",
+    ):
+        if marker not in worker_text:
+            raise AssertionError(f"release-hold migration worker is missing: {marker}")
+    worker_lower = worker_text.lower()
+    if "caches.open" in worker_lower or ".put(" in worker_lower or "mouldmaster_core_app" in worker_lower:
+        raise AssertionError("release-hold migration worker must not cache or serve learner runtime assets")
 
     helper_status, helper_body = fetch(urljoin(root, "device-validation.html"))
     helper_text = helper_body.decode("utf-8", errors="replace")
@@ -97,8 +119,9 @@ def main() -> None:
         try:
             verify_once(args.base_url)
             print(
-                "Pages release-hold verification passed: production root remains held, local-only "
-                "device metadata helper and non-production /preview/ are live, and legacy/non-public probes return 404."
+                "Pages release-hold verification passed: production root remains held, stale root PWAs migrate "
+                "to the non-production /preview/, the local-only device metadata helper is live, and "
+                "legacy/non-public probes return 404."
             )
             return
         except (AssertionError, RuntimeError) as exc:
