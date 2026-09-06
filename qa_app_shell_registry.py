@@ -102,7 +102,8 @@ browser=text('qa/mobile-viewport.spec.js')
 for marker in [
     "window.MM_APP_SHELL_FINALIZED==='2026.08.26.4'",
     "!document.getElementById('mmBootstrap')",
-    "Primary mobile navigation and More tools are keyboard reachable",
+    "Home is lean, XP-free, clear of duplicate reference launchers, and Practice owns troubleshooting",
+    "Primary mobile navigation and the reduced More tools are keyboard reachable",
     "data-mm-registry-menu=\"learning-insights\"", "data-mm-registry-menu=\"repair-app-files\"",
     "late dashboard modules recompose idempotently",
     "window.MM_APP_SHELL.dashboard.register",
@@ -110,4 +111,4 @@ for marker in [
     "capture Android-like Home regression artifact after bootstrap is gone"
 ]: need(marker in browser,f'mobile browser QA marker missing: {marker}')
 
-print('MouldMaster app-shell registry QA passed (idempotent late dashboard registration, canonical navigation/geometry, keyboard-capable mobile browser coverage, offline/desktop packaging)')
+print('MouldMaster app-shell registry QA passed (idempotent late dashboard registration, canonical navigation/geometry, XP-free condensed mobile coverage, offline/desktop packaging)')
