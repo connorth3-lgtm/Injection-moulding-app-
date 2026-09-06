@@ -53,6 +53,15 @@ function styleElementTexts(source,rel){
   return{created:matches.length,texts};
 }
 
+function staticRuntimeScriptDependencies(source){
+  const rels=[];
+  const assignment=/\b[A-Za-z_$][\w$]*\s*\.\s*src\s*=\s*(['"])(\.\/[^'"?]+\.js)(?:\?[^'"]*)?\1/g;
+  for(const match of source.matchAll(assignment))rels.push(match[2].replace(/^\.\//,''));
+  const setter=/\b[A-Za-z_$][\w$]*\s*\.\s*setAttribute\(\s*(['"])src\1\s*,\s*(['"])(\.\/[^'"?]+\.js)(?:\?[^'"]*)?\2\s*\)/g;
+  for(const match of source.matchAll(setter))rels.push(match[3].replace(/^\.\//,''));
+  return rels;
+}
+
 function runtimeSources(index){
   const rels=new Set();
   const body=/\['(\.\/[^']+\.js)'\s*,\s*'<script/g;
@@ -63,6 +72,22 @@ function runtimeSources(index){
   for(const asset of [...(manifest.assets||[]),...(manifest.dataAssets||[])])if(typeof asset==='string'&&asset.endsWith('.js'))rels.add(asset.replace(/^\.\//,''));
   const coreDir=path.join(ROOT,'src/core-runtime');
   for(const name of fs.readdirSync(coreDir))if(/^core-inline-\d{3}\.js$/.test(name))rels.add(`src/core-runtime/${name}`);
+
+  // Runtime loaders are part of the executable shell too. Follow static same-origin
+  // script.src/setAttribute('src', ...) dependencies recursively so dynamically loaded
+  // modules cannot create an inline <style> that escapes deterministic CSP hashing.
+  const queue=[...rels];
+  for(let i=0;i<queue.length;i++){
+    const rel=queue[i];
+    const full=path.join(ROOT,rel);
+    if(!fs.existsSync(full))fail(`runtime source missing: ${rel}`);
+    const source=fs.readFileSync(full,'utf8');
+    for(const dependency of staticRuntimeScriptDependencies(source)){
+      if(rels.has(dependency))continue;
+      rels.add(dependency);
+      queue.push(dependency);
+    }
+  }
   return[...rels].sort();
 }
 
