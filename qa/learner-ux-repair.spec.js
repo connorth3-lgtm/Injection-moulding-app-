@@ -56,6 +56,19 @@ for(const viewport of [{name:'android-412x915',width:412,height:915},{name:'smal
   });
 }
 
+test('open mobile modal stays above the fixed primary navigation',async({page})=>{
+  await page.setViewportSize({width:412,height:915});
+  await open(page);
+  await page.locator('.mobile-nav > button').filter({hasText:/More/i}).click();
+  await expect(page.locator('#modal')).not.toHaveClass(/hidden/);
+  const layers=await page.evaluate(()=>{
+    const modal=document.getElementById('modal');
+    const nav=document.querySelector('.mobile-nav');
+    return {modal:Number.parseInt(getComputedStyle(modal).zIndex,10)||0,nav:Number.parseInt(getComputedStyle(nav).zIndex,10)||0};
+  });
+  expect(layers.modal).toBeGreaterThan(layers.nav);
+});
+
 test('learner UX repair preserves the governed selector and adds audited rotation',async({page})=>{
   await page.setViewportSize({width:412,height:915});
   await open(page);
