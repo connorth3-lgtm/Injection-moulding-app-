@@ -72,7 +72,7 @@ mobile_markers=[
     'mm-mobile-layout-guard-style',
     'installMobileLayoutGuard',
     'syncVisibleViewChrome',
-    '--mm-mobile-nav-clearance:104px',
+    '--mm-mobile-nav-clearance:120px',
     'body{padding-bottom:0!important}',
     '.main{padding:14px 14px calc(var(--mm-mobile-nav-clearance) + env(safe-area-inset-bottom))!important}',
     '.topbar{position:relative!important;top:auto!important',
