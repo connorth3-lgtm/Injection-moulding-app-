@@ -1,8 +1,8 @@
-/* MouldMaster learner UX repair — 2026.09.06.20 */
+/* MouldMaster learner UX repair — 2026.09.06.21 */
 (function(){
 'use strict';
 if(window.MM_LEARNER_UX_REPAIR)return;
-const VERSION='2026.09.06.20';
+const VERSION='2026.09.06.21';
 const ASSESSMENT_BANK_VERSION='assessment-2026.08.30.1';
 const ASSESSMENT_HISTORY_KEY='mm-assessment-question-history-v4';
 const ASSESSMENT_RESULT_META_KEY='mm-assessment-result-meta-v1';
@@ -74,7 +74,16 @@ function syncExamDisclosureGeneration(){
   const questions=Array.from(host.children).filter(el=>el.classList.contains('question'));
   if(!questions.length)return;
   const signature=questions.map(q=>normaliseQuestionText(q.querySelector('h3,h4,strong,p')?.textContent||q.textContent).slice(0,180)).join('|');
-  if(!signature||host.dataset.mmUxExamFormSignature===signature)return;
+  if(!signature)return;
+  const governed=host.classList.contains('mm-focus-mode')||host.dataset.mmAssessmentUx==='1'||document.querySelector('.mm-exam-steps')!==null;
+  if(governed){
+    host.dataset.mmUxExamFormSignature=signature;
+    questions.forEach(question=>question.classList.remove('mm-question-collapsed'));
+    document.querySelectorAll('[data-mm-exam-question-toggle]').forEach(toggle=>toggle.remove());
+    delete host.dataset.mmQuestionDisclosure;
+    return;
+  }
+  if(host.dataset.mmUxExamFormSignature===signature)return;
   host.dataset.mmUxExamFormSignature=signature;
   delete host.dataset.mmQuestionDisclosure;
   document.querySelectorAll('[data-mm-exam-question-toggle]').forEach(toggle=>toggle.remove());
