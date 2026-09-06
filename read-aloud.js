@@ -208,6 +208,15 @@
     host.dataset.version=VERSION;
     host.innerHTML=`<details><summary><b>🔊 Listen</b><span>${supported?'Device voice':'Unavailable'}</span></summary><div class="mm-read-panel"><div class="mm-read-controls"><button type="button" data-mm-read="prev" aria-label="Previous sentence">◀</button><button type="button" class="mm-read-play" data-mm-read="play">Listen</button><button type="button" data-mm-read="next" aria-label="Next sentence">▶</button><button type="button" data-mm-read="stop">Stop</button></div><div class="mm-read-meta"><p class="mm-read-status" role="status" aria-live="polite">${supported?'Ready':'Speech synthesis is unavailable'}</p><label>Speed <select class="mm-read-speed" data-mm-read="speed" aria-label="Read aloud speed">${SPEEDS.map(v=>`<option value="${v}"${v===1?' selected':''}>${v}×</option>`).join('')}</select></label><span data-mm-read="position">0 / 0</span></div><p class="mm-read-current" data-mm-read="current" aria-live="off" hidden></p><p class="mm-read-note">Uses your device/browser speech-synthesis service. MouldMaster does not request microphone access or record audio.</p></div></details>`;
     document.body.appendChild(host);
+    const syncMobileClearance=()=>{
+      if(window.matchMedia?.('(max-width:680px)').matches){
+        host.style.bottom='calc(var(--mm-mobile-nav-clearance,104px) + env(safe-area-inset-bottom) + 14px)';
+      }else{
+        host.style.removeProperty('bottom');
+      }
+    };
+    syncMobileClearance();
+    window.addEventListener('resize',syncMobileClearance,{passive:true});
     ui={
       host,
       play:host.querySelector('[data-mm-read="play"]'),
