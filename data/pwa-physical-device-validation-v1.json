@@ -1,8 +1,8 @@
 {
   "schemaVersion": 2,
   "status": "released-with-accepted-ios-risk",
-  "boundary": "Automated browser, service-worker and assistive-technology regressions do not substitute for installing and exercising the production PWA on physical iOS/iPadOS and Android devices. This contract remains pending until both platform records have reviewed human evidence. Screen-reader conformance remains governed separately by data/accessibility-real-at-validation-v1.json.",
-  "runtimeFingerprint": "sha256:9ea466e2cd70d36ac45678aca79d7967b8bdb107e9fb324d1f5a644d946fe6a2",
+  "boundary": "Automated browser, service-worker and assistive-technology regressions do not substitute for testing on physical iOS/iPadOS and Android devices. Android has owner-attested evidence; iOS/iPadOS remains explicitly untested under the recorded release-risk waiver. Full physical validation requires reviewed evidence for both platforms. Screen-reader conformance remains governed separately by data/accessibility-real-at-validation-v1.json.",
+  "runtimeFingerprint": "sha256:3de533c64352b7c674c1a58eb7a14ecc51ba678464d047e6b1bd5294a9779b99",
   "testedAt": "2026-09-06T20:55:00+12:00",
   "testerReference": "repository-owner-android-attestation",
   "evidenceReference": "pr-234-release-risk-acceptance",
@@ -10,7 +10,7 @@
     "status": "accepted",
     "acceptedAt": "2026-09-06T20:55:00+12:00",
     "acceptedBy": "repository-owner",
-    "scope": "Physical iOS/iPadOS validation was not performed because no device was available. Automated WebKit coverage passed and is not represented as physical iOS validation. Release 2026.09.06.15 is authorized with this remaining risk explicitly accepted."
+    "scope": "Physical iOS/iPadOS validation was not performed because no device was available. Automated WebKit coverage passed and is not represented as physical iOS validation. Release 2026.09.06.16 is authorized with this remaining risk explicitly accepted."
   },
   "maxEvidenceAgeDays": 30,
   "platforms": {

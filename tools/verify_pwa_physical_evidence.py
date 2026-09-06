@@ -201,7 +201,7 @@ def validate_contract(data: dict) -> None:
             fail("accepted-risk release must be authorized by repository-owner")
         parse_tested_at(waiver.get("acceptedAt"))
         scope = str(waiver.get("scope") or "")
-        for marker in ("iOS/iPadOS validation was not performed", "WebKit", "2026.09.06.15"):
+        for marker in ("iOS/iPadOS validation was not performed", "WebKit", "2026.09.06.16"):
             if marker not in scope:
                 fail(f"accepted-risk scope is missing: {marker}")
         ios = platforms["ios"]
