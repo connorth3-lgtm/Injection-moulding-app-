@@ -2,7 +2,7 @@
 (function(){
 'use strict';
 if(window.MM_ACCESSIBILITY_HARDENING)return;
-const VERSION='2026.09.06.1';
+const VERSION='2026.09.06.2';
 let lastFocus=null,activeModal=null;
 const FOCUSABLE='a[href],button:not([disabled]),input:not([disabled]),select:not([disabled]),textarea:not([disabled]),[tabindex]:not([tabindex="-1"])';
 function visible(el){if(!el||!el.isConnected||el.closest?.('[aria-hidden="true"]'))return false;const s=getComputedStyle(el);return s.display!=='none'&&s.visibility!=='hidden'&&el.getClientRects().length>0}
@@ -18,12 +18,22 @@ function announce(text){const r=liveRegion();r.textContent='';setTimeout(()=>{r.
 function labelDialog(modal){
   const card=modal.querySelector('.modal-card')||modal.firstElementChild;if(!card)return;
   modal.setAttribute('role','dialog');modal.setAttribute('aria-modal','true');
+  const heading=card.querySelector('h1,h2,h3');
   const labelledBy=clean(modal.getAttribute('aria-labelledby'));
   const labelledTarget=labelledBy?document.getElementById(labelledBy):null;
   if(labelledBy&&(!labelledTarget||!modal.contains(labelledTarget)))modal.removeAttribute('aria-labelledby');
+  if(heading&&modal.dataset.mmA11yFallbackLabel==='1'){
+    modal.removeAttribute('aria-label');
+    delete modal.dataset.mmA11yFallbackLabel;
+  }
   if(!modal.getAttribute('aria-label')&&!modal.getAttribute('aria-labelledby')){
-    const heading=card.querySelector('h1,h2,h3');
-    if(heading){if(!heading.id)heading.id=`mmDialogTitle${Date.now().toString(36)}`;modal.setAttribute('aria-labelledby',heading.id)}else modal.setAttribute('aria-label','MouldMaster dialog')
+    if(heading){
+      if(!heading.id)heading.id=`mmDialogTitle${Date.now().toString(36)}`;
+      modal.setAttribute('aria-labelledby',heading.id);
+    }else{
+      modal.setAttribute('aria-label','MouldMaster dialog');
+      modal.dataset.mmA11yFallbackLabel='1';
+    }
   }
   const close=card.querySelector('.modal-close');if(close&&!close.getAttribute('aria-label'))close.setAttribute('aria-label','Close dialog');
   if(!card.hasAttribute('tabindex'))card.tabIndex=-1;
