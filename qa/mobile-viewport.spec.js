@@ -161,18 +161,17 @@ for(const viewport of [{name:'android-412x915',width:412,height:915},{name:'smal
       await expectOnlyCurrent(page,'Practice');
     });
 
-    test('Lesson action bar sits above the global mobile navigation',async({page})=>{
+    test('Lesson opens at the top without the duplicate fixed completion bar',async({page})=>{
       await openApp(page);
       await openLearnHub(page);
+      await scrollAppToBottom(page);
       await page.getByRole('button',{name:/Continue lesson/i}).first().click();
       await expect(page.locator('#lesson')).toBeVisible();
-      await expect(page.locator('.mm-mobile-actions')).toBeVisible();
-      const boxes=await page.evaluate(()=>{
-        const local=document.querySelector('.mm-mobile-actions').getBoundingClientRect();
-        const global=document.querySelector('.mobile-nav').getBoundingClientRect();
-        return {localBottom:local.bottom,globalTop:global.top};
-      });
-      expect(boxes.localBottom).toBeLessThanOrEqual(boxes.globalTop+1);
+      await expect(page.locator('#lesson .mm-simple-lesson-hero')).toBeVisible();
+      await expect(page.locator('.mm-mobile-actions')).toBeHidden();
+      const position=await page.evaluate(()=>({windowY:window.scrollY||0,rootY:document.scrollingElement?.scrollTop||0}));
+      expect(position.windowY).toBeLessThanOrEqual(1);
+      expect(position.rootY).toBeLessThanOrEqual(1);
       await expectOnlyCurrent(page,'Learn');
     });
 

@@ -1,4 +1,4 @@
-/* MouldMaster primary Learn / Practice hubs — 2026.09.06.4 */
+/* MouldMaster primary Learn / Practice hubs — 2026.09.06.6 */
 (function(){
 'use strict';
 if(window.MM_PRIMARY_HUBS)return;
@@ -7,22 +7,29 @@ if(typeof renderPath!=='function'||typeof renderScenarios!=='function'||typeof s
   return;
 }
 
-const VERSION='2026.09.06.4';
+const VERSION='2026.09.06.6';
+const PRACTICE_ROTATION_KEY='mm_practice_scenario_rotation_v1';
 const originalRenderPath=renderPath;
 const originalRenderScenarios=renderScenarios;
 const originalMore=typeof window.openMobileMenu==='function'?window.openMobileMenu:null;
 
-/* Hub presentation lives in ui-shell.css. The app CSP intentionally blocks
-   runtime-created <style> elements, so keep the CSS external. The versioned
-   second link also refreshes already-installed clients that cached ui-shell.css
-   before these hub rules existed. */
+/* Hub presentation lives in external CSS because the app CSP intentionally
+   blocks unapproved runtime-created style content. */
 function ensureHubStylesheet(){
-  if(document.querySelector('link[data-mm-primary-hub-style]'))return;
-  const link=document.createElement('link');
-  link.rel='stylesheet';
-  link.href=`./ui-shell.css?hub=${encodeURIComponent(VERSION)}`;
-  link.dataset.mmPrimaryHubStyle=VERSION;
-  document.head.appendChild(link);
+  if(!document.querySelector('link[data-mm-primary-hub-style]')){
+    const link=document.createElement('link');
+    link.rel='stylesheet';
+    link.href=`./ui-shell.css?hub=${encodeURIComponent(VERSION)}`;
+    link.dataset.mmPrimaryHubStyle=VERSION;
+    document.head.appendChild(link);
+  }
+  if(!document.querySelector('link[data-mm-mobile-lesson-fix]')){
+    const fix=document.createElement('link');
+    fix.rel='stylesheet';
+    fix.href=`./mobile-lesson-fix.css?v=${encodeURIComponent(VERSION)}`;
+    fix.dataset.mmMobileLessonFix=VERSION;
+    document.head.appendChild(fix);
+  }
 }
 ensureHubStylesheet();
 
@@ -79,7 +86,7 @@ function installModalScrollLock(){
 }
 installModalScrollLock();
 
-function esc(value){return String(value??'').replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]))}
+function esc(value){return String(value??'').replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot',"'":'&#39;'}[ch]))}
 function lessonContext(){
   try{
     const lesson=currentLesson();
@@ -89,6 +96,57 @@ function lessonContext(){
     const overall=D.lessons?.length?Math.round(completed/D.lessons.length*100):0;
     return {lesson,course,position,overall};
   }catch(_){return null}
+}
+function scrollLessonTop(){
+  const main=document.querySelector('main.main')||document.querySelector('.main');
+  if(main)main.scrollTop=0;
+  if(document.body)document.body.scrollTop=0;
+  const scrolling=document.scrollingElement;if(scrolling)scrolling.scrollTop=0;
+  try{window.scrollTo({top:0,left:0,behavior:'auto'})}catch(_){window.scrollTo(0,0)}
+}
+function withoutSmoothScroll(fn){
+  const original=window.scrollTo;
+  window.scrollTo=function(leftOrOptions,top){
+    if(leftOrOptions&&typeof leftOrOptions==='object')return original.call(window,{...leftOrOptions,behavior:'auto'});
+    return original.call(window,leftOrOptions,top);
+  };
+  try{return fn()}finally{window.scrollTo=original}
+}
+function openCurrentLesson(){
+  const active=document.activeElement;
+  if(active&&typeof active.blur==='function')active.blur();
+  const root=document.documentElement;
+  const previousAnchor=root.style.overflowAnchor;
+  root.style.overflowAnchor='none';
+  scrollLessonTop();
+  const result=withoutSmoothScroll(()=>switchView('lesson'));
+  scrollLessonTop();
+  requestAnimationFrame(()=>{
+    scrollLessonTop();
+    requestAnimationFrame(()=>{scrollLessonTop();root.style.overflowAnchor=previousAnchor});
+  });
+  return result;
+}
+function readPracticeRotation(){
+  const store=window.MM_RUNTIME_V2?.storage;
+  if(store?.get){const row=store.get(PRACTICE_ROTATION_KEY,null);return Number(row?.last)}
+  try{return Number(localStorage.getItem(PRACTICE_ROTATION_KEY))}catch(_){return NaN}
+}
+function writePracticeRotation(index){
+  const store=window.MM_RUNTIME_V2?.storage;
+  if(store?.set)return store.set(PRACTICE_ROTATION_KEY,{last:index});
+  try{localStorage.setItem(PRACTICE_ROTATION_KEY,String(index));return true}catch(_){return false}
+}
+function nextScenarioIndex(){
+  const total=Array.isArray(D?.scenarios)?D.scenarios.length:0;
+  if(total<=1)return 0;
+  const daily=Math.floor(Date.now()/86400000)%total;
+  let last=readPracticeRotation();
+  if(!Number.isInteger(last)||last<0||last>=total)last=daily;
+  let next=(last+1)%total;
+  if(next===daily)next=(next+1)%total;
+  writePracticeRotation(next);
+  return next;
 }
 function bind(root){root?.querySelectorAll('[data-mm-hub-action]').forEach(button=>button.addEventListener('click',()=>runAction(button.dataset.mmHubAction)))}
 function safeOpen(apiName,fallback){
@@ -103,8 +161,10 @@ function sanitizeDailyChallenge(){
   modal.querySelectorAll('.exam-integrity').forEach(box=>{box.textContent=(box.textContent||'').replace(/\s*XP[^.]*\.?/ig,'').trim()});
 }
 function openDaily(){
+  let done=false;try{done=typeof dailyDone==='function'&&dailyDone()}catch(_){}
+  if(done)return openScenarioDetail(nextScenarioIndex());
   if(typeof openDailyChallenge==='function'){openDailyChallenge();requestAnimationFrame(sanitizeDailyChallenge);return}
-  openScenarioDetail();
+  return openScenarioDetail(nextScenarioIndex());
 }
 function openPicker(kind){
   if(typeof openModal!=='function')return;
@@ -120,7 +180,7 @@ function openPicker(kind){
 function closePicker(){try{window.closeModal?.()}catch(_){}}
 function runAction(action){
   switch(action){
-    case 'lesson': return switchView('lesson');
+    case 'lesson': return openCurrentLesson();
     case 'path-detail': return openLearningPathDetail();
     case 'materials': return switchView('materials');
     case 'specialist': return safeOpen('MM_SPECIALIST_CURRICULUM');
@@ -135,7 +195,7 @@ function runAction(action){
     case 'coach': closePicker(); return switchView('coach');
     case 'diagnostic-labs': closePicker(); return safeOpen('MM_DIAGNOSTIC_LABS',()=>switchView('scenarios'));
     case 'process-data': return safeOpen('MM_PROCESS_DATA_DIAGNOSTICS');
-    case 'scenario-detail': return openScenarioDetail();
+    case 'scenario-detail': return openScenarioDetail(nextScenarioIndex());
     case 'labs': return openPicker('labs');
     case 'simulator': closePicker(); return switchView('simulator');
     case 'material-labs': closePicker(); return safeOpen('MM_MATERIAL_BEHAVIOUR_LABS',()=>switchView('materials'));
@@ -167,11 +227,11 @@ function practiceHubMarkup(){
   const examCount=D?.exams?Object.keys(D.exams).length:0;
   return `<div class="mm-primary-hub mm-practice-hub">
     <header class="mm-primary-hub-head"><span class="eyebrow">Practice</span><h1>What do you want to practise?</h1><p>Choose the kind of job you want to work on.</p></header>
-    <section class="mm-hub-continue mm-primary-hub-card" aria-label="Daily practice"><div class="mm-hub-continue-copy"><span class="eyebrow">Quick practice · about 5 min</span><h2>${done?'Daily practice complete ✓':'One moulding decision'}</h2><p>${done?'Today’s short drill is complete. You can keep practising whenever you want.':'Make one evidence-first decision and check your reasoning.'}</p></div><button class="primary mm-hub-continue-action" type="button" data-mm-hub-action="daily">${done?'Practise another scenario →':'Start daily practice →'}</button></section>
+    <section class="mm-hub-continue mm-primary-hub-card" aria-label="Daily practice"><div class="mm-hub-continue-copy"><span class="eyebrow">Quick practice · about 5 min</span><h2>${done?'Daily practice complete ✓':'One moulding decision'}</h2><p>${done?'Today’s short drill is complete. You can keep practising with a different scenario.':'Make one evidence-first decision and check your reasoning.'}</p></div><button class="primary mm-hub-continue-action" type="button" data-mm-hub-action="daily">${done?'Practise another scenario →':'Start daily practice →'}</button></section>
     <section class="mm-hub-section"><div class="mm-hub-section-head"><h2>Choose a practice mode</h2><p>Start from the job, not the tool.</p></div><div class="mm-hub-grid">
       <button class="mm-hub-tile mm-primary-hub-card-secondary" type="button" data-mm-hub-action="troubleshooting"><span class="eyebrow">Fault finding</span><b>Diagnose a moulding problem</b><small>Work from the defect and evidence to choose the next check.</small><span class="mm-hub-tile-action">Open troubleshooting →</span></button>
       <button class="mm-hub-tile mm-primary-hub-card-secondary" type="button" data-mm-hub-action="process-data"><span class="eyebrow">Process evidence</span><b>Analyse process data</b><small>Compare baseline, fault and recovery trends.</small><span class="mm-hub-tile-action">Open data diagnosis →</span></button>
-      <button class="mm-hub-tile mm-primary-hub-card-secondary" type="button" data-mm-hub-action="scenario-detail"><span class="eyebrow">Decision practice</span><b>Work a shop-floor scenario</b><small>Choose the strongest next action from the evidence${scenarioCount?` across ${scenarioCount} scenarios`:''}.</small><span class="mm-hub-tile-action">Open scenarios →</span></button>
+      <button class="mm-hub-tile mm-primary-hub-card-secondary" type="button" data-mm-hub-action="scenario-detail"><span class="eyebrow">Decision practice</span><b>Work a shop-floor scenario</b><small>Choose the strongest next action from the evidence${scenarioCount?` across ${scenarioCount} scenarios`:''}. Each launch advances to a different scenario.</small><span class="mm-hub-tile-action">Open next scenario →</span></button>
       <button class="mm-hub-tile mm-primary-hub-card-secondary" type="button" data-mm-hub-action="labs"><span class="eyebrow">Explore behaviour</span><b>Use labs & simulators</b><small>Explore process and material behaviour safely.</small><span class="mm-hub-tile-action">Open labs & simulators →</span></button>
     </div></section>
     <section class="mm-hub-assessment"><div class="mm-hub-assessment-copy"><b>Ready to check your understanding?</b><small>${examCount?`${examCount} assessment levels`:'Assessments'} stay separate from normal practice.</small></div><button class="secondary" type="button" data-mm-hub-action="assessments">Open assessments →</button></section>
@@ -184,10 +244,21 @@ function detailBack(root,label,back){
   bar.querySelector('button').addEventListener('click',()=>back==='Learn'?renderLearnHub():renderPracticeHub());root.prepend(bar);
 }
 function openLearningPathDetail(){const root=document.getElementById('path');if(!root)return;originalRenderPath();detailBack(root,'Full learning pathway','Learn');window.scrollTo({top:0,behavior:'smooth'})}
-function openScenarioDetail(){const root=document.getElementById('scenarios');if(!root)return;originalRenderScenarios();detailBack(root,'Troubleshooting Arena','Practice');window.scrollTo({top:0,behavior:'smooth'})}
+function openScenarioDetail(index=null){
+  const root=document.getElementById('scenarios');if(!root)return;
+  originalRenderScenarios();
+  detailBack(root,'Troubleshooting Arena','Practice');
+  if(!Number.isInteger(index)){window.scrollTo({top:0,behavior:'smooth'});return}
+  requestAnimationFrame(()=>{
+    const cards=Array.from(root.querySelectorAll('.scenario,.mm-scenario-card,[data-scenario-id]'));
+    const target=cards[Math.max(0,Math.min(cards.length-1,index))]||cards[0];
+    target?.scrollIntoView?.({block:'start',behavior:'smooth'});
+  });
+}
 
 renderPath=renderLearnHub;window.renderPath=renderLearnHub;
 renderScenarios=renderPracticeHub;window.renderScenarios=renderPracticeHub;
+window.mmHubOpenLesson=openCurrentLesson;
 window.mmHubOpenLearningPath=openLearningPathDetail;
 window.mmHubOpenScenarios=openScenarioDetail;
 
@@ -195,6 +266,10 @@ function simplifyHome(){
   const root=document.getElementById('dashboard');if(!root)return;
   root.querySelectorAll('.mm-home-task-hub').forEach(el=>el.remove());
   root.querySelectorAll('#mmDashboardRegistryBefore .mm-dashboard-slot:not([data-mm-dashboard-section="today-focus"]),#mmDashboardRegistryAfter .mm-dashboard-slot').forEach(el=>el.remove());
+  root.querySelectorAll('button[data-mm-onclick]').forEach(button=>{
+    const action=button.getAttribute('data-mm-onclick')||'';
+    if(/switchView\((['"])lesson\1\)/.test(action))button.setAttribute('data-mm-onclick','mmHubOpenLesson()');
+  });
 }
 window.MM_APP_SHELL?.events?.onRender?.('dashboard',()=>requestAnimationFrame(simplifyHome));
 
@@ -219,5 +294,5 @@ if(typeof currentView==='string'){
   if(currentView==='scenarios')renderPracticeHub();
 }
 window.MM_APP_SHELL?.navigation?.sync?.();
-window.MM_PRIMARY_HUBS={version:VERSION,renderLearnHub,renderPracticeHub,openLearningPathDetail,openScenarioDetail};
+window.MM_PRIMARY_HUBS={version:VERSION,renderLearnHub,renderPracticeHub,openCurrentLesson,openLearningPathDetail,openScenarioDetail,nextScenarioIndex};
 })();
