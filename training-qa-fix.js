@@ -1,8 +1,8 @@
-/* MouldMaster training data/assessment bridge — 2026.09.05.2 */
+/* MouldMaster training data/assessment bridge — 2026.09.06.1 */
 (function(){
 'use strict';
 const REVIEW_KEY='mm_spaced_review_v2', LEGACY_REVIEW='mm_spaced_review_v1', SIGN_KEY='mm_practical_signoff_v1';
-const ASSESSMENT_ANALYTICS_PREFIXES=['mm_assessment_analytics_v1','mm_assessment_exposure_timing_v1','mm_assessment_opening_history_v1'];
+const ASSESSMENT_ANALYTICS_PREFIXES=['mm_assessment_analytics_v1','mm_assessment_exposure_timing_v1','mm_assessment_opening_history_v1','mm-assessment-question-history-v4','mm-assessment-result-meta-v1'];
 const LEARNING_ANALYTICS_PREFIX='mm_learning_analytics_v1::';
 const ANALYTICS_CLEANUP_CODE='MM_ANALYTICS_CLEANUP_FAILED';
 function cleanupError(area,detail){const e=new Error(`Local ${area} cleanup could not be verified${detail?`: ${detail}`:''}`);e.code=ANALYTICS_CLEANUP_CODE;e.area=area;return e}
@@ -41,10 +41,8 @@ function read(k,d){try{const x=JSON.parse(localStorage.getItem(k)||'');return ob
 function restoreSnapshot(before){let failed=false;for(const [k,v] of Object.entries(before)){try{v===null?localStorage.removeItem(k):localStorage.setItem(k,v)}catch(_){failed=true}}return !failed}
 function cleanupFailureMessage(action,rolledBack=true){return `${action} was not completed because local analytics/training cleanup could not be fully verified.${rolledBack?' Existing learner progress was kept.':''} Some old analytics may already have been removed. Clear this app/site data before handing the same browser profile to another learner if the warning persists.`}
 
-/* One export contains the strictly validated core DB plus training extras. Assessment and Learning Insights analytics are deliberately excluded from the progress backup. */
 window.exportData=function(){try{const p=JSON.parse(JSON.stringify(db));p.backupFormat='mouldmaster-backup-v2';p.trainingExtras={version:2,spacedReview:cleanReview(read(REVIEW_KEY,{items:{}})),practicalSignoff:cleanSign(read(SIGN_KEY,{}))};const blob=new Blob([JSON.stringify(p,null,2)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='mouldmaster-progress.json';a.click();setTimeout(()=>URL.revokeObjectURL(a.href),0);window.toast?.('Backup exported with review and sign-off data')}catch(e){alert('Backup could not be created on this device.')}};
 
-/* Import validates and stages core/training writes first. Before the imported profile set becomes active, every analytics store must be deleted and re-enumerated successfully. If cleanup cannot be verified, staged core/training writes are rolled back and the imported learner registry is never activated. */
 window.importData=function(file){
  if(!file)return;
  if(file.size>10*1024*1024){alert('That backup is too large to import safely. No existing data was changed.');return}
@@ -92,7 +90,6 @@ window.importData=function(file){
  r.readAsText(file);
 };
 
-/* Confirmed factory reset is fail-closed: old analytics/training extras must be removed and verified before the fresh default learner registry is persisted or activated. */
 const baseReset=window.resetData;if(typeof baseReset==='function')window.resetData=function(){
  if(!confirm('Reset all local MouldMaster users and progress?'))return;
  try{clearAllAnalyticsStores();clearTrainingExtrasStores()}
@@ -105,7 +102,6 @@ const baseReset=window.resetData;if(typeof baseReset==='function')window.resetDa
  window.toast?.('Data reset. Local assessment and Learning Insights analytics were cleared and verified.');
 };
 
-/* One-time migration: legacy text-keyed review records are intentionally not guessed into stable IDs. */
 try{if(!localStorage.getItem(REVIEW_KEY)&&localStorage.getItem(LEGACY_REVIEW))localStorage.setItem(REVIEW_KEY,JSON.stringify({items:{}}))}catch(_){}
-window.MM_TRAINING_DATA_BRIDGE={version:'2026.09.05.2',cleanupFailureCode:ANALYTICS_CLEANUP_CODE,clearAssessmentAnalyticsStores,clearLearningAnalyticsStores,clearAllAnalyticsStores,clearTrainingExtrasStores,cancelActiveExam};
+window.MM_TRAINING_DATA_BRIDGE={version:'2026.09.06.1',cleanupFailureCode:ANALYTICS_CLEANUP_CODE,clearAssessmentAnalyticsStores,clearLearningAnalyticsStores,clearAllAnalyticsStores,clearTrainingExtrasStores,cancelActiveExam};
 })();
