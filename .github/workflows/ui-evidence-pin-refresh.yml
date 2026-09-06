@@ -1,0 +1,36 @@
+name: One-shot UI evidence pin refresh
+
+on:
+  push:
+    branches: [fix/ui-consolidation-audit]
+    paths: ['.github/workflows/ui-evidence-pin-refresh.yml']
+
+permissions:
+  contents: write
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: fix/ui-consolidation-audit
+      - name: Refresh reviewed cosmetic core pin
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p=Path('assessment-evidence-approval.js')
+          s=p.read_text(encoding='utf-8')
+          old="'MouldMaster_Core_App.html':'4eb0412467d3e7ce19f3ca28caf44528a0f1a968'"
+          new="'MouldMaster_Core_App.html':'c6b258ccd37d98b2f591f538b34eb33c7705dda6'"
+          if s.count(old)!=1: raise SystemExit('expected old core evidence pin exactly once')
+          p.write_text(s.replace(old,new,1),encoding='utf-8')
+          PY
+          python qa_assessment_evidence.py
+      - name: Commit reviewed pin
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add assessment-evidence-approval.js
+          git commit -m 'Refresh evidence pin for cosmetic core UI change'
+          git push origin HEAD:fix/ui-consolidation-audit
