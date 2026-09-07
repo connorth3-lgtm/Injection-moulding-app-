@@ -2,7 +2,7 @@
 
 This packet is for the **next release job**. It does not authorize production publication by itself and it does not replace `qa/PWA_PHYSICAL_DEVICE_CHECKLIST.md` or the governed record in `data/pwa-physical-device-validation-v1.json`.
 
-The narrow-phone Learn/Practice repair requested after the first `.24` freeze intentionally creates a new `.24` candidate. Any earlier `.24` runtime fingerprint or device observation is stale for these changed bytes and must not be carried forward.
+The narrow-phone Learn/Practice repair was requested after `.23` was frozen. Because the governed learner bytes changed, the repaired build advances to `.24`. Any `.23` runtime fingerprint or device observation cannot be carried forward to this candidate.
 
 ## Candidate identity
 
