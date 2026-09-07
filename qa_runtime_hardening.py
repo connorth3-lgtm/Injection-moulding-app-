@@ -119,12 +119,13 @@ require("localStorage.clear" not in repair and "sessionStorage.clear" not in rep
 
 must(reference_page, ['<script src="./reference-data.js"></script>', '<script src="./reference-2026-expansion.js"></script>', 'id="mm-reference-back"', "history.back()", "position:static!important", ".mmrd-close{display:none!important}", "modal.setAttribute('role','main')", "MM_REFERENCE_DATA_PAGE_MODE='standalone-document-unified-library'"], "standalone References")
 
-# Service-worker install remains atomic for CORE and best-effort for optional packs.
-# After installation the validated release cache is immutable: normal network fetches
-# may serve fresher online bytes, but they must never write those bytes into STATIC_CACHE.
+# Service-worker installation remains atomic across the governed release assets.
+# Once active, governed bytes are pinned to that worker's own immutable named cache;
+# a newer complete cache may wait in parallel but cannot leak bytes into old clients.
 must(service_worker, [
     "${CACHE_VERSION}-${CACHE_REVISION}", "'./repair.html'", "runtimeCritical=url.pathname.endsWith('.js')||url.pathname.endsWith('.json')",
-    "async function fetchNetwork(event)", "fetch(event.request,{cache:'no-store'})", "const network=await fetchNetwork(event)", "if(network&&network.ok)return network", "'./reference-data.html'", "'./reference-2026-expansion.js'", "'./diagnostic-learning-labs.js'",
+    "const RELEASE_PATHS=new Set(", "async function releaseCacheMatch(request)", "const cache=await caches.open(STATIC_CACHE)", "RELEASE_PATHS.has(url.pathname)",
+    "async function fetchNetwork(event)", "fetch(event.request,{cache:'no-store'})", "await fetchNetwork(event)||criticalOfflineResponse(url)", "'./reference-data.html'", "'./reference-2026-expansion.js'", "'./diagnostic-learning-labs.js'",
     "'./material-behaviour-labs.js'", "'./assessment-evidence-sources.js'", "'./evidence-maturity-deep-dive.js'", "'./evidence-maturity-formal-bridge.js'",
     "'./assessment-psychometric-hardening.js'", "'./assessment-evidence-integrity-upgrade.js'", "'./lesson-evidence-depth.js'", "'./lesson-deep-authoring-v2.js'", "'./assessment-evidence-approval.js'", "'./assessment-psychometric-approval.js'",
     "'./runtime-v2.js'", "'./assessment-runtime-v2.js'", "'./assessment-multimodal.js'", "'./accessibility-hardening.js'",
@@ -138,8 +139,12 @@ for required_asset in ("./index.html", "./MouldMaster_Core_App.html", "./pwa-she
     require(required_asset in core, f"PWA hardening: required core asset missing: {required_asset}")
 install = service_worker[service_worker.index("self.addEventListener('install'"):service_worker.index("self.addEventListener('activate'")]
 require("cache.addAll" not in install, "service-worker install should identify the exact failed assets rather than use opaque addAll failure")
-require("throw new Error" in install and "skipWaiting" in install, "service-worker install must fail closed before activation when any core asset is incomplete")
+require("throw new Error" in install, "service-worker install must fail closed when any governed release asset is incomplete")
+require(".skipWaiting(" not in install, "service-worker update must wait for old controlled clients before activation")
+activate = service_worker[service_worker.index("self.addEventListener('activate'"):service_worker.index("// Governed release bytes")]
+require(".clients.claim(" not in activate, "service-worker activation must not replace the controller of an already-open document")
 runtime_fetch = service_worker[service_worker.index("self.addEventListener('fetch'"):]
+require("caches.match(" not in runtime_fetch, "service-worker runtime must never search across release generations")
 require(".put(" not in runtime_fetch, "service-worker runtime fetches must never mutate the validated release cache")
 require("cacheAsset(" not in runtime_fetch, "service-worker install-only cache writer must not be reachable from runtime fetches")
 
