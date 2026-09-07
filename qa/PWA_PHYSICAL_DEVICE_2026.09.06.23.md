@@ -2,10 +2,12 @@
 
 This packet is for the **next release job**. It does not authorize production publication by itself and it does not replace `qa/PWA_PHYSICAL_DEVICE_CHECKLIST.md` or the governed record in `data/pwa-physical-device-validation-v1.json`.
 
+The narrow-phone Learn/Practice repair requested after the first `.23` freeze intentionally creates a new `.23` candidate. Any earlier `.23` runtime fingerprint or device observation is stale for these changed bytes and must not be carried forward.
+
 ## Candidate identity
 
 - Governed web release: `2026.09.06.23`
-- Protected-main source at the UI freeze: `3e7144b68c5dfe79232cf2ba0180060f1395ffcc`
+- Learner-runtime source at the repaired UI baseline: `f1c19e0a7ba1d39296fb9cdef2e614d568c31670`
 - Visual baseline contract: `qa/visual-regression-baseline.json`
 - Required artifact: `physical-pwa-candidate-<HEAD_SHA>` from the successful Pages Release Readiness run for the exact protected-main candidate being tested.
 - Required runtime identity: the `sha256:...` fingerprint reported by `python tools/verify_pwa_physical_evidence.py --artifact .pages-dist --print-fingerprint` for those exact bytes.
@@ -30,8 +32,8 @@ For every surface below, record `pass` or `fail` and a short non-sensitive obser
 | Surface | Required physical check |
 | --- | --- |
 | Home | Loads without bootstrap residue; Today’s focus and primary navigation are usable; no content is hidden behind system/PWA bars. |
-| Learn | Learning hub opens, scrolls and exposes the current/continue action without overlap or clipped controls. |
-| Practice | Practice hub opens and its primary choices remain reachable and readable. |
+| Learn | Learning hub opens, scrolls and exposes the current/continue action without overlap or clipped controls. On narrow phones, the one-column choices must remain content-driven and show useful explanatory text rather than empty title-only slabs. |
+| Practice | Practice hub opens and its primary choices remain reachable and readable. On narrow phones, the one-column choices must remain content-driven and show useful explanatory text rather than empty title-only slabs. |
 | Lesson | Current lesson opens at the top; lesson progress, content, notes and completion controls remain reachable; reopening the installed app returns to the persisted current lesson. |
 | More | More modal opens, scrolls if required, traps no essential action behind safe areas, and closes predictably. |
 | Assessment | A Beginner assessment starts; answer controls and question navigation are usable; grading shows the result and wrong-answer review. |
