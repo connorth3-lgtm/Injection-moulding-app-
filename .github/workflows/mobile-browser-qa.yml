@@ -114,6 +114,10 @@ jobs:
           cat /tmp/mouldmaster-http.log
           cat /tmp/mouldmaster-baseline-http.log
           exit 1
+      - name: Chromium mobile density contract
+        run: npx playwright test qa/learn-practice-mobile-style.spec.js --config=playwright.config.cjs
+      - name: WebKit mobile density contract
+        run: npx playwright test qa/learn-practice-mobile-style.spec.js --config=playwright.webkit-full.config.cjs
       - name: Chromium .24 visual regression lock
         run: npx playwright test qa/visual-regression.spec.js --config=playwright.config.cjs
       - name: Chromium mobile, material, evidence, engineering-store and PWA regression tests
