@@ -8,6 +8,7 @@ on:
     paths:
       - 'index.html'
       - 'MouldMaster_Core_App.html'
+      - '*.css'
       - 'app-shell-registry.js'
       - 'app-shell-finalize.js'
       - 'mould-master-workspace.js'
@@ -41,6 +42,8 @@ on:
       - 'qa/mobile-viewport.spec.js'
       - 'qa/visual-regression.spec.js'
       - 'qa/visual-regression-baseline.json'
+      - 'qa/learner-ux-repair.spec.js'
+      - 'qa/learn-practice-mobile-style.spec.js'
       - 'qa/material-grade-detail.spec.js'
       - 'qa/material-search-scale.spec.js'
       - 'qa/measured-evidence-decision.spec.js'
@@ -50,6 +53,7 @@ on:
       - 'qa/inline-handler-bridge.spec.js'
       - 'qa/inline-style-csp.spec.js'
       - 'qa/cross-browser-smoke.spec.js'
+      - 'qa/**/*.spec.js'
       - 'playwright.config.cjs'
       - 'playwright.webkit-full.config.cjs'
       - 'playwright.cross-browser.config.cjs'
@@ -86,14 +90,14 @@ jobs:
         run: |
           npm install --no-save --no-package-lock @playwright/test@1.55.0 pixelmatch@5.3.0 pngjs@7.0.0
           npx playwright install --with-deps chromium firefox webkit
-      - name: Prepare immutable .23 visual baseline
+      - name: Prepare immutable .24 visual baseline
         run: |
           BASELINE_SHA="$(python - <<'PY'
           import json
           print(json.load(open('qa/visual-regression-baseline.json', encoding='utf-8'))['commit'])
           PY
           )"
-          test "$BASELINE_SHA" = "3e7144b68c5dfe79232cf2ba0180060f1395ffcc"
+          test "$BASELINE_SHA" = "ed760a6cf63be717fad1392001802b0f30ed7a85"
           git fetch --no-tags --depth=1 origin "$BASELINE_SHA"
           rm -rf /tmp/mm-visual-baseline
           git worktree add --detach /tmp/mm-visual-baseline "$BASELINE_SHA"
@@ -110,10 +114,10 @@ jobs:
           cat /tmp/mouldmaster-http.log
           cat /tmp/mouldmaster-baseline-http.log
           exit 1
-      - name: Chromium .23 visual regression lock
+      - name: Chromium .24 visual regression lock
         run: npx playwright test qa/visual-regression.spec.js --config=playwright.config.cjs
       - name: Chromium mobile, material, evidence, engineering-store and PWA regression tests
-        run: npx playwright test --config=playwright.config.cjs --grep-invert "matches immutable \.23 baseline across learner surfaces"
+        run: npx playwright test --config=playwright.config.cjs --grep-invert "matches immutable \.24 baseline across learner surfaces"
       - name: WebKit substantive learner regression tests
         run: npx playwright test --config=playwright.webkit-full.config.cjs
       - name: Cross-browser desktop and tablet smoke tests

@@ -190,7 +190,15 @@ body[data-mm-view="lesson"] .topbar{justify-content:flex-end!important}
   .sidebar .more-nav{grid-column:1/-1!important;margin-top:2px!important;padding-top:6px!important}
   .main{padding-top:16px!important}
 }
-@media(max-width:380px){.mm-primary-hub .mm-hub-grid{grid-template-columns:1fr!important}}
+
+/* On the narrowest phones, a single column is easier to scan. Keep the cards
+   content-driven and restore a short explanation so they never become large,
+   empty-looking title slabs. */
+@media(max-width:380px){
+  .mm-primary-hub .mm-hub-grid{grid-template-columns:1fr!important;gap:10px!important}
+  .mm-primary-hub .mm-hub-tile{min-height:0!important;padding:14px 15px!important}
+  .mm-primary-hub .mm-hub-tile small{display:-webkit-box!important;margin:6px 0 0!important;overflow:hidden!important;-webkit-box-orient:vertical!important;-webkit-line-clamp:2;line-clamp:2;max-height:2.9em!important}
+}
 
 @media(max-width:390px){
   #dashboard .hero>.statbox .statline{padding:7px 4px!important}
