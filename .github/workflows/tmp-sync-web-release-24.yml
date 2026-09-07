@@ -1,0 +1,81 @@
+name: Temporary web release 24 sync
+
+on:
+  push:
+    branches: [fix/narrow-phone-practice-ui]
+
+permissions:
+  contents: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: fix/narrow-phone-practice-ui
+          fetch-depth: 0
+      - uses: actions/setup-python@v7
+        with:
+          python-version: '3.13'
+      - name: Synchronize governed .24 candidate
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          p=Path('version.json')
+          data=json.loads(p.read_text(encoding='utf-8'))
+          data['web_release']='2026.09.06.24'
+          p.write_text(json.dumps(data,indent=2,ensure_ascii=False)+'\n',encoding='utf-8')
+          p=Path('qa_release.py')
+          text=p.read_text(encoding='utf-8')
+          old='WEB_RELEASE = "2026.09.06.23"'
+          new='WEB_RELEASE = "2026.09.06.24"'
+          if old not in text: raise SystemExit('qa_release.py .23 constant not found')
+          p.write_text(text.replace(old,new,1),encoding='utf-8')
+          PY
+          python tools/sync_web_release.py
+
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git rm .github/workflows/tmp-sync-web-release-24.yml
+          git add version.json qa_release.py index.html service-worker.js pwa-shell.js
+          git commit -m "Advance repaired learner runtime to web release .24"
+          RUNTIME_SHA="$(git rev-parse HEAD)"
+          export RUNTIME_SHA
+
+          cp qa/PWA_PHYSICAL_DEVICE_2026.09.06.23.md /tmp/pwa24.md
+          git checkout origin/main -- qa/PWA_PHYSICAL_DEVICE_2026.09.06.23.md
+          python - <<'PY'
+          import json, os
+          from pathlib import Path
+          sha=os.environ['RUNTIME_SHA']
+          p=Path('qa/visual-regression-baseline.json')
+          data=json.loads(p.read_text(encoding='utf-8'))
+          data['release']='2026.09.06.24'
+          data['commit']=sha
+          data['policy']='This commit is the reviewed .24 visual baseline after the intentional narrow-phone Learn/Practice repair. Candidate screenshots are rendered beside this exact commit in the same Chromium job. Update the pinned commit only through an intentional reviewed visual-baseline change; automated physical-device evidence remains a separate release gate.'
+          p.write_text(json.dumps(data,indent=2,ensure_ascii=False)+'\n',encoding='utf-8')
+
+          p=Path('qa/visual-regression.spec.js')
+          text=p.read_text(encoding='utf-8').replace('matches immutable .23 baseline across learner surfaces','matches immutable .24 baseline across learner surfaces')
+          p.write_text(text,encoding='utf-8')
+
+          p=Path('.github/workflows/mobile-browser-qa.yml')
+          text=p.read_text(encoding='utf-8')
+          text=text.replace('Prepare immutable .23 visual baseline','Prepare immutable .24 visual baseline')
+          text=text.replace('Chromium .23 visual regression lock','Chromium .24 visual regression lock')
+          text=text.replace('matches immutable \\.23 baseline across learner surfaces','matches immutable \\.24 baseline across learner surfaces')
+          text=text.replace('test "$BASELINE_SHA" = "f1c19e0a7ba1d39296fb9cdef2e614d568c31670"',f'test "$BASELINE_SHA" = "{sha}"')
+          p.write_text(text,encoding='utf-8')
+
+          packet=Path('/tmp/pwa24.md').read_text(encoding='utf-8')
+          packet=packet.replace('2026.09.06.23','2026.09.06.24').replace('`.23`','`.24`').replace('.23`','.24`')
+          packet=packet.replace('f1c19e0a7ba1d39296fb9cdef2e614d568c31670',sha)
+          Path('qa/PWA_PHYSICAL_DEVICE_2026.09.06.24.md').write_text(packet,encoding='utf-8')
+          PY
+          git add .github/workflows/mobile-browser-qa.yml qa/visual-regression-baseline.json qa/visual-regression.spec.js qa/PWA_PHYSICAL_DEVICE_2026.09.06.23.md qa/PWA_PHYSICAL_DEVICE_2026.09.06.24.md
+          git commit -m "Rebind visual and physical QA to web release .24"
+          git push origin HEAD:fix/narrow-phone-practice-ui
