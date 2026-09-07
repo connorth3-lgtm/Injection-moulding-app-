@@ -44,7 +44,7 @@ for marker in (
     "source_fp=",
     "staged_fp=",
     'test "$source_fp" = "$staged_fp"',
-    "uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02",
+    "uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a",
     "name: physical-pwa-candidate-${{ github.sha }}",
     "path: physical-pwa-candidate",
     "retention-days: 30",
@@ -53,6 +53,7 @@ for marker in (
 ):
     need(marker in block, f"physical candidate handoff safeguard missing: {marker}")
 
+need("actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02" not in block, "retired upload-artifact v4-era pin must not return to the physical candidate handoff")
 need("path: .pages-dist\n          retention-days: 30" not in block, "generic artifact uploader must not target dot-prefixed .pages-dist directly")
 need("actions/upload-pages-artifact" not in block, "retained physical candidate must remain a generic non-deployable Actions artifact")
 
