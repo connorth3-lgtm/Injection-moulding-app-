@@ -1,11 +1,13 @@
-# MouldMaster 2026.09.06.23 physical-device execution packet
+# MouldMaster 2026.09.06.24 physical-device execution packet
 
 This packet is for the **next release job**. It does not authorize production publication by itself and it does not replace `qa/PWA_PHYSICAL_DEVICE_CHECKLIST.md` or the governed record in `data/pwa-physical-device-validation-v1.json`.
 
+The narrow-phone Learn/Practice repair requested after the first `.24` freeze intentionally creates a new `.24` candidate. Any earlier `.24` runtime fingerprint or device observation is stale for these changed bytes and must not be carried forward.
+
 ## Candidate identity
 
-- Governed web release: `2026.09.06.23`
-- Protected-main source at the UI freeze: `3e7144b68c5dfe79232cf2ba0180060f1395ffcc`
+- Governed web release: `2026.09.06.24`
+- Learner-runtime source at the repaired UI baseline: `ed760a6cf63be717fad1392001802b0f30ed7a85`
 - Visual baseline contract: `qa/visual-regression-baseline.json`
 - Required artifact: `physical-pwa-candidate-<HEAD_SHA>` from the successful Pages Release Readiness run for the exact protected-main candidate being tested.
 - Required runtime identity: the `sha256:...` fingerprint reported by `python tools/verify_pwa_physical_evidence.py --artifact .pages-dist --print-fingerprint` for those exact bytes.
@@ -30,8 +32,8 @@ For every surface below, record `pass` or `fail` and a short non-sensitive obser
 | Surface | Required physical check |
 | --- | --- |
 | Home | Loads without bootstrap residue; Today’s focus and primary navigation are usable; no content is hidden behind system/PWA bars. |
-| Learn | Learning hub opens, scrolls and exposes the current/continue action without overlap or clipped controls. |
-| Practice | Practice hub opens and its primary choices remain reachable and readable. |
+| Learn | Learning hub opens, scrolls and exposes the current/continue action without overlap or clipped controls. On narrow phones, the one-column choices must remain content-driven and show useful explanatory text rather than empty title-only slabs. |
+| Practice | Practice hub opens and its primary choices remain reachable and readable. On narrow phones, the one-column choices must remain content-driven and show useful explanatory text rather than empty title-only slabs. |
 | Lesson | Current lesson opens at the top; lesson progress, content, notes and completion controls remain reachable; reopening the installed app returns to the persisted current lesson. |
 | More | More modal opens, scrolls if required, traps no essential action behind safe areas, and closes predictably. |
 | Assessment | A Beginner assessment starts; answer controls and question navigation are usable; grading shows the result and wrong-answer review. |
@@ -39,7 +41,7 @@ For every surface below, record `pass` or `fail` and a short non-sensitive obser
 
 ## Release-critical behaviour pass
 
-In addition to the general PWA checklist, exercise these `.23` learner-state boundaries on both platforms:
+In addition to the general PWA checklist, exercise these `.24` learner-state boundaries on both platforms:
 
 ### Progress and resume
 
@@ -55,7 +57,7 @@ In addition to the general PWA checklist, exercise these `.23` learner-state bou
 2. Navigate away, relaunch the installed PWA, and confirm the bookmark survives local persistence.
 3. Remove the bookmark and confirm that removal also survives relaunch.
 
-This validates existing saved-lesson persistence only; richer saved-lesson discovery belongs to the post-`.23` learning-flow work.
+This validates existing saved-lesson persistence only; richer saved-lesson discovery belongs to the post-`.24` learning-flow work.
 
 ### Search
 
@@ -64,7 +66,7 @@ This validates existing saved-lesson persistence only; richer saved-lesson disco
 3. Open a result and confirm it routes to the intended surface.
 4. Enter a clearly absent term and confirm the UI reports no matches without hanging or losing navigation.
 
-This validates current search correctness only; relevance ranking, typo tolerance and intent quality belong to the post-`.23` learning-flow work.
+This validates current search correctness only; relevance ranking, typo tolerance and intent quality belong to the post-`.24` learning-flow work.
 
 ### Assessment feedback
 
@@ -72,7 +74,7 @@ This validates current search correctness only; relevance ranking, typo toleranc
 2. Grade the assessment.
 3. Confirm the result is readable, correct answers are not duplicated into the review list, and each wrong answer shows the learner answer, correct answer and source disclosure.
 
-Personalized remediation belongs to the post-`.23` learning-flow work.
+Personalized remediation belongs to the post-`.24` learning-flow work.
 
 ### Next-step guidance
 
@@ -80,7 +82,7 @@ Personalized remediation belongs to the post-`.23` learning-flow work.
 2. Confirm the next lesson is clearly identified and can be opened.
 3. Confirm linked formative practice can be reached from a lesson where curriculum recommendations are available.
 
-Adaptive “what should I do next?” recommendations belong to the post-`.23` learning-flow work.
+Adaptive “what should I do next?” recommendations belong to the post-`.24` learning-flow work.
 
 ## PWA lifecycle pass
 
@@ -110,7 +112,7 @@ A release verdict can move forward only when:
 
 ### FAIL
 
-If any release-critical check fails, record the failing surface and device, keep `.23` unpromoted, and fix the smallest relevant behavior. A learner-runtime fix creates a new candidate and therefore requires a new exact runtime fingerprint and fresh physical evidence; do not attach `.23` evidence to changed bytes.
+If any release-critical check fails, record the failing surface and device, keep `.24` unpromoted, and fix the smallest relevant behavior. A learner-runtime fix creates a new candidate and therefore requires a new exact runtime fingerprint and fresh physical evidence; do not attach `.24` evidence to changed bytes.
 
 ## After the physical verdict
 
@@ -122,4 +124,4 @@ Once the device gate is resolved, the next product work should improve learning 
 4. assessment remediation feedback; and
 5. adaptive “what should I do next?” recommendations.
 
-Those changes should intentionally advance the learner runtime instead of being folded into the `.23` validation candidate.
+Those changes should intentionally advance the learner runtime instead of being folded into the `.24` validation candidate.
