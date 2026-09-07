@@ -128,7 +128,7 @@ function compare(baseBuffer,candidateBuffer,diffPath){
 }
 
 for(const viewport of manifest.viewports){
-  test(`${viewport.name} matches immutable .24 baseline across learner surfaces`,async({browser})=>{
+  test(`${viewport.name} matches immutable .25 baseline across learner surfaces`,async({browser})=>{
     fs.mkdirSync(ARTIFACT_ROOT,{recursive:true});
     const candidateContext=await browser.newContext({viewport:{width:viewport.width,height:viewport.height},serviceWorkers:'block'});
     const baselineContext=await browser.newContext({viewport:{width:viewport.width,height:viewport.height},serviceWorkers:'block'});
