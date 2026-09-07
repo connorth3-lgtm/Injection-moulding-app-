@@ -1,0 +1,64 @@
+name: Temporary prepare web release .26
+
+on:
+  push:
+    branches: [post-25/pwa-release-consistency]
+    paths:
+      - '.github/workflows/tmp-prepare-web-release-26.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  prepare-release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: post-25/pwa-release-consistency
+          fetch-depth: 2
+      - uses: actions/setup-python@v7
+        with:
+          python-version: '3.13'
+      - name: Advance next-release identity and PWA governance
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import json
+          import subprocess
+
+          root=Path('.')
+          version_path=root/'version.json'
+          version=json.loads(version_path.read_text(encoding='utf-8'))
+          assert version['web_release']=='2026.09.06.25', version['web_release']
+          version['web_release']='2026.09.06.26'
+          version_path.write_text(json.dumps(version,indent=2)+"\n",encoding='utf-8')
+
+          subprocess.run(['python','tools/sync_web_release.py'],check=True)
+
+          qa_path=root/'qa_release.py'
+          qa=qa_path.read_text(encoding='utf-8')
+          qa=qa.replace('WEB_RELEASE = "2026.09.06.25"','WEB_RELEASE = "2026.09.06.26"',1)
+          old='''assert "skipWaiting" in install, "complete worker should still activate promptly"\nruntime_fetch = sw[sw.index("self.addEventListener('fetch'"):]\nassert "async function fetchNetwork(event)" in sw and "fetch(event.request,{cache:'no-store'})" in sw, "runtime fetches must use uncached network reads"'''
+          new='''assert ".skipWaiting(" not in install, "new worker must wait for existing controlled clients before activation"\nactivate = sw[sw.index("self.addEventListener('activate'"):sw.index("// Governed release bytes") ]\nassert ".clients.claim(" not in activate, "new worker must not replace the controller of an already-open document"\nruntime_fetch = sw[sw.index("self.addEventListener('fetch'"):]\nassert "const RELEASE_PATHS=" in sw and "async function releaseCacheMatch(request)" in sw, "governed release assets must be pinned to the active worker cache"\nassert "RELEASE_PATHS.has(url.pathname)" in runtime_fetch, "governed fetches must be identified by the release asset set"\nassert "caches.match(" not in runtime_fetch, "runtime fetches must not search across multiple release caches"\nassert "async function fetchNetwork(event)" in sw and "fetch(event.request,{cache:'no-store'})" in sw, "non-governed network fallback must bypass the HTTP cache"'''
+          if old not in qa:
+              raise SystemExit('qa_release.py PWA lifecycle contract did not match expected .25 text')
+          qa=qa.replace(old,new,1)
+          qa_path.write_text(qa,encoding='utf-8')
+
+          spec_path=root/'qa/pwa-two-release-transition.spec.js'
+          spec=spec_path.read_text(encoding='utf-8')
+          spec=spec.replace('// The test is expected to fail against the frozen .25 lifecycle because .25 can\n// replace the controller and serve newer network JS/JSON beneath an old document.\n// Keep this work on the post-.25 branch until the next governed web release fixes\n// the transition; automated browser evidence never substitutes for physical PWA QA.',
+          '// This test reproduces the .25 mixed-release failure and is the acceptance\n// contract for the next governed release: a waiting worker may cache the next\n// generation, but the active client must remain byte-coherent until a full\n// document transition. Automated browser evidence never substitutes for physical PWA QA.',1)
+          spec_path.write_text(spec,encoding='utf-8')
+          PY
+          python tools/sync_web_release.py --check
+          python qa_web_release_identity.py
+      - name: Commit generated next-release files
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add version.json service-worker.js index.html pwa-shell.js qa_release.py qa/pwa-two-release-transition.spec.js
+          git diff --cached --check
+          git commit -m 'Advance PWA consistency fix to web release .26'
+          git push origin HEAD:post-25/pwa-release-consistency
