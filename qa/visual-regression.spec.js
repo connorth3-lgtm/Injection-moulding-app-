@@ -69,6 +69,15 @@ async function clearTransientUi(page){
   });
 }
 
+async function normalizeCaptureState(page){
+  await page.evaluate(()=>{
+    document.querySelectorAll('.toast').forEach(node=>node.remove());
+    const active=document.activeElement;
+    if(active&&active!==document.body&&typeof active.blur==='function')active.blur();
+  });
+  await page.evaluate(()=>new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve))));
+}
+
 async function prepareSurface(page,surface){
   await clearTransientUi(page);
   if(surface==='home'){
@@ -100,8 +109,7 @@ async function prepareSurface(page,surface){
   }else{
     throw new Error(`Unknown visual surface: ${surface}`);
   }
-  await page.evaluate(()=>new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve))));
-  await page.evaluate(()=>document.querySelectorAll('.toast').forEach(node=>node.remove()));
+  await normalizeCaptureState(page);
 }
 
 async function capture(page,file){
