@@ -90,14 +90,14 @@ jobs:
         run: |
           npm install --no-save --no-package-lock @playwright/test@1.55.0 pixelmatch@5.3.0 pngjs@7.0.0
           npx playwright install --with-deps chromium firefox webkit
-      - name: Prepare immutable .24 visual baseline
+      - name: Prepare immutable .25 visual baseline
         run: |
           BASELINE_SHA="$(python - <<'PY'
           import json
           print(json.load(open('qa/visual-regression-baseline.json', encoding='utf-8'))['commit'])
           PY
           )"
-          test "$BASELINE_SHA" = "ed760a6cf63be717fad1392001802b0f30ed7a85"
+          test "$BASELINE_SHA" = "74a42f776e985d68fefb1992d696e2f49b13cc33"
           git fetch --no-tags --depth=1 origin "$BASELINE_SHA"
           rm -rf /tmp/mm-visual-baseline
           git worktree add --detach /tmp/mm-visual-baseline "$BASELINE_SHA"
@@ -118,10 +118,10 @@ jobs:
         run: npx playwright test qa/learn-practice-mobile-style.spec.js --config=playwright.config.cjs
       - name: WebKit mobile density contract
         run: npx playwright test qa/learn-practice-mobile-style.spec.js --config=playwright.webkit-full.config.cjs
-      - name: Chromium .24 visual regression lock
+      - name: Chromium .25 visual regression lock
         run: npx playwright test qa/visual-regression.spec.js --config=playwright.config.cjs
       - name: Chromium mobile, material, evidence, engineering-store and PWA regression tests
-        run: npx playwright test --config=playwright.config.cjs --grep-invert "matches immutable \.24 baseline across learner surfaces"
+        run: npx playwright test --config=playwright.config.cjs --grep-invert "matches immutable \.25 baseline across learner surfaces"
       - name: WebKit substantive learner regression tests
         run: npx playwright test --config=playwright.webkit-full.config.cjs
       - name: Cross-browser desktop and tablet smoke tests
