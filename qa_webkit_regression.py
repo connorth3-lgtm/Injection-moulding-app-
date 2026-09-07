@@ -17,8 +17,9 @@ workflow=text('.github/workflows/mobile-browser-qa.yml')
 
 chromium_specs=specs(chromium)
 webkit_specs=specs(webkit)
-expected_webkit=chromium_specs-{'pwa-lifecycle\\.spec\\.js','visual-regression\\.spec\\.js'}
-need('pwa-lifecycle\\.spec\\.js' in chromium_specs,'Chromium PWA lifecycle regression is missing')
+chromium_only_pwa={'pwa-lifecycle\\.spec\\.js','pwa-two-release-transition\\.spec\\.js'}
+expected_webkit=chromium_specs-chromium_only_pwa-{'visual-regression\\.spec\\.js'}
+need(chromium_only_pwa <= chromium_specs,'Chromium PWA lifecycle/transition regressions are missing')
 need('visual-regression\\.spec\\.js' in chromium_specs,'Chromium immutable visual regression is missing')
 need(webkit_specs==expected_webkit,f'WebKit substantive coverage drifted: {sorted(webkit_specs)} != {sorted(expected_webkit)}')
 need("browserName:'webkit'" in webkit,'full WebKit config must run WebKit')
@@ -28,4 +29,4 @@ need("name:'webkit-tablet'" in cross and "devices['iPad (gen 7)']" in cross,'exi
 need('npx playwright test --config=playwright.webkit-full.config.cjs' in workflow,'Mobile Browser QA does not execute full WebKit substantive regression')
 need("'playwright.webkit-full.config.cjs'" in workflow,'Mobile Browser QA path filter does not track the full WebKit config')
 need("'qa_webkit_regression.py'" in workflow,'Mobile Browser QA path filter does not track the WebKit coverage contract')
-print(f'MouldMaster WebKit regression contract passed ({len(webkit_specs)} substantive specs + tablet smoke; Chromium-only PWA lifecycle and immutable visual baseline explicit)')
+print(f'MouldMaster WebKit regression contract passed ({len(webkit_specs)} substantive specs + tablet smoke; Chromium-only service-worker PWA lifecycle/transition and immutable visual baseline explicit)')
