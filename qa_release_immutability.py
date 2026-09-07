@@ -8,6 +8,12 @@ def need(ok,msg):
 wf=(ROOT/'.github'/'workflows'/'publish-open-desktop.yml').read_text(encoding='utf-8')
 need('--clobber' not in wf,'desktop release workflow must never replace published assets')
 for marker in [
+    'detect-desktop-release-change:',
+    'Detect desktop release identity change',
+    'BEFORE_SHA: ${{ github.event.before }}',
+    'needs: detect-desktop-release-change',
+    "if: needs.detect-desktop-release-change.outputs.changed == 'true'",
+    'web-only version update will not rebuild or republish desktop.',
     'Publish one-shot release without asset replacement',
     'gh release create $env:MM_RELEASE_TAG --draft',
     'gh release upload $env:MM_RELEASE_TAG @paths',
@@ -17,6 +23,8 @@ for marker in [
     'Bump desktop_release; never clobber a published release.',
     'Published release hash mismatch',
     'Repository-level GitHub immutable releases should be enabled before the next release',
-]: need(marker in wf,f'desktop release immutability safeguard missing: {marker}')
+]: need(marker in wf,f'desktop release immutability/version-gate safeguard missing: {marker}')
+need("get('desktop_release', '')" in wf,'desktop publication gate must compare desktop_release rather than any version.json change')
+need(wf.find('detect-desktop-release-change:') < wf.find('publish-windows:'),'desktop identity detection must run before the Windows publication job')
 need(wf.find('gh release create $env:MM_RELEASE_TAG --draft') < wf.find('gh release upload $env:MM_RELEASE_TAG @paths') < wf.find('gh release edit $env:MM_RELEASE_TAG --draft=false'),'immutable release flow must be draft -> asset upload -> publish')
-print('MouldMaster desktop release immutability QA passed (no clobber; existing release hash verification; draft-first one-shot publication)')
+print('MouldMaster desktop release immutability QA passed (desktop_release-gated publication; no clobber; existing release hash verification; draft-first one-shot publication)')
