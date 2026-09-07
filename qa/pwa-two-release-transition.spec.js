@@ -103,10 +103,10 @@ async function cacheKeys(page){
 
 // Regression contract for issue #251. This intentionally models two distinct
 // release generations while reusing the repository's real service-worker logic.
-// The test is expected to fail against the frozen .25 lifecycle because .25 can
-// replace the controller and serve newer network JS/JSON beneath an old document.
-// Keep this work on the post-.25 branch until the next governed web release fixes
-// the transition; automated browser evidence never substitutes for physical PWA QA.
+// This test reproduces the .25 mixed-release failure and is the acceptance
+// contract for the next governed release: a waiting worker may cache the next
+// generation, but the active client must remain byte-coherent until a full
+// document transition. Automated browser evidence never substitutes for physical PWA QA.
 test('an old controlled client stays release-coherent until a complete new release takes over',async({page,context})=>{
   test.setTimeout(90000);
   const fixture=makeServer();

@@ -7,7 +7,7 @@ import struct
 import subprocess
 import tempfile
 
-WEB_RELEASE = "2026.09.06.25"
+WEB_RELEASE = "2026.09.06.26"
 ANDROID_RELEASE = "2026.08.26.2"
 CONTENT_VERSION = "2026.08.26.1"
 WINDOWS_RECOVERY_VERSION = "2026.08.21.1"
@@ -107,9 +107,14 @@ assert "Promise.allSettled" in install, "install must inspect every required off
 assert "if(failed.length)" in install and "await caches.delete(STATIC_CACHE)" in install, "incomplete new cache must be deleted"
 assert "throw new Error" in install, "install must fail if any core asset cannot be cached"
 assert "cache.addAll" not in install, "install must report exact missing assets rather than an opaque addAll failure"
-assert "skipWaiting" in install, "complete worker should still activate promptly"
+assert ".skipWaiting(" not in install, "new worker must wait for existing controlled clients before activation"
+activate = sw[sw.index("self.addEventListener('activate'"):sw.index("// Governed release bytes") ]
+assert ".clients.claim(" not in activate, "new worker must not replace the controller of an already-open document"
 runtime_fetch = sw[sw.index("self.addEventListener('fetch'"):]
-assert "async function fetchNetwork(event)" in sw and "fetch(event.request,{cache:'no-store'})" in sw, "runtime fetches must use uncached network reads"
+assert "const RELEASE_PATHS=" in sw and "async function releaseCacheMatch(request)" in sw, "governed release assets must be pinned to the active worker cache"
+assert "RELEASE_PATHS.has(url.pathname)" in runtime_fetch, "governed fetches must be identified by the release asset set"
+assert "caches.match(" not in runtime_fetch, "runtime fetches must not search across multiple release caches"
+assert "async function fetchNetwork(event)" in sw and "fetch(event.request,{cache:'no-store'})" in sw, "non-governed network fallback must bypass the HTTP cache"
 assert ".put(" not in runtime_fetch, "runtime fetches must never mutate the validated release cache"
 assert "cacheAsset(" not in runtime_fetch, "install-only cache writer must not be reachable from runtime fetches"
 assert "mouldmaster-offline-asset-unavailable" in sw, "critical offline failure response must be explicit"
