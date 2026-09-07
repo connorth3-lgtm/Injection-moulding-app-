@@ -36,7 +36,7 @@ window.__registrationPromise=('serviceWorker' in navigator)
 }
 
 function makeServer(){
-  const state={release:'v1',offline:false};
+  const state={release:'v1',offline:false,failPaths:new Set()};
   const server=http.createServer((req,res)=>{
     if(state.offline){
       res.writeHead(503,{'Cache-Control':'no-store','Content-Type':'text/plain; charset=utf-8'});
@@ -45,6 +45,11 @@ function makeServer(){
     }
     const pathname=new URL(req.url,'http://fixture.invalid').pathname;
     const common={'Cache-Control':'no-store'};
+    if(state.failPaths.has(pathname)){
+      res.writeHead(503,{...common,'Content-Type':'text/plain; charset=utf-8'});
+      res.end(`forced update failure for ${pathname}`);
+      return;
+    }
     if(pathname==='/'||pathname==='/index.html'){
       res.writeHead(200,{...common,'Content-Type':'text/html; charset=utf-8'});
       res.end(htmlFor(state.release));
@@ -101,6 +106,21 @@ async function cacheKeys(page){
   return page.evaluate(()=>caches.keys());
 }
 
+async function clientIdentity(page){
+  return page.evaluate(async()=>{
+    const runtimeText=await (await fetch('./runtime.js',{cache:'no-store'})).text();
+    const version=await (await fetch('./version.json',{cache:'no-store'})).json();
+    const fetchedRuntime=/__runtimeVersion=["']([^"']+)["']/.exec(runtimeText)?.[1]||'';
+    return {
+      document:window.__documentVersion,
+      runtime:window.__runtimeVersion,
+      fetchedRuntime,
+      fetchedVersion:version.release,
+      caches:await caches.keys()
+    };
+  });
+}
+
 // Regression contract for issue #251. This intentionally models two distinct
 // release generations while reusing the repository's real service-worker logic.
 // This test reproduces the .25 mixed-release failure and is the acceptance
@@ -129,18 +149,7 @@ test('an old controlled client stays release-coherent until a complete new relea
 
     // The still-open v1 document must continue to receive v1 governed bytes.
     // A v2 fetch here is a mixed-release execution window.
-    const oldClient=await page.evaluate(async()=>{
-      const runtimeText=await (await fetch('./runtime.js',{cache:'no-store'})).text();
-      const version=await (await fetch('./version.json',{cache:'no-store'})).json();
-      const fetchedRuntime=/__runtimeVersion=["']([^"']+)["']/.exec(runtimeText)?.[1]||'';
-      return {
-        document:window.__documentVersion,
-        runtime:window.__runtimeVersion,
-        fetchedRuntime,
-        fetchedVersion:version.release,
-        caches:await caches.keys()
-      };
-    });
+    const oldClient=await clientIdentity(page);
     expect(oldClient.document).toBe('v1');
     expect(oldClient.runtime).toBe('v1');
     expect(oldClient.fetchedRuntime).toBe('v1');
@@ -181,6 +190,54 @@ test('an old controlled client stays release-coherent until a complete new relea
     expect(await offline.evaluate(()=>({document:window.__documentVersion,runtime:window.__runtimeVersion}))).toEqual({document:'v2',runtime:'v2'});
   }finally{
     fixture.state.offline=false;
+    await closeServer(fixture.server);
+  }
+});
+
+test('an incomplete new release is discarded and the previous release remains usable offline',async({page,context})=>{
+  test.setTimeout(90000);
+  const fixture=makeServer();
+  const base=await listen(fixture.server);
+  try{
+    await page.goto(base,{waitUntil:'load'});
+    await waitForControlled(page);
+    expect(await clientIdentity(page)).toMatchObject({document:'v1',runtime:'v1',fetchedRuntime:'v1',fetchedVersion:'v1'});
+
+    // The update advertises v2 but one governed asset cannot be cached. Installation
+    // must fail atomically, delete the incomplete v2 cache and leave v1 active.
+    fixture.state.release='v2';
+    fixture.state.failPaths.add('/runtime.js');
+    await page.evaluate(async()=>{
+      const registration=await navigator.serviceWorker.getRegistration();
+      if(!registration)throw new Error('missing v1 service-worker registration');
+      await registration.update();
+    });
+    await expect.poll(async()=>page.evaluate(async()=>{
+      const registration=await navigator.serviceWorker.getRegistration();
+      return !!registration?.installing;
+    }),{timeout:30000}).toBe(false);
+
+    const keys=await cacheKeys(page);
+    expect(keys).toContain(`mouldmaster-static-v1-${CACHE_REVISION}`);
+    expect(keys).not.toContain(`mouldmaster-static-v2-${CACHE_REVISION}`);
+    expect(await page.evaluate(async()=>{
+      const registration=await navigator.serviceWorker.getRegistration();
+      return {waiting:!!registration?.waiting,active:!!registration?.active};
+    })).toEqual({waiting:false,active:true});
+    expect(await clientIdentity(page)).toMatchObject({document:'v1',runtime:'v1',fetchedRuntime:'v1',fetchedVersion:'v1'});
+
+    // Even with the origin now unavailable, closing and relaunching must recover
+    // the complete previous release rather than the rejected partial update.
+    fixture.state.offline=true;
+    fixture.state.failPaths.clear();
+    await page.close();
+    const offline=await context.newPage();
+    await offline.goto(base,{waitUntil:'load'});
+    await waitForControlled(offline);
+    expect(await offline.evaluate(()=>({document:window.__documentVersion,runtime:window.__runtimeVersion}))).toEqual({document:'v1',runtime:'v1'});
+  }finally{
+    fixture.state.offline=false;
+    fixture.state.failPaths.clear();
     await closeServer(fixture.server);
   }
 });
