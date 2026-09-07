@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "release": "2026.09.06.23",
-  "commit": "3e7144b68c5dfe79232cf2ba0180060f1395ffcc",
+  "commit": "f1c19e0a7ba1d39296fb9cdef2e614d568c31670",
   "browser": "chromium via @playwright/test 1.55.0",
   "maxDiffPixels": 12,
   "viewports": [
@@ -19,5 +19,5 @@
     "assessment",
     "listen-expanded"
   ],
-  "policy": "This commit is the reviewed .23 visual baseline. Candidate screenshots are rendered beside this exact commit in the same Chromium job. Update the pinned commit only through an intentional reviewed visual-baseline change; automated physical-device evidence remains a separate release gate."
+  "policy": "This commit is the reviewed .23 visual baseline after the intentional narrow-phone Learn/Practice repair. Candidate screenshots are rendered beside this exact commit in the same Chromium job. Update the pinned commit only through an intentional reviewed visual-baseline change; automated physical-device evidence remains a separate release gate."
 }
