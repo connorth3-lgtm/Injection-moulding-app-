@@ -117,6 +117,45 @@ async function expectFullWidthPrimaryAction(page,rootSelector){
   expect(Math.abs(geometry.buttonWidth-geometry.innerWidth)).toBeLessThan(2);
 }
 
+async function openMaterials(page){
+  await openHub(page,'Learn','#path .mm-learn-hub');
+  await page.locator('#path .mm-hub-tile').filter({hasText:'Material science'}).click();
+  await expect(page.locator('#materials')).toBeVisible();
+  await expect(page.locator('#materials .mat-chapter').first()).toBeVisible();
+  await page.evaluate(()=>new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve))));
+}
+
+async function expectMaterialDensity(page){
+  const result=await page.evaluate(()=>{
+    const root=document.getElementById('materials');
+    const cards=[...root.querySelectorAll('.mat-chapter')];
+    const first=cards[0];
+    const copy=first.querySelector('p');
+    const action=first.querySelector('.course-bottom button,.course-bottom .primary,.course-bottom .secondary,button');
+    const boxes=cards.slice(0,4).map(card=>card.getBoundingClientRect());
+    return {
+      count:cards.length,
+      minHeight:getComputedStyle(first).minHeight,
+      firstHeight:first.getBoundingClientRect().height,
+      copyHeight:copy?.getBoundingClientRect().height||0,
+      copyText:(copy?.textContent||'').trim(),
+      actionHeight:action?.getBoundingClientRect().height||0,
+      overflowX:Math.max(0,root.scrollWidth-root.clientWidth),
+      scrollTop:window.scrollY||document.scrollingElement?.scrollTop||0,
+      overlap:boxes.some((a,i)=>boxes.some((b,j)=>j>i&&a.top<b.bottom&&a.bottom>b.top&&a.left<b.right&&a.right>b.left))
+    };
+  });
+  expect(result.count).toBeGreaterThanOrEqual(4);
+  expect(result.minHeight).toBe('0px');
+  expect(result.firstHeight).toBeLessThan(300);
+  expect(result.copyHeight).toBeGreaterThan(20);
+  expect(result.copyText.length).toBeGreaterThan(30);
+  expect(result.actionHeight).toBeGreaterThanOrEqual(44);
+  expect(result.overflowX).toBeLessThanOrEqual(1);
+  expect(result.scrollTop).toBeLessThanOrEqual(1);
+  expect(result.overlap).toBe(false);
+}
+
 test.use({viewport:{width:412,height:915}});
 
 test('Learn hub keeps compact left-aligned mobile cards under strict CSP',async({page})=>{
@@ -133,6 +172,13 @@ test('Practice hub keeps compact left-aligned mobile cards under strict CSP',asy
   await expectReadableTiles(page,'#scenarios .mm-practice-hub');
   await expectFullWidthPrimaryAction(page,'#scenarios .mm-practice-hub');
   await page.screenshot({path:'qa-artifacts/mobile-practice-hub-412x915.png',fullPage:true});
+});
+
+test('Material chapters are content-driven and enter at the top on 412px phones',async({page})=>{
+  await openApp(page);
+  await openMaterials(page);
+  await expectMaterialDensity(page);
+  await page.screenshot({path:'qa-artifacts/mobile-materials-412x915.png',fullPage:true});
 });
 
 test.describe('360px narrow-phone hubs',()=>{
@@ -155,5 +201,15 @@ test.describe('360px narrow-phone hubs',()=>{
     await expect.poll(()=>page.evaluate(()=>window.scrollY||document.scrollingElement?.scrollTop||0)).toBeGreaterThan(20);
     await openHub(page,'Practice','#scenarios .mm-practice-hub');
     await expect.poll(()=>page.evaluate(()=>window.scrollY||document.scrollingElement?.scrollTop||0),{timeout:2500}).toBeLessThanOrEqual(1);
+  });
+
+  test('Material chapters keep readable copy, tap targets and stable view-entry position',async({page})=>{
+    await openApp(page);
+    await openHub(page,'Practice','#scenarios .mm-practice-hub');
+    await page.evaluate(()=>window.scrollTo(0,document.scrollingElement?.scrollHeight||document.body.scrollHeight));
+    await expect.poll(()=>page.evaluate(()=>window.scrollY||document.scrollingElement?.scrollTop||0)).toBeGreaterThan(20);
+    await openMaterials(page);
+    await expectMaterialDensity(page);
+    await page.screenshot({path:'qa-artifacts/mobile-materials-360x800.png',fullPage:true});
   });
 });
