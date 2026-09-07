@@ -15,7 +15,44 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
+  detect-desktop-release-change:
+    runs-on: ubuntu-latest
+    outputs:
+      changed: ${{ steps.detect.outputs.changed }}
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+      - id: detect
+        name: Detect desktop release identity change
+        shell: bash
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          BEFORE_SHA: ${{ github.event.before }}
+        run: |
+          if [[ "$EVENT_NAME" == "workflow_dispatch" ]]; then
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+            echo "Manual dispatch: desktop publication explicitly requested." >> "$GITHUB_STEP_SUMMARY"
+            exit 0
+          fi
+
+          current="$(python3 -c "import json; print(json.load(open('version.json', encoding='utf-8')).get('desktop_release', ''))")"
+          previous=""
+          if [[ -n "$BEFORE_SHA" && "$BEFORE_SHA" != "0000000000000000000000000000000000000000" ]] && git cat-file -e "${BEFORE_SHA}:version.json" 2>/dev/null; then
+            previous="$(git show "${BEFORE_SHA}:version.json" | python3 -c "import json,sys; print(json.load(sys.stdin).get('desktop_release', ''))")"
+          fi
+
+          if [[ -z "$previous" || "$current" != "$previous" ]]; then
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+            echo "Desktop release identity changed: ${previous:-<none>} -> $current" >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+            echo "Desktop release identity unchanged at $current; web-only version update will not rebuild or republish desktop." >> "$GITHUB_STEP_SUMMARY"
+          fi
+
   publish-windows:
+    needs: detect-desktop-release-change
+    if: needs.detect-desktop-release-change.outputs.changed == 'true'
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v7
