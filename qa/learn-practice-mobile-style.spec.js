@@ -59,8 +59,7 @@ async function expectReadableTiles(page,rootSelector){
   expect(result.textAlign).toBe('left');
   expect(result.whiteSpace).toBe('normal');
   expect(result.background).not.toBe('rgb(128, 128, 128)');
-  // The audit intentionally removes secondary eyebrow/copy/action text on phones.
-  // The tile title remains the clear accessible visual label and the whole tile is tappable.
+  // 412px phones keep the deliberately dense two-column presentation.
   expect(result.eyebrowDisplay).toBe('none');
   expect(result.titleDisplay).toBe('block');
   expect(result.copyDisplay).toBe('none');
@@ -68,6 +67,39 @@ async function expectReadableTiles(page,rootSelector){
   expect(result.helperDisplay).toBe('none');
   expect(result.minHeight).toBeGreaterThanOrEqual(94);
   expect(result.maxWidth-result.minWidth).toBeLessThan(2);
+  expect(result.overlap).toBe(false);
+}
+
+async function expectNarrowReadableTiles(page,rootSelector){
+  const result=await page.evaluate(rootSelector=>{
+    const root=document.querySelector(rootSelector);
+    const grid=root.querySelector('.mm-hub-grid');
+    const tiles=[...root.querySelectorAll('.mm-hub-tile')];
+    const boxes=tiles.map(x=>x.getBoundingClientRect());
+    const copies=tiles.map(x=>{
+      const node=x.querySelector('small');
+      const style=getComputedStyle(node);
+      return {display:style.display,height:node.getBoundingClientRect().height,text:(node.textContent||'').trim()};
+    });
+    const minHeights=tiles.map(x=>getComputedStyle(x).minHeight);
+    return {
+      count:tiles.length,
+      columns:getComputedStyle(grid).gridTemplateColumns.split(' ').filter(Boolean).length,
+      copies,
+      minHeights,
+      maxHeight:Math.max(...boxes.map(x=>x.height)),
+      minHeight:Math.min(...boxes.map(x=>x.height)),
+      overflowX:Math.max(0,root.scrollWidth-root.clientWidth),
+      overlap:boxes.some((a,i)=>boxes.some((b,j)=>j>i&&a.top<b.bottom&&a.bottom>b.top&&a.left<b.right&&a.right>b.left))
+    };
+  },rootSelector);
+  expect(result.count).toBe(4);
+  expect(result.columns).toBe(1);
+  expect(result.copies.every(x=>x.display!=='none'&&x.height>0&&x.text.length>12)).toBeTruthy();
+  expect(result.minHeights.every(x=>x==='0px')).toBeTruthy();
+  expect(result.minHeight).toBeGreaterThanOrEqual(70);
+  expect(result.maxHeight).toBeLessThan(165);
+  expect(result.overflowX).toBeLessThanOrEqual(1);
   expect(result.overlap).toBe(false);
 }
 
@@ -101,4 +133,27 @@ test('Practice hub keeps compact left-aligned mobile cards under strict CSP',asy
   await expectReadableTiles(page,'#scenarios .mm-practice-hub');
   await expectFullWidthPrimaryAction(page,'#scenarios .mm-practice-hub');
   await page.screenshot({path:'qa-artifacts/mobile-practice-hub-412x915.png',fullPage:true});
+});
+
+test.describe('360px narrow-phone hubs',()=>{
+  test.use({viewport:{width:360,height:800}});
+
+  test('Learn and Practice use content-driven one-column cards instead of empty title slabs',async({page})=>{
+    await openApp(page);
+    await openHub(page,'Learn','#path .mm-learn-hub');
+    await expectNarrowReadableTiles(page,'#path .mm-learn-hub');
+
+    await openHub(page,'Practice','#scenarios .mm-practice-hub');
+    await expectNarrowReadableTiles(page,'#scenarios .mm-practice-hub');
+    await page.screenshot({path:'qa-artifacts/mobile-practice-hub-360x800.png',fullPage:true});
+  });
+
+  test('primary tab navigation settles at the top instead of preserving a clipped hub position',async({page})=>{
+    await openApp(page);
+    await openHub(page,'Learn','#path .mm-learn-hub');
+    await page.evaluate(()=>window.scrollTo(0,document.scrollingElement?.scrollHeight||document.body.scrollHeight));
+    await expect.poll(()=>page.evaluate(()=>window.scrollY||document.scrollingElement?.scrollTop||0)).toBeGreaterThan(20);
+    await openHub(page,'Practice','#scenarios .mm-practice-hub');
+    await expect.poll(()=>page.evaluate(()=>window.scrollY||document.scrollingElement?.scrollTop||0),{timeout:2500}).toBeLessThanOrEqual(1);
+  });
 });
