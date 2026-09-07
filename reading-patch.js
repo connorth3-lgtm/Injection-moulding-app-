@@ -1,4 +1,4 @@
-/* MouldMaster lesson-reading enhancement — 2026.09.01.1 */
+/* MouldMaster lesson-reading enhancement — 2026.09.07.4 */
 (function(){
   'use strict';
   function norm(s){return String(s||'').replace(/\s+/g,' ').trim().toLowerCase();}
@@ -54,7 +54,41 @@
     script.async=false;
     document.head.appendChild(script);
   }
-  const run=()=>enhanceLesson();
+  function settleViewTop(){
+    const main=document.querySelector('main.main')||document.querySelector('.main');
+    if(main)main.scrollTop=0;
+    if(document.body)document.body.scrollTop=0;
+    const scrolling=document.scrollingElement;if(scrolling)scrolling.scrollTop=0;
+    try{window.scrollTo({top:0,left:0,behavior:'auto'})}catch(_){window.scrollTo(0,0)}
+  }
+  function installStableViewEntry(){
+    const current=window.switchView;
+    if(typeof current!=='function'||current.__mmStableViewEntry)return false;
+    const wrapped=function(){
+      const active=document.activeElement;
+      if(active&&typeof active.blur==='function')active.blur();
+      const root=document.documentElement;
+      const previousAnchor=root.style.overflowAnchor;
+      const nativeScrollTo=window.scrollTo;
+      root.style.overflowAnchor='none';
+      settleViewTop();
+      window.scrollTo=function(leftOrOptions,top){
+        if(leftOrOptions&&typeof leftOrOptions==='object')return nativeScrollTo.call(window,{...leftOrOptions,behavior:'auto'});
+        return nativeScrollTo.call(window,leftOrOptions,top);
+      };
+      let result;
+      try{result=current.apply(this,arguments)}finally{window.scrollTo=nativeScrollTo}
+      settleViewTop();
+      requestAnimationFrame(()=>requestAnimationFrame(()=>{settleViewTop();root.style.overflowAnchor=previousAnchor}));
+      return result;
+    };
+    wrapped.__mmStableViewEntry=true;
+    wrapped.__mmStableViewEntryBase=current;
+    window.switchView=wrapped;
+    window.__MM_STABLE_VIEW_ENTRY__='2026.09.07.1';
+    return true;
+  }
+  const run=()=>{enhanceLesson();installStableViewEntry()};
   const mo=new MutationObserver(()=>requestAnimationFrame(run));
   mo.observe(document.documentElement,{subtree:true,childList:true});
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',()=>{run();loadReadAloud();},{once:true});else{run();loadReadAloud();}
