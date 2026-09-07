@@ -1,4 +1,4 @@
-/* MouldMaster reading/question clarity + guided training — 2026.08.23.6 */
+/* MouldMaster reading/question clarity + guided training — 2026.09.07.1 */
 .lesson-body{max-width:980px;background:linear-gradient(180deg,#13233a 0%,#0d1b2f 100%);border-color:#39577b}
 .lesson-body>h2{font-size:clamp(28px,4vw,38px);line-height:1.15;margin-bottom:18px;color:#fff}
 .mm-reading-guide{display:grid;grid-template-columns:auto 1fr;gap:14px;align-items:center;margin:0 0 20px;padding:16px 18px;border:2px solid #55d6be;border-radius:14px;background:linear-gradient(135deg,#103a3b,#10253a);box-shadow:0 0 0 4px rgba(85,214,190,.09),0 10px 26px rgba(0,0,0,.2)}
@@ -24,7 +24,6 @@
 .mm-signoff{margin-top:22px;padding:22px}.mm-signoff h2{margin:6px 0 8px}.mm-signoff>p{color:#aabfd7;line-height:1.6}.mm-sign-progress{display:inline-flex;gap:7px;padding:8px 10px;margin:8px 0 14px;border-radius:999px;background:#17304d;color:#dff0ff}.mm-signoff>label{display:flex;gap:10px;align-items:flex-start;padding:10px 0;border-bottom:1px solid #263d59}.mm-signoff>label input[type=checkbox]{width:auto;margin-top:3px}.mm-sign-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:14px 0}.mm-signoff textarea{min-height:90px}.mm-signoff button{margin-top:12px}
 .mm-mobile-lessons{display:none;margin-bottom:12px}
 @media(max-width:700px){.lesson-body{padding:14px}.lesson-actions-sticky{position:static!important;margin-top:22px;padding-bottom:calc(8px + env(safe-area-inset-bottom))}.lesson-actions-sticky .primary{width:100%}.mm-reading-guide{grid-template-columns:1fr;gap:10px;padding:14px}.mm-reading-guide>span{justify-self:start}.mm-reading-guide strong{font-size:17px}.lesson-read-block,.lesson-source-box,.question-reference{padding:14px}.lesson-source-link,.question-ref-link,.mm-ref-panel>a,.mm-ref-link{grid-template-columns:1fr}.lesson-source-link span:last-child,.question-ref-link span:last-child,.mm-ref-panel>a em{display:none}.question{padding:14px!important}.option{font-size:15px}.mm-teaching-grid{grid-template-columns:1fr}.mm-extra-help summary{align-items:flex-start;flex-direction:column}.mm-review-card{grid-template-columns:1fr}.mm-sign-grid{grid-template-columns:1fr}.mm-mobile-lessons{display:inline-block}.lesson-side{display:none}.lesson-side.mm-open{display:block}.mm-confidence{display:grid;grid-template-columns:1fr 1fr 1fr}.mm-confidence>b{grid-column:1/-1}}
-
 
 /* Android profile/data layout clearance — physical OPPO regression 2026-09-05 */
 @media(max-width:700px){
@@ -60,7 +59,6 @@
   html body[data-mm-view="profile"] .top-actions button{min-height:46px!important}
 }
 
-
 /* iOS/iPadOS WebKit safe-area + profile viewport hardening — 2026-09-05 */
 html.mm-ios-webkit{height:100%;min-height:-webkit-fill-available}
 html.mm-ios-webkit body{min-height:100dvh;min-height:-webkit-fill-available;-webkit-text-size-adjust:100%}
@@ -84,4 +82,29 @@ html.mm-ios-webkit body{min-height:100dvh;min-height:-webkit-fill-available;-web
   }
   html.mm-ios-standalone .mobile-nav{bottom:0!important}
   html.mm-ios-standalone body[data-mm-view="profile"] #profile{padding-bottom:64px!important}
+}
+
+/* Mobile density contract — cards remain readable instead of preserving desktop
+   minimum heights. Keep controls large enough to tap; only presentation chrome
+   becomes content-driven. */
+@media(max-width:700px){
+  html body .mat-chapter{
+    min-height:0!important;
+    padding:14px!important;
+  }
+  html body .mat-chapter>p{
+    flex:0 0 auto!important;
+    margin-bottom:12px!important;
+  }
+  html body .mat-chapter .course-bottom{
+    margin-top:12px!important;
+  }
+  html body .mat-chapter .course-bottom button,
+  html body .mat-chapter .course-bottom .primary,
+  html body .mat-chapter .course-bottom .secondary{
+    min-height:44px!important;
+  }
+  html body .quick-action{
+    min-height:0!important;
+  }
 }
