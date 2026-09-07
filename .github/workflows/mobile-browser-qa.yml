@@ -8,6 +8,7 @@ on:
     paths:
       - 'index.html'
       - 'MouldMaster_Core_App.html'
+      - '*.css'
       - 'app-shell-registry.js'
       - 'app-shell-finalize.js'
       - 'mould-master-workspace.js'
@@ -38,18 +39,9 @@ on:
       - 'qa_mould_master_workspace.py'
       - 'qa_delayed_transfer_reviews.py'
       - 'qa_webkit_regression.py'
-      - 'qa/mobile-viewport.spec.js'
-      - 'qa/visual-regression.spec.js'
+      - 'qa_accessibility_real_at_contract.py'
+      - 'qa/**/*.spec.js'
       - 'qa/visual-regression-baseline.json'
-      - 'qa/material-grade-detail.spec.js'
-      - 'qa/material-search-scale.spec.js'
-      - 'qa/measured-evidence-decision.spec.js'
-      - 'qa/read-aloud.spec.js'
-      - 'qa/pwa-lifecycle.spec.js'
-      - 'qa/engineering-case-store.spec.js'
-      - 'qa/inline-handler-bridge.spec.js'
-      - 'qa/inline-style-csp.spec.js'
-      - 'qa/cross-browser-smoke.spec.js'
       - 'playwright.config.cjs'
       - 'playwright.webkit-full.config.cjs'
       - 'playwright.cross-browser.config.cjs'
@@ -93,7 +85,7 @@ jobs:
           print(json.load(open('qa/visual-regression-baseline.json', encoding='utf-8'))['commit'])
           PY
           )"
-          test "$BASELINE_SHA" = "3e7144b68c5dfe79232cf2ba0180060f1395ffcc"
+          test "$BASELINE_SHA" = "f1c19e0a7ba1d39296fb9cdef2e614d568c31670"
           git fetch --no-tags --depth=1 origin "$BASELINE_SHA"
           rm -rf /tmp/mm-visual-baseline
           git worktree add --detach /tmp/mm-visual-baseline "$BASELINE_SHA"
