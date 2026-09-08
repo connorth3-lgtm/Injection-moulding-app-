@@ -103,6 +103,7 @@ jobs:
             browsers: chromium
             baseline: true
             command: npx playwright test qa/visual-regression.spec.js --config=playwright.config.cjs
+          # Broad Chromium suite includes engineering-store and PWA regression tests.
           - suite: chromium-substantive
             browsers: chromium
             baseline: false
@@ -172,7 +173,7 @@ jobs:
           if-no-files-found: warn
           retention-days: 14
 
-  browser-gate:
+  mobile-browser:
     if: always()
     needs: [static-qa, browser-matrix]
     runs-on: ubuntu-latest
