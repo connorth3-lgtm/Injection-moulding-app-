@@ -78,7 +78,7 @@ function loadScope({users,activeUser,storage}){
   const document={querySelector:sel=>sel==='input[name=ex0]:checked'?{value:'0'}:null};
   const window={
     MM_LEARNER_SCOPE:scope,
-    MM_DATA_SPINE:{fingerprint:v=>String(v)K
+    MM_DATA_SPINE:{fingerprint:v=>String(v)},
     MM_QUESTION_REVISIONS:{bankVersion:'bank-current',forId:()=>({revision:7,date:'2026-09-04'})},
     MM_ASSESSMENT_ANALYTICS:{export:exportLegacy},
     addEventListener(){},
