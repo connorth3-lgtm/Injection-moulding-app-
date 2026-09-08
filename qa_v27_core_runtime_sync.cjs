@@ -1,23 +1,26 @@
 'use strict';
 
-const fs = require('fs');
 const assert = require('assert');
+const { spawnSync } = require('child_process');
 
-const core = fs.readFileSync('MouldMaster_Core_App.html', 'utf8');
-const inlineScripts = [...core.matchAll(/<script\b([^>]*)>([\s\S]*?)<\/script\s*>/gi)]
-  .filter(match => !/\bsrc\s*=/i.test(match[1]))
-  .map(match => match[2]);
+const result = spawnSync(
+  'python',
+  ['tools/externalize_core_scripts.py', '--check'],
+  { encoding: 'utf8' }
+);
 
-assert.strictEqual(inlineScripts.length, 10, 'canonical core inline script count drifted');
+if (result.error) throw result.error;
 
-for (let i = 0; i < inlineScripts.length; i += 1) {
-  const path = `src/core-runtime/core-inline-${String(i + 1).padStart(3, '0')}.js`;
-  const external = fs.readFileSync(path, 'utf8');
-  assert.strictEqual(
-    external,
-    inlineScripts[i],
-    `canonical/generated runtime drift: ${path} no longer matches inline script ${i + 1}`
-  );
-}
+assert.strictEqual(
+  result.status,
+  0,
+  `transform-aware core/runtime sync check failed\nstdout:\n${result.stdout || ''}\nstderr:\n${result.stderr || ''}`
+);
 
-console.log('v27 canonical core/runtime byte-sync QA passed');
+assert.match(
+  result.stdout || '',
+  /Core CSP migration check passed:/,
+  'canonical externalization checker did not report a successful deterministic transform check'
+);
+
+console.log('v27 canonical core/runtime transform-aware sync QA passed');
