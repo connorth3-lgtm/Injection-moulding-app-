@@ -52,5 +52,8 @@ function render(message='Select a local CSV.'){retireLegacy();const host=documen
 function open(){BASE.open();requestAnimationFrame(()=>render())}
 const originalOpen=BASE.open.bind(BASE);BASE.open=function(){const r=originalOpen();requestAnimationFrame(retireLegacy);return r};
 retireLegacy();
-window.MM_PROCESS_DATA_LOCAL_INTAKE=Object.freeze({version:VERSION,maxRows:MAX_ROWS,parseCsv,prepare,toCsv,open,scope:'Strict local in-memory CSV preparation only. Malformed structure is rejected atomically; no upload, storage, machine control or production limits.'});
+// Connected-data runtime intentionally decorates `prepare`/`open` and adds
+// __rawPrepare/enrichment helpers. Keep the API container extensible while the
+// strict parser itself remains the canonical parseCsv function.
+window.MM_PROCESS_DATA_LOCAL_INTAKE={version:VERSION,maxRows:MAX_ROWS,parseCsv,prepare,toCsv,open,scope:'Strict local in-memory CSV preparation only. Malformed structure is rejected atomically; no upload, storage, machine control or production limits.'};
 })();
