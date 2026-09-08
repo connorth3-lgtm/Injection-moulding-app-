@@ -3,32 +3,38 @@ const fs=require('fs');
 const vm=require('vm');
 const assert=require('assert');
 
-function memoryStorage(initial={}){
-  const data=new Map(Object.entries(initial));
+class StorageMock{
+  constructor(initial={}){this.data=new Map(Object.entries(initial));}
+  get length(){return this.data.size}
+  key(i){return [...this.data.keys()][i]??null}
+  getItem(k){return this.data.has(String(k))?this.data.get(String(k)):null}
+  setItem(k,v){this.data.set(String(k),String(v))}
+  removeItem(k){this.data.delete(String(k))}
+  dump(){return Object.fromEntries(this.data)}
+}
+function testCrypto(){
+  let seq=0;
   return {
-    get length(){return data.size},
-    key(i){return [...data.keys()][i]??null},
-    getItem(k){return data.has(String(k))?data.get(String(k)):null},
-    setItem(k,v){data.set(String(k),String(v))},
-    removeItem(k){data.delete(String(k))},
-    dump(){return Object.fromEntries(data)}
+    randomUUID(){seq++;return `00000000-0000-4000-8000-${String(seq).padStart(12,'0')}`},
+    getRandomValues(a){for(let i=0;i<a.length;i++)a[i]=(seq+i+1)&255;seq++;return a}
   };
 }
 function loadScope({users,activeUser,storage}){
-  const window={};
-  const sandbox={window,localStorage:storage,db:{activeUser,users},user:users[activeUser],console,Math,Object,String,Array,Set,Map};
+  const crypto=testCrypto();
+  const window={crypto};
+  const sandbox={window,localStorage:storage,Storage:StorageMock,crypto,Uint8Array,db:{activeUser,users},user:users[activeUser],console,Math,Object,String,Array,Set,Map,JSON,Error};
   window.window=window;
   vm.createContext(sandbox);
   vm.runInContext(fs.readFileSync('src/domains/shared/learner-scope.js','utf8'),sandbox,{filename:'learner-scope.js'});
   return {sandbox,scope:window.MM_LEARNER_SCOPE};
 }
 
-// Finding 1: the old 32-bit token can collide for ordinary learner IDs. The new
-// token must separate them, and a legacy bucket with two known owners must be
-// quarantined rather than copied into either learner's current history.
+// A known collision in the retired 32-bit scope must fail closed. The .27
+// cryptographic learner references stay distinct, and the ambiguous bucket is
+// preserved only in quarantine rather than assigned to either learner.
 {
   const a='learner-r2c9qcdfks2g',b='learner-8b62nqgdhctb',prefix='mm_learning_analytics_v1::';
-  const storage=memoryStorage();
+  const storage=new StorageMock();
   const {sandbox,scope}=loadScope({users:{[a]:{id:a},[b]:{id:b}},activeUser:a,storage});
   assert.strictEqual(scope.legacyTokenFor(a),scope.legacyTokenFor(b),'deterministic legacy collision fixture no longer collides');
   assert.strictEqual(scope.legacyTokenFor(a),'10ru0ym','legacy collision fixture changed unexpectedly');
@@ -40,8 +46,8 @@ function loadScope({users,activeUser,storage}){
   assert.strictEqual(storage.getItem(legacyKey),null,'ambiguous legacy learner bucket remained in the active analytics namespace');
   assert.strictEqual(storage.getItem(prefix+scope.tokenFor(a)),null,'ambiguous legacy history was assigned to learner A');
   assert.strictEqual(storage.getItem(prefix+scope.tokenFor(b)),null,'ambiguous legacy history was assigned to learner B');
-  assert(Object.keys(storage.dump()).some(k=>k.startsWith('mm_scope_quarantine_v1::')),'ambiguous legacy history was not preserved in quarantine');
-  assert.strictEqual(scope.migrationPlan(a).ambiguous,true,'collision was not reported as ambiguous ownership');
+  assert(Object.keys(storage.dump()).some(k=>k.startsWith('mm_scope_quarantine_v27::')),'ambiguous legacy history was not preserved in .27 quarantine');
+  assert.strictEqual(scope.legacyOwners(scope.legacyTokenFor(a)).length,2,'collision ownership is no longer reported as ambiguous');
   sandbox.db.activeUser=b;sandbox.user=sandbox.db.users[b];
   assert.notStrictEqual(scope.token(),scope.tokenFor(a),'switching to colliding learner reused the first learner strong token');
 }
@@ -49,7 +55,7 @@ function loadScope({users,activeUser,storage}){
 // A uniquely owned legacy bucket may migrate losslessly to the strong token.
 {
   const id='learner-unique-1',prefix='mm_activity_events_v2::';
-  const storage=memoryStorage();
+  const storage=new StorageMock();
   const {scope}=loadScope({users:{[id]:{id}},activeUser:id,storage});
   const oldKey=prefix+scope.legacyTokenFor(id),newKey=prefix+scope.tokenFor(id),payload=JSON.stringify({schema:2,events:[{type:'lesson_complete'}]});
   storage.setItem(oldKey,payload);
@@ -59,12 +65,11 @@ function loadScope({users,activeUser,storage}){
   assert.strictEqual(storage.getItem(oldKey),null,'legacy key remained after verified migration');
 }
 
-// Finding 2: pre-ledger stable-ID counters remain explicitly unversioned, while the
-// next real grade is captured in a proven revision bucket without changing that
-// frozen legacy baseline.
+// Pre-ledger stable-ID counters remain explicitly unversioned, while the next
+// real grade is captured in a proven revision bucket without rewriting history.
 {
   const source=fs.readFileSync('src/domains/assessment/assessment-analytics-v2.js','utf8');
-  const storage=memoryStorage();
+  const storage=new StorageMock();
   const legacyQuestion={stableId:'tech:Advanced:2',attempts:6,correct:4,wrong:2,unanswered:0,difficulty:'Advanced',competency:'process-control',concept:'interaction',optionSelections:{Alpha:4,Beta:2},totalResponseMs:6000,last:'2026-08-20T12:00:00.000Z'};
   const exportLegacy=()=>({questions:{q:JSON.parse(JSON.stringify(legacyQuestion))},exams:{},responseTimingBasis:'legacy'});
   const scope={registerStoragePrefix(){},token:()=> '0123456789abcdef0123456789abcdef',storageKey:(prefix,token)=>prefix+token};
@@ -73,7 +78,7 @@ function loadScope({users,activeUser,storage}){
   const document={querySelector:sel=>sel==='input[name=ex0]:checked'?{value:'0'}:null};
   const window={
     MM_LEARNER_SCOPE:scope,
-    MM_DATA_SPINE:{fingerprint:v=>String(v)},
+    MM_DATA_SPINE:{fingerprint:v=>String(v)K
     MM_QUESTION_REVISIONS:{bankVersion:'bank-current',forId:()=>({revision:7,date:'2026-09-04'})},
     MM_ASSESSMENT_ANALYTICS:{export:exportLegacy},
     addEventListener(){},
@@ -104,9 +109,7 @@ function loadScope({users,activeUser,storage}){
   assert.strictEqual(window.MM_ASSESSMENT_ANALYTICS_V2.export().questions['tech:Advanced:2@r7'].attempts,1,'duplicate grade activation double-counted the revision-aware attempt');
 }
 
-// Integration contracts: the learner analytics and activity bridges must register
-// their scoped stores, filter unsafe legacy cohort buckets, and never restore the old
-// current-revision fallback in assessment snapshots.
+// Integration contracts remain scoped, migration-aware and revision-safe.
 {
   const loader=fs.readFileSync('src/domains/learning/learning-analytics-loader.js','utf8');
   const activity=fs.readFileSync('src/domains/learning/activity-events-v2.js','utf8');
@@ -116,4 +119,4 @@ function loadScope({users,activeUser,storage}){
   assert(activity.includes("revision:null,revisionStatus:'legacy-unversioned'"),'legacy assessment snapshot regained a fabricated current revision');
 }
 
-console.log('Deep-dive data provenance QA passed: learner-token collisions fail closed with safe migration/quarantine, legacy assessment baselines freeze unversioned, and future grades are revision-aware.');
+console.log('Deep-dive data provenance QA passed: .27 learner-token collisions fail closed with safe migration/quarantine, legacy assessment baselines freeze unversioned, and future grades are revision-aware.');
