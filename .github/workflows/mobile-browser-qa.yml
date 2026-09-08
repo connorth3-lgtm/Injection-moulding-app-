@@ -64,18 +64,14 @@ permissions:
   contents: read
 
 jobs:
-  mobile-browser:
+  static-qa:
     runs-on: ubuntu-latest
-    timeout-minutes: 45
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@v7
       - uses: actions/setup-python@v7
         with:
           python-version: '3.13'
-      - uses: actions/setup-node@v7
-        with:
-          node-version: '22'
-          package-manager-cache: false
       - name: Static shell, workspace and measured-evidence QA
         run: |
           python qa_app_shell_registry.py
@@ -86,11 +82,54 @@ jobs:
           python qa_delayed_transfer_reviews.py
           python qa_webkit_regression.py
           python qa_accessibility_real_at_contract.py
-      - name: Install pinned Playwright browser matrix
+
+  browser-matrix:
+    needs: static-qa
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - suite: chromium-mobile-density
+            browsers: chromium
+            baseline: false
+            command: npx playwright test qa/learn-practice-mobile-style.spec.js --config=playwright.config.cjs
+          - suite: webkit-mobile-density
+            browsers: webkit
+            baseline: false
+            command: npx playwright test qa/learn-practice-mobile-style.spec.js --config=playwright.webkit-full.config.cjs
+          - suite: chromium-visual-lock
+            browsers: chromium
+            baseline: true
+            command: npx playwright test qa/visual-regression.spec.js --config=playwright.config.cjs
+          - suite: chromium-substantive
+            browsers: chromium
+            baseline: false
+            command: npx playwright test --config=playwright.config.cjs --grep-invert "matches immutable \.25 baseline across learner surfaces"
+          - suite: webkit-substantive
+            browsers: webkit
+            baseline: false
+            command: npx playwright test --config=playwright.webkit-full.config.cjs
+          - suite: desktop-tablet-cross-browser
+            browsers: chromium firefox webkit
+            baseline: false
+            command: npx playwright test --config=playwright.cross-browser.config.cjs
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: '3.13'
+      - uses: actions/setup-node@v7
+        with:
+          node-version: '22'
+          package-manager-cache: false
+      - name: Install pinned Playwright browser dependencies
         run: |
           npm install --no-save --no-package-lock @playwright/test@1.55.0 pixelmatch@5.3.0 pngjs@7.0.0
-          npx playwright install --with-deps chromium firefox webkit
+          npx playwright install --with-deps ${{ matrix.browsers }}
       - name: Prepare immutable .25 visual baseline
+        if: matrix.baseline
         run: |
           BASELINE_SHA="$(python - <<'PY'
           import json
@@ -101,36 +140,44 @@ jobs:
           git fetch --no-tags --depth=1 origin "$BASELINE_SHA"
           rm -rf /tmp/mm-visual-baseline
           git worktree add --detach /tmp/mm-visual-baseline "$BASELINE_SHA"
-      - name: Start candidate and baseline MouldMaster servers
+      - name: Start candidate MouldMaster server
         run: |
           python -m http.server 4173 --bind 127.0.0.1 > /tmp/mouldmaster-http.log 2>&1 &
           echo $! > /tmp/mouldmaster-http.pid
-          python -m http.server 4174 --bind 127.0.0.1 --directory /tmp/mm-visual-baseline > /tmp/mouldmaster-baseline-http.log 2>&1 &
-          echo $! > /tmp/mouldmaster-baseline-http.pid
           for i in {1..20}; do
-            if curl -fsS http://127.0.0.1:4173/index.html >/dev/null && curl -fsS http://127.0.0.1:4174/index.html >/dev/null; then exit 0; fi
+            if curl -fsS http://127.0.0.1:4173/index.html >/dev/null; then exit 0; fi
             sleep 1
           done
           cat /tmp/mouldmaster-http.log
+          exit 1
+      - name: Start immutable baseline server
+        if: matrix.baseline
+        run: |
+          python -m http.server 4174 --bind 127.0.0.1 --directory /tmp/mm-visual-baseline > /tmp/mouldmaster-baseline-http.log 2>&1 &
+          echo $! > /tmp/mouldmaster-baseline-http.pid
+          for i in {1..20}; do
+            if curl -fsS http://127.0.0.1:4174/index.html >/dev/null; then exit 0; fi
+            sleep 1
+          done
           cat /tmp/mouldmaster-baseline-http.log
           exit 1
-      - name: Chromium mobile density contract
-        run: npx playwright test qa/learn-practice-mobile-style.spec.js --config=playwright.config.cjs
-      - name: WebKit mobile density contract
-        run: npx playwright test qa/learn-practice-mobile-style.spec.js --config=playwright.webkit-full.config.cjs
-      - name: Chromium .25 visual regression lock
-        run: npx playwright test qa/visual-regression.spec.js --config=playwright.config.cjs
-      - name: Chromium mobile, material, evidence, engineering-store and PWA regression tests
-        run: npx playwright test --config=playwright.config.cjs --grep-invert "matches immutable \.25 baseline across learner surfaces"
-      - name: WebKit substantive learner regression tests
-        run: npx playwright test --config=playwright.webkit-full.config.cjs
-      - name: Cross-browser desktop and tablet smoke tests
-        run: npx playwright test --config=playwright.cross-browser.config.cjs
-      - name: Upload browser QA artifacts
+      - name: Run ${{ matrix.suite }}
+        run: ${{ matrix.command }}
+      - name: Upload ${{ matrix.suite }} artifacts
         if: always()
         uses: actions/upload-artifact@v7
         with:
-          name: mobile-browser-qa
+          name: mobile-browser-qa-${{ matrix.suite }}
           path: qa-artifacts/
           if-no-files-found: warn
           retention-days: 14
+
+  browser-gate:
+    if: always()
+    needs: [static-qa, browser-matrix]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Require complete browser evidence matrix
+        run: |
+          test "${{ needs.static-qa.result }}" = "success"
+          test "${{ needs.browser-matrix.result }}" = "success"
