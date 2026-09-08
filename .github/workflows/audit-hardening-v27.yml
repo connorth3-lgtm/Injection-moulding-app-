@@ -29,6 +29,7 @@ jobs:
           node --check tools/audit-hardening-v27-check.mjs
           node --check qa_v27_runtime_bridge.cjs
           node --check qa_v27_intake_compat.cjs
+          node --check qa_v27_security_regressions.cjs
       - name: Verify generated domain manifest
         run: python tools/generate_runtime_manifest.py --check
       - name: Run v27 regression/static gate
@@ -36,3 +37,4 @@ jobs:
           node tools/audit-hardening-v27-check.mjs
           node qa_v27_runtime_bridge.cjs
           node qa_v27_intake_compat.cjs
+          node qa_v27_security_regressions.cjs
