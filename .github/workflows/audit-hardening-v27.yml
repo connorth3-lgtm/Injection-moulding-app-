@@ -30,6 +30,7 @@ jobs:
           node --check qa_v27_runtime_bridge.cjs
           node --check qa_v27_intake_compat.cjs
           node --check qa_v27_security_regressions.cjs
+          node --check qa_v27_core_runtime_sync.cjs
       - name: Verify generated domain manifest
         run: python tools/generate_runtime_manifest.py --check
       - name: Run v27 regression/static gate
@@ -38,3 +39,4 @@ jobs:
           node qa_v27_runtime_bridge.cjs
           node qa_v27_intake_compat.cjs
           node qa_v27_security_regressions.cjs
+          node qa_v27_core_runtime_sync.cjs
