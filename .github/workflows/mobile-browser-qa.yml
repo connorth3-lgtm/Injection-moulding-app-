@@ -64,6 +64,16 @@ permissions:
   contents: read
 
 jobs:
+  mobile-browser:
+    if: always()
+    needs: [static-qa, browser-matrix]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Require complete browser evidence matrix
+        run: |
+          test "${{ needs.static-qa.result }}" = "success"
+          test "${{ needs.browser-matrix.result }}" = "success"
+
   static-qa:
     runs-on: ubuntu-latest
     timeout-minutes: 15
@@ -172,13 +182,3 @@ jobs:
           path: qa-artifacts/
           if-no-files-found: warn
           retention-days: 14
-
-  mobile-browser:
-    if: always()
-    needs: [static-qa, browser-matrix]
-    runs-on: ubuntu-latest
-    steps:
-      - name: Require complete browser evidence matrix
-        run: |
-          test "${{ needs.static-qa.result }}" = "success"
-          test "${{ needs.browser-matrix.result }}" = "success"
