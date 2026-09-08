@@ -48,9 +48,25 @@ function cell(v){const s=String(v??'');return /[",\n]/.test(s)?`"${s.replace(/"/
 function toCsv(p){return [p.headers.join(','),...p.rows.map(r=>p.headers.map(h=>cell(r[h])).join(','))].join('\n')+'\n'}
 function download(name,text,type){const u=URL.createObjectURL(new Blob([text],{type})),a=document.createElement('a');a.href=u;a.download=name;document.body.appendChild(a);a.click();a.remove();URL.revokeObjectURL(u)}
 function retireLegacy(){document.querySelectorAll('[data-pdi-launch],[data-pdi-root]').forEach(el=>el.remove())}
-function render(message='Select a local CSV.'){retireLegacy();const host=document.getElementById('processDataLabs');if(!host)return;host.innerHTML='';const card=document.createElement('section');card.className='card form-card';const title=document.createElement('h2');title.textContent='Strict local CSV preparation';const note=document.createElement('p');note.className='muted';note.textContent='Malformed CSV is rejected before preparation. Files stay in this browser/desktop session; prepared output is pseudonymised, not guaranteed anonymous.';const status=document.createElement('p');status.setAttribute('role','status');status.textContent=message;const input=document.createElement('input');input.type='file';input.accept='.csv,text/csv';const exportBtn=document.createElement('button');exportBtn.className='secondary';exportBtn.textContent='Export prepared CSV';exportBtn.disabled=!lastPrepared;input.addEventListener('change',async()=>{try{const f=input.files?.[0];if(!f)return;lastPrepared=prepare(parseCsv(await f.text()));render(`${lastPrepared.rows.length} rows prepared.`)}catch(err){lastPrepared=null;render(err?.message||'CSV rejected.')}});exportBtn.addEventListener('click',()=>{if(lastPrepared)download('mouldmaster-prepared-shot-data.csv',toCsv(lastPrepared),'text/csv;charset=utf-8')});card.append(title,note,status,input,exportBtn);host.appendChild(card)}
-function open(){BASE.open();requestAnimationFrame(()=>render())}
-const originalOpen=BASE.open.bind(BASE);BASE.open=function(){const r=originalOpen();requestAnimationFrame(retireLegacy);return r};
+function render(message='Select a local CSV.'){
+ retireLegacy();
+ const host=document.getElementById('processDataLabs');if(!host)return;
+ host.innerHTML='';
+ const card=document.createElement('section');card.className='card form-card';
+ const title=document.createElement('h2');title.textContent='Strict local CSV preparation';
+ const note=document.createElement('p');note.className='muted';note.textContent='Malformed CSV is rejected before preparation. Files stay in this browser/desktop session; prepared output is pseudonymised, not guaranteed anonymous.';
+ const status=document.createElement('p');status.setAttribute('role','status');status.setAttribute('aria-live','polite');status.textContent=message;
+ const label=document.createElement('label');label.setAttribute('for','mmLocalCsvPicker');label.textContent='Choose real-shot CSV';
+ const input=document.createElement('input');input.id='mmLocalCsvPicker';input.type='file';input.accept='.csv,text/csv';input.setAttribute('aria-describedby','mmLocalCsvBoundary');
+ note.id='mmLocalCsvBoundary';
+ const exportBtn=document.createElement('button');exportBtn.className='secondary';exportBtn.textContent='Export prepared CSV';exportBtn.disabled=!lastPrepared;
+ input.addEventListener('change',async()=>{try{const f=input.files?.[0];if(!f)return;lastPrepared=prepare(parseCsv(await f.text()));render(`${lastPrepared.rows.length} rows prepared.`)}catch(err){lastPrepared=null;render(err?.message||'CSV rejected.')}});
+ exportBtn.addEventListener('click',()=>{if(lastPrepared)download('mouldmaster-prepared-shot-data.csv',toCsv(lastPrepared),'text/csv;charset=utf-8')});
+ card.append(title,note,status,label,input,exportBtn);host.appendChild(card)
+}
+const originalOpen=BASE.open.bind(BASE);
+BASE.open=function(){const r=originalOpen();requestAnimationFrame(()=>render());return r};
+function open(){return BASE.open()}
 retireLegacy();
 // Connected-data runtime intentionally decorates `prepare`/`open` and adds
 // __rawPrepare/enrichment helpers. Keep the API container extensible while the
