@@ -27,7 +27,10 @@ jobs:
           node --check src/domains/zz-v27/05-audit-hardening.js
           node --check service-worker.js
           node --check tools/audit-hardening-v27-check.mjs
+          node --check qa_v27_runtime_bridge.cjs
       - name: Verify generated domain manifest
         run: python tools/generate_runtime_manifest.py --check
       - name: Run v27 regression/static gate
-        run: node tools/audit-hardening-v27-check.mjs
+        run: |
+          node tools/audit-hardening-v27-check.mjs
+          node qa_v27_runtime_bridge.cjs
