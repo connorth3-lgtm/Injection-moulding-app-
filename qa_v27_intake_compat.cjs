@@ -12,7 +12,8 @@ assert(!source.includes('MM_PROCESS_DATA_LOCAL_INTAKE=Object.freeze'),'strict in
 let legacyOpenCount=0;
 const nodes=new Map();
 function element(tag='div'){
-  return {tagName:String(tag).toUpperCase(),children:[],append(...xs){this.children.push(...xs);for(const x of xs)if(x&&x.id)nodes.set(x.id,x)},addEventListener(){},remove(){},setAttribute(k,v){this[k]=v},className:'',textContent:'',disabled:false,id:'',innerHTML:'',files:null};
+  const el={tagName:String(tag).toUpperCase(),children:[],append(...xs){for(const x of xs)this.appendChild(x)},appendChild(x){this.children.push(x);if(x&&x.id)nodes.set(x.id,x);return x},addEventListener(){},remove(){},setAttribute(k,v){this[k]=v},className:'',textContent:'',disabled:false,id:'',innerHTML:'',files:null};
+  return el;
 }
 const host=element('div');host.id='processDataLabs';nodes.set(host.id,host);
 const document={
