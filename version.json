@@ -1,5 +1,7 @@
 {
-  "web_release": "2026.09.06.26",
+  "web_release": "2026.09.08.27",
+  "release_status": "candidate-pending-physical-validation",
+  "audit_hardening_version": "2026.09.08.27",
   "android_release": "2026.08.26.2",
   "desktop_release": "2026.08.26.8",
   "desktop_release_tag": "desktop-v2026.08.26.8",
@@ -10,11 +12,15 @@
   "legacy_review_id_version": "2026.08.21.1",
   "assessment_quality_version": "2026.08.24.3",
   "assessment_storage_scope_version": "2026.08.24.4",
-  "assessment_storage_migration_version": "2026.09.06.1",
+  "assessment_storage_migration_version": "2026.09.08.27",
   "assessment_evidence_version": "2026.08.25.2",
   "production_observability_version": "2026.09.01.1",
   "read_aloud_version": "2026.09.07.3",
-  "published": "2026-09-06",
+  "candidate_date": "2026-09-08",
+  "physical_validation": "pending",
+  "published": "2026-09-08",
   "repository": "connorth3-lgtm/Injection-moulding-app-",
-  "pages_url": "https://connorth3-lgtm.github.io/Injection-moulding-app-/"
+  "pages_url": "https://connorth3-lgtm.github.io/Injection-moulding-app-/",
+  "learner_identity_scope_version": "2026.09.08.27",
+  "learner_storage_boundary_version": "2026.09.08.27"
 }

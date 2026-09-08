@@ -1,0 +1,13 @@
+{
+  "release": "2026.09.08.27",
+  "status": "pending-browser-capture",
+  "screens": ["Home", "Learn", "Practice", "Lesson", "More", "Assessment", "Listen-expanded"],
+  "viewports": [
+    {"width": 360, "height": 800},
+    {"width": 412, "height": 915},
+    {"width": 810, "height": 1080},
+    {"width": 1440, "height": 900}
+  ],
+  "required_state_count": 28,
+  "evidence_policy": "Only screenshots generated from the exact .27 commit SHA count as .27 visual evidence. Earlier-release screenshots may be comparison references but not pass evidence."
+}

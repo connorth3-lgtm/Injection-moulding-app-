@@ -22,7 +22,12 @@
     "./src/domains/learning/content-intelligence.js",
     "./src/domains/process/process-statistics.js",
     "./src/domains/shell/accessibility-loader.js",
-    "./src/domains/shell/product-areas.js"
+    "./src/domains/shell/product-areas.js",
+    "./src/domains/zz-v27/01-runtime-v2-scope-bridge.js",
+    "./src/domains/zz-v27/02-trainer-governance.js",
+    "./src/domains/zz-v27/03-process-data-local-intake.js",
+    "./src/domains/zz-v27/04-retire-legacy-process-intake.js",
+    "./src/domains/zz-v27/05-audit-hardening.js"
   ],
   "dataAssets": [
     "./material-catalog-v1.json"

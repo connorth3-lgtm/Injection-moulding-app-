@@ -1,5 +1,5 @@
-const CACHE_VERSION='2026.09.06.26';
-const CACHE_REVISION='assessment-rotation-immutable-r2-20260906';
+const CACHE_VERSION='2026.09.08.27';
+const CACHE_REVISION='audit-hardening-v27-20260908';
 const STATIC_CACHE=`mouldmaster-static-${CACHE_VERSION}-${CACHE_REVISION}`;
 
 // Release assets are grouped for readability, but activation is atomic across both
@@ -68,6 +68,11 @@ const CORE=[
   './src/domains/process/process-statistics.js',
   './src/domains/shell/accessibility-loader.js',
   './src/domains/shell/product-areas.js',
+  './src/domains/zz-v27/01-runtime-v2-scope-bridge.js',
+  './src/domains/zz-v27/02-trainer-governance.js',
+  './src/domains/zz-v27/03-process-data-local-intake.js',
+  './src/domains/zz-v27/04-retire-legacy-process-intake.js',
+  './src/domains/zz-v27/05-audit-hardening.js',
   './material-catalog-v1.json',
   './learning-analytics.js',
   './accessibility-hardening.js',
@@ -147,83 +152,10 @@ async function cacheAsset(cache,url){
   await cache.put(url,response.clone());
   return url;
 }
-
-async function releaseCacheMatch(request){
-  const cache=await caches.open(STATIC_CACHE);
-  return await cache.match(request,{ignoreSearch:true});
-}
-
-self.addEventListener('install',event=>{
-  event.waitUntil((async()=>{
-    const cache=await caches.open(STATIC_CACHE);
-    const results=await Promise.allSettled(RELEASE_ASSETS.map(url=>cacheAsset(cache,url)));
-    const failed=results.map((x,i)=>x.status==='rejected'?RELEASE_ASSETS[i]:null).filter(Boolean);
-    if(failed.length){
-      await caches.delete(STATIC_CACHE);
-      throw new Error(`MouldMaster offline release update is incomplete; keeping the previous worker. Missing: ${failed.join(', ')}`);
-    }
-    // Deliberately do not call skipWaiting(). The complete new release waits until
-    // existing clients using the previous worker have left its scope, preventing an
-    // in-place controller swap over a document that is still executing old bytes.
-  })());
-});
-
-self.addEventListener('activate',event=>{
-  event.waitUntil((async()=>{
-    // Normal service-worker waiting semantics mean the previous active worker no
-    // longer has controlled clients when this runs, so its release cache can now be
-    // retired without breaking an older document that still depends on it.
-    const keys=await caches.keys();
-    await Promise.all(keys.filter(k=>k.startsWith('mouldmaster-static-')&&k!==STATIC_CACHE).map(k=>caches.delete(k)));
-    // Do not claim already-open uncontrolled documents. The new worker controls the
-    // next navigation, keeping controller changes aligned with a full document load.
-  })());
-});
-
-// Governed release bytes are immutable for the lifetime of the active worker. A
-// waiting worker may cache a newer generation in parallel, but the active worker
-// always reads from its own named cache rather than from the network or a global
-// caches.match() that could select another generation.
-async function fetchNetwork(event){
-  try{return await fetch(event.request,{cache:'no-store'})}catch(_){return null}
-}
-function criticalOfflineResponse(url){
-  if(url.pathname.endsWith('.json'))return new Response(JSON.stringify({error:'mouldmaster-offline-asset-unavailable'}),{status:503,headers:{'Content-Type':'application/json; charset=utf-8','Cache-Control':'no-store'}});
-  return new Response('/* MouldMaster runtime asset is unavailable offline. Reconnect and reopen the app to cache this runtime feature pack. */\n',{status:503,headers:{'Content-Type':'text/javascript; charset=utf-8','Cache-Control':'no-store','X-Content-Type-Options':'nosniff'}})
-}
-function offlineDocumentResponse(){
-  return new Response('<!doctype html><meta name="viewport" content="width=device-width,initial-scale=1"><title>MouldMaster offline</title><main style="font:16px system-ui;padding:24px;max-width:680px"><h1>MouldMaster is not fully installed offline yet</h1><p>Reconnect once and reopen the app. The complete offline release installs atomically before a new worker can replace the previous validated cache.</p></main>',{status:503,headers:{'Content-Type':'text/html; charset=utf-8','Cache-Control':'no-store'}});
-}
-
-self.addEventListener('fetch',event=>{
-  if(event.request.method!=='GET')return;
-  const url=new URL(event.request.url);
-  if(url.origin!==self.location.origin)return;
-
-  if(event.request.mode==='navigate'){
-    event.respondWith((async()=>{
-      const exact=await releaseCacheMatch(event.request);
-      if(exact)return exact;
-      const index=await releaseCacheMatch(new Request(new URL('./index.html',self.registration.scope)));
-      return index||offlineDocumentResponse();
-    })());
-    return;
-  }
-
-  if(RELEASE_PATHS.has(url.pathname)){
-    event.respondWith((async()=>{
-      const cached=await releaseCacheMatch(event.request);
-      if(cached)return cached;
-      return criticalOfflineResponse(url);
-    })());
-    return;
-  }
-
-  const runtimeCritical=url.pathname.endsWith('.js')||url.pathname.endsWith('.json');
-  if(runtimeCritical){
-    event.respondWith((async()=>await fetchNetwork(event)||criticalOfflineResponse(url))());
-    return;
-  }
-
-  event.respondWith((async()=>await fetchNetwork(event)||new Response('MouldMaster asset unavailable offline',{status:503,headers:{'Content-Type':'text/plain; charset=utf-8','Cache-Control':'no-store'}}))());
-});
+async function releaseCacheMatch(request){const cache=await caches.open(STATIC_CACHE);return await cache.match(request,{ignoreSearch:true})}
+self.addEventListener('install',event=>{event.waitUntil((async()=>{const cache=await caches.open(STATIC_CACHE);const results=await Promise.allSettled(RELEASE_ASSETS.map(url=>cacheAsset(cache,url)));const failed=results.map((x,i)=>x.status==='rejected'?RELEASE_ASSETS[i]:null).filter(Boolean);if(failed.length){await caches.delete(STATIC_CACHE);throw new Error(`MouldMaster offline release update is incomplete; keeping the previous worker. Missing: ${failed.join(', ')}`)}})())});
+self.addEventListener('activate',event=>{event.waitUntil((async()=>{const keys=await caches.keys();await Promise.all(keys.filter(k=>k.startsWith('mouldmaster-static-')&&k!==STATIC_CACHE).map(k=>caches.delete(k)))})())});
+async function fetchNetwork(event){try{return await fetch(event.request,{cache:'no-store'})}catch(_){return null}}
+function criticalOfflineResponse(url){if(url.pathname.endsWith('.json'))return new Response(JSON.stringify({error:'mouldmaster-offline-asset-unavailable'}),{status:503,headers:{'Content-Type':'application/json; charset=utf-8','Cache-Control':'no-store'}});return new Response('/* MouldMaster runtime asset is unavailable offline. Reconnect and reopen the app to cache this runtime feature pack. */\n',{status:503,headers:{'Content-Type':'text/javascript; charset=utf-8','Cache-Control':'no-store','X-Content-Type-Options':'nosniff'}})}
+function offlineDocumentResponse(){return new Response('<!doctype html><meta name="viewport" content="width=device-width,initial-scale=1"><title>MouldMaster offline</title><main style="font:16px system-ui;padding:24px;max-width:680px"><h1>MouldMaster is not fully installed offline yet</h1><p>Reconnect once and reopen the app. The complete offline release installs atomically before a new worker can replace the previous validated cache.</p></main>',{status:503,headers:{'Content-Type':'text/html; charset=utf-8','Cache-Control':'no-store'}})}
+self.addEventListener('fetch',event=>{if(event.request.method!=='GET')return;const url=new URL(event.request.url);if(url.origin!==self.location.origin)return;if(event.request.mode==='navigate'){event.respondWith((async()=>{const exact=await releaseCacheMatch(event.request);if(exact)return exact;const index=await releaseCacheMatch(new Request(new URL('./index.html',self.registration.scope)));return index||offlineDocumentResponse()})());return}if(RELEASE_PATHS.has(url.pathname)){event.respondWith((async()=>{const cached=await releaseCacheMatch(event.request);if(cached)return cached;return criticalOfflineResponse(url)})());return}const runtimeCritical=url.pathname.endsWith('.js')||url.pathname.endsWith('.json');if(runtimeCritical){event.respondWith((async()=>await fetchNetwork(event)||criticalOfflineResponse(url))());return}event.respondWith((async()=>await fetchNetwork(event)||new Response('MouldMaster asset unavailable offline',{status:503,headers:{'Content-Type':'text/plain; charset=utf-8','Cache-Control':'no-store'}}))())});

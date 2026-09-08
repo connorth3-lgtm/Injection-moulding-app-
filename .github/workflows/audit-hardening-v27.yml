@@ -1,0 +1,33 @@
+name: Audit hardening v27
+
+on:
+  push:
+    branches: [fix/audit-hardening-v27]
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  invariant-gate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: '22'
+      - name: Syntax check v27 runtime modules
+        run: |
+          node --check src/domains/shared/learner-scope.js
+          node --check src/domains/zz-v27/01-runtime-v2-scope-bridge.js
+          node --check src/domains/zz-v27/02-trainer-governance.js
+          node --check src/domains/zz-v27/03-process-data-local-intake.js
+          node --check src/domains/zz-v27/04-retire-legacy-process-intake.js
+          node --check src/domains/zz-v27/05-audit-hardening.js
+          node --check service-worker.js
+          node --check tools/audit-hardening-v27-check.mjs
+      - name: Verify generated domain manifest
+        run: python tools/generate_runtime_manifest.py --check
+      - name: Run v27 regression/static gate
+        run: node tools/audit-hardening-v27-check.mjs
