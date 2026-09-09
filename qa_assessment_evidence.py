@@ -18,7 +18,7 @@ for path in ['assessment-evidence-sources.js','assessment-evidence-approval.js',
 
 approval=text('assessment-evidence-approval.js')
 sources=text('assessment-evidence-sources.js')
-need("const VERSION='2026.08.30.3'" in approval,'approval version missing')
+need("const VERSION='2026.09.10.1'" in approval,'approval version missing')
 need("version:'2026.08.25.3'" in sources,'evidence source version missing')
 need("summary.total!==157" in approval and "summary.labs!==36" in approval and "summary.materialLabs!==24" in approval,'157-question coverage guard missing')
 need('blockedIds' in approval,'blocked evidence IDs must be reported on failure')
@@ -29,6 +29,7 @@ need('if(!ids.length)' not in sources,'generic evidence fallback is forbidden; u
 need('approveExplicit' in approval and 'forMaterialLab' in approval,'material lab explicit approval API missing')
 need("function scheduleApproval()" in approval and "DOMContentLoaded',()=>setTimeout(buildApproval,0)" in approval,'evidence snapshot must wait until earlier DOMContentLoaded content upgrades finish')
 need("'assessment-stable-review-bridge.js'" in approval,'strict answer-balance bridge must be approval-pinned')
+need("R.after('gradeExam'" in approval and "R.registerModule('assessment-evidence-review'" in approval,'evidence review must integrate through Runtime V2')
 
 approved_inputs=dict(re.findall(r"'([^']+\.(?:html|js))':'([0-9a-f]{40})'",approval))
 need(len(approved_inputs)==8,f'expected 8 approval-pinned content inputs, got {len(approved_inputs)}')
@@ -57,10 +58,10 @@ const fs=require('fs'),vm=require('vm');
 const D=%s;
 const store={};
 const localStorage={getItem:k=>Object.prototype.hasOwnProperty.call(store,k)?store[k]:null,setItem:(k,v)=>{store[k]=String(v)},removeItem:k=>{delete store[k]},key:i=>Object.keys(store)[i]||null,get length(){return Object.keys(store).length}};
-const makeEl=()=>({textContent:'',innerHTML:'',className:'',dataset:{},style:{},appendChild(){},insertAdjacentHTML(){},insertAdjacentElement(){},querySelector(){return null},querySelectorAll(){return[]},addEventListener(){},setAttribute(){},hasAttribute(){return false},classList:{add(){},remove(){},contains(){return false}}});
-const document={getElementById:()=>null,querySelectorAll:()=>[],querySelector:()=>null,createElement:makeEl,head:{appendChild(){}},body:{appendChild(){}},documentElement:{},readyState:'complete',addEventListener(){}};
+const makeEl=()=>({textContent:'',innerHTML:'',className:'',dataset:{},style:{},appendChild(){},prepend(){},insertAdjacentHTML(){},insertAdjacentElement(){},querySelector(){return null},querySelectorAll(){return[]},addEventListener(){},setAttribute(){},hasAttribute(){return false},classList:{add(){},remove(){},contains(){return false}}});
+const document={getElementById:()=>null,querySelectorAll:()=>[],querySelector:()=>null,createElement:makeEl,head:{appendChild(){}},body:{appendChild(){},prepend(){}},documentElement:{},readyState:'complete',addEventListener(){}};
 function MutationObserver(){this.observe=()=>{};this.disconnect=()=>{}}
-const sandbox={window:{MM_DATA:D,requestAnimationFrame:fn=>fn(),addEventListener(){},scrollTo(){}},document,localStorage,performance:{now:()=>1000},console,setTimeout:(fn)=>{if(typeof fn==='function')fn()},clearTimeout(){},Date,Math,JSON,Map,Set,Blob:function(){},URL:{createObjectURL:()=>'',revokeObjectURL(){}},MutationObserver};
+const sandbox={window:{MM_DATA:D,MM_RUNTIME_V2:{after:()=>()=>{},registerModule:()=>({})},requestAnimationFrame:fn=>fn(),addEventListener(){},scrollTo(){}},document,localStorage,performance:{now:()=>1000},console,setTimeout:(fn)=>{if(typeof fn==='function')fn()},clearTimeout(){},Date,Math,JSON,Map,Set,Blob:function(){},URL:{createObjectURL:()=>'',revokeObjectURL(){}},MutationObserver};
 sandbox.window.window=sandbox.window;sandbox.window.document=document;sandbox.window.localStorage=localStorage;sandbox.window.MutationObserver=MutationObserver;sandbox.window.URL=sandbox.URL;sandbox.window.setTimeout=sandbox.setTimeout;
 vm.createContext(sandbox);
 for(const file of ['diagnostic-learning-labs.js','material-behaviour-labs.js','assessment-deep-dive.js','assessment-answer-cue-fix.js','assessment-quality-suite.js','assessment-stable-review-bridge.js','assessment-evidence-sources.js','assessment-evidence-approval.js'])vm.runInContext(fs.readFileSync(file,'utf8'),sandbox,{filename:file});
@@ -77,7 +78,7 @@ need(p.returncode==0,f'evidence approval runtime failed: {p.stderr or p.stdout}'
 runtime=json.loads(p.stdout)
 s=runtime['summary']; records=runtime['records']
 need(runtime.get('blockedIds')==[],'no keyed question may remain blocked')
-need(runtime.get('bridge',{}).get('strictAnswerBalance',{}).get('applied')==93,'strict answer-balance bridge must be active before evidence snapshot')
+need(runtime.get('bridge',{}).get('strictAnswerBalance',{}).get('applied')==94,'strict answer-balance bridge must be active before evidence snapshot')
 need(s=={'total':157,'approved':157,'technical':30,'regional':27,'scenarios':40,'labs':36,'materialLabs':24,'direct':s['direct'],'mapped':s['mapped']},f'unexpected approval summary: {s}')
 need(len(records)==157 and len({r['id'] for r in records})==157,'approval record IDs must be complete and unique')
 need(all(r['status']=='approved' for r in records),'every keyed question must be approved')

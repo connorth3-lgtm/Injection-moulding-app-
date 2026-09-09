@@ -40,6 +40,16 @@ for(const raw of [...DOMAIN_MANIFEST.assets,...DOMAIN_MANIFEST.dataAssets]){
   const name=raw.slice(2);
   need(Object.prototype.hasOwnProperty.call(INTEGRITY.files,name),`runtime manifest asset is not integrity-hashed/servable by desktop: ${raw}`);
 }
+const packagedFrom=new Set((PKG.build?.extraResources||[]).map(x=>String(x.from||'').replace(/^\.\.\/\.\.\//,'')));
+const dynamicLearnerAssets=[
+  'ui-shell.css','mobile-lesson-fix.css','learner-ux-repair.css','lesson-simple-experience.js','primary-learning-practice-hubs.js','learner-ux-repair.js',
+  'measured-evidence-integration.js','measured-evidence-decision.js','measured-learning-library.js','measured-learning-library.css','data/measured-learning'
+];
+for(const name of dynamicLearnerAssets){
+  need(packagedFrom.has(name),`desktop packaging parity missing dynamic learner asset: ${name}`);
+  if(!name.endsWith('/measured-learning'))need(Object.prototype.hasOwnProperty.call(INTEGRITY.files,name),`desktop integrity parity missing dynamic learner asset: ${name}`);
+}
+for(const name of ['data/measured-learning/promoted-v1.json','data/measured-learning/manifest-v1.json','data/measured-learning/expansion-manifest-v2.json','data/measured-learning/v2-policy.json','data/measured-learning/source-readiness-v2.json'])need(Object.prototype.hasOwnProperty.call(INTEGRITY.files,name),`desktop measured-learning data is not integrity hashed: ${name}`);
 for(const req of ['generated/dependency-licenses.json','generated/sbom.cdx.json','THREAT_MODEL.md'])need(fs.existsSync(path.join(DESKTOP,req)),`desktop transparency artifact missing: ${req}`);
 const licences=JSON.parse(fs.readFileSync(path.join(DESKTOP,'generated','dependency-licenses.json'),'utf8'));
 need(licences.schema===1 && Array.isArray(licences.packages),'dependency licence inventory invalid');
@@ -55,4 +65,4 @@ const legacyGuard=spawnSync(process.env.MM_PYTHON||'python',[path.join(ROOT,'qa_
 if(legacyGuard.stdout)process.stdout.write(legacyGuard.stdout);
 if(legacyGuard.stderr)process.stderr.write(legacyGuard.stderr);
 need(legacyGuard.status===0,`legacy retirement state QA failed with exit ${legacyGuard.status}`);
-console.log('MouldMaster open desktop QA passed (stable single-instance loopback origin preserves browser storage across launches; runtime manifest assets integrity-hashed and desktop-servable; legacy recovery retirement remains fail-closed)');
+console.log('MouldMaster open desktop QA passed (stable single-instance loopback origin preserves browser storage; browser/desktop dynamic assets are packaged and integrity-hashed; legacy recovery retirement remains fail-closed)');

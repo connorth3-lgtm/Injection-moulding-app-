@@ -1,8 +1,8 @@
-/* MouldMaster explicit process-case evidence granularity — 2026.09.04.3 */
+/* MouldMaster explicit process-case evidence granularity + local storage integrity guard — 2026.09.10.1 */
 (function(){
 'use strict';
 if(window.MM_PROCESS_CASE_EVIDENCE)return;
-const VERSION='2026.09.04.3';
+const VERSION='2026.09.10.1';
 const ATLAS_GRANULARITY='case-context-subset-from-pass-reviewed-pool';
 const ATLAS_FALLBACK='explicit-pass-inherited';
 const ATLAS_RELATIONSHIP='context-support-not-direct-validation';
@@ -46,5 +46,37 @@ function summary(){
   const r=records(),atlas=r.filter(x=>x.passId),signatures=new Set(atlas.filter(x=>x.granularity===ATLAS_GRANULARITY).map(x=>x.sourceIds.slice().sort().join('|')));
   return{version:VERSION,total:r.length,caseSupported:r.filter(x=>x.granularity==='case').length,atlasContextSubsets:atlas.filter(x=>x.granularity===ATLAS_GRANULARITY).length,explicitPassInherited:r.filter(x=>x.granularity===ATLAS_FALLBACK).length,uniqueAtlasSourceSignatures:signatures.size,directValidationClaimed:r.filter(x=>x.relationship==='direct-validation').length};
 }
+
+function duplicateShotIndexes(prepared){
+  const seen=new Map(),duplicates=[];
+  for(let i=0;i<(prepared?.rows||[]).length;i++){
+    const raw=prepared.rows[i]?.shot_index;
+    if(raw===null||raw===undefined||raw==='')continue;
+    const key=String(raw).trim();if(!key)continue;
+    if(seen.has(key))duplicates.push({shotIndex:key,firstRow:seen.get(key),duplicateRow:i+1});else seen.set(key,i+1)
+  }
+  return duplicates
+}
+function assertStorageIdentity(prepared){
+  const duplicates=duplicateShotIndexes(prepared);
+  if(duplicates.length){const sample=duplicates.slice(0,3).map(x=>`${x.shotIndex} (rows ${x.firstRow}/${x.duplicateRow})`).join(', ');throw new Error(`Duplicate source shot_index values would collide in local storage: ${sample}. Resolve or regenerate a unique chronological shot_index before saving.`)}
+  return prepared
+}
+function guardFunction(owner,key){
+  const base=owner?.[key];if(typeof base!=='function'||base.__mmStorageIdentityGuard)return false;
+  const wrapped=function(){const prepared=base.apply(this,arguments);if(prepared&&typeof prepared.then==='function')return prepared.then(assertStorageIdentity);return assertStorageIdentity(prepared)};
+  wrapped.__mmStorageIdentityGuard=true;owner[key]=wrapped;return true
+}
+function installStorageIntegrityGuard(attempt=0){
+  let guarded=false;
+  const intake=window.MM_PROCESS_DATA_LOCAL_INTAKE;
+  if(intake){guarded=guardFunction(intake,intake.__rawPrepare?'__rawPrepare':'prepare')||guarded}
+  const storage=window.MM_CONNECTED_PROCESS_DATA?.storage;
+  if(storage)guarded=guardFunction(storage,'savePrepared')||guarded;
+  if((!intake||!storage)&&attempt<80)setTimeout(()=>installStorageIntegrityGuard(attempt+1),50);
+  if(guarded||attempt===0)window.MM_PROCESS_STORAGE_INTEGRITY={version:VERSION,duplicateShotIndexes,assertStorageIdentity,policy:'Source shot_index may be retained for evidence, but duplicate values are rejected before local persistence because IndexedDB shot identity must never overwrite an earlier row. Chronology must be repaired explicitly rather than silently deduplicated.'}
+}
+
 window.MM_PROCESS_CASE_EVIDENCE=Object.freeze({version:VERSION,records,summary,boundary:'Guided and deep-dive cases retain their authored case-support relationships. Atlas cases may receive a deterministic case-context source subset only from registry-known members of their already reviewed pass source pool; token ranking is a relevance aid, not a new scientific claim, source review, causal proof or direct case validation. If fewer than two reviewed pass sources have usable registry metadata, atlas evidence remains explicit pass-inherited context.'});
+installStorageIntegrityGuard();
 })();

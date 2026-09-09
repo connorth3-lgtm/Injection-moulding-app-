@@ -1,8 +1,8 @@
-/* MouldMaster accessibility/browser hardening — 2026-09-06 */
+/* MouldMaster accessibility/browser hardening — 2026-09-10 */
 (function(){
 'use strict';
 if(window.MM_ACCESSIBILITY_HARDENING)return;
-const VERSION='2026.09.06.2';
+const VERSION='2026.09.10.1';
 let lastFocus=null,activeModal=null;
 const FOCUSABLE='a[href],button:not([disabled]),input:not([disabled]),select:not([disabled]),textarea:not([disabled]),[tabindex]:not([tabindex="-1"])';
 function visible(el){if(!el||!el.isConnected||el.closest?.('[aria-hidden="true"]'))return false;const s=getComputedStyle(el);return s.display!=='none'&&s.visibility!=='hidden'&&el.getClientRects().length>0}
@@ -47,11 +47,31 @@ function closeDialog(modal){if(activeModal!==modal)return;activeModal=null;reque
 function trap(e){if(e.key!=='Tab'||!activeModal||!visible(activeModal))return;const card=activeModal.querySelector('.modal-card')||activeModal,items=focusables(card);if(!items.length){e.preventDefault();card.focus();return}const first=items[0],last=items[items.length-1];if(e.shiftKey&&document.activeElement===first){e.preventDefault();last.focus()}else if(!e.shiftKey&&document.activeElement===last){e.preventDefault();first.focus()}}
 function nodes(root,selector){if(!root)return[];const out=[];if(root.nodeType===1&&root.matches?.(selector))out.push(root);if(root.querySelectorAll)out.push(...root.querySelectorAll(selector));return out}
 function safeLinks(root=document){for(const a of nodes(root,'a[target="_blank"]')){const rel=new Set(String(a.rel||'').split(/\s+/).filter(Boolean));rel.add('noopener');rel.add('noreferrer');a.rel=[...rel].join(' ')}}
-function decorateControls(root=document){
-  for(const img of nodes(root,'img:not([alt])'))img.alt='';
-  for(const button of nodes(root,'button'))if(!clean(button.textContent)&&!button.getAttribute('aria-label')&&!button.getAttribute('aria-labelledby'))button.setAttribute('aria-label','Action');
-  for(const input of nodes(root,'input,select,textarea')){if(input.getAttribute('aria-label')||input.getAttribute('aria-labelledby')||input.id&&document.querySelector?.(`label[for="${CSS.escape(input.id)}"]`)||input.closest('label'))continue;const p=input.getAttribute('placeholder');if(p)input.setAttribute('aria-label',p)}
+function explicitLabel(input){
+  if(input.getAttribute('aria-label')||input.getAttribute('aria-labelledby')||input.closest('label'))return true;
+  if(input.id&&document.querySelector?.(`label[for="${CSS.escape(input.id)}"]`))return true;
+  return false
 }
+function markIssue(el,kind){if(el)el.dataset.mmA11yUnresolved=kind}
+function clearIssue(el){if(el?.dataset?.mmA11yUnresolved)delete el.dataset.mmA11yUnresolved}
+function decorateControls(root=document){
+  for(const img of nodes(root,'img:not([alt])')){
+    if(img.getAttribute('aria-hidden')==='true'||img.getAttribute('role')==='presentation'||img.getAttribute('role')==='none'){img.alt='';clearIssue(img);continue}
+    const title=clean(img.getAttribute('title')),caption=clean(img.closest('figure')?.querySelector('figcaption')?.textContent);
+    if(caption||title){img.alt=caption||title;clearIssue(img)}else markIssue(img,'missing-image-alt')
+  }
+  for(const button of nodes(root,'button')){
+    if(clean(button.textContent)||button.getAttribute('aria-label')||button.getAttribute('aria-labelledby')||clean(button.getAttribute('title'))){clearIssue(button);continue}
+    markIssue(button,'unlabelled-button')
+  }
+  for(const input of nodes(root,'input,select,textarea')){
+    if(explicitLabel(input)){clearIssue(input);continue}
+    const title=clean(input.getAttribute('title'));
+    if(title){input.setAttribute('aria-label',title);clearIssue(input);continue}
+    markIssue(input,'unlabelled-form-control')
+  }
+}
+function semanticIssues(root=document){return nodes(root,'[data-mm-a11y-unresolved]').map(el=>({kind:el.dataset.mmA11yUnresolved,tag:String(el.tagName||'').toLowerCase(),id:el.id||null,text:clean(el.textContent).slice(0,80)}))}
 function syncModalState(){const modals=[...document.querySelectorAll('.modal')].filter(visible);if(modals.length)openDialog(modals[modals.length-1]);else if(activeModal)closeDialog(activeModal)}
 function scan(root=document){style();liveRegion();safeLinks(root);decorateControls(root);for(const modal of nodes(root,'.modal'))labelDialog(modal);syncModalState()}
 document.addEventListener('keydown',trap,true);
@@ -67,6 +87,6 @@ const observer=new MutationObserver(mutations=>{
 });
 observer.observe(document.documentElement,{childList:true,subtree:true,attributes:true,attributeFilter:['class','hidden','style','aria-hidden']});
 window.addEventListener('pageshow',()=>scan(document));document.addEventListener('DOMContentLoaded',()=>scan(document),{once:true});
-window.MM_ACCESSIBILITY_HARDENING=Object.freeze({version:VERSION,focusTrap:true,focusRestore:true,hiddenDescendantsExcluded:true,forcedColors:true,moreContrast:true,externalLinkIsolation:true,mutationScope:'changed-subtrees',announce,scan,scope:'Runtime accessibility safeguards; formal WCAG conformance still requires manual assistive-technology and browser testing.'});
+window.MM_ACCESSIBILITY_HARDENING=Object.freeze({version:VERSION,focusTrap:true,focusRestore:true,hiddenDescendantsExcluded:true,forcedColors:true,moreContrast:true,externalLinkIsolation:true,mutationScope:'changed-subtrees',announce,scan,semanticIssues,unresolvedSemanticCount:()=>semanticIssues(document).length,semanticRepairPolicy:'Runtime may use an explicit title/figcaption or an explicitly decorative image declaration. It does not convert placeholders into labels, invent generic button names, or silently mark unknown images decorative; unresolved source semantics stay visible to QA.',scope:'Runtime accessibility safeguards; formal WCAG conformance still requires manual assistive-technology and browser testing.'});
 scan(document);
 })();

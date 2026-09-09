@@ -1,4 +1,4 @@
-/* MouldMaster lesson-reading enhancement — 2026.09.07.4 */
+/* MouldMaster lesson-reading enhancement — 2026.09.07.5 */
 (function(){
   'use strict';
   function norm(s){return String(s||'').replace(/\s+/g,' ').trim().toLowerCase();}
@@ -63,7 +63,13 @@
   }
   function installStableViewEntry(){
     const current=window.switchView;
-    if(typeof current!=='function'||current.__mmStableViewEntry)return false;
+    /* Runtime V2 owns the canonical switchView dispatcher once it is present.
+       Do not wrap that dispatcher from a MutationObserver callback: rebinding a
+       Runtime-owned global recreates wrapper chains and can turn shell adoption
+       into recursive switchView/scrollTo calls. The pre-Runtime wrapper, when
+       installed during initial parsing, is already retained as the captured
+       legacy implementation inside Runtime V2. */
+    if(typeof current!=='function'||current.__mmStableViewEntry||current.__mmRuntimeV2)return false;
     const wrapped=function(){
       const active=document.activeElement;
       if(active&&typeof active.blur==='function')active.blur();
@@ -85,7 +91,7 @@
     wrapped.__mmStableViewEntry=true;
     wrapped.__mmStableViewEntryBase=current;
     window.switchView=wrapped;
-    window.__MM_STABLE_VIEW_ENTRY__='2026.09.07.1';
+    window.__MM_STABLE_VIEW_ENTRY__='2026.09.07.5';
     return true;
   }
   const run=()=>{enhanceLesson();installStableViewEntry()};

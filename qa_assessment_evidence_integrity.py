@@ -16,6 +16,7 @@ def text(path):
     return p.read_text(encoding='utf-8')
 
 hardening=text('assessment-psychometric-hardening.js')
+bridge=text('assessment-stable-review-bridge.js')
 integrity=text('assessment-evidence-integrity-upgrade.js')
 real=text('real-measured-data-assessment.js')
 
@@ -24,9 +25,9 @@ for forbidden in ['Math.max(124','cueNeutral','negTails','const pads=','qualific
     need(forbidden not in hardening,f'forbidden semantic/padding transform remains: {forbidden}')
 for required in ['semanticAnswerChanges:0','technicalTermSubstitutions:0','paddingApplied:false','keyedConciseEdits','distractorCueEdits','formClauseTrims','technicalLengthRanks','regionalLengthRanks','scenarioLengthRanks','diagnosticLengthRanks','materialLengthRanks','optionalLengthRanks']:
     need(required in hardening,f'missing tracked psychometric-integrity metadata: {required}')
-need("'scenario:03'" in hardening and "'scenario:30'" in hardening and "'scenario:33'" in hardening,'three reviewed concise keyed overrides are not explicit')
-need('CLAUSE_MARKERS' in hardening and 'balanceFormRows' in hardening and 'keyFormPenalty' in hardening,'all-bank relative-form distractor compaction/balancing is missing')
-need('technicalLengthRanks=[0,0,0,0]' in hardening and 'optionalLengthRanks=[0,0,0,0]' in hardening,'four-rank answer-length balancing is not explicit')
+need("'scenario:03'" in bridge and "'scenario:30'" in bridge and "'scenario:33'" in bridge,'three reviewed source-authored concise keyed overrides are not explicit in the stable-review bridge')
+need('repositionArray' in hardening and 'textMutationCount!==0' in hardening and 'Runtime psychometric code must never rewrite stems or option text' in hardening,'immutable psychometric runtime/text-mutation guard is missing')
+need('technicalLengthRanks:technicalLengthRanks.slice()' in hardening and 'optionalLengthRanks:optionalLengthRanks.slice()' in hardening,'answer-length rank telemetry is not exported')
 need("kp.chars>median*1.40&&kp.chars-median>12" in hardening,'non-salient longest-answer boundary missing')
 need("kp.chars>=Math.max" not in hardening,'runtime still forbids every longest keyed option and creates an inverse cue')
 

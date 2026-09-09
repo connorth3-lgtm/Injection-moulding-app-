@@ -67,6 +67,7 @@ const STRICT_ANSWER_BALANCE={
 
  'scenario:01':'Check shot-delivery/NRV, feed and injection actuals',
  'scenario:02':'Inspect end-of-fill venting and test fill-speed sensitivity',
+ 'scenario:03':'Inspect local parting-line/insert seating',
  'scenario:04':'Study cooling time against ejection and part quality',
  'scenario:05':'Verify drying history and actual material moisture',
  'scenario:06':'Run a cavity-balance study and inspect the repaired runner',
@@ -93,7 +94,7 @@ const STRICT_ANSWER_BALANCE={
  'scenario:27':'Check sensor zero and acquisition path',
  'scenario:28':'Check robot handshake',
  'scenario:29':'Check energy phases and boundary',
- 'scenario:30':'Map interface thermal and flow history first',
+ 'scenario:30':'Map interface thermal/flow history',
  'scenario:31':'Record insert/interface thermal state and transfer delay',
  'scenario:32':'Check local thermal, venting and microflow evidence',
  'scenario:33':'Check cell structure and relevant mechanical response',
@@ -122,7 +123,7 @@ function applyBalance(requireFull){
   const id=s.mmStableId||`scenario:${String(i+1).padStart(2,'0')}`,replacement=STRICT_ANSWER_BALANCE[id];if(!replacement)return;
   const opts=s.choices,key=Number(s.correct);if(!Array.isArray(opts)||opts.length!==4||key<0||key>3)throw new Error(`Strict answer-balance source invalid: ${id}`);opts[key]=replacement;applied++;
  });
- if(applied>93||requireFull&&applied!==93)throw new Error(`Strict answer-balance coverage mismatch: ${applied}/93`);
+ if(applied>94||requireFull&&applied!==94)throw new Error(`Strict answer-balance coverage mismatch: ${applied}/94`);
  window.MM_STABLE_REVIEW_BRIDGE.strictAnswerBalance.applied=applied;
  return applied;
 }
@@ -140,7 +141,7 @@ window.getExamQuestions=function(){
  return rows;
 };
 
-window.MM_STABLE_REVIEW_BRIDGE={version:'2026.08.30.2',stableIdsPrimary:true,fullBlueprintRequired:true,requiredTechnicalDomains:(S.blueprint||[]).slice(),legacyRecordsMigratedBy:'assessment-quality-suite.js',strictAnswerBalance:{applied:0,required:93,policy:'correct option must be shorter than at least one distractor; key indexes unchanged'}};
+window.MM_STABLE_REVIEW_BRIDGE={version:'2026.08.30.2',stableIdsPrimary:true,fullBlueprintRequired:true,requiredTechnicalDomains:(S.blueprint||[]).slice(),legacyRecordsMigratedBy:'assessment-quality-suite.js',strictAnswerBalance:{applied:0,required:94,policy:'correct option must be shorter than at least one distractor; key indexes unchanged'}};
 applyBalance(false);
 function finalizeBalance(){applyBalance(true)}
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',finalizeBalance,{once:true});else finalizeBalance();
