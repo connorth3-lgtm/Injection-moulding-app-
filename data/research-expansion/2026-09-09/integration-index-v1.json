@@ -1,9 +1,9 @@
 {
   "schema": 1,
-  "version": "2026.09.09.6",
+  "version": "2026.09.09.7",
   "purpose": "Staged research/evidence expansion. This does not bypass canonical measured-data, assessment, material, rights, or release gates.",
   "counts": {
-    "sourceCandidates": 94,
+    "sourceCandidates": 101,
     "confirmedExistingRepositoryOverlapsMinimum": 20,
     "productionOutcomeCases": 20,
     "publicLabelSources": 15,
@@ -14,8 +14,9 @@
     "completeProvenanceRecords": 120,
     "materialResearchCandidates": 20,
     "manufacturerExactGradeSourceCandidates": 9,
-    "mechanismVerificationEntries": 33,
-    "rankedRemainingDataGaps": 12
+    "mechanismVerificationEntries": 39,
+    "rankedRemainingDataGaps": 12,
+    "pinnedRawProfiles": 1
   },
   "truthBoundaries": {
     "rawThirdPartyPayloadsCommitted": false,
@@ -28,19 +29,21 @@
     "studyPaperAndCompanionDatasetShareOverlapGroup": true,
     "privateOrRequestOnlyDataCountBeforeAuthorization": 0,
     "manufacturerSourceCandidateIsNotValidatedMaterialGradeRecord": true,
-    "measuredStudyEvidenceDoesNotEqualRawDataset": true
+    "measuredStudyEvidenceDoesNotEqualRawDataset": true,
+    "pinnedRawProfileDoesNotEqualCanonicalAdmission": true
   },
   "wave2": {
-    "newResearchSourceIds": ["MM-DATA-076", "MM-DATA-077", "MM-DATA-078", "MM-DATA-079", "MM-DATA-080", "MM-DATA-081", "MM-DATA-082", "MM-DATA-083", "MM-DATA-084", "MM-DATA-085", "MM-DATA-086", "MM-DATA-087", "MM-DATA-088", "MM-DATA-089", "MM-DATA-090", "MM-DATA-091", "MM-DATA-092", "MM-DATA-093", "MM-DATA-094"],
+    "newResearchSourceIds": ["MM-DATA-076", "MM-DATA-077", "MM-DATA-078", "MM-DATA-079", "MM-DATA-080", "MM-DATA-081", "MM-DATA-082", "MM-DATA-083", "MM-DATA-084", "MM-DATA-085", "MM-DATA-086", "MM-DATA-087", "MM-DATA-088", "MM-DATA-089", "MM-DATA-090", "MM-DATA-091", "MM-DATA-092", "MM-DATA-093", "MM-DATA-094", "MM-DATA-095", "MM-DATA-096", "MM-DATA-097", "MM-DATA-098", "MM-DATA-099", "MM-DATA-100", "MM-DATA-101"],
     "exactGradeSourceIds": ["MAT-SRC-001", "MAT-SRC-002", "MAT-SRC-003", "MAT-SRC-004", "MAT-SRC-005", "MAT-SRC-006", "MAT-SRC-007", "MAT-SRC-008", "MAT-SRC-009"],
-    "mechanismStrongReReviewCandidates": ["fibre-breakage-retained-length", "liquid-silicone-rubber", "fluid-assisted-moulding", "moisture-drying-degradation", "recyclate-process-variability", "gate-freeze-and-part-mass", "tool-condition-monitoring"],
-    "mechanismImprovedNeedMoreEvidence": ["runner-gate-multicavity-imbalance", "hot-runner-actual-behaviour", "cross-material-process-transfer", "venting-air-entrapment", "natural-maintenance-lifecycle"],
+    "mechanismStrongReReviewCandidates": ["fibre-breakage-retained-length", "liquid-silicone-rubber", "fluid-assisted-moulding", "moisture-drying-degradation", "recyclate-process-variability", "gate-freeze-and-part-mass", "tool-condition-monitoring", "cooling-circuit-actuals"],
+    "mechanismImprovedNeedMoreEvidence": ["runner-gate-multicavity-imbalance", "hot-runner-actual-behaviour", "cross-material-process-transfer", "venting-air-entrapment", "natural-maintenance-lifecycle", "cooling-channel-fouling-progression"],
     "latestGapQueue": "data-gap-priority-wave3-v1.json"
   },
   "files": [
     "README.md",
     "integration-index-v1.json",
     "data-audit-2026-09-09.json",
+    "openmms-raw-profile-v1.json",
     "research-source-candidates-part1-v1.json",
     "research-source-candidates-part2-v1.json",
     "research-source-candidates-part3-v1.json",
@@ -51,6 +54,7 @@
     "research-source-candidates-wave3-v1.json",
     "research-source-candidates-wave4-v1.json",
     "research-source-candidates-wave5-v1.json",
+    "research-source-candidates-wave6-v1.json",
     "production-outcome-candidates-part1-v1.json",
     "production-outcome-candidates-part2-v1.json",
     "external-label-candidates-v1.json",
@@ -70,6 +74,7 @@
     "mechanism-evidence-verification-wave2b-v1.json",
     "mechanism-evidence-verification-wave2c-v1.json",
     "mechanism-evidence-verification-wave2d-v1.json",
+    "mechanism-evidence-verification-wave2e-v1.json",
     "data-gap-priority-wave2-v1.json",
     "data-gap-priority-wave3-v1.json"
   ]
