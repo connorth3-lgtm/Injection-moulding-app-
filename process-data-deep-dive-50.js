@@ -24,7 +24,7 @@ function noise(r,scale){return(r()-0.5)*2*scale}
 function generate(def,index){const r=rng(70000+index*211),rows=[];for(const [phase,p] of [['baseline',0],['fault',1],['recovery',2]])for(let cycle=1;cycle<=24;cycle++){const row={phase,cycle};for(const [key,v] of Object.entries(def.signals)){const base=+v[0],delta=+v[1],recovery=+v[2],target=p===0?base:p===1?base+delta:recovery,spread=Math.max(Math.abs(delta)*0.045,Math.abs(base)*0.0015,0.001);row[key]=+(target+noise(r,spread)).toFixed(4)}rows.push(row)}return{...def,synthetic:true,rows,phaseCounts:{baseline:24,fault:24,recovery:24},educationBoundary:'Synthetic training data only; relationships are illustrative and are not universal production setpoints, limits, maintenance thresholds or instructions.'}}
 const DATASETS=DEFS.map(generate);
 function mean(rows,key){const a=rows.map(r=>Number(r[key])).filter(Number.isFinite);return a.length?a.reduce((x,y)=>x+y,0)/a.length:0}
-function esc(v){return String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot',"'":'&#39;'}[c]))}
+function esc(v){return String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
 function label(k){return k.replace(/_/g,' ').replace(/([a-z])([A-Z])/g,'$1 $2')}
 function sourceName(id){return E.sources[id]?.name||id}
 function summary(ds){return Object.keys(ds.signals).map(key=>{const b=mean(ds.rows.filter(r=>r.phase==='baseline'),key),f=mean(ds.rows.filter(r=>r.phase==='fault'),key),r=mean(ds.rows.filter(r=>r.phase==='recovery'),key);return{key,b,f,r,d:f-b}})}

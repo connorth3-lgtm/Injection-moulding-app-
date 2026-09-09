@@ -1,8 +1,8 @@
-/* MouldMaster privacy-preserving learning analytics — 2026.09.05.2 */
+/* MouldMaster privacy-preserving learning analytics — 2026.09.10.1 */
 (function(){
 'use strict';
 
-const VERSION='2026.09.05.2';
+const VERSION='2026.09.10.1';
 const STORAGE_PREFIX='mm_learning_analytics_v1::';
 const MAX_EVENTS=1500;
 const IDLE_MS=5*60*1000;
@@ -136,17 +136,16 @@ function abandonPractice(module,id){
   const timer=attemptTimers[module];if(timer&&timer.id===id){record('practice_abandon',{module,id,durationSec:Math.round((Date.now()-timer.startedAt)/1000)});attemptTimers[module]=null}
 }
 
+let runtimeCoreHooksInstalled=false;
 function installCoreHooks(){
-  try{
-    if(typeof renderLesson==='function'&&!renderLesson.__mmAnalytics){
-      const base=renderLesson;const wrapped=function(){const r=base.apply(this,arguments);try{if(typeof currentView==='undefined'||currentView==='lesson')startLessonSession()}catch(_){}return r};wrapped.__mmAnalytics=true;renderLesson=wrapped;window.renderLesson=wrapped;
-    }
-  }catch(_){}
-  try{
-    if(typeof switchView==='function'&&!switchView.__mmAnalytics){
-      const base=switchView;const wrapped=function(id){if(id!=='lesson')closeLessonSession('view-change');const r=base.apply(this,arguments);if(id==='lesson')startLessonSession();return r};wrapped.__mmAnalytics=true;switchView=wrapped;window.switchView=wrapped;
-    }
-  }catch(_){}
+  const runtime=window.MM_RUNTIME_V2;
+  if(runtime&&!runtimeCoreHooksInstalled){
+    runtime.after('renderLesson',()=>{try{if(typeof currentView==='undefined'||currentView==='lesson')startLessonSession()}catch(_){}});
+    runtime.before('switchView',id=>{if(id!=='lesson')closeLessonSession('view-change')});
+    runtime.after('switchView',(_out,id)=>{if(id==='lesson')startLessonSession()});
+    runtime.rebind('renderLesson');runtime.rebind('switchView');
+    runtimeCoreHooksInstalled=true;
+  }
   try{
     if(typeof goLesson==='function'&&!goLesson.__mmAnalytics){
       const base=goLesson;const wrapped=function(id){closeLessonSession('lesson-change');const r=base.apply(this,arguments);startLessonSession();return r};wrapped.__mmAnalytics=true;goLesson=wrapped;window.goLesson=wrapped;
