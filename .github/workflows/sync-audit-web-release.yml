@@ -5,6 +5,7 @@ on:
     branches: [audit-consolidation-2026-09-10]
     paths:
       - 'version.json'
+      - '.audit-release-sync'
 
 permissions:
   contents: write
@@ -23,27 +24,35 @@ jobs:
       - uses: actions/setup-python@v7
         with:
           python-version: '3.12'
-      - name: Synchronise cache and browser release identity
+      - name: Synchronise cache, browser release and release QA identity
         run: |
           python - <<'PY'
           from pathlib import Path
-          import re
+          import json,re
           p=Path('service-worker.js')
           s=p.read_text(encoding='utf-8')
           s,n=re.subn(r"^const CACHE_REVISION='[^']+';$","const CACHE_REVISION='audit-consolidation-r1-20260910';",s,count=1,flags=re.M)
           if n != 1:
               raise SystemExit('CACHE_REVISION sync failed')
           p.write_text(s,encoding='utf-8')
+          web=json.loads(Path('version.json').read_text(encoding='utf-8'))['web_release']
+          q=Path('qa_release.py')
+          text=q.read_text(encoding='utf-8')
+          text,n=re.subn(r'^WEB_RELEASE = "[^"]+"$',f'WEB_RELEASE = "{web}"',text,count=1,flags=re.M)
+          if n != 1:
+              raise SystemExit('qa_release WEB_RELEASE sync failed')
+          q.write_text(text,encoding='utf-8')
           PY
           python tools/sync_web_release.py
           python qa_web_release_identity.py
+          python qa_release.py
       - name: Commit deterministic release identity
         run: |
-          if git diff --quiet -- index.html service-worker.js pwa-shell.js; then
+          if git diff --quiet -- index.html service-worker.js pwa-shell.js qa_release.py; then
             exit 0
           fi
           git config user.name github-actions[bot]
           git config user.email 41898282+github-actions[bot]@users.noreply.github.com
-          git add index.html service-worker.js pwa-shell.js
+          git add index.html service-worker.js pwa-shell.js qa_release.py
           git commit -m 'release: sync web identity for audit consolidation'
           git push origin HEAD:audit-consolidation-2026-09-10
