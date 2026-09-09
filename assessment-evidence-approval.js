@@ -1,8 +1,10 @@
-/* MouldMaster answer-evidence approval layer — 2026-08-30.3 */
+/* MouldMaster answer-evidence approval layer — 2026-09-10.1 */
 (function(){
 'use strict';
-const VERSION='2026.08.30.3',REVIEWED='2026-08-30',REVIEW_BY='2026-11-30';
+const VERSION='2026.09.10.1',REVIEWED='2026-08-30',REVIEW_BY='2026-11-30';
 const SCOPE='Internal educational content approval; external accreditation or independent third-party SME endorsement is not implied.';
+const R=window.MM_RUNTIME_V2;
+if(!R||typeof R.after!=='function')throw new Error('assessment-evidence-approval.js requires runtime-v2.js');
 const APPROVED_INPUTS={
  'MouldMaster_Core_App.html':'c6b258ccd37d98b2f591f538b34eb33c7705dda6',
  'training-upgrade.js':'ba3ed5cdab181e11359c2aff9f2dfa4d94b80cbb',
@@ -42,7 +44,7 @@ function buildApproval(){
  function enhanceExam(){const exam=currentExam(),rows=[...document.querySelectorAll('#answerReview .answer-row')];if(!exam?.questions?.length)return;rows.forEach((row,i)=>{if(row.querySelector('.mm-evidence-approval'))return;const q=exam.questions[i],id=q?.stableId||q?.mmId;if(id&&byId[id])row.insertAdjacentHTML('beforeend',approvalHtml(byId[id]))})}
  function enhanceLab(){const host=document.getElementById('diagnosticLabs');if(!host||host.querySelector('.mm-lab-approval'))return;const lab=(window.MM_DIAGNOSTIC_LABS?.labs||[]).find(l=>(host.textContent||'').includes(l.title));if(!lab)return;const rs=records.filter(r=>r.labId===lab.id),src=[];for(const r of rs)for(const s of r.sources)if(!src.some(x=>x.url===s.url))src.push(s);const p=document.createElement('div');p.className='mm-evidence-approval mm-lab-approval';p.innerHTML=`<b>Evidence-approved learning lab · ${rs.length}/${rs.length} keyed questions</b><br><small>Approval is tied to the reviewed lab source file and supporting sources.</small>${src.slice(0,4).map(s=>`<a href="${esc(s.url)}" target="_blank" rel="noopener">${esc(s.name)} ↗</a>`).join('')}`;host.appendChild(p)}
  function showUpdateWarning(){if(coverageOk||document.querySelector('.mm-evidence-update'))return;style();const host=document.querySelector('.main')||document.querySelector('main')||document.body;if(!host)return;const p=document.createElement('div');p.className='mm-evidence-update';p.innerHTML='<b>Evidence metadata could not finish loading.</b><br>Learning content remains available, but evidence labels are hidden because the initialized question bank is incomplete.<br><button type="button">Reload app</button>';p.querySelector('button')?.addEventListener('click',()=>location.reload());host.prepend(p)}
- if(coverageOk){style();const baseGrade=window.gradeExam;if(typeof baseGrade==='function')window.gradeExam=function(){const x=baseGrade.apply(this,arguments);setTimeout(enhanceExam,25);return x};let queued=false;const schedule=()=>{if(queued)return;queued=true;(window.requestAnimationFrame||setTimeout)(()=>{queued=false;enhanceExam();enhanceLab()},0)};if(document.documentElement)new MutationObserver(schedule).observe(document.documentElement,{childList:true,subtree:true});schedule()}else showUpdateWarning();
+ if(coverageOk){style();R.after('gradeExam',()=>setTimeout(enhanceExam,25));R.registerModule('assessment-evidence-review',{version:VERSION,type:'runtime-v2-post-grade-hook'});let queued=false;const schedule=()=>{if(queued)return;queued=true;(window.requestAnimationFrame||setTimeout)(()=>{queued=false;enhanceExam();enhanceLab()},0)};if(document.documentElement)new MutationObserver(schedule).observe(document.documentElement,{childList:true,subtree:true});schedule()}else showUpdateWarning();
  D.assessmentQA=D.assessmentQA||{};D.assessmentQA.evidenceApproval={version:VERSION,reviewed:REVIEWED,reviewBy:REVIEW_BY,totalQuestions:summary.total,approvedQuestions:summary.approved,directQuestionSources:summary.direct,mappedAuthoritativeSources:summary.mapped,coverageOk,status:coverageOk?'approved':'update-required',approvalScope:SCOPE};
  window.MM_EVIDENCE_APPROVAL={version:VERSION,reviewed:REVIEWED,reviewBy:REVIEW_BY,approvalScope:SCOPE,approvedInputs:{...APPROVED_INPUTS},records,summary,blockedIds,coverageOk,coverageError,record:id=>byId[id]||null,forScenarioTitle:title=>records.find(r=>r.kind==='scenario'&&r.title===title)||null,forLab:id=>records.filter(r=>r.labId===id),forMaterialLab:id=>records.filter(r=>r.materialLabId===id)};
 }
