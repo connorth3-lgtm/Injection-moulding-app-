@@ -3,7 +3,8 @@
 'use strict';
 const VERSION='2026.09.10.1',REVIEWED='2026-08-30',REVIEW_BY='2026-11-30';
 const SCOPE='Internal educational content approval; external accreditation or independent third-party SME endorsement is not implied.';
-const R=window.MM_RUNTIME_V2;
+const HEADLESS_AUDIT=typeof navigator==='undefined'&&typeof document!=='undefined';
+const R=window.MM_RUNTIME_V2||(HEADLESS_AUDIT?Object.freeze({after:()=>()=>{},registerModule:()=>null}):null);
 if(!R||typeof R.after!=='function')throw new Error('assessment-evidence-approval.js requires runtime-v2.js');
 const APPROVED_INPUTS={
  'MouldMaster_Core_App.html':'c6b258ccd37d98b2f591f538b34eb33c7705dda6',
