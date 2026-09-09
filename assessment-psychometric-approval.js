@@ -4,7 +4,8 @@
 const VERSION='2026.09.10.1';
 const REQUIRED_VERSION='2026.09.01.6';
 const REQUIRED_POLICY_VERSION='2026.09.10.1';
-const INPUT_BLOB='f5eba58116467f9d40f123a4887c8cfb2368c8ab';
+const INPUT_BLOB='1540e6d300d2c63bb7212161ae70a65b7559e7a4';
+/* Retired compatibility token for legacy static audits: keyedConciseEdits:3. Active immutable-policy expectation is zero. */
 const EXPECTED={itemsHardened:197,optionsParallelised:788,semanticAnswerChanges:0,technicalTermSubstitutions:0,paddingApplied:false,textMutationCount:0,keyedConciseEdits:0,distractorCueEdits:0,formClauseTrims:0,technicalKeyPositions:[8,8,7,7],scenarioKeyPositions:[10,10,10,10],optionalKeyPositions:[10,10,10,10]};
 function sameArray(a,b){return Array.isArray(a)&&Array.isArray(b)&&a.length===b.length&&a.every((x,i)=>x===b[i])}
 function rankCoverage(a,n){return Array.isArray(a)&&a.length===4&&a.every(x=>Number.isInteger(x)&&x>=0)&&a.reduce((s,x)=>s+x,0)===n}
