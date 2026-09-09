@@ -224,8 +224,8 @@ window.mmSpecialistGapLesson=function(id){const result=originalGapLesson?.(id);q
 loadProductionHealth();
 loadConnectedDataRuntime();
 window.MM_APP_SHELL.finalize();
-adoptShellRuntime();
 loadMeasuredLearningRuntime();
+adoptShellRuntime();
 installHomeScreenSimplification();
 installRetiredChromeGuard();
 loadSimpleLessonRuntime();
