@@ -6,6 +6,7 @@ on:
       - audit-hardening-2026-09-10
     paths:
       - tools/apply_audit_hardening.py
+      - tools/apply_runtime_analytics_hardening.py
       - .github/workflows/audit-hardening-autofix.yml
 
 permissions:
@@ -26,8 +27,11 @@ jobs:
         with:
           python-version: '3.12'
 
-      - name: Apply deterministic hardening migration
+      - name: Apply assessment and data hardening
         run: python tools/apply_audit_hardening.py
+
+      - name: Apply runtime ownership and escape hardening
+        run: python tools/apply_runtime_analytics_hardening.py
 
       - name: Verify generated packs and diff hygiene
         run: |
@@ -43,6 +47,6 @@ jobs:
           fi
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add evidence-maturity-deep-dive.js evidence-maturity-formal-bridge.js data-integration-runtime.js data/assessment-inventory-v1.json src/domains/runtime-packs/evidence-runtime-pack.js
-          git commit -m "fix(assessment): make optional answer semantics immutable"
+          git add -A
+          git commit -m "fix(runtime): enforce canonical hooks and source hygiene"
           git push origin HEAD:audit-hardening-2026-09-10
