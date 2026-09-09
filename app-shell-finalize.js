@@ -1,4 +1,4 @@
-/* MouldMaster app-shell finalizer — 2026.09.06.10 */
+/* MouldMaster app-shell finalizer — 2026.09.10.1 */
 (function(){
 'use strict';
 if(!window.MM_APP_SHELL)throw new Error('app-shell-finalize.js requires app-shell-registry.js');
@@ -7,37 +7,41 @@ if(!window.MM_CURRICULUM_INTEGRATION)throw new Error('app-shell-finalize.js requ
 if(!window.MM_SPECIALIST_CURRICULUM)throw new Error('app-shell-finalize.js requires specialist-curriculum.js');
 if(!window.MM_SPECIALIST_EVIDENCE_GAPS)throw new Error('app-shell-finalize.js requires specialist-evidence-gap-extension.js');
 if(!window.MM_MOULD_MASTER_WORKSPACE)throw new Error('app-shell-finalize.js requires mould-master-workspace.js');
+if(!window.MM_RUNTIME_V2)throw new Error('app-shell-finalize.js requires runtime-v2.js');
 
-const EVIDENCE_STATUS=Object.freeze({
-  'residual-stress-birefringence':'Promoted',
-  'weld-line-mechanical-strength':'Promoted',
-  'runner-gate-multicavity-imbalance':'Promoted',
-  'hot-runner-actual-behaviour':'Promoted',
-  'liquid-silicone-rubber':'Promoted',
-  'fluid-assisted-moulding':'Promoted',
-  'surface-replication-release':'Promoted',
-  'injection-compression-precision-optics':'Promoted'
-});
+const VERSION='2026.09.10.1';
+const R=window.MM_RUNTIME_V2;
 const GAP=window.MM_SPECIALIST_EVIDENCE_GAPS;
 const BASE=window.MM_SPECIALIST_CURRICULUM;
+const EVIDENCE_EXPORT={version:VERSION,statuses:{},summary:{promoted:0,provisional:0,gaps:0},source:'MM_GOVERNED_RESEARCH when loaded; authored specialist status otherwise',scope:'Resolved mechanism-level evidence state only; no assessment, certificate, process-setting or production authority.'};
 function esc(v){return String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function governedState(area){
+  const row=window.MM_GOVERNED_RESEARCH?.forId?.(area);
+  if(!row)return null;
+  if(String(row.evidenceState||'').toLowerCase()==='promoted')return 'Promoted';
+  if(String(row.evidenceState||'').toLowerCase()==='gap')return 'Gap';
+  return 'Provisional';
+}
 function syncEvidenceExports(){
+  const statuses={};
   for(const lesson of GAP.lessons){
-    const state=EVIDENCE_STATUS[lesson.evidenceArea]||'Provisional';
+    const state=governedState(lesson.evidenceArea)||lesson.evidenceStatus||'Provisional';
     lesson.evidenceStatus=state;
+    statuses[lesson.evidenceArea]=state;
     const base=BASE.lessons.find(x=>x.id===lesson.id);if(base)base.evidenceStatus=state;
   }
   const promoted=GAP.lessons.filter(x=>x.evidenceStatus==='Promoted').length;
   const provisional=GAP.lessons.filter(x=>x.evidenceStatus==='Provisional').length;
   const gaps=GAP.lessons.length-promoted-provisional;
   GAP.evidenceSummary={promoted,provisional,gaps};
+  EVIDENCE_EXPORT.statuses=statuses;EVIDENCE_EXPORT.summary={...GAP.evidenceSummary};
   const status=provisional?(promoted?'Mixed':'Provisional'):(promoted?'Promoted':'Gap');
   BASE.evidenceGapExtension={...(BASE.evidenceGapExtension||{}),status,evidenceSummary:{...GAP.evidenceSummary}};
 }
 function evidenceMessage(lesson){
-  if(lesson.evidenceStatus==='Promoted')return `<strong>Evidence status: Promoted</strong><br>Registry area: ${esc(lesson.evidenceArea)}. This mechanism has met the repository promotion rule with independent publisher-verified primary measured studies. Promotion is mechanism-level only; study-specific settings remain bounded to their material, mould, machine and test context.`;
+  if(lesson.evidenceStatus==='Promoted')return `<strong>Evidence status: Promoted</strong><br>Registry area: ${esc(lesson.evidenceArea)}. This mechanism has met the governed repository promotion rule with independent publisher-verified primary measured studies. Promotion is mechanism-level only; study-specific settings remain bounded to their material, mould, machine and test context.`;
   if(lesson.evidenceStatus==='Gap')return `<strong>Evidence status: Gap</strong><br>Registry area: ${esc(lesson.evidenceArea)}. Suitable primary measured confirmation is not yet retained. Treat this as a hypothesis/evidence exercise, not validated production guidance.`;
-  return `<strong>Evidence status: Provisional</strong><br>Registry area: ${esc(lesson.evidenceArea)}. This mechanism remains bounded formative learning and is not promoted evidence until independent publisher-verified primary measured studies satisfy the repository promotion rule.`;
+  return `<strong>Evidence status: Provisional</strong><br>Registry area: ${esc(lesson.evidenceArea)}. This mechanism remains bounded formative learning and is not promoted evidence until the governed mechanism registry satisfies the repository promotion rule.`;
 }
 function patchEvidenceUi(){
   for(const lesson of GAP.lessons){
@@ -190,26 +194,37 @@ function installRetiredChromeGuard(){
   if(window.__MM_RETIRED_CHROME_GUARD__)return;
   stabilizeRetiredChrome();
   window.addEventListener('resize',stabilizeRetiredChrome,{passive:true});
-  window.__MM_RETIRED_CHROME_GUARD__={version:'2026.09.06.10'};
+  window.__MM_RETIRED_CHROME_GUARD__={version:VERSION};
 }
 function installHomeScreenSimplification(){
-  if(window.__MM_HOME_SIMPLIFICATION__||typeof window.renderDashboard!=='function')return;
-  const base=window.renderDashboard;
-  window.renderDashboard=function(){const result=base.apply(this,arguments);simplifyHomeScreen();stabilizeRetiredChrome();return result};
-  window.__MM_HOME_SIMPLIFICATION__='2026.09.06.10';
+  if(window.__MM_HOME_SIMPLIFICATION__)return;
+  R.after('renderDashboard',()=>{simplifyHomeScreen();stabilizeRetiredChrome()});
+  R.registerModule('home-screen-simplification',{version:VERSION,type:'runtime-v2-dashboard-hook'});
+  window.__MM_HOME_SIMPLIFICATION__=VERSION;
   simplifyHomeScreen();
 }
+function adoptShellRuntime(){
+  for(const name of ['renderDashboard','renderLesson','switchView']){
+    const impl=window[name];
+    if(typeof impl!=='function')throw new Error(`app shell did not provide ${name}`);
+    R.setImplementation(name,impl,'app-shell-registry');
+    R.rebind(name);
+  }
+  R.registerModule('app-shell-runtime-adoption',{version:VERSION,type:'runtime-v2-core-owner',owned:['renderDashboard','renderLesson','switchView']});
+}
+function resyncGovernedEvidence(){syncEvidenceExports();patchEvidenceUi()}
 
 syncEvidenceExports();
+window.MM_SPECIALIST_EVIDENCE_STATUS=EVIDENCE_EXPORT;
 const originalSpecialistOpen=window.mmSpecialistOpen;
 const originalGapLesson=window.mmSpecialistGapLesson;
 window.mmSpecialistOpen=function(){const result=originalSpecialistOpen?.();queueMicrotask(patchEvidenceUi);return result};
 window.mmSpecialistGapLesson=function(id){const result=originalGapLesson?.(id);queueMicrotask(patchEvidenceUi);return result};
-window.MM_SPECIALIST_EVIDENCE_STATUS={version:'2026.08.29.1',statuses:{...EVIDENCE_STATUS},summary:{...GAP.evidenceSummary},scope:'Resolved display state from the historical mechanism registry plus the formal promotion overlay; no assessment, certificate, process-setting or production authority.'};
 
 loadProductionHealth();
 loadConnectedDataRuntime();
 window.MM_APP_SHELL.finalize();
+adoptShellRuntime();
 loadMeasuredLearningRuntime();
 installHomeScreenSimplification();
 installRetiredChromeGuard();
@@ -218,7 +233,7 @@ window.MM_APP_SHELL.navigation?.sync?.();
 const geometryStyle=document.getElementById('mm-app-shell-registry-style');
 if(geometryStyle&&geometryStyle.parentNode===document.head)document.head.appendChild(geometryStyle);
 window.addEventListener('popstate',()=>window.MM_APP_SHELL.navigation?.sync?.());
+window.addEventListener('mm:domains-ready',resyncGovernedEvidence);
 requestAnimationFrame(()=>{window.MM_APP_SHELL.geometry?.sync?.();patchEvidenceUi();simplifyHomeScreen();stabilizeRetiredChrome();window.MM_APP_SHELL.navigation?.sync?.()});
-// Preserve the canonical shell compatibility marker. Evidence-status bridging and connected-data runtime have their own versions above.
 window.MM_APP_SHELL_FINALIZED='2026.08.26.4';
 })();
