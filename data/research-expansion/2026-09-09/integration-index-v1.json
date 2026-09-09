@@ -1,9 +1,9 @@
 {
   "schema": 1,
-  "version": "2026.09.09.7",
+  "version": "2026.09.09.8",
   "purpose": "Staged research/evidence expansion. This does not bypass canonical measured-data, assessment, material, rights, or release gates.",
   "counts": {
-    "sourceCandidates": 101,
+    "sourceCandidates": 103,
     "confirmedExistingRepositoryOverlapsMinimum": 20,
     "productionOutcomeCases": 20,
     "publicLabelSources": 15,
@@ -14,7 +14,7 @@
     "completeProvenanceRecords": 120,
     "materialResearchCandidates": 20,
     "manufacturerExactGradeSourceCandidates": 9,
-    "mechanismVerificationEntries": 39,
+    "mechanismVerificationEntries": 40,
     "rankedRemainingDataGaps": 12,
     "pinnedRawProfiles": 1
   },
@@ -33,9 +33,9 @@
     "pinnedRawProfileDoesNotEqualCanonicalAdmission": true
   },
   "wave2": {
-    "newResearchSourceIds": ["MM-DATA-076", "MM-DATA-077", "MM-DATA-078", "MM-DATA-079", "MM-DATA-080", "MM-DATA-081", "MM-DATA-082", "MM-DATA-083", "MM-DATA-084", "MM-DATA-085", "MM-DATA-086", "MM-DATA-087", "MM-DATA-088", "MM-DATA-089", "MM-DATA-090", "MM-DATA-091", "MM-DATA-092", "MM-DATA-093", "MM-DATA-094", "MM-DATA-095", "MM-DATA-096", "MM-DATA-097", "MM-DATA-098", "MM-DATA-099", "MM-DATA-100", "MM-DATA-101"],
+    "newResearchSourceIds": ["MM-DATA-076", "MM-DATA-077", "MM-DATA-078", "MM-DATA-079", "MM-DATA-080", "MM-DATA-081", "MM-DATA-082", "MM-DATA-083", "MM-DATA-084", "MM-DATA-085", "MM-DATA-086", "MM-DATA-087", "MM-DATA-088", "MM-DATA-089", "MM-DATA-090", "MM-DATA-091", "MM-DATA-092", "MM-DATA-093", "MM-DATA-094", "MM-DATA-095", "MM-DATA-096", "MM-DATA-097", "MM-DATA-098", "MM-DATA-099", "MM-DATA-100", "MM-DATA-101", "MM-DATA-102", "MM-DATA-103"],
     "exactGradeSourceIds": ["MAT-SRC-001", "MAT-SRC-002", "MAT-SRC-003", "MAT-SRC-004", "MAT-SRC-005", "MAT-SRC-006", "MAT-SRC-007", "MAT-SRC-008", "MAT-SRC-009"],
-    "mechanismStrongReReviewCandidates": ["fibre-breakage-retained-length", "liquid-silicone-rubber", "fluid-assisted-moulding", "moisture-drying-degradation", "recyclate-process-variability", "gate-freeze-and-part-mass", "tool-condition-monitoring", "cooling-circuit-actuals"],
+    "mechanismStrongReReviewCandidates": ["fibre-breakage-retained-length", "liquid-silicone-rubber", "fluid-assisted-moulding", "moisture-drying-degradation", "recyclate-process-variability", "gate-freeze-and-part-mass", "tool-condition-monitoring", "cooling-circuit-actuals", "part-level-process-to-defect-traceability"],
     "mechanismImprovedNeedMoreEvidence": ["runner-gate-multicavity-imbalance", "hot-runner-actual-behaviour", "cross-material-process-transfer", "venting-air-entrapment", "natural-maintenance-lifecycle", "cooling-channel-fouling-progression"],
     "latestGapQueue": "data-gap-priority-wave3-v1.json"
   },
@@ -55,6 +55,7 @@
     "research-source-candidates-wave4-v1.json",
     "research-source-candidates-wave5-v1.json",
     "research-source-candidates-wave6-v1.json",
+    "research-source-candidates-wave7-v1.json",
     "production-outcome-candidates-part1-v1.json",
     "production-outcome-candidates-part2-v1.json",
     "external-label-candidates-v1.json",
@@ -75,6 +76,7 @@
     "mechanism-evidence-verification-wave2c-v1.json",
     "mechanism-evidence-verification-wave2d-v1.json",
     "mechanism-evidence-verification-wave2e-v1.json",
+    "mechanism-evidence-verification-wave2f-v1.json",
     "data-gap-priority-wave2-v1.json",
     "data-gap-priority-wave3-v1.json"
   ]
