@@ -15,7 +15,7 @@ let preparedSession=null;
 let activeWorkspaceCaseId='';
 let installQueued=false;
 
-function esc(v){return String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot',"'":'&#39;'}[c]))}
+function esc(v){return String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
 function safeToken(v,max=96){return String(v??'').replace(/[^a-zA-Z0-9:_\-. /]/g,'').slice(0,max)}
 function uid(prefix='id'){try{return `${prefix}-${crypto.randomUUID()}`}catch(_){return `${prefix}-${Date.now().toString(36)}-${Math.random().toString(36).slice(2,9)}`}}
 function num(v){const n=Number(v);return Number.isFinite(n)?n:null}

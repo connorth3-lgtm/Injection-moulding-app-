@@ -1,7 +1,7 @@
-/* MouldMaster evidence maturity deep dive — 2026.08.26.2 */
+/* MouldMaster evidence maturity deep dive — 2026.09.10.1 */
 (function(){
 'use strict';
-const VERSION='2026.08.26.2';
+const VERSION='2026.09.10.1';
 const REVIEWED='2026-08-26';
 const REVIEW_BY='2026-11-26';
 const E=window.MM_EVIDENCE_SOURCES;
@@ -125,9 +125,20 @@ const MATERIAL_PRACTICE=[
   ['Controlled response','If a different substrate grade restores bond while process conditions are unchanged, what is the correct conclusion?','Material identity/compatibility is a causal factor that belongs in the validated specification','All TPEs bond to all substrates','The process was never relevant','Peel testing is unnecessary'],
   ['Explain','Why is this useful?','Overmould quality is an interface system problem: chemistry, surface and process history all matter','Softness predicts adhesion','Higher injection pressure guarantees bonding','A cosmetic pass proves structural bond'] ]}
 ];
-function normalisePractice(){return MATERIAL_PRACTICE.map(l=>({...l,steps:l.steps.map(s=>({stage:s[0],question:s[1],choices:s.slice(2).map((text,i)=>({text,correct:i===0,feedback:i===0?'Correct. This choice tests the mechanism with the strongest evidence.':'Not the strongest evidence-first response for this scenario.'}))}))}))}
+function normalisePractice(){
+ return MATERIAL_PRACTICE.map((l,labIndex)=>{
+   const steps=l.steps.map((s,stepIndex)=>{
+     const targetPosition=(labIndex*4+stepIndex)%4;
+     const correctChoice={text:s[2],correct:true,feedback:'Correct. This choice tests the mechanism with the strongest evidence.'};
+     const wrongChoices=s.slice(3).map(text=>({text,correct:false,feedback:'Not the strongest evidence-first response for this scenario.'}));
+     const choices=wrongChoices.slice();choices.splice(targetPosition,0,correctChoice);
+     return {id:`optional:${l.id}:${stepIndex}`,revision:1,stage:s[0],question:s[1],answerIndex:targetPosition,choices};
+   });
+   return {...l,steps};
+ });
+}
 const PRACTICE_LABS=normalisePractice();
-window.MM_MATERIAL_PRACTICE_EXTENSIONS={version:VERSION,reviewed:REVIEWED,reviewBy:REVIEW_BY,labs:PRACTICE_LABS,scope:'Extended scenario-specific practice; not part of the formal 157 keyed approval bank and not a universal production recipe.'};
+window.MM_MATERIAL_PRACTICE_EXTENSIONS={version:VERSION,reviewed:REVIEWED,reviewBy:REVIEW_BY,labs:PRACTICE_LABS,scope:'Extended scenario-specific practice with source-authored answer semantics, stable step IDs and deterministic balanced key positions; not part of the formal 157 keyed approval bank and not a universal production recipe.'};
 
 /* Deterministic synthetic process data: values are illustrative and deliberately not production setpoints. */
 function rng(seed){let x=(seed>>>0)||1;return()=>{x=(Math.imul(x,1664525)+1013904223)>>>0;return x/4294967296}}

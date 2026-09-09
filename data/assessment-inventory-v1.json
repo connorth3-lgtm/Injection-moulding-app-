@@ -1,0 +1,49 @@
+{
+  "schemaVersion": 1,
+  "version": "2026.09.10.1",
+  "title": "MouldMaster assessment inventory and answer-governance contract",
+  "counts": {
+    "formalEvidenceApproved": 157,
+    "formalBreakdown": {
+      "technicalExam": 30,
+      "regionalExam": 27,
+      "scenario": 40,
+      "diagnosticLab": 36,
+      "materialLab": 24
+    },
+    "measuredEvidenceDecisions": 12,
+    "decisionManifestTotal": 169,
+    "optionalMaterialPractice": 40,
+    "learnerVisiblePsychometricInventory": 197,
+    "allGovernedDecisionSurfaces": 209
+  },
+  "scopeEquations": [
+    "157 = 30 technical + 27 regional + 40 scenarios + 36 diagnostic labs + 24 material labs",
+    "169 = 157 formal evidence-approved + 12 measured-evidence decisions",
+    "197 = 157 formal evidence-approved + 40 optional material-practice decisions",
+    "209 = 157 formal evidence-approved + 12 measured-evidence + 40 optional material-practice decisions"
+  ],
+  "governance": {
+    "answerSemantics": "source-authored; runtime semantic answer mutation is forbidden",
+    "optionalMaterialPractice": "stable item id, explicit revision, explicit answerIndex and exactly one correct:true choice required",
+    "choiceOrder": "may be deterministically balanced by the source authoring layer without rewriting answer text",
+    "formalApprovalBoundary": "the 40 optional material-practice decisions are learner-visible but remain outside the formal 157 keyed approval bank",
+    "measuredEvidenceBoundary": "the 12 measured-evidence decisions are governed separately and are excluded from the 197 psychometric inventory",
+    "competencyMetadataTarget": "explicit authored item metadata is authoritative; text-regex inference is a legacy fallback/lint only until migration is complete"
+  },
+  "sources": {
+    "decisionManifest": "data/assessment-decision-manifest-v1.json",
+    "formalApprovalRuntime": "assessment-evidence-approval.js",
+    "technicalRegionalRuntime": "assessment-runtime-v2.js",
+    "optionalMaterialPracticeSource": "evidence-maturity-deep-dive.js",
+    "optionalMaterialPracticeValidator": "evidence-maturity-formal-bridge.js",
+    "psychometricQa": "qa_question_quality_50_pass_runtime.py"
+  },
+  "migration": {
+    "optionalMaterialPracticeStableIds": "complete",
+    "optionalMaterialPracticeRuntimeSemanticMutationRemoval": "complete",
+    "allFormalItemsStableSourceAuthoredIds": "in-progress",
+    "allFormalItemsExplicitCompetencyConceptTags": "in-progress"
+  },
+  "boundary": "Inventory counts describe governed application decision surfaces. They do not imply external accreditation, regulatory approval, certification authority, or universal production-process validity."
+}
