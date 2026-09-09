@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "version": "2026.09.09.8",
+  "version": "2026.09.09.9",
   "purpose": "Staged research/evidence expansion. This does not bypass canonical measured-data, assessment, material, rights, or release gates.",
   "counts": {
     "sourceCandidates": 103,
@@ -37,7 +37,7 @@
     "exactGradeSourceIds": ["MAT-SRC-001", "MAT-SRC-002", "MAT-SRC-003", "MAT-SRC-004", "MAT-SRC-005", "MAT-SRC-006", "MAT-SRC-007", "MAT-SRC-008", "MAT-SRC-009"],
     "mechanismStrongReReviewCandidates": ["fibre-breakage-retained-length", "liquid-silicone-rubber", "fluid-assisted-moulding", "moisture-drying-degradation", "recyclate-process-variability", "gate-freeze-and-part-mass", "tool-condition-monitoring", "cooling-circuit-actuals", "part-level-process-to-defect-traceability"],
     "mechanismImprovedNeedMoreEvidence": ["runner-gate-multicavity-imbalance", "hot-runner-actual-behaviour", "cross-material-process-transfer", "venting-air-entrapment", "natural-maintenance-lifecycle", "cooling-channel-fouling-progression"],
-    "latestGapQueue": "data-gap-priority-wave3-v1.json"
+    "latestGapQueue": "data-gap-priority-wave4-v1.json"
   },
   "files": [
     "README.md",
@@ -78,6 +78,7 @@
     "mechanism-evidence-verification-wave2e-v1.json",
     "mechanism-evidence-verification-wave2f-v1.json",
     "data-gap-priority-wave2-v1.json",
-    "data-gap-priority-wave3-v1.json"
+    "data-gap-priority-wave3-v1.json",
+    "data-gap-priority-wave4-v1.json"
   ]
 }
