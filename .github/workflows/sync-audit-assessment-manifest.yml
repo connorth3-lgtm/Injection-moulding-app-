@@ -1,0 +1,36 @@
+name: Sync Audit Assessment Manifest
+
+on:
+  push:
+    branches: [audit-consolidation-2026-09-10]
+    paths:
+      - '.audit-assessment-manifest-sync'
+
+permissions:
+  contents: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: audit-consolidation-2026-09-10
+      - uses: actions/setup-node@v7
+        with:
+          node-version: '22.12.0'
+          package-manager-cache: false
+      - uses: actions/setup-python@v7
+        with:
+          python-version: '3.12'
+      - name: Regenerate canonical assessment decision manifest
+        run: |
+          python tools/generate_assessment_decision_manifest.py
+          python qa_assessment_decision_manifest.py
+      - name: Commit deterministic assessment manifest
+        run: |
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add data/assessment-decision-manifest-v1.json
+          git commit -m 'data: regenerate assessment decision manifest after reviewed authoring fixes'
+          git push origin HEAD:audit-consolidation-2026-09-10
