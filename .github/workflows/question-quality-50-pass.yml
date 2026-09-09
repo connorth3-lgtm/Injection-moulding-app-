@@ -18,8 +18,19 @@ on:
       - 'evidence-maturity-deep-dive.js'
       - 'evidence-maturity-formal-bridge.js'
       - 'assessment-psychometric-hardening.js'
+      - 'assessment-psychometric-approval.js'
       - 'assessment-evidence-integrity-upgrade.js'
       - 'real-measured-data-assessment.js'
+      - 'runtime-v2.js'
+      - 'app-shell-finalize.js'
+      - 'learning-analytics.js'
+      - 'assessment-evidence-approval.js'
+      - 'accessibility-hardening.js'
+      - 'src/domains/process/evidence-granularity.js'
+      - 'desktop/electron/package.json'
+      - 'desktop/electron/scripts/generate-integrity.cjs'
+      - 'desktop/electron/scripts/qa.cjs'
+      - 'qa_audit_consolidation.py'
       - 'qa_assessment_ux.py'
       - 'qa_question_quality_50_pass.py'
       - 'qa_question_quality_50_pass_runtime.py'
@@ -52,9 +63,12 @@ jobs:
       - name: Syntax-check evidence integrity assets
         run: |
           node --check assessment-psychometric-hardening.js
+          node --check assessment-psychometric-approval.js
           node --check assessment-evidence-integrity-upgrade.js
           node --check real-measured-data-assessment.js
-          python -m py_compile qa_assessment_evidence_integrity.py
+          python -m py_compile qa_assessment_evidence_integrity.py qa_audit_consolidation.py
+      - name: Run whole-app audit consolidation guard
+        run: python qa_audit_consolidation.py
       - name: Run assessment UX regression checks
         run: python qa_assessment_ux.py
       - name: Run 50-pass quality audit across formal and optional learner-visible questions
@@ -72,5 +86,6 @@ jobs:
             question-quality-50-pass-report.json
             question-quality-extreme-50-pass-report.json
             assessment-evidence-integrity-report.json
+            audit-consolidation-report.json
           if-no-files-found: warn
           retention-days: 30
