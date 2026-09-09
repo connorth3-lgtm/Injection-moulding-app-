@@ -6,7 +6,8 @@ const crypto=require('crypto');
 const ROOT=path.resolve(__dirname,'..','..','..');
 const OUT=path.resolve(__dirname,'..','generated','integrity.json');
 const RUNTIME_MANIFEST='runtime-domain-manifest.json';
-const STATIC_RUNTIME_DIRS=['src/core-runtime','data/measured-learning'];
+const STATIC_RUNTIME_DIRS=['src/core-runtime'];
+const STATIC_DATA_DIRS=['data/measured-learning'];
 const REQUIRED_MANIFEST_FILES=[
   'src/domains/engineering/engineering-store.js',
   'src/domains/materials/material-registry.js',
@@ -57,8 +58,9 @@ const runtimeManifest=JSON.parse(fs.readFileSync(path.join(ROOT,RUNTIME_MANIFEST
 if(runtimeManifest?.schemaVersion!==1||!Array.isArray(runtimeManifest.assets)||!Array.isArray(runtimeManifest.dataAssets))throw new Error('Invalid runtime-domain-manifest.json');
 const manifestFiles=[...runtimeManifest.assets,...runtimeManifest.dataAssets].map(runtimeAssetPath);
 const staticRuntimeFiles=STATIC_RUNTIME_DIRS.flatMap(filesUnder);
+const staticDataFiles=STATIC_DATA_DIRS.flatMap(filesUnder);
 for(const required of REQUIRED_MANIFEST_FILES){if(!manifestFiles.includes(required))throw new Error(`Canonical runtime manifest asset missing: ${required}`)}
-const FILES=[...new Set([...BASE_FILES,...staticRuntimeFiles,...manifestFiles])];
+const FILES=[...new Set([...BASE_FILES,...staticRuntimeFiles,...staticDataFiles,...manifestFiles])];
 
 const version=JSON.parse(fs.readFileSync(path.join(ROOT,'version.json'),'utf8'));
 const files={};
