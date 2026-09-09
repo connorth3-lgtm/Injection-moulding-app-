@@ -1,0 +1,70 @@
+{
+  "schema": 1,
+  "version": "2026.09.09.1",
+  "purpose": "Concrete data-request targets for the remaining hard gaps. This is an acquisition queue, not an access claim.",
+  "targets": [
+    {
+      "rank": 1,
+      "sourceId": "MM-DATA-159",
+      "askFor": ["cycle ID and chronological order", "machine settings before/after each controller update", "part weight", "filling-level metric", "burr count", "material-viscosity disturbance marker", "controller/action sequence", "target-quality recovery marker"],
+      "minimumUsefulDelivery": "An anonymized cycle table for the disturbance/recovery experiments, with rights for internal validation and derived aggregate publication.",
+      "reason": "Closest available research family to shot -> action -> verified recovery."
+    },
+    {
+      "rank": 2,
+      "sourceId": "MM-DATA-158",
+      "askFor": ["main and transfer cycle tables", "machine/tool identity or anonymized domain ID", "timestamps", "23/9 process features", "binary quality labels", "defect/reject semantics", "material identity at a non-confidential granularity"],
+      "minimumUsefulDelivery": "Rights-cleared anonymized tables preserving domain/machine identity and labels.",
+      "reason": "Would materially improve cross-machine/domain validation with real industrial defect prevalence."
+    },
+    {
+      "rank": 3,
+      "sourceId": "MM-DATA-162",
+      "askFor": ["run/shift ID", "machine and mould failure categories", "preventive/corrective maintenance timestamps", "operator comments", "cycle time", "good/reject counts", "maintenance action", "post-action production status"],
+      "minimumUsefulDelivery": "Controlled-access anonymized event/run table or owner-side aggregate execution against a supplied profiling script.",
+      "reason": "Could convert an aggregate OEE case into real maintenance/action/recovery validation."
+    },
+    {
+      "rank": 4,
+      "sourceId": "MM-DATA-166",
+      "askFor": ["source/target machine IDs", "same-mould identifier", "process parameters", "multisensor features", "part weight", "dimensions", "quality class", "sampling-plan ID", "chronological grouping"],
+      "minimumUsefulDelivery": "Anonymized source/target machine tables retaining group boundaries and physical outcomes.",
+      "reason": "Directly addresses rights-clear multi-machine physical-quality transfer."
+    },
+    {
+      "rank": 5,
+      "sourceId": "MM-DATA-167",
+      "askFor": ["cycle ID", "overmould material pair", "insert/first-component state", "infrared temperature trace", "piezoelectric pressure trace", "machine settings", "interface/bond quality outcome", "failure mode if tested"],
+      "minimumUsefulDelivery": "Raw or downsampled tool-sensor traces with cycle-linked physical quality.",
+      "reason": "Rare direct raw-data route for multimaterial/overmould sensing."
+    },
+    {
+      "rank": 6,
+      "sourceId": "MM-DATA-160",
+      "askFor": ["cycle-level DOE table", "hot/cold runner identifier", "material grade/condition", "valve-gate pressure", "heater-band energy", "servo energy", "thermolator energy", "hot-runner-controller energy", "actual cycle time", "repeat index"],
+      "minimumUsefulDelivery": "Cycle-level experimental table or supplementary source data under explicit reuse terms.",
+      "reason": "Would close much of the remaining hot-runner energy/device-state raw gap."
+    },
+    {
+      "rank": 7,
+      "sourceId": "MM-DATA-170",
+      "askFor": ["material batch ID", "batch date/season", "MFR/viscosity", "composition/contamination metrics", "injection pressure", "torque", "part weight", "dimensions", "mechanical outcomes", "process condition IDs"],
+      "minimumUsefulDelivery": "Batch-keyed material + moulding table retaining the six batch identities.",
+      "reason": "Best current route to real material-batch identity linked to injection outcomes."
+    },
+    {
+      "rank": 8,
+      "sourceId": "MM-DATA-169",
+      "askFor": ["supplementary numerical data", "ABS/PC component identity", "process settings", "shrinkage", "warpage", "tensile strength", "replicate identifiers"],
+      "minimumUsefulDelivery": "Publisher supplement plus any machine-readable numeric table authors can release.",
+      "reason": "Practical 2K/multimaterial process-to-quality data with an existing supplementary route."
+    }
+  ],
+  "requestConditions": [
+    "Do not request personal/operator identifiers; anonymized role/event fields are sufficient.",
+    "Ask for explicit internal-use, derived-analysis and redistribution permissions separately.",
+    "Preserve machine/mould/material family grouping even if commercial identifiers must be pseudonymized.",
+    "Prefer chronological cycle/order identifiers so leakage-safe validation remains possible.",
+    "Never treat article CC licensing as permission to reuse confidential industrial datasets."
+  ]
+}
