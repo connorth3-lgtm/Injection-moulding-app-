@@ -20,7 +20,7 @@ p=subprocess.run(['node','--check',str(ROOT/'learning-analytics.js')],capture_ou
 need(p.returncode==0,'learning-analytics.js syntax error: '+(p.stderr or p.stdout))
 
 for marker in [
-    "const VERSION='2026.09.05.2'",
+    "const VERSION='2026.09.10.1'",
     "const STORAGE_PREFIX='mm_learning_analytics_v1::'",
     'const MAX_EVENTS=1500',
     'const IDLE_MS=5*60*1000',
