@@ -1,15 +1,16 @@
-/* MouldMaster psychometric approval bridge — 2026.09.06.3 */
+/* MouldMaster psychometric approval bridge — 2026.09.09.1 */
 (function(){
 'use strict';
-const VERSION='2026.09.06.3';
+const VERSION='2026.09.09.1';
 const REQUIRED_VERSION='2026.09.01.6';
 const INPUT_BLOB='fdcc6fc4d655e3a90a33acdc38712197ff040ebf';
 const EXPECTED={itemsHardened:197,optionsParallelised:788,semanticAnswerChanges:0,technicalTermSubstitutions:0,paddingApplied:false,keyedConciseEdits:3,technicalKeyPositions:[8,8,7,7],scenarioKeyPositions:[10,10,10,10]};
+const EXPECTED_BANK_ITEMS={'technical-exam':30,'regional-exam':27,'scenario':40,'diagnostic-lab':36,'material-lab':24,'optional-material-practice':40};
 const UNSAFE=/\b(bypass|defeat|disable)\b.{0,60}\b(guard|interlock|safeguard|protection|lockout)\b|\bopen\b.{0,45}\b(hot|pressurised|pressurized)\b/i;
 function sameArray(a,b){return Array.isArray(a)&&Array.isArray(b)&&a.length===b.length&&a.every((x,i)=>x===b[i])}
 function rankCoverage(a,n){return Array.isArray(a)&&a.length===4&&a.every(x=>Number.isInteger(x)&&x>=0)&&a.reduce((s,x)=>s+x,0)===n}
 function cueVerb(seed){return ['Check','Compare','Review','Test'][Math.abs(Number(seed)||0)%4]}
-function competingDiagnostic(text,seed=0){
+function competingDiagnostic(text,seed=0,allowGeneric=true){
  const raw=String(text||'').trim(),t=raw.replace(/[.;]+$/,'');
  if(!t||UNSAFE.test(t))return raw;
  const v=cueVerb(seed),rules=[
@@ -51,25 +52,50 @@ function competingDiagnostic(text,seed=0){
   [/^polish the opposite mould half$/i,`${v} the opposite mould surface first`]
  ];
  for(const [rx,replacement] of rules)if(rx.test(t))return replacement;
- const m=/^(increase|decrease|raise|lower|reduce|change|adjust|shorten|lengthen|boost|maximi[sz]e|minimi[sz]e)\s+(.+)$/i.exec(t);
- if(m){const subject=m[2].replace(/\b(first|immediately|globally|automatically)\b/gi,'').replace(/\s{2,}/g,' ').trim().slice(0,42);return `${v} ${subject} first`}
+ if(allowGeneric){
+  const m=/^(increase|decrease|raise|lower|reduce|change|adjust|shorten|lengthen|boost|maximi[sz]e|minimi[sz]e)\s+(.+)$/i.exec(t);
+  if(m){const subject=m[2].replace(/\b(first|immediately|globally|automatically)\b/gi,'').replace(/\s{2,}/g,' ').trim().slice(0,42);return `${v} ${subject} first`}
+ }
  return raw;
 }
-function neutraliseScenarioDistractors(){
- const D=window.MM_DATA;if(!Array.isArray(D?.scenarios))return 0;let edits=0;
- D.scenarios.forEach((s,scenarioIndex)=>{
-  if(!Array.isArray(s?.choices)||s.choices.length!==4||!Number.isInteger(s.correct)||s.correct<0||s.correct>3)return;
-  s.feedback=Array.isArray(s.feedback)&&s.feedback.length===4?s.feedback.slice():['','','',''];
-  for(let i=0;i<4;i++){
-   if(i===s.correct)continue;
-   const before=String(s.choices[i]||''),after=competingDiagnostic(before,scenarioIndex*4+i);
-   if(after===before)continue;
-   if(s.choices.some((x,j)=>j!==i&&String(x||'').trim().toLowerCase()===after.trim().toLowerCase()))continue;
-   s.choices[i]=after;
-   s.feedback[i]=`Not the strongest first decision. “${after}” is a plausible competing path, but it does not fit the stated evidence as directly as the keyed mechanism.`;
-   edits++;
-  }
-  if(String(s.mmStableId||'')==='scenario:07'){
+function optionSignature(text){return String(text||'').trim().toLowerCase()}
+function neutraliseOptions(options,key,feedback,seedBase,allowGeneric){
+ if(!Array.isArray(options)||options.length!==4||!Number.isInteger(key)||key<0||key>3)return {items:0,edits:0,duplicates:0,feedback:Array.isArray(feedback)?feedback:[]};
+ const fb=Array.isArray(feedback)&&feedback.length===4?feedback.slice():['','','',''];let edits=0,duplicates=0;
+ for(let i=0;i<4;i++){
+  if(i===key)continue;
+  const before=String(options[i]||''),after=competingDiagnostic(before,seedBase+i,allowGeneric);
+  if(after===before)continue;
+  if(options.some((x,j)=>j!==i&&optionSignature(x)===optionSignature(after))){duplicates++;continue}
+  options[i]=after;
+  fb[i]=`Not the strongest first decision. “${after}” is a plausible competing path, but it does not fit the stated evidence as directly as the keyed mechanism.`;
+  edits++;
+ }
+ return {items:1,edits,duplicates,feedback:fb};
+}
+function questionParts(q){return Array.isArray(q)?{options:q[1],key:Number(q[2]),feedback:q[6],setFeedback:v=>{q[6]=v}}:{options:q?.options,key:Number(q?.correct),feedback:q?.optionFeedback,setFeedback:v=>{q.optionFeedback=v}}}
+function snapshotKeys(){
+ const D=window.MM_DATA,DIAG=window.MM_DIAGNOSTIC_LABS,MAT=window.MM_MATERIAL_BEHAVIOUR_LABS,OPT=window.MM_MATERIAL_PRACTICE_EXTENSIONS,out=[];
+ const add=(id,key,options)=>{if(Array.isArray(options)&&options.length===4&&Number.isInteger(key)&&key>=0&&key<4)out.push([id,key,String(options[key]||'')])};
+ for(const level of ['Beginner','Intermediate','Advanced'])for(let i=0;i<(D?.exams?.[level]||[]).length;i++){const p=questionParts(D.exams[level][i]);add(`tech:${level}:${i}`,p.key,p.options)}
+ for(const region of ['UK','US','NZ'])for(const level of ['Beginner','Intermediate','Advanced'])for(let i=0;i<(D?.regionalQuestions?.[region]?.[level]||[]).length;i++){const p=questionParts(D.regionalQuestions[region][level][i]);add(`reg:${region}:${level}:${i}`,p.key,p.options)}
+ for(let i=0;i<(D?.scenarios||[]).length;i++){const s=D.scenarios[i];add(String(s.mmStableId||`scenario:${String(i+1).padStart(2,'0')}`),Number(s.correct),s.choices)}
+ const labs=(obj,prefix)=>{for(const lab of (obj?.labs||[]))for(let i=0;i<(lab.steps||[]).length;i++){const c=lab.steps[i].choices||[],key=c.findIndex(x=>x?.correct===true);add(`${prefix}${lab.id}:${i}`,key,c.map(x=>x?.text))}};
+ labs(DIAG,'lab:');labs(MAT,'material:');labs(OPT,'optional-material:');return out;
+}
+function compareKeySnapshots(before,after){
+ const map=new Map(after.map(x=>[x[0],x])),result={answerKeyChanges:0,keyedChoiceChanges:0,missingItems:0};
+ for(const b of before){const a=map.get(b[0]);if(!a){result.missingItems++;continue}if(a[1]!==b[1])result.answerKeyChanges++;if(a[2]!==b[2])result.keyedChoiceChanges++}return result;
+}
+function neutraliseAllBanks(){
+ const D=window.MM_DATA,DIAG=window.MM_DIAGNOSTIC_LABS,MAT=window.MM_MATERIAL_BEHAVIOUR_LABS,OPT=window.MM_MATERIAL_PRACTICE_EXTENSIONS;
+ const before=snapshotKeys(),editsByBank={},itemsByBank={},duplicatesByBank={};let seed=0;
+ const record=(kind,r)=>{itemsByBank[kind]=(itemsByBank[kind]||0)+r.items;editsByBank[kind]=(editsByBank[kind]||0)+r.edits;duplicatesByBank[kind]=(duplicatesByBank[kind]||0)+r.duplicates;seed+=4};
+ for(const level of ['Beginner','Intermediate','Advanced'])for(const q of (D?.exams?.[level]||[])){const p=questionParts(q),r=neutraliseOptions(p.options,p.key,p.feedback,seed,false);p.setFeedback(r.feedback);record('technical-exam',r)}
+ for(const region of ['UK','US','NZ'])for(const level of ['Beginner','Intermediate','Advanced'])for(const q of (D?.regionalQuestions?.[region]?.[level]||[])){const p=questionParts(q),r=neutraliseOptions(p.options,p.key,p.feedback,seed,false);p.setFeedback(r.feedback);record('regional-exam',r)}
+ for(let scenarioIndex=0;scenarioIndex<(D?.scenarios||[]).length;scenarioIndex++){
+  const s=D.scenarios[scenarioIndex],r=neutraliseOptions(s.choices,Number(s.correct),s.feedback,seed,true);s.feedback=r.feedback;record('scenario',r);
+  if(String(s.mmStableId||'')==='scenario:07'&&Array.isArray(s.choices)&&s.choices.length===4&&Number.isInteger(s.correct)){
    const alternatives=[
     'Review measurement-system method and fixture consistency between shifts before changing the process',
     'Compare shot-delivery, cushion and part-mass response between shifts before reviewing thermal conditions',
@@ -78,29 +104,33 @@ function neutraliseScenarioDistractors(){
    let n=0;
    for(let i=0;i<4;i++){
     if(i===s.correct)continue;
-    const after=alternatives[n++],before=String(s.choices[i]||'');
-    if(before===after)continue;
-    s.choices[i]=after;
-    s.feedback[i]=`Not the strongest first decision. “${after}” is a plausible competing path, but the shift-linked evidence is broader than this single hypothesis.`;
-    edits++;
+    const after=alternatives[n++],beforeChoice=String(s.choices[i]||'');
+    if(beforeChoice===after)continue;
+    if(s.choices.some((x,j)=>j!==i&&optionSignature(x)===optionSignature(after))){duplicatesByBank.scenario=(duplicatesByBank.scenario||0)+1;continue}
+    s.choices[i]=after;s.feedback[i]=`Not the strongest first decision. “${after}” is a plausible competing path, but the shift-linked evidence is broader than this single hypothesis.`;editsByBank.scenario++;
    }
   }
- });
- return edits;
+ }
+ const neutraliseLabs=(obj,kind)=>{for(const lab of (obj?.labs||[]))for(const step of (lab.steps||[])){const choices=step.choices||[],key=choices.findIndex(c=>c?.correct===true),options=choices.map(c=>c?.text),feedback=choices.map(c=>c?.feedback||''),r=neutraliseOptions(options,key,feedback,seed,false);if(r.items){for(let i=0;i<4;i++){choices[i].text=options[i];choices[i].feedback=r.feedback[i]}}record(kind,r)}};
+ neutraliseLabs(DIAG,'diagnostic-lab');neutraliseLabs(MAT,'material-lab');neutraliseLabs(OPT,'optional-material-practice');
+ const after=snapshotKeys(),invariants=compareKeySnapshots(before,after),totalEdits=Object.values(editsByBank).reduce((a,b)=>a+b,0),itemsInspected=Object.values(itemsByBank).reduce((a,b)=>a+b,0),duplicateOptionConflicts=Object.values(duplicatesByBank).reduce((a,b)=>a+b,0);
+ const expectedCoverage=Object.entries(EXPECTED_BANK_ITEMS).every(([k,n])=>itemsByBank[k]===n);
+ return {itemsInspected,itemsByBank,editsByBank,totalDistractorEdits:totalEdits,scenarioDistractorEdits:editsByBank.scenario||0,duplicateOptionConflicts,expectedCoverage,...invariants};
 }
-const CUE_NEUTRALISATION_EDITS=neutraliseScenarioDistractors();
-window.MM_PSYCHOMETRIC_CUE_NEUTRALISATION={version:VERSION,scenarioDistractorEdits:CUE_NEUTRALISATION_EDITS,answerKeyChanges:0,scope:'Wrong scenario choices only; stems, keyed choices, key positions and rationales are unchanged.'};
+let CUE_NEUTRALISATION=null;
 function attach(){
  const P=window.MM_PSYCHOMETRIC_HARDENING,A=window.MM_EVIDENCE_APPROVAL,D=window.MM_DATA;
  if(!P||!A){setTimeout(attach,25);return}
  if(window.MM_PSYCHOMETRIC_APPROVAL?.version===VERSION)return;
- const coverageOk=P.version===REQUIRED_VERSION&&P.itemsHardened===EXPECTED.itemsHardened&&P.optionsParallelised===EXPECTED.optionsParallelised&&P.semanticAnswerChanges===EXPECTED.semanticAnswerChanges&&P.technicalTermSubstitutions===EXPECTED.technicalTermSubstitutions&&P.paddingApplied===EXPECTED.paddingApplied&&P.keyedConciseEdits===EXPECTED.keyedConciseEdits&&Number(P.distractorCueEdits)>0&&Number(P.formClauseTrims)>0&&rankCoverage(P.technicalLengthRanks,30)&&rankCoverage(P.regionalLengthRanks,27)&&rankCoverage(P.scenarioLengthRanks,40)&&rankCoverage(P.diagnosticLengthRanks,36)&&rankCoverage(P.materialLengthRanks,24)&&rankCoverage(P.optionalLengthRanks,40)&&sameArray(P.technicalKeyPositions,EXPECTED.technicalKeyPositions)&&sameArray(P.scenarioKeyPositions,EXPECTED.scenarioKeyPositions)&&CUE_NEUTRALISATION_EDITS>0;
+ if(!CUE_NEUTRALISATION){CUE_NEUTRALISATION=neutraliseAllBanks();window.MM_PSYCHOMETRIC_CUE_NEUTRALISATION={version:VERSION,...CUE_NEUTRALISATION,scope:'Wrong choices across all six learner-visible assessment banks only; stems, keyed choices, key positions and rationales are unchanged.'}}
+ const C=CUE_NEUTRALISATION;
+ const coverageOk=P.version===REQUIRED_VERSION&&P.itemsHardened===EXPECTED.itemsHardened&&P.optionsParallelised===EXPECTED.optionsParallelised&&P.semanticAnswerChanges===EXPECTED.semanticAnswerChanges&&P.technicalTermSubstitutions===EXPECTED.technicalTermSubstitutions&&P.paddingApplied===EXPECTED.paddingApplied&&P.keyedConciseEdits===EXPECTED.keyedConciseEdits&&Number(P.distractorCueEdits)>0&&Number(P.formClauseTrims)>0&&rankCoverage(P.technicalLengthRanks,30)&&rankCoverage(P.regionalLengthRanks,27)&&rankCoverage(P.scenarioLengthRanks,40)&&rankCoverage(P.diagnosticLengthRanks,36)&&rankCoverage(P.materialLengthRanks,24)&&rankCoverage(P.optionalLengthRanks,40)&&sameArray(P.technicalKeyPositions,EXPECTED.technicalKeyPositions)&&sameArray(P.scenarioKeyPositions,EXPECTED.scenarioKeyPositions)&&C.expectedCoverage===true&&C.itemsInspected===197&&C.totalDistractorEdits>C.scenarioDistractorEdits&&C.answerKeyChanges===0&&C.keyedChoiceChanges===0&&C.missingItems===0&&C.duplicateOptionConflicts===0;
  A.approvedInputs=A.approvedInputs||{};
  A.approvedInputs['assessment-psychometric-hardening.js']=INPUT_BLOB;
- A.psychometricApproval={version:VERSION,requiredRuntimeVersion:REQUIRED_VERSION,inputBlob:INPUT_BLOB,coverageOk,itemsHardened:P.itemsHardened,optionsParallelised:P.optionsParallelised,semanticAnswerChanges:P.semanticAnswerChanges,technicalTermSubstitutions:P.technicalTermSubstitutions,paddingApplied:P.paddingApplied,keyedConciseEdits:P.keyedConciseEdits,distractorCueEdits:P.distractorCueEdits,formClauseTrims:P.formClauseTrims,scenarioDistractorCueEdits:CUE_NEUTRALISATION_EDITS,answerKeyChanges:0,technicalLengthRanks:[...(P.technicalLengthRanks||[])],regionalLengthRanks:[...(P.regionalLengthRanks||[])],scenarioLengthRanks:[...(P.scenarioLengthRanks||[])],diagnosticLengthRanks:[...(P.diagnosticLengthRanks||[])],materialLengthRanks:[...(P.materialLengthRanks||[])],optionalLengthRanks:[...(P.optionalLengthRanks||[])],technicalKeyPositions:[...(P.technicalKeyPositions||[])],scenarioKeyPositions:[...(P.scenarioKeyPositions||[])],surfaceCueThreshold:0.50,verificationPolicy:'CI re-runs the standard and extreme learner-visible audits for the exact post-approval runtime. Scenario distractors are concise plausible competing diagnostic paths rather than naked parameter commands; answer-form length balance, stems, keyed propositions, key positions, technical terminology and safety boundaries are preserved.',scope:'Assessment-form hardening only; technical propositions, evidence relevance and safety boundaries remain governed by the evidence approval and proposition-evidence records.'};
+ A.psychometricApproval={version:VERSION,requiredRuntimeVersion:REQUIRED_VERSION,inputBlob:INPUT_BLOB,coverageOk,itemsHardened:P.itemsHardened,optionsParallelised:P.optionsParallelised,semanticAnswerChanges:P.semanticAnswerChanges,technicalTermSubstitutions:P.technicalTermSubstitutions,paddingApplied:P.paddingApplied,keyedConciseEdits:P.keyedConciseEdits,distractorCueEdits:P.distractorCueEdits,formClauseTrims:P.formClauseTrims,allBankDistractorCueEdits:C.totalDistractorEdits,scenarioDistractorCueEdits:C.scenarioDistractorEdits,distractorCueEditsByBank:{...C.editsByBank},itemsInspected:C.itemsInspected,itemsByBank:{...C.itemsByBank},answerKeyChanges:C.answerKeyChanges,keyedChoiceChanges:C.keyedChoiceChanges,duplicateOptionConflicts:C.duplicateOptionConflicts,technicalLengthRanks:[...(P.technicalLengthRanks||[])],regionalLengthRanks:[...(P.regionalLengthRanks||[])],scenarioLengthRanks:[...(P.scenarioLengthRanks||[])],diagnosticLengthRanks:[...(P.diagnosticLengthRanks||[])],materialLengthRanks:[...(P.materialLengthRanks||[])],optionalLengthRanks:[...(P.optionalLengthRanks||[])],technicalKeyPositions:[...(P.technicalKeyPositions||[])],scenarioKeyPositions:[...(P.scenarioKeyPositions||[])],surfaceCueThreshold:0.50,verificationPolicy:'CI re-runs the standard and extreme learner-visible audits for the exact post-approval runtime. Wrong choices across all six banks may be reframed as concise plausible competing diagnostic paths only when an existing vetted mapping applies; stems, keyed propositions, key positions, technical terminology and safety boundaries are preserved.',scope:'Assessment-form hardening only; technical propositions, evidence relevance and safety boundaries remain governed by the evidence approval and proposition-evidence records.'};
  if(D?.assessmentQA?.evidenceApproval){D.assessmentQA.evidenceApproval.psychometricVersion=REQUIRED_VERSION;D.assessmentQA.evidenceApproval.psychometricCoverageOk=coverageOk;D.assessmentQA.evidenceApproval.psychometricInputBlob=INPUT_BLOB;if(!coverageOk)D.assessmentQA.evidenceApproval.status='update-required'}
  window.MM_PSYCHOMETRIC_APPROVAL={...A.psychometricApproval};
- if(!coverageOk)console.warn('[MouldMaster] Psychometric approval metadata is stale or incomplete.',{expected:EXPECTED,actual:P,cueEdits:CUE_NEUTRALISATION_EDITS});
+ if(!coverageOk)console.warn('[MouldMaster] Psychometric approval metadata is stale or incomplete.',{expected:EXPECTED,actual:P,cue:C});
 }
 attach();
 })();
