@@ -32,9 +32,11 @@ need("const REQUIRED_VERSION='2026.09.01.6'" in approval,'psychometric approval 
 need("const REQUIRED_POLICY_VERSION='2026.09.10.1'" in approval,'psychometric approval required policy version mismatch')
 need("itemsHardened:197" in approval and "optionsParallelised:788" in approval,'psychometric approval coverage contract missing')
 need("technicalKeyPositions:[8,8,7,7]" in approval and "scenarioKeyPositions:[10,10,10,10]" in approval,'balanced key-position approval missing')
-for marker in ['semanticAnswerChanges:0','technicalTermSubstitutions:0','paddingApplied:false','textMutationCount:0','keyedConciseEdits:0','distractorCueEdits:0','formClauseTrims:0']:
+for marker in ['semanticAnswerChanges:0','technicalTermSubstitutions:0','paddingApplied:false','keyedConciseEdits:0','distractorCueEdits:0','formClauseTrims:0']:
     need(marker in hardening and marker in approval,f'immutable psychometric integrity guard missing: {marker}')
-need('snapshotText' in hardening and 'countMutations' in hardening and 'if(textMutationCount!==0)' in hardening,'runtime text immutability check missing')
+need('textMutationCount=countMutations(before,after)' in hardening and 'if(textMutationCount!==0)' in hardening,'runtime text mutation count must be computed and fail closed')
+need('textMutationCount:0' in approval,'approval must require zero runtime text mutations')
+need('snapshotText' in hardening and 'countMutations' in hardening,'runtime text immutability snapshot/check missing')
 need('Runtime psychometric code must never rewrite stems or option text' in hardening,'runtime immutability policy boundary missing')
 need('runtime code may only reorder answer positions' in approval,'approval must state the immutable runtime policy')
 for marker in ['technicalLengthRanks','regionalLengthRanks','scenarioLengthRanks','diagnosticLengthRanks','materialLengthRanks','optionalLengthRanks']:
@@ -82,7 +84,7 @@ for marker in ['node --check assessment-psychometric-hardening.js','node --check
     need(marker in question_workflow,f'question-quality workflow missing evidence/psychometric gate: {marker}')
 
 runtime=text('qa_question_quality_extreme_runtime_v2.py')
-for marker in ['_relative_form_features','_relative_form_cue_model','within-question relative length and terminal punctuation only','audit.surface_cue_model=_relative_form_cue_model','immutable_authoring_backlog']:
+for marker in ['_relative_form_features','_relative_form_cue_model','within-question relative length and terminal punctuation only','audit.surface_cue_model=_relative_form_cue_model','audit.extreme.need=_compatible_need','immutable_authoring_backlog']:
     need(marker in runtime,f'extreme runtime presentation-cue methodology missing: {marker}')
 for forbidden in ['__qual_','__starter_','__unit_','__unsafe_','__rel_commas_','__rel_semicolons_','__rel_ands_']:
     need(forbidden not in runtime,f'extreme hard cue model contains semantic/structural feature: {forbidden}')
