@@ -1,0 +1,117 @@
+{
+  "schema": 1,
+  "version": "2026.09.10.1",
+  "reviewed": "2026-09-10",
+  "purpose": "Targeted post-171 acquisition wave. Only net-new injection-moulding evidence families are staged; known overlaps are excluded. No third-party raw payload is committed and canonical measured counts remain unchanged until rights, retrieval, semantic, fingerprint, independence and profiling gates pass.",
+  "summary": {
+    "newCandidates": 3,
+    "candidateIds": ["MM-DATA-172", "MM-DATA-173", "MM-DATA-174"],
+    "cumulativeResearchCandidateCount": 174,
+    "explicitOpenArticleOrDatasetLicense": 3,
+    "rawPayloadsCommitted": 0,
+    "canonicalMeasuredFamilyIncrement": 0,
+    "canonicalAcceptedTimeSeriesValueIncrement": 0
+  },
+  "sources": [
+    {
+      "id": "MM-DATA-172",
+      "name": "LPBF conformal-cooling mould physical-part quality supplementary dataset",
+      "priority": "P1-DATA",
+      "sourceType": "measured_injection_moulded_conformal_cooling_quality",
+      "evidenceClass": "measured_tooling_cooling_physical_quality",
+      "independenceFamily": "UFSC_PolyMTL_LPBF_CCC_PP_2026",
+      "article": "https://doi.org/10.1007/s00170-026-18276-2",
+      "supplementaryData": "https://doi.org/10.5281/zenodo.18788744",
+      "articleLicense": "CC BY 4.0",
+      "material": "polypropylene",
+      "partContext": "automotive plastic component",
+      "toolingComparison": ["LPBF conformal cooling channels", "traditional baffle cooling channels"],
+      "measuredOutputs": ["moulding cycle time", "part mass", "geometric form error/dimensional accuracy", "tensile response", "impact/deformation-energy response", "DMA/viscoelastic response", "crystallinity", "microstructure/skin-core morphology"],
+      "reportedOutcomes": {
+        "cycleTimeReductionPercent": 26,
+        "spheruliteSizeReductionApproxPercent": 47,
+        "frozenLayerIncreaseApproxPercent": 53,
+        "refinedLayerIncreaseApproxPercent": 6,
+        "skinLayerIncreaseApproxPercent": 18,
+        "dimensionalPrecisionImprovementApproxPercent": 83
+      },
+      "value": "Net-new physical quality evidence tying cooling-tool architecture to cycle time, dimensional accuracy, microstructure and mechanical properties on injection-moulded PP parts. It strengthens cooling/tooling validation but is not longitudinal fouling-cleaning-recovery evidence.",
+      "rights": {
+        "articleState": "open-CC-BY-4.0",
+        "supplementState": "publisher-linked supplementary route; exact Zenodo file-level licence/fingerprint must be recorded before raw admission"
+      },
+      "governance": {
+        "rawPayloadCommitted": false,
+        "canonicalMeasuredCountIncrement": 0,
+        "countAsNewIndependentFamilyBeforeAdmission": false,
+        "productionAuthority": false
+      },
+      "nextAction": "Retrieve the exact supplementary payload through an approved binary route, record dataset-level licence, immutable hashes, file inventory, measured-vs-derived fields, sample/replicate identity and units, then profile before canonical admission."
+    },
+    {
+      "id": "MM-DATA-173",
+      "name": "GNP-enhanced HDPE injection-process to mechanical-property raw dataset",
+      "priority": "P1-DATA",
+      "sourceType": "open_measured_injection_moulded_material_process_dataset",
+      "evidenceClass": "measured_process_material_physical_property",
+      "independenceFamily": "VIT_CIPET_NIST_GNP_HDPE_2024",
+      "dataset": "https://doi.org/10.17632/4h98rz9f92.3",
+      "article": "https://doi.org/10.1016/j.dib.2024.110987",
+      "license": "CC BY 4.0",
+      "material": "HDPE with graphite nanoplatelet additions",
+      "measuredInputs": ["GNP fraction", "injection temperature", "injection pressure"],
+      "measuredOutputs": ["tensile modulus", "toughness", "Vickers hardness"],
+      "reportedExperimentCount": 35,
+      "reportedInputRanges": {
+        "GNP_fraction": "0 to 0.05 in the published experiment table",
+        "injectionTemperature_C": "170 to 210 in the published experiment table",
+        "injectionPressure_MPa": "approximately 20 to 38.4 in the published experiment table"
+      },
+      "derivedDataBoundary": "High/medium/low response classes and machine-learning predictions are derived; they must not be counted as additional physical measurements.",
+      "value": "Adds rights-clear measured process-to-mechanical-property evidence for HDPE composite moulding and extends material/process coverage beyond PP-heavy process datasets.",
+      "rights": {
+        "state": "open-dataset-CC-BY-4.0",
+        "rawReuseCandidate": true,
+        "exactFileFingerprintPending": true
+      },
+      "governance": {
+        "rawPayloadCommitted": false,
+        "canonicalMeasuredCountIncrement": 0,
+        "countAsNewIndependentFamilyBeforeAdmission": false,
+        "derivedLabelsNotGroundTruthRows": true
+      },
+      "nextAction": "Retrieve exact Mendeley files, hash and profile rows/columns/missingness/units; separate raw measured tables from SEM images, analysed tables, code, derived classes and model outputs before admission."
+    },
+    {
+      "id": "MM-DATA-174",
+      "name": "In-cavity pressure failure-diagnosis experiment for burn marks and short shots",
+      "priority": "P1-EVIDENCE",
+      "sourceType": "publisher_verified_primary_measured_failure_study",
+      "evidenceClass": "measured_cavity_pressure_defect_diagnosis",
+      "independenceFamily": "PIEP_MinHo_cavity_pressure_failure_2023",
+      "article": "https://doi.org/10.1007/s00170-023-11100-1",
+      "license": "CC BY 4.0 article",
+      "measuredEvidence": ["in-cavity pressure profiles", "processing-condition variations", "burn-mark failure observations", "short-shot failure observations", "velocity-to-pressure switchover behaviour", "filling-phase pressure behaviour"],
+      "value": "Independent physical defect/pressure evidence for diagnosing filling and switchover failures. This improves mechanism triangulation but does not provide a rights-cleared chronological shot-action-recovery raw corpus.",
+      "access": {
+        "state": "open-article",
+        "separateMachineReadableRawDatasetLocated": false
+      },
+      "governance": {
+        "rawPayloadCommitted": false,
+        "canonicalMeasuredCountIncrement": 0,
+        "countAsNewIndependentFamilyBeforeAdmission": false,
+        "articleEvidenceOnlyUntilRawReleaseFound": true
+      },
+      "nextAction": "Search author/institution repositories or request the original pressure traces and cycle-condition table under explicit reuse terms; retain only publisher-verifiable aggregate mechanism evidence until then."
+    }
+  ],
+  "duplicateExclusions": [
+    {"source": "https://doi.org/10.17632/gtnb4j7bfx.1", "existingId": "MM-DATA-011"},
+    {"source": "https://doi.org/10.17632/6f9x8yg8nj.1", "existingId": "MM-DATA-026"},
+    {"source": "https://doi.org/10.18154/RWTH-2025-06809", "existingId": "MM-DATA-007"},
+    {"source": "https://zenodo.org/records/20744054", "existingId": "MM-DATA-009"},
+    {"source": "https://zenodo.org/records/20309380", "existingId": "MM-DATA-023"},
+    {"source": "https://zenodo.org/records/20322729", "existingId": "MM-DATA-024"}
+  ]
+}

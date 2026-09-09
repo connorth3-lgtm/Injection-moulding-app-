@@ -1,0 +1,119 @@
+{
+  "schema": 1,
+  "version": "2026.09.10.newsource100pass.audit.1",
+  "auditDate": "2026-09-10",
+  "search": {
+    "targetedPasses": 100,
+    "scope": "new-source-only search after MM-DATA-001..178",
+    "newCandidates": 6,
+    "startingResearchCandidateCount": 178,
+    "endingResearchCandidateCount": 184,
+    "canonicalMeasuredFamiliesDelta": 0,
+    "acceptedTimeSeriesValuesDelta": 0,
+    "rawThirdPartyPayloadsCommitted": 0
+  },
+  "impact": [
+    {
+      "area": "industrial labelled process data",
+      "change": "Materially improved",
+      "evidence": ["MM-DATA-179"],
+      "note": "A directly readable industrial CSV with five separated production days and physical quality classes is a stronger admission target than another article-only source. Reuse rights and a 1451-vs-1446 count discrepancy remain explicit gates."
+    },
+    {
+      "area": "recycled-material process control",
+      "change": "Improved",
+      "evidence": ["MM-DATA-180"],
+      "note": "Adds material MFR, process-control variables and physical/mechanical outputs in a tabulated measured study."
+    },
+    {
+      "area": "cross-machine + material-lot + multicavity physical validation",
+      "change": "Strongly improved at article-evidence level",
+      "evidence": ["MM-DATA-181", "MM-DATA-184"],
+      "note": "Medical-device transfer and micro-vs-conventional comparisons add rare measured cross-machine/process evidence with physical part outcomes and cavity identity."
+    },
+    {
+      "area": "industrial high-frequency multimodal data",
+      "change": "New acquisition lead",
+      "evidence": ["MM-DATA-182"],
+      "note": "Foxconn mirror exposes large machine-state and dimensional files, but absent original-owner rights makes it non-admissible until provenance is resolved."
+    },
+    {
+      "area": "cross-part transfer breadth",
+      "change": "Improved for simulation stress testing only",
+      "evidence": ["MM-DATA-183"],
+      "note": "59-part transfer source is simulation, not measured evidence, and must remain isolated from production truth."
+    }
+  ],
+  "remainingPriority": [
+    {
+      "rank": 1,
+      "gap": "rights-cleared cycle -> physical defect/quality -> actual process action -> verified recovery histories",
+      "status": "critical_open",
+      "reason": "The new wave adds transfer, quality and material-lot evidence but still no reusable chronological intervention-to-recovery corpus."
+    },
+    {
+      "rank": 2,
+      "gap": "deterministic admission of already-reachable measured datasets",
+      "status": "critical_execution",
+      "reason": "MM-DATA-179 is now a strong profileable target; OpenMMS, RWTH PCR, PASCOE/imPURE, EPP, scatimdata and FORinFPRO-HIMD also remain higher-value engineering work than broad discovery."
+    },
+    {
+      "rank": 3,
+      "gap": "rights-clear cross-machine/multi-mould labelled raw corpus",
+      "status": "high_open",
+      "reason": "MM-DATA-181 and MM-DATA-184 strengthen measured article evidence but do not yet supply a large reusable row-level transfer corpus."
+    },
+    {
+      "rank": 4,
+      "gap": "maintenance intervention -> quantified production recovery",
+      "status": "high_open",
+      "reason": "Longitudinal wear/lifetime evidence exists, but action-to-recovery histories remain scarce."
+    },
+    {
+      "rank": 5,
+      "gap": "hot-runner actual device-state telemetry linked to shot quality",
+      "status": "high_open",
+      "reason": "No new source in this wave closes thermocouple/heater/valve-pin actual-state linkage."
+    },
+    {
+      "rank": 6,
+      "gap": "routine production material lot/COA/moisture/drying -> cycle -> physical outcome linkage",
+      "status": "high_open",
+      "reason": "MM-DATA-181 includes a material-lot factor and MM-DATA-180 includes MFR, but neither is the full factory traceability chain."
+    },
+    {
+      "rank": 7,
+      "gap": "rights-clear multicavity shot-level physical outcomes at production scale",
+      "status": "medium_high_open",
+      "reason": "This wave adds small measured cavity-balance and four-cavity comparison studies; larger raw per-cavity production datasets are still needed."
+    },
+    {
+      "rank": 8,
+      "gap": "rights-clear raw 2K/multimaterial production data",
+      "status": "high_open",
+      "reason": "No new source in the wave closes this gap."
+    },
+    {
+      "rank": 9,
+      "gap": "real MouldMaster learner telemetry",
+      "status": "app_specific_open",
+      "reason": "Cannot be solved by external source discovery."
+    },
+    {
+      "rank": 10,
+      "gap": "blinded independent MouldMaster engineer judgments",
+      "status": "app_specific_open",
+      "reason": "Cannot be solved by external source discovery."
+    }
+  ],
+  "nextActions": [
+    "Make MM-DATA-179 the next deterministic admission/profile target, with the 1451-vs-1446 class-count discrepancy resolved from the pinned CSV.",
+    "Finish admission engineering for OpenMMS, RWTH PCR, PASCOE/imPURE, EPP, scatimdata and FORinFPRO-HIMD.",
+    "Extract and provenance-lock measured tables for MM-DATA-180, MM-DATA-181 and MM-DATA-184.",
+    "Do not ingest MM-DATA-182 raw mirror files unless original Foxconn/competition permission is established.",
+    "Use MM-DATA-183 only as simulation/transfer-learning stress-test data.",
+    "Prioritize direct owner/author requests for shot-action-recovery, industrial transfer, maintenance recovery, hot-runner states and 2K raw production data."
+  ],
+  "decision": "NEW_SOURCE_DISCOVERY_STILL_YIELDS_VALUE__BUT_ADMISSION_AND_OWNER_REQUESTS_REMAIN_HIGHER_PRIORITY",
+  "truthBoundary": "The cumulative research count of 184 includes measured raw candidates, article-table evidence, a rights-unresolved mirror lead and simulation data. It is not a count of canonical rights-executable measured families."
+}

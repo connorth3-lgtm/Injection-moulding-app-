@@ -1,0 +1,84 @@
+{
+  "schema": 1,
+  "version": "2026.09.10.recovery200.1",
+  "auditDate": "2026-09-10",
+  "baseState": {
+    "researchCandidatesBeforeRecoverySweep": 184,
+    "targetedRecoverySearchPasses": 200,
+    "newRecoverySourceCandidates": 14,
+    "researchCandidatesAfterRecoverySweep": 198,
+    "canonicalMeasuredFamiliesDelta": 0,
+    "acceptedTimeSeriesValuesDelta": 0
+  },
+  "finding": "The recovery-evidence gap is narrower than before but is not closed. Public literature contains multiple experimental controllers and validated corrective-action cases, yet reusable row-level chronological datasets remain rare. The strongest new sources show explicit recovery horizons of 6 shots, 10-25 cycles, startup runs-to-quality reductions, autonomous next-cycle adjustments, and large-scale before/after factory validation.",
+  "strongestNewTargets": [
+    {
+      "rank": 1,
+      "id": "MM-DATA-185",
+      "why": "Measured induced disturbance, actual V/P/holding-pressure corrections and verified recovery within six shots."
+    },
+    {
+      "rank": 2,
+      "id": "MM-DATA-186",
+      "why": "16-cavity, five-material/vendor experiment with explicit material transitions, feedback action and 10/25-cycle recovery horizons plus physical dimensions."
+    },
+    {
+      "rank": 3,
+      "id": "MM-DATA-187",
+      "why": "Cross-machine and multi-viscosity startup tuning using vision defect acceptance with reported 88% lower runs-to-quality and 94% lower startup scrap."
+    },
+    {
+      "rank": 4,
+      "id": "MM-DATA-188",
+      "why": "2026 adaptive external-sensor study explicitly states data are available on request and includes appearance-defect optimization plus continuous adaptive weight control."
+    },
+    {
+      "rank": 5,
+      "id": "MM-DATA-194",
+      "why": "Real factory short-shot case with very large baseline and validation populations and verified production defect-rate reduction from about 1.2% to 0.32%."
+    },
+    {
+      "rank": 6,
+      "id": "MM-DATA-193",
+      "why": "Clean physical flash defect -> DOE diagnosis -> parameter correction -> consecutive zero-flash confirmation runs."
+    }
+  ],
+  "remainingCriticalGapDefinition": {
+    "requiredGrain": "one row/event sequence per chronological production shot or small run block",
+    "minimumFields": [
+      "machine_id",
+      "mould_id",
+      "cavity_id where applicable",
+      "material_grade_and_lot",
+      "cycle_or_shot_id",
+      "timestamp_or_order",
+      "measured_quality_or_defect_before_action",
+      "relevant sensor/process evidence",
+      "diagnosis_or_trigger",
+      "actual parameter/maintenance action",
+      "action magnitude",
+      "next-cycle/process response",
+      "measured physical quality after action",
+      "explicit recovered/not-recovered flag",
+      "recovery cycle/run index"
+    ]
+  },
+  "whatChangedAfter200Passes": [
+    "There is now substantially stronger publisher-verified evidence that shot/cycle-level recovery experiments exist across multiple independent research groups.",
+    "The search surfaced explicit recovery horizons rather than only steady-state quality improvements.",
+    "A large fraction of the best evidence is still trapped in figures, tables, confidential files or author-held datasets rather than downloadable machine-readable chronological tables.",
+    "Several NCKU/Hwang adaptive-control papers form a shared lineage and must be de-duplicated at experiment level before any independence count is increased.",
+    "Generic searching now has very low expected value relative to direct author/industrial data requests and exact-file admission work."
+  ],
+  "nextActions": [
+    "Request MM-DATA-185 ordered shot table with disturbance timing, corrective V/P/holding-pressure actions, physical part weights and acceptance state.",
+    "Request MM-DATA-186 cycle-mass/material-transition/holding-pressure/per-cavity dimension table from the LEGO/AAU team.",
+    "Request MM-DATA-187 qualification/startup run history with machine, viscosity, defect labels, parameter deltas and first accepted run.",
+    "Request MM-DATA-188 full chronological data because the article explicitly states data will be made available on request.",
+    "Request MM-DATA-194 anonymized baseline and validation production chronology rather than relying only on aggregate short-shot rates.",
+    "Map MM-DATA-188/189/190/196/197/198 at apparatus/material/date level to avoid counting one research lineage as six independent families.",
+    "Continue admission engineering for already-open executable datasets in parallel; do not wait for more discovery."
+  ],
+  "decision": "STOP_GENERIC_RECOVERY_SEARCH__MOVE_TO_DATA_OWNER_REQUESTS_AND_ADMISSION",
+  "truthBoundary": "The 200-pass sweep improved evidence coverage but did not create a rights-cleared canonical chronological recovery corpus. Research-candidate count is 198; canonical counts remain unchanged."
+}
