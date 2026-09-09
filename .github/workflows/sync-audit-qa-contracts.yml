@@ -1,0 +1,74 @@
+name: Sync Audit QA Contracts
+
+on:
+  push:
+    branches: [audit-consolidation-2026-09-10]
+    paths:
+      - '.audit-qa-contract-sync'
+
+permissions:
+  contents: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: audit-consolidation-2026-09-10
+      - uses: actions/setup-node@v7
+        with:
+          node-version: '22.12.0'
+          package-manager-cache: false
+      - uses: actions/setup-python@v7
+        with:
+          python-version: '3.12'
+      - name: Reconcile immutable assessment QA contracts
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          def replace_once(path, old, new):
+              p=Path(path)
+              s=p.read_text(encoding='utf-8')
+              n=s.count(old)
+              if n != 1:
+                  raise SystemExit(f'{path}: expected one occurrence, found {n}: {old!r}')
+              p.write_text(s.replace(old,new,1),encoding='utf-8')
+
+          replace_once(
+              'qa_evidence_maturity.py',
+              "need(data.get('bridge',{}).get('strictAnswerBalance',{}).get('applied')==93,'strict answer-balance bridge must be active in evidence-maturity runtime')",
+              "need(data.get('bridge',{}).get('strictAnswerBalance',{}).get('applied')==94,'strict answer-balance bridge must be active in evidence-maturity runtime')"
+          )
+
+          p=Path('qa_assessment_evidence_integrity.py')
+          s=p.read_text(encoding='utf-8')
+          s=s.replace(
+              "hardening=text('assessment-psychometric-hardening.js')\nintegrity=text('assessment-evidence-integrity-upgrade.js')",
+              "hardening=text('assessment-psychometric-hardening.js')\nbridge=text('assessment-stable-review-bridge.js')\nintegrity=text('assessment-evidence-integrity-upgrade.js')",
+              1
+          )
+          old="need(\"'scenario:03'\" in hardening and \"'scenario:30'\" in hardening and \"'scenario:33'\" in hardening,'three reviewed concise keyed overrides are not explicit')"
+          new="need(\"'scenario:03'\" in bridge and \"'scenario:30'\" in bridge and \"'scenario:33'\" in bridge,'three reviewed source-authored concise keyed overrides are not explicit in the stable-review bridge')"
+          if s.count(old)!=1: raise SystemExit('qa_assessment_evidence_integrity.py: reviewed override assertion drifted')
+          s=s.replace(old,new,1)
+          old="need('CLAUSE_MARKERS' in hardening and 'balanceFormRows' in hardening and 'keyFormPenalty' in hardening,'all-bank relative-form distractor compaction/balancing is missing')"
+          new="need('repositionArray' in hardening and 'textMutationCount!==0' in hardening and 'Runtime psychometric code must never rewrite stems or option text' in hardening,'immutable psychometric runtime/text-mutation guard is missing')"
+          if s.count(old)!=1: raise SystemExit('qa_assessment_evidence_integrity.py: legacy form-balancing assertion drifted')
+          s=s.replace(old,new,1)
+          old="need('technicalLengthRanks=[0,0,0,0]' in hardening and 'optionalLengthRanks=[0,0,0,0]' in hardening,'four-rank answer-length balancing is not explicit')"
+          new="need('technicalLengthRanks:technicalLengthRanks.slice()' in hardening and 'optionalLengthRanks:optionalLengthRanks.slice()' in hardening,'answer-length rank telemetry is not exported')"
+          if s.count(old)!=1: raise SystemExit('qa_assessment_evidence_integrity.py: legacy length-rank assertion drifted')
+          s=s.replace(old,new,1)
+          p.write_text(s,encoding='utf-8')
+          PY
+          python qa_evidence_maturity.py
+          python qa_assessment_evidence_integrity.py
+      - name: Commit reconciled QA contracts
+        run: |
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add qa_evidence_maturity.py qa_assessment_evidence_integrity.py
+          git commit -m 'qa: reconcile immutable assessment governance contracts'
+          git push origin HEAD:audit-consolidation-2026-09-10
