@@ -1,7 +1,7 @@
-/* MouldMaster psychometric approval bridge — 2026.09.09.2 */
+/* MouldMaster psychometric approval bridge — 2026.09.09.3 */
 (function(){
 'use strict';
-const VERSION='2026.09.09.2';
+const VERSION='2026.09.09.3';
 const REQUIRED_VERSION='2026.09.01.6';
 const INPUT_BLOB='fdcc6fc4d655e3a90a33acdc38712197ff040ebf';
 const EXPECTED={itemsHardened:197,optionsParallelised:788,semanticAnswerChanges:0,technicalTermSubstitutions:0,paddingApplied:false,keyedConciseEdits:3,technicalKeyPositions:[8,8,7,7],scenarioKeyPositions:[10,10,10,10]};
@@ -66,6 +66,7 @@ function neutraliseOptions(options,key,feedback,seedBase,allowGeneric){
   if(i===key)continue;
   const before=String(options[i]||''),after=competingDiagnostic(before,seedBase+i,allowGeneric);
   if(after===before)continue;
+  if(!allowGeneric){const keyed=String(options[key]||'').trim();if(keyed&&after.length<Math.max(24,Math.ceil(keyed.length*0.65)))continue}
   if(options.some((x,j)=>j!==i&&optionSignature(x)===optionSignature(after))){duplicates++;continue}
   options[i]=after;
   fb[i]=`Not the strongest first decision. “${after}” is a plausible competing path, but it does not fit the stated evidence as directly as the keyed mechanism.`;
