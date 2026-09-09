@@ -1,7 +1,7 @@
-/* MouldMaster psychometric approval bridge — 2026.09.09.1 */
+/* MouldMaster psychometric approval bridge — 2026.09.09.2 */
 (function(){
 'use strict';
-const VERSION='2026.09.09.1';
+const VERSION='2026.09.09.2';
 const REQUIRED_VERSION='2026.09.01.6';
 const INPUT_BLOB='fdcc6fc4d655e3a90a33acdc38712197ff040ebf';
 const EXPECTED={itemsHardened:197,optionsParallelised:788,semanticAnswerChanges:0,technicalTermSubstitutions:0,paddingApplied:false,keyedConciseEdits:3,technicalKeyPositions:[8,8,7,7],scenarioKeyPositions:[10,10,10,10]};
@@ -9,7 +9,7 @@ const EXPECTED_BANK_ITEMS={'technical-exam':30,'regional-exam':27,'scenario':40,
 const UNSAFE=/\b(bypass|defeat|disable)\b.{0,60}\b(guard|interlock|safeguard|protection|lockout)\b|\bopen\b.{0,45}\b(hot|pressurised|pressurized)\b/i;
 function sameArray(a,b){return Array.isArray(a)&&Array.isArray(b)&&a.length===b.length&&a.every((x,i)=>x===b[i])}
 function rankCoverage(a,n){return Array.isArray(a)&&a.length===4&&a.every(x=>Number.isInteger(x)&&x>=0)&&a.reduce((s,x)=>s+x,0)===n}
-function cueVerb(seed){return ['Check','Compare','Review','Test'][Math.abs(Number(seed)||0)%4]}
+function cueVerb(seed){const verbs=['Check','Compare','Review','Test','Inspect','Measure','Map'];return verbs[Math.abs(Number(seed)||0)%verbs.length]}
 function competingDiagnostic(text,seed=0,allowGeneric=true){
  const raw=String(text||'').trim(),t=raw.replace(/[.;]+$/,'');
  if(!t||UNSAFE.test(t))return raw;
