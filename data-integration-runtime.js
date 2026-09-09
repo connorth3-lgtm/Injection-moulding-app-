@@ -1,8 +1,8 @@
-/* MouldMaster connected process-data runtime — 2026.09.02.1 */
+/* MouldMaster connected process-data runtime — 2026.09.10.1 */
 (function(){
 'use strict';
 
-const VERSION='2026.09.02.1';
+const VERSION='2026.09.10.1';
 const DB_NAME='mouldmaster-process-data-v1';
 const DB_VERSION=1;
 const MAX_ROWS=50000;
@@ -15,7 +15,7 @@ let preparedSession=null;
 let activeWorkspaceCaseId='';
 let installQueued=false;
 
-function esc(v){return String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function esc(v){return String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot',"'":'&#39;'}[c]))}
 function safeToken(v,max=96){return String(v??'').replace(/[^a-zA-Z0-9:_\-. /]/g,'').slice(0,max)}
 function uid(prefix='id'){try{return `${prefix}-${crypto.randomUUID()}`}catch(_){return `${prefix}-${Date.now().toString(36)}-${Math.random().toString(36).slice(2,9)}`}}
 function num(v){const n=Number(v);return Number.isFinite(n)?n:null}
@@ -81,7 +81,7 @@ async function getAll(storeName){
 async function rowsForDataset(datasetId){
   const db=await openDb();return new Promise((resolve,reject)=>{
     const tx=db.transaction('shots','readonly'),idx=tx.objectStore('shots').index('datasetId'),r=idx.getAll(IDBKeyRange.only(datasetId));
-    r.onsuccess=()=>{const rows=(r.result||[]).sort((a,b)=>Number(a.shotIndex)-Number(b.shotIndex)).map(x=>x.values);resolve(rows);db.close()};
+    r.onsuccess=()=>{const rows=(r.result||[]).sort((a,b)=>(Number(a.shotIndex)-Number(b.shotIndex))||(Number(a.rowOrdinal||0)-Number(b.rowOrdinal||0))).map(x=>x.values);resolve(rows);db.close()};
     r.onerror=()=>{reject(r.error);db.close()}
   })
 }
@@ -191,6 +191,7 @@ function publicDatasetRecord(prepared,id){
       materialGrade:first.material_grade||first.resin_grade||prepared.datasetMeta?.material_context||null,
       job:first.job||first.work_order||prepared.datasetMeta?.job_context||null
     },
+    storageIdentity:{scheme:'immutable-row-ordinal-v1',sourceShotIndexPreserved:true},
     evidenceState:'site-local-measured-prepared',
     authority:'Local evidence dataset only; not a validated production recipe or universal process window.'
   };
@@ -202,9 +203,11 @@ async function savePrepared(prepared){
   tx.objectStore('datasets').put(record);
   const shots=tx.objectStore('shots');
   for(let i=0;i<prepared.rows.length;i++){
-    const row=prepared.rows[i],shotIndex=row.shot_index??i+1;
+    const row=prepared.rows[i],rowOrdinal=i+1,rawShotIndex=row.shot_index;
+    const sourceShotIndex=rawShotIndex!==''&&rawShotIndex!=null&&Number.isFinite(Number(rawShotIndex))?Number(rawShotIndex):null;
+    const shotIndex=sourceShotIndex??rowOrdinal;
     shots.put({
-      id:`${id}:${shotIndex}`,datasetId:id,shotIndex:Number(shotIndex)||i+1,
+      id:`${id}:row:${String(rowOrdinal).padStart(9,'0')}`,datasetId:id,rowOrdinal,shotIndex,sourceShotIndex,
       machine:row.machine||row.machine_id||record.entities.machine||'',
       mould:row.mould||row.mold||row.tool||record.entities.mould||'',
       materialGrade:row.material_grade||row.resin_grade||record.entities.materialGrade||'',
@@ -407,6 +410,7 @@ window.MM_CONNECTED_PROCESS_DATA={
   storage:{savePrepared,listDatasets,rowsForDataset,deleteDataset},
   intelligence:{createBaseline,compareToBaseline,compareWindows,summarizeRows},
   cases:{linkCase,caseLink,similarCases},
+  storageIdentity:Object.freeze({scheme:'immutable-row-ordinal-v1',sourceShotIndexPreserved:true}),
   scope:'Local-first connected process-data infrastructure. It distinguishes privacy preparation from semantic readiness, stores prepared site data in IndexedDB, provides site-local statistical evidence comparisons, and never creates universal production limits, causal proof or machine-control authority.'
 };
 
