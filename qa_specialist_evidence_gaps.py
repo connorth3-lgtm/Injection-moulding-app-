@@ -69,15 +69,15 @@ for mid in overlay_ids:
 resolved_status={mid:('promoted' if mid in overlay_ids else item.get('status')) for mid,item in registry_by_id.items()}
 need(sum(1 for x in resolved_status.values() if x=='promoted')==12,'formal overlay must resolve all 12 mechanisms to promoted')
 
-m=re.search(r"const EVIDENCE_STATUS=Object\.freeze\(\{(.*?)\}\);",finalizer,re.S)
-need(m is not None,'app-shell finalizer evidence-status bridge missing')
-status_map=dict(re.findall(r"'([^']+)':'(Promoted|Provisional|Gap)'",m.group(1)))
-need(list(status_map)==expected_areas,f'evidence-status bridge areas/order changed: {list(status_map)}')
-for area,label in status_map.items():
-    expected=resolved_status[area]
-    need(label.lower()==expected,f'{area}: specialist badge {label} disagrees with formally resolved status {expected}')
-    need(label=='Promoted',f'{area}: all S13-S20 evidence-depth mechanisms should now be formally promoted')
+# The finalizer must derive learner-facing specialist evidence state from the governed
+# mechanism registry rather than carrying a second hardcoded promotion map.
+need('const EVIDENCE_STATUS=Object.freeze' not in finalizer,'legacy hardcoded specialist evidence-status map returned')
+need('function governedState(area)' in finalizer,'governed specialist evidence resolver missing')
+need('MM_GOVERNED_RESEARCH?.forId?.(area)' in finalizer,'specialist evidence resolver must use the governed mechanism registry')
+need("governedState(lesson.evidenceArea)||lesson.evidenceStatus||'Provisional'" in finalizer,'specialist evidence fallback must remain conservative before governed domains are ready')
+need("window.addEventListener('mm:domains-ready',resyncGovernedEvidence)" in finalizer,'specialist evidence state must resynchronise after governed domains load')
 need('MM_SPECIALIST_EVIDENCE_STATUS' in finalizer,'specialist evidence status export missing')
+need("source:'MM_GOVERNED_RESEARCH when loaded; authored specialist status otherwise'" in finalizer,'specialist evidence export must identify its governed source/fallback policy')
 need('publisher-verified primary measured studies' in finalizer,'promoted UI must retain evidence boundary')
 need('study-specific settings remain bounded' in finalizer,'promoted UI must retain no-universal-recipe boundary')
 need("'\"':'&quot;'" in finalizer,'finalizer HTML escaping for double quotes is malformed')
@@ -108,4 +108,4 @@ integrity=text('desktop/electron/scripts/generate-integrity.cjs');need("'special
 workflow=text(WORKFLOW);need("- 'app-shell-finalize.js'" in workflow,'specialist evidence workflow path filters must include app-shell-finalize.js');need("- 'data/evidence-promotion-overlay-v2.json'" in workflow,'specialist evidence workflow path filters must include formal promotion overlay');need('node --check specialist-evidence-gap-extension.js' in workflow and 'node --check app-shell-finalize.js' in workflow,'specialist evidence workflow missing JavaScript syntax checks');need('python qa_specialist_evidence_gaps.py' in workflow,'specialist evidence-gap workflow missing QA gate');need('python qa_evidence_coverage.py' in workflow,'specialist evidence-gap workflow must also verify the evidence registry')
 
 promoted=sum(1 for a in expected_areas if resolved_status[a]=='promoted')
-print(f'MouldMaster specialist evidence-gap QA passed (8 extensions S13-S20; {promoted} formally promoted evidence lessons; {8-promoted} provisional; canonical 120 unchanged)')
+print(f'MouldMaster specialist evidence-gap QA passed (8 extensions S13-S20; {promoted} formally promoted evidence lessons; governed runtime source; canonical 120 unchanged)')
