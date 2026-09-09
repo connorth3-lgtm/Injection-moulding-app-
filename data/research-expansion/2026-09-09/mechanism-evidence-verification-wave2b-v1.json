@@ -1,0 +1,103 @@
+{
+  "schema": 1,
+  "version": "2026.09.09.1",
+  "reviewed": "2026-09-09",
+  "purpose": "Second verification addendum for provisional mechanism coverage. Canonical status remains unchanged until the repository promotion rule is applied by a dedicated review.",
+  "sources": [
+    {
+      "mechanismId": "fibre-breakage-retained-length",
+      "sourceId": "W3186005056",
+      "doi": "10.3390/polym13152492",
+      "title": "The Low Breaking Fiber Mechanism and Its Effect on the Behavior of the Melt Flow of Injection Molded Ultra-Long Glass Fiber Reinforced Polypropylene Composites",
+      "publisher": "MDPI Polymers",
+      "license": "CC BY 4.0",
+      "verification": "publisher-verified-primary-measured",
+      "independence": "independent author/institution group from DOI 10.1002/pc.27232",
+      "experimentalContext": ["25 mm long-glass-fibre PP feedstock", "special ultra-long-fibre injection machine", "screw-speed variation", "back-pressure/melt/mould-temperature studies", "gate-design and 1/3 mm specimen-thickness studies"],
+      "measuredSignalsOutcomes": ["retained fibre-length change", "fibre orientation", "melt-flow length", "tensile-stress relationship"],
+      "reportedFindingBoundary": "Some operating conditions shortened 25 mm fibres to roughly 10 mm on average; the low-breakage mechanism could retain about 22 mm under its tested configuration.",
+      "limitation": "Special machine architecture, 25 mm L-FRP feedstock and test geometries are application-specific; the measurements establish the fibre-breakage mechanism, not universal screw-speed or gate settings."
+    },
+    {
+      "mechanismId": "runner-gate-multicavity-imbalance",
+      "sourceId": "W4396581749",
+      "doi": "10.3390/polym16091279",
+      "title": "Study on the Influence of Runner and Overflow Area Design on Flow–Fiber Coupling in a Multi-Cavity System",
+      "publisher": "MDPI Polymers",
+      "license": "CC BY 4.0",
+      "verification": "publisher-verified-primary-measured-plus-simulation",
+      "experimentalContext": ["geometrically symmetric 1x4 multi-cavity mould", "ASTM D638 Type V cavities", "runner/overflow design variation", "experimental validation of flow-fibre coupling"],
+      "measuredSignalsOutcomes": ["part geometric shrinkage asymmetry", "fibre-orientation/microstructure observations", "cavity/flow-position differences"],
+      "limitation": "FRP material, overflow geometry and four-cavity layout are study-specific; experimental evidence supports cavity-specific flow-fibre imbalance but does not provide a universal runner balance rule."
+    },
+    {
+      "mechanismId": "hot-runner-actual-behaviour",
+      "sourceId": "W4392168082",
+      "doi": "10.1002/pen.26689",
+      "title": "Mechanical and crystallization properties of hot runner injection molded virgin and recycled polypropylene",
+      "publisher": "Polymer Engineering & Science / Wiley",
+      "verification": "publisher-verified-primary-measured-supporting",
+      "license": "open access",
+      "experimentalContext": ["multi-cavity hot-runner mould", "virgin PP", "recycled PP", "melt temperature", "mould temperature", "pack pressure", "soak/residence time"],
+      "physicalOutcomes": ["mechanical properties", "crystallization/morphology", "material contamination effects"],
+      "limitation": "This study verifies physical hot-runner process/property behaviour but does not independently measure every manifold/nozzle zone actual or valve actuation. It should be supporting evidence, not by itself proof that displayed hot-runner setpoints differ from actuals."
+    },
+    {
+      "mechanismId": "recyclate-process-variability",
+      "sourceId": "doi:10.1002/pen.26836",
+      "doi": "10.1002/pen.26836",
+      "title": "In-mold rheology and automated process control for injection molding of recycled polypropylene",
+      "publisher": "Polymer Engineering & Science / Wiley",
+      "verification": "publisher-verified-primary-measured",
+      "license": "CC BY open access",
+      "experimentalContext": ["five recycled-PP blends with broad flow-property distribution", "in-mould pressure sensing", "adaptive nozzle-pressure control", "control-enabled and fixed-condition moulding"],
+      "measuredSignalsOutcomes": ["in-mould pressure curves", "calculated in-mould viscosity", "part weight", "mechanical properties"],
+      "limitation": "The tested rPP blends, control architecture, mould and sensor locations are study-specific; variability reduction does not establish a universal controller or material-equivalence rule."
+    },
+    {
+      "mechanismId": "recyclate-process-variability",
+      "sourceId": "doi:10.1155/adv/7570978",
+      "doi": "10.1155/adv/7570978",
+      "title": "Influence of the Recyclate Content on the Process Stability and Part Quality of Injection Moulded Post-Consumer Polyolefins",
+      "publisher": "Advances in Polymer Technology / Wiley",
+      "verification": "publisher-verified-primary-measured",
+      "license": "open access",
+      "experimentalContext": ["16 mixtures of virgin and post-consumer PP/HDPE", "two injection-moulded geometries", "rheological analysis", "recorded injection-pressure/torque process data"],
+      "measuredSignalsOutcomes": ["process stability", "tensile strength", "elastic modulus", "strain at break", "geometrical and optical part properties"],
+      "limitation": "Specific post-consumer streams, blend ratios, compounding history and geometries; evidence supports variability and part-property sensitivity rather than interchangeability of recyclates."
+    },
+    {
+      "mechanismId": "recyclate-process-variability",
+      "sourceId": "doi:10.1016/j.cirpj.2025.09.005",
+      "doi": "10.1016/j.cirpj.2025.09.005",
+      "title": "Silver streaks dependence on processing conditions in the injection molding of post-consumer recycled polypropylene",
+      "publisher": "CIRP Journal of Manufacturing Science and Technology / Elsevier",
+      "verification": "publisher-verified-primary-measured",
+      "license": "Creative Commons open access",
+      "experimentalContext": ["post-consumer recycled PP", "melt-temperature variation", "shear/injection-speed variation", "surface-defect investigation"],
+      "physicalOutcomes": ["silver-streak surface defects", "degradation/volatile-related mechanism evidence"],
+      "limitation": "The defect chemistry depends on contaminant inks/binders and recyclate history; process adjustments are source-specific and cannot be generalized as universal settings."
+    },
+    {
+      "mechanismId": "recyclate-process-variability",
+      "sourceId": "doi:10.1016/j.jprocont.2026.103725",
+      "doi": "10.1016/j.jprocont.2026.103725",
+      "title": "Part-mass control in injection molding of recycled thermoplastics by learning-enabled model predictive cavity-pressure control",
+      "publisher": "Journal of Process Control / Elsevier",
+      "verification": "publisher-verified-primary-measured",
+      "license": "CC BY",
+      "linkedCanonicalDataset": "rwth-pcr-2025",
+      "experimentalContext": ["virgin PP and two PCR batches", "50 uninterrupted transition cycles", "cavity-pressure control", "cycle-adaptive process model", "plate mould"],
+      "physicalOutcome": ["part mass"],
+      "reportedPerformanceContext": "Mean part-mass deviation of 0.21% relative to the reference was reported during the tested transition sequence.",
+      "limitation": "This article and the RWTH dataset are the same experimental family and must never be counted as independent evidence from each other."
+    }
+  ],
+  "reviewRecommendations": {
+    "fibre-breakage-retained-length": "Now has two publisher-verified primary measured studies from independent groups with retained fibre length plus physical/mechanical outcomes; run canonical promotion review.",
+    "runner-gate-multicavity-imbalance": "Now has at least two publisher-level experimental candidates, but carefully check author-group overlap and whether physical cavity-quality outcomes satisfy the exact promotion rule.",
+    "hot-runner-actual-behaviour": "Evidence is stronger, but a second study measuring hot-runner actual thermal/mechanical state independently of commands/setpoints is still preferable before promotion.",
+    "recyclate-process-variability": "Multiple independent measured studies plus the RWTH data family now satisfy a strong evidence shape; run a dedicated overlap-group and physical-outcome promotion review."
+  },
+  "boundary": "No raw data are copied. No canonical counts or mechanism statuses are changed by this file."
+}
