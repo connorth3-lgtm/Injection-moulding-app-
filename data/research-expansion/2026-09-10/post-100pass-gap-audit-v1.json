@@ -1,0 +1,85 @@
+{
+  "schema": 1,
+  "version": "2026.09.10.100pass.1",
+  "auditDate": "2026-09-10",
+  "searchPassesCompleted": 100,
+  "researchCandidateCountBefore": 174,
+  "researchCandidateCountAfter": 178,
+  "newCandidates": ["MM-DATA-175", "MM-DATA-176", "MM-DATA-177", "MM-DATA-178"],
+  "canonicalMeasuredFamiliesDelta": 0,
+  "acceptedTimeSeriesValuesDelta": 0,
+  "conclusion": "Discovery is saturated. The dominant remaining work is admission and owner-authorized acquisition, not broader search.",
+  "remainingPriority": [
+    {
+      "rank": 1,
+      "gap": "rights-cleared cycle -> physical quality/defect -> actual action -> verified recovery raw histories",
+      "status": "critical_open",
+      "bestCurrentTargets": ["MM-DATA-159", "MM-DATA-142", "MM-DATA-165"],
+      "note": "The 100-pass wave found related control evidence but no new openly reusable chronological intervention/recovery corpus."
+    },
+    {
+      "rank": 2,
+      "gap": "admit already-discovered executable public data",
+      "status": "critical_internal",
+      "targets": ["OpenMMS", "RWTH PCR", "PASCOE/imPURE", "EPP", "scatimdata", "FORinFPRO-HIMD"],
+      "note": "Expected value now exceeds generic discovery because exact files already exist and several have explicit open licences or author-published raw payloads."
+    },
+    {
+      "rank": 3,
+      "gap": "rights-clear multi-machine / multi-mould labelled raw corpus",
+      "status": "critical_open",
+      "bestCurrentTargets": ["MM-DATA-158", "MM-DATA-166", "MM-DATA-084", "MM-DATA-085"],
+      "note": "Cross-machine mechanism evidence is abundant; executable domain-preserving tables remain scarce."
+    },
+    {
+      "rank": 4,
+      "gap": "natural maintenance/wear intervention -> quantified recovery",
+      "status": "high_open",
+      "bestCurrentTargets": ["MM-DATA-162", "MM-DATA-177"],
+      "note": "MM-DATA-176 improves long-horizon tool-life evidence but contains no repair/recovery intervention."
+    },
+    {
+      "rank": 5,
+      "gap": "longitudinal pre-defect process drift with direct quality events",
+      "status": "improved_request_open",
+      "bestCurrentTargets": ["MM-DATA-175", "MM-DATA-178"],
+      "note": "The 100-pass wave materially improved acquisition routes here, but raw owner-authorized chronological data are still required."
+    },
+    {
+      "rank": 6,
+      "gap": "hot-runner actual device-state telemetry",
+      "status": "high_open",
+      "bestCurrentTargets": ["MM-DATA-160", "MM-DATA-140"],
+      "note": "Need zone actuals, heater output/current, alarms, valve-pin command/actual and shot-linked quality."
+    },
+    {
+      "rank": 7,
+      "gap": "multicavity per-shot physical outcomes",
+      "status": "high_open",
+      "bestCurrentTargets": ["MM-DATA-136", "MM-DATA-085"],
+      "note": "Need cavity identity preserved with pressure/temperature plus weight/dimension/defect outcome."
+    },
+    {
+      "rank": 8,
+      "gap": "routine production material lot / COA / moisture / drying linkage",
+      "status": "high_open",
+      "bestCurrentTargets": ["MM-DATA-170", "MM-DATA-116"],
+      "note": "Research batch studies exist, but routine plant traceability remains missing."
+    },
+    {
+      "rank": 9,
+      "gap": "rights-clear raw 2K / multimaterial production records",
+      "status": "high_open",
+      "bestCurrentTargets": ["MM-DATA-167", "MM-DATA-169"],
+      "note": "Mechanism evidence is broad; cycle-linked interface quality remains scarce."
+    },
+    {
+      "rank": 10,
+      "gap": "real MouldMaster learner telemetry and blinded engineer validation",
+      "status": "app_specific_open",
+      "note": "Public search cannot close these two validation gaps."
+    }
+  ],
+  "recommendedMode": "STOP_GENERIC_SEARCH__RUN_ADMISSION_AND_OWNER_REQUESTS",
+  "truthBoundary": "178 is a research-candidate count, not a count of rights-executable canonical measured families."
+}
