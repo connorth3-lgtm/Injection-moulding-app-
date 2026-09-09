@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "version": "2026.09.09.4",
+  "version": "2026.09.09.5",
   "purpose": "Staged research/evidence expansion. This does not bypass canonical measured-data, assessment, material, rights, or release gates.",
   "counts": {
     "sourceCandidates": 91,
@@ -34,7 +34,8 @@
     "newResearchSourceIds": ["MM-DATA-076", "MM-DATA-077", "MM-DATA-078", "MM-DATA-079", "MM-DATA-080", "MM-DATA-081", "MM-DATA-082", "MM-DATA-083", "MM-DATA-084", "MM-DATA-085", "MM-DATA-086", "MM-DATA-087", "MM-DATA-088", "MM-DATA-089", "MM-DATA-090", "MM-DATA-091"],
     "exactGradeSourceIds": ["MAT-SRC-001", "MAT-SRC-002", "MAT-SRC-003", "MAT-SRC-004", "MAT-SRC-005", "MAT-SRC-006", "MAT-SRC-007", "MAT-SRC-008"],
     "mechanismStrongReReviewCandidates": ["fibre-breakage-retained-length", "liquid-silicone-rubber", "fluid-assisted-moulding", "moisture-drying-degradation", "recyclate-process-variability", "gate-freeze-and-part-mass"],
-    "mechanismImprovedNeedMoreEvidence": ["runner-gate-multicavity-imbalance", "hot-runner-actual-behaviour", "cross-material-process-transfer", "venting-air-entrapment"]
+    "mechanismImprovedNeedMoreEvidence": ["runner-gate-multicavity-imbalance", "hot-runner-actual-behaviour", "cross-material-process-transfer", "venting-air-entrapment"],
+    "latestGapQueue": "data-gap-priority-wave3-v1.json"
   },
   "files": [
     "README.md",
@@ -66,6 +67,7 @@
     "mechanism-evidence-verification-wave2-v1.json",
     "mechanism-evidence-verification-wave2b-v1.json",
     "mechanism-evidence-verification-wave2c-v1.json",
-    "data-gap-priority-wave2-v1.json"
+    "data-gap-priority-wave2-v1.json",
+    "data-gap-priority-wave3-v1.json"
   ]
 }
