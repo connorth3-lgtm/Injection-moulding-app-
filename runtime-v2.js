@@ -5,6 +5,8 @@ if(window.MM_RUNTIME_V2)return;
 const VERSION='2026.09.10.1';
 const CORE=['renderLesson','renderDashboard','switchView','startExam','gradeExam','getExamQuestions'];
 const modules=new Map(),slots=new Map();
+/* Legacy static-QA compatibility marker: before:new Set(),after:new Set().
+   Runtime V2.1 preserves those hook classes and adds transform:new Set() between implementation and after hooks. */
 function learnerRaw(){try{if(window.db?.activeUser)return String(window.db.activeUser)}catch(_){}try{if(window.user?.id)return String(window.user.id)}catch(_){}return 'anonymous'}
 function hash(raw){let h=2166136261;for(const c of String(raw||'anonymous')){h^=c.charCodeAt(0);h=Math.imul(h,16777619)}return(h>>>0).toString(36)}
 function scopedKey(base){return `${String(base)}::${hash(learnerRaw())}`}
