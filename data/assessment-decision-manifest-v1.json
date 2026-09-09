@@ -2453,13 +2453,13 @@
     {
       "bankVersion": null,
       "choiceFingerprints": [
-        "fnv1a-93bc6f66",
+        "fnv1a-5cba8fcb",
         "fnv1a-398419a5",
         "fnv1a-8317c99d",
         "fnv1a-795ee89f"
       ],
-      "contentFingerprint": "fnv1a-bb68078b",
-      "correctChoiceFingerprint": "fnv1a-93bc6f66",
+      "contentFingerprint": "fnv1a-002e01a4",
+      "correctChoiceFingerprint": "fnv1a-5cba8fcb",
       "critical": false,
       "decisionScope": "evidence-approved-learning",
       "evidenceSourceMode": "mapped-authoritative-source",
@@ -3109,12 +3109,12 @@
       "bankVersion": null,
       "choiceFingerprints": [
         "fnv1a-8b128b0a",
-        "fnv1a-7da9de4c",
+        "fnv1a-274f5ef8",
         "fnv1a-9dbadd4f",
         "fnv1a-2ed42f57"
       ],
-      "contentFingerprint": "fnv1a-e7bf676d",
-      "correctChoiceFingerprint": "fnv1a-7da9de4c",
+      "contentFingerprint": "fnv1a-7f034b5d",
+      "correctChoiceFingerprint": "fnv1a-274f5ef8",
       "critical": false,
       "decisionScope": "evidence-approved-learning",
       "evidenceSourceMode": "direct-question-source",
