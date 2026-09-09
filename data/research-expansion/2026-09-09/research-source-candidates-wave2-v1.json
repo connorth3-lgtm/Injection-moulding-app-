@@ -1,0 +1,165 @@
+{
+  "schema": 1,
+  "version": "2026.09.09.2",
+  "reviewed": "2026-09-09",
+  "boundary": "Discovery and source-review metadata only. No raw third-party payloads are committed and no canonical measured-value or independent-family count changes until existing rights, retrieval, semantic, fingerprint and profiling gates pass.",
+  "summary": {
+    "newCandidates": 8,
+    "candidateIds": ["MM-DATA-076", "MM-DATA-077", "MM-DATA-078", "MM-DATA-079", "MM-DATA-080", "MM-DATA-081", "MM-DATA-082", "MM-DATA-083"],
+    "explicitCcBy4DatasetRecords": 4,
+    "rightsReviewRequired": 3,
+    "articleMeasuredEvidenceOnly": 1,
+    "canonicalMeasuredCountIncrement": 0
+  },
+  "sources": [
+    {
+      "id": "MM-DATA-076",
+      "name": "NADINE / IJCNN transparent-part streaming injection-moulding quality dataset",
+      "priority": "P0",
+      "sourceType": "measured_multimodal_quality_stream",
+      "independenceFamily": "NADINE_IJCNN2021_transparent_mould",
+      "source": "https://arxiv.org/abs/2106.13955",
+      "reportedOriginalDataset": "https://github.com/ContinualAL/NADINE-IJCNN2021",
+      "survivingMirrorReviewed": "https://github.com/muzixiang/NADINE-IJCNN2021",
+      "scale": {
+        "observations": 2952,
+        "sensorFeatures": 48,
+        "classes": {"normal": 1008, "weaving": 1074, "shortForming": 870}
+      },
+      "processVariation": {
+        "holdingPressurePsi": [900, 700, 500, 300, 100],
+        "injectionSpeedRpm": [60, 70, 80, 90, 100]
+      },
+      "signalsOutputs": ["48 machine/sensor features", "part images", "three-class physical quality labels", "streaming concept-drift sequence"],
+      "value": "High-value independent multimodal quality/drift family with real injection-moulding observations and physical defect labels.",
+      "rights": {
+        "state": "review-required",
+        "reason": "The paper explicitly published the dataset for reproducibility, but the original GitHub path is not currently resolvable through the connected repository service and the surviving mirror reviewed has no explicit licence file. Public mirroring is not treated as permission for raw ingestion or redistribution."
+      },
+      "governance": {"rawPayloadCommitted": false, "canonicalMeasuredCountIncrement": 0, "countAsNewIndependentFamily": false},
+      "nextAction": "Locate an author-controlled surviving release or explicit dataset/code licence; then fingerprint and profile the exact archive with sequence/order and image-to-cycle linkage preserved."
+    },
+    {
+      "id": "MM-DATA-077",
+      "name": "Ferromatik Milacron K85 mould pressure/temperature experimental workbook",
+      "priority": "P1",
+      "sourceType": "measured_mould_sensor_workbook",
+      "independenceFamily": "K85_Priamus_pressure_temperature",
+      "source": "https://github.com/CEOsCompany/Injection-Molding-Machine-IMM--dataset",
+      "reportedSetup": {
+        "machine": "Ferromatik Milacron K85",
+        "controlledVariables": ["mould temperature", "second compaction pressure value", "second compaction pressure time"],
+        "repeatsPerCombination": 10,
+        "measuredSignals": ["mould pressure", "mould temperature"],
+        "pressureSensor": "Priamus 6001B",
+        "temperatureSensor": "Type K thermocouple"
+      },
+      "availablePayload": {"file": "Data.xlsx", "approxBytes": 2408184},
+      "value": "Potentially useful repeated-condition mould-sensor dataset for pressure/thermal response and process-repeatability learning.",
+      "rights": {"state": "review-required", "reason": "Repository exposes the workbook but no explicit licence or authoritative original-data provenance was located in the reviewed repository."},
+      "governance": {"rawPayloadCommitted": false, "canonicalMeasuredCountIncrement": 0, "countAsNewIndependentFamily": false},
+      "nextAction": "Trace the workbook to its original publication/data owner and obtain explicit reuse terms before profiling."
+    },
+    {
+      "id": "MM-DATA-078",
+      "name": "16-cavity ABS cavity-pressure-to-part-mass quality study",
+      "priority": "P0",
+      "sourceType": "publisher_verified_primary_measured_article",
+      "independenceFamily": "Parizs_2022_16cavity_pressure_quality",
+      "source": "https://doi.org/10.3390/s22072704",
+      "license": "CC BY 4.0 article",
+      "reportedSetup": {
+        "machine": "Arburg Allrounder 420 C 1000-290",
+        "material": "Terluran GP-35 ABS",
+        "mouldCavities": 16,
+        "pressureSensors": 30,
+        "pressureSamplingHz": 100,
+        "pressureWindowSeconds": 10,
+        "specimens": 190,
+        "holdingPressureBar": [200, 600, 1000],
+        "holdingTimeSeconds": "0 to 3 in 0.25 s steps"
+      },
+      "signalsOutputs": ["cavity/runner pressure curves", "19 pressure-derived features", "part mass", "quality classes"],
+      "value": "Strong measured evidence for cavity-specific pressure signatures, multicavity monitoring and mass prediction; directly supports pressure-to-quality learning.",
+      "rights": {"state": "article-open-no-separate-raw-dataset", "reason": "The article is open access, but a separately licensed machine-readable raw dataset was not located during this pass."},
+      "governance": {"rawPayloadCommitted": false, "canonicalMeasuredCountIncrement": 0, "countAsNewIndependentFamily": false},
+      "nextAction": "Retain as publisher-verified article evidence; search author/institution repositories for the original 30-sensor traces before any raw-data count."
+    },
+    {
+      "id": "MM-DATA-079",
+      "name": "MoldCAD paired injection-mould part and professional mould-assembly corpus",
+      "priority": "P0",
+      "sourceType": "engineer_authored_tooling_cad",
+      "independenceFamily": "MoldCAD_AIMold_2026",
+      "source": "https://tb2-sy.github.io/aimold/",
+      "code": "https://github.com/tb2-sy/AIMold",
+      "scale": {"mouldAssemblies": "5000+", "individualModels": "23000+", "engineerDesignedGroundTruthPercent": 100},
+      "annotations": ["single-body part", "demoulding orientation", "upper mould", "lower mould", "parting surface", "auxiliary components", "instance-level assembly structure"],
+      "value": "Large net-new tooling/design evidence class for demould direction, parting, side-action and mould-assembly reasoning; complements process datasets rather than replacing measured process evidence.",
+      "rights": {"state": "review-required", "reason": "The 2026 project page exposes MoldCAD and code links, but no repository-level licence file was found in the connected GitHub repository during this review."},
+      "governance": {"rawPayloadCommitted": false, "canonicalMeasuredCountIncrement": 0, "countAsNewIndependentFamily": false, "measuredProcessEvidence": false},
+      "nextAction": "Resolve the dataset hosting endpoint and licence/terms, then create a separate tooling-CAD contract with source hashes and train/eval split controls."
+    },
+    {
+      "id": "MM-DATA-080",
+      "name": "Injection-production PC waste recycling dataset (Tarflon IR1900 origin)",
+      "priority": "P1",
+      "sourceType": "measured_recycling_material_process",
+      "independenceFamily": "Edinburgh_Sartorius_PC_waste_2025",
+      "source": "https://doi.org/10.17632/tc6hgwp9mh.1",
+      "license": "CC BY 4.0",
+      "materials": ["Tarflon IR1900 virgin PC", "PC waste from Sartorius injection-moulding series production"],
+      "processContext": ["injection-production waste origin", "shredding", "regrind drying", "filament extrusion", "FDM"],
+      "value": "Useful supporting evidence for real injection-moulding waste provenance, PC drying and recycling-state changes; downstream FDM measurements must remain distinct from injection-cycle evidence.",
+      "rights": {"state": "open-dataset-record"},
+      "governance": {"rawPayloadCommitted": false, "canonicalMeasuredCountIncrement": 0, "countAsNewIndependentFamily": false, "downstreamOperationsDoNotCountAsInjectionCycles": true},
+      "nextAction": "Profile exact files and accept only directly measured fields with explicit stage identity; do not count downstream FDM rows as injection-moulding measurements."
+    },
+    {
+      "id": "MM-DATA-081",
+      "name": "Injection-moulded PLA/ABS structural mechanical comparison dataset",
+      "priority": "P1",
+      "sourceType": "measured_injection_moulded_specimen_properties",
+      "independenceFamily": "EdinburghNapier_IM_PLA_ABS_mechanical_2018",
+      "source": "https://doi.org/10.17632/yxz2w7ctnh.1",
+      "license": "CC BY 4.0",
+      "materials": ["PLA", "ABS"],
+      "measurements": ["three-point bending", "tensile testing", "impact testing"],
+      "value": "Direct physical-property outcomes on injection-moulded PLA and ABS specimens, useful for process-route comparison and material-learning examples.",
+      "rights": {"state": "open-dataset-record"},
+      "governance": {"rawPayloadCommitted": false, "canonicalMeasuredCountIncrement": 0, "countAsNewIndependentFamily": false, "routeIdentityRequired": true},
+      "nextAction": "Retrieve and fingerprint source files; isolate injection-moulded specimen rows from FDM rows and energy measurements before counting."
+    },
+    {
+      "id": "MM-DATA-082",
+      "name": "Silica-coated mould-tool surface characterisation dataset",
+      "priority": "P1",
+      "sourceType": "measured_tool_surface_characterisation",
+      "independenceFamily": "Freiburg_silica_coated_injection_tool_2025",
+      "source": "https://doi.org/10.17632/5c99y23pz9.3",
+      "license": "CC BY 4.0",
+      "payload": "~127 MB publisher ZIP",
+      "measurements": ["white-light interferometry surface roughness", "optical transmission", "fluorescence microscopy"],
+      "toolingContext": "Silica glass geometries adapted through metal casting for multi-sided injection-moulding tools.",
+      "value": "Adds measured tooling-surface and optical-characterisation evidence relevant to surface finish, insert/tool manufacture and demoulding-surface reasoning.",
+      "rights": {"state": "open-dataset-record"},
+      "governance": {"rawPayloadCommitted": false, "canonicalMeasuredCountIncrement": 0, "countAsNewIndependentFamily": false, "measuredProcessEvidence": false},
+      "nextAction": "Profile the exact v3 ZIP and classify measurements as tooling/material characterisation, not injection-cycle process signals."
+    },
+    {
+      "id": "MM-DATA-083",
+      "name": "Injection-moulding equipment effectiveness / SMED-TPM-5S operations dataset",
+      "priority": "P1",
+      "sourceType": "measured_operations_improvement",
+      "independenceFamily": "UPC_plastics_OEE_SMED_TPM_2024",
+      "source": "https://doi.org/10.17632/g6rz752g3f.1",
+      "license": "CC BY 4.0",
+      "reportedContext": ["injection-moulding interruptions", "setup/changeover time", "equipment availability", "OEE", "TPM", "SMED", "5S"],
+      "reportedBaselineEfficiencyPercent": 53.1,
+      "value": "Potential operations/maintenance evidence for downtime, setup/changeover and equipment-effectiveness learning, separate from cavity/process physics.",
+      "rights": {"state": "open-dataset-record"},
+      "governance": {"rawPayloadCommitted": false, "canonicalMeasuredCountIncrement": 0, "countAsNewIndependentFamily": false, "operationsEvidenceOnlyUntilProfiled": true},
+      "nextAction": "Retrieve and profile exact files; accept only directly observed operations values and keep proposed/intervention/model calculations separate."
+    }
+  ]
+}
