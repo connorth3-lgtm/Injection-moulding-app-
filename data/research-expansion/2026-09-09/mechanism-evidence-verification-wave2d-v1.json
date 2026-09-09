@@ -1,0 +1,43 @@
+{
+  "schema": 1,
+  "version": "2026.09.09.1",
+  "boundary": "Measured-study and author-published raw-data evidence for tool/machine-state monitoring. These records do not change canonical counts until the raw files or contractual data are separately admitted through repository gates.",
+  "entries": [
+    {
+      "id": "doi:10.3390/s23073569",
+      "mechanisms": ["tool-condition-monitoring", "ejection-extraction-fault", "mould-maintenance", "cavity-pressure-cycle-segmentation"],
+      "title": "Development of an Open-Source Injection Mold Monitoring System",
+      "verification": "publisher-verified-primary-measured-plus-author-published-raw-data",
+      "experimentalEvidence": ["110 continuously recorded cycles", "first 54 normal cycles", "repeated simulated extraction-pin fault", "10 Hz acquisition", "cavity pressure", "mould temperature", "extraction force", "3-axis acceleration", "real injection mould and machine"],
+      "physicalOutcome": "Clear distinguishable normal vs abnormal extraction-force/vibration patterns; fault intervention was physically applied to the ejector/extraction system.",
+      "rawData": "https://github.com/TEPGomes/OpenMMS-T4G/blob/cfa6e23c7fc02a645e31e06d299021cb0a3ce3e7/Real_World_Test/Case_Study_Raw_Data.csv",
+      "source": "https://www.mdpi.com/1424-8220/23/7/3569",
+      "limitation": "Fault is deliberately simulated by added friction at one extraction pin; it is not a naturally aged wear history or a population of production mould failures."
+    },
+    {
+      "id": "doi:10.3390/a18080521",
+      "mechanisms": ["machine-state-monitoring", "maintenance-anomaly", "human-error", "longitudinal-process-drift"],
+      "title": "Analysis of the State and Fault Detection of a Plastic Injection Machine—A Machine Learning-Based Approach",
+      "verification": "publisher-verified-industrial-measured-contract-restricted",
+      "experimentalEvidence": ["48 million records", "129 variables", "seven machines", "274 days April 2024-January 2025", "3,242,214-record single-machine analysis subset", "company-expert validation of inferred operational states"],
+      "physicalOutcome": "Operational/anomalous states and functional limits were checked with the industrial data provider; underlying data include failure events but do not identify failure type directly.",
+      "dataAccess": "Industry-owned; not readily available; authors accessed under maintenance and research contract.",
+      "source": "https://www.mdpi.com/1999-4893/18/8/521",
+      "limitation": "Cluster-derived state labels are not equivalent to independent shot-level root-cause labels; raw data cannot be used without owner authorization."
+    },
+    {
+      "id": "doi:10.7717/peerj-cs.302",
+      "mechanisms": ["sensor-synchronization", "sampling-rate-validation", "command-versus-actual-semantics"],
+      "title": "Towards a general application programming interface (API) for injection molding machines",
+      "verification": "publisher-verified-primary-measured-with-raw-supplements",
+      "experimentalEvidence": ["raw CSV supplements at 2, 33, 50 and 100 Hz", "mould pressure and temperature channels", "IMM and RevPi timestamps", "up to 97 machine/process parameters supported", "ENGEL CC300/RC300 prototype"],
+      "physicalOutcome": "Demonstrates synchronization and achievable logging behavior across machine and external sensors rather than a molded-part quality outcome.",
+      "source": "https://doi.org/10.7717/peerj-cs.302",
+      "limitation": "Not a quality-mechanism promotion source by itself; individual supplements must be screened because some tests were performed without the IMM operating."
+    }
+  ],
+  "reviewImpact": {
+    "newHighValueGapReduction": ["mould/ejection condition monitoring", "industrial machine-state monitoring", "measurement synchronization semantics"],
+    "remainingNeed": "Natural component wear/failure histories with maintenance action and verified post-repair recovery remain scarce."
+  }
+}
