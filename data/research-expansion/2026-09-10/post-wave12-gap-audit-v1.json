@@ -1,0 +1,107 @@
+{
+  "schema": 1,
+  "version": "2026.09.10.1",
+  "auditDate": "2026-09-10",
+  "baseState": {
+    "researchCandidatesBeforeWave": 171,
+    "researchCandidatesAfterWave": 174,
+    "newCandidates": 3,
+    "canonicalMeasuredFamiliesDelta": 0,
+    "acceptedTimeSeriesValuesDelta": 0,
+    "realMouldMasterLearnerRowsDelta": 0,
+    "independentBlindedMouldMasterEngineerLabelsDelta": 0
+  },
+  "waveImpact": [
+    {
+      "area": "cooling/tooling physical quality",
+      "statusBefore": "mechanism strong; longitudinal raw recovery missing",
+      "statusAfter": "physical quality breadth improved; longitudinal raw recovery still missing",
+      "evidenceAdded": ["MM-DATA-172"]
+    },
+    {
+      "area": "material/process physical-property linkage",
+      "statusBefore": "strong but PP/PCR-heavy in process-linked evidence",
+      "statusAfter": "broader with rights-clear HDPE/GNP process-to-mechanical measurements",
+      "evidenceAdded": ["MM-DATA-173"]
+    },
+    {
+      "area": "defect mechanism triangulation",
+      "statusBefore": "strong mechanism evidence; row-level action/recovery missing",
+      "statusAfter": "burn-mark/short-shot cavity-pressure evidence broadened; row-level action/recovery still missing",
+      "evidenceAdded": ["MM-DATA-174"]
+    }
+  ],
+  "remainingPriority": [
+    {
+      "rank": 1,
+      "gap": "rights-cleared shot -> physical defect/quality -> actual process action -> verified recovery raw histories",
+      "status": "critical_open",
+      "reason": "Wave12 adds no reusable chronological intervention/recovery table. MM-DATA-159 remains the closest acquisition target."
+    },
+    {
+      "rank": 2,
+      "gap": "deterministic admission of already-discovered executable public candidates",
+      "status": "high_open",
+      "reason": "OpenMMS raw CSV is reachable and its pinned header/blob are verified, but full deterministic row/missingness/range/unit/cycle profiling remains incomplete. RWTH PCR, PASCOE/imPURE, EPP and other executable records still need exact-file admission engineering."
+    },
+    {
+      "rank": 3,
+      "gap": "rights-clear multi-machine / multi-mould labeled raw corpus",
+      "status": "critical_open",
+      "reason": "Candidate mechanism coverage is strong but the best industrial transfer families remain request-only or not yet rights-cleared at row level."
+    },
+    {
+      "rank": 4,
+      "gap": "maintenance intervention -> quantified recovery raw histories",
+      "status": "high_open",
+      "reason": "Before/after cooling cases and wear mechanisms exist, but chronological maintenance-action-to-production-recovery data remain scarce."
+    },
+    {
+      "rank": 5,
+      "gap": "rights-clear hot-runner device-state raw telemetry",
+      "status": "high_open",
+      "reason": "Measured hot-runner mechanism evidence exists, but shot-linked thermocouple/heater/valve-pin actual-state rows with quality remain missing."
+    },
+    {
+      "rank": 6,
+      "gap": "rights-clear multicavity shot-level physical outcome data",
+      "status": "high_open",
+      "reason": "Multiple multicavity studies exist; reusable cavity-by-cavity pressure/temperature/weight/dimension/defect tables remain limited."
+    },
+    {
+      "rank": 7,
+      "gap": "routine production material lot/COA/moisture/drying linkage to cycle outcomes",
+      "status": "high_open",
+      "reason": "Wave12 broadens HDPE process-property evidence but does not add routine factory lot traceability."
+    },
+    {
+      "rank": 8,
+      "gap": "rights-clear raw 2K / multimaterial production records",
+      "status": "high_open",
+      "reason": "Request routes and mechanism evidence are broad; raw cycle-linked interface/quality data remain short."
+    },
+    {
+      "rank": 9,
+      "gap": "real MouldMaster learner telemetry",
+      "status": "app_specific_open",
+      "reason": "Cannot be closed by public dataset search."
+    },
+    {
+      "rank": 10,
+      "gap": "blinded independent MouldMaster engineer judgments",
+      "status": "app_specific_open",
+      "reason": "Cannot be closed by public dataset search."
+    }
+  ],
+  "nextAcquisitionActions": [
+    "Finish admission engineering for OpenMMS, RWTH PCR, PASCOE/imPURE and EPP before another broad discovery wave.",
+    "Request MM-DATA-159 chronological disturbance/action/recovery cycles.",
+    "Request MM-DATA-158 industrial main/transfer labeled cycle tables with domain identity preserved.",
+    "Request MM-DATA-166 cross-machine physical-quality tables.",
+    "Request MM-DATA-167 overmould IR/pressure traces with physical interface outcome.",
+    "Request MM-DATA-162 maintenance/run histories and MM-DATA-160 hot-runner row-level source data.",
+    "Begin privacy-safe MouldMaster learner telemetry and blinded engineer validation because public search cannot close those gaps."
+  ],
+  "decision": "CONTINUE_TARGETED_ACQUISITION__STOP_GENERIC_SEARCH",
+  "truthBoundary": "The cumulative candidate count is a research-discovery count, not a count of rights-executable or independently validated canonical measured families."
+}
