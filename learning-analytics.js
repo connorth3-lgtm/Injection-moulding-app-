@@ -1,8 +1,8 @@
-/* MouldMaster privacy-preserving learning analytics — 2026.09.05.2 */
+/* MouldMaster privacy-preserving learning analytics — 2026.09.10.1 */
 (function(){
 'use strict';
 
-const VERSION='2026.09.05.2';
+const VERSION='2026.09.10.1';
 const STORAGE_PREFIX='mm_learning_analytics_v1::';
 const MAX_EVENTS=1500;
 const IDLE_MS=5*60*1000;
@@ -12,7 +12,9 @@ const PRACTICE_LABELS={
   'process-data':['Read pattern','Diagnose','Next evidence','Recovery']
 };
 const learnerScope=window.MM_LEARNER_SCOPE;
+const R=window.MM_RUNTIME_V2;
 if(!learnerScope)throw new Error('MM_LEARNER_SCOPE must load before Learning Analytics');
+if(!R||typeof R.before!=='function'||typeof R.after!=='function')throw new Error('MM_RUNTIME_V2 must load before Learning Analytics');
 let storageHealth={ok:true,lastError:null,at:null};
 
 function esc(v){return String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
@@ -137,16 +139,12 @@ function abandonPractice(module,id){
 }
 
 function installCoreHooks(){
-  try{
-    if(typeof renderLesson==='function'&&!renderLesson.__mmAnalytics){
-      const base=renderLesson;const wrapped=function(){const r=base.apply(this,arguments);try{if(typeof currentView==='undefined'||currentView==='lesson')startLessonSession()}catch(_){}return r};wrapped.__mmAnalytics=true;renderLesson=wrapped;window.renderLesson=wrapped;
-    }
-  }catch(_){}
-  try{
-    if(typeof switchView==='function'&&!switchView.__mmAnalytics){
-      const base=switchView;const wrapped=function(id){if(id!=='lesson')closeLessonSession('view-change');const r=base.apply(this,arguments);if(id==='lesson')startLessonSession();return r};wrapped.__mmAnalytics=true;switchView=wrapped;window.switchView=wrapped;
-    }
-  }catch(_){}
+  if(window.__MM_ANALYTICS_RUNTIME_HOOKS__)return;
+  R.after('renderLesson',()=>{try{if(typeof currentView==='undefined'||currentView==='lesson')startLessonSession()}catch(_){}});
+  R.before('switchView',id=>{if(id!=='lesson')closeLessonSession('view-change')});
+  R.after('switchView',(_out,id)=>{if(id==='lesson')startLessonSession()});
+  R.registerModule('learning-analytics-core-hooks',{version:VERSION,type:'runtime-v2-lifecycle-hooks'});
+  window.__MM_ANALYTICS_RUNTIME_HOOKS__=true;
   try{
     if(typeof goLesson==='function'&&!goLesson.__mmAnalytics){
       const base=goLesson;const wrapped=function(id){closeLessonSession('lesson-change');const r=base.apply(this,arguments);startLessonSession();return r};wrapped.__mmAnalytics=true;goLesson=wrapped;window.goLesson=wrapped;
@@ -258,5 +256,5 @@ let queued=false;function schedule(){if(queued)return;queued=true;(window.reques
 const observer=new MutationObserver(schedule);if(document.documentElement)observer.observe(document.documentElement,{childList:true,subtree:true});install();window.addEventListener('load',schedule);
 try{if(typeof currentView!=='undefined'&&currentView==='lesson')startLessonSession()}catch(_){}
 
-window.MM_LEARNING_ANALYTICS={version:VERSION,record,summary:()=>aggregate(eventsFor()),open:openInsights,canExportCrossProfile:isInstructor,minimumAggregateProfiles:MIN_EXPORT_PROFILES,storageHealth:()=>({...storageHealth}),scope:'Learner-scoped local analytics only; instructor export is cohort-level aggregate only with a minimum profile threshold; no per-profile rows, names, hashed learner tokens, notes, free text, assessment answers or network upload.'};
+window.MM_LEARNING_ANALYTICS={version:VERSION,record,summary:()=>aggregate(eventsFor()),open:openInsights,canExportCrossProfile:isInstructor,minimumAggregateProfiles:MIN_EXPORT_PROFILES,storageHealth:()=>({...storageHealth}),scope:'Learner-scoped local analytics only; instructor export is cohort-level aggregate only with a minimum profile threshold; no per-profile rows, names, hashed learner tokens, notes, free text, assessment answers or network upload. Core render/view lifecycle integration uses Runtime V2 hooks rather than global wrapper replacement.'};
 })();
