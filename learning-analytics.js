@@ -1,8 +1,8 @@
-/* MouldMaster privacy-preserving learning analytics — 2026.09.10.1 */
+/* MouldMaster privacy-preserving learning analytics — 2026.09.10.2 */
 (function(){
 'use strict';
 
-const VERSION='2026.09.10.1';
+const VERSION='2026.09.10.2';
 const STORAGE_PREFIX='mm_learning_analytics_v1::';
 const MAX_EVENTS=1500;
 const IDLE_MS=5*60*1000;
@@ -163,19 +163,22 @@ function installCoreHooks(){
   }catch(_){}
 }
 
-function handlePracticeClick(e){
-  const t=e.target.closest?.('[data-dl-start],[data-dl-choice],[data-dl-finish],[data-dl-restart],[data-dl-home],[data-dl-back],[data-pd-start],[data-pd-choice],[data-pd-finish],[data-pd-restart],[data-pd-home],[data-pd-back]');if(!t)return;
-  if(t.dataset.dlStart){currentDiagnostic=t.dataset.dlStart;startPractice('diagnostic',currentDiagnostic);return}
-  if(t.hasAttribute('data-dl-restart')){if(currentDiagnostic)startPractice('diagnostic',currentDiagnostic);return}
-  if(t.dataset.dlChoice!==undefined&&currentDiagnostic){const host=document.getElementById('diagnosticLabs'),step=Number(host?.dataset.step||0);if(host?.querySelector('.dl-choice.wrong'))record('practice_miss',{module:'diagnostic',id:currentDiagnostic,step,correct:false});return}
-  if(t.hasAttribute('data-dl-finish')&&currentDiagnostic){const m=document.querySelector('#diagnosticLabs .dl-summary strong')?.textContent?.match(/(\d+)%/);finishPractice('diagnostic',currentDiagnostic,m?Number(m[1]):0);return}
-  if((t.hasAttribute('data-dl-home')||t.hasAttribute('data-dl-back'))&&currentDiagnostic){abandonPractice('diagnostic',currentDiagnostic);currentDiagnostic=null;return}
-
-  if(t.dataset.pdStart){currentProcessData=t.dataset.pdStart;startPractice('process-data',currentProcessData);return}
-  if(t.hasAttribute('data-pd-restart')){if(currentProcessData)startPractice('process-data',currentProcessData);return}
-  if(t.dataset.pdChoice!==undefined&&currentProcessData){const host=document.getElementById('processDataLabs'),step=Number(host?.dataset.step||0);if(host?.querySelector('.pd-choice.wrong'))record('practice_miss',{module:'process-data',id:currentProcessData,step,correct:false});return}
-  if(t.hasAttribute('data-pd-finish')&&currentProcessData){const m=document.querySelector('#processDataLabs .pd-summary strong')?.textContent?.match(/(\d+)%/);finishPractice('process-data',currentProcessData,m?Number(m[1]):0);return}
-  if((t.hasAttribute('data-pd-home')||t.hasAttribute('data-pd-back'))&&currentProcessData){abandonPractice('process-data',currentProcessData);currentProcessData=null}
+function handlePracticeEvent(e){
+  const d=e?.detail||{},module=d.module;
+  if(Number(d.schema)!==1||!['diagnostic','process-data'].includes(module))return;
+  const id=safeString(d.id,96);if(!id)return;
+  if(d.type==='start'){
+    if(module==='diagnostic')currentDiagnostic=id;else currentProcessData=id;
+    startPractice(module,id);return;
+  }
+  if(d.type==='choice'){
+    if(d.correct===false)record('practice_miss',{module,id,step:Number(d.step)||0,correct:false});
+    return;
+  }
+  if(d.type==='complete'){
+    finishPractice(module,id,Number(d.score)||0);
+    if(module==='diagnostic')currentDiagnostic=null;else currentProcessData=null;
+  }
 }
 
 function ensureStyle(){
@@ -248,7 +251,8 @@ function openInsights(){closeLessonSession('insights');ensureStyle();const host=
 
 function install(){ensureStyle();ensureSection();ensureNav();patchMobileMore();installCoreHooks()}
 
-document.addEventListener('click',e=>{handlePracticeClick(e);const t=e.target.closest?.('[data-la-export],[data-la-clear]');if(t?.hasAttribute('data-la-export')){try{exportAnonymousSummary()}catch(err){window.toast?.(err?.message||String(err))}}if(t?.hasAttribute('data-la-clear'))clearCurrentAnalytics()});
+window.addEventListener('mm:practice-event',handlePracticeEvent);
+document.addEventListener('click',e=>{const t=e.target.closest?.('[data-la-export],[data-la-clear]');if(t?.hasAttribute('data-la-export')){try{exportAnonymousSummary()}catch(err){window.toast?.(err?.message||String(err))}}if(t?.hasAttribute('data-la-clear'))clearCurrentAnalytics()});
 document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='hidden')pauseLesson();else touchActivity()});
 window.addEventListener('beforeunload',()=>{closeLessonSession('unload');abandonPractice('diagnostic',currentDiagnostic);abandonPractice('process-data',currentProcessData)});
 document.addEventListener('pointerdown',touchActivity,{passive:true});document.addEventListener('keydown',touchActivity);document.addEventListener('scroll',touchActivity,{passive:true});
