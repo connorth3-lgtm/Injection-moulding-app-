@@ -1,0 +1,115 @@
+{
+  "schema": 1,
+  "version": "2026.09.09.1",
+  "purpose": "Rank what is still genuinely missing after deliberate over-acquisition through MM-DATA-157. Mechanism coverage and possession of rights-clear raw data are scored separately.",
+  "gaps": [
+    {
+      "rank": 1,
+      "gap": "authorised real-site shot-linked intervention and verified-recovery histories",
+      "coverageStatus": "still_materially_missing",
+      "target": "shot/cycle -> machine/tool/cavity -> material lot -> process actuals -> cavity/tool signals -> physical defect -> operator/engineer action -> subsequent verified good-state recovery",
+      "why": "Many corrective-action studies now exist, but few provide reusable cycle-level before/fault/action/recovery raw histories."
+    },
+    {
+      "rank": 2,
+      "gap": "real MouldMaster learner telemetry",
+      "coverageStatus": "cannot_be_acquired_publicly",
+      "target": "first answer, distractor, response time, confidence, retry, lesson exposure and later transfer performance from actual MouldMaster users",
+      "why": "External learner proxies cannot establish MouldMaster item difficulty, discrimination or learning gain."
+    },
+    {
+      "rank": 3,
+      "gap": "blinded independent engineer judgments on MouldMaster cases",
+      "coverageStatus": "cannot_be_acquired_publicly",
+      "target": "at least three independent injection-moulding engineers per blinded case before app output is revealed",
+      "why": "Public expert labels and operational labels do not substitute for MouldMaster-specific comparative validation."
+    },
+    {
+      "rank": 4,
+      "gap": "rights-clear multi-machine / multi-mould raw anomaly and quality corpus",
+      "coverageStatus": "mechanism_overfilled__raw_access_still_short",
+      "target": "multiple machines and tools with cycle identity, normal/fault labels, actual cause, material identity and physical outcome",
+      "evidenceNow": ["MM-DATA-084", "MM-DATA-094", "MM-DATA-135", "MM-DATA-151"],
+      "why": "Cross-machine evidence is now strong, but the best industrial corpora are restricted, request-only or paper-only."
+    },
+    {
+      "rank": 5,
+      "gap": "natural wear -> maintenance action -> verified recovery raw histories",
+      "coverageStatus": "wear_mechanism_overfilled__recovery_link_missing",
+      "target": "longitudinal component/tool degradation plus maintenance trigger, exact intervention and post-maintenance signal/quality recovery",
+      "evidenceNow": ["MM-DATA-092", "MM-DATA-113", "MM-DATA-114", "MM-DATA-115", "MM-DATA-145", "MM-DATA-147", "MM-DATA-148", "MM-DATA-149", "MM-DATA-150", "MM-DATA-155", "MM-DATA-156", "MM-DATA-157"],
+      "why": "Wear progression is now substantially over-covered; the missing link is real repair/cleaning/replacement followed by quantified recovery."
+    },
+    {
+      "rank": 6,
+      "gap": "rights-clear hot-runner actual-state telemetry",
+      "coverageStatus": "measured_control_evidence_overfilled__raw_actuals_missing",
+      "target": "zone actual temperatures, heater current/output, thermocouple actuals, valve-pin commanded/actual position, alarms, nozzle/manifold state, cavity response and part quality",
+      "evidenceNow": ["MM-DATA-121", "MM-DATA-127", "MM-DATA-138", "MM-DATA-139", "MM-DATA-140", "MM-DATA-153"],
+      "why": "We now have multiple independent hot-runner experiments but little reusable raw device-state telemetry."
+    },
+    {
+      "rank": 7,
+      "gap": "longitudinal cooling fouling -> cleaning -> quality/energy recovery",
+      "coverageStatus": "cooling_measurement_overfilled__longitudinal_recovery_missing",
+      "target": "flow, inlet/outlet temperature, pressure drop, water quality, fouling accumulation, cleaning/descaling action and recovery over weeks/months",
+      "evidenceNow": ["MM-DATA-095", "MM-DATA-097", "MM-DATA-098", "MM-DATA-101", "MM-DATA-144"],
+      "why": "Cooling state and contamination mechanisms are well supported, but long-duration raw maintenance histories remain scarce."
+    },
+    {
+      "rank": 8,
+      "gap": "rights-clear multicavity shot-level physical outcomes",
+      "coverageStatus": "mechanism_overfilled__raw_acquisition_needed",
+      "target": "per-shot, per-cavity pressure/temperature/weight/dimensions/defects plus runner/gate state and cavity identity",
+      "evidenceNow": ["MM-DATA-099", "MM-DATA-136", "MM-DATA-137", "MM-DATA-142"],
+      "why": "Multiple strong physical studies now exist; author-delivered or open raw cavity-by-cavity data would turn mechanism confidence into reusable validation evidence."
+    },
+    {
+      "rank": 9,
+      "gap": "deterministic admission of public raw candidates",
+      "coverageStatus": "discovery_solved__engineering_work_remaining",
+      "target": "retrieve, hash, profile and rights-review OpenMMS, EPP, PASCOE/imPURE, RWTH PCR, LEGO appendix and other executable records",
+      "evidenceNow": ["MM-DATA-092", "MM-DATA-124", "MM-DATA-133", "MM-DATA-134"],
+      "why": "For these families the marginal value now comes from data engineering/admission, not more searching."
+    },
+    {
+      "rank": 10,
+      "gap": "exact material-lot / conditioning linkage to individual moulding runs",
+      "coverageStatus": "material_grade_and_batch_mechanism_overfilled__plant_lot_link_missing",
+      "target": "supplier/grade/lot/COA, moisture, drying, regrind/recycled fraction and rheology linked to cycle IDs and outcomes",
+      "evidenceNow": ["12 manufacturer-source candidates", "MM-DATA-116", "MM-DATA-126", "MM-DATA-142"],
+      "why": "Exact grades and deliberate material changes are now broad, but routine real-production lot identity remains rare."
+    },
+    {
+      "rank": 11,
+      "gap": "rights-clear raw 2K / multimaterial production data",
+      "coverageStatus": "mechanism_overfilled__raw_production_data_short",
+      "target": "component-specific actuals, interface/core position, sequencing, hot-runner actuals and physical bond/dimensional outcomes",
+      "evidenceNow": ["MM-DATA-107", "MM-DATA-121", "MM-DATA-127", "MM-DATA-128", "MM-DATA-131", "MM-DATA-152"],
+      "why": "The process family is no longer under-researched, but most useful raw production data remain request-only or confidential."
+    },
+    {
+      "rank": 12,
+      "gap": "rights-clear measured assessment cases with real psychometric outcomes",
+      "coverageStatus": "content_possible__calibration_missing",
+      "target": "trace/case assessment items sourced from rights-clear measured evidence, followed by actual learner response statistics",
+      "why": "More question writing without real learner calibration now has low marginal value."
+    }
+  ],
+  "overfilledAtMechanismLevel": [
+    "natural tool/ejector/mould wear",
+    "multicavity pressure/imbalance",
+    "hot-runner pressure/control behaviour",
+    "material-source and batch variation",
+    "cooling-state measurement",
+    "2K/multimaterial mechanisms",
+    "cross-machine transfer evidence"
+  ],
+  "deprioritised": [
+    "additional generic single-machine process traces without physical outcomes",
+    "more simulation-only data in already-covered processes",
+    "additional papers from the same experiment or institution/tooling program when no new physical outcome is added",
+    "out-of-domain anomaly datasets when injection-moulding-specific evidence is available",
+    "model-generated QA as domain truth"
+  ]
+}

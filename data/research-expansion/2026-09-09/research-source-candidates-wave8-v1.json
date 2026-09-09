@@ -1,0 +1,183 @@
+{
+  "schema": 1,
+  "purpose": "Over-acquisition wave focused on net-new high-value injection-moulding evidence. Entries remain candidates until rights, overlap, semantics and profiling gates pass.",
+  "sources": [
+    {
+      "id": "MM-DATA-104",
+      "name": "Cross-process-chain injection moulding + screw-driving archive",
+      "status": "open_dataset_overlap_review",
+      "evidenceClass": "measured_cross_process_chain",
+      "source": "https://zenodo.org/records/17240390",
+      "signals": ["upper/lower workpiece injection pressure target/actual", "velocity", "volume", "state", "downstream torque-angle-gradient"],
+      "notes": "~1 kHz injection data linked by experiment IDs to downstream assembly. Overlap with previously staged screw-driving scenarios must be resolved before independent-family counting."
+    },
+    {
+      "id": "MM-DATA-105",
+      "name": "Powder-injection-moulding rheology / wall-slip / yield-stress dataset",
+      "status": "open_dataset",
+      "evidenceClass": "measured_material_process_characterisation",
+      "source": "https://zenodo.org/records/21618439",
+      "notes": "2026 Materials & Design companion dataset; useful for highly filled feedstock rheology and PIM transfer limits."
+    },
+    {
+      "id": "MM-DATA-106",
+      "name": "Ultra-thin micro-injection moulding pressure stability study",
+      "status": "publisher_measured_study",
+      "evidenceClass": "measured_repeated_cycle_pressure",
+      "source": "https://link.springer.com/article/10.1007/s10965-026-04946-y",
+      "signals": ["three in-mould pressure positions", "repeated shots 001-035", "synchronised injection-start alignment"],
+      "notes": "Strong repeated-shot stability evidence; raw download/reuse route still requires source-specific review."
+    },
+    {
+      "id": "MM-DATA-107",
+      "name": "Two-component LSR + ABS medical injection moulding study",
+      "status": "open_article_measured_study",
+      "evidenceClass": "measured_2k_lsr_thermoplastic",
+      "source": "https://pmc.ncbi.nlm.nih.gov/articles/PMC10574965/",
+      "notes": "Arburg two-component process with dynamic thermal management; valuable 2K/LSR mechanism evidence."
+    },
+    {
+      "id": "MM-DATA-108",
+      "name": "LSR lens residual-stress and volume-shrinkage experimental table",
+      "status": "open_article_table",
+      "evidenceClass": "measured_lsr_quality",
+      "source": "https://www.nature.com/articles/s41598-025-87753-7",
+      "signals": ["five process factors", "residual stress", "volume shrinkage"],
+      "notes": "Experimental input-output table can support LSR process-window questions after transcription/provenance review."
+    },
+    {
+      "id": "MM-DATA-109",
+      "name": "High-precision micro-injection moulding simulation-validation database",
+      "status": "request_only_measured_database",
+      "evidenceClass": "measured_micro_moulding_validation",
+      "source": "https://www.sciencedirect.com/science/article/pii/S1526612519303585",
+      "signals": ["flow-front/short-shot length", "injection pressure profile", "moulding mass", "flow-pattern shape"],
+      "notes": "Extensive actual micro-injection experimental database described; acquisition requires author/publisher route."
+    },
+    {
+      "id": "MM-DATA-110",
+      "name": "CF-PEEK overmoulded composite failure repository",
+      "status": "open_repository",
+      "evidenceClass": "measured_overmoulding_mechanical_quality",
+      "source": "https://doi.org/10.5281/zenodo.16984881",
+      "signals": ["pull-off load-extension curves", "specimen location", "interface failure mode", "microscopy"],
+      "notes": "Companion data for CF-PEEK overmoulded onto CF-LM-PAEK; useful for local bond-quality and gate-distance effects."
+    },
+    {
+      "id": "MM-DATA-111",
+      "name": "ABS short-shot injection-moulding quality dataset",
+      "status": "open_article_measured_dataset",
+      "evidenceClass": "measured_binary_defect",
+      "source": "https://www.mdpi.com/2078-2489/13/10/488",
+      "signals": ["9 process attributes", "cavity pressure", "internal mould temperature", "short-shot/non-short-shot class"],
+      "notes": "Real Arburg Allrounder experiment; source-specific raw-data availability must be confirmed before ingestion."
+    },
+    {
+      "id": "MM-DATA-112",
+      "name": "Seal-less vacuum venting industrial injection-moulding experiment",
+      "status": "open_fulltext_measured_study",
+      "evidenceClass": "measured_venting_quality_energy",
+      "source": "https://www.um.edu.mt/library/oar/handle/123456789/146775",
+      "signals": ["short-shot analysis", "in-mould sensing", "cycle time", "energy", "sink depth", "burn marks"],
+      "notes": "2026 industrially relevant benchmark: active vacuum vs passive/no venting; reported 23% cycle reduction, 15% energy reduction and >60% sink-depth reduction."
+    },
+    {
+      "id": "MM-DATA-113",
+      "name": "Non-return-valve wear evaluation and compensation experiment",
+      "status": "open_fulltext_measured_study",
+      "evidenceClass": "measured_machine_wear_compensation",
+      "source": "https://4spepublications.onlinelibrary.wiley.com/doi/full/10.1002/pen.26246",
+      "signals": ["NRV wear state", "V/P switchover", "part-weight consistency"],
+      "notes": "Important maintenance/intervention evidence distinct from the later SAE-XGBoost diagnosis study."
+    },
+    {
+      "id": "MM-DATA-114",
+      "name": "Predictive-maintenance feasibility from NRV wear",
+      "status": "publisher_measured_study",
+      "evidenceClass": "measured_machine_wear_quality",
+      "source": "https://doi.org/10.1515/polyeng-2023-0201",
+      "signals": ["four NRV outer diameters", "process variables", "product quality", "melt backflow"],
+      "notes": "Natural-maintenance proxy using controlled wear states; raw data not confirmed open."
+    },
+    {
+      "id": "MM-DATA-115",
+      "name": "Pressure-integral NRV wear diagnosis and compensation",
+      "status": "request_only_measured_study",
+      "evidenceClass": "measured_machine_wear_compensation",
+      "source": "https://doi.org/10.1007/s00170-026-18298-w",
+      "notes": "2026 independent pressure-integral framework; valuable for lifecycle diagnosis/compensation cross-check."
+    },
+    {
+      "id": "MM-DATA-116",
+      "name": "Commercial polymer batch-to-batch variation monitoring",
+      "status": "publisher_measured_study",
+      "evidenceClass": "measured_material_batch_variation",
+      "source": "https://journals.sagepub.com/doi/10.1179/146580100101540662",
+      "materials": ["PA6", "POM", "flexible PVC"],
+      "signals": ["melt pressure", "melt temperature", "viscosity index"],
+      "notes": "Independent production-grade polymer batch study; especially valuable for material-lot drift generalisation."
+    },
+    {
+      "id": "MM-DATA-117",
+      "name": "PP process-temperature / molecular-weight / shrinkage study",
+      "status": "request_only_measured_study",
+      "evidenceClass": "measured_process_structure_property",
+      "source": "https://www.sciencedirect.com/science/article/pii/S0032386126008748",
+      "signals": ["dimensional stability", "tensile", "DSC", "TGA/MTGA", "dynamic rheology", "shrinkage"],
+      "notes": "2026 study directly connects melt temperature to chain scission, ductility and shrinkage; useful degradation evidence."
+    },
+    {
+      "id": "MM-DATA-118",
+      "name": "Industrial real-time Bayesian injection-moulding optimisation data",
+      "status": "open_article_data_included",
+      "evidenceClass": "measured_industrial_optimisation",
+      "source": "https://pmc.ncbi.nlm.nih.gov/articles/PMC11608349/",
+      "notes": "Single/multi-objective real-time optimisation; authors state all study data are included in the published article."
+    },
+    {
+      "id": "MM-DATA-119",
+      "name": "Micro-injection metal vs polymer rapid-tooling inline measurements",
+      "status": "request_only_measured_study",
+      "evidenceClass": "measured_micro_tooling_process",
+      "source": "https://www.sciencedirect.com/science/article/pii/S2666912925000236",
+      "signals": ["injection pressure dynamics", "repeatability", "mechanical properties", "tool thermal behaviour"],
+      "notes": "Useful for rapid-tooling transfer limits and pressure-dynamics interpretation."
+    },
+    {
+      "id": "MM-DATA-120",
+      "name": "Conformal-cooling Moldex3D dataset for complex slender parts",
+      "status": "open_simulation_dataset",
+      "evidenceClass": "simulation_cooling_dimensional",
+      "source": "https://doi.org/10.5281/zenodo.16269943",
+      "license": "CC BY 4.0",
+      "notes": "Keep simulation provenance separate; valuable for cooling-layout and dimensional-quality breadth."
+    },
+    {
+      "id": "MM-DATA-121",
+      "name": "2K-PackAssist recycled-core hot-runner sensing project",
+      "status": "measured_project_evidence_no_public_raw",
+      "evidenceClass": "measured_2k_recyclate_hotrunner",
+      "source": "https://www.ivv.fraunhofer.de/en/processing-machinery/2kpackassist.html",
+      "signals": ["integrated pressure sensing", "viscosity/flow variation", "dosing volumes", "injection speeds", "phase-transition points"],
+      "notes": "High-value acquisition target for 2K recyclate breakthrough/core-position quality."
+    },
+    {
+      "id": "MM-DATA-122",
+      "name": "Cross-phase cavity-pressure control under PCR batch variation",
+      "status": "measured_project_evidence_overlap_review",
+      "evidenceClass": "measured_recyclate_control",
+      "source": "https://ikv-aachen.de/en/rp/cross-phase-process-control-concepts-in-injection-moulding-using-modern-control-strategies/",
+      "notes": "Project-level evidence for batch-difference detection and Bayesian quality tracking; overlap with RWTH/IKV PCR family must be resolved before independence counting."
+    },
+    {
+      "id": "MM-DATA-123",
+      "name": "Anisotropic shrinkage in Silbione 4370 LSR injection moulding",
+      "status": "publisher_measured_study",
+      "evidenceClass": "measured_lsr_shrinkage",
+      "source": "https://doi.org/10.1002/pen.26756",
+      "material": "Elkem Silbione 4370",
+      "signals": ["flow/cross-flow shrinkage", "process variables", "cure/thermal history"],
+      "notes": "Exact-grade LSR shrinkage evidence; useful independent check against other LSR quality studies."
+    }
+  ]
+}

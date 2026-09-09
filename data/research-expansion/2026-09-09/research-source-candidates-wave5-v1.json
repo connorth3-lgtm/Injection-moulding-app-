@@ -1,0 +1,92 @@
+{
+  "schema": 1,
+  "version": "2026.09.09.1",
+  "reviewed": "2026-09-09",
+  "boundary": "Net-new high-value raw-data/acquisition candidates. Canonical sample counts remain zero until exact files are rights-reviewed, fingerprinted, parsed and semantically profiled by repository controls.",
+  "sources": [
+    {
+      "id": "MM-DATA-092",
+      "name": "OpenMMS real-world injection-mould monitoring raw case study",
+      "priority": "P0",
+      "sourceType": "author-published-real-world-raw-csv",
+      "independenceFamily": "OpenMMS_TOOLING4G_2023",
+      "paper": "https://doi.org/10.3390/s23073569",
+      "repository": "https://github.com/TEPGomes/OpenMMS-T4G",
+      "rawFile": {
+        "path": "Real_World_Test/Case_Study_Raw_Data.csv",
+        "gitBlobSha": "d035660bce92f21954818a6379326d2897eebae8",
+        "sizeBytes": 2872573,
+        "paperDataAvailabilityExplicitlyLinksRawFile": true
+      },
+      "repositoryLicense": "BSD-3-Clause",
+      "paperLicense": "CC BY 4.0",
+      "machine": "Tederic D80",
+      "material": "DOW LDPE 780E",
+      "geometry": "cup-shaped molded part",
+      "reportedSamplingHz": 10,
+      "reportedCycles": 110,
+      "reportedNormalCyclesAtStart": 54,
+      "faultProtocol": "Repeated simulated extraction-pin fault by tightening a screw against the force-sensor ejector pin after the initial normal run.",
+      "signals": ["cavity pressure", "mould-plate temperature", "extraction/ejection force", "3-axis acceleration"],
+      "physicalContext": ["normal operation", "simulated extraction fault", "fault retightening/repetition", "progressive friction/path effect"],
+      "value": "Exceptionally relevant raw family for normal-to-fault progression, ejection-force diagnostics, mould monitoring and maintenance-learning cases.",
+      "governance": {
+        "rawPayloadCommitted": false,
+        "canonicalMeasuredCountIncrement": 0,
+        "exactCsvSchemaProfilePending": true,
+        "dataLicenseScopeReviewStillRequiredBeforeRedistribution": true
+      },
+      "nextAction": "Profile exact CSV row count, columns, units, missingness, time base and cycle segmentation from the pinned blob; retain raw file outside repository if required and store only fingerprints/aggregate profile."
+    },
+    {
+      "id": "MM-DATA-093",
+      "name": "SINTEF/NTNU injection-moulding API multi-rate raw sensor supplements",
+      "priority": "P1",
+      "sourceType": "publisher-supplement-raw-csv",
+      "independenceFamily": "SINTEF_NTNU_IMM_API_2020",
+      "paper": "https://doi.org/10.7717/peerj-cs.302",
+      "codeRepository": "https://github.com/SintefManufacturing/IMM_API",
+      "codeLicense": "MIT",
+      "paperOpenAccess": true,
+      "supplements": [
+        {"doi": "10.7717/peerj-cs.302/supp-1", "reportedSamplingHz": 2, "reportedSize": "1.8 MB CSV"},
+        {"doi": "10.7717/peerj-cs.302/supp-2", "reportedSamplingHz": 33, "reportedSize": "3.1 MB CSV"},
+        {"doi": "10.7717/peerj-cs.302/supp-3", "reportedSamplingHz": 50, "reportedSize": "1.8 MB CSV"},
+        {"doi": "10.7717/peerj-cs.302/supp-4", "reportedSamplingHz": 100, "reportedSize": "947.5 KB CSV"}
+      ],
+      "reportedSignalsAndSemantics": ["pressure_mold", "temperature_mold", "machine_date", "machine_time", "timestamp_imm", "timestamp_revpi_daq", "machine/process values supported by API"],
+      "reportedPlatform": "ENGEL controllers CC300/RC300 plus RevPi third-party sensor DAQ",
+      "value": "Useful raw family for multi-rate sampling, machine-vs-external-sensor synchronization, timestamp semantics and actual-vs-machine data acquisition validation.",
+      "limitations": "The published tests are principally API/synchronization validation; at least one 2 Hz supplement notes pressure_mold is zero because the IMM is off, so physical-process-value selection must be supplement-specific.",
+      "governance": {
+        "rawPayloadCommitted": false,
+        "canonicalMeasuredCountIncrement": 0,
+        "supplementSpecificLicenseAndContentReviewRequired": true,
+        "notAQualityOutcomeFamilyUnlessPhysicalOutcomeIsEstablished": true
+      },
+      "nextAction": "Retrieve each publisher supplement separately, fingerprint, inspect whether the machine is operating, and count only directly measured physical channels with established units/time base."
+    },
+    {
+      "id": "MM-DATA-094",
+      "name": "2025 industrial plastic-injection machine state/fault corpus",
+      "priority": "P0-REQUEST",
+      "sourceType": "industrial-contract-restricted-longitudinal-machine-data",
+      "independenceFamily": "Coimbra_Sinmetro_2024_2025",
+      "paper": "https://doi.org/10.3390/a18080521",
+      "reportedPlantScale": {"machines": 7, "records": 48000000, "variables": 129, "period": "April 2024 to January 2025", "days": 274},
+      "reportedAnalysisSubset": {"machine": "Machine 76", "criticalVariables": 19, "records": 3242214, "classificationTrainingRecordsApprox": 890000},
+      "signals": ["injection pressure", "shot volume", "machine/process sensor variables", "operational-state patterns"],
+      "labeling": "Raw dataset has failure events but not explicit failure type; inferred operational clusters/states were reviewed/validated with the industrial data provider/company experts.",
+      "reportedModelResult": "XGBoost classification accuracy 83.26% after cluster-label filtering in the published methodology.",
+      "dataAvailability": "Not readily available; belongs to industry and is available only under contract. Authors accessed it under maintenance and research contract.",
+      "value": "Very high-value acquisition target for long-duration real machine-state, human-error and maintenance/anomaly validation if owner-authorized access can be negotiated.",
+      "governance": {
+        "rawPayloadCommitted": false,
+        "canonicalMeasuredCountIncrement": 0,
+        "authorizationRequired": true,
+        "articleLicenseDoesNotLicenseIndustrialDataset": true
+      },
+      "nextAction": "Request a controlled aggregate-profiling or owner-side-execution path; do not infer permission from the CC BY article."
+    }
+  ]
+}

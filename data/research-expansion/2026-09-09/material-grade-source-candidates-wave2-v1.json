@@ -1,0 +1,84 @@
+{
+  "schema": 1,
+  "version": "2026.09.09.1",
+  "reviewed": "2026-09-09",
+  "purpose": "Close the exact-commercial-grade evidence gap using manufacturer-controlled sources. These are source candidates only; validated/published material-grade-v2 records still require exact document revision, retrieval date, SHA-256 fingerprint and field-level semantic review.",
+  "summary": {
+    "candidateGrades": 5,
+    "manufacturerControlledSources": 5,
+    "validatedMaterialGradeV2RecordsCreated": 0
+  },
+  "grades": [
+    {
+      "id": "MAT-SRC-001",
+      "manufacturer": "SABIC",
+      "grade": "SABIC PP 579S",
+      "polymerFamily": "PP",
+      "source": "https://www.sabic.com/en/products/polymers/polypropylene-pp/sabic-pp",
+      "sourceKind": "manufacturer-product-page",
+      "identityEvidence": ["grade 579S", "MFR 47 g/10 min at 2.16 kg", "narrow molecular weight distribution", "antistatic and nucleating agents", "thin-wall injection-moulding use", "low-warpage/high-stiffness/high-flow positioning"],
+      "linkedMeasuredDataset": "rwth-pcr-2025",
+      "value": "Exact virgin PP grade used in the RWTH recycled-material control dataset; enables grade-specific interpretation rather than generic PP assumptions.",
+      "provenance": {"stage": "source-reviewed-staging", "fingerprint": null, "revision": null, "retrievedAt": "2026-09-09"},
+      "materialGradeV2Ready": false,
+      "nextAction": "Retrieve the manufacturer technical-data document offered by the product page, fingerprint it, preserve regional variant, and map only explicitly stated properties/processing guidance."
+    },
+    {
+      "id": "MAT-SRC-002",
+      "manufacturer": "INEOS Styrolution",
+      "grade": "Terluran GP-35",
+      "polymerFamily": "ABS",
+      "source": "https://eshop.ineos-styrolution.com/Product/Terluran_Terluran-GP-35_SKU300600120829.html",
+      "sourceKind": "manufacturer-product-page",
+      "identityEvidence": ["high-flow general-purpose injection-moulding ABS", "density 1.04 g/cm3", "MFR values with test conditions", "mould shrinkage", "melt-temperature range", "mould-temperature range", "drying temperature/time", "mechanical and thermal properties with standards"],
+      "linkedMeasuredEvidence": "MM-DATA-078",
+      "value": "Exact ABS grade used by the 16-cavity pressure-quality experiment; official page includes both property context and explicitly non-universal indicative processing guidance.",
+      "provenance": {"stage": "source-reviewed-staging", "fingerprint": null, "revision": null, "retrievedAt": "2026-09-09"},
+      "materialGradeV2Ready": false,
+      "nextAction": "Download the manufacturer ISO/ASTM TDS, fingerprint exact regional/version identity, and encode processing values as supplier guidance rather than production recipes."
+    },
+    {
+      "id": "MAT-SRC-003",
+      "manufacturer": "Momentive Performance Materials",
+      "grade": "Silopren LSR 2070",
+      "polymerFamily": "liquid silicone rubber",
+      "source": "https://www.momentive.com/content/dam/momentive/es-mx/products/tds/silopren-lsr-2070.pdf",
+      "sourceKind": "manufacturer-technical-data-sheet",
+      "documentRevision": "2021-10-13",
+      "identityEvidence": ["two-component LSR for injection moulding", "A:B mixing ratio 1:1", "component viscosity 1000 Pa.s at 20 C and 10 s^-1", "density 1.14 g/cm3", "Shore A 70", "tensile strength 9.0 N/mm2", "elongation 400%", "tear strength 20 N/mm", "mould-temperature guidance 170-230 C"],
+      "value": "Exact supplier-grade LSR source that directly addresses the app's specialist LSR evidence gap and keeps thermoset/crosslinking guidance separate from thermoplastic processing.",
+      "provenance": {"stage": "source-reviewed-staging", "fingerprint": null, "revision": "HCD-Silopren LSR 2070 Rev. 2021-10-13", "retrievedAt": "2026-09-09"},
+      "materialGradeV2Ready": false,
+      "nextAction": "Fingerprint the exact PDF bytes and transcribe only supplier-labelled typical values/guidance with the document's limitations preserved."
+    },
+    {
+      "id": "MAT-SRC-004",
+      "manufacturer": "Bakelite Synthetics",
+      "grade": "Bakelite PF 6680",
+      "polymerFamily": "phenolic thermoset",
+      "source": "https://bakelite.com/wp-content/uploads/2024/04/221117_bakelite-tabelle-mc-automotive_applications.pdf",
+      "sourceKind": "manufacturer-product-family-brochure",
+      "identityEvidence": ["Bakelite PF 6680 exact grade appears in current manufacturer moulding-compound automotive portfolio", "phenolic moulding-compound family"],
+      "linkedResearchCandidate": "MM-DATA-008",
+      "value": "Manufacturer-controlled identity source for the exact phenolic grade used by the RWTH thermoset experiment; closes part of the grade-identity gap without trusting reseller property tables as canonical truth.",
+      "provenance": {"stage": "source-reviewed-staging", "fingerprint": null, "revision": null, "retrievedAt": "2026-09-09"},
+      "materialGradeV2Ready": false,
+      "nextAction": "Obtain an authoritative Bakelite technical datasheet for PF 6680 before encoding numerical properties; reseller/aggregator tables remain corroborative only."
+    },
+    {
+      "id": "MAT-SRC-005",
+      "manufacturer": "Idemitsu Kosan",
+      "grade": "TARFLON IR1900",
+      "polymerFamily": "PC",
+      "source": "https://www.idemitsu.com/jp/business/ipc/products/pc/index.html",
+      "sourceKind": "manufacturer-product-page",
+      "identityEvidence": ["IR1900 listed by Idemitsu as a high-flow natural TARFLON polycarbonate grade"],
+      "linkedResearchCandidate": "MM-DATA-080",
+      "value": "Exact virgin PC grade named in the injection-production-waste recycling dataset; supports grade-aware comparison between virgin and recycled material state.",
+      "provenance": {"stage": "source-reviewed-staging", "fingerprint": null, "revision": null, "retrievedAt": "2026-09-09"},
+      "materialGradeV2Ready": false,
+      "nextAction": "Locate the current manufacturer TDS for IR1900, preserve region/formulation identity, fingerprint it and map test-conditioned properties."
+    }
+  ],
+  "safetyBoundary": "Supplier processing values are guidance tied to the exact grade/document and are never promoted as universal machine settings or production-control authority."
+}

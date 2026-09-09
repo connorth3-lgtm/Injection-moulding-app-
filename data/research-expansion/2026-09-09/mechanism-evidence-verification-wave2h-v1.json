@@ -1,0 +1,62 @@
+{
+  "schema": 1,
+  "purpose": "Mechanism links for the second over-acquisition wave. Evidence classes remain explicit and no automatic promotion is performed.",
+  "entries": [
+    {
+      "mechanism": "foam-moulding-cycle-warpage",
+      "sourceId": "MM-DATA-124",
+      "strength": "strong_measured_raw_available",
+      "evidence": "81 measured EPP moulding trials relate five process parameters to cycle time and warpage; raw Data.xlsx is publicly published by the author.",
+      "promotionUse": "new-mechanism-family-candidate"
+    },
+    {
+      "mechanism": "recyclate-process-variability",
+      "sourceId": "MM-DATA-125",
+      "strength": "strong_measured_independent",
+      "evidence": "Independent recycled-HDPE experiment correlates cavity-pressure/in-mould rheology with tensile properties and machine servo energy under pressure- versus velocity-controlled filling.",
+      "promotionUse": "strong-independent-recyclate-support"
+    },
+    {
+      "mechanism": "material-batch-drift",
+      "sourceId": "MM-DATA-126",
+      "strength": "strong_measured_cross_batch",
+      "evidence": "649 rubber injection cycles across three material batches with different viscosities and 118 unique parameter combinations directly test material-batch disturbance and product-weight response.",
+      "promotionUse": "strong-re-review"
+    },
+    {
+      "mechanism": "hot-runner-actual-behaviour",
+      "sourceId": "MM-DATA-127",
+      "strength": "measured-multimaterial-system",
+      "evidence": "Three-material automotive mould uses needle-valve hot-runner delivery, combined cooling architectures and measured final dimensional performance after trial production.",
+      "promotionUse": "improves-but-raw-data-confidential"
+    },
+    {
+      "mechanism": "2k-multimaterial-moulding",
+      "sourceId": "MM-DATA-128",
+      "strength": "strong_measured_factorial",
+      "evidence": "Two-component Arburg moulding experiment varies injection temperature, flow, holding pressure and overlap length across 16 treatments with eight replicates each, measuring interface shear strength.",
+      "promotionUse": "strong-independent-support"
+    },
+    {
+      "mechanism": "recyclate-material-property-transfer",
+      "sourceId": "MM-DATA-130",
+      "strength": "strong-open-measured-dataset",
+      "evidence": "Injection-moulded LDPE/LLDPE/MDPE/HDPE and post-consumer recycled-PE blends include density, MFR, thermal, mechanical and FTIR measurements.",
+      "promotionUse": "new-material-mechanism-family-candidate"
+    },
+    {
+      "mechanism": "polymer-metal-overmould-interface",
+      "sourceId": "MM-DATA-131",
+      "strength": "strong-measured-mechanical-failure",
+      "evidence": "Direct injection-moulded PA66-GF35/high-strength-steel hybrids are characterised in tension and bending with DIC/SEM evidence of interface debonding, matrix fracture and fibre breakage/pull-out.",
+      "promotionUse": "new-mechanism-family-candidate"
+    },
+    {
+      "mechanism": "reprocessing-degradation-contamination",
+      "sourceId": "MM-DATA-132",
+      "strength": "measured-recycling-history",
+      "evidence": "Post-consumer film-grade rLDPE with reported PP contamination is subjected to thermo-mechanical reprocessing and injection-moulded characterisation, linking recycling history to rheology/material response.",
+      "promotionUse": "independent-degradation/recyclate-support"
+    }
+  ]
+}

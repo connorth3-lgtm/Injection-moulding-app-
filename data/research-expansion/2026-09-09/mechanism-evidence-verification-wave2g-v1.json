@@ -1,0 +1,76 @@
+{
+  "schema": 1,
+  "purpose": "Independent mechanism evidence added during over-acquisition wave. These records support re-review; they do not themselves promote a mechanism.",
+  "entries": [
+    {
+      "mechanism": "venting-air-entrapment",
+      "sourceId": "MM-DATA-112",
+      "strength": "strong_measured_independent",
+      "evidence": "Active seal-less vacuum venting experimentally compared with passive/no venting using in-mould sensing and short-shot analysis; reported burn-mark elimination, >60% sink-depth reduction, 23% cycle-time reduction and 15% energy reduction.",
+      "promotionUse": "strong_re-review"
+    },
+    {
+      "mechanism": "natural-maintenance-lifecycle",
+      "sourceId": "MM-DATA-113",
+      "strength": "strong_measured_component_wear",
+      "evidence": "NRV wear state was evaluated online and V/P switchover compensation improved part-weight consistency.",
+      "promotionUse": "improves-but-controlled-wear-not-full-field-lifecycle"
+    },
+    {
+      "mechanism": "natural-maintenance-lifecycle",
+      "sourceId": "MM-DATA-114",
+      "strength": "measured_independent_wear_states",
+      "evidence": "Four non-return valves with different outer diameters were used to quantify wear effects on process variables, melt backflow and product quality.",
+      "promotionUse": "independent_component-wear_support"
+    },
+    {
+      "mechanism": "material-batch-drift",
+      "sourceId": "MM-DATA-116",
+      "strength": "strong_measured_independent",
+      "evidence": "Commercial PA6, POM and flexible-PVC batches were moulded under constant conditions while melt pressure, melt temperature and viscosity-index signals were monitored for batch variation.",
+      "promotionUse": "strong_re-review"
+    },
+    {
+      "mechanism": "moisture-drying-degradation",
+      "sourceId": "MM-DATA-117",
+      "strength": "strong_measured_process_structure_property",
+      "evidence": "2026 PP experiment links higher melt temperature to chain scission/high-MW loss, lower ductility and increased shrinkage using rheology, DSC/TGA and dimensional/mechanical measurements.",
+      "promotionUse": "degradation-submechanism-support"
+    },
+    {
+      "mechanism": "liquid-silicone-rubber",
+      "sourceId": "MM-DATA-123",
+      "strength": "strong_measured_exact_grade",
+      "evidence": "Silbione 4370 experiments quantify anisotropic shrinkage against flow/cross-flow direction and cure/thermal-history process variables.",
+      "promotionUse": "strong_re-review"
+    },
+    {
+      "mechanism": "2k-multimaterial-moulding",
+      "sourceId": "MM-DATA-107",
+      "strength": "measured_independent",
+      "evidence": "Two-component Arburg process combines ABS and LSR with separate cavities and dynamic thermal management, providing direct thermoplastic/thermoset 2K evidence.",
+      "promotionUse": "new-mechanism-family-candidate"
+    },
+    {
+      "mechanism": "2k-recyclate-core-position",
+      "sourceId": "MM-DATA-121",
+      "strength": "measured_project_evidence",
+      "evidence": "Fraunhofer project uses integrated pressure sensing to detect recyclate flow-property variation and control core-material position/breakthrough in 2K hot-runner moulding.",
+      "promotionUse": "acquisition-target"
+    },
+    {
+      "mechanism": "micro-moulding-pressure-stability",
+      "sourceId": "MM-DATA-106",
+      "strength": "strong_repeated_cycle_measured",
+      "evidence": "Three pressure positions along an ultra-thin micro-mould flow path were synchronised to injection start and repeated over 35 consecutive shots under fixed settings.",
+      "promotionUse": "new-mechanism-family-candidate"
+    },
+    {
+      "mechanism": "overmould-interface-quality",
+      "sourceId": "MM-DATA-110",
+      "strength": "strong_measured_repository",
+      "evidence": "CF-PEEK overmoulded onto continuous CF-LM-PAEK includes pull-off load-extension curves, specimen position and microscopy/failure modes, enabling local interface-quality analysis versus gate distance.",
+      "promotionUse": "new-mechanism-family-candidate"
+    }
+  ]
+}

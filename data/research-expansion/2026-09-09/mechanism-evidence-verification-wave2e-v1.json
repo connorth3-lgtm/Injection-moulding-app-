@@ -1,0 +1,74 @@
+{
+  "schema": 1,
+  "version": "2026.09.09.1",
+  "boundary": "Publisher-verified measured-study evidence added after wave-6 acquisition review. These entries support mechanism review but do not increment canonical raw-data/sample counts.",
+  "entries": [
+    {
+      "id": "doi:10.1111/exsy.13769",
+      "mechanisms": ["cooling-circuit-actuals", "cooling-quality", "command-versus-actual"],
+      "title": "General Industrial Process Optimization Method to Leverage Machine Learning Applied to Injection Moulding",
+      "verification": "publisher-verified-primary-measured",
+      "experimentalEvidence": ["150-ton ENGEL IMM", "actual coolant inlet/outlet temperature", "actual coolant flow rate", "coolant flow setpoint", "cooling time", "injection/packing/holding variables", "per-cycle short-shot/good/flash quality"],
+      "physicalOutcome": "Per-cycle molded-part quality scores are linked to measured process and cooling state.",
+      "source": "https://doi.org/10.1111/exsy.13769",
+      "limitation": "Publisher states data sharing is not applicable; the study is evidence, not an open raw-data family."
+    },
+    {
+      "id": "doi:10.1016/j.jclepro.2018.01.258",
+      "mechanisms": ["cooling-circuit-actuals", "energy-quality-tradeoff", "coolant-flow"],
+      "title": "Optimization of mold thermal control for minimum energy consumption in injection molding of polypropylene parts",
+      "verification": "publisher-verified-industrial-primary-measured",
+      "experimentalEvidence": ["86 monitored moulds and relative injection machines", "PP packaging plant", "coolant flow and temperature", "mould thermal power", "machine electrical power", "moulded-part quality", "cooling-circuit series/parallel experiments"],
+      "physicalOutcome": "A representative process could reduce coolant flow by 66% without compromising molded-part quality under the tested conditions.",
+      "source": "https://doi.org/10.1016/j.jclepro.2018.01.258",
+      "limitation": "Plant, product, mould, hot-runner and cooling-network configuration are application-specific; the 66% result is not a universal setting."
+    },
+    {
+      "id": "doi:10.1177/09544089251324760",
+      "mechanisms": ["cooling-channel-contamination", "mould-maintenance", "hydraulic-resistance"],
+      "title": "Algorithm for assessing the level of cooling channel contamination in injection mold",
+      "verification": "publisher-verified-primary-measured",
+      "experimentalEvidence": ["water volume flow", "compressed-air volume flow", "pressure drop", "different supply pressure", "calculated hydraulic resistance", "channel-condition assessment"],
+      "physicalOutcome": "Experimental flow/pressure measurements support an objective estimate of cooling-channel contamination condition.",
+      "source": "https://doi.org/10.1177/09544089251324760",
+      "dataAvailability": "Available from corresponding author on reasonable request.",
+      "limitation": "Condition inference depends on the tested channel geometry, medium, pressure range and contamination state."
+    },
+    {
+      "id": "doi:10.1093/jcde/qwad011",
+      "mechanisms": ["machine-fault-detection", "extreme-class-imbalance", "recipe-optimization"],
+      "title": "Deep-learning-based fault detection and recipe optimization for a plastic injection molding process under the class-imbalance problem",
+      "verification": "publisher-verified-primary-measured",
+      "experimentalEvidence": ["5 Hz real process data", "7,996 raw samples", "45 raw variables", "3,956 normal preprocessed samples", "28 fault samples", "time/position/speed/pressure/temperature signal families"],
+      "physicalOutcome": "Fault labels identify anomalous production observations; selected signals show labelled outlier behavior.",
+      "source": "https://doi.org/10.1093/jcde/qwad011",
+      "limitation": "The public article does not establish an openly reusable raw dataset or a rich taxonomy of physical failure causes."
+    },
+    {
+      "id": "doi:10.1002/pen.26866",
+      "mechanisms": ["cavity-pressure-quality", "dimensional-quality", "pressure-curve-features"],
+      "title": "Data-driven quality prediction in injection molding: An autoencoder and machine learning approach",
+      "verification": "publisher-verified-primary-measured",
+      "experimentalEvidence": ["two L27 experimental sets", "54 moulding cycles", "four cavity-pressure sensor nodes", "part length", "part width", "total weight"],
+      "physicalOutcome": "Physical dimensional and mass outcomes were predicted from measured cavity-pressure information.",
+      "source": "https://doi.org/10.1002/pen.26866",
+      "dataAvailability": "Data can be provided on request.",
+      "limitation": "Small controlled experimental family; model prediction quality does not create universal pressure-quality thresholds."
+    },
+    {
+      "id": "doi:10.3390/ai7020049",
+      "mechanisms": ["command-versus-measured", "EUROMAP77", "industrial-process-history"],
+      "title": "Real-Time Optimal Parameter Recommendation for Injection Molding Machines Using AI with Limited Dataset",
+      "verification": "publisher-verified-industrial-primary-measured",
+      "experimentalEvidence": ["several months of industrial testing/production", "31 process parameters", "timestamps", "EUROMAP-77", "separate control and measured parameter classes", "machine feedback"],
+      "physicalOutcome": "Industrial process data were used for parameter recommendation and productivity optimization; the dataset preserves the distinction between operator controls and measured feedback.",
+      "source": "https://doi.org/10.3390/ai7020049",
+      "dataAvailability": "Available from authors upon request and only with permission from KHW.",
+      "limitation": "Underlying company data are restricted; article CC BY does not license the production dataset."
+    }
+  ],
+  "reviewImpact": {
+    "strongerMechanisms": ["cooling-circuit-actuals", "cooling-channel-contamination", "cavity-pressure-dimensional-quality", "command-versus-measured"],
+    "stillMissing": ["rights-clear longitudinal cooling-circuit raw cycles", "natural cooling-channel fouling progression", "verified maintenance intervention and post-cleaning recovery", "rich physical fault taxonomy"]
+  }
+}

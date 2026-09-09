@@ -1,0 +1,136 @@
+{
+  "schema": 1,
+  "version": "2026.09.09.1",
+  "boundary": "Publisher-verified measured-study evidence. These records support mechanism review but do not increment canonical measured-dataset or raw-sample counts unless a source dataset is separately rights-cleared, retrieved, fingerprinted and profiled.",
+  "entries": [
+    {
+      "id": "doi:10.1016/j.jmapro.2026.06.013",
+      "mechanisms": ["cross-material-process-transfer", "cavity-pressure-quality", "material-substitution"],
+      "title": "A physics-consistent data-driven framework for cross-material pressure and quality prediction",
+      "publisher": "Elsevier / Journal of Manufacturing Processes",
+      "year": 2026,
+      "verification": "publisher-verified-primary-measured",
+      "experimentalEvidence": ["real-machine experiments", "eight cavity-pressure sensing locations", "PS and PC material families", "full-factorial process study", "physical quality prediction targets"],
+      "dataAccess": "article evidence; no open raw dataset confirmed in this review",
+      "source": "https://www.sciencedirect.com/science/article/pii/S152661252600575X",
+      "limitation": "Cross-material mappings are specific to the tested PS/PC materials, mould, sensors and process window."
+    },
+    {
+      "id": "doi:10.1007/s10965-026-04946-y",
+      "mechanisms": ["micro-injection-moulding", "cavity-pressure-quality", "short-shot-completeness"],
+      "title": "Pressure-curve-based stability analysis for micro-injection molding of ultra-thin polymer components",
+      "publisher": "Springer Nature / Journal of Polymer Research",
+      "year": 2026,
+      "verification": "publisher-verified-primary-measured",
+      "experimentalEvidence": ["three in-mould pressure sensor positions", "35 repeated shots per condition", "shot-to-shot pressure stability", "end-of-flow signal correlated with complete filling", "before/after process stabilisation"],
+      "dataAccess": "data available from corresponding author on reasonable request; supplementary material reported",
+      "source": "https://link.springer.com/article/10.1007/s10965-026-04946-y",
+      "limitation": "Ultra-thin micro-component geometry and tested process window are specialised."
+    },
+    {
+      "id": "doi:10.1002/pen.27078",
+      "mechanisms": ["gate-freeze", "packing", "part-mass", "cavity-pressure-integral"],
+      "title": "Real-time product weight estimation based on internal pressure monitoring in injection molding",
+      "publisher": "Wiley / Polymer Engineering & Science",
+      "year": 2025,
+      "verification": "publisher-verified-primary-measured",
+      "experimentalEvidence": ["ABS and PP", "post-gate and end-of-flow pressure", "part-weight measurements", "holding-pressure/time sweep", "gate freeze-off measured at 4 s for ABS and 7 s for PP under tested conditions", "shutoff-nozzle comparison"],
+      "dataAccess": "article tables/figures; no open raw dataset confirmed in this review",
+      "source": "https://4spepublications.onlinelibrary.wiley.com/doi/10.1002/pen.27078",
+      "limitation": "Freeze times and weight-pressure relationships are material, gate, runner, nozzle and process specific and must never become universal recipes."
+    },
+    {
+      "id": "doi:10.3390/app12031410",
+      "mechanisms": ["moisture-drying-degradation", "hygroscopic-materials", "surface-defects"],
+      "title": "An Investigation to Reduce the Effect of Moisture on Injection-Molded Parts through Optimization of Plasticization Parameters",
+      "publisher": "MDPI / Applied Sciences",
+      "year": 2022,
+      "verification": "publisher-verified-primary-measured",
+      "experimentalEvidence": ["TPU and PC", "controlled drying/moisture conditions", "back pressure", "screw speed", "barrel temperature", "air-bubble area", "surface gloss", "visual appearance"],
+      "dataAccess": "open article with measured DOE tables/figures; no separate raw dataset confirmed",
+      "source": "https://www.mdpi.com/2076-3417/12/3/1410",
+      "limitation": "The study explores an optimisation strategy and does not justify bypassing supplier drying requirements for other grades or applications."
+    },
+    {
+      "id": "doi:10.3390/polym11121908",
+      "mechanisms": ["recyclate-process-variability", "process-induced-degradation", "reprocessing"],
+      "title": "Study of the Influence of the Reprocessing Cycles on the Final Properties of Polylactide Pieces Obtained by Injection Molding",
+      "publisher": "MDPI / Polymers",
+      "year": 2019,
+      "verification": "publisher-verified-primary-measured",
+      "experimentalEvidence": ["0-6 reprocessing cycles", "injection-moulded PLA specimens", "tensile properties", "impact/hardness", "melt fluidity", "thermal/crystallinity response", "visual yellowing/transparency"],
+      "dataAccess": "open article with measured tables/figures",
+      "source": "https://www.mdpi.com/2073-4360/11/12/1908",
+      "limitation": "PLA-specific reprocessing history; results do not transfer quantitatively to PP, PET, PA or other grades."
+    },
+    {
+      "id": "doi:10.7735/ksmte.2014.23.2.206",
+      "mechanisms": ["liquid-silicone-rubber", "cavity-pressure-cure", "mechanical-strength"],
+      "title": "Effects of Variation in Process Parameters on Cavity Pressure and Mechanical Strength of Molded Parts in LSR Injection Molding",
+      "publisher": "Korean Society of Manufacturing Technology Engineers",
+      "year": 2014,
+      "verification": "publisher-verified-primary-measured",
+      "experimentalEvidence": ["mould temperature and pressure sensors", "LSR process-parameter variation", "air-vent/cure optimisation", "tensile-strength measurement"],
+      "dataAccess": "article evidence; no open raw dataset confirmed",
+      "source": "https://www.kci.go.kr/kciportal/ci/sereArticleSearch/ciSereArtiView.kci?sereArticleSearchBean.artiId=ART001868496",
+      "limitation": "LSR formulation, cure chemistry, vent geometry and tested tool are application specific."
+    },
+    {
+      "id": "doi:10.1002/app.53381",
+      "mechanisms": ["liquid-silicone-rubber", "cavity-pressure-cure", "crosslinking"],
+      "title": "Novel approach to characterize the cross-linking effect of liquid silicone rubber via cavity pressure analysis during injection molding",
+      "publisher": "Wiley / Journal of Applied Polymer Science",
+      "year": 2023,
+      "verification": "publisher-verified-primary-measured",
+      "experimentalEvidence": ["LSR cavity-pressure measurement", "crosslinking-state interpretation", "process measurements and validation"],
+      "dataAccess": "open article; no separate raw dataset confirmed",
+      "source": "https://onlinelibrary.wiley.com/doi/full/10.1002/app.53381",
+      "limitation": "Supports LSR cure-pressure mechanism, not universal cure-time or pressure settings."
+    },
+    {
+      "id": "doi:10.3390/polym15091985",
+      "mechanisms": ["fluid-assisted-moulding", "gas-assisted-moulding", "projectile-assisted-moulding", "residual-wall-thickness"],
+      "title": "Effects of Processing Method and Parameters on the Wall Thickness of Gas-Projectile-Assisted Injection Molding Pipes",
+      "publisher": "MDPI / Polymers",
+      "year": 2023,
+      "verification": "publisher-verified-primary-measured",
+      "experimentalEvidence": ["GAIM vs G-PAIM", "overflow vs short-shot methods", "PP pipes", "wall-thickness and uniformity measurement", "gas pressure and delay-time experiments"],
+      "dataAccess": "open article with measured experimental results",
+      "source": "https://www.mdpi.com/2073-4360/15/9/1985",
+      "limitation": "Gas/projectile-assisted pipe geometry is a specialist family and must not be merged with ordinary injection moulding recipes."
+    },
+    {
+      "id": "doi:10.1155/2015/161938",
+      "mechanisms": ["fluid-assisted-moulding", "water-assisted-moulding", "residual-wall-thickness", "cooling"],
+      "title": "Experimental and Numerical Investigation of the Effect of Process Conditions on Residual Wall Thickness and Cooling and Surface Characteristics of Water-Assisted Injection Molded Hollow Products",
+      "publisher": "Wiley / Advances in Materials Science and Engineering",
+      "year": 2015,
+      "verification": "publisher-verified-primary-measured",
+      "experimentalEvidence": ["instrumented water-assisted process", "pressure and temperature profiles", "melt temperature", "mould temperature", "water pressure", "injection delay", "measured residual wall thickness"],
+      "dataAccess": "open article tables/figures",
+      "source": "https://onlinelibrary.wiley.com/doi/10.1155/2015/161938",
+      "limitation": "WAIM has distinct fluid/phase-change physics and should remain separate from GAIM and G-PAIM."
+    },
+    {
+      "id": "doi:10.3390/polym15214278",
+      "mechanisms": ["liquid-silicone-rubber", "clamping-force", "residual-stress", "tie-bar-elongation"],
+      "title": "Liquid Silicone Rubber Headlamp Lens Injection Molding Process Optimization Based on Tie Bar Elongation and NSGA III",
+      "publisher": "MDPI / Polymers",
+      "year": 2023,
+      "verification": "publisher-verified-primary-measured",
+      "experimentalEvidence": ["cavity pressure", "clamping force", "tie-bar force", "residual-stress measurements", "LSR optical lens process"],
+      "dataAccess": "open article with explicit measured table values",
+      "source": "https://www.mdpi.com/2073-4360/15/21/4278",
+      "limitation": "Optical-headlamp LSR application and tested mould/process conditions are specific."
+    }
+  ],
+  "reviewImpact": {
+    "highConfidenceReReviewCandidates": [
+      "liquid-silicone-rubber",
+      "fluid-assisted-moulding",
+      "moisture-drying-degradation",
+      "gate-freeze-and-part-mass"
+    ],
+    "rule": "Promotion still requires the canonical registry's independence, measured-signal, physical-outcome, experimental-context and limitation checks."
+  }
+}

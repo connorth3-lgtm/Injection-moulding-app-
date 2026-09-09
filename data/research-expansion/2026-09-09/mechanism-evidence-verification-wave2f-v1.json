@@ -1,0 +1,21 @@
+{
+  "schema": 1,
+  "version": "2026.09.09.1",
+  "boundary": "Measured study evidence for part-level process traceability and tool-condition/defect linkage. No raw dataset/sample-count promotion is implied.",
+  "entries": [
+    {
+      "id": "doi:10.1016/j.procs.2026.02.037",
+      "mechanisms": ["part-level-traceability", "tool-condition-monitoring", "cavity-pressure-defect", "burn-mark-air-entrapment"],
+      "title": "Smart Stamping and Injection Molding Tools by Innovative Measuring System",
+      "verification": "publisher-verified-primary-measured",
+      "experimentalEvidence": ["Sumitomo IntElect2 injection moulding demonstrator", "two combined cavity pressure/temperature sensors", "closing-force sensors", "mould acceleration", "ambient temperature/humidity", "cycle count and tool-location capture", "unique marking of produced parts", "stimulated defect experiments"],
+      "physicalOutcome": "Measured excessive cavity pressure/temperature were linked to stored defective parts including burn-mark/Diesel-effect conditions; individual part identity was linked to its process signature.",
+      "source": "https://doi.org/10.1016/j.procs.2026.02.037",
+      "limitation": "Demonstrator study; no open raw production database was confirmed and the article is CC BY-NC-ND rather than a raw-data reuse grant."
+    }
+  ],
+  "reviewImpact": {
+    "strongerMechanisms": ["part-level-process-to-defect-traceability", "venting-air-entrapment"],
+    "stillMissing": "Rights-clear raw per-part traces from a sustained industrial production campaign with interventions/recovery."
+  }
+}
