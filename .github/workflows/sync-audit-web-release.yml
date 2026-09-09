@@ -1,0 +1,49 @@
+name: Sync Audit Web Release
+
+on:
+  push:
+    branches: [audit-consolidation-2026-09-10]
+    paths:
+      - 'version.json'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: sync-audit-web-release
+  cancel-in-progress: true
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: audit-consolidation-2026-09-10
+      - uses: actions/setup-python@v7
+        with:
+          python-version: '3.12'
+      - name: Synchronise cache and browser release identity
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import re
+          p=Path('service-worker.js')
+          s=p.read_text(encoding='utf-8')
+          s,n=re.subn(r"^const CACHE_REVISION='[^']+';$","const CACHE_REVISION='audit-consolidation-r1-20260910';",s,count=1,flags=re.M)
+          if n != 1:
+              raise SystemExit('CACHE_REVISION sync failed')
+          p.write_text(s,encoding='utf-8')
+          PY
+          python tools/sync_web_release.py
+          python qa_web_release_identity.py
+      - name: Commit deterministic release identity
+        run: |
+          if git diff --quiet -- index.html service-worker.js pwa-shell.js; then
+            exit 0
+          fi
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add index.html service-worker.js pwa-shell.js
+          git commit -m 'release: sync web identity for audit consolidation'
+          git push origin HEAD:audit-consolidation-2026-09-10
