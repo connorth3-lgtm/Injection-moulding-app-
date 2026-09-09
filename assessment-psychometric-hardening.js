@@ -73,5 +73,5 @@ function applyHardening(attempt=0){
    initialization:'after-training-upgrade',scope:'Presentation-form audit and answer-position balancing only; no learner-visible text mutation, no semantic substitution, no production authority.'
  });
 }
-if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',()=>applyHardening(),{once:true});else applyHardening();
+if(typeof document==='undefined')applyHardening();else if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',()=>applyHardening(),{once:true});else applyHardening();
 })();
