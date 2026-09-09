@@ -43,8 +43,8 @@ must(finalizer,["governedState(area)","MM_GOVERNED_RESEARCH?.forId","window.addE
 must_not(finalizer,["const EVIDENCE_STATUS=Object.freeze","window.renderDashboard=function"],'app shell finalizer')
 
 must(a11y,["semanticIssues","missing-image-alt","unlabelled-button","unlabelled-form-control","It does not convert placeholders into labels"],'accessibility semantic QA')
-must_not(a11y,["button.setAttribute('aria-label','Action')","if(p)input.setAttribute('aria-label',p)","img.alt=''"],'accessibility semantic QA')
-# Explicitly decorative images may still receive an empty alt, but the old blanket img:not([alt]) assignment may not.
+must_not(a11y,["button.setAttribute('aria-label','Action')","if(p)input.setAttribute('aria-label',p)"],'accessibility semantic QA')
+# Explicitly decorative images may still receive alt=""; only the old blanket missing-alt suppression is forbidden.
 need("for(const img of nodes(root,'img:not([alt])'))img.alt=''" not in a11y,'accessibility: blanket missing-alt suppression returned')
 
 must(process_guard,["duplicateShotIndexes","assertStorageIdentity","Duplicate source shot_index values would collide in local storage","__rawPrepare","storage,'savePrepared'"],'process storage integrity')
