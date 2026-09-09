@@ -55,11 +55,11 @@ function clearSummary(root){for(const el of all(root,'[data-pdi-kpi],[data-pdi-r
 function showSummary(root,p){
  clearSummary(root);if(!root||!p)return;
  const summary=document.createElement('div');summary.className='mm-v27-pdi-summary';
- const rows=document.createElement('p');rows.setAttribute('data-pdi-kpi','rows');rows.textContent=`Rows prepared locally: ${p.summary.outputRows}.`;
- const fields=document.createElement('p');fields.setAttribute('data-pdi-kpi','fields');fields.textContent=`Prepared fields: ${p.headers.length}. Invalid numeric values removed: ${p.summary.invalidNumericValues}.`;
+ const rows=document.createElement('p');rows.className='pdi-kpi';rows.setAttribute('data-pdi-kpi','rows');rows.textContent=`Rows prepared locally: ${p.summary.outputRows}.`;
+ const fields=document.createElement('p');fields.className='pdi-kpi';fields.setAttribute('data-pdi-kpi','fields');fields.textContent=`Prepared fields: ${p.headers.length}. Invalid numeric values removed: ${p.summary.invalidNumericValues}.`;
  const rules=document.createElement('ul');rules.setAttribute('aria-label','Local preparation rules');
  const labels={keep:'retained as numeric process data',alias:'pseudonymised for this prepared dataset',drop:'removed from prepared output'};
- for(const rule of p.rules){const li=document.createElement('li');li.setAttribute('data-pdi-rule',rule.action);li.textContent=`${rule.key}: ${labels[rule.action]||'reviewed locally'}.`;rules.appendChild(li)}
+ for(const rule of p.rules){const li=document.createElement('li');li.className='pdi-rule';li.setAttribute('data-pdi-rule',rule.action);const key=document.createElement('span');key.textContent=`${rule.key}: `;const action=document.createElement('b');action.className=rule.action;action.textContent=rule.action;const detail=document.createElement('span');detail.textContent=` — ${labels[rule.action]||'reviewed locally'}.`;li.append(key,action,detail);rules.appendChild(li)}
  summary.append(rows,fields,rules);root.appendChild(summary)
 }
 function render(message='Select a local CSV.'){
