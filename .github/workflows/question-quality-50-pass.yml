@@ -34,6 +34,7 @@ on:
       - 'qa_assessment_ux.py'
       - 'qa_question_quality_50_pass.py'
       - 'qa_question_quality_50_pass_runtime.py'
+      - 'qa_question_quality_50_pass_immutable.py'
       - 'qa_question_quality_extreme_50_pass.py'
       - 'qa_question_quality_extreme_runtime.py'
       - 'qa_question_quality_extreme_runtime_v2.py'
@@ -66,13 +67,13 @@ jobs:
           node --check assessment-psychometric-approval.js
           node --check assessment-evidence-integrity-upgrade.js
           node --check real-measured-data-assessment.js
-          python -m py_compile qa_assessment_evidence_integrity.py qa_audit_consolidation.py
+          python -m py_compile qa_assessment_evidence_integrity.py qa_audit_consolidation.py qa_question_quality_50_pass_immutable.py
       - name: Run whole-app audit consolidation guard
         run: python qa_audit_consolidation.py
       - name: Run assessment UX regression checks
         run: python qa_assessment_ux.py
       - name: Run 50-pass quality audit across formal and optional learner-visible questions
-        run: python qa_question_quality_50_pass_runtime.py
+        run: python qa_question_quality_50_pass_immutable.py
       - name: Run extreme 50-pass psychometric and evidence audit
         run: python qa_question_quality_extreme_runtime_v2.py
       - name: Run proposition/source relevance and real measured-data contract audit
