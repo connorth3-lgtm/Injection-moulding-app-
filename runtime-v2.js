@@ -2,7 +2,7 @@
 (function(){
 'use strict';
 if(window.MM_RUNTIME_V2)return;
-const VERSION='2026.09.10.1';
+const VERSION='2026.09.10.2';
 const CORE=['renderLesson','renderDashboard','switchView','startExam','gradeExam','getExamQuestions'];
 const modules=new Map(),slots=new Map();
 /* Legacy static-QA compatibility marker: before:new Set(),after:new Set().
@@ -19,14 +19,23 @@ const storage=Object.freeze({
 });
 function installCore(name){
  const original=typeof window[name]==='function'?window[name]:null;if(!original)return;
- const slot={name,original,implementation:original,owner:'legacy-captured',before:new Set(),transform:new Set(),after:new Set()};
+ const slot={name,original,implementation:original,owner:'legacy-captured',before:new Set(),transform:new Set(),after:new Set(),dispatchDepth:0};
  const dispatch=function(){
+  /* During migration, a legacy composition layer can accidentally capture this
+     dispatcher and later be installed as its implementation. Re-entering the
+     same slot would otherwise recurse forever (dispatcher -> wrapper -> dispatcher).
+     A same-slot re-entry therefore executes the captured legacy implementation
+     directly, while the outer dispatch remains the single hook boundary. */
+  if(slot.dispatchDepth>0)return slot.original.apply(this,arguments);
   const args=[...arguments];
-  for(const fn of slot.before){try{fn.apply(this,args)}catch(e){console.warn(`[MouldMaster runtime v2 before:${name}]`,e)}}
-  let out=slot.implementation.apply(this,args);
-  for(const fn of slot.transform){try{const next=fn.call(this,out,...args);if(next!==undefined)out=next}catch(e){console.warn(`[MouldMaster runtime v2 transform:${name}]`,e)}}
-  for(const fn of slot.after){try{fn.call(this,out,...args)}catch(e){console.warn(`[MouldMaster runtime v2 after:${name}]`,e)}}
-  return out
+  slot.dispatchDepth++;
+  try{
+   for(const fn of slot.before){try{fn.apply(this,args)}catch(e){console.warn(`[MouldMaster runtime v2 before:${name}]`,e)}}
+   let out=slot.implementation.apply(this,args);
+   for(const fn of slot.transform){try{const next=fn.call(this,out,...args);if(next!==undefined)out=next}catch(e){console.warn(`[MouldMaster runtime v2 transform:${name}]`,e)}}
+   for(const fn of slot.after){try{fn.call(this,out,...args)}catch(e){console.warn(`[MouldMaster runtime v2 after:${name}]`,e)}}
+   return out
+  }finally{slot.dispatchDepth--}
  };
  Object.defineProperty(dispatch,'__mmRuntimeV2',{value:true});slot.dispatch=dispatch;slots.set(name,slot);window[name]=dispatch
 }
