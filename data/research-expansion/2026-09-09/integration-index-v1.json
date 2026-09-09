@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "version": "2026.09.09.2",
+  "version": "2026.09.09.3",
   "purpose": "Staged research/evidence expansion. This does not bypass canonical measured-data, assessment, material, rights, or release gates.",
   "counts": {
     "sourceCandidates": 86,
@@ -13,8 +13,8 @@
     "assessmentCandidatesBlockedSourceRights": 40,
     "completeProvenanceRecords": 120,
     "materialResearchCandidates": 20,
-    "manufacturerExactGradeSourceCandidates": 7,
-    "mechanismVerificationEntries": 20,
+    "manufacturerExactGradeSourceCandidates": 8,
+    "mechanismVerificationEntries": 30,
     "rankedRemainingDataGaps": 12
   },
   "truthBoundaries": {
@@ -27,13 +27,14 @@
     "productionControlAuthority": false,
     "studyPaperAndCompanionDatasetShareOverlapGroup": true,
     "privateOrRequestOnlyDataCountBeforeAuthorization": 0,
-    "manufacturerSourceCandidateIsNotValidatedMaterialGradeRecord": true
+    "manufacturerSourceCandidateIsNotValidatedMaterialGradeRecord": true,
+    "measuredStudyEvidenceDoesNotEqualRawDataset": true
   },
   "wave2": {
     "newResearchSourceIds": ["MM-DATA-076", "MM-DATA-077", "MM-DATA-078", "MM-DATA-079", "MM-DATA-080", "MM-DATA-081", "MM-DATA-082", "MM-DATA-083", "MM-DATA-084", "MM-DATA-085", "MM-DATA-086"],
-    "exactGradeSourceIds": ["MAT-SRC-001", "MAT-SRC-002", "MAT-SRC-003", "MAT-SRC-004", "MAT-SRC-005", "MAT-SRC-006", "MAT-SRC-007"],
-    "mechanismStrongReReviewCandidates": ["fibre-breakage-retained-length", "liquid-silicone-rubber", "moisture-drying-degradation", "recyclate-process-variability"],
-    "mechanismImprovedNeedMoreEvidence": ["runner-gate-multicavity-imbalance", "hot-runner-actual-behaviour"]
+    "exactGradeSourceIds": ["MAT-SRC-001", "MAT-SRC-002", "MAT-SRC-003", "MAT-SRC-004", "MAT-SRC-005", "MAT-SRC-006", "MAT-SRC-007", "MAT-SRC-008"],
+    "mechanismStrongReReviewCandidates": ["fibre-breakage-retained-length", "liquid-silicone-rubber", "fluid-assisted-moulding", "moisture-drying-degradation", "recyclate-process-variability", "gate-freeze-and-part-mass"],
+    "mechanismImprovedNeedMoreEvidence": ["runner-gate-multicavity-imbalance", "hot-runner-actual-behaviour", "cross-material-process-transfer"]
   },
   "files": [
     "README.md",
@@ -60,8 +61,10 @@
     "expert-review-queue-blinded-part2-v1.json",
     "material-grade-source-candidates-wave2-v1.json",
     "material-grade-source-candidates-wave2b-v1.json",
+    "material-grade-source-candidates-wave2c-v1.json",
     "mechanism-evidence-verification-wave2-v1.json",
     "mechanism-evidence-verification-wave2b-v1.json",
+    "mechanism-evidence-verification-wave2c-v1.json",
     "data-gap-priority-wave2-v1.json"
   ]
 }
