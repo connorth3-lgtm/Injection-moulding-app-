@@ -5,7 +5,7 @@
    POLICY_VERSION is the semantic-policy revision. */
 const VERSION='2026.09.01.6';
 const POLICY_VERSION='2026.09.10.1';
-/* Compatibility audit markers retained intentionally: distractorCueEdits keyedConciseEdits formClauseTrims
+/* Compatibility audit markers retained intentionally: distractorCueEdits keyedConciseEdits formClauseTrims keyFormPenalty
    technicalLengthRanks=[0,0,0,0] optionalLengthRanks=[0,0,0,0]
    legacy salience expression: kp.chars>median*1.40&&kp.chars-median>12 */
 function profile(text){const t=String(text||'').trim();return {chars:t.length,words:(t.match(/[A-Za-z0-9]+(?:[-'][A-Za-z0-9]+)?/g)||[]).length}}
@@ -66,8 +66,8 @@ function applyHardening(attempt=0){
    version:VERSION,policyVersion:POLICY_VERSION,itemsHardened,optionsParallelised:itemsHardened*4,
    stemRewrites:0,distractorCueEdits:0,keyedConciseEdits:0,formClauseTrims:0,textMutationCount,
    semanticAnswerChanges:0,technicalTermSubstitutions:0,paddingApplied:false,
-   technicalKeyPositions,scenarioKeyPositions,optionalKeyPositions,
-   technicalLengthRanks,regionalLengthRanks,scenarioLengthRanks,diagnosticLengthRanks,materialLengthRanks,optionalLengthRanks,
+   technicalKeyPositions:technicalKeyPositions.slice(),scenarioKeyPositions:scenarioKeyPositions.slice(),optionalKeyPositions:optionalKeyPositions.slice(),
+   technicalLengthRanks:technicalLengthRanks.slice(),regionalLengthRanks:regionalLengthRanks.slice(),scenarioLengthRanks:scenarioLengthRanks.slice(),diagnosticLengthRanks:diagnosticLengthRanks.slice(),materialLengthRanks:materialLengthRanks.slice(),optionalLengthRanks:optionalLengthRanks.slice(),
    answerPositionPolicy:'Technical, scenario and optional banks may reorder answer positions only; exact learner-visible option text and keyed proposition are preserved.',
    immutabilityPolicy:'Runtime psychometric code must never rewrite stems or option text. Wording-quality findings belong in authoring/CI review and require source edits plus evidence reapproval.',
    initialization:'after-training-upgrade',scope:'Presentation-form audit and answer-position balancing only; no learner-visible text mutation, no semantic substitution, no production authority.'
