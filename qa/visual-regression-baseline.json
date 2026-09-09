@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
-  "release": "2026.09.06.25",
-  "commit": "74a42f776e985d68fefb1992d696e2f49b13cc33",
+  "release": "2026.09.08.27",
+  "commit": "225386e77208e89e088094630bca0c2b1fef5f50",
   "browser": "chromium via @playwright/test 1.55.0",
   "maxDiffPixels": 12,
   "viewports": [
@@ -35,5 +35,5 @@
     "assessment",
     "listen-expanded"
   ],
-  "policy": "This commit is the reviewed .25 visual baseline after the intentional cross-view mobile-density and deterministic view-entry repair. Candidate screenshots are rendered beside this exact commit in the same Chromium job. Update the pinned commit only through an intentional reviewed visual-baseline change; physical-device evidence remains a separate release gate and must be fresh for the changed runtime."
+  "policy": "This commit is the reviewed .27 visual baseline after the intentional lesson-depth and curriculum-specific authoring change. Candidate screenshots were reviewed at phone, tablet and desktop sizes before repinning. Future candidates are rendered beside this exact commit in the same Chromium job. Update the pinned commit only through an intentional reviewed visual-baseline change; physical-device and real assistive-technology evidence remain separate release gates and must be fresh for the changed runtime."
 }

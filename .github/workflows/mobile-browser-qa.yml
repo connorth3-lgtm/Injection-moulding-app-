@@ -117,7 +117,7 @@ jobs:
           - suite: chromium-substantive
             browsers: chromium
             baseline: false
-            command: npx playwright test --config=playwright.config.cjs --grep-invert "matches immutable \.25 baseline across learner surfaces"
+            command: npx playwright test --config=playwright.config.cjs --grep-invert "matches immutable \.27 baseline across learner surfaces"
           - suite: webkit-substantive
             browsers: webkit
             baseline: false
@@ -139,7 +139,7 @@ jobs:
         run: |
           npm install --no-save --no-package-lock @playwright/test@1.55.0 pixelmatch@5.3.0 pngjs@7.0.0
           npx playwright install --with-deps ${{ matrix.browsers }}
-      - name: Prepare immutable .25 visual baseline
+      - name: Prepare immutable .27 visual baseline
         if: matrix.baseline
         run: |
           BASELINE_SHA="$(python - <<'PY'
@@ -147,7 +147,7 @@ jobs:
           print(json.load(open('qa/visual-regression-baseline.json', encoding='utf-8'))['commit'])
           PY
           )"
-          test "$BASELINE_SHA" = "74a42f776e985d68fefb1992d696e2f49b13cc33"
+          test "$BASELINE_SHA" = "225386e77208e89e088094630bca0c2b1fef5f50"
           git fetch --no-tags --depth=1 origin "$BASELINE_SHA"
           rm -rf /tmp/mm-visual-baseline
           git worktree add --detach /tmp/mm-visual-baseline "$BASELINE_SHA"
