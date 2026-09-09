@@ -7,6 +7,7 @@ if(!BASE)throw new Error('process-data-local-intake-v27.js requires process-data
 const MAX_ROWS=50000;
 const DIRECT_ID=/(?:^|_)(?:name|email|phone|address|customer|supplier_contact|serial_number|asset_tag|user|username|operator|operator_id|employee|employee_id|personnel)(?:_|$)/i;
 const TIME=/^(?:timestamp|date|datetime|time|created_at|updated_at|recorded_at|event_timestamp|shot_timestamp|cycle_timestamp)$/i;
+const QUALITY=/^(?:quality|quality_result|quality_status|inspection_result|pass_fail|passfail|result)$/i;
 const OP_ID=/(?:machine|cell|mould|mold|tool|cavity|material|grade|resin|lot|batch|job|work_?order|part_?(?:number|no)|intervention)/i;
 let lastPrepared=null;
 const one=(root,selector)=>root&&typeof root.querySelector==='function'?root.querySelector(selector):null;
@@ -38,18 +39,18 @@ function numeric(rows,key){let present=0,ok=0;for(const r of rows){const v=Strin
 function aliasPrefix(key){return key.replace(/[^a-z0-9]+/gi,'-').replace(/^-+|-+$/g,'').slice(0,20)||'id'}
 function prepare(parsed){
  const {headers=[],rows=[]}=parsed||{};if(!headers.length||!rows.length)throw new Error('CSV needs a header row and at least one data row.');
- const rules=headers.map(key=>DIRECT_ID.test(key)||TIME.test(key)?{key,action:'drop'}:OP_ID.test(key)?{key,action:'alias'}:numeric(rows,key)?{key,action:'keep'}:{key,action:'drop'});
+ const rules=headers.map(key=>DIRECT_ID.test(key)||TIME.test(key)?{key,action:'drop'}:QUALITY.test(key)?{key,action:'quality'}:OP_ID.test(key)?{key,action:'alias'}:numeric(rows,key)?{key,action:'keep'}:{key,action:'drop'});
  const maps={};for(const r of rules)if(r.action==='alias')maps[r.key]=new Map();const invalidNumeric={};
  const keepShot=rules.some(r=>r.key==='shot_index'&&r.action==='keep');
- const out=rows.map((src,index)=>{const dst=keepShot?{}:{shot_index:index+1};for(const r of rules){if(r.action==='drop')continue;const v=String(src[r.key]??'').trim();if(r.action==='keep'){if(!v){dst[r.key]='';continue}const n=Number(v);if(Number.isFinite(n))dst[r.key]=n;else{dst[r.key]='';invalidNumeric[r.key]=(invalidNumeric[r.key]||0)+1}continue}if(!v){dst[r.key]='';continue}const m=maps[r.key];if(!m.has(v))m.set(v,`${aliasPrefix(r.key)}-${String(m.size+1).padStart(2,'0')}`);dst[r.key]=m.get(v)}return dst});
+ const out=rows.map((src,index)=>{const dst=keepShot?{}:{shot_index:index+1};for(const r of rules){if(r.action==='drop')continue;const v=String(src[r.key]??'').trim();if(r.action==='quality'){dst[r.key]=v;continue}if(r.action==='keep'){if(!v){dst[r.key]='';continue}const n=Number(v);if(Number.isFinite(n))dst[r.key]=n;else{dst[r.key]='';invalidNumeric[r.key]=(invalidNumeric[r.key]||0)+1}continue}if(!v){dst[r.key]='';continue}const m=maps[r.key];if(!m.has(v))m.set(v,`${aliasPrefix(r.key)}-${String(m.size+1).padStart(2,'0')}`);dst[r.key]=m.get(v)}return dst});
  const kept=rules.filter(r=>r.action!=='drop').map(r=>r.key),outputHeaders=keepShot?kept:['shot_index',...kept.filter(k=>k!=='shot_index')];
  const invalidNumericValues=Object.values(invalidNumeric).reduce((a,b)=>a+b,0);
- return {schema:4,version:VERSION,headers:outputHeaders,rows:out,rules,validation:{invalidNumericValues,reviewRequired:invalidNumericValues>0},summary:{sourceRows:parsed.sourceRows,inputRows:rows.length,outputRows:out.length,truncated:false,invalidNumericValues},boundary:'Prepared locally in memory. Malformed CSV is rejected atomically; direct identifiers and timestamps are removed; operational identifiers are pseudonymised. Output is not proof of anonymity and is not a production recipe.'};
+ return {schema:4,version:VERSION,headers:outputHeaders,rows:out,rules,validation:{invalidNumericValues,reviewRequired:invalidNumericValues>0},summary:{sourceRows:parsed.sourceRows,inputRows:rows.length,outputRows:out.length,truncated:false,invalidNumericValues},boundary:'Prepared locally in memory. Malformed CSV is rejected atomically; direct identifiers and timestamps are removed; operational identifiers are pseudonymised; categorical quality outcomes are retained for local analysis. Output is not proof of anonymity and is not a production recipe.'};
 }
 function cell(v){const s=String(v??'');return /[",\n]/.test(s)?`"${s.replace(/"/g,'""')}"`:s}
 function toCsv(p){return [p.headers.join(','),...p.rows.map(r=>p.headers.map(h=>cell(r[h])).join(','))].join('\n')+'\n'}
 function download(name,text,type){const u=URL.createObjectURL(new Blob([text],{type})),a=document.createElement('a');a.href=u;a.download=name;document.body.appendChild(a);a.click();a.remove();URL.revokeObjectURL(u)}
-function dictionaryCsv(p){const reason={keep:'Numeric process signal retained for local analysis.',alias:'Operational identifier replaced with a session-local pseudonym.',drop:'Excluded from prepared output by the local privacy boundary.'};return ['source_field,handling,reason',...(p?.rules||[]).map(r=>[cell(r.key),cell(r.action),cell(reason[r.action]||'Reviewed locally.')].join(','))].join('\n')+'\n'}
+function dictionaryCsv(p){const reason={keep:'Numeric process signal retained for local analysis.',quality:'Categorical quality outcome retained for local analysis.',alias:'Operational identifier replaced with a session-local pseudonym.',drop:'Excluded from prepared output by the local privacy boundary.'};return ['source_field,handling,reason',...(p?.rules||[]).map(r=>[cell(r.key),cell(r.action),cell(reason[r.action]||'Reviewed locally.')].join(','))].join('\n')+'\n'}
 function retireLegacy(){document.querySelectorAll('[data-pdi-launch],[data-pdi-root]').forEach(el=>el.remove())}
 function clearSummary(root){for(const el of all(root,'[data-pdi-kpi],[data-pdi-rule]'))el.remove()}
 function showSummary(root,p){
@@ -58,7 +59,7 @@ function showSummary(root,p){
  const rows=document.createElement('p');rows.className='pdi-kpi';rows.setAttribute('data-pdi-kpi','rows');rows.textContent=`Rows prepared locally: ${p.summary.outputRows}.`;
  const fields=document.createElement('p');fields.className='pdi-kpi';fields.setAttribute('data-pdi-kpi','fields');fields.textContent=`Prepared fields: ${p.headers.length}. Invalid numeric values removed: ${p.summary.invalidNumericValues}.`;
  const rules=document.createElement('ul');rules.setAttribute('aria-label','Local preparation rules');
- const labels={keep:'retained as numeric process data',alias:'pseudonymised for this prepared dataset',drop:'removed from prepared output'};
+ const labels={keep:'retained as numeric process data',quality:'retained as a categorical quality outcome',alias:'pseudonymised for this prepared dataset',drop:'removed from prepared output'};
  for(const rule of p.rules){const li=document.createElement('li');li.className='pdi-rule';li.setAttribute('data-pdi-rule',rule.action);const key=document.createElement('span');key.textContent=`${rule.key}: `;const action=document.createElement('b');action.className=rule.action;action.textContent=rule.action;const detail=document.createElement('span');detail.textContent=` — ${labels[rule.action]||'reviewed locally'}.`;li.append(key,action,detail);rules.appendChild(li)}
  summary.append(rows,fields,rules);root.appendChild(summary)
 }
