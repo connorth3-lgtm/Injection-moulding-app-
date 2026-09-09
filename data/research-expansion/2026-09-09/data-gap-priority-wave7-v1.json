@@ -1,0 +1,106 @@
+{
+  "schema": 1,
+  "version": "2026.09.09.1",
+  "purpose": "Refresh remaining gaps after hard-gap-only search through MM-DATA-171. Publicly searchable mechanism evidence and actually rights-clear/reusable raw data remain separate concepts.",
+  "gaps": [
+    {
+      "rank": 1,
+      "gap": "rights-cleared shot -> action -> verified recovery raw histories",
+      "coverageStatus": "mechanism_now_strong__raw_access_still_missing",
+      "evidenceNow": ["MM-DATA-141", "MM-DATA-159", "MM-DATA-165", "MM-DATA-171"],
+      "target": "chronological cycle ID, pre-action process state, physical defect/quality, actual process adjustment, post-action traces and verified recovery",
+      "why": "Wave 11 found unusually strong recovery experiments, but their reusable cycle tables have not yet been released."
+    },
+    {
+      "rank": 2,
+      "gap": "real MouldMaster learner telemetry",
+      "coverageStatus": "cannot_be_acquired_publicly",
+      "target": "actual MouldMaster learner responses and longitudinal learning outcomes",
+      "why": "Not searched in wave 11 because public proxy data cannot close this gap."
+    },
+    {
+      "rank": 3,
+      "gap": "blinded independent MouldMaster engineer judgments",
+      "coverageStatus": "cannot_be_acquired_publicly",
+      "target": "three or more blinded injection-moulding engineers per diagnostic case",
+      "why": "Not searched in wave 11 because only real MouldMaster-specific review can close this gap."
+    },
+    {
+      "rank": 4,
+      "gap": "rights-clear multi-machine / multi-mould labeled raw corpus",
+      "coverageStatus": "candidate_pool_overfilled__rights_clear_payload_still_short",
+      "evidenceNow": ["MM-DATA-084", "MM-DATA-094", "MM-DATA-135", "MM-DATA-151", "MM-DATA-158", "MM-DATA-165", "MM-DATA-166"],
+      "target": "source/target machine and mould identities, cycle order, process actuals, physical quality and actual fault/cause labels",
+      "why": "Multiple excellent industrial cross-machine families now exist, but most underlying tables remain confidential or request-only."
+    },
+    {
+      "rank": 5,
+      "gap": "maintenance intervention -> quantified recovery raw histories",
+      "coverageStatus": "wear_overfilled__maintenance_recovery_only_partial",
+      "evidenceNow": ["MM-DATA-145", "MM-DATA-147", "MM-DATA-148", "MM-DATA-155", "MM-DATA-156", "MM-DATA-157", "MM-DATA-162", "MM-DATA-163", "MM-DATA-164"],
+      "target": "natural degradation/fouling, maintenance trigger, exact repair/cleaning action, post-maintenance signal and quality recovery",
+      "why": "Cooling-cleaning field evidence now supplies before/after recovery examples, but natural machine/tool wear with detailed repair-to-recovery cycle data remains scarce."
+    },
+    {
+      "rank": 6,
+      "gap": "rights-clear hot-runner device-state raw telemetry",
+      "coverageStatus": "experimental_actuals_broadened__raw_rows_missing",
+      "evidenceNow": ["MM-DATA-121", "MM-DATA-127", "MM-DATA-138", "MM-DATA-139", "MM-DATA-140", "MM-DATA-153", "MM-DATA-160"],
+      "target": "actual zone temperature, heater current/output or energy, thermocouples, valve-pin command/actual, alarms, nozzle/manifold state, cavity pressure and quality per shot",
+      "why": "Wave 11 added separate hot-runner-controller energy and valve-gate pressure, but not a rights-clear row-level device-state dataset."
+    },
+    {
+      "rank": 7,
+      "gap": "longitudinal cooling fouling -> cleaning -> recovery raw data",
+      "coverageStatus": "before_after_recovery_found__longitudinal_raw_missing",
+      "evidenceNow": ["MM-DATA-095", "MM-DATA-097", "MM-DATA-098", "MM-DATA-101", "MM-DATA-144", "MM-DATA-163", "MM-DATA-164"],
+      "target": "weeks/months of flow, delta-T, pressure drop, water condition and quality before fouling, through cleaning, and after recovery",
+      "why": "Two independent quantified cleaning/recovery cases were found, so the remaining need is longitudinal machine-readable history rather than another cleaning case study."
+    },
+    {
+      "rank": 8,
+      "gap": "rights-clear multicavity shot-level physical outcome data",
+      "coverageStatus": "mechanism_overfilled__raw_author_delivery_needed",
+      "evidenceNow": ["MM-DATA-099", "MM-DATA-136", "MM-DATA-137", "MM-DATA-142", "MM-DATA-160"],
+      "target": "per-shot/per-cavity pressure, temperature, weight, dimensions, defects and runner/gate state",
+      "why": "The experimental evidence is already broad; machine-readable cavity-by-cavity author data would now add more value than further papers."
+    },
+    {
+      "rank": 9,
+      "gap": "deterministic admission of executable public candidates",
+      "coverageStatus": "search_not_needed__data_engineering_needed",
+      "target": "retrieve/hash/profile/rights-review OpenMMS, EPP, PASCOE/imPURE, RWTH PCR, FORinFPRO and other confirmed executable records",
+      "why": "These are already discovered; further search has lower value than admission engineering."
+    },
+    {
+      "rank": 10,
+      "gap": "production material-lot / conditioning linked to cycle outcomes",
+      "coverageStatus": "batch_evidence_very_strong__routine_plant_traceability_missing",
+      "evidenceNow": ["MM-DATA-116", "MM-DATA-126", "MM-DATA-142", "MM-DATA-170", "MM-DATA-171", "12 manufacturer-grade source candidates"],
+      "target": "supplier, exact grade, lot/COA, moisture/drying/regrind state and rheology tied to production cycle IDs and quality",
+      "why": "Wave 11 added a six-consecutive-batch PCR-HDPE family and another explicit recyclate batch-change/recovery case; what remains is routine plant traceability."
+    },
+    {
+      "rank": 11,
+      "gap": "rights-clear raw 2K / multimaterial production data",
+      "coverageStatus": "request_routes_expanded__open_raw_still_short",
+      "evidenceNow": ["MM-DATA-107", "MM-DATA-121", "MM-DATA-127", "MM-DATA-128", "MM-DATA-131", "MM-DATA-152", "MM-DATA-167", "MM-DATA-168", "MM-DATA-169"],
+      "target": "component-specific actuals, interface/core position, tool temperature/pressure, sequence and physical bond/dimensional outcome",
+      "why": "Wave 11 identified explicit author-data routes for sensor-monitored overmoulding and two additional interface/quality studies; permission and delivery are now the bottleneck."
+    },
+    {
+      "rank": 12,
+      "gap": "rights-clear measured assessments with real psychometrics",
+      "coverageStatus": "not_a_search_bottleneck",
+      "target": "questions derived from admitted raw evidence and calibrated using actual MouldMaster learners",
+      "why": "No additional generic question datasets were searched because this gap requires app-specific learner evidence."
+    }
+  ],
+  "wave11SearchBoundary": [
+    "No generic single-machine traces",
+    "No simulation-only sources unless tied to a missing measured raw route",
+    "No new learner proxy datasets",
+    "No new public expert-label proxies",
+    "No duplicate same-experiment papers counted as independent evidence"
+  ]
+}
