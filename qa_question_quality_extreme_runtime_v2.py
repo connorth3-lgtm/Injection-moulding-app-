@@ -19,7 +19,7 @@ def _compatible_need(ok,msg):
         return
     if msg.startswith('psychometric coverage mismatch:'):
         meta=audit.PSYCHOMETRIC_META or {}
-        if meta.get('itemsHardened')==197 and meta.get('optionsParallelised')==788:
+        if meta.get('itemsHardened')==197 and meta.get('optionsParallelised')==788 and meta.get('textMutationCount')==0:
             return
     _original_need(ok,msg)
 
@@ -36,7 +36,7 @@ def _load_post_approval_items():
         y['feedback']=list(x.get('feedback',[]))
         items.append(y)
     scenarios=[x for x in items if x.get('kind')=='scenario']
-    before_keys={x['id']:x['correct'] for x in scenarios}
+    before={x['id']:{'correct':x['correct'],'options':list(x['options']),'feedback':list(x.get('feedback',[]))} for x in scenarios}
     node=r'''
 const fs=require('fs'),vm=require('vm'),rows=%s,meta=%s;
 const D={scenarios:rows.map(x=>({title:x.title,situation:x.situation,choices:x.options,correct:x.correct,why:x.rationale,feedback:x.feedback,category:x.category||'',difficulty:x.level||'',mmStableId:x.id})),assessmentQA:{evidenceApproval:{}}};
@@ -59,18 +59,21 @@ process.stdout.write(JSON.stringify({scenarios:D.scenarios,cue:window.MM_PSYCHOM
         pth.unlink(missing_ok=True)
     _original_need(p.returncode==0,'post-approval psychometric runtime failed: '+(p.stderr or p.stdout)[:8000])
     data=json.loads(p.stdout);cue=data.get('cue') or {};POST_APPROVAL_META=data.get('approval') or {}
-    _original_need(cue.get('answerKeyChanges')==0,'psychometric cue neutralisation must not change answer keys')
-    _original_need(int(cue.get('scenarioDistractorEdits',0))>0,'psychometric cue neutralisation did not rewrite any scenario distractors')
+    _original_need(cue.get('answerKeyChanges')==0,'psychometric approval must not change answer keys')
+    _original_need(int(cue.get('scenarioDistractorEdits',0))==0,'psychometric approval must not rewrite scenario distractors at runtime')
+    _original_need(int(cue.get('textMutationCount',0))==0,'psychometric approval must report zero learner-visible text mutations')
     by_id={s['mmStableId']:s for s in data.get('scenarios',[])}
     for x in items:
         if x.get('kind')!='scenario':continue
         s=by_id.get(x['id']);_original_need(s is not None,f'post-approval scenario missing: {x["id"]}')
-        _original_need(s['correct']==before_keys[x['id']],f'post-approval key changed: {x["id"]}')
-        _original_need(len(s.get('choices',[]))==4 and len(set(str(o).strip().lower() for o in s['choices']))==4,f'post-approval option integrity failed: {x["id"]}')
-        x['options']=s['choices'];x['feedback']=s.get('feedback',[])
+        prior=before[x['id']]
+        _original_need(s['correct']==prior['correct'],f'post-approval key changed: {x["id"]}')
+        _original_need(s.get('choices',[])==prior['options'],f'post-approval scenario option text/order changed: {x["id"]}')
+        _original_need(s.get('feedback',[])==prior['feedback'],f'post-approval scenario feedback changed: {x["id"]}')
     _original_need(len(items)==197,f'post-approval learner-visible item count mismatch: {len(items)}')
     _original_need(POST_APPROVAL_META.get('coverageOk') is True,f'post-approval coverage failed: {POST_APPROVAL_META}')
-    _original_need(int(POST_APPROVAL_META.get('scenarioDistractorCueEdits',0))==int(cue.get('scenarioDistractorEdits',0)),'post-approval cue metadata mismatch')
+    _original_need(int(POST_APPROVAL_META.get('scenarioDistractorCueEdits',-1))==0,'post-approval cue metadata must confirm zero edits')
+    _original_need(int(POST_APPROVAL_META.get('textMutationCount',-1))==0,'post-approval metadata must confirm zero text mutations')
     POST_APPROVAL_ITEMS=items
     return POST_APPROVAL_ITEMS
 
@@ -83,13 +86,6 @@ def _bucket_relative(value,others,tolerance=0):
 
 
 def _relative_form_features(item,option_index):
-    """Presentation-only features relative to the other three options in this question.
-
-    The hard predictive gate uses answer length and terminal punctuation only. Internal
-    conjunction/comma density is deliberately excluded because it also encodes genuine
-    proposition structure. Semantic/content cues remain reported by the separate review
-    model and by item-level cue checks.
-    """
     profiles=[audit.extreme.style_profile(o) for o in item['options']]
     p=profiles[option_index];others=[x for i,x in enumerate(profiles) if i!=option_index]
     feats=set()
@@ -143,5 +139,6 @@ if __name__=='__main__':
     report=json.loads(report_path.read_text(encoding='utf-8'))
     report['final_psychometric_approval']=POST_APPROVAL_META
     report['final_runtime_layer']='assessment-psychometric-approval.js'
+    report['runtime_text_policy']='immutable: CI may report authoring cues, but runtime layers must not rewrite stems/options/feedback'
     report_path.write_text(json.dumps(report,indent=2)+'\n',encoding='utf-8')
-    print('Post-approval learner runtime verified:',POST_APPROVAL_META)
+    print('Immutable post-approval learner runtime verified:',POST_APPROVAL_META)
