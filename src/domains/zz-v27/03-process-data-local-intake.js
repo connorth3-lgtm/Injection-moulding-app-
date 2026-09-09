@@ -9,6 +9,8 @@ const DIRECT_ID=/(?:^|_)(?:name|email|phone|address|customer|supplier_contact|se
 const TIME=/^(?:timestamp|date|datetime|time|created_at|updated_at|recorded_at|event_timestamp|shot_timestamp|cycle_timestamp)$/i;
 const OP_ID=/(?:machine|cell|mould|mold|tool|cavity|material|grade|resin|lot|batch|job|work_?order|part_?(?:number|no)|intervention)/i;
 let lastPrepared=null;
+const one=(root,selector)=>root&&typeof root.querySelector==='function'?root.querySelector(selector):null;
+const all=(root,selector)=>root&&typeof root.querySelectorAll==='function'?[...root.querySelectorAll(selector)]:[];
 function norm(v){return String(v??'').trim().toLowerCase().replace(/[^a-z0-9]+/g,'_').replace(/^_+|_+$/g,'')}
 function parseCsv(text){
  const s=String(text??'').replace(/^\uFEFF/,''),rows=[];let row=[],field='',quoted=false,closed=false,started=false;
@@ -49,7 +51,7 @@ function toCsv(p){return [p.headers.join(','),...p.rows.map(r=>p.headers.map(h=>
 function download(name,text,type){const u=URL.createObjectURL(new Blob([text],{type})),a=document.createElement('a');a.href=u;a.download=name;document.body.appendChild(a);a.click();a.remove();URL.revokeObjectURL(u)}
 function dictionaryCsv(p){const reason={keep:'Numeric process signal retained for local analysis.',alias:'Operational identifier replaced with a session-local pseudonym.',drop:'Excluded from prepared output by the local privacy boundary.'};return ['source_field,handling,reason',...(p?.rules||[]).map(r=>[cell(r.key),cell(r.action),cell(reason[r.action]||'Reviewed locally.')].join(','))].join('\n')+'\n'}
 function retireLegacy(){document.querySelectorAll('[data-pdi-launch],[data-pdi-root]').forEach(el=>el.remove())}
-function clearSummary(root){root?.querySelectorAll('[data-pdi-kpi],[data-pdi-rule]').forEach(el=>el.remove())}
+function clearSummary(root){for(const el of all(root,'[data-pdi-kpi],[data-pdi-rule]'))el.remove()}
 function showSummary(root,p){
  clearSummary(root);if(!root||!p)return;
  const summary=document.createElement('div');summary.className='mm-v27-pdi-summary';
@@ -63,8 +65,8 @@ function showSummary(root,p){
 function render(message='Select a local CSV.'){
  retireLegacy();
  const host=document.getElementById('processDataLabs');if(!host)return false;
- let card=host.querySelector('[data-mm-v27-pdi-root]');
- if(card){const status=card.querySelector('[data-mm-v27-pdi-status]');if(status&&message)status.textContent=message;return true}
+ let card=one(host,'[data-mm-v27-pdi-root]');
+ if(card){const status=one(card,'[data-mm-v27-pdi-status]');if(status&&message)status.textContent=message;return true}
  card=document.createElement('section');card.className='card form-card';card.setAttribute('data-mm-v27-pdi-root','1');
  const title=document.createElement('h2');title.textContent='Prepare shot data without uploading it';
  const note=document.createElement('p');note.className='muted';note.id='mmLocalCsvBoundary';note.textContent='Malformed CSV is rejected before preparation. Files stay in this browser/desktop session; prepared output is pseudonymised, not guaranteed anonymous.';
@@ -84,15 +86,15 @@ function render(message='Select a local CSV.'){
 function ensureLauncher(){
  retireLegacy();
  const host=document.getElementById('processDataLabs');if(!host)return false;
- let launch=host.querySelector('[data-mm-v27-pdi-launch]');if(launch)return true;
+ let launch=one(host,'[data-mm-v27-pdi-launch]');if(launch)return true;
  const wrap=document.createElement('section');wrap.className='card';wrap.setAttribute('data-mm-v27-pdi-launcher','1');
  const heading=document.createElement('h3');heading.textContent='Local shot-data preparation';
  const copy=document.createElement('p');copy.className='muted';copy.textContent='Prepare a CSV locally without replacing the guided diagnostics, engineering store or other Process Data tools.';
- launch=document.createElement('button');launch.type='button';launch.className='secondary';launch.setAttribute('data-mm-v27-pdi-launch','1');launch.textContent='Prepare real shot CSV locally';launch.addEventListener('click',()=>{render();host.querySelector('[data-mm-v27-pdi-root]')?.scrollIntoView?.({block:'start'})});
+ launch=document.createElement('button');launch.type='button';launch.className='secondary';launch.setAttribute('data-mm-v27-pdi-launch','1');launch.textContent='Prepare real shot CSV locally';launch.addEventListener('click',()=>{render();one(host,'[data-mm-v27-pdi-root]')?.scrollIntoView?.({block:'start'})});
  wrap.append(heading,copy,launch);host.appendChild(wrap);return true
 }
 const originalOpen=BASE.open.bind(BASE);
-BASE.open=function(){const r=originalOpen();requestAnimationFrame(()=>ensureLauncher());return r};
+BASE.open=function(){const r=originalOpen();requestAnimationFrame(()=>{ensureLauncher();render()});return r};
 function open(){return BASE.open()}
 retireLegacy();
 // Connected-data runtime intentionally decorates `prepare`/`open` and adds
