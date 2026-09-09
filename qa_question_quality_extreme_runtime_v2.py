@@ -137,6 +137,7 @@ def _relative_form_cue_model(items,passes=50):
 
 
 audit.need=_compatible_need
+audit.extreme.need=_compatible_need
 audit.load_psychometric_items=_load_post_approval_items
 audit.surface_cue_model=_relative_form_cue_model
 
