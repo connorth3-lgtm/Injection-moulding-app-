@@ -20,6 +20,13 @@ on:
       - 'assessment-psychometric-hardening.js'
       - 'assessment-evidence-integrity-upgrade.js'
       - 'real-measured-data-assessment.js'
+      - 'data-integration-runtime.js'
+      - 'learning-analytics.js'
+      - 'data/assessment-inventory-v1.json'
+      - 'data/accessibility-real-at-validation-v1.json'
+      - 'src/domains/runtime-packs/evidence-runtime-pack.js'
+      - 'src/domains/runtime-packs/process-data-runtime-pack.js'
+      - 'tools/build_runtime_packs.py'
       - 'qa_assessment_ux.py'
       - 'qa_question_quality_50_pass.py'
       - 'qa_question_quality_50_pass_runtime.py'
@@ -27,6 +34,7 @@ on:
       - 'qa_question_quality_extreme_runtime.py'
       - 'qa_question_quality_extreme_runtime_v2.py'
       - 'qa_assessment_evidence_integrity.py'
+      - 'qa_audit_hardening.py'
       - '.github/workflows/question-quality-50-pass.yml'
   workflow_dispatch:
 
@@ -49,12 +57,20 @@ jobs:
       - uses: actions/setup-python@v7
         with:
           python-version: '3.12'
-      - name: Syntax-check evidence integrity assets
+      - name: Syntax-check evidence and audit-hardening assets
         run: |
           node --check assessment-psychometric-hardening.js
           node --check assessment-evidence-integrity-upgrade.js
           node --check real-measured-data-assessment.js
-          python -m py_compile qa_assessment_evidence_integrity.py
+          node --check evidence-maturity-deep-dive.js
+          node --check evidence-maturity-formal-bridge.js
+          node --check data-integration-runtime.js
+          node --check learning-analytics.js
+          python -m py_compile qa_assessment_evidence_integrity.py qa_audit_hardening.py
+      - name: Verify deterministic runtime packs
+        run: python tools/build_runtime_packs.py --check
+      - name: Run cross-cutting audit hardening contracts
+        run: python qa_audit_hardening.py
       - name: Run assessment UX regression checks
         run: python qa_assessment_ux.py
       - name: Run 50-pass quality audit across formal and optional learner-visible questions
