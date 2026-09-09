@@ -47,29 +47,56 @@ function prepare(parsed){
 function cell(v){const s=String(v??'');return /[",\n]/.test(s)?`"${s.replace(/"/g,'""')}"`:s}
 function toCsv(p){return [p.headers.join(','),...p.rows.map(r=>p.headers.map(h=>cell(r[h])).join(','))].join('\n')+'\n'}
 function download(name,text,type){const u=URL.createObjectURL(new Blob([text],{type})),a=document.createElement('a');a.href=u;a.download=name;document.body.appendChild(a);a.click();a.remove();URL.revokeObjectURL(u)}
+function dictionaryCsv(p){const reason={keep:'Numeric process signal retained for local analysis.',alias:'Operational identifier replaced with a session-local pseudonym.',drop:'Excluded from prepared output by the local privacy boundary.'};return ['source_field,handling,reason',...(p?.rules||[]).map(r=>[cell(r.key),cell(r.action),cell(reason[r.action]||'Reviewed locally.')].join(','))].join('\n')+'\n'}
 function retireLegacy(){document.querySelectorAll('[data-pdi-launch],[data-pdi-root]').forEach(el=>el.remove())}
+function clearSummary(root){root?.querySelectorAll('[data-pdi-kpi],[data-pdi-rule]').forEach(el=>el.remove())}
+function showSummary(root,p){
+ clearSummary(root);if(!root||!p)return;
+ const summary=document.createElement('div');summary.className='mm-v27-pdi-summary';
+ const rows=document.createElement('p');rows.setAttribute('data-pdi-kpi','rows');rows.textContent=`Rows prepared locally: ${p.summary.outputRows}.`;
+ const fields=document.createElement('p');fields.setAttribute('data-pdi-kpi','fields');fields.textContent=`Prepared fields: ${p.headers.length}. Invalid numeric values removed: ${p.summary.invalidNumericValues}.`;
+ const rules=document.createElement('ul');rules.setAttribute('aria-label','Local preparation rules');
+ const labels={keep:'retained as numeric process data',alias:'pseudonymised for this prepared dataset',drop:'removed from prepared output'};
+ for(const rule of p.rules){const li=document.createElement('li');li.setAttribute('data-pdi-rule',rule.action);li.textContent=`${rule.key}: ${labels[rule.action]||'reviewed locally'}.`;rules.appendChild(li)}
+ summary.append(rows,fields,rules);root.appendChild(summary)
+}
 function render(message='Select a local CSV.'){
  retireLegacy();
- const host=document.getElementById('processDataLabs');if(!host)return;
- host.innerHTML='';
- const card=document.createElement('section');card.className='card form-card';
- const title=document.createElement('h2');title.textContent='Strict local CSV preparation';
- const note=document.createElement('p');note.className='muted';note.textContent='Malformed CSV is rejected before preparation. Files stay in this browser/desktop session; prepared output is pseudonymised, not guaranteed anonymous.';
- const status=document.createElement('p');status.setAttribute('role','status');status.setAttribute('aria-live','polite');status.textContent=message;
+ const host=document.getElementById('processDataLabs');if(!host)return false;
+ let card=host.querySelector('[data-mm-v27-pdi-root]');
+ if(card){const status=card.querySelector('[data-mm-v27-pdi-status]');if(status&&message)status.textContent=message;return true}
+ card=document.createElement('section');card.className='card form-card';card.setAttribute('data-mm-v27-pdi-root','1');
+ const title=document.createElement('h2');title.textContent='Prepare shot data without uploading it';
+ const note=document.createElement('p');note.className='muted';note.id='mmLocalCsvBoundary';note.textContent='Malformed CSV is rejected before preparation. Files stay in this browser/desktop session; prepared output is pseudonymised, not guaranteed anonymous.';
+ const status=document.createElement('p');status.setAttribute('data-mm-v27-pdi-status','1');status.setAttribute('role','status');status.setAttribute('aria-live','polite');status.textContent=message;
  const label=document.createElement('label');label.setAttribute('for','mmLocalCsvPicker');label.textContent='Choose real-shot CSV';
- const input=document.createElement('input');input.id='mmLocalCsvPicker';input.type='file';input.accept='.csv,text/csv';input.setAttribute('aria-describedby','mmLocalCsvBoundary');
- note.id='mmLocalCsvBoundary';
- const exportBtn=document.createElement('button');exportBtn.className='secondary';exportBtn.textContent='Export prepared CSV';exportBtn.disabled=!lastPrepared;
- input.addEventListener('change',async()=>{try{const f=input.files?.[0];if(!f)return;lastPrepared=prepare(parseCsv(await f.text()));render(`${lastPrepared.rows.length} rows prepared.`)}catch(err){lastPrepared=null;render(err?.message||'CSV rejected.')}});
- exportBtn.addEventListener('click',()=>{if(lastPrepared)download('mouldmaster-prepared-shot-data.csv',toCsv(lastPrepared),'text/csv;charset=utf-8')});
- card.append(title,note,status,label,input,exportBtn);host.appendChild(card)
+ const input=document.createElement('input');input.id='mmLocalCsvPicker';input.type='file';input.accept='.csv,text/csv';input.setAttribute('data-pdi-file','1');input.setAttribute('aria-describedby','mmLocalCsvBoundary');
+ const exportDict=document.createElement('button');exportDict.type='button';exportDict.className='secondary';exportDict.textContent='Export data dictionary';exportDict.disabled=!lastPrepared;
+ const exportPrepared=document.createElement('button');exportPrepared.type='button';exportPrepared.className='secondary';exportPrepared.textContent='Export prepared CSV';exportPrepared.disabled=!lastPrepared;
+ input.addEventListener('change',async()=>{
+  clearSummary(card);lastPrepared=null;exportDict.disabled=true;exportPrepared.disabled=true;
+  try{const f=input.files?.[0];if(!f){status.textContent='Select a local CSV.';return}const parsed=parseCsv(await f.text());lastPrepared=prepare(parsed);status.textContent=`Accepted locally: ${lastPrepared.rows.length} rows prepared. No source row values are displayed or uploaded.`;exportDict.disabled=false;exportPrepared.disabled=false;showSummary(card,lastPrepared)}catch(err){status.textContent=`Rejected: ${err?.message||'CSV could not be prepared.'}`}
+ });
+ exportDict.addEventListener('click',()=>{if(lastPrepared)download('mouldmaster-data-dictionary.csv',dictionaryCsv(lastPrepared),'text/csv;charset=utf-8')});
+ exportPrepared.addEventListener('click',()=>{if(lastPrepared)download('mouldmaster-prepared-shot-data.csv',toCsv(lastPrepared),'text/csv;charset=utf-8')});
+ card.append(title,note,status,label,input,exportDict,exportPrepared);host.appendChild(card);if(lastPrepared)showSummary(card,lastPrepared);return true
+}
+function ensureLauncher(){
+ retireLegacy();
+ const host=document.getElementById('processDataLabs');if(!host)return false;
+ let launch=host.querySelector('[data-mm-v27-pdi-launch]');if(launch)return true;
+ const wrap=document.createElement('section');wrap.className='card';wrap.setAttribute('data-mm-v27-pdi-launcher','1');
+ const heading=document.createElement('h3');heading.textContent='Local shot-data preparation';
+ const copy=document.createElement('p');copy.className='muted';copy.textContent='Prepare a CSV locally without replacing the guided diagnostics, engineering store or other Process Data tools.';
+ launch=document.createElement('button');launch.type='button';launch.className='secondary';launch.setAttribute('data-mm-v27-pdi-launch','1');launch.textContent='Prepare real shot CSV locally';launch.addEventListener('click',()=>{render();host.querySelector('[data-mm-v27-pdi-root]')?.scrollIntoView?.({block:'start'})});
+ wrap.append(heading,copy,launch);host.appendChild(wrap);return true
 }
 const originalOpen=BASE.open.bind(BASE);
-BASE.open=function(){const r=originalOpen();requestAnimationFrame(()=>render());return r};
+BASE.open=function(){const r=originalOpen();requestAnimationFrame(()=>ensureLauncher());return r};
 function open(){return BASE.open()}
 retireLegacy();
 // Connected-data runtime intentionally decorates `prepare`/`open` and adds
 // __rawPrepare/enrichment helpers. Keep the API container extensible while the
 // strict parser itself remains the canonical parseCsv function.
-window.MM_PROCESS_DATA_LOCAL_INTAKE={version:VERSION,maxRows:MAX_ROWS,parseCsv,prepare,toCsv,open,scope:'Strict local in-memory CSV preparation only. Malformed structure is rejected atomically; no upload, storage, machine control or production limits.'};
+window.MM_PROCESS_DATA_LOCAL_INTAKE={version:VERSION,maxRows:MAX_ROWS,parseCsv,prepare,toCsv,open,render,ensureLauncher,exportDataDictionary:()=>{if(lastPrepared)download('mouldmaster-data-dictionary.csv',dictionaryCsv(lastPrepared),'text/csv;charset=utf-8')},scope:'Strict local in-memory CSV preparation only. Malformed structure is rejected atomically; no upload, storage, machine control or production limits.'};
 })();
