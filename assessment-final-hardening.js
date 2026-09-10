@@ -3,7 +3,8 @@
 'use strict';
 const D=window.MM_DATA;
 const A=window.MM_ASSESSMENT_ANALYTICS;
-if(!D||!A||typeof window.startExam!=='function'||typeof window.gradeExam!=='function')throw new Error('Assessment quality and analytics must load before final hardening');
+const S=window.MM_ASSESSMENT_STORAGE_SCOPE;
+if(!D||!A||!S||typeof S.read!=='function'||typeof window.startExam!=='function'||typeof window.gradeExam!=='function')throw new Error('Assessment quality, learner storage and analytics must load before final hardening');
 
 const VERSION='2026.08.24.3';
 const BANK_VERSION='2026.08.30.1';
@@ -48,8 +49,8 @@ const REVISION3={
  'tech:Advanced:9':{revision:3,date:'2026-08-30',change:'Changed pressure-loss recall into an explicit insufficient-evidence case when pressure-channel location, unit/reference or timing semantics are unresolved.'}
 };
 const esc=v=>String(v??'').replace(/[&<>\"]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','\"':'&quot;'}[m]));
-const read=(k,d)=>{try{const x=JSON.parse(localStorage.getItem(k)||'');return x&&typeof x==='object'?x:d}catch(_){return d}};
-const write=(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v));return true}catch(_){return false}};
+const read=(k,d)=>S.read(k,d);
+const write=(k,v)=>S.write(k,v);
 function revisionFor(id){return REVISION3[id]||REVISION2[id]||BASELINE}
 function allStableIds(){
  const out=[];
@@ -121,7 +122,7 @@ function installAnalyticsExportPatch(){
  if(A.__mmExposureTimingPatched)return;
  const original=A.export.bind(A),originalReset=typeof A.reset==='function'?A.reset.bind(A):null;
  A.__mmOriginalExport=original;A.__mmOriginalReset=originalReset;A.export=patchedAnalyticsExport;
- if(originalReset)A.reset=function(){localStorage.removeItem(TIMING_KEY);timingSession=null;return originalReset()};
+ if(originalReset)A.reset=function(){S.removeItem(TIMING_KEY);timingSession=null;return originalReset()};
  A.__mmExposureTimingPatched=true;
 }
 function slowestExposure(){

@@ -13,7 +13,7 @@ def git_blob_sha(path):
     need(p.returncode==0,f'cannot resolve committed Git blob for {path}: {p.stderr.strip()}')
     return p.stdout.strip()
 
-for path in ['assessment-evidence-sources.js','assessment-evidence-approval.js','sources/QUESTION_APPROVAL_POLICY.md','material-behaviour-labs.js','diagnostic-learning-labs.js','assessment-stable-review-bridge.js']:
+for path in ['assessment-storage-scope.js','assessment-evidence-sources.js','assessment-evidence-approval.js','sources/QUESTION_APPROVAL_POLICY.md','material-behaviour-labs.js','diagnostic-learning-labs.js','assessment-stable-review-bridge.js']:
     need((ROOT/path).exists(),f'missing evidence approval asset: {path}')
 
 approval=text('assessment-evidence-approval.js')
@@ -64,7 +64,7 @@ function MutationObserver(){this.observe=()=>{};this.disconnect=()=>{}}
 const sandbox={window:{MM_DATA:D,MM_RUNTIME_V2:{after:()=>()=>{},registerModule:()=>({})},requestAnimationFrame:fn=>fn(),addEventListener(){},scrollTo(){}},document,localStorage,performance:{now:()=>1000},console,setTimeout:(fn)=>{if(typeof fn==='function')fn()},clearTimeout(){},Date,Math,JSON,Map,Set,Blob:function(){},URL:{createObjectURL:()=>'',revokeObjectURL(){}},MutationObserver};
 sandbox.window.window=sandbox.window;sandbox.window.document=document;sandbox.window.localStorage=localStorage;sandbox.window.MutationObserver=MutationObserver;sandbox.window.URL=sandbox.URL;sandbox.window.setTimeout=sandbox.setTimeout;
 vm.createContext(sandbox);
-for(const file of ['diagnostic-learning-labs.js','material-behaviour-labs.js','assessment-deep-dive.js','assessment-answer-cue-fix.js','assessment-quality-suite.js','assessment-stable-review-bridge.js','assessment-evidence-sources.js','assessment-evidence-approval.js'])vm.runInContext(fs.readFileSync(file,'utf8'),sandbox,{filename:file});
+for(const file of ['diagnostic-learning-labs.js','material-behaviour-labs.js','assessment-deep-dive.js','assessment-answer-cue-fix.js','assessment-storage-scope.js','assessment-quality-suite.js','assessment-stable-review-bridge.js','assessment-evidence-sources.js','assessment-evidence-approval.js'])vm.runInContext(fs.readFileSync(file,'utf8'),sandbox,{filename:file});
 const A=sandbox.window.MM_EVIDENCE_APPROVAL;
 process.stdout.write(JSON.stringify({summary:A.summary,blockedIds:A.blockedIds,records:A.records,qa:D.assessmentQA.evidenceApproval,diagnostic:sandbox.window.MM_DIAGNOSTIC_LABS,material:sandbox.window.MM_MATERIAL_BEHAVIOUR_LABS,bridge:sandbox.window.MM_STABLE_REVIEW_BRIDGE}));
 '''%(json.dumps(D))

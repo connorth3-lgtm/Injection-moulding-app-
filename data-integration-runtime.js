@@ -1,8 +1,8 @@
-/* MouldMaster connected process-data runtime — 2026.09.10.3 */
+/* MouldMaster connected process-data runtime — 2026.09.11.1 */
 (function(){
 'use strict';
 
-const VERSION='2026.09.10.3';
+const VERSION='2026.09.11.1';
 const DB_NAME='mouldmaster-process-data-v1';
 const DB_VERSION=1;
 const MAX_ROWS=50000;
@@ -195,6 +195,11 @@ function enrichPrepared(prepared,overrides={},datasetMeta={}){
     sem.profile={rows:rows.length,present:present.length,missing,missingRate,invalid,...s};
   }
   if(prepared?.sequence?.reviewRequired)for(const w of prepared.sequence.warnings||[])issues.push({channel:'sequence',level:'block',code:'sequence-review',detail:w});
+  if(prepared?.validation?.reviewRequired){
+    const byColumn=(prepared.validation.invalidNumericByColumn||[]).filter(x=>Number(x?.count)>0).map(x=>`${x.column}: ${x.count}`).join(', ');
+    const detail=prepared.validation.note||`Prepared intake requires review${byColumn?` (${byColumn})`:''}.`;
+    issues.push({channel:'intake',level:'block',code:'prepared-data-review',detail});
+  }
   const blocking=issues.filter(x=>x.level==='block');
   const warnings=issues.filter(x=>x.level==='warn');
   const meta={
@@ -206,7 +211,7 @@ function enrichPrepared(prepared,overrides={},datasetMeta={}){
     job_context:safeToken(datasetMeta.job_context||'',72),
     notes_boundary:'Engineering metadata only. Do not enter names, emails, customer names, employee IDs or other personal identifiers.'
   };
-  return {...prepared,schema:3,semanticVersion:semanticRegistry?.version||VERSION,semantics,quality:{analysisReady:blocking.length===0,blockingCount:blocking.length,warningCount:warnings.length,issues},datasetMeta:meta,boundary:`${prepared.boundary||''} Semantic readiness is evaluated separately from privacy preparation; unresolved roles, units, meanings, sampling bases or sequence warnings block process intelligence until resolved.`};
+  return {...prepared,schema:3,semanticVersion:semanticRegistry?.version||VERSION,semantics,quality:{analysisReady:blocking.length===0,blockingCount:blocking.length,warningCount:warnings.length,issues},datasetMeta:meta,boundary:`${prepared.boundary||''} Analysis readiness is fail-closed and evaluated separately from privacy preparation; unresolved intake review states, roles, units, meanings, sampling bases or sequence warnings block process intelligence until resolved.`};
 }
 
 function publicDatasetRecord(prepared,id){
@@ -258,7 +263,7 @@ function summarizeRows(rows,semantics){
 }
 async function createBaseline(datasetId,label='Known-good local baseline'){
   const record=await get('datasets',datasetId);if(!record)throw new Error('Dataset not found');
-  if(!record.quality?.analysisReady)throw new Error('Dataset has unresolved semantic or sequence blockers');
+  if(!record.quality?.analysisReady)throw new Error('Dataset has unresolved analysis-readiness blockers');
   const rows=await rowsForDataset(datasetId),summary=summarizeRows(rows,record.semantics);
   const baseline={id:uid('baseline'),datasetId,label:safeToken(label,96),createdAt:new Date().toISOString(),entities:record.entities,summary,rowCount:rows.length,boundary:'Statistical site-local reference only. Attention signals are not machine safety limits, acceptance limits or validated process windows.'};
   await put('baselines',baseline);return baseline;
@@ -267,7 +272,7 @@ async function compareToBaseline(datasetId,baselineId){
   const [record,baseline]=await Promise.all([get('datasets',datasetId),get('baselines',baselineId)]);
   if(!record||!baseline)throw new Error('Dataset or baseline not found');
   assertBaselineCompatible(record,baseline);
-  if(!record.quality?.analysisReady)throw new Error('Dataset has unresolved semantic or sequence blockers');
+  if(!record.quality?.analysisReady)throw new Error('Dataset has unresolved analysis-readiness blockers');
   const rows=await rowsForDataset(datasetId),cur=summarizeRows(rows,record.semantics),signals=[];
   for(const [key,b] of Object.entries(baseline.summary||{})){
     const c=cur[key];if(!c||c.mean==null||b.mean==null)continue;
@@ -309,7 +314,7 @@ function semanticRowsHtml(p){
   return `<div class="di-semantic-table">${numeric.map(key=>{const s=p.semantics[key];return `<div class="di-sem-row" data-di-channel="${esc(key)}"><div><b>${esc(key)}</b><small>${esc(s.profile?.present||0)}/${esc(s.profile?.rows||0)} values · ${esc(s.source)}</small></div><label>Meaning<input data-di-meaning value="${esc(s.meaning||'')}" placeholder="engineering meaning"></label><label>Role<select data-di-role>${ROLE_OPTIONS.map(x=>`<option value="${x}" ${s.role===x?'selected':''}>${x}</option>`).join('')}</select></label><label>Unit<input data-di-unit value="${esc(s.unit||'')}" placeholder="e.g. MPa"></label><label>Sampling<select data-di-sampling>${SAMPLING_OPTIONS.map(x=>`<option value="${x}" ${s.sampling_basis===x?'selected':''}>${x}</option>`).join('')}</select></label><label>Sensor ref<input data-di-sensor value="${esc(s.sensor_ref||'')}" placeholder="optional local ref"></label><label>Calibration ref<input data-di-calibration value="${esc(s.calibration_ref||'')}" placeholder="optional local ref"></label><div class="di-sem-state ${s.blockers.length?'blocked':'ready'}">${s.blockers.length?`Needs ${esc(s.blockers.join(', '))}`:'Semantically ready'}</div></div>`}).join('')}</div>`;
 }
 function issuesHtml(p){
-  const xs=p.quality?.issues||[];if(!xs.length)return '<div class="di-ok">No semantic, sequence or basic data-quality blockers detected.</div>';
+  const xs=p.quality?.issues||[];if(!xs.length)return '<div class="di-ok">No semantic, sequence or intake-review blockers detected.</div>';
   return `<div class="di-issues">${xs.slice(0,30).map(x=>`<div class="di-issue ${esc(x.level)}"><b>${esc(x.level.toUpperCase())}</b> ${esc(x.channel)} · ${esc(x.detail)}</div>`).join('')}${xs.length>30?`<div class="di-issue note">${xs.length-30} more issues not shown</div>`:''}</div>`;
 }
 function ensureStyle(){
@@ -324,7 +329,7 @@ function renderAdvancedIntake(prepared=null,error=''){
   ensureStyle();const h=advancedHost();if(!h)return;
   const ready=prepared?.quality?.analysisReady;
   h.innerHTML=`<div data-di-root><div class="di-actions" style="margin-bottom:12px"><button class="ghost" data-di-back>← Data diagnosis</button><button class="ghost" data-di-template>Download standard CSV template</button><button class="ghost" data-di-library>Local dataset library</button></div>
-  <div class="card di-hero"><div class="eyebrow">Connected local process data</div><h2>Prepare, define and validate real shot data</h2><p>Raw CSV stays in this browser/desktop session. Privacy preparation happens first; semantic readiness is checked separately so a clean file cannot be mistaken for an interpretable engineering dataset.</p><div class="di-note"><b>Fail-closed rule:</b> unresolved meaning, actual/setpoint/command role, engineering unit, sampling basis or sequence integrity blocks baseline and drift intelligence. Saved data can remain locally preserved while blocked.</div></div>
+  <div class="card di-hero"><div class="eyebrow">Connected local process data</div><h2>Prepare, define and validate real shot data</h2><p>Raw CSV stays in this browser/desktop session. Privacy preparation happens first; semantic readiness is checked separately so a clean file cannot be mistaken for an interpretable engineering dataset.</p><div class="di-note"><b>Fail-closed rule:</b> malformed numeric intake review, unresolved meaning, actual/setpoint/command role, engineering unit, sampling basis or sequence integrity blocks baseline and drift intelligence. Saved data can remain locally preserved while blocked.</div></div>
   ${error?`<div class="di-note" style="margin-top:12px"><b>Could not prepare file:</b> ${esc(error)}</div>`:''}
   <div class="di-grid"><section class="card di-panel"><h3>1 · Local CSV and context</h3><div class="di-meta"><label class="wide">CSV<input type="file" accept=".csv,text/csv" data-di-file></label><label>Source label<input data-di-meta="source_label" placeholder="e.g. machine export"></label><label>Confidentiality<select data-di-meta="confidentiality"><option value="local-confidential">local-confidential</option><option value="internal-approved">internal-approved</option><option value="public-cleared">public-cleared</option></select></label><label>Machine context<input data-di-meta="machine_context" placeholder="non-person local alias"></label><label>Mould context<input data-di-meta="mould_context" placeholder="non-person local alias"></label><label>Material context<input data-di-meta="material_context" placeholder="grade/code"></label><label>Job context<input data-di-meta="job_context" placeholder="non-person work-order alias"></label></div><p class="muted">Do not enter operator, employee, customer or contact identifiers.</p></section>
   <section class="card di-panel"><h3>Readiness</h3>${prepared?`<div class="di-kpis"><div class="di-kpi"><b>${prepared.summary.outputRows}</b><small>rows</small></div><div class="di-kpi"><b>${prepared.summary.keptNumeric}</b><small>numeric channels</small></div><div class="di-kpi"><b>${prepared.quality.blockingCount}</b><small>blockers</small></div><div class="di-kpi"><b>${ready?'READY':'BLOCKED'}</b><small>analysis state</small></div></div>${issuesHtml(prepared)}`:'<div class="di-empty">Choose a CSV. MouldMaster will strip/alias sensitive fields, profile numeric channels and require semantic declarations before process intelligence.</div>'}</section></div>

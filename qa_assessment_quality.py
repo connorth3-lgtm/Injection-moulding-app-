@@ -8,7 +8,7 @@ def text(p): return (ROOT/p).read_text(encoding='utf-8')
 def need(ok,msg):
     if not ok: raise AssertionError(msg)
 
-for p in ['assessment-quality-suite.js','assessment-stable-review-bridge.js','assessment-analytics-ui.js','assessment-deep-dive.js','assessment-answer-cue-fix.js','training-upgrade.js','MouldMaster_Core_App.html','version.json','sources/QUESTION_BANK_CHANGELOG.md','sources/SOURCE_FRESHNESS.json','qa_source_freshness.py']:
+for p in ['assessment-storage-scope.js','assessment-quality-suite.js','assessment-stable-review-bridge.js','assessment-analytics-ui.js','assessment-deep-dive.js','assessment-answer-cue-fix.js','training-upgrade.js','MouldMaster_Core_App.html','version.json','sources/QUESTION_BANK_CHANGELOG.md','sources/SOURCE_FRESHNESS.json','qa_source_freshness.py']:
     need((ROOT/p).exists(),f'missing assessment quality file: {p}')
 
 suite=text('assessment-quality-suite.js')
@@ -46,12 +46,13 @@ for title in extra_titles: base['scenarios'].append({'title':title,'situation':'
 
 node=r'''
 const fs=require('fs'),vm=require('vm');const D=%s;const store={};
-const localStorage={getItem:k=>Object.prototype.hasOwnProperty.call(store,k)?store[k]:null,setItem:(k,v)=>{store[k]=String(v)},removeItem:k=>{delete store[k]}};
+const localStorage={getItem:k=>Object.prototype.hasOwnProperty.call(store,k)?store[k]:null,setItem:(k,v)=>{store[k]=String(v)},removeItem:k=>{delete store[k]},key:i=>Object.keys(store)[i]||null,get length(){return Object.keys(store).length}};
 const document={getElementById:()=>null,querySelectorAll:()=>[],querySelector:()=>null,createElement:()=>({set id(v){this._id=v},get id(){return this._id},textContent:'',appendChild(){},setAttribute(){},insertAdjacentHTML(){},addEventListener(){}}),head:{appendChild(){}},body:{appendChild(){}},documentElement:{},readyState:'complete'};
-const sandbox={window:{MM_DATA:D},document,localStorage,performance:{now:()=>1000},console,setTimeout:(fn)=>{if(typeof fn==='function')fn()},clearTimeout(){},Date,Math,JSON,Map,Set,Blob:function(){},URL:{createObjectURL:()=>'',revokeObjectURL(){}}};
-sandbox.window.window=sandbox.window;sandbox.window.localStorage=localStorage;sandbox.window.document=document;sandbox.window.URL=sandbox.URL;vm.createContext(sandbox);
+const sandbox={window:{MM_DATA:D,addEventListener(){}},document,localStorage,performance:{now:()=>1000},console,setTimeout:(fn)=>{if(typeof fn==='function')fn()},clearTimeout(){},Date,Math,JSON,Map,Set,Blob:function(){},URL:{createObjectURL:()=>'',revokeObjectURL(){}}};
+sandbox.window.window=sandbox.window;sandbox.window.localStorage=localStorage;sandbox.window.document=document;sandbox.window.URL=sandbox.URL;sandbox.window.setTimeout=sandbox.setTimeout;vm.createContext(sandbox);
 vm.runInContext(fs.readFileSync(%s,'utf8'),sandbox,{filename:'assessment-deep-dive.js'});
 vm.runInContext(fs.readFileSync(%s,'utf8'),sandbox,{filename:'assessment-answer-cue-fix.js'});
+vm.runInContext(fs.readFileSync(%s,'utf8'),sandbox,{filename:'assessment-storage-scope.js'});
 vm.runInContext(fs.readFileSync(%s,'utf8'),sandbox,{filename:'assessment-quality-suite.js'});
 vm.runInContext(fs.readFileSync(%s,'utf8'),sandbox,{filename:'assessment-stable-review-bridge.js'});
 const Q=sandbox.window.MM_ASSESSMENT_QUALITY,exams={};
@@ -61,7 +62,7 @@ for(const level of ['Beginner','Intermediate','Advanced'])for(let i=0;i<(D.exams
 for(const region of ['UK','US','NZ'])for(const level of ['Beginner','Intermediate','Advanced'])for(let i=0;i<(D.regionalQuestions?.[region]?.[level]||[]).length;i++){const q=D.regionalQuestions[region][level][i];definitions.push({id:`reg:${region}:${level}:${i}`,kind:'regional-exam',options:q.options??q[1],correct:Number(q.correct??q[2]),stem:q.q??q[0]})}
 const scenarios=D.scenarios.map(s=>({id:s.mmStableId,title:s.title,options:s.choices,choices:s.choices.length,correct:s.correct,feedback:Array.isArray(s.feedback)?s.feedback.length:0,category:s.category,difficulty:s.difficulty,reference:s.reference||null,sourceUrl:s.sourceUrl||null}));
 process.stdout.write(JSON.stringify({scenarioCount:D.scenarios.length,definitions,exams,quality:Q,scenarios,qa:D.assessmentQA.qualitySuite,history:D.assessmentQA.questionRevisionHistory,bridge:sandbox.window.MM_STABLE_REVIEW_BRIDGE}));
-'''%(json.dumps(base),json.dumps(str(ROOT/'assessment-deep-dive.js')),json.dumps(str(ROOT/'assessment-answer-cue-fix.js')),json.dumps(str(ROOT/'assessment-quality-suite.js')),json.dumps(str(ROOT/'assessment-stable-review-bridge.js')))
+'''%(json.dumps(base),json.dumps(str(ROOT/'assessment-deep-dive.js')),json.dumps(str(ROOT/'assessment-answer-cue-fix.js')),json.dumps(str(ROOT/'assessment-storage-scope.js')),json.dumps(str(ROOT/'assessment-quality-suite.js')),json.dumps(str(ROOT/'assessment-stable-review-bridge.js')))
 with tempfile.NamedTemporaryFile('w',suffix='.js',delete=False,encoding='utf-8') as handle: handle.write(node);node_path=Path(handle.name)
 try: p=subprocess.run(['node',str(node_path)],capture_output=True,text=True,encoding='utf-8',errors='replace')
 finally: node_path.unlink(missing_ok=True)
@@ -115,18 +116,18 @@ V=json.loads(text('version.json'));need(V.get('question_bank_version')=='2026.08
 log=text('sources/QUESTION_BANK_CHANGELOG.md')
 for marker in ['2026.08.30.1','all 30 technical questions','insufficient evidence','2026.08.24.2','stable question IDs','device-local question analytics','competency-balanced exam blueprint','Expanded shop-floor scenario drills from 16 to 40','scheduled authoritative-source freshness monitoring']:need(marker in log,f'question-bank changelog marker missing: {marker}')
 idx=text('index.html')
-for asset in ['assessment-answer-cue-fix.js','assessment-quality-suite.js','assessment-stable-review-bridge.js','assessment-analytics-ui.js']:need(f'<script src="./{asset}">' in idx,f'{asset} not loaded by shell')
-need(idx.index('assessment-deep-dive.js')<idx.index('assessment-answer-cue-fix.js')<idx.index('assessment-quality-suite.js')<idx.index('assessment-stable-review-bridge.js')<idx.index('assessment-analytics-ui.js')<idx.index('source-library.js'),'assessment quality stack load order wrong')
+for asset in ['assessment-storage-scope.js','assessment-answer-cue-fix.js','assessment-quality-suite.js','assessment-stable-review-bridge.js','assessment-analytics-ui.js']:need(f'<script src="./{asset}">' in idx,f'{asset} not loaded by shell')
+need(idx.index('assessment-deep-dive.js')<idx.index('assessment-answer-cue-fix.js')<idx.index('assessment-storage-scope.js')<idx.index('assessment-quality-suite.js')<idx.index('assessment-stable-review-bridge.js')<idx.index('assessment-analytics-ui.js')<idx.index('source-library.js'),'assessment quality stack load order wrong')
 sw=text('service-worker.js')
-for asset in ['assessment-answer-cue-fix.js','assessment-quality-suite.js','assessment-stable-review-bridge.js','assessment-analytics-ui.js']:need(f"'./{asset}'" in sw,f'{asset} not cached offline')
+for asset in ['assessment-storage-scope.js','assessment-answer-cue-fix.js','assessment-quality-suite.js','assessment-stable-review-bridge.js','assessment-analytics-ui.js']:need(f"'./{asset}'" in sw,f'{asset} not cached offline')
 pkg=json.loads(text('desktop/electron/package.json'));froms={x.get('from') for x in pkg['build']['extraResources'] if isinstance(x,dict)}
-for asset in ['assessment-answer-cue-fix.js','assessment-quality-suite.js','assessment-stable-review-bridge.js','assessment-analytics-ui.js']:need(f'../../{asset}' in froms,f'{asset} missing from desktop package')
+for asset in ['assessment-storage-scope.js','assessment-answer-cue-fix.js','assessment-quality-suite.js','assessment-stable-review-bridge.js','assessment-analytics-ui.js']:need(f'../../{asset}' in froms,f'{asset} missing from desktop package')
 integrity=text('desktop/electron/scripts/generate-integrity.cjs')
-for asset in ['assessment-answer-cue-fix.js','assessment-quality-suite.js','assessment-stable-review-bridge.js','assessment-analytics-ui.js']:need(f"'{asset}'" in integrity,f'{asset} missing from integrity hashes')
+for asset in ['assessment-storage-scope.js','assessment-answer-cue-fix.js','assessment-quality-suite.js','assessment-stable-review-bridge.js','assessment-analytics-ui.js']:need(f"'{asset}'" in integrity,f'{asset} missing from integrity hashes')
 qy=text('.github/workflows/qa.yml')
 need("find . -maxdepth 1 -type f -name '*.js'" in qy,'release workflow must syntax-check root JavaScript dynamically')
 need('python qa_assessment_quality.py' in qy and 'python qa_source_freshness.py' in qy,'release workflow missing assessment quality gates')
 ow=text('.github/workflows/open-desktop-build.yml')
-for asset in ['assessment-quality-suite.js','assessment-stable-review-bridge.js','assessment-analytics-ui.js']:need(f"- '{asset}'" in ow,f'desktop workflow trigger missing {asset}')
+for asset in ['assessment-storage-scope.js','assessment-quality-suite.js','assessment-stable-review-bridge.js','assessment-analytics-ui.js']:need(f"- '{asset}'" in ow,f'desktop workflow trigger missing {asset}')
 need("- 'qa_assessment_quality.py'" in ow and 'python qa_assessment_quality.py' in ow,'desktop workflow missing assessment quality suite');need('python qa_assessment_quality.py' in text('.github/workflows/microsoft-store-msix.yml'),'Store workflow missing assessment quality QA');need((ROOT/'.github/workflows/source-freshness.yml').exists(),'scheduled source freshness workflow missing')
 print(f"MouldMaster assessment quality QA passed (57 exam items; 40 scenarios; strict longest-answer flags=0; stable IDs; device-local analytics; near-duplicate flags={len(near)}; answer-cue flags={len(cue_flags)})")

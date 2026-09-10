@@ -12,7 +12,7 @@ def text(name): return (ROOT/name).read_text(encoding='utf-8')
 
 required=[
  'MouldMaster_Core_App.html','training-upgrade.js','assessment-deep-dive.js','assessment-answer-cue-fix.js',
- 'assessment-quality-suite.js','assessment-stable-review-bridge.js','diagnostic-learning-labs.js','material-behaviour-labs.js','assessment-evidence-sources.js',
+ 'assessment-storage-scope.js','assessment-quality-suite.js','assessment-stable-review-bridge.js','diagnostic-learning-labs.js','material-behaviour-labs.js','assessment-evidence-sources.js',
  'assessment-evidence-approval.js','source-library.js','reference-data.js','reference-deep-dive.js','reference-research-extension.js',
  'reference-20x-extension.js','reference-2026-expansion.js','evidence-maturity-deep-dive.js','evidence-maturity-formal-bridge.js','lesson-evidence-depth.js'
 ]
@@ -44,7 +44,7 @@ for(const file of ['reference-data.js','reference-deep-dive.js','reference-resea
  vm.runInContext(fs.readFileSync(file,'utf8'),sandbox,{filename:file});
 }
 document.readyState='complete';
-for(const file of ['diagnostic-learning-labs.js','material-behaviour-labs.js','assessment-deep-dive.js','assessment-answer-cue-fix.js','assessment-quality-suite.js','assessment-stable-review-bridge.js','assessment-evidence-sources.js','evidence-maturity-deep-dive.js','evidence-maturity-formal-bridge.js','lesson-evidence-depth.js','assessment-evidence-approval.js']){
+for(const file of ['diagnostic-learning-labs.js','material-behaviour-labs.js','assessment-deep-dive.js','assessment-answer-cue-fix.js','assessment-storage-scope.js','assessment-quality-suite.js','assessment-stable-review-bridge.js','assessment-evidence-sources.js','evidence-maturity-deep-dive.js','evidence-maturity-formal-bridge.js','lesson-evidence-depth.js','assessment-evidence-approval.js']){
  vm.runInContext(fs.readFileSync(file,'utf8'),sandbox,{filename:file});
 }
 const A=sandbox.window.MM_EVIDENCE_APPROVAL;
@@ -140,6 +140,7 @@ for asset in ['evidence-maturity-deep-dive.js','evidence-maturity-formal-bridge.
     need(f"'./{asset}'" in sw,f'offline cache missing {asset}')
     need(f'../../{asset}' in pkg,f'desktop package missing {asset}')
     need(f"'{asset}'" in integ,f'desktop integrity missing {asset}')
+need(idx.index('assessment-storage-scope.js')<idx.index('assessment-quality-suite.js'),'evidence-maturity runtime must preserve scoped assessment-storage load order')
 need(idx.index('assessment-evidence-sources.js')<idx.index('evidence-maturity-deep-dive.js')<idx.index('evidence-maturity-formal-bridge.js')<idx.index('assessment-evidence-approval.js'),'formal evidence modules must run after base sources and before approval')
 need(idx.index('evidence-maturity-formal-bridge.js')<idx.index('lesson-evidence-depth.js'),'lesson depth must see final evidence mappings')
 
