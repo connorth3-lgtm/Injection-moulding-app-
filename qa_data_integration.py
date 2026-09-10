@@ -20,7 +20,9 @@ def main() -> None:
     closeout = json.loads((ROOT / "data/measured-data-collection-closeout-2026-08-30.json").read_text(encoding="utf-8"))
     registry = json.loads((ROOT / "process-data-semantic-registry.json").read_text(encoding="utf-8"))
     version = json.loads((ROOT / "version.json").read_text(encoding="utf-8"))
+    runtime_manifest = json.loads((ROOT / "runtime-domain-manifest.json").read_text(encoding="utf-8"))
     runtime = (ROOT / "data-integration-runtime.js").read_text(encoding="utf-8")
+    integrity = (ROOT / "src/domains/process/process-data-integrity.js").read_text(encoding="utf-8")
     intelligence_ui = (ROOT / "process-data-intelligence-ui.js").read_text(encoding="utf-8")
     shell = (ROOT / "app-shell-finalize.js").read_text(encoding="utf-8")
     index = (ROOT / "index.html").read_text(encoding="utf-8")
@@ -65,6 +67,22 @@ def main() -> None:
     require('id:`${id}:${shotIndex}`' not in runtime, 'source shot_index must never be the IndexedDB primary key')
     require('Number(a.rowOrdinal??a.shotIndex)' in runtime, 'dataset reads must preserve source row order while remaining backward-compatible')
 
+    integrity_asset = "./src/domains/process/process-data-integrity.js"
+    require(integrity_asset in runtime_manifest.get("assets", []), "process-data integrity hardening must load through the generated domain manifest")
+    for token in [
+        "CONTEXT_KEYS=['machine','mould','materialGrade','job']",
+        "missing.length===0&&mismatched.length===0",
+        "baseline.datasetId===dataset.id",
+        "assertBaselineCompatible(dataset,baseline)",
+        "api.intelligence.compareToBaseline=function",
+        "['datasets','shots','baselines','caseLinks']",
+        "row=>row?.datasetId===datasetId",
+        "event.stopImmediatePropagation()",
+        "data-di-delete",
+    ]:
+        require(token in integrity, f"process-data integrity hardening missing invariant: {token}")
+    require((ROOT / "qa_process_data_integrity.cjs").exists(), "behavioral process-data integrity regression test missing")
+
     require("script.src='./data-integration-runtime.js'" in shell, "app shell must load connected data runtime")
     require("ui.src='./process-data-intelligence-ui.js'" in shell, "app shell must load process intelligence UI")
     require('window.MM_APP_SHELL_FINALIZED=VERSION' in shell, "connected data must preserve canonical app-shell finalization through VERSION")
@@ -72,6 +90,7 @@ def main() -> None:
     require("'./process-data-intelligence-ui.js'" in worker, "process intelligence UI must be a published worker asset")
     require("'./process-data-semantic-registry.json'" in worker, "semantic registry must be a published worker asset")
     require("'./current-data-manifest.json'" in worker, "current-data manifest must be a published worker asset")
+    require("'./src/domains/process/process-data-integrity.js'" in worker, "process-data integrity hardening must be an offline governed worker asset")
     require(f"CACHE_VERSION='{version['web_release']}'" in worker, "service-worker cache version must stay aligned with the canonical web release")
     cache_version = re.search(r"CACHE_VERSION='([^']+)'", worker)
     cache_revision = re.search(r"CACHE_REVISION='([^']+)'", worker)
@@ -93,6 +112,7 @@ def main() -> None:
     require("reference-20x-extension.js" in optional_assets, "large specialist/reference packs should not be part of the atomic offline install")
     require("data-integration-runtime.js" in core_assets, "connected process-data layer should be available in offline core")
     require("process-data-intelligence-ui.js" in core_assets, "process intelligence UI should be available in offline core")
+    require("src/domains/process/process-data-integrity.js" in core_assets, "process-data integrity module should be available in offline core")
     require(len(optional_assets) >= 20, "offline split did not materially reduce atomic pre-cache scope")
 
     for token in [
@@ -122,6 +142,7 @@ def main() -> None:
     for asset in connected_assets:
         require(f"../../{asset}" in desktop_from, f"desktop package missing connected data asset: {asset}")
         require(f"'{asset}'" in desktop_integrity, f"desktop integrity set missing connected data asset: {asset}")
+    require('../../src/domains' in desktop_from, "desktop package must include governed domain runtime directory")
 
     print(
         "Connected process-data QA passed: "
