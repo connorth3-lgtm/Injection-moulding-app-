@@ -1,17 +1,19 @@
-/* MouldMaster learner-scoped assessment storage — 2026-09-06.1 */
+/* MouldMaster learner-scoped assessment storage — 2026-09-11.1 */
 (function(){
 'use strict';
-if(typeof window==='undefined'||typeof Storage==='undefined'||typeof localStorage==='undefined')return;
-const VERSION='2026.09.06.1';
+if(typeof window==='undefined'||typeof localStorage==='undefined')return;
+const VERSION='2026.09.11.1';
 const ANALYTICS_BASE='mm_assessment_analytics_v1';
 const TIMING_BASE='mm_assessment_exposure_timing_v1';
 const ROTATION_BASE='mm_assessment_opening_history_v1';
 const QUESTION_HISTORY_BASE='mm-assessment-question-history-v4';
 const RESULT_META_BASE='mm-assessment-result-meta-v1';
 const BASES=[ANALYTICS_BASE,TIMING_BASE,ROTATION_BASE,QUESTION_HISTORY_BASE,RESULT_META_BASE];
-const P=Storage.prototype;
-if(P.__mmAssessmentStorageScopeInstalled)return;
-const rawGet=P.getItem,rawSet=P.setItem,rawRemove=P.removeItem,rawKey=P.key;
+if(window.MM_ASSESSMENT_STORAGE_SCOPE?.version===VERSION)return;
+const rawGet=localStorage.getItem.bind(localStorage);
+const rawSet=localStorage.setItem.bind(localStorage);
+const rawRemove=localStorage.removeItem.bind(localStorage);
+const rawKey=localStorage.key.bind(localStorage);
 let sharedMigration={status:'not-run',migrated:0,removedDuplicate:0,conflicts:0,ambiguous:0};
 let sharedMigrationComplete=false;
 function learnerId(){
@@ -38,11 +40,11 @@ function migrateFallbackScopes(){
  let migrated=0,removedDuplicate=0,conflicts=0,ambiguous=0;
  for(const base of BASES){
   for(const [oldToken,owners] of byOld){
-   const oldKey=rawScopedKey(base,oldToken),legacy=rawGet.call(localStorage,oldKey);if(legacy==null)continue;
+   const oldKey=rawScopedKey(base,oldToken),legacy=rawGet(oldKey);if(legacy==null)continue;
    if(owners.length!==1){ambiguous++;continue}
-   const target=rawScopedKey(base,shared.tokenFor(owners[0])),current=rawGet.call(localStorage,target);
-   if(current==null){rawSet.call(localStorage,target,legacy);if(rawGet.call(localStorage,target)===legacy){rawRemove.call(localStorage,oldKey);migrated++}else conflicts++;continue}
-   if(current===legacy){rawRemove.call(localStorage,oldKey);removedDuplicate++;continue}
+   const target=rawScopedKey(base,shared.tokenFor(owners[0])),current=rawGet(target);
+   if(current==null){rawSet(target,legacy);if(rawGet(target)===legacy){rawRemove(oldKey);migrated++}else conflicts++;continue}
+   if(current===legacy){rawRemove(oldKey);removedDuplicate++;continue}
    conflicts++;
   }
  }
@@ -56,43 +58,79 @@ function scopeToken(raw=learnerId()){
  const shared=sharedScope();if(shared){ensureSharedMigration();return shared.tokenFor(raw)}
  return hashScope(raw)
 }
-function scopedKey(key){const k=String(key);return BASES.includes(k)?rawScopedKey(k,scopeToken()):k}
-function rawKeys(){const out=[];for(let i=0;i<localStorage.length;i++){const k=rawKey.call(localStorage,i);if(k!=null)out.push(k)}return out}
+function scopedKey(base,raw=learnerId()){
+ const k=String(base);return BASES.includes(k)?rawScopedKey(k,scopeToken(raw)):k
+}
+function rawKeys(){const out=[];for(let i=0;i<localStorage.length;i++){const k=rawKey(i);if(k!=null)out.push(k)}return out}
 function assessmentKey(k){return BASES.some(base=>k===base||k.startsWith(base+'::'))}
-function clearAll(){for(const k of rawKeys())if(assessmentKey(k))rawRemove.call(localStorage,k)}
+function getItem(base){return rawGet(scopedKey(base))}
+function setItem(base,value){rawSet(scopedKey(base),String(value));return true}
+function removeItem(base){rawRemove(scopedKey(base));return true}
+function read(base,fallback=null){try{const raw=getItem(base);if(raw==null)return fallback;const value=JSON.parse(raw);return value==null?fallback:value}catch(_){return fallback}}
+function write(base,value){try{return setItem(base,JSON.stringify(value))}catch(_){return false}}
+function clearAll(){for(const k of rawKeys())if(assessmentKey(k))rawRemove(k)}
 function cancelInMemoryAttempt(){
  try{if(typeof activeExam!=='undefined')activeExam=null}catch(_){}
  try{window.activeExam=null}catch(_){}
 }
 function migrateLegacy(){
- let migrated=0,discarded=0,userCount=0;
- try{userCount=(typeof db!=='undefined'&&db&&db.users)?Object.keys(db.users).length:0}catch(_){}
+ let migrated=0,removedDuplicate=0,conflicts=0,ambiguous=0;
+ const ids=[...new Set(profileIds())],active=learnerId(),sole=ids.length===1?ids[0]:null;
  for(const base of BASES){
-  const old=rawGet.call(localStorage,base);if(old==null)continue;
-  if(userCount===1){const target=scopedKey(base);if(rawGet.call(localStorage,target)==null){rawSet.call(localStorage,target,old);migrated++}}
-  else discarded++;
-  rawRemove.call(localStorage,base);
+  const old=rawGet(base);if(old==null)continue;
+  if(!sole||active!==sole){ambiguous++;continue}
+  const target=scopedKey(base,sole),current=rawGet(target);
+  if(current==null){
+   rawSet(target,old);
+   if(rawGet(target)===old){rawRemove(base);migrated++}else conflicts++;
+   continue
+  }
+  if(current===old){rawRemove(base);removedDuplicate++;continue}
+  conflicts++;
  }
- return {migrated,discarded};
+ return {status:conflicts||ambiguous?'partial-fail-closed':'migrated',migrated,removedDuplicate,conflicts,ambiguous};
 }
 function wrapLearnerChange(name){
- const base=typeof window[name]==='function'?window[name]:null;if(!base)return;
- window[name]=function(){const before=learnerId();try{return base.apply(this,arguments)}finally{if(learnerId()!==before)cancelInMemoryAttempt()}};
+ const base=typeof window[name]==='function'?window[name]:null;if(!base||base.__mmAssessmentScopeWrapped)return;
+ const wrapped=function(){const before=learnerId();try{return base.apply(this,arguments)}finally{if(learnerId()!==before)cancelInMemoryAttempt()}};
+ Object.defineProperty(wrapped,'__mmAssessmentScopeWrapped',{value:true});window[name]=wrapped;
 }
-Object.defineProperty(P,'getItem',{configurable:true,writable:true,value:function(key){return rawGet.call(this,this===localStorage?scopedKey(key):key)}});
-Object.defineProperty(P,'setItem',{configurable:true,writable:true,value:function(key,value){return rawSet.call(this,this===localStorage?scopedKey(key):key,value)}});
-Object.defineProperty(P,'removeItem',{configurable:true,writable:true,value:function(key){return rawRemove.call(this,this===localStorage?scopedKey(key):key)}});
-Object.defineProperty(P,'__mmAssessmentStorageScopeInstalled',{configurable:false,writable:false,value:true});
 const legacy=migrateLegacy();
 wrapLearnerChange('switchUser');
 wrapLearnerChange('createLearner');
 const baseReset=typeof window.resetData==='function'?window.resetData:null;
-if(baseReset)window.resetData=function(){
- let before=null;try{before=rawGet.call(localStorage,'mouldmasterProDB')}catch(_){}
- const r=baseReset.apply(this,arguments);
- setTimeout(()=>{try{const after=rawGet.call(localStorage,'mouldmasterProDB');if(after!==before){cancelInMemoryAttempt();clearAll()}}catch(_){}},0);
- return r;
-};
+if(baseReset&&!baseReset.__mmAssessmentScopeWrapped){
+ const wrappedReset=function(){
+  let before=null;try{before=rawGet('mouldmasterProDB')}catch(_){}
+  const r=baseReset.apply(this,arguments);
+  setTimeout(()=>{try{const after=rawGet('mouldmasterProDB');if(after!==before){cancelInMemoryAttempt();clearAll()}}catch(_){}},0);
+  return r;
+ };
+ Object.defineProperty(wrappedReset,'__mmAssessmentScopeWrapped',{value:true});window.resetData=wrappedReset;
+}
 window.addEventListener?.('mm:domains-ready',()=>ensureSharedMigration(),{once:true});
-window.MM_ASSESSMENT_STORAGE_SCOPE={version:VERSION,scopeToken,analyticsKey:()=>scopedKey(ANALYTICS_BASE),timingKey:()=>scopedKey(TIMING_BASE),rotationKey:()=>scopedKey(ROTATION_BASE),questionHistoryKey:()=>scopedKey(QUESTION_HISTORY_BASE),resultMetaKey:()=>scopedKey(RESULT_META_BASE),clearAll,cancelInMemoryAttempt,migrateFallbackScopes:ensureSharedMigration,legacyMigration:{...legacy},get sharedMigration(){return {...sharedMigration}},scopeProvider:()=>sharedScope()?'MM_LEARNER_SCOPE':'compatibility-hash',learnerScoped:true,boundary:'Assessment analytics, exposure timing, opening history, recent-question rotation and graded-form metadata use MM_LEARNER_SCOPE 128-bit tokens once the shared scope service is available. The previous assessment hash remains only for fail-closed migration; ambiguous or conflicting legacy buckets are never reassigned automatically.'};
+window.MM_ASSESSMENT_STORAGE_SCOPE={
+ version:VERSION,
+ scopeToken,
+ key:scopedKey,
+ getItem,
+ setItem,
+ removeItem,
+ read,
+ write,
+ analyticsKey:()=>scopedKey(ANALYTICS_BASE),
+ timingKey:()=>scopedKey(TIMING_BASE),
+ rotationKey:()=>scopedKey(ROTATION_BASE),
+ questionHistoryKey:()=>scopedKey(QUESTION_HISTORY_BASE),
+ resultMetaKey:()=>scopedKey(RESULT_META_BASE),
+ clearAll,
+ cancelInMemoryAttempt,
+ migrateFallbackScopes:ensureSharedMigration,
+ legacyMigration:{...legacy},
+ get sharedMigration(){return {...sharedMigration}},
+ scopeProvider:()=>sharedScope()?'MM_LEARNER_SCOPE':'compatibility-hash',
+ learnerScoped:true,
+ prototypeInterception:false,
+ boundary:'Assessment persistence is explicit: callers use this API for learner-scoped analytics and assessment metadata. Native browser storage methods are never replaced. Single-owner legacy values are copied and verified before removal; ambiguous or conflicting legacy data remains untouched and is never inherited automatically.'
+};
 })();

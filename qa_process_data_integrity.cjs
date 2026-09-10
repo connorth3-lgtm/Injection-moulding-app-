@@ -12,7 +12,37 @@ for(const [token,message] of [
   ['row=>row?.datasetId===datasetId','canonical deletion must remove dataset-linked troubleshooting records'],
   ['__mmCanonicalProcessDataIntegrity:VERSION','canonical runtime must advertise native integrity ownership'],
   ['baselineCompatibility,contextCompatibility,assertBaselineCompatible','canonical integrity helpers must be exposed through the process-data API'],
+  ['prepared?.validation?.reviewRequired','canonical readiness must consume intake review state'],
+  ["code:'prepared-data-review'",'canonical readiness must expose a stable intake-review blocker code'],
+  ['analysis-readiness blockers','baseline/drift errors must describe the full canonical readiness gate'],
 ])assert(runtimeSource.includes(token),message);
+
+/* Exercise the canonical enrichment predicate without starting its browser installer. */
+const runtimeForReadiness=runtimeSource.replace("install().catch(err=>{console.error('MouldMaster connected process-data runtime failed to initialise',err)});",'');
+const readinessSandbox={window:{},console};
+vm.createContext(readinessSandbox);
+vm.runInContext(runtimeForReadiness,readinessSandbox,{filename:'data-integration-runtime.js'});
+const readinessApi=readinessSandbox.window.MM_CONNECTED_PROCESS_DATA;
+assert(readinessApi?.enrichPrepared,'canonical readiness API not installed');
+const basePrepared={
+  schema:3,rows:[{fill_time_s:1},{fill_time_s:2}],headers:['fill_time_s'],
+  rules:[{key:'fill_time_s',action:'keep'}],sequence:{reviewRequired:false,warnings:[]},
+  validation:{reviewRequired:false,invalidNumericValues:0,invalidNumericByColumn:[],note:'No malformed numeric values.'},
+  summary:{outputRows:2,keptNumeric:1},boundary:'Prepared locally.'
+};
+const declared={fill_time_s:{meaning:'Measured fill time',role:'actual',unit:'s',sampling_basis:'per-cycle'}};
+const clean=readinessApi.enrichPrepared(basePrepared,declared,{});
+assert.equal(clean.quality.analysisReady,true,'fully declared clean intake should be analysis-ready');
+assert.equal(clean.quality.blockingCount,0,'clean intake should have no readiness blockers');
+const needsReview=JSON.parse(JSON.stringify(basePrepared));
+needsReview.rows[1].fill_time_s='';
+needsReview.validation={reviewRequired:true,invalidNumericValues:1,invalidNumericByColumn:[{column:'fill_time_s',count:1}],note:'Malformed nonblank numeric value was omitted and requires review.'};
+const blocked=readinessApi.enrichPrepared(needsReview,declared,{});
+assert.equal(blocked.quality.analysisReady,false,'intake review state must fail closed even after malformed cells are blanked');
+assert(blocked.quality.issues.some(x=>x.level==='block'&&x.code==='prepared-data-review'),'intake review blocker missing from quality issues');
+const reapplied=readinessApi.enrichPrepared(blocked,declared,{});
+assert.equal(reapplied.quality.analysisReady,false,'reapplying semantic declarations must not erase unresolved intake review');
+assert(reapplied.quality.issues.some(x=>x.code==='prepared-data-review'),'intake review blocker must survive re-enrichment');
 
 function immediate(fn){setImmediate(fn)}
 
@@ -94,7 +124,7 @@ assert(integrity,'integrity API not installed');
 const canonicalDelete=async()=>true;
 const canonicalCompare=async()=>({canonical:true});
 const canonicalApi={
-  __mmCanonicalProcessDataIntegrity:'2026.09.10.3',
+  __mmCanonicalProcessDataIntegrity:'2026.09.11.1',
   storage:{deleteDataset:canonicalDelete},
   intelligence:{compareToBaseline:canonicalCompare},
 };
@@ -144,5 +174,5 @@ tables.baselines.set('b-same',{id:'b-same',datasetId:'d-current',entities:{},sum
   assert.equal(tables.baselines.has('baseline-keep'),true,'unrelated baseline must remain');
   assert.equal(tables.caseLinks.has('case-keep'),true,'unrelated troubleshooting reference must remain');
 
-  console.log('Process-data integrity QA passed: canonical runtime ownership, fallback compatibility, context gating, and atomic dataset/case-link cascade verified.');
+  console.log('Process-data integrity QA passed: canonical ownership, fail-closed intake review, context gating, fallback compatibility, and atomic dataset/case-link cascade verified.');
 })().catch(err=>{console.error(err);process.exitCode=1});
