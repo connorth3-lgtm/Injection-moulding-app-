@@ -1,4 +1,4 @@
-/* MouldMaster primary Learn / Practice hubs — 2026.09.06.6 */
+/* MouldMaster primary Learn / Practice hubs — 2026.09.10.8 */
 (function(){
 'use strict';
 if(window.MM_PRIMARY_HUBS)return;
@@ -7,7 +7,7 @@ if(typeof renderPath!=='function'||typeof renderScenarios!=='function'||typeof s
   return;
 }
 
-const VERSION='2026.09.06.6';
+const VERSION='2026.09.10.8';
 const PRACTICE_ROTATION_KEY='mm_practice_scenario_rotation_v1';
 const originalRenderPath=renderPath;
 const originalRenderScenarios=renderScenarios;
@@ -86,7 +86,7 @@ function installModalScrollLock(){
 }
 installModalScrollLock();
 
-function esc(value){return String(value??'').replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot',"'":'&#39;'}[ch]))}
+function esc(value){return String(value??'').replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]))}
 function lessonContext(){
   try{
     const lesson=currentLesson();
@@ -221,31 +221,102 @@ function learnHubMarkup(){
     </div></section>
   </div>`;
 }
+
+function practiceTopicLabel(topic){
+  const raw=String(topic||'').replace(/^[^:]+:/,'').replace(/[_-]+/g,' ').replace(/\s+/g,' ').trim();
+  return raw?raw.replace(/\b\w/g,ch=>ch.toUpperCase()):'Moulding judgement';
+}
+function practiceActionFor(rec){
+  const topic=String(rec?.topic||'').toLowerCase();
+  const suggested=String(rec?.suggestedActivity||'').toLowerCase();
+  if(/material|moisture|dry|rheolog|viscos|polymer|resin/.test(topic))return 'material-labs';
+  if(['discriminating-scenario-practice','retrieval-practice','timestamped-practice-or-assessment','different-context-scenario'].includes(suggested))return 'scenario-detail';
+  if(suggested==='guided-retrieval-and-feedback'||rec?.actionType==='stabilize-regression')return 'diagnostic-labs';
+  if(suggested==='different-practice-format'||rec?.actionType==='evidence-confirmation')return 'labs';
+  return 'scenario-detail';
+}
+function practiceRecommendationLabel(rec){
+  return ({
+    'targeted-remediation':'Untangle a weak area',
+    'spaced-retrieval':'Refresh before it fades',
+    'refresh-recency-evidence':'Refresh your evidence',
+    'evidence-confirmation':'Confirm it another way',
+    'stabilize-regression':'Rebuild a slipping skill',
+    'transfer-practice':'Use it in a new context'
+  })[rec?.actionType]||'Recommended next';
+}
+function practiceRecommendationCta(action,rec){
+  if(action==='material-labs')return 'Start material practice →';
+  if(action==='diagnostic-labs')return 'Start diagnostic practice →';
+  if(action==='labs')return 'Choose a practice lab →';
+  const suggested=String(rec?.suggestedActivity||'').toLowerCase();
+  if(suggested==='discriminating-scenario-practice')return 'Start discriminating scenario →';
+  if(suggested==='retrieval-practice')return 'Start retrieval practice →';
+  if(suggested==='timestamped-practice-or-assessment')return 'Refresh with a scenario →';
+  if(suggested==='different-context-scenario')return 'Try a new-context scenario →';
+  return 'Start recommended scenario →';
+}
+function learnerPracticePlan(){
+  const model=window.MM_LEARNER_MODEL;
+  if(!model?.recommendations||!model?.summary)return null;
+  try{
+    const recommendations=model.recommendations(3)||[],summary=model.summary()||{};
+    if(!recommendations.length)return {recommendations:[],summary};
+    return {recommendations,summary};
+  }catch(_){return null}
+}
+function practiceStatusLine(plan){
+  if(!plan)return 'Your practice suggestions will personalise as you complete lessons, scenarios, labs and assessments.';
+  const s=plan.summary||{},bits=[];
+  if(Number(s.highStuckness)>0)bits.push(`${s.highStuckness} weak area${s.highStuckness===1?'':'s'} to untangle`);
+  if(Number(s.reviewDue)>0)bits.push(`${s.reviewDue} review${s.reviewDue===1?'':'s'} due`);
+  if(Number(s.negativeVelocity)>0)bits.push(`${s.negativeVelocity} skill${s.negativeVelocity===1?'':'s'} slipping`);
+  if(bits.length)return bits.join(' · ');
+  if(Number(s.topics)>0)return 'No urgent weak area detected — use varied practice to strengthen transfer.';
+  return 'Complete a lesson, scenario or lab and this page will start recommending what to practise next.';
+}
+function recommendedPracticeMarkup(plan,done){
+  const rec=plan?.recommendations?.[0];
+  if(!rec){
+    return `<section class="mm-hub-continue mm-primary-hub-card" aria-label="Recommended practice"><div class="mm-hub-continue-copy"><span class="eyebrow">${done?'Keep going · about 5 min':'Recommended start · about 5 min'}</span><h2>${done?'Try a different shop-floor decision':'One moulding decision'}</h2><p>${done?'Your daily drill is complete. Use another scenario to keep the evidence-to-decision habit active.':'Start with one short evidence-first decision. Personal recommendations will appear as the app gathers local learning evidence.'}</p></div><button class="primary mm-hub-continue-action" type="button" data-mm-hub-action="daily">${done?'Practise another scenario →':'Start quick practice →'}</button></section>`;
+  }
+  const action=practiceActionFor(rec),topic=practiceTopicLabel(rec.topic),label=practiceRecommendationLabel(rec);
+  const signal=rec.actionType==='targeted-remediation'&&Number.isFinite(Number(rec.stuckness))?`Repeated misses · ${Math.round(Number(rec.stuckness))}% stuckness signal`:rec.actionType==='spaced-retrieval'&&Number.isFinite(Number(rec.ageDays))?`Last evidence ${Math.round(Number(rec.ageDays))} day${Math.round(Number(rec.ageDays))===1?'':'s'} ago`:'Based on your local learning evidence';
+  return `<section class="mm-hub-continue mm-primary-hub-card" aria-label="Recommended practice"><div class="mm-hub-continue-copy"><span class="eyebrow">${esc(label)} · 5–10 min</span><h2>${esc(topic)}</h2><p>${esc(rec.reason||'Use a different practice format to strengthen this skill.')}</p><div class="mm-hub-progress"><strong>${esc(signal)}</strong></div></div><button class="primary mm-hub-continue-action" type="button" data-mm-hub-action="${esc(action)}">${esc(practiceRecommendationCta(action,rec))}</button></section>`;
+}
+function practicePlanRows(plan){
+  const rows=(plan?.recommendations||[]).slice(1,3);
+  if(!rows.length)return '';
+  return `<section class="mm-hub-section" aria-label="More recommended practice"><div class="mm-hub-section-head"><h2>Next after that</h2><p>Optional follow-up based on your learning evidence.</p></div><div class="mm-hub-grid">${rows.map(rec=>{const action=practiceActionFor(rec);return `<button class="mm-hub-tile mm-primary-hub-card-secondary" type="button" data-mm-hub-action="${esc(action)}"><span class="eyebrow">${esc(practiceRecommendationLabel(rec))}</span><b>${esc(practiceTopicLabel(rec.topic))}</b><small>${esc(rec.reason||'Use another practice format to strengthen transfer.')}</small><span class="mm-hub-tile-action">${esc(practiceRecommendationCta(action,rec))}</span></button>`}).join('')}</div></section>`;
+}
 function practiceHubMarkup(){
-  const done=typeof dailyDone==='function'&&dailyDone();
+  let done=false;try{done=typeof dailyDone==='function'&&dailyDone()}catch(_){}
   const scenarioCount=D?.scenarios?.length||0;
   const examCount=D?.exams?Object.keys(D.exams).length:0;
+  const plan=learnerPracticePlan();
   return `<div class="mm-primary-hub mm-practice-hub">
-    <header class="mm-primary-hub-head"><span class="eyebrow">Practice</span><h1>What do you want to practise?</h1><p>Choose the kind of job you want to work on.</p></header>
-    <section class="mm-hub-continue mm-primary-hub-card" aria-label="Daily practice"><div class="mm-hub-continue-copy"><span class="eyebrow">Quick practice · about 5 min</span><h2>${done?'Daily practice complete ✓':'One moulding decision'}</h2><p>${done?'Today’s short drill is complete. You can keep practising with a different scenario.':'Make one evidence-first decision and check your reasoning.'}</p></div><button class="primary mm-hub-continue-action" type="button" data-mm-hub-action="daily">${done?'Practise another scenario →':'Start daily practice →'}</button></section>
-    <section class="mm-hub-section"><div class="mm-hub-section-head"><h2>Choose a practice mode</h2><p>Start from the job, not the tool.</p></div><div class="mm-hub-grid">
-      <button class="mm-hub-tile mm-primary-hub-card-secondary" type="button" data-mm-hub-action="troubleshooting"><span class="eyebrow">Fault finding</span><b>Diagnose a moulding problem</b><small>Work from the defect and evidence to choose the next check.</small><span class="mm-hub-tile-action">Open troubleshooting →</span></button>
-      <button class="mm-hub-tile mm-primary-hub-card-secondary" type="button" data-mm-hub-action="process-data"><span class="eyebrow">Process evidence</span><b>Analyse process data</b><small>Compare baseline, fault and recovery trends.</small><span class="mm-hub-tile-action">Open data diagnosis →</span></button>
-      <button class="mm-hub-tile mm-primary-hub-card-secondary" type="button" data-mm-hub-action="scenario-detail"><span class="eyebrow">Decision practice</span><b>Work a shop-floor scenario</b><small>Choose the strongest next action from the evidence${scenarioCount?` across ${scenarioCount} scenarios`:''}. Each launch advances to a different scenario.</small><span class="mm-hub-tile-action">Open next scenario →</span></button>
-      <button class="mm-hub-tile mm-primary-hub-card-secondary" type="button" data-mm-hub-action="labs"><span class="eyebrow">Explore behaviour</span><b>Use labs & simulators</b><small>Explore process and material behaviour safely.</small><span class="mm-hub-tile-action">Open labs & simulators →</span></button>
+    <header class="mm-primary-hub-head"><span class="eyebrow">Practice</span><h1>What should I practise next?</h1><p>${esc(practiceStatusLine(plan))}</p></header>
+    ${recommendedPracticeMarkup(plan,done)}
+    ${practicePlanRows(plan)}
+    <section class="mm-hub-section"><div class="mm-hub-section-head"><h2>Choose by the job you want to practise</h2><p>Practice is for learning; assessments stay separate.</p></div><div class="mm-hub-grid">
+      <button class="mm-hub-tile mm-primary-hub-card-secondary" type="button" data-mm-hub-action="troubleshooting"><span class="eyebrow">Find the cause · 5–15 min</span><b>Diagnose a moulding problem</b><small>Start from a defect, separate plausible mechanisms and choose the next discriminating check.</small><span class="mm-hub-tile-action">Choose troubleshooting practice →</span></button>
+      <button class="mm-hub-tile mm-primary-hub-card-secondary" type="button" data-mm-hub-action="scenario-detail"><span class="eyebrow">Make a decision · about 5 min</span><b>Work a shop-floor scenario</b><small>Read the evidence and choose the strongest next action${scenarioCount?` across ${scenarioCount} scenarios`:''}. Each launch rotates the case.</small><span class="mm-hub-tile-action">Start next scenario →</span></button>
+      <button class="mm-hub-tile mm-primary-hub-card-secondary" type="button" data-mm-hub-action="process-data"><span class="eyebrow">Read evidence · 10–20 min</span><b>Analyse process data</b><small>Prepare local data, verify signal meaning and compare a fault or recovery against a valid baseline.</small><span class="mm-hub-tile-action">Open data diagnosis →</span></button>
+      <button class="mm-hub-tile mm-primary-hub-card-secondary" type="button" data-mm-hub-action="labs"><span class="eyebrow">Explore behaviour · 5–15 min</span><b>Use labs & simulators</b><small>Test process and material reasoning in a controlled training environment without changing a real machine.</small><span class="mm-hub-tile-action">Choose a lab or simulator →</span></button>
     </div></section>
-    <section class="mm-hub-assessment"><div class="mm-hub-assessment-copy"><b>Ready to check your understanding?</b><small>${examCount?`${examCount} assessment levels`:'Assessments'} stay separate from normal practice.</small></div><button class="secondary" type="button" data-mm-hub-action="assessments">Open assessments →</button></section>
+    <section class="mm-hub-assessment"><div class="mm-hub-assessment-copy"><b>Want to check what you can demonstrate?</b><small>${examCount?`${examCount} assessment levels`:'Assessments'} are kept separate so practice remains low-stakes and useful for learning.</small></div><button class="secondary" type="button" data-mm-hub-action="assessments">Open assessments →</button></section>
   </div>`;
 }
-function renderLearnHub(){const root=document.getElementById('path');if(!root)return;root.innerHTML=learnHubMarkup();bind(root)}
-function renderPracticeHub(){const root=document.getElementById('scenarios');if(!root)return;root.innerHTML=practiceHubMarkup();bind(root)}
+function renderLearnHub(){const root=document.getElementById('path');if(!root)return;root.dataset.mmHubMode='hub';root.innerHTML=learnHubMarkup();bind(root)}
+function renderPracticeHub(){const root=document.getElementById('scenarios');if(!root)return;root.dataset.mmHubMode='hub';root.innerHTML=practiceHubMarkup();bind(root)}
 function detailBack(root,label,back){
   const bar=document.createElement('div');bar.className='mm-hub-detail-back';bar.innerHTML=`<button type="button">← ${esc(back)}</button><span>${esc(label)}</span>`;
   bar.querySelector('button').addEventListener('click',()=>back==='Learn'?renderLearnHub():renderPracticeHub());root.prepend(bar);
 }
-function openLearningPathDetail(){const root=document.getElementById('path');if(!root)return;originalRenderPath();detailBack(root,'Full learning pathway','Learn');window.scrollTo({top:0,behavior:'smooth'})}
+function openLearningPathDetail(){const root=document.getElementById('path');if(!root)return;root.dataset.mmHubMode='detail';originalRenderPath();detailBack(root,'Full learning pathway','Learn');window.scrollTo({top:0,behavior:'smooth'})}
 function openScenarioDetail(index=null){
   const root=document.getElementById('scenarios');if(!root)return;
+  root.dataset.mmHubMode='detail';
   originalRenderScenarios();
   detailBack(root,'Troubleshooting Arena','Practice');
   if(!Number.isInteger(index)){window.scrollTo({top:0,behavior:'smooth'});return}
@@ -288,11 +359,17 @@ if(originalMore){
   window.openMobileMenu=function(){const result=originalMore.apply(this,arguments);requestAnimationFrame(()=>requestAnimationFrame(pruneMore));return result};
 }
 
+function refreshPracticePersonalisation(){
+  const root=document.getElementById('scenarios');
+  if(root?.dataset.mmHubMode==='hub'&&typeof currentView==='string'&&currentView==='scenarios')renderPracticeHub();
+}
+window.addEventListener('mm:domains-ready',()=>requestAnimationFrame(refreshPracticePersonalisation));
+
 simplifyHome();
 if(typeof currentView==='string'){
   if(currentView==='path')renderLearnHub();
   if(currentView==='scenarios')renderPracticeHub();
 }
 window.MM_APP_SHELL?.navigation?.sync?.();
-window.MM_PRIMARY_HUBS={version:VERSION,renderLearnHub,renderPracticeHub,openCurrentLesson,openLearningPathDetail,openScenarioDetail,nextScenarioIndex};
+window.MM_PRIMARY_HUBS={version:VERSION,renderLearnHub,renderPracticeHub,openCurrentLesson,openLearningPathDetail,openScenarioDetail,nextScenarioIndex,learnerPracticePlan};
 })();
