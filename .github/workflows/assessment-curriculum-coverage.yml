@@ -11,7 +11,9 @@ on:
       - 'specialist-*.js'
       - 'qa_assessment_curriculum_coverage.py'
       - 'qa_assessment_curriculum_ratchet.py'
+      - 'qa_assessment_outcome_review.py'
       - 'qa/assessment-curriculum-coverage-floor.json'
+      - 'qa/assessment-outcome-review.json'
       - '.github/workflows/assessment-curriculum-coverage.yml'
   pull_request:
     branches: [main]
@@ -23,7 +25,9 @@ on:
       - 'specialist-*.js'
       - 'qa_assessment_curriculum_coverage.py'
       - 'qa_assessment_curriculum_ratchet.py'
+      - 'qa_assessment_outcome_review.py'
       - 'qa/assessment-curriculum-coverage-floor.json'
+      - 'qa/assessment-outcome-review.json'
       - '.github/workflows/assessment-curriculum-coverage.yml'
   workflow_dispatch:
 
@@ -44,6 +48,10 @@ jobs:
           python-version: '3.12'
       - name: Quantify assessment breadth and curriculum semantic coverage
         run: python qa_assessment_curriculum_coverage.py
+      - name: Exercise assessment outcome-review fail-closed contract
+        run: python qa_assessment_outcome_review.py --self-test
+      - name: Validate assessment outcome-review contract
+        run: python qa_assessment_outcome_review.py
       - name: Exercise fail-closed ratchet contract
         run: python qa_assessment_curriculum_ratchet.py --self-test
       - name: Prepare base coverage floor for monotonic comparison
@@ -62,14 +70,17 @@ jobs:
           else
             python qa_assessment_curriculum_ratchet.py
           fi
-      - name: Upload coverage report
+      - name: Upload coverage reports
         uses: actions/upload-artifact@v7
         with:
           name: assessment-curriculum-coverage
-          path: assessment-curriculum-coverage-report.json
+          path: |
+            assessment-curriculum-coverage-report.json
+            assessment-outcome-review-report.json
           if-no-files-found: error
           retention-days: 30
       - name: Preserve human-review boundary
         run: |
           echo 'Coverage audit is automated evidence only.'
-          echo 'Assessment outcome mapping and curriculum SME semantic approval remain human HOLD states.'
+          echo 'Pending or proposed assessment outcome mappings never count toward breadth.'
+          echo 'Assessment outcome mapping and curriculum SME semantic approval remain human HOLD states until explicitly reviewed.'
