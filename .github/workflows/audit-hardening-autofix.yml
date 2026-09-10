@@ -7,6 +7,7 @@ on:
     paths:
       - tools/apply_audit_hardening.py
       - tools/apply_runtime_analytics_hardening.py
+      - tools/finalize_assessment_hardening.py
       - .github/workflows/audit-hardening-autofix.yml
 
 permissions:
@@ -30,12 +31,16 @@ jobs:
       - name: Apply assessment and data hardening
         run: python tools/apply_audit_hardening.py
 
-      - name: Apply runtime ownership and escape hardening
+      - name: Apply runtime ownership and structured analytics hardening
         run: python tools/apply_runtime_analytics_hardening.py
+
+      - name: Freeze reviewed psychometric bank and retire runtime answer heuristics
+        run: python tools/finalize_assessment_hardening.py
 
       - name: Verify generated packs and diff hygiene
         run: |
           python tools/build_runtime_packs.py --check
+          python qa_audit_hardening.py
           git diff --check
 
       - name: Commit generated hardening changes
@@ -48,5 +53,5 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add -A
-          git commit -m "fix(runtime): enforce canonical hooks and source hygiene"
+          git commit -m "fix(assessment): freeze reviewed learner-visible bank"
           git push origin HEAD:audit-hardening-2026-09-10
