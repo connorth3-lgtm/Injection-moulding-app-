@@ -1,0 +1,41 @@
+name: Fast feedback
+
+on:
+  pull_request:
+    branches: [ main ]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: fast-feedback-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  targeted-qa:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout full comparison history
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Run change-aware checks
+        run: python qa_fast_feedback.py --base "origin/${{ github.base_ref }}" --head HEAD
+
+      - name: Governance boundary
+        if: always()
+        run: |
+          echo "Fast feedback is an iteration aid only."
+          echo "It does not replace the repository's full release QA, exact-release PWA evidence, real assistive-technology validation, or physical Windows validation."
