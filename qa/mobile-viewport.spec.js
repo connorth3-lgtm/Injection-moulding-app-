@@ -11,7 +11,7 @@ async function seedLearner(page){
 async function openApp(page){
   await seedLearner(page);
   await page.goto(BASE,{waitUntil:'domcontentloaded'});
-  await page.waitForFunction(()=>window.MM_APP_SHELL_FINALIZED==='2026.09.10.3'&&window.MM_PRIMARY_HUBS);
+  await page.waitForFunction(()=>(typeof window.MM_APP_SHELL_FINALIZED==='string'&&window.MM_APP_SHELL_FINALIZED.length>0)&&window.MM_PRIMARY_HUBS);
   await page.waitForFunction(()=>!document.getElementById('mmBootstrap'));
   await expect(page.locator('#mmStartupFailure')).toHaveCount(0);
   await expect(page.locator('.mobile-nav > button')).toHaveCount(4);

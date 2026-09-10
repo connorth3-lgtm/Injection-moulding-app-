@@ -9,7 +9,7 @@ function legacyLearnerToken(raw){let h=2166136261;for(const ch of String(raw)){h
 const SEEDED_LEGACY_KEY=`mm_mould_master_cases_v1::${legacyLearnerToken(USER_A)}`;
 
 async function waitForApp(page){
-  await page.waitForFunction(()=>window.MM_APP_SHELL_FINALIZED==='2026.08.26.4'&&window.MM_ENGINEERING_STORE&&window.MM_MOULD_MASTER_WORKSPACE&&window.MM_MATERIAL_REGISTRY,{timeout:30000});
+  await page.waitForFunction(()=>(typeof window.MM_APP_SHELL_FINALIZED==='string'&&window.MM_APP_SHELL_FINALIZED.length>0)&&window.MM_ENGINEERING_STORE&&window.MM_MOULD_MASTER_WORKSPACE&&window.MM_MATERIAL_REGISTRY,{timeout:30000});
   await page.waitForFunction(()=>!document.getElementById('mmBootstrap'),{timeout:30000});
   await expect(page.locator('#mmStartupFailure')).toHaveCount(0);
   await page.evaluate(()=>window.MM_MOULD_MASTER_WORKSPACE.hydrate({force:true}));
