@@ -1,0 +1,26 @@
+{
+  "schemaVersion": 1,
+  "assessment": {
+    "lockedIdentityCount": 57,
+    "technicalItemCount": 30,
+    "regionalSafetyItemCount": 27,
+    "technicalItemsWithExplicitOutcomeMetadata": 0,
+    "conceptLabelsBelowThreeItems": 15,
+    "conceptLabelsAtThreeToFiveItems": 3
+  },
+  "curriculum": {
+    "totalLessons": 120,
+    "lessonsWithAllSevenLessonSpecificSignals": 0,
+    "dimensionLessonSpecificSignal": {
+      "mechanism": 6,
+      "diagnosticDecision": 0,
+      "measurement": 18,
+      "practicalAction": 1,
+      "misconceptionFailure": 1,
+      "evidence": 1,
+      "outcome": 0
+    },
+    "lessonsWithZeroSpecificDimensions": 99
+  },
+  "policy": "This file records the first quantified coverage-debt floor. Future changes must not reduce assessment inventory/outcome mapping or lesson-specific semantic signals, increase sparse concept labels, increase zero-signal lessons, remove canonical lessons, or remove the derived depth layer. Improve the floor deliberately when reviewed content improves; automated counts are not SME approval."
+}
