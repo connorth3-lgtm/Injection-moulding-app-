@@ -1,0 +1,61 @@
+name: Repair structural shell readiness browser QA
+
+on:
+  push:
+    branches: [audit-quality-followup-2026-09-10]
+
+permissions:
+  contents: write
+
+jobs:
+  repair:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: audit-quality-followup-2026-09-10
+          fetch-depth: 0
+      - name: Replace exact shell-version waits
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import re
+
+          pattern = re.compile(r"window\.MM_APP_SHELL_FINALIZED===['\"]\d{4}\.\d{2}\.\d{2}\.\d+['\"]")
+          replacement = "(typeof window.MM_APP_SHELL_FINALIZED==='string'&&window.MM_APP_SHELL_FINALIZED.length>0)"
+          changed = []
+          replacements = 0
+          for path in sorted(Path('qa').glob('*.spec.js')):
+              text = path.read_text(encoding='utf-8')
+              updated, count = pattern.subn(replacement, text)
+              if count:
+                  path.write_text(updated, encoding='utf-8')
+                  changed.append(str(path))
+                  replacements += count
+          if replacements < 5:
+              raise SystemExit(f'expected at least five stale shell readiness comparisons; found {replacements}')
+          remaining=[]
+          for path in sorted(Path('qa').glob('*.spec.js')):
+              text=path.read_text(encoding='utf-8')
+              if pattern.search(text): remaining.append(str(path))
+          if remaining:
+              raise SystemExit('exact shell-version waits remain: '+', '.join(remaining))
+          print(f'replaced {replacements} exact shell-version waits across {len(changed)} specs')
+          print('\n'.join(changed))
+          PY
+      - name: Syntax-check browser specs
+        run: |
+          for file in qa/*.spec.js; do node --check "$file"; done
+      - name: Verify finalizer readiness marker remains structural
+        run: |
+          grep -F "window.MM_APP_SHELL_FINALIZED=VERSION" app-shell-finalize.js
+          ! grep -R -E "MM_APP_SHELL_FINALIZED===['\"][0-9]{4}\.[0-9]{2}\.[0-9]{2}\.[0-9]+['\"]" qa --include='*.spec.js'
+      - name: Commit verified repair and remove one-shot workflow
+        run: |
+          rm .github/workflows/repair-shell-readiness-browser-qa.yml
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add qa .github/workflows/repair-shell-readiness-browser-qa.yml
+          git diff --cached --quiet && exit 0
+          git commit -m "test(browser): make shell readiness release-agnostic"
+          git push origin HEAD:audit-quality-followup-2026-09-10
