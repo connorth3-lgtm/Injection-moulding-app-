@@ -1,0 +1,47 @@
+name: Fix specialist finalizer contract
+on:
+  push:
+    branches: [audit-quality-followup-2026-09-10]
+permissions:
+  contents: write
+jobs:
+  patch-and-verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 2
+      - uses: actions/setup-node@v7
+        with:
+          node-version: '22.12.0'
+          package-manager-cache: false
+      - uses: actions/setup-python@v7
+        with:
+          python-version: '3.12'
+      - name: Replace obsolete finalizer release assertion
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p=Path('qa_specialist_evidence_gaps.py')
+          s=p.read_text(encoding='utf-8')
+          old="need(\"MM_APP_SHELL_FINALIZED='2026.08.26.4'\" in finalizer,'canonical app-shell compatibility marker changed')"
+          new="need('window.MM_APP_SHELL_FINALIZED=VERSION' in finalizer,'canonical app-shell compatibility marker must follow the finalizer VERSION')"
+          if s.count(old)!=1:
+              raise SystemExit('obsolete specialist finalizer assertion drifted')
+          p.write_text(s.replace(old,new,1),encoding='utf-8')
+          PY
+      - name: Verify specialist and release contracts
+        run: |
+          python qa_specialist_evidence_gaps.py
+          python qa_specialist_curriculum.py
+          python qa_release.py
+      - name: Commit permanent QA correction and remove workflow
+        run: |
+          rm -f .github/workflows/fix-specialist-finalizer-contract.yml
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add qa_specialist_evidence_gaps.py
+          git add -u .github/workflows/fix-specialist-finalizer-contract.yml
+          git diff --cached --check
+          git commit -m 'test(specialist): follow canonical shell finalizer version'
+          git push origin HEAD:audit-quality-followup-2026-09-10
