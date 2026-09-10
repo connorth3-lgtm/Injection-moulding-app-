@@ -80,19 +80,21 @@ vm.runInThisContext(fs.readFileSync('src/domains/process/process-data-integrity.
 const integrity=window.MM_PROCESS_DATA_INTEGRITY;
 assert(integrity,'integrity API not installed');
 
-function entity(machine='M1',mould='T1',materialGrade='PP-A'){return {machine,mould,materialGrade}}
+function entity(machine='M1',mould='T1',materialGrade='PP-A',job='JOB-1'){return {machine,mould,materialGrade,job}}
 
+assert.deepEqual(integrity.contextKeys,['machine','mould','materialGrade','job'],'cross-dataset gate must include job context');
 assert.equal(integrity.baselineCompatibility({id:'d1',entities:{}},{datasetId:'d1',entities:{}}).compatible,true,'same-dataset baseline must remain valid');
-assert.equal(integrity.baselineCompatibility({id:'d1',entities:entity(' M1 ',' T1 ',' PP-A ')},{datasetId:'other',entities:entity('m1','t1','pp-a')}).compatible,true,'cross-dataset context comparison should normalize case and whitespace');
-assert.equal(integrity.baselineCompatibility({id:'d1',entities:entity()},{datasetId:'other',entities:{machine:'M1',mould:'T1'}}).compatible,false,'missing material identity must fail closed');
-assert.equal(integrity.baselineCompatibility({id:'d1',entities:entity()},{datasetId:'other',entities:entity('M1','T2','PP-A')}).compatible,false,'mould mismatch must fail closed');
+assert.equal(integrity.baselineCompatibility({id:'d1',entities:entity(' M1 ',' T1 ',' PP-A ',' JOB-1 ')},{datasetId:'other',entities:entity('m1','t1','pp-a','job-1')}).compatible,true,'cross-dataset context comparison should normalize case and whitespace');
+assert.equal(integrity.baselineCompatibility({id:'d1',entities:entity()},{datasetId:'other',entities:{machine:'M1',mould:'T1',materialGrade:'PP-A'}}).compatible,false,'missing job identity must fail closed');
+assert.equal(integrity.baselineCompatibility({id:'d1',entities:entity()},{datasetId:'other',entities:entity('M1','T1','PP-A','JOB-2')}).compatible,false,'job mismatch must fail closed');
+assert.equal(integrity.baselineCompatibility({id:'d1',entities:entity()},{datasetId:'other',entities:entity('M1','T2','PP-A','JOB-1')}).compatible,false,'mould mismatch must fail closed');
 
 for(const [key,value] of [
   ['d-current',{id:'d-current',quality:{analysisReady:true},entities:entity()}],
-  ['d-delete',{id:'d-delete',quality:{analysisReady:true},entities:entity('M2','T2','ABS')}],
+  ['d-delete',{id:'d-delete',quality:{analysisReady:true},entities:entity('M2','T2','ABS','JOB-2')}],
 ])tables.datasets.set(key,value);
 tables.baselines.set('b-good',{id:'b-good',datasetId:'other-good',entities:entity(),summary:{}});
-tables.baselines.set('b-bad',{id:'b-bad',datasetId:'other-bad',entities:entity('M1','T9','PP-A'),summary:{}});
+tables.baselines.set('b-bad',{id:'b-bad',datasetId:'other-bad',entities:entity('M1','T9','PP-A','JOB-1'),summary:{}});
 tables.baselines.set('b-same',{id:'b-same',datasetId:'d-current',entities:{},summary:{}});
 
 (async()=>{
@@ -119,5 +121,5 @@ tables.baselines.set('b-same',{id:'b-same',datasetId:'d-current',entities:{},sum
   assert.equal(tables.baselines.has('baseline-keep'),true,'unrelated baseline must remain');
   assert.equal(tables.caseLinks.has('case-keep'),true,'unrelated troubleshooting reference must remain');
 
-  console.log('Process-data integrity QA passed: fail-closed baseline context and atomic dataset/case-link cascade verified.');
+  console.log('Process-data integrity QA passed: machine/mould/material/job baseline gate and atomic dataset/case-link cascade verified.');
 })().catch(err=>{console.error(err);process.exitCode=1});
