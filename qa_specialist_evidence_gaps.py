@@ -82,7 +82,7 @@ need('publisher-verified primary measured studies' in finalizer,'promoted UI mus
 need('study-specific settings remain bounded' in finalizer,'promoted UI must retain no-universal-recipe boundary')
 need("'\"':'&quot;'" in finalizer,'finalizer HTML escaping for double quotes is malformed')
 need('fetch(' not in finalizer and 'XMLHttpRequest' not in finalizer and 'sendBeacon' not in finalizer,'evidence status bridge must not add network transport')
-need("MM_APP_SHELL_FINALIZED='2026.08.26.4'" in finalizer,'canonical app-shell compatibility marker changed')
+need('window.MM_APP_SHELL_FINALIZED=VERSION' in finalizer,'canonical app-shell compatibility marker must follow the finalizer VERSION')
 
 for title in ['Residual stress, frozen-in orientation & birefringence','Weld-line structural strength versus appearance','Runner, gate & multicavity imbalance diagnosis','Hot-runner actual thermal & mechanical behaviour','Liquid silicone rubber: metering, mixing & cure behaviour','Gas-, water- & projectile-assisted moulding','Surface replication, texture, adhesion & release','Injection-compression & precision optical moulding']:
     need(title in js,f'expected specialist evidence-gap topic missing: {title}')
