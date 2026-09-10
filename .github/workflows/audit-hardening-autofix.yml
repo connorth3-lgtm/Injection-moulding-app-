@@ -5,6 +5,7 @@ on:
     branches:
       - audit-hardening-2026-09-10
     paths:
+      - tools/repair_hardening_sources.py
       - tools/apply_audit_hardening.py
       - tools/apply_runtime_analytics_hardening.py
       - tools/finalize_assessment_hardening.py
@@ -28,37 +29,8 @@ jobs:
         with:
           python-version: '3.12'
 
-      - name: Repair hardening migration sources
-        shell: bash
-        run: |
-          python - <<'PY'
-          from pathlib import Path
-
-          p=Path('tools/finalize_assessment_hardening.py')
-          t=p.read_text(encoding='utf-8')
-          t=t.replace("    new_optional=r'''def load_optional_runtime():", '    new_optional=r"""def load_optional_runtime():', 1)
-          t=t.replace("    return items'''\n    replace_section", '    return items"""\n    replace_section', 1)
-          p.write_text(t,encoding='utf-8')
-
-          p=Path('tools/apply_audit_hardening.py')
-          t=p.read_text(encoding='utf-8')
-          old=""" }));
-}
-if(optionalChoicesValidated!==40)throw new Error(`Optional-practice quality coverage mismatch: ${optionalChoicesValidated}/40`);
-if(optionalKeyPositions.some(x=>x!==10))throw new Error(`Optional-practice key positions are unbalanced: ${optionalKeyPositions.join(',')}`);
-window.MM_QUESTION_QUALITY_OVERLAY={"""
-          new=""" }));
- if(optionalChoicesValidated!==40)throw new Error(`Optional-practice quality coverage mismatch: ${optionalChoicesValidated}/40`);
- if(optionalKeyPositions.some(x=>x!==10))throw new Error(`Optional-practice key positions are unbalanced: ${optionalKeyPositions.join(',')}`);
-}
-window.MM_QUESTION_QUALITY_OVERLAY={"""
-          if old in t:
-              t=t.replace(old,new,1)
-          elif new not in t:
-              raise SystemExit('Optional-practice isolation-safe validation anchor moved')
-          p.write_text(t,encoding='utf-8')
-          PY
-          python -m py_compile tools/finalize_assessment_hardening.py tools/apply_audit_hardening.py
+      - name: Repair transitional hardening sources
+        run: python tools/repair_hardening_sources.py
 
       - name: Apply assessment and data hardening
         run: python tools/apply_audit_hardening.py
