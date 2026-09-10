@@ -1,0 +1,44 @@
+name: Assessment identity lock follow-up
+on:
+  push:
+    branches: [audit-quality-followup-2026-09-10]
+permissions:
+  contents: write
+jobs:
+  apply-and-verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 2
+      - uses: actions/setup-node@v7
+        with:
+          node-version: '22.12.0'
+          package-manager-cache: false
+      - uses: actions/setup-python@v7
+        with:
+          python-version: '3.12'
+      - name: Apply assessment identity lock
+        run: |
+          python tools/apply_assessment_identity_lock.py
+          python tools/sync_web_release.py
+      - name: Verify identity, psychometrics and release
+        run: |
+          node --check assessment-quality-suite.js
+          python qa_stable_review_bridge.py
+          python qa_assessment_quality.py
+          python qa_assessment_final_hardening.py
+          python qa_assessment_decision_manifest.py
+          python qa_question_quality_50_pass_runtime.py
+          python qa_release.py
+          python qa_web_release_identity.py
+      - name: Commit verified permanent changes
+        run: |
+          rm -f tools/apply_assessment_identity_lock.py .github/workflows/assessment-identity-lock-followup.yml
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add assessment-quality-suite.js qa_stable_review_bridge.py qa_release.py version.json service-worker.js index.html pwa-shell.js
+          git add -u tools/apply_assessment_identity_lock.py .github/workflows/assessment-identity-lock-followup.yml
+          git diff --cached --check
+          git commit -m 'fix(assessment): lock identity and metadata to reviewed fingerprints'
+          git push origin HEAD:audit-quality-followup-2026-09-10
