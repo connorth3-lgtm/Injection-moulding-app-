@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from collections import Counter
 from pathlib import Path
 import json
 
@@ -38,6 +39,14 @@ def exactly(label: str, current: int, floor: int) -> None:
         raise AssertionError(f"coverage invariant: {label} expected {floor}, found {current}")
 
 
+def global_concept_counts(assessment: dict) -> Counter:
+    counts = Counter()
+    for level in assessment.get("levels", {}).values():
+        for concept, count in level.get("conceptCounts", {}).items():
+            counts[concept] += int(count)
+    return counts
+
+
 def main() -> None:
     report = load(REPORT)
     floor = load(FLOOR)
@@ -59,10 +68,12 @@ def main() -> None:
         len(assessment["conceptProxy"]["labelsBelowThreeItems"]),
         assessment_floor["conceptLabelsBelowThreeItems"],
     )
+    concept_counts = global_concept_counts(assessment)
+    labels_at_least_three = sum(count >= 3 for count in concept_counts.values())
     at_least(
-        "concept labels with three-to-five proxy items",
-        len(assessment["conceptProxy"]["labelsAtThreeToFiveItems"]),
-        assessment_floor["conceptLabelsAtThreeToFiveItems"],
+        "concept labels with at least three proxy items",
+        labels_at_least_three,
+        assessment_floor["conceptLabelsAtLeastThreeItems"],
     )
 
     exactly("canonical lesson count", curriculum["totalLessons"], curriculum_floor["totalLessons"])
@@ -88,7 +99,7 @@ def main() -> None:
 
     print(
         "Assessment/curriculum coverage ratchet passed: existing quantified debt did not worsen; "
-        "improvement remains allowed and human SME approval remains separate."
+        "proxy breadth is monotonic at three-or-more items; human SME approval remains separate."
     )
 
 
