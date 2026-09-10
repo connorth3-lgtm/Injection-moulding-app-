@@ -39,6 +39,7 @@ jobs:
       - name: Syntax-check changed assessment runtime
         run: |
           node --check assessment-deep-dive.js
+          node --check assessment-answer-cue-fix.js
           node --check training-upgrade.js
           node --check assessment-quality-suite.js
           node --check assessment-stable-review-bridge.js
@@ -49,7 +50,7 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add MouldMaster_Core_App.html training-upgrade.js assessment-deep-dive.js assessment-quality-suite.js assessment-stable-review-bridge.js assessment-evidence-approval.js qa_question_quality_50_pass.py qa_assessment_evidence.py qa_assessment_evidence_integrity.py
+          git add training-upgrade.js assessment-deep-dive.js assessment-answer-cue-fix.js assessment-quality-suite.js assessment-stable-review-bridge.js assessment-evidence-approval.js qa_question_quality_50_pass.py qa_assessment_evidence.py qa_assessment_evidence_integrity.py
           git diff --cached --check
           git commit -m "fix(assessment): author reviewed keyed wording at source"
 
