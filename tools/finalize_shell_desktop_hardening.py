@@ -12,7 +12,6 @@ from __future__ import annotations
 import json
 import re
 import subprocess
-import sys
 from pathlib import Path
 
 ROOT=Path(__file__).resolve().parents[1]
@@ -38,8 +37,7 @@ def canonical_specialist_statuses()->tuple[str,dict[str,str]]:
     data=json.loads(COVERAGE.read_text(encoding='utf-8'))
     version=str(data.get('version') or data.get('registryVersion') or data.get('schemaVersion') or 'unknown')
     mechanisms=data.get('mechanisms') or data.get('areas') or data.get('coverage') or []
-    if isinstance(mechanisms,dict):rows=list(mechanisms.values())
-    else:rows=list(mechanisms)
+    rows=list(mechanisms.values()) if isinstance(mechanisms,dict) else list(mechanisms)
     by_id={str(x.get('id')):str(x.get('status','provisional')).strip().lower() for x in rows if isinstance(x,dict) and x.get('id')}
     specialist_src=SPECIALIST.read_text(encoding='utf-8')
     ids=[]
@@ -93,14 +91,10 @@ def harden_assessment_ux()->None:
         "const VERSION='2026.09.06.9';\nconst FIRST_HISTORY_LIMIT=3;\nconst HISTORY_KEY='mm_assessment_opening_history_v1';",
         "const VERSION='2026.09.10.1';\nconst FIRST_HISTORY_LIMIT=3;\nconst HISTORY_KEY='mm_assessment_opening_history_v1';\nconst R=window.MM_RUNTIME_V2;if(!R)throw new Error('assessment-ux.js requires runtime-v2.js');",
     )
-    old_read="""    const stored=localStorage.getItem(HISTORY_KEY);
-    const raw=JSON.parse(stored||'{}');"""
-    new_read="""    const raw=R.storage.get(HISTORY_KEY,{})||{};"""
-    replace_once(UX,old_read,new_read)
-    old_persist="""    localStorage.setItem(HISTORY_KEY,JSON.stringify(out));
-    return true;"""
-    new_persist="""    return R.storage.set(HISTORY_KEY,out);"""
-    replace_once(UX,old_persist,new_persist)
+    replace_once(UX,"""    const stored=localStorage.getItem(HISTORY_KEY);
+    const raw=JSON.parse(stored||'{}');""","""    const raw=R.storage.get(HISTORY_KEY,{})||{};""")
+    replace_once(UX,"""    localStorage.setItem(HISTORY_KEY,JSON.stringify(out));
+    return true;""","""    return R.storage.set(HISTORY_KEY,out);""")
     replace_once(UX,"function resetQuestionRotation(){firstQuestionHistory.clear();try{localStorage.removeItem(HISTORY_KEY)}catch(_){}}","function resetQuestionRotation(){firstQuestionHistory.clear();R.storage.remove(HISTORY_KEY)}")
     old_hooks="""const baseQuestions=window.getExamQuestions;if(typeof baseQuestions==='function')window.getExamQuestions=function(level,region){return rotateOpeningQuestion(baseQuestions.apply(this,arguments),level,region)};
 const baseStart=window.startExam;if(typeof baseStart==='function')window.startExam=function(){state=null;const r=baseStart.apply(this,arguments);setTimeout(decorateExam,0);return r};
@@ -111,8 +105,7 @@ R.after('startExam',()=>{setTimeout(decorateExam,0)});
 R.after('gradeExam',()=>{setTimeout(decorateReview,0)});
 R.rebind('getExamQuestions');R.rebind('startExam');R.rebind('gradeExam');"""
     replace_once(UX,old_hooks,new_hooks)
-    text=UX.read_text(encoding='utf-8')
-    text=text.replace("persistence:'learner-scoped localStorage stable IDs only; no answers or personal data'","persistence:'Runtime V2 learner-scoped storage; stable IDs only; no answers or personal data'")
+    text=UX.read_text(encoding='utf-8').replace("persistence:'learner-scoped localStorage stable IDs only; no answers or personal data'","persistence:'Runtime V2 learner-scoped storage; stable IDs only; no answers or personal data'")
     UX.write_text(text,encoding='utf-8')
 
 
@@ -120,26 +113,20 @@ def harden_evidence_approval_runtime_owner()->None:
     old="if(coverageOk){style();const baseGrade=window.gradeExam;if(typeof baseGrade==='function')window.gradeExam=function(){const x=baseGrade.apply(this,arguments);setTimeout(enhanceExam,25);return x};let queued=false;"
     new="if(coverageOk){style();const runtime=window.MM_RUNTIME_V2;if(!runtime)throw new Error('assessment-evidence-approval.js requires runtime-v2.js');runtime.after('gradeExam',()=>{setTimeout(enhanceExam,25)});runtime.rebind('gradeExam');let queued=false;"
     replace_once(APPROVAL,old,new)
-    text=APPROVAL.read_text(encoding='utf-8')
-    text=text.replace("const VERSION='2026.08.30.3'","const VERSION='2026.09.10.1'",1)
-    text=text.replace('/* MouldMaster answer-evidence approval layer — 2026-08-30.3 */','/* MouldMaster answer-evidence approval layer — 2026-09-10.1 */',1)
+    text=APPROVAL.read_text(encoding='utf-8').replace("const VERSION='2026.08.30.3'","const VERSION='2026.09.10.1'",1).replace('/* MouldMaster answer-evidence approval layer — 2026-08-30.3 */','/* MouldMaster answer-evidence approval layer — 2026-09-10.1 */',1)
     APPROVAL.write_text(text,encoding='utf-8')
 
 
 def harden_desktop_assets()->None:
     pkg_text=PKG.read_text(encoding='utf-8')
-    additions=[
-        ('../../measured-learning-library.js','mouldmaster/measured-learning-library.js'),
-        ('../../lesson-simple-experience.js','mouldmaster/lesson-simple-experience.js'),
-    ]
+    additions=[('../../measured-learning-library.js','mouldmaster/measured-learning-library.js'),('../../lesson-simple-experience.js','mouldmaster/lesson-simple-experience.js')]
     anchor='      {"from": "../../learning-experience.js", "to": "mouldmaster/learning-experience.js"},\n'
     if anchor not in pkg_text:raise SystemExit('Desktop extraResources insertion anchor missing')
     missing=[x for x in additions if f'"from": "{x[0]}"' not in pkg_text]
     if missing:
         rows=''.join(f'      {{"from": "{src}", "to": "{dst}"}},\n' for src,dst in missing)
         pkg_text=pkg_text.replace(anchor,anchor+rows,1)
-    json.loads(pkg_text)
-    PKG.write_text(pkg_text,encoding='utf-8')
+    json.loads(pkg_text);PKG.write_text(pkg_text,encoding='utf-8')
 
     gen=INTEGRITY_GEN.read_text(encoding='utf-8')
     gen_anchor="  'app-shell-registry.js','assessment-multimodal.js','pwa-shell.js','learning-experience.js','process-data-diagnostics.js','real-measured-data-assessment.js',"
@@ -164,8 +151,7 @@ for(const name of DYNAMIC_ROOT_ASSETS){
 
 
 def verify()->None:
-    version,statuses=canonical_specialist_statuses()
-    app=APP.read_text(encoding='utf-8')
+    version,statuses=canonical_specialist_statuses();app=APP.read_text(encoding='utf-8')
     for k,v in statuses.items():
         if f'{json.dumps(k)}:{json.dumps(v)}' not in app:raise SystemExit(f'App-shell evidence status not synced: {k}={v}')
     if f'const EVIDENCE_REGISTRY_VERSION={json.dumps(version)};' not in app:raise SystemExit('App-shell evidence registry version not synced')
@@ -187,19 +173,15 @@ def verify()->None:
     for name in ('measured-learning-library.js','lesson-simple-experience.js'):
         if not any(x.get('from')==f'../../{name}' and x.get('to')==f'mouldmaster/{name}' for x in package['build']['extraResources']):raise SystemExit('Desktop package missing '+name)
         if name not in INTEGRITY_GEN.read_text(encoding='utf-8'):raise SystemExit('Desktop integrity generator missing '+name)
-    for path in (APP,UX,APPROVAL,INTEGRITY_GEN,DESKTOP_QA):
-        subprocess.run(['node','--check',str(path.relative_to(ROOT))],cwd=ROOT,check=True)
+    for path in (APP,UX,APPROVAL,INTEGRITY_GEN,DESKTOP_QA):subprocess.run(['node','--check',str(path.relative_to(ROOT))],cwd=ROOT,check=True)
     subprocess.run(['node','desktop/electron/scripts/generate-integrity.cjs'],cwd=ROOT,check=True)
+    subprocess.run(['node','desktop/electron/scripts/generate-licenses.cjs'],cwd=ROOT,check=True)
+    subprocess.run(['node','desktop/electron/scripts/generate-sbom.cjs'],cwd=ROOT,check=True)
     subprocess.run(['node','desktop/electron/scripts/qa.cjs'],cwd=ROOT,check=True)
 
 
 def main()->None:
-    harden_evidence_status()
-    harden_app_runtime_owner()
-    harden_assessment_ux()
-    harden_evidence_approval_runtime_owner()
-    harden_desktop_assets()
-    verify()
+    harden_evidence_status();harden_app_runtime_owner();harden_assessment_ux();harden_evidence_approval_runtime_owner();harden_desktop_assets();verify()
     print('Shell/desktop hardening applied: canonical evidence status, Runtime V2 ownership, learner-scoped assessment rotation, dynamic desktop asset parity.')
 
 if __name__=='__main__':main()
