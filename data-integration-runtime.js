@@ -81,7 +81,7 @@ async function getAll(storeName){
 async function rowsForDataset(datasetId){
   const db=await openDb();return new Promise((resolve,reject)=>{
     const tx=db.transaction('shots','readonly'),idx=tx.objectStore('shots').index('datasetId'),r=idx.getAll(IDBKeyRange.only(datasetId));
-    r.onsuccess=()=>{const rows=(r.result||[]).sort((a,b)=>Number(a.shotIndex)-Number(b.shotIndex)).map(x=>x.values);resolve(rows);db.close()};
+    r.onsuccess=()=>{const rows=(r.result||[]).sort((a,b)=>Number(a.rowOrdinal??a.shotIndex)-Number(b.rowOrdinal??b.shotIndex)||Number(a.shotIndex)-Number(b.shotIndex)).map(x=>x.values);resolve(rows);db.close()};
     r.onerror=()=>{reject(r.error);db.close()}
   })
 }
@@ -202,9 +202,11 @@ async function savePrepared(prepared){
   tx.objectStore('datasets').put(record);
   const shots=tx.objectStore('shots');
   for(let i=0;i<prepared.rows.length;i++){
-    const row=prepared.rows[i],shotIndex=row.shot_index??i+1;
+    const row=prepared.rows[i],rowOrdinal=i+1,sourceShotIndex=row.shot_index??null,parsedShotIndex=Number(sourceShotIndex);
     shots.put({
-      id:`${id}:${shotIndex}`,datasetId:id,shotIndex:Number(shotIndex)||i+1,
+      id:`${id}:row:${rowOrdinal}`,datasetId:id,rowOrdinal,
+      sourceShotIndex:sourceShotIndex==null?null:String(sourceShotIndex),
+      shotIndex:Number.isFinite(parsedShotIndex)?parsedShotIndex:rowOrdinal,
       machine:row.machine||row.machine_id||record.entities.machine||'',
       mould:row.mould||row.mold||row.tool||record.entities.mould||'',
       materialGrade:row.material_grade||row.resin_grade||record.entities.materialGrade||'',

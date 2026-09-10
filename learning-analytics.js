@@ -2,7 +2,7 @@
 (function(){
 'use strict';
 
-const VERSION='2026.09.10.1';
+const VERSION='2026.09.10.2';
 const STORAGE_PREFIX='mm_learning_analytics_v1::';
 const MAX_EVENTS=1500;
 const IDLE_MS=5*60*1000;
@@ -124,18 +124,37 @@ function closeLessonSession(reason='leave'){
 }
 
 const attemptTimers={diagnostic:null,'process-data':null};
+const practiceStepResults={diagnostic:new Map(),'process-data':new Map()};
 let currentDiagnostic=null,currentProcessData=null;
 function startPractice(module,id){
-  const safeId=safeString(id,96);if(!safeId)return;attemptTimers[module]={id:safeId,startedAt:Date.now()};
+  const safeId=safeString(id,96);if(!safeId)return;attemptTimers[module]={id:safeId,startedAt:Date.now()};practiceStepResults[module]=new Map();
   const prior=eventsFor().filter(x=>x.type==='practice_start'&&x.module===module&&x.id===safeId).length;
   record('practice_start',{module,id:safeId,attempt:prior+1});
 }
+function markPracticeChoice(module,id,step,correct){
+  const timer=attemptTimers[module];if(!timer||timer.id!==id||typeof correct!=='boolean')return false;
+  practiceStepResults[module].set(Number(step)||0,correct);
+  if(!correct)record('practice_miss',{module,id,step:Number(step)||0,correct:false});
+  return true;
+}
+function trackedPracticeScore(module,id,total){
+  const timer=attemptTimers[module],n=Number(total)||0;if(!timer||timer.id!==id||n<1)return 0;
+  const correct=[...practiceStepResults[module].values()].filter(Boolean).length;return Math.round(correct/n*100)
+}
 function finishPractice(module,id,score){
   const timer=attemptTimers[module],durationSec=timer&&timer.id===id?Math.round((Date.now()-timer.startedAt)/1000):0;
-  record('practice_complete',{module,id,score:Number(score)||0,durationSec});attemptTimers[module]=null;
+  record('practice_complete',{module,id,score:Number(score)||0,durationSec});attemptTimers[module]=null;practiceStepResults[module]=new Map();
 }
 function abandonPractice(module,id){
-  const timer=attemptTimers[module];if(timer&&timer.id===id){record('practice_abandon',{module,id,durationSec:Math.round((Date.now()-timer.startedAt)/1000)});attemptTimers[module]=null}
+  const timer=attemptTimers[module];if(timer&&timer.id===id){record('practice_abandon',{module,id,durationSec:Math.round((Date.now()-timer.startedAt)/1000)});attemptTimers[module]=null;practiceStepResults[module]=new Map()}
+}
+function diagnosticChoiceCorrect(id,step,choiceIndex){
+  const lab=(window.MM_DIAGNOSTIC_LABS?.labs||[]).find(x=>x.id===id),choice=lab?.steps?.[Number(step)]?.choices?.[Number(choiceIndex)];
+  return choice&&typeof choice.correct==='boolean'?choice.correct:null
+}
+function processChoiceCorrect(id,step,choiceIndex){
+  const result=window.MM_PROCESS_DATA_DIAGNOSTICS?.evaluateChoice?.(id,Number(step),Number(choiceIndex));
+  return result?.valid?!!result.correct:null
 }
 
 function installCoreHooks(){
@@ -166,17 +185,16 @@ function handlePracticeClick(e){
   const t=e.target.closest?.('[data-dl-start],[data-dl-choice],[data-dl-finish],[data-dl-restart],[data-dl-home],[data-dl-back],[data-pd-start],[data-pd-choice],[data-pd-finish],[data-pd-restart],[data-pd-home],[data-pd-back]');if(!t)return;
   if(t.dataset.dlStart){currentDiagnostic=t.dataset.dlStart;startPractice('diagnostic',currentDiagnostic);return}
   if(t.hasAttribute('data-dl-restart')){if(currentDiagnostic)startPractice('diagnostic',currentDiagnostic);return}
-  if(t.dataset.dlChoice!==undefined&&currentDiagnostic){const host=document.getElementById('diagnosticLabs'),step=Number(host?.dataset.step||0);if(host?.querySelector('.dl-choice.wrong'))record('practice_miss',{module:'diagnostic',id:currentDiagnostic,step,correct:false});return}
-  if(t.hasAttribute('data-dl-finish')&&currentDiagnostic){const m=document.querySelector('#diagnosticLabs .dl-summary strong')?.textContent?.match(/(\d+)%/);finishPractice('diagnostic',currentDiagnostic,m?Number(m[1]):0);return}
+  if(t.dataset.dlChoice!==undefined&&currentDiagnostic){const host=document.getElementById('diagnosticLabs'),step=Number(host?.dataset.step||0),correct=diagnosticChoiceCorrect(currentDiagnostic,step,Number(t.dataset.dlChoice));markPracticeChoice('diagnostic',currentDiagnostic,step,correct);return}
+  if(t.hasAttribute('data-dl-finish')&&currentDiagnostic){const lab=(window.MM_DIAGNOSTIC_LABS?.labs||[]).find(x=>x.id===currentDiagnostic),total=lab?.steps?.length||4;finishPractice('diagnostic',currentDiagnostic,trackedPracticeScore('diagnostic',currentDiagnostic,total));return}
   if((t.hasAttribute('data-dl-home')||t.hasAttribute('data-dl-back'))&&currentDiagnostic){abandonPractice('diagnostic',currentDiagnostic);currentDiagnostic=null;return}
 
   if(t.dataset.pdStart){currentProcessData=t.dataset.pdStart;startPractice('process-data',currentProcessData);return}
   if(t.hasAttribute('data-pd-restart')){if(currentProcessData)startPractice('process-data',currentProcessData);return}
-  if(t.dataset.pdChoice!==undefined&&currentProcessData){const host=document.getElementById('processDataLabs'),step=Number(host?.dataset.step||0);if(host?.querySelector('.pd-choice.wrong'))record('practice_miss',{module:'process-data',id:currentProcessData,step,correct:false});return}
-  if(t.hasAttribute('data-pd-finish')&&currentProcessData){const m=document.querySelector('#processDataLabs .pd-summary strong')?.textContent?.match(/(\d+)%/);finishPractice('process-data',currentProcessData,m?Number(m[1]):0);return}
+  if(t.dataset.pdChoice!==undefined&&currentProcessData){const host=document.getElementById('processDataLabs'),step=Number(host?.dataset.step||0),correct=processChoiceCorrect(currentProcessData,step,Number(t.dataset.pdChoice));markPracticeChoice('process-data',currentProcessData,step,correct);return}
+  if(t.hasAttribute('data-pd-finish')&&currentProcessData){finishPractice('process-data',currentProcessData,trackedPracticeScore('process-data',currentProcessData,4));return}
   if((t.hasAttribute('data-pd-home')||t.hasAttribute('data-pd-back'))&&currentProcessData){abandonPractice('process-data',currentProcessData);currentProcessData=null}
 }
-
 function ensureStyle(){
   if(document.getElementById('mm-learning-analytics-style'))return;
   const s=document.createElement('style');s.id='mm-learning-analytics-style';s.textContent=`

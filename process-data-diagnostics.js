@@ -2,7 +2,7 @@
 (function(){
 'use strict';
 
-const VERSION='2026.08.26.1';
+const VERSION='2026.09.10.1';
 const PACK=window.MM_PROCESS_EVIDENCE_DATASETS;
 const SOURCES=window.MM_EVIDENCE_SOURCES?.sources||{};
 if(!PACK||!Array.isArray(PACK.datasets))throw new Error('process-data-diagnostics.js requires MM_PROCESS_EVIDENCE_DATASETS');
@@ -141,6 +141,12 @@ function deterministicChoices(step,caseId,stepIndex){
   for(let i=arr.length-1;i>0;i--){seed=(Math.imul(seed,1664525)+1013904223)>>>0;const j=seed%(i+1);[arr[i],arr[j]]=[arr[j],arr[i]]}
   return arr
 }
+function evaluateChoice(caseId,stepIndex,choiceIndex){
+  const ds=DATASETS.find(x=>x.id===String(caseId||'')),stepNo=Number(stepIndex),choiceNo=Number(choiceIndex);
+  if(!ds||!Number.isInteger(stepNo)||stepNo<0||stepNo>3||!Number.isInteger(choiceNo)||choiceNo<0||choiceNo>3)return {valid:false,correct:false,total:4};
+  const steps=buildSteps(ds),choices=deterministicChoices(steps[stepNo],ds.id,stepNo),choice=choices[choiceNo];
+  return {valid:!!choice,correct:!!choice?.correct,total:steps.length};
+}
 
 let activeId=null,answers=[],hadError=false;
 function ensureStyle(){
@@ -213,5 +219,5 @@ function handleClick(e){
 function install(){ensureStyle();const host=ensureSection();ensureNav();patchMobileMore();if(host&&!host.__mmPdClick){host.addEventListener('click',handleClick);host.__mmPdClick=true}}
 let queued=false;function schedule(){if(queued)return;queued=true;(window.requestAnimationFrame||setTimeout)(()=>{queued=false;install()},0)}
 const observer=new MutationObserver(schedule);if(document.documentElement)observer.observe(document.documentElement,{childList:true,subtree:true});install();window.addEventListener('load',schedule);
-window.MM_PROCESS_DATA_DIAGNOSTICS={version:VERSION,cases:DATASETS.map(d=>({id:d.id,title:d.title,kind:d.kind,signals:Object.keys(d.signals),sourceIds:d.sourceIds})),open:openHome,scope:'Guided use of deterministic synthetic training data; outside the formal assessment bank and not a production recipe.'};
+window.MM_PROCESS_DATA_DIAGNOSTICS={version:VERSION,cases:DATASETS.map(d=>({id:d.id,title:d.title,kind:d.kind,signals:Object.keys(d.signals),sourceIds:d.sourceIds})),open:openHome,evaluateChoice,scope:'Guided use of deterministic synthetic training data; outside the formal assessment bank and not a production recipe. evaluateChoice exposes structured practice correctness for local analytics without scraping rendered CSS or score text.'};
 })();
