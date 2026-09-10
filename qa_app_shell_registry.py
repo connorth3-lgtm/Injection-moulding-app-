@@ -1,5 +1,5 @@
 from pathlib import Path
-import json, subprocess
+import json, re, subprocess
 
 ROOT=Path(__file__).resolve().parent
 
@@ -100,9 +100,16 @@ need("root.querySelector('[data-mm-role=\"explore-learning\"]')" in finalizer,'H
 need('actions.find(button=>/Explore your learning/i.test' not in finalizer,'Home behavior must not depend on learner-visible learning-copy text')
 need('new MutationObserver' not in finalizer,'finalizer reintroduced redundant document/view MutationObserver ownership')
 
+# Browser readiness must depend on shell-finalized state, never a release/version literal.
+shell_version_wait=re.compile(r"MM_APP_SHELL_FINALIZED\s*===\s*['\"]\d{4}\.\d{2}\.\d{2}\.\d+['\"]")
+for spec in sorted((ROOT/'qa').glob('*.spec.js')):
+    source=spec.read_text(encoding='utf-8')
+    need(not shell_version_wait.search(source),f'browser QA pins shell readiness to a release literal: {spec.relative_to(ROOT)}')
+
 browser=text('qa/mobile-viewport.spec.js')
 for marker in [
-    "window.MM_APP_SHELL_FINALIZED==='2026.09.10.3'",
+    "typeof window.MM_APP_SHELL_FINALIZED==='string'",
+    'window.MM_APP_SHELL_FINALIZED.length>0',
     "!document.getElementById('mmBootstrap')",
     "Home is lean, XP-free, clear of duplicate reference launchers, and Practice owns troubleshooting",
     "Primary mobile navigation and the reduced More tools are keyboard reachable",
@@ -113,4 +120,4 @@ for marker in [
     "capture Android-like Home regression artifact after bootstrap is gone"
 ]: need(marker in browser,f'mobile browser QA marker missing: {marker}')
 
-print('MouldMaster app-shell registry QA passed (idempotent late dashboard registration, canonical navigation/geometry, XP-free condensed mobile coverage, offline/desktop packaging)')
+print('MouldMaster app-shell registry QA passed (release-agnostic shell readiness, idempotent late dashboard registration, canonical navigation/geometry, XP-free condensed mobile coverage, offline/desktop packaging)')
