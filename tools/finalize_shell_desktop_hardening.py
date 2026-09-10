@@ -21,8 +21,9 @@ APPROVAL=ROOT/'assessment-evidence-approval.js'
 COVERAGE=ROOT/'data'/'evidence-coverage-v1.json'
 SPECIALIST=ROOT/'specialist-evidence-gap-extension.js'
 PKG=ROOT/'desktop'/'electron'/'package.json'
-INTEGRITY_GEN=ROOT/'desktop'/'electron'/'scripts'/'generate-integrity.cjs'
-DESKTOP_QA=ROOT/'desktop'/'electron'/'scripts'/'qa.cjs'
+DESKTOP=ROOT/'desktop'/'electron'
+INTEGRITY_GEN=DESKTOP/'scripts'/'generate-integrity.cjs'
+DESKTOP_QA=DESKTOP/'scripts'/'qa.cjs'
 
 
 def replace_once(path:Path,old:str,new:str)->None:
@@ -86,11 +87,7 @@ def harden_app_runtime_owner()->None:
 
 
 def harden_assessment_ux()->None:
-    replace_once(
-        UX,
-        "const VERSION='2026.09.06.9';\nconst FIRST_HISTORY_LIMIT=3;\nconst HISTORY_KEY='mm_assessment_opening_history_v1';",
-        "const VERSION='2026.09.10.1';\nconst FIRST_HISTORY_LIMIT=3;\nconst HISTORY_KEY='mm_assessment_opening_history_v1';\nconst R=window.MM_RUNTIME_V2;if(!R)throw new Error('assessment-ux.js requires runtime-v2.js');",
-    )
+    replace_once(UX,"const VERSION='2026.09.06.9';\nconst FIRST_HISTORY_LIMIT=3;\nconst HISTORY_KEY='mm_assessment_opening_history_v1';","const VERSION='2026.09.10.1';\nconst FIRST_HISTORY_LIMIT=3;\nconst HISTORY_KEY='mm_assessment_opening_history_v1';\nconst R=window.MM_RUNTIME_V2;if(!R)throw new Error('assessment-ux.js requires runtime-v2.js');")
     replace_once(UX,"""    const stored=localStorage.getItem(HISTORY_KEY);
     const raw=JSON.parse(stored||'{}');""","""    const raw=R.storage.get(HISTORY_KEY,{})||{};""")
     replace_once(UX,"""    localStorage.setItem(HISTORY_KEY,JSON.stringify(out));
@@ -105,8 +102,7 @@ R.after('startExam',()=>{setTimeout(decorateExam,0)});
 R.after('gradeExam',()=>{setTimeout(decorateReview,0)});
 R.rebind('getExamQuestions');R.rebind('startExam');R.rebind('gradeExam');"""
     replace_once(UX,old_hooks,new_hooks)
-    text=UX.read_text(encoding='utf-8').replace("persistence:'learner-scoped localStorage stable IDs only; no answers or personal data'","persistence:'Runtime V2 learner-scoped storage; stable IDs only; no answers or personal data'")
-    UX.write_text(text,encoding='utf-8')
+    UX.write_text(UX.read_text(encoding='utf-8').replace("persistence:'learner-scoped localStorage stable IDs only; no answers or personal data'","persistence:'Runtime V2 learner-scoped storage; stable IDs only; no answers or personal data'"),encoding='utf-8')
 
 
 def harden_evidence_approval_runtime_owner()->None:
@@ -123,30 +119,26 @@ def harden_desktop_assets()->None:
     anchor='      {"from": "../../learning-experience.js", "to": "mouldmaster/learning-experience.js"},\n'
     if anchor not in pkg_text:raise SystemExit('Desktop extraResources insertion anchor missing')
     missing=[x for x in additions if f'"from": "{x[0]}"' not in pkg_text]
-    if missing:
-        rows=''.join(f'      {{"from": "{src}", "to": "{dst}"}},\n' for src,dst in missing)
-        pkg_text=pkg_text.replace(anchor,anchor+rows,1)
+    if missing:pkg_text=pkg_text.replace(anchor,anchor+''.join(f'      {{"from": "{src}", "to": "{dst}"}},\n' for src,dst in missing),1)
     json.loads(pkg_text);PKG.write_text(pkg_text,encoding='utf-8')
-
     gen=INTEGRITY_GEN.read_text(encoding='utf-8')
-    gen_anchor="  'app-shell-registry.js','assessment-multimodal.js','pwa-shell.js','learning-experience.js','process-data-diagnostics.js','real-measured-data-assessment.js',"
-    gen_new="  'app-shell-registry.js','assessment-multimodal.js','pwa-shell.js','learning-experience.js','measured-learning-library.js','lesson-simple-experience.js','process-data-diagnostics.js','real-measured-data-assessment.js',"
-    if gen_new not in gen:
-        if gen_anchor not in gen:raise SystemExit('Desktop integrity asset insertion anchor missing')
-        gen=gen.replace(gen_anchor,gen_new,1)
+    a="  'app-shell-registry.js','assessment-multimodal.js','pwa-shell.js','learning-experience.js','process-data-diagnostics.js','real-measured-data-assessment.js',"
+    b="  'app-shell-registry.js','assessment-multimodal.js','pwa-shell.js','learning-experience.js','measured-learning-library.js','lesson-simple-experience.js','process-data-diagnostics.js','real-measured-data-assessment.js',"
+    if b not in gen:
+        if a not in gen:raise SystemExit('Desktop integrity asset insertion anchor missing')
+        gen=gen.replace(a,b,1)
     INTEGRITY_GEN.write_text(gen,encoding='utf-8')
-
     qa=DESKTOP_QA.read_text(encoding='utf-8')
-    qa_anchor="need(DOMAIN_MANIFEST?.schemaVersion===1&&Array.isArray(DOMAIN_MANIFEST.assets)&&Array.isArray(DOMAIN_MANIFEST.dataAssets),'runtime domain manifest invalid for desktop QA');"
-    qa_insert="""const DYNAMIC_ROOT_ASSETS=['measured-learning-library.js','lesson-simple-experience.js'];
+    anchor="need(DOMAIN_MANIFEST?.schemaVersion===1&&Array.isArray(DOMAIN_MANIFEST.assets)&&Array.isArray(DOMAIN_MANIFEST.dataAssets),'runtime domain manifest invalid for desktop QA');"
+    insert="""const DYNAMIC_ROOT_ASSETS=['measured-learning-library.js','lesson-simple-experience.js'];
 for(const name of DYNAMIC_ROOT_ASSETS){
   need((PKG.build?.extraResources||[]).some(x=>x?.from===`../../${name}`&&x?.to===`mouldmaster/${name}`),`dynamic root runtime asset is not packaged by desktop: ${name}`);
   need(Object.prototype.hasOwnProperty.call(INTEGRITY.files,name),`dynamic root runtime asset is not integrity-hashed/servable by desktop: ${name}`);
 }
-"""+qa_anchor
+"""+anchor
     if 'const DYNAMIC_ROOT_ASSETS=' not in qa:
-        if qa_anchor not in qa:raise SystemExit('Desktop QA dynamic-root insertion anchor missing')
-        qa=qa.replace(qa_anchor,qa_insert,1)
+        if anchor not in qa:raise SystemExit('Desktop QA dynamic-root insertion anchor missing')
+        qa=qa.replace(anchor,insert,1)
     DESKTOP_QA.write_text(qa,encoding='utf-8')
 
 
@@ -158,17 +150,14 @@ def verify()->None:
     if 'window.renderDashboard=function' in app:raise SystemExit('App shell still overwrites renderDashboard')
     for marker in ("runtime.after('renderDashboard'","runtime.rebind('renderDashboard')"):
         if marker not in app:raise SystemExit('Missing app-shell Runtime V2 hook: '+marker)
-
     ux=UX.read_text(encoding='utf-8')
     for forbidden in ('localStorage.getItem(HISTORY_KEY)','localStorage.setItem(HISTORY_KEY','localStorage.removeItem(HISTORY_KEY)','window.getExamQuestions=function','window.startExam=function','window.gradeExam=function'):
         if forbidden in ux:raise SystemExit('Assessment UX still uses unscoped/wrapper behavior: '+forbidden)
     for marker in ('R.storage.get(HISTORY_KEY','R.storage.set(HISTORY_KEY','R.storage.remove(HISTORY_KEY)',"R.after('getExamQuestions'","R.before('startExam'","R.after('gradeExam'"):
         if marker not in ux:raise SystemExit('Assessment UX hardening marker missing: '+marker)
-
     approval=APPROVAL.read_text(encoding='utf-8')
     if 'window.gradeExam=function' in approval:raise SystemExit('Evidence approval still overwrites gradeExam')
     if "runtime.after('gradeExam'" not in approval:raise SystemExit('Evidence approval Runtime V2 grade hook missing')
-
     package=json.loads(PKG.read_text(encoding='utf-8'))
     for name in ('measured-learning-library.js','lesson-simple-experience.js'):
         if not any(x.get('from')==f'../../{name}' and x.get('to')==f'mouldmaster/{name}' for x in package['build']['extraResources']):raise SystemExit('Desktop package missing '+name)
@@ -176,8 +165,9 @@ def verify()->None:
     for path in (APP,UX,APPROVAL,INTEGRITY_GEN,DESKTOP_QA):subprocess.run(['node','--check',str(path.relative_to(ROOT))],cwd=ROOT,check=True)
     subprocess.run(['node','desktop/electron/scripts/generate-integrity.cjs'],cwd=ROOT,check=True)
     subprocess.run(['node','desktop/electron/scripts/generate-licenses.cjs'],cwd=ROOT,check=True)
-    subprocess.run(['node','desktop/electron/scripts/generate-sbom.cjs'],cwd=ROOT,check=True)
-    subprocess.run(['node','desktop/electron/scripts/qa.cjs'],cwd=ROOT,check=True)
+    subprocess.run(['npm','ci','--ignore-scripts','--no-audit','--no-fund'],cwd=DESKTOP,check=True)
+    subprocess.run(['node','scripts/generate-sbom.cjs'],cwd=DESKTOP,check=True)
+    subprocess.run(['node','scripts/qa.cjs'],cwd=DESKTOP,check=True)
 
 
 def main()->None:
