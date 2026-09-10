@@ -1,0 +1,78 @@
+{
+  "schemaVersion": 1,
+  "contextId": "ctx-site-machine-mould-material-part",
+  "status": "missing",
+  "machine": {
+    "status": "missing",
+    "machineAlias": null,
+    "manufacturer": null,
+    "model": null,
+    "controller": null,
+    "clampForceKn": null,
+    "screwDiameterMm": null,
+    "maxInjectionPressureMpa": null,
+    "maxInjectionSpeedMmS": null,
+    "maxShotVolumeCm3": null,
+    "tieBarSpacingHorizontalMm": null,
+    "tieBarSpacingVerticalMm": null,
+    "calibrationRefs": []
+  },
+  "mould": {
+    "status": "missing",
+    "mouldAlias": null,
+    "cavityCount": null,
+    "activeCavityAliases": [],
+    "runnerType": "unknown",
+    "gateType": null,
+    "hotRunner": null,
+    "partVolumeCm3": null,
+    "runnerVolumeCm3": null,
+    "projectedAreaMm2": null,
+    "coolingCircuits": []
+  },
+  "material": {
+    "status": "missing",
+    "materialAlias": null,
+    "manufacturer": null,
+    "grade": null,
+    "polymerFamily": null,
+    "lotAlias": null,
+    "materialBatchAlias": null,
+    "materialGradeRecordId": null,
+    "tdsSourceRef": null,
+    "sdsSourceRef": null
+  },
+  "part": {
+    "status": "missing",
+    "partAlias": null,
+    "revisionAlias": null,
+    "nominalMassG": null,
+    "criticalCharacteristics": []
+  },
+  "validatedProcessWindow": {
+    "status": "missing",
+    "validationRef": null,
+    "parameters": {}
+  },
+  "qualityPlan": {
+    "status": "missing",
+    "qualityPlanRef": null,
+    "defectCodeSetRef": null,
+    "samplingPlanRef": null
+  },
+  "sourceRefs": [],
+  "collectionContracts": {
+    "shotData": "data/real-process-data-pilot-template.csv",
+    "dataDictionary": "data/real-process-data-dictionary-template.csv",
+    "traceData": "data/real-process-trace-template.csv",
+    "events": "data/real-process-event-template.csv",
+    "sensorCalibration": "data/real-process-sensor-calibration-template.csv",
+    "materialGradeSchema": "data/materials/material-grade-v2.schema.json"
+  },
+  "boundaries": {
+    "noMachineControl": true,
+    "noInventedValues": true,
+    "supplierGuidanceIsNotValidatedWindow": true,
+    "aliasesOnlyForSensitiveOperationalIdentity": true
+  }
+}
