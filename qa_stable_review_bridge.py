@@ -1,5 +1,6 @@
 from pathlib import Path
 import json
+import re
 import subprocess
 
 ROOT=Path(__file__).resolve().parent
@@ -28,7 +29,19 @@ suite=text('assessment-quality-suite.js')
 need('migrateStableReviewIds' in suite,'quality suite must migrate older version-prefixed review records')
 need('techId(level,index)' in suite and 'regId(region,level,index)' in suite,'quality suite stable ID builders missing')
 need("const BLUEPRINT=['materials','machine','tooling','process','quality','troubleshooting']" in suite,'six-domain technical blueprint missing')
-need('competencies:competencySet' in suite,'technical questions must retain multi-competency tags for blueprint coverage')
+need("const IDENTITY_LOCK_VERSION='2026.09.10.1'" in suite,'reviewed assessment identity lock version missing')
+need('function identityFingerprint' in suite and 'function identityFor' in suite,'reorder-safe assessment identity resolver missing')
+need('Assessment identity drift:' in suite and 'metadataInference' in suite,'identity/content drift must fail closed while regex metadata remains audit-only')
+need("stableId:techId(level,i),revision:VERSION,difficulty:difficulty(level,i)" not in suite,'technical runtime identity must not fall back to live array position')
+lock_match=re.search(r'const LOCKED_IDENTITIES=(\[[\s\S]*?\]);\nconst IDENTITY_BY_FINGERPRINT',suite)
+need(lock_match is not None,'reviewed identity lock payload missing')
+identity_lock=json.loads(lock_match.group(1))
+need(len(identity_lock)==57 and len({x['stableId'] for x in identity_lock})==57 and len({x['fingerprint'] for x in identity_lock})==57,'reviewed identity lock must contain 57 unique IDs/fingerprints')
+revision_index=json.loads(text('sources/QUESTION_REVISION_INDEX.json'))
+need({x['stableId'] for x in identity_lock}==set(revision_index.get('all_stable_ids') or []),'reviewed identity lock IDs differ from governed revision index')
+need(sum(x['kind']=='technical' for x in identity_lock)==30 and sum(x['kind']=='regional' for x in identity_lock)==27,'identity lock formal kind split drifted')
+need(all(x.get('reviewedRevision') in {2,3} for x in identity_lock),'identity lock must retain reviewed revision numbers')
+need(all(x.get('competency') and x.get('concept') and x.get('difficulty') for x in identity_lock),'identity lock must carry explicit competency/concept/difficulty metadata')
 
 upgrade=text('training-upgrade.js')
 need("m=/^tech:([^:]+):(\\d+)$/.exec(id)" in upgrade,'spaced-review resolver must support stable technical IDs')
@@ -48,4 +61,4 @@ ow=text('.github/workflows/open-desktop-build.yml')
 need("- 'assessment-stable-review-bridge.js'" in ow and "- 'qa_stable_review_bridge.py'" in ow and 'python qa_stable_review_bridge.py' in ow,'desktop workflow missing stable-review bridge QA')
 need('python qa_stable_review_bridge.py' in text('.github/workflows/microsoft-store-msix.yml'),'Store workflow missing stable-review bridge QA')
 
-print('MouldMaster stable spaced-review ID and full-blueprint guard QA passed')
+print('MouldMaster stable spaced-review ID, reviewed fingerprint identity lock and full-blueprint guard QA passed')

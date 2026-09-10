@@ -1,4 +1,4 @@
-const CACHE_VERSION='2026.09.10.2';
+const CACHE_VERSION='2026.09.10.4';
 const CACHE_REVISION='audit-consolidation-r1-20260910';
 const STATIC_CACHE=`mouldmaster-static-${CACHE_VERSION}-${CACHE_REVISION}`;
 

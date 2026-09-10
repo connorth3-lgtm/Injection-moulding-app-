@@ -49,7 +49,7 @@ async function seed(page,id){
 async function openApp(page,url,id){
   await seed(page,id);
   await page.goto(url,{waitUntil:'domcontentloaded'});
-  await page.waitForFunction(()=>window.MM_APP_SHELL_FINALIZED==='2026.08.26.4'&&window.MM_PRIMARY_HUBS&&typeof window.switchView==='function');
+  await page.waitForFunction(()=>Boolean(window.MM_APP_SHELL_FINALIZED)&&window.MM_PRIMARY_HUBS&&typeof window.switchView==='function');
   await page.waitForFunction(()=>!document.getElementById('mmBootstrap'));
   await expect(page.locator('#mmStartupFailure')).toHaveCount(0);
   await page.emulateMedia({reducedMotion:'reduce'});

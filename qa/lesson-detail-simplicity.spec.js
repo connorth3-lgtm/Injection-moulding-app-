@@ -9,7 +9,7 @@ async function openLesson(page){
     localStorage.setItem('mouldmasterProDB',JSON.stringify({activeUser:user.id,users:{[user.id]:user}}));
   });
   await page.goto(BASE,{waitUntil:'domcontentloaded'});
-  await page.waitForFunction(()=>window.MM_APP_SHELL_FINALIZED==='2026.08.26.4'&&window.MM_PRIMARY_HUBS);
+  await page.waitForFunction(()=>(typeof window.MM_APP_SHELL_FINALIZED==='string'&&window.MM_APP_SHELL_FINALIZED.length>0)&&window.MM_PRIMARY_HUBS);
   await page.waitForFunction(()=>!document.getElementById('mmBootstrap'));
   await page.locator('.mobile-nav > button').filter({hasText:'Learn'}).click();
   await expect(page.locator('#path .mm-learn-hub')).toBeVisible();

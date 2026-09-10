@@ -8,7 +8,7 @@ async function openApp(page){
     localStorage.setItem('mouldmasterProDB',JSON.stringify({activeUser:'material-detail-qa',users:{'material-detail-qa':user}}));
   });
   await page.goto(BASE,{waitUntil:'domcontentloaded'});
-  await page.waitForFunction(()=>window.MM_APP_SHELL_FINALIZED==='2026.08.26.4'&&window.MM_MATERIAL_REGISTRY&&window.MM_PRIMARY_HUBS);
+  await page.waitForFunction(()=>(typeof window.MM_APP_SHELL_FINALIZED==='string'&&window.MM_APP_SHELL_FINALIZED.length>0)&&window.MM_MATERIAL_REGISTRY&&window.MM_PRIMARY_HUBS);
   await page.waitForFunction(()=>!document.getElementById('mmBootstrap'));
   await expect(page.locator('#mmStartupFailure')).toHaveCount(0);
 }

@@ -27,7 +27,7 @@ p=subprocess.run(['node','--check',str(ROOT/'pwa-shell.js')],capture_output=True
 need(p.returncode==0,'pwa-shell.js syntax error: '+(p.stderr or p.stdout))
 
 markers=[
-    "const VERSION='2026.08.26.1'",
+    "const VERSION='2026.09.10.3'",
     'Complete & continue',
     'Today’s focus',
     'What do you need help with?',
@@ -37,6 +37,12 @@ markers=[
     'Explore your learning',
     'Mould Master · start from the defect',
     'mm-home-task-hub',
+    'data-mm-role="today-focus"',
+    'data-mm-role="task-hub"',
+    'data-mm-role="diagnose-defect"',
+    'data-mm-role="process-data"',
+    'data-mm-role="practice-scenario"',
+    'data-mm-role="explore-learning"',
     'mm-home-core-hero',
     'mmOpenMouldMaster',
     'mmOpenDataDiagnosis',

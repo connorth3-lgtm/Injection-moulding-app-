@@ -9,7 +9,7 @@ if(!window.MM_SPECIALIST_EVIDENCE_GAPS)throw new Error('app-shell-finalize.js re
 if(!window.MM_MOULD_MASTER_WORKSPACE)throw new Error('app-shell-finalize.js requires mould-master-workspace.js');
 if(!window.MM_RUNTIME_V2)throw new Error('app-shell-finalize.js requires runtime-v2.js');
 
-const VERSION='2026.09.10.1';
+const VERSION='2026.09.10.3';
 const R=window.MM_RUNTIME_V2;
 const GAP=window.MM_SPECIALIST_EVIDENCE_GAPS;
 const BASE=window.MM_SPECIALIST_CURRICULUM;
@@ -147,7 +147,7 @@ function simplifyHomeScreen(){
   root.querySelectorAll('.how-grid,.achievement-grid').forEach(el=>el.remove());
 
   const actions=Array.from(root.querySelectorAll('.mm-home-action'));
-  const learningShortcut=actions.find(button=>/Explore your learning/i.test(button.textContent||''));
+  const learningShortcut=root.querySelector('[data-mm-role="explore-learning"]');
   if(learningShortcut){
     let done=false;
     try{done=typeof window.dailyDone==='function'&&window.dailyDone()}catch(_){}
@@ -235,5 +235,5 @@ if(geometryStyle&&geometryStyle.parentNode===document.head)document.head.appendC
 window.addEventListener('popstate',()=>window.MM_APP_SHELL.navigation?.sync?.());
 window.addEventListener('mm:domains-ready',resyncGovernedEvidence);
 requestAnimationFrame(()=>{window.MM_APP_SHELL.geometry?.sync?.();patchEvidenceUi();simplifyHomeScreen();stabilizeRetiredChrome();window.MM_APP_SHELL.navigation?.sync?.()});
-window.MM_APP_SHELL_FINALIZED='2026.08.26.4';
+window.MM_APP_SHELL_FINALIZED=VERSION;
 })();

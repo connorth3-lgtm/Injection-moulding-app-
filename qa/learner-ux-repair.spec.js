@@ -18,7 +18,7 @@ async function seed(page){
 async function open(page){
   await seed(page);
   await page.goto(BASE,{waitUntil:'domcontentloaded'});
-  await page.waitForFunction(()=>window.MM_APP_SHELL_FINALIZED==='2026.08.26.4'&&window.MM_PRIMARY_HUBS&&window.MM_LEARNER_UX_REPAIR&&window.MM_SIMPLE_LESSON_EXPERIENCE);
+  await page.waitForFunction(()=>(typeof window.MM_APP_SHELL_FINALIZED==='string'&&window.MM_APP_SHELL_FINALIZED.length>0)&&window.MM_PRIMARY_HUBS&&window.MM_LEARNER_UX_REPAIR&&window.MM_SIMPLE_LESSON_EXPERIENCE);
   await page.waitForFunction(()=>!document.getElementById('mmBootstrap'));
   await expect(page.locator('#mmStartupFailure')).toHaveCount(0);
 }
