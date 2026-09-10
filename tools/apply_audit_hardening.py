@@ -92,9 +92,9 @@ if(PRACTICE?.labs){
    if(choices.some(c=>!String(c?.text||'').trim()))throw new Error(`Optional-practice empty choice text for ${expectedId}`);
    optionalKeyPositions[keyIndex]++;optionalChoicesValidated++;
  }));
+ if(optionalChoicesValidated!==40)throw new Error(`Optional-practice quality coverage mismatch: ${optionalChoicesValidated}/40`);
+ if(optionalKeyPositions.some(x=>x!==10))throw new Error(`Optional-practice key positions are unbalanced: ${optionalKeyPositions.join(',')}`);
 }
-if(optionalChoicesValidated!==40)throw new Error(`Optional-practice quality coverage mismatch: ${optionalChoicesValidated}/40`);
-if(optionalKeyPositions.some(x=>x!==10))throw new Error(`Optional-practice key positions are unbalanced: ${optionalKeyPositions.join(',')}`);
 window.MM_QUESTION_QUALITY_OVERLAY={
  version:QUALITY_VERSION,
  scenarioFeedbackUpgraded,

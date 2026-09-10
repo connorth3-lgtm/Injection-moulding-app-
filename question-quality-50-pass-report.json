@@ -1,0 +1,717 @@
+{
+  "schema": 1,
+  "version": "2026.08.30.1",
+  "passes": 50,
+  "question_decisions_per_pass": 197,
+  "total_item_evaluations": 9850,
+  "scope_counts": {
+    "technical-exam": 30,
+    "regional-exam": 27,
+    "scenario": 40,
+    "diagnostic-lab": 36,
+    "material-lab": 24,
+    "optional-material-practice": 40
+  },
+  "formal_decisions": 157,
+  "optional_decisions": 40,
+  "hard_finding_types": {},
+  "warning_types": {},
+  "hard_items": {},
+  "warning_items": {},
+  "mean_quality_score": 100.0,
+  "minimum_quality_score": 100,
+  "by_kind": {
+    "technical-exam": {
+      "items": 30,
+      "mean_score": 100.0,
+      "hard_items": 0,
+      "warning_items": 0
+    },
+    "regional-exam": {
+      "items": 27,
+      "mean_score": 100.0,
+      "hard_items": 0,
+      "warning_items": 0
+    },
+    "scenario": {
+      "items": 40,
+      "mean_score": 100.0,
+      "hard_items": 0,
+      "warning_items": 0
+    },
+    "diagnostic-lab": {
+      "items": 36,
+      "mean_score": 100.0,
+      "hard_items": 0,
+      "warning_items": 0
+    },
+    "material-lab": {
+      "items": 24,
+      "mean_score": 100.0,
+      "hard_items": 0,
+      "warning_items": 0
+    },
+    "optional-material-practice": {
+      "items": 40,
+      "mean_score": 100.0,
+      "hard_items": 0,
+      "warning_items": 0
+    }
+  },
+  "worst_items": [
+    {
+      "id": "lab:cavity-short-shot:0",
+      "kind": "diagnostic-lab",
+      "score": 100,
+      "hard": [],
+      "warnings": []
+    },
+    {
+      "id": "lab:cavity-short-shot:1",
+      "kind": "diagnostic-lab",
+      "score": 100,
+      "hard": [],
+      "warnings": []
+    },
+    {
+      "id": "lab:cavity-short-shot:2",
+      "kind": "diagnostic-lab",
+      "score": 100,
+      "hard": [],
+      "warnings": []
+    },
+    {
+      "id": "lab:cavity-short-shot:3",
+      "kind": "diagnostic-lab",
+      "score": 100,
+      "hard": [],
+      "warnings": []
+    },
+    {
+      "id": "lab:check-ring-repeatability:0",
+      "kind": "diagnostic-lab",
+      "score": 100,
+      "hard": [],
+      "warnings": []
+    },
+    {
+      "id": "lab:check-ring-repeatability:1",
+      "kind": "diagnostic-lab",
+      "score": 100,
+      "hard": [],
+      "warnings": []
+    },
+    {
+      "id": "lab:check-ring-repeatability:2",
+      "kind": "diagnostic-lab",
+      "score": 100,
+      "hard": [],
+      "warnings": []
+    },
+    {
+      "id": "lab:check-ring-repeatability:3",
+      "kind": "diagnostic-lab",
+      "score": 100,
+      "hard": [],
+      "warnings": []
+    },
+    {
+      "id": "lab:cooling-warpage:0",
+      "kind": "diagnostic-lab",
+      "score": 100,
+      "hard": [],
+      "warnings": []
+    },
+    {
+      "id": "lab:cooling-warpage:1",
+      "kind": "diagnostic-lab",
+      "score": 100,
+      "hard": [],
+      "warnings": []
+    },
+    {
+      "id": "lab:cooling-warpage:2",
+      "kind": "diagnostic-lab",
+      "score": 100,
+      "hard": [],
+      "warnings": []
+    },
+    {
+      "id": "lab:cooling-warpage:3",
+      "kind": "diagnostic-lab",
+      "score": 100,
+      "hard": [],
+      "warnings": []
+    },
+    {
+      "id": "lab:gate-seal-study:0",
+      "kind": "diagnostic-lab",
+      "score": 100,
+      "hard": [],
+      "warnings": []
+    },
+    {
+      "id": "lab:gate-seal-study:1",
+      "kind": "diagnostic-lab",
+      "score": 100,
+      "hard": [],
+      "warnings": []
+    },
+    {
+      "id": "lab:gate-seal-study:2",
+      "kind": "diagnostic-lab",
+      "score": 100,
+      "hard": [],
+      "warnings": []
+    },
+    {
+      "id": "lab:gate-seal-study:3",
+      "kind": "diagnostic-lab",
+      "score": 100,
+      "hard": [],
+      "warnings": []
+    },
+    {
+      "id": "lab:hot-runner-imbalance:0",
+      "kind": "diagnostic-lab",
+      "score": 100,
+      "hard": [],
+      "warnings": []
+    },
+    {
+      "id": "lab:hot-runner-imbalance:1",
+      "kind": "diagnostic-lab",
+      "score": 100,
+      "hard": [],
+      "warnings": []
+    },
+    {
+      "id": "lab:hot-runner-imbalance:2",
+      "kind": "diagnostic-lab",
+      "score": 100,
+      "hard": [],
+      "warnings": []
+    },
+    {
+      "id": "lab:hot-runner-imbalance:3",
+      "kind": "diagnostic-lab",
+      "score": 100,
+      "hard": [],
+      "warnings": []
+    },
+    {
+      "id": "lab:local-flash:0",
+      "kind": "diagnostic-lab",
+      "score": 100,
+      "hard": [],
+      "warnings": []
+    },
+    {
+      "id": "lab:local-flash:1",
+      "kind": "diagnostic-lab",
+      "score": 100,
+      "hard": [],
+      "warnings": []
+    },
+    {
+      "id": "lab:local-flash:2",
+      "kind": "diagnostic-lab",
+      "score": 100,
+      "hard": [],
+      "warnings": []
+    },
+    {
+      "id": "lab:local-flash:3",
+      "kind": "diagnostic-lab",
+      "score": 100,
+      "hard": [],
+      "warnings": []
+    },
+    {
+      "id": "lab:measurement-noise:0",
+      "kind": "diagnostic-lab",
+      "score": 100,
+      "hard": [],
+      "warnings": []
+    }
+  ],
+  "pass_summaries": [
+    {
+      "pass": 1,
+      "items": 197,
+      "hard_findings": 0,
+      "warning_findings": 0,
+      "mean_score": 100.0,
+      "digest": "190eda093fa84ecb50bc004de4f40e453a9253f3e7d39799a0b433a8d29189fd"
+    },
+    {
+      "pass": 2,
+      "items": 197,
+      "hard_findings": 0,
+      "warning_findings": 0,
+      "mean_score": 100.0,
+      "digest": "190eda093fa84ecb50bc004de4f40e453a9253f3e7d39799a0b433a8d29189fd"
+    },
+    {
+      "pass": 3,
+      "items": 197,
+      "hard_findings": 0,
+      "warning_findings": 0,
+      "mean_score": 100.0,
+      "digest": "190eda093fa84ecb50bc004de4f40e453a9253f3e7d39799a0b433a8d29189fd"
+    },
+    {
+      "pass": 4,
+      "items": 197,
+      "hard_findings": 0,
+      "warning_findings": 0,
+      "mean_score": 100.0,
+      "digest": "190eda093fa84ecb50bc004de4f40e453a9253f3e7d39799a0b433a8d29189fd"
+    },
+    {
+      "pass": 5,
+      "items": 197,
+      "hard_findings": 0,
+      "warning_findings": 0,
+      "mean_score": 100.0,
+      "digest": "190eda093fa84ecb50bc004de4f40e453a9253f3e7d39799a0b433a8d29189fd"
+    },
+    {
+      "pass": 6,
+      "items": 197,
+      "hard_findings": 0,
+      "warning_findings": 0,
+      "mean_score": 100.0,
+      "digest": "190eda093fa84ecb50bc004de4f40e453a9253f3e7d39799a0b433a8d29189fd"
+    },
+    {
+      "pass": 7,
+      "items": 197,
+      "hard_findings": 0,
+      "warning_findings": 0,
+      "mean_score": 100.0,
+      "digest": "190eda093fa84ecb50bc004de4f40e453a9253f3e7d39799a0b433a8d29189fd"
+    },
+    {
+      "pass": 8,
+      "items": 197,
+      "hard_findings": 0,
+      "warning_findings": 0,
+      "mean_score": 100.0,
+      "digest": "190eda093fa84ecb50bc004de4f40e453a9253f3e7d39799a0b433a8d29189fd"
+    },
+    {
+      "pass": 9,
+      "items": 197,
+      "hard_findings": 0,
+      "warning_findings": 0,
+      "mean_score": 100.0,
+      "digest": "190eda093fa84ecb50bc004de4f40e453a9253f3e7d39799a0b433a8d29189fd"
+    },
+    {
+      "pass": 10,
+      "items": 197,
+      "hard_findings": 0,
+      "warning_findings": 0,
+      "mean_score": 100.0,
+      "digest": "190eda093fa84ecb50bc004de4f40e453a9253f3e7d39799a0b433a8d29189fd"
+    },
+    {
+      "pass": 11,
+      "items": 197,
+      "hard_findings": 0,
+      "warning_findings": 0,
+      "mean_score": 100.0,
+      "digest": "190eda093fa84ecb50bc004de4f40e453a9253f3e7d39799a0b433a8d29189fd"
+    },
+    {
+      "pass": 12,
+      "items": 197,
+      "hard_findings": 0,
+      "warning_findings": 0,
+      "mean_score": 100.0,
+      "digest": "190eda093fa84ecb50bc004de4f40e453a9253f3e7d39799a0b433a8d29189fd"
+    },
+    {
+      "pass": 13,
+      "items": 197,
+      "hard_findings": 0,
+      "warning_findings": 0,
+      "mean_score": 100.0,
+      "digest": "190eda093fa84ecb50bc004de4f40e453a9253f3e7d39799a0b433a8d29189fd"
+    },
+    {
+      "pass": 14,
+      "items": 197,
+      "hard_findings": 0,
+      "warning_findings": 0,
+      "mean_score": 100.0,
+      "digest": "190eda093fa84ecb50bc004de4f40e453a9253f3e7d39799a0b433a8d29189fd"
+    },
+    {
+      "pass": 15,
+      "items": 197,
+      "hard_findings": 0,
+      "warning_findings": 0,
+      "mean_score": 100.0,
+      "digest": "190eda093fa84ecb50bc004de4f40e453a9253f3e7d39799a0b433a8d29189fd"
+    },
+    {
+      "pass": 16,
+      "items": 197,
+      "hard_findings": 0,
+      "warning_findings": 0,
+      "mean_score": 100.0,
+      "digest": "190eda093fa84ecb50bc004de4f40e453a9253f3e7d39799a0b433a8d29189fd"
+    },
+    {
+      "pass": 17,
+      "items": 197,
+      "hard_findings": 0,
+      "warning_findings": 0,
+      "mean_score": 100.0,
+      "digest": "190eda093fa84ecb50bc004de4f40e453a9253f3e7d39799a0b433a8d29189fd"
+    },
+    {
+      "pass": 18,
+      "items": 197,
+      "hard_findings": 0,
+      "warning_findings": 0,
+      "mean_score": 100.0,
+      "digest": "190eda093fa84ecb50bc004de4f40e453a9253f3e7d39799a0b433a8d29189fd"
+    },
+    {
+      "pass": 19,
+      "items": 197,
+      "hard_findings": 0,
+      "warning_findings": 0,
+      "mean_score": 100.0,
+      "digest": "190eda093fa84ecb50bc004de4f40e453a9253f3e7d39799a0b433a8d29189fd"
+    },
+    {
+      "pass": 20,
+      "items": 197,
+      "hard_findings": 0,
+      "warning_findings": 0,
+      "mean_score": 100.0,
+      "digest": "190eda093fa84ecb50bc004de4f40e453a9253f3e7d39799a0b433a8d29189fd"
+    },
+    {
+      "pass": 21,
+      "items": 197,
+      "hard_findings": 0,
+      "warning_findings": 0,
+      "mean_score": 100.0,
+      "digest": "190eda093fa84ecb50bc004de4f40e453a9253f3e7d39799a0b433a8d29189fd"
+    },
+    {
+      "pass": 22,
+      "items": 197,
+      "hard_findings": 0,
+      "warning_findings": 0,
+      "mean_score": 100.0,
+      "digest": "190eda093fa84ecb50bc004de4f40e453a9253f3e7d39799a0b433a8d29189fd"
+    },
+    {
+      "pass": 23,
+      "items": 197,
+      "hard_findings": 0,
+      "warning_findings": 0,
+      "mean_score": 100.0,
+      "digest": "190eda093fa84ecb50bc004de4f40e453a9253f3e7d39799a0b433a8d29189fd"
+    },
+    {
+      "pass": 24,
+      "items": 197,
+      "hard_findings": 0,
+      "warning_findings": 0,
+      "mean_score": 100.0,
+      "digest": "190eda093fa84ecb50bc004de4f40e453a9253f3e7d39799a0b433a8d29189fd"
+    },
+    {
+      "pass": 25,
+      "items": 197,
+      "hard_findings": 0,
+      "warning_findings": 0,
+      "mean_score": 100.0,
+      "digest": "190eda093fa84ecb50bc004de4f40e453a9253f3e7d39799a0b433a8d29189fd"
+    },
+    {
+      "pass": 26,
+      "items": 197,
+      "hard_findings": 0,
+      "warning_findings": 0,
+      "mean_score": 100.0,
+      "digest": "190eda093fa84ecb50bc004de4f40e453a9253f3e7d39799a0b433a8d29189fd"
+    },
+    {
+      "pass": 27,
+      "items": 197,
+      "hard_findings": 0,
+      "warning_findings": 0,
+      "mean_score": 100.0,
+      "digest": "190eda093fa84ecb50bc004de4f40e453a9253f3e7d39799a0b433a8d29189fd"
+    },
+    {
+      "pass": 28,
+      "items": 197,
+      "hard_findings": 0,
+      "warning_findings": 0,
+      "mean_score": 100.0,
+      "digest": "190eda093fa84ecb50bc004de4f40e453a9253f3e7d39799a0b433a8d29189fd"
+    },
+    {
+      "pass": 29,
+      "items": 197,
+      "hard_findings": 0,
+      "warning_findings": 0,
+      "mean_score": 100.0,
+      "digest": "190eda093fa84ecb50bc004de4f40e453a9253f3e7d39799a0b433a8d29189fd"
+    },
+    {
+      "pass": 30,
+      "items": 197,
+      "hard_findings": 0,
+      "warning_findings": 0,
+      "mean_score": 100.0,
+      "digest": "190eda093fa84ecb50bc004de4f40e453a9253f3e7d39799a0b433a8d29189fd"
+    },
+    {
+      "pass": 31,
+      "items": 197,
+      "hard_findings": 0,
+      "warning_findings": 0,
+      "mean_score": 100.0,
+      "digest": "190eda093fa84ecb50bc004de4f40e453a9253f3e7d39799a0b433a8d29189fd"
+    },
+    {
+      "pass": 32,
+      "items": 197,
+      "hard_findings": 0,
+      "warning_findings": 0,
+      "mean_score": 100.0,
+      "digest": "190eda093fa84ecb50bc004de4f40e453a9253f3e7d39799a0b433a8d29189fd"
+    },
+    {
+      "pass": 33,
+      "items": 197,
+      "hard_findings": 0,
+      "warning_findings": 0,
+      "mean_score": 100.0,
+      "digest": "190eda093fa84ecb50bc004de4f40e453a9253f3e7d39799a0b433a8d29189fd"
+    },
+    {
+      "pass": 34,
+      "items": 197,
+      "hard_findings": 0,
+      "warning_findings": 0,
+      "mean_score": 100.0,
+      "digest": "190eda093fa84ecb50bc004de4f40e453a9253f3e7d39799a0b433a8d29189fd"
+    },
+    {
+      "pass": 35,
+      "items": 197,
+      "hard_findings": 0,
+      "warning_findings": 0,
+      "mean_score": 100.0,
+      "digest": "190eda093fa84ecb50bc004de4f40e453a9253f3e7d39799a0b433a8d29189fd"
+    },
+    {
+      "pass": 36,
+      "items": 197,
+      "hard_findings": 0,
+      "warning_findings": 0,
+      "mean_score": 100.0,
+      "digest": "190eda093fa84ecb50bc004de4f40e453a9253f3e7d39799a0b433a8d29189fd"
+    },
+    {
+      "pass": 37,
+      "items": 197,
+      "hard_findings": 0,
+      "warning_findings": 0,
+      "mean_score": 100.0,
+      "digest": "190eda093fa84ecb50bc004de4f40e453a9253f3e7d39799a0b433a8d29189fd"
+    },
+    {
+      "pass": 38,
+      "items": 197,
+      "hard_findings": 0,
+      "warning_findings": 0,
+      "mean_score": 100.0,
+      "digest": "190eda093fa84ecb50bc004de4f40e453a9253f3e7d39799a0b433a8d29189fd"
+    },
+    {
+      "pass": 39,
+      "items": 197,
+      "hard_findings": 0,
+      "warning_findings": 0,
+      "mean_score": 100.0,
+      "digest": "190eda093fa84ecb50bc004de4f40e453a9253f3e7d39799a0b433a8d29189fd"
+    },
+    {
+      "pass": 40,
+      "items": 197,
+      "hard_findings": 0,
+      "warning_findings": 0,
+      "mean_score": 100.0,
+      "digest": "190eda093fa84ecb50bc004de4f40e453a9253f3e7d39799a0b433a8d29189fd"
+    },
+    {
+      "pass": 41,
+      "items": 197,
+      "hard_findings": 0,
+      "warning_findings": 0,
+      "mean_score": 100.0,
+      "digest": "190eda093fa84ecb50bc004de4f40e453a9253f3e7d39799a0b433a8d29189fd"
+    },
+    {
+      "pass": 42,
+      "items": 197,
+      "hard_findings": 0,
+      "warning_findings": 0,
+      "mean_score": 100.0,
+      "digest": "190eda093fa84ecb50bc004de4f40e453a9253f3e7d39799a0b433a8d29189fd"
+    },
+    {
+      "pass": 43,
+      "items": 197,
+      "hard_findings": 0,
+      "warning_findings": 0,
+      "mean_score": 100.0,
+      "digest": "190eda093fa84ecb50bc004de4f40e453a9253f3e7d39799a0b433a8d29189fd"
+    },
+    {
+      "pass": 44,
+      "items": 197,
+      "hard_findings": 0,
+      "warning_findings": 0,
+      "mean_score": 100.0,
+      "digest": "190eda093fa84ecb50bc004de4f40e453a9253f3e7d39799a0b433a8d29189fd"
+    },
+    {
+      "pass": 45,
+      "items": 197,
+      "hard_findings": 0,
+      "warning_findings": 0,
+      "mean_score": 100.0,
+      "digest": "190eda093fa84ecb50bc004de4f40e453a9253f3e7d39799a0b433a8d29189fd"
+    },
+    {
+      "pass": 46,
+      "items": 197,
+      "hard_findings": 0,
+      "warning_findings": 0,
+      "mean_score": 100.0,
+      "digest": "190eda093fa84ecb50bc004de4f40e453a9253f3e7d39799a0b433a8d29189fd"
+    },
+    {
+      "pass": 47,
+      "items": 197,
+      "hard_findings": 0,
+      "warning_findings": 0,
+      "mean_score": 100.0,
+      "digest": "190eda093fa84ecb50bc004de4f40e453a9253f3e7d39799a0b433a8d29189fd"
+    },
+    {
+      "pass": 48,
+      "items": 197,
+      "hard_findings": 0,
+      "warning_findings": 0,
+      "mean_score": 100.0,
+      "digest": "190eda093fa84ecb50bc004de4f40e453a9253f3e7d39799a0b433a8d29189fd"
+    },
+    {
+      "pass": 49,
+      "items": 197,
+      "hard_findings": 0,
+      "warning_findings": 0,
+      "mean_score": 100.0,
+      "digest": "190eda093fa84ecb50bc004de4f40e453a9253f3e7d39799a0b433a8d29189fd"
+    },
+    {
+      "pass": 50,
+      "items": 197,
+      "hard_findings": 0,
+      "warning_findings": 0,
+      "mean_score": 100.0,
+      "digest": "190eda093fa84ecb50bc004de4f40e453a9253f3e7d39799a0b433a8d29189fd"
+    }
+  ],
+  "rubric": {
+    "hard_gates": [
+      "complete/unique four-option structure",
+      "valid single keyed answer",
+      "correct option is not longest or tied-longest",
+      "substantive rationale/feedback",
+      "no unsafe safeguard-bypass action keyed correct",
+      "two-source minimum for optional material practice",
+      "balanced 8/8/7/7 technical answer positions",
+      "balanced 10/10/10/10 scenario and optional answer positions",
+      "non-salient correct options may occupy any relative length rank",
+      "option-specific optional feedback",
+      "zero learner-visible quality warnings"
+    ],
+    "warning_checks": [
+      "option-length spread",
+      "absolute-language distractor pattern",
+      "repetitive feedback",
+      "stem length/wording",
+      "all/none-of-above",
+      "generated optional feedback"
+    ],
+    "semantic_boundary": "Heuristics flag review candidates; evidence correctness remains governed by the reviewed evidence-approval and source-maturity layers."
+  },
+  "quality_overlay": {
+    "version": "2026.09.10.1",
+    "scenarioFeedbackUpgraded": 0,
+    "optionalChoicesUpgraded": 0,
+    "optionalChoicesValidated": 40,
+    "optionalKeyPositions": [
+      10,
+      10,
+      10,
+      10
+    ],
+    "optionalAnswerSemanticMutationPolicy": "forbidden",
+    "optionalKeyPositionPolicy": "10 source-authored keyed decisions in each of four positions",
+    "stableOptionalItemIdPolicy": "optional:<lab-id>:<step-index> with explicit revision",
+    "evidenceMechanismsPreserved": true
+  },
+  "scenario_feedback_upgraded": 24,
+  "optional_answer_positions": [
+    10,
+    10,
+    10,
+    10
+  ],
+  "psychometric_runtime": {
+    "version": "2026.09.10.2",
+    "baselineCommit": "48e1e7a6777c288fd7c67d6dbc9fcd891a4a9307",
+    "contentSha256": "1e3eb731d0c5584f30c792ac80352e3495206ae649f7984eca002087ae2e57d2",
+    "itemsHardened": 197,
+    "optionsParallelised": 788,
+    "sourceAuthoredSnapshotApplied": 197,
+    "runtimeHeuristicSemanticEdits": 0,
+    "semanticAnswerChanges": 0,
+    "technicalTermSubstitutions": 0,
+    "paddingApplied": false,
+    "keyedConciseEdits": 0,
+    "distractorCueEdits": 0,
+    "formClauseTrims": 0,
+    "technicalKeyPositions": [
+      8,
+      8,
+      7,
+      7
+    ],
+    "scenarioKeyPositions": [
+      10,
+      10,
+      10,
+      10
+    ],
+    "initialization": "explicit-reviewed-snapshot",
+    "policy": "Learner-visible stems, choices, answer keys and feedback are explicit reviewed content from the audited baseline. Runtime semantic cue substitution, clause trimming and answer-length rewriting are forbidden."
+  },
+  "runtime_quality_version": "2026.09.01.2"
+}

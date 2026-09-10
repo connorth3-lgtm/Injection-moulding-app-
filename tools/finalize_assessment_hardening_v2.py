@@ -129,7 +129,7 @@ def patch_base_qa()->None:
 
 
 def patch_runtime_qa()->None:
-    replacement=r'''def load_optional_runtime():
+    replacement=r"""def load_optional_runtime():
     global OPTIONAL_OVERLAY,OPTIONAL_POSITIONS
     src=base.text('evidence-maturity-deep-dive.js')
     start=src.find('const MATERIAL_PRACTICE=[')
@@ -162,7 +162,7 @@ process.stdout.write(JSON.stringify({items:out,overlay:window.MM_QUESTION_QUALIT
     need(OPTIONAL_OVERLAY and OPTIONAL_OVERLAY.get('optionalChoicesValidated')==40,f'optional validation incomplete: {OPTIONAL_OVERLAY}')
     need(OPTIONAL_OVERLAY.get('optionalChoicesUpgraded')==0,f'optional bridge must be read-only: {OPTIONAL_OVERLAY}')
     need(OPTIONAL_POSITIONS==[10,10,10,10],f'optional source key positions not balanced: {OPTIONAL_POSITIONS}')
-    return items'''
+    return items"""
     replace_section(RUNTIME_QA,'def load_optional_runtime():','def load_final_runtime():',replacement)
     text=RUNTIME_QA.read_text(encoding='utf-8')
     text=text.replace("title:x.labId,level:x.level||'',focus:x.focus||'',sourceIds:x.sourceIds||[],steps:[]","title:x.title||x.labId,level:x.level||'',focus:x.focus||'',sourceIds:x.sourceIds||[],steps:[]")

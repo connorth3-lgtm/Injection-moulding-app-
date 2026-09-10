@@ -88,20 +88,21 @@ process.stdout.write(JSON.stringify({scenarios:window.MM_DATA.scenarios,overlay:
 def load_optional_runtime():
     global OPTIONAL_OVERLAY,OPTIONAL_POSITIONS
     src=base.text('evidence-maturity-deep-dive.js')
-    start=src.find('const MATERIAL_PRACTICE=[');end=src.find('\n];\nfunction normalisePractice',start)
-    need(start>=0 and end>start,'extended MATERIAL_PRACTICE block missing')
-    block=src[start:end+3]
+    start=src.find('const MATERIAL_PRACTICE=[')
+    marker='const PRACTICE_LABS=normalisePractice();'
+    end=src.find(marker,start)
+    need(start>=0 and end>start,'extended material-practice source/normalizer missing')
+    block=src[start:end+len(marker)]
     node=block+r'''
 const fs=require('fs'),vm=require('vm');
-function normalisePractice(){return MATERIAL_PRACTICE.map(l=>({...l,steps:l.steps.map(s=>({stage:s[0],question:s[1],choices:s.slice(2).map((text,i)=>({text,correct:i===0,feedback:i===0?'Correct. This choice tests the mechanism with the strongest evidence.':'Not the strongest evidence-first response for this scenario.'}))}))}))}
 const hash=s=>{let h=2166136261;for(const ch of String(s||'')){h^=ch.charCodeAt(0);h=Math.imul(h,16777619)}return (h>>>0).toString(16).padStart(8,'0')};
-const window={MM_EVIDENCE_SOURCES:{sources:{},inferred:()=>[],hash},MM_MATERIAL_PRACTICE_EXTENSIONS:{version:'qa',labs:normalisePractice(),scope:'QA runtime'}};
+const window={MM_EVIDENCE_SOURCES:{sources:{},inferred:()=>[],hash},MM_MATERIAL_PRACTICE_EXTENSIONS:{version:'qa',labs:PRACTICE_LABS,scope:'QA runtime'}};
 const sandbox={window,console,URL};window.window=window;vm.createContext(sandbox);
 vm.runInContext(fs.readFileSync('evidence-maturity-formal-bridge.js','utf8'),sandbox,{filename:'evidence-maturity-formal-bridge.js'});
 const out=[];
 for(const lab of window.MM_MATERIAL_PRACTICE_EXTENSIONS.labs)for(let i=0;i<(lab.steps||[]).length;i++){
  const step=lab.steps[i],choices=step.choices||[],correct=choices.findIndex(c=>c&&c.correct===true);
- out.push({id:`optional-material:${lab.id}:${i}`,kind:'optional-material-practice',scope:'optional',labId:lab.id,level:lab.level||'',stage:step.stage||'',stem:step.question||'',options:choices.map(c=>c.text),correct,feedback:choices.map(c=>c.feedback||''),rationale:correct>=0?(choices[correct].feedback||''):'',sourceIds:lab.sourceIds||[],focus:lab.focus||'',critical:/safety|isolation|guard|interlock|shutdown|high-temperature/i.test((lab.focus||'')+' '+(step.question||''))});
+ out.push({id:`optional-material:${lab.id}:${i}`,kind:'optional-material-practice',scope:'optional',labId:lab.id,title:lab.title||lab.id,level:lab.level||'',stage:step.stage||'',stem:step.question||'',options:choices.map(c=>c.text),correct,feedback:choices.map(c=>c.feedback||''),rationale:correct>=0?(choices[correct].feedback||''):'',sourceIds:lab.sourceIds||[],focus:lab.focus||'',critical:/safety|isolation|guard|interlock|shutdown|high-temperature/i.test((lab.focus||'')+' '+(step.question||''))});
 }
 process.stdout.write(JSON.stringify({items:out,overlay:window.MM_QUESTION_QUALITY_OVERLAY||null}));
 '''
@@ -114,11 +115,10 @@ process.stdout.write(JSON.stringify({items:out,overlay:window.MM_QUESTION_QUALIT
     need(p.returncode==0,'optional material-practice runtime failed: '+(p.stderr or p.stdout)[:5000])
     data=json.loads(p.stdout);items=data['items'];OPTIONAL_OVERLAY=data.get('overlay')
     OPTIONAL_POSITIONS=[sum(1 for x in items if x['correct']==i) for i in range(4)]
-    need(OPTIONAL_OVERLAY and OPTIONAL_OVERLAY.get('optionalChoicesUpgraded')==40,f'optional quality overlay incomplete: {OPTIONAL_OVERLAY}')
-    need(OPTIONAL_POSITIONS==[10,10,10,10],f'optional key positions not balanced: {OPTIONAL_POSITIONS}')
-    need(OPTIONAL_OVERLAY.get('optionalKeyPositions')==[10,10,10,10],f'overlay key-position metadata mismatch: {OPTIONAL_OVERLAY}')
+    need(OPTIONAL_OVERLAY and OPTIONAL_OVERLAY.get('optionalChoicesValidated')==40,f'optional validation incomplete: {OPTIONAL_OVERLAY}')
+    need(OPTIONAL_OVERLAY.get('optionalChoicesUpgraded')==0,f'optional bridge must be read-only: {OPTIONAL_OVERLAY}')
+    need(OPTIONAL_POSITIONS==[10,10,10,10],f'optional source key positions not balanced: {OPTIONAL_POSITIONS}')
     return items
-
 
 def load_final_runtime():
     global FINAL_RUNTIME,FINAL_META
@@ -140,8 +140,8 @@ for(const x of items){
  else if(x.kind==='regional-exam')D.regionalQuestions[x.region][x.level].push([x.stem,x.options,x.correct,x.rationale,x.reference||'',x.sourceUrl||null,x.feedback||[],true]);
  else if(x.kind==='scenario'){const parts=String(x.stem||'').split(': ');D.scenarios.push({title:parts.shift()||x.id,situation:parts.join(': '),choices:x.options,correct:x.correct,why:x.rationale,feedback:x.feedback||[],category:x.category||'',difficulty:x.level||'',mmStableId:x.id});}
  else if(x.kind==='diagnostic-lab'){if(!diagMap.has(x.labId))diagMap.set(x.labId,{id:x.labId,title:x.labId,level:x.level||'',focus:x.focus||'',steps:[]});diagMap.get(x.labId).steps.push({stage:x.stage,question:x.stem,choices:x.options.map((t,i)=>mkChoice(t,i===x.correct,(x.feedback||[])[i]||''))});}
- else if(x.kind==='material-lab'){if(!matMap.has(x.labId))matMap.set(x.labId,{id:x.labId,title:x.labId,level:x.level||'',focus:x.focus||'',sourceIds:x.sourceIds||[],steps:[]});matMap.get(x.labId).steps.push({stage:x.stage,question:x.stem,choices:x.options.map((t,i)=>mkChoice(t,i===x.correct,(x.feedback||[])[i]||''))});}
- else if(x.kind==='optional-material-practice'){if(!optMap.has(x.labId))optMap.set(x.labId,{id:x.labId,title:x.labId,level:x.level||'',focus:x.focus||'',sourceIds:x.sourceIds||[],steps:[]});optMap.get(x.labId).steps.push({stage:x.stage,question:x.stem,choices:x.options.map((t,i)=>mkChoice(t,i===x.correct,(x.feedback||[])[i]||''))});}
+ else if(x.kind==='material-lab'){if(!matMap.has(x.labId))matMap.set(x.labId,{id:x.labId,title:x.title||x.labId,level:x.level||'',focus:x.focus||'',sourceIds:x.sourceIds||[],steps:[]});matMap.get(x.labId).steps.push({stage:x.stage,question:x.stem,choices:x.options.map((t,i)=>mkChoice(t,i===x.correct,(x.feedback||[])[i]||''))});}
+ else if(x.kind==='optional-material-practice'){if(!optMap.has(x.labId))optMap.set(x.labId,{id:x.labId,title:x.title||x.labId,level:x.level||'',focus:x.focus||'',sourceIds:x.sourceIds||[],steps:[]});optMap.get(x.labId).steps.push({stage:x.stage,question:x.stem,choices:x.options.map((t,i)=>mkChoice(t,i===x.correct,(x.feedback||[])[i]||''))});}
 }
 const DIAG={labs:[...diagMap.values()]},MAT={labs:[...matMap.values()]},OPT={labs:[...optMap.values()]};
 const window={MM_DATA:D,MM_DIAGNOSTIC_LABS:DIAG,MM_MATERIAL_BEHAVIOUR_LABS:MAT,MM_MATERIAL_PRACTICE_EXTENSIONS:OPT};

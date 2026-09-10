@@ -46,7 +46,7 @@ def patch_qa_for_current_optional_contract()->None:
         "    need(data.get('bridge',{}).get('strictAnswerBalance',{}).get('applied')==93,'strict answer-balance bridge did not reach 93/93 before audit')",
         "    balance=data.get('bridge',{}).get('strictAnswerBalance',{})\n    need(balance.get('applied')==93 or balance.get('runtimeMutation') is False,'stable-review bridge must be historical 93/93 or final read-only')",
     )
-    new_optional=r'''def load_optional_runtime():
+    new_optional=r"""def load_optional_runtime():
     global OPTIONAL_OVERLAY,OPTIONAL_POSITIONS
     src=base.text('evidence-maturity-deep-dive.js')
     start=src.find('const MATERIAL_PRACTICE=[')
@@ -54,7 +54,8 @@ def patch_qa_for_current_optional_contract()->None:
     end=src.find(marker,start)
     need(start>=0 and end>start,'extended material-practice source/normalizer missing')
     block=src[start:end+len(marker)]
-    node=block+r'''\nconst fs=require('fs'),vm=require('vm');
+    node=block+r'''
+const fs=require('fs'),vm=require('vm');
 const hash=s=>{let h=2166136261;for(const ch of String(s||'')){h^=ch.charCodeAt(0);h=Math.imul(h,16777619)}return (h>>>0).toString(16).padStart(8,'0')};
 const window={MM_EVIDENCE_SOURCES:{sources:{},inferred:()=>[],hash},MM_MATERIAL_PRACTICE_EXTENSIONS:{version:'qa',labs:PRACTICE_LABS,scope:'QA runtime'}};
 const sandbox={window,console,URL};window.window=window;vm.createContext(sandbox);
@@ -79,7 +80,7 @@ process.stdout.write(JSON.stringify({items:out,overlay:window.MM_QUESTION_QUALIT
     need(OPTIONAL_OVERLAY.get('optionalChoicesUpgraded')==0,f'optional bridge must be read-only: {OPTIONAL_OVERLAY}')
     need(OPTIONAL_POSITIONS==[10,10,10,10],f'optional key positions not balanced: {OPTIONAL_POSITIONS}')
     need(OPTIONAL_OVERLAY.get('optionalKeyPositions')==[10,10,10,10],f'optional overlay key-position mismatch: {OPTIONAL_OVERLAY}')
-    return items'''
+    return items"""
     replace_section(RUNTIME_QA,'def load_optional_runtime():','def load_final_runtime():',new_optional)
     text=RUNTIME_QA.read_text(encoding='utf-8')
     text=text.replace("title:x.labId,level:x.level||'',focus:x.focus||'',sourceIds:x.sourceIds||[],steps:[]","title:x.title||x.labId,level:x.level||'',focus:x.focus||'',sourceIds:x.sourceIds||[],steps:[]")
