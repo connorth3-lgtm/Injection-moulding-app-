@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from collections import Counter
+from copy import deepcopy
 from pathlib import Path
 import argparse
 import json
@@ -158,6 +159,46 @@ def require_monotonic_floor(candidate: dict, previous: dict) -> None:
         )
 
 
+def expect_failure(label: str, fn) -> None:
+    try:
+        fn()
+    except AssertionError:
+        return
+    raise AssertionError(f"ratchet self-test expected failure: {label}")
+
+
+def self_test() -> None:
+    baseline = load(FLOOR)
+    require_monotonic_floor(deepcopy(baseline), baseline)
+
+    improved = deepcopy(baseline)
+    improved["assessment"]["technicalItemsWithExplicitOutcomeMetadata"] += 1
+    improved["assessment"]["conceptLabelsBelowThreeItems"] -= 1
+    improved["assessment"]["conceptLabelsAtLeastThreeItems"] += 1
+    improved["curriculum"]["lessonsWithAllSevenLessonSpecificSignals"] += 1
+    improved["curriculum"]["lessonsWithZeroSpecificDimensions"] -= 1
+    improved["curriculum"]["dimensionLessonSpecificSignal"]["diagnosticDecision"] += 1
+    improved["curriculum"]["dimensionLessonSpecificSignal"]["outcome"] += 1
+    require_monotonic_floor(improved, baseline)
+
+    regressed = deepcopy(baseline)
+    regressed["curriculum"]["dimensionLessonSpecificSignal"]["mechanism"] -= 1
+    expect_failure("decreasing a semantic signal", lambda: require_monotonic_floor(regressed, baseline))
+
+    sparse_regression = deepcopy(baseline)
+    sparse_regression["assessment"]["conceptLabelsBelowThreeItems"] += 1
+    expect_failure("increasing sparse concept labels", lambda: require_monotonic_floor(sparse_regression, baseline))
+
+    stale_floor = deepcopy(baseline)
+    stale_floor["assessment"]["technicalItemCount"] += 1
+    expect_failure("stale measured-to-floor snapshot", lambda: require_floor_matches_measurement(baseline, stale_floor))
+
+    print(
+        "Assessment/curriculum ratchet self-test passed: equal and improved floors pass; "
+        "semantic regression, sparse-concept regression, and stale floors fail closed."
+    )
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description="Enforce reviewed assessment/curriculum coverage debt ratchet")
     parser.add_argument(
@@ -166,7 +207,16 @@ def main() -> None:
         default=None,
         help="Optional previous reviewed floor from the pull request base branch.",
     )
+    parser.add_argument(
+        "--self-test",
+        action="store_true",
+        help="Exercise equal, improving, stale and regressing floor contracts without repository changes.",
+    )
     args = parser.parse_args()
+
+    if args.self_test:
+        self_test()
+        return
 
     report = load(REPORT)
     floor = load(FLOOR)
