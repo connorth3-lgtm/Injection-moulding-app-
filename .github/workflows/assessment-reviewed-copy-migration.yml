@@ -54,21 +54,24 @@ jobs:
           git diff --cached --check
           git commit -m "fix(assessment): author reviewed keyed wording at source"
 
-      - name: Assessment quality and evidence gates
+      - name: Protected assessment quality contract
         run: |
-          python qa_question_quality_50_pass.py
-          python qa_question_quality_50_pass_runtime.py
+          python qa_audit_consolidation.py
+          python qa_assessment_ux.py
           python qa_question_quality_50_pass_immutable.py
           python qa_question_quality_extreme_runtime_v2.py
-          python qa_assessment_evidence.py
           python qa_assessment_evidence_integrity.py
+
+      - name: Additional reviewed-answer and approval gates
+        run: |
+          python qa_question_quality_50_pass_runtime.py
+          python qa_assessment_evidence.py
           python qa_psychometric_integration.py
 
       - name: App regression gates
         run: |
           python qa_runtime_hardening.py
           python qa_release.py
-          python qa_audit_consolidation.py
 
       - name: Push only the verified source commit
         shell: bash
