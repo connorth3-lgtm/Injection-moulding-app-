@@ -6,6 +6,7 @@ on:
       - audit-followup-2026-09-10
     paths:
       - tools/migrate_reviewed_assessment_copy.py
+      - tools/author_reviewed_core_scenarios.py
       - .github/workflows/assessment-reviewed-copy-migration.yml
   workflow_dispatch:
 
@@ -35,6 +36,9 @@ jobs:
 
       - name: Promote reviewed keyed wording into authored banks
         run: python tools/migrate_reviewed_assessment_copy.py
+
+      - name: Preserve frozen recovery core and author its reviewed scenarios in the assessment layer
+        run: python tools/author_reviewed_core_scenarios.py
 
       - name: Syntax-check changed assessment runtime
         run: |
