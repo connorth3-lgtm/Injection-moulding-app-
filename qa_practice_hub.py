@@ -22,6 +22,15 @@ required_hub = {
     "troubleshooting practice": 'data-mm-hub-action="troubleshooting"',
     "labs practice": 'data-mm-hub-action="labs"',
     "personalisation refresh": "mm:domains-ready",
+    "recommender activity routing": "suggestedActivity",
+    "discriminating scenario route": "discriminating-scenario-practice",
+    "retrieval practice route": "retrieval-practice",
+    "recency refresh route": "timestamped-practice-or-assessment",
+    "transfer scenario route": "different-context-scenario",
+    "guided feedback route": "guided-retrieval-and-feedback",
+    "different-format route": "different-practice-format",
+    "discriminating scenario CTA": "Start discriminating scenario →",
+    "retrieval practice CTA": "Start retrieval practice →",
 }
 required_css = {
     "mobile practice scope": ".mm-practice-hub",
@@ -39,6 +48,16 @@ for label, needle in required_css.items():
     if needle not in css:
         failures.append(f"Practice CSS missing: {label}")
 
+# A repeated-miss recommendation explicitly asks for a discriminating scenario.
+# Keep that recommendation on the scenario lane rather than silently substituting
+# a diagnostic lab whose interaction contract is different.
+if "['discriminating-scenario-practice','retrieval-practice','timestamped-practice-or-assessment','different-context-scenario'].includes(suggested))return 'scenario-detail';" not in hub:
+    failures.append("Practice hub no longer maps scenario-oriented learner-model recommendations to scenario-detail")
+if "suggested==='guided-retrieval-and-feedback'||rec?.actionType==='stabilize-regression'" not in hub:
+    failures.append("Practice hub no longer maps guided feedback/regression recommendations to diagnostic labs")
+if "suggested==='different-practice-format'||rec?.actionType==='evidence-confirmation'" not in hub:
+    failures.append("Practice hub no longer maps evidence-confirmation recommendations to varied labs")
+
 # Guard against accidentally turning Practice into an authority or assessment lane.
 for banned in ("validated production recipe", "automatic machine setting", "machine-control authority"):
     if banned.lower() in hub.lower():
@@ -52,6 +71,7 @@ if failures:
 
 print("PRACTICE HUB QA: PASS")
 print(" - learner-guided recommendation wiring present")
+print(" - recommender activity type and CTA stay aligned")
 print(" - task/time-oriented Practice choices present")
 print(" - mobile explanations and CTAs remain visible")
 print(" - assessments remain a separate lane")
