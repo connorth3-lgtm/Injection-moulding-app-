@@ -3,6 +3,17 @@ const assert=require('node:assert/strict');
 const fs=require('node:fs');
 const vm=require('node:vm');
 
+const runtimeSource=fs.readFileSync('data-integration-runtime.js','utf8');
+for(const [token,message] of [
+  ["const CONTEXT_KEYS=['machine','mould','materialGrade','job']",'canonical runtime must own the full baseline context identity'],
+  ['function baselineCompatibility(dataset={},baseline={})','canonical runtime must own baseline compatibility'],
+  ['assertBaselineCompatible(record,baseline);','canonical comparison must fail closed before drift analysis'],
+  ["db.transaction(['datasets','shots','baselines','caseLinks'],'readwrite')",'canonical deletion must atomically include troubleshooting links'],
+  ['row=>row?.datasetId===datasetId','canonical deletion must remove dataset-linked troubleshooting records'],
+  ['__mmCanonicalProcessDataIntegrity:VERSION','canonical runtime must advertise native integrity ownership'],
+  ['baselineCompatibility,contextCompatibility,assertBaselineCompatible','canonical integrity helpers must be exposed through the process-data API'],
+])assert(runtimeSource.includes(token),message);
+
 function immediate(fn){setImmediate(fn)}
 
 const tables={
@@ -80,6 +91,18 @@ vm.runInThisContext(fs.readFileSync('src/domains/process/process-data-integrity.
 const integrity=window.MM_PROCESS_DATA_INTEGRITY;
 assert(integrity,'integrity API not installed');
 
+const canonicalDelete=async()=>true;
+const canonicalCompare=async()=>({canonical:true});
+const canonicalApi={
+  __mmCanonicalProcessDataIntegrity:'2026.09.10.3',
+  storage:{deleteDataset:canonicalDelete},
+  intelligence:{compareToBaseline:canonicalCompare},
+};
+assert.equal(integrity.harden(canonicalApi),true,'compatibility sidecar should accept a canonical runtime');
+assert.equal(canonicalApi.storage.deleteDataset,canonicalDelete,'compatibility sidecar must not replace canonical deletion');
+assert.equal(canonicalApi.intelligence.compareToBaseline,canonicalCompare,'compatibility sidecar must not wrap canonical comparison');
+assert.equal(canonicalApi.__mmProcessDataIntegrity,integrity.version,'compatibility sidecar should record successful canonical handoff');
+
 function entity(machine='M1',mould='T1',materialGrade='PP-A',job='JOB-1'){return {machine,mould,materialGrade,job}}
 
 assert.deepEqual(integrity.contextKeys,['machine','mould','materialGrade','job'],'cross-dataset gate must include job context');
@@ -121,5 +144,5 @@ tables.baselines.set('b-same',{id:'b-same',datasetId:'d-current',entities:{},sum
   assert.equal(tables.baselines.has('baseline-keep'),true,'unrelated baseline must remain');
   assert.equal(tables.caseLinks.has('case-keep'),true,'unrelated troubleshooting reference must remain');
 
-  console.log('Process-data integrity QA passed: machine/mould/material/job baseline gate and atomic dataset/case-link cascade verified.');
+  console.log('Process-data integrity QA passed: canonical runtime ownership, fallback compatibility, context gating, and atomic dataset/case-link cascade verified.');
 })().catch(err=>{console.error(err);process.exitCode=1});

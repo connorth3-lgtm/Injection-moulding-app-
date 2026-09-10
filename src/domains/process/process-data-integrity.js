@@ -1,9 +1,9 @@
-/* MouldMaster process-data integrity hardening — 2026.09.10.2 */
+/* MouldMaster process-data integrity compatibility hardening — 2026.09.10.3 */
 (function(){
 'use strict';
 if(window.MM_PROCESS_DATA_INTEGRITY)return;
 
-const VERSION='2026.09.10.2';
+const VERSION='2026.09.10.3';
 const DB_NAME='mouldmaster-process-data-v1';
 const DB_VERSION=1;
 const CONTEXT_KEYS=['machine','mould','materialGrade','job'];
@@ -79,6 +79,7 @@ async function guardedCompare(original,datasetId,baselineId,args,receiver){
 function harden(api=window.MM_CONNECTED_PROCESS_DATA){
   if(!api?.storage||!api?.intelligence)return false;
   if(api.__mmProcessDataIntegrity===VERSION)return true;
+  if(api.__mmCanonicalProcessDataIntegrity){api.__mmProcessDataIntegrity=VERSION;return true}
   const originalCompare=api.intelligence.compareToBaseline;
   if(typeof originalCompare!=='function')return false;
   api.intelligence.compareToBaseline=function(datasetId,baselineId){return guardedCompare(originalCompare,datasetId,baselineId,arguments,this)};
@@ -106,6 +107,7 @@ function captureUi(event){
   if(analyze?.dataset?.piAnalyze){activeDatasetId=analyze.dataset.piAnalyze;setTimeout(queueOptionFilter,0)}
   const del=event.target?.closest?.('[data-di-delete]');
   if(!del?.dataset?.diDelete)return;
+  if(window.MM_CONNECTED_PROCESS_DATA?.__mmCanonicalProcessDataIntegrity)return;
   event.preventDefault();event.stopImmediatePropagation();
   if(!window.confirm?.('Delete this local dataset, its shots, baselines, and linked troubleshooting references?'))return;
   deleteDatasetCascade(del.dataset.diDelete).then(()=>{
