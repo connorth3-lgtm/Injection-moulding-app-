@@ -95,12 +95,14 @@ finalizer=text('app-shell-finalize.js')
 for dep in ['MM_APP_SHELL','MM_LEARNING_EXPERIENCE','MM_CURRICULUM_INTEGRATION','MM_SPECIALIST_CURRICULUM','MM_MOULD_MASTER_WORKSPACE']:
     need(dep in finalizer,f'finalizer dependency guard missing: {dep}')
 need('MM_APP_SHELL.finalize()' in finalizer,'finalizer does not activate canonical shell')
-need("MM_APP_SHELL_FINALIZED='2026.08.26.4'" in finalizer,'finalizer marker is stale')
+need('window.MM_APP_SHELL_FINALIZED=VERSION' in finalizer,'finalizer marker must derive from the finalizer version')
+need("root.querySelector('[data-mm-role=\"explore-learning\"]')" in finalizer,'Home simplification must target the semantic learning role')
+need('actions.find(button=>/Explore your learning/i.test' not in finalizer,'Home behavior must not depend on learner-visible learning-copy text')
 need('new MutationObserver' not in finalizer,'finalizer reintroduced redundant document/view MutationObserver ownership')
 
 browser=text('qa/mobile-viewport.spec.js')
 for marker in [
-    "window.MM_APP_SHELL_FINALIZED==='2026.08.26.4'",
+    "window.MM_APP_SHELL_FINALIZED==='2026.09.10.3'",
     "!document.getElementById('mmBootstrap')",
     "Home is lean, XP-free, clear of duplicate reference launchers, and Practice owns troubleshooting",
     "Primary mobile navigation and the reduced More tools are keyboard reachable",

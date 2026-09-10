@@ -2,7 +2,7 @@
 (function(){
 'use strict';
 
-const VERSION='2026.08.26.1';
+const VERSION='2026.09.10.3';
 if(typeof renderLesson!=='function'||typeof renderDashboard!=='function'||typeof currentLesson!=='function'){
   throw new Error('MouldMaster core learning functions must load before learning-experience.js');
 }
@@ -226,25 +226,25 @@ function decorateDashboard(){
   const courseHead=[...root.querySelectorAll('.section-head')].find(x=>/Continue your path/i.test(x.textContent||''));
   if(courseHead){courseHead.classList.add('mm-home-course-head');courseHead.nextElementSibling?.classList.add('mm-home-course-grid')}
   root.insertAdjacentHTML('afterbegin',`
-    <section class="mm-today-focus" aria-label="Today's learning focus">
+    <section class="mm-today-focus" data-mm-role="today-focus" aria-label="Today's learning focus">
       <div>
         <span class="eyebrow">Today’s focus</span>
         <h2>${esc(c.lesson.title)}</h2>
         <p>Track ${c.course.id}: ${esc(c.course.name)} · Lesson ${c.position+1}/${c.course.lessonIds.length}. Pick up exactly where you left off.</p>
         <div class="mm-today-meta"><span class="pill">${c.lesson.duration} min lesson</span><span class="pill">${user.dailyMinutes||15} min daily goal</span><span class="pill">${overall}% overall</span></div>
-        <div class="mm-home-utility" aria-label="Home shortcuts"><button class="ghost" type="button" data-mm-onclick="switchView('scenarios')">◎ Daily practice</button><button class="ghost" type="button" data-mm-onclick="switchView('profile')">☆ Saved lessons</button></div>
+        <div class="mm-home-utility" aria-label="Home shortcuts"><button class="ghost" type="button" data-mm-role="daily-practice" data-mm-onclick="switchView('scenarios')">◎ Daily practice</button><button class="ghost" type="button" data-mm-role="saved-lessons" data-mm-onclick="switchView('profile')">☆ Saved lessons</button></div>
       </div>
-      <button class="primary" type="button" data-mm-onclick="switchView('lesson')">Continue lesson →</button>
+      <button class="primary" type="button" data-mm-role="continue-lesson" data-mm-onclick="switchView('lesson')">Continue lesson →</button>
     </section>
-    <section class="mm-home-task-hub" aria-label="MouldMaster quick actions">
+    <section class="mm-home-task-hub" data-mm-role="task-hub" aria-label="MouldMaster quick actions">
       <span class="eyebrow">What do you need help with?</span>
       <h2>Choose your next task</h2>
       <p>Go straight to diagnosis, process evidence or practice without searching through the course catalogue.</p>
       <div class="mm-home-actions">
-        <button class="mm-home-action mm-home-action-primary" type="button" data-mm-onclick="mmOpenMouldMaster()"><span class="mm-home-action-icon">◇</span><span><strong>Diagnose a moulding problem</strong><small>Mould Master · start from the defect, rank mechanisms and check evidence.</small></span></button>
-        <button class="mm-home-action" type="button" data-mm-onclick="mmOpenDataDiagnosis()"><span class="mm-home-action-icon">⌁</span><span><strong>Analyse process data</strong><small>Read baseline, fault and recovery trends before changing settings.</small></span></button>
-        <button class="mm-home-action" type="button" data-mm-onclick="switchView('scenarios')"><span class="mm-home-action-icon">◎</span><span><strong>Practice a scenario</strong><small>Build shop-floor judgement with evidence-first decisions.</small></span></button>
-        <button class="mm-home-action" type="button" data-mm-onclick="switchView('path')"><span class="mm-home-action-icon">▦</span><span><strong>Explore your learning</strong><small>Open the 120-lesson pathway, progress and linked practice.</small></span></button>
+        <button class="mm-home-action mm-home-action-primary" type="button" data-mm-role="diagnose-defect" data-mm-onclick="mmOpenMouldMaster()"><span class="mm-home-action-icon">◇</span><span><strong>Diagnose a moulding problem</strong><small>Mould Master · start from the defect, rank mechanisms and check evidence.</small></span></button>
+        <button class="mm-home-action" type="button" data-mm-role="process-data" data-mm-onclick="mmOpenDataDiagnosis()"><span class="mm-home-action-icon">⌁</span><span><strong>Analyse process data</strong><small>Read baseline, fault and recovery trends before changing settings.</small></span></button>
+        <button class="mm-home-action" type="button" data-mm-role="practice-scenario" data-mm-onclick="switchView('scenarios')"><span class="mm-home-action-icon">◎</span><span><strong>Practice a scenario</strong><small>Build shop-floor judgement with evidence-first decisions.</small></span></button>
+        <button class="mm-home-action" type="button" data-mm-role="explore-learning" data-mm-onclick="switchView('path')"><span class="mm-home-action-icon">▦</span><span><strong>Explore your learning</strong><small>Open the 120-lesson pathway, progress and linked practice.</small></span></button>
       </div>
     </section>`);
 }
