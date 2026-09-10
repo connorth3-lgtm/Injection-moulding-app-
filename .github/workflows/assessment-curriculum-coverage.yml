@@ -1,0 +1,75 @@
+name: Assessment and Curriculum Coverage Audit
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'MouldMaster_Core_App.html'
+      - 'assessment-*.js'
+      - 'lesson-*.js'
+      - 'curriculum-*.js'
+      - 'specialist-*.js'
+      - 'qa_assessment_curriculum_coverage.py'
+      - 'qa_assessment_curriculum_ratchet.py'
+      - 'qa/assessment-curriculum-coverage-floor.json'
+      - '.github/workflows/assessment-curriculum-coverage.yml'
+  pull_request:
+    branches: [main]
+    paths:
+      - 'MouldMaster_Core_App.html'
+      - 'assessment-*.js'
+      - 'lesson-*.js'
+      - 'curriculum-*.js'
+      - 'specialist-*.js'
+      - 'qa_assessment_curriculum_coverage.py'
+      - 'qa_assessment_curriculum_ratchet.py'
+      - 'qa/assessment-curriculum-coverage-floor.json'
+      - '.github/workflows/assessment-curriculum-coverage.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: assessment-curriculum-coverage-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  coverage-audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: '3.12'
+      - name: Quantify assessment breadth and curriculum semantic coverage
+        run: python qa_assessment_curriculum_coverage.py
+      - name: Exercise fail-closed ratchet contract
+        run: python qa_assessment_curriculum_ratchet.py --self-test
+      - name: Prepare base coverage floor for monotonic comparison
+        if: github.event_name == 'pull_request'
+        env:
+          BASE_REF: ${{ github.base_ref }}
+        run: |
+          git fetch --no-tags --depth=1 origin "$BASE_REF"
+          if git cat-file -e "origin/$BASE_REF:qa/assessment-curriculum-coverage-floor.json" 2>/dev/null; then
+            git show "origin/$BASE_REF:qa/assessment-curriculum-coverage-floor.json" > /tmp/assessment-curriculum-base-floor.json
+          fi
+      - name: Enforce quantified coverage debt ratchet
+        run: |
+          if [ -f /tmp/assessment-curriculum-base-floor.json ]; then
+            python qa_assessment_curriculum_ratchet.py --base-floor /tmp/assessment-curriculum-base-floor.json
+          else
+            python qa_assessment_curriculum_ratchet.py
+          fi
+      - name: Upload coverage report
+        uses: actions/upload-artifact@v7
+        with:
+          name: assessment-curriculum-coverage
+          path: assessment-curriculum-coverage-report.json
+          if-no-files-found: error
+          retention-days: 30
+      - name: Preserve human-review boundary
+        run: |
+          echo 'Coverage audit is automated evidence only.'
+          echo 'Assessment outcome mapping and curriculum SME semantic approval remain human HOLD states.'
