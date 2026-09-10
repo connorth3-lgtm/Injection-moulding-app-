@@ -1,5 +1,5 @@
-const CACHE_VERSION='2026.09.10.7';
-const CACHE_REVISION='architecture-consolidation-r1-20260911';
+const CACHE_VERSION='2026.09.10.8';
+const CACHE_REVISION='architecture-consolidation-r2-20260911';
 const STATIC_CACHE=`mouldmaster-static-${CACHE_VERSION}-${CACHE_REVISION}`;
 
 // Release assets are grouped for readability, but activation is atomic across both
@@ -124,7 +124,6 @@ const OPTIONAL=[
   './lesson-deep-authoring-v2.js',
   './assessment-evidence-approval.js',
   './assessment-psychometric-approval.js',
-  './app-shell-registry.js',
   './assessment-multimodal.js',
   './real-measured-data-assessment.js',
   './process-data-deep-dive-machine.js',
