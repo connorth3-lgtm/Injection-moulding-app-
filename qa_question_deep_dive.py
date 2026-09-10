@@ -18,11 +18,11 @@ tech=text(PATCH); regional=text(REGIONAL)
 for marker in [
     "technicalItemsRewritten:30","scenarioItemsRewritten:16","regionalAnswerChanges:0",
     "observation:true","decision:true","discrimination:true","verification:true","insufficientEvidence:true",
-    "MFR is measured under specified test conditions",
-    "Part mass reaches a repeatable plateau",
-    "Machine/nozzle and local cavity pressure are measurements at different locations",
-    "factor effect may be confounded with time-related drift",
-    "There is insufficient evidence for a defensible quantitative pressure-loss calculation",
+    "MFR does not fully describe moulding rheology or mouldability",
+    "A repeatable part-mass plateau as hold time increases",
+    "Treat machine/nozzle and cavity pressure as different-location signals",
+    "Run order may confound the factor with time drift; randomise or block",
+    "Insufficient evidence until location, units and timing are verified",
     "https://doi.org/10.1007/s13367-023-00081-y",
     "https://doi.org/10.1515/ipp-2022-4281",
 ]: need(marker in tech,f'technical deep-dive marker missing: {marker}')
