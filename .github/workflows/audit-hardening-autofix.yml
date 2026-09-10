@@ -9,6 +9,7 @@ on:
       - tools/apply_audit_hardening.py
       - tools/apply_runtime_analytics_hardening.py
       - tools/finalize_assessment_hardening_v2.py
+      - tools/finalize_shell_desktop_hardening.py
       - .github/workflows/audit-hardening-autofix.yml
 
 permissions:
@@ -41,6 +42,9 @@ jobs:
       - name: Freeze exact audited learner-visible assessment bank
         run: python tools/finalize_assessment_hardening_v2.py
 
+      - name: Apply shell desktop and learner-scoping hardening
+        run: python tools/finalize_shell_desktop_hardening.py
+
       - name: Verify generated packs and diff hygiene
         run: |
           python tools/build_runtime_packs.py --check
@@ -57,5 +61,5 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add -A
-          git commit -m "fix(assessment): freeze exact reviewed learner-visible bank"
+          git commit -m "fix(shell): enforce evidence truth runtime ownership and desktop parity"
           git push origin HEAD:audit-hardening-2026-09-10
