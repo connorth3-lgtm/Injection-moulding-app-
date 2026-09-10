@@ -6,7 +6,7 @@
     "regionalSafetyItemCount": 27,
     "technicalItemsWithExplicitOutcomeMetadata": 0,
     "conceptLabelsBelowThreeItems": 15,
-    "conceptLabelsAtThreeToFiveItems": 3
+    "conceptLabelsAtLeastThreeItems": 3
   },
   "curriculum": {
     "totalLessons": 120,
@@ -22,5 +22,5 @@
     },
     "lessonsWithZeroSpecificDimensions": 99
   },
-  "policy": "This file records the first quantified coverage-debt floor. Future changes must not reduce assessment inventory/outcome mapping or lesson-specific semantic signals, increase sparse concept labels, increase zero-signal lessons, remove canonical lessons, or remove the derived depth layer. Improve the floor deliberately when reviewed content improves; automated counts are not SME approval."
+  "policy": "This file records the first quantified coverage-debt floor. Future changes must not reduce assessment inventory/outcome mapping or lesson-specific semantic signals, increase sparse concept labels, increase zero-signal lessons, remove canonical lessons, or remove the derived depth layer. Assessment proxy breadth is monotonic at three-or-more items so growing a concept beyond five cannot be misclassified as regression. Improve the floor deliberately when reviewed content improves; automated counts are not SME approval."
 }
