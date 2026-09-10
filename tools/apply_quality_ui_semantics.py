@@ -27,15 +27,15 @@ replace_once('app-shell-finalize.js', "const VERSION='2026.09.10.1';", "const VE
 replace_once('app-shell-finalize.js', "const learningShortcut=actions.find(button=>/Explore your learning/i.test(button.textContent||''));", "const learningShortcut=root.querySelector('[data-mm-role=\"explore-learning\"]');")
 replace_once('app-shell-finalize.js', "window.MM_APP_SHELL_FINALIZED='2026.08.26.4';", "window.MM_APP_SHELL_FINALIZED=VERSION;")
 
-# QA asserts semantic ownership and removes the stale shell-version contract.
+# QA asserts semantic ownership and removes stale version contracts.
 replace_once('qa_learning_experience.py', '"const VERSION=\'2026.08.26.1\'",', '"const VERSION=\'2026.09.10.3\'",')
 needle="    'mm-home-task-hub',\n"
 roles="    'mm-home-task-hub',\n    'data-mm-role=\"today-focus\"',\n    'data-mm-role=\"task-hub\"',\n    'data-mm-role=\"diagnose-defect\"',\n    'data-mm-role=\"process-data\"',\n    'data-mm-role=\"practice-scenario\"',\n    'data-mm-role=\"explore-learning\"',\n"
 replace_once('qa_learning_experience.py', needle, roles)
-
 replace_once('qa_app_shell_registry.py', "need(\"MM_APP_SHELL_FINALIZED='2026.08.26.4'\" in finalizer,'finalizer marker is stale')", "need('window.MM_APP_SHELL_FINALIZED=VERSION' in finalizer,'finalizer marker must derive from the finalizer version')\nneed(\"root.querySelector('[data-mm-role=\\\"explore-learning\\\"]')\" in finalizer,'Home simplification must target the semantic learning role')\nneed('actions.find(button=>/Explore your learning/i.test' not in finalizer,'Home behavior must not depend on learner-visible learning-copy text')")
 replace_once('qa_app_shell_registry.py', '"window.MM_APP_SHELL_FINALIZED===\'2026.08.26.4\'",', '"window.MM_APP_SHELL_FINALIZED===\'2026.09.10.3\'",')
 replace_once('qa/mobile-viewport.spec.js', "window.MM_APP_SHELL_FINALIZED==='2026.08.26.4'", "window.MM_APP_SHELL_FINALIZED==='2026.09.10.3'")
+replace_once('qa_release.py', 'WEB_RELEASE = "2026.09.10.2"', 'WEB_RELEASE = "2026.09.10.3"')
 
 version_path=ROOT/'version.json'
 version=json.loads(version_path.read_text(encoding='utf-8'))
