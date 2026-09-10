@@ -21,6 +21,7 @@
     "./src/domains/process/evidence-granularity.js",
     "./src/domains/learning/content-intelligence.js",
     "./src/domains/process/process-statistics.js",
+    "./src/domains/process/process-data-integrity.js",
     "./src/domains/shell/accessibility-loader.js",
     "./src/domains/shell/product-areas.js"
   ],
