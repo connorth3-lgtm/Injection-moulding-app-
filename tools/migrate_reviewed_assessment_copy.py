@@ -16,6 +16,9 @@ CUE=ROOT/'assessment-answer-cue-fix.js'
 QUALITY=ROOT/'assessment-quality-suite.js'
 BRIDGE=ROOT/'assessment-stable-review-bridge.js'
 APPROVAL=ROOT/'assessment-evidence-approval.js'
+# Search in reverse runtime-authoring precedence. The first exact literal found is the
+# last layer capable of contributing the assembled pre-bridge learner-visible answer.
+AUTHORING_PRECEDENCE=[QUALITY,CUE,DEEP,TRAINING,CORE]
 
 
 def need(ok:bool,msg:str)->None:
@@ -82,33 +85,36 @@ def review_map()->dict[str,str]:
 def item_map(payload:dict)->dict[str,dict]:return {x['id']:x for x in payload['items']}
 
 
+def discover_source(item_id:str,old:str)->Path:
+    hits=[]
+    for path in AUTHORING_PRECEDENCE:
+        count=read(path).count(old)
+        if count:hits.append((path,count))
+    need(hits,f'{item_id}: assembled keyed text not found in any authoring layer: {old!r}')
+    path,count=hits[0]
+    need(count==1,f'{item_id}: final authoring layer {path.name} contains keyed text {count} times; refusing ambiguous replacement: {old!r}')
+    return path
+
+
 def replace_answer(path:Path,old:str,new:str,item_id:str)->bool:
     if old==new:return False
     src=read(path);count=src.count(old)
-    need(count>=1,f'{item_id}: authored keyed text not found in {path.name}: {old!r}')
+    need(count==1,f'{item_id}: expected one keyed-text occurrence in {path.name}, found {count}: {old!r}')
     write(path,src.replace(old,new,1));return True
 
 
-def authored_source(item_id:str)->Path:
-    if item_id=='tech:Advanced:7':return CUE
-    if item_id.startswith('tech:'):return DEEP
-    if item_id.startswith('reg:'):return CUE
-    if item_id.startswith('scenario:'):
-        n=int(item_id.split(':')[1])
-        if n<=8:return DEEP
-        if n<=16:return TRAINING
-        return QUALITY
-    raise SystemExit(f'unsupported reviewed item id: {item_id}')
-
-
-def migrate_sources(contract:dict[str,str],authored:dict[str,dict])->dict[str,int]:
-    changed={p.name:0 for p in [CORE,TRAINING,DEEP,CUE,QUALITY]}
+def migrate_sources(contract:dict[str,str],authored:dict[str,dict])->tuple[dict[str,int],dict[str,str]]:
+    changed={p.name:0 for p in AUTHORING_PRECEDENCE}
+    sources={}
     for item_id,replacement in contract.items():
         row=authored.get(item_id);need(row is not None,f'missing assembled item: {item_id}')
         key=int(row['correct']);opts=row.get('options') or [];need(len(opts)==4 and 0<=key<4,f'invalid authored item: {item_id}')
-        old=str(opts[key]);path=authored_source(item_id)
+        old=str(opts[key])
+        if old==replacement:
+            sources[item_id]='already-authored';continue
+        path=discover_source(item_id,old);sources[item_id]=path.name
         if replace_answer(path,old,replacement,item_id):changed[path.name]+=1
-    return changed
+    return changed,sources
 
 
 def make_bridge_validation_only()->None:
@@ -157,17 +163,17 @@ def main()->None:
     contract=review_map()
     baseline=assembled(True);baseline_items=baseline['items']
     need(baseline.get('bridge',{}).get('strictAnswerBalance',{}).get('applied')==94,'baseline bridge did not apply 94 reviewed answers')
-    authored=item_map(assembled(False));changes=migrate_sources(contract,authored)
+    authored=item_map(assembled(False));changes,sources=migrate_sources(contract,authored)
     migrated_authored=item_map(assembled(False))
     for item_id,replacement in contract.items():
-        row=migrated_authored[item_id];need(row['options'][row['correct']]==replacement,f'{item_id}: reviewed answer was not authored into its source bank')
+        row=migrated_authored[item_id];need(row['options'][row['correct']]==replacement,f'{item_id}: reviewed answer was not authored into the assembled source bank')
     make_bridge_validation_only();qa_changed=patch_qa_contract()
     after=assembled(True)
     need(after.get('bridge',{}).get('strictAnswerBalance',{}).get('validated')==94,'validation-only bridge did not validate 94 reviewed answers')
     need(after.get('bridge',{}).get('strictAnswerBalance',{}).get('runtimeTextMutations')==0,'validation-only bridge does not declare zero runtime text mutation')
     need(after['items']==baseline_items,'learner-visible formal assessment output changed during source migration')
-    source_paths=[p for p in [TRAINING,DEEP,CUE,QUALITY,BRIDGE] if changes.get(p.name,0)>0 or p==BRIDGE]
+    source_paths=[p for p in AUTHORING_PRECEDENCE if changes.get(p.name,0)>0]+[BRIDGE]
     pins=update_approval_hashes(source_paths)
-    print(json.dumps({'reviewedAnswers':len(contract),'sourceEdits':changes,'qaContractFiles':qa_changed,'updatedApprovalPins':pins,'formalItems':len(after['items']),'runtimeTextMutations':0},indent=2))
+    print(json.dumps({'reviewedAnswers':len(contract),'sourceEdits':changes,'sourceLocations':sources,'qaContractFiles':qa_changed,'updatedApprovalPins':pins,'formalItems':len(after['items']),'runtimeTextMutations':0},indent=2))
 
 if __name__=='__main__':main()
