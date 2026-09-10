@@ -1,14 +1,15 @@
-/* MouldMaster connected process-data runtime — 2026.09.02.1 */
+/* MouldMaster connected process-data runtime — 2026.09.10.3 */
 (function(){
 'use strict';
 
-const VERSION='2026.09.02.1';
+const VERSION='2026.09.10.3';
 const DB_NAME='mouldmaster-process-data-v1';
 const DB_VERSION=1;
 const MAX_ROWS=50000;
 const ROLE_OPTIONS=['unresolved','actual','setpoint','command','state','quality','derived','structural'];
 const SAMPLING_OPTIONS=['unknown','per-cycle','trace-sample','event','batch'];
 const BLOCKING_SEMANTIC_KINDS=new Set(['unresolved']);
+const CONTEXT_KEYS=['machine','mould','materialGrade','job'];
 let semanticRegistry=null;
 let currentManifest=null;
 let preparedSession=null;
@@ -30,6 +31,28 @@ function roleToKind(role){
   return ({actual:'direct-measurement',setpoint:'command-signal',command:'command-signal',state:'state-signal',quality:'quality-measurement',derived:'derived-feature',structural:'structural',unresolved:'unresolved'})[role]||'unresolved';
 }
 function format(n,d=3){return Number.isFinite(Number(n))?Number(n).toLocaleString(undefined,{maximumFractionDigits:d}):'—'}
+function normContext(value){return String(value??'').trim().toLowerCase()}
+function contextCompatibility(left={},right={}){
+  const missing=[],mismatched=[];
+  for(const key of CONTEXT_KEYS){
+    const a=normContext(left?.[key]),b=normContext(right?.[key]);
+    if(!a||!b){missing.push(key);continue}
+    if(a!==b)mismatched.push(key);
+  }
+  return {compatible:missing.length===0&&mismatched.length===0,missing,mismatched};
+}
+function baselineCompatibility(dataset={},baseline={}){
+  if(dataset?.id&&baseline?.datasetId===dataset.id)return {compatible:true,sameDataset:true,missing:[],mismatched:[]};
+  return {sameDataset:false,...contextCompatibility(dataset?.entities||{},baseline?.entities||{})};
+}
+function assertBaselineCompatible(dataset,baseline){
+  const result=baselineCompatibility(dataset,baseline);
+  if(result.compatible)return result;
+  const detail=[];
+  if(result.missing.length)detail.push(`missing ${result.missing.join(', ')}`);
+  if(result.mismatched.length)detail.push(`different ${result.mismatched.join(', ')}`);
+  throw new Error(`Baseline context mismatch: cross-dataset comparisons require the same machine, mould, material grade, and job (${detail.join('; ')}).`);
+}
 
 async function loadJson(url){
   const r=await fetch(url,{cache:'no-store',credentials:'same-origin'});
@@ -85,17 +108,24 @@ async function rowsForDataset(datasetId){
     r.onerror=()=>{reject(r.error);db.close()}
   })
 }
+function deleteCursorMatches(request,match){
+  return new Promise((resolve,reject)=>{
+    request.onsuccess=()=>{const cursor=request.result;if(!cursor){resolve();return}if(match(cursor.value))cursor.delete();cursor.continue()};
+    request.onerror=()=>reject(request.error||new Error('IndexedDB cursor failed'));
+  });
+}
 async function deleteDataset(id){
-  const db=await openDb(),tx=db.transaction(['datasets','shots','baselines'],'readwrite');
-  tx.objectStore('datasets').delete(id);
-  const shots=tx.objectStore('shots').index('datasetId'),range=IDBKeyRange.only(id);
-  await new Promise((resolve,reject)=>{
-    const r=shots.openCursor(range);r.onsuccess=()=>{const c=r.result;if(!c){resolve();return}c.delete();c.continue()};r.onerror=()=>reject(r.error)
-  });
-  await new Promise((resolve,reject)=>{
-    const r=tx.objectStore('baselines').openCursor();r.onsuccess=()=>{const c=r.result;if(!c){resolve();return}if(c.value.datasetId===id)c.delete();c.continue()};r.onerror=()=>reject(r.error)
-  });
-  await txDone(tx);db.close();return true;
+  const datasetId=String(id||'');if(!datasetId)throw new Error('Dataset id is required');
+  const db=await openDb();
+  try{
+    const tx=db.transaction(['datasets','shots','baselines','caseLinks'],'readwrite');
+    tx.objectStore('datasets').delete(datasetId);
+    const shots=tx.objectStore('shots').index('datasetId');
+    await deleteCursorMatches(shots.openCursor(IDBKeyRange.only(datasetId)),()=>true);
+    await deleteCursorMatches(tx.objectStore('baselines').openCursor(),row=>row?.datasetId===datasetId);
+    await deleteCursorMatches(tx.objectStore('caseLinks').openCursor(),row=>row?.datasetId===datasetId);
+    await txDone(tx);return true;
+  }finally{db.close()}
 }
 
 function knownDefinition(column){
@@ -236,6 +266,7 @@ async function createBaseline(datasetId,label='Known-good local baseline'){
 async function compareToBaseline(datasetId,baselineId){
   const [record,baseline]=await Promise.all([get('datasets',datasetId),get('baselines',baselineId)]);
   if(!record||!baseline)throw new Error('Dataset or baseline not found');
+  assertBaselineCompatible(record,baseline);
   if(!record.quality?.analysisReady)throw new Error('Dataset has unresolved semantic or sequence blockers');
   const rows=await rowsForDataset(datasetId),cur=summarizeRows(rows,record.semantics),signals=[];
   for(const [key,b] of Object.entries(baseline.summary||{})){
@@ -331,7 +362,7 @@ async function renderDatasetLibrary(){
   h.innerHTML=`<div data-di-library-root><div class="di-actions" style="margin-bottom:12px"><button class="ghost" data-di-intake>← Process-data intake</button><button class="ghost" data-di-back>Data diagnosis</button></div><div class="card di-hero"><div class="eyebrow">Local process-data store</div><h2>Dataset library</h2><p>Prepared datasets are stored in IndexedDB on this device. Analysis-blocked datasets remain preserved but cannot be used for baseline or drift calculations until semantics are resolved and re-saved.</p></div><section class="card di-panel" style="margin-top:12px"><div class="di-dataset-list">${datasets.length?datasets.map(d=>`<div class="di-dataset"><b>${esc(d.datasetMeta?.source_label||d.id)}</b><div class="muted">${d.rowCount} rows · ${d.quality?.analysisReady?'analysis-ready':'blocked'} · ${esc(d.entities?.machine||'machine not linked')} · ${esc(d.entities?.mould||'mould not linked')}</div><div class="di-actions" style="margin-top:7px">${d.quality?.analysisReady?`<button class="secondary" data-di-baseline="${esc(d.id)}">Create baseline</button>`:''}<button class="ghost" data-di-delete="${esc(d.id)}">Delete local dataset</button></div></div>`).join(''):'<div class="di-empty">No locally stored datasets yet.</div>'}</div></section></div>`;
   const root=h.querySelector('[data-di-library-root]');root.querySelector('[data-di-intake]')?.addEventListener('click',()=>renderAdvancedIntake(preparedSession));root.querySelector('[data-di-back]')?.addEventListener('click',()=>window.MM_PROCESS_DATA_DIAGNOSTICS?.open?.());
   root.querySelectorAll('[data-di-baseline]').forEach(b=>b.addEventListener('click',async()=>{try{await createBaseline(b.dataset.diBaseline);window.toast?.('Local baseline created')}catch(err){window.toast?.(err?.message||String(err))}}));
-  root.querySelectorAll('[data-di-delete]').forEach(b=>b.addEventListener('click',async()=>{if(!confirm('Delete this local dataset and its local shots/baselines?'))return;await deleteDataset(b.dataset.diDelete);renderDatasetLibrary()}))
+  root.querySelectorAll('[data-di-delete]').forEach(b=>b.addEventListener('click',async()=>{if(!confirm('Delete this local dataset, its shots, baselines, and linked troubleshooting references?'))return;await deleteDataset(b.dataset.diDelete);renderDatasetLibrary()}))
 }
 function openAdvancedIntake(){window.MM_PROCESS_DATA_DIAGNOSTICS?.open?.();requestAnimationFrame(()=>renderAdvancedIntake(preparedSession))}
 
@@ -402,12 +433,13 @@ async function install(){
 
 window.MM_CONNECTED_PROCESS_DATA={
   version:VERSION,
+  __mmCanonicalProcessDataIntegrity:VERSION,
   loadPublicMetadata,
   semanticRegistry:()=>semanticRegistry,
   currentManifest:()=>currentManifest,
   enrichPrepared,
   storage:{savePrepared,listDatasets,rowsForDataset,deleteDataset},
-  intelligence:{createBaseline,compareToBaseline,compareWindows,summarizeRows},
+  intelligence:{createBaseline,compareToBaseline,baselineCompatibility,contextCompatibility,assertBaselineCompatible,compareWindows,summarizeRows},
   cases:{linkCase,caseLink,similarCases},
   scope:'Local-first connected process-data infrastructure. It distinguishes privacy preparation from semantic readiness, stores prepared site data in IndexedDB, provides site-local statistical evidence comparisons, and never creates universal production limits, causal proof or machine-control authority.'
 };
