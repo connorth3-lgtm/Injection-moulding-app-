@@ -1,4 +1,4 @@
-const CACHE_VERSION='2026.09.10.4';
+const CACHE_VERSION='2026.09.10.5';
 const CACHE_REVISION='audit-consolidation-r1-20260910';
 const STATIC_CACHE=`mouldmaster-static-${CACHE_VERSION}-${CACHE_REVISION}`;
 
@@ -66,6 +66,7 @@ const CORE=[
   './src/domains/process/evidence-granularity.js',
   './src/domains/learning/content-intelligence.js',
   './src/domains/process/process-statistics.js',
+  './src/domains/process/process-data-integrity.js',
   './src/domains/shell/accessibility-loader.js',
   './src/domains/shell/product-areas.js',
   './material-catalog-v1.json',

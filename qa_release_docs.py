@@ -9,6 +9,7 @@ def need(ok,msg):
 
 V=json.loads(text('version.json'))
 expected={
+ 'web_release':'2026.09.10.5',
  'android_release':'2026.08.26.2',
  'desktop_release':'2026.08.26.8',
  'content_version':'2026.08.26.1',
@@ -22,7 +23,7 @@ for k,v in expected.items(): need(V.get(k)==v,f'version.json {k} drift: {V.get(k
 
 readme=text('README.md')
 for label,k in [
- ('PWA / browser shell','android_release'),('Open Windows desktop','desktop_release'),('Training content','content_version'),
+ ('PWA / browser shell','web_release'),('Open Windows desktop','desktop_release'),('Training content','content_version'),
  ('Audited assessment bank','question_bank_version'),('Assessment quality / analytics hardening','assessment_quality_version'),
  ('Learner-scoped assessment storage','assessment_storage_scope_version'),('Question evidence approval','assessment_evidence_version'),
  ('Frozen legacy Windows recovery lane','windows_recovery_release')]:
@@ -37,6 +38,7 @@ need('qa_mechanism_promotion.py' in readme,'README must list mechanism promotion
 need('qa_specialist_evidence_gaps.py' in readme,'README must list specialist evidence-status QA')
 need('qa_app_shell_registry.py' in readme,'README must list canonical app-shell QA')
 need('qa_mould_master_workspace.py' in readme,'README must list Mould Master workspace QA')
+need('qa_process_data_integrity.cjs' in readme,'README must list process-data integrity regression QA')
 need('120 core lessons' in readme and '20 lessons total' in readme and 'S13–S20' in readme,'README must describe current 120-core / 20-optional specialist curriculum boundary')
 need('learner completion never promotes evidence maturity' in readme,'README must preserve learner-completion/evidence-maturity separation')
 need(V.get('desktop_release_tag')==f"desktop-v{V['desktop_release']}",'desktop release tag/version mismatch')
@@ -120,7 +122,7 @@ for label,k in [('CURRENT LEGACY RECOVERY CONTENT','windows_recovery_release'),(
 need('must NOT be silently inserted into this legacy feed' in upload,'recovery/PWA lane separation warning missing')
 
 support=text('support.html')
-for k,id_ in {'android_release':'mmPwa','desktop_release':'mmDesktop','content_version':'mmContent','question_bank_version':'mmBank','assessment_quality_version':'mmQuality','assessment_storage_scope_version':'mmScope','assessment_evidence_version':'mmEvidence','windows_recovery_release':'mmRecovery'}.items():
+for k,id_ in {'web_release':'mmPwa','desktop_release':'mmDesktop','content_version':'mmContent','question_bank_version':'mmBank','assessment_quality_version':'mmQuality','assessment_storage_scope_version':'mmScope','assessment_evidence_version':'mmEvidence','windows_recovery_release':'mmRecovery'}.items():
     need(f'id="{id_}">{V[k]}' in support,f'support fallback version stale: {k}')
     need(f"{k}:'{id_}'" in support,f'support dynamic version mapping missing: {k}')
 need("fetch('./version.json',{cache:'no-store'})" in support,'support page must synchronise from version.json')

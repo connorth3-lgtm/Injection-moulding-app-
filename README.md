@@ -17,7 +17,7 @@ The project maintainers do not intend to seek patent protection over implementat
 
 ## Current release lanes
 
-- PWA / browser shell: `2026.08.26.2`
+- PWA / browser shell: `2026.09.10.5`
 - Open Windows desktop: `2026.08.26.8`
 - Training content: `2026.08.26.1`
 - Audited assessment bank: `2026.08.30.1`
@@ -162,6 +162,7 @@ The release workflows run structural, runtime, question/answer, assessment-quali
 - `qa_process_data_deep_dive_50.py`
 - `qa_process_data_20_pass.py`
 - `qa_process_data_local_intake.py`
+- `qa_process_data_integrity.cjs`
 - `qa_process_data_sweep.py`
 - `qa_measured_evidence_50_pass.py`
 - `qa_real_process_data_pilot.py`
