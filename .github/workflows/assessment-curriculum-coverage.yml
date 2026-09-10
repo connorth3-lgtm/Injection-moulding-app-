@@ -1,0 +1,53 @@
+name: Assessment and Curriculum Coverage Audit
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'MouldMaster_Core_App.html'
+      - 'assessment-*.js'
+      - 'lesson-*.js'
+      - 'curriculum-*.js'
+      - 'specialist-*.js'
+      - 'qa_assessment_curriculum_coverage.py'
+      - '.github/workflows/assessment-curriculum-coverage.yml'
+  pull_request:
+    branches: [main]
+    paths:
+      - 'MouldMaster_Core_App.html'
+      - 'assessment-*.js'
+      - 'lesson-*.js'
+      - 'curriculum-*.js'
+      - 'specialist-*.js'
+      - 'qa_assessment_curriculum_coverage.py'
+      - '.github/workflows/assessment-curriculum-coverage.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: assessment-curriculum-coverage-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  coverage-audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: '3.12'
+      - name: Quantify assessment breadth and curriculum semantic coverage
+        run: python qa_assessment_curriculum_coverage.py
+      - name: Upload coverage report
+        uses: actions/upload-artifact@v7
+        with:
+          name: assessment-curriculum-coverage
+          path: assessment-curriculum-coverage-report.json
+          if-no-files-found: error
+          retention-days: 30
+      - name: Preserve human-review boundary
+        run: |
+          echo 'Coverage audit is automated evidence only.'
+          echo 'Assessment outcome mapping and curriculum SME semantic approval remain human HOLD states.'
