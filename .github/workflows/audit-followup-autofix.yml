@@ -1,0 +1,67 @@
+name: Audit follow-up hardening
+
+on:
+  push:
+    branches:
+      - audit-followup-2026-09-10
+    paths:
+      - tools/apply_followup_audit_hardening.py
+      - .github/workflows/audit-followup-autofix.yml
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  harden:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out follow-up branch
+        uses: actions/checkout@v7
+        with:
+          ref: audit-followup-2026-09-10
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v7
+        with:
+          python-version: '3.12'
+
+      - name: Set up Node
+        uses: actions/setup-node@v7
+        with:
+          node-version: '22.12.0'
+          package-manager-cache: false
+
+      - name: Apply follow-up audit hardening
+        run: python tools/apply_followup_audit_hardening.py
+
+      - name: JavaScript syntax
+        run: |
+          node --check data-integration-runtime.js
+          node --check learning-analytics.js
+          node --check process-data-diagnostics.js
+
+      - name: Targeted data and analytics QA
+        run: |
+          python qa_data_integration.py
+          python qa_learning_analytics.py
+
+      - name: Runtime and release regression QA
+        run: |
+          python qa_runtime_hardening.py
+          python qa_release.py
+          git diff --check
+
+      - name: Commit source hardening
+        shell: bash
+        run: |
+          if git diff --quiet; then
+            echo "No generated source changes."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data-integration-runtime.js qa_data_integration.py process-data-diagnostics.js learning-analytics.js qa_learning_analytics.py
+          git commit -m "fix(data): preserve row identity and structured practice analytics"
+          git push origin HEAD:audit-followup-2026-09-10
