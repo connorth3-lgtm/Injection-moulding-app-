@@ -22,6 +22,10 @@ def repair_freeze_quoting()->None:
     if old_open in t:t=t.replace(old_open,new_open,1)
     if old_close in t:t=t.replace(old_close,new_close,1)
     if new_open not in t or new_close not in t:raise SystemExit('Assessment freeze quoting repair did not converge')
+    literal="node=block+r'''\\nconst fs=require('fs'),vm=require('vm');"
+    actual="node=block+r'''\nconst fs=require('fs'),vm=require('vm');"
+    if literal in t:t=t.replace(literal,actual,1)
+    if actual not in t:raise SystemExit('Assessment freeze embedded Node newline repair did not converge')
     p.write_text(t,encoding='utf-8')
 
 
