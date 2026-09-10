@@ -21,6 +21,7 @@ on:
       - 'desktop/electron/scripts/generate-integrity.cjs'
       - 'tools/build_pages_artifact.py'
       - 'tools/generate_current_data_manifest.py'
+      - 'tools/generate_runtime_manifest.py'
       - 'qa_data_integration.py'
       - 'qa_process_data_integrity.cjs'
       - '.github/workflows/data-integration-qa.yml'
@@ -52,6 +53,8 @@ jobs:
           node --check desktop/electron/scripts/generate-integrity.cjs
       - name: Process-data integrity regressions
         run: node qa_process_data_integrity.cjs
+      - name: Runtime domain manifest is generated
+        run: python tools/generate_runtime_manifest.py --check
       - name: Current manifest is generated from governed ledger
         run: python tools/generate_current_data_manifest.py --check
       - name: Connected process-data architecture
