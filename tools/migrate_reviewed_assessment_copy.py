@@ -12,6 +12,7 @@ ROOT=Path(__file__).resolve().parents[1]
 CORE=ROOT/'MouldMaster_Core_App.html'
 TRAINING=ROOT/'training-upgrade.js'
 DEEP=ROOT/'assessment-deep-dive.js'
+CUE=ROOT/'assessment-answer-cue-fix.js'
 QUALITY=ROOT/'assessment-quality-suite.js'
 BRIDGE=ROOT/'assessment-stable-review-bridge.js'
 APPROVAL=ROOT/'assessment-evidence-approval.js'
@@ -89,8 +90,9 @@ def replace_answer(path:Path,old:str,new:str,item_id:str)->bool:
 
 
 def authored_source(item_id:str)->Path:
+    if item_id=='tech:Advanced:7':return CUE
     if item_id.startswith('tech:'):return DEEP
-    if item_id.startswith('reg:'):return CORE
+    if item_id.startswith('reg:'):return CUE
     if item_id.startswith('scenario:'):
         n=int(item_id.split(':')[1])
         if n<=8:return DEEP
@@ -100,7 +102,7 @@ def authored_source(item_id:str)->Path:
 
 
 def migrate_sources(contract:dict[str,str],authored:dict[str,dict])->dict[str,int]:
-    changed={p.name:0 for p in [CORE,TRAINING,DEEP,QUALITY]}
+    changed={p.name:0 for p in [CORE,TRAINING,DEEP,CUE,QUALITY]}
     for item_id,replacement in contract.items():
         row=authored.get(item_id);need(row is not None,f'missing assembled item: {item_id}')
         key=int(row['correct']);opts=row.get('options') or [];need(len(opts)==4 and 0<=key<4,f'invalid authored item: {item_id}')
@@ -164,7 +166,7 @@ def main()->None:
     need(after.get('bridge',{}).get('strictAnswerBalance',{}).get('validated')==94,'validation-only bridge did not validate 94 reviewed answers')
     need(after.get('bridge',{}).get('strictAnswerBalance',{}).get('runtimeTextMutations')==0,'validation-only bridge does not declare zero runtime text mutation')
     need(after['items']==baseline_items,'learner-visible formal assessment output changed during source migration')
-    source_paths=[p for p in [CORE,TRAINING,DEEP,QUALITY,BRIDGE] if changes.get(p.name,0)>0 or p==BRIDGE]
+    source_paths=[p for p in [TRAINING,DEEP,CUE,QUALITY,BRIDGE] if changes.get(p.name,0)>0 or p==BRIDGE]
     pins=update_approval_hashes(source_paths)
     print(json.dumps({'reviewedAnswers':len(contract),'sourceEdits':changes,'qaContractFiles':qa_changed,'updatedApprovalPins':pins,'formalItems':len(after['items']),'runtimeTextMutations':0},indent=2))
 
