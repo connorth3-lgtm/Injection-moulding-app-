@@ -2,7 +2,9 @@
 (function(){
 'use strict';
 const D=window.MM_DATA;
+const ASSESSMENT_STORAGE=window.MM_ASSESSMENT_STORAGE_SCOPE;
 if(!D||!D.exams||!D.regionalQuestions||!D.scenarios)throw new Error('MouldMaster assessment data must load before quality suite');
+if(!ASSESSMENT_STORAGE||typeof ASSESSMENT_STORAGE.read!=='function'||typeof ASSESSMENT_STORAGE.write!=='function'||typeof ASSESSMENT_STORAGE.removeItem!=='function')throw new Error('Learner-scoped assessment storage must load before quality suite');
 
 const VERSION='2026.08.24.2';
 const ANALYTICS_KEY='mm_assessment_analytics_v1';
@@ -140,8 +142,8 @@ function addScenarios(){
  D.scenarios.forEach((s,i)=>{s.mmStableId=s.mmStableId||scenarioId(i);s.difficulty=s.difficulty|| (i<8?'Foundation':i<16?'Diagnostic':'Applied');s.category=s.category||primaryCompetency(s.title+' '+s.situation,i);s.revision=VERSION});
 }
 
-function analytics(){const a=read(ANALYTICS_KEY,{schema:1,version:VERSION,questions:{},scenarios:{},exams:{},started:0,graded:0});a.schema=1;a.version=VERSION;a.questions=obj(a.questions)?a.questions:{};a.scenarios=obj(a.scenarios)?a.scenarios:{};a.exams=obj(a.exams)?a.exams:{};return a}
-function saveAnalytics(a){write(ANALYTICS_KEY,a)}
+function analytics(){const a=ASSESSMENT_STORAGE.read(ANALYTICS_KEY,{schema:1,version:VERSION,questions:{},scenarios:{},exams:{},started:0,graded:0});a.schema=1;a.version=VERSION;a.questions=obj(a.questions)?a.questions:{};a.scenarios=obj(a.scenarios)?a.scenarios:{};a.exams=obj(a.exams)?a.exams:{};return a}
+function saveAnalytics(a){ASSESSMENT_STORAGE.write(ANALYTICS_KEY,a)}
 function updateQuestionAnalytics(q,selected,ok,ms){const a=analytics(),id=q.stableId||q.mmStableId||q.mmId||norm(q.q);const x=a.questions[id]||{stableId:id,attempts:0,correct:0,wrong:0,unanswered:0,totalResponseMs:0,optionSelections:{},difficulty:q.difficulty||'',competency:q.competency||'',concept:q.concept||'',stem:q.q||''};x.attempts++;if(selected==null)x.unanswered++;else{x.optionSelections[q.options[selected]]=(x.optionSelections[q.options[selected]]||0)+1;ok?x.correct++:x.wrong++}if(Number.isFinite(ms)&&ms>=0){x.totalResponseMs+=Math.min(ms,3600000);x.lastResponseMs=Math.min(ms,3600000)}x.last=Date.now();a.questions[id]=x;saveAnalytics(a)}
 function updateExamAnalytics(level,region,pct,passed){const a=analytics(),key=level+'-'+region,x=a.exams[key]||{attempts:0,passes:0,best:0,totalScore:0};x.attempts++;x.passes+=passed?1:0;x.best=Math.max(x.best,pct);x.totalScore+=pct;x.last=Date.now();a.exams[key]=x;a.graded=(a.graded||0)+1;saveAnalytics(a)}
 function updateScenarioAnalytics(s,selected,ok){const a=analytics(),id=s.mmStableId||norm(s.title),x=a.scenarios[id]||{stableId:id,title:s.title,attempts:0,correct:0,wrong:0,selections:{},category:s.category||'',difficulty:s.difficulty||''};x.attempts++;ok?x.correct++:x.wrong++;x.selections[s.choices[selected]]=(x.selections[s.choices[selected]]||0)+1;x.last=Date.now();a.scenarios[id]=x;saveAnalytics(a)}
@@ -188,6 +190,6 @@ D.assessmentQA.questionRevisionHistory=[
  {version:'2026.08.24',date:'24 August 2026',change:'100-pass structural/safety audit and deep question review.'},
  {version:VERSION,date:'24 August 2026',change:'Stable IDs, competency blueprint, local analytics, per-question evidence, difficulty calibration, scenario expansion, duplicate/leak checks and freshness monitoring.'}
 ];
-window.MM_ASSESSMENT_ANALYTICS={version:VERSION,summary:analyticsSummary,export:()=>analytics(),reset:()=>{localStorage.removeItem(ANALYTICS_KEY);try{window.renderExams?.()}catch(_){}}};
+window.MM_ASSESSMENT_ANALYTICS={version:VERSION,summary:analyticsSummary,export:()=>analytics(),reset:()=>{ASSESSMENT_STORAGE.removeItem(ANALYTICS_KEY);try{window.renderExams?.()}catch(_){}}};
 window.MM_ASSESSMENT_QUALITY={version:VERSION,identityLockVersion:IDENTITY_LOCK_VERSION,identityCount:LOCKED_IDENTITIES.length,blueprint:BLUEPRINT.slice(),labels:{...LABELS},scenarioCount:D.scenarios.length,questionCount:57,nearDuplicates:nearDuplicates(),answerLeakRisks:leakRisks(),coverage:(level)=>blueprintCoverage(selectBlueprint(level)),resolveIdentity:(q,kind,level,region,index)=>identityFor(q,kind,level,region,index),sourceReview:{reviewed:SOURCE_REVIEWED,reviewBy:SOURCE_REVIEW_BY}};
 })();
