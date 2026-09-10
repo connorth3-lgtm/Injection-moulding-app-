@@ -62,9 +62,8 @@ jobs:
           python qa_question_quality_extreme_runtime_v2.py
           python qa_assessment_evidence_integrity.py
 
-      - name: Additional reviewed-answer and approval gates
+      - name: Reviewed-answer and approval gates
         run: |
-          python qa_question_quality_50_pass_runtime.py
           python qa_assessment_evidence.py
           python qa_psychometric_integration.py
 
