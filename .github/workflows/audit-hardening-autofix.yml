@@ -28,6 +28,19 @@ jobs:
         with:
           python-version: '3.12'
 
+      - name: Repair assessment freeze migration source
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p=Path('tools/finalize_assessment_hardening.py')
+          t=p.read_text(encoding='utf-8')
+          t=t.replace("    new_optional=r'''def load_optional_runtime():", '    new_optional=r"""def load_optional_runtime():', 1)
+          t=t.replace("    return items'''\n    replace_section", '    return items"""\n    replace_section', 1)
+          p.write_text(t,encoding='utf-8')
+          PY
+          python -m py_compile tools/finalize_assessment_hardening.py
+
       - name: Apply assessment and data hardening
         run: python tools/apply_audit_hardening.py
 
