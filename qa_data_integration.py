@@ -72,7 +72,7 @@ def main() -> None:
     for token in [
         "CONTEXT_KEYS=['machine','mould','materialGrade','job']",
         "missing.length===0&&mismatched.length===0",
-        "baseline.datasetId===dataset.id",
+        "baseline?.datasetId===dataset.id",
         "assertBaselineCompatible(dataset,baseline)",
         "api.intelligence.compareToBaseline=function",
         "['datasets','shots','baselines','caseLinks']",
