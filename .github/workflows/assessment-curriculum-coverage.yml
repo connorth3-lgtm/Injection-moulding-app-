@@ -10,6 +10,8 @@ on:
       - 'curriculum-*.js'
       - 'specialist-*.js'
       - 'qa_assessment_curriculum_coverage.py'
+      - 'qa_assessment_curriculum_ratchet.py'
+      - 'qa/assessment-curriculum-coverage-floor.json'
       - '.github/workflows/assessment-curriculum-coverage.yml'
   pull_request:
     branches: [main]
@@ -20,6 +22,8 @@ on:
       - 'curriculum-*.js'
       - 'specialist-*.js'
       - 'qa_assessment_curriculum_coverage.py'
+      - 'qa_assessment_curriculum_ratchet.py'
+      - 'qa/assessment-curriculum-coverage-floor.json'
       - '.github/workflows/assessment-curriculum-coverage.yml'
   workflow_dispatch:
 
@@ -40,6 +44,8 @@ jobs:
           python-version: '3.12'
       - name: Quantify assessment breadth and curriculum semantic coverage
         run: python qa_assessment_curriculum_coverage.py
+      - name: Enforce quantified coverage debt ratchet
+        run: python qa_assessment_curriculum_ratchet.py
       - name: Upload coverage report
         uses: actions/upload-artifact@v7
         with:
