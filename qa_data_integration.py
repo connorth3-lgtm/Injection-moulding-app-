@@ -67,7 +67,7 @@ def main() -> None:
 
     require("script.src='./data-integration-runtime.js'" in shell, "app shell must load connected data runtime")
     require("ui.src='./process-data-intelligence-ui.js'" in shell, "app shell must load process intelligence UI")
-    require("MM_APP_SHELL_FINALIZED='2026.08.26.4'" in shell, "connected data must not change the canonical app-shell compatibility marker")
+    require('window.MM_APP_SHELL_FINALIZED=VERSION' in shell, "connected data must preserve canonical app-shell finalization through VERSION")
     require("'./data-integration-runtime.js'" in worker, "connected runtime must be a published worker asset")
     require("'./process-data-intelligence-ui.js'" in worker, "process intelligence UI must be a published worker asset")
     require("'./process-data-semantic-registry.json'" in worker, "semantic registry must be a published worker asset")
