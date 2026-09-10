@@ -1,0 +1,143 @@
+{
+  "schema": 1,
+  "version": "2026.09.10.1",
+  "reviewed": "2026-09-10",
+  "purpose": "Single acquisition status for the data needed to move MouldMaster from generic/public evidence to site-specific production interpretation without fabricating machine, mould, material, part or process values.",
+  "repositoryState": {
+    "minimumProductionContextSchema": "data/minimum-production-context-v1.schema.json",
+    "minimumProductionContextTemplate": "data/minimum-production-context-template.json",
+    "shotDataTemplate": "data/real-process-data-pilot-template.csv",
+    "dataDictionaryTemplate": "data/real-process-data-dictionary-template.csv",
+    "traceTemplate": "data/real-process-trace-template.csv",
+    "eventTemplate": "data/real-process-event-template.csv",
+    "sensorCalibrationTemplate": "data/real-process-sensor-calibration-template.csv",
+    "materialGradeSchema": "data/materials/material-grade-v2.schema.json",
+    "pilotAnalysisContract": "data/real-pilot-analysis-contract-v1.json",
+    "semanticRegistry": "process-data-semantic-registry.json"
+  },
+  "availableNow": {
+    "processDataContract": true,
+    "traceDataContract": true,
+    "eventAndInterventionContract": true,
+    "sensorCalibrationContract": true,
+    "qualityOutcomeFields": true,
+    "materialExactGradeSchema": true,
+    "exactGradeSourceBackedPilotsPresent": true,
+    "semanticFailClosedGate": true,
+    "currentMeasuredEvidence": {
+      "inventoriedMeasuredSources": 34,
+      "rightsExecutableSources": 21,
+      "fullyProfiledMeasuredFamilies": 17,
+      "acceptedInjectionProcessTimeSeriesValues": 85569824,
+      "source": "current-data-manifest.json"
+    }
+  },
+  "siteSpecificDataRequired": [
+    {
+      "id": "machine-master",
+      "status": "required-from-site",
+      "fields": ["machine alias", "manufacturer", "model", "controller", "clamp force", "screw diameter", "maximum injection pressure", "maximum injection speed", "maximum shot volume", "tie-bar spacing", "relevant calibration references"],
+      "authoritativeSources": ["machine manual/specification", "site equipment register", "current calibration records"]
+    },
+    {
+      "id": "mould-master",
+      "status": "required-from-site",
+      "fields": ["mould alias", "cavity count", "active cavities", "runner type", "gate type", "hot-runner state", "part and runner volume", "projected area", "cooling-circuit identity", "target supply temperature", "target flow", "sensor references"],
+      "authoritativeSources": ["controlled mould drawing", "tool specification", "cooling map", "hot-runner documentation"]
+    },
+    {
+      "id": "material-in-use",
+      "status": "required-from-site",
+      "fields": ["exact manufacturer", "exact commercial grade", "polymer family", "lot/batch alias", "current TDS reference", "current SDS reference", "MouldMaster exact-grade record link when available"],
+      "authoritativeSources": ["bag/lot identity", "manufacturer TDS", "manufacturer SDS", "approved material specification"]
+    },
+    {
+      "id": "part-and-ctq",
+      "status": "required-from-site",
+      "fields": ["part alias", "drawing/revision alias", "nominal mass", "critical-to-quality characteristics", "nominal values", "lower and upper specification limits", "inspection methods"],
+      "authoritativeSources": ["controlled part drawing", "quality plan", "inspection specification"]
+    },
+    {
+      "id": "validated-process-window",
+      "status": "required-from-site",
+      "fields": ["validation reference", "validated min/nominal/max values for applicable process variables", "evidence linking the window to this machine/mould/material/part combination"],
+      "authoritativeSources": ["approved setup sheet", "process validation", "DOE/robust-window study", "site-controlled process specification"],
+      "boundary": "Supplier processing guidance is context only and must not be promoted to a site-validated production window."
+    },
+    {
+      "id": "real-run-evidence",
+      "status": "required-from-site",
+      "fields": ["shot index", "phase", "at least two numeric process signals", "machine/mould/material/cavity aliases where available", "actual measured process values", "quality result", "defect alias where applicable"],
+      "contract": "data/real-process-data-pilot-template.csv"
+    },
+    {
+      "id": "channel-semantics",
+      "status": "required-for-each-import",
+      "fields": ["source field", "engineering meaning", "role", "actual/setpoint/command semantics", "unit", "sampling basis/rate", "scale/offset", "link fields", "sensor/calibration references"],
+      "contract": "data/real-process-data-dictionary-template.csv"
+    },
+    {
+      "id": "quality-events-and-interventions",
+      "status": "required-when-applicable",
+      "fields": ["quality results", "defect codes", "sampling plan", "maintenance events", "process changes", "interventions", "verification outcomes"],
+      "contracts": ["data/real-process-event-template.csv", "data/real-process-data-pilot-template.csv"]
+    }
+  ],
+  "publicOrExternalGates": [
+    {
+      "datasetId": "cross-process-chain-17240390",
+      "status": "semantic-clarification-required",
+      "known": "Lower-workpiece TXT data authoritatively declares pressure in bar, volume in cm3 and injection flow in cm3/s. Upper-workpiece public data names pressure target/actual, velocity, volume and state.",
+      "missing": "Authoritative upper-workpiece pressure unit and state-code meanings.",
+      "rule": "Do not transfer lower-workpiece pressure units to upper-workpiece data by inference."
+    },
+    {
+      "datasetId": "rwth-pcr-2025",
+      "status": "publisher-openaccess-listing-confirmed-machine-delivery-blocked",
+      "known": "The authoritative RWTH record advertises ExperimentalData.zip as OpenAccess and the existing repository delivery review records the archive route and provenance metadata.",
+      "missing": "Actual ZIP bytes delivered successfully to the automated research client followed by archive fingerprinting and semantic validation.",
+      "acceptedAdditionalValues": 0,
+      "sourceReview": "data/rwth-pcr-delivery-review-2026-08-30.json"
+    },
+    {
+      "datasetId": "impure-pascoe-2022",
+      "status": "partial-semantic-resolution",
+      "known": "Two mould-temperature and two cavity-pressure channels are already accepted.",
+      "missing": "Authoritative delivered-data units/scaling and stable mapping for HydPressure, ScrewPosition and Analog Input[1]/[2].",
+      "acceptedAdditionalValuesUntilResolved": 0
+    },
+    {
+      "datasetId": "warwick-demoulding",
+      "status": "special-format-export-required",
+      "known": "Five publisher OPJU projects are already SHA-256 verified.",
+      "missing": "Trusted Origin/OriginPro or validated Origin Viewer export and reconciliation.",
+      "acceptedAdditionalValuesUntilResolved": 0
+    }
+  ],
+  "completionRules": {
+    "siteContextCompleteOnlyWhen": [
+      "machine, mould, material, part, process-window and quality-plan sections are source-backed",
+      "all required real-run columns are present",
+      "retained numeric evidence has authoritative engineering semantics",
+      "actuals are not confused with commands or setpoints",
+      "required sensors have calibration linkage or an explicit documented warning",
+      "quality results are linked to the relevant shot/cavity where the source supports that linkage"
+    ],
+    "neverCountAsComplete": [
+      "generic polymer-family processing ranges substituted for an exact grade",
+      "supplier guidance relabelled as a validated site process window",
+      "machine values guessed from model-family marketing material without exact configuration evidence",
+      "mould geometry or projected area inferred without a controlled source",
+      "publication-reported sample counts when payload bytes are not possessed and profiled",
+      "units or signal roles inferred merely because values look plausible"
+    ]
+  },
+  "privacyAndSafety": {
+    "aliasesInsteadOfNames": true,
+    "rawProductionFilesStayOutsideRepository": true,
+    "noCustomerOrPersonIdentifiers": true,
+    "noMachineControlAuthority": true,
+    "noAutomaticProductionChangeAuthority": true
+  },
+  "nextAction": "Populate data/minimum-production-context-template.json from site-controlled documents, then import a prepared pilot run using the existing shot/data-dictionary/trace/event/calibration contracts."
+}
