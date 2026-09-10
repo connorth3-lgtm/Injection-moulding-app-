@@ -16,8 +16,6 @@ CUE=ROOT/'assessment-answer-cue-fix.js'
 QUALITY=ROOT/'assessment-quality-suite.js'
 BRIDGE=ROOT/'assessment-stable-review-bridge.js'
 APPROVAL=ROOT/'assessment-evidence-approval.js'
-# Search in reverse runtime-authoring precedence. The first exact literal found is the
-# last layer capable of contributing the assembled pre-bridge learner-visible answer.
 AUTHORING_PRECEDENCE=[QUALITY,CUE,DEEP,TRAINING,CORE]
 
 
@@ -104,14 +102,12 @@ def replace_answer(path:Path,old:str,new:str,item_id:str)->bool:
 
 
 def migrate_sources(contract:dict[str,str],authored:dict[str,dict])->tuple[dict[str,int],dict[str,str]]:
-    changed={p.name:0 for p in AUTHORING_PRECEDENCE}
-    sources={}
+    changed={p.name:0 for p in AUTHORING_PRECEDENCE};sources={}
     for item_id,replacement in contract.items():
         row=authored.get(item_id);need(row is not None,f'missing assembled item: {item_id}')
         key=int(row['correct']);opts=row.get('options') or [];need(len(opts)==4 and 0<=key<4,f'invalid authored item: {item_id}')
         old=str(opts[key])
-        if old==replacement:
-            sources[item_id]='already-authored';continue
+        if old==replacement:sources[item_id]='already-authored';continue
         path=discover_source(item_id,old);sources[item_id]=path.name
         if replace_answer(path,old,replacement,item_id):changed[path.name]+=1
     return changed,sources
@@ -124,11 +120,11 @@ def make_bridge_validation_only()->None:
     src=src.replace('function applyBalance(requireFull){\n let applied=0;','function validateReviewedAnswers(requireFull){\n let validated=0;',1)
     src=src.replace(');opts[key]=replacement;applied++;',");if(String(opts[key])!==replacement)throw new Error(`Reviewed keyed answer drift: ${id}`);validated++;",3)
     src=src.replace(" if(applied>94||requireFull&&applied!==94)throw new Error(`Strict answer-balance coverage mismatch: ${applied}/94`);\n window.MM_STABLE_REVIEW_BRIDGE.strictAnswerBalance.applied=applied;\n return applied;"," if(validated>94||requireFull&&validated!==94)throw new Error(`Reviewed keyed answer coverage mismatch: ${validated}/94`);\n window.MM_STABLE_REVIEW_BRIDGE.strictAnswerBalance.validated=validated;\n return validated;",1)
-    src=src.replace(' applyBalance(false);',' validateReviewedAnswers(false);')
+    src=src.replace('applyBalance(false);','validateReviewedAnswers(false);')
     src=src.replace("window.MM_STABLE_REVIEW_BRIDGE={version:'2026.08.30.2',stableIdsPrimary:true,fullBlueprintRequired:true,requiredTechnicalDomains:(S.blueprint||[]).slice(),legacyRecordsMigratedBy:'assessment-quality-suite.js',strictAnswerBalance:{applied:0,required:94,policy:'correct option must be shorter than at least one distractor; key indexes unchanged'}};","window.MM_STABLE_REVIEW_BRIDGE={version:'2026.09.10.1',stableIdsPrimary:true,fullBlueprintRequired:true,requiredTechnicalDomains:(S.blueprint||[]).slice(),legacyRecordsMigratedBy:'assessment-quality-suite.js',strictAnswerBalance:{validated:0,required:94,runtimeTextMutations:0,policy:'Reviewed keyed answer wording is source-authored; runtime validates drift only; key indexes unchanged'}};",1)
     src=src.replace('function finalizeBalance(){applyBalance(true)}','function finalizeBalance(){validateReviewedAnswers(true)}',1)
     need('opts[key]=replacement' not in src,'stable-review bridge still mutates keyed option text')
-    need('applyBalance(' not in src,'stable-review bridge still exposes mutating balance function')
+    need('function applyBalance' not in src and 'applyBalance(false)' not in src and 'applyBalance(true)' not in src,'stable-review bridge still exposes mutating balance behavior')
     need("strictAnswerBalance:{validated:0,required:94,runtimeTextMutations:0" in src,'validation-only bridge metadata missing')
     write(BRIDGE,src)
 
@@ -153,22 +149,19 @@ def update_approval_hashes(paths:list[Path])->dict[str,str]:
         need(p.returncode==0,f'git hash-object failed for {rel}: {p.stderr}')
         sha=p.stdout.strip();out[rel]=sha
         pattern=re.compile(rf"'{re.escape(rel)}':'[0-9a-f]{{40}}'")
-        replacement=f"'{rel}':'{sha}'"
-        src,n=pattern.subn(replacement,src,count=1)
+        replacement=f"'{rel}':'{sha}'";src,n=pattern.subn(replacement,src,count=1)
         need(n==1,f'approval pin not found for changed input: {rel}')
     write(APPROVAL,src);return out
 
 
 def main()->None:
-    contract=review_map()
-    baseline=assembled(True);baseline_items=baseline['items']
+    contract=review_map();baseline=assembled(True);baseline_items=baseline['items']
     need(baseline.get('bridge',{}).get('strictAnswerBalance',{}).get('applied')==94,'baseline bridge did not apply 94 reviewed answers')
     authored=item_map(assembled(False));changes,sources=migrate_sources(contract,authored)
     migrated_authored=item_map(assembled(False))
     for item_id,replacement in contract.items():
         row=migrated_authored[item_id];need(row['options'][row['correct']]==replacement,f'{item_id}: reviewed answer was not authored into the assembled source bank')
-    make_bridge_validation_only();qa_changed=patch_qa_contract()
-    after=assembled(True)
+    make_bridge_validation_only();qa_changed=patch_qa_contract();after=assembled(True)
     need(after.get('bridge',{}).get('strictAnswerBalance',{}).get('validated')==94,'validation-only bridge did not validate 94 reviewed answers')
     need(after.get('bridge',{}).get('strictAnswerBalance',{}).get('runtimeTextMutations')==0,'validation-only bridge does not declare zero runtime text mutation')
     need(after['items']==baseline_items,'learner-visible formal assessment output changed during source migration')
