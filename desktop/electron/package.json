@@ -53,6 +53,8 @@
       {"from": "../../assessment-multimodal.js", "to": "mouldmaster/assessment-multimodal.js"},
       {"from": "../../pwa-shell.js", "to": "mouldmaster/pwa-shell.js"},
       {"from": "../../learning-experience.js", "to": "mouldmaster/learning-experience.js"},
+      {"from": "../../measured-learning-library.js", "to": "mouldmaster/measured-learning-library.js"},
+      {"from": "../../lesson-simple-experience.js", "to": "mouldmaster/lesson-simple-experience.js"},
       {"from": "../../process-data-diagnostics.js", "to": "mouldmaster/process-data-diagnostics.js"},
       {"from": "../../real-measured-data-assessment.js", "to": "mouldmaster/real-measured-data-assessment.js"},
       {"from": "../../process-data-deep-dive-machine.js", "to": "mouldmaster/process-data-deep-dive-machine.js"},

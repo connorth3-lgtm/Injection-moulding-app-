@@ -34,6 +34,11 @@ need(INTEGRITY.schema===1,'integrity schema mismatch');
 need(INTEGRITY.release===VERSION.desktop_release,'integrity release must match desktop_release');
 need(Object.keys(INTEGRITY.files||{}).length>=15,'integrity manifest is incomplete');
 for(const [name,hash] of Object.entries(INTEGRITY.files)){need(/^[a-f0-9]{64}$/.test(hash),`bad SHA-256 for ${name}`);need(fs.existsSync(path.join(ROOT,name)),`integrity asset missing: ${name}`)}
+const DYNAMIC_ROOT_ASSETS=['measured-learning-library.js','lesson-simple-experience.js'];
+for(const name of DYNAMIC_ROOT_ASSETS){
+  need((PKG.build?.extraResources||[]).some(x=>x?.from===`../../${name}`&&x?.to===`mouldmaster/${name}`),`dynamic root runtime asset is not packaged by desktop: ${name}`);
+  need(Object.prototype.hasOwnProperty.call(INTEGRITY.files,name),`dynamic root runtime asset is not integrity-hashed/servable by desktop: ${name}`);
+}
 need(DOMAIN_MANIFEST?.schemaVersion===1&&Array.isArray(DOMAIN_MANIFEST.assets)&&Array.isArray(DOMAIN_MANIFEST.dataAssets),'runtime domain manifest invalid for desktop QA');
 for(const raw of [...DOMAIN_MANIFEST.assets,...DOMAIN_MANIFEST.dataAssets]){
   need(typeof raw==='string'&&raw.startsWith('./'),`unsafe runtime manifest path in desktop QA: ${raw}`);

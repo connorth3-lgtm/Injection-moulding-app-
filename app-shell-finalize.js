@@ -8,15 +8,16 @@ if(!window.MM_SPECIALIST_CURRICULUM)throw new Error('app-shell-finalize.js requi
 if(!window.MM_SPECIALIST_EVIDENCE_GAPS)throw new Error('app-shell-finalize.js requires specialist-evidence-gap-extension.js');
 if(!window.MM_MOULD_MASTER_WORKSPACE)throw new Error('app-shell-finalize.js requires mould-master-workspace.js');
 
+const EVIDENCE_REGISTRY_VERSION="2026.08.28.4";
 const EVIDENCE_STATUS=Object.freeze({
-  'residual-stress-birefringence':'Promoted',
-  'weld-line-mechanical-strength':'Promoted',
-  'runner-gate-multicavity-imbalance':'Promoted',
-  'hot-runner-actual-behaviour':'Promoted',
-  'liquid-silicone-rubber':'Promoted',
-  'fluid-assisted-moulding':'Promoted',
-  'surface-replication-release':'Promoted',
-  'injection-compression-precision-optics':'Promoted'
+  "residual-stress-birefringence":"Promoted",
+  "weld-line-mechanical-strength":"Promoted",
+  "runner-gate-multicavity-imbalance":"Provisional",
+  "hot-runner-actual-behaviour":"Provisional",
+  "liquid-silicone-rubber":"Provisional",
+  "fluid-assisted-moulding":"Provisional",
+  "surface-replication-release":"Provisional",
+  "injection-compression-precision-optics":"Provisional"
 });
 const GAP=window.MM_SPECIALIST_EVIDENCE_GAPS;
 const BASE=window.MM_SPECIALIST_CURRICULUM;
@@ -193,10 +194,11 @@ function installRetiredChromeGuard(){
   window.__MM_RETIRED_CHROME_GUARD__={version:'2026.09.06.10'};
 }
 function installHomeScreenSimplification(){
-  if(window.__MM_HOME_SIMPLIFICATION__||typeof window.renderDashboard!=='function')return;
-  const base=window.renderDashboard;
-  window.renderDashboard=function(){const result=base.apply(this,arguments);simplifyHomeScreen();stabilizeRetiredChrome();return result};
-  window.__MM_HOME_SIMPLIFICATION__='2026.09.06.10';
+  if(window.__MM_HOME_SIMPLIFICATION__)return;
+  const runtime=window.MM_RUNTIME_V2;if(!runtime)throw new Error('app-shell-finalize.js requires runtime-v2.js for dashboard composition');
+  runtime.after('renderDashboard',()=>{simplifyHomeScreen();stabilizeRetiredChrome()});
+  runtime.rebind('renderDashboard');
+  window.__MM_HOME_SIMPLIFICATION__='2026.09.10.1';
   simplifyHomeScreen();
 }
 
@@ -205,7 +207,7 @@ const originalSpecialistOpen=window.mmSpecialistOpen;
 const originalGapLesson=window.mmSpecialistGapLesson;
 window.mmSpecialistOpen=function(){const result=originalSpecialistOpen?.();queueMicrotask(patchEvidenceUi);return result};
 window.mmSpecialistGapLesson=function(id){const result=originalGapLesson?.(id);queueMicrotask(patchEvidenceUi);return result};
-window.MM_SPECIALIST_EVIDENCE_STATUS={version:'2026.08.29.1',statuses:{...EVIDENCE_STATUS},summary:{...GAP.evidenceSummary},scope:'Resolved display state from the historical mechanism registry plus the formal promotion overlay; no assessment, certificate, process-setting or production authority.'};
+window.MM_SPECIALIST_EVIDENCE_STATUS={version:'2026.09.10.1',registryVersion:EVIDENCE_REGISTRY_VERSION,statuses:{...EVIDENCE_STATUS},summary:{...GAP.evidenceSummary},scope:'Display state generated from data/evidence-coverage-v1.json; no learner completion, shell code, assessment, certificate, process-setting or production authority can promote evidence.'};
 
 loadProductionHealth();
 loadConnectedDataRuntime();

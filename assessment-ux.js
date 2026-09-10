@@ -2,16 +2,16 @@
 (function(){
 'use strict';
 
-const VERSION='2026.09.06.9';
+const VERSION='2026.09.10.1';
 const FIRST_HISTORY_LIMIT=3;
 const HISTORY_KEY='mm_assessment_opening_history_v1';
+const R=window.MM_RUNTIME_V2;if(!R)throw new Error('assessment-ux.js requires runtime-v2.js');
 const root=document.documentElement;
 const firstQuestionHistory=new Map();
 
 function readQuestionHistory(){
   try{
-    const stored=localStorage.getItem(HISTORY_KEY);
-    const raw=JSON.parse(stored||'{}');
+    const raw=R.storage.get(HISTORY_KEY,{})||{};
     firstQuestionHistory.clear();
     if(!raw||typeof raw!=='object'||Array.isArray(raw))return true;
     for(const [scope,ids] of Object.entries(raw)){
@@ -29,8 +29,7 @@ function persistQuestionHistory(){
       const clean=(Array.isArray(ids)?ids:[]).map(x=>String(x||'').trim()).filter(Boolean).slice(0,FIRST_HISTORY_LIMIT);
       if(clean.length)out[scope]=clean;
     }
-    localStorage.setItem(HISTORY_KEY,JSON.stringify(out));
-    return true;
+    return R.storage.set(HISTORY_KEY,out);
   }catch(_){return false}
 }
 readQuestionHistory();
@@ -113,7 +112,7 @@ function rotateOpeningQuestion(rows,level,region){
   }
   return rows;
 }
-function resetQuestionRotation(){firstQuestionHistory.clear();try{localStorage.removeItem(HISTORY_KEY)}catch(_){}}
+function resetQuestionRotation(){firstQuestionHistory.clear();R.storage.remove(HISTORY_KEY)}
 
 function hasAnswer(card){return !!card.querySelector('label.option input[type=radio]:checked')}
 function stripLegacyAttemptControls(card){card.querySelectorAll('.mm-confidence').forEach(control=>control.remove())}
@@ -256,10 +255,12 @@ function decorateScenario(i,ci,el){
 }
 
 addStyles();
-const baseQuestions=window.getExamQuestions;if(typeof baseQuestions==='function')window.getExamQuestions=function(level,region){return rotateOpeningQuestion(baseQuestions.apply(this,arguments),level,region)};
-const baseStart=window.startExam;if(typeof baseStart==='function')window.startExam=function(){state=null;const r=baseStart.apply(this,arguments);setTimeout(decorateExam,0);return r};
-const baseGrade=window.gradeExam;if(typeof baseGrade==='function')window.gradeExam=function(){const r=baseGrade.apply(this,arguments);setTimeout(decorateReview,0);return r};
+R.after('getExamQuestions',(rows,level,region)=>rotateOpeningQuestion(rows,level,region));
+R.before('startExam',()=>{state=null});
+R.after('startExam',()=>{setTimeout(decorateExam,0)});
+R.after('gradeExam',()=>{setTimeout(decorateReview,0)});
+R.rebind('getExamQuestions');R.rebind('startExam');R.rebind('gradeExam');
 const baseScenario=window.answerScenario;if(typeof baseScenario==='function')window.answerScenario=function(i,ci,el){const r=baseScenario.apply(this,arguments);setTimeout(()=>decorateScenario(i,ci,el),0);return r};
 
-window.MM_ASSESSMENT_UX={version:VERSION,decorateExam,decorateReview,showQuestion,rotateOpeningQuestion,resetQuestionRotation,questionRotation:{historyLimit:FIRST_HISTORY_LIMIT,scope:'learner + level + region',persistence:'learner-scoped localStorage stable IDs only; no answers or personal data',storageKey:HISTORY_KEY,policy:'avoid the last three opening questions across starts, reloads and learner switches when another valid item is available'}};
+window.MM_ASSESSMENT_UX={version:VERSION,decorateExam,decorateReview,showQuestion,rotateOpeningQuestion,resetQuestionRotation,questionRotation:{historyLimit:FIRST_HISTORY_LIMIT,scope:'learner + level + region',persistence:'Runtime V2 learner-scoped storage; stable IDs only; no answers or personal data',storageKey:HISTORY_KEY,policy:'avoid the last three opening questions across starts, reloads and learner switches when another valid item is available'}};
 })();

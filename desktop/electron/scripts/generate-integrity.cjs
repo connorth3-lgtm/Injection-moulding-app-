@@ -21,7 +21,7 @@ const BASE_FILES=[
   'assessment-stable-review-bridge.js','assessment-analytics-ui.js','assessment-final-hardening.js','runtime-v2.js','assessment-runtime-v2.js','assessment-ux.js',
   'assessment-evidence-sources.js','evidence-maturity-deep-dive.js','evidence-maturity-formal-bridge.js','assessment-psychometric-hardening.js',
   'assessment-evidence-integrity-upgrade.js','lesson-evidence-depth.js','lesson-deep-authoring-v2.js','assessment-evidence-approval.js','assessment-psychometric-approval.js',
-  'app-shell-registry.js','assessment-multimodal.js','pwa-shell.js','learning-experience.js','process-data-diagnostics.js','real-measured-data-assessment.js',
+  'app-shell-registry.js','assessment-multimodal.js','pwa-shell.js','learning-experience.js','measured-learning-library.js','lesson-simple-experience.js','process-data-diagnostics.js','real-measured-data-assessment.js',
   'process-data-deep-dive-machine.js','process-data-deep-dive-tooling.js','process-data-deep-dive-material.js','process-data-deep-dive-scientific.js',
   'process-data-deep-dive-quality.js','process-data-deep-dive-50.js','process-data-20-pass-01-05.js','process-data-20-pass-06-10.js',
   'process-data-20-pass-11-15.js','process-data-20-pass-16-20.js','process-data-20-pass-atlas.js','process-data-local-intake.js',
