@@ -92,6 +92,20 @@ def main() -> int:
     if release_docs_changed and (ROOT / "qa_release_docs.py").exists():
         commands.append([sys.executable, "qa_release_docs.py"])
 
+    browser_contract_changed = any(
+        p in {
+            ".github/workflows/mobile-browser-qa.yml",
+            "qa_webkit_regression.py",
+            "playwright.config.cjs",
+            "playwright.webkit-full.config.cjs",
+            "playwright.cross-browser.config.cjs",
+        }
+        or (p.startswith("qa/") and p.endswith(".spec.js"))
+        for p in files
+    )
+    if browser_contract_changed and (ROOT / "qa_webkit_regression.py").exists():
+        commands.append([sys.executable, "qa_webkit_regression.py"])
+
     if any(p.startswith("src/domains/") or p in {"runtime-v2.js", "runtime-domain-manifest.json"} for p in files):
         if (ROOT / "qa_audit_consolidation.py").exists():
             commands.append([sys.executable, "qa_audit_consolidation.py"])
