@@ -77,7 +77,7 @@ def technical_identities() -> list[dict]:
         raise AssertionError("technical assessment stableIds are not unique")
     for row in technical:
         revision = row.get("reviewedRevision")
-        if not isinstance(revision, int) or revision < 1:
+        if type(revision) is not int or revision < 1:
             raise AssertionError(f"{clean(row.get('stableId'))}: invalid reviewedRevision")
     return sorted(technical, key=lambda row: clean(row.get("stableId")))
 
@@ -94,8 +94,8 @@ def require_unique_strings(label: str, values) -> list[str]:
 
 
 def validate_contract(contract: dict, technical: list[dict]) -> dict:
-    if contract.get("schemaVersion") != 1:
-        raise AssertionError("assessment outcome-review contract schemaVersion must be 1")
+    if type(contract.get("schemaVersion")) is not int or contract.get("schemaVersion") != 1:
+        raise AssertionError("assessment outcome-review contract schemaVersion must be integer 1")
 
     outcomes = contract.get("outcomes")
     mappings = contract.get("mappings")
@@ -136,7 +136,7 @@ def validate_contract(contract: dict, technical: list[dict]) -> dict:
         if not title:
             raise AssertionError(f"{outcome_id}: title is required")
         important = row.get("important")
-        if important not in (True, False, None):
+        if important is not None and type(important) is not bool:
             raise AssertionError(f"{outcome_id}: important must be true, false or null")
         if state == "approved":
             if not isinstance(important, bool):
@@ -189,9 +189,10 @@ def validate_contract(contract: dict, technical: list[dict]) -> dict:
                 raise AssertionError(f"{stable_id}: approved mapping references unapproved outcome {outcome_id}")
 
         current_revision = current_by_id[stable_id]["reviewedRevision"]
-        if row.get("reviewedItemRevision") != current_revision:
+        reviewed_item_revision = row.get("reviewedItemRevision")
+        if type(reviewed_item_revision) is not int or reviewed_item_revision != current_revision:
             raise AssertionError(
-                f"{stable_id}: approved mapping reviewedItemRevision={row.get('reviewedItemRevision')} "
+                f"{stable_id}: approved mapping reviewedItemRevision={reviewed_item_revision} "
                 f"does not match current reviewedRevision={current_revision}; SME re-review is required"
             )
         if row.get("independenceReviewed") is not True:
@@ -353,6 +354,20 @@ def self_test() -> None:
     expect_failure(
         "pending mapping populates counted outcomeIds",
         lambda: validate_contract(counted_while_pending, technical),
+    )
+
+    numeric_boolean = deepcopy(approved)
+    numeric_boolean["outcomes"][0]["important"] = 1
+    expect_failure(
+        "numeric value used as outcome boolean",
+        lambda: validate_contract(numeric_boolean, technical),
+    )
+
+    boolean_revision = deepcopy(approved)
+    boolean_revision["mappings"][1]["reviewedItemRevision"] = True
+    expect_failure(
+        "boolean value used as question revision",
+        lambda: validate_contract(boolean_revision, technical),
     )
 
     print(
