@@ -9,6 +9,7 @@ def need(ok,msg):
 
 V=json.loads(text('version.json'))
 expected={
+ 'web_release':'2026.09.10.5',
  'android_release':'2026.08.26.2',
  'desktop_release':'2026.08.26.8',
  'content_version':'2026.08.26.1',
@@ -22,7 +23,7 @@ for k,v in expected.items(): need(V.get(k)==v,f'version.json {k} drift: {V.get(k
 
 readme=text('README.md')
 for label,k in [
- ('PWA / browser shell','android_release'),('Open Windows desktop','desktop_release'),('Training content','content_version'),
+ ('PWA / browser shell','web_release'),('Open Windows desktop','desktop_release'),('Training content','content_version'),
  ('Audited assessment bank','question_bank_version'),('Assessment quality / analytics hardening','assessment_quality_version'),
  ('Learner-scoped assessment storage','assessment_storage_scope_version'),('Question evidence approval','assessment_evidence_version'),
  ('Frozen legacy Windows recovery lane','windows_recovery_release')]:
