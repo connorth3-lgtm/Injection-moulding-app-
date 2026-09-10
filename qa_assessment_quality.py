@@ -20,7 +20,7 @@ p=subprocess.run(['node','--check',str(ROOT/'assessment-quality-suite.js')],capt
 
 cue_fix=text('assessment-answer-cue-fix.js')
 need("const transfer=D?.exams?.Advanced?.[7]" in cue_fix and "transfer[2]!==2" in cue_fix,'advanced answer-cue correction guard missing')
-need('Match validated fill, pressure/transfer, thermal and part-quality outputs' in cue_fix,'advanced answer-cue correction text missing')
+need('Match validated physical process outputs on a capable receiving machine' in cue_fix,'advanced answer-cue correction text missing')
 need('regionalItemsRewritten:27' in cue_fix and 'regionalAnswerChanges:0' in cue_fix,'regional applied-safety hardening metadata missing')
 p=subprocess.run(['node','--check',str(ROOT/'assessment-answer-cue-fix.js')],capture_output=True,text=True,encoding='utf-8',errors='replace');need(p.returncode==0,f'assessment-answer-cue-fix.js syntax error: {p.stderr}')
 
