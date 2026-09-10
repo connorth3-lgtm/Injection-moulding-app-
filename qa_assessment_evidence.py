@@ -78,7 +78,7 @@ need(p.returncode==0,f'evidence approval runtime failed: {p.stderr or p.stdout}'
 runtime=json.loads(p.stdout)
 s=runtime['summary']; records=runtime['records']
 need(runtime.get('blockedIds')==[],'no keyed question may remain blocked')
-need(runtime.get('bridge',{}).get('strictAnswerBalance',{}).get('applied')==94,'strict answer-balance bridge must be active before evidence snapshot')
+need(runtime.get('bridge',{}).get('strictAnswerBalance',{}).get('validated')==94,'reviewed keyed-answer validator must pass before evidence snapshot')
 need(s=={'total':157,'approved':157,'technical':30,'regional':27,'scenarios':40,'labs':36,'materialLabs':24,'direct':s['direct'],'mapped':s['mapped']},f'unexpected approval summary: {s}')
 need(len(records)==157 and len({r['id'] for r in records})==157,'approval record IDs must be complete and unique')
 need(all(r['status']=='approved' for r in records),'every keyed question must be approved')

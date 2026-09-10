@@ -67,7 +67,7 @@ data=json.loads(p.stdout)
 records=data['approval']['records']; need(data['approval']['coverageOk'],'formal 157-question evidence approval lost coverage')
 need(len(records)==157,'formal keyed bank must remain 157 while practice extensions stay separate')
 need(len(data.get('diagnostic',{}).get('labs',[]))==9,'diagnostic lab runtime must expose nine reviewed labs')
-need(data.get('bridge',{}).get('strictAnswerBalance',{}).get('applied')==94,'strict answer-balance bridge must be active in evidence-maturity runtime')
+need(data.get('bridge',{}).get('strictAnswerBalance',{}).get('validated')==94,'strict answer-balance bridge must be active in evidence-maturity runtime')
 
 def authority_family(src):
     a=str(src.get('authority','')).strip().lower()

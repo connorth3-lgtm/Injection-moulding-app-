@@ -1,13 +1,12 @@
-/* MouldMaster stable spaced-review ID + blueprint guard — 2026-08-30 strict answer balance */
+/* MouldMaster stable spaced-review ID + blueprint guard — reviewed answer validation 2026-09-10 */
 (function(){
 'use strict';
 const S=window.MM_ASSESSMENT_QUALITY,D=window.MM_DATA;
 if(!S||!D||typeof window.getExamQuestions!=='function')throw new Error('Assessment quality suite must load before stable review bridge');
 
-/* Keep the assessed mechanism and correct index unchanged. These concise keyed choices
-   move explanation back into the existing rationale/feedback instead of telegraphing the
-   answer by making it the longest option. Items absent from this map already passed the
-   strict longest/tied-longest audit unchanged. */
+/* Reviewed keyed wording contract. The strings below are authored upstream in the source
+   banks. This bridge is validation-only: it must never rewrite learner-visible assessment
+   text. A mismatch is source drift and fails closed until the content is re-reviewed. */
 const STRICT_ANSWER_BALANCE={
  'tech:Beginner:0':'Part-mass plateau supports gate seal for this condition',
  'tech:Beginner:1':'Insufficient evidence; trend repeated shot-delivery actuals first',
@@ -109,28 +108,28 @@ const STRICT_ANSWER_BALANCE={
 
 function optionsOf(q){return q?.options??q?.[1]}
 function correctOf(q){return Number(q?.correct??q?.[2])}
-function applyBalance(requireFull){
- let applied=0;
+function validateReviewedAnswers(requireFull){
+ let validated=0;
  for(const level of ['Beginner','Intermediate','Advanced'])for(let i=0;i<(D.exams?.[level]||[]).length;i++){
   const id=`tech:${level}:${i}`,replacement=STRICT_ANSWER_BALANCE[id];if(!replacement)continue;
-  const q=D.exams[level][i],opts=optionsOf(q),key=correctOf(q);if(!Array.isArray(opts)||opts.length!==4||key<0||key>3)throw new Error(`Strict answer-balance source invalid: ${id}`);opts[key]=replacement;applied++;
+  const q=D.exams[level][i],opts=optionsOf(q),key=correctOf(q);if(!Array.isArray(opts)||opts.length!==4||key<0||key>3)throw new Error(`Strict answer-balance source invalid: ${id}`);if(String(opts[key])!==replacement)throw new Error(`Reviewed keyed answer drift: ${id}`);validated++;
  }
  for(const region of ['UK','US','NZ'])for(const level of ['Beginner','Intermediate','Advanced'])for(let i=0;i<(D.regionalQuestions?.[region]?.[level]||[]).length;i++){
   const id=`reg:${region}:${level}:${i}`,replacement=STRICT_ANSWER_BALANCE[id];if(!replacement)continue;
-  const q=D.regionalQuestions[region][level][i],opts=optionsOf(q),key=correctOf(q);if(!Array.isArray(opts)||opts.length!==4||key<0||key>3)throw new Error(`Strict answer-balance source invalid: ${id}`);opts[key]=replacement;applied++;
+  const q=D.regionalQuestions[region][level][i],opts=optionsOf(q),key=correctOf(q);if(!Array.isArray(opts)||opts.length!==4||key<0||key>3)throw new Error(`Strict answer-balance source invalid: ${id}`);if(String(opts[key])!==replacement)throw new Error(`Reviewed keyed answer drift: ${id}`);validated++;
  }
  (D.scenarios||[]).forEach((s,i)=>{
   const id=s.mmStableId||`scenario:${String(i+1).padStart(2,'0')}`,replacement=STRICT_ANSWER_BALANCE[id];if(!replacement)return;
-  const opts=s.choices,key=Number(s.correct);if(!Array.isArray(opts)||opts.length!==4||key<0||key>3)throw new Error(`Strict answer-balance source invalid: ${id}`);opts[key]=replacement;applied++;
+  const opts=s.choices,key=Number(s.correct);if(!Array.isArray(opts)||opts.length!==4||key<0||key>3)throw new Error(`Strict answer-balance source invalid: ${id}`);if(String(opts[key])!==replacement)throw new Error(`Reviewed keyed answer drift: ${id}`);validated++;
  });
- if(applied>94||requireFull&&applied!==94)throw new Error(`Strict answer-balance coverage mismatch: ${applied}/94`);
- window.MM_STABLE_REVIEW_BRIDGE.strictAnswerBalance.applied=applied;
- return applied;
+ if(validated>94||requireFull&&validated!==94)throw new Error(`Reviewed keyed answer coverage mismatch: ${validated}/94`);
+ window.MM_STABLE_REVIEW_BRIDGE.strictAnswerBalance.validated=validated;
+ return validated;
 }
 
 const base=window.getExamQuestions;
 window.getExamQuestions=function(){
- applyBalance(false);
+ validateReviewedAnswers(false);
  const rows=base.apply(this,arguments);
  const technical=rows.filter(q=>q&&q.kind==='technical');
  const covered=new Set();
@@ -141,8 +140,8 @@ window.getExamQuestions=function(){
  return rows;
 };
 
-window.MM_STABLE_REVIEW_BRIDGE={version:'2026.08.30.2',stableIdsPrimary:true,fullBlueprintRequired:true,requiredTechnicalDomains:(S.blueprint||[]).slice(),legacyRecordsMigratedBy:'assessment-quality-suite.js',strictAnswerBalance:{applied:0,required:94,policy:'correct option must be shorter than at least one distractor; key indexes unchanged'}};
-applyBalance(false);
-function finalizeBalance(){applyBalance(true)}
+window.MM_STABLE_REVIEW_BRIDGE={version:'2026.09.10.1',stableIdsPrimary:true,fullBlueprintRequired:true,requiredTechnicalDomains:(S.blueprint||[]).slice(),legacyRecordsMigratedBy:'assessment-quality-suite.js',strictAnswerBalance:{validated:0,required:94,runtimeTextMutations:0,policy:'Reviewed keyed answer wording is source-authored; runtime validates drift only; key indexes unchanged'}};
+validateReviewedAnswers(false);
+function finalizeBalance(){validateReviewedAnswers(true)}
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',finalizeBalance,{once:true});else finalizeBalance();
 })();

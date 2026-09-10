@@ -99,7 +99,7 @@ process.stdout.write(JSON.stringify({items:out,bridge:sandbox.window.MM_STABLE_R
     need(p.returncode==0,'formal/scenario runtime failed: '+(p.stderr or p.stdout)[:5000])
     data=json.loads(p.stdout)
     need(data.get('scenarioCount')==40,f"expected 40 scenarios, got {data.get('scenarioCount')}")
-    need(data.get('bridge',{}).get('strictAnswerBalance',{}).get('applied')==94,'strict answer-balance bridge did not reach 94/94 before audit')
+    need(data.get('bridge',{}).get('strictAnswerBalance',{}).get('validated')==94,'reviewed keyed-answer validator did not reach 94/94 before audit')
     return data['items']
 
 
