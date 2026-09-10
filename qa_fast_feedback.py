@@ -59,11 +59,11 @@ def main() -> int:
 
     assessment_changed = any(
         p.startswith("assessment-")
+        or p.startswith("qa_assessment_")
         or "/assessment/" in p
         or p in {
             "tools/generate_assessment_decision_manifest.py",
             "data/assessment-decision-manifest-v1.json",
-            "qa_assessment_decision_manifest.py",
         }
         for p in files
     )
@@ -72,6 +72,8 @@ def main() -> int:
             commands.append([sys.executable, "qa_assessment_storage_scope.py"])
         if (ROOT / "qa_assessment_decision_manifest.py").exists():
             commands.append([sys.executable, "qa_assessment_decision_manifest.py"])
+        if (ROOT / "qa_assessment_quality.py").exists():
+            commands.append([sys.executable, "qa_assessment_quality.py"])
 
     if any(p.startswith("src/domains/") or p in {"runtime-v2.js", "runtime-domain-manifest.json"} for p in files):
         if (ROOT / "qa_audit_consolidation.py").exists():
