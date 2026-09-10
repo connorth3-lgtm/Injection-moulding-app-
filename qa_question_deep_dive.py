@@ -16,7 +16,7 @@ for p in [PATCH,REGIONAL,REGISTER,'index.html','service-worker.js','desktop/elec
 
 tech=text(PATCH); regional=text(REGIONAL)
 for marker in [
-    "technicalItemsRewritten:30","scenarioItemsRewritten:8","regionalAnswerChanges:0",
+    "technicalItemsRewritten:30","scenarioItemsRewritten:16","regionalAnswerChanges:0",
     "observation:true","decision:true","discrimination:true","verification:true","insufficientEvidence:true",
     "MFR is measured under specified test conditions",
     "Part mass reaches a repeatable plateau",
@@ -77,7 +77,7 @@ if(afterKeys!==beforeKeys)throw new Error('regional answer key changed');
 for(const s of D.scenarios){if(!Array.isArray(s.choices)||s.choices.length!==4||!Array.isArray(s.feedback)||s.feedback.length!==4||!String(s.feedback[s.correct]).toLowerCase().includes('correct'))throw new Error(`scenario integrity: ${s.title}`)}
 if(D.exams.Advanced[7][2]!==2||!D.exams.Advanced[7][1][2].startsWith('Match validated fill'))throw new Error('advanced transfer cue fix missing');
 const t=D.assessmentQA.questionDeepDive,r=D.assessmentQA.regionalDeepDive;
-if(!t||t.technicalItemsRewritten!==30||t.scenarioItemsRewritten!==8)throw new Error('technical metadata missing');
+if(!t||t.technicalItemsRewritten!==30||t.scenarioItemsRewritten!==16)throw new Error('technical metadata missing');
 if(!r||r.regionalItemsRewritten!==27||r.regionalAnswerChanges!==0||r.appliedSafety!==true)throw new Error('regional metadata missing');
 if(!sandbox.window.MM_QUESTION_DEEP_DIVE?.allTechnicalEvidenceReasoning)throw new Error('technical runtime marker missing');
 if(!sandbox.window.MM_REGIONAL_QUESTION_DEEP_DIVE?.appliedSafety)throw new Error('regional runtime marker missing');
@@ -100,4 +100,4 @@ qy=text('.github/workflows/qa.yml');need("find . -maxdepth 1 -type f -name '*.js
 need('python qa_question_deep_dive.py' in text('.github/workflows/open-desktop-build.yml'),'desktop workflow missing question QA')
 need('python qa_question_deep_dive.py' in text('.github/workflows/microsoft-store-msix.yml'),'Store workflow missing question QA')
 
-print('MouldMaster question-and-answer deep dive passed: 30 technical + 27 regional live exam rewrites; 8 deepened scenarios; 0 regional key changes')
+print('MouldMaster question-and-answer deep dive passed: 30 technical + 27 regional live exam rewrites; 16 authored scenario definitions; 0 regional key changes')
