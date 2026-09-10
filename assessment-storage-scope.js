@@ -131,6 +131,6 @@ window.MM_ASSESSMENT_STORAGE_SCOPE={
  scopeProvider:()=>sharedScope()?'MM_LEARNER_SCOPE':'compatibility-hash',
  learnerScoped:true,
  prototypeInterception:false,
- boundary:'Assessment persistence is explicit: callers use this API for learner-scoped analytics and assessment metadata. Native Storage.prototype methods are never replaced. Single-owner legacy values are copied and verified before removal; ambiguous or conflicting legacy data remains untouched and is never inherited automatically.'
+ boundary:'Assessment persistence is explicit: callers use this API for learner-scoped analytics and assessment metadata. Native browser storage methods are never replaced. Single-owner legacy values are copied and verified before removal; ambiguous or conflicting legacy data remains untouched and is never inherited automatically.'
 };
 })();
