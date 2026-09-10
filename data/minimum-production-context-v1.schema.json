@@ -1,0 +1,206 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://mouldmaster.local/schema/minimum-production-context-v1.json",
+  "title": "MouldMaster Minimum Production Context v1",
+  "description": "Static, site-controlled engineering context required to interpret MouldMaster shot, trace, event, calibration and quality data without inventing production values.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "contextId", "status", "machine", "mould", "material", "part", "validatedProcessWindow", "qualityPlan", "sourceRefs", "collectionContracts", "boundaries"],
+  "properties": {
+    "schemaVersion": {"const": 1},
+    "contextId": {"type": "string", "pattern": "^ctx-[a-z0-9][a-z0-9._-]{2,95}$"},
+    "status": {"enum": ["complete", "partial", "missing", "unverified"]},
+    "machine": {"$ref": "#/$defs/machine"},
+    "mould": {"$ref": "#/$defs/mould"},
+    "material": {"$ref": "#/$defs/material"},
+    "part": {"$ref": "#/$defs/part"},
+    "validatedProcessWindow": {"$ref": "#/$defs/processWindow"},
+    "qualityPlan": {"$ref": "#/$defs/qualityPlan"},
+    "sourceRefs": {"type": "array", "items": {"$ref": "#/$defs/sourceRef"}},
+    "collectionContracts": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["shotData", "dataDictionary", "traceData", "events", "sensorCalibration", "materialGradeSchema"],
+      "properties": {
+        "shotData": {"const": "data/real-process-data-pilot-template.csv"},
+        "dataDictionary": {"const": "data/real-process-data-dictionary-template.csv"},
+        "traceData": {"const": "data/real-process-trace-template.csv"},
+        "events": {"const": "data/real-process-event-template.csv"},
+        "sensorCalibration": {"const": "data/real-process-sensor-calibration-template.csv"},
+        "materialGradeSchema": {"const": "data/materials/material-grade-v2.schema.json"}
+      }
+    },
+    "boundaries": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["noMachineControl", "noInventedValues", "supplierGuidanceIsNotValidatedWindow", "aliasesOnlyForSensitiveOperationalIdentity"],
+      "properties": {
+        "noMachineControl": {"const": true},
+        "noInventedValues": {"const": true},
+        "supplierGuidanceIsNotValidatedWindow": {"const": true},
+        "aliasesOnlyForSensitiveOperationalIdentity": {"const": true}
+      }
+    }
+  },
+  "$defs": {
+    "status": {"enum": ["complete", "partial", "missing", "unverified"]},
+    "nullableString": {"type": ["string", "null"], "maxLength": 200},
+    "nullableNumber": {"type": ["number", "null"]},
+    "quantityWindow": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["min", "nominal", "max", "unit", "sourceRef"],
+      "properties": {
+        "min": {"$ref": "#/$defs/nullableNumber"},
+        "nominal": {"$ref": "#/$defs/nullableNumber"},
+        "max": {"$ref": "#/$defs/nullableNumber"},
+        "unit": {"$ref": "#/$defs/nullableString"},
+        "sourceRef": {"$ref": "#/$defs/nullableString"}
+      }
+    },
+    "machine": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "machineAlias", "manufacturer", "model", "controller", "clampForceKn", "screwDiameterMm", "maxInjectionPressureMpa", "maxInjectionSpeedMmS", "maxShotVolumeCm3", "tieBarSpacingHorizontalMm", "tieBarSpacingVerticalMm", "calibrationRefs"],
+      "properties": {
+        "status": {"$ref": "#/$defs/status"},
+        "machineAlias": {"$ref": "#/$defs/nullableString"},
+        "manufacturer": {"$ref": "#/$defs/nullableString"},
+        "model": {"$ref": "#/$defs/nullableString"},
+        "controller": {"$ref": "#/$defs/nullableString"},
+        "clampForceKn": {"$ref": "#/$defs/nullableNumber"},
+        "screwDiameterMm": {"$ref": "#/$defs/nullableNumber"},
+        "maxInjectionPressureMpa": {"$ref": "#/$defs/nullableNumber"},
+        "maxInjectionSpeedMmS": {"$ref": "#/$defs/nullableNumber"},
+        "maxShotVolumeCm3": {"$ref": "#/$defs/nullableNumber"},
+        "tieBarSpacingHorizontalMm": {"$ref": "#/$defs/nullableNumber"},
+        "tieBarSpacingVerticalMm": {"$ref": "#/$defs/nullableNumber"},
+        "calibrationRefs": {"type": "array", "items": {"type": "string", "maxLength": 120}, "uniqueItems": true}
+      }
+    },
+    "coolingCircuit": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["circuitAlias", "supplyTargetC", "targetFlowLmin", "sensorRefs"],
+      "properties": {
+        "circuitAlias": {"type": "string", "minLength": 1, "maxLength": 120},
+        "supplyTargetC": {"$ref": "#/$defs/nullableNumber"},
+        "targetFlowLmin": {"$ref": "#/$defs/nullableNumber"},
+        "sensorRefs": {"type": "array", "items": {"type": "string", "maxLength": 120}, "uniqueItems": true}
+      }
+    },
+    "mould": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "mouldAlias", "cavityCount", "activeCavityAliases", "runnerType", "gateType", "hotRunner", "partVolumeCm3", "runnerVolumeCm3", "projectedAreaMm2", "coolingCircuits"],
+      "properties": {
+        "status": {"$ref": "#/$defs/status"},
+        "mouldAlias": {"$ref": "#/$defs/nullableString"},
+        "cavityCount": {"type": ["integer", "null"], "minimum": 1},
+        "activeCavityAliases": {"type": "array", "items": {"type": "string", "maxLength": 120}, "uniqueItems": true},
+        "runnerType": {"enum": ["cold", "hot", "hybrid", "unknown"]},
+        "gateType": {"$ref": "#/$defs/nullableString"},
+        "hotRunner": {"type": ["boolean", "null"]},
+        "partVolumeCm3": {"$ref": "#/$defs/nullableNumber"},
+        "runnerVolumeCm3": {"$ref": "#/$defs/nullableNumber"},
+        "projectedAreaMm2": {"$ref": "#/$defs/nullableNumber"},
+        "coolingCircuits": {"type": "array", "items": {"$ref": "#/$defs/coolingCircuit"}}
+      }
+    },
+    "material": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "materialAlias", "manufacturer", "grade", "polymerFamily", "lotAlias", "materialBatchAlias", "materialGradeRecordId", "tdsSourceRef", "sdsSourceRef"],
+      "properties": {
+        "status": {"$ref": "#/$defs/status"},
+        "materialAlias": {"$ref": "#/$defs/nullableString"},
+        "manufacturer": {"$ref": "#/$defs/nullableString"},
+        "grade": {"$ref": "#/$defs/nullableString"},
+        "polymerFamily": {"$ref": "#/$defs/nullableString"},
+        "lotAlias": {"$ref": "#/$defs/nullableString"},
+        "materialBatchAlias": {"$ref": "#/$defs/nullableString"},
+        "materialGradeRecordId": {"$ref": "#/$defs/nullableString"},
+        "tdsSourceRef": {"$ref": "#/$defs/nullableString"},
+        "sdsSourceRef": {"$ref": "#/$defs/nullableString"}
+      }
+    },
+    "criticalCharacteristic": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["characteristicAlias", "nominal", "lowerSpecLimit", "upperSpecLimit", "unit", "inspectionMethodAlias", "sourceRef"],
+      "properties": {
+        "characteristicAlias": {"type": "string", "minLength": 1, "maxLength": 120},
+        "nominal": {"$ref": "#/$defs/nullableNumber"},
+        "lowerSpecLimit": {"$ref": "#/$defs/nullableNumber"},
+        "upperSpecLimit": {"$ref": "#/$defs/nullableNumber"},
+        "unit": {"$ref": "#/$defs/nullableString"},
+        "inspectionMethodAlias": {"$ref": "#/$defs/nullableString"},
+        "sourceRef": {"$ref": "#/$defs/nullableString"}
+      }
+    },
+    "part": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "partAlias", "revisionAlias", "nominalMassG", "criticalCharacteristics"],
+      "properties": {
+        "status": {"$ref": "#/$defs/status"},
+        "partAlias": {"$ref": "#/$defs/nullableString"},
+        "revisionAlias": {"$ref": "#/$defs/nullableString"},
+        "nominalMassG": {"$ref": "#/$defs/nullableNumber"},
+        "criticalCharacteristics": {"type": "array", "items": {"$ref": "#/$defs/criticalCharacteristic"}}
+      }
+    },
+    "processWindow": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "validationRef", "parameters"],
+      "properties": {
+        "status": {"$ref": "#/$defs/status"},
+        "validationRef": {"$ref": "#/$defs/nullableString"},
+        "parameters": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "fill_time_s": {"$ref": "#/$defs/quantityWindow"},
+            "transfer_position_mm": {"$ref": "#/$defs/quantityWindow"},
+            "transfer_pressure_mpa": {"$ref": "#/$defs/quantityWindow"},
+            "cushion_mm": {"$ref": "#/$defs/quantityWindow"},
+            "recovery_time_s": {"$ref": "#/$defs/quantityWindow"},
+            "cycle_time_s": {"$ref": "#/$defs/quantityWindow"},
+            "tcu_supply_c": {"$ref": "#/$defs/quantityWindow"},
+            "tcu_return_c": {"$ref": "#/$defs/quantityWindow"},
+            "tcu_flow_lpm": {"$ref": "#/$defs/quantityWindow"},
+            "resin_moisture_ppm": {"$ref": "#/$defs/quantityWindow"},
+            "dryer_dew_point_c": {"$ref": "#/$defs/quantityWindow"},
+            "drying_time_h": {"$ref": "#/$defs/quantityWindow"},
+            "regrind_fraction_pct": {"$ref": "#/$defs/quantityWindow"},
+            "hot_runner_actual_c": {"$ref": "#/$defs/quantityWindow"}
+          }
+        }
+      }
+    },
+    "qualityPlan": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "qualityPlanRef", "defectCodeSetRef", "samplingPlanRef"],
+      "properties": {
+        "status": {"$ref": "#/$defs/status"},
+        "qualityPlanRef": {"$ref": "#/$defs/nullableString"},
+        "defectCodeSetRef": {"$ref": "#/$defs/nullableString"},
+        "samplingPlanRef": {"$ref": "#/$defs/nullableString"}
+      }
+    },
+    "sourceRef": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["sourceAlias", "kind", "revisionAlias", "authority", "status"],
+      "properties": {
+        "sourceAlias": {"type": "string", "minLength": 1, "maxLength": 160},
+        "kind": {"enum": ["machine-spec", "mould-drawing", "material-tds", "material-sds", "part-drawing", "quality-plan", "process-validation", "calibration", "sop", "other"]},
+        "revisionAlias": {"$ref": "#/$defs/nullableString"},
+        "authority": {"enum": ["authoritative", "site-controlled", "unverified"]},
+        "status": {"enum": ["available", "missing", "expired", "unverified"]}
+      }
+    }
+  }
+}
