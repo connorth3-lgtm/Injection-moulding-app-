@@ -1,0 +1,93 @@
+/* MouldMaster Practice hub usability layer — 2026.09.10.7
+   Small, scoped overrides keep practice choices readable on phones without
+   perturbing the broader shell layout. */
+
+.mm-practice-hub .mm-hub-continue-copy .mm-hub-progress{
+  grid-template-columns:1fr!important;
+  margin-top:12px!important;
+}
+.mm-practice-hub .mm-hub-continue-copy .mm-hub-progress strong{
+  white-space:normal!important;
+  color:#b9cbe0!important;
+  font-weight:700!important;
+}
+.mm-practice-hub .mm-hub-tile{
+  min-height:154px!important;
+}
+
+@media(max-width:700px){
+  .mm-practice-hub .mm-primary-hub-head p{
+    display:block!important;
+  }
+  .mm-practice-hub .mm-hub-section-head{
+    align-items:flex-start!important;
+  }
+  .mm-practice-hub .mm-hub-section-head p{
+    display:block!important;
+    max-width:44ch!important;
+    line-height:1.35!important;
+  }
+  .mm-practice-hub .mm-hub-tile{
+    min-height:0!important;
+    padding:14px 15px!important;
+  }
+  .mm-practice-hub .mm-hub-tile .eyebrow{
+    display:block!important;
+    margin-bottom:5px!important;
+    font-size:9.5px!important;
+  }
+  .mm-practice-hub .mm-hub-tile b{
+    font-size:17px!important;
+  }
+  .mm-practice-hub .mm-hub-tile small{
+    display:-webkit-box!important;
+    -webkit-box-orient:vertical!important;
+    -webkit-line-clamp:3!important;
+    overflow:hidden!important;
+    margin-top:6px!important;
+    font-size:12px!important;
+    line-height:1.38!important;
+  }
+  .mm-practice-hub .mm-hub-tile-action{
+    display:block!important;
+    padding-top:9px!important;
+    font-size:11px!important;
+  }
+  .mm-practice-hub .mm-hub-assessment{
+    align-items:flex-start!important;
+  }
+  .mm-practice-hub .mm-hub-assessment-copy small{
+    display:block!important;
+  }
+}
+
+@media(max-width:520px){
+  .mm-practice-hub .mm-hub-grid{
+    grid-template-columns:1fr!important;
+  }
+  .mm-practice-hub .mm-hub-continue{
+    grid-template-columns:1fr!important;
+    gap:14px!important;
+    align-items:stretch!important;
+  }
+  .mm-practice-hub .mm-hub-continue-action{
+    width:100%!important;
+    min-width:0!important;
+  }
+  .mm-practice-hub .mm-hub-tile small{
+    -webkit-line-clamp:4!important;
+  }
+  .mm-practice-hub .mm-hub-assessment{
+    display:grid!important;
+    grid-template-columns:1fr!important;
+  }
+  .mm-practice-hub .mm-hub-assessment button{
+    width:100%!important;
+  }
+}
+
+@media(prefers-reduced-motion:reduce){
+  .mm-practice-hub *{
+    scroll-behavior:auto!important;
+  }
+}
