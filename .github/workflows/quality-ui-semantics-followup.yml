@@ -36,7 +36,7 @@ jobs:
           rm -f tools/apply_quality_ui_semantics.py .github/workflows/quality-ui-semantics-followup.yml
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add learning-experience.js app-shell-finalize.js qa_learning_experience.py qa_app_shell_registry.py qa/mobile-viewport.spec.js version.json service-worker.js index.html pwa-shell.js
+          git add learning-experience.js app-shell-finalize.js qa_learning_experience.py qa_app_shell_registry.py qa/mobile-viewport.spec.js qa_release.py version.json service-worker.js index.html pwa-shell.js
           git add -u tools/apply_quality_ui_semantics.py .github/workflows/quality-ui-semantics-followup.yml
           git diff --cached --check
           git commit -m 'fix(ui): decouple Home behavior from learner-visible copy'
