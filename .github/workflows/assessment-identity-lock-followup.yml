@@ -38,7 +38,7 @@ jobs:
           python qa_assessment_quality.py
           python qa_assessment_final_hardening.py
           python qa_assessment_decision_manifest.py
-          python qa_question_quality_50_pass_runtime.py
+          python qa_question_quality_50_pass_immutable.py
           python qa_release.py
           python qa_web_release_identity.py
       - name: Commit verified permanent changes
