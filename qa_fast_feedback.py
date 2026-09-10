@@ -74,6 +74,8 @@ def main() -> int:
             commands.append([sys.executable, "qa_assessment_decision_manifest.py"])
         if (ROOT / "qa_assessment_quality.py").exists():
             commands.append([sys.executable, "qa_assessment_quality.py"])
+        if (ROOT / "qa_assessment_evidence.py").exists():
+            commands.append([sys.executable, "qa_assessment_evidence.py"])
 
     if any(p.startswith("src/domains/") or p in {"runtime-v2.js", "runtime-domain-manifest.json"} for p in files):
         if (ROOT / "qa_audit_consolidation.py").exists():
