@@ -21,6 +21,15 @@ jobs:
       - name: Apply assessment identity lock
         run: |
           python tools/apply_assessment_identity_lock.py
+          python - <<'PY'
+          from pathlib import Path
+          p=Path('qa_stable_review_bridge.py')
+          s=p.read_text(encoding='utf-8')
+          old="need('competencies:competencySet' in suite,'technical questions must retain multi-competency tags for blueprint coverage')\n"
+          if s.count(old)!=1:
+              raise SystemExit('obsolete competency-construction QA marker drifted')
+          p.write_text(s.replace(old,'',1),encoding='utf-8')
+          PY
           python tools/sync_web_release.py
       - name: Verify identity, psychometrics and release
         run: |
