@@ -44,7 +44,7 @@ for expression in (
     '${{ steps.cross_browser_smoke.outcome }}',
 ):
     need(expression in workflow,f'final browser gate is not wired to {expression}')
-need('check_gate "Immutable .25 visual baseline approval" "$VISUAL_OUTCOME"' in workflow,'immutable visual drift must remain fail-closed after evidence collection')
+need('check_gate "Approved visual baseline" "$VISUAL_OUTCOME"' in workflow,'approved visual drift must remain fail-closed after evidence collection')
 need('if [ "$failed" -ne 0 ]; then' in workflow and 'exit 1' in workflow,'final browser gate must fail the job when an approval/test outcome is unresolved')
 
-print(f'MouldMaster WebKit regression contract passed ({len(webkit_specs)} substantive specs + tablet smoke; Chromium-only service-worker PWA lifecycle/transition and immutable visual baseline explicit; browser evidence remains complete before final fail-closed approval)')
+print(f'MouldMaster WebKit regression contract passed ({len(webkit_specs)} substantive specs + tablet smoke; Chromium-only service-worker PWA lifecycle/transition and approved visual baseline explicit; browser evidence remains complete before final fail-closed approval)')
