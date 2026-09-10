@@ -1,0 +1,43 @@
+name: Quality UI semantics follow-up
+on:
+  push:
+    branches: [audit-quality-followup-2026-09-10]
+permissions:
+  contents: write
+jobs:
+  apply-and-verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 2
+      - uses: actions/setup-node@v7
+        with:
+          node-version: '22.12.0'
+          package-manager-cache: false
+      - uses: actions/setup-python@v7
+        with:
+          python-version: '3.12'
+      - name: Apply semantic UI hardening
+        run: |
+          python tools/apply_quality_ui_semantics.py
+          python tools/sync_web_release.py
+      - name: Syntax and focused contracts
+        run: |
+          node --check learning-experience.js
+          node --check app-shell-finalize.js
+          python qa_learning_experience.py
+          python qa_app_shell_registry.py
+          python qa_runtime_hardening.py
+          python qa_release.py
+          python qa_web_release_identity.py
+      - name: Commit verified source-only changes and remove migration helpers
+        run: |
+          rm -f tools/apply_quality_ui_semantics.py .github/workflows/quality-ui-semantics-followup.yml
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add learning-experience.js app-shell-finalize.js qa_learning_experience.py qa_app_shell_registry.py qa/mobile-viewport.spec.js version.json service-worker.js index.html pwa-shell.js
+          git add -u tools/apply_quality_ui_semantics.py .github/workflows/quality-ui-semantics-followup.yml
+          git diff --cached --check
+          git commit -m 'fix(ui): decouple Home behavior from learner-visible copy'
+          git push origin HEAD:audit-quality-followup-2026-09-10
