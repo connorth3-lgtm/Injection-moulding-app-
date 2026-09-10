@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from collections import Counter, defaultdict
+from collections import Counter
 from pathlib import Path
 import json
 import re
@@ -54,6 +54,17 @@ def flatten(values) -> list[str]:
         elif clean(value):
             out.append(clean(value))
     return out
+
+
+def outcome_values(row: dict, keys: tuple[str, ...]) -> list[str]:
+    values: list[str] = []
+    for key in keys:
+        raw = row.get(key)
+        if isinstance(raw, list):
+            values.extend(clean(value) for value in raw if clean(value))
+        elif clean(raw):
+            values.append(clean(raw))
+    return sorted(set(values))
 
 
 def lines_for_dimension(lesson: dict, dimension: str) -> list[str]:
@@ -117,6 +128,12 @@ def assessment_report() -> dict:
     if not technical:
         raise AssertionError("no locked technical assessment identities found")
 
+    stable_ids = [clean(row.get("stableId")) for row in technical]
+    if any(not stable_id for stable_id in stable_ids):
+        raise AssertionError("technical assessment identity missing stableId")
+    if len(set(stable_ids)) != len(stable_ids):
+        raise AssertionError("technical assessment stableIds are not unique")
+
     by_level: dict[str, list[dict]] = {level: [] for level in LEVELS}
     for row in technical:
         level = row.get("level")
@@ -124,7 +141,7 @@ def assessment_report() -> dict:
             by_level[level].append(row)
 
     outcome_keys = ("outcome", "outcomes", "learningOutcome", "learningOutcomes")
-    tagged = [row for row in technical if any(row.get(key) for key in outcome_keys)]
+    tagged = [row for row in technical if outcome_values(row, outcome_keys)]
     concept_counts = Counter(clean(row.get("concept")) or "<missing>" for row in technical)
     competency_counts = Counter()
     for row in technical:
@@ -153,19 +170,32 @@ def assessment_report() -> dict:
     if outcome_ready:
         outcome_counts = Counter()
         for row in technical:
-            vals = []
-            for key in outcome_keys:
-                raw = row.get(key)
-                if isinstance(raw, list):
-                    vals.extend(raw)
-                elif raw:
-                    vals.append(raw)
-            for value in {clean(x) for x in vals if clean(x)}:
+            for value in outcome_values(row, outcome_keys):
                 outcome_counts[value] += 1
         if any(count < TARGET_MIN for count in outcome_counts.values()):
             status = "HOLD_BREADTH_BELOW_TARGET"
     else:
         outcome_counts = Counter()
+
+    level_order = {level: index for index, level in enumerate(LEVELS)}
+    mapping_queue = []
+    for row in sorted(technical, key=lambda item: (level_order.get(item.get("level"), 99), clean(item.get("stableId")))):
+        outcomes = outcome_values(row, outcome_keys)
+        competencies = sorted(
+            {clean(value) for value in (row.get("competencies") or [row.get("competency")]) if clean(value)}
+        )
+        mapping_queue.append(
+            {
+                "stableId": clean(row.get("stableId")),
+                "level": clean(row.get("level")),
+                "difficulty": clean(row.get("difficulty")),
+                "conceptProxy": clean(row.get("concept")) or "<missing>",
+                "competencies": competencies,
+                "reviewedRevision": row.get("reviewedRevision"),
+                "currentOutcomeIds": outcomes,
+                "mappingStatus": "mapped-pending-sme-review" if outcomes else "pending-sme-mapping",
+            }
+        )
 
     return {
         "status": status,
@@ -187,6 +217,8 @@ def assessment_report() -> dict:
             "labelsAtThreeToFiveItems": proxy_target,
         },
         "explicitOutcomeCounts": dict(sorted(outcome_counts.items())),
+        "outcomeMappingQueuePendingCount": sum(row["mappingStatus"] == "pending-sme-mapping" for row in mapping_queue),
+        "outcomeMappingQueue": mapping_queue,
     }
 
 
@@ -260,6 +292,25 @@ def curriculum_report() -> dict:
         for row in per_lesson
     )
 
+    review_queue = []
+    for row in per_lesson:
+        dimensions_needing_review = [
+            dimension for dimension in DIMENSIONS
+            if row["dimensions"][dimension]["signal"] != "lesson-specific-signal"
+        ]
+        specific_count = len(DIMENSIONS) - len(dimensions_needing_review)
+        review_queue.append(
+            {
+                "id": row["id"],
+                "course": row["course"],
+                "title": row["title"],
+                "lessonSpecificDimensionCount": specific_count,
+                "dimensionsNeedingReview": dimensions_needing_review,
+                "reviewStatus": "pending-sme-semantic-review",
+            }
+        )
+    review_queue.sort(key=lambda row: (row["lessonSpecificDimensionCount"], row["id"]))
+
     derived = text("lesson-deep-authoring-v2.js")
     derived_layer_present = all(
         marker in derived
@@ -281,6 +332,8 @@ def curriculum_report() -> dict:
             "This is an automated source-specificity heuristic, not an SME judgement. The runtime deep-authoring layer can derive "
             "mechanism/evidence/decision/misconception/teach-back records, but derived uniqueness is not counted as independent SME semantic sign-off."
         ),
+        "lessonReviewQueuePendingCount": len(review_queue),
+        "lessonReviewQueue": review_queue,
         "lessonSignals": per_lesson,
     }
 
@@ -305,11 +358,13 @@ def main() -> None:
         "Assessment breadth:",
         f"{assessment['technicalItemCount']} technical items;",
         f"{assessment['technicalItemsWithExplicitOutcomeMetadata']} with explicit outcome metadata;",
+        f"{assessment['outcomeMappingQueuePendingCount']} pending SME mapping;",
         f"status={assessment['status']}",
     )
     print(
         "Curriculum semantic source-specificity:",
         f"{curriculum['lessonsWithAllSevenLessonSpecificSignals']}/120 lessons signal all seven dimensions;",
+        f"{curriculum['lessonReviewQueuePendingCount']} pending SME review;",
         f"status={curriculum['status']}",
     )
     for dimension in DIMENSIONS:
