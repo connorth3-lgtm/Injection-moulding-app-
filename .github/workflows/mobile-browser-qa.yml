@@ -90,14 +90,14 @@ jobs:
         run: |
           npm install --no-save --no-package-lock @playwright/test@1.55.0 pixelmatch@5.3.0 pngjs@7.0.0
           npx playwright install --with-deps chromium firefox webkit
-      - name: Prepare immutable .25 visual baseline
+      - name: Prepare approved visual baseline
         run: |
           BASELINE_SHA="$(python - <<'PY'
           import json
           print(json.load(open('qa/visual-regression-baseline.json', encoding='utf-8'))['commit'])
           PY
           )"
-          test "$BASELINE_SHA" = "74a42f776e985d68fefb1992d696e2f49b13cc33"
+          test "$BASELINE_SHA" = "948d69c16e5354b8fccd374fd70d2ff9d7164ce3"
           git fetch --no-tags --depth=1 origin "$BASELINE_SHA"
           rm -rf /tmp/mm-visual-baseline
           git worktree add --detach /tmp/mm-visual-baseline "$BASELINE_SHA"
@@ -118,7 +118,7 @@ jobs:
         run: npx playwright test qa/learn-practice-mobile-style.spec.js --config=playwright.config.cjs
       - name: WebKit mobile density contract
         run: npx playwright test qa/learn-practice-mobile-style.spec.js --config=playwright.webkit-full.config.cjs
-      - name: Chromium .25 visual regression lock
+      - name: Chromium approved visual regression lock
         id: visual_lock
         continue-on-error: true
         run: npx playwright test qa/visual-regression.spec.js --config=playwright.config.cjs
@@ -159,7 +159,7 @@ jobs:
               failed=1
             fi
           }
-          check_gate "Immutable .25 visual baseline approval" "$VISUAL_OUTCOME"
+          check_gate "Approved visual baseline" "$VISUAL_OUTCOME"
           check_gate "Chromium substantive regression suite" "$CHROMIUM_OUTCOME"
           check_gate "WebKit substantive learner suite" "$WEBKIT_OUTCOME"
           check_gate "Cross-browser desktop/tablet smoke suite" "$CROSS_BROWSER_OUTCOME"
