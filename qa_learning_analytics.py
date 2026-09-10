@@ -18,9 +18,11 @@ for name in required:
 js=text('learning-analytics.js')
 p=subprocess.run(['node','--check',str(ROOT/'learning-analytics.js')],capture_output=True,text=True)
 need(p.returncode==0,'learning-analytics.js syntax error: '+(p.stderr or p.stdout))
+p=subprocess.run(['node','--check',str(ROOT/'process-data-diagnostics.js')],capture_output=True,text=True)
+need(p.returncode==0,'process-data-diagnostics.js syntax error: '+(p.stderr or p.stdout))
 
 for marker in [
-    "const VERSION='2026.09.10.1'",
+    "const VERSION='2026.09.10.2'",
     "const STORAGE_PREFIX='mm_learning_analytics_v1::'",
     'const MAX_EVENTS=1500',
     'const IDLE_MS=5*60*1000',
@@ -41,6 +43,10 @@ for marker in [
     'Cohort aggregate summary',
     'Export cohort aggregate',
     'Clear my analytics',
+    'practiceStepResults',
+    'diagnosticChoiceCorrect',
+    'processChoiceCorrect',
+    'MM_PROCESS_DATA_DIAGNOSTICS?.evaluateChoice?.',
     'MM_LEARNING_ANALYTICS'
 ]:
     need(marker in js,f'learning analytics marker missing: {marker}')
@@ -64,6 +70,9 @@ need('profiles:' not in js and 'anonymousProfile:i+1' not in js,'cohort export m
 need('tokens.length<MIN_EXPORT_PROFILES' in js,'cohort export must fail closed below the minimum profile threshold')
 need("a[a.length-1]-a[0]" in js,'retry gain must compare latest completed attempt with the first attempt')
 need('Math.max(...a)-a[0]' not in js,'retry gain must not use best-ever score because that hides later regression')
+for forbidden_dom_inference in ["querySelector('.dl-choice.wrong')","querySelector('.pd-choice.wrong')",".dl-summary strong",".pd-summary strong"]:
+    need(forbidden_dom_inference not in js,f'practice analytics must use structured correctness, not rendered DOM state: {forbidden_dom_inference}')
+need('evaluateChoice' in text('process-data-diagnostics.js'),'process-data practice must expose structured choice evaluation')
 
 # Storage failures must be visible rather than silently treated as successful analytics persistence.
 for marker in ['setStorageError','analytics-read-failed','analytics-write-failed','analytics-index-read-failed','Analytics storage needs attention.','storageHealth:()=>']:

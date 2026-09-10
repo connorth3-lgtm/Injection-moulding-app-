@@ -9,10 +9,10 @@ if(!R||typeof R.after!=='function')throw new Error('assessment-evidence-approval
 const APPROVED_INPUTS={
  'MouldMaster_Core_App.html':'c6b258ccd37d98b2f591f538b34eb33c7705dda6',
  'training-upgrade.js':'ba3ed5cdab181e11359c2aff9f2dfa4d94b80cbb',
- 'assessment-deep-dive.js':'79c02dcdaa5ba29d3405228f47e374ef53aaebe3',
- 'assessment-answer-cue-fix.js':'513e92d56a01f27cd6be15f36b43c150bf0381d1',
- 'assessment-quality-suite.js':'9bd8f5bf53236f615164410acb2cdcd4b12b02d4',
- 'assessment-stable-review-bridge.js':'cd32aa381d56d5cf6109a5d877a2ba5a2a3211f2',
+ 'assessment-deep-dive.js':'8f41edb8e855f1b3f8f2277873b7700aa1d4bf29',
+ 'assessment-answer-cue-fix.js':'9a6ef14f5eac1e127255afdd050a6f47f6009587',
+ 'assessment-quality-suite.js':'8783fa70b89a1bcb49bb9c86c6aef6ed2947a801',
+ 'assessment-stable-review-bridge.js':'b91ac5b4712f96634ffd76a842ae75a417ed6a85',
  'diagnostic-learning-labs.js':'582ac717d1e218c9144f9d3b69490933f01936da',
  'material-behaviour-labs.js':'6b0f489c59ef7d5f1e6ebdd5a01d527d294f3f3b'
 };

@@ -60,6 +60,11 @@ def main() -> None:
     for token in required_runtime_tokens:
         require(token in runtime, f"connected runtime missing required behavior: {token}")
 
+    require('id:`${id}:row:${rowOrdinal}`' in runtime, 'stored process rows must use immutable row-ordinal identity')
+    require('sourceShotIndex' in runtime and 'rowOrdinal' in runtime, 'stored process rows must preserve source shot index separately from row identity')
+    require('id:`${id}:${shotIndex}`' not in runtime, 'source shot_index must never be the IndexedDB primary key')
+    require('Number(a.rowOrdinal??a.shotIndex)' in runtime, 'dataset reads must preserve source row order while remaining backward-compatible')
+
     require("script.src='./data-integration-runtime.js'" in shell, "app shell must load connected data runtime")
     require("ui.src='./process-data-intelligence-ui.js'" in shell, "app shell must load process intelligence UI")
     require("MM_APP_SHELL_FINALIZED='2026.08.26.4'" in shell, "connected data must not change the canonical app-shell compatibility marker")

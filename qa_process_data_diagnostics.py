@@ -28,7 +28,7 @@ need(p.returncode==0,'process-statistics.js syntax error: '+(p.stderr or p.stdou
 p=subprocess.run(['node',str(ROOT/'qa_process_statistics_current.cjs')],cwd=ROOT,capture_output=True,text=True)
 need(p.returncode==0,'current process statistics runtime QA failed: '+(p.stderr or p.stdout))
 
-need("const VERSION='2026.08.26.1'" in js,'guided data diagnostic version marker missing')
+need("const VERSION='2026.09.10.1'" in js,'guided data diagnostic version marker missing')
 need("const PACK=window.MM_PROCESS_EVIDENCE_DATASETS" in js,'guided UI must consume the canonical evidence dataset pack')
 need("DATASETS.length!==PACK.datasets.length" in js,'guided UI must fail closed if a canonical dataset has no guide')
 need("24 baseline, 24 fault and 24 recovery" in js,'learner UI must explain the canonical phase structure')
@@ -36,6 +36,9 @@ for marker in ['Read the pattern','Diagnose','Choose the next evidence','Interpr
     need(marker in js,f'guided data diagnostic marker missing: {marker}')
 need("PACK.toCsv(ds.id)" in js,'CSV export must use the canonical dataset generator rather than a duplicate dataset')
 need("MM_PROCESS_DATA_DIAGNOSTICS" in js,'guided data diagnostic runtime API missing')
+need("function evaluateChoice(caseId,stepIndex,choiceIndex)" in js,'guided diagnostics must expose deterministic structured answer evaluation')
+need("open:openHome,evaluateChoice" in js,'structured answer evaluator must be exported on the guided diagnostic runtime API')
+need("without scraping rendered CSS or score text" in js,'structured answer API privacy/analytics boundary missing')
 need("outside the formal assessment bank" in js,'guided cases must remain explicitly outside formal assessment')
 need('fetch(' not in js,'guided process-data module must remain local-only')
 for forbidden in ['MM_DATA.exams=', 'regionalQuestions=', 'MM_EVIDENCE_APPROVAL.records=', 'question_bank_version=', 'correctIndex=']:
@@ -88,4 +91,4 @@ need('../../process-data-diagnostics.js' in froms,'guided data diagnostics missi
 need('../../src/domains' in froms,'desktop package must bundle the current domain runtime tree')
 need("'process-data-diagnostics.js'" in text('desktop/electron/scripts/generate-integrity.cjs'),'guided data diagnostics missing from desktop integrity manifest')
 
-print(f'MouldMaster guided process-data diagnostics QA passed (14/14 canonical datasets; descriptive statistics service with missingness-safe sequence logic and fail-closed signal semantics; local-only; coherent runtime={runtime_asset})')
+print(f'MouldMaster guided process-data diagnostics QA passed (14/14 canonical datasets; structured deterministic answer evaluation for local analytics; descriptive statistics service with missingness-safe sequence logic and fail-closed signal semantics; local-only; coherent runtime={runtime_asset})')
