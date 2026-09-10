@@ -75,7 +75,7 @@ if(regionalChanged!==27)throw new Error(`expected 27 regional rewrites, got ${re
 const afterKeys=JSON.stringify(Object.fromEntries(Object.entries(D.regionalQuestions).map(([r,levels])=>[r,Object.fromEntries(Object.entries(levels).map(([l,qs])=>[l,qs.map(q=>q[2])]))])));
 if(afterKeys!==beforeKeys)throw new Error('regional answer key changed');
 for(const s of D.scenarios){if(!Array.isArray(s.choices)||s.choices.length!==4||!Array.isArray(s.feedback)||s.feedback.length!==4||!String(s.feedback[s.correct]).toLowerCase().includes('correct'))throw new Error(`scenario integrity: ${s.title}`)}
-if(D.exams.Advanced[7][2]!==2||!D.exams.Advanced[7][1][2].startsWith('Match validated fill'))throw new Error('advanced transfer cue fix missing');
+if(D.exams.Advanced[7][2]!==2||D.exams.Advanced[7][1][2]!=='Match validated physical process outputs on a capable receiving machine')throw new Error('advanced transfer reviewed answer/key contract missing');
 const t=D.assessmentQA.questionDeepDive,r=D.assessmentQA.regionalDeepDive;
 if(!t||t.technicalItemsRewritten!==30||t.scenarioItemsRewritten!==16)throw new Error('technical metadata missing');
 if(!r||r.regionalItemsRewritten!==27||r.regionalAnswerChanges!==0||r.appliedSafety!==true)throw new Error('regional metadata missing');
