@@ -29,6 +29,20 @@ def repair_freeze_quoting()->None:
     p.write_text(t,encoding='utf-8')
 
 
+def repair_freeze_v2_quoting()->None:
+    p=ROOT/'tools'/'finalize_assessment_hardening_v2.py'
+    if not p.exists():return
+    t=p.read_text(encoding='utf-8')
+    old_open="    replacement=r'''def load_optional_runtime():"
+    new_open='    replacement=r"""def load_optional_runtime():'
+    old_close="    return items'''\n    replace_section(RUNTIME_QA"
+    new_close='    return items"""\n    replace_section(RUNTIME_QA'
+    if old_open in t:t=t.replace(old_open,new_open,1)
+    if old_close in t:t=t.replace(old_close,new_close,1)
+    if new_open not in t or new_close not in t:raise SystemExit('Assessment freeze v2 quoting repair did not converge')
+    p.write_text(t,encoding='utf-8')
+
+
 def repair_optional_isolation()->None:
     p=ROOT/'tools'/'apply_audit_hardening.py'
     t=p.read_text(encoding='utf-8')
@@ -48,9 +62,9 @@ window.MM_QUESTION_QUALITY_OVERLAY={"""
 
 
 def main()->None:
-    repair_freeze_quoting();repair_optional_isolation()
-    for name in ('tools/finalize_assessment_hardening.py','tools/apply_audit_hardening.py'):
-        py_compile.compile(str(ROOT/name),doraise=True)
+    repair_freeze_quoting();repair_freeze_v2_quoting();repair_optional_isolation()
+    for name in ('tools/finalize_assessment_hardening.py','tools/finalize_assessment_hardening_v2.py','tools/apply_audit_hardening.py'):
+        if (ROOT/name).exists():py_compile.compile(str(ROOT/name),doraise=True)
     print('Hardening migration sources repaired and syntax-checked.')
 
 if __name__=='__main__':main()
