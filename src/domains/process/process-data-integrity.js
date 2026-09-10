@@ -1,17 +1,17 @@
-/* MouldMaster process-data integrity hardening — 2026.09.10.1 */
+/* MouldMaster process-data integrity hardening — 2026.09.10.2 */
 (function(){
 'use strict';
 if(window.MM_PROCESS_DATA_INTEGRITY)return;
 
-const VERSION='2026.09.10.1';
+const VERSION='2026.09.10.2';
 const DB_NAME='mouldmaster-process-data-v1';
 const DB_VERSION=1;
-const CONTEXT_KEYS=['machine','mould','materialGrade'];
+const CONTEXT_KEYS=['machine','mould','materialGrade','job'];
 let activeDatasetId='';
 let installAttempts=0;
 let optionFilterQueued=false;
 
-function norm(value){return String(value??'').trim().toLocaleLowerCase()}
+function norm(value){return String(value??'').trim().toLowerCase()}
 function contextCompatibility(left={},right={}){
   const missing=[],mismatched=[];
   for(const key of CONTEXT_KEYS){
@@ -31,7 +31,7 @@ function assertBaselineCompatible(dataset,baseline){
   const detail=[];
   if(result.missing.length)detail.push(`missing ${result.missing.join(', ')}`);
   if(result.mismatched.length)detail.push(`different ${result.mismatched.join(', ')}`);
-  throw new Error(`Baseline context mismatch: cross-dataset comparisons require the same machine, mould, and material grade (${detail.join('; ')}).`);
+  throw new Error(`Baseline context mismatch: cross-dataset comparisons require the same machine, mould, material grade, and job (${detail.join('; ')}).`);
 }
 function openDb(){
   return new Promise((resolve,reject)=>{
