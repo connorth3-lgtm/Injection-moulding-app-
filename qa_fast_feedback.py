@@ -60,6 +60,7 @@ def main() -> int:
     assessment_changed = any(
         p.startswith("assessment-")
         or p.startswith("qa_assessment_")
+        or p == "qa_evidence_maturity.py"
         or "/assessment/" in p
         or p in {
             "tools/generate_assessment_decision_manifest.py",
@@ -68,16 +69,28 @@ def main() -> int:
         for p in files
     )
     if assessment_changed:
-        if (ROOT / "qa_assessment_storage_scope.py").exists():
-            commands.append([sys.executable, "qa_assessment_storage_scope.py"])
-        if (ROOT / "qa_assessment_decision_manifest.py").exists():
-            commands.append([sys.executable, "qa_assessment_decision_manifest.py"])
-        if (ROOT / "qa_assessment_quality.py").exists():
-            commands.append([sys.executable, "qa_assessment_quality.py"])
-        if (ROOT / "qa_assessment_evidence.py").exists():
-            commands.append([sys.executable, "qa_assessment_evidence.py"])
-        if (ROOT / "qa_assessment_final_hardening.py").exists():
-            commands.append([sys.executable, "qa_assessment_final_hardening.py"])
+        for qa in [
+            "qa_assessment_storage_scope.py",
+            "qa_assessment_decision_manifest.py",
+            "qa_assessment_quality.py",
+            "qa_assessment_evidence.py",
+            "qa_assessment_final_hardening.py",
+            "qa_evidence_maturity.py",
+        ]:
+            if (ROOT / qa).exists():
+                commands.append([sys.executable, qa])
+
+    release_docs_changed = bool(files & {
+        "README.md",
+        "support.html",
+        "version.json",
+        "index.html",
+        "pwa-shell.js",
+        "service-worker.js",
+        "qa_release_docs.py",
+    })
+    if release_docs_changed and (ROOT / "qa_release_docs.py").exists():
+        commands.append([sys.executable, "qa_release_docs.py"])
 
     if any(p.startswith("src/domains/") or p in {"runtime-v2.js", "runtime-domain-manifest.json"} for p in files):
         if (ROOT / "qa_audit_consolidation.py").exists():
