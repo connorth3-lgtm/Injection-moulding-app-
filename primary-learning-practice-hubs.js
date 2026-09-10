@@ -1,4 +1,4 @@
-/* MouldMaster primary Learn / Practice hubs — 2026.09.10.7 */
+/* MouldMaster primary Learn / Practice hubs — 2026.09.10.8 */
 (function(){
 'use strict';
 if(window.MM_PRIMARY_HUBS)return;
@@ -7,7 +7,7 @@ if(typeof renderPath!=='function'||typeof renderScenarios!=='function'||typeof s
   return;
 }
 
-const VERSION='2026.09.10.7';
+const VERSION='2026.09.10.8';
 const PRACTICE_ROTATION_KEY='mm_practice_scenario_rotation_v1';
 const originalRenderPath=renderPath;
 const originalRenderScenarios=renderScenarios;
@@ -228,9 +228,11 @@ function practiceTopicLabel(topic){
 }
 function practiceActionFor(rec){
   const topic=String(rec?.topic||'').toLowerCase();
+  const suggested=String(rec?.suggestedActivity||'').toLowerCase();
   if(/material|moisture|dry|rheolog|viscos|polymer|resin/.test(topic))return 'material-labs';
-  if(rec?.actionType==='targeted-remediation'||rec?.actionType==='stabilize-regression')return 'diagnostic-labs';
-  if(rec?.actionType==='evidence-confirmation')return 'labs';
+  if(['discriminating-scenario-practice','retrieval-practice','timestamped-practice-or-assessment','different-context-scenario'].includes(suggested))return 'scenario-detail';
+  if(suggested==='guided-retrieval-and-feedback'||rec?.actionType==='stabilize-regression')return 'diagnostic-labs';
+  if(suggested==='different-practice-format'||rec?.actionType==='evidence-confirmation')return 'labs';
   return 'scenario-detail';
 }
 function practiceRecommendationLabel(rec){
@@ -243,10 +245,15 @@ function practiceRecommendationLabel(rec){
     'transfer-practice':'Use it in a new context'
   })[rec?.actionType]||'Recommended next';
 }
-function practiceRecommendationCta(action){
+function practiceRecommendationCta(action,rec){
   if(action==='material-labs')return 'Start material practice →';
   if(action==='diagnostic-labs')return 'Start diagnostic practice →';
   if(action==='labs')return 'Choose a practice lab →';
+  const suggested=String(rec?.suggestedActivity||'').toLowerCase();
+  if(suggested==='discriminating-scenario-practice')return 'Start discriminating scenario →';
+  if(suggested==='retrieval-practice')return 'Start retrieval practice →';
+  if(suggested==='timestamped-practice-or-assessment')return 'Refresh with a scenario →';
+  if(suggested==='different-context-scenario')return 'Try a new-context scenario →';
   return 'Start recommended scenario →';
 }
 function learnerPracticePlan(){
@@ -275,12 +282,12 @@ function recommendedPracticeMarkup(plan,done){
   }
   const action=practiceActionFor(rec),topic=practiceTopicLabel(rec.topic),label=practiceRecommendationLabel(rec);
   const signal=rec.actionType==='targeted-remediation'&&Number.isFinite(Number(rec.stuckness))?`Repeated misses · ${Math.round(Number(rec.stuckness))}% stuckness signal`:rec.actionType==='spaced-retrieval'&&Number.isFinite(Number(rec.ageDays))?`Last evidence ${Math.round(Number(rec.ageDays))} day${Math.round(Number(rec.ageDays))===1?'':'s'} ago`:'Based on your local learning evidence';
-  return `<section class="mm-hub-continue mm-primary-hub-card" aria-label="Recommended practice"><div class="mm-hub-continue-copy"><span class="eyebrow">${esc(label)} · 5–10 min</span><h2>${esc(topic)}</h2><p>${esc(rec.reason||'Use a different practice format to strengthen this skill.')}</p><div class="mm-hub-progress"><strong>${esc(signal)}</strong></div></div><button class="primary mm-hub-continue-action" type="button" data-mm-hub-action="${esc(action)}">${esc(practiceRecommendationCta(action))}</button></section>`;
+  return `<section class="mm-hub-continue mm-primary-hub-card" aria-label="Recommended practice"><div class="mm-hub-continue-copy"><span class="eyebrow">${esc(label)} · 5–10 min</span><h2>${esc(topic)}</h2><p>${esc(rec.reason||'Use a different practice format to strengthen this skill.')}</p><div class="mm-hub-progress"><strong>${esc(signal)}</strong></div></div><button class="primary mm-hub-continue-action" type="button" data-mm-hub-action="${esc(action)}">${esc(practiceRecommendationCta(action,rec))}</button></section>`;
 }
 function practicePlanRows(plan){
   const rows=(plan?.recommendations||[]).slice(1,3);
   if(!rows.length)return '';
-  return `<section class="mm-hub-section" aria-label="More recommended practice"><div class="mm-hub-section-head"><h2>Next after that</h2><p>Optional follow-up based on your learning evidence.</p></div><div class="mm-hub-grid">${rows.map(rec=>{const action=practiceActionFor(rec);return `<button class="mm-hub-tile mm-primary-hub-card-secondary" type="button" data-mm-hub-action="${esc(action)}"><span class="eyebrow">${esc(practiceRecommendationLabel(rec))}</span><b>${esc(practiceTopicLabel(rec.topic))}</b><small>${esc(rec.reason||'Use another practice format to strengthen transfer.')}</small><span class="mm-hub-tile-action">${esc(practiceRecommendationCta(action))}</span></button>`}).join('')}</div></section>`;
+  return `<section class="mm-hub-section" aria-label="More recommended practice"><div class="mm-hub-section-head"><h2>Next after that</h2><p>Optional follow-up based on your learning evidence.</p></div><div class="mm-hub-grid">${rows.map(rec=>{const action=practiceActionFor(rec);return `<button class="mm-hub-tile mm-primary-hub-card-secondary" type="button" data-mm-hub-action="${esc(action)}"><span class="eyebrow">${esc(practiceRecommendationLabel(rec))}</span><b>${esc(practiceTopicLabel(rec.topic))}</b><small>${esc(rec.reason||'Use another practice format to strengthen transfer.')}</small><span class="mm-hub-tile-action">${esc(practiceRecommendationCta(action,rec))}</span></button>`}).join('')}</div></section>`;
 }
 function practiceHubMarkup(){
   let done=false;try{done=typeof dailyDone==='function'&&dailyDone()}catch(_){}
