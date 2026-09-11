@@ -51,6 +51,8 @@ jobs:
         run: python qa_critical_actions_versions.py
       - name: Architecture debt ceiling
         run: python qa_architecture_debt.py
+      - name: Build Pages artifact for app-wide audit
+        run: python tools/build_pages_artifact.py
       - name: App-wide data and runtime deep audit
         run: python qa_app_wide_audit.py
       - name: Data activation v1 integrity
