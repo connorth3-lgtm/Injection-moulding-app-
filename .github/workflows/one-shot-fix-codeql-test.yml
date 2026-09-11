@@ -1,0 +1,36 @@
+name: Fix CodeQL Remediation Test
+
+on:
+  push:
+    branches:
+      - code-scanning-remediation-2026-09-11
+    paths:
+      - .github/workflows/one-shot-fix-codeql-test.yml
+
+permissions:
+  contents: write
+
+jobs:
+  fix-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - name: Fix malformed-tag regression test construction
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          path=Path('tools/one_shot_codeql_remediate.py')
+          text=path.read_text(encoding='utf-8')
+          old="""try:\n    inline_script_bodies('<script>unsafe</script\\\\t\\\\n bar><p>x</p>')\nexcept ValueError:"""
+          new="""malformed = '<script>unsafe</script' + chr(9) + chr(10) + ' bar><p>x</p>'\ntry:\n    inline_script_bodies(malformed)\nexcept ValueError:"""
+          if text.count(old) != 1:
+              raise SystemExit(f'expected one malformed-tag test, found {text.count(old)}')
+          path.write_text(text.replace(old,new,1),encoding='utf-8')
+          PY
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add tools/one_shot_codeql_remediate.py
+          git commit -m 'Fix CodeQL malformed-tag regression test'
+          git push origin HEAD:code-scanning-remediation-2026-09-11
