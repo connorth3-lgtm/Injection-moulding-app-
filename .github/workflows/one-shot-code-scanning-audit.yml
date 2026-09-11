@@ -15,6 +15,7 @@ jobs:
   audit-code-scanning:
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v7
       - name: List open CodeQL alerts
         env:
           GH_TOKEN: ${{ github.token }}
@@ -28,3 +29,10 @@ jobs:
             "repos/${GH_REPO}/code-scanning/alerts?state=open&per_page=100" \
             --paginate \
             --jq '.[] | {number, state, rule: {id: .rule.id, name: .rule.name, description: .rule.description, severity: .rule.severity, security_severity_level: .rule.security_severity_level, tags: .rule.tags}, tool: .tool.name, most_recent_instance: {ref: .most_recent_instance.ref, commit_sha: .most_recent_instance.commit_sha, message: .most_recent_instance.message.text, location: .most_recent_instance.location, classifications: .most_recent_instance.classifications}}'
+      - name: Trace frozen core dependencies
+        shell: bash
+        run: |
+          set -euo pipefail
+          git grep -n -F 'MouldMaster_Core_App.html' -- ':!MouldMaster_Core_App.html' || true
+          printf '\n--- recovery hash references ---\n'
+          git grep -n -E 'CORE_SHA256|96ed07e1487633538359eb12073fe50bfe595d9d5aaa807173e0a764b9123754|WINDOWS_RECOVERY_VERSION' || true
