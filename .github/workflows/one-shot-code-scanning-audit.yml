@@ -1,0 +1,30 @@
+name: One-shot Code Scanning Audit
+
+on:
+  push:
+    branches:
+      - code-scanning-remediation-2026-09-11
+    paths:
+      - .github/workflows/one-shot-code-scanning-audit.yml
+
+permissions:
+  contents: read
+  security-events: read
+
+jobs:
+  audit-code-scanning:
+    runs-on: ubuntu-latest
+    steps:
+      - name: List open CodeQL alerts
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          gh api \
+            -H "Accept: application/vnd.github+json" \
+            -H "X-GitHub-Api-Version: 2026-03-10" \
+            "repos/${GH_REPO}/code-scanning/alerts?state=open&per_page=100" \
+            --paginate \
+            --jq '.[] | {number, state, rule: {id: .rule.id, name: .rule.name, description: .rule.description, severity: .rule.severity, security_severity_level: .rule.security_severity_level, tags: .rule.tags}, tool: .tool.name, most_recent_instance: {ref: .most_recent_instance.ref, commit_sha: .most_recent_instance.commit_sha, message: .most_recent_instance.message.text, location: .most_recent_instance.location, classifications: .most_recent_instance.classifications}}'
