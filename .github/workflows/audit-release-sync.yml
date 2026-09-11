@@ -1,0 +1,59 @@
+name: One-shot Audit Release Sync
+
+on:
+  push:
+    branches:
+      - 'audit/deep-app-correctness-hardening'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: audit-release-sync-deep-app-correctness-hardening
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    if: github.repository == 'connorth3-lgtm/Injection-moulding-app-'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          ref: audit/deep-app-correctness-hardening
+          fetch-depth: 0
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7
+        with:
+          python-version: '3.12'
+      - name: Synchronise canonical web release
+        shell: bash
+        run: |
+          set -euo pipefail
+          current="$(python -c 'import json; print(json.load(open("version.json", encoding="utf-8"))["web_release"])')"
+          if [ "$current" != "2026.09.12.1" ]; then
+            python tools/bump_web_release.py --release 2026.09.12.1 --published 2026-09-12
+          fi
+          python tools/sync_web_release.py --check
+          python tools/verify_release_external_validation.py
+          git diff --check
+      - name: Commit generated release identity
+        shell: bash
+        run: |
+          set -euo pipefail
+          git add \
+            README.md \
+            data/release-external-validation-v1.json \
+            index.html \
+            pwa-shell.js \
+            qa_release.py \
+            qa_release_docs.py \
+            service-worker.js \
+            support.html \
+            version.json
+          if git diff --cached --quiet; then
+            echo 'Release identity already synchronised.'
+            exit 0
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m 'Bump canonical web release to 2026.09.12.1'
+          git push origin HEAD:audit/deep-app-correctness-hardening
