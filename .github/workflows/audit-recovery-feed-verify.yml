@@ -1,0 +1,35 @@
+name: One-shot Recovery Feed Candidate Verify
+
+on:
+  push:
+    branches:
+      - 'audit/repair-frozen-recovery-feed'
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7
+        with:
+          python-version: '3.12'
+      - name: Verify governed main candidate against published recovery hash
+        run: |
+          python - <<'PY'
+          import hashlib,json,urllib.request
+          candidate='19ef75781e3a782b234db313a5265ff0f3518ee4'
+          manifest=json.load(open('latest.json',encoding='utf-8'))
+          url=f'https://raw.githubusercontent.com/connorth3-lgtm/Injection-moulding-app-/{candidate}/MouldMaster_Core_App.html'
+          req=urllib.request.Request(url,headers={'User-Agent':'MouldMaster-recovery-candidate-check'})
+          with urllib.request.urlopen(req,timeout=30) as response:
+              payload=response.read()
+          actual=hashlib.sha256(payload).hexdigest()
+          print(f'candidate={candidate} sha256={actual}')
+          assert actual==manifest['sha256'],f'governed main candidate does not match published recovery hash: {actual}'
+          local=hashlib.sha256(open('MouldMaster_Core_App.html','rb').read()).hexdigest()
+          assert local==manifest['sha256'],f'branch-local main core differs from published recovery hash: {local}'
+          print('Governed main recovery candidate matches the published immutable recovery payload hash.')
+          PY
