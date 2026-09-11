@@ -1,5 +1,5 @@
 const CACHE_VERSION='2026.09.10.9';
-const CACHE_REVISION='practice-redesign-r1-20260911';
+const CACHE_REVISION='engineer-simulator-ui-r1-20260911';
 const STATIC_CACHE=`mouldmaster-static-${CACHE_VERSION}-${CACHE_REVISION}`;
 
 // Release assets are grouped for readability, but activation is atomic across both
@@ -55,6 +55,7 @@ const CORE=[
   './src/domains/engineering/engineering-store.js',
   './src/domains/engineering/evidence-chain.js',
   './src/domains/engineering/research-context.js',
+  './src/domains/engineering/engineer-simulator-ui.js',
   './src/domains/learning/learning-analytics-loader.js',
   './src/domains/learning/activity-events-v2.js',
   './src/domains/learning/learner-model.js',
