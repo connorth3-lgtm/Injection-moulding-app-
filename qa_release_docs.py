@@ -9,7 +9,7 @@ def need(ok,msg):
 
 V=json.loads(text('version.json'))
 expected={
- 'web_release':'2026.09.11.1',
+ 'web_release':'2026.09.12.4',
  'android_release':'2026.08.26.2',
  'desktop_release':'2026.08.26.8',
  'content_version':'2026.08.26.1',

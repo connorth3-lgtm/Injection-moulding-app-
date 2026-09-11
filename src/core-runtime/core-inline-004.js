@@ -355,16 +355,17 @@ function renderInstructor(){
  const users=Object.values(db.users);
  $("#instructor").innerHTML=`<div class="kpis"><div class="card kpi"><span>Local learners</span><b>${users.length}</b></div><div class="card kpi"><span>Total completions</span><b>${users.reduce((n,u)=>n+(u.completed?.length||0),0)}</b></div><div class="card kpi"><span>Certificates</span><b>${users.reduce((n,u)=>n+(u.certificates?.length||0),0)}</b></div><div class="card kpi"><span>Course size</span><b>120</b></div></div>
  <div class="section-head"><div><h2>Learner overview</h2><p>This offline version manages profiles stored on this device.</p></div><button class="primary" data-mm-onclick="newLearner()">Add learner</button></div>
- <div class="card table-wrap"><table class="table"><thead><tr><th>Learner</th><th>Progress</th><th>Beginner</th><th>Intermediate</th><th>Advanced</th><th>Last activity</th><th></th></tr></thead><tbody>${users.map(u=>`<tr><td><b>${esc(u.name)}</b></td><td>${Math.round((u.completed?.length||0)/D.lessons.length*100)}%</td><td>${u.examScores?.Beginner??"—"}</td><td>${u.examScores?.Intermediate??"—"}</td><td>${u.examScores?.Advanced??"—"}</td><td>${new Date(u.lastSeen||Date.now()).toLocaleDateString()}</td><td><button class="ghost" data-mm-onclick="switchUser('${u.id}')">${u.id===db.activeUser?"Active":"Open"}</button></td></tr>`).join("")}</tbody></table></div>`;
+ <div class="card table-wrap"><table class="table"><thead><tr><th>Learner</th><th>Progress</th><th>Beginner</th><th>Intermediate</th><th>Advanced</th><th>Last activity</th><th></th></tr></thead><tbody>${users.map((u,userIndex)=>`<tr><td><b>${esc(u.name)}</b></td><td>${Math.round((u.completed?.length||0)/D.lessons.length*100)}%</td><td>${u.examScores?.Beginner??"—"}</td><td>${u.examScores?.Intermediate??"—"}</td><td>${u.examScores?.Advanced??"—"}</td><td>${new Date(u.lastSeen||Date.now()).toLocaleDateString()}</td><td><button class="ghost" data-mm-switch-user="${userIndex}">${u.id===db.activeUser?"Active":"Open"}</button></td></tr>`).join("")}</tbody></table></div>`;
+ pvWireInstructorSwitches(users);
 }
 function newLearner(){
  openModal(`<span class="eyebrow">Instructor</span><h2>Add learner</h2><label>Learner name<input id="newLearnerName" placeholder="e.g. Sam Taylor"></label><button class="primary" style="margin-top:12px" data-mm-onclick="createLearner()">Create profile</button>`);
 }
 function createLearner(){
  const name=$("#newLearnerName").value.trim();if(!name)return;
- const id="learner-"+Date.now();db.users[id]={id,name,role:"learner",completed:[],bookmarks:[],notes:{},examScores:{},certificates:[],currentLesson:1,lastSeen:new Date().toISOString()};db.activeUser=id;user=db.users[id];persist();closeModal();updateGlobalProgress();renderInstructor();toast("Learner created");
+ const id=pvRequireLearnerId("learner-"+Date.now());db.users[id]={id,name,role:"learner",completed:[],bookmarks:[],notes:{},examScores:{},certificates:[],currentLesson:1,lastSeen:new Date().toISOString()};db.activeUser=id;user=db.users[id];persist();closeModal();updateGlobalProgress();renderInstructor();toast("Learner created");
 }
-function switchUser(id){persist();db.activeUser=id;user=db.users[id];persist();updateGlobalProgress();renderInstructor();toast("Switched learner")}
+function switchUser(id){const sid=pvCanonicalLearnerId(id);if(!sid||!db.users[sid]){toast("Learner profile unavailable");return}persist();db.activeUser=sid;user=db.users[sid];persist();updateGlobalProgress();renderInstructor();toast("Switched learner")}
 
 function renderGlossary(){
  $("#glossary").innerHTML=`<div class="section-head"><div><h2>Injection moulding glossary</h2><p>Search terms used throughout the platform.</p></div><input id="glossarySearch" style="max-width:340px" placeholder="Search..." data-mm-oninput="filterGlossary()"></div><div class="glossary-grid" id="glossaryGrid">${Object.entries(D.glossary).map(([k,v])=>`<div class="card term" data-term="${esc((k+" "+v).toLowerCase())}"><b>${esc(k)}</b><p>${esc(v)}</p></div>`).join("")}</div>`;
@@ -1525,7 +1526,8 @@ renderInstructor=function(){
   const users=Object.values(db.users);
   $("#instructor").innerHTML=`<div class="kpis"><div class="card kpi"><span>Local learners</span><b>${users.length}</b></div><div class="card kpi"><span>Total lesson completions</span><b>${users.reduce((n,u)=>n+(u.completed?.length||0),0)}</b></div><div class="card kpi"><span>Certificates</span><b>${users.reduce((n,u)=>n+(u.certificates?.length||0),0)}</b></div><div class="card kpi"><span>Course size</span><b>${D.lessons.length}</b></div></div>
   <div class="section-head"><div><h2>Learner overview</h2><p>Local device profiles only; this is not a secure LMS identity system.</p></div><button class="primary" data-mm-onclick="newLearner()">Add learner</button></div>
-  <div class="card table-wrap"><table class="table"><thead><tr><th>Learner</th><th>Progress</th><th>Beginner best</th><th>Intermediate best</th><th>Advanced best</th><th>Certificates</th><th>Last activity</th><th></th></tr></thead><tbody>${users.map(u=>`<tr><td><b>${esc(u.name)}</b></td><td>${Math.round((u.completed?.length||0)/D.lessons.length*100)}%</td><td>${bestRegionalScore(u,"Beginner")??"—"}</td><td>${bestRegionalScore(u,"Intermediate")??"—"}</td><td>${bestRegionalScore(u,"Advanced")??"—"}</td><td>${u.certificates?.length||0}</td><td>${new Date(u.lastSeen||Date.now()).toLocaleDateString()}</td><td><button class="ghost" data-mm-onclick="switchUser('${u.id}')">${u.id===db.activeUser?"Active":"Open"}</button></td></tr>`).join("")}</tbody></table></div>`;
+  <div class="card table-wrap"><table class="table"><thead><tr><th>Learner</th><th>Progress</th><th>Beginner best</th><th>Intermediate best</th><th>Advanced best</th><th>Certificates</th><th>Last activity</th><th></th></tr></thead><tbody>${users.map((u,userIndex)=>`<tr><td><b>${esc(u.name)}</b></td><td>${Math.round((u.completed?.length||0)/D.lessons.length*100)}%</td><td>${bestRegionalScore(u,"Beginner")??"—"}</td><td>${bestRegionalScore(u,"Intermediate")??"—"}</td><td>${bestRegionalScore(u,"Advanced")??"—"}</td><td>${u.certificates?.length||0}</td><td>${new Date(u.lastSeen||Date.now()).toLocaleDateString()}</td><td><button class="ghost" data-mm-switch-user="${userIndex}">${u.id===db.activeUser?"Active":"Open"}</button></td></tr>`).join("")}</tbody></table></div>`;
+ pvWireInstructorSwitches(users);
 };
 
 /* Simulator: relative-to-validated-baseline model. No universal resin temperature recipe. */
@@ -1623,7 +1625,7 @@ function openMobileMenu(){openModal(`<span class="eyebrow">More</span><h2>Tools 
 const fineCreateLearner=createLearner;
 createLearner=function(){
   const name=$("#newLearnerName")?.value.trim();if(!name)return;
-  const id="learner-"+Date.now();db.users[id]={id,name,role:"learner",completed:[],bookmarks:[],notes:{},examScores:{},examPassStatus:{},certificates:[],certificateMeta:{},currentLesson:1,lastSeen:new Date().toISOString(),region:user.region||"ALL",experience:"Beginner",goal:"Learn the full process",dailyMinutes:15,onboardingDone:true};db.activeUser=id;user=db.users[id];persist();closeModal();updateGlobalProgress();renderInstructor();toast("Learner created");
+  const id=pvRequireLearnerId("learner-"+Date.now());db.users[id]={id,name,role:"learner",completed:[],bookmarks:[],notes:{},examScores:{},examPassStatus:{},certificates:[],certificateMeta:{},currentLesson:1,lastSeen:new Date().toISOString(),region:user.region||"ALL",experience:"Beginner",goal:"Learn the full process",dailyMinutes:15,onboardingDone:true};db.activeUser=id;user=db.users[id];persist();closeModal();updateGlobalProgress();renderInstructor();toast("Learner created");
 };
 
 /* Final home refresh after hardening overrides. */
