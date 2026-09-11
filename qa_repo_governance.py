@@ -70,7 +70,7 @@ for forbidden in [
     "Lock open desktop dependencies",
 ]:
     need(forbidden not in guard, f"post-push provenance audit must never mutate or exempt main: {forbidden}")
-need('conclusion\\" != \\"success' in guard, "required PR workflows must still fail audit when completed unsuccessfully")
+need('"$conclusion" != "success"' in guard, "required PR workflows must still fail audit when completed unsuccessfully")
 need("for attempt in {1..60}" in guard, "read-only workflow audit must tolerate long-running required checks")
 
 # Effective ruleset verification must require independent human review as well
