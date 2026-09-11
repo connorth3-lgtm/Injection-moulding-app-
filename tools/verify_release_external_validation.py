@@ -7,7 +7,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 CONTRACT = ROOT / "data" / "release-external-validation-v1.json"
-EXPECTED_RELEASE = "2026.09.10.9"
+VERSION = ROOT / "version.json"
 ALLOWED_SECTION_STATUS = {
     "governance": {"pending-native-ruleset-apply", "enforced"},
     "accessibility": {"hold", "validated"},
@@ -43,12 +43,33 @@ def require_nonempty(value: object, message: str) -> str:
     return text
 
 
-def validate_accessibility(section: dict) -> None:
+def load_current_release() -> str:
+    if not VERSION.is_file():
+        fail("canonical release source is missing: version.json")
+    try:
+        value = json.loads(VERSION.read_text(encoding="utf-8"))
+    except (UnicodeDecodeError, json.JSONDecodeError) as exc:
+        fail(f"invalid JSON in version.json: {exc}")
+    if not isinstance(value, dict):
+        fail("version.json must contain a JSON object")
+    return require_nonempty(
+        value.get("web_release"),
+        "version.json.web_release must identify the canonical web release",
+    )
+
+
+def require_current_release(evidence: dict, expected_release: str, label: str) -> None:
+    if evidence.get("release") != expected_release:
+        fail(f"validated {label} evidence must be bound to release {expected_release}")
+
+
+def validate_accessibility(section: dict, expected_release: str) -> None:
     evidence = load_json(ROOT / section["evidenceContract"])
     if section["status"] == "hold":
         if evidence.get("status") == "validated":
             fail("accessibility is marked hold although its evidence contract says validated; reconcile explicitly")
         return
+    require_current_release(evidence, expected_release, "accessibility")
     if evidence.get("status") != "validated":
         fail("accessibility cannot be validated until the real-AT contract status is validated")
     matrix = evidence.get("requiredMatrix")
@@ -61,20 +82,22 @@ def validate_accessibility(section: dict) -> None:
             require_nonempty(row.get(key), f"validated real-AT row is missing {key}")
 
 
-def validate_pwa(section: dict) -> None:
+def validate_pwa(section: dict, expected_release: str) -> None:
     evidence = load_json(ROOT / section["evidenceContract"])
     if section["status"] == "hold":
         return
+    require_current_release(evidence, expected_release, "PWA physical-device")
     if evidence.get("status") != "validated":
         fail("current-release PWA cannot be validated without full physical iOS/iPadOS + Android evidence")
 
 
-def validate_curriculum(section: dict) -> None:
+def validate_curriculum(section: dict, expected_release: str) -> None:
     evidence = load_json(ROOT / section["evidenceContract"])
     reviews = evidence.get("reviews")
     lesson_ids = evidence.get("lessonIds")
     if section["status"] == "hold":
         return
+    require_current_release(evidence, expected_release, "curriculum SME")
     if not isinstance(lesson_ids, list) or len(lesson_ids) != 120:
         fail("curriculum SME validation requires the canonical 120-lesson inventory")
     if not isinstance(reviews, list) or len(reviews) != 120:
@@ -84,7 +107,7 @@ def validate_curriculum(section: dict) -> None:
         fail("curriculum SME review records do not exactly cover the canonical lesson set")
 
 
-def validate_windows(section: dict) -> None:
+def validate_windows(section: dict, expected_release: str) -> None:
     if section["status"] == "hold":
         if section.get("evidence") is not None:
             fail("Windows HOLD must not contain synthetic completion evidence")
@@ -92,6 +115,7 @@ def validate_windows(section: dict) -> None:
     evidence = section.get("evidence")
     if not isinstance(evidence, dict):
         fail("validated Windows distribution requires a release-specific evidence object")
+    require_current_release(evidence, expected_release, "Windows distribution")
     for key in ("testedAt", "evidenceRef", "packageSha256", "signer", "windowsVersion", "deviceRef"):
         require_nonempty(evidence.get(key), f"validated Windows evidence is missing {key}")
     checks = evidence.get("checks")
@@ -100,7 +124,7 @@ def validate_windows(section: dict) -> None:
         fail("validated Windows evidence requires all governed real-machine/package checks to pass")
 
 
-def validate_learner(section: dict) -> None:
+def validate_learner(section: dict, expected_release: str) -> None:
     if section["status"] == "hold":
         if section.get("evidence") is not None:
             fail("learner-outcomes HOLD must not contain synthetic completion evidence")
@@ -108,6 +132,7 @@ def validate_learner(section: dict) -> None:
     evidence = section.get("evidence")
     if not isinstance(evidence, dict):
         fail("validated learner outcomes require a release-specific longitudinal evidence object")
+    require_current_release(evidence, expected_release, "learner outcomes")
     for key in ("studyRef", "startedAt", "endedAt", "analysisRef"):
         require_nonempty(evidence.get(key), f"validated learner evidence is missing {key}")
     cohort = evidence.get("realLearnerCohortSize")
@@ -118,11 +143,12 @@ def validate_learner(section: dict) -> None:
 
 
 def main() -> None:
+    expected_release = load_current_release()
     data = load_json(CONTRACT)
     if data.get("schemaVersion") != 1:
         fail("schemaVersion must be 1")
-    if data.get("release") != EXPECTED_RELEASE:
-        fail(f"release must remain bound to {EXPECTED_RELEASE}")
+    if data.get("release") != expected_release:
+        fail(f"release must match canonical web release {expected_release}")
     if (data.get("technicalAutomation") or {}).get("status") != "pass":
         fail("technicalAutomation.status must be pass for this audited release record")
 
@@ -141,11 +167,11 @@ def main() -> None:
         if policy.get(key) is not True:
             fail(f"governance.requiredPolicy.{key} must be true")
 
-    validate_accessibility(data["accessibility"])
-    validate_pwa(data["pwaPhysicalDevices"])
-    validate_windows(data["windowsDistribution"])
-    validate_curriculum(data["curriculumSme"])
-    validate_learner(data["learnerOutcomes"])
+    validate_accessibility(data["accessibility"], expected_release)
+    validate_pwa(data["pwaPhysicalDevices"], expected_release)
+    validate_windows(data["windowsDistribution"], expected_release)
+    validate_curriculum(data["curriculumSme"], expected_release)
+    validate_learner(data["learnerOutcomes"], expected_release)
 
     production = data["productionUse"]
     if production.get("status") != "advisory-only" or production.get("authority") != "no-automatic-machine-control":
@@ -170,7 +196,7 @@ def main() -> None:
         if data[name]["status"] == "hold"
     ]
     print(
-        f"Release {EXPECTED_RELEASE} external-validation boundary verified. "
+        f"Release {expected_release} external-validation boundary verified. "
         f"Automated technical state is PASS; explicit HOLD areas: {', '.join(holds) if holds else 'none'}; "
         "production authority remains advisory-only."
     )
