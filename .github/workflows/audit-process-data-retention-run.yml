@@ -31,6 +31,48 @@ jobs:
       - name: Apply deterministic remediation
         run: |
           python tools/apply_process_data_retention_temp.py
+          python - <<'PY'
+          from pathlib import Path
+          p=Path('src/domains/process/process-data-integrity.js')
+          text=p.read_text(encoding='utf-8')
+          def once(old,new,label):
+              global text
+              if text.count(old)!=1:
+                  raise SystemExit(f'{label}: expected one match, found {text.count(old)}')
+              text=text.replace(old,new,1)
+          once(
+              "async function get(storeName,key){\n  const db=await openDb();\n  return new Promise((resolve,reject)=>{\n    const tx=db.transaction(storeName,'readonly'),req=tx.objectStore(storeName).get(key);\n    req.onsuccess=()=>{resolve(req.result||null);db.close()};\n    req.onerror=()=>{reject(req.error||new Error(`Could not read ${storeName}`));db.close()};\n  });\n}\n",
+              "async function get(storeName,key){\n  const db=await openDb();\n  return new Promise((resolve,reject)=>{\n    const tx=db.transaction(storeName,'readonly'),req=tx.objectStore(storeName).get(key);\n    req.onsuccess=()=>{resolve(req.result||null);db.close()};\n    req.onerror=()=>{reject(req.error||new Error(`Could not read ${storeName}`));db.close()};\n  });\n}\nasync function getAll(storeName){\n  const db=await openDb();\n  return new Promise((resolve,reject)=>{\n    const tx=db.transaction(storeName,'readonly'),req=tx.objectStore(storeName).getAll();\n    req.onsuccess=()=>{resolve(req.result||[]);db.close()};\n    req.onerror=()=>{reject(req.error||new Error(`Could not read ${storeName}`));db.close()};\n  });\n}\n",
+              'compatibility getAll helper',
+          )
+          marker="async function guardedCompare(original,datasetId,baselineId,args,receiver){"
+          clear_fn="""async function clearAllProcessData(){
+  const db=await openDb();
+  try{
+    const tx=db.transaction(PROCESS_DATA_STORES,'readwrite');
+    for(const name of PROCESS_DATA_STORES)tx.objectStore(name).clear();
+    await txDone(tx);
+  }finally{db.close()}
+  const remaining={};
+  for(const name of PROCESS_DATA_STORES)remaining[name]=(await getAll(name)).length;
+  const total=Object.values(remaining).reduce((sum,n)=>sum+Number(n||0),0);
+  if(total)throw new Error(`Process-data cleanup could not be verified (${total} record${total===1?'':'s'} remain).`);
+  return {verified:true,remaining};
+}
+"""
+          once(marker,clear_fn+marker,'compatibility clear-all insertion')
+          once(
+              "  if(api.__mmCanonicalProcessDataIntegrity){api.__mmProcessDataIntegrity=VERSION;return true}\n",
+              "  if(api.__mmCanonicalProcessDataIntegrity){if(typeof api.storage.clearAllProcessData!=='function')api.storage.clearAllProcessData=clearAllProcessData;api.__mmProcessDataIntegrity=VERSION;return true}\n",
+              'canonical compatibility clear-all handoff',
+          )
+          once(
+              "  api.storage.deleteDataset=deleteDatasetCascade;\n  api.__mmProcessDataIntegrity=VERSION;\n",
+              "  api.storage.deleteDataset=deleteDatasetCascade;\n  api.storage.clearAllProcessData=clearAllProcessData;\n  api.__mmProcessDataIntegrity=VERSION;\n",
+              'legacy compatibility clear-all handoff',
+          )
+          p.write_text(text,encoding='utf-8')
+          PY
           python tools/bump_web_release.py --release 2026.09.12.3 --published 2026-09-12
           python tools/sync_web_release.py --check
       - name: Validate remediation
