@@ -1,0 +1,72 @@
+name: One-shot Standalone Learner ID Runner
+
+on:
+  push:
+    branches:
+      - 'audit/standalone-learner-id-hardening'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: audit-standalone-learner-id-runner
+  cancel-in-progress: false
+
+jobs:
+  remediate:
+    if: github.repository == 'connorth3-lgtm/Injection-moulding-app-' && github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          ref: audit/standalone-learner-id-hardening
+          fetch-depth: 0
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7
+        with:
+          node-version: '22.12.0'
+          package-manager-cache: false
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7
+        with:
+          python-version: '3.12'
+      - name: Apply deterministic standalone hardening
+        run: |
+          python tools/apply_standalone_learner_id_temp.py
+          python tools/bump_web_release.py --release 2026.09.12.4 --published 2026-09-12
+          python tools/sync_web_release.py --check
+      - name: Validate standalone and governed web release
+        env:
+          BASE_SHA: 58b94233f5e382a06a344660eda85fab8d4ded64
+        run: |
+          set -euo pipefail
+          node --check qa_standalone_learner_ids.cjs
+          node qa_standalone_learner_ids.cjs
+          python qa_release.py
+          python qa_release_docs.py
+          python qa_app_wide_audit.py
+          python qa_webkit_regression.py
+          python tools/build_pages_artifact.py
+          python tools/verify_release_external_validation.py
+          git diff --exit-code "$BASE_SHA" -- latest.json
+          python - <<'PY'
+          import hashlib,json,urllib.request
+          manifest=json.load(open('latest.json',encoding='utf-8'))
+          standalone=manifest['standalone']
+          req=urllib.request.Request(standalone['raw_url'],headers={'User-Agent':'MouldMaster-recovery-integrity-check'})
+          with urllib.request.urlopen(req,timeout=30) as response:
+              payload=response.read()
+          actual=hashlib.sha256(payload).hexdigest()
+          assert actual==standalone['sha256'],f'frozen recovery payload hash mismatch: {actual}'
+          assert standalone['path']=='MouldMaster_Core_App.html'
+          print(f"Frozen recovery feed unchanged and hash-valid: {manifest['release']} @ {manifest['source_commit'][:12]}")
+          PY
+          git diff --check
+      - name: Commit only validated generated changes
+        run: |
+          set -euo pipefail
+          rm -rf tools/__pycache__
+          git add -A
+          git restore --staged .github/workflows/audit-standalone-learner-id-run.yml tools/apply_standalone_learner_id_temp.py
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m 'Harden standalone learner identifiers'
+          git push origin HEAD:audit/standalone-learner-id-hardening
