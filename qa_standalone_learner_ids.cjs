@@ -23,6 +23,7 @@ const requireSource=extractFunction('pvRequireLearnerId');
 const hasOwnSource=extractFunction('pvHasOwnLearner');
 const buildSource=extractFunction('pvBuildImportedUsers');
 const commitSource=extractFunction('pvCommitImportedUsers');
+const resetCommitSource=extractFunction('pvCommitPristineReset');
 const api=new Function('normaliseImportedUser',`${canonicalSource}\n${requireSource}\n${hasOwnSource}\n${buildSource}\nreturn {pvCanonicalLearnerId,pvRequireLearnerId,pvHasOwnLearner,pvBuildImportedUsers};`)((u,id)=>({id,name:u?.name||'Learner',completed:[1],certificates:['Advanced-ALL'],certificateMeta:{'Advanced-ALL':{score:100}},examPassStatus:{'Advanced-ALL':true}}));
 
 for(const id of ['learner-1','learner_2','legacy.ID-3','team:alpha+1','person@example'])assert.equal(api.pvCanonicalLearnerId(id),id,`benign legacy ID should survive unchanged: ${id}`);
@@ -112,6 +113,36 @@ function makeStandaloneCommitHarness(storage){
   assert.equal(state.db,proposed,'live registry must activate only after storage succeeds');
   assert.equal(state.user,proposed.users['learner-2'],'live learner must match the persisted active learner');
 }
+function makeStandaloneResetHarness(storage){
+  const existingDb={activeUser:'learner-9',users:{'learner-9':{id:'learner-9',name:'Existing'}}};
+  const existingUser=existingDb.users['learner-9'];
+  const resetPristine={activeUser:'learner-1',users:{'learner-1':{id:'learner-1',name:'Learner 1',role:'learner',completed:[],bookmarks:[],notes:{},examScores:{},certificates:[],currentLesson:1,lastSeen:'old'}}};
+  const harness=new Function('state','localStorage','PRISTINE_DB',`let db=state.db,user=state.user;\n${resetCommitSource}\nreturn {commit:pvCommitPristineReset,snapshot:()=>({db,user})};`)({db:existingDb,user:existingUser},storage,resetPristine);
+  return {existingDb,existingUser,resetPristine,harness};
+}
+{
+  const storage={setItem(){throw new Error('storage denied')}};
+  const {existingDb,existingUser,harness}=makeStandaloneResetHarness(storage);
+  assert.throws(()=>harness.commit(),/storage denied/,'reset storage failure must surface to resetData');
+  const state=harness.snapshot();
+  assert.equal(state.db,existingDb,'failed reset must leave the live registry unchanged');
+  assert.equal(state.user,existingUser,'failed reset must leave the live learner unchanged');
+}
+{
+  let saved='';
+  const storage={setItem(k,v){assert.equal(k,'mouldmasterProDB');saved=String(v)}};
+  const {harness}=makeStandaloneResetHarness(storage);
+  const proposed=harness.commit();
+  const state=harness.snapshot();
+  const persisted=JSON.parse(saved);
+  assert.equal(persisted.activeUser,'learner-1','successful reset must persist the pristine active learner');
+  assert.equal(persisted.users['learner-1'].onboardingDone,false,'successful reset must persist initialized learner defaults');
+  assert.equal(state.db,proposed,'live reset registry must activate only after storage succeeds');
+  assert.equal(state.user,proposed.users['learner-1'],'live reset learner must match persisted pristine learner');
+}
+assert(source.includes('try{pvCommitPristineReset()}catch(e){alert("MouldMaster could not reset local data because browser storage is unavailable. Existing learner data was left unchanged.");return}'),'standalone reset must fail closed with an explicit storage warning');
+assert(source.indexOf('localStorage.setItem("mouldmasterProDB",serialized);',source.indexOf('function pvCommitPristineReset'))<source.indexOf('db=proposed;user=nextUser;',source.indexOf('function pvCommitPristineReset')),'standalone reset must persist before live-memory activation');
+
 for(const bad of ["bad'id",'<tag>','bad\\id','bad\nid','bad id']){
   assert.throws(()=>api.pvBuildImportedUsers({activeUser:bad,users:{[bad]:{}}}),/Invalid learner identifier/);
 }

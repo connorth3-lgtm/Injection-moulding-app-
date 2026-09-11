@@ -2050,12 +2050,24 @@ persist=function(){
   try{ localStorage.setItem("mouldmasterProDB",JSON.stringify(db)); }catch(e){ /* app remains usable for this session */ }
   updateGlobalProgress();
 };
+function pvCommitPristineReset(){
+  const proposed=JSON.parse(JSON.stringify(PRISTINE_DB)),nextUser=proposed.users[proposed.activeUser];
+  if(nextUser.onboardingDone===undefined)nextUser.onboardingDone=false;
+  if(!nextUser.experience)nextUser.experience="Beginner";
+  if(!nextUser.goal)nextUser.goal="Learn the full process";
+  if(!nextUser.dailyMinutes)nextUser.dailyMinutes=15;
+  if(!nextUser.region)nextUser.region="ALL";
+  nextUser.lastSeen=new Date().toISOString();
+  proposed.users[proposed.activeUser]=nextUser;
+  const serialized=JSON.stringify(proposed);
+  localStorage.setItem("mouldmasterProDB",serialized);
+  db=proposed;user=nextUser;
+  return proposed;
+}
 resetData=function(){
   if(confirm("Reset all local MouldMaster users and progress on this device? This cannot be undone unless you exported a backup.")){
-    db=JSON.parse(JSON.stringify(PRISTINE_DB)); user=db.users[db.activeUser];
-    if(user.onboardingDone===undefined)user.onboardingDone=false;
-    if(!user.experience)user.experience="Beginner"; if(!user.goal)user.goal="Learn the full process"; if(!user.dailyMinutes)user.dailyMinutes=15; if(!user.region)user.region="ALL";
-    persist();updateGlobalProgress();switchView("dashboard");toast("Local data reset");
+    try{pvCommitPristineReset()}catch(e){alert("MouldMaster could not reset local data because browser storage is unavailable. Existing learner data was left unchanged.");return}
+    updateGlobalProgress();switchView("dashboard");toast("Local data reset");
   }
 };
 function normaliseImportedUser(u,id){
