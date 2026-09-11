@@ -25,7 +25,7 @@ actors. A governed merge must require all of the following:
 - the existing CodeQL code-scanning rule;
 - the existing code-quality rule;
 - the existing Copilot code-review rule;
-- branch deletion blocked;
+- block branch deletion;
 - non-fast-forward/force updates blocked.
 
 Automated checks are necessary but are not independent review. A fully green CI
