@@ -1,0 +1,208 @@
+/* MouldMaster first-paint compact shell — 2026.09.06
+   Loaded in <head> so the learner UI never paints the legacy roomy layout first. */
+:root{--mm-mobile-nav-clearance:104px;--mm-control-size:44px;--mm-control-large:48px;--mm-radius-sm:12px;--mm-radius-md:14px;--mm-radius-lg:16px;--shadow:0 7px 22px rgba(0,0,0,.18)}
+
+/* One visible page title on self-titled learner views. */
+body[data-mm-view="path"] .topbar>div:first-child,
+body[data-mm-view="scenarios"] .topbar>div:first-child,
+body[data-mm-view="lesson"] .topbar>div:first-child{display:none!important}
+body[data-mm-view="path"] .topbar,
+body[data-mm-view="scenarios"] .topbar,
+body[data-mm-view="lesson"] .topbar{justify-content:flex-end!important}
+
+.mm-home-utility{display:flex!important;gap:8px!important;flex-wrap:wrap!important;margin-top:10px!important}
+.mm-home-utility button{min-height:var(--mm-control-size)!important;padding:8px 11px!important;border-radius:var(--mm-radius-sm)!important}
+
+/* Retired gamification and legacy Home blocks must never reach first paint. The
+   runtime also removes these nodes, but hiding them here prevents mission,
+   welcome, standards, XP/rank and achievement flashes during startup. */
+#xpPop,.xp-pop,.achievement-grid,.fun-settings,.fun-dashboard .level-card,#profileMini .fun-hud{display:none!important}
+#dashboard .fun-dashboard,
+#dashboard .friendly-hero,
+#dashboard .hero,
+#dashboard .region-banner{display:none!important}
+.card{border-radius:14px!important;border-color:#263b58!important;box-shadow:var(--shadow)!important;background:linear-gradient(180deg,rgba(18,32,52,.96),rgba(13,25,42,.96))!important}
+.main{padding-top:20px}
+.topbar{margin-bottom:16px!important}
+.topbar h1{line-height:1.12}
+.hero{gap:12px!important}
+.hero-main{padding:22px!important;min-height:220px!important}
+.hero-main h2{font-size:clamp(29px,4vw,34px)!important;margin-bottom:9px!important}
+.hero-main p{line-height:1.58!important}
+.kpis{gap:10px!important;margin:13px 0!important}.kpi{padding:14px!important}
+.section-head{margin:22px 0 10px!important}.grid,.grid2{gap:12px!important}.grid4{gap:10px!important}
+.course-card{min-height:220px!important;padding:16px!important}
+.lesson-body{padding:22px!important}
+.lesson-read-block,.mm-reading-guide,.question,.exam-card .question,.mm-teach,.mm-ref-panel,.lesson-source-box,.question-reference{box-shadow:none!important}
+.lesson-read-block,.mm-teach,.mm-ref-panel,.lesson-source-box,.question-reference{border-radius:12px!important}
+.mm-reading-guide{border-width:1px!important;border-radius:12px!important;padding:14px 16px!important}
+.lesson-read-primary{border-width:1px!important;box-shadow:none!important}
+.fun-dashboard.mm-daily-only{grid-template-columns:1fr!important;margin-bottom:14px!important}
+.fun-dashboard.mm-daily-only .mission-card{min-height:0!important;padding:18px!important}
+
+/* Primary Learn / Practice hubs. These rules live in an external stylesheet on
+   purpose: the app CSP blocks runtime-created <style> elements. */
+.mm-primary-hub{max-width:1040px;margin:0 auto;display:grid!important;gap:18px!important}
+.mm-primary-hub-head{padding:2px 2px 0!important}
+.mm-primary-hub-head .eyebrow{display:block!important;margin-bottom:5px!important}
+.mm-primary-hub-head h1{margin:0!important;font-size:clamp(29px,4vw,39px)!important;line-height:1.08!important;letter-spacing:-.025em!important}
+.mm-primary-hub-head p{margin:7px 0 0!important;color:#aebfd4!important;line-height:1.5!important;max-width:700px!important;font-size:15px!important}
+.mm-primary-hub .mm-hub-continue{display:grid!important;grid-template-columns:minmax(0,1fr) auto!important;gap:22px!important;align-items:end!important;padding:23px 24px!important;border:1px solid #41617f!important;border-radius:18px!important;background:linear-gradient(180deg,#142b43,#10243a)!important;box-shadow:none!important;text-align:left!important}
+.mm-primary-hub .mm-hub-continue-copy .eyebrow{display:block!important;margin-bottom:7px!important;font-size:11px!important;letter-spacing:.13em!important}
+.mm-primary-hub .mm-hub-continue h2{margin:0!important;font-size:clamp(24px,3.4vw,32px)!important;line-height:1.15!important;letter-spacing:-.018em!important}
+.mm-primary-hub .mm-hub-continue p{margin:8px 0 0!important;color:#bfd0e1!important;line-height:1.52!important;max-width:700px!important;font-size:15px!important}
+.mm-primary-hub .mm-hub-progress{display:grid!important;grid-template-columns:minmax(0,320px) auto!important;align-items:center!important;gap:10px!important;margin-top:14px!important;color:#9eb3ca!important;font-size:12px!important}
+.mm-primary-hub .mm-hub-progress .mini-bar{width:100%!important;max-width:320px!important;margin:0!important}
+.mm-primary-hub .mm-hub-progress strong{color:#dce8f6!important;font-size:12px!important;white-space:nowrap!important}
+.mm-primary-hub .mm-hub-continue-action{min-width:185px!important;min-height:48px!important;padding:11px 17px!important;font-size:15px!important;font-weight:800!important}
+.mm-primary-hub .mm-hub-section{display:grid!important;gap:10px!important}
+.mm-primary-hub .mm-hub-section-head{display:flex!important;align-items:end!important;justify-content:space-between!important;gap:12px!important;padding:0 2px!important}
+.mm-primary-hub .mm-hub-section-head h2{margin:0!important;font-size:18px!important;line-height:1.25!important}
+.mm-primary-hub .mm-hub-section-head p{margin:0!important;color:#8299b2!important;font-size:12px!important}
+.mm-primary-hub .mm-hub-grid{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:11px!important}
+.mm-primary-hub .mm-hub-tile{appearance:none!important;-webkit-appearance:none!important;width:100%!important;min-width:0!important;height:auto!important;min-height:142px!important;margin:0!important;padding:18px 19px!important;border:1px solid #304b68!important;border-radius:15px!important;background:linear-gradient(180deg,#11243a,#0e1f33)!important;color:#eef6ff!important;text-align:left!important;white-space:normal!important;display:flex!important;flex-direction:column!important;align-items:flex-start!important;justify-content:flex-start!important;cursor:pointer!important;box-shadow:none!important;font:inherit!important;line-height:1.3!important;overflow:hidden!important}
+.mm-primary-hub .mm-hub-tile:hover{border-color:#52779a!important;background:linear-gradient(180deg,#152c45,#10243a)!important}
+.mm-primary-hub .mm-hub-tile:focus-visible{outline:2px solid #8fe8d6!important;outline-offset:2px!important}
+.mm-primary-hub .mm-hub-tile .eyebrow{display:block!important;width:100%!important;margin:0 0 6px!important;font-size:10px!important;line-height:1.25!important;letter-spacing:.12em!important;text-align:left!important}
+.mm-primary-hub .mm-hub-tile b{display:block!important;width:100%!important;margin:0!important;font-size:19px!important;line-height:1.22!important;text-align:left!important;color:#eef6ff!important}
+.mm-primary-hub .mm-hub-tile small{display:block!important;width:100%!important;margin:7px 0 0!important;color:#aebfd4!important;font-size:13px!important;line-height:1.45!important;max-width:560px!important;text-align:left!important;font-weight:500!important}
+.mm-primary-hub .mm-hub-tile-action{display:block!important;width:100%!important;margin-top:auto!important;padding-top:14px!important;color:#8fe8d6!important;font-size:12px!important;line-height:1.25!important;font-weight:850!important;text-align:left!important}
+.mm-primary-hub .mm-hub-assessment{display:flex!important;align-items:center!important;justify-content:space-between!important;gap:18px!important;padding:16px 18px!important;border:1px solid #2c455f!important;border-radius:14px!important;background:#0e1f32!important}
+.mm-primary-hub .mm-hub-assessment-copy b{display:block!important;font-size:15px!important}
+.mm-primary-hub .mm-hub-assessment-copy small{display:block!important;margin-top:4px!important;color:#9eb2c9!important;line-height:1.4!important}
+.mm-primary-hub .mm-hub-assessment button{flex:0 0 auto!important;min-height:42px!important;padding:9px 14px!important}
+.mm-hub-detail-back{display:flex!important;align-items:center!important;gap:10px!important;margin:0 0 15px!important;padding:12px 14px!important;border:1px solid #304a68!important;border-radius:14px!important;background:#0f1f34!important;color:#dce8f6!important}
+.mm-hub-detail-back button{border:0!important;background:transparent!important;color:#8fe8d6!important;font-weight:800!important;padding:0!important}
+.mm-hub-detail-back span{color:#9fb1c7!important;font-size:13px!important}
+.mm-hub-picker-grid{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:10px!important;margin-top:14px!important}
+.mm-hub-picker-grid button{min-height:100px!important;padding:15px!important;border:1px solid #35516f!important;border-radius:14px!important;background:#11243a!important;color:#edf5ff!important;text-align:left!important;white-space:normal!important}
+.mm-hub-picker-grid button b{display:block!important;font-size:15px!important;margin-bottom:5px!important}
+.mm-hub-picker-grid button small{display:block!important;color:#a9bdd4!important;line-height:1.45!important}
+#dashboard .mm-home-task-hub{display:none!important}
+#dashboard #mmDashboardRegistryBefore .mm-dashboard-slot:not([data-mm-dashboard-section="today-focus"]),#dashboard #mmDashboardRegistryAfter .mm-dashboard-slot{display:none!important}
+
+@media(max-width:700px){
+  :root{--mm-mobile-nav-clearance:104px}
+  html{scroll-padding-bottom:calc(var(--mm-mobile-nav-clearance) + env(safe-area-inset-bottom))}
+  body{padding-bottom:0!important}
+  .main{padding:12px 12px calc(var(--mm-mobile-nav-clearance) + env(safe-area-inset-bottom))!important}
+  .topbar{position:relative!important;top:auto!important;z-index:1!important;background:transparent!important;backdrop-filter:none!important;gap:8px!important;margin-bottom:10px!important;padding:0 0 4px!important;align-items:flex-start!important}
+  .topbar h1{font-size:clamp(23px,7vw,27px)!important}.topbar p{font-size:12px!important;line-height:1.4!important;margin-top:3px!important}
+
+  /* References belong under More on mobile. Hide both legacy launchers before
+     runtime docking so neither can flash over the canonical bottom navigation. */
+  #mm-src-open,#mmrd-open{display:none!important;visibility:hidden!important;pointer-events:none!important}
+
+  /* Keep only a compact Search affordance in the top bar. Continue is already the
+     primary Home/Learn action, so duplicating it here creates noise. */
+  #app .top-actions{width:auto!important;gap:6px!important;flex:0 0 auto!important;align-items:flex-start!important;margin-left:auto!important}
+  #app .top-actions>*{flex:0 0 auto!important}
+  #app .top-actions #continueBtn{display:none!important}
+  #app #searchBtn{flex:0 0 var(--mm-control-size)!important;width:var(--mm-control-size)!important;min-width:var(--mm-control-size)!important;height:var(--mm-control-size)!important;min-height:var(--mm-control-size)!important;padding:0!important;font-size:0!important;display:grid!important;place-items:center!important;border-radius:var(--mm-radius-sm)!important}
+  #app #searchBtn::before{content:"⌕";font-size:20px;line-height:1}
+
+  .mobile-nav{position:fixed!important;left:0!important;right:0!important;bottom:0!important;background:rgba(7,16,28,.97)!important;border-top:1px solid #263b58!important;padding:6px 8px calc(6px + env(safe-area-inset-bottom))!important;box-shadow:0 -5px 18px rgba(0,0,0,.22),0 56px 0 #07101c!important}
+  .mobile-nav button{min-height:48px!important;padding:6px 4px!important}
+
+  #dashboard{padding-bottom:8px!important}
+  #dashboard .hero-main{padding:16px!important;min-height:0!important}
+  #dashboard .hero-main h2{font-size:clamp(25px,7.8vw,29px)!important;margin-top:7px!important}
+  #dashboard .hero-main p{font-size:13px!important;line-height:1.48!important;margin-bottom:8px!important}
+  #dashboard .hero-main .hero-buttons{margin-top:12px!important}
+  #dashboard .hero-main .hero-buttons>.secondary,
+  #dashboard .hero-main .hero-buttons>.ghost{display:none!important}
+
+  /* Simulator is in More and troubleshooting is the persistent Practice tab. */
+  #dashboard .kpis{display:none!important}
+
+  /* Progress stays visible but becomes one compact strip instead of a tall card. */
+  #dashboard .hero>.statbox{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:0!important;padding:8px 6px!important}
+  #dashboard .hero>.statbox .statline{padding:8px 6px!important;border:0!important;border-right:1px solid #263954!important;min-width:0!important}
+  #dashboard .hero>.statbox .statline:last-child{border-right:0!important}
+  #dashboard .hero>.statbox .statline b{font-size:20px!important;margin-top:2px!important}
+  #dashboard .hero>.statbox .statline .tiny{font-size:10px!important;line-height:1.25!important}
+
+  #dashboard .section-head{margin:16px 0 8px!important}
+  #dashboard .section-head p{display:none!important}
+  #dashboard .section-head>button{display:none!important}
+  #dashboard .grid{gap:9px!important}
+  #dashboard .grid .course-card:nth-child(n+4){display:none!important}
+  #dashboard .course-card{min-height:0!important;padding:12px!important}
+  #dashboard .course-card p{margin:5px 0!important;line-height:1.4!important}
+
+  /* Daily practice remains available, but as a small action card rather than a
+     second hero competing with the learner's primary next step. */
+  #dashboard .fun-dashboard.mm-daily-only{margin:8px 0 10px!important}
+  #dashboard .fun-dashboard.mm-daily-only .mission-card{padding:12px 14px!important}
+  #dashboard .fun-dashboard.mm-daily-only .mission-card h2{font-size:18px!important;margin:5px 0!important}
+  #dashboard .fun-dashboard.mm-daily-only .mission-card p{display:none!important}
+  #dashboard .fun-dashboard.mm-daily-only .mission-card .hero-buttons{margin-top:8px!important}
+  #dashboard .fun-dashboard.mm-daily-only .mission-card .hero-buttons>.ghost{display:none!important}
+
+  #dashboard .mm-specialist-strip{margin-bottom:10px!important}
+  .course-card{min-height:0!important;padding:14px!important}
+  .lesson-body{padding:14px!important}
+  .section-head{margin:18px 0 9px!important}
+  .toast{bottom:calc(84px + env(safe-area-inset-bottom))!important}
+
+  /* Learn / Practice must remain readable under the strict CSP on small screens. */
+  .mm-primary-hub{gap:14px!important}
+  .mm-primary-hub-head{padding:0!important}
+  .mm-primary-hub-head .eyebrow{margin-bottom:4px!important}
+  .mm-primary-hub-head h1{font-size:28px!important}
+  .mm-primary-hub-head p{font-size:14px!important;line-height:1.42!important;margin-top:6px!important}
+  .mm-primary-hub .mm-hub-continue{grid-template-columns:1fr!important;gap:13px!important;padding:16px!important;border-radius:16px!important}
+  .mm-primary-hub .mm-hub-continue h2{font-size:24px!important;line-height:1.16!important}
+  .mm-primary-hub .mm-hub-continue p{font-size:14px!important;line-height:1.42!important}
+  .mm-primary-hub .mm-hub-progress{grid-template-columns:minmax(0,1fr) auto!important;gap:8px!important;margin-top:11px!important}
+  .mm-primary-hub .mm-hub-progress .mini-bar{max-width:none!important}
+  .mm-primary-hub .mm-hub-progress strong{font-size:12px!important}
+  .mm-primary-hub .mm-hub-continue-action{width:100%!important;min-width:0!important;min-height:48px!important}
+  .mm-primary-hub .mm-hub-section{gap:8px!important}
+  .mm-primary-hub .mm-hub-section-head{align-items:flex-start!important;flex-direction:column!important;gap:2px!important;padding:0!important}
+  .mm-primary-hub .mm-hub-section-head h2{font-size:22px!important;line-height:1.2!important}
+  .mm-primary-hub .mm-hub-section-head p{display:none!important}
+  .mm-primary-hub .mm-hub-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:8px!important}
+  .mm-primary-hub .mm-hub-tile{min-height:96px!important;padding:13px!important;border-radius:var(--mm-radius-md)!important}
+  .mm-primary-hub .mm-hub-tile .eyebrow{display:none!important}
+  .mm-primary-hub .mm-hub-tile b{font-size:18px!important;line-height:1.18!important}
+  .mm-primary-hub .mm-hub-tile small{display:none!important}
+  .mm-primary-hub .mm-hub-tile-action{display:none!important}
+  .mm-primary-hub .mm-hub-assessment{align-items:stretch!important;flex-direction:column!important;gap:10px!important;padding:14px 15px!important}
+  .mm-primary-hub .mm-hub-assessment button{width:100%!important}
+  .mm-hub-picker-grid{grid-template-columns:1fr!important}
+  .mm-hub-picker-grid button{min-height:0!important}
+
+  html body[data-mm-view="profile"] .topbar{gap:8px!important;margin-bottom:10px!important;padding:0 0 4px!important}
+  html body[data-mm-view="profile"] .main{padding-bottom:calc(var(--mm-mobile-nav-clearance) + env(safe-area-inset-bottom))!important}
+  html body[data-mm-view="profile"] #profile{padding-bottom:10px!important}
+  html body[data-mm-view="profile"] #profile>*:last-child{margin-bottom:10px!important}
+  html.mm-ios-webkit body[data-mm-view="profile"] .main{padding-top:calc(12px + env(safe-area-inset-top))!important;padding-left:max(12px,env(safe-area-inset-left))!important;padding-right:max(12px,env(safe-area-inset-right))!important;padding-bottom:calc(var(--mm-mobile-nav-clearance) + env(safe-area-inset-bottom))!important}
+  html.mm-ios-webkit .mobile-nav{padding-left:max(8px,env(safe-area-inset-left))!important;padding-right:max(8px,env(safe-area-inset-right))!important;padding-bottom:calc(6px + env(safe-area-inset-bottom))!important}
+}
+
+@media(min-width:701px) and (max-width:900px){
+  #app{grid-template-columns:1fr!important}
+  .sidebar{position:relative!important;height:auto!important;padding:10px 12px!important}
+  .sidebar .brand,.sidebar .profile-mini,.sidebar .sidebar-foot,.sidebar .nav-group-label{display:none!important}
+  .sidebar nav{grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:6px!important}
+  .sidebar nav>button{min-height:var(--mm-control-size)!important;justify-content:center!important;padding:8px!important;text-align:center!important}
+  .sidebar .more-nav{grid-column:1/-1!important;margin-top:2px!important;padding-top:6px!important}
+  .main{padding-top:16px!important}
+}
+
+/* On the narrowest phones, a single column is easier to scan. Keep the cards
+   content-driven and restore a short explanation so they never become large,
+   empty-looking title slabs. */
+@media(max-width:380px){
+  .mm-primary-hub .mm-hub-grid{grid-template-columns:1fr!important;gap:10px!important}
+  .mm-primary-hub .mm-hub-tile{min-height:0!important;padding:14px 15px!important}
+  .mm-primary-hub .mm-hub-tile small{display:-webkit-box!important;margin:6px 0 0!important;overflow:hidden!important;-webkit-box-orient:vertical!important;-webkit-line-clamp:2;line-clamp:2;max-height:2.9em!important}
+}
+
+@media(max-width:390px){
+  #dashboard .hero>.statbox .statline{padding:7px 4px!important}
+  #dashboard .hero>.statbox .statline b{font-size:18px!important}
+  .mm-primary-hub-head h1{font-size:26px!important}
+  .mm-primary-hub .mm-hub-continue h2{font-size:22px!important}
+}

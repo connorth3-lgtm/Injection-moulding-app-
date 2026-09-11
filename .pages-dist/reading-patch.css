@@ -1,0 +1,110 @@
+/* MouldMaster reading/question clarity + guided training — 2026.09.07.1 */
+.lesson-body{max-width:980px;background:linear-gradient(180deg,#13233a 0%,#0d1b2f 100%);border-color:#39577b}
+.lesson-body>h2{font-size:clamp(28px,4vw,38px);line-height:1.15;margin-bottom:18px;color:#fff}
+.mm-reading-guide{display:grid;grid-template-columns:auto 1fr;gap:14px;align-items:center;margin:0 0 20px;padding:16px 18px;border:2px solid #55d6be;border-radius:14px;background:linear-gradient(135deg,#103a3b,#10253a);box-shadow:0 0 0 4px rgba(85,214,190,.09),0 10px 26px rgba(0,0,0,.2)}
+.mm-reading-guide>span{align-self:start;padding:7px 9px;border-radius:8px;background:#55d6be;color:#062625;font-size:11px;font-weight:900;letter-spacing:.12em}.mm-reading-guide strong{display:block;color:#fff;font-size:18px;line-height:1.35}.mm-reading-guide p{margin:4px 0 0;color:#c9e8e5;line-height:1.55;font-size:13px}
+.lesson-read-block{margin:18px 0;padding:18px 20px;border:1px solid #345273;border-radius:14px;background:#0b192b;box-shadow:0 8px 22px rgba(0,0,0,.15)}
+.lesson-read-primary{border:3px solid #55d6be;background:linear-gradient(145deg,#123344,#0b1d30);box-shadow:0 0 0 4px rgba(85,214,190,.08),0 10px 28px rgba(0,0,0,.22)}
+.mm-read-marker{display:flex;align-items:center;gap:9px;margin:-4px 0 11px;color:#aeece2;font-size:11px;font-weight:900;letter-spacing:.12em}.mm-read-marker b{display:grid;place-items:center;width:26px;height:26px;border-radius:50%;background:#55d6be;color:#062625;font-size:14px;letter-spacing:0}.lesson-read-task{border:2px solid #ffd166!important;background:#282116!important}.lesson-read-task .mm-read-marker{color:#ffe39a}.lesson-read-task .mm-read-marker b{background:#ffd166;color:#302400}
+.mm-extra-help{margin:18px 0;border:1px solid #355474;border-radius:14px;background:#0b192b;overflow:hidden}.mm-extra-help summary{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:16px 18px;cursor:pointer;color:#fff;list-style:none}.mm-extra-help summary::-webkit-details-marker{display:none}.mm-extra-help summary span{padding:5px 8px;border-radius:7px;background:#173a52;color:#8ed9ff;font-size:10px;font-weight:900;letter-spacing:.12em;text-transform:uppercase}.mm-extra-help summary b{font-size:15px}.mm-extra-help summary b::after{content:' +';color:#55d6be}.mm-extra-help[open] summary{border-bottom:1px solid #355474}.mm-extra-help[open] summary b::after{content:' −'}.mm-extra-help .mm-teaching-grid{margin:0;padding:14px}
+.lesson-read-block h3{margin:5px 0 10px;font-size:18px;color:#fff}.lesson-read-block p,.lesson-read-block li{color:#d7e4f3;line-height:1.78;font-size:15px}.lesson-read-block ul{margin:8px 0 0;padding-left:22px;display:grid;gap:8px}
+.lesson-intro{border-left:5px solid #69a8ff}.lesson-objectives{border-left:5px solid #7ce6a3}.lesson-points{border-left:5px solid #69a8ff}.lesson-exercise{border-left:5px solid #ffd166;background:#211f18}
+.lesson-source-box,.question-reference{margin:18px 0;padding:16px;border:1px solid #466d95;border-radius:14px;background:linear-gradient(145deg,#10243a,#0b1727)}
+.lesson-source-box h3,.question-reference h4{margin:4px 0 8px;color:#fff}.lesson-source-list,.question-ref-list{display:grid;gap:8px}.lesson-source-link,.question-ref-link{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center;padding:10px 12px;border:1px solid #355474;border-radius:10px;background:#0d1d31;color:#eaf4ff;text-decoration:none}.lesson-source-link small,.question-ref-link small{display:block;color:#9cb2cb;margin-top:3px;line-height:1.45}.lesson-source-link:hover,.question-ref-link:hover{background:#16304d;border-color:#69a8ff}
+.exam-card .question,.question{padding:18px!important;background:#0b192c!important;border:1px solid #3b5d82!important;border-radius:14px!important;box-shadow:0 8px 20px rgba(0,0,0,.14)}
+.question p,.question>div:first-child,.question strong{font-size:16px;line-height:1.6;color:#f7fbff}.option{padding:12px 13px!important;margin:9px 0!important;background:#10233b;border-color:#41658d!important;line-height:1.5}.option:hover{background:#17314f}
+.question-reference{margin-top:14px;background:#0c2033}.question-reference .eyebrow{font-size:10px}.question-reference p{font-size:13px!important;color:#a9bed6!important;margin:4px 0 10px!important}.question-ref-link{font-size:13px}
+.question-plain-language{margin:8px 0 12px;padding:10px 12px;border-radius:10px;background:#13263b;border-left:4px solid #69a8ff;color:#dcecff;font-size:13px;line-height:1.55}
+.mm-lesson-progress{margin:-4px 0 18px;padding:12px 14px;border:1px solid #355474;border-radius:12px;background:#0c1b2d}.mm-lesson-progress>div{display:flex;justify-content:space-between;gap:12px;color:#dfeeff;font-size:13px}.mm-lesson-progress i{display:block;height:7px;margin-top:8px;border-radius:99px;background:#20344e;overflow:hidden}.mm-lesson-progress i b{display:block;height:100%;background:linear-gradient(90deg,#55d6be,#69a8ff)}
+.mm-teaching-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin:18px 0}.mm-teach{padding:16px;border:1px solid #355474;border-radius:13px;background:#0c1b2e}.mm-teach span{font-size:10px;letter-spacing:.13em;color:#55d6be}.mm-teach h3{margin:6px 0 8px!important;font-size:17px}.mm-teach p{margin:0;color:#d7e4f3!important;line-height:1.7}.mm-plain{border-left:5px solid #69a8ff}.mm-mistake{border-left:5px solid #ffd166;background:#211f18}
+.mm-ref-panel{margin:20px 0;padding:18px;border:1px solid #466d95;border-radius:14px;background:#0c2033}.mm-ref-panel h3{margin:5px 0 12px!important}.mm-ref-panel>a,.mm-ref-link{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center;padding:10px 12px;margin:8px 0;border:1px solid #355474;border-radius:10px;background:#0d1d31;color:#ecf6ff;text-decoration:none}.mm-ref-panel>a small,.mm-ref-link small{display:block;color:#9db3ca;margin-top:3px}.mm-ref-panel>a em{font-style:normal;color:#55d6be;font-weight:800}.mm-ref-panel>p{font-size:12px;color:#92a8c0!important}
+.mm-qmeta{display:flex;gap:7px;flex-wrap:wrap;margin:8px 0}.mm-qmeta span{font-size:10px;padding:5px 8px;border-radius:999px;background:#17304d;color:#cfe5ff;border:1px solid #355474}.mm-confidence{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:12px;padding-top:10px;border-top:1px solid #2d4665}.mm-confidence>b{font-size:12px;color:#c9dbef}.mm-confidence label{font-size:12px;color:#c0d2e6}.mm-confidence input{width:auto;margin:0 4px 0 0}
+.mm-learning-debrief{margin-top:18px}.mm-learning-debrief>p{color:#aabfd7}.mm-debrief{margin:10px 0;border:1px solid #355474;border-radius:12px;background:#0d1b2e;overflow:hidden}.mm-debrief summary{cursor:pointer;padding:13px 15px;font-weight:800;color:#e9f5ff;background:#11243a}.mm-debrief>div{padding:14px}.mm-debrief h4{margin:13px 0 6px}.mm-debrief p,.mm-debrief li{color:#c6d7ea;line-height:1.6;font-size:13px}.mm-debrief ul{padding-left:20px}
+.mm-review-card{display:grid;grid-template-columns:1fr auto;gap:16px;align-items:center;padding:18px;margin-bottom:16px}.mm-review-card h3{margin:4px 0}.mm-review-card p{margin:0;color:#9fb4cb}.mm-review-card>div:last-child{display:grid;gap:4px;min-width:120px;text-align:center}.mm-review-card>div:last-child>b{font-size:28px}.mm-review-card>div:last-child span{font-size:11px;color:#9fb4cb}.mm-review-q .feedback{margin-top:10px}
+.mm-signoff{margin-top:22px;padding:22px}.mm-signoff h2{margin:6px 0 8px}.mm-signoff>p{color:#aabfd7;line-height:1.6}.mm-sign-progress{display:inline-flex;gap:7px;padding:8px 10px;margin:8px 0 14px;border-radius:999px;background:#17304d;color:#dff0ff}.mm-signoff>label{display:flex;gap:10px;align-items:flex-start;padding:10px 0;border-bottom:1px solid #263d59}.mm-signoff>label input[type=checkbox]{width:auto;margin-top:3px}.mm-sign-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:14px 0}.mm-signoff textarea{min-height:90px}.mm-signoff button{margin-top:12px}
+.mm-mobile-lessons{display:none;margin-bottom:12px}
+@media(max-width:700px){.lesson-body{padding:14px}.lesson-actions-sticky{position:static!important;margin-top:22px;padding-bottom:calc(8px + env(safe-area-inset-bottom))}.lesson-actions-sticky .primary{width:100%}.mm-reading-guide{grid-template-columns:1fr;gap:10px;padding:14px}.mm-reading-guide>span{justify-self:start}.mm-reading-guide strong{font-size:17px}.lesson-read-block,.lesson-source-box,.question-reference{padding:14px}.lesson-source-link,.question-ref-link,.mm-ref-panel>a,.mm-ref-link{grid-template-columns:1fr}.lesson-source-link span:last-child,.question-ref-link span:last-child,.mm-ref-panel>a em{display:none}.question{padding:14px!important}.option{font-size:15px}.mm-teaching-grid{grid-template-columns:1fr}.mm-extra-help summary{align-items:flex-start;flex-direction:column}.mm-review-card{grid-template-columns:1fr}.mm-sign-grid{grid-template-columns:1fr}.mm-mobile-lessons{display:inline-block}.lesson-side{display:none}.lesson-side.mm-open{display:block}.mm-confidence{display:grid;grid-template-columns:1fr 1fr 1fr}.mm-confidence>b{grid-column:1/-1}}
+
+/* Android profile/data layout clearance — physical OPPO regression 2026-09-05 */
+@media(max-width:700px){
+  html body[data-mm-view="profile"] .topbar{
+    gap:12px!important;
+    margin-bottom:20px!important;
+    padding:0 0 4px!important;
+  }
+  html body[data-mm-view="profile"] .topbar>div:first-child{min-width:0}
+  html body[data-mm-view="profile"] .top-actions{
+    width:100%!important;
+    display:grid!important;
+    grid-template-columns:minmax(0,1fr) minmax(0,1fr)!important;
+    gap:10px!important;
+    align-items:stretch!important;
+    margin:0!important;
+  }
+  html body[data-mm-view="profile"] .top-actions button{
+    width:100%!important;
+    min-width:0!important;
+    min-height:50px!important;
+    padding:10px 12px!important;
+    white-space:normal!important;
+  }
+  html body[data-mm-view="profile"] .main{
+    padding-bottom:calc(174px + env(safe-area-inset-bottom))!important;
+  }
+  html body[data-mm-view="profile"] #profile{padding-bottom:48px!important}
+  html body[data-mm-view="profile"] #profile>*:last-child{margin-bottom:36px!important}
+}
+@media(max-width:390px){
+  html body[data-mm-view="profile"] .top-actions{grid-template-columns:1fr!important}
+  html body[data-mm-view="profile"] .top-actions button{min-height:46px!important}
+}
+
+/* iOS/iPadOS WebKit safe-area + profile viewport hardening — 2026-09-05 */
+html.mm-ios-webkit{height:100%;min-height:-webkit-fill-available}
+html.mm-ios-webkit body{min-height:100dvh;min-height:-webkit-fill-available;-webkit-text-size-adjust:100%}
+@media(max-width:700px){
+  html.mm-ios-webkit body[data-mm-view="profile"] .main{
+    padding-top:calc(16px + env(safe-area-inset-top))!important;
+    padding-left:max(16px,env(safe-area-inset-left))!important;
+    padding-right:max(16px,env(safe-area-inset-right))!important;
+    padding-bottom:calc(184px + env(safe-area-inset-bottom))!important;
+  }
+  html.mm-ios-webkit body[data-mm-view="profile"] .topbar{
+    margin-bottom:22px!important;
+    scroll-margin-top:calc(12px + env(safe-area-inset-top));
+  }
+  html.mm-ios-webkit .mobile-nav{
+    padding-left:max(8px,env(safe-area-inset-left))!important;
+    padding-right:max(8px,env(safe-area-inset-right))!important;
+    padding-bottom:calc(10px + env(safe-area-inset-bottom))!important;
+    -webkit-transform:translateZ(0);
+    transform:translateZ(0);
+  }
+  html.mm-ios-standalone .mobile-nav{bottom:0!important}
+  html.mm-ios-standalone body[data-mm-view="profile"] #profile{padding-bottom:64px!important}
+}
+
+/* Mobile density contract — cards remain readable instead of preserving desktop
+   minimum heights. Keep controls large enough to tap; only presentation chrome
+   becomes content-driven. */
+@media(max-width:700px){
+  html body .mat-chapter{
+    min-height:0!important;
+    padding:14px!important;
+  }
+  html body .mat-chapter>p{
+    flex:0 0 auto!important;
+    margin-bottom:12px!important;
+  }
+  html body .mat-chapter .course-bottom{
+    margin-top:12px!important;
+  }
+  html body .mat-chapter .course-bottom button,
+  html body .mat-chapter .course-bottom .primary,
+  html body .mat-chapter .course-bottom .secondary{
+    min-height:44px!important;
+  }
+  html body .quick-action{
+    min-height:0!important;
+  }
+}

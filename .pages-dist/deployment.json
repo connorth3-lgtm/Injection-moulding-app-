@@ -1,0 +1,14 @@
+{
+  "artifact_policy": "service-worker-core-plus-on-demand-runtime-plus-minimal-public-metadata",
+  "assessment_runtime": "2026.09.01.6",
+  "measured_learning_promoted_case_count": 0,
+  "measured_learning_public_governance_count": 5,
+  "on_demand_asset_count": 53,
+  "precache_asset_count": 76,
+  "schema": 3,
+  "service_worker_cache_revision": "engineer-simulator-ui-r1-20260911",
+  "service_worker_cache_version": "2026.09.12.4",
+  "source_ref": "audit/standalone-learner-id-hardening",
+  "source_sha": "d2a96f673e63e5a48c86bad4c8e66a8b10a93fb3",
+  "web_release": "2026.09.12.4"
+}

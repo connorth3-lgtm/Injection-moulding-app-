@@ -1,0 +1,689 @@
+{
+  "asset_count": 137,
+  "assets": {
+    "LICENSE": {
+      "bytes": 11324,
+      "sha256": "50e6751797c50dedd75ef1b8a0d9e42f5f8472e9fbce91f34718e9f97b0c780a"
+    },
+    "MouldMaster_Core_App.html": {
+      "bytes": 523177,
+      "sha256": "dc8ea48f5557fec9c94106f6302044b8a254ec980f8f54f5c165f0073c21eaf8"
+    },
+    "NOTICE": {
+      "bytes": 1202,
+      "sha256": "6ed53ad482fb56f798d442e9923726faf191986e76854f758abc8a9c8c2911bf"
+    },
+    "THIRD_PARTY_NOTICES.md": {
+      "bytes": 4463,
+      "sha256": "63020bae0a264f3c77c1fb42ffd9ccbf03b7f87e0204e4aed622f9ecac9b7892"
+    },
+    "accessibility-hardening.js": {
+      "bytes": 8392,
+      "sha256": "352bc19504f07b5d8c5d76bf71c5bb4c0253a3a92a0f846b430cc2ef0fddbf06"
+    },
+    "app-shell-finalize.js": {
+      "bytes": 14192,
+      "sha256": "5a49cbd2cde3302749e7a9070ce11917c897a2eeadd6dd40329563444ba271cb"
+    },
+    "app-shell-registry.js": {
+      "bytes": 22372,
+      "sha256": "174cf1be95864d6e55534e1fc4753cbc78d67a602d75aca75924b51ed317e8d8"
+    },
+    "assessment-100-pass.js": {
+      "bytes": 2502,
+      "sha256": "a9f54b6e446432ce3c4bc57fa82c9b9675ba47da004f6d7ceaf13b7bfcd14182"
+    },
+    "assessment-analytics-ui.js": {
+      "bytes": 3682,
+      "sha256": "0cb3a36da2298dd8e2aa44b57d5ff9e31dd915ba2620f9e42113f8c092da2bd4"
+    },
+    "assessment-answer-cue-fix.js": {
+      "bytes": 21401,
+      "sha256": "878aeda686d19448462faf8c4a70864bbea51534cf367192c0358107d4ac68d5"
+    },
+    "assessment-deep-dive.js": {
+      "bytes": 36542,
+      "sha256": "2f3ee7b01f22f7df82f9df7dbfb5034d5468fdafabc983e90441db03f7d027a6"
+    },
+    "assessment-evidence-approval.js": {
+      "bytes": 11831,
+      "sha256": "18e33c32ef2713053d5a566aa348d8ccf750053a878605465c97c8327be293cd"
+    },
+    "assessment-evidence-integrity-upgrade.js": {
+      "bytes": 17765,
+      "sha256": "1defe2ff7acc7cf96f317fcf9131835cef2a0add9b3c8b9fa834d0ecb535310d"
+    },
+    "assessment-evidence-sources.js": {
+      "bytes": 11370,
+      "sha256": "f92515e138f0abb3c7f8a3207899d0f106273136bb7a87549a65212db97f80b2"
+    },
+    "assessment-final-hardening.js": {
+      "bytes": 15051,
+      "sha256": "95cc02f83c30c15660b1a5aac2859c29c7c24b157a0ab7a82fd7139a8fa35cb8"
+    },
+    "assessment-multimodal.js": {
+      "bytes": 16801,
+      "sha256": "239c5479e5973828a22d8c525d7a9c482f96d4f840f35df275154f5ec3f3e630"
+    },
+    "assessment-psychometric-approval.js": {
+      "bytes": 4762,
+      "sha256": "d48b1c604b85608844e7171aa1ef42b9637a746414a11bc7a3f2dd3d2dd3c5c0"
+    },
+    "assessment-psychometric-hardening.js": {
+      "bytes": 9335,
+      "sha256": "e08f16ad8b051416612b5718fb71f389c6fe9046cfe7a83ca139878f672e6e40"
+    },
+    "assessment-quality-suite.js": {
+      "bytes": 56006,
+      "sha256": "417594245b9ba9a904a80269ca2a1fc3a19b8f7f184d402261b0b17b5ee96087"
+    },
+    "assessment-runtime-v2.js": {
+      "bytes": 9011,
+      "sha256": "f71267fd75ff11c141221188575a34389f14854c6c596808b27a2ba3b3eac271"
+    },
+    "assessment-stable-review-bridge.js": {
+      "bytes": 11022,
+      "sha256": "ccd6f3d543a0a444c578e1077b5e0e2f118cf8a9b81c0d34429bfebf4275ff48"
+    },
+    "assessment-storage-scope.js": {
+      "bytes": 7255,
+      "sha256": "dcffd6dcfb1cde989285d59c9abf7cdde1f09559d427d71fbb2d4b40bdda88dd"
+    },
+    "assessment-ux.js": {
+      "bytes": 20399,
+      "sha256": "3bfa8616c2a9d3cbfea8a66234337789206c67b8da46cd121bf67a9fa2894f40"
+    },
+    "current-data-manifest.json": {
+      "bytes": 1195,
+      "sha256": "9d124990a5c88e0f7bececda97588bff7d21117e3367a4d8ce1c8d9029dcfea9"
+    },
+    "curriculum-integration.js": {
+      "bytes": 22188,
+      "sha256": "8fbd1d204ed15fa978024f623aa9875645b083e9f9797399195204cc1653dd64"
+    },
+    "data-integration-runtime.js": {
+      "bytes": 45579,
+      "sha256": "337208c1d365706867b3c11d9aff78c4dd3d09f4bfbd44a3bd5f29911b3ae501"
+    },
+    "data/measured-learning/expansion-manifest-v2.json": {
+      "bytes": 700,
+      "sha256": "71c9e48205527b9fbbeb5eeb603075a523194ea7f16003cbad7d4fa13e3076a8"
+    },
+    "data/measured-learning/manifest-v1.json": {
+      "bytes": 10296,
+      "sha256": "5b10ac6a194ca6832d5f60b735a35b0f4703da4524af11ade82bc6cb2af9c4dd"
+    },
+    "data/measured-learning/promoted-v1.json": {
+      "bytes": 272,
+      "sha256": "92e9770b11a9c45e81380a401db94e5ceccb0be55f6439013eda65fd6b76aa41"
+    },
+    "data/measured-learning/source-readiness-v2.json": {
+      "bytes": 8707,
+      "sha256": "c118b0078af1d73420d7856a76030593ba43217506e6ee0339f2ade8aa71315f"
+    },
+    "data/measured-learning/v2-policy.json": {
+      "bytes": 2581,
+      "sha256": "d79f07629722bfdbbddea0f8776a1afce8b1b0991dac8ccbcdf4ced245ae797f"
+    },
+    "deployment.json": {
+      "bytes": 583,
+      "sha256": "7df9b1937b2f5397251963e8e2bc015564c94805aedcdbfaa5cca69a055c0c2e"
+    },
+    "diagnostic-learning-labs.js": {
+      "bytes": 52886,
+      "sha256": "bdec3d25a10c48e69777a5c7948e1178a0e842fe35336503bf4d48171bae1ce8"
+    },
+    "evidence-maturity-deep-dive.js": {
+      "bytes": 39833,
+      "sha256": "02c6a67e98f5bf2780662223d93fc3ad9fd6fbb2bfe1a6aba0f336efd662f1da"
+    },
+    "evidence-maturity-formal-bridge.js": {
+      "bytes": 15363,
+      "sha256": "7ae21db800e9825a7e75a2f2aaa85d392955c2e57d92305c02cb44043d9ac266"
+    },
+    "index.html": {
+      "bytes": 16290,
+      "sha256": "6b4151e7ff104a1b2de0d02e881aec95a0b4717a1bcc466e065c52ff4a69a2cc"
+    },
+    "latest.json": {
+      "bytes": 945,
+      "sha256": "b3fc378083b697a91f10b4a89fe55cdeb8a1fc28567740afbeee70b1901477ea"
+    },
+    "learner-ux-repair.css": {
+      "bytes": 2887,
+      "sha256": "bdb9f6cdf2bd99f13e34163e9caa07c19fbed9c13e038ce187a5e275d4cedc06"
+    },
+    "learner-ux-repair.js": {
+      "bytes": 13399,
+      "sha256": "8b52af2282a668b9a6ad5aec51537587e88640a06c1bbb96c46db37cb8cb59d3"
+    },
+    "learning-analytics.js": {
+      "bytes": 26523,
+      "sha256": "612d1beaaf1e9e0553e9a9e916a12deda38f43fb885a527427582de23ae18b41"
+    },
+    "learning-experience.js": {
+      "bytes": 16869,
+      "sha256": "a4842557a9cc8627a98d88ea3ff3c0a2f5380e99f7508c473dc32e2ff2847497"
+    },
+    "lesson-deep-authoring-v2.js": {
+      "bytes": 9289,
+      "sha256": "b6ae77020ee9cc1b94ceb30aa2e2bcee70b008388494efacb57629c94c96dd4c"
+    },
+    "lesson-evidence-depth.js": {
+      "bytes": 14023,
+      "sha256": "a31f577a155e2b286996ae93c75ca98959a343822b714f2cef97edbc0a8e2ac1"
+    },
+    "lesson-simple-experience.js": {
+      "bytes": 18142,
+      "sha256": "ea445009d5dc7621caf082eb02e0c889811dfd947df14e1d30ce0a83ad5c466c"
+    },
+    "manifest.webmanifest": {
+      "bytes": 811,
+      "sha256": "7b21b90a5cb9f57ba7f93636192473ef2904b38c23553c9db01026cf9e9b4ab8"
+    },
+    "material-behaviour-labs.js": {
+      "bytes": 47489,
+      "sha256": "8415e4423a75c5fad6e1a23b00c5f9ae50a14b7c3c35512a9016a20727eb0520"
+    },
+    "material-catalog-v1.json": {
+      "bytes": 43827,
+      "sha256": "793352ef3e4ca7ea51cbb2e90dd3c3a7040c789b41ce4b1eed744e78748dc23e"
+    },
+    "measured-evidence-decision.js": {
+      "bytes": 4988,
+      "sha256": "8a1f87c3390f8c7587511a2b4224876a43c5ff1cabd72b699d2bb38222f2a801"
+    },
+    "measured-evidence-integration.js": {
+      "bytes": 16640,
+      "sha256": "4f0ec5f4967db6dee0ea64e53b6ed9d629c8001824fca8665709a6f2c484bb94"
+    },
+    "measured-learning-library.css": {
+      "bytes": 2732,
+      "sha256": "757506f6d0bc6ba8f0504ebdc638a7c1df858727882bfa22d93beefb49f74bdd"
+    },
+    "measured-learning-library.js": {
+      "bytes": 13172,
+      "sha256": "c09a9c1e0ee0705bd4d3527c646a04be7409f3662c8fdf123a79d4de6752d9f9"
+    },
+    "mobile-lesson-fix.css": {
+      "bytes": 3347,
+      "sha256": "819583df39b234efa06968c35f4107194170aa9d260049639f5424687f17f34b"
+    },
+    "mould-master-workspace.js": {
+      "bytes": 23970,
+      "sha256": "754c75f95d49a0e5f274515c2b433e0a21f7cf5c852c5cb0db56625c8951b0cb"
+    },
+    "mouldmaster-192.png": {
+      "bytes": 2116,
+      "sha256": "186bc2ee65f40e2b385f98ceecf9283c7584720eafb73c13d036a9d34296607a"
+    },
+    "mouldmaster-512.png": {
+      "bytes": 6129,
+      "sha256": "6e6d46266c7b9fee50bbca9e9ccb0be97fa74835f68c3c8d1b62c00697c287e3"
+    },
+    "preview/index.html": {
+      "bytes": 428,
+      "sha256": "0ab7e02f1c6f9cab115488cee530bea21262aa9b2eebf03e54072feb61304c1a"
+    },
+    "preview/service-worker.js": {
+      "bytes": 312,
+      "sha256": "7842af99ff25cc8f7bb3f785b99a11939dbd8a6eefcf86345b2c97ea296634ab"
+    },
+    "primary-learning-practice-hubs.js": {
+      "bytes": 27264,
+      "sha256": "43af3a5c7960a51ef9de861dcfb40f55860c07c9796e938ccd9b153c4be8c732"
+    },
+    "privacy.html": {
+      "bytes": 12370,
+      "sha256": "bf53840e696277a1899ea0f9957aaec062b523a527e9195fcb47b2fba749e8ea"
+    },
+    "process-data-20-pass-01-05.js": {
+      "bytes": 32720,
+      "sha256": "6ffd37e86f5240ef0aa12c7b459d5c72063b459a4eee308a9936949ec2f3900b"
+    },
+    "process-data-20-pass-06-10.js": {
+      "bytes": 31227,
+      "sha256": "94d5364e6377cac3ac28f13abaf6e209b83de3f3dde37bbc3e895bd0739d0a42"
+    },
+    "process-data-20-pass-11-15.js": {
+      "bytes": 31779,
+      "sha256": "9d6ad6ec392711ab5dbbc2eaae7e07edafc4b3b969f6b1e1b578de64188ab4ca"
+    },
+    "process-data-20-pass-16-20.js": {
+      "bytes": 33251,
+      "sha256": "6cda1b010d3facb50c582a1a5ce1b198b8c966a76718cd34964de75ff33386bf"
+    },
+    "process-data-20-pass-atlas.js": {
+      "bytes": 16713,
+      "sha256": "7ede37ca19cbd16589750e76e2cfe8fe9b29e79ce0324bce287d9b5f63125bdc"
+    },
+    "process-data-deep-dive-50.js": {
+      "bytes": 10636,
+      "sha256": "bb4d51c5efad751f82f78e1c12a8183dd89b116a2c48447a2794abe1d1358570"
+    },
+    "process-data-deep-dive-machine.js": {
+      "bytes": 5757,
+      "sha256": "f37e9174414bb41f3aecee0883d1a4044621294cfd2ef8290a490f77df4bc031"
+    },
+    "process-data-deep-dive-material.js": {
+      "bytes": 5487,
+      "sha256": "e827afb7bf5d2920e9a53bf40882e62c1a6982d09555171e22da1066239f9a13"
+    },
+    "process-data-deep-dive-quality.js": {
+      "bytes": 5668,
+      "sha256": "fa246053e16173e5b92a4cb7ed288741e32039b8296afdfe538d42044aa66a38"
+    },
+    "process-data-deep-dive-scientific.js": {
+      "bytes": 5722,
+      "sha256": "c4b5ed6edb41bd6fbe8d01b7d8f5cbd8eca02dbc372b0a587fbcb40999644bdd"
+    },
+    "process-data-deep-dive-tooling.js": {
+      "bytes": 5357,
+      "sha256": "94230be5b9c76f6bbbc1eeaa30892e3558c1a380330408afbdd1caee549abcd3"
+    },
+    "process-data-diagnostics.js": {
+      "bytes": 27465,
+      "sha256": "f841a13d1774f1250e7fa8dcb8568c83ddc285c1a62441c6fb280b78abbb14d6"
+    },
+    "process-data-intelligence-ui.js": {
+      "bytes": 18614,
+      "sha256": "df86602aaeba7453111d31d3f6248034074dbc1ad8217ab9db8ec6bf89788b03"
+    },
+    "process-data-local-intake.js": {
+      "bytes": 20906,
+      "sha256": "8abfcca570aff1cec3c46aa2fd0ec2621c3e7c1a416db4f494df8f0c5462c2a0"
+    },
+    "process-data-semantic-registry.json": {
+      "bytes": 8903,
+      "sha256": "5f5fd9c7fc5d6107698442ef261004b458d90dcdb9b51f6c948621c1cdcc76a1"
+    },
+    "production-health.js": {
+      "bytes": 8369,
+      "sha256": "03ef7f9b4d0fa683141bc4d6d5d0e34136034a1fcbee843813c7b89033c8341a"
+    },
+    "pwa-shell.js": {
+      "bytes": 28078,
+      "sha256": "3feae3b313b15beccd0513173476966f100fe76f5460681a50651255d66bca0a"
+    },
+    "read-aloud.js": {
+      "bytes": 12601,
+      "sha256": "0ce833eaa16edf2e43cafe4b5007d1f7f8e9a3f4f3fe707ee4e386d41341d74c"
+    },
+    "reading-patch.css": {
+      "bytes": 12254,
+      "sha256": "cdf398ccd4c05c51496f5678043b4ce999b59f4042b946e6e5f988166cca3fdc"
+    },
+    "reading-patch.js": {
+      "bytes": 5327,
+      "sha256": "7e17fa9e5e586669d0e9fb60dc7e51fb3cadb731fddb405ce2e533db680bc6ec"
+    },
+    "real-measured-data-assessment.js": {
+      "bytes": 17108,
+      "sha256": "35b1c55d006b1ea23c576f59ed159394d635bc355284178ac07de522edbba80e"
+    },
+    "reference-2026-expansion.js": {
+      "bytes": 28545,
+      "sha256": "224d7eb258fcd22a5b012746d24e9e0e5e9bedac02378e4aab71b5e1925bd1f3"
+    },
+    "reference-20x-extension.js": {
+      "bytes": 52846,
+      "sha256": "c839eee70b9123c7d094e46d429e90de3e529566b278ba68a53ff648192d8bcf"
+    },
+    "reference-browser-ui.js": {
+      "bytes": 10250,
+      "sha256": "0d586b549581cebdfa7a2446d42292df7338cd657a77fa47987543ad5c18e40a"
+    },
+    "reference-data.html": {
+      "bytes": 9243,
+      "sha256": "41498e6c6d38fece966cfe783fa4f48641580d5cd878dbaeb549a18dd372ce4e"
+    },
+    "reference-data.js": {
+      "bytes": 57588,
+      "sha256": "9af28bc5b022ab59eea11f3f4144ac06eb7489dfa7edcfb3db58868872367f44"
+    },
+    "reference-deep-dive.js": {
+      "bytes": 45705,
+      "sha256": "9d0760617993f19e4791ceda9a31341719cd83b260a6e907d61b5e3ef3df71e7"
+    },
+    "reference-research-extension.js": {
+      "bytes": 32605,
+      "sha256": "09b2582bd093440de9cc96754b9c1a92dd8c5c05f79ccc9129b2718c44a3a12e"
+    },
+    "reference-sources.js": {
+      "bytes": 13301,
+      "sha256": "e23b3207ecd30d8477f5c8e52fc4d5b2c4836545bc8fac3cbfc1e460a3d76bdf"
+    },
+    "repair.html": {
+      "bytes": 2431,
+      "sha256": "ca0c6037af38ddb581c5d9435b7b4de303edc06a83f842eb303b4d3ef0a1205e"
+    },
+    "runtime-domain-manifest.json": {
+      "bytes": 1367,
+      "sha256": "57d3b1dc756fcfe998bf50ecf541e15a2e5bde1acefc4fa1953499074b4b3a42"
+    },
+    "runtime-v2.js": {
+      "bytes": 5603,
+      "sha256": "46c7ff201cce82689d8df43c35eee9bc142dfd6febd10f4bde1156915cd78084"
+    },
+    "service-worker.js": {
+      "bytes": 10054,
+      "sha256": "f5a637140b97b55b6af492f0955afc76e12eb0abe74351e96ca998147ec503e0"
+    },
+    "source-library.js": {
+      "bytes": 8072,
+      "sha256": "d51e4343ace72b9115e7a69ffc195c75dcfb259e6f10ab17cbd706c14acc6029"
+    },
+    "specialist-curriculum.js": {
+      "bytes": 29973,
+      "sha256": "c9e31a97f715712e9a13bbb2638fe552cf46b672117a7c5615b616bcee896bad"
+    },
+    "specialist-evidence-gap-extension.js": {
+      "bytes": 23302,
+      "sha256": "5ac85a8723f02a539e0380c41eecd8301409ab59e115cdc3b701ceba2465bcd6"
+    },
+    "src/core-runtime/core-inline-001.js": {
+      "bytes": 1639,
+      "sha256": "38e4f23ecf20d7ec58de90ec5362f3b56bf37fb8c9eee900100a53bf5f5b1f28"
+    },
+    "src/core-runtime/core-inline-002.js": {
+      "bytes": 264587,
+      "sha256": "0e20c711fdcc9fcdac40b6e859199b306eb4b0b4a2bc2a30018b6543182f9759"
+    },
+    "src/core-runtime/core-inline-003.js": {
+      "bytes": 7329,
+      "sha256": "6006ee52574a461f190b0f3874f4df823556b85674302ffd211e35b39ea1cc2d"
+    },
+    "src/core-runtime/core-inline-004.js": {
+      "bytes": 117465,
+      "sha256": "d475d9fb2c8bfe7b255cb6db7c1821aa64458ab1ace39181d443c80a35f68fcf"
+    },
+    "src/core-runtime/core-inline-005.js": {
+      "bytes": 69133,
+      "sha256": "481081e55b23ec54316883164fc6dd453ce451f5a3d52a331b7c449ac7cac610"
+    },
+    "src/core-runtime/core-inline-006.js": {
+      "bytes": 11229,
+      "sha256": "9d419ded5bd0d792ccb9359fc35ef1cdaab912c0a0e7d1598a0f9159c57685ee"
+    },
+    "src/core-runtime/core-inline-007.js": {
+      "bytes": 10018,
+      "sha256": "8ddadfb2a0e7f542cd50ef169662260569218ea7653ee4df5d9576362dbbeb25"
+    },
+    "src/core-runtime/core-inline-008.js": {
+      "bytes": 614,
+      "sha256": "f47cbc985ea5f41fcd066088479e31346dbc62ef05142b9a8c63f42694287f2b"
+    },
+    "src/core-runtime/core-inline-009.js": {
+      "bytes": 507,
+      "sha256": "a1ac587404d234ad0f53d8c8f2ba64b32f83ecb7f0827a2fcf6193faaf54d0c4"
+    },
+    "src/core-runtime/core-inline-010.js": {
+      "bytes": 9856,
+      "sha256": "9b7fae924556897785d473e5aeeff9044fb321c2550ff9ccb75b1ac0ab9d5499"
+    },
+    "src/core-runtime/inline-style-bridge.js": {
+      "bytes": 5344,
+      "sha256": "3a7dcedfc0f5abf6adb67b14190180d3cf4dfd48d04f65d1fe57f08713785b19"
+    },
+    "src/domains/assessment/assessment-analytics-v2.js": {
+      "bytes": 8686,
+      "sha256": "21e5a7874e495ae35597edd7d63acadf635c89f4caaeee92b3fe5684d2dcf6ee"
+    },
+    "src/domains/domain-bootstrap.js": {
+      "bytes": 2387,
+      "sha256": "c9c2f70cca89ce3049848e2b54f59bb49076bf33f9677ec3665bfb214d63855d"
+    },
+    "src/domains/engineering/engineer-simulator-ui.js": {
+      "bytes": 26067,
+      "sha256": "e0c78f2dbc6638e48e939c874059982cdd2878686138b21244707f620019d05b"
+    },
+    "src/domains/engineering/engineering-store.js": {
+      "bytes": 10142,
+      "sha256": "74cb6815b7c04a5be1fd560475418f898b5adc547a0e8f76ea107206b9e252b4"
+    },
+    "src/domains/engineering/evidence-chain.js": {
+      "bytes": 2200,
+      "sha256": "7634a7ca2beb8793e0f5a176aa03fb996698cc14749a64dc65c0c3a0bee0f7f1"
+    },
+    "src/domains/engineering/research-context.js": {
+      "bytes": 6984,
+      "sha256": "faf32c5489aacd77da84ac0a334df7881fd6212da8b05ac65bbef9854a6e59b5"
+    },
+    "src/domains/learning/activity-events-v2.js": {
+      "bytes": 7909,
+      "sha256": "6d5db95ecc3c0e27ab764e7f5b0e537b40afe5760a6a1a04f3483d5dd50fc52d"
+    },
+    "src/domains/learning/content-intelligence.js": {
+      "bytes": 7242,
+      "sha256": "bdfceeef2938d06ad8d6cda96b1acf11e6a2d69e0f89fdc579f5fd7afde73d08"
+    },
+    "src/domains/learning/delayed-transfer-reviews.js": {
+      "bytes": 5094,
+      "sha256": "c31a9312ab067d33508ddb928e3480b68e618549c381456b104978d4ee04cb4e"
+    },
+    "src/domains/learning/learner-model.js": {
+      "bytes": 7361,
+      "sha256": "227849d0d0f42cb1aae948add3a1e4447eac6bc453edd39c6195c98c2330a7cb"
+    },
+    "src/domains/learning/learning-analytics-loader.js": {
+      "bytes": 13354,
+      "sha256": "a1ec952476b87b042a27d721afde414c4b7c35c1a9db51638a1b39ff983eb09f"
+    },
+    "src/domains/materials/material-observation-v2.js": {
+      "bytes": 2980,
+      "sha256": "fbdd9a8bec2ce8fdb90ceb5034caf49d26715b7a692ccb82b1c223f5b228ef8f"
+    },
+    "src/domains/materials/material-registry.js": {
+      "bytes": 16859,
+      "sha256": "978de3eac35a67699b8ab44864d01ee68f6f43a990c0587b77277aa7599869d1"
+    },
+    "src/domains/materials/material-search-index.js": {
+      "bytes": 3262,
+      "sha256": "fb0562c57432ae5c28109be127ed58ca8b4a6f3ad0d85edfdb54ef6c5651dbba"
+    },
+    "src/domains/materials/material-search-pagination.js": {
+      "bytes": 9941,
+      "sha256": "5c96d84d420d563aef94471d4fae5f12df541e54ac65e8467f47f040a69adc0d"
+    },
+    "src/domains/process/evidence-granularity.js": {
+      "bytes": 7736,
+      "sha256": "581145364957542a9250c5bf9a48b1af2a93fcd15b04fc866a4939c14e081a74"
+    },
+    "src/domains/process/process-data-integrity.js": {
+      "bytes": 8130,
+      "sha256": "d58c1679154fac45e06e621e8534898c855afc57bc0f02d2f037b1e09c2533ae"
+    },
+    "src/domains/process/process-statistics.js": {
+      "bytes": 11465,
+      "sha256": "952367d23b84baadfb1078cc7bacaf663aa7e71a421ab96826d4b80dca08116f"
+    },
+    "src/domains/research/governed-mechanisms.js": {
+      "bytes": 14897,
+      "sha256": "d30bfc0a268b559022719e527f2b972f17998bec129694e486b8697a8cd4a717"
+    },
+    "src/domains/runtime-packs/evidence-runtime-pack.js": {
+      "bytes": 408935,
+      "sha256": "2eec145f8d6bffd36c2efeaa34c6e350597a27705ee2a1c687968659da948cd5"
+    },
+    "src/domains/runtime-packs/process-data-runtime-pack.js": {
+      "bytes": 185506,
+      "sha256": "48088d449e0631962f13197a7b1c48faf830836307cee9e1c7346d2c03eec883"
+    },
+    "src/domains/shared/data-spine.js": {
+      "bytes": 6277,
+      "sha256": "3ebe5f2b16064ee2ecb18a6970c6923412711d8ca0aaa981b1056bdd3ecc3626"
+    },
+    "src/domains/shared/learner-scope.js": {
+      "bytes": 7495,
+      "sha256": "efba951bec7d77bebbccd443ec031e7354ae7b2f2d8f990223f98254e0fa2d5c"
+    },
+    "src/domains/shared/signal-registry.js": {
+      "bytes": 7466,
+      "sha256": "0ed8625d6dfe274c0ad6cdb6bba42bc9cdd07b9b6fa1d2413ca012f7e6835009"
+    },
+    "src/domains/shell/accessibility-loader.js": {
+      "bytes": 955,
+      "sha256": "6ea0bd4c086a4f847edf3cd8ae4c9fb1d7e3bafda23b85ce6d7c4a589ce8d6a0"
+    },
+    "src/domains/shell/product-areas.js": {
+      "bytes": 4257,
+      "sha256": "813d09c853ff86c229eb41aa87d3361031d078850e5c2de98839e861356b7928"
+    },
+    "support.html": {
+      "bytes": 8416,
+      "sha256": "cf503f7f7bcb122fc896aec409cfa49545793b6823b6d4f3f85264a80d111df9"
+    },
+    "training-qa-fix.js": {
+      "bytes": 10015,
+      "sha256": "75311abe0f08e6db3b95f300c79e4f2c66da5cb36fc9dc5a83f66ecdfffcb2ec"
+    },
+    "training-upgrade.js": {
+      "bytes": 31096,
+      "sha256": "7d8a826f36f10a5a6e18fed00f375d2c8cabd7c6b855cac8376a36fb707b31bb"
+    },
+    "ui-shell.css": {
+      "bytes": 19040,
+      "sha256": "0990481c3061f5595a6248bd672aabb1013307fcfd454ef3a2669ec6396008e4"
+    },
+    "version.json": {
+      "bytes": 919,
+      "sha256": "484a496948539900a986b5bbcf8e9db6aa09ea525e9560be94977904c700f7ec"
+    }
+  },
+  "on_demand_assets": [
+    "assessment-100-pass.js",
+    "assessment-analytics-ui.js",
+    "assessment-answer-cue-fix.js",
+    "assessment-deep-dive.js",
+    "assessment-evidence-approval.js",
+    "assessment-evidence-integrity-upgrade.js",
+    "assessment-evidence-sources.js",
+    "assessment-final-hardening.js",
+    "assessment-multimodal.js",
+    "assessment-psychometric-approval.js",
+    "assessment-psychometric-hardening.js",
+    "assessment-quality-suite.js",
+    "assessment-stable-review-bridge.js",
+    "assessment-storage-scope.js",
+    "assessment-ux.js",
+    "data/measured-learning/expansion-manifest-v2.json",
+    "data/measured-learning/manifest-v1.json",
+    "data/measured-learning/promoted-v1.json",
+    "data/measured-learning/source-readiness-v2.json",
+    "data/measured-learning/v2-policy.json",
+    "diagnostic-learning-labs.js",
+    "evidence-maturity-deep-dive.js",
+    "evidence-maturity-formal-bridge.js",
+    "lesson-deep-authoring-v2.js",
+    "lesson-evidence-depth.js",
+    "material-behaviour-labs.js",
+    "measured-evidence-decision.js",
+    "measured-evidence-integration.js",
+    "measured-learning-library.css",
+    "measured-learning-library.js",
+    "process-data-20-pass-01-05.js",
+    "process-data-20-pass-06-10.js",
+    "process-data-20-pass-11-15.js",
+    "process-data-20-pass-16-20.js",
+    "process-data-20-pass-atlas.js",
+    "process-data-deep-dive-50.js",
+    "process-data-deep-dive-machine.js",
+    "process-data-deep-dive-material.js",
+    "process-data-deep-dive-quality.js",
+    "process-data-deep-dive-scientific.js",
+    "process-data-deep-dive-tooling.js",
+    "real-measured-data-assessment.js",
+    "reference-2026-expansion.js",
+    "reference-20x-extension.js",
+    "reference-browser-ui.js",
+    "reference-data.html",
+    "reference-data.js",
+    "reference-deep-dive.js",
+    "reference-research-extension.js",
+    "reference-sources.js",
+    "source-library.js",
+    "src/domains/runtime-packs/evidence-runtime-pack.js",
+    "src/domains/runtime-packs/process-data-runtime-pack.js"
+  ],
+  "precache_assets": [
+    "MouldMaster_Core_App.html",
+    "accessibility-hardening.js",
+    "app-shell-finalize.js",
+    "app-shell-registry.js",
+    "assessment-runtime-v2.js",
+    "current-data-manifest.json",
+    "curriculum-integration.js",
+    "data-integration-runtime.js",
+    "index.html",
+    "learner-ux-repair.css",
+    "learner-ux-repair.js",
+    "learning-analytics.js",
+    "learning-experience.js",
+    "lesson-simple-experience.js",
+    "manifest.webmanifest",
+    "material-catalog-v1.json",
+    "mobile-lesson-fix.css",
+    "mould-master-workspace.js",
+    "mouldmaster-192.png",
+    "mouldmaster-512.png",
+    "primary-learning-practice-hubs.js",
+    "privacy.html",
+    "process-data-diagnostics.js",
+    "process-data-intelligence-ui.js",
+    "process-data-local-intake.js",
+    "process-data-semantic-registry.json",
+    "production-health.js",
+    "pwa-shell.js",
+    "read-aloud.js",
+    "reading-patch.css",
+    "reading-patch.js",
+    "repair.html",
+    "runtime-domain-manifest.json",
+    "runtime-v2.js",
+    "specialist-curriculum.js",
+    "specialist-evidence-gap-extension.js",
+    "src/core-runtime/core-inline-001.js",
+    "src/core-runtime/core-inline-002.js",
+    "src/core-runtime/core-inline-003.js",
+    "src/core-runtime/core-inline-004.js",
+    "src/core-runtime/core-inline-005.js",
+    "src/core-runtime/core-inline-006.js",
+    "src/core-runtime/core-inline-007.js",
+    "src/core-runtime/core-inline-008.js",
+    "src/core-runtime/core-inline-009.js",
+    "src/core-runtime/core-inline-010.js",
+    "src/core-runtime/inline-style-bridge.js",
+    "src/domains/assessment/assessment-analytics-v2.js",
+    "src/domains/domain-bootstrap.js",
+    "src/domains/engineering/engineer-simulator-ui.js",
+    "src/domains/engineering/engineering-store.js",
+    "src/domains/engineering/evidence-chain.js",
+    "src/domains/engineering/research-context.js",
+    "src/domains/learning/activity-events-v2.js",
+    "src/domains/learning/content-intelligence.js",
+    "src/domains/learning/delayed-transfer-reviews.js",
+    "src/domains/learning/learner-model.js",
+    "src/domains/learning/learning-analytics-loader.js",
+    "src/domains/materials/material-observation-v2.js",
+    "src/domains/materials/material-registry.js",
+    "src/domains/materials/material-search-index.js",
+    "src/domains/materials/material-search-pagination.js",
+    "src/domains/process/evidence-granularity.js",
+    "src/domains/process/process-data-integrity.js",
+    "src/domains/process/process-statistics.js",
+    "src/domains/research/governed-mechanisms.js",
+    "src/domains/shared/data-spine.js",
+    "src/domains/shared/learner-scope.js",
+    "src/domains/shared/signal-registry.js",
+    "src/domains/shell/accessibility-loader.js",
+    "src/domains/shell/product-areas.js",
+    "support.html",
+    "training-qa-fix.js",
+    "training-upgrade.js",
+    "ui-shell.css",
+    "version.json"
+  ],
+  "schema": 3,
+  "source_sha": "d2a96f673e63e5a48c86bad4c8e66a8b10a93fb3",
+  "web_release": "2026.09.12.4"
+}

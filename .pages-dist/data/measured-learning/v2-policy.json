@@ -1,0 +1,43 @@
+{
+  "schemaVersion": 2,
+  "architectureId": "measured-learning-library-v2",
+  "baseLibraryId": "measured-learning-library-v1",
+  "baseManifest": "data/measured-learning/manifest-v1.json",
+  "expansionManifest": "data/measured-learning/expansion-manifest-v2.json",
+  "promotionIndex": "data/measured-learning/promoted-v1.json",
+  "releaseTargetCaseCount": 70,
+  "catalogueCapacity": 100,
+  "reservedCaseIds": ["MLM-071","MLM-072","MLM-073","MLM-074","MLM-075","MLM-076","MLM-077","MLM-078","MLM-079","MLM-080","MLM-081","MLM-082","MLM-083","MLM-084","MLM-085","MLM-086","MLM-087","MLM-088","MLM-089","MLM-090","MLM-091","MLM-092","MLM-093","MLM-094","MLM-095","MLM-096","MLM-097","MLM-098","MLM-099","MLM-100"],
+  "learnerVisibleOnlyWhenPromoted": true,
+  "payloadBudget": {"typicalCaseBytes":262144,"hardCaseBytes":524288,"aggregatePromotedBytes":20971520},
+  "expansionGate": {
+    "minimumPromotedCasesBeforeAuthoringExpansion": 50,
+    "minimumPromotionReadySourceFamilies": 15,
+    "maximumLargestFamilyShareAt100": 0.15,
+    "maximumTopFourFamilyShareAt100": 0.45,
+    "substantialWindowOverlapThreshold": 0.5,
+    "maximumSubstantialWindowReuseRate": 0.1,
+    "requiresLazyRuntimeLoading": true,
+    "requiresExactArtifactFingerprintVerification": true,
+    "requiresRawWindowIdentitySeparateFromRepresentation": true,
+    "requiresDeterministicFeatureRecalculation": true,
+    "requiresRealXAxisRendering": true,
+    "requiresCaseNoveltyReview": true
+  },
+  "v2Requirements": {
+    "sourceReadinessRegistry":"data/measured-learning/source-readiness-v2.json",
+    "sourceArtifactRegistry":"data/measured-learning/source-artifacts-v2.json",
+    "sourceChannelRegistry":"data/measured-learning/source-channels-v2.json",
+    "caseRequirementsRegistry":"data/measured-learning/case-requirements-v2.json",
+    "featureMethodRegistry":"data/measured-learning/feature-methods-v1.json",
+    "bindingTemplate":"data/measured-learning/binding-template-v2.json",
+    "sourceWindowReuseDefault":"prohibited",
+    "finiteNumericTraceValuesRequired":true,
+    "xAxisSemanticAndUnitRequired":true,
+    "monotonicXAxisRequired":true,
+    "independentReviewIdentityRequired":true,
+    "exactArtifactHashPairRequired":true,
+    "rawWindowAndRepresentationFingerprintsSeparate":true
+  },
+  "boundary":"V2 provides governed capacity to 100 while keeping MLM-001..MLM-070 as the current release catalogue. The separate expansion manifest stays empty until the gate passes; only then may the full ordered MLM-071..MLM-100 proposal be authored and evaluated without another architecture change."
+}
