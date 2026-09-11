@@ -1,0 +1,66 @@
+{
+  "schemaVersion": 1,
+  "webRelease": "2026.09.10.9",
+  "status": "release-claims-restricted",
+  "boundary": "Automated, synthetic, modelled, contract-only and CI evidence may verify software behavior but must not be promoted into human, physical-device, signed-distribution, SME, learner-efficacy, site-production, machine-control or external-accreditation claims.",
+  "claims": {
+    "realAssistiveTechnologyValidated": {
+      "authorized": false,
+      "status": "pending-human-validation",
+      "requiredEvidenceType": "human-assistive-technology-validation",
+      "evidenceRef": "data/accessibility-real-at-validation-v1.json"
+    },
+    "physicalPwaProductionValidated": {
+      "authorized": false,
+      "status": "pending-physical-device-validation",
+      "requiredEvidenceType": "physical-device-validation",
+      "evidenceRef": "data/pwa-physical-device-validation-v1.json"
+    },
+    "signedWindowsDistributionValidated": {
+      "authorized": false,
+      "status": "pending-signed-physical-windows-validation",
+      "requiredEvidenceType": "physical-signed-windows-validation",
+      "evidenceRef": null
+    },
+    "curriculumSmeReviewed": {
+      "authorized": false,
+      "status": "pending-human-sme-review",
+      "requiredEvidenceType": "human-sme-review",
+      "evidenceRef": null
+    },
+    "learnerEfficacyObserved": {
+      "authorized": false,
+      "status": "pending-observed-real-learner-outcomes",
+      "requiredEvidenceType": "observed-real-learner-outcomes",
+      "evidenceRef": null
+    },
+    "siteProductionAccepted": {
+      "authorized": false,
+      "status": "pending-site-acceptance",
+      "requiredEvidenceType": "site-production-acceptance",
+      "evidenceRef": null
+    },
+    "automaticMachineControlAuthorized": {
+      "authorized": false,
+      "status": "prohibited",
+      "requiredEvidenceType": "formal-machine-control-safety-validation",
+      "evidenceRef": null
+    },
+    "externalAccreditationAwarded": {
+      "authorized": false,
+      "status": "pending-external-accreditor-award",
+      "requiredEvidenceType": "external-accreditor-award",
+      "evidenceRef": null
+    }
+  },
+  "syntheticPsychometrics": {
+    "classification": "qa-only",
+    "maySatisfyLearnerEfficacyClaim": false,
+    "boundary": "Synthetic or modelled psychometric results are quality-assurance evidence only and cannot establish observed learner efficacy."
+  },
+  "productionAuthority": {
+    "processDataRole": "advisory-decision-support-only",
+    "validatedRecipeAuthority": false,
+    "automaticMachineControl": false
+  }
+}
