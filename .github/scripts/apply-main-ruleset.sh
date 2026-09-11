@@ -56,24 +56,18 @@ cat >"$payload" <<JSON
     }
   },
   "rules": [
-    {
-      "type": "deletion"
-    },
-    {
-      "type": "non_fast_forward"
-    },
-    {
-      "type": "required_linear_history"
-    },
+    {"type": "deletion"},
+    {"type": "non_fast_forward"},
+    {"type": "required_linear_history"},
     {
       "type": "pull_request",
       "parameters": {
         "allowed_merge_methods": ["squash"],
-        "dismiss_stale_reviews_on_push": false,
+        "dismiss_stale_reviews_on_push": true,
         "require_code_owner_review": false,
-        "require_last_push_approval": false,
-        "required_approving_review_count": 0,
-        "required_review_thread_resolution": false
+        "require_last_push_approval": true,
+        "required_approving_review_count": 1,
+        "required_review_thread_resolution": true
       }
     },
     {
@@ -82,22 +76,10 @@ cat >"$payload" <<JSON
         "do_not_enforce_on_create": false,
         "strict_required_status_checks_policy": true,
         "required_status_checks": [
-          {
-            "context": "integrity",
-            "integration_id": $GITHUB_ACTIONS_APP_ID
-          },
-          {
-            "context": "mobile-browser",
-            "integration_id": $GITHUB_ACTIONS_APP_ID
-          },
-          {
-            "context": "build-windows",
-            "integration_id": $GITHUB_ACTIONS_APP_ID
-          },
-          {
-            "context": "question-quality-50-pass",
-            "integration_id": $GITHUB_ACTIONS_APP_ID
-          }
+          {"context": "integrity", "integration_id": $GITHUB_ACTIONS_APP_ID},
+          {"context": "mobile-browser", "integration_id": $GITHUB_ACTIONS_APP_ID},
+          {"context": "build-windows", "integration_id": $GITHUB_ACTIONS_APP_ID},
+          {"context": "question-quality-50-pass", "integration_id": $GITHUB_ACTIONS_APP_ID}
         ]
       }
     }
@@ -116,7 +98,10 @@ jq -e '
   ([.rules[].type] | index("non_fast_forward")) != null and
   ([.rules[].type] | index("required_linear_history")) != null and
   ([.rules[] | select(.type == "pull_request") | .parameters.allowed_merge_methods] | .[0]) == ["squash"] and
-  ([.rules[] | select(.type == "pull_request") | .parameters.required_approving_review_count] | .[0]) == 0 and
+  ([.rules[] | select(.type == "pull_request") | .parameters.required_approving_review_count] | .[0]) == 1 and
+  ([.rules[] | select(.type == "pull_request") | .parameters.dismiss_stale_reviews_on_push] | .[0]) == true and
+  ([.rules[] | select(.type == "pull_request") | .parameters.require_last_push_approval] | .[0]) == true and
+  ([.rules[] | select(.type == "pull_request") | .parameters.required_review_thread_resolution] | .[0]) == true and
   ([.rules[] | select(.type == "required_status_checks") | .parameters.do_not_enforce_on_create] | .[0]) == false and
   ([.rules[] | select(.type == "required_status_checks") | .parameters.strict_required_status_checks_policy] | .[0]) == true and
   ([.rules[] | select(.type == "required_status_checks") | .parameters.required_status_checks[].context] | sort) == (["build-windows","integrity","mobile-browser","question-quality-50-pass"] | sort)
@@ -136,10 +121,10 @@ EOF
   exit 0
 fi
 
-existing_id="$(gh api "repos/$REPO/rulesets" --jq ".[] | select(.name == \"$RULESET_NAME\") | .id" | head -n 1)"
+existing_id="$(gh api "repos/$REPO/rulesets" --jq ".[] | select(.name == \"$RULESET_NAME\" or (.conditions.ref_name.include // [] | index(\"refs/heads/main\"))) | .id" | head -n 1)"
 
 if [[ -n "$existing_id" ]]; then
-  echo "Updating existing ruleset id=$existing_id"
+  echo "Updating existing main ruleset id=$existing_id"
   gh api --method PUT "repos/$REPO/rulesets/$existing_id" --input "$payload" >/dev/null
   ruleset_id="$existing_id"
 else
@@ -149,10 +134,9 @@ fi
 
 echo "Applied ruleset id=$ruleset_id. Verifying effective configuration..."
 effective="$(gh api "repos/$REPO/rulesets/$ruleset_id")"
-printf '%s\n' "$effective" | jq '{id,name,target,enforcement,conditions,rules,bypass_actors}'
+printf '%s\n' "$effective" | jq '{id,name,target,enforcement,conditions,rules,bypass_actors,current_user_can_bypass,updated_at}'
 
-printf '%s\n' "$effective" | jq -e --arg name "$RULESET_NAME" --argjson app "$GITHUB_ACTIONS_APP_ID" '
-  .name == $name and
+printf '%s\n' "$effective" | jq -e --argjson app "$GITHUB_ACTIONS_APP_ID" '
   .target == "branch" and
   .enforcement == "active" and
   .bypass_actors == [] and
@@ -162,7 +146,10 @@ printf '%s\n' "$effective" | jq -e --arg name "$RULESET_NAME" --argjson app "$GI
   ([.rules[].type] | index("non_fast_forward")) != null and
   ([.rules[].type] | index("required_linear_history")) != null and
   ([.rules[] | select(.type == "pull_request") | .parameters.allowed_merge_methods] | .[0]) == ["squash"] and
-  ([.rules[] | select(.type == "pull_request") | .parameters.required_approving_review_count] | .[0]) == 0 and
+  ([.rules[] | select(.type == "pull_request") | .parameters.required_approving_review_count] | .[0]) == 1 and
+  ([.rules[] | select(.type == "pull_request") | .parameters.dismiss_stale_reviews_on_push] | .[0]) == true and
+  ([.rules[] | select(.type == "pull_request") | .parameters.require_last_push_approval] | .[0]) == true and
+  ([.rules[] | select(.type == "pull_request") | .parameters.required_review_thread_resolution] | .[0]) == true and
   ([.rules[] | select(.type == "required_status_checks") | .parameters.do_not_enforce_on_create] | .[0]) == false and
   ([.rules[] | select(.type == "required_status_checks") | .parameters.strict_required_status_checks_policy] | .[0]) == true and
   ([.rules[] | select(.type == "required_status_checks") | .parameters.required_status_checks[].context] | sort) == (["build-windows","integrity","mobile-browser","question-quality-50-pass"] | sort) and
@@ -182,9 +169,8 @@ done
 protected="$(gh api "repos/$REPO/branches/main" --jq '.protected')"
 if [[ "$protected" != "true" ]]; then
   echo "GitHub does not yet report lowercase main as protected after applying the ruleset." >&2
-  echo "Check the ref condition is exactly refs/heads/main; ref matching is case-sensitive." >&2
   exit 1
 fi
 
-echo "Verified: exact MouldMaster ruleset is active on lowercase main and GitHub reports protected=true."
-echo "Next: open a test PR and confirm all four required checks block merge while pending/failing."
+echo "Verified: main requires one independent current-head approval, stale reviews are dismissed, all review threads must resolve, all four required checks remain strict, and no bypass actor exists."
+echo "Record the returned ruleset updated_at in .github/main-ruleset-attestation.json if GitHub Actions redacts bypass_actors."
