@@ -44,6 +44,26 @@ const reapplied=readinessApi.enrichPrepared(blocked,declared,{});
 assert.equal(reapplied.quality.analysisReady,false,'reapplying semantic declarations must not erase unresolved intake review');
 assert(reapplied.quality.issues.some(x=>x.code==='prepared-data-review'),'intake review blocker must survive re-enrichment');
 
+/* Missing measurements must never be coerced to measured zero by statistical summaries. */
+const summarySemantics={
+  melt_temperature:{column:'melt_temperature',kind:'direct-measurement',role:'actual',blockers:[],unit:'°C',meaning:'Melt temperature',canonical_quantity:'melt_temperature'},
+  real_zero:{column:'real_zero',kind:'direct-measurement',role:'actual',blockers:[],unit:'mm',meaning:'Zero-capable measurement',canonical_quantity:'real_zero'},
+};
+const missingSummary=readinessApi.intelligence.summarizeRows([
+  {melt_temperature:'250',real_zero:'0'},
+  {melt_temperature:'',real_zero:''},
+  {melt_temperature:'   ',real_zero:null},
+  {melt_temperature:null,real_zero:undefined},
+  {melt_temperature:'260',real_zero:'10'},
+  {melt_temperature:'not-a-number',real_zero:'not-a-number'},
+],summarySemantics);
+assert.equal(missingSummary.melt_temperature.n,2,'blank/null/invalid process measurements must be excluded from n');
+assert.equal(missingSummary.melt_temperature.mean,255,'missing process measurements must not depress the mean toward zero');
+assert.equal(missingSummary.melt_temperature.min,250,'missing process measurements must not create a false zero minimum');
+assert.equal(missingSummary.real_zero.n,2,'missing values must be excluded while genuine zero remains a measurement');
+assert.equal(missingSummary.real_zero.mean,5,'genuine numeric zero must remain in statistics');
+assert.equal(missingSummary.real_zero.min,0,'genuine zero must not be filtered as missing');
+
 function immediate(fn){setImmediate(fn)}
 
 const tables={
@@ -174,5 +194,5 @@ tables.baselines.set('b-same',{id:'b-same',datasetId:'d-current',entities:{},sum
   assert.equal(tables.baselines.has('baseline-keep'),true,'unrelated baseline must remain');
   assert.equal(tables.caseLinks.has('case-keep'),true,'unrelated troubleshooting reference must remain');
 
-  console.log('Process-data integrity QA passed: canonical ownership, fail-closed intake review, context gating, fallback compatibility, and atomic dataset/case-link cascade verified.');
+  console.log('Process-data integrity QA passed: canonical ownership, fail-closed intake review, missing-value statistics, context gating, fallback compatibility, and atomic dataset/case-link cascade verified.');
 })().catch(err=>{console.error(err);process.exitCode=1});
