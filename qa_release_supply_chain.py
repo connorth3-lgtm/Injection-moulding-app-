@@ -66,8 +66,16 @@ need(
     "# Deny by default; only the actual publication job receives write authority.\npermissions: {}" in desktop,
     "desktop publisher must deny token capabilities by default",
 )
+source_guard = desktop.split("  production-source:", 1)[1].split("\n  detect-desktop-release-change:", 1)[0]
 detector = desktop.split("  detect-desktop-release-change:", 1)[1].split("\n  publish-windows:", 1)[0]
 publisher = desktop.split("  publish-windows:", 1)[1]
+need("contents: read" in source_guard, "desktop production-source guard requires read-only contents access")
+need("pull-requests: read" in source_guard, "desktop production-source guard requires PR provenance read access")
+need("actions: read" in source_guard, "desktop production-source guard requires workflow evidence read access")
+need("contents: write" not in source_guard, "desktop production-source guard must not receive publication authority")
+need("tools/verify_production_source.py" in source_guard, "desktop publisher must verify exact merged-PR provenance")
+need("--require-native-protection" in source_guard, "desktop publisher must require exact native main protection")
+need("needs: production-source" in detector, "desktop release detector must wait for the production-source guard")
 need("contents: read" in detector, "desktop release detector requires read-only contents access")
 need("contents: write" not in detector, "desktop release detector must not inherit publication authority")
 need("contents: write" in publisher, "desktop publication job must receive explicit contents write authority")
@@ -85,5 +93,6 @@ for marker in (
 print(
     "MouldMaster release supply-chain QA passed "
     "(critical Pages/desktop Actions SHA-pinned; Node-24-capable Pages releases; "
-    "desktop publication write authority job-scoped; GitHub Actions and desktop npm updates governed by Dependabot)"
+    "desktop publication is gated by governed merged-main provenance before write authority; "
+    "GitHub Actions and desktop npm updates governed by Dependabot)"
 )

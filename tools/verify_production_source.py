@@ -32,6 +32,7 @@ REQUIRED_WORKFLOWS = (
     "Mobile Browser QA",
     "Open Desktop Build",
     "Question Quality 50-Pass",
+    "Release External Validation Boundary",
 )
 
 
@@ -192,7 +193,7 @@ def self_test() -> None:
         ]
     }
     ok, states = successful_required_workflows(sample)
-    assert ok and len(states) == 4
+    assert ok and len(states) == 5
 
     assert api_endpoint("https://api.github.com/repos/example/project/pulls?state=closed") == "repos/example/project/pulls?state=closed"
     for invalid in ("http://api.github.com/repos/a/b", "https://example.com/repos/a/b", "https://api.github.com/user"):
