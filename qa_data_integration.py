@@ -75,7 +75,7 @@ def main() -> None:
         "baseline?.datasetId===dataset.id",
         "assertBaselineCompatible(dataset,baseline)",
         "api.intelligence.compareToBaseline=function",
-        "['datasets','shots','baselines','caseLinks']",
+        "PROCESS_DATA_STORES=['datasets','shots','baselines','caseLinks','interventions']",
         "row=>row?.datasetId===datasetId",
         "event.stopImmediatePropagation()",
         "data-di-delete",
