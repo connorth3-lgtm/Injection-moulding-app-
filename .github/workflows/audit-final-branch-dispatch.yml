@@ -1,0 +1,26 @@
+name: One-shot Final Standalone Hardening QA Dispatch
+
+on:
+  push:
+    branches:
+      - 'audit/standalone-learner-id-hardening'
+
+permissions:
+  contents: read
+  actions: write
+
+jobs:
+  dispatch:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Dispatch Release QA and Mobile Browser QA
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+          REF: ${{ github.ref_name }}
+        run: |
+          set -euo pipefail
+          gh api --method POST "repos/${REPO}/actions/workflows/qa.yml/dispatches" -f ref="${REF}"
+          gh api --method POST "repos/${REPO}/actions/workflows/mobile-browser-qa.yml/dispatches" -f ref="${REF}"
+          echo "Dispatched qa.yml and mobile-browser-qa.yml on ${REF}"
