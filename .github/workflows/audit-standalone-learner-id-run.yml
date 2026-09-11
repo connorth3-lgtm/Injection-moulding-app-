@@ -35,26 +35,34 @@ jobs:
           python tools/sync_web_release.py --check
           python - <<'PY'
           from pathlib import Path
-          import hashlib
+          import hashlib,json
+
+          recovery_commit='19ef75781e3a782b234db313a5265ff0f3518ee4'
+          recovery_hash='96ed07e1487633538359eb12073fe50bfe595d9d5aaa807173e0a764b9123754'
+          recovery_url=f'https://raw.githubusercontent.com/connorth3-lgtm/Injection-moulding-app-/{recovery_commit}/MouldMaster_Core_App.html'
+
+          latest_path=Path('latest.json')
+          latest=json.loads(latest_path.read_text(encoding='utf-8'))
+          assert latest['version']=='2026.08.21.1'
+          assert latest['sha256']==recovery_hash
+          latest['app_url']=recovery_url
+          latest_path.write_text(json.dumps(latest,indent=2,ensure_ascii=False)+'\n',encoding='utf-8')
+
           p=Path('qa_release.py')
           text=p.read_text(encoding='utf-8')
           current=hashlib.sha256(Path('MouldMaster_Core_App.html').read_bytes()).hexdigest()
           replacements=[
             (
               'CORE_SHA256 = "96ed07e1487633538359eb12073fe50bfe595d9d5aaa807173e0a764b9123754"',
-              'WINDOWS_RECOVERY_CORE_SHA256 = "96ed07e1487633538359eb12073fe50bfe595d9d5aaa807173e0a764b9123754"\nCURRENT_CORE_SHA256 = "'+current+'"',
+              'WINDOWS_RECOVERY_SOURCE_COMMIT = "'+recovery_commit+'"\nWINDOWS_RECOVERY_CORE_SHA256 = "'+recovery_hash+'"\nCURRENT_CORE_SHA256 = "'+current+'"',
             ),
             (
-              'assert latest["sha256"] == CORE_SHA256, "Windows recovery feed must use audited core SHA-256"',
-              'assert latest["sha256"] == WINDOWS_RECOVERY_CORE_SHA256, "Windows recovery feed must use audited recovery SHA-256"',
-            ),
-            (
-              'assert sha256("MouldMaster_Core_App.html") == latest["sha256"], "Windows recovery content hash mismatch"',
-              'assert re.fullmatch(r"https://raw\\.githubusercontent\\.com/connorth3-lgtm/Injection-moulding-app-/[0-9a-f]{40}/MouldMaster_Core_App\\.html", latest["app_url"]), "Windows recovery feed must pin immutable standalone source bytes"',
+              'assert latest["sha256"] == CORE_SHA256, "Windows recovery feed must use audited core SHA-256"\nassert latest["app_url"].endswith("/MouldMaster_Core_App.html"), "Windows recovery feed must point to audited full core"\nassert sha256("MouldMaster_Core_App.html") == latest["sha256"], "Windows recovery content hash mismatch"',
+              'assert latest["sha256"] == WINDOWS_RECOVERY_CORE_SHA256, "Windows recovery feed must use audited recovery SHA-256"\nexpected_recovery_url = f"https://raw.githubusercontent.com/connorth3-lgtm/Injection-moulding-app-/{WINDOWS_RECOVERY_SOURCE_COMMIT}/MouldMaster_Core_App.html"\nassert latest["app_url"] == expected_recovery_url, "Windows recovery feed must pin the audited immutable source commit"',
             ),
             (
               'assert sha256("MouldMaster_Core_App.html") == CORE_SHA256, "audited core bytes changed"',
-              'assert sha256("MouldMaster_Core_App.html") == CURRENT_CORE_SHA256, "current standalone core bytes changed without updating the audited current-core hash"',
+              'assert sha256("MouldMaster_Core_App.html") == CURRENT_CORE_SHA256, "current standalone core bytes changed without updating its audited hash lock"',
             ),
           ]
           for old,new in replacements:
@@ -65,8 +73,6 @@ jobs:
           print(f'Locked hardened current standalone core SHA-256: {current}')
           PY
       - name: Validate standalone and governed web release
-        env:
-          BASE_SHA: 58b94233f5e382a06a344660eda85fab8d4ded64
         run: |
           set -euo pipefail
           node --check qa_standalone_learner_ids.cjs
@@ -77,18 +83,17 @@ jobs:
           python qa_webkit_regression.py
           python tools/build_pages_artifact.py
           python tools/verify_release_external_validation.py
-          git diff --exit-code "$BASE_SHA" -- latest.json
           python - <<'PY'
           import hashlib,json,re,urllib.request
           manifest=json.load(open('latest.json',encoding='utf-8'))
           url=manifest['app_url']
           assert re.fullmatch(r'https://raw\.githubusercontent\.com/connorth3-lgtm/Injection-moulding-app-/[0-9a-f]{40}/MouldMaster_Core_App\.html',url),url
-          req=urllib.request.Request(url,headers={'User-Agent':'MouldMaster-recovery-integrity-check'})
+          req=urllib.request.Request(url,headers={'User-Agent':'MouldMaster-standalone-hardening-recovery-check'})
           with urllib.request.urlopen(req,timeout=30) as response:
               payload=response.read()
           actual=hashlib.sha256(payload).hexdigest()
           assert actual==manifest['sha256'],f'frozen recovery payload hash mismatch: {actual}'
-          print(f"Frozen recovery feed unchanged and hash-valid: {manifest['version']} @ {url.split('/')[-2][:12]}")
+          print(f"Frozen recovery feed hash-valid and unchanged in payload/version: {manifest['version']} @ {url.split('/')[-2][:12]}")
           PY
           git diff --check
       - name: Commit only validated generated changes
