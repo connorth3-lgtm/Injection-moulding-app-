@@ -33,10 +33,11 @@ jobs:
         run: |
           set -euo pipefail
           python tools/apply_training_bridge_learner_id_temp.py
-          git show origin/audit/deep-app-correctness-hardening:tools/bump_web_release.py > /tmp/bump_web_release.py
-          git show origin/audit/deep-app-correctness-hardening:tools/sync_web_release.py > /tmp/sync_web_release.py
-          PYTHONPATH=/tmp python /tmp/bump_web_release.py --release 2026.09.12.5 --published 2026-09-12
-          PYTHONPATH=/tmp python /tmp/sync_web_release.py --check
+          git show origin/audit/deep-app-correctness-hardening:tools/bump_web_release.py > tools/bump_web_release_temp.py
+          git show origin/audit/deep-app-correctness-hardening:tools/sync_web_release.py > tools/sync_web_release.py
+          python tools/bump_web_release_temp.py --release 2026.09.12.5 --published 2026-09-12
+          python tools/sync_web_release.py --check
+          rm tools/bump_web_release_temp.py tools/sync_web_release.py
       - name: Validate hosted and standalone learner-ID contracts
         run: |
           set -euo pipefail
