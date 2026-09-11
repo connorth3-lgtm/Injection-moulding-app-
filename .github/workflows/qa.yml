@@ -121,6 +121,8 @@ jobs:
         run: node qa_final_audit_lifecycle.cjs
       - name: Audit remediation application and data regression
         run: node qa_audit_remediation_runtime.cjs
+      - name: Standalone learner-ID hardening regression
+        run: node qa_standalone_learner_ids.cjs
       - name: Learner-scoped assessment storage integrity
         run: python qa_assessment_storage_scope.py
       - name: Stable spaced-review ID integrity
