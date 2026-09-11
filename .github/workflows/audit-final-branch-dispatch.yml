@@ -47,6 +47,7 @@ jobs:
           python qa_architecture_debt.py
           node qa_standalone_learner_ids.cjs
           python qa_release.py
+          python tools/build_pages_artifact.py
           python qa_app_wide_audit.py
           git diff --check
       - name: Commit generated runtime slots only
