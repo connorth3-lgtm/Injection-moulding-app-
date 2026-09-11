@@ -75,7 +75,6 @@ def load_attestation(path: Path = ATTESTATION_PATH) -> dict | None:
 
 
 def normalized_timestamp(value: object) -> datetime | None:
-    """Parse GitHub ISO-8601 timestamps and normalize equivalent offsets to UTC."""
     if not isinstance(value, str) or not value.strip():
         return None
     raw = value.strip()
@@ -98,7 +97,6 @@ def rule_by_type(detail: dict, rule_type: str) -> dict | None:
 
 
 def bypass_errors(detail: dict, attestation: dict | None, repository: str | None) -> list[str]:
-    """Verify no bypass actors, using exact-version attestation only for API redaction."""
     errors: list[str] = []
     bypass = detail.get("bypass_actors", "__missing__")
     if bypass != "__missing__":
@@ -163,8 +161,14 @@ def valid_main_ruleset(
     pr_params = pr.get("parameters") or {}
     if pr_params.get("allowed_merge_methods") != ["squash"]:
         errors.append("pull_request.allowed_merge_methods must be ['squash']")
-    if pr_params.get("required_approving_review_count") != 0:
-        errors.append("pull_request.required_approving_review_count must be 0")
+    if pr_params.get("required_approving_review_count") != 1:
+        errors.append("pull_request.required_approving_review_count must be 1")
+    if pr_params.get("dismiss_stale_reviews_on_push") is not True:
+        errors.append("pull_request.dismiss_stale_reviews_on_push must be true")
+    if pr_params.get("require_last_push_approval") is not True:
+        errors.append("pull_request.require_last_push_approval must be true")
+    if pr_params.get("required_review_thread_resolution") is not True:
+        errors.append("pull_request.required_review_thread_resolution must be true")
 
     status = rule_by_type(detail, "required_status_checks") or {}
     status_params = status.get("parameters") or {}
@@ -235,7 +239,7 @@ def verify(repository: str) -> None:
 
     print(
         f"Verified effective native policy on {MAIN_REF} via active ruleset(s): "
-        f"{', '.join(repr(name) for name in matches)}; all four required checks."
+        f"{', '.join(repr(name) for name in matches)}; independent current-head approval, resolved review threads and all four required checks."
     )
 
 
@@ -253,7 +257,13 @@ def self_test() -> None:
             {"type": "deletion"},
             {"type": "non_fast_forward"},
             {"type": "required_linear_history"},
-            {"type": "pull_request", "parameters": {"allowed_merge_methods": ["squash"], "required_approving_review_count": 0}},
+            {"type": "pull_request", "parameters": {
+                "allowed_merge_methods": ["squash"],
+                "required_approving_review_count": 1,
+                "dismiss_stale_reviews_on_push": True,
+                "require_last_push_approval": True,
+                "required_review_thread_resolution": True,
+            }},
             {"type": "required_status_checks", "parameters": {
                 "do_not_enforce_on_create": False,
                 "strict_required_status_checks_policy": True,
@@ -269,6 +279,14 @@ def self_test() -> None:
     renamed = json.loads(json.dumps(good))
     renamed["name"] = "connor"
     assert valid_main_ruleset(renamed)[0], "ruleset display name must not affect semantic validity"
+
+    for key in ("dismiss_stale_reviews_on_push", "require_last_push_approval", "required_review_thread_resolution"):
+        weakened = json.loads(json.dumps(good))
+        next(r for r in weakened["rules"] if r["type"] == "pull_request")["parameters"][key] = False
+        assert not valid_main_ruleset(weakened)[0], f"{key}=false must fail closed"
+    zero_review = json.loads(json.dumps(good))
+    next(r for r in zero_review["rules"] if r["type"] == "pull_request")["parameters"]["required_approving_review_count"] = 0
+    assert not valid_main_ruleset(zero_review)[0], "zero-review main policy must fail closed"
 
     matching_attestation = {
         "schema": 1,
@@ -303,7 +321,7 @@ def self_test() -> None:
     bad_case["conditions"]["ref_name"]["include"] = ["refs/heads/Main"]
     assert not valid_main_ruleset(bad_case)[0]
     bad_checks = json.loads(json.dumps(good))
-    bad_checks["rules"][-1]["parameters"]["required_status_checks"].pop()
+    next(r for r in bad_checks["rules"] if r["type"] == "required_status_checks")["parameters"]["required_status_checks"].pop()
     assert not valid_main_ruleset(bad_checks)[0]
     print("Native main ruleset verifier self-test passed")
 
