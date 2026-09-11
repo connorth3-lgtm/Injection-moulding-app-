@@ -20,25 +20,29 @@
       "authorized": false,
       "status": "pending-signed-physical-windows-validation",
       "requiredEvidenceType": "physical-signed-windows-validation",
-      "evidenceRef": null
+      "evidenceRef": "data/external-validation-contracts-v1.json",
+      "evidenceContractKey": "signedWindowsDistributionValidated"
     },
     "curriculumSmeReviewed": {
       "authorized": false,
       "status": "pending-human-sme-review",
       "requiredEvidenceType": "human-sme-review",
-      "evidenceRef": null
+      "evidenceRef": "data/external-validation-contracts-v1.json",
+      "evidenceContractKey": "curriculumSmeReviewed"
     },
     "learnerEfficacyObserved": {
       "authorized": false,
       "status": "pending-observed-real-learner-outcomes",
       "requiredEvidenceType": "observed-real-learner-outcomes",
-      "evidenceRef": null
+      "evidenceRef": "data/external-validation-contracts-v1.json",
+      "evidenceContractKey": "learnerEfficacyObserved"
     },
     "siteProductionAccepted": {
       "authorized": false,
       "status": "pending-site-acceptance",
       "requiredEvidenceType": "site-production-acceptance",
-      "evidenceRef": null
+      "evidenceRef": "data/external-validation-contracts-v1.json",
+      "evidenceContractKey": "siteProductionAccepted"
     },
     "automaticMachineControlAuthorized": {
       "authorized": false,
@@ -50,7 +54,8 @@
       "authorized": false,
       "status": "pending-external-accreditor-award",
       "requiredEvidenceType": "external-accreditor-award",
-      "evidenceRef": null
+      "evidenceRef": "data/external-validation-contracts-v1.json",
+      "evidenceContractKey": "externalAccreditationAwarded"
     }
   },
   "syntheticPsychometrics": {
