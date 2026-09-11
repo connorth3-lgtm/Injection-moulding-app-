@@ -46,20 +46,21 @@ jobs:
               'compatibility getAll helper',
           )
           marker="async function guardedCompare(original,datasetId,baselineId,args,receiver){"
-          clear_fn="""async function clearAllProcessData(){
-  const db=await openDb();
-  try{
-    const tx=db.transaction(PROCESS_DATA_STORES,'readwrite');
-    for(const name of PROCESS_DATA_STORES)tx.objectStore(name).clear();
-    await txDone(tx);
-  }finally{db.close()}
-  const remaining={};
-  for(const name of PROCESS_DATA_STORES)remaining[name]=(await getAll(name)).length;
-  const total=Object.values(remaining).reduce((sum,n)=>sum+Number(n||0),0);
-  if(total)throw new Error(`Process-data cleanup could not be verified (${total} record${total===1?'':'s'} remain).`);
-  return {verified:true,remaining};
-}
-"""
+          clear_fn=(
+              "async function clearAllProcessData(){\n"
+              "  const db=await openDb();\n"
+              "  try{\n"
+              "    const tx=db.transaction(PROCESS_DATA_STORES,'readwrite');\n"
+              "    for(const name of PROCESS_DATA_STORES)tx.objectStore(name).clear();\n"
+              "    await txDone(tx);\n"
+              "  }finally{db.close()}\n"
+              "  const remaining={};\n"
+              "  for(const name of PROCESS_DATA_STORES)remaining[name]=(await getAll(name)).length;\n"
+              "  const total=Object.values(remaining).reduce((sum,n)=>sum+Number(n||0),0);\n"
+              "  if(total)throw new Error(`Process-data cleanup could not be verified (${total} record${total===1?'':'s'} remain).`);\n"
+              "  return {verified:true,remaining};\n"
+              "}\n"
+          )
           once(marker,clear_fn+marker,'compatibility clear-all insertion')
           once(
               "  if(api.__mmCanonicalProcessDataIntegrity){api.__mmProcessDataIntegrity=VERSION;return true}\n",
