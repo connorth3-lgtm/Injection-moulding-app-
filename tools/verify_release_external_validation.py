@@ -7,7 +7,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 CONTRACT = ROOT / "data" / "release-external-validation-v1.json"
-EXPECTED_RELEASE = "2026.09.10.9"
+VERSION = ROOT / "version.json"
 ALLOWED_SECTION_STATUS = {
     "governance": {"pending-native-ruleset-apply", "enforced"},
     "accessibility": {"hold", "validated"},
@@ -41,6 +41,21 @@ def require_nonempty(value: object, message: str) -> str:
     if not text:
         fail(message)
     return text
+
+
+def load_current_release() -> str:
+    if not VERSION.is_file():
+        fail("canonical release source is missing: version.json")
+    try:
+        value = json.loads(VERSION.read_text(encoding="utf-8"))
+    except (UnicodeDecodeError, json.JSONDecodeError) as exc:
+        fail(f"invalid JSON in version.json: {exc}")
+    if not isinstance(value, dict):
+        fail("version.json must contain a JSON object")
+    return require_nonempty(
+        value.get("web_release"),
+        "version.json.web_release must identify the canonical web release",
+    )
 
 
 def validate_accessibility(section: dict) -> None:
@@ -118,11 +133,12 @@ def validate_learner(section: dict) -> None:
 
 
 def main() -> None:
+    expected_release = load_current_release()
     data = load_json(CONTRACT)
     if data.get("schemaVersion") != 1:
         fail("schemaVersion must be 1")
-    if data.get("release") != EXPECTED_RELEASE:
-        fail(f"release must remain bound to {EXPECTED_RELEASE}")
+    if data.get("release") != expected_release:
+        fail(f"release must match canonical web release {expected_release}")
     if (data.get("technicalAutomation") or {}).get("status") != "pass":
         fail("technicalAutomation.status must be pass for this audited release record")
 
@@ -170,7 +186,7 @@ def main() -> None:
         if data[name]["status"] == "hold"
     ]
     print(
-        f"Release {EXPECTED_RELEASE} external-validation boundary verified. "
+        f"Release {expected_release} external-validation boundary verified. "
         f"Automated technical state is PASS; explicit HOLD areas: {', '.join(holds) if holds else 'none'}; "
         "production authority remains advisory-only."
     )
