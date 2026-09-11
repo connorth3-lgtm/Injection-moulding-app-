@@ -1,4 +1,4 @@
-name: One-shot Final Standalone Hardening QA Dispatch
+name: One-shot Regenerate Standalone Core Runtime
 
 on:
   push:
@@ -6,21 +6,55 @@ on:
       - 'audit/standalone-learner-id-hardening'
 
 permissions:
-  contents: read
-  actions: write
+  contents: write
 
 jobs:
-  dispatch:
+  regenerate:
     if: github.actor != 'github-actions[bot]'
     runs-on: ubuntu-latest
     steps:
-      - name: Dispatch Release QA and Mobile Browser QA
-        env:
-          GH_TOKEN: ${{ github.token }}
-          REPO: ${{ github.repository }}
-          REF: ${{ github.ref_name }}
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          ref: audit/standalone-learner-id-hardening
+          fetch-depth: 0
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7
+        with:
+          node-version: '22.12.0'
+          package-manager-cache: false
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7
+        with:
+          python-version: '3.12'
+      - name: Regenerate externalized standalone runtime slots only
+        run: |
+          python - <<'PY'
+          from tools.externalize_core_scripts import CORE, OUT_DIR, expected_assets
+          expected=expected_assets(CORE.read_text(encoding='utf-8'))
+          changed=[]
+          for name,body in expected.items():
+              path=OUT_DIR/name
+              if not path.is_file() or path.read_text(encoding='utf-8')!=body:
+                  path.write_text(body,encoding='utf-8')
+                  changed.append(name)
+          extras=[p for p in OUT_DIR.glob('core-inline-*.js') if p.name not in expected]
+          for path in extras:
+              path.unlink();changed.append(path.name+' (removed)')
+          print('Regenerated runtime slots:', ', '.join(changed) if changed else 'none')
+          PY
+      - name: Validate generated runtime coherence
         run: |
           set -euo pipefail
-          gh api --method POST "repos/${REPO}/actions/workflows/qa.yml/dispatches" -f ref="${REF}"
-          gh api --method POST "repos/${REPO}/actions/workflows/mobile-browser-qa.yml/dispatches" -f ref="${REF}"
-          echo "Dispatched qa.yml and mobile-browser-qa.yml on ${REF}"
+          python tools/externalize_core_scripts.py --check
+          python qa_architecture_debt.py
+          node qa_standalone_learner_ids.cjs
+          python qa_release.py
+          python qa_app_wide_audit.py
+          git diff --check
+      - name: Commit generated runtime slots only
+        run: |
+          set -euo pipefail
+          git add src/core-runtime/core-inline-*.js
+          git diff --cached --quiet && { echo 'No generated runtime changes'; exit 0; }
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m 'Regenerate hardened standalone runtime slots'
+          git push origin HEAD:audit/standalone-learner-id-hardening
