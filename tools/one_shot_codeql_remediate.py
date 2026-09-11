@@ -232,6 +232,9 @@ arch = replace_once(
 )
 old_arch = 'inline_core_script_re = re.compile(r"<script\\b(?![^>]*\\bsrc\\s*=)[^>]*>(.*?)</script\\s*>", re.I | re.S)\ninline_core_scripts = inline_core_script_re.findall(core)'
 arch = replace_once(arch, old_arch, "inline_core_scripts = inline_script_bodies(core)", "architecture script extraction")
+arch = replace_once(arch, 'need("function externalizeCoreScripts(out)" in index, "runtime core script externalization function missing")', 'need("function externalizeParsedCoreScripts(parsed)" in index, "parsed runtime core script externalization function missing")', "architecture externalizer function invariant")
+arch = replace_once(arch, 'need("out=externalizeCoreScripts(out)" in index, "runtime assembly does not externalize frozen core scripts")', 'need("externalizeParsedCoreScripts(parsed);retireInlineHandlerAttrs(parsed);" in index, "runtime preparation does not externalize parsed core scripts before handler retirement")', "architecture externalizer call invariant")
+arch = replace_once(arch, 'need("retireInlineHandlerAttrs(parsed);retireInlineStyleAttrs(parsed);const scripts=[]" in index, "static handler retirement does not run before document installation")', 'need("externalizeParsedCoreScripts(parsed);retireInlineHandlerAttrs(parsed);retireInlineStyleAttrs(parsed);const scripts=[]" in index, "parsed script externalization and static handler retirement do not run before document installation")', "architecture preparation order invariant")
 write(arch_path, arch)
 
 release_path = Path("qa_release.py")
