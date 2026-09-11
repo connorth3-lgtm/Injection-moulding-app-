@@ -99,7 +99,7 @@ for marker in (
     'HELPER_MARKER = \'data-mm-device-metadata-helper="true"\'',
     'PREVIEW_MARKER = \'content="non-production-preview"\'',
     'PREVIEW_REQUIRED = {"index.html", "manifest.webmanifest", "service-worker.js", "version.json"}',
-    "stage_preview(preview_source, target / \"preview\")",
+    'stage_preview(preview_source, target / "preview")',
     "validate_helper(helper_payload)",
     "No learner application runtime",
     "release-hold artifact boundary mismatch",
@@ -140,10 +140,10 @@ for marker in (
     "normalized_timestamp",
     'normalized_timestamp(attestation.get("ruleset_updated_at"))',
     'missing_bypass.pop("bypass_actors")',
-    'null_bypass["bypass_actors"] = None',
-    "equivalent timestamp offsets must match the same ruleset update instant",
-    "stale bypass attestation must fail closed",
-    "malformed bypass attestation timestamp must fail closed",
+    'matching_attestation = {',
+    'assert valid_main_ruleset(missing_bypass, matching_attestation, "example/project")[0]',
+    'stale = dict(matching_attestation, ruleset_updated_at=',
+    'assert not valid_main_ruleset(missing_bypass, stale, "example/project")[0]',
 ):
     need(marker in ruleset, f"ruleset bypass fail-closed contract missing: {marker}")
 need(attestation.get("schema") == 1, "ruleset attestation schema must be 1")

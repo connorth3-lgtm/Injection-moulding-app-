@@ -1,0 +1,68 @@
+{
+  "schemaVersion": 1,
+  "release": "2026.09.10.9",
+  "policy": "External validation is release-specific. Automated QA may verify that HOLD boundaries are represented truthfully but must never manufacture human, device, learner, accreditation, signing, or production-site evidence.",
+  "technicalAutomation": {
+    "status": "pass",
+    "claim": "Strongly automated and technically governed; no external-validation claim is implied."
+  },
+  "governance": {
+    "status": "pending-native-ruleset-apply",
+    "requiredPolicy": {
+      "minimumApprovals": 1,
+      "reviewThreadResolution": true,
+      "dismissStaleReviews": true,
+      "lastPushApproval": true
+    },
+    "repositoryPolicy": ".github/MAIN_PROTECTION.md",
+    "verifier": "tools/verify_main_ruleset.py"
+  },
+  "accessibility": {
+    "status": "hold",
+    "evidenceContract": "data/accessibility-real-at-validation-v1.json",
+    "required": "Release-specific human NVDA and VoiceOver validation across the governed matrix."
+  },
+  "pwaPhysicalDevices": {
+    "status": "hold",
+    "evidenceContract": "data/pwa-physical-device-validation-v1.json",
+    "required": "Current-release physical iOS/iPadOS and Android install/update/offline validation. Prior release waivers do not authorize this release."
+  },
+  "windowsDistribution": {
+    "status": "hold",
+    "workflow": ".github/workflows/microsoft-store-msix.yml",
+    "handoff": "certification/STORE_SUBMISSION_STATUS.md",
+    "evidence": null,
+    "required": [
+      "signed package provenance",
+      "physical Windows machine execution",
+      "SmartScreen or Store reputation path",
+      "WACK or equivalent package validation"
+    ]
+  },
+  "curriculumSme": {
+    "status": "hold",
+    "evidenceContract": "qa/curriculum-semantic-review.json",
+    "required": "Traceable human SME semantic approval of all 120 canonical lessons."
+  },
+  "learnerOutcomes": {
+    "status": "hold",
+    "evidence": null,
+    "required": "Longitudinal real-learner outcome evidence before efficacy or genuine psychometric-validity claims."
+  },
+  "productionUse": {
+    "status": "advisory-only",
+    "authority": "no-automatic-machine-control",
+    "requiredForExpansion": "Formal controlled-site validation, safety/governance review and explicit authorization before any machine-control or validated-recipe authority."
+  },
+  "visualGovernance": {
+    "status": "pending-native-ruleset-apply",
+    "required": "Independent human PR approval is mandatory in addition to owner visual-baseline authorization."
+  },
+  "claims": {
+    "fullyExternallyValidated": false,
+    "accreditationAuthorized": false,
+    "learnerEfficacyEstablished": false,
+    "productionRecipeValidated": false,
+    "automaticMachineControlAuthorized": false
+  }
+}
