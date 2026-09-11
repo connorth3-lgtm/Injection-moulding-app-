@@ -1,0 +1,85 @@
+{
+  "schemaVersion": 1,
+  "webRelease": "2026.09.10.9",
+  "desktopRelease": "2026.08.26.8",
+  "contentVersion": "2026.08.26.1",
+  "status": "pending-external-validation",
+  "boundary": "These records describe evidence that must be produced by real people, real devices, an authorised production site or an external accreditor. CI, synthetic data, modelled learners, contract tests and generated artifacts cannot populate validation metadata or promote these rows to validated.",
+  "contracts": {
+    "signedWindowsDistributionValidated": {
+      "evidenceType": "physical-signed-windows-validation",
+      "targetVersion": "2026.08.26.8",
+      "status": "pending",
+      "validatedAt": null,
+      "validator": null,
+      "evidenceRef": null,
+      "requiredChecks": [
+        "Verify the production package carries the intended trusted code-signing identity and an intact signature chain",
+        "Install, launch, close and uninstall on a real supported Windows machine",
+        "Verify Windows reputation and warning behavior, including SmartScreen where applicable",
+        "Verify local persistence, offline launch and packaged asset integrity on the installed build",
+        "Retain release-specific hashes and reviewer evidence without storing secrets or personal identifiers"
+      ]
+    },
+    "curriculumSmeReviewed": {
+      "evidenceType": "human-sme-review",
+      "targetVersion": "2026.08.26.1",
+      "status": "pending",
+      "validatedAt": null,
+      "validator": null,
+      "evidenceRef": null,
+      "requiredChecks": [
+        "Review all core lesson claims for injection-moulding technical correctness and safe scope",
+        "Review specialist optional learning content and evidence boundaries",
+        "Review assessment blueprint and keyed-answer semantics against the taught curriculum",
+        "Record material corrections, unresolved disagreements and reviewer authority",
+        "Do not infer SME approval from automated source, schema or citation checks"
+      ]
+    },
+    "learnerEfficacyObserved": {
+      "evidenceType": "observed-real-learner-outcomes",
+      "targetVersion": "2026.09.10.9",
+      "status": "pending",
+      "validatedAt": null,
+      "validator": null,
+      "evidenceRef": null,
+      "requiredChecks": [
+        "Use outcomes from real learners rather than synthetic or modelled learner records",
+        "Predefine the learning-outcome measures, comparison method and minimum usable sample",
+        "Preserve privacy and exclude raw assessment text or unnecessary personal identifiers",
+        "Separate observed learning outcomes from engagement, completion and QA metrics",
+        "Retain limitations and uncertainty with the release-specific evidence"
+      ]
+    },
+    "siteProductionAccepted": {
+      "evidenceType": "site-production-acceptance",
+      "targetVersion": "2026.09.10.9",
+      "status": "pending",
+      "validatedAt": null,
+      "validator": null,
+      "evidenceRef": null,
+      "requiredChecks": [
+        "Use an explicitly authorised production site and authorised site reviewer",
+        "Validate representative local process-data intake and advisory workflows with site-controlled data",
+        "Confirm recommendations remain decision support and do not automatically control machinery",
+        "Record site-specific limitations, acceptance criteria and unresolved risks",
+        "Retain only privacy-safe evidence approved for repository or release governance use"
+      ]
+    },
+    "externalAccreditationAwarded": {
+      "evidenceType": "external-accreditor-award",
+      "targetVersion": "2026.08.26.1",
+      "status": "pending",
+      "validatedAt": null,
+      "validator": null,
+      "evidenceRef": null,
+      "requiredChecks": [
+        "Identify the external accrediting body and exact programme or product scope",
+        "Retain the accreditor-issued award, approval or register reference",
+        "Bind the award to the applicable content/version and validity period",
+        "Do not promote internal readiness checks into an accreditation claim",
+        "Record any conditions, exclusions or renewal requirements"
+      ]
+    }
+  }
+}
