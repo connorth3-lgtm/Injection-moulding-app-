@@ -24,6 +24,8 @@ const hasOwnSource=extractFunction('pvHasOwnLearner');
 const buildSource=extractFunction('pvBuildImportedUsers');
 const commitSource=extractFunction('pvCommitImportedUsers');
 const resetCommitSource=extractFunction('pvCommitPristineReset');
+const storageDurabilitySource=extractFunction('mmSetStorageDurability');
+const persistCurrentSource=extractFunction('mmPersistCurrentState');
 const api=new Function('normaliseImportedUser',`${canonicalSource}\n${requireSource}\n${hasOwnSource}\n${buildSource}\nreturn {pvCanonicalLearnerId,pvRequireLearnerId,pvHasOwnLearner,pvBuildImportedUsers};`)((u,id)=>({id,name:u?.name||'Learner',completed:[1],certificates:['Advanced-ALL'],certificateMeta:{'Advanced-ALL':{score:100}},examPassStatus:{'Advanced-ALL':true}}));
 
 for(const id of ['learner-1','learner_2','legacy.ID-3','team:alpha+1','person@example'])assert.equal(api.pvCanonicalLearnerId(id),id,`benign legacy ID should survive unchanged: ${id}`);
@@ -102,6 +104,45 @@ const pristine={activeUser:'learner-1',users:{'learner-1':legacyRecord('learner-
 assert(source.includes('<span class="pill">${esc(status)}</span>'),'exam status display must escape persisted-derived status text');
 assert(source.includes('${esc(f.xp)} XP')&&source.includes('${esc(f.streak)}-day learning streak'),'gamification counters must be escaped at HTML sinks');
 assert.equal((source.match(/m\.bestQuiz==null\?"—":esc\(m\.bestQuiz\)\+"%"/g)||[]).length,2,'both material best-quiz HTML sinks must escape persisted values');
+function makePersistenceHarness(storage){
+  const elements=new Map();
+  const host={prepend(element){elements.set(element.id,element)}};
+  const document={
+    body:host,
+    getElementById(id){return elements.get(id)||null},
+    querySelector(selector){return selector==='#mainContent'?host:null},
+    createElement(){return {id:'',className:'',textContent:'',attributes:{},setAttribute(k,v){this.attributes[k]=v},remove(){elements.delete(this.id)}}}
+  };
+  const state={
+    db:{activeUser:'learner-1',users:{'learner-1':{id:'learner-1',name:'Existing'}}},
+    user:{id:'learner-1',name:'Existing'},
+    progressCalls:0
+  };
+  const harness=new Function('state','localStorage','document','elements',`${storageDurabilitySource}\nlet db=state.db,user=state.user;const updateGlobalProgress=()=>{state.progressCalls++};\n${persistCurrentSource}\nreturn {persist:mmPersistCurrentState,elements,snapshot:()=>({db,user})};`)(state,storage,document,elements);
+  return {state,harness};
+}
+{
+  const {state,harness}=makePersistenceHarness({setItem(){throw new Error('quota exceeded')}});
+  assert.equal(harness.persist(),false,'ordinary persistence must report storage failure instead of silently claiming durability');
+  assert.equal(state.progressCalls,1,'storage failure must not prevent the current session UI from updating');
+  const warning=harness.elements.get('mmStorageDurabilityWarning');
+  assert(warning,'storage failure must render a persistent session-only warning');
+  assert.match(warning.textContent,/only for this session/);
+  assert.match(warning.textContent,/Export a backup/);
+}
+{
+  let stored='';
+  const storage={setItem(k,v){assert.equal(k,'mouldmasterProDB');stored=String(v)}};
+  const {state,harness}=makePersistenceHarness(storage);
+  assert.equal(harness.persist(),true,'ordinary persistence must report a successful durable write');
+  assert.equal(JSON.parse(stored).activeUser,'learner-1');
+  assert.equal(state.progressCalls,1);
+  assert.equal(harness.elements.has('mmStorageDurabilityWarning'),false,'successful persistence must not leave a session-only warning');
+}
+assert(source.includes('toast(durable?"Notes saved":"Note updated for this session only — browser storage is unavailable.")'),'note save wording must distinguish durable and session-only state');
+assert.equal((source.match(/toast\(durable\?"Preferences saved":"Preferences updated for this session only — browser storage is unavailable\."\)/g)||[]).length,2,'profile preference save wording must distinguish durable and session-only state');
+assert.equal((source.match(/toast\(durable\?"Learner created":"Learner created for this session only — browser storage is unavailable\."\)/g)||[]).length,2,'learner creation wording must distinguish durable and session-only state');
+assert(source.includes('mm-session-only-result')&&source.includes('This result and any certificate earned are available only for this session'),'assessment evidence must disclose non-durable certificate/result state');
 for(const id of ['',"bad'id",'bad"id','<tag>','bad\\id','bad/id','bad\nid','bad\rid','bad id','bad;id','bad(id)','-leading'])assert.equal(api.pvCanonicalLearnerId(id),'',`unsafe learner ID must be rejected: ${JSON.stringify(id)}`);
 assert.equal(api.pvCanonicalLearnerId('a'.repeat(160)),'a'.repeat(160));
 assert.equal(api.pvCanonicalLearnerId('a'.repeat(161)),'');

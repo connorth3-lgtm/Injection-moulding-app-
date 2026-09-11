@@ -851,7 +851,7 @@ function renderLesson(){
 function goLesson(id){user.currentLesson=id;persist();renderLesson();window.scrollTo({top:0,behavior:"smooth"})}
 function nextLesson(){let id=user.currentLesson+1;if(id>D.lessons.length)id=1;goLesson(id)}
 function completeLesson(id){if(!user.completed.includes(id))user.completed.push(id);persist();renderLesson();toast("Lesson completed")}
-function saveLessonNote(id){user.notes=user.notes||{};user.notes[id]=$("#lessonNotes").value;persist();toast("Notes saved")}
+function saveLessonNote(id){user.notes=user.notes||{};user.notes[id]=$("#lessonNotes").value;const durable=persist();toast(durable?"Notes saved":"Note updated for this session only — browser storage is unavailable.")}
 function toggleBookmark(id){user.bookmarks=user.bookmarks||[];const i=user.bookmarks.indexOf(id);if(i>=0)user.bookmarks.splice(i,1);else user.bookmarks.push(id);persist();renderLesson()}
 
 function renderVisuals(){
@@ -1041,7 +1041,7 @@ function newLearner(){
 }
 function createLearner(){
  const name=$("#newLearnerName").value.trim();if(!name)return;
- const id=pvRequireLearnerId("learner-"+Date.now());db.users[id]={id,name,role:"learner",completed:[],bookmarks:[],notes:{},examScores:{},certificates:[],currentLesson:1,lastSeen:new Date().toISOString()};db.activeUser=id;user=db.users[id];persist();closeModal();updateGlobalProgress();renderInstructor();toast("Learner created");
+ const id=pvRequireLearnerId("learner-"+Date.now());db.users[id]={id,name,role:"learner",completed:[],bookmarks:[],notes:{},examScores:{},certificates:[],currentLesson:1,lastSeen:new Date().toISOString()};db.activeUser=id;user=db.users[id];const durable=persist();closeModal();updateGlobalProgress();renderInstructor();toast(durable?"Learner created":"Learner created for this session only — browser storage is unavailable.");
 }
 function switchUser(id){const sid=pvCanonicalLearnerId(id);if(!sid||!pvHasOwnLearner(db.users,sid)){toast("Learner profile unavailable");return}persist();db.activeUser=sid;user=db.users[sid];persist();updateGlobalProgress();renderInstructor();toast("Switched learner")}
 
@@ -1320,7 +1320,7 @@ function saveFriendlyProfile(){
   user.goal=$("#profileGoal").value;
   user.dailyMinutes=+$("#profileMinutes").value;
   user.role=$("#profileRole").value;
-  persist();updateGlobalProgress();renderProfile();toast("Preferences saved");
+  const durable=persist();updateGlobalProgress();renderProfile();toast(durable?"Preferences saved":"Preferences updated for this session only — browser storage is unavailable.");
 }
 
 /* Keep duplicate mobile navigation in sync and open onboarding on first run. */
@@ -1544,7 +1544,7 @@ saveFriendlyProfile=function(){
   user.dailyMinutes=+$("#profileMinutes").value;
   user.region=$("#profileRegion")?.value||user.region||"ALL";
   user.role=$("#profileRole").value;
-  persist();updateGlobalProgress();renderProfile();toast("Preferences saved");
+  const durable=persist();updateGlobalProgress();renderProfile();toast(durable?"Preferences saved":"Preferences updated for this session only — browser storage is unavailable.");
 };
 
 /* Add standards banner to home and path after existing friendly renders. */
@@ -2074,12 +2074,25 @@ renderDashboard();
    ========================================================= */
 
 /* Safer persistence and true factory reset. */
-persist=function(){
+function mmSetStorageDurability(durable){
+  const id="mmStorageDurabilityWarning",existing=document.getElementById(id);
+  if(durable){if(existing)existing.remove();return}
+  if(existing)return;
+  const warning=document.createElement("div");
+  warning.id=id;warning.className="callout";warning.setAttribute("role","status");warning.setAttribute("aria-live","polite");
+  warning.textContent="Browser storage is unavailable. Changes are available only for this session and will be lost after reload or close. Export a backup now if you need to preserve the current session.";
+  const host=document.querySelector("#mainContent")||document.body;host.prepend(warning);
+}
+function mmPersistCurrentState(){
   user.lastSeen=new Date().toISOString();
   db.users[db.activeUser]=user;
-  try{ localStorage.setItem("mouldmasterProDB",JSON.stringify(db)); }catch(e){ /* app remains usable for this session */ }
+  let durable=true;
+  try{localStorage.setItem("mouldmasterProDB",JSON.stringify(db))}catch(e){durable=false}
   updateGlobalProgress();
-};
+  mmSetStorageDurability(durable);
+  return durable;
+}
+persist=mmPersistCurrentState;
 function pvCommitPristineReset(){
   const proposed=JSON.parse(JSON.stringify(PRISTINE_DB)),nextUser=proposed.users[proposed.activeUser];
   if(nextUser.onboardingDone===undefined)nextUser.onboardingDone=false;
@@ -2184,7 +2197,15 @@ gradeExam=function(level){
   user.examPassStatus=user.examPassStatus||{}; if(passed)user.examPassStatus[key]=true; else if(user.examPassStatus[key]!==true)user.examPassStatus[key]=false;
   user.certificateMeta=user.certificateMeta||{};
   if(passed&&!had&&!user.certificateMeta[key]) user.certificateMeta[key]={earnedAt:new Date().toISOString(),score:pct,region:activeExam.region,level};
-  persist();
+  const durable=persist();
+  if(!durable){
+    const result=$("#examResult");
+    if(result&&!result.querySelector(".mm-session-only-result")){
+      const note=document.createElement("div");note.className="mm-session-only-result muted";
+      note.textContent="This result and any certificate earned are available only for this session because browser storage is unavailable. Export a backup before reload or close if you need to preserve current progress.";
+      result.appendChild(note);
+    }
+  }
 };
 function certificateDateText(key){
   const iso=user.certificateMeta?.[key]?.earnedAt;
@@ -2308,7 +2329,7 @@ function openMobileMenu(){openModal(`<span class="eyebrow">More</span><h2>Tools 
 const fineCreateLearner=createLearner;
 createLearner=function(){
   const name=$("#newLearnerName")?.value.trim();if(!name)return;
-  const id=pvRequireLearnerId("learner-"+Date.now());db.users[id]={id,name,role:"learner",completed:[],bookmarks:[],notes:{},examScores:{},examPassStatus:{},certificates:[],certificateMeta:{},currentLesson:1,lastSeen:new Date().toISOString(),region:user.region||"ALL",experience:"Beginner",goal:"Learn the full process",dailyMinutes:15,onboardingDone:true};db.activeUser=id;user=db.users[id];persist();closeModal();updateGlobalProgress();renderInstructor();toast("Learner created");
+  const id=pvRequireLearnerId("learner-"+Date.now());db.users[id]={id,name,role:"learner",completed:[],bookmarks:[],notes:{},examScores:{},examPassStatus:{},certificates:[],certificateMeta:{},currentLesson:1,lastSeen:new Date().toISOString(),region:user.region||"ALL",experience:"Beginner",goal:"Learn the full process",dailyMinutes:15,onboardingDone:true};db.activeUser=id;user=db.users[id];const durable=persist();closeModal();updateGlobalProgress();renderInstructor();toast(durable?"Learner created":"Learner created for this session only — browser storage is unavailable.");
 };
 
 /* Final home refresh after hardening overrides. */
