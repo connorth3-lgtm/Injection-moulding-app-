@@ -19,18 +19,23 @@ let installQueued=false;
 function esc(v){return String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
 function safeToken(v,max=96){return String(v??'').replace(/[^a-zA-Z0-9:_\-. /]/g,'').slice(0,max)}
 function uid(prefix='id'){try{return `${prefix}-${crypto.randomUUID()}`}catch(_){return `${prefix}-${Date.now().toString(36)}-${Math.random().toString(36).slice(2,9)}`}}
-function num(v){const n=Number(v);return Number.isFinite(n)?n:null}
+function num(v){
+  if(typeof v==='number')return Number.isFinite(v)?v:null;
+  if(typeof v!=='string')return null;
+  const text=v.trim();if(!text)return null;
+  const n=Number(text);return Number.isFinite(n)?n:null;
+}
 function mean(a){return a.length?a.reduce((s,x)=>s+x,0)/a.length:null}
 function variance(a,m=mean(a)){if(a.length<2||m==null)return 0;return a.reduce((s,x)=>s+(x-m)*(x-m),0)/(a.length-1)}
 function quantile(sorted,q){if(!sorted.length)return null;const p=(sorted.length-1)*q,l=Math.floor(p),h=Math.ceil(p);return l===h?sorted[l]:sorted[l]+(sorted[h]-sorted[l])*(p-l)}
 function stats(values){
-  const a=values.map(Number).filter(Number.isFinite).sort((x,y)=>x-y),m=mean(a),sd=Math.sqrt(variance(a,m));
+  const a=values.map(num).filter(v=>v!==null).sort((x,y)=>x-y),m=mean(a),sd=Math.sqrt(variance(a,m));
   return {n:a.length,min:a[0]??null,q1:quantile(a,.25),median:quantile(a,.5),q3:quantile(a,.75),max:a[a.length-1]??null,mean:m,sd};
 }
 function roleToKind(role){
   return ({actual:'direct-measurement',setpoint:'command-signal',command:'command-signal',state:'state-signal',quality:'quality-measurement',derived:'derived-feature',structural:'structural',unresolved:'unresolved'})[role]||'unresolved';
 }
-function format(n,d=3){return Number.isFinite(Number(n))?Number(n).toLocaleString(undefined,{maximumFractionDigits:d}):'—'}
+function format(n,d=3){const value=num(n);return value===null?'—':value.toLocaleString(undefined,{maximumFractionDigits:d})}
 function normContext(value){return String(value??'').trim().toLowerCase()}
 function contextCompatibility(left={},right={}){
   const missing=[],mismatched=[];
@@ -183,7 +188,7 @@ function enrichPrepared(prepared,overrides={},datasetMeta={}){
   for(const key of numeric){
     const sem=semanticFor(key,overrides[key]||{});
     semantics[key]=sem;
-    const vals=rows.map(r=>r[key]),present=vals.filter(v=>v!==''&&v!=null),finite=present.map(Number).filter(Number.isFinite),s=stats(finite);
+    const vals=rows.map(r=>r[key]),present=vals.filter(v=>v!=null&&!(typeof v==='string'&&v.trim()==='')),finite=present.map(num).filter(v=>v!==null),s=stats(finite);
     const missing=rows.length-present.length,invalid=present.length-finite.length,missingRate=rows.length?missing/rows.length:1;
     const channelIssues=[];
     if(sem.blockers.length)channelIssues.push({level:'block',code:'semantic-unresolved',detail:`Missing ${sem.blockers.join(', ')}`});
