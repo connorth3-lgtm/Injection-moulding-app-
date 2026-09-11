@@ -38,7 +38,7 @@ jobs:
           git show origin/audit/deep-app-correctness-hardening:tools/sync_web_release.py > tools/sync_web_release.py
           python tools/bump_web_release_temp.py --release 2026.09.12.5 --published 2026-09-12
           python tools/sync_web_release.py --check
-          rm tools/bump_web_release_temp.py tools/sync_web_release.py
+          rm tools/bump_web_release_temp.py
       - name: Validate hosted and standalone learner-ID contracts
         run: |
           set -euo pipefail
@@ -67,6 +67,7 @@ jobs:
           print('Frozen recovery URL/hash verified:',actual)
           PY
           rm -rf .pages-dist tools/__pycache__ __pycache__
+          rm tools/sync_web_release.py
           git diff --check
       - name: Commit only validated permanent changes
         run: |
