@@ -26,11 +26,18 @@ function num(v){
   const n=Number(text);return Number.isFinite(n)?n:null;
 }
 function mean(a){return a.length?a.reduce((s,x)=>s+x,0)/a.length:null}
-function variance(a,m=mean(a)){if(a.length<2||m==null)return 0;return a.reduce((s,x)=>s+(x-m)*(x-m),0)/(a.length-1)}
+function variance(a,m=mean(a)){if(a.length<2||m==null)return null;return a.reduce((s,x)=>s+(x-m)*(x-m),0)/(a.length-1)}
 function quantile(sorted,q){if(!sorted.length)return null;const p=(sorted.length-1)*q,l=Math.floor(p),h=Math.ceil(p);return l===h?sorted[l]:sorted[l]+(sorted[h]-sorted[l])*(p-l)}
 function stats(values){
-  const a=values.map(num).filter(v=>v!==null).sort((x,y)=>x-y),m=mean(a),sd=Math.sqrt(variance(a,m));
+  const a=values.map(num).filter(v=>v!==null).sort((x,y)=>x-y),m=mean(a),v=variance(a,m),sd=v==null?null:Math.sqrt(v);
   return {n:a.length,min:a[0]??null,q1:quantile(a,.25),median:quantile(a,.5),q3:quantile(a,.75),max:a[a.length-1]??null,mean:m,sd};
+}
+function referenceScale(summary){
+  if(!summary||Number(summary.n)<2)return null;
+  const s=num(summary.sd),q1=num(summary.q1),q3=num(summary.q3);
+  const robust=q1!==null&&q3!==null?Math.abs(q3-q1)/1.349:null;
+  const candidates=[s,robust].filter(v=>Number.isFinite(v)&&v>0);
+  return candidates.length?Math.max(...candidates):null;
 }
 function roleToKind(role){
   return ({actual:'direct-measurement',setpoint:'command-signal',command:'command-signal',state:'state-signal',quality:'quality-measurement',derived:'derived-feature',structural:'structural',unresolved:'unresolved'})[role]||'unresolved';
@@ -281,19 +288,23 @@ async function compareToBaseline(datasetId,baselineId){
   const rows=await rowsForDataset(datasetId),cur=summarizeRows(rows,record.semantics),signals=[];
   for(const [key,b] of Object.entries(baseline.summary||{})){
     const c=cur[key];if(!c||c.mean==null||b.mean==null)continue;
-    const scale=Math.max(Math.abs(Number(b.sd)||0),Math.abs(Number(b.q3)-Number(b.q1))/1.349,1e-9);
-    const normalizedShift=Math.abs(c.mean-b.mean)/scale;
-    const variabilityRatio=(Number(b.sd)||0)>0?(Number(c.sd)||0)/(Number(b.sd)||0):null;
-    const level=normalizedShift>=3?'high':normalizedShift>=2?'review':'stable';
-    signals.push({channel:key,meaning:b.meaning||key,unit:b.unit||'',baselineMean:b.mean,currentMean:c.mean,normalizedShift,variabilityRatio,level});
+    const scale=referenceScale(b),normalizedShift=scale==null?null:Math.abs(c.mean-b.mean)/scale;
+    const baselineSd=num(b.sd),currentSd=num(c.sd);
+    const variabilityRatio=baselineSd!==null&&baselineSd>0&&currentSd!==null?currentSd/baselineSd:null;
+    const level=normalizedShift==null?'insufficient':normalizedShift>=3?'high':normalizedShift>=2?'review':'stable';
+    signals.push({channel:key,meaning:b.meaning||key,unit:b.unit||'',baselineMean:b.mean,currentMean:c.mean,normalizedShift,variabilityRatio,level,reason:normalizedShift==null?'Reference requires at least two finite observations and positive estimated spread.':null});
   }
-  return {datasetId,baselineId,signals:signals.sort((a,b)=>b.normalizedShift-a.normalizedShift),boundary:'Drift scores compare this site-local dataset with its selected baseline. They are evidence-attention heuristics, not automatic root-cause diagnoses or production control limits.'};
+  return {datasetId,baselineId,signals:signals.sort((a,b)=>(b.normalizedShift??-Infinity)-(a.normalizedShift??-Infinity)),boundary:'Drift scores compare this site-local dataset with its selected baseline. Channels without at least two finite reference observations and positive estimated spread remain explicitly unscored. Scores are evidence-attention heuristics, not automatic root-cause diagnoses or production control limits.'};
 }
 function compareWindows(rows,semantics,splitIndex,windowSize=20){
   const i=Math.max(1,Math.min(rows.length-1,Number(splitIndex)||Math.floor(rows.length/2))),n=Math.max(3,Math.min(500,Number(windowSize)||20));
   const before=rows.slice(Math.max(0,i-n),i),after=rows.slice(i,Math.min(rows.length,i+n)),a=summarizeRows(before,semantics),b=summarizeRows(after,semantics),changes=[];
-  for(const key of Object.keys(a)){if(!b[key]||a[key].mean==null||b[key].mean==null)continue;const scale=Math.max(a[key].sd||0,Math.abs((a[key].q3||0)-(a[key].q1||0))/1.349,1e-9);changes.push({channel:key,meaning:a[key].meaning||key,unit:a[key].unit||'',beforeMean:a[key].mean,afterMean:b[key].mean,normalizedChange:Math.abs(b[key].mean-a[key].mean)/scale})}
-  return {splitIndex:i,beforeRows:before.length,afterRows:after.length,changes:changes.sort((x,y)=>y.normalizedChange-x.normalizedChange),boundary:'Before/after comparison supports controlled-test evidence. Association with an intervention does not by itself prove causality.'};
+  for(const key of Object.keys(a)){
+    if(!b[key]||a[key].mean==null||b[key].mean==null)continue;
+    const enough=Number(a[key].n)>=2&&Number(b[key].n)>=2,scale=enough?referenceScale(a[key]):null;
+    changes.push({channel:key,meaning:a[key].meaning||key,unit:a[key].unit||'',beforeMean:a[key].mean,afterMean:b[key].mean,normalizedChange:scale==null?null:Math.abs(b[key].mean-a[key].mean)/scale,status:scale==null?'insufficient':'scored',reason:scale==null?'Both windows require at least two finite observations and the reference window requires positive estimated spread.':null});
+  }
+  return {splitIndex:i,beforeRows:before.length,afterRows:after.length,changes:changes.sort((x,y)=>(y.normalizedChange??-Infinity)-(x.normalizedChange??-Infinity)),boundary:'Before/after comparison supports controlled-test evidence. Underpowered or zero-spread channels remain explicitly unscored. Association with an intervention does not by itself prove causality.'};
 }
 
 async function linkCase(caseId,link){
@@ -449,7 +460,7 @@ window.MM_CONNECTED_PROCESS_DATA={
   currentManifest:()=>currentManifest,
   enrichPrepared,
   storage:{savePrepared,listDatasets,rowsForDataset,deleteDataset},
-  intelligence:{createBaseline,compareToBaseline,baselineCompatibility,contextCompatibility,assertBaselineCompatible,compareWindows,summarizeRows},
+  intelligence:{createBaseline,compareToBaseline,baselineCompatibility,contextCompatibility,assertBaselineCompatible,compareWindows,summarizeRows,referenceScale},
   cases:{linkCase,caseLink,similarCases},
   scope:'Local-first connected process-data infrastructure. It distinguishes privacy preparation from semantic readiness, stores prepared site data in IndexedDB, provides site-local statistical evidence comparisons, and never creates universal production limits, causal proof or machine-control authority.'
 };
