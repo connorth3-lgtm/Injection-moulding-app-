@@ -84,6 +84,7 @@ jobs:
             "Mobile Browser QA"
             "Open Desktop Build"
             "Question Quality 50-Pass"
+            "Release External Validation Boundary"
           )
 
           all_required_success=false
