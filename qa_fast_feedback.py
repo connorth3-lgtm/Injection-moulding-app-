@@ -80,6 +80,13 @@ def main() -> int:
             if (ROOT / qa).exists():
                 commands.append([sys.executable, qa])
 
+    engineer_simulator_changed = bool(files & {
+        "src/domains/engineering/engineer-simulator-ui.js",
+        "qa_engineer_simulator_units.cjs",
+    })
+    if engineer_simulator_changed and (ROOT / "qa_engineer_simulator_units.cjs").exists():
+        commands.append(["node", "qa_engineer_simulator_units.cjs"])
+
     release_docs_changed = bool(files & {
         "README.md",
         "support.html",
