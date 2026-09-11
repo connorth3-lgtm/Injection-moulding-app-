@@ -1,0 +1,76 @@
+name: One-shot Learner-ID Bridge Hardening
+
+on:
+  push:
+    branches:
+      - 'audit/standalone-learner-id-hardening-clean'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: audit-training-bridge-learner-id
+  cancel-in-progress: false
+
+jobs:
+  remediate:
+    if: github.repository == 'connorth3-lgtm/Injection-moulding-app-' && github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          ref: audit/standalone-learner-id-hardening-clean
+          fetch-depth: 0
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7
+        with:
+          node-version: '22.12.0'
+          package-manager-cache: false
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7
+        with:
+          python-version: '3.12'
+      - name: Apply deterministic bridge patch and release bump
+        run: |
+          set -euo pipefail
+          python tools/apply_training_bridge_learner_id_temp.py
+          python tools/bump_web_release.py --release 2026.09.12.5 --published 2026-09-12
+          python tools/sync_web_release.py --check
+      - name: Validate hosted and standalone learner-ID contracts
+        run: |
+          set -euo pipefail
+          node --check training-qa-fix.js
+          node --check qa_standalone_learner_ids.cjs
+          node qa_standalone_learner_ids.cjs
+          node qa_final_audit_lifecycle.cjs
+          node qa_audit_remediation_runtime.cjs
+          python tools/externalize_core_scripts.py --check
+          python qa_runtime_release_bump.py
+          python qa_runtime_hardening.py
+          python qa_release.py
+          python qa_release_docs.py
+          python qa_app_wide_audit.py
+          python qa_webkit_regression.py
+          python tools/build_pages_artifact.py
+          python tools/verify_release_external_validation.py
+          python - <<'PY'
+          import hashlib,json,urllib.request
+          latest=json.load(open('latest.json',encoding='utf-8'))
+          with urllib.request.urlopen(latest['app_url'],timeout=30) as response:
+              data=response.read()
+          actual=hashlib.sha256(data).hexdigest()
+          assert actual==latest['sha256'],(actual,latest['sha256'])
+          print('Frozen recovery URL/hash verified:',actual)
+          PY
+          rm -rf .pages-dist tools/__pycache__ __pycache__
+          git diff --check
+      - name: Commit only validated permanent changes
+        run: |
+          set -euo pipefail
+          rm -rf .pages-dist tools/__pycache__ __pycache__
+          git add -A
+          git restore --staged .github/workflows/audit-training-bridge-learner-id-run.yml tools/apply_training_bridge_learner_id_temp.py
+          git diff --cached --check
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m 'Share learner-ID validation with hosted import bridge'
+          git push origin HEAD:audit/standalone-learner-id-hardening-clean
