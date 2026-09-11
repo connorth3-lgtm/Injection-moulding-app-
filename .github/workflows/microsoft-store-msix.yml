@@ -20,9 +20,9 @@ jobs:
       actions: read
     steps:
       - name: Checkout
-        uses: actions/checkout@1af3b93b681fe567477e1754c93a5784cc6ff5db # v6.0.2
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
       - name: Setup Python
-        uses: actions/setup-python@e213ff1d62d7d1920be3ea5634c005ecc3c7e4a2 # v6.3.0
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7
         with:
           python-version: '3.12'
       - name: Verify governed merged-main production source
@@ -42,7 +42,7 @@ jobs:
       MM_STORE_PUBLISHER: ${{ vars.MM_STORE_PUBLISHER }}
       MM_STORE_PUBLISHER_DISPLAY_NAME: ${{ vars.MM_STORE_PUBLISHER_DISPLAY_NAME }}
     steps:
-      - uses: actions/checkout@1af3b93b681fe567477e1754c93a5784cc6ff5db # v6.0.2
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
       - name: Require Partner Center identity
         shell: pwsh
         run: |
@@ -61,14 +61,14 @@ jobs:
           if ($env:MM_STORE_PUBLISHER -notmatch '^CN=.+') {
             Write-Error 'MM_STORE_PUBLISHER must be the Partner Center Identity/Publisher value (normally beginning with CN=).'
           }
-      - uses: actions/setup-node@a2b2e8eeba5861535c53431499a2969c938313d2 # v6.3.0
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7
         with:
           node-version: '22.12.0'
           cache: 'npm'
           cache-dependency-path: |
             desktop/electron/package-lock.json
             desktop/electron/msix-toolchain/package-lock.json
-      - uses: actions/setup-python@e213ff1d62d7d1920be3ea5634c005ecc3c7e4a2 # v6.3.0
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7
         with:
           python-version: '3.12'
       - name: Install exact locked dependencies
