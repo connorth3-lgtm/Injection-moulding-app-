@@ -73,6 +73,14 @@ jobs:
               'legacy compatibility clear-all handoff',
           )
           p.write_text(text,encoding='utf-8')
+
+          q=Path('qa_data_integration.py')
+          qa=q.read_text(encoding='utf-8')
+          old='        "[\'datasets\',\'shots\',\'baselines\',\'caseLinks\']",\n'
+          new='        "PROCESS_DATA_STORES=[\'datasets\',\'shots\',\'baselines\',\'caseLinks\',\'interventions\']",\n'
+          if qa.count(old)!=1:
+              raise SystemExit(f'data-integration store invariant: expected one match, found {qa.count(old)}')
+          q.write_text(qa.replace(old,new,1),encoding='utf-8')
           PY
           python tools/bump_web_release.py --release 2026.09.12.3 --published 2026-09-12
           python tools/sync_web_release.py --check
