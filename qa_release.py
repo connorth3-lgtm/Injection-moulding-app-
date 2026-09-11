@@ -7,7 +7,7 @@ import struct
 import subprocess
 import tempfile
 
-WEB_RELEASE = "2026.09.12.8"
+WEB_RELEASE = "2026.09.12.9"
 ANDROID_RELEASE = "2026.08.26.2"
 CONTENT_VERSION = "2026.08.26.1"
 WINDOWS_RECOVERY_VERSION = "2026.08.21.1"
@@ -15,7 +15,7 @@ QUESTION_BANK_VERSION = "2026.08.30.1"
 LEGACY_REVIEW_ID_VERSION = "2026.08.21.1"
 WINDOWS_RECOVERY_SOURCE_COMMIT = "19ef75781e3a782b234db313a5265ff0f3518ee4"
 WINDOWS_RECOVERY_CORE_SHA256 = "96ed07e1487633538359eb12073fe50bfe595d9d5aaa807173e0a764b9123754"
-CURRENT_CORE_SHA256 = "bfac628433b9b866827c65fc9818731066b2ca644725535daef0511099054f3e"
+CURRENT_CORE_SHA256 = "321e327c89b60df5de70226be462e8b5fcec0f44febf59d23b187fa91067c1d0"
 EXE_SHA256 = "db7abc4da613a6d1409fdb129cb788b8ac396e5ac2d161963521c844d0ee771c"
 NODE = os.environ.get("MM_NODE", "node")
 
@@ -65,6 +65,7 @@ assert len(core) > 500000, "audited core unexpectedly small"
 assert "clean.certificates=[];" in core and "clean.certificateMeta={};" in core and "clean.examPassStatus={};" in core, "standalone backup import must strip credential evidence"
 assert "function pvCommitImportedUsers(proposed)" in core and "if(file.size>10*1024*1024)" in core, "standalone backup import must be storage-first and size-bounded"
 assert "function mmSelectStartupDb(candidate,pristine)" in core and "Object.prototype.hasOwnProperty.call(candidate.users,active)" in core, "persisted learner registry must fail closed on inherited/unsafe startup identities"
+assert "function mmStartupLearnerRecordIsSafe(record,id)" in core and "!Array.isArray(record.completed)||!Array.isArray(record.bookmarks)||!Array.isArray(record.certificates)" in core, "persisted learner registry must validate core learner record shapes before rendering"
 assert "criticalWrong===0" in core, "zero-wrong safety-critical gate missing"
 assert "Compare All assesses ALL 9 regional items" in core, "Compare All regional rule missing"
 

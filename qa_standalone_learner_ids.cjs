@@ -16,6 +16,7 @@ function extractFunction(name){
   throw new Error(`unterminated ${name}`);
 }
 const startupCanonicalSource=extractFunction('mmCanonicalStartupLearnerId');
+const startupRecordSource=extractFunction('mmStartupLearnerRecordIsSafe');
 const startupSelectSource=extractFunction('mmSelectStartupDb');
 const canonicalSource=extractFunction('pvCanonicalLearnerId');
 const requireSource=extractFunction('pvRequireLearnerId');
@@ -25,9 +26,10 @@ const commitSource=extractFunction('pvCommitImportedUsers');
 const api=new Function('normaliseImportedUser',`${canonicalSource}\n${requireSource}\n${hasOwnSource}\n${buildSource}\nreturn {pvCanonicalLearnerId,pvRequireLearnerId,pvHasOwnLearner,pvBuildImportedUsers};`)((u,id)=>({id,name:u?.name||'Learner',completed:[1],certificates:['Advanced-ALL'],certificateMeta:{'Advanced-ALL':{score:100}},examPassStatus:{'Advanced-ALL':true}}));
 
 for(const id of ['learner-1','learner_2','legacy.ID-3','team:alpha+1','person@example'])assert.equal(api.pvCanonicalLearnerId(id),id,`benign legacy ID should survive unchanged: ${id}`);
-const startupApi=new Function(`${startupCanonicalSource}\n${startupSelectSource}\nreturn {mmCanonicalStartupLearnerId,mmSelectStartupDb};`)();
+const startupApi=new Function(`${startupCanonicalSource}\n${startupRecordSource}\n${startupSelectSource}\nreturn {mmCanonicalStartupLearnerId,mmStartupLearnerRecordIsSafe,mmSelectStartupDb};`)();
 for(const id of ['learner-1','learner_2','legacy.ID-3','team:alpha+1','person@example',"bad'id",'<tag>','bad\\id','bad/id','bad id','__proto__','constructor'])assert.equal(startupApi.mmCanonicalStartupLearnerId(id),api.pvCanonicalLearnerId(id),`startup/current learner-ID contracts must agree: ${JSON.stringify(id)}`);
-const pristine={activeUser:'learner-1',users:{'learner-1':{id:'learner-1',name:'Pristine'}}};
+const legacyRecord=(id='learner-1',name='Legacy')=>({id,name,completed:[],bookmarks:[],notes:{},examScores:{},certificates:[]});
+const pristine={activeUser:'learner-1',users:{'learner-1':legacyRecord('learner-1','Pristine')}};
 {
   const selected=startupApi.mmSelectStartupDb({activeUser:'__proto__',users:{}},pristine);
   assert.equal(selected.rejected,true,'legacy __proto__ active learner must fail closed');
@@ -35,18 +37,42 @@ const pristine={activeUser:'learner-1',users:{'learner-1':{id:'learner-1',name:'
   assert.equal(Object.prototype.hasOwnProperty.call(selected.db.users,'learner-1'),true);
 }
 {
-  const selected=startupApi.mmSelectStartupDb({activeUser:'constructor',users:{'learner-1':{id:'learner-1'}}},pristine);
+  const selected=startupApi.mmSelectStartupDb({activeUser:'constructor',users:{'learner-1':legacyRecord()}},pristine);
   assert.equal(selected.rejected,true,'inherited constructor lookup must not satisfy startup active membership');
 }
 {
-  const candidate={activeUser:'constructor',users:{constructor:{id:'constructor',name:'Owned legacy'}}};
+  const candidate={activeUser:'constructor',users:{constructor:legacyRecord('constructor','Owned legacy')}};
   const selected=startupApi.mmSelectStartupDb(candidate,pristine);
   assert.equal(selected.rejected,false,'explicitly owned canonical legacy ID remains valid at startup');
   assert.equal(selected.db,candidate);
 }
 {
-  const selected=startupApi.mmSelectStartupDb({activeUser:'learner-1',users:{'learner-1':{id:'learner-1'},"bad'id":{id:"bad'id"}}},pristine);
+  const selected=startupApi.mmSelectStartupDb({activeUser:'learner-1',users:{'learner-1':legacyRecord(),"bad'id":legacyRecord("bad'id")}},pristine);
   assert.equal(selected.rejected,true,'unsafe inactive persisted learner IDs must also fail the startup registry boundary');
+}
+{
+  const bad=legacyRecord(); bad.completed={1:true};
+  assert.equal(startupApi.mmSelectStartupDb({activeUser:'learner-1',users:{'learner-1':bad}},pristine).rejected,true,'non-array completed state must fail closed before .includes() use');
+}
+{
+  const bad=legacyRecord(); bad.bookmarks='1,2';
+  assert.equal(startupApi.mmSelectStartupDb({activeUser:'learner-1',users:{'learner-1':bad}},pristine).rejected,true,'non-array bookmarks must fail closed before bookmark lookups');
+}
+{
+  const bad=legacyRecord(); bad.certificates={Advanced:true};
+  assert.equal(startupApi.mmSelectStartupDb({activeUser:'learner-1',users:{'learner-1':bad}},pristine).rejected,true,'non-array certificate state must fail closed');
+}
+{
+  const bad=legacyRecord(); bad.name=42;
+  assert.equal(startupApi.mmSelectStartupDb({activeUser:'learner-1',users:{'learner-1':bad}},pristine).rejected,true,'non-string learner name must fail closed before string methods');
+}
+{
+  const bad=legacyRecord(); bad.id='learner-2';
+  assert.equal(startupApi.mmSelectStartupDb({activeUser:'learner-1',users:{'learner-1':bad}},pristine).rejected,true,'persisted embedded/key learner-ID mismatch must fail closed');
+}
+{
+  const valid=legacyRecord(); delete valid.examPassStatus; delete valid.certificateMeta;
+  assert.equal(startupApi.mmSelectStartupDb({activeUser:'learner-1',users:{'learner-1':valid}},pristine).rejected,false,'valid historical core records may omit newer optional evidence maps');
 }
 for(const id of ['',"bad'id",'bad"id','<tag>','bad\\id','bad/id','bad\nid','bad\rid','bad id','bad;id','bad(id)','-leading'])assert.equal(api.pvCanonicalLearnerId(id),'',`unsafe learner ID must be rejected: ${JSON.stringify(id)}`);
 assert.equal(api.pvCanonicalLearnerId('a'.repeat(160)),'a'.repeat(160));
@@ -136,6 +162,8 @@ assert(strict.includes('if(file.size>10*1024*1024)'),'standalone import must rej
 assert(strict.includes('pvCommitImportedUsers(proposed);'),'standalone import must use storage-first commit helper');
 assert(source.includes('Object.prototype.hasOwnProperty.call(candidate.users,active)'),'startup registry must require own active learner membership');
 assert(source.includes('mmStartupLearnerDataRejected=true'),'unsafe persisted registries must fail closed before user activation');
+assert(source.includes('function mmStartupLearnerRecordIsSafe(record,id)'),'startup must validate persisted learner record shapes before render-time dereferences');
+assert(source.includes('!Array.isArray(record.completed)||!Array.isArray(record.bookmarks)||!Array.isArray(record.certificates)'),'startup must require array-shaped core progress fields');
 assert(strict.indexOf('localStorage.setItem("mouldmasterProDB",serialized)')<strict.indexOf('db=proposed;user=nextUser;'),'standalone import commit must persist before live-memory activation');
 assert(!strict.includes('!x.users[x.activeUser]'),'strict structural gate must not use inherited learner lookup');
 assert(!strict.includes('users[pvCleanString(id,160)]=normaliseImportedUser(u,id)'),'strict import must not truncate unsafe learner IDs into registry keys');

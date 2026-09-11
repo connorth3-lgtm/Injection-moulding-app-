@@ -16,13 +16,24 @@ function mmCanonicalStartupLearnerId(v){
   const raw=String(v==null?"":v);
   return raw.length>=1&&raw.length<=160&&/^[A-Za-z0-9][A-Za-z0-9._:@+-]*$/.test(raw)?raw:"";
 }
+function mmStartupLearnerRecordIsSafe(record,id){
+  if(!record||typeof record!=="object"||Array.isArray(record))return false;
+  if(typeof record.id!=="string"||mmCanonicalStartupLearnerId(record.id)!==id)return false;
+  if(typeof record.name!=="string")return false;
+  if(!Array.isArray(record.completed)||!Array.isArray(record.bookmarks)||!Array.isArray(record.certificates))return false;
+  for(const key of ["notes","examScores","examPassStatus","certificateMeta"]){
+    const value=record[key];
+    if(value!=null&&(typeof value!=="object"||Array.isArray(value)))return false;
+  }
+  return true;
+}
 function mmSelectStartupDb(candidate,pristine){
   const fallback=()=>({db:JSON.parse(JSON.stringify(pristine)),rejected:true});
   if(!candidate||typeof candidate!=="object"||Array.isArray(candidate)||!candidate.users||typeof candidate.users!=="object"||Array.isArray(candidate.users))return fallback();
   const entries=Object.entries(candidate.users);
   if(!entries.length)return fallback();
   for(const [id,record] of entries){
-    if(mmCanonicalStartupLearnerId(id)!==id||!record||typeof record!=="object"||Array.isArray(record))return fallback();
+    if(mmCanonicalStartupLearnerId(id)!==id||!mmStartupLearnerRecordIsSafe(record,id))return fallback();
   }
   if(typeof candidate.activeUser!=="string")return fallback();
   const active=mmCanonicalStartupLearnerId(candidate.activeUser);
