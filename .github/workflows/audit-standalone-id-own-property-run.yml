@@ -1,0 +1,138 @@
+name: One-shot Learner Registry Ownership Hardening
+
+on:
+  push:
+    branches:
+      - 'audit/standalone-learner-id-hardening-clean'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: audit-standalone-id-own-property
+  cancel-in-progress: false
+
+jobs:
+  remediate:
+    if: github.repository == 'connorth3-lgtm/Injection-moulding-app-' && github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          ref: audit/standalone-learner-id-hardening-clean
+          fetch-depth: 0
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7
+        with:
+          node-version: '22.12.0'
+          package-manager-cache: false
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7
+        with:
+          python-version: '3.12'
+      - name: Apply own-property hardening
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+          import hashlib, re
+
+          core_path=Path('MouldMaster_Core_App.html')
+          text=core_path.read_text(encoding='utf-8')
+          def once(old,new,label):
+              global text
+              count=text.count(old)
+              if count!=1:
+                  raise SystemExit(f'{label}: expected one match, found {count}')
+              text=text.replace(old,new,1)
+
+          once(
+              'function pvBuildImportedUsers(x){\n',
+              'function pvHasOwnLearner(users,id){\n  return !!users&&Object.prototype.hasOwnProperty.call(users,id);\n}\nfunction pvBuildImportedUsers(x){\n',
+              'own-property helper insertion',
+          )
+          once(
+              '    if(Object.prototype.hasOwnProperty.call(users,sid))throw new Error("Duplicate learner identifier");\n',
+              '    if(pvHasOwnLearner(users,sid))throw new Error("Duplicate learner identifier");\n',
+              'duplicate own-property guard',
+          )
+          once(
+              '  if(!users[active])throw new Error("Missing active learner");\n',
+              '  if(!pvHasOwnLearner(users,active))throw new Error("Missing active learner");\n',
+              'active learner own-property guard',
+          )
+          once(
+              'function switchUser(id){const sid=pvCanonicalLearnerId(id);if(!sid||!db.users[sid]){toast("Learner profile unavailable");return}persist();db.activeUser=sid;user=db.users[sid];persist();updateGlobalProgress();renderInstructor();toast("Switched learner")}\n',
+              'function switchUser(id){const sid=pvCanonicalLearnerId(id);if(!sid||!pvHasOwnLearner(db.users,sid)){toast("Learner profile unavailable");return}persist();db.activeUser=sid;user=db.users[sid];persist();updateGlobalProgress();renderInstructor();toast("Switched learner")}\n',
+              'switch learner own-property guard',
+          )
+          once(
+              '    if(!x||typeof x!=="object"||Array.isArray(x)||!x.users||typeof x.users!=="object"||Array.isArray(x.users)||!x.activeUser||!x.users[x.activeUser])throw new Error("Invalid backup structure");\n',
+              '    if(!x||typeof x!=="object"||Array.isArray(x)||!x.users||typeof x.users!=="object"||Array.isArray(x.users)||!x.activeUser)throw new Error("Invalid backup structure");\n',
+              'strict import inherited lookup removal',
+          )
+          core_path.write_text(text,encoding='utf-8')
+
+          qa_path=Path('qa_standalone_learner_ids.cjs')
+          qa=qa_path.read_text(encoding='utf-8')
+          old="const buildSource=extractFunction('pvBuildImportedUsers');\nconst api=new Function('normaliseImportedUser',`${canonicalSource}\\n${requireSource}\\n${buildSource}\\nreturn {pvCanonicalLearnerId,pvRequireLearnerId,pvBuildImportedUsers};`)((u,id)=>({id,name:u?.name||'Learner'}));\n"
+          new="const hasOwnSource=extractFunction('pvHasOwnLearner');\nconst buildSource=extractFunction('pvBuildImportedUsers');\nconst api=new Function('normaliseImportedUser',`${canonicalSource}\\n${requireSource}\\n${hasOwnSource}\\n${buildSource}\\nreturn {pvCanonicalLearnerId,pvRequireLearnerId,pvHasOwnLearner,pvBuildImportedUsers};`)((u,id)=>({id,name:u?.name||'Learner'}));\n"
+          if qa.count(old)!=1: raise SystemExit(f'QA API extraction: expected one match, found {qa.count(old)}')
+          qa=qa.replace(old,new,1)
+          old="assert.throws(()=>api.pvBuildImportedUsers({activeUser:'missing',users:{'learner-1':{}}}),/Missing active learner/);\n\n"
+          new="assert.throws(()=>api.pvBuildImportedUsers({activeUser:'missing',users:{'learner-1':{}}}),/Missing active learner/);\nassert.throws(()=>api.pvBuildImportedUsers({activeUser:'constructor',users:{'learner-1':{}}}),/Missing active learner/,'prototype property names must not satisfy learner membership');\nconst prototypeNamed=api.pvBuildImportedUsers({activeUser:'constructor',users:{constructor:{name:'Legacy'}}});\nassert.equal(prototypeNamed.activeUser,'constructor','an explicitly owned safe legacy prototype-name ID remains supported');\nassert.equal(Object.prototype.hasOwnProperty.call(prototypeNamed.users,'constructor'),true);\n\n"
+          if qa.count(old)!=1: raise SystemExit(f'prototype membership QA insertion: expected one match, found {qa.count(old)}')
+          qa=qa.replace(old,new,1)
+          old="const strictStart=source.indexOf('/* ---------- Strict backup import allowlist ---------- */');assert(strictStart>=0);\n"
+          new="const switchSource=extractFunction('switchUser');\nlet switchState={db:{activeUser:'learner-1',users:{'learner-1':{id:'learner-1'}}},persistCalls:0,toasts:[]};\nconst guardedSwitch=new Function(`${canonicalSource}\\n${hasOwnSource}\\nlet db=arguments[0].db,user=db.users[db.activeUser];const persist=()=>arguments[0].persistCalls++;const updateGlobalProgress=()=>{};const renderInstructor=()=>{};const toast=m=>arguments[0].toasts.push(m);${switchSource}\\nreturn switchUser;`)(switchState);\nguardedSwitch('constructor');\nassert.equal(switchState.db.activeUser,'learner-1','prototype property names must not switch without an owned learner record');\nassert.equal(switchState.persistCalls,0,'rejected prototype-name switch must not persist');\nassert.equal(switchState.toasts.at(-1),'Learner profile unavailable');\n\nconst strictStart=source.indexOf('/* ---------- Strict backup import allowlist ---------- */');assert(strictStart>=0);\n"
+          if qa.count(old)!=1: raise SystemExit(f'switch own-property QA insertion: expected one match, found {qa.count(old)}')
+          qa=qa.replace(old,new,1)
+          old="assert(strict.includes('const proposed=pvBuildImportedUsers(x);'),'strict import must build through the canonical learner-ID contract');\n"
+          new="assert(strict.includes('const proposed=pvBuildImportedUsers(x);'),'strict import must build through the canonical learner-ID contract');\nassert(strict.includes('pvHasOwnLearner(users,active)'),'strict import must require own learner membership for the active ID');\nassert(!strict.includes('!x.users[x.activeUser]'),'strict structural gate must not use inherited learner lookup');\n"
+          if qa.count(old)!=1: raise SystemExit(f'strict own-property QA markers: expected one match, found {qa.count(old)}')
+          qa_path.write_text(qa.replace(old,new,1),encoding='utf-8')
+          PY
+
+          python tools/externalize_core_scripts.py
+          python - <<'PY'
+          from pathlib import Path
+          import hashlib,re
+          p=Path('qa_release.py');text=p.read_text(encoding='utf-8')
+          digest=hashlib.sha256(Path('MouldMaster_Core_App.html').read_bytes()).hexdigest()
+          new,count=re.subn(r'CURRENT_CORE_SHA256 = "[0-9a-f]{64}"',f'CURRENT_CORE_SHA256 = "{digest}"',text,count=1)
+          if count!=1: raise SystemExit('CURRENT_CORE_SHA256 lock not found exactly once')
+          p.write_text(new,encoding='utf-8')
+          print('current_core_sha256='+digest)
+          PY
+      - name: Validate exact patch
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --check qa_standalone_learner_ids.cjs
+          node qa_standalone_learner_ids.cjs
+          python tools/externalize_core_scripts.py --check
+          python qa_release.py
+          python qa_release_docs.py
+          python qa_app_wide_audit.py
+          python qa_webkit_regressions.py
+          python tools/build_pages_artifact.py
+          python tools/verify_release_external_validation.py
+          python - <<'PY'
+          import hashlib,json,urllib.request
+          latest=json.load(open('latest.json',encoding='utf-8'))
+          with urllib.request.urlopen(latest['app_url'],timeout=30) as r: data=r.read()
+          actual=hashlib.sha256(data).hexdigest()
+          assert actual==latest['sha256'],(actual,latest['sha256'])
+          print('Frozen recovery URL/hash verified:',actual)
+          PY
+          rm -rf .pages-dist tools/__pycache__ __pycache__
+          git diff --check
+      - name: Commit validated permanent changes
+        shell: bash
+        run: |
+          set -euo pipefail
+          git add MouldMaster_Core_App.html src/core-runtime/core-inline-004.js src/core-runtime/core-inline-007.js qa_standalone_learner_ids.cjs qa_release.py
+          git diff --cached --check
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m 'Require owned learner registry membership'
+          git push origin HEAD:audit/standalone-learner-id-hardening-clean
