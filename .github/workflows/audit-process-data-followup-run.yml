@@ -71,6 +71,10 @@ jobs:
       - name: Commit only validated generated changes
         run: |
           set -euo pipefail
+          # The GITHUB_TOKEN may not update other workflow files. The validated
+          # CI wiring is applied separately through the repository connector.
+          git restore -- .github/workflows/data-integration-qa.yml tools/apply_process_data_followup_temp.py
+          rm -rf tools/__pycache__
           git add -A
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
