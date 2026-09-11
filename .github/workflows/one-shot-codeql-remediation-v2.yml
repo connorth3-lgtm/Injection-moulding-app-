@@ -1,0 +1,44 @@
+name: One-shot CodeQL Remediation v2
+
+on:
+  push:
+    branches:
+      - code-scanning-remediation-2026-09-11
+    paths:
+      - .github/workflows/one-shot-codeql-remediation-v2.yml
+
+permissions:
+  contents: write
+
+jobs:
+  remediate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+      - name: Apply and verify remediation
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 tools/one_shot_codeql_remediate.py
+          python3 tools/sync_web_release.py
+          python3 qa_html_script_parser.py
+          python3 qa_code_scanning_remediation.py
+          python3 tools/externalize_core_scripts.py --check
+          python3 qa_architecture_debt.py
+          python3 qa_web_release_identity.py
+          python3 qa_release_docs.py
+          python3 qa_release.py
+          node --check src/core-runtime/core-inline-004.js
+          node --check src/core-runtime/core-inline-010.js
+          python3 qa_fast_feedback.py --base origin/main --head HEAD
+      - name: Commit source remediation
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -A -- ':!.github/workflows'
+          git commit -m 'Remediate all current CodeQL findings'
+          git push origin HEAD:code-scanning-remediation-2026-09-11
