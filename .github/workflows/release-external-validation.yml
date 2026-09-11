@@ -1,0 +1,32 @@
+name: Release External Validation Boundary
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: release-external-validation-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  release-external-validation:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: '3.12'
+      - name: Verify release-specific external validation boundaries
+        run: python tools/verify_release_external_validation.py
+      - name: Exercise native ruleset verifier contract
+        run: python tools/verify_main_ruleset.py --self-test
+      - name: Preserve human and operational evidence boundary
+        run: |
+          echo 'PASS means unsupported external-validation claims are blocked.'
+          echo 'It does not mean human AT, physical-device, Windows, SME, learner or site evidence has been performed.'
