@@ -33,6 +33,9 @@ function pvBuildImportedUsers(x){
     if(pvHasOwnLearner(users,sid))throw new Error("Duplicate learner identifier");
     const clean=normaliseImportedUser(u,sid);
     if(clean.id!==sid)throw new Error("Learner identifier mismatch");
+    clean.certificates=[];
+    clean.certificateMeta={};
+    clean.examPassStatus={};
     users[sid]=clean;
   }
   const active=pvRequireLearnerId(x.activeUser);

@@ -19,7 +19,7 @@ const canonicalSource=extractFunction('pvCanonicalLearnerId');
 const requireSource=extractFunction('pvRequireLearnerId');
 const hasOwnSource=extractFunction('pvHasOwnLearner');
 const buildSource=extractFunction('pvBuildImportedUsers');
-const api=new Function('normaliseImportedUser',`${canonicalSource}\n${requireSource}\n${hasOwnSource}\n${buildSource}\nreturn {pvCanonicalLearnerId,pvRequireLearnerId,pvHasOwnLearner,pvBuildImportedUsers};`)((u,id)=>({id,name:u?.name||'Learner'}));
+const api=new Function('normaliseImportedUser',`${canonicalSource}\n${requireSource}\n${hasOwnSource}\n${buildSource}\nreturn {pvCanonicalLearnerId,pvRequireLearnerId,pvHasOwnLearner,pvBuildImportedUsers};`)((u,id)=>({id,name:u?.name||'Learner',completed:[1],certificates:['Advanced-ALL'],certificateMeta:{'Advanced-ALL':{score:100}},examPassStatus:{'Advanced-ALL':true}}));
 
 for(const id of ['learner-1','learner_2','legacy.ID-3','team:alpha+1','person@example'])assert.equal(api.pvCanonicalLearnerId(id),id,`benign legacy ID should survive unchanged: ${id}`);
 for(const id of ['',"bad'id",'bad"id','<tag>','bad\\id','bad/id','bad\nid','bad\rid','bad id','bad;id','bad(id)','-leading'])assert.equal(api.pvCanonicalLearnerId(id),'',`unsafe learner ID must be rejected: ${JSON.stringify(id)}`);
@@ -28,6 +28,10 @@ assert.equal(api.pvCanonicalLearnerId('a'.repeat(161)),'');
 
 let registry=api.pvBuildImportedUsers({activeUser:'learner-1',users:{'learner-1':{name:'A'},'legacy.ID-3':{name:'B'}}});
 assert.equal(registry.activeUser,'learner-1');assert.deepEqual(Object.keys(registry.users),['learner-1','legacy.ID-3']);
+assert.deepEqual(registry.users['learner-1'].completed,[1],'standalone import must preserve ordinary learning progress');
+assert.deepEqual(registry.users['learner-1'].certificates,[],'standalone import must strip imported certificates');
+assert.deepEqual(registry.users['learner-1'].certificateMeta,{},'standalone import must strip imported certificate metadata');
+assert.deepEqual(registry.users['learner-1'].examPassStatus,{},'standalone import must strip imported pass assertions');
 for(const bad of ["bad'id",'<tag>','bad\\id','bad\nid','bad id']){
   assert.throws(()=>api.pvBuildImportedUsers({activeUser:bad,users:{[bad]:{}}}),/Invalid learner identifier/);
 }
@@ -71,6 +75,9 @@ assert(strict.includes('const keyId=pvRequireLearnerId(id);'),'strict normaliser
 assert(strict.includes('if(embeddedId!==keyId)throw new Error("Learner identifier mismatch");'),'strict normaliser must reject embedded/key identity mismatch');
 assert(strict.includes('const proposed=pvBuildImportedUsers(x);'),'strict import must build through the canonical learner-ID contract');
 assert(strict.includes('pvHasOwnLearner(users,active)'),'strict import must require own learner membership for the active ID');
+assert(strict.includes('clean.certificates=[];'),'standalone import must strip certificate assertions');
+assert(strict.includes('clean.certificateMeta={};'),'standalone import must strip certificate metadata assertions');
+assert(strict.includes('clean.examPassStatus={};'),'standalone import must strip pass-status assertions');
 assert(!strict.includes('!x.users[x.activeUser]'),'strict structural gate must not use inherited learner lookup');
 assert(!strict.includes('users[pvCleanString(id,160)]=normaliseImportedUser(u,id)'),'strict import must not truncate unsafe learner IDs into registry keys');
 const vm=require('node:vm');
