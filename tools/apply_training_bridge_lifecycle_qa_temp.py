@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Temporarily align lifecycle QA with the canonical learner-ID prerequisite."""
+"""Temporarily align lifecycle/release QA with the canonical learner-ID prerequisite."""
 from pathlib import Path
 
 p=Path('qa_final_audit_lifecycle.cjs')
@@ -32,4 +32,12 @@ once(
     'lifecycle learner-ID API injection',
 )
 p.write_text(text,encoding='utf-8')
-print('Aligned lifecycle QA sandbox with canonical learner-ID API.')
+
+r=Path('qa_release.py')
+release=r.read_text(encoding='utf-8')
+old='for marker in ["file.size>10*1024*1024", "clean.id=sid", "clean.certificates=[]", "clean.certificateMeta={}", "clean.examPassStatus={}", "restoreSnapshot(before)", "Certificates must be re-earned", "db!==beforeDb", "LEARNING_ANALYTICS_PREFIX", "ANALYTICS_CLEANUP_CODE", "remaining key(s):", "clearAllAnalyticsStores();clearTrainingExtrasStores()", "analytics were cleared and verified"]:\n    assert marker in bridge, f"import/reset hardening missing: {marker}"\n'
+new='for marker in ["file.size>10*1024*1024", "const sid=requireCoreLearnerId(id);", "if(hasOwnCoreLearner(users,sid))", "if(!clean||clean.id!==sid)", "const active=requireCoreLearnerId(x.activeUser);", "if(!hasOwnCoreLearner(users,active))", "clean.certificates=[]", "clean.certificateMeta={}", "clean.examPassStatus={}", "restoreSnapshot(before)", "Certificates must be re-earned", "db!==beforeDb", "LEARNING_ANALYTICS_PREFIX", "ANALYTICS_CLEANUP_CODE", "remaining key(s):", "clearAllAnalyticsStores();clearTrainingExtrasStores()", "analytics were cleared and verified"]:\n    assert marker in bridge, f"import/reset hardening missing: {marker}"\nassert "clean.id=sid" not in bridge, "import bridge must reject learner-ID mismatch instead of silently rewriting it"\nassert "!x.users[x.activeUser]" not in bridge, "import bridge must not use inherited learner lookup for activeUser"\n'
+if release.count(old)!=1:
+    raise SystemExit(f'release bridge invariant: expected one match, found {release.count(old)}')
+r.write_text(release.replace(old,new,1),encoding='utf-8')
+print('Aligned lifecycle and release QA with canonical learner-ID bridge contract.')
