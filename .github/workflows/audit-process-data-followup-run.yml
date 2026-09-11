@@ -30,6 +30,26 @@ jobs:
           python-version: '3.12'
       - name: Apply deterministic remediation
         run: |
+          python - <<'PY'
+          from pathlib import Path
+          p=Path('tools/apply_process_data_followup_temp.py')
+          text=p.read_text(encoding='utf-8')
+          replacements=[
+            (
+              '    "<span>${fmt(x.normalizedShift,2)}σ · ${esc(x.level)}</span>",',
+              '    "<span class=\\"pi-${esc(x.level)}\\">${fmt(x.normalizedShift,2)}σ · ${esc(x.level)}</span>",',
+            ),
+            (
+              '    "<span>${x.normalizedShift==null?\'Unscored · insufficient spread/sample\':`${fmt(x.normalizedShift,2)}σ · ${esc(x.level)}`}</span>",',
+              '    "<span class=\\"pi-${esc(x.level)}\\">${x.normalizedShift==null?\'Unscored · insufficient spread/sample\':`${fmt(x.normalizedShift,2)}σ · ${esc(x.level)}`}</span>",',
+            ),
+          ]
+          for old,new in replacements:
+            if text.count(old)!=1:
+              raise SystemExit(f'helper drift selector expected one match, found {text.count(old)}: {old}')
+            text=text.replace(old,new,1)
+          p.write_text(text,encoding='utf-8')
+          PY
           python tools/apply_process_data_followup_temp.py
           python tools/bump_web_release.py --release 2026.09.12.2 --published 2026-09-12
           python tools/sync_web_release.py --check
