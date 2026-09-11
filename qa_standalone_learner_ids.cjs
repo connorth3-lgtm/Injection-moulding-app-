@@ -15,6 +15,8 @@ function extractFunction(name){
   }
   throw new Error(`unterminated ${name}`);
 }
+const startupCanonicalSource=extractFunction('mmCanonicalStartupLearnerId');
+const startupSelectSource=extractFunction('mmSelectStartupDb');
 const canonicalSource=extractFunction('pvCanonicalLearnerId');
 const requireSource=extractFunction('pvRequireLearnerId');
 const hasOwnSource=extractFunction('pvHasOwnLearner');
@@ -23,6 +25,29 @@ const commitSource=extractFunction('pvCommitImportedUsers');
 const api=new Function('normaliseImportedUser',`${canonicalSource}\n${requireSource}\n${hasOwnSource}\n${buildSource}\nreturn {pvCanonicalLearnerId,pvRequireLearnerId,pvHasOwnLearner,pvBuildImportedUsers};`)((u,id)=>({id,name:u?.name||'Learner',completed:[1],certificates:['Advanced-ALL'],certificateMeta:{'Advanced-ALL':{score:100}},examPassStatus:{'Advanced-ALL':true}}));
 
 for(const id of ['learner-1','learner_2','legacy.ID-3','team:alpha+1','person@example'])assert.equal(api.pvCanonicalLearnerId(id),id,`benign legacy ID should survive unchanged: ${id}`);
+const startupApi=new Function(`${startupCanonicalSource}\n${startupSelectSource}\nreturn {mmCanonicalStartupLearnerId,mmSelectStartupDb};`)();
+for(const id of ['learner-1','learner_2','legacy.ID-3','team:alpha+1','person@example',"bad'id",'<tag>','bad\\id','bad/id','bad id','__proto__','constructor'])assert.equal(startupApi.mmCanonicalStartupLearnerId(id),api.pvCanonicalLearnerId(id),`startup/current learner-ID contracts must agree: ${JSON.stringify(id)}`);
+const pristine={activeUser:'learner-1',users:{'learner-1':{id:'learner-1',name:'Pristine'}}};
+{
+  const selected=startupApi.mmSelectStartupDb({activeUser:'__proto__',users:{}},pristine);
+  assert.equal(selected.rejected,true,'legacy __proto__ active learner must fail closed');
+  assert.equal(selected.db.activeUser,'learner-1');
+  assert.equal(Object.prototype.hasOwnProperty.call(selected.db.users,'learner-1'),true);
+}
+{
+  const selected=startupApi.mmSelectStartupDb({activeUser:'constructor',users:{'learner-1':{id:'learner-1'}}},pristine);
+  assert.equal(selected.rejected,true,'inherited constructor lookup must not satisfy startup active membership');
+}
+{
+  const candidate={activeUser:'constructor',users:{constructor:{id:'constructor',name:'Owned legacy'}}};
+  const selected=startupApi.mmSelectStartupDb(candidate,pristine);
+  assert.equal(selected.rejected,false,'explicitly owned canonical legacy ID remains valid at startup');
+  assert.equal(selected.db,candidate);
+}
+{
+  const selected=startupApi.mmSelectStartupDb({activeUser:'learner-1',users:{'learner-1':{id:'learner-1'},"bad'id":{id:"bad'id"}}},pristine);
+  assert.equal(selected.rejected,true,'unsafe inactive persisted learner IDs must also fail the startup registry boundary');
+}
 for(const id of ['',"bad'id",'bad"id','<tag>','bad\\id','bad/id','bad\nid','bad\rid','bad id','bad;id','bad(id)','-leading'])assert.equal(api.pvCanonicalLearnerId(id),'',`unsafe learner ID must be rejected: ${JSON.stringify(id)}`);
 assert.equal(api.pvCanonicalLearnerId('a'.repeat(160)),'a'.repeat(160));
 assert.equal(api.pvCanonicalLearnerId('a'.repeat(161)),'');
@@ -109,6 +134,8 @@ assert(strict.includes('clean.certificateMeta={};'),'standalone import must stri
 assert(strict.includes('clean.examPassStatus={};'),'standalone import must strip pass-status assertions');
 assert(strict.includes('if(file.size>10*1024*1024)'),'standalone import must reject oversized backups before FileReader allocation');
 assert(strict.includes('pvCommitImportedUsers(proposed);'),'standalone import must use storage-first commit helper');
+assert(source.includes('Object.prototype.hasOwnProperty.call(candidate.users,active)'),'startup registry must require own active learner membership');
+assert(source.includes('mmStartupLearnerDataRejected=true'),'unsafe persisted registries must fail closed before user activation');
 assert(strict.indexOf('localStorage.setItem("mouldmasterProDB",serialized)')<strict.indexOf('db=proposed;user=nextUser;'),'standalone import commit must persist before live-memory activation');
 assert(!strict.includes('!x.users[x.activeUser]'),'strict structural gate must not use inherited learner lookup');
 assert(!strict.includes('users[pvCleanString(id,160)]=normaliseImportedUser(u,id)'),'strict import must not truncate unsafe learner IDs into registry keys');

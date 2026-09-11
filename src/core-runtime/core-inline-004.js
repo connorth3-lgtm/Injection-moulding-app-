@@ -12,9 +12,30 @@ const defaultDB = {
   }
 };
 const PRISTINE_DB = JSON.parse(JSON.stringify(defaultDB));
-let db;
-try{ db = JSON.parse(localStorage.getItem("mouldmasterProDB")) || JSON.parse(JSON.stringify(PRISTINE_DB)) }catch(e){ db=JSON.parse(JSON.stringify(PRISTINE_DB)) }
-if(!db.users || !db.activeUser){db=defaultDB}
+function mmCanonicalStartupLearnerId(v){
+  const raw=String(v==null?"":v);
+  return raw.length>=1&&raw.length<=160&&/^[A-Za-z0-9][A-Za-z0-9._:@+-]*$/.test(raw)?raw:"";
+}
+function mmSelectStartupDb(candidate,pristine){
+  const fallback=()=>({db:JSON.parse(JSON.stringify(pristine)),rejected:true});
+  if(!candidate||typeof candidate!=="object"||Array.isArray(candidate)||!candidate.users||typeof candidate.users!=="object"||Array.isArray(candidate.users))return fallback();
+  const entries=Object.entries(candidate.users);
+  if(!entries.length)return fallback();
+  for(const [id,record] of entries){
+    if(mmCanonicalStartupLearnerId(id)!==id||!record||typeof record!=="object"||Array.isArray(record))return fallback();
+  }
+  if(typeof candidate.activeUser!=="string")return fallback();
+  const active=mmCanonicalStartupLearnerId(candidate.activeUser);
+  if(!active||active!==candidate.activeUser||!Object.prototype.hasOwnProperty.call(candidate.users,active))return fallback();
+  return {db:candidate,rejected:false};
+}
+let db,mmStartupLearnerDataRejected=false;
+try{
+  const raw=localStorage.getItem("mouldmasterProDB");
+  const parsed=raw===null?JSON.parse(JSON.stringify(PRISTINE_DB)):JSON.parse(raw);
+  const selected=mmSelectStartupDb(parsed,PRISTINE_DB);
+  db=selected.db;mmStartupLearnerDataRejected=selected.rejected;
+}catch(e){db=JSON.parse(JSON.stringify(PRISTINE_DB));mmStartupLearnerDataRejected=true}
 let user = db.users[db.activeUser];
 if(user.onboardingDone === undefined) user.onboardingDone = false;
 if(!user.experience) user.experience = "Beginner";
@@ -402,6 +423,7 @@ $("#modal").addEventListener("click",e=>{if(e.target.id==="modal")closeModal()})
 
 updateGlobalProgress();
 renderDashboard();
+if(mmStartupLearnerDataRejected)toast("Saved learner data failed safety checks, so a clean local profile was opened. Existing stored bytes were not trusted.");
 
 
 /* ---------- Friendly Edition behaviour ---------- */
