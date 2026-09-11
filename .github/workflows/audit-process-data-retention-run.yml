@@ -1,0 +1,61 @@
+name: One-shot Process Data Retention Runner
+
+on:
+  push:
+    branches:
+      - 'audit/process-data-retention-hardening'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: audit-process-data-retention-runner
+  cancel-in-progress: false
+
+jobs:
+  remediate:
+    if: github.repository == 'connorth3-lgtm/Injection-moulding-app-' && github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          ref: audit/process-data-retention-hardening
+          fetch-depth: 0
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7
+        with:
+          node-version: '22.12.0'
+          package-manager-cache: false
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7
+        with:
+          python-version: '3.12'
+      - name: Apply deterministic remediation
+        run: |
+          python tools/apply_process_data_retention_temp.py
+          python tools/bump_web_release.py --release 2026.09.12.3 --published 2026-09-12
+          python tools/sync_web_release.py --check
+      - name: Validate remediation
+        run: |
+          set -euo pipefail
+          node --check data-integration-runtime.js
+          node --check src/domains/process/process-data-integrity.js
+          node --check training-qa-fix.js
+          node --check qa_process_data_integrity.cjs
+          node qa_data_integration_statistics.cjs
+          node qa_process_data_integrity.cjs
+          node qa_process_data_followup.cjs
+          python qa_process_data_local_intake.py
+          python qa_data_integration.py
+          python qa_release.py
+          python qa_release_docs.py
+          python tools/verify_release_external_validation.py
+          git diff --check
+      - name: Commit only validated generated changes
+        run: |
+          set -euo pipefail
+          rm -rf tools/__pycache__
+          git add -A
+          git restore --staged .github/workflows/audit-process-data-retention-run.yml tools/apply_process_data_retention_temp.py
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m 'Make local process-data retention controls truthful'
+          git push origin HEAD:audit/process-data-retention-hardening
