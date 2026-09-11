@@ -2,7 +2,7 @@
 (function(){
 'use strict';
 if(window.MM_ENGINEER_SIMULATOR_UI)return;
-const VERSION='2026.09.11.2';
+const VERSION='2026.09.11.3';
 const baseRender=window.renderSimulator;
 const baseUpdate=window.updateSimulator;
 if(typeof baseRender!=='function'||typeof baseUpdate!=='function'){
@@ -32,6 +32,11 @@ const METRIC_FIELDS=[
   {key:'meltTemp',label:'Melt temperature',unit:'°C',step:0.1,help:'Prefer measured melt temperature rather than barrel setpoint where possible.'},
   {key:'mouldTemp',label:'Mould surface temperature',unit:'°C',step:0.1,help:'Measured mould/tool surface temperature at a consistent location.'},
   {key:'coolingTime',label:'Cooling time',unit:'s',min:0.01,step:0.01,help:'Cooling stage duration using one cycle definition.'}
+];
+const FLOW_FIELDS=[
+  {id:'mm_flow_volume',label:'Fill-stage melt volume (cm³)',step:'0.01',help:'Volume delivered during the same interval used for fill time.'},
+  {id:'mm_flow_mass',label:'Fill-stage polymer mass (g)',step:'0.01',help:'Mass delivered during the same fill interval. Do not substitute a final packed part mass unless the timing basis matches.'},
+  {id:'mm_flow_stroke',label:'Injection stroke during fill (mm)',step:'0.01',help:'Screw/ram forward travel during the measured fill interval.'}
 ];
 const state={baseline:{},current:{},lastDerived:null};
 function node(tag,className,text){
@@ -66,7 +71,7 @@ function makeNumberField(prefix,field){
   input.type='number';input.inputMode='decimal';input.id=`mm_${prefix}_${field.key}`;
   if(field.min!=null)input.min=String(field.min);if(field.max!=null)input.max=String(field.max);input.step=String(field.step||'any');
   const stored=state[prefix][field.key];if(Number.isFinite(stored))input.value=String(stored);
-  input.addEventListener('input',()=>{const n=finite(input.value);if(n==null)delete state[prefix][field.key];else state[prefix][field.key]=n});
+  input.addEventListener('input',()=>{const n=finite(input.value);if(n==null)delete state[prefix][field.key];else state[prefix][field.key]=n;renderFlowReadout(deriveFlowMetrics())});
   const help=node('span','tiny muted',field.help);
   label.append(title,input,help);return label;
 }
@@ -110,6 +115,37 @@ function deriveMetricModel(){
   derived.cooling=clampModel('cooling-time normalisation',ratioIndex(c.coolingTime,b.coolingTime,false),0,100,notes);
   return {ok:true,derived,notes};
 }
+function calculateFlowMetrics(fillTime,volume,mass,stroke){
+  const t=positive(fillTime);if(t==null)return null;
+  const v=positive(volume),m=positive(mass),s=positive(stroke);
+  if(v==null&&m==null&&s==null)return null;
+  return {
+    fillTime:t,
+    volumetricFlowCm3S:v==null?null:v/t,
+    massFlowGS:m==null?null:m/t,
+    averageStrokeSpeedMmS:s==null?null:s/t
+  };
+}
+function deriveFlowMetrics(){
+  const fillTime=positive(document.getElementById('mm_current_fillTime')?.value);
+  return calculateFlowMetrics(
+    fillTime,
+    document.getElementById('mm_flow_volume')?.value,
+    document.getElementById('mm_flow_mass')?.value,
+    document.getElementById('mm_flow_stroke')?.value
+  );
+}
+function renderFlowReadout(result){
+  const el=document.getElementById('mmSimFlowReadout');if(!el)return;
+  const packPressure=positive(document.getElementById('mm_current_packPressure')?.value);
+  const pressureText=packPressure==null?'':` Pack/hold pressure equivalent: ${packPressure.toFixed(2)} MPa = ${(packPressure*10).toFixed(1)} bar.`;
+  if(!result){el.textContent=`Enter current fill time plus at least one fill-stage volume, mass or injection-stroke measurement to calculate rates.${pressureText}`;return}
+  const parts=[];
+  if(result.volumetricFlowCm3S!=null)parts.push(`volumetric fill rate ${result.volumetricFlowCm3S.toFixed(2)} cm³/s`);
+  if(result.massFlowGS!=null)parts.push(`average mass delivery rate ${result.massFlowGS.toFixed(2)} g/s`);
+  if(result.averageStrokeSpeedMmS!=null)parts.push(`average screw/ram forward speed ${result.averageStrokeSpeedMmS.toFixed(2)} mm/s`);
+  el.textContent=`Calculated from entered measurements: ${parts.join('; ')}.${pressureText} Screw/ram speed is not melt-front velocity; no shear rate or viscosity is inferred without flow-path geometry and material rheology.`;
+}
 function deriveClamp(){
   const area=positive(document.getElementById('mm_clamp_area')?.value);
   const pressure=positive(document.getElementById('mm_clamp_pressure')?.value);
@@ -123,7 +159,7 @@ function deriveClamp(){
 function renderClampReadout(result){
   const el=document.getElementById('mmSimClampReadout');if(!el)return;
   if(!result){el.textContent='Optional: enter projected area, representative average cavity pressure and machine clamp capacity to calculate a simple opening-force estimate.';return}
-  el.textContent=`Calculated estimate: opening force ${result.openingForceKN.toFixed(1)} kN; machine utilisation ${result.utilisationPct.toFixed(1)}%; capacity margin over estimated requirement ${result.marginOnRequiredPct.toFixed(1)}%. Assumption: the entered pressure represents the average pressure acting over the entered projected area.`;
+  el.textContent=`Calculated estimate: opening force ${result.openingForceKN.toFixed(1)} kN; machine utilisation ${result.utilisationPct.toFixed(1)}%; capacity margin over estimated requirement ${result.marginOnRequiredPct.toFixed(1)}%. Pressure equivalent: ${result.pressure.toFixed(2)} MPa = ${(result.pressure*10).toFixed(1)} bar. Assumption: the entered pressure represents the average pressure acting over the entered projected area.`;
 }
 function syncModelDisplays(){
   for(const key of MODEL_KEYS){
@@ -141,8 +177,8 @@ function applyMetricModel(){
     if(clampResult.marginOnRequiredPct>50)result.notes.push('Clamp margin exceeds the advisory model ceiling; the physical estimate is shown separately.');
     if(clampResult.marginOnRequiredPct<0)result.notes.push('Estimated opening force exceeds entered machine clamp capacity.');
   }
-  state.lastDerived={...result,clamp:clampResult};
-  syncModelDisplays();renderClampReadout(clampResult);window.updateSimulator();
+  state.lastDerived={...result,clamp:clampResult,flow:deriveFlowMetrics()};
+  syncModelDisplays();renderClampReadout(clampResult);renderFlowReadout(state.lastDerived.flow);window.updateSimulator();
   const note=result.notes.length?` ${result.notes.join(' ')}`:'';
   metricStatus(`Applied metric process values to the baseline-normalised advisory model.${note}`,'ok');
 }
@@ -157,6 +193,11 @@ function buildMetricSection(form){
   const current=node('div','content-block');current.append(node('h3','', 'Current / scenario'));
   const cGrid=node('div','form-grid');METRIC_FIELDS.forEach(field=>cGrid.append(makeNumberField('current',field)));current.append(cGrid);
   grid.append(baseline,current);section.append(grid);
+  const flowBox=node('div','content-block');flowBox.append(node('h3','', 'Calculated fill-rate measurements'));
+  flowBox.append(node('p','tiny muted','Optional current-cycle calculations using the current fill time above. These are direct rate calculations only; they are not cavity-flow, shear-rate or rheology predictions.'));
+  const flowGrid=node('div','form-grid');
+  FLOW_FIELDS.forEach(field=>{const label=node('label');const title=node('span','',field.label);const input=document.createElement('input');input.type='number';input.inputMode='decimal';input.id=field.id;input.min='0';input.step=field.step;input.addEventListener('input',()=>renderFlowReadout(deriveFlowMetrics()));label.append(title,input,node('span','tiny muted',field.help));flowGrid.append(label)});
+  flowBox.append(flowGrid);const flowReadout=node('p','tiny muted','Enter current fill time plus at least one fill-stage volume, mass or injection-stroke measurement to calculate rates.');flowReadout.id='mmSimFlowReadout';flowReadout.setAttribute('aria-live','polite');flowBox.append(flowReadout);section.append(flowBox);
   const clampBox=node('div','content-block');clampBox.append(node('h3','', 'Clamp-force estimate'));
   clampBox.append(node('p','tiny muted','Optional calculation. F = p̄ × A. Use representative average cavity pressure, not machine hydraulic pressure. Actual distributed cavity pressure should be integrated over projected area for high-fidelity work.'));
   const clampGrid=node('div','form-grid');
@@ -165,7 +206,7 @@ function buildMetricSection(form){
     ['mm_clamp_pressure','Average cavity pressure (MPa)','0.1'],
     ['mm_clamp_capacity','Machine clamp capacity (kN)','1']
   ].forEach(([id,labelText,step])=>{const label=node('label','',labelText);const input=document.createElement('input');input.type='number';input.inputMode='decimal';input.id=id;input.min='0';input.step=step;input.addEventListener('input',()=>renderClampReadout(deriveClamp()));label.append(input);clampGrid.append(label)});
-  clampBox.append(clampGrid);const clampReadout=node('p','tiny muted','Optional: enter projected area, representative average cavity pressure and machine clamp capacity to calculate a simple opening-force estimate.');clampReadout.id='mmSimClampReadout';clampBox.append(clampReadout);section.append(clampBox);
+  clampBox.append(clampGrid);const clampReadout=node('p','tiny muted','Optional: enter projected area, representative average cavity pressure and machine clamp capacity to calculate a simple opening-force estimate.');clampReadout.id='mmSimClampReadout';clampReadout.setAttribute('aria-live','polite');clampBox.append(clampReadout);section.append(clampBox);
   const actions=node('div','hero-buttons');
   const capture=node('button','secondary','Capture current as baseline');capture.type='button';capture.addEventListener('click',copyCurrentToBaseline);
   const apply=node('button','primary','Apply metric values to model');apply.type='button';apply.addEventListener('click',applyMetricModel);
@@ -210,7 +251,10 @@ function engineeringDetail(output){
   details.append(node('summary','', 'Equations, units and validity'));
   const list=node('ul');
   [
-    'Metric process inputs: fill/hold/cooling time in s; temperature in °C; pressure in MPa; projected area in cm²; clamp force in kN.',
+    'Metric process inputs: fill/hold/cooling time in s; temperature in °C; pressure in MPa (bar equivalent shown); projected area in cm²; injection stroke in mm; clamp force in kN; mass in g.',
+    'Direct flow calculations: volumetric fill rate Q[cm³/s] = fill-stage volume[cm³] / fill time[s]; mass delivery rate ṁ[g/s] = fill-stage mass[g] / fill time[s]; average screw/ram speed v[mm/s] = fill stroke[mm] / fill time[s].',
+    'Average screw/ram speed is not melt-front velocity. Shear rate, viscosity and pressure loss are not inferred without flow-path geometry and material rheology.',
+    'Pressure conversion: 1 MPa = 10 bar. Keep hydraulic, plastic and cavity pressure definitions distinct; do not compare them as interchangeable values.',
     'Baseline-normalised ratio: model index = 50 × current/baseline. Fill aggressiveness uses the inverse fill-time ratio: 50 × baseline fill time/current fill time.',
     'Temperature model inputs are current minus baseline in °C and are bounded to the model validity range of ±20 °C.',
     'Clamp opening-force estimate: F[kN] = average cavity pressure[MPa] × projected area[cm²] × 0.1. Distributed cavity pressure is more accurately integrated over projected area.',
@@ -264,5 +308,5 @@ window.renderSimulator=renderWrapped;
 window.updateSimulator=updateWrapped;
 if(window.MM_RUNTIME_V2?.registerModule)window.MM_RUNTIME_V2.registerModule('engineer-simulator-ui',{version:VERSION,type:'simulator-presentation',scope:'metric-baseline-normalised-advisory'});
 if(document.getElementById('simulator')?.children.length){enhanceStructure();enhanceResult()}
-window.MM_ENGINEER_SIMULATOR_UI=Object.freeze({version:VERSION,enhance(){enhanceStructure();enhanceResult()},deriveMetricModel,deriveClamp});
+window.MM_ENGINEER_SIMULATOR_UI=Object.freeze({version:VERSION,enhance(){enhanceStructure();enhanceResult()},deriveMetricModel,calculateFlowMetrics,deriveFlowMetrics,deriveClamp});
 })();
