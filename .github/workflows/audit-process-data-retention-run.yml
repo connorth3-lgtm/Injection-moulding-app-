@@ -81,6 +81,19 @@ jobs:
           if qa.count(old)!=1:
               raise SystemExit(f'data-integration store invariant: expected one match, found {qa.count(old)}')
           q.write_text(qa.replace(old,new,1),encoding='utf-8')
+
+          r=Path('qa_release_docs.py')
+          docs=r.read_text(encoding='utf-8')
+          old="'orphaned buckets','Reset local analytics','confirmed factory reset']"
+          new="'orphaned buckets','Reset local analytics','confirmed learner-data reset','Delete all saved process data']"
+          if docs.count(old)!=1:
+              raise SystemExit(f'release-doc reset invariant: expected one match, found {docs.count(old)}')
+          docs=docs.replace(old,new,1)
+          anchor="need('Learning insights events' in support and 'resets both analytics histories' in support,'support import analytics lifecycle disclosure is stale')\n"
+          addition=anchor+"need('Delete all saved process data' in support and 'Saved process-data datasets' in support,'support process-data retention/reset disclosure is stale')\n"
+          if docs.count(anchor)!=1:
+              raise SystemExit(f'support retention invariant anchor: expected one match, found {docs.count(anchor)}')
+          r.write_text(docs.replace(anchor,addition,1),encoding='utf-8')
           PY
           python tools/bump_web_release.py --release 2026.09.12.3 --published 2026-09-12
           python tools/sync_web_release.py --check
