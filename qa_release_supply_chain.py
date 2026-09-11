@@ -72,9 +72,9 @@ assert_pinned_actions(
     "Microsoft Store",
     store,
     {
-        "actions/checkout": "1af3b93b681fe567477e1754c93a5784cc6ff5db",
-        "actions/setup-node": "a2b2e8eeba5861535c53431499a2969c938313d2",
-        "actions/setup-python": "e213ff1d62d7d1920be3ea5634c005ecc3c7e4a2",
+        "actions/checkout": "3d3c42e5aac5ba805825da76410c181273ba90b1",
+        "actions/setup-node": "820762786026740c76f36085b0efc47a31fe5020",
+        "actions/setup-python": "5fda3b95a4ea91299a34e894583c3862153e4b97",
         "actions/upload-artifact": "043fb46d1a93c77aae656e7c1c64a875d1fc6a0a",
     },
 )
