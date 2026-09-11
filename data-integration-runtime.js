@@ -10,6 +10,7 @@ const ROLE_OPTIONS=['unresolved','actual','setpoint','command','state','quality'
 const SAMPLING_OPTIONS=['unknown','per-cycle','trace-sample','event','batch'];
 const BLOCKING_SEMANTIC_KINDS=new Set(['unresolved']);
 const CONTEXT_KEYS=['machine','mould','materialGrade','job'];
+const PROCESS_DATA_STORES=['datasets','shots','baselines','caseLinks','interventions'];
 let semanticRegistry=null;
 let currentManifest=null;
 let preparedSession=null;
@@ -130,14 +131,28 @@ async function deleteDataset(id){
   const datasetId=String(id||'');if(!datasetId)throw new Error('Dataset id is required');
   const db=await openDb();
   try{
-    const tx=db.transaction(['datasets','shots','baselines','caseLinks'],'readwrite');
+    const tx=db.transaction(PROCESS_DATA_STORES,'readwrite');
     tx.objectStore('datasets').delete(datasetId);
     const shots=tx.objectStore('shots').index('datasetId');
     await deleteCursorMatches(shots.openCursor(IDBKeyRange.only(datasetId)),()=>true);
     await deleteCursorMatches(tx.objectStore('baselines').openCursor(),row=>row?.datasetId===datasetId);
     await deleteCursorMatches(tx.objectStore('caseLinks').openCursor(),row=>row?.datasetId===datasetId);
+    await deleteCursorMatches(tx.objectStore('interventions').openCursor(),row=>row?.datasetId===datasetId);
     await txDone(tx);return true;
   }finally{db.close()}
+}
+async function clearAllProcessData(){
+  const db=await openDb();
+  try{
+    const tx=db.transaction(PROCESS_DATA_STORES,'readwrite');
+    for(const name of PROCESS_DATA_STORES)tx.objectStore(name).clear();
+    await txDone(tx);
+  }finally{db.close()}
+  const remaining={};
+  for(const name of PROCESS_DATA_STORES)remaining[name]=(await getAll(name)).length;
+  const total=Object.values(remaining).reduce((sum,n)=>sum+Number(n||0),0);
+  if(total)throw new Error(`Process-data cleanup could not be verified (${total} record${total===1?'':'s'} remain).`);
+  return {verified:true,remaining};
 }
 
 function knownDefinition(column){
@@ -380,10 +395,14 @@ function wireAdvancedIntake(prepared){
 async function renderDatasetLibrary(){
   ensureStyle();const h=advancedHost();if(!h)return;
   const datasets=await listDatasets().catch(()=>[]);
-  h.innerHTML=`<div data-di-library-root><div class="di-actions" style="margin-bottom:12px"><button class="ghost" data-di-intake>← Process-data intake</button><button class="ghost" data-di-back>Data diagnosis</button></div><div class="card di-hero"><div class="eyebrow">Local process-data store</div><h2>Dataset library</h2><p>Prepared datasets are stored in IndexedDB on this device. Analysis-blocked datasets remain preserved but cannot be used for baseline or drift calculations until semantics are resolved and re-saved.</p></div><section class="card di-panel" style="margin-top:12px"><div class="di-dataset-list">${datasets.length?datasets.map(d=>`<div class="di-dataset"><b>${esc(d.datasetMeta?.source_label||d.id)}</b><div class="muted">${d.rowCount} rows · ${d.quality?.analysisReady?'analysis-ready':'blocked'} · ${esc(d.entities?.machine||'machine not linked')} · ${esc(d.entities?.mould||'mould not linked')}</div><div class="di-actions" style="margin-top:7px">${d.quality?.analysisReady?`<button class="secondary" data-di-baseline="${esc(d.id)}">Create baseline</button>`:''}<button class="ghost" data-di-delete="${esc(d.id)}">Delete local dataset</button></div></div>`).join(''):'<div class="di-empty">No locally stored datasets yet.</div>'}</div></section></div>`;
+  h.innerHTML=`<div data-di-library-root><div class="di-actions" style="margin-bottom:12px"><button class="ghost" data-di-intake>← Process-data intake</button><button class="ghost" data-di-back>Data diagnosis</button><button class="danger" data-di-clear-all>Delete all saved process data</button></div><div class="card di-hero"><div class="eyebrow">Local process-data store</div><h2>Dataset library</h2><p>Prepared datasets are stored in IndexedDB on this device. Analysis-blocked datasets remain preserved but cannot be used for baseline or drift calculations until semantics are resolved and re-saved.</p></div><section class="card di-panel" style="margin-top:12px"><div class="di-dataset-list">${datasets.length?datasets.map(d=>`<div class="di-dataset"><b>${esc(d.datasetMeta?.source_label||d.id)}</b><div class="muted">${d.rowCount} rows · ${d.quality?.analysisReady?'analysis-ready':'blocked'} · ${esc(d.entities?.machine||'machine not linked')} · ${esc(d.entities?.mould||'mould not linked')}</div><div class="di-actions" style="margin-top:7px">${d.quality?.analysisReady?`<button class="secondary" data-di-baseline="${esc(d.id)}">Create baseline</button>`:''}<button class="ghost" data-di-delete="${esc(d.id)}">Delete local dataset</button></div></div>`).join(''):'<div class="di-empty">No locally stored datasets yet.</div>'}</div></section></div>`;
   const root=h.querySelector('[data-di-library-root]');root.querySelector('[data-di-intake]')?.addEventListener('click',()=>renderAdvancedIntake(preparedSession));root.querySelector('[data-di-back]')?.addEventListener('click',()=>window.MM_PROCESS_DATA_DIAGNOSTICS?.open?.());
+  root.querySelector('[data-di-clear-all]')?.addEventListener('click',async()=>{
+    if(!confirm('Delete every saved process dataset, shot row, baseline, linked troubleshooting reference, and intervention record from this device? Learner progress and learner analytics are separate and will not be deleted.'))return;
+    try{await clearAllProcessData();preparedSession=null;window.toast?.('All saved process data deleted and verified');renderDatasetLibrary()}catch(err){window.toast?.(`Process-data cleanup failed: ${err?.message||err}`)}
+  });
   root.querySelectorAll('[data-di-baseline]').forEach(b=>b.addEventListener('click',async()=>{try{await createBaseline(b.dataset.diBaseline);window.toast?.('Local baseline created')}catch(err){window.toast?.(err?.message||String(err))}}));
-  root.querySelectorAll('[data-di-delete]').forEach(b=>b.addEventListener('click',async()=>{if(!confirm('Delete this local dataset, its shots, baselines, and linked troubleshooting references?'))return;await deleteDataset(b.dataset.diDelete);renderDatasetLibrary()}))
+  root.querySelectorAll('[data-di-delete]').forEach(b=>b.addEventListener('click',async()=>{if(!confirm('Delete this local dataset, its shots, baselines, linked troubleshooting references, and intervention records?'))return;await deleteDataset(b.dataset.diDelete);renderDatasetLibrary()}))
 }
 function openAdvancedIntake(){window.MM_PROCESS_DATA_DIAGNOSTICS?.open?.();requestAnimationFrame(()=>renderAdvancedIntake(preparedSession))}
 
@@ -459,7 +478,7 @@ window.MM_CONNECTED_PROCESS_DATA={
   semanticRegistry:()=>semanticRegistry,
   currentManifest:()=>currentManifest,
   enrichPrepared,
-  storage:{savePrepared,listDatasets,rowsForDataset,deleteDataset},
+  storage:{savePrepared,listDatasets,rowsForDataset,deleteDataset,clearAllProcessData},
   intelligence:{createBaseline,compareToBaseline,baselineCompatibility,contextCompatibility,assertBaselineCompatible,compareWindows,summarizeRows,referenceScale},
   cases:{linkCase,caseLink,similarCases},
   scope:'Local-first connected process-data infrastructure. It distinguishes privacy preparation from semantic readiness, stores prepared site data in IndexedDB, provides site-local statistical evidence comparisons, and never creates universal production limits, causal proof or machine-control authority.'
