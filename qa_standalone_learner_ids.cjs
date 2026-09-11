@@ -75,6 +75,33 @@ const pristine={activeUser:'learner-1',users:{'learner-1':legacyRecord('learner-
   const valid=legacyRecord(); delete valid.examPassStatus; delete valid.certificateMeta;
   assert.equal(startupApi.mmSelectStartupDb({activeUser:'learner-1',users:{'learner-1':valid}},pristine).rejected,false,'valid historical core records may omit newer optional evidence maps');
 }
+{
+  const bad=legacyRecord(); bad.examScores={'Beginner-ALL':'<img src=x onerror=alert(1)>'};
+  assert.equal(startupApi.mmSelectStartupDb({activeUser:'learner-1',users:{'learner-1':bad}},pristine).rejected,true,'string exam scores from permissive legacy imports must fail closed before HTML rendering');
+}
+{
+  const bad=legacyRecord(); bad.examPassStatus={'Beginner-ALL':'false'};
+  assert.equal(startupApi.mmSelectStartupDb({activeUser:'learner-1',users:{'learner-1':bad}},pristine).rejected,true,'non-boolean pass status must not become truthy passed state');
+}
+{
+  const bad=legacyRecord(); bad.fun={xp:'<svg/onload=alert(1)>',streak:1,achievements:[],rewarded:{}};
+  assert.equal(startupApi.mmSelectStartupDb({activeUser:'learner-1',users:{'learner-1':bad}},pristine).rejected,true,'string gamification counters must fail closed before dashboard HTML rendering');
+}
+{
+  const bad=legacyRecord(); bad.materialScience={completed:[],bestQuiz:'<img src=x onerror=alert(1)>',quizAttempts:0,currentLesson:1};
+  assert.equal(startupApi.mmSelectStartupDb({activeUser:'learner-1',users:{'learner-1':bad}},pristine).rejected,true,'string material quiz state must fail closed before material HTML rendering');
+}
+{
+  const valid=legacyRecord();
+  valid.examScores={'Beginner-ALL':87.5};
+  valid.examPassStatus={'Beginner-ALL':true};
+  valid.fun={xp:120,rewarded:{lesson1:1700000000000,lesson2:'1700000000001'},achievements:['first-lesson'],sound:false,celebrations:true,scenarioCorrect:2,scenarioAttempts:3,bossWins:0,streak:4,lastLearningDate:'2026-09-11'};
+  valid.materialScience={completed:[1,2],bestQuiz:80,quizAttempts:1,currentLesson:3};
+  assert.equal(startupApi.mmSelectStartupDb({activeUser:'learner-1',users:{'learner-1':valid}},pristine).rejected,false,'valid historical assessment, gamification and material-science state must remain compatible');
+}
+assert(source.includes('<span class="pill">${esc(status)}</span>'),'exam status display must escape persisted-derived status text');
+assert(source.includes('${esc(f.xp)} XP')&&source.includes('${esc(f.streak)}-day learning streak'),'gamification counters must be escaped at HTML sinks');
+assert.equal((source.match(/m\.bestQuiz==null\?"—":esc\(m\.bestQuiz\)\+"%"/g)||[]).length,2,'both material best-quiz HTML sinks must escape persisted values');
 for(const id of ['',"bad'id",'bad"id','<tag>','bad\\id','bad/id','bad\nid','bad\rid','bad id','bad;id','bad(id)','-leading'])assert.equal(api.pvCanonicalLearnerId(id),'',`unsafe learner ID must be rejected: ${JSON.stringify(id)}`);
 assert.equal(api.pvCanonicalLearnerId('a'.repeat(160)),'a'.repeat(160));
 assert.equal(api.pvCanonicalLearnerId('a'.repeat(161)),'');

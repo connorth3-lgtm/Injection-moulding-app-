@@ -641,6 +641,36 @@ function mmStartupLearnerRecordIsSafe(record,id){
     const value=record[key];
     if(value!=null&&(typeof value!=="object"||Array.isArray(value)))return false;
   }
+  if(record.examScores!=null){
+    for(const value of Object.values(record.examScores)){
+      if(typeof value!=="number"||!Number.isFinite(value)||value<0||value>100)return false;
+    }
+  }
+  if(record.examPassStatus!=null){
+    for(const value of Object.values(record.examPassStatus))if(typeof value!=="boolean")return false;
+  }
+  if(record.fun!=null){
+    const f=record.fun;
+    if(typeof f!=="object"||Array.isArray(f))return false;
+    for(const key of ["xp","scenarioCorrect","scenarioAttempts","bossWins","streak"]){
+      if(f[key]!=null&&(typeof f[key]!=="number"||!Number.isFinite(f[key])||f[key]<0))return false;
+    }
+    if(f.rewarded!=null&&(typeof f.rewarded!=="object"||Array.isArray(f.rewarded)))return false;
+    if(f.rewarded!=null){
+      for(const value of Object.values(f.rewarded))if(!["string","number","boolean"].includes(typeof value))return false;
+    }
+    if(f.achievements!=null&&(!Array.isArray(f.achievements)||f.achievements.some(value=>typeof value!=="string")))return false;
+    for(const key of ["sound","celebrations"])if(f[key]!=null&&typeof f[key]!=="boolean")return false;
+    for(const key of ["lastLearningDate","lastActiveDate"])if(f[key]!=null&&typeof f[key]!=="string")return false;
+  }
+  if(record.materialScience!=null){
+    const m=record.materialScience;
+    if(typeof m!=="object"||Array.isArray(m))return false;
+    if(m.completed!=null&&(!Array.isArray(m.completed)||m.completed.some(value=>!Number.isInteger(value)||value<1||value>36)))return false;
+    if(m.bestQuiz!=null&&(typeof m.bestQuiz!=="number"||!Number.isFinite(m.bestQuiz)||m.bestQuiz<0||m.bestQuiz>100))return false;
+    if(m.quizAttempts!=null&&(typeof m.quizAttempts!=="number"||!Number.isFinite(m.quizAttempts)||m.quizAttempts<0))return false;
+    if(m.currentLesson!=null&&(!Number.isInteger(m.currentLesson)||m.currentLesson<1||m.currentLesson>36))return false;
+  }
   return true;
 }
 function mmSelectStartupDb(candidate,pristine){
@@ -1847,10 +1877,10 @@ function funDashboardPanel(){
     <div class="card level-card">
       <span class="eyebrow">Your workshop rank</span>
       <h3>${lvl.icon} ${esc(lvl.name)}</h3>
-      <div style="font-size:27px;font-weight:900">${f.xp} XP</div>
+      <div style="font-size:27px;font-weight:900">${esc(f.xp)} XP</div>
       <div class="level-track"><span style="width:${lvl.progress}%"></span></div>
       <div class="level-next">${lvl.atMax?"Top rank reached":"Next: "+esc(lvl.nextName)+" at "+lvl.next+" XP"}</div>
-      <div class="fun-hud" style="margin-top:13px"><span class="fun-chip streak">🔥 ${f.streak}-day learning streak</span><span class="fun-chip">🏅 ${f.achievements.length}/${FUN_ACHIEVEMENTS.length} badges</span></div>
+      <div class="fun-hud" style="margin-top:13px"><span class="fun-chip streak">🔥 ${esc(f.streak)}-day learning streak</span><span class="fun-chip">🏅 ${f.achievements.length}/${FUN_ACHIEVEMENTS.length} badges</span></div>
     </div>
   </div>`;
 }
@@ -2138,7 +2168,7 @@ renderExams=function(){
     <div class="grid">${Object.keys(D.exams).map(level=>{
       const key=level+"-"+region,score=user.examScores?.[key],passed=!!user.examPassStatus[key]||user.certificates.includes(key);
       const status=score==null?"Not attempted":passed?`Passed · best ${score}%`:`Not passed · best ${score}%`;
-      return `<div class="card exam-card"><span class="eyebrow">${level}</span><h3>${level} ${region==="US"?"Injection Molding":"Injection Moulding"} Knowledge Check</h3><p class="muted">${qCount} questions · ${rCount} safety-critical · ${esc(regionName(region))}</p><div class="course-bottom"><span class="pill">${status}</span><button class="secondary" onclick="startExam('${level}')">Start</button></div></div>`;
+      return `<div class="card exam-card"><span class="eyebrow">${level}</span><h3>${level} ${region==="US"?"Injection Molding":"Injection Moulding"} Knowledge Check</h3><p class="muted">${qCount} questions · ${rCount} safety-critical · ${esc(regionName(region))}</p><div class="course-bottom"><span class="pill">${esc(status)}</span><button class="secondary" onclick="startExam('${level}')">Start</button></div></div>`;
     }).join("")}</div>`;
 };
 
@@ -2353,7 +2383,7 @@ function renderMaterialLearn(){
       <div class="card mat-kpi"><span>Material lessons</span><strong>${MAT_LESSONS.length}</strong></div>
       <div class="card mat-kpi"><span>Chapters</span><strong>${MATERIALS.chapters.length}</strong></div>
       <div class="card mat-kpi"><span>Progress</span><strong>${pct}%</strong></div>
-      <div class="card mat-kpi"><span>Best material quiz</span><strong>${m.bestQuiz==null?"—":m.bestQuiz+"%"}</strong></div>
+      <div class="card mat-kpi"><span>Best material quiz</span><strong>${m.bestQuiz==null?"—":esc(m.bestQuiz)+"%"}</strong></div>
     </div>
     <div class="mat-disclaimer"><b>Important:</b> Family-level statements in this module describe general tendencies. Actual properties, drying requirements, processing limits, shrinkage and compliance depend on the specific grade, additives, conditioning, test method, machine, mould and part. Use the resin supplier's current TDS/SDS and your approved process for production decisions.</div>
     <div class="section-head"><div><h2>9 material-science chapters</h2><p>From molecules to real component behaviour.</p></div></div>
@@ -2569,7 +2599,7 @@ renderProfile=function(){
   materialBaseProfile();
   const m=ensureMaterialState();
   const head=$("#profile .section-head");
-  if(head)head.insertAdjacentHTML("beforebegin",`<div class="card form-card" style="margin-top:14px"><span class="eyebrow">Material Science</span><h2>${materialProgress()}% complete</h2><p class="muted">${m.completed.length}/${MAT_LESSONS.length} lessons · Best knowledge check: ${m.bestQuiz==null?"—":m.bestQuiz+"%"}</p><div class="mini-bar"><span style="width:${materialProgress()}%"></span></div><button class="secondary" style="margin-top:12px" onclick="switchView('materials')">Open material science</button></div>`);
+  if(head)head.insertAdjacentHTML("beforebegin",`<div class="card form-card" style="margin-top:14px"><span class="eyebrow">Material Science</span><h2>${materialProgress()}% complete</h2><p class="muted">${m.completed.length}/${MAT_LESSONS.length} lessons · Best knowledge check: ${m.bestQuiz==null?"—":esc(m.bestQuiz)+"%"}</p><div class="mini-bar"><span style="width:${materialProgress()}%"></span></div><button class="secondary" style="margin-top:12px" onclick="switchView('materials')">Open material science</button></div>`);
 };
 
 ensureMaterialState();

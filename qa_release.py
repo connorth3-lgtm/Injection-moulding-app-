@@ -7,7 +7,7 @@ import struct
 import subprocess
 import tempfile
 
-WEB_RELEASE = "2026.09.12.10"
+WEB_RELEASE = "2026.09.12.11"
 ANDROID_RELEASE = "2026.08.26.2"
 CONTENT_VERSION = "2026.08.26.1"
 WINDOWS_RECOVERY_VERSION = "2026.08.21.1"
@@ -15,7 +15,7 @@ QUESTION_BANK_VERSION = "2026.08.30.1"
 LEGACY_REVIEW_ID_VERSION = "2026.08.21.1"
 WINDOWS_RECOVERY_SOURCE_COMMIT = "19ef75781e3a782b234db313a5265ff0f3518ee4"
 WINDOWS_RECOVERY_CORE_SHA256 = "96ed07e1487633538359eb12073fe50bfe595d9d5aaa807173e0a764b9123754"
-CURRENT_CORE_SHA256 = "f87b289870b9691b69eea62e3d48882e8919d6ea6f12b3ab5e04a2f69d21b6ec"
+CURRENT_CORE_SHA256 = "784b72f98c6629f4979270489de9d3bace64f48fc5c3663be9a3e594180f37f1"
 EXE_SHA256 = "db7abc4da613a6d1409fdb129cb788b8ac396e5ac2d161963521c844d0ee771c"
 NODE = os.environ.get("MM_NODE", "node")
 
@@ -67,6 +67,8 @@ assert "function pvCommitImportedUsers(proposed)" in core and "if(file.size>10*1
 assert "function pvCommitPristineReset()" in core and "Existing learner data was left unchanged" in core, "standalone destructive reset must fail closed when browser storage cannot persist the reset"
 assert "function mmSelectStartupDb(candidate,pristine)" in core and "Object.prototype.hasOwnProperty.call(candidate.users,active)" in core, "persisted learner registry must fail closed on inherited/unsafe startup identities"
 assert "function mmStartupLearnerRecordIsSafe(record,id)" in core and "!Array.isArray(record.completed)||!Array.isArray(record.bookmarks)||!Array.isArray(record.certificates)" in core, "persisted learner registry must validate core learner record shapes before rendering"
+assert "typeof value!==\"number\"||!Number.isFinite(value)||value<0||value>100" in core and "<span class=\"pill\">${esc(status)}</span>" in core, "persisted assessment values must be typed at startup and escaped at exam-status HTML sinks"
+assert "${esc(f.xp)} XP" in core and "${esc(f.streak)}-day learning streak" in core and "m.bestQuiz==null?\"—\":esc(m.bestQuiz)+\"%\"" in core, "legacy gamification/material numeric state must be escaped at HTML sinks"
 assert "criticalWrong===0" in core, "zero-wrong safety-critical gate missing"
 assert "Compare All assesses ALL 9 regional items" in core, "Compare All regional rule missing"
 

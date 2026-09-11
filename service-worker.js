@@ -1,4 +1,4 @@
-const CACHE_VERSION='2026.09.12.10';
+const CACHE_VERSION='2026.09.12.11';
 const CACHE_REVISION='engineer-simulator-ui-r1-20260911';
 const STATIC_CACHE=`mouldmaster-static-${CACHE_VERSION}-${CACHE_REVISION}`;
 
