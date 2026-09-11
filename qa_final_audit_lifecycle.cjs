@@ -5,6 +5,14 @@ const assert=require('assert');
 
 const analyticsSource=fs.readFileSync('src/domains/learning/learning-analytics-loader.js','utf8');
 const trainingSource=fs.readFileSync('training-qa-fix.js','utf8');
+const coreSource=fs.readFileSync('MouldMaster_Core_App.html','utf8');
+function extractCoreFunction(name){
+  const start=coreSource.indexOf(`function ${name}(`);assert(start>=0,`missing ${name}`);
+  const brace=coreSource.indexOf('{',start);let depth=0,quote=null,escape=false;
+  for(let i=brace;i<coreSource.length;i++){const ch=coreSource[i];if(quote){if(escape){escape=false;continue}if(ch==='\\'){escape=true;continue}if(ch===quote)quote=null;continue}if(ch==='\"'||ch==="'"||ch==='`'){quote=ch;continue}if(ch==='{')depth++;else if(ch==='}'&&--depth===0)return coreSource.slice(start,i+1)}
+  throw new Error(`unterminated ${name}`);
+}
+const learnerIdApi=new Function(`${extractCoreFunction('pvCanonicalLearnerId')}\n${extractCoreFunction('pvRequireLearnerId')}\n${extractCoreFunction('pvHasOwnLearner')}\nreturn {pvRequireLearnerId,pvHasOwnLearner};`)();
 
 // Learner-analytics cohort discovery must be derived from the current profile
 // registry. A syntactically valid strong-token bucket left by a removed/imported
@@ -115,6 +123,7 @@ function trainingSandbox(removeMode='normal'){
     db:JSON.parse(oldSerialized),user:null,
     defaultDB:{activeUser:'learner-1',users:{'learner-1':{id:'learner-1',name:'Learner 1',role:'learner',completed:[],bookmarks:[],notes:{},examScores:{},certificates:[],currentLesson:1,lastSeen:'2026-09-05T00:00:00.000Z'}}},
     normaliseImportedUser:(u,id)=>({...u,id:String(id),completed:Array.isArray(u.completed)?u.completed:[]}),
+    pvRequireLearnerId:learnerIdApi.pvRequireLearnerId,pvHasOwnLearner:learnerIdApi.pvHasOwnLearner,
     updateGlobalProgress(){},switchView(){},renderProfile(){},
     startExam:undefined,activeExam:null,resetData(){},toast:msg=>toasts.push(String(msg)),
   };

@@ -35,6 +35,8 @@ function mirror(){try{if(typeof activeExam==='undefined'||!activeExam)return;(ac
 const baseStart=window.startExam;if(typeof baseStart==='function')window.startExam=function(){const r=baseStart.apply(this,arguments);mirror();setTimeout(mirror,0);return r};
 
 const obj=x=>x&&typeof x==='object'&&!Array.isArray(x), clamp=(n,a,b,d=0)=>Number.isFinite(+n)?Math.max(a,Math.min(b,+n)):d;
+function requireCoreLearnerId(v){const fn=window.pvRequireLearnerId;if(typeof fn!=='function')throw new Error('Core learner-ID validator unavailable');return fn(v)}
+function hasOwnCoreLearner(users,id){const fn=window.pvHasOwnLearner;if(typeof fn!=='function')throw new Error('Core learner-ID membership validator unavailable');return fn(users,id)}
 function cleanReview(v){const out={items:{}};if(!obj(v)||!obj(v.items))return out;for(const [id,x] of Object.entries(v.items).slice(0,1000)){if(!obj(x))continue;const sid=String(id).slice(0,220);if(!/^(tech|reg|legacy):/.test(sid))continue;out.items[sid]={id:sid,stage:Math.floor(clamp(x.stage,0,5)),due:clamp(x.due,0,4102444800000,Date.now()),wrong:Math.floor(clamp(x.wrong,0,100000)),right:Math.floor(clamp(x.right,0,100000)),last:clamp(x.last,0,4102444800000),confidence:['low','medium','high'].includes(x.confidence)?x.confidence:'medium'}}return out}
 function cleanSign(v){const o={checks:{},supervisor:'',date:'',notes:''};if(!obj(v))return o;if(obj(v.checks))for(const [k,b] of Object.entries(v.checks).slice(0,50))o.checks[String(k).slice(0,20)]=b===true;o.supervisor=String(v.supervisor||'').slice(0,160);o.date=String(v.date||'').slice(0,20);o.notes=String(v.notes||'').slice(0,10000);return o}
 function read(k,d){try{const x=JSON.parse(localStorage.getItem(k)||'');return obj(x)?x:d}catch(_){return d}}
@@ -51,18 +53,19 @@ window.importData=function(file){
   let committed=false;
   try{
    const x=JSON.parse(r.result);
-   if(!obj(x)||!obj(x.users)||typeof x.activeUser!=='string'||!x.users[x.activeUser])throw new Error('Invalid backup structure');
+   if(!obj(x)||!obj(x.users)||typeof x.activeUser!=='string')throw new Error('Invalid backup structure');
    if(typeof normaliseImportedUser!=='function')throw new Error('Core validator unavailable');
    const users={};
    for(const [id,u] of Object.entries(x.users).slice(0,500)){
-    const sid=String(id).slice(0,160),clean=normaliseImportedUser(u,id);
-    if(!sid||users[sid])throw new Error('Invalid or duplicate learner identifier');
-    clean.id=sid;
+    const sid=requireCoreLearnerId(id);
+    if(hasOwnCoreLearner(users,sid))throw new Error('Invalid or duplicate learner identifier');
+    const clean=normaliseImportedUser(u,sid);
+    if(!clean||clean.id!==sid)throw new Error('Learner identifier mismatch');
     clean.certificates=[];clean.certificateMeta={};clean.examPassStatus={};
     users[sid]=clean;
    }
-   const active=String(x.activeUser).slice(0,160);
-   if(!users[active])throw new Error('Missing active learner');
+   const active=requireCoreLearnerId(x.activeUser);
+   if(!hasOwnCoreLearner(users,active))throw new Error('Missing active learner');
    const extras=obj(x.trainingExtras)?x.trainingExtras:{};
    const cleanR=cleanReview(extras.spacedReview||{items:{}}),cleanS=cleanSign(extras.practicalSignoff||{});
    const proposed={activeUser:active,users};
