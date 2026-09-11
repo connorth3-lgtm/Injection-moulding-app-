@@ -57,7 +57,7 @@ jobs:
   measured-learning:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v7
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
       - name: Install pinned workbook reader for candidate extraction
         run: python -m pip install --disable-pip-version-check 'openpyxl==3.1.5'
       - name: Compile V2 promotion, proof, candidate and review tooling
@@ -157,7 +157,7 @@ jobs:
         run: python qa_measured_learning_review_packets.py
       - name: Upload compact source proofs, authoring candidates, review queue and packets
         if: always()
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6
         with:
           name: measured-learning-source-proofs
           path: measured-source-proof/
