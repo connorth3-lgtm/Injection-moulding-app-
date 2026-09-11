@@ -24,14 +24,14 @@ release_qa = text(".github/workflows/qa.yml")
 mobile_qa = text(".github/workflows/mobile-browser-qa.yml")
 desktop_build = text(".github/workflows/open-desktop-build.yml")
 question_quality = text(".github/workflows/question-quality-50-pass.yml")
+external_validation = text(".github/workflows/release-external-validation.yml")
 protection_helper = text(".github/scripts/apply-main-ruleset.sh")
 protection_doc = text(".github/MAIN_PROTECTION.md")
 ruleset_verifier = text("tools/verify_main_ruleset.py")
 production_verifier = text("tools/verify_production_source.py")
 
-# Main provenance is now a read-only post-push audit. Prevention belongs to
-# GitHub's native ruleset. The audit may report a policy failure, but it must
-# never rewrite history in reaction to slow or eventually-consistent CI state.
+# Main provenance is a read-only post-push audit. Native ruleset prevention is
+# authoritative; audit automation must never rewrite main after the fact.
 for marker in [
     "name: Main PR Provenance Guard",
     "push:",
@@ -70,36 +70,46 @@ for forbidden in [
     "Lock open desktop dependencies",
 ]:
     need(forbidden not in guard, f"post-push provenance audit must never mutate or exempt main: {forbidden}")
-need("conclusion\" != \"success" in guard, "required PR workflows must still fail audit when completed unsuccessfully")
+need('conclusion\\" != \\"success' in guard, "required PR workflows must still fail audit when completed unsuccessfully")
 need("for attempt in {1..60}" in guard, "read-only workflow audit must tolerate long-running required checks")
 
-# Effective ruleset verification must reject the two real failure modes seen in
-# repository administration: overbroad ~ALL protection and case-mismatched Main.
+# Effective ruleset verification must require independent human review as well
+# as the five governed automated contexts and existing server-side protections.
 for marker in [
-    'RULESET_NAME = "Protect main — MouldMaster required gates"',
     'MAIN_REF = "refs/heads/main"',
     '"integrity"',
     '"mobile-browser"',
     '"build-windows"',
     '"question-quality-50-pass"',
+    '"release-external-validation"',
     '"deletion"',
     '"non_fast_forward"',
     '"required_linear_history"',
     '"pull_request"',
     '"required_status_checks"',
-    'allowed_merge_methods',
-    'required_approving_review_count',
-    'strict_required_status_checks_policy',
-    'do_not_enforce_on_create',
+    '"code_scanning"',
+    '"code_quality"',
+    '"copilot_code_review"',
+    "required_approving_review_count must be at least 1",
+    "required_review_thread_resolution must be true",
+    "dismiss_stale_reviews_on_push must be true",
+    "require_last_push_approval must be true",
+    "strict_required_status_checks_policy",
+    "do_not_enforce_on_create",
     '"~ALL"',
-    'refs/heads/Main',
+    "refs/heads/Main",
     'branch.get("protected") is not True',
 ]:
     need(marker in ruleset_verifier, f"effective main ruleset verifier missing marker: {marker}")
-need("from verify_main_ruleset import verify as verify_main_ruleset" in production_verifier,
-     "production verifier must import the effective main ruleset verifier")
-need("verify_main_ruleset(repository)" in production_verifier,
-     "production verifier must validate the exact effective ruleset when native protection is required")
+
+need(
+    "from verify_main_ruleset import verify as verify_main_ruleset" in production_verifier,
+    "production verifier must import the effective main ruleset verifier",
+)
+need(
+    "verify_main_ruleset(repository)" in production_verifier,
+    "production verifier must validate the exact effective ruleset when native protection is required",
+)
 
 self_test = subprocess.run(
     [sys.executable, str(ROOT / "tools/verify_main_ruleset.py"), "--self-test"],
@@ -107,7 +117,10 @@ self_test = subprocess.run(
     capture_output=True,
     text=True,
 )
-need(self_test.returncode == 0, f"effective main ruleset verifier self-test failed: {(self_test.stderr or self_test.stdout).strip()}")
+need(
+    self_test.returncode == 0,
+    f"effective main ruleset verifier self-test failed: {(self_test.stderr or self_test.stdout).strip()}",
+)
 
 # Production publication must require GitHub's effective native protection.
 need("--require-native-protection" in pages, "Pages publication does not require native main protection")
@@ -115,66 +128,96 @@ need("Require merged-PR provenance before publication" in pages, "Pages stable p
 need("native protection mandatory" in pages, "Pages native-protection requirement is not explicit")
 need("if: github.event_name != 'pull_request'" in pages, "Pages publication guard must remain push/manual only")
 
-# The native-protection helper is an explicit administrator action, defaults to
-# a credential-free dry run, has no bypass actors, and mirrors the exact CI job
-# contexts used by this repository. It must verify GitHub's effective state
-# after applying rather than treating a successful API request as proof.
+# The administrator helper must transform the live ruleset rather than replace
+# it with a stale static payload. It must preserve existing security/review
+# rules while adding independent-review semantics and the fifth release gate.
 for marker in [
     'MODE="${1:---dry-run}"',
     "--dry-run|--apply",
-    'RULESET_NAME="Protect main — MouldMaster required gates"',
-    '"bypass_actors": []',
-    '"include": ["refs/heads/main"]',
-    '"type": "deletion"',
-    '"type": "non_fast_forward"',
-    '"type": "required_linear_history"',
-    '"type": "pull_request"',
-    '"allowed_merge_methods": ["squash"]',
-    '"required_approving_review_count": 0',
-    '"type": "required_status_checks"',
-    '"strict_required_status_checks_policy": true',
-    '"context": "integrity"',
-    '"context": "mobile-browser"',
-    '"context": "build-windows"',
-    '"context": "question-quality-50-pass"',
-    '["build-windows","integrity","mobile-browser","question-quality-50-pass"]',
-    'gh api --method POST "repos/$REPO/rulesets"',
-    'gh api --method PUT "repos/$REPO/rulesets/$existing_id"',
+    'REQUIRED_CONTEXTS=(',
+    '"integrity"',
+    '"mobile-browser"',
+    '"build-windows"',
+    '"question-quality-50-pass"',
+    '"release-external-validation"',
+    'gh api "repos/$REPO/rulesets/$RULESET_ID" >"$live"',
+    '.parameters.required_approving_review_count = 1',
+    ".parameters.required_review_thread_resolution = true",
+    ".parameters.dismiss_stale_reviews_on_push = true",
+    ".parameters.require_last_push_approval = true",
+    ".parameters.strict_required_status_checks_policy = true",
+    ".parameters.do_not_enforce_on_create = false",
+    'index("code_scanning")',
+    'index("code_quality")',
+    'index("copilot_code_review")',
+    '["refs/heads/main"]',
+    'gh api --method PUT "repos/$REPO/rulesets/$RULESET_ID" --input "$payload"',
     'gh api "repos/$REPO/branches/main" --jq',
-    'protected=true',
-    'all four required checks',
+    'protected',
+    "independent approval",
+    "resolved review threads",
 ]:
     need(marker in protection_helper, f"native-protection helper missing marker: {marker}")
-need('if [[ "$MODE" == "--apply" ]]' in protection_helper, "GitHub auth/network access must be apply-only")
+
+need('if [[ "$MODE" == "--dry-run" ]]' in protection_helper, "native-protection helper must expose a non-mutating dry run")
 need("gh auth token" not in protection_helper, "native-protection helper must not extract a GitHub token")
 need("GITHUB_TOKEN=" not in protection_helper, "native-protection helper must not embed or assign a repository token")
+need(
+    'gh api --method POST "repos/$REPO/rulesets"' not in protection_helper,
+    "helper must not create a parallel static ruleset when a reviewed live main ruleset already exists",
+)
 
 for marker in [
-    "require a pull request before merge",
-    "require the branch to be up to date",
+    "at least one approving human review",
+    "all review conversations resolved",
+    "stale approvals dismissed after new pushes",
+    "approval of the most recent push",
     "`integrity`",
     "`mobile-browser`",
     "`build-windows`",
     "`question-quality-50-pass`",
-    "four technical gates",
-    "all four are green",
-    "all four required workflows green",
+    "`release-external-validation`",
+    "CodeQL",
+    "code-quality",
+    "Copilot code-review",
     "block branch deletion",
-    "block non-fast-forward/force updates",
-    "required_approving_review_count: 0",
+    "non-fast-forward/force updates blocked",
     "--dry-run",
     "--apply",
-    "protected: true",
+    "transforms that exact object",
+    "all five checks are green",
+    "Automated checks are necessary but are not independent review",
     "Issue #43",
 ]:
     need(marker in protection_doc, f"native-protection documentation missing marker: {marker}")
 
-# Ensure protection helper contexts remain real PR job names.
+# Ensure all five governed contexts remain real PR jobs.
 need("jobs:\n  integrity:" in release_qa, "required status context 'integrity' is no longer the Release QA job")
 need("jobs:\n  mobile-browser:" in mobile_qa, "required status context 'mobile-browser' is no longer the mobile QA job")
 need("jobs:\n  build-windows:" in desktop_build, "required status context 'build-windows' is no longer the desktop build job")
-need("jobs:\n  question-quality-50-pass:" in question_quality, "required status context 'question-quality-50-pass' is no longer the question-quality job")
-need("pull_request:\n    branches: [main]" in question_quality, "question-quality required check must run on every PR to main")
+need(
+    "jobs:\n  question-quality-50-pass:" in question_quality,
+    "required status context 'question-quality-50-pass' is no longer the question-quality job",
+)
+need(
+    "jobs:\n  release-external-validation:" in external_validation,
+    "required status context 'release-external-validation' is no longer the external-validation boundary job",
+)
+for workflow_name, workflow in [
+    ("question-quality", question_quality),
+    ("release-external-validation", external_validation),
+]:
+    need("pull_request:\n    branches: [main]" in workflow, f"{workflow_name} required check must run on every PR to main")
+
+for marker in [
+    "Verify release-specific external validation boundaries",
+    "tools/verify_release_external_validation.py",
+    "Exercise native ruleset verifier contract",
+    "tools/verify_main_ruleset.py --self-test",
+    "PASS means unsupported external-validation claims are blocked.",
+    "It does not mean human AT, physical-device, Windows, SME, learner or site evidence has been performed.",
+]:
+    need(marker in external_validation, f"external-validation boundary workflow missing marker: {marker}")
 
 # Release QA must discover executable JavaScript from the filesystem and keep
 # the architecture debt ceiling as a release gate.
@@ -242,6 +285,7 @@ need("run: python qa_repo_governance.py" in release_qa, "release QA must run rep
 
 print(
     "MouldMaster repository governance QA passed "
-    "(exact main-only ruleset semantics; post-push audit read-only; Pages requires exact native protection; "
-    "four required checks audited; dual locked desktop toolchains; guard-gated pruning; architecture debt gate)"
+    "(main-only native policy; independent review controls; five required contexts; live-preserving helper; "
+    "post-push audit read-only; Pages requires exact native protection; dual locked desktop toolchains; "
+    "guard-gated pruning; architecture debt gate)"
 )
