@@ -171,6 +171,6 @@ if [[ "$protected" != "true" ]]; then
   echo "GitHub does not yet report lowercase main as protected after applying the ruleset." >&2
   exit 1
 fi
-
+echo "protected=true"
 echo "Verified: main requires one independent current-head approval, stale reviews are dismissed, all review threads must resolve, all four required checks remain strict, and no bypass actor exists."
 echo "Record the returned ruleset updated_at in .github/main-ruleset-attestation.json if GitHub Actions redacts bypass_actors."
