@@ -14,6 +14,35 @@
 function pvCleanString(v,max=10000){
   return String(v==null?"":v).slice(0,max);
 }
+function pvCanonicalLearnerId(v){
+  const raw=String(v==null?"":v);
+  return raw.length>=1&&raw.length<=160&&/^[A-Za-z0-9][A-Za-z0-9._:@+-]*$/.test(raw)?raw:"";
+}
+function pvRequireLearnerId(v){
+  const raw=String(v==null?"":v),canonical=pvCanonicalLearnerId(raw);
+  if(!canonical||canonical!==raw)throw new Error("Invalid learner identifier");
+  return canonical;
+}
+function pvBuildImportedUsers(x){
+  const users={};
+  for(const [id,u] of Object.entries(x.users).slice(0,500)){
+    const sid=pvRequireLearnerId(id);
+    if(Object.prototype.hasOwnProperty.call(users,sid))throw new Error("Duplicate learner identifier");
+    const clean=normaliseImportedUser(u,sid);
+    if(clean.id!==sid)throw new Error("Learner identifier mismatch");
+    users[sid]=clean;
+  }
+  const active=pvRequireLearnerId(x.activeUser);
+  if(!users[active])throw new Error("Missing active learner");
+  return {activeUser:active,users};
+}
+function pvWireInstructorSwitches(users){
+  const host=$("#instructor");if(!host)return;
+  host.querySelectorAll("[data-mm-switch-user]").forEach(button=>button.addEventListener("click",()=>{
+    const index=Number(button.dataset.mmSwitchUser),target=Number.isInteger(index)?users[index]:null;
+    if(target)switchUser(target.id);
+  }));
+}
 function pvUniqueInts(xs,min,max){
   return [...new Set((Array.isArray(xs)?xs:[]).filter(x=>Number.isInteger(x)&&x>=min&&x<=max))];
 }
@@ -83,6 +112,9 @@ function pvCleanMaterialScience(obj){
 }
 normaliseImportedUser=function(u,id){
   if(!u||typeof u!=="object"||Array.isArray(u))throw new Error("Invalid learner");
+  const keyId=pvRequireLearnerId(id);
+  const embeddedId=u.id==null||String(u.id)===""?keyId:pvRequireLearnerId(u.id);
+  if(embeddedId!==keyId)throw new Error("Learner identifier mismatch");
   const notes={};
   if(u.notes&&typeof u.notes==="object"&&!Array.isArray(u.notes)){
     for(const [k,v] of Object.entries(u.notes)){
@@ -91,7 +123,7 @@ normaliseImportedUser=function(u,id){
     }
   }
   return {
-    id:pvCleanString(u.id||id,160)||pvCleanString(id,160),
+    id:keyId,
     name:pvCleanString(u.name||"Learner",120)||"Learner",
     role:u.role==="instructor"?"instructor":"learner",
     completed:pvUniqueInts(u.completed,1,D.lessons.length),
@@ -119,11 +151,8 @@ importData=function(file){
   r.onload=()=>{try{
     const x=JSON.parse(r.result);
     if(!x||typeof x!=="object"||Array.isArray(x)||!x.users||typeof x.users!=="object"||Array.isArray(x.users)||!x.activeUser||!x.users[x.activeUser])throw new Error("Invalid backup structure");
-    const entries=Object.entries(x.users).slice(0,500);
-    const users={}; entries.forEach(([id,u])=>users[pvCleanString(id,160)]=normaliseImportedUser(u,id));
-    const active=pvCleanString(x.activeUser,160);
-    if(!users[active])throw new Error("Missing active learner");
-    const proposed={activeUser:active,users};
+    const proposed=pvBuildImportedUsers(x);
+    const users=proposed.users,active=proposed.activeUser;
     db=proposed;user=db.users[db.activeUser];
     persist();updateGlobalProgress();switchView("profile");toast("Backup imported and strictly validated");
   }catch(e){alert("That file is not a valid MouldMaster backup. No existing data was changed.")}};
