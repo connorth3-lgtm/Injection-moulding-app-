@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from pathlib import Path
 from tools.externalize_core_scripts import runtime_transform as core_runtime_transform
+from tools.html_script_parser import inline_script_bodies
 import json
 import re
 
@@ -85,8 +86,7 @@ need("document.writeln(" not in index, "document.writeln is not permitted in the
 # runtime uses deterministic generated copies with handler attributes rewritten to
 # inert data attributes. The final generated slot also embeds the strict delegated
 # bridge, avoiding a 40th BODY_SCRIPTS entry.
-inline_core_script_re = re.compile(r"<script\b(?![^>]*\bsrc\s*=)[^>]*>(.*?)</script\s*>", re.I | re.S)
-inline_core_scripts = inline_core_script_re.findall(core)
+inline_core_scripts = inline_script_bodies(core)
 core_runtime_scripts = sorted(CORE_RUNTIME_DIR.glob("core-inline-*.js"))
 need(inline_core_scripts, "frozen recovery core unexpectedly has no inline scripts")
 need(len(inline_core_scripts) == len(core_runtime_scripts), f"core runtime externalization count drifted: {len(inline_core_scripts)} source / {len(core_runtime_scripts)} generated")
@@ -109,10 +109,10 @@ for number, (source, path) in enumerate(zip(inline_core_scripts, core_runtime_sc
     else:
         need(generated == expected_handler_free, f"handler-free externalized core runtime is stale at slot {number}: {path.name}")
 need("const CORE_INLINE_SCRIPTS=[" in index, "runtime core script externalization registry missing")
-need("function externalizeCoreScripts(out)" in index, "runtime core script externalization function missing")
-need("out=externalizeCoreScripts(out)" in index, "runtime assembly does not externalize frozen core scripts")
+need("function externalizeParsedCoreScripts(parsed)" in index, "parsed runtime core script externalization function missing")
+need("externalizeParsedCoreScripts(parsed);retireInlineHandlerAttrs(parsed);" in index, "runtime preparation does not externalize parsed core scripts before handler retirement")
 need("function retireInlineHandlerAttrs(parsed)" in index, "runtime static frozen-core handler retirement is missing")
-need("retireInlineHandlerAttrs(parsed);retireInlineStyleAttrs(parsed);const scripts=[]" in index, "static handler retirement does not run before document installation")
+need("externalizeParsedCoreScripts(parsed);retireInlineHandlerAttrs(parsed);retireInlineStyleAttrs(parsed);const scripts=[]" in index, "parsed script externalization and static handler retirement do not run before document installation")
 need("function retireInlineStyleAttrs(parsed)" in index, "runtime frozen-core style-attribute retirement is missing")
 need("./src/core-runtime/inline-style-bridge.js" in index, "strict inline-style bridge is not loaded before core replay")
 for path in core_runtime_scripts:

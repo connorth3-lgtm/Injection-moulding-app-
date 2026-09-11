@@ -899,9 +899,13 @@ function renderDefects(){
 }
 function defectCard(d,i){return `<div class="card defect-card" data-defect="${esc((d.name+" "+d.symptom+" "+d.mechanisms.join(" ")).toLowerCase())}"><span class="eyebrow">Defect ${i+1}</span><h3>${esc(d.name)}</h3><p>${esc(d.symptom)}</p><button class="secondary" onclick="openDefect(${i})">Diagnose</button></div>`}
 function filterDefects(){const q=$("#defectSearch").value.toLowerCase();$$("[data-defect]").forEach(x=>x.classList.toggle("hidden",!x.dataset.defect.includes(q)))}
+function openDefectCoach(i){
+ const d=D.defects[i]; if(!d)return;
+ closeModal();switchView("coach");setCoachPrompt(d.name);
+}
 function openDefect(i){
  const d=D.defects[i];
- openModal(`<span class="eyebrow">Defect lab</span><h2>${esc(d.name)}</h2><p class="muted">${esc(d.symptom)}</p><div class="grid2"><div><h3>Likely mechanisms</h3><div class="cause-list">${d.mechanisms.map(x=>`<div class="cause">${esc(x)}</div>`).join("")}</div></div><div><h3>Evidence / checks</h3><div class="cause-list">${d.checks.map(x=>`<div class="cause">${esc(x)}</div>`).join("")}</div></div></div><div class="callout"><b>Best practice:</b> rank mechanisms by evidence, then run the smallest controlled test that distinguishes between them.</div><button class="primary" onclick="closeModal();switchView('coach');setCoachPrompt('${esc(d.name).replace(/'/g,"\\'")}')">Ask coach about ${esc(d.name)}</button>`);
+ openModal(`<span class="eyebrow">Defect lab</span><h2>${esc(d.name)}</h2><p class="muted">${esc(d.symptom)}</p><div class="grid2"><div><h3>Likely mechanisms</h3><div class="cause-list">${d.mechanisms.map(x=>`<div class="cause">${esc(x)}</div>`).join("")}</div></div><div><h3>Evidence / checks</h3><div class="cause-list">${d.checks.map(x=>`<div class="cause">${esc(x)}</div>`).join("")}</div></div></div><div class="callout"><b>Best practice:</b> rank mechanisms by evidence, then run the smallest controlled test that distinguishes between them.</div><button class="primary" onclick="openDefectCoach(${i})">Ask coach about ${esc(d.name)}</button>`);
 }
 
 function renderScenarios(){
@@ -2917,27 +2921,41 @@ setTimeout(function () {
     if(status==="feed-unavailable") return ["Updates not live yet","The automatic update feed has not been published yet. The installed app continues to work normally."];
     return ["Automatic updates enabled","MouldMaster checks for updates whenever you launch it."];
   }
+  function mmTextElement(tag,className,text){
+    const el=document.createElement(tag);
+    if(className)el.className=className;
+    el.textContent=String(text==null?"":text);
+    return el;
+  }
   function mmUpdateCard(){
     const s=mmUpdateState(), copy=mmStatusText(s.status);
-    return `<div class="card form-card" style="margin-top:14px">
-      <span class="eyebrow">Updates</span>
-      <h2 style="margin-bottom:6px">${copy[0]}</h2>
-      <p class="muted">${copy[1]}</p>
-      <div class="grid2" style="margin-top:10px">
-        <div class="stat"><span>Installed version</span><b>${s.version}</b></div>
-        <div class="stat"><span>Update mode</span><b>Automatic on launch</b></div>
-      </div>
-      <p class="tiny muted" style="margin-top:10px">Learner progress, notes, scores and certificates stay in your browser profile and are not replaced by app updates.</p>
-    </div>`;
+    const card=mmTextElement("div","card form-card","");
+    card.style.marginTop="14px";
+    card.appendChild(mmTextElement("span","eyebrow","Updates"));
+    const title=mmTextElement("h2","",copy[0]);
+    title.style.marginBottom="6px";
+    card.appendChild(title);
+    card.appendChild(mmTextElement("p","muted",copy[1]));
+    const grid=mmTextElement("div","grid2","");
+    grid.style.marginTop="10px";
+    const version=mmTextElement("div","stat","");
+    version.appendChild(mmTextElement("span","","Installed version"));
+    version.appendChild(mmTextElement("b","",s.version));
+    const mode=mmTextElement("div","stat","");
+    mode.appendChild(mmTextElement("span","","Update mode"));
+    mode.appendChild(mmTextElement("b","","Automatic on launch"));
+    grid.appendChild(version);grid.appendChild(mode);card.appendChild(grid);
+    const note=mmTextElement("p","tiny muted","Learner progress, notes, scores and certificates stay in your browser profile and are not replaced by app updates.");
+    note.style.marginTop="10px";card.appendChild(note);
+    return card;
   }
   function attachUpdateCard(){
     try{
       const profile=document.getElementById("profile");
       if(profile && !profile.querySelector("[data-mm-update-card]")){
-        const wrap=document.createElement("div");
-        wrap.setAttribute("data-mm-update-card","1");
-        wrap.innerHTML=mmUpdateCard();
-        profile.appendChild(wrap);
+        const card=mmUpdateCard();
+        card.setAttribute("data-mm-update-card","1");
+        profile.appendChild(card);
       }
     }catch(e){}
   }

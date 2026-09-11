@@ -1,5 +1,5 @@
-const CACHE_VERSION='2026.09.11.1';
-const CACHE_REVISION='engineer-simulator-ui-r1-20260911';
+const CACHE_VERSION='2026.09.11.2';
+const CACHE_REVISION='security-codeql-r1-20260911';
 const STATIC_CACHE=`mouldmaster-static-${CACHE_VERSION}-${CACHE_REVISION}`;
 
 // Release assets are grouped for readability, but activation is atomic across both

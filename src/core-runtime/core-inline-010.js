@@ -16,27 +16,41 @@
     if(status==="feed-unavailable") return ["Updates not live yet","The automatic update feed has not been published yet. The installed app continues to work normally."];
     return ["Automatic updates enabled","MouldMaster checks for updates whenever you launch it."];
   }
+  function mmTextElement(tag,className,text){
+    const el=document.createElement(tag);
+    if(className)el.className=className;
+    el.textContent=String(text==null?"":text);
+    return el;
+  }
   function mmUpdateCard(){
     const s=mmUpdateState(), copy=mmStatusText(s.status);
-    return `<div class="card form-card" style="margin-top:14px">
-      <span class="eyebrow">Updates</span>
-      <h2 style="margin-bottom:6px">${copy[0]}</h2>
-      <p class="muted">${copy[1]}</p>
-      <div class="grid2" style="margin-top:10px">
-        <div class="stat"><span>Installed version</span><b>${s.version}</b></div>
-        <div class="stat"><span>Update mode</span><b>Automatic on launch</b></div>
-      </div>
-      <p class="tiny muted" style="margin-top:10px">Learner progress, notes, scores and certificates stay in your browser profile and are not replaced by app updates.</p>
-    </div>`;
+    const card=mmTextElement("div","card form-card","");
+    card.style.marginTop="14px";
+    card.appendChild(mmTextElement("span","eyebrow","Updates"));
+    const title=mmTextElement("h2","",copy[0]);
+    title.style.marginBottom="6px";
+    card.appendChild(title);
+    card.appendChild(mmTextElement("p","muted",copy[1]));
+    const grid=mmTextElement("div","grid2","");
+    grid.style.marginTop="10px";
+    const version=mmTextElement("div","stat","");
+    version.appendChild(mmTextElement("span","","Installed version"));
+    version.appendChild(mmTextElement("b","",s.version));
+    const mode=mmTextElement("div","stat","");
+    mode.appendChild(mmTextElement("span","","Update mode"));
+    mode.appendChild(mmTextElement("b","","Automatic on launch"));
+    grid.appendChild(version);grid.appendChild(mode);card.appendChild(grid);
+    const note=mmTextElement("p","tiny muted","Learner progress, notes, scores and certificates stay in your browser profile and are not replaced by app updates.");
+    note.style.marginTop="10px";card.appendChild(note);
+    return card;
   }
   function attachUpdateCard(){
     try{
       const profile=document.getElementById("profile");
       if(profile && !profile.querySelector("[data-mm-update-card]")){
-        const wrap=document.createElement("div");
-        wrap.setAttribute("data-mm-update-card","1");
-        wrap.innerHTML=mmUpdateCard();
-        profile.appendChild(wrap);
+        const card=mmUpdateCard();
+        card.setAttribute("data-mm-update-card","1");
+        profile.appendChild(card);
       }
     }catch(e){}
   }
@@ -74,7 +88,7 @@
     'goLesson','gradeExam','gradeMaterialQuiz','importData',
     'mmCheckReview','mmCompleteAndContinue','mmCurriculumOpen','mmLearningJump','mmNextLesson','mmOpenDataDiagnosis','mmOpenMouldMaster','mmOpenReview','mmPreviousLesson','mmSaveSignoff',
     'mmSpecialistClose','mmSpecialistGapLesson','mmSpecialistGapToggle','mmSpecialistLesson','mmSpecialistOpen','mmSpecialistPractice','mmSpecialistToggle',
-    'newLearner','nextBoss','nextLesson','openCourse','openDefect','openMaterialChapter','openMaterialLesson','openMobileMenu',
+    'newLearner','nextBoss','nextLesson','openCourse','openDefect','openDefectCoach','openMaterialChapter','openMaterialLesson','openMobileMenu',
     'phaseExplain','printCertificate','resetData','resetSimulator','saveFriendlyProfile','saveLessonNote','saveProfile','setCoachPrompt','setRegion','simChange','simPreset','skipOnboarding','startBossRound','startExam','startRescueChallenge','switchMaterialTab','switchUser','switchView',
     'toggleBookmark','toggleFunSetting','updateCrystalLab','updateDryLab','updateFibreLab','updateRheologyLab','window.print'
   ]);

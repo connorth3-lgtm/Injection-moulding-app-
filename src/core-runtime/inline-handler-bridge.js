@@ -14,7 +14,7 @@
     'goLesson','gradeExam','gradeMaterialQuiz','importData',
     'mmCheckReview','mmCompleteAndContinue','mmCurriculumOpen','mmLearningJump','mmNextLesson','mmOpenDataDiagnosis','mmOpenMouldMaster','mmOpenReview','mmPreviousLesson','mmSaveSignoff',
     'mmSpecialistClose','mmSpecialistGapLesson','mmSpecialistGapToggle','mmSpecialistLesson','mmSpecialistOpen','mmSpecialistPractice','mmSpecialistToggle',
-    'newLearner','nextBoss','nextLesson','openCourse','openDefect','openMaterialChapter','openMaterialLesson','openMobileMenu',
+    'newLearner','nextBoss','nextLesson','openCourse','openDefect','openDefectCoach','openMaterialChapter','openMaterialLesson','openMobileMenu',
     'phaseExplain','printCertificate','resetData','resetSimulator','saveFriendlyProfile','saveLessonNote','saveProfile','setCoachPrompt','setRegion','simChange','simPreset','skipOnboarding','startBossRound','startExam','startRescueChallenge','switchMaterialTab','switchUser','switchView',
     'toggleBookmark','toggleFunSetting','updateCrystalLab','updateDryLab','updateFibreLab','updateRheologyLab','window.print'
   ]);

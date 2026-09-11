@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 """Generate hardened runtime copies of the frozen core's inline script blocks.
 
-`MouldMaster_Core_App.html` is also the immutable legacy Windows recovery payload,
-so its bytes are intentionally not rewritten. The browser bootstrap replaces those
-inline blocks with same-origin generated assets during runtime assembly.
+`MouldMaster_Core_App.html` is the current canonical web/desktop core source. The
+legacy Windows recovery feed is independently pinned to a historical commit and SHA-256.
+The browser bootstrap replaces current inline blocks with same-origin generated assets.
 
 Runtime-only transforms remove the recovery core's historical certificate-print
 `document.write` call and rewrite generated inline event-handler markup to inert
@@ -17,6 +17,11 @@ import argparse
 import re
 from pathlib import Path
 
+try:
+    from html_script_parser import inline_script_bodies
+except ModuleNotFoundError:
+    from tools.html_script_parser import inline_script_bodies
+
 ROOT = Path(__file__).resolve().parents[1]
 CORE = ROOT / "MouldMaster_Core_App.html"
 INDEX = ROOT / "index.html"
@@ -27,8 +32,6 @@ DESKTOP_INTEGRITY = ROOT / "desktop/electron/scripts/generate-integrity.cjs"
 HANDLER_BRIDGE_PATH = OUT_DIR / "inline-handler-bridge.js"
 STYLE_BRIDGE_PATH = OUT_DIR / "inline-style-bridge.js"
 
-INLINE_SCRIPT_RE = re.compile(r"<script(?P<attrs>[^>]*)>(?P<body>.*?)</script\s*>", re.I | re.S)
-SRC_ATTR_RE = re.compile(r"\bsrc\s*=", re.I)
 INDEX_RUNTIME_REF_RE = re.compile(r"['\"]\./src/core-runtime/(core-inline-\d{3}\.js)['\"]")
 HANDLER_ATTR_RE = re.compile(r"(?P<prefix>[\s<])on(?P<event>click|change|input|keydown)\s*=", re.I)
 PRINT_CERTIFICATE_RE = re.compile(
@@ -58,11 +61,7 @@ def fail(message: str) -> None:
 
 
 def inline_blocks(core: str) -> list[str]:
-    return [
-        match.group("body")
-        for match in INLINE_SCRIPT_RE.finditer(core)
-        if not SRC_ATTR_RE.search(match.group("attrs") or "")
-    ]
+    return inline_script_bodies(core)
 
 
 def retire_handler_attrs(source: str) -> str:
@@ -214,8 +213,8 @@ def check_state() -> None:
     expected_names = list(expected)
     if refs != expected_names:
         fail(f"index CORE_INLINE_SCRIPTS drifted: {refs} != {expected_names}")
-    if "function externalizeCoreScripts(out)" not in index or "out=externalizeCoreScripts(out)" not in index:
-        fail("browser bootstrap does not externalize frozen core scripts during assembly")
+    if "function externalizeParsedCoreScripts(parsed)" not in index or "externalizeParsedCoreScripts(parsed);retireInlineHandlerAttrs(parsed);" not in index:
+        fail("browser bootstrap does not externalize parsed core scripts before installation")
     if "function retireInlineHandlerAttrs(parsed)" not in index or "retireInlineHandlerAttrs(parsed);retireInlineStyleAttrs(parsed);const scripts=[]" not in index:
         fail("browser bootstrap does not retire static frozen-core handler attributes before installation")
     if "function retireInlineStyleAttrs(parsed)" not in index or "./src/core-runtime/inline-style-bridge.js" not in index:

@@ -87,6 +87,24 @@ def main() -> int:
     if engineer_simulator_changed and (ROOT / "qa_engineer_simulator_units.cjs").exists():
         commands.append(["node", "qa_engineer_simulator_units.cjs"])
 
+    code_scanning_changed = bool(files & {
+        "MouldMaster_Core_App.html",
+        "index.html",
+        "tools/externalize_core_scripts.py",
+        "tools/html_script_parser.py",
+        "qa_release.py",
+        "qa_architecture_debt.py",
+        "src/core-runtime/inline-handler-bridge.js",
+        "src/core-runtime/core-inline-004.js",
+        "src/core-runtime/core-inline-010.js",
+        "qa_html_script_parser.py",
+        "qa_code_scanning_remediation.py",
+    })
+    if code_scanning_changed:
+        commands.append([sys.executable, "qa_html_script_parser.py"])
+        commands.append([sys.executable, "qa_code_scanning_remediation.py"])
+        commands.append([sys.executable, "tools/externalize_core_scripts.py", "--check"])
+
     release_docs_changed = bool(files & {
         "README.md",
         "support.html",
