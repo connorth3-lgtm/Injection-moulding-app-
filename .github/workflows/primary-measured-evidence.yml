@@ -64,8 +64,8 @@ jobs:
   primary-measured-evidence:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v7
-      - uses: actions/setup-python@v7
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7
         with:
           python-version: '3.12'
       - name: Validate immutable measured-data closeout before evidence overlays
@@ -85,37 +85,37 @@ jobs:
       - name: Revalidate measured-data collection closeout after evidence overlays
         run: python qa_measured_data_collection_closeout.py
       - name: Upload aggregate primary measured registry QA report
-        uses: actions/upload-artifact@v7
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
         with:
           name: mouldmaster-primary-measured-evidence
           path: primary-measured-evidence-report.json
           if-no-files-found: error
       - name: Upload aggregate measured dataset inventory QA report
-        uses: actions/upload-artifact@v7
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
         with:
           name: mouldmaster-measured-dataset-inventory
           path: measured-dataset-inventory-report.json
           if-no-files-found: error
       - name: Upload aggregate blocked dataset contracts QA report
-        uses: actions/upload-artifact@v7
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
         with:
           name: mouldmaster-blocked-dataset-contracts
           path: blocked-dataset-contracts-report.json
           if-no-files-found: error
       - name: Upload aggregate remaining dataset terminal-state report
-        uses: actions/upload-artifact@v7
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
         with:
           name: mouldmaster-remaining-dataset-terminal-states
           path: remaining-dataset-terminal-states-report.json
           if-no-files-found: error
       - name: Upload aggregate measured-data discovery report
-        uses: actions/upload-artifact@v7
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
         with:
           name: mouldmaster-measured-data-discovery-queue
           path: measured-data-discovery-queue-report.json
           if-no-files-found: error
       - name: Upload measured-data collection closeout report
-        uses: actions/upload-artifact@v7
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
         with:
           name: mouldmaster-measured-data-collection-closeout
           path: measured-data-collection-closeout-report.json
