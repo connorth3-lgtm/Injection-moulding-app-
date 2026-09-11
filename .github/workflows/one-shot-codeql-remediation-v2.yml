@@ -6,6 +6,7 @@ on:
       - code-scanning-remediation-2026-09-11
     paths:
       - .github/workflows/one-shot-codeql-remediation-v2.yml
+      - tools/one_shot_codeql_remediate.py
 
 permissions:
   contents: write
@@ -21,7 +22,6 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          # Parser regression now uses a version-independent unterminated-script fixture.
           python3 tools/one_shot_codeql_remediate.py
           python3 tools/sync_web_release.py
           python3 qa_html_script_parser.py
