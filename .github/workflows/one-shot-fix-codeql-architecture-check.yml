@@ -1,0 +1,36 @@
+name: Fix CodeQL Architecture Check
+
+on:
+  push:
+    branches:
+      - code-scanning-remediation-2026-09-11
+    paths:
+      - .github/workflows/one-shot-fix-codeql-architecture-check.yml
+
+permissions:
+  contents: write
+
+jobs:
+  fix-architecture-check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - name: Update remediation script architecture assertions
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          path=Path('tools/one_shot_codeql_remediate.py')
+          text=path.read_text(encoding='utf-8')
+          anchor='arch = replace_once(arch, old_arch, "inline_core_scripts = inline_script_bodies(core)", "architecture script extraction")\n'
+          addition='''arch = replace_once(arch, 'need("function externalizeCoreScripts(out)" in index, "runtime core script externalization function missing")', 'need("function externalizeParsedCoreScripts(parsed)" in index, "parsed runtime core script externalization function missing")', "architecture externalizer function invariant")\narch = replace_once(arch, 'need("out=externalizeCoreScripts(out)" in index, "runtime assembly does not externalize frozen core scripts")', 'need("externalizeParsedCoreScripts(parsed);retireInlineHandlerAttrs(parsed);" in index, "runtime preparation does not externalize parsed core scripts before handler retirement")', "architecture externalizer call invariant")\narch = replace_once(arch, 'need("retireInlineHandlerAttrs(parsed);retireInlineStyleAttrs(parsed);const scripts=[]" in index, "static handler retirement does not run before document installation")', 'need("externalizeParsedCoreScripts(parsed);retireInlineHandlerAttrs(parsed);retireInlineStyleAttrs(parsed);const scripts=[]" in index, "parsed script externalization and static handler retirement do not run before document installation")', "architecture preparation order invariant")\n'''
+          if text.count(anchor) != 1:
+              raise SystemExit(f'expected one architecture extraction anchor, found {text.count(anchor)}')
+          path.write_text(text.replace(anchor,anchor+addition,1),encoding='utf-8')
+          PY
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add tools/one_shot_codeql_remediate.py
+          git commit -m 'Update architecture QA for parsed script externalizer'
+          git push origin HEAD:code-scanning-remediation-2026-09-11
