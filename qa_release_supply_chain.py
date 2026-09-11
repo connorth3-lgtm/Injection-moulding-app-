@@ -4,6 +4,7 @@ import re
 ROOT = Path(__file__).resolve().parent
 PAGES = ROOT / ".github" / "workflows" / "pages.yml"
 DESKTOP = ROOT / ".github" / "workflows" / "publish-open-desktop.yml"
+STORE = ROOT / ".github" / "workflows" / "microsoft-store-msix.yml"
 DEPENDABOT = ROOT / ".github" / "dependabot.yml"
 
 
@@ -29,6 +30,7 @@ def assert_pinned_actions(label, workflow, expected):
 
 pages = PAGES.read_text(encoding="utf-8")
 desktop = DESKTOP.read_text(encoding="utf-8")
+store = STORE.read_text(encoding="utf-8")
 dependabot = DEPENDABOT.read_text(encoding="utf-8")
 
 assert_pinned_actions(
@@ -49,6 +51,16 @@ assert_pinned_actions(
         "actions/checkout": "3d3c42e5aac5ba805825da76410c181273ba90b1",
         "actions/setup-node": "820762786026740c76f36085b0efc47a31fe5020",
         "actions/setup-python": "5fda3b95a4ea91299a34e894583c3862153e4b97",
+        "actions/upload-artifact": "043fb46d1a93c77aae656e7c1c64a875d1fc6a0a",
+    },
+)
+assert_pinned_actions(
+    "Microsoft Store",
+    store,
+    {
+        "actions/checkout": "1af3b93b681fe567477e1754c93a5784cc6ff5db",
+        "actions/setup-node": "a2b2e8eeba5861535c53431499a2969c938313d2",
+        "actions/setup-python": "e213ff1d62d7d1920be3ea5634c005ecc3c7e4a2",
         "actions/upload-artifact": "043fb46d1a93c77aae656e7c1c64a875d1fc6a0a",
     },
 )
@@ -81,6 +93,18 @@ need("contents: write" not in detector, "desktop release detector must not inher
 need("contents: write" in publisher, "desktop publication job must receive explicit contents write authority")
 need("permissions:" in publisher.split("needs:", 1)[0], "desktop publication permission must be job-scoped")
 
+need("\npermissions:\n  contents: read\n" in store, "Store workflow must default to read-only repository access")
+store_source_guard = store.split("  production-source:", 1)[1].split("\n  store-package:", 1)[0]
+store_package = store.split("\n  store-package:", 1)[1]
+need("contents: read" in store_source_guard, "Store production-source guard requires read-only contents access")
+need("pull-requests: read" in store_source_guard, "Store production-source guard requires PR provenance read access")
+need("actions: read" in store_source_guard, "Store production-source guard requires workflow evidence read access")
+need("contents: write" not in store_source_guard, "Store production-source guard must not receive publication authority")
+need("tools/verify_production_source.py" in store_source_guard, "Store packaging must verify exact merged-PR provenance")
+need("--require-native-protection" in store_source_guard, "Store packaging must require exact native main protection")
+need("needs: production-source" in store_package.split("steps:", 1)[0], "Store packaging must wait for the production-source guard")
+need("contents: write" not in store_package, "Store package workflow must not receive repository write authority")
+
 for marker in (
     'package-ecosystem: "github-actions"',
     'directory: "/"',
@@ -92,7 +116,7 @@ for marker in (
 
 print(
     "MouldMaster release supply-chain QA passed "
-    "(critical Pages/desktop Actions SHA-pinned; Node-24-capable Pages releases; "
-    "desktop publication is gated by governed merged-main provenance before write authority; "
+    "(critical Pages/desktop/Store Actions SHA-pinned; Node-24-capable Pages releases; "
+    "desktop publication and Store packaging are gated by governed merged-main provenance; "
     "GitHub Actions and desktop npm updates governed by Dependabot)"
 )
