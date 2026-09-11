@@ -5,6 +5,8 @@ ROOT = Path(__file__).resolve().parent
 PAGES = ROOT / ".github" / "workflows" / "pages.yml"
 DESKTOP = ROOT / ".github" / "workflows" / "publish-open-desktop.yml"
 STORE = ROOT / ".github" / "workflows" / "microsoft-store-msix.yml"
+MASTER_DATA = ROOT / ".github" / "workflows" / "master-data-compile.yml"
+RESEARCH_HARVEST = ROOT / ".github" / "workflows" / "research-registry-harvest.yml"
 DEPENDABOT = ROOT / ".github" / "dependabot.yml"
 
 
@@ -24,13 +26,15 @@ def assert_pinned_actions(label, workflow, expected):
         if ref.startswith("actions/"):
             need(
                 re.search(r"@[0-9a-f]{40}$", ref) is not None,
-                f"mutable GitHub Action reference in {label} release workflow: {ref}",
+                f"mutable GitHub Action reference in {label} governed workflow: {ref}",
             )
 
 
 pages = PAGES.read_text(encoding="utf-8")
 desktop = DESKTOP.read_text(encoding="utf-8")
 store = STORE.read_text(encoding="utf-8")
+master_data = MASTER_DATA.read_text(encoding="utf-8")
+research_harvest = RESEARCH_HARVEST.read_text(encoding="utf-8")
 dependabot = DEPENDABOT.read_text(encoding="utf-8")
 
 assert_pinned_actions(
@@ -62,6 +66,25 @@ assert_pinned_actions(
         "actions/setup-node": "a2b2e8eeba5861535c53431499a2969c938313d2",
         "actions/setup-python": "e213ff1d62d7d1920be3ea5634c005ecc3c7e4a2",
         "actions/upload-artifact": "043fb46d1a93c77aae656e7c1c64a875d1fc6a0a",
+    },
+)
+assert_pinned_actions(
+    "master-data compilation",
+    master_data,
+    {
+        "actions/checkout": "3d3c42e5aac5ba805825da76410c181273ba90b1",
+        "actions/setup-node": "820762786026740c76f36085b0efc47a31fe5020",
+        "actions/setup-python": "5fda3b95a4ea91299a34e894583c3862153e4b97",
+        "actions/upload-artifact": "043fb46d1a93c77aae656e7c1c64a875d1fc6a0a",
+    },
+)
+assert_pinned_actions(
+    "research-registry harvest",
+    research_harvest,
+    {
+        "actions/checkout": "11d5960a326750d5838078e36cf38b85af677262",
+        "actions/setup-python": "a26af69be951a213d495a4c3e4e4022e16d87065",
+        "actions/upload-artifact": "ea165f8d65b6e75b540449e92b4886f43607fa02",
     },
 )
 
@@ -105,6 +128,13 @@ need("--require-native-protection" in store_source_guard, "Store packaging must 
 need("needs: production-source" in store_package.split("steps:", 1)[0], "Store packaging must wait for the production-source guard")
 need("contents: write" not in store_package, "Store package workflow must not receive repository write authority")
 
+for label, workflow in (
+    ("master-data compilation", master_data),
+    ("research-registry harvest", research_harvest),
+):
+    need("\npermissions:\n  contents: read\n" in workflow, f"{label} must remain repository read-only")
+    need("contents: write" not in workflow, f"{label} must not gain repository write authority")
+
 for marker in (
     'package-ecosystem: "github-actions"',
     'directory: "/"',
@@ -116,7 +146,8 @@ for marker in (
 
 print(
     "MouldMaster release supply-chain QA passed "
-    "(critical Pages/desktop/Store Actions SHA-pinned; Node-24-capable Pages releases; "
-    "desktop publication and Store packaging are gated by governed merged-main provenance; "
+    "(critical Pages/desktop/Store and governed master-data/research artifact Actions SHA-pinned; "
+    "desktop publication and Store packaging gated by governed merged-main provenance; "
+    "artifact-only evidence workflows remain repository read-only; "
     "GitHub Actions and desktop npm updates governed by Dependabot)"
 )
