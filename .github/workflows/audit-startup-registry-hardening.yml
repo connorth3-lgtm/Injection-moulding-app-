@@ -69,7 +69,7 @@ jobs:
           python3 - <<'PY'
           import subprocess
           permanent={
-            'MouldMaster_Core_App.html','src/core-runtime/core-inline-003.js','qa_standalone_learner_ids.cjs',
+            'MouldMaster_Core_App.html','src/core-runtime/core-inline-004.js','qa_standalone_learner_ids.cjs',
             'version.json','README.md','support.html','data/release-external-validation-v1.json',
             'qa_release.py','qa_release_docs.py','index.html','pwa-shell.js','service-worker.js'
           }
@@ -81,7 +81,7 @@ jobs:
           PY
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add -- MouldMaster_Core_App.html src/core-runtime/core-inline-003.js qa_standalone_learner_ids.cjs version.json README.md support.html data/release-external-validation-v1.json qa_release.py qa_release_docs.py index.html pwa-shell.js service-worker.js
+          git add -- MouldMaster_Core_App.html src/core-runtime/core-inline-004.js qa_standalone_learner_ids.cjs version.json README.md support.html data/release-external-validation-v1.json qa_release.py qa_release_docs.py index.html pwa-shell.js service-worker.js
           git diff --cached --check
           git commit -m 'Reject unsafe persisted learner registries at startup'
           git push origin HEAD:audit/standalone-learner-id-hardening-clean
