@@ -19,6 +19,7 @@ const canonicalSource=extractFunction('pvCanonicalLearnerId');
 const requireSource=extractFunction('pvRequireLearnerId');
 const hasOwnSource=extractFunction('pvHasOwnLearner');
 const buildSource=extractFunction('pvBuildImportedUsers');
+const commitSource=extractFunction('pvCommitImportedUsers');
 const api=new Function('normaliseImportedUser',`${canonicalSource}\n${requireSource}\n${hasOwnSource}\n${buildSource}\nreturn {pvCanonicalLearnerId,pvRequireLearnerId,pvHasOwnLearner,pvBuildImportedUsers};`)((u,id)=>({id,name:u?.name||'Learner',completed:[1],certificates:['Advanced-ALL'],certificateMeta:{'Advanced-ALL':{score:100}},examPassStatus:{'Advanced-ALL':true}}));
 
 for(const id of ['learner-1','learner_2','legacy.ID-3','team:alpha+1','person@example'])assert.equal(api.pvCanonicalLearnerId(id),id,`benign legacy ID should survive unchanged: ${id}`);
@@ -32,6 +33,34 @@ assert.deepEqual(registry.users['learner-1'].completed,[1],'standalone import mu
 assert.deepEqual(registry.users['learner-1'].certificates,[],'standalone import must strip imported certificates');
 assert.deepEqual(registry.users['learner-1'].certificateMeta,{},'standalone import must strip imported certificate metadata');
 assert.deepEqual(registry.users['learner-1'].examPassStatus,{},'standalone import must strip imported pass assertions');
+
+function makeStandaloneCommitHarness(storage){
+  const existingDb={activeUser:'learner-1',users:{'learner-1':{id:'learner-1',name:'Existing'}}};
+  const existingUser=existingDb.users['learner-1'];
+  const harness=new Function('state','localStorage',`${hasOwnSource}\nlet db=state.db,user=state.user;\n${commitSource}\nreturn {commit:pvCommitImportedUsers,snapshot:()=>({db,user})};`)({db:existingDb,user:existingUser},storage);
+  return {existingDb,existingUser,harness};
+}
+{
+  const storage={setItem(){throw new Error('quota exceeded')}};
+  const {existingDb,existingUser,harness}=makeStandaloneCommitHarness(storage);
+  const proposed={activeUser:'learner-2',users:{'learner-2':{id:'learner-2',name:'Imported'}}};
+  assert.throws(()=>harness.commit(proposed),/quota exceeded/,'storage failure must surface to the import boundary');
+  const state=harness.snapshot();
+  assert.equal(state.db,existingDb,'storage failure must leave the live learner registry unchanged');
+  assert.equal(state.user,existingUser,'storage failure must leave the live learner unchanged');
+}
+{
+  let savedKey='',savedValue='';
+  const storage={setItem(k,v){savedKey=String(k);savedValue=String(v)}};
+  const {harness}=makeStandaloneCommitHarness(storage);
+  const proposed={activeUser:'learner-2',users:{'learner-2':{id:'learner-2',name:'Imported'}}};
+  harness.commit(proposed);
+  const state=harness.snapshot();
+  assert.equal(savedKey,'mouldmasterProDB');
+  assert.equal(JSON.parse(savedValue).activeUser,'learner-2','successful import must persist the proposed registry');
+  assert.equal(state.db,proposed,'live registry must activate only after storage succeeds');
+  assert.equal(state.user,proposed.users['learner-2'],'live learner must match the persisted active learner');
+}
 for(const bad of ["bad'id",'<tag>','bad\\id','bad\nid','bad id']){
   assert.throws(()=>api.pvBuildImportedUsers({activeUser:bad,users:{[bad]:{}}}),/Invalid learner identifier/);
 }
@@ -78,6 +107,9 @@ assert(strict.includes('pvHasOwnLearner(users,active)'),'strict import must requ
 assert(strict.includes('clean.certificates=[];'),'standalone import must strip certificate assertions');
 assert(strict.includes('clean.certificateMeta={};'),'standalone import must strip certificate metadata assertions');
 assert(strict.includes('clean.examPassStatus={};'),'standalone import must strip pass-status assertions');
+assert(strict.includes('if(file.size>10*1024*1024)'),'standalone import must reject oversized backups before FileReader allocation');
+assert(strict.includes('pvCommitImportedUsers(proposed);'),'standalone import must use storage-first commit helper');
+assert(strict.indexOf('localStorage.setItem("mouldmasterProDB",serialized)')<strict.indexOf('db=proposed;user=nextUser;'),'standalone import commit must persist before live-memory activation');
 assert(!strict.includes('!x.users[x.activeUser]'),'strict structural gate must not use inherited learner lookup');
 assert(!strict.includes('users[pvCleanString(id,160)]=normaliseImportedUser(u,id)'),'strict import must not truncate unsafe learner IDs into registry keys');
 const vm=require('node:vm');
