@@ -7,7 +7,7 @@ import struct
 import subprocess
 import tempfile
 
-WEB_RELEASE = "2026.09.12.12"
+WEB_RELEASE = "2026.09.12.13"
 ANDROID_RELEASE = "2026.08.26.2"
 CONTENT_VERSION = "2026.08.26.1"
 WINDOWS_RECOVERY_VERSION = "2026.08.21.1"
@@ -15,7 +15,7 @@ QUESTION_BANK_VERSION = "2026.08.30.1"
 LEGACY_REVIEW_ID_VERSION = "2026.08.21.1"
 WINDOWS_RECOVERY_SOURCE_COMMIT = "19ef75781e3a782b234db313a5265ff0f3518ee4"
 WINDOWS_RECOVERY_CORE_SHA256 = "96ed07e1487633538359eb12073fe50bfe595d9d5aaa807173e0a764b9123754"
-CURRENT_CORE_SHA256 = "cf3924bd660f23865fe8d8994bd56cb1bd6b19d3f9c7a946bfea9d69edb22e2a"
+CURRENT_CORE_SHA256 = "8e48f7a21c04f6dcca0b07d456e00bb72cd54dd29b89d1347e9b06fee8dfa874"
 EXE_SHA256 = "db7abc4da613a6d1409fdb129cb788b8ac396e5ac2d161963521c844d0ee771c"
 NODE = os.environ.get("MM_NODE", "node")
 
@@ -68,7 +68,7 @@ assert "function pvCommitPristineReset()" in core and "Existing learner data was
 assert "function mmPersistCurrentState()" in core and "mmStorageDurabilityWarning" in core and "return durable;" in core, "ordinary learner persistence must report durability and expose a persistent session-only warning on storage failure"
 assert "mm-session-only-result" in core and "This result and any certificate earned are available only for this session" in core, "non-durable assessment evidence must be disclosed in the result UI"
 assert "function mmSelectStartupDb(candidate,pristine)" in core and "Object.prototype.hasOwnProperty.call(candidate.users,active)" in core, "persisted learner registry must fail closed on inherited/unsafe startup identities"
-assert "function mmStartupLearnerRecordIsSafe(record,id)" in core and "!Array.isArray(record.completed)||!Array.isArray(record.bookmarks)||!Array.isArray(record.certificates)" in core, "persisted learner registry must validate core learner record shapes before rendering"
+assert "function mmStartupUniqueLessonIdsAreSafe(values)" in core and "function mmStartupCertificatesAreSafe(values)" in core and "mmStartupCertificatesAreSafe(record.certificates)" in core, "persisted learner registry must validate unique in-range progress/bookmark IDs and recognized certificate keys before rendering"
 assert "typeof value!==\"number\"||!Number.isFinite(value)||value<0||value>100" in core and "<span class=\"pill\">${esc(status)}</span>" in core, "persisted assessment values must be typed at startup and escaped at exam-status HTML sinks"
 assert "${esc(f.xp)} XP" in core and "${esc(f.streak)}-day learning streak" in core and "m.bestQuiz==null?\"—\":esc(m.bestQuiz)+\"%\"" in core, "legacy gamification/material numeric state must be escaped at HTML sinks"
 assert "criticalWrong===0" in core, "zero-wrong safety-critical gate missing"

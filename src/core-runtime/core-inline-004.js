@@ -16,11 +16,22 @@ function mmCanonicalStartupLearnerId(v){
   const raw=String(v==null?"":v);
   return raw.length>=1&&raw.length<=160&&/^[A-Za-z0-9][A-Za-z0-9._:@+-]*$/.test(raw)?raw:"";
 }
+function mmStartupUniqueLessonIdsAreSafe(values){
+  return Array.isArray(values)&&values.length<=D.lessons.length&&new Set(values).size===values.length&&values.every(value=>Number.isInteger(value)&&value>=1&&value<=D.lessons.length);
+}
+function mmStartupCertificateKeyIsSafe(value){
+  if(typeof value!=="string")return false;
+  if(["Beginner","Intermediate","Advanced"].includes(value))return true;
+  return /^(Beginner|Intermediate|Advanced)-(ALL|UK|US|NZ)$/.test(value);
+}
+function mmStartupCertificatesAreSafe(values){
+  return Array.isArray(values)&&values.length<=15&&new Set(values).size===values.length&&values.every(mmStartupCertificateKeyIsSafe);
+}
 function mmStartupLearnerRecordIsSafe(record,id){
   if(!record||typeof record!=="object"||Array.isArray(record))return false;
   if(typeof record.id!=="string"||mmCanonicalStartupLearnerId(record.id)!==id)return false;
   if(typeof record.name!=="string")return false;
-  if(!Array.isArray(record.completed)||!Array.isArray(record.bookmarks)||!Array.isArray(record.certificates))return false;
+  if(!mmStartupUniqueLessonIdsAreSafe(record.completed)||!mmStartupUniqueLessonIdsAreSafe(record.bookmarks)||!mmStartupCertificatesAreSafe(record.certificates))return false;
   for(const key of ["notes","examScores","examPassStatus","certificateMeta"]){
     const value=record[key];
     if(value!=null&&(typeof value!=="object"||Array.isArray(value)))return false;

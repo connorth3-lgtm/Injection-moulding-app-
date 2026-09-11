@@ -16,6 +16,9 @@ function extractFunction(name){
   throw new Error(`unterminated ${name}`);
 }
 const startupCanonicalSource=extractFunction('mmCanonicalStartupLearnerId');
+const startupLessonIdsSource=extractFunction('mmStartupUniqueLessonIdsAreSafe');
+const startupCertKeySource=extractFunction('mmStartupCertificateKeyIsSafe');
+const startupCertsSource=extractFunction('mmStartupCertificatesAreSafe');
 const startupRecordSource=extractFunction('mmStartupLearnerRecordIsSafe');
 const startupSelectSource=extractFunction('mmSelectStartupDb');
 const canonicalSource=extractFunction('pvCanonicalLearnerId');
@@ -29,7 +32,7 @@ const persistCurrentSource=extractFunction('mmPersistCurrentState');
 const api=new Function('normaliseImportedUser',`${canonicalSource}\n${requireSource}\n${hasOwnSource}\n${buildSource}\nreturn {pvCanonicalLearnerId,pvRequireLearnerId,pvHasOwnLearner,pvBuildImportedUsers};`)((u,id)=>({id,name:u?.name||'Learner',completed:[1],certificates:['Advanced-ALL'],certificateMeta:{'Advanced-ALL':{score:100}},examPassStatus:{'Advanced-ALL':true}}));
 
 for(const id of ['learner-1','learner_2','legacy.ID-3','team:alpha+1','person@example'])assert.equal(api.pvCanonicalLearnerId(id),id,`benign legacy ID should survive unchanged: ${id}`);
-const startupApi=new Function(`${startupCanonicalSource}\n${startupRecordSource}\n${startupSelectSource}\nreturn {mmCanonicalStartupLearnerId,mmStartupLearnerRecordIsSafe,mmSelectStartupDb};`)();
+const startupApi=new Function('D',`${startupCanonicalSource}\n${startupLessonIdsSource}\n${startupCertKeySource}\n${startupCertsSource}\n${startupRecordSource}\n${startupSelectSource}\nreturn {mmCanonicalStartupLearnerId,mmStartupUniqueLessonIdsAreSafe,mmStartupCertificateKeyIsSafe,mmStartupCertificatesAreSafe,mmStartupLearnerRecordIsSafe,mmSelectStartupDb};`)({lessons:Array.from({length:120},(_,i)=>({id:i+1}))});
 for(const id of ['learner-1','learner_2','legacy.ID-3','team:alpha+1','person@example',"bad'id",'<tag>','bad\\id','bad/id','bad id','__proto__','constructor'])assert.equal(startupApi.mmCanonicalStartupLearnerId(id),api.pvCanonicalLearnerId(id),`startup/current learner-ID contracts must agree: ${JSON.stringify(id)}`);
 const legacyRecord=(id='learner-1',name='Legacy')=>({id,name,completed:[],bookmarks:[],notes:{},examScores:{},certificates:[]});
 const pristine={activeUser:'learner-1',users:{'learner-1':legacyRecord('learner-1','Pristine')}};
@@ -53,6 +56,33 @@ const pristine={activeUser:'learner-1',users:{'learner-1':legacyRecord('learner-
   const selected=startupApi.mmSelectStartupDb({activeUser:'learner-1',users:{'learner-1':legacyRecord(),"bad'id":legacyRecord("bad'id")}},pristine);
   assert.equal(selected.rejected,true,'unsafe inactive persisted learner IDs must also fail the startup registry boundary');
 }
+{
+  const bad=legacyRecord(); bad.completed=[1,1];
+  assert.equal(startupApi.mmSelectStartupDb({activeUser:'learner-1',users:{'learner-1':bad}},pristine).rejected,true,'duplicate legacy completion IDs must not inflate overall progress');
+}
+{
+  const bad=legacyRecord(); bad.completed=[121];
+  assert.equal(startupApi.mmSelectStartupDb({activeUser:'learner-1',users:{'learner-1':bad}},pristine).rejected,true,'out-of-range legacy completion IDs must not count as course progress');
+}
+{
+  const bad=legacyRecord(); bad.bookmarks=[1,1];
+  assert.equal(startupApi.mmSelectStartupDb({activeUser:'learner-1',users:{'learner-1':bad}},pristine).rejected,true,'duplicate legacy bookmark IDs must fail the canonical startup boundary');
+}
+{
+  const bad=legacyRecord(); bad.certificates=['Advanced-ALL','Advanced-ALL'];
+  assert.equal(startupApi.mmSelectStartupDb({activeUser:'learner-1',users:{'learner-1':bad}},pristine).rejected,true,'duplicate certificate keys must not inflate instructor certificate counts');
+}
+{
+  const bad=legacyRecord(); bad.certificates=['Not-A-Certificate'];
+  assert.equal(startupApi.mmSelectStartupDb({activeUser:'learner-1',users:{'learner-1':bad}},pristine).rejected,true,'unknown legacy certificate keys must not count as earned credentials');
+}
+{
+  const valid=legacyRecord(); valid.completed=[1,2,120];valid.bookmarks=[3,119];valid.certificates=['Beginner','Intermediate-US','Advanced-NZ'];
+  assert.equal(startupApi.mmSelectStartupDb({activeUser:'learner-1',users:{'learner-1':valid}},pristine).rejected,false,'valid historical lesson IDs and legacy/current certificate formats must remain compatible');
+}
+assert.equal(startupApi.mmStartupCertificateKeyIsSafe('Advanced'),true);
+assert.equal(startupApi.mmStartupCertificateKeyIsSafe('Advanced-NZ'),true);
+assert.equal(startupApi.mmStartupCertificateKeyIsSafe('Advanced-XX'),false);
 {
   const bad=legacyRecord(); bad.completed={1:true};
   assert.equal(startupApi.mmSelectStartupDb({activeUser:'learner-1',users:{'learner-1':bad}},pristine).rejected,true,'non-array completed state must fail closed before .includes() use');
@@ -262,7 +292,7 @@ assert(strict.includes('pvCommitImportedUsers(proposed);'),'standalone import mu
 assert(source.includes('Object.prototype.hasOwnProperty.call(candidate.users,active)'),'startup registry must require own active learner membership');
 assert(source.includes('mmStartupLearnerDataRejected=true'),'unsafe persisted registries must fail closed before user activation');
 assert(source.includes('function mmStartupLearnerRecordIsSafe(record,id)'),'startup must validate persisted learner record shapes before render-time dereferences');
-assert(source.includes('!Array.isArray(record.completed)||!Array.isArray(record.bookmarks)||!Array.isArray(record.certificates)'),'startup must require array-shaped core progress fields');
+assert(source.includes('mmStartupUniqueLessonIdsAreSafe(record.completed)')&&source.includes('mmStartupUniqueLessonIdsAreSafe(record.bookmarks)')&&source.includes('mmStartupCertificatesAreSafe(record.certificates)'),'startup must require canonical unique in-range progress fields and recognized certificate keys');
 assert(strict.indexOf('localStorage.setItem("mouldmasterProDB",serialized)')<strict.indexOf('db=proposed;user=nextUser;'),'standalone import commit must persist before live-memory activation');
 assert(!strict.includes('!x.users[x.activeUser]'),'strict structural gate must not use inherited learner lookup');
 assert(!strict.includes('users[pvCleanString(id,160)]=normaliseImportedUser(u,id)'),'strict import must not truncate unsafe learner IDs into registry keys');
