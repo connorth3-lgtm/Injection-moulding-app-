@@ -23,17 +23,20 @@ function pvRequireLearnerId(v){
   if(!canonical||canonical!==raw)throw new Error("Invalid learner identifier");
   return canonical;
 }
+function pvHasOwnLearner(users,id){
+  return !!users&&Object.prototype.hasOwnProperty.call(users,id);
+}
 function pvBuildImportedUsers(x){
   const users={};
   for(const [id,u] of Object.entries(x.users).slice(0,500)){
     const sid=pvRequireLearnerId(id);
-    if(Object.prototype.hasOwnProperty.call(users,sid))throw new Error("Duplicate learner identifier");
+    if(pvHasOwnLearner(users,sid))throw new Error("Duplicate learner identifier");
     const clean=normaliseImportedUser(u,sid);
     if(clean.id!==sid)throw new Error("Learner identifier mismatch");
     users[sid]=clean;
   }
   const active=pvRequireLearnerId(x.activeUser);
-  if(!users[active])throw new Error("Missing active learner");
+  if(!pvHasOwnLearner(users,active))throw new Error("Missing active learner");
   return {activeUser:active,users};
 }
 function pvWireInstructorSwitches(users){
@@ -150,7 +153,7 @@ importData=function(file){
   if(!file)return; const r=new FileReader();
   r.onload=()=>{try{
     const x=JSON.parse(r.result);
-    if(!x||typeof x!=="object"||Array.isArray(x)||!x.users||typeof x.users!=="object"||Array.isArray(x.users)||!x.activeUser||!x.users[x.activeUser])throw new Error("Invalid backup structure");
+    if(!x||typeof x!=="object"||Array.isArray(x)||!x.users||typeof x.users!=="object"||Array.isArray(x.users)||!x.activeUser)throw new Error("Invalid backup structure");
     const proposed=pvBuildImportedUsers(x);
     const users=proposed.users,active=proposed.activeUser;
     db=proposed;user=db.users[db.activeUser];

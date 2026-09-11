@@ -365,7 +365,7 @@ function createLearner(){
  const name=$("#newLearnerName").value.trim();if(!name)return;
  const id=pvRequireLearnerId("learner-"+Date.now());db.users[id]={id,name,role:"learner",completed:[],bookmarks:[],notes:{},examScores:{},certificates:[],currentLesson:1,lastSeen:new Date().toISOString()};db.activeUser=id;user=db.users[id];persist();closeModal();updateGlobalProgress();renderInstructor();toast("Learner created");
 }
-function switchUser(id){const sid=pvCanonicalLearnerId(id);if(!sid||!db.users[sid]){toast("Learner profile unavailable");return}persist();db.activeUser=sid;user=db.users[sid];persist();updateGlobalProgress();renderInstructor();toast("Switched learner")}
+function switchUser(id){const sid=pvCanonicalLearnerId(id);if(!sid||!pvHasOwnLearner(db.users,sid)){toast("Learner profile unavailable");return}persist();db.activeUser=sid;user=db.users[sid];persist();updateGlobalProgress();renderInstructor();toast("Switched learner")}
 
 function renderGlossary(){
  $("#glossary").innerHTML=`<div class="section-head"><div><h2>Injection moulding glossary</h2><p>Search terms used throughout the platform.</p></div><input id="glossarySearch" style="max-width:340px" placeholder="Search..." data-mm-oninput="filterGlossary()"></div><div class="glossary-grid" id="glossaryGrid">${Object.entries(D.glossary).map(([k,v])=>`<div class="card term" data-term="${esc((k+" "+v).toLowerCase())}"><b>${esc(k)}</b><p>${esc(v)}</p></div>`).join("")}</div>`;

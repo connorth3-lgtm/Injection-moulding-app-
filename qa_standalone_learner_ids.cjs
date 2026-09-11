@@ -17,8 +17,9 @@ function extractFunction(name){
 }
 const canonicalSource=extractFunction('pvCanonicalLearnerId');
 const requireSource=extractFunction('pvRequireLearnerId');
+const hasOwnSource=extractFunction('pvHasOwnLearner');
 const buildSource=extractFunction('pvBuildImportedUsers');
-const api=new Function('normaliseImportedUser',`${canonicalSource}\n${requireSource}\n${buildSource}\nreturn {pvCanonicalLearnerId,pvRequireLearnerId,pvBuildImportedUsers};`)((u,id)=>({id,name:u?.name||'Learner'}));
+const api=new Function('normaliseImportedUser',`${canonicalSource}\n${requireSource}\n${hasOwnSource}\n${buildSource}\nreturn {pvCanonicalLearnerId,pvRequireLearnerId,pvHasOwnLearner,pvBuildImportedUsers};`)((u,id)=>({id,name:u?.name||'Learner'}));
 
 for(const id of ['learner-1','learner_2','legacy.ID-3','team:alpha+1','person@example'])assert.equal(api.pvCanonicalLearnerId(id),id,`benign legacy ID should survive unchanged: ${id}`);
 for(const id of ['',"bad'id",'bad"id','<tag>','bad\\id','bad/id','bad\nid','bad\rid','bad id','bad;id','bad(id)','-leading'])assert.equal(api.pvCanonicalLearnerId(id),'',`unsafe learner ID must be rejected: ${JSON.stringify(id)}`);
@@ -31,6 +32,10 @@ for(const bad of ["bad'id",'<tag>','bad\\id','bad\nid','bad id']){
   assert.throws(()=>api.pvBuildImportedUsers({activeUser:bad,users:{[bad]:{}}}),/Invalid learner identifier/);
 }
 assert.throws(()=>api.pvBuildImportedUsers({activeUser:'missing',users:{'learner-1':{}}}),/Missing active learner/);
+assert.throws(()=>api.pvBuildImportedUsers({activeUser:'constructor',users:{'learner-1':{}}}),/Missing active learner/,'prototype property names must not satisfy learner membership');
+const prototypeNamed=api.pvBuildImportedUsers({activeUser:'constructor',users:{constructor:{name:'Legacy'}}});
+assert.equal(prototypeNamed.activeUser,'constructor','an explicitly owned safe legacy prototype-name ID remains supported');
+assert.equal(Object.prototype.hasOwnProperty.call(prototypeNamed.users,'constructor'),true);
 
 assert(!source.includes(`onclick="switchUser('${'${u.id}'})"`),'learner IDs must never be interpolated into inline JavaScript handlers');
 assert.equal((source.match(/data-mm-switch-user="\$\{userIndex\}"/g)||[]).length,2,'both instructor renderers must use inert index tokens');
@@ -52,10 +57,20 @@ assert.equal(switchedTo,'legacy.ID-3','inert index token must resolve to the int
 switchedTo='';clickHandlers[1]();
 assert.equal(switchedTo,'','out-of-range inert index must not switch a learner');
 
+const switchSource=extractFunction('switchUser');
+let switchState={db:{activeUser:'learner-1',users:{'learner-1':{id:'learner-1'}}},persistCalls:0,toasts:[]};
+const guardedSwitch=new Function(`${canonicalSource}\n${hasOwnSource}\nlet db=arguments[0].db,user=db.users[db.activeUser];const persist=()=>arguments[0].persistCalls++;const updateGlobalProgress=()=>{};const renderInstructor=()=>{};const toast=m=>arguments[0].toasts.push(m);${switchSource}\nreturn switchUser;`)(switchState);
+guardedSwitch('constructor');
+assert.equal(switchState.db.activeUser,'learner-1','prototype property names must not switch without an owned learner record');
+assert.equal(switchState.persistCalls,0,'rejected prototype-name switch must not persist');
+assert.equal(switchState.toasts.at(-1),'Learner profile unavailable');
+
 const strictStart=source.indexOf('/* ---------- Strict backup import allowlist ---------- */');assert(strictStart>=0);
 const strict=source.slice(strictStart);
 assert(strict.includes('const keyId=pvRequireLearnerId(id);'),'strict normaliser must validate the registry key');
 assert(strict.includes('if(embeddedId!==keyId)throw new Error("Learner identifier mismatch");'),'strict normaliser must reject embedded/key identity mismatch');
 assert(strict.includes('const proposed=pvBuildImportedUsers(x);'),'strict import must build through the canonical learner-ID contract');
+assert(strict.includes('pvHasOwnLearner(users,active)'),'strict import must require own learner membership for the active ID');
+assert(!strict.includes('!x.users[x.activeUser]'),'strict structural gate must not use inherited learner lookup');
 assert(!strict.includes('users[pvCleanString(id,160)]=normaliseImportedUser(u,id)'),'strict import must not truncate unsafe learner IDs into registry keys');
 console.log('Standalone learner-ID QA passed: canonical IDs preserve benign legacy punctuation, reject JS/HTML metacharacters/separators, and instructor switching resolves inert index tokens without learner-ID inline-code sinks.');
