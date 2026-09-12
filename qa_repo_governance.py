@@ -73,8 +73,9 @@ for forbidden in [
 need('"$conclusion" != "success"' in guard, "required PR workflows must still fail audit when completed unsuccessfully")
 need("for attempt in {1..60}" in guard, "read-only workflow audit must tolerate long-running required checks")
 
-# Effective ruleset verification must require independent human review as well
-# as the five governed automated contexts and existing server-side protections.
+# Effective ruleset verification must enforce the explicit solo-maintainer
+# review settings as well as the five governed automated contexts and existing
+# server-side protections.
 for marker in [
     'MAIN_REF = "refs/heads/main"',
     '"integrity"',
@@ -90,10 +91,10 @@ for marker in [
     '"code_scanning"',
     '"code_quality"',
     '"copilot_code_review"',
-    "required_approving_review_count must be at least 1",
+    "required_approving_review_count must be 0 for the solo-maintainer repository",
     "required_review_thread_resolution must be true",
     "dismiss_stale_reviews_on_push must be true",
-    "require_last_push_approval must be true",
+    "require_last_push_approval must be false for the solo-maintainer repository",
     "strict_required_status_checks_policy",
     "do_not_enforce_on_create",
     '"~ALL"',
@@ -130,7 +131,7 @@ need("if: github.event_name != 'pull_request'" in pages, "Pages publication guar
 
 # The administrator helper must transform the live ruleset rather than replace
 # it with a stale static payload. It must preserve existing security/review
-# rules while adding independent-review semantics and the fifth release gate.
+# rules while applying solo-maintainer review semantics and the fifth release gate.
 for marker in [
     'MODE="${1:---dry-run}"',
     "--dry-run|--apply",
@@ -141,10 +142,10 @@ for marker in [
     '"question-quality-50-pass"',
     '"release-external-validation"',
     'gh api "repos/$REPO/rulesets/$RULESET_ID" >"$live"',
-    '.parameters.required_approving_review_count = 1',
+    '.parameters.required_approving_review_count = 0',
     ".parameters.required_review_thread_resolution = true",
     ".parameters.dismiss_stale_reviews_on_push = true",
-    ".parameters.require_last_push_approval = true",
+    ".parameters.require_last_push_approval = false",
     ".parameters.strict_required_status_checks_policy = true",
     ".parameters.do_not_enforce_on_create = false",
     'index("code_scanning")',
@@ -154,7 +155,7 @@ for marker in [
     'gh api --method PUT "repos/$REPO/rulesets/$RULESET_ID" --input "$payload"',
     'gh api "repos/$REPO/branches/main" --jq',
     'protected',
-    "independent approval",
+    "only one write-capable maintainer",
     "resolved review threads",
 ]:
     need(marker in protection_helper, f"native-protection helper missing marker: {marker}")
@@ -168,10 +169,11 @@ need(
 )
 
 for marker in [
-    "at least one approving human review",
+    "solo-maintainer policy",
+    "zero required approving reviews",
+    "approval of the latest push is disabled",
     "all review conversations resolved",
     "stale approvals dismissed after new pushes",
-    "approval of the most recent push",
     "`integrity`",
     "`mobile-browser`",
     "`build-windows`",
@@ -184,9 +186,9 @@ for marker in [
     "non-fast-forward/force updates blocked",
     "--dry-run",
     "--apply",
-    "transforms that exact object",
-    "all five checks are green",
-    "Automated checks are necessary but are not independent review",
+    "transforms that exact",
+    "all five required checks are green",
+    "Automated checks are necessary but are not equivalent to independent human review",
     "Issue #43",
 ]:
     need(marker in protection_doc, f"native-protection documentation missing marker: {marker}")
@@ -285,7 +287,7 @@ need("run: python qa_repo_governance.py" in release_qa, "release QA must run rep
 
 print(
     "MouldMaster repository governance QA passed "
-    "(main-only native policy; independent review controls; five required contexts; live-preserving helper; "
+    "(main-only solo-maintainer native policy; five required contexts; live-preserving helper; "
     "post-push audit read-only; Pages requires exact native protection; dual locked desktop toolchains; "
     "guard-gated pruning; architecture debt gate)"
 )
