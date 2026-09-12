@@ -47,7 +47,7 @@ const numericIdPrepared=api.prepare(api.parseCsv(numericIds));
 const malformedNumeric='fill_time_s,cycle_time_s\\n1.0,20\\n1.1,21\\n1.2,22\\n1.3,23\\n1.4,24\\n1.5,25\\n1.6,26\\n1.7,27\\n1.8,28\\nBAD,29\\n';
 const malformedPrepared=api.prepare(api.parseCsv(malformedNumeric));
 const quotedComma=api.parseCsv('a,b\\n"1,2",3\\n');
-const escapedQuote=api.parseCsv('a,b\\n"say ""hi""",3\\n');
+const escapedQuote=api.parseCsv('a,b\\n"say ""hi""'+String.fromCharCode(34)+',3\\n');
 const quotedNewline=api.parseCsv('a,b\\n"line1\\nline2",3\\n');
 const trailingBlank=api.parseCsv('a,b\\r\\n1,2\\r\\n\\r\\n');
 let oversizedError='',unterminatedQuoteError='',tooManyCellsError='',tooFewCellsError='';
