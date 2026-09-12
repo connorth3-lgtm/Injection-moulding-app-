@@ -5,7 +5,7 @@ git config user.name 'github-actions[bot]'
 git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
 
 set +e
-git merge --no-commit --no-ff origin/audit/process-data-readiness-flow
+git merge --no-commit --no-ff origin/audit/process-reset-domless-hardening
 merge_code=$?
 set -e
 if [[ "$merge_code" -ne 1 ]]; then
@@ -49,7 +49,7 @@ git checkout --theirs -- qa_release_docs.py support.html
 
 python - <<'PY'
 from pathlib import Path
-old_process='2026.09.12.5'
+old_process='2026.09.12.6'
 security_base='2026.09.12.16'
 for name in ['qa_release_docs.py','support.html']:
     p=Path(name); text=p.read_text(encoding='utf-8')
