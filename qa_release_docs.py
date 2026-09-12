@@ -9,7 +9,7 @@ def need(ok,msg):
 
 V=json.loads(text('version.json'))
 expected={
- 'web_release':'2026.09.11.1',
+ 'web_release':'2026.09.12.18',
  'android_release':'2026.08.26.2',
  'desktop_release':'2026.08.26.8',
  'content_version':'2026.08.26.1',
@@ -128,9 +128,10 @@ for k,id_ in {'web_release':'mmPwa','desktop_release':'mmDesktop','content_versi
 need("fetch('./version.json',{cache:'no-store'})" in support,'support page must synchronise from version.json')
 need('MouldMaster GitHub Issues' in support and 'Do not post learner names' in support,'support contact/privacy warning missing')
 need('Learning insights events' in support and 'resets both analytics histories' in support,'support import analytics lifecycle disclosure is stale')
+need('Delete all saved process data' in support and 'Saved process-data datasets' in support,'support process-data retention/reset disclosure is stale')
 
 privacy=text('privacy.html')
-for marker in ['assessment analytics','scoped to the active learner profile','first meaningful question exposure','does not currently upload','deliberately not included in the progress backup','successful progress-backup import resets local assessment analytics and Learning insights analytics','orphaned buckets','Reset local analytics','confirmed factory reset']:
+for marker in ['assessment analytics','scoped to the active learner profile','first meaningful question exposure','does not currently upload','deliberately not included in the progress backup','successful progress-backup import resets local assessment analytics and Learning insights analytics','orphaned buckets','Reset local analytics','confirmed learner-data reset','Delete all saved process data']:
     need(marker in privacy,f'privacy disclosure missing: {marker}')
 need('cleanup cannot be verified' in privacy,'privacy notice must disclose fail-closed reset/import cleanup behavior')
 

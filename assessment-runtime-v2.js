@@ -71,8 +71,7 @@ function nextExam(level,region){
   for(const q of technical){const e=exposure(history,q.stableId);history.items[q.stableId]={count:e.count+1,last:formNumber}}writeHistory(history);
   return shuffle(selected,rng).map(q=>shuffleOptions(q,rng))
 }
-const legacySelector=window.getExamQuestions;
-function selector(level,region){if(!['Beginner','Intermediate','Advanced'].includes(level)||!['UK','US','NZ','ALL'].includes(region))return legacySelector.apply(this,arguments);return nextExam(level,region)}
+function selector(level,region){if(!['Beginner','Intermediate','Advanced'].includes(level)||!['UK','US','NZ','ALL'].includes(region))throw new Error('Assessment selector rejected unknown level or region');return nextExam(level,region)}
 R.setImplementation('getExamQuestions',selector,'assessment-runtime-v2');
 R.registerModule('assessment-runtime-v2',{version:VERSION,type:'assessment-selector',owns:'getExamQuestions'});
 function coverageSimulation(level,attempts=3){const history=emptyHistory(),seen=new Set();for(let n=1;n<=attempts;n++){const rng=seeded(`qa:${level}:${n}`),rows=selectTechnical(level,history,n,rng);for(const q of rows){seen.add(q.stableId);const e=exposure(history,q.stableId);history.items[q.stableId]={count:e.count+1,last:n}}}return {level,attempts,seen:[...seen],coverage:seen.size,total:(D.exams[level]||[]).length}}

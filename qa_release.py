@@ -7,13 +7,15 @@ import struct
 import subprocess
 import tempfile
 
-WEB_RELEASE = "2026.09.11.1"
+WEB_RELEASE = "2026.09.12.18"
 ANDROID_RELEASE = "2026.08.26.2"
 CONTENT_VERSION = "2026.08.26.1"
 WINDOWS_RECOVERY_VERSION = "2026.08.21.1"
 QUESTION_BANK_VERSION = "2026.08.30.1"
 LEGACY_REVIEW_ID_VERSION = "2026.08.21.1"
-CORE_SHA256 = "96ed07e1487633538359eb12073fe50bfe595d9d5aaa807173e0a764b9123754"
+WINDOWS_RECOVERY_SOURCE_COMMIT = "19ef75781e3a782b234db313a5265ff0f3518ee4"
+WINDOWS_RECOVERY_CORE_SHA256 = "96ed07e1487633538359eb12073fe50bfe595d9d5aaa807173e0a764b9123754"
+CURRENT_CORE_SHA256 = "961ea748b7355d4af2dfecdf644b6311051b3228a15c42f48b09bedb367fb394"
 EXE_SHA256 = "db7abc4da613a6d1409fdb129cb788b8ac396e5ac2d161963521c844d0ee771c"
 NODE = os.environ.get("MM_NODE", "node")
 
@@ -43,9 +45,9 @@ assert version["content_version"] == CONTENT_VERSION
 assert version["question_bank_version"] == QUESTION_BANK_VERSION
 assert version["legacy_review_id_version"] == LEGACY_REVIEW_ID_VERSION
 assert latest["version"] == WINDOWS_RECOVERY_VERSION, "Windows recovery version changed unexpectedly"
-assert latest["sha256"] == CORE_SHA256, "Windows recovery feed must use audited core SHA-256"
-assert latest["app_url"].endswith("/MouldMaster_Core_App.html"), "Windows recovery feed must point to audited full core"
-assert sha256("MouldMaster_Core_App.html") == latest["sha256"], "Windows recovery content hash mismatch"
+assert latest["sha256"] == WINDOWS_RECOVERY_CORE_SHA256, "Windows recovery feed must use audited recovery SHA-256"
+expected_recovery_url = f"https://raw.githubusercontent.com/connorth3-lgtm/Injection-moulding-app-/{WINDOWS_RECOVERY_SOURCE_COMMIT}/MouldMaster_Core_App.html"
+assert latest["app_url"] == expected_recovery_url, "Windows recovery feed must pin the audited immutable source commit"
 assert sha256("MouldMasterAcademy.exe") == latest["launcher_sha256"] == EXE_SHA256, "Windows recovery launcher hash mismatch"
 
 icon_sizes = {icon["src"].removeprefix("./"): icon["sizes"] for icon in manifest["icons"]}
@@ -58,8 +60,19 @@ assert manifest["display"] == "standalone"
 core = text("MouldMaster_Core_App.html")
 attributes = text(".gitattributes")
 assert re.search(r"^MouldMaster_Core_App\.html\s+-text\s*$", attributes, flags=re.M), "audited core must disable Git line-ending conversion"
-assert sha256("MouldMaster_Core_App.html") == CORE_SHA256, "audited core bytes changed"
+assert sha256("MouldMaster_Core_App.html") == CURRENT_CORE_SHA256, "current standalone core bytes changed without updating its audited hash lock"
 assert len(core) > 500000, "audited core unexpectedly small"
+assert "clean.certificates=[];" in core and "clean.certificateMeta={};" in core and "clean.examPassStatus={};" in core, "standalone backup import must strip credential evidence"
+assert "function pvCommitImportedUsers(proposed)" in core and "if(file.size>10*1024*1024)" in core, "standalone backup import must be storage-first and size-bounded"
+assert "function pvCommitPristineReset()" in core and "Existing learner data was left unchanged" in core, "standalone destructive reset must fail closed when browser storage cannot persist the reset"
+assert "function mmPersistCurrentState()" in core and "mmStorageDurabilityWarning" in core and "return durable;" in core, "ordinary learner persistence must report durability and expose a persistent session-only warning on storage failure"
+assert "mm-session-only-result" in core and "This result and any certificate earned are available only for this session" in core, "non-durable assessment evidence must be disclosed in the result UI"
+assert "function mmSelectStartupDb(candidate,pristine)" in core and "Object.prototype.hasOwnProperty.call(candidate.users,active)" in core, "persisted learner registry must fail closed on inherited/unsafe startup identities"
+assert "function mmStartupUniqueLessonIdsAreSafe(values)" in core and "function mmStartupCertificatesAreSafe(values)" in core and "mmStartupCertificatesAreSafe(record.certificates)" in core, "persisted learner registry must validate unique in-range progress/bookmark IDs and recognized certificate keys before rendering"
+assert "record.currentLesson!=null" in core and "record.region!=null" in core and "m.completed.length>36" in core and "new Set(m.completed).size!==m.completed.length" in core, "persisted learner registry must fail closed on unsafe lesson pointers, regions and duplicate material progress"
+assert "Assessment selector rejected unknown level or region" in core and core.count("mmSetStorageDurability(true)") >= 2, "standalone assessment/storage recovery hardening missing"
+assert "typeof value!==\"number\"||!Number.isFinite(value)||value<0||value>100" in core and "<span class=\"pill\">${esc(status)}</span>" in core, "persisted assessment values must be typed at startup and escaped at exam-status HTML sinks"
+assert "${esc(f.xp)} XP" in core and "${esc(f.streak)}-day learning streak" in core and "m.bestQuiz==null?\"—\":esc(m.bestQuiz)+\"%\"" in core, "legacy gamification/material numeric state must be escaped at HTML sinks"
 assert "criticalWrong===0" in core, "zero-wrong safety-critical gate missing"
 assert "Compare All assesses ALL 9 regional items" in core, "Compare All regional rule missing"
 
@@ -123,7 +136,7 @@ runtime_v2 = text("runtime-v2.js")
 for marker in ["one owner at a time", "setImplementation", "before:new Set(),after:new Set()", "registerModule", "scopedKey"]:
     assert marker in runtime_v2, f"runtime v2 invariant missing: {marker}"
 assessment_v2 = text("assessment-runtime-v2.js")
-for marker in ["technicalPerExam:7", "technicalBankPerLevel:10", "least-exposed blueprint-preserving stable IDs", "R.setImplementation('getExamQuestions',selector,'assessment-runtime-v2')"]:
+for marker in ["technicalPerExam:7", "technicalBankPerLevel:10", "least-exposed blueprint-preserving stable IDs", "R.setImplementation('getExamQuestions',selector,'assessment-runtime-v2')", "Assessment selector rejected unknown level or region"]:
     assert marker in assessment_v2, f"assessment membership rotation invariant missing: {marker}"
 lesson_v2 = text("lesson-deep-authoring-v2.js")
 assert "D.lessons.length!==120" in lesson_v2 and "duplicate lesson records" in lesson_v2, "lesson deep authoring must cover 120 unique records"
@@ -181,8 +194,11 @@ assert "lesson()" in source_lib and "standards()" in source_lib, "sources must b
 assert Path("sources/AUTHORITATIVE_SOURCE_REGISTER.md").exists(), "authoritative source register missing"
 
 bridge = text("training-qa-fix.js")
-for marker in ["file.size>10*1024*1024", "clean.id=sid", "clean.certificates=[]", "clean.certificateMeta={}", "clean.examPassStatus={}", "restoreSnapshot(before)", "Certificates must be re-earned", "db!==beforeDb", "LEARNING_ANALYTICS_PREFIX", "ANALYTICS_CLEANUP_CODE", "remaining key(s):", "clearAllAnalyticsStores();clearTrainingExtrasStores()", "analytics were cleared and verified"]:
+assert bridge.count("mmSetStorageDurability?.(true)") == 2, "hosted import/reset must clear stale session-only storage warnings after successful writes"
+for marker in ["file.size>10*1024*1024", "const sid=requireCoreLearnerId(id);", "if(hasOwnCoreLearner(users,sid))", "if(!clean||clean.id!==sid)", "const active=requireCoreLearnerId(x.activeUser);", "if(!hasOwnCoreLearner(users,active))", "clean.certificates=[]", "clean.certificateMeta={}", "clean.examPassStatus={}", "restoreSnapshot(before)", "Certificates must be re-earned", "db!==beforeDb", "LEARNING_ANALYTICS_PREFIX", "ANALYTICS_CLEANUP_CODE", "remaining key(s):", "clearAllAnalyticsStores();clearTrainingExtrasStores()", "analytics were cleared and verified"]:
     assert marker in bridge, f"import/reset hardening missing: {marker}"
+assert "clean.id=sid" not in bridge, "import bridge must reject learner-ID mismatch instead of silently rewriting it"
+assert "!x.users[x.activeUser]" not in bridge, "import bridge must not use inherited learner lookup for activeUser"
 storage_commit = bridge.index("for(const [k,v] of Object.entries(writes))localStorage.setItem(k,v)")
 cleanup_commit = bridge.index("clearAllAnalyticsStores();", storage_commit)
 memory_commit = bridge.index("db=proposed;user=db.users[db.activeUser]")

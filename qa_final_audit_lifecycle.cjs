@@ -5,6 +5,14 @@ const assert=require('assert');
 
 const analyticsSource=fs.readFileSync('src/domains/learning/learning-analytics-loader.js','utf8');
 const trainingSource=fs.readFileSync('training-qa-fix.js','utf8');
+const coreSource=fs.readFileSync('MouldMaster_Core_App.html','utf8');
+function extractCoreFunction(name){
+  const start=coreSource.indexOf(`function ${name}(`);assert(start>=0,`missing ${name}`);
+  const brace=coreSource.indexOf('{',start);let depth=0,quote=null,escape=false;
+  for(let i=brace;i<coreSource.length;i++){const ch=coreSource[i];if(quote){if(escape){escape=false;continue}if(ch==='\\'){escape=true;continue}if(ch===quote)quote=null;continue}if(ch==='\"'||ch==="'"||ch==='`'){quote=ch;continue}if(ch==='{')depth++;else if(ch==='}'&&--depth===0)return coreSource.slice(start,i+1)}
+  throw new Error(`unterminated ${name}`);
+}
+const learnerIdApi=new Function(`${extractCoreFunction('pvCanonicalLearnerId')}\n${extractCoreFunction('pvRequireLearnerId')}\n${extractCoreFunction('pvHasOwnLearner')}\nreturn {pvRequireLearnerId,pvHasOwnLearner};`)();
 
 // Learner-analytics cohort discovery must be derived from the current profile
 // registry. A syntactically valid strong-token bucket left by a removed/imported
@@ -115,6 +123,7 @@ function trainingSandbox(removeMode='normal'){
     db:JSON.parse(oldSerialized),user:null,
     defaultDB:{activeUser:'learner-1',users:{'learner-1':{id:'learner-1',name:'Learner 1',role:'learner',completed:[],bookmarks:[],notes:{},examScores:{},certificates:[],currentLesson:1,lastSeen:'2026-09-05T00:00:00.000Z'}}},
     normaliseImportedUser:(u,id)=>({...u,id:String(id),completed:Array.isArray(u.completed)?u.completed:[]}),
+    pvRequireLearnerId:learnerIdApi.pvRequireLearnerId,pvHasOwnLearner:learnerIdApi.pvHasOwnLearner,
     updateGlobalProgress(){},switchView(){},renderProfile(){},
     startExam:undefined,activeExam:null,resetData(){},toast:msg=>toasts.push(String(msg)),
   };
@@ -133,6 +142,17 @@ function trainingSandbox(removeMode='normal'){
   assert.strictEqual(t.memory.get('mouldmasterProDB'),t.oldSerialized,'failed import did not roll staged core storage back');
   assert(t.alerts.some(x=>/Import was not completed because local analytics\/training cleanup could not be fully verified/i.test(x)),'cleanup failure did not surface a specific blocking import warning');
   assert(!t.toasts.some(x=>/^Progress imported/i.test(x)),'failed cleanup falsely reported a successful import');
+}
+
+// Oversized hosted backups must fail closed before staging any learner-registry write.
+{
+  const t=trainingSandbox('normal');
+  const users={};for(let i=0;i<501;i++)users[`learner-${i+1}`]={id:`learner-${i+1}`,name:`Learner ${i+1}`,completed:[]};
+  const incoming={activeUser:'learner-1',users,trainingExtras:{version:2,spacedReview:{items:{}},practicalSignoff:{checks:{}}}};
+  t.sandbox.importData({size:500000,contents:JSON.stringify(incoming)});
+  assert.strictEqual(t.sandbox.db.activeUser,'old','oversized hosted import silently activated a truncated learner registry');
+  assert.strictEqual(t.memory.get('mouldmasterProDB'),t.oldSerialized,'oversized hosted import staged or persisted a truncated learner registry');
+  assert(t.alerts.some(x=>/not a valid MouldMaster backup/i.test(x)),'oversized hosted import did not surface a blocking invalid-backup warning');
 }
 
 // Silent removeItem failure is just as unsafe as a thrown exception. Re-enumeration

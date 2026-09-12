@@ -10,6 +10,7 @@ const ROLE_OPTIONS=['unresolved','actual','setpoint','command','state','quality'
 const SAMPLING_OPTIONS=['unknown','per-cycle','trace-sample','event','batch'];
 const BLOCKING_SEMANTIC_KINDS=new Set(['unresolved']);
 const CONTEXT_KEYS=['machine','mould','materialGrade','job'];
+const PROCESS_DATA_STORES=['datasets','shots','baselines','caseLinks','interventions'];
 let semanticRegistry=null;
 let currentManifest=null;
 let preparedSession=null;
@@ -19,18 +20,30 @@ let installQueued=false;
 function esc(v){return String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
 function safeToken(v,max=96){return String(v??'').replace(/[^a-zA-Z0-9:_\-. /]/g,'').slice(0,max)}
 function uid(prefix='id'){try{return `${prefix}-${crypto.randomUUID()}`}catch(_){return `${prefix}-${Date.now().toString(36)}-${Math.random().toString(36).slice(2,9)}`}}
-function num(v){const n=Number(v);return Number.isFinite(n)?n:null}
+function num(v){
+  if(typeof v==='number')return Number.isFinite(v)?v:null;
+  if(typeof v!=='string')return null;
+  const text=v.trim();if(!text)return null;
+  const n=Number(text);return Number.isFinite(n)?n:null;
+}
 function mean(a){return a.length?a.reduce((s,x)=>s+x,0)/a.length:null}
-function variance(a,m=mean(a)){if(a.length<2||m==null)return 0;return a.reduce((s,x)=>s+(x-m)*(x-m),0)/(a.length-1)}
+function variance(a,m=mean(a)){if(a.length<2||m==null)return null;return a.reduce((s,x)=>s+(x-m)*(x-m),0)/(a.length-1)}
 function quantile(sorted,q){if(!sorted.length)return null;const p=(sorted.length-1)*q,l=Math.floor(p),h=Math.ceil(p);return l===h?sorted[l]:sorted[l]+(sorted[h]-sorted[l])*(p-l)}
 function stats(values){
-  const a=values.map(Number).filter(Number.isFinite).sort((x,y)=>x-y),m=mean(a),sd=Math.sqrt(variance(a,m));
+  const a=values.map(num).filter(v=>v!==null).sort((x,y)=>x-y),m=mean(a),v=variance(a,m),sd=v==null?null:Math.sqrt(v);
   return {n:a.length,min:a[0]??null,q1:quantile(a,.25),median:quantile(a,.5),q3:quantile(a,.75),max:a[a.length-1]??null,mean:m,sd};
+}
+function referenceScale(summary){
+  if(!summary||Number(summary.n)<2)return null;
+  const s=num(summary.sd),q1=num(summary.q1),q3=num(summary.q3);
+  const robust=q1!==null&&q3!==null?Math.abs(q3-q1)/1.349:null;
+  const candidates=[s,robust].filter(v=>Number.isFinite(v)&&v>0);
+  return candidates.length?Math.max(...candidates):null;
 }
 function roleToKind(role){
   return ({actual:'direct-measurement',setpoint:'command-signal',command:'command-signal',state:'state-signal',quality:'quality-measurement',derived:'derived-feature',structural:'structural',unresolved:'unresolved'})[role]||'unresolved';
 }
-function format(n,d=3){return Number.isFinite(Number(n))?Number(n).toLocaleString(undefined,{maximumFractionDigits:d}):'—'}
+function format(n,d=3){const value=num(n);return value===null?'—':value.toLocaleString(undefined,{maximumFractionDigits:d})}
 function normContext(value){return String(value??'').trim().toLowerCase()}
 function contextCompatibility(left={},right={}){
   const missing=[],mismatched=[];
@@ -118,14 +131,28 @@ async function deleteDataset(id){
   const datasetId=String(id||'');if(!datasetId)throw new Error('Dataset id is required');
   const db=await openDb();
   try{
-    const tx=db.transaction(['datasets','shots','baselines','caseLinks'],'readwrite');
+    const tx=db.transaction(PROCESS_DATA_STORES,'readwrite');
     tx.objectStore('datasets').delete(datasetId);
     const shots=tx.objectStore('shots').index('datasetId');
     await deleteCursorMatches(shots.openCursor(IDBKeyRange.only(datasetId)),()=>true);
     await deleteCursorMatches(tx.objectStore('baselines').openCursor(),row=>row?.datasetId===datasetId);
     await deleteCursorMatches(tx.objectStore('caseLinks').openCursor(),row=>row?.datasetId===datasetId);
+    await deleteCursorMatches(tx.objectStore('interventions').openCursor(),row=>row?.datasetId===datasetId);
     await txDone(tx);return true;
   }finally{db.close()}
+}
+async function clearAllProcessData(){
+  const db=await openDb();
+  try{
+    const tx=db.transaction(PROCESS_DATA_STORES,'readwrite');
+    for(const name of PROCESS_DATA_STORES)tx.objectStore(name).clear();
+    await txDone(tx);
+  }finally{db.close()}
+  const remaining={};
+  for(const name of PROCESS_DATA_STORES)remaining[name]=(await getAll(name)).length;
+  const total=Object.values(remaining).reduce((sum,n)=>sum+Number(n||0),0);
+  if(total)throw new Error(`Process-data cleanup could not be verified (${total} record${total===1?'':'s'} remain).`);
+  return {verified:true,remaining};
 }
 
 function knownDefinition(column){
@@ -183,7 +210,7 @@ function enrichPrepared(prepared,overrides={},datasetMeta={}){
   for(const key of numeric){
     const sem=semanticFor(key,overrides[key]||{});
     semantics[key]=sem;
-    const vals=rows.map(r=>r[key]),present=vals.filter(v=>v!==''&&v!=null),finite=present.map(Number).filter(Number.isFinite),s=stats(finite);
+    const vals=rows.map(r=>r[key]),present=vals.filter(v=>v!=null&&!(typeof v==='string'&&v.trim()==='')),finite=present.map(num).filter(v=>v!==null),s=stats(finite);
     const missing=rows.length-present.length,invalid=present.length-finite.length,missingRate=rows.length?missing/rows.length:1;
     const channelIssues=[];
     if(sem.blockers.length)channelIssues.push({level:'block',code:'semantic-unresolved',detail:`Missing ${sem.blockers.join(', ')}`});
@@ -276,19 +303,23 @@ async function compareToBaseline(datasetId,baselineId){
   const rows=await rowsForDataset(datasetId),cur=summarizeRows(rows,record.semantics),signals=[];
   for(const [key,b] of Object.entries(baseline.summary||{})){
     const c=cur[key];if(!c||c.mean==null||b.mean==null)continue;
-    const scale=Math.max(Math.abs(Number(b.sd)||0),Math.abs(Number(b.q3)-Number(b.q1))/1.349,1e-9);
-    const normalizedShift=Math.abs(c.mean-b.mean)/scale;
-    const variabilityRatio=(Number(b.sd)||0)>0?(Number(c.sd)||0)/(Number(b.sd)||0):null;
-    const level=normalizedShift>=3?'high':normalizedShift>=2?'review':'stable';
-    signals.push({channel:key,meaning:b.meaning||key,unit:b.unit||'',baselineMean:b.mean,currentMean:c.mean,normalizedShift,variabilityRatio,level});
+    const scale=referenceScale(b),normalizedShift=scale==null?null:Math.abs(c.mean-b.mean)/scale;
+    const baselineSd=num(b.sd),currentSd=num(c.sd);
+    const variabilityRatio=baselineSd!==null&&baselineSd>0&&currentSd!==null?currentSd/baselineSd:null;
+    const level=normalizedShift==null?'insufficient':normalizedShift>=3?'high':normalizedShift>=2?'review':'stable';
+    signals.push({channel:key,meaning:b.meaning||key,unit:b.unit||'',baselineMean:b.mean,currentMean:c.mean,normalizedShift,variabilityRatio,level,reason:normalizedShift==null?'Reference requires at least two finite observations and positive estimated spread.':null});
   }
-  return {datasetId,baselineId,signals:signals.sort((a,b)=>b.normalizedShift-a.normalizedShift),boundary:'Drift scores compare this site-local dataset with its selected baseline. They are evidence-attention heuristics, not automatic root-cause diagnoses or production control limits.'};
+  return {datasetId,baselineId,signals:signals.sort((a,b)=>(b.normalizedShift??-Infinity)-(a.normalizedShift??-Infinity)),boundary:'Drift scores compare this site-local dataset with its selected baseline. Channels without at least two finite reference observations and positive estimated spread remain explicitly unscored. Scores are evidence-attention heuristics, not automatic root-cause diagnoses or production control limits.'};
 }
 function compareWindows(rows,semantics,splitIndex,windowSize=20){
   const i=Math.max(1,Math.min(rows.length-1,Number(splitIndex)||Math.floor(rows.length/2))),n=Math.max(3,Math.min(500,Number(windowSize)||20));
   const before=rows.slice(Math.max(0,i-n),i),after=rows.slice(i,Math.min(rows.length,i+n)),a=summarizeRows(before,semantics),b=summarizeRows(after,semantics),changes=[];
-  for(const key of Object.keys(a)){if(!b[key]||a[key].mean==null||b[key].mean==null)continue;const scale=Math.max(a[key].sd||0,Math.abs((a[key].q3||0)-(a[key].q1||0))/1.349,1e-9);changes.push({channel:key,meaning:a[key].meaning||key,unit:a[key].unit||'',beforeMean:a[key].mean,afterMean:b[key].mean,normalizedChange:Math.abs(b[key].mean-a[key].mean)/scale})}
-  return {splitIndex:i,beforeRows:before.length,afterRows:after.length,changes:changes.sort((x,y)=>y.normalizedChange-x.normalizedChange),boundary:'Before/after comparison supports controlled-test evidence. Association with an intervention does not by itself prove causality.'};
+  for(const key of Object.keys(a)){
+    if(!b[key]||a[key].mean==null||b[key].mean==null)continue;
+    const enough=Number(a[key].n)>=2&&Number(b[key].n)>=2,scale=enough?referenceScale(a[key]):null;
+    changes.push({channel:key,meaning:a[key].meaning||key,unit:a[key].unit||'',beforeMean:a[key].mean,afterMean:b[key].mean,normalizedChange:scale==null?null:Math.abs(b[key].mean-a[key].mean)/scale,status:scale==null?'insufficient':'scored',reason:scale==null?'Both windows require at least two finite observations and the reference window requires positive estimated spread.':null});
+  }
+  return {splitIndex:i,beforeRows:before.length,afterRows:after.length,changes:changes.sort((x,y)=>(y.normalizedChange??-Infinity)-(x.normalizedChange??-Infinity)),boundary:'Before/after comparison supports controlled-test evidence. Underpowered or zero-spread channels remain explicitly unscored. Association with an intervention does not by itself prove causality.'};
 }
 
 async function linkCase(caseId,link){
@@ -317,11 +348,29 @@ function issuesHtml(p){
   const xs=p.quality?.issues||[];if(!xs.length)return '<div class="di-ok">No semantic, sequence or intake-review blockers detected.</div>';
   return `<div class="di-issues">${xs.slice(0,30).map(x=>`<div class="di-issue ${esc(x.level)}"><b>${esc(x.level.toUpperCase())}</b> ${esc(x.channel)} · ${esc(x.detail)}</div>`).join('')}${xs.length>30?`<div class="di-issue note">${xs.length-30} more issues not shown</div>`:''}</div>`;
 }
+function readinessHtml(p){
+  const labels=['Import','Validate structure','Privacy preparation','Define semantics','Check coverage','Analyse'];
+  if(!p)return `<div class="di-readiness-flow">${labels.map((label,i)=>`<div class="di-readiness-step ${i===0?'current':'locked'}"><b>${i+1} · ${esc(label)}</b><small>${i===0?'Choose a local CSV to begin.':'Waiting for the previous readiness step.'}</small></div>`).join('')}</div><div class="di-empty" style="margin-top:10px">Analysis stays locked until source integrity, privacy preparation and channel semantics are ready.</div>`;
+  const issues=p.quality?.issues||[],blocking=issues.filter(x=>x.level==='block'),warnings=issues.filter(x=>x.level==='warn');
+  const semanticBlocks=Object.values(p.semantics||{}).filter(s=>(s.blockers||[]).length).length;
+  const sourceBlocks=blocking.filter(x=>['prepared-data-review','sequence-review','non-numeric-values'].includes(x.code)).length;
+  const privacyRules=Array.isArray(p.rules)?p.rules:[],privacyActions=privacyRules.filter(x=>['drop','alias','keep','quality','category','unit'].includes(x.action)).length;
+  const coverageState=sourceBlocks?'blocked':warnings.length?'review':'done';
+  const steps=[
+    {label:labels[0],state:'done',detail:`${p.summary?.outputRows||0} prepared rows loaded locally.`},
+    {label:labels[1],state:sourceBlocks?'blocked':'done',detail:sourceBlocks?`${sourceBlocks} source-integrity blocker${sourceBlocks===1?'':'s'} must be resolved.`:'CSV structure, sequence and retained numeric values passed blocking checks.'},
+    {label:labels[2],state:privacyActions?'done':'blocked',detail:privacyActions?`${privacyActions} keep/alias/drop preparation decisions applied locally.`:'Privacy preparation decisions are unavailable.'},
+    {label:labels[3],state:semanticBlocks?'blocked':'done',detail:semanticBlocks?`${semanticBlocks} channel${semanticBlocks===1?'':'s'} still need meaning, role, unit or sampling basis.`:'All retained numeric channels have resolved semantics.'},
+    {label:labels[4],state:coverageState,detail:sourceBlocks?'Coverage cannot be trusted until source blockers are resolved.':warnings.length?`${warnings.length} coverage/variation warning${warnings.length===1?'':'s'} to review; warnings do not unlock blocked semantics.`:'No blocking coverage or variation issue detected.'},
+    {label:labels[5],state:p.quality?.analysisReady?'ready':'locked',detail:p.quality?.analysisReady?'Analysis-ready: baseline and process-intelligence tools may be used.':`${blocking.length} blocker${blocking.length===1?'':'s'} keep analysis locked.`}
+  ];
+  return `<div class="di-readiness-flow">${steps.map((step,i)=>`<div class="di-readiness-step ${esc(step.state)}"><b>${i+1} · ${esc(step.label)}</b><small>${esc(step.detail)}</small></div>`).join('')}</div><div class="di-kpis"><div class="di-kpi"><b>${p.summary?.outputRows||0}</b><small>rows</small></div><div class="di-kpi"><b>${p.summary?.keptNumeric||0}</b><small>numeric channels</small></div><div class="di-kpi"><b>${p.quality?.blockingCount||0}</b><small>blockers</small></div><div class="di-kpi"><b>${p.quality?.analysisReady?'READY':'BLOCKED'}</b><small>analysis state</small></div></div>${issuesHtml(p)}`;
+}
 function ensureStyle(){
   if(document.getElementById('mm-data-integration-style'))return;
   const s=document.createElement('style');s.id='mm-data-integration-style';s.textContent=`
-  .di-hero,.di-panel{padding:18px}.di-actions{display:flex;gap:8px;flex-wrap:wrap}.di-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px}.di-note{padding:11px 13px;border:1px solid #66582c;border-radius:10px;background:#282313;color:#f2e6b4;font-size:12px;line-height:1.5}.di-ok{padding:11px 13px;border:1px solid #355a55;border-radius:10px;background:#102824;color:#d6eee7}.di-empty{padding:13px;border:1px dashed #3a5675;border-radius:9px;color:var(--muted)}.di-kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:12px 0}.di-kpi{padding:10px;border:1px solid #304b69;border-radius:9px;background:#0e1d31}.di-kpi b{display:block;font-size:18px}.di-kpi small{color:var(--muted)}.di-semantic-table{display:grid;gap:8px;max-height:520px;overflow:auto}.di-sem-row{display:grid;grid-template-columns:minmax(150px,1.2fr) 1.5fr 120px 100px 130px 130px 130px minmax(120px,1fr);gap:7px;align-items:end;padding:9px;border:1px solid #304b69;border-radius:9px;background:#0e1d31}.di-sem-row small{display:block;color:var(--muted)}.di-sem-row label{font-size:10px;color:var(--muted)}.di-sem-row input,.di-sem-row select{width:100%;margin-top:3px}.di-sem-state{font-size:10px;padding:7px;border-radius:7px}.di-sem-state.ready{background:#102824;color:#8ce4c6}.di-sem-state.blocked{background:#32251b;color:#ffd49a}.di-issues{display:grid;gap:5px}.di-issue{padding:8px 9px;border-radius:7px;background:#0e1d31;font-size:11px}.di-issue.block{border-left:4px solid #ff8c9b}.di-issue.warn{border-left:4px solid #ffd166}.di-issue.note{border-left:4px solid #69a8ff}.di-meta{display:grid;grid-template-columns:1fr 1fr;gap:8px}.di-meta .wide{grid-column:1/-1}.di-dataset-list{display:grid;gap:7px}.di-dataset{padding:10px;border:1px solid #304b69;border-radius:9px;background:#0e1d31}.di-workspace-panel{margin-top:10px}.di-workspace-panel select{width:100%}.di-similar{display:grid;gap:6px;margin-top:8px}
-  @media(max-width:1100px){.di-sem-row{grid-template-columns:1fr 1fr 1fr}.di-grid{grid-template-columns:1fr}}@media(max-width:650px){.di-kpis,.di-meta,.di-sem-row{grid-template-columns:1fr}.di-actions button,.di-actions label{width:100%}}
+  .di-hero,.di-panel{padding:18px}.di-actions{display:flex;gap:8px;flex-wrap:wrap}.di-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px}.di-readiness-flow{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:7px;margin:10px 0}.di-readiness-step{padding:9px;border:1px solid #304b69;border-radius:9px;background:#0e1d31;min-height:78px}.di-readiness-step b{display:block;font-size:11px;margin-bottom:5px}.di-readiness-step small{display:block;color:var(--muted);line-height:1.35}.di-readiness-step.done,.di-readiness-step.ready{border-color:#355a55;background:#102824}.di-readiness-step.review{border-color:#786129;background:#2a2414}.di-readiness-step.blocked{border-color:#7b3e4a;background:#2b171d}.di-readiness-step.locked{opacity:.72}.di-readiness-step.current{border-color:#4f78a7;background:#10243a}.di-note{padding:11px 13px;border:1px solid #66582c;border-radius:10px;background:#282313;color:#f2e6b4;font-size:12px;line-height:1.5}.di-ok{padding:11px 13px;border:1px solid #355a55;border-radius:10px;background:#102824;color:#d6eee7}.di-empty{padding:13px;border:1px dashed #3a5675;border-radius:9px;color:var(--muted)}.di-kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:12px 0}.di-kpi{padding:10px;border:1px solid #304b69;border-radius:9px;background:#0e1d31}.di-kpi b{display:block;font-size:18px}.di-kpi small{color:var(--muted)}.di-semantic-table{display:grid;gap:8px;max-height:520px;overflow:auto}.di-sem-row{display:grid;grid-template-columns:minmax(150px,1.2fr) 1.5fr 120px 100px 130px 130px 130px minmax(120px,1fr);gap:7px;align-items:end;padding:9px;border:1px solid #304b69;border-radius:9px;background:#0e1d31}.di-sem-row small{display:block;color:var(--muted)}.di-sem-row label{font-size:10px;color:var(--muted)}.di-sem-row input,.di-sem-row select{width:100%;margin-top:3px}.di-sem-state{font-size:10px;padding:7px;border-radius:7px}.di-sem-state.ready{background:#102824;color:#8ce4c6}.di-sem-state.blocked{background:#32251b;color:#ffd49a}.di-issues{display:grid;gap:5px}.di-issue{padding:8px 9px;border-radius:7px;background:#0e1d31;font-size:11px}.di-issue.block{border-left:4px solid #ff8c9b}.di-issue.warn{border-left:4px solid #ffd166}.di-issue.note{border-left:4px solid #69a8ff}.di-meta{display:grid;grid-template-columns:1fr 1fr;gap:8px}.di-meta .wide{grid-column:1/-1}.di-dataset-list{display:grid;gap:7px}.di-dataset{padding:10px;border:1px solid #304b69;border-radius:9px;background:#0e1d31}.di-workspace-panel{margin-top:10px}.di-workspace-panel select{width:100%}.di-similar{display:grid;gap:6px;margin-top:8px}
+  @media(max-width:1100px){.di-sem-row{grid-template-columns:1fr 1fr 1fr}.di-grid{grid-template-columns:1fr}.di-readiness-flow{grid-template-columns:repeat(3,minmax(0,1fr))}}@media(max-width:650px){.di-kpis,.di-meta,.di-sem-row,.di-readiness-flow{grid-template-columns:1fr}.di-actions button,.di-actions label{width:100%}.di-readiness-step{min-height:0}}
   `;document.head.appendChild(s)
 }
 function advancedHost(){return document.getElementById('processDataLabs')}
@@ -332,7 +381,7 @@ function renderAdvancedIntake(prepared=null,error=''){
   <div class="card di-hero"><div class="eyebrow">Connected local process data</div><h2>Prepare, define and validate real shot data</h2><p>Raw CSV stays in this browser/desktop session. Privacy preparation happens first; semantic readiness is checked separately so a clean file cannot be mistaken for an interpretable engineering dataset.</p><div class="di-note"><b>Fail-closed rule:</b> malformed numeric intake review, unresolved meaning, actual/setpoint/command role, engineering unit, sampling basis or sequence integrity blocks baseline and drift intelligence. Saved data can remain locally preserved while blocked.</div></div>
   ${error?`<div class="di-note" style="margin-top:12px"><b>Could not prepare file:</b> ${esc(error)}</div>`:''}
   <div class="di-grid"><section class="card di-panel"><h3>1 · Local CSV and context</h3><div class="di-meta"><label class="wide">CSV<input type="file" accept=".csv,text/csv" data-di-file></label><label>Source label<input data-di-meta="source_label" placeholder="e.g. machine export"></label><label>Confidentiality<select data-di-meta="confidentiality"><option value="local-confidential">local-confidential</option><option value="internal-approved">internal-approved</option><option value="public-cleared">public-cleared</option></select></label><label>Machine context<input data-di-meta="machine_context" placeholder="non-person local alias"></label><label>Mould context<input data-di-meta="mould_context" placeholder="non-person local alias"></label><label>Material context<input data-di-meta="material_context" placeholder="grade/code"></label><label>Job context<input data-di-meta="job_context" placeholder="non-person work-order alias"></label></div><p class="muted">Do not enter operator, employee, customer or contact identifiers.</p></section>
-  <section class="card di-panel"><h3>Readiness</h3>${prepared?`<div class="di-kpis"><div class="di-kpi"><b>${prepared.summary.outputRows}</b><small>rows</small></div><div class="di-kpi"><b>${prepared.summary.keptNumeric}</b><small>numeric channels</small></div><div class="di-kpi"><b>${prepared.quality.blockingCount}</b><small>blockers</small></div><div class="di-kpi"><b>${ready?'READY':'BLOCKED'}</b><small>analysis state</small></div></div>${issuesHtml(prepared)}`:'<div class="di-empty">Choose a CSV. MouldMaster will strip/alias sensitive fields, profile numeric channels and require semantic declarations before process intelligence.</div>'}</section></div>
+  <section class="card di-panel"><h3>Data readiness</h3>${readinessHtml(prepared)}</section></div>
   ${prepared?`<section class="card di-panel" style="margin-top:12px"><h3>2 · Channel semantic dictionary</h3><p class="muted">Confirm each numeric channel. Heuristic matches are suggestions, never authority.</p>${semanticRowsHtml(prepared)}<div class="di-actions" style="margin-top:10px"><button class="secondary" data-di-apply>Apply semantic declarations</button></div></section>
   <section class="card di-panel" style="margin-top:12px"><h3>3 · Use the prepared dataset</h3><div class="di-actions"><button class="ghost" data-di-csv>Download prepared CSV</button><button class="ghost" data-di-dictionary>Download semantic dictionary</button><button class="primary" data-di-save>${ready?'Save analysis-ready dataset locally':'Save blocked dataset locally'}</button></div><p class="muted">Saving uses IndexedDB on this device. No network upload is performed by this module.</p></section>`:''}</div>`;
   wireAdvancedIntake(prepared)
@@ -364,10 +413,14 @@ function wireAdvancedIntake(prepared){
 async function renderDatasetLibrary(){
   ensureStyle();const h=advancedHost();if(!h)return;
   const datasets=await listDatasets().catch(()=>[]);
-  h.innerHTML=`<div data-di-library-root><div class="di-actions" style="margin-bottom:12px"><button class="ghost" data-di-intake>← Process-data intake</button><button class="ghost" data-di-back>Data diagnosis</button></div><div class="card di-hero"><div class="eyebrow">Local process-data store</div><h2>Dataset library</h2><p>Prepared datasets are stored in IndexedDB on this device. Analysis-blocked datasets remain preserved but cannot be used for baseline or drift calculations until semantics are resolved and re-saved.</p></div><section class="card di-panel" style="margin-top:12px"><div class="di-dataset-list">${datasets.length?datasets.map(d=>`<div class="di-dataset"><b>${esc(d.datasetMeta?.source_label||d.id)}</b><div class="muted">${d.rowCount} rows · ${d.quality?.analysisReady?'analysis-ready':'blocked'} · ${esc(d.entities?.machine||'machine not linked')} · ${esc(d.entities?.mould||'mould not linked')}</div><div class="di-actions" style="margin-top:7px">${d.quality?.analysisReady?`<button class="secondary" data-di-baseline="${esc(d.id)}">Create baseline</button>`:''}<button class="ghost" data-di-delete="${esc(d.id)}">Delete local dataset</button></div></div>`).join(''):'<div class="di-empty">No locally stored datasets yet.</div>'}</div></section></div>`;
+  h.innerHTML=`<div data-di-library-root><div class="di-actions" style="margin-bottom:12px"><button class="ghost" data-di-intake>← Process-data intake</button><button class="ghost" data-di-back>Data diagnosis</button><button class="danger" data-di-clear-all>Delete all saved process data</button></div><div class="card di-hero"><div class="eyebrow">Local process-data store</div><h2>Dataset library</h2><p>Prepared datasets are stored in IndexedDB on this device. Analysis-blocked datasets remain preserved but cannot be used for baseline or drift calculations until semantics are resolved and re-saved.</p></div><section class="card di-panel" style="margin-top:12px"><div class="di-dataset-list">${datasets.length?datasets.map(d=>`<div class="di-dataset"><b>${esc(d.datasetMeta?.source_label||d.id)}</b><div class="muted">${d.rowCount} rows · ${d.quality?.analysisReady?'analysis-ready':'blocked'} · ${esc(d.entities?.machine||'machine not linked')} · ${esc(d.entities?.mould||'mould not linked')}</div><div class="di-actions" style="margin-top:7px">${d.quality?.analysisReady?`<button class="secondary" data-di-baseline="${esc(d.id)}">Create baseline</button>`:''}<button class="ghost" data-di-delete="${esc(d.id)}">Delete local dataset</button></div></div>`).join(''):'<div class="di-empty">No locally stored datasets yet.</div>'}</div></section></div>`;
   const root=h.querySelector('[data-di-library-root]');root.querySelector('[data-di-intake]')?.addEventListener('click',()=>renderAdvancedIntake(preparedSession));root.querySelector('[data-di-back]')?.addEventListener('click',()=>window.MM_PROCESS_DATA_DIAGNOSTICS?.open?.());
+  root.querySelector('[data-di-clear-all]')?.addEventListener('click',async()=>{
+    if(!confirm('Delete every saved process dataset, shot row, baseline, linked troubleshooting reference, and intervention record from this device? Learner progress and learner analytics are separate and will not be deleted.'))return;
+    try{await clearAllProcessData();preparedSession=null;window.toast?.('All saved process data deleted and verified');renderDatasetLibrary()}catch(err){window.toast?.(`Process-data cleanup failed: ${err?.message||err}`)}
+  });
   root.querySelectorAll('[data-di-baseline]').forEach(b=>b.addEventListener('click',async()=>{try{await createBaseline(b.dataset.diBaseline);window.toast?.('Local baseline created')}catch(err){window.toast?.(err?.message||String(err))}}));
-  root.querySelectorAll('[data-di-delete]').forEach(b=>b.addEventListener('click',async()=>{if(!confirm('Delete this local dataset, its shots, baselines, and linked troubleshooting references?'))return;await deleteDataset(b.dataset.diDelete);renderDatasetLibrary()}))
+  root.querySelectorAll('[data-di-delete]').forEach(b=>b.addEventListener('click',async()=>{if(!confirm('Delete this local dataset, its shots, baselines, linked troubleshooting references, and intervention records?'))return;await deleteDataset(b.dataset.diDelete);renderDatasetLibrary()}))
 }
 function openAdvancedIntake(){window.MM_PROCESS_DATA_DIAGNOSTICS?.open?.();requestAnimationFrame(()=>renderAdvancedIntake(preparedSession))}
 
@@ -443,8 +496,8 @@ window.MM_CONNECTED_PROCESS_DATA={
   semanticRegistry:()=>semanticRegistry,
   currentManifest:()=>currentManifest,
   enrichPrepared,
-  storage:{savePrepared,listDatasets,rowsForDataset,deleteDataset},
-  intelligence:{createBaseline,compareToBaseline,baselineCompatibility,contextCompatibility,assertBaselineCompatible,compareWindows,summarizeRows},
+  storage:{savePrepared,listDatasets,rowsForDataset,deleteDataset,clearAllProcessData},
+  intelligence:{createBaseline,compareToBaseline,baselineCompatibility,contextCompatibility,assertBaselineCompatible,compareWindows,summarizeRows,referenceScale},
   cases:{linkCase,caseLink,similarCases},
   scope:'Local-first connected process-data infrastructure. It distinguishes privacy preparation from semantic readiness, stores prepared site data in IndexedDB, provides site-local statistical evidence comparisons, and never creates universal production limits, causal proof or machine-control authority.'
 };
