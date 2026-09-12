@@ -37,6 +37,7 @@ jobs:
         run: |
           python - <<'PY'
           from pathlib import Path
+          import hashlib
           targets=[Path('src/core-runtime/core-inline-007.js'),Path('MouldMaster_Core_App.html')]
           old='  const users={};\n  for(const [id,u] of Object.entries(x.users).slice(0,500)){'
           new='  const users={},entries=Object.entries(x.users);\n  if(entries.length>500)throw new Error("Too many learners in backup");\n  for(const [id,u] of entries){'
@@ -52,6 +53,14 @@ jobs:
           if qa.count(anchor)!=1:
               raise SystemExit(f'learner-cap regression anchor count was {qa.count(anchor)}, expected 1')
           qa_path.write_text(qa.replace(anchor,insertion,1),encoding='utf-8')
+          release_path=Path('qa_release.py')
+          release=release_path.read_text(encoding='utf-8')
+          old_hash='4bb28931116c9ad74597aec1c0a57ff5c522e0879d41f4db8984f5648632f855'
+          new_hash=hashlib.sha256(Path('MouldMaster_Core_App.html').read_bytes()).hexdigest()
+          if release.count(old_hash)!=1:
+              raise SystemExit(f'current standalone hash-lock target count was {release.count(old_hash)}, expected 1')
+          release_path.write_text(release.replace(old_hash,new_hash,1),encoding='utf-8')
+          print(f'Updated current standalone SHA-256 lock to {new_hash}')
           PY
       - name: Synchronize governed web release
         shell: bash
@@ -81,7 +90,7 @@ jobs:
           python qa_release.py
           python qa_release_docs.py
           python - <<'PY'
-          import json
+          import hashlib,json,re
           from pathlib import Path
           release='2026.09.12.15'
           version=json.loads(Path('version.json').read_text(encoding='utf-8'))
@@ -91,6 +100,10 @@ jobs:
           worker=Path('service-worker.js').read_text(encoding='utf-8')
           shell=Path('pwa-shell.js').read_text(encoding='utf-8')
           evidence=json.loads(Path('data/release-external-validation-v1.json').read_text(encoding='utf-8'))
+          release_qa=Path('qa_release.py').read_text(encoding='utf-8')
+          core_hash=hashlib.sha256(Path('MouldMaster_Core_App.html').read_bytes()).hexdigest()
+          match=re.search(r'^CURRENT_CORE_SHA256 = "([0-9a-f]{64})"$',release_qa,re.M)
+          assert match and match.group(1)==core_hash
           assert f'const SHELL_RELEASE="{release}"' in index
           assert f"const CACHE_VERSION='{release}'" in worker
           assert release in shell
