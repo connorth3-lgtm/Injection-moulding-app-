@@ -23,6 +23,8 @@ jobs:
       - name: Report merge conflict surface
         shell: bash
         run: |
+          git config user.name 'integration-preflight'
+          git config user.email 'integration-preflight@invalid.example'
           set +e
           git merge --no-commit --no-ff origin/audit/process-data-readiness-flow
           code=$?
