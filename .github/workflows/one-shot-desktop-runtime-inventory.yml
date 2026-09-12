@@ -1,0 +1,26 @@
+name: One-shot desktop runtime inventory
+
+on:
+  push:
+    branches:
+      - audit/desktop-runtime-44-2-governed
+    paths:
+      - .github/workflows/one-shot-desktop-runtime-inventory.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  inventory:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Inventory reviewed desktop identifiers
+        shell: bash
+        run: |
+          set -euo pipefail
+          for value in '44.1.1' '26.15.7' '2026.08.26.8' '2026.8.26.8'; do
+            echo "===== ${value} ====="
+            grep -R -n -F --exclude-dir=.git --exclude='one-shot-desktop-runtime-inventory.yml' "$value" . || true
+          done
