@@ -90,6 +90,7 @@ def main() -> int:
     simulator_accessibility_changed = bool(files & {
         "src/core-runtime/core-inline-007.js",
         "qa_simulator_accessibility.py",
+        "tools/externalize_core_scripts.py",
     })
     if simulator_accessibility_changed and (ROOT / "qa_simulator_accessibility.py").exists():
         commands.append([sys.executable, "qa_simulator_accessibility.py"])
