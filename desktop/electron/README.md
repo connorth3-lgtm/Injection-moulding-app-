@@ -4,9 +4,9 @@ This directory contains the normal open-source Windows desktop implementation fo
 
 ## Status
 
-- Current desktop release: `2026.08.26.8`
+- Current desktop release: `2026.08.26.9`
 - Source licence: Apache-2.0
-- Desktop runtime: Electron 44.1.1
+- Desktop runtime: Electron 44.2.0
 - Supported OS/architecture: Windows 10/11 64-bit
 - Packaging: electron-builder
 - Targets: portable EXE, NSIS installer, MSIX / Microsoft Store upload package
@@ -83,7 +83,7 @@ Do not invent a publisher certificate subject or substitute the display name for
 
 ## Versioning
 
-`version.json` is the repository release record. `desktop_release` is four-part (for example `2026.08.26.8`). `desktop_release_tag` and `desktop_release_url` identify the corresponding GitHub Release. npm `package.json` keeps the first three numeric components as its package version, while `build.buildNumber` and `build.buildVersion` carry the fourth Windows release component. QA rejects drift between these values. Windows artifacts use `${buildVersion}` so package filenames and Windows metadata retain the complete desktop release number. Local MSIX builds and the Store workflow both enable MSIX build-number propagation, so the manifest also retains the fourth component.
+`version.json` is the repository release record. `desktop_release` is four-part (for example `2026.08.26.9`). `desktop_release_tag` and `desktop_release_url` identify the corresponding GitHub Release. npm `package.json` keeps the first three numeric components as its package version, while `build.buildNumber` and `build.buildVersion` carry the fourth Windows release component. QA rejects drift between these values. Windows artifacts use `${buildVersion}` so package filenames and Windows metadata retain the complete desktop release number. Local MSIX builds and the Store workflow both enable MSIX build-number propagation, so the manifest also retains the fourth component.
 
 ## Reproducibility
 

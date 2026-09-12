@@ -76,11 +76,27 @@ for marker in [
 ]:
     require(marker in workflow, f"Store package workflow safeguard missing: {marker}")
 
+# A Store-submission artifact is externally meaningful even though this workflow does not
+# submit to Partner Center directly. It must be built only from a governed merged-main SHA.
+require("  production-source:" in workflow, "Store workflow must have a dedicated production-source provenance job")
+require("  store-package:\n    needs: production-source" in workflow, "Store packaging must depend on the production-source gate")
+provenance_job = workflow.split("  production-source:", 1)[1].split("\n  store-package:", 1)[0]
+for marker in [
+    "contents: read",
+    "pull-requests: read",
+    "actions: read",
+    "tools/verify_production_source.py",
+    "--source-sha \"${{ github.sha }}\"",
+    "--require-native-protection",
+]:
+    require(marker in provenance_job, f"Store production-source safeguard missing: {marker}")
+require("contents: write" not in provenance_job, "Store provenance gate must remain read-only")
+
 # MSIX packaging must be reproducible and isolated from the stable portable/NSIS builder.
-require(desktop_pkg['devDependencies'].get('electron-builder') == '26.15.7', 'portable/NSIS electron-builder pin changed unexpectedly')
+require(desktop_pkg['devDependencies'].get('electron-builder') == '26.16.0', 'portable/NSIS electron-builder pin changed unexpectedly')
 require('node scripts/run-msix-builder.cjs --win msix' in desktop_pkg['scripts'].get('dist:msix', ''), 'desktop MSIX script must use the locked local runner')
 require('npx --yes electron-builder' not in desktop_pkg['scripts'].get('dist:msix', ''), 'desktop MSIX script must not resolve a builder from the network at execution time')
-require(desktop_lock['packages']['']['devDependencies'].get('electron-builder') == '26.15.7', 'root desktop lock must preserve electron-builder 26.15.7')
+require(desktop_lock['packages']['']['devDependencies'].get('electron-builder') == '26.16.0', 'root desktop lock must preserve electron-builder 26.16.0')
 require(msix_pkg.get('devDependencies', {}).get('electron-builder') == '27.0.0-alpha.7', 'MSIX toolchain must pin electron-builder 27.0.0-alpha.7 exactly')
 locked_msix = msix_lock.get('packages', {}).get('node_modules/electron-builder')
 require(locked_msix is not None and locked_msix.get('version') == '27.0.0-alpha.7', 'MSIX lockfile must resolve electron-builder 27.0.0-alpha.7 exactly')
