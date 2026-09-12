@@ -48,7 +48,7 @@ require(pkg.get("license") == "Apache-2.0", "desktop package must remain Apache-
 require(lock.get("lockfileVersion", 0) >= 3, "desktop npm lockfile must be v3+")
 for dep in ("electron", "electron-builder"):
     require(lock["packages"][""]["devDependencies"][dep] == pkg["devDependencies"][dep], f"locked {dep} version mismatch")
-require(pkg["devDependencies"].get("electron-builder") == "26.15.7", "portable/NSIS builder must remain pinned to 26.15.7")
+require(pkg["devDependencies"].get("electron-builder") == "26.16.0", "portable/NSIS builder must remain pinned to 26.16.0")
 require(msix_pkg.get("devDependencies", {}).get("electron-builder") == "27.0.0-alpha.7", "isolated MSIX builder must be pinned to 27.0.0-alpha.7")
 locked_msix_builder = msix_lock.get("packages", {}).get("node_modules/electron-builder")
 require(locked_msix_builder is not None and locked_msix_builder.get("version") == "27.0.0-alpha.7", "isolated MSIX lock must resolve electron-builder 27.0.0-alpha.7")

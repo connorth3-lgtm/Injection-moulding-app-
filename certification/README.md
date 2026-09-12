@@ -4,7 +4,7 @@ Status: **repository preparation is advanced, but MouldMaster Academy is not yet
 
 Current product baselines are recorded in `../version.json`. As of 2026-09-05:
 - PWA / browser shell: `2026.09.05.2`
-- Open Windows desktop: `2026.08.26.8`
+- Open Windows desktop: `2026.08.26.9`
 - Training content: `2026.08.26.1`
 - Audited question bank: `2026.08.30.1`
 - Assessment quality / analytics hardening: `2026.08.24.3`
