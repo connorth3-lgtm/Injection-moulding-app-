@@ -1,0 +1,144 @@
+name: One-shot governed desktop runtime upgrade
+
+on:
+  push:
+    branches:
+      - audit/desktop-runtime-44-2-governed
+    paths:
+      - .github/workflows/one-shot-desktop-runtime-upgrade.yml
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+env:
+  PYTHONDONTWRITEBYTECODE: '1'
+
+jobs:
+  patch-validate-commit:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout governed base
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: audit/desktop-runtime-44-2-governed
+          fetch-depth: 0
+      - name: Setup Node
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7
+        with:
+          node-version: '22.12.0'
+          package-manager-cache: false
+      - name: Setup Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7
+        with:
+          python-version: '3.12'
+      - name: Import exact Dependabot dependency update
+        shell: bash
+        run: |
+          set -euo pipefail
+          git fetch origin 1e8126580b54079f4753c3499e207b1b1fdcc1d4
+          git checkout 1e8126580b54079f4753c3499e207b1b1fdcc1d4 -- desktop/electron/package.json desktop/electron/package-lock.json
+      - name: Apply governed runtime and release identities
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import json
+
+          def replace_all(path, old, new, minimum=1):
+              p=Path(path); text=p.read_text(encoding='utf-8'); count=text.count(old)
+              if count < minimum:
+                  raise SystemExit(f'{path}: expected at least {minimum} occurrence(s) of {old!r}, found {count}')
+              p.write_text(text.replace(old,new),encoding='utf-8')
+              print(f'{path}: {old} -> {new} ({count})')
+
+          pkg_path=Path('desktop/electron/package.json')
+          pkg=json.loads(pkg_path.read_text(encoding='utf-8'))
+          if pkg.get('devDependencies') != {'electron':'44.2.0','electron-builder':'26.16.0'}:
+              raise SystemExit(f'unexpected imported desktop dependencies: {pkg.get("devDependencies")}')
+          pkg['build']['buildNumber']='9'
+          pkg['build']['buildVersion']='2026.8.26.9'
+          pkg_path.write_text(json.dumps(pkg,indent=2)+'\n',encoding='utf-8')
+
+          version_path=Path('version.json')
+          version=json.loads(version_path.read_text(encoding='utf-8'))
+          if version.get('desktop_release')!='2026.08.26.8':
+              raise SystemExit(f'unexpected desktop release base: {version.get("desktop_release")}')
+          version['desktop_release']='2026.08.26.9'
+          version['desktop_release_tag']='desktop-v2026.08.26.9'
+          version['desktop_release_url']='https://github.com/connorth3-lgtm/Injection-moulding-app-/releases/tag/desktop-v2026.08.26.9'
+          version_path.write_text(json.dumps(version,indent=2)+'\n',encoding='utf-8')
+
+          for path in [
+              'README.md','support.html','desktop/electron/README.md','desktop/electron/REAL_WINDOWS_VALIDATION.md',
+              'certification/MICROSOFT_STORE_LISTING_COPY.md','certification/README.md','certification/MICROSOFT_STORE_SUBMISSION.md',
+              'qa_release_docs.py'
+          ]:
+              replace_all(path,'2026.08.26.8','2026.08.26.9')
+          replace_all('desktop/electron/REAL_WINDOWS_VALIDATION.md','2026.8.26.8','2026.8.26.9')
+
+          for path in ['qa_release_docs.py','desktop/electron/ELECTRON_44_SUPPORT.md','desktop/electron/README.md']:
+              replace_all(path,'44.1.1','44.2.0')
+          for path in ['qa_open_desktop.py','qa_store_submission.py','desktop/electron/ELECTRON_44_SUPPORT.md']:
+              replace_all(path,'26.15.7','26.16.0')
+
+          support=Path('desktop/electron/ELECTRON_44_SUPPORT.md')
+          text=support.read_text(encoding='utf-8')
+          anchor='''Upstream references:\n\n- https://www.electronjs.org/blog/electron-44-0\n'''
+          insert='''## Electron 44.2.0 patch review\n\nThe 44.2.0 patch release was reviewed as a patch-level runtime update within the already-approved Electron 44 platform boundary. Relevant upstream changes include Chromium/Node maintenance updates plus fixes for failed/aborted chunked `net.request` uploads, ASAR-integrity violation termination, high-volume renderer IPC crashes, and offscreen `menu.popup` crashes. MouldMaster does not use the affected chunked-upload/offscreen-menu application paths, while the ASAR-integrity and IPC fixes strengthen failure behaviour around existing desktop security boundaries. No supported OS/architecture target is added or removed by this patch update.\n\nUpstream references:\n\n- https://www.electronjs.org/blog/electron-44-0\n'''
+          if text.count(anchor)!=1:
+              raise SystemExit(f'Electron support upstream anchor count={text.count(anchor)}')
+          support.write_text(text.replace(anchor,insert,1),encoding='utf-8')
+
+          # Validate the dependency-lock workflow locally with the reviewed builder version.
+          dep=Path('.github/workflows/desktop-dependency-lock.yml')
+          dt=dep.read_text(encoding='utf-8')
+          if dt.count('26.15.7')!=2:
+              raise SystemExit(f'desktop dependency workflow old builder count={dt.count("26.15.7")}')
+          dep.write_text(dt.replace('26.15.7','26.16.0'),encoding='utf-8')
+          PY
+          python tools/bump_web_release.py --release 2026.09.12.19
+      - name: Validate dependency and release contracts
+        shell: bash
+        run: |
+          set -euo pipefail
+          npm ci --prefix desktop/electron --ignore-scripts --no-audit --fund=false
+          node -e "const e=require('./desktop/electron/node_modules/electron/package.json'); if(e.version!=='44.2.0') throw new Error('electron drift: '+e.version)"
+          node -e "const b=require('./desktop/electron/node_modules/electron-builder/package.json'); if(b.version!=='26.16.0') throw new Error('builder drift: '+b.version)"
+          npm run --prefix desktop/electron integrity
+          npm run --prefix desktop/electron licenses
+          npm run --prefix desktop/electron sbom
+          npm run --prefix desktop/electron qa
+          python qa_release.py
+          python qa_release_docs.py
+          python qa_open_desktop.py
+          python qa_store_submission.py
+          python qa_release_immutability.py
+          python qa_release_supply_chain.py
+          python qa_critical_actions_versions.py
+          python qa_repo_governance.py
+          python qa_audit_governance.py
+          python tools/sync_web_release.py --check
+          python tools/verify_release_external_validation.py
+          node tools/generate_style_csp.cjs --check
+          git diff --check
+          if grep -R -n -F --exclude-dir=.git --exclude='one-shot-desktop-runtime-inventory.yml' --exclude='one-shot-desktop-runtime-upgrade.yml' '44.1.1' qa_release_docs.py desktop/electron; then
+            echo 'stale reviewed Electron 44.1.1 marker remains' >&2; exit 1
+          fi
+          if grep -R -n -F --exclude-dir=.git --exclude='package-lock.json' --exclude='one-shot-desktop-runtime-inventory.yml' --exclude='one-shot-desktop-runtime-upgrade.yml' '26.15.7' qa_open_desktop.py qa_store_submission.py desktop/electron .github/workflows/desktop-dependency-lock.yml; then
+            echo 'stale reviewed electron-builder 26.15.7 marker remains' >&2; exit 1
+          fi
+      - name: Commit validated non-workflow changes
+        shell: bash
+        run: |
+          set -euo pipefail
+          # Workflow files are applied separately through the authenticated user API;
+          # restore the locally validated dependency-lock workflow before bot push.
+          git restore --source=HEAD -- .github/workflows/desktop-dependency-lock.yml
+          rm -f .github/workflows/one-shot-desktop-runtime-inventory.yml .github/workflows/one-shot-desktop-runtime-upgrade.yml
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -A
+          git diff --cached --check
+          git commit -m 'Prepare governed Electron 44.2 desktop runtime release'
+          git push origin HEAD:audit/desktop-runtime-44-2-governed
