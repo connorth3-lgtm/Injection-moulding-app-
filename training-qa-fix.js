@@ -81,7 +81,7 @@ window.importData=function(file){
     if(storageError?.code===ANALYTICS_CLEANUP_CODE){storageError.importRollbackVerified=rolledBack;throw storageError}
     throw storageError;
    }
-   db=proposed;user=db.users[db.activeUser];committed=true;cancelActiveExam();
+   db=proposed;user=db.users[db.activeUser];committed=true;cancelActiveExam();try{window.mmSetStorageDurability?.(true)}catch(_){}
    try{updateGlobalProgress();switchView('profile')}catch(uiError){console.warn('[MouldMaster] imported data saved; view refresh failed:',uiError)}
    window.toast?.('Progress imported. Certificates must be re-earned; local assessment and Learning Insights analytics were reset and verified.');
   }catch(e){
@@ -100,7 +100,7 @@ const baseReset=window.resetData;if(typeof baseReset==='function')window.resetDa
  const proposedReset=JSON.parse(JSON.stringify(defaultDB));
  const resetUser=proposedReset.users[proposedReset.activeUser];if(resetUser)resetUser.lastSeen=new Date().toISOString();
  try{localStorage.setItem('mouldmasterProDB',JSON.stringify(proposedReset))}catch(e){alert('Factory reset could not save the clean learner state. Analytics were cleared, but existing progress was not replaced. Reopen MouldMaster and try again.');return}
- const beforeDb=db;db=proposedReset;user=db.users[db.activeUser];if(db!==beforeDb)cancelActiveExam();
+ const beforeDb=db;db=proposedReset;user=db.users[db.activeUser];if(db!==beforeDb)cancelActiveExam();try{window.mmSetStorageDurability?.(true)}catch(_){}
  try{updateGlobalProgress();renderProfile()}catch(uiError){console.warn('[MouldMaster] reset saved; view refresh failed:',uiError)}
  window.toast?.('Data reset. Local assessment and Learning Insights analytics were cleared and verified.');
 };

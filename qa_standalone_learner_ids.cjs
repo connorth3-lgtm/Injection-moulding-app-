@@ -84,6 +84,22 @@ assert.equal(startupApi.mmStartupCertificateKeyIsSafe('Advanced'),true);
 assert.equal(startupApi.mmStartupCertificateKeyIsSafe('Advanced-NZ'),true);
 assert.equal(startupApi.mmStartupCertificateKeyIsSafe('Advanced-XX'),false);
 {
+  const bad=legacyRecord(); bad.region='ZZ';
+  assert.equal(startupApi.mmSelectStartupDb({activeUser:'learner-1',users:{'learner-1':bad}},pristine).rejected,true,'unknown persisted region must fail closed before assessment selection');
+}
+{
+  const bad=legacyRecord(); bad.currentLesson='1';
+  assert.equal(startupApi.mmSelectStartupDb({activeUser:'learner-1',users:{'learner-1':bad}},pristine).rejected,true,'non-integer persisted current lesson must fail closed before navigation');
+}
+{
+  const bad=legacyRecord(); bad.currentLesson=121;
+  assert.equal(startupApi.mmSelectStartupDb({activeUser:'learner-1',users:{'learner-1':bad}},pristine).rejected,true,'out-of-range persisted current lesson must fail closed before navigation');
+}
+{
+  const bad=legacyRecord(); bad.materialScience={completed:[1,1],bestQuiz:80,quizAttempts:1,currentLesson:1};
+  assert.equal(startupApi.mmSelectStartupDb({activeUser:'learner-1',users:{'learner-1':bad}},pristine).rejected,true,'duplicate material lesson IDs must not inflate material progress or achievements');
+}
+{
   const bad=legacyRecord(); bad.completed={1:true};
   assert.equal(startupApi.mmSelectStartupDb({activeUser:'learner-1',users:{'learner-1':bad}},pristine).rejected,true,'non-array completed state must fail closed before .includes() use');
 }
@@ -134,6 +150,11 @@ assert.equal(startupApi.mmStartupCertificateKeyIsSafe('Advanced-XX'),false);
 assert(source.includes('<span class="pill">${esc(status)}</span>'),'exam status display must escape persisted-derived status text');
 assert(source.includes('${esc(f.xp)} XP')&&source.includes('${esc(f.streak)}-day learning streak'),'gamification counters must be escaped at HTML sinks');
 assert.equal((source.match(/m\.bestQuiz==null\?"—":esc\(m\.bestQuiz\)\+"%"/g)||[]).length,2,'both material best-quiz HTML sinks must escape persisted values');
+assert(source.includes('Assessment selector rejected unknown level or region'),'standalone assessment selection must fail closed on unknown level or region');
+assert(commitSource.includes('mmSetStorageDurability(true)')&&resetCommitSource.includes('mmSetStorageDurability(true)'),'successful storage-first import/reset must clear a stale session-only warning');
+const assessmentV2Source=fs.readFileSync('assessment-runtime-v2.js','utf8');
+assert(assessmentV2Source.includes("throw new Error('Assessment selector rejected unknown level or region')"),'hosted assessment selector must fail closed on unknown region/level');
+assert(!assessmentV2Source.includes('return legacySelector.apply'),'hosted assessment selector must not delegate unknown region/level to the legacy selector');
 function makePersistenceHarness(storage){
   const elements=new Map();
   const host={prepend(element){elements.set(element.id,element)}};
@@ -298,6 +319,7 @@ assert(!strict.includes('!x.users[x.activeUser]'),'strict structural gate must n
 assert(!strict.includes('users[pvCleanString(id,160)]=normaliseImportedUser(u,id)'),'strict import must not truncate unsafe learner IDs into registry keys');
 const vm=require('node:vm');
 const bridgeSource=fs.readFileSync('training-qa-fix.js','utf8');
+assert.equal(bridgeSource.split('mmSetStorageDurability?.(true)').length-1,2,'hosted import/reset must clear stale session-only storage warnings after successful writes');
 assert(bridgeSource.includes("const sid=requireCoreLearnerId(id);"),'hosted import bridge must use the canonical core learner-ID validator');
 assert(bridgeSource.includes("if(hasOwnCoreLearner(users,sid))"),'hosted import bridge must use own-property duplicate membership');
 assert(bridgeSource.includes("if(!hasOwnCoreLearner(users,active))"),'hosted import bridge must use own-property active membership');

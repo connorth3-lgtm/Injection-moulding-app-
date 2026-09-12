@@ -7,7 +7,7 @@ import struct
 import subprocess
 import tempfile
 
-WEB_RELEASE = "2026.09.12.13"
+WEB_RELEASE = "2026.09.12.14"
 ANDROID_RELEASE = "2026.08.26.2"
 CONTENT_VERSION = "2026.08.26.1"
 WINDOWS_RECOVERY_VERSION = "2026.08.21.1"
@@ -15,7 +15,7 @@ QUESTION_BANK_VERSION = "2026.08.30.1"
 LEGACY_REVIEW_ID_VERSION = "2026.08.21.1"
 WINDOWS_RECOVERY_SOURCE_COMMIT = "19ef75781e3a782b234db313a5265ff0f3518ee4"
 WINDOWS_RECOVERY_CORE_SHA256 = "96ed07e1487633538359eb12073fe50bfe595d9d5aaa807173e0a764b9123754"
-CURRENT_CORE_SHA256 = "8e48f7a21c04f6dcca0b07d456e00bb72cd54dd29b89d1347e9b06fee8dfa874"
+CURRENT_CORE_SHA256 = "4bb28931116c9ad74597aec1c0a57ff5c522e0879d41f4db8984f5648632f855"
 EXE_SHA256 = "db7abc4da613a6d1409fdb129cb788b8ac396e5ac2d161963521c844d0ee771c"
 NODE = os.environ.get("MM_NODE", "node")
 
@@ -69,6 +69,8 @@ assert "function mmPersistCurrentState()" in core and "mmStorageDurabilityWarnin
 assert "mm-session-only-result" in core and "This result and any certificate earned are available only for this session" in core, "non-durable assessment evidence must be disclosed in the result UI"
 assert "function mmSelectStartupDb(candidate,pristine)" in core and "Object.prototype.hasOwnProperty.call(candidate.users,active)" in core, "persisted learner registry must fail closed on inherited/unsafe startup identities"
 assert "function mmStartupUniqueLessonIdsAreSafe(values)" in core and "function mmStartupCertificatesAreSafe(values)" in core and "mmStartupCertificatesAreSafe(record.certificates)" in core, "persisted learner registry must validate unique in-range progress/bookmark IDs and recognized certificate keys before rendering"
+assert "record.currentLesson!=null" in core and "record.region!=null" in core and "m.completed.length>36" in core and "new Set(m.completed).size!==m.completed.length" in core, "persisted learner registry must fail closed on unsafe lesson pointers, regions and duplicate material progress"
+assert "Assessment selector rejected unknown level or region" in core and core.count("mmSetStorageDurability(true)") >= 2, "standalone assessment/storage recovery hardening missing"
 assert "typeof value!==\"number\"||!Number.isFinite(value)||value<0||value>100" in core and "<span class=\"pill\">${esc(status)}</span>" in core, "persisted assessment values must be typed at startup and escaped at exam-status HTML sinks"
 assert "${esc(f.xp)} XP" in core and "${esc(f.streak)}-day learning streak" in core and "m.bestQuiz==null?\"—\":esc(m.bestQuiz)+\"%\"" in core, "legacy gamification/material numeric state must be escaped at HTML sinks"
 assert "criticalWrong===0" in core, "zero-wrong safety-critical gate missing"
@@ -134,7 +136,7 @@ runtime_v2 = text("runtime-v2.js")
 for marker in ["one owner at a time", "setImplementation", "before:new Set(),after:new Set()", "registerModule", "scopedKey"]:
     assert marker in runtime_v2, f"runtime v2 invariant missing: {marker}"
 assessment_v2 = text("assessment-runtime-v2.js")
-for marker in ["technicalPerExam:7", "technicalBankPerLevel:10", "least-exposed blueprint-preserving stable IDs", "R.setImplementation('getExamQuestions',selector,'assessment-runtime-v2')"]:
+for marker in ["technicalPerExam:7", "technicalBankPerLevel:10", "least-exposed blueprint-preserving stable IDs", "R.setImplementation('getExamQuestions',selector,'assessment-runtime-v2')", "Assessment selector rejected unknown level or region"]:
     assert marker in assessment_v2, f"assessment membership rotation invariant missing: {marker}"
 lesson_v2 = text("lesson-deep-authoring-v2.js")
 assert "D.lessons.length!==120" in lesson_v2 and "duplicate lesson records" in lesson_v2, "lesson deep authoring must cover 120 unique records"
@@ -192,6 +194,7 @@ assert "lesson()" in source_lib and "standards()" in source_lib, "sources must b
 assert Path("sources/AUTHORITATIVE_SOURCE_REGISTER.md").exists(), "authoritative source register missing"
 
 bridge = text("training-qa-fix.js")
+assert bridge.count("mmSetStorageDurability?.(true)") == 2, "hosted import/reset must clear stale session-only storage warnings after successful writes"
 for marker in ["file.size>10*1024*1024", "const sid=requireCoreLearnerId(id);", "if(hasOwnCoreLearner(users,sid))", "if(!clean||clean.id!==sid)", "const active=requireCoreLearnerId(x.activeUser);", "if(!hasOwnCoreLearner(users,active))", "clean.certificates=[]", "clean.certificateMeta={}", "clean.examPassStatus={}", "restoreSnapshot(before)", "Certificates must be re-earned", "db!==beforeDb", "LEARNING_ANALYTICS_PREFIX", "ANALYTICS_CLEANUP_CODE", "remaining key(s):", "clearAllAnalyticsStores();clearTrainingExtrasStores()", "analytics were cleared and verified"]:
     assert marker in bridge, f"import/reset hardening missing: {marker}"
 assert "clean.id=sid" not in bridge, "import bridge must reject learner-ID mismatch instead of silently rewriting it"

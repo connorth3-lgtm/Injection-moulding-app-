@@ -31,6 +31,8 @@ function mmStartupLearnerRecordIsSafe(record,id){
   if(!record||typeof record!=="object"||Array.isArray(record))return false;
   if(typeof record.id!=="string"||mmCanonicalStartupLearnerId(record.id)!==id)return false;
   if(typeof record.name!=="string")return false;
+  if(record.currentLesson!=null&&(!Number.isInteger(record.currentLesson)||record.currentLesson<1||record.currentLesson>D.lessons.length))return false;
+  if(record.region!=null&&record.region!==""&&!["ALL","UK","US","NZ"].includes(record.region))return false;
   if(!mmStartupUniqueLessonIdsAreSafe(record.completed)||!mmStartupUniqueLessonIdsAreSafe(record.bookmarks)||!mmStartupCertificatesAreSafe(record.certificates))return false;
   for(const key of ["notes","examScores","examPassStatus","certificateMeta"]){
     const value=record[key];
@@ -61,7 +63,7 @@ function mmStartupLearnerRecordIsSafe(record,id){
   if(record.materialScience!=null){
     const m=record.materialScience;
     if(typeof m!=="object"||Array.isArray(m))return false;
-    if(m.completed!=null&&(!Array.isArray(m.completed)||m.completed.some(value=>!Number.isInteger(value)||value<1||value>36)))return false;
+    if(m.completed!=null&&(!Array.isArray(m.completed)||m.completed.length>36||new Set(m.completed).size!==m.completed.length||m.completed.some(value=>!Number.isInteger(value)||value<1||value>36)))return false;
     if(m.bestQuiz!=null&&(typeof m.bestQuiz!=="number"||!Number.isFinite(m.bestQuiz)||m.bestQuiz<0||m.bestQuiz>100))return false;
     if(m.quizAttempts!=null&&(typeof m.quizAttempts!=="number"||!Number.isFinite(m.quizAttempts)||m.quizAttempts<0))return false;
     if(m.currentLesson!=null&&(!Number.isInteger(m.currentLesson)||m.currentLesson<1||m.currentLesson>36))return false;
@@ -90,6 +92,7 @@ try{
 }catch(e){db=JSON.parse(JSON.stringify(PRISTINE_DB));mmStartupLearnerDataRejected=true}
 let user = db.users[db.activeUser];
 if(user.onboardingDone === undefined) user.onboardingDone = false;
+if(user.currentLesson == null) user.currentLesson = 1;
 if(!user.experience) user.experience = "Beginner";
 if(!user.goal) user.goal = "Learn the full process";
 if(!user.dailyMinutes) user.dailyMinutes = 15;
@@ -1500,6 +1503,7 @@ function pvCommitPristineReset(){
   const serialized=JSON.stringify(proposed);
   localStorage.setItem("mouldmasterProDB",serialized);
   db=proposed;user=nextUser;
+  try{mmSetStorageDurability(true)}catch(_){}
   return proposed;
 }
 resetData=function(){
@@ -1554,6 +1558,7 @@ awardXP=function(amount,key,label,opts={}){
 
 /* Compare All assesses ALL 9 regional items, not one sample per jurisdiction. */
 getExamQuestions=function(level,region){
+  if(!["Beginner","Intermediate","Advanced"].includes(level)||!["ALL","UK","US","NZ"].includes(region))throw new Error("Assessment selector rejected unknown level or region");
   const technical=shuffleCopy((D.exams[level]||[]).map(normaliseTechnicalQuestion10)).slice(0,7);
   let regs=[];
   if(region==="ALL"){

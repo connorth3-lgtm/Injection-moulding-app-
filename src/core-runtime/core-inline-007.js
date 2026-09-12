@@ -159,6 +159,7 @@ function pvCommitImportedUsers(proposed){
   const serialized=JSON.stringify(proposed);
   localStorage.setItem("mouldmasterProDB",serialized);
   db=proposed;user=nextUser;
+  try{mmSetStorageDurability(true)}catch(_){}
 }
 
 /* Also prevent arbitrary top-level properties from imported backup files. */
