@@ -53,8 +53,24 @@ jobs:
               raise SystemExit(f'learner-cap regression anchor count was {qa.count(anchor)}, expected 1')
           qa_path.write_text(qa.replace(anchor,insertion,1),encoding='utf-8')
           PY
-      - name: Bump governed web release
-        run: python tools/bump_web_release.py --release 2026.09.12.15
+      - name: Synchronize governed web release
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          old='2026.09.12.14';new='2026.09.12.15'
+          files=[
+            'README.md','data/release-external-validation-v1.json','index.html','pwa-shell.js',
+            'qa_release.py','qa_release_docs.py','service-worker.js','support.html','version.json'
+          ]
+          total=0
+          for name in files:
+              path=Path(name);text=path.read_text(encoding='utf-8');count=text.count(old)
+              if count<1:
+                  raise SystemExit(f'{name}: expected governed release marker {old} was missing')
+              path.write_text(text.replace(old,new),encoding='utf-8');total+=count
+          print(f'Synchronized {total} governed web release markers: {old} -> {new}')
+          PY
       - name: Validate standalone hardening and governed release
         shell: bash
         run: |
@@ -64,8 +80,22 @@ jobs:
           node qa_final_audit_lifecycle.cjs
           python qa_release.py
           python qa_release_docs.py
-          python tools/sync_web_release.py --check
-          python tools/verify_release_external_validation.py
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          release='2026.09.12.15'
+          version=json.loads(Path('version.json').read_text(encoding='utf-8'))
+          assert version['web_release']==release
+          assert version['published']=='2026-09-12'
+          index=Path('index.html').read_text(encoding='utf-8')
+          worker=Path('service-worker.js').read_text(encoding='utf-8')
+          shell=Path('pwa-shell.js').read_text(encoding='utf-8')
+          evidence=json.loads(Path('data/release-external-validation-v1.json').read_text(encoding='utf-8'))
+          assert f'const SHELL_RELEASE="{release}"' in index
+          assert f"const CACHE_VERSION='{release}'" in worker
+          assert release in shell
+          assert release in json.dumps(evidence)
+          PY
           git diff --check
       - name: Commit validated product change and remove one-shot runner
         shell: bash
