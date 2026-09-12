@@ -11,14 +11,38 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  production-source:
+    name: production-source
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: read
+      actions: read
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+      - name: Setup Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7
+        with:
+          python-version: '3.12'
+      - name: Verify governed merged-main production source
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          python3 tools/verify_production_source.py \
+            --repository "${{ github.repository }}" \
+            --source-sha "${{ github.sha }}" \
+            --require-native-protection
+
   store-package:
+    needs: production-source
     runs-on: windows-latest
     env:
       MM_STORE_IDENTITY_NAME: ${{ vars.MM_STORE_IDENTITY_NAME }}
       MM_STORE_PUBLISHER: ${{ vars.MM_STORE_PUBLISHER }}
       MM_STORE_PUBLISHER_DISPLAY_NAME: ${{ vars.MM_STORE_PUBLISHER_DISPLAY_NAME }}
     steps:
-      - uses: actions/checkout@v7
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
       - name: Require Partner Center identity
         shell: pwsh
         run: |
@@ -37,14 +61,14 @@ jobs:
           if ($env:MM_STORE_PUBLISHER -notmatch '^CN=.+') {
             Write-Error 'MM_STORE_PUBLISHER must be the Partner Center Identity/Publisher value (normally beginning with CN=).'
           }
-      - uses: actions/setup-node@v7
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7
         with:
           node-version: '22.12.0'
           cache: 'npm'
           cache-dependency-path: |
             desktop/electron/package-lock.json
             desktop/electron/msix-toolchain/package-lock.json
-      - uses: actions/setup-python@v7
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7
         with:
           python-version: '3.12'
       - name: Install exact locked dependencies
@@ -185,7 +209,7 @@ jobs:
         run: |
           git rev-parse HEAD | Set-Content 'desktop/electron/dist/SOURCE_COMMIT.txt'
           Get-ChildItem 'desktop/electron/dist' -File | Where-Object { $_.Extension -in '.msix','.msixbundle','.msixupload' } | Get-FileHash -Algorithm SHA256 | ForEach-Object { "$($_.Hash.ToLower())  $($_.Path | Split-Path -Leaf)" } | Set-Content 'desktop/electron/dist/SHA256SUMS-STORE.txt'
-      - uses: actions/upload-artifact@v7
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
         with:
           name: mouldmaster-microsoft-store-msix
           path: |

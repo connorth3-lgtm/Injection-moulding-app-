@@ -10,9 +10,10 @@ let queued=false;
 let lastPrivacyRules=[];
 
 function esc(v){return String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
-function fmt(v,d=3){return Number.isFinite(Number(v))?Number(v).toLocaleString(undefined,{maximumFractionDigits:d}):'—'}
+function finite(v){if(v==null||String(v).trim()==='')return null;const n=Number(v);return Number.isFinite(n)?n:null}
+function fmt(v,d=3){const n=finite(v);return n==null?'—':n.toLocaleString(undefined,{maximumFractionDigits:d})}
 function mean(a){return a.length?a.reduce((s,x)=>s+x,0)/a.length:null}
-function sd(a){if(a.length<2)return 0;const m=mean(a);return Math.sqrt(a.reduce((s,x)=>s+(x-m)*(x-m),0)/(a.length-1))}
+function sd(a){if(a.length<2)return null;const m=mean(a);return Math.sqrt(a.reduce((s,x)=>s+(x-m)*(x-m),0)/(a.length-1))}
 function openDb(){
   return new Promise((resolve,reject)=>{const r=indexedDB.open(DB_NAME,1);r.onsuccess=()=>resolve(r.result);r.onerror=()=>reject(r.error)})
 }
@@ -46,37 +47,38 @@ function cavitySummary(rows,dataset){
   const channels=resolvedNumeric(dataset).filter(s=>s.role!=='quality').slice(0,6);
   return [...groups].map(([c,rs])=>{
     const q=rs.map(r=>qualityLabel(r.quality_result)).filter(x=>x!=null);
-    const values={};for(const s of channels){const a=rs.map(r=>Number(r[s.column])).filter(Number.isFinite);values[s.column]=mean(a)}
+    const values={};for(const s of channels){const a=rs.map(r=>finite(r[s.column])).filter(v=>v!==null);values[s.column]=mean(a)}
     return {cavity:c,rows:rs.length,goodRate:q.length?mean(q):null,values}
   }).sort((a,b)=>String(a.cavity).localeCompare(String(b.cavity),undefined,{numeric:true}))
 }
 function qualityAssociations(rows,dataset){
   const labelled=rows.map(r=>({r,y:qualityLabel(r.quality_result)})).filter(x=>x.y!=null);if(labelled.length<10)return[];
   const out=[];for(const s of resolvedNumeric(dataset).filter(x=>x.role!=='quality')){
-    const good=labelled.filter(x=>x.y===1).map(x=>Number(x.r[s.column])).filter(Number.isFinite);
-    const bad=labelled.filter(x=>x.y===0).map(x=>Number(x.r[s.column])).filter(Number.isFinite);
+    const good=labelled.filter(x=>x.y===1).map(x=>finite(x.r[s.column])).filter(v=>v!==null);
+    const bad=labelled.filter(x=>x.y===0).map(x=>finite(x.r[s.column])).filter(v=>v!==null);
     if(good.length<3||bad.length<3)continue;
-    const pooled=Math.max(Math.sqrt((sd(good)**2+sd(bad)**2)/2),1e-9);
-    out.push({channel:s.column,meaning:s.meaning||s.column,unit:s.unit||'',goodMean:mean(good),badMean:mean(bad),standardizedDifference:Math.abs(mean(good)-mean(bad))/pooled});
+    const gs=sd(good),bs=sd(bad),pooled=gs==null||bs==null?null:Math.sqrt((gs*gs+bs*bs)/2);
+    out.push({channel:s.column,meaning:s.meaning||s.column,unit:s.unit||'',goodMean:mean(good),badMean:mean(bad),standardizedDifference:pooled>0?Math.abs(mean(good)-mean(bad))/pooled:null,status:pooled>0?'scored':'insufficient-spread'});
   }
-  return out.sort((a,b)=>b.standardizedDifference-a.standardizedDifference).slice(0,10)
+  return out.sort((a,b)=>(b.standardizedDifference??-Infinity)-(a.standardizedDifference??-Infinity)).slice(0,10)
 }
 function energySummary(rows,dataset){
-  const candidates=resolvedNumeric(dataset).filter(s=>/(energy|power.*energy|kwh|watt.?hour)/i.test(`${s.column} ${s.meaning||''}`)&&/^(?:kWh|Wh|J|kJ|MJ)$/i.test(String(s.unit||'')));
+  const candidates=resolvedNumeric(dataset).filter(s=>/(energy|power.*energy|kwh|watt.?hour)/i.test(`${s.column} ${s.meaning||''}`)&&/^(?:kWh|Wh|J|kJ|MJ)$/i.test(String(s.unit||'').trim())&&String(s.sampling_basis||s.samplingBasis||'').trim().toLowerCase()==='per-cycle');
   if(!candidates.length)return null;
-  const s=candidates[0],vals=rows.map(r=>Number(r[s.column])).filter(Number.isFinite);if(!vals.length)return null;
-  let total=vals.reduce((a,b)=>a+b,0),unit=s.unit;
-  if(/^wh$/i.test(unit)){total/=1000;unit='kWh'}else if(/^j$/i.test(unit)){total/=3.6e6;unit='kWh'}else if(/^kj$/i.test(unit)){total/=3600;unit='kWh'}else if(/^mj$/i.test(unit)){total/=3.6;unit='kWh'}
-  const q=rows.map(r=>qualityLabel(r.quality_result)).filter(x=>x!=null),good=q.filter(x=>x===1).length;
-  return {channel:s.column,totalKwh:unit==='kWh'?total:null,goodParts:good,energyPerGoodPart:unit==='kWh'&&good?total/good:null,sourceUnit:s.unit}
+  const s=candidates[0],energyValues=rows.map(r=>finite(r[s.column])),vals=energyValues.filter(v=>v!==null);if(!vals.length)return null;
+  let total=vals.reduce((a,b)=>a+b,0),unit=String(s.unit||'').trim();
+  if(/^kwh$/i.test(unit)){unit='kWh'}else if(/^wh$/i.test(unit)){total/=1000;unit='kWh'}else if(/^j$/i.test(unit)){total/=3.6e6;unit='kWh'}else if(/^kj$/i.test(unit)){total/=3600;unit='kWh'}else if(/^mj$/i.test(unit)){total/=3.6;unit='kWh'}
+  const labels=rows.map(r=>qualityLabel(r.quality_result)),q=labels.filter(x=>x!=null),good=q.filter(x=>x===1).length;
+  const coverageComplete=rows.length>0&&vals.length===rows.length&&q.length===rows.length;
+  return {channel:s.column,totalKwh:unit==='kWh'?total:null,goodParts:good,energyRows:vals.length,qualityRows:q.length,totalRows:rows.length,coverageComplete,energyPerGoodPart:unit==='kWh'&&good&&coverageComplete?total/good:null,sourceUnit:s.unit,samplingBasis:s.sampling_basis||s.samplingBasis||''}
 }
 function driftHtml(result){
   if(!result?.signals?.length)return '<div class="di-empty">No common resolved numeric channels were available for this baseline comparison.</div>';
-  return `<div class="pi-table">${result.signals.slice(0,15).map(x=>`<div class="pi-row"><div><b>${esc(x.meaning||x.channel)}</b><small>${esc(x.channel)} · ${esc(x.unit||'')}</small></div><span>${fmt(x.baselineMean)}</span><span>${fmt(x.currentMean)}</span><span class="pi-${esc(x.level)}">${fmt(x.normalizedShift,2)}σ · ${esc(x.level)}</span></div>`).join('')}</div><p class="muted">${esc(result.boundary)}</p>`
+  return `<div class="pi-table">${result.signals.slice(0,15).map(x=>`<div class="pi-row"><div><b>${esc(x.meaning||x.channel)}</b><small>${esc(x.channel)} · ${esc(x.unit||'')}</small></div><span>${fmt(x.baselineMean)}</span><span>${fmt(x.currentMean)}</span><span class="pi-${esc(x.level)}">${x.normalizedShift==null?'Unscored · insufficient spread/sample':`${fmt(x.normalizedShift,2)}σ · ${esc(x.level)}`}</span></div>`).join('')}</div><p class="muted">${esc(result.boundary)}</p>`
 }
 function changeHtml(result){
   if(!result?.changes?.length)return '<div class="di-empty">No resolved numeric channels were available in both windows.</div>';
-  return `<div class="pi-table">${result.changes.slice(0,15).map(x=>`<div class="pi-row"><div><b>${esc(x.meaning||x.channel)}</b><small>${esc(x.channel)} · ${esc(x.unit||'')}</small></div><span>${fmt(x.beforeMean)}</span><span>${fmt(x.afterMean)}</span><span>${fmt(x.normalizedChange,2)}σ</span></div>`).join('')}</div><p class="muted">${esc(result.boundary)}</p>`
+  return `<div class="pi-table">${result.changes.slice(0,15).map(x=>`<div class="pi-row"><div><b>${esc(x.meaning||x.channel)}</b><small>${esc(x.channel)} · ${esc(x.unit||'')}</small></div><span>${fmt(x.beforeMean)}</span><span>${fmt(x.afterMean)}</span><span>${x.normalizedChange==null?'Unscored · insufficient spread/sample':`${fmt(x.normalizedChange,2)}σ`}</span></div>`).join('')}</div><p class="muted">${esc(result.boundary)}</p>`
 }
 function ensureStyle(){
   if(document.getElementById('mm-process-intelligence-style'))return;
@@ -115,8 +117,8 @@ async function openAnalysis(datasetId){
   <div class="pi-grid"><section class="card di-panel"><h3>Golden baseline / drift</h3><div class="pi-analysis-controls"><label>Baseline<select data-pi-baseline><option value="">Choose baseline</option>${baselines.map(b=>`<option value="${esc(b.id)}">${esc(b.label)} · ${new Date(b.createdAt).toLocaleDateString()}</option>`).join('')}</select></label><button class="secondary" data-pi-drift ${baselines.length?'':'disabled'}>Compare drift</button></div><div data-pi-drift-result style="margin-top:10px">${baselines.length?'<div class="di-empty">Select a compatible site-local baseline.</div>':'<div class="di-empty">No compatible baseline yet. Create one from an analysis-ready known-good dataset in the library.</div>'}</div></section>
   <section class="card di-panel"><h3>Before / after intervention</h3><div class="pi-analysis-controls"><label>Split row<input type="number" min="1" max="${Math.max(1,rows.length-1)}" value="${points[0]?.index||Math.floor(rows.length/2)}" data-pi-split></label><label>Window rows<input type="number" min="3" max="500" value="20" data-pi-window></label><button class="secondary" data-pi-before-after>Compare windows</button></div>${points.length?`<p class="muted">Detected intervention labels: ${points.slice(0,8).map(p=>`${esc(p.label)} @ row ${p.index}`).join(' · ')}</p>`:'<p class="muted">No intervention-code transition was detected; choose the split row manually.</p>'}<div data-pi-change-result><div class="di-empty">Compare matched windows around one controlled change or event.</div></div></section></div>
   <div class="pi-grid"><section class="card di-panel"><h3>Cavity intelligence</h3>${cavities.length?`<div class="pi-table">${cavities.slice(0,24).map(c=>`<div class="pi-row"><div><b>Cavity ${esc(c.cavity)}</b><small>${c.rows} rows</small></div><span>${c.goodRate==null?'—':`${fmt(c.goodRate*100,1)}% good`}</span><span>${Object.entries(c.values).slice(0,1).map(([k,v])=>`${esc(k)} ${fmt(v)}`).join('')}</span><span></span></div>`).join('')}</div>`:'<div class="di-empty">At least two retained cavity identifiers are needed for cavity comparison.</div>'}</section>
-  <section class="card di-panel"><h3>Quality associations</h3>${quality.length?`<div class="pi-table">${quality.map(q=>`<div class="pi-row"><div><b>${esc(q.meaning)}</b><small>${esc(q.channel)} · correlation support only</small></div><span>Good ${fmt(q.goodMean)}</span><span>Bad ${fmt(q.badMean)}</span><span>${fmt(q.standardizedDifference,2)}σ separation</span></div>`).join('')}</div><p class="muted">Association does not establish causality and is not a release/acceptance rule.</p>`:'<div class="di-empty">A controlled pass/fail quality_result plus enough resolved numeric rows is needed for local association ranking.</div>'}</section></div>
-  <section class="card di-panel" style="margin-top:12px"><h3>Energy per good part</h3>${energy?`<div class="pi-kpis"><div class="pi-kpi"><b>${fmt(energy.totalKwh,4)}</b><small>kWh in dataset</small></div><div class="pi-kpi"><b>${energy.goodParts}</b><small>good labelled parts</small></div><div class="pi-kpi"><b>${fmt(energy.energyPerGoodPart,6)}</b><small>kWh / good part</small></div><div class="pi-kpi"><b>${esc(energy.channel)}</b><small>energy channel</small></div></div>`:'<div class="di-empty">No resolved energy channel with an engineering energy unit (kWh, Wh, J, kJ or MJ) was found.</div>'}</section></div>`;
+  <section class="card di-panel"><h3>Quality associations</h3>${quality.length?`<div class="pi-table">${quality.map(q=>`<div class="pi-row"><div><b>${esc(q.meaning)}</b><small>${esc(q.channel)} · correlation support only</small></div><span>Good ${fmt(q.goodMean)}</span><span>Bad ${fmt(q.badMean)}</span><span>${q.standardizedDifference==null?'Unscored · zero spread':`${fmt(q.standardizedDifference,2)}σ separation`}</span></div>`).join('')}</div><p class="muted">Association does not establish causality and is not a release/acceptance rule.</p>`:'<div class="di-empty">A controlled pass/fail quality_result plus enough resolved numeric rows is needed for local association ranking.</div>'}</section></div>
+  <section class="card di-panel" style="margin-top:12px"><h3>Energy per good part</h3>${energy?`<div class="pi-kpis"><div class="pi-kpi"><b>${fmt(energy.totalKwh,4)}</b><small>observed kWh in dataset</small></div><div class="pi-kpi"><b>${energy.goodParts}</b><small>good labelled parts</small></div><div class="pi-kpi"><b>${fmt(energy.energyPerGoodPart,6)}</b><small>kWh / good part</small></div><div class="pi-kpi"><b>${esc(energy.channel)}</b><small>energy channel</small></div></div><p class="muted">Coverage: energy ${energy.energyRows}/${energy.totalRows} rows · quality ${energy.qualityRows}/${energy.totalRows} rows. kWh/good part is withheld unless the energy channel is confirmed per-cycle and both energy and quality coverage are complete.</p>`:'<div class="di-empty">No resolved per-cycle energy channel with an engineering energy unit (kWh, Wh, J, kJ or MJ) was found.</div>'}</section></div>`;
   wire(host,dataset,rows)
 }
 function wire(host,dataset,rows){

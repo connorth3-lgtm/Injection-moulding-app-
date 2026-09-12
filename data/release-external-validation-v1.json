@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "release": "2026.09.12.16",
+  "release": "2026.09.12.17",
   "policy": "External validation is release-specific. Automated QA may verify that HOLD boundaries are represented truthfully but must never manufacture human, device, learner, accreditation, signing, or production-site evidence.",
   "technicalAutomation": {
     "status": "pass",

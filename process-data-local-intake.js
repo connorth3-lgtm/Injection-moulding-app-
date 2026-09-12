@@ -22,23 +22,31 @@ function esc(v){return String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&l
 function cleanHeader(v,index){let x=String(v||'').trim().toLowerCase().replace(/[^a-z0-9]+/g,'_').replace(/^_+|_+$/g,'');if(!x)x=`column_${index+1}`;return x}
 function enforceRowLimit(rows){if(rows.length>MAX_ROWS+1)throw new Error(`CSV exceeds the ${MAX_ROWS.toLocaleString()} data-row safety limit. No truncated subset was prepared; split or filter the controlled source export and try again.`)}
 function parseCsv(text){
-  const rows=[];let row=[],field='',quoted=false;
+  const rows=[],rowLines=[];let row=[],field='',quoted=false,line=1,rowStartLine=1;
   const s=String(text||'').replace(/^\uFEFF/,'');
   for(let i=0;i<s.length;i++){
     const ch=s[i];
-    if(quoted){if(ch==='"'&&s[i+1]==='"'){field+='"';i++}else if(ch==='"')quoted=false;else field+=ch;continue}
-    if(ch==='"'){quoted=true;continue}
+    if(quoted){
+      if(ch==='"'&&s[i+1]==='"'){field+='"';i++;continue}
+      if(ch==='"'){quoted=false;continue}
+      if(ch==='\n')line++;
+      field+=ch;continue
+    }
+    if(ch==='"'){if(field.length)throw new Error(`CSV has an unexpected quote on source line ${line}.`);quoted=true;continue}
     if(ch===','){row.push(field);field='';continue}
-    if(ch==='\n'){row.push(field);rows.push(row);enforceRowLimit(rows);row=[];field='';continue}
+    if(ch==='\n'){row.push(field);rows.push(row);rowLines.push(rowStartLine);enforceRowLimit(rows);row=[];field='';line++;rowStartLine=line;continue}
     if(ch==='\r')continue;
     field+=ch;
   }
-  if(field.length||row.length){row.push(field);rows.push(row);enforceRowLimit(rows)}
-  while(rows.length&&rows[rows.length-1].every(x=>String(x).trim()===''))rows.pop();
+  if(quoted)throw new Error(`CSV has an unterminated quoted field starting on source line ${rowStartLine}.`);
+  if(field.length||row.length){row.push(field);rows.push(row);rowLines.push(rowStartLine);enforceRowLimit(rows)}
+  while(rows.length&&rows[rows.length-1].every(x=>String(x).trim()==='')){rows.pop();rowLines.pop()}
   if(rows.length<2)return {headers:rows[0]?.map(cleanHeader)||[],rows:[],sourceRows:0,truncated:false};
   const headers=rows[0].map(cleanHeader);
   const seen={};for(let i=0;i<headers.length;i++){const base=headers[i];seen[base]=(seen[base]||0)+1;if(seen[base]>1)headers[i]=`${base}_${seen[base]}`}
-  const dataRows=rows.slice(1);
+  const records=rows.slice(1).map((cells,i)=>({cells,line:rowLines[i+1]??i+2})).filter(x=>!x.cells.every(v=>String(v).trim()===''));
+  for(const record of records)if(record.cells.length!==headers.length)throw new Error(`CSV source line ${record.line} has ${record.cells.length} cells; expected ${headers.length}.`);
+  const dataRows=records.map(x=>x.cells);
   if(dataRows.length>MAX_ROWS)throw new Error(`CSV exceeds the ${MAX_ROWS.toLocaleString()} data-row safety limit. No truncated subset was prepared; split or filter the controlled source export and try again.`);
   return {headers,rows:dataRows.map(r=>Object.fromEntries(headers.map((h,i)=>[h,String(r[i]??'').trim()]))),sourceRows:dataRows.length,truncated:false}
 }

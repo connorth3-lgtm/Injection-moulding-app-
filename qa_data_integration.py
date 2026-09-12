@@ -58,6 +58,12 @@ def main() -> None:
         "data-pdi-launch",
         "current-data-manifest.json",
         "process-data-semantic-registry.json",
+        "function readinessHtml(p)",
+        "Validate structure",
+        "Privacy preparation",
+        "Define semantics",
+        "Check coverage",
+        "Analysis-ready: baseline and process-intelligence tools may be used.",
     ]
     for token in required_runtime_tokens:
         require(token in runtime, f"connected runtime missing required behavior: {token}")
@@ -75,7 +81,7 @@ def main() -> None:
         "baseline?.datasetId===dataset.id",
         "assertBaselineCompatible(dataset,baseline)",
         "api.intelligence.compareToBaseline=function",
-        "['datasets','shots','baselines','caseLinks']",
+        "PROCESS_DATA_STORES=['datasets','shots','baselines','caseLinks','interventions']",
         "row=>row?.datasetId===datasetId",
         "event.stopImmediatePropagation()",
         "data-di-delete",

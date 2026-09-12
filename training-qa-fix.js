@@ -94,8 +94,16 @@ window.importData=function(file){
  r.readAsText(file);
 };
 
+function relabelLearnerResetControls(root){
+ if(!root&&typeof document!=='undefined')root=document;
+ if(!root?.querySelectorAll)return;
+ try{root.querySelectorAll('button[onclick*=\"resetData\"]').forEach(button=>{if(button.textContent.trim()==='Reset all local data')button.textContent='Reset learner data'})}catch(_){}
+}
+relabelLearnerResetControls();
+try{if(typeof document!=='undefined'&&typeof MutationObserver!=='undefined')new MutationObserver(()=>relabelLearnerResetControls(document)).observe(document.documentElement,{childList:true,subtree:true})}catch(_){}
+
 const baseReset=window.resetData;if(typeof baseReset==='function')window.resetData=function(){
- if(!confirm('Reset all local MouldMaster users and progress?'))return;
+ if(!confirm('Reset learner profiles, progress, notes, assessment/Learning Insights analytics, and training extras? Saved process-data datasets are separate and will not be deleted.'))return;
  try{clearAllAnalyticsStores();clearTrainingExtrasStores()}
  catch(e){console.error('[MouldMaster] factory reset cleanup blocked:',e);alert(cleanupFailureMessage('Factory reset',false));return}
  const proposedReset=JSON.parse(JSON.stringify(defaultDB));
@@ -103,7 +111,7 @@ const baseReset=window.resetData;if(typeof baseReset==='function')window.resetDa
  try{localStorage.setItem('mouldmasterProDB',JSON.stringify(proposedReset))}catch(e){alert('Factory reset could not save the clean learner state. Analytics were cleared, but existing progress was not replaced. Reopen MouldMaster and try again.');return}
  const beforeDb=db;db=proposedReset;user=db.users[db.activeUser];if(db!==beforeDb)cancelActiveExam();try{window.mmSetStorageDurability?.(true)}catch(_){}
  try{updateGlobalProgress();renderProfile()}catch(uiError){console.warn('[MouldMaster] reset saved; view refresh failed:',uiError)}
- window.toast?.('Data reset. Local assessment and Learning Insights analytics were cleared and verified.');
+ window.toast?.('Learner data reset. Assessment and Learning Insights analytics were cleared and verified; saved process-data datasets were left unchanged.');
 };
 
 try{if(!localStorage.getItem(REVIEW_KEY)&&localStorage.getItem(LEGACY_REVIEW))localStorage.setItem(REVIEW_KEY,JSON.stringify({items:{}}))}catch(_){}
