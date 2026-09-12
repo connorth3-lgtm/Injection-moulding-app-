@@ -63,11 +63,11 @@ function qualityAssociations(rows,dataset){
   return out.sort((a,b)=>(b.standardizedDifference??-Infinity)-(a.standardizedDifference??-Infinity)).slice(0,10)
 }
 function energySummary(rows,dataset){
-  const candidates=resolvedNumeric(dataset).filter(s=>/(energy|power.*energy|kwh|watt.?hour)/i.test(`${s.column} ${s.meaning||''}`)&&/^(?:kWh|Wh|J|kJ|MJ)$/i.test(String(s.unit||''))&&String(s.sampling_basis||s.samplingBasis||'').trim().toLowerCase()==='per-cycle');
+  const candidates=resolvedNumeric(dataset).filter(s=>/(energy|power.*energy|kwh|watt.?hour)/i.test(`${s.column} ${s.meaning||''}`)&&/^(?:kWh|Wh|J|kJ|MJ)$/i.test(String(s.unit||'').trim())&&String(s.sampling_basis||s.samplingBasis||'').trim().toLowerCase()==='per-cycle');
   if(!candidates.length)return null;
   const s=candidates[0],energyValues=rows.map(r=>finite(r[s.column])),vals=energyValues.filter(v=>v!==null);if(!vals.length)return null;
-  let total=vals.reduce((a,b)=>a+b,0),unit=s.unit;
-  if(/^wh$/i.test(unit)){total/=1000;unit='kWh'}else if(/^j$/i.test(unit)){total/=3.6e6;unit='kWh'}else if(/^kj$/i.test(unit)){total/=3600;unit='kWh'}else if(/^mj$/i.test(unit)){total/=3.6;unit='kWh'}
+  let total=vals.reduce((a,b)=>a+b,0),unit=String(s.unit||'').trim();
+  if(/^kwh$/i.test(unit)){unit='kWh'}else if(/^wh$/i.test(unit)){total/=1000;unit='kWh'}else if(/^j$/i.test(unit)){total/=3.6e6;unit='kWh'}else if(/^kj$/i.test(unit)){total/=3600;unit='kWh'}else if(/^mj$/i.test(unit)){total/=3.6;unit='kWh'}
   const labels=rows.map(r=>qualityLabel(r.quality_result)),q=labels.filter(x=>x!=null),good=q.filter(x=>x===1).length;
   const coverageComplete=rows.length>0&&vals.length===rows.length&&q.length===rows.length;
   return {channel:s.column,totalKwh:unit==='kWh'?total:null,goodParts:good,energyRows:vals.length,qualityRows:q.length,totalRows:rows.length,coverageComplete,energyPerGoodPart:unit==='kWh'&&good&&coverageComplete?total/good:null,sourceUnit:s.unit,samplingBasis:s.sampling_basis||s.samplingBasis||''}
