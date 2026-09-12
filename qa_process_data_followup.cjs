@@ -58,6 +58,10 @@ assert.equal(energy.energyPerGoodPart,null,'energy/good part must be withheld on
 energy=helpers.energySummary([{cycle_energy_wh:'100',quality_result:'pass'},{cycle_energy_wh:'100',quality_result:'pass'},{cycle_energy_wh:'200',quality_result:'fail'}],energyDataset);
 assert.equal(energy.coverageComplete,true);
 assert.equal(energy.energyPerGoodPart,0.2,'complete per-cycle coverage should preserve valid energy/good-part calculation');
+const mixedCaseKwhEnergy={semantics:{energy:{column:'cycle_energy_kwh',role:'actual',blockers:[],unit:' KWH ',meaning:'Cycle energy',sampling_basis:'per-cycle'}}};
+energy=helpers.energySummary([{cycle_energy_kwh:'0.1',quality_result:'pass'},{cycle_energy_kwh:'0.2',quality_result:'pass'}],mixedCaseKwhEnergy);
+assert(Math.abs(energy.totalKwh-0.3)<1e-12,'supported kWh spelling/case must normalize before aggregation');
+assert(Math.abs(energy.energyPerGoodPart-0.15)<1e-12,'normalized kWh input must preserve energy/good-part calculation');
 const eventEnergy={semantics:{energy:{column:'cycle_energy_wh',role:'actual',blockers:[],unit:'Wh',meaning:'Energy meter',sampling_basis:'event'}}};
 assert.equal(helpers.energySummary([{cycle_energy_wh:'100',quality_result:'pass'}],eventEnergy),null,'non-per-cycle energy must not be treated as cycle energy');
 
