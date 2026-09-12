@@ -14,13 +14,13 @@ need(p.returncode==0,'local process-data intake syntax error: '+(p.stderr or p.s
 
 body=text(MODULE)
 for marker in [
-    "VERSION='2026.09.05.2'",'Prepare real shot CSV locally','Prepare shot data without uploading it','pseudonymisation','not guaranteed anonymisation',
+    "VERSION='2026.09.12.1'",'Prepare real shot CSV locally','Prepare shot data without uploading it','pseudonymisation','not guaranteed anonymisation',
     'Raw file contents stay in memory only','Export prepared CSV','Export data dictionary','Download CSV template',
     'shot_index','direct/person identifier','operational identifier replaced with stable per-file alias','numeric process/quality signal',
     'unknown labels aliased per file','MM_PROCESS_DATA_LOCAL_INTAKE','MAX_ROWS=50000','operator_id','employee_id',
     'Sequence review required','Sequence check','sourceShotIndex','timestampChecks','strictly increasing','structured measurement unit',
     'explicitOperationalIdentifier','ALIAS_ID_TOKEN_RE','ALIAS_EXACT_RE','enforceRowLimit','rejected rather than silently truncated',
-    'invalidNumericValues','invalidNumericByColumn','omitted rather than converted to NaN'
+    'invalidNumericValues','invalidNumericByColumn','omitted rather than converted to NaN','unterminated quoted field','Structurally malformed CSV'
 ]:
     need(marker in body,f'local intake marker missing: {marker}')
 for forbidden in ['fetch(', 'XMLHttpRequest', 'WebSocket', 'localStorage', 'sessionStorage', 'indexedDB', 'MM_DATA.exams=', 'correctIndex=', 'regionalQuestions=']:
@@ -46,9 +46,16 @@ const numericIds='machine_id,cavity_id,material_grade,peak_cavity_pressure_mpa,m
 const numericIdPrepared=api.prepare(api.parseCsv(numericIds));
 const malformedNumeric='fill_time_s,cycle_time_s\\n1.0,20\\n1.1,21\\n1.2,22\\n1.3,23\\n1.4,24\\n1.5,25\\n1.6,26\\n1.7,27\\n1.8,28\\nBAD,29\\n';
 const malformedPrepared=api.prepare(api.parseCsv(malformedNumeric));
-let oversizedError='';
+const quotedComma=api.parseCsv('a,b\\n"1,2",3\\n');
+const escapedQuote=api.parseCsv('a,b\\n"say ""hi""'+String.fromCharCode(34)+',3\\n');
+const quotedNewline=api.parseCsv('a,b\\n"line1\\nline2",3\\n');
+const trailingBlank=api.parseCsv('a,b\\r\\n1,2\\r\\n\\r\\n');
+let oversizedError='',unterminatedQuoteError='',tooManyCellsError='',tooFewCellsError='';
 try{{const oversized='fill_time_s\\n'+Array.from({{length:50001}},(_,i)=>String(i+1)).join('\\n')+'\\n';api.parseCsv(oversized)}}catch(err){{oversizedError=String(err&&err.message||err)}}
-process.stdout.write(JSON.stringify({{parsed,prepared,csv:api.toCsv(prepared),template:api.templateCsv(),scope:api.scope,maxRows:api.maxRows,badPrepared,badCsv:api.toCsv(badPrepared),pilotPrepared,numericIdPrepared,malformedPrepared,malformedCsv:api.toCsv(malformedPrepared),oversizedError}}));
+try{{api.parseCsv('a,b\\n"SECRET-UNTERMINATED,2')}}catch(err){{unterminatedQuoteError=String(err&&err.message||err)}}
+try{{api.parseCsv('a,b\\nSECRET-A,2,EXTRA-SECRET\\n')}}catch(err){{tooManyCellsError=String(err&&err.message||err)}}
+try{{api.parseCsv('a,b\\nSECRET-B\\n')}}catch(err){{tooFewCellsError=String(err&&err.message||err)}}
+process.stdout.write(JSON.stringify({{parsed,prepared,csv:api.toCsv(prepared),template:api.templateCsv(),scope:api.scope,maxRows:api.maxRows,badPrepared,badCsv:api.toCsv(badPrepared),pilotPrepared,numericIdPrepared,malformedPrepared,malformedCsv:api.toCsv(malformedPrepared),oversizedError,quotedComma,escapedQuote,quotedNewline,trailingBlank,unterminatedQuoteError,tooManyCellsError,tooFewCellsError}}));
 """
 p=subprocess.run(['node','-e',node],capture_output=True,text=True)
 need(p.returncode==0,'local intake runtime failed: '+p.stderr)
@@ -83,6 +90,16 @@ need(row0['peak_cavity_pressure_mpa']==83.2 and row0['mould_temp_c']==45 and row
 serialized=json.dumps(prepared).lower()
 for secret in ['imm-a','tool-x','pa66-gf30','lot-secret','alice-17','bob-22','customer one','weld-line-secret','burn-secret','first shot','second shot','2026-08-26t10:00:00z']:
     need(secret not in serialized,f'prepared output leaked raw identifier/text: {secret}')
+
+need(r['quotedComma']['rows'][0]['a']=='1,2' and r['quotedComma']['rows'][0]['b']=='3','quoted commas must remain inside one field')
+need(r['escapedQuote']['rows'][0]['a']=='say "hi"','escaped double quotes must decode correctly')
+need(r['quotedNewline']['rows'][0]['a']=='line1\nline2' and r['quotedNewline']['rows'][0]['b']=='3','quoted newlines must remain valid field content')
+need(r['trailingBlank']['sourceRows']==1 and r['trailingBlank']['rows'][0]['a']=='1','CRLF input with blank trailing rows must remain valid')
+need('unterminated quoted field' in r['unterminatedQuoteError'].lower() and 'source line 2' in r['unterminatedQuoteError'].lower(),'unterminated quoted field must fail closed with a bounded source-line error')
+need('secret-unterminated' not in r['unterminatedQuoteError'].lower(),'unterminated quote error must not retain raw sensitive field contents')
+need('csv row 2 has 3 cells; expected 2' in r['tooManyCellsError'].lower(),'row with extra cells must fail closed before mapping')
+need('csv row 2 has 1 cell; expected 2' in r['tooFewCellsError'].lower(),'row with missing cells must fail closed before mapping')
+need('secret-a' not in r['tooManyCellsError'].lower() and 'extra-secret' not in r['tooManyCellsError'].lower() and 'secret-b' not in r['tooFewCellsError'].lower(),'row-width errors must report only bounded row/count metadata, not raw cell contents')
 
 numeric_ids=r['numericIdPrepared']
 need(numeric_ids['rows'][0]['machine_id']=='machine-id-01' and numeric_ids['rows'][0]['cavity_id']=='cavity-id-01' and numeric_ids['rows'][0]['material_grade']=='material-grade-01','numeric-coded operational identifiers must still be pseudonymised rather than retained as measurements')
@@ -126,6 +143,7 @@ need('phase' in r['template'] and 'intervention_code' in r['template'] and 'dime
 need('pseudonym' in prepared['boundary'].lower() and 'not proof of anonymity' in prepared['boundary'].lower(),'prepared output must preserve the privacy limitation')
 need('files over the row safety limit are rejected rather than silently truncated' in prepared['boundary'].lower(),'prepared boundary must disclose fail-closed oversized-file handling')
 need('malformed nonblank values in retained numeric columns are omitted and reported by column rather than converted to nan' in prepared['boundary'].lower(),'prepared boundary must disclose invalid numeric handling')
+need('structurally malformed csv rows and unterminated quoted fields are rejected before preparation' in prepared['boundary'].lower(),'prepared boundary must disclose fail-closed structural CSV validation')
 need('timestamp and source shot-index values may be inspected in-session only' in prepared['boundary'].lower(),'prepared boundary must disclose transient sequence checking')
 need('unknown categorical quality/phase labels are aliased only within the current prepared file' in prepared['boundary'].lower(),'prepared boundary must explain per-file category aliasing')
 need('no upload/storage/machine control' in r['scope'].lower(),'runtime scope must preserve local-only/no-control boundary')
@@ -154,4 +172,4 @@ for wf in ['.github/workflows/qa.yml','.github/workflows/open-desktop-build.yml'
 release_workflow=text('.github/workflows/qa.yml')
 need("find . -maxdepth 1 -type f -name '*.js' -print0 | sort -z | xargs -0 -n1 node --check" in release_workflow,'release filesystem JavaScript syntax gate missing')
 
-print('MouldMaster local process-data intake QA passed (oversized files rejected; malformed numeric values omitted/reported; numeric moulding signals preserved; numeric IDs pseudonymised; sequence audit; local-only packaging)')
+print('MouldMaster local process-data intake QA passed (oversized/malformed CSV rejected; quoted fields preserved; malformed numeric values omitted/reported; numeric moulding signals preserved; numeric IDs pseudonymised; sequence audit; local-only packaging)')
