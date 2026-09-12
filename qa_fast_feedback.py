@@ -87,6 +87,13 @@ def main() -> int:
     if engineer_simulator_changed and (ROOT / "qa_engineer_simulator_units.cjs").exists():
         commands.append(["node", "qa_engineer_simulator_units.cjs"])
 
+    simulator_accessibility_changed = bool(files & {
+        "src/core-runtime/core-inline-007.js",
+        "qa_simulator_accessibility.py",
+    })
+    if simulator_accessibility_changed and (ROOT / "qa_simulator_accessibility.py").exists():
+        commands.append([sys.executable, "qa_simulator_accessibility.py"])
+
     release_docs_changed = bool(files & {
         "README.md",
         "support.html",
