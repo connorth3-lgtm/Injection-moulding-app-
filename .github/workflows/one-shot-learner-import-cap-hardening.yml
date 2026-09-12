@@ -1,0 +1,79 @@
+name: One-shot learner import cap hardening
+
+on:
+  push:
+    branches:
+      - audit/standalone-learner-import-cap-hardening
+    paths:
+      - .github/workflows/one-shot-learner-import-cap-hardening.yml
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+env:
+  PYTHONDONTWRITEBYTECODE: '1'
+
+jobs:
+  harden:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout exact branch
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          ref: audit/standalone-learner-import-cap-hardening
+          fetch-depth: 0
+      - name: Setup Node
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7
+        with:
+          node-version: '22.12.0'
+          package-manager-cache: false
+      - name: Setup Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7
+        with:
+          python-version: '3.12'
+      - name: Apply fail-closed learner registry cap
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          targets=[Path('src/core-runtime/core-inline-007.js'),Path('MouldMaster_Core_App.html')]
+          old='  const users={};\n  for(const [id,u] of Object.entries(x.users).slice(0,500)){'
+          new='  const users={},entries=Object.entries(x.users);\n  if(entries.length>500)throw new Error("Too many learners in backup");\n  for(const [id,u] of entries){'
+          for path in targets:
+              text=path.read_text(encoding='utf-8')
+              if text.count(old)!=1:
+                  raise SystemExit(f'{path}: learner registry patch target count was {text.count(old)}, expected 1')
+              path.write_text(text.replace(old,new,1),encoding='utf-8')
+          qa_path=Path('qa_standalone_learner_ids.cjs')
+          qa=qa_path.read_text(encoding='utf-8')
+          anchor="assert.deepEqual(registry.users['learner-1'].examPassStatus,{},'standalone import must strip imported pass assertions');"
+          insertion=anchor+"\nconst overCapUsers={};for(let i=0;i<501;i++)overCapUsers[`learner-${i+1}`]={name:`Learner ${i+1}`};\nassert.throws(()=>api.pvBuildImportedUsers({activeUser:'learner-1',users:overCapUsers}),/Too many learners in backup/,'oversized learner registries must fail closed rather than silently truncating valid profiles');"
+          if qa.count(anchor)!=1:
+              raise SystemExit(f'learner-cap regression anchor count was {qa.count(anchor)}, expected 1')
+          qa_path.write_text(qa.replace(anchor,insertion,1),encoding='utf-8')
+          PY
+      - name: Bump governed web release
+        run: python tools/bump_web_release.py --release 2026.09.12.15
+      - name: Validate standalone hardening and governed release
+        shell: bash
+        run: |
+          node --check src/core-runtime/core-inline-007.js
+          node --check qa_standalone_learner_ids.cjs
+          node qa_standalone_learner_ids.cjs
+          node qa_final_audit_lifecycle.cjs
+          python qa_release.py
+          python qa_release_docs.py
+          python tools/sync_web_release.py --check
+          python tools/verify_release_external_validation.py
+          git diff --check
+      - name: Commit validated product change and remove one-shot runner
+        shell: bash
+        run: |
+          rm -f .github/workflows/one-shot-learner-import-cap-hardening.yml
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -A
+          git diff --cached --check
+          git commit -m 'Fail closed on oversized learner backup registries'
+          git push origin HEAD:audit/standalone-learner-import-cap-hardening
