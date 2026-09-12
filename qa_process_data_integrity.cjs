@@ -4,6 +4,23 @@ const fs=require('node:fs');
 const vm=require('node:vm');
 
 const runtimeSource=fs.readFileSync('data-integration-runtime.js','utf8');
+const trainingBridgeSource=fs.readFileSync('training-qa-fix.js','utf8');
+{
+  const memory=new Map();
+  const storage={
+    get length(){return memory.size},
+    key(i){return [...memory.keys()][i]??null},
+    getItem:k=>memory.has(String(k))?memory.get(String(k)):null,
+    setItem:(k,v)=>memory.set(String(k),String(v)),
+    removeItem:k=>memory.delete(String(k)),
+  };
+  const bridgeWindow={};
+  const bridgeSandbox={window:bridgeWindow,localStorage:storage,console,Date,Math,Object,String,Number,JSON,setTimeout:()=>{},alert:()=>{},confirm:()=>true,Blob:function(){},URL:{createObjectURL:()=>'',revokeObjectURL:()=>{}}};
+  vm.createContext(bridgeSandbox);
+  assert.doesNotThrow(()=>vm.runInContext(trainingBridgeSource,bridgeSandbox,{filename:'training-qa-fix.js'}),'training bridge must initialize without a DOM so import/reset validation can run in non-browser contexts');
+  assert(bridgeWindow.MM_TRAINING_DATA_BRIDGE,'DOM-less training bridge initialization must still expose its cleanup API');
+}
+
 for(const [token,message] of [
   ["const CONTEXT_KEYS=['machine','mould','materialGrade','job']",'canonical runtime must own the full baseline context identity'],
   ['function baselineCompatibility(dataset={},baseline={})','canonical runtime must own baseline compatibility'],
