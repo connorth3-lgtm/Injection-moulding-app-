@@ -40,10 +40,10 @@ If a second trusted maintainer with write access is added, this policy should be
 re-hardened to require at least one independent human approval and approval of
 the latest push by someone other than the pusher.
 
-Automated checks are necessary but are not equivalent to independent human
-review. While the repository remains solo-maintained, merge authorization rests
-on the protected PR workflow and all required automated/security gates rather
-than a fabricated self-review or second account.
+Automated checks are necessary but are not equivalent to independent human review.
+While the repository remains solo-maintained, merge authorization rests on the
+protected PR workflow and all required automated/security gates rather than a
+fabricated self-review or second account.
 
 ## Applying the policy safely
 
