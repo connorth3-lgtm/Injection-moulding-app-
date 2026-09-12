@@ -44,8 +44,8 @@ path.write_text(text,encoding='utf-8')
 
 qa=Path('qa_data_integration.py')
 q=qa.read_text(encoding='utf-8')
-marker='        "current-data-manifest.json",\n'
-insertion=marker+'        "function readinessHtml(p)",\n        "Validate structure",\n        "Privacy preparation",\n        "Define semantics",\n        "Check coverage",\n        "Analysis-ready: baseline and process-intelligence tools may be used.",\n'
+marker='''        "data-pdi-launch",\n        "current-data-manifest.json",\n        "process-data-semantic-registry.json",\n'''
+insertion=marker+'''        "function readinessHtml(p)",\n        "Validate structure",\n        "Privacy preparation",\n        "Define semantics",\n        "Check coverage",\n        "Analysis-ready: baseline and process-intelligence tools may be used.",\n'''
 if q.count(marker)!=1:
-    raise SystemExit(f'QA marker count was {q.count(marker)}, expected 1')
+    raise SystemExit(f'QA readiness anchor count was {q.count(marker)}, expected 1')
 qa.write_text(q.replace(marker,insertion,1),encoding='utf-8')
