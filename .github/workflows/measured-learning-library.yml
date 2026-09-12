@@ -157,7 +157,7 @@ jobs:
         run: python qa_measured_learning_review_packets.py
       - name: Upload compact source proofs, authoring candidates, review queue and packets
         if: always()
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7
         with:
           name: measured-learning-source-proofs
           path: measured-source-proof/
