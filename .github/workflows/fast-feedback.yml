@@ -5,7 +5,7 @@ on:
     branches: [ main ]
 
 permissions:
-  contents: write
+  contents: read
 
 concurrency:
   group: fast-feedback-${{ github.event.pull_request.number }}
@@ -20,7 +20,6 @@ jobs:
         uses: actions/checkout@v7
         with:
           fetch-depth: 0
-          ref: ${{ github.head_ref }}
 
       - name: Set up Python
         uses: actions/setup-python@v7
@@ -31,32 +30,6 @@ jobs:
         uses: actions/setup-node@v7
         with:
           node-version: '22'
-
-      - name: Synchronise release identity for this PR
-        run: |
-          python tools/sync_web_release.py
-          python - <<'PY'
-          from pathlib import Path
-          replacements = {
-              Path('README.md'): [('PWA / browser shell: `2026.09.12.19`', 'PWA / browser shell: `2026.09.12.20`')],
-              Path('support.html'): [('id="mmPwa">2026.09.12.19', 'id="mmPwa">2026.09.12.20')],
-              Path('qa_release_docs.py'): [("'web_release':'2026.09.12.19'", "'web_release':'2026.09.12.20'")],
-          }
-          for path, pairs in replacements.items():
-              text = path.read_text(encoding='utf-8')
-              for old, new in pairs:
-                  if text.count(old) != 1:
-                      raise SystemExit(f'{path}: expected exactly one {old!r}, found {text.count(old)}')
-                  text = text.replace(old, new, 1)
-              path.write_text(text, encoding='utf-8')
-          PY
-          if ! git diff --quiet; then
-            git config user.name "github-actions[bot]"
-            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-            git add version.json service-worker.js index.html pwa-shell.js README.md support.html qa_release_docs.py
-            git commit -m "Synchronise web release identity"
-            git push origin HEAD:${{ github.head_ref }}
-          fi
 
       - name: Run change-aware checks
         run: python qa_fast_feedback.py --base "origin/${{ github.base_ref }}" --head HEAD
