@@ -36,8 +36,8 @@ jobs:
   evidence-coverage:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
         with:
           python-version: '3.12'
       - name: Mechanism evidence coverage integrity
@@ -45,7 +45,7 @@ jobs:
       - name: Mechanism promotion dossier integrity
         run: python qa_mechanism_promotion.py
       - name: Upload evidence coverage reports
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: mouldmaster-evidence-coverage
           path: |
