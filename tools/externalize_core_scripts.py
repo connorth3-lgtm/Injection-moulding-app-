@@ -52,6 +52,44 @@ HARDENED_PRINT_CERTIFICATE = r'''function printCertificate(level,region){
 
 /* Instructor dashboard understands regional score keys. */'''
 
+LEGACY_SIM_ACCESSIBILITY = r'''/* ---------- Accessibility: explicit names for simulator controls ---------- */
+safeSlider=function(label,key,min,max,val,help){
+  const units={speed:"%",transfer:"%",hold:"%",holdTime:"s",melt:"",mould:"",cooling:"s",clamp:"%",vent:"%",moisture:"%"};
+  return `<label>${esc(label)}
+    <div class="range-row">
+      <input aria-label="${esc(label)}" type="range" min="${min}" max="${max}" value="${val}" oninput="simChange('${key}',this.value)">
+      <input aria-label="${esc(label)} current display" id="sim_${key}" value="${val}${units[key]||""}" readonly>
+    </div>
+    ${help?`<small class="muted">${esc(help)}</small>`:""}
+  </label>`;
+};'''
+
+HARDENED_SIM_ACCESSIBILITY = r'''/* ---------- Accessibility: explicit names and semantic values for simulator controls ---------- */
+function pvSafeSimDisplay(key,value){
+  if(typeof safeSimLabel==="function"){
+    try{return String(safeSimLabel(key,+value));}catch(_e){}
+  }
+  return String(value);
+}
+if(typeof simChange==="function"){
+  const PV_simChange_accessibility_base=simChange;
+  simChange=function(k,v){
+    PV_simChange_accessibility_base(k,v);
+    const control=document.getElementById(`sim_range_${k}`);
+    if(control)control.setAttribute("aria-valuetext",pvSafeSimDisplay(k,v));
+  };
+}
+safeSlider=function(label,key,min,max,val,help){
+  const display=pvSafeSimDisplay(key,val);
+  return `<label>${esc(label)}
+    <div class="range-row">
+      <input id="sim_range_${esc(key)}" aria-label="${esc(label)}" aria-valuetext="${esc(display)}" type="range" min="${min}" max="${max}" value="${val}" oninput="simChange('${key}',this.value)">
+      <input aria-label="${esc(label)} current display" aria-live="polite" id="sim_${key}" value="${esc(display)}" readonly>
+    </div>
+    ${help?`<small class="muted">${esc(help)}</small>`:""}
+  </label>`;
+};'''
+
 
 def fail(message: str) -> None:
     raise SystemExit(message)
@@ -101,6 +139,10 @@ def runtime_transform(name: str, source: str) -> str:
             fail("certificate print runtime transform did not match exactly once")
         if "document.write(" in transformed or "document.writeln(" in transformed:
             fail("certificate print runtime transform left document.write active")
+    if name == "core-inline-007.js":
+        if transformed.count(LEGACY_SIM_ACCESSIBILITY) != 1:
+            fail("frozen simulator accessibility source drifted; review the runtime hardening transform")
+        transformed = transformed.replace(LEGACY_SIM_ACCESSIBILITY, HARDENED_SIM_ACCESSIBILITY, 1)
     return retire_handler_attrs(transformed)
 
 
