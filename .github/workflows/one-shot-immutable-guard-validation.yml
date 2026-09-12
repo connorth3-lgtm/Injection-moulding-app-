@@ -1,0 +1,35 @@
+name: One-shot immutable guard validation
+
+on:
+  push:
+    branches:
+      - audit/immutable-release-fail-closed
+    paths:
+      - .github/workflows/one-shot-immutable-guard-validation.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  PYTHONDONTWRITEBYTECODE: '1'
+
+jobs:
+  validate:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout branch
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Setup Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7
+        with:
+          python-version: '3.12'
+      - name: Run focused release and governance QA
+        run: |
+          python qa_release_immutability.py
+          python qa_critical_actions_versions.py
+          python qa_repo_governance.py
+          python qa_audit_governance.py
+          python qa_release_supply_chain.py
+          python qa_open_desktop.py
+          git diff --check
