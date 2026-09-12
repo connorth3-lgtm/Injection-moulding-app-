@@ -93,7 +93,7 @@ jobs:
           # Validate the dependency-lock workflow locally with the reviewed builder version.
           dep=Path('.github/workflows/desktop-dependency-lock.yml')
           dt=dep.read_text(encoding='utf-8')
-          if dt.count('26.15.7')!=2:
+          if dt.count('26.15.7')!=1:
               raise SystemExit(f'desktop dependency workflow old builder count={dt.count("26.15.7")}')
           dep.write_text(dt.replace('26.15.7','26.16.0'),encoding='utf-8')
           PY
