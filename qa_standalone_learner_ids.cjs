@@ -204,6 +204,8 @@ assert.deepEqual(registry.users['learner-1'].completed,[1],'standalone import mu
 assert.deepEqual(registry.users['learner-1'].certificates,[],'standalone import must strip imported certificates');
 assert.deepEqual(registry.users['learner-1'].certificateMeta,{},'standalone import must strip imported certificate metadata');
 assert.deepEqual(registry.users['learner-1'].examPassStatus,{},'standalone import must strip imported pass assertions');
+const overCapUsers={};for(let i=0;i<501;i++)overCapUsers[`learner-${i+1}`]={name:`Learner ${i+1}`};
+assert.throws(()=>api.pvBuildImportedUsers({activeUser:'learner-1',users:overCapUsers}),/Too many learners in backup/,'oversized learner registries must fail closed rather than silently truncating valid profiles');
 
 function makeStandaloneCommitHarness(storage){
   const existingDb={activeUser:'learner-1',users:{'learner-1':{id:'learner-1',name:'Existing'}}};

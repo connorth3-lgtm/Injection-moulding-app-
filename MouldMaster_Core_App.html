@@ -2809,8 +2809,9 @@ function pvHasOwnLearner(users,id){
   return !!users&&Object.prototype.hasOwnProperty.call(users,id);
 }
 function pvBuildImportedUsers(x){
-  const users={};
-  for(const [id,u] of Object.entries(x.users).slice(0,500)){
+  const users={},entries=Object.entries(x.users);
+  if(entries.length>500)throw new Error("Too many learners in backup");
+  for(const [id,u] of entries){
     const sid=pvRequireLearnerId(id);
     if(pvHasOwnLearner(users,sid))throw new Error("Duplicate learner identifier");
     const clean=normaliseImportedUser(u,sid);
