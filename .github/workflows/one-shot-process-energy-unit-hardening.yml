@@ -4,14 +4,16 @@ on:
   push:
     branches:
       - audit/process-energy-unit-hardening
+    paths:
+      - .github/workflows/one-shot-process-energy-unit-hardening.yml
+  workflow_dispatch:
 
 permissions:
   contents: write
 
 jobs:
   harden:
-    if: github.actor != 'github-actions[bot]'
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - name: Checkout exact branch
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
