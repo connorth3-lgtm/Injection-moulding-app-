@@ -1,0 +1,111 @@
+name: One-shot hosted learner import cap hardening
+
+on:
+  push:
+    branches:
+      - audit/hosted-learner-import-cap-hardening
+    paths:
+      - .github/workflows/one-shot-hosted-learner-import-cap-hardening.yml
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+env:
+  PYTHONDONTWRITEBYTECODE: '1'
+
+jobs:
+  harden:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout exact branch
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          ref: audit/hosted-learner-import-cap-hardening
+          fetch-depth: 0
+      - name: Setup Node
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7
+        with:
+          node-version: '22.12.0'
+          package-manager-cache: false
+      - name: Setup Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7
+        with:
+          python-version: '3.12'
+      - name: Apply fail-closed hosted learner registry cap
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          runtime_path=Path('training-qa-fix.js')
+          runtime=runtime_path.read_text(encoding='utf-8')
+          old="   const users={};\n   for(const [id,u] of Object.entries(x.users).slice(0,500)){"
+          new="   const users={},entries=Object.entries(x.users);\n   if(entries.length>500)throw new Error('Too many learners in backup');\n   for(const [id,u] of entries){"
+          if runtime.count(old)!=1:
+              raise SystemExit(f'hosted learner registry patch target count was {runtime.count(old)}, expected 1')
+          runtime_path.write_text(runtime.replace(old,new,1),encoding='utf-8')
+
+          qa_path=Path('qa_final_audit_lifecycle.cjs')
+          qa=qa_path.read_text(encoding='utf-8')
+          anchor="// Silent removeItem failure is just as unsafe as a thrown exception. Re-enumeration\n// must detect the retained key and fail closed."
+          insertion="""// Oversized hosted backups must fail closed before staging any learner-registry write.\n{\n  const t=trainingSandbox('normal');\n  const users={};for(let i=0;i<501;i++)users[`learner-${i+1}`]={id:`learner-${i+1}`,name:`Learner ${i+1}`,completed:[]};\n  const incoming={activeUser:'learner-1',users,trainingExtras:{version:2,spacedReview:{items:{}},practicalSignoff:{checks:{}}}};\n  t.sandbox.importData({size:500000,contents:JSON.stringify(incoming)});\n  assert.strictEqual(t.sandbox.db.activeUser,'old','oversized hosted import silently activated a truncated learner registry');\n  assert.strictEqual(t.memory.get('mouldmasterProDB'),t.oldSerialized,'oversized hosted import staged or persisted a truncated learner registry');\n  assert(t.alerts.some(x=>/not a valid MouldMaster backup/i.test(x)),'oversized hosted import did not surface a blocking invalid-backup warning');\n}\n\n// Silent removeItem failure is just as unsafe as a thrown exception. Re-enumeration\n// must detect the retained key and fail closed."""
+          if qa.count(anchor)!=1:
+              raise SystemExit(f'hosted import regression anchor count was {qa.count(anchor)}, expected 1')
+          qa_path.write_text(qa.replace(anchor,insertion,1),encoding='utf-8')
+          PY
+      - name: Synchronize governed web release
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          old='2026.09.12.15';new='2026.09.12.16'
+          files=[
+            'README.md','data/release-external-validation-v1.json','index.html','pwa-shell.js',
+            'qa_release.py','qa_release_docs.py','service-worker.js','support.html','version.json'
+          ]
+          total=0
+          for name in files:
+              path=Path(name);text=path.read_text(encoding='utf-8');count=text.count(old)
+              if count<1:
+                  raise SystemExit(f'{name}: expected governed release marker {old} was missing')
+              path.write_text(text.replace(old,new),encoding='utf-8');total+=count
+          print(f'Synchronized {total} governed web release markers: {old} -> {new}')
+          PY
+      - name: Validate hosted and standalone import hardening
+        shell: bash
+        run: |
+          node --check training-qa-fix.js
+          node --check qa_final_audit_lifecycle.cjs
+          node qa_final_audit_lifecycle.cjs
+          node qa_standalone_learner_ids.cjs
+          python qa_release.py
+          python qa_release_docs.py
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          release='2026.09.12.16'
+          version=json.loads(Path('version.json').read_text(encoding='utf-8'))
+          assert version['web_release']==release
+          assert version['published']=='2026-09-12'
+          index=Path('index.html').read_text(encoding='utf-8')
+          worker=Path('service-worker.js').read_text(encoding='utf-8')
+          shell=Path('pwa-shell.js').read_text(encoding='utf-8')
+          evidence=json.loads(Path('data/release-external-validation-v1.json').read_text(encoding='utf-8'))
+          runtime=Path('training-qa-fix.js').read_text(encoding='utf-8')
+          assert "if(entries.length>500)throw new Error('Too many learners in backup')" in runtime
+          assert f'const SHELL_RELEASE="{release}"' in index
+          assert f"const CACHE_VERSION='{release}'" in worker
+          assert release in shell
+          assert release in json.dumps(evidence)
+          PY
+          git diff --check
+      - name: Commit validated product change and remove one-shot runner
+        shell: bash
+        run: |
+          rm -f .github/workflows/one-shot-hosted-learner-import-cap-hardening.yml
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -A
+          git diff --cached --check
+          git commit -m 'Fail closed on oversized hosted learner backups'
+          git push origin HEAD:audit/hosted-learner-import-cap-hardening
