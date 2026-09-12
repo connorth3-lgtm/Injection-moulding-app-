@@ -34,40 +34,25 @@ jobs:
         run: |
           python - <<'PY'
           from pathlib import Path
-
-          ui_path = Path('process-data-intelligence-ui.js')
-          ui = ui_path.read_text(encoding='utf-8')
-          old = """  const candidates=resolvedNumeric(dataset).filter(s=>/(energy|power.*energy|kwh|watt.?hour)/i.test(`${s.column} ${s.meaning||''}`)&&/^(?:kWh|Wh|J|kJ|MJ)$/i.test(String(s.unit||''))&&String(s.sampling_basis||s.samplingBasis||'').trim().toLowerCase()==='per-cycle');
-  if(!candidates.length)return null;
-  const s=candidates[0],energyValues=rows.map(r=>finite(r[s.column])),vals=energyValues.filter(v=>v!==null);if(!vals.length)return null;
-  let total=vals.reduce((a,b)=>a+b,0),unit=s.unit;
-  if(/^wh$/i.test(unit)){total/=1000;unit='kWh'}else if(/^j$/i.test(unit)){total/=3.6e6;unit='kWh'}else if(/^kj$/i.test(unit)){total/=3600;unit='kWh'}else if(/^mj$/i.test(unit)){total/=3.6;unit='kWh'}
-"""
-          new = """  const candidates=resolvedNumeric(dataset).filter(s=>/(energy|power.*energy|kwh|watt.?hour)/i.test(`${s.column} ${s.meaning||''}`)&&/^(?:kWh|Wh|J|kJ|MJ)$/i.test(String(s.unit||'').trim())&&String(s.sampling_basis||s.samplingBasis||'').trim().toLowerCase()==='per-cycle');
-  if(!candidates.length)return null;
-  const s=candidates[0],energyValues=rows.map(r=>finite(r[s.column])),vals=energyValues.filter(v=>v!==null);if(!vals.length)return null;
-  let total=vals.reduce((a,b)=>a+b,0),unit=String(s.unit||'').trim();
-  if(/^kwh$/i.test(unit)){unit='kWh'}else if(/^wh$/i.test(unit)){total/=1000;unit='kWh'}else if(/^j$/i.test(unit)){total/=3.6e6;unit='kWh'}else if(/^kj$/i.test(unit)){total/=3600;unit='kWh'}else if(/^mj$/i.test(unit)){total/=3.6;unit='kWh'}
-"""
-          if ui.count(old) != 1:
-              raise SystemExit(f'energySummary patch target count was {ui.count(old)}, expected 1')
-          ui_path.write_text(ui.replace(old, new, 1), encoding='utf-8')
-
-          qa_path = Path('qa_process_data_followup.cjs')
-          qa = qa_path.read_text(encoding='utf-8')
-          anchor = """assert.equal(energy.energyPerGoodPart,0.2,'complete per-cycle coverage should preserve valid energy/good-part calculation');
-const eventEnergy={semantics:{energy:{column:'cycle_energy_wh',role:'actual',blockers:[],unit:'Wh',meaning:'Energy meter',sampling_basis:'event'}}};
-"""
-          replacement = """assert.equal(energy.energyPerGoodPart,0.2,'complete per-cycle coverage should preserve valid energy/good-part calculation');
-const mixedCaseKwhEnergy={semantics:{energy:{column:'cycle_energy_kwh',role:'actual',blockers:[],unit:' KWH ',meaning:'Cycle energy',sampling_basis:'per-cycle'}}};
-energy=helpers.energySummary([{cycle_energy_kwh:'0.1',quality_result:'pass'},{cycle_energy_kwh:'0.2',quality_result:'pass'}],mixedCaseKwhEnergy);
-assert.equal(energy.totalKwh,0.3,'supported kWh spelling/case must normalize before aggregation');
-assert.equal(energy.energyPerGoodPart,0.15,'normalized kWh input must preserve energy/good-part calculation');
-const eventEnergy={semantics:{energy:{column:'cycle_energy_wh',role:'actual',blockers:[],unit:'Wh',meaning:'Energy meter',sampling_basis:'event'}}};
-"""
-          if qa.count(anchor) != 1:
+          ui_path=Path('process-data-intelligence-ui.js')
+          ui=ui_path.read_text(encoding='utf-8')
+          replacements=[
+              ("  const candidates=resolvedNumeric(dataset).filter(s=>/(energy|power.*energy|kwh|watt.?hour)/i.test(`${s.column} ${s.meaning||''}`)&&/^(?:kWh|Wh|J|kJ|MJ)$/i.test(String(s.unit||''))&&String(s.sampling_basis||s.samplingBasis||'').trim().toLowerCase()==='per-cycle');", "  const candidates=resolvedNumeric(dataset).filter(s=>/(energy|power.*energy|kwh|watt.?hour)/i.test(`${s.column} ${s.meaning||''}`)&&/^(?:kWh|Wh|J|kJ|MJ)$/i.test(String(s.unit||'').trim())&&String(s.sampling_basis||s.samplingBasis||'').trim().toLowerCase()==='per-cycle');"),
+              ("  let total=vals.reduce((a,b)=>a+b,0),unit=s.unit;", "  let total=vals.reduce((a,b)=>a+b,0),unit=String(s.unit||'').trim();"),
+              ("  if(/^wh$/i.test(unit)){total/=1000;unit='kWh'}else if(/^j$/i.test(unit)){total/=3.6e6;unit='kWh'}else if(/^kj$/i.test(unit)){total/=3600;unit='kWh'}else if(/^mj$/i.test(unit)){total/=3.6;unit='kWh'}", "  if(/^kwh$/i.test(unit)){unit='kWh'}else if(/^wh$/i.test(unit)){total/=1000;unit='kWh'}else if(/^j$/i.test(unit)){total/=3.6e6;unit='kWh'}else if(/^kj$/i.test(unit)){total/=3600;unit='kWh'}else if(/^mj$/i.test(unit)){total/=3.6;unit='kWh'}"),
+          ]
+          for old,new in replacements:
+              if ui.count(old)!=1:
+                  raise SystemExit(f'process intelligence patch target count was {ui.count(old)}, expected 1: {old[:80]}')
+              ui=ui.replace(old,new,1)
+          ui_path.write_text(ui,encoding='utf-8')
+          qa_path=Path('qa_process_data_followup.cjs')
+          qa=qa_path.read_text(encoding='utf-8')
+          anchor="assert.equal(energy.energyPerGoodPart,0.2,'complete per-cycle coverage should preserve valid energy/good-part calculation');\nconst eventEnergy={semantics:{energy:{column:'cycle_energy_wh',role:'actual',blockers:[],unit:'Wh',meaning:'Energy meter',sampling_basis:'event'}}};"
+          insertion="assert.equal(energy.energyPerGoodPart,0.2,'complete per-cycle coverage should preserve valid energy/good-part calculation');\nconst mixedCaseKwhEnergy={semantics:{energy:{column:'cycle_energy_kwh',role:'actual',blockers:[],unit:' KWH ',meaning:'Cycle energy',sampling_basis:'per-cycle'}}};\nenergy=helpers.energySummary([{cycle_energy_kwh:'0.1',quality_result:'pass'},{cycle_energy_kwh:'0.2',quality_result:'pass'}],mixedCaseKwhEnergy);\nassert.equal(energy.totalKwh,0.3,'supported kWh spelling/case must normalize before aggregation');\nassert.equal(energy.energyPerGoodPart,0.15,'normalized kWh input must preserve energy/good-part calculation');\nconst eventEnergy={semantics:{energy:{column:'cycle_energy_wh',role:'actual',blockers:[],unit:'Wh',meaning:'Energy meter',sampling_basis:'event'}}};"
+          if qa.count(anchor)!=1:
               raise SystemExit(f'energy regression insertion target count was {qa.count(anchor)}, expected 1')
-          qa_path.write_text(qa.replace(anchor, replacement, 1), encoding='utf-8')
+          qa_path.write_text(qa.replace(anchor,insertion,1),encoding='utf-8')
           PY
       - name: Bump governed web release
         run: python tools/bump_web_release.py --release 2026.09.12.4
