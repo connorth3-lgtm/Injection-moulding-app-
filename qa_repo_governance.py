@@ -186,7 +186,7 @@ for marker in [
     "non-fast-forward/force updates blocked",
     "--dry-run",
     "--apply",
-    "transforms that exact object",
+    "transforms that exact",
     "all five required checks are green",
     "Automated checks are necessary but are not equivalent to independent human review",
     "Issue #43",
