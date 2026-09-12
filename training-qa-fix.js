@@ -55,8 +55,9 @@ window.importData=function(file){
    const x=JSON.parse(r.result);
    if(!obj(x)||!obj(x.users)||typeof x.activeUser!=='string')throw new Error('Invalid backup structure');
    if(typeof normaliseImportedUser!=='function')throw new Error('Core validator unavailable');
-   const users={};
-   for(const [id,u] of Object.entries(x.users).slice(0,500)){
+   const users={},entries=Object.entries(x.users);
+   if(entries.length>500)throw new Error('Too many learners in backup');
+   for(const [id,u] of entries){
     const sid=requireCoreLearnerId(id);
     if(hasOwnCoreLearner(users,sid))throw new Error('Invalid or duplicate learner identifier');
     const clean=normaliseImportedUser(u,sid);

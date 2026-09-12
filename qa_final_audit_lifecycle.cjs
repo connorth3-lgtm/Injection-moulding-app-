@@ -144,6 +144,17 @@ function trainingSandbox(removeMode='normal'){
   assert(!t.toasts.some(x=>/^Progress imported/i.test(x)),'failed cleanup falsely reported a successful import');
 }
 
+// Oversized hosted backups must fail closed before staging any learner-registry write.
+{
+  const t=trainingSandbox('normal');
+  const users={};for(let i=0;i<501;i++)users[`learner-${i+1}`]={id:`learner-${i+1}`,name:`Learner ${i+1}`,completed:[]};
+  const incoming={activeUser:'learner-1',users,trainingExtras:{version:2,spacedReview:{items:{}},practicalSignoff:{checks:{}}}};
+  t.sandbox.importData({size:500000,contents:JSON.stringify(incoming)});
+  assert.strictEqual(t.sandbox.db.activeUser,'old','oversized hosted import silently activated a truncated learner registry');
+  assert.strictEqual(t.memory.get('mouldmasterProDB'),t.oldSerialized,'oversized hosted import staged or persisted a truncated learner registry');
+  assert(t.alerts.some(x=>/not a valid MouldMaster backup/i.test(x)),'oversized hosted import did not surface a blocking invalid-backup warning');
+}
+
 // Silent removeItem failure is just as unsafe as a thrown exception. Re-enumeration
 // must detect the retained key and fail closed.
 {
