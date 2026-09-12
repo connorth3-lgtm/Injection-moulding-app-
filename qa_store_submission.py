@@ -77,10 +77,10 @@ for marker in [
     require(marker in workflow, f"Store package workflow safeguard missing: {marker}")
 
 # MSIX packaging must be reproducible and isolated from the stable portable/NSIS builder.
-require(desktop_pkg['devDependencies'].get('electron-builder') == '26.15.7', 'portable/NSIS electron-builder pin changed unexpectedly')
+require(desktop_pkg['devDependencies'].get('electron-builder') == '26.16.0', 'portable/NSIS electron-builder pin changed unexpectedly')
 require('node scripts/run-msix-builder.cjs --win msix' in desktop_pkg['scripts'].get('dist:msix', ''), 'desktop MSIX script must use the locked local runner')
 require('npx --yes electron-builder' not in desktop_pkg['scripts'].get('dist:msix', ''), 'desktop MSIX script must not resolve a builder from the network at execution time')
-require(desktop_lock['packages']['']['devDependencies'].get('electron-builder') == '26.15.7', 'root desktop lock must preserve electron-builder 26.15.7')
+require(desktop_lock['packages']['']['devDependencies'].get('electron-builder') == '26.16.0', 'root desktop lock must preserve electron-builder 26.16.0')
 require(msix_pkg.get('devDependencies', {}).get('electron-builder') == '27.0.0-alpha.7', 'MSIX toolchain must pin electron-builder 27.0.0-alpha.7 exactly')
 locked_msix = msix_lock.get('packages', {}).get('node_modules/electron-builder')
 require(locked_msix is not None and locked_msix.get('version') == '27.0.0-alpha.7', 'MSIX lockfile must resolve electron-builder 27.0.0-alpha.7 exactly')

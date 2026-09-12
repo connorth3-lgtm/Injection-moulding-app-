@@ -9,9 +9,9 @@ def need(ok,msg):
 
 V=json.loads(text('version.json'))
 expected={
- 'web_release':'2026.09.11.1',
+ 'web_release':'2026.09.12.19',
  'android_release':'2026.08.26.2',
- 'desktop_release':'2026.08.26.8',
+ 'desktop_release':'2026.08.26.9',
  'content_version':'2026.08.26.1',
  'question_bank_version':'2026.08.30.1',
  'assessment_quality_version':'2026.08.24.3',
@@ -52,11 +52,11 @@ need(str(pkg.get('build',{}).get('buildNumber'))==release_parts[3],'desktop buil
 need(pkg.get('build',{}).get('buildVersion')=='.'.join(release_parts),'desktop buildVersion must match desktop_release')
 
 # Electron 44 is an explicit supported-platform decision, not just a package bump.
-need(pkg.get('devDependencies',{}).get('electron')=='44.1.1','desktop runtime must remain pinned to reviewed Electron 44.1.1')
-need(lock.get('packages',{}).get('',{}).get('devDependencies',{}).get('electron')=='44.1.1','desktop lock must resolve reviewed Electron 44.1.1')
+need(pkg.get('devDependencies',{}).get('electron')=='44.2.0','desktop runtime must remain pinned to reviewed Electron 44.2.0')
+need(lock.get('packages',{}).get('',{}).get('devDependencies',{}).get('electron')=='44.2.0','desktop lock must resolve reviewed Electron 44.2.0')
 electron_support=text('desktop/electron/ELECTRON_44_SUPPORT.md')
 for marker in [
- 'Electron `44.1.1`',
+ 'Electron `44.2.0`',
  'Windows 10/11, 64-bit only',
  'GitHub portable/NSIS validation lane is x64',
  'Microsoft Store MSIX lane packages x64 and arm64',
@@ -67,12 +67,12 @@ for marker in [
  'setLoginItemSettings',
  'ANGLE is statically linked',
  'https://www.electronjs.org/blog/electron-44-0',
- 'https://releases.electronjs.org/release/v44.1.1',
+ 'https://releases.electronjs.org/release/v44.2.0',
 ]:
     need(marker in electron_support,f'Electron 44 support policy missing marker: {marker}')
 
 desktop_readme=text('desktop/electron/README.md')
-for marker in ['Electron 44.1.1','Windows 10/11 64-bit','ELECTRON_44_SUPPORT.md','127.0.0.1:43139']:
+for marker in ['Electron 44.2.0','Windows 10/11 64-bit','ELECTRON_44_SUPPORT.md','127.0.0.1:43139']:
     need(marker in desktop_readme,f'desktop README Electron 44/stable-origin marker missing: {marker}')
 
 # The manual retirement guide is release evidence too. Keep its human test target

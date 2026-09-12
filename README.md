@@ -17,8 +17,8 @@ The project maintainers do not intend to seek patent protection over implementat
 
 ## Current release lanes
 
-- PWA / browser shell: `2026.09.11.1`
-- Open Windows desktop: `2026.08.26.8`
+- PWA / browser shell: `2026.09.12.19`
+- Open Windows desktop: `2026.08.26.9`
 - Training content: `2026.08.26.1`
 - Audited assessment bank: `2026.08.30.1`
 - Assessment quality / analytics hardening: `2026.08.24.3`
@@ -84,7 +84,7 @@ The normal open-source Windows desktop implementation is under:
 
 `desktop/electron/`
 
-Desktop `2026.08.26.8` is the tagged open release identity for the verified analytics-cleanup/runtime-governance hardening. `.github/workflows/publish-open-desktop.yml` publishes the versioned tagged GitHub Release when `version.json` changes on protected `main`; release artifacts include the portable Windows executable, SHA-256 hashes, source commit, bundled-asset integrity manifest, dependency licence inventory, CycloneDX SBOM and assessment/evidence/source-freshness QA reports.
+Desktop `2026.08.26.9` is the tagged open release identity for the verified analytics-cleanup/runtime-governance hardening. `.github/workflows/publish-open-desktop.yml` publishes the versioned tagged GitHub Release when `version.json` changes on protected `main`; release artifacts include the portable Windows executable, SHA-256 hashes, source commit, bundled-asset integrity manifest, dependency licence inventory, CycloneDX SBOM and assessment/evidence/source-freshness QA reports.
 
 Security controls include:
 - SHA-256 verification of bundled MouldMaster application assets before launch;
