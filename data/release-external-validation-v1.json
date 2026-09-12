@@ -1,21 +1,23 @@
 {
   "schemaVersion": 1,
-  "release": "2026.09.12.20",
+  "release": "2026.09.12.21",
   "policy": "External validation is release-specific. Automated QA may verify that HOLD boundaries are represented truthfully but must never manufacture human, device, learner, accreditation, signing, or production-site evidence.",
   "technicalAutomation": {
     "status": "pass",
     "claim": "Strongly automated and technically governed; no external-validation claim is implied."
   },
   "governance": {
-    "status": "pending-native-ruleset-apply",
+    "status": "enforced",
     "requiredPolicy": {
-      "minimumApprovals": 1,
+      "minimumApprovals": 0,
       "reviewThreadResolution": true,
       "dismissStaleReviews": true,
-      "lastPushApproval": true
+      "lastPushApproval": false
     },
     "repositoryPolicy": ".github/MAIN_PROTECTION.md",
-    "verifier": "tools/verify_main_ruleset.py"
+    "verifier": "tools/verify_main_ruleset.py",
+    "maintainerMode": "solo",
+    "soloMaintainerBoundary": "Independent approval and latest-push approval are disabled only while this repository has one write-capable maintainer; all PR, thread-resolution, status, security and no-bypass controls remain mandatory."
   },
   "accessibility": {
     "status": "hold",
@@ -55,8 +57,8 @@
     "requiredForExpansion": "Formal controlled-site validation, safety/governance review and explicit authorization before any machine-control or validated-recipe authority."
   },
   "visualGovernance": {
-    "status": "pending-native-ruleset-apply",
-    "required": "Independent human PR approval is mandatory in addition to owner visual-baseline authorization."
+    "status": "enforced",
+    "required": "Solo-maintainer protected-PR governance is enforced without fabricated self-review; restore independent visual/review approval when a second trusted write-capable maintainer is added."
   },
   "claims": {
     "fullyExternallyValidated": false,

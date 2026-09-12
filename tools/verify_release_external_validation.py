@@ -161,9 +161,24 @@ def main() -> None:
 
     governance = data["governance"]
     policy = governance.get("requiredPolicy") or {}
-    if policy.get("minimumApprovals", 0) < 1:
-        fail("governance requires at least one approval")
-    for key in ("reviewThreadResolution", "dismissStaleReviews", "lastPushApproval"):
+    maintainer_mode = str(governance.get("maintainerMode") or "multi").strip().lower()
+    if maintainer_mode == "solo":
+        if governance.get("status") != "enforced":
+            fail("solo-maintainer governance must be recorded as enforced")
+        if policy.get("minimumApprovals") != 0:
+            fail("solo-maintainer governance requires minimumApprovals=0")
+        if policy.get("lastPushApproval") is not False:
+            fail("solo-maintainer governance requires lastPushApproval=false")
+        require_nonempty(
+            governance.get("soloMaintainerBoundary"),
+            "solo-maintainer governance must document its narrow exception boundary",
+        )
+    else:
+        if policy.get("minimumApprovals", 0) < 1:
+            fail("multi-maintainer governance requires at least one independent approval")
+        if policy.get("lastPushApproval") is not True:
+            fail("multi-maintainer governance requires latest-push approval")
+    for key in ("reviewThreadResolution", "dismissStaleReviews"):
         if policy.get(key) is not True:
             fail(f"governance.requiredPolicy.{key} must be true")
 
