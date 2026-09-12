@@ -141,9 +141,52 @@ jobs:
           # Workflow files are applied separately through the authenticated user API;
           # restore the locally validated dependency-lock workflow before bot push.
           git restore --source=HEAD -- .github/workflows/desktop-dependency-lock.yml
+
+          # `git checkout <source> -- ...` above populates the index. Reset it so the
+          # candidate is staged from an explicit, reviewed allowlist only. This also
+          # prevents npm-created node_modules/ and generated validation artifacts from
+          # leaking into the release commit.
+          git reset
+          expected=(
+            README.md
+            certification/MICROSOFT_STORE_LISTING_COPY.md
+            certification/MICROSOFT_STORE_SUBMISSION.md
+            certification/README.md
+            data/release-external-validation-v1.json
+            desktop/electron/ELECTRON_44_SUPPORT.md
+            desktop/electron/README.md
+            desktop/electron/REAL_WINDOWS_VALIDATION.md
+            desktop/electron/package-lock.json
+            desktop/electron/package.json
+            index.html
+            pwa-shell.js
+            qa_open_desktop.py
+            qa_release.py
+            qa_release_docs.py
+            qa_store_submission.py
+            service-worker.js
+            support.html
+            version.json
+          )
+
+          mapfile -t expected_sorted < <(printf '%s\n' "${expected[@]}" | sort)
+          mapfile -t changed < <(git diff --name-only HEAD -- | sort)
+          if ! diff -u <(printf '%s\n' "${expected_sorted[@]}") <(printf '%s\n' "${changed[@]}"); then
+            echo 'Tracked change set does not match the governed allowlist.' >&2
+            git status --short --untracked-files=no >&2
+            exit 1
+          fi
+
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add -A
+          git add -- "${expected[@]}"
           git diff --cached --check
+
+          mapfile -t staged < <(git diff --cached --name-only | sort)
+          if ! diff -u <(printf '%s\n' "${expected_sorted[@]}") <(printf '%s\n' "${staged[@]}"); then
+            echo 'Staged change set does not match the governed allowlist.' >&2
+            exit 1
+          fi
+
           git commit -m 'Prepare governed Electron 44.2 desktop runtime release'
           git push origin HEAD:audit/desktop-runtime-44-2-governed
