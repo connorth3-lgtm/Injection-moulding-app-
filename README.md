@@ -17,7 +17,7 @@ The project maintainers do not intend to seek patent protection over implementat
 
 ## Current release lanes
 
-- PWA / browser shell: `2026.09.12.19`
+- PWA / browser shell: `2026.09.12.20`
 - Open Windows desktop: `2026.08.26.9`
 - Training content: `2026.08.26.1`
 - Audited assessment bank: `2026.08.30.1`
