@@ -130,13 +130,27 @@ importData=function(file){
   r.readAsText(file);
 };
 
-/* ---------- Accessibility: explicit names for simulator controls ---------- */
+/* ---------- Accessibility: explicit names and semantic values for simulator controls ---------- */
+function pvSafeSimDisplay(key,value){
+  if(typeof safeSimLabel==="function"){
+    try{return String(safeSimLabel(key,+value));}catch(_e){}
+  }
+  return String(value);
+}
+if(typeof simChange==="function"){
+  const PV_simChange_accessibility_base=simChange;
+  simChange=function(k,v){
+    PV_simChange_accessibility_base(k,v);
+    const control=document.getElementById(`sim_range_${k}`);
+    if(control)control.setAttribute("aria-valuetext",pvSafeSimDisplay(k,v));
+  };
+}
 safeSlider=function(label,key,min,max,val,help){
-  const units={speed:"%",transfer:"%",hold:"%",holdTime:"s",melt:"",mould:"",cooling:"s",clamp:"%",vent:"%",moisture:"%"};
+  const display=pvSafeSimDisplay(key,val);
   return `<label>${esc(label)}
     <div class="range-row">
-      <input aria-label="${esc(label)}" type="range" min="${min}" max="${max}" value="${val}" data-mm-oninput="simChange('${key}',this.value)">
-      <input aria-label="${esc(label)} current display" id="sim_${key}" value="${val}${units[key]||""}" readonly>
+      <input id="sim_range_${esc(key)}" aria-label="${esc(label)}" aria-valuetext="${esc(display)}" type="range" min="${min}" max="${max}" value="${val}" data-mm-oninput="simChange('${key}',this.value)">
+      <input aria-label="${esc(label)} current display" aria-live="polite" id="sim_${key}" value="${esc(display)}" readonly>
     </div>
     ${help?`<small class="muted">${esc(help)}</small>`:""}
   </label>`;
