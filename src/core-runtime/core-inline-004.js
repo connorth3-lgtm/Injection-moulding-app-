@@ -12,11 +12,87 @@ const defaultDB = {
   }
 };
 const PRISTINE_DB = JSON.parse(JSON.stringify(defaultDB));
-let db;
-try{ db = JSON.parse(localStorage.getItem("mouldmasterProDB")) || JSON.parse(JSON.stringify(PRISTINE_DB)) }catch(e){ db=JSON.parse(JSON.stringify(PRISTINE_DB)) }
-if(!db.users || !db.activeUser){db=defaultDB}
+function mmCanonicalStartupLearnerId(v){
+  const raw=String(v==null?"":v);
+  return raw.length>=1&&raw.length<=160&&/^[A-Za-z0-9][A-Za-z0-9._:@+-]*$/.test(raw)?raw:"";
+}
+function mmStartupUniqueLessonIdsAreSafe(values){
+  return Array.isArray(values)&&values.length<=D.lessons.length&&new Set(values).size===values.length&&values.every(value=>Number.isInteger(value)&&value>=1&&value<=D.lessons.length);
+}
+function mmStartupCertificateKeyIsSafe(value){
+  if(typeof value!=="string")return false;
+  if(["Beginner","Intermediate","Advanced"].includes(value))return true;
+  return /^(Beginner|Intermediate|Advanced)-(ALL|UK|US|NZ)$/.test(value);
+}
+function mmStartupCertificatesAreSafe(values){
+  return Array.isArray(values)&&values.length<=15&&new Set(values).size===values.length&&values.every(mmStartupCertificateKeyIsSafe);
+}
+function mmStartupLearnerRecordIsSafe(record,id){
+  if(!record||typeof record!=="object"||Array.isArray(record))return false;
+  if(typeof record.id!=="string"||mmCanonicalStartupLearnerId(record.id)!==id)return false;
+  if(typeof record.name!=="string")return false;
+  if(record.currentLesson!=null&&(!Number.isInteger(record.currentLesson)||record.currentLesson<1||record.currentLesson>D.lessons.length))return false;
+  if(record.region!=null&&record.region!==""&&!["ALL","UK","US","NZ"].includes(record.region))return false;
+  if(!mmStartupUniqueLessonIdsAreSafe(record.completed)||!mmStartupUniqueLessonIdsAreSafe(record.bookmarks)||!mmStartupCertificatesAreSafe(record.certificates))return false;
+  for(const key of ["notes","examScores","examPassStatus","certificateMeta"]){
+    const value=record[key];
+    if(value!=null&&(typeof value!=="object"||Array.isArray(value)))return false;
+  }
+  if(record.examScores!=null){
+    for(const value of Object.values(record.examScores)){
+      if(typeof value!=="number"||!Number.isFinite(value)||value<0||value>100)return false;
+    }
+  }
+  if(record.examPassStatus!=null){
+    for(const value of Object.values(record.examPassStatus))if(typeof value!=="boolean")return false;
+  }
+  if(record.fun!=null){
+    const f=record.fun;
+    if(typeof f!=="object"||Array.isArray(f))return false;
+    for(const key of ["xp","scenarioCorrect","scenarioAttempts","bossWins","streak"]){
+      if(f[key]!=null&&(typeof f[key]!=="number"||!Number.isFinite(f[key])||f[key]<0))return false;
+    }
+    if(f.rewarded!=null&&(typeof f.rewarded!=="object"||Array.isArray(f.rewarded)))return false;
+    if(f.rewarded!=null){
+      for(const value of Object.values(f.rewarded))if(!["string","number","boolean"].includes(typeof value))return false;
+    }
+    if(f.achievements!=null&&(!Array.isArray(f.achievements)||f.achievements.some(value=>typeof value!=="string")))return false;
+    for(const key of ["sound","celebrations"])if(f[key]!=null&&typeof f[key]!=="boolean")return false;
+    for(const key of ["lastLearningDate","lastActiveDate"])if(f[key]!=null&&typeof f[key]!=="string")return false;
+  }
+  if(record.materialScience!=null){
+    const m=record.materialScience;
+    if(typeof m!=="object"||Array.isArray(m))return false;
+    if(m.completed!=null&&(!Array.isArray(m.completed)||m.completed.length>36||new Set(m.completed).size!==m.completed.length||m.completed.some(value=>!Number.isInteger(value)||value<1||value>36)))return false;
+    if(m.bestQuiz!=null&&(typeof m.bestQuiz!=="number"||!Number.isFinite(m.bestQuiz)||m.bestQuiz<0||m.bestQuiz>100))return false;
+    if(m.quizAttempts!=null&&(typeof m.quizAttempts!=="number"||!Number.isFinite(m.quizAttempts)||m.quizAttempts<0))return false;
+    if(m.currentLesson!=null&&(!Number.isInteger(m.currentLesson)||m.currentLesson<1||m.currentLesson>36))return false;
+  }
+  return true;
+}
+function mmSelectStartupDb(candidate,pristine){
+  const fallback=()=>({db:JSON.parse(JSON.stringify(pristine)),rejected:true});
+  if(!candidate||typeof candidate!=="object"||Array.isArray(candidate)||!candidate.users||typeof candidate.users!=="object"||Array.isArray(candidate.users))return fallback();
+  const entries=Object.entries(candidate.users);
+  if(!entries.length)return fallback();
+  for(const [id,record] of entries){
+    if(mmCanonicalStartupLearnerId(id)!==id||!mmStartupLearnerRecordIsSafe(record,id))return fallback();
+  }
+  if(typeof candidate.activeUser!=="string")return fallback();
+  const active=mmCanonicalStartupLearnerId(candidate.activeUser);
+  if(!active||active!==candidate.activeUser||!Object.prototype.hasOwnProperty.call(candidate.users,active))return fallback();
+  return {db:candidate,rejected:false};
+}
+let db,mmStartupLearnerDataRejected=false;
+try{
+  const raw=localStorage.getItem("mouldmasterProDB");
+  const parsed=raw===null?JSON.parse(JSON.stringify(PRISTINE_DB)):JSON.parse(raw);
+  const selected=mmSelectStartupDb(parsed,PRISTINE_DB);
+  db=selected.db;mmStartupLearnerDataRejected=selected.rejected;
+}catch(e){db=JSON.parse(JSON.stringify(PRISTINE_DB));mmStartupLearnerDataRejected=true}
 let user = db.users[db.activeUser];
 if(user.onboardingDone === undefined) user.onboardingDone = false;
+if(user.currentLesson == null) user.currentLesson = 1;
 if(!user.experience) user.experience = "Beginner";
 if(!user.goal) user.goal = "Learn the full process";
 if(!user.dailyMinutes) user.dailyMinutes = 15;
@@ -173,7 +249,7 @@ function renderLesson(){
 function goLesson(id){user.currentLesson=id;persist();renderLesson();window.scrollTo({top:0,behavior:"smooth"})}
 function nextLesson(){let id=user.currentLesson+1;if(id>D.lessons.length)id=1;goLesson(id)}
 function completeLesson(id){if(!user.completed.includes(id))user.completed.push(id);persist();renderLesson();toast("Lesson completed")}
-function saveLessonNote(id){user.notes=user.notes||{};user.notes[id]=$("#lessonNotes").value;persist();toast("Notes saved")}
+function saveLessonNote(id){user.notes=user.notes||{};user.notes[id]=$("#lessonNotes").value;const durable=persist();toast(durable?"Notes saved":"Note updated for this session only — browser storage is unavailable.")}
 function toggleBookmark(id){user.bookmarks=user.bookmarks||[];const i=user.bookmarks.indexOf(id);if(i>=0)user.bookmarks.splice(i,1);else user.bookmarks.push(id);persist();renderLesson()}
 
 function renderVisuals(){
@@ -355,16 +431,17 @@ function renderInstructor(){
  const users=Object.values(db.users);
  $("#instructor").innerHTML=`<div class="kpis"><div class="card kpi"><span>Local learners</span><b>${users.length}</b></div><div class="card kpi"><span>Total completions</span><b>${users.reduce((n,u)=>n+(u.completed?.length||0),0)}</b></div><div class="card kpi"><span>Certificates</span><b>${users.reduce((n,u)=>n+(u.certificates?.length||0),0)}</b></div><div class="card kpi"><span>Course size</span><b>120</b></div></div>
  <div class="section-head"><div><h2>Learner overview</h2><p>This offline version manages profiles stored on this device.</p></div><button class="primary" data-mm-onclick="newLearner()">Add learner</button></div>
- <div class="card table-wrap"><table class="table"><thead><tr><th>Learner</th><th>Progress</th><th>Beginner</th><th>Intermediate</th><th>Advanced</th><th>Last activity</th><th></th></tr></thead><tbody>${users.map(u=>`<tr><td><b>${esc(u.name)}</b></td><td>${Math.round((u.completed?.length||0)/D.lessons.length*100)}%</td><td>${u.examScores?.Beginner??"—"}</td><td>${u.examScores?.Intermediate??"—"}</td><td>${u.examScores?.Advanced??"—"}</td><td>${new Date(u.lastSeen||Date.now()).toLocaleDateString()}</td><td><button class="ghost" data-mm-onclick="switchUser('${u.id}')">${u.id===db.activeUser?"Active":"Open"}</button></td></tr>`).join("")}</tbody></table></div>`;
+ <div class="card table-wrap"><table class="table"><thead><tr><th>Learner</th><th>Progress</th><th>Beginner</th><th>Intermediate</th><th>Advanced</th><th>Last activity</th><th></th></tr></thead><tbody>${users.map((u,userIndex)=>`<tr><td><b>${esc(u.name)}</b></td><td>${Math.round((u.completed?.length||0)/D.lessons.length*100)}%</td><td>${u.examScores?.Beginner??"—"}</td><td>${u.examScores?.Intermediate??"—"}</td><td>${u.examScores?.Advanced??"—"}</td><td>${new Date(u.lastSeen||Date.now()).toLocaleDateString()}</td><td><button class="ghost" data-mm-switch-user="${userIndex}">${u.id===db.activeUser?"Active":"Open"}</button></td></tr>`).join("")}</tbody></table></div>`;
+ pvWireInstructorSwitches(users);
 }
 function newLearner(){
  openModal(`<span class="eyebrow">Instructor</span><h2>Add learner</h2><label>Learner name<input id="newLearnerName" placeholder="e.g. Sam Taylor"></label><button class="primary" style="margin-top:12px" data-mm-onclick="createLearner()">Create profile</button>`);
 }
 function createLearner(){
  const name=$("#newLearnerName").value.trim();if(!name)return;
- const id="learner-"+Date.now();db.users[id]={id,name,role:"learner",completed:[],bookmarks:[],notes:{},examScores:{},certificates:[],currentLesson:1,lastSeen:new Date().toISOString()};db.activeUser=id;user=db.users[id];persist();closeModal();updateGlobalProgress();renderInstructor();toast("Learner created");
+ const id=pvRequireLearnerId("learner-"+Date.now());db.users[id]={id,name,role:"learner",completed:[],bookmarks:[],notes:{},examScores:{},certificates:[],currentLesson:1,lastSeen:new Date().toISOString()};db.activeUser=id;user=db.users[id];const durable=persist();closeModal();updateGlobalProgress();renderInstructor();toast(durable?"Learner created":"Learner created for this session only — browser storage is unavailable.");
 }
-function switchUser(id){persist();db.activeUser=id;user=db.users[id];persist();updateGlobalProgress();renderInstructor();toast("Switched learner")}
+function switchUser(id){const sid=pvCanonicalLearnerId(id);if(!sid||!pvHasOwnLearner(db.users,sid)){toast("Learner profile unavailable");return}persist();db.activeUser=sid;user=db.users[sid];persist();updateGlobalProgress();renderInstructor();toast("Switched learner")}
 
 function renderGlossary(){
  $("#glossary").innerHTML=`<div class="section-head"><div><h2>Injection moulding glossary</h2><p>Search terms used throughout the platform.</p></div><input id="glossarySearch" style="max-width:340px" placeholder="Search..." data-mm-oninput="filterGlossary()"></div><div class="glossary-grid" id="glossaryGrid">${Object.entries(D.glossary).map(([k,v])=>`<div class="card term" data-term="${esc((k+" "+v).toLowerCase())}"><b>${esc(k)}</b><p>${esc(v)}</p></div>`).join("")}</div>`;
@@ -401,6 +478,7 @@ $("#modal").addEventListener("click",e=>{if(e.target.id==="modal")closeModal()})
 
 updateGlobalProgress();
 renderDashboard();
+if(mmStartupLearnerDataRejected)toast("Saved learner data failed safety checks, so a clean local profile was opened. Existing stored bytes were not trusted.");
 
 
 /* ---------- Friendly Edition behaviour ---------- */
@@ -640,7 +718,7 @@ function saveFriendlyProfile(){
   user.goal=$("#profileGoal").value;
   user.dailyMinutes=+$("#profileMinutes").value;
   user.role=$("#profileRole").value;
-  persist();updateGlobalProgress();renderProfile();toast("Preferences saved");
+  const durable=persist();updateGlobalProgress();renderProfile();toast(durable?"Preferences saved":"Preferences updated for this session only — browser storage is unavailable.");
 }
 
 /* Keep duplicate mobile navigation in sync and open onboarding on first run. */
@@ -864,7 +942,7 @@ saveFriendlyProfile=function(){
   user.dailyMinutes=+$("#profileMinutes").value;
   user.region=$("#profileRegion")?.value||user.region||"ALL";
   user.role=$("#profileRole").value;
-  persist();updateGlobalProgress();renderProfile();toast("Preferences saved");
+  const durable=persist();updateGlobalProgress();renderProfile();toast(durable?"Preferences saved":"Preferences updated for this session only — browser storage is unavailable.");
 };
 
 /* Add standards banner to home and path after existing friendly renders. */
@@ -1197,10 +1275,10 @@ function funDashboardPanel(){
     <div class="card level-card">
       <span class="eyebrow">Your workshop rank</span>
       <h3>${lvl.icon} ${esc(lvl.name)}</h3>
-      <div style="font-size:27px;font-weight:900">${f.xp} XP</div>
+      <div style="font-size:27px;font-weight:900">${esc(f.xp)} XP</div>
       <div class="level-track"><span style="width:${lvl.progress}%"></span></div>
       <div class="level-next">${lvl.atMax?"Top rank reached":"Next: "+esc(lvl.nextName)+" at "+lvl.next+" XP"}</div>
-      <div class="fun-hud" style="margin-top:13px"><span class="fun-chip streak">🔥 ${f.streak}-day learning streak</span><span class="fun-chip">🏅 ${f.achievements.length}/${FUN_ACHIEVEMENTS.length} badges</span></div>
+      <div class="fun-hud" style="margin-top:13px"><span class="fun-chip streak">🔥 ${esc(f.streak)}-day learning streak</span><span class="fun-chip">🏅 ${f.achievements.length}/${FUN_ACHIEVEMENTS.length} badges</span></div>
     </div>
   </div>`;
 }
@@ -1394,18 +1472,44 @@ renderDashboard();
    ========================================================= */
 
 /* Safer persistence and true factory reset. */
-persist=function(){
+function mmSetStorageDurability(durable){
+  const id="mmStorageDurabilityWarning",existing=document.getElementById(id);
+  if(durable){if(existing)existing.remove();return}
+  if(existing)return;
+  const warning=document.createElement("div");
+  warning.id=id;warning.className="callout";warning.setAttribute("role","status");warning.setAttribute("aria-live","polite");
+  warning.textContent="Browser storage is unavailable. Changes are available only for this session and will be lost after reload or close. Export a backup now if you need to preserve the current session.";
+  const host=document.querySelector("#mainContent")||document.body;host.prepend(warning);
+}
+function mmPersistCurrentState(){
   user.lastSeen=new Date().toISOString();
   db.users[db.activeUser]=user;
-  try{ localStorage.setItem("mouldmasterProDB",JSON.stringify(db)); }catch(e){ /* app remains usable for this session */ }
+  let durable=true;
+  try{localStorage.setItem("mouldmasterProDB",JSON.stringify(db))}catch(e){durable=false}
   updateGlobalProgress();
-};
+  mmSetStorageDurability(durable);
+  return durable;
+}
+persist=mmPersistCurrentState;
+function pvCommitPristineReset(){
+  const proposed=JSON.parse(JSON.stringify(PRISTINE_DB)),nextUser=proposed.users[proposed.activeUser];
+  if(nextUser.onboardingDone===undefined)nextUser.onboardingDone=false;
+  if(!nextUser.experience)nextUser.experience="Beginner";
+  if(!nextUser.goal)nextUser.goal="Learn the full process";
+  if(!nextUser.dailyMinutes)nextUser.dailyMinutes=15;
+  if(!nextUser.region)nextUser.region="ALL";
+  nextUser.lastSeen=new Date().toISOString();
+  proposed.users[proposed.activeUser]=nextUser;
+  const serialized=JSON.stringify(proposed);
+  localStorage.setItem("mouldmasterProDB",serialized);
+  db=proposed;user=nextUser;
+  try{mmSetStorageDurability(true)}catch(_){}
+  return proposed;
+}
 resetData=function(){
   if(confirm("Reset all local MouldMaster users and progress on this device? This cannot be undone unless you exported a backup.")){
-    db=JSON.parse(JSON.stringify(PRISTINE_DB)); user=db.users[db.activeUser];
-    if(user.onboardingDone===undefined)user.onboardingDone=false;
-    if(!user.experience)user.experience="Beginner"; if(!user.goal)user.goal="Learn the full process"; if(!user.dailyMinutes)user.dailyMinutes=15; if(!user.region)user.region="ALL";
-    persist();updateGlobalProgress();switchView("dashboard");toast("Local data reset");
+    try{pvCommitPristineReset()}catch(e){alert("MouldMaster could not reset local data because browser storage is unavailable. Existing learner data was left unchanged.");return}
+    updateGlobalProgress();switchView("dashboard");toast("Local data reset");
   }
 };
 function normaliseImportedUser(u,id){
@@ -1454,6 +1558,7 @@ awardXP=function(amount,key,label,opts={}){
 
 /* Compare All assesses ALL 9 regional items, not one sample per jurisdiction. */
 getExamQuestions=function(level,region){
+  if(!["Beginner","Intermediate","Advanced"].includes(level)||!["ALL","UK","US","NZ"].includes(region))throw new Error("Assessment selector rejected unknown level or region");
   const technical=shuffleCopy((D.exams[level]||[]).map(normaliseTechnicalQuestion10)).slice(0,7);
   let regs=[];
   if(region==="ALL"){
@@ -1476,7 +1581,7 @@ renderExams=function(){
     <div class="grid">${Object.keys(D.exams).map(level=>{
       const key=level+"-"+region,score=user.examScores?.[key],passed=!!user.examPassStatus[key]||user.certificates.includes(key);
       const status=score==null?"Not attempted":passed?`Passed · best ${score}%`:`Not passed · best ${score}%`;
-      return `<div class="card exam-card"><span class="eyebrow">${level}</span><h3>${level} ${region==="US"?"Injection Molding":"Injection Moulding"} Knowledge Check</h3><p class="muted">${qCount} questions · ${rCount} safety-critical · ${esc(regionName(region))}</p><div class="course-bottom"><span class="pill">${status}</span><button class="secondary" data-mm-onclick="startExam('${level}')">Start</button></div></div>`;
+      return `<div class="card exam-card"><span class="eyebrow">${level}</span><h3>${level} ${region==="US"?"Injection Molding":"Injection Moulding"} Knowledge Check</h3><p class="muted">${qCount} questions · ${rCount} safety-critical · ${esc(regionName(region))}</p><div class="course-bottom"><span class="pill">${esc(status)}</span><button class="secondary" data-mm-onclick="startExam('${level}')">Start</button></div></div>`;
     }).join("")}</div>`;
 };
 
@@ -1492,7 +1597,15 @@ gradeExam=function(level){
   user.examPassStatus=user.examPassStatus||{}; if(passed)user.examPassStatus[key]=true; else if(user.examPassStatus[key]!==true)user.examPassStatus[key]=false;
   user.certificateMeta=user.certificateMeta||{};
   if(passed&&!had&&!user.certificateMeta[key]) user.certificateMeta[key]={earnedAt:new Date().toISOString(),score:pct,region:activeExam.region,level};
-  persist();
+  const durable=persist();
+  if(!durable){
+    const result=$("#examResult");
+    if(result&&!result.querySelector(".mm-session-only-result")){
+      const note=document.createElement("div");note.className="mm-session-only-result muted";
+      note.textContent="This result and any certificate earned are available only for this session because browser storage is unavailable. Export a backup before reload or close if you need to preserve current progress.";
+      result.appendChild(note);
+    }
+  }
 };
 function certificateDateText(key){
   const iso=user.certificateMeta?.[key]?.earnedAt;
@@ -1525,7 +1638,8 @@ renderInstructor=function(){
   const users=Object.values(db.users);
   $("#instructor").innerHTML=`<div class="kpis"><div class="card kpi"><span>Local learners</span><b>${users.length}</b></div><div class="card kpi"><span>Total lesson completions</span><b>${users.reduce((n,u)=>n+(u.completed?.length||0),0)}</b></div><div class="card kpi"><span>Certificates</span><b>${users.reduce((n,u)=>n+(u.certificates?.length||0),0)}</b></div><div class="card kpi"><span>Course size</span><b>${D.lessons.length}</b></div></div>
   <div class="section-head"><div><h2>Learner overview</h2><p>Local device profiles only; this is not a secure LMS identity system.</p></div><button class="primary" data-mm-onclick="newLearner()">Add learner</button></div>
-  <div class="card table-wrap"><table class="table"><thead><tr><th>Learner</th><th>Progress</th><th>Beginner best</th><th>Intermediate best</th><th>Advanced best</th><th>Certificates</th><th>Last activity</th><th></th></tr></thead><tbody>${users.map(u=>`<tr><td><b>${esc(u.name)}</b></td><td>${Math.round((u.completed?.length||0)/D.lessons.length*100)}%</td><td>${bestRegionalScore(u,"Beginner")??"—"}</td><td>${bestRegionalScore(u,"Intermediate")??"—"}</td><td>${bestRegionalScore(u,"Advanced")??"—"}</td><td>${u.certificates?.length||0}</td><td>${new Date(u.lastSeen||Date.now()).toLocaleDateString()}</td><td><button class="ghost" data-mm-onclick="switchUser('${u.id}')">${u.id===db.activeUser?"Active":"Open"}</button></td></tr>`).join("")}</tbody></table></div>`;
+  <div class="card table-wrap"><table class="table"><thead><tr><th>Learner</th><th>Progress</th><th>Beginner best</th><th>Intermediate best</th><th>Advanced best</th><th>Certificates</th><th>Last activity</th><th></th></tr></thead><tbody>${users.map((u,userIndex)=>`<tr><td><b>${esc(u.name)}</b></td><td>${Math.round((u.completed?.length||0)/D.lessons.length*100)}%</td><td>${bestRegionalScore(u,"Beginner")??"—"}</td><td>${bestRegionalScore(u,"Intermediate")??"—"}</td><td>${bestRegionalScore(u,"Advanced")??"—"}</td><td>${u.certificates?.length||0}</td><td>${new Date(u.lastSeen||Date.now()).toLocaleDateString()}</td><td><button class="ghost" data-mm-switch-user="${userIndex}">${u.id===db.activeUser?"Active":"Open"}</button></td></tr>`).join("")}</tbody></table></div>`;
+ pvWireInstructorSwitches(users);
 };
 
 /* Simulator: relative-to-validated-baseline model. No universal resin temperature recipe. */
@@ -1623,7 +1737,7 @@ function openMobileMenu(){openModal(`<span class="eyebrow">More</span><h2>Tools 
 const fineCreateLearner=createLearner;
 createLearner=function(){
   const name=$("#newLearnerName")?.value.trim();if(!name)return;
-  const id="learner-"+Date.now();db.users[id]={id,name,role:"learner",completed:[],bookmarks:[],notes:{},examScores:{},examPassStatus:{},certificates:[],certificateMeta:{},currentLesson:1,lastSeen:new Date().toISOString(),region:user.region||"ALL",experience:"Beginner",goal:"Learn the full process",dailyMinutes:15,onboardingDone:true};db.activeUser=id;user=db.users[id];persist();closeModal();updateGlobalProgress();renderInstructor();toast("Learner created");
+  const id=pvRequireLearnerId("learner-"+Date.now());db.users[id]={id,name,role:"learner",completed:[],bookmarks:[],notes:{},examScores:{},examPassStatus:{},certificates:[],certificateMeta:{},currentLesson:1,lastSeen:new Date().toISOString(),region:user.region||"ALL",experience:"Beginner",goal:"Learn the full process",dailyMinutes:15,onboardingDone:true};db.activeUser=id;user=db.users[id];const durable=persist();closeModal();updateGlobalProgress();renderInstructor();toast(durable?"Learner created":"Learner created for this session only — browser storage is unavailable.");
 };
 
 /* Final home refresh after hardening overrides. */

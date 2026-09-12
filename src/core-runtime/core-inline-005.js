@@ -66,7 +66,7 @@ function renderMaterialLearn(){
       <div class="card mat-kpi"><span>Material lessons</span><strong>${MAT_LESSONS.length}</strong></div>
       <div class="card mat-kpi"><span>Chapters</span><strong>${MATERIALS.chapters.length}</strong></div>
       <div class="card mat-kpi"><span>Progress</span><strong>${pct}%</strong></div>
-      <div class="card mat-kpi"><span>Best material quiz</span><strong>${m.bestQuiz==null?"—":m.bestQuiz+"%"}</strong></div>
+      <div class="card mat-kpi"><span>Best material quiz</span><strong>${m.bestQuiz==null?"—":esc(m.bestQuiz)+"%"}</strong></div>
     </div>
     <div class="mat-disclaimer"><b>Important:</b> Family-level statements in this module describe general tendencies. Actual properties, drying requirements, processing limits, shrinkage and compliance depend on the specific grade, additives, conditioning, test method, machine, mould and part. Use the resin supplier's current TDS/SDS and your approved process for production decisions.</div>
     <div class="section-head"><div><h2>9 material-science chapters</h2><p>From molecules to real component behaviour.</p></div></div>
@@ -282,7 +282,7 @@ renderProfile=function(){
   materialBaseProfile();
   const m=ensureMaterialState();
   const head=$("#profile .section-head");
-  if(head)head.insertAdjacentHTML("beforebegin",`<div class="card form-card" style="margin-top:14px"><span class="eyebrow">Material Science</span><h2>${materialProgress()}% complete</h2><p class="muted">${m.completed.length}/${MAT_LESSONS.length} lessons · Best knowledge check: ${m.bestQuiz==null?"—":m.bestQuiz+"%"}</p><div class="mini-bar"><span style="width:${materialProgress()}%"></span></div><button class="secondary" style="margin-top:12px" data-mm-onclick="switchView('materials')">Open material science</button></div>`);
+  if(head)head.insertAdjacentHTML("beforebegin",`<div class="card form-card" style="margin-top:14px"><span class="eyebrow">Material Science</span><h2>${materialProgress()}% complete</h2><p class="muted">${m.completed.length}/${MAT_LESSONS.length} lessons · Best knowledge check: ${m.bestQuiz==null?"—":esc(m.bestQuiz)+"%"}</p><div class="mini-bar"><span style="width:${materialProgress()}%"></span></div><button class="secondary" style="margin-top:12px" data-mm-onclick="switchView('materials')">Open material science</button></div>`);
 };
 
 ensureMaterialState();
