@@ -76,6 +76,12 @@ jobs:
           ]:
               replace_all(path,'2026.08.26.8','2026.08.26.9')
           replace_all('desktop/electron/REAL_WINDOWS_VALIDATION.md','2026.8.26.8','2026.8.26.9')
+          windows_validation=Path('desktop/electron/REAL_WINDOWS_VALIDATION.md')
+          wtext=windows_validation.read_text(encoding='utf-8')
+          changed_heading='Target release family: open desktop `2026.08.26.9`  \n'
+          if wtext.count(changed_heading)!=1:
+              raise SystemExit(f'changed Windows validation heading count={wtext.count(changed_heading)}')
+          windows_validation.write_text(wtext.replace(changed_heading,'Target release family: open desktop `2026.08.26.9`\n',1),encoding='utf-8')
 
           for path in ['qa_release_docs.py','desktop/electron/ELECTRON_44_SUPPORT.md','desktop/electron/README.md']:
               replace_all(path,'44.1.1','44.2.0')
