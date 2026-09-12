@@ -90,11 +90,13 @@ window.importData=function(file){
  r.readAsText(file);
 };
 
-function relabelLearnerResetControls(root=document){
- try{root.querySelectorAll?.('button[onclick*=\"resetData\"]')?.forEach(button=>{if(button.textContent.trim()==='Reset all local data')button.textContent='Reset learner data'})}catch(_){}
+function relabelLearnerResetControls(root){
+ if(!root&&typeof document!=='undefined')root=document;
+ if(!root?.querySelectorAll)return;
+ try{root.querySelectorAll('button[onclick*=\"resetData\"]').forEach(button=>{if(button.textContent.trim()==='Reset all local data')button.textContent='Reset learner data'})}catch(_){}
 }
 relabelLearnerResetControls();
-try{new MutationObserver(()=>relabelLearnerResetControls()).observe(document.documentElement,{childList:true,subtree:true})}catch(_){}
+try{if(typeof document!=='undefined'&&typeof MutationObserver!=='undefined')new MutationObserver(()=>relabelLearnerResetControls(document)).observe(document.documentElement,{childList:true,subtree:true})}catch(_){}
 
 const baseReset=window.resetData;if(typeof baseReset==='function')window.resetData=function(){
  if(!confirm('Reset learner profiles, progress, notes, assessment/Learning Insights analytics, and training extras? Saved process-data datasets are separate and will not be deleted.'))return;
