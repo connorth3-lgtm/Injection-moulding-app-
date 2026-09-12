@@ -1,0 +1,37 @@
+name: One-shot final integration preflight
+
+on:
+  push:
+    branches:
+      - audit/final-integration-preflight
+    paths:
+      - .github/workflows/one-shot-final-integration-preflight.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  preflight:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout integration base
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          ref: audit/final-integration-preflight
+          fetch-depth: 0
+      - name: Report merge conflict surface
+        shell: bash
+        run: |
+          set +e
+          git merge --no-commit --no-ff origin/audit/process-data-readiness-flow
+          code=$?
+          echo "merge_exit=$code"
+          echo "--- unmerged files ---"
+          git diff --name-only --diff-filter=U
+          echo "--- staged/merged files ---"
+          git diff --cached --name-only
+          echo "--- worktree status ---"
+          git status --short
+          git merge --abort >/dev/null 2>&1 || true
+          exit 0
