@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "bookId": "mouldmaster-book",
-  "version": "2026.09.14.1",
+  "version": "2026.09.14.2",
   "policy": "accuracy-overkill",
   "supersedesConclusionsOnlyForListedClaimIds": true,
   "chapterPromotionAuthorized": false,
@@ -20,7 +20,7 @@
     {"claimId":"vp-transfer-03","previous":"qualified","newConclusion":"qualified","evidence":["ENGEL-IQ-PROCESS-CONTROL"],"reason":"ENGEL shows switchover point is actively adjusted using process signals as conditions change, corroborating that transfer is process-dependent. It remains vendor-specific evidence, so the generic establishment method is not promoted to fully supported."},
     {"claimId":"warpage-02","previous":"qualified","newConclusion":"supported","evidence":["OUBELLAOUCH-2024-FIBRE-ORIENTATION"],"reason":"Peer-reviewed experimental work directly links fibre orientation distribution in injection-moulded reinforced thermoplastics with mechanical properties and shrinkage/warpage-related defects; chapter wording remains scoped to reinforced systems."}
   ],
-  "effectiveHighRiskCountsAfterResolution": {"supported":7,"qualified":10,"conflicting":0,"hold":3,"claims":20,"chaptersPromoted":0},
+  "effectiveHighRiskCountsAfterResolution": {"supported":7,"qualified":9,"conflicting":0,"hold":4,"claims":20,"chaptersPromoted":0},
   "remainingBlockingClaims": ["safety-foundations-02","vp-transfer-02","clamp-01","clamp-03"],
   "note":"The effective hold count remains blocking. The count field intentionally counts unique effective conclusions and does not authorize chapter promotion."
 }
