@@ -106,6 +106,11 @@ async function prepareSurface(page,surface){
     await expect(host).toBeVisible();
     await host.locator('details').evaluate(el=>{el.open=true});
     await expect(host.locator('[data-mm-read="play"]')).toBeVisible();
+  }else if(surface==='listening'){
+    await page.waitForFunction(()=>typeof window.MMReadAloud?.openListening==='function');
+    await page.evaluate(()=>window.MMReadAloud.openListening());
+    await expect(page.locator('#mmListeningView')).toBeVisible();
+    await expect(page.locator('[data-mm-listening="play"]')).toBeVisible();
   }else{
     throw new Error(`Unknown visual surface: ${surface}`);
   }
@@ -128,7 +133,7 @@ function compare(baseBuffer,candidateBuffer,diffPath){
 }
 
 for(const viewport of manifest.viewports){
-  test(`${viewport.name} matches immutable .25 baseline across learner surfaces`,async({browser})=>{
+  test(`${viewport.name} matches immutable approved baseline across learner surfaces`,async({browser})=>{
     fs.mkdirSync(ARTIFACT_ROOT,{recursive:true});
     const candidateContext=await browser.newContext({viewport:{width:viewport.width,height:viewport.height},serviceWorkers:'block'});
     const baselineContext=await browser.newContext({viewport:{width:viewport.width,height:viewport.height},serviceWorkers:'block'});
