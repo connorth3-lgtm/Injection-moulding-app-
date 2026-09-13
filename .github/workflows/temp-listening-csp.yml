@@ -1,0 +1,42 @@
+name: Temporary Listening CSP regeneration
+
+on:
+  push:
+    branches:
+      - feature/listening-tab
+    paths:
+      - .github/workflows/temp-listening-csp.yml
+
+permissions:
+  contents: write
+
+jobs:
+  regenerate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: feature/listening-tab
+          fetch-depth: 0
+      - uses: actions/setup-node@v7
+        with:
+          node-version: '22'
+      - uses: actions/setup-python@v7
+        with:
+          python-version: '3.12'
+      - name: Regenerate strict style CSP hashes
+        run: |
+          node tools/generate_style_csp.cjs
+          node tools/generate_style_csp.cjs --check
+          node --check read-aloud.js
+          python qa_read_aloud.py
+          python qa_release.py
+          python qa_release_docs.py
+      - name: Commit CSP regeneration
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html
+          git diff --cached --quiet && exit 0
+          git commit -m "chore: regenerate CSP hashes for Listening tab"
+          git push origin HEAD:feature/listening-tab
