@@ -1,9 +1,10 @@
 /* MouldMaster Book runtime — evidence-governed, no automatic verification. */
 (function(){
   'use strict';
-  const VERSION='2026.09.14.3';
+  const VERSION='2026.09.14.4';
   const BATCH_PATHS=[
     './data/book-authored-foundations-v1.json',
+    './data/book-evidence-registry-v1.json',
     './data/book-chapters-materials-machine-v1.json',
     './data/book-authored-remaining-v1.json'
   ];
