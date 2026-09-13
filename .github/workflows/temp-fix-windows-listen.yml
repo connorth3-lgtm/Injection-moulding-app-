@@ -1,0 +1,47 @@
+name: Temporary Windows Listen package fix
+
+on:
+  push:
+    branches:
+      - fix/windows-listen-runtime
+    paths:
+      - scripts/patch_windows_listen_runtime.py
+      - .github/workflows/temp-fix-windows-listen.yml
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: fix/windows-listen-runtime
+          fetch-depth: 0
+      - name: Verify pinned read-aloud source
+        run: |
+          test "$(git rev-parse 3e7144b68c5dfe79232cf2ba0180060f1395ffcc:read-aloud.js)" = "a0f56135a42b54a26461a8739445c951ba814b4d"
+          test "$(git hash-object read-aloud.js)" = "a0f56135a42b54a26461a8739445c951ba814b4d"
+      - name: Patch Windows Academy package
+        run: python3 scripts/patch_windows_listen_runtime.py
+      - name: Verify package regression
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          p=Path('MouldMaster_Academy_App.html')
+          t=p.read_text()
+          assert len(p.read_bytes()) == 540000
+          assert 'read-aloud.js' in t
+          assert 'get("readAloud"),get("reading")' in t
+          assert '${readAloud}<\\/script><script>${reading}' in t
+          assert 'mm_windows_academy_cache_v6' in t
+          PY
+      - name: Commit generated package
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add MouldMaster_Academy_App.html
+          git diff --cached --quiet && exit 0
+          git commit -m "fix: package Listen runtime in Windows Academy app"
+          git push origin HEAD:fix/windows-listen-runtime
