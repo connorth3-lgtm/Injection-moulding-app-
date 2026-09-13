@@ -5,30 +5,19 @@ on:
     branches:
       - fix/read-aloud-voice-readiness
     paths:
-      - scripts/patch_read_aloud_voice_readiness.py
       - .github/workflows/temp-read-aloud-reliability-fix.yml
 
 permissions:
   contents: write
 
 jobs:
-  patch:
+  verify-and-pin:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
         with:
           ref: fix/read-aloud-voice-readiness
           fetch-depth: 0
-      - name: Patch runtime and QA
-        run: python3 scripts/patch_read_aloud_voice_readiness.py
-      - name: Commit runtime and QA
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add read-aloud.js qa/read-aloud.spec.js
-          git diff --cached --quiet && exit 0
-          git commit -m "fix: make Read Aloud wait for Windows device voices"
-          git push origin HEAD:fix/read-aloud-voice-readiness
       - name: Pin updated runtime into Windows Academy package
         run: |
           python3 - <<'PY'
@@ -36,7 +25,7 @@ jobs:
           import hashlib, re, subprocess
           app=Path('MouldMaster_Academy_App.html')
           text=app.read_text(encoding='utf-8')
-          commit=subprocess.check_output(['git','rev-parse','HEAD']).decode().strip()
+          commit=subprocess.check_output(['git','log','-1','--format=%H','--','read-aloud.js']).decode().strip()
           runtime=Path('read-aloud.js').read_bytes()
           sha=hashlib.sha256(runtime).hexdigest()
           text=re.sub(r'const CONTENT="[^"]+";', 'const CONTENT="2026.09.14.2";', text, count=1)
@@ -69,6 +58,8 @@ jobs:
           PY
       - name: Commit package pin
         run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add MouldMaster_Academy_App.html
           git diff --cached --quiet && exit 0
           git commit -m "fix: pin reliable Read Aloud runtime in Windows package"
