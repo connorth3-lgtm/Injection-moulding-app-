@@ -6,21 +6,7 @@ test.use({serviceWorkers:'block'});
 async function seedLearner(page){
   await page.addInitScript(() => {
     const user={
-      id:'read-aloud-qa',
-      name:'Read Aloud QA',
-      role:'learner',
-      completed:[],
-      bookmarks:[],
-      notes:{},
-      examScores:{},
-      certificates:[],
-      currentLesson:1,
-      lastSeen:new Date().toISOString(),
-      onboardingDone:true,
-      experience:'Beginner',
-      goal:'Learn the full process',
-      dailyMinutes:15,
-      region:'ALL'
+      id:'read-aloud-qa',name:'Read Aloud QA',role:'learner',completed:[],bookmarks:[],notes:{},examScores:{},certificates:[],currentLesson:1,lastSeen:new Date().toISOString(),onboardingDone:true,experience:'Beginner',goal:'Learn the full process',dailyMinutes:15,region:'ALL'
     };
     localStorage.setItem('mouldmasterProDB',JSON.stringify({activeUser:'read-aloud-qa',users:{'read-aloud-qa':user}}));
   });
@@ -33,8 +19,8 @@ test('Read Aloud integrates with the real shell, docks in the header without cov
 
   const host=page.locator('.mm-read-aloud');
   await expect(host).toBeVisible();
-  await expect(host).toHaveAttribute('data-version','2026.09.14.1');
-  await expect.poll(()=>page.evaluate(()=>window.MMReadAloud?.version||'')).toBe('2026.09.14.1');
+  await expect(host).toHaveAttribute('data-version','2026.09.14.2');
+  await expect.poll(()=>page.evaluate(()=>window.MMReadAloud?.version||'')).toBe('2026.09.14.2');
   await expect(host.locator('summary')).toContainText('Listen');
 
   const placement=await page.evaluate(()=>{
@@ -58,21 +44,12 @@ test('Read Aloud integrates with the real shell, docks in the header without cov
 
   const visibilityCheck=await page.evaluate(() => {
     const root=document.querySelector('.main')||document.querySelector('main')||document.body;
-    const visible=document.createElement('p');
-    visible.id='mmQaVisibleSpeech';
-    visible.textContent='Read aloud visible sentinel sentence.';
-    const hidden=document.createElement('p');
-    hidden.id='mmQaHiddenSpeech';
-    hidden.hidden=true;
-    hidden.textContent='Read aloud hidden sentinel sentence.';
+    const visible=document.createElement('p');visible.id='mmQaVisibleSpeech';visible.textContent='Read aloud visible sentinel sentence.';
+    const hidden=document.createElement('p');hidden.id='mmQaHiddenSpeech';hidden.hidden=true;hidden.textContent='Read aloud hidden sentinel sentence.';
     root.append(visible,hidden);
     const texts=(window.MMReadAloud?.refresh?.()||[]).map(item=>item.text);
     visible.remove();hidden.remove();
-    return {
-      visible:texts.includes('Read aloud visible sentinel sentence.'),
-      hidden:texts.includes('Read aloud hidden sentinel sentence.'),
-      supported:window.MMReadAloud?.supported===true
-    };
+    return {visible:texts.includes('Read aloud visible sentinel sentence.'),hidden:texts.includes('Read aloud hidden sentinel sentence.'),supported:window.MMReadAloud?.supported===true};
   });
   expect(visibilityCheck.visible).toBeTruthy();
   expect(visibilityCheck.hidden).toBeFalsy();
@@ -94,95 +71,48 @@ test('Read Aloud supported-path controls execute the exact product runtime in a 
   await page.setContent(`<!doctype html><html lang="en"><head><meta charset="utf-8"><title>Read Aloud QA</title></head><body><main class="main"><h1>Read Aloud harness</h1><p id="mmQaVisibleSpeech">Read aloud visible sentinel sentence.</p><p id="mmQaHiddenSpeech" hidden>Read aloud hidden sentinel sentence.</p></main></body></html>`);
 
   await page.evaluate(() => {
-    class QaSpeechSynthesisUtterance {
-      constructor(text=''){
-        this.text=String(text);
-        this.lang='';
-        this.rate=1;
-        this.onstart=null;
-        this.onend=null;
-        this.onerror=null;
-      }
-    }
-    const synth={
-      speaking:false,
-      paused:false,
-      pending:false,
-      getVoices(){return[{name:'QA Voice',lang:'en-US',default:true}];},
-      speak(utterance){
-        this.speaking=true;
-        this.paused=false;
-        window.__mmReadAloudSpoken=String(utterance.text||'');
-        window.__mmReadAloudRate=Number(utterance.rate||1);
-        queueMicrotask(()=>utterance.onstart?.());
-      },
-      cancel(){this.speaking=false;this.paused=false;},
-      pause(){this.speaking=false;this.paused=true;window.__mmReadAloudPaused=true;},
-      resume(){this.speaking=true;this.paused=false;window.__mmReadAloudResumed=true;}
-    };
+    class QaSpeechSynthesisUtterance {constructor(text=''){this.text=String(text);this.lang='';this.rate=1;this.onstart=null;this.onend=null;this.onerror=null;}}
+    const synth={speaking:false,paused:false,pending:false,getVoices(){return[{name:'QA Voice',lang:'en-US',default:true}];},speak(utterance){this.speaking=true;this.paused=false;window.__mmReadAloudSpoken=String(utterance.text||'');window.__mmReadAloudRate=Number(utterance.rate||1);queueMicrotask(()=>utterance.onstart?.());},cancel(){this.speaking=false;this.paused=false;},pause(){this.speaking=false;this.paused=true;window.__mmReadAloudPaused=true;},resume(){this.speaking=true;this.paused=false;window.__mmReadAloudResumed=true;}};
     Object.defineProperty(window,'SpeechSynthesisUtterance',{configurable:true,writable:true,value:QaSpeechSynthesisUtterance});
     Object.defineProperty(window,'speechSynthesis',{configurable:true,writable:true,value:synth});
   });
 
   await page.addScriptTag({path:'read-aloud.js'});
   await expect.poll(()=>page.evaluate(()=>window.MMReadAloud?.supported===true)).toBeTruthy();
-
   const host=page.locator('.mm-read-aloud');
   await expect(host).toBeVisible();
-  await expect(host).toHaveAttribute('data-version','2026.09.14.1');
+  await expect(host).toHaveAttribute('data-version','2026.09.14.2');
   await host.locator('details').evaluate(el=>{el.open=true;});
 
   const visibilityCheck=await page.evaluate(() => {
     const texts=(window.MMReadAloud?.refresh?.()||[]).map(item=>item.text);
-    return {
-      visible:texts.includes('Read aloud visible sentinel sentence.'),
-      hidden:texts.includes('Read aloud hidden sentinel sentence.')
-    };
+    return {visible:texts.includes('Read aloud visible sentinel sentence.'),hidden:texts.includes('Read aloud hidden sentinel sentence.')};
   });
-  expect(visibilityCheck.visible).toBeTruthy();
-  expect(visibilityCheck.hidden).toBeFalsy();
+  expect(visibilityCheck.visible).toBeTruthy();expect(visibilityCheck.hidden).toBeFalsy();
 
   await host.locator('[data-mm-read="play"]').click();
   await expect.poll(()=>page.evaluate(()=>window.__mmReadAloudSpoken||'')).not.toBe('');
   await expect(host.locator('[data-mm-read="play"]')).toHaveText('Pause');
   await expect(host.locator('[data-mm-read="current"]')).not.toBeEmpty();
-
   await host.locator('[data-mm-read="play"]').click();
   await expect(host.locator('[data-mm-read="play"]')).toHaveText('Resume');
   expect(await page.evaluate(()=>window.__mmReadAloudPaused===true)).toBeTruthy();
   await host.locator('[data-mm-read="play"]').click();
   await expect(host.locator('[data-mm-read="play"]')).toHaveText('Pause');
   expect(await page.evaluate(()=>window.__mmReadAloudResumed===true)).toBeTruthy();
-
   await host.locator('[data-mm-read="speed"]').selectOption('1.25');
   await expect.poll(()=>page.evaluate(()=>window.__mmReadAloudRate)).toBe(1.25);
-
   await host.locator('[data-mm-read="stop"]').click();
   await expect(host.locator('[data-mm-read="play"]')).toHaveText('Listen');
   await expect(host.locator('.mm-read-status')).toHaveText('Stopped');
 });
 
-
 test('Read Aloud waits for delayed Windows voices and selects the device voice before speaking', async ({ page }) => {
   await page.setContent(`<!doctype html><html lang="en"><head><meta charset="utf-8"></head><body><main class="main"><p>Delayed Windows voice sentinel.</p></main></body></html>`);
   await page.evaluate(() => {
-    class QaSpeechSynthesisUtterance {
-      constructor(text=''){this.text=String(text);this.lang='';this.voice=null;this.rate=1;this.onstart=null;this.onend=null;this.onerror=null;}
-    }
-    const listeners=new Set();
-    let ready=false;
-    const voice={name:'Windows QA Voice',lang:'en-NZ',default:true};
-    const synth={
-      getVoices(){return ready?[voice]:[];},
-      speak(utterance){
-        window.__mmDelayedVoiceName=utterance.voice?.name||'';
-        window.__mmDelayedSpeech=utterance.text;
-        queueMicrotask(()=>utterance.onstart?.());
-      },
-      cancel(){},pause(){},resume(){},
-      addEventListener(type,fn){if(type==='voiceschanged')listeners.add(fn);},
-      removeEventListener(type,fn){if(type==='voiceschanged')listeners.delete(fn);}
-    };
+    class QaSpeechSynthesisUtterance {constructor(text=''){this.text=String(text);this.lang='';this.voice=null;this.rate=1;this.onstart=null;this.onend=null;this.onerror=null;}}
+    const listeners=new Set();let ready=false;const voice={name:'Windows QA Voice',lang:'en-NZ',default:true};
+    const synth={getVoices(){return ready?[voice]:[];},speak(utterance){window.__mmDelayedVoiceName=utterance.voice?.name||'';window.__mmDelayedSpeech=utterance.text;queueMicrotask(()=>utterance.onstart?.());},cancel(){},pause(){},resume(){},addEventListener(type,fn){if(type==='voiceschanged')listeners.add(fn);},removeEventListener(type,fn){if(type==='voiceschanged')listeners.delete(fn);}};
     Object.defineProperty(window,'SpeechSynthesisUtterance',{configurable:true,writable:true,value:QaSpeechSynthesisUtterance});
     Object.defineProperty(window,'speechSynthesis',{configurable:true,writable:true,value:synth});
     setTimeout(()=>{ready=true;for(const fn of [...listeners])fn();},120);
@@ -194,4 +124,34 @@ test('Read Aloud waits for delayed Windows voices and selects the device voice b
   await expect.poll(()=>page.evaluate(()=>window.__mmDelayedVoiceName||'')).toBe('Windows QA Voice');
   await expect.poll(()=>page.evaluate(()=>window.__mmDelayedSpeech||'')).toContain('Delayed Windows voice sentinel.');
   await expect(host.locator('.mm-read-status')).toHaveText('Reading');
+});
+
+test('Listening tab builds a continuous lesson playlist and exposes long-session controls', async ({ page }) => {
+  await page.setContent(`<!doctype html><html lang="en"><head><meta charset="utf-8"></head><body><div id="app"><aside><nav id="nav"><button data-view="path">Path</button></nav></aside><main id="mainContent" class="main"><section id="path" class="view"><p>Path content</p></section><header><div class="top-actions"></div></header></main></div></body></html>`);
+  await page.evaluate(() => {
+    window.MM_DATA={lessons:[
+      {id:1,title:'Moulding basics',intro:'Injection moulding starts with controlled material preparation.',summary:'Control the process window.',objectives:['Recognise the cycle.'],keypoints:['Record evidence.'],exercise:'Observe one cycle.'},
+      {id:2,title:'Material preparation',intro:'Drying depends on the material.',summary:'Use supplier evidence.',objectives:['Check drying requirements.'],keypoints:['Avoid assumptions.'],exercise:'Review a material sheet.'}
+    ]};
+    class QaSpeechSynthesisUtterance {constructor(text=''){this.text=String(text);this.lang='';this.voice=null;this.rate=1;this.onstart=null;this.onend=null;this.onerror=null;}}
+    const synth={getVoices(){return[{name:'QA Voice',lang:'en-NZ',default:true}];},speak(utterance){window.__mmListeningSpoken=utterance.text;window.__mmListeningRate=utterance.rate;queueMicrotask(()=>utterance.onstart?.());},cancel(){},pause(){window.__mmListeningPaused=true;},resume(){window.__mmListeningResumed=true;},addEventListener(){},removeEventListener(){}};
+    Object.defineProperty(window,'SpeechSynthesisUtterance',{configurable:true,writable:true,value:QaSpeechSynthesisUtterance});
+    Object.defineProperty(window,'speechSynthesis',{configurable:true,writable:true,value:synth});
+  });
+  await page.addScriptTag({path:'read-aloud.js'});
+  const tab=page.locator('[data-mm-listening-tab]');
+  await expect(tab).toBeVisible();
+  await tab.click();
+  const view=page.locator('#mmListeningView');
+  await expect(view).toBeVisible();
+  await expect(view).toContainText('Listen through MouldMaster lessons continuously');
+  await view.locator('[data-mm-listening="play"]').click();
+  await expect.poll(()=>page.evaluate(()=>window.__mmListeningSpoken||'')).toContain('Moulding basics');
+  await expect(view.locator('[data-mm-listening-lesson]')).toContainText('Lesson 1');
+  await view.locator('[data-mm-listening-speed]').selectOption('1.25');
+  await expect.poll(()=>page.evaluate(()=>window.__mmListeningRate)).toBe(1.25);
+  await view.locator('[data-mm-listening="next-lesson"]').click();
+  await expect(view.locator('[data-mm-listening-lesson]')).toContainText('Lesson 2');
+  await view.locator('[data-mm-listening="stop"]').click();
+  await expect(view.locator('[data-mm-listening-status]')).toHaveText('Stopped');
 });

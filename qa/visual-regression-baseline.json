@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
-  "release": "2026.09.10.9",
-  "commit": "948d69c16e5354b8fccd374fd70d2ff9d7164ce3",
+  "release": "2026.09.14.2",
+  "commit": "04e7dbea97c3e87342159709db0dbc9e5059d4aa",
   "browser": "chromium via @playwright/test 1.55.0",
   "maxDiffPixels": 12,
   "viewports": [
@@ -33,7 +33,8 @@
     "lesson",
     "more",
     "assessment",
-    "listen-expanded"
+    "listen-expanded",
+    "listening"
   ],
-  "policy": "This commit is the reviewed 2026.09.10.9 visual baseline after the intentional learner-guided Practice redesign. Candidate screenshots are rendered beside this exact commit in the same Chromium job. Update the pinned commit only through an intentional reviewed visual-baseline change; physical-device evidence remains a separate release gate and must be fresh for the changed runtime."
+  "policy": "This commit is the reviewed 2026.09.14.2 visual baseline after the intentional long-session Listening tab addition. Candidate screenshots are rendered beside this exact commit in the same Chromium job. Update the pinned commit only through an intentional reviewed visual-baseline change; physical-device evidence remains a separate release gate and must be fresh for the changed runtime."
 }
