@@ -1,0 +1,49 @@
+name: Windows Listen package
+
+on:
+  pull_request:
+    paths:
+      - MouldMaster_Academy_App.html
+      - read-aloud.js
+      - reading-patch.js
+      - .github/workflows/windows-listen-package.yml
+  push:
+    branches: [main]
+    paths:
+      - MouldMaster_Academy_App.html
+      - read-aloud.js
+      - reading-patch.js
+      - .github/workflows/windows-listen-package.yml
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Verify standalone Listen runtime
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import hashlib, re, subprocess
+
+          app = Path('MouldMaster_Academy_App.html')
+          text = app.read_text(encoding='utf-8')
+          assert len(app.read_bytes()) == 540000, 'Windows launcher payload size changed'
+          assert 'read-aloud.js' in text, 'read-aloud runtime missing from package manifest'
+          assert 'get("readAloud"),get("reading")' in text, 'read-aloud must be fetched before reading patch'
+          assert "'<script>'+readAloud+'</scr'+'ipt><script>'+reading" in text, 'read-aloud must execute before reading patch'
+          assert 'fetch((expected.base||BASE)+expected.path' in text, 'per-asset immutable base support missing'
+
+          commit = re.search(r'const READ_ALOUD_COMMIT="([0-9a-f]{40})";', text)
+          expected = re.search(r'readAloud:\{path:"read-aloud.js",sha256:"([0-9a-f]{64})",base:READ_ALOUD_BASE\}', text)
+          assert commit and expected, 'immutable read-aloud pin/hash missing'
+          pinned = subprocess.check_output(['git', 'show', f'{commit.group(1)}:read-aloud.js'])
+          actual = hashlib.sha256(pinned).hexdigest()
+          assert actual == expected.group(1), f'read-aloud SHA mismatch: {actual}'
+          print('Windows Listen package verified:', commit.group(1), actual)
+          PY
