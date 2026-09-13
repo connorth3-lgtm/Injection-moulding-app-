@@ -1,0 +1,62 @@
+name: Temporary governed web release bump
+
+on:
+  push:
+    branches:
+      - fix/read-aloud-voice-readiness
+    paths:
+      - .github/workflows/temp-web-release-bump.yml
+
+permissions:
+  contents: write
+
+jobs:
+  bump:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: fix/read-aloud-voice-readiness
+          fetch-depth: 2
+      - uses: actions/setup-python@v7
+        with:
+          python-version: '3.12'
+      - name: Apply coherent release identity bump
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          old='2026.09.12.21'
+          new='2026.09.14.1'
+          paths=[
+            'README.md',
+            'service-worker.js',
+            'index.html',
+            'qa_release.py',
+            'pwa-shell.js',
+            'qa_release_docs.py',
+            'support.html',
+            'version.json',
+            'data/release-external-validation-v1.json',
+          ]
+          for name in paths:
+            p=Path(name)
+            text=p.read_text(encoding='utf-8')
+            if old not in text:
+              raise SystemExit(f'{name}: expected old release not found')
+            p.write_text(text.replace(old,new),encoding='utf-8')
+            print(name)
+          PY
+      - name: Validate release coherence
+        run: |
+          python qa_release.py
+          python qa_release_docs.py
+          python qa_runtime_release_bump.py
+          python tools/verify_release_external_validation.py
+      - name: Commit governed release bump
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add README.md service-worker.js index.html qa_release.py pwa-shell.js qa_release_docs.py support.html version.json data/release-external-validation-v1.json
+          git diff --cached --quiet && exit 0
+          git commit -m "chore: bump web release for Read Aloud runtime fix"
+          git push origin HEAD:fix/read-aloud-voice-readiness
