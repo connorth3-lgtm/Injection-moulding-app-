@@ -21,8 +21,8 @@ version = json.loads((ROOT / "version.json").read_text(encoding="utf-8"))
 package = json.loads((ROOT / "desktop/electron/package.json").read_text(encoding="utf-8"))
 integrity_generator = (ROOT / "desktop/electron/scripts/generate-integrity.cjs").read_text(encoding="utf-8")
 
-need(version.get("read_aloud_version") == "2026.09.07.3", "Read Aloud version marker mismatch")
-need("const VERSION='2026.09.07.3'" in runtime, "Read Aloud runtime version mismatch")
+need(version.get("read_aloud_version") == "2026.09.14.1", "Read Aloud version marker mismatch")
+need("const VERSION='2026.09.14.1'" in runtime, "Read Aloud runtime version mismatch")
 
 # The feature must be output-only speech synthesis. Microphone capture, recognition,
 # recording and application-controlled telemetry/network paths are forbidden here.
@@ -73,6 +73,9 @@ for marker in (
     'role="status"',
     'aria-live="polite"',
     "Read Aloud is not available in this browser/device.",
+    "Device voice did not start. Check Windows speech voices, then try again.",
+    "voiceschanged",
+    "getVoices",
     "🔊 Listen",
     "#app .top-actions,.top-actions",
     "details[open]",
@@ -110,4 +113,4 @@ for marker in (
     need(marker in privacy, f"Read Aloud privacy disclosure missing: {marker}")
 need("entirely on-device" in privacy, "voice-processing limitation disclosure missing")
 
-print("MouldMaster Read Aloud QA passed: speech-synthesis-only, visible-content-scoped, mobile-nav-clear, offline/desktop-integrity wired, and privacy disclosed.")
+print("MouldMaster Read Aloud QA passed: speech-synthesis-only, visible-content-scoped, delayed-device-voice-aware, mobile-nav-clear, offline/desktop-integrity wired, and privacy disclosed.")
