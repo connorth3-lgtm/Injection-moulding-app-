@@ -1,7 +1,7 @@
 /* MouldMaster Book runtime — evidence-governed, no automatic verification. */
 (function(){
   'use strict';
-  const VERSION='2026.09.14.4';
+  const VERSION='2026.09.14.5';
   const BATCH_PATHS=[
     './data/book-authored-foundations-v1.json',
     './data/book-evidence-registry-v1.json',
@@ -33,10 +33,11 @@
         authoredIds.add(authored.id);
         const chapter=declared.get(authored.id);
         if(!chapter)throw new Error(`Authored chapter is not declared in manifest: ${authored.id}`);
-        if(authored.state==='verified')throw new Error(`Authored draft cannot self-promote to verified: ${authored.id}`);
+        const effectiveState=authored.state||(batch.status==='technical-review'?'technical-review':chapter.state);
+        if(effectiveState==='verified')throw new Error(`Authored draft cannot self-promote to verified: ${authored.id}`);
         if(!authored.applicability||!Array.isArray(authored.sections)||!authored.sections.length)throw new Error(`Incomplete authored chapter: ${authored.id}`);
         for(const sourceId of authored.sourceIds||[])if(!sourceMap.has(sourceId))throw new Error(`Unknown source ${sourceId} in ${authored.id}`);
-        Object.assign(chapter,authored);
+        Object.assign(chapter,authored,{state:effectiveState});
       }
     }
     return data;
