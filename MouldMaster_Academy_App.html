@@ -14,16 +14,16 @@
 <script>
 (async function(){
 "use strict";
-const CONTENT="2026.09.14.1";
+const CONTENT="2026.09.14.2";
 const RELEASE_COMMIT="36119f5922feb06e5b8db291b1b61b401072b961";
-const READ_ALOUD_COMMIT="3e7144b68c5dfe79232cf2ba0180060f1395ffcc";
+const READ_ALOUD_COMMIT="8b463ca8b4a4e37b23a1b0ab84367de30f80a457";
 const CACHE_KEY="mouldmaster_windows_assembled_"+CONTENT.replace(/\./g,"_");
 const BASE="https://raw.githubusercontent.com/connorth3-lgtm/Injection-moulding-app-/"+RELEASE_COMMIT+"/";
 const READ_ALOUD_BASE="https://raw.githubusercontent.com/connorth3-lgtm/Injection-moulding-app-/"+READ_ALOUD_COMMIT+"/";
 const FILES={
  core:{path:"MouldMaster_Core_App.html",sha256:"b30719d5d3ea946a01c72d0b8996b0375575ad910a5c8d9b22b4395d6b3c8098"},
  css:{path:"reading-patch.css",sha256:"55f20703459ab5d9c5cf50effbae04f5bd134f5c6e6a2f258a58f021e7b1470e"},
- readAloud:{path:"read-aloud.js",sha256:"0ce833eaa16edf2e43cafe4b5007d1f7f8e9a3f4f3fe707ee4e386d41341d74c",base:READ_ALOUD_BASE},
+ readAloud:{path:"read-aloud.js",sha256:"9be047a4686585feb4de8583f3f3e5a045bb4bb3272d8136f22d0419ed0d48d9",base:READ_ALOUD_BASE},
  reading:{path:"reading-patch.js",sha256:"2a1236a9fb4b2023261d3600238a26be7b90defcdf5b9540d8aac28af46997c9"},
  training:{path:"training-upgrade.js",sha256:"6104958235e1a2ac8ab1d7b42137e527f19b21105fc7da07e058500eb7550e18"},
  qa:{path:"training-qa-fix.js",sha256:"fd27c6d01f84a7f086eb6b6d566fe7d039f36cafd879d11c07417f59dac29ed5"}
