@@ -1,4 +1,4 @@
-/* MouldMaster lesson-reading enhancement — 2026.09.07.5 */
+/* MouldMaster lesson-reading enhancement — 2026.09.14.1 */
 (function(){
   'use strict';
   function norm(s){return String(s||'').replace(/\s+/g,' ').trim().toLowerCase();}
@@ -54,6 +54,14 @@
     script.async=false;
     document.head.appendChild(script);
   }
+  function loadBook(){
+    if(window.MMBook||document.querySelector('script[data-mm-book-runtime]'))return;
+    const script=document.createElement('script');
+    script.src='./book-runtime.js';
+    script.dataset.mmBookRuntime='1';
+    script.async=false;
+    document.head.appendChild(script);
+  }
   function settleViewTop(){
     const main=document.querySelector('main.main')||document.querySelector('.main');
     if(main)main.scrollTop=0;
@@ -91,11 +99,12 @@
     wrapped.__mmStableViewEntry=true;
     wrapped.__mmStableViewEntryBase=current;
     window.switchView=wrapped;
-    window.__MM_STABLE_VIEW_ENTRY__='2026.09.07.5';
+    window.__MM_STABLE_VIEW_ENTRY__='2026.09.14.1';
     return true;
   }
   const run=()=>{enhanceLesson();installStableViewEntry()};
+  const boot=()=>{run();loadReadAloud();loadBook();};
   const mo=new MutationObserver(()=>requestAnimationFrame(run));
   mo.observe(document.documentElement,{subtree:true,childList:true});
-  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',()=>{run();loadReadAloud();},{once:true});else{run();loadReadAloud();}
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot,{once:true});else boot();
 })();
