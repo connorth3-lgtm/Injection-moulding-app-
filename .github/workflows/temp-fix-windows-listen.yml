@@ -34,8 +34,8 @@ jobs:
           assert len(p.read_bytes()) == 540000
           assert 'read-aloud.js' in t
           assert 'get("readAloud"),get("reading")' in t
-          assert '${readAloud}<\\/script><script>${reading}' in t
-          assert 'mm_windows_academy_cache_v6' in t
+          assert "'<script>'+readAloud+'</scr'+'ipt><script>'+reading" in t
+          assert 'const CONTENT="2026.09.14.1";' in t
           PY
       - name: Commit generated package
         run: |
