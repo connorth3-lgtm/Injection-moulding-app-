@@ -67,18 +67,20 @@ for claim in claims:
     for field in ('section','claimClass','claim','applicability','exclusions','basis'):
         assert str(claim[field]).strip(), f"blank {field} in {claim['claimId']}"
 
-# Build one evidence namespace from all governed source records.
+# Build one evidence namespace from all governed source records. Different ledgers may
+# use a shorter display title for the same source ID; the canonical URL may not diverge.
 source_records = {}
 def add_sources(items):
     for src in items or []:
         sid = src.get('id')
         assert sid, 'source record missing id'
         if sid in source_records:
-            # Duplicate IDs are allowed only when they resolve to the same issuer/title/URL role.
             prior = source_records[sid]
-            for key in ('url','title'):
-                if prior.get(key) and src.get(key):
-                    assert prior[key] == src[key], f'conflicting source record for {sid}: {key}'
+            if prior.get('url') and src.get('url'):
+                assert prior['url'] == src['url'], f'conflicting source URL for {sid}'
+            # Keep the richer record if the first registration was metadata-light.
+            if len(src) > len(prior):
+                source_records[sid] = {**prior, **src}
         else:
             source_records[sid] = src
 
