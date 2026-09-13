@@ -1,0 +1,26 @@
+{
+  "schema": 1,
+  "bookId": "mouldmaster-book",
+  "version": "2026.09.14.1",
+  "policy": "accuracy-overkill",
+  "supersedesConclusionsOnlyForListedClaimIds": true,
+  "chapterPromotionAuthorized": false,
+  "reviewedAt": "2026-09-14",
+  "newEvidence": [
+    {"id":"HUSKY-SCVG-HOT-SPRUE-SERVICE-2024","type":"manufacturer-service-manual","issuer":"Husky Technologies","title":"Single Cavity Valve Gates (SCVG) and Hot Sprues — Hot Runner Service Manual v2.4","url":"https://www.husky.co/contentassets/59b3dcff9d564dc998b386aa0f5ebb6b/hr_scvg_hs_v2-4_eng_202405_4803621.pdf","checked":"2026-09-14","state":"current-public-manufacturer-manual","scope":"Hot-runner startup/operation sequence and explicit requirement to follow machine-manufacturer documentation; applies to the covered Husky system, not all hot runners."},
+    {"id":"MOLD-MASTERS-HOT-RUNNER-USER-MANUAL-2020","type":"manufacturer-user-manual","issuer":"Mold-Masters","title":"Hot Runner User Manual — System Startup and Shutdown","url":"https://www.moldmasters.com/sites/default/files/2021-11/ENG%20HR%20UM_1.pdf","checked":"2026-09-14","state":"public-manufacturer-manual","scope":"System-specific startup/shutdown and thermally-sensitive-material cautions; evidence that procedures depend on system/material, not a universal recipe."},
+    {"id":"ENGEL-IQ-PROCESS-CONTROL","type":"manufacturer-technical-guidance","issuer":"ENGEL","title":"iQ weight control and iQ clamp control process monitoring guidance","url":"https://www.engelglobal.com/us/blog/shopfloor-monitoring-process-monitoring-at-solidplast","checked":"2026-09-14","state":"current-public-manufacturer-guidance","scope":"Application-specific adjustment of injection profile, switchover point, holding pressure and clamping force based on measured process signals; specific to ENGEL systems."},
+    {"id":"OUBELLAOUCH-2024-FIBRE-ORIENTATION","type":"peer-reviewed","issuer":"The International Journal of Advanced Manufacturing Technology","title":"Assessment of fiber orientation models predictability by comparison with X-ray µCT data in injection-molded short glass fiber-reinforced polyamide","url":"https://consensus.app/papers/assessment-of-fiber-orientation-models-predictability-by-oubellaouch-pelaccia/c82506ff62375c969e92b74a15c92c3c/","checked":"2026-09-14","state":"peer-reviewed-fetched","scope":"Experimental X-ray micro-CT evidence that fibre orientation varies locally and materially affects properties and shrinkage/warpage-related defects in short-glass-fibre-reinforced injection mouldings."}
+  ],
+  "resolutions": [
+    {"claimId":"hot-runners-01","previous":"hold","newConclusion":"qualified","evidence":["HUSKY-SCVG-HOT-SPRUE-SERVICE-2024","MOLD-MASTERS-HOT-RUNNER-USER-MANUAL-2020"],"reason":"Two independent hot-runner manufacturers document heated-system startup/operation as system-specific. The chapter wording must remain generic and must not import either supplier's numeric procedure."},
+    {"claimId":"hot-runners-02","previous":"hold","newConclusion":"qualified","evidence":["MOLD-MASTERS-HOT-RUNNER-USER-MANUAL-2020"],"reason":"Manufacturer manual explicitly treats thermally sensitive material and staged hot-runner heating as system/material dependent. No universal temperature/residence threshold is permitted."},
+    {"claimId":"hot-runners-03","previous":"hold","newConclusion":"supported","evidence":["HUSKY-SCVG-HOT-SPRUE-SERVICE-2024","MOLD-MASTERS-HOT-RUNNER-USER-MANUAL-2020"],"reason":"Manufacturer manuals provide explicit startup/shutdown instructions and Husky explicitly directs users to machine-manufacturer documentation. Installed-system documentation remains controlling."},
+    {"claimId":"clamp-02","previous":"hold","newConclusion":"qualified","evidence":["ENGEL-IQ-PROCESS-CONTROL"],"reason":"ENGEL demonstrates application-specific clamping-force determination from mould breathing, supporting the claim that one generic projected-area rule is insufficient. This does not establish a universal sizing method."},
+    {"claimId":"vp-transfer-03","previous":"qualified","newConclusion":"qualified","evidence":["ENGEL-IQ-PROCESS-CONTROL"],"reason":"ENGEL shows switchover point is actively adjusted using process signals as conditions change, corroborating that transfer is process-dependent. It remains vendor-specific evidence, so the generic establishment method is not promoted to fully supported."},
+    {"claimId":"warpage-02","previous":"qualified","newConclusion":"supported","evidence":["OUBELLAOUCH-2024-FIBRE-ORIENTATION"],"reason":"Peer-reviewed experimental work directly links fibre orientation distribution in injection-moulded reinforced thermoplastics with mechanical properties and shrinkage/warpage-related defects; chapter wording remains scoped to reinforced systems."}
+  ],
+  "effectiveHighRiskCountsAfterResolution": {"supported":7,"qualified":10,"conflicting":0,"hold":3,"claims":20,"chaptersPromoted":0},
+  "remainingBlockingClaims": ["safety-foundations-02","vp-transfer-02","clamp-01","clamp-03"],
+  "note":"The effective hold count remains blocking. The count field intentionally counts unique effective conclusions and does not authorize chapter promotion."
+}
