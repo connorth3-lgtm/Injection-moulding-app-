@@ -33,8 +33,8 @@ test('Read Aloud integrates with the real shell, docks in the header without cov
 
   const host=page.locator('.mm-read-aloud');
   await expect(host).toBeVisible();
-  await expect(host).toHaveAttribute('data-version','2026.09.07.3');
-  await expect.poll(()=>page.evaluate(()=>window.MMReadAloud?.version||'')).toBe('2026.09.07.3');
+  await expect(host).toHaveAttribute('data-version','2026.09.14.1');
+  await expect.poll(()=>page.evaluate(()=>window.MMReadAloud?.version||'')).toBe('2026.09.14.1');
   await expect(host.locator('summary')).toContainText('Listen');
 
   const placement=await page.evaluate(()=>{
@@ -108,7 +108,7 @@ test('Read Aloud supported-path controls execute the exact product runtime in a 
       speaking:false,
       paused:false,
       pending:false,
-      getVoices(){return[];},
+      getVoices(){return[{name:'QA Voice',lang:'en-US',default:true}];},
       speak(utterance){
         this.speaking=true;
         this.paused=false;
@@ -129,7 +129,7 @@ test('Read Aloud supported-path controls execute the exact product runtime in a 
 
   const host=page.locator('.mm-read-aloud');
   await expect(host).toBeVisible();
-  await expect(host).toHaveAttribute('data-version','2026.09.07.3');
+  await expect(host).toHaveAttribute('data-version','2026.09.14.1');
   await host.locator('details').evaluate(el=>{el.open=true;});
 
   const visibilityCheck=await page.evaluate(() => {
@@ -160,4 +160,38 @@ test('Read Aloud supported-path controls execute the exact product runtime in a 
   await host.locator('[data-mm-read="stop"]').click();
   await expect(host.locator('[data-mm-read="play"]')).toHaveText('Listen');
   await expect(host.locator('.mm-read-status')).toHaveText('Stopped');
+});
+
+
+test('Read Aloud waits for delayed Windows voices and selects the device voice before speaking', async ({ page }) => {
+  await page.setContent(`<!doctype html><html lang="en"><head><meta charset="utf-8"></head><body><main class="main"><p>Delayed Windows voice sentinel.</p></main></body></html>`);
+  await page.evaluate(() => {
+    class QaSpeechSynthesisUtterance {
+      constructor(text=''){this.text=String(text);this.lang='';this.voice=null;this.rate=1;this.onstart=null;this.onend=null;this.onerror=null;}
+    }
+    const listeners=new Set();
+    let ready=false;
+    const voice={name:'Windows QA Voice',lang:'en-NZ',default:true};
+    const synth={
+      getVoices(){return ready?[voice]:[];},
+      speak(utterance){
+        window.__mmDelayedVoiceName=utterance.voice?.name||'';
+        window.__mmDelayedSpeech=utterance.text;
+        queueMicrotask(()=>utterance.onstart?.());
+      },
+      cancel(){},pause(){},resume(){},
+      addEventListener(type,fn){if(type==='voiceschanged')listeners.add(fn);},
+      removeEventListener(type,fn){if(type==='voiceschanged')listeners.delete(fn);}
+    };
+    Object.defineProperty(window,'SpeechSynthesisUtterance',{configurable:true,writable:true,value:QaSpeechSynthesisUtterance});
+    Object.defineProperty(window,'speechSynthesis',{configurable:true,writable:true,value:synth});
+    setTimeout(()=>{ready=true;for(const fn of [...listeners])fn();},120);
+  });
+  await page.addScriptTag({path:'read-aloud.js'});
+  const host=page.locator('.mm-read-aloud');
+  await host.locator('details').evaluate(el=>{el.open=true;});
+  await host.locator('[data-mm-read="play"]').click();
+  await expect.poll(()=>page.evaluate(()=>window.__mmDelayedVoiceName||'')).toBe('Windows QA Voice');
+  await expect.poll(()=>page.evaluate(()=>window.__mmDelayedSpeech||'')).toContain('Delayed Windows voice sentinel.');
+  await expect(host.locator('.mm-read-status')).toHaveText('Reading');
 });

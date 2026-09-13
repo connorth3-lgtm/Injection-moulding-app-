@@ -5,7 +5,7 @@
 (function(){
   'use strict';
 
-  const VERSION='2026.09.07.3';
+  const VERSION='2026.09.14.1';
   const synth=window.speechSynthesis;
   const supported=!!(synth&&window.SpeechSynthesisUtterance);
   const SPEEDS=[0.75,1,1.25,1.5];
@@ -15,6 +15,9 @@
   let index=0;
   let speaking=false;
   let paused=false;
+  let starting=false;
+  let selectedVoice=null;
+  let speakToken=0;
   let activeSource=null;
   let activeRoot=null;
   let ui=null;
@@ -96,10 +99,36 @@
     ui.position.textContent=units.length?`${Math.min(index+1,units.length)} / ${units.length}`:'0 / 0';
   }
 
+  function refreshVoice(){
+    if(!supported||typeof synth.getVoices!=='function'){selectedVoice=null;return null;}
+    const voices=synth.getVoices()||[];
+    if(!voices.length){selectedVoice=null;return null;}
+    const lang=String(document.documentElement.lang||navigator.language||'en').toLowerCase();
+    const base=lang.split('-')[0];
+    selectedVoice=voices.find(v=>String(v.lang||'').toLowerCase()===lang)
+      ||voices.find(v=>String(v.lang||'').toLowerCase().split('-')[0]===base)
+      ||voices.find(v=>v.default)
+      ||voices[0]
+      ||null;
+    return selectedVoice;
+  }
+
+  function waitForVoice(timeout=1200){
+    if(refreshVoice())return Promise.resolve(selectedVoice);
+    if(!supported)return Promise.resolve(null);
+    return new Promise(resolve=>{
+      let done=false;
+      const finish=()=>{if(done)return;done=true;cleanup();resolve(refreshVoice())};
+      const cleanup=()=>{clearTimeout(timer);try{synth.removeEventListener?.('voiceschanged',finish)}catch(_){}};
+      const timer=setTimeout(finish,timeout);
+      try{synth.addEventListener?.('voiceschanged',finish,{once:true})}catch(_){ }
+    });
+  }
+
   function updateButtons(){
     if(!ui)return;
-    ui.play.textContent=paused?'Resume':speaking?'Pause':'Listen';
-    ui.play.setAttribute('aria-label',paused?'Resume read aloud':speaking?'Pause read aloud':'Start read aloud');
+    ui.play.textContent=starting?'Starting…':paused?'Resume':speaking?'Pause':'Listen';
+    ui.play.setAttribute('aria-label',starting?'Starting read aloud':paused?'Resume read aloud':speaking?'Pause read aloud':'Start read aloud');
     ui.prev.disabled=!supported||!units.length||index<=0;
     ui.next.disabled=!supported||!units.length||index>=units.length-1;
     ui.stop.disabled=!supported||(!speaking&&!paused);
@@ -119,38 +148,72 @@
 
   function stop(reason){
     if(supported)synth.cancel();
-    speaking=false;paused=false;
+    speakToken+=1;
+    starting=false;speaking=false;paused=false;
     clearHighlight();
     if(ui)ui.current.hidden=true;
     setStatus(reason||'Stopped');
     updateButtons();
   }
 
-  function speakCurrent(){
+  async function speakCurrent(retry=0){
     if(!supported){setStatus('Read Aloud is not available in this browser/device.');updateButtons();return;}
     if(!units.length)buildUnits();
     const unit=units[index];
     if(!unit){setStatus('No readable text is visible on this screen.');updateButtons();return;}
+    const token=++speakToken;
+    starting=true;speaking=false;paused=false;
+    setStatus(refreshVoice()?'Starting device voice…':'Loading device voice…');
+    updateButtons();
+    await waitForVoice(retry?700:1200);
+    if(token!==speakToken)return;
     synth.cancel();
     const utterance=new SpeechSynthesisUtterance(unit.text);
-    utterance.lang=document.documentElement.lang||'en';
+    if(selectedVoice){utterance.voice=selectedVoice;utterance.lang=selectedVoice.lang||document.documentElement.lang||'en';}
+    else utterance.lang=document.documentElement.lang||'en';
     utterance.rate=Number(ui?.speed?.value||1);
+    let started=false;
+    const startTimer=setTimeout(()=>{
+      if(token!==speakToken||started)return;
+      synth.cancel();
+      starting=false;speaking=false;paused=false;
+      if(retry<1){
+        selectedVoice=null;
+        setStatus('Retrying device voice…');
+        updateButtons();
+        speakCurrent(1);
+      }else{
+        setStatus('Device voice did not start. Check Windows speech voices, then try again.');
+        updateButtons();
+      }
+    },2500);
     utterance.onstart=()=>{
-      speaking=true;paused=false;
+      if(token!==speakToken)return;
+      clearTimeout(startTimer);started=true;
+      starting=false;speaking=true;paused=false;
       highlight(unit);
       setStatus('Reading');
       updateButtons();
     };
     utterance.onend=()=>{
-      if(!speaking)return;
+      clearTimeout(startTimer);
+      if(token!==speakToken||!speaking)return;
       if(index<units.length-1){index+=1;speakCurrent();}
       else stop('Finished');
     };
     utterance.onerror=event=>{
+      clearTimeout(startTimer);
+      if(token!==speakToken)return;
       if(event?.error==='canceled'||event?.error==='interrupted')return;
-      stop('Speech playback could not continue.');
+      starting=false;
+      stop(`Speech playback could not continue${event?.error?`: ${event.error}`:''}.`);
     };
-    synth.speak(utterance);
+    try{synth.speak(utterance)}catch(err){
+      clearTimeout(startTimer);
+      starting=false;
+      stop('Device voice could not be started.');
+      console.error('MouldMaster Read Aloud:',err);
+    }
   }
 
   function start(){
@@ -162,6 +225,7 @@
 
   function toggle(){
     if(!supported){setStatus('Read Aloud is not available in this browser/device.');return;}
+    if(starting){stop('Stopped');return;}
     if(paused){synth.resume();paused=false;speaking=true;setStatus('Reading');updateButtons();return;}
     if(speaking){synth.pause();paused=true;speaking=false;setStatus('Paused');updateButtons();return;}
     start();
@@ -171,7 +235,7 @@
     if(!units.length)buildUnits();
     if(!units.length)return;
     index=Math.max(0,Math.min(units.length-1,index+delta));
-    speaking=true;paused=false;
+    speaking=false;paused=false;
     speakCurrent();
   }
 
@@ -228,7 +292,15 @@
     ui.stop.addEventListener('click',()=>stop('Stopped'));
     ui.speed.addEventListener('change',()=>{if(speaking||paused){paused=false;speaking=true;speakCurrent();}});
     host.querySelector('details').addEventListener('toggle',event=>{if(event.target.open&&!speaking&&!paused){buildUnits();setStatus(supported?'Ready':'Read Aloud is not available in this browser/device.');updateButtons();}});
+    refreshVoice();
+    if(supported&&!selectedVoice)setStatus('Device voice will load when playback starts.');
     updateButtons();
+  }
+
+  if(supported){
+    try{synth.addEventListener?.('voiceschanged',()=>{
+      if(refreshVoice()&&ui&&!starting&&!speaking&&!paused){setStatus('Ready');updateButtons();}
+    })}catch(_){ }
   }
 
   document.addEventListener('click',event=>{
