@@ -1,21 +1,40 @@
-/* MouldMaster Book foundation runtime — evidence-governed, no automatic verification. */
+/* MouldMaster Book runtime — evidence-governed, no automatic verification. */
 (function(){
   'use strict';
-  const VERSION='2026.09.14.2';
+  const VERSION='2026.09.14.3';
+  const BATCH_PATHS=[
+    './data/book-authored-foundations-v1.json',
+    './data/book-chapters-materials-machine-v1.json',
+    './data/book-authored-remaining-v1.json'
+  ];
   let manifest=null,ui=null,previousView=null,open=false;
   const esc=value=>String(value??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
   const stateLabel=state=>({planned:'Planned','source-review':'Source review','technical-review':'Technical review',verified:'Verified',hold:'Hold'}[state]||state);
   async function json(path){const r=await fetch(path,{cache:'no-store'});if(!r.ok)throw new Error(`${path} unavailable (${r.status})`);return r.json();}
   async function loadManifest(){
     const data=await json('./data/book-manifest-v1.json');
-    if(data?.schema!==1||data?.bookId!=='mouldmaster-book')throw new Error('Book manifest identity check failed');
-    const batches=await Promise.all(['./data/book-authored-foundations-v1.json'].map(path=>json(path)));
+    if(data?.schema!==1||data?.bookId!=='mouldmaster-book'||!Array.isArray(data.parts)||!Array.isArray(data.sourceSeeds))throw new Error('Book manifest identity check failed');
+    const declared=new Map((data.parts||[]).flatMap(p=>p.chapters||[]).map(ch=>[ch.id,ch]));
+    if(declared.size!==(data.parts||[]).reduce((n,p)=>n+(p.chapters||[]).length,0))throw new Error('Duplicate chapter id in Book manifest');
+    const sourceMap=new Map((data.sourceSeeds||[]).map(source=>[source.id,source]));
+    if(sourceMap.size!==data.sourceSeeds.length)throw new Error('Duplicate source id in Book manifest');
+    const authoredIds=new Set();
+    const batches=await Promise.all(BATCH_PATHS.map(path=>json(path)));
     for(const batch of batches){
-      if(batch?.schema!==1||batch?.bookId!==data.bookId)throw new Error('Book authored-batch identity check failed');
-      for(const source of batch.sourceSeeds||[])if(!(data.sourceSeeds||[]).some(x=>x.id===source.id))data.sourceSeeds.push(source);
-      for(const authored of batch.chapters||[]){
-        const chapter=(data.parts||[]).flatMap(p=>p.chapters||[]).find(x=>x.id===authored.id);
+      if(batch?.schema!==1||batch?.bookId!==data.bookId||!Array.isArray(batch.chapters))throw new Error('Book authored-batch identity check failed');
+      for(const source of batch.sourceSeeds||[]){
+        if(!source?.id||!source?.title||!source?.url||!source?.scope)throw new Error('Incomplete Book source record');
+        if(sourceMap.has(source.id))throw new Error(`Duplicate authored source id: ${source.id}`);
+        sourceMap.set(source.id,source);data.sourceSeeds.push(source);
+      }
+      for(const authored of batch.chapters){
+        if(!authored?.id||authoredIds.has(authored.id))throw new Error(`Duplicate authored chapter id: ${authored?.id||'missing'}`);
+        authoredIds.add(authored.id);
+        const chapter=declared.get(authored.id);
         if(!chapter)throw new Error(`Authored chapter is not declared in manifest: ${authored.id}`);
+        if(authored.state==='verified')throw new Error(`Authored draft cannot self-promote to verified: ${authored.id}`);
+        if(!authored.applicability||!Array.isArray(authored.sections)||!authored.sections.length)throw new Error(`Incomplete authored chapter: ${authored.id}`);
+        for(const sourceId of authored.sourceIds||[])if(!sourceMap.has(sourceId))throw new Error(`Unknown source ${sourceId} in ${authored.id}`);
         Object.assign(chapter,authored);
       }
     }
@@ -35,7 +54,7 @@
     const chapter=allChapters().find(ch=>ch.id===id);if(!chapter||!ui)return;const sections=Array.isArray(chapter.sections)?chapter.sections:[];
     const back='<button type="button" class="ghost" data-mm-book-back>← Book contents</button>';
     if(chapter.state==='verified')ui.reader.innerHTML=`${back}<span class="eyebrow">Verified</span><h2>${esc(chapter.title)}</h2><p><b>Applicability:</b> ${esc(chapter.applicability||'See attached evidence and controlling documentation.')}</p>${sections.map(s=>`<section><h3>${esc(s.title||'')}</h3><p>${esc(s.text||'')}</p></section>`).join('')}${sourceHtml(chapter)}`;
-    else if(chapter.state==='technical-review'&&sections.length)ui.reader.innerHTML=`${back}<span class="eyebrow">Technical review draft — not verified</span><h2>${esc(chapter.title)}</h2><p><b>Applicability:</b> ${esc(chapter.applicability||'Under review.')}</p><div class="callout"><b>Review boundary:</b> This draft is visible for technical review. Do not treat it as a machine setting, safety procedure or verified production instruction.</div>${sections.map(s=>`<section><h3>${esc(s.title||'')}</h3><p>${esc(s.text||'')}</p></section>`).join('')}${sourceHtml(chapter)}`;
+    else if(chapter.state==='technical-review'&&sections.length)ui.reader.innerHTML=`${back}<span class="eyebrow">Technical review draft — not verified</span><h2>${esc(chapter.title)}</h2><p><b>Applicability:</b> ${esc(chapter.applicability||'Under review.')}</p><div class="callout"><b>Review boundary:</b> ${esc(chapter.reviewBoundary||'This draft is visible for technical review. Do not treat it as a machine setting, safety procedure or verified production instruction.')}</div>${sections.map(s=>`<section><h3>${esc(s.title||'')}</h3><p>${esc(s.text||'')}</p></section>`).join('')}${sourceHtml(chapter)}`;
     else ui.reader.innerHTML=`${back}<span class="eyebrow">${esc(stateLabel(chapter.state))}</span><h2>${esc(chapter.title)}</h2><p><b>This chapter is not being published as technical teaching content yet.</b></p><p>MouldMaster is reviewing the claims, applicability and sources first. Existing Academy lesson text is not automatically treated as verified Book evidence.</p>${sourceHtml(chapter)}<p><small>Claim classes: ${esc((chapter.claimClasses||[]).join(', '))}</small></p>`;
     ui.contents.hidden=true;ui.reader.hidden=false;ui.reader.querySelector('[data-mm-book-back]')?.addEventListener('click',()=>{ui.reader.hidden=true;ui.contents.hidden=false;});
   }
@@ -47,7 +66,7 @@
     const view=document.createElement('section');view.id='mmBookView';view.className='view hidden';view.innerHTML=`<section class="card"><span class="eyebrow">MouldMaster Book</span><h2>Injection moulding from foundations to advanced troubleshooting</h2><p>The Book is being built source-first. Review drafts are clearly marked; technical teaching content becomes verified only after its evidence, scope and applicability pass the Book accuracy rules.</p><p data-mm-book-summary>Loading governed Book manifest…</p><div><button type="button" class="primary" data-mm-book-mode="read">Read Book</button> <button type="button" class="ghost" data-mm-book-mode="listen" disabled>Listening unlocks after verification</button></div></section><section data-mm-book-contents><div data-mm-book-parts></div></section><section class="card" data-mm-book-reader hidden></section><section class="card"><h3>Accuracy boundary</h3><p>Material, machine, mould, hot-runner and workplace-specific requirements override generic guidance. Unsupported numbers and unresolved conflicting evidence are held rather than presented confidently.</p></section>`;main.appendChild(view);
     ui={view,nav:button,summary:view.querySelector('[data-mm-book-summary]'),parts:view.querySelector('[data-mm-book-parts]'),contents:view.querySelector('[data-mm-book-contents]'),reader:view.querySelector('[data-mm-book-reader]'),listen:view.querySelector('[data-mm-book-mode="listen"]')};button.addEventListener('click',e=>{e.preventDefault();e.stopPropagation();openBook();});view.querySelector('[data-mm-book-mode="read"]').addEventListener('click',()=>{ui.reader.hidden=true;ui.contents.hidden=false;});
   }
-  async function init(){createUI();try{manifest=await loadManifest();renderOverview();}catch(error){if(ui){ui.summary.textContent='Book manifest could not be verified. Technical content remains unavailable.';ui.parts.innerHTML='<section class="card"><h3>Book unavailable</h3><p>The evidence manifest failed to load or validate, so MouldMaster has failed closed.</p></section>';}console.error('MouldMaster Book:',error);}}
+  async function init(){createUI();try{manifest=await loadManifest();renderOverview();}catch(error){if(ui){ui.summary.textContent='Book manifest or authored evidence could not be verified. Technical content remains unavailable.';ui.parts.innerHTML='<section class="card"><h3>Book unavailable</h3><p>The evidence manifest failed to load or validate, so MouldMaster has failed closed.</p></section>';}console.error('MouldMaster Book:',error);}}
   document.addEventListener('click',event=>{const target=event.target?.closest?.('nav button,[data-view],[data-page]');if(!target||target.dataset.mmBookTab)return;if(open)leaveBook();},true);
   window.MMBook={version:VERSION,open:openBook,getManifest:()=>manifest,verifiedChapters};if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init,{once:true});else init();
 })();
