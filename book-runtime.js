@@ -1,7 +1,7 @@
 /* MouldMaster Book runtime — evidence-governed, no automatic verification. */
 (function(){
   'use strict';
-  const VERSION='2026.09.14.5';
+  const VERSION='2026.09.14.6';
   const BATCH_PATHS=[
     './data/book-authored-foundations-v1.json',
     './data/book-evidence-registry-v1.json',
@@ -47,7 +47,7 @@
   function renderOverview(){
     if(!ui||!manifest)return;const verified=verifiedChapters(),review=allChapters().filter(ch=>ch.state==='technical-review');
     ui.summary.textContent=`${manifest.parts.length} parts · ${allChapters().length} governed chapters · ${review.length} in technical review · ${verified.length} verified for publication`;
-    ui.parts.innerHTML=(manifest.parts||[]).map((part,partIndex)=>`<section class="card"><span class="eyebrow">Part ${partIndex+1}</span><h3>${esc(part.title.replace(/^Part\s+\d+\s+[—-]\s*/,''))}</h3><div>${(part.chapters||[]).map((chapter,chapterIndex)=>`<button type="button" class="ghost" data-mm-book-chapter="${esc(chapter.id)}" style="width:100%;text-align:left;margin:6px 0"><b>${chapterIndex+1}. ${esc(chapter.title)}</b><br><small>${esc(chapter.level)} · ${esc(stateLabel(chapter.state))}</small></button>`).join('')}</div></section>`).join('');
+    ui.parts.innerHTML=(manifest.parts||[]).map((part,partIndex)=>`<section class="card"><span class="eyebrow">Part ${partIndex+1}</span><h3>${esc(part.title.replace(/^Part\s+\d+\s+[—-]\s*/,''))}</h3><div>${(part.chapters||[]).map((chapter,chapterIndex)=>`<button type="button" class="ghost mm-book-chapter-button" data-mm-book-chapter="${esc(chapter.id)}"><b>${chapterIndex+1}. ${esc(chapter.title)}</b><br><small>${esc(chapter.level)} · ${esc(stateLabel(chapter.state))}</small></button>`).join('')}</div></section>`).join('');
     ui.parts.querySelectorAll('[data-mm-book-chapter]').forEach(b=>b.addEventListener('click',()=>showChapter(b.dataset.mmBookChapter)));
     ui.listen.disabled=!verified.length;ui.listen.textContent=verified.length?'Listen to verified Book':'Listening unlocks after verification';
   }
