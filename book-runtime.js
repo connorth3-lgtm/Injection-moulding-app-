@@ -1,7 +1,7 @@
 /* MouldMaster Book runtime — evidence-governed, no automatic verification. */
 (function(){
   'use strict';
-  const VERSION='2026.09.14.6';
+  const VERSION='2026.09.14.8';
   const BATCH_PATHS=[
     './data/book-authored-foundations-v1.json',
     './data/book-evidence-registry-v1.json',
@@ -9,7 +9,7 @@
     './data/book-authored-remaining-v1.json'
   ];
   let manifest=null,ui=null,previousView=null,open=false;
-  const esc=value=>String(value??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  const esc=value=>String(value??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot',"'":'&#39;'}[c]));
   const stateLabel=state=>({planned:'Planned','source-review':'Source review','technical-review':'Technical review',verified:'Verified',hold:'Hold'}[state]||state);
   async function json(path){const r=await fetch(path,{cache:'no-store'});if(!r.ok)throw new Error(`${path} unavailable (${r.status})`);return r.json();}
   async function loadManifest(){
@@ -52,23 +52,39 @@
     ui.listen.disabled=!verified.length;ui.listen.textContent=verified.length?'Listen to verified Book':'Listening unlocks after verification';
   }
   function sourceHtml(chapter){const sources=(chapter.sourceIds||[]).map(id=>(manifest.sourceSeeds||[]).find(s=>s.id===id)).filter(Boolean);return sources.length?`<h4>Evidence anchors currently attached</h4><ul>${sources.map(s=>`<li><b>${esc(s.id)}</b> — ${esc(s.title)}<br><small>${esc(s.scope)}</small></li>`).join('')}</ul>`:'<p>No source has been attached to this chapter yet.</p>';}
+  function verifiedChapterHtml(chapter){const sections=Array.isArray(chapter.sections)?chapter.sections:[];return `<article class="mm-book-verified-chapter" data-mm-book-verified-chapter="${esc(chapter.id)}"><span class="eyebrow">Verified</span><h2>${esc(chapter.title)}</h2><p><b>Applicability:</b> ${esc(chapter.applicability||'See attached evidence and controlling documentation.')}</p>${sections.map(s=>`<section><h3>${esc(s.title||'')}</h3><p>${esc(s.text||'')}</p></section>`).join('')}${sourceHtml(chapter)}</article>`;}
+  function restoreBookChrome(){if(!ui)return;ui.hero.hidden=false;ui.accuracy.hidden=false;}
+  function stopBookSpeech(){try{window.MMReadAloud?.stop?.();}catch(_){ }}
+  function showContents(){if(!ui)return;stopBookSpeech();restoreBookChrome();ui.reader.hidden=true;ui.contents.hidden=false;}
+  function bindBack(){ui?.reader?.querySelector('[data-mm-book-back]')?.addEventListener('click',showContents);}
   function showChapter(id){
     const chapter=allChapters().find(ch=>ch.id===id);if(!chapter||!ui)return;const sections=Array.isArray(chapter.sections)?chapter.sections:[];
+    restoreBookChrome();
     const back='<button type="button" class="ghost" data-mm-book-back>← Book contents</button>';
-    if(chapter.state==='verified')ui.reader.innerHTML=`${back}<span class="eyebrow">Verified</span><h2>${esc(chapter.title)}</h2><p><b>Applicability:</b> ${esc(chapter.applicability||'See attached evidence and controlling documentation.')}</p>${sections.map(s=>`<section><h3>${esc(s.title||'')}</h3><p>${esc(s.text||'')}</p></section>`).join('')}${sourceHtml(chapter)}`;
+    if(chapter.state==='verified')ui.reader.innerHTML=`${back}${verifiedChapterHtml(chapter)}`;
     else if(chapter.state==='technical-review'&&sections.length)ui.reader.innerHTML=`${back}<span class="eyebrow">Technical review draft — not verified</span><h2>${esc(chapter.title)}</h2><p><b>Applicability:</b> ${esc(chapter.applicability||'Under review.')}</p><div class="callout"><b>Review boundary:</b> ${esc(chapter.reviewBoundary||'This draft is visible for technical review. Do not treat it as a machine setting, safety procedure or verified production instruction.')}</div>${sections.map(s=>`<section><h3>${esc(s.title||'')}</h3><p>${esc(s.text||'')}</p></section>`).join('')}${sourceHtml(chapter)}`;
     else ui.reader.innerHTML=`${back}<span class="eyebrow">${esc(stateLabel(chapter.state))}</span><h2>${esc(chapter.title)}</h2><p><b>This chapter is not being published as technical teaching content yet.</b></p><p>MouldMaster is reviewing the claims, applicability and sources first. Existing Academy lesson text is not automatically treated as verified Book evidence.</p>${sourceHtml(chapter)}<p><small>Claim classes: ${esc((chapter.claimClasses||[]).join(', '))}</small></p>`;
-    ui.contents.hidden=true;ui.reader.hidden=false;ui.reader.querySelector('[data-mm-book-back]')?.addEventListener('click',()=>{ui.reader.hidden=true;ui.contents.hidden=false;});
+    ui.contents.hidden=true;ui.reader.hidden=false;bindBack();
   }
-  function openBook(){if(!ui)return;previousView=[...document.querySelectorAll('.view')].find(v=>!v.classList.contains('hidden')&&v!==ui.view)||previousView;document.querySelectorAll('.view').forEach(v=>v.classList.add('hidden'));ui.view.classList.remove('hidden');open=true;document.querySelectorAll('#nav button').forEach(b=>b.classList.remove('active'));ui.nav.classList.add('active');const title=document.getElementById('pageTitle'),subtitle=document.getElementById('pageSubtitle');if(title)title.textContent='Book';if(subtitle)subtitle.textContent='Evidence-governed injection moulding reference — read or listen as chapters are verified.';window.scrollTo({top:0,behavior:'smooth'});}
-  function leaveBook(){if(!open)return;open=false;ui?.view?.classList.add('hidden');ui?.nav?.classList.remove('active');}
+  function startVerifiedListening(){
+    if(!ui)return;const verified=verifiedChapters();if(!verified.length)return;
+    const reader=window.MMReadAloud,details=document.querySelector('.mm-read-aloud details'),play=document.querySelector('.mm-read-aloud [data-mm-read="play"]');
+    if(!reader?.supported||!details||!play){ui.summary.textContent='Verified Book text is available to read, but device speech synthesis is unavailable.';return;}
+    reader.stop?.();
+    const back='<button type="button" class="ghost" data-mm-book-back>← Book contents</button>';
+    ui.reader.innerHTML=`${back}${verified.map(verifiedChapterHtml).join('')}`;
+    ui.contents.hidden=true;ui.hero.hidden=true;ui.accuracy.hidden=true;ui.reader.hidden=false;bindBack();
+    requestAnimationFrame(()=>{reader.refresh?.();details.open=true;play.click();});
+  }
+  function openBook(){if(!ui)return;previousView=[...document.querySelectorAll('.view')].find(v=>!v.classList.contains('hidden')&&v!==ui.view)||previousView;document.querySelectorAll('.view').forEach(v=>v.classList.add('hidden'));ui.view.classList.remove('hidden');restoreBookChrome();open=true;document.querySelectorAll('#nav button').forEach(b=>b.classList.remove('active'));ui.nav.classList.add('active');const title=document.getElementById('pageTitle'),subtitle=document.getElementById('pageSubtitle');if(title)title.textContent='Book';if(subtitle)subtitle.textContent='Evidence-governed injection moulding reference — read or listen as chapters are verified.';window.scrollTo({top:0,behavior:'smooth'});}
+  function leaveBook(){if(!open)return;stopBookSpeech();open=false;ui?.view?.classList.add('hidden');ui?.nav?.classList.remove('active');}
   function createUI(){
     const nav=document.getElementById('nav'),main=document.querySelector('#mainContent,.main,main');if(!nav||!main||document.getElementById('mmBookView'))return;
     const button=document.createElement('button');button.type='button';button.dataset.mmBookTab='1';button.innerHTML='📖 <span>Book</span>';const listening=nav.querySelector('[data-mm-listening-tab]'),path=nav.querySelector('[data-view="path"]');(listening||path)?.insertAdjacentElement('afterend',button);if(!listening&&!path)nav.prepend(button);
-    const view=document.createElement('section');view.id='mmBookView';view.className='view hidden';view.innerHTML=`<section class="card"><span class="eyebrow">MouldMaster Book</span><h2>Injection moulding from foundations to advanced troubleshooting</h2><p>The Book is being built source-first. Review drafts are clearly marked; technical teaching content becomes verified only after its evidence, scope and applicability pass the Book accuracy rules.</p><p data-mm-book-summary>Loading governed Book manifest…</p><div><button type="button" class="primary" data-mm-book-mode="read">Read Book</button> <button type="button" class="ghost" data-mm-book-mode="listen" disabled>Listening unlocks after verification</button></div></section><section data-mm-book-contents><div data-mm-book-parts></div></section><section class="card" data-mm-book-reader hidden></section><section class="card"><h3>Accuracy boundary</h3><p>Material, machine, mould, hot-runner and workplace-specific requirements override generic guidance. Unsupported numbers and unresolved conflicting evidence are held rather than presented confidently.</p></section>`;main.appendChild(view);
-    ui={view,nav:button,summary:view.querySelector('[data-mm-book-summary]'),parts:view.querySelector('[data-mm-book-parts]'),contents:view.querySelector('[data-mm-book-contents]'),reader:view.querySelector('[data-mm-book-reader]'),listen:view.querySelector('[data-mm-book-mode="listen"]')};button.addEventListener('click',e=>{e.preventDefault();e.stopPropagation();openBook();});view.querySelector('[data-mm-book-mode="read"]').addEventListener('click',()=>{ui.reader.hidden=true;ui.contents.hidden=false;});
+    const view=document.createElement('section');view.id='mmBookView';view.className='view hidden';view.innerHTML=`<section class="card" data-mm-book-hero><span class="eyebrow">MouldMaster Book</span><h2>Injection moulding from foundations to advanced troubleshooting</h2><p>The Book is being built source-first. Review drafts are clearly marked; technical teaching content becomes verified only after its evidence, scope and applicability pass the Book accuracy rules.</p><p data-mm-book-summary>Loading governed Book manifest…</p><div><button type="button" class="primary" data-mm-book-mode="read">Read Book</button> <button type="button" class="ghost" data-mm-book-mode="listen" disabled>Listening unlocks after verification</button></div></section><section data-mm-book-contents><div data-mm-book-parts></div></section><section class="card" data-mm-book-reader hidden></section><section class="card" data-mm-book-accuracy><h3>Accuracy boundary</h3><p>Material, machine, mould, hot-runner and workplace-specific requirements override generic guidance. Unsupported numbers and unresolved conflicting evidence are held rather than presented confidently.</p></section>`;main.appendChild(view);
+    ui={view,nav:button,hero:view.querySelector('[data-mm-book-hero]'),accuracy:view.querySelector('[data-mm-book-accuracy]'),summary:view.querySelector('[data-mm-book-summary]'),parts:view.querySelector('[data-mm-book-parts]'),contents:view.querySelector('[data-mm-book-contents]'),reader:view.querySelector('[data-mm-book-reader]'),listen:view.querySelector('[data-mm-book-mode="listen"]')};button.addEventListener('click',e=>{e.preventDefault();e.stopPropagation();openBook();});view.querySelector('[data-mm-book-mode="read"]').addEventListener('click',showContents);ui.listen.addEventListener('click',startVerifiedListening);
   }
   async function init(){createUI();try{manifest=await loadManifest();renderOverview();}catch(error){if(ui){ui.summary.textContent='Book manifest or authored evidence could not be verified. Technical content remains unavailable.';ui.parts.innerHTML='<section class="card"><h3>Book unavailable</h3><p>The evidence manifest failed to load or validate, so MouldMaster has failed closed.</p></section>';}console.error('MouldMaster Book:',error);}}
   document.addEventListener('click',event=>{const target=event.target?.closest?.('nav button,[data-view],[data-page]');if(!target||target.dataset.mmBookTab)return;if(open)leaveBook();},true);
-  window.MMBook={version:VERSION,open:openBook,getManifest:()=>manifest,verifiedChapters};if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init,{once:true});else init();
+  window.MMBook={version:VERSION,open:openBook,getManifest:()=>manifest,verifiedChapters,startVerifiedListening};if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init,{once:true});else init();
 })();
