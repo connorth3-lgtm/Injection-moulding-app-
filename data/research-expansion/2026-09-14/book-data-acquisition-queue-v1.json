@@ -1,0 +1,110 @@
+{
+  "schema": 1,
+  "version": "2026.09.14.1",
+  "purpose": "Prioritized queue for turning Book enrichment sources into reproducible, rights-aware derived tables, plots and worked examples. This is not an authorization to ingest or redistribute third-party raw data.",
+  "governance": {
+    "metadataOnly": true,
+    "rawThirdPartyPayloadsCommitted": false,
+    "verifyLicenceBeforeExtraction": true,
+    "fingerprintAnyDownloadedDataset": true,
+    "preserveOriginalUnits": true,
+    "preserveSampleUnit": true,
+    "keepMeasuredSimulationPredictionVendorSeparate": true
+  },
+  "queue": [
+    {
+      "rank": 1,
+      "sourceId": "polym-2026-75-run-hdpe-doe",
+      "action": "extract the complete 75-run article table into a derived Book analysis workspace if CC BY terms permit; preserve all seven inputs, four outputs and measurement notes",
+      "artifactTarget": "worked DOE table + Pareto/trade-off plots + one deliberately non-transferable optimum example",
+      "chapters": ["doe", "process-window", "warpage", "cooling", "dimensional-stability"]
+    },
+    {
+      "rank": 2,
+      "sourceId": "springer-2026-recycled-pp-warpage-sensors",
+      "action": "derive a compact 21-condition warpage/cooling/injection-temperature teaching table from the article while keeping the 420-part replicate structure explicit",
+      "artifactTarget": "warpage versus thermal condition plot + sensor/measurement-context box",
+      "chapters": ["warpage", "cooling", "process-monitoring", "dimensional-stability"]
+    },
+    {
+      "rank": 3,
+      "sourceId": "app-sci-2026-1284-cycle-defect-production",
+      "action": "extract only article-reported aggregate defect counts and documented process-feature relationships unless an authorized raw dataset becomes available",
+      "artifactTarget": "class-imbalance exercise + prediction-versus-causation case",
+      "chapters": ["diagnostic-method", "burns", "short-shot", "sink-voids", "flash"]
+    },
+    {
+      "rank": 4,
+      "sourceId": "jmmp-2021-scientific-moulding-transfer",
+      "action": "reuse existing repository evidence to assemble a Book-owned end-to-end scientific-moulding case without claiming it is a new source",
+      "artifactTarget": "rheology -> pressure-loss -> cavity-balance -> gate-freeze -> cooling -> verification flow",
+      "chapters": ["process-baseline", "fill-study", "pressure-loss", "gate-seal", "cooling", "multi-cavity"]
+    },
+    {
+      "rank": 5,
+      "sourceId": "procir-2025-active-vacuum-venting",
+      "action": "create a derived comparison of vent/no-vent mechanism, cycle-time effect and energy boundary; do not reproduce protected figures under CC BY-NC-ND",
+      "artifactTarget": "venting trade-off case",
+      "chapters": ["venting", "burns", "short-shot", "process-window"]
+    },
+    {
+      "rank": 6,
+      "sourceId": "procir-2026-holistic-power-profiles",
+      "action": "extract the measurement-boundary architecture and build an original energy-accounting diagram",
+      "artifactTarget": "machine + heater + TCU + cooling + peripherals energy boundary diagram",
+      "chapters": ["cycle", "machine-anatomy", "documentation", "process-monitoring"]
+    },
+    {
+      "rank": 7,
+      "sourceId": "springer-2025-experimental-numerical-rheology",
+      "action": "derive a worked rheology-characterization example from the CC BY article with clear experimental-versus-fitted-model labels",
+      "artifactTarget": "viscosity/shear-rate worked example + model-fit caveat",
+      "chapters": ["rheology", "pressure-loss", "thin-wall"]
+    },
+    {
+      "rank": 8,
+      "sourceId": "esaf-2024-ejection-draft-roughness",
+      "action": "extract CC BY 3.0 ejection-force experiment factors and build original interaction plots",
+      "artifactTarget": "polymer x draft x roughness x mould-temperature interaction example",
+      "chapters": ["ejection-draft", "mould-anatomy", "doe"]
+    },
+    {
+      "rank": 9,
+      "sourceId": "polym-2025-thin-cooling-layer-weld-strength",
+      "action": "derive a cooling-versus-weld-strength worked example from the CC BY article",
+      "artifactTarget": "thermal design -> weld-line mechanical response case",
+      "chapters": ["cooling", "weld-lines", "doe"]
+    },
+    {
+      "rank": 10,
+      "sourceId": "polym-2023-pa-gf-weld-line-strength",
+      "action": "build a reinforced-material weld-line exercise from article data with full grade/specimen context",
+      "artifactTarget": "PA-GF weld-line factor table",
+      "chapters": ["weld-lines", "fillers-additives", "fibre-orientation"]
+    },
+    {
+      "rank": 11,
+      "sourceId": "polym-2022-tpms-conformal-cooling",
+      "action": "derive an original conformal-cooling comparison from CC BY physical trials; keep geometry and coolant details attached",
+      "artifactTarget": "conventional-versus-TPMS cooling case",
+      "chapters": ["cooling", "mould-anatomy", "dimensional-stability"]
+    },
+    {
+      "rank": 12,
+      "sourceId": "basf-ultramid-a3wg5-current-processing-sheet",
+      "action": "create a source-reading exercise that asks the learner to distinguish grade identity, moisture, drying, residence and directional shrinkage fields from generic Book guidance",
+      "artifactTarget": "supplier-sheet literacy exercise; quote minimally and link to current source",
+      "chapters": ["moisture-drying", "thermal-history", "fillers-additives", "dimensional-stability"]
+    }
+  ],
+  "heldForFutureAccess": [
+    {
+      "source": "10.5281/zenodo.20322729",
+      "reason": "defect image/segmentation/process dataset is embargoed until 2027-12-31; metadata may be cited but files must not be counted as currently usable"
+    },
+    {
+      "source": "10.5281/zenodo.20309380",
+      "reason": "companion PP process/weight/energy/CAD dataset is currently embargoed; do not ingest until access state changes and rights are rechecked"
+    }
+  ]
+}
