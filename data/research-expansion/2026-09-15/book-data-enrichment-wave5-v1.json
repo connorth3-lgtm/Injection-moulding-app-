@@ -1,0 +1,152 @@
+{
+  "schema": 1,
+  "version": "2026.09.15.1",
+  "purpose": "Gap-narrowing Book enrichment focused on black-speck contamination/degradation diagnosis and hot-runner actual-state control. Sources were screened against the repository before admission; this wave does not claim to close the remaining raw shot-by-shot contamination trace gap.",
+  "screening": {
+    "mainSha": "5f7006d64061c2968e9d03365c2a834f97bd9e17",
+    "repoSearchPerformed": true,
+    "earlierBookWaveDeduplication": true,
+    "sameProjectContinuationDoesNotCountAsIndependentEvidence": true
+  },
+  "governance": {
+    "metadataOnly": true,
+    "rawThirdPartyPayloadsCommitted": false,
+    "technicalTradeAndPractitionerSourcesSeparatedFromPeerReviewedEvidence": true,
+    "vendorOrLaboratoryGuidanceDoesNotEstablishRootCauseByItself": true,
+    "caseSpecificSettingsNeverBecomeUniversalSetpoints": true,
+    "blackSpeckGapRemainsUntilRightsClearShotLinkedOnsetInterventionRecoveryDataExist": true
+  },
+  "summary": {
+    "candidates": 6,
+    "peerReviewedPhysicalAnalytical": 1,
+    "technicalJournalCaseSeries": 1,
+    "industrialAcademicCase": 1,
+    "practitionerFailureAnalysisCase": 1,
+    "hotRunnerMeasuredTechnical": 1,
+    "hotRunnerInstitutionalProjectContinuation": 1
+  },
+  "candidates": [
+    {
+      "id": "plastics-engineering-2013-black-specks",
+      "priority": "A",
+      "doi": "10.1002/j.1941-9635.2013.tb00942.x",
+      "title": "Troubleshooting Black Specks and Color Streaks in Injection Molded Parts",
+      "year": 2013,
+      "evidenceType": "technical-journal-three-case-troubleshooting-series",
+      "data": [
+        "three injection-moulding troubleshooting cases",
+        "plasticator screw/non-return-valve inspection",
+        "measured melt/barrel temperature and plasticising response",
+        "back-pressure and screw-speed perturbation",
+        "scrap/streak response before and after diagnostic interventions",
+        "material-versus-equipment hypothesis discrimination"
+      ],
+      "bookChapters": ["black-specks", "diagnostic-method", "plasticising-unit", "thermal-history", "documentation"],
+      "rightsState": "publisher-controlled article; use as evidence/reference and create original Book explanations rather than reproducing protected figures/tables",
+      "value": "Direct black-speck/color-streak case evidence showing how process perturbation, natural-resin trials and screw/NRV inspection can discriminate degraded-resin, stagnant-region and masterbatch hypotheses.",
+      "limitations": "Case-series evidence from specific machines/materials; tested temperatures, back pressures and screw speeds are not transferable production settings."
+    },
+    {
+      "id": "jcbbp-2019-pet-inclusion-degradation-identification",
+      "priority": "A",
+      "doi": "10.12974/2311-8717.2019.07.3",
+      "title": "Detection of Inclusions and Degradation in Injection-Molded Thermoplastics",
+      "year": 2019,
+      "evidenceType": "peer-reviewed-physical-analytical-identification-study",
+      "data": [
+        "actual PET injection-blow preforms containing inclusions",
+        "PET degraded intentionally by residence-time control",
+        "optical microscopy",
+        "SEM/EDS",
+        "FTIR/micro-IR",
+        "XRF",
+        "XRD",
+        "DSC"
+      ],
+      "bookChapters": ["black-specks", "diagnostic-method", "thermal-history", "material-families", "complex-diagnostics"],
+      "rightsState": "peer-reviewed publisher article; reuse licence not established from the institutional record, so keep reference-only until rights are rechecked",
+      "value": "Provides a defensible analytical ladder for distinguishing foreign inclusions from polymer degradation instead of diagnosing dark particles by appearance alone.",
+      "limitations": "PET/preform study and laboratory-analysis protocol; it does not identify every contaminant or replace process-history evidence."
+    },
+    {
+      "id": "umb-2024-pet-preform-black-speck-dmaic",
+      "priority": "B",
+      "url": "https://repository.mercubuana.ac.id/87231/",
+      "title": "Implementasi Metode DMAIC untuk Perbaikan Defect Produksi Preform pada Perusahaan Manufaktur Injection Plastic",
+      "year": 2024,
+      "evidenceType": "industrial-undergraduate-thesis-quantified-defect-intervention-case",
+      "scale": "29,399 reported defective 14.20 g preforms in the study population; 11,200 black-speck/contamination defects",
+      "data": [
+        "black-speck/contamination defect counts",
+        "short-shot, bubble/void and flash counts",
+        "preventive-maintenance condition",
+        "thermocouple malfunction/overheating diagnosis",
+        "post-improvement black-speck share reported to decrease from 38% to 32%"
+      ],
+      "bookChapters": ["black-specks", "diagnostic-method", "machine-anatomy", "thermal-history", "documentation"],
+      "rightsState": "repository abstract is public; thesis chapters are access-restricted, so only public abstract-level findings may be used unless access/reuse permission is obtained",
+      "value": "Adds quantified plant-level defect prevalence plus a maintenance intervention/follow-up outcome, which is closer to the Book's desired fault-action-recovery pattern than generic troubleshooting lists.",
+      "limitations": "Non-peer-reviewed undergraduate thesis; available public evidence is abstract-level and the reported percentage change is not a raw shot-linked time series."
+    },
+    {
+      "id": "madison-group-2024-black-particle-failure-analysis",
+      "priority": "B",
+      "url": "https://madisongroup.com/using-data-to-pinpoint-cosmetic-defect-causes-in-injection-molded-parts/",
+      "title": "Using Data to Pinpoint Cosmetic Defect Causes in Injection Molded Parts",
+      "year": 2024,
+      "evidenceType": "practitioner-failure-analysis-case",
+      "data": [
+        "black particle embedded in moulded polycarbonate part",
+        "cross-sectional optical examination",
+        "SEM imaging",
+        "EDS screening",
+        "FTIR contaminant identification"
+      ],
+      "bookChapters": ["black-specks", "diagnostic-method", "complex-diagnostics"],
+      "rightsState": "commercial laboratory case article; reference-only and do not reproduce proprietary images without permission",
+      "value": "Useful practical example of escalating from visual evidence to elemental and molecular analysis when a black inclusion cannot be identified from appearance or process settings alone.",
+      "limitations": "Commercial practitioner case, not a controlled moulding experiment; analytical identification does not by itself prove when or where contamination entered the process."
+    },
+    {
+      "id": "kunststoffe-2021-hot-runner-valve-pin-pressure-control",
+      "priority": "B",
+      "url": "https://res.cloudinary.com/sternwald-systems/raw/upload/v1/hugoprd/ARTIKEL_ATTACH/0028BF39_7D302DF647FF/f10c8f4ce2dc1b933ae3d9cb560a9cdf58212067/The%20Hot%20Runner%20Valve%20Pin%20%20as%20Actuating%20Variable%20-%20KUint%2001%202021.pdf",
+      "title": "The Hot Runner Valve Pin as Actuating Variable — Cavity-Specific Pressure Control to Increase Process Consistency",
+      "year": 2021,
+      "evidenceType": "measured-technical-hot-runner-control-article",
+      "overlapGroup": "ikv-hot-runner-pin-pressure-control",
+      "data": [
+        "servo-electric hot-runner valve-pin stroke",
+        "cavity pressure at multiple locations",
+        "holding-phase pin closure/reopening response",
+        "measured pressure changes due to pin movement"
+      ],
+      "bookChapters": ["hot-runners", "cavity-pressure", "process-monitoring", "multi-cavity", "vp-transfer"],
+      "rightsState": "technical publisher article; reference-only unless republication rights are verified",
+      "value": "Adds direct measured evidence that hot-runner pin position can alter local pressure transfer during the holding phase and can serve as a controlled actuator rather than assuming commanded state equals cavity response.",
+      "limitations": "One experimental hot-runner system; measured pressure changes and pin strokes are not generic control limits."
+    },
+    {
+      "id": "ikv-2026-kaskare-hot-runner-pressure-control",
+      "priority": "B",
+      "url": "https://ikv-aachen.de/en/rp/kaskare-hot-runner-pressure-control/",
+      "title": "KaskaRe — Hot runner pressure control",
+      "year": 2026,
+      "evidenceType": "institutional-project-final-engineering-report",
+      "overlapGroup": "ikv-hot-runner-pin-pressure-control",
+      "scale": "IGF 22805 N; project duration 2023-03-01 to 2025-07-31",
+      "data": [
+        "servo-electric cascade hot-runner pins",
+        "opening-stroke versus pressure-loss relationship",
+        "cavity-pressure control",
+        "individual gate influence",
+        "simulation-informed pin geometry optimisation",
+        "reported increase in process consistency"
+      ],
+      "bookChapters": ["hot-runners", "cavity-pressure", "multi-cavity", "process-monitoring", "process-window"],
+      "rightsState": "public institutional project page; figures/data remain source-controlled unless reuse terms explicitly permit",
+      "value": "Current continuation of the hot-runner pin-control evidence family and a useful example of using actual actuator stroke and cavity pressure instead of treating valve command as proof of delivered cavity state.",
+      "limitations": "Same broader IKV control family as the 2021 article; it must not be counted as an independent experiment without experiment-level separation."
+    }
+  ]
+}
