@@ -4,26 +4,35 @@ on:
   workflow_run:
     workflows: ["MouldMaster Pages Release Readiness"]
     types: [completed]
-  workflow_dispatch:
 
 permissions:
   contents: read
 
 concurrency:
-  group: book-live-pages-${{ github.event.workflow_run.head_sha || github.sha }}
+  group: book-live-pages-${{ github.event.workflow_run.head_sha }}
   cancel-in-progress: true
 
 jobs:
   live-book:
     if: >-
-      github.event_name == 'workflow_dispatch' ||
-      (github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.head_branch == 'main')
+      github.event.workflow_run.conclusion == 'success' &&
+      github.event.workflow_run.head_branch == 'main'
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout exact deployed source
+      - name: Checkout trusted default branch
         uses: actions/checkout@v7
         with:
-          ref: ${{ github.event.workflow_run.head_sha || github.sha }}
+          ref: main
+          fetch-depth: 1
+      - name: Require checkout to equal deployed Pages source
+        shell: bash
+        env:
+          DEPLOYED_SHA: ${{ github.event.workflow_run.head_sha }}
+        run: |
+          test "$(git rev-parse HEAD)" = "$DEPLOYED_SHA" || {
+            echo "::error title=Pages source moved::Trusted main checkout does not equal the completed Pages run SHA; refusing to validate a different deployment."
+            exit 1
+          }
       - name: Set up Python
         uses: actions/setup-python@v7
         with:
