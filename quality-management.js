@@ -1,4 +1,4 @@
-/* MouldMaster ISO 9001 QMS support — 2026.09.15.1 */
+/* MouldMaster ISO 9001 QMS support — 2026.09.15.2 */
 (function(){
 'use strict';
 const DATA_URL='./src/domains/quality/data/quality-management-iso9001-v1.json';
@@ -78,5 +78,5 @@ function schedule(){(window.requestAnimationFrame||setTimeout)(render)}
 const mo=new MutationObserver(schedule);
 if(document.documentElement)mo.observe(document.documentElement,{childList:true,subtree:true});
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',schedule);else schedule();
-window.MM_ISO9001_QMS=Object.freeze({version:'2026.09.15.1',dataUrl:DATA_URL,load,render});
+window.MM_ISO9001_QMS=Object.freeze({version:'2026.09.15.2',dataUrl:DATA_URL,load,render});
 })();
