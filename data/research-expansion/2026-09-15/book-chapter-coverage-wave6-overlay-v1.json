@@ -1,0 +1,56 @@
+{
+  "schema": 1,
+  "version": "2026.09.15.1",
+  "purpose": "Overlay Wave 6 lifecycle and maintenance-recovery evidence onto the Book quantitative coverage map while keeping practitioner case evidence distinct from peer-reviewed studies.",
+  "base": "data/research-expansion/2026-09-14/book-chapter-quantitative-coverage-v1.json",
+  "overlays": [
+    {
+      "chapterId": "cooling",
+      "currentState": "strong-measured-plus-maintenance-recovery",
+      "addedEvidenceRoutes": [
+        "wave6:mechanik-2018-cooling-channel-diagnosis-cleaning",
+        "wave6:sanko-2025-cooling-pipe-cleaning-three-cases",
+        "wave6:fuso-2023-eight-cavity-cooling-cleaning",
+        "wave6:smartflow-2025-cooling-flow-balance-case"
+      ],
+      "newEditorialCapability": "Teach the full maintenance chain: flow/pressure/temperature evidence -> contamination or imbalance hypothesis -> intervention -> post-intervention hydraulic/production verification.",
+      "boundary": "Practitioner cases provide useful before/after observations but do not define universal flow, pressure-drop or cleaning thresholds."
+    },
+    {
+      "chapterId": "mould-anatomy",
+      "currentState": "strong-mixed-plus-lifecycle",
+      "addedEvidenceRoutes": [
+        "wave6:springer-2022-13mould-rul-metrology",
+        "wave6:mechanik-2018-cooling-channel-diagnosis-cleaning"
+      ],
+      "newEditorialCapability": "Connect mould components and cooling circuits to long-term degradation, cleaning/refurbishment and observable part-metrology consequences."
+    },
+    {
+      "chapterId": "process-monitoring",
+      "currentState": "strong-measured-plus-maintenance-context",
+      "addedEvidenceRoutes": [
+        "wave6:springer-2022-13mould-rul-metrology",
+        "wave6:fuso-2023-eight-cavity-cooling-cleaning",
+        "wave6:pps-2003-realtime-flow-rate-valvegated-hotrunner"
+      ],
+      "newEditorialCapability": "Distinguish short-cycle process monitoring from long-horizon asset-condition monitoring and intervention verification."
+    },
+    {
+      "chapterId": "hot-runners",
+      "currentState": "strong-measured-expanded",
+      "addedEvidenceRoutes": [
+        "wave6:pps-2003-realtime-flow-rate-valvegated-hotrunner"
+      ],
+      "newEditorialCapability": "Add measured sequential valve-gate pressure/flow chronology to the newer valve-pin pressure-control evidence from Wave 5."
+    },
+    {
+      "chapterId": "dimensional-stability",
+      "currentState": "strong-measured-plus-tool-lifecycle",
+      "addedEvidenceRoutes": [
+        "wave6:springer-2022-13mould-rul-metrology",
+        "wave6:smartflow-2025-cooling-flow-balance-case"
+      ],
+      "newEditorialCapability": "Show that dimensional drift can originate from both process thermal imbalance and long-term mould condition, requiring different evidence and interventions."
+    }
+  ]
+}
