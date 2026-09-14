@@ -1,0 +1,57 @@
+name: MouldMaster Book Live Pages Validation
+
+on:
+  workflow_run:
+    workflows: ["MouldMaster Pages Release Readiness"]
+    types: [completed]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: book-live-pages-${{ github.event.workflow_run.head_sha || github.sha }}
+  cancel-in-progress: true
+
+jobs:
+  live-book:
+    if: >-
+      github.event_name == 'workflow_dispatch' ||
+      (github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.head_branch == 'main')
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout exact deployed source
+        uses: actions/checkout@v7
+        with:
+          ref: ${{ github.event.workflow_run.head_sha || github.sha }}
+      - name: Set up Python
+        uses: actions/setup-python@v7
+        with:
+          python-version: '3.12'
+      - name: Verify live governed Book bytes
+        shell: bash
+        run: |
+          base_url="$(python3 - <<'PY'
+          import json
+          print(json.load(open('version.json', encoding='utf-8'))['pages_url'])
+          PY
+          )"
+          expected_release="$(python3 - <<'PY'
+          import json
+          print(json.load(open('version.json', encoding='utf-8'))['web_release'])
+          PY
+          )"
+          candidate_path=""
+          if curl --fail --silent --show-error --location "$base_url" | grep -q 'data-mm-release-hold="true"'; then
+            candidate_path="preview/"
+          fi
+          python3 tools/verify_book_pages_candidate.py \
+            --base-url "$base_url" \
+            --candidate-path "$candidate_path" \
+            --expected-release "$expected_release" \
+            --convergence-attempts 12 \
+            --convergence-delay 2
+      - name: Preserve external-evidence boundary
+        run: |
+          echo 'PASS proves the deployed Book bytes, authorization and Read/Listen runtime contract.'
+          echo 'PASS does not prove physical-device, real-AT, human SME, signed-Windows or real-learner evidence.'
