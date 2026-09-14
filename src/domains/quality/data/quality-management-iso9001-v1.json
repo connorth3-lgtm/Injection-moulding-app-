@@ -1,0 +1,329 @@
+{
+  "schema": 1,
+  "id": "mouldmaster-iso9001-qms-support",
+  "status": "technical-review",
+  "checked": "2026-09-15",
+  "purpose": "Support quality-management learning and evidence discipline relevant to ISO 9001 without claiming organisational conformity, certification, accreditation or auditor approval.",
+  "copyrightBoundary": "Clause themes and app mappings are paraphrased. This file does not reproduce ISO 9001 requirement text and is not a substitute for a licensed copy of the applicable standard.",
+  "claimBoundary": {
+    "allowed": [
+      "supports quality-management practices relevant to ISO 9001",
+      "provides learning, evidence prompts and record templates that can support an organisation's QMS",
+      "helps users structure objective evidence for review"
+    ],
+    "forbidden": [
+      "ISO 9001 compliant app",
+      "ISO 9001 certified app",
+      "using MouldMaster makes an organisation ISO 9001 compliant",
+      "MouldMaster provides certification or accreditation",
+      "MouldMaster replaces a certification body, auditor, customer requirement or organisation-specific QMS"
+    ]
+  },
+  "standards": [
+    {
+      "id": "ISO-9001-2015",
+      "title": "ISO 9001:2015 — Quality management systems — Requirements",
+      "url": "https://www.iso.org/standard/62085.html",
+      "role": "current-published-requirements-basis",
+      "currentState": "published",
+      "note": "Use together with Amendment 1:2024 until ISO publishes and supersedes this edition."
+    },
+    {
+      "id": "ISO-9001-2015-AMD1-2024",
+      "title": "ISO 9001:2015/Amd 1:2024 — Quality management systems — Requirements — Amendment 1: Climate action changes",
+      "url": "https://www.iso.org/standard/88431.html",
+      "role": "current-published-amendment",
+      "currentState": "published",
+      "note": "Applies to ISO 9001:2015."
+    },
+    {
+      "id": "ISO-9000-2026",
+      "title": "ISO 9000:2026 — Quality management — Fundamentals and vocabulary",
+      "url": "https://www.iso.org/standard/9000",
+      "role": "current-terminology-basis",
+      "currentState": "published",
+      "note": "Use for current quality-management vocabulary and fundamentals."
+    },
+    {
+      "id": "ISO-9001-ED6-2026",
+      "title": "ISO 9001 Edition 6 (2026) — Quality management systems — Requirements",
+      "url": "https://www.iso.org/standard/9001",
+      "role": "transition-watch",
+      "currentState": "under-publication",
+      "note": "Do not treat as the published requirements basis until ISO changes its status to published. Re-map and review this support layer after publication."
+    }
+  ],
+  "supportMap": [
+    {
+      "clause": "4",
+      "theme": "Context and QMS scope",
+      "supportLevel": "partial",
+      "mouldmasterSupport": [
+        "process-baseline and documentation learning",
+        "applicability boundaries on Book content and evidence",
+        "source-status and evidence-scope records"
+      ],
+      "notProvided": [
+        "organisation-specific QMS scope approval",
+        "interested-party determination",
+        "formal process ownership"
+      ]
+    },
+    {
+      "clause": "5",
+      "theme": "Leadership, policy and responsibilities",
+      "supportLevel": "limited",
+      "mouldmasterSupport": [
+        "role and approval prompts in record templates",
+        "escalation reminders for site-controlled decisions"
+      ],
+      "notProvided": [
+        "quality policy approval",
+        "top-management accountability evidence",
+        "organisation authority assignments"
+      ]
+    },
+    {
+      "clause": "6",
+      "theme": "Planning, risks, opportunities and controlled change",
+      "supportLevel": "partial",
+      "mouldmasterSupport": [
+        "evidence-first troubleshooting",
+        "process-window and change-evaluation learning",
+        "change-control evidence template"
+      ],
+      "notProvided": [
+        "organisation-wide risk register",
+        "business objectives",
+        "automatic approval of planned changes"
+      ]
+    },
+    {
+      "clause": "7",
+      "theme": "Support, competence, awareness, measurement resources and documented information",
+      "supportLevel": "strong-support",
+      "mouldmasterSupport": [
+        "competence evidence template",
+        "measurement-resource evidence template",
+        "documented-information and traceability learning",
+        "source and record identity prompts"
+      ],
+      "notProvided": [
+        "calibration laboratory accreditation",
+        "competence authorization by an employer",
+        "document-control authority for an organisation"
+      ]
+    },
+    {
+      "clause": "8",
+      "theme": "Operational control and nonconforming output",
+      "supportLevel": "partial",
+      "mouldmasterSupport": [
+        "controlled process baseline learning",
+        "material, mould and cavity traceability prompts",
+        "nonconformity containment and disposition template",
+        "changeover and recovery evidence learning"
+      ],
+      "notProvided": [
+        "production release authority",
+        "supplier approval",
+        "automatic disposition of nonconforming product",
+        "validated manufacturing recipe authority"
+      ]
+    },
+    {
+      "clause": "9",
+      "theme": "Monitoring, measurement, analysis, audit and management review",
+      "supportLevel": "partial",
+      "mouldmasterSupport": [
+        "process monitoring, capability and measurement learning",
+        "objective-evidence audit template",
+        "trend and verification prompts"
+      ],
+      "notProvided": [
+        "certification audit",
+        "internal-auditor competence approval",
+        "management-review approval or minutes"
+      ]
+    },
+    {
+      "clause": "10",
+      "theme": "Nonconformity, corrective action and continual improvement",
+      "supportLevel": "strong-support",
+      "mouldmasterSupport": [
+        "nonconformity and CAPA workflow template",
+        "root-cause evidence boundary",
+        "effectiveness-verification prompt",
+        "maintenance and recovery trajectory learning"
+      ],
+      "notProvided": [
+        "automatic root-cause determination",
+        "automatic CAPA closure",
+        "proof of organisational QMS effectiveness"
+      ]
+    }
+  ],
+  "recordTemplates": [
+    {
+      "id": "audit-evidence",
+      "title": "Audit evidence record",
+      "purpose": "Capture what criterion was reviewed, what objective evidence was observed and what finding was made without turning the app into a certification audit.",
+      "fields": [
+        "recordRef",
+        "criterionRef",
+        "processOrAreaRef",
+        "objectiveEvidence",
+        "findingState",
+        "evidenceRef",
+        "reviewerRoleRef",
+        "reviewedAt",
+        "followUpRef"
+      ],
+      "states": [
+        "conformity-observed",
+        "observation",
+        "nonconformity-raised",
+        "follow-up-required"
+      ],
+      "rules": [
+        "Do not quote protected ISO requirement text into the record unless your organisation is licensed to do so.",
+        "A finding records observed evidence against the organisation's chosen criterion; MouldMaster does not certify conformity."
+      ]
+    },
+    {
+      "id": "nonconformity-capa",
+      "title": "Nonconformity and corrective-action record",
+      "purpose": "Preserve containment, evidence, cause investigation, approved action and effectiveness verification as separate steps.",
+      "fields": [
+        "recordRef",
+        "detectedAt",
+        "productOrProcessRef",
+        "problemStatement",
+        "objectiveEvidence",
+        "containment",
+        "dispositionRef",
+        "causeStatus",
+        "causeEvidence",
+        "approvedAction",
+        "actionOwnerRoleRef",
+        "targetDate",
+        "effectivenessMethod",
+        "effectivenessEvidence",
+        "status"
+      ],
+      "states": [
+        "open",
+        "contained",
+        "cause-under-review",
+        "action-approved",
+        "effectiveness-review",
+        "closed"
+      ],
+      "rules": [
+        "Do not infer root cause from a defect label, model prediction or one successful intervention.",
+        "Closure requires recorded effectiveness evidence; action completion alone is not effectiveness proof."
+      ]
+    },
+    {
+      "id": "measurement-resource",
+      "title": "Measurement and calibration or verification evidence",
+      "purpose": "Record whether a measurement resource is fit for the intended decision and what traceable evidence supports its status.",
+      "fields": [
+        "equipmentRef",
+        "measurementCharacteristic",
+        "intendedUse",
+        "status",
+        "evidenceRef",
+        "checkedAt",
+        "nextReviewOrDue",
+        "traceabilityRef",
+        "limitations",
+        "affectedRecordsRef"
+      ],
+      "states": [
+        "fit-for-intended-use",
+        "verification-due",
+        "calibration-due",
+        "restricted-use",
+        "out-of-status"
+      ],
+      "rules": [
+        "A capable production process does not prove that the measurement system is suitable.",
+        "Do not invent calibration status from a sticker, historical pass or process result."
+      ]
+    },
+    {
+      "id": "competence",
+      "title": "Competence evidence record",
+      "purpose": "Connect a role or authorization need to evidence of training, assessment or supervised demonstration.",
+      "fields": [
+        "roleRef",
+        "competenceTopic",
+        "requiredEvidence",
+        "evidenceRef",
+        "assessmentMethod",
+        "reviewerRoleRef",
+        "assessedAt",
+        "status",
+        "renewalOrReviewDate",
+        "limitations"
+      ],
+      "states": [
+        "planned",
+        "in-training",
+        "demonstrated",
+        "authorized-by-organisation",
+        "review-due",
+        "restricted"
+      ],
+      "rules": [
+        "MouldMaster completion or a certificate is learning evidence, not employer authorization.",
+        "Role authorization remains an organisation decision."
+      ]
+    },
+    {
+      "id": "document-change",
+      "title": "Documented-information and change-control record",
+      "purpose": "Keep the reason, approved change, affected evidence and verification visible when a process or controlled document changes.",
+      "fields": [
+        "changeRef",
+        "affectedItemRef",
+        "reason",
+        "riskOrImpactReview",
+        "approvedByRoleRef",
+        "effectiveAt",
+        "supersedesRef",
+        "verificationPlan",
+        "verificationEvidence",
+        "status"
+      ],
+      "states": [
+        "proposed",
+        "reviewed",
+        "approved",
+        "implemented",
+        "verified",
+        "withdrawn"
+      ],
+      "rules": [
+        "Do not silently overwrite the previous controlled state.",
+        "A new process setting is not validated merely because it was approved for a trial."
+      ]
+    }
+  ],
+  "workflow": {
+    "nonconformityToEffectiveness": [
+      "detect-and-record",
+      "contain-and-identify-affected-output",
+      "preserve-objective-evidence",
+      "investigate-cause-with-competing-hypotheses",
+      "approve-corrective-action",
+      "implement-with-change-control",
+      "verify-effectiveness-on-new-evidence",
+      "close-or-reopen"
+    ],
+    "evidenceRule": "Measured evidence, document identity, timing and responsible role should remain distinguishable. Missing data stays missing; do not reconstruct measurements after the event."
+  },
+  "privacyBoundary": "Use non-sensitive references rather than names, customer identifiers, site identifiers, proprietary part numbers, raw customer process data or private attachments in any public or training record.",
+  "transitionRule": "When ISO publishes Edition 6, recheck the official ISO status page, update the requirements basis, compare clause themes, rerun QA and require a deliberate review before changing any conformity-support wording."
+}
