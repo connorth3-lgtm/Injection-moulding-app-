@@ -42,6 +42,10 @@ jobs:
           commit = re.search(r'const READ_ALOUD_COMMIT="([0-9a-f]{40})";', text)
           expected = re.search(r'readAloud:\{path:"read-aloud.js",sha256:"([0-9a-f]{64})",base:READ_ALOUD_BASE\}', text)
           assert commit and expected, 'immutable read-aloud pin/hash missing'
+          # The immutable pin may be a historical feature-branch commit that is no
+          # longer reachable from current branch refs. Fetch the exact pinned object
+          # before asking git show to verify its read-aloud.js bytes.
+          subprocess.check_call(['git', 'fetch', '--no-tags', '--depth=1', 'origin', commit.group(1)])
           pinned = subprocess.check_output(['git', 'show', f'{commit.group(1)}:read-aloud.js'])
           actual = hashlib.sha256(pinned).hexdigest()
           assert actual == expected.group(1), f'read-aloud SHA mismatch: {actual}'
