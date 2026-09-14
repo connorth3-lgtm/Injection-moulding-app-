@@ -1,0 +1,61 @@
+{
+  "schema": 1,
+  "version": "2026.09.15.1",
+  "purpose": "Follow-up plan for converting Wave 6 maintenance and recovery evidence into original, rights-aware Book teaching assets.",
+  "governance": {
+    "rawThirdPartyPayloadsCommitted": false,
+    "originalBookGraphicsRequired": true,
+    "commercialCaseEvidenceMustBeLabelledPractitioner": true,
+    "industrialDataNotPublicMustNotBeReconstructedOrClaimedOwned": true,
+    "beforeAfterValuesRemainCaseSpecific": true
+  },
+  "queue": [
+    {
+      "rank": 1,
+      "sourceId": "springer-2022-13mould-rul-metrology",
+      "action": "build an original mould-lifecycle teaching diagram linking part metrology drift, lifecycle stage and maintenance decision; do not imply access to the underlying confidential industrial rows",
+      "artifactTarget": "mould degradation / maintenance-decision case",
+      "chapters": ["mould-anatomy", "process-monitoring", "capability", "dimensional-stability"]
+    },
+    {
+      "rank": 2,
+      "sourceId": "sanko-2025-cooling-pipe-cleaning-three-cases",
+      "action": "create an original three-case before/after table using only publicly reported measurements and clearly label the source as practitioner case evidence",
+      "artifactTarget": "cooling maintenance recovery table: flow, cycle, defect/startup outcomes",
+      "chapters": ["cooling", "cycle", "sink-voids", "process-monitoring"]
+    },
+    {
+      "rank": 3,
+      "sourceId": "mechanik-2018-cooling-channel-diagnosis-cleaning",
+      "action": "derive a Book-owned maintenance workflow separating diagnosis, hydraulic evidence, cleaning action and post-clean verification",
+      "artifactTarget": "cooling-channel diagnostic and cleaning workflow",
+      "chapters": ["cooling", "mould-anatomy", "documentation"]
+    },
+    {
+      "rank": 4,
+      "sourceId": "fuso-2023-eight-cavity-cooling-cleaning",
+      "action": "build an original worked calculation from the reported pre/post flow and pressure-loss values and include the discovered water leak as a confounder",
+      "artifactTarget": "hydraulic recovery worked example",
+      "chapters": ["cooling", "multi-cavity", "process-monitoring"]
+    },
+    {
+      "rank": 5,
+      "sourceId": "smartflow-2025-cooling-flow-balance-case",
+      "action": "create an original parallel-circuit cooling illustration showing why equal supply temperature does not imply equal local cooling when circuits have unequal or zero flow",
+      "artifactTarget": "cooling-flow balance diagnostic exercise",
+      "chapters": ["cooling", "warpage", "diagnostic-method"]
+    },
+    {
+      "rank": 6,
+      "sourceId": "pps-2003-realtime-flow-rate-valvegated-hotrunner",
+      "action": "draw an original sequence diagram for two valve gates showing injection pressure, local cavity-pressure arrival and estimated branch-flow timing; do not copy manuscript figures",
+      "artifactTarget": "valve-gated hot-runner flow/pressure chronology",
+      "chapters": ["hot-runners", "multi-cavity", "cavity-pressure", "feed-system"]
+    }
+  ],
+  "rawDataRequestsWorthPursuing": [
+    "13-mould lifecycle/metrology dataset from the 2022 RUL study, if owner authorization and reusable terms can be obtained",
+    "production cooling maintenance logs with repeated pre-clean/post-clean flow, pressure, temperature, cycle and part-quality observations",
+    "servo valve-pin actual position/current plus cavity-pressure and cavity-specific quality traces"
+  ]
+}
