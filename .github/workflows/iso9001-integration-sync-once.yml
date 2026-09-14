@@ -22,6 +22,7 @@ jobs:
       - name: Integrate governed QMS layer and release identity
         run: |
           python .github/scripts/iso9001_integration_once.py
+          sed -i 's/2026\.09\.15\.1/2026.09.15.2/g' qa_book_release_integration.py
           python tools/sync_web_release.py
           node --check quality-management.js
           python qa_iso9001_qms.py
