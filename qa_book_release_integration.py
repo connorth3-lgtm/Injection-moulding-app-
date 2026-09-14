@@ -25,6 +25,7 @@ book_sme = json.loads(SME_SOURCE.read_text(encoding='utf-8'))
 book_data = [
     'book-manifest-v1.json',
     'book-publication-authorization-v1.json',
+    'book-sme-review-v1.json',
     'book-authored-foundations-v1.json',
     'book-evidence-registry-v1.json',
     'book-chapters-materials-machine-v1.json',
@@ -41,12 +42,10 @@ for name in book_data:
     target = PACKAGED_ROOT / name
     assert source.read_bytes() == target.read_bytes(), f'packaged Book data drifted from governed source: {name}'
 
-# Independent SME evidence is packaged with the desktop/domain tree for truthful status display.
-# It is intentionally optional at runtime so an uncached web/offline session fails to "status unavailable"
-# rather than hiding the Book or inferring approval.
-sme_target = PACKAGED_ROOT / 'book-sme-review-v1.json'
-assert sme_target.exists(), 'packaged Book SME review contract is missing'
-assert SME_SOURCE.read_bytes() == sme_target.read_bytes(), 'packaged Book SME review contract drifted from governed source'
+# Independent human SME evidence is packaged and atomically cached with the Book so
+# the installed/offline release can show the same governed review status. It remains
+# display-only external evidence: it cannot grant publication authorization or be
+# inferred from automated QA.
 assert book_sme.get('schemaVersion') == 1 and book_sme.get('bookId') == 'mouldmaster-book'
 assert len(book_sme.get('chapterIds', [])) == 46 and len(set(book_sme.get('chapterIds', []))) == 46
 assert isinstance(book_sme.get('reviews'), list)
@@ -142,6 +141,6 @@ assert len(authorized_ids) == 46 and len(set(authorized_ids)) == 46
 assert set(authorized_ids) == manifest_ids
 assert set(book_sme['chapterIds']) == manifest_ids, 'SME review contract must cover the same governed Book chapters'
 
-print('PASS: Book runtime/data/publication authorization are registered for domain loading, atomic web offline cache and desktop package/integrity inclusion.')
+print('PASS: Book runtime/data/publication authorization and SME status are registered for domain loading, atomic web offline cache and desktop package/integrity inclusion.')
 print('PASS: authorization is the only runtime promotion path; source authored/manifest state remains immutable and fail-closed.')
 print('PASS: evidence-verified Book Read and Listen surfaces share one governed renderer and surface governed independent-SME coverage without inferring approval.')
