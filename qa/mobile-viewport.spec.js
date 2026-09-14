@@ -132,7 +132,7 @@ for(const viewport of [{name:'android-412x915',width:412,height:915},{name:'smal
       await expect(page.locator('.at20-table tbody tr')).toHaveCount(4);
       await expect(page.getByText('Ranked root-cause mechanism')).toBeVisible();
       await expect(page.getByText('Best next evidence')).toBeVisible();
-      await expect(page.getByText('Verification')).toBeVisible();
+      await expect(page.getByText('Verification',{exact:true})).toBeVisible();
       await expect(page.getByText(/Compensation trap/i)).toBeVisible();
       await expect(page.getByText(/Baseline index 100/i)).toBeVisible();
       await expect(page.getByRole('button',{name:'Export 72-cycle CSV'})).toBeVisible();

@@ -72,6 +72,42 @@
       "title": "Knowledge-based Estimation of Maintenance Time for Complex Engineered-to-Order Products Based on KPIs Monitoring: A PSS Approach",
       "url": "https://doi.org/10.1016/j.procir.2017.03.317",
       "scope": "Real mould-maintenance project histories containing mould age, usage, failures/issues and maintenance-duration context; useful for record design, not for universal maintenance-time allowances or wear-recovery proof."
+    },
+    {
+      "id": "ISO-9001-2015",
+      "type": "international-standard",
+      "title": "ISO 9001:2015 — Quality management systems — Requirements",
+      "url": "https://www.iso.org/standard/62085.html",
+      "scope": "Current published ISO 9001 requirements basis as checked 2026-09-15, used with Amendment 1:2024. Supports QMS context only; does not make MouldMaster or a user organisation certified or conforming.",
+      "checked": "2026-09-15",
+      "currentState": "published"
+    },
+    {
+      "id": "ISO-9001-2015-AMD1-2024",
+      "type": "international-standard-amendment",
+      "title": "ISO 9001:2015/Amd 1:2024 — Quality management systems — Requirements — Amendment 1: Climate action changes",
+      "url": "https://www.iso.org/standard/88431.html",
+      "scope": "Published amendment applying to ISO 9001:2015. Used as part of the current requirements context until superseded.",
+      "checked": "2026-09-15",
+      "currentState": "published"
+    },
+    {
+      "id": "ISO-9000-2026",
+      "type": "international-standard",
+      "title": "ISO 9000:2026 — Quality management — Fundamentals and vocabulary",
+      "url": "https://www.iso.org/standard/9000",
+      "scope": "Published current fundamentals and vocabulary reference for quality-management terminology.",
+      "checked": "2026-09-15",
+      "currentState": "published"
+    },
+    {
+      "id": "ISO-9001-ED6-2026",
+      "type": "international-standard-transition-watch",
+      "title": "ISO 9001 Edition 6 (2026) — Quality management systems — Requirements",
+      "url": "https://www.iso.org/standard/9001",
+      "scope": "ISO lists Edition 6 as under publication on 2026-09-15. Transition watch only; not treated as the published requirements basis until ISO changes its status to published.",
+      "checked": "2026-09-15",
+      "currentState": "under-publication"
     }
   ],
   "chapterPatches": [
@@ -115,12 +151,19 @@
       "chapterId": "documentation",
       "sourceIds": [
         "ESREL-MOULD-MAINT-2025",
-        "procir-2017-mould-maintenance-time-cbr"
+        "procir-2017-mould-maintenance-time-cbr",
+        "ISO-9001-2015",
+        "ISO-9001-2015-AMD1-2024",
+        "ISO-9000-2026"
       ],
       "sections": [
         {
           "title": "Record maintenance so recovery can be proved",
           "text": "A maintenance record should preserve enough information to connect the asset, its production exposure, the observed condition, the work carried out and the verified result. Record stable mould and component identity, shot count or other defensible exposure, the measured pre-maintenance condition, the specific intervention, the post-maintenance condition and a comparable part-quality or metrology check.\n\n‘Cleaned mould — running OK’ is not enough for later diagnosis. If a value was never measured, record it as missing rather than reconstructing it after the event. The purpose of the record is to let a future engineer test whether the same degradation pattern is returning and whether the previous intervention genuinely restored performance.\n\nExercise: start with “Mould 7 — parts out of tolerance. Tool cleaned and repaired. Running OK.” Add the stable component identity, production exposure, measured pre-condition, specific intervention, measured post-condition, comparable part-quality verification and the observation period used to call the process recovered."
+        },
+        {
+          "title": "Quality records need evidence, not just completion",
+          "text": "A quality record is useful when it preserves objective evidence, identity, timing and responsibility well enough for another person to review the decision. For nonconformity and corrective action, keep detection, containment, cause investigation, approved action and effectiveness verification separate. For measurement resources, keep the intended use, calibration or verification evidence, traceability and limitations visible. For competence, distinguish learning evidence from the organisation’s authorization to perform a role. For controlled changes, preserve what was superseded and how the new state will be verified.\n\nISO 9001 provides the organisation-level QMS requirements context; ISO 9000:2026 provides current quality-management vocabulary. MouldMaster can support evidence discipline and learning, but it does not establish organisational conformity, certification, accreditation, auditor approval or production-release authority. As checked on 15 September 2026, ISO lists Edition 6 of ISO 9001 as under publication, so it remains a transition watch rather than the published requirements basis in this content."
         }
       ]
     },

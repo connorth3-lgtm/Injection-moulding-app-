@@ -75,6 +75,7 @@ def main() -> int:
             "qa_book_complete_draft.py",
             "qa_book_claim_coverage.py",
             "qa_book_release_integration.py",
+            "qa_iso9001_qms.py",
         ]:
             if (ROOT / qa).exists():
                 commands.append([sys.executable, qa])

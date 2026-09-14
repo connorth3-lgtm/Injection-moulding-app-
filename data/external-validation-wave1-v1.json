@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
   "waveId": "external-validation-wave1",
-  "release": "2026.09.15.1",
-  "releaseSourceSha": "a56c23813b9be4d4c66bcbdd4589455953743faa",
+  "release": "2026.09.15.2",
+  "releaseSourceSha": "01a75d3d6308e718a864627192d513b7b3cdb26e",
   "createdAt": "2026-09-15",
   "policy": "Execute every automatable external-readiness check now; preserve physical, human, signing and real-learner evidence as explicit HOLDs until actually performed. Prior-release Pages or physical-candidate evidence may be retained only as historical provenance and must never be relabelled as current-release validation.",
   "livePages": {
