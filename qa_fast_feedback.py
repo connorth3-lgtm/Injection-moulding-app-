@@ -80,6 +80,18 @@ def main() -> int:
             if (ROOT / qa).exists():
                 commands.append([sys.executable, qa])
 
+    nzqa_changed = any(
+        p == "qa_nzqa_readiness.py"
+        or p.startswith("data/nzqa-")
+        or p.startswith("src/domains/learning/book-data/nzqa-")
+        or p == "sources/NZQA_READINESS_REGISTER.md"
+        or p.startswith("certification/NZQA_")
+        or p in {"certification/README.md", "certification/PROVIDER_PARTNERSHIP_OUTREACH.md"}
+        for p in files
+    )
+    if nzqa_changed and (ROOT / "qa_nzqa_readiness.py").exists():
+        commands.append([sys.executable, "qa_nzqa_readiness.py"])
+
     if any("process-data" in p or p in {"data-integration-runtime.js", "current-data-manifest.json"} for p in files):
         if (ROOT / "qa_process_data_integrity.cjs").exists():
             commands.append(["node", "qa_process_data_integrity.cjs"])
