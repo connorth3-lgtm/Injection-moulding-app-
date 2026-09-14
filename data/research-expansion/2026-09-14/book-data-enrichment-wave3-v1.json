@@ -1,7 +1,7 @@
 {
   "schema": 1,
-  "version": "2026.09.14.1",
-  "purpose": "Add one genuinely absent measured defect experiment and four current supplier-reference families that broaden the Book's exact-source material coverage.",
+  "version": "2026.09.14.2",
+  "purpose": "Add genuinely absent measured/case defect evidence and current supplier-reference families that broaden the Book's exact-source material coverage.",
   "governance": {
     "metadataOnly": true,
     "rawThirdPartyPayloadsCommitted": false,
@@ -11,8 +11,8 @@
     "exactGradeOrCurrentSupplierDocumentControlsProduction": true
   },
   "summary": {
-    "integrationCandidates": 5,
-    "measuredExperimental": 1,
+    "integrationCandidates": 6,
+    "measuredExperimentalOrFaultCase": 2,
     "manufacturerReference": 4
   },
   "candidates": [
@@ -27,6 +27,17 @@
       "bookChapters": ["sink-voids", "venting", "splay", "burns", "diagnostic-method"],
       "rightsState": "publisher/KCI article; verify exact reuse licence before reproducing tables or figures",
       "limitations": "Highly specific EGI mould/part/material experiment. Its pressure, delay and supply-time values must never be promoted as general sink, venting or drying settings; supplier drying requirements still control production."
+    },
+    {
+      "id": "plastics-engineering-2013-black-specks-recovery",
+      "priority": "A",
+      "doi": "10.1002/j.1941-9635.2013.tb00942.x",
+      "title": "Troubleshooting Black Specks and Color Streaks in Injection Molded Parts",
+      "evidenceType": "industrial-fault-investigation-intervention-followup-case",
+      "data": ["black-speck/color-streak symptom", "screw and non-return-valve inspection", "degraded resin at stagnant regions", "specific-rate/plasticating assessment", "equipment replacement/intervention", "post-intervention production follow-up", "separate pigment-dispersion case with back-pressure response"],
+      "bookChapters": ["black-specks", "thermal-history", "plasticising-unit", "diagnostic-method", "complex-diagnostics"],
+      "rightsState": "Wiley/Plastics Engineering article; reference/case interpretation only unless reuse rights explicitly permit reproduction",
+      "limitations": "Valuable fault-to-intervention-to-follow-up evidence but not an open raw cycle-level dataset. The hardware/process findings remain machine/material specific."
     },
     {
       "id": "celanese-vectra-lcp-design-processing-guide",
