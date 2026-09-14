@@ -7,7 +7,7 @@ const ROOT=path.resolve(__dirname,'..','..','..');
 const OUT=path.resolve(__dirname,'..','generated','integrity.json');
 const RUNTIME_MANIFEST='runtime-domain-manifest.json';
 const STATIC_RUNTIME_DIRS=['src/core-runtime'];
-const STATIC_DATA_DIRS=['data/measured-learning'];
+const STATIC_DATA_DIRS=['data/measured-learning','src/domains/learning/book-data'];
 const REQUIRED_MANIFEST_FILES=[
   'src/domains/engineering/engineering-store.js',
   'src/domains/materials/material-registry.js',
