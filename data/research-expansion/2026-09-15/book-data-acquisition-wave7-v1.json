@@ -1,0 +1,63 @@
+{
+  "schema": 1,
+  "version": "2026.09.15.1",
+  "purpose": "Follow-up plan for converting Wave 7 black-defect intervention, cycle-resolved cleaning, maintenance-decision and hot-runner observability evidence into original, rights-aware Book teaching assets.",
+  "governance": {
+    "rawThirdPartyPayloadsCommitted": false,
+    "originalBookGraphicsRequired": true,
+    "doNotReproduceNoDerivativesLicensedFiguresOrTables": true,
+    "beforeAfterCasesRemainCaseSpecific": true,
+    "colorChangeoverMustBeLabelledAnalogueNotBlackSpeckClosure": true,
+    "vendorSignalCapabilitiesMustNotBePresentedAsMeasuredQualityValidation": true
+  },
+  "queue": [
+    {
+      "rank": 1,
+      "sourceId": "polytest-2022-hotrunner-color-changeover-cycle-trace",
+      "action": "build a Book-owned cycle-by-cycle cleaning/recovery example from the reported cavity-identified chronology, 99%-clean cycle counts and material-use comparison; label it explicitly as color-changeover evidence rather than black-speck evidence",
+      "artifactTarget": "hot-runner cleaning chronology + recovery-curve teaching example",
+      "chapters": ["hot-runners", "process-monitoring", "multi-cavity", "black-specks"]
+    },
+    {
+      "rank": 2,
+      "sourceId": "ieom-2023-black-spot-filter-mesh",
+      "action": "create an original before/intervention/after case table using the reported 7.85% -> 2.16% defect change and Process Z 1.42 -> 2.02 while preserving the single-case boundary",
+      "artifactTarget": "black-spot intervention/recovery case",
+      "chapters": ["black-specks", "diagnostic-method", "capability", "documentation"]
+    },
+    {
+      "rank": 3,
+      "sourceId": "chula-2014-black-dot-dmaic",
+      "action": "create a separate Book-owned DMAIC diagnostic exercise using the disclosed four tested factors, DOE/confirmation sequence and 0.65% -> 0.34% outcome; do not adapt thesis figures",
+      "artifactTarget": "black-dot hypothesis-test -> DOE -> verification exercise",
+      "chapters": ["black-specks", "diagnostic-method", "doe", "plasticising-unit"]
+    },
+    {
+      "rank": 4,
+      "sourceId": "ewikon-2022-electric-valve-gate-observability",
+      "action": "draw an original signal-path architecture separating valve command, measured pin position, motor current/force, cavity pressure and cavity-specific quality; visually mark the final synchronized quality-link dataset as still missing",
+      "artifactTarget": "hot-runner actual-state observability architecture",
+      "chapters": ["hot-runners", "cavity-pressure", "process-monitoring", "complex-diagnostics"]
+    },
+    {
+      "rank": 5,
+      "sourceId": "procs-2023-injection-mould-gft-pdm",
+      "action": "derive a maintenance-decision exercise that contrasts corrective, fixed-period preventive and condition-based/predictive logic without turning the reported cost percentages into universal savings claims",
+      "artifactTarget": "mould maintenance decision framework",
+      "chapters": ["mould-anatomy", "process-monitoring", "complex-diagnostics"]
+    },
+    {
+      "rank": 6,
+      "sourceId": "jpe-2022-hotrunner-crosssection-pressure-control",
+      "action": "add a same-family continuation note and an original control-loop schematic showing reference pressure -> measured cavity pressure -> controller -> pin movement -> pressure-transfer response and the documented disturbance limitation",
+      "artifactTarget": "hot-runner cavity-pressure control-loop boundary diagram",
+      "chapters": ["hot-runners", "cavity-pressure", "process-window"]
+    }
+  ],
+  "stillWanted": [
+    "rights-clear shot-by-shot black-speck onset -> intervention -> verified-recovery dataset with part order/timestamps and process state",
+    "synchronized hot-runner actual valve-pin position + motor current/torque + cavity pressure + cavity-specific quality traces",
+    "longitudinal natural mould wear history containing maintenance action, component condition and verified post-maintenance recovery",
+    "production cooling maintenance logs with repeated pre-clean/post-clean flow, pressure, temperature, cycle and quality observations"
+  ]
+}
