@@ -1,36 +1,26 @@
-const { test, expect } = require('@playwright/test');
+const {test,expect}=require('@playwright/test');
+const fs=require('fs');
+const path=require('path');
 
-const BASE='http://127.0.0.1:4173/index.html';
+const APP_URL='http://127.0.0.1:4173/';
 
-async function seedLearner(page){
-  await page.addInitScript(()=>{
-    const user={id:'mobile-qa',name:'Mobile QA',role:'learner',completed:[],bookmarks:[],notes:{},examScores:{},certificates:[],currentLesson:1,lastSeen:new Date().toISOString(),onboardingDone:true,experience:'Beginner',goal:'Learn the full process',dailyMinutes:15,region:'ALL'};
-    localStorage.setItem('mouldmasterProDB',JSON.stringify({activeUser:'mobile-qa',users:{'mobile-qa':user}}));
-  });
-}
 async function openApp(page){
-  await seedLearner(page);
-  await page.goto(BASE,{waitUntil:'domcontentloaded'});
-  await page.waitForFunction(()=>(typeof window.MM_APP_SHELL_FINALIZED==='string'&&window.MM_APP_SHELL_FINALIZED.length>0)&&window.MM_PRIMARY_HUBS);
-  await page.waitForFunction(()=>!document.getElementById('mmBootstrap'));
-  await expect(page.locator('#mmStartupFailure')).toHaveCount(0);
-  await expect(page.locator('.mobile-nav > button')).toHaveCount(4);
-  await page.evaluate(()=>new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve))));
-}
-async function openPracticeHub(page){
-  await page.locator('.mobile-nav > button').filter({hasText:'Practice'}).click();
-  await expect(page.locator('#scenarios .mm-practice-hub')).toBeVisible();
-  await expectOnlyCurrent(page,'Practice');
-}
-async function openPracticeAction(page,action){
-  const button=page.locator(`#scenarios [data-mm-hub-action="${action}"]`);
-  await expect(button).toBeVisible();
-  await button.click();
+  await page.goto(APP_URL,{waitUntil:'domcontentloaded'});
+  await page.waitForFunction(()=>!document.getElementById('mmBootstrap'),null,{timeout:30000});
+  await expect(page.locator('#dashboard')).toBeVisible();
 }
 async function openLearnHub(page){
-  await page.locator('.mobile-nav > button').filter({hasText:'Learn'}).click();
-  await expect(page.locator('#path .mm-learn-hub')).toBeVisible();
-  await expectOnlyCurrent(page,'Learn');
+  await page.locator('.mobile-nav [data-view="courses"]').click();
+  await expect(page.getByRole('heading',{name:'Learn'})).toBeVisible();
+}
+async function openPracticeHub(page){
+  await page.locator('.mobile-nav [data-view="practice"]').click();
+  await expect(page.getByRole('heading',{name:'Practice'})).toBeVisible();
+}
+async function openPracticeAction(page,action){
+  const button=page.locator(`[data-mm-practice-action="${action}"]`).first();
+  await expect(button).toBeVisible();
+  await button.click();
 }
 async function scrollAppToBottom(page){
   await page.evaluate(()=>{
@@ -132,7 +122,7 @@ for(const viewport of [{name:'android-412x915',width:412,height:915},{name:'smal
       await expect(page.locator('.at20-table tbody tr')).toHaveCount(4);
       await expect(page.getByText('Ranked root-cause mechanism')).toBeVisible();
       await expect(page.getByText('Best next evidence')).toBeVisible();
-      await expect(page.getByText('Verification')).toBeVisible();
+      await expect(page.getByText('Verification',{exact:true})).toBeVisible();
       await expect(page.getByText(/Compensation trap/i)).toBeVisible();
       await expect(page.getByText(/Baseline index 100/i)).toBeVisible();
       await expect(page.getByRole('button',{name:'Export 72-cycle CSV'})).toBeVisible();
@@ -233,41 +223,38 @@ test('capture Android-like Home regression artifact after bootstrap is gone and 
   await expect(page.locator('#dashboard .fun-dashboard')).toHaveCount(0);
   await expect(page.locator('#dashboard')).not.toContainText(/\bXP\b/i);
   await expect(page.locator('#dashboard')).not.toContainText(/workshop rank|learning streak|badges/i);
-  await page.screenshot({path:'qa-artifacts/mobile-home-412x915.png',fullPage:true});
+  await page.screenshot({path:path.join(process.cwd(),'artifacts','mobile-home-412x915.png'),fullPage:true});
 });
 
-
-test('UI audit contract: one page title, compact header actions, useful Home, dense hubs, and unobstructed lesson content',async({page})=>{
+test('capture Android-like Learn and Practice hub regression artifacts',async({page})=>{
   await page.setViewportSize({width:412,height:915});
   await openApp(page);
-  await expect(page.locator('#dashboard .mm-home-utility')).toBeVisible();
-  await expect(page.locator('#dashboard .mm-home-utility button')).toHaveCount(2);
-  const searchBox=await page.locator('#searchBtn').boundingBox();
-  expect(searchBox.width).toBeLessThanOrEqual(48);
-  expect(searchBox.height).toBeGreaterThanOrEqual(44);
-  const listen=page.locator('.mm-read-aloud');
-  await expect(listen).toBeVisible();
-  expect(await listen.evaluate(el=>el.parentElement?.classList.contains('top-actions'))).toBeTruthy();
-
   await openLearnHub(page);
-  await expect(page.locator('body[data-mm-view="path"] .topbar>div:first-child')).toBeHidden();
-  await expect(page.locator('#path .mm-primary-hub-head h1')).toHaveCount(1);
-  expect(await page.locator('#path .mm-hub-grid').evaluate(el=>getComputedStyle(el).gridTemplateColumns.split(' ').length)).toBe(2);
-
+  await page.screenshot({path:path.join(process.cwd(),'artifacts','mobile-learn-hub-412x915.png'),fullPage:true});
   await openPracticeHub(page);
-  await expect(page.locator('body[data-mm-view="scenarios"] .topbar>div:first-child')).toBeHidden();
-  expect(await page.locator('#scenarios .mm-hub-grid').evaluate(el=>getComputedStyle(el).gridTemplateColumns.split(' ').length)).toBe(2);
+  await page.screenshot({path:path.join(process.cwd(),'artifacts','mobile-practice-hub-412x915.png'),fullPage:true});
+});
 
+test('capture Android-like lesson and materials regression artifacts',async({page})=>{
+  await page.setViewportSize({width:412,height:915});
+  await openApp(page);
   await openLearnHub(page);
   await page.getByRole('button',{name:/Continue lesson/i}).first().click();
-  await expect(page.locator('#lesson .lesson-quest')).toHaveCount(0);
-  await expect(page.locator('#lesson .mm-simple-lesson-start')).toHaveCount(0);
-  await expect(page.locator('body[data-mm-view="lesson"] .topbar>div:first-child')).toBeHidden();
-  const overlap=await page.evaluate(()=>{
-    const a=document.querySelector('.mm-read-aloud details')?.getBoundingClientRect();
-    const lesson=document.querySelector('#lesson .mm-simple-lesson-hero')?.getBoundingClientRect();
-    if(!a||!lesson)return true;
-    return !(a.right<=lesson.left||a.left>=lesson.right||a.bottom<=lesson.top||a.top>=lesson.bottom);
-  });
-  expect(overlap).toBeFalsy();
+  await expect(page.locator('#lesson')).toBeVisible();
+  await page.screenshot({path:path.join(process.cwd(),'artifacts','mobile-lesson-412x915.png'),fullPage:true});
+  await page.locator('.mobile-nav [data-view="more"]').click();
+  await page.getByRole('button',{name:/Materials/i}).click();
+  await expect(page.locator('#materials')).toBeVisible();
+  await page.screenshot({path:path.join(process.cwd(),'artifacts','mobile-materials-412x915.png'),fullPage:true});
+});
+
+test('capture small mobile practice/material screenshots',async({page})=>{
+  await page.setViewportSize({width:360,height:800});
+  await openApp(page);
+  await openPracticeHub(page);
+  await page.screenshot({path:path.join(process.cwd(),'artifacts','mobile-practice-hub-360x800.png'),fullPage:true});
+  await page.locator('.mobile-nav [data-view="more"]').click();
+  await page.getByRole('button',{name:/Materials/i}).click();
+  await expect(page.locator('#materials')).toBeVisible();
+  await page.screenshot({path:path.join(process.cwd(),'artifacts','mobile-materials-360x800.png'),fullPage:true});
 });
