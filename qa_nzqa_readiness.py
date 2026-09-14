@@ -6,6 +6,8 @@ ROOT = Path(__file__).resolve().parent
 CERT = ROOT / "certification"
 DATA = ROOT / "data" / "nzqa-education-readiness-v1.json"
 RUNTIME_DATA = ROOT / "src" / "domains" / "learning" / "book-data" / "nzqa-education-readiness-v1.json"
+EVIDENCE_TEMPLATES = ROOT / "data" / "nzqa-provider-evidence-templates-v1.json"
+RUNTIME_EVIDENCE_TEMPLATES = ROOT / "src" / "domains" / "learning" / "book-data" / "nzqa-provider-evidence-templates-v1.json"
 REGISTER = ROOT / "sources" / "NZQA_READINESS_REGISTER.md"
 MANIFEST = ROOT / "data" / "book-manifest-v1.json"
 
@@ -29,6 +31,9 @@ register = read(REGISTER)
 contract_text = read(DATA)
 runtime_text = read(RUNTIME_DATA)
 contract = json.loads(contract_text)
+evidence_templates_text = read(EVIDENCE_TEMPLATES)
+runtime_evidence_templates_text = read(RUNTIME_EVIDENCE_TEMPLATES)
+evidence_templates = json.loads(evidence_templates_text)
 manifest = json.loads(read(MANIFEST))
 
 # Current 2026 rule baseline must be explicit and internally coherent.
@@ -91,7 +96,7 @@ for body, name in [(roadmap, "roadmap"), (draft, "draft"), (matrix, "matrix"), (
     require("120 lessons" not in body, f"unverified exact lesson-count marketing claim returned in {name}")
 require("Do not assume an annual review" in draft, "draft still risks hard-coded annual review assumption")
 
-# New governed readiness contract is byte-paired and remains technical-review only.
+# Governed readiness contract is byte-paired and remains technical-review only.
 require(contract_text == runtime_text, "NZQA readiness source/runtime data pair must be byte-identical")
 require(contract["schema"] == 1, "NZQA readiness schema mismatch")
 require(contract["id"] == "mouldmaster-nzqa-education-readiness", "NZQA readiness identity mismatch")
@@ -99,6 +104,39 @@ require(contract["status"] == "technical-review", "NZQA readiness must remain te
 require(contract["checked"] == "2026-09-15", "NZQA readiness source check date mismatch")
 require(contract["bookId"] == "mouldmaster-book", "NZQA readiness Book identity mismatch")
 require(contract["publicationEffect"] == "none", "NZQA readiness must not authorize Book publication")
+
+# Provider evidence templates are governed as a second exact source/runtime pair.
+require(evidence_templates_text == runtime_evidence_templates_text, "NZQA provider evidence template pair must be byte-identical")
+require(evidence_templates["schema"] == 1, "NZQA provider evidence template schema mismatch")
+require(evidence_templates["id"] == "mouldmaster-nzqa-provider-evidence-templates", "NZQA provider evidence template identity mismatch")
+require(evidence_templates["status"] == "technical-review", "NZQA provider evidence templates must remain technical-review")
+require(evidence_templates["checked"] == "2026-09-15", "NZQA provider evidence template check date mismatch")
+privacy_boundary = evidence_templates["privacyBoundary"].lower()
+for marker in ["learner pii", "customer names", "proprietary part data", "private attachments", "confidential workplace records"]:
+    require(marker in privacy_boundary, f"NZQA evidence-template privacy boundary missing: {marker}")
+
+templates = {row["id"]: row for row in evidence_templates["templates"]}
+expected_template_ids = {
+    "stakeholder-need",
+    "workload-study",
+    "assessment-evidence",
+    "workplace-observation",
+    "moderation-record",
+    "assessor-capability",
+    "credential-review-change",
+}
+require(set(templates) == expected_template_ids, "NZQA provider evidence template set changed unexpectedly")
+require("Do not derive credits from screen time" in templates["workload-study"]["rule"], "NZQA workload-study credit boundary missing")
+require("Simulation and app records cannot substitute" in templates["workplace-observation"]["rule"], "NZQA workplace-observation simulation boundary missing")
+for template_id in ["assessment-evidence", "moderation-record", "assessor-capability", "credential-review-change"]:
+    require(templates[template_id].get("providerControlled") is True, f"{template_id} must remain provider-controlled")
+require(templates["stakeholder-need"].get("externalEvidenceRequired") is True, "stakeholder-need evidence must remain external")
+for required_field in ["judgementRationale", "moderationRef", "retentionRef"]:
+    require(required_field in templates["assessment-evidence"]["fields"], f"assessment-evidence template missing {required_field}")
+for required_field in ["authorisationRef", "hazardControlCheck", "escalationObserved", "retentionRef"]:
+    require(required_field in templates["workplace-observation"]["fields"], f"workplace-observation template missing {required_field}")
+for required_field in ["validityFinding", "sufficiencyFinding", "consistencyFinding", "externalModerationRef"]:
+    require(required_field in templates["moderation-record"]["fields"], f"moderation-record template missing {required_field}")
 
 # Current/expired standard handling must be explicit and fail closed.
 current = {row["id"] for row in contract["currentInjectionMouldingStandards"]}
@@ -203,7 +241,7 @@ for marker in [
 ]:
     require(marker in moderation_plan, f"NZQA assessment/moderation plan missing: {marker}")
 
-# Evidence matrix must now carry the standards-based gates as well as micro-credential gates.
+# Evidence matrix must carry the standards-based gates as well as micro-credential gates.
 for marker in [
     "Standards-based assessment route — separate external gate",
     "Formal assessment against DASS standards requires provider consent to assess",
@@ -229,6 +267,10 @@ for marker in [
     require(marker in register, f"NZQA source register missing: {marker}")
 
 for source in contract["officialSources"]:
-    require(source["url"].startswith("https://www.nzqa.govt.nz/") or source["url"].startswith("https://www2.nzqa.govt.nz/"), f"non-NZQA authoritative URL in NZQA readiness contract: {source['id']}")
+    require(
+        source["url"].startswith("https://www.nzqa.govt.nz/")
+        or source["url"].startswith("https://www2.nzqa.govt.nz/"),
+        f"non-NZQA authoritative URL in NZQA readiness contract: {source['id']}",
+    )
 
 print("MouldMaster NZQA 2026 readiness QA passed")
