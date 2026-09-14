@@ -3,8 +3,9 @@
 
 This is a network verifier for the bytes actually served by GitHub Pages. It is
 intentionally narrower than browser/device validation: it proves Book identity,
-authorization, authored coverage, runtime parity markers and release-cache wiring.
-It does not claim physical-device, accessibility, SME or learner-outcome evidence.
+authorization, authored coverage, runtime parity markers, governed SME-status
+reporting and release-cache wiring. It does not claim physical-device,
+accessibility, independent SME approval or learner-outcome evidence.
 """
 from __future__ import annotations
 
@@ -19,6 +20,7 @@ from urllib.request import Request, urlopen
 BOOK_ROOT = "src/domains/learning/book-data/"
 MANIFEST = BOOK_ROOT + "book-manifest-v1.json"
 AUTH = BOOK_ROOT + "book-publication-authorization-v1.json"
+SME = BOOK_ROOT + "book-sme-review-v1.json"
 RUNTIME = "src/domains/learning/book-runtime.js"
 BATCHES = (
     BOOK_ROOT + "book-authored-foundations-v1.json",
@@ -38,6 +40,10 @@ EXPECTED_SNAPSHOT = {
 RUNTIME_MARKERS = (
     "applyPublicationAuthorization",
     "book-publication-authorization-v1.json",
+    "book-sme-review-v1.json",
+    "validateSmeReview",
+    "Independent human SME review:",
+    "status unavailable — do not infer approval",
     "verifiedChapterHtml",
     "startVerifiedListening",
     "reader.refresh?.()",
@@ -93,6 +99,29 @@ def chapter_ids(manifest: dict) -> list[str]:
     return ids
 
 
+def sme_summary(sme: dict, ids: list[str]) -> tuple[str, int, int]:
+    if sme.get("schemaVersion") != 1 or sme.get("bookId") != "mouldmaster-book":
+        raise AssertionError("live Book SME review contract identity mismatch")
+    chapter_rows = sme.get("chapterIds")
+    reviews = sme.get("reviews")
+    if not isinstance(chapter_rows, list) or len(chapter_rows) != 46 or len(set(chapter_rows)) != 46:
+        raise AssertionError("live Book SME review contract must contain exactly 46 unique chapter ids")
+    if set(chapter_rows) != set(ids):
+        raise AssertionError("live Book SME review chapter set does not exactly match the Book manifest")
+    if not isinstance(reviews, list):
+        raise AssertionError("live Book SME review contract reviews must be a list")
+    approved: set[str] = set()
+    for review in reviews:
+        if not isinstance(review, dict) or review.get("chapterId") not in set(ids):
+            raise AssertionError("live Book SME review contains an unknown or missing chapter id")
+        if review.get("conclusion") == "approved":
+            approved.add(str(review["chapterId"]))
+    status = str(sme.get("status") or "")
+    if status == "validated" and len(approved) != 46:
+        raise AssertionError("live Book SME review claims validated without 46 approved chapter reviews")
+    return status, len(approved), len(chapter_rows)
+
+
 def verify_once(base_url: str, candidate_path: str, expected_release: str | None) -> None:
     base = base_url.rstrip("/") + "/"
     candidate = urljoin(base, candidate_path.strip("/") + "/") if candidate_path.strip("/") else base
@@ -108,7 +137,7 @@ def verify_once(base_url: str, candidate_path: str, expected_release: str | None
     cache_match = re.search(r"CACHE_VERSION\s*=\s*['\"]([^'\"]+)['\"]", worker)
     if not cache_match or cache_match.group(1) != web_release:
         raise AssertionError("candidate service-worker release does not match version.json")
-    for path in (RUNTIME, MANIFEST, AUTH, *BATCHES):
+    for path in (RUNTIME, MANIFEST, AUTH, SME, *BATCHES):
         marker = f"'./{path}'"
         if marker not in worker and f'"./{path}"' not in worker:
             raise AssertionError(f"candidate service worker does not govern Book asset: {path}")
@@ -140,6 +169,9 @@ def verify_once(base_url: str, candidate_path: str, expected_release: str | None
     if set(authorized) != set(ids):
         raise AssertionError("live Book authorization chapter set does not exactly match the manifest")
 
+    sme = fetch_json(candidate, SME)
+    sme_status, sme_approved, sme_total = sme_summary(sme, ids)
+
     authored: set[str] = set()
     for path in BATCHES:
         batch = fetch_json(candidate, path)
@@ -165,6 +197,7 @@ def verify_once(base_url: str, candidate_path: str, expected_release: str | None
     print(
         f"Live MouldMaster Book candidate verified at {candidate}: release {web_release}; "
         "8 parts / 46 chapters; authorization 116 supported / 21 scoped-qualified / 0 hold / 0 conflict; "
+        f"independent SME contract status={sme_status!r}, approved={sme_approved}/{sme_total}; "
         "authored drafts remain non-self-promoting; Read/Listen shared-runtime markers are present."
     )
 

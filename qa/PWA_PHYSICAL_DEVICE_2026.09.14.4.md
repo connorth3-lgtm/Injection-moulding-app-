@@ -59,12 +59,13 @@ Use the exact artifact or a byte-identical HTTPS-served build and complete every
 On both platforms, additionally exercise the current Book integration:
 
 1. Open **Book** from the primary navigation.
-2. Confirm the Book summary reports 46 governed chapters and all authorized chapters are visibly `Verified`.
-3. Open at least one chapter from each of the eight parts and confirm content renders without a fail-closed error.
-4. Exercise **Read Book** navigation and return-to-contents behavior.
-5. Exercise **Listen to verified Book** where device speech synthesis is available; confirm it speaks the same visible governed text rather than a separate manuscript.
-6. Disable connectivity after the candidate has fully installed/cached, relaunch, and confirm the Book manifest, authorization and chapter content remain available offline.
-7. Restore connectivity and exercise the update/recovery path; confirm Book content is not left in a mixed old/new state.
+2. Confirm the Book summary reports 46 governed chapters and all publication-authorized chapters are visibly labelled `Evidence verified`, not a bare assurance label that could be mistaken for independent practitioner approval.
+3. While online, confirm the Book shows the governed **Independent human SME review** status and approved/total chapter count from the current SME review contract. For the recorded `2026.09.14.4` evidence packet this contract is `hold` with `0/46` approved; if that status has legitimately changed, verify the displayed count against the governed contract instead of copying this historical number.
+4. Open at least one chapter from each of the eight parts and confirm content renders without a fail-closed error.
+5. Exercise **Read Book** navigation and return-to-contents behavior.
+6. Exercise **Listen to evidence-verified Book** where device speech synthesis is available; confirm it speaks the same visible governed text rather than a separate manuscript.
+7. Disable connectivity after the candidate has fully installed/cached, relaunch, and confirm the Book manifest, authorization and chapter content remain available offline. If the separately packaged SME status is unavailable offline, the UI must say `status unavailable — do not infer approval`; it must never silently convert missing external evidence into approval.
+8. Restore connectivity and exercise the update/recovery path; confirm Book content is not left in a mixed old/new state and the SME status returns to the governed online value.
 
 These Book checks supplement, not replace, the standard physical PWA checklist.
 
@@ -76,7 +77,7 @@ Automated live validation is complete for this source deployment:
 - MouldMaster Book Live Pages Validation run `34806814722` matched trusted `main` to the deployed Pages SHA and verified the live `/preview/` Book candidate;
 - the live verifier confirmed release `2026.09.14.4`, 8 parts / 46 chapters, authorization counts `116 supported / 21 scoped-qualified / 0 hold / 0 conflict`, authored-draft non-self-promotion, and shared Read/Listen runtime markers.
 
-This automated evidence does **not** substitute for the physical checks above.
+This automated evidence does **not** substitute for the physical checks above or for independent human SME review.
 
 ## Updating the governed evidence
 

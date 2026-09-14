@@ -1,0 +1,14 @@
+{
+  "schemaVersion": 1,
+  "capturedAt": "2026-09-15",
+  "scope": "Static browser regression ceilings for the locally served candidate. These are engineering guardrails, not claims about physical-device performance.",
+  "startupReadyMsMax": 15000,
+  "scriptResourceCountMax": 120,
+  "scriptEncodedBytesMax": 6000000,
+  "domNodeCountMax": 12000,
+  "policy": [
+    "Budgets are intentionally generous ceilings for regression detection and should trend downward as legacy runtime layers are retired.",
+    "A passing automated budget does not substitute for physical iOS/iPadOS/Android startup, offline, update, storage-pressure or assistive-technology evidence.",
+    "Tighten a ceiling only after measuring representative CI and physical-device distributions; do not loosen a ceiling merely to make a regression pass."
+  ]
+}

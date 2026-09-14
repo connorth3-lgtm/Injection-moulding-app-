@@ -13,6 +13,7 @@ ALLOWED_SECTION_STATUS = {
     "accessibility": {"hold", "validated"},
     "pwaPhysicalDevices": {"hold", "validated"},
     "windowsDistribution": {"hold", "validated"},
+    "bookSme": {"hold", "validated"},
     "curriculumSme": {"hold", "validated"},
     "learnerOutcomes": {"hold", "validated"},
     "productionUse": {"advisory-only"},
@@ -89,6 +90,39 @@ def validate_pwa(section: dict, expected_release: str) -> None:
     require_current_release(evidence, expected_release, "PWA physical-device")
     if evidence.get("status") != "validated":
         fail("current-release PWA cannot be validated without full physical iOS/iPadOS + Android evidence")
+
+
+def validate_book_sme(section: dict, expected_release: str) -> None:
+    evidence = load_json(ROOT / section["evidenceContract"])
+    require_current_release(evidence, expected_release, "Book SME")
+    chapter_ids = evidence.get("chapterIds")
+    reviews = evidence.get("reviews")
+    required_dimensions = set(evidence.get("requiredDimensions") or [])
+    if not isinstance(chapter_ids, list) or len(chapter_ids) != 46 or len(set(chapter_ids)) != 46:
+        fail("Book SME contract must contain exactly 46 unique governed chapter ids")
+    if not isinstance(reviews, list):
+        fail("Book SME reviews must be a list")
+    if section["status"] == "hold":
+        if evidence.get("status") == "validated":
+            fail("Book SME is marked hold although its evidence contract says validated; reconcile explicitly")
+        return
+    if evidence.get("status") != "validated":
+        fail("Book SME cannot be validated until the human-review contract status is validated")
+    if len(required_dimensions) != 6:
+        fail("validated Book SME evidence requires all six governed review dimensions")
+    if len(reviews) != 46:
+        fail("validated Book SME evidence requires one review record for every governed chapter")
+    by_id = {row.get("chapterId"): row for row in reviews if isinstance(row, dict)}
+    if set(by_id) != set(chapter_ids):
+        fail("validated Book SME reviews must exactly cover the 46 governed chapters")
+    for chapter_id, row in by_id.items():
+        for key in ("reviewedAt", "reviewerReference", "evidenceRef"):
+            require_nonempty(row.get(key), f"validated Book SME review {chapter_id} is missing {key}")
+        if row.get("conclusion") != "approved":
+            fail(f"validated Book SME review is not approved: {chapter_id}")
+        dimensions = row.get("dimensions") or {}
+        if set(dimensions) != required_dimensions or any(value != "pass" for value in dimensions.values()):
+            fail(f"validated Book SME dimensions do not all pass: {chapter_id}")
 
 
 def validate_curriculum(section: dict, expected_release: str) -> None:
@@ -185,6 +219,7 @@ def main() -> None:
     validate_accessibility(data["accessibility"], expected_release)
     validate_pwa(data["pwaPhysicalDevices"], expected_release)
     validate_windows(data["windowsDistribution"], expected_release)
+    validate_book_sme(data["bookSme"], expected_release)
     validate_curriculum(data["curriculumSme"], expected_release)
     validate_learner(data["learnerOutcomes"], expected_release)
 
@@ -207,7 +242,7 @@ def main() -> None:
         fail("unsupported release claims must remain false until a separately reviewed policy change: " + ", ".join(promoted))
 
     holds = [
-        name for name in ("accessibility", "pwaPhysicalDevices", "windowsDistribution", "curriculumSme", "learnerOutcomes")
+        name for name in ("accessibility", "pwaPhysicalDevices", "windowsDistribution", "bookSme", "curriculumSme", "learnerOutcomes")
         if data[name]["status"] == "hold"
     ]
     print(

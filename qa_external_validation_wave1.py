@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
 """Static integrity checks for External Validation Wave 1.
 
-The gate verifies readiness contracts and prevents automation from manufacturing
-physical, human, signing or real-learner completion evidence.
+Wave 1 is historical release evidence. The gate preserves that record while also
+checking that the mutable current-release HOLD contracts remain truthful. It must
+never manufacture physical, human, signing or real-learner completion evidence.
 """
 from __future__ import annotations
 
@@ -26,8 +27,9 @@ def require(ok: bool, message: str) -> None:
 
 
 version = load("version.json")
-release = version["web_release"]
+current_release = version["web_release"]
 wave = load("data/external-validation-wave1-v1.json")
+wave_release = str(wave.get("release") or "")
 external = load("data/release-external-validation-v1.json")
 manifest = load("data/book-manifest-v1.json")
 auth = load("data/book-publication-authorization-v1.json")
@@ -35,7 +37,8 @@ book_sme = load("data/book-sme-review-v1.json")
 pilot = load("data/learner-pilot-v1.json")
 
 require(wave.get("schemaVersion") == 1, "Wave schemaVersion must be 1")
-require(wave.get("release") == release == external.get("release"), "Wave/external release must match version.json")
+require(re.fullmatch(r"\d{4}\.\d{2}\.\d{2}\.\d+", wave_release) is not None, "historical Wave release id is invalid")
+require(external.get("release") == current_release, "current external-validation contract must match version.json")
 require(re.fullmatch(r"[0-9a-f]{40}", str(wave.get("releaseSourceSha") or "")) is not None, "Wave releaseSourceSha must be a full commit SHA")
 
 live = wave.get("livePages") or {}
@@ -58,21 +61,24 @@ for marker in (
 ):
     require(marker in pages_workflow, f"live Pages Book workflow missing marker: {marker}")
 
-for section in ("pwaPhysicalDevices", "windowsDistribution", "curriculumSme", "learnerOutcomes"):
-    require((external.get(section) or {}).get("status") == "hold", f"{section} must remain hold in Wave 1 preparation")
+# The current release must keep every real-world boundary held until new evidence is
+# actually collected. Historical Wave 1 pass evidence is not promoted to new bytes.
+for section in ("pwaPhysicalDevices", "windowsDistribution", "bookSme", "curriculumSme", "learnerOutcomes"):
+    require((external.get(section) or {}).get("status") == "hold", f"current {section} must remain hold")
 require((external.get("windowsDistribution") or {}).get("evidence") is None, "Windows HOLD must not contain completion evidence")
 require((external.get("learnerOutcomes") or {}).get("evidence") is None, "learner outcomes HOLD must not contain completion evidence")
 
 for section in ("physicalPwa", "windowsDistribution", "bookSme", "curriculumSme"):
-    require((wave.get(section) or {}).get("status") == "hold", f"Wave {section} must remain hold")
-require((wave.get("learnerPilot") or {}).get("status") == "prepared-evidence-hold", "learner pilot must be prepared but evidence-held")
+    require((wave.get(section) or {}).get("status") == "hold", f"historical Wave {section} must remain hold")
+require((wave.get("learnerPilot") or {}).get("status") == "prepared-evidence-hold", "historical learner pilot must be prepared but evidence-held")
 
+# Historical physical-candidate evidence remains bound to the historical Wave release.
 physical = wave.get("physicalPwa") or {}
-require(physical.get("releasePacket") == "qa/PWA_PHYSICAL_DEVICE_2026.09.14.4.md", "release-specific physical PWA packet path mismatch")
-require((ROOT / physical["releasePacket"]).is_file(), "release-specific physical PWA packet is missing")
+require(physical.get("releasePacket") == f"qa/PWA_PHYSICAL_DEVICE_{wave_release}.md", "historical release-specific physical PWA packet path mismatch")
+require((ROOT / physical["releasePacket"]).is_file(), "historical release-specific physical PWA packet is missing")
 candidate = physical.get("currentCandidate") or {}
-require(candidate.get("sourceSha") == wave.get("releaseSourceSha"), "physical candidate source SHA must match Wave release source")
-require(candidate.get("pagesRun") == live.get("pagesRun"), "physical candidate Pages run must match live Pages evidence")
+require(candidate.get("sourceSha") == wave.get("releaseSourceSha"), "physical candidate source SHA must match historical Wave release source")
+require(candidate.get("pagesRun") == live.get("pagesRun"), "physical candidate Pages run must match historical live Pages evidence")
 require(re.fullmatch(r"sha256:[0-9a-f]{64}", str(candidate.get("runtimeFingerprint") or "")) is not None, "physical candidate runtime fingerprint is invalid")
 require(candidate.get("artifactName") == f"physical-pwa-candidate-{candidate.get('sourceSha')}", "physical candidate artifact name must bind to source SHA")
 require(isinstance(candidate.get("artifactId"), int) and candidate["artifactId"] > 0, "physical candidate artifact ID is missing")
@@ -80,11 +86,11 @@ require(re.fullmatch(r"[0-9a-f]{64}", str(candidate.get("artifactZipSha256") or 
 require(isinstance(candidate.get("artifactBytes"), int) and candidate["artifactBytes"] > 0, "physical candidate artifact size is invalid")
 require(candidate.get("retentionDays") == 30, "physical candidate must retain the governed 30-day handoff window")
 old_fingerprint = str((load("data/pwa-physical-device-validation-v1.json")).get("runtimeFingerprint") or "")
-require(old_fingerprint != candidate.get("runtimeFingerprint"), "Wave must not relabel prior device evidence as the current candidate")
+require(old_fingerprint != candidate.get("runtimeFingerprint"), "historical Wave must not relabel prior device evidence as its candidate")
 
 manifest_ids = [ch["id"] for part in manifest["parts"] for ch in part["chapters"]]
 require(len(manifest_ids) == 46 and len(set(manifest_ids)) == 46, "Book manifest must contain 46 unique chapter ids")
-require(book_sme.get("release") == release, "Book SME contract must be release-bound")
+require(book_sme.get("release") == current_release, "current Book SME contract must be release-bound")
 require(book_sme.get("manifestVersion") == manifest.get("version"), "Book SME manifest version mismatch")
 require(set(book_sme.get("chapterIds") or []) == set(manifest_ids), "Book SME contract must cover exactly all 46 manifest chapters")
 require(set(auth.get("authorizedChapterIds") or []) == set(manifest_ids), "Book publication authorization must cover the same 46 chapters")
@@ -105,7 +111,7 @@ if book_sme.get("status") == "validated":
 else:
     require(book_sme.get("status") == "hold", "Book SME status must be hold or validated")
 
-require(pilot.get("schemaVersion") == 1 and pilot.get("release") == release, "learner pilot identity/release mismatch")
+require(pilot.get("schemaVersion") == 1 and pilot.get("release") == current_release, "current learner pilot identity/release mismatch")
 require(pilot.get("status") == "prepared", "learner pilot must remain prepared before execution")
 require(pilot.get("synthetic") is False, "learner pilot must explicitly require real, non-synthetic participants")
 require(pilot.get("evidence") is None, "prepared learner pilot must not contain synthetic completion evidence")
@@ -138,10 +144,10 @@ for key in (
     "curriculumSmeValidated",
     "learnerEfficacyEstablished",
 ):
-    require(claims.get(key) is False, f"unsupported Wave 1 claim must remain false: {key}")
+    require(claims.get(key) is False, f"unsupported historical Wave 1 claim must remain false: {key}")
 
 require((wave.get("productImprovement") or {}).get("status") == "armed", "evidence-to-product improvement loop must be armed")
 print(
-    f"External Validation Wave 1 integrity passed for {release}: live Pages verification is wired; "
-    "the exact physical candidate is pinned; physical PWA, Windows distribution, Book/curriculum SME and real-learner evidence remain fail-closed HOLDs."
+    f"External Validation Wave 1 historical integrity passed for {wave_release}; current release {current_release} "
+    "keeps physical PWA, Windows distribution, Book/curriculum SME and real-learner evidence fail-closed HOLDs."
 )
