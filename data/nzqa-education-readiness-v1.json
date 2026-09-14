@@ -205,7 +205,7 @@
   },
   "moderationModel": {
     "internalModeration": "Provider-owned and required for controlled assessment practice.",
-    "nationalExternalModeration": "Required through the relevant standard-setting body system when assessing DASS standards.",
+    "nationalExternalModeration": "National external moderation is required through the relevant standard-setting body system when assessing DASS standards.",
     "cmr": "CMR 13 applies to the current Injection Moulding standards listed here.",
     "repositoryRole": "MouldMaster may supply draft instruments, source trails and audit fields but cannot self-grant moderation acceptance."
   },
