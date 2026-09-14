@@ -1,0 +1,229 @@
+{
+  "schema": 1,
+  "id": "mouldmaster-nzqa-education-readiness",
+  "status": "technical-review",
+  "checked": "2026-09-15",
+  "bookId": "mouldmaster-book",
+  "publicationEffect": "none",
+  "purpose": "Provide a governed education-readiness map for NZQA discussions without representing MouldMaster as an approved micro-credential, accredited provider, consented assessor, qualification, or workplace competence authority.",
+  "claimBoundary": {
+    "allowed": [
+      "NZQA-readiness support",
+      "draft learning-outcome and evidence mapping",
+      "supporting knowledge mapped to current Injection Moulding standards",
+      "provider-readiness evidence pack"
+    ],
+    "forbidden": [
+      "NZQA approved",
+      "NZQA accredited",
+      "MouldMaster is a New Zealand qualification",
+      "completion awards NZQA credits",
+      "completion proves workplace competence",
+      "completion authorises machine operation",
+      "assessment in MouldMaster is nationally moderated"
+    ]
+  },
+  "officialSources": [
+    {
+      "id": "NZQA-MICROCREDENTIAL-RULES-2026",
+      "title": "Micro-credential Approval and Accreditation Rules 2026",
+      "url": "https://www2.nzqa.govt.nz/about-us/rules-fees-policies/nzqa-rules/micro-credential-approval-and-accreditation-rules/",
+      "state": "current",
+      "note": "Commenced 19 January 2026. Approval criteria include title/outcomes, need and stakeholder support, requirements and review; accreditation criteria include delivery plus assessment/moderation capability."
+    },
+    {
+      "id": "NZQA-LISTING-RULES-2026",
+      "title": "Qualification and Micro-credential Listing and Operational Rules 2026",
+      "url": "https://www2.nzqa.govt.nz/about-us/rules-fees-policies/nzqa-rules/qualification-and-micro-credentials/",
+      "state": "current",
+      "note": "Current listing and operational rules for qualifications and micro-credentials."
+    },
+    {
+      "id": "NZQA-CONSENT-TO-ASSESS-RULES-2026",
+      "title": "Consent to Assess Against Standards on the Directory of Assessment and Skill Standards Rules 2026",
+      "url": "https://www2.nzqa.govt.nz/ncea/ncea-rules-and-procedures/consent-to-assess/",
+      "state": "current",
+      "note": "Providers need consent to assess against DASS standards and must meet the relevant consent and moderation requirements."
+    },
+    {
+      "id": "NZQA-CMR-GUIDANCE",
+      "title": "Consent and Moderation Requirements",
+      "url": "https://www2.nzqa.govt.nz/tertiary/assessment-and-moderation-of-standards/consent-and-moderation-requirements/",
+      "state": "current-guidance",
+      "note": "CMRs specify sector requirements for consent to assess and national external moderation."
+    },
+    {
+      "id": "NZQA-INJECTION-MOULDING-DOMAIN",
+      "title": "DASS domain — Injection Moulding",
+      "url": "https://www.nzqa.govt.nz/framework/explore/domain-full.do?frameworkId=75775",
+      "state": "current-domain-page",
+      "note": "Domain source used to separate current standards from expired standards."
+    },
+    {
+      "id": "NZQA-QUAL-4401",
+      "title": "New Zealand Certificate in Plastics Processing (Level 3) with optional Injection Moulding strand",
+      "url": "https://www.nzqa.govt.nz/nzqf/search/viewQualification.do?selectedItemKey=4401",
+      "state": "qualification-context",
+      "note": "Qualification context only; this mapping does not claim programme equivalence or qualification delivery."
+    },
+    {
+      "id": "NZQA-QUAL-4402",
+      "title": "New Zealand Certificate in Plastics Processing (Level 4) with Injection Moulding strand",
+      "url": "https://www.nzqa.govt.nz/nzqf/search/viewQualification.do?selectedItemKey=4402",
+      "state": "qualification-context",
+      "note": "Qualification context only; this mapping does not claim programme equivalence or qualification delivery."
+    }
+  ],
+  "currentInjectionMouldingStandards": [
+    {
+      "id": "252",
+      "level": 1,
+      "credits": 4,
+      "title": "Perform process operations for injection moulding",
+      "cmr": "13",
+      "mappingUse": "supporting-knowledge-and-practice-context",
+      "externalAssessmentGate": "provider-consent-to-assess-and-moderation-required"
+    },
+    {
+      "id": "255",
+      "level": 3,
+      "credits": 12,
+      "title": "Control and optimise the injection moulding production process",
+      "cmr": "13",
+      "mappingUse": "strongest-current-process-control-anchor",
+      "externalAssessmentGate": "provider-consent-to-assess-and-moderation-required"
+    },
+    {
+      "id": "27926",
+      "level": 3,
+      "credits": 7,
+      "title": "Set up advanced moulds for injection moulding",
+      "cmr": "13",
+      "mappingUse": "tooling-setup-context",
+      "externalAssessmentGate": "provider-consent-to-assess-and-moderation-required"
+    },
+    {
+      "id": "29515",
+      "level": 3,
+      "credits": 5,
+      "title": "Carry out routine service of injection moulding equipment",
+      "cmr": "13",
+      "mappingUse": "routine-service-context",
+      "externalAssessmentGate": "provider-consent-to-assess-and-moderation-required"
+    },
+    {
+      "id": "260",
+      "level": 4,
+      "credits": 10,
+      "title": "Service and maintain a complex mould for injection moulding",
+      "cmr": "13",
+      "mappingUse": "complex-mould-maintenance-context",
+      "externalAssessmentGate": "provider-consent-to-assess-and-moderation-required"
+    },
+    {
+      "id": "9713",
+      "level": 4,
+      "credits": 5,
+      "title": "Set and remove complex injection moulds",
+      "cmr": "13",
+      "mappingUse": "complex-mould-setup-context",
+      "externalAssessmentGate": "provider-consent-to-assess-and-moderation-required"
+    }
+  ],
+  "expiredStandardsNotForCurrentAssessmentMapping": ["253", "254", "256", "257", "258", "259", "27925", "9712"],
+  "learningOutcomes": [
+    {"id": "LO1", "text": "Explain the injection-moulding cycle, production purpose, hazards and safe operating boundaries."},
+    {"id": "LO2", "text": "Explain major machine functions and distinguish setpoints, actual process signals and machine limitations."},
+    {"id": "LO3", "text": "Explain how polymer structure, rheology, moisture, additives and thermal history affect process behaviour using grade-specific evidence where required."},
+    {"id": "LO4", "text": "Explain mould, feed, cooling, venting, ejection and hot-runner functions and identify tooling evidence needed before intervention."},
+    {"id": "LO5", "text": "Explain routine service and maintenance evidence, including pre-condition, intervention, post-condition and recovery verification."},
+    {"id": "LO6", "text": "Plan and interpret controlled process studies and process-window evidence without converting generic examples into production recipes."},
+    {"id": "LO7", "text": "Diagnose moulding defects using competing mechanisms, controlled evidence and safe escalation decisions."},
+    {"id": "LO8", "text": "Interpret basic measurement, capability, monitoring and quality-record evidence and document a defensible decision trail."},
+    {"id": "LO9", "text": "Explain advanced mould setup, verification and multi-cavity considerations while preserving machine-, mould- and site-specific authority boundaries."},
+    {"id": "LO10", "text": "Demonstrate, under authorised provider/workplace control, the ability to gather practical evidence and escalate conditions outside personal authority."}
+  ],
+  "chapterMap": [
+    {"chapterId":"what-injection-moulding-is","outcomes":["LO1"],"standardRefs":["252"]},
+    {"chapterId":"cycle","outcomes":["LO1","LO2"],"standardRefs":["252"]},
+    {"chapterId":"machine-anatomy","outcomes":["LO2"],"standardRefs":["252","255"]},
+    {"chapterId":"mould-anatomy","outcomes":["LO4"],"standardRefs":["27926","29515","260","9713"]},
+    {"chapterId":"safety-foundations","outcomes":["LO1","LO10"],"standardRefs":["252"]},
+    {"chapterId":"polymer-structure","outcomes":["LO3"],"standardRefs":["255"]},
+    {"chapterId":"rheology","outcomes":["LO3","LO6"],"standardRefs":["255"]},
+    {"chapterId":"moisture-drying","outcomes":["LO3"],"standardRefs":["255"]},
+    {"chapterId":"thermal-history","outcomes":["LO3"],"standardRefs":["255"]},
+    {"chapterId":"material-families","outcomes":["LO3"],"standardRefs":["255"]},
+    {"chapterId":"fillers-additives","outcomes":["LO3"],"standardRefs":["255"]},
+    {"chapterId":"plasticising-unit","outcomes":["LO2","LO3"],"standardRefs":["255"]},
+    {"chapterId":"shot-utilisation","outcomes":["LO2","LO6"],"standardRefs":["255"]},
+    {"chapterId":"velocity-pressure","outcomes":["LO2","LO6"],"standardRefs":["255"]},
+    {"chapterId":"vp-transfer","outcomes":["LO6"],"standardRefs":["255"]},
+    {"chapterId":"clamp","outcomes":["LO2","LO4"],"standardRefs":["27926","9713"]},
+    {"chapterId":"feed-system","outcomes":["LO4","LO6"],"standardRefs":["255","27926"]},
+    {"chapterId":"venting","outcomes":["LO4","LO7"],"standardRefs":["255"]},
+    {"chapterId":"cooling","outcomes":["LO4","LO5","LO6","LO7"],"standardRefs":["255","29515","260"]},
+    {"chapterId":"ejection-draft","outcomes":["LO4"],"standardRefs":["27926","9713"]},
+    {"chapterId":"hot-runners","outcomes":["LO4","LO9"],"standardRefs":["27926","9713"]},
+    {"chapterId":"process-baseline","outcomes":["LO6","LO8"],"standardRefs":["255"]},
+    {"chapterId":"fill-study","outcomes":["LO6"],"standardRefs":["255"]},
+    {"chapterId":"pressure-loss","outcomes":["LO6","LO7"],"standardRefs":["255"]},
+    {"chapterId":"gate-seal","outcomes":["LO6"],"standardRefs":["255"]},
+    {"chapterId":"process-window","outcomes":["LO6","LO8"],"standardRefs":["255"]},
+    {"chapterId":"documentation","outcomes":["LO5","LO8","LO10"],"standardRefs":["255","29515","260"]},
+    {"chapterId":"diagnostic-method","outcomes":["LO7","LO8"],"standardRefs":["255"]},
+    {"chapterId":"short-shot","outcomes":["LO7"],"standardRefs":["255"]},
+    {"chapterId":"flash","outcomes":["LO7"],"standardRefs":["255"]},
+    {"chapterId":"sink-voids","outcomes":["LO7"],"standardRefs":["255"]},
+    {"chapterId":"splay","outcomes":["LO3","LO7"],"standardRefs":["255"]},
+    {"chapterId":"burns","outcomes":["LO7"],"standardRefs":["255"]},
+    {"chapterId":"weld-lines","outcomes":["LO7"],"standardRefs":["255"]},
+    {"chapterId":"warpage","outcomes":["LO3","LO7"],"standardRefs":["255"]},
+    {"chapterId":"black-specks","outcomes":["LO3","LO7"],"standardRefs":["255"]},
+    {"chapterId":"cavity-pressure","outcomes":["LO6","LO8"],"standardRefs":["255"]},
+    {"chapterId":"doe","outcomes":["LO6","LO8"],"standardRefs":["255"]},
+    {"chapterId":"capability","outcomes":["LO8"],"standardRefs":["255"]},
+    {"chapterId":"process-monitoring","outcomes":["LO6","LO8"],"standardRefs":["255"]},
+    {"chapterId":"dimensional-stability","outcomes":["LO7","LO8"],"standardRefs":["255"]},
+    {"chapterId":"fibre-orientation","outcomes":["LO3","LO7"],"standardRefs":["255"]},
+    {"chapterId":"thin-wall","outcomes":["LO6","LO7"],"standardRefs":["255"]},
+    {"chapterId":"multi-cavity","outcomes":["LO6","LO7","LO9"],"standardRefs":["255"]},
+    {"chapterId":"high-performance-polymers","outcomes":["LO3"],"standardRefs":["255"]},
+    {"chapterId":"complex-diagnostics","outcomes":["LO7","LO8","LO10"],"standardRefs":["255"]}
+  ],
+  "mappingRule": "Chapter-to-standard references indicate potentially relevant supporting knowledge or practice context only. They do not assert that a chapter covers all outcomes, evidence requirements, range statements, special notes or CMR obligations of a standard.",
+  "assessmentEvidenceModel": {
+    "formativeAppEvidence": ["knowledge checks", "retrieval practice", "case analysis", "simulated troubleshooting", "source-based written reasoning"],
+    "providerControlledSummativeEvidence": ["approved assessment instrument", "marking schedule", "assessor judgement", "reassessment decision", "identity-controlled evidence retention"],
+    "workplaceEvidence": ["direct observation where required", "machine/mould/site context", "authorised practical activity", "supervisor or assessor verification", "evidence of escalation outside learner authority"],
+    "boundaries": [
+      "simulation is not workplace practical competence",
+      "a quiz pass is not consent to assess",
+      "MouldMaster completion is not an NZQA result",
+      "provider assessment does not become national-standard assessment without consent and moderation where DASS standards are used"
+    ]
+  },
+  "moderationModel": {
+    "internalModeration": "Provider-owned and required for controlled assessment practice.",
+    "nationalExternalModeration": "Required through the relevant standard-setting body system when assessing DASS standards.",
+    "cmr": "CMR 13 applies to the current Injection Moulding standards listed here.",
+    "repositoryRole": "MouldMaster may supply draft instruments, source trails and audit fields but cannot self-grant moderation acceptance."
+  },
+  "microCredentialReadiness": {
+    "creditRange": "1-40 credits",
+    "creditDefinition": "1 credit represents 10 notional learning hours",
+    "applicationOwnership": "Eligible provider or other body permitted by current NZQA rules; provider accreditation remains provider-owned.",
+    "criteria": ["title-and-learning-outcomes", "need-and-stakeholder-support", "requirements", "review", "delivery-capability", "assessment-and-moderation-capability"],
+    "rule": "Do not infer title, level or credits from app structure or screen time."
+  },
+  "gates": [
+    {"id":"G1-provider","status":"external-hold","requirement":"Eligible NZQA-recognised provider and accountable application owner confirmed."},
+    {"id":"G2-need","status":"external-hold","requirement":"Documented employer, learner, provider and industry need/support evidence."},
+    {"id":"G3-design","status":"partial","requirement":"Final title, outcomes, NZQCF level, credit/workload, entry, RPL/credit, assessment and completion rules approved by provider."},
+    {"id":"G4-assessment","status":"external-hold","requirement":"Approved summative instruments, authorised assessors, internal moderation and evidence-retention controls."},
+    {"id":"G5-consent","status":"external-hold","requirement":"Consent to assess and CMR 13 capability where current DASS standards are assessed."},
+    {"id":"G6-national-moderation","status":"external-hold","requirement":"Participation in the relevant national external moderation system where standards are assessed."},
+    {"id":"G7-workplace","status":"external-hold","requirement":"Real workplace evidence under authorised conditions; simulations and app records cannot substitute for required practical evidence."},
+    {"id":"G8-review","status":"partial","requirement":"Provider-controlled formal review cycle, stakeholder review, change governance and NZQA change-consent handling."}
+  ]
+}
