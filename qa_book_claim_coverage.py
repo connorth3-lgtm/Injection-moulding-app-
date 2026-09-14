@@ -11,6 +11,7 @@ def load(rel):
 manifest = load('data/book-manifest-v1.json')
 gate = load('data/book-accuracy-gate-v1.json')
 evidence_registry = load('data/book-evidence-registry-v1.json')
+audit = load('data/book-verification-audit-all-v1.json')
 review_paths = [
     'data/book-claim-review-high-risk-v1.json',
     'data/book-claim-review-process-tooling-v1.json',
@@ -79,7 +80,6 @@ def add_sources(items):
             prior = source_records[sid]
             if prior.get('url') and src.get('url'):
                 assert prior['url'] == src['url'], f'conflicting source URL for {sid}'
-            # Keep the richer record if the first registration was metadata-light.
             if len(src) > len(prior):
                 source_records[sid] = {**prior, **src}
         else:
@@ -97,7 +97,6 @@ for resolution in resolutions:
     assert resolution.get('chapterPromotionAuthorized') is False
     add_sources(resolution.get('newEvidence'))
 
-# Currency-only records in the high-risk ledger must still resolve to a traceable source record elsewhere.
 high_risk = reviews[0]
 for snap in high_risk.get('sourceCurrency', []):
     sid = snap['id']
@@ -141,8 +140,7 @@ assert counts['hold'] == 0, counts
 assert counts['conflicting'] == 0, counts
 
 all_resolution = resolutions[-1]
-assert all_resolution.get('reviewScope') == 'all-46-chapters-all-137-claims'
-assert all_resolution.get('effectiveCountsAfterAllResolutions') == {
+expected_counts = {
     'chapters': 46,
     'claims': 137,
     'supported': 74,
@@ -150,8 +148,51 @@ assert all_resolution.get('effectiveCountsAfterAllResolutions') == {
     'hold': 0,
     'conflicting': 0,
 }
+assert all_resolution.get('reviewScope') == 'all-46-chapters-all-137-claims'
+assert all_resolution.get('effectiveCountsAfterAllResolutions') == expected_counts
 assert all_resolution.get('publicationBoundary', {}).get('verifiedChaptersAuthorized') == 0
+
+# Recount the two historical ledgers whose stored summary objects were found to be stale.
+review_by_scope = {r['reviewScope']: r for r in reviews}
+corrections = {x['ledger']: x for x in all_resolution.get('auditCorrections', [])}
+for filename, scope in [
+    ('book-claim-review-foundations-materials-machine-v1.json', 'remaining-foundations-materials-machine'),
+    ('book-claim-review-troubleshooting-v1.json', 'troubleshooting-excluding-warpage'),
+]:
+    review = review_by_scope[scope]
+    raw = Counter(c['conclusion'] for ch in review['chapters'] for c in ch['claims'])
+    correction = corrections[filename]
+    assert correction['storedSummary'] != correction['recountFromClaimRecords'], f'{filename} correction must document a real mismatch'
+    assert correction['recountFromClaimRecords'] == {
+        'claims': sum(raw.values()),
+        'supported': raw['supported'],
+        'qualified': raw['qualified'],
+        'hold': raw['hold'],
+        'conflicting': raw['conflicting'],
+    }
+
+# The all-chapter audit must enumerate exactly the same 46 chapters as the manifest.
+audit_ids = [cid for part in audit.get('parts', []) for cid in part.get('chapters', [])]
+assert audit.get('scope', {}).get('chapters') == 46
+assert audit.get('scope', {}).get('claims') == 137
+assert len(audit_ids) == 46 and len(set(audit_ids)) == 46
+assert set(audit_ids) == manifest_ids
+assert audit.get('effectiveClaimDisposition') == {
+    'supported': 74,
+    'qualified': 63,
+    'hold': 0,
+    'conflicting': 0,
+    'rule': 'Qualified claims remain scoped by their applicability, exclusions and evidence basis; qualified does not mean universal.',
+}
+publication = audit.get('publicationDecision', {})
+assert publication.get('evidenceReviewComplete') is True
+assert publication.get('claimLevelEvidenceBlockersRemaining') == 0
+assert publication.get('claimLevelConflictsRemaining') == 0
+assert publication.get('chaptersReadyForExplicitPromotionReview') == 46
+assert publication.get('chaptersAutomaticallyVerified') == 0
+assert publication.get('currentBookDisposition') == 'technical-review-only'
 
 print('PASS: 46/46 Book chapters have claim-level review coverage; 137 claims inventoried; 0 chapters self-promoted.')
 print('PASS: all effective claim evidence blockers cleared without publication self-promotion.')
+print('PASS: historical summary-count drift is governed by explicit recount records; all-chapter audit matches the manifest.')
 print(f"PASS: effective claim dispositions: supported={counts['supported']}, qualified={counts['qualified']}, hold={counts['hold']}, conflicting={counts['conflicting']}.")
