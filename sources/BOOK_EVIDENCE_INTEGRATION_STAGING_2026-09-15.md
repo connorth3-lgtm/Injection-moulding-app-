@@ -53,7 +53,7 @@ The expected runtime state is therefore 36 previously authorized chapters still 
 
 ## Release boundary
 
-The enrichment JSON is intentionally not added to the existing `2026.09.14.4` service-worker cache generation. Adding new governed bytes to that cache name would mutate an existing release generation. A future enriched offline/device release therefore requires a deliberate new release/cache identity followed by full release QA and a new publication decision.
+The historical `2026.09.14.4` service-worker/cache generation is not relabelled. Because governed learner-runtime bytes changed, this integration defines a new `2026.09.15.1` technical-review candidate. The enrichment JSON is cached only in that new generation. This release-identity bump is not publication authorization: the 10 enriched chapters remain in technical review until separately reviewed and re-authorized.
 
 A QA-only mirror PR to `main` is used to trigger the repository workflows while PR #339 remains correctly stacked on PR #332.
 

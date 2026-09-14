@@ -47,8 +47,10 @@ for name in book_data:
 # that without a new cache identity would mutate bytes visible to the old generation.
 assert ENRICHMENT_SOURCE.read_bytes() == ENRICHMENT_PACKAGED.read_bytes(), 'Book evidence enrichment source/runtime pair drifted'
 enrichment_asset = './src/domains/learning/book-data/book-evidence-enrichment-v1.json'
-assert "const CACHE_VERSION='2026.09.14.4';" in sw, 'unexpected release identity change inside evidence-integration PR'
-assert enrichment_asset not in sw, 'evidence enrichment must not be inserted into the existing 2026.09.14.4 cache generation; choose a new release identity first'
+release_version = json.loads((ROOT / 'version.json').read_text(encoding='utf-8'))['web_release']
+assert release_version == '2026.09.15.1', f'unexpected Book enrichment candidate release: {release_version}'
+assert f"const CACHE_VERSION='{release_version}';" in sw, 'Book enrichment cache generation is not bound to the new web release'
+assert enrichment_asset in sw, 'Book evidence enrichment is missing from the new offline cache generation'
 
 assert runtime_asset in sw, 'Book runtime not in atomic offline cache'
 assert "const BOOK_DATA='./src/domains/learning/book-data/';" in book_runtime
@@ -173,4 +175,4 @@ assert expected_review_ids.issubset(manifest_ids)
 
 print('PASS: governed Book data/runtime pairs remain aligned and legacy publication authorization remains intact.')
 print('PASS: evidence enrichment is additive, source-traceable, and all 10 touched chapters are forced back to technical review after legacy authorization.')
-print('PASS: the existing 2026.09.14.4 physical-device cache generation is unchanged; enriched Book release remains deliberately blocked pending a new release identity and full release QA.')
+print('PASS: 2026.09.14.4 remains the historical candidate; 2026.09.15.1 is the new enrichment technical-review cache generation and still requires a separate publication decision.')
