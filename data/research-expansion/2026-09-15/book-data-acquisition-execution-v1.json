@@ -1,0 +1,117 @@
+{
+  "schema": 1,
+  "version": "2026.09.15.1",
+  "purpose": "Convert the Book data-enrichment gap closeout into execution-ready source-owner acquisition requests. This file defines the minimum useful schemas, preferred formats, rights requirements, privacy boundaries and verified public contact routes. It does not claim that any owner has agreed to share data.",
+  "governance": {
+    "metadataOnly": true,
+    "noOwnerContactClaimedYet": true,
+    "requestMinimumNecessaryData": true,
+    "acceptDeidentifiedOrPseudonymizedProductionIdentifiers": true,
+    "doNotRequestTradeSecretsUnrelatedToEvidenceQuestion": true,
+    "doNotTreatPublicationLicenceAsDatasetLicence": true,
+    "explicitDatasetReuseTermsRequiredBeforeBookEmbedding": true,
+    "rawThirdPartyPayloadsCommitted": false
+  },
+  "requests": [
+    {
+      "id": "acq-black-speck-shot-recovery",
+      "priority": 1,
+      "gapId": "black-speck-shot-linked-recovery",
+      "objective": "Acquire a rights-clear chronological production record linking black-speck/black-dot observations to the intervention and verified post-intervention recovery sequence.",
+      "minimumUsefulSchema": [
+        {"field":"cycle_or_sample_id","required":true,"note":"Monotonic shot/cycle identity or sampling order; exact clock time optional if order is reliable."},
+        {"field":"timestamp","required":false,"note":"Preferred when available; relative elapsed time is acceptable."},
+        {"field":"machine_or_line_id","required":true,"note":"May be pseudonymized."},
+        {"field":"mould_or_part_family","required":true,"note":"May be pseudonymized; enough context to distinguish campaigns."},
+        {"field":"material_context","required":true,"note":"Polymer family/grade or minimally resin family plus colour/masterbatch context; commercial names may be redacted."},
+        {"field":"black_speck_observation","required":true,"note":"Binary reject, defect count, area/count metric, or inspection score tied to the cycle/sample."},
+        {"field":"intervention_event","required":true,"note":"Purge, barrel/screw cleaning, hopper clean, filter-mesh change, hot-runner clean or other specific action."},
+        {"field":"intervention_start_end","required":true,"note":"Cycle IDs or times bounding the action."},
+        {"field":"post_intervention_sequence","required":true,"note":"Enough subsequent observations to demonstrate recovery/stabilization rather than a single after value."},
+        {"field":"process_context","required":false,"note":"Melt temperature, residence-time proxies, screw recovery, back pressure, purge material or other available context."}
+      ],
+      "preferredFormats": ["CSV", "XLSX", "Parquet", "JSON"],
+      "preferredScale": "At least 100 ordered observations spanning pre-event, intervention and recovery; smaller records remain useful if every intervention step is precisely timestamped.",
+      "rightsRequest": "Permission to analyse the supplied records, derive aggregate statistics and create new Book-owned diagrams/tables. Raw rows need not be redistributed publicly; a restricted research-use grant is acceptable if derived outputs may be published with attribution and confidentiality constraints.",
+      "publicContactRoutes": [
+        {"source":"Curbano 2023 black-spot production case","contact":"ryanjeffrey.curbano@lpulaguna.edu.ph","evidence":"Author email printed in the public IEOM proceedings paper."},
+        {"source":"Rattanabunditsakun 2014 black-dot thesis","contact":"Chulalongkorn University ETD / author or advisor via institutional repository","evidence":"ETD page identifies author, Faculty of Engineering and advisor Parames Chutima; no direct author email was verified in this pass."}
+      ],
+      "acceptanceCriteria": [
+        "chronology is unambiguous",
+        "defect observations are linked to the same chronology as the intervention",
+        "recovery contains repeated post-intervention observations",
+        "machine/material/mould context is sufficient to avoid universalizing a plant-specific result",
+        "reuse terms are explicit"
+      ]
+    },
+    {
+      "id": "acq-hotrunner-synchronized-state-quality",
+      "priority": 2,
+      "gapId": "hot-runner-synchronized-actual-state-quality",
+      "objective": "Acquire synchronized cycle-level traces joining commanded valve state, actual valve-pin state, actuator effort, cavity response and cavity-specific product quality.",
+      "minimumUsefulSchema": [
+        {"field":"cycle_id","required":true,"note":"Shared identifier across controller, sensor and quality exports."},
+        {"field":"timebase","required":true,"note":"Timestamp or within-cycle sample time sufficient for channel alignment."},
+        {"field":"gate_or_cavity_id","required":true,"note":"Needed for multi-gate/multi-cavity attribution."},
+        {"field":"valve_command","required":true,"note":"Open/close command, target position or target stroke."},
+        {"field":"actual_pin_position","required":true,"note":"Measured or controller-reported actual position/stroke."},
+        {"field":"motor_current_torque_or_force","required":false,"note":"Strongly preferred; current/torque/force proxy with engineering units or scaling metadata."},
+        {"field":"cavity_pressure","required":true,"note":"Local cavity-pressure trace with sensor location and units."},
+        {"field":"cavity_temperature","required":false,"note":"Useful for separating thermal/material effects from actuator effects."},
+        {"field":"part_quality","required":true,"note":"Cavity-specific weight, dimension, surface/visual classification or another measured quality characteristic."},
+        {"field":"process_setpoints","required":false,"note":"Injection speed, V/P transfer, holding pressure/time and melt/mould temperature where available."}
+      ],
+      "preferredFormats": ["CSV", "TDMS", "HDF5", "Parquet", "controller export + quality CSV with documented join key"],
+      "preferredScale": "At least 50 production cycles per cavity under a stable condition plus one deliberate or natural disturbance; higher-frequency within-cycle traces preferred.",
+      "rightsRequest": "Permission to analyse synchronized traces and publish only newly derived, de-identified plots/tables and teaching examples. Owner may retain raw controller exports privately; field semantics, units and cycle/cavity join keys must be supplied.",
+      "publicContactRoutes": [
+        {"source":"IKV servo-electric valve-pin cavity-pressure programme","contact":"matthias.schoell@ikv.rwth-aachen.de","evidence":"Public IKV/Kunststoffe material identifies Matthias Schöll as process-control working-group lead and publishes this address."},
+        {"source":"EWIKON valve-gate observability / application engineering","contact":"anwendungstechnik@ewikon.com","evidence":"EWIKON public contact page identifies Application Engineering as the technical contact route."},
+        {"source":"EWIKON general contact","contact":"info@ewikon.com","evidence":"EWIKON public contact page."}
+      ],
+      "acceptanceCriteria": [
+        "actual pin state is not inferred only from the command",
+        "cavity-pressure and pin-state channels share a reliable time/cycle alignment",
+        "quality is attributable to the same cavity/cycle",
+        "units and sensor/controller semantics are documented",
+        "reuse terms permit derived Book-owned teaching graphics"
+      ]
+    },
+    {
+      "id": "acq-mould-condition-maintenance-recovery",
+      "priority": 3,
+      "gapId": "mould-maintenance-condition-to-recovery",
+      "objective": "Acquire asset-linked records joining measured component condition or wear, a specific maintenance/refurbishment action and verified post-maintenance quality/metrology recovery.",
+      "minimumUsefulSchema": [
+        {"field":"asset_or_mould_id","required":true,"note":"Pseudonymous stable identifier acceptable."},
+        {"field":"event_id","required":true,"note":"Stable maintenance-event identity."},
+        {"field":"shots_or_cycles_at_event","required":true,"note":"Preferred life axis; calendar time alone is secondary."},
+        {"field":"pre_intervention_condition","required":true,"note":"Measured wear, flow/pressure loss, dimensional drift, inspection score, component-state label or documented failure mode."},
+        {"field":"maintenance_action","required":true,"note":"Cleaning, component replacement, polishing, refurbishment, cooling-circuit restoration or other specific action."},
+        {"field":"post_intervention_condition","required":true,"note":"Repeated measurement or inspection showing whether the physical condition changed."},
+        {"field":"pre_quality_or_metrology","required":true,"note":"Part quality/metrology before the intervention."},
+        {"field":"post_quality_or_metrology","required":true,"note":"Same or comparable quality/metrology after intervention."},
+        {"field":"event_date","required":false,"note":"Useful for fleet/seasonality context."},
+        {"field":"component_id","required":false,"note":"Gate bush, centre unit, cooling circuit, cavity insert etc. when available."}
+      ],
+      "preferredFormats": ["CSV", "XLSX", "Parquet", "CMMS export + metrology/quality export with documented join key"],
+      "preferredScale": "Multiple repeated intervention/recovery events across the same assets are preferred; a smaller fleet is acceptable if pre/post measurements are strong and consistently linked.",
+      "rightsRequest": "Permission to analyse de-identified event-linked records and publish derived survival/recovery diagrams, distributions and worked examples. Company and product identities may remain confidential; raw rows can remain non-public.",
+      "publicContactRoutes": [
+        {"source":"2011-2024 injection-mould maintenance history","contact":"parni@mmmi.sdu.dk","evidence":"Public ESREL/SRA-E 2025 proceedings list Parisa Niloofar at the University of Southern Denmark."},
+        {"source":"2011-2024 injection-mould maintenance history","contact":"kristian.have@hotmail.com","evidence":"Public ESREL/SRA-E 2025 proceedings list Kristian Have as co-author."},
+        {"source":"Mould wear-out prediction case","contact":"fdal@dtu.dk","evidence":"Taylor & Francis article page lists Flavia Dalia Frumosu as corresponding author."},
+        {"source":"13-mould RUL/metrology study","contact":"Till Böttjer via Aarhus University research portal","evidence":"Aarhus University identifies Till Böttjer as corresponding author; direct email was not verified in this pass."},
+        {"source":"OLI injection-mould predictive-maintenance project","contact":"University of Aveiro authors / OLI project team","evidence":"Open paper identifies University of Aveiro researchers and OLI - Sistemas Sanitários as the industrial application partner; direct project email was not verified in this pass."}
+      ],
+      "acceptanceCriteria": [
+        "same asset/event joins condition, intervention and post-intervention evidence",
+        "pre/post quality or metrology is comparable",
+        "shot/cycle exposure is available or a defensible substitute is documented",
+        "maintenance-action semantics are clear",
+        "reuse terms are explicit"
+      ]
+    }
+  ]
+}
