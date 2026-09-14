@@ -1,0 +1,15 @@
+{
+  "schema": 1,
+  "status": "editorial-pack-complete-integration-ready",
+  "researchPr": 333,
+  "humanVoicePr": 332,
+  "completedArtifactSpecs": 12,
+  "integrationMap": "data/research-expansion/2026-09-15/book-artifact-integration-map-v1.json",
+  "copyHandoffs": [
+    "sources/book-editorial-artifacts/2026-09-15/integration-batch-1-copy.md",
+    "sources/book-editorial-artifacts/2026-09-15/integration-batch-2-copy.md",
+    "sources/book-editorial-artifacts/2026-09-15/integration-batch-3-copy.md"
+  ],
+  "nextControlledAction": "Create a stacked Book-content branch from feature/book-human-voice-pass, integrate source/runtime pairs identically, then run full Book/release QA before any release identity change.",
+  "runtimeChangedInResearchPr": false
+}
