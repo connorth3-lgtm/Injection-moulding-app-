@@ -14,10 +14,20 @@ Public sources:
 - https://maeisb.nz/for-providers/qualifications-and-standards/
 - https://maeisb.nz/our-industries/
 
+Verified public routing checked 2026-09-15:
+- qualifications / standards / training schemes (micro-credentials): **qualifications@maeisb.nz**
+- national external moderation / consent to assess / general quality assurance: **moderation@maeisb.nz**
+- general enquiries: **info@maeisb.nz**
+- phone: **04 280 3378**
+
 Why this is the first contact:
 - MAEISB is the current standard-setting body for Manufacturing and Engineering and explicitly covers **Plastics, Polymer and Rubber Product Manufacturing**.
 - Its published functions include developing/maintaining standards, qualifications and micro-credentials, programme endorsement, moderation and workforce analysis.
 - Its provider contact page explicitly routes enquiries for qualifications/standards, micro-credentials, programme endorsement, consent to assess and national external moderation.
+
+Use two routed messages:
+1. `qualifications@maeisb.nz` for pathway, qualification/version, micro-credential and future-provider questions;
+2. `moderation@maeisb.nz` for CMR 13 / CMR 0014 v15, consent-to-assess, pre-moderation and national external moderation questions.
 
 Questions to resolve with MAEISB before any recognised-assessment claim:
 1. Confirm the current CMR requirements for standards `252`, `255`, `27926`, `29515`, `260` and `9713` in a **new 2026 consent-to-assess application**.
@@ -27,7 +37,7 @@ Questions to resolve with MAEISB before any recognised-assessment claim:
 5. Confirm the appropriate route for industry-needs evidence and plastics-sector stakeholder consultation.
 6. Confirm what programme endorsement, pre-moderation and national external moderation evidence would be expected from a future provider.
 
-Evidence state: **external-hold** until MAEISB responds in writing or meeting notes are retained with consent.
+Evidence state: **external-hold** until MAEISB responds in writing or meeting notes are retained with consent. Sending the messages alone records a contact attempt only.
 
 ## 2. Second contact — Competenz
 
@@ -122,7 +132,7 @@ Until then, the existing MouldMaster `4401`/`4402` mapping remains **qualificati
 
 The live NZQA Injection Moulding domain currently displays **CMR 13** for the selected current standards. NZQA's August 2025 CMR review also states that **CMR 0014 version 15** is the core CMR for Hanga-Aro-Rau industries, that new consent applications from August 2025 must comply with version 15, and that standards in legacy CMRs including CMR 0013 are moved as they are reviewed.
 
-MAEISB's current consent-to-assess application materials also direct Manufacturing and Engineering applicants to CMR 0014.
+MAEISB's current consent-to-assess application materials also direct Manufacturing and Engineering applicants to CMR 0014 and route consent questions/applications through `moderation@maeisb.nz`.
 
 Therefore:
 - preserve the current standard-page CMR 13 evidence;
@@ -132,22 +142,24 @@ Therefore:
 
 ## 7. Engagement sequence
 
-1. **MAEISB** — validate pathway, current standards/CMR position, provider/endorsement/moderation route.
-2. **Competenz** — validate current plastics programme reality, assessment practice and likely post-2027 provider transition.
-3. **Plastics New Zealand** — validate workforce need and recruit consented employer reviewers.
-4. **Potential provider owner** — selected only after steps 1–3 clarify the transition and delivery model.
-5. **Employer pilot sites** — only after provider/assessment roles and privacy/evidence handling are defined.
-6. **NZQA application/consent activity** — provider-owned; never initiated as a repository self-approval step.
+1. **MAEISB qualifications** — validate pathway, current standards/qualification-version position and future-provider route.
+2. **MAEISB moderation** — validate CMR/consent/pre-moderation/national external moderation position.
+3. **Competenz** — validate current plastics programme reality, assessment practice and likely post-2027 provider transition.
+4. **Plastics New Zealand** — validate workforce need and recruit consented employer reviewers.
+5. **Potential provider owner** — selected only after steps 1–4 clarify the transition and delivery model.
+6. **Employer pilot sites** — only after provider/assessment roles and privacy/evidence handling are defined.
+7. **NZQA application/consent activity** — provider-owned; never initiated as a repository self-approval step.
 
 ## 8. First-contact evidence record
 
 For every contact attempt or meeting, record only what can be evidenced:
 - organisation;
-- public contact route used;
-- date;
-- contact role if voluntarily/publicly supplied;
-- purpose of contact;
+- exact public contact route used;
+- date/time;
+- subject;
+- exact message body or immutable reference;
 - documents shared;
+- contact role if voluntarily/publicly supplied;
 - consent to retain notes;
 - statements actually made by the organisation;
 - follow-up requested;
@@ -159,4 +171,4 @@ Do not mark `G1-provider`, `G2-need`, `G4-assessment`, `G5-consent`, `G6-nationa
 
 ## 9. Current decision
 
-MouldMaster is **provider-engagement ready**, not NZQA approved. The best immediate sequence is MAEISB → Competenz → Plastics New Zealand, with the long-term provider owner selected only after the 2026–2027 work-based-learning transition is clarified.
+MouldMaster is **provider-engagement ready**, not NZQA approved. The best immediate sequence is MAEISB qualifications → MAEISB moderation → Competenz → Plastics New Zealand, with the long-term provider owner selected only after the 2026–2027 work-based-learning transition is clarified.
