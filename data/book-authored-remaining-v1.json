@@ -40,77 +40,99 @@
       "type": "peer-reviewed-journal",
       "title": "Development of a cavity pressure control for injection moulding by adjusting the cross-section in the hot runner",
       "url": "https://doi.org/10.1515/polyeng-2021-0225",
-      "scope": "Experimental servo valve-pin control study linking hot-runner restriction changes to measured cavity-pressure transfer; same IKV research family as related hot-runner control work."
+      "scope": "Experimental servo valve-pin control study linking hot-runner restriction changes to measured cavity-pressure transfer; same IKV research family as related hot-runner control work.",
+      "checked": "2026-09-15",
+      "currentState": "published"
     },
     {
       "id": "ewikon-2022-electric-valve-gate-observability",
       "type": "supplier-technical",
       "title": "New solutions for valve gate technology and networked injection moulding",
       "url": "https://www.etmm-online.com/new-solutions-for-valve-gate-technology-and-networked-injection-moulding-a-6343d5227a092f1fe1ff40ce4b040e43/",
-      "scope": "Supplier/trade evidence that electric valve-gate systems can expose actual valve-pin position and motor-current/force information alongside networked process monitoring; capability evidence, not quality validation."
+      "scope": "Supplier/trade evidence that electric valve-gate systems can expose actual valve-pin position and motor-current/force information alongside networked process monitoring; capability evidence, not quality validation.",
+      "checked": "2026-09-15",
+      "currentState": "published-supplier-technical"
     },
     {
       "id": "ipp-1998-multicavity-melt-control-quality",
       "type": "peer-reviewed-journal",
       "title": "Consistency and Flexibility of Multi Cavity Melt Control",
       "url": "https://doi.org/10.3139/217.980398",
-      "scope": "Commercial four-gate distributed melt-control study reporting dimensional and process-capability changes; values are case-specific and part of the Kazmer dynamic-melt-control research family."
+      "scope": "Commercial four-gate distributed melt-control study reporting dimensional and process-capability changes; values are case-specific and part of the Kazmer dynamic-melt-control research family.",
+      "checked": "2026-09-15",
+      "currentState": "published"
     },
     {
       "id": "pes-1997-multicavity-pressure-control-capability",
       "type": "peer-reviewed-journal",
       "title": "The process capability of multi-cavity pressure control for the injection molding process",
       "url": "https://doi.org/10.1002/pen.11838",
-      "scope": "Experimental multi-cavity pressure-control study reporting process-capability improvement under the studied system; same Kazmer research family, not an independent replication."
+      "scope": "Experimental multi-cavity pressure-control study reporting process-capability improvement under the studied system; same Kazmer research family, not an independent replication.",
+      "checked": "2026-09-15",
+      "currentState": "published"
     },
     {
       "id": "prc-2004-selfregulating-valve-consistency",
       "type": "peer-reviewed-journal",
       "title": "Validation of moulding consistency with a self-regulating melt pressure valve",
       "url": "https://doi.org/10.1179/174328904X29948",
-      "scope": "Experimental hot-runner melt-pressure-valve study reporting reduced part-weight sensitivity and variation; case-specific and part of the same broader research family."
+      "scope": "Experimental hot-runner melt-pressure-valve study reporting reduced part-weight sensitivity and variation; case-specific and part of the same broader research family.",
+      "checked": "2026-09-15",
+      "currentState": "published"
     },
     {
       "id": "ieom-2023-black-spot-filter-mesh",
       "type": "conference-applied-production",
       "title": "Quality Improvement of Black Spot Defects in the Plastic Injection Molding Process at Company ABC",
       "url": "https://doi.org/10.46254/AN13.20230097",
-      "scope": "Single-company black-spot intervention case with quantified before/after defect outcomes; the filter-mesh conclusion is case-specific, not a universal cause."
+      "scope": "Single-company black-spot intervention case with quantified before/after defect outcomes; the filter-mesh conclusion is case-specific, not a universal cause.",
+      "checked": "2026-09-15",
+      "currentState": "published"
     },
     {
       "id": "chula-2014-black-dot-dmaic",
       "type": "masters-thesis",
       "title": "Black dot defect reduction in plastic injection moulding process",
       "url": "https://doi.org/10.58837/CHULA.THE.2014.1470",
-      "scope": "Production DMAIC/DOE black-dot reduction study with quantified before/after defect proportion; plant-, machine- and material-specific evidence."
+      "scope": "Production DMAIC/DOE black-dot reduction study with quantified before/after defect proportion; plant-, machine- and material-specific evidence.",
+      "checked": "2026-09-15",
+      "currentState": "published-thesis"
     },
     {
       "id": "mechanik-2018-cooling-channel-diagnosis-cleaning",
       "type": "peer-reviewed-journal",
       "title": "Diagnosing and cleaning of injection mould cooling channels",
       "url": "https://doi.org/10.17814/mechanik.2018.4.45",
-      "scope": "Peer-reviewed cooling-channel diagnosis and cleaning evidence linking hydraulic restriction/contamination to physical maintenance; not a universal maintenance threshold."
+      "scope": "Peer-reviewed cooling-channel diagnosis and cleaning evidence linking hydraulic restriction/contamination to physical maintenance; not a universal maintenance threshold.",
+      "checked": "2026-09-15",
+      "currentState": "published"
     },
     {
       "id": "sanko-2025-cooling-pipe-cleaning-three-cases",
       "type": "practitioner-case",
       "title": "Improvement Case Study: Enhanced Cooling Efficiency Through Mold Cooling Pipe Cleaning",
       "url": "https://en.sankogosei.shop/post/improvement-case-study-enhanced-cooling-efficiency-through-mold-cooling-pipe-cleaning",
-      "scope": "Three commercial production mould cleaning cases with reported hydraulic and production before/after outcomes; factual case values only, not generic targets."
+      "scope": "Three commercial production mould cleaning cases with reported hydraulic and production before/after outcomes; factual case values only, not generic targets.",
+      "checked": "2026-09-15",
+      "currentState": "published-practitioner-case"
     },
     {
       "id": "fuso-2023-eight-cavity-cooling-cleaning",
       "type": "practitioner-case",
       "title": "Case Study of Mold Cooling Circuit Cleaning — 8-Cavity Injection Mold",
       "url": "https://mono.ipros.com/en/product/detail/2000839561/",
-      "scope": "Eight-cavity cooling-circuit cleaning case with measured flow and pressure-loss changes; hydraulic recovery does not by itself prove product-quality recovery."
+      "scope": "Eight-cavity cooling-circuit cleaning case with measured flow and pressure-loss changes; hydraulic recovery does not by itself prove product-quality recovery.",
+      "checked": "2026-09-15",
+      "currentState": "published-practitioner-case"
     },
     {
       "id": "smartflow-2025-cooling-flow-balance-case",
       "type": "practitioner-case",
       "title": "Case Study: Flow Regulators Solve a Part Quality Issue",
       "url": "https://www.smartflow-usa.com/case-study-flow-regulators-solve-a-part-quality-issue/",
-      "scope": "Commercial cooling-balance diagnostic case showing severe circuit-to-circuit flow imbalance and part deformation; case evidence, not a universal flow criterion."
+      "scope": "Commercial cooling-balance diagnostic case showing severe circuit-to-circuit flow imbalance and part deformation; case evidence, not a universal flow criterion.",
+      "checked": "2026-09-15",
+      "currentState": "published-practitioner-case"
     }
   ],
   "chapters": [
