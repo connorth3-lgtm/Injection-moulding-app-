@@ -218,8 +218,8 @@
   "effectiveCountsAfterAllResolutions": {
     "chapters": 46,
     "claims": 137,
-    "supported": 73,
-    "qualified": 64,
+    "supported": 74,
+    "qualified": 63,
     "hold": 0,
     "conflicting": 0
   },
@@ -228,7 +228,7 @@
     {"scope":"process-tooling","chapters":8,"claims":24,"supported":9,"qualified":15,"hold":0,"conflicting":0},
     {"scope":"troubleshooting-excluding-warpage","chapters":8,"claims":24,"supported":12,"qualified":12,"hold":0,"conflicting":0},
     {"scope":"engineering-advanced","chapters":12,"claims":36,"supported":31,"qualified":5,"hold":0,"conflicting":0},
-    {"scope":"high-risk","chapters":7,"claims":20,"supported":8,"qualified":12,"hold":0,"conflicting":0}
+    {"scope":"high-risk","chapters":7,"claims":20,"supported":9,"qualified":11,"hold":0,"conflicting":0}
   ],
   "publicationBoundary": {
     "evidenceHoldsRemaining": 0,
