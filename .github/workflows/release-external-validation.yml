@@ -30,5 +30,6 @@ jobs:
         run: python tools/verify_main_ruleset.py --self-test
       - name: Preserve human and operational evidence boundary
         run: |
-          echo 'PASS means unsupported external-validation claims are blocked and the Wave 1 execution contracts are coherent.'
+          echo 'PASS means unsupported external-validation claims are blocked.'
+          echo 'PASS also means the Wave 1 execution contracts are internally coherent.'
           echo 'It does not mean human AT, physical-device, Windows, SME, learner or site evidence has been performed.'
