@@ -169,7 +169,7 @@
       "claimId": "venting-03",
       "previous": "hold",
       "newConclusion": "qualified",
-      "evidence": ["DME-VENTING-SOLUTIONS","DME-SINTERED-VENTS-FAQ","BOOK-ACCURACY-GATE-V1"],
+      "evidence": ["DME-VENTING-SOLUTIONS","DME-SINTERED-VENTS-FAQ"],
       "reason": "DME demonstrates that vent selection, location, geometry and installation are application/product specific. The requirement for tooling/site authorization is retained as a MouldMaster governance boundary rather than presented as a universal technical standard. No generic vent dimension is authorized."
     },
     {
