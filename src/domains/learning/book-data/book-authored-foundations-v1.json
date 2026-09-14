@@ -23,10 +23,10 @@
       "applicability": "General thermoplastic injection-moulding concepts only. Actual process windows depend on the material grade, machine, mould, part requirements and applicable site controls.",
       "sourceIds": ["ISO-294-1-2017", "ASTM-D3641-24"],
       "sections": [
-        {"title": "The process in one sentence", "text": "Injection moulding repeatedly prepares a polymer melt, drives a controlled quantity into a closed mould, allows the material to form and solidify sufficiently, and removes the moulded part so the cycle can repeat."},
-        {"title": "What the process must achieve", "text": "A useful process must do more than fill the visible cavity. It must produce the required geometry and properties with repeatable conditions, while staying inside the limits of the material, machine, mould and safety system."},
-        {"title": "Why settings are not universal", "text": "Moulding conditions are not transferable constants. Standards for reproducible test-specimen moulding explicitly recognise that required conditions vary with the material. Production parts add further dependence on geometry, mould design, machine capability and quality requirements."},
-        {"title": "How to think like a process engineer", "text": "Separate the desired part result from the machine inputs used to create it. Observe what the material and cavity are doing, record the conditions that matter, and change one justified variable at a time when establishing cause and effect."}
+        {"title": "The process in one sentence", "text": "Injection moulding is a repeating sequence: prepare the melt, push a controlled shot into a closed mould, let the part form and become stable enough to handle, then open the mould and remove it ready for the next cycle."},
+        {"title": "What the process must achieve", "text": "Getting plastic into the cavity is only the start. A production process has to make the required shape and properties repeatedly, while staying inside the real limits of the material, machine, mould and safety system."},
+        {"title": "Why settings are not universal", "text": "There is no set of moulding conditions that travels unchanged from job to job. Even standards written for repeatable test specimens recognise that conditions depend on the material. Production adds another layer: part geometry, mould design, machine capability and the actual quality requirements all matter."},
+        {"title": "How to think like a process engineer", "text": "Start with the part result you need, then work back to the machine inputs that create it. Watch what the material and cavity are telling you, record the conditions that matter, and when you need to learn cause and effect, change one justified variable at a time."}
       ]
     },
     {
@@ -35,11 +35,11 @@
       "applicability": "Conceptual cycle model. Controller names, available phases and transition methods vary by machine and process.",
       "sourceIds": ["ISO-294-1-2017", "ASTM-D3641-24"],
       "sections": [
-        {"title": "Prepare the next shot", "text": "The plasticising unit rotates and retracts the screw to prepare a controlled quantity of melt for a later injection. Material preparation and thermal history continue to matter even when the mould is closed and cooling."},
-        {"title": "Fill the cavity", "text": "The machine advances the screw so melt flows through the nozzle, feed system and gate into the cavity. During this phase, flow resistance and the commanded motion interact; displayed hydraulic or injection pressure is not itself proof of cavity pressure."},
-        {"title": "Transfer and pack", "text": "A controlled transition moves the process from filling toward post-fill pressure control. Packing compensates for material contraction while the gate and part remain able to respond. The correct transition and packing strategy must be established for the actual moulded system rather than copied as a universal percentage or pressure."},
-        {"title": "Cool and eject", "text": "The part must remain constrained long enough to reach a condition where opening and ejection can occur without unacceptable deformation or damage. Cooling, mould temperature distribution, part geometry and material behaviour all affect this stage."},
-        {"title": "Treat the cycle as an interacting system", "text": "Cycle phases overlap physically even when the controller displays them separately. Plasticising may occur while the part cools, and thermal or pressure history from one phase can change what happens in the next. Diagnose the complete sequence, not a single screen value in isolation."}
+        {"title": "Prepare the next shot", "text": "While one part is being made, the plasticising unit is already preparing what comes next. The screw rotates and moves back as material is conveyed, heated and mixed into the next shot. That means material preparation and thermal history still matter while the mould is shut and the current part is cooling."},
+        {"title": "Fill the cavity", "text": "The screw moves forward and drives melt through the nozzle, feed system and gate into the cavity. The machine is commanding motion, but the resistance of the flow path decides how much pressure is needed to achieve it. A pressure value on the machine screen is useful evidence, not a direct reading of cavity pressure."},
+        {"title": "Transfer and pack", "text": "Near the end of filling, the process changes jobs: it moves from driving the flow front toward controlling post-fill pressure. Packing can compensate for contraction while the gate and part can still respond. Where to transfer and how to pack have to be established on the actual moulded system; they are not percentages or pressures to copy from another job."},
+        {"title": "Cool and eject", "text": "The part stays in the mould until it is stable enough to open and eject without unacceptable damage or deformation. How long that takes depends on the material, geometry, mould-temperature distribution and the way heat is being removed."},
+        {"title": "Treat the cycle as an interacting system", "text": "The controller may show neat, separate phases, but the physics overlaps. Plasticising can be happening while the part cools, and the thermal or pressure history created in one phase can change what happens in the next. When a process drifts, follow the whole cycle rather than staring at one screen value."}
       ]
     },
     {
@@ -48,10 +48,10 @@
       "applicability": "General injection-moulding-machine architecture. Exact guarding, drives, controls and component names depend on the machine manufacturer and configuration.",
       "sourceIds": ["ISO-20430-2020"],
       "sections": [
-        {"title": "Injection unit", "text": "The injection unit receives material, plasticises it, meters the shot and drives melt toward the mould. Common functional elements include the feed system, heated barrel, reciprocating screw, non-return function and nozzle, but their designs and control methods vary."},
-        {"title": "Clamping unit", "text": "The clamping unit supports the mould, closes it, provides the required closing and clamping functions, opens it after the moulding phase and supports ejection-related motion. Machine architecture can be hydraulic, electric or hybrid and may use different mechanical arrangements."},
-        {"title": "Control and energy systems", "text": "The controller coordinates commanded motion, temperatures, pressures, timing, alarms and interlocks. The machine also contains energy sources and stored-energy hazards that cannot be understood safely from the process screen alone."},
-        {"title": "Use the machine documentation", "text": "For setup, maintenance, guarding, isolation, limits and permitted operation, the specific machine manufacturer's instructions and the site's approved procedures control. A generic Book chapter cannot replace them."}
+        {"title": "Injection unit", "text": "The injection unit takes in raw material, turns it into a usable melt, meters the shot and then drives that melt toward the mould. Most reciprocating-screw machines share familiar elements such as the feed system, heated barrel, screw, non-return function and nozzle, although the details of their design and control vary."},
+        {"title": "Clamping unit", "text": "The clamp carries the mould through closing, clamping, opening and the motions associated with releasing the part. How it does that depends on the machine: hydraulic, electric and hybrid designs use different mechanical arrangements, so similar-looking controller commands can sit on very different hardware."},
+        {"title": "Control and energy systems", "text": "The controller coordinates motion, temperature, pressure, timing, alarms and interlocks, but the screen is only one view of the machine. Behind it are electrical, hydraulic, pneumatic, thermal and stored-energy hazards whose safe state cannot be judged from process values alone."},
+        {"title": "Use the machine documentation", "text": "When the task involves setup limits, guarding, isolation, maintenance or permitted operation, go to the manufacturer's instructions and the site's approved procedure. This Book can explain how the process works; it cannot replace the machine-specific safety and operating documents."}
       ]
     },
     {
@@ -60,10 +60,10 @@
       "applicability": "General mould-component concepts and terminology. Actual mould construction varies widely and may omit or add systems described here.",
       "sourceIds": ["ISO-12165-2019"],
       "sections": [
-        {"title": "The mould creates the part-forming space", "text": "Core and cavity surfaces define the moulded geometry. The mould also has to receive melt, remove heat, separate in a controlled way and release the part without damaging the component or tooling."},
-        {"title": "Feed system", "text": "A conventional feed path may include a sprue, runners and gates. Hot-runner systems change how melt is conveyed and controlled. The gate is both a flow restriction and a process boundary, so its geometry and thermal state can strongly affect filling and post-fill behaviour."},
-        {"title": "Guidance, support and ejection", "text": "Mould assemblies use locating, guiding and supporting components to maintain alignment and carry loads. Ejection systems then apply controlled motion to release the moulding. The exact component arrangement must be identified from the real tool rather than assumed from a generic diagram."},
-        {"title": "Temperature-control system", "text": "Cooling or temperature-control circuits remove or supply heat so the mould reaches a useful thermal condition. Circuit layout, flow condition and local heat load can create different surface temperatures across the tool, which is why a single controller setpoint does not describe the whole mould."}
+        {"title": "The mould creates the part-forming space", "text": "The core and cavity surfaces create the shape of the part, but a working mould has more to do than define geometry. It has to accept the melt, manage heat, stay aligned under load, open in the intended sequence and release the moulding without damaging either the part or the tool."},
+        {"title": "Feed system", "text": "In a cold-runner mould the feed path may include a sprue, runners and one or more gates; a hot runner changes how that melt is carried and controlled. The gate deserves particular attention because it is both a restriction and a process boundary. Its size and thermal condition can change filling and what happens after fill."},
+        {"title": "Guidance, support and ejection", "text": "Locating, guiding and support components keep the mould aligned and carry the loads produced during the cycle. Once the part is ready to come off the tool, the ejection system supplies the release motion. Do not assume the arrangement from a generic diagram; identify how the actual mould is built."},
+        {"title": "Temperature-control system", "text": "Cooling or temperature-control circuits move heat into or out of the tool. Their layout, flow condition and local heat load can create noticeably different surface temperatures across one mould, which is why the temperature-control-unit setpoint should never be treated as the temperature of every cavity surface."}
       ]
     },
     {
@@ -72,10 +72,10 @@
       "applicability": "Awareness only. It is not a lockout/tagout procedure, machine-specific safe system of work, guarding instruction or authorisation to enter a hazardous area.",
       "sourceIds": ["ISO-20430-2020"],
       "sections": [
-        {"title": "Safety is a system boundary", "text": "Injection-moulding equipment combines hazardous motion, hot surfaces and materials, pressure, electrical energy and other machine-dependent energy sources. Safe work depends on engineered safeguards, correct machine condition, authorised procedures and competent people."},
-        {"title": "A stopped screen is not an isolation", "text": "The absence of commanded movement does not prove that hazardous energy has been isolated or dissipated. Never infer a safe intervention state from a controller display, cycle stop or open guard alone."},
-        {"title": "Guarding and interlocks are safety functions", "text": "Do not defeat, bypass or treat safeguards as production inconveniences. If a safeguard prevents the intended task, the task needs the approved machine- and site-specific safe method rather than an improvised workaround."},
-        {"title": "When this Book must stop", "text": "If a task involves access to a danger zone, isolation, stored energy, maintenance, abnormal machine condition or uncertainty about a safeguard, this Book does not provide the procedure. Use the machine manufacturer's instructions, the site's authorised safety system and competent supervision."}
+        {"title": "Safety is a system boundary", "text": "An injection-moulding machine puts hazardous motion, hot surfaces and material, pressure, electricity and other stored energy in the same working area. Safe operation depends on the machine's engineered safeguards, its actual condition, the approved procedures around it and people who are competent for the task."},
+        {"title": "A stopped screen is not an isolation", "text": "A machine that is not moving is not automatically safe to enter or work on. A cycle stop, an open guard or a quiet controller does not prove that hazardous energy has been isolated or dissipated."},
+        {"title": "Guarding and interlocks are safety functions", "text": "Guards and interlocks are part of the safety system, not obstacles to production. If a safeguard prevents the job you want to do, that is the point to use the approved machine- and site-specific method, not to defeat or work around the safeguard."},
+        {"title": "When this Book must stop", "text": "If the job involves entering a danger zone, isolating energy, dealing with stored energy, maintenance, an abnormal machine condition or uncertainty about a safeguard, stop using this Book as the procedure. Follow the machine manufacturer's instructions, the site's authorised safety system and competent supervision."}
       ]
     }
   ]
