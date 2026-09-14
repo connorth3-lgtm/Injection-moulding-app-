@@ -28,11 +28,6 @@
     "./src/domains/shell/product-areas.js"
   ],
   "dataAssets": [
-    "./material-catalog-v1.json",
-    "./src/domains/learning/book-data/book-manifest-v1.json",
-    "./src/domains/learning/book-data/book-authored-foundations-v1.json",
-    "./src/domains/learning/book-data/book-evidence-registry-v1.json",
-    "./src/domains/learning/book-data/book-chapters-materials-machine-v1.json",
-    "./src/domains/learning/book-data/book-authored-remaining-v1.json"
+    "./material-catalog-v1.json"
   ]
 }
