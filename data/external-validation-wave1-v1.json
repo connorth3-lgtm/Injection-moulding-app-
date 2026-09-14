@@ -1,31 +1,38 @@
 {
   "schemaVersion": 1,
   "waveId": "external-validation-wave1",
-  "release": "2026.09.14.4",
-  "releaseSourceSha": "1c22697fab781e40548c950b84203d73e255a5fe",
-  "createdAt": "2026-09-14",
-  "policy": "Execute every automatable external-readiness check now; preserve physical, human, signing and real-learner evidence as explicit HOLDs until actually performed.",
+  "release": "2026.09.15.1",
+  "releaseSourceSha": "a56c23813b9be4d4c66bcbdd4589455953743faa",
+  "createdAt": "2026-09-15",
+  "policy": "Execute every automatable external-readiness check now; preserve physical, human, signing and real-learner evidence as explicit HOLDs until actually performed. Prior-release Pages or physical-candidate evidence may be retained only as historical provenance and must never be relabelled as current-release validation.",
   "livePages": {
-    "status": "pass",
-    "pagesRun": 34806712586,
-    "pagesRunConclusion": "success",
+    "status": "pending-main-deployment",
+    "pagesRun": null,
+    "pagesRunConclusion": null,
     "productionRootState": "release-hold",
     "candidatePath": "preview/",
     "existingVerifier": "tools/verify_pages_hold.py",
-    "existingEvidence": "Pages run 34806712586 verified the live release-hold boundary twice, including the stable non-production preview, version/cache consistency, immutable preview cache, local-only device helper and private-path 404 boundary.",
     "bookVerifier": "tools/verify_book_pages_candidate.py",
-    "bookVerifierStatus": "pass",
-    "bookVerifierRun": 34806814722,
-    "bookVerifierEvidence": "The post-Pages verifier matched trusted main to the deployed Pages source and verified live /preview/ release 2026.09.14.4, 8 parts / 46 chapters, the 116 supported / 21 scoped-qualified / 0 hold / 0 conflict authorization snapshot, non-self-promoting authored drafts, and shared Read/Listen runtime markers.",
-    "verifiedAt": "2026-09-14",
-    "boundary": "Automated live-byte verification does not substitute for physical-device, assistive-technology, SME or learner evidence."
+    "bookVerifierStatus": "pending-main-deployment",
+    "boundary": "No Pages run for 2026.09.15.1 is claimed before main deployment. Automated live-byte verification does not substitute for physical-device, assistive-technology, SME or learner evidence.",
+    "priorReleaseEvidence": {
+      "release": "2026.09.14.4",
+      "sourceSha": "1c22697fab781e40548c950b84203d73e255a5fe",
+      "pagesRun": 34806712586,
+      "pagesRunConclusion": "success",
+      "bookVerifierRun": 34806814722,
+      "bookVerifierStatus": "pass"
+    }
   },
   "physicalPwa": {
     "status": "hold",
     "contract": "data/pwa-physical-device-validation-v1.json",
     "checklist": "qa/PWA_PHYSICAL_DEVICE_CHECKLIST.md",
-    "releasePacket": "qa/PWA_PHYSICAL_DEVICE_2026.09.14.4.md",
-    "currentCandidate": {
+    "releasePacket": null,
+    "currentCandidate": null,
+    "priorCandidate": {
+      "release": "2026.09.14.4",
+      "releasePacket": "qa/PWA_PHYSICAL_DEVICE_2026.09.14.4.md",
       "sourceSha": "1c22697fab781e40548c950b84203d73e255a5fe",
       "pagesRun": 34806712586,
       "runtimeFingerprint": "sha256:b1aea83687ec9b6264b90fe30d8641225e56a7864c6c805881679d128b24e382",
@@ -35,7 +42,7 @@
       "artifactBytes": 1045438,
       "retentionDays": 30
     },
-    "required": "Current-runtime physical iOS/iPadOS and Android install, standalone, offline restart/reboot, update recovery and storage-pressure evidence."
+    "required": "Generate a fresh 2026.09.15.1 candidate after current-release Pages verification, then obtain physical iOS/iPadOS and Android install, standalone, offline restart/reboot, update recovery and storage-pressure evidence. The retained 2026.09.14.4 candidate is historical provenance only."
   },
   "windowsDistribution": {
     "status": "hold",

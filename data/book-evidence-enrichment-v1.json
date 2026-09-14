@@ -1,0 +1,176 @@
+{
+  "schema": 1,
+  "bookId": "mouldmaster-book",
+  "patchId": "book-evidence-enrichment-2026-09-15-v1",
+  "status": "technical-review",
+  "reviewBoundary": "Evidence-enrichment patch. Added sections remain technical-review content until separately re-authorized; no case value is a universal machine, material, mould, hot-runner or maintenance setting.",
+  "reviewChapterIds": [
+    "mould-anatomy",
+    "cooling",
+    "hot-runners",
+    "black-specks",
+    "pressure-loss",
+    "warpage",
+    "process-window",
+    "documentation",
+    "process-monitoring",
+    "multi-cavity"
+  ],
+  "sourceSeeds": [
+    {
+      "id": "jmmp-2021-scientific-moulding-transfer",
+      "type": "peer-reviewed-journal",
+      "title": "Transfer and Optimisation of Injection Moulding Manufacture of Medical Devices Using Scientific Moulding Principles",
+      "url": "https://doi.org/10.3390/jmmp5040113",
+      "scope": "Industrial scientific-moulding transfer case with pressure-loss, cavity-balance, gate-freeze, cooling and verification studies; values belong to the studied machines, mould and product."
+    },
+    {
+      "id": "polym-2026-75-run-hdpe-doe",
+      "type": "peer-reviewed-journal",
+      "title": "Experiment-Driven Gaussian Process Surrogate Modeling and Bayesian Optimization for Multi-Objective Injection Molding",
+      "url": "https://doi.org/10.3390/polym18080902",
+      "scope": "Seventy-five validated physical HDPE moulding experiments with shrinkage, warpage, cycle-time and part-weight responses; complete case data support DOE and trade-off teaching but do not define transferable setpoints."
+    },
+    {
+      "id": "polym-2023-experimental-process-window",
+      "type": "peer-reviewed-journal",
+      "title": "Experimental Development of an Injection Molding Process Window",
+      "url": "https://doi.org/10.3390/polym15153207",
+      "scope": "Physical experimental process-window study demonstrating an acceptance region rather than a single nominal setting; process boundaries are case-specific."
+    },
+    {
+      "id": "polym-2025-hips-process-window",
+      "type": "peer-reviewed-journal",
+      "title": "Utilizing Simulation Software to Develop Injection Molding Process Windows with High-Impact Polystyrene",
+      "url": "https://doi.org/10.3390/polym17060718",
+      "scope": "Simulation-plus-physical-validation HIPS process-window study linking predicted operating regions to measured dimensional response; simulated and physical evidence remain distinct."
+    },
+    {
+      "id": "springer-2026-recycled-pp-warpage-sensors",
+      "type": "peer-reviewed-journal",
+      "title": "Warpage optimization on primary recycled polypropylene composites: investigating the effect of cooling time and injection temperature with machine learning and in-mold sensors",
+      "url": "https://doi.org/10.1007/s00170-026-17702-9",
+      "scope": "Physical warpage study covering 420 moulded parts across 21 process conditions with in-mould thermal sensing and dimensional response; one material and production geometry."
+    },
+    {
+      "id": "measurement-2012-cooling-warpage",
+      "type": "peer-reviewed-journal",
+      "title": "On the relationship between cooling setup and warpage in injection molding",
+      "url": "https://doi.org/10.1016/j.measurement.2012.01.039",
+      "scope": "Physical metrology study linking cooling setup to measured warpage across part regions; direct case evidence, not a universal cooling prescription."
+    },
+    {
+      "id": "polytest-2022-hotrunner-color-changeover-cycle-trace",
+      "type": "peer-reviewed-journal",
+      "title": "Developing a method for evaluating color changeover in a hot-runner multi-cavity injection mold",
+      "url": "https://doi.org/10.1016/j.polymertesting.2022.107759",
+      "scope": "Cycle- and cavity-identified hot-runner colour-change recovery study. It demonstrates why recovery should be treated as a trajectory; colour carryover is an analogue and does not establish black-speck recovery behaviour."
+    },
+    {
+      "id": "procir-2017-mould-maintenance-time-cbr",
+      "type": "peer-reviewed-conference",
+      "title": "Knowledge-based Estimation of Maintenance Time for Complex Engineered-to-Order Products Based on KPIs Monitoring: A PSS Approach",
+      "url": "https://doi.org/10.1016/j.procir.2017.03.317",
+      "scope": "Real mould-maintenance project histories containing mould age, usage, failures/issues and maintenance-duration context; useful for record design, not for universal maintenance-time allowances or wear-recovery proof."
+    }
+  ],
+  "chapterPatches": [
+    {
+      "chapterId": "hot-runners",
+      "sourceIds": [],
+      "sections": [
+        {
+          "title": "Measured quality outcomes from distributed melt control",
+          "text": "Older dynamic-melt-control studies should be read as one linked research family, not as independent replications. Within that family, one multi-cavity pressure-control study reported Cp increasing from 0.52 to 1.5, a commercial four-gate application reported 50–400% Cp improvement across eleven measured dimensions, and a self-regulating-valve study reported lower part-weight sensitivity and variation. These are case-specific outcomes from different implementations within the broader programme.\n\nThe teaching point is that local melt control can affect measured quality and capability. The reported numbers are not transferable controller-performance targets, and they do not substitute for synchronized modern actuator-state, cavity-pressure and cavity-specific quality data."
+        }
+      ]
+    },
+    {
+      "chapterId": "pressure-loss",
+      "sourceIds": [
+        "jmmp-2021-scientific-moulding-transfer"
+      ],
+      "sections": [
+        {
+          "title": "Pressure only means something when you know where it was measured",
+          "text": "Pressure is local to the point and time of measurement. The machine's injection-pressure signal sits upstream of the nozzle, feed system, gates and cavity, so a high machine value can coexist with a weak pressure response in one cavity. When pressure loss is part of the diagnosis, record the sensor location and compare the flow path in sections rather than treating every pressure number as interchangeable.\n\nA useful pressure map follows the melt from machine/nozzle through manifold or runner, gate and cavity. Each restriction can consume pressure and shift timing, and parallel branches can behave differently. Use that map to decide what measurement would isolate the change instead of increasing machine pressure to compensate for an unknown restriction."
+        }
+      ]
+    },
+    {
+      "chapterId": "process-window",
+      "sourceIds": [
+        "polym-2026-75-run-hdpe-doe",
+        "polym-2023-experimental-process-window",
+        "polym-2025-hips-process-window"
+      ],
+      "sections": [
+        {
+          "title": "Choose a robust region, not one optimum point",
+          "text": "A process window is a tested region in which the important outputs remain acceptable, not the single setting that produces the best value for one response. Map more than one outcome—such as fill, dimension, defect level and process variation—and keep the rejected or unstable edges visible. That makes the trade-offs explicit and stops an apparent optimum from hiding another failure mode.\n\nWhen quality priorities change, re-evaluate which part of the tested region still meets all requirements. Do not extend the claim beyond the material, mould, machine and factor ranges that were actually evaluated."
+        }
+      ]
+    },
+    {
+      "chapterId": "documentation",
+      "sourceIds": [
+        "ESREL-MOULD-MAINT-2025",
+        "procir-2017-mould-maintenance-time-cbr"
+      ],
+      "sections": [
+        {
+          "title": "Record maintenance so recovery can be proved",
+          "text": "A maintenance record should preserve enough information to connect the asset, its production exposure, the observed condition, the work carried out and the verified result. Record stable mould and component identity, shot count or other defensible exposure, the measured pre-maintenance condition, the specific intervention, the post-maintenance condition and a comparable part-quality or metrology check.\n\n‘Cleaned mould — running OK’ is not enough for later diagnosis. If a value was never measured, record it as missing rather than reconstructing it after the event. The purpose of the record is to let a future engineer test whether the same degradation pattern is returning and whether the previous intervention genuinely restored performance.\n\nExercise: start with “Mould 7 — parts out of tolerance. Tool cleaned and repaired. Running OK.” Add the stable component identity, production exposure, measured pre-condition, specific intervention, measured post-condition, comparable part-quality verification and the observation period used to call the process recovered."
+        }
+      ]
+    },
+    {
+      "chapterId": "warpage",
+      "sourceIds": [
+        "polym-2026-75-run-hdpe-doe",
+        "springer-2026-recycled-pp-warpage-sensors",
+        "measurement-2012-cooling-warpage"
+      ],
+      "sections": [
+        {
+          "title": "Similar warpage can come from different mechanisms",
+          "text": "Two parts can finish with a similar warped shape for different reasons. Uneven heat removal, asymmetric packing pressure, material morphology and directional fibre orientation can all create differential shrinkage or residual stress. The next test should be chosen from the evidence already present: cooling-flow and temperature measurements for a thermal hypothesis, cavity-pressure history for a packing hypothesis, and material/orientation evidence when anisotropy or morphology is plausible.\n\nTreat warpage as a mechanism-discrimination problem. A process change that improves one part does not prove that the same variable caused another part's deformation, and a statistical effect does not replace physical evidence."
+        }
+      ]
+    },
+    {
+      "chapterId": "black-specks",
+      "sourceIds": [],
+      "sections": [
+        {
+          "title": "What two intervention cases actually show",
+          "text": "Two reported production cases improved black-spot or black-dot performance through different investigation paths. One case reported defect share moving from 7.85% to 2.16% after a filter-mesh design improvement. Another reported 0.65% to 0.34% after a DMAIC programme that tested several contamination and degradation hypotheses. These are source-specific outcomes, not generic expected reductions.\n\nUse the pair to ask what each case supports—and what it cannot prove without shot-linked chronology. Different successful interventions reinforce the need to discriminate mechanisms rather than memorise one repair."
+        }
+      ]
+    },
+    {
+      "chapterId": "process-monitoring",
+      "sourceIds": [
+        "polytest-2022-hotrunner-color-changeover-cycle-trace"
+      ],
+      "sections": [
+        {
+          "title": "Recovery needs a trajectory, not one good part",
+          "text": "When a process is recovering after cleaning, changeover or intervention, preserve cycle and cavity identity and watch the response over repeated parts. One acceptable part can occur before the system has stabilised. Define the measurement method and a stop rule in advance, then require enough consecutive evidence to show that the recovery has settled.\n\nCycle-resolved hot-runner colour-change research demonstrates the value of this chronology, but colour carryover is only an analogue for the method. Do not transfer its numerical recovery curve to black-speck behaviour."
+        }
+      ]
+    },
+    {
+      "chapterId": "multi-cavity",
+      "sourceIds": [
+        "fuso-2023-eight-cavity-cooling-cleaning"
+      ],
+      "sections": [
+        {
+          "title": "Total flow can recover while one cavity stays different",
+          "text": "Keep cavity identity after a maintenance intervention. A large improvement in total cooling flow or system pressure loss does not prove that every parallel circuit is balanced. Compare local flow and thermal response by cavity or zone, then verify the associated part result. If one cavity remains different, diagnose the local path rather than assuming the system-level improvement solved the whole tool.\n\nWorked exercise: one reported eight-cavity cleaning case moved system flow from 0.6 to 2.0 L/min while pressure loss changed from 416 to 362 kPa. Treat those as source-specific system values, then use an explicitly synthetic cavity-by-cavity balance table to ask whether system recovery proves local balance. It does not; local hydraulic, thermal and part evidence still need to be checked."
+        }
+      ]
+    }
+  ]
+}

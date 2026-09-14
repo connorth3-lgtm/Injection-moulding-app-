@@ -39,13 +39,24 @@ require(wave.get("release") == release == external.get("release"), "Wave/externa
 require(re.fullmatch(r"[0-9a-f]{40}", str(wave.get("releaseSourceSha") or "")) is not None, "Wave releaseSourceSha must be a full commit SHA")
 
 live = wave.get("livePages") or {}
-require(live.get("status") in {"partial-pass", "pass"}, "livePages status must be partial-pass or pass")
-require(isinstance(live.get("pagesRun"), int) and live["pagesRun"] > 0, "livePages must identify its successful Pages run")
-require(live.get("pagesRunConclusion") == "success", "recorded Pages run must be successful")
+live_status = live.get("status")
+require(live_status in {"pending-main-deployment", "partial-pass", "pass"}, "livePages status is invalid")
 require(live.get("productionRootState") in {"release-hold", "production"}, "productionRootState is invalid")
 require(live.get("bookVerifier") == "tools/verify_book_pages_candidate.py", "live Book verifier path mismatch")
 require((ROOT / live["bookVerifier"]).is_file(), "live Book verifier is missing")
-require(live.get("bookVerifierStatus") in {"pending-main-deployment", "pass"}, "live Book verifier status is invalid")
+if live_status == "pending-main-deployment":
+    require(live.get("pagesRun") is None, "pending current release must not reuse a prior Pages run")
+    require(live.get("pagesRunConclusion") is None, "pending current release must not claim a Pages conclusion")
+    require(live.get("bookVerifierStatus") == "pending-main-deployment", "pending current release must keep Book verifier pending")
+    prior_live = live.get("priorReleaseEvidence") or {}
+    require(isinstance(prior_live, dict) and prior_live.get("release") != release, "pending release must identify prior Pages evidence only as historical provenance")
+    require(isinstance(prior_live.get("pagesRun"), int) and prior_live["pagesRun"] > 0, "historical Pages provenance must identify its prior run")
+    require(prior_live.get("pagesRunConclusion") == "success", "historical Pages provenance must describe a successful prior run")
+    require(re.fullmatch(r"[0-9a-f]{40}", str(prior_live.get("sourceSha") or "")) is not None, "historical Pages provenance source SHA is invalid")
+else:
+    require(isinstance(live.get("pagesRun"), int) and live["pagesRun"] > 0, "livePages must identify its successful Pages run")
+    require(live.get("pagesRunConclusion") == "success", "recorded Pages run must be successful")
+    require(live.get("bookVerifierStatus") in {"pending-main-deployment", "pass"}, "live Book verifier status is invalid")
 
 pages_workflow = (ROOT / ".github/workflows/book-live-pages-validation.yml").read_text(encoding="utf-8")
 for marker in (
@@ -68,19 +79,35 @@ for section in ("physicalPwa", "windowsDistribution", "bookSme", "curriculumSme"
 require((wave.get("learnerPilot") or {}).get("status") == "prepared-evidence-hold", "learner pilot must be prepared but evidence-held")
 
 physical = wave.get("physicalPwa") or {}
-require(physical.get("releasePacket") == "qa/PWA_PHYSICAL_DEVICE_2026.09.14.4.md", "release-specific physical PWA packet path mismatch")
-require((ROOT / physical["releasePacket"]).is_file(), "release-specific physical PWA packet is missing")
-candidate = physical.get("currentCandidate") or {}
-require(candidate.get("sourceSha") == wave.get("releaseSourceSha"), "physical candidate source SHA must match Wave release source")
-require(candidate.get("pagesRun") == live.get("pagesRun"), "physical candidate Pages run must match live Pages evidence")
-require(re.fullmatch(r"sha256:[0-9a-f]{64}", str(candidate.get("runtimeFingerprint") or "")) is not None, "physical candidate runtime fingerprint is invalid")
-require(candidate.get("artifactName") == f"physical-pwa-candidate-{candidate.get('sourceSha')}", "physical candidate artifact name must bind to source SHA")
-require(isinstance(candidate.get("artifactId"), int) and candidate["artifactId"] > 0, "physical candidate artifact ID is missing")
-require(re.fullmatch(r"[0-9a-f]{64}", str(candidate.get("artifactZipSha256") or "")) is not None, "physical candidate ZIP SHA-256 is invalid")
-require(isinstance(candidate.get("artifactBytes"), int) and candidate["artifactBytes"] > 0, "physical candidate artifact size is invalid")
-require(candidate.get("retentionDays") == 30, "physical candidate must retain the governed 30-day handoff window")
-old_fingerprint = str((load("data/pwa-physical-device-validation-v1.json")).get("runtimeFingerprint") or "")
-require(old_fingerprint != candidate.get("runtimeFingerprint"), "Wave must not relabel prior device evidence as the current candidate")
+candidate = physical.get("currentCandidate")
+if candidate is None:
+    require(live_status == "pending-main-deployment", "current physical candidate may be absent only before current-release Pages verification")
+    require(physical.get("releasePacket") is None, "pending current release must not point at a prior release-specific physical packet")
+    prior = physical.get("priorCandidate") or {}
+    require(isinstance(prior, dict) and prior.get("release") != release, "prior physical candidate must remain explicitly bound to an older release")
+    require(re.fullmatch(r"[0-9a-f]{40}", str(prior.get("sourceSha") or "")) is not None, "prior physical candidate source SHA is invalid")
+    require(prior.get("sourceSha") != wave.get("releaseSourceSha"), "prior physical candidate must not be relabelled as the current release source")
+    require(re.fullmatch(r"sha256:[0-9a-f]{64}", str(prior.get("runtimeFingerprint") or "")) is not None, "prior physical candidate runtime fingerprint is invalid")
+    require(prior.get("artifactName") == f"physical-pwa-candidate-{prior.get('sourceSha')}", "prior physical candidate artifact name must remain bound to its source SHA")
+    require(isinstance(prior.get("artifactId"), int) and prior["artifactId"] > 0, "prior physical candidate artifact ID is missing")
+    require(re.fullmatch(r"[0-9a-f]{64}", str(prior.get("artifactZipSha256") or "")) is not None, "prior physical candidate ZIP SHA-256 is invalid")
+    require(isinstance(prior.get("artifactBytes"), int) and prior["artifactBytes"] > 0, "prior physical candidate artifact size is invalid")
+    require(prior.get("retentionDays") == 30, "prior physical candidate must preserve its governed 30-day handoff record")
+    prior_packet = str(prior.get("releasePacket") or "").strip()
+    require(prior_packet != "" and (ROOT / prior_packet).is_file(), "prior release-specific physical PWA packet is missing")
+else:
+    release_packet = str(physical.get("releasePacket") or "").strip()
+    require(release_packet != "" and (ROOT / release_packet).is_file(), "current release-specific physical PWA packet is missing")
+    require(candidate.get("sourceSha") == wave.get("releaseSourceSha"), "physical candidate source SHA must match Wave release source")
+    require(candidate.get("pagesRun") == live.get("pagesRun"), "physical candidate Pages run must match live Pages evidence")
+    require(re.fullmatch(r"sha256:[0-9a-f]{64}", str(candidate.get("runtimeFingerprint") or "")) is not None, "physical candidate runtime fingerprint is invalid")
+    require(candidate.get("artifactName") == f"physical-pwa-candidate-{candidate.get('sourceSha')}", "physical candidate artifact name must bind to source SHA")
+    require(isinstance(candidate.get("artifactId"), int) and candidate["artifactId"] > 0, "physical candidate artifact ID is missing")
+    require(re.fullmatch(r"[0-9a-f]{64}", str(candidate.get("artifactZipSha256") or "")) is not None, "physical candidate ZIP SHA-256 is invalid")
+    require(isinstance(candidate.get("artifactBytes"), int) and candidate["artifactBytes"] > 0, "physical candidate artifact size is invalid")
+    require(candidate.get("retentionDays") == 30, "physical candidate must retain the governed 30-day handoff window")
+    old_fingerprint = str((load("data/pwa-physical-device-validation-v1.json")).get("runtimeFingerprint") or "")
+    require(old_fingerprint != candidate.get("runtimeFingerprint"), "Wave must not relabel prior device evidence as the current candidate")
 
 manifest_ids = [ch["id"] for part in manifest["parts"] for ch in part["chapters"]]
 require(len(manifest_ids) == 46 and len(set(manifest_ids)) == 46, "Book manifest must contain 46 unique chapter ids")
@@ -142,6 +169,7 @@ for key in (
 
 require((wave.get("productImprovement") or {}).get("status") == "armed", "evidence-to-product improvement loop must be armed")
 print(
-    f"External Validation Wave 1 integrity passed for {release}: live Pages verification is wired; "
-    "the exact physical candidate is pinned; physical PWA, Windows distribution, Book/curriculum SME and real-learner evidence remain fail-closed HOLDs."
+    f"External Validation Wave 1 integrity passed for {release}: current Pages/physical evidence is "
+    f"{'pending and explicitly held' if live_status == 'pending-main-deployment' else 'release-bound'}; "
+    "physical PWA, Windows distribution, Book/curriculum SME and real-learner evidence remain fail-closed HOLDs."
 )
