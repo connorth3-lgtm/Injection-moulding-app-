@@ -1,0 +1,57 @@
+{
+  "schema": 1,
+  "version": "2026.09.15.1",
+  "purpose": "Overlay Wave 7 intervention, cycle-resolved cleaning, predictive-maintenance and hot-runner actual-state observability evidence onto the Book coverage map without claiming that the remaining raw-data gaps are closed.",
+  "base": "data/research-expansion/2026-09-14/book-chapter-quantitative-coverage-v1.json",
+  "overlays": [
+    {
+      "chapterId": "black-specks",
+      "currentState": "targeted-gap-narrowed-with-quantified-intervention-cases",
+      "addedEvidenceRoutes": [
+        "wave7:ieom-2023-black-spot-filter-mesh",
+        "wave7:chula-2014-black-dot-dmaic",
+        "wave7:polytest-2022-hotrunner-color-changeover-cycle-trace"
+      ],
+      "newEditorialCapability": "Teach two quantified black-defect before/intervention/after cases plus a genuinely cycle-resolved hot-runner cleaning trajectory as an explicitly labelled analogue for how recovery evidence should be read.",
+      "boundary": "The color-changeover study is not black-speck evidence, and neither black-defect case exposes a rights-clear shot-by-shot onset -> intervention -> recovery trace; the chapter therefore remains a targeted raw-data gap."
+    },
+    {
+      "chapterId": "hot-runners",
+      "currentState": "strong-measured-plus-actual-state-observability",
+      "addedEvidenceRoutes": [
+        "wave7:polytest-2022-hotrunner-color-changeover-cycle-trace",
+        "wave7:jpe-2022-hotrunner-crosssection-pressure-control",
+        "wave7:ewikon-2022-electric-valve-gate-observability"
+      ],
+      "newEditorialCapability": "Separate hot-runner command from measured pin movement/position, motor current or force, local cavity pressure, cycle-resolved cleaning response and eventual part-quality evidence.",
+      "boundary": "The public sources still do not provide one synchronized raw dataset containing actual pin position, motor current/torque, cavity pressure and cavity-specific quality."
+    },
+    {
+      "chapterId": "process-monitoring",
+      "currentState": "strong-measured-plus-visual-quality-and-asset-state",
+      "addedEvidenceRoutes": [
+        "wave7:polytest-2022-hotrunner-color-changeover-cycle-trace",
+        "wave7:procs-2023-injection-mould-gft-pdm",
+        "wave7:ewikon-2022-electric-valve-gate-observability"
+      ],
+      "newEditorialCapability": "Connect cycle-by-cycle visual quality, in-mould sensing, actuator actual-state signals and longer-horizon mould reliability into one monitoring hierarchy."
+    },
+    {
+      "chapterId": "diagnostic-method",
+      "currentState": "strong-measured-plus-verified-intervention",
+      "addedEvidenceRoutes": [
+        "wave7:ieom-2023-black-spot-filter-mesh",
+        "wave7:chula-2014-black-dot-dmaic"
+      ],
+      "newEditorialCapability": "Use real cases to teach measurement-system checking, competing hypotheses, statistical testing, intervention and post-change verification rather than jumping directly from symptom to cause."
+    },
+    {
+      "chapterId": "mould-anatomy",
+      "currentState": "strong-mixed-plus-lifecycle-and-maintenance-decision",
+      "addedEvidenceRoutes": [
+        "wave7:procs-2023-injection-mould-gft-pdm"
+      ],
+      "newEditorialCapability": "Extend Wave 6 lifecycle degradation evidence into condition-based maintenance decision logic while keeping modeled savings distinct from physical wear measurements."
+    }
+  ]
+}
