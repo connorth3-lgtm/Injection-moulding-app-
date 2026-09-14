@@ -21,6 +21,7 @@ review_paths = [
 resolution_paths = [
     'data/book-claim-resolution-high-risk-v1.json',
     'data/book-claim-resolution-high-risk-v2.json',
+    'data/book-claim-resolution-all-v1.json',
 ]
 authored_paths = [
     'data/book-authored-foundations-v1.json',
@@ -133,7 +134,24 @@ for batch in authored:
         assert chapter.get('state') != 'verified', f"authored chapter self-promoted: {chapter.get('id')}"
 
 counts = Counter(effective.values())
-assert counts['conflicting'] == 0
 assert sum(counts.values()) == 137
+assert counts['supported'] == 74, counts
+assert counts['qualified'] == 63, counts
+assert counts['hold'] == 0, counts
+assert counts['conflicting'] == 0, counts
+
+all_resolution = resolutions[-1]
+assert all_resolution.get('reviewScope') == 'all-46-chapters-all-137-claims'
+assert all_resolution.get('effectiveCountsAfterAllResolutions') == {
+    'chapters': 46,
+    'claims': 137,
+    'supported': 74,
+    'qualified': 63,
+    'hold': 0,
+    'conflicting': 0,
+}
+assert all_resolution.get('publicationBoundary', {}).get('verifiedChaptersAuthorized') == 0
+
 print('PASS: 46/46 Book chapters have claim-level review coverage; 137 claims inventoried; 0 chapters self-promoted.')
+print('PASS: all effective claim evidence blockers cleared without publication self-promotion.')
 print(f"PASS: effective claim dispositions: supported={counts['supported']}, qualified={counts['qualified']}, hold={counts['hold']}, conflicting={counts['conflicting']}.")
