@@ -1,0 +1,80 @@
+{
+  "schema": 1,
+  "version": "2026.09.15.1",
+  "purpose": "Highly targeted Book enrichment focused on long-horizon natural injection-mould maintenance histories and concrete mould-maintenance project records. Exact DOI searches were screened against main and the current PR before admission; broad process papers were deliberately excluded.",
+  "screening": {
+    "mainSha": "5f7006d64061c2968e9d03365c2a834f97bd9e17",
+    "currentPrHeadBeforeWave8": "83f580ebfc84dad129684535380770847bdf3f20",
+    "repoSearchPerformed": true,
+    "currentPrPatchDeduplication": true,
+    "knownRelatedButAlreadyPresentEvidenceNotRecounted": [
+      "10.1080/0951192X.2020.1829062",
+      "10.1007/978-3-030-90700-6_49"
+    ]
+  },
+  "governance": {
+    "metadataOnly": true,
+    "rawThirdPartyPayloadsCommitted": false,
+    "maintenanceEventHistoryDoesNotEqualVerifiedPostMaintenanceQualityRecovery": true,
+    "modelAccuracyNeverBecomesMaintenanceThreshold": true,
+    "privateIndustrialRowsMustNotBeReconstructed": true,
+    "caseSpecificMaintenanceTimesDoNotBecomeUniversalPlanningFactors": true
+  },
+  "summary": {
+    "candidates": 2,
+    "longitudinalIndustrialMaintenanceHistories": 1,
+    "realMouldMaintenanceCaseRepositories": 1,
+    "rawPublicIndustrialDatasetAdded": 0,
+    "verifiedPostMaintenanceQualityRecoveryDatasetAdded": 0
+  },
+  "candidates": [
+    {
+      "id": "esrel-2025-9157mould-maintenance-history",
+      "priority": "A",
+      "doi": "10.3850/978-981-94-3281-3_ESREL-SRA-E2025-P6414-cd",
+      "title": "Data-Driven Predictive Maintenance of Spare Parts for Smart Manufacturing",
+      "year": 2025,
+      "evidenceType": "conference-industrial-longitudinal-injection-mould-maintenance-history",
+      "scale": "April 2011 to March 2024; 64,020 maintenance notifications; 9,157 unique injection moulds; 2,553 unique spare parts",
+      "data": [
+        "maintenance notification records containing injection-mould IDs, maintained spare parts, shot counts at notification time and maintenance dates",
+        "mould master data containing plastic requirements, specifications and production capability",
+        "38 master-data features and 15 notification-data features",
+        "analysis focused on gate bushes and centre units because of cost and lead-time importance",
+        "target defined as shots until next maintenance rather than calendar age",
+        "shot intervals spanning thousands to millions between maintenance events",
+        "final classification datasets of 981 gate-bush instances and 605 centre-unit instances",
+        "Random Forest test accuracy 69.59% for gate bushes and 69.23% for centre units",
+        "0-49-day Random Forest precision 0.82 for gate bushes and 0.88 for centre units",
+        "paper explicitly reports data-quality limitations including mixed cleaning/maintenance records, duplicate entries, free-text information loss and lack of component-state information"
+      ],
+      "bookChapters": ["mould-anatomy", "process-monitoring", "documentation", "complex-diagnostics", "capability"],
+      "rightsState": "public conference PDF; proceedings state © 2025 ESREL SRA-E 2025 Organizers, all rights reserved. Treat the industrial dataset as non-public and use only factual aggregate findings with original Book diagrams/tables.",
+      "value": "The strongest long-horizon natural mould-maintenance history identified in this programme: it connects mould identity, component maintenance, shot count and date across thousands of moulds over roughly thirteen years, moving the remaining lifecycle gap from 'history unavailable' to 'history exists but raw/recovery access is missing'.",
+      "limitations": "The underlying industrial rows are not established as publicly reusable; records mix different maintenance activities and lack direct component-condition labels. The study does not provide verified before/after part-quality recovery after each intervention, and regression performance was weak, so its model outputs must not be presented as universal maintenance limits."
+    },
+    {
+      "id": "procir-2017-mould-maintenance-time-cbr",
+      "priority": "B",
+      "doi": "10.1016/j.procir.2017.03.317",
+      "title": "Knowledge-based Estimation of Maintenance Time for Complex Engineered-to-Order Products Based on KPIs Monitoring: A PSS Approach",
+      "year": 2017,
+      "evidenceType": "peer-reviewed-conference-real-mould-maintenance-case-repository",
+      "scale": "real-life mould-maintenance projects from a European mould-making SME",
+      "data": [
+        "historical maintenance-project repository used for Case-Based Reasoning",
+        "mould maintenance attributes including typical failures, cycle rate and year of mould manufacture",
+        "product attributes including cavity count and other mould/product descriptors",
+        "example comparison includes one new maintenance task and five prior mould cases",
+        "reported prior-case cycle rates span approximately 45,000 to 80,000 cycles per week",
+        "reported prior-case maintenance times span 128 to 592 hours, equivalent to 16 to 74 days",
+        "example moulds contain one or two cavities and manufacturing years from 2003 to 2012",
+        "case similarity used to estimate maintenance time rather than relying only on engineer memory"
+      ],
+      "bookChapters": ["mould-anatomy", "documentation", "process-monitoring", "complex-diagnostics"],
+      "rightsState": "open-access Procedia CIRP article under CC BY-NC-ND 4.0; use factual values and create original Book case matrices rather than adapting protected tables/figures.",
+      "value": "Adds concrete real-mould maintenance project histories with age, usage, configuration, failure/issues and maintenance-duration context, useful for teaching why maintenance planning should retain structured lifecycle records rather than only the latest repair note.",
+      "limitations": "Small illustrative case set and focused on maintenance-time estimation, not physical wear progression or verified post-repair part-quality recovery. Reported hours/days are company- and project-specific and must not become generic planning allowances."
+    }
+  ]
+}
