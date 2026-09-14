@@ -1,0 +1,57 @@
+{
+  "schema": 1,
+  "version": "2026.09.15.1",
+  "purpose": "Overlay the Wave 5 gap-narrowing evidence onto the existing 46-chapter quantitative coverage map without rewriting historical coverage state or overstating closure.",
+  "base": "data/research-expansion/2026-09-14/book-chapter-quantitative-coverage-v1.json",
+  "governance": {
+    "metadataOnly": true,
+    "rawThirdPartyPayloadsCommitted": false,
+    "overlayDoesNotChangePublicationAuthorization": true,
+    "targetedGapCanRemainAfterEvidenceImproves": true
+  },
+  "overlays": [
+    {
+      "chapterId": "black-specks",
+      "priorState": "targeted-gap",
+      "currentState": "targeted-gap-narrowed",
+      "addedEvidenceRoutes": [
+        "wave5:plastics-engineering-2013-black-specks",
+        "wave5:jcbbp-2019-pet-inclusion-degradation-identification",
+        "wave5:umb-2024-pet-preform-black-speck-dmaic",
+        "wave5:madison-group-2024-black-particle-failure-analysis"
+      ],
+      "newEditorialCapability": [
+        "build a hypothesis-discrimination case around degraded polymer versus masterbatch versus foreign inclusion",
+        "show a laboratory escalation ladder from microscopy to SEM/EDS and FTIR/XRF/DSC",
+        "include a quantified industrial defect/intervention example without presenting it as a universal cause"
+      ],
+      "remainingGap": "Still no rights-clear raw shot-linked public dataset that captures black-speck/contamination onset, relevant process/material signals, intervention, and verified recovery over time."
+    },
+    {
+      "chapterId": "hot-runners",
+      "priorState": "strong-measured",
+      "currentState": "strong-measured-expanded",
+      "addedEvidenceRoutes": [
+        "wave5:kunststoffe-2021-hot-runner-valve-pin-pressure-control",
+        "wave5:ikv-2026-kaskare-hot-runner-pressure-control"
+      ],
+      "newEditorialCapability": [
+        "show valve-pin opening stroke as an actual manipulated variable",
+        "connect local cavity-pressure response to hot-runner actuation",
+        "teach why commanded valve state and delivered cavity pressure should be treated as separate observations"
+      ],
+      "independenceBoundary": "Both routes belong to the broader IKV hot-runner pin-control research family and are not automatically counted as independent experiments."
+    },
+    {
+      "chapterId": "diagnostic-method",
+      "priorState": "strong-measured",
+      "currentState": "strong-measured-expanded",
+      "addedEvidenceRoutes": [
+        "wave5:plastics-engineering-2013-black-specks",
+        "wave5:jcbbp-2019-pet-inclusion-degradation-identification",
+        "wave5:madison-group-2024-black-particle-failure-analysis"
+      ],
+      "newEditorialCapability": "Add an evidence-escalation example: process history -> perturbation -> part inspection -> laboratory identification -> equipment inspection -> verification."
+    }
+  ]
+}
