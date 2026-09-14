@@ -23,6 +23,7 @@ resolution_paths = [
     'data/book-claim-resolution-high-risk-v1.json',
     'data/book-claim-resolution-high-risk-v2.json',
     'data/book-claim-resolution-all-v1.json',
+    'data/book-qualification-resolution-all-v1.json',
 ]
 authored_paths = [
     'data/book-authored-foundations-v1.json',
@@ -118,7 +119,7 @@ for overlay in resolutions:
         assert cid in effective, f'resolution targets unknown claim: {cid}'
         assert cid not in seen, f'duplicate resolution target in overlay: {cid}'
         seen.add(cid)
-        assert res.get('previous') == effective[cid], f'resolution previous-state mismatch for {cid}'
+        assert res.get('previous') == effective[cid], f'resolution previous-state mismatch for {cid}: expected {effective[cid]}, got {res.get("previous")}'
         assert res.get('newConclusion') in allowed
         assert res.get('reason','').strip()
         ev = res.get('evidence', [])
@@ -134,13 +135,14 @@ for batch in authored:
 
 counts = Counter(effective.values())
 assert sum(counts.values()) == 137
-assert counts['supported'] == 74, counts
-assert counts['qualified'] == 63, counts
+assert counts['supported'] == 116, counts
+assert counts['qualified'] == 21, counts
 assert counts['hold'] == 0, counts
 assert counts['conflicting'] == 0, counts
 
-all_resolution = resolutions[-1]
-expected_counts = {
+claim_resolution_all = resolutions[2]
+assert claim_resolution_all.get('reviewScope') == 'all-46-chapters-all-137-claims'
+assert claim_resolution_all.get('effectiveCountsAfterAllResolutions') == {
     'chapters': 46,
     'claims': 137,
     'supported': 74,
@@ -148,13 +150,34 @@ expected_counts = {
     'hold': 0,
     'conflicting': 0,
 }
-assert all_resolution.get('reviewScope') == 'all-46-chapters-all-137-claims'
-assert all_resolution.get('effectiveCountsAfterAllResolutions') == expected_counts
-assert all_resolution.get('publicationBoundary', {}).get('verifiedChaptersAuthorized') == 0
+assert claim_resolution_all.get('publicationBoundary', {}).get('verifiedChaptersAuthorized') == 0
+
+qualification_resolution = resolutions[3]
+expected_counts = {
+    'chapters': 46,
+    'claims': 137,
+    'supported': 116,
+    'qualified': 21,
+    'hold': 0,
+    'conflicting': 0,
+}
+assert qualification_resolution.get('reviewScope') == 'all-qualified-claims-publication-readiness'
+assert qualification_resolution.get('effectiveCountsAfterQualificationReview') == expected_counts
+remaining_qualified = qualification_resolution.get('remainingQualifiedClaims', [])
+assert len(remaining_qualified) == 21
+assert len({x['claimId'] for x in remaining_qualified}) == 21
+assert all(x.get('blockingPublication') is False for x in remaining_qualified)
+assert {x['claimId'] for x in remaining_qualified} == {cid for cid,state in effective.items() if state == 'qualified'}
+readiness = qualification_resolution.get('publicationReadinessEffect', {})
+assert readiness.get('claimEvidenceGapsRemaining') == 0
+assert readiness.get('claimConflictsRemaining') == 0
+assert readiness.get('scopeQualifiedClaimsRemaining') == 21
+assert readiness.get('scopeQualifiedClaimsBlockingPublication') == 0
+assert readiness.get('chaptersPromoted') == 0
 
 # Recount the two historical ledgers whose stored summary objects were found to be stale.
 review_by_scope = {r['reviewScope']: r for r in reviews}
-corrections = {x['ledger']: x for x in all_resolution.get('auditCorrections', [])}
+corrections = {x['ledger']: x for x in claim_resolution_all.get('auditCorrections', [])}
 for filename, scope in [
     ('book-claim-review-foundations-materials-machine-v1.json', 'remaining-foundations-materials-machine'),
     ('book-claim-review-troubleshooting-v1.json', 'troubleshooting-excluding-warpage'),
@@ -178,21 +201,22 @@ assert audit.get('scope', {}).get('claims') == 137
 assert len(audit_ids) == 46 and len(set(audit_ids)) == 46
 assert set(audit_ids) == manifest_ids
 assert audit.get('effectiveClaimDisposition') == {
-    'supported': 74,
-    'qualified': 63,
+    'supported': 116,
+    'qualified': 21,
     'hold': 0,
     'conflicting': 0,
-    'rule': 'Qualified claims remain scoped by their applicability, exclusions and evidence basis; qualified does not mean universal.',
+    'rule': 'Qualified claims are deliberate scope boundaries after publication-readiness review; they remain non-universal and do not authorize machine, mould, material, site or product-specific values/procedures.',
 }
 publication = audit.get('publicationDecision', {})
 assert publication.get('evidenceReviewComplete') is True
 assert publication.get('claimLevelEvidenceBlockersRemaining') == 0
 assert publication.get('claimLevelConflictsRemaining') == 0
+assert publication.get('scopeQualifiedClaimsBlockingPublication') == 0
 assert publication.get('chaptersReadyForExplicitPromotionReview') == 46
 assert publication.get('chaptersAutomaticallyVerified') == 0
 assert publication.get('currentBookDisposition') == 'technical-review-only'
 
 print('PASS: 46/46 Book chapters have claim-level review coverage; 137 claims inventoried; 0 chapters self-promoted.')
-print('PASS: all effective claim evidence blockers cleared without publication self-promotion.')
+print('PASS: evidence-gap qualifications resolved; remaining 21 qualified claims are explicit non-universal scope boundaries.')
 print('PASS: historical summary-count drift is governed by explicit recount records; all-chapter audit matches the manifest.')
 print(f"PASS: effective claim dispositions: supported={counts['supported']}, qualified={counts['qualified']}, hold={counts['hold']}, conflicting={counts['conflicting']}.")
