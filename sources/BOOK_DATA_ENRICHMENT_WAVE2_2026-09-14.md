@@ -1,89 +1,99 @@
-# MouldMaster Book — Data Enrichment Wave 2
+# MouldMaster Book — Data Enrichment Waves 2–3
 
 Date: 2026-09-14
 
-This wave broadens the Book beyond general mechanism explanation by adding candidates for measured examples, worked calculations, plots, tables, case studies and supplier-document reading exercises. It is research metadata only. It does not change the Book runtime, web release, physical-device candidate or publication authorization.
+This research stream broadens the Book beyond general mechanism explanation by adding candidates for measured examples, worked calculations, plots, tables, case studies and supplier-document reading exercises. It is research metadata only. It does not change the Book runtime, web release, physical-device candidate or publication authorization.
 
 ## Baseline already present
 
-MouldMaster already has a substantial measured-data/evidence base. The repository currently documents 25 measured dataset families and a primary measured evidence registry whose human-readable ledger records 70 unique peer-reviewed measured studies. Wave 2 is not an attempt to inflate those numbers. It is an editorial acquisition map for evidence that can make the Book more concrete.
+MouldMaster already has a substantial measured-data/evidence base. The repository documents 25 measured dataset families and a human-readable primary measured evidence ledger recording 70 unique peer-reviewed measured studies. These enrichment waves are not intended to inflate those counts. They are an editorial acquisition and integration map.
 
-Wave 1 is also now novelty-audited: it contains 16 integration candidates, of which 9 were new repository discoveries and 7 were already-known evidence selected for Book reuse.
+Wave 1 is novelty-audited separately. It contains 16 integration candidates: 9 were new repository discoveries and 7 were already-known evidence selected for Book reuse.
 
-## Wave 2 adds 25 candidates
+Wave 2 adds 25 integration candidates across defects, energy, materials, cooling, weld lines, rheology, ejection, recyclate variability, fibre orientation and supplier-grade guidance. Wave 3 adds a measured sink/venting experiment, an industrial black-speck fault-to-recovery case, and current exact supplier references for LCP, TPU, copolyester and PPS.
 
-The machine-readable registry is `data/research-expansion/2026-09-14/book-data-enrichment-wave2-v1.json`.
+## Highest-value measured additions
 
-The highest-value additions are:
+- **75-run physical HDPE DOE** — complete physical table across seven process inputs and four outputs. Best worked DOE/process-window example.
+- **420-part recycled-PP warpage/sensor study** — measured warpage, mass, in-mould temperature profiles, MFI/DSC/FTIR and controlled cooling/injection-temperature variation.
+- **1,284 real industrial production cycles with 22 defect labels** — bounded production-data example across burn/gas mark, short shot, sink and flash, useful for class imbalance and prediction-versus-causation.
+- **active vacuum venting experiment** — connects venting, productivity and energy using physical trials.
+- **external-gas sink/venting experiment** — measured sink depth and visible streak response under controlled gas timing/pressure; useful precisely because its optimum is non-transferable.
+- **black-speck fault investigation** — inspection found degraded polymer in stagnant screw/NRV regions; corrective hardware change was followed by production monitoring. This is valuable fault → intervention → follow-up evidence, though not an open raw time-series dataset.
+- **industrial/module-level energy studies** — broaden the energy boundary beyond machine cycle time to drives, heaters, temperature-control units, cooling and peripherals.
+- **transparent-PC weld-line/dimensional DOE**, **PA-GF weld-line strength**, **GF composite weld-line mechanical validation**, and **micro-injection weld-line work** — enable a proper material/scale evidence matrix rather than one generic weld-line rule.
+- **new thermoplastic rheology-characterisation procedure** — practical experimental bridge between MFI, fitted rheology and injection response.
+- **TPMS conformal cooling**, **threaded cooling-channel thermal trials**, **cooling/warpage metrology**, and **dynamic rapid-heat-cycle moulding** — create a multi-source cooling chapter.
+- **measured ejection-force DOE** — draft angle, roughness, mould temperature, holding pressure and polymer identity measured with a force sensor; excellent for teaching interactions.
+- **time-dependent PP shrinkage/conditioning** — directly supports the point that immediate post-mould dimensions are not necessarily final dimensions.
+- **XCT fibre-orientation study** and **recycled GF-PP processing-history trials** — physical orientation/fibre-length/property evidence for reinforced-material chapters.
 
-- **420-part recycled-PP warpage/sensor study** — measured warpage, mass, in-mould temperature profiles, MFI/DSC/FTIR and controlled cooling/injection-temperature variation. Best for `warpage`, `cooling`, `dimensional-stability` and `process-monitoring`.
-- **1,284 real industrial production cycles with 22 defect labels** — gives the Book a bounded production-data example across burn/gas mark, short shot, sink and flash without claiming that model feature importance proves physical cause.
-- **active vacuum venting experiment** — connects venting, productivity and energy using physical trials instead of treating venting as a purely qualitative chapter.
-- **holistic injection-moulding power profiles** — includes machine drives/heaters plus peripherals and cooling, useful for explaining why energy cannot be inferred from cycle time alone.
-- **industrial module-level energy modelling** — useful for the distinction between machine-level and site/module-level energy evidence and for teaching model-transfer limits.
-- **transparent-PC weld-line/dimensional DOE** — a clean worked example of competing cosmetic and dimensional objectives.
-- **new thermoplastic rheology-characterisation procedure** — gives `rheology` and `pressure-loss` a practical experimental bridge rather than only qualitative shear-thinning discussion.
-- **cooling-layer/weld-strength experiment** — links mould thermal design to physical flexural performance at a weld line.
-- **PA/glass-fibre weld-line experiment** and **GF-composite weld-line prediction/validation** — allow a reinforced-material treatment that does not pretend unfilled-polymer rules transfer unchanged.
-- **micro-injection weld-line experiment** — demonstrates scale effects and why a technically correct mechanism can behave differently in a very small geometry.
-- **TPMS conformal-cooling mould trials**, **threaded-channel thermal experiments**, and **direct cooling/warpage metrology** — create a multi-source cooling chapter instead of relying on one conformal-cooling example.
-- **measured ejection-force DOE** — draft angle, roughness, mould temperature, holding pressure and polymer identity measured with a piezoelectric force sensor. Excellent for showing interactions rather than a simplistic 'more draft is always enough' rule.
-- **thick-wall sink/void experiment + CAE** — supports a worked defect case where geometry, cooling, packing and simulation are separated cleanly.
-- **rapid heat-cycle moulding experiment** — useful for surface/weld/cooling trade-offs and for teaching dynamic mould-temperature systems.
-- **time-dependent PP shrinkage/conditioning experiment** — supports the important point that a dimension measured immediately after moulding is not necessarily the final dimensional state.
-- **XCT fibre-orientation study comparing glass, carbon and hybrid reinforcement** — gives real spatial orientation evidence and measured directional mechanical response.
-- **hybrid continuous/discontinuous GF-PA6 experiment** — broadens reinforced-material coverage into insert/overmoulded hybrid structures.
-- **47-variant recycled GF-PP processing-history experiment** — connects reprocessing, screw speed, MVR, fibre length and physical properties without treating screw speed as a universal degradation proxy.
+## Supplier-data coverage
 
-## Supplier-data coverage added
+Current supplier targets now cover a broader material range:
 
-The wave also adds current manufacturer-reference targets rather than deriving grade settings from papers:
+- BASF **Ultramid A3WG5** — PA66-GF25 grade-level moisture, drying, residence, screw-speed and directional-shrinkage fields.
+- Asahi Kasei **LEONA PA** — moisture/water absorption, moulding, mould design and troubleshooting.
+- Syensqo **KetaSpire PEEK** — high-temperature machine capability, moisture/drying, thermal stability, shutdown/purge.
+- Syensqo **Udel PSU / Radel PPSU / Veradel PESU** — high-temperature amorphous processing/design.
+- Celanese **Vectra LCP** — machine requirements, hot runners, high-flow/thin-wall behaviour and troubleshooting.
+- Celanese **Fortron PPS** — current high-temperature/reinforced/low-warpage family reference.
+- Lubrizol **TPU/ETP processing guide** — equipment, mould design, start-up and troubleshooting across TPU/ETP families.
+- Eastman **Tritan copolyester** — processing, drying and mould-design guidance.
+- Existing Book sources continue to cover BASF Ultradur PBT, Ultramid PA and Ultrason high-temperature polymers.
 
-- Asahi Kasei **LEONA PA technical handbook** — water absorption, moisture dependence, moulding, mould design and troubleshooting.
-- Syensqo **KetaSpire PEEK design/processing guide** — high-temperature machine capability, moisture/drying, shutdown/purge and degradation checks.
-- Syensqo **Udel PSU / Radel PPSU / Veradel PESU guides** — high-temperature amorphous engineering-polymer processing and design.
-- BASF **Ultramid A3WG5 grade processing sheet** — a concrete PA66-GF25 exercise covering grade-specific moisture, drying, residence, screw speed and directional shrinkage.
+These references should appear as **source-reading exercises**, not copied recipe tables. The learner should identify material/grade, decide what is generic versus supplier-specific, and state which current document controls the production decision.
 
-These references are ideal for a recurring Book exercise: **read the exact supplier sheet, identify what is grade-specific, identify what the Book can explain generically, and state which document controls the production decision.**
+## 46-chapter coverage audit
+
+`data/research-expansion/2026-09-14/book-chapter-quantitative-coverage-v1.json` maps every canonical Book chapter to concrete evidence routes.
+
+Current classification:
+
+- 32 chapters — strong measured route
+- 10 chapters — strong mixed measured/supplier/standard route
+- 3 chapters — strong authoritative route where standards or supplier documentation are intentionally more appropriate than additional raw data
+- 1 chapter — targeted remaining raw-data gap: `black-specks`
+
+The black-speck chapter now has a credible published fault/intervention/follow-up case as well as degradation and machine-health evidence. The remaining gap is narrower: a lawful public **raw cycle/trace dataset with contamination onset, intervention and recovery** would materially improve reproducible teaching.
 
 ## Recommended Book artifacts
 
-### 1. Worked DOE chapter spread
-
-Use the Wave 1 75-run physical HDPE dataset as the main worked table. Add the Wave 2 420-part recycled-PP warpage study as a second example showing that a different material/geometry produces a different response surface. The teaching objective is not to find a universal optimum; it is to learn how to construct, interrogate and bound an experiment.
+### 1. Worked DOE spread
+Use the 75-run physical HDPE table as the main worked example, then contrast it with the 420-part recycled-PP warpage experiment. Teach design, interaction, response surfaces and trade-offs—not a universal optimum.
 
 ### 2. Real defect-data spread
-
-Use the 1,284-cycle industrial dataset to show defect prevalence, imbalance and why a classifier can be misleading when defects are rare. Pair it with mechanism-focused measured studies for short shot, flash, burns and sink/voids. This keeps prediction separate from physical diagnosis.
+Use aggregate information from the 1,284-cycle industrial dataset to teach rare-class imbalance and association-versus-causation. Pair with mechanism-specific measured cases for short shot, burns, flash, sink/void and black specks.
 
 ### 3. Cooling evidence ladder
-
-Build one figure/table that progresses from coolant/mould thermal design to measured surface temperature, dimensional response, warpage and weld-line strength. The learner should see why 'mould temperature' is not a single controller number.
+Progress from coolant/mould thermal design to measured surface temperature, part temperature, dimensions, warpage and weld-line strength. Make the point that a temperature-controller setpoint is not the whole mould thermal state.
 
 ### 4. Ejection interaction example
-
-Plot or tabulate the ejection-force study by polymer, draft and surface condition. The key learning point is the interaction: one surface or thermal change can help one polymer and hurt another.
+Plot material × draft × roughness × thermal-condition interaction. The lesson is that interactions matter; one setting does not produce the same effect across polymers.
 
 ### 5. Weld-line evidence matrix
-
-Compare unfilled/transparent PC, PA-GF, general GF composites and micro-injection examples. Columns should include material, geometry/scale, measured output, process variables and what cannot be transferred to another mould.
+Compare transparent PC, PA-GF, other GF composites and micro-injection. Include material, geometry/scale, measured output, process variables and what cannot be transferred.
 
 ### 6. Energy accounting example
-
-Separate energy into machine drive, barrel heating, mould/temperature-control, cooling and other peripherals. Show why an energy improvement claim requires a defined measurement boundary.
+Separate drive, heater, TCU, cooling and peripheral energy boundaries. Require the learner to define the measurement boundary before comparing 'energy efficiency'.
 
 ### 7. Supplier-document exercises
+Use PA66-GF, PEEK, PSU/PPSU/PESU, LCP, PPS, TPU and copolyester examples. Grade/family numbers remain case/source data, never generic Book defaults.
 
-Add small grade-document exercises for PA66-GF, PEEK and PSU/PPSU/PESU. No grade-specific number should be copied into a generic Book recipe.
+### 8. Fault → intervention → recovery cases
+Use scientific-moulding transfer, black-speck investigation, cavity-pressure failure diagnosis and controlled venting cases to teach evidence updates over time rather than symptom → guaranteed fix.
 
 ## Acquisition order
 
-1. Extract only article tables/data whose licence clearly permits it and preserve citation + context.
-2. Prefer public raw datasets with stable identifiers and checksums when available.
-3. For article-only studies, create Book-owned derived summaries/plots only when licence permits; otherwise cite and describe without reproducing protected tables/figures.
-4. Keep physical measurements, simulation outputs, model predictions and supplier recommendations as distinct evidence classes in every Book artifact.
-5. Preserve units, material identity, machine/mould context, measurement timing and sample unit. Never convert a batch, part, cycle or time-sample count into another unit to make a dataset appear larger.
+The machine-readable queue is `data/research-expansion/2026-09-14/book-data-acquisition-queue-v1.json`.
+
+1. Extract article tables only where licence permits, preserving material/machine/mould/sample context.
+2. Prefer public raw datasets with stable identifiers/checksums where available.
+3. For article-only sources, create original derived summaries/plots when permitted; otherwise cite and describe without reproducing protected material.
+4. Keep physical measurement, simulation, model prediction and supplier recommendation as distinct evidence classes.
+5. Preserve units and sample units. A part, batch, cycle and time sample are not interchangeable counts.
+6. Do not count embargoed data as usable. The large 2026 defect-image/process datasets remain held until their access state changes.
 
 ## Release boundary
 
-None of this research changes the currently released Book. When selected examples are actually added to learner-visible Book content, that will change governed learner-runtime bytes, require a new `web_release`, and create a new exact physical-device candidate. Until then, PR #332 remains the human-voice content candidate and this research PR remains metadata-only.
+None of this research changes the currently released Book. When selected examples are added to learner-visible Book content, governed learner-runtime bytes will change, a new `web_release` will be required, and a new exact physical-device candidate will be created. Until then, PR #332 remains the human-voice Book candidate and this research PR remains metadata-only.
