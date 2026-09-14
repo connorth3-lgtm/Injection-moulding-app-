@@ -28,7 +28,7 @@ For every governed Book data edit, the authoritative `data/` file and matching `
 Current paired blob identities:
 
 - foundations pair: `798920a4252cc20fa85a5a9c437be0e0e3b7e68c`
-- remaining-authored pair: `97f7bbd5af096b71d72bf5fed836de05a277d59e`
+- remaining-authored pair: `1c06814a207046acc9db7ce93d6e9c77d32bd780`
 - evidence-enrichment pair: `b36f633741104f0332b85c3a30dd83a368d531dc`
 
 ## Publication gate
