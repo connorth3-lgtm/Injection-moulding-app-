@@ -14,6 +14,7 @@ module.exports=defineConfig({
     /engineering-case-store\.spec\.js/,
     /inline-handler-bridge\.spec\.js/,
     /inline-style-csp\.spec\.js/,
+    /book-assurance\.spec\.js/,
     /performance-budget\.spec\.js/
   ],
   timeout:60000,
