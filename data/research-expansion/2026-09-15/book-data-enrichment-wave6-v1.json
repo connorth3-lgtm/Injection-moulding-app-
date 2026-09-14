@@ -1,0 +1,141 @@
+{
+  "schema": 1,
+  "version": "2026.09.15.1",
+  "purpose": "Book enrichment focused on natural mould lifecycle degradation, quantified cooling-circuit maintenance/recovery, and measured valve-gated hot-runner flow/pressure observability. Exact DOI/title searches were run against the repository before admission.",
+  "governance": {
+    "metadataOnly": true,
+    "rawThirdPartyPayloadsCommitted": false,
+    "peerReviewedAndPractitionerEvidenceSeparated": true,
+    "commercialCaseStudiesAreExamplesNotIndependentScientificProof": true,
+    "beforeAfterAssociationDoesNotProveEveryCausalMechanism": true,
+    "caseSpecificFlowPressureCycleValuesNeverBecomeMaintenanceThresholds": true
+  },
+  "summary": {
+    "candidates": 6,
+    "peerReviewedOrPeerReviewedProceedings": 2,
+    "technicalConferenceMeasured": 1,
+    "practitionerProductionCases": 3,
+    "rawPublicDatasetAdded": 0
+  },
+  "candidates": [
+    {
+      "id": "springer-2022-13mould-rul-metrology",
+      "priority": "A",
+      "doi": "10.1007/978-3-030-90700-6_49",
+      "title": "Data-Driven Identification of Remaining Useful Life for Plastic Injection Moulds",
+      "year": 2022,
+      "evidenceType": "peer-reviewed-real-world-mould-lifecycle-metrology",
+      "scale": "13 high-production-volume injection moulds",
+      "data": [
+        "solidified-part metrology measurements",
+        "mould lifecycle data",
+        "early run-in / production / worn-out state labels",
+        "multivariate statistical process control",
+        "XGBoost state classification"
+      ],
+      "reportedPerformance": {
+        "wornOutInClassAccuracy": "88%",
+        "earlyRunInInClassAccuracy": "73%",
+        "productionInClassAccuracy": "61%"
+      },
+      "bookChapters": ["mould-anatomy", "process-monitoring", "capability", "dimensional-stability", "documentation", "complex-diagnostics"],
+      "rightsState": "peer-reviewed Springer proceedings; public author/institutional copies are visible, but underlying industrial dataset is not established as publicly reusable",
+      "value": "Rare natural lifecycle evidence linking long-term mould state to physical part metrology across multiple production moulds.",
+      "limitations": "Industrial source data are not confirmed open; classifier accuracy is study-specific and does not define maintenance limits."
+    },
+    {
+      "id": "mechanik-2018-cooling-channel-diagnosis-cleaning",
+      "priority": "A",
+      "doi": "10.17814/mechanik.2018.4.45",
+      "title": "Diagnosing and cleaning of injection mould cooling channels",
+      "year": 2018,
+      "evidenceType": "peer-reviewed-cooling-channel-maintenance-study",
+      "data": [
+        "cooling-channel contamination and blockage mechanisms",
+        "cooling-channel diagnostic method",
+        "sediment/sludge removal method",
+        "flow restriction and cooling-efficiency context"
+      ],
+      "bookChapters": ["cooling", "mould-anatomy", "process-monitoring", "documentation"],
+      "rightsState": "CC BY 4.0 article; English and Polish full text publicly available",
+      "value": "Provides a peer-reviewed maintenance bridge between hydraulic condition, channel contamination and physical cleaning, complementing newer pressure-drop studies that stop short of recovery intervention.",
+      "limitations": "Article-level maintenance evidence rather than a raw longitudinal dataset; cleaning chemistry/equipment and channel geometry remain case-specific."
+    },
+    {
+      "id": "sanko-2025-cooling-pipe-cleaning-three-cases",
+      "priority": "A",
+      "url": "https://en.sankogosei.shop/post/improvement-case-study-enhanced-cooling-efficiency-through-mold-cooling-pipe-cleaning",
+      "title": "Improvement Case Study: Enhanced Cooling Efficiency Through Mold Cooling Pipe Cleaning",
+      "year": 2025,
+      "evidenceType": "practitioner-three-production-mould-before-after-maintenance-cases",
+      "scale": "three production mould cases including >120,000-shot, >600,000-shot and ~700,000-shot mould histories",
+      "data": [
+        "case 1 flow 0.2 to 0.5 L/min after cleaning",
+        "case 2 flow 0.3 to 0.6 L/min, cycle 70 to 63 s and reported voids reduced to zero",
+        "case 3 flow 0.2 to 1.1 L/min, heat-up 90 to 60 min, discarded shots 8 to 3 and part-weight change within tolerance"
+      ],
+      "bookChapters": ["cooling", "sink-voids", "cycle", "process-monitoring", "documentation", "complex-diagnostics"],
+      "rightsState": "commercial practitioner case article; reference factual reported before/after values only and create original Book graphics",
+      "value": "Unusually concrete maintenance-recovery examples connecting cooling-circuit restoration to flow, cycle time, defects, startup waste and part response.",
+      "limitations": "Commercial case reporting without controlled peer-reviewed design; improvements may include confounders and must not become universal cleaning triggers."
+    },
+    {
+      "id": "fuso-2023-eight-cavity-cooling-cleaning",
+      "priority": "B",
+      "url": "https://mono.ipros.com/en/product/detail/2000839561/",
+      "title": "Case Study of Mold Cooling Circuit Cleaning — 8-Cavity Injection Mold",
+      "year": 2023,
+      "evidenceType": "practitioner-production-cooling-before-after-case",
+      "data": [
+        "heavy rust accumulation and restricted cooling-water flow",
+        "water leak discovered during pre-clean check",
+        "flow rate 0.6 to 2.0 L/min",
+        "pressure loss 416 to 362 kPa",
+        "reported 13% pressure-loss reduction"
+      ],
+      "bookChapters": ["cooling", "multi-cavity", "mould-anatomy", "process-monitoring", "documentation"],
+      "rightsState": "commercial case page; reference-only unless catalog reuse permission is explicit",
+      "value": "Adds a multi-cavity maintenance example with paired hydraulic measurements before and after intervention and an important leak-detection confounder.",
+      "limitations": "No controlled quality/cycle outcome is reported on the public page; do not infer product-quality improvement solely from hydraulic recovery."
+    },
+    {
+      "id": "smartflow-2025-cooling-flow-balance-case",
+      "priority": "B",
+      "url": "https://www.smartflow-usa.com/case-study-flow-regulators-solve-a-part-quality-issue/",
+      "title": "Case Study: Flow Regulators Solve a Part Quality Issue",
+      "year": 2025,
+      "evidenceType": "practitioner-production-cooling-balance-diagnostic-case",
+      "data": [
+        "large automotive grille with >1 mm center deformation",
+        "16 cooling zones using three temperature-control units",
+        "five zones with no measurable flow",
+        "other zones up to 2.5 gal/min",
+        "measured parting-line delta-T above target before balancing"
+      ],
+      "bookChapters": ["cooling", "warpage", "dimensional-stability", "diagnostic-method", "process-monitoring"],
+      "rightsState": "commercial technical case; reference factual measurements and produce original explanatory graphics",
+      "value": "Useful diagnostic counterexample showing that nominal coolant temperature alone is insufficient when parallel circuits have severe flow imbalance.",
+      "limitations": "Commercial case; public excerpt does not constitute a controlled experiment or universal Reynolds-number target."
+    },
+    {
+      "id": "pps-2003-realtime-flow-rate-valvegated-hotrunner",
+      "priority": "B",
+      "title": "Real Time Flow Rate Estimation in Injection Molding",
+      "year": 2003,
+      "evidenceType": "measured-technical-conference-hot-runner-sensor-model-fusion",
+      "source": "Polymer Processing Society 20th Annual Meeting / Molding Technology Symposium; author-hosted/public manuscript copies visible",
+      "data": [
+        "two-cavity valve-gated hot-runner mould",
+        "injection pressure",
+        "cavity pressure behind ejector pins",
+        "screw-position-derived inlet flow",
+        "distinct valve-gate opening sequence",
+        "estimated branch flow rates and pressure histories"
+      ],
+      "bookChapters": ["hot-runners", "multi-cavity", "cavity-pressure", "feed-system", "process-monitoring"],
+      "rightsState": "conference manuscript visible from author/archival mirrors; reuse rights for figures/data are not established, so use as reference and create original diagrams",
+      "value": "Adds directly measured valve-gated hot-runner pressure chronology and branch-flow observability, useful for teaching that sequential valve opening changes pressure/flow state and that local cavity evidence matters.",
+      "limitations": "Older two-cavity experimental system and model-assisted flow estimates; not a modern raw valve-pin-position/current dataset and not a generic control recipe."
+    }
+  ]
+}
