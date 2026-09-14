@@ -1,0 +1,55 @@
+{
+  "schema": 1,
+  "version": "2026.09.15.1",
+  "purpose": "Rights-aware follow-up actions for Wave 5 Book enrichment sources. These actions create Book-owned explanations and derived teaching structures; they do not authorize copying protected third-party figures, tables or raw datasets.",
+  "governance": {
+    "verifyReuseRightsBeforeExtraction": true,
+    "useOriginalBookGraphicsAndTables": true,
+    "noProtectedFigureReproductionByDefault": true,
+    "preserveCaseMaterialMachineContext": true,
+    "doNotTreatPractitionerOrThesisEvidenceAsPeerReviewed": true
+  },
+  "queue": [
+    {
+      "rank": 1,
+      "sourceId": "jcbbp-2019-pet-inclusion-degradation-identification",
+      "action": "build an original black-speck/inclusion analytical decision ladder from the reported method: optical examination -> SEM/EDS -> FTIR or micro-IR -> XRF/XRD/DSC where justified",
+      "artifactTarget": "Black-speck diagnostic evidence ladder",
+      "chapters": ["black-specks", "diagnostic-method", "complex-diagnostics"]
+    },
+    {
+      "rank": 2,
+      "sourceId": "plastics-engineering-2013-black-specks",
+      "action": "extract only case-level factual relationships and create an original hypothesis-testing exercise contrasting degraded material, stagnant regions and color-concentrate causes",
+      "artifactTarget": "Three-path black-speck troubleshooting case",
+      "chapters": ["black-specks", "plasticising-unit", "thermal-history", "diagnostic-method"]
+    },
+    {
+      "rank": 3,
+      "sourceId": "umb-2024-pet-preform-black-speck-dmaic",
+      "action": "use only the public abstract-level counts unless full thesis access/reuse is authorized; create a Book-owned Pareto-style exercise from the disclosed defect totals and maintenance intervention",
+      "artifactTarget": "PET-preform defect Pareto + intervention-boundary exercise",
+      "chapters": ["black-specks", "documentation", "diagnostic-method"]
+    },
+    {
+      "rank": 4,
+      "sourceId": "kunststoffe-2021-hot-runner-valve-pin-pressure-control",
+      "action": "derive an original schematic explaining valve-pin opening stroke -> pressure loss -> local cavity-pressure response without reproducing publisher figures",
+      "artifactTarget": "Hot-runner actual-state versus cavity-response diagram",
+      "chapters": ["hot-runners", "cavity-pressure", "process-monitoring"]
+    },
+    {
+      "rank": 5,
+      "sourceId": "ikv-2026-kaskare-hot-runner-pressure-control",
+      "action": "use the institutional project outcome to update the hot-runner control narrative and explicitly tag it as the same broader research family as the 2021 technical article",
+      "artifactTarget": "Cascade hot-runner control continuation note",
+      "chapters": ["hot-runners", "multi-cavity", "process-window"]
+    }
+  ],
+  "stillWanted": [
+    "rights-clear shot-by-shot black-speck or contamination dataset with timestamps/order and intervention/recovery",
+    "raw hot-runner valve-pin actual-position/current/pressure traces tied to cavity-specific part quality",
+    "longitudinal natural machine/mould wear history ending in maintenance action and verified recovery",
+    "cooling-loop fouling history with pre-clean, cleaning and post-clean hydraulic/thermal measurements"
+  ]
+}
