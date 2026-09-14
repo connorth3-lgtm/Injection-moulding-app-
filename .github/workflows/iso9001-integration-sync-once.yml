@@ -1,0 +1,217 @@
+name: One-shot ISO 9001 QMS integration sync
+
+on:
+  push:
+    branches:
+      - feature/iso9001-qms-integration-20260915
+
+permissions:
+  contents: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: feature/iso9001-qms-integration-20260915
+          fetch-depth: 0
+      - uses: actions/setup-python@v7
+        with:
+          python-version: '3.12'
+      - name: Integrate governed QMS layer and release identity
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import json, os, re
+
+          root=Path('.')
+          new_release='2026.09.15.2'
+          trigger_sha=os.environ['GITHUB_SHA']
+
+          source_path=root/'data/book-evidence-enrichment-v1.json'
+          runtime_path=root/'src/domains/learning/book-data/book-evidence-enrichment-v1.json'
+          book=json.loads(source_path.read_text(encoding='utf-8'))
+          seeds={x['id']:x for x in book.get('sourceSeeds',[])}
+          additions=[
+            {
+              'id':'ISO-9001-2015','type':'international-standard','title':'ISO 9001:2015 — Quality management systems — Requirements',
+              'url':'https://www.iso.org/standard/62085.html','scope':'Current published ISO 9001 requirements basis as checked 2026-09-15, used with Amendment 1:2024. Supports QMS context only; does not make MouldMaster or a user organisation certified or conforming.',
+              'checked':'2026-09-15','currentState':'published'
+            },
+            {
+              'id':'ISO-9001-2015-AMD1-2024','type':'international-standard-amendment','title':'ISO 9001:2015/Amd 1:2024 — Quality management systems — Requirements — Amendment 1: Climate action changes',
+              'url':'https://www.iso.org/standard/88431.html','scope':'Published amendment applying to ISO 9001:2015. Used as part of the current requirements context until superseded.',
+              'checked':'2026-09-15','currentState':'published'
+            },
+            {
+              'id':'ISO-9000-2026','type':'international-standard','title':'ISO 9000:2026 — Quality management — Fundamentals and vocabulary',
+              'url':'https://www.iso.org/standard/9000','scope':'Published current fundamentals and vocabulary reference for quality-management terminology.',
+              'checked':'2026-09-15','currentState':'published'
+            },
+            {
+              'id':'ISO-9001-ED6-2026','type':'international-standard-transition-watch','title':'ISO 9001 Edition 6 (2026) — Quality management systems — Requirements',
+              'url':'https://www.iso.org/standard/9001','scope':'ISO lists Edition 6 as under publication on 2026-09-15. Transition watch only; not treated as the published requirements basis until ISO changes its status to published.',
+              'checked':'2026-09-15','currentState':'under-publication'
+            },
+          ]
+          for item in additions:
+              if item['id'] not in seeds:
+                  book.setdefault('sourceSeeds',[]).append(item)
+                  seeds[item['id']]=item
+          doc=next(x for x in book['chapterPatches'] if x.get('chapterId')=='documentation')
+          for sid in ['ISO-9001-2015','ISO-9001-2015-AMD1-2024','ISO-9000-2026']:
+              if sid not in doc.setdefault('sourceIds',[]): doc['sourceIds'].append(sid)
+          title='Quality records need evidence, not just completion'
+          if not any(x.get('title')==title for x in doc.setdefault('sections',[])):
+              doc['sections'].append({
+                'title':title,
+                'text':(
+                  'A quality record is useful when it preserves objective evidence, identity, timing and responsibility well enough for another person to review the decision. '
+                  'For nonconformity and corrective action, keep detection, containment, cause investigation, approved action and effectiveness verification separate. '
+                  'For measurement resources, keep the intended use, calibration or verification evidence, traceability and limitations visible. '
+                  'For competence, distinguish learning evidence from the organisation’s authorization to perform a role. For controlled changes, preserve what was superseded and how the new state will be verified.\n\n'
+                  'ISO 9001 provides the organisation-level QMS requirements context; ISO 9000:2026 provides current quality-management vocabulary. '
+                  'MouldMaster can support evidence discipline and learning, but it does not establish organisational conformity, certification, accreditation, auditor approval or production-release authority. '
+                  'As checked on 15 September 2026, ISO lists Edition 6 of ISO 9001 as under publication, so it remains a transition watch rather than the published requirements basis in this content.'
+                )
+              })
+          rendered=json.dumps(book,indent=2,ensure_ascii=False)+'\n'
+          source_path.write_text(rendered,encoding='utf-8')
+          runtime_path.write_text(rendered,encoding='utf-8')
+
+          reg_path=root/'sources/AUTHORITATIVE_SOURCE_REGISTER.md'
+          reg=reg_path.read_text(encoding='utf-8')
+          reg=reg.replace('Status date: 2026-08-24','Status date: 2026-09-15',1)
+          heading='## Quality-management systems and ISO 9001 support'
+          if heading not in reg:
+              block='''## Quality-management systems and ISO 9001 support
+
+          - **ISO 9001:2015 — Quality management systems — Requirements** — current published requirements basis as checked 15 September 2026. Use with Amendment 1:2024 until ISO publishes and supersedes this edition. https://www.iso.org/standard/62085.html
+          - **ISO 9001:2015/Amd 1:2024 — Climate action changes** — published amendment that applies to ISO 9001:2015. https://www.iso.org/standard/88431.html
+          - **ISO 9000:2026 — Quality management — Fundamentals and vocabulary** — current published fundamentals and vocabulary reference. https://www.iso.org/standard/9000
+          - **ISO 9001 Edition 6 (2026)** — ISO status was **under publication** when checked on 15 September 2026. Treat as a transition watch only until ISO marks the edition published. https://www.iso.org/standard/9001
+
+          MouldMaster supports quality-management practices, evidence prompts and learning that can be relevant to an organisation using ISO 9001. This does not make MouldMaster ISO 9001 certified, does not establish an organisation's conformity, and does not replace a licensed copy of the standard, an organisation-specific QMS, competent auditors or an accredited certification body. Clause themes in MouldMaster are paraphrased rather than reproduced from protected standard text.
+
+          '''
+              anchor='## Reference-database coverage'
+              if anchor not in reg: raise SystemExit('authoritative register insertion anchor missing')
+              reg=reg.replace(anchor,block+anchor,1)
+          reg_path.write_text(reg,encoding='utf-8')
+
+          lib_path=root/'source-library.js'
+          lib=lib_path.read_text(encoding='utf-8')
+          if ' quality:[' not in lib:
+              marker='\n stats:['
+              pos=lib.find(marker)
+              if pos<0: raise SystemExit('source library stats block missing')
+              end=lib.find('\n ]\n};',pos)
+              if end<0: raise SystemExit('source library stats end missing')
+              end += len('\n ]')
+              quality='''\n,\n quality:[
+  ['ISO 9001:2015','Current published quality-management-system requirements basis; use with Amendment 1:2024 until superseded.','https://www.iso.org/standard/62085.html'],
+  ['ISO 9001:2015/Amd 1:2024','Published climate-action amendment applying to ISO 9001:2015.','https://www.iso.org/standard/88431.html'],
+  ['ISO 9000:2026','Current published quality-management fundamentals and vocabulary.','https://www.iso.org/standard/9000'],
+  ['ISO 9001 Edition 6 (2026)','Transition watch only: ISO listed this edition as under publication when checked 2026-09-15.','https://www.iso.org/standard/9001']
+ ]'''
+              lib=lib[:end]+quality+lib[end:]
+          needle=" if(/capability|cpk|ppk|doe|statistics|measurement|random|factorial|validation|sampling|msa/.test(t))out.push('stats');"
+          qline="\n if(/quality management|qms|audit|nonconform|capa|competence|corrective|calibrat|document control/.test(t))out.push('quality');"
+          if qline.strip() not in lib:
+              if needle not in lib: raise SystemExit('source library category anchor missing')
+              lib=lib.replace(needle,needle+qline,1)
+          lib_path.write_text(lib,encoding='utf-8')
+
+          idx_path=root/'index.html'
+          idx=idx_path.read_text(encoding='utf-8')
+          qms_script="      ['./quality-management.js','<script src=\"./quality-management.js\">'],\n"
+          anchor="      ['./source-library.js','<script src=\"./source-library.js\">'],\n"
+          if qms_script not in idx:
+              if anchor not in idx: raise SystemExit('index source-library anchor missing')
+              idx=idx.replace(anchor,anchor+qms_script,1)
+          idx_path.write_text(idx,encoding='utf-8')
+
+          sw_path=root/'service-worker.js'
+          sw=sw_path.read_text(encoding='utf-8')
+          core_anchor="  './src/domains/learning/book-data/book-evidence-enrichment-v1.json',\n"
+          qms_data="  './src/domains/quality/data/quality-management-iso9001-v1.json',\n"
+          if qms_data not in sw:
+              if core_anchor not in sw: raise SystemExit('service worker QMS data anchor missing')
+              sw=sw.replace(core_anchor,core_anchor+qms_data,1)
+          opt_anchor="  './source-library.js',\n"
+          qms_runtime="  './quality-management.js',\n"
+          if qms_runtime not in sw:
+              if opt_anchor not in sw: raise SystemExit('service worker source-library anchor missing')
+              sw=sw.replace(opt_anchor,opt_anchor+qms_runtime,1)
+          sw_path.write_text(sw,encoding='utf-8')
+
+          version_path=root/'version.json'
+          version=json.loads(version_path.read_text(encoding='utf-8'))
+          version['web_release']=new_release
+          version_path.write_text(json.dumps(version,indent=2)+'\n',encoding='utf-8')
+
+          ext_path=root/'data/release-external-validation-v1.json'
+          ext=json.loads(ext_path.read_text(encoding='utf-8')); ext['release']=new_release
+          ext_path.write_text(json.dumps(ext,indent=2)+'\n',encoding='utf-8')
+
+          wave_path=root/'data/external-validation-wave1-v1.json'
+          wave=json.loads(wave_path.read_text(encoding='utf-8'))
+          wave['release']=new_release
+          wave['releaseSourceSha']=trigger_sha
+          live=wave['livePages']
+          live['status']='pending-main-deployment'; live['pagesRun']=None; live['pagesRunConclusion']=None; live['productionRootState']='release-hold'; live['bookVerifierStatus']='pending-main-deployment'
+          physical=wave['physicalPwa']
+          physical['status']='hold'; physical['releasePacket']=None; physical['currentCandidate']=None
+          wave_path.write_text(json.dumps(wave,indent=2)+'\n',encoding='utf-8')
+
+          sme_path=root/'data/book-sme-review-v1.json'
+          sme=json.loads(sme_path.read_text(encoding='utf-8')); sme['release']=new_release; sme['status']='hold'; sme['reviews']=[]
+          sme_path.write_text(json.dumps(sme,indent=2)+'\n',encoding='utf-8')
+
+          pilot_path=root/'data/learner-pilot-v1.json'
+          pilot=json.loads(pilot_path.read_text(encoding='utf-8')); pilot['release']=new_release; pilot['status']='prepared'; pilot['evidence']=None
+          pilot_path.write_text(json.dumps(pilot,indent=2)+'\n',encoding='utf-8')
+
+          fast_path=root/'qa_fast_feedback.py'
+          fast=fast_path.read_text(encoding='utf-8')
+          book_marker='            "qa_book_release_integration.py",\n'
+          iso_line='            "qa_iso9001_qms.py",\n'
+          if iso_line not in fast:
+              if book_marker not in fast: raise SystemExit('fast-feedback Book QA anchor missing')
+              fast=fast.replace(book_marker,book_marker+iso_line,1)
+          fast_path.write_text(fast,encoding='utf-8')
+
+          wf_path=root/'.github/workflows/qa.yml'
+          qawf=wf_path.read_text(encoding='utf-8')
+          qa_anchor='          python qa_book_release_integration.py\n'
+          qa_iso='          python qa_iso9001_qms.py\n'
+          if qa_iso not in qawf:
+              if qa_anchor not in qawf: raise SystemExit('release QA Book anchor missing')
+              qawf=qawf.replace(qa_anchor,qa_anchor+qa_iso,1)
+          wf_path.write_text(qawf,encoding='utf-8')
+
+          release_path=root/'qa_release.py'
+          release=release_path.read_text(encoding='utf-8')
+          old='for marker in ["ISO 20430:2020", "HSE PPIS4(rev1)", "OSHA 1910.147", "WorkSafe NZ — Machine lockouts", "ISO 1133-1:2022", "ISO 22514-2:2026", "NIST — Experimental design", "More authoritative sources"]:'
+          new='for marker in ["ISO 20430:2020", "HSE PPIS4(rev1)", "OSHA 1910.147", "WorkSafe NZ — Machine lockouts", "ISO 1133-1:2022", "ISO 22514-2:2026", "ISO 9001:2015", "ISO 9000:2026", "NIST — Experimental design", "More authoritative sources"]:'
+          if old in release: release=release.replace(old,new,1)
+          release_path.write_text(release,encoding='utf-8')
+          PY
+
+          python tools/sync_web_release.py
+          node --check quality-management.js
+          python qa_iso9001_qms.py
+          python qa_book_release_integration.py
+          python qa_external_validation_wave1.py
+          python tools/verify_release_external_validation.py
+          python qa_release_docs.py
+
+          rm .github/workflows/iso9001-integration-sync-once.yml
+      - name: Commit governed ISO 9001 integration
+        run: |
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add -A
+          git commit -m "Integrate ISO 9001 QMS support and synchronize 2026.09.15.2"
+          git push origin HEAD:feature/iso9001-qms-integration-20260915
