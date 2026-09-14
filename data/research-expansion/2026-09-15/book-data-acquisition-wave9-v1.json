@@ -1,0 +1,52 @@
+{
+  "schema": 1,
+  "version": "2026.09.15.1",
+  "purpose": "Rights-aware follow-up plan for converting Wave 9 hot-runner/melt-control quality evidence into original Book teaching assets without treating a linked research family as independent replication.",
+  "governance": {
+    "rawThirdPartyPayloadsCommitted": false,
+    "originalBookGraphicsRequired": true,
+    "sameFamilyStudiesMustBePresentedAsLinkedEvidence": true,
+    "legacyValvePerformanceMustRemainSystemSpecific": true,
+    "publishedAggregateOutcomesDoNotAuthorizeRawDataReconstruction": true
+  },
+  "queue": [
+    {
+      "rank": 1,
+      "sourceId": "ipp-1998-multicavity-melt-control-quality",
+      "action": "create an original four-gate schematic showing local valve control -> local pressure/flow -> shrinkage response -> eleven measured dimensions; summarize only the reported range of Cp improvement and do not recreate publisher figures",
+      "artifactTarget": "distributed melt-control to dimensional-quality case",
+      "chapters": ["hot-runners", "multi-cavity", "dimensional-stability", "capability"]
+    },
+    {
+      "rank": 2,
+      "sourceId": "pes-1997-multicavity-pressure-control-capability",
+      "action": "build a Book-owned before/after capability example using the reported Cp 0.52 versus 1.5 values and explicitly label the mould/valve system as a study-specific experimental case",
+      "artifactTarget": "multi-cavity pressure-control capability worked example",
+      "chapters": ["hot-runners", "cavity-pressure", "capability", "weld-lines"]
+    },
+    {
+      "rank": 3,
+      "sourceId": "prc-2004-selfregulating-valve-consistency",
+      "action": "draw an original causal-chain diagram separating applied control force, passive valve-pin response, melt-pressure regulation, actuator dynamics and part-weight variation; include the slow-pneumatic-loop counterexample",
+      "artifactTarget": "actuator dynamics and part-weight robustness exercise",
+      "chapters": ["hot-runners", "cavity-pressure", "process-window", "process-monitoring"]
+    },
+    {
+      "rank": 4,
+      "sourceId": "prc-2004-selfregulating-valve-productivity",
+      "action": "create an original quality/productivity trade-off table from the reported part-weight consistency, clamp-tonnage and cycle-time outcomes, with prominent case-specific boundaries",
+      "artifactTarget": "local melt-control quality versus productivity trade-off",
+      "chapters": ["hot-runners", "multi-cavity", "clamp", "cycle", "capability"]
+    }
+  ],
+  "familySynthesis": {
+    "overlapGroup": "kazmer-dynamic-melt-control-1997-2006",
+    "editorialUse": "Treat the four papers as a longitudinal engineering evidence family showing progression from distributed dynamic valves and cavity-pressure control to commercial dimensional capability and self-regulating pressure-valve quality/productivity validation. Do not count the four papers as four independent replications.",
+    "remainingEvidenceGap": "Public synchronized shot-level data containing actual valve-pin position or motion, motor current/force or torque, local cavity pressure and cavity-specific measured part quality from the same cycles."
+  },
+  "rawDataRequestsWorthPursuing": [
+    "archived experimental records from the 1997-2006 Kazmer dynamic-melt-control programme if the authors/institution can supply reusable terms and field semantics",
+    "modern servo-electric hot-runner exports containing commanded and actual pin position, motor current/torque and timestamps",
+    "the same modern cycles linked to cavity-pressure traces and cavity-specific weight/dimensional/surface-quality measurements"
+  ]
+}

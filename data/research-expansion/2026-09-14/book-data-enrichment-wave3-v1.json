@@ -1,0 +1,87 @@
+{
+  "schema": 1,
+  "version": "2026.09.14.2",
+  "purpose": "Add genuinely absent measured/case defect evidence and current supplier-reference families that broaden the Book's exact-source material coverage.",
+  "governance": {
+    "metadataOnly": true,
+    "rawThirdPartyPayloadsCommitted": false,
+    "exactRepoDuplicateSearchPerformed": true,
+    "measuredDoesNotEqualUniversal": true,
+    "supplierGuidanceDoesNotEqualBookDefaults": true,
+    "exactGradeOrCurrentSupplierDocumentControlsProduction": true
+  },
+  "summary": {
+    "integrationCandidates": 6,
+    "measuredExperimentalOrFaultCase": 2,
+    "manufacturerReference": 4
+  },
+  "candidates": [
+    {
+      "id": "ksdme-2024-external-gas-sink-venting",
+      "priority": "A",
+      "doi": "10.22847/ksdme.18.3.202409.010",
+      "title": "Study on sink-mark reduction and gas venting of injection molded parts using compressed air",
+      "evidenceType": "physical-external-gas-injection-defect-experiment",
+      "data": ["external-gas delay time", "air supply/discharge pressure", "air supply time", "measured sink-mark depth", "silver-streak appearance on non-dried PC", "venting intervention"],
+      "reportedCaseFindings": ["sink depth varied non-monotonically with gas delay", "reported minimum sink depth 0.594 micrometres versus 10.078 micrometres conventional in the studied setup", "silver streaks on the studied non-dried PC part disappeared at one tested air-supply condition"],
+      "bookChapters": ["sink-voids", "venting", "splay", "burns", "diagnostic-method"],
+      "rightsState": "publisher/KCI article; verify exact reuse licence before reproducing tables or figures",
+      "limitations": "Highly specific EGI mould/part/material experiment. Its pressure, delay and supply-time values must never be promoted as general sink, venting or drying settings; supplier drying requirements still control production."
+    },
+    {
+      "id": "plastics-engineering-2013-black-specks-recovery",
+      "priority": "A",
+      "doi": "10.1002/j.1941-9635.2013.tb00942.x",
+      "title": "Troubleshooting Black Specks and Color Streaks in Injection Molded Parts",
+      "evidenceType": "industrial-fault-investigation-intervention-followup-case",
+      "data": ["black-speck/color-streak symptom", "screw and non-return-valve inspection", "degraded resin at stagnant regions", "specific-rate/plasticating assessment", "equipment replacement/intervention", "post-intervention production follow-up", "separate pigment-dispersion case with back-pressure response"],
+      "bookChapters": ["black-specks", "thermal-history", "plasticising-unit", "diagnostic-method", "complex-diagnostics"],
+      "rightsState": "Wiley/Plastics Engineering article; reference/case interpretation only unless reuse rights explicitly permit reproduction",
+      "limitations": "Valuable fault-to-intervention-to-follow-up evidence but not an open raw cycle-level dataset. The hardware/process findings remain machine/material specific."
+    },
+    {
+      "id": "celanese-vectra-lcp-design-processing-guide",
+      "priority": "B",
+      "title": "Celanese Vectra LCP design and processing guidance",
+      "url": "https://www.celanese.com/products/lcp-vectra-zenite",
+      "evidenceType": "manufacturer-high-performance-polymer-reference",
+      "data": ["LCP structure and properties", "drying", "machine requirements", "screw/check-ring/nozzle", "hot runners", "injection rate", "mould temperature", "back pressure", "cycle time", "regrind", "defect troubleshooting", "thin-wall design"],
+      "bookChapters": ["high-performance-polymers", "thin-wall", "plasticising-unit", "hot-runners", "warpage", "weld-lines", "short-shot", "flash"],
+      "rightsState": "public manufacturer reference; reference-only unless republication terms explicitly permit",
+      "limitations": "Vectra/Zenite LCP-specific. Current grade data and Celanese documentation control actual production conditions."
+    },
+    {
+      "id": "lubrizol-tpu-injection-moulding-guide",
+      "priority": "B",
+      "title": "Lubrizol Injection Molding Processing Guide for TPU/ETP materials",
+      "url": "https://media.lubrizol.com/-/media/Project/Lubrizol-Corporation/Lubrizol/Master-Site/Engineered-Polymers/Documents/Literature/Lubrizol-Injection-Molding-Processing-Guide.pdf",
+      "evidenceType": "manufacturer-elastomer-processing-reference",
+      "data": ["equipment requirements", "mould and part design", "moulding operation", "start-up", "troubleshooting", "Estane TPU", "Pearlthane TPU", "Isoplast ETP", "Estaloc RETPU"],
+      "bookChapters": ["material-families", "moisture-drying", "thermal-history", "machine-anatomy", "mould-anatomy", "ejection-draft", "diagnostic-method"],
+      "rightsState": "public manufacturer guide; reference-only unless republication terms explicitly permit",
+      "limitations": "Portfolio/general guide. Exact grade TDS and Lubrizol technical guidance remain controlling."
+    },
+    {
+      "id": "eastman-tritan-processing-mould-design",
+      "priority": "B",
+      "title": "Eastman Tritan copolyester processing and mould-design guidance",
+      "url": "https://www.eastman.com/en/products/brands/tritan/resources/publications",
+      "evidenceType": "manufacturer-copolyester-processing-reference",
+      "data": ["processing guide", "mould-design guidelines", "drying guidance", "secondary operations", "thin-wall/application guidance"],
+      "bookChapters": ["material-families", "moisture-drying", "thermal-history", "mould-anatomy", "weld-lines", "dimensional-stability"],
+      "rightsState": "public manufacturer resource library; reference-only unless republication terms explicitly permit",
+      "limitations": "Tritan-family guidance. Exact grade/application documentation controls production use."
+    },
+    {
+      "id": "celanese-fortron-pps-current-reference",
+      "priority": "B",
+      "title": "Celanese Fortron PPS current product and technical-guide reference",
+      "url": "https://www.celanese.com/en/products/fortron-polyphenylene-sulfide",
+      "evidenceType": "manufacturer-high-performance-polymer-reference",
+      "data": ["PPS family properties", "high-temperature capability", "moisture behaviour", "reinforced and low-warpage grades", "injection-moulding applicability", "technical-guide links"],
+      "bookChapters": ["high-performance-polymers", "material-families", "fillers-additives", "thermal-history", "dimensional-stability"],
+      "rightsState": "public manufacturer reference; reference-only unless republication terms explicitly permit",
+      "limitations": "Fortron PPS family-level reference. Grade-level current documentation controls processing and qualification."
+    }
+  ]
+}

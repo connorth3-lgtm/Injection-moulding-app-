@@ -1,0 +1,38 @@
+{
+  "schema": 1,
+  "version": "2026.09.14.1",
+  "purpose": "Authoritative novelty/count correction for book-data-enrichment-wave1-v1.json. The original file remains an integration catalogue; this audit distinguishes genuinely new repository discoveries from already-known evidence reused for Book examples.",
+  "governance": {
+    "metadataOnly": true,
+    "rawThirdPartyPayloadsCommitted": false,
+    "supersedesWave1NoveltyCountOnly": true,
+    "doesNotSupersedeWave1SourceDetails": true,
+    "repoSearchDate": "2026-09-14"
+  },
+  "summary": {
+    "integrationCandidates": 16,
+    "newlyDiscoveredRelativeToRepository": 9,
+    "existingEvidenceReusedForBookIntegration": 7,
+    "originalWave1SummaryCandidateCount": 15,
+    "countCorrection": 1
+  },
+  "candidates": [
+    {"id":"polym-2026-75-run-hdpe-doe","noveltyState":"new-repository-discovery","evidence":"exact DOI search returned no prior repository hit"},
+    {"id":"jmmp-2021-scientific-moulding-transfer","noveltyState":"existing-evidence-reuse","evidence":"already seeded in Deep Dive evidence"},
+    {"id":"polym-2025-hips-process-window","noveltyState":"new-repository-discovery","evidence":"exact DOI search returned no prior repository hit"},
+    {"id":"polym-2023-experimental-process-window","noveltyState":"new-repository-discovery","evidence":"exact DOI search returned no prior repository hit"},
+    {"id":"springer-2023-in-cavity-failure-diagnosis","noveltyState":"existing-evidence-reuse","evidence":"already counted in the primary measured evidence registry"},
+    {"id":"sensors-2023-multiple-in-mold-sensors","noveltyState":"existing-evidence-reuse","evidence":"already used in primary measured multicavity evidence"},
+    {"id":"polym-2019-tie-bar-vp","noveltyState":"existing-evidence-reuse","evidence":"already present in measured recovery/switchover research"},
+    {"id":"polym-2021-micro-cavity-pressure-weight","noveltyState":"existing-evidence-reuse","evidence":"already referenced in sensor/machine-health evidence"},
+    {"id":"pes-2025-pressure-weight","noveltyState":"existing-evidence-reuse","evidence":"already referenced in sensor/machine-health evidence"},
+    {"id":"polym-2024-hot-runner-adaptive-control","noveltyState":"existing-evidence-reuse","evidence":"already supporting hot-runner primary evidence"},
+    {"id":"aisy-2020-geometry-transfer","noveltyState":"new-repository-discovery","evidence":"exact DOI search returned no prior repository hit"},
+    {"id":"zenodo-2026-injection-simulations-v5","noveltyState":"new-repository-discovery","evidence":"exact DOI search returned no prior repository hit"},
+    {"id":"polym-2026-gfpp-ccd-anisotropy","noveltyState":"new-repository-discovery","evidence":"exact DOI search returned no prior repository hit"},
+    {"id":"figshare-2025-gpps-warpage-rsm","noveltyState":"new-repository-discovery","evidence":"exact dataset identifier search returned no prior repository hit"},
+    {"id":"covestro-makrolon-fr6902-grade-data","noveltyState":"new-repository-discovery","evidence":"exact grade search returned no prior repository hit"},
+    {"id":"celanese-polyester-tech-manual-flow-shrinkage","noveltyState":"new-repository-discovery","evidence":"exact document identifier search returned no prior repository hit"}
+  ],
+  "interpretation": "Wave 1 remains useful because existing evidence can be repurposed into worked Book examples. Novelty and editorial usefulness are separate attributes and must not be conflated."
+}

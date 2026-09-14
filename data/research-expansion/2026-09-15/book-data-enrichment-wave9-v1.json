@@ -1,0 +1,118 @@
+{
+  "schema": 1,
+  "version": "2026.09.15.1",
+  "purpose": "Highly targeted Book enrichment focused on direct experimental links from hot-runner or melt-valve control to measured moulded-part quality and process capability. Exact DOI/title searches were screened against main and the current PR before admission. All four additions belong to one broader Kazmer dynamic-melt-control research family and must not be counted as four independent experimental confirmations.",
+  "screening": {
+    "mainSha": "5f7006d64061c2968e9d03365c2a834f97bd9e17",
+    "currentPrHeadBeforeWave9": "b1cc22f4c3b3c2c464f407dcf946ca7fe87c045f",
+    "repoSearchPerformed": true,
+    "currentPrPatchDeduplication": true,
+    "knownRelatedEvidenceNotRecounted": [
+      "10.3390/polym16081057",
+      "10.1515/polyeng-2021-0225",
+      "wave7:ewikon-2022-electric-valve-gate-observability"
+    ]
+  },
+  "governance": {
+    "metadataOnly": true,
+    "rawThirdPartyPayloadsCommitted": false,
+    "sameResearchFamilyMustRemainLinked": true,
+    "qualityImprovementDoesNotProveAUniversalControlRecipe": true,
+    "legacyActuatorResultsDoNotEstablishModernServoPerformance": true,
+    "publishedAggregateQualityResultsDoNotCloseRawSynchronizedTraceGap": true
+  },
+  "summary": {
+    "candidates": 4,
+    "peerReviewedJournalStudies": 4,
+    "distinctBroadResearchFamilies": 1,
+    "commercialOrProductionApplicationStudies": 1,
+    "directPartQualityOrCapabilityOutcomes": 4,
+    "rawPublicValvePinPositionCurrentPressureQualityDatasetAdded": 0
+  },
+  "candidates": [
+    {
+      "id": "ipp-1998-multicavity-melt-control-quality",
+      "priority": "A",
+      "doi": "10.3139/217.980398",
+      "title": "Consistency and Flexibility of Multi Cavity Melt Control",
+      "year": 1998,
+      "evidenceType": "peer-reviewed-commercial-application-multicavity-dynamic-valve-quality-control",
+      "overlapGroup": "kazmer-dynamic-melt-control-1997-2006",
+      "data": [
+        "multiple dynamic valve stems installed in a hot-runner feed system for local polymer-flow control",
+        "simultaneous cavity-pressure control at multiple mould locations",
+        "commercial four-gate application",
+        "eleven measured part dimensions",
+        "reported process-capability Cp improvement between 50% and 400% across all eleven dimensions",
+        "multiple dimensions independently and simultaneously adjusted through local shrinkage control"
+      ],
+      "bookChapters": ["hot-runners", "multi-cavity", "cavity-pressure", "dimensional-stability", "capability", "process-monitoring"],
+      "rightsState": "publisher-controlled International Polymer Processing article; use factual aggregate findings and create original Book diagrams/tables rather than reproducing protected figures",
+      "value": "Rare direct quality evidence connecting distributed hot-runner melt control to multiple measured dimensions and capability, strengthening the Book's command/control -> local melt state -> part outcome chain.",
+      "limitations": "Older commercial application and one broader research family; actuator architecture and reported Cp gains are system-specific and do not define modern servo-valve performance or universal control gains."
+    },
+    {
+      "id": "pes-1997-multicavity-pressure-control-capability",
+      "priority": "A",
+      "doi": "10.1002/pen.11838",
+      "title": "The process capability of multi-cavity pressure control for the injection molding process",
+      "year": 1997,
+      "evidenceType": "peer-reviewed-experimental-dynamic-valve-multicavity-quality-capability",
+      "overlapGroup": "kazmer-dynamic-melt-control-1997-2006",
+      "data": [
+        "dynamic valves in the melt-delivery system independently meter flow and pressure to different mould regions",
+        "experimental flow balancing and knit-line movement",
+        "multiple part dimensions controlled through distributed pressure control",
+        "testing under typical production process disturbances",
+        "reported process-capability index Cp increased from 0.52 for conventional moulding to 1.5 with closed-loop multi-cavity pressure control"
+      ],
+      "bookChapters": ["hot-runners", "multi-cavity", "cavity-pressure", "weld-lines", "dimensional-stability", "capability"],
+      "rightsState": "publisher-controlled Polymer Engineering & Science article; reference factual results and build original Book explanatory graphics",
+      "value": "Directly links distributed melt-pressure actuation to measurable quality/capability under process disturbances instead of stopping at pressure-curve control alone.",
+      "limitations": "Companion/continuation evidence from the same research family as the 1998 commercial application; Cp values are study-specific and must not be generalized to other moulds, materials or valve systems."
+    },
+    {
+      "id": "prc-2004-selfregulating-valve-consistency",
+      "priority": "A",
+      "doi": "10.1179/174328904X29948",
+      "title": "Validation of moulding consistency with a self-regulating melt pressure valve",
+      "year": 2004,
+      "evidenceType": "peer-reviewed-hot-runner-self-regulating-valve-part-weight-consistency",
+      "overlapGroup": "kazmer-dynamic-melt-control-1997-2006",
+      "data": [
+        "two self-regulating melt-pressure valves in a hot-runner injection-moulding process",
+        "valve pin adjusts juncture loss by balancing an applied control force against melt-pressure force",
+        "resolution-IV fractional-factorial comparison with conventional hot-runner moulding",
+        "part-weight consistency used as the quality outcome",
+        "open-loop self-regulating valve reportedly reduced sensitivity of part weight to process changes by 73%",
+        "short-term part-to-part variation reportedly reduced by 60%",
+        "slower pneumatic closed-loop response could induce more variation than the open-loop self-regulating mode"
+      ],
+      "bookChapters": ["hot-runners", "cavity-pressure", "process-window", "capability", "process-monitoring"],
+      "rightsState": "publisher-controlled Plastics, Rubber and Composites article; use factual aggregate findings and original Book diagrams",
+      "value": "Adds a useful counterexample to the assumption that more closed-loop control is automatically better: actuator dynamics can worsen variation, while a pressure-responsive valve can materially change part-weight robustness.",
+      "limitations": "Legacy pneumatic/self-regulating architecture and same broader Kazmer control family; no public synchronized raw valve-position/current/cavity-pressure/quality traces are exposed."
+    },
+    {
+      "id": "prc-2004-selfregulating-valve-productivity",
+      "priority": "B",
+      "doi": "10.1179/174328904X29957",
+      "title": "Validation of moulding productivity with two self-regulating melt pressure valves",
+      "year": 2004,
+      "evidenceType": "peer-reviewed-hot-runner-zone-control-quality-productivity-tradeoff",
+      "overlapGroup": "kazmer-dynamic-melt-control-1997-2006",
+      "data": [
+        "two self-regulating melt-pressure valves independently tune two cavities of differing geometry",
+        "reported mouldings could not be produced to specification without the valves or mould-design changes",
+        "part-weight standard-deviation consistency with the self-regulating valves reported at least twice that of conventional moulding",
+        "independent melt-pressure profiling and time shifting by moulding zone",
+        "reported 20% clamp-tonnage reduction with no cycle-time increase",
+        "reported 50% clamp-tonnage reduction with an 8% cycle-time increase"
+      ],
+      "bookChapters": ["hot-runners", "multi-cavity", "clamp", "cycle", "capability", "process-window"],
+      "rightsState": "publisher-controlled Plastics, Rubber and Composites article; use factual aggregate values and create original Book trade-off tables",
+      "value": "Connects local melt-pressure control not only to quality consistency but to an explicit clamp-tonnage/cycle-time trade-off, useful for teaching that process robustness and productivity objectives can interact.",
+      "limitations": "Same 2004 valve platform and broader research family as the consistency paper; reported productivity trade-offs are case-specific and are not safe generic clamp-reduction targets."
+    }
+  ]
+}

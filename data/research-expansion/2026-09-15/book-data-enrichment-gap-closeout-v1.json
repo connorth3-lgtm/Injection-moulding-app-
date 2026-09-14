@@ -1,0 +1,96 @@
+{
+  "schema": 1,
+  "version": "2026.09.15.1",
+  "purpose": "Close the current high-intensity Book-enrichment discovery pass without claiming that no future source can appear. The remaining gaps are now acquisition/rights/data-linkage problems rather than broad literature-discovery problems. Reopen only when new public raw data, owner authorization, author-supplied records or materially stronger trace-level evidence changes a gap state.",
+  "scope": {
+    "candidateWavesCompleted": 9,
+    "candidateEntries": 86,
+    "currentPrHeadAtCloseoutCreation": "80c6741b57009bd4bf7448c87d3c8cb8b1b27cac",
+    "metadataOnly": true,
+    "rawThirdPartyPayloadsCommitted": false
+  },
+  "gapStates": [
+    {
+      "id": "black-speck-shot-linked-recovery",
+      "state": "open-acquisition-gap",
+      "whatIsNowCovered": [
+        "multiple black-speck/black-dot mechanism and intervention cases",
+        "quantified before/after plant outcomes",
+        "analytical identification ladder for inclusion versus degradation hypotheses",
+        "cycle-resolved hot-runner cleaning/color-carryover recovery analogue"
+      ],
+      "stillRequired": [
+        "shot or cycle identity/order",
+        "black-speck or contamination observation tied to each shot or sampling interval",
+        "timestamped intervention or maintenance event",
+        "post-intervention recovery sequence long enough to verify stabilization",
+        "usable rights and sufficient machine/material context"
+      ],
+      "bestAcquisitionTargets": [
+        "owners/authors of the Wave 7 black-spot and black-dot production studies for underlying control-chart or defect-log records",
+        "production partners willing to export reject-camera or quality-log events together with purge/cleaning/maintenance timestamps",
+        "the embargoed Leon process/defect campaign after 2027-12-31 only if its released fields actually support the required chronology"
+      ],
+      "doNotReopenFor": "another generic troubleshooting list, isolated before/after percentage, unlinked defect image set or simulation-only degradation study"
+    },
+    {
+      "id": "hot-runner-synchronized-actual-state-quality",
+      "state": "open-acquisition-gap",
+      "whatIsNowCovered": [
+        "measured valve-gated pressure and branch-flow chronology",
+        "servo valve-pin stroke used to alter cavity-pressure transfer",
+        "supplier/trade evidence that actual pin position and motor current/force can be monitored",
+        "peer-reviewed direct links from distributed melt-valve/pressure control to dimensions, Cp and part-weight consistency",
+        "commercial controller documentation showing valve-pin position, mould pressure/temperature and complete-cycle recording can coexist"
+      ],
+      "stillRequired": [
+        "commanded valve state or target position",
+        "actual valve-pin position or motion",
+        "motor current, torque or force where available",
+        "local cavity-pressure trace",
+        "cavity-specific measured part quality",
+        "shared cycle identity/timestamps and reusable rights"
+      ],
+      "bestAcquisitionTargets": [
+        "IKV/KaskaRe researchers for reusable experimental traces from the servo-electric valve-pin pressure-control programme",
+        "EWIKON demonstration-cell owners or customers able to export pin-position/current plus cavity-pressure data",
+        "RUNIPSYS/Symbioz 4.0 deployments because public technical documentation states that valve-pin position, mould pressure/temperature and complete cycle information are recorded",
+        "authors/institutional archives from the Kazmer dynamic-melt-control programme if historical raw records and semantics survive"
+      ],
+      "doNotReopenFor": "another valve-gate patent, controller brochure, simulation-only pin-motion study or aggregate quality paper without synchronized actuator-state traces"
+    },
+    {
+      "id": "mould-maintenance-condition-to-recovery",
+      "state": "open-acquisition-gap",
+      "whatIsNowCovered": [
+        "roughly thirteen years of real industrial mould-maintenance event history at substantial scale",
+        "shot counts at maintenance events for thousands of injection moulds",
+        "natural lifecycle/metrology classification across 13 production moulds",
+        "production cooling maintenance before/after recovery cases",
+        "real mould-maintenance project histories with age, usage, failure/issues and maintenance duration"
+      ],
+      "stillRequired": [
+        "rights-clear row-level maintenance events",
+        "physical component-condition or measured wear state before intervention",
+        "specific intervention/refurbishment action",
+        "post-maintenance part-quality or metrology recovery linked to the same asset/event",
+        "enough repeated history to distinguish one-off repair anecdotes from recurrent degradation/recovery"
+      ],
+      "bestAcquisitionTargets": [
+        "industrial owner of the 2011-2024 ESREL maintenance history",
+        "owners of the 13-mould RUL/metrology dataset",
+        "OLI predictive-maintenance project owners where event-level maintenance/action outcomes may exist",
+        "production moulders with structured CMMS plus quality/metrology systems that can be joined under an approved data-use agreement"
+      ],
+      "doNotReopenFor": "another predictive-maintenance model without intervention/recovery data, simulated wear study or maintenance schedule recommendation without asset-linked measurements"
+    }
+  ],
+  "reopenTriggers": [
+    "a genuinely new public raw injection-moulding dataset appears with one of the required linkage patterns",
+    "an author, institution, vendor or industrial owner supplies the underlying records with explicit reusable terms",
+    "a currently embargoed dataset becomes legally accessible and its released schema matches a remaining gap",
+    "a rights-unresolved mirror gains authoritative provenance and explicit reuse permission",
+    "a modern production case publishes synchronized actuator-state, cavity-state and cavity-specific quality traces"
+  ],
+  "editorialDecision": "Proceed with Book-owned diagrams, case tables, diagnostic exercises and acquisition requests from Waves 1-9. Do not continue broad discovery merely to increase candidate count; prioritize rights-clear trace acquisition and source-owner outreach for the three open linkage gaps."
+}

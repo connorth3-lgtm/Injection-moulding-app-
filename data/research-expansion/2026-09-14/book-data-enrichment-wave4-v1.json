@@ -1,0 +1,200 @@
+{
+  "schema": 1,
+  "version": "2026.09.14.1",
+  "purpose": "Exact-DOI-screened enrichment beyond Waves 1-3, focused on evidence families absent from main and absent from earlier 2026-09-14 Book-enrichment waves.",
+  "screening": {
+    "mainSha": "5f7006d64061c2968e9d03365c2a834f97bd9e17",
+    "exactDoiRepoSearch": true,
+    "earlierWaveDeduplication": true,
+    "noExactMatchIsNotProofOfExperimentalIndependence": true
+  },
+  "governance": {
+    "metadataOnly": true,
+    "rawThirdPartyPayloadsCommitted": false,
+    "measuredAndSimulationLayersSeparated": true,
+    "specialistThermosetSeparatedFromCoreThermoplasticGuidance": true,
+    "secondarySynthesisNotCountedAsPrimaryMeasuredEvidence": true,
+    "caseValuesNeverBecomeUniversalSetpoints": true,
+    "rightsRecheckRequiredBeforeReuse": true
+  },
+  "summary": {
+    "candidates": 15,
+    "primaryOrHybridExperimental": 12,
+    "simulationOnly": 1,
+    "specialistThermoset": 1,
+    "secondarySynthesis": 1,
+    "priorityA": 7
+  },
+  "candidates": [
+    {
+      "id": "compositesa-2025-gapp-recycled-gfpp",
+      "priority": "A",
+      "doi": "10.1016/j.compositesa.2025.109174",
+      "title": "Enhancing weld line strength in fiber-reinforced recycled polypropylene through gas-assisted push-pull injection molding",
+      "evidenceType": "physical-assisted-moulding-weld-line-mechanics-plus-simulation",
+      "data": ["weld-line tensile strength", "stiffness", "fibre orientation", "recycled short-glass-fibre PP"],
+      "bookChapters": ["weld-lines", "fibre-orientation", "material-families", "complex-diagnostics"],
+      "rightsState": "Creative Commons open access; verify exact licence variant before reuse",
+      "limitations": "Specialist gas-assisted push-pull process; do not generalize settings to conventional moulding."
+    },
+    {
+      "id": "plos-2025-induction-thin-wall",
+      "priority": "A",
+      "doi": "10.1371/journal.pone.0337889",
+      "title": "Applying a new mold temperature control strategy to improve the tensile strength of thin wall products in injection molding processes",
+      "evidenceType": "physical-dynamic-mould-temperature-study-plus-simulation",
+      "data": ["PC", "ABS", "PA6", "PP", "three-point mould-surface temperature", "thin-wall filling", "weld-line tensile strength", "energy/cycle trade-off"],
+      "bookChapters": ["thin-wall", "weld-lines", "cooling", "process-window", "material-families"],
+      "rightsState": "CC BY; article states all relevant data are within the manuscript",
+      "limitations": "Rotating induction-heated insert system is specialised; local temperatures/timings are case-specific."
+    },
+    {
+      "id": "ijamt-2026-inline-laser-geometry",
+      "priority": "A",
+      "doi": "10.1007/s00170-026-18962-1",
+      "title": "Calibration of the set of laser profilers with an application to real time measurement of the injection molded parts geometry",
+      "evidenceType": "industrial-inline-metrology-validation",
+      "scale": "four profilers; 20 calibration experiments; 780 reference points",
+      "data": ["75 µm lateral resolution", "3.6 µm vertical resolution", "0.1 mm calibration precision", "moving-part 3D geometry inspection"],
+      "bookChapters": ["dimensional-stability", "capability", "process-monitoring", "documentation"],
+      "rightsState": "open article; industrial component geometry remains company-controlled",
+      "limitations": "Measurement capability is installation-specific and does not itself prove process capability."
+    },
+    {
+      "id": "scirep-2026-halo-gloss",
+      "priority": "A",
+      "doi": "10.1038/s41598-026-42688-5",
+      "title": "Elimination of halo gloss transition surface defects on injection-molded parts",
+      "evidenceType": "physical-surface-defect-process-study",
+      "data": ["PC/ABS", "multi-step injection speed", "flow-front behaviour", "surface gloss", "halo transition response"],
+      "bookChapters": ["diagnostic-method", "fill-study", "process-window", "complex-diagnostics"],
+      "rightsState": "CC BY-NC-ND 4.0; adapted article material is restricted",
+      "limitations": "Material, hot-runner gate and polished tool are specific."
+    },
+    {
+      "id": "ijamt-2026-recyclate-flowfront",
+      "priority": "A",
+      "doi": "10.1007/s00170-025-17109-y",
+      "title": "Molding trials and injection phase simulations considering the impact of variable material properties from recyclates on flow front progression",
+      "evidenceType": "physical-moulding-trials-plus-simulation-recyclate-variability",
+      "data": ["dynamic viscosity", "pvT behaviour", "specific heat capacity", "flow-front progression", "injection pressure demand", "incomplete filling"],
+      "bookChapters": ["rheology", "fill-study", "short-shot", "vp-transfer", "material-families", "process-window"],
+      "rightsState": "CC BY 4.0 with supplementary material",
+      "limitations": "Measured trials and simulation must remain distinct; tested property ranges are not generic recyclate limits."
+    },
+    {
+      "id": "jmapro-2026-injection-moulding-compounder",
+      "priority": "A",
+      "doi": "10.1016/j.jmapro.2026.02.012",
+      "title": "Injection moulding compounders: Integrated processing route for enhanced thermoplastic composite performance?",
+      "evidenceType": "experimental-recycled-composite-processing-plus-numerical",
+      "data": ["pressure build-up", "mean residence time", "local shear rate", "mechanical response", "recycled fibre-reinforced thermoplastic processing"],
+      "bookChapters": ["material-families", "fibre-orientation", "rheology", "black-specks", "process-baseline"],
+      "rightsState": "Creative Commons open access; verify exact licence variant",
+      "limitations": "Integrated compounder differs from a conventional reciprocating-screw moulding cell."
+    },
+    {
+      "id": "compositesa-2026-paperfiber-pp-reprocessing",
+      "priority": "B",
+      "doi": "10.1016/j.compositesa.2026.109837",
+      "title": "Impact of multiple mechanical recycling cycles on the structure and performance of paper fiber-reinforced polypropylene composites",
+      "evidenceType": "physical-multiple-reprocessing-material-history-study",
+      "scale": "up to five reprocessing cycles",
+      "data": ["GPC molecular weight", "fibre length/morphology", "DMA", "rheology", "thermal response", "mechanical properties"],
+      "bookChapters": ["material-families", "fibre-orientation", "rheology", "dimensional-stability", "documentation"],
+      "rightsState": "publisher article; verify exact licence before reuse",
+      "limitations": "Paper-fibre PP laboratory reprocessing does not represent every post-consumer history."
+    },
+    {
+      "id": "biopolymers-2025-pla-residual-stress",
+      "priority": "B",
+      "doi": "10.1002/bip.70026",
+      "title": "Rapid Quantitative Assessment of Residual Stress States in PLA Components Enabled by the Combination of Photoelasticity and the Hole Drilling Method",
+      "evidenceType": "physical-residual-stress-metrology",
+      "data": ["PLA", "photoelastic fringe patterns", "hole-drilling residual stress", "two ejection-tool configurations", "stress depth profile"],
+      "bookChapters": ["warpage", "dimensional-stability", "ejection-draft", "complex-diagnostics"],
+      "rightsState": "CC BY; underlying data available on request",
+      "limitations": "Reported stress magnitudes/depths are case measurements, not design or acceptance limits."
+    },
+    {
+      "id": "materials-2026-multisite-recycled-fibre-pp",
+      "priority": "B",
+      "doi": "10.3390/ma19112314",
+      "title": "Industrial-Scale Injection Moulding Validation of Recycled Fiber-Reinforced Polypropylene: Processability and Manufacturing Feasibility",
+      "evidenceType": "multi-site-industrial-processing-validation",
+      "scale": "seven industrial companies/sites across Spain and Slovenia with multiple machine and mould families",
+      "data": ["processing parameters", "cycle stability", "part quality", "defect observations", "cross-site processability"],
+      "bookChapters": ["material-families", "process-baseline", "process-window", "documentation", "complex-diagnostics"],
+      "rightsState": "CC BY 4.0",
+      "limitations": "Multi-site feasibility does not establish one transferable process window."
+    },
+    {
+      "id": "jmapro-2026-lattice-surface-cooling",
+      "priority": "B",
+      "doi": "10.1016/j.jmapro.2026.04.059",
+      "title": "Process-driven thermal optimization of injection molds through rapid tooling with lattice-structured surface cooling channels",
+      "evidenceType": "simulation-plus-physical-cooling-validation",
+      "data": ["straight/conformal/waterfall/lattice cooling comparison", "Moldex3D", "coolant flow", "thermal response", "wax validation", "LDPE injection validation"],
+      "bookChapters": ["cooling", "warpage", "dimensional-stability", "process-window"],
+      "rightsState": "publisher article; verify exact reuse terms",
+      "limitations": "Rapid-tooling geometry specific; simulation outputs must remain labelled separately."
+    },
+    {
+      "id": "ijmf-2026-cooling-pareto-simulation",
+      "priority": "C",
+      "doi": "10.1007/s12289-026-01979-y",
+      "title": "A comparative study of conformal and traditional cooling system for optimizing molding time and warpage reduction",
+      "evidenceType": "simulation-multiobjective-cooling-study",
+      "data": ["15 Latin-hypercube samples", "Moldflow", "RBF surrogate", "particle-swarm optimization", "moulding time", "maximum warpage"],
+      "bookChapters": ["cooling", "warpage", "doe", "process-window"],
+      "rightsState": "publisher article; verify final licence before reuse",
+      "limitations": "Simulation only; useful for Pareto reasoning, not as measured production evidence."
+    },
+    {
+      "id": "jmmp-2026-hdpe-deformation-3d-scan",
+      "priority": "A",
+      "doi": "10.3390/jmmp10090340",
+      "title": "Cross-Study of Techniques for the Analysis of Deformations Generated in the Injection Molding Process",
+      "evidenceType": "physical-hdpe-doe-3d-scan-plus-thermal-structural-simulation",
+      "data": ["HDPE moulding tests", "DOE", "3D scanning", "warpage", "sink marks", "ANSYS thermal-structural comparison"],
+      "bookChapters": ["warpage", "sink-voids", "dimensional-stability", "doe", "documentation"],
+      "rightsState": "open MDPI article; verify final licence metadata before derived reuse",
+      "limitations": "One HDPE geometry/process study; simulation agreement does not create a generic deformation model."
+    },
+    {
+      "id": "ijamt-2026-photopolymer-rapid-tool-life",
+      "priority": "B",
+      "doi": "10.1007/s00170-026-19051-z",
+      "title": "Applying material jetting to produce prototype injection moulds from medical grade and conventional photopolymers",
+      "evidenceType": "physical-rapid-tooling-degradation-study",
+      "data": ["progressive heat accumulation", "dimensional deviation", "edge failure", "cycle-dependent tool degradation"],
+      "bookChapters": ["mould-anatomy", "cooling", "ejection-draft", "dimensional-stability", "complex-diagnostics"],
+      "rightsState": "open article; verify final licence text before reuse",
+      "limitations": "Photopolymer prototype inserts are not representative of steel production mould life; observed 40–50-cycle degradation is not a general limit."
+    },
+    {
+      "id": "ijmf-2026-thermoset-moisture-industrial",
+      "priority": "B",
+      "doi": "10.1007/s12289-026-02087-7",
+      "title": "Data-driven optimization of moisture content in thermoset transfer moulding: an industrial case study on process stability and scrap reduction",
+      "evidenceType": "specialist-thermoset-industrial-controlled-moisture-study",
+      "scale": "1524 parts; 254 cycles; six controlled moisture levels",
+      "data": ["maximum moulding pressure", "switchover volume", "moulding time", "100% camera inspection", "eight surface defect types", "scrap rate"],
+      "bookChapters": ["moisture-drying", "vp-transfer", "process-monitoring", "diagnostic-method"],
+      "rightsState": "CC BY 4.0",
+      "limitations": "Epoxy thermoset physics differs from thermoplastics; reported moisture window must stay specialist/case-specific."
+    },
+    {
+      "id": "resconrec-2026-sec-meta-regression",
+      "priority": "C",
+      "doi": "10.1016/j.resconrec.2025.108730",
+      "title": "Quantifying energy consumption variability in injection molding: A meta-regression analysis",
+      "evidenceType": "secondary-meta-analysis-with-shared-data",
+      "scale": "160 energy-use observations from 15 studies, 20 materials and three machine types",
+      "data": ["specific energy consumption", "machine type", "material theoretical heat energy", "injection utilisation", "mixed-effects meta-regression"],
+      "bookChapters": ["cycle", "shot-utilisation", "documentation", "process-window"],
+      "rightsState": "Creative Commons open access; shared Figshare dataset requires separate licence verification",
+      "limitations": "Secondary synthesis only; never count as an independent physical moulding experiment."
+    }
+  ]
+}

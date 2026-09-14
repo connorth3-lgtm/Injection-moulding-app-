@@ -1,0 +1,313 @@
+{
+  "schema": 1,
+  "version": "2026.09.14.1",
+  "purpose": "Broaden the MouldMaster Book evidence pool across defects, energy, materials, cooling, weld lines, rheology, ejection, recyclate variability, fibre orientation and supplier-grade practice without changing learner-runtime content.",
+  "governance": {
+    "metadataOnly": true,
+    "rawThirdPartyPayloadsCommitted": false,
+    "exactRepoDuplicateSearchPerformed": true,
+    "measuredDoesNotEqualUniversal": true,
+    "simulationMustRemainLabelled": true,
+    "vendorGuidanceIsGradeOrFamilySpecific": true,
+    "articleValuesAreNotBookSetpoints": true,
+    "rightsMustBeRecheckedBeforeFigureTableOrRawDataReuse": true
+  },
+  "summary": {
+    "integrationCandidates": 25,
+    "researchOrExperimentalCandidates": 21,
+    "manufacturerReferenceCandidates": 4,
+    "priorityA": 10,
+    "priorityB": 11,
+    "priorityC": 4
+  },
+  "candidates": [
+    {
+      "id": "springer-2026-recycled-pp-warpage-sensors",
+      "priority": "A",
+      "doi": "10.1007/s00170-026-17702-9",
+      "title": "Warpage optimization on primary recycled polypropylene composites: investigating the effect of cooling time and injection temperature with machine learning and in-mold sensors",
+      "evidenceType": "physical-industrial-warpage-sensor-study",
+      "scale": "420 evaluated moulded parts across 21 process conditions; 20 samples per condition",
+      "data": ["in-mould temperature profiles", "warpage/dimensional response", "part mass", "MFI", "DSC", "FTIR", "injection temperature", "cooling time"],
+      "bookChapters": ["warpage", "cooling", "dimensional-stability", "process-window", "process-monitoring", "material-families"],
+      "rightsState": "open-access article; verify exact reuse scope before extracting figures/tables",
+      "limitations": "Reprocessed PP homopolymer with 40 wt% CaCO3 and one production geometry; prediction accuracy is case-specific."
+    },
+    {
+      "id": "app-sci-2026-1284-cycle-defect-production",
+      "priority": "A",
+      "doi": "10.3390/app16021025",
+      "title": "Application of Artificial Intelligence-Integrated Six Sigma Methodology for Multi-Objective Optimization in Injection Molding Processes",
+      "evidenceType": "real-industrial-production-cycle-defect-data",
+      "scale": "1284 production cycles",
+      "data": ["24 machine/process parameters", "22 binary defect labels", "gas-trapped burn", "short shot", "sink mark", "flash", "SHAP feature interpretation"],
+      "bookChapters": ["diagnostic-method", "burns", "short-shot", "sink-voids", "flash", "process-monitoring", "doe"],
+      "rightsState": "open MDPI article; raw production dataset reuse route must be checked separately",
+      "limitations": "Severe class imbalance and one industrial control-panel line; predictive association is not physical root-cause proof."
+    },
+    {
+      "id": "procir-2025-active-vacuum-venting",
+      "priority": "A",
+      "doi": "10.1016/j.procir.2025.02.132",
+      "title": "Efficient injection moulding using active vacuum venting",
+      "evidenceType": "physical-venting-energy-cycle-study",
+      "data": ["active vacuum versus no venting", "cycle time", "energy consumption", "higher-speed moulding comparison", "part-quality viability"],
+      "bookChapters": ["venting", "burns", "short-shot", "process-window", "documentation"],
+      "rightsState": "CC BY-NC-ND 4.0 article; reference/derived commentary only unless reuse is allowed",
+      "limitations": "AVVS hardware and tested mould are specific; reported energy/cycle improvements are not universal."
+    },
+    {
+      "id": "procir-2026-holistic-power-profiles",
+      "priority": "A",
+      "doi": "10.1016/j.procir.2026.05.065",
+      "title": "Intelligent Utilization of Power Profiles: Energy-efficient and Sustainable Plastics Injection Molding Processing Without Sacrificing Part Quality",
+      "evidenceType": "physical-energy-measurement-framework",
+      "data": ["IMM drive energy", "barrel heater energy", "temperature-control-unit energy", "machine cooling", "peripheral energy and heat flows", "part-quality constraint"],
+      "bookChapters": ["cycle", "process-baseline", "documentation", "process-monitoring", "complex-diagnostics"],
+      "rightsState": "open-access Procedia CIRP article; verify exact licence before reuse",
+      "limitations": "Energy architecture is equipment/site-dependent; useful for energy accounting, not generic machine consumption prediction."
+    },
+    {
+      "id": "springer-2026-imm-module-energy",
+      "priority": "A",
+      "doi": "10.1007/978-3-032-21157-6_62",
+      "title": "Data-Driven Energy Consumption Modeling of Injection Molding Machine Modules",
+      "evidenceType": "industrial-historical-energy-production-data",
+      "data": ["machine type", "machine size", "shot weight", "cooling time", "mould temperature", "melt temperature", "aggregated module energy", "auxiliary systems"],
+      "bookChapters": ["machine-anatomy", "cycle", "documentation", "process-monitoring", "capability"],
+      "rightsState": "open access; institutional record states CC BY-NC-ND",
+      "limitations": "Partner and machine identities are confidential/standardized; module-specific training data was necessary for strong prediction."
+    },
+    {
+      "id": "rineng-2026-pc-weld-line-dimensions",
+      "priority": "A",
+      "doi": "10.1016/j.rineng.2026.110551",
+      "title": "Optimization of injection molding process to minimize weld-line defects and improve dimensional accuracy of the plastic parts using Taguchi-based grey relational analysis",
+      "evidenceType": "physical-weld-line-dimensional-doe",
+      "data": ["transparent polycarbonate part", "weld-line width", "dimensional accuracy", "Taguchi DOE", "GRA", "ANOVA"],
+      "bookChapters": ["weld-lines", "dimensional-stability", "doe", "process-window", "documentation"],
+      "rightsState": "open-access article under a Creative Commons licence; verify exact reuse terms",
+      "limitations": "One PC housing/tool/process; optimized values remain case evidence."
+    },
+    {
+      "id": "springer-2025-experimental-numerical-rheology",
+      "priority": "A",
+      "doi": "10.1007/s00170-025-16522-7",
+      "title": "A novel experimental-numerical procedure for the rheological characterization of thermoplastic polymers applied to injection molding",
+      "evidenceType": "experimental-rheology-plus-numerical-identification",
+      "data": ["MFI-based characterization", "viscosity model identification", "injection-moulding validation", "rheological parameter sensitivity"],
+      "bookChapters": ["rheology", "fill-study", "pressure-loss", "thin-wall", "material-families"],
+      "rightsState": "CC BY 4.0",
+      "limitations": "Characterization procedure is material/test specific and does not replace grade rheology data where available."
+    },
+    {
+      "id": "polym-2025-thin-cooling-layer-weld-strength",
+      "priority": "A",
+      "doi": "10.3390/polym17212831",
+      "title": "A Study on Thin Cooling Layers Between the Cooling Channel and Cavity in the Injection Molding Process for Mold Temperature Control to Enhance Weld Line Flexural Strength in Plastic Products",
+      "evidenceType": "physical-cooling-weld-line-strength-study",
+      "data": ["cooling-layer configuration", "mould temperature control", "weld-line flexural strength", "Taguchi experiment", "injection pressure effects"],
+      "bookChapters": ["cooling", "weld-lines", "mould-anatomy", "doe", "dimensional-stability"],
+      "rightsState": "CC BY 4.0 article",
+      "limitations": "Geometry/material/tooling-specific thermal and strength response."
+    },
+    {
+      "id": "polym-2023-pa-gf-weld-line-strength",
+      "priority": "A",
+      "doi": "10.3390/polym15204102",
+      "title": "Weld Line Strength of Polyamide Fiberglass Composite at Different Processing Parameters in Injection Molding Technique",
+      "evidenceType": "physical-glass-fibre-weld-line-doe",
+      "data": ["PA/glass-fibre weld-line strength", "filling time", "packing time", "packing pressure", "melt temperature", "mould temperature"],
+      "bookChapters": ["weld-lines", "fillers-additives", "fibre-orientation", "doe", "material-families"],
+      "rightsState": "CC BY 4.0 article",
+      "limitations": "Specific composite and specimen; weld strength response must not be generalized to other GF grades."
+    },
+    {
+      "id": "polym-2025-gf-weld-line-prediction",
+      "priority": "A",
+      "doi": "10.3390/polym17233120",
+      "title": "Prediction of Mechanical Properties of Injection-Molded Weld Lines of Glass Fiber-Reinforced Composites",
+      "evidenceType": "physical-mechanical-plus-simulation-weld-study",
+      "data": ["tensile strength", "flexural strength", "weld-line versus non-weld comparison", "temperature effects", "simulation comparison"],
+      "bookChapters": ["weld-lines", "fillers-additives", "fibre-orientation", "complex-diagnostics"],
+      "rightsState": "CC BY 4.0 article",
+      "limitations": "Measured and simulated layers must remain distinct; tested composite system does not define universal weld penalties."
+    },
+    {
+      "id": "materials-2023-micro-weld-lines",
+      "priority": "B",
+      "doi": "10.3390/ma16176053",
+      "title": "Analysis of Weld Lines in Micro-Injection Molding",
+      "evidenceType": "physical-micro-injection-weld-study-plus-simulation",
+      "data": ["micro-cavity fill completeness", "weld-line length", "mould-temperature effects", "mechanical response", "simulation comparison"],
+      "bookChapters": ["weld-lines", "thin-wall", "fill-study", "mould-anatomy"],
+      "rightsState": "CC BY 4.0 article",
+      "limitations": "Micro-injection scale; thermal/flow conclusions must not be transferred numerically to conventional moulding."
+    },
+    {
+      "id": "polym-2022-tpms-conformal-cooling",
+      "priority": "B",
+      "doi": "10.3390/polym14010181",
+      "title": "Adaptive Conformal Cooling of Injection Molds Using Additively Manufactured TPMS Structures",
+      "evidenceType": "physical-conformal-cooling-tool-study",
+      "data": ["TPMS cooling geometry", "physical injection trials", "cooling-time variation", "part dimensional response", "thermal comparison"],
+      "bookChapters": ["cooling", "mould-anatomy", "warpage", "dimensional-stability"],
+      "rightsState": "CC BY 4.0 article",
+      "limitations": "Tool design and coolant conditions are specific; use as a thermal-design case, not a universal channel prescription."
+    },
+    {
+      "id": "measurement-2012-cooling-warpage",
+      "priority": "B",
+      "doi": "10.1016/j.measurement.2012.01.039",
+      "title": "On the relationship between cooling setup and warpage in injection molding",
+      "evidenceType": "physical-warpage-metrology-study",
+      "data": ["non-contact warpage measurements", "cooling parameters", "multiple part regions", "thermal setup effects"],
+      "bookChapters": ["cooling", "warpage", "dimensional-stability", "documentation"],
+      "rightsState": "publisher article; reference only unless reuse rights are confirmed",
+      "limitations": "Older study and one experimental system; still useful as direct metrology evidence."
+    },
+    {
+      "id": "esaf-2024-ejection-draft-roughness",
+      "priority": "B",
+      "doi": "10.21741/9781644903131-294",
+      "title": "Analysis of the effect of draft angle and surface roughness on ejection forces in micro injection molding",
+      "evidenceType": "physical-ejection-force-doe",
+      "data": ["piezoelectric peak ejection force", "draft angle", "surface roughness", "mould temperature", "holding pressure", "PP and COC"],
+      "bookChapters": ["ejection-draft", "mould-anatomy", "process-window", "doe"],
+      "rightsState": "CC BY 3.0 article",
+      "limitations": "Micro-moulding and two polymers; ejection-force interactions were material-dependent."
+    },
+    {
+      "id": "polym-2025-thick-wall-sink-void",
+      "priority": "B",
+      "doi": "10.3390/polym17081126",
+      "title": "Mitigation of Sink Voids in Thick-Walled Thermoplastic Components via Integrated Taguchi DOE and CAE Simulations",
+      "evidenceType": "physical-industrial-doe-plus-cae-defect-study",
+      "data": ["thick-wall sink/void response", "Taguchi DOE", "CAE", "processing effects", "industrial gauge-plate geometry"],
+      "bookChapters": ["sink-voids", "cooling", "gate-seal", "doe", "warpage"],
+      "rightsState": "CC BY 4.0 article",
+      "limitations": "Physical and CAE evidence must remain separated; one thick-wall industrial component."
+    },
+    {
+      "id": "springer-2024-rapid-heat-cycle-moulding",
+      "priority": "B",
+      "doi": "10.1007/s00170-023-12683-5",
+      "title": "Development of a rapid heat cycle injection molding system using infrared radiation and convection heating and influence on morphology and mechanical properties",
+      "evidenceType": "physical-dynamic-mould-temperature-study",
+      "data": ["infrared heating", "water convection cooling", "mould surface temperature", "morphology", "Young modulus", "surface-defect context"],
+      "bookChapters": ["cooling", "weld-lines", "sink-voids", "warpage", "mould-anatomy"],
+      "rightsState": "open-access Springer article; verify exact licence for reuse",
+      "limitations": "RHCM implementation-specific; temperatures/cycle behaviour are not generic recommendations."
+    },
+    {
+      "id": "iranian-polymer-2024-threaded-cooling",
+      "priority": "B",
+      "doi": "10.1007/s13726-024-01329-2",
+      "title": "An experimental analysis on thermal performance of interloping threaded cooling channels in injection mold cavity",
+      "evidenceType": "physical-cooling-channel-thermal-study",
+      "data": ["infrared thermal imaging", "conventional versus threaded cooling channels", "steady heating/cooling temperature distribution"],
+      "bookChapters": ["cooling", "mould-anatomy", "dimensional-stability"],
+      "rightsState": "publisher article; verify licence before reuse",
+      "limitations": "Thermal study context and tooling geometry constrain transferability."
+    },
+    {
+      "id": "pjti-2025-pp-conditioning-shrinkage",
+      "priority": "B",
+      "doi": "10.37660/PJTI.2025.25.1.1",
+      "title": "The influence of heterogonous nucleation on the processing shrinkage and mechanical properties of polypropylene injection moldings",
+      "evidenceType": "physical-post-mould-conditioning-study",
+      "data": ["processing shrinkage", "conditioning time", "mechanical properties", "PP nucleation", "1 h to 504 h post-mould measurements"],
+      "bookChapters": ["dimensional-stability", "warpage", "material-families", "documentation"],
+      "rightsState": "public journal article; verify licence before figure/table reuse",
+      "limitations": "Specific PP/nucleant system; time-dependent dimensional behaviour is illustrative, not a universal conditioning schedule."
+    },
+    {
+      "id": "composites-2025-fibre-orientation-xct",
+      "priority": "B",
+      "doi": "10.1016/j.coco.2025.102496",
+      "title": "Development of fiber orientation in injection molding: Comparison of glass fiber, carbon fiber and their hybrid composites",
+      "evidenceType": "physical-xct-fibre-orientation-plus-cfd",
+      "data": ["X-ray CT fibre orientation distributions", "flow-distance positions", "GF", "CF", "hybrid CF/GF", "longitudinal/transverse tensile response", "CFD/rheology comparison"],
+      "bookChapters": ["fibre-orientation", "fillers-additives", "warpage", "rheology", "fill-study"],
+      "rightsState": "publisher article with DOE public-access obligations; verify reuse licence before extracts",
+      "limitations": "Nylon 66 composite system and tested panel geometry; simulation corroboration does not replace XCT measurements."
+    },
+    {
+      "id": "composites-a-2025-hybrid-pa6-insert-moulding",
+      "priority": "B",
+      "doi": "10.1016/j.compositesa.2024.108534",
+      "title": "Insert-injection moulding and post-thermal treatment of hybrid continuous and discontinuous glass-fibre-reinforced polyamide composite products",
+      "evidenceType": "physical-hybrid-composite-dimensional-mechanical-study",
+      "data": ["warpage", "bending strength", "bending modulus", "interfacial bonding", "injection parameters", "post-thermal treatment"],
+      "bookChapters": ["fillers-additives", "fibre-orientation", "warpage", "dimensional-stability", "material-families"],
+      "rightsState": "publisher article; raw/full-text reuse not confirmed",
+      "limitations": "Hybrid continuous/discontinuous PA6 architecture is specialised and not representative of ordinary short-fibre moulding."
+    },
+    {
+      "id": "procir-2024-recycled-gfpp-history-screw-speed",
+      "priority": "B",
+      "doi": "10.1016/j.procir.2024.02.006",
+      "title": "Influence of the material history on the properties of recycled glass fiber reinforced polypropylene - impact of screw speed during injection molding",
+      "evidenceType": "physical-reprocessing-fibre-degradation-doe",
+      "scale": "47 processing variants across five processing cycles and multiple screw-speed conditions",
+      "data": ["tensile", "impact", "MVR", "fibre length distribution", "processing cycle", "screw speed"],
+      "bookChapters": ["plasticising-unit", "thermal-history", "fillers-additives", "fibre-orientation", "material-families"],
+      "rightsState": "open access under CC BY-NC-ND",
+      "limitations": "Recycled GF-PP and tested screw speeds; study found processing history more important than screw speed within the tested range."
+    },
+    {
+      "id": "asahi-leona-pa-handbook",
+      "priority": "C",
+      "title": "Asahi Kasei LEONA polyamide resin Technical Handbook",
+      "url": "https://www.asahi-kasei-plastics.com/en/download/handbook_re/",
+      "evidenceType": "manufacturer-family-technical-reference",
+      "data": ["water absorption", "moisture-content dependence", "temperature dependence", "injection mould design", "injection-moulding technology", "troubleshooting examples"],
+      "bookChapters": ["moisture-drying", "material-families", "mould-anatomy", "fillers-additives", "dimensional-stability"],
+      "rightsState": "public manufacturer reference; reference-only unless republication terms permit",
+      "limitations": "LEONA family guidance; exact production decisions still require current grade-level data."
+    },
+    {
+      "id": "syensqo-ketaspire-peek-guide",
+      "priority": "C",
+      "title": "Syensqo KetaSpire PEEK Design and Processing Guide",
+      "url": "https://www.syensqo.com/en/brands/ketaspire-peek/documents",
+      "evidenceType": "manufacturer-high-performance-polymer-reference",
+      "data": ["high-temperature injection equipment requirements", "drying/moisture", "thermal stability", "shutdown/purge guidance", "grade/product data"],
+      "bookChapters": ["high-performance-polymers", "moisture-drying", "thermal-history", "machine-anatomy", "plasticising-unit"],
+      "rightsState": "public manufacturer reference; reference-only unless republication terms permit",
+      "limitations": "KetaSpire-specific; do not generalize temperatures, moisture limits or equipment requirements to all PEEK."
+    },
+    {
+      "id": "syensqo-udel-psu-processing-guides",
+      "priority": "C",
+      "title": "Syensqo Udel PSU / Radel PPSU / Veradel PESU processing guides",
+      "url": "https://www.syensqo.com/en/brands/udel-psu/documents",
+      "evidenceType": "manufacturer-high-performance-amorphous-reference",
+      "data": ["injection moulding quick guide", "processing guide", "design guide", "grade data", "high-temperature processing context"],
+      "bookChapters": ["high-performance-polymers", "material-families", "thermal-history", "moisture-drying", "machine-anatomy"],
+      "rightsState": "public manufacturer reference; reference-only unless republication terms permit",
+      "limitations": "Supplier-family guidance; grade-level current documents remain controlling."
+    },
+    {
+      "id": "basf-ultramid-a3wg5-current-processing-sheet",
+      "priority": "C",
+      "title": "BASF Ultramid A3WG5 Processing Data Sheet",
+      "url": "https://download.basf.com/p1/8a8081c57fd4b609017fd6612f1339c7/en/ULTRAMID%3Csup%3E%C2%AE%3Csup%3E_A3WG5_Processing_Data_Sheet_Asia_PacificEurope_English.pdf",
+      "evidenceType": "manufacturer-grade-processing-reference",
+      "data": ["PA66-GF25 identity", "recommended/max moisture", "drying", "melt/mould temperature", "residence time", "peripheral screw speed", "longitudinal/transverse shrinkage"],
+      "bookChapters": ["moisture-drying", "fillers-additives", "fibre-orientation", "thermal-history", "dimensional-stability", "plasticising-unit"],
+      "rightsState": "public manufacturer data sheet; reference-only unless republication terms permit",
+      "limitations": "Exact grade data. This is precisely the kind of source that should override family-level or Book-generic processing numbers."
+    }
+  ],
+  "nextIntegrationPriority": [
+    "springer-2026-recycled-pp-warpage-sensors",
+    "app-sci-2026-1284-cycle-defect-production",
+    "procir-2025-active-vacuum-venting",
+    "procir-2026-holistic-power-profiles",
+    "rineng-2026-pc-weld-line-dimensions",
+    "springer-2025-experimental-numerical-rheology",
+    "polym-2025-thin-cooling-layer-weld-strength",
+    "esaf-2024-ejection-draft-roughness"
+  ]
+}
