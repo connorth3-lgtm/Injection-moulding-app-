@@ -1,0 +1,42 @@
+{
+  "schema": 1,
+  "version": "2026.09.15.1",
+  "purpose": "Rights-aware follow-up actions for Wave 8 longitudinal mould-maintenance evidence. The goal is to turn public aggregate findings into Book-owned lifecycle teaching structures while separately pursuing authorized raw histories.",
+  "governance": {
+    "rawThirdPartyPayloadsCommitted": false,
+    "originalBookGraphicsRequired": true,
+    "industrialRowsMustNotBeInferredFromAggregates": true,
+    "maintenancePredictionIsNotPhysicalRootCauseProof": true,
+    "postMaintenanceRecoveryMustBeVerifiedSeparately": true
+  },
+  "queue": [
+    {
+      "rank": 1,
+      "sourceId": "esrel-2025-9157mould-maintenance-history",
+      "action": "create an original event-schema and example timeline showing mould ID -> shot count -> component maintenance notification -> next maintenance interval, using only public aggregate/source-described fields; clearly mark component condition and post-maintenance part-quality verification as unavailable in the public record",
+      "artifactTarget": "shot-count mould-maintenance history timeline + maintenance-event data schema",
+      "chapters": ["mould-anatomy", "process-monitoring", "documentation", "complex-diagnostics"]
+    },
+    {
+      "rank": 2,
+      "sourceId": "esrel-2025-9157mould-maintenance-history",
+      "action": "pursue owner-authorized access to a de-identified subset of maintenance notifications/master data, prioritizing repeated event sequences for the same mould/component and explicit separation of cleaning, repair and replacement events",
+      "artifactTarget": "rights-clear longitudinal maintenance dataset acquisition",
+      "chapters": ["process-monitoring", "documentation", "capability"]
+    },
+    {
+      "rank": 3,
+      "sourceId": "procir-2017-mould-maintenance-time-cbr",
+      "action": "build a Book-owned case matrix from the disclosed mould age, cycles/week, cavities, issue/failure attributes and maintenance-time ranges; use it to teach similarity-based planning without reproducing the source table",
+      "artifactTarget": "mould-maintenance history and planning exercise",
+      "chapters": ["mould-anatomy", "documentation", "complex-diagnostics"]
+    }
+  ],
+  "stillWanted": [
+    "a rights-clear longitudinal injection-mould maintenance dataset with repeated events for the same mould/component plus explicit intervention type and post-maintenance condition",
+    "part-quality/metrology measurements immediately before and after natural mould maintenance or refurbishment, linked to the same maintenance event history",
+    "rights-clear shot-by-shot black-speck onset -> intervention -> verified-recovery data with part order/timestamps and process state",
+    "synchronized hot-runner actual valve-pin position + motor current/torque + cavity pressure + cavity-specific quality traces"
+  ],
+  "gapUpdate": "Long natural maintenance histories are no longer an evidence-discovery gap: a 2011-2024 industrial history with 64,020 notifications across 9,157 moulds is now identified. The remaining gap is access/reuse plus physical condition and verified post-maintenance quality recovery linked to those events."
+}
