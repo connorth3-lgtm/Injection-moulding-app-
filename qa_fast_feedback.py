@@ -82,8 +82,8 @@ def main() -> int:
 
     nzqa_changed = any(
         p == "qa_nzqa_readiness.py"
-        or p == "data/nzqa-education-readiness-v1.json"
-        or p == "src/domains/learning/book-data/nzqa-education-readiness-v1.json"
+        or p.startswith("data/nzqa-")
+        or p.startswith("src/domains/learning/book-data/nzqa-")
         or p == "sources/NZQA_READINESS_REGISTER.md"
         or p.startswith("certification/NZQA_")
         or p in {"certification/README.md", "certification/PROVIDER_PARTNERSHIP_OUTREACH.md"}
