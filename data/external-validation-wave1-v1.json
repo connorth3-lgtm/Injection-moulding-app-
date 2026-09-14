@@ -21,6 +21,17 @@
     "status": "hold",
     "contract": "data/pwa-physical-device-validation-v1.json",
     "checklist": "qa/PWA_PHYSICAL_DEVICE_CHECKLIST.md",
+    "releasePacket": "qa/PWA_PHYSICAL_DEVICE_2026.09.14.4.md",
+    "currentCandidate": {
+      "sourceSha": "9925eb26472c598d900a5a3d710e90ccf27e83e8",
+      "pagesRun": 34804805500,
+      "runtimeFingerprint": "sha256:b1aea83687ec9b6264b90fe30d8641225e56a7864c6c805881679d128b24e382",
+      "artifactName": "physical-pwa-candidate-9925eb26472c598d900a5a3d710e90ccf27e83e8",
+      "artifactId": 10332657929,
+      "artifactZipSha256": "e6dabfd549d5749933b8fa51986e9b9d8d5cb1d1cfde7d7365797e2d644b3ef9",
+      "artifactBytes": 1045431,
+      "retentionDays": 30
+    },
     "required": "Current-runtime physical iOS/iPadOS and Android install, standalone, offline restart/reboot, update recovery and storage-pressure evidence."
   },
   "windowsDistribution": {
