@@ -1,0 +1,70 @@
+name: One-shot Book release sync
+
+on:
+  push:
+    branches:
+      - qa/book-evidence-integration-main-20260915
+
+permissions:
+  contents: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: qa/book-evidence-integration-main-20260915
+          fetch-depth: 0
+      - uses: actions/setup-python@v7
+        with:
+          python-version: '3.12'
+      - name: Synchronize release identity and Book cache contract
+        run: |
+          python tools/sync_web_release.py
+          python - <<'PY'
+          from pathlib import Path
+          import json
+
+          root = Path('.')
+          sw_path = root / 'service-worker.js'
+          sw = sw_path.read_text(encoding='utf-8')
+          asset = "  './src/domains/learning/book-data/book-evidence-enrichment-v1.json',\n"
+          anchor = "  './src/domains/learning/book-data/book-authored-remaining-v1.json',\n"
+          if asset not in sw:
+              if anchor not in sw:
+                  raise SystemExit('Book cache anchor missing')
+              sw = sw.replace(anchor, anchor + asset, 1)
+          sw_path.write_text(sw, encoding='utf-8')
+
+          qa_path = root / 'qa_book_release_integration.py'
+          qa = qa_path.read_text(encoding='utf-8')
+          old = '''assert ENRICHMENT_SOURCE.read_bytes() == ENRICHMENT_PACKAGED.read_bytes(), 'Book evidence enrichment source/runtime pair drifted'\nenrichment_asset = './src/domains/learning/book-data/book-evidence-enrichment-v1.json'\nassert "const CACHE_VERSION='2026.09.14.4';" in sw, 'unexpected release identity change inside evidence-integration PR'\nassert enrichment_asset not in sw, 'evidence enrichment must not be inserted into the existing 2026.09.14.4 cache generation; choose a new release identity first'\n'''
+          new = '''assert ENRICHMENT_SOURCE.read_bytes() == ENRICHMENT_PACKAGED.read_bytes(), 'Book evidence enrichment source/runtime pair drifted'\nenrichment_asset = './src/domains/learning/book-data/book-evidence-enrichment-v1.json'\nrelease_version = json.loads((ROOT / 'version.json').read_text(encoding='utf-8'))['web_release']\nassert release_version == '2026.09.15.1', f'unexpected Book enrichment candidate release: {release_version}'\nassert f"const CACHE_VERSION='{release_version}';" in sw, 'Book enrichment cache generation is not bound to the new web release'\nassert enrichment_asset in sw, 'Book evidence enrichment is missing from the new offline cache generation'\n'''
+          if old not in qa:
+              raise SystemExit('Book QA release-boundary block did not match expected pre-sync text')
+          qa = qa.replace(old, new, 1)
+          qa = qa.replace(
+              "print('PASS: the existing 2026.09.14.4 physical-device cache generation is unchanged; enriched Book release remains deliberately blocked pending a new release identity and full release QA.')",
+              "print('PASS: 2026.09.14.4 remains the historical candidate; 2026.09.15.1 is the new enrichment technical-review cache generation and still requires a separate publication decision.')",
+              1,
+          )
+          qa_path.write_text(qa, encoding='utf-8')
+
+          staging_path = root / 'sources/BOOK_EVIDENCE_INTEGRATION_STAGING_2026-09-15.md'
+          staging = staging_path.read_text(encoding='utf-8')
+          old_staging = '''The enrichment JSON is intentionally not added to the existing `2026.09.14.4` service-worker cache generation. Adding new governed bytes to that cache name would mutate an existing release generation. A future enriched offline/device release therefore requires a deliberate new release/cache identity followed by full release QA and a new publication decision.\n'''
+          new_staging = '''The historical `2026.09.14.4` service-worker/cache generation is not relabelled. Because governed learner-runtime bytes changed, this integration defines a new `2026.09.15.1` technical-review candidate. The enrichment JSON is cached only in that new generation. This release-identity bump is not publication authorization: the 10 enriched chapters remain in technical review until separately reviewed and re-authorized.\n'''
+          if old_staging not in staging:
+              raise SystemExit('Staging release-boundary paragraph did not match expected pre-sync text')
+          staging_path.write_text(staging.replace(old_staging, new_staging, 1), encoding='utf-8')
+          PY
+          rm .github/workflows/book-release-sync-once.yml
+          python tools/sync_web_release.py --check
+      - name: Commit synchronized candidate
+        run: |
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add -A
+          git commit -m "Synchronize 2026.09.15.1 Book enrichment candidate"
+          git push origin HEAD:qa/book-evidence-integration-main-20260915
