@@ -1,0 +1,70 @@
+{
+  "schema": 1,
+  "version": "2026.09.15.1",
+  "purpose": "Overlay Wave 9 linked hot-runner/melt-control quality evidence onto the Book chapter coverage map while preserving the raw synchronized actuator-state dataset gap.",
+  "base": "data/research-expansion/2026-09-14/book-chapter-quantitative-coverage-v1.json",
+  "overlays": [
+    {
+      "chapterId": "hot-runners",
+      "currentState": "strong-measured-plus-direct-quality-link",
+      "addedEvidenceRoutes": [
+        "wave9:ipp-1998-multicavity-melt-control-quality",
+        "wave9:pes-1997-multicavity-pressure-control-capability",
+        "wave9:prc-2004-selfregulating-valve-consistency",
+        "wave9:prc-2004-selfregulating-valve-productivity"
+      ],
+      "newEditorialCapability": "Teach a direct evidence chain from distributed/local melt-valve action through pressure/flow control to measured dimensions, part-weight consistency, process capability and productivity trade-offs.",
+      "boundary": "All four sources belong to one broader research family and use legacy dynamic/self-regulating valve architectures; they are not four independent replications and do not substitute for modern raw servo-state traces."
+    },
+    {
+      "chapterId": "multi-cavity",
+      "currentState": "strong-measured-plus-local-quality-control",
+      "addedEvidenceRoutes": [
+        "wave9:ipp-1998-multicavity-melt-control-quality",
+        "wave9:pes-1997-multicavity-pressure-control-capability",
+        "wave9:prc-2004-selfregulating-valve-productivity"
+      ],
+      "newEditorialCapability": "Show that cavity balance is not only a fill or pressure concept: local melt-delivery control can alter dimensional consistency, knit-line position and cavity-specific production flexibility."
+    },
+    {
+      "chapterId": "capability",
+      "currentState": "strong-measured-expanded-control-to-quality",
+      "addedEvidenceRoutes": [
+        "wave9:ipp-1998-multicavity-melt-control-quality",
+        "wave9:pes-1997-multicavity-pressure-control-capability",
+        "wave9:prc-2004-selfregulating-valve-consistency"
+      ],
+      "newEditorialCapability": "Add controlled examples where process capability and short-term quality variation changed after local melt-pressure control, while keeping every numerical gain tied to its experimental system."
+    },
+    {
+      "chapterId": "dimensional-stability",
+      "currentState": "strong-measured-plus-distributed-pressure-control",
+      "addedEvidenceRoutes": [
+        "wave9:ipp-1998-multicavity-melt-control-quality",
+        "wave9:pes-1997-multicavity-pressure-control-capability"
+      ],
+      "newEditorialCapability": "Link local melt-pressure/shrinkage control to multiple measured dimensions rather than treating dimensional variation solely as a global machine-setting problem."
+    },
+    {
+      "chapterId": "clamp",
+      "currentState": "strong-measured-plus-local-pressure-tradeoff",
+      "addedEvidenceRoutes": [
+        "wave9:prc-2004-selfregulating-valve-productivity"
+      ],
+      "newEditorialCapability": "Use a case-specific example showing that local melt-pressure control can interact with clamp-tonnage and cycle-time requirements; do not convert reported reductions into generic clamp-sizing guidance."
+    }
+  ],
+  "remainingTargetedRawDataGap": {
+    "id": "hot-runner-synchronized-actual-state-quality",
+    "status": "open",
+    "wantedChannels": [
+      "commanded valve state or target position",
+      "actual valve-pin position or motion",
+      "motor current, torque or force",
+      "local cavity pressure",
+      "cavity-specific measured part quality",
+      "shared shot/cycle identity and timestamps"
+    ],
+    "note": "Wave 9 materially strengthens the causal teaching narrative but adds no public synchronized raw dataset containing all required channels."
+  }
+}
