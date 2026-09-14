@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
-  "release": "2026.09.14.2",
-  "commit": "04e7dbea97c3e87342159709db0dbc9e5059d4aa",
+  "release": "2026.09.14.4",
+  "commit": "9a74fa40aec493d79207e6de2e25955e3d4020aa",
   "browser": "chromium via @playwright/test 1.55.0",
   "maxDiffPixels": 12,
   "viewports": [
@@ -36,5 +36,5 @@
     "listen-expanded",
     "listening"
   ],
-  "policy": "This commit is the reviewed 2026.09.14.2 visual baseline after the intentional long-session Listening tab addition. Candidate screenshots are rendered beside this exact commit in the same Chromium job. Update the pinned commit only through an intentional reviewed visual-baseline change; physical-device evidence remains a separate release gate and must be fresh for the changed runtime."
+  "policy": "This commit is the reviewed 2026.09.14.4 visual baseline after the intentional first-class governed Book navigation addition. Candidate screenshots are rendered beside this exact commit in the same Chromium job. The tablet and desktop Home drift from the prior baseline was reviewed as the Book navigation item only; phone surfaces and existing Home content remained unchanged. Update the pinned commit only through an intentional reviewed visual-baseline change; physical-device evidence remains a separate release gate and must be fresh for changed runtime."
 }

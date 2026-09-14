@@ -20,6 +20,7 @@ PRIORITY_ASSETS = [
     "./src/domains/learning/activity-events-v2.js",
     "./src/domains/learning/learner-model.js",
     "./src/domains/learning/delayed-transfer-reviews.js",
+    "./src/domains/learning/book-runtime.js",
     "./src/domains/materials/material-registry.js",
     "./src/domains/materials/material-search-index.js",
     "./src/domains/materials/material-search-pagination.js",
@@ -27,6 +28,10 @@ PRIORITY_ASSETS = [
     "./src/domains/process/evidence-granularity.js",
     "./src/domains/learning/content-intelligence.js",
 ]
+# runtime-domain-manifest dataAssets remains the canonical validated material-data
+# channel. Other packaged domain data (such as Book JSON) is governed and hashed by
+# its owning feature/package checks rather than widening this material invariant.
+DATA_ASSETS = ["./material-catalog-v1.json"]
 # Generated classic-script packs are injected synchronously by index.html at
 # specific legacy ordering boundaries. Loading them again through the async
 # domain manifest would execute their source parts twice.
@@ -44,11 +49,14 @@ def build_manifest() -> dict:
         discovered.append("./" + path.relative_to(ROOT).as_posix())
     priority = [asset for asset in PRIORITY_ASSETS if asset in discovered]
     assets = priority + [asset for asset in discovered if asset not in priority]
+    for asset in DATA_ASSETS:
+        if not (ROOT / asset.removeprefix("./")).is_file():
+            raise FileNotFoundError(f"Runtime data asset is missing: {asset}")
     return {
         "schemaVersion": 1,
         "generatedBy": "tools/generate_runtime_manifest.py",
         "assets": assets,
-        "dataAssets": ["./material-catalog-v1.json"],
+        "dataAssets": DATA_ASSETS,
     }
 
 

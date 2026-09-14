@@ -1,0 +1,88 @@
+{
+  "schema": 1,
+  "bookId": "mouldmaster-book",
+  "version": "2026.09.14.1",
+  "policy": "accuracy-overkill",
+  "reviewScope": "remaining-high-risk-blockers",
+  "publicationEffect": "none",
+  "chapterPromotionAuthorized": false,
+  "reviewedAt": "2026-09-14",
+  "newEvidence": [
+    {
+      "id": "HUSKY-ULTRASHOT-SERVICE-2023",
+      "type": "manufacturer-service-manual",
+      "issuer": "Husky Technologies",
+      "title": "UltraShot Injection System — Hot Runner Service Manual v1.1",
+      "url": "https://www.husky.co/contentassets/59b3dcff9d564dc998b386aa0f5ebb6b/hr_ultrashot_v1-1_eng_202305_10991396.pdf",
+      "checked": "2026-09-14",
+      "state": "public-manufacturer-service-manual",
+      "scope": "Requires qualified personnel and lockout/tagout of electrical, pneumatic and hydraulic energy sources before servicing or entering the mould area; system-specific and does not replace site isolation procedure."
+    },
+    {
+      "id": "BIELENBERG-2025-SWITCHOVER-REVIEW",
+      "type": "peer-reviewed-review",
+      "issuer": "Polymers",
+      "title": "From Manual to Automated: Exploring the Evolution of Switchover Methods in Injection Molding Processes—A Review",
+      "url": "https://consensus.app/papers/from-manual-to-automated-exploring-the-evolution-of-bielenberg-stommel/24f22c3f6f355c0497be3aea21e1a1cc/",
+      "checked": "2026-09-14",
+      "state": "peer-reviewed-fetched",
+      "scope": "Review of filling-to-holding switchover methods; supports early/late switchover consequences and sensitivity to material, machine and environmental conditions without defining a universal transfer point."
+    },
+    {
+      "id": "AUTODESK-MOLDFLOW-CLAMP-FORCE",
+      "type": "engineering-software-documentation",
+      "issuer": "Autodesk",
+      "title": "Moldflow Insight — Modeling for accurate clamp force prediction",
+      "url": "https://help.autodesk.com/cloudhelp/2019/ENU/MoldflowInsight-Modelprep/files/GUID-5C97629F-C5C5-4A6D-BD2A-55FE6A4A5EE2.htm",
+      "checked": "2026-09-14",
+      "state": "public-engineering-documentation",
+      "scope": "Defines clamp-force calculation as integration of pressure over projected area, supporting the physical opening-load relationship without authorizing a generic machine-sizing safety factor."
+    },
+    {
+      "id": "SUMITOMO-INTELECT-ACTIVEPROTECT",
+      "type": "machine-manufacturer-technical-documentation",
+      "issuer": "Sumitomo (SHI) Demag",
+      "title": "IntElect — activeProtect mould protection",
+      "url": "https://www.sumitomo-shi-demag.eu/fileadmin/user_upload/DownloadCentre/15-28-26-SD_IntElect_Brochure_EN_Image.pdf",
+      "checked": "2026-09-14",
+      "state": "current-public-manufacturer-brochure",
+      "scope": "Describes activeProtect monitoring of clamp-force transmission during mould closing using force-signature sensing; specific to applicable Sumitomo IntElect equipment."
+    }
+  ],
+  "resolutions": [
+    {
+      "claimId": "safety-foundations-02",
+      "previous": "hold",
+      "newConclusion": "qualified",
+      "evidence": ["ISO-20430-2020", "HUSKY-ULTRASHOT-SERVICE-2023"],
+      "reason": "The manufacturer service manual explicitly requires hazardous-energy lockout/tagout before service or mould-area entry. This supports the warning that a controller stop is not proof of isolation, while exact isolation remains machine- and site-specific."
+    },
+    {
+      "claimId": "vp-transfer-02",
+      "previous": "hold",
+      "newConclusion": "supported",
+      "evidence": ["BIELENBERG-2025-SWITCHOVER-REVIEW", "ENGEL-IQ-PROCESS-CONTROL"],
+      "reason": "A peer-reviewed review directly describes early switchover as capable of incomplete filling and late switchover as capable of high pressure peaks, increased clamp demand and flash. ENGEL independently treats switchover as a process condition requiring adaptive control. The Book wording remains non-diagnostic and non-numeric."
+    },
+    {
+      "claimId": "clamp-01",
+      "previous": "hold",
+      "newConclusion": "supported",
+      "evidence": ["AUTODESK-MOLDFLOW-CLAMP-FORCE", "ENGEL-IQ-PROCESS-CONTROL"],
+      "reason": "Authoritative engineering documentation calculates opening force from pressure acting over projected area, and machine-manufacturer process guidance independently treats clamping force as a measured mould/process quantity. No generic sizing factor is introduced."
+    },
+    {
+      "claimId": "clamp-03",
+      "previous": "hold",
+      "newConclusion": "qualified",
+      "evidence": ["SUMITOMO-INTELECT-ACTIVEPROTECT", "ISO-20430-2020"],
+      "reason": "Sumitomo documents a specific mould-protection implementation based on clamp-force-signature monitoring during closing, demonstrating that mould protection is a controller/machine function. ISO machinery-safety scope remains separate, so mould protection is not presented as a substitute for guarding or maintenance."
+    }
+  ],
+  "effectiveHighRiskDisposition": {
+    "remainingHoldClaimsFromReviewedSet": 0,
+    "remainingConflictingClaimsFromReviewedSet": 0,
+    "chaptersPromoted": 0,
+    "note": "Removing claim-level blockers does not verify any chapter. Complete claim inventory, technical review, source-currentness recheck and publication sign-off remain mandatory."
+  }
+}

@@ -53,6 +53,32 @@ def main() -> int:
     if files & {"primary-learning-practice-hubs.js", "mobile-lesson-fix.css", "qa_practice_hub.py"}:
         commands.append([sys.executable, "qa_practice_hub.py"])
 
+    book_changed = any(
+        p == "book-runtime.js"
+        or p == "reading-patch.css"
+        or p.startswith("data/book-")
+        or p.startswith("src/domains/learning/book-")
+        or p.startswith("qa_book_")
+        or p in {
+            "runtime-domain-manifest.json",
+            "tools/generate_runtime_manifest.py",
+            "desktop/electron/scripts/generate-integrity.cjs",
+            "service-worker.js",
+        }
+        for p in files
+    )
+    if book_changed:
+        for qa in [
+            "qa_book_manifest.py",
+            "qa_book_authored.py",
+            "qa_book_materials_machine.py",
+            "qa_book_complete_draft.py",
+            "qa_book_claim_coverage.py",
+            "qa_book_release_integration.py",
+        ]:
+            if (ROOT / qa).exists():
+                commands.append([sys.executable, qa])
+
     if any("process-data" in p or p in {"data-integration-runtime.js", "current-data-manifest.json"} for p in files):
         if (ROOT / "qa_process_data_integrity.cjs").exists():
             commands.append(["node", "qa_process_data_integrity.cjs"])

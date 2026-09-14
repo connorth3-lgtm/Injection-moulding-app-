@@ -1,0 +1,90 @@
+{
+  "schema": 1,
+  "bookId": "mouldmaster-book",
+  "version": "2026.09.14.1",
+  "policy": "accuracy-overkill",
+  "defaultDisposition": "fail-closed",
+  "verificationUnit": "claim",
+  "publicationRule": "A chapter may be verified only when every substantive claim has a reviewed claim record and no blocking claim remains.",
+  "requiredForEverySubstantiveClaim": [
+    "stable claim id",
+    "exact chapter and section location",
+    "claim class",
+    "applicability and exclusions",
+    "at least one traceable evidence record",
+    "reviewer conclusion: supported, qualified, conflicting, or hold",
+    "source checked date and currency state"
+  ],
+  "numericClaimRequirements": [
+    "value or range",
+    "SI unit",
+    "material/grade or measured-system scope where applicable",
+    "temperature/time/rate/test context where relevant",
+    "primary source or declared measured basis",
+    "no conversion into a universal production setpoint"
+  ],
+  "highConsequenceRules": {
+    "safety": "Requires authoritative safety evidence plus applicable machine/site documentation. Generic Book wording cannot authorize hazardous work.",
+    "gradeSpecificProcessing": "Requires current grade-specific manufacturer evidence. Family-level guidance is insufficient for a production value.",
+    "machineSpecific": "Requires applicable machine/controller manufacturer evidence for limits, meanings or procedures.",
+    "mouldOrHotRunnerSpecific": "Requires applicable tool/component manufacturer evidence for limits, procedures or settings.",
+    "troubleshooting": "Must preserve symptom -> plausible mechanism -> discriminating evidence -> controlled test -> interpretation -> possible corrective action. No symptom-to-guaranteed-cause or guaranteed-fix shortcuts.",
+    "dimensionalClaims": "Must distinguish standard test-specimen shrinkage from production-part dimensional behaviour and account for process, geometry, material and restraint where applicable."
+  },
+  "corroboration": {
+    "importantGeneralEngineeringClaims": "Prefer two independent authoritative sources where practical; at least one should be primary or peer-reviewed.",
+    "singleSourceException": "Allowed only when the source is controlling for the claim, such as a current grade data sheet or machine manual, and the scope is explicitly narrow.",
+    "conflictRule": "Conflicting reputable evidence blocks verification until applicability explains the difference or the claim is placed on hold."
+  },
+  "sourceCurrency": {
+    "standards": "Check official publisher status immediately before verification; withdrawn or superseded editions cannot be silently treated as current.",
+    "manufacturerDocuments": "Record document identity/revision/date where available and re-check official availability before verification.",
+    "peerReviewed": "Record paper metadata and use research as corroboration, not as authority for a manufacturer's specific machine or grade limit."
+  },
+  "evidenceAnchorsConfirmed2026_09_14": [
+    {
+      "id": "ISO-294-4-2018",
+      "issuer": "ISO",
+      "title": "Plastics — Injection moulding of test specimens of thermoplastic materials — Part 4: Determination of moulding shrinkage",
+      "url": "https://www.iso.org/standard/70413.html",
+      "status": "current-confirmed-2024",
+      "scope": "Test-specimen moulding and post-moulding shrinkage; distinguishes flow and transverse directions and excludes humidity uptake from moulding shrinkage."
+    },
+    {
+      "id": "ISO-20457-2026",
+      "issuer": "ISO",
+      "title": "Plastics moulded parts — Tolerances and acceptance conditions",
+      "url": "https://www.iso.org/standard/90304.html",
+      "status": "published-2026-08",
+      "scope": "Current plastics-specific geometrical/dimensional tolerances and acceptance framework. Supersedes ISO 20457:2018."
+    },
+    {
+      "id": "ASTM-D955-21",
+      "issuer": "ASTM International",
+      "title": "Standard Test Method of Measuring Shrinkage from Mold Dimensions of Thermoplastics",
+      "url": "https://store.astm.org/d0955-21.html",
+      "status": "active-checked-2026-09-14",
+      "scope": "Shrinkage measurement; identifies mould/process factors affecting shrinkage and supports reproducible test practice rather than universal production-part predictions."
+    },
+    {
+      "id": "ZHAO-2022-WARPAGE-SHRINKAGE-REVIEW",
+      "issuer": "The International Journal of Advanced Manufacturing Technology",
+      "title": "Recent progress in minimizing the warpage and shrinkage deformations by the optimization of process parameters in plastic injection molding: a review",
+      "url": "https://consensus.app/papers/recent-progress-in-minimizing-the-warpage-and-shrinkage-zhao-lian/87423bb5d6e15bcba62bfe49843785c7/",
+      "status": "peer-reviewed-fetched-2026-09-14",
+      "scope": "Corroborating review for multi-variable warpage/shrinkage mechanisms and process-parameter interactions; not a universal settings source."
+    }
+  ],
+  "chapterPromotionRequirements": [
+    "all substantive claims inventoried",
+    "all claim evidence resolved",
+    "all numeric claims scoped",
+    "all source currency checks current",
+    "all conflicts resolved or claim held",
+    "technical review record present",
+    "no unresolved safety, material, machine, mould or diagnostic ambiguity",
+    "read and listen surfaces use exactly the same verified governed text"
+  ],
+  "currentBookDisposition": "technical-review-only",
+  "verifiedChapterCountAuthorizedByThisGate": 0
+}
