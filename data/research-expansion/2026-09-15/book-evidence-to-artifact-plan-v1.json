@@ -1,0 +1,162 @@
+{
+  "schema": 1,
+  "version": "2026.09.15.1",
+  "purpose": "Convert the strongest Waves 1-9 evidence into original Book-owned diagrams, case tables and diagnostic exercises without copying third-party figures and without changing learner-runtime content in this research PR.",
+  "governance": {
+    "metadataOnly": true,
+    "bookOwnedOriginalGraphics": true,
+    "noThirdPartyFigureTracing": true,
+    "reportedNumbersRetainSourceContext": true,
+    "sameResearchFamilyNotShownAsIndependentReplication": true,
+    "caseSpecificValuesNeverBecomeUniversalRecipes": true,
+    "simulationClearlyLabelledWhenUsed": true
+  },
+  "artifacts": [
+    {
+      "id":"art-black-speck-evidence-ladder",
+      "priority":1,
+      "type":"diagnostic-diagram",
+      "title":"Black speck: observation to discriminating evidence",
+      "chapters":["black-specks","diagnostic-method","complex-diagnostics"],
+      "sourceRoutes":["wave5:jcbbp-2019-pet-inclusion-degradation-identification","wave7:ieom-2023-black-spot-filter-mesh","wave7:chula-2014-black-dot-dmaic"],
+      "content":"Book-owned decision ladder separating contamination, stagnant/degraded material, hopper/feed contamination and tooling/process hypotheses. Each branch specifies the observation that would discriminate it and the intervention evidence needed before calling it root cause.",
+      "exercise":"Give learners the same initial symptom but three evidence packets; require them to choose the next measurement rather than a parameter change.",
+      "boundary":"Do not present filter-mesh, barrel cleaning or hopper contamination as universal first fixes."
+    },
+    {
+      "id":"art-black-speck-before-after-table",
+      "priority":2,
+      "type":"case-table",
+      "title":"Black-spot interventions: what changed and what did not prove",
+      "chapters":["black-specks","documentation","capability"],
+      "sourceRoutes":["wave7:ieom-2023-black-spot-filter-mesh","wave7:chula-2014-black-dot-dmaic"],
+      "content":"Original side-by-side table with baseline defect rate, intervention, post-intervention defect rate, confirmation method, sustainment control and evidence limitations.",
+      "exercise":"Ask learners to identify which causal claims are supported by each case and which remain unproven without shot-order traces.",
+      "boundary":"Keep plant-specific percentages attached to their original case context."
+    },
+    {
+      "id":"art-hotrunner-command-to-quality-chain",
+      "priority":1,
+      "type":"system-diagram",
+      "title":"Hot runner: command is not cavity state",
+      "chapters":["hot-runners","cavity-pressure","multi-cavity","process-monitoring"],
+      "sourceRoutes":["wave6:pps-2003-realtime-flow-rate-valvegated-hotrunner","wave7:jpe-2022-hotrunner-crosssection-pressure-control","wave7:ewikon-2022-electric-valve-gate-observability","wave9:ipp-1998-multicavity-melt-control-quality","wave9:pes-1997-multicavity-pressure-control-capability"],
+      "content":"Original signal-chain diagram: controller command -> target stroke -> actual pin motion -> actuator current/force -> hot-runner restriction -> local melt pressure/flow -> cavity pressure -> cavity-specific quality. Mark which links are directly measured in current evidence and which remain acquisition gaps.",
+      "exercise":"Learners receive a valve-open command plus a weak cavity-pressure response and must choose measurements that distinguish controller, mechanical, melt-flow and cavity causes.",
+      "boundary":"Never infer actual pin movement solely from a command signal."
+    },
+    {
+      "id":"art-hotrunner-quality-capability-table",
+      "priority":2,
+      "type":"case-table",
+      "title":"Distributed melt control: measured quality outcomes",
+      "chapters":["hot-runners","multi-cavity","capability","dimensional-stability"],
+      "sourceRoutes":["wave9:ipp-1998-multicavity-melt-control-quality","wave9:pes-1997-multicavity-pressure-control-capability","wave9:prc-2004-selfregulating-valve-consistency","wave9:prc-2004-selfregulating-valve-productivity"],
+      "content":"Original table showing measured outcome type, actuator concept, reported change and limitation. Group all four rows under one Kazmer-family banner rather than presenting them as four independent replications.",
+      "exercise":"Ask learners why a closed-loop actuator can perform worse than a passive/self-regulating scheme when actuator response is slow.",
+      "boundary":"Reported Cp, weight variation and clamp/cycle changes are case-specific."
+    },
+    {
+      "id":"art-cooling-maintenance-chain",
+      "priority":1,
+      "type":"before-after-diagram",
+      "title":"Cooling restriction: diagnose, restore, verify",
+      "chapters":["cooling","diagnostic-method","process-monitoring"],
+      "sourceRoutes":["wave6:mechanik-2018-cooling-channel-diagnosis-cleaning","wave6:sanko-2025-cooling-pipe-cleaning-three-cases","wave6:fuso-2023-eight-cavity-cooling-cleaning","wave6:smartflow-2025-cooling-flow-balance-case"],
+      "content":"Original four-stage diagram: hydraulic/thermal symptom -> localization -> cleaning/restoration -> post-maintenance verification. Include source-backed examples of flow recovery, pressure-loss change, cycle-time change and deformation/void observations.",
+      "exercise":"Provide 16 cooling-zone readings including five zero-flow zones and >1 mm deformation; ask learners to design a verification sequence before changing process settings.",
+      "boundary":"Commercial case values are examples, not universal flow or pressure-drop thresholds."
+    },
+    {
+      "id":"art-eight-cavity-cooling-balance",
+      "priority":2,
+      "type":"diagnostic-exercise",
+      "title":"Eight-cavity cooling balance after cleaning",
+      "chapters":["cooling","multi-cavity","documentation"],
+      "sourceRoutes":["wave6:fuso-2023-eight-cavity-cooling-cleaning"],
+      "content":"Book-owned worksheet using normalized cavity/zone flow and pressure-loss values before and after cleaning. Learners must separate total-flow improvement from residual imbalance.",
+      "exercise":"Rank next checks when total flow improves but one cavity remains thermally different.",
+      "boundary":"Normalize values where necessary rather than reproducing proprietary diagrams."
+    },
+    {
+      "id":"art-mould-lifecycle-state-map",
+      "priority":1,
+      "type":"lifecycle-diagram",
+      "title":"Mould lifecycle: run-in, production, degradation and intervention",
+      "chapters":["mould-anatomy","process-monitoring","dimensional-stability","documentation"],
+      "sourceRoutes":["wave6:springer-2022-13mould-rul-metrology","wave8:esrel-2025-9157mould-maintenance-history","existing:10.1080/0951192X.2020.1829062"],
+      "content":"Original state diagram combining natural lifecycle states, shot-count exposure and maintenance events. Show the difference between statistical state classification, survival/maintenance prediction and physical wear evidence.",
+      "exercise":"Give a trend of part metrology plus maintenance events and ask learners which additional physical inspection would be required before declaring tool wear as root cause.",
+      "boundary":"Model state labels and prediction accuracy do not equal measured component wear."
+    },
+    {
+      "id":"art-maintenance-record-design",
+      "priority":2,
+      "type":"record-template",
+      "title":"Minimum mould maintenance record for future diagnosis",
+      "chapters":["documentation","mould-anatomy","complex-diagnostics"],
+      "sourceRoutes":["wave8:esrel-2025-9157mould-maintenance-history","wave8:procir-2017-mould-maintenance-time-cbr"],
+      "content":"Book-owned record template linking stable mould ID, shot count, component, symptom, measured condition, intervention, post-condition and part-quality verification.",
+      "exercise":"Learners repair an intentionally poor maintenance log by adding the missing fields required for future evidence-based diagnosis.",
+      "boundary":"Maintenance duration from historical cases is context, not a planning allowance."
+    },
+    {
+      "id":"art-cycle-resolved-cleaning-recovery",
+      "priority":2,
+      "type":"time-series-teaching-plot-spec",
+      "title":"Cleaning recovery is a trajectory, not an after photo",
+      "chapters":["hot-runners","black-specks","process-monitoring","documentation"],
+      "sourceRoutes":["wave7:polytest-2022-hotrunner-color-changeover-cycle-trace"],
+      "content":"Original conceptual plot of cycle number versus residual visual contamination/colour signal, distinguishing combined-system and separately cleaned hot-runner recovery. Use only source-reported aggregate milestones and independently drawn curves unless raw data rights are obtained.",
+      "exercise":"Ask learners to define an evidence-based stop criterion and explain why a single clean-looking part is insufficient.",
+      "boundary":"Colour-change recovery is an analogue for chronology, not proof of black-speck behavior."
+    },
+    {
+      "id":"art-pressure-location-map",
+      "priority":3,
+      "type":"measurement-diagram",
+      "title":"Pressure depends on where you measure it",
+      "chapters":["pressure-loss","cavity-pressure","vp-transfer","feed-system"],
+      "sourceRoutes":["wave1:jmmp-2021-scientific-moulding-transfer","existing:scatimdata-avaps","wave6:pps-2003-realtime-flow-rate-valvegated-hotrunner"],
+      "content":"Original moulding-system pressure map showing machine/nozzle, manifold/branch, gate-near and cavity locations, with arrows for pressure loss and timing differences.",
+      "exercise":"Learners diagnose why machine pressure rises while one cavity remains under-packed.",
+      "boundary":"Do not compare absolute pressure values across sensor locations without geometry and calibration context."
+    },
+    {
+      "id":"art-warpage-multivariable-cause-map",
+      "priority":3,
+      "type":"cause-map",
+      "title":"Warpage: competing mechanisms and evidence",
+      "chapters":["warpage","cooling","fibre-orientation","dimensional-stability"],
+      "sourceRoutes":["wave1:polym-2026-75-run-hdpe-doe","wave2:springer-2026-recycled-pp-warpage-sensors","wave2:measurement-2012-cooling-warpage","wave2:composites-2025-fibre-orientation-xct"],
+      "content":"Original cause/evidence map separating thermal imbalance, pressure/packing history, morphology/shrinkage and fibre-orientation pathways.",
+      "exercise":"Give two parts with similar final warpage but different cavity-pressure and cooling-zone evidence; require different next tests.",
+      "boundary":"Avoid single-cause 'turn up X' troubleshooting rules."
+    },
+    {
+      "id":"art-process-window-evidence-grid",
+      "priority":3,
+      "type":"worked-example",
+      "title":"Process window: a region supported by multiple outcomes",
+      "chapters":["process-window","doe","capability"],
+      "sourceRoutes":["wave1:polym-2026-75-run-hdpe-doe","wave1:polym-2023-experimental-process-window","wave1:polym-2025-hips-process-window"],
+      "content":"Original evidence grid showing acceptable/rejected regions by multiple responses rather than one nominal setting. Include interactions and trade-offs rather than a single optimum point.",
+      "exercise":"Learners select a robust operating region under a changed quality priority and explain the trade-off.",
+      "boundary":"Study regions illustrate method; they are not transferable machine recipes."
+    }
+  ],
+  "executionOrder": [
+    "art-hotrunner-command-to-quality-chain",
+    "art-black-speck-evidence-ladder",
+    "art-cooling-maintenance-chain",
+    "art-mould-lifecycle-state-map",
+    "art-black-speck-before-after-table",
+    "art-hotrunner-quality-capability-table",
+    "art-eight-cavity-cooling-balance",
+    "art-maintenance-record-design",
+    "art-cycle-resolved-cleaning-recovery",
+    "art-pressure-location-map",
+    "art-warpage-multivariable-cause-map",
+    "art-process-window-evidence-grid"
+  ]
+}
