@@ -6,7 +6,7 @@ const APP_URL='http://127.0.0.1:4173/';
 
 async function openApp(page){
   await page.goto(APP_URL,{waitUntil:'domcontentloaded'});
-  await page.waitForFunction(()=>!document.getElementById('mmBootstrap'),null,{timeout:30000});
+  await page.waitForFunction(()=>typeof window.MM_APP_SHELL_FINALIZED==='string'&&window.MM_APP_SHELL_FINALIZED.length>0&&!document.getElementById('mmBootstrap'),null,{timeout:30000});
   await expect(page.locator('#dashboard')).toBeVisible();
 }
 async function openLearnHub(page){
