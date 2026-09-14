@@ -7,7 +7,7 @@ import struct
 import subprocess
 import tempfile
 
-WEB_RELEASE = "2026.09.15.1"
+WEB_RELEASE = "2026.09.15.2"
 ANDROID_RELEASE = "2026.08.26.2"
 CONTENT_VERSION = "2026.08.26.1"
 WINDOWS_RECOVERY_VERSION = "2026.08.21.1"
@@ -174,7 +174,7 @@ for marker in [
     assert marker in reading_css, f"iOS/iPadOS mobile layout regression guard missing: {marker}"
 
 source_lib = text("source-library.js")
-for marker in ["ISO 20430:2020", "HSE PPIS4(rev1)", "OSHA 1910.147", "WorkSafe NZ — Machine lockouts", "ISO 1133-1:2022", "ISO 22514-2:2026", "NIST — Experimental design", "More authoritative sources"]:
+for marker in ["ISO 20430:2020", "HSE PPIS4(rev1)", "OSHA 1910.147", "WorkSafe NZ — Machine lockouts", "ISO 1133-1:2022", "ISO 22514-2:2026", "ISO 9001:2015", "ISO 9000:2026", "NIST — Experimental design", "More authoritative sources"]:
     assert marker in source_lib, f"authoritative source missing: {marker}"
 assert "#examQuestions" not in source_lib and "activeExam" not in source_lib and "questionBank" not in source_lib, "source library must not inject sources into live assessments"
 assert "lesson()" in source_lib and "standards()" in source_lib, "sources must be limited to lesson/standards presentation"

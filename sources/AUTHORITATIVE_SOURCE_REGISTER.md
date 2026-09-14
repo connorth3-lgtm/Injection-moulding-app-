@@ -1,6 +1,6 @@
 # MouldMaster Academy — Authoritative Source Register
 
-Status date: 2026-08-24
+Status date: 2026-09-15
 
 Purpose: maintain a transparent source set for lesson enrichment, the searchable reference database, safety/legal reference pages and content review. These sources **support mechanisms and obligations; they do not create universal process recipes**. Grade-specific supplier data, machine manuals, mould documentation, approved site procedures and applicable law control specific production limits.
 
@@ -75,6 +75,15 @@ Assessment rule: this source register must **not** be used to inject answer-supp
 - **NIST — Experimental design** — factors, interactions, randomisation/blocking and design principles. https://www.itl.nist.gov/div898/handbook/pri/section1/pri13.htm
 - **ISO 22514-2:2026 — Process capability and performance of time-dependent process models** — current 2026 ISO process-capability standard. https://www.iso.org/standard/88883.html
 - **ISO 22514-7:2021 + Amendment 1:2024 — Capability of measurement processes** — published measurement-process capability reference. A replacement edition was under publication in August 2026, so recheck ISO status before formal use. https://www.iso.org/standard/80624.html
+
+## Quality-management systems and ISO 9001 support
+
+- **ISO 9001:2015 — Quality management systems — Requirements** — current published requirements basis as checked 15 September 2026. Use with Amendment 1:2024 until ISO publishes and supersedes this edition. https://www.iso.org/standard/62085.html
+- **ISO 9001:2015/Amd 1:2024 — Climate action changes** — published amendment that applies to ISO 9001:2015. https://www.iso.org/standard/88431.html
+- **ISO 9000:2026 — Quality management — Fundamentals and vocabulary** — current published fundamentals and vocabulary reference. https://www.iso.org/standard/9000
+- **ISO 9001 Edition 6 (2026)** — ISO status was **under publication** when checked on 15 September 2026. Treat as a transition watch only until ISO marks the edition published. https://www.iso.org/standard/9001
+
+MouldMaster supports quality-management practices, evidence prompts and learning that can be relevant to an organisation using ISO 9001. This does not make MouldMaster ISO 9001 certified, does not establish an organisation's conformity, and does not replace a licensed copy of the standard, an organisation-specific QMS, competent auditors or an accredited certification body. Clause themes in MouldMaster are paraphrased rather than reproduced from protected standard text.
 
 ## Reference-database coverage
 

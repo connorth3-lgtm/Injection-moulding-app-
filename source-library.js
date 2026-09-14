@@ -46,6 +46,13 @@ const SOURCES={
   ['ISO 22514-2:2026','Process capability and performance for time-dependent process models.','https://www.iso.org/standard/88883.html'],
   ['ISO 22514-7:2021','Capability of measurement processes; recheck ISO status before formal use because a replacement edition was progressing in 2026.','https://www.iso.org/standard/80624.html']
  ]
+,
+ quality:[
+  ['ISO 9001:2015','Current published quality-management-system requirements basis; use with Amendment 1:2024 until superseded.','https://www.iso.org/standard/62085.html'],
+  ['ISO 9001:2015/Amd 1:2024','Published climate-action amendment applying to ISO 9001:2015.','https://www.iso.org/standard/88431.html'],
+  ['ISO 9000:2026','Current published quality-management fundamentals and vocabulary.','https://www.iso.org/standard/9000'],
+  ['ISO 9001 Edition 6 (2026)','Transition watch only: ISO listed this edition as under publication when checked 2026-09-15.','https://www.iso.org/standard/9001']
+ ]
 };
 function categories(text){const t=String(text||'').toLowerCase(),out=[];
  if(/guard|safety|interlock|lockout|isolation|hazard|robot|cell|fume|emergency/.test(t))out.push('safety');
@@ -54,6 +61,7 @@ function categories(text){const t=String(text||'').toLowerCase(),out=[];
  if(/pack|hold|gate|cool|thermal|shrink|warpage|fill|flow|pressure|cavity|runner|vent|burn|weld|sink/.test(t))out.push('process');
  if(/sensor|cavity pressure|monitor|trace|industry 4|condition monitoring/.test(t))out.push('sensors');
  if(/capability|cpk|ppk|doe|statistics|measurement|random|factorial|validation|sampling|msa/.test(t))out.push('stats');
+ if(/quality management|qms|audit|nonconform|capa|competence|corrective|calibrat|document control/.test(t))out.push('quality');
  return [...new Set(out)];}
 function select(text,limit=5){const out=[];for(const cat of categories(text))for(const s of SOURCES[cat]||[])if(!out.some(x=>x[2]===s[2]))out.push(s);return out.slice(0,limit)}
 function panel(text){const src=select(text);if(!src.length)return '';return `<section class="mm-ref-panel mm-authoritative-more" data-mm-authoritative-sources="1"><span class="eyebrow">More authoritative sources</span><h3>Verify and go deeper</h3>${src.map(s=>`<a href="${esc(s[2])}" target="_blank" rel="noopener"><b>${esc(s[0])}</b><small>${esc(s[1])}</small><em>Open ↗</em></a>`).join('')}<p>These sources support principles and obligations, not universal process settings. Current material data, machine/tool documentation, approved site procedures and applicable law control specific limits.</p></section>`}

@@ -1,4 +1,4 @@
-const CACHE_VERSION='2026.09.15.1';
+const CACHE_VERSION='2026.09.15.2';
 const CACHE_REVISION='engineer-simulator-ui-r1-20260911';
 const STATIC_CACHE=`mouldmaster-static-${CACHE_VERSION}-${CACHE_REVISION}`;
 
@@ -68,6 +68,7 @@ const CORE=[
   './src/domains/learning/book-data/book-chapters-materials-machine-v1.json',
   './src/domains/learning/book-data/book-authored-remaining-v1.json',
   './src/domains/learning/book-data/book-evidence-enrichment-v1.json',
+  './src/domains/quality/data/quality-management-iso9001-v1.json',
   './src/domains/materials/material-registry.js',
   './src/domains/materials/material-search-index.js',
   './src/domains/materials/material-search-pagination.js',
@@ -105,6 +106,7 @@ const OPTIONAL=[
   './assessment-final-hardening.js',
   './assessment-ux.js',
   './source-library.js',
+  './quality-management.js',
   './measured-evidence-integration.js',
   './measured-evidence-decision.js',
   './measured-learning-library.js',
