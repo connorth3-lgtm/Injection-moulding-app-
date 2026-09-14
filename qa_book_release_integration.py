@@ -26,9 +26,9 @@ book_data = [
 
 runtime_asset = './src/domains/learning/book-runtime.js'
 assert runtime_asset in runtime_manifest['assets']
+assert runtime_manifest['dataAssets'] == ['./material-catalog-v1.json'], 'Book integration must not widen canonical material dataAssets'
 for name in book_data:
     packaged = f'./src/domains/learning/book-data/{name}'
-    assert packaged in runtime_manifest['dataAssets'], f'missing runtime data asset: {packaged}'
     assert packaged in sw, f'Book data not in atomic offline cache: {packaged}'
     source = ROOT / 'data' / name
     target = PACKAGED_ROOT / name
@@ -44,9 +44,11 @@ assert 'window.MMBook=' in book_runtime
 # Desktop already packages src/domains as one governed resource tree.
 extra = desktop['build']['extraResources']
 assert any(x.get('from') == '../../src/domains' and x.get('to') == 'mouldmaster/src/domains' for x in extra)
-# Integrity generation consumes runtime-domain-manifest assets/dataAssets, so the same bytes are hashed.
+# Book JSON stays outside the canonical material dataAssets channel, but its packaged
+# directory is still included in desktop integrity hashing as a governed static-data tree.
+assert "'src/domains/learning/book-data'" in integrity, 'desktop integrity scanner does not include governed Book data'
+assert 'STATIC_DATA_DIRS.flatMap(filesUnder)' in integrity
 assert 'runtimeManifest.assets' in integrity and 'runtimeManifest.dataAssets' in integrity
-assert 'manifestFiles' in integrity
 
 # Keep source/runtime review state fail-closed until explicit promotion work exists.
 source_manifest = json.loads((ROOT / 'data/book-manifest-v1.json').read_text(encoding='utf-8'))
@@ -54,5 +56,5 @@ chapters = [c for p in source_manifest['parts'] for c in p.get('chapters', [])]
 assert len(chapters) == 46
 assert not any(c.get('state') == 'verified' for c in chapters)
 
-print('PASS: Book runtime/data are registered for domain loading, atomic web offline cache and desktop integrity/package inclusion.')
-print('PASS: packaged Book data are byte-identical to governed source data; 0 chapters self-promoted.')
+print('PASS: Book runtime/data are registered for domain loading, atomic web offline cache and desktop package/integrity inclusion.')
+print('PASS: canonical material dataAssets remains isolated; packaged Book data are byte-identical to governed source; 0 chapters self-promoted.')
