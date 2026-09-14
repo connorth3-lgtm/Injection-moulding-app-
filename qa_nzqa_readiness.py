@@ -23,6 +23,8 @@ roadmap = read(CERT / "README.md")
 draft = read(CERT / "NZQA_MICROCREDENTIAL_DRAFT.md")
 matrix = read(CERT / "NZQA_2026_EVIDENCE_MATRIX.md")
 outreach = read(CERT / "PROVIDER_PARTNERSHIP_OUTREACH.md")
+handoff = read(CERT / "NZQA_PROVIDER_HANDOFF_2026.md")
+moderation_plan = read(CERT / "NZQA_ASSESSMENT_MODERATION_PLAN.md")
 register = read(REGISTER)
 contract_text = read(DATA)
 runtime_text = read(RUNTIME_DATA)
@@ -41,19 +43,29 @@ require("ISBs may apply for listing/approval but not provider accreditation" in 
 require("MyNZQA" in roadmap and "MyNZQA" in draft, "eligible provider application route is not explicit")
 
 # MouldMaster must not invent level, credit or approval status before provider work.
-for body, name in [(roadmap, "roadmap"), (draft, "draft"), (matrix, "matrix"), (outreach, "outreach")]:
+for body, name in [
+    (roadmap, "roadmap"),
+    (draft, "draft"),
+    (matrix, "matrix"),
+    (outreach, "outreach"),
+    (handoff, "handoff"),
+    (moderation_plan, "moderation plan"),
+]:
     lower = body.lower()
     require(
         "not nzqa approved" in lower
         or "not yet accredited by nzqa" in lower
         or "not evidence of nzqa approval" in lower
-        or "do not state or imply that mouldmaster academy is nzqa approved" in lower,
+        or "do not state or imply that mouldmaster academy is nzqa approved" in lower
+        or "not represented here as nzqa approved" in lower
+        or "does not establish nzqa approval" in lower,
         f"{name} is missing explicit NZQA non-approval status",
     )
 
 require("No claim is made here about NZQCF level" in draft, "draft must not invent an NZQCF level")
 require("Do **not** reverse-engineer credits from app screen time" in matrix, "credit workload safeguard missing")
 require("final title, level and credits are agreed" in matrix, "provider decision gate missing")
+require("deliberately unlevelled" in handoff, "provider handoff must not pre-assign NZQCF level")
 
 # Provider-owned capability must remain clearly separated from repository evidence.
 for marker in [
@@ -136,10 +148,17 @@ require("cannot self-grant moderation acceptance" in moderation["repositoryRole"
 
 # External/provider gates must remain HOLD; internal preparation may only be partial.
 gates = {row["id"]: row for row in contract["gates"]}
-require(set(gates) == {f"G{i}-{name}" for i, name in [
-    (1, "provider"), (2, "need"), (3, "design"), (4, "assessment"),
-    (5, "consent"), (6, "national-moderation"), (7, "workplace"), (8, "review")
-]}, "NZQA gate set changed unexpectedly")
+expected_gate_ids = {
+    "G1-provider",
+    "G2-need",
+    "G3-design",
+    "G4-assessment",
+    "G5-consent",
+    "G6-national-moderation",
+    "G7-workplace",
+    "G8-review",
+}
+require(set(gates) == expected_gate_ids, "NZQA gate set changed unexpectedly")
 for gate_id in ["G1-provider", "G2-need", "G4-assessment", "G5-consent", "G6-national-moderation", "G7-workplace"]:
     require(gates[gate_id]["status"] == "external-hold", f"{gate_id} must remain external-hold")
 for gate_id in ["G3-design", "G8-review"]:
@@ -156,6 +175,44 @@ for marker in [
     "assessment in MouldMaster is nationally moderated",
 ]:
     require(marker in contract["claimBoundary"]["forbidden"], f"forbidden NZQA claim missing: {marker}")
+
+# Provider handoff and moderation plan must preserve the two-lane assessment model.
+for marker in [
+    "micro-credential",
+    "standards-based",
+    "CMR 13",
+    "252",
+    "255",
+    "27926",
+    "29515",
+    "260",
+    "9713",
+    "simulation, quiz result or app completion record must not be treated as workplace practical competence",
+    "External/provider gates: **HOLD**",
+]:
+    require(marker in handoff, f"NZQA provider handoff missing: {marker}")
+
+for marker in [
+    "Lane A — MouldMaster formative learning",
+    "Lane B — provider-controlled recognised assessment",
+    "national external moderation",
+    "CMR 13",
+    "direct observation where required",
+    "MouldMaster simulation or screenshot cannot by itself satisfy a real workplace-performance requirement",
+    "Current state: **technical-review / external gates HOLD**",
+]:
+    require(marker in moderation_plan, f"NZQA assessment/moderation plan missing: {marker}")
+
+# Evidence matrix must now carry the standards-based gates as well as micro-credential gates.
+for marker in [
+    "Standards-based assessment route — separate external gate",
+    "Formal assessment against DASS standards requires provider consent to assess",
+    "CMR 13",
+    "current consent-to-assess scope is confirmed",
+    "national external moderation participation is controlled",
+    "Simulation is not workplace competence",
+]:
+    require(marker in matrix, f"NZQA evidence matrix missing standards-based gate: {marker}")
 
 # Source register must preserve official-source and qualification-context boundaries.
 for marker in [
