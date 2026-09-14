@@ -1,8 +1,8 @@
-/* MouldMaster engineer-friendly simulator UI — 2026.09.11 */
+/* MouldMaster engineer-friendly simulator UI — 2026.09.15 */
 (function(){
 'use strict';
 if(window.MM_ENGINEER_SIMULATOR_UI)return;
-const VERSION='2026.09.11.3';
+const VERSION='2026.09.15.1';
 const baseRender=window.renderSimulator;
 const baseUpdate=window.updateSimulator;
 if(typeof baseRender!=='function'||typeof baseUpdate!=='function'){
@@ -60,7 +60,7 @@ function makeIntro(root){
   const icon=node('span','', '✓');
   const copy=node('div');
   const strong=node('b','', 'Engineer workflow: validated baseline → measured change → model signal → verification');
-  const text=document.createTextNode(' Use metric process values where they are measurable. The model normalises them against your own known-good process; it does not prescribe universal settings.');
+  const text=document.createTextNode(' Use metric process values where they are measurable. Ratio-normalised training indices use 50 as the unchanged baseline/reference point; they are not physical units or probabilities. The model does not prescribe universal settings.');
   copy.append(strong,text);intro.append(icon,copy);
   legal?.insertAdjacentElement('afterend',intro);
 }
@@ -85,7 +85,7 @@ function readMetricFields(prefix){
 function copyCurrentToBaseline(){
   readMetricFields('current');
   for(const field of METRIC_FIELDS){const value=state.current[field.key];if(Number.isFinite(value)){state.baseline[field.key]=value;const el=document.getElementById(`mm_baseline_${field.key}`);if(el)el.value=String(value)}}
-  metricStatus('Baseline captured from the current measured values. Change only the current column to compare the process against this reference.','ok');
+  metricStatus('Baseline captured from the current measured values. Change only the current column to compare the process against this reference. Unchanged ratio-normalised conditions map to training index 50.','ok');
 }
 function ratioIndex(currentValue,baselineValue,inverse){
   const c=positive(currentValue),b=positive(baselineValue);if(c==null||b==null)return null;
@@ -180,13 +180,13 @@ function applyMetricModel(){
   state.lastDerived={...result,clamp:clampResult,flow:deriveFlowMetrics()};
   syncModelDisplays();renderClampReadout(clampResult);renderFlowReadout(state.lastDerived.flow);window.updateSimulator();
   const note=result.notes.length?` ${result.notes.join(' ')}`:'';
-  metricStatus(`Applied metric process values to the baseline-normalised advisory model.${note}`,'ok');
+  metricStatus(`Applied metric process values to the baseline-normalised advisory model. Ratio-normalised reference = 50; these indices are training scales, not physical units.${note}`,'ok');
 }
 function buildMetricSection(form){
   if(form.querySelector('#mmSimMetricInputs'))return;
   const section=node('section','content-block');section.id='mmSimMetricInputs';
   section.append(node('h3','', 'Measured process values · metric engineering units'));
-  section.append(node('p','muted','Enter your validated/known-good baseline and the current process. Ratios are dimensionless; temperatures use direct °C deviation. No universal resin or machine setpoints are supplied.'));
+  section.append(node('p','muted','Enter your validated/known-good baseline and the current process. Ratios are dimensionless; temperatures use direct °C deviation. For ratio-normalised model controls, an unchanged current value maps to training index 50. The 0–100 model scales are advisory, not physical units or probabilities. No universal resin or machine setpoints are supplied.'));
   const grid=node('div','grid2');
   const baseline=node('div','content-block');baseline.append(node('h3','', 'Validated baseline'));
   const bGrid=node('div','form-grid');METRIC_FIELDS.forEach(field=>bGrid.append(makeNumberField('baseline',field)));baseline.append(bGrid);
@@ -211,7 +211,7 @@ function buildMetricSection(form){
   const capture=node('button','secondary','Capture current as baseline');capture.type='button';capture.addEventListener('click',copyCurrentToBaseline);
   const apply=node('button','primary','Apply metric values to model');apply.type='button';apply.addEventListener('click',applyMetricModel);
   actions.append(capture,apply);section.append(actions);
-  const status=node('p','tiny muted','Metric mode is ready. Until values are applied, the relative training controls below continue to drive the model.');status.id='mmSimMetricStatus';status.setAttribute('aria-live','polite');section.append(status);
+  const status=node('p','tiny muted','Metric mode is ready. Until values are applied, the relative training controls below continue to drive the model. Ratio-normalised reference = 50.');status.id='mmSimMetricStatus';status.setAttribute('aria-live','polite');section.append(status);
   const groups=form.querySelector('.mm-engineer-sim-groups');if(groups)form.insertBefore(section,groups);else form.append(section);
 }
 function groupInputs(form){
@@ -221,7 +221,7 @@ function groupInputs(form){
   const byKey=new Map(labels.map(label=>[keyForLabel(label),label]));
   const details=node('details','content-block');details.classList.add('mm-engineer-sim-groups');
   const summary=node('summary','', 'Advanced model-normalised controls');
-  details.append(summary,node('p','muted','These dimensionless controls remain for training and sensitivity work. For engineering scenarios, use the measured metric values above.'));
+  details.append(summary,node('p','muted','These dimensionless controls remain for training and sensitivity work. Ratio-normalised reference = 50; the scales are not physical units. For engineering scenarios, use the measured metric values above.'));
   for(const group of GROUPS){
     const section=node('section','content-block');
     section.append(node('h3','',group.title),node('p','muted',group.copy));
@@ -255,7 +255,7 @@ function engineeringDetail(output){
     'Direct flow calculations: volumetric fill rate Q[cm³/s] = fill-stage volume[cm³] / fill time[s]; mass delivery rate ṁ[g/s] = fill-stage mass[g] / fill time[s]; average screw/ram speed v[mm/s] = fill stroke[mm] / fill time[s].',
     'Average screw/ram speed is not melt-front velocity. Shear rate, viscosity and pressure loss are not inferred without flow-path geometry and material rheology.',
     'Pressure conversion: 1 MPa = 10 bar. Keep hydraulic, plastic and cavity pressure definitions distinct; do not compare them as interchangeable values.',
-    'Baseline-normalised ratio: model index = 50 × current/baseline. Fill aggressiveness uses the inverse fill-time ratio: 50 × baseline fill time/current fill time.',
+    'Baseline-normalised ratio: model index = 50 × current/baseline. An unchanged current value maps to index 50. Fill aggressiveness uses the inverse fill-time ratio: 50 × baseline fill time/current fill time.',
     'Temperature model inputs are current minus baseline in °C and are bounded to the model validity range of ±20 °C.',
     'Clamp opening-force estimate: F[kN] = average cavity pressure[MPa] × projected area[cm²] × 0.1. Distributed cavity pressure is more accurately integrated over projected area.',
     'The 0–100 defect values are advisory training indicators, not probabilities, Cp/Cpk values, specifications or production limits.',
