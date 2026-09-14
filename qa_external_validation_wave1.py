@@ -67,6 +67,21 @@ for section in ("physicalPwa", "windowsDistribution", "bookSme", "curriculumSme"
     require((wave.get(section) or {}).get("status") == "hold", f"Wave {section} must remain hold")
 require((wave.get("learnerPilot") or {}).get("status") == "prepared-evidence-hold", "learner pilot must be prepared but evidence-held")
 
+physical = wave.get("physicalPwa") or {}
+require(physical.get("releasePacket") == "qa/PWA_PHYSICAL_DEVICE_2026.09.14.4.md", "release-specific physical PWA packet path mismatch")
+require((ROOT / physical["releasePacket"]).is_file(), "release-specific physical PWA packet is missing")
+candidate = physical.get("currentCandidate") or {}
+require(candidate.get("sourceSha") == wave.get("releaseSourceSha"), "physical candidate source SHA must match Wave release source")
+require(candidate.get("pagesRun") == live.get("pagesRun"), "physical candidate Pages run must match live Pages evidence")
+require(re.fullmatch(r"sha256:[0-9a-f]{64}", str(candidate.get("runtimeFingerprint") or "")) is not None, "physical candidate runtime fingerprint is invalid")
+require(candidate.get("artifactName") == f"physical-pwa-candidate-{candidate.get('sourceSha')}", "physical candidate artifact name must bind to source SHA")
+require(isinstance(candidate.get("artifactId"), int) and candidate["artifactId"] > 0, "physical candidate artifact ID is missing")
+require(re.fullmatch(r"[0-9a-f]{64}", str(candidate.get("artifactZipSha256") or "")) is not None, "physical candidate ZIP SHA-256 is invalid")
+require(isinstance(candidate.get("artifactBytes"), int) and candidate["artifactBytes"] > 0, "physical candidate artifact size is invalid")
+require(candidate.get("retentionDays") == 30, "physical candidate must retain the governed 30-day handoff window")
+old_fingerprint = str((load("data/pwa-physical-device-validation-v1.json")).get("runtimeFingerprint") or "")
+require(old_fingerprint != candidate.get("runtimeFingerprint"), "Wave must not relabel prior device evidence as the current candidate")
+
 manifest_ids = [ch["id"] for part in manifest["parts"] for ch in part["chapters"]]
 require(len(manifest_ids) == 46 and len(set(manifest_ids)) == 46, "Book manifest must contain 46 unique chapter ids")
 require(book_sme.get("release") == release, "Book SME contract must be release-bound")
@@ -112,6 +127,7 @@ for marker in (
 require((ROOT / "certification/WINDOWS_SIGNING_READINESS_2026.09.14.md").is_file(), "Windows signing readiness packet is missing")
 require((ROOT / "qa/BOOK_SME_REVIEW_2026.09.14.md").is_file(), "Book SME execution packet is missing")
 require((ROOT / "qa/LEARNER_PILOT_2026.09.14.md").is_file(), "learner pilot execution packet is missing")
+require((ROOT / "qa/EXTERNAL_VALIDATION_WAVE1_2026.09.14.md").is_file(), "Wave 1 execution index is missing")
 
 claims = wave.get("claims") or {}
 for key in (
@@ -127,5 +143,5 @@ for key in (
 require((wave.get("productImprovement") or {}).get("status") == "armed", "evidence-to-product improvement loop must be armed")
 print(
     f"External Validation Wave 1 integrity passed for {release}: live Pages verification is wired; "
-    "physical PWA, Windows distribution, Book/curriculum SME and real-learner evidence remain fail-closed HOLDs."
+    "the exact physical candidate is pinned; physical PWA, Windows distribution, Book/curriculum SME and real-learner evidence remain fail-closed HOLDs."
 )
