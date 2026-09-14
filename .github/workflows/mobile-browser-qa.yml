@@ -97,7 +97,7 @@ jobs:
           print(json.load(open('qa/visual-regression-baseline.json', encoding='utf-8'))['commit'])
           PY
           )"
-          test "$BASELINE_SHA" = "04e7dbea97c3e87342159709db0dbc9e5059d4aa"
+          test "$BASELINE_SHA" = "9a74fa40aec493d79207e6de2e25955e3d4020aa"
           git fetch --no-tags --depth=1 origin "$BASELINE_SHA"
           rm -rf /tmp/mm-visual-baseline
           git worktree add --detach /tmp/mm-visual-baseline "$BASELINE_SHA"
