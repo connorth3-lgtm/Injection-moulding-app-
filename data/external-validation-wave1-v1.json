@@ -1,0 +1,69 @@
+{
+  "schemaVersion": 1,
+  "waveId": "external-validation-wave1",
+  "release": "2026.09.14.4",
+  "releaseSourceSha": "9925eb26472c598d900a5a3d710e90ccf27e83e8",
+  "createdAt": "2026-09-14",
+  "policy": "Execute every automatable external-readiness check now; preserve physical, human, signing and real-learner evidence as explicit HOLDs until actually performed.",
+  "livePages": {
+    "status": "partial-pass",
+    "pagesRun": 34804805500,
+    "pagesRunConclusion": "success",
+    "productionRootState": "release-hold",
+    "candidatePath": "preview/",
+    "existingVerifier": "tools/verify_pages_hold.py",
+    "existingEvidence": "The release-hold workflow verified the live production boundary, live non-production preview, version/cache consistency, immutable preview cache, local-only device helper and private-path 404 boundary.",
+    "bookVerifier": "tools/verify_book_pages_candidate.py",
+    "bookVerifierStatus": "pending-main-deployment",
+    "boundary": "Automated live-byte verification does not substitute for physical-device, assistive-technology, SME or learner evidence."
+  },
+  "physicalPwa": {
+    "status": "hold",
+    "contract": "data/pwa-physical-device-validation-v1.json",
+    "checklist": "qa/PWA_PHYSICAL_DEVICE_CHECKLIST.md",
+    "required": "Current-runtime physical iOS/iPadOS and Android install, standalone, offline restart/reboot, update recovery and storage-pressure evidence."
+  },
+  "windowsDistribution": {
+    "status": "hold",
+    "workflow": ".github/workflows/microsoft-store-msix.yml",
+    "readinessPacket": "certification/WINDOWS_SIGNING_READINESS_2026.09.14.md",
+    "required": "Partner Center identity, signed/Store provenance, real Windows launch, SmartScreen or Store reputation path and WACK/equivalent validation."
+  },
+  "bookSme": {
+    "status": "hold",
+    "contract": "data/book-sme-review-v1.json",
+    "packet": "qa/BOOK_SME_REVIEW_2026.09.14.md",
+    "required": "Independent human review of all 46 Book chapters with priority review of safety, V/P transfer, gate seal, troubleshooting, cavity pressure, monitoring and complex diagnostics."
+  },
+  "curriculumSme": {
+    "status": "hold",
+    "contract": "qa/curriculum-semantic-review.json",
+    "required": "Human SME semantic approval of all 120 canonical lessons remains separate from Book review."
+  },
+  "learnerPilot": {
+    "status": "prepared-evidence-hold",
+    "contract": "data/learner-pilot-v1.json",
+    "packet": "qa/LEARNER_PILOT_2026.09.14.md",
+    "required": "Real learners and longitudinal evidence; synthetic/proxy datasets cannot satisfy this boundary."
+  },
+  "productImprovement": {
+    "status": "armed",
+    "rule": "Only convert observed physical, SME or learner findings into product changes with a traceable evidence reference; do not pre-claim improvements or efficacy before observations exist.",
+    "prioritySurfaces": [
+      "Book-to-troubleshooting links",
+      "Book-to-material guidance",
+      "Book-to-Academy lesson links",
+      "mobile/offline/update friction",
+      "Read/Listen accessibility and comprehension",
+      "diagnostic uncertainty wording"
+    ]
+  },
+  "claims": {
+    "fullyExternallyValidated": false,
+    "physicalDeviceValidatedForCurrentRelease": false,
+    "windowsDistributionValidated": false,
+    "bookSmeValidated": false,
+    "curriculumSmeValidated": false,
+    "learnerEfficacyEstablished": false
+  }
+}
