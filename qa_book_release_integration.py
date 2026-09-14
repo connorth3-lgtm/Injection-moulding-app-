@@ -57,6 +57,11 @@ for runtime in (source_runtime, book_runtime):
     assert "chapter.state==='verified'" in runtime
     assert 'style=' not in runtime, 'Book runtime reintroduced inline style attributes'
     assert 'window.MMBook=' in runtime
+    assert "verified:'Evidence verified'" in runtime, 'learner-facing Book state must distinguish evidence verification from independent external validation'
+    assert '<span class="eyebrow">Evidence verified</span>' in runtime, 'verified chapter eyebrow must say Evidence verified'
+    assert 'evidence verification does not imply independent human SME approval' in runtime, 'Book must disclose the independent SME boundary'
+    assert 'physical-device validation' in runtime and 'learner-outcome validation' in runtime, 'Book must disclose separate physical/learner external-validation gates'
+    assert "verified:'Verified'" not in runtime, 'bare Verified learner-facing state reintroduces assurance ambiguity'
 
 # Publication authorization itself must be a complete, explicit release decision.
 assert authorization['schema'] == 1 and authorization['bookId'] == 'mouldmaster-book'
@@ -86,13 +91,13 @@ assert authorization.get('revocationRules', {}).get('claimHoldOrConflict') == 'b
 assert authorization.get('revocationRules', {}).get('readListenTextDivergence') == 'block-release'
 assert authorization.get('revocationRules', {}).get('manifestOrAuthorizationIdentityMismatch') == 'fail-closed-runtime'
 
-# Read/listen publication parity: both surfaces render verified chapters through
+# Read/listen publication parity: both surfaces render evidence-verified chapters through
 # one governed renderer. Listening may use device TTS, but may not maintain a second
 # copy of technical teaching text.
 assert 'function verifiedChapterHtml(chapter)' in book_runtime, 'missing shared verified-chapter renderer'
 assert "if(chapter.state==='verified')ui.reader.innerHTML=`${back}${verifiedChapterHtml(chapter)}`" in book_runtime, 'Read mode bypasses shared verified renderer'
 assert "verified.map(verifiedChapterHtml).join('')" in book_runtime, 'Listen mode does not use the shared verified renderer'
-assert "ui.listen.addEventListener('click',startVerifiedListening)" in book_runtime, 'verified Book listen control has no handler'
+assert "ui.listen.addEventListener('click',startVerifiedListening)" in book_runtime, 'evidence-verified Book listen control has no handler'
 assert 'window.MMReadAloud' in book_runtime and 'reader.refresh?.()' in book_runtime, 'Book listening does not hand the governed surface to Read Aloud'
 assert 'data-mm-read="play"' in book_runtime, 'Book listening cannot invoke the existing device speech control'
 
@@ -115,4 +120,4 @@ assert set(authorized_ids) == manifest_ids
 
 print('PASS: Book runtime/data/publication authorization are registered for domain loading, atomic web offline cache and desktop package/integrity inclusion.')
 print('PASS: authorization is the only runtime promotion path; source authored/manifest state remains immutable and fail-closed.')
-print('PASS: verified Book Read and Listen surfaces share one governed chapter renderer and existing device TTS path.')
+print('PASS: evidence-verified Book Read and Listen surfaces share one governed chapter renderer and disclose that independent SME/device/learner validation is separate.')
