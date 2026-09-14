@@ -137,7 +137,7 @@ def verify_once(base_url: str, candidate_path: str, expected_release: str | None
     cache_match = re.search(r"CACHE_VERSION\s*=\s*['\"]([^'\"]+)['\"]", worker)
     if not cache_match or cache_match.group(1) != web_release:
         raise AssertionError("candidate service-worker release does not match version.json")
-    for path in (RUNTIME, MANIFEST, AUTH, *BATCHES):
+    for path in (RUNTIME, MANIFEST, AUTH, SME, *BATCHES):
         marker = f"'./{path}'"
         if marker not in worker and f'"./{path}"' not in worker:
             raise AssertionError(f"candidate service worker does not govern Book asset: {path}")
