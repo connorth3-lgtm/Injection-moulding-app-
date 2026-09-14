@@ -53,6 +53,7 @@ on:
       - 'qa/inline-handler-bridge.spec.js'
       - 'qa/inline-style-csp.spec.js'
       - 'qa/cross-browser-smoke.spec.js'
+      - 'qa/performance-budget.json'
       - 'qa/**/*.spec.js'
       - 'playwright.config.cjs'
       - 'playwright.webkit-full.config.cjs'
