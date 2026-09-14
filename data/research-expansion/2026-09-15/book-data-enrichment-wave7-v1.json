@@ -1,0 +1,163 @@
+{
+  "schema": 1,
+  "version": "2026.09.15.1",
+  "purpose": "Gap-narrowing Book enrichment focused on quantified black-speck/black-dot intervention outcomes, cycle-resolved hot-runner cleaning recovery, injection-mould predictive-maintenance decisions, and hot-runner actual-state observability. Exact DOI/title searches were screened against main and the current PR patch before admission.",
+  "screening": {
+    "mainSha": "5f7006d64061c2968e9d03365c2a834f97bd9e17",
+    "currentPrHeadBeforeWave7": "045ec9ff8e60b499551ffb78bf14151db265dfc5",
+    "repoSearchPerformed": true,
+    "currentPrPatchDeduplication": true,
+    "knownRediscoveriesExcluded": [
+      "10.3390/jmmp7010031",
+      "10.1080/0951192X.2020.1829062"
+    ],
+    "sameProjectContinuationDoesNotCountAsIndependentEvidence": true
+  },
+  "governance": {
+    "metadataOnly": true,
+    "rawThirdPartyPayloadsCommitted": false,
+    "beforeAfterCaseEvidenceDoesNotByItselfProveUniversalRootCause": true,
+    "colorChangeoverTrajectoryDoesNotCloseBlackSpeckRawTraceGap": true,
+    "vendorCapabilityDocumentationDoesNotCountAsMeasuredQualityValidation": true,
+    "hotRunnerSameFamilyContinuationMustRemainLinked": true
+  },
+  "summary": {
+    "candidates": 6,
+    "blackSpotOrBlackDotInterventionCases": 2,
+    "cycleResolvedHotRunnerCleaningStudies": 1,
+    "industrialPredictiveMaintenanceCases": 1,
+    "hotRunnerPressureControlJournalStudies": 1,
+    "hotRunnerSupplierObservabilityReferences": 1,
+    "rawPublicShotLinkedBlackSpeckDatasetAdded": 0,
+    "rawPublicValvePinPositionCurrentQualityDatasetAdded": 0
+  },
+  "candidates": [
+    {
+      "id": "ieom-2023-black-spot-filter-mesh",
+      "priority": "A",
+      "doi": "10.46254/AN13.20230097",
+      "title": "Quality Improvement of Black Spot Defects in the Plastic Injection Molding Process at Company ABC",
+      "year": 2023,
+      "evidenceType": "conference-applied-production-black-spot-intervention-case",
+      "data": [
+        "black-spot defect share 7.85% before intervention",
+        "overall Process Z 1.42 before intervention",
+        "Why-Why analysis identifying filter-mesh design as the study root cause",
+        "filter-mesh design improvement",
+        "black-spot defect share 2.16% after implementation",
+        "overall Process Z 2.02 after implementation",
+        "work instruction and control plan for sustainment"
+      ],
+      "bookChapters": ["black-specks", "diagnostic-method", "documentation", "capability", "complex-diagnostics"],
+      "rightsState": "public IEOM conference paper/PDF; reuse licence was not established in this pass, so retain as evidence/reference, quote minimally, and create original Book tables/graphics",
+      "value": "Adds a quantified plant black-spot defect -> identified intervention -> post-implementation outcome chain rather than another generic defect-cause list.",
+      "limitations": "Single-company applied case; the published summary is not a shot-by-shot time series and the filter-mesh conclusion is case-specific rather than a universal black-speck cause."
+    },
+    {
+      "id": "chula-2014-black-dot-dmaic",
+      "priority": "A",
+      "doi": "10.58837/CHULA.THE.2014.1470",
+      "title": "Black dot defect reduction in plastic injection moulding process",
+      "year": 2014,
+      "evidenceType": "masters-thesis-production-six-sigma-black-dot-intervention",
+      "scale": "two injection-moulding machines, P24 and P25",
+      "data": [
+        "black-dot defect proportion 0.65% before improvement",
+        "Gage R&R plus cause/effect, FMEA, Why-Why and hypothesis-testing workflow",
+        "four statistically tested factors: dirty/carbonised barrel and screw, previous material trapped in barrel, raw-material degradation, and hopper contamination",
+        "DOE and confirmation testing before production implementation",
+        "black-dot defect proportion 0.34% after improvement",
+        "reported 47.69% reduction",
+        "work instruction, control plan and control charts for sustainment"
+      ],
+      "bookChapters": ["black-specks", "diagnostic-method", "plasticising-unit", "thermal-history", "doe", "documentation"],
+      "rightsState": "Chulalongkorn University ETD record is licensed CC BY-NC-ND 4.0; use factual findings and Book-owned explanations, and do not adapt/reproduce protected thesis figures or tables by default",
+      "value": "Provides an independent structured black-dot intervention case with measurement-system checking, hypothesis testing, DOE, confirmation and a quantified production outcome.",
+      "limitations": "Master's thesis rather than peer-reviewed journal evidence; no public shot-order onset/recovery trace is established, and the identified factors remain plant/machine/material specific."
+    },
+    {
+      "id": "polytest-2022-hotrunner-color-changeover-cycle-trace",
+      "priority": "A",
+      "doi": "10.1016/j.polymertesting.2022.107759",
+      "title": "Developing a method for evaluating color changeover in a hot-runner multi-cavity injection mold",
+      "year": 2022,
+      "evidenceType": "peer-reviewed-cycle-resolved-hot-runner-cleaning-and-visual-quality-study",
+      "scale": "two-cavity valve-gated hot-runner mould; ABS; individual samples recorded by cycle and cavity",
+      "data": [
+        "digital image recorded for every sampled part with cavity and cycle identity",
+        "combined injection-unit plus hot-runner cleaning visually completed at approximately 135 cycles",
+        "separate hot-runner test after injection-unit cleaning ran for 105 cycles",
+        "modelled cycles to 99% clean: 148 and 132 for the two nozzles in combined cleaning versus 34 and 34 in separate cleaning",
+        "cleaning material 6.3 kg combined versus 3.2 kg separate",
+        "reported time and material consumption about 50% lower when injection unit and hot runner were cleaned independently",
+        "saturation-curve model described measured color-change data with 97.8% accuracy"
+      ],
+      "bookChapters": ["black-specks", "hot-runners", "multi-cavity", "process-monitoring", "documentation", "complex-diagnostics"],
+      "rightsState": "open-access CC BY-NC-ND 4.0 article; use factual measurements and create original Book plots/tables without adapting protected figures unless the intended reuse is separately permitted",
+      "value": "Rare cycle-by-cycle, cavity-identified visual cleaning trajectory in a hot-runner mould. It supplies the chronology structure the Book needs for recovery teaching even though the observed defect is color carryover rather than black specks.",
+      "limitations": "This is color-changeover/cleaning evidence, not a black-speck onset dataset; it must never be presented as closing the black-speck raw-trace gap."
+    },
+    {
+      "id": "procs-2023-injection-mould-gft-pdm",
+      "priority": "B",
+      "doi": "10.1016/j.procs.2022.12.302",
+      "title": "Predictive maintenance on injection molds by generalized fault trees and anomaly detection",
+      "year": 2023,
+      "evidenceType": "conference-proceedings-industrial-injection-mould-predictive-maintenance-case",
+      "overlapGroup": "oli-gft-injection-mould-pdm",
+      "data": [
+        "industrial application at OLI, an injection-moulded plastic-parts producer",
+        "generalized fault-tree reliability assessment",
+        "isolation-forest anomaly detection",
+        "training objective minimizing operational costs",
+        "reported potential savings 27.05% versus optimized fixed-period preventive maintenance",
+        "reported potential savings 63.43% versus corrective maintenance"
+      ],
+      "bookChapters": ["mould-anatomy", "process-monitoring", "documentation", "complex-diagnostics", "capability"],
+      "rightsState": "open-access Procedia Computer Science article under a Creative Commons licence; use source-backed factual findings and Book-owned maintenance-decision graphics",
+      "value": "Adds a real injection-mould industrial maintenance-decision case, complementing Wave 6's natural lifecycle/metrology evidence with an explicit intervention-scheduling/cost framework.",
+      "limitations": "The savings are study/model outputs, not universal maintenance economics; this source does not provide the desired public wear -> maintenance action -> post-maintenance recovery raw history. The 2023 Applied Sciences paper is an extended version of this work and is not independent evidence."
+    },
+    {
+      "id": "jpe-2022-hotrunner-crosssection-pressure-control",
+      "priority": "B",
+      "doi": "10.1515/polyeng-2021-0225",
+      "title": "Development of a cavity pressure control for injection moulding by adjusting the cross-section in the hot runner",
+      "year": 2022,
+      "evidenceType": "peer-reviewed-hot-runner-pressure-control-study-same-family-continuation",
+      "overlapGroup": "ikv-hot-runner-pin-pressure-control",
+      "data": [
+        "commercial servo-electrically driven hot-runner valve pin",
+        "one-cavity mould with two cavity-pressure sensors",
+        "opening stroke varied to change hot-runner pressure resistance and cavity pressure transfer",
+        "PID controller compares actual cavity pressure with a reference curve and compensates using pin movement",
+        "provoked holding-pressure disturbances could be compensated",
+        "material-behaviour changes such as mould-temperature fluctuations could not be compensated by the reference-control approach"
+      ],
+      "bookChapters": ["hot-runners", "cavity-pressure", "process-monitoring", "process-window"],
+      "rightsState": "journal article; figure/data republication rights were not established in this pass, so use as evidence/reference and create original explanatory diagrams",
+      "value": "Adds peer-reviewed experimental detail to the Wave 5 IKV valve-pin-control family and makes the distinction between measured cavity pressure, actual pin movement and control limitations explicit.",
+      "limitations": "Same broader IKV research family as Wave 5 sources, so it is not counted as an independent experimental family. It still does not expose raw motor-current traces or cavity-specific part-quality traces."
+    },
+    {
+      "id": "ewikon-2022-electric-valve-gate-observability",
+      "priority": "B",
+      "url": "https://www.etmm-online.com/new-solutions-for-valve-gate-technology-and-networked-injection-moulding-a-6343d5227a092f1fe1ff40ce4b040e43/",
+      "title": "New solutions for valve gate technology and networked injection moulding",
+      "year": 2022,
+      "evidenceType": "supplier-trade-technical-servo-valve-gate-observability-reference",
+      "data": [
+        "linear servo motors with permanent high-precision valve-pin position control",
+        "motor current consumption controlled as a function of required force at constant speed and usable to monitor valve-pin closing force",
+        "process-data export via OPC UA",
+        "documented 4+4-cavity Luer-connector demonstration cell",
+        "two cavity-pressure sensors per cavity recorded in the demonstration cell",
+        "current EWIKON technical documentation also states torque/current consumption can indicate system condition and valve-pin position is continuously monitored"
+      ],
+      "bookChapters": ["hot-runners", "cavity-pressure", "multi-cavity", "process-monitoring", "complex-diagnostics"],
+      "rightsState": "manufacturer/trade technical material; capability descriptions may be cited factually but do not reuse vendor graphics by default",
+      "value": "Directly identifies the signal architecture needed for the remaining hot-runner evidence gap: pin position, motor current/force, cavity pressure and networked monitoring can coexist in one production cell.",
+      "limitations": "Vendor/trade capability evidence is not a public synchronized raw trace and does not demonstrate a causal link from current/position to cavity-specific part quality; the raw actual-state + quality gap therefore remains open."
+    }
+  ]
+}
