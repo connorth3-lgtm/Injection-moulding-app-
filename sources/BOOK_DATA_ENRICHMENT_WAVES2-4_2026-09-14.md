@@ -6,13 +6,13 @@ This note extends `BOOK_DATA_ENRICHMENT_2026-09-14.md`. It records the broader s
 
 ## Current branch inventory
 
-- Wave 1: 15 Book-enrichment candidates.
+- Wave 1: 16 Book-enrichment candidates after the novelty audit: 9 new repository discoveries plus 7 already-known evidence sources deliberately selected for Book reuse.
 - Wave 2: 25 further integration candidates across defects, energy, cooling, weld lines, rheology, ejection, recyclate/fibre behaviour and supplier references.
 - Wave 3: 6 recovered candidates from the interrupted search: two defect/fault cases plus four manufacturer references.
 - Wave 4: 15 candidates that were exact-DOI screened against `main` and deduplicated against Waves 1–3.
-- Total candidate entries on this branch: **61**.
+- Total candidate entries on this branch: **62**.
 
-**61 candidate entries does not mean 61 new independent experiments.** Earlier waves include sources that were new to the Book-enrichment map but in some cases already existed elsewhere in MouldMaster's larger research/evidence corpus. Wave 4 is the strictest novelty layer and records only candidates whose exact DOI was not found on `main` and which were absent from Waves 1–3.
+**62 candidate entries does not mean 62 new independent experiments.** Earlier waves include sources that were new to the Book-enrichment map but in some cases already existed elsewhere in MouldMaster's larger research/evidence corpus. Wave 4 is the strictest novelty layer and records only candidates whose exact DOI was not found on `main` and which were absent from Waves 1–3.
 
 No learner-runtime Book content, release identity, publication authorization or physical-PWA candidate is changed by this research branch.
 
