@@ -13,7 +13,8 @@ module.exports=defineConfig({
     /read-aloud\.spec\.js/,
     /engineering-case-store\.spec\.js/,
     /inline-handler-bridge\.spec\.js/,
-    /inline-style-csp\.spec\.js/
+    /inline-style-csp\.spec\.js/,
+    /performance-budget\.spec\.js/
   ],
   timeout:60000,
   expect:{timeout:15000},
