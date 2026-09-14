@@ -1,0 +1,53 @@
+{
+  "schemaVersion": 1,
+  "pilotId": "mouldmaster-learner-pilot-wave1",
+  "release": "2026.09.14.4",
+  "status": "prepared",
+  "synthetic": false,
+  "purpose": "Collect real-learner usability, comprehension, diagnostic-transfer and retention signals for MouldMaster without presenting an exploratory pilot as efficacy or psychometric validation.",
+  "cohort": {
+    "targetCompletedParticipants": "8-15 exploratory learners",
+    "roles": ["beginner", "setter-technician", "process-engineer"],
+    "eligibility": "Adults using the app voluntarily for injection-moulding learning; no customer or employer identity is required in the repository evidence."
+  },
+  "design": {
+    "baseline": "Short pre-use concept and diagnostic task set before guided learning.",
+    "immediate": "Repeat matched concept/diagnostic tasks after the assigned learning path and Book use.",
+    "delayed": "Repeat matched transfer tasks after 7-14 days where feasible.",
+    "qualitative": "Capture confusion points, navigation friction, perceived confidence and the reason for any answer changes.",
+    "bookTasks": [
+      "find the applicable Book chapter for a defect or process question",
+      "state the chapter's applicability boundary before acting",
+      "distinguish a plausible mechanism from a guaranteed cause",
+      "identify when machine/material/mould/site documentation overrides generic guidance"
+    ]
+  },
+  "metrics": [
+    "baselineCorrectRate",
+    "immediateCorrectRate",
+    "delayedTransferCorrectRate",
+    "diagnosticReasoningRubric",
+    "timeToRelevantEvidence",
+    "bookBoundaryRecognitionRate",
+    "taskAbandonmentRate",
+    "reportedConfusionThemes"
+  ],
+  "analysisBoundary": "This pilot may identify usability and learning-signal opportunities. It does not by itself establish efficacy, accreditation, population psychometric validity, production recipe validity or machine-control authority.",
+  "privacy": {
+    "identifier": "locally generated pseudonymous participant code",
+    "prohibitedPublicFields": [
+      "name",
+      "email",
+      "phone",
+      "employer",
+      "customer",
+      "site",
+      "productionPart",
+      "rawProcessData",
+      "privateScreenshot"
+    ],
+    "publicRepositoryEvidence": "Aggregate counts, non-identifying analysis references and release-bound conclusions only."
+  },
+  "evidence": null,
+  "promotionRule": "data/release-external-validation-v1.json learnerOutcomes must remain hold until a separately reviewed real-learner longitudinal evidence object satisfies tools/verify_release_external_validation.py."
+}
