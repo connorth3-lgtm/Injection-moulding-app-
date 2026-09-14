@@ -1,0 +1,54 @@
+{
+  "schema": 1,
+  "version": "2026.09.15.1",
+  "purpose": "Overlay Wave 8 longitudinal mould-maintenance evidence onto the Book coverage map, explicitly separating event-history scale from raw-data access and verified post-maintenance recovery.",
+  "base": "data/research-expansion/2026-09-14/book-chapter-quantitative-coverage-v1.json",
+  "overlays": [
+    {
+      "chapterId": "mould-anatomy",
+      "currentState": "strong-mixed-plus-longitudinal-maintenance-history",
+      "addedEvidenceRoutes": [
+        "wave8:esrel-2025-9157mould-maintenance-history",
+        "wave8:procir-2017-mould-maintenance-time-cbr"
+      ],
+      "newEditorialCapability": "Connect mould components to repeated shot-count maintenance events, component-specific service histories and real mould-maintenance project records rather than presenting maintenance as a generic interval checklist.",
+      "boundary": "Public evidence does not expose reusable row-level histories with component condition and verified post-maintenance part-quality recovery."
+    },
+    {
+      "chapterId": "process-monitoring",
+      "currentState": "strong-measured-plus-long-horizon-maintenance-events",
+      "addedEvidenceRoutes": [
+        "wave8:esrel-2025-9157mould-maintenance-history"
+      ],
+      "newEditorialCapability": "Teach a monitoring hierarchy in which cycle-level process signals coexist with asset-level shot counts, component maintenance events and long-horizon service history.",
+      "boundary": "Maintenance-event records are not a substitute for physical condition sensing; the source itself identifies missing component-state information as a limitation."
+    },
+    {
+      "chapterId": "documentation",
+      "currentState": "strong-measured-plus-maintenance-event-schema",
+      "addedEvidenceRoutes": [
+        "wave8:esrel-2025-9157mould-maintenance-history",
+        "wave8:procir-2017-mould-maintenance-time-cbr"
+      ],
+      "newEditorialCapability": "Show exactly why mould ID, component identity, shot count, maintenance date, intervention type, configuration and outcome fields should be retained in a durable service history.",
+      "boundary": "The Book should add intervention-type and verified outcome fields beyond what is consistently available in the identified industrial history."
+    },
+    {
+      "chapterId": "complex-diagnostics",
+      "currentState": "strong-mixed-plus-lifecycle-context",
+      "addedEvidenceRoutes": [
+        "wave8:esrel-2025-9157mould-maintenance-history",
+        "wave8:procir-2017-mould-maintenance-time-cbr"
+      ],
+      "newEditorialCapability": "Contrast similarity/history-based maintenance planning with physical diagnosis, and make clear that a predicted service window does not identify the degradation mechanism or prove recovery."
+    }
+  ],
+  "programmeGapUpdate": {
+    "closedAsDiscoveryGap": "existence of long natural injection-mould maintenance histories",
+    "stillOpen": [
+      "rights-clear reusable row-level longitudinal mould/component maintenance histories",
+      "physical component-condition evidence linked to maintenance events",
+      "verified before/after part-quality or metrology recovery linked to the same natural maintenance events"
+    ]
+  }
+}
