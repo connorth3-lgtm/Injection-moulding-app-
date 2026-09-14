@@ -1,4 +1,4 @@
-const CACHE_VERSION='2026.09.14.3';
+const CACHE_VERSION='2026.09.14.4';
 const CACHE_REVISION='engineer-simulator-ui-r1-20260911';
 const STATIC_CACHE=`mouldmaster-static-${CACHE_VERSION}-${CACHE_REVISION}`;
 
@@ -62,6 +62,7 @@ const CORE=[
   './src/domains/learning/delayed-transfer-reviews.js',
   './src/domains/learning/book-runtime.js',
   './src/domains/learning/book-data/book-manifest-v1.json',
+  './src/domains/learning/book-data/book-publication-authorization-v1.json',
   './src/domains/learning/book-data/book-authored-foundations-v1.json',
   './src/domains/learning/book-data/book-evidence-registry-v1.json',
   './src/domains/learning/book-data/book-chapters-materials-machine-v1.json',
