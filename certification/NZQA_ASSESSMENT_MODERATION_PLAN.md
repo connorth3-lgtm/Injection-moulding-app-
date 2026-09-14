@@ -70,7 +70,7 @@ Provider-approved assessment should be designed so that:
 
 ## 4. Practical workplace evidence
 
-Where a final outcome requires workplace performance, collect direct evidence under authorised conditions. Candidate evidence may include:
+Where a final outcome requires workplace performance, collect direct evidence under authorised conditions, including **direct observation where required** by the outcome, standard or provider assessment design. Candidate evidence may include:
 - identifying hazard zones, safeguards and escalation boundaries;
 - identifying cycle phases and relevant machine actuals;
 - retrieving approved machine/material/site documentation;
