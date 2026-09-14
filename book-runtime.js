@@ -3,6 +3,7 @@
   'use strict';
   const VERSION='2026.09.14.9';
   const AUTH_PATH='./data/book-publication-authorization-v1.json';
+  const ENRICHMENT_PATH='./data/book-evidence-enrichment-v1.json';
   const BATCH_PATHS=[
     './data/book-authored-foundations-v1.json',
     './data/book-evidence-registry-v1.json',
@@ -10,7 +11,7 @@
     './data/book-authored-remaining-v1.json'
   ];
   let manifest=null,publicationAuthorization=null,ui=null,previousView=null,open=false;
-  const esc=value=>String(value??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  const esc=value=>String(value??'').replace(/[&<>\"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','\"':'&quot;',"'":'&#39;'}[c]));
   const stateLabel=state=>({planned:'Planned','source-review':'Source review','technical-review':'Technical review',verified:'Verified',hold:'Hold'}[state]||state);
   async function json(path){const r=await fetch(path,{cache:'no-store'});if(!r.ok)throw new Error(`${path} unavailable (${r.status})`);return r.json();}
   function applyPublicationAuthorization(data,declared,auth){
@@ -23,6 +24,38 @@
     if(ids.length!==declared.size||new Set(ids).size!==ids.length)throw new Error('Book publication authorization chapter coverage mismatch');
     for(const id of ids){const chapter=declared.get(id);if(!chapter)throw new Error(`Book publication authorization contains unknown chapter: ${id}`);chapter.state='verified';}
     publicationAuthorization=auth;
+  }
+
+  function applyTechnicalReviewEnrichment(data,declared,sourceMap,patch){
+    if(patch?.schema!==1||patch?.bookId!==data.bookId||patch?.status!=='technical-review'||!Array.isArray(patch.sourceSeeds)||!Array.isArray(patch.chapterPatches)||!Array.isArray(patch.reviewChapterIds))throw new Error('Book evidence enrichment identity check failed');
+    const newSourceIds=new Set();
+    for(const source of patch.sourceSeeds){
+      if(!source?.id||!source?.title||!source?.url||!source?.scope)throw new Error('Incomplete Book enrichment source record');
+      if(sourceMap.has(source.id)||newSourceIds.has(source.id))throw new Error(`Duplicate Book enrichment source id: ${source.id}`);
+      newSourceIds.add(source.id);sourceMap.set(source.id,source);data.sourceSeeds.push(source);
+    }
+    const patchedIds=new Set();
+    for(const entry of patch.chapterPatches){
+      if(!entry?.chapterId||patchedIds.has(entry.chapterId)||!Array.isArray(entry.sections)||!entry.sections.length)throw new Error(`Invalid Book enrichment chapter patch: ${entry?.chapterId||'missing'}`);
+      const chapter=declared.get(entry.chapterId);
+      if(!chapter)throw new Error(`Book enrichment contains unknown chapter: ${entry.chapterId}`);
+      for(const sourceId of entry.sourceIds||[])if(!sourceMap.has(sourceId))throw new Error(`Unknown enrichment source ${sourceId} in ${entry.chapterId}`);
+      const titles=new Set((chapter.sections||[]).map(section=>section.title));
+      for(const section of entry.sections){
+        if(!section?.title||!section?.text||titles.has(section.title))throw new Error(`Invalid or duplicate enrichment section in ${entry.chapterId}`);
+        titles.add(section.title);chapter.sections.push(section);
+      }
+      chapter.sourceIds=[...new Set([...(chapter.sourceIds||[]),...(entry.sourceIds||[])])];
+      patchedIds.add(entry.chapterId);
+    }
+    const reviewIds=new Set(patch.reviewChapterIds);
+    for(const id of patchedIds)if(!reviewIds.has(id))throw new Error(`Enriched chapter missing technical-review gate: ${id}`);
+    for(const id of reviewIds){
+      const chapter=declared.get(id);
+      if(!chapter)throw new Error(`Book enrichment review gate contains unknown chapter: ${id}`);
+      chapter.state='technical-review';
+      chapter.reviewBoundary=patch.reviewBoundary;
+    }
   }
   async function loadManifest(){
     const data=await json('./data/book-manifest-v1.json');
@@ -55,6 +88,8 @@
     if(authoredIds.size!==declared.size)throw new Error('Book authored chapter coverage is incomplete');
     const auth=await json(AUTH_PATH);
     applyPublicationAuthorization(data,declared,auth);
+    const enrichment=await json(ENRICHMENT_PATH);
+    applyTechnicalReviewEnrichment(data,declared,sourceMap,enrichment);
     return data;
   }
   const allChapters=()=> (manifest?.parts||[]).flatMap(part=>part.chapters||[]);
