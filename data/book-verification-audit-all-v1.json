@@ -1,0 +1,99 @@
+{
+  "schema": 1,
+  "bookId": "mouldmaster-book",
+  "version": "2026.09.14.4-audit",
+  "policy": "accuracy-overkill",
+  "auditedAt": "2026-09-14",
+  "scope": {
+    "parts": 8,
+    "chapters": 46,
+    "claims": 137,
+    "claimCoverage": "46/46 chapters and 137/137 stable claim IDs",
+    "resolutionOverlay": "book-claim-resolution-all-v1.json"
+  },
+  "effectiveClaimDisposition": {
+    "supported": 74,
+    "qualified": 63,
+    "hold": 0,
+    "conflicting": 0,
+    "rule": "Qualified claims remain scoped by their applicability, exclusions and evidence basis; qualified does not mean universal."
+  },
+  "qualityFindings": [
+    {
+      "severity": "governance-data-integrity",
+      "finding": "Two historical review-ledger summary objects did not match their individual claim records.",
+      "affectedLedgers": [
+        "book-claim-review-foundations-materials-machine-v1.json",
+        "book-claim-review-troubleshooting-v1.json"
+      ],
+      "disposition": "Individual claim records were treated as authoritative. Corrected recounts are recorded in book-claim-resolution-all-v1.json; historical ledgers are left immutable for audit traceability."
+    },
+    {
+      "severity": "publication-boundary",
+      "finding": "Clearing all claim-level holds/conflicts does not itself satisfy chapter publication authorization.",
+      "disposition": "All chapters remain technical-review. No manifest/authored chapter is changed to verified by this audit."
+    }
+  ],
+  "parts": [
+    {
+      "id": "foundations",
+      "chapters": ["what-injection-moulding-is","cycle","machine-anatomy","mould-anatomy","safety-foundations"]
+    },
+    {
+      "id": "materials",
+      "chapters": ["polymer-structure","rheology","moisture-drying","thermal-history","material-families","fillers-additives"]
+    },
+    {
+      "id": "machine",
+      "chapters": ["plasticising-unit","shot-utilisation","velocity-pressure","vp-transfer","clamp"]
+    },
+    {
+      "id": "mould",
+      "chapters": ["feed-system","venting","cooling","ejection-draft","hot-runners"]
+    },
+    {
+      "id": "process-development",
+      "chapters": ["process-baseline","fill-study","pressure-loss","gate-seal","process-window","documentation"]
+    },
+    {
+      "id": "troubleshooting",
+      "chapters": ["diagnostic-method","short-shot","flash","sink-voids","splay","burns","weld-lines","warpage","black-specks"]
+    },
+    {
+      "id": "process-engineering",
+      "chapters": ["cavity-pressure","doe","capability","process-monitoring","dimensional-stability"]
+    },
+    {
+      "id": "advanced",
+      "chapters": ["fibre-orientation","thin-wall","multi-cavity","high-performance-polymers","complex-diagnostics"]
+    }
+  ],
+  "chapterDispositionRule": {
+    "allListedChapters": "evidence-blockers-cleared",
+    "publicationState": "technical-review",
+    "verified": false,
+    "whyNotVerified": [
+      "The accuracy gate forbids self-promotion from evidence review alone.",
+      "Explicit chapter-level technical/publication sign-off is not recorded by this audit.",
+      "Source currency must be re-confirmed at the promotion event for any source whose status could have changed.",
+      "Release validation must confirm that any enabled read/listen surfaces use the same governed verified text."
+    ]
+  },
+  "gateChecks": [
+    {"id":"chapter-inventory","result":"pass","detail":"46 unique manifest chapters are covered exactly once across the five base claim-review ledgers."},
+    {"id":"claim-inventory","result":"pass","detail":"137 globally unique claim IDs are present with section, class, applicability, exclusions, evidence, conclusion and basis."},
+    {"id":"evidence-namespace","result":"pass-by-qa-contract","detail":"All resolution evidence must resolve to a traceable HTTPS source record; qa_book_claim_coverage.py enforces this."},
+    {"id":"hold-conflict-clearance","result":"pass","detail":"Ordered high-risk and all-book resolution overlays produce 0 hold and 0 conflicting effective claims."},
+    {"id":"universal-numeric-setpoints","result":"pass-no-new-values","detail":"This audit adds no production setpoint, drying recipe, pressure threshold, vent dimension, cooling target, fill percentage or machine sizing factor to Book teaching text."},
+    {"id":"diagnostic-contract","result":"pass","detail":"Troubleshooting conclusions remain hypotheses/evidence/tests rather than symptom-to-guaranteed-cause or guaranteed-fix rules."},
+    {"id":"publication-self-promotion","result":"pass","detail":"0 chapters are promoted to verified; fail-closed state is preserved."}
+  ],
+  "publicationDecision": {
+    "evidenceReviewComplete": true,
+    "claimLevelEvidenceBlockersRemaining": 0,
+    "claimLevelConflictsRemaining": 0,
+    "chaptersReadyForExplicitPromotionReview": 46,
+    "chaptersAutomaticallyVerified": 0,
+    "currentBookDisposition": "technical-review-only"
+  }
+}
