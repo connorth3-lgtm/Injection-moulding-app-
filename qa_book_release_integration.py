@@ -41,6 +41,16 @@ assert "effectiveState==='verified'" in book_runtime
 assert 'style=' not in book_runtime, 'Book packaged runtime reintroduced inline style attributes'
 assert 'window.MMBook=' in book_runtime
 
+# Read/listen publication parity: both surfaces must render verified chapters through
+# one governed renderer. Listening may use device TTS, but it may not maintain a second
+# copy of technical teaching text.
+assert 'function verifiedChapterHtml(chapter)' in book_runtime, 'missing shared verified-chapter renderer'
+assert "if(chapter.state==='verified')ui.reader.innerHTML=`${back}${verifiedChapterHtml(chapter)}`" in book_runtime, 'Read mode bypasses shared verified renderer'
+assert "verified.map(verifiedChapterHtml).join('')" in book_runtime, 'Listen mode does not use the shared verified renderer'
+assert "ui.listen.addEventListener('click',startVerifiedListening)" in book_runtime, 'verified Book listen control has no handler'
+assert 'window.MMReadAloud' in book_runtime and 'reader.refresh?.()' in book_runtime, 'Book listening does not hand the governed surface to Read Aloud'
+assert 'data-mm-read="play"' in book_runtime, 'Book listening cannot invoke the existing device speech control'
+
 # Desktop already packages src/domains as one governed resource tree.
 extra = desktop['build']['extraResources']
 assert any(x.get('from') == '../../src/domains' and x.get('to') == 'mouldmaster/src/domains' for x in extra)
@@ -57,4 +67,5 @@ assert len(chapters) == 46
 assert not any(c.get('state') == 'verified' for c in chapters)
 
 print('PASS: Book runtime/data are registered for domain loading, atomic web offline cache and desktop package/integrity inclusion.')
+print('PASS: verified Book Read and Listen surfaces share one governed chapter renderer and existing device TTS path.')
 print('PASS: canonical material dataAssets remains isolated; packaged Book data are byte-identical to governed source; 0 chapters self-promoted.')
