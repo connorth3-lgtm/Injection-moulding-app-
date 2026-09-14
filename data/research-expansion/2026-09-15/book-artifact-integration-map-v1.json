@@ -1,0 +1,191 @@
+{
+  "schema": 1,
+  "version": "2026.09.15.1",
+  "purpose": "Map the 12 completed Book-owned editorial artifacts onto the actual human-voice Book files from PR #332 without modifying learner-runtime content inside research PR #333.",
+  "stacking": {
+    "researchPr": 333,
+    "bookVoicePr": 332,
+    "recommendedIntegrationBase": "feature/book-human-voice-pass",
+    "sourceRuntimePairRule": "Any content integration must update the data/ source Book file and its src/domains/learning/book-data/ runtime copy identically.",
+    "publicationBoundary": "Integration changes learner-runtime bytes and therefore belongs in a separate stacked Book-content PR with a deliberate release decision."
+  },
+  "artifacts": [
+    {
+      "id": "art-hotrunner-command-to-quality-chain",
+      "editorialSpec": "sources/book-editorial-artifacts/2026-09-15/hot-runner-command-is-not-cavity-state.md",
+      "primaryTarget": {
+        "sourceFile": "data/book-authored-remaining-v1.json",
+        "runtimeFile": "src/domains/learning/book-data/book-authored-remaining-v1.json",
+        "chapterId": "hot-runners",
+        "anchorSection": "Thermal history can differ by location",
+        "insertionMode": "new-section-plus-figure",
+        "suggestedSectionTitle": "Command is not cavity state"
+      },
+      "secondaryCrossReferences": ["cavity-pressure", "multi-cavity", "process-monitoring"]
+    },
+    {
+      "id": "art-black-speck-evidence-ladder",
+      "editorialSpec": "sources/book-editorial-artifacts/2026-09-15/black-speck-observation-to-evidence.md",
+      "primaryTarget": {
+        "sourceFile": "data/book-authored-remaining-v1.json",
+        "runtimeFile": "src/domains/learning/book-data/book-authored-remaining-v1.json",
+        "chapterId": "black-specks",
+        "anchorSection": "Pattern matters",
+        "insertionMode": "new-section-plus-diagnostic-figure",
+        "suggestedSectionTitle": "Build evidence before naming the cause"
+      },
+      "secondaryCrossReferences": ["diagnostic-method"]
+    },
+    {
+      "id": "art-cooling-maintenance-chain",
+      "editorialSpec": "sources/book-editorial-artifacts/2026-09-15/cooling-restriction-diagnose-restore-verify.md",
+      "primaryTarget": {
+        "sourceFile": "data/book-authored-remaining-v1.json",
+        "runtimeFile": "src/domains/learning/book-data/book-authored-remaining-v1.json",
+        "chapterId": "cooling",
+        "anchorSection": "Measure the system",
+        "insertionMode": "new-section-plus-case-figure",
+        "suggestedSectionTitle": "Diagnose, restore and verify"
+      },
+      "secondaryCrossReferences": ["diagnostic-method", "process-monitoring"]
+    },
+    {
+      "id": "art-mould-lifecycle-state-map",
+      "editorialSpec": "sources/book-editorial-artifacts/2026-09-15/mould-lifecycle-run-in-production-degradation-intervention.md",
+      "primaryTarget": {
+        "sourceFile": "data/book-authored-foundations-v1.json",
+        "runtimeFile": "src/domains/learning/book-data/book-authored-foundations-v1.json",
+        "chapterId": "mould-anatomy",
+        "anchorSection": "Temperature-control system",
+        "insertionMode": "advanced-callout-plus-lifecycle-figure",
+        "suggestedSectionTitle": "Mould condition changes through its life"
+      },
+      "secondaryCrossReferences": ["process-monitoring", "dimensional-stability", "documentation"]
+    },
+    {
+      "id": "art-black-speck-before-after-table",
+      "editorialSpec": "sources/book-editorial-artifacts/2026-09-15/black-spot-interventions-case-table.md",
+      "primaryTarget": {
+        "sourceFile": "data/book-authored-remaining-v1.json",
+        "runtimeFile": "src/domains/learning/book-data/book-authored-remaining-v1.json",
+        "chapterId": "black-specks",
+        "anchorSection": "Build evidence before naming the cause",
+        "insertionMode": "case-table",
+        "suggestedSectionTitle": "What two intervention cases actually show"
+      },
+      "secondaryCrossReferences": ["documentation", "capability"]
+    },
+    {
+      "id": "art-hotrunner-quality-capability-table",
+      "editorialSpec": "sources/book-editorial-artifacts/2026-09-15/distributed-melt-control-quality-capability-table.md",
+      "primaryTarget": {
+        "sourceFile": "data/book-authored-remaining-v1.json",
+        "runtimeFile": "src/domains/learning/book-data/book-authored-remaining-v1.json",
+        "chapterId": "hot-runners",
+        "anchorSection": "Command is not cavity state",
+        "insertionMode": "evidence-table",
+        "suggestedSectionTitle": "Measured quality outcomes from distributed melt control"
+      },
+      "secondaryCrossReferences": ["multi-cavity", "capability", "dimensional-stability"]
+    },
+    {
+      "id": "art-eight-cavity-cooling-balance",
+      "editorialSpec": "sources/book-editorial-artifacts/2026-09-15/eight-cavity-cooling-balance-worksheet.md",
+      "primaryTarget": {
+        "sourceFile": "data/book-authored-remaining-v1.json",
+        "runtimeFile": "src/domains/learning/book-data/book-authored-remaining-v1.json",
+        "chapterId": "multi-cavity",
+        "anchorSection": "Analyse cavities separately",
+        "insertionMode": "diagnostic-exercise",
+        "suggestedSectionTitle": "Total flow can recover while one cavity stays different"
+      },
+      "secondaryCrossReferences": ["cooling"]
+    },
+    {
+      "id": "art-maintenance-record-design",
+      "editorialSpec": "sources/book-editorial-artifacts/2026-09-15/minimum-mould-maintenance-record.md",
+      "primaryTarget": {
+        "sourceFile": "data/book-authored-remaining-v1.json",
+        "runtimeFile": "src/domains/learning/book-data/book-authored-remaining-v1.json",
+        "chapterId": "documentation",
+        "anchorSection": "Link changes to evidence",
+        "insertionMode": "record-template-plus-exercise",
+        "suggestedSectionTitle": "Record maintenance so recovery can be proved"
+      },
+      "secondaryCrossReferences": ["mould-anatomy", "complex-diagnostics"]
+    },
+    {
+      "id": "art-cycle-resolved-cleaning-recovery",
+      "editorialSpec": "sources/book-editorial-artifacts/2026-09-15/cleaning-recovery-is-a-trajectory.md",
+      "primaryTarget": {
+        "sourceFile": "data/book-authored-remaining-v1.json",
+        "runtimeFile": "src/domains/learning/book-data/book-authored-remaining-v1.json",
+        "chapterId": "process-monitoring",
+        "anchorSection": "An alarm is a decision aid",
+        "insertionMode": "time-series-teaching-plot",
+        "suggestedSectionTitle": "Recovery needs a trajectory, not one good part"
+      },
+      "secondaryCrossReferences": ["hot-runners", "black-specks", "documentation"]
+    },
+    {
+      "id": "art-pressure-location-map",
+      "editorialSpec": "sources/book-editorial-artifacts/2026-09-15/pressure-depends-on-where-you-measure-it.md",
+      "primaryTarget": {
+        "sourceFile": "data/book-authored-remaining-v1.json",
+        "runtimeFile": "src/domains/learning/book-data/book-authored-remaining-v1.json",
+        "chapterId": "pressure-loss",
+        "anchorSection": "Do not equate machine pressure with cavity pressure",
+        "insertionMode": "measurement-figure-plus-exercise",
+        "suggestedSectionTitle": "Pressure only means something when you know where it was measured"
+      },
+      "secondaryCrossReferences": ["cavity-pressure", "feed-system", "vp-transfer"]
+    },
+    {
+      "id": "art-warpage-multivariable-cause-map",
+      "editorialSpec": "sources/book-editorial-artifacts/2026-09-15/warpage-competing-mechanisms-and-evidence.md",
+      "primaryTarget": {
+        "sourceFile": "data/book-authored-remaining-v1.json",
+        "runtimeFile": "src/domains/learning/book-data/book-authored-remaining-v1.json",
+        "chapterId": "warpage",
+        "anchorSection": "Sources interact",
+        "insertionMode": "cause-evidence-map-plus-exercise",
+        "suggestedSectionTitle": "Similar warpage can come from different mechanisms"
+      },
+      "secondaryCrossReferences": ["cooling", "fibre-orientation", "dimensional-stability"]
+    },
+    {
+      "id": "art-process-window-evidence-grid",
+      "editorialSpec": "sources/book-editorial-artifacts/2026-09-15/process-window-region-not-point.md",
+      "primaryTarget": {
+        "sourceFile": "data/book-authored-remaining-v1.json",
+        "runtimeFile": "src/domains/learning/book-data/book-authored-remaining-v1.json",
+        "chapterId": "process-window",
+        "anchorSection": "Challenge the edges deliberately",
+        "insertionMode": "worked-example-plus-evidence-grid",
+        "suggestedSectionTitle": "Choose a robust region, not one optimum point"
+      },
+      "secondaryCrossReferences": ["doe", "capability"]
+    }
+  ],
+  "integrationOrder": [
+    "hot-runners",
+    "black-specks",
+    "cooling",
+    "pressure-loss",
+    "warpage",
+    "process-window",
+    "documentation",
+    "process-monitoring",
+    "multi-cavity",
+    "mould-anatomy"
+  ],
+  "preMergeChecks": [
+    "source/runtime Book file pairs remain byte-identical",
+    "all added numeric values remain source-context labelled",
+    "synthetic teaching values are visibly labelled synthetic",
+    "same-family studies remain grouped",
+    "publication authorization is not silently expanded",
+    "Book/release QA is rerun because learner-runtime bytes change",
+    "a new release identity is chosen deliberately rather than relabelling the 2026.09.14.4 physical-device candidate"
+  ]
+}
