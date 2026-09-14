@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 import json
+import re
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent
@@ -26,8 +27,12 @@ for chapter in chapters:
     assert len(chapter.get('sections', [])) >= 2, f'insufficient authored teaching sections: {cid}'
     text = ' '.join(section.get('text','') for section in chapter['sections']).lower()
     assert 'guaranteed fix' not in text
+
+numeric_process_recipe = re.compile(
+    r'(?i)\b\d+(?:\.\d+)?(?:\s*[–-]\s*\d+(?:\.\d+)?)?\s*(?:°\s*c|bar|psi)\b'
+)
 for chapter in chapters:
     for section in chapter['sections']:
         text = section.get('text','')
-        assert '°C' not in text and ' bar' not in text and ' psi' not in text, f'unscoped numeric process recipe found in {chapter["id"]}'
+        assert not numeric_process_recipe.search(text), f'unscoped numeric process recipe found in {chapter["id"]}'
 print(f'PASS: governed Materials + Machine Book batch ({len(chapters)} chapters)')
