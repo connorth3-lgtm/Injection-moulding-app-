@@ -28,14 +28,10 @@ PRIORITY_ASSETS = [
     "./src/domains/process/evidence-granularity.js",
     "./src/domains/learning/content-intelligence.js",
 ]
-DATA_ASSETS = [
-    "./material-catalog-v1.json",
-    "./src/domains/learning/book-data/book-manifest-v1.json",
-    "./src/domains/learning/book-data/book-authored-foundations-v1.json",
-    "./src/domains/learning/book-data/book-evidence-registry-v1.json",
-    "./src/domains/learning/book-data/book-chapters-materials-machine-v1.json",
-    "./src/domains/learning/book-data/book-authored-remaining-v1.json",
-]
+# runtime-domain-manifest dataAssets remains the canonical validated material-data
+# channel. Other packaged domain data (such as Book JSON) is governed and hashed by
+# its owning feature/package checks rather than widening this material invariant.
+DATA_ASSETS = ["./material-catalog-v1.json"]
 # Generated classic-script packs are injected synchronously by index.html at
 # specific legacy ordering boundaries. Loading them again through the async
 # domain manifest would execute their source parts twice.
