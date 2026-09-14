@@ -106,7 +106,6 @@ const OPTIONAL=[
   './assessment-final-hardening.js',
   './assessment-ux.js',
   './source-library.js',
-  './quality-management.js',
   './measured-evidence-integration.js',
   './measured-evidence-decision.js',
   './measured-learning-library.js',

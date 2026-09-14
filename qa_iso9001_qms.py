@@ -8,7 +8,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent
 SOURCE = ROOT / "data" / "quality-management-iso9001-v1.json"
 RUNTIME = ROOT / "src" / "domains" / "quality" / "data" / "quality-management-iso9001-v1.json"
-RUNTIME_JS = ROOT / "quality-management.js"
+RUNTIME_JS = ROOT / "source-library.js"
 BOOK_SOURCE = ROOT / "data" / "book-evidence-enrichment-v1.json"
 BOOK_RUNTIME = ROOT / "src" / "domains" / "learning" / "book-data" / "book-evidence-enrichment-v1.json"
 
@@ -65,8 +65,9 @@ for marker in [
     "MM_ISO9001_QMS",
 ]:
     need(marker in runtime, f"QMS runtime marker missing: {marker}")
-need("localStorage" not in runtime and "indexedDB" not in runtime, "QMS support must remain read-only and must not create a shadow controlled-record store")
-need("fetch(DATA_URL" in runtime, "QMS runtime must load governed data contract")
+qms_runtime = runtime[runtime.index('/* MouldMaster ISO 9001 QMS support — 2026.09.15.2 */'):]
+need("localStorage" not in qms_runtime and "indexedDB" not in qms_runtime, "QMS support must remain read-only and must not create a shadow controlled-record store")
+need("fetch(DATA_URL" in qms_runtime, "QMS runtime must load governed data contract")
 
 need(BOOK_SOURCE.read_bytes() == BOOK_RUNTIME.read_bytes(), "Book enrichment source/runtime pair drifted")
 book = load(BOOK_SOURCE)
@@ -79,9 +80,10 @@ index = (ROOT / "index.html").read_text(encoding="utf-8")
 sw = (ROOT / "service-worker.js").read_text(encoding="utf-8")
 version = load(ROOT / "version.json")
 need(version.get("web_release") == "2026.09.15.2", "QMS learner-runtime integration requires web release 2026.09.15.2")
-need("['./quality-management.js','<script src=\"./quality-management.js\">']" in index, "QMS runtime not loaded by shell")
+need("['./quality-management.js','<script src=\"./quality-management.js\">']" not in index, "QMS support must not add a new bootstrap script")
+need("['./source-library.js','<script src=\"./source-library.js\">']" in index, "governed source-library runtime missing from shell")
 for asset in [
-    "'./quality-management.js'",
+    "'./source-library.js'",
     "'./src/domains/quality/data/quality-management-iso9001-v1.json'",
 ]:
     need(asset in sw, f"QMS offline asset missing: {asset}")
