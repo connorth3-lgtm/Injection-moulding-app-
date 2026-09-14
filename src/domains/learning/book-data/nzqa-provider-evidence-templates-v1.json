@@ -1,0 +1,51 @@
+{
+  "schema": 1,
+  "id": "mouldmaster-nzqa-provider-evidence-templates",
+  "status": "technical-review",
+  "checked": "2026-09-15",
+  "privacyBoundary": "Templates define non-sensitive fields and references only. Do not commit learner PII, customer names, proprietary part data, private attachments, assessor signatures, or raw confidential workplace records to public repository artifacts.",
+  "templates": [
+    {
+      "id": "stakeholder-need",
+      "purpose": "Document actual learner/employer/industry need and stakeholder support.",
+      "fields": ["recordRef", "stakeholderRole", "organisationRef", "date", "consentState", "needIdentified", "affectedOutcomeRefs", "requestedChanges", "pilotInterest", "quotePermission", "followUpAction"],
+      "externalEvidenceRequired": true
+    },
+    {
+      "id": "workload-study",
+      "purpose": "Build defensible notional learning hours before proposing credits.",
+      "fields": ["componentRef", "outcomeRefs", "guidedHours", "independentHours", "formativeHours", "caseHours", "summativeHours", "workplaceHours", "feedbackReassessmentHours", "learnerCohortBasis", "evidenceRef", "reviewerRef"],
+      "rule": "Do not derive credits from screen time or existing lesson count."
+    },
+    {
+      "id": "assessment-evidence",
+      "purpose": "Preserve provider-controlled assessment identity, judgement and evidence references.",
+      "fields": ["learnerRef", "assessmentRef", "assessmentVersion", "outcomeRef", "standardRef", "evidenceType", "contextRef", "collectedAt", "assessorRef", "judgement", "judgementRationale", "moderationState", "moderationRef", "reassessmentRef", "limitations", "retentionRef"],
+      "providerControlled": true
+    },
+    {
+      "id": "workplace-observation",
+      "purpose": "Record authorised practical evidence when a real performance outcome requires observation.",
+      "fields": ["observationRef", "learnerRef", "outcomeRef", "standardRef", "siteRef", "machineRef", "mouldRef", "materialRef", "authorisationRef", "taskObserved", "hazardControlCheck", "evidenceObserved", "escalationObserved", "assessorRef", "judgement", "limitations", "retentionRef"],
+      "rule": "Simulation and app records cannot substitute for required workplace practical evidence."
+    },
+    {
+      "id": "moderation-record",
+      "purpose": "Record pre-assessment, post-assessment or external moderation evidence and actions.",
+      "fields": ["moderationRef", "assessmentRef", "standardRef", "outcomeRef", "moderatorRef", "moderationType", "sampleMethod", "sampleRefs", "validityFinding", "sufficiencyFinding", "consistencyFinding", "fairnessFinding", "actionRequired", "actionOwner", "dueDate", "completionEvidence", "closedAt", "externalModerationRef"],
+      "providerControlled": true
+    },
+    {
+      "id": "assessor-capability",
+      "purpose": "Reference evidence that an assessor/verifier/moderator has the required provider/CMR capability.",
+      "fields": ["personRef", "role", "industryCompetenceRef", "assessmentPracticeRef", "siteAuthorityRef", "standardScope", "conflictCheck", "professionalDevelopmentRef", "moderationParticipationRef", "approvedBy", "reviewDate"],
+      "providerControlled": true
+    },
+    {
+      "id": "credential-review-change",
+      "purpose": "Preserve the review and change-control decision trail for an approved provider-owned offering.",
+      "fields": ["reviewRef", "offeringRef", "reviewDate", "stakeholderEvidenceRefs", "learnerOutcomeEvidenceRefs", "sourceStatusCheck", "standardStatusCheck", "changesProposed", "impactAssessment", "nzqaConsentRequired", "providerApprovalRef", "effectiveVersion", "supersedesRef", "nextReviewTrigger"],
+      "providerControlled": true
+    }
+  ]
+}
