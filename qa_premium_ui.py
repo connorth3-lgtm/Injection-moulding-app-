@@ -1,0 +1,59 @@
+#!/usr/bin/env python3
+from pathlib import Path
+import json
+import re
+
+ROOT=Path(__file__).resolve().parent
+
+def need(ok,msg):
+    if not ok: raise AssertionError(msg)
+
+def text(path): return (ROOT/path).read_text(encoding='utf-8')
+
+version=json.loads(text('version.json'))
+need(version.get('web_release')=='2026.09.15.7','premium UI release must be 2026.09.15.7')
+css=text('premium-ui.css')
+for marker in [
+    '--mm-surface-0','--mm-accent','--mm-radius-xl','--mm-shadow-lg',
+    '.sidebar{','.hero-main{','.mm-primary-hub','.lesson-body{','.exam-card{',
+    '.table-wrap{','.modal-card{','.mobile-nav{','prefers-reduced-motion','forced-colors:active'
+]:
+    need(marker in css,f'premium UI stylesheet missing governed marker: {marker}')
+need('http://' not in css and 'https://' not in css,'premium UI must remain fully local/offline')
+need('@import' not in css.lower(),'premium UI must not import remote or implicit stylesheets')
+need(css.count('!important') < 220,'premium UI override specificity grew beyond governed ceiling')
+
+index=text('index.html')
+need("['premium-ui.css','<link rel=\"stylesheet\" href=\"./premium-ui.css\">']" in index,'premium UI stylesheet must load in first-paint HEAD assets')
+need('const SHELL_RELEASE="2026.09.15.7";' in index,'shell release marker stale')
+
+sw=text('service-worker.js')
+need("const CACHE_VERSION='2026.09.15.7';" in sw,'service-worker release marker stale')
+need("'./premium-ui.css'" in sw,'premium UI stylesheet missing from atomic offline cache')
+
+pwa=text('pwa-shell.js')
+need("const RELEASE='2026.09.15.7';" in pwa,'PWA shell release marker stale')
+
+pkg=json.loads(text('desktop/electron/package.json'))
+extra=[str(x.get('from','')).replace('../../','') for x in pkg.get('build',{}).get('extraResources',[])]
+need('premium-ui.css' in extra,'desktop package must include premium UI stylesheet')
+
+integrity=text('desktop/electron/scripts/generate-integrity.cjs')
+need("'premium-ui.css'" in integrity,'desktop integrity manifest must hash premium UI stylesheet')
+desktop_qa=text('desktop/electron/scripts/qa.cjs')
+need("'premium-ui.css'" in desktop_qa,'desktop QA must require premium UI stylesheet')
+
+release_qa=text('qa_release.py')
+need('"premium-ui.css"' in release_qa,'release QA must require premium UI offline governance')
+
+workflow=text('.github/workflows/qa.yml')
+need('python qa_premium_ui.py' in workflow,'Release QA must execute premium UI governance')
+mobile=text('.github/workflows/mobile-browser-qa.yml')
+need("'premium-ui.css'" in mobile,'Mobile Browser QA trigger must include premium UI changes')
+need("'qa/premium-ui.spec.js'" in mobile,'Mobile Browser QA trigger must include premium UI browser contract')
+
+spec=text('qa/premium-ui.spec.js')
+for marker in ['premium UI stylesheet is active','no horizontal overflow','reduced motion','forced-colour-safe']:
+    need(marker in spec,f'premium browser contract missing: {marker}')
+
+print('PASS: premium industrial UI is first-paint, offline, desktop-integrity, accessibility and browser-regression governed.')
