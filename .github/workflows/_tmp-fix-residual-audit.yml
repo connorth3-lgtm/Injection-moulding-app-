@@ -51,7 +51,7 @@ jobs:
       - name: Commit permanent remediation
         run: |
           git add -A
-          git reset .github/workflows/_tmp-fix-residual-audit.yml tools/_tmp_fix_residual_audit.py tools/_tmp_fix_residual_followup.py
+          git reset .github/workflows/_tmp-fix-residual-audit.yml .github/workflows/_tmp-recovery-history.yml tools/_tmp_fix_residual_audit.py tools/_tmp_fix_residual_followup.py
           if git diff --cached --quiet; then
             echo 'No permanent remediation changes were produced.'
             exit 1
