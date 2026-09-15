@@ -1,0 +1,66 @@
+name: Build Settled 2026.09.15.6 Candidate
+
+on:
+  push:
+    branches: [fix/audit-remediation-2026-09-16]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: build-settled-2026-09-15-6-candidate
+  cancel-in-progress: false
+
+jobs:
+  candidate:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+          ref: fix/audit-remediation-2026-09-16
+      - uses: actions/setup-python@v7
+        with:
+          python-version: '3.12'
+      - name: Validate settled runtime
+        run: |
+          python qa_release.py
+          python qa_release_docs.py
+          python qa_book_release_integration.py
+          python qa_audit_remediation_20260915_6.py
+          python tools/externalize_core_scripts.py --check
+          python tools/generate_runtime_manifest.py --check
+      - name: Build exact public candidate
+        run: |
+          python tools/build_pages_artifact.py
+          fp="$(python tools/verify_pwa_physical_evidence.py --artifact .pages-dist --print-fingerprint)"
+          echo "$fp"
+          test "$fp" = "sha256:5ba0738492ee3e9747150f4638ad327f91786a7a972d68162e08af276543045f"
+          test ! -e .pages-dist/MouldMaster_Core_App.html
+          test -f .pages-dist/src/core-runtime/core-source.txt
+          cmp -s MouldMaster_Core_App.html .pages-dist/src/core-runtime/core-source.txt
+      - name: Stage candidate
+        run: |
+          rm -rf physical-pwa-candidate
+          mkdir physical-pwa-candidate
+          cp -a .pages-dist/. physical-pwa-candidate/
+          test "$(python tools/verify_pwa_physical_evidence.py --artifact physical-pwa-candidate --print-fingerprint)" = "sha256:5ba0738492ee3e9747150f4638ad327f91786a7a972d68162e08af276543045f"
+      - name: Upload exact candidate
+        uses: actions/upload-artifact@v7
+        with:
+          name: physical-pwa-candidate-${{ github.sha }}
+          path: physical-pwa-candidate
+          retention-days: 30
+          if-no-files-found: error
+          compression-level: 6
+          overwrite: false
+          include-hidden-files: false
+      - name: Candidate summary
+        run: |
+          {
+            echo '### Settled 2026.09.15.6 candidate'
+            echo 'Source SHA: `${{ github.sha }}`'
+            echo 'Runtime fingerprint: `sha256:5ba0738492ee3e9747150f4638ad327f91786a7a972d68162e08af276543045f`'
+            echo 'External device/human validation remains HOLD.'
+          } >> "$GITHUB_STEP_SUMMARY"
