@@ -1,0 +1,48 @@
+name: Temporary assessment pack migration
+
+on:
+  push:
+    branches:
+      - pack-assessment-foundation-runtime-2026-09-15
+
+permissions:
+  contents: write
+
+jobs:
+  migrate:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout branch
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          ref: pack-assessment-foundation-runtime-2026-09-15
+          fetch-depth: 2
+      - name: Apply coordinated migration
+        run: python tools/tmp_assessment_pack_migration.py
+      - name: Validate deterministic pack and core contracts
+        run: |
+          node --check src/domains/runtime-packs/assessment-foundation-runtime-pack.js
+          python qa_architecture_debt.py
+          python qa_app_wide_audit.py
+          python qa_100_pass.py
+          python qa_question_deep_dive.py
+          python qa_assessment_quality.py
+          python qa_assessment_storage_scope.py
+          python qa_assessment_final_hardening.py
+          python qa_runtime_hardening.py
+          python qa_release.py
+          python qa_release_docs.py
+          python qa_book_release_integration.py
+          python tools/verify_release_external_validation.py
+      - name: Commit migration or verify committed release bump
+        run: |
+          git add -A
+          if git diff --cached --quiet; then
+            python qa_runtime_release_bump.py
+            echo "Assessment pack migration is committed and release-bound."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "Pack assessment foundation runtime"
+          git push origin HEAD:pack-assessment-foundation-runtime-2026-09-15
