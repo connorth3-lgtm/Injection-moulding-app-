@@ -29,6 +29,7 @@ jobs:
       - name: Apply residual audit remediation
         run: |
           python tools/_tmp_fix_residual_audit.py
+          python tools/_tmp_fix_residual_followup.py
           python tools/build_runtime_packs.py
       - name: Run focused correctness contracts
         run: |
@@ -50,7 +51,7 @@ jobs:
       - name: Commit permanent remediation
         run: |
           git add -A
-          git reset .github/workflows/_tmp-fix-residual-audit.yml tools/_tmp_fix_residual_audit.py
+          git reset .github/workflows/_tmp-fix-residual-audit.yml tools/_tmp_fix_residual_audit.py tools/_tmp_fix_residual_followup.py
           if git diff --cached --quiet; then
             echo 'No permanent remediation changes were produced.'
             exit 1
