@@ -135,7 +135,7 @@ must(service_worker, [
 core = worker_assets(service_worker, "CORE")
 optional = worker_assets(service_worker, "OPTIONAL")
 require("./MouldMaster_Academy_App.html" not in core | optional, "PWA hardening: frozen legacy Academy app must not be a current cached asset")
-for required_asset in ("./index.html", "./MouldMaster_Core_App.html", "./pwa-shell.js", "./src/domains/domain-bootstrap.js", "./src/domains/engineering/engineering-store.js", "./material-catalog-v1.json"):
+for required_asset in ("./index.html", "./src/core-runtime/core-source.txt", "./pwa-shell.js", "./src/domains/domain-bootstrap.js", "./src/domains/engineering/engineering-store.js", "./material-catalog-v1.json"):
     require(required_asset in core, f"PWA hardening: required core asset missing: {required_asset}")
 install = service_worker[service_worker.index("self.addEventListener('install'"):service_worker.index("self.addEventListener('activate'")]
 require("cache.addAll" not in install, "service-worker install should identify the exact failed assets rather than use opaque addAll failure")

@@ -23,6 +23,22 @@ pruner = text(".github/workflows/prune-merged-branches.yml")
 ruleset = text("tools/verify_main_ruleset.py")
 attestation = json.loads(text(".github/main-ruleset-attestation.json"))
 
+# The question-evidence approval gate may need to read an older approved Git blob so
+# unrelated core-shell edits can be distinguished from assessment-bearing changes.
+# Every workflow that can execute that gate must therefore retain full history.
+assessment_history_workflows = {
+    "release QA": text(".github/workflows/qa.yml"),
+    "fast feedback": text(".github/workflows/fast-feedback.yml"),
+    "open desktop build": text(".github/workflows/open-desktop-build.yml"),
+    "Microsoft Store MSIX": text(".github/workflows/microsoft-store-msix.yml"),
+    "desktop publication": text(".github/workflows/publish-open-desktop.yml"),
+}
+for label, workflow in assessment_history_workflows.items():
+    need("qa_assessment_evidence.py" in workflow or "qa_fast_feedback.py" in workflow,
+         f"{label} no longer exposes the assessment-evidence execution path")
+    need("fetch-depth: 0" in workflow,
+         f"{label} must keep full Git history for historical assessment-evidence approval blobs")
+
 # Pages permissions are deny-by-default and granted only per job.
 need("name: MouldMaster Pages Release Readiness" in pages, "Pages workflow name does not describe release-readiness policy")
 need("permissions: {}" in pages, "Pages workflow must deny token permissions by default")
@@ -163,7 +179,7 @@ self_test = subprocess.run(
 need(self_test.returncode == 0, f"ruleset verifier self-test failed: {self_test.stderr or self_test.stdout}")
 
 print(
-    "Audit governance QA passed: least-privilege Pages permissions, physical-test runtime fingerprint reporting, "
-    "production-root fail-closed gating with a separated non-production learner preview and local-only device metadata helper, "
-    "live branch-prune SHA recheck and fail-closed ruleset bypass verification are enforced."
+    "Audit governance QA passed: assessment-evidence workflows retain full Git history, least-privilege Pages permissions, "
+    "physical-test runtime fingerprint reporting, production-root fail-closed gating with a separated non-production learner preview "
+    "and local-only device metadata helper, live branch-prune SHA recheck and fail-closed ruleset bypass verification are enforced."
 )

@@ -1,7 +1,7 @@
 /* MouldMaster Book runtime — evidence-governed publication authorization. */
 (function(){
   'use strict';
-  const VERSION='2026.09.15.5';
+  const VERSION='2026.09.15.6';
   if(window.MMBook?.version===VERSION)return;
   const AUTH_PATH='./data/book-publication-authorization-v1.json';
   const SME_PATH='./data/book-sme-review-v1.json';
