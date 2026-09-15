@@ -1,0 +1,290 @@
+{
+  "schema": 1,
+  "checked_at": "2026-09-15T02:04:55Z",
+  "mode": "static",
+  "manifest_reviewed": "2026-08-26",
+  "manifest_review_by": "2026-11-26",
+  "doi_count": 70,
+  "source_file_counts": {
+    "assessment-deep-dive.js": 6,
+    "assessment-quality-suite.js": 15,
+    "assessment-evidence-sources.js": 8,
+    "evidence-maturity-deep-dive.js": 10,
+    "evidence-maturity-formal-bridge.js": 0,
+    "lesson-evidence-depth.js": 8,
+    "reference-research-extension.js": 3,
+    "reference-20x-extension.js": 45,
+    "source-library.js": 2,
+    "sources/QUESTION_BANK_DEEP_DIVE.md": 0,
+    "sources/RESEARCH_20X_SOURCE_REGISTER.md": 28,
+    "sources/DEEP_DIVE_SOURCE_REGISTER.md": 0
+  },
+  "source_locations": {
+    "https://doi.org/10.1002/pen.10186": [
+      "assessment-deep-dive.js",
+      "assessment-evidence-sources.js"
+    ],
+    "https://doi.org/10.3390/polym15040978": [
+      "assessment-deep-dive.js"
+    ],
+    "https://doi.org/10.1007/s00170-023-11100-1": [
+      "assessment-deep-dive.js",
+      "assessment-evidence-sources.js",
+      "assessment-quality-suite.js"
+    ],
+    "https://doi.org/10.3390/polym13234087": [
+      "assessment-deep-dive.js",
+      "assessment-quality-suite.js",
+      "reference-20x-extension.js"
+    ],
+    "https://doi.org/10.1515/ipp-2022-4281": [
+      "assessment-deep-dive.js",
+      "assessment-evidence-sources.js"
+    ],
+    "https://doi.org/10.1007/s13367-023-00081-y": [
+      "assessment-deep-dive.js",
+      "assessment-quality-suite.js"
+    ],
+    "https://doi.org/10.3390/polym16081057": [
+      "assessment-evidence-sources.js",
+      "assessment-quality-suite.js",
+      "reference-20x-extension.js",
+      "sources/RESEARCH_20X_SOURCE_REGISTER.md"
+    ],
+    "https://doi.org/10.1007/s00170-019-04697-9": [
+      "assessment-quality-suite.js",
+      "reference-research-extension.js"
+    ],
+    "https://doi.org/10.3390/s22134792": [
+      "assessment-evidence-sources.js",
+      "assessment-quality-suite.js"
+    ],
+    "https://doi.org/10.1007/s40684-020-00226-2": [
+      "assessment-quality-suite.js",
+      "reference-20x-extension.js"
+    ],
+    "https://doi.org/10.1088/1361-6501/ad1c4c": [
+      "assessment-quality-suite.js",
+      "reference-20x-extension.js",
+      "sources/RESEARCH_20X_SOURCE_REGISTER.md"
+    ],
+    "https://doi.org/10.1109/tim.2024.3522402": [
+      "assessment-quality-suite.js",
+      "reference-20x-extension.js",
+      "sources/RESEARCH_20X_SOURCE_REGISTER.md"
+    ],
+    "https://doi.org/10.1002/app.50294": [
+      "assessment-evidence-sources.js",
+      "assessment-quality-suite.js",
+      "reference-20x-extension.js",
+      "sources/RESEARCH_20X_SOURCE_REGISTER.md"
+    ],
+    "https://doi.org/10.3390/polym13193236": [
+      "assessment-quality-suite.js",
+      "reference-20x-extension.js",
+      "sources/RESEARCH_20X_SOURCE_REGISTER.md"
+    ],
+    "https://doi.org/10.1002/pen.26700": [
+      "assessment-quality-suite.js",
+      "reference-20x-extension.js",
+      "sources/RESEARCH_20X_SOURCE_REGISTER.md"
+    ],
+    "https://doi.org/10.3390/polym14061078": [
+      "assessment-quality-suite.js",
+      "reference-20x-extension.js",
+      "sources/RESEARCH_20X_SOURCE_REGISTER.md"
+    ],
+    "https://doi.org/10.1515/ipp-2022-0014": [
+      "assessment-quality-suite.js",
+      "reference-20x-extension.js"
+    ],
+    "https://doi.org/10.4028/p-q2k0v8": [
+      "assessment-quality-suite.js",
+      "reference-research-extension.js"
+    ],
+    "https://doi.org/10.1002/pen.26836": [
+      "assessment-evidence-sources.js"
+    ],
+    "https://doi.org/10.1016/j.polymertesting.2021.107068": [
+      "assessment-evidence-sources.js",
+      "source-library.js"
+    ],
+    "https://doi.org/10.1002/pen.26246": [
+      "evidence-maturity-deep-dive.js"
+    ],
+    "https://doi.org/10.3390/en10111768": [
+      "evidence-maturity-deep-dive.js",
+      "lesson-evidence-depth.js",
+      "reference-20x-extension.js",
+      "sources/RESEARCH_20X_SOURCE_REGISTER.md"
+    ],
+    "https://doi.org/10.3390/mi14071337": [
+      "evidence-maturity-deep-dive.js",
+      "reference-20x-extension.js",
+      "sources/RESEARCH_20X_SOURCE_REGISTER.md"
+    ],
+    "https://doi.org/10.3390/polym15132879": [
+      "evidence-maturity-deep-dive.js"
+    ],
+    "https://doi.org/10.1016/0141-3910(90)90052-9": [
+      "evidence-maturity-deep-dive.js"
+    ],
+    "https://doi.org/10.1016/j.procir.2013.09.052": [
+      "evidence-maturity-deep-dive.js"
+    ],
+    "https://doi.org/10.1038/s41598-024-80405-2": [
+      "evidence-maturity-deep-dive.js",
+      "reference-20x-extension.js",
+      "sources/RESEARCH_20X_SOURCE_REGISTER.md"
+    ],
+    "https://doi.org/10.1186/s12909-024-05433-y": [
+      "evidence-maturity-deep-dive.js"
+    ],
+    "https://doi.org/10.34293/education.v11i3.6081": [
+      "evidence-maturity-deep-dive.js"
+    ],
+    "https://doi.org/10.3390/polym14163352": [
+      "evidence-maturity-deep-dive.js"
+    ],
+    "https://doi.org/10.3390/s24072205": [
+      "lesson-evidence-depth.js"
+    ],
+    "https://doi.org/10.1007/s00170-024-13263-x": [
+      "lesson-evidence-depth.js"
+    ],
+    "https://doi.org/10.3390/polym17172360": [
+      "lesson-evidence-depth.js"
+    ],
+    "https://doi.org/10.3390/pr11020411": [
+      "lesson-evidence-depth.js"
+    ],
+    "https://doi.org/10.3389/frai.2020.578152": [
+      "lesson-evidence-depth.js",
+      "reference-20x-extension.js",
+      "sources/RESEARCH_20X_SOURCE_REGISTER.md"
+    ],
+    "https://doi.org/10.1007/s00170-025-15611-x": [
+      "lesson-evidence-depth.js"
+    ],
+    "https://doi.org/10.3390/polym16070895": [
+      "lesson-evidence-depth.js"
+    ],
+    "https://doi.org/10.3390/app13137437": [
+      "reference-research-extension.js"
+    ],
+    "https://doi.org/10.1007/s44347-025-00013-9": [
+      "reference-20x-extension.js",
+      "sources/RESEARCH_20X_SOURCE_REGISTER.md"
+    ],
+    "https://doi.org/10.3390/app12031410": [
+      "reference-20x-extension.js",
+      "sources/RESEARCH_20X_SOURCE_REGISTER.md"
+    ],
+    "https://doi.org/10.1002/app.70411": [
+      "reference-20x-extension.js",
+      "sources/RESEARCH_20X_SOURCE_REGISTER.md"
+    ],
+    "https://doi.org/10.1080/0951192x.2020.1829062": [
+      "reference-20x-extension.js",
+      "sources/RESEARCH_20X_SOURCE_REGISTER.md"
+    ],
+    "https://doi.org/10.3390/machines12040255": [
+      "reference-20x-extension.js",
+      "sources/RESEARCH_20X_SOURCE_REGISTER.md"
+    ],
+    "https://doi.org/10.3390/polym16162318": [
+      "reference-20x-extension.js"
+    ],
+    "https://doi.org/10.1016/j.compositesa.2022.107239": [
+      "reference-20x-extension.js"
+    ],
+    "https://doi.org/10.1007/s12221-021-0964-3": [
+      "reference-20x-extension.js"
+    ],
+    "https://doi.org/10.3390/act13090376": [
+      "reference-20x-extension.js",
+      "sources/RESEARCH_20X_SOURCE_REGISTER.md"
+    ],
+    "https://doi.org/10.1155/2021/9960021": [
+      "reference-20x-extension.js",
+      "sources/RESEARCH_20X_SOURCE_REGISTER.md"
+    ],
+    "https://doi.org/10.3390/math11122619": [
+      "reference-20x-extension.js"
+    ],
+    "https://doi.org/10.3390/s21155193": [
+      "reference-20x-extension.js",
+      "sources/RESEARCH_20X_SOURCE_REGISTER.md"
+    ],
+    "https://doi.org/10.1007/s00170-020-06011-4": [
+      "reference-20x-extension.js"
+    ],
+    "https://doi.org/10.1109/iccia61416.2023.10506371": [
+      "reference-20x-extension.js"
+    ],
+    "https://doi.org/10.1109/access.2023.3271748": [
+      "reference-20x-extension.js"
+    ],
+    "https://doi.org/10.1016/j.cirpj.2020.07.006": [
+      "reference-20x-extension.js",
+      "sources/RESEARCH_20X_SOURCE_REGISTER.md"
+    ],
+    "https://doi.org/10.3390/electronics12020271": [
+      "reference-20x-extension.js",
+      "sources/RESEARCH_20X_SOURCE_REGISTER.md"
+    ],
+    "https://doi.org/10.34657/18916": [
+      "reference-20x-extension.js"
+    ],
+    "https://doi.org/10.3390/ma17081855": [
+      "reference-20x-extension.js",
+      "sources/RESEARCH_20X_SOURCE_REGISTER.md"
+    ],
+    "https://doi.org/10.1007/s10098-024-02818-x": [
+      "reference-20x-extension.js",
+      "sources/RESEARCH_20X_SOURCE_REGISTER.md"
+    ],
+    "https://doi.org/10.3390/polym12091901": [
+      "reference-20x-extension.js",
+      "sources/RESEARCH_20X_SOURCE_REGISTER.md"
+    ],
+    "https://doi.org/10.1111/jiec.13277": [
+      "reference-20x-extension.js",
+      "sources/RESEARCH_20X_SOURCE_REGISTER.md"
+    ],
+    "https://doi.org/10.3390/ma16144952": [
+      "reference-20x-extension.js"
+    ],
+    "https://doi.org/10.31803/tg-20210531204548": [
+      "reference-20x-extension.js"
+    ],
+    "https://doi.org/10.1155/2022/7280643": [
+      "reference-20x-extension.js"
+    ],
+    "https://doi.org/10.3390/mi11060614": [
+      "reference-20x-extension.js",
+      "sources/RESEARCH_20X_SOURCE_REGISTER.md"
+    ],
+    "https://doi.org/10.1002/adem.202502009": [
+      "reference-20x-extension.js"
+    ],
+    "https://doi.org/10.14710/jati.20.2.104-110": [
+      "reference-20x-extension.js"
+    ],
+    "https://doi.org/10.1115/1.4065847": [
+      "reference-20x-extension.js",
+      "sources/RESEARCH_20X_SOURCE_REGISTER.md"
+    ],
+    "https://doi.org/10.1016/j.prostr.2024.01.043": [
+      "reference-20x-extension.js",
+      "sources/RESEARCH_20X_SOURCE_REGISTER.md"
+    ],
+    "https://doi.org/10.1002/pc.70132": [
+      "reference-20x-extension.js"
+    ],
+    "https://doi.org/10.3390/polym14173646": [
+      "source-library.js"
+    ]
+  },
+  "results": []
+}

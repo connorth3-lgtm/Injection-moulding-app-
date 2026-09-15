@@ -1,4 +1,4 @@
-const CACHE_VERSION='2026.09.15.2';
+const CACHE_VERSION='2026.09.15.3';
 const CACHE_REVISION='engineer-simulator-ui-r1-20260911';
 const STATIC_CACHE=`mouldmaster-static-${CACHE_VERSION}-${CACHE_REVISION}`;
 
@@ -28,6 +28,7 @@ const CORE=[
   './mobile-lesson-fix.css',
   './learner-ux-repair.css',
   './src/domains/runtime-packs/learning-foundation-runtime-pack.js',
+  './src/domains/runtime-packs/assessment-foundation-runtime-pack.js',
   './read-aloud.js',
   './runtime-v2.js',
   './assessment-runtime-v2.js',
@@ -93,14 +94,6 @@ const CORE=[
 const OPTIONAL=[
   './src/domains/runtime-packs/evidence-runtime-pack.js',
   './src/domains/runtime-packs/process-data-runtime-pack.js',
-  './assessment-100-pass.js',
-  './assessment-deep-dive.js',
-  './assessment-answer-cue-fix.js',
-  './assessment-storage-scope.js',
-  './assessment-quality-suite.js',
-  './assessment-stable-review-bridge.js',
-  './assessment-analytics-ui.js',
-  './assessment-final-hardening.js',
   './assessment-ux.js',
   './source-library.js',
   './measured-evidence-integration.js',

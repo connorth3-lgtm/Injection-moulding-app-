@@ -153,8 +153,9 @@ reg=ROOT/"sources"/"ASSESSMENT_AND_DATA_100_PASS_AUDIT.md"
 audit(reg.exists() and "100-pass" in reg.read_text(encoding="utf-8").lower(),"100-pass register")
 idx=text("index.html")
 learning_pack="src/domains/runtime-packs/learning-foundation-runtime-pack.js"
-audit('<script src="./assessment-100-pass.js">' in idx and learning_pack in idx and idx.index(learning_pack)<idx.index("assessment-100-pass.js")<idx.index("source-library.js"),"shell audit load order")
-audit("'./assessment-100-pass.js'" in text("service-worker.js"),"offline audit asset")
+assessment_pack="src/domains/runtime-packs/assessment-foundation-runtime-pack.js"
+audit(assessment_pack in idx and learning_pack in idx and idx.index(learning_pack)<idx.index(assessment_pack)<idx.index("runtime-v2.js")<idx.index("source-library.js"),"shell audit pack load order")
+audit("'./src/domains/runtime-packs/assessment-foundation-runtime-pack.js'" in text("service-worker.js"),"offline assessment pack")
 P=json.loads(text("desktop/electron/package.json"))
 paths={x.get("from") for x in P["build"]["extraResources"] if isinstance(x,dict)}
 audit("../../assessment-100-pass.js" in paths,"desktop audit asset")

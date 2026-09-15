@@ -27,7 +27,7 @@ const BASE_FILES=[
   'process-data-deep-dive-quality.js','process-data-deep-dive-50.js','process-data-20-pass-01-05.js','process-data-20-pass-06-10.js',
   'process-data-20-pass-11-15.js','process-data-20-pass-16-20.js','process-data-20-pass-atlas.js','process-data-local-intake.js',
   'curriculum-integration.js','specialist-curriculum.js','specialist-evidence-gap-extension.js','mould-master-workspace.js',
-  'src/domains/domain-bootstrap.js',RUNTIME_MANIFEST,'src/domains/runtime-packs/learning-foundation-runtime-pack.js','src/domains/runtime-packs/evidence-runtime-pack.js','src/domains/runtime-packs/process-data-runtime-pack.js','app-shell-finalize.js','production-health.js','data-integration-runtime.js',
+  'src/domains/domain-bootstrap.js',RUNTIME_MANIFEST,'src/domains/runtime-packs/learning-foundation-runtime-pack.js','src/domains/runtime-packs/assessment-foundation-runtime-pack.js','src/domains/runtime-packs/evidence-runtime-pack.js','src/domains/runtime-packs/process-data-runtime-pack.js','app-shell-finalize.js','production-health.js','data-integration-runtime.js',
   'process-data-intelligence-ui.js','process-data-semantic-registry.json','current-data-manifest.json','learning-analytics.js','accessibility-hardening.js',
   'source-library.js','measured-evidence-integration.js','measured-evidence-decision.js','measured-learning-library.js','measured-learning-library.css',
   'reference-data.js','reference-data.html','reference-deep-dive.js','reference-research-extension.js','reference-20x-extension.js',

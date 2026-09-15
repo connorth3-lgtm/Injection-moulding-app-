@@ -116,10 +116,14 @@ V=json.loads(text('version.json'));need(V.get('question_bank_version')=='2026.08
 log=text('sources/QUESTION_BANK_CHANGELOG.md')
 for marker in ['2026.08.30.1','all 30 technical questions','insufficient evidence','2026.08.24.2','stable question IDs','device-local question analytics','competency-balanced exam blueprint','Expanded shop-floor scenario drills from 16 to 40','scheduled authoritative-source freshness monitoring']:need(marker in log,f'question-bank changelog marker missing: {marker}')
 idx=text('index.html')
-for asset in ['assessment-storage-scope.js','assessment-answer-cue-fix.js','assessment-quality-suite.js','assessment-stable-review-bridge.js','assessment-analytics-ui.js']:need(f'<script src="./{asset}">' in idx,f'{asset} not loaded by shell')
-need(idx.index('assessment-deep-dive.js')<idx.index('assessment-answer-cue-fix.js')<idx.index('assessment-storage-scope.js')<idx.index('assessment-quality-suite.js')<idx.index('assessment-stable-review-bridge.js')<idx.index('assessment-analytics-ui.js')<idx.index('source-library.js'),'assessment quality stack load order wrong')
+assessment_pack='src/domains/runtime-packs/assessment-foundation-runtime-pack.js'
+pack=text(assessment_pack)
+assessment_sources=['assessment-deep-dive.js','assessment-answer-cue-fix.js','assessment-storage-scope.js','assessment-quality-suite.js','assessment-stable-review-bridge.js','assessment-analytics-ui.js']
+need(assessment_pack in idx and all(f'<script src="./{asset}">' not in idx for asset in assessment_sources),'assessment quality stack must load through deterministic pack only')
+positions=[pack.index(f'/* >>> {asset} */') for asset in assessment_sources]
+need(positions==sorted(positions),'assessment quality pack source order wrong')
 sw=text('service-worker.js')
-for asset in ['assessment-storage-scope.js','assessment-answer-cue-fix.js','assessment-quality-suite.js','assessment-stable-review-bridge.js','assessment-analytics-ui.js']:need(f"'./{asset}'" in sw,f'{asset} not cached offline')
+need("'./src/domains/runtime-packs/assessment-foundation-runtime-pack.js'" in sw,'assessment quality pack not cached offline')
 pkg=json.loads(text('desktop/electron/package.json'));froms={x.get('from') for x in pkg['build']['extraResources'] if isinstance(x,dict)}
 for asset in ['assessment-storage-scope.js','assessment-answer-cue-fix.js','assessment-quality-suite.js','assessment-stable-review-bridge.js','assessment-analytics-ui.js']:need(f'../../{asset}' in froms,f'{asset} missing from desktop package')
 integrity=text('desktop/electron/scripts/generate-integrity.cjs')

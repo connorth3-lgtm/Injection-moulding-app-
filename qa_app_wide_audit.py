@@ -69,9 +69,10 @@ index = text("index.html")
 service_worker = text("service-worker.js")
 body_scripts = set(re.findall(r"\['(\./[^']+\.js)'\s*,\s*'<script", index))
 offline_assets = set(re.findall(r"^\s*'(\./[^']+)'\s*,?\s*$", service_worker, flags=re.M))
-need(len(body_scripts) >= 37, f"runtime BODY_SCRIPTS extraction unexpectedly small: {len(body_scripts)}")
+need(len(body_scripts) >= 30, f"runtime BODY_SCRIPTS extraction unexpectedly small: {len(body_scripts)}")
 runtime_packs = {
     "./src/domains/runtime-packs/learning-foundation-runtime-pack.js",
+    "./src/domains/runtime-packs/assessment-foundation-runtime-pack.js",
     "./src/domains/runtime-packs/evidence-runtime-pack.js",
     "./src/domains/runtime-packs/process-data-runtime-pack.js",
 }
@@ -89,6 +90,27 @@ for source in learning_sources:
     need(f'"{source}"' in pack_builder, f"runtime pack generator does not own learning source: {source}")
 need(positions == sorted(positions), "learning foundation pack source order drifted")
 need('"learning-foundation-runtime-pack.js"' in pack_builder, "learning foundation pack is missing from deterministic generator")
+assessment_sources = (
+    "assessment-100-pass.js",
+    "assessment-deep-dive.js",
+    "assessment-answer-cue-fix.js",
+    "assessment-storage-scope.js",
+    "assessment-quality-suite.js",
+    "assessment-stable-review-bridge.js",
+    "assessment-analytics-ui.js",
+    "assessment-final-hardening.js",
+)
+assessment_pack = text("src/domains/runtime-packs/assessment-foundation-runtime-pack.js")
+assessment_positions = []
+for source in assessment_sources:
+    marker = f"/* >>> {source} */"
+    need(marker in assessment_pack, f"assessment foundation runtime pack missing source marker: {source}")
+    assessment_positions.append(assessment_pack.index(marker))
+    need(f"// packed source './{source}'" in index, f"browser bootstrap does not document packed assessment source: {source}")
+    need(f"['./{source}','<script" not in index, f"retired assessment source is still directly injected: {source}")
+    need(f'"{source}"' in pack_builder, f"runtime pack generator does not own assessment source: {source}")
+need(assessment_positions == sorted(assessment_positions), "assessment foundation pack source order drifted")
+need('"assessment-foundation-runtime-pack.js"' in pack_builder, "assessment foundation pack is missing from deterministic generator")
 missing_files = sorted(src for src in body_scripts if not (ROOT / src.removeprefix("./")).is_file())
 need(not missing_files, f"runtime scripts referenced by index.html are missing: {missing_files}")
 missing_offline = sorted(body_scripts - offline_assets)
