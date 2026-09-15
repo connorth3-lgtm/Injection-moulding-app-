@@ -80,9 +80,34 @@ def main() -> int:
             if (ROOT / qa).exists():
                 commands.append([sys.executable, qa])
 
-    if any("process-data" in p or p in {"data-integration-runtime.js", "current-data-manifest.json"} for p in files):
-        if (ROOT / "qa_process_data_integrity.cjs").exists():
-            commands.append(["node", "qa_process_data_integrity.cjs"])
+    process_integrity_changed = any(
+        "process-data" in p
+        or p in {
+            "data-integration-runtime.js",
+            "process-data-intelligence-ui.js",
+            "current-data-manifest.json",
+            "qa_data_integration.py",
+            "qa_process_statistics_integrity.cjs",
+            "qa_process_data_integrity.cjs",
+        }
+        for p in files
+    )
+    if process_integrity_changed:
+        for qa in ["qa_process_statistics_integrity.cjs", "qa_process_data_integrity.cjs"]:
+            if (ROOT / qa).exists():
+                commands.append(["node", qa])
+        if (ROOT / "qa_data_integration.py").exists():
+            commands.append([sys.executable, "qa_data_integration.py"])
+
+    learner_identity_changed = bool(files & {
+        "training-qa-fix.js",
+        "qa_import_identity_integrity.cjs",
+        "qa_final_audit_lifecycle.cjs",
+    })
+    if learner_identity_changed:
+        for qa in ["qa_import_identity_integrity.cjs", "qa_final_audit_lifecycle.cjs"]:
+            if (ROOT / qa).exists():
+                commands.append(["node", qa])
 
     assessment_changed = any(
         p.startswith("assessment-")
@@ -133,6 +158,14 @@ def main() -> int:
     })
     if release_docs_changed and (ROOT / "qa_release_docs.py").exists():
         commands.append([sys.executable, "qa_release_docs.py"])
+
+    recovery_contract_changed = bool(files & {
+        "latest.json",
+        "tools/verify_frozen_recovery.py",
+        ".github/workflows/frozen-recovery-contract.yml",
+    })
+    if recovery_contract_changed and (ROOT / "tools/verify_frozen_recovery.py").exists():
+        commands.append([sys.executable, "tools/verify_frozen_recovery.py"])
 
     browser_contract_changed = any(
         p in {

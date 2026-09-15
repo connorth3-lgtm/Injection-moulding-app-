@@ -1,0 +1,12 @@
+const fs=require('fs'),vm=require('vm'),assert=require('assert');
+const memory=new Map();
+const localStorage={get length(){return memory.size},key(i){return [...memory.keys()][i]??null},getItem:k=>memory.has(k)?memory.get(k):null,setItem:(k,v)=>memory.set(k,String(v)),removeItem:k=>memory.delete(k)};
+const sandbox={console,localStorage,confirm:()=>false,alert:()=>{},document:{querySelectorAll:()=>[]},window:null,db:{},user:{},defaultDB:{activeUser:'learner-1',users:{'learner-1':{id:'learner-1'}}},normaliseImportedUser:(u,id)=>({...u,id}),updateGlobalProgress(){},switchView(){},renderProfile(){},resetData(){},activeExam:null,Blob:function(){},URL:{createObjectURL:()=>'',revokeObjectURL(){}},FileReader:function(){}};
+sandbox.window=sandbox;vm.createContext(sandbox);vm.runInContext(fs.readFileSync('training-qa-fix.js','utf8'),sandbox);
+const fn=sandbox.MM_TRAINING_DATA_BRIDGE.canonicalLearnerId;
+for(const good of ['learner-1','learner-1723456789012','learner-A','legacy.user:2','A_1'])assert.strictEqual(fn(good),good);
+for(const bad of ['', ' learner-1','learner 1','learner\"x','learner<x','learner\nx','x/'.repeat(50)])assert.throws(()=>fn(bad));
+const src=fs.readFileSync('training-qa-fix.js','utf8');
+assert(src.includes('const sid=canonicalLearnerId(id)'));assert(src.includes('canonicalLearnerId(u.id)!==sid'));assert(src.includes('const active=canonicalLearnerId(x.activeUser)'));
+assert(src.includes('Reset learner data'));assert(src.includes('Saved process-data evidence was not deleted'));
+console.log('Import identity integrity QA passed: learner IDs use a canonical safe allowlist with no truncation collision, active IDs are checked, embedded IDs must match, and learner reset states its separate process-data boundary.');

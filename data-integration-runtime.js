@@ -1,8 +1,8 @@
-/* MouldMaster connected process-data runtime — 2026.09.11.1 */
+/* MouldMaster connected process-data runtime — 2026.09.15.4 */
 (function(){
 'use strict';
 
-const VERSION='2026.09.11.1';
+const VERSION='2026.09.15.4';
 const DB_NAME='mouldmaster-process-data-v1';
 const DB_VERSION=1;
 const MAX_ROWS=50000;
@@ -19,18 +19,25 @@ let installQueued=false;
 function esc(v){return String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
 function safeToken(v,max=96){return String(v??'').replace(/[^a-zA-Z0-9:_\-. /]/g,'').slice(0,max)}
 function uid(prefix='id'){try{return `${prefix}-${crypto.randomUUID()}`}catch(_){return `${prefix}-${Date.now().toString(36)}-${Math.random().toString(36).slice(2,9)}`}}
-function num(v){const n=Number(v);return Number.isFinite(n)?n:null}
+function num(v){if(v==null)return null;if(typeof v==='string'&&!v.trim())return null;const n=Number(v);return Number.isFinite(n)?n:null}
 function mean(a){return a.length?a.reduce((s,x)=>s+x,0)/a.length:null}
 function variance(a,m=mean(a)){if(a.length<2||m==null)return 0;return a.reduce((s,x)=>s+(x-m)*(x-m),0)/(a.length-1)}
 function quantile(sorted,q){if(!sorted.length)return null;const p=(sorted.length-1)*q,l=Math.floor(p),h=Math.ceil(p);return l===h?sorted[l]:sorted[l]+(sorted[h]-sorted[l])*(p-l)}
 function stats(values){
-  const a=values.map(Number).filter(Number.isFinite).sort((x,y)=>x-y),m=mean(a),sd=Math.sqrt(variance(a,m));
+  const a=values.map(num).filter(x=>x!==null).sort((x,y)=>x-y),m=mean(a),sd=Math.sqrt(variance(a,m));
   return {n:a.length,min:a[0]??null,q1:quantile(a,.25),median:quantile(a,.5),q3:quantile(a,.75),max:a[a.length-1]??null,mean:m,sd};
 }
+function referenceScale(summary){
+  if(!summary||Number(summary.n)<2)return null;
+  const sdv=Math.abs(num(summary.sd)??0),q1=num(summary.q1),q3=num(summary.q3);
+  const robust=q1!==null&&q3!==null?Math.abs(q3-q1)/1.349:0,scale=Math.max(sdv,robust);
+  return Number.isFinite(scale)&&scale>0?scale:null;
+}
+function scoreSort(field){return (a,b)=>{const av=num(a?.[field]),bv=num(b?.[field]);if(av===null&&bv===null)return String(a.channel||'').localeCompare(String(b.channel||''));if(av===null)return 1;if(bv===null)return -1;return bv-av}}
 function roleToKind(role){
   return ({actual:'direct-measurement',setpoint:'command-signal',command:'command-signal',state:'state-signal',quality:'quality-measurement',derived:'derived-feature',structural:'structural',unresolved:'unresolved'})[role]||'unresolved';
 }
-function format(n,d=3){return Number.isFinite(Number(n))?Number(n).toLocaleString(undefined,{maximumFractionDigits:d}):'—'}
+function format(n,d=3){const v=num(n);return v===null?'—':v.toLocaleString(undefined,{maximumFractionDigits:d})}
 function normContext(value){return String(value??'').trim().toLowerCase()}
 function contextCompatibility(left={},right={}){
   const missing=[],mismatched=[];
@@ -114,18 +121,26 @@ function deleteCursorMatches(request,match){
     request.onerror=()=>reject(request.error||new Error('IndexedDB cursor failed'));
   });
 }
+async function countStore(db,storeName){return new Promise((resolve,reject)=>{const req=db.transaction(storeName,'readonly').objectStore(storeName).count();req.onsuccess=()=>resolve(Number(req.result)||0);req.onerror=()=>reject(req.error||new Error(`Could not count ${storeName}`))})}
 async function deleteDataset(id){
   const datasetId=String(id||'');if(!datasetId)throw new Error('Dataset id is required');
   const db=await openDb();
   try{
-    const tx=db.transaction(['datasets','shots','baselines','caseLinks'],'readwrite');
+    const tx=db.transaction(['datasets','shots','baselines','caseLinks','interventions'],'readwrite');
     tx.objectStore('datasets').delete(datasetId);
     const shots=tx.objectStore('shots').index('datasetId');
     await deleteCursorMatches(shots.openCursor(IDBKeyRange.only(datasetId)),()=>true);
     await deleteCursorMatches(tx.objectStore('baselines').openCursor(),row=>row?.datasetId===datasetId);
     await deleteCursorMatches(tx.objectStore('caseLinks').openCursor(),row=>row?.datasetId===datasetId);
+    await deleteCursorMatches(tx.objectStore('interventions').openCursor(),row=>row?.datasetId===datasetId);
     await txDone(tx);return true;
   }finally{db.close()}
+}
+async function deleteAllProcessData(){
+  const stores=['datasets','shots','baselines','caseLinks','interventions'],db=await openDb();
+  try{const tx=db.transaction(stores,'readwrite');for(const store of stores)tx.objectStore(store).clear();await txDone(tx)}finally{db.close()}
+  const verifyDb=await openDb();
+  try{const counts={};for(const store of stores)counts[store]=await countStore(verifyDb,store);const remaining=Object.values(counts).reduce((a,b)=>a+b,0);if(remaining)throw new Error(`Process-data reset verification failed: ${JSON.stringify(counts)}`);return Object.freeze({verified:true,counts})}finally{verifyDb.close()}
 }
 
 function knownDefinition(column){
@@ -276,19 +291,25 @@ async function compareToBaseline(datasetId,baselineId){
   const rows=await rowsForDataset(datasetId),cur=summarizeRows(rows,record.semantics),signals=[];
   for(const [key,b] of Object.entries(baseline.summary||{})){
     const c=cur[key];if(!c||c.mean==null||b.mean==null)continue;
-    const scale=Math.max(Math.abs(Number(b.sd)||0),Math.abs(Number(b.q3)-Number(b.q1))/1.349,1e-9);
-    const normalizedShift=Math.abs(c.mean-b.mean)/scale;
-    const variabilityRatio=(Number(b.sd)||0)>0?(Number(c.sd)||0)/(Number(b.sd)||0):null;
-    const level=normalizedShift>=3?'high':normalizedShift>=2?'review':'stable';
-    signals.push({channel:key,meaning:b.meaning||key,unit:b.unit||'',baselineMean:b.mean,currentMean:c.mean,normalizedShift,variabilityRatio,level});
+    const scale=referenceScale(b),normalizedShift=scale===null?null:Math.abs(c.mean-b.mean)/scale;
+    const variabilityRatio=num(b.sd)>0?(num(c.sd)??0)/num(b.sd):null;
+    const level=normalizedShift===null?'unscored':normalizedShift>=3?'high':normalizedShift>=2?'review':'stable';
+    const scoreReason=Number(b.n)<2?'insufficient-reference-observations':scale===null?'zero-reference-spread':null;
+    signals.push({channel:key,meaning:b.meaning||key,unit:b.unit||'',baselineMean:b.mean,currentMean:c.mean,baselineN:Number(b.n)||0,currentN:Number(c.n)||0,normalizedShift,variabilityRatio,level,scoreReason});
   }
-  return {datasetId,baselineId,signals:signals.sort((a,b)=>b.normalizedShift-a.normalizedShift),boundary:'Drift scores compare this site-local dataset with its selected baseline. They are evidence-attention heuristics, not automatic root-cause diagnoses or production control limits.'};
+  return {datasetId,baselineId,signals:signals.sort(scoreSort('normalizedShift')),boundary:'Drift scores compare this site-local dataset with its selected baseline. Channels with fewer than two reference observations or no positive reference spread remain explicitly unscored. Scored values are evidence-attention heuristics, not automatic root-cause diagnoses or production control limits.'};
 }
 function compareWindows(rows,semantics,splitIndex,windowSize=20){
   const i=Math.max(1,Math.min(rows.length-1,Number(splitIndex)||Math.floor(rows.length/2))),n=Math.max(3,Math.min(500,Number(windowSize)||20));
   const before=rows.slice(Math.max(0,i-n),i),after=rows.slice(i,Math.min(rows.length,i+n)),a=summarizeRows(before,semantics),b=summarizeRows(after,semantics),changes=[];
-  for(const key of Object.keys(a)){if(!b[key]||a[key].mean==null||b[key].mean==null)continue;const scale=Math.max(a[key].sd||0,Math.abs((a[key].q3||0)-(a[key].q1||0))/1.349,1e-9);changes.push({channel:key,meaning:a[key].meaning||key,unit:a[key].unit||'',beforeMean:a[key].mean,afterMean:b[key].mean,normalizedChange:Math.abs(b[key].mean-a[key].mean)/scale})}
-  return {splitIndex:i,beforeRows:before.length,afterRows:after.length,changes:changes.sort((x,y)=>y.normalizedChange-x.normalizedChange),boundary:'Before/after comparison supports controlled-test evidence. Association with an intervention does not by itself prove causality.'};
+  for(const key of Object.keys(a)){
+    if(!b[key]||a[key].mean==null||b[key].mean==null)continue;
+    const beforeN=Number(a[key].n)||0,afterN=Number(b[key].n)||0,scale=beforeN>=2&&afterN>=2?referenceScale(a[key]):null;
+    const normalizedChange=scale===null?null:Math.abs(b[key].mean-a[key].mean)/scale;
+    const scoreReason=beforeN<2||afterN<2?'insufficient-window-observations':scale===null?'zero-before-spread':null;
+    changes.push({channel:key,meaning:a[key].meaning||key,unit:a[key].unit||'',beforeMean:a[key].mean,afterMean:b[key].mean,beforeN,afterN,normalizedChange,scoreReason});
+  }
+  return {splitIndex:i,beforeRows:before.length,afterRows:after.length,changes:changes.sort(scoreSort('normalizedChange')),boundary:'Before/after comparison supports controlled-test evidence. Channels with fewer than two finite observations on either side or no positive before-window spread remain explicitly unscored. Association with an intervention does not by itself prove causality.'};
 }
 
 async function linkCase(caseId,link){
@@ -364,10 +385,11 @@ function wireAdvancedIntake(prepared){
 async function renderDatasetLibrary(){
   ensureStyle();const h=advancedHost();if(!h)return;
   const datasets=await listDatasets().catch(()=>[]);
-  h.innerHTML=`<div data-di-library-root><div class="di-actions" style="margin-bottom:12px"><button class="ghost" data-di-intake>← Process-data intake</button><button class="ghost" data-di-back>Data diagnosis</button></div><div class="card di-hero"><div class="eyebrow">Local process-data store</div><h2>Dataset library</h2><p>Prepared datasets are stored in IndexedDB on this device. Analysis-blocked datasets remain preserved but cannot be used for baseline or drift calculations until semantics are resolved and re-saved.</p></div><section class="card di-panel" style="margin-top:12px"><div class="di-dataset-list">${datasets.length?datasets.map(d=>`<div class="di-dataset"><b>${esc(d.datasetMeta?.source_label||d.id)}</b><div class="muted">${d.rowCount} rows · ${d.quality?.analysisReady?'analysis-ready':'blocked'} · ${esc(d.entities?.machine||'machine not linked')} · ${esc(d.entities?.mould||'mould not linked')}</div><div class="di-actions" style="margin-top:7px">${d.quality?.analysisReady?`<button class="secondary" data-di-baseline="${esc(d.id)}">Create baseline</button>`:''}<button class="ghost" data-di-delete="${esc(d.id)}">Delete local dataset</button></div></div>`).join(''):'<div class="di-empty">No locally stored datasets yet.</div>'}</div></section></div>`;
+  h.innerHTML=`<div data-di-library-root><div class="di-actions" style="margin-bottom:12px"><button class="ghost" data-di-intake>← Process-data intake</button><button class="ghost" data-di-back>Data diagnosis</button><button class="danger" data-di-delete-all>Delete all local process-data evidence</button></div><div class="card di-hero"><div class="eyebrow">Local process-data store</div><h2>Dataset library</h2><p>Prepared datasets are stored in IndexedDB on this device until you delete them here or clear this app/site data. Learner-profile reset does not silently delete engineering evidence. Analysis-blocked datasets remain preserved but cannot be used for baseline or drift calculations until semantics are resolved and re-saved.</p></div><section class="card di-panel" style="margin-top:12px"><div class="di-dataset-list">${datasets.length?datasets.map(d=>`<div class="di-dataset"><b>${esc(d.datasetMeta?.source_label||d.id)}</b><div class="muted">${d.rowCount} rows · ${d.quality?.analysisReady?'analysis-ready':'blocked'} · ${esc(d.entities?.machine||'machine not linked')} · ${esc(d.entities?.mould||'mould not linked')}</div><div class="di-actions" style="margin-top:7px">${d.quality?.analysisReady?`<button class="secondary" data-di-baseline="${esc(d.id)}">Create baseline</button>`:''}<button class="ghost" data-di-delete="${esc(d.id)}">Delete local dataset</button></div></div>`).join(''):'<div class="di-empty">No locally stored datasets yet.</div>'}</div></section></div>`;
   const root=h.querySelector('[data-di-library-root]');root.querySelector('[data-di-intake]')?.addEventListener('click',()=>renderAdvancedIntake(preparedSession));root.querySelector('[data-di-back]')?.addEventListener('click',()=>window.MM_PROCESS_DATA_DIAGNOSTICS?.open?.());
   root.querySelectorAll('[data-di-baseline]').forEach(b=>b.addEventListener('click',async()=>{try{await createBaseline(b.dataset.diBaseline);window.toast?.('Local baseline created')}catch(err){window.toast?.(err?.message||String(err))}}));
-  root.querySelectorAll('[data-di-delete]').forEach(b=>b.addEventListener('click',async()=>{if(!confirm('Delete this local dataset, its shots, baselines, and linked troubleshooting references?'))return;await deleteDataset(b.dataset.diDelete);renderDatasetLibrary()}))
+  root.querySelectorAll('[data-di-delete]').forEach(b=>b.addEventListener('click',async()=>{if(!confirm('Delete this local dataset, its shots, baselines, interventions, and linked troubleshooting references?'))return;await deleteDataset(b.dataset.diDelete);renderDatasetLibrary()}));
+  root.querySelector('[data-di-delete-all]')?.addEventListener('click',async()=>{if(!confirm('Delete ALL locally saved prepared process-data evidence on this device? This clears datasets, shots, baselines, interventions and case links, but does not reset learner progress.'))return;try{await deleteAllProcessData();window.toast?.('All local process-data evidence deleted and verified');renderDatasetLibrary()}catch(err){window.toast?.(`Process-data delete failed: ${err?.message||err}`)}})
 }
 function openAdvancedIntake(){window.MM_PROCESS_DATA_DIAGNOSTICS?.open?.();requestAnimationFrame(()=>renderAdvancedIntake(preparedSession))}
 
@@ -443,8 +465,9 @@ window.MM_CONNECTED_PROCESS_DATA={
   semanticRegistry:()=>semanticRegistry,
   currentManifest:()=>currentManifest,
   enrichPrepared,
-  storage:{savePrepared,listDatasets,rowsForDataset,deleteDataset},
+  storage:{savePrepared,listDatasets,rowsForDataset,deleteDataset,deleteAllProcessData},
   intelligence:{createBaseline,compareToBaseline,baselineCompatibility,contextCompatibility,assertBaselineCompatible,compareWindows,summarizeRows},
+  diagnostics:{num,stats,referenceScale},
   cases:{linkCase,caseLink,similarCases},
   scope:'Local-first connected process-data infrastructure. It distinguishes privacy preparation from semantic readiness, stores prepared site data in IndexedDB, provides site-local statistical evidence comparisons, and never creates universal production limits, causal proof or machine-control authority.'
 };
