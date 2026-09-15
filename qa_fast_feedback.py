@@ -74,6 +74,7 @@ def main() -> int:
             "qa_book_materials_machine.py",
             "qa_book_complete_draft.py",
             "qa_book_claim_coverage.py",
+            "qa_book_derived_governance.py",
             "qa_book_release_integration.py",
         ]:
             if (ROOT / qa).exists():
