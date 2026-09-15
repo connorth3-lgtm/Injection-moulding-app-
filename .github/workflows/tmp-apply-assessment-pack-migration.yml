@@ -19,19 +19,28 @@ jobs:
           fetch-depth: 2
       - name: Apply coordinated migration
         run: python tools/tmp_assessment_pack_migration.py
-      - name: Tighten direct-injection assertion to BODY_SCRIPTS rows
+      - name: Align release assertions with the deterministic pack boundary
         run: |
           python - <<'PY'
           from pathlib import Path
-          path = Path('qa_release.py')
-          text = path.read_text(encoding='utf-8')
+
+          release = Path('qa_release.py')
+          text = release.read_text(encoding='utf-8')
           old = "    assert f\"'./{retired}'\" not in index, f\"assessment foundation direct source is still injected: {retired}\""
           new = "    assert f\"['./{retired}','<script\" not in index, f\"assessment foundation direct source is still injected: {retired}\""
           if new not in text:
               if old not in text:
                   raise SystemExit('qa_release.py assessment direct-injection assertion not found')
-              text = text.replace(old, new, 1)
-              path.write_text(text, encoding='utf-8')
+              release.write_text(text.replace(old, new, 1), encoding='utf-8')
+
+          docs = Path('qa_release_docs.py')
+          text = docs.read_text(encoding='utf-8')
+          old = "for marker in [\"'./privacy.html'\",\"'./support.html'\",\"'./assessment-storage-scope.js'\",\"'./assessment-evidence-sources.js'\",\"'./assessment-evidence-approval.js'\",\"'./curriculum-integration.js'\",\"'./specialist-curriculum.js'\",\"'./specialist-evidence-gap-extension.js'\",\"'./app-shell-registry.js'\",\"'./mould-master-workspace.js'\",\"'./app-shell-finalize.js'\"]:"
+          new = "for marker in [\"'./privacy.html'\",\"'./support.html'\",\"'./src/domains/runtime-packs/assessment-foundation-runtime-pack.js'\",\"'./assessment-evidence-sources.js'\",\"'./assessment-evidence-approval.js'\",\"'./curriculum-integration.js'\",\"'./specialist-curriculum.js'\",\"'./specialist-evidence-gap-extension.js'\",\"'./app-shell-registry.js'\",\"'./mould-master-workspace.js'\",\"'./app-shell-finalize.js'\"]:"
+          if new not in text:
+              if old not in text:
+                  raise SystemExit('qa_release_docs.py offline asset marker list not found')
+              docs.write_text(text.replace(old, new, 1), encoding='utf-8')
           PY
       - name: Validate deterministic pack and core contracts
         run: |
