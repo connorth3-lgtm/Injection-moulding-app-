@@ -79,7 +79,8 @@ expected_name = f"physical-pwa-candidate-{source_sha}"
 need(candidate.get("artifactName") == expected_name, "physical PWA artifact name/source SHA binding drifted")
 need(FP_RE.fullmatch(str(candidate.get("runtimeFingerprint") or "")) is not None, "physical PWA candidate fingerprint is invalid")
 need(FP_RE.fullmatch(str(candidate.get("artifactDigest") or "")) is not None, "physical PWA artifact digest is invalid")
-need(isinstance(candidate.get("pagesRunId"), int) and candidate["pagesRunId"] > 0, "physical PWA Pages run id is invalid")
+candidate_run_id = candidate.get("candidateRunId", candidate.get("pagesRunId"))
+need(isinstance(candidate_run_id, int) and candidate_run_id > 0, "physical PWA candidate build run id is invalid")
 need(isinstance(candidate.get("artifactId"), int) and candidate["artifactId"] > 0, "physical PWA artifact id is invalid")
 need(bool(candidate.get("artifactExpiresAt")), "physical PWA artifact expiry is missing")
 

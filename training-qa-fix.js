@@ -1,12 +1,13 @@
-/* MouldMaster training data/assessment bridge — 2026.09.15.4 */
+/* MouldMaster training data/assessment bridge — 2026.09.15.5 */
 (function(){
 'use strict';
 const REVIEW_KEY='mm_spaced_review_v2', LEGACY_REVIEW='mm_spaced_review_v1', SIGN_KEY='mm_practical_signoff_v1';
 const ASSESSMENT_ANALYTICS_PREFIXES=['mm_assessment_analytics_v1','mm_assessment_exposure_timing_v1','mm_assessment_opening_history_v1','mm-assessment-question-history-v4','mm-assessment-result-meta-v1'];
 const LEARNING_ANALYTICS_PREFIX='mm_learning_analytics_v1::';
 const ANALYTICS_CLEANUP_CODE='MM_ANALYTICS_CLEANUP_FAILED';
-const LEARNER_ID_RE=/^[A-Za-z0-9][A-Za-z0-9._:-]{0,79}$/;
+const LEARNER_ID_RE=/^[A-Za-z0-9][A-Za-z0-9._:@+-]{0,159}$/;
 function canonicalLearnerId(v){const s=String(v??'');if(!LEARNER_ID_RE.test(s))throw new Error('Invalid learner identifier');return s}
+function hasOwnLearner(users,id){return !!users&&Object.prototype.hasOwnProperty.call(users,id)}
 function cleanupError(area,detail){const e=new Error(`Local ${area} cleanup could not be verified${detail?`: ${detail}`:''}`);e.code=ANALYTICS_CLEANUP_CODE;e.area=area;return e}
 function matchingKeys(predicate,area){
  try{const out=[];for(let i=0;i<localStorage.length;i++){const k=localStorage.key(i);if(k&&predicate(k))out.push(k)}return [...new Set(out)]}
@@ -53,19 +54,21 @@ window.importData=function(file){
   let committed=false;
   try{
    const x=JSON.parse(r.result);
-   if(!obj(x)||!obj(x.users)||typeof x.activeUser!=='string'||!x.users[x.activeUser])throw new Error('Invalid backup structure');
+   if(!obj(x)||!obj(x.users)||typeof x.activeUser!=='string'||!hasOwnLearner(x.users,x.activeUser))throw new Error('Invalid backup structure');
    if(typeof normaliseImportedUser!=='function')throw new Error('Core validator unavailable');
+   const entries=Object.entries(x.users);
+   if(entries.length>500)throw new Error('Too many learners in backup');
    const users={};
-   for(const [id,u] of Object.entries(x.users).slice(0,500)){
+   for(const [id,u] of entries){
     const sid=canonicalLearnerId(id),clean=normaliseImportedUser(u,sid);
-    if(users[sid])throw new Error('Invalid or duplicate learner identifier');
+    if(hasOwnLearner(users,sid))throw new Error('Invalid or duplicate learner identifier');
     if(u?.id!=null&&canonicalLearnerId(u.id)!==sid)throw new Error('Learner identifier mismatch');
     clean.id=sid;
     clean.certificates=[];clean.certificateMeta={};clean.examPassStatus={};
     users[sid]=clean;
    }
    const active=canonicalLearnerId(x.activeUser);
-   if(!users[active])throw new Error('Missing active learner');
+   if(!hasOwnLearner(users,active))throw new Error('Missing active learner');
    const extras=obj(x.trainingExtras)?x.trainingExtras:{};
    const cleanR=cleanReview(extras.spacedReview||{items:{}}),cleanS=cleanSign(extras.practicalSignoff||{});
    const proposed={activeUser:active,users};
@@ -90,6 +93,7 @@ window.importData=function(file){
    else alert('That file is not a valid MouldMaster backup. No existing data was changed.');
   }
  };
+ r.onerror=()=>alert('That backup could not be read. No existing data was changed.');
  r.readAsText(file);
 };
 
@@ -110,5 +114,5 @@ const baseReset=window.resetData;if(typeof baseReset==='function')window.resetDa
 labelLearnerReset();
 
 try{if(!localStorage.getItem(REVIEW_KEY)&&localStorage.getItem(LEGACY_REVIEW))localStorage.setItem(REVIEW_KEY,JSON.stringify({items:{}}))}catch(_){}
-window.MM_TRAINING_DATA_BRIDGE={version:'2026.09.15.4',cleanupFailureCode:ANALYTICS_CLEANUP_CODE,canonicalLearnerId,clearAssessmentAnalyticsStores,clearLearningAnalyticsStores,clearAllAnalyticsStores,clearTrainingExtrasStores,cancelActiveExam};
+window.MM_TRAINING_DATA_BRIDGE={version:'2026.09.15.5',cleanupFailureCode:ANALYTICS_CLEANUP_CODE,canonicalLearnerId,clearAssessmentAnalyticsStores,clearLearningAnalyticsStores,clearAllAnalyticsStores,clearTrainingExtrasStores,cancelActiveExam};
 })();

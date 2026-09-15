@@ -150,10 +150,12 @@ def validate_pwa(section: dict, expected_release: str) -> None:
     source_sha = require_sha(candidate.get("sourceSha"), "PWA candidate sourceSha")
     require_fingerprint(candidate.get("runtimeFingerprint"), "PWA candidate runtimeFingerprint")
     require_fingerprint(candidate.get("artifactDigest"), "PWA candidate artifactDigest")
-    for key in ("pagesRunId", "artifactId"):
-        value = candidate.get(key)
-        if not isinstance(value, int) or value <= 0:
-            fail(f"PWA candidate {key} must be a positive integer")
+    candidate_run_id = candidate.get("candidateRunId", candidate.get("pagesRunId"))
+    if not isinstance(candidate_run_id, int) or candidate_run_id <= 0:
+        fail("PWA candidate build run id must be a positive integer")
+    artifact_id = candidate.get("artifactId")
+    if not isinstance(artifact_id, int) or artifact_id <= 0:
+        fail("PWA candidate artifactId must be a positive integer")
     expected_name = f"physical-pwa-candidate-{source_sha}"
     if candidate.get("artifactName") != expected_name:
         fail(f"PWA candidate artifactName must be {expected_name}")

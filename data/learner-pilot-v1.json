@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "pilotId": "mouldmaster-learner-pilot-wave1",
-  "release": "2026.09.15.4",
+  "release": "2026.09.15.5",
   "status": "prepared",
   "synthetic": false,
   "purpose": "Collect real-learner usability, comprehension, diagnostic-transfer and retention signals for MouldMaster without presenting an exploratory pilot as efficacy or psychometric validation.",

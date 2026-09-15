@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "bookId": "mouldmaster-book",
-  "release": "2026.09.15.4",
+  "release": "2026.09.15.5",
   "manifestVersion": "2026.09.14.1",
   "status": "hold",
   "policy": "Human SME review is independent external evidence. Automated QA may verify coverage, fingerprints/identity and review-record shape, but must never create or infer an SME approval.",
