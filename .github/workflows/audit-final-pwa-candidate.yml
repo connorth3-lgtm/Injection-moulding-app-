@@ -1,0 +1,54 @@
+name: Audit Final PWA Candidate
+
+on:
+  push:
+    branches: [fix/audit-remediation-2026-09-16]
+
+permissions:
+  contents: read
+  issues: write
+  pull-requests: write
+
+jobs:
+  candidate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout exact final 2026.09.15.6 runtime candidate
+        uses: actions/checkout@v7
+        with:
+          ref: f5055cf8b156f1887dcd37aa214d37587be97493
+          fetch-depth: 0
+      - uses: actions/setup-python@v7
+        with:
+          python-version: '3.12'
+      - name: Build and validate exact public candidate
+        id: candidate
+        shell: bash
+        run: |
+          python tools/build_pages_artifact.py
+          fingerprint="$(python tools/verify_pwa_physical_evidence.py --artifact .pages-dist --print-fingerprint)"
+          test ! -e .pages-dist/MouldMaster_Core_App.html
+          test -f .pages-dist/src/core-runtime/core-source.txt
+          cmp -s MouldMaster_Core_App.html .pages-dist/src/core-runtime/core-source.txt
+          cp -a .pages-dist physical-pwa-candidate
+          printf '%s\n' 'f5055cf8b156f1887dcd37aa214d37587be97493' > physical-pwa-candidate/SOURCE_SHA.txt
+          printf '%s\n' "$fingerprint" > physical-pwa-candidate/RUNTIME_FINGERPRINT.txt
+          echo "fingerprint=$fingerprint" >> "$GITHUB_OUTPUT"
+      - name: Retain exact physical-device candidate
+        uses: actions/upload-artifact@v7
+        with:
+          name: physical-pwa-candidate-f5055cf8b156f1887dcd37aa214d37587be97493
+          path: physical-pwa-candidate
+          retention-days: 30
+          if-no-files-found: error
+          compression-level: 6
+          overwrite: false
+          include-hidden-files: false
+      - name: Publish exact candidate fingerprint to remediation PR
+        env:
+          GH_TOKEN: ${{ github.token }}
+          FINGERPRINT: ${{ steps.candidate.outputs.fingerprint }}
+        shell: bash
+        run: |
+          body="FINAL exact 2026.09.15.6 runtime candidate metadata: sourceSha=\`f5055cf8b156f1887dcd37aa214d37587be97493\`; runtimeFingerprint=\`$FINGERPRINT\`. Build metadata only; physical-device and human validation remain HOLD."
+          gh api "repos/${GITHUB_REPOSITORY}/issues/364/comments" -f body="$body"
