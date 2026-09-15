@@ -1,14 +1,11 @@
 {
   "schemaVersion": 1,
   "capturedAt": "2026-09-15",
-  "runtimeBodyScriptCeiling": 39,
-  "rootRuntimeScriptCeiling": 36,
+  "runtimeBodyScriptCeiling": 37,
+  "rootRuntimeScriptCeiling": 33,
   "documentWriteCeiling": 0,
   "grandfatheredRootRuntimeScripts": [
     "./production-health.js",
-    "./reading-patch.js",
-    "./training-upgrade.js",
-    "./training-qa-fix.js",
     "./assessment-100-pass.js",
     "./assessment-deep-dive.js",
     "./assessment-answer-cue-fix.js",
@@ -63,6 +60,7 @@
     "The active certificate-print runtime transforms the frozen recovery core's historical document.write into DOM construction before packaging; document.write remains forbidden in active browser/PWA/desktop runtime code.",
     "2026-09-03 handler-CSP tranche reduced active inline event-handler source occurrences from 176 to 0 while leaving 144 historical attributes only in the immutable recovery core. Runtime assembly rewrites static recovery handlers to inert data-mm-on* attributes; generated and legacy dynamic markup emit those inert attributes directly; a strict allowlisted delegated bridge is folded into the final generated core slot so BODY_SCRIPTS remains 39 and script-src-attr is none.",
     "2026-09-04 style-CSP tranche removes the final unsafe-inline directive: deterministic style elements are exact SHA-256 allowlisted, frozen/generated style attributes are neutralized at HTML sinks and applied via property-level CSSOM, and cssText/setAttribute(style) are forbidden.",
-    "2026-09-15 grandfathering hardening removes already packed or domain-delegated root scripts from the runtime allowlist. The grandfathered root list now contains only the 36 root scripts that are actually injected by BODY_SCRIPTS, so a retired root layer cannot return without an explicit governance-baseline change."
+    "2026-09-15 grandfathering hardening removes already packed or domain-delegated root scripts from the runtime allowlist. The grandfathered root list must exactly match the active root runtime set, so a retired root layer cannot return without an explicit governance-baseline change.",
+    "2026-09-15 learning-foundation pack concatenates reading-patch.js, training-upgrade.js and training-qa-fix.js in their historical order without transformation, reducing BODY_SCRIPTS from 39 to 37 and directly injected root runtime scripts from 36 to 33."
   ]
 }
