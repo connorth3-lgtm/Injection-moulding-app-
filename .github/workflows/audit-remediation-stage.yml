@@ -57,7 +57,6 @@ jobs:
               if marker not in s:raise SystemExit('qa.yml insertion marker missing')
               qa.write_text(s.replace(marker,addition),encoding='utf-8')
           PY
-          git rm .github/workflows/audit-remediation-stage.yml
       - name: Focused release validation
         run: |
           node --check service-worker.js
