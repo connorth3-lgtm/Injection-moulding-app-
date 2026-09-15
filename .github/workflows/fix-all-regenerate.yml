@@ -1,0 +1,88 @@
+name: Fix-all generated artifact repair
+
+on:
+  push:
+    branches: [ audit/fix-all-deep-dive-20260915 ]
+    paths:
+      - .github/workflows/fix-all-regenerate.yml
+
+permissions:
+  contents: write
+
+concurrency:
+  group: fix-all-regenerate-audit-20260915
+  cancel-in-progress: false
+
+jobs:
+  regenerate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout repair branch
+        uses: actions/checkout@v7
+        with:
+          ref: audit/fix-all-deep-dive-20260915
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v7
+        with:
+          python-version: '3.12'
+
+      - name: Set up Node
+        uses: actions/setup-node@v7
+        with:
+          node-version: '22'
+
+      - name: Synchronize release and generated runtime artifacts
+        shell: bash
+        run: |
+          set -euo pipefail
+          python tools/sync_web_release.py
+          python - <<'PY'
+          from pathlib import Path
+          path=Path('service-worker.js')
+          text=path.read_text(encoding='utf-8')
+          anchor="  './src/domains/learning/book-data/book-sme-review-v1.json',"
+          additions=[
+              "  './src/domains/learning/book-data/book-qualification-resolution-all-v1.json',",
+              "  './src/domains/learning/book-data/book-claim-resolution-high-risk-v1.json',",
+          ]
+          if anchor not in text:
+              raise SystemExit('Book SME cache anchor missing')
+          insert='\n'.join(x for x in additions if x not in text)
+          if insert:
+              text=text.replace(anchor,anchor+'\n'+insert,1)
+              path.write_text(text,encoding='utf-8')
+          PY
+          python tools/build_runtime_packs.py
+
+      - name: Run focused regression checks
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --check training-qa-fix.js
+          node --check src/domains/learning/learner-model.js
+          node --check book-runtime.js
+          node --check src/domains/learning/book-runtime.js
+          node qa_import_identity_integrity.cjs
+          python qa_book_release_integration.py
+          python tools/build_runtime_packs.py --check
+          python tools/externalize_core_scripts.py --check
+          git diff --check
+
+      - name: Commit regenerated artifacts and remove one-shot workflow
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git rm .github/workflows/fix-all-regenerate.yml
+          git add index.html service-worker.js pwa-shell.js qa_release.py README.md src/domains/runtime-packs/learning-foundation-runtime-pack.js
+          git add -u
+          if git diff --cached --quiet; then
+            echo 'No generated changes to commit'
+            exit 0
+          fi
+          git commit -m 'Synchronize audit-fix generated runtime artifacts'
+          git push origin HEAD:audit/fix-all-deep-dive-20260915
