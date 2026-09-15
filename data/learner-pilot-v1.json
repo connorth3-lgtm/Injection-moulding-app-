@@ -1,13 +1,17 @@
 {
   "schemaVersion": 1,
   "pilotId": "mouldmaster-learner-pilot-wave1",
-  "release": "2026.09.15.2",
+  "release": "2026.09.15.3",
   "status": "prepared",
   "synthetic": false,
   "purpose": "Collect real-learner usability, comprehension, diagnostic-transfer and retention signals for MouldMaster without presenting an exploratory pilot as efficacy or psychometric validation.",
   "cohort": {
     "targetCompletedParticipants": "8-15 exploratory learners",
-    "roles": ["beginner", "setter-technician", "process-engineer"],
+    "roles": [
+      "beginner",
+      "setter-technician",
+      "process-engineer"
+    ],
     "eligibility": "Adults using the app voluntarily for injection-moulding learning; no customer or employer identity is required in the repository evidence."
   },
   "design": {

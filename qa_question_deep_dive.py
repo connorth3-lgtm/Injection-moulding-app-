@@ -91,8 +91,11 @@ for marker in ['all 57 live exam questions','All 30 technical questions','27 reg
     need(marker in reg,f'question deep-dive register marker missing: {marker}')
 
 idx=text('index.html')
-need(idx.index('assessment-deep-dive.js')<idx.index('assessment-answer-cue-fix.js')<idx.index('assessment-quality-suite.js'),'assessment rewrite load order wrong')
-need("'./assessment-deep-dive.js'" in text('service-worker.js') and "'./assessment-answer-cue-fix.js'" in text('service-worker.js'),'assessment patches not cached offline')
+assessment_pack='src/domains/runtime-packs/assessment-foundation-runtime-pack.js'
+pack=text(assessment_pack)
+need(pack.index('/* >>> assessment-deep-dive.js */')<pack.index('/* >>> assessment-answer-cue-fix.js */')<pack.index('/* >>> assessment-quality-suite.js */'),'assessment rewrite pack order wrong')
+need(assessment_pack in idx and idx.index(assessment_pack)<idx.index('runtime-v2.js'),'assessment rewrite pack load order wrong')
+need("'./src/domains/runtime-packs/assessment-foundation-runtime-pack.js'" in text('service-worker.js'),'assessment patches pack not cached offline')
 pkg=json.loads(text('desktop/electron/package.json'));froms={x.get('from') for x in pkg['build']['extraResources'] if isinstance(x,dict)}
 need('../../assessment-deep-dive.js' in froms and '../../assessment-answer-cue-fix.js' in froms,'assessment patches missing from desktop package')
 integ=text('desktop/electron/scripts/generate-integrity.cjs');need("'assessment-deep-dive.js'" in integ and "'assessment-answer-cue-fix.js'" in integ,'assessment patches missing from integrity set')

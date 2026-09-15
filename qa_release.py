@@ -7,7 +7,7 @@ import struct
 import subprocess
 import tempfile
 
-WEB_RELEASE = "2026.09.15.2"
+WEB_RELEASE = "2026.09.15.3"
 ANDROID_RELEASE = "2026.08.26.2"
 CONTENT_VERSION = "2026.08.26.1"
 WINDOWS_RECOVERY_VERSION = "2026.08.21.1"
@@ -73,6 +73,7 @@ for marker in ["Content-Security-Policy", "default-src 'self'", "object-src 'non
     assert marker in index, f"browser CSP boundary missing: {marker}"
 for asset in [
     "src/domains/runtime-packs/learning-foundation-runtime-pack.js",
+    "src/domains/runtime-packs/assessment-foundation-runtime-pack.js",
     "learning-experience.js",
     "process-data-diagnostics.js",
     "curriculum-integration.js",
@@ -89,15 +90,17 @@ for asset in [
 ]:
     assert f"'./{asset}'" in index, f"current learner-facing runtime asset not loaded by shell: {asset}"
 assert "['./reading-patch.js','<script" not in index and "['./training-upgrade.js','<script" not in index and "['./training-qa-fix.js','<script" not in index, "learning foundation source scripts must not return as direct bootstrap entries"
-assert index.index("'./assessment-final-hardening.js'") < index.index("'./runtime-v2.js'") < index.index("'./assessment-runtime-v2.js'") < index.index("'./assessment-ux.js'"), "runtime-v2 assessment ownership load order is wrong"
+assert index.index("'./src/domains/runtime-packs/assessment-foundation-runtime-pack.js'") < index.index("'./runtime-v2.js'") < index.index("'./assessment-runtime-v2.js'") < index.index("'./assessment-ux.js'"), "runtime-v2 assessment ownership load order is wrong"
 assert index.index("'./specialist-curriculum.js'") < index.index("'./specialist-evidence-gap-extension.js'") < index.index("'./mould-master-workspace.js'") < index.index("'./app-shell-finalize.js'"), "specialist evidence/runtime finalizer load order is wrong"
+for retired in ["assessment-100-pass.js","assessment-deep-dive.js","assessment-answer-cue-fix.js","assessment-storage-scope.js","assessment-quality-suite.js","assessment-stable-review-bridge.js","assessment-analytics-ui.js","assessment-final-hardening.js"]:
+    assert f"['./{retired}','<script" not in index, f"assessment foundation direct source is still injected: {retired}"
 
 sw = text("service-worker.js")
 assert f"CACHE_VERSION='{WEB_RELEASE}'" in sw
 for asset in [
     "index.html", "MouldMaster_Core_App.html", "manifest.webmanifest",
     "mouldmaster-192.png", "mouldmaster-512.png", "version.json", "reading-patch.css",
-    "src/domains/runtime-packs/learning-foundation-runtime-pack.js", "source-library.js", "pwa-shell.js", "learning-experience.js",
+    "src/domains/runtime-packs/learning-foundation-runtime-pack.js", "src/domains/runtime-packs/assessment-foundation-runtime-pack.js", "source-library.js", "pwa-shell.js", "learning-experience.js",
     "process-data-diagnostics.js", "curriculum-integration.js", "specialist-curriculum.js",
     "specialist-evidence-gap-extension.js", "mould-master-workspace.js", "app-shell-finalize.js", "learning-analytics.js",
     "runtime-v2.js", "assessment-runtime-v2.js", "lesson-deep-authoring-v2.js", "assessment-multimodal.js", "accessibility-hardening.js",

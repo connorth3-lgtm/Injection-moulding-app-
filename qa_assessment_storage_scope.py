@@ -102,9 +102,10 @@ final=text('assessment-final-hardening.js')
 for marker in ['const S=window.MM_ASSESSMENT_STORAGE_SCOPE;', 'S.read(k,d)', 'S.write(k,v)', 'S.removeItem(TIMING_KEY)']:
     need(marker in final,f'assessment timing explicit storage marker missing: {marker}')
 
-idx=text('index.html');need('<script src="./assessment-storage-scope.js">' in idx,'storage scope not loaded by shell')
-need(idx.index('assessment-deep-dive.js')<idx.index('assessment-storage-scope.js')<idx.index('assessment-quality-suite.js'),'storage scope load order must precede analytics suite')
-need("'./assessment-storage-scope.js'" in text('service-worker.js'),'storage scope missing from offline cache')
+idx=text('index.html');assessment_pack='src/domains/runtime-packs/assessment-foundation-runtime-pack.js';pack=text(assessment_pack)
+need(assessment_pack in idx and '<script src="./assessment-storage-scope.js">' not in idx,'storage scope must load through assessment foundation pack')
+need(pack.index('/* >>> assessment-deep-dive.js */')<pack.index('/* >>> assessment-storage-scope.js */')<pack.index('/* >>> assessment-quality-suite.js */'),'storage scope pack order must precede analytics suite')
+need("'./src/domains/runtime-packs/assessment-foundation-runtime-pack.js'" in text('service-worker.js'),'assessment foundation pack missing from offline cache')
 pkg=json.loads(text('desktop/electron/package.json'));froms={x.get('from') for x in pkg['build']['extraResources'] if isinstance(x,dict)}
 need('../../assessment-storage-scope.js' in froms,'storage scope missing from desktop package')
 need("'assessment-storage-scope.js'" in text('desktop/electron/scripts/generate-integrity.cjs'),'storage scope missing from integrity set')

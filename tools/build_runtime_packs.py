@@ -21,6 +21,16 @@ PACKS: dict[str, tuple[str, ...]] = {
         "training-upgrade.js",
         "training-qa-fix.js",
     ),
+    "assessment-foundation-runtime-pack.js": (
+        "assessment-100-pass.js",
+        "assessment-deep-dive.js",
+        "assessment-answer-cue-fix.js",
+        "assessment-storage-scope.js",
+        "assessment-quality-suite.js",
+        "assessment-stable-review-bridge.js",
+        "assessment-analytics-ui.js",
+        "assessment-final-hardening.js",
+    ),
     "evidence-runtime-pack.js": (
         "reference-data.js",
         "reference-deep-dive.js",
