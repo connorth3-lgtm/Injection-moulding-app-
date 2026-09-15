@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 from pathlib import Path
 import json
-import re
 
 ROOT=Path(__file__).resolve().parent
 
@@ -11,7 +10,7 @@ def need(ok,msg):
 def text(path): return (ROOT/path).read_text(encoding='utf-8')
 
 version=json.loads(text('version.json'))
-need(version.get('web_release')=='2026.09.15.7','premium UI release must be 2026.09.15.7')
+need(version.get('web_release')=='2026.09.16.1','premium UI release must be 2026.09.16.1')
 css=text('premium-ui.css')
 for marker in [
     '--mm-surface-0','--mm-accent','--mm-radius-xl','--mm-shadow-lg',
@@ -25,14 +24,14 @@ need(css.count('!important') < 220,'premium UI override specificity grew beyond 
 
 index=text('index.html')
 need("['premium-ui.css','<link rel=\"stylesheet\" href=\"./premium-ui.css\">']" in index,'premium UI stylesheet must load in first-paint HEAD assets')
-need('const SHELL_RELEASE="2026.09.15.7";' in index,'shell release marker stale')
+need('const SHELL_RELEASE="2026.09.16.1";' in index,'shell release marker stale')
 
 sw=text('service-worker.js')
-need("const CACHE_VERSION='2026.09.15.7';" in sw,'service-worker release marker stale')
+need("const CACHE_VERSION='2026.09.16.1';" in sw,'service-worker release marker stale')
 need("'./premium-ui.css'" in sw,'premium UI stylesheet missing from atomic offline cache')
 
 pwa=text('pwa-shell.js')
-need("const RELEASE='2026.09.15.7';" in pwa,'PWA shell release marker stale')
+need("const RELEASE='2026.09.16.1';" in pwa,'PWA shell release marker stale')
 
 pkg=json.loads(text('desktop/electron/package.json'))
 extra=[str(x.get('from','')).replace('../../','') for x in pkg.get('build',{}).get('extraResources',[])]
