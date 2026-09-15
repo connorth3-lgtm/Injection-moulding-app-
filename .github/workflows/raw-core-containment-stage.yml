@@ -122,3 +122,5 @@ jobs:
           git diff --cached --check
           git commit -m '[audit-remediation-generated] Remove executable raw core from supported distribution'
           git push origin HEAD:fix/audit-remediation-2026-09-16
+
+# retrigger after release-QA invariant migration
