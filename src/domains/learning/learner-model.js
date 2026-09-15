@@ -1,8 +1,9 @@
-/* MouldMaster local learner evidence model — 2026.09.04.2 */
+/* MouldMaster local learner evidence model — 2026.09.15.5 */
 (function(){
 'use strict';
 if(window.MM_LEARNER_MODEL)return;
-const VERSION='2026.09.04.2';
+const VERSION='2026.09.15.5';
+const LEARNER_ID_RE=/^[A-Za-z0-9][A-Za-z0-9._:@+-]{0,159}$/;
 function clamp(n,a=0,b=100){return Math.max(a,Math.min(b,Number(n)||0))}
 function ageDays(value){const t=Date.parse(String(value||''));return Number.isFinite(t)?Math.max(0,(Date.now()-t)/86400000):null}
 function topicKey(kind,value){const v=String(value||'').trim();return `${kind}:${v||'unclassified'}`}
@@ -78,5 +79,40 @@ function recommendationFor(x){
 }
 function recommendations(limit=5){const model=build(),out=[];for(const x of model.topics){const r=recommendationFor(x);if(r)out.push(r)}return out.sort((a,b)=>b.priority-a.priority).slice(0,Math.max(1,Math.min(Number(limit)||5,20)))}
 function summary(){const m=build(),r=recommendations(5),topics=m.topics;return {version:VERSION,topics:topics.length,averageMastery:topics.length?+(topics.reduce((s,x)=>s+x.mastery,0)/topics.length).toFixed(1):null,averageConfidence:topics.length?+(topics.reduce((s,x)=>s+x.confidence,0)/topics.length).toFixed(1):null,highStuckness:topics.filter(x=>x.stuckness>=45).length,reviewDue:topics.filter(x=>x.recencyKnown&&Number.isFinite(x.forgettingRisk)&&x.forgettingRisk>=45).length,recencyUnknown:topics.filter(x=>x.attempts>0&&!x.recencyKnown).length,negativeVelocity:topics.filter(x=>x.learningVelocity<=-15).length,recommendations:r}}
-window.MM_LEARNER_MODEL=Object.freeze({version:VERSION,build,recommendations,summary,boundary:'Rule-based local evidence model. Unknown timestamps remain unknown and never become synthetic forgetting risk. Recommendations separate remediation, spaced retrieval, recency refresh, evidence confirmation, regression stabilisation and transfer practice; they are learning guidance, not competence certification or production-control authority.'});
+
+function validateBackupEnvelope(text){
+ const x=JSON.parse(String(text||''));
+ if(!x||typeof x!=='object'||Array.isArray(x)||!x.users||typeof x.users!=='object'||Array.isArray(x.users)||typeof x.activeUser!=='string')throw new Error('Invalid backup structure');
+ const entries=Object.entries(x.users);
+ if(entries.length>500)throw new Error('Too many learners in backup');
+ for(const [id,u] of entries){
+  if(!LEARNER_ID_RE.test(id))throw new Error('Invalid learner identifier');
+  if(!u||typeof u!=='object'||Array.isArray(u))throw new Error('Invalid learner record');
+  if(u.id!=null&&String(u.id)!==id)throw new Error('Learner identifier mismatch');
+ }
+ if(!Object.prototype.hasOwnProperty.call(x.users,x.activeUser)||!LEARNER_ID_RE.test(x.activeUser))throw new Error('Missing active learner');
+ return true;
+}
+function installImportGuard(){
+ const base=window.importData;
+ if(typeof base!=='function'||base.__mmImportIntegrityGuard)return false;
+ const guarded=function(file){
+  if(!file)return base.apply(this,arguments);
+  if(Number(file.size)>10*1024*1024){window.alert?.('That backup is too large to import safely. No existing data was changed.');return}
+  const receiver=this,args=arguments,reader=new FileReader();
+  reader.onload=()=>{
+   try{validateBackupEnvelope(reader.result)}catch(_){window.alert?.('That file is not a valid MouldMaster backup. No existing data was changed.');return}
+   base.apply(receiver,args);
+  };
+  reader.onerror=()=>window.alert?.('That backup could not be read. No existing data was changed.');
+  reader.readAsText(file);
+ };
+ guarded.__mmImportIntegrityGuard=true;
+ guarded.__mmImportIntegrityBase=base;
+ window.importData=guarded;
+ return true;
+}
+installImportGuard();
+
+window.MM_LEARNER_MODEL=Object.freeze({version:VERSION,build,recommendations,summary,validateBackupEnvelope,installImportGuard,boundary:'Rule-based local evidence model. Unknown timestamps remain unknown and never become synthetic forgetting risk. Recommendations separate remediation, spaced retrieval, recency refresh, evidence confirmation, regression stabilisation and transfer practice; they are learning guidance, not competence certification or production-control authority. Backup import is additionally guarded fail-closed at the final learning-domain boundary.'});
 })();
