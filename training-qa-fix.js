@@ -1,10 +1,12 @@
-/* MouldMaster training data/assessment bridge — 2026.09.06.1 */
+/* MouldMaster training data/assessment bridge — 2026.09.15.4 */
 (function(){
 'use strict';
 const REVIEW_KEY='mm_spaced_review_v2', LEGACY_REVIEW='mm_spaced_review_v1', SIGN_KEY='mm_practical_signoff_v1';
 const ASSESSMENT_ANALYTICS_PREFIXES=['mm_assessment_analytics_v1','mm_assessment_exposure_timing_v1','mm_assessment_opening_history_v1','mm-assessment-question-history-v4','mm-assessment-result-meta-v1'];
 const LEARNING_ANALYTICS_PREFIX='mm_learning_analytics_v1::';
 const ANALYTICS_CLEANUP_CODE='MM_ANALYTICS_CLEANUP_FAILED';
+const LEARNER_ID_RE=/^[A-Za-z0-9][A-Za-z0-9._:-]{0,79}$/;
+function canonicalLearnerId(v){const s=String(v??'');if(!LEARNER_ID_RE.test(s))throw new Error('Invalid learner identifier');return s}
 function cleanupError(area,detail){const e=new Error(`Local ${area} cleanup could not be verified${detail?`: ${detail}`:''}`);e.code=ANALYTICS_CLEANUP_CODE;e.area=area;return e}
 function matchingKeys(predicate,area){
  try{const out=[];for(let i=0;i<localStorage.length;i++){const k=localStorage.key(i);if(k&&predicate(k))out.push(k)}return [...new Set(out)]}
@@ -55,13 +57,14 @@ window.importData=function(file){
    if(typeof normaliseImportedUser!=='function')throw new Error('Core validator unavailable');
    const users={};
    for(const [id,u] of Object.entries(x.users).slice(0,500)){
-    const sid=String(id).slice(0,160),clean=normaliseImportedUser(u,id);
-    if(!sid||users[sid])throw new Error('Invalid or duplicate learner identifier');
+    const sid=canonicalLearnerId(id),clean=normaliseImportedUser(u,sid);
+    if(users[sid])throw new Error('Invalid or duplicate learner identifier');
+    if(u?.id!=null&&canonicalLearnerId(u.id)!==sid)throw new Error('Learner identifier mismatch');
     clean.id=sid;
     clean.certificates=[];clean.certificateMeta={};clean.examPassStatus={};
     users[sid]=clean;
    }
-   const active=String(x.activeUser).slice(0,160);
+   const active=canonicalLearnerId(x.activeUser);
    if(!users[active])throw new Error('Missing active learner');
    const extras=obj(x.trainingExtras)?x.trainingExtras:{};
    const cleanR=cleanReview(extras.spacedReview||{items:{}}),cleanS=cleanSign(extras.practicalSignoff||{});
@@ -90,8 +93,10 @@ window.importData=function(file){
  r.readAsText(file);
 };
 
+function labelLearnerReset(){if(typeof document==='undefined')return;document.querySelectorAll?.('[data-mm-onclick="resetData()"]').forEach?.(button=>{if(String(button.textContent||'').trim()==='Reset all local data')button.textContent='Reset learner data'})}
+const baseRenderProfile=window.renderProfile;if(typeof baseRenderProfile==='function')window.renderProfile=function(){const result=baseRenderProfile.apply(this,arguments);labelLearnerReset();return result};
 const baseReset=window.resetData;if(typeof baseReset==='function')window.resetData=function(){
- if(!confirm('Reset all local MouldMaster users and progress?'))return;
+ if(!confirm('Reset local MouldMaster learner profiles, progress, analytics and training extras? Saved process-data evidence is managed separately in Process Data.'))return;
  try{clearAllAnalyticsStores();clearTrainingExtrasStores()}
  catch(e){console.error('[MouldMaster] factory reset cleanup blocked:',e);alert(cleanupFailureMessage('Factory reset',false));return}
  const proposedReset=JSON.parse(JSON.stringify(defaultDB));
@@ -99,9 +104,11 @@ const baseReset=window.resetData;if(typeof baseReset==='function')window.resetDa
  try{localStorage.setItem('mouldmasterProDB',JSON.stringify(proposedReset))}catch(e){alert('Factory reset could not save the clean learner state. Analytics were cleared, but existing progress was not replaced. Reopen MouldMaster and try again.');return}
  const beforeDb=db;db=proposedReset;user=db.users[db.activeUser];if(db!==beforeDb)cancelActiveExam();
  try{updateGlobalProgress();renderProfile()}catch(uiError){console.warn('[MouldMaster] reset saved; view refresh failed:',uiError)}
- window.toast?.('Data reset. Local assessment and Learning Insights analytics were cleared and verified.');
+ window.toast?.('Learner data reset. Local assessment and Learning Insights analytics were cleared and verified. Saved process-data evidence was not deleted.');
+ labelLearnerReset();
 };
+labelLearnerReset();
 
 try{if(!localStorage.getItem(REVIEW_KEY)&&localStorage.getItem(LEGACY_REVIEW))localStorage.setItem(REVIEW_KEY,JSON.stringify({items:{}}))}catch(_){}
-window.MM_TRAINING_DATA_BRIDGE={version:'2026.09.06.1',cleanupFailureCode:ANALYTICS_CLEANUP_CODE,clearAssessmentAnalyticsStores,clearLearningAnalyticsStores,clearAllAnalyticsStores,clearTrainingExtrasStores,cancelActiveExam};
+window.MM_TRAINING_DATA_BRIDGE={version:'2026.09.15.4',cleanupFailureCode:ANALYTICS_CLEANUP_CODE,canonicalLearnerId,clearAssessmentAnalyticsStores,clearLearningAnalyticsStores,clearAllAnalyticsStores,clearTrainingExtrasStores,cancelActiveExam};
 })();

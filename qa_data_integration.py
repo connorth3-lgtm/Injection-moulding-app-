@@ -56,6 +56,11 @@ def main() -> None:
         "process_dataset_saved",
         "process_case_linked",
         "data-pdi-launch",
+        "deleteAllProcessData",
+        "referenceScale",
+        "insufficient-reference-observations",
+        "zero-reference-spread",
+        "insufficient-window-observations",
         "current-data-manifest.json",
         "process-data-semantic-registry.json",
     ]
@@ -75,7 +80,7 @@ def main() -> None:
         "baseline?.datasetId===dataset.id",
         "assertBaselineCompatible(dataset,baseline)",
         "api.intelligence.compareToBaseline=function",
-        "['datasets','shots','baselines','caseLinks']",
+        "['datasets','shots','baselines','caseLinks','interventions']",
         "row=>row?.datasetId===datasetId",
         "event.stopImmediatePropagation()",
         "data-di-delete",
@@ -125,9 +130,15 @@ def main() -> None:
         "compareWindows",
         "if(!dataset.quality?.analysisReady)",
         "includes('blocked')",
+        "finiteNumber",
+        "unscored-zero-spread",
+        "sampling_basis==='per-cycle'",
+        "unscored-incomplete-coverage",
     ]:
         require(token in intelligence_ui, f"process intelligence UI missing required behavior: {token}")
 
+    require((ROOT / "qa_process_statistics_integrity.cjs").exists(), "behavioral process-statistics regression test missing")
+    require((ROOT / "qa_import_identity_integrity.cjs").exists(), "behavioral import-identity regression test missing")
     require("extract_service_worker_assets" in builder, "Pages builder must publish both atomic-core and runtime-fetched worker assets")
     require("on_demand_assets" in builder and "precache_assets" in builder, "Pages manifest must expose cache policy")
     require("FORBIDDEN_PREFIXES" in builder and '"data/"' in builder, "raw governed data must remain excluded from public Pages artifact")

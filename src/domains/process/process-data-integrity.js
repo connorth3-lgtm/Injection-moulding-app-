@@ -1,9 +1,9 @@
-/* MouldMaster process-data integrity compatibility hardening — 2026.09.10.3 */
+/* MouldMaster process-data integrity compatibility hardening — 2026.09.15.4 */
 (function(){
 'use strict';
 if(window.MM_PROCESS_DATA_INTEGRITY)return;
 
-const VERSION='2026.09.10.3';
+const VERSION='2026.09.15.4';
 const DB_NAME='mouldmaster-process-data-v1';
 const DB_VERSION=1;
 const CONTEXT_KEYS=['machine','mould','materialGrade','job'];
@@ -60,12 +60,13 @@ async function deleteDatasetCascade(id){
   const datasetId=String(id||'');if(!datasetId)throw new Error('Dataset id is required');
   const db=await openDb();
   try{
-    const tx=db.transaction(['datasets','shots','baselines','caseLinks'],'readwrite');
+    const tx=db.transaction(['datasets','shots','baselines','caseLinks','interventions'],'readwrite');
     tx.objectStore('datasets').delete(datasetId);
     const shotIndex=tx.objectStore('shots').index('datasetId');
     await deleteCursorMatches(shotIndex.openCursor(IDBKeyRange.only(datasetId)),()=>true);
     await deleteCursorMatches(tx.objectStore('baselines').openCursor(),row=>row?.datasetId===datasetId);
     await deleteCursorMatches(tx.objectStore('caseLinks').openCursor(),row=>row?.datasetId===datasetId);
+    await deleteCursorMatches(tx.objectStore('interventions').openCursor(),row=>row?.datasetId===datasetId);
     await txDone(tx);
     return true;
   }finally{db.close()}
@@ -109,7 +110,7 @@ function captureUi(event){
   if(!del?.dataset?.diDelete)return;
   if(window.MM_CONNECTED_PROCESS_DATA?.__mmCanonicalProcessDataIntegrity)return;
   event.preventDefault();event.stopImmediatePropagation();
-  if(!window.confirm?.('Delete this local dataset, its shots, baselines, and linked troubleshooting references?'))return;
+  if(!window.confirm?.('Delete this local dataset, its shots, baselines, interventions, and linked troubleshooting references?'))return;
   deleteDatasetCascade(del.dataset.diDelete).then(()=>{
     window.toast?.('Local dataset and linked evidence deleted');
     window.MM_PROCESS_DATA_LOCAL_INTAKE?.openLibrary?.();

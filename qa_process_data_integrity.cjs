@@ -8,7 +8,7 @@ for(const [token,message] of [
   ["const CONTEXT_KEYS=['machine','mould','materialGrade','job']",'canonical runtime must own the full baseline context identity'],
   ['function baselineCompatibility(dataset={},baseline={})','canonical runtime must own baseline compatibility'],
   ['assertBaselineCompatible(record,baseline);','canonical comparison must fail closed before drift analysis'],
-  ["db.transaction(['datasets','shots','baselines','caseLinks'],'readwrite')",'canonical deletion must atomically include troubleshooting links'],
+  ["db.transaction(['datasets','shots','baselines','caseLinks','interventions'],'readwrite')",'canonical deletion must atomically include shots, baselines, troubleshooting links and interventions'],
   ['row=>row?.datasetId===datasetId','canonical deletion must remove dataset-linked troubleshooting records'],
   ['__mmCanonicalProcessDataIntegrity:VERSION','canonical runtime must advertise native integrity ownership'],
   ['baselineCompatibility,contextCompatibility,assertBaselineCompatible','canonical integrity helpers must be exposed through the process-data API'],
@@ -163,16 +163,20 @@ tables.baselines.set('b-same',{id:'b-same',datasetId:'d-current',entities:{},sum
   tables.baselines.set('baseline-keep',{id:'baseline-keep',datasetId:'d-current'});
   tables.caseLinks.set('case-delete',{caseId:'case-delete',datasetId:'d-delete'});
   tables.caseLinks.set('case-keep',{caseId:'case-keep',datasetId:'d-current'});
+  tables.interventions.set('intervention-delete',{id:'intervention-delete',datasetId:'d-delete'});
+  tables.interventions.set('intervention-keep',{id:'intervention-keep',datasetId:'d-current'});
 
   await window.MM_CONNECTED_PROCESS_DATA.storage.deleteDataset('d-delete');
   assert.equal(tables.datasets.has('d-delete'),false,'dataset must be deleted');
   assert.equal(tables.shots.has('shot-delete'),false,'dataset shots must be deleted');
   assert.equal(tables.baselines.has('baseline-delete'),false,'dataset baselines must be deleted');
   assert.equal(tables.caseLinks.has('case-delete'),false,'dataset-linked troubleshooting reference must be deleted');
+  assert.equal(tables.interventions.has('intervention-delete'),false,'dataset-linked intervention must be deleted');
   assert.equal(tables.datasets.has('d-current'),true,'unrelated dataset must remain');
   assert.equal(tables.shots.has('shot-keep'),true,'unrelated shot must remain');
   assert.equal(tables.baselines.has('baseline-keep'),true,'unrelated baseline must remain');
   assert.equal(tables.caseLinks.has('case-keep'),true,'unrelated troubleshooting reference must remain');
+  assert.equal(tables.interventions.has('intervention-keep'),true,'unrelated intervention must remain');
 
-  console.log('Process-data integrity QA passed: canonical ownership, fail-closed intake review, context gating, fallback compatibility, and atomic dataset/case-link cascade verified.');
+  console.log('Process-data integrity QA passed: canonical ownership, fail-closed intake review, context gating, fallback compatibility, and atomic dataset/case-link/intervention cascade verified.');
 })().catch(err=>{console.error(err);process.exitCode=1});

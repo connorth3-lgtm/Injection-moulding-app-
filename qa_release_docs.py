@@ -9,7 +9,7 @@ def need(ok,msg):
 
 V=json.loads(text('version.json'))
 expected={
- 'web_release':'2026.09.15.3',
+ 'web_release':'2026.09.15.4',
  'android_release':'2026.08.26.2',
  'desktop_release':'2026.08.26.9',
  'content_version':'2026.08.26.1',
@@ -130,7 +130,7 @@ need('MouldMaster GitHub Issues' in support and 'Do not post learner names' in s
 need('Learning insights events' in support and 'resets both analytics histories' in support,'support import analytics lifecycle disclosure is stale')
 
 privacy=text('privacy.html')
-for marker in ['assessment analytics','scoped to the active learner profile','first meaningful question exposure','does not currently upload','deliberately not included in the progress backup','successful progress-backup import resets local assessment analytics and Learning insights analytics','orphaned buckets','Reset local analytics','confirmed factory reset']:
+for marker in ['assessment analytics','scoped to the active learner profile','first meaningful question exposure','does not currently upload','deliberately not included in the progress backup','successful progress-backup import resets local assessment analytics and Learning insights analytics','orphaned buckets','Reset local analytics','Reset learner data','Delete all local process-data evidence','mouldmaster-process-data-v1']:
     need(marker in privacy,f'privacy disclosure missing: {marker}')
 need('cleanup cannot be verified' in privacy,'privacy notice must disclose fail-closed reset/import cleanup behavior')
 

@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "release": "2026.09.15.3",
+  "release": "2026.09.15.4",
   "policy": "External validation is release-specific. Automated QA may verify that HOLD boundaries are represented truthfully but must never manufacture human, device, learner, accreditation, signing, or production-site evidence.",
   "technicalAutomation": {
     "status": "pass",
@@ -44,7 +44,7 @@
   "bookSme": {
     "status": "hold",
     "evidenceContract": "data/book-sme-review-v1.json",
-    "reviewPacket": "qa/BOOK_SME_REVIEW_2026.09.15.3.md",
+    "reviewPacket": "qa/BOOK_SME_REVIEW_2026.09.15.4.md",
     "required": "Independent human SME approval of all 46 governed Book chapters across the six required review dimensions."
   },
   "curriculumSme": {
@@ -55,7 +55,7 @@
   "learnerOutcomes": {
     "status": "hold",
     "pilotContract": "data/learner-pilot-v1.json",
-    "pilotPacket": "qa/LEARNER_PILOT_2026.09.15.3.md",
+    "pilotPacket": "qa/LEARNER_PILOT_2026.09.15.4.md",
     "evidence": null,
     "required": "Longitudinal real-learner outcome evidence before efficacy or genuine psychometric-validity claims."
   },
