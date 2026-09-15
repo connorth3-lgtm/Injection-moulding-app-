@@ -328,7 +328,6 @@ def apply() -> None:
     expected = expected_assets(core)
     OUT_DIR.mkdir(parents=True, exist_ok=True)
     ASSEMBLY_PAYLOAD.write_bytes(CORE.read_bytes())
-    ASSEMBLY_PAYLOAD.write_bytes(CORE.read_bytes())
     for old in OUT_DIR.glob("core-inline-*.js"):
         if old.name not in expected:
             old.unlink()
