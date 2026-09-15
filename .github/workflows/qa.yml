@@ -58,6 +58,7 @@ jobs:
           python qa_book_materials_machine.py
           python qa_book_complete_draft.py
           python qa_book_claim_coverage.py
+          python qa_book_derived_governance.py
           python qa_book_release_integration.py
       - name: App-wide data and runtime deep audit
         run: python qa_app_wide_audit.py
