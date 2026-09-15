@@ -1,0 +1,64 @@
+name: Audit Fix Runtime Hardening QA
+
+on:
+  push:
+    branches: [fix/audit-remediation-2026-09-16]
+
+permissions:
+  contents: write
+
+jobs:
+  fix:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+          ref: fix/audit-remediation-2026-09-16
+      - uses: actions/setup-node@v7
+        with:
+          node-version: '22.12.0'
+          package-manager-cache: false
+      - uses: actions/setup-python@v7
+        with:
+          python-version: '3.12'
+      - name: Migrate hardening invariant to non-executable core payload
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p=Path('qa_runtime_hardening.py')
+          s=p.read_text(encoding='utf-8')
+          old='for required_asset in ("./index.html", "./MouldMaster_Core_App.html", "./pwa-shell.js", "./src/domains/domain-bootstrap.js", "./src/domains/engineering/engineering-store.js", "./material-catalog-v1.json"):'
+          new='for required_asset in ("./index.html", "./src/core-runtime/core-source.txt", "./pwa-shell.js", "./src/domains/domain-bootstrap.js", "./src/domains/engineering/engineering-store.js", "./material-catalog-v1.json"):'
+          if old not in s:
+              if new not in s: raise SystemExit('runtime hardening required-asset invariant shape changed')
+          else:
+              s=s.replace(old,new,1)
+          p.write_text(s,encoding='utf-8')
+          PY
+          git diff --check
+      - name: Run full maturity hardening gates
+        run: |
+          python qa_runtime_v2.py
+          python qa_assessment_runtime_v2.py
+          python qa_lesson_deep_authoring_v2.py
+          python qa_assessment_multimodal.py
+          python qa_authorised_site_pilot_framework.py
+          python qa_accessibility_hardening.py
+          python qa_release_immutability.py
+          python qa_runtime_hardening.py
+          python qa_release.py
+          python qa_open_desktop.py
+          python qa_release_docs.py
+          python qa_audit_remediation_20260915_6.py
+          python tools/build_pages_artifact.py
+      - name: Commit QA invariant migration
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add qa_runtime_hardening.py
+          git diff --cached --check
+          if git diff --cached --quiet; then exit 0; fi
+          git commit -m '[audit-remediation-generated] Align runtime hardening QA with contained core payload'
+          git push origin HEAD:fix/audit-remediation-2026-09-16
