@@ -22,9 +22,10 @@ jobs:
         with:
           python-version: '3.12'
       - name: Set up Node
-        uses: actions/setup-node@395ad3262231945c25e8478c1edab83777a24a66
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020
         with:
           node-version: '22'
+          package-manager-cache: false
       - name: Apply residual audit remediation
         run: |
           python tools/_tmp_fix_residual_audit.py
