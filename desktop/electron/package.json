@@ -51,10 +51,6 @@
         "to": "mouldmaster/index.html"
       },
       {
-        "from": "../../MouldMaster_Core_App.html",
-        "to": "mouldmaster/MouldMaster_Core_App.html"
-      },
-      {
         "from": "../../manifest.webmanifest",
         "to": "mouldmaster/manifest.webmanifest"
       },
