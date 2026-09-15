@@ -1,0 +1,69 @@
+name: Fix-all final candidate provenance
+
+on:
+  push:
+    branches: [ audit/fix-all-deep-dive-20260915 ]
+    paths:
+      - .github/workflows/fix-all-final-provenance.yml
+
+permissions:
+  contents: write
+
+jobs:
+  bind:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: audit/fix-all-deep-dive-20260915
+          fetch-depth: 0
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5.6.0
+        with:
+          python-version: '3.12'
+      - name: Replace provisional candidate provenance with final artifact
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+          replacements={
+            'afbfc2921fb1cba8ad9705ad821f9223546bda84':'7fe353beb0f54b5b8f53851221738bb5c1a9bcfe',
+            '34931254705':'34931583556',
+            '10381038770':'10381573337',
+            'physical-pwa-candidate-afbfc2921fb1cba8ad9705ad821f9223546bda84':'physical-pwa-candidate-7fe353beb0f54b5b8f53851221738bb5c1a9bcfe',
+            'sha256:cb84c59349536382c17609f5251b8efc40bef4624e9b3232353e185d6b57c796':'sha256:1d036a472946a2425daff02019e5f99893968bee91da5fb108a0b86c5a1a8448',
+            '2026-10-15T05:04:12Z':'2026-10-15T05:09:15Z',
+          }
+          paths=[
+            Path('data/release-external-validation-v1.json'),
+            Path('data/accessibility-real-at-validation-v1.json'),
+            Path('qa/EXTERNAL_VALIDATION_2026.09.15.5.md'),
+            Path('qa/ACCESSIBILITY_REAL_AT_2026.09.15.5.md'),
+            Path('qa/PWA_PHYSICAL_DEVICE_2026.09.15.5.md'),
+            Path('certification/WINDOWS_SIGNING_READINESS_2026.09.15.5.md'),
+          ]
+          for path in paths:
+            text=path.read_text(encoding='utf-8')
+            for old,new in replacements.items(): text=text.replace(old,new)
+            path.write_text(text,encoding='utf-8')
+          PY
+          python qa_release_validation_packets.py
+          python tools/verify_release_external_validation.py
+          python qa_book_release_integration.py
+          git diff --check
+          ! grep -R 'afbfc2921fb1cba8ad9705ad821f9223546bda84\|10381038770\|34931254705' \
+            data/release-external-validation-v1.json data/accessibility-real-at-validation-v1.json \
+            qa/EXTERNAL_VALIDATION_2026.09.15.5.md qa/ACCESSIBILITY_REAL_AT_2026.09.15.5.md \
+            qa/PWA_PHYSICAL_DEVICE_2026.09.15.5.md certification/WINDOWS_SIGNING_READINESS_2026.09.15.5.md
+      - name: Commit final provenance and remove one-shot workflow
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git rm .github/workflows/fix-all-final-provenance.yml
+          git add data qa certification
+          git add -u
+          git commit -m 'Bind final audit-fix candidate provenance'
+          git push origin HEAD:audit/fix-all-deep-dive-20260915
