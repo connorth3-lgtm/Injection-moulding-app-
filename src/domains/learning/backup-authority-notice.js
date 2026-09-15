@@ -1,8 +1,8 @@
-/* MouldMaster backup authority UX — 2026.09.15.6 */
+/* MouldMaster backup authority UX — 2026.09.16.1 */
 (function(){
 'use strict';
 if(window.MM_BACKUP_AUTHORITY_NOTICE)return;
-const VERSION='2026.09.15.6';
+const VERSION='2026.09.16.1';
 const LEGACY_SUCCESS='Backup imported and strictly validated';
 const CLEAR_SUCCESS='Progress imported. Certificates and pass authority must be re-earned; local assessment and Learning Insights analytics are reset.';
 const baseToast=window.toast;

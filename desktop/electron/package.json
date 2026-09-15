@@ -75,6 +75,10 @@
         "to": "mouldmaster/ui-shell.css"
       },
       {
+        "from": "../../premium-ui.css",
+        "to": "mouldmaster/premium-ui.css"
+      },
+      {
         "from": "../../mobile-lesson-fix.css",
         "to": "mouldmaster/mobile-lesson-fix.css"
       },
