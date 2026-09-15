@@ -39,9 +39,10 @@
     ];
     const BODY_SCRIPTS=[
       ['./production-health.js','<script src="./production-health.js">'],
-      ['./reading-patch.js','<script src="./reading-patch.js">'],
-      ['./training-upgrade.js','<script src="./training-upgrade.js">'],
-      ['./training-qa-fix.js','<script src="./training-qa-fix.js">'],
+      // packed source './reading-patch.js'
+      // packed source './training-upgrade.js'
+      // packed source './training-qa-fix.js'
+      ['./src/domains/runtime-packs/learning-foundation-runtime-pack.js','<script src="./src/domains/runtime-packs/learning-foundation-runtime-pack.js">'],
       ['./assessment-100-pass.js','<script src="./assessment-100-pass.js">'],
       ['./assessment-deep-dive.js','<script src="./assessment-deep-dive.js">'],
       ['./assessment-answer-cue-fix.js','<script src="./assessment-answer-cue-fix.js">'],
