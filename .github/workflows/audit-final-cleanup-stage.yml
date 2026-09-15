@@ -1,0 +1,64 @@
+name: Audit Final Cleanup Stage
+
+on:
+  push:
+    branches: [fix/audit-remediation-2026-09-16]
+
+permissions:
+  contents: write
+
+jobs:
+  cleanup:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+          ref: fix/audit-remediation-2026-09-16
+      - uses: actions/setup-node@v7
+        with:
+          node-version: '22.12.0'
+          package-manager-cache: false
+      - uses: actions/setup-python@v7
+        with:
+          python-version: '3.12'
+      - name: Remove duplicate containment write
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p=Path('tools/externalize_core_scripts.py')
+          s=p.read_text(encoding='utf-8')
+          duplicate='    ASSEMBLY_PAYLOAD.write_bytes(CORE.read_bytes())\n    ASSEMBLY_PAYLOAD.write_bytes(CORE.read_bytes())\n'
+          single='    ASSEMBLY_PAYLOAD.write_bytes(CORE.read_bytes())\n'
+          if duplicate in s:
+              s=s.replace(duplicate,single,1)
+          elif s.count(single)!=1:
+              raise SystemExit('assembly payload write invariant is not exactly one')
+          p.write_text(s,encoding='utf-8')
+          PY
+          git diff --check
+      - name: Validate final source candidate
+        run: |
+          python tools/externalize_core_scripts.py --check
+          python tools/generate_runtime_manifest.py --check
+          node --check service-worker.js
+          node --check src/domains/learning/book-claim-trace.js
+          node --check src/domains/learning/backup-authority-notice.js
+          python qa_release.py
+          python qa_release_docs.py
+          python qa_audit_remediation_20260915_6.py
+          python tools/build_pages_artifact.py
+          test ! -e .pages-dist/MouldMaster_Core_App.html
+          test -f .pages-dist/src/core-runtime/core-source.txt
+          cmp -s MouldMaster_Core_App.html .pages-dist/src/core-runtime/core-source.txt
+          python tools/verify_pwa_physical_evidence.py --artifact .pages-dist --print-fingerprint
+      - name: Commit cleanup
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add tools/externalize_core_scripts.py
+          git diff --cached --check
+          if git diff --cached --quiet; then exit 0; fi
+          git commit -m '[audit-remediation-generated] Deduplicate core payload generation'
+          git push origin HEAD:fix/audit-remediation-2026-09-16
