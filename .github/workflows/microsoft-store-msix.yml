@@ -19,6 +19,8 @@ jobs:
       MM_STORE_PUBLISHER_DISPLAY_NAME: ${{ vars.MM_STORE_PUBLISHER_DISPLAY_NAME }}
     steps:
       - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
       - name: Require Partner Center identity
         shell: pwsh
         run: |
