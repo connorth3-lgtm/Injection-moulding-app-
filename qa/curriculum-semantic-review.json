@@ -1,5 +1,7 @@
 {
   "schemaVersion": 1,
+  "release": "2026.09.15.4",
+  "packet": "qa/CURRICULUM_SME_REVIEW_2026.09.15.4.md",
   "policy": "Human SME semantic-review contract for the 120 canonical lessons. Dimension approvals bind to the current whole-lesson SHA-256 fingerprint. Any canonical lesson change invalidates all recorded approvals for that lesson until re-reviewed. Lessons without a review record are pending. This repository is public; reviewers should use only attribution they intend to publish.",
   "requiredDimensions": [
     "mechanism",

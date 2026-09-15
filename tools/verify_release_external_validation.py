@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
-"""Fail closed on unsupported external-validation claims for the current release."""
+"""Fail closed on unsupported or stale external-validation claims for the current release."""
 from __future__ import annotations
 
 import json
+import re
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -19,6 +20,8 @@ ALLOWED_SECTION_STATUS = {
     "productionUse": {"advisory-only"},
     "visualGovernance": {"pending-native-ruleset-apply", "enforced"},
 }
+SHA_RE = re.compile(r"^[0-9a-f]{40}$")
+FINGERPRINT_RE = re.compile(r"^sha256:[0-9a-f]{64}$")
 
 
 def fail(message: str) -> None:
@@ -44,6 +47,37 @@ def require_nonempty(value: object, message: str) -> str:
     return text
 
 
+def require_repo_file(value: object, message: str) -> str:
+    rel = require_nonempty(value, message)
+    path = ROOT / rel
+    if not path.is_file():
+        fail(f"referenced file is missing: {rel}")
+    return rel
+
+
+def require_release_packet(value: object, expected_release: str, expected_path: str, label: str) -> str:
+    rel = require_repo_file(value, f"{label} release packet is missing")
+    if rel != expected_path:
+        fail(f"{label} release packet must be {expected_path}, got {rel}")
+    if expected_release not in Path(rel).name:
+        fail(f"{label} packet is not visibly bound to release {expected_release}")
+    return rel
+
+
+def require_sha(value: object, label: str) -> str:
+    text = require_nonempty(value, f"{label} is missing")
+    if SHA_RE.fullmatch(text) is None:
+        fail(f"{label} must be a 40-character lowercase commit SHA")
+    return text
+
+
+def require_fingerprint(value: object, label: str) -> str:
+    text = require_nonempty(value, f"{label} is missing")
+    if FINGERPRINT_RE.fullmatch(text) is None:
+        fail(f"{label} must be sha256:<64 lowercase hex characters>")
+    return text
+
+
 def load_current_release() -> str:
     if not VERSION.is_file():
         fail("canonical release source is missing: version.json")
@@ -61,16 +95,34 @@ def load_current_release() -> str:
 
 def require_current_release(evidence: dict, expected_release: str, label: str) -> None:
     if evidence.get("release") != expected_release:
-        fail(f"validated {label} evidence must be bound to release {expected_release}")
+        fail(f"{label} evidence/contract must be bound to release {expected_release}")
 
 
 def validate_accessibility(section: dict, expected_release: str) -> None:
+    packet = require_release_packet(
+        section.get("reviewPacket"),
+        expected_release,
+        f"qa/ACCESSIBILITY_REAL_AT_{expected_release}.md",
+        "accessibility",
+    )
     evidence = load_json(ROOT / section["evidenceContract"])
+    require_current_release(evidence, expected_release, "accessibility")
+    if evidence.get("packet") != packet:
+        fail("accessibility contract packet does not match the release ledger")
+    source_sha = require_sha(evidence.get("sourceSha"), "accessibility sourceSha")
+    fingerprint = require_fingerprint(evidence.get("runtimeFingerprint"), "accessibility runtimeFingerprint")
+    candidate = section.get("candidate")
+    if not isinstance(candidate, dict):
+        fail("accessibility candidate binding is missing")
+    if candidate.get("release") != expected_release:
+        fail("accessibility candidate release is stale")
+    if candidate.get("sourceSha") != source_sha or candidate.get("runtimeFingerprint") != fingerprint:
+        fail("accessibility candidate does not match the governed real-AT contract")
+
     if section["status"] == "hold":
         if evidence.get("status") == "validated":
             fail("accessibility is marked hold although its evidence contract says validated; reconcile explicitly")
         return
-    require_current_release(evidence, expected_release, "accessibility")
     if evidence.get("status") != "validated":
         fail("accessibility cannot be validated until the real-AT contract status is validated")
     matrix = evidence.get("requiredMatrix")
@@ -84,15 +136,46 @@ def validate_accessibility(section: dict, expected_release: str) -> None:
 
 
 def validate_pwa(section: dict, expected_release: str) -> None:
+    require_release_packet(
+        section.get("reviewPacket"),
+        expected_release,
+        f"qa/PWA_PHYSICAL_DEVICE_{expected_release}.md",
+        "PWA physical-device",
+    )
+    candidate = section.get("currentCandidate")
+    if not isinstance(candidate, dict):
+        fail("PWA currentCandidate binding is missing")
+    if candidate.get("release") != expected_release:
+        fail("PWA candidate release is stale")
+    source_sha = require_sha(candidate.get("sourceSha"), "PWA candidate sourceSha")
+    require_fingerprint(candidate.get("runtimeFingerprint"), "PWA candidate runtimeFingerprint")
+    require_fingerprint(candidate.get("artifactDigest"), "PWA candidate artifactDigest")
+    for key in ("pagesRunId", "artifactId"):
+        value = candidate.get(key)
+        if not isinstance(value, int) or value <= 0:
+            fail(f"PWA candidate {key} must be a positive integer")
+    expected_name = f"physical-pwa-candidate-{source_sha}"
+    if candidate.get("artifactName") != expected_name:
+        fail(f"PWA candidate artifactName must be {expected_name}")
+    require_nonempty(candidate.get("artifactExpiresAt"), "PWA candidate artifactExpiresAt is missing")
+
     evidence = load_json(ROOT / section["evidenceContract"])
     if section["status"] == "hold":
         return
     require_current_release(evidence, expected_release, "PWA physical-device")
     if evidence.get("status") != "validated":
         fail("current-release PWA cannot be validated without full physical iOS/iPadOS + Android evidence")
+    if evidence.get("runtimeFingerprint") != candidate.get("runtimeFingerprint"):
+        fail("validated PWA evidence must match the exact currentCandidate runtime fingerprint")
 
 
 def validate_book_sme(section: dict, expected_release: str) -> None:
+    require_release_packet(
+        section.get("reviewPacket"),
+        expected_release,
+        f"qa/BOOK_SME_REVIEW_{expected_release}.md",
+        "Book SME",
+    )
     evidence = load_json(ROOT / section["evidenceContract"])
     require_current_release(evidence, expected_release, "Book SME")
     chapter_ids = evidence.get("chapterIds")
@@ -126,15 +209,25 @@ def validate_book_sme(section: dict, expected_release: str) -> None:
 
 
 def validate_curriculum(section: dict, expected_release: str) -> None:
+    packet = require_release_packet(
+        section.get("reviewPacket"),
+        expected_release,
+        f"qa/CURRICULUM_SME_REVIEW_{expected_release}.md",
+        "curriculum SME",
+    )
     evidence = load_json(ROOT / section["evidenceContract"])
+    require_current_release(evidence, expected_release, "curriculum SME")
+    if evidence.get("packet") != packet:
+        fail("curriculum SME contract packet does not match the release ledger")
     reviews = evidence.get("reviews")
     lesson_ids = evidence.get("lessonIds")
+    if not isinstance(lesson_ids, list) or len(lesson_ids) != 120 or len(set(lesson_ids)) != 120:
+        fail("curriculum SME contract must contain the canonical 120 unique lesson ids")
+    if not isinstance(reviews, list):
+        fail("curriculum SME reviews must be a list")
     if section["status"] == "hold":
         return
-    require_current_release(evidence, expected_release, "curriculum SME")
-    if not isinstance(lesson_ids, list) or len(lesson_ids) != 120:
-        fail("curriculum SME validation requires the canonical 120-lesson inventory")
-    if not isinstance(reviews, list) or len(reviews) != 120:
+    if len(reviews) != 120:
         fail("curriculum SME validation requires one review record for each of 120 lessons")
     reviewed_ids = {row.get("lessonId") for row in reviews if isinstance(row, dict)}
     if reviewed_ids != set(lesson_ids):
@@ -142,6 +235,14 @@ def validate_curriculum(section: dict, expected_release: str) -> None:
 
 
 def validate_windows(section: dict, expected_release: str) -> None:
+    require_release_packet(
+        section.get("readinessPacket"),
+        expected_release,
+        f"certification/WINDOWS_SIGNING_READINESS_{expected_release}.md",
+        "Windows distribution",
+    )
+    require_sha(section.get("sourceSha"), "Windows sourceSha")
+    require_nonempty(section.get("desktopRelease"), "Windows desktopRelease is missing")
     if section["status"] == "hold":
         if section.get("evidence") is not None:
             fail("Windows HOLD must not contain synthetic completion evidence")
@@ -159,6 +260,14 @@ def validate_windows(section: dict, expected_release: str) -> None:
 
 
 def validate_learner(section: dict, expected_release: str) -> None:
+    require_release_packet(
+        section.get("pilotPacket"),
+        expected_release,
+        f"qa/LEARNER_PILOT_{expected_release}.md",
+        "learner pilot",
+    )
+    pilot = load_json(ROOT / section["pilotContract"])
+    require_current_release(pilot, expected_release, "learner pilot")
     if section["status"] == "hold":
         if section.get("evidence") is not None:
             fail("learner-outcomes HOLD must not contain synthetic completion evidence")
@@ -183,6 +292,12 @@ def main() -> None:
         fail("schemaVersion must be 1")
     if data.get("release") != expected_release:
         fail(f"release must match canonical web release {expected_release}")
+    require_release_packet(
+        data.get("validationIndex"),
+        expected_release,
+        f"qa/EXTERNAL_VALIDATION_{expected_release}.md",
+        "external-validation index",
+    )
     if (data.get("technicalAutomation") or {}).get("status") != "pass":
         fail("technicalAutomation.status must be pass for this audited release record")
 
@@ -247,8 +362,8 @@ def main() -> None:
     ]
     print(
         f"Release {expected_release} external-validation boundary verified. "
-        f"Automated technical state is PASS; explicit HOLD areas: {', '.join(holds) if holds else 'none'}; "
-        "production authority remains advisory-only."
+        f"Automated technical state is PASS; exact release packets are current; explicit HOLD areas: "
+        f"{', '.join(holds) if holds else 'none'}; production authority remains advisory-only."
     )
 
 
