@@ -72,7 +72,7 @@ assert "Compare All assesses ALL 9 regional items" in core, "Compare All regiona
 index = text("index.html")
 assert f'const SHELL_RELEASE="{WEB_RELEASE}"' in index
 assert 'const RUNTIME_ASSET_VERSION=SHELL_RELEASE;' in index
-assert 'const CORE_URL="./MouldMaster_Core_App.html"' in index
+assert 'const CORE_URL="./src/core-runtime/core-source.txt"' in index
 assert "BODY_SCRIPTS" in index and "'./source-library.js'" in index, "source library not loaded by shell"
 for marker in ["Content-Security-Policy", "default-src 'self'", "object-src 'none'", "frame-src 'none'", "connect-src 'self'", "worker-src 'self'"]:
     assert marker in index, f"browser CSP boundary missing: {marker}"
@@ -103,7 +103,7 @@ for retired in ["assessment-100-pass.js","assessment-deep-dive.js","assessment-a
 sw = text("service-worker.js")
 assert f"CACHE_VERSION='{WEB_RELEASE}'" in sw
 for asset in [
-    "index.html", "MouldMaster_Core_App.html", "manifest.webmanifest",
+    "index.html", "src/core-runtime/core-source.txt", "manifest.webmanifest",
     "mouldmaster-192.png", "mouldmaster-512.png", "version.json", "reading-patch.css",
     "src/domains/runtime-packs/learning-foundation-runtime-pack.js", "src/domains/runtime-packs/assessment-foundation-runtime-pack.js", "source-library.js", "pwa-shell.js", "learning-experience.js",
     "process-data-diagnostics.js", "curriculum-integration.js", "specialist-curriculum.js",
