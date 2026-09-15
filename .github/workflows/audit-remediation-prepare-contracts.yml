@@ -1,0 +1,100 @@
+name: Prepare 2026.09.15.6 External Contracts
+
+on:
+  push:
+    branches: [fix/audit-remediation-2026-09-16]
+
+permissions:
+  contents: write
+
+concurrency:
+  group: prepare-2026-09-15-6-external-contracts
+  cancel-in-progress: false
+
+jobs:
+  prepare:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+          ref: fix/audit-remediation-2026-09-16
+      - uses: actions/setup-python@v7
+        with:
+          python-version: '3.12'
+      - name: Advance external contracts to the current release without carrying evidence
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import json
+          OLD='2026.09.15.5'; NEW='2026.09.15.6'
+          def load(path): return json.loads(Path(path).read_text(encoding='utf-8'))
+          def dump(path,obj): Path(path).write_text(json.dumps(obj,indent=2,ensure_ascii=False)+'\n',encoding='utf-8')
+          def release_only_copy(src,dst):
+              s=Path(src).read_text(encoding='utf-8').replace(OLD,NEW)
+              Path(dst).write_text(s,encoding='utf-8')
+
+          ledger=load('data/release-external-validation-v1.json')
+          ledger['release']=NEW
+          ledger['validationIndex']=f'qa/EXTERNAL_VALIDATION_{NEW}.md'
+          ledger['accessibility']['reviewPacket']=f'qa/ACCESSIBILITY_REAL_AT_{NEW}.md'
+          ledger['accessibility']['candidate']['release']=NEW
+          ledger['pwaPhysicalDevices']['reviewPacket']=f'qa/PWA_PHYSICAL_DEVICE_{NEW}.md'
+          ledger['pwaPhysicalDevices']['currentCandidate']['release']=NEW
+          ledger['windowsDistribution']['readinessPacket']=f'certification/WINDOWS_SIGNING_READINESS_{NEW}.md'
+          ledger['bookSme']['reviewPacket']=f'qa/BOOK_SME_REVIEW_{NEW}.md'
+          ledger['curriculumSme']['reviewPacket']=f'qa/CURRICULUM_SME_REVIEW_{NEW}.md'
+          ledger['learnerOutcomes']['pilotPacket']=f'qa/LEARNER_PILOT_{NEW}.md'
+          for key in ('accessibility','pwaPhysicalDevices','windowsDistribution','bookSme','curriculumSme','learnerOutcomes'):
+              ledger[key]['status']='hold'
+          for key in ('fullyExternallyValidated','accreditationAuthorized','learnerEfficacyEstablished','productionRecipeValidated','automaticMachineControlAuthorized'):
+              ledger['claims'][key]=False
+          dump('data/release-external-validation-v1.json',ledger)
+
+          at=load('data/accessibility-real-at-validation-v1.json')
+          if at.get('status')=='validated': raise SystemExit('refusing to carry validated AT evidence to a new runtime')
+          at['release']=NEW; at['packet']=f'qa/ACCESSIBILITY_REAL_AT_{NEW}.md'
+          dump('data/accessibility-real-at-validation-v1.json',at)
+
+          curriculum=load('qa/curriculum-semantic-review.json')
+          curriculum['release']=NEW; curriculum['packet']=f'qa/CURRICULUM_SME_REVIEW_{NEW}.md'
+          dump('qa/curriculum-semantic-review.json',curriculum)
+
+          book=load('data/book-sme-review-v1.json')
+          if book.get('status')=='validated' or book.get('reviews'): raise SystemExit('refusing to synthesize or carry Book SME approval')
+          book['release']=NEW
+          dump('data/book-sme-review-v1.json',book)
+          dump('src/domains/learning/book-data/book-sme-review-v1.json',book)
+
+          learner=load('data/learner-pilot-v1.json')
+          learner['release']=NEW
+          dump('data/learner-pilot-v1.json',learner)
+
+          for src,dst in [
+            (f'qa/EXTERNAL_VALIDATION_{OLD}.md',f'qa/EXTERNAL_VALIDATION_{NEW}.md'),
+            (f'qa/ACCESSIBILITY_REAL_AT_{OLD}.md',f'qa/ACCESSIBILITY_REAL_AT_{NEW}.md'),
+            (f'qa/PWA_PHYSICAL_DEVICE_{OLD}.md',f'qa/PWA_PHYSICAL_DEVICE_{NEW}.md'),
+            (f'certification/WINDOWS_SIGNING_READINESS_{OLD}.md',f'certification/WINDOWS_SIGNING_READINESS_{NEW}.md'),
+            (f'qa/BOOK_SME_REVIEW_{OLD}.md',f'qa/BOOK_SME_REVIEW_{NEW}.md'),
+            (f'qa/CURRICULUM_SME_REVIEW_{OLD}.md',f'qa/CURRICULUM_SME_REVIEW_{NEW}.md'),
+            (f'qa/LEARNER_PILOT_{OLD}.md',f'qa/LEARNER_PILOT_{NEW}.md'),
+          ]: release_only_copy(src,dst)
+          PY
+      - name: Validate settled learner-facing bytes
+        run: |
+          python qa_release.py
+          python qa_release_docs.py
+          python qa_book_release_integration.py
+          python qa_audit_remediation_20260915_6.py
+          python tools/build_pages_artifact.py
+          python tools/verify_pwa_physical_evidence.py --artifact .pages-dist --print-fingerprint
+          git diff --check
+      - name: Commit release-contract transition
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add data/release-external-validation-v1.json data/accessibility-real-at-validation-v1.json qa/curriculum-semantic-review.json data/book-sme-review-v1.json src/domains/learning/book-data/book-sme-review-v1.json data/learner-pilot-v1.json qa/EXTERNAL_VALIDATION_2026.09.15.6.md qa/ACCESSIBILITY_REAL_AT_2026.09.15.6.md qa/PWA_PHYSICAL_DEVICE_2026.09.15.6.md certification/WINDOWS_SIGNING_READINESS_2026.09.15.6.md qa/BOOK_SME_REVIEW_2026.09.15.6.md qa/CURRICULUM_SME_REVIEW_2026.09.15.6.md qa/LEARNER_PILOT_2026.09.15.6.md
+          git diff --cached --check
+          git commit -m '[audit-remediation-generated] Advance 2026.09.15.6 external contracts without evidence carryover'
+          git push origin HEAD:fix/audit-remediation-2026-09-16
