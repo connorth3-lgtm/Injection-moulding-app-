@@ -130,6 +130,8 @@ jobs:
         run: node qa_final_audit_lifecycle.cjs
       - name: Audit remediation application and data regression
         run: node qa_audit_remediation_runtime.cjs
+      - name: 2026.09.15.6 deep-audit remediation regression
+        run: python qa_audit_remediation_20260915_6.py
       - name: Learner-scoped assessment storage integrity
         run: python qa_assessment_storage_scope.py
       - name: Stable spaced-review ID integrity
