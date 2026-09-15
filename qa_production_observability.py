@@ -74,7 +74,9 @@ require(expected_static_cache == f"mouldmaster-static-{cache_version}-{cache_rev
         "Bootstrap expected cache does not exactly match the service-worker cache identity")
 require("['./production-health.js','<script src=\"./production-health.js\">']" in index,
         "Browser runtime does not load production health before learner modules")
-require(index.index("'./production-health.js'") < index.index("'./reading-patch.js'"),
+learning_pack = "'./src/domains/runtime-packs/learning-foundation-runtime-pack.js'"
+require(learning_pack in index, "Learning foundation runtime pack is missing from browser bootstrap")
+require(index.index("'./production-health.js'") < index.index(learning_pack),
         "Production health must load before learner runtime modules")
 require("Promise.allSettled" in worker and "await caches.delete(STATIC_CACHE)" in worker,
         "Observability must coexist with fail-closed service-worker install rather than a partially active core cache")

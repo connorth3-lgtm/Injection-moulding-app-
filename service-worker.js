@@ -1,4 +1,4 @@
-const CACHE_VERSION='2026.09.15.1';
+const CACHE_VERSION='2026.09.15.2';
 const CACHE_REVISION='engineer-simulator-ui-r1-20260911';
 const STATIC_CACHE=`mouldmaster-static-${CACHE_VERSION}-${CACHE_REVISION}`;
 
@@ -27,10 +27,8 @@ const CORE=[
   './ui-shell.css',
   './mobile-lesson-fix.css',
   './learner-ux-repair.css',
-  './reading-patch.js',
+  './src/domains/runtime-packs/learning-foundation-runtime-pack.js',
   './read-aloud.js',
-  './training-upgrade.js',
-  './training-qa-fix.js',
   './runtime-v2.js',
   './assessment-runtime-v2.js',
   './app-shell-registry.js',

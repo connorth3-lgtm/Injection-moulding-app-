@@ -28,6 +28,20 @@ def explicit_same_origin_assets(source: str) -> set[str]:
     return {m.group(1).split("?", 1)[0] for m in re.finditer(r"['\"]\./([^'\"?]+)(?:\?[^'\"]*)?['\"]", source)}
 
 
+def packed_source_inputs(source: str) -> set[str]:
+    """Return generator inputs documented in index but not fetched at runtime.
+
+    Runtime-pack source files remain visible in index as review breadcrumbs. They
+    are not network/runtime assets: the generated pack is the governed browser
+    asset, while tools/build_runtime_packs.py --check proves the pack is the exact
+    ordered concatenation of these inputs before this release gate runs.
+    """
+    return {
+        m.group(1).split("?", 1)[0]
+        for m in re.finditer(r"^\s*//\s*packed source\s+['\"]\./([^'\"]+)['\"]\s*$", source, re.M)
+    }
+
+
 # The mandatory integrity workflow checks out two commits. Fail clearly if that
 # invariant is weakened, because silently skipping this comparison would reopen
 # the mixed-version PWA failure mode.
@@ -51,7 +65,10 @@ governed.update({"service-worker.js", "manifest.webmanifest"})
 # Independently derive what the browser shell and generated domain manifest can
 # load. This prevents a future feature from being added to index/domain loading
 # while being accidentally omitted from the service-worker/release-governance set.
+# Generator inputs documented with `// packed source './…'` are deliberately
+# excluded because they are not fetched by the shell; their generated pack is.
 shell_runtime = explicit_same_origin_assets(index)
+shell_runtime.difference_update(packed_source_inputs(index))
 domain_manifest = json.loads((ROOT / "runtime-domain-manifest.json").read_text(encoding="utf-8"))
 for field in ("assets", "dataAssets"):
     values = domain_manifest.get(field, [])

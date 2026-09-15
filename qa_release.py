@@ -7,7 +7,7 @@ import struct
 import subprocess
 import tempfile
 
-WEB_RELEASE = "2026.09.15.1"
+WEB_RELEASE = "2026.09.15.2"
 ANDROID_RELEASE = "2026.08.26.2"
 CONTENT_VERSION = "2026.08.26.1"
 WINDOWS_RECOVERY_VERSION = "2026.08.21.1"
@@ -39,6 +39,7 @@ manifest = json.loads(text("manifest.webmanifest"))
 assert version["web_release"] == WEB_RELEASE
 assert version["android_release"] == ANDROID_RELEASE
 subprocess.run(["python", "qa_web_release_identity.py"], check=True)
+subprocess.run(["python", "tools/build_runtime_packs.py", "--check"], check=True)
 assert version["content_version"] == CONTENT_VERSION
 assert version["question_bank_version"] == QUESTION_BANK_VERSION
 assert version["legacy_review_id_version"] == LEGACY_REVIEW_ID_VERSION
@@ -71,6 +72,7 @@ assert "BODY_SCRIPTS" in index and "'./source-library.js'" in index, "source lib
 for marker in ["Content-Security-Policy", "default-src 'self'", "object-src 'none'", "frame-src 'none'", "connect-src 'self'", "worker-src 'self'"]:
     assert marker in index, f"browser CSP boundary missing: {marker}"
 for asset in [
+    "src/domains/runtime-packs/learning-foundation-runtime-pack.js",
     "learning-experience.js",
     "process-data-diagnostics.js",
     "curriculum-integration.js",
@@ -86,6 +88,7 @@ for asset in [
     "accessibility-hardening.js",
 ]:
     assert f"'./{asset}'" in index, f"current learner-facing runtime asset not loaded by shell: {asset}"
+assert "['./reading-patch.js','<script" not in index and "['./training-upgrade.js','<script" not in index and "['./training-qa-fix.js','<script" not in index, "learning foundation source scripts must not return as direct bootstrap entries"
 assert index.index("'./assessment-final-hardening.js'") < index.index("'./runtime-v2.js'") < index.index("'./assessment-runtime-v2.js'") < index.index("'./assessment-ux.js'"), "runtime-v2 assessment ownership load order is wrong"
 assert index.index("'./specialist-curriculum.js'") < index.index("'./specialist-evidence-gap-extension.js'") < index.index("'./mould-master-workspace.js'") < index.index("'./app-shell-finalize.js'"), "specialist evidence/runtime finalizer load order is wrong"
 
@@ -93,14 +96,16 @@ sw = text("service-worker.js")
 assert f"CACHE_VERSION='{WEB_RELEASE}'" in sw
 for asset in [
     "index.html", "MouldMaster_Core_App.html", "manifest.webmanifest",
-    "mouldmaster-192.png", "mouldmaster-512.png", "version.json", "reading-patch.css", "reading-patch.js",
-    "training-upgrade.js", "training-qa-fix.js", "source-library.js", "pwa-shell.js", "learning-experience.js",
+    "mouldmaster-192.png", "mouldmaster-512.png", "version.json", "reading-patch.css",
+    "src/domains/runtime-packs/learning-foundation-runtime-pack.js", "source-library.js", "pwa-shell.js", "learning-experience.js",
     "process-data-diagnostics.js", "curriculum-integration.js", "specialist-curriculum.js",
     "specialist-evidence-gap-extension.js", "mould-master-workspace.js", "app-shell-finalize.js", "learning-analytics.js",
     "runtime-v2.js", "assessment-runtime-v2.js", "lesson-deep-authoring-v2.js", "assessment-multimodal.js", "accessibility-hardening.js",
     "learner-ux-repair.css", "learner-ux-repair.js"
 ]:
     assert f"'./{asset}'" in sw, f"offline asset missing: {asset}"
+for retired in ["reading-patch.js", "training-upgrade.js", "training-qa-fix.js"]:
+    assert f"'./{retired}'" not in sw, f"retired direct learning source must not remain an offline release asset: {retired}"
 assert "'./MouldMaster_Academy_App.html'" not in sw.split("const OPTIONAL=", 1)[0], "frozen legacy Academy app must not be a current core cache asset"
 install = sw[sw.index("self.addEventListener('install'"):sw.index("self.addEventListener('activate'")]
 assert "Promise.allSettled" in install, "install must inspect every required offline asset"
@@ -228,6 +233,7 @@ for dep in ["electron", "electron-builder"]:
 from_paths = {x.get("from") for x in dpkg["build"].get("extraResources", []) if isinstance(x, dict)}
 for asset in ["runtime-v2.js", "assessment-runtime-v2.js", "lesson-deep-authoring-v2.js", "assessment-multimodal.js", "accessibility-hardening.js"]:
     assert f"../../{asset}" in from_paths, f"desktop bundle missing maturity-hardening asset: {asset}"
+assert "../../src/domains" in from_paths, "desktop bundle must include generated domain runtime packs"
 dmain = (desktop_root / "src" / "main.cjs").read_text(encoding="utf-8")
 for marker in ["nodeIntegration: false", "contextIsolation: true", "sandbox: true", "webSecurity: true", "allowRunningInsecureContent: false", "setPermissionRequestHandler", "setPermissionCheckHandler", "will-attach-webview", "setWindowOpenHandler", "const DESKTOP_PORT = 43139", "server.listen(DESKTOP_PORT, '127.0.0.1'", "requestSingleInstanceLock()", "SHA-256 verification failed"]:
     assert marker in dmain, f"open desktop security control missing: {marker}"
@@ -240,7 +246,7 @@ if lock.exists():
     assert lock_data.get("lockfileVersion", 0) >= 2, "desktop npm lockfile is too old"
 
 for js_name in [
-    "service-worker.js", "reading-patch.js", "training-upgrade.js", "training-qa-fix.js",
+    "service-worker.js", "src/domains/runtime-packs/learning-foundation-runtime-pack.js", "reading-patch.js", "training-upgrade.js", "training-qa-fix.js",
     "assessment-quality-suite.js", "source-library.js", "pwa-shell.js", "specialist-curriculum.js",
     "specialist-evidence-gap-extension.js", "mould-master-workspace.js", "app-shell-finalize.js",
     "runtime-v2.js", "assessment-runtime-v2.js", "lesson-deep-authoring-v2.js", "assessment-multimodal.js", "accessibility-hardening.js",
