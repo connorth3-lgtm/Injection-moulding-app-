@@ -16,6 +16,11 @@ ROOT = Path(__file__).resolve().parents[1]
 OUT_DIR = ROOT / "src" / "domains" / "runtime-packs"
 
 PACKS: dict[str, tuple[str, ...]] = {
+    "learning-foundation-runtime-pack.js": (
+        "reading-patch.js",
+        "training-upgrade.js",
+        "training-qa-fix.js",
+    ),
     "evidence-runtime-pack.js": (
         "reference-data.js",
         "reference-deep-dive.js",
