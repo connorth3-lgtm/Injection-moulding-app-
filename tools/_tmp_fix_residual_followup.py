@@ -24,4 +24,8 @@ patch('qa_process_data_integrity.cjs',
 patch('qa_process_data_integrity.cjs',
 "  assert.equal(tables.caseLinks.has('case-keep'),true,'unrelated troubleshooting reference must remain');\n\n  console.log('Process-data integrity QA passed: canonical ownership, fail-closed intake review, context gating, fallback compatibility, and atomic dataset/case-link cascade verified.');",
 "  assert.equal(tables.caseLinks.has('case-keep'),true,'unrelated troubleshooting reference must remain');\n  assert.equal(tables.interventions.has('intervention-keep'),true,'unrelated intervention must remain');\n\n  console.log('Process-data integrity QA passed: canonical ownership, fail-closed intake review, context gating, fallback compatibility, and atomic dataset/case-link/intervention cascade verified.');")
+
+patch('training-qa-fix.js',
+"function labelLearnerReset(){document.querySelectorAll?.('[data-mm-onclick=\"resetData()\"]').forEach?.(button=>{if(String(button.textContent||'').trim()==='Reset all local data')button.textContent='Reset learner data'})}",
+"function labelLearnerReset(){if(typeof document==='undefined')return;document.querySelectorAll?.('[data-mm-onclick=\"resetData()\"]').forEach?.(button=>{if(String(button.textContent||'').trim()==='Reset all local data')button.textContent='Reset learner data'})}")
 print('Residual follow-up regression alignment staged.')
