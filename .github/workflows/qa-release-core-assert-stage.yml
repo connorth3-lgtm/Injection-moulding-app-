@@ -1,0 +1,40 @@
+name: Core Assembly QA Assertion Stage
+
+on:
+  push:
+    branches: [fix/audit-remediation-2026-09-16]
+
+permissions:
+  contents: write
+
+jobs:
+  update:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+          ref: fix/audit-remediation-2026-09-16
+      - name: Update release invariants
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p=Path('qa_release.py');s=p.read_text(encoding='utf-8')
+          replacements=[
+            ('assert \'const CORE_URL="./MouldMaster_Core_App.html"\' in index','assert \'const CORE_URL="./src/core-runtime/core-source.txt"\' in index'),
+            ('"index.html", "MouldMaster_Core_App.html", "manifest.webmanifest",','"index.html", "src/core-runtime/core-source.txt", "manifest.webmanifest",'),
+          ]
+          for old,new in replacements:
+            if old in s:s=s.replace(old,new,1)
+            elif new not in s:raise SystemExit(f'missing qa_release marker: {old}')
+          p.write_text(s,encoding='utf-8')
+          PY
+          git diff --check
+      - name: Commit release QA migration
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add qa_release.py
+          git commit -m '[audit-remediation-generated] Govern non-executable core assembly in release QA'
+          git push origin HEAD:fix/audit-remediation-2026-09-16
