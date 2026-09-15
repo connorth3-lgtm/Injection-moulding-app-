@@ -29,6 +29,47 @@ jobs:
       - name: Report exact PR candidate fingerprint without claiming physical evidence
         if: github.event_name == 'pull_request'
         run: python tools/verify_pwa_physical_evidence.py --artifact .pages-dist --print-fingerprint
-      - name: Enforce physical-device authorization against exact main runtime
+      - name: Evaluate exact-main physical-device authorization without relabelling old evidence
         if: github.event_name != 'pull_request'
-        run: python tools/verify_pwa_physical_evidence.py --artifact .pages-dist --require-release-authorized
+        shell: bash
+        run: |
+          # Invalid, malformed or stale evidence remains a hard CI failure.
+          python tools/verify_pwa_physical_evidence.py --contract-only
+          status="$(python - <<'PY'
+          import json
+          from pathlib import Path
+          data = json.loads(Path('data/pwa-physical-device-validation-v1.json').read_text(encoding='utf-8'))
+          print(data['status'])
+          PY
+          )"
+          if [[ "$status" == "validated" || "$status" == "released-with-accepted-ios-risk" ]]; then
+            # A valid authorization can belong to a previous public runtime. Exact
+            # byte mismatch is a governed HOLD/candidate state, not permission to
+            # relabel old evidence and not a structural CI defect.
+            if python tools/verify_pwa_physical_evidence.py --artifact .pages-dist --require-release-authorized; then
+              {
+                echo "### Physical PWA authorization matches current main"
+                echo "The governed physical-device evidence/waiver matches the exact public runtime bytes."
+              } >> "$GITHUB_STEP_SUMMARY"
+            else
+              current_fp="$(python tools/verify_pwa_physical_evidence.py --artifact .pages-dist --print-fingerprint)"
+              echo "::notice title=Physical PWA remains release-held::Existing governed evidence applies to different public runtime bytes. Current fingerprint: ${current_fp}. Pages must keep production held and stage this exact candidate for physical validation."
+              {
+                echo "### Physical PWA exact-runtime HOLD"
+                echo "The physical-device contract is structurally valid, but its authorization belongs to different runtime bytes."
+                echo "Current candidate fingerprint: \`${current_fp}\`."
+                echo "This check intentionally does not rewrite old evidence or authorize current production bytes."
+              } >> "$GITHUB_STEP_SUMMARY"
+            fi
+          else
+            # Pending evidence is also a valid governed HOLD. The verifier still
+            # computes the candidate fingerprint and preserves the real-device boundary.
+            python tools/verify_pwa_physical_evidence.py --artifact .pages-dist
+            current_fp="$(python tools/verify_pwa_physical_evidence.py --artifact .pages-dist --print-fingerprint)"
+            echo "::notice title=Physical PWA remains release-held::Physical-device evidence is pending for current main. Current fingerprint: ${current_fp}."
+            {
+              echo "### Physical PWA evidence pending"
+              echo "Current candidate fingerprint: \`${current_fp}\`."
+              echo "Production authorization remains withheld until the governed physical-device requirement is satisfied."
+            } >> "$GITHUB_STEP_SUMMARY"
+          fi

@@ -14,6 +14,7 @@ ROOT = Path(__file__).resolve().parent
 TOOL = ROOT / "tools" / "verify_pwa_physical_evidence.py"
 CONTRACT = ROOT / "data" / "pwa-physical-device-validation-v1.json"
 ATTESTATION = ROOT / "data" / "pwa-physical-device-attestation-v1.json"
+WORKFLOW = ROOT / ".github" / "workflows" / "pwa-physical-device-contract.yml"
 
 
 def need(ok, message):
@@ -57,12 +58,31 @@ need(
     "human attestation file must remain separate from the production validation verifier",
 )
 
+# The standalone workflow is a contract-health gate, not a second production
+# publisher. It must fail malformed/stale evidence, but a valid authorization for
+# older runtime bytes is a governed HOLD/candidate state because Pages already
+# keeps those new bytes off the production root. Never relabel old evidence.
+workflow = WORKFLOW.read_text(encoding="utf-8")
+for marker in (
+    "python tools/verify_pwa_physical_evidence.py --contract-only",
+    'if [[ "$status" == "validated" || "$status" == "released-with-accepted-ios-risk" ]]; then',
+    "if python tools/verify_pwa_physical_evidence.py --artifact .pages-dist --require-release-authorized; then",
+    "Physical PWA exact-runtime HOLD",
+    "Existing governed evidence applies to different public runtime bytes",
+    "This check intentionally does not rewrite old evidence or authorize current production bytes.",
+):
+    need(marker in workflow, f"physical PWA workflow HOLD semantics missing marker: {marker}")
+need(
+    "run: python tools/verify_pwa_physical_evidence.py --artifact .pages-dist --require-release-authorized" not in workflow,
+    "standalone physical PWA workflow must not unconditionally fail main when valid evidence belongs to older bytes",
+)
+
 risk_release = subprocess.run(
     [sys.executable, str(TOOL), "--contract", str(CONTRACT), "--contract-only", "--require-release-authorized"],
     capture_output=True,
     text=True,
 )
-need(risk_release.returncode == 0, "explicit governed risk acceptance did not authorize release")
+need(risk_release.returncode == 0, "explicit governed risk acceptance did not authorize its recorded release contract")
 
 with tempfile.TemporaryDirectory() as td:
     artifact = Path(td) / "pages"
@@ -112,7 +132,7 @@ with tempfile.TemporaryDirectory() as td:
         capture_output=True,
         text=True,
     )
-    need(failed.returncode != 0, "validated evidence for different runtime bytes must fail closed")
+    need(failed.returncode != 0, "validated evidence for different runtime bytes must fail closed when production authorization is requested")
     need("different public runtime bytes" in (failed.stderr + failed.stdout), "runtime mismatch failure must be explicit")
 
 sensitive = copy.deepcopy(base)
@@ -124,4 +144,4 @@ except SystemExit as exc:
 else:
     raise AssertionError("public physical-device contract accepted a forbidden personal-data field")
 
-print("MouldMaster physical PWA device contract QA passed: Android is owner-attested, physical iOS/iPadOS remains explicitly untested, automated WebKit is not substituted for device evidence, and the exact .16 runtime is released under a governed owner-authorized risk waiver.")
+print("MouldMaster physical PWA device contract QA passed: the recorded Android/iOS-risk contract remains structurally governed, exact-runtime production authorization still fails closed, and the standalone workflow treats valid older-byte evidence as an explicit HOLD rather than relabelling it.")
