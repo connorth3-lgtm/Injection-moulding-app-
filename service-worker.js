@@ -1,4 +1,4 @@
-const CACHE_VERSION='2026.09.15.5';
+const CACHE_VERSION='2026.09.15.6';
 const CACHE_REVISION='engineer-simulator-ui-r1-20260911';
 const STATIC_CACHE=`mouldmaster-static-${CACHE_VERSION}-${CACHE_REVISION}`;
 
@@ -58,13 +58,22 @@ const CORE=[
   './src/domains/learning/learning-analytics-loader.js',
   './src/domains/learning/activity-events-v2.js',
   './src/domains/learning/learner-model.js',
+  './src/domains/learning/backup-authority-notice.js',
   './src/domains/learning/delayed-transfer-reviews.js',
   './src/domains/learning/book-runtime.js',
+  './src/domains/learning/book-claim-trace.js',
   './src/domains/learning/book-data/book-manifest-v1.json',
   './src/domains/learning/book-data/book-publication-authorization-v1.json',
   './src/domains/learning/book-data/book-sme-review-v1.json',
   './src/domains/learning/book-data/book-qualification-resolution-all-v1.json',
+  './src/domains/learning/book-data/book-claim-review-foundations-materials-machine-v1.json',
+  './src/domains/learning/book-data/book-claim-review-process-tooling-v1.json',
+  './src/domains/learning/book-data/book-claim-review-troubleshooting-v1.json',
+  './src/domains/learning/book-data/book-claim-review-engineering-advanced-v1.json',
+  './src/domains/learning/book-data/book-claim-review-high-risk-v1.json',
   './src/domains/learning/book-data/book-claim-resolution-high-risk-v1.json',
+  './src/domains/learning/book-data/book-claim-resolution-high-risk-v2.json',
+  './src/domains/learning/book-data/book-claim-resolution-all-v1.json',
   './src/domains/learning/book-data/book-authored-foundations-v1.json',
   './src/domains/learning/book-data/book-evidence-registry-v1.json',
   './src/domains/learning/book-data/book-chapters-materials-machine-v1.json',
@@ -142,6 +151,7 @@ const OPTIONAL=[
 ];
 const RELEASE_ASSETS=[...new Set([...CORE,...OPTIONAL])];
 const RELEASE_PATHS=new Set(RELEASE_ASSETS.map(asset=>new URL(asset,self.registration.scope).pathname));
+const LEGACY_CORE_PATH=new URL('./MouldMaster_Core_App.html',self.registration.scope).pathname;
 
 async function cacheAsset(cache,url){
   const request=new Request(url,{cache:'reload'});
@@ -205,9 +215,14 @@ self.addEventListener('fetch',event=>{
 
   if(event.request.mode==='navigate'){
     event.respondWith((async()=>{
+      const indexRequest=new Request(new URL('./index.html',self.registration.scope));
+      const index=await releaseCacheMatch(indexRequest);
+      // MouldMaster_Core_App.html remains a governed assembly/recovery dependency,
+      // not a supported learner-facing web entry point. Once the current PWA owns
+      // navigation, direct requests are contained by the hardened index shell.
+      if(url.pathname===LEGACY_CORE_PATH)return index||offlineDocumentResponse();
       const exact=await releaseCacheMatch(event.request);
       if(exact)return exact;
-      const index=await releaseCacheMatch(new Request(new URL('./index.html',self.registration.scope)));
       return index||offlineDocumentResponse();
     })());
     return;
