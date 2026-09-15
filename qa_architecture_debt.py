@@ -62,9 +62,21 @@ need(
 )
 
 root_runtime_scripts = [src for src in body_scripts if "/" not in src.removeprefix("./")]
-grandfathered_root = set(baseline["grandfatheredRootRuntimeScripts"])
-unknown_root = sorted(set(root_runtime_scripts) - grandfathered_root)
+active_root = set(root_runtime_scripts)
+grandfathered_root_entries = baseline["grandfatheredRootRuntimeScripts"]
+need(
+    len(grandfathered_root_entries) == len(set(grandfathered_root_entries)),
+    "grandfatheredRootRuntimeScripts contains duplicate entries",
+)
+grandfathered_root = set(grandfathered_root_entries)
+unknown_root = sorted(active_root - grandfathered_root)
 need(not unknown_root, f"new root-level runtime scripts are forbidden; use src/domains/<domain>/: {unknown_root}")
+stale_grandfathered_root = sorted(grandfathered_root - active_root)
+need(
+    not stale_grandfathered_root,
+    "retired root runtime scripts must be removed from grandfatheredRootRuntimeScripts so they cannot silently return: "
+    f"{stale_grandfathered_root}",
+)
 need(
     len(root_runtime_scripts) <= int(baseline["rootRuntimeScriptCeiling"]),
     f"root runtime-script debt grew: {len(root_runtime_scripts)} > ceiling {baseline['rootRuntimeScriptCeiling']}",
