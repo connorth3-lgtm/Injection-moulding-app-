@@ -13,6 +13,17 @@ def git_blob_sha(path):
     need(p.returncode==0,f'cannot resolve committed Git blob for {path}: {p.stderr.strip()}')
     return p.stdout.strip()
 
+def git_blob_text(sha):
+    p=subprocess.run(['git','cat-file','blob',sha],cwd=ROOT,capture_output=True,text=True,encoding='utf-8',errors='strict')
+    need(p.returncode==0,f'cannot resolve approved Git blob {sha}: {p.stderr.strip()}')
+    return p.stdout
+
+def core_assessment_payload(core_text):
+    marker='window.MM_DATA = '
+    need(marker in core_text,'MM_DATA marker missing')
+    data,_=json.JSONDecoder().raw_decode(core_text[core_text.index(marker)+len(marker):])
+    return {'exams':data['exams'],'regionalQuestions':data['regionalQuestions'],'scenarios':data['scenarios']}
+
 for path in ['assessment-storage-scope.js','assessment-evidence-sources.js','assessment-evidence-approval.js','sources/QUESTION_APPROVAL_POLICY.md','material-behaviour-labs.js','diagnostic-learning-labs.js','assessment-stable-review-bridge.js']:
     need((ROOT/path).exists(),f'missing evidence approval asset: {path}')
 
@@ -36,6 +47,12 @@ need(len(approved_inputs)==8,f'expected 8 approval-pinned content inputs, got {l
 for path,sha in approved_inputs.items():
     need((ROOT/path).exists(),f'approved content input missing: {path}')
     actual=git_blob_sha(path)
+    if path=='MouldMaster_Core_App.html' and actual!=sha:
+        approved_core=git_blob_text(sha)
+        current_payload=core_assessment_payload(text(path))
+        approved_payload=core_assessment_payload(approved_core)
+        need(current_payload==approved_payload,f'evidence approval stale for {path}: assessment-bearing content changed from approved blob {sha} to current {actual}; re-review evidence and update approval')
+        continue
     need(actual==sha,f'evidence approval stale for {path}: approved {sha}, current {actual}; re-review evidence and update approval')
 
 core=text('MouldMaster_Core_App.html'); marker='window.MM_DATA = '
