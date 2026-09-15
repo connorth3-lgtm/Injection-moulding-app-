@@ -32,4 +32,10 @@ patch('training-qa-fix.js',
 patch('qa_release_docs.py',
 "for marker in ['assessment analytics','scoped to the active learner profile','first meaningful question exposure','does not currently upload','deliberately not included in the progress backup','successful progress-backup import resets local assessment analytics and Learning insights analytics','orphaned buckets','Reset local analytics','confirmed factory reset']:",
 "for marker in ['assessment analytics','scoped to the active learner profile','first meaningful question exposure','does not currently upload','deliberately not included in the progress backup','successful progress-backup import resets local assessment analytics and Learning insights analytics','orphaned buckets','Reset local analytics','Reset learner data','Delete all local process-data evidence','mouldmaster-process-data-v1']:")
-print('Residual follow-up regression alignment staged.')
+
+# The current manifest incorrectly points at a later manifest-only commit. The frozen-core
+# preservation commit is the immutable provenance anchor for the recovery payload.
+patch('latest.json',
+'https://raw.githubusercontent.com/connorth3-lgtm/Injection-moulding-app-/ffc05506e6baebc8d9f0e047f556a017a06c110a/MouldMaster_Core_App.html',
+'https://raw.githubusercontent.com/connorth3-lgtm/Injection-moulding-app-/97eb09c9ac346eb31922cf877a570bcf6856c8cb/MouldMaster_Core_App.html')
+print('Residual follow-up regression and recovery-provenance alignment staged.')
