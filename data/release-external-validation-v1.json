@@ -26,8 +26,8 @@
     "reviewPacket": "qa/ACCESSIBILITY_REAL_AT_2026.09.15.6.md",
     "candidate": {
       "release": "2026.09.15.6",
-      "sourceSha": "7fe353beb0f54b5b8f53851221738bb5c1a9bcfe",
-      "runtimeFingerprint": "sha256:b6fca9536f77247e1e778639a7b24228e4fe43ef413fa6e6d025e8a788006f2e"
+      "sourceSha": "dd39a2351edf74622d67ccf79737bbcbfc96dc58",
+      "runtimeFingerprint": "sha256:5ba0738492ee3e9747150f4638ad327f91786a7a972d68162e08af276543045f"
     },
     "required": "Release-specific human NVDA and VoiceOver validation across the governed matrix."
   },
@@ -37,14 +37,14 @@
     "reviewPacket": "qa/PWA_PHYSICAL_DEVICE_2026.09.15.6.md",
     "currentCandidate": {
       "release": "2026.09.15.6",
-      "sourceSha": "7fe353beb0f54b5b8f53851221738bb5c1a9bcfe",
-      "runtimeFingerprint": "sha256:b6fca9536f77247e1e778639a7b24228e4fe43ef413fa6e6d025e8a788006f2e",
-      "candidateRunId": 34931583556,
-      "candidateWorkflow": "one-shot exact public candidate build; not production publication",
-      "artifactId": 10381573337,
-      "artifactName": "physical-pwa-candidate-7fe353beb0f54b5b8f53851221738bb5c1a9bcfe",
-      "artifactDigest": "sha256:1d036a472946a2425daff02019e5f99893968bee91da5fb108a0b86c5a1a8448",
-      "artifactExpiresAt": "2026-10-15T05:09:15Z"
+      "sourceSha": "dd39a2351edf74622d67ccf79737bbcbfc96dc58",
+      "runtimeFingerprint": "sha256:5ba0738492ee3e9747150f4638ad327f91786a7a972d68162e08af276543045f",
+      "candidateRunId": 35036847825,
+      "candidateWorkflow": "Build Settled 2026.09.15.6 Candidate; exact public candidate build, not production publication",
+      "artifactId": 10423740874,
+      "artifactName": "physical-pwa-candidate-dd39a2351edf74622d67ccf79737bbcbfc96dc58",
+      "artifactDigest": "sha256:55bba4551d89505874f72381d756924444a532586b237efb067dccac0b179b17",
+      "artifactExpiresAt": "2026-10-15T23:42:28Z"
     },
     "required": "Current-release physical iOS/iPadOS and Android install/update/offline validation. Prior release waivers do not authorize this release."
   },
@@ -53,7 +53,7 @@
     "workflow": ".github/workflows/microsoft-store-msix.yml",
     "handoff": "certification/STORE_SUBMISSION_STATUS.md",
     "readinessPacket": "certification/WINDOWS_SIGNING_READINESS_2026.09.15.6.md",
-    "sourceSha": "7fe353beb0f54b5b8f53851221738bb5c1a9bcfe",
+    "sourceSha": "dd39a2351edf74622d67ccf79737bbcbfc96dc58",
     "desktopRelease": "2026.08.26.9",
     "evidence": null,
     "required": [

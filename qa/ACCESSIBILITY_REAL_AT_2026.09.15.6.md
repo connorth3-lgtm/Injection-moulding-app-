@@ -5,8 +5,8 @@ This packet governs **human** assistive-technology validation for web release `2
 ## Exact release boundary
 
 - web release: `2026.09.15.6`
-- protected-main source commit: `7fe353beb0f54b5b8f53851221738bb5c1a9bcfe`
-- public-runtime fingerprint: `sha256:b6fca9536f77247e1e778639a7b24228e4fe43ef413fa6e6d025e8a788006f2e`
+- protected-main source commit: `dd39a2351edf74622d67ccf79737bbcbfc96dc58`
+- public-runtime fingerprint: `sha256:5ba0738492ee3e9747150f4638ad327f91786a7a972d68162e08af276543045f`
 - evidence contract: `data/accessibility-real-at-validation-v1.json`
 
 If learner-facing runtime bytes change, this packet must be rebound to the new release/fingerprint before new validation is recorded.

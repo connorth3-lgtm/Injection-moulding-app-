@@ -2,10 +2,10 @@
 
 Release `2026.09.15.6` is technically automated and governed, but the following external workstreams remain explicit **HOLD**. This index does not create human, device, learner, accreditation, signing, or production-site evidence.
 
-- Exact candidate source: `7fe353beb0f54b5b8f53851221738bb5c1a9bcfe`
-- Exact public-runtime fingerprint: `sha256:b6fca9536f77247e1e778639a7b24228e4fe43ef413fa6e6d025e8a788006f2e`
-- Candidate build run: `34931583556`
-- Candidate artifact: `physical-pwa-candidate-7fe353beb0f54b5b8f53851221738bb5c1a9bcfe` (`10381573337`; `sha256:1d036a472946a2425daff02019e5f99893968bee91da5fb108a0b86c5a1a8448`; expires `2026-10-15T05:09:15Z`)
+- Exact candidate source: `dd39a2351edf74622d67ccf79737bbcbfc96dc58`
+- Exact public-runtime fingerprint: `sha256:5ba0738492ee3e9747150f4638ad327f91786a7a972d68162e08af276543045f`
+- Candidate build run: `35036847825`
+- Candidate artifact: `physical-pwa-candidate-dd39a2351edf74622d67ccf79737bbcbfc96dc58` (`10423740874`; `sha256:55bba4551d89505874f72381d756924444a532586b237efb067dccac0b179b17`; expires `2026-10-15T23:42:28Z`)
 
 | Workstream | Status | Release packet | Required genuine evidence |
 | --- | --- | --- | --- |
