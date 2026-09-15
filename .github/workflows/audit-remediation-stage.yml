@@ -27,7 +27,7 @@ jobs:
       - uses: actions/setup-python@v7
         with:
           python-version: '3.12'
-      - name: Synchronize .6 release identity and regression wiring
+      - name: Synchronize .6 release identity
         shell: bash
         run: |
           python - <<'PY'
@@ -49,13 +49,6 @@ jobs:
           replace('support.html','id="mmPwa">2026.09.15.5','id="mmPwa">2026.09.15.6')
           replace('book-runtime.js',"const VERSION='2026.09.15.5';","const VERSION='2026.09.15.6';")
           replace('src/domains/learning/book-runtime.js',"const VERSION='2026.09.15.5';","const VERSION='2026.09.15.6';")
-
-          qa=Path('.github/workflows/qa.yml');s=qa.read_text(encoding='utf-8')
-          marker='      - name: Audit remediation application and data regression\n        run: node qa_audit_remediation_runtime.cjs\n'
-          addition=marker+'      - name: 2026.09.15.6 deep-audit remediation regression\n        run: python qa_audit_remediation_20260915_6.py\n'
-          if '2026.09.15.6 deep-audit remediation regression' not in s:
-              if marker not in s:raise SystemExit('qa.yml insertion marker missing')
-              qa.write_text(s.replace(marker,addition),encoding='utf-8')
           PY
       - name: Focused release validation
         run: |
@@ -72,7 +65,7 @@ jobs:
         run: |
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add -A
+          git add index.html pwa-shell.js qa_release.py qa_release_docs.py README.md support.html book-runtime.js src/domains/learning/book-runtime.js
           git diff --cached --check
           if git diff --cached --quiet; then
             echo 'No staged release synchronization changes required.'
