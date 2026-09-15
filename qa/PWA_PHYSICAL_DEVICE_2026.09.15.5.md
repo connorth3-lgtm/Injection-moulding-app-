@@ -5,13 +5,13 @@ This packet governs hands-on physical-device validation of the exact MouldMaster
 ## Exact candidate
 
 - web release: `2026.09.15.5`
-- repair-branch source commit: `afbfc2921fb1cba8ad9705ad821f9223546bda84`
+- repair-branch source commit: `7fe353beb0f54b5b8f53851221738bb5c1a9bcfe`
 - public-runtime fingerprint: `sha256:b6fca9536f77247e1e778639a7b24228e4fe43ef413fa6e6d025e8a788006f2e`
-- exact candidate build run: `34931254705`
-- retained candidate artifact: `physical-pwa-candidate-afbfc2921fb1cba8ad9705ad821f9223546bda84`
-- artifact id: `10381038770`
-- artifact ZIP digest: `sha256:cb84c59349536382c17609f5251b8efc40bef4624e9b3232353e185d6b57c796`
-- artifact retention expiry: `2026-10-15T05:04:12Z`
+- exact candidate build run: `34931583556`
+- retained candidate artifact: `physical-pwa-candidate-7fe353beb0f54b5b8f53851221738bb5c1a9bcfe`
+- artifact id: `10381573337`
+- artifact ZIP digest: `sha256:1d036a472946a2425daff02019e5f99893968bee91da5fb108a0b86c5a1a8448`
+- artifact retention expiry: `2026-10-15T05:09:15Z`
 
 The candidate was built with the repository's production Pages artifact builder but was **not published**. The runtime fingerprint is the byte-level acceptance key. This automated candidate provenance is not physical-device evidence.
 

@@ -5,7 +5,7 @@ This packet governs **human** assistive-technology validation for web release `2
 ## Exact release boundary
 
 - web release: `2026.09.15.5`
-- protected-main source commit: `afbfc2921fb1cba8ad9705ad821f9223546bda84`
+- protected-main source commit: `7fe353beb0f54b5b8f53851221738bb5c1a9bcfe`
 - public-runtime fingerprint: `sha256:b6fca9536f77247e1e778639a7b24228e4fe43ef413fa6e6d025e8a788006f2e`
 - evidence contract: `data/accessibility-real-at-validation-v1.json`
 

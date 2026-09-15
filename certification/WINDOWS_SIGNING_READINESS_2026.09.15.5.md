@@ -1,6 +1,6 @@
 # Windows distribution/signing readiness — 2026.09.15.5
 
-This packet governs the external Windows distribution work associated with MouldMaster web release `2026.09.15.5` at protected-main source commit `afbfc2921fb1cba8ad9705ad821f9223546bda84`. The separately governed desktop release identity remains `2026.08.26.9` unless deliberately advanced through its own release process.
+This packet governs the external Windows distribution work associated with MouldMaster web release `2026.09.15.5` at protected-main source commit `7fe353beb0f54b5b8f53851221738bb5c1a9bcfe`. The separately governed desktop release identity remains `2026.08.26.9` unless deliberately advanced through its own release process.
 
 ## What repository automation already proves
 

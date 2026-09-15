@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "release": "2026.09.15.5",
   "packet": "qa/ACCESSIBILITY_REAL_AT_2026.09.15.5.md",
-  "sourceSha": "afbfc2921fb1cba8ad9705ad821f9223546bda84",
+  "sourceSha": "7fe353beb0f54b5b8f53851221738bb5c1a9bcfe",
   "runtimeFingerprint": "sha256:b6fca9536f77247e1e778639a7b24228e4fe43ef413fa6e6d025e8a788006f2e",
   "status": "pending-real-at-validation",
   "boundary": "Automated browser and accessibility regressions do not substitute for real assistive-technology interaction by a human reviewer. This contract must remain pending until each required matrix row has dated evidence from the named platform/AT/browser combination.",

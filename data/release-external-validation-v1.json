@@ -26,7 +26,7 @@
     "reviewPacket": "qa/ACCESSIBILITY_REAL_AT_2026.09.15.5.md",
     "candidate": {
       "release": "2026.09.15.5",
-      "sourceSha": "afbfc2921fb1cba8ad9705ad821f9223546bda84",
+      "sourceSha": "7fe353beb0f54b5b8f53851221738bb5c1a9bcfe",
       "runtimeFingerprint": "sha256:b6fca9536f77247e1e778639a7b24228e4fe43ef413fa6e6d025e8a788006f2e"
     },
     "required": "Release-specific human NVDA and VoiceOver validation across the governed matrix."
@@ -37,14 +37,14 @@
     "reviewPacket": "qa/PWA_PHYSICAL_DEVICE_2026.09.15.5.md",
     "currentCandidate": {
       "release": "2026.09.15.5",
-      "sourceSha": "afbfc2921fb1cba8ad9705ad821f9223546bda84",
+      "sourceSha": "7fe353beb0f54b5b8f53851221738bb5c1a9bcfe",
       "runtimeFingerprint": "sha256:b6fca9536f77247e1e778639a7b24228e4fe43ef413fa6e6d025e8a788006f2e",
-      "candidateRunId": 34931254705,
+      "candidateRunId": 34931583556,
       "candidateWorkflow": "one-shot exact public candidate build; not production publication",
-      "artifactId": 10381038770,
-      "artifactName": "physical-pwa-candidate-afbfc2921fb1cba8ad9705ad821f9223546bda84",
-      "artifactDigest": "sha256:cb84c59349536382c17609f5251b8efc40bef4624e9b3232353e185d6b57c796",
-      "artifactExpiresAt": "2026-10-15T05:04:12Z"
+      "artifactId": 10381573337,
+      "artifactName": "physical-pwa-candidate-7fe353beb0f54b5b8f53851221738bb5c1a9bcfe",
+      "artifactDigest": "sha256:1d036a472946a2425daff02019e5f99893968bee91da5fb108a0b86c5a1a8448",
+      "artifactExpiresAt": "2026-10-15T05:09:15Z"
     },
     "required": "Current-release physical iOS/iPadOS and Android install/update/offline validation. Prior release waivers do not authorize this release."
   },
@@ -53,7 +53,7 @@
     "workflow": ".github/workflows/microsoft-store-msix.yml",
     "handoff": "certification/STORE_SUBMISSION_STATUS.md",
     "readinessPacket": "certification/WINDOWS_SIGNING_READINESS_2026.09.15.5.md",
-    "sourceSha": "afbfc2921fb1cba8ad9705ad821f9223546bda84",
+    "sourceSha": "7fe353beb0f54b5b8f53851221738bb5c1a9bcfe",
     "desktopRelease": "2026.08.26.9",
     "evidence": null,
     "required": [
