@@ -28,4 +28,8 @@ patch('qa_process_data_integrity.cjs',
 patch('training-qa-fix.js',
 "function labelLearnerReset(){document.querySelectorAll?.('[data-mm-onclick=\"resetData()\"]').forEach?.(button=>{if(String(button.textContent||'').trim()==='Reset all local data')button.textContent='Reset learner data'})}",
 "function labelLearnerReset(){if(typeof document==='undefined')return;document.querySelectorAll?.('[data-mm-onclick=\"resetData()\"]').forEach?.(button=>{if(String(button.textContent||'').trim()==='Reset all local data')button.textContent='Reset learner data'})}")
+
+patch('qa_release_docs.py',
+"for marker in ['assessment analytics','scoped to the active learner profile','first meaningful question exposure','does not currently upload','deliberately not included in the progress backup','successful progress-backup import resets local assessment analytics and Learning insights analytics','orphaned buckets','Reset local analytics','confirmed factory reset']:",
+"for marker in ['assessment analytics','scoped to the active learner profile','first meaningful question exposure','does not currently upload','deliberately not included in the progress backup','successful progress-backup import resets local assessment analytics and Learning insights analytics','orphaned buckets','Reset local analytics','Reset learner data','Delete all local process-data evidence','mouldmaster-process-data-v1']:")
 print('Residual follow-up regression alignment staged.')
