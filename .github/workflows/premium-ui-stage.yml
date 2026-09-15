@@ -26,7 +26,7 @@ jobs:
         run: |
           python - <<'PY'
           from pathlib import Path
-          import json,re
+          import json
           R=Path('.')
           OLD='2026.09.15.6'
           NEW='2026.09.16.1'
@@ -38,17 +38,19 @@ jobs:
               if required and a not in s: raise SystemExit(f'{p}: missing expected text {a!r}')
               write(p,s.replace(a,b))
 
-          # Release identity.
           v=json.loads(read('version.json'))
           if v.get('web_release')!=OLD: raise SystemExit(f"unexpected starting web release {v.get('web_release')!r}")
           v['web_release']=NEW
           v['published']='2026-09-16'
           write('version.json',json.dumps(v,indent=2,ensure_ascii=False)+'\n')
 
-          for p in ['README.md','book-runtime.js','src/domains/learning/book-runtime.js','src/domains/learning/backup-authority-notice.js','qa_release.py']:
+          for p in [
+              'README.md','book-runtime.js','src/domains/learning/book-runtime.js',
+              'src/domains/learning/backup-authority-notice.js','qa_release.py',
+              'qa_release_docs.py','support.html'
+          ]:
               replace(p,OLD,NEW)
 
-          # First-paint shell and atomic cache generation.
           s=read('index.html').replace(OLD,NEW)
           s=s.replace('engineer-simulator-ui-r1-20260911','premium-ui-r1-20260916')
           anchor="      ['ui-shell.css','<link rel=\"stylesheet\" href=\"./ui-shell.css\">'],\n"
@@ -68,14 +70,12 @@ jobs:
 
           replace('pwa-shell.js',OLD,NEW)
 
-          # Packaged Book SME contract is learner-visible; advance it before candidate fingerprinting.
           for p in ['data/book-sme-review-v1.json','src/domains/learning/book-data/book-sme-review-v1.json']:
               data=json.loads(read(p))
               if data.get('release')!=OLD: raise SystemExit(f'{p}: unexpected release')
               data['release']=NEW
               write(p,json.dumps(data,indent=2,ensure_ascii=False)+'\n')
 
-          # Desktop packaging and integrity.
           pkg=json.loads(read('desktop/electron/package.json'))
           extra=pkg['build']['extraResources']
           if not any(x.get('from')=='../../premium-ui.css' for x in extra):
@@ -83,25 +83,21 @@ jobs:
               extra.insert(idx,{'from':'../../premium-ui.css','to':'mouldmaster/premium-ui.css'})
           write('desktop/electron/package.json',json.dumps(pkg,indent=2,ensure_ascii=False)+'\n')
 
-          p='desktop/electron/scripts/generate-integrity.cjs'
-          s=read(p)
+          p='desktop/electron/scripts/generate-integrity.cjs'; s=read(p)
           if "'premium-ui.css'" not in s:
               s=s.replace("'reading-patch.css','ui-shell.css','mobile-lesson-fix.css'","'reading-patch.css','ui-shell.css','premium-ui.css','mobile-lesson-fix.css'",1)
           write(p,s)
 
-          p='desktop/electron/scripts/qa.cjs'
-          s=read(p)
+          p='desktop/electron/scripts/qa.cjs'; s=read(p)
           if "'premium-ui.css'" not in s:
               s=s.replace("'ui-shell.css','mobile-lesson-fix.css'","'ui-shell.css','premium-ui.css','mobile-lesson-fix.css'",1)
           write(p,s)
 
-          # Release QA must enforce offline presence of the design layer.
           p='qa_release.py'; s=read(p)
           if '"premium-ui.css"' not in s:
               s=s.replace('"learner-ux-repair.css", "learner-ux-repair.js"','"learner-ux-repair.css", "premium-ui.css", "learner-ux-repair.js"',1)
           write(p,s)
 
-          # The .6 remediation gate is permanent, not a one-release assertion.
           p='qa_audit_remediation_20260915_6.py'; s=read(p)
           s=s.replace("need(version['web_release']=='2026.09.15.6','audit-remediation release must be 2026.09.15.6')",
                       "release=version['web_release']\nneed(tuple(int(x) for x in release.split('.')) >= (2026,9,15,6),'audit-remediation release must not regress below 2026.09.15.6')")
@@ -109,7 +105,6 @@ jobs:
                       "need(f\"const CACHE_VERSION='{release}';\" in sw,'service-worker release identity stale')")
           write(p,s)
 
-          # Sanity: this release intentionally changes learner-facing presentation only.
           if not (R/'premium-ui.css').is_file(): raise SystemExit('premium-ui.css missing')
           PY
       - name: Validate staged premium release contracts
@@ -124,7 +119,7 @@ jobs:
         run: |
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add README.md version.json index.html service-worker.js pwa-shell.js book-runtime.js src/domains/learning/book-runtime.js src/domains/learning/backup-authority-notice.js data/book-sme-review-v1.json src/domains/learning/book-data/book-sme-review-v1.json desktop/electron/package.json desktop/electron/scripts/generate-integrity.cjs desktop/electron/scripts/qa.cjs qa_release.py qa_audit_remediation_20260915_6.py
+          git add README.md version.json index.html service-worker.js pwa-shell.js book-runtime.js support.html qa_release_docs.py src/domains/learning/book-runtime.js src/domains/learning/backup-authority-notice.js data/book-sme-review-v1.json src/domains/learning/book-data/book-sme-review-v1.json desktop/electron/package.json desktop/electron/scripts/generate-integrity.cjs desktop/electron/scripts/qa.cjs qa_release.py qa_audit_remediation_20260915_6.py
           git diff --cached --quiet && exit 0
           git commit -m '[premium-ui-generated] Integrate premium UI into 2026.09.16.1 runtime'
           git push
