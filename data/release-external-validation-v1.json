@@ -1,6 +1,7 @@
 {
   "schemaVersion": 1,
   "release": "2026.09.15.4",
+  "validationIndex": "qa/EXTERNAL_VALIDATION_2026.09.15.4.md",
   "policy": "External validation is release-specific. Automated QA may verify that HOLD boundaries are represented truthfully but must never manufacture human, device, learner, accreditation, signing, or production-site evidence.",
   "technicalAutomation": {
     "status": "pass",
@@ -22,17 +23,37 @@
   "accessibility": {
     "status": "hold",
     "evidenceContract": "data/accessibility-real-at-validation-v1.json",
+    "reviewPacket": "qa/ACCESSIBILITY_REAL_AT_2026.09.15.4.md",
+    "candidate": {
+      "release": "2026.09.15.4",
+      "sourceSha": "f83daaf5b597afc4ef7c1c8ae2653bd7bf67040b",
+      "runtimeFingerprint": "sha256:36cb9bbc8acd664ea7b72bd32ad06f75defd0d2019c6879039c87e7d4c45ebf8"
+    },
     "required": "Release-specific human NVDA and VoiceOver validation across the governed matrix."
   },
   "pwaPhysicalDevices": {
     "status": "hold",
     "evidenceContract": "data/pwa-physical-device-validation-v1.json",
+    "reviewPacket": "qa/PWA_PHYSICAL_DEVICE_2026.09.15.4.md",
+    "currentCandidate": {
+      "release": "2026.09.15.4",
+      "sourceSha": "f83daaf5b597afc4ef7c1c8ae2653bd7bf67040b",
+      "runtimeFingerprint": "sha256:36cb9bbc8acd664ea7b72bd32ad06f75defd0d2019c6879039c87e7d4c45ebf8",
+      "pagesRunId": 34923733290,
+      "artifactId": 10379530204,
+      "artifactName": "physical-pwa-candidate-f83daaf5b597afc4ef7c1c8ae2653bd7bf67040b",
+      "artifactDigest": "sha256:f394da228df59b5e5e3358164722bdd4fbed12eee46133648be2a7ca548e1154",
+      "artifactExpiresAt": "2026-10-15T03:07:29Z"
+    },
     "required": "Current-release physical iOS/iPadOS and Android install/update/offline validation. Prior release waivers do not authorize this release."
   },
   "windowsDistribution": {
     "status": "hold",
     "workflow": ".github/workflows/microsoft-store-msix.yml",
     "handoff": "certification/STORE_SUBMISSION_STATUS.md",
+    "readinessPacket": "certification/WINDOWS_SIGNING_READINESS_2026.09.15.4.md",
+    "sourceSha": "f83daaf5b597afc4ef7c1c8ae2653bd7bf67040b",
+    "desktopRelease": "2026.08.26.9",
     "evidence": null,
     "required": [
       "signed package provenance",
@@ -50,6 +71,7 @@
   "curriculumSme": {
     "status": "hold",
     "evidenceContract": "qa/curriculum-semantic-review.json",
+    "reviewPacket": "qa/CURRICULUM_SME_REVIEW_2026.09.15.4.md",
     "required": "Traceable human SME semantic approval of all 120 canonical lessons."
   },
   "learnerOutcomes": {
