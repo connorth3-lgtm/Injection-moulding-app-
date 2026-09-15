@@ -9,7 +9,7 @@ def text(p): return (ROOT/p).read_text(encoding='utf-8')
 def need(ok,msg):
     if not ok: raise AssertionError(msg)
 
-for p in ['assessment-quality-suite.js','assessment-stable-review-bridge.js','training-upgrade.js','index.html','service-worker.js','desktop/electron/package.json','desktop/electron/scripts/generate-integrity.cjs','.github/workflows/qa.yml','.github/workflows/open-desktop-build.yml','.github/workflows/microsoft-store-msix.yml']:
+for p in ['assessment-quality-suite.js','assessment-stable-review-bridge.js','training-upgrade.js','index.html','service-worker.js','src/domains/runtime-packs/assessment-foundation-runtime-pack.js','desktop/electron/package.json','desktop/electron/scripts/generate-integrity.cjs','.github/workflows/qa.yml','.github/workflows/open-desktop-build.yml','.github/workflows/microsoft-store-msix.yml']:
     need((ROOT/p).exists(),f'stable-review bridge file missing: {p}')
 
 bridge=text('assessment-stable-review-bridge.js')
@@ -48,9 +48,14 @@ need("m=/^tech:([^:]+):(\\d+)$/.exec(id)" in upgrade,'spaced-review resolver mus
 need("m=/^reg:([^:]+):([^:]+):(\\d+)$/.exec(id)" in upgrade,'spaced-review resolver must support stable regional IDs')
 
 idx=text('index.html')
-need('<script src="./assessment-stable-review-bridge.js">' in idx,'stable-review bridge not loaded by shell')
-need(idx.index('assessment-quality-suite.js')<idx.index('assessment-stable-review-bridge.js')<idx.index('source-library.js'),'stable-review bridge load order wrong')
-need("'./assessment-stable-review-bridge.js'" in text('service-worker.js'),'stable-review bridge missing from offline cache')
+assessment_pack='src/domains/runtime-packs/assessment-foundation-runtime-pack.js'
+pack=text(assessment_pack)
+need(assessment_pack in idx,'assessment foundation pack not loaded by shell')
+need('<script src="./assessment-stable-review-bridge.js">' not in idx,'stable-review bridge must not be directly injected after packing')
+need('/* >>> assessment-stable-review-bridge.js */' in pack,'assessment foundation pack is missing stable-review bridge source marker')
+need(pack.index('/* >>> assessment-quality-suite.js */')<pack.index('/* >>> assessment-stable-review-bridge.js */')<pack.index('/* >>> assessment-analytics-ui.js */'),'stable-review bridge pack load order wrong')
+need(idx.index(assessment_pack)<idx.index('runtime-v2.js')<idx.index('source-library.js'),'assessment foundation pack shell boundary wrong')
+need("'./src/domains/runtime-packs/assessment-foundation-runtime-pack.js'" in text('service-worker.js'),'assessment foundation pack missing from offline cache')
 pkg=json.loads(text('desktop/electron/package.json'));froms={x.get('from') for x in pkg['build']['extraResources'] if isinstance(x,dict)}
 need('../../assessment-stable-review-bridge.js' in froms,'stable-review bridge missing from desktop package')
 need("'assessment-stable-review-bridge.js'" in text('desktop/electron/scripts/generate-integrity.cjs'),'stable-review bridge missing from integrity set')
