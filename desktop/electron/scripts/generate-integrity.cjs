@@ -16,7 +16,7 @@ const REQUIRED_MANIFEST_FILES=[
 ];
 
 const BASE_FILES=[
-  'index.html','MouldMaster_Core_App.html','manifest.webmanifest','mouldmaster-192.png','mouldmaster-512.png','version.json',
+  'index.html','manifest.webmanifest','mouldmaster-192.png','mouldmaster-512.png','version.json',
   'reading-patch.css','ui-shell.css','mobile-lesson-fix.css','learner-ux-repair.css','reading-patch.js','read-aloud.js','training-upgrade.js','training-qa-fix.js',
   'assessment-100-pass.js','assessment-deep-dive.js','assessment-answer-cue-fix.js','assessment-storage-scope.js','assessment-quality-suite.js',
   'assessment-stable-review-bridge.js','assessment-analytics-ui.js','assessment-final-hardening.js','runtime-v2.js','assessment-runtime-v2.js','assessment-ux.js',

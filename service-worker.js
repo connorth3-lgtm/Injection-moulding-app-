@@ -7,7 +7,7 @@ const STATIC_CACHE=`mouldmaster-static-${CACHE_VERSION}-${CACHE_REVISION}`;
 // replace the previous validated release.
 const CORE=[
   './index.html',
-  './MouldMaster_Core_App.html',
+  './src/core-runtime/core-source.txt',
   './src/core-runtime/inline-style-bridge.js',
   './src/core-runtime/core-inline-010.js',
   './src/core-runtime/core-inline-009.js',

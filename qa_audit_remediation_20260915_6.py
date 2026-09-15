@@ -74,10 +74,17 @@ for marker in ['Certificates and pass authority must be re-earned','local analyt
 
 sw=text('service-worker.js')
 need("const CACHE_VERSION='2026.09.15.6';" in sw,'service-worker release identity stale')
+core=ROOT/'MouldMaster_Core_App.html';payload=ROOT/'src/core-runtime/core-source.txt'
+need(payload.is_file() and payload.read_bytes()==core.read_bytes(),'non-executable core assembly payload must be byte-identical to frozen core')
+index=text('index.html');need('const CORE_URL="./src/core-runtime/core-source.txt";' in index,'supported bootstrap must assemble from non-executable core source')
 for asset in [claim_runtime,backup_runtime]+[f'./src/domains/learning/book-data/{x}' for x in REVIEWS+RESOLUTIONS]:
  need(repr(asset) in sw or f"'{asset}'" in sw,f'offline cache missing audit-remediation asset: {asset}')
 for marker in ["const LEGACY_CORE_PATH=new URL('./MouldMaster_Core_App.html',self.registration.scope).pathname;","if(url.pathname===LEGACY_CORE_PATH)return index||offlineDocumentResponse();","not a supported learner-facing web entry point"]:
  need(marker in sw,f'legacy raw-core navigation containment missing: {marker}')
+core_match=__import__('re').search(r'const\s+CORE\s*=\s*\[(.*?)\]\s*;',sw,__import__('re').S)
+need(core_match and "'./src/core-runtime/core-source.txt'" in core_match.group(1),'service-worker CORE must cache non-executable core source')
+need("'./MouldMaster_Core_App.html'" not in core_match.group(1),'service-worker CORE must not publish raw executable core HTML')
+package=text('desktop/electron/package.json');need('../../MouldMaster_Core_App.html' not in package,'desktop package must not publish raw executable core HTML')
 
 integrity=text('desktop/electron/scripts/generate-integrity.cjs')
 need("'src/domains/learning/book-data'" in integrity and 'STATIC_DATA_DIRS.flatMap(filesUnder)' in integrity,'desktop integrity must hash the complete packaged Book ledger directory')

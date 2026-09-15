@@ -21,6 +21,7 @@ ROOT = Path(__file__).resolve().parents[1]
 CORE = ROOT / "MouldMaster_Core_App.html"
 INDEX = ROOT / "index.html"
 OUT_DIR = ROOT / "src/core-runtime"
+ASSEMBLY_PAYLOAD = OUT_DIR / "core-source.txt"
 SERVICE_WORKER = ROOT / "service-worker.js"
 DESKTOP_PACKAGE = ROOT / "desktop/electron/package.json"
 DESKTOP_INTEGRITY = ROOT / "desktop/electron/scripts/generate-integrity.cjs"
@@ -202,7 +203,7 @@ def ensure_static_handler_retirement(index: str) -> str:
 
 
 def insert_worker_assets(worker: str, names: list[str]) -> str:
-    marker = "  './MouldMaster_Core_App.html',\n"
+    marker = "  './src/core-runtime/core-source.txt',\n"
     if marker not in worker:
         fail("service-worker CORE insertion point missing")
     assets = [f"./src/core-runtime/{name}" for name in names]
@@ -251,6 +252,10 @@ def enable_integrity_directory(integrity: str) -> str:
 def check_state() -> None:
     core = CORE.read_text(encoding="utf-8")
     index = INDEX.read_text(encoding="utf-8")
+    if not ASSEMBLY_PAYLOAD.is_file() or ASSEMBLY_PAYLOAD.read_bytes() != CORE.read_bytes():
+        fail("non-executable core assembly payload is missing or differs from the frozen core")
+    if 'const CORE_URL="./src/core-runtime/core-source.txt";' not in index:
+        fail("browser bootstrap must assemble from the non-executable core-source.txt payload")
     expected = expected_assets(core)
     refs = list(dict.fromkeys(INDEX_RUNTIME_REF_RE.findall(index)))
     expected_names = list(expected)
@@ -292,6 +297,11 @@ def check_state() -> None:
     if "script-src-attr 'unsafe-inline'" in index or "script-src 'self' 'unsafe-inline'" in index:
         fail("runtime CSP still permits inline script execution")
     worker = SERVICE_WORKER.read_text(encoding="utf-8")
+    if "'./src/core-runtime/core-source.txt'" not in worker:
+        fail("service-worker CORE must cache the non-executable core assembly payload")
+    core_array = re.search(r"const\s+CORE\s*=\s*\[(.*?)\]\s*;", worker, re.S)
+    if not core_array or "'./MouldMaster_Core_App.html'" in core_array.group(1):
+        fail("supported web cache must not publish the executable raw core HTML")
     for name in expected_names:
         if f"'./src/core-runtime/{name}'" not in worker:
             fail(f"service-worker CORE missing generated runtime asset: {name}")
@@ -300,7 +310,11 @@ def check_state() -> None:
     package = DESKTOP_PACKAGE.read_text(encoding="utf-8")
     if '"../../src/core-runtime"' not in package:
         fail("desktop package does not include src/core-runtime")
+    if '"../../MouldMaster_Core_App.html"' in package:
+        fail("desktop package must not expose the executable raw core HTML")
     integrity = DESKTOP_INTEGRITY.read_text(encoding="utf-8")
+    if "'MouldMaster_Core_App.html'" in integrity:
+        fail("desktop integrity base files must not publish the executable raw core HTML")
     if "STATIC_RUNTIME_DIRS=['src/core-runtime']" not in integrity or "...staticRuntimeFiles" not in integrity:
         fail("desktop integrity does not derive generated core runtime files")
     print(
@@ -313,6 +327,7 @@ def apply() -> None:
     core = CORE.read_text(encoding="utf-8")
     expected = expected_assets(core)
     OUT_DIR.mkdir(parents=True, exist_ok=True)
+    ASSEMBLY_PAYLOAD.write_bytes(CORE.read_bytes())
     for old in OUT_DIR.glob("core-inline-*.js"):
         if old.name not in expected:
             old.unlink()
