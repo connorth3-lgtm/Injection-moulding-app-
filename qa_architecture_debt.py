@@ -84,9 +84,20 @@ need(
 
 compat_pattern = re.compile(r"-(?:fix|hardening|finalize|extension)\.js$")
 actual_compat = {path.name for path in ROOT.glob("*.js") if compat_pattern.search(path.name)}
-grandfathered_compat = set(baseline["grandfatheredCompatibilityLayers"])
+grandfathered_compat_entries = baseline["grandfatheredCompatibilityLayers"]
+need(
+    len(grandfathered_compat_entries) == len(set(grandfathered_compat_entries)),
+    "grandfatheredCompatibilityLayers contains duplicate entries",
+)
+grandfathered_compat = set(grandfathered_compat_entries)
 unknown_compat = sorted(actual_compat - grandfathered_compat)
 need(not unknown_compat, f"new root compatibility layers are frozen; consolidate under src/domains/: {unknown_compat}")
+stale_grandfathered_compat = sorted(grandfathered_compat - actual_compat)
+need(
+    not stale_grandfathered_compat,
+    "retired root compatibility layers must be removed from grandfatheredCompatibilityLayers so they cannot silently return: "
+    f"{stale_grandfathered_compat}",
+)
 
 # document.write has been retired. The zero ceiling prevents it from returning.
 write_count = index.count("document.write(")
@@ -185,7 +196,7 @@ print(
     "MouldMaster architecture debt guard passed: "
     f"{len(body_scripts)}/{baseline['runtimeBodyScriptCeiling']} bootstrap scripts; "
     f"{len(root_runtime_scripts)}/{baseline['rootRuntimeScriptCeiling']} grandfathered root scripts; "
-    f"{len(actual_compat)}/{len(grandfathered_compat)} compatibility layers; "
+    f"{len(actual_compat)}/{len(grandfathered_compat)} exact grandfathered compatibility layers; "
     f"document.write {write_count}/{baseline['documentWriteCeiling']}; "
     f"{len(core_runtime_scripts)} runtime-externalized frozen core scripts with handler bridge folded into final slot; "
     "script-src self-only; script-src-attr none; style-src exact-hash/self-only with style-src-attr none; no unsafe-inline, cssText, setAttribute(style), active inline handlers, remote scripts, unsafe-eval, eval(), or new Function()"
