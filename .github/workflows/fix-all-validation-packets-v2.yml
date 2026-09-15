@@ -1,0 +1,45 @@
+name: Fix-all validation packet rebinder v2
+
+on:
+  push:
+    branches: [ audit/fix-all-deep-dive-20260915 ]
+    paths:
+      - .github/workflows/fix-all-validation-packets-v2.yml
+
+permissions:
+  contents: write
+
+jobs:
+  rebind:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: audit/fix-all-deep-dive-20260915
+          fetch-depth: 0
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5.6.0
+        with:
+          python-version: '3.12'
+      - name: Rebind with fingerprint produced by the release-bound metadata set
+        shell: bash
+        run: |
+          set -euo pipefail
+          awk 'BEGIN{f=0} /python - <<'\''PY'\''/{f=1;next} f && /^          PY$/{exit} f{sub(/^          /,"");print}' .github/workflows/fix-all-validation-packets.yml > /tmp/rebind.py
+          sed -i 's#sha256:8bfc892bc9823a9135480f837fbd2e0560790e21584d5dd6fe1ca88a046aa098#sha256:b6fca9536f77247e1e778639a7b24228e4fe43ef413fa6e6d025e8a788006f2e#g' /tmp/rebind.py
+          python /tmp/rebind.py
+          python qa_release_validation_packets.py
+          python tools/verify_release_external_validation.py
+          python qa_book_release_integration.py
+          git diff --check
+      - name: Commit exact-release HOLD rebinding
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git rm .github/workflows/fix-all-validation-packets.yml .github/workflows/fix-all-validation-packets-v2.yml
+          git add data qa certification src/domains/learning/book-data qa_release_validation_packets.py tools/verify_release_external_validation.py
+          git add -u
+          git commit -m 'Bind audit fixes to exact-release validation HOLDs'
+          git push origin HEAD:audit/fix-all-deep-dive-20260915
