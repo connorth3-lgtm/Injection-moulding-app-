@@ -1,0 +1,132 @@
+name: Fix-all validation packet rebinder
+
+on:
+  push:
+    branches: [ audit/fix-all-deep-dive-20260915 ]
+    paths:
+      - .github/workflows/fix-all-validation-packets.yml
+
+permissions:
+  contents: write
+
+jobs:
+  rebind:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout repair branch
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: audit/fix-all-deep-dive-20260915
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5.6.0
+        with:
+          python-version: '3.12'
+
+      - name: Rebind exact-release HOLD contracts and packets
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          OLD='2026.09.15.4'
+          NEW='2026.09.15.5'
+          OLD_SHA='f83daaf5b597afc4ef7c1c8ae2653bd7bf67040b'
+          NEW_SHA='afbfc2921fb1cba8ad9705ad821f9223546bda84'
+          OLD_FP='sha256:36cb9bbc8acd664ea7b72bd32ad06f75defd0d2019c6879039c87e7d4c45ebf8'
+          NEW_FP='sha256:8bfc892bc9823a9135480f837fbd2e0560790e21584d5dd6fe1ca88a046aa098'
+          RUN=34931254705
+          ARTIFACT_ID=10381038770
+          ARTIFACT_NAME=f'physical-pwa-candidate-{NEW_SHA}'
+          ARTIFACT_DIGEST='sha256:cb84c59349536382c17609f5251b8efc40bef4624e9b3232353e185d6b57c796'
+          EXPIRES='2026-10-15T05:04:12Z'
+
+          def load(path): return json.loads(Path(path).read_text(encoding='utf-8'))
+          def save(path,obj): Path(path).write_text(json.dumps(obj,indent=2)+'\n',encoding='utf-8')
+
+          ledger=load('data/release-external-validation-v1.json')
+          ledger['release']=NEW
+          ledger['validationIndex']=f'qa/EXTERNAL_VALIDATION_{NEW}.md'
+          ledger['accessibility']['reviewPacket']=f'qa/ACCESSIBILITY_REAL_AT_{NEW}.md'
+          ledger['accessibility']['candidate']={'release':NEW,'sourceSha':NEW_SHA,'runtimeFingerprint':NEW_FP}
+          pwa=ledger['pwaPhysicalDevices']
+          pwa['reviewPacket']=f'qa/PWA_PHYSICAL_DEVICE_{NEW}.md'
+          pwa['currentCandidate']={
+              'release':NEW,'sourceSha':NEW_SHA,'runtimeFingerprint':NEW_FP,
+              'candidateRunId':RUN,
+              'candidateWorkflow':'one-shot exact public candidate build; not production publication',
+              'artifactId':ARTIFACT_ID,'artifactName':ARTIFACT_NAME,
+              'artifactDigest':ARTIFACT_DIGEST,'artifactExpiresAt':EXPIRES,
+          }
+          ledger['windowsDistribution']['readinessPacket']=f'certification/WINDOWS_SIGNING_READINESS_{NEW}.md'
+          ledger['windowsDistribution']['sourceSha']=NEW_SHA
+          ledger['bookSme']['reviewPacket']=f'qa/BOOK_SME_REVIEW_{NEW}.md'
+          ledger['curriculumSme']['reviewPacket']=f'qa/CURRICULUM_SME_REVIEW_{NEW}.md'
+          ledger['learnerOutcomes']['pilotPacket']=f'qa/LEARNER_PILOT_{NEW}.md'
+          save('data/release-external-validation-v1.json',ledger)
+
+          access=load('data/accessibility-real-at-validation-v1.json')
+          access.update(release=NEW,packet=f'qa/ACCESSIBILITY_REAL_AT_{NEW}.md',sourceSha=NEW_SHA,runtimeFingerprint=NEW_FP)
+          save('data/accessibility-real-at-validation-v1.json',access)
+
+          curriculum=load('qa/curriculum-semantic-review.json')
+          curriculum.update(release=NEW,packet=f'qa/CURRICULUM_SME_REVIEW_{NEW}.md')
+          save('qa/curriculum-semantic-review.json',curriculum)
+
+          book=load('data/book-sme-review-v1.json');book['release']=NEW;save('data/book-sme-review-v1.json',book)
+          Path('src/domains/learning/book-data/book-sme-review-v1.json').write_bytes(Path('data/book-sme-review-v1.json').read_bytes())
+
+          pilot=load('data/learner-pilot-v1.json');pilot['release']=NEW;save('data/learner-pilot-v1.json',pilot)
+
+          packet_pairs=[
+              ('qa/ACCESSIBILITY_REAL_AT_', '.md'),
+              ('qa/BOOK_SME_REVIEW_', '.md'),
+              ('qa/CURRICULUM_SME_REVIEW_', '.md'),
+              ('qa/LEARNER_PILOT_', '.md'),
+              ('certification/WINDOWS_SIGNING_READINESS_', '.md'),
+          ]
+          for prefix,suffix in packet_pairs:
+              src=Path(f'{prefix}{OLD}{suffix}');dst=Path(f'{prefix}{NEW}{suffix}')
+              text=src.read_text(encoding='utf-8').replace(OLD,NEW).replace(OLD_SHA,NEW_SHA).replace(OLD_FP,NEW_FP)
+              dst.write_text(text,encoding='utf-8')
+
+          pwa_packet=f'''# MouldMaster physical PWA validation — {NEW}\n\nThis packet governs hands-on physical-device validation of the exact MouldMaster web release `{NEW}` candidate. It does **not** authorize production and it does not replace `qa/PWA_PHYSICAL_DEVICE_CHECKLIST.md` or `data/pwa-physical-device-validation-v1.json`.\n\n## Exact candidate\n\n- web release: `{NEW}`\n- repair-branch source commit: `{NEW_SHA}`\n- public-runtime fingerprint: `{NEW_FP}`\n- exact candidate build run: `{RUN}`\n- retained candidate artifact: `{ARTIFACT_NAME}`\n- artifact id: `{ARTIFACT_ID}`\n- artifact ZIP digest: `{ARTIFACT_DIGEST}`\n- artifact retention expiry: `{EXPIRES}`\n\nThe candidate was built with the repository's production Pages artifact builder but was **not published**. The runtime fingerprint is the byte-level acceptance key. This automated candidate provenance is not physical-device evidence.\n\n## Required iOS / iPadOS execution\n\nUsing a physical iPhone or iPad, Safari, and a trusted HTTPS origin serving byte-identical candidate content, complete every applicable item in `qa/PWA_PHYSICAL_DEVICE_CHECKLIST.md`, including install/standalone launch, safe-area/orientation behavior, representative Academy/Book/assessment/workspace use, offline close/relaunch, offline reboot, update recovery, storage-pressure recovery, learner reset, and separate process-evidence deletion.\n\n## Required Android execution\n\nUsing a physical Android device and Chrome, complete the same governed matrix including install/standalone launch, system-bar clearance, representative feature use, offline restart/reboot, update recovery, storage-pressure recovery, and the separate learner/process-data deletion boundaries.\n\n## Audit-fix regression focus\n\nAdditionally verify on physical devices that a normal learner backup still imports, an oversized or malformed backup fails closed without replacing existing state, Book evidence links open externally, and the claim-trace disclosure remains readable without implying independent SME approval.\n\n## Evidence hygiene\n\nKeep screenshots, device logs, learner/customer/site identifiers, raw process data, email addresses, filesystem paths and other sensitive evidence outside this public repository. Browser emulation, Playwright, desktop WebKit and service-worker automation do not count as physical-device evidence.\n\n## Completion\n\nOnly after both platform rows genuinely pass: update `data/pwa-physical-device-validation-v1.json` with the exact runtime fingerprint and real device evidence; run the physical-device QA and exact-artifact verifier; submit through protected review; and bind any production publication decision to the protected-main artifact. Until then, `pwaPhysicalDevices.status` remains `hold`.\n'''
+          Path(f'qa/PWA_PHYSICAL_DEVICE_{NEW}.md').write_text(pwa_packet,encoding='utf-8')
+
+          index=f'''# External validation boundary — {NEW}\n\nRelease `{NEW}` is technically automated and governed, but the following external workstreams remain explicit **HOLD**. This index does not create human, device, learner, accreditation, signing, or production-site evidence.\n\n- Exact candidate source: `{NEW_SHA}`\n- Exact public-runtime fingerprint: `{NEW_FP}`\n- Candidate build run: `{RUN}`\n- Candidate artifact: `{ARTIFACT_NAME}` (`{ARTIFACT_ID}`; `{ARTIFACT_DIGEST}`; expires `{EXPIRES}`)\n\n| Workstream | Status | Release packet | Required genuine evidence |\n| --- | --- | --- | --- |\n| Physical iOS/iPadOS + Android PWA | **HOLD** | `qa/PWA_PHYSICAL_DEVICE_{NEW}.md` | Current-release hands-on device execution across the governed install/update/offline matrix. |\n| Real assistive technology | **HOLD** | `qa/ACCESSIBILITY_REAL_AT_{NEW}.md` | Human NVDA and VoiceOver matrix evidence. |\n| Windows distribution | **HOLD** | `certification/WINDOWS_SIGNING_READINESS_{NEW}.md` | Signed/Store provenance, physical Windows launch, reputation path and package validation. |\n| Independent Book SME | **HOLD** | `qa/BOOK_SME_REVIEW_{NEW}.md` | 46/46 human chapter approvals across six dimensions. |\n| Curriculum SME | **HOLD** | `qa/CURRICULUM_SME_REVIEW_{NEW}.md` | 120/120 human lesson semantic approvals. |\n| Learner outcomes | **HOLD** | `qa/LEARNER_PILOT_{NEW}.md` | Real longitudinal learner evidence. |\n\nProduction use remains advisory-only; no automatic machine control, validated recipe authority, accreditation or learner-efficacy claim is authorized.\n'''
+          Path(f'qa/EXTERNAL_VALIDATION_{NEW}.md').write_text(index,encoding='utf-8')
+
+          # Make candidate-run provenance generic rather than falsely requiring a Pages workflow run.
+          q=Path('qa_release_validation_packets.py');text=q.read_text(encoding='utf-8')
+          text=text.replace('need(isinstance(candidate.get("pagesRunId"), int) and candidate["pagesRunId"] > 0, "physical PWA Pages run id is invalid")', 'candidate_run_id = candidate.get("candidateRunId", candidate.get("pagesRunId"))\nneed(isinstance(candidate_run_id, int) and candidate_run_id > 0, "physical PWA candidate build run id is invalid")')
+          q.write_text(text,encoding='utf-8')
+
+          q=Path('tools/verify_release_external_validation.py');text=q.read_text(encoding='utf-8')
+          text=text.replace('    for key in ("pagesRunId", "artifactId"):\n        value = candidate.get(key)\n        if not isinstance(value, int) or value <= 0:\n            fail(f"PWA candidate {key} must be a positive integer")', '    candidate_run_id = candidate.get("candidateRunId", candidate.get("pagesRunId"))\n    if not isinstance(candidate_run_id, int) or candidate_run_id <= 0:\n        fail("PWA candidate build run id must be a positive integer")\n    artifact_id = candidate.get("artifactId")\n    if not isinstance(artifact_id, int) or artifact_id <= 0:\n        fail("PWA candidate artifactId must be a positive integer")')
+          q.write_text(text,encoding='utf-8')
+          PY
+
+      - name: Validate exact-release HOLD packets
+        shell: bash
+        run: |
+          set -euo pipefail
+          python qa_release_validation_packets.py
+          python tools/verify_release_external_validation.py
+          python qa_book_release_integration.py
+          git diff --check
+
+      - name: Commit release packet rebinding and remove one-shot workflow
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git rm .github/workflows/fix-all-validation-packets.yml
+          git add data qa certification src/domains/learning/book-data qa_release_validation_packets.py tools/verify_release_external_validation.py
+          git add -u
+          git commit -m 'Bind audit fixes to exact-release validation HOLDs'
+          git push origin HEAD:audit/fix-all-deep-dive-20260915
