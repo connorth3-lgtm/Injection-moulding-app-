@@ -1,16 +1,52 @@
 {
   "schemaVersion": 1,
-  "release": "2026.09.15.4",
-  "packet": "qa/ACCESSIBILITY_REAL_AT_2026.09.15.4.md",
-  "sourceSha": "f83daaf5b597afc4ef7c1c8ae2653bd7bf67040b",
-  "runtimeFingerprint": "sha256:36cb9bbc8acd664ea7b72bd32ad06f75defd0d2019c6879039c87e7d4c45ebf8",
+  "release": "2026.09.15.5",
+  "packet": "qa/ACCESSIBILITY_REAL_AT_2026.09.15.5.md",
+  "sourceSha": "afbfc2921fb1cba8ad9705ad821f9223546bda84",
+  "runtimeFingerprint": "sha256:b6fca9536f77247e1e778639a7b24228e4fe43ef413fa6e6d025e8a788006f2e",
   "status": "pending-real-at-validation",
   "boundary": "Automated browser and accessibility regressions do not substitute for real assistive-technology interaction by a human reviewer. This contract must remain pending until each required matrix row has dated evidence from the named platform/AT/browser combination.",
   "requiredMatrix": [
-    {"id":"nvda-firefox-windows","assistiveTechnology":"NVDA","browser":"Firefox","platform":"Windows","status":"pending","testedAt":null,"reviewer":null,"evidenceRef":null},
-    {"id":"nvda-chromium-windows","assistiveTechnology":"NVDA","browser":"Chrome or Chromium","platform":"Windows","status":"pending","testedAt":null,"reviewer":null,"evidenceRef":null},
-    {"id":"voiceover-safari-macos","assistiveTechnology":"VoiceOver","browser":"Safari","platform":"macOS","status":"pending","testedAt":null,"reviewer":null,"evidenceRef":null},
-    {"id":"voiceover-safari-ios","assistiveTechnology":"VoiceOver","browser":"Safari","platform":"iOS","status":"pending","testedAt":null,"reviewer":null,"evidenceRef":null}
+    {
+      "id": "nvda-firefox-windows",
+      "assistiveTechnology": "NVDA",
+      "browser": "Firefox",
+      "platform": "Windows",
+      "status": "pending",
+      "testedAt": null,
+      "reviewer": null,
+      "evidenceRef": null
+    },
+    {
+      "id": "nvda-chromium-windows",
+      "assistiveTechnology": "NVDA",
+      "browser": "Chrome or Chromium",
+      "platform": "Windows",
+      "status": "pending",
+      "testedAt": null,
+      "reviewer": null,
+      "evidenceRef": null
+    },
+    {
+      "id": "voiceover-safari-macos",
+      "assistiveTechnology": "VoiceOver",
+      "browser": "Safari",
+      "platform": "macOS",
+      "status": "pending",
+      "testedAt": null,
+      "reviewer": null,
+      "evidenceRef": null
+    },
+    {
+      "id": "voiceover-safari-ios",
+      "assistiveTechnology": "VoiceOver",
+      "browser": "Safari",
+      "platform": "iOS",
+      "status": "pending",
+      "testedAt": null,
+      "reviewer": null,
+      "evidenceRef": null
+    }
   ],
   "requiredTasks": [
     "Navigate primary product areas and return focus predictably",
