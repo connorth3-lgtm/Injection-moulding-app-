@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
-  "release": "2026.09.15.5",
-  "validationIndex": "qa/EXTERNAL_VALIDATION_2026.09.15.5.md",
+  "release": "2026.09.15.6",
+  "validationIndex": "qa/EXTERNAL_VALIDATION_2026.09.15.6.md",
   "policy": "External validation is release-specific. Automated QA may verify that HOLD boundaries are represented truthfully but must never manufacture human, device, learner, accreditation, signing, or production-site evidence.",
   "technicalAutomation": {
     "status": "pass",
@@ -23,9 +23,9 @@
   "accessibility": {
     "status": "hold",
     "evidenceContract": "data/accessibility-real-at-validation-v1.json",
-    "reviewPacket": "qa/ACCESSIBILITY_REAL_AT_2026.09.15.5.md",
+    "reviewPacket": "qa/ACCESSIBILITY_REAL_AT_2026.09.15.6.md",
     "candidate": {
-      "release": "2026.09.15.5",
+      "release": "2026.09.15.6",
       "sourceSha": "7fe353beb0f54b5b8f53851221738bb5c1a9bcfe",
       "runtimeFingerprint": "sha256:b6fca9536f77247e1e778639a7b24228e4fe43ef413fa6e6d025e8a788006f2e"
     },
@@ -34,9 +34,9 @@
   "pwaPhysicalDevices": {
     "status": "hold",
     "evidenceContract": "data/pwa-physical-device-validation-v1.json",
-    "reviewPacket": "qa/PWA_PHYSICAL_DEVICE_2026.09.15.5.md",
+    "reviewPacket": "qa/PWA_PHYSICAL_DEVICE_2026.09.15.6.md",
     "currentCandidate": {
-      "release": "2026.09.15.5",
+      "release": "2026.09.15.6",
       "sourceSha": "7fe353beb0f54b5b8f53851221738bb5c1a9bcfe",
       "runtimeFingerprint": "sha256:b6fca9536f77247e1e778639a7b24228e4fe43ef413fa6e6d025e8a788006f2e",
       "candidateRunId": 34931583556,
@@ -52,7 +52,7 @@
     "status": "hold",
     "workflow": ".github/workflows/microsoft-store-msix.yml",
     "handoff": "certification/STORE_SUBMISSION_STATUS.md",
-    "readinessPacket": "certification/WINDOWS_SIGNING_READINESS_2026.09.15.5.md",
+    "readinessPacket": "certification/WINDOWS_SIGNING_READINESS_2026.09.15.6.md",
     "sourceSha": "7fe353beb0f54b5b8f53851221738bb5c1a9bcfe",
     "desktopRelease": "2026.08.26.9",
     "evidence": null,
@@ -66,19 +66,19 @@
   "bookSme": {
     "status": "hold",
     "evidenceContract": "data/book-sme-review-v1.json",
-    "reviewPacket": "qa/BOOK_SME_REVIEW_2026.09.15.5.md",
+    "reviewPacket": "qa/BOOK_SME_REVIEW_2026.09.15.6.md",
     "required": "Independent human SME approval of all 46 governed Book chapters across the six required review dimensions."
   },
   "curriculumSme": {
     "status": "hold",
     "evidenceContract": "qa/curriculum-semantic-review.json",
-    "reviewPacket": "qa/CURRICULUM_SME_REVIEW_2026.09.15.5.md",
+    "reviewPacket": "qa/CURRICULUM_SME_REVIEW_2026.09.15.6.md",
     "required": "Traceable human SME semantic approval of all 120 canonical lessons."
   },
   "learnerOutcomes": {
     "status": "hold",
     "pilotContract": "data/learner-pilot-v1.json",
-    "pilotPacket": "qa/LEARNER_PILOT_2026.09.15.5.md",
+    "pilotPacket": "qa/LEARNER_PILOT_2026.09.15.6.md",
     "evidence": null,
     "required": "Longitudinal real-learner outcome evidence before efficacy or genuine psychometric-validity claims."
   },
