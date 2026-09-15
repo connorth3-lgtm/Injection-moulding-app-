@@ -1,0 +1,42 @@
+name: Audit PWA Candidate Stage
+
+on:
+  push:
+    branches: [fix/audit-remediation-2026-09-16]
+
+permissions:
+  contents: read
+
+jobs:
+  candidate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout exact 2026.09.15.6 technical candidate
+        uses: actions/checkout@v7
+        with:
+          ref: 55f316d1bb3135da0407ce158eb108dda7e9d9d1
+          fetch-depth: 0
+      - uses: actions/setup-python@v7
+        with:
+          python-version: '3.12'
+      - name: Build and validate exact public candidate
+        shell: bash
+        run: |
+          python tools/build_pages_artifact.py
+          python tools/verify_pwa_physical_evidence.py --artifact .pages-dist --print-fingerprint | tee runtime-fingerprint.txt
+          test ! -e .pages-dist/MouldMaster_Core_App.html
+          test -f .pages-dist/src/core-runtime/core-source.txt
+          cmp -s MouldMaster_Core_App.html .pages-dist/src/core-runtime/core-source.txt
+          cp -a .pages-dist physical-pwa-candidate
+          printf '%s\n' '55f316d1bb3135da0407ce158eb108dda7e9d9d1' > physical-pwa-candidate/SOURCE_SHA.txt
+          cp runtime-fingerprint.txt physical-pwa-candidate/RUNTIME_FINGERPRINT.txt
+      - name: Retain exact physical-device candidate
+        uses: actions/upload-artifact@v7
+        with:
+          name: physical-pwa-candidate-55f316d1bb3135da0407ce158eb108dda7e9d9d1
+          path: physical-pwa-candidate
+          retention-days: 30
+          if-no-files-found: error
+          compression-level: 6
+          overwrite: false
+          include-hidden-files: false
