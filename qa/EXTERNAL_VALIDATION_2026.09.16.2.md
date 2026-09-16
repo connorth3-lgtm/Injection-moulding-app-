@@ -2,11 +2,11 @@
 
 Release `2026.09.16.2` is technically automated and governed, but the following external workstreams remain explicit **HOLD**. This index does not create human, device, learner, accreditation, signing, or production-site evidence.
 
-- Exact pre-merge candidate source: `5d7808a1cae6e256d633553061c6ac1652f237e2`
-- Exact public-runtime fingerprint: `sha256:f3195f0e8aa5585bb5ee8fa957a2d65efb8a9ac003e181a1d48fe7438fa7f122`
-- Candidate build run: `35058788000`
-- Candidate artifact: `physical-pwa-candidate-5d7808a1cae6e256d633553061c6ac1652f237e2` (`10431443080`; `sha256:f5e16827f6593338a8b76dfca9eb3459826377b715e60ec3bcad9879630a8255`; expires `2026-10-16T05:15:28Z`)
-- Pages disposition: production root **HOLD**; exact learner runtime available only through the non-production `/preview/` path pending genuine physical-device authorization.
+- Exact pre-merge candidate source: `0705a4a430868ec871200aa7dd65362ce79cdb96`
+- Exact public-runtime fingerprint: `sha256:00a6be79979742d3dd12b8f6ae7b904bc6210e9bc1a457f340f9814e48f4e46f`
+- Candidate build run: `35059209551`
+- Candidate artifact: `physical-pwa-candidate-0705a4a430868ec871200aa7dd65362ce79cdb96` (`10431871537`; `sha256:98b1be94bd6b5801444ce7e404c6c944e8fded450fab3667e3bd1171ff3cee9b`; expires `2026-10-16T05:21:53Z`)
+- Pages disposition: production root remains **HOLD**. This retained pre-merge artifact is the exact validation source; after merge, the protected-main Pages workflow must independently stage and verify byte-equivalent runtime before any production decision.
 
 | Workstream | Status | Release packet | Required genuine evidence |
 | --- | --- | --- | --- |
