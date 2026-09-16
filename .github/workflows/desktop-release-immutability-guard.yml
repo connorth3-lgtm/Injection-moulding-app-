@@ -1,0 +1,107 @@
+name: Desktop Release Platform Immutability Guard
+
+on:
+  workflow_run:
+    workflows: ["Publish Open Desktop Release"]
+    types: [completed]
+    branches: [main]
+  workflow_dispatch:
+
+permissions: {}
+
+concurrency:
+  group: desktop-release-immutability-${{ github.event.workflow_run.id || github.run_id }}
+  cancel-in-progress: false
+
+jobs:
+  verify-platform-immutability:
+    if: ${{ github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success' }}
+    permissions:
+      contents: write
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout publisher source
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ github.event.workflow_run.head_sha || github.sha }}
+          fetch-depth: 2
+      - name: Verify platform immutable desktop release
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPOSITORY: ${{ github.repository }}
+          EVENT_NAME: ${{ github.event_name }}
+          TRIGGER_EVENT: ${{ github.event.workflow_run.event || '' }}
+          TRIGGER_SHA: ${{ github.event.workflow_run.head_sha || github.sha }}
+          TRIGGER_STARTED_AT: ${{ github.event.workflow_run.run_started_at || '' }}
+          TRIGGER_UPDATED_AT: ${{ github.event.workflow_run.updated_at || '' }}
+        run: |
+          set -euo pipefail
+
+          current="$(python3 -c "import json; print(json.load(open('version.json', encoding='utf-8')).get('desktop_release', ''))")"
+          if [[ -z "$current" ]]; then
+            echo "desktop_release is missing from version.json" >&2
+            exit 1
+          fi
+
+          # A normal web-only version bump also runs the desktop publisher, but its
+          # desktop job is skipped. Do not reinterpret an older desktop release on
+          # those runs. Manual publisher dispatch remains an explicit verification.
+          if [[ "$EVENT_NAME" == "workflow_run" && "$TRIGGER_EVENT" == "push" ]]; then
+            previous=""
+            if git rev-parse "${TRIGGER_SHA}^" >/dev/null 2>&1 && git cat-file -e "${TRIGGER_SHA}^:version.json" 2>/dev/null; then
+              previous="$(git show "${TRIGGER_SHA}^:version.json" | python3 -c "import json,sys; print(json.load(sys.stdin).get('desktop_release', ''))")"
+            fi
+            if [[ -n "$previous" && "$current" == "$previous" ]]; then
+              echo "Desktop release identity unchanged at $current; no platform immutability check is required for this web-only publisher run."
+              exit 0
+            fi
+          fi
+
+          tag="desktop-v${current}"
+          release_json="$(gh api \
+            -H 'Accept: application/vnd.github+json' \
+            -H 'X-GitHub-Api-Version: 2026-03-10' \
+            "repos/${REPOSITORY}/releases/tags/${tag}")" || {
+              echo "Desktop release ${tag} could not be read after a successful publisher run." >&2
+              exit 1
+            }
+
+          immutable="$(python3 -c 'import json,sys; print("true" if json.load(sys.stdin).get("immutable") is True else "false")' <<<"$release_json")"
+          if [[ "$immutable" == "true" ]]; then
+            echo "GitHub reports immutable=true for ${tag}."
+            exit 0
+          fi
+
+          target="$(python3 -c 'import json,sys; print(json.load(sys.stdin).get("target_commitish") or "")' <<<"$release_json")"
+          created_at="$(python3 -c 'import json,sys; print(json.load(sys.stdin).get("created_at") or "")' <<<"$release_json")"
+
+          created_by_this_run="false"
+          if [[ "$EVENT_NAME" == "workflow_run" && -n "$TRIGGER_STARTED_AT" && -n "$TRIGGER_UPDATED_AT" && "$target" == "$TRIGGER_SHA" ]]; then
+            if python3 - "$created_at" "$TRIGGER_STARTED_AT" "$TRIGGER_UPDATED_AT" <<'PY'
+          from datetime import datetime
+          import sys
+
+          def parse(value):
+              return datetime.fromisoformat(value.replace('Z', '+00:00'))
+
+          created, started, updated = map(parse, sys.argv[1:4])
+          raise SystemExit(0 if started <= created <= updated else 1)
+          PY
+            then
+              created_by_this_run="true"
+            fi
+          fi
+
+          if [[ "$created_by_this_run" == "true" ]]; then
+            echo "GitHub reports the newly published ${tag} release as mutable; removing only this run's release and tag before failing closed." >&2
+            gh release delete "$tag" --repo "$REPOSITORY" --yes --cleanup-tag || {
+              echo "Mutable new release cleanup failed. Remove ${tag} manually, enable repository-level immutable releases, and do not retry publication until cleanup is verified." >&2
+              exit 1
+            }
+            echo "The newly created mutable release/tag was removed. Enable repository-level immutable releases before retrying desktop publication." >&2
+            exit 1
+          fi
+
+          echo "GitHub reports ${tag} as mutable, but this guard cannot prove it was created by the triggering publisher run. Existing releases are never auto-deleted. Enable repository-level immutable releases and advance desktop_release for the next governed release." >&2
+          exit 1
