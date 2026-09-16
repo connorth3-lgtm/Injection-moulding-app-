@@ -11,7 +11,7 @@ This packet governs hands-on physical-device validation of the exact MouldMaster
 - retained candidate artifact: `physical-pwa-candidate-8c5b71cb8b39c9e7b425da03dc804772c953eb85`
 - artifact id: `10425530938`
 - artifact ZIP digest: `sha256:ea02666f2d2b21534bdc453efc59c3586a8f655bfd9b5b050cb70596cbe52d23`
-- artifact retention expiry: `2026-10-16T00:42:42Z`
+- artifact retention expiry: `2026-10-16T00:42:41Z`
 
 The candidate was built with the repository's production Pages artifact builder but was **not published**. The runtime fingerprint is the byte-level acceptance key. This automated candidate provenance is not physical-device evidence.
 

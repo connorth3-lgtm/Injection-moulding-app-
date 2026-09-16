@@ -44,7 +44,7 @@
       "artifactId": 10425530938,
       "artifactName": "physical-pwa-candidate-8c5b71cb8b39c9e7b425da03dc804772c953eb85",
       "artifactDigest": "sha256:ea02666f2d2b21534bdc453efc59c3586a8f655bfd9b5b050cb70596cbe52d23",
-      "artifactExpiresAt": "2026-10-16T00:42:42Z"
+      "artifactExpiresAt": "2026-10-16T00:42:41Z"
     },
     "required": "Current-release physical iOS/iPadOS and Android install/update/offline validation. Prior release waivers do not authorize this release."
   },
