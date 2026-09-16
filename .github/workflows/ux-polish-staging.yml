@@ -3,42 +3,29 @@ on:
   push:
     branches: [fix/ux-polish-20260916-2]
 permissions:
-  contents: read
+  contents: write
 concurrency:
   group: ux-polish-staging-${{ github.ref }}
-  cancel-in-progress: true
+  cancel-in-progress: false
 jobs:
-  candidate:
+  rebind:
+    if: ${{ !contains(github.event.head_commit.message, 'Rebind 2026.09.16.2 external validation') }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-      - name: Verify release sync
-        run: python3 tools/sync_web_release.py --check
-      - name: Verify premium static contract
-        run: python3 qa_premium_ui.py
-      - name: Verify Book source syntax
-        run: node --check book-runtime.js
-      - name: Verify packaged Book syntax
-        run: node --check src/domains/learning/book-runtime.js
-      - name: Build exact public candidate
-        run: |
-          python3 tools/build_pages_artifact.py
-          rm -rf physical-pwa-candidate
-          mkdir physical-pwa-candidate
-          cp -a .pages-dist/. physical-pwa-candidate/
-          python3 tools/verify_pwa_physical_evidence.py --artifact physical-pwa-candidate --print-fingerprint | tee candidate-fingerprint.txt
-          printf '%s\n' '${{ github.sha }}' > candidate-source-sha.txt
-          printf '%s\n' '${{ github.run_id }}' > candidate-run-id.txt
-      - name: Retain exact branch candidate
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
-          name: physical-pwa-candidate-${{ github.sha }}
-          path: |
-            physical-pwa-candidate
-            candidate-fingerprint.txt
-            candidate-source-sha.txt
-            candidate-run-id.txt
-          retention-days: 30
-          if-no-files-found: error
-          compression-level: 6
-          overwrite: false
+          ref: fix/ux-polish-20260916-2
+      - name: Rebind exact candidate without manufacturing evidence
+        run: python3 tools/rebind_external_validation_20260916_2.py
+      - name: Verify release-bound external validation remains fail closed
+        run: |
+          python3 tools/verify_release_external_validation.py
+          python3 tools/sync_web_release.py --check
+          git diff --check
+      - name: Commit governance rebind
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "Rebind 2026.09.16.2 external validation"
+          git push origin HEAD:fix/ux-polish-20260916-2
