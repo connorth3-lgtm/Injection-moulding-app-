@@ -27,8 +27,8 @@
     "./src/domains/process/process-data-integrity.js",
     "./src/domains/process/process-statistics.js",
     "./src/domains/shell/accessibility-loader.js",
-    "./src/domains/shell/learner-ui-polish.js",
-    "./src/domains/shell/product-areas.js"
+    "./src/domains/shell/product-areas.js",
+    "./src/domains/shell/learner-ui-polish.js"
   ],
   "dataAssets": [
     "./material-catalog-v1.json"
