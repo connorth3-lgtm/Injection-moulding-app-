@@ -24,8 +24,8 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
         with: {python-version: '3.12'}
       - name: Install semantic profiling dependencies
         run: |
@@ -55,7 +55,7 @@ jobs:
               assert x['semanticProfile']['sourceDeliveredStressStrainTraceValues'] > 0
           print(json.dumps({'status':x['status'],'stressValues':x['semanticProfile']['sourceDeliveredStressTraceValues'],'strainValues':x['semanticProfile']['sourceDeliveredStrainTraceValues'],'traceValues':x['semanticProfile']['sourceDeliveredStressStrainTraceValues'],'plotNumericExcluded':x['semanticProfile']['excludedPlotSheet']['numericCells']},indent=2))
           PY
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: mouldmaster-pmc4753395-stage2-profile
           path: benchmark-results/pmc4753395-stage2.json
