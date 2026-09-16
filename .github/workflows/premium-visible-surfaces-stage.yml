@@ -3,6 +3,7 @@ name: Premium Visible Surfaces Stage
 on:
   push:
     branches: [design/premium-polish-20260916]
+  workflow_dispatch:
 
 permissions:
   contents: write
