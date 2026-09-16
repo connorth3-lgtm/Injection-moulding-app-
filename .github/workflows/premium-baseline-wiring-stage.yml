@@ -1,0 +1,79 @@
+name: Premium Baseline Wiring Stage
+
+on:
+  push:
+    branches: [design/premium-polish-20260916]
+
+permissions:
+  contents: write
+
+jobs:
+  wire:
+    if: ${{ !contains(github.event.head_commit.message, '[premium-baseline-wired]') }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: '3.13'
+      - name: Bind permanent browser QA to approved premium baseline
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          p=Path('.github/workflows/mobile-browser-qa.yml')
+          s=p.read_text(encoding='utf-8')
+          old='9a74fa40aec493d79207e6de2e25955e3d4020aa'
+          new='4f187eb068264f48522f6ad6fb2825e91b3cff7d'
+          if new not in s:
+              if old not in s: raise SystemExit('mobile baseline SHA anchor missing')
+              s=s.replace(old,new,1)
+              p.write_text(s,encoding='utf-8')
+
+          p=Path('.github/workflows/premium-ui-qa.yml')
+          s=p.read_text(encoding='utf-8')
+          if "      - 'premium-dynamic.css'" not in s:
+              s=s.replace("      - 'premium-ui.css'\n", "      - 'premium-ui.css'\n      - 'premium-dynamic.css'\n",1)
+          marker='      - name: Upload premium UI review artifacts\n'
+          if 'Capture premium desktop and mobile review screenshots' not in s:
+              block=r'''      - name: Capture premium desktop and mobile review screenshots
+        run: |
+          mkdir -p qa-artifacts/premium-review
+          node <<'NODE'
+          const { chromium }=require('playwright');
+          (async()=>{
+            const browser=await chromium.launch({headless:true});
+            const user={id:'premium-review',name:'Premium Review',role:'learner',completed:[1,2,3],bookmarks:[],notes:{},examScores:{},certificates:[],currentLesson:4,lastSeen:'2026-09-16T00:00:00.000Z',onboardingDone:true,experience:'Beginner',goal:'Learn the full process',dailyMinutes:15,region:'ALL'};
+            for(const profile of [{name:'desktop',viewport:{width:1440,height:1100}},{name:'mobile',viewport:{width:390,height:844}}]){
+              const page=await browser.newPage({viewport:profile.viewport});
+              await page.addInitScript(({user})=>{localStorage.clear();localStorage.setItem('mouldmasterProDB',JSON.stringify({activeUser:user.id,users:{[user.id]:user}}));},{user});
+              await page.goto('http://127.0.0.1:4173/index.html',{waitUntil:'domcontentloaded'});
+              await page.waitForFunction(()=>Boolean(window.MM_APP_SHELL_FINALIZED)&&typeof window.switchView==='function');
+              await page.waitForFunction(()=>!document.getElementById('mmBootstrap'));
+              for(const [surface,action] of [
+                ['home',()=>page.evaluate(()=>switchView('dashboard'))],
+                ['learn',()=>page.evaluate(()=>switchView('path'))],
+                ['practice',()=>page.evaluate(()=>switchView('scenarios'))],
+                ['lesson',()=>page.evaluate(()=>{goLesson(4);switchView('lesson')})]
+              ]){
+                await action(); await page.waitForTimeout(250);
+                await page.screenshot({path:`qa-artifacts/premium-review/${profile.name}-${surface}.png`,fullPage:true});
+              }
+              await page.close();
+            }
+            await browser.close();
+          })().catch(e=>{console.error(e);process.exit(1)});
+          NODE
+'''
+              if marker not in s: raise SystemExit('premium artifact upload anchor missing')
+              s=s.replace(marker,block+marker,1)
+          p.write_text(s,encoding='utf-8')
+          PY
+      - name: Commit permanent baseline governance
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add .github/workflows/mobile-browser-qa.yml .github/workflows/premium-ui-qa.yml
+          git diff --cached --quiet && exit 0
+          git commit -m '[premium-baseline-wired] Lock premium visual baseline and review captures'
+          git push
