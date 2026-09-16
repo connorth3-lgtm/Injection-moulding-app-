@@ -98,8 +98,14 @@ body #lesson .mm-note-status{color:#8fa5ba}
 }
 
 @media(prefers-reduced-motion:reduce){
+  body .mm-primary-hub .mm-hub-tile,
+  body #lesson .mm-learning-jumps button{
+    transition-duration:.01ms!important;
+    animation-duration:.01ms!important;
+  }
+  body .mm-primary-hub .mm-hub-tile:hover,
   body #lesson .mm-learning-jumps button:hover,
-  body #lesson .mm-learning-jumps button:focus-visible{transform:none}
+  body #lesson .mm-learning-jumps button:focus-visible{transform:none!important}
 }
 
 @media(forced-colors:active){
