@@ -5,9 +5,9 @@ This packet governs **human** assistive-technology validation for web release `2
 ## Exact release boundary
 
 - web release: `2026.09.16.2`
-- pre-merge candidate source commit: `0705a4a430868ec871200aa7dd65362ce79cdb96`
-- public-runtime fingerprint: `sha256:00a6be79979742d3dd12b8f6ae7b904bc6210e9bc1a457f340f9814e48f4e46f`
-- retained physical candidate: `physical-pwa-candidate-0705a4a430868ec871200aa7dd65362ce79cdb96` (`10431871537`)
+- pre-merge candidate source commit: `f7ad92a51cc2808b62fb942e2f8b87fc4ffb1b1f`
+- public-runtime fingerprint: `sha256:f44179f21716056300bb7637478e581bb059bc07091112e44b85d97586001e03`
+- retained physical candidate: `physical-pwa-candidate-f7ad92a51cc2808b62fb942e2f8b87fc4ffb1b1f` (`10467227083`)
 - evidence contract: `data/accessibility-real-at-validation-v1.json`
 
 If learner-facing runtime bytes change, this packet must be rebound to the new release/fingerprint before new validation is recorded.
@@ -30,7 +30,7 @@ Every row must be tested by a human reviewer using the named real assistive tech
 3. Open sourced exact-grade details and understand property/process evidence boundaries.
 4. Complete core learner assessment interactions and confirm state/errors are announced meaningfully.
 5. Create or edit a Mould Master evidence case without losing semantic context.
-6. Open a late Book chapter from deep in the contents, confirm focus/reading starts at the chapter heading, then return to contents without losing the reader's place.
+6. Search for a Book topic from the global search, open a late Book chapter from deep in the contents, confirm focus/reading starts at the chapter heading, then return to contents without losing the reader's place.
 7. Exercise dialogs, menus, tab-like controls, expandable regions and form validation with keyboard/AT navigation.
 8. Confirm status changes that matter to task completion are announced without forcing excessive verbosity.
 9. Confirm headings, landmarks, accessible names and focus order remain understandable at realistic zoom/text settings, including the compact tablet navigation where applicable.

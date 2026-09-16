@@ -2,11 +2,13 @@
 
 Release `2026.09.16.2` is technically automated and governed, but the following external workstreams remain explicit **HOLD**. This index does not create human, device, learner, accreditation, signing, or production-site evidence.
 
-- Exact pre-merge candidate source: `0705a4a430868ec871200aa7dd65362ce79cdb96`
-- Exact public-runtime fingerprint: `sha256:00a6be79979742d3dd12b8f6ae7b904bc6210e9bc1a457f340f9814e48f4e46f`
-- Candidate build run: `35059209551`
-- Candidate artifact: `physical-pwa-candidate-0705a4a430868ec871200aa7dd65362ce79cdb96` (`10431871537`; `sha256:98b1be94bd6b5801444ce7e404c6c944e8fded450fab3667e3bd1171ff3cee9b`; expires `2026-10-16T05:21:53Z`)
+- Exact hardened pre-merge candidate source: `f7ad92a51cc2808b62fb942e2f8b87fc4ffb1b1f`
+- Exact public-runtime fingerprint: `sha256:f44179f21716056300bb7637478e581bb059bc07091112e44b85d97586001e03`
+- Candidate build run: `35145771290`
+- Candidate artifact: `physical-pwa-candidate-f7ad92a51cc2808b62fb942e2f8b87fc4ffb1b1f` (`10467227083`; `sha256:c083623822ac3ae8a142cd8465c4c8204e2c1892af02badc9b2cb22c43fb9395`; expires `2026-10-16T20:18:41Z`)
 - Pages disposition: production root remains **HOLD**. This retained pre-merge artifact is the exact validation source; after merge, the protected-main Pages workflow must independently stage and verify byte-equivalent runtime before any production decision.
+
+The retained candidate includes the completed deep-audit hardening: one canonical Book runtime, exact-byte Book publication binding, Book-aware global search, canonical learner-facing academic evidence links, and release-versioned dynamic same-origin script loads. These are technical assurances only and do not satisfy any external workstream below.
 
 | Workstream | Status | Release packet | Required genuine evidence |
 | --- | --- | --- | --- |

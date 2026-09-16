@@ -26,8 +26,8 @@
     "reviewPacket": "qa/ACCESSIBILITY_REAL_AT_2026.09.16.2.md",
     "candidate": {
       "release": "2026.09.16.2",
-      "sourceSha": "0705a4a430868ec871200aa7dd65362ce79cdb96",
-      "runtimeFingerprint": "sha256:00a6be79979742d3dd12b8f6ae7b904bc6210e9bc1a457f340f9814e48f4e46f"
+      "sourceSha": "f7ad92a51cc2808b62fb942e2f8b87fc4ffb1b1f",
+      "runtimeFingerprint": "sha256:f44179f21716056300bb7637478e581bb059bc07091112e44b85d97586001e03"
     },
     "required": "Release-specific human NVDA and VoiceOver validation across the governed matrix."
   },
@@ -37,14 +37,14 @@
     "reviewPacket": "qa/PWA_PHYSICAL_DEVICE_2026.09.16.2.md",
     "currentCandidate": {
       "release": "2026.09.16.2",
-      "sourceSha": "0705a4a430868ec871200aa7dd65362ce79cdb96",
-      "runtimeFingerprint": "sha256:00a6be79979742d3dd12b8f6ae7b904bc6210e9bc1a457f340f9814e48f4e46f",
-      "candidateRunId": 35059209551,
-      "candidateWorkflow": "final pre-merge exact-candidate staging retention",
-      "artifactId": 10431871537,
-      "artifactName": "physical-pwa-candidate-0705a4a430868ec871200aa7dd65362ce79cdb96",
-      "artifactDigest": "sha256:98b1be94bd6b5801444ce7e404c6c944e8fded450fab3667e3bd1171ff3cee9b",
-      "artifactExpiresAt": "2026-10-16T05:21:53Z"
+      "sourceSha": "f7ad92a51cc2808b62fb942e2f8b87fc4ffb1b1f",
+      "runtimeFingerprint": "sha256:f44179f21716056300bb7637478e581bb059bc07091112e44b85d97586001e03",
+      "candidateRunId": 35145771290,
+      "candidateWorkflow": "UX Polish Final Candidate Staging — hardened pre-merge exact-candidate retention",
+      "artifactId": 10467227083,
+      "artifactName": "physical-pwa-candidate-f7ad92a51cc2808b62fb942e2f8b87fc4ffb1b1f",
+      "artifactDigest": "sha256:c083623822ac3ae8a142cd8465c4c8204e2c1892af02badc9b2cb22c43fb9395",
+      "artifactExpiresAt": "2026-10-16T20:18:41Z"
     },
     "required": "Current-release physical iOS/iPadOS and Android install/update/offline validation. Prior release waivers do not authorize this release."
   },
@@ -53,7 +53,7 @@
     "workflow": ".github/workflows/microsoft-store-msix.yml",
     "handoff": "certification/STORE_SUBMISSION_STATUS.md",
     "readinessPacket": "certification/WINDOWS_SIGNING_READINESS_2026.09.16.2.md",
-    "sourceSha": "0705a4a430868ec871200aa7dd65362ce79cdb96",
+    "sourceSha": "f7ad92a51cc2808b62fb942e2f8b87fc4ffb1b1f",
     "desktopRelease": "2026.08.26.9",
     "evidence": null,
     "required": [
