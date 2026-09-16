@@ -1,10 +1,10 @@
 # Windows distribution/signing readiness — 2026.09.16.1
 
-This packet governs the external Windows distribution work associated with MouldMaster web release `2026.09.16.1` at protected-main source commit `8c5b71cb8b39c9e7b425da03dc804772c953eb85`. The separately governed desktop release identity remains `2026.08.26.9` unless deliberately advanced through its own release process.
+This packet governs the external Windows distribution work associated with MouldMaster web release `2026.09.16.1` at protected-main source commit `b34a8a637f8006bca868c436411bacb689c067e2`. The separately governed desktop release identity remains `2026.08.26.9` unless deliberately advanced through its own release process.
 
 ## What repository automation already proves
 
-The normal Open Desktop Build and release QA on the `.4` source passed package construction, dependency-lock checks, generated integrity metadata, licence inventory, SBOM generation and product QA. The Store/MSIX workflow is also designed to fail closed unless the Partner Center identity variables are supplied.
+The normal Open Desktop Build and release QA for this protected-main release passed package construction, dependency-lock checks, generated integrity metadata, licence inventory, SBOM generation and product QA. The Store/MSIX workflow is also designed to fail closed unless the Partner Center identity variables are supplied.
 
 Those automated results establish packaging readiness. They do **not** establish certificate possession, Microsoft Store approval, SmartScreen reputation, WACK success or launch on a physical Windows machine.
 

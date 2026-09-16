@@ -5,15 +5,15 @@ This packet governs hands-on physical-device validation of the exact MouldMaster
 ## Exact candidate
 
 - web release: `2026.09.16.1`
-- repair-branch source commit: `8c5b71cb8b39c9e7b425da03dc804772c953eb85`
+- protected-main source commit: `b34a8a637f8006bca868c436411bacb689c067e2`
 - public-runtime fingerprint: `sha256:c0b4ac65d7701a231250262e43a6aca6bf6d479b4010ccbb30593346d00f4407`
-- exact candidate build run: `35041121189`
-- retained candidate artifact: `physical-pwa-candidate-8c5b71cb8b39c9e7b425da03dc804772c953eb85`
-- artifact id: `10425530938`
-- artifact ZIP digest: `sha256:ea02666f2d2b21534bdc453efc59c3586a8f655bfd9b5b050cb70596cbe52d23`
-- artifact retention expiry: `2026-10-16T00:42:41Z`
+- exact candidate build run: `35042785613`
+- retained candidate artifact: `physical-pwa-candidate-b34a8a637f8006bca868c436411bacb689c067e2`
+- artifact id: `10425941965`
+- artifact ZIP digest: `sha256:cff263f6f00316742ae49119fde44e7ad7c701296fbc60196d8687b7657b9b71`
+- artifact retention expiry: `2026-10-16T01:07:44Z`
 
-The candidate was built with the repository's production Pages artifact builder but was **not published**. The runtime fingerprint is the byte-level acceptance key. This automated candidate provenance is not physical-device evidence.
+The retained candidate was built by the protected-main Pages workflow using the repository's production Pages artifact builder. The workflow confirmed that existing physical-device evidence belongs to different runtime bytes, kept the production root on **HOLD**, retained this exact candidate artifact for physical testing, and deployed the same governed learner runtime only under the explicitly non-production `/preview/` path. The runtime fingerprint is the byte-level acceptance key. This automated provenance is not physical-device evidence.
 
 ## Required iOS / iPadOS execution
 
