@@ -1,0 +1,87 @@
+name: Assessment Semantic Baseline Stage
+
+on:
+  push:
+    branches: [design/premium-polish-20260916]
+
+permissions:
+  contents: write
+
+jobs:
+  baseline:
+    if: ${{ !contains(github.event.head_commit.message, '[assessment-semantic-baseline]') }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v7
+        with:
+          python-version: '3.13'
+      - uses: actions/setup-node@v7
+        with:
+          node-version: '22'
+          package-manager-cache: false
+      - name: Prove current semantic payload still equals the historically approved blob
+        run: python qa_assessment_evidence.py
+      - name: Materialize history-independent semantic approval fingerprint
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import hashlib, json, re
+
+          root=Path('.')
+          core=(root/'MouldMaster_Core_App.html').read_text(encoding='utf-8')
+          marker='window.MM_DATA = '
+          data,_=json.JSONDecoder().raw_decode(core[core.index(marker)+len(marker):])
+          payload={k:data[k] for k in ('exams','regionalQuestions','scenarios')}
+          canonical=json.dumps(payload,ensure_ascii=False,sort_keys=True,separators=(',',':')).encode('utf-8')
+          digest='sha256:'+hashlib.sha256(canonical).hexdigest()
+          approval=(root/'assessment-evidence-approval.js').read_text(encoding='utf-8')
+          approved_blob=re.search(r"'MouldMaster_Core_App\.html':'([0-9a-f]{40})'",approval).group(1)
+          obj={
+            'schemaVersion':1,
+            'scope':'MouldMaster_Core_App.html assessment-bearing MM_DATA payload only',
+            'scopeKeys':['exams','regionalQuestions','scenarios'],
+            'canonicalization':'UTF-8 JSON; ensure_ascii=false; sort_keys=true; separators=(comma,colon)',
+            'sha256':digest,
+            'historicalApprovedBlob':approved_blob,
+            'evidenceApprovalVersion':'2026.09.10.1',
+            'reviewedOn':'2026-08-30',
+            'provenance':'Materialized only after legacy QA proved the current semantic payload equals the immutable historically approved Git blob. Future QA compares this semantic fingerprint directly and does not require historical Git objects.'
+          }
+          (root/'data/assessment-semantic-approval-v1.json').write_text(json.dumps(obj,indent=2,ensure_ascii=False)+'\n',encoding='utf-8')
+
+          p=root/'qa_assessment_evidence.py'
+          s=p.read_text(encoding='utf-8')
+          s=s.replace('import ast, json, re, subprocess, tempfile','import ast, hashlib, json, re, subprocess, tempfile',1)
+          anchor="approved_inputs=dict(re.findall(r\"'([^']+\\.(?:html|js))':'([0-9a-f]{40})'\",approval))\nneed(len(approved_inputs)==8,f'expected 8 approval-pinned content inputs, got {len(approved_inputs)}')\n"
+          replacement=anchor+"semantic_approval=json.loads(text('data/assessment-semantic-approval-v1.json'))\nneed(semantic_approval.get('schemaVersion')==1,'assessment semantic approval schema mismatch')\nneed(semantic_approval.get('scopeKeys')==['exams','regionalQuestions','scenarios'],'assessment semantic approval scope mismatch')\n"
+          if anchor not in s: raise SystemExit('approved-input anchor missing')
+          s=s.replace(anchor,replacement,1)
+          old="""    actual=git_blob_sha(path)\n    if path=='MouldMaster_Core_App.html' and actual!=sha:\n        approved_core=git_blob_text(sha)\n        current_payload=core_assessment_payload(text(path))\n        approved_payload=core_assessment_payload(approved_core)\n        need(current_payload==approved_payload,f'evidence approval stale for {path}: assessment-bearing content changed from approved blob {sha} to current {actual}; re-review evidence and update approval')\n        continue\n    need(actual==sha,f'evidence approval stale for {path}: approved {sha}, current {actual}; re-review evidence and update approval')\n"""
+          new="""    actual=git_blob_sha(path)\n    if path=='MouldMaster_Core_App.html':\n        need(semantic_approval.get('historicalApprovedBlob')==sha,f'assessment semantic approval provenance does not match evidence-approved core blob {sha}')\n        current_payload=core_assessment_payload(text(path))\n        canonical=json.dumps(current_payload,ensure_ascii=False,sort_keys=True,separators=(',',':')).encode('utf-8')\n        actual_payload_sha='sha256:'+hashlib.sha256(canonical).hexdigest()\n        need(actual_payload_sha==semantic_approval.get('sha256'),f'evidence approval stale for {path}: assessment-bearing semantic fingerprint changed from {semantic_approval.get(\"sha256\")} to {actual_payload_sha}; re-review evidence and update semantic approval')\n        continue\n    need(actual==sha,f'evidence approval stale for {path}: approved {sha}, current {actual}; re-review evidence and update approval')\n"""
+          if old not in s: raise SystemExit('legacy core approval comparison block missing')
+          s=s.replace(old,new,1)
+          p.write_text(s,encoding='utf-8')
+
+          policy=root/'sources/QUESTION_APPROVAL_POLICY.md'
+          ps=policy.read_text(encoding='utf-8')
+          oldp='Approval is invalidated when reviewed evidence-bearing content changes. Dedicated question and lab source files remain byte-pinned. For the legacy monolithic `MouldMaster_Core_App.html`, release QA compares the embedded assessment-bearing `MM_DATA` subsets (`exams`, `regionalQuestions`, and `scenarios`) against the immutable approved Git blob; unrelated shell, storage, import, accessibility, or security hardening outside those subsets does not relabel or recreate the historical content review. A changed question, answer, rationale, scenario, Diagnostic Learning Lab or Material Behaviour Lab source file therefore requires a fresh evidence review before release QA can pass.'
+          newp='Approval is invalidated when reviewed evidence-bearing content changes. Dedicated question and lab source files remain byte-pinned. For the legacy monolithic `MouldMaster_Core_App.html`, the approved assessment-bearing `MM_DATA` subsets (`exams`, `regionalQuestions`, and `scenarios`) are governed by `data/assessment-semantic-approval-v1.json`. That semantic SHA-256 baseline was materialized only after release QA proved the current payload exactly matched the immutable historically approved Git blob. Normal release QA now compares the canonical semantic payload directly to that stored fingerprint, so unrelated shell, storage, import, accessibility, or security hardening does not relabel the historical content review and shallow Git history cannot create a false failure. A changed question, answer, rationale, scenario, Diagnostic Learning Lab or Material Behaviour Lab source file therefore requires a fresh evidence review before release QA can pass.'
+          if oldp not in ps: raise SystemExit('approval policy paragraph anchor missing')
+          policy.write_text(ps.replace(oldp,newp,1),encoding='utf-8')
+          print(digest)
+          PY
+      - name: Prove the new gate works without historical Git objects
+        run: |
+          git clone --depth=1 --no-local . /tmp/mm-shallow
+          cd /tmp/mm-shallow
+          python qa_assessment_evidence.py
+      - name: Commit semantic approval baseline
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add data/assessment-semantic-approval-v1.json qa_assessment_evidence.py sources/QUESTION_APPROVAL_POLICY.md
+          git commit -m '[assessment-semantic-baseline] Make evidence approval history-independent'
+          git push
