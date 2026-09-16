@@ -46,10 +46,11 @@ async function seed(page,id){
   },{id,user:learner(id)});
 }
 
-async function openApp(page,url,id){
+async function openApp(page,url,id,{candidate=false}={}){
   await seed(page,id);
   await page.goto(url,{waitUntil:'domcontentloaded'});
   await page.waitForFunction(()=>Boolean(window.MM_APP_SHELL_FINALIZED)&&window.MM_PRIMARY_HUBS&&typeof window.switchView==='function');
+  if(candidate)await page.waitForFunction(()=>Boolean(window.MM_LEARNER_UI_POLISH));
   await page.waitForFunction(()=>!document.getElementById('mmBootstrap'));
   await expect(page.locator('#mmStartupFailure')).toHaveCount(0);
   await page.emulateMedia({reducedMotion:'reduce'});
@@ -155,7 +156,7 @@ for(const viewport of manifest.viewports){
     const candidate=await candidateContext.newPage();
     const baseline=await baselineContext.newPage();
     const learnerId=`visual-${viewport.name}`;
-    await openApp(candidate,CANDIDATE_URL,learnerId);
+    await openApp(candidate,CANDIDATE_URL,learnerId,{candidate:true});
     await openApp(baseline,BASELINE_URL,learnerId);
 
     try{
