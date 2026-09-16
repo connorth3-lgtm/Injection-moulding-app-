@@ -109,7 +109,7 @@ for asset in [
     "process-data-diagnostics.js", "curriculum-integration.js", "specialist-curriculum.js",
     "specialist-evidence-gap-extension.js", "mould-master-workspace.js", "app-shell-finalize.js", "learning-analytics.js",
     "runtime-v2.js", "assessment-runtime-v2.js", "lesson-deep-authoring-v2.js", "assessment-multimodal.js", "accessibility-hardening.js",
-    "learner-ux-repair.css", "premium-ui.css", "learner-ux-repair.js"
+    "learner-ux-repair.css", "premium-ui.css", "premium-dynamic.css", "learner-ux-repair.js"
 ]:
     assert f"'./{asset}'" in sw, f"offline asset missing: {asset}"
 for retired in ["reading-patch.js", "training-upgrade.js", "training-qa-fix.js"]:

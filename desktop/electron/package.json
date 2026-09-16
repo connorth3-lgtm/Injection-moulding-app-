@@ -79,6 +79,10 @@
         "to": "mouldmaster/premium-ui.css"
       },
       {
+        "from": "../../premium-dynamic.css",
+        "to": "mouldmaster/premium-dynamic.css"
+      },
+      {
         "from": "../../mobile-lesson-fix.css",
         "to": "mouldmaster/mobile-lesson-fix.css"
       },

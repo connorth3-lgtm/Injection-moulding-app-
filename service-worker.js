@@ -26,6 +26,7 @@ const CORE=[
   './reading-patch.css',
   './ui-shell.css',
   './premium-ui.css',
+  './premium-dynamic.css',
   './mobile-lesson-fix.css',
   './learner-ux-repair.css',
   './src/domains/runtime-packs/learning-foundation-runtime-pack.js',
