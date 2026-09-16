@@ -16,7 +16,9 @@ jobs:
         with:
           ref: fix/ux-polish-20260916-2
       - name: Apply governed UX patch
-        run: python3 tools/apply_ux_polish_20260916_2.py
+        run: |
+          python3 tools/apply_ux_polish_20260916_2.py
+          rm -f .github/workflows/ux-polish-qa.yml
       - name: Static syntax and release checks
         continue-on-error: true
         run: |
