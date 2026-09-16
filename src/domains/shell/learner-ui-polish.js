@@ -118,7 +118,8 @@ function syncBookDisclosure(){
   }
   if(!view.classList.contains('hidden')&&document.getElementById('pageTitle')?.textContent==='Book'){
     const subtitle=document.getElementById('pageSubtitle');
-    if(subtitle)subtitle.textContent='Evidence-governed injection moulding reference.';
+    const text='Evidence-governed injection moulding reference.';
+    if(subtitle&&subtitle.textContent!==text)subtitle.textContent=text;
   }
 }
 
