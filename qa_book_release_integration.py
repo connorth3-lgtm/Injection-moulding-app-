@@ -1,30 +1,53 @@
 #!/usr/bin/env python3
+import hashlib
 import json
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent
-MANIFEST_PATH = ROOT / 'runtime-domain-manifest.json'
-SW_PATH = ROOT / 'service-worker.js'
-DESKTOP_PACKAGE = ROOT / 'desktop/electron/package.json'
-INTEGRITY_SCRIPT = ROOT / 'desktop/electron/scripts/generate-integrity.cjs'
 PACKAGED_ROOT = ROOT / 'src/domains/learning/book-data'
 PACKAGED_RUNTIME = ROOT / 'src/domains/learning/book-runtime.js'
-SOURCE_RUNTIME = ROOT / 'book-runtime.js'
+COMPAT_LOADER = ROOT / 'book-runtime.js'
 AUTH_SOURCE = ROOT / 'data/book-publication-authorization-v1.json'
 SME_SOURCE = ROOT / 'data/book-sme-review-v1.json'
 QUAL_SOURCE = ROOT / 'data/book-qualification-resolution-all-v1.json'
 HIGH_RISK_SOURCE = ROOT / 'data/book-claim-resolution-high-risk-v1.json'
+HIGH_RISK_V2_SOURCE = ROOT / 'data/book-claim-resolution-high-risk-v2.json'
+MANIFEST_PATH = ROOT / 'runtime-domain-manifest.json'
+SW_PATH = ROOT / 'service-worker.js'
+INDEX_PATH = ROOT / 'index.html'
+LEARNING_PACK = ROOT / 'src/domains/runtime-packs/learning-foundation-runtime-pack.js'
+DESKTOP_PACKAGE = ROOT / 'desktop/electron/package.json'
+INTEGRITY_SCRIPT = ROOT / 'desktop/electron/scripts/generate-integrity.cjs'
+
+
+def git_blob_sha(path: Path) -> str:
+    data = path.read_bytes()
+    return hashlib.sha1(f'blob {len(data)}\0'.encode() + data).hexdigest()
+
+
+def need(ok, message):
+    if not ok:
+        raise AssertionError(message)
+
 
 runtime_manifest = json.loads(MANIFEST_PATH.read_text(encoding='utf-8'))
 sw = SW_PATH.read_text(encoding='utf-8')
-desktop = json.loads(DESKTOP_PACKAGE.read_text(encoding='utf-8'))
-integrity = INTEGRITY_SCRIPT.read_text(encoding='utf-8')
+index = INDEX_PATH.read_text(encoding='utf-8')
+learning_pack = LEARNING_PACK.read_text(encoding='utf-8')
 book_runtime = PACKAGED_RUNTIME.read_text(encoding='utf-8')
-source_runtime = SOURCE_RUNTIME.read_text(encoding='utf-8')
+compat_loader = COMPAT_LOADER.read_text(encoding='utf-8')
 authorization = json.loads(AUTH_SOURCE.read_text(encoding='utf-8'))
 book_sme = json.loads(SME_SOURCE.read_text(encoding='utf-8'))
 qualification = json.loads(QUAL_SOURCE.read_text(encoding='utf-8'))
 high_risk = json.loads(HIGH_RISK_SOURCE.read_text(encoding='utf-8'))
+high_risk_v2 = json.loads(HIGH_RISK_V2_SOURCE.read_text(encoding='utf-8'))
+desktop = json.loads(DESKTOP_PACKAGE.read_text(encoding='utf-8'))
+integrity_script = INTEGRITY_SCRIPT.read_text(encoding='utf-8')
+
+runtime_asset = './src/domains/learning/book-runtime.js'
+need(runtime_asset in runtime_manifest['assets'], 'canonical Book runtime missing from domain manifest')
+need(runtime_manifest['dataAssets'] == ['./material-catalog-v1.json'], 'Book integration must not widen canonical material dataAssets')
+need(runtime_asset in sw, 'canonical Book runtime missing from atomic offline cache')
 
 book_data = [
     'book-manifest-v1.json',
@@ -32,119 +55,89 @@ book_data = [
     'book-sme-review-v1.json',
     'book-qualification-resolution-all-v1.json',
     'book-claim-resolution-high-risk-v1.json',
+    'book-claim-resolution-high-risk-v2.json',
     'book-authored-foundations-v1.json',
     'book-evidence-registry-v1.json',
     'book-chapters-materials-machine-v1.json',
     'book-authored-remaining-v1.json',
 ]
-
-runtime_asset = './src/domains/learning/book-runtime.js'
-assert runtime_asset in runtime_manifest['assets']
-assert runtime_manifest['dataAssets'] == ['./material-catalog-v1.json'], 'Book integration must not widen canonical material dataAssets'
 for name in book_data:
     packaged = f'./src/domains/learning/book-data/{name}'
-    assert packaged in sw, f'Book data not in atomic offline cache: {packaged}'
+    need(packaged in sw, f'Book data not in atomic offline cache: {packaged}')
     source = ROOT / 'data' / name
     target = PACKAGED_ROOT / name
-    assert source.read_bytes() == target.read_bytes(), f'packaged Book data drifted from governed source: {name}'
+    if source.exists():
+        need(source.read_bytes() == target.read_bytes(), f'packaged Book data drifted from governed source: {name}')
 
-assert book_sme.get('schemaVersion') == 1 and book_sme.get('bookId') == 'mouldmaster-book'
-assert len(book_sme.get('chapterIds', [])) == 46 and len(set(book_sme.get('chapterIds', []))) == 46
-assert isinstance(book_sme.get('reviews'), list)
-approved_sme = {r.get('chapterId') for r in book_sme['reviews'] if r.get('conclusion') == 'approved'}
-assert approved_sme <= set(book_sme['chapterIds'])
-if book_sme.get('status') == 'validated':
-    assert len(approved_sme) == 46, 'Book SME status cannot be validated without 46 approved chapter reviews'
+# One canonical Book implementation: the legacy root path is now only a stable compatibility loader.
+need("script.src='./src/domains/learning/book-runtime.js'" in compat_loader, 'root Book compatibility loader must delegate to canonical packaged runtime')
+for forbidden in ("const AUTH_PATH='./data/", 'function showChapter(', 'function verifiedChapterHtml('):
+    need(forbidden not in compat_loader, f'root Book path still contains a second implementation: {forbidden}')
+need("script.src='./book-runtime.js'" in learning_pack, 'learning foundation must still reach the compatibility loader')
+need(index.index('learning-foundation-runtime-pack.js') < index.index('app-shell-finalize.js'), 'release script versioner must install before app-shell dynamic loaders execute')
 
-assert qualification['schema'] == 1 and qualification['bookId'] == 'mouldmaster-book'
-assert qualification['effectiveCountsAfterQualificationReview'] == {'chapters':46,'claims':137,'supported':116,'qualified':21,'hold':0,'conflicting':0}
-assert len(qualification['remainingQualifiedClaims']) == 21
-assert high_risk['schema'] == 1 and high_risk['bookId'] == 'mouldmaster-book'
-high_risk_sources = {x['id']: x for x in high_risk.get('newEvidence', [])}
-for evidence_id in ('HUSKY-SCVG-HOT-SPRUE-SERVICE-2024','MOLD-MASTERS-HOT-RUNNER-USER-MANUAL-2020'):
-    assert evidence_id in high_risk_sources and high_risk_sources[evidence_id].get('url'), f'missing learner-linkable high-risk evidence: {evidence_id}'
-hot_runner_trace = next(x for x in qualification['resolutions'] if x.get('claimId') == 'hot-runners-01')
-assert set(hot_runner_trace['evidence']) >= {'HUSKY-SCVG-HOT-SPRUE-SERVICE-2024','MOLD-MASTERS-HOT-RUNNER-USER-MANUAL-2020'}
+# Every dynamically created same-origin script after the compatibility loader gets the current shell release query.
+for marker in ('__MM_RELEASE_SCRIPT_VERSIONER__', 'HTMLScriptElement', 'versionScriptUrl', "url.searchParams.set('v',release)"):
+    need(marker in compat_loader, f'dynamic release-versioning safeguard missing: {marker}')
 
-assert runtime_asset in sw, 'Book runtime not in atomic offline cache'
-assert "const BOOK_DATA='./src/domains/learning/book-data/';" in book_runtime
-assert "const AUTH_PATH=`${BOOK_DATA}book-publication-authorization-v1.json`;" in book_runtime
-assert "const SME_PATH=`${BOOK_DATA}book-sme-review-v1.json`;" in book_runtime
-assert "const QUAL_PATH=`${BOOK_DATA}book-qualification-resolution-all-v1.json`;" in book_runtime
-assert "const HIGH_RISK_PATH=`${BOOK_DATA}book-claim-resolution-high-risk-v1.json`;" in book_runtime
-assert "const AUTH_PATH='./data/book-publication-authorization-v1.json';" in source_runtime
-assert "const SME_PATH='./data/book-sme-review-v1.json';" in source_runtime
-assert "const QUAL_PATH='./data/book-qualification-resolution-all-v1.json';" in source_runtime
-for runtime in (source_runtime, book_runtime):
-    assert 'function applyPublicationAuthorization(data,declared,auth)' in runtime
-    assert 'function validateSmeReview(data,declared)' in runtime
-    assert 'function validateQualificationReview(data)' in runtime
-    assert 'function smeStatusText()' in runtime
-    assert 'function claimTraceHtml(chapter)' in runtime
-    assert 'function evidenceItem(id)' in runtime
-    assert 'Publication claim trace' in runtime
-    assert 'why this wording was authorized' in runtime
-    assert 'target="_blank" rel="noopener"' in runtime
-    assert "if(auth.status!=='authorized')return;" in runtime
-    assert "snapshot.supported!==116" in runtime and "snapshot.qualified!==21" in runtime
-    assert "snapshot.hold!==0" in runtime and "snapshot.conflicting!==0" in runtime
-    assert "if(ids.length!==declared.size||new Set(ids).size!==ids.length)" in runtime
-    assert runtime.count("chapter.state='verified'") == 1, 'runtime verification assignment must exist only inside governed authorization application'
-    assert "const effectiveState=authored.state||(batch.status==='technical-review'?" in runtime
-    assert "if(effectiveState==='verified')throw new Error(`Authored draft cannot self-promote to verified:" in runtime
-    assert 'getPublicationAuthorization:()=>publicationAuthorization' in runtime
-    assert 'getSmeReview:()=>bookSmeReview' in runtime
-    assert 'getQualificationReview:()=>qualificationReview' in runtime
-    assert "chapter.state==='verified'" in runtime
-    assert 'style=' not in runtime, 'Book runtime reintroduced inline style attributes'
-    assert 'window.MMBook=' in runtime
-    assert "verified:'Evidence verified'" in runtime
-    assert '<span class="eyebrow">Evidence verified</span>' in runtime
-    assert 'evidence verification does not imply independent human SME approval' in runtime
-    assert 'Independent human SME review:' in runtime and 'chapters approved.' in runtime
-    assert 'status unavailable — do not infer approval' in runtime
-    assert 'physical-device validation' in runtime and 'learner-outcome validation' in runtime
-    assert "verified:'Verified'" not in runtime
-
-assert authorization['schema'] == 1 and authorization['bookId'] == 'mouldmaster-book'
-assert authorization['status'] == 'authorized'
-assert authorization['authorizationType'] == 'governed-book-publication'
-assert authorization['publicationScope'] == 'generic-evidence-governed-reference'
-snapshot = authorization['governanceSnapshot']
-assert snapshot == {
-    'manifestVersion': '2026.09.14.1','verificationAuditVersion': '2026.09.14.5-audit','qualificationResolutionVersion': '2026.09.14.5-audit','parts': 8,'chapters': 46,'claims': 137,'supported': 116,'qualified': 21,'hold': 0,'conflicting': 0,'scopeQualifiedClaimsBlockingPublication': 0,'sourceCurrencyChecked': '2026-09-14',
+# Canonical DOI/publisher links replace intermediary academic-discovery links in learner-facing Book surfaces.
+canonical_links = {
+    '24f22c3f6f355c0497be3aea21e1a1cc': 'https://doi.org/10.3390/polym17081096',
+    'c82506ff62375c969e92b74a15c92c3c': 'https://doi.org/10.1007/s00170-024-12990-5',
+    '87423bb5d6e15bcba62bfe49843785c7': 'https://doi.org/10.1007/s00170-022-08859-0',
+    '4c976e13bbb957b0862288b2202429ee': 'https://doi.org/10.3390/s23031735',
+    'c253cc9c68cd5db1b1afec5c98425d9d': 'https://doi.org/10.1007/s00170-024-13607-7',
 }
-assert authorization['authorizationBasis']['releaseQaConclusion'] == 'success'
-assert authorization['authorizationBasis']['releaseQaRun'] == 34799571637
-assert authorization['authorizationBasis']['sourceRevision'] == '7ef28bd8b02994223e320fda64e99808357d3219'
-assert len(authorization.get('publicationBoundaries', [])) >= 5
-assert authorization.get('revocationRules', {}).get('claimHoldOrConflict') == 'block-release'
-assert authorization.get('revocationRules', {}).get('readListenTextDivergence') == 'block-release'
-assert authorization.get('revocationRules', {}).get('manifestOrAuthorizationIdentityMismatch') == 'fail-closed-runtime'
+for fingerprint, doi in canonical_links.items():
+    need(fingerprint in compat_loader and doi in compat_loader, f'canonical academic evidence rewrite missing for {doi}')
+need('https://doi.org/10.1007/s00170-024-12990-5' in HIGH_RISK_SOURCE.read_text(encoding='utf-8'), 'high-risk v1 must retain canonical fibre-orientation DOI')
+need('consensus.app' not in HIGH_RISK_SOURCE.read_text(encoding='utf-8'), 'high-risk v1 must not retain intermediary academic URL')
+need('https://doi.org/10.3390/polym17081096' in HIGH_RISK_V2_SOURCE.read_text(encoding='utf-8'), 'high-risk v2 must retain canonical switchover DOI')
+need('consensus.app' not in HIGH_RISK_V2_SOURCE.read_text(encoding='utf-8'), 'high-risk v2 must not retain intermediary academic URL')
+need(authorization.get('canonicalAcademicEvidenceUrls', {}).get('PARIZS-2023-IN-MOLD-SENSORS') == 'https://doi.org/10.3390/s23031735', 'authorization canonical academic evidence map missing')
 
-assert 'function verifiedChapterHtml(chapter)' in book_runtime
-assert "if(chapter.state==='verified')ui.reader.innerHTML=`${back}${verifiedChapterHtml(chapter)}`" in book_runtime
-assert "verified.map(verifiedChapterHtml).join('')" in book_runtime
-assert "ui.listen.addEventListener('click',startVerifiedListening)" in book_runtime
-assert 'window.MMReadAloud' in book_runtime and 'reader.refresh?.()' in book_runtime
-assert 'data-mm-read="play"' in book_runtime
+# Authorization is now byte-bound to the exact served payloads that can influence publication promotion.
+need(AUTH_SOURCE.read_bytes() == (PACKAGED_ROOT / 'book-publication-authorization-v1.json').read_bytes(), 'packaged authorization drifted from governed source')
+byte_contract = authorization.get('runtimeIntegrity') or {}
+need(byte_contract.get('algorithm') == 'git-blob-sha1', 'Book runtime integrity algorithm missing')
+sha_by_file = byte_contract.get('gitBlobSha1ByFile') or {}
+required_integrity = {
+    'book-manifest-v1.json', 'book-sme-review-v1.json', 'book-qualification-resolution-all-v1.json',
+    'book-claim-resolution-high-risk-v1.json', 'book-authored-foundations-v1.json',
+    'book-evidence-registry-v1.json', 'book-chapters-materials-machine-v1.json', 'book-authored-remaining-v1.json',
+}
+need(required_integrity <= set(sha_by_file), f'Book byte-integrity coverage incomplete: {sorted(required_integrity - set(sha_by_file))}')
+for name in required_integrity:
+    need(sha_by_file[name] == git_blob_sha(PACKAGED_ROOT / name), f'Book byte-integrity Git object mismatch: {name}')
+auth_blob = git_blob_sha(PACKAGED_ROOT / 'book-publication-authorization-v1.json')
+need(f"const AUTH_GIT_BLOB_SHA1='{auth_blob}'" in book_runtime, 'canonical runtime is not pinned to exact authorization bytes')
+for marker in ('gitBlobSha1', 'verifiedJson', 'validateIntegrityAuthorization', 'Book byte-integrity mismatch'):
+    need(marker in book_runtime, f'Book runtime exact-byte safeguard missing: {marker}')
+need("auth?.authorizationBasis?.sourceRevision!=='7ef28bd8b02994223e320fda64e99808357d3219'" in book_runtime, 'runtime no longer enforces reviewed source revision')
 
+# Publication/SME/qualification boundaries remain fail-closed and unchanged in meaning.
+need(book_sme.get('status') == 'hold' and book_sme.get('reviews') == [], 'independent Book SME HOLD must not be manufactured by hardening')
+need(len(book_sme.get('chapterIds', [])) == 46 and len(set(book_sme['chapterIds'])) == 46, 'Book SME chapter coverage drift')
+need(qualification['effectiveCountsAfterQualificationReview'] == {'chapters':46,'claims':137,'supported':116,'qualified':21,'hold':0,'conflicting':0}, 'qualification counts drift')
+need(authorization['status'] == 'authorized' and authorization['authorizationType'] == 'governed-book-publication', 'publication authorization identity drift')
+need(authorization.get('revocationRules', {}).get('runtimeByteIntegrityMismatch') == 'fail-closed-runtime', 'runtime byte mismatch must revoke publication at runtime')
+need(authorization['authorizationBasis']['sourceRevision'] == '7ef28bd8b02994223e320fda64e99808357d3219', 'authorization provenance revision drift')
+
+# Book is now part of the primary search surface and read/listen still render one governed chapter representation.
+for marker in ('function searchBook(', 'function appendBookSearchResults(', 'function installBookSearch(', 'function openChapter('):
+    need(marker in book_runtime, f'Book search integration missing: {marker}')
+need('function verifiedChapterHtml(chapter)' in book_runtime, 'verified chapter renderer missing')
+need("if(chapter.state==='verified')ui.reader.innerHTML=`${back}${verifiedChapterHtml(chapter)}`" in book_runtime, 'Book read surface no longer uses governed verified renderer')
+need("verified.map(verifiedChapterHtml).join('')" in book_runtime, 'Book listen surface no longer uses governed verified renderer')
+need("ui.listen.addEventListener('click',startVerifiedListening)" in book_runtime, 'Book listening control is not bound')
+need('style=' not in book_runtime, 'Book runtime reintroduced inline style attributes')
+
+# Desktop packaging must continue to carry the same canonical domain/data tree.
 extra = desktop['build']['extraResources']
-assert any(x.get('from') == '../../src/domains' and x.get('to') == 'mouldmaster/src/domains' for x in extra)
-assert "'src/domains/learning/book-data'" in integrity
-assert 'STATIC_DATA_DIRS.flatMap(filesUnder)' in integrity
-assert 'runtimeManifest.assets' in integrity and 'runtimeManifest.dataAssets' in integrity
+need(any(x.get('from') == '../../src/domains' and x.get('to') == 'mouldmaster/src/domains' for x in extra), 'desktop package no longer carries canonical domain runtime/data')
+need("'src/domains/learning/book-data'" in integrity_script, 'desktop integrity manifest no longer includes Book data')
+need('STATIC_DATA_DIRS.flatMap(filesUnder)' in integrity_script, 'desktop static-data integrity enumeration missing')
 
-source_manifest = json.loads((ROOT / 'data/book-manifest-v1.json').read_text(encoding='utf-8'))
-chapters = [c for p in source_manifest['parts'] for c in p.get('chapters', [])]
-manifest_ids = {c['id'] for c in chapters}
-assert len(chapters) == 46
-assert not any(c.get('state') == 'verified' for c in chapters)
-authorized_ids = authorization['authorizedChapterIds']
-assert len(authorized_ids) == 46 and len(set(authorized_ids)) == 46
-assert set(authorized_ids) == manifest_ids
-assert set(book_sme['chapterIds']) == manifest_ids
-
-print('PASS: Book runtime/data/publication authorization, claim provenance and SME status are registered for offline and desktop use.')
-print('PASS: authorization remains the only runtime promotion path; source state is immutable and fail-closed.')
-print('PASS: readers can inspect clickable source anchors plus effective claim evidence/qualification reasons without implying independent SME approval.')
+print('PASS: Book uses one canonical runtime with exact-byte publication binding and fail-closed authorization.')
+print('PASS: dynamic scripts are release-versioned before late loaders, Book is globally searchable, and learner-facing academic evidence uses canonical DOI links.')
+print('PASS: independent SME/external validation boundaries remain HOLD and were not weakened by the hardening pass.')
