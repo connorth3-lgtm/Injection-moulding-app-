@@ -1,0 +1,85 @@
+name: Premium UI Review Stage
+
+on:
+  push:
+    branches: [design/premium-polish-20260916]
+
+permissions:
+  contents: read
+
+jobs:
+  review:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: '3.13'
+      - uses: actions/setup-node@v7
+        with:
+          node-version: '22'
+          package-manager-cache: false
+      - name: Premium UI static governance
+        run: python qa_premium_ui.py
+      - name: Install browser review matrix
+        run: |
+          npm install --no-save --no-package-lock @playwright/test@1.55.0 playwright@1.55.0
+          npx playwright install --with-deps chromium webkit
+      - name: Start review server
+        run: |
+          mkdir -p qa-artifacts/premium-review
+          python -m http.server 4173 --bind 127.0.0.1 > /tmp/mm-premium-http.log 2>&1 &
+          for i in {1..20}; do
+            curl -fsS http://127.0.0.1:4173/index.html >/dev/null && exit 0
+            sleep 1
+          done
+          cat /tmp/mm-premium-http.log
+          exit 1
+      - name: Run Chromium premium interaction contract
+        run: npx playwright test --config=playwright.premium.config.cjs --project=chromium-premium
+      - name: Run WebKit premium interaction contract
+        run: npx playwright test --config=playwright.premium.config.cjs --project=webkit-premium
+      - name: Capture desktop and mobile design review screenshots
+        run: |
+          node <<'NODE'
+          const { chromium } = require('playwright');
+          const fs=require('fs');
+          (async()=>{
+            const browser=await chromium.launch({headless:true});
+            const user={id:'premium-review',name:'Premium Review',role:'learner',completed:[1,2,3],bookmarks:[],notes:{},examScores:{},certificates:[],currentLesson:4,lastSeen:'2026-09-16T00:00:00.000Z',onboardingDone:true,experience:'Beginner',goal:'Learn the full process',dailyMinutes:15,region:'ALL'};
+            for(const profile of [
+              {name:'desktop',viewport:{width:1440,height:1100},scale:1},
+              {name:'mobile',viewport:{width:390,height:844},scale:1}
+            ]){
+              const page=await browser.newPage({viewport:profile.viewport,deviceScaleFactor:profile.scale});
+              await page.addInitScript(({user})=>{
+                localStorage.clear();
+                localStorage.setItem('mouldmasterProDB',JSON.stringify({activeUser:user.id,users:{[user.id]:user}}));
+              },{user});
+              await page.goto('http://127.0.0.1:4173/index.html',{waitUntil:'domcontentloaded'});
+              await page.waitForFunction(()=>Boolean(window.MM_APP_SHELL_FINALIZED)&&typeof window.switchView==='function');
+              await page.waitForFunction(()=>!document.getElementById('mmBootstrap'));
+              const shots=[
+                ['home',async()=>page.evaluate(()=>switchView('dashboard'))],
+                ['learn',async()=>page.evaluate(()=>switchView('path'))],
+                ['practice',async()=>page.evaluate(()=>switchView('scenarios'))],
+                ['lesson',async()=>page.evaluate(()=>{goLesson(4);switchView('lesson')})]
+              ];
+              for(const [surface,act] of shots){
+                await act(); await page.waitForTimeout(300);
+                await page.screenshot({path:`qa-artifacts/premium-review/${profile.name}-${surface}.png`,fullPage:true});
+              }
+              await page.close();
+            }
+            await browser.close();
+          })().catch(e=>{console.error(e);process.exit(1)});
+          NODE
+      - name: Upload premium UI review artifacts
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: premium-ui-review
+          path: qa-artifacts/
+          if-no-files-found: error
+          retention-days: 14
