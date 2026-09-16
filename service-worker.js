@@ -1,5 +1,5 @@
-const CACHE_VERSION='2026.09.15.6';
-const CACHE_REVISION='engineer-simulator-ui-r1-20260911';
+const CACHE_VERSION='2026.09.16.1';
+const CACHE_REVISION='premium-ui-r1-20260916';
 const STATIC_CACHE=`mouldmaster-static-${CACHE_VERSION}-${CACHE_REVISION}`;
 
 // Release assets are grouped for readability, but activation is atomic across both
@@ -25,6 +25,8 @@ const CORE=[
   './version.json',
   './reading-patch.css',
   './ui-shell.css',
+  './premium-ui.css',
+  './premium-dynamic.css',
   './mobile-lesson-fix.css',
   './learner-ux-repair.css',
   './src/domains/runtime-packs/learning-foundation-runtime-pack.js',

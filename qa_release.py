@@ -7,7 +7,7 @@ import struct
 import subprocess
 import tempfile
 
-WEB_RELEASE = "2026.09.15.6"
+WEB_RELEASE = "2026.09.16.1"
 ANDROID_RELEASE = "2026.08.26.2"
 CONTENT_VERSION = "2026.08.26.1"
 WINDOWS_RECOVERY_VERSION = "2026.08.21.1"
@@ -109,7 +109,7 @@ for asset in [
     "process-data-diagnostics.js", "curriculum-integration.js", "specialist-curriculum.js",
     "specialist-evidence-gap-extension.js", "mould-master-workspace.js", "app-shell-finalize.js", "learning-analytics.js",
     "runtime-v2.js", "assessment-runtime-v2.js", "lesson-deep-authoring-v2.js", "assessment-multimodal.js", "accessibility-hardening.js",
-    "learner-ux-repair.css", "learner-ux-repair.js"
+    "learner-ux-repair.css", "premium-ui.css", "premium-dynamic.css", "learner-ux-repair.js"
 ]:
     assert f"'./{asset}'" in sw, f"offline asset missing: {asset}"
 for retired in ["reading-patch.js", "training-upgrade.js", "training-qa-fix.js"]:

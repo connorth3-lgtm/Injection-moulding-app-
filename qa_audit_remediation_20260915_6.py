@@ -24,7 +24,8 @@ def load(path): return json.loads((ROOT/path).read_text(encoding='utf-8'))
 def text(path): return (ROOT/path).read_text(encoding='utf-8')
 
 version=load('version.json')
-need(version['web_release']=='2026.09.15.6','audit-remediation release must be 2026.09.15.6')
+release=version['web_release']
+need(tuple(int(x) for x in release.split('.')) >= (2026,9,15,6),'audit-remediation release must not regress below 2026.09.15.6')
 
 claims={};chapters=set()
 for name in REVIEWS:
@@ -73,7 +74,7 @@ for marker in ['Certificates and pass authority must be re-earned','local analyt
  need(marker in backup,f'backup authority disclosure missing: {marker}')
 
 sw=text('service-worker.js')
-need("const CACHE_VERSION='2026.09.15.6';" in sw,'service-worker release identity stale')
+need(f"const CACHE_VERSION='{release}';" in sw,'service-worker release identity stale')
 core=ROOT/'MouldMaster_Core_App.html';payload=ROOT/'src/core-runtime/core-source.txt'
 need(payload.is_file() and payload.read_bytes()==core.read_bytes(),'non-executable core assembly payload must be byte-identical to frozen core')
 index=text('index.html');need('const CORE_URL="./src/core-runtime/core-source.txt";' in index,'supported bootstrap must assemble from non-executable core source')

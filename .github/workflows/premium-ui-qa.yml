@@ -1,0 +1,66 @@
+name: Premium UI QA
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+    paths:
+      - 'premium-ui.css'
+      - 'ui-shell.css'
+      - 'reading-patch.css'
+      - 'learner-ux-repair.css'
+      - 'index.html'
+      - 'src/core-runtime/**'
+      - 'qa_premium_ui.py'
+      - 'qa/premium-ui.spec.js'
+      - 'playwright.premium.config.cjs'
+      - '.github/workflows/premium-ui-qa.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  premium-ui:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 2
+      - uses: actions/setup-python@v7
+        with:
+          python-version: '3.13'
+      - uses: actions/setup-node@v7
+        with:
+          node-version: '22'
+          package-manager-cache: false
+      - name: Premium UI static release governance
+        run: python qa_premium_ui.py
+      - name: Install pinned premium browser matrix
+        run: |
+          npm install --no-save --no-package-lock @playwright/test@1.55.0
+          npx playwright install --with-deps chromium webkit
+      - name: Start local candidate server
+        run: |
+          python -m http.server 4173 --bind 127.0.0.1 > /tmp/mouldmaster-premium-http.log 2>&1 &
+          echo $! > /tmp/mouldmaster-premium-http.pid
+          for i in {1..20}; do
+            curl -fsS http://127.0.0.1:4173/index.html >/dev/null && exit 0
+            sleep 1
+          done
+          cat /tmp/mouldmaster-premium-http.log
+          exit 1
+      - name: Chromium premium UI contract
+        run: npx playwright test --config=playwright.premium.config.cjs --project=chromium-premium
+      - name: WebKit premium UI contract
+        run: npx playwright test --config=playwright.premium.config.cjs --project=webkit-premium
+      - name: Upload premium UI review artifacts
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: premium-ui-qa
+          path: qa-artifacts/
+          if-no-files-found: warn
+          retention-days: 14

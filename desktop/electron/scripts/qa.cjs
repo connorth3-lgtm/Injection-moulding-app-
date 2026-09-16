@@ -42,7 +42,7 @@ for(const raw of [...DOMAIN_MANIFEST.assets,...DOMAIN_MANIFEST.dataAssets]){
 }
 const packagedFrom=new Set((PKG.build?.extraResources||[]).map(x=>String(x.from||'').replace(/^\.\.\/\.\.\//,'')));
 const dynamicLearnerAssets=[
-  'ui-shell.css','mobile-lesson-fix.css','learner-ux-repair.css','lesson-simple-experience.js','primary-learning-practice-hubs.js','learner-ux-repair.js',
+  'ui-shell.css','premium-ui.css','premium-dynamic.css','mobile-lesson-fix.css','learner-ux-repair.css','lesson-simple-experience.js','primary-learning-practice-hubs.js','learner-ux-repair.js',
   'measured-evidence-integration.js','measured-evidence-decision.js','measured-learning-library.js','measured-learning-library.css','data/measured-learning'
 ];
 for(const name of dynamicLearnerAssets){
