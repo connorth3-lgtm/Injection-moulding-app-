@@ -2,13 +2,13 @@
 
 Release `2026.09.16.2` is technically automated and governed, but the following external workstreams remain explicit **HOLD**. This index does not create human, device, learner, accreditation, signing, or production-site evidence.
 
-- Exact hardened pre-merge candidate source: `f7ad92a51cc2808b62fb942e2f8b87fc4ffb1b1f`
-- Exact public-runtime fingerprint: `sha256:f44179f21716056300bb7637478e581bb059bc07091112e44b85d97586001e03`
-- Candidate build run: `35145771290`
-- Candidate artifact: `physical-pwa-candidate-f7ad92a51cc2808b62fb942e2f8b87fc4ffb1b1f` (`10467227083`; `sha256:c083623822ac3ae8a142cd8465c4c8204e2c1892af02badc9b2cb22c43fb9395`; expires `2026-10-16T20:18:41Z`)
+- Exact polished pre-merge candidate source: `5c4e5f303cc1835157fb53869e93ca94b66810c4`
+- Exact public-runtime fingerprint: `sha256:eb54931580479511c31ceec12019a4a31d9bcbe8847aabc1563f599266bc8d3a`
+- Candidate build run: `35157590109`
+- Candidate artifact: `physical-pwa-candidate-5c4e5f303cc1835157fb53869e93ca94b66810c4` (`10471772733`; `sha256:7bb187fc2ff51ee804e8ad409e3ad5b05d659787a4311f782b3a5216151db1ca`; expires `2026-10-16T22:25:23Z`)
 - Pages disposition: production root remains **HOLD**. This retained pre-merge artifact is the exact validation source; after merge, the protected-main Pages workflow must independently stage and verify byte-equivalent runtime before any production decision.
 
-The retained candidate includes the completed deep-audit hardening: one canonical Book runtime, exact-byte Book publication binding, Book-aware global search, canonical learner-facing academic evidence links, and release-versioned dynamic same-origin script loads. These are technical assurances only and do not satisfy any external workstream below.
+The retained candidate includes the completed deep-audit hardening plus the reviewed learner-interface polish: one canonical Book runtime, exact-byte Book publication binding, Book-aware global search, canonical learner-facing academic evidence links, release-versioned dynamic same-origin script loads, balanced tablet/desktop Home workspace access, progressive Book governance/assurance disclosure, compact desktop tool navigation and quieter Read Aloud chrome. These are technical assurances only and do not satisfy any external workstream below.
 
 | Workstream | Status | Release packet | Required genuine evidence |
 | --- | --- | --- | --- |

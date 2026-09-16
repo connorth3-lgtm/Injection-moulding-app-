@@ -5,15 +5,15 @@ This packet governs hands-on physical-device validation of the exact MouldMaster
 ## Exact candidate
 
 - web release: `2026.09.16.2`
-- pre-merge candidate source commit: `f7ad92a51cc2808b62fb942e2f8b87fc4ffb1b1f`
-- public-runtime fingerprint: `sha256:f44179f21716056300bb7637478e581bb059bc07091112e44b85d97586001e03`
-- exact candidate build run: `35145771290`
-- retained candidate artifact: `physical-pwa-candidate-f7ad92a51cc2808b62fb942e2f8b87fc4ffb1b1f`
-- artifact id: `10467227083`
-- artifact ZIP digest: `sha256:c083623822ac3ae8a142cd8465c4c8204e2c1892af02badc9b2cb22c43fb9395`
-- artifact retention expiry: `2026-10-16T20:18:41Z`
+- pre-merge candidate source commit: `5c4e5f303cc1835157fb53869e93ca94b66810c4`
+- public-runtime fingerprint: `sha256:eb54931580479511c31ceec12019a4a31d9bcbe8847aabc1563f599266bc8d3a`
+- exact candidate build run: `35157590109`
+- retained candidate artifact: `physical-pwa-candidate-5c4e5f303cc1835157fb53869e93ca94b66810c4`
+- artifact id: `10471772733`
+- artifact ZIP digest: `sha256:7bb187fc2ff51ee804e8ad409e3ad5b05d659787a4311f782b3a5216151db1ca`
+- artifact retention expiry: `2026-10-16T22:25:23Z`
 
-The retained candidate was built from the hardened pre-merge branch using the repository's production Pages artifact builder and exact public-runtime fingerprint verifier. It includes the canonical byte-bound Book runtime, Book-aware search, canonical learner-facing academic evidence links and release-versioned dynamic same-origin scripts. It is retained only for governed validation; it does **not** authorize the production Pages root. After merge, the protected-main Pages workflow must independently stage the byte-equivalent main candidate before any release decision. The runtime fingerprint is the byte-level acceptance key. This automated provenance is not physical-device evidence.
+The retained candidate was built from the polished pre-merge branch using the repository's production Pages artifact builder and exact public-runtime fingerprint verifier. It includes the canonical byte-bound Book runtime, Book-aware search, canonical learner-facing academic evidence links, release-versioned dynamic same-origin scripts, the balanced tablet/desktop Home workspace, progressive Book governance disclosure, compact desktop tool navigation and the quieter Read Aloud utility treatment. It is retained only for governed validation; it does **not** authorize the production Pages root. After merge, the protected-main Pages workflow must independently stage the byte-equivalent main candidate before any release decision. The runtime fingerprint is the byte-level acceptance key. This automated provenance is not physical-device evidence.
 
 ## Required iOS / iPadOS execution
 
@@ -25,7 +25,7 @@ Using a physical Android device and Chrome, complete the same governed matrix in
 
 ## Audit-fix regression focus
 
-Additionally verify on physical devices that a normal learner backup still imports, an oversized or malformed backup fails closed without replacing existing state, Book evidence links open externally, Book search opens the intended chapter, Book chapter entry starts at the chapter heading, returning to contents restores the reader's prior position, and the complete claim-trace disclosure remains readable without implying independent SME approval. On iPad/tablet widths also verify the compact Home / Learn / Practice / More navigation does not obscure learner content.
+Additionally verify on physical devices that a normal learner backup still imports, an oversized or malformed backup fails closed without replacing existing state, Book evidence links open externally, Book search opens the intended chapter, Book chapter entry starts at the chapter heading, returning to contents restores the reader's prior position, the publication/review and accuracy/assurance disclosures remain operable and truthful, and the complete claim-trace disclosure remains readable without implying independent SME approval. On iPad/tablet widths also verify the Home workspace uses the available canvas without obscuring content, while phone Home remains lean. On desktop-width devices confirm specialist tools remain reachable through Practice/More despite the compact primary navigation.
 
 ## Evidence hygiene
 
