@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
-  "release": "2026.09.14.4",
-  "commit": "9a74fa40aec493d79207e6de2e25955e3d4020aa",
+  "release": "2026.09.16.1",
+  "commit": "4f187eb068264f48522f6ad6fb2825e91b3cff7d",
   "browser": "chromium via @playwright/test 1.55.0",
   "maxDiffPixels": 12,
   "viewports": [
@@ -36,5 +36,5 @@
     "listen-expanded",
     "listening"
   ],
-  "policy": "This commit is the reviewed 2026.09.14.4 visual baseline after the intentional first-class governed Book navigation addition. Candidate screenshots are rendered beside this exact commit in the same Chromium job. The tablet and desktop Home drift from the prior baseline was reviewed as the Book navigation item only; phone surfaces and existing Home content remained unchanged. Update the pinned commit only through an intentional reviewed visual-baseline change; physical-device evidence remains a separate release gate and must be fresh for changed runtime."
+  "policy": "This commit is the intentionally reviewed 2026.09.16.1 premium industrial visual baseline. It introduces the governed premium-ui.css design system plus premium-dynamic.css treatment for the real learner-facing Today, progress and next-step surfaces. Chromium and WebKit premium interaction contracts passed before this baseline was advanced. Candidate screenshots remain compared against this exact immutable commit across phone, tablet and desktop viewports. Update this pinned commit only for an intentional reviewed visual change; physical-device and real assistive-technology evidence remain separate release gates and must be fresh for changed runtime."
 }
