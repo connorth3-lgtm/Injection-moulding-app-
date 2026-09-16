@@ -73,15 +73,19 @@ jobs:
           policy.write_text(ps.replace(oldp,newp,1),encoding='utf-8')
           print(digest)
           PY
-      - name: Prove the new gate works without historical Git objects
-        run: |
-          git clone --depth=1 --no-local . /tmp/mm-shallow
-          cd /tmp/mm-shallow
-          python qa_assessment_evidence.py
-      - name: Commit semantic approval baseline
+      - name: Commit semantic approval baseline locally
         run: |
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add data/assessment-semantic-approval-v1.json qa_assessment_evidence.py sources/QUESTION_APPROVAL_POLICY.md
           git commit -m '[assessment-semantic-baseline] Make evidence approval history-independent'
-          git push
+      - name: Prove the committed gate works without historical Git objects
+        run: |
+          git clone --depth=1 --no-local --branch design/premium-polish-20260916 . /tmp/mm-shallow || true
+          rm -rf /tmp/mm-shallow
+          git clone --depth=1 --no-local . /tmp/mm-shallow
+          cd /tmp/mm-shallow
+          test ! -e .git/shallow || test -s .git/shallow
+          python qa_assessment_evidence.py
+      - name: Push verified semantic approval baseline
+        run: git push origin HEAD:design/premium-polish-20260916
