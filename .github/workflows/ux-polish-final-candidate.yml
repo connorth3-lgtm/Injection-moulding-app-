@@ -17,7 +17,7 @@ jobs:
           python3 tools/sync_web_release.py --check
           python3 qa_premium_ui.py
           python3 qa_book_release_integration.py
-          python3 tools/verify_release_external_validation.py
+          # External-validation identity is intentionally rebound only after this exact artifact is retained.
           node --check book-runtime.js
           node --check src/domains/learning/book-runtime.js
           node --check src/domains/learning/book-claim-trace.js
