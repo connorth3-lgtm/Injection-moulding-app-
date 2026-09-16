@@ -1,0 +1,45 @@
+name: UX Polish Final Candidate Staging
+on:
+  push:
+    branches: [fix/ux-polish-20260916-2]
+permissions:
+  contents: read
+concurrency:
+  group: ux-polish-final-candidate-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  candidate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Verify governed state
+        run: |
+          python3 tools/sync_web_release.py --check
+          python3 qa_premium_ui.py
+          python3 qa_book_release_integration.py
+          python3 tools/verify_release_external_validation.py
+          node --check book-runtime.js
+          node --check src/domains/learning/book-runtime.js
+          node --check src/domains/learning/book-claim-trace.js
+      - name: Build and fingerprint final public candidate
+        run: |
+          python3 tools/build_pages_artifact.py
+          rm -rf physical-pwa-candidate
+          mkdir physical-pwa-candidate
+          cp -a .pages-dist/. physical-pwa-candidate/
+          python3 tools/verify_pwa_physical_evidence.py --artifact physical-pwa-candidate --print-fingerprint | tee candidate-fingerprint.txt
+          printf '%s\n' '${{ github.sha }}' > candidate-source-sha.txt
+          printf '%s\n' '${{ github.run_id }}' > candidate-run-id.txt
+      - name: Retain final exact candidate
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: physical-pwa-candidate-${{ github.sha }}
+          path: |
+            physical-pwa-candidate
+            candidate-fingerprint.txt
+            candidate-source-sha.txt
+            candidate-run-id.txt
+          retention-days: 30
+          if-no-files-found: error
+          compression-level: 6
+          overwrite: false
