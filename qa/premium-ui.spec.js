@@ -29,9 +29,15 @@ test('premium UI stylesheet is active on the primary learner shell',async({page}
   });
   expect(shell.background).toContain('linear-gradient');
   expect(shell.shadow).not.toBe('none');
-  const hero=await page.locator('#dashboard .hero-main').evaluate(el=>({radius:getComputedStyle(el).borderRadius,shadow:getComputedStyle(el).boxShadow}));
-  expect(parseFloat(hero.radius)).toBeGreaterThanOrEqual(18);
-  expect(hero.shadow).not.toBe('none');
+  await expect(page.locator('#dashboard .mm-today-focus')).toBeVisible();
+  const focusCard=await page.locator('#dashboard .mm-today-focus').evaluate(el=>({
+    radius:getComputedStyle(el).borderRadius,
+    shadow:getComputedStyle(el).boxShadow,
+    background:getComputedStyle(el).backgroundImage
+  }));
+  expect(parseFloat(focusCard.radius)).toBeGreaterThanOrEqual(18);
+  expect(focusCard.shadow).not.toBe('none');
+  expect(focusCard.background).toContain('linear-gradient');
 });
 
 test('premium UI has no horizontal overflow across primary responsive surfaces',async({page})=>{
@@ -70,7 +76,9 @@ test('premium controls retain professional touch and focus targets',async({page}
 test('premium UI reduced motion contract remains calm',async({page})=>{
   await page.emulateMedia({reducedMotion:'reduce'});
   await openApp(page);
-  const durations=await page.locator('.course-card').first().evaluate(el=>({transition:getComputedStyle(el).transitionDuration,animation:getComputedStyle(el).animationDuration}));
+  await page.evaluate(()=>switchView('path'));
+  await expect(page.locator('#path .mm-hub-tile').first()).toBeVisible();
+  const durations=await page.locator('#path .mm-hub-tile').first().evaluate(el=>({transition:getComputedStyle(el).transitionDuration,animation:getComputedStyle(el).animationDuration}));
   const parse=s=>String(s).split(',').map(v=>parseFloat(v)||0);
   expect(Math.max(...parse(durations.transition))).toBeLessThanOrEqual(.02);
   expect(Math.max(...parse(durations.animation))).toBeLessThanOrEqual(.02);
