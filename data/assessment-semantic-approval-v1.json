@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "scope": "MouldMaster_Core_App.html assessment-bearing MM_DATA payload only",
+  "scopeKeys": [
+    "exams",
+    "regionalQuestions",
+    "scenarios"
+  ],
+  "canonicalization": "UTF-8 JSON; ensure_ascii=false; sort_keys=true; separators=(comma,colon)",
+  "sha256": "sha256:10940b2062532cb070474a82d6144aec14bfbdef6472af7bc49236104ff416aa",
+  "historicalApprovedBlob": "c6b258ccd37d98b2f591f538b34eb33c7705dda6",
+  "evidenceApprovalVersion": "2026.09.10.1",
+  "reviewedOn": "2026-08-30",
+  "provenance": "Materialized only after legacy QA proved the current semantic payload equals the immutable historically approved Git blob. Future QA compares this semantic fingerprint directly and does not require historical Git objects."
+}

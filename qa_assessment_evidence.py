@@ -1,5 +1,5 @@
 from pathlib import Path
-import ast, json, re, subprocess, tempfile
+import ast, hashlib, json, re, subprocess, tempfile
 
 ROOT=Path(__file__).resolve().parent
 
@@ -44,14 +44,18 @@ need("R.after('gradeExam'" in approval and "R.registerModule('assessment-evidenc
 
 approved_inputs=dict(re.findall(r"'([^']+\.(?:html|js))':'([0-9a-f]{40})'",approval))
 need(len(approved_inputs)==8,f'expected 8 approval-pinned content inputs, got {len(approved_inputs)}')
+semantic_approval=json.loads(text('data/assessment-semantic-approval-v1.json'))
+need(semantic_approval.get('schemaVersion')==1,'assessment semantic approval schema mismatch')
+need(semantic_approval.get('scopeKeys')==['exams','regionalQuestions','scenarios'],'assessment semantic approval scope mismatch')
 for path,sha in approved_inputs.items():
     need((ROOT/path).exists(),f'approved content input missing: {path}')
     actual=git_blob_sha(path)
-    if path=='MouldMaster_Core_App.html' and actual!=sha:
-        approved_core=git_blob_text(sha)
+    if path=='MouldMaster_Core_App.html':
+        need(semantic_approval.get('historicalApprovedBlob')==sha,f'assessment semantic approval provenance does not match evidence-approved core blob {sha}')
         current_payload=core_assessment_payload(text(path))
-        approved_payload=core_assessment_payload(approved_core)
-        need(current_payload==approved_payload,f'evidence approval stale for {path}: assessment-bearing content changed from approved blob {sha} to current {actual}; re-review evidence and update approval')
+        canonical=json.dumps(current_payload,ensure_ascii=False,sort_keys=True,separators=(',',':')).encode('utf-8')
+        actual_payload_sha='sha256:'+hashlib.sha256(canonical).hexdigest()
+        need(actual_payload_sha==semantic_approval.get('sha256'),f'evidence approval stale for {path}: assessment-bearing semantic fingerprint changed from {semantic_approval.get("sha256")} to {actual_payload_sha}; re-review evidence and update semantic approval')
         continue
     need(actual==sha,f'evidence approval stale for {path}: approved {sha}, current {actual}; re-review evidence and update approval')
 
