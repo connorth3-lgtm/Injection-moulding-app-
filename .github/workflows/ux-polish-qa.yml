@@ -1,0 +1,29 @@
+name: UX Polish and Book Endurance QA
+on:
+  pull_request:
+    branches: [main]
+    paths: ['book-runtime.js','src/domains/learning/book-runtime.js','ui-shell.css','premium-ui.css','premium-dynamic.css','qa/ux-polish.spec.js','playwright.ux-polish.config.cjs','version.json']
+  push:
+    branches: [main]
+permissions:
+  contents: read
+jobs:
+  ux-polish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - run: python3 qa_premium_ui.py
+      - name: Install browser QA
+        run: |
+          npm install --no-save --no-package-lock @playwright/test@1.55.0
+          npx playwright install --with-deps chromium webkit
+      - name: Run UX polish and repeat-use contracts
+        run: npx playwright test -c playwright.ux-polish.config.cjs
+      - name: Upload UX evidence
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: ux-polish-qa
+          path: test-results
+          if-no-files-found: ignore
+          retention-days: 14

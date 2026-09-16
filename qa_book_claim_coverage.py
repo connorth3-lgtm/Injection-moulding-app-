@@ -12,6 +12,7 @@ manifest = load('data/book-manifest-v1.json')
 gate = load('data/book-accuracy-gate-v1.json')
 evidence_registry = load('data/book-evidence-registry-v1.json')
 audit = load('data/book-verification-audit-all-v1.json')
+authorization = load('data/book-publication-authorization-v1.json')
 review_paths = [
     'data/book-claim-review-high-risk-v1.json',
     'data/book-claim-review-process-tooling-v1.json',
@@ -70,21 +71,31 @@ for claim in claims:
     for field in ('section','claimClass','claim','applicability','exclusions','basis'):
         assert str(claim[field]).strip(), f"blank {field} in {claim['claimId']}"
 
-# Build one evidence namespace from all governed source records. Different ledgers may
-# use a shorter display title for the same source ID; the canonical URL may not diverge.
+# Build one evidence namespace from all governed source records. Historical ledgers
+# may retain a discovery/index URL, but any repeated source ID must resolve to one
+# explicit canonical learner-facing URL in the publication authorization.
+canonical_urls = authorization.get('canonicalAcademicEvidenceUrls', {})
+assert isinstance(canonical_urls, dict)
 source_records = {}
+def resolved_url(sid, url):
+    return canonical_urls.get(sid) or url
+
 def add_sources(items):
     for src in items or []:
         sid = src.get('id')
         assert sid, 'source record missing id'
+        current_url = resolved_url(sid, src.get('url'))
         if sid in source_records:
             prior = source_records[sid]
-            if prior.get('url') and src.get('url'):
-                assert prior['url'] == src['url'], f'conflicting source URL for {sid}'
-            if len(src) > len(prior):
-                source_records[sid] = {**prior, **src}
+            prior_url = resolved_url(sid, prior.get('url'))
+            if prior_url and current_url:
+                assert prior_url == current_url, f'conflicting canonical source URL for {sid}'
+            merged = {**prior, **src} if len(src) > len(prior) else {**src, **prior}
+            if current_url:
+                merged['url'] = current_url
+            source_records[sid] = merged
         else:
-            source_records[sid] = src
+            source_records[sid] = {**src, **({'url': current_url} if current_url else {})}
 
 add_sources(manifest.get('sourceSeeds'))
 add_sources(evidence_registry.get('sourceSeeds'))
@@ -97,6 +108,11 @@ for review in reviews:
 for resolution in resolutions:
     assert resolution.get('chapterPromotionAuthorized') is False
     add_sources(resolution.get('newEvidence'))
+
+for sid, url in canonical_urls.items():
+    assert sid in source_records, f'canonical evidence URL points to unknown source ID: {sid}'
+    assert source_records[sid].get('url') == url, f'canonical evidence URL not applied: {sid}'
+    assert str(url).startswith('https://doi.org/') or str(url).startswith('https://'), f'canonical evidence URL is not HTTPS: {sid}'
 
 high_risk = reviews[0]
 for snap in high_risk.get('sourceCurrency', []):
@@ -219,4 +235,5 @@ assert publication.get('currentBookDisposition') == 'technical-review-only'
 print('PASS: 46/46 Book chapters have claim-level review coverage; 137 claims inventoried; 0 chapters self-promoted.')
 print('PASS: evidence-gap qualifications resolved; remaining 21 qualified claims are explicit non-universal scope boundaries.')
 print('PASS: historical summary-count drift is governed by explicit recount records; all-chapter audit matches the manifest.')
+print('PASS: repeated academic evidence IDs resolve through one authorization-owned canonical learner-facing URL.')
 print(f"PASS: effective claim dispositions: supported={counts['supported']}, qualified={counts['qualified']}, hold={counts['hold']}, conflicting={counts['conflicting']}.")

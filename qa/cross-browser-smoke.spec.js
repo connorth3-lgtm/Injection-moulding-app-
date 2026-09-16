@@ -18,12 +18,27 @@ async function openApp(page){
   await page.evaluate(()=>new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve))));
 }
 
+async function openMaterials(page){
+  const desktopMaterials=page.locator('#nav button[data-view="materials"]');
+  if(await desktopMaterials.isVisible()){
+    await desktopMaterials.click();
+  }else{
+    const learn=page.locator('.mobile-nav > button').filter({hasText:'Learn'});
+    await expect(learn).toBeVisible();
+    await learn.click();
+    await expect(page.locator('#path .mm-learn-hub')).toBeVisible();
+    const materials=page.locator('#path [data-mm-hub-action="materials"]');
+    await expect(materials).toBeVisible();
+    await materials.click();
+  }
+  await expect(page.locator('#materials')).toBeVisible();
+}
+
 test('core shell and exact-grade Materials work without layout overflow',async({page})=>{
   const errors=[];
   page.on('pageerror',err=>errors.push(String(err.message||err)));
   await openApp(page);
-  await page.locator('#nav button[data-view="materials"]').click();
-  await expect(page.locator('#materials')).toBeVisible();
+  await openMaterials(page);
   await expect(page.locator('#mmExactMaterialCatalog')).toBeVisible({timeout:30000});
   await expect(page.locator('[data-mm-material-grade]').first()).toBeVisible();
   const geometry=await page.evaluate(()=>({scroll:document.documentElement.scrollWidth,client:document.documentElement.clientWidth}));

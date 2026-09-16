@@ -1,5 +1,5 @@
-const CACHE_VERSION='2026.09.16.1';
-const CACHE_REVISION='premium-ui-r1-20260916';
+const CACHE_VERSION='2026.09.16.2';
+const CACHE_REVISION='learner-ui-r2-20260917';
 const STATIC_CACHE=`mouldmaster-static-${CACHE_VERSION}-${CACHE_REVISION}`;
 
 // Release assets are grouped for readability, but activation is atomic across both
@@ -90,6 +90,8 @@ const CORE=[
   './src/domains/process/process-data-integrity.js',
   './src/domains/shell/accessibility-loader.js',
   './src/domains/shell/product-areas.js',
+  './src/domains/shell/learner-ui-polish.js',
+  './src/domains/shell/learner-ui-polish.css',
   './material-catalog-v1.json',
   './learning-analytics.js',
   './accessibility-hardening.js',

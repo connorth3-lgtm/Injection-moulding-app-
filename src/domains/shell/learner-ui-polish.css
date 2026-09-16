@@ -1,0 +1,92 @@
+/* MouldMaster learner UI polish — 2026.09.17.1 */
+
+/* Home: keep the mobile landing page lean, but use the available tablet/desktop
+   canvas for a small task-oriented workspace instead of a large empty field. */
+.mm-home-balance{
+  display:grid;
+  grid-template-columns:minmax(210px,.7fr) minmax(0,1.8fr);
+  gap:18px;
+  align-items:stretch;
+  margin:0 0 18px;
+  padding:18px;
+  border-radius:18px!important;
+}
+.mm-home-balance-copy{padding:3px 3px 3px 2px}
+.mm-home-balance-copy h2{margin:5px 0 7px;font-size:20px;letter-spacing:-.025em}
+.mm-home-balance-copy p{margin:0;color:var(--mm-text-muted,var(--muted));line-height:1.5;font-size:13px;max-width:390px}
+.mm-home-balance-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:9px}
+.mm-home-balance-grid button{
+  min-width:0;min-height:118px;padding:13px;
+  border:1px solid var(--mm-border-strong,#35516f);border-radius:14px;
+  background:linear-gradient(180deg,rgba(18,39,60,.96),rgba(12,28,45,.98));
+  color:var(--mm-text-strong,#eef6ff);text-align:left;
+  display:flex;flex-direction:column;align-items:flex-start;gap:9px;
+}
+.mm-home-balance-grid button:hover,.mm-home-balance-grid button:focus-visible{background:linear-gradient(180deg,#173149,#11283d);border-color:rgba(95,224,198,.45)}
+.mm-home-balance-grid b{display:block;font-size:14px;line-height:1.25}
+.mm-home-balance-grid small{display:block;margin-top:4px;color:var(--mm-text-muted,#9fb2c6);font-size:11px;line-height:1.4}
+.mm-home-balance-icon{display:grid;place-items:center;width:32px;height:32px;border-radius:9px;background:#183149;color:#9fd7ff;font-size:17px;font-weight:900;flex:0 0 auto}
+.mm-home-balance-icon.mm-book-mark{position:relative;background:#173b38}
+.mm-home-balance-icon.mm-book-mark::before{content:"";width:14px;height:18px;border:2px solid #9ff3df;border-radius:2px;box-shadow:5px 0 0 -3px #173b38,5px 0 0 -1px #9ff3df}
+
+/* Book: the evidence contract stays visible and accessible, but it no longer
+   competes with the learner's chapter choice above the fold. */
+#mmBookView [data-mm-book-hero]{padding:21px!important}
+#mmBookView [data-mm-book-hero]>h2{margin:6px 0 8px;font-size:clamp(25px,3.2vw,32px);letter-spacing:-.03em;line-height:1.12}
+#mmBookView [data-mm-book-hero]>p:not([data-mm-book-summary]):not([data-mm-book-sme-status]){max-width:820px;margin:0 0 12px;color:var(--mm-text,#c7d6e5);line-height:1.55}
+.mm-book-governance,.mm-book-assurance-details{border:1px solid rgba(125,169,205,.2);border-radius:13px;background:rgba(9,24,39,.72);overflow:hidden}
+.mm-book-governance{margin:10px 0 12px}
+.mm-book-governance>summary,.mm-book-assurance-details>summary{list-style:none;display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:44px;padding:10px 13px;cursor:pointer;color:#dce8f6}
+.mm-book-governance>summary::-webkit-details-marker,.mm-book-assurance-details>summary::-webkit-details-marker{display:none}
+.mm-book-governance>summary b,.mm-book-assurance-details>summary b{font-size:13px}
+.mm-book-governance>summary span,.mm-book-assurance-details>summary span{color:var(--mm-text-muted,#97aac0);font-size:11px;text-align:right}
+.mm-book-governance>summary::after,.mm-book-assurance-details>summary::after{content:"+";font-size:18px;color:var(--mm-accent,#5fe0c6);line-height:1}
+.mm-book-governance[open]>summary::after,.mm-book-assurance-details[open]>summary::after{content:"−"}
+.mm-book-governance-body,.mm-book-assurance-body{padding:0 13px 13px;border-top:1px solid rgba(125,169,205,.13)}
+.mm-book-governance-body p,.mm-book-assurance-body p{line-height:1.5}
+.mm-book-governance-body [data-mm-book-summary]{margin:11px 0 5px;font-size:12px;color:#d3dfeb}
+.mm-book-governance-body [data-mm-book-sme-status]{margin:5px 0;font-size:12px}
+.mm-book-hero-actions{display:flex;align-items:center;gap:8px;margin-top:4px}
+.mm-book-hero-actions [data-mm-book-mode="listen"]{min-height:38px!important;padding:7px 11px!important;font-size:12px!important}
+#mmBookView [data-mm-book-accuracy]{padding:0!important;background:transparent!important;border-color:transparent!important;box-shadow:none!important}
+.mm-book-assurance-body h3{margin:12px 0 7px;font-size:15px}
+
+/* Top-bar Read Aloud remains immediately available, but the collapsed control
+   reads as a quiet utility rather than a competing primary action. */
+.top-actions .mm-read-aloud details:not([open]){width:40px!important;height:40px!important;margin:2px 0!important;border-color:rgba(126,163,196,.24)!important;background:rgba(9,22,35,.38)!important}
+.top-actions .mm-read-aloud details:not([open]) summary{width:40px!important;min-width:40px!important;height:40px!important;min-height:40px!important;background:transparent!important;opacity:.76!important}
+.top-actions .mm-read-aloud details:not([open]) summary:hover,.top-actions .mm-read-aloud details:not([open]) summary:focus-visible{opacity:1!important;background:#12263a!important}
+
+/* Desktop: keep the primary learner destinations visible and route specialist
+   utilities through one More tools entry. Hidden tools remain available from
+   Practice or the More dialog; no capability is removed. */
+.mm-desktop-more-tools{margin-top:4px!important}
+.mm-more-dots{display:inline-flex;align-items:center;gap:3px;width:18px;justify-content:center}
+.mm-more-dots i{display:block;width:3px;height:3px;border-radius:50%;background:currentColor}
+
+@media(max-width:1280px) and (min-width:701px){
+  .mm-home-balance{grid-template-columns:1fr;gap:13px}
+  .mm-home-balance-copy{display:grid;grid-template-columns:auto 1fr;column-gap:10px;align-items:baseline}
+  .mm-home-balance-copy .eyebrow{grid-column:1/-1}
+  .mm-home-balance-copy h2{margin-bottom:2px}
+  .mm-home-balance-copy p{max-width:none}
+  .mm-home-balance-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .mm-home-balance-grid button{min-height:94px;display:grid;grid-template-columns:auto 1fr;align-items:start}
+  .mm-home-balance-grid .mm-home-balance-icon{grid-row:1/span 2}
+}
+
+@media(max-width:700px){
+  .mm-home-balance{display:none!important}
+  #mmBookView [data-mm-book-hero]{padding:16px!important}
+  #mmBookView [data-mm-book-hero]>h2{font-size:24px!important;margin-top:5px!important}
+  #mmBookView [data-mm-book-hero]>p:not([data-mm-book-summary]):not([data-mm-book-sme-status]){font-size:13px;line-height:1.46;margin-bottom:10px}
+  .mm-book-governance{margin:8px 0 10px}
+  .mm-book-governance>summary,.mm-book-assurance-details>summary{align-items:flex-start;padding:10px 11px}
+  .mm-book-governance>summary span,.mm-book-assurance-details>summary span{display:none}
+  .mm-book-hero-actions [data-mm-book-mode="listen"]{width:auto!important;min-height:36px!important}
+}
+
+@media(forced-colors:active){
+  .mm-home-balance-grid button,.mm-book-governance,.mm-book-assurance-details{border:1px solid ButtonText}
+  .mm-home-balance-icon{border:1px solid ButtonText}
+}

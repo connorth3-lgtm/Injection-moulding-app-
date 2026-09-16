@@ -5,7 +5,8 @@ from pathlib import Path
 ROOT=Path(__file__).resolve().parent
 manifest=json.loads((ROOT/'data/book-manifest-v1.json').read_text(encoding='utf-8'))
 batch=json.loads((ROOT/'data/book-authored-foundations-v1.json').read_text(encoding='utf-8'))
-runtime=(ROOT/'book-runtime.js').read_text(encoding='utf-8')
+runtime=(ROOT/'src/domains/learning/book-runtime.js').read_text(encoding='utf-8')
+compat=(ROOT/'book-runtime.js').read_text(encoding='utf-8')
 
 def require(ok,msg):
     if not ok: raise SystemExit(f'BOOK AUTHORED QA FAILED: {msg}')
@@ -24,9 +25,11 @@ for chapter in chapters:
     require(len(chapter.get('sections',[]))>=4,f"{chapter['id']} lacks substantive review sections")
     require(chapter.get('sourceIds'),f"{chapter['id']} has no evidence anchors")
     require(all(s in source_ids for s in chapter['sourceIds']),f"{chapter['id']} references unknown source")
-require('book-authored-foundations-v1.json' in runtime,'runtime does not load authored foundation batch')
+require("book-authored-foundations-v1.json" in runtime and 'BATCH_PATHS' in runtime,'canonical runtime does not load authored foundation batch')
+require("verifiedJson(path)" in runtime,'canonical runtime must byte-verify authored batches before parsing')
+require("script.src='./src/domains/learning/book-runtime.js'" in compat,'root compatibility path must delegate to canonical Book runtime')
 require("chapter.state==='verified'" in runtime,'governed publication gate missing')
 require("chapter.state==='technical-review'" in runtime and 'not evidence verified' in runtime.lower(),'review-draft disclosure missing')
 require('machine setting, safety procedure or evidence-verified production instruction' in runtime,'review boundary is not explicit enough')
 require("verified:'Evidence verified'" in runtime,'learner-facing publication status must use evidence-verification terminology')
-print('MouldMaster Book authored QA passed: five sourced foundation drafts remain technical-review-only and fail closed for publication.')
+print('MouldMaster Book authored QA passed: five sourced foundation drafts load through the byte-verified canonical runtime, remain technical-review-only and fail closed for publication.')

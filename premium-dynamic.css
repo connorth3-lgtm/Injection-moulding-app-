@@ -1,4 +1,4 @@
-/* MouldMaster premium dynamic learner surfaces — 2026.09.16.1
+/* MouldMaster premium dynamic learner surfaces — 2026.09.16.2
    Presentation only. Kept separate from the legacy-shell override layer so its specificity debt can remain frozen. */
 
 body #dashboard .mm-today-focus{
@@ -121,3 +121,6 @@ body #lesson .mm-note-status{color:#8fa5ba}
     box-shadow:none;
   }
 }
+
+/* Keep useful Home shortcuts visually intentional instead of floating in empty space. */
+body #dashboard .mm-home-utility{margin-top:14px;padding:12px;border:1px solid rgba(128,172,208,.16);border-radius:14px;background:rgba(10,25,40,.72)}

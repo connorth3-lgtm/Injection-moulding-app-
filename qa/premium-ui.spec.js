@@ -41,15 +41,17 @@ test('premium UI stylesheet is active on the primary learner shell',async({page}
 });
 
 test('premium UI has no horizontal overflow across primary responsive surfaces',async({page})=>{
-  await page.setViewportSize({width:360,height:800});
-  await openApp(page);
-  for(const [view,ready] of [
+  for(const width of [320,360]){
+    await page.setViewportSize({width,height:800});
+    await openApp(page);
+    for(const [view,ready] of [
     ['dashboard','#dashboard'],['path','#path .mm-learn-hub'],['scenarios','#scenarios .mm-practice-hub'],['lesson','#lesson']
   ]){
     if(view==='lesson')await page.evaluate(()=>{goLesson(4);switchView('lesson')});
     else await page.evaluate(v=>switchView(v),view);
     await expect(page.locator(ready)).toBeVisible();
-    await assertNoHorizontalOverflow(page,view);
+      await assertNoHorizontalOverflow(page,`${view}-${width}`);
+    }
   }
 });
 
@@ -89,4 +91,14 @@ test('premium UI forced-colour-safe CSS remains present',async({page})=>{
   const css=await page.evaluate(async()=>fetch('./premium-ui.css').then(r=>r.text()));
   expect(css).toContain('@media(forced-colors:active)');
   expect(css).toContain('background:Canvas!important');
+});
+
+
+test('forced colours are actually applied in Chromium',async({page,browserName})=>{
+  test.skip(browserName!=='chromium','Forced-colours emulation is governed in Chromium; CSS presence remains cross-browser.');
+  await page.emulateMedia({forcedColors:'active'});
+  await openApp(page);
+  const style=await page.locator('#dashboard .mm-today-focus').evaluate(el=>({shadow:getComputedStyle(el).boxShadow,border:getComputedStyle(el).borderTopStyle}));
+  expect(style.shadow).toBe('none');
+  expect(style.border).not.toBe('none');
 });
