@@ -1,4 +1,4 @@
-/* MouldMaster premium industrial UI — 2026.09.16
+/* MouldMaster premium industrial UI — 2026.09.16.2
    Presentation-only layer. It must not change assessment, safety, evidence or machine-authority semantics. */
 
 :root{
@@ -285,8 +285,9 @@ details>summary{border-radius:10px}
 /* Tablet */
 @media(min-width:701px) and (max-width:900px){
   #app{grid-template-columns:1fr!important}
-  .sidebar{box-shadow:0 12px 32px rgba(0,0,0,.18)!important;border-right:0!important;border-bottom:1px solid rgba(135,180,218,.14)!important}
-  .main{padding:20px 22px 64px!important}
+  .sidebar{display:none!important}
+  .main{padding:20px 22px calc(104px + env(safe-area-inset-bottom))!important}
+  .mobile-nav{background:rgba(6,16,27,.965)!important;border-top-color:rgba(132,177,214,.18)!important;box-shadow:0 -14px 34px rgba(0,0,0,.28),0 56px 0 #06101b!important;backdrop-filter:blur(18px) saturate(1.12)!important;-webkit-backdrop-filter:blur(18px) saturate(1.12)!important}
 }
 
 /* Mobile: premium but restrained. Preserve density and the existing fixed-nav contract. */
@@ -336,3 +337,7 @@ details>summary{border-radius:10px}
   .primary,.secondary,.ghost,.danger,nav button,.mobile-nav button{forced-color-adjust:auto!important;box-shadow:none!important}
   .mini-bar span,.bar span{background:Highlight!important}
 }
+
+/* 2026.09.16.2 refinement: consistent local Book/navigation iconography. */
+.mm-book-nav-icon{width:17px;height:14px;display:inline-block;border:1.8px solid currentColor;border-radius:3px;position:relative;box-sizing:border-box}.mm-book-nav-icon::after{content:"";position:absolute;top:1px;bottom:1px;left:50%;border-left:1.5px solid currentColor}.mm-book-hero-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
+body.mm-home-visible #continueBtn,body[data-mm-view="path"] #continueBtn{display:none!important}

@@ -100,6 +100,21 @@ async function prepareSurface(page,surface){
     await page.evaluate(()=>{switchView('exams');startExam('Beginner')});
     await page.waitForFunction(()=>Array.isArray(window.activeExam?.questions)&&window.activeExam.questions.length===16&&document.querySelectorAll('#examQuestions .question').length===16);
     await expect(page.locator('#examQuestions')).toBeVisible();
+  }else if(surface==='book-contents'){
+    await page.waitForFunction(()=>window.MMBook?.getManifest?.()?.parts?.length>0);
+    await page.evaluate(()=>window.MMBook.open());
+    await expect(page.locator('[data-mm-book-chapter]')).toHaveCount(46);
+  }else if(surface==='book-late'){
+    await page.waitForFunction(()=>window.MMBook?.getManifest?.()?.parts?.length>0);
+    await page.evaluate(()=>window.MMBook.open());
+    await page.locator('[data-mm-book-chapter]').nth(41).click();
+    await expect(page.locator('[data-mm-book-reader] h2')).toBeVisible();
+  }else if(surface==='book-trace'){
+    await page.waitForFunction(()=>window.MMBook?.getManifest?.()?.parts?.length>0);
+    await page.evaluate(()=>window.MMBook.open());
+    await page.locator('[data-mm-book-chapter]').first().click();
+    const trace=page.locator('.mm-book-claim-trace').first();if(await trace.count())await trace.evaluate(el=>{el.open=true});
+    await expect(page.locator('[data-mm-book-reader] h2')).toBeVisible();
   }else if(surface==='listen-expanded'){
     await page.evaluate(()=>switchView('dashboard'));
     const host=page.locator('.mm-read-aloud');

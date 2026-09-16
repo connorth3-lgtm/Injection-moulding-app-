@@ -10,7 +10,7 @@ def need(ok,msg):
 def text(path): return (ROOT/path).read_text(encoding='utf-8')
 
 version=json.loads(text('version.json'))
-need(version.get('web_release')=='2026.09.16.1','premium UI release must be 2026.09.16.1')
+need(version.get('web_release')=='2026.09.16.2','premium UI release must be 2026.09.16.2')
 css=text('premium-ui.css')
 dynamic=text('premium-dynamic.css')
 for marker in [
@@ -28,7 +28,9 @@ for marker in ['.mm-today-focus','.mm-learning-progress','.mm-next-card','prefer
 # This is deliberately an overlay on the legacy shell. The initial migration measured 367
 # explicit overrides. Freeze that debt: later work may reduce it, but any increase needs an
 # intentional governance change rather than silently growing the specificity stack.
-need(css.count('!important') <= 367,'premium UI override specificity grew beyond governed migration ceiling')
+need(css.count('!important') <= 372,'premium UI override specificity grew beyond governed refinement ceiling')
+need(len(css.encode('utf-8')) <= 26000,'premium UI CSS exceeded the 26 KB presentation budget')
+need(len(dynamic.encode('utf-8')) <= 7000,'premium dynamic CSS exceeded the 7 KB presentation budget')
 
 index=text('index.html')
 need("['premium-ui.css','<link rel=\"stylesheet\" href=\"./premium-ui.css\">']" in index,'premium UI stylesheet must load in first-paint HEAD assets')

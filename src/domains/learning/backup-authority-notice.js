@@ -1,4 +1,4 @@
-/* MouldMaster backup authority UX — 2026.09.16.1 */
+/* MouldMaster backup authority UX — 2026.09.16.2 */
 (function(){
 'use strict';
 if(window.MM_BACKUP_AUTHORITY_NOTICE)return;
