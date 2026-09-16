@@ -5,15 +5,15 @@ This packet governs hands-on physical-device validation of the exact MouldMaster
 ## Exact candidate
 
 - web release: `2026.09.16.2`
-- pre-merge candidate source commit: `5d7808a1cae6e256d633553061c6ac1652f237e2`
-- public-runtime fingerprint: `sha256:f3195f0e8aa5585bb5ee8fa957a2d65efb8a9ac003e181a1d48fe7438fa7f122`
-- exact candidate build run: `35058788000`
-- retained candidate artifact: `physical-pwa-candidate-5d7808a1cae6e256d633553061c6ac1652f237e2`
-- artifact id: `10431443080`
-- artifact ZIP digest: `sha256:f5e16827f6593338a8b76dfca9eb3459826377b715e60ec3bcad9879630a8255`
-- artifact retention expiry: `2026-10-16T05:15:28Z`
+- pre-merge candidate source commit: `0705a4a430868ec871200aa7dd65362ce79cdb96`
+- public-runtime fingerprint: `sha256:00a6be79979742d3dd12b8f6ae7b904bc6210e9bc1a457f340f9814e48f4e46f`
+- exact candidate build run: `35059209551`
+- retained candidate artifact: `physical-pwa-candidate-0705a4a430868ec871200aa7dd65362ce79cdb96`
+- artifact id: `10431871537`
+- artifact ZIP digest: `sha256:98b1be94bd6b5801444ce7e404c6c944e8fded450fab3667e3bd1171ff3cee9b`
+- artifact retention expiry: `2026-10-16T05:21:53Z`
 
-The retained candidate was built by the protected-main Pages workflow using the repository's production Pages artifact builder. The workflow confirmed that existing physical-device evidence belongs to different runtime bytes, kept the production root on **HOLD**, retained this exact candidate artifact for physical testing, and deployed the same governed learner runtime only under the explicitly non-production `/preview/` path. The runtime fingerprint is the byte-level acceptance key. This automated provenance is not physical-device evidence.
+The retained candidate was built from the fully rebound pre-merge branch using the repository's production Pages artifact builder and exact public-runtime fingerprint verifier. It is retained only for governed validation; it does **not** authorize the production Pages root. After merge, the protected-main Pages workflow must independently stage the byte-equivalent main candidate before any release decision. The runtime fingerprint is the byte-level acceptance key. This automated provenance is not physical-device evidence.
 
 ## Required iOS / iPadOS execution
 
@@ -25,7 +25,7 @@ Using a physical Android device and Chrome, complete the same governed matrix in
 
 ## Audit-fix regression focus
 
-Additionally verify on physical devices that a normal learner backup still imports, an oversized or malformed backup fails closed without replacing existing state, Book evidence links open externally, and the claim-trace disclosure remains readable without implying independent SME approval.
+Additionally verify on physical devices that a normal learner backup still imports, an oversized or malformed backup fails closed without replacing existing state, Book evidence links open externally, Book chapter entry starts at the chapter heading, returning to contents restores the reader's prior position, and the claim-trace disclosure remains readable without implying independent SME approval. On iPad/tablet widths also verify the compact Home / Learn / Practice / More navigation does not obscure learner content.
 
 ## Evidence hygiene
 
