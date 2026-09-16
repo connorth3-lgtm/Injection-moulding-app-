@@ -20,6 +20,10 @@ jobs:
         with:
           node-version: '22'
           package-manager-cache: false
+      - name: Measure premium UI migration debt
+        run: |
+          printf 'premium-ui.css !important count: '
+          grep -o '!important' premium-ui.css | wc -l
       - name: Premium UI static governance
         run: python qa_premium_ui.py
       - name: Install browser review matrix
@@ -44,7 +48,6 @@ jobs:
         run: |
           node <<'NODE'
           const { chromium } = require('playwright');
-          const fs=require('fs');
           (async()=>{
             const browser=await chromium.launch({headless:true});
             const user={id:'premium-review',name:'Premium Review',role:'learner',completed:[1,2,3],bookmarks:[],notes:{},examScores:{},certificates:[],currentLesson:4,lastSeen:'2026-09-16T00:00:00.000Z',onboardingDone:true,experience:'Beginner',goal:'Learn the full process',dailyMinutes:15,region:'ALL'};
