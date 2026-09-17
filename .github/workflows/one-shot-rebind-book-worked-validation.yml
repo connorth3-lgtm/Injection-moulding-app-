@@ -24,7 +24,7 @@ jobs:
           node-version: '22'
       - name: Regenerate canonical governance surface
         run: |
-          python tools/render_governance_status.py
+          python tools/render_governance_status.py --write
           python tools/render_governance_status.py --check
       - name: Verify current release HOLD contracts
         run: |
