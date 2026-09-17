@@ -26,8 +26,8 @@
     "reviewPacket": "qa/ACCESSIBILITY_REAL_AT_2026.09.18.1.md",
     "candidate": {
       "release": "2026.09.18.1",
-      "sourceSha": "0100306094648cda214fed513365761cff9c4f25",
-      "runtimeFingerprint": "sha256:36d47a5343eb9095e33b63e50efb03d4b4b4542cbb781d686e637d95af9791d3"
+      "sourceSha": "26598f4dc5c7ee54b2fd38cbc008b38dd1190717",
+      "runtimeFingerprint": "sha256:25b3676cc5aad6f85795e468bd0913eac43db25267e1d1415ac58098dacab048"
     },
     "required": "Release-specific human NVDA and VoiceOver validation across the governed matrix."
   },
@@ -37,14 +37,14 @@
     "reviewPacket": "qa/PWA_PHYSICAL_DEVICE_2026.09.18.1.md",
     "currentCandidate": {
       "release": "2026.09.18.1",
-      "sourceSha": "0100306094648cda214fed513365761cff9c4f25",
-      "runtimeFingerprint": "sha256:36d47a5343eb9095e33b63e50efb03d4b4b4542cbb781d686e637d95af9791d3",
-      "candidateRunId": 35282006382,
+      "sourceSha": "26598f4dc5c7ee54b2fd38cbc008b38dd1190717",
+      "runtimeFingerprint": "sha256:25b3676cc5aad6f85795e468bd0913eac43db25267e1d1415ac58098dacab048",
+      "candidateRunId": 35283989564,
       "candidateWorkflow": "Pre-merge Public Candidate",
-      "artifactId": 10522519333,
-      "artifactName": "physical-pwa-candidate-0100306094648cda214fed513365761cff9c4f25",
-      "artifactDigest": "sha256:a948a451f99e8ec5c0e128bf027bdf255520689f6f7747ba3d584f2bcc23f3b2",
-      "artifactExpiresAt": "2026-10-17T22:26:18Z"
+      "artifactId": 10522957295,
+      "artifactName": "physical-pwa-candidate-26598f4dc5c7ee54b2fd38cbc008b38dd1190717",
+      "artifactDigest": "sha256:379e258aa4d09f7564db6795a0d1a28379944101072ed393f480057fcdb7df86",
+      "artifactExpiresAt": "2026-10-17T22:50:20Z"
     },
     "required": "Current-release physical iOS/iPadOS and Android install/update/offline validation. Prior release waivers do not authorize this release."
   },
