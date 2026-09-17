@@ -1,0 +1,53 @@
+name: One-shot worked-case validation rebind
+
+on:
+  push:
+    branches: [ feature/book-worked-cases-20260918 ]
+
+permissions:
+  contents: write
+
+jobs:
+  rebind:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: feature/book-worked-cases-20260918
+          fetch-depth: 1
+      - uses: actions/setup-python@v7
+        with:
+          python-version: '3.12'
+      - uses: actions/setup-node@v7
+        with:
+          node-version: '22'
+      - name: Regenerate canonical governance surface
+        run: |
+          python tools/render_governance_status.py
+          python tools/render_governance_status.py --check
+      - name: Verify current release HOLD contracts
+        run: |
+          python tools/verify_release_external_validation.py
+          python qa_accessibility_real_at_contract.py
+          python qa_curriculum_semantic_review.py
+          python qa_governance_state_model.py
+          python qa_governance_orphan_detection.py
+      - name: Verify exact public candidate and Book integration
+        run: |
+          python qa_release_validation_packets.py
+          python tools/sync_book_runtime_data.py --check
+          python qa_book_release_integration.py
+          python qa_book_worked_cases_next_release.py
+          python qa_book_worked_case_calculations.py
+      - name: Commit generated governance status and remove helper
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git rm .github/workflows/one-shot-rebind-book-worked-validation.yml
+          git add GOVERNANCE_STATUS.md
+          git diff --cached --check
+          git commit -m "Rebind 2026.09.18.2 external validation HOLD status"
+          git push origin HEAD:feature/book-worked-cases-20260918
