@@ -42,6 +42,7 @@ jobs:
             qa_governance_orphan_detection.py \
             qa_book_curriculum_crosswalk.py \
             qa_book_worked_cases_next_release.py \
+            qa_book_worked_case_calculations.py \
             tools/sync_book_runtime_data.py \
             tools/render_governance_status.py
 
@@ -63,8 +64,11 @@ jobs:
       - name: Authoritative Book runtime mirror
         run: python tools/sync_book_runtime_data.py --check
 
-      - name: Next-release Book worked cases
+      - name: Governed Book worked-case integration
         run: python qa_book_worked_cases_next_release.py
+
+      - name: Book worked-case calculations
+        run: python qa_book_worked_case_calculations.py
 
       - name: Pure process statistics domain
         run: node qa_process_statistics_domain.mjs
