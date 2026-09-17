@@ -6,6 +6,17 @@ Current learner-facing web release: **2026.09.16.2**
 
 This file is generated from `data/health-program-v1.json`. It reports engineering/operations health separately from deliberate external-validation HOLDs.
 
+## Health-state model
+
+| State | Meaning | Required response |
+| --- | --- | --- |
+| **OK** | Software-controlled checks and governed bindings are coherent. | Continue normal operation/review cadence. |
+| **DEGRADED** | A recoverable operational condition exists, such as offline/unreachable resources, without proven integrity loss. | Preserve state, diagnose the bounded signal, and restore normal service without bypassing gates. |
+| **BLOCKED / HOLD** | A deliberate governance boundary is waiting for named external evidence or authorised action. | Keep the HOLD visible until the real exit condition is satisfied; age alone does not make it stuck. |
+| **FAILED / STUCK** | Integrity cannot be verified, a canonical binding is missing/contradictory, or a public lifecycle is in an illegal transient state. | Stop promotion/affected workflow, repair the authoritative governed source, and rerun validation. |
+
+Current repository engineering baseline: **OK**. Current external-validation boundary: **BLOCKED / HOLD**.
+
 ## Current baseline
 
 - Protected PR evidence: PR #372 — 18 PR-triggered workflows — **SUCCESS**.
