@@ -60,6 +60,8 @@ jobs:
           python qa_book_claim_coverage.py
           python qa_book_derived_governance.py
           python qa_book_release_integration.py
+          python qa_book_worked_cases_next_release.py
+          python qa_book_worked_case_calculations.py
       - name: App-wide data and runtime deep audit
         run: python qa_app_wide_audit.py
       - name: Data activation v1 integrity
