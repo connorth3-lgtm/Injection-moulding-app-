@@ -128,6 +128,8 @@ jobs:
         run: python qa_learning_analytics.py
       - name: Final audit learner-data lifecycle regression
         run: node qa_final_audit_lifecycle.cjs
+      - name: Learner backup SHA-256 integrity regression
+        run: node qa_learner_backup_integrity.cjs
       - name: Audit remediation application and data regression
         run: node qa_audit_remediation_runtime.cjs
       - name: 2026.09.15.6 deep-audit remediation regression
