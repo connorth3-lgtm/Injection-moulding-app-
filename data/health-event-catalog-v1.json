@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "catalog": "mouldmaster-health-events",
+  "privacy": "Codes describe bounded local operational state only; do not attach raw learner/process values.",
+  "events": [
+    {"code":"runtime_error", "class":"failed", "human":"A JavaScript runtime error occurred. Capture the safe diagnostic snapshot and reproduce before changing data."},
+    {"code":"promise_error", "class":"failed", "human":"An asynchronous operation rejected without a handled recovery path. Preserve the safe code/context and investigate the owning workflow."},
+    {"code":"resource_error", "class":"degraded", "human":"A same-origin runtime resource did not load successfully. Verify deployment/cache coherence before retrying."},
+    {"code":"offline", "class":"degraded", "human":"Network connectivity is unavailable. Offline-capable flows may continue; external/deployment checks are deferred."},
+    {"code":"online", "class":"ok", "human":"Connectivity returned and deployment coherence can be checked again."},
+    {"code":"sw_update_found", "class":"ok", "human":"A service-worker update was detected and is progressing through the governed update lifecycle."},
+    {"code":"sw_installed", "class":"ok", "human":"A service-worker candidate reached installed state; activation/control still follows browser lifecycle rules."},
+    {"code":"sw_redundant", "class":"failed", "human":"A service worker became redundant unexpectedly. Verify active controller/cache/release coherence before promotion."},
+    {"code":"sw_controller_change", "class":"ok", "human":"The active service-worker controller changed; re-check release/cache identity when diagnosing update problems."},
+    {"code":"deployment_ok", "class":"ok", "human":"Deployment metadata, manifest and service-worker revision are coherent for the checked public runtime."},
+    {"code":"deployment_mismatch", "class":"failed", "human":"Public deployment metadata or service-worker identity disagrees. Stop promotion and restore a coherent exact artifact."},
+    {"code":"deployment_unreachable", "class":"degraded", "human":"Deployment coherence could not be checked because required public files were unreachable."},
+    {"code":"external-evidence-hold", "class":"blocked", "human":"Software-controlled checks may be healthy, but genuine human/device/platform evidence is still required. This is not a stuck runtime."},
+    {"code":"governance-stuck-orphan", "class":"failed", "human":"A canonical lifecycle binding is missing, contradictory or outside an allowed transition. Repair the governed state rather than relabelling it."}
+  ]
+}
