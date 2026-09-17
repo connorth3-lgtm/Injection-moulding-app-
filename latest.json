@@ -3,8 +3,8 @@
   "app_url": "https://raw.githubusercontent.com/connorth3-lgtm/Injection-moulding-app-/3e7144b68c5dfe79232cf2ba0180060f1395ffcc/MouldMaster_Core_App.html",
   "sha256": "96ed07e1487633538359eb12073fe50bfe595d9d5aaa807173e0a764b9123754",
   "launcher_version": "2026.08.21.2",
-  "launcher_url": "https://raw.githubusercontent.com/connorth3-lgtm/Injection-moulding-app-/main/MouldMasterAcademy.exe",
+  "launcher_url": "https://raw.githubusercontent.com/connorth3-lgtm/Injection-moulding-app-/bf23f8aca724e75080ae74ebfb0bc87c3801d989/MouldMasterAcademy.exe",
   "launcher_sha256": "db7abc4da613a6d1409fdb129cb788b8ac396e5ac2d161963521c844d0ee771c",
   "published": "2026-08-24",
-  "notes": "Frozen legacy Windows recovery feed only. The normal open-source Windows release is published through the tagged GitHub Release recorded in version.json. Do not migrate this legacy feed to the Electron executable because the runtimes do not share learner storage automatically; complete the documented real-machine backup/import migration check before retiring this recovery launcher."
+  "notes": "Frozen legacy Windows recovery feed only. Both recovery payload URLs are pinned to immutable commits and separately SHA-256 locked. The normal open-source Windows release is published through the tagged GitHub Release recorded in version.json. Do not migrate this legacy feed to the Electron executable because the runtimes do not share learner storage automatically; complete the documented real-machine backup/import migration check before retiring this recovery launcher."
 }
