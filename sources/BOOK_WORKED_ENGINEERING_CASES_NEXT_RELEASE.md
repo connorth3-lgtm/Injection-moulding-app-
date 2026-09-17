@@ -1,8 +1,8 @@
 # MouldMaster Book — worked engineering cases for the next learner release
 
-**Status:** post-`2026.09.16.2` authoring source. Not part of the frozen `.16.2` learner runtime and not independently SME-approved.
+**Status:** integrated into governed `2026.09.18.2` learner runtime as exact-byte-authorized synthetic teaching content. The cases remain **not independently SME-approved**; independent human Book SME validation is still a separate HOLD.
 
-Every number below is **SYNTHETIC TEACHING DATA** unless explicitly stated otherwise. The cases teach calculation and evidence structure, not universal production settings. Before learner-runtime integration, every case must be mapped into the Book claim/evidence ledger, included in the new release identity/fingerprint, and added to the independent Book SME review scope.
+Every number below is **SYNTHETIC TEACHING DATA** unless explicitly stated otherwise. The cases teach calculation and evidence structure, not universal production settings. Each case is mapped into `data/book-worked-engineering-cases-v1.json` with a unique case-level claim ID, evidence source IDs, assumptions/boundaries, runtime byte-integrity authorization, and explicit inclusion in the independent Book SME review scope.
 
 ## 1. Clamp-force estimate: expose every assumption
 
@@ -153,6 +153,8 @@ A simple sensible-heat estimate is:
 
 ---
 
-## Integration gate for issue #368
+## Integration record for issue #368
 
-These cases are ready for editorial/evidence review, but issue #368 must remain open until they are deliberately integrated into a **post-`.16.2`** learner release. Integration must: assign claim IDs/source IDs; generate any Book-owned figures/tables; update authoritative `data/` and generated runtime mirror through the sync tool; advance release identity and runtime fingerprint; regenerate release-specific external-validation packets; and include all affected chapters in genuine independent human SME review. No `.16.2` evidence may be relabelled for the changed bytes.
+The ten cases are integrated into release `2026.09.18.2` through the governed worked-case ledger and the canonical Book renderer. The authoritative `data/` ledger and generated runtime mirror must remain byte-identical; publication authorization pins the exact served worked-case and SME-scope bytes; executable QA recomputes the numeric examples; and all ten case IDs are inside the current human SME review contract.
+
+This integration does **not** complete independent human SME validation. The Book SME workstream remains HOLD until genuine human review is recorded. Release-specific physical-device, real assistive-technology, curriculum-SME and learner-outcome evidence also remain separate HOLDs. No `.16.2` or `.18.1` external evidence may be relabelled for the changed `.18.2` bytes.
