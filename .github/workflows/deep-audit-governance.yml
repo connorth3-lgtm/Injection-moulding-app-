@@ -40,13 +40,17 @@ jobs:
             qa_recovery_immutability.py \
             qa_governance_state_model.py \
             qa_book_curriculum_crosswalk.py \
-            tools/sync_book_runtime_data.py
+            tools/sync_book_runtime_data.py \
+            tools/render_governance_status.py
 
       - name: Frozen recovery immutability
         run: python qa_recovery_immutability.py
 
       - name: Canonical governance states
         run: python qa_governance_state_model.py
+
+      - name: Human governance status derives from canonical model
+        run: python tools/render_governance_status.py --check
 
       - name: Book to Academy crosswalk
         run: python qa_book_curriculum_crosswalk.py
