@@ -10,5 +10,5 @@
   "artifactDigest": "sha256:a948a451f99e8ec5c0e128bf027bdf255520689f6f7747ba3d584f2bcc23f3b2",
   "artifactExpiresAt": "2026-10-17T22:26:18Z",
   "status": "technical-candidate-only",
-  "boundary": "This is exact technical candidate provenance only; it is not physical-device, assistive-technology, SME, learner-outcome, signing, Store, accreditation or production evidence."
+  "boundary": "This is exact technical candidate provenance and governance rebind metadata only; it is not physical-device, assistive-technology, SME, learner-outcome, signing, Store, accreditation or production evidence."
 }
