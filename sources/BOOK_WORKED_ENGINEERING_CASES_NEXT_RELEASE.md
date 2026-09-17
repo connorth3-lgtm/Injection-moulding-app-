@@ -158,3 +158,5 @@ A simple sensible-heat estimate is:
 The ten cases are integrated into release `2026.09.18.2` through the governed worked-case ledger and the canonical Book renderer. The authoritative `data/` ledger and generated runtime mirror must remain byte-identical; publication authorization pins the exact served worked-case and SME-scope bytes; executable QA recomputes the numeric examples; and all ten case IDs are inside the current human SME review contract.
 
 This integration does **not** complete independent human SME validation. The Book SME workstream remains HOLD until genuine human review is recorded. Release-specific physical-device, real assistive-technology, curriculum-SME and learner-outcome evidence also remain separate HOLDs. No `.16.2` or `.18.1` external evidence may be relabelled for the changed `.18.2` bytes.
+
+**Exact retained `.18.2` candidate:** source `f0bbf8410d3736da955fb0256e0c7dc1288d0712`, runtime fingerprint `sha256:dd89c6283eaae5c72abc08b22390610ab4e8326b1a5255ad97890df2fff04752`, candidate run `35288487442`, artifact `10524804805`. Later governance/QA-only commits must remain public-byte-equivalent under the exact release packet verifier.
