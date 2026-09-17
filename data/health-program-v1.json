@@ -1,0 +1,168 @@
+{
+  "schemaVersion": 1,
+  "program": "mouldmaster-long-term-health",
+  "currentWebRelease": "2026.09.16.2",
+  "principles": {
+    "protectedMainRequired": true,
+    "failClosedEngineering": true,
+    "externalHoldsAreNotDefects": true,
+    "productionAuthority": "advisory-only",
+    "automaticMachineControl": false
+  },
+  "ci": {
+    "failureClasses": ["product-regression", "infrastructure-failure", "external-evidence-hold"],
+    "fastPrTier": {
+      "intent": "Deterministic repository and domain regressions that should fail before expensive browser/package work.",
+      "requiredSignals": [
+        "Fast feedback",
+        "Deep Audit Governance",
+        "MouldMaster Domain Foundation QA",
+        "Frozen Recovery Contract",
+        "Release External Validation Boundary"
+      ]
+    },
+    "deepReleaseTier": {
+      "intent": "Browser, release, PWA, desktop and maturity integration coverage.",
+      "requiredSignals": [
+        "MouldMaster Release QA",
+        "MouldMaster Pages Release Readiness",
+        "Mobile Browser QA",
+        "Premium UI QA",
+        "Open Desktop Build",
+        "Production Observability QA",
+        "MouldMaster Physical PWA Contract QA",
+        "Question Quality 50-Pass",
+        "Read Aloud QA"
+      ]
+    },
+    "criticalPaths": [
+      {"id":"backup-import", "risk":"learner-data-corruption", "regressions":["src/core-runtime/core-inline-007.js", "training-qa-fix.js"], "tier":"deep-release"},
+      {"id":"process-data-numerics", "risk":"silent-engineering-miscalculation", "regressions":["qa_process_statistics_domain.mjs", "qa_engineering_domain.mjs", "qa_data_integration.py"], "tier":"fast-pr"},
+      {"id":"process-data-delete", "risk":"privacy-reset-incomplete", "regressions":["data-integration-runtime.js", "src/domains/process/process-data-integrity.js"], "tier":"fast-pr"},
+      {"id":"release-fingerprint", "risk":"evidence-bound-to-wrong-bytes", "regressions":["tools/verify_release_external_validation.py", "tools/verify_pwa_physical_evidence.py"], "tier":"fast-pr"},
+      {"id":"offline-pwa", "risk":"mixed-or-unavailable-runtime", "regressions":["service-worker.js", "qa_pwa_physical_device.py"], "tier":"deep-release"},
+      {"id":"desktop-integrity", "risk":"tampered-or-incoherent-package", "regressions":["desktop/electron/main.js", "desktop/electron/scripts/generate-integrity.cjs"], "tier":"deep-release"},
+      {"id":"governance-holds", "risk":"false-validation-claim", "regressions":["qa_governance_state_model.py", "qa_governance_orphan_detection.py"], "tier":"fast-pr"}
+    ],
+    "historicalDefectRegressions": [281, 282, 283, 285, 288, 300]
+  },
+  "persistence": {
+    "stores": [
+      {
+        "id": "learner-core",
+        "technology": "localStorage",
+        "identity": "mouldmasterProDB",
+        "source": "src/core-runtime/core-inline-007.js",
+        "sourceOfTruth": true,
+        "backupScope": "learner-core-backup",
+        "deletionBoundary": "learner-reset"
+      },
+      {
+        "id": "learner-scoped-extras",
+        "technology": "localStorage",
+        "identity": "learner-scoped keys registered through MM_LEARNER_SCOPE",
+        "source": "src/domains/shared/learner-scope.js",
+        "sourceOfTruth": true,
+        "backupScope": "explicit-per-feature",
+        "deletionBoundary": "learner-reset"
+      },
+      {
+        "id": "engineering-cases",
+        "technology": "IndexedDB",
+        "identity": "mouldmaster-engineering-v2",
+        "version": 2,
+        "stores": ["cases", "caseLinks", "migrations"],
+        "source": "src/domains/engineering/engineering-store.js",
+        "sourceOfTruth": true,
+        "legacySource": "mm_mould_master_cases_v1::<learner-token>",
+        "migration": "additive-non-destructive-idempotent",
+        "deletionBoundary": "engineering-evidence"
+      },
+      {
+        "id": "process-data",
+        "technology": "IndexedDB",
+        "identity": "mouldmaster-process-data-v1",
+        "version": 1,
+        "stores": ["datasets", "shots", "baselines", "caseLinks", "interventions"],
+        "source": "data-integration-runtime.js",
+        "sourceOfTruth": true,
+        "backupScope": "site-local-explicit-export-only",
+        "deletionBoundary": "process-data-reset"
+      },
+      {
+        "id": "production-health",
+        "technology": "localStorage",
+        "identity": "mm_production_health_v1",
+        "version": 1,
+        "source": "production-health.js",
+        "sourceOfTruth": false,
+        "rebuildable": true,
+        "retentionMaxEvents": 120,
+        "deletionBoundary": "diagnostics-clear"
+      }
+    ],
+    "learnerBackupContract": {
+      "maxBytes": 10485760,
+      "maxLearners": 500,
+      "strictLearnerId": true,
+      "unknownTopLevelPropertiesAccepted": false,
+      "commitAfterFullValidation": true,
+      "failurePreservesExistingData": true
+    },
+    "migrationRules": [
+      "validate-before-write",
+      "preserve-last-known-good-on-failure",
+      "idempotent-where-replayed",
+      "never-conflate-learner-reset-with-process-evidence-delete",
+      "derived-data-may-be-rebuilt-but-source-data-must-not-be-silently-replaced"
+    ]
+  },
+  "observability": {
+    "eventSchema": "production-health-v1",
+    "eventLimit": 120,
+    "privacy": "local-only-no-raw-learner-or-process-values",
+    "stableClasses": {
+      "ok": ["deployment_ok", "online"],
+      "degraded": ["offline", "resource_error", "deployment_unreachable"],
+      "failed": ["runtime_error", "promise_error", "deployment_mismatch", "sw_redundant"],
+      "blocked": ["external-evidence-hold"]
+    },
+    "stuckRule": "A governed workflow is stuck only when it violates its canonical lifecycle/timeout rule; an explicit HOLD awaiting external evidence is not stuck."
+  },
+  "operations": {
+    "lanes": [
+      {"id":"web-pwa", "releaseChecks":["MouldMaster Release QA", "MouldMaster Pages Release Readiness", "Release External Validation Boundary"], "rollback":"redeploy a previously retained exact Pages artifact through protected release procedure"},
+      {"id":"open-desktop", "releaseChecks":["Open Desktop Build"], "rollback":"return to a previously hashed desktop artifact/release; do not mutate a governed release"},
+      {"id":"frozen-recovery", "releaseChecks":["Frozen Recovery Contract"], "rollback":"use only the immutable commit-and-hash-pinned recovery chain"}
+    ],
+    "incidentClasses": ["runtime-defect", "data-corruption", "ci-infrastructure", "release-integrity", "governance-evidence-hold"],
+    "stopConditions": ["release-fingerprint-mismatch", "unverified-data-restore", "critical-security-integrity-failure", "governance-state-contradiction"]
+  },
+  "maintenance": {
+    "supportedAutomationBaseline": {"node":"22", "python":"3.12"},
+    "cadenceDays": {"dependencyReview":30, "securityReview":30, "backupRestoreDrill":90, "releaseRecoveryDrill":90, "healthReview":30},
+    "vulnerabilityTriage": {"critical":"immediate-hold-and-remediate", "high":"prioritize-next-protected-change", "medium":"schedule-and-track", "low":"review-at-maintenance-cycle"},
+    "exceptions": {"mustHaveOwner":true, "mustHaveExpiry":true, "mustNotDisableRequiredGates":true}
+  },
+  "indicators": [
+    {"id":"required-pr-gates", "healthy":"all required gates successful", "failure":"any required product gate red"},
+    {"id":"flaky-required-gates", "healthy":"0 accepted flaky required gates", "failure":"flakiness normalized instead of repaired or isolated"},
+    {"id":"critical-defects", "healthy":"0 unresolved critical correctness/security defects", "failure":"critical defect left without explicit HOLD/owner"},
+    {"id":"backup-restore-recency", "healthy":"drill age <= 90 days", "failure":"drill overdue"},
+    {"id":"release-recovery-recency", "healthy":"drill age <= 90 days", "failure":"drill overdue"},
+    {"id":"stuck-orphan", "healthy":"0 canonical stuck/orphan workflows", "failure":"unexplained stuck/orphan state exists"},
+    {"id":"external-validation", "healthy":"reported truthfully as PASS or HOLD", "failure":"HOLD omitted, relabelled or treated as software pass"}
+  ],
+  "baselineReview": {
+    "date": "2026-09-18",
+    "sourceCommit": "e5b93cdf24dee9b446a80e91da601f9067a5d97b",
+    "prEvidence": {"pr":372, "prTriggeredWorkflows":18, "result":"success"},
+    "externalValidation": "hold",
+    "knownPlatformAdminHold": 278,
+    "notes": [
+      "Repository-controlled deep-audit remediation is merged.",
+      "Independent human/device/platform evidence remains governed HOLD and is not counted as a defect.",
+      "Repository-level immutable-release enablement remains an administrator action tracked separately."
+    ]
+  }
+}
