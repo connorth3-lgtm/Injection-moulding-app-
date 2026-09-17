@@ -29,6 +29,11 @@ jobs:
         with:
           python-version: '3.12'
 
+      - name: Set up Node
+        uses: actions/setup-node@v7
+        with:
+          node-version: '22'
+
       - name: Python syntax
         run: |
           python -m py_compile \
@@ -48,6 +53,9 @@ jobs:
 
       - name: Authoritative Book runtime mirror
         run: python tools/sync_book_runtime_data.py --check
+
+      - name: Pure process statistics domain
+        run: node qa_process_statistics_domain.mjs
 
       - name: Boundary
         if: always()
