@@ -7,6 +7,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent
 CONTRACT = ROOT / "data" / "health-program-v1.json"
+EVENT_CATALOG = ROOT / "data" / "health-event-catalog-v1.json"
 DOC = ROOT / "docs" / "HEALTH_PROGRAM.md"
 STATUS = ROOT / "HEALTH_STATUS.md"
 
@@ -26,6 +27,7 @@ def load_tool(name: str, path: Path):
 
 def main() -> None:
     data = json.loads(CONTRACT.read_text(encoding="utf-8"))
+    catalog = json.loads(EVENT_CATALOG.read_text(encoding="utf-8"))
     doc = DOC.read_text(encoding="utf-8")
 
     require(data.get("schemaVersion") == 1, "health program schema mismatch")
@@ -58,9 +60,19 @@ def main() -> None:
 
     health_runtime = (ROOT / "production-health.js").read_text(encoding="utf-8")
     require("MAX_EVENTS=120" in health_runtime, "runtime diagnostic bound drifted")
-    for kind in ["runtime_error", "promise_error", "resource_error", "deployment_mismatch", "deployment_unreachable"]:
+    runtime_kinds = ["runtime_error", "promise_error", "resource_error", "offline", "online", "sw_update_found", "sw_installed", "sw_redundant", "sw_controller_change", "deployment_ok", "deployment_mismatch", "deployment_unreachable"]
+    for kind in runtime_kinds:
         require(kind in health_runtime, f"runtime observability signal missing: {kind}")
     require("raw process data" in health_runtime and "No learner identity" in health_runtime, "observability privacy boundary drifted")
+
+    event_rows = catalog.get("events", [])
+    event_codes = {row.get("code") for row in event_rows}
+    require(set(runtime_kinds).issubset(event_codes), "stable event catalog does not cover current runtime signals")
+    require({"external-evidence-hold", "governance-stuck-orphan"}.issubset(event_codes), "governance health codes missing")
+    for row in event_rows:
+        require(row.get("class") in {"ok", "degraded", "blocked", "failed"}, f"invalid health class for {row.get('code')}")
+        require(len(str(row.get("human") or "")) >= 30, f"human diagnostic explanation missing for {row.get('code')}")
+    require("raw learner/process values" in catalog.get("privacy", ""), "diagnostic catalog privacy boundary missing")
 
     operations = data.get("operations", {})
     require({row["id"] for row in operations.get("lanes", [])} == {"web-pwa", "open-desktop", "frozen-recovery"}, "release lane inventory incomplete")
@@ -102,7 +114,7 @@ def main() -> None:
     governance_qa = (ROOT / "qa_governance_orphan_detection.py").read_text(encoding="utf-8")
     require("orphan" in governance_qa.lower() and "hold" in governance_qa.lower(), "canonical stuck/orphan HOLD distinction missing")
 
-    print("MouldMaster long-term health program QA passed: CI risk tiers, persistent-data ownership, synthetic restore/recovery drills, operations, dependency/security policy, health indicators and HOLD boundaries.")
+    print("MouldMaster long-term health program QA passed: CI risk tiers, persistent-data ownership, stable diagnostic codes, synthetic restore/recovery drills, operations, dependency/security policy, health indicators and HOLD boundaries.")
 
 
 if __name__ == "__main__":
