@@ -8,7 +8,9 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent
 CONTRACT = ROOT / "data" / "health-program-v1.json"
 EVENT_CATALOG = ROOT / "data" / "health-event-catalog-v1.json"
+DEPENDENCY_INVENTORY = ROOT / "data" / "dependency-maintenance-v1.json"
 DOC = ROOT / "docs" / "HEALTH_PROGRAM.md"
+REVIEW_TEMPLATE = ROOT / "docs" / "HEALTH_REVIEW_TEMPLATE.md"
 STATUS = ROOT / "HEALTH_STATUS.md"
 
 
@@ -28,7 +30,9 @@ def load_tool(name: str, path: Path):
 def main() -> None:
     data = json.loads(CONTRACT.read_text(encoding="utf-8"))
     catalog = json.loads(EVENT_CATALOG.read_text(encoding="utf-8"))
+    dependency_inventory = json.loads(DEPENDENCY_INVENTORY.read_text(encoding="utf-8"))
     doc = DOC.read_text(encoding="utf-8")
+    review_template = REVIEW_TEMPLATE.read_text(encoding="utf-8")
 
     require(data.get("schemaVersion") == 1, "health program schema mismatch")
     principles = data.get("principles", {})
@@ -86,6 +90,8 @@ def main() -> None:
     exceptions = maintenance.get("exceptions", {})
     require(exceptions.get("mustHaveOwner") is True and exceptions.get("mustHaveExpiry") is True and exceptions.get("mustNotDisableRequiredGates") is True, "security exception controls incomplete")
     require((ROOT / "package-lock.json").exists(), "dependency lock missing")
+    require(dependency_inventory.get("reviewBy"), "critical dependency review deadline missing")
+    require(len(dependency_inventory.get("components", [])) >= 5, "critical dependency inventory incomplete")
 
     indicator_ids = {row["id"] for row in data.get("indicators", [])}
     for required in ["required-pr-gates", "flaky-required-gates", "critical-defects", "backup-restore-recency", "release-recovery-recency", "stuck-orphan", "external-validation"]:
@@ -94,12 +100,21 @@ def main() -> None:
     for phrase in [
         "A red product check is a product failure until investigated",
         "failed import must leave the previous database intact",
+        "does **not yet contain a cryptographic integrity envelope verified by the runtime importer**",
         "HOLD is not a runtime failure",
         "do not mutate an already governed release",
         "Automated dependency PRs are review-only",
         "Metrics must never improve merely because checks were deleted, weakened or reclassified",
     ]:
         require(phrase in doc, f"health documentation boundary missing: {phrase}")
+
+    for phrase in [
+        "Any flaky required gate has its own GitHub issue and owner",
+        "Every overdue recovery, security or dependency action must have a GitHub issue",
+        "No required gate was deleted or weakened to improve a metric",
+        "External validation state",
+    ]:
+        require(phrase in review_template, f"periodic health review template incomplete: {phrase}")
 
     restore = load_tool("health_restore_drill", ROOT / "tools" / "health_restore_drill.py")
     result = restore.run_drill()
@@ -108,13 +123,21 @@ def main() -> None:
     operations_drill = load_tool("health_operations_drill", ROOT / "tools" / "health_operations_drill.py")
     operations_drill.main()
 
+    stuck = load_tool("health_stuck_state", ROOT / "qa_health_stuck_state.py")
+    blocked = stuck.classify_public_binding(state="hold", binding_exists=True, exit_condition="real external evidence")
+    failed = stuck.classify_public_binding(state="in-progress", binding_exists=True, exit_condition="real external evidence")
+    require(blocked.health == "blocked" and failed.health == "failed", "health-state classifier does not distinguish HOLD from stuck")
+
     renderer = load_tool("render_health_status", ROOT / "tools" / "render_health_status.py")
-    require(STATUS.read_text(encoding="utf-8") == renderer.render(), "HEALTH_STATUS.md is stale")
+    rendered = renderer.render()
+    require(STATUS.read_text(encoding="utf-8") == rendered, "HEALTH_STATUS.md is stale")
+    for state in ["**OK**", "**DEGRADED**", "**BLOCKED / HOLD**", "**FAILED / STUCK**"]:
+        require(state in rendered, f"generated health surface is missing state {state}")
 
     governance_qa = (ROOT / "qa_governance_orphan_detection.py").read_text(encoding="utf-8")
     require("orphan" in governance_qa.lower() and "hold" in governance_qa.lower(), "canonical stuck/orphan HOLD distinction missing")
 
-    print("MouldMaster long-term health program QA passed: CI risk tiers, persistent-data ownership, stable diagnostic codes, synthetic restore/recovery drills, operations, dependency/security policy, health indicators and HOLD boundaries.")
+    print("MouldMaster long-term health program QA passed: CI risk tiers, persistent-data ownership, stable diagnostic codes, four-state health surface, synthetic restore/recovery/stuck drills, dependency policy, review template and HOLD boundaries.")
 
 
 if __name__ == "__main__":
