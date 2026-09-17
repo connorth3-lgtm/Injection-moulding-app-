@@ -34,6 +34,7 @@ jobs:
           python -m py_compile \
             qa_health_program.py \
             qa_health_stuck_state.py \
+            qa_dependency_maintenance.py \
             tools/health_restore_drill.py \
             tools/health_operations_drill.py \
             tools/render_health_status.py
@@ -52,6 +53,9 @@ jobs:
 
       - name: Synthetic rollback and frozen recovery drill
         run: python tools/health_operations_drill.py
+
+      - name: Dependency support freshness and EOL policy
+        run: python qa_dependency_maintenance.py
 
       - name: Existing production observability boundary
         run: python qa_production_observability.py
