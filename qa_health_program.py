@@ -89,7 +89,7 @@ def main() -> None:
     require(all(1 <= int(v) <= 90 for v in cadence.values()), "maintenance cadence must stay bounded to 90 days")
     exceptions = maintenance.get("exceptions", {})
     require(exceptions.get("mustHaveOwner") is True and exceptions.get("mustHaveExpiry") is True and exceptions.get("mustNotDisableRequiredGates") is True, "security exception controls incomplete")
-    require((ROOT / "package-lock.json").exists(), "dependency lock missing")
+    require((ROOT / "desktop" / "electron" / "package-lock.json").exists(), "desktop dependency lock missing")
     require(dependency_inventory.get("reviewBy"), "critical dependency review deadline missing")
     require(len(dependency_inventory.get("components", [])) >= 5, "critical dependency inventory incomplete")
 
@@ -102,7 +102,7 @@ def main() -> None:
         "failed import must leave the previous database intact",
         "does **not yet contain a cryptographic integrity envelope verified by the runtime importer**",
         "HOLD is not a runtime failure",
-        "do not mutate an already governed release",
+        "Do not mutate an already governed release",
         "Automated dependency PRs are review-only",
         "Metrics must never improve merely because checks were deleted, weakened or reclassified",
     ]:
