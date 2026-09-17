@@ -5,12 +5,15 @@ This packet governs **human** assistive-technology validation for web release `2
 ## Exact release boundary
 
 - web release: `2026.09.16.2`
-- pre-merge candidate source commit: `5c4e5f303cc1835157fb53869e93ca94b66810c4`
-- public-runtime fingerprint: `sha256:eb54931580479511c31ceec12019a4a31d9bcbe8847aabc1563f599266bc8d3a`
-- retained physical candidate: `physical-pwa-candidate-5c4e5f303cc1835157fb53869e93ca94b66810c4` (`10471772733`)
+- retained pre-merge public candidate source commit: `e20d789464f65f411afb3e508722644f59867436`
+- public-runtime fingerprint: `sha256:df173158dae2b63da7b764cc8a7a7dd1ab20e99387279d3162800ccd2d14a1ef`
+- retained physical candidate: `physical-pwa-candidate-e20d789464f65f411afb3e508722644f59867436` (`10480573719`)
+- candidate build run: `35182050411` (`Pre-merge Public Candidate`)
+- artifact ZIP digest: `sha256:88ce4f47209e81610347088bb8035b16fe574e61bde142e5cecfe4214216fafc`
+- artifact retention expiry: `2026-10-17T04:28:37Z`
 - evidence contract: `data/accessibility-real-at-validation-v1.json`
 
-If learner-facing runtime bytes change, this packet must be rebound to the new release/fingerprint before new validation is recorded.
+This is a candidate **rebind**, not new AT evidence. The learner-facing Academy/Book runtime remains release `2026.09.16.2`; the public artifact fingerprint changed because `latest.json` was hardened so the frozen legacy Windows recovery launcher URL is commit-pinned as well as SHA-256 locked. No earlier human/device evidence is relabelled. If learner-facing runtime bytes change again, this packet must be rebound before new validation is recorded.
 
 ## Required matrix
 
@@ -48,6 +51,6 @@ Do not commit recordings, screenshots with personal data, customer/site identifi
 
 ## Completion boundary
 
-The top-level accessibility status may move from `hold` to `validated` only after all four matrix rows genuinely pass and `python qa_accessibility_real_at_contract.py` plus `python tools/verify_release_external_validation.py` both pass for this exact release.
+The top-level accessibility status may move from `hold` to `validated` only after all four matrix rows genuinely pass and `python qa_accessibility_real_at_contract.py` plus `python tools/verify_release_external_validation.py` both pass for this exact release/candidate.
 
 Until then, real-AT validation remains **HOLD**.

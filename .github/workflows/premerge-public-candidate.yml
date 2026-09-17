@@ -1,0 +1,93 @@
+name: Pre-merge Public Candidate
+
+on:
+  pull_request:
+    branches: [ main ]
+    paths:
+      - 'latest.json'
+      - 'version.json'
+      - 'index.html'
+      - 'service-worker.js'
+      - 'pwa-shell.js'
+      - 'src/**'
+      - '*.js'
+      - '*.css'
+      - '*.html'
+      - 'manifest.webmanifest'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: premerge-public-candidate-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  retain-exact-candidate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout exact PR head
+        uses: actions/checkout@v7
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 1
+
+      - name: Set up Python
+        uses: actions/setup-python@v7
+        with:
+          python-version: '3.12'
+
+      - name: Build production Pages candidate from exact PR head
+        shell: bash
+        run: |
+          set -euo pipefail
+          SOURCE_SHA="${{ github.event.pull_request.head.sha || github.sha }}"
+          GITHUB_SHA="$SOURCE_SHA" python tools/build_pages_artifact.py
+          test -f .pages-dist/pages-manifest.json
+          python - "$SOURCE_SHA" <<'PY'
+          import json, sys
+          from pathlib import Path
+          expected = sys.argv[1]
+          manifest = json.loads(Path('.pages-dist/pages-manifest.json').read_text(encoding='utf-8'))
+          deployment = json.loads(Path('.pages-dist/deployment.json').read_text(encoding='utf-8'))
+          assert manifest.get('source_sha') == expected, (manifest.get('source_sha'), expected)
+          assert deployment.get('source_sha') == expected, (deployment.get('source_sha'), expected)
+          print(f'Candidate metadata is bound to exact PR head {expected}.')
+          PY
+
+      - name: Report exact public-runtime fingerprint
+        id: fingerprint
+        shell: bash
+        run: |
+          value="$(python - <<'PY'
+          import sys
+          from pathlib import Path
+          sys.path.insert(0, 'tools')
+          from verify_pwa_physical_evidence import runtime_fingerprint
+          print(runtime_fingerprint(Path('.pages-dist')))
+          PY
+          )"
+          echo "fingerprint=$value" >> "$GITHUB_OUTPUT"
+          echo "Exact public-runtime fingerprint: $value"
+          echo "### Pre-merge exact candidate" >> "$GITHUB_STEP_SUMMARY"
+          echo "- source SHA: \`${{ github.event.pull_request.head.sha || github.sha }}\`" >> "$GITHUB_STEP_SUMMARY"
+          echo "- runtime fingerprint: \`$value\`" >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Retain exact candidate for external HOLD execution
+        id: artifact
+        uses: actions/upload-artifact@v7
+        with:
+          name: physical-pwa-candidate-${{ github.event.pull_request.head.sha || github.sha }}
+          path: .pages-dist
+          if-no-files-found: error
+          retention-days: 30
+          compression-level: 9
+          include-hidden-files: true
+
+      - name: Record artifact provenance
+        run: |
+          echo "- artifact id: \`${{ steps.artifact.outputs.artifact-id }}\`" >> "$GITHUB_STEP_SUMMARY"
+          echo "- artifact digest: \`${{ steps.artifact.outputs.artifact-digest }}\`" >> "$GITHUB_STEP_SUMMARY"
+          echo "This artifact is a validation candidate only. It does not create physical-device, assistive-technology, SME, learner-outcome, signing, Store, accreditation or production authority." >> "$GITHUB_STEP_SUMMARY"

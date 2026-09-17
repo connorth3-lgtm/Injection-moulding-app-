@@ -2,13 +2,13 @@
 
 Release `2026.09.16.2` is technically automated and governed, but the following external workstreams remain explicit **HOLD**. This index does not create human, device, learner, accreditation, signing, or production-site evidence.
 
-- Exact polished pre-merge candidate source: `5c4e5f303cc1835157fb53869e93ca94b66810c4`
-- Exact public-runtime fingerprint: `sha256:eb54931580479511c31ceec12019a4a31d9bcbe8847aabc1563f599266bc8d3a`
-- Candidate build run: `35157590109`
-- Candidate artifact: `physical-pwa-candidate-5c4e5f303cc1835157fb53869e93ca94b66810c4` (`10471772733`; `sha256:7bb187fc2ff51ee804e8ad409e3ad5b05d659787a4311f782b3a5216151db1ca`; expires `2026-10-16T22:25:23Z`)
-- Pages disposition: production root remains **HOLD**. This retained pre-merge artifact is the exact validation source; after merge, the protected-main Pages workflow must independently stage and verify byte-equivalent runtime before any production decision.
+- retained pre-merge public candidate source: `e20d789464f65f411afb3e508722644f59867436`
+- exact public-runtime fingerprint: `sha256:df173158dae2b63da7b764cc8a7a7dd1ab20e99387279d3162800ccd2d14a1ef`
+- candidate build run: `35182050411` (`Pre-merge Public Candidate`)
+- candidate artifact: `physical-pwa-candidate-e20d789464f65f411afb3e508722644f59867436` (`10480573719`; `sha256:88ce4f47209e81610347088bb8035b16fe574e61bde142e5cecfe4214216fafc`; expires `2026-10-17T04:28:37Z`)
+- Pages disposition: production root remains governed separately. This retained artifact is the exact validation source for the current public byte set; protected-main publication must remain byte-equivalent under the release verifier before any production decision.
 
-The retained candidate includes the completed deep-audit hardening plus the reviewed learner-interface polish: one canonical Book runtime, exact-byte Book publication binding, Book-aware global search, canonical learner-facing academic evidence links, release-versioned dynamic same-origin script loads, balanced tablet/desktop Home workspace access, progressive Book governance/assurance disclosure, compact desktop tool navigation and quieter Read Aloud chrome. These are technical assurances only and do not satisfy any external workstream below.
+This is a candidate **rebind**, not external evidence. The Academy/Book learner runtime remains release `2026.09.16.2`. The public fingerprint changed because the frozen legacy Windows recovery metadata in `latest.json` was hardened so both the recovery app and launcher URLs are immutable-commit pinned and SHA-256 locked. The Book content, Academy learner runtime and existing human/device evidence states were not promoted or relabelled.
 
 | Workstream | Status | Release packet | Required genuine evidence |
 | --- | --- | --- | --- |

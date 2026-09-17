@@ -26,8 +26,8 @@
     "reviewPacket": "qa/ACCESSIBILITY_REAL_AT_2026.09.16.2.md",
     "candidate": {
       "release": "2026.09.16.2",
-      "sourceSha": "5c4e5f303cc1835157fb53869e93ca94b66810c4",
-      "runtimeFingerprint": "sha256:eb54931580479511c31ceec12019a4a31d9bcbe8847aabc1563f599266bc8d3a"
+      "sourceSha": "e20d789464f65f411afb3e508722644f59867436",
+      "runtimeFingerprint": "sha256:df173158dae2b63da7b764cc8a7a7dd1ab20e99387279d3162800ccd2d14a1ef"
     },
     "required": "Release-specific human NVDA and VoiceOver validation across the governed matrix."
   },
@@ -37,14 +37,14 @@
     "reviewPacket": "qa/PWA_PHYSICAL_DEVICE_2026.09.16.2.md",
     "currentCandidate": {
       "release": "2026.09.16.2",
-      "sourceSha": "5c4e5f303cc1835157fb53869e93ca94b66810c4",
-      "runtimeFingerprint": "sha256:eb54931580479511c31ceec12019a4a31d9bcbe8847aabc1563f599266bc8d3a",
-      "candidateRunId": 35157590109,
-      "candidateWorkflow": "UI Polish R2 Final Candidate Staging — polished pre-merge exact-candidate retention",
-      "artifactId": 10471772733,
-      "artifactName": "physical-pwa-candidate-5c4e5f303cc1835157fb53869e93ca94b66810c4",
-      "artifactDigest": "sha256:7bb187fc2ff51ee804e8ad409e3ad5b05d659787a4311f782b3a5216151db1ca",
-      "artifactExpiresAt": "2026-10-16T22:25:23Z"
+      "sourceSha": "e20d789464f65f411afb3e508722644f59867436",
+      "runtimeFingerprint": "sha256:df173158dae2b63da7b764cc8a7a7dd1ab20e99387279d3162800ccd2d14a1ef",
+      "candidateRunId": 35182050411,
+      "candidateWorkflow": "Pre-merge Public Candidate",
+      "artifactId": 10480573719,
+      "artifactName": "physical-pwa-candidate-e20d789464f65f411afb3e508722644f59867436",
+      "artifactDigest": "sha256:88ce4f47209e81610347088bb8035b16fe574e61bde142e5cecfe4214216fafc",
+      "artifactExpiresAt": "2026-10-17T04:28:37Z"
     },
     "required": "Current-release physical iOS/iPadOS and Android install/update/offline validation. Prior release waivers do not authorize this release."
   },

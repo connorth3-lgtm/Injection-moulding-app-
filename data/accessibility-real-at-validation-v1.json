@@ -2,10 +2,10 @@
   "schemaVersion": 1,
   "release": "2026.09.16.2",
   "packet": "qa/ACCESSIBILITY_REAL_AT_2026.09.16.2.md",
-  "sourceSha": "5c4e5f303cc1835157fb53869e93ca94b66810c4",
-  "runtimeFingerprint": "sha256:eb54931580479511c31ceec12019a4a31d9bcbe8847aabc1563f599266bc8d3a",
+  "sourceSha": "e20d789464f65f411afb3e508722644f59867436",
+  "runtimeFingerprint": "sha256:df173158dae2b63da7b764cc8a7a7dd1ab20e99387279d3162800ccd2d14a1ef",
   "status": "pending-real-at-validation",
-  "boundary": "Automated browser and accessibility regressions do not substitute for real assistive-technology interaction by a human reviewer. This contract must remain pending until each required matrix row has dated evidence from the named platform/AT/browser combination.",
+  "boundary": "Automated browser and accessibility regressions do not substitute for real assistive-technology interaction by a human reviewer. This contract must remain pending until each required matrix row has dated evidence from the named platform/AT/browser combination. The candidate rebind records changed public artifact bytes caused by the immutable legacy recovery-feed pin; it does not relabel or manufacture any AT evidence.",
   "requiredMatrix": [
     {"id":"nvda-firefox-windows","assistiveTechnology":"NVDA","browser":"Firefox","platform":"Windows","status":"pending","testedAt":null,"reviewer":null,"evidenceRef":null},
     {"id":"nvda-chromium-windows","assistiveTechnology":"NVDA","browser":"Chrome or Chromium","platform":"Windows","status":"pending","testedAt":null,"reviewer":null,"evidenceRef":null},
