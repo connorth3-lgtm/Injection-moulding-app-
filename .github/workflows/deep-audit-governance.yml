@@ -1,0 +1,56 @@
+name: Deep Audit Governance
+
+on:
+  pull_request:
+    branches: [ main ]
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: deep-audit-governance-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  governance-and-book-integrity:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7
+        with:
+          fetch-depth: 1
+
+      - name: Set up Python
+        uses: actions/setup-python@v7
+        with:
+          python-version: '3.12'
+
+      - name: Python syntax
+        run: |
+          python -m py_compile \
+            qa_recovery_immutability.py \
+            qa_governance_state_model.py \
+            qa_book_curriculum_crosswalk.py \
+            tools/sync_book_runtime_data.py
+
+      - name: Frozen recovery immutability
+        run: python qa_recovery_immutability.py
+
+      - name: Canonical governance states
+        run: python qa_governance_state_model.py
+
+      - name: Book to Academy crosswalk
+        run: python qa_book_curriculum_crosswalk.py
+
+      - name: Authoritative Book runtime mirror
+        run: python tools/sync_book_runtime_data.py --check
+
+      - name: Boundary
+        if: always()
+        run: |
+          echo "These checks enforce repository-controlled integrity only."
+          echo "They do not manufacture physical-device, assistive-technology, human SME, learner-outcome, accreditation, signing, Store, or production-site evidence."
