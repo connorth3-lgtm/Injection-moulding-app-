@@ -1,19 +1,19 @@
 # MouldMaster physical PWA validation — 2026.09.16.2
 
-This packet governs hands-on physical-device validation of the exact MouldMaster web release `2026.09.16.2` candidate. It does **not** authorize production and it does not replace `qa/PWA_PHYSICAL_DEVICE_CHECKLIST.md` or `data/pwa-physical-device-validation-v1.json`.
+This packet governs hands-on physical-device validation of the exact MouldMaster web release `2026.09.16.2` public candidate. It does **not** authorize production and it does not replace `qa/PWA_PHYSICAL_DEVICE_CHECKLIST.md` or `data/pwa-physical-device-validation-v1.json`.
 
 ## Exact candidate
 
 - web release: `2026.09.16.2`
-- pre-merge candidate source commit: `5c4e5f303cc1835157fb53869e93ca94b66810c4`
-- public-runtime fingerprint: `sha256:eb54931580479511c31ceec12019a4a31d9bcbe8847aabc1563f599266bc8d3a`
-- exact candidate build run: `35157590109`
-- retained candidate artifact: `physical-pwa-candidate-5c4e5f303cc1835157fb53869e93ca94b66810c4`
-- artifact id: `10471772733`
-- artifact ZIP digest: `sha256:7bb187fc2ff51ee804e8ad409e3ad5b05d659787a4311f782b3a5216151db1ca`
-- artifact retention expiry: `2026-10-16T22:25:23Z`
+- retained pre-merge public candidate source commit: `e20d789464f65f411afb3e508722644f59867436`
+- public-runtime fingerprint: `sha256:df173158dae2b63da7b764cc8a7a7dd1ab20e99387279d3162800ccd2d14a1ef`
+- exact candidate build run: `35182050411` (`Pre-merge Public Candidate`)
+- retained candidate artifact: `physical-pwa-candidate-e20d789464f65f411afb3e508722644f59867436`
+- artifact id: `10480573719`
+- artifact ZIP digest: `sha256:88ce4f47209e81610347088bb8035b16fe574e61bde142e5cecfe4214216fafc`
+- artifact retention expiry: `2026-10-17T04:28:37Z`
 
-The retained candidate was built from the polished pre-merge branch using the repository's production Pages artifact builder and exact public-runtime fingerprint verifier. It includes the canonical byte-bound Book runtime, Book-aware search, canonical learner-facing academic evidence links, release-versioned dynamic same-origin scripts, the balanced tablet/desktop Home workspace, progressive Book governance disclosure, compact desktop tool navigation and the quieter Read Aloud utility treatment. It is retained only for governed validation; it does **not** authorize the production Pages root. After merge, the protected-main Pages workflow must independently stage the byte-equivalent main candidate before any release decision. The runtime fingerprint is the byte-level acceptance key. This automated provenance is not physical-device evidence.
+The retained candidate was built from the exact PR head with the repository's production Pages artifact builder and public-runtime fingerprint verifier. It is a **candidate rebind**, not physical-device evidence. The Academy/Book learner runtime remains release `2026.09.16.2`; the public byte set changed because `latest.json` was hardened so the frozen legacy Windows recovery launcher URL is commit-pinned as well as SHA-256 locked. No earlier device evidence is relabelled. Governance-only commits after the retained source do not change the public runtime fingerprint and must remain byte-equivalent under `qa_release_validation_packets.py`.
 
 ## Required iOS / iPadOS execution
 
