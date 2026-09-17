@@ -11,9 +11,24 @@ def main() -> None:
     text = SOURCE.read_text(encoding="utf-8")
     lower = text.lower()
     version = json.loads(VERSION.read_text(encoding="utf-8"))
-    assert version.get("web_release") == "2026.09.16.2", "worked-case source pack is explicitly staged behind the frozen .16.2 runtime"
+    release = str(version.get("web_release") or "").strip()
+    assert release, "current web release identity is missing"
     assert "post-`2026.09.16.2` authoring source" in text
     assert "not independently SME-approved" in text
+
+    # This file is an authoring/evidence-review source, not learner-runtime content.
+    # The original .16.2 freeze is a historical boundary, not a permanent assertion
+    # that the whole repository must remain on that release forever.
+    source_name = SOURCE.name
+    for runtime_surface in [
+        ROOT / "index.html",
+        ROOT / "service-worker.js",
+        ROOT / "runtime-domain-manifest.json",
+    ]:
+        assert source_name not in runtime_surface.read_text(encoding="utf-8"), (
+            f"worked-case authoring source leaked into learner runtime surface: {runtime_surface.name}"
+        )
+
     headings = re.findall(r"^## (\d+)\. ", text, flags=re.M)
     assert headings == [str(i) for i in range(1, 11)], f"expected ten ordered worked cases, found {headings}"
     assert text.count("SYNTHETIC") >= 10, "worked numerical cases must remain visibly synthetic until replaced by governed measured evidence"
@@ -52,7 +67,10 @@ def main() -> None:
     ]:
         assert required_boundary in lower, f"worked-case fail-closed boundary missing: {required_boundary}"
 
-    print("MouldMaster next-release worked engineering case source QA passed")
+    print(
+        f"MouldMaster worked engineering case authoring-source QA passed for current release {release}; "
+        "the pack remains outside learner runtime pending deliberate issue #368 integration and SME scope."
+    )
 
 
 if __name__ == "__main__":
