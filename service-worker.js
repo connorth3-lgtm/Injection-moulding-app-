@@ -80,6 +80,7 @@ const CORE=[
   './src/domains/learning/book-data/book-evidence-registry-v1.json',
   './src/domains/learning/book-data/book-chapters-materials-machine-v1.json',
   './src/domains/learning/book-data/book-authored-remaining-v1.json',
+  './src/domains/learning/book-data/book-worked-engineering-cases-v1.json',
   './src/domains/materials/material-registry.js',
   './src/domains/materials/material-search-index.js',
   './src/domains/materials/material-search-pagination.js',
