@@ -1,0 +1,73 @@
+name: MouldMaster Health Program QA
+
+on:
+  pull_request:
+    branches: [ main ]
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: health-program-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  health-program:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7
+        with:
+          fetch-depth: 1
+
+      - name: Set up Python
+        uses: actions/setup-python@v7
+        with:
+          python-version: '3.12'
+
+      - name: Syntax
+        run: |
+          python -m py_compile \
+            qa_health_program.py \
+            qa_health_stuck_state.py \
+            qa_dependency_maintenance.py \
+            tools/health_restore_drill.py \
+            tools/health_operations_drill.py \
+            tools/render_health_status.py
+
+      - name: Canonical long-term health contract
+        run: python qa_health_program.py
+
+      - name: Generated health status
+        run: python tools/render_health_status.py --check
+
+      - name: Synthetic stuck-state and HOLD regression
+        run: python qa_health_stuck_state.py
+
+      - name: Synthetic backup and restore drill
+        run: python tools/health_restore_drill.py
+
+      - name: Synthetic rollback and frozen recovery drill
+        run: python tools/health_operations_drill.py
+
+      - name: Dependency support freshness and EOL policy
+        run: python qa_dependency_maintenance.py
+
+      - name: Existing production observability boundary
+        run: python qa_production_observability.py
+
+      - name: Existing canonical stuck and orphan boundary
+        run: python qa_governance_orphan_detection.py
+
+      - name: Existing frozen recovery immutability boundary
+        run: python qa_recovery_immutability.py
+
+      - name: Boundary
+        if: always()
+        run: |
+          echo "This workflow verifies repository-controlled health only."
+          echo "External human/device/platform/accreditation evidence remains HOLD until genuine evidence exists."

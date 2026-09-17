@@ -1,0 +1,55 @@
+{
+  "schemaVersion": 1,
+  "reviewedAt": "2026-09-18",
+  "reviewBy": "2026-10-18",
+  "owner": "repository-maintainer",
+  "policy": "Critical runtime/build support status must be re-reviewed from authoritative upstream sources before reviewBy. EOL components fail maintenance QA and require an explicit protected upgrade or a time-bounded owned exception that cannot disable required gates.",
+  "components": [
+    {
+      "id": "node-ci",
+      "declared": "22",
+      "statusAtReview": "lts",
+      "eol": "2027-04-30",
+      "owner": "repository-maintainer",
+      "rationale": "Primary JavaScript QA/build runtime used by protected workflows.",
+      "authoritativeSource": "https://nodejs.org/en/about/previous-releases"
+    },
+    {
+      "id": "python-ci",
+      "declared": "3.12",
+      "statusAtReview": "security",
+      "eolMonth": "2028-10",
+      "owner": "repository-maintainer",
+      "rationale": "Primary governance, data and release-verification runtime used by protected workflows.",
+      "authoritativeSource": "https://devguide.python.org/versions/"
+    },
+    {
+      "id": "electron-desktop",
+      "declared": "44.2.0",
+      "statusAtReview": "supported-stable",
+      "eol": "2027-03-02",
+      "owner": "repository-maintainer",
+      "rationale": "Security boundary and runtime for the open Windows desktop wrapper.",
+      "authoritativeSource": "https://releases.electronjs.org/schedule"
+    },
+    {
+      "id": "electron-builder",
+      "declared": "26.16.0",
+      "statusAtReview": "pinned-build-tool",
+      "reviewRequired": true,
+      "owner": "repository-maintainer",
+      "rationale": "Creates portable/NSIS/MSIX desktop artifacts; changes affect package and signing behavior.",
+      "evidenceSource": "desktop/electron/package.json"
+    },
+    {
+      "id": "github-actions-critical",
+      "declaredMajors": {"checkout":7, "setup-node":7, "setup-python":7, "upload-artifact":7},
+      "statusAtReview": "repository-governed",
+      "reviewRequired": true,
+      "owner": "repository-maintainer",
+      "rationale": "Critical build/release automation actions are version-governed and separately checked by repository QA.",
+      "evidenceSource": ".github/workflows"
+    }
+  ],
+  "exceptions": []
+}
