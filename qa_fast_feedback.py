@@ -101,11 +101,13 @@ def main() -> int:
 
     learner_identity_changed = bool(files & {
         "training-qa-fix.js",
+        "src/domains/learning/backup-authority-notice.js",
         "qa_import_identity_integrity.cjs",
         "qa_final_audit_lifecycle.cjs",
+        "qa_learner_backup_integrity.cjs",
     })
     if learner_identity_changed:
-        for qa in ["qa_import_identity_integrity.cjs", "qa_final_audit_lifecycle.cjs"]:
+        for qa in ["qa_import_identity_integrity.cjs", "qa_final_audit_lifecycle.cjs", "qa_learner_backup_integrity.cjs"]:
             if (ROOT / qa).exists():
                 commands.append(["node", qa])
 
