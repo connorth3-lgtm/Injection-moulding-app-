@@ -7,7 +7,13 @@ const {TextEncoder}=require('util');
 
 const source=fs.readFileSync('src/domains/learning/backup-authority-notice.js','utf8');
 
-async function settle(){await new Promise(resolve=>setImmediate(resolve));await new Promise(resolve=>setImmediate(resolve))}
+async function waitFor(predicate,message,timeoutMs=2000){
+  const started=Date.now();
+  while(!predicate()){
+    if(Date.now()-started>=timeoutMs)throw new Error(message);
+    await new Promise(resolve=>setTimeout(resolve,10));
+  }
+}
 
 function sandbox(){
   const memory=new Map([
@@ -76,13 +82,11 @@ function sandbox(){
   await assert.rejects(()=>api.verifyEnvelope(metadataTamper),/Unsupported backup integrity metadata/,'unsupported integrity algorithm was accepted');
 
   t.context.importData({size:JSON.stringify(tampered).length,text:async()=>JSON.stringify(tampered)});
-  await settle();
+  await waitFor(()=>t.alerts.some(message=>/failed its SHA-256 integrity check/i.test(message)),'tampered v3 import did not finish its integrity rejection');
   assert.strictEqual(t.baseImports.length,0,'tampered v3 backup reached the legacy restore path');
-  assert(t.alerts.some(message=>/failed its SHA-256 integrity check/i.test(message)),'tamper rejection did not explain the integrity failure');
 
   t.context.importData({size:JSON.stringify(envelope).length,text:async()=>JSON.stringify(envelope)});
-  await settle();
-  assert.strictEqual(t.baseImports.length,1,'verified v3 backup was not handed to the governed legacy restore transaction');
+  await waitFor(()=>t.baseImports.length===1,'verified v3 backup did not reach the governed legacy restore transaction');
   assert(t.baseImports[0] instanceof Blob,'verified v3 backup was not unwrapped into an isolated payload blob');
   const unwrapped=JSON.parse(await t.baseImports[0].text());
   assert.strictEqual(unwrapped.backupFormat,'mouldmaster-backup-v2');
@@ -91,13 +95,11 @@ function sandbox(){
   const legacy={activeUser:'legacy',users:{legacy:{id:'legacy',name:'Legacy learner'}},backupFormat:'mouldmaster-backup-v2'};
   const legacyFile={size:JSON.stringify(legacy).length,text:async()=>JSON.stringify(legacy)};
   t.context.importData(legacyFile);
-  await settle();
-  assert.strictEqual(t.baseImports.length,2,'explicitly accepted legacy backup was not passed to the existing strict importer');
+  await waitFor(()=>t.baseImports.length===2,'explicitly accepted legacy backup did not reach the existing strict importer');
   assert.strictEqual(t.baseImports[1],legacyFile,'legacy compatibility path rewrote the original backup unexpectedly');
   assert(t.confirms.some(message=>/no cryptographic integrity checksum/i.test(message)),'legacy compatibility path did not disclose missing integrity evidence');
 
   t.context.importData({size:10*1024*1024+1,text:async()=>JSON.stringify(envelope)});
-  await settle();
   assert.strictEqual(t.baseImports.length,2,'oversized backup bypassed the 10 MiB limit');
 
   await t.context.exportData();
