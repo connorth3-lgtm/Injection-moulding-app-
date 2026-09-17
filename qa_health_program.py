@@ -29,12 +29,14 @@ def load_tool(name: str, path: Path):
 
 def main() -> None:
     data = json.loads(CONTRACT.read_text(encoding="utf-8"))
+    version = json.loads((ROOT / "version.json").read_text(encoding="utf-8"))
     catalog = json.loads(EVENT_CATALOG.read_text(encoding="utf-8"))
     dependency_inventory = json.loads(DEPENDENCY_INVENTORY.read_text(encoding="utf-8"))
     doc = DOC.read_text(encoding="utf-8")
     review_template = REVIEW_TEMPLATE.read_text(encoding="utf-8")
 
     require(data.get("schemaVersion") == 1, "health program schema mismatch")
+    require(data.get("currentWebRelease") == version.get("web_release"), "health program web release drifted from version.json")
     principles = data.get("principles", {})
     require(principles.get("protectedMainRequired") is True, "protected-main boundary missing")
     require(principles.get("failClosedEngineering") is True, "fail-closed engineering boundary missing")
@@ -44,14 +46,17 @@ def main() -> None:
 
     ci = data.get("ci", {})
     require(set(ci.get("failureClasses", [])) == {"product-regression", "infrastructure-failure", "external-evidence-hold"}, "CI failure taxonomy incomplete")
-    critical_ids = {row.get("id") for row in ci.get("criticalPaths", [])}
+    critical_rows = {row.get("id"): row for row in ci.get("criticalPaths", [])}
     for required in ["backup-import", "process-data-numerics", "process-data-delete", "release-fingerprint", "offline-pwa", "desktop-integrity", "governance-holds"]:
-        require(required in critical_ids, f"critical CI path missing: {required}")
-    require(set(ci.get("historicalDefectRegressions", [])) >= {281, 282, 283, 285, 288, 300}, "historical audit regressions not tracked")
+        require(required in critical_rows, f"critical CI path missing: {required}")
+    backup_regressions = set(critical_rows["backup-import"].get("regressions", []))
+    require({"src/domains/learning/backup-authority-notice.js", "qa_learner_backup_integrity.cjs", "tools/health_restore_drill.py"}.issubset(backup_regressions), "backup integrity regression ownership incomplete")
+    require(set(ci.get("historicalDefectRegressions", [])) >= {281, 282, 283, 285, 288, 300, 311}, "historical audit regressions not tracked")
 
     workflow_text = "\n".join(path.read_text(encoding="utf-8") for path in (ROOT / ".github" / "workflows").glob("*.yml"))
     for signal in ci["fastPrTier"]["requiredSignals"] + ci["deepReleaseTier"]["requiredSignals"]:
         require(f"name: {signal}" in workflow_text, f"declared CI signal has no workflow: {signal}")
+    require("node qa_learner_backup_integrity.cjs" in workflow_text, "backup integrity runtime regression is not wired into CI")
 
     stores = {row["id"]: row for row in data.get("persistence", {}).get("stores", [])}
     require(stores["learner-core"]["identity"] == "mouldmasterProDB", "learner source-of-truth key mismatch")
@@ -61,6 +66,28 @@ def main() -> None:
     backup = data["persistence"]["learnerBackupContract"]
     require(backup["maxBytes"] == 10 * 1024 * 1024 and backup["maxLearners"] == 500, "learner backup bounds mismatch")
     require(backup["commitAfterFullValidation"] is True and backup["failurePreservesExistingData"] is True, "restore last-known-good rules missing")
+    require(backup.get("format") == "mouldmaster-backup-v3" and backup.get("payloadFormat") == "mouldmaster-backup-v2", "learner backup format contract mismatch")
+    integrity = backup.get("integrity", {})
+    require(integrity.get("algorithm") == "SHA-256", "learner backup SHA-256 contract missing")
+    require(integrity.get("canonicalization") == "json-stable-v1" and integrity.get("scope") == "backupFormat+payload", "learner backup canonical integrity scope mismatch")
+    require(integrity.get("verifiedBeforeRestore") is True and integrity.get("detectsCorruptionOrModification") is True, "learner backup verify-before-restore boundary missing")
+    require(integrity.get("provesAuthenticity") is False, "learner backup checksum must not be represented as authentication/signature")
+    legacy = backup.get("legacyCompatibility", {})
+    require(legacy.get("format") == "mouldmaster-backup-v2" and legacy.get("integrityStatus") == "unverified", "legacy backup compatibility status is not explicit")
+    require(legacy.get("requiresExplicitUserDisclosure") is True and legacy.get("usesExistingStrictImporter") is True, "legacy backup compatibility boundary incomplete")
+
+    backup_runtime = (ROOT / "src" / "domains" / "learning" / "backup-authority-notice.js").read_text(encoding="utf-8")
+    for marker in [
+        "const BACKUP_FORMAT='mouldmaster-backup-v3'",
+        "const INTEGRITY_ALGORITHM='SHA-256'",
+        "const CANONICALIZATION='json-stable-v1'",
+        "await verifyEnvelope(parsed)",
+        "MM_BACKUP_INTEGRITY_MISMATCH",
+        "checksum is not a digital signature",
+        "no cryptographic integrity checksum",
+    ]:
+        require(marker in backup_runtime, f"backup integrity runtime marker missing: {marker}")
+    require(backup_runtime.index("await verifyEnvelope(parsed)") < backup_runtime.index("baseImportData(new Blob"), "backup payload can reach restore before SHA-256 verification")
 
     health_runtime = (ROOT / "production-health.js").read_text(encoding="utf-8")
     require("MAX_EVENTS=120" in health_runtime, "runtime diagnostic bound drifted")
@@ -100,7 +127,10 @@ def main() -> None:
     for phrase in [
         "A red product check is a product failure until investigated",
         "failed import must leave the previous database intact",
-        "does **not yet contain a cryptographic integrity envelope verified by the runtime importer**",
+        "Current exports use `mouldmaster-backup-v3`",
+        "verified **before** handing an isolated payload Blob",
+        "not a digital signature or authenticity proof",
+        "legacy-unverified",
         "HOLD is not a runtime failure",
         "Do not mutate an already governed release",
         "Automated dependency PRs are review-only",
@@ -110,6 +140,8 @@ def main() -> None:
 
     for phrase in [
         "Any flaky required gate has its own GitHub issue and owner",
+        "node qa_learner_backup_integrity.cjs",
+        "not a digital signature or authenticity proof",
         "Every overdue recovery, security or dependency action must have a GitHub issue",
         "No required gate was deleted or weakened to improve a metric",
         "External validation state",
@@ -118,7 +150,16 @@ def main() -> None:
 
     restore = load_tool("health_restore_drill", ROOT / "tools" / "health_restore_drill.py")
     result = restore.run_drill()
-    require(all(result[key] == "pass" for key in ["learnerRestore", "invalidRestorePreservesLastKnownGood", "engineeringMigration", "engineeringMigrationReplay", "processDataResetContract"]), "restore drill failed")
+    restore_keys = [
+        "learnerV3IntegrityRestore",
+        "tamperAndMetadataRejection",
+        "invalidRestorePreservesLastKnownGood",
+        "legacyV2CompatibilityExplicitlyUnverified",
+        "engineeringMigration",
+        "engineeringMigrationReplay",
+        "processDataResetContract",
+    ]
+    require(all(result.get(key) == "pass" for key in restore_keys), "restore drill failed")
 
     operations_drill = load_tool("health_operations_drill", ROOT / "tools" / "health_operations_drill.py")
     operations_drill.main()
@@ -137,7 +178,7 @@ def main() -> None:
     governance_qa = (ROOT / "qa_governance_orphan_detection.py").read_text(encoding="utf-8")
     require("orphan" in governance_qa.lower() and "hold" in governance_qa.lower(), "canonical stuck/orphan HOLD distinction missing")
 
-    print("MouldMaster long-term health program QA passed: CI risk tiers, persistent-data ownership, stable diagnostic codes, four-state health surface, synthetic restore/recovery/stuck drills, dependency policy, review template and HOLD boundaries.")
+    print("MouldMaster long-term health program QA passed: CI risk tiers, v3 SHA-256 learner-backup integrity, persistent-data ownership, stable diagnostic codes, four-state health surface, synthetic restore/recovery/stuck drills, dependency policy, review template and HOLD boundaries.")
 
 
 if __name__ == "__main__":

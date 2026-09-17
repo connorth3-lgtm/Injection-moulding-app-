@@ -24,12 +24,16 @@ Evidence / issue references:
 
 ## 2. Data integrity, backup and restore
 
+- [ ] Run `node qa_learner_backup_integrity.cjs`.
 - [ ] Run `python tools/health_restore_drill.py`.
+- [ ] Confirm current exports use `mouldmaster-backup-v3` with SHA-256 / `json-stable-v1` integrity metadata verified before restore.
+- [ ] Confirm checksum mismatch, unsupported integrity metadata, oversize input and learner-identity failure cannot reach the restore transaction and preserve last-known-good data.
+- [ ] Confirm legacy v2/unversioned import remains explicitly disclosed as cryptographically unverified before the existing strict importer is allowed to run.
+- [ ] Confirm the UI/documentation still states that the embedded SHA-256 checksum detects corruption/modification but is not a digital signature or authenticity proof.
 - [ ] Confirm learner import bounds and validation still match the runtime.
 - [ ] Confirm engineering-case migration remains additive/non-destructive/idempotent.
 - [ ] Confirm process-data reset verification still covers all governed stores.
 - [ ] Check the last real/representative restore evidence age; if older than 90 days, create a GitHub issue before closing this review.
-- [ ] Check issue #311 until the learner backup envelope has runtime-verifiable cryptographic integrity metadata.
 
 Evidence / issue references:
 

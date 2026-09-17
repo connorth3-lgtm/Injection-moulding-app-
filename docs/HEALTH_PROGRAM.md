@@ -1,6 +1,6 @@
 # MouldMaster long-term health program
 
-This document operationalises the canonical contract in `data/health-program-v1.json` for issues #309 and #311–#315 without weakening release, privacy, engineering or external-validation boundaries. The repository-controlled portions of #311 are covered here, but #311 remains open until the learner-facing backup format carries runtime-verifiable cryptographic integrity metadata on a deliberate post-`2026.09.16.2` release.
+This document operationalises the canonical contract in `data/health-program-v1.json` for issues #309 and #311–#315 without weakening release, privacy, engineering or external-validation boundaries. Web release `2026.09.18.1` introduces the repository-controlled completion of #311: current learner backups use a runtime-verifiable SHA-256 integrity envelope that is checked before the existing strict restore transaction can receive the payload. Closure still depends on protected review/CI and merge; external human/device/platform evidence remains a separate HOLD.
 
 ## 1. Risk-based CI tiers
 
@@ -36,9 +36,13 @@ Every migration follows: **validate source → stage/normalise → write transac
 
 A learner backup does not implicitly include engineering cases or site-local process evidence. Those have separate scope and must be explicitly exported/handled when supported. This prevents a learner-profile restore from silently overwriting workplace evidence.
 
-The deterministic health drill in `tools/health_restore_drill.py` exercises current learner-backup acceptance, corrupted/oversized/identity-conflict rejection, last-known-good preservation and the additive engineering migration rules. The drill uses synthetic records only and creates no claim about a real learner/site backup.
+Current exports use `mouldmaster-backup-v3`. The envelope contains the existing strictly validated `mouldmaster-backup-v2` payload plus integrity metadata: `SHA-256`, canonicalization `json-stable-v1`, and scope `backupFormat+payload`. The runtime computes the digest over canonical envelope input. The payload is verified **before** handing an isolated payload Blob to the existing bounded/transactional importer. Digest mismatch, unsupported integrity metadata, malformed envelope, invalid learner identity or oversize input fails closed before restore and preserves last-known-good learner data.
 
-The current learner backup is structurally validated and rollback-safe, but the exported JSON does **not yet contain a cryptographic integrity envelope verified by the runtime importer**. That remaining acceptance item is tracked by #311 and must not be hidden by this health program. Implementing it changes learner-facing runtime bytes, so it belongs to a deliberately new release identity/fingerprint rather than silently modifying the frozen `.16.2` candidate.
+The SHA-256 value is an integrity checksum, **not a digital signature or authenticity proof**. A party able to modify a file and recompute its checksum can produce a new internally consistent envelope. Its purpose is to detect corruption or uncoordinated modification before restore, not to establish who created the backup.
+
+Older v2/unversioned backups remain available for compatibility only after explicit user disclosure that they contain no cryptographic integrity checksum. They continue through the existing strict structural/identity/transactional importer and are recorded conceptually as `legacy-unverified`; they are never relabelled as cryptographically verified evidence.
+
+The deterministic health drill in `tools/health_restore_drill.py` exercises valid v3 restore, checksum/metadata tampering, malformed/oversized/identity-conflicting rejection, legacy-v2 compatibility disclosure, last-known-good preservation and additive engineering migration rules. `qa_learner_backup_integrity.cjs` executes the browser-facing envelope implementation directly using Web Crypto. These tests use synthetic records only and create no claim about a real learner/site backup.
 
 ## 4. Observability and stuck-state semantics
 
@@ -62,6 +66,7 @@ From a clean checkout of the exact commit under review, the repository-controlle
 ```text
 python qa_health_program.py
 python qa_health_stuck_state.py
+node qa_learner_backup_integrity.cjs
 python tools/health_restore_drill.py
 python tools/health_operations_drill.py
 python qa_production_observability.py
@@ -113,7 +118,7 @@ Review monthly using `docs/HEALTH_REVIEW_TEMPLATE.md`. Required PR gates should 
 
 External validation is reported separately: a truthful HOLD is healthy governance, not poor software quality. Metrics must never improve merely because checks were deleted, weakened or reclassified.
 
-The baseline review is generated into `HEALTH_STATUS.md` from the same machine-readable contract. When a review identifies an overdue recovery/security/dependency action, create or link a GitHub issue before considering the review complete. The current baseline already carries platform-admin issue #278 explicitly rather than hiding it.
+The baseline review is generated into `HEALTH_STATUS.md` from the same machine-readable contract. When a review identifies an overdue recovery/security/dependency action, create or link a GitHub issue before considering the review complete. The current baseline carries platform-admin issue #278 explicitly rather than hiding it.
 
 ## 8. Current boundaries
 

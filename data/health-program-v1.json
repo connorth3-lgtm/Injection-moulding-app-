@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "program": "mouldmaster-long-term-health",
-  "currentWebRelease": "2026.09.16.2",
+  "currentWebRelease": "2026.09.18.1",
   "principles": {
     "protectedMainRequired": true,
     "failClosedEngineering": true,
@@ -36,7 +36,7 @@
       ]
     },
     "criticalPaths": [
-      {"id":"backup-import", "risk":"learner-data-corruption", "regressions":["src/core-runtime/core-inline-007.js", "training-qa-fix.js"], "tier":"deep-release"},
+      {"id":"backup-import", "risk":"learner-data-corruption", "regressions":["src/core-runtime/core-inline-007.js", "training-qa-fix.js", "src/domains/learning/backup-authority-notice.js", "qa_learner_backup_integrity.cjs", "tools/health_restore_drill.py"], "tier":"deep-release"},
       {"id":"process-data-numerics", "risk":"silent-engineering-miscalculation", "regressions":["qa_process_statistics_domain.mjs", "qa_engineering_domain.mjs", "qa_data_integration.py"], "tier":"fast-pr"},
       {"id":"process-data-delete", "risk":"privacy-reset-incomplete", "regressions":["data-integration-runtime.js", "src/domains/process/process-data-integrity.js"], "tier":"fast-pr"},
       {"id":"release-fingerprint", "risk":"evidence-bound-to-wrong-bytes", "regressions":["tools/verify_release_external_validation.py", "tools/verify_pwa_physical_evidence.py"], "tier":"fast-pr"},
@@ -44,7 +44,7 @@
       {"id":"desktop-integrity", "risk":"tampered-or-incoherent-package", "regressions":["desktop/electron/main.js", "desktop/electron/scripts/generate-integrity.cjs"], "tier":"deep-release"},
       {"id":"governance-holds", "risk":"false-validation-claim", "regressions":["qa_governance_state_model.py", "qa_governance_orphan_detection.py"], "tier":"fast-pr"}
     ],
-    "historicalDefectRegressions": [281, 282, 283, 285, 288, 300]
+    "historicalDefectRegressions": [281, 282, 283, 285, 288, 300, 311]
   },
   "persistence": {
     "stores": [
@@ -102,15 +102,32 @@
       }
     ],
     "learnerBackupContract": {
+      "format": "mouldmaster-backup-v3",
+      "payloadFormat": "mouldmaster-backup-v2",
       "maxBytes": 10485760,
       "maxLearners": 500,
       "strictLearnerId": true,
       "unknownTopLevelPropertiesAccepted": false,
       "commitAfterFullValidation": true,
-      "failurePreservesExistingData": true
+      "failurePreservesExistingData": true,
+      "integrity": {
+        "algorithm": "SHA-256",
+        "canonicalization": "json-stable-v1",
+        "scope": "backupFormat+payload",
+        "verifiedBeforeRestore": true,
+        "detectsCorruptionOrModification": true,
+        "provesAuthenticity": false
+      },
+      "legacyCompatibility": {
+        "format": "mouldmaster-backup-v2",
+        "integrityStatus": "unverified",
+        "requiresExplicitUserDisclosure": true,
+        "usesExistingStrictImporter": true
+      }
     },
     "migrationRules": [
       "validate-before-write",
+      "verify-current-backup-integrity-before-restore",
       "preserve-last-known-good-on-failure",
       "idempotent-where-replayed",
       "never-conflate-learner-reset-with-process-evidence-delete",
@@ -155,12 +172,12 @@
   ],
   "baselineReview": {
     "date": "2026-09-18",
-    "sourceCommit": "e5b93cdf24dee9b446a80e91da601f9067a5d97b",
-    "prEvidence": {"pr":372, "prTriggeredWorkflows":18, "result":"success"},
+    "sourceCommit": "3e020626205ebdb3c62a155105b6bfb91b8e70df",
+    "prEvidence": {"pr":373, "prTriggeredWorkflows":16, "result":"success"},
     "externalValidation": "hold",
     "knownPlatformAdminHold": 278,
     "notes": [
-      "Repository-controlled deep-audit remediation is merged.",
+      "Repository-controlled long-term health controls through #315 are merged; #311 is completed only when the v3 backup-integrity release passes protected review and merges.",
       "Independent human/device/platform evidence remains governed HOLD and is not counted as a defect.",
       "Repository-level immutable-release enablement remains an administrator action tracked separately."
     ]
