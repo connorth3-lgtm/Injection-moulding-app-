@@ -1,4 +1,4 @@
-# MouldMaster Book — worked engineering cases for the next learner release
+# MouldMaster Book — governed worked engineering cases
 
 **Status:** integrated into governed `2026.09.18.2` learner runtime as exact-byte-authorized synthetic teaching content. The cases remain **not independently SME-approved**; independent human Book SME validation is still a separate HOLD.
 
