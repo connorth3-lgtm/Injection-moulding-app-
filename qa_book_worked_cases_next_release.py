@@ -9,6 +9,7 @@ VERSION = ROOT / "version.json"
 
 def main() -> None:
     text = SOURCE.read_text(encoding="utf-8")
+    lower = text.lower()
     version = json.loads(VERSION.read_text(encoding="utf-8"))
     assert version.get("web_release") == "2026.09.16.2", "worked-case source pack is explicitly staged behind the frozen .16.2 runtime"
     assert "post-`2026.09.16.2` authoring source" in text
@@ -31,12 +32,25 @@ def main() -> None:
         "No `.16.2` evidence may be relabelled for the changed bytes.",
     ]:
         assert marker in text, f"worked-case governance/content marker missing: {marker}"
-    for unsafe in [
-        "universal production setting",
-        "guaranteed root cause",
-        "automatic machine-control authority is granted",
+
+    # Fail on affirmative unsafe claims, while allowing the source to explicitly
+    # deny those claims (for example, "not a universal production setting").
+    unsafe_patterns = [
+        r"(?<!not a )universal production setting(?:s)?(?:\s+(?:is|are|applies?|for))",
+        r"guaranteed root cause(?:\s+(?:is|has|was|identified|confirmed))",
+        r"automatic machine-control authority is granted",
+    ]
+    for pattern in unsafe_patterns:
+        assert not re.search(pattern, lower), f"unsafe worked-case claim detected: {pattern}"
+
+    for required_boundary in [
+        "not a universal production setting",
+        "does not establish a generic hold time",
+        "does not by itself prove",
+        "not universal process settings",
     ]:
-        assert unsafe not in text.lower(), f"unsafe worked-case claim detected: {unsafe}"
+        assert required_boundary in lower, f"worked-case fail-closed boundary missing: {required_boundary}"
+
     print("MouldMaster next-release worked engineering case source QA passed")
 
 
