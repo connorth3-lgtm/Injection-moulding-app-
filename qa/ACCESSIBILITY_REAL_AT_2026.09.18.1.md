@@ -5,15 +5,15 @@ This packet governs **human** assistive-technology validation for web release `2
 ## Exact release boundary
 
 - web release: `2026.09.18.1`
-- retained pre-merge public candidate source commit: `0100306094648cda214fed513365761cff9c4f25`
-- public-runtime fingerprint: `sha256:36d47a5343eb9095e33b63e50efb03d4b4b4542cbb781d686e637d95af9791d3`
-- retained physical candidate: `physical-pwa-candidate-0100306094648cda214fed513365761cff9c4f25` (`10522519333`)
-- candidate build run: `35282006382` (`Pre-merge Public Candidate`)
-- artifact ZIP digest: `sha256:a948a451f99e8ec5c0e128bf027bdf255520689f6f7747ba3d584f2bcc23f3b2`
-- artifact retention expiry: `2026-10-17T22:26:18Z`
+- retained pre-merge public candidate source commit: `26598f4dc5c7ee54b2fd38cbc008b38dd1190717`
+- public-runtime fingerprint: `sha256:25b3676cc5aad6f85795e468bd0913eac43db25267e1d1415ac58098dacab048`
+- retained physical candidate: `physical-pwa-candidate-26598f4dc5c7ee54b2fd38cbc008b38dd1190717` (`10522957295`)
+- candidate build run: `35283989564` (`Pre-merge Public Candidate`)
+- artifact ZIP digest: `sha256:379e258aa4d09f7564db6795a0d1a28379944101072ed393f480057fcdb7df86`
+- artifact retention expiry: `2026-10-17T22:50:20Z`
 - evidence contract: `data/accessibility-real-at-validation-v1.json`
 
-This is a candidate **rebind**, not new AT evidence. The learner-facing runtime deliberately advanced to release `2026.09.18.1` for the learner-backup integrity change. No earlier human/device evidence is relabelled. If learner-facing runtime bytes change again, this packet must be rebound before new validation is recorded.
+This is a candidate **rebind**, not new AT evidence. The learner-facing runtime deliberately advanced to release `2026.09.18.1` for the learner-backup integrity change and coherent Book runtime/integrity identity. No earlier human/device evidence is relabelled. If learner-facing runtime bytes change again, this packet must be rebound before new validation is recorded.
 
 ## Required matrix
 
