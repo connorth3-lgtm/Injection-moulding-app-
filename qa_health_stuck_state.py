@@ -7,15 +7,13 @@ states fail closed with actionable repair guidance.
 """
 from __future__ import annotations
 
-from dataclasses import dataclass
-from typing import Mapping
+from typing import Mapping, NamedTuple
 
 STABLE = {"pass", "authorized", "hold", "validated", "advisory-only"}
 TRANSIENT_PUBLIC = {"pending", "in-progress", "processing", "unknown", "unresolved"}
 
 
-@dataclass(frozen=True)
-class HealthDecision:
+class HealthDecision(NamedTuple):
     health: str
     code: str
     guidance: str
