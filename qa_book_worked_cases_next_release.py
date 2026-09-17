@@ -34,9 +34,9 @@ def main() -> None:
         assert marker in text, f"worked-case governance/content marker missing: {marker}"
 
     # Fail on affirmative unsafe claims, while allowing the source to explicitly
-    # deny those claims (for example, "not a universal production setting").
+    # deny those claims (for example, "not universal production settings").
     unsafe_patterns = [
-        r"(?<!not a )universal production setting(?:s)?(?:\s+(?:is|are|applies?|for))",
+        r"(?<!not )universal production setting(?:s)?(?:\s+(?:is|are|applies?|for))",
         r"guaranteed root cause(?:\s+(?:is|has|was|identified|confirmed))",
         r"automatic machine-control authority is granted",
     ]
@@ -44,10 +44,11 @@ def main() -> None:
         assert not re.search(pattern, lower), f"unsafe worked-case claim detected: {pattern}"
 
     for required_boundary in [
-        "not a universal production setting",
+        "not universal production settings",
         "does not establish a generic hold time",
         "does not by itself prove",
-        "not universal process settings",
+        "not a cooling-time formula",
+        "not automatically the required machine clamp rating",
     ]:
         assert required_boundary in lower, f"worked-case fail-closed boundary missing: {required_boundary}"
 
