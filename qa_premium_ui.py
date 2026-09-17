@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 from pathlib import Path
 import json
+import re
 
 ROOT=Path(__file__).resolve().parent
 
@@ -10,7 +11,8 @@ def need(ok,msg):
 def text(path): return (ROOT/path).read_text(encoding='utf-8')
 
 version=json.loads(text('version.json'))
-need(version.get('web_release')=='2026.09.16.2','premium UI release must be 2026.09.16.2')
+release=str(version.get('web_release') or '')
+need(re.fullmatch(r'\d{4}\.\d{2}\.\d{2}\.\d+',release) is not None,'premium UI requires a governed web release identity')
 css=text('premium-ui.css')
 dynamic=text('premium-dynamic.css')
 for marker in [
@@ -36,15 +38,15 @@ index=text('index.html')
 need("['premium-ui.css','<link rel=\"stylesheet\" href=\"./premium-ui.css\">']" in index,'premium UI stylesheet must load in first-paint HEAD assets')
 need("['premium-dynamic.css','<link rel=\"stylesheet\" href=\"./premium-dynamic.css\">']" in index,'premium dynamic stylesheet must load after the governed premium layer')
 need(index.index("['premium-ui.css'") < index.index("['premium-dynamic.css'"),'premium dynamic stylesheet must load after premium-ui.css')
-need('const SHELL_RELEASE="2026.09.16.2";' in index,'shell release marker stale')
+need(f'const SHELL_RELEASE="{release}";' in index,'shell release marker stale')
 
 sw=text('service-worker.js')
-need("const CACHE_VERSION='2026.09.16.2';" in sw,'service-worker release marker stale')
+need(f"const CACHE_VERSION='{release}';" in sw,'service-worker release marker stale')
 need("'./premium-ui.css'" in sw,'premium UI stylesheet missing from atomic offline cache')
 need("'./premium-dynamic.css'" in sw,'premium dynamic stylesheet missing from atomic offline cache')
 
 pwa=text('pwa-shell.js')
-need("const RELEASE='2026.09.16.2';" in pwa,'PWA shell release marker stale')
+need(f"const RELEASE='{release}';" in pwa,'PWA shell release marker stale')
 
 pkg=json.loads(text('desktop/electron/package.json'))
 extra=[str(x.get('from','')).replace('../../','') for x in pkg.get('build',{}).get('extraResources',[])]
@@ -78,4 +80,4 @@ spec=text('qa/premium-ui.spec.js')
 for marker in ['premium UI stylesheet is active','no horizontal overflow','reduced motion','forced-colour-safe']:
     need(marker in spec,f'premium browser contract missing: {marker}')
 
-print('PASS: premium industrial UI is first-paint, offline, desktop-integrity, accessibility and cross-browser-regression governed.')
+print(f'PASS: premium industrial UI is first-paint, offline, desktop-integrity, accessibility and cross-browser-regression governed for {release}.')
