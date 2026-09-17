@@ -2,13 +2,13 @@
 
 Release `2026.09.18.1` is technically automated and governed, but the following external workstreams remain explicit **HOLD**. This index does not create human, device, learner, accreditation, signing, or production-site evidence.
 
-- retained pre-merge public candidate source: `0100306094648cda214fed513365761cff9c4f25`
-- exact public-runtime fingerprint: `sha256:36d47a5343eb9095e33b63e50efb03d4b4b4542cbb781d686e637d95af9791d3`
-- candidate build run: `35282006382` (`Pre-merge Public Candidate`)
-- candidate artifact: `physical-pwa-candidate-0100306094648cda214fed513365761cff9c4f25` (`10522519333`; `sha256:a948a451f99e8ec5c0e128bf027bdf255520689f6f7747ba3d584f2bcc23f3b2`; expires `2026-10-17T22:26:18Z`)
+- retained pre-merge public candidate source: `26598f4dc5c7ee54b2fd38cbc008b38dd1190717`
+- exact public-runtime fingerprint: `sha256:25b3676cc5aad6f85795e468bd0913eac43db25267e1d1415ac58098dacab048`
+- candidate build run: `35283989564` (`Pre-merge Public Candidate`)
+- candidate artifact: `physical-pwa-candidate-26598f4dc5c7ee54b2fd38cbc008b38dd1190717` (`10522957295`; `sha256:379e258aa4d09f7564db6795a0d1a28379944101072ed393f480057fcdb7df86`; expires `2026-10-17T22:50:20Z`)
 - Pages disposition: production root remains governed separately. This retained artifact is the exact validation source for the current public byte set; protected-main publication must remain byte-equivalent under the release verifier before any production decision.
 
-This is a candidate **rebind**, not external evidence. The learner-facing runtime deliberately advanced to release `2026.09.18.1` to add runtime-verified SHA-256 learner-backup integrity before restore. The Book teaching content and existing human/device/SME/learner/Windows evidence states were not promoted or relabelled. All six external workstreams remain HOLD until genuine release-specific evidence exists.
+This is a candidate **rebind**, not external evidence. The learner-facing runtime deliberately advanced to release `2026.09.18.1` to add runtime-verified SHA-256 learner-backup integrity before restore and to keep the Book runtime/integrity identity coherent with the new release. The Book teaching content and existing human/device/SME/learner/Windows evidence states were not promoted or relabelled. All six external workstreams remain HOLD until genuine release-specific evidence exists.
 
 | Workstream | Status | Release packet | Required genuine evidence |
 | --- | --- | --- | --- |
