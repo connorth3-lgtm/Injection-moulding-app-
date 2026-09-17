@@ -40,6 +40,7 @@ jobs:
             qa_recovery_immutability.py \
             qa_governance_state_model.py \
             qa_book_curriculum_crosswalk.py \
+            qa_book_worked_cases_next_release.py \
             tools/sync_book_runtime_data.py \
             tools/render_governance_status.py
 
@@ -57,6 +58,9 @@ jobs:
 
       - name: Authoritative Book runtime mirror
         run: python tools/sync_book_runtime_data.py --check
+
+      - name: Next-release Book worked cases
+        run: python qa_book_worked_cases_next_release.py
 
       - name: Pure process statistics domain
         run: node qa_process_statistics_domain.mjs
