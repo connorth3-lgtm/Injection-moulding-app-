@@ -5,7 +5,7 @@
   "sourceSha": "0100306094648cda214fed513365761cff9c4f25",
   "runtimeFingerprint": "sha256:36d47a5343eb9095e33b63e50efb03d4b4b4542cbb781d686e637d95af9791d3",
   "status": "pending-real-at-validation",
-  "boundary": "Automated browser/accessibility regressions and the learner-backup integrity release do not substitute for real assistive-technology interaction by a human reviewer. This current-release candidate rebind records exact public bytes only; it does not relabel or manufacture AT evidence.",
+  "boundary": "Automated browser and accessibility regressions do not substitute for real assistive-technology interaction by a human reviewer. The learner-backup integrity release does not change that boundary. This current-release candidate rebind records exact public bytes only; it does not relabel or manufacture AT evidence.",
   "requiredMatrix": [
     {
       "id": "nvda-firefox-windows",
