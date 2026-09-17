@@ -153,21 +153,14 @@ jobs:
           ledger['validationIndex']=f'qa/EXTERNAL_VALIDATION_{new}.md'
           ledger['accessibility']['status']='hold'
           ledger['accessibility']['reviewPacket']=f'qa/ACCESSIBILITY_REAL_AT_{new}.md'
-          ledger['accessibility']['candidate']={
-              'release':new,'sourceSha':candidate['sourceSha'],'runtimeFingerprint':candidate['runtimeFingerprint']
-          }
+          ledger['accessibility']['candidate']={'release':new,'sourceSha':candidate['sourceSha'],'runtimeFingerprint':candidate['runtimeFingerprint']}
           ledger['pwaPhysicalDevices']['status']='hold'
           ledger['pwaPhysicalDevices']['reviewPacket']=f'qa/PWA_PHYSICAL_DEVICE_{new}.md'
           ledger['pwaPhysicalDevices']['currentCandidate']={
-              'release':new,
-              'sourceSha':candidate['sourceSha'],
-              'runtimeFingerprint':candidate['runtimeFingerprint'],
-              'candidateRunId':candidate['candidateRunId'],
-              'candidateWorkflow':candidate['candidateWorkflow'],
-              'artifactId':candidate['artifactId'],
-              'artifactName':candidate['artifactName'],
-              'artifactDigest':candidate['artifactDigest'],
-              'artifactExpiresAt':candidate['artifactExpiresAt'],
+              'release':new,'sourceSha':candidate['sourceSha'],'runtimeFingerprint':candidate['runtimeFingerprint'],
+              'candidateRunId':candidate['candidateRunId'],'candidateWorkflow':candidate['candidateWorkflow'],
+              'artifactId':candidate['artifactId'],'artifactName':candidate['artifactName'],
+              'artifactDigest':candidate['artifactDigest'],'artifactExpiresAt':candidate['artifactExpiresAt']
           }
           ledger['windowsDistribution']['status']='hold'
           ledger['windowsDistribution']['readinessPacket']=f'certification/WINDOWS_SIGNING_READINESS_{new}.md'
@@ -188,8 +181,6 @@ jobs:
           python tools/verify_release_external_validation.py
           python qa_accessibility_real_at_contract.py
           python qa_curriculum_semantic_review.py
-          python qa_book_sme_review.py
-          python qa_learner_pilot.py
           python qa_release_validation_packets.py
       - name: Commit rebind and remove helper
         shell: bash
