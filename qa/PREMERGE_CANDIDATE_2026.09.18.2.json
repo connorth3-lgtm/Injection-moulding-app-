@@ -1,0 +1,14 @@
+{
+  "schemaVersion": 1,
+  "release": "2026.09.18.2",
+  "sourceSha": "f0bbf8410d3736da955fb0256e0c7dc1288d0712",
+  "runtimeFingerprint": "sha256:dd89c6283eaae5c72abc08b22390610ab4e8326b1a5255ad97890df2fff04752",
+  "candidateRunId": 35288487442,
+  "candidateWorkflow": "Pre-merge Public Candidate",
+  "artifactId": 10524804805,
+  "artifactName": "physical-pwa-candidate-f0bbf8410d3736da955fb0256e0c7dc1288d0712",
+  "artifactDigest": "sha256:f7b6b8cae45f1db5ce1cb53f74d195b90e848bc149f4c4a16e9bb2509e372716",
+  "artifactExpiresAt": "2026-10-17T23:49:02Z",
+  "status": "technical-candidate-only",
+  "boundary": "This is exact technical candidate provenance and governance rebind metadata only; it is not physical-device, assistive-technology, SME, learner-outcome, signing, Store, accreditation or production evidence."
+}
