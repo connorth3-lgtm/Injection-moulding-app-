@@ -33,6 +33,7 @@ jobs:
         run: |
           python -m py_compile \
             qa_health_program.py \
+            qa_health_stuck_state.py \
             tools/health_restore_drill.py \
             tools/health_operations_drill.py \
             tools/render_health_status.py
@@ -42,6 +43,9 @@ jobs:
 
       - name: Generated health status
         run: python tools/render_health_status.py --check
+
+      - name: Synthetic stuck-state and HOLD regression
+        run: python qa_health_stuck_state.py
 
       - name: Synthetic backup and restore drill
         run: python tools/health_restore_drill.py
