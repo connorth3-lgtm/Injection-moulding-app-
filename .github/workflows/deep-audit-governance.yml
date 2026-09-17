@@ -69,6 +69,9 @@ jobs:
       - name: Pure process statistics domain
         run: node qa_process_statistics_domain.mjs
 
+      - name: Pure injection-moulding engineering domain
+        run: node qa_engineering_domain.mjs
+
       - name: Boundary
         if: always()
         run: |
