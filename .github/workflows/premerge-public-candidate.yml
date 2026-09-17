@@ -39,8 +39,23 @@ jobs:
         with:
           python-version: '3.12'
 
-      - name: Build production Pages candidate
-        run: python tools/build_pages_artifact.py
+      - name: Build production Pages candidate from exact PR head
+        shell: bash
+        run: |
+          set -euo pipefail
+          SOURCE_SHA="${{ github.event.pull_request.head.sha || github.sha }}"
+          GITHUB_SHA="$SOURCE_SHA" python tools/build_pages_artifact.py
+          test -f .pages-dist/pages-manifest.json
+          python - "$SOURCE_SHA" <<'PY'
+          import json, sys
+          from pathlib import Path
+          expected = sys.argv[1]
+          manifest = json.loads(Path('.pages-dist/pages-manifest.json').read_text(encoding='utf-8'))
+          deployment = json.loads(Path('.pages-dist/deployment.json').read_text(encoding='utf-8'))
+          assert manifest.get('source_sha') == expected, (manifest.get('source_sha'), expected)
+          assert deployment.get('source_sha') == expected, (deployment.get('source_sha'), expected)
+          print(f'Candidate metadata is bound to exact PR head {expected}.')
+          PY
 
       - name: Report exact public-runtime fingerprint
         id: fingerprint
@@ -69,6 +84,7 @@ jobs:
           if-no-files-found: error
           retention-days: 30
           compression-level: 9
+          include-hidden-files: true
 
       - name: Record artifact provenance
         run: |
