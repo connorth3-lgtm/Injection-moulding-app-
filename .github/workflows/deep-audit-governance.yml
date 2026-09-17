@@ -39,6 +39,7 @@ jobs:
           python -m py_compile \
             qa_recovery_immutability.py \
             qa_governance_state_model.py \
+            qa_governance_orphan_detection.py \
             qa_book_curriculum_crosswalk.py \
             qa_book_worked_cases_next_release.py \
             tools/sync_book_runtime_data.py \
@@ -49,6 +50,9 @@ jobs:
 
       - name: Canonical governance states
         run: python qa_governance_state_model.py
+
+      - name: Lifecycle orphan and stuck-state detection
+        run: python qa_governance_orphan_detection.py
 
       - name: Human governance status derives from canonical model
         run: python tools/render_governance_status.py --check
