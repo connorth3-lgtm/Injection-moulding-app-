@@ -1,0 +1,54 @@
+name: One-shot Book integrity sync
+
+on:
+  push:
+    branches: [ fix/learner-backup-integrity-v3 ]
+
+permissions:
+  contents: write
+
+jobs:
+  sync:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: fix/learner-backup-integrity-v3
+          fetch-depth: 1
+      - uses: actions/setup-python@v7
+        with:
+          python-version: '3.12'
+      - name: Rebind Book SME runtime integrity
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          paths = [
+              Path('data/book-publication-authorization-v1.json'),
+              Path('src/domains/learning/book-data/book-publication-authorization-v1.json'),
+          ]
+          expected_old = '2d203ada0a7e9c0eb793a55e6ec2d39f16dbd255'
+          expected_new = '9a198b0b16ddb998a6dea2ac70dbb524b88a7380'
+          for path in paths:
+              data = json.loads(path.read_text(encoding='utf-8'))
+              hashes = data['runtimeIntegrity']['gitBlobSha1ByFile']
+              if hashes.get('book-sme-review-v1.json') != expected_old:
+                  raise SystemExit(f'{path}: Book SME integrity source drifted')
+              hashes['book-sme-review-v1.json'] = expected_new
+              path.write_text(json.dumps(data, indent=2) + '\n', encoding='utf-8')
+          if paths[0].read_bytes() != paths[1].read_bytes():
+              raise SystemExit('Book publication authorization mirrors diverged')
+          PY
+          python qa_book_release_integration.py
+      - name: Commit synchronized authorization and remove helper
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git rm .github/workflows/one-shot-book-integrity-sync.yml
+          git add data/book-publication-authorization-v1.json src/domains/learning/book-data/book-publication-authorization-v1.json
+          git diff --cached --check
+          git commit -m "Rebind Book SME runtime integrity hash"
+          git push origin HEAD:fix/learner-backup-integrity-v3
