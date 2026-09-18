@@ -1,34 +1,14 @@
 {
   "schemaVersion": 1,
   "capturedAt": "2026-09-17",
-  "runtimeBodyScriptCeiling": 30,
-  "rootRuntimeScriptCeiling": 25,
+  "runtimeBodyScriptCeiling": 13,
+  "rootRuntimeScriptCeiling": 5,
   "documentWriteCeiling": 0,
   "grandfatheredRootRuntimeScripts": [
     "./production-health.js",
     "./runtime-v2.js",
-    "./assessment-runtime-v2.js",
-    "./assessment-ux.js",
-    "./source-library.js",
-    "./measured-evidence-integration.js",
-    "./measured-evidence-decision.js",
-    "./assessment-psychometric-hardening.js",
-    "./assessment-evidence-integrity-upgrade.js",
-    "./lesson-evidence-depth.js",
-    "./lesson-deep-authoring-v2.js",
-    "./assessment-evidence-approval.js",
-    "./assessment-psychometric-approval.js",
     "./app-shell-registry.js",
-    "./assessment-multimodal.js",
     "./pwa-shell.js",
-    "./learning-experience.js",
-    "./process-data-diagnostics.js",
-    "./real-measured-data-assessment.js",
-    "./process-data-local-intake.js",
-    "./curriculum-integration.js",
-    "./specialist-curriculum.js",
-    "./specialist-evidence-gap-extension.js",
-    "./mould-master-workspace.js",
     "./app-shell-finalize.js"
   ],
   "grandfatheredCompatibilityLayers": [
@@ -54,6 +34,7 @@
     "2026-09-04 style-CSP tranche removes the final unsafe-inline directive: deterministic style elements are exact SHA-256 allowlisted, frozen/generated style attributes are neutralized at HTML sinks and applied via property-level CSSOM, and cssText/setAttribute(style) are forbidden.",
     "2026-09-15 grandfathering hardening removes already packed or domain-delegated root scripts from the runtime allowlist. The grandfathered root list must exactly match the active root runtime set, so a retired root layer cannot return without an explicit governance-baseline change.",
     "2026-09-15 learning-foundation pack concatenates reading-patch.js, training-upgrade.js and training-qa-fix.js in their historical order without transformation, reducing BODY_SCRIPTS from 39 to 37 and directly injected root runtime scripts from 36 to 33.",
-    "2026-09-15 assessment-foundation pack concatenates eight reviewed assessment bootstrap sources in their historical order without transformation, reducing BODY_SCRIPTS from 37 to 30 and directly injected root runtime scripts from 33 to 25. Release 2026.09.15.3 was the historical exact physical-device candidate for that packing tranche only; current release-specific validation identity is governed by data/release-external-validation-v1.json and must not be inferred from this architecture history."
+    "2026-09-15 assessment-foundation pack concatenates eight reviewed assessment bootstrap sources in their historical order without transformation, reducing BODY_SCRIPTS from 37 to 30 and directly injected root runtime scripts from 33 to 25. Release 2026.09.15.3 was the historical exact physical-device candidate for that packing tranche only; current release-specific validation identity is governed by data/release-external-validation-v1.json and must not be inferred from this architecture history.",
+    "2026-09-18 audit-remediation tranche packs the remaining assessment, learning/curriculum, and operational evidence/process bootstrap layers without semantic transformation, reducing BODY_SCRIPTS to 13 and directly injected root runtime scripts to 5."
   ]
 }
