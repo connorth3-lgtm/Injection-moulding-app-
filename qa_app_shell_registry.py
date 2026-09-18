@@ -76,10 +76,10 @@ for forbidden in ['correctIndex=', 'question_bank_version=', 'MM_DATA.exams=', '
 idx=text('index.html')
 for asset in ['app-shell-registry.js','app-shell-finalize.js']:
     need(f"['./{asset}','<script src=\"./{asset}\">']" in idx,f'index missing {asset}')
-need("'./src/domains/runtime-packs/operational-evidence-runtime-pack.js'" in idx,'index missing packed mould-master workspace runtime')
-need(idx.index("'./src/domains/runtime-packs/assessment-runtime-pack.js'") < idx.index("'./app-shell-registry.js'"),'registry must capture the mature pre-shell core after packed assessment evidence patches')
-need(idx.index("'./app-shell-registry.js'") < idx.index("'./src/domains/runtime-packs/learning-curriculum-runtime-pack.js'"),'registry must capture core before packed learner wrapper modules')
-need(idx.index("'./src/domains/runtime-packs/operational-evidence-runtime-pack.js'") < idx.index("'./app-shell-finalize.js'"),'packed workspace runtime must be registered before shell finalization')
+need("'./src/domains/runtime-packs/curriculum-workspace-runtime-pack.js'" in idx,'index missing packed mould-master workspace runtime')
+need(idx.index("'./src/domains/runtime-packs/assessment-evidence-depth-runtime-pack.js'") < idx.index("'./app-shell-registry.js'"),'registry must capture the mature pre-shell core after packed assessment evidence patches')
+need(idx.index("'./app-shell-registry.js'") < idx.index("'./src/domains/runtime-packs/learning-process-diagnostics-runtime-pack.js'"),'registry must capture core before packed learner wrapper modules')
+need(idx.index("'./src/domains/runtime-packs/curriculum-workspace-runtime-pack.js'") < idx.index("'./app-shell-finalize.js'"),'packed workspace runtime must be registered before shell finalization')
 need(idx.index("'./app-shell-finalize.js'") < idx.index("'./learning-analytics.js'"),'analytics may add its single lifecycle hook only after canonical shell finalization')
 
 sw=text('service-worker.js')
