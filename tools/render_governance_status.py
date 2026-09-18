@@ -18,6 +18,7 @@ LABELS = {
     "assistiveTechnology": "Real NVDA + VoiceOver validation",
     "windowsDistribution": "Signed/Store Windows distribution validation",
     "learnerOutcomes": "Real learner outcome evidence",
+    "nzqaProviderValidation": "NZQA/provider/accreditation validation",
     "productionAuthority": "Production authority",
 }
 
