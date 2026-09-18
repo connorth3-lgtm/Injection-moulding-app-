@@ -152,7 +152,7 @@ for lab_id,required in material_required.items():
 idx=text('index.html')
 need("'./src/domains/runtime-packs/evidence-runtime-pack.js'" in idx,"browser shell missing evidence runtime pack")
 need("'./src/domains/runtime-packs/assessment-runtime-pack.js'" in idx,"browser shell missing assessment runtime pack")
-need(idx.index('evidence-runtime-pack.js')<idx.index('assessment-runtime-pack.js'),'evidence pack must load before assessment approval runtime')
+need(idx.index('assessment-runtime-pack.js')<idx.index('evidence-runtime-pack.js'),'assessment approval runtime must load before the later evidence runtime pack')
 sw=text('service-worker.js'); need("'./material-behaviour-labs.js'" in sw and "'./assessment-evidence-sources.js'" in sw and "'./assessment-evidence-approval.js'" in sw,'evidence/material assets missing from offline cache')
 pkg=text('desktop/electron/package.json'); need('../../material-behaviour-labs.js' in pkg and '../../assessment-evidence-sources.js' in pkg and '../../assessment-evidence-approval.js' in pkg,'evidence/material assets missing from desktop package')
 integ=text('desktop/electron/scripts/generate-integrity.cjs'); need("'material-behaviour-labs.js'" in integ and "'assessment-evidence-sources.js'" in integ and "'assessment-evidence-approval.js'" in integ,'evidence/material assets missing from integrity manifest')
