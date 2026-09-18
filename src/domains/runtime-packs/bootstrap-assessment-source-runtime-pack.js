@@ -490,7 +490,7 @@ window.MM_MEASURED_EVIDENCE={version:VERSION,canonical:{...CANONICAL},families:F
 const VERSION='2026.08.30.3';
 const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 function base(){return window.MM_MEASURED_EVIDENCE||null}
-function hasTopic(text,topic){const t=String(text||'').toLowerCase(),k=String(topic||'').toLowerCase();if(k.length>3)return t.includes(k);const safe=k.replace(/[.*+?^${}()|[\]\\]/g,'\\$&');return new RegExp(`(?:^|[^a-z0-9])${safe}(?:$|[^a-z0-9])`,'i').test(t)}
+function hasTopic(text,topic){const t=String(text||'').toLowerCase(),k=String(topic||'').toLowerCase();if(k.length>3)return t.indexOf(k)!==-1;const safe=k.replace(/[.*+?^${}()|[\]\\]/g,'\\$&');return new RegExp(`(?:^|[^a-z0-9])${safe}(?:$|[^a-z0-9])`,'i').test(t)}
 function matchedTopics(f,text){return (f.topics||[]).filter(k=>hasTopic(text,k)).sort((a,b)=>b.length-a.length)}
 function role(f){
  if(Number(f.timeSeries)>0)return {group:'direct',label:'Direct measured signal',detail:'The source contains an accepted machine, mould/cavity, sensor or energy waveform close to the decision variable.'};
