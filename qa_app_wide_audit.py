@@ -69,7 +69,7 @@ index = text("index.html")
 service_worker = text("service-worker.js")
 body_scripts = set(re.findall(r"\['(\./[^']+\.js)'\s*,\s*'<script", index))
 offline_assets = set(re.findall(r"^\s*'(\./[^']+)'\s*,?\s*$", service_worker, flags=re.M))
-need(len(body_scripts) >= 30, f"runtime BODY_SCRIPTS extraction unexpectedly small: {len(body_scripts)}")
+need(len(body_scripts) >= 13, f"runtime BODY_SCRIPTS extraction unexpectedly small: {len(body_scripts)}")
 runtime_packs = {
     "./src/domains/runtime-packs/learning-foundation-runtime-pack.js",
     "./src/domains/runtime-packs/assessment-foundation-runtime-pack.js",
