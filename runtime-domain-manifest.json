@@ -29,7 +29,10 @@
     "./src/domains/process/process-statistics.js",
     "./src/domains/shell/accessibility-loader.js",
     "./src/domains/shell/product-areas.js",
-    "./src/domains/shell/learner-ui-polish.js"
+    "./src/domains/shell/learner-ui-polish.js",
+    "./src/domains/runtime-packs/assessment-runtime-pack.js",
+    "./src/domains/runtime-packs/learning-curriculum-runtime-pack.js",
+    "./src/domains/runtime-packs/operational-evidence-runtime-pack.js"
   ],
   "dataAssets": [
     "./material-catalog-v1.json"
