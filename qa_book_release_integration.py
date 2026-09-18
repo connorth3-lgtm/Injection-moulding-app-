@@ -120,7 +120,7 @@ need("auth?.authorizationBasis?.sourceRevision!=='7ef28bd8b02994223e320fda64e998
 
 # Publication/SME/qualification boundaries remain fail-closed and unchanged in meaning.
 need(book_sme.get('status') == 'hold' and book_sme.get('reviews') == [], 'independent Book SME HOLD must not be manufactured by hardening')
-need(book_sme.get('release') == '2026.09.18.3', 'Book SME contract is not bound to the current learner release')
+need(book_sme.get('release') == json.loads((ROOT / 'version.json').read_text(encoding='utf-8')).get('web_release'), 'Book SME contract is not bound to the current learner release')
 need(len(book_sme.get('workedCaseIds', [])) == 10 and len(set(book_sme.get('workedCaseIds', []))) == 10, 'Book SME worked-case review scope is incomplete')
 need(len(book_sme.get('enrichmentChapterIds', [])) == 10 and len(set(book_sme.get('enrichmentChapterIds', []))) == 10, 'Book SME evidence-enrichment review scope is incomplete')
 need(len(book_sme.get('chapterIds', [])) == 46 and len(set(book_sme['chapterIds'])) == 46, 'Book SME chapter coverage drift')
@@ -128,7 +128,7 @@ need(qualification['effectiveCountsAfterQualificationReview'] == {'chapters':46,
 need(authorization['status'] == 'authorized' and authorization['authorizationType'] == 'governed-book-publication', 'publication authorization identity drift')
 need(authorization.get('revocationRules', {}).get('runtimeByteIntegrityMismatch') == 'fail-closed-runtime', 'runtime byte mismatch must revoke publication at runtime')
 need(authorization.get('revocationRules', {}).get('evidenceEnrichmentLedgerOrEvidenceMismatch') == 'fail-closed-runtime', 'evidence-enrichment mismatch must fail closed at runtime')
-need((authorization.get('evidenceEnrichmentAuthorization') or {}).get('release') == '2026.09.18.3', 'evidence-enrichment authorization release mismatch')
+need((authorization.get('evidenceEnrichmentAuthorization') or {}).get('release') == json.loads((ROOT / 'version.json').read_text(encoding='utf-8')).get('web_release'), 'evidence-enrichment authorization release mismatch')
 need((authorization.get('evidenceEnrichmentAuthorization') or {}).get('sectionCount') == 13, 'evidence-enrichment authorization section count drifted')
 need((authorization.get('evidenceEnrichmentAuthorization') or {}).get('independentSmeStatus') == 'hold', 'evidence-enrichment authorization must preserve SME HOLD')
 need(authorization['authorizationBasis']['sourceRevision'] == '7ef28bd8b02994223e320fda64e99808357d3219', 'authorization provenance revision drift')
