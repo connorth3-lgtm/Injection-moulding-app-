@@ -5,15 +5,15 @@ This packet governs **human** assistive-technology validation for web release `2
 ## Exact release boundary
 
 - web release: `2026.09.18.2`
-- retained pre-merge public candidate source commit: `f0bbf8410d3736da955fb0256e0c7dc1288d0712`
-- public-runtime fingerprint: `sha256:dd89c6283eaae5c72abc08b22390610ab4e8326b1a5255ad97890df2fff04752`
-- retained physical candidate: `physical-pwa-candidate-f0bbf8410d3736da955fb0256e0c7dc1288d0712` (`10524804805`)
-- candidate build run: `35288487442` (`Pre-merge Public Candidate`)
-- artifact ZIP digest: `sha256:f7b6b8cae45f1db5ce1cb53f74d195b90e848bc149f4c4a16e9bb2509e372716`
-- artifact retention expiry: `2026-10-17T23:49:02Z`
+- retained pre-merge public candidate source commit: `eca032ec96d38e5b62a1c94a5ea1d76c66713562`
+- public-runtime fingerprint: `sha256:2fb5623577a90057230f652c0e959e79128cd088c8a899cbf47aecfc4f1496f9`
+- retained physical candidate: `physical-pwa-candidate-eca032ec96d38e5b62a1c94a5ea1d76c66713562` (`10525777021`)
+- candidate build run: `35289427232` (`Pre-merge Public Candidate`)
+- artifact ZIP digest: `sha256:479fc047ea65a693aa77b6126275e21b9a24750a618957fd36b3d81f3eb66ec4`
+- artifact retention expiry: `2026-10-18T00:02:19Z`
 - evidence contract: `data/accessibility-real-at-validation-v1.json`
 
-This is a candidate **rebind**, not new AT evidence. The learner-facing runtime deliberately advanced to release `2026.09.18.2` for the learner-backup integrity change and coherent Book runtime/integrity identity. No earlier human/device evidence is relabelled. If learner-facing runtime bytes change again, this packet must be rebound before new validation is recorded.
+This is a candidate **rebind**, not new AT evidence. The learner-facing runtime deliberately advanced to release `2026.09.18.2` for exact-byte-authorized worked engineering cases and a WebKit-safe Book contents-position restore. No earlier human/device evidence is relabelled. If learner-facing runtime bytes change again, this packet must be rebound before new validation is recorded.
 
 ## Required matrix
 
