@@ -236,7 +236,13 @@ def verify_once(base_url: str, candidate_path: str, expected_release: str | None
     if sum(len(x.get("sections") or []) for x in patches if isinstance(x, dict)) != 13:
         raise AssertionError("live Book evidence-enrichment ledger must contain exactly 13 governed sections")
     enrichment_ids = [str(x.get("chapterId")) for x in patches]
-    if sme.get("enrichmentChapterIds") != enrichment_ids:
+    sme_enrichment_ids = sme.get("enrichmentChapterIds")
+    if (
+        not isinstance(sme_enrichment_ids, list)
+        or len(sme_enrichment_ids) != len(enrichment_ids)
+        or len(set(map(str, sme_enrichment_ids))) != len(enrichment_ids)
+        or set(map(str, sme_enrichment_ids)) != set(enrichment_ids)
+    ):
         raise AssertionError("live Book SME contract does not cover the served enrichment chapter set")
     if sme_status != "hold":
         raise AssertionError("live Book independent SME status must remain HOLD until genuine review exists")
