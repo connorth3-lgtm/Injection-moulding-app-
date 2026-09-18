@@ -1,11 +1,11 @@
 {
   "schemaVersion": 1,
-  "release": "2026.09.18.2",
-  "packet": "qa/ACCESSIBILITY_REAL_AT_2026.09.18.2.md",
-  "sourceSha": "eca032ec96d38e5b62a1c94a5ea1d76c66713562",
-  "runtimeFingerprint": "sha256:2fb5623577a90057230f652c0e959e79128cd088c8a899cbf47aecfc4f1496f9",
+  "release": "2026.09.18.3",
+  "packet": "qa/ACCESSIBILITY_REAL_AT_2026.09.18.3.md",
+  "sourceSha": "9ff71536215d88f60ce8a3fbdc59fc3f0874b52f",
+  "runtimeFingerprint": "sha256:cc4687fd2545c17f70d544e5952b8c95f4ee2ab0d73fddaffb3c797e8b36cda9",
   "status": "pending-real-at-validation",
-  "boundary": "Automated browser and accessibility regressions do not substitute for real assistive-technology interaction by a human reviewer. The worked-case Book release does not change that boundary. This current-release candidate rebind records exact public bytes only; it does not relabel or manufacture AT evidence.",
+  "boundary": "Automated browser and accessibility regressions do not substitute for real assistive-technology interaction by a human reviewer. The governed readiness release does not change that boundary. This current-release candidate rebind records exact public bytes only; it does not relabel or manufacture AT evidence.",
   "requiredMatrix": [
     {
       "id": "nvda-firefox-windows",

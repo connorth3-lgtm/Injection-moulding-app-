@@ -158,6 +158,8 @@ jobs:
         run: python qa_open_desktop.py
       - name: Microsoft Store submission integrity
         run: python qa_store_submission.py
+      - name: Governed Book, ISO 9001 and NZQA readiness layers
+        run: python qa_governed_readiness_layers.py
       - name: NZQA 2026 readiness integrity
         run: python qa_nzqa_readiness.py
       - name: IACET 2026 readiness integrity

@@ -61,6 +61,7 @@ book_data = [
     'book-chapters-materials-machine-v1.json',
     'book-authored-remaining-v1.json',
     'book-worked-engineering-cases-v1.json',
+    'book-evidence-enrichment-v2.json',
 ]
 for name in book_data:
     packaged = f'./src/domains/learning/book-data/{name}'
@@ -106,25 +107,30 @@ required_integrity = {
     'book-manifest-v1.json', 'book-sme-review-v1.json', 'book-qualification-resolution-all-v1.json',
     'book-claim-resolution-high-risk-v1.json', 'book-authored-foundations-v1.json',
     'book-evidence-registry-v1.json', 'book-chapters-materials-machine-v1.json', 'book-authored-remaining-v1.json',
-    'book-worked-engineering-cases-v1.json',
+    'book-worked-engineering-cases-v1.json', 'book-evidence-enrichment-v2.json',
 }
 need(required_integrity <= set(sha_by_file), f'Book byte-integrity coverage incomplete: {sorted(required_integrity - set(sha_by_file))}')
 for name in required_integrity:
     need(sha_by_file[name] == git_blob_sha(PACKAGED_ROOT / name), f'Book byte-integrity Git object mismatch: {name}')
 auth_blob = git_blob_sha(PACKAGED_ROOT / 'book-publication-authorization-v1.json')
 need(f"const AUTH_GIT_BLOB_SHA1='{auth_blob}'" in book_runtime, 'canonical runtime is not pinned to exact authorization bytes')
-for marker in ('gitBlobSha1', 'verifiedJson', 'validateIntegrityAuthorization', 'Book byte-integrity mismatch', 'WORKED_CASES_PATH', 'validateWorkedCases', 'workedCaseHtml', 'getWorkedCases'):
+for marker in ('gitBlobSha1', 'verifiedJson', 'validateIntegrityAuthorization', 'Book byte-integrity mismatch', 'WORKED_CASES_PATH', 'validateWorkedCases', 'workedCaseHtml', 'getWorkedCases', 'ENRICHMENT_PATH', 'validateEvidenceEnrichment', 'getEvidenceEnrichment'):
     need(marker in book_runtime, f'Book runtime exact-byte safeguard missing: {marker}')
 need("auth?.authorizationBasis?.sourceRevision!=='7ef28bd8b02994223e320fda64e99808357d3219'" in book_runtime, 'runtime no longer enforces reviewed source revision')
 
 # Publication/SME/qualification boundaries remain fail-closed and unchanged in meaning.
 need(book_sme.get('status') == 'hold' and book_sme.get('reviews') == [], 'independent Book SME HOLD must not be manufactured by hardening')
-need(book_sme.get('release') == '2026.09.18.2', 'Book SME contract is not bound to the worked-case learner release')
+need(book_sme.get('release') == '2026.09.18.3', 'Book SME contract is not bound to the current learner release')
 need(len(book_sme.get('workedCaseIds', [])) == 10 and len(set(book_sme.get('workedCaseIds', []))) == 10, 'Book SME worked-case review scope is incomplete')
+need(len(book_sme.get('enrichmentChapterIds', [])) == 10 and len(set(book_sme.get('enrichmentChapterIds', []))) == 10, 'Book SME evidence-enrichment review scope is incomplete')
 need(len(book_sme.get('chapterIds', [])) == 46 and len(set(book_sme['chapterIds'])) == 46, 'Book SME chapter coverage drift')
 need(qualification['effectiveCountsAfterQualificationReview'] == {'chapters':46,'claims':137,'supported':116,'qualified':21,'hold':0,'conflicting':0}, 'qualification counts drift')
 need(authorization['status'] == 'authorized' and authorization['authorizationType'] == 'governed-book-publication', 'publication authorization identity drift')
 need(authorization.get('revocationRules', {}).get('runtimeByteIntegrityMismatch') == 'fail-closed-runtime', 'runtime byte mismatch must revoke publication at runtime')
+need(authorization.get('revocationRules', {}).get('evidenceEnrichmentLedgerOrEvidenceMismatch') == 'fail-closed-runtime', 'evidence-enrichment mismatch must fail closed at runtime')
+need((authorization.get('evidenceEnrichmentAuthorization') or {}).get('release') == '2026.09.18.3', 'evidence-enrichment authorization release mismatch')
+need((authorization.get('evidenceEnrichmentAuthorization') or {}).get('sectionCount') == 13, 'evidence-enrichment authorization section count drifted')
+need((authorization.get('evidenceEnrichmentAuthorization') or {}).get('independentSmeStatus') == 'hold', 'evidence-enrichment authorization must preserve SME HOLD')
 need(authorization['authorizationBasis']['sourceRevision'] == '7ef28bd8b02994223e320fda64e99808357d3219', 'authorization provenance revision drift')
 
 # Book is now part of the primary search surface and read/listen still render one governed chapter representation.

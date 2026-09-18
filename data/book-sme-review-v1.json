@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "bookId": "mouldmaster-book",
-  "release": "2026.09.18.2",
+  "release": "2026.09.18.3",
   "manifestVersion": "2026.09.14.1",
   "status": "hold",
   "policy": "Human SME review is independent external evidence. Automated QA may verify coverage, fingerprints/identity and review-record shape, but must never create or infer an SME approval.",
@@ -90,5 +90,18 @@
     "worked-heat-load-v1",
     "worked-diagnostic-short-shot-v1"
   ],
-  "workedCaseReviewRule": "Each workedCaseId must be reviewed inside its owning chapter across the same six requiredDimensions. A chapter approval for this release must include the worked case where present; automation must not create or infer that approval."
+  "workedCaseReviewRule": "Each workedCaseId must be reviewed inside its owning chapter across the same six requiredDimensions. A chapter approval for this release must include the worked case where present; automation must not create or infer that approval.",
+  "enrichmentChapterIds": [
+    "mould-anatomy",
+    "cooling",
+    "hot-runners",
+    "black-specks",
+    "pressure-loss",
+    "warpage",
+    "process-window",
+    "documentation",
+    "process-monitoring",
+    "multi-cavity"
+  ],
+  "enrichmentReviewRule": "Each enrichmentChapterId must be reviewed with all published evidence-enrichment sections in that chapter. Automation may verify scope and identity but must not create or infer human SME approval."
 }

@@ -23,6 +23,7 @@ MANIFEST = BOOK_ROOT + "book-manifest-v1.json"
 AUTH = BOOK_ROOT + "book-publication-authorization-v1.json"
 SME = BOOK_ROOT + "book-sme-review-v1.json"
 WORKED = BOOK_ROOT + "book-worked-engineering-cases-v1.json"
+ENRICHMENT = BOOK_ROOT + "book-evidence-enrichment-v2.json"
 RUNTIME = "src/domains/learning/book-runtime.js"
 BATCHES = (
     BOOK_ROOT + "book-authored-foundations-v1.json",
@@ -54,6 +55,9 @@ RUNTIME_MARKERS = (
     "WORKED_CASES_PATH",
     "validateWorkedCases",
     "workedCaseHtml",
+    "ENRICHMENT_PATH",
+    "validateEvidenceEnrichment",
+    "getEvidenceEnrichment",
 )
 
 
@@ -80,10 +84,7 @@ def fetch_bytes(root: str, path: str) -> bytes:
 
 
 def fetch_text(root: str, path: str) -> str:
-    body = fetch_bytes(root, path)
-    if status != 200:
-        raise AssertionError(f"{path} unavailable: HTTP {status}")
-    return body.decode("utf-8", errors="strict")
+    return fetch_bytes(root, path).decode("utf-8", errors="strict")
 
 
 def fetch_json(root: str, path: str) -> dict:
@@ -153,7 +154,7 @@ def verify_once(base_url: str, candidate_path: str, expected_release: str | None
     cache_match = re.search(r"CACHE_VERSION\s*=\s*['\"]([^'\"]+)['\"]", worker)
     if not cache_match or cache_match.group(1) != web_release:
         raise AssertionError("candidate service-worker release does not match version.json")
-    for path in (RUNTIME, MANIFEST, AUTH, SME, WORKED, *BATCHES):
+    for path in (RUNTIME, MANIFEST, AUTH, SME, WORKED, ENRICHMENT, *BATCHES):
         marker = f"'./{path}'"
         if marker not in worker and f'"./{path}"' not in worker:
             raise AssertionError(f"candidate service worker does not govern Book asset: {path}")
@@ -189,7 +190,7 @@ def verify_once(base_url: str, candidate_path: str, expected_release: str | None
     hashes = integrity.get("gitBlobSha1ByFile") if isinstance(integrity, dict) else None
     if not isinstance(hashes, dict) or integrity.get("algorithm") != "git-blob-sha1":
         raise AssertionError("live Book exact-byte authorization contract is missing")
-    integrity_paths = (MANIFEST, SME, WORKED, *BATCHES)
+    integrity_paths = (MANIFEST, SME, WORKED, ENRICHMENT, *BATCHES)
     for path in integrity_paths:
         name = path.rsplit("/", 1)[-1]
         expected = hashes.get(name)
@@ -207,6 +208,14 @@ def verify_once(base_url: str, candidate_path: str, expected_release: str | None
     if worked_auth.get("independentSmeStatus") != "hold":
         raise AssertionError("live Book worked-case authorization must preserve independent SME HOLD")
 
+    enrichment_auth = auth.get("evidenceEnrichmentAuthorization")
+    if not isinstance(enrichment_auth, dict) or enrichment_auth.get("status") != "authorized":
+        raise AssertionError("live Book evidence-enrichment authorization is missing")
+    if enrichment_auth.get("release") != web_release or enrichment_auth.get("chapterCount") != 10 or enrichment_auth.get("sectionCount") != 13:
+        raise AssertionError("live Book evidence-enrichment authorization is not bound to the served release")
+    if enrichment_auth.get("independentSmeStatus") != "hold":
+        raise AssertionError("live Book evidence-enrichment authorization must preserve independent SME HOLD")
+
     sme = fetch_json(candidate, SME)
     sme_status, sme_approved, sme_total = sme_summary(sme, ids)
     worked = fetch_json(candidate, WORKED)
@@ -218,6 +227,17 @@ def verify_once(base_url: str, candidate_path: str, expected_release: str | None
     worked_ids = [str(x.get("id")) for x in cases]
     if sme.get("release") != web_release or sme.get("workedCaseIds") != worked_ids:
         raise AssertionError("live Book SME contract does not cover the served worked-case set")
+    enrichment = fetch_json(candidate, ENRICHMENT)
+    patches = enrichment.get("chapterPatches")
+    if enrichment.get("schemaVersion") != 1 or enrichment.get("bookId") != "mouldmaster-book" or enrichment.get("release") != web_release:
+        raise AssertionError("live Book evidence-enrichment ledger identity/release mismatch")
+    if not isinstance(patches, list) or len(patches) != 10 or len({str(x.get("chapterId")) for x in patches if isinstance(x, dict)}) != 10:
+        raise AssertionError("live Book evidence-enrichment ledger must contain exactly 10 unique chapter patches")
+    if sum(len(x.get("sections") or []) for x in patches if isinstance(x, dict)) != 13:
+        raise AssertionError("live Book evidence-enrichment ledger must contain exactly 13 governed sections")
+    enrichment_ids = [str(x.get("chapterId")) for x in patches]
+    if sme.get("enrichmentChapterIds") != enrichment_ids:
+        raise AssertionError("live Book SME contract does not cover the served enrichment chapter set")
     if sme_status != "hold":
         raise AssertionError("live Book independent SME status must remain HOLD until genuine review exists")
 
@@ -247,7 +267,7 @@ def verify_once(base_url: str, candidate_path: str, expected_release: str | None
         f"Live MouldMaster Book candidate verified at {candidate}: release {web_release}; "
         "8 parts / 46 chapters; authorization 116 supported / 21 scoped-qualified / 0 hold / 0 conflict; "
         f"independent SME contract status={sme_status!r}, approved={sme_approved}/{sme_total}; "
-        "10 byte-authorized worked cases are covered by the SME HOLD; authored drafts remain non-self-promoting; "
+        "10 byte-authorized worked cases and 13 enrichment sections are covered by the SME HOLD; authored drafts remain non-self-promoting; "
         "Read/Listen shared-runtime markers are present."
     )
 
