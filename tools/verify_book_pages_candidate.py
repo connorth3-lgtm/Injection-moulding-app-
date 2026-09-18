@@ -10,6 +10,7 @@ accessibility, independent SME approval or learner-outcome evidence.
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import re
 import time
@@ -21,6 +22,7 @@ BOOK_ROOT = "src/domains/learning/book-data/"
 MANIFEST = BOOK_ROOT + "book-manifest-v1.json"
 AUTH = BOOK_ROOT + "book-publication-authorization-v1.json"
 SME = BOOK_ROOT + "book-sme-review-v1.json"
+WORKED = BOOK_ROOT + "book-worked-engineering-cases-v1.json"
 RUNTIME = "src/domains/learning/book-runtime.js"
 BATCHES = (
     BOOK_ROOT + "book-authored-foundations-v1.json",
@@ -49,6 +51,9 @@ RUNTIME_MARKERS = (
     "reader.refresh?.()",
     "play.click()",
     "Authored draft cannot self-promote to verified",
+    "WORKED_CASES_PATH",
+    "validateWorkedCases",
+    "workedCaseHtml",
 )
 
 
@@ -63,8 +68,19 @@ def fetch(url: str) -> tuple[int, bytes]:
         raise RuntimeError(f"could not fetch {url}: {exc}") from exc
 
 
-def fetch_text(root: str, path: str) -> str:
+def git_blob_sha(body: bytes) -> str:
+    return hashlib.sha1(f"blob {len(body)}\0".encode() + body).hexdigest()
+
+
+def fetch_bytes(root: str, path: str) -> bytes:
     status, body = fetch(urljoin(root, path))
+    if status != 200:
+        raise AssertionError(f"{path} unavailable: HTTP {status}")
+    return body
+
+
+def fetch_text(root: str, path: str) -> str:
+    body = fetch_bytes(root, path)
     if status != 200:
         raise AssertionError(f"{path} unavailable: HTTP {status}")
     return body.decode("utf-8", errors="strict")
@@ -137,7 +153,7 @@ def verify_once(base_url: str, candidate_path: str, expected_release: str | None
     cache_match = re.search(r"CACHE_VERSION\s*=\s*['\"]([^'\"]+)['\"]", worker)
     if not cache_match or cache_match.group(1) != web_release:
         raise AssertionError("candidate service-worker release does not match version.json")
-    for path in (RUNTIME, MANIFEST, AUTH, SME, *BATCHES):
+    for path in (RUNTIME, MANIFEST, AUTH, SME, WORKED, *BATCHES):
         marker = f"'./{path}'"
         if marker not in worker and f'"./{path}"' not in worker:
             raise AssertionError(f"candidate service worker does not govern Book asset: {path}")
@@ -155,11 +171,11 @@ def verify_once(base_url: str, candidate_path: str, expected_release: str | None
     auth = fetch_json(candidate, AUTH)
     if auth.get("schema") != 1 or auth.get("bookId") != "mouldmaster-book" or auth.get("status") != "authorized":
         raise AssertionError("live Book publication authorization is not authorized")
-    if auth.get("version") != manifest.get("version"):
-        raise AssertionError("live Book manifest/authorization version mismatch")
     snapshot = auth.get("governanceSnapshot")
     if not isinstance(snapshot, dict):
         raise AssertionError("live Book authorization governance snapshot is missing")
+    if snapshot.get("manifestVersion") != manifest.get("version"):
+        raise AssertionError("live Book authorization governance snapshot does not bind the served manifest version")
     for key, expected in EXPECTED_SNAPSHOT.items():
         if snapshot.get(key) != expected:
             raise AssertionError(f"live Book authorization snapshot mismatch for {key}: {snapshot.get(key)!r}")
@@ -169,8 +185,41 @@ def verify_once(base_url: str, candidate_path: str, expected_release: str | None
     if set(authorized) != set(ids):
         raise AssertionError("live Book authorization chapter set does not exactly match the manifest")
 
+    integrity = auth.get("runtimeIntegrity")
+    hashes = integrity.get("gitBlobSha1ByFile") if isinstance(integrity, dict) else None
+    if not isinstance(hashes, dict) or integrity.get("algorithm") != "git-blob-sha1":
+        raise AssertionError("live Book exact-byte authorization contract is missing")
+    integrity_paths = (MANIFEST, SME, WORKED, *BATCHES)
+    for path in integrity_paths:
+        name = path.rsplit("/", 1)[-1]
+        expected = hashes.get(name)
+        if not isinstance(expected, str) or not re.fullmatch(r"[0-9a-f]{40}", expected):
+            raise AssertionError(f"live Book exact-byte authorization missing: {name}")
+        actual = git_blob_sha(fetch_bytes(candidate, path))
+        if actual != expected:
+            raise AssertionError(f"live Book exact-byte authorization mismatch: {name}")
+
+    worked_auth = auth.get("workedCasesAuthorization")
+    if not isinstance(worked_auth, dict) or worked_auth.get("status") != "authorized":
+        raise AssertionError("live Book worked-case authorization is missing")
+    if worked_auth.get("release") != web_release or worked_auth.get("caseCount") != 10 or worked_auth.get("claimCount") != 10:
+        raise AssertionError("live Book worked-case authorization is not bound to the served release")
+    if worked_auth.get("independentSmeStatus") != "hold":
+        raise AssertionError("live Book worked-case authorization must preserve independent SME HOLD")
+
     sme = fetch_json(candidate, SME)
     sme_status, sme_approved, sme_total = sme_summary(sme, ids)
+    worked = fetch_json(candidate, WORKED)
+    cases = worked.get("cases")
+    if worked.get("schemaVersion") != 1 or worked.get("bookId") != "mouldmaster-book" or worked.get("release") != web_release:
+        raise AssertionError("live Book worked-case ledger identity/release mismatch")
+    if not isinstance(cases, list) or len(cases) != 10 or len({str(x.get("id")) for x in cases if isinstance(x, dict)}) != 10:
+        raise AssertionError("live Book worked-case ledger must contain exactly 10 unique cases")
+    worked_ids = [str(x.get("id")) for x in cases]
+    if sme.get("release") != web_release or sme.get("workedCaseIds") != worked_ids:
+        raise AssertionError("live Book SME contract does not cover the served worked-case set")
+    if sme_status != "hold":
+        raise AssertionError("live Book independent SME status must remain HOLD until genuine review exists")
 
     authored: set[str] = set()
     for path in BATCHES:
@@ -198,7 +247,8 @@ def verify_once(base_url: str, candidate_path: str, expected_release: str | None
         f"Live MouldMaster Book candidate verified at {candidate}: release {web_release}; "
         "8 parts / 46 chapters; authorization 116 supported / 21 scoped-qualified / 0 hold / 0 conflict; "
         f"independent SME contract status={sme_status!r}, approved={sme_approved}/{sme_total}; "
-        "authored drafts remain non-self-promoting; Read/Listen shared-runtime markers are present."
+        "10 byte-authorized worked cases are covered by the SME HOLD; authored drafts remain non-self-promoting; "
+        "Read/Listen shared-runtime markers are present."
     )
 
 
