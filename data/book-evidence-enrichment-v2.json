@@ -188,6 +188,24 @@
       "title": "Developing a method for evaluating color changeover in a hot-runner multi-cavity injection mold",
       "url": "https://doi.org/10.1016/j.polymertesting.2022.107759",
       "scope": "Cycle- and cavity-identified hot-runner colour-change recovery study. It demonstrates why recovery should be treated as a trajectory; colour carryover is an analogue and does not establish black-speck recovery behaviour."
+    },
+    {
+      "id": "ISO-9001-2026",
+      "type": "international-standard",
+      "title": "ISO 9001:2026 — Quality management systems — Requirements",
+      "url": "https://www.iso.org/standard/9001",
+      "scope": "Current published ISO 9001 requirements basis. MouldMaster uses copyright-safe paraphrased support themes only; this source does not make MouldMaster or a user organisation certified or conforming.",
+      "checked": "2026-09-18",
+      "currentState": "published"
+    },
+    {
+      "id": "ISO-9000-2026",
+      "type": "international-standard",
+      "title": "ISO 9000:2026 — Quality management — Fundamentals and vocabulary",
+      "url": "https://www.iso.org/standard/9000",
+      "scope": "Current published fundamentals and vocabulary reference for quality-management terminology.",
+      "checked": "2026-09-18",
+      "currentState": "published"
     }
   ],
   "chapterPatches": [
@@ -293,12 +311,18 @@
       "chapterId": "documentation",
       "sourceIds": [
         "ESREL-MOULD-MAINT-2025",
-        "procir-2017-mould-maintenance-time-cbr"
+        "procir-2017-mould-maintenance-time-cbr",
+        "ISO-9001-2026",
+        "ISO-9000-2026"
       ],
       "sections": [
         {
           "title": "Record maintenance so recovery can be proved",
           "text": "A maintenance record should preserve enough information to connect the asset, its production exposure, the observed condition, the work carried out and the verified result. Record stable mould and component identity, shot count or other defensible exposure, the measured pre-maintenance condition, the specific intervention, the post-maintenance condition and a comparable part-quality or metrology check.\n\n‘Cleaned mould — running OK’ is not enough for later diagnosis. If a value was never measured, record it as missing rather than reconstructing it after the event. The purpose of the record is to let a future engineer test whether the same degradation pattern is returning and whether the previous intervention genuinely restored performance.\n\nExercise: start with “Mould 7 — parts out of tolerance. Tool cleaned and repaired. Running OK.” Add the stable component identity, production exposure, measured pre-condition, specific intervention, measured post-condition, comparable part-quality verification and the observation period used to call the process recovered."
+        },
+        {
+          "title": "Quality records need evidence, not just completion",
+          "text": "A quality record is useful when it preserves objective evidence, identity, timing and responsibility well enough for another person to review the decision. For nonconformity and corrective action, keep detection, containment, cause investigation, approved action and effectiveness verification separate. For measurement resources, keep the intended use, calibration or verification evidence, traceability and limitations visible. For competence, distinguish learning evidence from the organisation’s authorization to perform a role. For controlled changes, preserve what was superseded and how the new state will be verified.\n\nISO 9001:2026 provides the current organisation-level QMS requirements context; ISO 9000:2026 provides the current quality-management vocabulary. MouldMaster supports evidence discipline and learning, but it does not establish organisational conformity, certification, accreditation, auditor approval or production-release authority. Use a licensed copy of ISO 9001 for requirement text; this Book section intentionally paraphrases support themes rather than reproducing normative clauses."
         }
       ]
     },
