@@ -14,6 +14,7 @@ This page is generated from `data/governance-state-model-v1.json`. Do not hand-e
 | Real NVDA + VoiceOver validation | **hold** |
 | Signed/Store Windows distribution validation | **hold** |
 | Real learner outcome evidence | **hold** |
+| NZQA/provider/accreditation validation | **hold** |
 | Production authority | **advisory-only** |
 
 ## Interpretation

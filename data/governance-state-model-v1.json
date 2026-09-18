@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "modelId": "mouldmaster-governance-state-model",
-  "version": "2026.09.17.2",
+  "version": "2026.09.18.1",
   "purpose": "One canonical vocabulary and transition model for technical automation, evidence maturity, publication authorization, external validation, distribution validation and production authority. Status words from different namespaces must never be treated as interchangeable.",
   "namespaces": {
     "technicalAutomation": {
@@ -92,13 +92,14 @@
     "externalValidation": "data/release-external-validation-v1.json",
     "bookPublication": "data/book-publication-authorization-v1.json",
     "bookIndependentSme": "data/book-sme-review-v1.json",
-    "curriculumIndependentSme": "qa/curriculum-semantic-review.json"
+    "curriculumIndependentSme": "qa/curriculum-semantic-review.json",
+    "nzqaExternalValidation": "data/nzqa-external-validation-v1.json"
   },
   "invariants": [
     {"id": "automation-does-not-create-external-evidence", "rule": "technicalAutomation=pass must never promote externalValidation or distributionValidation from hold to validated."},
     {"id": "publication-is-not-independent-validation", "rule": "publicationAuthorization=authorized may coexist with externalValidation=hold and must not be presented as independent SME approval."},
     {"id": "holds-are-not-test-failures", "rule": "A truthful external HOLD is a governed blocked state, not a software-test failure and not permission to weaken a gate."},
-    {"id": "external-evidence-is-release-bound", "rule": "Physical-device, assistive-technology, SME, learner-outcome and signed-distribution evidence must identify the exact learner-facing release/candidate it validates."},
+    {"id": "external-evidence-is-release-bound", "rule": "Physical-device, assistive-technology, SME, learner-outcome, NZQA/provider/accreditation and signed-distribution evidence must identify the exact learner-facing release/candidate it validates."},
     {"id": "production-authority-fails-closed", "rule": "Current productionAuthority must remain advisory-only unless a separate governed controlled-site validation explicitly authorizes expansion."},
     {"id": "claims-derive-from-evidence", "rule": "User-facing claims such as fully externally validated, accredited, learner efficacy established, validated production recipe or automatic machine control must remain false unless their governed evidence contracts explicitly satisfy the corresponding state transition."},
     {"id": "human-review-cannot-be-synthetic", "rule": "AI review, repository CI, browser emulation and synthetic learner data cannot be recorded as the human/device evidence required by an externalValidation transition."}
@@ -120,6 +121,7 @@
     "assistiveTechnology": "hold",
     "windowsDistribution": "hold",
     "learnerOutcomes": "hold",
+    "nzqaProviderValidation": "hold",
     "productionAuthority": "advisory-only"
   }
 }

@@ -47,6 +47,7 @@ packet_expectations = {
     "bookSme": ("reviewPacket", f"qa/BOOK_SME_REVIEW_{release}.md"),
     "curriculumSme": ("reviewPacket", f"qa/CURRICULUM_SME_REVIEW_{release}.md"),
     "learnerOutcomes": ("pilotPacket", f"qa/LEARNER_PILOT_{release}.md"),
+    "nzqaProvider": ("reviewPacket", f"qa/NZQA_EXTERNAL_VALIDATION_{release}.md"),
 }
 for section_name, (key, expected) in packet_expectations.items():
     section = ledger.get(section_name) or {}
@@ -64,6 +65,16 @@ need(FP_RE.fullmatch(str(access.get("runtimeFingerprint") or "")) is not None, "
 need(access_candidate.get("release") == release, "real-AT candidate release is stale")
 need(access_candidate.get("sourceSha") == access.get("sourceSha"), "real-AT candidate source SHA drifted")
 need(access_candidate.get("runtimeFingerprint") == access.get("runtimeFingerprint"), "real-AT candidate fingerprint drifted")
+
+nzqa = load("data/nzqa-external-validation-v1.json")
+nzqa_section = ledger["nzqaProvider"]
+nzqa_candidate = nzqa.get("candidate") or {}
+need(nzqa.get("release") == release, "NZQA external-validation contract release is stale")
+need(nzqa.get("packet") == nzqa_section.get("reviewPacket"), "NZQA packet binding drifted")
+need(SHA_RE.fullmatch(str(nzqa_candidate.get("sourceSha") or "")) is not None, "NZQA candidate source SHA is invalid")
+need(FP_RE.fullmatch(str(nzqa_candidate.get("runtimeFingerprint") or "")) is not None, "NZQA candidate runtime fingerprint is invalid")
+need(len(nzqa.get("requiredGates") or []) == 8, "NZQA external-validation contract must retain eight provider gates")
+need(nzqa.get("evidence") is None, "NZQA provider HOLD must not contain completion evidence")
 
 curriculum = load("qa/curriculum-semantic-review.json")
 need(curriculum.get("release") == release, "curriculum SME contract release is stale")
@@ -99,14 +110,22 @@ try:
         actual_fp == access.get("runtimeFingerprint"),
         f"real-AT packet fingerprint is stale: expected {access.get('runtimeFingerprint')} actual {actual_fp}",
     )
+    need(
+        actual_fp == nzqa_candidate.get("runtimeFingerprint"),
+        f"NZQA external-validation packet fingerprint is stale: expected {nzqa_candidate.get('runtimeFingerprint')} actual {actual_fp}",
+    )
+    need(
+        source_sha == nzqa_candidate.get("sourceSha"),
+        "NZQA external-validation candidate source SHA drifted from the retained public candidate",
+    )
 finally:
     if PAGES.exists():
         shutil.rmtree(PAGES)
 
-for name in ("accessibility", "pwaPhysicalDevices", "windowsDistribution", "bookSme", "curriculumSme", "learnerOutcomes"):
+for name in ("accessibility", "pwaPhysicalDevices", "windowsDistribution", "bookSme", "curriculumSme", "learnerOutcomes", "nzqaProvider"):
     need((ledger.get(name) or {}).get("status") == "hold", f"{name} must remain HOLD until genuine external evidence exists")
 
 print(
     f"Release validation packet QA passed for {release}: exact public runtime {candidate['runtimeFingerprint']} is bound to "
-    "physical-device and real-AT packets; all six external workstreams remain explicit HOLDs."
+    "physical-device, real-AT and NZQA/provider packets; all seven release-bound external workstreams remain explicit HOLDs."
 )

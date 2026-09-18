@@ -97,5 +97,11 @@
     "learnerEfficacyEstablished": false,
     "productionRecipeValidated": false,
     "automaticMachineControlAuthorized": false
+  },
+  "nzqaProvider": {
+    "status": "hold",
+    "evidenceContract": "data/nzqa-external-validation-v1.json",
+    "reviewPacket": "qa/NZQA_EXTERNAL_VALIDATION_2026.09.18.3.md",
+    "required": "Genuine provider ownership, stakeholder need, provider-approved design, authorised assessment/internal moderation, consent-to-assess/CMR confirmation, applicable national moderation, workplace evidence and provider-controlled review/change evidence for the exact governed release."
   }
 }

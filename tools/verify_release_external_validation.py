@@ -17,6 +17,7 @@ ALLOWED_SECTION_STATUS = {
     "bookSme": {"hold", "validated"},
     "curriculumSme": {"hold", "validated"},
     "learnerOutcomes": {"hold", "validated"},
+    "nzqaProvider": {"hold", "validated"},
     "productionUse": {"advisory-only"},
     "visualGovernance": {"pending-native-ruleset-apply", "enforced"},
 }
@@ -287,6 +288,63 @@ def validate_learner(section: dict, expected_release: str) -> None:
         fail("validated learner evidence must explicitly declare synthetic=false")
 
 
+def validate_nzqa(section: dict, expected_release: str) -> None:
+    packet = require_release_packet(
+        section.get("reviewPacket"),
+        expected_release,
+        f"qa/NZQA_EXTERNAL_VALIDATION_{expected_release}.md",
+        "NZQA provider validation",
+    )
+    contract = load_json(ROOT / section["evidenceContract"])
+    require_current_release(contract, expected_release, "NZQA provider validation")
+    if contract.get("packet") != packet:
+        fail("NZQA external-validation contract packet does not match the release ledger")
+    readiness_path = require_repo_file(contract.get("readinessContract"), "NZQA readiness contract is missing")
+    templates_path = require_repo_file(contract.get("providerTemplatesContract"), "NZQA provider evidence-template contract is missing")
+    readiness = load_json(ROOT / readiness_path)
+    templates = load_json(ROOT / templates_path)
+    if readiness.get("id") != "mouldmaster-nzqa-education-readiness" or readiness.get("releaseTarget") != expected_release:
+        fail("NZQA readiness contract identity/release target is stale")
+    if templates.get("id") != "mouldmaster-nzqa-provider-evidence-templates":
+        fail("NZQA provider evidence-template contract identity is invalid")
+    candidate = contract.get("candidate")
+    if not isinstance(candidate, dict):
+        fail("NZQA external-validation candidate binding is missing")
+    require_sha(candidate.get("sourceSha"), "NZQA candidate sourceSha")
+    require_fingerprint(candidate.get("runtimeFingerprint"), "NZQA candidate runtimeFingerprint")
+    gates = contract.get("requiredGates")
+    expected_ids = {
+        "G1-provider", "G2-need", "G3-design", "G4-assessment",
+        "G5-consent", "G6-national-moderation", "G7-workplace", "G8-review",
+    }
+    if not isinstance(gates, list) or len(gates) != len(expected_ids):
+        fail("NZQA external-validation contract must contain all eight governed provider gates")
+    by_id = {row.get("id"): row for row in gates if isinstance(row, dict)}
+    if set(by_id) != expected_ids:
+        fail("NZQA external-validation gate identity set is incomplete or duplicated")
+
+    if section["status"] == "hold":
+        if contract.get("status") == "validated":
+            fail("NZQA provider validation is marked hold although its evidence contract says validated")
+        if contract.get("evidence") is not None:
+            fail("NZQA provider HOLD must not contain synthetic completion evidence")
+        for gate_id, row in by_id.items():
+            if row.get("status") in {"pass", "validated"} or row.get("evidenceRef"):
+                fail(f"NZQA provider HOLD contains premature completion evidence: {gate_id}")
+        return
+
+    if contract.get("status") != "validated":
+        fail("NZQA provider validation cannot be promoted until its external contract is validated")
+    evidence = contract.get("evidence")
+    if not isinstance(evidence, dict):
+        fail("validated NZQA provider status requires a release-bound evidence object")
+    require_current_release(evidence, expected_release, "NZQA provider evidence")
+    for gate_id, row in by_id.items():
+        if row.get("status") not in {"pass", "validated"}:
+            fail(f"validated NZQA provider evidence requires gate completion: {gate_id}")
+        require_nonempty(row.get("evidenceRef"), f"validated NZQA gate {gate_id} is missing evidenceRef")
+
+
 def main() -> None:
     expected_release = load_current_release()
     data = load_json(CONTRACT)
@@ -339,6 +397,7 @@ def main() -> None:
     validate_book_sme(data["bookSme"], expected_release)
     validate_curriculum(data["curriculumSme"], expected_release)
     validate_learner(data["learnerOutcomes"], expected_release)
+    validate_nzqa(data["nzqaProvider"], expected_release)
 
     production = data["productionUse"]
     if production.get("status") != "advisory-only" or production.get("authority") != "no-automatic-machine-control":
@@ -359,7 +418,7 @@ def main() -> None:
         fail("unsupported release claims must remain false until a separately reviewed policy change: " + ", ".join(promoted))
 
     holds = [
-        name for name in ("accessibility", "pwaPhysicalDevices", "windowsDistribution", "bookSme", "curriculumSme", "learnerOutcomes")
+        name for name in ("accessibility", "pwaPhysicalDevices", "windowsDistribution", "bookSme", "curriculumSme", "learnerOutcomes", "nzqaProvider")
         if data[name]["status"] == "hold"
     ]
     print(
