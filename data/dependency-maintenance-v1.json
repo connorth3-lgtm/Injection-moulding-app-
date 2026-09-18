@@ -25,7 +25,7 @@
     },
     {
       "id": "electron-desktop",
-      "declared": "44.2.0",
+      "declared": "44.3.0",
       "statusAtReview": "supported-stable",
       "eol": "2027-03-02",
       "owner": "repository-maintainer",
@@ -34,7 +34,7 @@
     },
     {
       "id": "electron-builder",
-      "declared": "26.16.0",
+      "declared": "26.16.1",
       "statusAtReview": "pinned-build-tool",
       "reviewRequired": true,
       "owner": "repository-maintainer",
