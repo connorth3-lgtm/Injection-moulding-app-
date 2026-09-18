@@ -68,8 +68,8 @@ need('./src/domains/engineering/engineering-store.js' in assets,'canonical engin
 need('./src/domains/engineering/store-bridge.js' not in assets,'retired engineering store bridge remains in domain manifest')
 
 idx=text('index.html')
-need("'./src/domains/runtime-packs/operational-evidence-runtime-pack.js'" in idx,'browser runtime does not load packed Mould Master workspace')
-need(idx.index("'./src/domains/runtime-packs/operational-evidence-runtime-pack.js'") < idx.index("'./src/domains/domain-bootstrap.js'"),'domain bootstrap must load after packed workspace surface so canonical-store hydration can complete')
+need("'./src/domains/runtime-packs/curriculum-workspace-runtime-pack.js'" in idx,'browser runtime does not load packed Mould Master workspace')
+need(idx.index("'./src/domains/runtime-packs/curriculum-workspace-runtime-pack.js'") < idx.index("'./src/domains/domain-bootstrap.js'"),'domain bootstrap must load after packed workspace surface so canonical-store hydration can complete')
 
 sw=text('service-worker.js')
 need("'./mould-master-workspace.js'" in sw,'Mould Master workspace missing from offline cache')
