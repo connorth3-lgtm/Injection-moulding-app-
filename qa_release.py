@@ -73,7 +73,7 @@ index = text("index.html")
 assert f'const SHELL_RELEASE="{WEB_RELEASE}"' in index
 assert 'const RUNTIME_ASSET_VERSION=SHELL_RELEASE;' in index
 assert 'const CORE_URL="./src/core-runtime/core-source.txt"' in index
-assert "BODY_SCRIPTS" in index and "'./source-library.js'" in index, "source library not loaded by shell"
+assert "BODY_SCRIPTS" in index and "'./src/domains/runtime-packs/operational-evidence-runtime-pack.js'" in index, "packed source library runtime not loaded by shell"
 for marker in ["Content-Security-Policy", "default-src 'self'", "object-src 'none'", "frame-src 'none'", "connect-src 'self'", "worker-src 'self'"]:
     assert marker in index, f"browser CSP boundary missing: {marker}"
 for asset in [
@@ -95,8 +95,8 @@ for asset in [
 ]:
     assert f"'./{asset}'" in index, f"current learner-facing runtime asset not loaded by shell: {asset}"
 assert "['./reading-patch.js','<script" not in index and "['./training-upgrade.js','<script" not in index and "['./training-qa-fix.js','<script" not in index, "learning foundation source scripts must not return as direct bootstrap entries"
-assert index.index("'./src/domains/runtime-packs/assessment-foundation-runtime-pack.js'") < index.index("'./runtime-v2.js'") < index.index("'./assessment-runtime-v2.js'") < index.index("'./assessment-ux.js'"), "runtime-v2 assessment ownership load order is wrong"
-assert index.index("'./specialist-curriculum.js'") < index.index("'./specialist-evidence-gap-extension.js'") < index.index("'./mould-master-workspace.js'") < index.index("'./app-shell-finalize.js'"), "specialist evidence/runtime finalizer load order is wrong"
+assert index.index("'./src/domains/runtime-packs/assessment-foundation-runtime-pack.js'") < index.index("'./runtime-v2.js'") < index.index("'./src/domains/runtime-packs/assessment-runtime-pack.js'"), "runtime-v2 assessment ownership load order is wrong"
+assert index.index("'./src/domains/runtime-packs/learning-curriculum-runtime-pack.js'") < index.index("'./app-shell-finalize.js'"), "specialist evidence/runtime finalizer load order is wrong"
 for retired in ["assessment-100-pass.js","assessment-deep-dive.js","assessment-answer-cue-fix.js","assessment-storage-scope.js","assessment-quality-suite.js","assessment-stable-review-bridge.js","assessment-analytics-ui.js","assessment-final-hardening.js"]:
     assert f"['./{retired}','<script" not in index, f"assessment foundation direct source is still injected: {retired}"
 
