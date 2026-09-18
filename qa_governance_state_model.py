@@ -69,6 +69,8 @@ def validate_public_snapshot(snapshot: dict, *, book_sme: dict, curriculum_sme: 
         raise AssertionError("Windows distribution status cannot outrun signed/platform/physical evidence")
     if snapshot.get("learnerOutcomes") == "validated" and external.get("learnerOutcomes", {}).get("status") != "validated":
         raise AssertionError("learner-outcome status cannot outrun genuine learner evidence")
+    if snapshot.get("nzqaProviderValidation") == "validated" and external.get("nzqaProvider", {}).get("status") != "validated":
+        raise AssertionError("NZQA/provider validation cannot outrun genuine provider/consent/moderation evidence")
     if snapshot.get("productionAuthority") != "advisory-only":
         raise AssertionError("public MouldMaster production authority must remain advisory-only without separate controlled-site authorization")
 
@@ -88,12 +90,14 @@ def main() -> None:
     book_auth = load("data/book-publication-authorization-v1.json")
     book_sme = load("data/book-sme-review-v1.json")
     curriculum_sme = load("qa/curriculum-semantic-review.json")
+    nzqa_external = load("data/nzqa-external-validation-v1.json")
 
     validate_model_shape(model)
 
     assert external.get("release") == version.get("web_release"), "external-validation contract must bind to current web release"
     assert book_sme.get("release") == version.get("web_release"), "Book SME contract must bind to current web release"
     assert curriculum_sme.get("release") == version.get("web_release"), "curriculum SME contract must bind to current web release"
+    assert nzqa_external.get("release") == version.get("web_release"), "NZQA external-validation contract must bind to current web release"
 
     state_allowed(model, "technicalAutomation", external["technicalAutomation"]["status"])
     state_allowed(model, "publicationAuthorization", book_auth["status"])
@@ -103,6 +107,7 @@ def main() -> None:
     state_allowed(model, "externalValidation", external["pwaPhysicalDevices"]["status"])
     state_allowed(model, "externalValidation", external["accessibility"]["status"])
     state_allowed(model, "externalValidation", external["learnerOutcomes"]["status"])
+    state_allowed(model, "externalValidation", external["nzqaProvider"]["status"])
     state_allowed(model, "distributionValidation", external["windowsDistribution"]["status"])
     state_allowed(model, "productionAuthority", external["productionUse"]["status"])
 
@@ -113,7 +118,7 @@ def main() -> None:
     assert external["curriculumSme"]["status"] == "hold", "curriculum SME must remain HOLD until all 120 human reviews exist"
     assert curriculum_sme.get("reviews") == [], "current curriculum SME ledger must not contain manufactured approvals"
 
-    for key in ("pwaPhysicalDevices", "accessibility", "windowsDistribution", "learnerOutcomes"):
+    for key in ("pwaPhysicalDevices", "accessibility", "windowsDistribution", "learnerOutcomes", "nzqaProvider"):
         assert external[key]["status"] == "hold", f"{key} must remain HOLD until genuine release-bound evidence exists"
 
     assert external["productionUse"]["status"] == "advisory-only"
@@ -139,6 +144,7 @@ def main() -> None:
         "assistiveTechnology": external["accessibility"]["status"],
         "windowsDistribution": external["windowsDistribution"]["status"],
         "learnerOutcomes": external["learnerOutcomes"]["status"],
+        "nzqaProviderValidation": external["nzqaProvider"]["status"],
         "productionAuthority": external["productionUse"]["status"],
     }
     assert current == expected, f"canonical state snapshot drifted from governed contracts: {current!r} != {expected!r}"
