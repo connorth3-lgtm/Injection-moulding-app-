@@ -32,8 +32,8 @@ for forbidden in ['window.getExamQuestions=function','window.startExam=function'
 require('D.exams' not in ux, 'assessment UX layer must not rewrite the exam question bank')
 require('activeExam.questions=' not in ux, 'assessment UX layer must not rewrite active assessment questions')
 require("transform:new Set()" in runtime and 'function transform(name,fn)' in runtime, 'runtime-v2 transform hook is required for assessment rotation')
-require("['./assessment-ux.js','<script src=\"./assessment-ux.js\">']" in index, 'assessment UX must load from the runtime bootstrap')
-require(index.find('runtime-v2.js') < index.find('assessment-ux.js'), 'assessment UX must load after runtime-v2')
+require("'./src/domains/runtime-packs/assessment-runtime-pack.js'" in index, 'assessment runtime pack must load from the runtime bootstrap')
+require(index.find('runtime-v2.js') < index.find('assessment-runtime-pack.js'), 'assessment runtime pack must load after runtime-v2')
 require("'./assessment-ux.js'" in sw, 'assessment UX must be available offline')
 require("'assessment-ux.js'" in integrity, 'desktop integrity manifest must include assessment UX')
 extra = pkg['build']['extraResources']
