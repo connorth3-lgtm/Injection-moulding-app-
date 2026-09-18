@@ -150,9 +150,9 @@ for lab_id,required in material_required.items():
     for r in rs: need(required.issubset(set(r['sourceIds'])),f'material lab {r["id"]} lacks required evidence: {r["sourceIds"]}')
 
 idx=text('index.html')
-for asset in ['./material-behaviour-labs.js','./assessment-evidence-sources.js','./assessment-evidence-approval.js']:
-    need(asset in idx,f'browser shell missing {asset}')
-need(idx.index('material-behaviour-labs.js')<idx.index('assessment-evidence-sources.js')<idx.index('assessment-evidence-approval.js'),'material labs and evidence assets load in wrong order')
+need("'./src/domains/runtime-packs/evidence-runtime-pack.js'" in idx,"browser shell missing evidence runtime pack")
+need("'./src/domains/runtime-packs/assessment-runtime-pack.js'" in idx,"browser shell missing assessment runtime pack")
+need(idx.index('evidence-runtime-pack.js')<idx.index('assessment-runtime-pack.js'),'evidence pack must load before assessment approval runtime')
 sw=text('service-worker.js'); need("'./material-behaviour-labs.js'" in sw and "'./assessment-evidence-sources.js'" in sw and "'./assessment-evidence-approval.js'" in sw,'evidence/material assets missing from offline cache')
 pkg=text('desktop/electron/package.json'); need('../../material-behaviour-labs.js' in pkg and '../../assessment-evidence-sources.js' in pkg and '../../assessment-evidence-approval.js' in pkg,'evidence/material assets missing from desktop package')
 integ=text('desktop/electron/scripts/generate-integrity.cjs'); need("'material-behaviour-labs.js'" in integ and "'assessment-evidence-sources.js'" in integ and "'assessment-evidence-approval.js'" in integ,'evidence/material assets missing from integrity manifest')
