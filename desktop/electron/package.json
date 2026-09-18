@@ -429,18 +429,6 @@
       {
         "from": "generated/sbom.cdx.json",
         "to": "sbom.cdx.json"
-      },
-      {
-        "from": "../../src/domains/runtime-packs/assessment-runtime-pack.js",
-        "to": "mouldmaster/src/domains/runtime-packs/assessment-runtime-pack.js"
-      },
-      {
-        "from": "../../src/domains/runtime-packs/learning-curriculum-runtime-pack.js",
-        "to": "mouldmaster/src/domains/runtime-packs/learning-curriculum-runtime-pack.js"
-      },
-      {
-        "from": "../../src/domains/runtime-packs/operational-evidence-runtime-pack.js",
-        "to": "mouldmaster/src/domains/runtime-packs/operational-evidence-runtime-pack.js"
       }
     ],
     "win": {
