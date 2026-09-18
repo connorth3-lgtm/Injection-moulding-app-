@@ -31,9 +31,6 @@ const CORE=[
   './learner-ux-repair.css',
   './src/domains/runtime-packs/learning-foundation-runtime-pack.js',
   './src/domains/runtime-packs/assessment-foundation-runtime-pack.js',
-  './src/domains/runtime-packs/assessment-runtime-pack.js',
-  './src/domains/runtime-packs/learning-curriculum-runtime-pack.js',
-  './src/domains/runtime-packs/operational-evidence-runtime-pack.js',
   './read-aloud.js',
   './runtime-v2.js',
   './assessment-runtime-v2.js',
@@ -116,7 +113,12 @@ const CORE=[
 ];
 
 const OPTIONAL=[
+  './src/domains/runtime-packs/bootstrap-assessment-source-runtime-pack.js',
   './src/domains/runtime-packs/evidence-runtime-pack.js',
+  './src/domains/runtime-packs/assessment-evidence-depth-runtime-pack.js',
+  './src/domains/runtime-packs/assessment-multimodal-runtime-pack.js',
+  './src/domains/runtime-packs/learning-process-diagnostics-runtime-pack.js',
+  './src/domains/runtime-packs/curriculum-workspace-runtime-pack.js',
   './src/domains/runtime-packs/process-data-runtime-pack.js',
   './assessment-ux.js',
   './source-library.js',
