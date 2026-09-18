@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """Fail-closed QA for Book enrichment, ISO 9001:2026 support and NZQA readiness."""
+# Generated release state is committed separately and must pass this QA on the protected PR head.
 from __future__ import annotations
 import json
 import re
