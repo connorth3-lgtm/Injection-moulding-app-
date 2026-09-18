@@ -28,8 +28,8 @@ jobs:
   runner-qa:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
         with:
           python-version: '3.12'
       - run: python -m pip install --disable-pip-version-check pandas numpy
@@ -41,8 +41,8 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
         with:
           python-version: '3.12'
       - run: python -m pip install --disable-pip-version-check pandas numpy
@@ -65,7 +65,7 @@ jobs:
           print(x['status'], x['profile']['rows'], x['profile']['measuredSignalColumns'], x['profile']['acceptedMeasuredTimeSeriesSamples'])
           PY
       - name: Upload aggregate OpenMMS evidence only
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: mouldmaster-public-measured-benchmark-openmms-t4g
           path: benchmark-results/openmms-t4g-profile.json
