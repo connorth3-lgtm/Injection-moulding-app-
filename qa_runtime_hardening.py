@@ -73,7 +73,7 @@ must(index, [
 for forbidden in ("ensureCoherentRuntime", ".unregister()", "mmBundle"):
     require(forbidden not in index, f"bootstrap hardening: destructive browser/PWA reset marker remains: {forbidden}")
 require(index.index("'./src/domains/runtime-packs/assessment-foundation-runtime-pack.js'") < index.index("'./runtime-v2.js'") < index.index("'./src/domains/runtime-packs/assessment-runtime-pack.js'"), "runtime v2 must capture the foundation assessment functions before the consolidated assessment runtime owns/decorates them")
-require(index.index("'./src/domains/runtime-packs/evidence-runtime-pack.js'") < index.index("'./src/domains/runtime-packs/assessment-runtime-pack.js'") < index.index("'./app-shell-registry.js'"), "evidence and assessment packs must load in deterministic order before shell registry")
+require(index.index("'./src/domains/runtime-packs/assessment-runtime-pack.js'") < index.index("'./src/domains/runtime-packs/evidence-runtime-pack.js'") < index.index("'./app-shell-registry.js'"), "assessment and evidence packs must load in deterministic historical order before shell registry")
 require(index.index("'./src/domains/runtime-packs/operational-evidence-runtime-pack.js'") < index.index("'./src/domains/runtime-packs/process-data-runtime-pack.js'"), "operational evidence runtime must load before process-data runtime pack")
 require(index.rindex("'./accessibility-hardening.js'") > index.index("'./learning-analytics.js'"), "accessibility hardening must run after learner-facing runtime modules are installed")
 
