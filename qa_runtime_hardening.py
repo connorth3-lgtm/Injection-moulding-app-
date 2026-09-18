@@ -66,15 +66,15 @@ must(index, [
     'throw new Error("Core training content is incomplete")', "versionMarkup", "?v=${RUNTIME_ASSET_VERSION}",
     "fetch(`${CORE_URL}?v=${RUNTIME_ASSET_VERSION}`", "window.MM_RUNTIME_ASSET_VERSION=RUNTIME_ASSET_VERSION",
     "Content-Security-Policy", "default-src 'self'", "object-src 'none'", "frame-src 'none'", "connect-src 'self'", "worker-src 'self'",
-    "'./runtime-v2.js'", "'./src/domains/runtime-packs/assessment-runtime-pack.js'", "'./src/domains/runtime-packs/learning-curriculum-runtime-pack.js'", "'./accessibility-hardening.js'",
-    "'./src/domains/runtime-packs/operational-evidence-runtime-pack.js'", "'./src/domains/runtime-packs/evidence-runtime-pack.js'",
+    "'./runtime-v2.js'", "'./src/domains/runtime-packs/bootstrap-assessment-source-runtime-pack.js'", "'./src/domains/runtime-packs/learning-process-diagnostics-runtime-pack.js'", "'./accessibility-hardening.js'",
+    "'./src/domains/runtime-packs/curriculum-workspace-runtime-pack.js'", "'./src/domains/runtime-packs/evidence-runtime-pack.js'",
     "'./src/domains/runtime-packs/process-data-runtime-pack.js'", "'./src/domains/domain-bootstrap.js'"
 ], "bootstrap hardening")
 for forbidden in ("ensureCoherentRuntime", ".unregister()", "mmBundle"):
     require(forbidden not in index, f"bootstrap hardening: destructive browser/PWA reset marker remains: {forbidden}")
-require(index.index("'./src/domains/runtime-packs/assessment-foundation-runtime-pack.js'") < index.index("'./runtime-v2.js'") < index.index("'./src/domains/runtime-packs/assessment-runtime-pack.js'"), "runtime v2 must capture the foundation assessment functions before the consolidated assessment runtime owns/decorates them")
-require(index.index("'./src/domains/runtime-packs/assessment-runtime-pack.js'") < index.index("'./src/domains/runtime-packs/evidence-runtime-pack.js'") < index.index("'./app-shell-registry.js'"), "assessment and evidence packs must load in deterministic historical order before shell registry")
-require(index.index("'./src/domains/runtime-packs/operational-evidence-runtime-pack.js'") < index.index("'./src/domains/runtime-packs/process-data-runtime-pack.js'"), "operational evidence runtime must load before process-data runtime pack")
+require(index.index("'./src/domains/runtime-packs/assessment-foundation-runtime-pack.js'") < index.index("'./runtime-v2.js'") < index.index("'./src/domains/runtime-packs/bootstrap-assessment-source-runtime-pack.js'"), "runtime v2 must capture the foundation assessment functions before the consolidated assessment runtime owns/decorates them")
+require(index.index("'./src/domains/runtime-packs/bootstrap-assessment-source-runtime-pack.js'") < index.index("'./src/domains/runtime-packs/evidence-runtime-pack.js'") < index.index("'./src/domains/runtime-packs/assessment-evidence-depth-runtime-pack.js'") < index.index("'./app-shell-registry.js'"), "assessment and evidence packs must load in deterministic historical order before shell registry")
+require(index.index("'./src/domains/runtime-packs/learning-process-diagnostics-runtime-pack.js'") < index.index("'./src/domains/runtime-packs/process-data-runtime-pack.js'") < index.index("'./src/domains/runtime-packs/curriculum-workspace-runtime-pack.js'"), "operational evidence runtime must load before process-data runtime pack")
 require(index.rindex("'./accessibility-hardening.js'") > index.index("'./learning-analytics.js'"), "accessibility hardening must run after learner-facing runtime modules are installed")
 
 must(runtime_v2, ["const CORE=['renderLesson','renderDashboard','switchView','startExam','gradeExam','getExamQuestions']", "setImplementation", "already owned by", "before:new Set(),after:new Set()", "scopedKey", "registerModule", "one owner at a time"], "runtime v2")
