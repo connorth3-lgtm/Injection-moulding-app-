@@ -3,8 +3,8 @@ import json
 import re
 
 ROOT = Path(__file__).resolve().parent
-REGISTRY = ROOT / "measured-evidence-integration.js"
-DECISION = ROOT / "measured-evidence-decision.js"
+REGISTRY_PACK = ROOT / "src/domains/runtime-packs/bootstrap-assessment-source-runtime-pack.js"
+DECISION_PACK = ROOT / "src/domains/runtime-packs/bootstrap-assessment-source-runtime-pack.js"
 SCENARIOS = ROOT / "data/measured-evidence-decision-scenarios-v1.json"
 DISCOVERY = ROOT / "data/measured-data-discovery-queue-v1.json"
 INDEX = ROOT / "index.html"
@@ -24,14 +24,16 @@ def has_topic(text, topic):
     return re.search(r"(?:^|[^a-z0-9])" + re.escape(topic) + r"(?:$|[^a-z0-9])", text, re.I) is not None
 
 
-registry = REGISTRY.read_text(encoding="utf-8")
-decision = DECISION.read_text(encoding="utf-8")
+registry_pack = REGISTRY_PACK.read_text(encoding="utf-8")
+decision_pack = DECISION_PACK.read_text(encoding="utf-8")
+need("/* >>> measured-evidence-decision.js */" in decision_pack, "bootstrap pack missing decision layer")
 scenario_doc = json.loads(SCENARIOS.read_text(encoding="utf-8"))
 discovery = json.loads(DISCOVERY.read_text(encoding="utf-8"))
 index = INDEX.read_text(encoding="utf-8")
 sw = SW.read_text(encoding="utf-8")
 
 families = []
+registry = registry_pack.split("/* >>> measured-evidence-integration.js */",1)[1].split("/* <<< measured-evidence-integration.js */",1)[0]
 for line in registry.splitlines():
     if not line.lstrip().startswith("{id:'"):
         continue
@@ -91,11 +93,12 @@ for marker in [
     "matchedTopics",
     "MM_MEASURED_EVIDENCE_DECISIONS",
 ]:
-    need(marker in decision, f"decision layer missing marker: {marker}")
+    need(marker in decision_pack, f"decision layer missing marker: {marker}")
 
-need("./measured-evidence-decision.js" in index, "index runtime loader missing decision layer")
-need("./measured-evidence-decision.js" in sw, "offline CORE missing decision layer")
-need("rawRows:[" not in decision and "samples:[" not in decision and "signalValues:[" not in decision, "decision layer must remain metadata-only")
+need("./src/domains/runtime-packs/bootstrap-assessment-source-runtime-pack.js" in index, "index runtime loader missing bootstrap assessment/source runtime pack")
+need("/* >>> measured-evidence-decision.js */" in decision_pack, "bootstrap pack missing decision layer")
+need("./src/domains/runtime-packs/bootstrap-assessment-source-runtime-pack.js" in sw, "offline CORE missing bootstrap assessment/source runtime pack")
+need("rawRows:[" not in decision_pack and "samples:[" not in decision_pack and "signalValues:[" not in decision_pack, "decision layer must remain metadata-only")
 
 active = discovery.get("activeDiscoveries", [])
 active_ids = {x.get("canonicalDatasetId") or x.get("id") for x in active}
