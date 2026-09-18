@@ -34,13 +34,14 @@ def main() -> None:
     bindings = model.get("currentReleaseBindings")
     if not isinstance(bindings, dict):
         raise AssertionError("canonical model has no currentReleaseBindings")
-    for key in ("externalValidation", "bookPublication", "bookIndependentSme", "curriculumIndependentSme"):
+    for key in ("externalValidation", "bookPublication", "bookIndependentSme", "curriculumIndependentSme", "nzqaExternalValidation"):
         referenced_file(f"currentReleaseBindings.{key}", bindings.get(key))
 
     external = load(str(bindings["externalValidation"]))
     book_publication = load(str(bindings["bookPublication"]))
     book_sme = load(str(bindings["bookIndependentSme"]))
     curriculum_sme = load(str(bindings["curriculumIndependentSme"]))
+    nzqa_external = load(str(bindings["nzqaExternalValidation"]))
 
     if external.get("release") != release:
         raise AssertionError("external-validation binding is stuck on a different release")
@@ -48,6 +49,8 @@ def main() -> None:
         raise AssertionError("Book SME binding is stuck on a different release")
     if curriculum_sme.get("release") != release:
         raise AssertionError("curriculum SME binding is stuck on a different release")
+    if nzqa_external.get("release") != release:
+        raise AssertionError("NZQA external-validation binding is stuck on a different release")
 
     referenced_file("external validation index", external.get("validationIndex"))
     packet_fields = {
@@ -57,6 +60,7 @@ def main() -> None:
         "bookSme": "reviewPacket",
         "curriculumSme": "reviewPacket",
         "learnerOutcomes": "pilotPacket",
+        "nzqaProvider": "reviewPacket",
     }
     contract_fields = {
         "accessibility": "evidenceContract",
@@ -64,6 +68,7 @@ def main() -> None:
         "bookSme": "evidenceContract",
         "curriculumSme": "evidenceContract",
         "learnerOutcomes": "pilotContract",
+        "nzqaProvider": "evidenceContract",
     }
     for section_name, packet_key in packet_fields.items():
         section = external.get(section_name)
@@ -92,6 +97,7 @@ def main() -> None:
         "assistiveTechnology",
         "windowsDistribution",
         "learnerOutcomes",
+        "nzqaProviderValidation",
         "productionAuthority",
     }
     if set(current) != expected_keys:
@@ -108,6 +114,7 @@ def main() -> None:
         "assistiveTechnology": external["accessibility"]["status"],
         "windowsDistribution": external["windowsDistribution"]["status"],
         "learnerOutcomes": external["learnerOutcomes"]["status"],
+        "nzqaProviderValidation": external["nzqaProvider"]["status"],
         "productionAuthority": external["productionUse"]["status"],
     }
     if current != derived:
