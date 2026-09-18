@@ -1,5 +1,7 @@
 /* GENERATED FILE — DO NOT EDIT DIRECTLY.
- * Audit remediation assessment runtime pack. Exact concatenation; historical execution order preserved.
+ * Built by tools/build_runtime_packs.py from reviewed classic-script parts.
+ * Concatenation preserves the exact historical execution order; no code is transformed.
+ * Pack: assessment-runtime-pack.js
  */
 
 /* >>> assessment-runtime-v2.js */
