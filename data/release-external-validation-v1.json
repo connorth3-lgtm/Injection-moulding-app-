@@ -36,13 +36,13 @@
     "evidenceContract": "data/pwa-physical-device-validation-v1.json",
     "reviewPacket": "qa/PWA_PHYSICAL_DEVICE_2026.09.18.4.md",
     "currentCandidate": {
-      "release": "2026.09.18.3",
-      "sourceSha": "9ff71536215d88f60ce8a3fbdc59fc3f0874b52f",
+      "release": "2026.09.18.4",
+      "sourceSha": "8a36385143f42fcffe29ec61bf5f23bc43741d95",
       "runtimeFingerprint": "sha256:cc4687fd2545c17f70d544e5952b8c95f4ee2ab0d73fddaffb3c797e8b36cda9",
       "candidateRunId": 35299002421,
       "candidateWorkflow": "Pre-merge Public Candidate",
       "artifactId": 10529445520,
-      "artifactName": "physical-pwa-candidate-9ff71536215d88f60ce8a3fbdc59fc3f0874b52f",
+      "artifactName": "physical-pwa-candidate-8a36385143f42fcffe29ec61bf5f23bc43741d95",
       "artifactDigest": "sha256:6b2955da193fc695e11a7e0a6e2d64b82038a6c3aa83526bf8405ca74ed2289e",
       "artifactExpiresAt": "2026-10-18T02:23:19Z"
     },
