@@ -114,6 +114,8 @@ jobs:
         run: python qa_process_data_local_intake.py
       - name: Real process-data pilot readiness
         run: python qa_real_process_data_pilot.py
+      - name: External measured-data acquisition readiness
+        run: python qa_external_data_acquisition_readiness.py
       - name: Real-site human feedback contract
         run: python qa_real_site_feedback_contract.py
       - name: Learner experience progression and mobile integrity

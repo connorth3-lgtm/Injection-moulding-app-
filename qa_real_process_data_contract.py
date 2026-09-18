@@ -94,7 +94,10 @@ for marker in [
     'maintenance, cleaning, component replacement and inspection events',
     'cycle/cavity-resolved outcomes',
     'another machine or cell',
-    'issue #73', 'issue #74', 'issue #75',
+    'issue #334', 'issue #335', 'issue #336',
+    'black-speck-intervention-recovery-template.csv',
+    'hot-runner-synchronised-trace-template.csv',
+    'mould-maintenance-recovery-template.csv',
     'does not define validated process windows',
 ]:
     need(marker in contract, f'capture contract boundary missing: {marker}')

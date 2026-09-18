@@ -1,6 +1,6 @@
 # MouldMaster — Mechanism Validation Queue
 
-Reviewed: 2026-08-29
+Reviewed: 2026-09-18
 
 This queue turns the evidence-coverage audit into executable work. It does **not** claim that formal mechanism promotion completes real-production validation. A public or site dataset should only be used where its actual fields, material/tool context and physical outcomes match the relationship being tested.
 
@@ -91,6 +91,16 @@ The first approved site pilot can strengthen transferability and troubleshooting
 - timestamped intervention with before/after recovery verification.
 
 No site-data field is required merely to satisfy this queue. Site authority, privacy rules, instrumentation and approved scope control what can be used. Raw proprietary rows remain outside the public repository.
+
+### Prepared external acquisition targets
+
+Repository-side intake preparation is complete for the three remaining high-value evidence acquisitions:
+
+- **#334 black-speck intervention/recovery** — use `data/black-speck-intervention-recovery-template.csv`; requires ordered shot/sample identity, defect observation, intervention event/timing and repeated post-intervention verification.
+- **#335 hot-runner synchronized behaviour** — use `data/hot-runner-synchronised-trace-template.csv`; requires command/target, actual valve-pin motion, actuator effort, cavity pressure and cavity-specific quality linkage.
+- **#336 mould maintenance/recovery** — use `data/mould-maintenance-recovery-template.csv`; requires stable asset/event identity, measured pre/post condition, maintenance action and comparable part-quality/metrology recovery.
+
+The templates are deliberately header-only in the public repository. Completion still requires genuine rights-clear or authorised measured records; synthetic rows, simulations, aggregate before/after percentages or command-only signals do not satisfy these issues.
 
 ## Promotion and strengthening sequence
 

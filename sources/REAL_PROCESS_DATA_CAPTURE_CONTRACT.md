@@ -1,7 +1,7 @@
 # MouldMaster real process-data capture contract
 
 Status: required metadata contract for authorised real-site pilot work; no production-control authority  
-Reviewed: 2026-08-29
+Reviewed: 2026-09-18
 
 ## Acceptance rule
 
@@ -19,7 +19,17 @@ A serious real-site pilot should be prepared as a linked set rather than one ove
 4. `data/real-process-sensor-calibration-template.csv` — sensor location, unit, calibration/zero/scaling and validity window.
 5. `data/real-process-event-template.csv` — process changes, maintenance, interventions and verification windows aligned to relative shot/time order.
 
-The public templates are header-only. Site values belong in approved private working storage.
+The public templates are header-only. Site values belong in approved private working storage. Raw proprietary rows remain outside the public repository.
+
+### Current external acquisition packets
+
+The three open high-value acquisition issues now have dedicated prepared schemas:
+
+- `data/black-speck-intervention-recovery-template.csv` — issue #334; one row per shot/sample with defect observation, intervention timing and repeated recovery-window linkage.
+- `data/hot-runner-synchronised-trace-template.csv` — issue #335; synchronized command, target stroke, actual pin position, actuator effort, cavity pressure and quality-record linkage.
+- `data/mould-maintenance-recovery-template.csv` — issue #336; asset/maintenance-event identity, pre/post condition, action, exposure and comparable quality/metrology linkage.
+
+These dedicated templates supplement the generic pilot, dictionary, trace, calibration and event files; they do not authorize collection and they do not imply that evidence has been acquired.
 
 ## Shot/cycle evidence
 
@@ -123,11 +133,11 @@ A finding should not be described as broadly generalised until independent machi
 
 ## Current external-data priority order
 
-1. Cross-process data dictionary and lower-workpiece TXT format — issue #73.
-2. ImPure analogue-input and sensor-channel definitions — issue #74.
-3. Warwick Origin/OriginPro export — issue #75.
+1. Shot-linked black-speck intervention and repeated recovery chronology — issue #334.
+2. Synchronized hot-runner command/actual/cavity/quality traces — issue #335.
+3. Mould condition → maintenance → verified recovery records — issue #336.
 
-These tasks may unlock already obtained data, but they must obey the same rule: unknown units/semantics or ambiguous source structure remain non-counting.
+Older source-unlock work remains useful where lawful source bytes become available, but the active acquisition priority is the three fault/intervention/recovery programmes above. Unknown units/semantics, ambiguous joins or unverified intervention timing remain non-counting.
 
 ## Safety and governance boundary
 
