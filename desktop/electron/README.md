@@ -6,7 +6,7 @@ This directory contains the normal open-source Windows desktop implementation fo
 
 - Current desktop release: `2026.08.26.9`
 - Source licence: Apache-2.0
-- Desktop runtime: Electron 44.2.0
+- Desktop runtime: Electron 44.3.0
 - Supported OS/architecture: Windows 10/11 64-bit
 - Packaging: electron-builder
 - Targets: portable EXE, NSIS installer, MSIX / Microsoft Store upload package

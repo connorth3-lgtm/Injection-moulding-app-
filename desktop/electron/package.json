@@ -17,8 +17,8 @@
     "dist:msix": "npm run integrity && npm run licenses && npm run sbom && npm run qa && node scripts/run-msix-builder.cjs --win msix --config.msix.setBuildNumber=true"
   },
   "devDependencies": {
-    "electron": "44.2.0",
-    "electron-builder": "26.16.0"
+    "electron": "44.3.0",
+    "electron-builder": "26.16.1"
   },
   "build": {
     "appId": "org.mouldmaster.academy",
