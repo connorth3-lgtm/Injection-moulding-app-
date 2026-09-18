@@ -19,7 +19,7 @@ A serious real-site pilot should be prepared as a linked set rather than one ove
 4. `data/real-process-sensor-calibration-template.csv` — sensor location, unit, calibration/zero/scaling and validity window.
 5. `data/real-process-event-template.csv` — process changes, maintenance, interventions and verification windows aligned to relative shot/time order.
 
-The public templates are header-only. Site values belong in approved private working storage.
+The public templates are header-only. Site values belong in approved private working storage. Raw proprietary rows remain outside the public repository.
 
 ### Current external acquisition packets
 
