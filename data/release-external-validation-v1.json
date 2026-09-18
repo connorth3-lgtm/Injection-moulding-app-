@@ -25,8 +25,8 @@
     "evidenceContract": "data/accessibility-real-at-validation-v1.json",
     "reviewPacket": "qa/ACCESSIBILITY_REAL_AT_2026.09.18.4.md",
     "candidate": {
-      "release": "2026.09.18.3",
-      "sourceSha": "9ff71536215d88f60ce8a3fbdc59fc3f0874b52f",
+      "release": "2026.09.18.4",
+      "sourceSha": "8a36385143f42fcffe29ec61bf5f23bc43741d95",
       "runtimeFingerprint": "sha256:cc4687fd2545c17f70d544e5952b8c95f4ee2ab0d73fddaffb3c797e8b36cda9"
     },
     "required": "Release-specific human NVDA and VoiceOver validation across the governed matrix."
