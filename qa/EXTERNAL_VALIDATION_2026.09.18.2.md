@@ -2,10 +2,10 @@
 
 Release `2026.09.18.2` is technically automated and governed, but the following external workstreams remain explicit **HOLD**. This index does not create human, device, learner, accreditation, signing, or production-site evidence.
 
-- retained pre-merge public candidate source: `f0bbf8410d3736da955fb0256e0c7dc1288d0712`
-- exact public-runtime fingerprint: `sha256:dd89c6283eaae5c72abc08b22390610ab4e8326b1a5255ad97890df2fff04752`
-- candidate build run: `35288487442` (`Pre-merge Public Candidate`)
-- candidate artifact: `physical-pwa-candidate-f0bbf8410d3736da955fb0256e0c7dc1288d0712` (`10524804805`; `sha256:f7b6b8cae45f1db5ce1cb53f74d195b90e848bc149f4c4a16e9bb2509e372716`; expires `2026-10-17T23:49:02Z`)
+- retained pre-merge public candidate source: `eca032ec96d38e5b62a1c94a5ea1d76c66713562`
+- exact public-runtime fingerprint: `sha256:2fb5623577a90057230f652c0e959e79128cd088c8a899cbf47aecfc4f1496f9`
+- candidate build run: `35289427232` (`Pre-merge Public Candidate`)
+- candidate artifact: `physical-pwa-candidate-eca032ec96d38e5b62a1c94a5ea1d76c66713562` (`10525777021`; `sha256:479fc047ea65a693aa77b6126275e21b9a24750a618957fd36b3d81f3eb66ec4`; expires `2026-10-18T00:02:19Z`)
 - Pages disposition: production root remains governed separately. This retained artifact is the exact validation source for the current public byte set; protected-main publication must remain byte-equivalent under the release verifier before any production decision.
 
 This is a candidate **rebind**, not external evidence. The learner-facing runtime deliberately advanced to release `2026.09.18.2` to integrate ten exact-byte-authorized synthetic Book worked engineering cases with executable calculation regression and explicit SME review scope. Existing human/device/SME/learner/Windows evidence states were not promoted or relabelled. All six external workstreams remain HOLD until genuine release-specific evidence exists.
