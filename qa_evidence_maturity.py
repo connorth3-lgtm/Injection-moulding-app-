@@ -136,7 +136,7 @@ need('fetch(' not in text('evidence-maturity-formal-bridge.js'),'formal evidence
 
 idx=text('index.html'); sw=text('service-worker.js'); pkg=text('desktop/electron/package.json'); integ=text('desktop/electron/scripts/generate-integrity.cjs')
 need('evidence-runtime-pack.js' in idx,'browser shell missing packed evidence maturity runtime')
-need('assessment-runtime-pack.js' in idx,'browser shell missing packed lesson evidence runtime')
+need('assessment-evidence-depth-runtime-pack.js' in idx,'browser shell missing packed lesson evidence runtime')
     need(f"'./{asset}'" in sw,f'offline cache missing {asset}')
     need(f'../../{asset}' in pkg,f'desktop package missing {asset}')
     need(f"'{asset}'" in integ,f'desktop integrity missing {asset}')
