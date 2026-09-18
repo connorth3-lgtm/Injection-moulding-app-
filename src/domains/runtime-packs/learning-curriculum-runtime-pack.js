@@ -1,5 +1,7 @@
 /* GENERATED FILE — DO NOT EDIT DIRECTLY.
- * Audit remediation learning/curriculum runtime pack. Exact concatenation; historical execution order preserved.
+ * Built by tools/build_runtime_packs.py from reviewed classic-script parts.
+ * Concatenation preserves the exact historical execution order; no code is transformed.
+ * Pack: learning-curriculum-runtime-pack.js
  */
 
 /* >>> lesson-evidence-depth.js */
