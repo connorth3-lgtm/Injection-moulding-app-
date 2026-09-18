@@ -79,18 +79,13 @@ for marker in ["Content-Security-Policy", "default-src 'self'", "object-src 'non
 for asset in [
     "src/domains/runtime-packs/learning-foundation-runtime-pack.js",
     "src/domains/runtime-packs/assessment-foundation-runtime-pack.js",
-    "learning-experience.js",
-    "process-data-diagnostics.js",
-    "curriculum-integration.js",
-    "specialist-curriculum.js",
-    "specialist-evidence-gap-extension.js",
-    "mould-master-workspace.js",
+    "src/domains/runtime-packs/assessment-runtime-pack.js",
+    "src/domains/runtime-packs/operational-evidence-runtime-pack.js",
+    "src/domains/runtime-packs/learning-curriculum-runtime-pack.js",
+    "src/domains/runtime-packs/process-data-runtime-pack.js",
     "app-shell-finalize.js",
     "learning-analytics.js",
     "runtime-v2.js",
-    "assessment-runtime-v2.js",
-    "lesson-deep-authoring-v2.js",
-    "assessment-multimodal.js",
     "accessibility-hardening.js",
 ]:
     assert f"'./{asset}'" in index, f"current learner-facing runtime asset not loaded by shell: {asset}"
