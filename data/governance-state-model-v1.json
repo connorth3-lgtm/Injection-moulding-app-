@@ -1,89 +1,211 @@
 {
   "schemaVersion": 1,
   "modelId": "mouldmaster-governance-state-model",
-  "version": "2026.09.17.2",
+  "version": "2026.09.18.1",
   "purpose": "One canonical vocabulary and transition model for technical automation, evidence maturity, publication authorization, external validation, distribution validation and production authority. Status words from different namespaces must never be treated as interchangeable.",
   "namespaces": {
     "technicalAutomation": {
-      "states": ["pass", "fail"],
+      "states": [
+        "pass",
+        "fail"
+      ],
       "meaning": "Result of software-controlled checks only. A pass does not create human, device, learner, accreditation, signing or production-site evidence."
     },
     "evidenceMaturity": {
-      "states": ["planned", "source-review", "technical-review", "verified", "hold"],
+      "states": [
+        "planned",
+        "source-review",
+        "technical-review",
+        "verified",
+        "hold"
+      ],
       "meaning": "Internal claim/source maturity for governed educational content. Verified is an internal evidence/publication state, not independent practitioner validation."
     },
     "publicationAuthorization": {
-      "states": ["draft", "authorized", "revoked", "hold"],
+      "states": [
+        "draft",
+        "authorized",
+        "revoked",
+        "hold"
+      ],
       "meaning": "Whether governed content may be published within its stated scope. Authorization never implies external validation."
     },
     "externalValidation": {
-      "states": ["hold", "validated"],
+      "states": [
+        "hold",
+        "validated"
+      ],
       "meaning": "Release-bound evidence produced by genuine humans/devices/platforms or other required external actors. Automated QA may validate record shape but may not create validated status."
     },
     "distributionValidation": {
-      "states": ["hold", "validated"],
+      "states": [
+        "hold",
+        "validated"
+      ],
       "meaning": "Signed/platform/physical distribution evidence for the exact governed release lane."
     },
     "productionAuthority": {
-      "states": ["advisory-only", "validated-recipe-authority", "automatic-machine-control"],
+      "states": [
+        "advisory-only",
+        "validated-recipe-authority",
+        "automatic-machine-control"
+      ],
       "meaning": "Authority boundary for production use. Current public MouldMaster is advisory-only. Higher authority requires a separate controlled-site safety and validation programme."
     }
   },
   "transitions": {
     "technicalAutomation": [
-      {"from": "pass", "to": "fail", "requires": "A governed software-controlled check fails."},
-      {"from": "fail", "to": "pass", "requires": "The failing condition is corrected and the governed check passes on the exact candidate."}
+      {
+        "from": "pass",
+        "to": "fail",
+        "requires": "A governed software-controlled check fails."
+      },
+      {
+        "from": "fail",
+        "to": "pass",
+        "requires": "The failing condition is corrected and the governed check passes on the exact candidate."
+      }
     ],
     "evidenceMaturity": [
-      {"from": "planned", "to": "source-review", "requires": "Sources are identified and claim review has begun."},
-      {"from": "source-review", "to": "technical-review", "requires": "Claim-level source fit and applicability are sufficiently developed for technical review."},
-      {"from": "technical-review", "to": "verified", "requires": "Internal governed evidence requirements are satisfied."},
-      {"from": "*", "to": "hold", "requires": "A blocking evidence, safety, conflict, freshness or applicability condition exists."},
-      {"from": "hold", "to": "source-review", "requires": "The blocking condition is resolved but source review remains incomplete."},
-      {"from": "hold", "to": "technical-review", "requires": "The blocking condition is resolved and source review is already complete."},
-      {"from": "hold", "to": "verified", "requires": "The blocking condition is resolved and all internal verification requirements are re-satisfied."}
+      {
+        "from": "planned",
+        "to": "source-review",
+        "requires": "Sources are identified and claim review has begun."
+      },
+      {
+        "from": "source-review",
+        "to": "technical-review",
+        "requires": "Claim-level source fit and applicability are sufficiently developed for technical review."
+      },
+      {
+        "from": "technical-review",
+        "to": "verified",
+        "requires": "Internal governed evidence requirements are satisfied."
+      },
+      {
+        "from": "*",
+        "to": "hold",
+        "requires": "A blocking evidence, safety, conflict, freshness or applicability condition exists."
+      },
+      {
+        "from": "hold",
+        "to": "source-review",
+        "requires": "The blocking condition is resolved but source review remains incomplete."
+      },
+      {
+        "from": "hold",
+        "to": "technical-review",
+        "requires": "The blocking condition is resolved and source review is already complete."
+      },
+      {
+        "from": "hold",
+        "to": "verified",
+        "requires": "The blocking condition is resolved and all internal verification requirements are re-satisfied."
+      }
     ],
     "publicationAuthorization": [
-      {"from": "draft", "to": "authorized", "requires": "Publication authorization policy is satisfied."},
-      {"from": "authorized", "to": "hold", "requires": "A release-blocking publication concern is discovered."},
-      {"from": "authorized", "to": "revoked", "requires": "Published authorization is explicitly withdrawn."},
-      {"from": "hold", "to": "authorized", "requires": "The blocking publication concern is resolved and authorization is re-evaluated."},
-      {"from": "revoked", "to": "draft", "requires": "A new governed publication candidate is created."}
+      {
+        "from": "draft",
+        "to": "authorized",
+        "requires": "Publication authorization policy is satisfied."
+      },
+      {
+        "from": "authorized",
+        "to": "hold",
+        "requires": "A release-blocking publication concern is discovered."
+      },
+      {
+        "from": "authorized",
+        "to": "revoked",
+        "requires": "Published authorization is explicitly withdrawn."
+      },
+      {
+        "from": "hold",
+        "to": "authorized",
+        "requires": "The blocking publication concern is resolved and authorization is re-evaluated."
+      },
+      {
+        "from": "revoked",
+        "to": "draft",
+        "requires": "A new governed publication candidate is created."
+      }
     ],
     "externalValidation": [
-      {"from": "hold", "to": "validated", "requires": "The required genuine release-bound human/device/platform evidence is complete and accepted."},
-      {"from": "validated", "to": "hold", "requires": "Learner-facing bytes, fingerprint, required matrix, evidence validity or governing release identity changes."}
+      {
+        "from": "hold",
+        "to": "validated",
+        "requires": "The required genuine release-bound human/device/platform evidence is complete and accepted."
+      },
+      {
+        "from": "validated",
+        "to": "hold",
+        "requires": "Learner-facing bytes, fingerprint, required matrix, evidence validity or governing release identity changes."
+      }
     ],
     "distributionValidation": [
-      {"from": "hold", "to": "validated", "requires": "Signed/platform provenance, package validation and required physical execution evidence are complete for the exact distribution candidate."},
-      {"from": "validated", "to": "hold", "requires": "Distribution bytes, signer/provenance, required platform validation or governed release identity changes."}
+      {
+        "from": "hold",
+        "to": "validated",
+        "requires": "Signed/platform provenance, package validation and required physical execution evidence are complete for the exact distribution candidate."
+      },
+      {
+        "from": "validated",
+        "to": "hold",
+        "requires": "Distribution bytes, signer/provenance, required platform validation or governed release identity changes."
+      }
     ],
     "productionAuthority": [
-      {"from": "advisory-only", "to": "validated-recipe-authority", "requires": "A separate controlled-site validation, safety/governance review and explicit authorization establishes recipe authority within a defined scope."},
-      {"from": "validated-recipe-authority", "to": "automatic-machine-control", "requires": "A further governed machine-control safety case, validation programme and explicit authorization are complete for the exact site/system scope."},
-      {"from": "validated-recipe-authority", "to": "advisory-only", "requires": "The controlled-site authority expires, is revoked or its validation assumptions cease to hold."},
-      {"from": "automatic-machine-control", "to": "advisory-only", "requires": "Machine-control authority expires, is revoked or its validation assumptions cease to hold."}
+      {
+        "from": "advisory-only",
+        "to": "validated-recipe-authority",
+        "requires": "A separate controlled-site validation, safety/governance review and explicit authorization establishes recipe authority within a defined scope."
+      },
+      {
+        "from": "validated-recipe-authority",
+        "to": "automatic-machine-control",
+        "requires": "A further governed machine-control safety case, validation programme and explicit authorization are complete for the exact site/system scope."
+      },
+      {
+        "from": "validated-recipe-authority",
+        "to": "advisory-only",
+        "requires": "The controlled-site authority expires, is revoked or its validation assumptions cease to hold."
+      },
+      {
+        "from": "automatic-machine-control",
+        "to": "advisory-only",
+        "requires": "Machine-control authority expires, is revoked or its validation assumptions cease to hold."
+      }
     ]
   },
   "forbiddenCombinations": [
     {
       "id": "automation-cannot-substitute-for-book-sme",
-      "when": {"technicalAutomation": "pass", "bookIndependentSme": "validated"},
+      "when": {
+        "technicalAutomation": "pass",
+        "bookIndependentSme": "validated"
+      },
       "forbiddenUnless": "The Book SME ledger contains genuine accepted human reviews for every required chapter bound to the current release."
     },
     {
       "id": "automation-cannot-substitute-for-curriculum-sme",
-      "when": {"technicalAutomation": "pass", "curriculumIndependentSme": "validated"},
+      "when": {
+        "technicalAutomation": "pass",
+        "curriculumIndependentSme": "validated"
+      },
       "forbiddenUnless": "The curriculum SME ledger contains genuine accepted human reviews for all required lessons/dimensions bound to current lesson fingerprints."
     },
     {
       "id": "external-validation-cannot-outlive-release",
-      "when": {"externalValidation": "validated"},
+      "when": {
+        "externalValidation": "validated"
+      },
       "forbiddenUnless": "The evidence release identity and runtime fingerprint exactly match the current learner-facing candidate."
     },
     {
       "id": "production-control-without-separate-authority",
-      "when": {"productionAuthority": "automatic-machine-control"},
+      "when": {
+        "productionAuthority": "automatic-machine-control"
+      },
       "forbiddenUnless": "A separately governed controlled-site machine-control authorization exists; public MouldMaster has no such authorization."
     }
   ],
@@ -92,16 +214,38 @@
     "externalValidation": "data/release-external-validation-v1.json",
     "bookPublication": "data/book-publication-authorization-v1.json",
     "bookIndependentSme": "data/book-sme-review-v1.json",
-    "curriculumIndependentSme": "qa/curriculum-semantic-review.json"
+    "curriculumIndependentSme": "qa/curriculum-semantic-review.json",
+    "nzqaExternalValidation": "data/nzqa-external-validation-v1.json"
   },
   "invariants": [
-    {"id": "automation-does-not-create-external-evidence", "rule": "technicalAutomation=pass must never promote externalValidation or distributionValidation from hold to validated."},
-    {"id": "publication-is-not-independent-validation", "rule": "publicationAuthorization=authorized may coexist with externalValidation=hold and must not be presented as independent SME approval."},
-    {"id": "holds-are-not-test-failures", "rule": "A truthful external HOLD is a governed blocked state, not a software-test failure and not permission to weaken a gate."},
-    {"id": "external-evidence-is-release-bound", "rule": "Physical-device, assistive-technology, SME, learner-outcome and signed-distribution evidence must identify the exact learner-facing release/candidate it validates."},
-    {"id": "production-authority-fails-closed", "rule": "Current productionAuthority must remain advisory-only unless a separate governed controlled-site validation explicitly authorizes expansion."},
-    {"id": "claims-derive-from-evidence", "rule": "User-facing claims such as fully externally validated, accredited, learner efficacy established, validated production recipe or automatic machine control must remain false unless their governed evidence contracts explicitly satisfy the corresponding state transition."},
-    {"id": "human-review-cannot-be-synthetic", "rule": "AI review, repository CI, browser emulation and synthetic learner data cannot be recorded as the human/device evidence required by an externalValidation transition."}
+    {
+      "id": "automation-does-not-create-external-evidence",
+      "rule": "technicalAutomation=pass must never promote externalValidation or distributionValidation from hold to validated."
+    },
+    {
+      "id": "publication-is-not-independent-validation",
+      "rule": "publicationAuthorization=authorized may coexist with externalValidation=hold and must not be presented as independent SME approval."
+    },
+    {
+      "id": "holds-are-not-test-failures",
+      "rule": "A truthful external HOLD is a governed blocked state, not a software-test failure and not permission to weaken a gate."
+    },
+    {
+      "id": "external-evidence-is-release-bound",
+      "rule": "Physical-device, assistive-technology, SME, learner-outcome, NZQA/provider/accreditation and signed-distribution evidence must identify the exact learner-facing release/candidate it validates."
+    },
+    {
+      "id": "production-authority-fails-closed",
+      "rule": "Current productionAuthority must remain advisory-only unless a separate governed controlled-site validation explicitly authorizes expansion."
+    },
+    {
+      "id": "claims-derive-from-evidence",
+      "rule": "User-facing claims such as fully externally validated, accredited, learner efficacy established, validated production recipe or automatic machine control must remain false unless their governed evidence contracts explicitly satisfy the corresponding state transition."
+    },
+    {
+      "id": "human-review-cannot-be-synthetic",
+      "rule": "AI review, repository CI, browser emulation and synthetic learner data cannot be recorded as the human/device evidence required by an externalValidation transition."
+    }
   ],
   "userFacingPrecedence": [
     "productionAuthority",
@@ -120,6 +264,7 @@
     "assistiveTechnology": "hold",
     "windowsDistribution": "hold",
     "learnerOutcomes": "hold",
-    "productionAuthority": "advisory-only"
+    "productionAuthority": "advisory-only",
+    "nzqaProviderValidation": "hold"
   }
 }
