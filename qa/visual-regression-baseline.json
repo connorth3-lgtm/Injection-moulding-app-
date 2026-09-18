@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
-  "release": "2026.09.16.2",
-  "commit": "5c4e5f303cc1835157fb53869e93ca94b66810c4",
+  "release": "2026.09.18.3",
+  "commit": "9ff71536215d88f60ce8a3fbdc59fc3f0874b52f",
   "browser": "chromium via @playwright/test 1.55.0",
   "maxDiffPixels": 12,
   "viewports": [
@@ -39,5 +39,5 @@
     "book-late",
     "book-trace"
   ],
-  "policy": "2026.09.16.2 adds reviewed Book navigation, tablet-shell and endurance coverage. The pinned visual commit must be advanced only after candidate screenshots are reviewed; external physical-device and real-AT evidence remain separate fresh gates."
+  "policy": "2026.09.18.3 deliberately adds the governed Standards & readiness entry to the mobile More surface and current Book evidence/readiness content. The pinned visual commit is the retained exact public-byte candidate reviewed for this release; maxDiffPixels remains strict. Physical-device and real-AT evidence remain separate fresh gates."
 }
