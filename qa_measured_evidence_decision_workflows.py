@@ -34,6 +34,7 @@ sw = SW.read_text(encoding="utf-8")
 
 families = []
 registry = registry_pack.split("/* >>> measured-evidence-integration.js */",1)[1].split("/* <<< measured-evidence-integration.js */",1)[0]
+registry = registry_pack.split("/* >>> measured-evidence-integration.js */",1)[1].split("/* <<< measured-evidence-integration.js */",1)[0]
 for line in registry.splitlines():
     if not line.lstrip().startswith("{id:'"):
         continue
