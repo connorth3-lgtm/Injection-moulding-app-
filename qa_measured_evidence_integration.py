@@ -3,7 +3,7 @@ import json
 import re
 
 ROOT = Path(__file__).resolve().parent
-JS = ROOT / "measured-evidence-integration.js"
+PACK = ROOT / "src/domains/runtime-packs/bootstrap-assessment-source-runtime-pack.js"
 INDEX = ROOT / "index.html"
 SW = ROOT / "service-worker.js"
 CLOSEOUT = ROOT / "data/measured-data-collection-closeout-2026-08-30.json"
@@ -16,7 +16,7 @@ def need(ok, msg):
 def load(path):
     return json.loads(path.read_text(encoding="utf-8"))
 
-js = JS.read_text(encoding="utf-8")
+js = PACK.read_text(encoding="utf-8")
 index = INDEX.read_text(encoding="utf-8")
 sw = SW.read_text(encoding="utf-8")
 closeout = load(CLOSEOUT)
@@ -88,8 +88,9 @@ for did in restricted_ids:
 need(js.count("restricted:true") == 3, "restricted family count drifted")
 need("raw third-party" in js.lower(), "runtime scope must state raw third-party payload boundary")
 
-need("./measured-evidence-integration.js" in index, "index runtime loader missing measured-evidence-integration.js")
-need("./measured-evidence-integration.js" in sw, "offline CORE missing measured-evidence-integration.js")
+need("./src/domains/runtime-packs/bootstrap-assessment-source-runtime-pack.js" in index, "index runtime loader missing bootstrap assessment/source runtime pack")
+need("/* >>> measured-evidence-integration.js */" in js, "bootstrap pack missing measured-evidence-integration.js")
+need("./src/domains/runtime-packs/bootstrap-assessment-source-runtime-pack.js" in sw, "offline CORE missing bootstrap assessment/source runtime pack")
 release_qa = (ROOT / ".github/workflows/qa.yml").read_text(encoding="utf-8")
 need("find . -maxdepth 1 -type f -name '*.js'" in release_qa, "Release QA filesystem JavaScript syntax gate missing")
 need("python qa_measured_evidence_integration.py" in release_qa, "Release QA integration gate missing")
