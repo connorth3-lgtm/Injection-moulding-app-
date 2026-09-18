@@ -1,4 +1,4 @@
-const CACHE_VERSION='2026.09.18.1';
+const CACHE_VERSION='2026.09.18.2';
 const CACHE_REVISION='learner-ui-r2-20260917';
 const STATIC_CACHE=`mouldmaster-static-${CACHE_VERSION}-${CACHE_REVISION}`;
 
@@ -80,6 +80,7 @@ const CORE=[
   './src/domains/learning/book-data/book-evidence-registry-v1.json',
   './src/domains/learning/book-data/book-chapters-materials-machine-v1.json',
   './src/domains/learning/book-data/book-authored-remaining-v1.json',
+  './src/domains/learning/book-data/book-worked-engineering-cases-v1.json',
   './src/domains/materials/material-registry.js',
   './src/domains/materials/material-search-index.js',
   './src/domains/materials/material-search-pagination.js',

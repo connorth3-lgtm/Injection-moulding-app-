@@ -1,0 +1,533 @@
+{
+  "schemaVersion": 1,
+  "bookId": "mouldmaster-book",
+  "release": "2026.09.18.2",
+  "status": "authorized-synthetic-teaching",
+  "policy": "Worked engineering cases are synthetic teaching examples. They are source-governed and internally publication-authorized, but they are not independent human SME approval, measured production evidence, universal process recipes, validated production limits or machine-control authority.",
+  "sourceSeeds": [
+    {
+      "id": "AUTODESK-CLAMP-FORCE-RESULT",
+      "type": "manufacturer-technical-documentation",
+      "issuer": "Autodesk",
+      "title": "Moldflow — Clamp force result",
+      "url": "https://help.autodesk.com/cloudhelp/2017/ENU/MoldflowComm-UsersGuide/files/GUID-76E9C735-4C1F-4AF9-A54E-B7646D9A9198.htm",
+      "checked": "2026-09-18",
+      "scope": "Documents clamp force as the resultant of pressure acting over projected area in Moldflow analysis; tool/model assumptions and machine/tool-specific margins remain controlling."
+    },
+    {
+      "id": "PANTANI-2004-GATE-FREEZE",
+      "type": "peer-reviewed",
+      "issuer": "Polymer Engineering & Science",
+      "title": "Analysis of gate freeze-off time in injection molding",
+      "url": "https://doi.org/10.1002/pen.20000",
+      "checked": "2026-09-18",
+      "scope": "Experimental study of gate/cavity geometry effects on gate solidification and pressure evolution. Numerical results are study-specific."
+    },
+    {
+      "id": "NIST-SEMATECH-DOE",
+      "type": "government-statistical-handbook",
+      "issuer": "NIST/SEMATECH",
+      "title": "e-Handbook of Statistical Methods — Experimental design",
+      "url": "https://www.itl.nist.gov/div898/handbook/pri/section1/pri11.htm",
+      "checked": "2026-09-18",
+      "scope": "Engineering experimental-design framework including main effects and interaction terms; does not supply injection-moulding production setpoints."
+    },
+    {
+      "id": "NIST-SEMATECH-CAPABILITY",
+      "type": "government-statistical-handbook",
+      "issuer": "NIST/SEMATECH",
+      "title": "e-Handbook of Statistical Methods — Process capability",
+      "url": "https://www.itl.nist.gov/div898/handbook/pmc/section1/pmc16.htm",
+      "checked": "2026-09-18",
+      "scope": "Definitions and assumptions for Cp/Cpk and capability interpretation, including stable-process and distribution/sample-size considerations."
+    },
+    {
+      "id": "PARIZS-2023-IN-MOLD-SENSORS-WORKED",
+      "type": "peer-reviewed",
+      "issuer": "Sensors",
+      "title": "Multiple In-Mold Sensors for Quality and Process Control in Injection Molding",
+      "url": "https://doi.org/10.3390/s23031735",
+      "checked": "2026-09-18",
+      "scope": "Experimental in-mould sensing work supporting cavity-pressure trace interpretation, sensor-position context and process/quality monitoring boundaries."
+    }
+  ],
+  "cases": [
+    {
+      "id": "worked-clamp-force-v1",
+      "chapterId": "clamp",
+      "title": "Clamp-force estimate: expose every assumption",
+      "synthetic": true,
+      "setup": "Projected area is 120 cm². An engineering teaching study assumes a representative cavity pressure of 55 MPa only to illustrate the pressure × area relationship.",
+      "assumptions": [
+        "Projected area includes only the stated synthetic part/runner area.",
+        "55 MPa is an assumed representative pressure for arithmetic teaching; it is not inferred from machine injection pressure.",
+        "No tool-specific preload, safety margin or machine-rating decision is included."
+      ],
+      "units": [
+        "area: cm² → m²",
+        "pressure: MPa → Pa",
+        "force: N → kN"
+      ],
+      "calculationSteps": [
+        "120 cm² = 0.012 m²",
+        "55 MPa = 55,000,000 Pa",
+        "F = P × A = 55,000,000 × 0.012 = 660,000 N = 660 kN"
+      ],
+      "interpretation": "660 kN is the arithmetic result of the stated assumptions. It is not automatically the required machine clamp rating.",
+      "boundaries": [
+        "Real decisions require actual projected area, pressure distribution, cavity/feed-system contribution, mould support/stiffness, machine/mould limits and the site's engineering margin policy.",
+        "No automatic machine-control or production recipe authority is created."
+      ],
+      "sourceIds": [
+        "ISO-20430-2020",
+        "ISO-294-1-2017",
+        "AUTODESK-CLAMP-FORCE-RESULT"
+      ],
+      "claims": [
+        {
+          "id": "worked-clamp-force-v1-claim-1",
+          "statement": "Separating-force arithmetic can be illustrated as pressure × projected area when the assumed pressure and area are explicit; the result is an estimate, not automatically a machine clamp setting.",
+          "conclusion": "supported-with-explicit-synthetic-scope",
+          "sourceIds": [
+            "AUTODESK-CLAMP-FORCE-RESULT",
+            "ISO-20430-2020",
+            "ISO-294-1-2017"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "worked-pressure-loss-v1",
+      "chapterId": "pressure-loss",
+      "title": "Staged pressure-loss study: upstream pressure is not cavity pressure",
+      "synthetic": true,
+      "setup": "At a controlled comparable fill condition, displayed upstream injection pressure is recorded while successive portions of a synthetic flow path are added.",
+      "table": {
+        "columns": [
+          "Flow path present",
+          "Displayed upstream injection pressure"
+        ],
+        "rows": [
+          [
+            "Nozzle only",
+            "18 MPa"
+          ],
+          [
+            "Nozzle + sprue/runner",
+            "34 MPa"
+          ],
+          [
+            "+ gate / early cavity",
+            "58 MPa"
+          ],
+          [
+            "Full intended fill path",
+            "72 MPa"
+          ]
+        ]
+      },
+      "calculationSteps": [
+        "Apparent increments across the staged additions are 18 MPa, 16 MPa, 24 MPa and 14 MPa.",
+        "The largest synthetic increment occurs when the gate/early-cavity portion is added."
+      ],
+      "interpretation": "The sequence identifies where pressure demand appears to increase and therefore where to investigate. It does not prove that the gate is defective, and the displayed upstream signal must not be relabelled as cavity pressure.",
+      "boundaries": [
+        "The comparison requires controlled comparable states and valid machine/sensor semantics.",
+        "A staged pressure signal is diagnostic evidence, not causal proof."
+      ],
+      "sourceIds": [
+        "ISO-294-1-2017",
+        "AUTODESK-RUNNER-LAYOUT",
+        "AUTODESK-JUNCTURE-LOSS"
+      ],
+      "claims": [
+        {
+          "id": "worked-pressure-loss-v1-claim-1",
+          "statement": "Successive flow-path restrictions can be compared through controlled pressure observations, but upstream machine pressure is not equivalent to local cavity pressure.",
+          "conclusion": "supported-with-explicit-synthetic-scope",
+          "sourceIds": [
+            "ISO-294-1-2017",
+            "AUTODESK-RUNNER-LAYOUT",
+            "AUTODESK-JUNCTURE-LOSS"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "worked-gate-seal-v1",
+      "chapterId": "gate-seal",
+      "title": "Gate-seal study: find a response plateau, not a universal hold time",
+      "synthetic": true,
+      "setup": "All selected conditions are held constant while hold duration changes and mean part mass is observed.",
+      "table": {
+        "columns": [
+          "Hold duration",
+          "Mean part mass"
+        ],
+        "rows": [
+          [
+            "2 s",
+            "18.42 g"
+          ],
+          [
+            "4 s",
+            "18.70 g"
+          ],
+          [
+            "6 s",
+            "18.82 g"
+          ],
+          [
+            "8 s",
+            "18.83 g"
+          ],
+          [
+            "10 s",
+            "18.83 g"
+          ]
+        ]
+      },
+      "calculationSteps": [
+        "6 → 8 s change = +0.01 g",
+        "8 → 10 s change = +0.00 g at the shown resolution"
+      ],
+      "interpretation": "The synthetic mass response approaches a plateau around the 6–8 s region. A real study needs repeated observations, measurement-resolution awareness and critical quality checks.",
+      "boundaries": [
+        "The result is specific to material, gate, mould and thermal state.",
+        "The example does not establish a generic hold time."
+      ],
+      "sourceIds": [
+        "ASTM-D955-21",
+        "ISO-294-1-2017",
+        "PANTANI-2004-GATE-FREEZE"
+      ],
+      "claims": [
+        {
+          "id": "worked-gate-seal-v1-claim-1",
+          "statement": "A controlled hold-duration study may use a plateau in an appropriate part response as evidence of effective gate isolation for the studied system, but the result is not universal.",
+          "conclusion": "supported-with-explicit-synthetic-scope",
+          "sourceIds": [
+            "PANTANI-2004-GATE-FREEZE",
+            "ASTM-D955-21",
+            "ISO-294-1-2017"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "worked-pressure-trace-v1",
+      "chapterId": "cavity-pressure",
+      "title": "Pressure-trace interpretation: peak alone can hide history",
+      "synthetic": true,
+      "setup": "Two synthetic cavity-pressure traces both reach 60 MPa peak pressure, while their pressure-time areas differ.",
+      "table": {
+        "columns": [
+          "Trace",
+          "Peak pressure",
+          "Pressure-time area"
+        ],
+        "rows": [
+          [
+            "A",
+            "60 MPa",
+            "90 MPa·s"
+          ],
+          [
+            "B",
+            "60 MPa",
+            "120 MPa·s"
+          ]
+        ]
+      },
+      "calculationSteps": [
+        "Relative area difference = (120 - 90) / 90 × 100 = 33.3%"
+      ],
+      "interpretation": "Equal peak pressure does not make two traces equivalent. Transfer timing, packing duration, decay shape and pressure-time area may expose process-history differences.",
+      "boundaries": [
+        "Sensor location, type, calibration, sampling and cavity identity remain part of the evidence.",
+        "A trace correlation does not automatically prove causality outside the studied process window."
+      ],
+      "sourceIds": [
+        "ISO-294-1-2017",
+        "PARIZS-2023-IN-MOLD-SENSORS-WORKED"
+      ],
+      "claims": [
+        {
+          "id": "worked-pressure-trace-v1-claim-1",
+          "statement": "Cavity-pressure interpretation can require trace features beyond peak value, with sensor placement and calibration retained as evidence context.",
+          "conclusion": "supported-with-explicit-synthetic-scope",
+          "sourceIds": [
+            "PARIZS-2023-IN-MOLD-SENSORS-WORKED",
+            "ISO-294-1-2017"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "worked-doe-interaction-v1",
+      "chapterId": "doe",
+      "title": "Two-factor DOE: an interaction can reverse the apparent answer",
+      "synthetic": true,
+      "setup": "Response is synthetic warpage in millimetres; lower is better for this teaching example only.",
+      "table": {
+        "columns": [
+          "Fill-speed level",
+          "Mould-temperature level",
+          "Warpage"
+        ],
+        "rows": [
+          [
+            "Low",
+            "Low",
+            "0.42 mm"
+          ],
+          [
+            "High",
+            "Low",
+            "0.31 mm"
+          ],
+          [
+            "Low",
+            "High",
+            "0.29 mm"
+          ],
+          [
+            "High",
+            "High",
+            "0.30 mm"
+          ]
+        ]
+      },
+      "calculationSteps": [
+        "At low mould temperature: high − low fill speed = 0.31 − 0.42 = -0.11 mm",
+        "At high mould temperature: high − low fill speed = 0.30 − 0.29 = +0.01 mm"
+      ],
+      "interpretation": "The fill-speed effect changes with mould-temperature level, so a one-factor statement such as 'higher speed reduces warpage' would be misleading.",
+      "boundaries": [
+        "Real conclusions require an appropriate design, replication/randomisation or blocking where needed, residual checks and confirmation runs.",
+        "Factor ranges must remain within safe and qualified limits."
+      ],
+      "sourceIds": [
+        "NIST-SEMATECH-DOE",
+        "ISO-20457-2026"
+      ],
+      "claims": [
+        {
+          "id": "worked-doe-interaction-v1-claim-1",
+          "statement": "Factor effects can depend on other factor levels; interaction terms are therefore part of factorial experimental reasoning.",
+          "conclusion": "supported-with-explicit-synthetic-scope",
+          "sourceIds": [
+            "NIST-SEMATECH-DOE",
+            "ISO-20457-2026"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "worked-multi-cavity-v1",
+      "chapterId": "multi-cavity",
+      "title": "Multi-cavity variation: pooled data can hide a cavity problem",
+      "synthetic": true,
+      "setup": "A synthetic four-cavity mass summary shows similar within-cavity spread but different cavity means.",
+      "table": {
+        "columns": [
+          "Cavity",
+          "Mean part mass",
+          "Sample SD"
+        ],
+        "rows": [
+          [
+            "1",
+            "12.02 g",
+            "0.03 g"
+          ],
+          [
+            "2",
+            "12.15 g",
+            "0.03 g"
+          ],
+          [
+            "3",
+            "12.01 g",
+            "0.04 g"
+          ],
+          [
+            "4",
+            "11.88 g",
+            "0.03 g"
+          ]
+        ]
+      },
+      "calculationSteps": [
+        "The four cavity means average to 12.015 g, approximately 12.02 g at two decimal places.",
+        "Opposite offsets in cavities 2 and 4 can be hidden by the pooled mean."
+      ],
+      "interpretation": "Retain cavity identity before pooling so systematic cavity bias is not disguised as ordinary overall variation.",
+      "boundaries": [
+        "Do not infer capability from these summaries alone; specifications, stability, sampling design and measurement-system adequacy are missing.",
+        "Tooling changes require repeatable cavity-specific evidence."
+      ],
+      "sourceIds": [
+        "ISO-20457-2026",
+        "ISO-294-1-2017",
+        "NIST-SEMATECH-CAPABILITY"
+      ],
+      "claims": [
+        {
+          "id": "worked-multi-cavity-v1-claim-1",
+          "statement": "Pooling cavity-specific observations can hide systematic cavity offsets; capability claims require additional process and measurement evidence.",
+          "conclusion": "supported-with-explicit-synthetic-scope",
+          "sourceIds": [
+            "ISO-20457-2026",
+            "ISO-294-1-2017",
+            "NIST-SEMATECH-CAPABILITY"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "worked-capability-v1",
+      "chapterId": "capability",
+      "title": "Capability example: good spread does not compensate for poor centring",
+      "synthetic": true,
+      "setup": "Synthetic specification is 10.00 ± 0.20 mm, giving LSL 9.80 mm and USL 10.20 mm. Teaching estimates use mean 10.08 mm and s = 0.04 mm.",
+      "calculationSteps": [
+        "Cp = (USL - LSL) / (6s) = 0.40 / 0.24 = 1.67",
+        "Cpk = min((10.20 - 10.08)/(3×0.04), (10.08 - 9.80)/(3×0.04))",
+        "Cpk = min(1.00, 2.33) = 1.00"
+      ],
+      "interpretation": "The synthetic spread is narrower than the tolerance width, but off-centre location lowers Cpk relative to Cp.",
+      "boundaries": [
+        "Capability arithmetic is not trustworthy merely because it can be calculated; process stability, sampling, distribution assumptions where applicable and measurement-system adequacy must be established.",
+        "No customer/site acceptance threshold is inferred."
+      ],
+      "sourceIds": [
+        "NIST-SEMATECH-CAPABILITY"
+      ],
+      "claims": [
+        {
+          "id": "worked-capability-v1-claim-1",
+          "statement": "Cp describes specification width relative to process spread while Cpk also reflects centring; meaningful capability interpretation requires the method's assumptions and process context.",
+          "conclusion": "supported-with-explicit-synthetic-scope",
+          "sourceIds": [
+            "NIST-SEMATECH-CAPABILITY"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "worked-conditioning-v1",
+      "chapterId": "dimensional-stability",
+      "title": "Conditioning and dimensional state: define when a dimension is measured",
+      "synthetic": true,
+      "setup": "A reinforced-polyamide teaching example measures 100.00 mm after a defined dry-state interval and 100.18 mm after a defined conditioning protocol.",
+      "calculationSteps": [
+        "Absolute change = 100.18 - 100.00 = +0.18 mm",
+        "Relative change = 0.18 / 100.00 × 100 = +0.18%"
+      ],
+      "interpretation": "The example demonstrates why dimensional acceptance must define conditioning/time/environment and measurement method.",
+      "boundaries": [
+        "It does not claim that a particular PA66-GF30 grade changes by 0.18%.",
+        "Real magnitude is grade-, geometry-, orientation- and conditioning-specific; current exact-grade supplier data remain controlling."
+      ],
+      "sourceIds": [
+        "ISO-20457-2026",
+        "ASTM-D955-21",
+        "BASF-ULTRAMID-B3Z1-2026"
+      ],
+      "claims": [
+        {
+          "id": "worked-conditioning-v1-claim-1",
+          "statement": "Dimensional comparisons require a defined conditioning and measurement state because polymer/environment history can affect measured dimensions.",
+          "conclusion": "supported-with-explicit-synthetic-scope",
+          "sourceIds": [
+            "ISO-20457-2026",
+            "ASTM-D955-21",
+            "BASF-ULTRAMID-B3Z1-2026"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "worked-heat-load-v1",
+      "chapterId": "cooling",
+      "title": "Cooling/heat-load estimate: useful arithmetic with explicit omissions",
+      "synthetic": true,
+      "setup": "Synthetic moulded mass including runner is 0.080 kg, illustrative average specific heat is 1,800 J/(kg·K), and illustrative temperature drop is 180 K.",
+      "calculationSteps": [
+        "Q = m × cp × ΔT",
+        "Q = 0.080 × 1,800 × 180 = 25,920 J ≈ 25.9 kJ per shot"
+      ],
+      "interpretation": "This is a simplified sensible-heat quantity, not a cooling-time formula.",
+      "boundaries": [
+        "The estimate omits crystallisation/latent effects where relevant, mould/insert heat capacity, shear heating, losses outside the mould, spatial gradients and heat-transfer coefficients.",
+        "Real cooling design requires geometry-, material- and tool-specific analysis and measurement."
+      ],
+      "sourceIds": [
+        "ISO-294-1-2017",
+        "ASTM-D955-21",
+        "KUO-2022-COOLING-WARPAGE"
+      ],
+      "claims": [
+        {
+          "id": "worked-heat-load-v1-claim-1",
+          "statement": "A sensible-heat estimate can illustrate energy scale when mass, specific heat and temperature change are explicit, but it is not by itself a cooling-time prediction.",
+          "conclusion": "supported-with-explicit-synthetic-scope",
+          "sourceIds": [
+            "ISO-294-1-2017",
+            "ASTM-D955-21",
+            "KUO-2022-COOLING-WARPAGE"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "worked-diagnostic-short-shot-v1",
+      "chapterId": "diagnostic-method",
+      "title": "End-to-end diagnosis: short shot without reflex tuning",
+      "synthetic": true,
+      "setup": "One cavity in a four-cavity mould becomes intermittently short while the other three remain full. Global machine actuals and shot mass are stable; the affected cavity also shows a colder local mould-surface measurement and a contaminated vent during an authorised inspection.",
+      "observations": [
+        "Single-cavity defect pattern",
+        "Stable global machine actuals and shot mass",
+        "Colder local mould-surface measurement",
+        "Visible local vent contamination during authorised inspection"
+      ],
+      "calculationSteps": [
+        "Competing mechanisms: local thermal restriction; local vent restriction; gate/runner restriction; cavity-specific damage/obstruction; global delivery limitation.",
+        "Discriminating evidence: cavity identity, fill progression, local thermal evidence, vent condition, runner/gate comparison, actual-vs-commanded machine response and repeated post-intervention recovery."
+      ],
+      "interpretation": "Stable global delivery plus a repeatable single-cavity pattern weakens a global-machine hypothesis. It does not by itself prove that venting or temperature is causal.",
+      "boundaries": [
+        "Any intervention must be safe and authorised.",
+        "A mechanism is promoted only after discriminating evidence and repeatable recovery; troubleshooting remains hypothesis-and-evidence based."
+      ],
+      "sourceIds": [
+        "ISO-294-1-2017",
+        "BASF-INJECTION-TROUBLESHOOTER"
+      ],
+      "claims": [
+        {
+          "id": "worked-diagnostic-short-shot-v1-claim-1",
+          "statement": "Cavity-specific defect patterns can be used to discriminate local from global hypotheses, but repeated recovery evidence is required before promoting a mechanism as causal.",
+          "conclusion": "supported-with-explicit-synthetic-scope",
+          "sourceIds": [
+            "ISO-294-1-2017",
+            "BASF-INJECTION-TROUBLESHOOTER"
+          ]
+        }
+      ]
+    }
+  ],
+  "humanReviewScope": {
+    "status": "hold",
+    "contract": "data/book-sme-review-v1.json",
+    "required": "All ten worked cases are attached to chapters already inside the 46-chapter independent human SME scope; the case IDs are also enumerated explicitly in that contract for the new release."
+  },
+  "authorityBoundary": {
+    "productionUse": "advisory-only",
+    "validatedRecipeAuthority": false,
+    "automaticMachineControl": false,
+    "universalSetpoints": false
+  }
+}
