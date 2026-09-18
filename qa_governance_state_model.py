@@ -117,6 +117,8 @@ def main() -> None:
     assert external["bookSme"]["status"] == book_sme["status"]
     assert external["curriculumSme"]["status"] == "hold", "curriculum SME must remain HOLD until all 120 human reviews exist"
     assert curriculum_sme.get("reviews") == [], "current curriculum SME ledger must not contain manufactured approvals"
+    assert nzqa_external.get("status") == "pending-provider-validation", "NZQA external evidence contract must remain pending until genuine provider evidence exists"
+    assert nzqa_external.get("evidence") is None, "NZQA external HOLD must not contain manufactured completion evidence"
 
     for key in ("pwaPhysicalDevices", "accessibility", "windowsDistribution", "learnerOutcomes", "nzqaProvider"):
         assert external[key]["status"] == "hold", f"{key} must remain HOLD until genuine release-bound evidence exists"
@@ -154,6 +156,13 @@ def main() -> None:
     invalid["bookIndependentSme"] = "validated"
     expect_failure(
         "automation/publication status cannot manufacture independent Book SME validation",
+        lambda: validate_public_snapshot(invalid, book_sme=book_sme, curriculum_sme=curriculum_sme, external=external),
+    )
+
+    invalid = deepcopy(current)
+    invalid["nzqaProviderValidation"] = "validated"
+    expect_failure(
+        "automation/readiness status cannot manufacture NZQA/provider validation",
         lambda: validate_public_snapshot(invalid, book_sme=book_sme, curriculum_sme=curriculum_sme, external=external),
     )
 
