@@ -1,0 +1,58 @@
+{
+  "schemaVersion": 1,
+  "release": "2026.09.18.3",
+  "status": "pending-provider-validation",
+  "packet": "qa/NZQA_EXTERNAL_VALIDATION_2026.09.18.3.md",
+  "readinessContract": "data/nzqa-education-readiness-v1.json",
+  "providerTemplatesContract": "data/nzqa-provider-evidence-templates-v1.json",
+  "issueNumber": 379,
+  "candidate": {
+    "sourceSha": "9ff71536215d88f60ce8a3fbdc59fc3f0874b52f",
+    "runtimeFingerprint": "sha256:cc4687fd2545c17f70d544e5952b8c95f4ee2ab0d73fddaffb3c797e8b36cda9"
+  },
+  "boundary": "Repository readiness, mappings, templates and automated QA do not create NZQA approval, provider accreditation, consent to assess, moderation acceptance, learner competence, workplace competence or qualification award.",
+  "requiredGates": [
+    {
+      "id": "G1-provider",
+      "status": "pending-external",
+      "evidenceRef": null
+    },
+    {
+      "id": "G2-need",
+      "status": "pending-external",
+      "evidenceRef": null
+    },
+    {
+      "id": "G3-design",
+      "status": "pending-external",
+      "evidenceRef": null
+    },
+    {
+      "id": "G4-assessment",
+      "status": "pending-external",
+      "evidenceRef": null
+    },
+    {
+      "id": "G5-consent",
+      "status": "pending-external",
+      "evidenceRef": null
+    },
+    {
+      "id": "G6-national-moderation",
+      "status": "pending-external",
+      "evidenceRef": null
+    },
+    {
+      "id": "G7-workplace",
+      "status": "pending-external",
+      "evidenceRef": null
+    },
+    {
+      "id": "G8-review",
+      "status": "pending-external",
+      "evidenceRef": null
+    }
+  ],
+  "evidence": null,
+  "validationRule": "Validated requires genuine provider-owned evidence for all eight gates, public-safe evidence references, exact release/candidate binding, and separate reviewed promotion of the canonical external-validation status. Automation must not manufacture completion."
+}
