@@ -299,8 +299,14 @@ def validate_nzqa(section: dict, expected_release: str) -> None:
     require_current_release(contract, expected_release, "NZQA provider validation")
     if contract.get("packet") != packet:
         fail("NZQA external-validation contract packet does not match the release ledger")
-    require_repo_file(contract.get("readinessContract"), "NZQA readiness contract is missing")
-    require_repo_file(contract.get("providerTemplatesContract"), "NZQA provider evidence-template contract is missing")
+    readiness_path = require_repo_file(contract.get("readinessContract"), "NZQA readiness contract is missing")
+    templates_path = require_repo_file(contract.get("providerTemplatesContract"), "NZQA provider evidence-template contract is missing")
+    readiness = load_json(ROOT / readiness_path)
+    templates = load_json(ROOT / templates_path)
+    if readiness.get("id") != "mouldmaster-nzqa-education-readiness" or readiness.get("releaseTarget") != expected_release:
+        fail("NZQA readiness contract identity/release target is stale")
+    if templates.get("id") != "mouldmaster-nzqa-provider-evidence-templates":
+        fail("NZQA provider evidence-template contract identity is invalid")
     candidate = contract.get("candidate")
     if not isinstance(candidate, dict):
         fail("NZQA external-validation candidate binding is missing")
