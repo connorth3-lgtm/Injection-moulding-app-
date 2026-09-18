@@ -26,7 +26,7 @@ for bad in ['git add','git commit','git push','read_pickle','pickle.load']:
     need(bad not in t, f'forbidden OpenMMS operation: {bad}')
 if W.exists():
     w=W.read_text()
-    for marker in ['MouldMaster Public Measured Benchmark — OpenMMS-T4G','qa_public_benchmark_openmms.py','run_public_benchmark_openmms_t4g.py','actions/upload-artifact@v4']:
+    for marker in ['MouldMaster Public Measured Benchmark — OpenMMS-T4G','qa_public_benchmark_openmms.py','run_public_benchmark_openmms_t4g.py','actions/upload-artifact@v7']:
         need(marker in w, f'OpenMMS workflow marker missing: {marker}')
     for bad in ['*.csv','publisher/**','.benchmark-work/**']:
         need(bad not in w, f'OpenMMS workflow must not upload raw data: {bad}')
