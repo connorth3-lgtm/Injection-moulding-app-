@@ -99,9 +99,9 @@ for item_id in re.findall(r"\{type:'core',id:'(\d+)'",js):need(1<=int(item_id)<=
 for practice_type in re.findall(r"\{type:'([^']+)'",js):need(practice_type in {'core','defects','standards'},f'evidence-gap extension introduced unsupported practice type: {practice_type}')
 
 idx=text('index.html')
-needle="['./specialist-evidence-gap-extension.js','<script src=\"./specialist-evidence-gap-extension.js\">']"
+needle="['./src/domains/runtime-packs/learning-curriculum-runtime-pack.js','<script src=\"./src/domains/runtime-packs/learning-curriculum-runtime-pack.js\">']"
 need(needle in idx,'browser shell does not load specialist evidence-gap extension')
-need(idx.index("'./specialist-curriculum.js'") < idx.index("'./specialist-evidence-gap-extension.js'") < idx.index("'./mould-master-workspace.js'") < idx.index("'./app-shell-finalize.js'"),'specialist evidence-gap/finalizer load order is wrong')
+need(idx.index("'./src/domains/runtime-packs/learning-curriculum-runtime-pack.js'") < idx.index("'./app-shell-finalize.js'"),'specialist evidence pack/finalizer load order is wrong')
 sw=text('service-worker.js');need("'./specialist-evidence-gap-extension.js'" in sw,'specialist evidence-gap extension missing from offline cache');need("'./app-shell-finalize.js'" in sw,'evidence-status finalizer missing from offline cache')
 pkg=json.loads(text('desktop/electron/package.json'));froms={x.get('from') for x in pkg['build']['extraResources'] if isinstance(x,dict)};need('../../specialist-evidence-gap-extension.js' in froms,'specialist evidence-gap extension missing from desktop package');need('../../app-shell-finalize.js' in froms,'evidence-status finalizer missing from desktop package')
 integrity=text('desktop/electron/scripts/generate-integrity.cjs');need("'specialist-evidence-gap-extension.js'" in integrity and "'app-shell-finalize.js'" in integrity,'specialist evidence assets missing from desktop integrity manifest')
