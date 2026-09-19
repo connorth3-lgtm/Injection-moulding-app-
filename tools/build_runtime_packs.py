@@ -23,7 +23,7 @@ PACKS: dict[str, tuple[str, ...]] = {
     "assessment-evidence-depth-runtime-pack.js": ("assessment-psychometric-hardening.js","assessment-evidence-integrity-upgrade.js","lesson-evidence-depth.js","lesson-deep-authoring-v2.js","assessment-evidence-approval.js","assessment-psychometric-approval.js"),
     "assessment-multimodal-runtime-pack.js": ("assessment-multimodal.js",),
     "learning-process-diagnostics-runtime-pack.js": ("learning-experience.js","process-data-diagnostics.js","real-measured-data-assessment.js"),
-    "process-data-runtime-pack.js": ("process-data-deep-dive-machine.js","process-data-deep-dive-tooling.js","process-data-deep-dive-material.js","process-data-deep-dive-scientific.js","process-data-deep-dive-quality.js","process-data-deep-dive-50.js","process-data-20-pass-01-05.js","process-data-20-pass-06-10.js","process-data-20-pass-11-15.js","process-data-20-pass-16-20.js","process-data-20-pass-atlas.js"),
+    "process-data-runtime-pack.js": ("process-data-deep-dive-machine.js","process-data-deep-dive-tooling.js","process-data-deep-dive-material.js","process-data-deep-dive-scientific.js","process-data-deep-dive-quality.js","process-data-deep-dive-50.js","process-data-20-pass-01-05.js","process-data-20-pass-06-10.js","process-data-20-pass-11-15.js","process-data-20-pass-16-20.js","process-data-20-pass-atlas.js","process-data-local-intake.js"),
     "curriculum-workspace-runtime-pack.js": ("curriculum-integration.js","specialist-curriculum.js","specialist-evidence-gap-extension.js","mould-master-workspace.js"),
 }
 
