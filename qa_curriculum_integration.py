@@ -77,12 +77,10 @@ for kind,item_id in routes:
 # Browser order: all practice modules and learner experience exist before integration;
 # analytics loads after it so curriculum-opening events can be recorded locally.
 idx=text('index.html')
-needle="['./curriculum-integration.js','<script src=\"./curriculum-integration.js\">']"
-need(needle in idx,'browser shell does not load curriculum-integration.js')
-need(idx.index("'./learning-experience.js'") < idx.index("'./curriculum-integration.js'"),'curriculum integration must load after learning experience')
-need(idx.index("'./process-data-diagnostics.js'") < idx.index("'./curriculum-integration.js'"),'curriculum integration must load after process-data diagnostics')
-need(idx.index("'./material-behaviour-labs.js'") < idx.index("'./curriculum-integration.js'"),'curriculum integration must load after material labs')
-need(idx.index("'./diagnostic-learning-labs.js'") < idx.index("'./curriculum-integration.js'"),'curriculum integration must load after diagnostic labs')
+need("'./src/domains/runtime-packs/curriculum-workspace-runtime-pack.js'" in idx,'browser shell does not load curriculum workspace runtime pack')
+need('/* >>> curriculum-integration.js */' in text('src/domains/runtime-packs/curriculum-workspace-runtime-pack.js'),'curriculum integration missing from curriculum workspace pack')
+need(idx.index("'./src/domains/runtime-packs/learning-process-diagnostics-runtime-pack.js'") < idx.index("'./src/domains/runtime-packs/curriculum-workspace-runtime-pack.js'"),'curriculum workspace must load after learner/process diagnostics pack')
+need(idx.index("'./src/domains/runtime-packs/curriculum-workspace-runtime-pack.js'") < idx.index("'./app-shell-finalize.js'"),'curriculum workspace pack must load before shell finalization')
 need(idx.index("'./curriculum-integration.js'") < idx.index("'./learning-analytics.js'"),'learning analytics must load after curriculum integration')
 
 sw=text('service-worker.js')
