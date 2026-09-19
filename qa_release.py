@@ -7,7 +7,7 @@ import struct
 import subprocess
 import tempfile
 
-WEB_RELEASE = "2026.09.18.3"
+WEB_RELEASE = "2026.09.18.4"
 ANDROID_RELEASE = "2026.08.26.2"
 CONTENT_VERSION = "2026.08.26.1"
 WINDOWS_RECOVERY_VERSION = "2026.08.21.1"
@@ -73,30 +73,25 @@ index = text("index.html")
 assert f'const SHELL_RELEASE="{WEB_RELEASE}"' in index
 assert 'const RUNTIME_ASSET_VERSION=SHELL_RELEASE;' in index
 assert 'const CORE_URL="./src/core-runtime/core-source.txt"' in index
-assert "BODY_SCRIPTS" in index and "'./source-library.js'" in index, "source library not loaded by shell"
+assert "BODY_SCRIPTS" in index and "'./src/domains/runtime-packs/bootstrap-assessment-source-runtime-pack.js'" in index, "packed source library runtime not loaded by shell"
 for marker in ["Content-Security-Policy", "default-src 'self'", "object-src 'none'", "frame-src 'none'", "connect-src 'self'", "worker-src 'self'"]:
     assert marker in index, f"browser CSP boundary missing: {marker}"
 for asset in [
     "src/domains/runtime-packs/learning-foundation-runtime-pack.js",
     "src/domains/runtime-packs/assessment-foundation-runtime-pack.js",
-    "learning-experience.js",
-    "process-data-diagnostics.js",
-    "curriculum-integration.js",
-    "specialist-curriculum.js",
-    "specialist-evidence-gap-extension.js",
-    "mould-master-workspace.js",
+    "src/domains/runtime-packs/assessment-evidence-depth-runtime-pack.js",
+    "src/domains/runtime-packs/bootstrap-assessment-source-runtime-pack.js",
+    "src/domains/runtime-packs/curriculum-workspace-runtime-pack.js",
+    "src/domains/runtime-packs/process-data-runtime-pack.js",
     "app-shell-finalize.js",
     "learning-analytics.js",
     "runtime-v2.js",
-    "assessment-runtime-v2.js",
-    "lesson-deep-authoring-v2.js",
-    "assessment-multimodal.js",
     "accessibility-hardening.js",
 ]:
     assert f"'./{asset}'" in index, f"current learner-facing runtime asset not loaded by shell: {asset}"
 assert "['./reading-patch.js','<script" not in index and "['./training-upgrade.js','<script" not in index and "['./training-qa-fix.js','<script" not in index, "learning foundation source scripts must not return as direct bootstrap entries"
-assert index.index("'./src/domains/runtime-packs/assessment-foundation-runtime-pack.js'") < index.index("'./runtime-v2.js'") < index.index("'./assessment-runtime-v2.js'") < index.index("'./assessment-ux.js'"), "runtime-v2 assessment ownership load order is wrong"
-assert index.index("'./specialist-curriculum.js'") < index.index("'./specialist-evidence-gap-extension.js'") < index.index("'./mould-master-workspace.js'") < index.index("'./app-shell-finalize.js'"), "specialist evidence/runtime finalizer load order is wrong"
+assert index.index("'./src/domains/runtime-packs/assessment-foundation-runtime-pack.js'") < index.index("'./runtime-v2.js'") < index.index("'./src/domains/runtime-packs/assessment-evidence-depth-runtime-pack.js'"), "runtime-v2 assessment ownership load order is wrong"
+assert index.index("'./src/domains/runtime-packs/curriculum-workspace-runtime-pack.js'") < index.index("'./app-shell-finalize.js'"), "specialist evidence/runtime finalizer load order is wrong"
 for retired in ["assessment-100-pass.js","assessment-deep-dive.js","assessment-answer-cue-fix.js","assessment-storage-scope.js","assessment-quality-suite.js","assessment-stable-review-bridge.js","assessment-analytics-ui.js","assessment-final-hardening.js"]:
     assert f"['./{retired}','<script" not in index, f"assessment foundation direct source is still injected: {retired}"
 

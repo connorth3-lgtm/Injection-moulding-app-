@@ -16,48 +16,15 @@ ROOT = Path(__file__).resolve().parents[1]
 OUT_DIR = ROOT / "src" / "domains" / "runtime-packs"
 
 PACKS: dict[str, tuple[str, ...]] = {
-    "learning-foundation-runtime-pack.js": (
-        "reading-patch.js",
-        "training-upgrade.js",
-        "training-qa-fix.js",
-    ),
-    "assessment-foundation-runtime-pack.js": (
-        "assessment-100-pass.js",
-        "assessment-deep-dive.js",
-        "assessment-answer-cue-fix.js",
-        "assessment-storage-scope.js",
-        "assessment-quality-suite.js",
-        "assessment-stable-review-bridge.js",
-        "assessment-analytics-ui.js",
-        "assessment-final-hardening.js",
-    ),
-    "evidence-runtime-pack.js": (
-        "reference-data.js",
-        "reference-deep-dive.js",
-        "reference-research-extension.js",
-        "reference-20x-extension.js",
-        "reference-2026-expansion.js",
-        "reference-sources.js",
-        "reference-browser-ui.js",
-        "diagnostic-learning-labs.js",
-        "material-behaviour-labs.js",
-        "assessment-evidence-sources.js",
-        "evidence-maturity-deep-dive.js",
-        "evidence-maturity-formal-bridge.js",
-    ),
-    "process-data-runtime-pack.js": (
-        "process-data-deep-dive-machine.js",
-        "process-data-deep-dive-tooling.js",
-        "process-data-deep-dive-material.js",
-        "process-data-deep-dive-scientific.js",
-        "process-data-deep-dive-quality.js",
-        "process-data-deep-dive-50.js",
-        "process-data-20-pass-01-05.js",
-        "process-data-20-pass-06-10.js",
-        "process-data-20-pass-11-15.js",
-        "process-data-20-pass-16-20.js",
-        "process-data-20-pass-atlas.js",
-    ),
+    "learning-foundation-runtime-pack.js": ("reading-patch.js","training-upgrade.js","training-qa-fix.js"),
+    "assessment-foundation-runtime-pack.js": ("assessment-100-pass.js","assessment-deep-dive.js","assessment-answer-cue-fix.js","assessment-storage-scope.js","assessment-quality-suite.js","assessment-stable-review-bridge.js","assessment-analytics-ui.js","assessment-final-hardening.js"),
+    "bootstrap-assessment-source-runtime-pack.js": ("assessment-runtime-v2.js","assessment-ux.js","source-library.js","measured-evidence-integration.js","measured-evidence-decision.js"),
+    "evidence-runtime-pack.js": ("reference-data.js","reference-deep-dive.js","reference-research-extension.js","reference-20x-extension.js","reference-2026-expansion.js","reference-sources.js","reference-browser-ui.js","diagnostic-learning-labs.js","material-behaviour-labs.js","assessment-evidence-sources.js","evidence-maturity-deep-dive.js","evidence-maturity-formal-bridge.js"),
+    "assessment-evidence-depth-runtime-pack.js": ("assessment-psychometric-hardening.js","assessment-evidence-integrity-upgrade.js","lesson-evidence-depth.js","lesson-deep-authoring-v2.js","assessment-evidence-approval.js","assessment-psychometric-approval.js"),
+    "assessment-multimodal-runtime-pack.js": ("assessment-multimodal.js",),
+    "learning-process-diagnostics-runtime-pack.js": ("learning-experience.js","process-data-diagnostics.js","real-measured-data-assessment.js"),
+    "process-data-runtime-pack.js": ("process-data-deep-dive-machine.js","process-data-deep-dive-tooling.js","process-data-deep-dive-material.js","process-data-deep-dive-scientific.js","process-data-deep-dive-quality.js","process-data-deep-dive-50.js","process-data-20-pass-01-05.js","process-data-20-pass-06-10.js","process-data-20-pass-11-15.js","process-data-20-pass-16-20.js","process-data-20-pass-atlas.js","process-data-local-intake.js"),
+    "curriculum-workspace-runtime-pack.js": ("curriculum-integration.js","specialist-curriculum.js","specialist-evidence-gap-extension.js","mould-master-workspace.js"),
 }
 
 

@@ -144,12 +144,15 @@ for sid,doi in {
 
 idx=text('index.html'); sw=text('service-worker.js'); pkg=json.loads(text('desktop/electron/package.json')); integrity=text('desktop/electron/scripts/generate-integrity.cjs')
 resource_from={x.get('from') for x in pkg['build']['extraResources'] if isinstance(x,dict)}
+runtime_pack=text('src/domains/runtime-packs/process-data-runtime-pack.js')
 for f in ALL:
-    need(f in idx,f'browser shell missing {f}')
+    need(f in runtime_pack,f'process-data runtime pack missing {f}')
     need(f"'./{f}'" in sw,f'offline cache missing {f}')
     need('../../'+f in resource_from,f'desktop package missing {f}')
     need("'"+f+"'" in integrity,f'desktop integrity manifest missing {f}')
-need(idx.index("'./process-data-deep-dive-50.js'") < idx.index("'./process-data-20-pass-01-05.js'") < idx.index("'./process-data-20-pass-atlas.js'") < idx.index("'./curriculum-integration.js'"),'atlas must load after the 50-case layer and before curriculum integration')
+need("'./src/domains/runtime-packs/process-data-runtime-pack.js'" in idx,'browser shell missing process-data runtime pack')
+need(idx.index("'./src/domains/runtime-packs/learning-process-diagnostics-runtime-pack.js'") < idx.index("'./src/domains/runtime-packs/process-data-runtime-pack.js'") < idx.index("'./src/domains/runtime-packs/curriculum-workspace-runtime-pack.js'"),'atlas runtime pack must load after guided diagnostics and before curriculum/workspace integration')
+need(runtime_pack.index('process-data-deep-dive-50.js') < runtime_pack.index('process-data-20-pass-01-05.js') < runtime_pack.index('process-data-20-pass-atlas.js'),'atlas internal execution order drifted')
 
 for wf in ['.github/workflows/qa.yml','.github/workflows/open-desktop-build.yml','.github/workflows/publish-open-desktop.yml','.github/workflows/microsoft-store-msix.yml']:
     body=text(wf)

@@ -1,7 +1,7 @@
 /* MouldMaster Book runtime — evidence-governed publication authorization. */
 (function(){
   'use strict';
-  const VERSION='2026.09.18.3';
+  const VERSION='2026.09.18.4';
   if(window.MMBook?.version===VERSION)return;
   const BOOK_DATA='./src/domains/learning/book-data/';
   const AUTH_PATH=`${BOOK_DATA}book-publication-authorization-v1.json`;
@@ -11,7 +11,7 @@
   const WORKED_CASES_PATH=`${BOOK_DATA}book-worked-engineering-cases-v1.json`;
   const ENRICHMENT_PATH=`${BOOK_DATA}book-evidence-enrichment-v2.json`;
   const BATCH_PATHS=[`${BOOK_DATA}book-authored-foundations-v1.json`,`${BOOK_DATA}book-evidence-registry-v1.json`,`${BOOK_DATA}book-chapters-materials-machine-v1.json`,`${BOOK_DATA}book-authored-remaining-v1.json`];
-  const AUTH_GIT_BLOB_SHA1='dbbdbb15ed94bea1f7c5a4f4364acc9e131afa6b';
+  const AUTH_GIT_BLOB_SHA1='f569d649cbd9afc3293c8c3b0f11343003bf4ad3';
   const REQUIRED_INTEGRITY_FILES=['book-manifest-v1.json','book-sme-review-v1.json','book-qualification-resolution-all-v1.json','book-claim-resolution-high-risk-v1.json','book-authored-foundations-v1.json','book-evidence-registry-v1.json','book-chapters-materials-machine-v1.json','book-authored-remaining-v1.json','book-worked-engineering-cases-v1.json','book-evidence-enrichment-v2.json'];
   const CANONICAL_SOURCE_URLS=Object.freeze({
     'OUBELLAOUCH-2024-FIBRE-ORIENTATION':'https://doi.org/10.1007/s00170-024-12990-5',

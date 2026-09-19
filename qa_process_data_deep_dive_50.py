@@ -136,12 +136,15 @@ sw = text('service-worker.js')
 pkg = json.loads(text('desktop/electron/package.json'))
 integrity = text('desktop/electron/scripts/generate-integrity.cjs')
 resource_from = {x.get('from') for x in pkg['build']['extraResources'] if isinstance(x, dict)}
+runtime_pack = text('src/domains/runtime-packs/process-data-runtime-pack.js')
 for filename in ALL:
-    need(filename in idx, f'browser shell missing {filename}')
+    need(filename in runtime_pack, f'process-data runtime pack missing {filename}')
     need(f"'./{filename}'" in sw, f'offline cache missing {filename}')
     need('../../' + filename in resource_from, f'desktop package missing {filename}')
     need("'" + filename + "'" in integrity, f'desktop integrity manifest missing {filename}')
-need(idx.index("'./process-data-diagnostics.js'") < idx.index("'./process-data-deep-dive-machine.js'") < idx.index("'./process-data-deep-dive-50.js'") < idx.index("'./curriculum-integration.js'"), '50-case packs/engine must load after guided data and before curriculum integration')
+need("'./src/domains/runtime-packs/process-data-runtime-pack.js'" in idx, 'browser shell missing process-data runtime pack')
+need(idx.index("'./src/domains/runtime-packs/learning-process-diagnostics-runtime-pack.js'") < idx.index("'./src/domains/runtime-packs/process-data-runtime-pack.js'") < idx.index("'./src/domains/runtime-packs/curriculum-workspace-runtime-pack.js'"), '50-case runtime pack must load after guided diagnostics and before curriculum/workspace integration')
+need(runtime_pack.index('process-data-deep-dive-machine.js') < runtime_pack.index('process-data-deep-dive-50.js'), '50-case pack must preserve machine-data-before-engine execution order')
 
 qa = text('.github/workflows/qa.yml')
 desktop = text('.github/workflows/open-desktop-build.yml')

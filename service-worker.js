@@ -1,4 +1,4 @@
-const CACHE_VERSION='2026.09.18.3';
+const CACHE_VERSION='2026.09.18.4';
 const CACHE_REVISION='learner-ui-r2-20260917';
 const STATIC_CACHE=`mouldmaster-static-${CACHE_VERSION}-${CACHE_REVISION}`;
 
@@ -113,7 +113,12 @@ const CORE=[
 ];
 
 const OPTIONAL=[
+  './src/domains/runtime-packs/bootstrap-assessment-source-runtime-pack.js',
   './src/domains/runtime-packs/evidence-runtime-pack.js',
+  './src/domains/runtime-packs/assessment-evidence-depth-runtime-pack.js',
+  './src/domains/runtime-packs/assessment-multimodal-runtime-pack.js',
+  './src/domains/runtime-packs/learning-process-diagnostics-runtime-pack.js',
+  './src/domains/runtime-packs/curriculum-workspace-runtime-pack.js',
   './src/domains/runtime-packs/process-data-runtime-pack.js',
   './assessment-ux.js',
   './source-library.js',

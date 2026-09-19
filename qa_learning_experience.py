@@ -123,8 +123,9 @@ for forbidden in ['MM_EVIDENCE_APPROVAL.records=', 'correctIndex=', 'question_ba
 need('fetch(' not in js,'learning experience must remain local-only and must not upload notes/progress')
 
 idx=text('index.html')
-need("['./learning-experience.js','<script src=\"./learning-experience.js\">']" in idx,'browser shell does not load learning-experience.js')
-need(idx.index("'./pwa-shell.js'") < idx.index("'./learning-experience.js'"),'learning experience must load after the existing runtime patches')
+need("'./src/domains/runtime-packs/learning-process-diagnostics-runtime-pack.js'" in idx,'browser shell does not load learning/process diagnostics runtime pack')
+need('/* >>> learning-experience.js */' in text('src/domains/runtime-packs/learning-process-diagnostics-runtime-pack.js'),'learning experience missing from learning/process runtime pack')
+need(idx.index("'./pwa-shell.js'") < idx.index("'./src/domains/runtime-packs/learning-process-diagnostics-runtime-pack.js'"),'learning/process runtime pack must load after the existing runtime patches')
 
 # Runtime coherence is structural. Browser/runtime asset identity derives from the canonical
 # web release, while CACHE_REVISION remains an independent invalidation token.
@@ -140,6 +141,7 @@ need(shell_release==cache_version,'learning UX shell release must match PWA cach
 need(bool(cache_revision.strip()),'learning UX cache revision must remain an explicit independent invalidation token')
 need(expected_cache==f'mouldmaster-static-{cache_version}-{cache_revision}','learning UX expected cache must match service-worker cache identity')
 need("'./learning-experience.js'" in sw,'learning experience missing from offline cache')
+need("'./src/domains/runtime-packs/learning-process-diagnostics-runtime-pack.js'" in sw,'learning/process runtime pack missing from offline cache')
 need("'./pwa-shell.js'" in sw,'PWA shell/mobile layout guard missing from offline cache')
 need("url.pathname.endsWith('.js')" in sw,'PWA shell must remain on the network-first runtime-critical path so installed apps receive mobile layout fixes')
 
