@@ -4,7 +4,6 @@
  * Pack: curriculum-workspace-runtime-pack.js
  */
 
-
 /* >>> curriculum-integration.js */
 /* MouldMaster curriculum integration — theory → practice → evidence — 2026.08.26.1 */
 (function(){
@@ -269,6 +268,7 @@ updateReturnButton();
 })();
 /* <<< curriculum-integration.js */
 
+
 /* >>> specialist-curriculum.js */
 /* MouldMaster specialist curriculum — optional gap-driven extensions — 2026.08.26.1 */
 (function(){
@@ -455,6 +455,7 @@ if(typeof currentView==='string'&&currentView==='dashboard')decorateDashboard(fa
 })();
 /* <<< specialist-curriculum.js */
 
+
 /* >>> specialist-evidence-gap-extension.js */
 /* MouldMaster specialist evidence-gap extension — optional formative learning — 2026.08.28.2 */
 (function(){
@@ -629,6 +630,7 @@ if(typeof currentView==='string'&&currentView==='dashboard')patchDashboard();
 })();
 /* <<< specialist-evidence-gap-extension.js */
 
+
 /* >>> mould-master-workspace.js */
 /* MouldMaster evidence-led troubleshooting workspace — 2026.09.03.3 */
 (function(){
@@ -802,3 +804,4 @@ window.MM_MOULD_MASTER_WORKSPACE={version:VERSION,canonicalStore:'indexeddb-v2',
 window.addEventListener('mm:domains-ready',()=>hydrate({force:true}),{once:true});
 })();
 /* <<< mould-master-workspace.js */
+
