@@ -93,8 +93,7 @@ need("window.addEventListener('beforeunload'" in js,'active timing must flush on
 
 idx=text('index.html')
 need("['./learning-analytics.js','<script src=\"./learning-analytics.js\">']" not in idx,'learning analytics must not execute before the domain dependency graph is ready')
-need(idx.index("'./learning-experience.js'") < idx.index("'./src/domains/domain-bootstrap.js'"),'domain bootstrap must remain after learner-flow hooks')
-need(idx.index("'./process-data-diagnostics.js'") < idx.index("'./src/domains/domain-bootstrap.js'"),'domain bootstrap must remain after guided process-data practice')
+need(idx.index("'./src/domains/runtime-packs/learning-process-diagnostics-runtime-pack.js'") < idx.index("'./src/domains/domain-bootstrap.js'"),'domain bootstrap must remain after learner/process hooks')
 
 manifest=json.loads(text('runtime-domain-manifest.json'))
 assets=manifest.get('assets',[])
