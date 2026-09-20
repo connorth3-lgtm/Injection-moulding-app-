@@ -238,7 +238,7 @@ function observeDesktopNavigation(){
     if(!nav.querySelector('[data-mm-registry-nav="book"]'))syncDesktopNavigation();
     else normalizeRegistryNav();
   });
-  desktopNavObserver.observe(nav,{childList:true,subtree:true,attributes:true,attributeFilter:['hidden','class','style']});
+  desktopNavObserver.observe(nav,{childList:true});
 }
 function syncNavigation(){installGeometry();syncDesktopNavigation();observeDesktopNavigation();normalizeMobilePrimaryNav();syncActiveState()}
 
