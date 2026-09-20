@@ -63,7 +63,9 @@ for asset in full_stack:
 require(positions == sorted(positions), "standalone References scripts must load in dependency order")
 require("standalone-document-unified-library" in page, "standalone References unified-library runtime marker missing")
 
-require("reference-2026-expansion.js" in index, "main app must load the 2026 reference expansion")
+require("./src/domains/runtime-packs/evidence-runtime-pack.js" in index, "main app must load the evidence runtime pack")
+evidence_pack=text("src/domains/runtime-packs/evidence-runtime-pack.js")
+require("/* >>> reference-2026-expansion.js */" in evidence_pack, "main app evidence pack must load the 2026 reference expansion")
 revision_match = re.search(r"CACHE_REVISION='([^']+)'", sw)
 require(revision_match is not None and "${CACHE_VERSION}-${CACHE_REVISION}" in sw, "PWA cache revision marker missing")
 revision_dates = [int(x) for x in re.findall(r"20\d{6}", revision_match.group(1))]
