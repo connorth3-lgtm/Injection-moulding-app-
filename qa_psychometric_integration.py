@@ -52,10 +52,15 @@ need(actual==m.group(1),f'psychometric approval stale: pinned {m.group(1)}, curr
 
 idx=text('index.html')
 sw=text('service-worker.js')
-for asset in ['./assessment-psychometric-hardening.js','./assessment-evidence-integrity-upgrade.js','./assessment-psychometric-approval.js','./real-measured-data-assessment.js']:
-    need(asset in idx,f'browser shell missing {asset}')
-need(idx.index("'./evidence-maturity-formal-bridge.js'") < idx.index("'./assessment-psychometric-hardening.js'") < idx.index("'./assessment-evidence-integrity-upgrade.js'") < idx.index("'./assessment-evidence-approval.js'") < idx.index("'./assessment-psychometric-approval.js'") < idx.index("'./app-shell-registry.js'"),'psychometric/evidence browser load order is wrong')
-need(idx.index("'./process-data-diagnostics.js'") < idx.index("'./real-measured-data-assessment.js'"),'real measured assessment load order is wrong')
+need("'./src/domains/runtime-packs/assessment-evidence-depth-runtime-pack.js'" in idx,'browser shell missing assessment evidence-depth runtime pack')
+need("'./src/domains/runtime-packs/learning-process-diagnostics-runtime-pack.js'" in idx,'browser shell missing learning/process diagnostics runtime pack')
+evidence_pack=text('src/domains/runtime-packs/assessment-evidence-depth-runtime-pack.js')
+learning_process_pack=text('src/domains/runtime-packs/learning-process-diagnostics-runtime-pack.js')
+for asset in ['assessment-psychometric-hardening.js','assessment-evidence-integrity-upgrade.js','assessment-evidence-approval.js','assessment-psychometric-approval.js']:
+    need(f'/* >>> {asset} */' in evidence_pack,f'{asset} missing from assessment evidence-depth runtime pack')
+need('/* >>> real-measured-data-assessment.js */' in learning_process_pack,'real measured assessment missing from learning/process diagnostics runtime pack')
+need(idx.index("'./src/domains/runtime-packs/evidence-runtime-pack.js'") < idx.index("'./src/domains/runtime-packs/assessment-evidence-depth-runtime-pack.js'") < idx.index("'./app-shell-registry.js'"),'psychometric/evidence browser load order is wrong')
+need(idx.index("'./src/domains/runtime-packs/learning-process-diagnostics-runtime-pack.js'") < idx.index("'./src/domains/runtime-packs/process-data-runtime-pack.js'"),'real measured assessment pack order is wrong')
 shell_match=re.search(r'const SHELL_RELEASE="([^"]+)"',idx)
 cache_match=re.search(r"const CACHE_REVISION='([^']+)'",sw)
 need(shell_match is not None,'canonical browser shell release missing')
@@ -67,8 +72,8 @@ need(re.fullmatch(r'\d{4}\.\d{2}\.\d{2}\.\d+',runtime_token) is not None,'canoni
 need(bool(cache_revision.strip()),'PWA cache revision must remain an explicit independent invalidation token')
 need("'./runtime-v2.js'" in idx and "'./assessment-runtime-v2.js'" in idx,'maturity runtime must preserve psychometric bank while replacing only exam membership selection')
 
-for asset in ["'./assessment-psychometric-hardening.js'","'./assessment-evidence-integrity-upgrade.js'","'./assessment-psychometric-approval.js'","'./real-measured-data-assessment.js'"]:
-    need(asset in sw,f'offline cache missing {asset}')
+for asset in ["'./src/domains/runtime-packs/assessment-evidence-depth-runtime-pack.js'","'./src/domains/runtime-packs/learning-process-diagnostics-runtime-pack.js'"]:
+    need(asset in sw,f'offline cache missing runtime pack: {asset}')
 need("'./runtime-v2.js'" in sw and "'./assessment-runtime-v2.js'" in sw,'PWA cache must include assessment runtime v2')
 
 pkg=json.loads(text('desktop/electron/package.json'))
