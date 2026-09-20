@@ -165,6 +165,9 @@ function makeDesktopButton(item){
   b.addEventListener('click',e=>{e.preventDefault();e.stopImmediatePropagation();activeCustomId=item.id;safeCall(item.action);syncActiveState()});
   return b
 }
+function normalizeRegistryNav(){
+  document.querySelectorAll('#nav [data-mm-registry-nav]').forEach(b=>{b.hidden=false;b.classList.remove('hidden');b.style.setProperty('display','inline-flex','important')})
+}
 function syncDesktopNavigation(){
   const nav=document.getElementById('nav');if(!nav)return;
   removeLegacyDynamicNav();
@@ -179,6 +182,7 @@ function syncDesktopNavigation(){
       if(lastPractice)lastPractice.insertAdjacentElement('afterend',b);else if(anchor)anchor.insertAdjacentElement('afterend',b);else nav.appendChild(b);lastPractice=b
     }
   }
+  normalizeRegistryNav()
 }
 function mobileGrid(){return document.querySelector('#modal .modal-card .grid2')}
 function makeMobileMoreButton(item){
@@ -232,8 +236,9 @@ function observeDesktopNavigation(){
   desktopNavObserver=new MutationObserver(()=>{
     if(!finalized)return;
     if(!nav.querySelector('[data-mm-registry-nav="book"]'))syncDesktopNavigation();
+    else normalizeRegistryNav();
   });
-  desktopNavObserver.observe(nav,{childList:true});
+  desktopNavObserver.observe(nav,{childList:true,subtree:true,attributes:true,attributeFilter:['hidden','class','style']});
 }
 function syncNavigation(){installGeometry();syncDesktopNavigation();observeDesktopNavigation();normalizeMobilePrimaryNav();syncActiveState()}
 
