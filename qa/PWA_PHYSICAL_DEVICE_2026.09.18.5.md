@@ -5,13 +5,13 @@ This packet governs hands-on physical-device validation of the exact MouldMaster
 ## Exact candidate
 
 - web release: `2026.09.18.5`
-- retained pre-merge public candidate source commit: `8808b6d9ef55a383bf0b5ba9595a68b2a5251f05`
-- public-runtime fingerprint: `sha256:44b7dacb47107467b3f16974b1bd8b76a43d5b82a31ffad4d8b16990ce145a85`
-- exact candidate build run: `35499090868` (`Pre-merge Public Candidate`)
-- retained candidate artifact: `physical-pwa-candidate-8808b6d9ef55a383bf0b5ba9595a68b2a5251f05`
-- artifact id: `10601068256`
-- artifact ZIP digest: `sha256:0703e7c50f0ade0f18c2e29fb7d8096dfc86885efaa2fdc2f6953131c16a4f81`
-- artifact retention expiry: `2026-10-20T08:16:11Z`
+- retained pre-merge public candidate source commit: `d86e85f94b5a91a04f48983543b05155da91ba84`
+- public-runtime fingerprint: `sha256:0f23552b90e86c7c3d1d259bd9be7dd7d78bc7003af3536205f72d61d2264c0e`
+- exact candidate build run: `35502553030` (`Pre-merge Public Candidate`)
+- retained candidate artifact: `physical-pwa-candidate-d86e85f94b5a91a04f48983543b05155da91ba84`
+- artifact id: `10602139631`
+- artifact ZIP digest: `sha256:fd434d87abf9867a933648da11a1ba0a6a0ee6bcf8e424aae52302c6daa7d8c5`
+- artifact retention expiry: `2026-10-20T09:31:45Z`
 
 The retained candidate was built from the exact PR head with the repository's production Pages artifact builder and public-runtime fingerprint verifier. It is a **candidate rebind**, not physical-device evidence. The learner-facing runtime deliberately advanced to release `2026.09.18.5` to publish 13 exact-byte-authorized Book evidence-enrichment sections and a read-only Standards & readiness surface for ISO 9001:2026 and NZQA readiness while preserving existing worked-case, backup-integrity and Book governance boundaries. No earlier device evidence is relabelled. Governance/QA-only commits after the retained source do not change the public runtime fingerprint and must remain byte-equivalent under `qa_release_validation_packets.py`.
 
