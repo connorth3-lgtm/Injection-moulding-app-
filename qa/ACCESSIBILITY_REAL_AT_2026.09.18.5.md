@@ -6,10 +6,10 @@ This packet governs **human** assistive-technology validation for web release `2
 
 - web release: `2026.09.18.5`
 - retained pre-merge public candidate source commit: `9ff71536215d88f60ce8a3fbdc59fc3f0874b52f`
-- public-runtime fingerprint: `sha256:cc4687fd2545c17f70d544e5952b8c95f4ee2ab0d73fddaffb3c797e8b36cda9`
+- public-runtime fingerprint: `sha256:243aaeefca0d5521d9014bea5deb11a8fa24ed4741bac0f07ac5e16dda9f40da`
 - retained physical candidate: `physical-pwa-candidate-9ff71536215d88f60ce8a3fbdc59fc3f0874b52f` (`10529445520`)
 - candidate build run: `35299002421` (`Pre-merge Public Candidate`)
-- artifact ZIP digest: `sha256:6b2955da193fc695e11a7e0a6e2d64b82038a6c3aa83526bf8405ca74ed2289e`
+- artifact ZIP digest: `sha256:243aaeefca0d5521d9014bea5deb11a8fa24ed4741bac0f07ac5e16dda9f40da`
 - artifact retention expiry: `2026-10-18T02:23:19Z`
 - evidence contract: `data/accessibility-real-at-validation-v1.json`
 
