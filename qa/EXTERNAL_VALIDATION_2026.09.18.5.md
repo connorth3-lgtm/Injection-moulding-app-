@@ -3,7 +3,7 @@
 Release `2026.09.18.5` is technically automated and governed, but the following external workstreams remain explicit **HOLD**. This index does not create human, device, learner, accreditation, signing, or production-site evidence.
 
 - retained pre-merge public candidate source: `ec6b184d9d50b9d7b7ef94587bf961fee2c5c89c`
-- exact public-runtime fingerprint: `sha256:db4dc1acbc90b94b24c6e6adbee5bf49ca6d8e9dff8c2382b7c5fd082b308a18`
+- exact public-runtime fingerprint: `sha256:0e579eb1aacba4f4ce8929989f80367d131b5efee6783483de344d1c156e7796`
 - candidate build run: `35502553030` (`Pre-merge Public Candidate`)
 - candidate artifact: `physical-pwa-candidate-ec6b184d9d50b9d7b7ef94587bf961fee2c5c89c` (`10610080144`; `sha256:dc86e938ccd2f6791ff351c1cc5af5dc63e6a597c97ccf54a03594e9f2e7d4f9`; expires `2026-10-20T17:16:44Z`)
 - Pages disposition: production root remains governed separately. This retained artifact is the exact validation source for the current public byte set; protected-main publication must remain byte-equivalent under the release verifier before any production decision.
