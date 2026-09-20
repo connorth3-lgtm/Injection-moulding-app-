@@ -92,7 +92,7 @@ need('idleTimer=setTimeout(pauseLesson,IDLE_MS)' in js,'lesson timing must enfor
 need("window.addEventListener('beforeunload'" in js,'active timing must flush on unload')
 
 idx=text('index.html')
-need("'./src/domains/runtime-packs/learning-process-diagnostics-runtime-pack.js' in idx,'learning/process runtime pack missing from index')
+need("'./src/domains/runtime-packs/learning-process-diagnostics-runtime-pack.js'" in idx,'learning/process runtime pack missing from index')
 need(idx.index("'./src/domains/runtime-packs/learning-process-diagnostics-runtime-pack.js'") < idx.index("'./src/domains/domain-bootstrap.js'"),'domain bootstrap must remain after learner/process hooks')
 
 manifest=json.loads(text('runtime-domain-manifest.json'))
