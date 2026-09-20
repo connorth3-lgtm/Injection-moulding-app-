@@ -2,10 +2,10 @@
 
 Release `2026.09.18.5` is technically automated and governed, but the following external workstreams remain explicit **HOLD**. This index does not create human, device, learner, accreditation, signing, or production-site evidence.
 
-- retained pre-merge public candidate source: `9ff71536215d88f60ce8a3fbdc59fc3f0874b52f`
-- exact public-runtime fingerprint: `sha256:243aaeefca0d5521d9014bea5deb11a8fa24ed4741bac0f07ac5e16dda9f40da`
-- candidate build run: `35299002421` (`Pre-merge Public Candidate`)
-- candidate artifact: `physical-pwa-candidate-9ff71536215d88f60ce8a3fbdc59fc3f0874b52f` (`10529445520`; `sha256:243aaeefca0d5521d9014bea5deb11a8fa24ed4741bac0f07ac5e16dda9f40da`; expires `2026-10-18T02:23:19Z`)
+- retained pre-merge public candidate source: `98ce9f57b7711055468aea6364753148eb964b3f`
+- exact public-runtime fingerprint: `sha256:f521e713682284a75c5fcae8a04a7aaf243a3528c44e22bb4fb235b699d2415b`
+- candidate build run: `35495431986` (`Pre-merge Public Candidate`)
+- candidate artifact: `physical-pwa-candidate-98ce9f57b7711055468aea6364753148eb964b3f` (`10600572184`; `sha256:f521e713682284a75c5fcae8a04a7aaf243a3528c44e22bb4fb235b699d2415b`; expires `2026-10-20T06:54:44Z`)
 - Pages disposition: production root remains governed separately. This retained artifact is the exact validation source for the current public byte set; protected-main publication must remain byte-equivalent under the release verifier before any production decision.
 
 This is a release-boundary **rebind**, not external evidence. Runtime architecture changed; all genuine external validation remains HOLD until new release-specific evidence exists. The learner-facing runtime deliberately advanced to release `2026.09.18.5` to publish 13 exact-byte-authorized Book enrichment sections and the read-only ISO 9001:2026 / NZQA Standards & readiness surface. The ten governed worked engineering cases remain part of the current release and independent Book SME scope. Existing human/device/SME/learner/Windows evidence states were not promoted or relabelled. All seven release-bound external validation workstreams remain HOLD until genuine release-specific evidence exists.
