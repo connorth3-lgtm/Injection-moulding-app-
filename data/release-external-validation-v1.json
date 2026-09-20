@@ -27,7 +27,7 @@
     "candidate": {
       "release": "2026.09.18.4",
       "sourceSha": "8a36385143f42fcffe29ec61bf5f23bc43741d95",
-      "runtimeFingerprint": "sha256:d0e305cc85f93b7d5e3c7617d265960f2d7d854945f2b36dae604fe286b4fbf7"
+      "runtimeFingerprint": "sha256:ecbd2ad95d5ec3c6589564d853f5b318830360867af59512c81e6f23442727e7"
     },
     "required": "Release-specific human NVDA and VoiceOver validation across the governed matrix."
   },
@@ -38,7 +38,7 @@
     "currentCandidate": {
       "release": "2026.09.18.4",
       "sourceSha": "8a36385143f42fcffe29ec61bf5f23bc43741d95",
-      "runtimeFingerprint": "sha256:d0e305cc85f93b7d5e3c7617d265960f2d7d854945f2b36dae604fe286b4fbf7",
+      "runtimeFingerprint": "sha256:ecbd2ad95d5ec3c6589564d853f5b318830360867af59512c81e6f23442727e7",
       "candidateRunId": 35299002421,
       "candidateWorkflow": "Pre-merge Public Candidate",
       "artifactId": 10529445520,
