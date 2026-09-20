@@ -159,7 +159,7 @@ function desktopAnchor(item){
   return nav.querySelector('button[data-view="scenarios"]')
 }
 function makeDesktopButton(item){
-  const b=document.createElement('button');b.type='button';b.dataset.mmRegistryNav=item.id;b.style.setProperty('display','inline-flex','important');b.hidden=false;b.classList.remove('hidden');
+  const b=document.createElement('button');b.type='button';b.dataset.mmRegistryNav=item.id;if(item.id==='book')b.dataset.view='book';b.style.setProperty('display','inline-flex','important');b.hidden=false;b.classList.remove('hidden');
   if(item.legacyDataset)b.dataset[item.legacyDataset]='1';
   b.innerHTML=`${esc(item.icon||'•')} <span>${esc(item.label||item.id)}</span>`;
   b.addEventListener('click',e=>{e.preventDefault();e.stopImmediatePropagation();activeCustomId=item.id;safeCall(item.action);syncActiveState()});
