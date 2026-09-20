@@ -21,6 +21,7 @@ const renderListeners=new Map();
 let finalized=false;
 let activeCustomId='';
 let mobileNavObserver=null;
+let desktopNavObserver=null;
 let geometryQueued=false;
 let dashboardComposeQueued=false;
 
@@ -226,7 +227,15 @@ function syncActiveState(){
   });
   syncMobileGeometry()
 }
-function syncNavigation(){installGeometry();syncDesktopNavigation();normalizeMobilePrimaryNav();syncActiveState()}
+function observeDesktopNavigation(){
+  const nav=document.getElementById('nav');if(!nav||desktopNavObserver)return;
+  desktopNavObserver=new MutationObserver(()=>{
+    if(!finalized)return;
+    if(!nav.querySelector('[data-mm-registry-nav="book"]'))syncDesktopNavigation();
+  });
+  desktopNavObserver.observe(nav,{childList:true});
+}
+function syncNavigation(){installGeometry();syncDesktopNavigation();observeDesktopNavigation();normalizeMobilePrimaryNav();syncActiveState()}
 
 function onViewChange(fn){viewListeners.add(fn);return ()=>viewListeners.delete(fn)}
 function onRender(view,fn){if(!renderListeners.has(view))renderListeners.set(view,new Set());renderListeners.get(view).add(fn);return ()=>renderListeners.get(view)?.delete(fn)}
