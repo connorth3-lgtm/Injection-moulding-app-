@@ -5,7 +5,7 @@ Release `2026.09.18.5` is technically automated and governed, but the following 
 - retained pre-merge public candidate source: `8808b6d9ef55a383bf0b5ba9595a68b2a5251f05`
 - exact public-runtime fingerprint: `sha256:44b7dacb47107467b3f16974b1bd8b76a43d5b82a31ffad4d8b16990ce145a85`
 - candidate build run: `35499090868` (`Pre-merge Public Candidate`)
-- candidate artifact: `physical-pwa-candidate-8808b6d9ef55a383bf0b5ba9595a68b2a5251f05` (`10601068256`; `sha256:44b7dacb47107467b3f16974b1bd8b76a43d5b82a31ffad4d8b16990ce145a85`; expires `2026-10-20T08:16:11Z`)
+- candidate artifact: `physical-pwa-candidate-8808b6d9ef55a383bf0b5ba9595a68b2a5251f05` (`10601068256`; `sha256:0703e7c50f0ade0f18c2e29fb7d8096dfc86885efaa2fdc2f6953131c16a4f81`; expires `2026-10-20T08:16:11Z`)
 - Pages disposition: production root remains governed separately. This retained artifact is the exact validation source for the current public byte set; protected-main publication must remain byte-equivalent under the release verifier before any production decision.
 
 This is a release-boundary **rebind**, not external evidence. Runtime architecture changed; all genuine external validation remains HOLD until new release-specific evidence exists. The learner-facing runtime deliberately advanced to release `2026.09.18.5` to publish 13 exact-byte-authorized Book enrichment sections and the read-only ISO 9001:2026 / NZQA Standards & readiness surface. The ten governed worked engineering cases remain part of the current release and independent Book SME scope. Existing human/device/SME/learner/Windows evidence states were not promoted or relabelled. All seven release-bound external validation workstreams remain HOLD until genuine release-specific evidence exists.
