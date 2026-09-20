@@ -26,7 +26,7 @@
     "reviewPacket": "qa/ACCESSIBILITY_REAL_AT_2026.09.18.5.md",
     "candidate": {
       "release": "2026.09.18.5",
-      "sourceSha": "d86e85f94b5a91a04f48983543b05155da91ba84",
+      "sourceSha": "ec6b184d9d50b9d7b7ef94587bf961fee2c5c89c",
       "runtimeFingerprint": "sha256:0f23552b90e86c7c3d1d259bd9be7dd7d78bc7003af3536205f72d61d2264c0e"
     },
     "required": "Release-specific human NVDA and VoiceOver validation across the governed matrix."
@@ -37,14 +37,14 @@
     "reviewPacket": "qa/PWA_PHYSICAL_DEVICE_2026.09.18.5.md",
     "currentCandidate": {
       "release": "2026.09.18.5",
-      "sourceSha": "d86e85f94b5a91a04f48983543b05155da91ba84",
+      "sourceSha": "ec6b184d9d50b9d7b7ef94587bf961fee2c5c89c",
       "runtimeFingerprint": "sha256:0f23552b90e86c7c3d1d259bd9be7dd7d78bc7003af3536205f72d61d2264c0e",
       "candidateRunId": 35502553030,
       "candidateWorkflow": "Pre-merge Public Candidate",
-      "artifactId": 10602139631,
-      "artifactName": "physical-pwa-candidate-d86e85f94b5a91a04f48983543b05155da91ba84",
-      "artifactDigest": "sha256:fd434d87abf9867a933648da11a1ba0a6a0ee6bcf8e424aae52302c6daa7d8c5",
-      "artifactExpiresAt": "2026-10-20T09:31:45Z"
+      "artifactId": 10610080144,
+      "artifactName": "physical-pwa-candidate-ec6b184d9d50b9d7b7ef94587bf961fee2c5c89c",
+      "artifactDigest": "sha256:dc86e938ccd2f6791ff351c1cc5af5dc63e6a597c97ccf54a03594e9f2e7d4f9",
+      "artifactExpiresAt": "2026-10-20T17:16:44Z"
     },
     "required": "Current-release physical iOS/iPadOS and Android install/update/offline validation. Prior release waivers do not authorize this release."
   },
