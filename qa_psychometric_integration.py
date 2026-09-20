@@ -70,7 +70,9 @@ runtime_token=shell_match.group(1)
 cache_revision=cache_match.group(1)
 need(re.fullmatch(r'\d{4}\.\d{2}\.\d{2}\.\d+',runtime_token) is not None,'canonical browser release must use YYYY.MM.DD.N')
 need(bool(cache_revision.strip()),'PWA cache revision must remain an explicit independent invalidation token')
-need("'./runtime-v2.js'" in idx and "'./assessment-runtime-v2.js'" in idx,'maturity runtime must preserve psychometric bank while replacing only exam membership selection')
+need("'./runtime-v2.js'" in idx and "'./src/domains/runtime-packs/bootstrap-assessment-source-runtime-pack.js'" in idx,'maturity runtime must preserve psychometric bank while replacing only exam membership selection')
+bootstrap_pack=text('src/domains/runtime-packs/bootstrap-assessment-source-runtime-pack.js')
+need('/* >>> assessment-runtime-v2.js */' in bootstrap_pack,'assessment runtime v2 missing from bootstrap assessment/source pack')
 
 for asset in ["'./src/domains/runtime-packs/assessment-evidence-depth-runtime-pack.js'","'./src/domains/runtime-packs/learning-process-diagnostics-runtime-pack.js'"]:
     need(asset in sw,f'offline cache missing runtime pack: {asset}')
