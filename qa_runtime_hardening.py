@@ -66,15 +66,15 @@ must(index, [
     'throw new Error("Core training content is incomplete")', "versionMarkup", "?v=${RUNTIME_ASSET_VERSION}",
     "fetch(`${CORE_URL}?v=${RUNTIME_ASSET_VERSION}`", "window.MM_RUNTIME_ASSET_VERSION=RUNTIME_ASSET_VERSION",
     "Content-Security-Policy", "default-src 'self'", "object-src 'none'", "frame-src 'none'", "connect-src 'self'", "worker-src 'self'",
-    "'./runtime-v2.js'", "'./assessment-runtime-v2.js'", "'./lesson-deep-authoring-v2.js'", "'./assessment-multimodal.js'", "'./accessibility-hardening.js'",
-    "'./assessment-psychometric-hardening.js'", "'./assessment-evidence-integrity-upgrade.js'", "'./assessment-psychometric-approval.js'",
-    "'./real-measured-data-assessment.js'", "'./src/domains/domain-bootstrap.js'"
+    "'./runtime-v2.js'", "'./src/domains/runtime-packs/bootstrap-assessment-source-runtime-pack.js'", "'./src/domains/runtime-packs/learning-process-diagnostics-runtime-pack.js'", "'./accessibility-hardening.js'",
+    "'./src/domains/runtime-packs/curriculum-workspace-runtime-pack.js'", "'./src/domains/runtime-packs/evidence-runtime-pack.js'",
+    "'./src/domains/runtime-packs/process-data-runtime-pack.js'", "'./src/domains/domain-bootstrap.js'"
 ], "bootstrap hardening")
 for forbidden in ("ensureCoherentRuntime", ".unregister()", "mmBundle"):
     require(forbidden not in index, f"bootstrap hardening: destructive browser/PWA reset marker remains: {forbidden}")
-require(index.index("'./src/domains/runtime-packs/assessment-foundation-runtime-pack.js'") < index.index("'./runtime-v2.js'") < index.index("'./assessment-runtime-v2.js'") < index.index("'./assessment-ux.js'"), "runtime v2 must capture the packed audited assessment functions before the new selector owns getExamQuestions and before assessment UX decorates it")
-require(index.index("'./evidence-maturity-formal-bridge.js'") < index.index("'./assessment-psychometric-hardening.js'") < index.index("'./assessment-evidence-integrity-upgrade.js'") < index.index("'./lesson-evidence-depth.js'") < index.index("'./lesson-deep-authoring-v2.js'") < index.index("'./assessment-evidence-approval.js'") < index.index("'./assessment-psychometric-approval.js'") < index.index("'./app-shell-registry.js'") < index.index("'./assessment-multimodal.js'"), "psychometric/evidence/deep-authoring/multimodal assets must load in deterministic order")
-require(index.index("'./process-data-diagnostics.js'") < index.index("'./real-measured-data-assessment.js'"), "real measured assessment must load after the process-data navigation surface")
+require(index.index("'./src/domains/runtime-packs/assessment-foundation-runtime-pack.js'") < index.index("'./runtime-v2.js'") < index.index("'./src/domains/runtime-packs/bootstrap-assessment-source-runtime-pack.js'"), "runtime v2 must capture the foundation assessment functions before the consolidated assessment runtime owns/decorates them")
+require(index.index("'./src/domains/runtime-packs/bootstrap-assessment-source-runtime-pack.js'") < index.index("'./src/domains/runtime-packs/evidence-runtime-pack.js'") < index.index("'./src/domains/runtime-packs/assessment-evidence-depth-runtime-pack.js'") < index.index("'./app-shell-registry.js'"), "assessment and evidence packs must load in deterministic historical order before shell registry")
+require(index.index("'./src/domains/runtime-packs/learning-process-diagnostics-runtime-pack.js'") < index.index("'./src/domains/runtime-packs/process-data-runtime-pack.js'") < index.index("'./src/domains/runtime-packs/curriculum-workspace-runtime-pack.js'"), "operational evidence runtime must load before process-data runtime pack")
 require(index.rindex("'./accessibility-hardening.js'") > index.index("'./learning-analytics.js'"), "accessibility hardening must run after learner-facing runtime modules are installed")
 
 must(runtime_v2, ["const CORE=['renderLesson','renderDashboard','switchView','startExam','gradeExam','getExamQuestions']", "setImplementation", "already owned by", "before:new Set(),after:new Set()", "scopedKey", "registerModule", "one owner at a time"], "runtime v2")

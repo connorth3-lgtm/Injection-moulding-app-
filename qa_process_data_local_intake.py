@@ -159,13 +159,13 @@ capture=text('sources/REAL_PROCESS_DATA_INTAKE.md')
 for marker in ['Preferred capture hierarchy','Intervention record','Data-quality checks before analysis','Privacy and confidentiality','Engineering boundary']:
     need(marker in capture,f'real process-data capture standard missing section: {marker}')
 
-idx=text('index.html');sw=text('service-worker.js');pkg=json.loads(text('desktop/electron/package.json'));integrity=text('desktop/electron/scripts/generate-integrity.cjs')
-need(MODULE in idx,'browser shell missing local intake module')
+idx=text('index.html');sw=text('service-worker.js');pkg=json.loads(text('desktop/electron/package.json'));integrity=text('desktop/electron/scripts/generate-integrity.cjs');process_pack=text('src/domains/runtime-packs/process-data-runtime-pack.js')
+need('/* >>> '+MODULE+' */' in process_pack,'process-data runtime pack missing local intake module')
 need(f"'./{MODULE}'" in sw,'offline cache missing local intake module')
 froms={x.get('from') for x in pkg['build']['extraResources'] if isinstance(x,dict)}
 need('../../'+MODULE in froms,'desktop package missing local intake module')
 need("'"+MODULE+"'" in integrity,'desktop integrity manifest missing local intake module')
-need(idx.index("'./process-data-20-pass-atlas.js'") < idx.index(f"'./{MODULE}'") < idx.index("'./curriculum-integration.js'"),'local intake must load after data libraries and before curriculum integration')
+need(process_pack.index("/* >>> process-data-20-pass-atlas.js */") < process_pack.index('/* >>> '+MODULE+' */'),'local intake must load after the process-data atlas inside its runtime pack'); need(idx.index("'./src/domains/runtime-packs/process-data-runtime-pack.js'") < idx.index("'./app-shell-finalize.js'"),'process-data runtime pack must load before shell finalization')
 
 for wf in ['.github/workflows/qa.yml','.github/workflows/open-desktop-build.yml','.github/workflows/publish-open-desktop.yml','.github/workflows/microsoft-store-msix.yml']:
     need('python qa_process_data_local_intake.py' in text(wf),f'{wf} must gate local process-data intake')

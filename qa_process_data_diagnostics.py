@@ -63,8 +63,8 @@ need(len(guided)==14,f'expected 14 guided data cases, got {len(guided)}')
 need(set(canonical)==set(guided),f'guided data case coverage mismatch: missing={sorted(set(canonical)-set(guided))}, extra={sorted(set(guided)-set(canonical))}')
 
 idx=text('index.html')
-need("['./process-data-diagnostics.js','<script src=\"./process-data-diagnostics.js\">']" in idx,'browser shell does not load guided data diagnostics')
-need(idx.index("'./evidence-maturity-deep-dive.js'") < idx.index("'./process-data-diagnostics.js'"),'guided data diagnostics must load after the canonical dataset pack')
+need("'./src/domains/runtime-packs/learning-process-diagnostics-runtime-pack.js'" in idx,'browser shell does not load packed guided data diagnostics')
+need(idx.index("'./src/domains/runtime-packs/evidence-runtime-pack.js'") < idx.index("'./src/domains/runtime-packs/learning-process-diagnostics-runtime-pack.js'"),'guided data diagnostics pack must load after the canonical evidence dataset pack')
 
 # Runtime coherence is structural. Browser/runtime asset identity derives from the canonical
 # web release, while CACHE_REVISION remains an independent invalidation token.

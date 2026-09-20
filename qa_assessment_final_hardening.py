@@ -98,7 +98,7 @@ need(V.get('assessment_quality_version')=='2026.08.24.3','assessment quality ver
 idx=text('index.html');assessment_pack='src/domains/runtime-packs/assessment-foundation-runtime-pack.js';pack=text(assessment_pack)
 need(assessment_pack in idx and '<script src="./assessment-storage-scope.js">' not in idx and '<script src="./assessment-final-hardening.js">' not in idx,'assessment storage/final hardening must load through deterministic pack')
 need(pack.index('/* >>> assessment-storage-scope.js */')<pack.index('/* >>> assessment-analytics-ui.js */')<pack.index('/* >>> assessment-final-hardening.js */'),'final hardening/scoped-storage pack order wrong')
-need(idx.index(assessment_pack)<idx.index('runtime-v2.js')<idx.index('source-library.js'),'assessment foundation pack boundary wrong')
+need(idx.index(assessment_pack)<idx.index('runtime-v2.js')<idx.index('bootstrap-assessment-source-runtime-pack.js'),'assessment foundation pack boundary wrong')
 need("'./src/domains/runtime-packs/assessment-foundation-runtime-pack.js'" in text('service-worker.js'),'assessment foundation pack missing from offline cache')
 pkg=json.loads(text('desktop/electron/package.json'));froms={x.get('from') for x in pkg['build']['extraResources'] if isinstance(x,dict)}
 need('../../assessment-storage-scope.js' in froms,'scoped assessment storage missing from desktop package')

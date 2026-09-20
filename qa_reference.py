@@ -150,11 +150,13 @@ for marker in [
 
 index = text("index.html")
 evidence_pack = text("src/domains/runtime-packs/evidence-runtime-pack.js")
-source_library_marker = '<script src="./source-library.js">'
+bootstrap_pack_marker = './src/domains/runtime-packs/bootstrap-assessment-source-runtime-pack.js'
 evidence_pack_marker = '<script src="./src/domains/runtime-packs/evidence-runtime-pack.js">'
-require(source_library_marker in index, "reference source library missing from browser shell")
+bootstrap_pack = text("src/domains/runtime-packs/bootstrap-assessment-source-runtime-pack.js")
+require(bootstrap_pack_marker in index, "reference bootstrap/source runtime pack missing from browser shell")
 require(evidence_pack_marker in index, "reference evidence runtime pack missing from browser shell")
-require(index.index(source_library_marker) < index.index(evidence_pack_marker), "reference source library must load before evidence runtime pack")
+require('/* >>> source-library.js */' in bootstrap_pack, "reference source library missing from bootstrap/source runtime pack")
+require(index.index(bootstrap_pack_marker) < index.index(evidence_pack_marker), "reference source pack must load before evidence runtime pack")
 positions = []
 for asset in REFERENCE_ASSETS[1:]:
     marker = f"/* >>> {asset} */"

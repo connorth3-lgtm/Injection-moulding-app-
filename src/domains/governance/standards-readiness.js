@@ -2,7 +2,7 @@
 (function(){
 'use strict';
 if(window.MM_STANDARDS_READINESS)return;
-const VERSION='2026.09.18.3';
+const VERSION='2026.09.18.4';
 const QMS='./src/domains/quality/data/quality-management-iso9001-v1.json';
 const NZQA='./src/domains/learning/book-data/nzqa-education-readiness-v1.json';
 let data=null,view=null,navDispose=null;

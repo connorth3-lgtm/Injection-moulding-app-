@@ -135,14 +135,14 @@ need('fetch(' not in text('evidence-maturity-deep-dive.js'),'evidence maturity l
 need('fetch(' not in text('evidence-maturity-formal-bridge.js'),'formal evidence bridge must remain local-only')
 
 idx=text('index.html'); sw=text('service-worker.js'); pkg=text('desktop/electron/package.json'); integ=text('desktop/electron/scripts/generate-integrity.cjs')
-for asset in ['evidence-maturity-deep-dive.js','evidence-maturity-formal-bridge.js','lesson-evidence-depth.js']:
-    need(asset in idx,f'browser shell missing {asset}')
-    need(f"'./{asset}'" in sw,f'offline cache missing {asset}')
-    need(f'../../{asset}' in pkg,f'desktop package missing {asset}')
-    need(f"'{asset}'" in integ,f'desktop integrity missing {asset}')
-need(idx.index('assessment-storage-scope.js')<idx.index('assessment-quality-suite.js'),'evidence-maturity runtime must preserve scoped assessment-storage load order')
-need(idx.index('assessment-evidence-sources.js')<idx.index('evidence-maturity-deep-dive.js')<idx.index('evidence-maturity-formal-bridge.js')<idx.index('assessment-evidence-approval.js'),'formal evidence modules must run after base sources and before approval')
-need(idx.index('evidence-maturity-formal-bridge.js')<idx.index('lesson-evidence-depth.js'),'lesson depth must see final evidence mappings')
+need('evidence-runtime-pack.js' in idx,'browser shell missing packed evidence maturity runtime')
+need('assessment-evidence-depth-runtime-pack.js' in idx,'browser shell missing packed lesson evidence runtime')
+foundation_pack=text('src/domains/runtime-packs/assessment-foundation-runtime-pack.js')
+need(foundation_pack.index('assessment-storage-scope.js')<foundation_pack.index('assessment-quality-suite.js'),'evidence-maturity runtime must preserve scoped assessment-storage load order')
+evidence_pack=text('src/domains/runtime-packs/evidence-runtime-pack.js'); depth_pack=text('src/domains/runtime-packs/assessment-evidence-depth-runtime-pack.js')
+need(evidence_pack.index('assessment-evidence-sources.js')<evidence_pack.index('evidence-maturity-deep-dive.js')<evidence_pack.index('evidence-maturity-formal-bridge.js'),'formal evidence modules must run after base sources')
+need('assessment-evidence-approval.js' in depth_pack,'assessment evidence approval must remain in the post-evidence depth pack')
+need(idx.index('evidence-runtime-pack.js')<idx.index('app-shell-registry.js'),'packed evidence maturity runtime must load before shell registry')
 
 report={
  'schema':1,'version':'2026.08.26.4','formal_questions':157,'formal_min_urls':2,'formal_min_authorities':2,
