@@ -131,7 +131,8 @@ need('bypass guards' not in LOWER_JS, 'unsafe bypass instruction detected')
 need('defeat interlocks' not in LOWER_JS, 'unsafe interlock-defeat instruction detected')
 
 asset = './diagnostic-learning-labs.js'
-need(asset in INDEX, 'browser shell does not load diagnostic learning labs')
+need('./src/domains/runtime-packs/evidence-runtime-pack.js' in INDEX, 'browser shell does not load evidence runtime pack')
+need('/* >>> diagnostic-learning-labs.js */' in text('src/domains/runtime-packs/evidence-runtime-pack.js'), 'diagnostic learning labs missing from evidence runtime pack')
 need(asset in SW, 'diagnostic learning labs missing from offline cache')
 need('../../diagnostic-learning-labs.js' in PKG, 'desktop package does not include diagnostic learning labs')
 need("'diagnostic-learning-labs.js'" in INTEGRITY, 'desktop integrity manifest generator does not cover diagnostic learning labs')
