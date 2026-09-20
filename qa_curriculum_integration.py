@@ -81,7 +81,8 @@ need("'./src/domains/runtime-packs/curriculum-workspace-runtime-pack.js'" in idx
 need('/* >>> curriculum-integration.js */' in text('src/domains/runtime-packs/curriculum-workspace-runtime-pack.js'),'curriculum integration missing from curriculum workspace pack')
 need(idx.index("'./src/domains/runtime-packs/learning-process-diagnostics-runtime-pack.js'") < idx.index("'./src/domains/runtime-packs/curriculum-workspace-runtime-pack.js'"),'curriculum workspace must load after learner/process diagnostics pack')
 need(idx.index("'./src/domains/runtime-packs/curriculum-workspace-runtime-pack.js'") < idx.index("'./app-shell-finalize.js'"),'curriculum workspace pack must load before shell finalization')
-need(idx.index("'./curriculum-integration.js'") < idx.index("'./learning-analytics.js'"),'learning analytics must load after curriculum integration')
+need("const DOMAIN_DELEGATED_ASSETS=['./learning-analytics.js','./accessibility-hardening.js']" in idx,'learning analytics must remain a delegated domain asset')
+need("'./learning-analytics.js' in idx,'learning analytics delegated asset missing from browser shell')
 
 sw=text('service-worker.js')
 need("'./curriculum-integration.js'" in sw,'curriculum integration missing from offline cache')
