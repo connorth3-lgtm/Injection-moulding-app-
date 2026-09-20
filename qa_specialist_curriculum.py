@@ -102,11 +102,12 @@ need('mm_specialist_curriculum_v1' in js,'specialist storage namespace missing')
 need('Mark specialist lesson complete' in js,'specialist completion UI missing')
 
 idx=text('index.html')
-needle="['./specialist-curriculum.js','<script src=\"./specialist-curriculum.js\">']"
-need(needle in idx,'browser shell does not load specialist-curriculum.js')
-need(idx.index("'./curriculum-integration.js'") < idx.index("'./specialist-curriculum.js'"),'specialist curriculum must load after core curriculum integration')
-need(idx.index("'./specialist-curriculum.js'") < idx.index("'./learning-analytics.js'"),'learning analytics must load after specialist curriculum')
-
+need("'./src/domains/runtime-packs/curriculum-workspace-runtime-pack.js'" in idx,'browser shell does not load curriculum workspace runtime pack')
+curriculum_pack=text('src/domains/runtime-packs/curriculum-workspace-runtime-pack.js')
+need('/* >>> specialist-curriculum.js */' in curriculum_pack,'specialist curriculum missing from curriculum workspace runtime pack')
+need('/* >>> curriculum-integration.js */' in curriculum_pack,'curriculum integration missing from curriculum workspace runtime pack')
+need(idx.index("'./src/domains/runtime-packs/learning-process-diagnostics-runtime-pack.js'") < idx.index("'./src/domains/runtime-packs/curriculum-workspace-runtime-pack.js'"),'specialist curriculum pack must load after learning/process diagnostics')
+need(idx.index("'./src/domains/runtime-packs/curriculum-workspace-runtime-pack.js'") < idx.index("'./app-shell-finalize.js'"),'specialist curriculum pack must load before shell finalization')
 sw=text('service-worker.js')
 need("'./src/domains/runtime-packs/curriculum-workspace-runtime-pack.js'" in sw,'curriculum workspace runtime pack missing from offline cache')
 
