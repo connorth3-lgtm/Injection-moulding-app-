@@ -108,7 +108,7 @@ need(idx.index("'./curriculum-integration.js'") < idx.index("'./specialist-curri
 need(idx.index("'./specialist-curriculum.js'") < idx.index("'./learning-analytics.js'"),'learning analytics must load after specialist curriculum')
 
 sw=text('service-worker.js')
-need("'./specialist-curriculum.js'" in sw,'specialist curriculum missing from offline cache')
+need("'./src/domains/runtime-packs/curriculum-workspace-runtime-pack.js'" in sw,'curriculum workspace runtime pack missing from offline cache')
 
 pkg=json.loads(text('desktop/electron/package.json'))
 froms={x.get('from') for x in pkg['build']['extraResources'] if isinstance(x,dict)}
