@@ -46,7 +46,7 @@ for a,b,label in [(nsrc,nrt,"NZQA readiness"),(tsrc,trt,"NZQA templates")]:
 n=load(nsrc);t=load(tsrc)
 need(n.get("schema")==1 and n.get("id")=="mouldmaster-nzqa-education-readiness","NZQA identity mismatch")
 need(n.get("checked")=="2026-09-18","NZQA source check must be current")
-need(n.get("releaseTarget")=="2026.09.18.3","NZQA readiness must target current governed release")
+need(n.get("releaseTarget")=="2026.09.18.4","NZQA readiness must target current governed release")
 need(n.get("publicationEffect")=="read-only-readiness-surface","NZQA publication effect must stay read-only")
 current={x["id"] for x in n.get("currentInjectionMouldingStandards",[])}
 expired=set(n.get("expiredStandardsNotForCurrentAssessmentMapping",[]))
