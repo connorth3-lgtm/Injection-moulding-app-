@@ -27,7 +27,7 @@
     "candidate": {
       "release": "2026.09.18.5",
       "sourceSha": "98ce9f57b7711055468aea6364753148eb964b3f",
-      "runtimeFingerprint": "sha256:f521e713682284a75c5fcae8a04a7aaf243a3528c44e22bb4fb235b699d2415b"
+      "runtimeFingerprint": "sha256:30aed510ba590ffcfbcddc0aed2faf929f6e6aceb1124eae3c52b524eb1f6e10"
     },
     "required": "Release-specific human NVDA and VoiceOver validation across the governed matrix."
   },
