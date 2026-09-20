@@ -103,7 +103,7 @@ need(authority.get("productionUse")=="advisory-only" and authority.get("automati
 
 # Release/runtime integration
 version=load(ROOT/"version.json")
-need(version.get("web_release")=="2026.09.18.3","governed readiness layers require web release 2026.09.18.3")
+need(version.get("web_release")=="2026.09.18.4","governed readiness layers require web release 2026.09.18.4")
 domain_manifest=load(ROOT/"runtime-domain-manifest.json")
 need("./src/domains/governance/standards-readiness.js" in domain_manifest.get("assets",[]),"readiness runtime missing from domain manifest")
 sw=text(ROOT/"service-worker.js")
