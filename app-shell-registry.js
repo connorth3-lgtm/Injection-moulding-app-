@@ -77,7 +77,8 @@ function normalizeMobilePrimaryNav(){
   [...nav.querySelectorAll(':scope > button')].forEach(button=>{
     const view=button.dataset.view||'';
     const keep=view==='dashboard'||view==='path'||view==='scenarios'||canonicalMoreButton(button);
-    if(!keep)button.remove()
+    if(!keep)button.remove();
+    else {button.hidden=false;button.classList.remove('hidden');button.style.removeProperty('display')}
   });
   if(!mobileNavObserver){
     mobileNavObserver=new MutationObserver(()=>{normalizeMobilePrimaryNav();syncMobileGeometry()});
