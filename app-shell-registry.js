@@ -21,6 +21,7 @@ const renderListeners=new Map();
 let finalized=false;
 let activeCustomId='';
 let mobileNavObserver=null;
+let mobileNavHostObserver=null;
 let desktopNavObserver=null;
 let geometryQueued=false;
 let dashboardComposeQueued=false;
@@ -73,7 +74,20 @@ function syncMobileGeometry(){
 }
 function canonicalMoreButton(button){const handler=button.getAttribute('data-mm-onclick')||button.getAttribute('onclick')||'';return !button.dataset.view&&(handler.includes('openMobileMenu')||/\bMore\b/i.test(button.textContent||''))}
 function normalizeMobilePrimaryNav(){
-  const nav=document.querySelector('.mobile-nav');if(!nav)return;
+  const nav=document.querySelector('.mobile-nav');
+  if(!nav){
+    if(!mobileNavHostObserver&&document.body){
+      mobileNavHostObserver=new MutationObserver(()=>{
+        if(document.querySelector('.mobile-nav')){
+          mobileNavHostObserver.disconnect();
+          mobileNavHostObserver=null;
+          normalizeMobilePrimaryNav();
+        }
+      });
+      mobileNavHostObserver.observe(document.body,{childList:true,subtree:true});
+    }
+    return;
+  }
   [...nav.querySelectorAll(':scope > button')].forEach(button=>{
     const isMore=canonicalMoreButton(button)||button.dataset.view==='more';
     const view=button.dataset.view||'';
