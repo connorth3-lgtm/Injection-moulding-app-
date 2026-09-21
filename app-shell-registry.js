@@ -167,7 +167,7 @@ function makeDesktopButton(item){
   return b
 }
 function normalizeRegistryNav(){
-  document.querySelectorAll('#nav [data-mm-registry-nav]').forEach(b=>{b.hidden=false;b.classList.remove('hidden');b.style.setProperty('display','inline-flex','important')})
+  document.querySelectorAll('#nav [data-mm-registry-nav]').forEach(b=>{b.hidden=false;b.classList.remove('hidden');b.removeAttribute('aria-hidden');b.style.setProperty('display','inline-flex','important');b.style.setProperty('visibility','visible','important');b.style.setProperty('opacity','1','important')})
 }
 function syncDesktopNavigation(){
   const nav=document.getElementById('nav');if(!nav)return;
