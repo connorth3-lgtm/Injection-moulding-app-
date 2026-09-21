@@ -8,7 +8,7 @@
   "issueNumber": 379,
   "candidate": {
     "sourceSha": "ec6b184d9d50b9d7b7ef94587bf961fee2c5c89c",
-    "runtimeFingerprint": "sha256:5383d67782b1c699180d3fcfdaf9fa2c0285928d5075033f548bc2c81e3f465b"
+    "runtimeFingerprint": "sha256:982cc5b7f9547d1a9df6e474b6072d5a635c025628728dc625850e2130632ab3"
   },
   "boundary": "Repository readiness, mappings, templates and automated QA do not create NZQA approval, provider accreditation, consent to assess, moderation acceptance, learner competence, workplace competence or qualification award.",
   "requiredGates": [
