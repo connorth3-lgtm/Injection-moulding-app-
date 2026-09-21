@@ -83,7 +83,8 @@ function normalizeMobilePrimaryNav(){
       if(isMore&&!button.dataset.view)button.dataset.view='more';
       if(button.hidden)button.hidden=false;
       if(button.classList.contains('hidden'))button.classList.remove('hidden');
-      if(button.style.getPropertyValue('display'))button.style.removeProperty('display');
+      if(isMore)button.style.setProperty('display','inline-flex','important');
+      else if(button.style.getPropertyValue('display'))button.style.removeProperty('display');
       if(button.style.getPropertyValue('visibility'))button.style.removeProperty('visibility');
       if(button.style.getPropertyValue('opacity'))button.style.removeProperty('opacity');
     }
@@ -235,7 +236,7 @@ function syncActiveState(){
     if(group==='home')match=v==='dashboard';
     else if(group==='learn')match=v==='path';
     else if(group==='practice')match=v==='scenarios';
-    else if(group==='more')match=canonicalMoreButton(b);
+    else if(group==='more')match=b.dataset.view==='more'||canonicalMoreButton(b);
     b.classList.toggle('active',match);if(match)b.setAttribute('aria-current','page');else b.removeAttribute('aria-current')
   });
   syncMobileGeometry()
