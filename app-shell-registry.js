@@ -241,11 +241,14 @@ function observeDesktopNavigation(){
   desktopNavObserver.observe(nav,{childList:true});
 }
 function ensureMobileBookButton(){
-  const nav=document.querySelector('.mobile-nav');if(!nav||nav.querySelector('[data-mm-registry-nav="book"]'))return;
+  const nav=document.querySelector('.mobile-nav');if(!nav||nav.querySelector('[data-mm-book-launcher]'))return;
+  const wrap=document.createElement('div');wrap.dataset.mmBookLauncher='1';wrap.style.display='contents';
   const b=document.createElement('button');b.type='button';b.dataset.mmRegistryNav='book';b.dataset.mmBookTab='1';b.dataset.view='book';b.setAttribute('aria-label','Book');b.innerHTML='<span>▣</span> <span>Book</span>';
+  b.style.cssText='display:inline-flex;align-items:center;justify-content:center;gap:6px;min-height:44px;padding:10px 12px;border:0;background:transparent;color:inherit;font:inherit;cursor:pointer;';
   b.addEventListener('click',e=>{e.preventDefault();e.stopImmediatePropagation();activeCustomId='book';safeCall(()=>window.MMBook?.open?.());syncActiveState()});
+  wrap.appendChild(b);
   const more=[...nav.querySelectorAll(':scope > button')].find(canonicalMoreButton);
-  if(more)more.insertAdjacentElement('beforebegin',b);else nav.appendChild(b)
+  if(more)more.insertAdjacentElement('beforebegin',wrap);else nav.appendChild(wrap)
 }
 function syncNavigation(){installGeometry();syncDesktopNavigation();observeDesktopNavigation();ensureMobileBookButton();normalizeMobilePrimaryNav();syncActiveState()}
 
