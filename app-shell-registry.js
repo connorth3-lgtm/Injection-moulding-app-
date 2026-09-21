@@ -76,7 +76,7 @@ function normalizeMobilePrimaryNav(){
   const nav=document.querySelector('.mobile-nav');if(!nav)return;
   [...nav.querySelectorAll(':scope > button')].forEach(button=>{
     const view=button.dataset.view||'';
-    const keep=view==='dashboard'||view==='path'||view==='scenarios'||canonicalMoreButton(button);
+    const keep=view==='dashboard'||view==='path'||view==='scenarios'||button.dataset.mmRegistryNav==='book'||canonicalMoreButton(button);
     if(!keep)button.remove()
   });
   if(!mobileNavObserver){
@@ -240,7 +240,7 @@ function observeDesktopNavigation(){
   });
   desktopNavObserver.observe(nav,{childList:true});
 }
-function syncNavigation(){installGeometry();syncDesktopNavigation();observeDesktopNavigation();normalizeMobilePrimaryNav();syncActiveState()}
+function syncNavigation(){installGeometry();syncDesktopNavigation();observeDesktopNavigation();ensureMobileBookButton();normalizeMobilePrimaryNav();syncActiveState()}
 
 function onViewChange(fn){viewListeners.add(fn);return ()=>viewListeners.delete(fn)}
 function onRender(view,fn){if(!renderListeners.has(view))renderListeners.set(view,new Set());renderListeners.get(view).add(fn);return ()=>renderListeners.get(view)?.delete(fn)}
