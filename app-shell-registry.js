@@ -78,11 +78,15 @@ function normalizeMobilePrimaryNav(){
     const view=button.dataset.view||'';
     const keep=view==='dashboard'||view==='path'||view==='scenarios'||canonicalMoreButton(button);
     if(!keep)button.remove();
-    else {button.hidden=false;button.classList.remove('hidden');button.style.removeProperty('display')}
+    else {
+      if(button.hidden)button.hidden=false;
+      if(button.classList.contains('hidden'))button.classList.remove('hidden');
+      if(button.style.getPropertyValue('display'))button.style.removeProperty('display');
+    }
   });
   if(!mobileNavObserver){
     mobileNavObserver=new MutationObserver(()=>{normalizeMobilePrimaryNav();syncMobileGeometry()});
-    mobileNavObserver.observe(nav,{childList:true})
+    mobileNavObserver.observe(nav,{childList:true,attributes:true,attributeFilter:['hidden','class','style']})
   }
   syncMobileGeometry()
 }
