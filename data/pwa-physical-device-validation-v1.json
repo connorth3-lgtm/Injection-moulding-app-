@@ -2,7 +2,7 @@
   "schemaVersion": 2,
   "status": "released-with-accepted-ios-risk",
   "boundary": "Automated browser, service-worker and assistive-technology regressions do not substitute for testing on physical iOS/iPadOS and Android devices. Android has owner-attested evidence; iOS/iPadOS remains explicitly untested under the recorded release-risk waiver. Full physical validation requires reviewed evidence for both platforms. Screen-reader conformance remains governed separately by data/accessibility-real-at-validation-v1.json.",
-  "runtimeFingerprint": "sha256:44b7dacb47107467b3f16974b1bd8b76a43d5b82a31ffad4d8b16990ce145a85",
+  "runtimeFingerprint": "sha256:82a9b3add975da76aef8a6fb3be183365d1a1b7e9777c180fee2935233b11a19",
   "testedAt": "2026-09-06T20:55:00+12:00",
   "testerReference": "repository-owner-android-attestation",
   "evidenceReference": "pr-234-release-risk-acceptance",
