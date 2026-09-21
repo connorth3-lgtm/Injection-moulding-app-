@@ -241,7 +241,7 @@ function observeDesktopNavigation(){
   desktopNavObserver.observe(nav,{childList:true});
 }
 function ensureMobileBookButton(){
-  const nav=document.querySelector('.mobile-nav');if(!nav||nav.querySelector('[data-mm-book-launcher]'))return;
+  const nav=document.querySelector('.mobile-nav');if(!nav||!window.matchMedia('(max-width: 600px)').matches||nav.querySelector('[data-mm-book-launcher]'))return;
   const wrap=document.createElement('div');wrap.dataset.mmBookLauncher='1';wrap.style.display='contents';
   const b=document.createElement('button');b.type='button';b.dataset.mmRegistryNav='book';b.dataset.view='book';b.tabIndex=-1;b.setAttribute('aria-label','Book');b.innerHTML='<span>▣</span> <span>Book</span>';
   b.style.setProperty('display','inline-flex');b.style.setProperty('align-items','center');b.style.setProperty('justify-content','center');b.style.setProperty('gap','6px');b.style.setProperty('min-height','44px');b.style.setProperty('padding','10px 12px');b.style.setProperty('border','0');b.style.setProperty('background','transparent');b.style.setProperty('color','inherit');b.style.setProperty('font','inherit');b.style.setProperty('cursor','pointer');b.style.setProperty('position','absolute');b.style.setProperty('right','8px');b.style.setProperty('bottom','calc(100% + 8px)');
