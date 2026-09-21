@@ -76,7 +76,7 @@ function normalizeMobilePrimaryNav(){
   const nav=document.querySelector('.mobile-nav');if(!nav)return;
   [...nav.querySelectorAll(':scope > button')].forEach(button=>{
     const view=button.dataset.view||'';
-    const keep=view==='dashboard'||view==='path'||view==='scenarios'||button.dataset.mmRegistryNav==='book'||canonicalMoreButton(button);
+    const keep=view==='dashboard'||view==='path'||view==='scenarios'||canonicalMoreButton(button);
     if(!keep)button.remove()
   });
   if(!mobileNavObserver){
@@ -186,7 +186,7 @@ function syncDesktopNavigation(){
 }
 function mobileGrid(){return document.querySelector('#modal .modal-card .grid2')}
 function makeMobileMoreButton(item){
-  const b=document.createElement('button');b.type='button';b.className='quick-action';b.dataset.mmRegistryMenu=item.id;
+  const b=document.createElement('button');b.type='button';b.className='quick-action';b.dataset.mmRegistryMenu=item.id;if(item.id==='book')b.dataset.mmBookTab='1';
   b.innerHTML=`<span class="icon">${esc(item.icon||'•')}</span><b>${esc(item.label||item.id)}</b><small>${esc(item.description||'Open this tool.')}</small>`;
   b.addEventListener('click',()=>{try{window.closeModal?.()}catch(_){}activeCustomId=item.id;safeCall(item.action);syncActiveState()});return b
 }
@@ -240,19 +240,7 @@ function observeDesktopNavigation(){
   });
   desktopNavObserver.observe(nav,{childList:true});
 }
-function ensureMobileBookButton(){
-  const nav=document.querySelector('.mobile-nav');if(!nav||!window.matchMedia('(max-width: 600px)').matches||nav.querySelector('[data-mm-book-launcher]'))return;
-  const wrap=document.createElement('div');wrap.dataset.mmBookLauncher='1';wrap.style.display='contents';
-  const b=document.createElement('button');b.type='button';b.dataset.mmRegistryNav='book';b.dataset.view='book';b.tabIndex=-1;b.setAttribute('aria-label','Book');b.innerHTML='<span>▣</span> <span>Book</span>';
-  b.style.setProperty('display','inline-flex');b.style.setProperty('align-items','center');b.style.setProperty('justify-content','center');b.style.setProperty('gap','6px');b.style.setProperty('min-height','44px');b.style.setProperty('padding','10px 12px');b.style.setProperty('border','0');b.style.setProperty('background','transparent');b.style.setProperty('color','inherit');b.style.setProperty('font','inherit');b.style.setProperty('cursor','pointer');b.style.setProperty('position','absolute');b.style.setProperty('right','8px');b.style.setProperty('bottom','calc(100% + 8px)');
-  b.addEventListener('click',e=>{e.preventDefault();e.stopImmediatePropagation();activeCustomId='book';safeCall(()=>window.MMBook?.open?.());syncActiveState()});
-  wrap.appendChild(b);
-  const more=[...nav.querySelectorAll(':scope > button')].find(canonicalMoreButton);
-  if(more)more.insertAdjacentElement('beforebegin',wrap);else nav.appendChild(wrap);
-  const syncMarker=()=>{const desktop=document.querySelector('#nav [data-mm-registry-nav="book"]');const mobile=b;const narrow=window.matchMedia('(max-width: 900px)').matches;if(desktop)desktop.toggleAttribute('data-mm-book-tab',!narrow);mobile.toggleAttribute('data-mm-book-tab',narrow)};
-  syncMarker();window.addEventListener('resize',syncMarker,{passive:true})
-}
-function syncNavigation(){installGeometry();syncDesktopNavigation();observeDesktopNavigation();ensureMobileBookButton();normalizeMobilePrimaryNav();syncActiveState()}
+function syncNavigation(){installGeometry();syncDesktopNavigation();observeDesktopNavigation();normalizeMobilePrimaryNav();syncActiveState()}
 
 function onViewChange(fn){viewListeners.add(fn);return ()=>viewListeners.delete(fn)}
 function onRender(view,fn){if(!renderListeners.has(view))renderListeners.set(view,new Set());renderListeners.get(view).add(fn);return ()=>renderListeners.get(view)?.delete(fn)}
