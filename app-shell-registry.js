@@ -240,6 +240,13 @@ function observeDesktopNavigation(){
   });
   desktopNavObserver.observe(nav,{childList:true});
 }
+function ensureMobileBookButton(){
+  const nav=document.querySelector('.mobile-nav');if(!nav||nav.querySelector('[data-mm-registry-nav="book"]'))return;
+  const b=document.createElement('button');b.type='button';b.dataset.mmRegistryNav='book';b.dataset.mmBookTab='1';b.dataset.view='book';b.setAttribute('aria-label','Book');b.innerHTML='<span>▣</span> <span>Book</span>';
+  b.addEventListener('click',e=>{e.preventDefault();e.stopImmediatePropagation();activeCustomId='book';safeCall(()=>window.MMBook?.open?.());syncActiveState()});
+  const more=[...nav.querySelectorAll(':scope > button')].find(canonicalMoreButton);
+  if(more)more.insertAdjacentElement('beforebegin',b);else nav.appendChild(b)
+}
 function syncNavigation(){installGeometry();syncDesktopNavigation();observeDesktopNavigation();ensureMobileBookButton();normalizeMobilePrimaryNav();syncActiveState()}
 
 function onViewChange(fn){viewListeners.add(fn);return ()=>viewListeners.delete(fn)}
