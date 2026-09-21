@@ -14,7 +14,13 @@ async function openApp(page){
 
 test('Book distinguishes evidence verification from independent human validation',async({page})=>{
   await openApp(page);
-  const bookButton=page.locator('button[data-mm-book-tab]');
+  let bookButton=page.locator('button[data-mm-book-tab]:visible').first();
+  if(await bookButton.count()===0){
+    const more=page.locator('.mobile-nav > button').filter({hasText:'More'}).first();
+    await expect(more).toBeVisible();
+    await more.click();
+    bookButton=page.locator('#modal button[data-mm-book-tab]:visible').first();
+  }
   await expect(bookButton).toBeVisible();
   await bookButton.click();
 
