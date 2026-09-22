@@ -3,7 +3,7 @@
   "release": "2026.09.18.5",
   "packet": "qa/ACCESSIBILITY_REAL_AT_2026.09.18.5.md",
   "sourceSha": "ec6b184d9d50b9d7b7ef94587bf961fee2c5c89c",
-  "runtimeFingerprint": "sha256:cec5ac3c2039f3d1cebc0ffd4e0fc79cc437500d959d009dd670546a6c5038af",
+  "runtimeFingerprint": "sha256:d314003f3171614a2b55af79120174f8ed8ea812bcaf73688201e2170f401851",
   "status": "pending-real-at-validation",
   "boundary": "Automated browser and accessibility regressions do not substitute for real assistive-technology interaction by a human reviewer. Release 2026.09.18.5 changed governed runtime bytes; exact candidate provenance must be rebound by the release-candidate workflow before validation, and all real-AT tasks remain pending.",
   "requiredMatrix": [
