@@ -89,7 +89,8 @@ function normalizeMobilePrimaryNav(){
     const keep=view==='dashboard'||view==='path'||view==='scenarios'||isMore;
     if(!keep)button.remove();
     else if(isMore){
-      if(button.hidden&&!button.dataset.mmCanonicalMore){
+      const hiddenMore=button.hidden||button.classList.contains('hidden')||getComputedStyle(button).display==='none';
+      if(hiddenMore&&!button.dataset.mmCanonicalMore){
         const replacement=document.createElement('button');
         replacement.type='button';
         replacement.dataset.view='more';
