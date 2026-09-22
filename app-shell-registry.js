@@ -89,7 +89,18 @@ function normalizeMobilePrimaryNav(){
     const keep=view==='dashboard'||view==='path'||view==='scenarios'||isMore;
     if(!keep)button.remove();
     else if(isMore){
-      if(button.dataset.view!=='more')button.dataset.view='more';
+      if(button.hidden&&!button.dataset.mmCanonicalMore){
+        const replacement=document.createElement('button');
+        replacement.type='button';
+        replacement.dataset.view='more';
+        replacement.dataset.mmCanonicalMore='1';
+        replacement.dataset.mmOnclick='openMobileMenu()';
+        replacement.innerHTML=button.innerHTML||'<span>More</span>';
+        replacement.addEventListener('click',event=>{event.preventDefault();event.stopImmediatePropagation();window.openMobileMenu?.()});
+        button.replaceWith(replacement);
+        return;
+      }
+      button.dataset.view='more';
       button.hidden=false;
       button.classList.remove('hidden');
       button.removeAttribute('aria-hidden');
