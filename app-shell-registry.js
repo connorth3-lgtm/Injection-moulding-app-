@@ -21,7 +21,6 @@ const renderListeners=new Map();
 let finalized=false;
 let activeCustomId='';
 let mobileNavObserver=null;
-let mobileNavHostObserver=null;
 let desktopNavObserver=null;
 let geometryQueued=false;
 let dashboardComposeQueued=false;
@@ -74,38 +73,15 @@ function syncMobileGeometry(){
 }
 function canonicalMoreButton(button){const handler=button.getAttribute('data-mm-onclick')||button.getAttribute('onclick')||'';return !button.dataset.view&&(handler.includes('openMobileMenu')||/\bMore\b/i.test(button.textContent||''))}
 function normalizeMobilePrimaryNav(){
-  const nav=document.querySelector('.mobile-nav');
-  if(!nav){
-    if(!mobileNavHostObserver&&document.body){
-      mobileNavHostObserver=new MutationObserver(()=>{
-        if(document.querySelector('.mobile-nav')){
-          mobileNavHostObserver.disconnect();
-          mobileNavHostObserver=null;
-          normalizeMobilePrimaryNav();
-        }
-      });
-      mobileNavHostObserver.observe(document.body,{childList:true,subtree:true});
-    }
-    return;
-  }
+  const nav=document.querySelector('.mobile-nav');if(!nav)return;
   [...nav.querySelectorAll(':scope > button')].forEach(button=>{
-    const isMore=canonicalMoreButton(button)||button.dataset.view==='more';
     const view=button.dataset.view||'';
-    const keep=view==='dashboard'||view==='path'||view==='scenarios'||isMore;
-    if(!keep)button.remove();
-    else {
-      if(isMore&&!button.dataset.view)button.dataset.view='more';
-      if(button.hidden)button.hidden=false;
-      if(button.classList.contains('hidden'))button.classList.remove('hidden');
-      if(isMore)button.style.setProperty('display','inline-flex','important');
-      else if(button.style.getPropertyValue('display'))button.style.removeProperty('display');
-      if(button.style.getPropertyValue('visibility'))button.style.removeProperty('visibility');
-      if(button.style.getPropertyValue('opacity'))button.style.removeProperty('opacity');
-    }
+    const keep=view==='dashboard'||view==='path'||view==='scenarios'||canonicalMoreButton(button);
+    if(!keep)button.remove()
   });
   if(!mobileNavObserver){
     mobileNavObserver=new MutationObserver(()=>{normalizeMobilePrimaryNav();syncMobileGeometry()});
-    mobileNavObserver.observe(nav,{childList:true,attributes:true,attributeFilter:['hidden','class','style']})
+    mobileNavObserver.observe(nav,{childList:true})
   }
   syncMobileGeometry()
 }
