@@ -101,17 +101,17 @@ function normalizeMobilePrimaryNav(){
         return;
       }
       button.dataset.view='more';
-      button.hidden=false;
-      button.classList.remove('hidden');
-      button.removeAttribute('aria-hidden');
-      button.style.setProperty('display','grid','important');
-      button.style.setProperty('visibility','visible','important');
-      button.style.setProperty('opacity','1','important');
+      if(button.hidden)button.hidden=false;
+      if(button.classList.contains('hidden'))button.classList.remove('hidden');
+      if(button.hasAttribute('aria-hidden'))button.removeAttribute('aria-hidden');
+      if(button.style.getPropertyValue('display'))button.style.removeProperty('display');
+      if(button.style.getPropertyValue('visibility'))button.style.removeProperty('visibility');
+      if(button.style.getPropertyValue('opacity'))button.style.removeProperty('opacity');
     }
   });
   if(!mobileNavObserver){
     mobileNavObserver=new MutationObserver(()=>{normalizeMobilePrimaryNav();syncMobileGeometry()});
-    mobileNavObserver.observe(nav,{childList:true})
+    mobileNavObserver.observe(nav,{childList:true,attributes:true,attributeFilter:['hidden','class','style','aria-hidden']})
   }
   syncMobileGeometry()
 }
