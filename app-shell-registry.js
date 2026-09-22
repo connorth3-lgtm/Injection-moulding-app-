@@ -111,7 +111,7 @@ function normalizeMobilePrimaryNav(){
   });
   if(!mobileNavObserver){
     mobileNavObserver=new MutationObserver(()=>{normalizeMobilePrimaryNav();syncMobileGeometry()});
-    mobileNavObserver.observe(nav,{childList:true,attributes:true,attributeFilter:['hidden','class','style','aria-hidden']})
+    mobileNavObserver.observe(nav,{childList:true})
   }
   syncMobileGeometry()
 }
