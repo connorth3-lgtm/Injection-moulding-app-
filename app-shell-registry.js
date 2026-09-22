@@ -21,6 +21,7 @@ const renderListeners=new Map();
 let finalized=false;
 let activeCustomId='';
 let mobileNavObserver=null;
+let desktopNavObserver=null;
 let geometryQueued=false;
 let dashboardComposeQueued=false;
 
@@ -52,7 +53,7 @@ function installGeometry(){
   body{padding-bottom:0!important}
   .main{padding-bottom:var(--mm-mobile-content-clearance)!important}
   .mobile-nav{position:fixed!important;left:0!important;right:0!important;bottom:0!important;min-height:var(--mm-mobile-nav-height);z-index:40!important;background:#07101c!important;padding-bottom:max(8px,env(safe-area-inset-bottom))!important;box-shadow:0 -12px 28px rgba(0,0,0,.30),0 90px 0 #07101c!important}
-  .mobile-nav>button:not([data-view]):not([onclick*="openMobileMenu"]):not([data-mm-onclick*="openMobileMenu"]){display:none!important}
+  .mobile-nav>button:not([data-view]):not([onclick*="openMobileMenu"]):not([data-mm-onclick*="openMobileMenu"]){display:none!important}.mobile-nav>button[data-view="more"]{display:grid!important}
   body[data-mm-view="dashboard"] #continueBtn{display:none!important}
   .mm-mobile-actions{bottom:var(--mm-mobile-nav-clearance)!important;z-index:35!important;padding-bottom:9px!important}
   #lesson .lesson-body{padding-bottom:calc(var(--mm-mobile-content-clearance) + 86px)!important}
@@ -71,16 +72,47 @@ function syncMobileGeometry(){
   })
 }
 function canonicalMoreButton(button){const handler=button.getAttribute('data-mm-onclick')||button.getAttribute('onclick')||'';return !button.dataset.view&&(handler.includes('openMobileMenu')||/\bMore\b/i.test(button.textContent||''))}
+function ensureMobileMoreVisible(){
+  const nav=document.querySelector('.mobile-nav');if(!nav)return;
+  const more=[...nav.querySelectorAll(':scope > button')].find(button=>canonicalMoreButton(button)||button.textContent?.trim().endsWith('More'));
+  if(!more)return;
+  more.hidden=false;
+  more.classList.remove('hidden');
+  more.removeAttribute('aria-hidden');
+  more.style.setProperty('display','grid','important');
+}
 function normalizeMobilePrimaryNav(){
   const nav=document.querySelector('.mobile-nav');if(!nav)return;
   [...nav.querySelectorAll(':scope > button')].forEach(button=>{
     const view=button.dataset.view||'';
-    const keep=view==='dashboard'||view==='path'||view==='scenarios'||canonicalMoreButton(button);
-    if(!keep)button.remove()
+    const isMore=canonicalMoreButton(button)||button.dataset.view==='more';
+    const keep=view==='dashboard'||view==='path'||view==='scenarios'||isMore;
+    if(!keep)button.remove();
+    else if(isMore){
+      const hiddenMore=button.hidden||button.classList.contains('hidden')||getComputedStyle(button).display==='none';
+      if(hiddenMore&&!button.dataset.mmCanonicalMore){
+        const replacement=document.createElement('button');
+        replacement.type='button';
+        replacement.dataset.view='more';
+        replacement.dataset.mmCanonicalMore='1';
+        replacement.dataset.mmOnclick='openMobileMenu()';
+        replacement.innerHTML=button.innerHTML||'<span>More</span>';
+        replacement.addEventListener('click',event=>{event.preventDefault();event.stopImmediatePropagation();window.openMobileMenu?.()});
+        button.replaceWith(replacement);
+        return;
+      }
+      button.dataset.view='more';
+      if(button.hidden)button.hidden=false;
+      if(button.classList.contains('hidden'))button.classList.remove('hidden');
+      if(button.hasAttribute('aria-hidden'))button.removeAttribute('aria-hidden');
+      if(button.style.getPropertyValue('display'))button.style.removeProperty('display');
+      if(button.style.getPropertyValue('visibility'))button.style.removeProperty('visibility');
+      if(button.style.getPropertyValue('opacity'))button.style.removeProperty('opacity');
+    }
   });
   if(!mobileNavObserver){
     mobileNavObserver=new MutationObserver(()=>{normalizeMobilePrimaryNav();syncMobileGeometry()});
-    mobileNavObserver.observe(nav,{childList:true})
+    mobileNavObserver.observe(nav,{childList:true,attributes:true,attributeFilter:['hidden','class','style','aria-hidden']})
   }
   syncMobileGeometry()
 }
@@ -158,11 +190,14 @@ function desktopAnchor(item){
   return nav.querySelector('button[data-view="scenarios"]')
 }
 function makeDesktopButton(item){
-  const b=document.createElement('button');b.type='button';b.dataset.mmRegistryNav=item.id;
+  const b=document.createElement('button');b.type='button';b.dataset.mmRegistryNav=item.id;if(item.id==='book')b.dataset.view='book';b.style.setProperty('display','inline-flex','important');b.hidden=false;b.classList.remove('hidden');
   if(item.legacyDataset)b.dataset[item.legacyDataset]='1';
   b.innerHTML=`${esc(item.icon||'•')} <span>${esc(item.label||item.id)}</span>`;
   b.addEventListener('click',e=>{e.preventDefault();e.stopImmediatePropagation();activeCustomId=item.id;safeCall(item.action);syncActiveState()});
   return b
+}
+function normalizeRegistryNav(){
+  document.querySelectorAll('#nav [data-mm-registry-nav]').forEach(b=>{b.hidden=false;b.classList.remove('hidden');b.removeAttribute('aria-hidden');b.style.setProperty('display','inline-flex','important');b.style.setProperty('visibility','visible','important');b.style.setProperty('opacity','1','important')})
 }
 function syncDesktopNavigation(){
   const nav=document.getElementById('nav');if(!nav)return;
@@ -178,10 +213,11 @@ function syncDesktopNavigation(){
       if(lastPractice)lastPractice.insertAdjacentElement('afterend',b);else if(anchor)anchor.insertAdjacentElement('afterend',b);else nav.appendChild(b);lastPractice=b
     }
   }
+  normalizeRegistryNav()
 }
 function mobileGrid(){return document.querySelector('#modal .modal-card .grid2')}
 function makeMobileMoreButton(item){
-  const b=document.createElement('button');b.type='button';b.className='quick-action';b.dataset.mmRegistryMenu=item.id;
+  const b=document.createElement('button');b.type='button';b.className='quick-action';b.dataset.mmRegistryMenu=item.id;if(item.id==='book')b.dataset.mmBookTab='1';
   b.innerHTML=`<span class="icon">${esc(item.icon||'•')}</span><b>${esc(item.label||item.id)}</b><small>${esc(item.description||'Open this tool.')}</small>`;
   b.addEventListener('click',()=>{try{window.closeModal?.()}catch(_){}activeCustomId=item.id;safeCall(item.action);syncActiveState()});return b
 }
@@ -206,6 +242,7 @@ function canonicalMobileGroup(view){
 }
 function syncActiveState(){
   normalizeMobilePrimaryNav();
+  ensureMobileMoreVisible();
   const visible=visibleCoreView();
   const view=visible||(typeof currentView==='string'?currentView:'dashboard');
   document.body.dataset.mmView=activeCustomId||view;
@@ -221,12 +258,21 @@ function syncActiveState(){
     if(group==='home')match=v==='dashboard';
     else if(group==='learn')match=v==='path';
     else if(group==='practice')match=v==='scenarios';
-    else if(group==='more')match=canonicalMoreButton(b);
+    else if(group==='more')match=b.dataset.view==='more'||canonicalMoreButton(b);
     b.classList.toggle('active',match);if(match)b.setAttribute('aria-current','page');else b.removeAttribute('aria-current')
   });
   syncMobileGeometry()
 }
-function syncNavigation(){installGeometry();syncDesktopNavigation();normalizeMobilePrimaryNav();syncActiveState()}
+function observeDesktopNavigation(){
+  const nav=document.getElementById('nav');if(!nav||desktopNavObserver)return;
+  desktopNavObserver=new MutationObserver(()=>{
+    if(!finalized)return;
+    if(!nav.querySelector('[data-mm-registry-nav="book"]'))syncDesktopNavigation();
+    else normalizeRegistryNav();
+  });
+  desktopNavObserver.observe(nav,{childList:true});
+}
+function syncNavigation(){installGeometry();syncDesktopNavigation();observeDesktopNavigation();normalizeMobilePrimaryNav();syncActiveState()}
 
 function onViewChange(fn){viewListeners.add(fn);return ()=>viewListeners.delete(fn)}
 function onRender(view,fn){if(!renderListeners.has(view))renderListeners.set(view,new Set());renderListeners.get(view).add(fn);return ()=>renderListeners.get(view)?.delete(fn)}
@@ -277,6 +323,7 @@ function installDefaultNavigation(){
   registerNavigation({id:'diagnostic-labs',label:'Diagnostic labs',icon:'⌁',description:'Practise evidence-first troubleshooting.',order:20,group:'practice',legacyDataset:'mmDiagnosticLabs',mobileGroup:'practice',action:()=>window.MM_DIAGNOSTIC_LABS?.open?.()});
   registerNavigation({id:'process-data',label:'Data diagnosis',icon:'⌁',description:'Read process trends and choose the next evidence check.',order:30,group:'practice',legacyDataset:'mmProcessData',mobileGroup:'practice',action:()=>window.MM_PROCESS_DATA_DIAGNOSTICS?.open?.()});
   registerNavigation({id:'material-labs',label:'Material labs',icon:'◈',description:'Compare resin-specific behaviour and evidence.',order:40,group:'practice',legacyDataset:'mmMaterialLabs',mobileGroup:'practice',action:()=>window.MM_MATERIAL_BEHAVIOUR_LABS?.open?.()});
+  registerNavigation({id:'book',label:'Book',icon:'▣',description:'Open the evidence-governed MouldMaster Book.',order:45,group:'progress',legacyDataset:'mmBookTab',mobileGroup:'more',action:()=>window.MMBook?.open?.()});
   registerNavigation({id:'reference-data',label:'Reference data',icon:'▤',description:'Materials, defects, signals and troubleshooting data.',order:50,group:'progress',desktop:false,mobileGroup:'more',action:()=>location.assign('./reference-data.html')});
   registerNavigation({id:'learning-insights',label:'Learning insights',icon:'◫',description:'See local learning progress and retry trends.',order:60,group:'progress',legacyDataset:'mmLearningInsights',mobileGroup:'more',action:()=>window.MM_LEARNING_ANALYTICS?.open?.()});
   registerNavigation({id:'repair-app-files',label:'Repair app files',icon:'↻',description:'Refresh installed files without deleting learner progress.',order:70,group:'progress',desktop:false,mobileGroup:'more',action:()=>location.assign('./repair.html')})

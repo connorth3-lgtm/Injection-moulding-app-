@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "bookId": "mouldmaster-book",
-  "version": "2026.09.18.4",
+  "version": "2026.09.18.5",
   "status": "authorized",
   "authorizationType": "governed-book-publication",
   "authorizedAt": "2026-09-14",
@@ -22,15 +22,15 @@
     "scope": "Exact served bytes for every payload that can influence Book publication promotion or its independent-SME status. Git object identity is checked in-browser before JSON parsing; any mismatch fails closed.",
     "gitBlobSha1ByFile": {
       "book-manifest-v1.json": "59efb8048451389ebb610566e13607d2d9c47cdd",
-      "book-sme-review-v1.json": "fd78f92bade063ca5c2eb4d632930a814318a997",
+      "book-sme-review-v1.json": "a8cac72394a3df776f94835457873ff51999f245",
       "book-qualification-resolution-all-v1.json": "c6da26d0c4ed3608b1a19b1551856c1d80c03a8f",
       "book-claim-resolution-high-risk-v1.json": "84d007a72c16b60e01ba392f9ca6e0f6d487cc85",
       "book-authored-foundations-v1.json": "5d03416c4f857d41de9890546a6de5c649f86094",
       "book-evidence-registry-v1.json": "24cbe1b1777fa4e2377226a8789815b7321d66a9",
       "book-chapters-materials-machine-v1.json": "db728583dd832c1998c8b2ac32ce97b281929047",
       "book-authored-remaining-v1.json": "ee0788e10630aaf6d0d8c64e2d69e40c14968f1f",
-      "book-worked-engineering-cases-v1.json": "585e16c168411b3e315970fdc1e62f0f082f122b",
-      "book-evidence-enrichment-v2.json": "6e6282cd8eee5afdf64d1c6bb360570dd5c1eb2c"
+      "book-worked-engineering-cases-v1.json": "2b9308c3c73ed7b32e96489941ccf3289357b03e",
+      "book-evidence-enrichment-v2.json": "960d0c4f352ad3c0e83af0d1afd6dc4b575c9316"
     }
   },
   "canonicalAcademicEvidenceUrls": {
@@ -127,7 +127,7 @@
   "workedCasesAuthorization": {
     "status": "authorized",
     "authorizedAt": "2026-09-18",
-    "release": "2026.09.18.4",
+    "release": "2026.09.18.5",
     "ledger": "data/book-worked-engineering-cases-v1.json",
     "caseCount": 10,
     "claimCount": 10,
@@ -139,7 +139,7 @@
   "evidenceEnrichmentAuthorization": {
     "status": "authorized",
     "authorizedAt": "2026-09-18",
-    "release": "2026.09.18.4",
+    "release": "2026.09.18.5",
     "ledger": "data/book-evidence-enrichment-v2.json",
     "ledgerId": "book-evidence-enrichment-2026-09-18-v2",
     "chapterCount": 10,
