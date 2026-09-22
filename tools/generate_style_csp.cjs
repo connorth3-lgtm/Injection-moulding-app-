@@ -123,7 +123,7 @@ const expected=expectedHashes();
 const index=fs.readFileSync(INDEX,'utf8');
 const next=rewriteIndex(index,expected);
 if(check){
-  if(index!==next){const current=(index.match(/style-src 'self'([^;]*);/)||[])[1]?.trim().split(/\\s+/).filter(Boolean)||[];const expected=expected.hashes;const missing=expected.filter(x=>!current.includes(x));const extra=current.filter(x=>!expected.includes(x));console.error(`Style CSP diff: missing=${missing.join(',')||'none'} extra=${extra.join(',')||'none'}`);fail('index.html style CSP hash allowlist is stale; run node tools/generate_style_csp.cjs');}
+  if(index!==next){const current=(index.match(/style-src 'self'([^;]*);/)||[])[1]?.trim().split(/\s+/).filter(Boolean)||[];const expected=expected.hashes;const missing=expected.filter(x=>!current.includes(x));const extra=current.filter(x=>!expected.includes(x));console.error(`Style CSP diff: missing=${missing.join(',')||'none'} extra=${extra.join(',')||'none'}`);fail('index.html style CSP hash allowlist is stale; run node tools/generate_style_csp.cjs');}
   if(index.includes("style-src 'self' 'unsafe-inline'"))fail('style-src still contains unsafe-inline');
   if(!index.includes("style-src-attr 'none'"))fail('style-src-attr is not none');
 }else{
