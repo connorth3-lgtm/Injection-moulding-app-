@@ -72,6 +72,15 @@ function syncMobileGeometry(){
   })
 }
 function canonicalMoreButton(button){const handler=button.getAttribute('data-mm-onclick')||button.getAttribute('onclick')||'';return !button.dataset.view&&(handler.includes('openMobileMenu')||/\bMore\b/i.test(button.textContent||''))}
+function ensureMobileMoreVisible(){
+  const nav=document.querySelector('.mobile-nav');if(!nav)return;
+  const more=[...nav.querySelectorAll(':scope > button')].find(button=>canonicalMoreButton(button)||button.textContent?.trim().endsWith('More'));
+  if(!more)return;
+  more.hidden=false;
+  more.classList.remove('hidden');
+  more.removeAttribute('aria-hidden');
+  more.style.setProperty('display','grid','important');
+}
 function normalizeMobilePrimaryNav(){
   const nav=document.querySelector('.mobile-nav');if(!nav)return;
   [...nav.querySelectorAll(':scope > button')].forEach(button=>{
@@ -211,6 +220,7 @@ function canonicalMobileGroup(view){
 }
 function syncActiveState(){
   normalizeMobilePrimaryNav();
+  ensureMobileMoreVisible();
   const visible=visibleCoreView();
   const view=visible||(typeof currentView==='string'?currentView:'dashboard');
   document.body.dataset.mmView=activeCustomId||view;
