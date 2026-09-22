@@ -496,7 +496,7 @@ transition:opacity .38s ease,visibility .38s ease;">
   <button data-view="dashboard">⌂<span>Home</span></button>
   <button data-view="path">▤<span>Learn</span></button>
   <button data-view="scenarios">◎<span>Practice</span></button>
-  <button type="button" data-view="more" onclick="openMobileMenu()">☰<span>More</span></button>
+  <button type="button" onclick="openMobileMenu()">☰<span>More</span></button>
 </nav>
 
 <div id="modal" class="modal hidden" role="dialog" aria-modal="true">
