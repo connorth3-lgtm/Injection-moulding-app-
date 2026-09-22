@@ -85,8 +85,18 @@ function normalizeMobilePrimaryNav(){
   const nav=document.querySelector('.mobile-nav');if(!nav)return;
   [...nav.querySelectorAll(':scope > button')].forEach(button=>{
     const view=button.dataset.view||'';
-    const keep=view==='dashboard'||view==='path'||view==='scenarios'||canonicalMoreButton(button);
-    if(!keep)button.remove()
+    const isMore=canonicalMoreButton(button)||button.dataset.view==='more';
+    const keep=view==='dashboard'||view==='path'||view==='scenarios'||isMore;
+    if(!keep)button.remove();
+    else if(isMore){
+      if(button.dataset.view!=='more')button.dataset.view='more';
+      button.hidden=false;
+      button.classList.remove('hidden');
+      button.removeAttribute('aria-hidden');
+      button.style.setProperty('display','grid','important');
+      button.style.setProperty('visibility','visible','important');
+      button.style.setProperty('opacity','1','important');
+    }
   });
   if(!mobileNavObserver){
     mobileNavObserver=new MutationObserver(()=>{normalizeMobilePrimaryNav();syncMobileGeometry()});
