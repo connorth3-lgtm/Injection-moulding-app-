@@ -57,3 +57,6 @@ Until then, real-AT validation remains **HOLD**.
 
 
 > Merge-candidate CI governance note: release identity remains the canonical `2026.09.18.4`; this packet is documentation-only and does not assert fresh physical-device or assistive-technology validation.
+
+
+> Final CI provenance note: this packet remains HOLD for human validation; repository CI evidence is not a substitute for real-device/assistive-technology validation.
