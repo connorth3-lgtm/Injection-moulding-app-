@@ -154,7 +154,6 @@
         "from": "../../assessment-ux.css",
         "to": "mouldmaster/assessment-ux.css"
       },
-      },
       {
         "from": "../../app-shell-registry.js",
         "to": "mouldmaster/app-shell-registry.js"
