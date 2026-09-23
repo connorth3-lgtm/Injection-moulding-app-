@@ -121,6 +121,7 @@ const OPTIONAL=[
   './src/domains/runtime-packs/curriculum-workspace-runtime-pack.js',
   './src/domains/runtime-packs/process-data-runtime-pack.js',
   './assessment-ux.js',
+  './assessment-ux.css',
   './source-library.js',
   './measured-evidence-integration.js',
   './measured-evidence-decision.js',
