@@ -54,3 +54,6 @@ Do not commit recordings, screenshots with personal data, customer/site identifi
 The top-level accessibility status may move from `hold` to `validated` only after all four matrix rows genuinely pass and `python qa_accessibility_real_at_contract.py` plus `python tools/verify_release_external_validation.py` both pass for this exact release/candidate.
 
 Until then, real-AT validation remains **HOLD**.
+
+
+> Merge-candidate CI governance note: release identity remains the canonical `2026.09.18.4`; this packet is documentation-only and does not assert fresh physical-device or assistive-technology validation.
