@@ -45,8 +45,15 @@ def packed_source_inputs(source: str) -> set[str]:
 # The mandatory integrity workflow checks out two commits. Fail clearly if that
 # invariant is weakened, because silently skipping this comparison would reopen
 # the mixed-version PWA failure mode.
-git("rev-parse", "HEAD^")
-parent = "HEAD^"
+# On pull_request workflows GitHub checks out a synthetic merge commit, so HEAD^
+# is the base branch rather than the previous commit on the PR branch. Compare
+# against the PR head's real parent when GITHUB_HEAD_REF is available.
+head_ref = __import__("os").environ.get("GITHUB_HEAD_REF", "").strip()
+if head_ref:
+    parent = git("rev-parse", f"origin/{head_ref}^").strip()
+else:
+    parent = "HEAD^"
+git("rev-parse", parent)
 changed = {x.strip() for x in git("diff", "--name-only", parent, "HEAD").splitlines() if x.strip()}
 
 worker = (ROOT / "service-worker.js").read_text(encoding="utf-8")
