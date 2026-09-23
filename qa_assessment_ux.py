@@ -39,9 +39,11 @@ require("'./assessment-ux.js'" in sw, 'assessment UX must be available offline')
 require("'./assessment-ux.css'" in sw, 'assessment UX CSS must be available offline')
 require('assessment-ux.css' in ux_css and '.mm-focus-mode' in ux_css, 'assessment UX CSS must be externalized and contain focus-mode rules')
 require("'assessment-ux.js'" in integrity, 'desktop integrity manifest must include assessment UX')
+require("'assessment-ux.css'" in integrity, 'desktop integrity manifest must include assessment UX CSS')
 extra = pkg['build']['extraResources']
 from_paths = {x.get('from') for x in extra if isinstance(x, dict)}
 require('../../assessment-ux.js' in from_paths, 'desktop bundle must include assessment UX')
+require('../../assessment-ux.css' in from_paths, 'desktop bundle must include assessment UX CSS')
 
 shell_release = re.search(r'const SHELL_RELEASE="([^"]+)"', index)
 cache = re.search(r"const CACHE_REVISION='([^']+)'", sw)
