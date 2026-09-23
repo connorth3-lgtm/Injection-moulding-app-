@@ -278,3 +278,25 @@ test('graded assessment records the exact bank and form metadata used for the at
   expect(meta.record.questionKeys).toEqual(meta.form.questionKeys);
   expect(meta.record.score).toBe(100);
 });
+
+test('assessment focus mode uses the external stylesheet and never injects a runtime style block',async({page})=>{
+  await page.setViewportSize({width:412,height:915});
+  await open(page);
+  await page.evaluate(()=>startExam('Beginner'));
+  await waitForExamNavigation(page);
+  const state=await page.evaluate(()=>{
+    const links=[...document.querySelectorAll('link[rel="stylesheet"]')].map(link=>link.getAttribute('href')||'');
+    return {
+      external:links.some(href=>href.includes('assessment-ux.css')),
+      injected:!!document.getElementById('mm-assessment-ux-style'),
+      current:document.querySelector('#examQuestions .mm-current-question .mm-question-stem')?.textContent||'',
+      focused:document.activeElement?.classList.contains('mm-question-stem')||false
+    };
+  });
+  expect(state.external).toBe(true);
+  expect(state.injected).toBe(false);
+  expect(state.current).not.toBe('');
+  expect(state.focused).toBe(false);
+  await page.locator('.mm-exam-next').click();
+  await expect(page.locator('#examQuestions .mm-current-question .mm-question-stem')).toBeFocused();
+});
