@@ -29,7 +29,9 @@
     "./src/domains/process/process-statistics.js",
     "./src/domains/shell/accessibility-loader.js",
     "./src/domains/shell/product-areas.js",
-    "./src/domains/shell/learner-ui-polish.js"
+    "./src/domains/shell/learner-ui-polish.js",
+    "./primary-learning-practice-hubs.js",
+    "./learner-ux-repair.js"
   ],
   "dataAssets": [
     "./material-catalog-v1.json"
