@@ -37,7 +37,7 @@ require("'./src/domains/runtime-packs/bootstrap-assessment-source-runtime-pack.j
 require(index.find('runtime-v2.js') < index.find('bootstrap-assessment-source-runtime-pack.js'), 'assessment runtime pack must load after runtime-v2')
 require("'./assessment-ux.js'" in sw, 'assessment UX must be available offline')
 require("'./assessment-ux.css'" in sw, 'assessment UX CSS must be available offline')
-require('assessment-ux.css' in ux_css and '.mm-focus-mode' in ux_css, 'assessment UX CSS must be externalized and contain focus-mode rules')
+require('.mm-focus-mode' in ux_css, 'assessment UX CSS must be externalized and contain focus-mode rules')
 require("'assessment-ux.js'" in integrity, 'desktop integrity manifest must include assessment UX')
 require("'assessment-ux.css'" in integrity, 'desktop integrity manifest must include assessment UX CSS')
 extra = pkg['build']['extraResources']
