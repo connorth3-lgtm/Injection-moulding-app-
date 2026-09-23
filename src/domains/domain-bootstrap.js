@@ -13,7 +13,7 @@ async function boot(){
   if(manifest?.schemaVersion!==1||!Array.isArray(manifest.assets))throw new Error('Invalid domain runtime manifest');
   const loaded=[];
   for(const src of manifest.assets){
-    if(typeof src!=='string'||!src.startsWith('./src/domains/')||!src.endsWith('.js'))throw new Error(`Unsafe domain asset: ${src}`);
+    if(typeof src!=='string'||!src.endsWith('.js')||(!src.startsWith('./src/domains/')&&!['./primary-learning-practice-hubs.js','./learner-ux-repair.js'].includes(src)))throw new Error(`Unsafe domain asset: ${src}`);
     await loadScript(src);loaded.push(src);
   }
   window.dispatchEvent(new CustomEvent('mm:domains-ready',{detail:{version:VERSION,loaded}}));
