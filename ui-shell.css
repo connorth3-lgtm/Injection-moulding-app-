@@ -207,3 +207,54 @@ body[data-mm-view="lesson"] .topbar{justify-content:flex-end!important}
   .mm-primary-hub-head h1{font-size:26px!important}
   .mm-primary-hub .mm-hub-continue h2{font-size:22px!important}
 }
+/* UI hardening: shared semantics, keyboard focus, reduced-motion and high-contrast support. */
+:root{
+  --mm-surface-app:#06101b;
+  --mm-surface-panel:#0d1b2b;
+  --mm-surface-panel-raised:#112238;
+  --mm-border-subtle:#263b58;
+  --mm-border-strong:#41617f;
+  --mm-text-primary:#f3f8fd;
+  --mm-text-secondary:#bfd0e1;
+  --mm-text-muted:#96aac0;
+  --mm-accent:#5fe0c6;
+  --mm-accent-strong:#8fe8d6;
+  --mm-danger:#ff8585;
+  --mm-focus-ring:0 0 0 3px rgba(95,224,198,.24);
+}
+
+:where(button,a,input,select,textarea):focus-visible{
+  outline:2px solid var(--mm-accent-strong)!important;
+  outline-offset:2px!important;
+  box-shadow:var(--mm-focus-ring)!important;
+}
+
+:where(button,a,input,select,textarea)[disabled],
+:where(button,a,input,select,textarea)[aria-disabled="true"]{
+  cursor:not-allowed!important;
+}
+
+@media(prefers-reduced-motion:reduce){
+  *,*::before,*::after{
+    scroll-behavior:auto!important;
+    animation-duration:.01ms!important;
+    animation-iteration-count:1!important;
+    transition-duration:.01ms!important;
+  }
+}
+
+@media(forced-colors:active){
+  .mobile-nav,.mm-primary-hub .mm-hub-tile,.mm-primary-hub .mm-hub-continue,.card,
+  .mm-reading-guide,.lesson-read-block,.question,.mm-ref-panel,.mm-teach{
+    forced-color-adjust:auto!important;
+    background:Canvas!important;
+    color:CanvasText!important;
+    border:1px solid CanvasText!important;
+    box-shadow:none!important;
+  }
+  :where(button,a){forced-color-adjust:auto!important}
+}
+
+@media(max-width:700px){
+  :where(button,a,input,select,textarea){touch-action:manipulation}
+}
