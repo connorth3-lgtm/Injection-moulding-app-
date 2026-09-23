@@ -13,6 +13,7 @@ def require(condition, message):
 
 
 ux = (ROOT / 'assessment-ux.js').read_text(encoding='utf-8')
+ux_css = (ROOT / 'assessment-ux.css').read_text(encoding='utf-8')
 runtime = (ROOT / 'runtime-v2.js').read_text(encoding='utf-8')
 index = (ROOT / 'index.html').read_text(encoding='utf-8')
 sw = (ROOT / 'service-worker.js').read_text(encoding='utf-8')
@@ -27,7 +28,7 @@ for marker in [
 ]:
     require(marker in ux, f'assessment UX safeguard missing: {marker}')
 
-for forbidden in ['window.getExamQuestions=function','window.startExam=function','window.gradeExam=function','localStorage.setItem(HISTORY_KEY','localStorage.getItem(HISTORY_KEY)']:
+for forbidden in ['function addStyles()','document.createElement(\'style\')','window.getExamQuestions=function','window.startExam=function','window.gradeExam=function','localStorage.setItem(HISTORY_KEY','localStorage.getItem(HISTORY_KEY)']:
     require(forbidden not in ux, f'assessment UX must use runtime-v2 rather than global/unscoped legacy behavior: {forbidden}')
 require('D.exams' not in ux, 'assessment UX layer must not rewrite the exam question bank')
 require('activeExam.questions=' not in ux, 'assessment UX layer must not rewrite active assessment questions')
@@ -35,6 +36,8 @@ require("transform:new Set()" in runtime and 'function transform(name,fn)' in ru
 require("'./src/domains/runtime-packs/bootstrap-assessment-source-runtime-pack.js'" in index, 'assessment runtime pack must load from the runtime bootstrap')
 require(index.find('runtime-v2.js') < index.find('bootstrap-assessment-source-runtime-pack.js'), 'assessment runtime pack must load after runtime-v2')
 require("'./assessment-ux.js'" in sw, 'assessment UX must be available offline')
+require("'./assessment-ux.css'" in sw, 'assessment UX CSS must be available offline')
+require('assessment-ux.css' in ux_css and '.mm-focus-mode' in ux_css, 'assessment UX CSS must be externalized and contain focus-mode rules')
 require("'assessment-ux.js'" in integrity, 'desktop integrity manifest must include assessment UX')
 extra = pkg['build']['extraResources']
 from_paths = {x.get('from') for x in extra if isinstance(x, dict)}
