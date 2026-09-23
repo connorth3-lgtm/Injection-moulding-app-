@@ -5,12 +5,12 @@ This packet governs **human** assistive-technology validation for web release `2
 ## Exact release boundary
 
 - web release: `2026.09.18.4`
-- retained pre-merge public candidate source commit: `9ff71536215d88f60ce8a3fbdc59fc3f0874b52f`
+- retained pre-merge public candidate source commit: `2d32dc6d481394d10c41d7e630bce37c6270b49a`
 - public-runtime fingerprint: `sha256:cc4687fd2545c17f70d544e5952b8c95f4ee2ab0d73fddaffb3c797e8b36cda9`
-- retained physical candidate: `physical-pwa-candidate-9ff71536215d88f60ce8a3fbdc59fc3f0874b52f` (`10529445520`)
-- candidate build run: `35299002421` (`Pre-merge Public Candidate`)
-- artifact ZIP digest: `sha256:6b2955da193fc695e11a7e0a6e2d64b82038a6c3aa83526bf8405ca74ed2289e`
-- artifact retention expiry: `2026-10-18T02:23:19Z`
+- retained physical candidate: `physical-pwa-candidate-2d32dc6d481394d10c41d7e630bce37c6270b49a` (`10779964829`)
+- candidate build run: `35929241892` (`Pre-merge Public Candidate`)
+- artifact ZIP digest: `sha256:85bbfd45718656d88af1d89063b3c586c711ff243999709a53587d975e2030f9`
+- artifact retention expiry: `2026-10-23T22:36:19Z`
 - evidence contract: `data/accessibility-real-at-validation-v1.json`
 
 This is a candidate **rebind**, not new AT evidence. The learner-facing runtime deliberately advanced to release `2026.09.18.4` for exact-byte-authorized Book evidence enrichment, ISO 9001:2026 QMS support and the read-only NZQA/Standards readiness surface. No earlier human/device evidence is relabelled. If learner-facing runtime bytes change again, this packet must be rebound before new validation is recorded.
@@ -54,3 +54,9 @@ Do not commit recordings, screenshots with personal data, customer/site identifi
 The top-level accessibility status may move from `hold` to `validated` only after all four matrix rows genuinely pass and `python qa_accessibility_real_at_contract.py` plus `python tools/verify_release_external_validation.py` both pass for this exact release/candidate.
 
 Until then, real-AT validation remains **HOLD**.
+
+
+> Merge-candidate CI governance note: release identity remains the canonical `2026.09.18.4`; this packet is documentation-only and does not assert fresh physical-device or assistive-technology validation.
+
+
+> Final CI provenance note: this packet remains HOLD for human validation; repository CI evidence is not a substitute for real-device/assistive-technology validation.
