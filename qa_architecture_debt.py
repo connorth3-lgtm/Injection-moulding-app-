@@ -140,7 +140,7 @@ need("function retireInlineStyleAttrs(parsed)" in index, "runtime frozen-core st
 need("./src/core-runtime/inline-style-bridge.js" in index, "strict inline-style bridge is not loaded before core replay")
 domain_bootstrap = read("src/domains/domain-bootstrap.js")
 need("const COMPAT_ASSETS=Object.freeze(['./primary-learning-practice-hubs.js','./learner-ux-repair.js']);" in domain_bootstrap, "late learner UI compatibility assets must remain explicitly governed")
-need("for(const src of COMPAT_ASSETS){await loadScript(src);loaded.push(src)}" in domain_bootstrap, "compatibility assets must load sequentially after domain assets")
+need("for(const src of COMPAT_ASSETS){await loadScript(src);loaded.push(src)}" in domain_bootstrap, "compatibility assets must load sequentially through the governed bootstrap")
 need("s.async=true" not in domain_bootstrap, "domain bootstrap must not reintroduce fire-and-forget compatibility script races")
 for path in core_runtime_scripts:
     need(f"'./src/core-runtime/{path.name}'" in index, f"runtime core script missing from bootstrap registry: {path.name}")
