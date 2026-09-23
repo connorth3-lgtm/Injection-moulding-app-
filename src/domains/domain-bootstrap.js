@@ -2,8 +2,9 @@
 (function(){
 'use strict';
 if(window.MM_DOMAIN_BOOTSTRAP)return;
-const VERSION='2026.09.24.1';
+const VERSION='2026.09.24.2';
 const MANIFEST='./runtime-domain-manifest.json';
+const COMPAT_ASSETS=Object.freeze(['./primary-learning-practice-hubs.js','./learner-ux-repair.js']);
 
 function loadScript(src){return new Promise((resolve,reject)=>{const s=document.createElement('script');s.src=src;s.async=false;s.dataset.mmDomainAsset='1';s.onload=()=>resolve(src);s.onerror=()=>reject(new Error(`Domain asset failed: ${src}`));document.body.appendChild(s)})}
 async function boot(){
@@ -13,9 +14,10 @@ async function boot(){
   if(manifest?.schemaVersion!==1||!Array.isArray(manifest.assets))throw new Error('Invalid domain runtime manifest');
   const loaded=[];
   for(const src of manifest.assets){
-    if(typeof src!=='string'||!src.endsWith('.js')||(!src.startsWith('./src/domains/')&&!['./primary-learning-practice-hubs.js','./learner-ux-repair.js'].includes(src)))throw new Error(`Unsafe domain asset: ${src}`);
+    if(typeof src!=='string'||!src.startsWith('./src/domains/')||!src.endsWith('.js'))throw new Error(`Unsafe domain asset: ${src}`);
     await loadScript(src);loaded.push(src);
   }
+  for(const src of COMPAT_ASSETS){await loadScript(src);loaded.push(src)}
   window.dispatchEvent(new CustomEvent('mm:domains-ready',{detail:{version:VERSION,loaded}}));
   return loaded;
 }
