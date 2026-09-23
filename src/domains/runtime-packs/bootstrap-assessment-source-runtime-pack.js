@@ -127,63 +127,6 @@ function persistQuestionHistory(){
 }
 readQuestionHistory();
 
-function addStyles(){
-  if(document.getElementById('mm-assessment-ux-style'))return;
-  const s=document.createElement('style');
-  s.id='mm-assessment-ux-style';
-  s.textContent=`
-  .modal-card.mm-assessment-modal{width:min(980px,96vw);padding:clamp(18px,3vw,30px);scroll-padding-bottom:110px}
-  .mm-assessment-modal .mm-exam-prelude,.mm-assessment-modal .mm-question-meta,.mm-assessment-modal .mm-qmeta,.mm-assessment-modal .question-plain-language,.mm-assessment-modal .mm-confidence{display:none!important}
-  .mm-assessment-modal [id^="mmDialogTitle"]{margin:0 42px 10px 0;font-size:clamp(20px,2.5vw,27px)}
-  #examQuestions.mm-focus-mode{margin-top:18px}
-  #examQuestions.mm-focus-mode .question{display:none!important;margin:0;padding:clamp(18px,3vw,28px);border:1px solid #314a69;border-radius:16px;background:linear-gradient(180deg,#10213a,#0c1a2e);box-shadow:0 14px 34px rgba(0,0,0,.18)}
-  #examQuestions.mm-focus-mode .question.mm-current-question{display:block!important}
-  .mm-question-meta{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:11px;color:#98acc9;font-size:12px;text-transform:uppercase;letter-spacing:.08em}
-  .mm-question-stem{display:block;font-size:clamp(18px,2.4vw,24px);line-height:1.45;color:#f4f8ff;margin:0 0 18px;font-weight:760}
-  .mm-option-card{display:grid!important;grid-template-columns:22px 32px minmax(0,1fr);gap:10px;align-items:start;min-height:52px;padding:13px 14px!important;margin:9px 0!important;border:1px solid #355171!important;border-radius:12px!important;background:#102039!important;color:#e8f1fc!important;line-height:1.5;cursor:pointer;transition:border-color .12s ease,background .12s ease,transform .12s ease}
-  .mm-option-card:hover{border-color:#5f84aa!important;background:#142943!important}
-  .mm-option-card:focus-within{outline:3px solid rgba(105,168,255,.3);outline-offset:2px}
-  .mm-option-card input[type=radio]{width:18px;height:18px;margin:3px 0 0;accent-color:#69a8ff}
-  .mm-option-key{width:29px;height:29px;border-radius:9px;display:grid;place-items:center;background:#1c314e;border:1px solid #395879;color:#bcd2ed;font-weight:800;font-size:12px;line-height:1}
-  .mm-option-card.mm-option-selected{border-color:#69a8ff!important;background:#17314f!important;box-shadow:inset 3px 0 0 #69a8ff}
-  .mm-option-card.mm-option-selected .mm-option-key{background:#69a8ff;color:#07131b;border-color:#69a8ff}
-  .mm-exam-steps{display:flex;gap:6px;flex-wrap:wrap;margin:16px 0 10px}
-  .mm-step{width:38px;height:38px;border-radius:10px;border:1px solid #355171;background:#102039;color:#a9bdd6;font-size:12px;font-weight:800;padding:0}
-  .mm-step:hover{background:#172b46;color:#fff}
-  .mm-step.mm-step-answered{border-color:#3e756b;color:#cffff5;background:#12302e}
-  .mm-step.mm-step-current{outline:2px solid #69a8ff;outline-offset:2px;color:#fff}
-  .mm-exam-nav{position:sticky;bottom:-1px;z-index:8;margin-top:16px;padding:12px;border:1px solid #304a69;border-radius:14px;background:rgba(8,18,32,.96);backdrop-filter:blur(12px);box-shadow:0 -8px 28px rgba(0,0,0,.2)}
-  .mm-exam-nav-top{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:10px}
-  .mm-exam-progress{font-weight:800;color:#edf5ff}.mm-exam-answered{font-size:12px;color:#9fb4ce}
-  .mm-exam-actions{display:flex;justify-content:space-between;gap:9px;align-items:center}
-  .mm-exam-actions .primary,.mm-exam-actions .secondary{min-height:44px}
-  .mm-exam-actions .mm-native-grade{margin-left:auto}
-  .mm-exam-actions button[disabled]{cursor:not-allowed;opacity:.48}
-  .mm-unanswered-note{color:#ffd166;font-size:12px;margin-left:auto;text-align:right}
-  .mm-exam-reviewed #examQuestions,.mm-exam-reviewed .mm-exam-nav,.mm-exam-reviewed .mm-exam-steps{display:none!important}
-  .mm-exam-reviewed #examResult{margin-top:18px;font-size:16px;line-height:1.55}
-  .mm-exam-reviewed .answer-review{gap:12px}
-  .mm-exam-reviewed .answer-row{padding:15px 16px;border-radius:12px;line-height:1.5}
-  .mm-exam-reviewed .answer-row.correct{background:#0d2925;border-color:#397466}
-  .mm-exam-reviewed .answer-row.incorrect{background:#2a171d;border-color:#74424d}
-  .scenario .choice.mm-choice-selected{border-color:#69a8ff;background:#17314f;box-shadow:inset 3px 0 0 #69a8ff}
-  .scenario .choice.mm-choice-correct{border-color:#397466;background:#0d2925;box-shadow:inset 3px 0 0 #7ce6a3}
-  .scenario .choice.mm-choice-review{border-color:#74424d;background:#2a171d;box-shadow:inset 3px 0 0 #ff7b7b}
-  @media(max-width:680px){
-    .modal{padding:0}.modal-card.mm-assessment-modal{width:100vw;max-width:none;max-height:100dvh;min-height:100dvh;border-radius:0;padding:18px 15px 120px}
-    #examQuestions.mm-focus-mode .question{padding:18px 14px;border-radius:13px}
-    .mm-question-stem{font-size:19px;line-height:1.5}
-    .mm-option-card{grid-template-columns:20px 30px minmax(0,1fr);padding:12px 11px!important;font-size:14px}
-    .mm-exam-steps{gap:5px}.mm-step{width:38px;height:38px;border-radius:9px}
-    .mm-exam-nav{position:fixed;left:0;right:0;bottom:0;border-radius:14px 14px 0 0;margin:0;padding:10px 12px calc(10px + env(safe-area-inset-bottom));box-shadow:0 -14px 34px rgba(0,0,0,.34)}
-    .mm-exam-nav-top{margin-bottom:8px}.mm-exam-actions{display:grid;grid-template-columns:1fr 1fr}.mm-exam-actions .mm-native-grade{grid-column:1/-1;width:100%;margin:0}
-    .mm-unanswered-note{grid-column:1/-1;text-align:left;margin:0}
-  }
-  @media(prefers-reduced-motion:reduce){.mm-option-card{transition:none!important}}
-  `;
-  document.head.appendChild(s);
-}
-
 function questionIdentity(item){return String(item?.stableId||item?.mmId||item?.id||item?.q||'').trim()}
 function questionScope(level,region){return `${String(level||'unknown')}::${String(region||'ALL')}`}
 function rotateOpeningQuestion(rows,level,region){
@@ -347,7 +290,6 @@ function decorateScenario(i,ci,el){
   const D=window.MM_DATA;const correct=D?.scenarios?.[i]?.correct;if(Number.isInteger(correct))el.classList.add(ci===correct?'mm-choice-correct':'mm-choice-review');
 }
 
-addStyles();
 R.transform('getExamQuestions',(rows,level,region)=>rotateOpeningQuestion(rows,level,region));
 R.after('startExam',()=>{state=null;setTimeout(decorateExam,0)});
 R.after('gradeExam',()=>setTimeout(decorateReview,0));
