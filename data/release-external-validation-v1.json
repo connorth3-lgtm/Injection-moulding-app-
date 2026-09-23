@@ -26,7 +26,7 @@
     "reviewPacket": "qa/ACCESSIBILITY_REAL_AT_2026.09.18.4.md",
     "candidate": {
       "release": "2026.09.18.4",
-      "sourceSha": "8c37f87cfb1f055f1c37a7f6bec6878b961895c9",
+      "sourceSha": "9bd6894b3e7d13988e2c52dc599acda04a766e13",
       "runtimeFingerprint": "sha256:9475f8f9eee78b96c7f81db4775e1ae53a1018488ec97bc69f5c10a4098423cd"
     },
     "required": "Release-specific human NVDA and VoiceOver validation across the governed matrix."
@@ -37,7 +37,7 @@
     "reviewPacket": "qa/PWA_PHYSICAL_DEVICE_2026.09.18.4.md",
     "currentCandidate": {
       "release": "2026.09.18.4",
-      "sourceSha": "8c37f87cfb1f055f1c37a7f6bec6878b961895c9",
+      "sourceSha": "9bd6894b3e7d13988e2c52dc599acda04a766e13",
       "runtimeFingerprint": "sha256:9475f8f9eee78b96c7f81db4775e1ae53a1018488ec97bc69f5c10a4098423cd",
       "candidateRunId": 35916058672,
       "candidateWorkflow": "Pre-merge Public Candidate",
