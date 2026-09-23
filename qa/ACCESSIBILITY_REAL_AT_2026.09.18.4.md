@@ -5,12 +5,12 @@ This packet governs **human** assistive-technology validation for web release `2
 ## Exact release boundary
 
 - web release: `2026.09.18.4`
-- retained pre-merge public candidate source commit: `9ff71536215d88f60ce8a3fbdc59fc3f0874b52f`
+- retained pre-merge public candidate source commit: `9bd6894b3e7d13988e2c52dc599acda04a766e13`
 - public-runtime fingerprint: `sha256:cc4687fd2545c17f70d544e5952b8c95f4ee2ab0d73fddaffb3c797e8b36cda9`
-- retained physical candidate: `physical-pwa-candidate-9ff71536215d88f60ce8a3fbdc59fc3f0874b52f` (`10726613244`)
-- candidate build run: `35803152946` (`Pre-merge Public Candidate`)
-- artifact ZIP digest: `sha256:efb962cfcb87679636dab5c7faf18e571571a0791bd98bb5b43c741592cfa7e7`
-- artifact retention expiry: `2026-10-23T00:41:38Z`
+- retained physical candidate: `physical-pwa-candidate-9bd6894b3e7d13988e2c52dc599acda04a766e13` (`10775312050`)
+- candidate build run: `35916058672` (`Pre-merge Public Candidate`)
+- artifact ZIP digest: `sha256:d90b00442f663eaf8b1d59aa9eecc875eb12dd3396515a94e49d9684330bb167`
+- artifact retention expiry: `2026-10-23T20:27:35Z`
 - evidence contract: `data/accessibility-real-at-validation-v1.json`
 
 This is a candidate **rebind**, not new AT evidence. The learner-facing runtime deliberately advanced to release `2026.09.18.4` for exact-byte-authorized Book evidence enrichment, ISO 9001:2026 QMS support and the read-only NZQA/Standards readiness surface. No earlier human/device evidence is relabelled. If learner-facing runtime bytes change again, this packet must be rebound before new validation is recorded.
