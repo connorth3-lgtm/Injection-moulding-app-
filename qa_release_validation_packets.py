@@ -132,8 +132,12 @@ try:
         )
     else:
         need(
-            actual_fp != candidate.get("runtimeFingerprint"),
-            "runtime changed from retained candidate source but fingerprint did not change; candidate binding is ambiguous",
+            candidate.get("sourceSha") == access.get("sourceSha") == nzqa_candidate.get("sourceSha"),
+            "retained external-validation packets do not share one candidate source SHA",
+        )
+        need(
+            candidate.get("runtimeFingerprint") == access.get("runtimeFingerprint") == nzqa_candidate.get("runtimeFingerprint"),
+            "retained external-validation packets do not share one candidate runtime fingerprint",
         )
 finally:
     if PAGES.exists():
