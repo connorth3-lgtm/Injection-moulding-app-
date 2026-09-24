@@ -134,7 +134,7 @@ for number, (source, path) in enumerate(zip(inline_core_scripts, core_runtime_sc
 # Runtime modules loaded by the domain manifest must use the explicit domain-ready lifecycle rather than hot polling for shell availability.
 for rel in ['src/domains/shell/product-areas.js','src/domains/governance/standards-readiness.js']:
     source=read(rel)
-    need('setInterval(' not in source,f'{rel} reintroduced startup polling')
+    need('setInterval(' not in source and 'setTimeout(installWhenReady,50)' not in source,f'{rel} reintroduced startup polling')
     need("mm:domains-ready" in source,f'{rel} must bind deferred installation to domain readiness')
 
 reading_patch=read('reading-patch.js')
