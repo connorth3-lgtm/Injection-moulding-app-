@@ -747,6 +747,6 @@
       "requirement": "Provider-controlled formal review cycle, stakeholder review, change governance and NZQA change-consent handling."
     }
   ],
-  "releaseTarget": "2026.09.24.5",
+  "releaseTarget": "2026.09.24.6",
   "currentSourceNote": "Current domain/CMR sources rechecked 2026-09-18; six active Injection Moulding anchors remain 252, 255, 260, 9713, 27926 and 29515. Recognition, consent, moderation and provider ownership remain external."
 }
