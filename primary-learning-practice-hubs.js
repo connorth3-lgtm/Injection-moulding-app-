@@ -11,7 +11,6 @@ const VERSION='2026.09.24.1';
 const PRACTICE_ROTATION_KEY='mm_practice_scenario_rotation_v1';
 const originalRenderPath=renderPath;
 const originalRenderScenarios=renderScenarios;
-const originalMore=typeof window.openMobileMenu==='function'?window.openMobileMenu:null;
 
 /* Hub presentation lives in external CSS because the app CSP intentionally
    blocks unapproved runtime-created style content. */
@@ -355,9 +354,7 @@ function pruneMore(){
   modal.querySelectorAll('.quick-action').forEach(button=>{const label=(button.querySelector('b')?.textContent||'').trim();if(moved.test(label))button.remove()});
 }
 configureMore();
-if(originalMore){
-  window.openMobileMenu=function(){const result=originalMore.apply(this,arguments);requestAnimationFrame(()=>requestAnimationFrame(pruneMore));return result};
-}
+window.MM_APP_SHELL?.events?.onViewChange?.(id=>{if(id==='more')requestAnimationFrame(()=>requestAnimationFrame(pruneMore))});
 
 function refreshPracticePersonalisation(){
   const root=document.getElementById('scenarios');
