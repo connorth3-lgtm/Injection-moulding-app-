@@ -1,6 +1,6 @@
-# Windows distribution/signing readiness — 2026.09.24.6
+# Windows distribution/signing readiness — 2026.09.24.7
 
-This packet governs the external Windows distribution work associated with MouldMaster web release `2026.09.24.6`. The separately governed desktop release identity remains `2026.08.26.9` at its existing governed source/package lineage unless deliberately advanced through its own release process. The web Book-enrichment and Standards/readiness release does not create new Windows signing, Store, reputation, WACK or physical-machine evidence.
+This packet governs the external Windows distribution work associated with MouldMaster web release `2026.09.24.7`. The separately governed desktop release identity remains `2026.08.26.9` at its existing governed source/package lineage unless deliberately advanced through its own release process. The web Book-enrichment and Standards/readiness release does not create new Windows signing, Store, reputation, WACK or physical-machine evidence.
 
 ## What repository automation proves
 
@@ -24,7 +24,7 @@ Before `data/release-external-validation-v1.json` can move `windowsDistribution.
 
 Only after those real external checks pass may `windowsDistribution.evidence` contain a release-bound object with:
 
-- `release = 2026.09.24.6`;
+- `release = 2026.09.24.7`;
 - `testedAt`;
 - `evidenceRef`;
 - `packageSha256`;
