@@ -248,15 +248,11 @@ function installAssessmentRotation(){
 
 ensureStyles();
 window.MM_APP_SHELL?.events?.onRender?.('lesson',onLessonRender);
-window.MM_APP_SHELL?.events?.onViewChange?.(id=>{if(id==='lesson')scheduleRepair(true)});
+window.MM_APP_SHELL?.events?.onViewChange?.(id=>{if(id==='lesson')scheduleRepair(true);syncExamDisclosureGeneration();ensurePreviewWarning()});
+window.addEventListener('mm:domains-ready',()=>{syncExamDisclosureGeneration();ensurePreviewWarning()});
+window.MM_RUNTIME_V2?.after?.('startExam',()=>requestAnimationFrame(syncExamDisclosureGeneration));
 window.addEventListener('resize',()=>scheduleRepair(false),{passive:true});
 
-const observer=new MutationObserver(()=>{
-  syncExamDisclosureGeneration();
-  if(lessonVisible())scheduleRepair(false);
-  if(isPreviewPublication())ensurePreviewWarning();
-});
-if(document.body)observer.observe(document.body,{childList:true,subtree:true});
 lastLessonId=currentLessonId()||null;
 syncExamDisclosureGeneration();
 scheduleRepair(lessonVisible());
