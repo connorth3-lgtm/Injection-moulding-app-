@@ -76,6 +76,11 @@ function startLoopbackServer(allowedFiles) {
         }
         const u = new URL(req.url || '/', 'http://127.0.0.1');
         const name = decodeURIComponent(u.pathname.replace(/^\/+/, '')) || 'index.html';
+        if (name === 'repair.html') {
+          res.writeHead(302, {'Location': '/index.html', 'Cache-Control': 'no-store'});
+          res.end();
+          return;
+        }
         if (!safeRelativeAsset(name) || !allowedFiles.has(name)) {
           res.writeHead(404, {'Content-Type': 'text/plain; charset=utf-8'});
           res.end('Not found');
