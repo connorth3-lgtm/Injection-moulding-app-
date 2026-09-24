@@ -133,11 +133,11 @@ for number, (source, path) in enumerate(zip(inline_core_scripts, core_runtime_sc
         need(generated == expected_handler_free, f"handler-free externalized core runtime is stale at slot {number}: {path.name}")
 # Runtime modules loaded by the domain manifest must use the explicit domain-ready lifecycle rather than hot polling for shell availability.
 for rel in ['src/domains/shell/product-areas.js','src/domains/governance/standards-readiness.js']:
-    source=text(rel)
+    source=read(rel)
     need('setInterval(' not in source,f'{rel} reintroduced startup polling')
     need("mm:domains-ready" in source,f'{rel} must bind deferred installation to domain readiness')
 
-ui_polish=text('src/domains/shell/learner-ui-polish.js')
+ui_polish=read('src/domains/shell/learner-ui-polish.js')
 need('new MutationObserver' not in ui_polish,'learner UI polish reintroduced a whole-body mutation observer')
 need("onRender?.('dashboard',schedule)" in ui_polish and 'onViewChange?.(schedule)' in ui_polish,'learner UI polish must use shell lifecycle events')
 
