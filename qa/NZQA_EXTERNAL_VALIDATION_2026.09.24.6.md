@@ -1,6 +1,6 @@
-# NZQA external validation — 2026.09.24.6
+# NZQA external validation — 2026.09.24.7
 
-Release `2026.09.24.6` has a repository-controlled NZQA readiness layer, but external provider/NZQA validation remains **HOLD**.
+Release `2026.09.24.7` has a repository-controlled NZQA readiness layer, but external provider/NZQA validation remains **HOLD**.
 
 - retained learner-facing source: `2d32dc6d481394d10c41d7e630bce37c6270b49a`
 - runtime fingerprint: `sha256:cc4687fd2545c17f70d544e5952b8c95f4ee2ab0d73fddaffb3c797e8b36cda9`
