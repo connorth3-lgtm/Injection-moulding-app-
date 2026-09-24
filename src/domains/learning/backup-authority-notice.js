@@ -170,7 +170,7 @@ function annotate(root=document){
  }
 }
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',()=>annotate(),{once:true});else annotate();
-window.addEventListener('mm:domains-ready',()=>annotate());
+window.addEventListener?.('mm:domains-ready',()=>annotate());
 window.MM_APP_SHELL?.events?.onViewChange?.(()=>annotate());
 window.MM_APP_SHELL?.events?.onRender?.('profile',()=>annotate());
 
