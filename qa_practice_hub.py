@@ -73,7 +73,7 @@ const source=fs.readFileSync('primary-learning-practice-hubs.js','utf8');
 const start=source.indexOf('function practiceStore()');
 const end=source.indexOf('function bind(root)',start);
 if(start<0||end<0)throw new Error('practice rotation helpers missing');
-const cut="const PRACTICE_ROTATION_KEY='mm_practice_scenario_rotation_v1';\\n"+source.slice(start,end);
+const cut="const PRACTICE_ROTATION_KEY='mm_practice_scenario_rotation_v1';\n"+source.slice(start,end);
 function run(storage){const sandbox={window:{MM_RUNTIME_V2:storage?{storage}:undefined},D:{scenarios:[1,2,3,4]},Date:{now:()=>86400000*10},Number,Array,Math};vm.createContext(sandbox);vm.runInContext(cut+';this.out={readPracticeRotation,writePracticeRotation,nextScenarioIndex};',sandbox);return sandbox.out}
 const none=run(null);if(!Number.isNaN(none.readPracticeRotation())||none.writePracticeRotation(2)!==false)throw new Error('missing Runtime V2 storage must stay transient');
 const rows=new Map(),store={get:(k,d)=>rows.has(k)?rows.get(k):d,set:(k,v)=>{rows.set(k,v);return true}};const scoped=run(store);const first=scoped.nextScenarioIndex(),second=scoped.nextScenarioIndex();if(first===second||rows.size!==1)throw new Error('scoped practice rotation did not persist exactly once per learner store');
