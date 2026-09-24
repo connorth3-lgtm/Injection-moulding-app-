@@ -212,10 +212,6 @@ function ensureNav(){
   const anchor=nav.querySelector('button[data-view="profile"]')||nav.lastElementChild;if(anchor)anchor.insertAdjacentElement('beforebegin',b);else nav.appendChild(b);
   b.addEventListener('click',e=>{e.preventDefault();e.stopImmediatePropagation();openInsights()})
 }
-function patchMobileMore(){
-  if(window.__MM_LEARNING_INSIGHTS_MORE__||typeof window.openMobileMenu!=='function')return;const base=window.openMobileMenu;
-  window.openMobileMenu=function(){const r=base.apply(this,arguments);requestAnimationFrame(()=>{const grid=document.querySelector('#modal .modal-card .grid2');if(!grid||grid.querySelector('[data-mm-learning-insights-menu]'))return;const b=document.createElement('button');b.type='button';b.className='quick-action';b.dataset.mmLearningInsightsMenu='1';b.innerHTML='<span class="icon">◫</span><b>Learning insights</b><small>See local learning progress and retry trends.</small>';b.addEventListener('click',()=>{try{window.closeModal?.()}catch(_){}openInsights()});grid.appendChild(b)});return r};window.__MM_LEARNING_INSIGHTS_MORE__=true
-}
 function hideOtherViews(){document.querySelectorAll('.view').forEach(v=>v.classList.add('hidden'))}
 function markNav(){document.querySelectorAll('#nav button').forEach(b=>b.classList.remove('active'));document.querySelector('[data-mm-learning-insights]')?.classList.add('active')}
 function setHeader(){const h=document.getElementById('pageTitle'),p=document.getElementById('pageSubtitle');if(h)h.textContent='Learning insights';if(p)p.textContent='Local evidence of practice, time-on-task and improvement.'}
@@ -263,7 +259,7 @@ function renderInsights(){
 }
 function openInsights(){closeLessonSession('insights');ensureStyle();const host=ensureSection();if(!host)return;hideOtherViews();host.classList.remove('hidden');markNav();setHeader();renderInsights();window.scrollTo?.({top:0,behavior:'smooth'})}
 
-function install(){ensureStyle();ensureSection();ensureNav();patchMobileMore();installCoreHooks()}
+function install(){ensureStyle();ensureSection();ensureNav();installCoreHooks()}
 
 document.addEventListener('click',e=>{handlePracticeClick(e);const t=e.target.closest?.('[data-la-export],[data-la-clear]');if(t?.hasAttribute('data-la-export')){try{exportAnonymousSummary()}catch(err){window.toast?.(err?.message||String(err))}}if(t?.hasAttribute('data-la-clear'))clearCurrentAnalytics()});
 document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='hidden')pauseLesson();else touchActivity()});
