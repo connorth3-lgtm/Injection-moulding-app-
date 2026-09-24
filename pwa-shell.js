@@ -280,13 +280,9 @@ function configureReferenceDrawer(){
 `;document.head.appendChild(style)}modal.dataset.mmNonBlocking='1'
 }
 function openStandaloneReferenceData(){location.assign(REFERENCE_DATA_URL)}
-function patchMobileMoreForReferenceData(){
-  if(window.__MM_REFERENCE_DATA_MORE_PATCH__||typeof window.openMobileMenu!=='function')return;const base=window.openMobileMenu;
-  window.openMobileMenu=function(){const r=base.apply(this,arguments);requestAnimationFrame(()=>{const card=document.querySelector('#modal .modal-card'),grid=card?.querySelector('.grid2');if(!grid||grid.querySelector('[data-mm-reference-data-menu]'))return;const button=document.createElement('button');button.type='button';button.className='quick-action';button.dataset.mmReferenceDataMenu='1';button.innerHTML='<span class="icon">▤</span><b>References</b><small>Standards, materials, defects, process signals and troubleshooting.</small>';button.addEventListener('click',()=>{try{window.closeModal?.()}catch(_){}openStandaloneReferenceData()});grid.appendChild(button)});return r};window.__MM_REFERENCE_DATA_MORE_PATCH__=true
-}
 function dockReferenceDataLauncher(){
   const open=document.getElementById('mmrd-open');if(!open)return;open.style.position='static';open.style.left='auto';open.style.right='auto';open.style.top='auto';open.style.bottom='auto';open.style.zIndex='auto';open.style.pointerEvents='auto';
-  if(isMobileNav()){open.style.display='none';open.style.width='auto';open.style.margin='0';open.dataset.mmDocked='mobile-more-standalone-page';patchMobileMoreForReferenceData();return}
+  if(isMobileNav()){open.style.display='none';open.style.width='auto';open.style.margin='0';open.dataset.mmDocked='mobile-more-standalone-page';return}
   setText(open,'References');open.setAttribute('aria-label','Open References');const sidebar=document.querySelector('.sidebar-foot'),dock=sidebar||document.querySelector('.top-actions')||document.querySelector('.main');if(!dock)return;if(open.parentElement!==dock)dock.appendChild(open);open.style.width=sidebar?'100%':'auto';open.style.margin=sidebar?'8px 0 0':'0';open.style.display=sidebar?'flex':'inline-flex';open.style.justifyContent='center';open.dataset.mmDocked=sidebar?'sidebar':dock.classList.contains('top-actions')?'topbar':'content'
 }
 function configureReferenceDataDrawer(){
