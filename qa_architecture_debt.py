@@ -255,3 +255,7 @@ print(
 )
 
 need('window.openMobileMenu=function' not in text('primary-learning-practice-hubs.js'),'practice hubs reintroduced a mobile-menu wrapper; use shell lifecycle/navigation registry')
+training_bridge=text('training-qa-fix.js')
+need("runtime.after('startExam'" in training_bridge,'training compatibility exam mirror must use Runtime V2 after hook')
+need("window.startExam=function" not in training_bridge,'training compatibility layer reintroduced a startExam global wrapper')
+
