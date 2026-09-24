@@ -864,7 +864,7 @@ function renderLesson(){
 }
 function goLesson(id){user.currentLesson=id;persist();renderLesson();window.scrollTo({top:0,behavior:"smooth"})}
 function nextLesson(){let id=user.currentLesson+1;if(id>D.lessons.length)id=1;goLesson(id)}
-function completeLesson(id){if(!user.completed.includes(id))user.completed.push(id);persist();renderLesson();toast("Lesson completed")}
+function completeLesson(id){if(!user.completed.includes(id))user.completed.push(id);persist();renderLesson();try{window.dispatchEvent(new CustomEvent("mm:lesson-complete",{detail:{id:String(id)}}))}catch(_){}toast("Lesson completed")}
 function saveLessonNote(id){user.notes=user.notes||{};user.notes[id]=$("#lessonNotes").value;const durable=persist();toast(durable?"Notes saved":"Note updated for this session only — browser storage is unavailable.")}
 function toggleBookmark(id){user.bookmarks=user.bookmarks||[];const i=user.bookmarks.indexOf(id);if(i>=0)user.bookmarks.splice(i,1);else user.bookmarks.push(id);persist();renderLesson()}
 
