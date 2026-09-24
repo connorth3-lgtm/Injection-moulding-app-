@@ -118,11 +118,11 @@ function captureUi(event){
 }
 function installWhenReady(){
   if(harden())return;
-  if(++installAttempts===1)window.addEventListener('mm:domains-ready',()=>{if(!harden())console.error('MouldMaster process-data integrity hardening could not find the connected process-data runtime')},{once:true});
+  if(++installAttempts===1)window.addEventListener?.('mm:domains-ready',()=>{if(!harden())console.error('MouldMaster process-data integrity hardening could not find the connected process-data runtime')},{once:true});
 }
 
 document.addEventListener('click',captureUi,true);
-window.addEventListener('mm:domains-ready',queueOptionFilter);
+window.addEventListener?.('mm:domains-ready',queueOptionFilter);
 window.MM_APP_SHELL?.events?.onViewChange?.(queueOptionFilter);
 window.MM_PROCESS_DATA_INTEGRITY=Object.freeze({version:VERSION,contextKeys:[...CONTEXT_KEYS],contextCompatibility,baselineCompatibility,assertBaselineCompatible,deleteDatasetCascade,harden});
 installWhenReady();
