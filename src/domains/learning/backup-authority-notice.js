@@ -169,9 +169,10 @@ function annotate(root=document){
   const controls=card.querySelector('.hero-buttons');card.insertBefore(note,controls||null);
  }
 }
-const observer=new MutationObserver(mutations=>{for(const mutation of mutations)for(const node of mutation.addedNodes||[])if(node.nodeType===1)annotate(node)});
-observer.observe(document.documentElement,{childList:true,subtree:true});
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',()=>annotate(),{once:true});else annotate();
+window.addEventListener('mm:domains-ready',()=>annotate());
+window.MM_APP_SHELL?.events?.onViewChange?.(()=>annotate());
+window.MM_APP_SHELL?.events?.onRender?.('profile',()=>annotate());
 
 window.MM_LEARNER_BACKUP_INTEGRITY=Object.freeze({
  version:VERSION,
