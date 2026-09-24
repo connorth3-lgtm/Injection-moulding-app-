@@ -26,6 +26,7 @@ for marker in [
  "S.removeItem(TIMING_KEY)","__mmOriginalReset"
 ]: need(marker in js,f'final assessment hardening marker missing: {marker}')
 need('localStorage.removeItem(TIMING_KEY)' not in js,'final hardening must not bypass learner-scoped timing storage')
+need("runtime.after('startExam'" in js and "runtime.before('gradeExam'" in js and "runtime.after('gradeExam'" in js,'assessment timing lifecycle must use Runtime V2 hooks when available')
 p=subprocess.run(['node','--check',str(ROOT/'assessment-final-hardening.js')],capture_output=True,text=True)
 need(p.returncode==0,f'assessment-final-hardening.js syntax error: {p.stderr}')
 
