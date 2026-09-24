@@ -89,7 +89,7 @@ must(a11y, ["aria-modal", "focusTrap:true", "focusRestore:true", "forced-colors:
 # and browser + installed PWA share the same service-worker/cache origin state.
 must(shell, [
     "el.textContent!==value", "syncUpdateCard", "[data-mm-update-card]",
-    "data-mm-repair-link", "Repair app files", "./repair.html", "hideInternalQaProvenance", "Plugin-assisted QA provenance",
+    "data-mm-repair-link", "Repair app files", "./repair.html", "location.reload()", "Desktop package", "hideInternalQaProvenance", "Plugin-assisted QA provenance",
     "dockReferenceLauncher", "getElementById('mm-src-open')", "document.querySelector('.sidebar-foot')",
     "sourceReviewDisplayDate", "qualitySuite?.sourceFreshnessReviewed", "syncStandardsReviewDate", "window.MM_DATA?.standards", "References reviewed\\s+\\d{1,2}",
     "open.style.position='static'", "open.style.zIndex='auto'", "configureReferenceDrawer",
