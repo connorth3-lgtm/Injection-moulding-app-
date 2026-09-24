@@ -314,10 +314,13 @@ window.importData=function(file){
    const active=canonicalLearnerId(x.activeUser);
    if(!hasOwnLearner(users,active))throw new Error('Missing active learner');
    const extras=obj(x.trainingExtras)?x.trainingExtras:{};
-   if(Object.keys(extras).length){
-    if(extras.version!==3||extras.scope!=='active-learner'||canonicalLearnerId(extras.learnerId)!==active)throw new Error('Training extras learner scope mismatch');
+   if(Object.keys(extras).length&&extras.version===3){
+    if(extras.scope!=='active-learner'||canonicalLearnerId(extras.learnerId)!==active)throw new Error('Training extras learner scope mismatch');
    }
-   const cleanR=cleanReview(extras.spacedReview||{items:{}}),cleanS=cleanSign(extras.practicalSignoff||{});
+   // Legacy v2 backups had no learner-scoped training ownership metadata. Their
+   // extras are intentionally ignored rather than assigned to the active learner.
+   const scopedExtras=extras.version===3?extras:{};
+   const cleanR=cleanReview(scopedExtras.spacedReview||{items:{}}),cleanS=cleanSign(scopedExtras.practicalSignoff||{});
    const proposed={activeUser:active,users};
    const reviewKey=trainingKey(REVIEW_KEY,active),signKey=trainingKey(SIGN_KEY,active);
    const writes={mouldmasterProDB:JSON.stringify(proposed),[reviewKey]:JSON.stringify(cleanR),[signKey]:JSON.stringify(cleanS)};
