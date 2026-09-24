@@ -158,6 +158,16 @@ require("../../src/domains" in from_paths, "canonical domain modules must ship i
 require("generated/integrity.json" in from_paths, "packaged integrity manifest missing")
 require("generated/dependency-licenses.json" in from_paths, "dependency licence inventory missing")
 require("generated/sbom.cdx.json" in from_paths, "SBOM missing from package")
+# Every explicit same-origin release asset governed by the service worker must either be
+# covered by a packaged directory or appear directly in Electron extraResources.
+sw=(ROOT / "service-worker.js").read_text(encoding="utf-8")
+import re
+sw_assets=set(re.findall(r"['\"](\./[^'\"]+)['\"]",sw))
+explicit_root={a[2:] for a in sw_assets if '/' not in a[2:]}
+packaged_root={Path(x[6:]).name for x in from_paths if isinstance(x,str) and x.startswith('../../') and '/' not in x[6:]}
+missing_root=sorted(explicit_root-packaged_root)
+require(not missing_root,f"desktop extraResources missing service-worker root asset(s): {missing_root}")
+
 
 msix_assets = (DESKTOP / "scripts" / "generate-msix-assets.ps1").read_text(encoding="utf-8")
 require('"../../../mouldmaster-512.png"' in msix_assets, "MSIX artwork source path must resolve to repository root icon")
