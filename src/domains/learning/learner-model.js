@@ -101,7 +101,11 @@ function installImportGuard(){
   if(Number(file.size)>10*1024*1024){window.alert?.('That backup is too large to import safely. No existing data was changed.');return}
   const receiver=this,args=arguments,reader=new FileReader();
   reader.onload=()=>{
-   try{validateBackupEnvelope(reader.result)}catch(_){window.alert?.('That file is not a valid MouldMaster backup. No existing data was changed.');return}
+   try{
+    const parsed=JSON.parse(String(reader.result||''));
+    if(parsed?.backupFormat==='mouldmaster-backup-v3')return base.apply(receiver,args);
+    validateBackupEnvelope(reader.result);
+   }catch(_){window.alert?.('That file is not a valid MouldMaster backup. No existing data was changed.');return}
    base.apply(receiver,args);
   };
   reader.onerror=()=>window.alert?.('That backup could not be read. No existing data was changed.');
