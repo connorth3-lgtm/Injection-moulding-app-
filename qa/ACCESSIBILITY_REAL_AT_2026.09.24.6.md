@@ -1,10 +1,10 @@
-# MouldMaster real assistive-technology validation — 2026.09.24.6
+# MouldMaster real assistive-technology validation — 2026.09.24.7
 
-This packet governs **human** assistive-technology validation for web release `2026.09.24.6`. Automated accessibility checks, browser regressions and synthetic screen-reader simulations do not satisfy this boundary.
+This packet governs **human** assistive-technology validation for web release `2026.09.24.7`. Automated accessibility checks, browser regressions and synthetic screen-reader simulations do not satisfy this boundary.
 
 ## Exact release boundary
 
-- web release: `2026.09.24.6`
+- web release: `2026.09.24.7`
 - retained pre-merge public candidate source commit: `2d32dc6d481394d10c41d7e630bce37c6270b49a`
 - public-runtime fingerprint: `sha256:cc4687fd2545c17f70d544e5952b8c95f4ee2ab0d73fddaffb3c797e8b36cda9`
 - retained physical candidate: `physical-pwa-candidate-2d32dc6d481394d10c41d7e630bce37c6270b49a` (`10779964829`)
@@ -13,7 +13,7 @@ This packet governs **human** assistive-technology validation for web release `2
 - artifact retention expiry: `2026-10-23T22:36:19Z`
 - evidence contract: `data/accessibility-real-at-validation-v1.json`
 
-This is a candidate **rebind**, not new AT evidence. The learner-facing runtime deliberately advanced to release `2026.09.24.6` for exact-byte-authorized Book evidence enrichment, ISO 9001:2026 QMS support and the read-only NZQA/Standards readiness surface. No earlier human/device evidence is relabelled. If learner-facing runtime bytes change again, this packet must be rebound before new validation is recorded.
+This is a candidate **rebind**, not new AT evidence. The learner-facing runtime deliberately advanced to release `2026.09.24.7` for exact-byte-authorized Book evidence enrichment, ISO 9001:2026 QMS support and the read-only NZQA/Standards readiness surface. No earlier human/device evidence is relabelled. If learner-facing runtime bytes change again, this packet must be rebound before new validation is recorded.
 
 ## Required matrix
 
@@ -58,7 +58,7 @@ The top-level accessibility status may move from `hold` to `validated` only afte
 Until then, real-AT validation remains **HOLD**.
 
 
-> Merge-candidate CI governance note: release identity remains the canonical `2026.09.24.6`; this packet is documentation-only and does not assert fresh physical-device or assistive-technology validation.
+> Merge-candidate CI governance note: release identity remains the canonical `2026.09.24.7`; this packet is documentation-only and does not assert fresh physical-device or assistive-technology validation.
 
 
 > Final CI provenance note: this packet remains HOLD for human validation; repository CI evidence is not a substitute for real-device/assistive-technology validation.
