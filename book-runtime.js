@@ -35,9 +35,8 @@
     });
   }
   if(!window.__MM_CANONICAL_EVIDENCE_LINKS__){
-    const observer=new MutationObserver(records=>{for(const record of records)for(const node of record.addedNodes||[])if(node.nodeType===1)canonicalizeEvidenceLinks(node)});
-    observer.observe(document.documentElement,{subtree:true,childList:true});
     canonicalizeEvidenceLinks();
+    window.addEventListener?.('mm:book-render',()=>canonicalizeEvidenceLinks());
     window.__MM_CANONICAL_EVIDENCE_LINKS__=Object.freeze({version:'1',rewrite:canonicalizeEvidenceLinks});
   }
   if(window.MMBook?.version===release)return;
