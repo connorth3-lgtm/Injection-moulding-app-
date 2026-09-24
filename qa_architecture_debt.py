@@ -162,6 +162,10 @@ backup_notice=read('src/domains/learning/backup-authority-notice.js')
 need('new MutationObserver' not in backup_notice,'backup authority notice reintroduced a whole-document mutation observer')
 need("addEventListener('mm:domains-ready'" in backup_notice,'backup authority notice must use domain readiness')
 
+connected_data=read('data-integration-runtime.js')
+need('new MutationObserver' not in connected_data,'connected process-data runtime reintroduced a whole-document mutation observer')
+need("addEventListener('mm:domains-ready',scheduleInstall)" in connected_data,'connected process-data runtime must use domain readiness')
+
 ui_polish=read('src/domains/shell/learner-ui-polish.js')
 need('new MutationObserver' not in ui_polish,'learner UI polish reintroduced a whole-body mutation observer')
 need("onRender?.('dashboard',schedule)" in ui_polish and 'onViewChange?.(schedule)' in ui_polish,'learner UI polish must use shell lifecycle events')
