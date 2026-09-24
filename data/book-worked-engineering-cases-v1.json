@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "bookId": "mouldmaster-book",
-  "release": "2026.09.24.10",
+  "release": "2026.09.24.11",
   "status": "authorized-synthetic-teaching",
   "policy": "Worked engineering cases are synthetic teaching examples. They are source-governed and internally publication-authorized, but they are not independent human SME approval, measured production evidence, universal process recipes, validated production limits or machine-control authority.",
   "sourceSeeds": [
