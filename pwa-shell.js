@@ -166,6 +166,13 @@ function enhanceExamQuestionList(){
   const host=document.getElementById('examQuestions');if(!host)return;
   const questions=Array.from(host.children).filter(el=>el.classList.contains('question'));
   const existing=document.querySelector('[data-mm-exam-question-toggle]');
+  const governed=host.classList.contains('mm-focus-mode')||host.dataset.mmAssessmentUx==='1'||document.querySelector('.mm-exam-steps')!==null;
+  if(governed){
+    questions.forEach(q=>q.classList.remove('mm-question-collapsed'));
+    if(existing)existing.remove();
+    delete host.dataset.mmQuestionDisclosure;
+    return;
+  }
   if(!isMobileNav()||questions.length<=5){
     questions.forEach(q=>q.classList.remove('mm-question-collapsed'));
     if(existing)existing.hidden=true;
