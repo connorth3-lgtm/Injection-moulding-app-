@@ -123,7 +123,14 @@ for number, (source, path) in enumerate(zip(inline_core_scripts, core_runtime_sc
     if path.name == "core-inline-004.js":
         need(source.count("document.write(") == 1, "frozen certificate print debt drifted; review runtime transform")
         need("document.write(" not in generated and "document.writeln(" not in generated, "active certificate print runtime still uses document.write")
-        for marker in ("w.opener=null", 'd.createElement("style")', "d.body.appendChild(box)", "w.print()"):
+        for marker in ("w.opener=null", 'd.createElement("style")', "d.body.appendChild(box)", "w.
+# Runtime modules loaded by the domain manifest must use the explicit domain-ready lifecycle rather than hot polling for shell availability.
+for rel in ['src/domains/shell/product-areas.js','src/domains/governance/standards-readiness.js']:
+    source=text(rel)
+    need('setInterval(' not in source,f'{rel} reintroduced startup polling')
+    need("mm:domains-ready" in source,f'{rel} must bind deferred installation to domain readiness')
+
+print()"):
             need(marker in generated, f"certificate print runtime hardening marker missing: {marker}")
     elif number == len(core_runtime_scripts):
         need(generated.startswith(expected_handler_free.rstrip()), f"final generated core slot is stale before bridge concatenation: {path.name}")
