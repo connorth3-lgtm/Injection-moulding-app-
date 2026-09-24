@@ -8,7 +8,7 @@ const R=window.MM_RUNTIME_V2||(HEADLESS_AUDIT?Object.freeze({after:()=>()=>{},re
 if(!R||typeof R.after!=='function')throw new Error('assessment-evidence-approval.js requires runtime-v2.js');
 const APPROVED_INPUTS={
  'MouldMaster_Core_App.html':'c6b258ccd37d98b2f591f538b34eb33c7705dda6',
- 'training-upgrade.js':'ba3ed5cdab181e11359c2aff9f2dfa4d94b80cbb',
+ 'training-upgrade.js':'d5bec661f9940948b41f6d60fb19f02e3947032d',
  'assessment-deep-dive.js':'8f41edb8e855f1b3f8f2277873b7700aa1d4bf29',
  'assessment-answer-cue-fix.js':'9a6ef14f5eac1e127255afdd050a6f47f6009587',
  'assessment-quality-suite.js':'2f311bf1349d9c3ba4e5b54958efd3627c98991b',
