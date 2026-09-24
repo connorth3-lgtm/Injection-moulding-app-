@@ -32,7 +32,7 @@ const BASE_FILES=[
   'source-library.js','measured-evidence-integration.js','measured-evidence-decision.js','measured-learning-library.js','measured-learning-library.css',
   'reference-data.js','reference-data.html','reference-deep-dive.js','reference-research-extension.js','reference-20x-extension.js',
   'reference-2026-expansion.js','reference-sources.js','reference-browser-ui.js','diagnostic-learning-labs.js','material-behaviour-labs.js',
-  'service-worker.js','privacy.html','support.html'
+  'service-worker.js','repair.html','privacy.html','support.html'
 ];
 
 function sha(file){return crypto.createHash('sha256').update(fs.readFileSync(file)).digest('hex')}
