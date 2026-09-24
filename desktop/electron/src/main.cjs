@@ -189,10 +189,23 @@ app.whenReady().then(async () => {
     app.quit();
   }
 
-  app.on('activate', () => {
+  app.on('activate', async () => {
     if (BrowserWindow.getAllWindows().length === 0 && localServer) {
-      const integrity = JSON.parse(fs.readFileSync(INTEGRITY_PATH, 'utf8'));
-      createWindow(`http://127.0.0.1:${DESKTOP_PORT}`, integrity);
+      try {
+        // Re-verify the packaged bytes before every recreated window. The loopback
+        // server also hashes each request, but activation must not trust a manifest
+        // that was merely re-read after the startup verification boundary.
+        const integrity = verifyBundledAssets();
+        await createWindow(`http://127.0.0.1:${DESKTOP_PORT}`, integrity);
+      } catch (err) {
+        await dialog.showMessageBox({
+          type: 'error',
+          title: 'MouldMaster integrity check failed',
+          message: 'MouldMaster could not reopen because its verified local application changed.',
+          detail: `${err.message}\n\nReinstall from a trusted MouldMaster release.`
+        });
+        app.quit();
+      }
     }
   });
 });
