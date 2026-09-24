@@ -8,6 +8,7 @@ const MAIN=fs.readFileSync(path.join(DESKTOP,'src','main.cjs'),'utf8');
 const PKG=JSON.parse(fs.readFileSync(path.join(DESKTOP,'package.json'),'utf8'));
 const LOCK=JSON.parse(fs.readFileSync(path.join(DESKTOP,'package-lock.json'),'utf8'));
 const VERSION=JSON.parse(fs.readFileSync(path.join(ROOT,'version.json'),'utf8'));
+const SERVICE_WORKER=fs.readFileSync(path.join(ROOT,'service-worker.js'),'utf8');
 const DOMAIN_MANIFEST=JSON.parse(fs.readFileSync(path.join(ROOT,'runtime-domain-manifest.json'),'utf8'));
 const INTEGRITY=JSON.parse(fs.readFileSync(path.join(DESKTOP,'generated','integrity.json'),'utf8'));
 function need(cond,msg){if(!cond)throw new Error(msg)}
@@ -32,6 +33,11 @@ need(MAIN.includes('http://127.0.0.1:${DESKTOP_PORT}'),'desktop renderer origin 
 need(!MAIN.includes("storages: ['localstorage'")&&!MAIN.includes("storages: ['indexdb'"),'desktop PWA cleanup must preserve learner localStorage and IndexedDB');
 need(!MAIN.includes("process.resourcesPath, 'mouldmaster', 'integrity.json'"),'packaged integrity manifest must not be read from writable asset directory');
 need(INTEGRITY.schema===1,'integrity schema mismatch');
+for(const listName of ['CORE','OPTIONAL']){
+  const match=SERVICE_WORKER.match(new RegExp(`const\\s+${listName}\\s*=\\s*\\[(.*?)\\]\\s*;`,'s'));
+  need(match,`service-worker ${listName} asset list missing`);
+  for(const hit of match[1].matchAll(/['"]\\.\\/([^'"]+)['"]/g))need(Object.prototype.hasOwnProperty.call(INTEGRITY.files,hit[1]),`desktop integrity parity missing service-worker asset: ${hit[1]}`);
+}
 need(INTEGRITY.release===VERSION.desktop_release,'integrity release must match desktop_release');
 need(Object.keys(INTEGRITY.files||{}).length>=15,'integrity manifest is incomplete');
 for(const [name,hash] of Object.entries(INTEGRITY.files)){need(/^[a-f0-9]{64}$/.test(hash),`bad SHA-256 for ${name}`);need(fs.existsSync(path.join(ROOT,name)),`integrity asset missing: ${name}`)}
