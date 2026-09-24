@@ -1,8 +1,8 @@
-/* MouldMaster learner UX repair — 2026.09.06.21 */
+/* MouldMaster learner UX repair — 2026.09.24.1 */
 (function(){
 'use strict';
 if(window.MM_LEARNER_UX_REPAIR)return;
-const VERSION='2026.09.06.21';
+const VERSION='2026.09.24.1';
 const ASSESSMENT_BANK_VERSION='assessment-2026.08.30.1';
 const ASSESSMENT_HISTORY_KEY='mm-assessment-question-history-v4';
 const ASSESSMENT_RESULT_META_KEY='mm-assessment-result-meta-v1';
@@ -170,14 +170,15 @@ function dedupeForm(items){
   });
 }
 function historyScope(level,region){return `${String(level||'unknown')}|${String(region||'ALL')}`}
+function assessmentStore(){return window.MM_ASSESSMENT_STORAGE_SCOPE||null}
 function readAssessmentHistory(){
-  try{
-    const raw=JSON.parse(localStorage.getItem(ASSESSMENT_HISTORY_KEY)||'{}');
-    return raw&&typeof raw==='object'?raw:{};
-  }catch(_){return {}}
+  const store=assessmentStore();
+  if(!store?.read)return {};
+  const raw=store.read(ASSESSMENT_HISTORY_KEY,{});
+  return raw&&typeof raw==='object'&&!Array.isArray(raw)?raw:{}
 }
 function writeAssessmentHistory(history){
-  try{localStorage.setItem(ASSESSMENT_HISTORY_KEY,JSON.stringify(history))}catch(_){}
+  return !!assessmentStore()?.write?.(ASSESSMENT_HISTORY_KEY,history)
 }
 function rotateAwayFromPreviousFirst(form,previousFirst){
   if(!previousFirst||form.length<2||questionKey(form[0])!==previousFirst)return form;
@@ -206,11 +207,11 @@ function persistAssessmentResultMeta(level){
     }
   }catch(_){}
   const record={bankVersion:ASSESSMENT_BANK_VERSION,formFingerprint:form.formFingerprint,level:String(level||form.level||''),region:String(region),score:Number.isFinite(Number(score))?Number(score):null,questionKeys:Array.from(form.questionKeys||[]),recordedAt:new Date().toISOString()};
-  try{
-    const prior=JSON.parse(localStorage.getItem(ASSESSMENT_RESULT_META_KEY)||'[]');
-    const list=Array.isArray(prior)?prior:[];
-    localStorage.setItem(ASSESSMENT_RESULT_META_KEY,JSON.stringify([record,...list].slice(0,100)));
-  }catch(_){}
+  const store=assessmentStore();
+  if(!store?.read||!store?.write)return;
+  const prior=store.read(ASSESSMENT_RESULT_META_KEY,[]);
+  const list=Array.isArray(prior)?prior:[];
+  store.write(ASSESSMENT_RESULT_META_KEY,[record,...list].slice(0,100));
 }
 function installAssessmentRotation(){
   if(window.__MM_ASSESSMENT_ROTATION_V4__)return;
