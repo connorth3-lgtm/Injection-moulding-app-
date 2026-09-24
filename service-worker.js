@@ -1,5 +1,5 @@
-const CACHE_VERSION='2026.09.24.1';
-const CACHE_REVISION='learner-scope-r1-20260924';
+const CACHE_VERSION='2026.09.24.2';
+const CACHE_REVISION='learner-scope-r2-20260924';
 const STATIC_CACHE=`mouldmaster-static-${CACHE_VERSION}-${CACHE_REVISION}`;
 
 // Release assets are grouped for readability, but activation is atomic across both
