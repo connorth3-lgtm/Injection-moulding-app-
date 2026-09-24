@@ -49,7 +49,7 @@ function syncUpdateCard(){
     });
     if(!card.querySelector('[data-mm-repair-link]')){
       const repair=document.createElement('button');repair.type='button';repair.className='secondary';repair.dataset.mmRepairLink='1';repair.textContent='Repair app files';
-      repair.addEventListener('click',()=>location.assign(displayContext?.().mode==='Desktop package'?'./':'./repair.html'));
+      repair.addEventListener('click',()=>{if(displayContext().mode==='Desktop package')location.reload();else location.assign('./repair.html')});
       card.appendChild(repair);
     }
   });
