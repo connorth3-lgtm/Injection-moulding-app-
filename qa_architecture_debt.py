@@ -152,24 +152,24 @@ need("addEventListener('mm:book-render'" in book_trace,'Book claim trace must co
 
 analytics_runtime=read('learning-analytics.js')
 need('new MutationObserver' not in analytics_runtime,'learning analytics reintroduced a whole-document mutation observer')
-need("addEventListener('mm:domains-ready',schedule)" in analytics_runtime,'learning analytics must use explicit readiness lifecycle')
+need("addEventListener?.('mm:domains-ready',schedule)" in analytics_runtime,'learning analytics must use explicit readiness lifecycle')
 process_integrity=read('src/domains/process/process-data-integrity.js')
 need('new MutationObserver' not in process_integrity,'process-data integrity reintroduced a whole-document mutation observer')
 need('setInterval(' not in process_integrity and 'setTimeout(installWhenReady,50)' not in process_integrity,'process-data integrity reintroduced startup polling')
-need("addEventListener('mm:domains-ready'" in process_integrity,'process-data integrity must use domain readiness')
+need("addEventListener?.('mm:domains-ready'" in process_integrity,'process-data integrity must use domain readiness')
 
 backup_notice=read('src/domains/learning/backup-authority-notice.js')
 need('new MutationObserver' not in backup_notice,'backup authority notice reintroduced a whole-document mutation observer')
-need("addEventListener('mm:domains-ready'" in backup_notice,'backup authority notice must use domain readiness')
+need("addEventListener?.('mm:domains-ready'" in backup_notice,'backup authority notice must use domain readiness')
 
 connected_data=read('data-integration-runtime.js')
 need('new MutationObserver' not in connected_data,'connected process-data runtime reintroduced a whole-document mutation observer')
-need("addEventListener('mm:domains-ready',scheduleInstall)" in connected_data,'connected process-data runtime must use domain readiness')
+need("addEventListener?.('mm:domains-ready',scheduleInstall)" in connected_data,'connected process-data runtime must use domain readiness')
 
 learner_repair=read('learner-ux-repair.js')
 need('new MutationObserver' not in learner_repair,'learner UX repair reintroduced a whole-body mutation observer')
 need("after?.('startExam'" in learner_repair,'learner UX repair must use assessment lifecycle for disclosure synchronization')
-need("addEventListener('mm:domains-ready'" in learner_repair,'learner UX repair must use domain readiness')
+need("addEventListener?.('mm:domains-ready'" in learner_repair,'learner UX repair must use domain readiness')
 
 ui_polish=read('src/domains/shell/learner-ui-polish.js')
 need('new MutationObserver' not in ui_polish,'learner UI polish reintroduced a whole-body mutation observer')
