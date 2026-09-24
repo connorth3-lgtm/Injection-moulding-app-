@@ -39,7 +39,7 @@ for marker in [
     "id:'diagnostic-labs'",
     "id:'process-data'",
     "id:'material-labs'",
-    "id:'learning-insights'", "id:'repair-app-files'", "./repair.html",
+    "id:'learning-insights'", "id:'repair-app-files'", "./repair.html", "location.reload()", "Electron",
     '--mm-mobile-nav-height',
     '--mm-mobile-nav-clearance',
     '--mm-mobile-content-clearance',
