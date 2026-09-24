@@ -97,7 +97,7 @@ must(shell, [
     ".mmsrc.mm-reference-drawer .mmsrc-panel{width:min(430px", "pointer-events:auto!important",
     "calc(82px + env(safe-area-inset-bottom))", "max-height:48dvh",
     "REFERENCE_DATA_URL='./reference-data.html'", "openStandaloneReferenceData", "location.assign(REFERENCE_DATA_URL)",
-    "patchMobileMoreForReferenceData", "data-mm-reference-data-menu", "References",
+    "REFERENCE_DATA_URL='./reference-data.html'", "References",
     "dockReferenceDataLauncher", "getElementById('mmrd-open')", "open.dataset.mmDocked='mobile-more-standalone-page'",
     "open.style.display='none'", ".mmrd.mm-reference-data-drawer,.mmrd.mm-reference-data-drawer[data-open=\"1\"]{display:none!important",
     "MM_REFERENCE_DATA_LAUNCHER_DOCK='mobile-more-standalone-page'",
