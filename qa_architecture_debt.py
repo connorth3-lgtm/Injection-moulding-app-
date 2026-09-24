@@ -144,6 +144,12 @@ lesson_evidence=read('lesson-evidence-depth.js')
 need('new MutationObserver' not in lesson_evidence,'lesson evidence depth reintroduced a whole-document mutation observer')
 need("onRender?.('lesson',schedule)" in lesson_evidence,'lesson evidence depth must use lesson render lifecycle')
 
+book_runtime=read('src/domains/learning/book-runtime.js')
+book_trace=read('src/domains/learning/book-claim-trace.js')
+need("mm:book-render" in book_runtime,'Book runtime must emit explicit render lifecycle events')
+need('new MutationObserver' not in book_trace,'Book claim trace reintroduced a whole-document mutation observer')
+need("addEventListener('mm:book-render'" in book_trace,'Book claim trace must consume explicit Book render lifecycle')
+
 ui_polish=read('src/domains/shell/learner-ui-polish.js')
 need('new MutationObserver' not in ui_polish,'learner UI polish reintroduced a whole-body mutation observer')
 need("onRender?.('dashboard',schedule)" in ui_polish and 'onViewChange?.(schedule)' in ui_polish,'learner UI polish must use shell lifecycle events')
