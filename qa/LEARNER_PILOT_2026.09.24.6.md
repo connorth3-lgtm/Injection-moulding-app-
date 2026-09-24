@@ -1,6 +1,6 @@
-# MouldMaster real-learner pilot — 2026.09.24.6
+# MouldMaster real-learner pilot — 2026.09.24.7
 
-This is the execution protocol for `data/learner-pilot-v1.json` and web release `2026.09.24.6`.
+This is the execution protocol for `data/learner-pilot-v1.json` and web release `2026.09.24.7`.
 
 The pilot is deliberately **exploratory**. It may reveal usability, comprehension and diagnostic-transfer signals; it does not establish population efficacy, accreditation, psychometric validity, production-recipe validity or machine-control authority.
 
