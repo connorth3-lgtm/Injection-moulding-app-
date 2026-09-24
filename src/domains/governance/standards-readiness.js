@@ -66,7 +66,7 @@ async function init(){
  catch(e){if(view)view.innerHTML='<section class="card"><h2>Standards & readiness unavailable</h2><p>The governed support contracts could not be verified or loaded. No compliance or approval status should be inferred.</p></section>';console.error('[MouldMaster readiness]',e);}
  install();
 }
-if(!install()){let n=0,t=setInterval(()=>{n++;if(install()||n>100)clearInterval(t)},50)}
+if(!install())window.addEventListener('mm:domains-ready',install,{once:true});
 window.MM_STANDARDS_READINESS=Object.freeze({version:VERSION,open,getData:()=>data});
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init,{once:true});else init();
 })();
