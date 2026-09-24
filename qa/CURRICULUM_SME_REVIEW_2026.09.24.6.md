@@ -1,13 +1,13 @@
-# MouldMaster curriculum SME review — 2026.09.24.6
+# MouldMaster curriculum SME review — 2026.09.24.7
 
-This packet governs the **human** semantic review of all 120 canonical Academy lessons for web release `2026.09.24.6`. It is separate from the 46-chapter Book SME review.
+This packet governs the **human** semantic review of all 120 canonical Academy lessons for web release `2026.09.24.7`. It is separate from the 46-chapter Book SME review.
 
 ## Governed contract
 
 - review ledger: `qa/curriculum-semantic-review.json`
 - canonical lesson count: `120`
 - required semantic dimensions per lesson: `7`
-- release: `2026.09.24.6`
+- release: `2026.09.24.7`
 
 Each recorded dimension approval is bound to the SHA-256 fingerprint of the entire canonical lesson object. Any canonical lesson change invalidates prior approvals for that lesson and requires re-review.
 
