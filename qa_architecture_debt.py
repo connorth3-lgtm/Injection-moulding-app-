@@ -171,6 +171,10 @@ need('new MutationObserver' not in learner_repair,'learner UX repair reintroduce
 need("after?.('startExam'" in learner_repair,'learner UX repair must use assessment lifecycle for disclosure synchronization')
 need("addEventListener?.('mm:domains-ready'" in learner_repair,'learner UX repair must use domain readiness')
 
+book_loader=read('book-runtime.js')
+need('new MutationObserver' not in book_loader,'Book compatibility loader reintroduced a whole-document mutation observer')
+need("addEventListener?.('mm:book-render'" in book_loader,'Book evidence-link canonicalization must use Book render lifecycle')
+
 ui_polish=read('src/domains/shell/learner-ui-polish.js')
 need('new MutationObserver' not in ui_polish,'learner UI polish reintroduced a whole-body mutation observer')
 need("onRender?.('dashboard',schedule)" in ui_polish and 'onViewChange?.(schedule)' in ui_polish,'learner UI polish must use shell lifecycle events')
