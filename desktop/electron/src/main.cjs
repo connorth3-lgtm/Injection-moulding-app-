@@ -147,6 +147,10 @@ async function createWindow(origin, integrity) {
   win.webContents.session.setPermissionRequestHandler((_wc, _permission, callback) => callback(false));
   win.webContents.session.setPermissionCheckHandler(() => false);
 
+  // Browser/PWA service-worker state must never control the packaged desktop origin.
+  // Clear only offline app-file caches; preserve localStorage/IndexedDB learner data.
+  await win.webContents.session.clearStorageData({origin, storages: ['serviceworkers', 'cachestorage']});
+
   await win.loadURL(`${origin}/index.html?desktopRelease=${encodeURIComponent(integrity.release || app.getVersion())}`);
   win.once('ready-to-show', () => win.show());
 }
