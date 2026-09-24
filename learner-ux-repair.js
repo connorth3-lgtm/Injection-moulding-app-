@@ -1,8 +1,8 @@
-/* MouldMaster learner UX repair — 2026.09.06.21 */
+/* MouldMaster learner UX repair — 2026.09.24.1 */
 (function(){
 'use strict';
 if(window.MM_LEARNER_UX_REPAIR)return;
-const VERSION='2026.09.06.21';
+const VERSION='2026.09.24.1';
 const ASSESSMENT_BANK_VERSION='assessment-2026.08.30.1';
 const ASSESSMENT_HISTORY_KEY='mm-assessment-question-history-v4';
 const ASSESSMENT_RESULT_META_KEY='mm-assessment-result-meta-v1';
@@ -170,14 +170,17 @@ function dedupeForm(items){
   });
 }
 function historyScope(level,region){return `${String(level||'unknown')}|${String(region||'ALL')}`}
+function assessmentStore(){return window.MM_ASSESSMENT_STORAGE_SCOPE||null}
 function readAssessmentHistory(){
-  try{
-    const raw=JSON.parse(localStorage.getItem(ASSESSMENT_HISTORY_KEY)||'{}');
-    return raw&&typeof raw==='object'?raw:{};
-  }catch(_){return {}}
+  const store=assessmentStore();
+  if(!store?.read)return {};
+  const raw=store.read(ASSESSMENT_HISTORY_KEY,{});
+  return raw&&typeof raw==='object'&&!Array.isArray(raw)?raw:{}
 }
 function writeAssessmentHistory(history){
-  try{localStorage.setItem(ASSESSMENT_HISTORY_KEY,JSON.stringify(history))}catch(_){}
+  const store=assessmentStore();
+  if(!store?.write)return false;
+  return !!store.write(ASSESSMENT_HISTORY_KEY,history)
 }
 function rotateAwayFromPreviousFirst(form,previousFirst){
   if(!previousFirst||form.length<2||questionKey(form[0])!==previousFirst)return form;
@@ -206,22 +209,20 @@ function persistAssessmentResultMeta(level){
     }
   }catch(_){}
   const record={bankVersion:ASSESSMENT_BANK_VERSION,formFingerprint:form.formFingerprint,level:String(level||form.level||''),region:String(region),score:Number.isFinite(Number(score))?Number(score):null,questionKeys:Array.from(form.questionKeys||[]),recordedAt:new Date().toISOString()};
-  try{
-    const prior=JSON.parse(localStorage.getItem(ASSESSMENT_RESULT_META_KEY)||'[]');
-    const list=Array.isArray(prior)?prior:[];
-    localStorage.setItem(ASSESSMENT_RESULT_META_KEY,JSON.stringify([record,...list].slice(0,100)));
-  }catch(_){}
+  const store=assessmentStore();
+  if(!store?.read||!store?.write)return;
+  const prior=store.read(ASSESSMENT_RESULT_META_KEY,[]);
+  const list=Array.isArray(prior)?prior:[];
+  store.write(ASSESSMENT_RESULT_META_KEY,[record,...list].slice(0,100));
 }
 function installAssessmentRotation(){
   if(window.__MM_ASSESSMENT_ROTATION_V4__)return;
-  try{window.MM_RUNTIME_V2?.rebind?.('getExamQuestions')}catch(error){console.warn('[MouldMaster assessment] canonical selector rebind unavailable',error)}
-  const base=window.getExamQuestions;
-  if(typeof base!=='function')return;
-  window.getExamQuestions=function(level,region){
+  const R=window.MM_RUNTIME_V2;
+  if(!R?.transform||!R?.after)return;
+  R.transform('getExamQuestions',function(raw,level,region){
     const scope=historyScope(level,region);
     const history=readAssessmentHistory();
     const recent=Array.isArray(history[scope])?history[scope].filter(Array.isArray).slice(0,ASSESSMENT_HISTORY_LIMIT):[];
-    const raw=base.apply(this,arguments);
     if(!Array.isArray(raw)||!raw.length)throw new Error('Assessment question selector returned no questions.');
     const clean=dedupeForm(raw);
     if(clean.length!==raw.length)throw new Error('Assessment question selector returned duplicate or malformed questions.');
@@ -231,29 +232,18 @@ function installAssessmentRotation(){
     writeAssessmentHistory(history);
     window.MM_ACTIVE_QUESTION_FORM=Object.freeze({version:VERSION,bankVersion:ASSESSMENT_BANK_VERSION,formFingerprint:formFingerprint(chosen),level:String(level||''),region:String(region||'ALL'),questionKeys:Object.freeze(keys.slice())});
     return chosen;
-  };
-  const baseGrade=window.gradeExam;
-  if(typeof baseGrade==='function'){
-    window.gradeExam=function(level){
-      const result=baseGrade.apply(this,arguments);
-      persistAssessmentResultMeta(level);
-      return result;
-    };
-  }
+  });
+  R.after('gradeExam',function(_result,level){persistAssessmentResultMeta(level)});
   window.__MM_ASSESSMENT_ROTATION_V4__=Object.freeze({version:VERSION,bankVersion:ASSESSMENT_BANK_VERSION,historyKey:ASSESSMENT_HISTORY_KEY,resultMetaKey:ASSESSMENT_RESULT_META_KEY,baseCallsPerAttempt:1,historyLimit:ASSESSMENT_HISTORY_LIMIT,selectionPolicy:'one canonical generated form per learner attempt; only the opening order may be adjusted to avoid an immediate repeat'});
 }
 
 ensureStyles();
 window.MM_APP_SHELL?.events?.onRender?.('lesson',onLessonRender);
-window.MM_APP_SHELL?.events?.onViewChange?.(id=>{if(id==='lesson')scheduleRepair(true)});
+window.MM_APP_SHELL?.events?.onViewChange?.(id=>{if(id==='lesson')scheduleRepair(true);syncExamDisclosureGeneration();ensurePreviewWarning()});
+window.addEventListener?.('mm:domains-ready',()=>{syncExamDisclosureGeneration();ensurePreviewWarning()});
+window.MM_RUNTIME_V2?.after?.('startExam',()=>requestAnimationFrame(syncExamDisclosureGeneration));
 window.addEventListener('resize',()=>scheduleRepair(false),{passive:true});
 
-const observer=new MutationObserver(()=>{
-  syncExamDisclosureGeneration();
-  if(lessonVisible())scheduleRepair(false);
-  if(isPreviewPublication())ensurePreviewWarning();
-});
-if(document.body)observer.observe(document.body,{childList:true,subtree:true});
 lastLessonId=currentLessonId()||null;
 syncExamDisclosureGeneration();
 scheduleRepair(lessonVisible());

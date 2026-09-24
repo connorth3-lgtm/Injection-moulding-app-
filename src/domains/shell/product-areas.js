@@ -40,8 +40,6 @@ function install(){
   }
   return false;
 }
-if(!install()){
-  let tries=0;const timer=setInterval(()=>{tries++;if(install()||tries>80)clearInterval(timer)},50);
-}
+if(!install())window.addEventListener('mm:domains-ready',install,{once:true});
 window.MM_PRODUCT_AREAS=Object.freeze({version:VERSION,areas:AREAS,open,install});
 })();

@@ -131,6 +131,58 @@ for number, (source, path) in enumerate(zip(inline_core_scripts, core_runtime_sc
             need(marker in generated, f"handler bridge marker missing from final generated core slot: {marker}")
     else:
         need(generated == expected_handler_free, f"handler-free externalized core runtime is stale at slot {number}: {path.name}")
+# Runtime modules loaded by the domain manifest must use the explicit domain-ready lifecycle rather than hot polling for shell availability.
+for rel in ['src/domains/shell/product-areas.js','src/domains/governance/standards-readiness.js']:
+    source=read(rel)
+    need('setInterval(' not in source and 'setTimeout(installWhenReady,50)' not in source,f'{rel} reintroduced startup polling')
+    need("mm:domains-ready" in source,f'{rel} must bind deferred installation to domain readiness')
+
+reading_patch=read('reading-patch.js')
+need('new MutationObserver' not in reading_patch,'reading patch reintroduced a whole-document mutation observer')
+need('window.switchView=wrapped' not in reading_patch,'reading patch reintroduced a global switchView wrapper')
+need("R.before('switchView'" in reading_patch and "R.after('switchView'" in reading_patch,'stable view entry must use Runtime V2 switchView hooks')
+need("onRender?.('lesson',refresh)" in reading_patch,'reading patch must use lesson render lifecycle')
+lesson_evidence=read('lesson-evidence-depth.js')
+need('new MutationObserver' not in lesson_evidence,'lesson evidence depth reintroduced a whole-document mutation observer')
+need("onRender?.('lesson',schedule)" in lesson_evidence,'lesson evidence depth must use lesson render lifecycle')
+
+book_runtime=read('src/domains/learning/book-runtime.js')
+book_trace=read('src/domains/learning/book-claim-trace.js')
+need("mm:book-render" in book_runtime,'Book runtime must emit explicit render lifecycle events')
+need('new MutationObserver' not in book_trace,'Book claim trace reintroduced a whole-document mutation observer')
+need("addEventListener('mm:book-render'" in book_trace,'Book claim trace must consume explicit Book render lifecycle')
+
+analytics_runtime=read('learning-analytics.js')
+need('new MutationObserver' not in analytics_runtime,'learning analytics reintroduced a whole-document mutation observer')
+need("addEventListener?.('mm:domains-ready',schedule)" in analytics_runtime,'learning analytics must use explicit readiness lifecycle')
+process_integrity=read('src/domains/process/process-data-integrity.js')
+need('new MutationObserver' not in process_integrity,'process-data integrity reintroduced a whole-document mutation observer')
+need('setInterval(' not in process_integrity and 'setTimeout(installWhenReady,50)' not in process_integrity,'process-data integrity reintroduced startup polling')
+need("addEventListener?.('mm:domains-ready'" in process_integrity,'process-data integrity must use domain readiness')
+
+backup_notice=read('src/domains/learning/backup-authority-notice.js')
+need('new MutationObserver' not in backup_notice,'backup authority notice reintroduced a whole-document mutation observer')
+need("addEventListener?.('mm:domains-ready'" in backup_notice,'backup authority notice must use domain readiness')
+
+connected_data=read('data-integration-runtime.js')
+need('new MutationObserver' not in connected_data,'connected process-data runtime reintroduced a whole-document mutation observer')
+need("addEventListener?.('mm:domains-ready',scheduleInstall)" in connected_data,'connected process-data runtime must use domain readiness')
+
+learner_repair=read('learner-ux-repair.js')
+need('new MutationObserver' not in learner_repair,'learner UX repair reintroduced a whole-body mutation observer')
+need('window.getExamQuestions=function' not in learner_repair and 'window.gradeExam=function' not in learner_repair,'learner UX repair reintroduced assessment global wrappers')
+need("R.transform('getExamQuestions'" in learner_repair and "R.after('gradeExam'" in learner_repair,'assessment rotation/result metadata must use Runtime V2 hooks')
+need("after?.('startExam'" in learner_repair,'learner UX repair must use assessment lifecycle for disclosure synchronization')
+need("addEventListener?.('mm:domains-ready'" in learner_repair,'learner UX repair must use domain readiness')
+
+book_loader=read('book-runtime.js')
+need('new MutationObserver' not in book_loader,'Book compatibility loader reintroduced a whole-document mutation observer')
+need("addEventListener?.('mm:book-render'" in book_loader,'Book evidence-link canonicalization must use Book render lifecycle')
+
+ui_polish=read('src/domains/shell/learner-ui-polish.js')
+need('new MutationObserver' not in ui_polish,'learner UI polish reintroduced a whole-body mutation observer')
+need("onRender?.('dashboard',schedule)" in ui_polish and 'onViewChange?.(schedule)' in ui_polish,'learner UI polish must use shell lifecycle events')
+
 need("const CORE_INLINE_SCRIPTS=[" in index, "runtime core script externalization registry missing")
 need("function externalizeCoreScripts(out)" in index, "runtime core script externalization function missing")
 need("out=externalizeCoreScripts(out)" in index, "runtime assembly does not externalize frozen core scripts")
@@ -201,3 +253,10 @@ print(
     f"{len(core_runtime_scripts)} runtime-externalized frozen core scripts with handler bridge folded into final slot; "
     "script-src self-only; script-src-attr none; style-src exact-hash/self-only with style-src-attr none; no unsafe-inline, cssText, setAttribute(style), active inline handlers, remote scripts, unsafe-eval, eval(), or new Function()"
 )
+
+need('window.openMobileMenu=function' not in read('primary-learning-practice-hubs.js'),'practice hubs reintroduced a mobile-menu wrapper; use shell lifecycle/navigation registry')
+for rel in ['pwa-shell.js','learning-analytics.js']:
+    need('window.openMobileMenu=function' not in read(rel),f'{rel} reintroduced a mobile-menu wrapper; app-shell-registry owns mobile More composition')
+pwa=read('pwa-shell.js')
+need("MM_RUNTIME_V2.after('startExam'" in pwa,'PWA question disclosures must prefer Runtime V2 startExam lifecycle')
+

@@ -64,7 +64,7 @@ function verifyBundledAssets() {
   return manifest;
 }
 
-function startLoopbackServer(allowedFiles) {
+function startLoopbackServer(expectedFiles) {
   return new Promise((resolve, reject) => {
     const server = http.createServer((req, res) => {
       try {
@@ -76,12 +76,24 @@ function startLoopbackServer(allowedFiles) {
         }
         const u = new URL(req.url || '/', 'http://127.0.0.1');
         const name = decodeURIComponent(u.pathname.replace(/^\/+/, '')) || 'index.html';
-        if (!safeRelativeAsset(name) || !allowedFiles.has(name)) {
+        if (name === 'repair.html') {
+          res.writeHead(302, {'Location': '/index.html', 'Cache-Control': 'no-store'});
+          res.end();
+          return;
+        }
+        if (!safeRelativeAsset(name) || !Object.prototype.hasOwnProperty.call(expectedFiles, name)) {
           res.writeHead(404, {'Content-Type': 'text/plain; charset=utf-8'});
           res.end('Not found');
           return;
         }
         const file = assetPath(name);
+        const body = fs.readFileSync(file);
+        const actual = crypto.createHash('sha256').update(body).digest('hex');
+        if (actual !== expectedFiles[name]) {
+          res.writeHead(503, {'Content-Type': 'text/plain; charset=utf-8', 'Cache-Control': 'no-store'});
+          res.end('Verified application asset changed after startup');
+          return;
+        }
         const type = MIME[path.extname(file).toLowerCase()] || 'application/octet-stream';
         res.writeHead(200, {
           'Content-Type': type,
@@ -94,7 +106,7 @@ function startLoopbackServer(allowedFiles) {
           res.end();
           return;
         }
-        fs.createReadStream(file).pipe(res);
+        res.end(body);
       } catch (_) {
         res.writeHead(400, {'Content-Type': 'text/plain; charset=utf-8'});
         res.end('Bad request');
@@ -142,6 +154,10 @@ async function createWindow(origin, integrity) {
   win.webContents.session.setPermissionRequestHandler((_wc, _permission, callback) => callback(false));
   win.webContents.session.setPermissionCheckHandler(() => false);
 
+  // Browser/PWA service-worker state must never control the packaged desktop origin.
+  // Clear only offline app-file caches; preserve localStorage/IndexedDB learner data.
+  await win.webContents.session.clearStorageData({origin, storages: ['serviceworkers', 'cachestorage']});
+
   await win.loadURL(`${origin}/index.html?desktopRelease=${encodeURIComponent(integrity.release || app.getVersion())}`);
   win.once('ready-to-show', () => win.show());
 }
@@ -160,8 +176,7 @@ app.whenReady().then(async () => {
   if (!singleInstanceLock) return;
   try {
     const integrity = verifyBundledAssets();
-    const allowed = new Set(Object.keys(integrity.files));
-    const local = await startLoopbackServer(allowed);
+    const local = await startLoopbackServer(integrity.files);
     localServer = local.server;
     await createWindow(local.origin, integrity);
   } catch (err) {

@@ -8,6 +8,7 @@ const MAIN=fs.readFileSync(path.join(DESKTOP,'src','main.cjs'),'utf8');
 const PKG=JSON.parse(fs.readFileSync(path.join(DESKTOP,'package.json'),'utf8'));
 const LOCK=JSON.parse(fs.readFileSync(path.join(DESKTOP,'package-lock.json'),'utf8'));
 const VERSION=JSON.parse(fs.readFileSync(path.join(ROOT,'version.json'),'utf8'));
+const SERVICE_WORKER=fs.readFileSync(path.join(ROOT,'service-worker.js'),'utf8');
 const DOMAIN_MANIFEST=JSON.parse(fs.readFileSync(path.join(ROOT,'runtime-domain-manifest.json'),'utf8'));
 const INTEGRITY=JSON.parse(fs.readFileSync(path.join(DESKTOP,'generated','integrity.json'),'utf8'));
 function need(cond,msg){if(!cond)throw new Error(msg)}
@@ -26,11 +27,17 @@ need(PKG.build?.buildVersion===normalized.join('.'),'desktop buildVersion does n
 need(String(PKG.build?.win?.artifactName||'').includes('${buildVersion}'),'Windows artifact name must include buildVersion');
 const fuses=PKG.build?.electronFuses||{};
 for(const [name,expected] of Object.entries({runAsNode:false,enableNodeOptionsEnvironmentVariable:false,enableNodeCliInspectArguments:false,enableEmbeddedAsarIntegrityValidation:true,onlyLoadAppFromAsar:true}))need(fuses[name]===expected,`Electron fuse must remain ${name}=${expected}`);
-for(const marker of ['nodeIntegration: false','contextIsolation: true','sandbox: true','webSecurity: true','allowRunningInsecureContent: false','setPermissionRequestHandler','setPermissionCheckHandler','will-attach-webview','setWindowOpenHandler',"server.listen(DESKTOP_PORT, '127.0.0.1'",'app.requestSingleInstanceLock()','const DESKTOP_PORT = 43139','const INTEGRITY_PATH = path.join(__dirname, \'..\', \'generated\', \'integrity.json\')','const allowed = new Set(Object.keys(integrity.files))','method !== \'GET\' && method !== \'HEAD\'','SHA-256 verification failed'])need(MAIN.includes(marker),`desktop security marker missing: ${marker}`);
+for(const marker of ['nodeIntegration: false','contextIsolation: true','sandbox: true','webSecurity: true','allowRunningInsecureContent: false','setPermissionRequestHandler','setPermissionCheckHandler','will-attach-webview','setWindowOpenHandler',"server.listen(DESKTOP_PORT, '127.0.0.1'",'app.requestSingleInstanceLock()','const DESKTOP_PORT = 43139','const INTEGRITY_PATH = path.join(__dirname, \'..\', \'generated\', \'integrity.json\')','startLoopbackServer(integrity.files)','method !== \'GET\' && method !== \'HEAD\'','SHA-256 verification failed','Verified application asset changed after startup',"Object.prototype.hasOwnProperty.call(expectedFiles, name)","name === 'repair.html'","'Location': '/index.html'","clearStorageData({origin, storages: ['serviceworkers', 'cachestorage']})"])need(MAIN.includes(marker),`desktop security marker missing: ${marker}`);
 need(!MAIN.includes("server.listen(0, '127.0.0.1', () =>"),'desktop loopback origin must not use the legacy executable ephemeral-port call because browser storage is origin-scoped');
 need(MAIN.includes('http://127.0.0.1:${DESKTOP_PORT}'),'desktop renderer origin must be derived from the stable port');
+need(!MAIN.includes("storages: ['localstorage'")&&!MAIN.includes("storages: ['indexdb'"),'desktop PWA cleanup must preserve learner localStorage and IndexedDB');
 need(!MAIN.includes("process.resourcesPath, 'mouldmaster', 'integrity.json'"),'packaged integrity manifest must not be read from writable asset directory');
 need(INTEGRITY.schema===1,'integrity schema mismatch');
+for(const listName of ['CORE','OPTIONAL']){
+  const match=SERVICE_WORKER.match(new RegExp(`const\\s+${listName}\\s*=\\s*\\[(.*?)\\]\\s*;`,'s'));
+  need(match,`service-worker ${listName} asset list missing`);
+  for(const hit of match[1].matchAll(/['"]\.\/([^'"]+)['"]/g))need(Object.prototype.hasOwnProperty.call(INTEGRITY.files,hit[1]),`desktop integrity parity missing service-worker asset: ${hit[1]}`);
+}
 need(INTEGRITY.release===VERSION.desktop_release,'integrity release must match desktop_release');
 need(Object.keys(INTEGRITY.files||{}).length>=15,'integrity manifest is incomplete');
 for(const [name,hash] of Object.entries(INTEGRITY.files)){need(/^[a-f0-9]{64}$/.test(hash),`bad SHA-256 for ${name}`);need(fs.existsSync(path.join(ROOT,name)),`integrity asset missing: ${name}`)}
@@ -42,13 +49,16 @@ for(const raw of [...DOMAIN_MANIFEST.assets,...DOMAIN_MANIFEST.dataAssets]){
 }
 const packagedFrom=new Set((PKG.build?.extraResources||[]).map(x=>String(x.from||'').replace(/^\.\.\/\.\.\//,'')));
 const dynamicLearnerAssets=[
-  'ui-shell.css','premium-ui.css','premium-dynamic.css','mobile-lesson-fix.css','learner-ux-repair.css','lesson-simple-experience.js','primary-learning-practice-hubs.js','learner-ux-repair.js',
+  'repair.html','ui-shell.css','premium-ui.css','premium-dynamic.css','mobile-lesson-fix.css','learner-ux-repair.css','lesson-simple-experience.js','primary-learning-practice-hubs.js','learner-ux-repair.js',
   'measured-evidence-integration.js','measured-evidence-decision.js','measured-learning-library.js','measured-learning-library.css','data/measured-learning'
 ];
 for(const name of dynamicLearnerAssets){
   need(packagedFrom.has(name),`desktop packaging parity missing dynamic learner asset: ${name}`);
   if(!name.endsWith('/measured-learning'))need(Object.prototype.hasOwnProperty.call(INTEGRITY.files,name),`desktop integrity parity missing dynamic learner asset: ${name}`);
 }
+for(const name of ['src/domains/shell/learner-ui-polish.css','src/domains/quality/data/quality-management-iso9001-v1.json'])need(Object.prototype.hasOwnProperty.call(INTEGRITY.files,name),`desktop integrity parity missing governed shell dependency: ${name}`);
+const requiredRuntimePacks=['learning-foundation-runtime-pack.js','assessment-foundation-runtime-pack.js','bootstrap-assessment-source-runtime-pack.js','evidence-runtime-pack.js','assessment-evidence-depth-runtime-pack.js','assessment-multimodal-runtime-pack.js','learning-process-diagnostics-runtime-pack.js','process-data-runtime-pack.js','curriculum-workspace-runtime-pack.js'];
+for(const name of requiredRuntimePacks)need(Object.prototype.hasOwnProperty.call(INTEGRITY.files,'src/domains/runtime-packs/'+name),`desktop integrity parity missing shell runtime pack: ${name}`);
 for(const name of ['data/measured-learning/promoted-v1.json','data/measured-learning/manifest-v1.json','data/measured-learning/expansion-manifest-v2.json','data/measured-learning/v2-policy.json','data/measured-learning/source-readiness-v2.json'])need(Object.prototype.hasOwnProperty.call(INTEGRITY.files,name),`desktop measured-learning data is not integrity hashed: ${name}`);
 for(const req of ['generated/dependency-licenses.json','generated/sbom.cdx.json','THREAT_MODEL.md'])need(fs.existsSync(path.join(DESKTOP,req)),`desktop transparency artifact missing: ${req}`);
 const licences=JSON.parse(fs.readFileSync(path.join(DESKTOP,'generated','dependency-licenses.json'),'utf8'));

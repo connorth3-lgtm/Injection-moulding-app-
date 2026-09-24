@@ -185,7 +185,7 @@ test('learner UX repair preserves the governed selector and adds audited rotatio
   expect(assessment.owner).toBe('assessment-runtime-v2');
   expect(assessment.technicalPerExam).toBe(7);
   expect(assessment.technicalBankPerLevel).toBeGreaterThanOrEqual(10);
-  expect(assessment.rotationVersion).toBe('2026.09.06.21');
+  expect(assessment.rotationVersion).toBe('2026.09.24.1');
   expect(assessment.bankVersion).toBe('assessment-2026.08.30.1');
   expect(assessment.baseCallsPerAttempt).toBe(1);
 });
@@ -237,7 +237,7 @@ test('consecutive assessment attempts do not repeat the opening question and adv
     const secondMembership=window.MM_ASSESSMENT_RUNTIME_V2.history().forms.Beginner||0;
     return {
       first,second,firstMembership,secondMembership,
-      history:JSON.parse(localStorage.getItem('mm-assessment-question-history-v4')||'{}'),
+      history:window.MM_ASSESSMENT_STORAGE_SCOPE?.read?.('mm-assessment-question-history-v4',{})||{},
       legacyOpeningHistory:localStorage.getItem('mm_assessment_opening_history_v1')
     };
   });
@@ -269,7 +269,7 @@ test('graded assessment records the exact bank and form metadata used for the at
       if(input)input.checked=true;
     });
     gradeExam('Beginner');
-    const records=JSON.parse(localStorage.getItem('mm-assessment-result-meta-v1')||'[]');
+    const records=window.MM_ASSESSMENT_STORAGE_SCOPE?.read?.('mm-assessment-result-meta-v1',[])||[];
     return {record:records[0]||null,form:window.MM_ACTIVE_QUESTION_FORM};
   });
   expect(meta.record).toBeTruthy();
@@ -277,6 +277,33 @@ test('graded assessment records the exact bank and form metadata used for the at
   expect(meta.record.formFingerprint).toBe(meta.form.formFingerprint);
   expect(meta.record.questionKeys).toEqual(meta.form.questionKeys);
   expect(meta.record.score).toBe(100);
+});
+
+test('assessment history and result metadata remain isolated across learner switches',async({page})=>{
+  await page.setViewportSize({width:412,height:915});
+  await open(page);
+  const state=await page.evaluate(()=>{
+    const api=window.MM_ASSESSMENT_STORAGE_SCOPE;
+    startExam('Beginner');
+    const aForm=window.MM_ACTIVE_QUESTION_FORM?.formFingerprint||'';
+    closeModal();
+    const aHistory=api.read('mm-assessment-question-history-v4',{});
+    const userB={id:'ux-repair-b',name:'Learner B',role:'learner',completed:[],bookmarks:[],notes:{},examScores:{},certificates:[],currentLesson:1,lastSeen:new Date().toISOString(),onboardingDone:true,experience:'Beginner',goal:'Learn',dailyMinutes:15,region:'ALL'};
+    db.users[userB.id]=userB;switchUser(userB.id);
+    const bBefore=api.read('mm-assessment-question-history-v4',{});
+    startExam('Beginner');
+    const bForm=window.MM_ACTIVE_QUESTION_FORM?.formFingerprint||'';
+    closeModal();
+    const bHistory=api.read('mm-assessment-question-history-v4',{});
+    switchUser('ux-repair-qa');
+    const aAfter=api.read('mm-assessment-question-history-v4',{});
+    return {aForm,bForm,aHistory,bBefore,bHistory,aAfter,aKey:api.questionHistoryKey()};
+  });
+  expect(Object.keys(state.aHistory).length).toBeGreaterThan(0);
+  expect(Object.keys(state.bBefore)).toHaveLength(0);
+  expect(Object.keys(state.bHistory).length).toBeGreaterThan(0);
+  expect(state.aAfter).toEqual(state.aHistory);
+  expect(state.aKey).not.toBe('mm-assessment-question-history-v4');
 });
 
 test('assessment focus mode uses the external stylesheet and never injects a runtime style block',async({page})=>{

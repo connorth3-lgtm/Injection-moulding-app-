@@ -181,10 +181,10 @@ function schedule(){
 function install(){
   ensureStyles();
   run();
-  const observer=new MutationObserver(schedule);
-  if(document.body)observer.observe(document.body,{childList:true,subtree:true,characterData:true});
+  // Shell render/view lifecycle events cover app-owned mutations. Avoid a whole-body characterData observer,
+  // which previously scheduled a full polish pass for every text mutation in the application.
   window.addEventListener('resize',schedule,{passive:true});
-  window.addEventListener('mm:domains-ready',schedule);
+  window.addEventListener?.('mm:domains-ready',schedule);
   window.MM_APP_SHELL?.events?.onRender?.('dashboard',schedule);
   window.MM_APP_SHELL?.events?.onViewChange?.(schedule);
   window.MM_LEARNER_UI_POLISH=Object.freeze({version:VERSION,refresh:schedule});

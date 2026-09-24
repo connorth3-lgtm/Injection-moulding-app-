@@ -1,6 +1,6 @@
 # MouldMaster Book — governed worked engineering cases
 
-**Status:** integrated into governed `2026.09.18.4` learner runtime as exact-byte-authorized synthetic teaching content. The cases remain **not independently SME-approved**; independent human Book SME validation is still a separate HOLD.
+**Status:** integrated into governed `2026.09.24.14` learner runtime as exact-byte-authorized synthetic teaching content. The cases remain **not independently SME-approved**; independent human Book SME validation is still a separate HOLD.
 
 Every number below is **SYNTHETIC TEACHING DATA** unless explicitly stated otherwise. The cases teach calculation and evidence structure, not universal production settings. Each case is mapped into `data/book-worked-engineering-cases-v1.json` with a unique case-level claim ID, evidence source IDs, assumptions/boundaries, runtime byte-integrity authorization, and explicit inclusion in the independent Book SME review scope.
 

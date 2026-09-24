@@ -79,7 +79,7 @@ async function init(){
  }catch(e){error=e;console.error('[MouldMaster Book complete claim trace]',e);window.dispatchEvent(new CustomEvent('mm:book-claim-trace-failed',{detail:{version:VERSION,message:String(e?.message||e)}}));}
  installStatus();queue();
 }
-const observer=new MutationObserver(()=>{installStatus();queue()});observer.observe(document.documentElement,{childList:true,subtree:true});
+window.addEventListener('mm:book-render',()=>{installStatus();queue()});
 window.MM_BOOK_CLAIM_TRACE=Object.freeze({version:VERSION,expected:{...EXPECTED},isReady:()=>ready,getError:()=>error?String(error?.message||error):null,getClaim:id=>claims.get(String(id))||null,getChapterClaims:chapterClaims,renderAll});
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init,{once:true});else init();
 })();

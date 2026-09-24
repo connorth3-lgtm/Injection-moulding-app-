@@ -7,7 +7,7 @@ const ROOT=path.resolve(__dirname,'..','..','..');
 const OUT=path.resolve(__dirname,'..','generated','integrity.json');
 const RUNTIME_MANIFEST='runtime-domain-manifest.json';
 const STATIC_RUNTIME_DIRS=['src/core-runtime'];
-const STATIC_DATA_DIRS=['data/measured-learning','src/domains/learning/book-data'];
+const STATIC_DATA_DIRS=['data/measured-learning','src/domains/learning/book-data','src/domains/quality/data'];
 const REQUIRED_MANIFEST_FILES=[
   'src/domains/engineering/engineering-store.js',
   'src/domains/materials/material-registry.js',
@@ -27,12 +27,12 @@ const BASE_FILES=[
   'process-data-deep-dive-quality.js','process-data-deep-dive-50.js','process-data-20-pass-01-05.js','process-data-20-pass-06-10.js',
   'process-data-20-pass-11-15.js','process-data-20-pass-16-20.js','process-data-20-pass-atlas.js','process-data-local-intake.js',
   'curriculum-integration.js','specialist-curriculum.js','specialist-evidence-gap-extension.js','mould-master-workspace.js',
-  'src/domains/domain-bootstrap.js',RUNTIME_MANIFEST,'src/domains/runtime-packs/learning-foundation-runtime-pack.js','src/domains/runtime-packs/assessment-foundation-runtime-pack.js','src/domains/runtime-packs/evidence-runtime-pack.js','src/domains/runtime-packs/process-data-runtime-pack.js','app-shell-finalize.js','production-health.js','data-integration-runtime.js',
+  'src/domains/domain-bootstrap.js',RUNTIME_MANIFEST,'src/domains/runtime-packs/learning-foundation-runtime-pack.js','src/domains/runtime-packs/assessment-foundation-runtime-pack.js','src/domains/runtime-packs/bootstrap-assessment-source-runtime-pack.js','src/domains/runtime-packs/evidence-runtime-pack.js','src/domains/runtime-packs/assessment-evidence-depth-runtime-pack.js','src/domains/runtime-packs/assessment-multimodal-runtime-pack.js','src/domains/runtime-packs/learning-process-diagnostics-runtime-pack.js','src/domains/runtime-packs/process-data-runtime-pack.js','src/domains/runtime-packs/curriculum-workspace-runtime-pack.js','app-shell-finalize.js','production-health.js','data-integration-runtime.js',
   'process-data-intelligence-ui.js','process-data-semantic-registry.json','current-data-manifest.json','learning-analytics.js','accessibility-hardening.js',
   'source-library.js','measured-evidence-integration.js','measured-evidence-decision.js','measured-learning-library.js','measured-learning-library.css',
   'reference-data.js','reference-data.html','reference-deep-dive.js','reference-research-extension.js','reference-20x-extension.js',
   'reference-2026-expansion.js','reference-sources.js','reference-browser-ui.js','diagnostic-learning-labs.js','material-behaviour-labs.js',
-  'service-worker.js','privacy.html','support.html'
+  'src/domains/shell/learner-ui-polish.css','service-worker.js','repair.html','privacy.html','support.html'
 ];
 
 function sha(file){return crypto.createHash('sha256').update(fs.readFileSync(file)).digest('hex')}

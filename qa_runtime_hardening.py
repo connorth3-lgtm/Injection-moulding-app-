@@ -89,7 +89,7 @@ must(a11y, ["aria-modal", "focusTrap:true", "focusRestore:true", "forced-colors:
 # and browser + installed PWA share the same service-worker/cache origin state.
 must(shell, [
     "el.textContent!==value", "syncUpdateCard", "[data-mm-update-card]",
-    "data-mm-repair-link", "Repair app files", "location.assign('./repair.html')", "hideInternalQaProvenance", "Plugin-assisted QA provenance",
+    "data-mm-repair-link", "Repair app files", "./repair.html", "location.reload()", "Desktop package", "hideInternalQaProvenance", "Plugin-assisted QA provenance",
     "dockReferenceLauncher", "getElementById('mm-src-open')", "document.querySelector('.sidebar-foot')",
     "sourceReviewDisplayDate", "qualitySuite?.sourceFreshnessReviewed", "syncStandardsReviewDate", "window.MM_DATA?.standards", "References reviewed\\s+\\d{1,2}",
     "open.style.position='static'", "open.style.zIndex='auto'", "configureReferenceDrawer",
@@ -97,7 +97,7 @@ must(shell, [
     ".mmsrc.mm-reference-drawer .mmsrc-panel{width:min(430px", "pointer-events:auto!important",
     "calc(82px + env(safe-area-inset-bottom))", "max-height:48dvh",
     "REFERENCE_DATA_URL='./reference-data.html'", "openStandaloneReferenceData", "location.assign(REFERENCE_DATA_URL)",
-    "patchMobileMoreForReferenceData", "data-mm-reference-data-menu", "References",
+    "REFERENCE_DATA_URL='./reference-data.html'", "References",
     "dockReferenceDataLauncher", "getElementById('mmrd-open')", "open.dataset.mmDocked='mobile-more-standalone-page'",
     "open.style.display='none'", ".mmrd.mm-reference-data-drawer,.mmrd.mm-reference-data-drawer[data-open=\"1\"]{display:none!important",
     "MM_REFERENCE_DATA_LAUNCHER_DOCK='mobile-more-standalone-page'",
@@ -167,6 +167,8 @@ require("_evaluate_balanced_length" in question_runtime and "hard.remove('correc
 must(real_measured, ["evidenceType:'real-measured'", "decisionCount:CASES.reduce", "Pressure actual values excluded pending unit", "without assigning phase names until an authoritative mapping is found"], "real measured assessment")
 require("throw new Error('Evidence approval coverage failure" not in approval, "incomplete evidence coverage must not crash the learning app")
 require("document.addEventListener('DOMContentLoaded',init)" in training, "training scenario upgrade remains DOMContentLoaded-driven")
+require("MM_RUNTIME_V2?.storage" in training and "scopedStore()?.get?.(k,d)" in training and "scopedStore()?.set?.(k,v)" in training, "training review/sign-off persistence must use learner-scoped Runtime V2 storage")
+require("localStorage.getItem" not in training and "localStorage.setItem" not in training, "training review/sign-off persistence must not fall back to device-global localStorage")
 require("npm_execpath" in sbom and "result.error" in sbom, "desktop SBOM generation must use the npm CLI entry point and report spawn failures")
 require("NamedTemporaryFile" in assessment_qa and "['node','-e',node]" not in assessment_qa, "assessment runtime QA must not exceed OS command-line limits")
 

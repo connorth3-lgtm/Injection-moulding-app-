@@ -110,6 +110,12 @@ pkg=json.loads(text('desktop/electron/package.json'));froms={x.get('from') for x
 need('../../assessment-storage-scope.js' in froms,'storage scope missing from desktop package')
 need("'assessment-storage-scope.js'" in text('desktop/electron/scripts/generate-integrity.cjs'),'storage scope missing from integrity set')
 
+ux=text('learner-ux-repair.js')
+for marker in ["function assessmentStore(){return window.MM_ASSESSMENT_STORAGE_SCOPE||null}", "store.read(ASSESSMENT_HISTORY_KEY,{})", "store.write(ASSESSMENT_HISTORY_KEY,history)", "store.read(ASSESSMENT_RESULT_META_KEY,[])", "store.write(ASSESSMENT_RESULT_META_KEY,[record,...list].slice(0,100))"]:
+    need(marker in ux,f'learner UX assessment persistence must use scoped storage: {marker}')
+for forbidden in ["localStorage.getItem(ASSESSMENT_HISTORY_KEY)", "localStorage.setItem(ASSESSMENT_HISTORY_KEY", "localStorage.getItem(ASSESSMENT_RESULT_META_KEY)", "localStorage.setItem(ASSESSMENT_RESULT_META_KEY"]:
+    need(forbidden not in ux,f'learner UX assessment persistence bypasses scoped storage: {forbidden}')
+
 bridge=text('training-qa-fix.js')
 for marker in ['clearAssessmentAnalyticsStores','clearLearningAnalyticsStores','clearAllAnalyticsStores','clearTrainingExtrasStores','cancelActiveExam','mm_assessment_analytics_v1','mm_assessment_exposure_timing_v1','mm_assessment_opening_history_v1','mm-assessment-question-history-v4','mm-assessment-result-meta-v1','mm_learning_analytics_v1::','ANALYTICS_CLEANUP_CODE','remaining key(s):','restoreSnapshot(before)','clearAllAnalyticsStores();clearTrainingExtrasStores()','const proposedReset=JSON.parse(JSON.stringify(defaultDB))']:
     need(marker in bridge,f'training reset/import verified analytics cleanup missing: {marker}')

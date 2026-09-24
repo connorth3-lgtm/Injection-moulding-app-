@@ -108,7 +108,9 @@ for marker in [
     "server.listen(DESKTOP_PORT, '127.0.0.1'",
     "requestSingleInstanceLock()",
     "const INTEGRITY_PATH = path.join(__dirname, '..', 'generated', 'integrity.json')",
-    "const allowed = new Set(Object.keys(integrity.files))",
+    "startLoopbackServer(integrity.files)",
+    "Object.prototype.hasOwnProperty.call(expectedFiles, name)",
+    "Verified application asset changed after startup",
     "method !== 'GET' && method !== 'HEAD'",
     "SHA-256 verification failed",
 ]:
@@ -158,6 +160,19 @@ require("../../src/domains" in from_paths, "canonical domain modules must ship i
 require("generated/integrity.json" in from_paths, "packaged integrity manifest missing")
 require("generated/dependency-licenses.json" in from_paths, "dependency licence inventory missing")
 require("generated/sbom.cdx.json" in from_paths, "SBOM missing from package")
+# Every explicit same-origin release asset governed by the service worker must either be
+# covered by a packaged directory or appear directly in Electron extraResources.
+sw=(ROOT / "service-worker.js").read_text(encoding="utf-8")
+import re
+sw_assets=set(re.findall(r"['\"](\./[^'\"]+)['\"]",sw))
+explicit_root={a[2:] for a in sw_assets if '/' not in a[2:]}
+packaged_root={Path(x[6:]).name for x in from_paths if isinstance(x,str) and x.startswith('../../') and '/' not in x[6:]}
+desktop_exclusions={'MouldMaster_Core_App.html'}
+missing_root=sorted(explicit_root-packaged_root-desktop_exclusions)
+require(not missing_root,f"desktop extraResources missing service-worker root asset(s): {missing_root}")
+require(desktop_exclusions.isdisjoint(packaged_root),'legacy assembly routes must remain excluded from desktop resources')
+require('repair.html' in packaged_root,"repair.html must be integrity-packaged so the desktop server can fail closed while redirecting it to index.html")
+
 
 msix_assets = (DESKTOP / "scripts" / "generate-msix-assets.ps1").read_text(encoding="utf-8")
 require('"../../../mouldmaster-512.png"' in msix_assets, "MSIX artwork source path must resolve to repository root icon")

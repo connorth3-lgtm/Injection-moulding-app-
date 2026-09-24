@@ -77,42 +77,19 @@
     try{window.scrollTo({top:0,left:0,behavior:'auto'})}catch(_){window.scrollTo(0,0)}
   }
   function installStableViewEntry(){
-    const current=window.switchView;
-    /* Runtime V2 owns the canonical switchView dispatcher once it is present.
-       Do not wrap that dispatcher from a MutationObserver callback: rebinding a
-       Runtime-owned global recreates wrapper chains and can turn shell adoption
-       into recursive switchView/scrollTo calls. The pre-Runtime wrapper, when
-       installed during initial parsing, is already retained as the captured
-       legacy implementation inside Runtime V2. */
-    if(typeof current!=='function'||current.__mmStableViewEntry||current.__mmRuntimeV2)return false;
-    const wrapped=function(){
-      const active=document.activeElement;
-      if(active&&typeof active.blur==='function')active.blur();
-      const root=document.documentElement;
-      const previousAnchor=root.style.overflowAnchor;
-      const nativeScrollTo=window.scrollTo;
-      root.style.overflowAnchor='none';
-      settleViewTop();
-      window.scrollTo=function(leftOrOptions,top){
-        if(leftOrOptions&&typeof leftOrOptions==='object')return nativeScrollTo.call(window,{...leftOrOptions,behavior:'auto'});
-        return nativeScrollTo.call(window,leftOrOptions,top);
-      };
-      let result;
-      try{result=current.apply(this,arguments)}finally{window.scrollTo=nativeScrollTo}
-      settleViewTop();
-      requestAnimationFrame(()=>requestAnimationFrame(()=>{settleViewTop();root.style.overflowAnchor=previousAnchor}));
-      return result;
-    };
-    wrapped.__mmStableViewEntry=true;
-    wrapped.__mmStableViewEntryBase=current;
-    window.switchView=wrapped;
-    window.__MM_STABLE_VIEW_ENTRY__='2026.09.14.1';
+    const R=window.MM_RUNTIME_V2;
+    if(!R?.before||!R?.after||window.__MM_STABLE_VIEW_ENTRY__)return false;
+    R.before('switchView',()=>{const active=document.activeElement;if(active&&typeof active.blur==='function')active.blur();settleViewTop()});
+    R.after('switchView',()=>{settleViewTop();requestAnimationFrame(()=>requestAnimationFrame(settleViewTop))});
+    window.__MM_STABLE_VIEW_ENTRY__='2026.09.24.5-runtime-hook';
     return true;
   }
   const run=()=>{enhanceLesson();installStableViewEntry()};
   const boot=()=>{run();loadReadAloud();loadBook();};
-  const mo=new MutationObserver(()=>requestAnimationFrame(run));
-  mo.observe(document.documentElement,{subtree:true,childList:true});
+  const refresh=()=>requestAnimationFrame(run);
+  window.addEventListener?.('mm:domains-ready',refresh);
+  window.MM_APP_SHELL?.events?.onRender?.('lesson',refresh);
+  window.MM_APP_SHELL?.events?.onViewChange?.(id=>{if(id==='lesson')refresh()});
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot,{once:true});else boot();
 })();
 /* <<< reading-patch.js */
@@ -123,8 +100,11 @@
 'use strict';
 const REVIEW_KEY='mm_spaced_review_v2', SIGN_KEY='mm_practical_signoff_v1', DAY=86400000;
 const esc=v=>String(v??'').replace(/[&<>\"]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','\"':'&quot;'}[m]));
-const load=(k,d)=>{try{const x=JSON.parse(localStorage.getItem(k)||'');return x&&typeof x==='object'?x:d}catch(_){return d}};
-const save=(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v))}catch(_){}};
+// Review scheduling and practical sign-off can contain learner-specific progress, supervisor identity and notes.
+// Keep them inside Runtime V2 learner scope; never fall back to historical device-global keys.
+const scopedStore=()=>window.MM_RUNTIME_V2?.storage||null;
+const load=(k,d)=>{try{const x=scopedStore()?.get?.(k,d);return x&&typeof x==='object'?x:d}catch(_){return d}};
+const save=(k,v)=>{try{return !!scopedStore()?.set?.(k,v)}catch(_){return false}};
 const qt=q=>q?.q??q?.[0]??'', qo=q=>q?.options??q?.[1]??[], qc=q=>Number(q?.correct??q?.[2]??0), qw=q=>q?.explanation??q?.why??q?.[3]??'', qfb=q=>q?.optionFeedback??q?.feedback??q?.[6]??[], qu=q=>q?.sourceUrl??q?.url??q?.[5]??'', qr=q=>q?.reference??q?.source??q?.[4]??'';
 
 const SRC={
@@ -275,7 +255,20 @@ function clearAllAnalyticsStores(){
  if(errors.length){const e=cleanupError('analytics',errors.map(x=>x.message).join(' | '));e.causes=errors;throw e}
  return Object.freeze({assessment:results.assessment.removed,learning:results.learning.removed,total:results.assessment.removed+results.learning.removed,verified:true})
 }
-function clearTrainingExtrasStores(){return clearMatchingStores('training extras',k=>k===REVIEW_KEY||k===LEGACY_REVIEW||k===SIGN_KEY)}
+function runtimeLearnerToken(raw){
+ const id=String(raw||'anonymous'),scope=window.MM_LEARNER_SCOPE;
+ if(scope&&typeof scope.legacyTokenFor==='function')return scope.legacyTokenFor(id);
+ let h=2166136261;for(const ch of id){h^=ch.charCodeAt(0);h=Math.imul(h,16777619)}return (h>>>0).toString(36)
+}
+function trainingKey(base,learnerId){
+ const id=learnerId==null?(typeof db!=='undefined'?db?.activeUser:null):learnerId;
+ return `${base}::${runtimeLearnerToken(String(id||'anonymous'))}`
+}
+function readTraining(base,d,learnerId){try{const x=JSON.parse(localStorage.getItem(trainingKey(base,learnerId))||'');return obj(x)?x:d}catch(_){return d}}
+function clearTrainingExtrasStores(){
+ const keys=[trainingKey(REVIEW_KEY),trainingKey(SIGN_KEY),REVIEW_KEY,LEGACY_REVIEW,SIGN_KEY];
+ return clearMatchingStores('training extras',k=>keys.includes(k))
+}
 function cancelActiveExam(){
  try{if(typeof activeExam!=='undefined')activeExam=null}catch(_){}
  try{window.activeExam=null}catch(_){}
@@ -291,7 +284,7 @@ function read(k,d){try{const x=JSON.parse(localStorage.getItem(k)||'');return ob
 function restoreSnapshot(before){let failed=false;for(const [k,v] of Object.entries(before)){try{v===null?localStorage.removeItem(k):localStorage.setItem(k,v)}catch(_){failed=true}}return !failed}
 function cleanupFailureMessage(action,rolledBack=true){return `${action} was not completed because local analytics/training cleanup could not be fully verified.${rolledBack?' Existing learner progress was kept.':''} Some old analytics may already have been removed. Clear this app/site data before handing the same browser profile to another learner if the warning persists.`}
 
-window.exportData=function(){try{const p=JSON.parse(JSON.stringify(db));p.backupFormat='mouldmaster-backup-v2';p.trainingExtras={version:2,spacedReview:cleanReview(read(REVIEW_KEY,{items:{}})),practicalSignoff:cleanSign(read(SIGN_KEY,{}))};const blob=new Blob([JSON.stringify(p,null,2)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='mouldmaster-progress.json';a.click();setTimeout(()=>URL.revokeObjectURL(a.href),0);window.toast?.('Backup exported with review and sign-off data')}catch(e){alert('Backup could not be created on this device.')}};
+window.exportData=function(){try{const p=JSON.parse(JSON.stringify(db));p.backupFormat='mouldmaster-backup-v2';p.trainingExtras={version:3,scope:'active-learner',learnerId:String(db.activeUser||''),spacedReview:cleanReview(readTraining(REVIEW_KEY,{items:{}})),practicalSignoff:cleanSign(readTraining(SIGN_KEY,{}))};const blob=new Blob([JSON.stringify(p,null,2)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='mouldmaster-progress.json';a.click();setTimeout(()=>URL.revokeObjectURL(a.href),0);window.toast?.('Backup exported with review and sign-off data')}catch(e){alert('Backup could not be created on this device.')}};
 
 window.importData=function(file){
  if(!file)return;
@@ -319,12 +312,13 @@ window.importData=function(file){
    const extras=obj(x.trainingExtras)?x.trainingExtras:{};
    const cleanR=cleanReview(extras.spacedReview||{items:{}}),cleanS=cleanSign(extras.practicalSignoff||{});
    const proposed={activeUser:active,users};
-   const writes={mouldmasterProDB:JSON.stringify(proposed),[REVIEW_KEY]:JSON.stringify(cleanR),[SIGN_KEY]:JSON.stringify(cleanS)};
-   const keys=[...Object.keys(writes),LEGACY_REVIEW],before={};
+   const reviewKey=trainingKey(REVIEW_KEY,active),signKey=trainingKey(SIGN_KEY,active);
+   const writes={mouldmasterProDB:JSON.stringify(proposed),[reviewKey]:JSON.stringify(cleanR),[signKey]:JSON.stringify(cleanS)};
+   const keys=[...Object.keys(writes),REVIEW_KEY,LEGACY_REVIEW,SIGN_KEY],before={};
    keys.forEach(k=>before[k]=localStorage.getItem(k));
    try{
     for(const [k,v] of Object.entries(writes))localStorage.setItem(k,v);
-    localStorage.removeItem(LEGACY_REVIEW);
+    localStorage.removeItem(REVIEW_KEY);localStorage.removeItem(LEGACY_REVIEW);localStorage.removeItem(SIGN_KEY);
     clearAllAnalyticsStores();
    }catch(storageError){
     const rolledBack=restoreSnapshot(before);
@@ -360,7 +354,7 @@ const baseReset=window.resetData;if(typeof baseReset==='function')window.resetDa
 };
 labelLearnerReset();
 
-try{if(!localStorage.getItem(REVIEW_KEY)&&localStorage.getItem(LEGACY_REVIEW))localStorage.setItem(REVIEW_KEY,JSON.stringify({items:{}}))}catch(_){}
-window.MM_TRAINING_DATA_BRIDGE={version:'2026.09.15.5',cleanupFailureCode:ANALYTICS_CLEANUP_CODE,canonicalLearnerId,clearAssessmentAnalyticsStores,clearLearningAnalyticsStores,clearAllAnalyticsStores,clearTrainingExtrasStores,cancelActiveExam};
+// Historical device-global review/sign-off ownership is ambiguous. Never adopt it into a learner scope.
+window.MM_TRAINING_DATA_BRIDGE={version:'2026.09.24.6',cleanupFailureCode:ANALYTICS_CLEANUP_CODE,canonicalLearnerId,clearAssessmentAnalyticsStores,clearLearningAnalyticsStores,clearAllAnalyticsStores,clearTrainingExtrasStores,cancelActiveExam};
 })();
 /* <<< training-qa-fix.js */

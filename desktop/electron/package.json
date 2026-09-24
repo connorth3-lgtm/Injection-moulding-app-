@@ -407,6 +407,10 @@
         "to": "mouldmaster/service-worker.js"
       },
       {
+        "from": "../../repair.html",
+        "to": "mouldmaster/repair.html"
+      },
+      {
         "from": "../../privacy.html",
         "to": "mouldmaster/privacy.html"
       },

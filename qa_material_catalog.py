@@ -300,7 +300,7 @@ need("./data/materials/" not in service_worker and "./data/runtime-domain-manife
 # Desktop remains integrity-verified while allowing only explicitly allow-listed
 # safe relative nested paths.
 desktop_main = (ROOT / "desktop/electron/src/main.cjs").read_text(encoding="utf-8")
-need("safeRelativeAsset" in desktop_main and "allowedFiles.has(name)" in desktop_main, "desktop nested domain serving is not allow-list constrained")
+need("safeRelativeAsset" in desktop_main and "Object.prototype.hasOwnProperty.call(expectedFiles, name)" in desktop_main, "desktop nested domain serving is not integrity-manifest allow-list constrained")
 integrity_generator = (ROOT / "desktop/electron/scripts/generate-integrity.cjs").read_text(encoding="utf-8")
 for required in ["src/domains/domain-bootstrap.js", "runtime-domain-manifest.json", "src/domains/engineering/engineering-store.js", "src/domains/materials/material-registry.js", "src/domains/shell/product-areas.js", "material-catalog-v1.json"]:
     need(required in integrity_generator, f"desktop integrity generation missing {required}")

@@ -91,6 +91,7 @@ function sandbox(){
   const unwrapped=JSON.parse(await t.baseImports[0].text());
   assert.strictEqual(unwrapped.backupFormat,'mouldmaster-backup-v2');
   assert.strictEqual(unwrapped.activeUser,'learner-a');
+  assert.strictEqual(unwrapped.users['learner-a'].name,'Learner A');
 
   const legacy={activeUser:'legacy',users:{legacy:{id:'legacy',name:'Legacy learner'}},backupFormat:'mouldmaster-backup-v2'};
   const legacyFile={size:JSON.stringify(legacy).length,text:async()=>JSON.stringify(legacy)};

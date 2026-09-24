@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
-  "release": "2026.09.18.3",
-  "commit": "9ff71536215d88f60ce8a3fbdc59fc3f0874b52f",
+  "release": "2026.09.24.14",
+  "commit": "c8ac878ebe6ae2e9d25698a305b10b2726dadee9",
   "browser": "chromium via @playwright/test 1.55.0",
   "maxDiffPixels": 12,
   "viewports": [
@@ -39,5 +39,5 @@
     "book-late",
     "book-trace"
   ],
-  "policy": "2026.09.18.3 deliberately adds the governed Standards & readiness entry to the mobile More surface and current Book evidence/readiness content. The pinned visual commit is the retained exact public-byte candidate reviewed for this release; maxDiffPixels remains strict. Physical-device and real-AT evidence remain separate fresh gates."
+  "policy": "2026.09.24.14 retains the governed learner UI and lesson presentation now exercised by the complete Chromium/WebKit regression suites. This exact PR head is the reviewed visual candidate; maxDiffPixels remains strict for subsequent changes. Physical-device and real-AT evidence remain separate fresh gates."
 }

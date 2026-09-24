@@ -160,25 +160,17 @@ function processChoiceCorrect(id,step,choiceIndex){
 function installCoreHooks(){
   if(window.__MM_ANALYTICS_RUNTIME_HOOKS__)return;
   R.after('renderLesson',()=>{try{if(typeof currentView==='undefined'||currentView==='lesson')startLessonSession()}catch(_){}});
+  // Completion is not a Runtime V2 core slot. Derive it from the canonical render lifecycle:
+  // completeLesson updates user.completed before renderLesson, so this remains additive and owner-safe.
+  const completionSeen=new Set();
+  R.after('renderLesson',()=>{try{const id=lessonId();if(!id)return;const done=Array.isArray(user?.completed)&&user.completed.map(String).includes(String(id));if(done&&!completionSeen.has(String(id))){completionSeen.add(String(id));record('lesson_complete',{module:'lesson',id})}}catch(_){}});
   R.before('switchView',id=>{if(id!=='lesson')closeLessonSession('view-change')});
   R.after('switchView',(_out,id)=>{if(id==='lesson')startLessonSession()});
   R.registerModule('learning-analytics-core-hooks',{version:VERSION,type:'runtime-v2-lifecycle-hooks'});
   window.__MM_ANALYTICS_RUNTIME_HOOKS__=true;
-  try{
-    if(typeof goLesson==='function'&&!goLesson.__mmAnalytics){
-      const base=goLesson;const wrapped=function(id){closeLessonSession('lesson-change');const r=base.apply(this,arguments);startLessonSession();return r};wrapped.__mmAnalytics=true;goLesson=wrapped;window.goLesson=wrapped;
-    }
-  }catch(_){}
-  try{
-    if(typeof window.mmCompleteAndContinue==='function'&&!window.mmCompleteAndContinue.__mmAnalytics){
-      const base=window.mmCompleteAndContinue;const wrapped=function(id){let was=false;try{was=Array.isArray(user?.completed)&&user.completed.includes(id)}catch(_){}closeLessonSession('complete');if(!was)record('lesson_complete',{module:'lesson',id:String(id)});const r=base.apply(this,arguments);try{if(typeof currentView==='undefined'||currentView==='lesson')startLessonSession()}catch(_){}return r};wrapped.__mmAnalytics=true;window.mmCompleteAndContinue=wrapped;
-    }
-  }catch(_){}
-  try{
-    if(typeof completeLesson==='function'&&!completeLesson.__mmAnalytics){
-      const base=completeLesson;const wrapped=function(id){let was=false;try{was=Array.isArray(user?.completed)&&user.completed.includes(id)}catch(_){}closeLessonSession('complete');const r=base.apply(this,arguments);if(!was)record('lesson_complete',{module:'lesson',id:String(id)});startLessonSession();return r};wrapped.__mmAnalytics=true;completeLesson=wrapped;window.completeLesson=wrapped;
-    }
-  }catch(_){}
+  // Core lesson/view analytics are owned by Runtime V2 lifecycle hooks above.
+  // Do not replace non-core navigation/completion globals here; wrapper chains bypass
+  // the canonical one-owner runtime boundary and make composition order-dependent.
 }
 
 function handlePracticeClick(e){
@@ -211,10 +203,6 @@ function ensureNav(){
   const b=document.createElement('button');b.type='button';b.dataset.mmLearningInsights='1';b.innerHTML='◫ <span>Learning insights</span>';
   const anchor=nav.querySelector('button[data-view="profile"]')||nav.lastElementChild;if(anchor)anchor.insertAdjacentElement('beforebegin',b);else nav.appendChild(b);
   b.addEventListener('click',e=>{e.preventDefault();e.stopImmediatePropagation();openInsights()})
-}
-function patchMobileMore(){
-  if(window.__MM_LEARNING_INSIGHTS_MORE__||typeof window.openMobileMenu!=='function')return;const base=window.openMobileMenu;
-  window.openMobileMenu=function(){const r=base.apply(this,arguments);requestAnimationFrame(()=>{const grid=document.querySelector('#modal .modal-card .grid2');if(!grid||grid.querySelector('[data-mm-learning-insights-menu]'))return;const b=document.createElement('button');b.type='button';b.className='quick-action';b.dataset.mmLearningInsightsMenu='1';b.innerHTML='<span class="icon">◫</span><b>Learning insights</b><small>See local learning progress and retry trends.</small>';b.addEventListener('click',()=>{try{window.closeModal?.()}catch(_){}openInsights()});grid.appendChild(b)});return r};window.__MM_LEARNING_INSIGHTS_MORE__=true
 }
 function hideOtherViews(){document.querySelectorAll('.view').forEach(v=>v.classList.add('hidden'))}
 function markNav(){document.querySelectorAll('#nav button').forEach(b=>b.classList.remove('active'));document.querySelector('[data-mm-learning-insights]')?.classList.add('active')}
@@ -263,7 +251,7 @@ function renderInsights(){
 }
 function openInsights(){closeLessonSession('insights');ensureStyle();const host=ensureSection();if(!host)return;hideOtherViews();host.classList.remove('hidden');markNav();setHeader();renderInsights();window.scrollTo?.({top:0,behavior:'smooth'})}
 
-function install(){ensureStyle();ensureSection();ensureNav();patchMobileMore();installCoreHooks()}
+function install(){ensureStyle();ensureSection();ensureNav();installCoreHooks()}
 
 document.addEventListener('click',e=>{handlePracticeClick(e);const t=e.target.closest?.('[data-la-export],[data-la-clear]');if(t?.hasAttribute('data-la-export')){try{exportAnonymousSummary()}catch(err){window.toast?.(err?.message||String(err))}}if(t?.hasAttribute('data-la-clear'))clearCurrentAnalytics()});
 document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='hidden')pauseLesson();else touchActivity()});
@@ -271,7 +259,7 @@ window.addEventListener('beforeunload',()=>{closeLessonSession('unload');abandon
 document.addEventListener('pointerdown',touchActivity,{passive:true});document.addEventListener('keydown',touchActivity);document.addEventListener('scroll',touchActivity,{passive:true});
 
 let queued=false;function schedule(){if(queued)return;queued=true;(window.requestAnimationFrame||setTimeout)(()=>{queued=false;install()},0)}
-const observer=new MutationObserver(schedule);if(document.documentElement)observer.observe(document.documentElement,{childList:true,subtree:true});install();window.addEventListener('load',schedule);
+install();window.addEventListener('load',schedule);window.addEventListener?.('mm:domains-ready',schedule);window.MM_APP_SHELL?.events?.onRender?.('profile',schedule);window.MM_APP_SHELL?.events?.onViewChange?.(schedule);
 try{if(typeof currentView!=='undefined'&&currentView==='lesson')startLessonSession()}catch(_){}
 
 window.MM_LEARNING_ANALYTICS={version:VERSION,record,summary:()=>aggregate(eventsFor()),open:openInsights,canExportCrossProfile:isInstructor,minimumAggregateProfiles:MIN_EXPORT_PROFILES,storageHealth:()=>({...storageHealth}),scope:'Learner-scoped local analytics only; instructor export is cohort-level aggregate only with a minimum profile threshold; no per-profile rows, names, hashed learner tokens, notes, free text, assessment answers or network upload. Core render/view lifecycle integration uses Runtime V2 hooks rather than global wrapper replacement.'};

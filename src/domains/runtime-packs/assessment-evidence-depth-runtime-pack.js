@@ -348,7 +348,9 @@ function enrich(){const article=document.querySelector?.('#lesson article.lesson
  if(remaining.length){const block=document.createElement('div');block.className='mm-lesson-evidence-depth-links';block.innerHTML=remaining.map(linkHtml).join('');target.appendChild(block)}
  const p=document.createElement('p');p.dataset.mmEvidenceBoundary='depth';p.textContent='These references support mechanisms, study methods and evidence discipline; they are not universal production recipes. Verify the exact resin grade, machine and mould documentation, approved site procedures, product requirements and applicable law for real work.';target.appendChild(p);target.dataset.mmLessonEvidenceExpanded='1';target.dataset.mmLessonEvidenceDepth=VERSION}
 let queued=false;function schedule(){if(queued)return;queued=true;(window.requestAnimationFrame||setTimeout)(()=>{queued=false;enrich()},0)}
-if(typeof MutationObserver!=='undefined'&&document.documentElement)new MutationObserver(schedule).observe(document.documentElement,{subtree:true,childList:true});
+window.addEventListener?.('mm:domains-ready',schedule);
+window.MM_APP_SHELL?.events?.onRender?.('lesson',schedule);
+window.MM_APP_SHELL?.events?.onViewChange?.(id=>{if(id==='lesson')schedule()});
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',()=>setTimeout(schedule,0));else setTimeout(schedule,0);
 window.MM_LESSON_EVIDENCE_AUDIT={version:VERSION,curatedSources:CURATED,rules:RULES,topicSources,fallbackSources,lessonSources,auditLesson,auditAll};
 })();
@@ -430,7 +432,7 @@ const R=window.MM_RUNTIME_V2||(HEADLESS_AUDIT?Object.freeze({after:()=>()=>{},re
 if(!R||typeof R.after!=='function')throw new Error('assessment-evidence-approval.js requires runtime-v2.js');
 const APPROVED_INPUTS={
  'MouldMaster_Core_App.html':'c6b258ccd37d98b2f591f538b34eb33c7705dda6',
- 'training-upgrade.js':'ba3ed5cdab181e11359c2aff9f2dfa4d94b80cbb',
+ 'training-upgrade.js':'ea6ee84e69c4d5ed60776f2022f1bc9462425ea2',
  'assessment-deep-dive.js':'8f41edb8e855f1b3f8f2277873b7700aa1d4bf29',
  'assessment-answer-cue-fix.js':'9a6ef14f5eac1e127255afdd050a6f47f6009587',
  'assessment-quality-suite.js':'2f311bf1349d9c3ba4e5b54958efd3627c98991b',
