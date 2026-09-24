@@ -147,11 +147,8 @@ function enhanceRevisionDetails(){
 function addStyles(){if(document.getElementById('mm-final-assessment-style'))return;const s=document.createElement('style');s.id='mm-final-assessment-style';s.textContent='.mm-revision-detail{margin-top:8px;padding:8px 10px;border-left:3px solid #55d6be;background:#0b192a;border-radius:6px;font-size:11.5px;line-height:1.45}.mm-revision-detail b{color:#72e6cd}';document.head.appendChild(s)}
 
 installAnalyticsExportPatch();addStyles();
-const runtime=window.MM_RUNTIME_V2;
-if(runtime?.after&&runtime?.before){runtime.after('startExam',()=>setTimeout(initExposureTiming,0));runtime.before('gradeExam',persistExposureTiming);runtime.after('gradeExam',()=>setTimeout(()=>{enhanceRevisionDetails();rewriteTimingPanel()},20))}else{
- const baseStart=window.startExam;window.startExam=function(){const r=baseStart.apply(this,arguments);setTimeout(initExposureTiming,0);return r};
- const baseGrade=window.gradeExam;window.gradeExam=function(){persistExposureTiming();const r=baseGrade.apply(this,arguments);setTimeout(()=>{enhanceRevisionDetails();rewriteTimingPanel()},20);return r};
-}
+const baseStart=window.startExam;window.startExam=function(){const r=baseStart.apply(this,arguments);setTimeout(initExposureTiming,0);return r};
+const baseGrade=window.gradeExam;window.gradeExam=function(){persistExposureTiming();const r=baseGrade.apply(this,arguments);setTimeout(()=>{enhanceRevisionDetails();rewriteTimingPanel()},20);return r};
 const baseRender=typeof window.renderExams==='function'?window.renderExams:null;if(baseRender)window.renderExams=function(){const r=baseRender.apply(this,arguments);setTimeout(rewriteTimingPanel,20);return r};
 
 D.assessmentQA=D.assessmentQA||{};D.assessmentQA.finalHardening={version:VERSION,bankVersion:BANK_VERSION,stableIds:allStableIds().length,revision2Items:Object.keys(REVISION2).length,revision3Items:Object.keys(REVISION3).length,responseTiming:'first meaningful question exposure; hidden-tab time excluded',researchFreshness:'separate DOI resolver QA'};
