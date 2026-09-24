@@ -170,6 +170,8 @@ need("addEventListener?.('mm:domains-ready',scheduleInstall)" in connected_data,
 
 learner_repair=read('learner-ux-repair.js')
 need('new MutationObserver' not in learner_repair,'learner UX repair reintroduced a whole-body mutation observer')
+need('window.getExamQuestions=function' not in learner_repair and 'window.gradeExam=function' not in learner_repair,'learner UX repair reintroduced assessment global wrappers')
+need("R.transform('getExamQuestions'" in learner_repair and "R.after('gradeExam'" in learner_repair,'assessment rotation/result metadata must use Runtime V2 hooks')
 need("after?.('startExam'" in learner_repair,'learner UX repair must use assessment lifecycle for disclosure synchronization')
 need("addEventListener?.('mm:domains-ready'" in learner_repair,'learner UX repair must use domain readiness')
 
