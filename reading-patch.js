@@ -105,7 +105,7 @@
   const run=()=>{enhanceLesson();installStableViewEntry()};
   const boot=()=>{run();loadReadAloud();loadBook();};
   const refresh=()=>requestAnimationFrame(run);
-  window.addEventListener('mm:domains-ready',refresh);
+  window.addEventListener?.('mm:domains-ready',refresh);
   window.MM_APP_SHELL?.events?.onRender?.('lesson',refresh);
   window.MM_APP_SHELL?.events?.onViewChange?.(id=>{if(id==='lesson')refresh()});
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot,{once:true});else boot();
