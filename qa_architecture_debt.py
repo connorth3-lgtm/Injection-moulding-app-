@@ -150,6 +150,14 @@ need("mm:book-render" in book_runtime,'Book runtime must emit explicit render li
 need('new MutationObserver' not in book_trace,'Book claim trace reintroduced a whole-document mutation observer')
 need("addEventListener('mm:book-render'" in book_trace,'Book claim trace must consume explicit Book render lifecycle')
 
+analytics_runtime=read('learning-analytics.js')
+need('new MutationObserver' not in analytics_runtime,'learning analytics reintroduced a whole-document mutation observer')
+need("addEventListener('mm:domains-ready',schedule)" in analytics_runtime,'learning analytics must use explicit readiness lifecycle')
+process_integrity=read('src/domains/process/process-data-integrity.js')
+need('new MutationObserver' not in process_integrity,'process-data integrity reintroduced a whole-document mutation observer')
+need('setInterval(' not in process_integrity and 'setTimeout(installWhenReady,50)' not in process_integrity,'process-data integrity reintroduced startup polling')
+need("addEventListener('mm:domains-ready'" in process_integrity,'process-data integrity must use domain readiness')
+
 ui_polish=read('src/domains/shell/learner-ui-polish.js')
 need('new MutationObserver' not in ui_polish,'learner UI polish reintroduced a whole-body mutation observer')
 need("onRender?.('dashboard',schedule)" in ui_polish and 'onViewChange?.(schedule)' in ui_polish,'learner UI polish must use shell lifecycle events')
