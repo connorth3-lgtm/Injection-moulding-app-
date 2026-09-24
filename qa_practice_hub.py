@@ -58,6 +58,13 @@ if "suggested==='guided-retrieval-and-feedback'||rec?.actionType==='stabilize-re
 if "suggested==='different-practice-format'||rec?.actionType==='evidence-confirmation'" not in hub:
     failures.append("Practice hub no longer maps evidence-confirmation recommendations to varied labs")
 
+# Practice rotation is learner-scoped. If Runtime V2 is unavailable, leave the
+# preference transient rather than sharing one browser-global key across learners.
+if "localStorage.getItem(PRACTICE_ROTATION_KEY)" in hub or "localStorage.setItem(PRACTICE_ROTATION_KEY" in hub:
+    failures.append("Practice rotation must not use unscoped localStorage fallback")
+if "window.MM_RUNTIME_V2?.storage" not in hub:
+    failures.append("Practice rotation learner-scoped Runtime V2 storage contract missing")
+
 # Guard against accidentally turning Practice into an authority or assessment lane.
 for banned in ("validated production recipe", "automatic machine setting", "machine-control authority"):
     if banned.lower() in hub.lower():
