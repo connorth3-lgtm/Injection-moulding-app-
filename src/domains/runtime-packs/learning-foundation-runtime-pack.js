@@ -77,42 +77,17 @@
     try{window.scrollTo({top:0,left:0,behavior:'auto'})}catch(_){window.scrollTo(0,0)}
   }
   function installStableViewEntry(){
-    const current=window.switchView;
-    /* Runtime V2 owns the canonical switchView dispatcher once it is present.
-       Do not wrap that dispatcher from a MutationObserver callback: rebinding a
-       Runtime-owned global recreates wrapper chains and can turn shell adoption
-       into recursive switchView/scrollTo calls. The pre-Runtime wrapper, when
-       installed during initial parsing, is already retained as the captured
-       legacy implementation inside Runtime V2. */
-    if(typeof current!=='function'||current.__mmStableViewEntry||current.__mmRuntimeV2)return false;
-    const wrapped=function(){
-      const active=document.activeElement;
-      if(active&&typeof active.blur==='function')active.blur();
-      const root=document.documentElement;
-      const previousAnchor=root.style.overflowAnchor;
-      const nativeScrollTo=window.scrollTo;
-      root.style.overflowAnchor='none';
-      settleViewTop();
-      window.scrollTo=function(leftOrOptions,top){
-        if(leftOrOptions&&typeof leftOrOptions==='object')return nativeScrollTo.call(window,{...leftOrOptions,behavior:'auto'});
-        return nativeScrollTo.call(window,leftOrOptions,top);
-      };
-      let result;
-      try{result=current.apply(this,arguments)}finally{window.scrollTo=nativeScrollTo}
-      settleViewTop();
-      requestAnimationFrame(()=>requestAnimationFrame(()=>{settleViewTop();root.style.overflowAnchor=previousAnchor}));
-      return result;
-    };
-    wrapped.__mmStableViewEntry=true;
-    wrapped.__mmStableViewEntryBase=current;
-    window.switchView=wrapped;
-    window.__MM_STABLE_VIEW_ENTRY__='2026.09.14.1';
+    const R=window.MM_RUNTIME_V2;
+    if(!R?.before||!R?.after||window.__MM_STABLE_VIEW_ENTRY__)return false;
+    R.before('switchView',()=>{const active=document.activeElement;if(active&&typeof active.blur==='function')active.blur();settleViewTop()});
+    R.after('switchView',()=>{settleViewTop();requestAnimationFrame(()=>requestAnimationFrame(settleViewTop))});
+    window.__MM_STABLE_VIEW_ENTRY__='2026.09.24.5-runtime-hook';
     return true;
   }
   const run=()=>{enhanceLesson();installStableViewEntry()};
   const boot=()=>{run();loadReadAloud();loadBook();};
   const refresh=()=>requestAnimationFrame(run);
-  window.addEventListener('mm:domains-ready',refresh);
+  window.addEventListener?.('mm:domains-ready',refresh);
   window.MM_APP_SHELL?.events?.onRender?.('lesson',refresh);
   window.MM_APP_SHELL?.events?.onViewChange?.(id=>{if(id==='lesson')refresh()});
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot,{once:true});else boot();
