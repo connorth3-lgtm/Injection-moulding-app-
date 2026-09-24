@@ -167,6 +167,8 @@ require("_evaluate_balanced_length" in question_runtime and "hard.remove('correc
 must(real_measured, ["evidenceType:'real-measured'", "decisionCount:CASES.reduce", "Pressure actual values excluded pending unit", "without assigning phase names until an authoritative mapping is found"], "real measured assessment")
 require("throw new Error('Evidence approval coverage failure" not in approval, "incomplete evidence coverage must not crash the learning app")
 require("document.addEventListener('DOMContentLoaded',init)" in training, "training scenario upgrade remains DOMContentLoaded-driven")
+require("MM_RUNTIME_V2?.storage" in training and "scopedStore()?.get?.(k,d)" in training and "scopedStore()?.set?.(k,v)" in training, "training review/sign-off persistence must use learner-scoped Runtime V2 storage")
+require("localStorage.getItem" not in training and "localStorage.setItem" not in training, "training review/sign-off persistence must not fall back to device-global localStorage")
 require("npm_execpath" in sbom and "result.error" in sbom, "desktop SBOM generation must use the npm CLI entry point and report spawn failures")
 require("NamedTemporaryFile" in assessment_qa and "['node','-e',node]" not in assessment_qa, "assessment runtime QA must not exceed OS command-line limits")
 
