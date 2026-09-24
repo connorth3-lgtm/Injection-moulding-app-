@@ -7,8 +7,8 @@
   "providerTemplatesContract": "data/nzqa-provider-evidence-templates-v1.json",
   "issueNumber": 379,
   "candidate": {
-    "sourceSha": "75e43ce9b7a1258a8aaa6ba28ad940915e049529",
-    "runtimeFingerprint": "sha256:0df9c05a03ac9edbd20db8c1a6841a8ab670ada4fb7e9f7f6d23aa66a03855de"
+    "sourceSha": "1b0aa65bb1191b6b63ba8ab7c192c543d9b38024",
+    "runtimeFingerprint": "sha256:e25dc737179e31aa6b2c89ed86092015d1dab5f637ef59fb91e3a01abc49f444"
   },
   "boundary": "Repository readiness, mappings, templates and automated QA do not create NZQA approval, provider accreditation, consent to assess, moderation acceptance, learner competence, workplace competence or qualification award.",
   "requiredGates": [
