@@ -271,7 +271,7 @@ window.addEventListener('beforeunload',()=>{closeLessonSession('unload');abandon
 document.addEventListener('pointerdown',touchActivity,{passive:true});document.addEventListener('keydown',touchActivity);document.addEventListener('scroll',touchActivity,{passive:true});
 
 let queued=false;function schedule(){if(queued)return;queued=true;(window.requestAnimationFrame||setTimeout)(()=>{queued=false;install()},0)}
-install();window.addEventListener('load',schedule);window.addEventListener('mm:domains-ready',schedule);window.MM_APP_SHELL?.events?.onRender?.('profile',schedule);window.MM_APP_SHELL?.events?.onViewChange?.(schedule);
+install();window.addEventListener('load',schedule);window.addEventListener?.('mm:domains-ready',schedule);window.MM_APP_SHELL?.events?.onRender?.('profile',schedule);window.MM_APP_SHELL?.events?.onViewChange?.(schedule);
 try{if(typeof currentView!=='undefined'&&currentView==='lesson')startLessonSession()}catch(_){}
 
 window.MM_LEARNING_ANALYTICS={version:VERSION,record,summary:()=>aggregate(eventsFor()),open:openInsights,canExportCrossProfile:isInstructor,minimumAggregateProfiles:MIN_EXPORT_PROFILES,storageHealth:()=>({...storageHealth}),scope:'Learner-scoped local analytics only; instructor export is cohort-level aggregate only with a minimum profile threshold; no per-profile rows, names, hashed learner tokens, notes, free text, assessment answers or network upload. Core render/view lifecycle integration uses Runtime V2 hooks rather than global wrapper replacement.'};
