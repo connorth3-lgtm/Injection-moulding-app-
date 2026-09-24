@@ -91,6 +91,13 @@ function sandbox(){
   const unwrapped=JSON.parse(await t.baseImports[0].text());
   assert.strictEqual(unwrapped.backupFormat,'mouldmaster-backup-v2');
   assert.strictEqual(unwrapped.activeUser,'learner-a');
+  assert.strictEqual(unwrapped.users['learner-a'].name,'Learner A');
+
+  // Exercise the actual two-layer production composition: the v3 authority unwraps
+  // into the pre-existing strict transactional importer rather than bypassing it.
+  const strictImports=[];
+  const originalBase=t.baseImports.splice(0,t.baseImports.length);
+  assert.strictEqual(originalBase.length,1,'unexpected v3 base-import count before composition check');
 
   const legacy={activeUser:'legacy',users:{legacy:{id:'legacy',name:'Legacy learner'}},backupFormat:'mouldmaster-backup-v2'};
   const legacyFile={size:JSON.stringify(legacy).length,text:async()=>JSON.stringify(legacy)};
