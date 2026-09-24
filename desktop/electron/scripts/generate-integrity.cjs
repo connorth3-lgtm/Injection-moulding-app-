@@ -7,7 +7,7 @@ const ROOT=path.resolve(__dirname,'..','..','..');
 const OUT=path.resolve(__dirname,'..','generated','integrity.json');
 const RUNTIME_MANIFEST='runtime-domain-manifest.json';
 const STATIC_RUNTIME_DIRS=['src/core-runtime'];
-const STATIC_DATA_DIRS=['data/measured-learning','src/domains/learning/book-data'];
+const STATIC_DATA_DIRS=['data/measured-learning','src/domains/learning/book-data','src/domains/quality/data'];
 const REQUIRED_MANIFEST_FILES=[
   'src/domains/engineering/engineering-store.js',
   'src/domains/materials/material-registry.js',
@@ -32,7 +32,7 @@ const BASE_FILES=[
   'source-library.js','measured-evidence-integration.js','measured-evidence-decision.js','measured-learning-library.js','measured-learning-library.css',
   'reference-data.js','reference-data.html','reference-deep-dive.js','reference-research-extension.js','reference-20x-extension.js',
   'reference-2026-expansion.js','reference-sources.js','reference-browser-ui.js','diagnostic-learning-labs.js','material-behaviour-labs.js',
-  'service-worker.js','repair.html','privacy.html','support.html'
+  'src/domains/shell/learner-ui-polish.css','service-worker.js','repair.html','privacy.html','support.html'
 ];
 
 function sha(file){return crypto.createHash('sha256').update(fs.readFileSync(file)).digest('hex')}
