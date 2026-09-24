@@ -2,7 +2,7 @@
 
 Baseline review: **2026-09-18**  
 Source commit: `3e020626205ebdb3c62a155105b6bfb91b8e70df`  
-Current learner-facing web release: **2026.09.24.4**
+Current learner-facing web release: **2026.09.24.5**
 
 This file is generated from `data/health-program-v1.json`. It reports engineering/operations health separately from deliberate external-validation HOLDs.
 
