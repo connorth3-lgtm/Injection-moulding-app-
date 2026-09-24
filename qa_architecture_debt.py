@@ -253,3 +253,5 @@ print(
     f"{len(core_runtime_scripts)} runtime-externalized frozen core scripts with handler bridge folded into final slot; "
     "script-src self-only; script-src-attr none; style-src exact-hash/self-only with style-src-attr none; no unsafe-inline, cssText, setAttribute(style), active inline handlers, remote scripts, unsafe-eval, eval(), or new Function()"
 )
+
+need('window.openMobileMenu=function' not in text('primary-learning-practice-hubs.js'),'practice hubs reintroduced a mobile-menu wrapper; use shell lifecycle/navigation registry')
