@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "bookId": "mouldmaster-book",
-  "version": "2026.09.24.9",
+  "version": "2026.09.24.10",
   "status": "authorized",
   "authorizationType": "governed-book-publication",
   "authorizedAt": "2026-09-14",
@@ -127,7 +127,7 @@
   "workedCasesAuthorization": {
     "status": "authorized",
     "authorizedAt": "2026-09-18",
-    "release": "2026.09.24.9",
+    "release": "2026.09.24.10",
     "ledger": "data/book-worked-engineering-cases-v1.json",
     "caseCount": 10,
     "claimCount": 10,
@@ -139,7 +139,7 @@
   "evidenceEnrichmentAuthorization": {
     "status": "authorized",
     "authorizedAt": "2026-09-18",
-    "release": "2026.09.24.9",
+    "release": "2026.09.24.10",
     "ledger": "data/book-evidence-enrichment-v2.json",
     "ledgerId": "book-evidence-enrichment-2026-09-18-v2",
     "chapterCount": 10,
