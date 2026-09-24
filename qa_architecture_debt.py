@@ -139,6 +139,8 @@ for rel in ['src/domains/shell/product-areas.js','src/domains/governance/standar
 
 reading_patch=read('reading-patch.js')
 need('new MutationObserver' not in reading_patch,'reading patch reintroduced a whole-document mutation observer')
+need('window.switchView=wrapped' not in reading_patch,'reading patch reintroduced a global switchView wrapper')
+need("R.before('switchView'" in reading_patch and "R.after('switchView'" in reading_patch,'stable view entry must use Runtime V2 switchView hooks')
 need("onRender?.('lesson',refresh)" in reading_patch,'reading patch must use lesson render lifecycle')
 lesson_evidence=read('lesson-evidence-depth.js')
 need('new MutationObserver' not in lesson_evidence,'lesson evidence depth reintroduced a whole-document mutation observer')
