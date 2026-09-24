@@ -164,21 +164,7 @@ function installCoreHooks(){
   R.after('switchView',(_out,id)=>{if(id==='lesson')startLessonSession()});
   R.registerModule('learning-analytics-core-hooks',{version:VERSION,type:'runtime-v2-lifecycle-hooks'});
   window.__MM_ANALYTICS_RUNTIME_HOOKS__=true;
-  try{
-    if(typeof goLesson==='function'&&!goLesson.__mmAnalytics){
-      const base=goLesson;const wrapped=function(id){closeLessonSession('lesson-change');const r=base.apply(this,arguments);startLessonSession();return r};wrapped.__mmAnalytics=true;goLesson=wrapped;window.goLesson=wrapped;
-    }
-  }catch(_){}
-  try{
-    if(typeof window.mmCompleteAndContinue==='function'&&!window.mmCompleteAndContinue.__mmAnalytics){
-      const base=window.mmCompleteAndContinue;const wrapped=function(id){let was=false;try{was=Array.isArray(user?.completed)&&user.completed.includes(id)}catch(_){}closeLessonSession('complete');if(!was)record('lesson_complete',{module:'lesson',id:String(id)});const r=base.apply(this,arguments);try{if(typeof currentView==='undefined'||currentView==='lesson')startLessonSession()}catch(_){}return r};wrapped.__mmAnalytics=true;window.mmCompleteAndContinue=wrapped;
-    }
-  }catch(_){}
-  try{
-    if(typeof completeLesson==='function'&&!completeLesson.__mmAnalytics){
-      const base=completeLesson;const wrapped=function(id){let was=false;try{was=Array.isArray(user?.completed)&&user.completed.includes(id)}catch(_){}closeLessonSession('complete');const r=base.apply(this,arguments);if(!was)record('lesson_complete',{module:'lesson',id:String(id)});startLessonSession();return r};wrapped.__mmAnalytics=true;completeLesson=wrapped;window.completeLesson=wrapped;
-    }
-  }catch(_){}
+  // Core lesson/view analytics are owned by Runtime V2 lifecycle hooks above.\n  // Do not replace non-core navigation/completion globals here; wrapper chains bypass\n  // the canonical one-owner runtime boundary and make composition order-dependent.
 }
 
 function handlePracticeClick(e){
