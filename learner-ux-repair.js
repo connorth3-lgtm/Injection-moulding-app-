@@ -217,14 +217,12 @@ function persistAssessmentResultMeta(level){
 }
 function installAssessmentRotation(){
   if(window.__MM_ASSESSMENT_ROTATION_V4__)return;
-  try{window.MM_RUNTIME_V2?.rebind?.('getExamQuestions')}catch(error){console.warn('[MouldMaster assessment] canonical selector rebind unavailable',error)}
-  const base=window.getExamQuestions;
-  if(typeof base!=='function')return;
-  window.getExamQuestions=function(level,region){
+  const R=window.MM_RUNTIME_V2;
+  if(!R?.transform||!R?.after)return;
+  R.transform('getExamQuestions',function(raw,level,region){
     const scope=historyScope(level,region);
     const history=readAssessmentHistory();
     const recent=Array.isArray(history[scope])?history[scope].filter(Array.isArray).slice(0,ASSESSMENT_HISTORY_LIMIT):[];
-    const raw=base.apply(this,arguments);
     if(!Array.isArray(raw)||!raw.length)throw new Error('Assessment question selector returned no questions.');
     const clean=dedupeForm(raw);
     if(clean.length!==raw.length)throw new Error('Assessment question selector returned duplicate or malformed questions.');
@@ -234,15 +232,8 @@ function installAssessmentRotation(){
     writeAssessmentHistory(history);
     window.MM_ACTIVE_QUESTION_FORM=Object.freeze({version:VERSION,bankVersion:ASSESSMENT_BANK_VERSION,formFingerprint:formFingerprint(chosen),level:String(level||''),region:String(region||'ALL'),questionKeys:Object.freeze(keys.slice())});
     return chosen;
-  };
-  const baseGrade=window.gradeExam;
-  if(typeof baseGrade==='function'){
-    window.gradeExam=function(level){
-      const result=baseGrade.apply(this,arguments);
-      persistAssessmentResultMeta(level);
-      return result;
-    };
-  }
+  });
+  R.after('gradeExam',function(_result,level){persistAssessmentResultMeta(level)});
   window.__MM_ASSESSMENT_ROTATION_V4__=Object.freeze({version:VERSION,bankVersion:ASSESSMENT_BANK_VERSION,historyKey:ASSESSMENT_HISTORY_KEY,resultMetaKey:ASSESSMENT_RESULT_META_KEY,baseCallsPerAttempt:1,historyLimit:ASSESSMENT_HISTORY_LIMIT,selectionPolicy:'one canonical generated form per learner attempt; only the opening order may be adjusted to avoid an immediate repeat'});
 }
 
