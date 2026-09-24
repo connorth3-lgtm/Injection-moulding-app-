@@ -11,7 +11,7 @@
   const WORKED_CASES_PATH=`${BOOK_DATA}book-worked-engineering-cases-v1.json`;
   const ENRICHMENT_PATH=`${BOOK_DATA}book-evidence-enrichment-v2.json`;
   const BATCH_PATHS=[`${BOOK_DATA}book-authored-foundations-v1.json`,`${BOOK_DATA}book-evidence-registry-v1.json`,`${BOOK_DATA}book-chapters-materials-machine-v1.json`,`${BOOK_DATA}book-authored-remaining-v1.json`];
-  const AUTH_GIT_BLOB_SHA1='c3afed946536d5da983bdf0b65d213b3daee1c7b';
+  const AUTH_GIT_BLOB_SHA1='5eae7482395a91e68fc5e421e1be267c7e2bf109';
   const REQUIRED_INTEGRITY_FILES=['book-manifest-v1.json','book-sme-review-v1.json','book-qualification-resolution-all-v1.json','book-claim-resolution-high-risk-v1.json','book-authored-foundations-v1.json','book-evidence-registry-v1.json','book-chapters-materials-machine-v1.json','book-authored-remaining-v1.json','book-worked-engineering-cases-v1.json','book-evidence-enrichment-v2.json'];
   const CANONICAL_SOURCE_URLS=Object.freeze({
     'OUBELLAOUCH-2024-FIBRE-ORIENTATION':'https://doi.org/10.1007/s00170-024-12990-5',
