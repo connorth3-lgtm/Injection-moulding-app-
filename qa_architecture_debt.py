@@ -166,6 +166,11 @@ connected_data=read('data-integration-runtime.js')
 need('new MutationObserver' not in connected_data,'connected process-data runtime reintroduced a whole-document mutation observer')
 need("addEventListener('mm:domains-ready',scheduleInstall)" in connected_data,'connected process-data runtime must use domain readiness')
 
+learner_repair=read('learner-ux-repair.js')
+need('new MutationObserver' not in learner_repair,'learner UX repair reintroduced a whole-body mutation observer')
+need("after?.('startExam'" in learner_repair,'learner UX repair must use assessment lifecycle for disclosure synchronization')
+need("addEventListener('mm:domains-ready'" in learner_repair,'learner UX repair must use domain readiness')
+
 ui_polish=read('src/domains/shell/learner-ui-polish.js')
 need('new MutationObserver' not in ui_polish,'learner UI polish reintroduced a whole-body mutation observer')
 need("onRender?.('dashboard',schedule)" in ui_polish and 'onViewChange?.(schedule)' in ui_polish,'learner UI polish must use shell lifecycle events')
