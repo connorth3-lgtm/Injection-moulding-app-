@@ -3,7 +3,11 @@
 'use strict';
 const REVIEW_KEY='mm_spaced_review_v2', SIGN_KEY='mm_practical_signoff_v1', DAY=86400000;
 const esc=v=>String(v??'').replace(/[&<>\"]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','\"':'&quot;'}[m]));
-// Review scheduling and practical sign-off can contain learner-specific progress, supervisor identity and notes.\n// Keep them inside Runtime V2 learner scope; never fall back to historical device-global keys.\nconst scopedStore=()=>window.MM_RUNTIME_V2?.storage||null;\nconst load=(k,d)=>{try{const x=scopedStore()?.get?.(k,d);return x&&typeof x==='object'?x:d}catch(_){return d}};\nconst save=(k,v)=>{try{return !!scopedStore()?.set?.(k,v)}catch(_){return false}};
+// Review scheduling and practical sign-off can contain learner-specific progress, supervisor identity and notes.
+// Keep them inside Runtime V2 learner scope; never fall back to historical device-global keys.
+const scopedStore=()=>window.MM_RUNTIME_V2?.storage||null;
+const load=(k,d)=>{try{const x=scopedStore()?.get?.(k,d);return x&&typeof x==='object'?x:d}catch(_){return d}};
+const save=(k,v)=>{try{return !!scopedStore()?.set?.(k,v)}catch(_){return false}};
 const qt=q=>q?.q??q?.[0]??'', qo=q=>q?.options??q?.[1]??[], qc=q=>Number(q?.correct??q?.[2]??0), qw=q=>q?.explanation??q?.why??q?.[3]??'', qfb=q=>q?.optionFeedback??q?.feedback??q?.[6]??[], qu=q=>q?.sourceUrl??q?.url??q?.[5]??'', qr=q=>q?.reference??q?.source??q?.[4]??'';
 
 const SRC={
