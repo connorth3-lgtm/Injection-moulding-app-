@@ -22,6 +22,10 @@ const tooMany={activeUser:'learner-0',users:{}};for(let i=0;i<501;i++)tooMany.us
 assert.throws(()=>validate(JSON.stringify(tooMany)),/Too many learners/);
 assert.throws(()=>validate(JSON.stringify({activeUser:'toString',users:{}})),/Missing active learner/);
 assert.throws(()=>validate(JSON.stringify({activeUser:'learner-1',users:{'learner-1':{id:'different'}}})),/mismatch/);
+let forwarded=0;sandbox.importData=function(){forwarded++};sandbox.window.importData=sandbox.importData;sandbox.MM_LEARNER_MODEL.installImportGuard();
+const v3={backupFormat:'mouldmaster-backup-v3',integrity:{algorithm:'SHA-256',canonicalization:'json-stable-v1',scope:'backupFormat+payload',digest:'0'.repeat(64)},payload:{backupFormat:'mouldmaster-backup-v2',activeUser:'learner-1',users:{'learner-1':{id:'learner-1'}}}};
+
+
 const guardSrc=fs.readFileSync('src/domains/learning/learner-model.js','utf8');
-assert(guardSrc.includes('__mmImportIntegrityGuard'));assert(guardSrc.includes('Object.prototype.hasOwnProperty.call(x.users,x.activeUser)'));
+assert(guardSrc.includes("parsed?.backupFormat==='mouldmaster-backup-v3'"));assert(guardSrc.includes('__mmImportIntegrityGuard'));assert(guardSrc.includes('Object.prototype.hasOwnProperty.call(x.users,x.activeUser)'));
 console.log('Import identity integrity QA passed: canonical IDs are aligned, oversized registries fail closed before mutation, own-property activation is required, embedded IDs must match, and the final learning-domain runtime guard prevents packed legacy code from reintroducing truncation.');
