@@ -28,11 +28,14 @@ function clearAllAnalyticsStores(){
  if(errors.length){const e=cleanupError('analytics',errors.map(x=>x.message).join(' | '));e.causes=errors;throw e}
  return Object.freeze({assessment:results.assessment.removed,learning:results.learning.removed,total:results.assessment.removed+results.learning.removed,verified:true})
 }
+function runtimeLearnerToken(raw){
+ const id=String(raw||'anonymous'),scope=window.MM_LEARNER_SCOPE;
+ if(scope&&typeof scope.legacyTokenFor==='function')return scope.legacyTokenFor(id);
+ let h=2166136261;for(const ch of id){h^=ch.charCodeAt(0);h=Math.imul(h,16777619)}return (h>>>0).toString(36)
+}
 function trainingKey(base,learnerId){
- const scope=window.MM_LEARNER_SCOPE;
- if(!scope||typeof scope.legacyTokenFor!=='function')throw new Error('Learner scope unavailable');
  const id=learnerId==null?(typeof db!=='undefined'?db?.activeUser:null):learnerId;
- return `${base}::${scope.legacyTokenFor(String(id||'anonymous'))}`
+ return `${base}::${runtimeLearnerToken(String(id||'anonymous'))}`
 }
 function readTraining(base,d,learnerId){try{const x=JSON.parse(localStorage.getItem(trainingKey(base,learnerId))||'');return obj(x)?x:d}catch(_){return d}}
 function clearTrainingExtrasStores(){
