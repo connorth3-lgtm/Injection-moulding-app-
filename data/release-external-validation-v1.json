@@ -26,8 +26,8 @@
     "reviewPacket": "qa/ACCESSIBILITY_REAL_AT_2026.09.24.9.md",
     "candidate": {
       "release": "2026.09.24.9",
-      "sourceSha": "c9a911463852b66e60f9a5da0ddb4385f16c8939",
-      "runtimeFingerprint": "sha256:51ec0f267f7c4ba05b24bffbebb060e188c3217b3d71494712cb0eb23e43f111"
+      "sourceSha": "7839cd6835e871323e68f2ce55c2864a9c25e759",
+      "runtimeFingerprint": "sha256:4c3320d968d542041c8916ffcf44cbc0afe2cbbc3ca463a00945cde890ae9224"
     },
     "required": "Release-specific human NVDA and VoiceOver validation across the governed matrix."
   },
@@ -37,14 +37,14 @@
     "reviewPacket": "qa/PWA_PHYSICAL_DEVICE_2026.09.24.9.md",
     "currentCandidate": {
       "release": "2026.09.24.9",
-      "sourceSha": "c9a911463852b66e60f9a5da0ddb4385f16c8939",
-      "runtimeFingerprint": "sha256:51ec0f267f7c4ba05b24bffbebb060e188c3217b3d71494712cb0eb23e43f111",
-      "candidateRunId": 35962128914,
+      "sourceSha": "7839cd6835e871323e68f2ce55c2864a9c25e759",
+      "runtimeFingerprint": "sha256:4c3320d968d542041c8916ffcf44cbc0afe2cbbc3ca463a00945cde890ae9224",
+      "candidateRunId": 35964180995,
       "candidateWorkflow": "Pre-merge Public Candidate",
-      "artifactId": 10792577801,
-      "artifactName": "physical-pwa-candidate-c9a911463852b66e60f9a5da0ddb4385f16c8939",
-      "artifactDigest": "sha256:afd28aab9e9d1bc900007bc0677997208b72a542a5e6abf4dbddd1e1e3dad951",
-      "artifactExpiresAt": "2026-10-24T05:56:46Z"
+      "artifactId": 10793965598,
+      "artifactName": "physical-pwa-candidate-7839cd6835e871323e68f2ce55c2864a9c25e759",
+      "artifactDigest": "sha256:b582022c84c0607d327bdc83f97ccc0dded23143c52e70315ca5ca7306e4eb77",
+      "artifactExpiresAt": "2026-10-24T06:32:38Z"
     },
     "required": "Current-release physical iOS/iPadOS and Android install/update/offline validation. Prior release waivers do not authorize this release."
   },
@@ -104,8 +104,8 @@
     "reviewPacket": "qa/NZQA_EXTERNAL_VALIDATION_2026.09.24.9.md",
     "required": "Genuine provider ownership, stakeholder need, provider-approved design, authorised assessment/internal moderation, consent-to-assess/CMR confirmation, applicable national moderation, workplace evidence and provider-controlled review/change evidence for the exact governed release.",
     "candidate": {
-      "sourceSha": "c9a911463852b66e60f9a5da0ddb4385f16c8939",
-      "runtimeFingerprint": "sha256:51ec0f267f7c4ba05b24bffbebb060e188c3217b3d71494712cb0eb23e43f111"
+      "sourceSha": "7839cd6835e871323e68f2ce55c2864a9c25e759",
+      "runtimeFingerprint": "sha256:4c3320d968d542041c8916ffcf44cbc0afe2cbbc3ca463a00945cde890ae9224"
     }
   }
 }
