@@ -137,6 +137,13 @@ for rel in ['src/domains/shell/product-areas.js','src/domains/governance/standar
     need('setInterval(' not in source,f'{rel} reintroduced startup polling')
     need("mm:domains-ready" in source,f'{rel} must bind deferred installation to domain readiness')
 
+reading_patch=read('reading-patch.js')
+need('new MutationObserver' not in reading_patch,'reading patch reintroduced a whole-document mutation observer')
+need("onRender?.('lesson',refresh)" in reading_patch,'reading patch must use lesson render lifecycle')
+lesson_evidence=read('lesson-evidence-depth.js')
+need('new MutationObserver' not in lesson_evidence,'lesson evidence depth reintroduced a whole-document mutation observer')
+need("onRender?.('lesson',schedule)" in lesson_evidence,'lesson evidence depth must use lesson render lifecycle')
+
 ui_polish=read('src/domains/shell/learner-ui-polish.js')
 need('new MutationObserver' not in ui_polish,'learner UI polish reintroduced a whole-body mutation observer')
 need("onRender?.('dashboard',schedule)" in ui_polish and 'onViewChange?.(schedule)' in ui_polish,'learner UI polish must use shell lifecycle events')
