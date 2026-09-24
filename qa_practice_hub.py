@@ -65,6 +65,19 @@ if "localStorage.getItem(PRACTICE_ROTATION_KEY)" in hub or "localStorage.setItem
 if "window.MM_RUNTIME_V2?.storage" not in hub:
     failures.append("Practice rotation learner-scoped Runtime V2 storage contract missing")
 
+# Exercise the scoped rotation store contract, including fail-closed transient behavior.
+import subprocess
+node=r'''
+const fs=require('fs'),vm=require('vm');
+const source=fs.readFileSync('primary-learning-practice-hubs.js','utf8');
+const cut=source.slice(source.indexOf('function practiceStore()'),source.indexOf('function bind(root)'));
+function run(storage){const sandbox={window:{MM_RUNTIME_V2:storage?{storage}:undefined},D:{scenarios:[1,2,3,4]},Date:{now:()=>86400000*10},Number,Array,Math};vm.createContext(sandbox);vm.runInContext(cut+';this.out={readPracticeRotation,writePracticeRotation,nextScenarioIndex};',sandbox);return sandbox.out}
+const none=run(null);if(!Number.isNaN(none.readPracticeRotation())||none.writePracticeRotation(2)!==false)throw new Error('missing Runtime V2 storage must stay transient');
+const rows=new Map(),store={get:(k,d)=>rows.has(k)?rows.get(k):d,set:(k,v)=>{rows.set(k,v);return true}};const scoped=run(store);const first=scoped.nextScenarioIndex(),second=scoped.nextScenarioIndex();if(first===second||rows.size!==1)throw new Error('scoped practice rotation did not persist exactly once per learner store');
+'''
+p=subprocess.run(['node','-e',node],capture_output=True,text=True,cwd=ROOT)
+if p.returncode!=0: failures.append('Practice rotation runtime storage contract failed: '+(p.stderr or p.stdout).strip())
+
 # Guard against accidentally turning Practice into an authority or assessment lane.
 for banned in ("validated production recipe", "automatic machine setting", "machine-control authority"):
     if banned.lower() in hub.lower():
