@@ -137,6 +137,10 @@ for rel in ['src/domains/shell/product-areas.js','src/domains/governance/standar
     need('setInterval(' not in source,f'{rel} reintroduced startup polling')
     need("mm:domains-ready" in source,f'{rel} must bind deferred installation to domain readiness')
 
+ui_polish=text('src/domains/shell/learner-ui-polish.js')
+need('new MutationObserver' not in ui_polish,'learner UI polish reintroduced a whole-body mutation observer')
+need("onRender?.('dashboard',schedule)" in ui_polish and 'onViewChange?.(schedule)' in ui_polish,'learner UI polish must use shell lifecycle events')
+
 need("const CORE_INLINE_SCRIPTS=[" in index, "runtime core script externalization registry missing")
 need("function externalizeCoreScripts(out)" in index, "runtime core script externalization function missing")
 need("out=externalizeCoreScripts(out)" in index, "runtime assembly does not externalize frozen core scripts")
