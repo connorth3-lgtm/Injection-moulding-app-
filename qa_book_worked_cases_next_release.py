@@ -48,8 +48,8 @@ def main() -> None:
     runtime = BOOK_RUNTIME.read_text(encoding="utf-8")
     sw = SW.read_text(encoding="utf-8")
 
-    need(version.get("web_release") == "2026.09.24.9", "worked-case learner integration requires deliberate web release 2026.09.24.9")
-    need(ledger.get("release") == "2026.09.24.9", "worked-case ledger release mismatch")
+    need(version.get("web_release") == "2026.09.24.10", "worked-case learner integration requires deliberate web release 2026.09.24.10")
+    need(ledger.get("release") == "2026.09.24.10", "worked-case ledger release mismatch")
     need(LEDGER.read_bytes() == RUNTIME_LEDGER.read_bytes(), "authoritative/runtime worked-case ledgers differ")
 
     cases = ledger.get("cases") or []
@@ -84,13 +84,13 @@ def main() -> None:
         need(authority.get(key) is False, f"worked-case authority unexpectedly enabled: {key}")
 
     expected_ids = list(EXPECTED)
-    need(sme.get("release") == "2026.09.24.9", "Book SME contract was not advanced with the worked cases")
+    need(sme.get("release") == "2026.09.24.10", "Book SME contract was not advanced with the worked cases")
     need(sme.get("status") == "hold" and sme.get("reviews") == [], "worked-case integration must not manufacture human SME approval")
     need(sme.get("workedCaseIds") == expected_ids, "Book SME contract does not enumerate all worked-case IDs")
 
     worked_auth = auth.get("workedCasesAuthorization") or {}
     need(worked_auth.get("status") == "authorized", "worked-case publication authorization missing")
-    need(worked_auth.get("release") == "2026.09.24.9", "worked-case authorization release mismatch")
+    need(worked_auth.get("release") == "2026.09.24.10", "worked-case authorization release mismatch")
     need(worked_auth.get("caseCount") == 10 and worked_auth.get("claimCount") == 10, "worked-case authorization counts drifted")
     need(worked_auth.get("independentSmeStatus") == "hold", "worked-case authorization falsely promotes SME status")
     hashes = (auth.get("runtimeIntegrity") or {}).get("gitBlobSha1ByFile") or {}
@@ -101,7 +101,7 @@ def main() -> None:
         need(marker in runtime, f"Book runtime worked-case integration marker missing: {marker}")
     need("./src/domains/learning/book-data/book-worked-engineering-cases-v1.json" in sw, "worked-case ledger missing from atomic offline cache")
 
-    need("integrated into governed" in lower and "2026.09.24.9" in lower and "learner runtime" in lower, "source pack integration status is stale")
+    need("integrated into governed" in lower and "2026.09.24.10" in lower and "learner runtime" in lower, "source pack integration status is stale")
     headings = re.findall(r"^## (\d+)\. ", text, flags=re.M)
     need(headings == [str(i) for i in range(1, 11)], f"expected ten ordered source cases, found {headings}")
     need(text.count("SYNTHETIC") >= 10, "worked values must remain visibly synthetic")
