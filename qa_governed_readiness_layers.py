@@ -46,7 +46,7 @@ for a,b,label in [(nsrc,nrt,"NZQA readiness"),(tsrc,trt,"NZQA templates")]:
 n=load(nsrc);t=load(tsrc)
 need(n.get("schema")==1 and n.get("id")=="mouldmaster-nzqa-education-readiness","NZQA identity mismatch")
 need(n.get("checked")=="2026-09-18","NZQA source check must be current")
-need(n.get("releaseTarget")=="2026.09.18.4","NZQA readiness must target current governed release")
+need(n.get("releaseTarget")==load(ROOT/"version.json").get("web_release"),"NZQA readiness must target current governed release")
 need(n.get("publicationEffect")=="read-only-readiness-surface","NZQA publication effect must stay read-only")
 current={x["id"] for x in n.get("currentInjectionMouldingStandards",[])}
 expired=set(n.get("expiredStandardsNotForCurrentAssessmentMapping",[]))
@@ -82,7 +82,7 @@ need(esrc.is_file() and ert.is_file(),"Book enrichment pair missing")
 need(esrc.read_bytes()==ert.read_bytes(),"Book enrichment source/runtime pair drifted")
 e=load(esrc)
 need(e.get("schemaVersion")==1 and e.get("bookId")=="mouldmaster-book","Book enrichment identity mismatch")
-need(e.get("release")=="2026.09.18.4","Book enrichment release mismatch")
+need(e.get("release")==load(ROOT/"version.json").get("web_release"),"Book enrichment release mismatch")
 patches=e.get("chapterPatches",[])
 need(len(patches)==10 and len({x["chapterId"] for x in patches})==10,"Book enrichment must cover 10 unique chapters")
 need(sum(len(x.get("sections",[])) for x in patches)==13,"Book enrichment must contain 13 governed sections")
@@ -103,7 +103,7 @@ need(authority.get("productionUse")=="advisory-only" and authority.get("automati
 
 # Release/runtime integration
 version=load(ROOT/"version.json")
-need(version.get("web_release")=="2026.09.18.4","governed readiness layers require web release 2026.09.18.4")
+need(re.fullmatch(r"\d{4}\.\d{2}\.\d{2}\.\d+",str(version.get("web_release") or "")) is not None,"governed readiness layers require a valid web release identity")
 domain_manifest=load(ROOT/"runtime-domain-manifest.json")
 need("./src/domains/governance/standards-readiness.js" in domain_manifest.get("assets",[]),"readiness runtime missing from domain manifest")
 sw=text(ROOT/"service-worker.js")
@@ -118,14 +118,14 @@ for asset in [
 
 auth=load(ROOT/"data/book-publication-authorization-v1.json")
 permit=auth.get("evidenceEnrichmentAuthorization",{})
-need(permit.get("status")=="authorized" and permit.get("release")=="2026.09.18.4","Book enrichment authorization missing")
+need(permit.get("status")=="authorized" and permit.get("release")==version.get("web_release"),"Book enrichment authorization missing")
 need(permit.get("ledger")=="data/book-evidence-enrichment-v2.json","Book enrichment authorization ledger mismatch")
 need(permit.get("sectionCount")==13 and permit.get("chapterCount")==10,"Book enrichment authorization counts mismatch")
 need(permit.get("independentSmeStatus")=="hold","Book enrichment must preserve independent SME HOLD")
 need("book-evidence-enrichment-v2.json" in auth.get("runtimeIntegrity",{}).get("gitBlobSha1ByFile",{}),"Book enrichment missing from exact-byte authorization")
 
 sme=load(ROOT/"data/book-sme-review-v1.json")
-need(sme.get("release")=="2026.09.18.4","Book SME contract release mismatch")
+need(sme.get("release")==version.get("web_release"),"Book SME contract release mismatch")
 need(set(sme.get("enrichmentChapterIds",[]))=={x["chapterId"] for x in patches},"Book SME contract does not cover enrichment chapters")
 need(sme.get("status")=="hold","Book SME must remain HOLD")
 
