@@ -123,7 +123,7 @@ function enrich(){const article=document.querySelector?.('#lesson article.lesson
  if(remaining.length){const block=document.createElement('div');block.className='mm-lesson-evidence-depth-links';block.innerHTML=remaining.map(linkHtml).join('');target.appendChild(block)}
  const p=document.createElement('p');p.dataset.mmEvidenceBoundary='depth';p.textContent='These references support mechanisms, study methods and evidence discipline; they are not universal production recipes. Verify the exact resin grade, machine and mould documentation, approved site procedures, product requirements and applicable law for real work.';target.appendChild(p);target.dataset.mmLessonEvidenceExpanded='1';target.dataset.mmLessonEvidenceDepth=VERSION}
 let queued=false;function schedule(){if(queued)return;queued=true;(window.requestAnimationFrame||setTimeout)(()=>{queued=false;enrich()},0)}
-window.addEventListener('mm:domains-ready',schedule);
+window.addEventListener?.('mm:domains-ready',schedule);
 window.MM_APP_SHELL?.events?.onRender?.('lesson',schedule);
 window.MM_APP_SHELL?.events?.onViewChange?.(id=>{if(id==='lesson')schedule()});
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',()=>setTimeout(schedule,0));else setTimeout(schedule,0);
