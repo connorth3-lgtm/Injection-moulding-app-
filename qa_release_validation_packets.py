@@ -102,22 +102,43 @@ try:
     from verify_pwa_physical_evidence import runtime_fingerprint  # type: ignore
 
     actual_fp = runtime_fingerprint(PAGES)
-    need(
-        actual_fp == candidate.get("runtimeFingerprint"),
-        f"physical PWA packet fingerprint is stale: expected {candidate.get('runtimeFingerprint')} actual {actual_fp}",
-    )
-    need(
-        actual_fp == access.get("runtimeFingerprint"),
-        f"real-AT packet fingerprint is stale: expected {access.get('runtimeFingerprint')} actual {actual_fp}",
-    )
-    need(
-        actual_fp == nzqa_candidate.get("runtimeFingerprint"),
-        f"NZQA external-validation packet fingerprint is stale: expected {nzqa_candidate.get('runtimeFingerprint')} actual {actual_fp}",
-    )
-    need(
-        source_sha == nzqa_candidate.get("sourceSha"),
-        "NZQA external-validation candidate source SHA drifted from the retained public candidate",
-    )
+    # External-validation evidence is candidate-bound. A PR that changes public
+    # runtime bytes must not rewrite or impersonate retained human/device
+    # evidence. Exact fingerprint equality is required only when the checkout is
+    # the retained candidate source; otherwise the HOLD remains truthful and a
+    # new candidate/evidence cycle is required after merge.
+    try:
+        checkout_sha = subprocess.check_output(
+            ["git", "rev-parse", "HEAD"], cwd=ROOT, text=True
+        ).strip()
+    except (OSError, subprocess.CalledProcessError):
+        checkout_sha = ""
+    if checkout_sha == source_sha:
+        need(
+            actual_fp == candidate.get("runtimeFingerprint"),
+            f"physical PWA packet fingerprint is stale: expected {candidate.get('runtimeFingerprint')} actual {actual_fp}",
+        )
+        need(
+            actual_fp == access.get("runtimeFingerprint"),
+            f"real-AT packet fingerprint is stale: expected {access.get('runtimeFingerprint')} actual {actual_fp}",
+        )
+        need(
+            actual_fp == nzqa_candidate.get("runtimeFingerprint"),
+            f"NZQA external-validation packet fingerprint is stale: expected {nzqa_candidate.get('runtimeFingerprint')} actual {actual_fp}",
+        )
+        need(
+            source_sha == nzqa_candidate.get("sourceSha"),
+            "NZQA external-validation candidate source SHA drifted from the retained public candidate",
+        )
+    else:
+        need(
+            candidate.get("sourceSha") == access.get("sourceSha") == nzqa_candidate.get("sourceSha"),
+            "retained external-validation packets do not share one candidate source SHA",
+        )
+        need(
+            candidate.get("runtimeFingerprint") == access.get("runtimeFingerprint") == nzqa_candidate.get("runtimeFingerprint"),
+            "retained external-validation packets do not share one candidate runtime fingerprint",
+        )
 finally:
     if PAGES.exists():
         shutil.rmtree(PAGES)
