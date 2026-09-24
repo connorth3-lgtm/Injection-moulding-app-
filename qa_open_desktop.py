@@ -167,10 +167,11 @@ import re
 sw_assets=set(re.findall(r"['\"](\./[^'\"]+)['\"]",sw))
 explicit_root={a[2:] for a in sw_assets if '/' not in a[2:]}
 packaged_root={Path(x[6:]).name for x in from_paths if isinstance(x,str) and x.startswith('../../') and '/' not in x[6:]}
-desktop_exclusions={'repair.html','MouldMaster_Core_App.html'}
+desktop_exclusions={'MouldMaster_Core_App.html'}
 missing_root=sorted(explicit_root-packaged_root-desktop_exclusions)
 require(not missing_root,f"desktop extraResources missing service-worker root asset(s): {missing_root}")
-require(desktop_exclusions.isdisjoint(packaged_root),'browser repair/legacy assembly routes must remain excluded from desktop resources')
+require(desktop_exclusions.isdisjoint(packaged_root),'legacy assembly routes must remain excluded from desktop resources')
+require('repair.html' in packaged_root,"repair.html must be integrity-packaged so the desktop server can fail closed while redirecting it to index.html")
 
 
 msix_assets = (DESKTOP / "scripts" / "generate-msix-assets.ps1").read_text(encoding="utf-8")
