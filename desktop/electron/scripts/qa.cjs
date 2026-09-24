@@ -36,7 +36,7 @@ need(INTEGRITY.schema===1,'integrity schema mismatch');
 for(const listName of ['CORE','OPTIONAL']){
   const match=SERVICE_WORKER.match(new RegExp(`const\\s+${listName}\\s*=\\s*\\[(.*?)\\]\\s*;`,'s'));
   need(match,`service-worker ${listName} asset list missing`);
-  for(const hit of match[1].matchAll(/['"]\\.\\/([^'"]+)['"]/g))need(Object.prototype.hasOwnProperty.call(INTEGRITY.files,hit[1]),`desktop integrity parity missing service-worker asset: ${hit[1]}`);
+  for(const hit of match[1].matchAll(/['"]\.\/([^'"]+)['"]/g))need(Object.prototype.hasOwnProperty.call(INTEGRITY.files,hit[1]),`desktop integrity parity missing service-worker asset: ${hit[1]}`);
 }
 need(INTEGRITY.release===VERSION.desktop_release,'integrity release must match desktop_release');
 need(Object.keys(INTEGRITY.files||{}).length>=15,'integrity manifest is incomplete');
