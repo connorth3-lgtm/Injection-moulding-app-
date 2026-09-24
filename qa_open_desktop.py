@@ -108,7 +108,9 @@ for marker in [
     "server.listen(DESKTOP_PORT, '127.0.0.1'",
     "requestSingleInstanceLock()",
     "const INTEGRITY_PATH = path.join(__dirname, '..', 'generated', 'integrity.json')",
-    "const allowed = new Set(Object.keys(integrity.files))",
+    "startLoopbackServer(integrity.files)",
+    "Object.prototype.hasOwnProperty.call(expectedFiles, name)",
+    "Verified application asset changed after startup",
     "method !== 'GET' && method !== 'HEAD'",
     "SHA-256 verification failed",
 ]:
