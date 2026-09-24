@@ -185,7 +185,7 @@ test('learner UX repair preserves the governed selector and adds audited rotatio
   expect(assessment.owner).toBe('assessment-runtime-v2');
   expect(assessment.technicalPerExam).toBe(7);
   expect(assessment.technicalBankPerLevel).toBeGreaterThanOrEqual(10);
-  expect(assessment.rotationVersion).toBe('2026.09.06.21');
+  expect(assessment.rotationVersion).toBe('2026.09.24.1');
   expect(assessment.bankVersion).toBe('assessment-2026.08.30.1');
   expect(assessment.baseCallsPerAttempt).toBe(1);
 });
