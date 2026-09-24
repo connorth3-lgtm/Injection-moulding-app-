@@ -49,6 +49,8 @@ for(const name of dynamicLearnerAssets){
   need(packagedFrom.has(name),`desktop packaging parity missing dynamic learner asset: ${name}`);
   if(!name.endsWith('/measured-learning'))need(Object.prototype.hasOwnProperty.call(INTEGRITY.files,name),`desktop integrity parity missing dynamic learner asset: ${name}`);
 }
+const requiredRuntimePacks=['learning-foundation-runtime-pack.js','assessment-foundation-runtime-pack.js','bootstrap-assessment-source-runtime-pack.js','evidence-runtime-pack.js','assessment-evidence-depth-runtime-pack.js','assessment-multimodal-runtime-pack.js','learning-process-diagnostics-runtime-pack.js','process-data-runtime-pack.js','curriculum-workspace-runtime-pack.js'];
+for(const name of requiredRuntimePacks)need(Object.prototype.hasOwnProperty.call(INTEGRITY.files,'src/domains/runtime-packs/'+name),`desktop integrity parity missing shell runtime pack: ${name}`);
 for(const name of ['data/measured-learning/promoted-v1.json','data/measured-learning/manifest-v1.json','data/measured-learning/expansion-manifest-v2.json','data/measured-learning/v2-policy.json','data/measured-learning/source-readiness-v2.json'])need(Object.prototype.hasOwnProperty.call(INTEGRITY.files,name),`desktop measured-learning data is not integrity hashed: ${name}`);
 for(const req of ['generated/dependency-licenses.json','generated/sbom.cdx.json','THREAT_MODEL.md'])need(fs.existsSync(path.join(DESKTOP,req)),`desktop transparency artifact missing: ${req}`);
 const licences=JSON.parse(fs.readFileSync(path.join(DESKTOP,'generated','dependency-licenses.json'),'utf8'));
