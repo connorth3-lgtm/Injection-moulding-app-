@@ -178,7 +178,9 @@ function readAssessmentHistory(){
   return raw&&typeof raw==='object'&&!Array.isArray(raw)?raw:{}
 }
 function writeAssessmentHistory(history){
-  return !!assessmentStore()?.write?.(ASSESSMENT_HISTORY_KEY,history)
+  const store=assessmentStore();
+  if(!store?.write)return false;
+  return !!store.write(ASSESSMENT_HISTORY_KEY,history)
 }
 function rotateAwayFromPreviousFirst(form,previousFirst){
   if(!previousFirst||form.length<2||questionKey(form[0])!==previousFirst)return form;
