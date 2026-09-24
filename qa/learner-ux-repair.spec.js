@@ -237,7 +237,7 @@ test('consecutive assessment attempts do not repeat the opening question and adv
     const secondMembership=window.MM_ASSESSMENT_RUNTIME_V2.history().forms.Beginner||0;
     return {
       first,second,firstMembership,secondMembership,
-      history:JSON.parse(localStorage.getItem('mm-assessment-question-history-v4')||'{}'),
+      history:window.MM_ASSESSMENT_STORAGE_SCOPE?.read?.('mm-assessment-question-history-v4',{})||{},
       legacyOpeningHistory:localStorage.getItem('mm_assessment_opening_history_v1')
     };
   });
@@ -269,7 +269,7 @@ test('graded assessment records the exact bank and form metadata used for the at
       if(input)input.checked=true;
     });
     gradeExam('Beginner');
-    const records=JSON.parse(localStorage.getItem('mm-assessment-result-meta-v1')||'[]');
+    const records=window.MM_ASSESSMENT_STORAGE_SCOPE?.read?.('mm-assessment-result-meta-v1',[])||[];
     return {record:records[0]||null,form:window.MM_ACTIVE_QUESTION_FORM};
   });
   expect(meta.record).toBeTruthy();
