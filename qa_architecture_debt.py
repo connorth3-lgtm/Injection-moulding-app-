@@ -254,9 +254,9 @@ print(
     "script-src self-only; script-src-attr none; style-src exact-hash/self-only with style-src-attr none; no unsafe-inline, cssText, setAttribute(style), active inline handlers, remote scripts, unsafe-eval, eval(), or new Function()"
 )
 
-need('window.openMobileMenu=function' not in text('primary-learning-practice-hubs.js'),'practice hubs reintroduced a mobile-menu wrapper; use shell lifecycle/navigation registry')
+need('window.openMobileMenu=function' not in read('primary-learning-practice-hubs.js'),'practice hubs reintroduced a mobile-menu wrapper; use shell lifecycle/navigation registry')
 for rel in ['pwa-shell.js','learning-analytics.js']:
-    need('window.openMobileMenu=function' not in text(rel),f'{rel} reintroduced a mobile-menu wrapper; app-shell-registry owns mobile More composition')
-pwa=text('pwa-shell.js')
+    need('window.openMobileMenu=function' not in read(rel),f'{rel} reintroduced a mobile-menu wrapper; app-shell-registry owns mobile More composition')
+pwa=read('pwa-shell.js')
 need("MM_RUNTIME_V2.after('startExam'" in pwa,'PWA question disclosures must prefer Runtime V2 startExam lifecycle')
 
