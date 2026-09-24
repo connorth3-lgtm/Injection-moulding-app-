@@ -1,4 +1,4 @@
-/* MouldMaster primary Learn / Practice hubs — 2026.09.10.8 */
+/* MouldMaster primary Learn / Practice hubs — 2026.09.24.1 */
 (function(){
 'use strict';
 if(window.MM_PRIMARY_HUBS)return;
@@ -7,7 +7,7 @@ if(typeof renderPath!=='function'||typeof renderScenarios!=='function'||typeof s
   return;
 }
 
-const VERSION='2026.09.10.8';
+const VERSION='2026.09.24.1';
 const PRACTICE_ROTATION_KEY='mm_practice_scenario_rotation_v1';
 const originalRenderPath=renderPath;
 const originalRenderScenarios=renderScenarios;
@@ -127,15 +127,15 @@ function openCurrentLesson(){
   });
   return result;
 }
+function practiceStore(){return window.MM_RUNTIME_V2?.storage||null}
 function readPracticeRotation(){
-  const store=window.MM_RUNTIME_V2?.storage;
-  if(store?.get){const row=store.get(PRACTICE_ROTATION_KEY,null);return Number(row?.last)}
-  try{return Number(localStorage.getItem(PRACTICE_ROTATION_KEY))}catch(_){return NaN}
+  const store=practiceStore();
+  if(!store?.get)return NaN;
+  const row=store.get(PRACTICE_ROTATION_KEY,null);return Number(row?.last)
 }
 function writePracticeRotation(index){
-  const store=window.MM_RUNTIME_V2?.storage;
-  if(store?.set)return store.set(PRACTICE_ROTATION_KEY,{last:index});
-  try{localStorage.setItem(PRACTICE_ROTATION_KEY,String(index));return true}catch(_){return false}
+  const store=practiceStore();
+  return !!store?.set?.(PRACTICE_ROTATION_KEY,{last:index})
 }
 function nextScenarioIndex(){
   const total=Array.isArray(D?.scenarios)?D.scenarios.length:0;
