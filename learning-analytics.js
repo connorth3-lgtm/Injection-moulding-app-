@@ -160,11 +160,14 @@ function processChoiceCorrect(id,step,choiceIndex){
 function installCoreHooks(){
   if(window.__MM_ANALYTICS_RUNTIME_HOOKS__)return;
   R.after('renderLesson',()=>{try{if(typeof currentView==='undefined'||currentView==='lesson')startLessonSession()}catch(_){}});
+  R.after('completeLesson',()=>{const id=lessonId();if(id)record('lesson_complete',{module:'lesson',id})});
   R.before('switchView',id=>{if(id!=='lesson')closeLessonSession('view-change')});
   R.after('switchView',(_out,id)=>{if(id==='lesson')startLessonSession()});
   R.registerModule('learning-analytics-core-hooks',{version:VERSION,type:'runtime-v2-lifecycle-hooks'});
   window.__MM_ANALYTICS_RUNTIME_HOOKS__=true;
-  // Core lesson/view analytics are owned by Runtime V2 lifecycle hooks above.\n  // Do not replace non-core navigation/completion globals here; wrapper chains bypass\n  // the canonical one-owner runtime boundary and make composition order-dependent.
+  // Core lesson/view analytics are owned by Runtime V2 lifecycle hooks above.
+  // Do not replace non-core navigation/completion globals here; wrapper chains bypass
+  // the canonical one-owner runtime boundary and make composition order-dependent.
 }
 
 function handlePracticeClick(e){
