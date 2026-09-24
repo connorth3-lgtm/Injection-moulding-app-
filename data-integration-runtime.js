@@ -454,7 +454,7 @@ async function install(){
   ensureStyle();await loadPublicMetadata();patchIntakeApi();patchWorkspaceApi();
   document.addEventListener('click',interceptLegacyLauncher,true);
   document.addEventListener('click',workspaceCapture,true);
-  window.addEventListener('mm:domains-ready',scheduleInstall);
+  window.addEventListener?.('mm:domains-ready',scheduleInstall);
   window.MM_APP_SHELL?.events?.onViewChange?.(scheduleInstall);
   window.MM_APP_SHELL?.events?.onRender?.('profile',scheduleInstall);
   scheduleInstall()
