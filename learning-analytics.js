@@ -160,9 +160,10 @@ function processChoiceCorrect(id,step,choiceIndex){
 function installCoreHooks(){
   if(window.__MM_ANALYTICS_RUNTIME_HOOKS__)return;
   R.after('renderLesson',()=>{try{if(typeof currentView==='undefined'||currentView==='lesson')startLessonSession()}catch(_){}});
-  // Completion is not a Runtime V2 core slot. Observe the canonical completion event instead;
-  // analytics must not require or replace a non-owned global function.
-  window.addEventListener('mm:lesson-complete',e=>{const id=safeString(e?.detail?.id||lessonId(),96);if(id)record('lesson_complete',{module:'lesson',id})});
+  // Completion is not a Runtime V2 core slot. Derive it from the canonical render lifecycle:
+  // completeLesson updates user.completed before renderLesson, so this remains additive and owner-safe.
+  const completionSeen=new Set();
+  R.after('renderLesson',()=>{try{const id=lessonId();if(!id)return;const done=Array.isArray(user?.completed)&&user.completed.map(String).includes(String(id));if(done&&!completionSeen.has(String(id))){completionSeen.add(String(id));record('lesson_complete',{module:'lesson',id})}}catch(_){}});
   R.before('switchView',id=>{if(id!=='lesson')closeLessonSession('view-change')});
   R.after('switchView',(_out,id)=>{if(id==='lesson')startLessonSession()});
   R.registerModule('learning-analytics-core-hooks',{version:VERSION,type:'runtime-v2-lifecycle-hooks'});
