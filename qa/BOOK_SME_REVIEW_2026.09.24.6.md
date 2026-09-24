@@ -1,6 +1,6 @@
-# MouldMaster Book SME review packet — 2026.09.24.6
+# MouldMaster Book SME review packet — 2026.09.24.7
 
-This packet governs the **human** technical review of the 46-chapter MouldMaster Book for web release `2026.09.24.6` / Book manifest `2026.09.14.1`.
+This packet governs the **human** technical review of the 46-chapter MouldMaster Book for web release `2026.09.24.7` / Book manifest `2026.09.14.1`.
 
 Automated evidence review, CI, browser tests and the Book publication authorization are necessary but are not a substitute for an independent experienced injection-moulding practitioner reviewing the teaching as a practitioner would use it.
 
