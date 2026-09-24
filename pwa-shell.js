@@ -191,7 +191,8 @@ function patchQuestionListRenderers(){
     const baseScenarios=window.renderScenarios;
     window.renderScenarios=function(){const r=baseScenarios.apply(this,arguments);scheduleQuestionDisclosures();return r};
   }
-  if(typeof window.startExam==='function'){
+  if(window.MM_RUNTIME_V2?.after)window.MM_RUNTIME_V2.after('startExam',scheduleQuestionDisclosures);
+  else if(typeof window.startExam==='function'){
     const baseStartExam=window.startExam;
     window.startExam=function(){const r=baseStartExam.apply(this,arguments);scheduleQuestionDisclosures();return r};
   }
