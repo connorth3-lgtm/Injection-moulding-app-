@@ -234,6 +234,9 @@ for marker in ("mm:book-render", "book_chapter_open", "activityType:'book'", "bo
     need(marker in activity_events, f"Book-to-app learner activity bridge missing: {marker}")
 need("if(e.type==='book_chapter_open')" in learner_model and "engagement.get(id)" in learner_model, "learner model lost separate Book engagement reporting")
 need("bookEngagement:" in learner_model, "learner model must expose Book engagement separately from mastery topics")
+activity_events = text("src/domains/learning/activity-events-v2.js")
+need("learnerToken=scope.token()" in activity_events and "${learnerToken}:${eventKey}" in activity_events, "Book session dedupe must be learner-scoped")
+need("seen.startsWith(`${token}:`)" in activity_events and "bookSessionSeen.delete(seen)" in activity_events, "activity reset must clear current learner Book session dedupe")
 need("e.activityType==='book'?" not in learner_model, "Book engagement must not carry a mastery evidence weight")
 need("Book reading/listening engagement is reported separately and never contributes to mastery" in learner_model, "Book engagement/mastery authority boundary missing")
 
