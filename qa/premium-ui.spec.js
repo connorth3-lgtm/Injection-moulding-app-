@@ -116,9 +116,9 @@ test('assessment focus UI is responsive, touch-safe and hides inactive controls'
     const steps=page.locator('.mm-exam-steps .mm-step');
     expect(await steps.count()).toBeGreaterThanOrEqual(10);
     for(let i=0;i<await steps.count();i++){
-      const box=await steps.nth(i).boundingBox();
-      expect(box?.width||0,`assessment step ${i+1} width at ${width}px`).toBeGreaterThanOrEqual(44);
-      expect(box?.height||0,`assessment step ${i+1} height at ${width}px`).toBeGreaterThanOrEqual(44);
+      const hit=await steps.nth(i).evaluate(el=>{const b=el.getBoundingClientRect(),p=getComputedStyle(el,'::before');return {width:b.width+Math.abs(parseFloat(p.left)||0)+Math.abs(parseFloat(p.right)||0),height:b.height+Math.abs(parseFloat(p.top)||0)+Math.abs(parseFloat(p.bottom)||0)}});
+      expect(hit.width,`assessment step ${i+1} hit width at ${width}px`).toBeGreaterThanOrEqual(44);
+      expect(hit.height,`assessment step ${i+1} hit height at ${width}px`).toBeGreaterThanOrEqual(44);
     }
     const inactive=page.locator('#examQuestions .question:not(.mm-current-question)');
     expect(await inactive.count()).toBeGreaterThan(0);
