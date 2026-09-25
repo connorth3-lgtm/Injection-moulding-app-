@@ -1,9 +1,9 @@
-/* MouldMaster canonical app-shell registry — 2026.08.26.4 */
+/* MouldMaster canonical app-shell registry — 2026.09.26.1 */
 (function(){
 'use strict';
 if(window.MM_APP_SHELL)return;
 
-const VERSION='2026.08.26.4';
+const VERSION='2026.09.26.1';
 const captured={
   renderDashboard:typeof renderDashboard==='function'?renderDashboard:null,
   renderLesson:typeof renderLesson==='function'?renderLesson:null,
@@ -21,6 +21,7 @@ const renderListeners=new Map();
 let finalized=false;
 let activeCustomId='';
 let mobileNavObserver=null;
+let mobileNavNormalizing=false;
 let geometryQueued=false;
 let dashboardComposeQueued=false;
 
@@ -72,16 +73,23 @@ function syncMobileGeometry(){
 }
 function canonicalMoreButton(button){const handler=button.getAttribute('data-mm-onclick')||button.getAttribute('onclick')||'';return !button.dataset.view&&(handler.includes('openMobileMenu')||/\bMore\b/i.test(button.textContent||''))}
 function normalizeMobilePrimaryNav(){
-  const nav=document.querySelector('.mobile-nav');if(!nav)return;
-  [...nav.querySelectorAll(':scope > button')].forEach(button=>{
-    const view=button.dataset.view||'';
-    const keep=view==='dashboard'||view==='path'||view==='scenarios'||canonicalMoreButton(button);
-    if(!keep)button.remove()
-  });
-  if(!mobileNavObserver){
-    mobileNavObserver=new MutationObserver(()=>{normalizeMobilePrimaryNav();syncMobileGeometry()});
-    mobileNavObserver.observe(nav,{childList:true})
-  }
+  const nav=document.querySelector('.mobile-nav');if(!nav||mobileNavNormalizing)return;
+  mobileNavNormalizing=true;
+  try{
+    [...nav.querySelectorAll(':scope > button')].forEach(button=>{
+      const view=button.dataset.view||'';
+      const keep=view==='dashboard'||view==='path'||view==='scenarios'||canonicalMoreButton(button);
+      if(!keep)button.remove()
+    });
+    if(!mobileNavObserver){
+      mobileNavObserver=new MutationObserver(records=>{
+        if(mobileNavNormalizing)return;
+        if(records.some(record=>record.type==='childList'))normalizeMobilePrimaryNav();
+        else syncMobileGeometry()
+      });
+      mobileNavObserver.observe(nav,{childList:true})
+    }
+  }finally{mobileNavNormalizing=false}
   syncMobileGeometry()
 }
 
@@ -160,7 +168,7 @@ function desktopAnchor(item){
 function makeDesktopButton(item){
   const b=document.createElement('button');b.type='button';b.dataset.mmRegistryNav=item.id;
   if(item.legacyDataset)b.dataset[item.legacyDataset]='1';
-  b.innerHTML=`${esc(item.icon||'•')} <span>${esc(item.label||item.id)}</span>`;
+  b.innerHTML=`${esc(item.icon||'•')} <span>${esc(item.label||item.id)}</span>`;b.setAttribute('aria-label',item.label||item.id);
   b.addEventListener('click',e=>{e.preventDefault();e.stopImmediatePropagation();activeCustomId=item.id;safeCall(item.action);syncActiveState()});
   return b
 }
@@ -182,7 +190,7 @@ function syncDesktopNavigation(){
 function mobileGrid(){return document.querySelector('#modal .modal-card .grid2')}
 function makeMobileMoreButton(item){
   const b=document.createElement('button');b.type='button';b.className='quick-action';b.dataset.mmRegistryMenu=item.id;
-  b.innerHTML=`<span class="icon">${esc(item.icon||'•')}</span><b>${esc(item.label||item.id)}</b><small>${esc(item.description||'Open this tool.')}</small>`;
+  b.innerHTML=`<span class="icon" aria-hidden="true">${esc(item.icon||'•')}</span><b>${esc(item.label||item.id)}</b><small>${esc(item.description||'Open this tool.')}</small>`;b.setAttribute('aria-label',item.label||item.id);
   b.addEventListener('click',()=>{try{window.closeModal?.()}catch(_){}activeCustomId=item.id;safeCall(item.action);syncActiveState()});return b
 }
 function populateMobileMore(){
@@ -209,6 +217,7 @@ function syncActiveState(){
   const visible=visibleCoreView();
   const view=visible||(typeof currentView==='string'?currentView:'dashboard');
   document.body.dataset.mmView=activeCustomId||view;
+  document.body.dataset.mmNavGroup=canonicalMobileGroup(view);
   document.querySelectorAll('#nav button').forEach(b=>{
     const registryId=b.dataset.mmRegistryNav;
     const active=registryId?registryId===activeCustomId:!activeCustomId&&b.dataset.view===view;
