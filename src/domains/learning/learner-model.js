@@ -17,9 +17,9 @@ function build(){
   for(const c of e.conceptIds||[])topics.push(topicKey('concept',c));
   for(const m of e.mechanismIds||[])topics.push(topicKey('mechanism',m));
   if(!topics.length&&e.activityId)topics.push(topicKey('activity',e.activityId));
-  const weight=e.activityType==='lesson'?0.2:e.activityType==='material-lab'?0.75:e.activityType==='scenario'?0.85:0.7;
+  const weight=e.activityType==='lesson'?0.2:e.activityType==='book'?0.15:e.activityType==='material-lab'?0.75:e.activityType==='scenario'?0.85:0.7;
   for(const key of topics){
-   if(e.type==='lesson_complete')add(map,key,{evidence:0.25,success:0.2,attempts:1,last:e.t,activityType:e.activityType});
+   if(e.type==='lesson_complete')add(map,key,{evidence:0.25,success:0.2,attempts:1,last:e.t,activityType:e.activityType});\n   if(e.type==='book_chapter_open')add(map,key,{evidence:weight,success:0,attempts:1,last:e.t,activityType:e.activityType});
    if(e.type==='practice_complete')add(map,key,{evidence:weight,success:weight*clamp(e.score)/100,attempts:1,score:Number(e.score)||0,last:e.t,activityType:e.activityType});
    if(e.type==='practice_choice')add(map,key,{evidence:weight*0.25,success:e.correct?weight*0.25:0,attempts:1,misses:e.correct?0:1,last:e.t,activityType:e.activityType});
    if(e.type==='practice_miss')add(map,key,{evidence:weight*0.25,attempts:1,misses:1,last:e.t,activityType:e.activityType});
