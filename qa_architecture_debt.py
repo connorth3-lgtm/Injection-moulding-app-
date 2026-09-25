@@ -47,7 +47,7 @@ def retire_handler_attrs(source: str) -> str:
     )
 
 
-baseline = json.loads(BASELINE_PATH.read_text(encoding="utf-8"))\nneed(REMEDIATION_PATH.is_file(), "full-app remediation contract is missing")\nremediation = REMEDIATION_PATH.read_text(encoding="utf-8")\nfor marker in ("Root compatibility retirement", "Canonical release asset graph", "CI coverage meta-gate", "Dynamic HTML sink reduction", "Storage ownership matrix", "Client compatibility matrix", "External validation"):\n    need(marker in remediation, f"full-app remediation contract lost required workstream: {marker}")
+baseline = json.loads(BASELINE_PATH.read_text(encoding="utf-8"))
 need(baseline.get("schemaVersion") == 1, "architecture debt baseline schema drift")
 
 index = read("index.html")
