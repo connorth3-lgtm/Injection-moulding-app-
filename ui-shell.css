@@ -242,3 +242,9 @@ body[data-mm-view="lesson"] .topbar{justify-content:flex-end!important}
   #lesson .lesson-body{padding-bottom:calc(var(--mm-mobile-content-clearance) + 86px)!important}
   .toast{bottom:calc(var(--mm-mobile-content-clearance) + 12px)!important}
 }
+
+
+/* Product-area dashboard presentation belongs to the canonical shell stylesheet. */
+.mm-product-areas{padding:18px}.mm-product-areas-head{display:flex;justify-content:space-between;gap:12px;align-items:end;margin-bottom:12px}.mm-product-areas-head h2{margin:3px 0 0}.mm-product-areas-head p{margin:5px 0 0;color:var(--muted);max-width:760px}.mm-product-area-grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:9px}.mm-product-area{min-height:125px;text-align:left;padding:13px;border:1px solid #304b69;border-radius:12px;background:#0e1d31;color:#edf5ff}.mm-product-area:hover,.mm-product-area:focus-visible{background:#142843;border-color:#4c739c}.mm-product-area .icon{display:block;font-size:20px;margin-bottom:9px;color:var(--accent)}.mm-product-area b{display:block;font-size:14px}.mm-product-area small{display:block;color:#aebfd3;line-height:1.4;margin-top:5px}.mm-product-boundary{margin-top:10px;color:var(--muted);font-size:11px;line-height:1.45}
+@media(max-width:1050px){.mm-product-area-grid{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:650px){.mm-product-area-grid{grid-template-columns:1fr 1fr}.mm-product-areas{padding:15px}.mm-product-areas-head{display:block}}
