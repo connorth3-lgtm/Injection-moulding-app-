@@ -47,6 +47,8 @@ jobs:
         run: python qa_repo_governance.py
       - name: Audit remediation governance regression
         run: python qa_audit_governance.py
+      - name: Full-app remediation contract
+        run: python qa_app_remediation.py
       - name: Critical GitHub Actions version integrity
         run: python qa_critical_actions_versions.py
       - name: Architecture debt ceiling
