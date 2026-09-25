@@ -43,24 +43,7 @@ function esc(v){return String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&l
 function safeCall(fn,...args){try{return typeof fn==='function'?fn(...args):undefined}catch(e){console.warn('[MouldMaster shell]',e);return undefined}}
 
 function installGeometry(){
-  if(document.getElementById('mm-app-shell-registry-style'))return;
-  const s=document.createElement('style');s.id='mm-app-shell-registry-style';s.textContent=`
-:root{--mm-mobile-nav-height:calc(70px + env(safe-area-inset-bottom));--mm-mobile-nav-clearance:var(--mm-mobile-nav-height);--mm-mobile-content-clearance:calc(var(--mm-mobile-nav-clearance) + 26px)}
-.mm-dashboard-registry{display:grid;gap:14px}.mm-dashboard-registry:empty{display:none}
-.mm-registry-nav-divider{height:1px;background:#20344d;margin:9px 8px}
-@media(max-width:700px){
-  html{scroll-padding-bottom:calc(var(--mm-mobile-content-clearance) + 12px)!important}
-  body{padding-bottom:0!important}
-  .main{padding-bottom:var(--mm-mobile-content-clearance)!important}
-  .mobile-nav{position:fixed!important;left:0!important;right:0!important;bottom:0!important;min-height:var(--mm-mobile-nav-height);z-index:40!important;background:#07101c!important;padding-bottom:max(8px,env(safe-area-inset-bottom))!important;box-shadow:0 -12px 28px rgba(0,0,0,.30),0 90px 0 #07101c!important}
-  .mobile-nav>button:not([data-view]):not([onclick*="openMobileMenu"]):not([data-mm-onclick*="openMobileMenu"]){display:none!important}
-  body[data-mm-view="dashboard"] #continueBtn{display:none!important}
-  .mm-mobile-actions{bottom:var(--mm-mobile-nav-clearance)!important;z-index:35!important;padding-bottom:9px!important}
-  #lesson .lesson-body{padding-bottom:calc(var(--mm-mobile-content-clearance) + 86px)!important}
-  .toast{bottom:calc(var(--mm-mobile-content-clearance) + 12px)!important}
-}
-`;
-  document.head.appendChild(s)
+  document.documentElement.classList.add('mm-app-shell-registry');
 }
 function syncMobileGeometry(){
   if(geometryQueued)return;geometryQueued=true;
