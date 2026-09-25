@@ -226,6 +226,15 @@ for marker in (
 ):
     need(marker in process_data_runtime, f"connected process-data HTML sink lost escaping: {marker}")
 
+book_runtime = text("src/domains/learning/book-runtime.js")
+activity_events = text("src/domains/learning/activity-events-v2.js")
+learner_model = text("src/domains/learning/learner-model.js")
+need("emitBookRender('chapter',id)" in book_runtime, "Book runtime must emit chapter engagement events")
+for marker in ("mm:book-render", "book_chapter_open", "activityType:'book'", "book_listening_start"):
+    need(marker in activity_events, f"Book-to-app learner activity bridge missing: {marker}")
+need("e.activityType==='book'?0.15" in learner_model, "learner model lost conservative Book evidence weighting")
+need("if(e.type==='book_chapter_open')" in learner_model and "success:0" in learner_model, "Book reading must not self-award mastery")
+
 sink_register = text("docs/DYNAMIC_HTML_SINK_REGISTER.md")
 for marker in ("learner strings", "imported/device/site data", "Frozen/generated core runtime", "eval", "new Function", "textContent"):
     need(marker in sink_register, f"dynamic HTML sink register missing security boundary: {marker}")
