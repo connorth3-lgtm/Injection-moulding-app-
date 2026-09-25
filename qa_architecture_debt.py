@@ -6,7 +6,7 @@ import json
 import re
 
 ROOT = Path(__file__).resolve().parent
-BASELINE_PATH = ROOT / "qa/architecture-debt-baseline.json"
+BASELINE_PATH = ROOT / "qa/architecture-debt-baseline.json"\nREMEDIATION_PATH = ROOT / "docs/FULL_APP_REMEDIATION_2026-09-25.md"
 CORE_RUNTIME_DIR = ROOT / "src/core-runtime"
 HANDLER_BRIDGE_PATH = CORE_RUNTIME_DIR / "inline-handler-bridge.js"
 STYLE_BRIDGE_PATH = CORE_RUNTIME_DIR / "inline-style-bridge.js"
@@ -47,7 +47,7 @@ def retire_handler_attrs(source: str) -> str:
     )
 
 
-baseline = json.loads(BASELINE_PATH.read_text(encoding="utf-8"))
+baseline = json.loads(BASELINE_PATH.read_text(encoding="utf-8"))\nneed(REMEDIATION_PATH.is_file(), "full-app remediation contract is missing")\nremediation = REMEDIATION_PATH.read_text(encoding="utf-8")\nfor marker in ("Root compatibility retirement", "Canonical release asset graph", "CI coverage meta-gate", "Dynamic HTML sink reduction", "Storage ownership matrix", "Client compatibility matrix", "External validation"):\n    need(marker in remediation, f"full-app remediation contract lost required workstream: {marker}")
 need(baseline.get("schemaVersion") == 1, "architecture debt baseline schema drift")
 
 index = read("index.html")
