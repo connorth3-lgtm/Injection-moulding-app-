@@ -75,10 +75,7 @@ need('window.MM_PROCESS_DATA_DIAGNOSTICS?.open' in js,'Home process-data action 
 # Mobile Home keeps a compact non-sticky topbar and enough fixed-nav/safe-area clearance
 # without the previous oversized dead space. Touch targets stay at least 44px.
 mobile_shell_markers=[
-    'installMobileLayoutGuard',
-    "document.documentElement.classList.add('mm-mobile-layout-guard')",
     'syncVisibleViewChrome',
-    "window.MM_MOBILE_LAYOUT_GUARD='home-task-first-fixed-nav-clearance-v2'",
     "window.MM_UI_POLISH='compact-shell-no-gamification-v1'"
 ]
 for marker in mobile_shell_markers:
@@ -99,10 +96,10 @@ mobile_style_markers=[
 for marker in mobile_style_markers:
     need(marker in ui_shell,f'canonical ui-shell mobile presentation marker missing: {marker}')
 need('mm-mobile-layout-guard-style' not in ui_shell,'canonical ui-shell must not depend on a runtime style element id')
+need('installMobileLayoutGuard' not in shell and 'MM_MOBILE_LAYOUT_GUARD' not in shell,'retired presentation guard must not return to PWA behavior runtime')
 for marker in ['.mmsrc.mm-reference-drawer{','.mmrd.mm-reference-data-drawer{']:
     need(marker in ui_shell,f'reference drawer presentation missing from canonical ui-shell: {marker}')
 need('mm-reference-drawer-style' not in shell and 'mm-reference-data-drawer-style' not in shell,'reference drawers must not inject runtime styles')
-need(shell.index('installMobileLayoutGuard()') < shell.index('dockReferenceLauncher()'),'mobile layout guard must install before shell docking work')
 need(shell.index('syncVisibleViewChrome()') < shell.index('dockReferenceLauncher()'),'visible-view chrome sync must run before shell docking work')
 need("shell?.events?.onViewChange?.(scheduleSync)" in shell,'mobile Home chrome must react through canonical app-shell view lifecycle events')
 need("shell?.events?.onRender?.(view,scheduleSync)" in shell,'mobile Home chrome must react when canonical views render')
