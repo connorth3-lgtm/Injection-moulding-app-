@@ -226,6 +226,20 @@ for marker in (
 ):
     need(marker in process_data_runtime, f"connected process-data HTML sink lost escaping: {marker}")
 
+book_runtime = text("src/domains/learning/book-runtime.js")
+activity_events = text("src/domains/learning/activity-events-v2.js")
+learner_model = text("src/domains/learning/learner-model.js")
+need("emitBookRender('chapter',id)" in book_runtime, "Book runtime must emit chapter engagement events")
+for marker in ("mm:book-render", "book_chapter_open", "activityType:'book'", "book_listening_start"):
+    need(marker in activity_events, f"Book-to-app learner activity bridge missing: {marker}")
+need("if(e.type==='book_chapter_open')" in learner_model and "engagement.get(id)" in learner_model, "learner model lost separate Book engagement reporting")
+need("bookEngagement:" in learner_model, "learner model must expose Book engagement separately from mastery topics")
+activity_events = text("src/domains/learning/activity-events-v2.js")
+need("learnerToken=scope.token()" in activity_events and "${learnerToken}:${eventKey}" in activity_events, "Book session dedupe must be learner-scoped")
+need("seen.startsWith(`${token}:`)" in activity_events and "bookSessionSeen.delete(seen)" in activity_events, "activity reset must clear current learner Book session dedupe")
+need("e.activityType==='book'?" not in learner_model, "Book engagement must not carry a mastery evidence weight")
+need("Book reading/listening engagement is reported separately and never contributes to mastery" in learner_model, "Book engagement/mastery authority boundary missing")
+
 sink_register = text("docs/DYNAMIC_HTML_SINK_REGISTER.md")
 for marker in ("learner strings", "imported/device/site data", "Frozen/generated core runtime", "eval", "new Function", "textContent"):
     need(marker in sink_register, f"dynamic HTML sink register missing security boundary: {marker}")

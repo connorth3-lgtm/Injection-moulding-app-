@@ -1,5 +1,5 @@
-const CACHE_VERSION='2026.09.24.14';
-const CACHE_REVISION='lifecycle-r5-20260924';
+const CACHE_VERSION='2026.09.24.16';
+const CACHE_REVISION='book-bridge-r2-20260926';
 const STATIC_CACHE=`mouldmaster-static-${CACHE_VERSION}-${CACHE_REVISION}`;
 
 // Release assets are grouped for readability, but activation is atomic across both

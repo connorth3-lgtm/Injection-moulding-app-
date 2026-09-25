@@ -10,8 +10,10 @@ function topicKey(kind,value){const v=String(value||'').trim();return `${kind}:$
 function add(map,key,patch){const x=map.get(key)||{key,evidence:0,success:0,attempts:0,last:null,activityTypes:new Set(),scores:[],misses:0};x.evidence+=patch.evidence||0;x.success+=patch.success||0;x.attempts+=patch.attempts||0;x.misses+=patch.misses||0;if(Number.isFinite(patch.score))x.scores.push(patch.score);if(patch.activityType)x.activityTypes.add(patch.activityType);if(patch.last&&(!x.last||patch.last>x.last))x.last=patch.last;map.set(key,x)}
 function urgency(x){return x.stuckness+(Number.isFinite(x.forgettingRisk)?x.forgettingRisk:0)+(x.learningVelocity<=-15?15:0)}
 function build(){
- const map=new Map(),events=window.MM_ACTIVITY_EVENTS_V2?.events?.()||[];
+ const map=new Map(),engagement=new Map(),events=window.MM_ACTIVITY_EVENTS_V2?.events?.()||[];
  for(const e of events){
+  if(e.type==='book_chapter_open'){const id=String(e.itemId||'').trim();if(id){const x=engagement.get(id)||{chapterId:id,opens:0,last:null};x.opens+=1;if(e.t&&(!x.last||e.t>x.last))x.last=e.t;engagement.set(id,x)}continue;}
+  if(e.type==='book_listening_start'){const id='verified-listening';const x=engagement.get(id)||{chapterId:null,listeningStarts:0,last:null};x.listeningStarts=(x.listeningStarts||0)+1;if(e.t&&(!x.last||e.t>x.last))x.last=e.t;engagement.set(id,x);continue;}
   const topics=[];
   for(const c of e.competencyIds||[])topics.push(topicKey('competency',c));
   for(const c of e.conceptIds||[])topics.push(topicKey('concept',c));
@@ -45,7 +47,7 @@ function build(){
   const transferStrength=clamp((evidenceDiversity-1)*25+mastery*.5);
   return {...x,activityTypes:[...x.activityTypes],mastery:+mastery.toFixed(1),confidence:+confidence.toFixed(1),recencyKnown,ageDays:recencyKnown?+age.toFixed(1):null,forgettingRisk:Number.isFinite(forgettingRisk)?+forgettingRisk.toFixed(1):null,stuckness:+stuckness.toFixed(1),learningVelocity:+velocity.toFixed(1),evidenceDiversity,transferStrength:+transferStrength.toFixed(1)};
  }).sort((a,b)=>urgency(b)-urgency(a));
- return {schema:2,version:VERSION,generatedAt:new Date().toISOString(),topics:rows};
+ return {schema:2,version:VERSION,generatedAt:new Date().toISOString(),topics:rows,bookEngagement:[...engagement.values()].sort((a,b)=>String(b.last||'').localeCompare(String(a.last||'')))};
 }
 function recommendationFor(x){
  let actionType='',suggestedActivity='',reason='',priority=0;
@@ -114,5 +116,5 @@ function installImportGuard(){
 }
 installImportGuard();
 
-window.MM_LEARNER_MODEL=Object.freeze({version:VERSION,build,recommendations,summary,validateBackupEnvelope,installImportGuard,boundary:'Rule-based local evidence model. Unknown timestamps remain unknown and never become synthetic forgetting risk. Recommendations separate remediation, spaced retrieval, recency refresh, evidence confirmation, regression stabilisation and transfer practice; they are learning guidance, not competence certification or production-control authority. Backup import is additionally guarded fail-closed at the final learning-domain boundary.'});
+window.MM_LEARNER_MODEL=Object.freeze({version:VERSION,build,recommendations,summary,validateBackupEnvelope,installImportGuard,boundary:'Rule-based local evidence model. Book reading/listening engagement is reported separately and never contributes to mastery, confidence, attempts, stuckness, transfer strength, averages or learning recommendations. Unknown timestamps remain unknown and never become synthetic forgetting risk. Recommendations separate remediation, spaced retrieval, recency refresh, evidence confirmation, regression stabilisation and transfer practice; they are learning guidance, not competence certification or production-control authority. Backup import is additionally guarded fail-closed at the final learning-domain boundary.'});
 })();

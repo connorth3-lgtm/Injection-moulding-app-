@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "bookId": "mouldmaster-book",
   "ledgerId": "book-evidence-enrichment-2026-09-18-v2",
-  "release": "2026.09.24.14",
+  "release": "2026.09.24.16",
   "status": "governed-publication-candidate",
   "sourceOrigin": "Recovered from the fully validated but unmerged 2026-09-15 editorial integration stack (#339/#342); re-bound to the current Book architecture for deliberate release authorization.",
   "reviewBoundary": "These additions remain generic evidence-governed teaching content. Case values are source-specific, synthetic examples stay labelled, and no content creates universal machine, material, mould, hot-runner, maintenance or production settings.",

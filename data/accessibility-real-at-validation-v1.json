@@ -1,11 +1,11 @@
 {
   "schemaVersion": 1,
-  "release": "2026.09.24.14",
-  "packet": "qa/ACCESSIBILITY_REAL_AT_2026.09.24.14.md",
-  "sourceSha": "b405edea1406e77b8173732fb2a6c81dcb45667f",
-  "runtimeFingerprint": "sha256:6fcce09b789464245853efd96fb09aa0003e05b4bc6eb83be215e0b0aaf27ab7",
+  "release": "2026.09.24.15",
+  "packet": "qa/ACCESSIBILITY_REAL_AT_2026.09.24.15.md",
+  "sourceSha": "f6a6ced8c910038a59580e6da497ee6a8749b93f",
+  "runtimeFingerprint": "sha256:3aa49bbff9785f4bb4c8bef365cc69019c309ce14f8c69d9e27568adf8c6f352",
   "status": "pending-real-at-validation",
-  "boundary": "Automated browser and accessibility regressions do not substitute for real assistive-technology interaction by a human reviewer. Release 2026.09.24.14 changed governed runtime bytes; exact candidate provenance must be rebound by the release-candidate workflow before validation, and all real-AT tasks remain pending.",
+  "boundary": "Automated browser and accessibility regressions do not substitute for real assistive-technology interaction by a human reviewer. Release 2026.09.24.15 changed governed runtime bytes; exact candidate provenance must be rebound by the release-candidate workflow before validation, and all real-AT tasks remain pending.",
   "requiredMatrix": [
     {
       "id": "nvda-firefox-windows",
