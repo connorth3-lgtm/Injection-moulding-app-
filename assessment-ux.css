@@ -16,8 +16,8 @@
 .mm-option-card.mm-option-selected{border-color:#69a8ff!important;background:#17314f!important;box-shadow:inset 3px 0 0 #69a8ff}
 .mm-option-card.mm-option-selected .mm-option-key{background:#69a8ff;color:#07131b;border-color:#69a8ff}
 .mm-exam-steps{display:flex;gap:6px;flex-wrap:wrap;margin:16px 0 10px}
-.mm-step{width:38px;height:38px;border-radius:10px;border:1px solid #355171;background:#102039;color:#a9bdd6;font-size:12px;font-weight:800;padding:0}
-.mm-step:hover{background:#172b46;color:#fff}
+.mm-step{position:relative;width:38px;height:38px;border-radius:10px;border:1px solid #355171;background:#102039;color:#a9bdd6;font-size:12px;font-weight:800;padding:0}
+.mm-step::before{content:"";position:absolute;inset:-3px;border-radius:13px}\n.mm-step:hover{background:#172b46;color:#fff}
 .mm-step.mm-step-answered{border-color:#3e756b;color:#cffff5;background:#12302e}
 .mm-step.mm-step-current{outline:2px solid #69a8ff;outline-offset:2px;color:#fff}
 .mm-exam-nav{position:sticky;bottom:-1px;z-index:8;margin-top:16px;padding:12px;border:1px solid #304a69;border-radius:14px;background:rgba(8,18,32,.96);backdrop-filter:blur(12px);box-shadow:0 -8px 28px rgba(0,0,0,.2)}
