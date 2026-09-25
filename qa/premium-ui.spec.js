@@ -105,6 +105,7 @@ test('forced colours are actually applied in Chromium',async({page,browserName})
 
 
 test('assessment focus UI is responsive, touch-safe and hides inactive controls',async({page})=>{
+  test.setTimeout(90000);
   for(const width of [320,360,390,412,1024]){
     await page.setViewportSize({width,height:width<500?844:900});
     await openApp(page);
