@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "release": "2026.09.24.14",
+  "release": "2026.09.24.15",
   "commit": "c8ac878ebe6ae2e9d25698a305b10b2726dadee9",
   "browser": "chromium via @playwright/test 1.55.0",
   "maxDiffPixels": 12,
@@ -39,5 +39,5 @@
     "book-late",
     "book-trace"
   ],
-  "policy": "2026.09.24.14 retains the governed learner UI and lesson presentation now exercised by the complete Chromium/WebKit regression suites. This exact PR head is the reviewed visual candidate; maxDiffPixels remains strict for subsequent changes. Physical-device and real-AT evidence remain separate fresh gates."
+  "policy": "2026.09.24.15 retains the governed learner UI and lesson presentation now exercised by the complete Chromium/WebKit regression suites. This exact PR head is the reviewed visual candidate; maxDiffPixels remains strict for subsequent changes. Physical-device and real-AT evidence remain separate fresh gates."
 }
