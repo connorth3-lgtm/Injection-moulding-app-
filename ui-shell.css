@@ -225,3 +225,20 @@ body[data-mm-view="lesson"] .topbar{justify-content:flex-end!important}
   .mmsrc.mm-reference-drawer .mmsrc-head{padding-top:10px!important}
   .mmrd.mm-reference-data-drawer,.mmrd.mm-reference-data-drawer[data-open="1"]{display:none!important;pointer-events:none!important}
 }
+
+
+/* Canonical app-shell registry geometry. Runtime measures the actual nav height;
+   static CSS owns presentation and clearance. */
+:root{--mm-mobile-nav-height:calc(70px + env(safe-area-inset-bottom));--mm-mobile-content-clearance:calc(var(--mm-mobile-nav-height) + 26px)}
+.mm-dashboard-registry{display:grid;gap:14px}.mm-dashboard-registry:empty{display:none}
+.mm-registry-nav-divider{height:1px;background:#20344d;margin:9px 8px}
+@media(max-width:700px){
+  html{scroll-padding-bottom:calc(var(--mm-mobile-content-clearance) + 12px)!important}
+  .main{padding-bottom:var(--mm-mobile-content-clearance)!important}
+  .mobile-nav{min-height:var(--mm-mobile-nav-height)!important;z-index:40!important}
+  .mobile-nav>button:not([data-view]):not([onclick*="openMobileMenu"]):not([data-mm-onclick*="openMobileMenu"]){display:none!important}
+  body[data-mm-view="dashboard"] #continueBtn{display:none!important}
+  .mm-mobile-actions{bottom:var(--mm-mobile-nav-height)!important;z-index:35!important;padding-bottom:9px!important}
+  #lesson .lesson-body{padding-bottom:calc(var(--mm-mobile-content-clearance) + 86px)!important}
+  .toast{bottom:calc(var(--mm-mobile-content-clearance) + 12px)!important}
+}
