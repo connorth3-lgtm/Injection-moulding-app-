@@ -102,3 +102,48 @@ test('forced colours are actually applied in Chromium',async({page,browserName})
   expect(style.shadow).toBe('none');
   expect(style.border).not.toBe('none');
 });
+
+
+test('assessment focus UI is responsive, touch-safe and hides inactive controls',async({page})=>{
+  for(const width of [320,360,390,412,1024]){
+    await page.setViewportSize({width,height:width<500?844:900});
+    await openApp(page);
+    await page.evaluate(()=>startExam('Beginner'));
+    await expect(page.locator('#examQuestions.mm-focus-mode')).toBeVisible();
+    await expect(page.locator('#examQuestions .question.mm-current-question')).toHaveCount(1);
+    await assertNoHorizontalOverflow(page,`assessment-${width}`);
+    const steps=page.locator('.mm-exam-steps .mm-step');
+    expect(await steps.count()).toBeGreaterThanOrEqual(10);
+    for(let i=0;i<await steps.count();i++){
+      const box=await steps.nth(i).boundingBox();
+      expect(box?.width||0,`assessment step ${i+1} width at ${width}px`).toBeGreaterThanOrEqual(44);
+      expect(box?.height||0,`assessment step ${i+1} height at ${width}px`).toBeGreaterThanOrEqual(44);
+    }
+    const inactive=page.locator('#examQuestions .question:not(.mm-current-question)');
+    expect(await inactive.count()).toBeGreaterThan(0);
+    for(let i=0;i<await inactive.count();i++){
+      await expect(inactive.nth(i)).toBeHidden();
+      const radios=inactive.nth(i).locator('input[type=radio]');
+      for(let j=0;j<await radios.count();j++)await expect(radios.nth(j)).not.toBeFocused();
+    }
+    const grade=page.locator('.mm-native-grade');
+    await expect(grade).toBeDisabled();
+  }
+});
+
+test('assessment keyboard navigation moves focus only into the active question',async({page})=>{
+  await page.setViewportSize({width:390,height:844});
+  await openApp(page);
+  await page.evaluate(()=>startExam('Beginner'));
+  const next=page.locator('.mm-exam-next');
+  await next.click();
+  await expect(page.locator('.question.mm-current-question .mm-question-stem')).toBeFocused();
+  const active=await page.evaluate(()=>({
+    current:document.querySelector('.question.mm-current-question')?.getAttribute('aria-hidden'),
+    hidden:[...document.querySelectorAll('#examQuestions .question:not(.mm-current-question)')].every(x=>x.getAttribute('aria-hidden')==='true'),
+    hiddenChecked:[...document.querySelectorAll('#examQuestions .question:not(.mm-current-question) input[type=radio]')].some(x=>x===document.activeElement)
+  }));
+  expect(active.current).toBe('false');
+  expect(active.hidden).toBe(true);
+  expect(active.hiddenChecked).toBe(false);
+});
