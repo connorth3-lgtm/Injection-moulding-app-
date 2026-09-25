@@ -74,25 +74,32 @@ need('window.MM_PROCESS_DATA_DIAGNOSTICS?.open' in js,'Home process-data action 
 
 # Mobile Home keeps a compact non-sticky topbar and enough fixed-nav/safe-area clearance
 # without the previous oversized dead space. Touch targets stay at least 44px.
-mobile_markers=[
-    'mm-mobile-layout-guard-style',
+mobile_shell_markers=[
     'installMobileLayoutGuard',
+    "document.documentElement.classList.add('mm-mobile-layout-guard')",
     'syncVisibleViewChrome',
-    '--mm-mobile-nav-clearance:120px',
-    'body{padding-bottom:0!important}',
-    '.main{padding:14px 14px calc(var(--mm-mobile-nav-clearance) + env(safe-area-inset-bottom))!important}',
-    '.topbar{position:relative!important;top:auto!important',
-    '.mobile-nav{position:fixed!important;left:0!important;right:0!important;bottom:0!important',
-    '.mobile-nav button{min-height:48px!important',
-    '.top-actions button{min-height:44px!important',
-    'body.mm-home-visible #continueBtn{display:none!important}',
-    'body.mm-home-visible #searchBtn{flex:0 0 auto!important',
-    'scroll-padding-bottom:calc(var(--mm-mobile-nav-clearance) + env(safe-area-inset-bottom))',
     "window.MM_MOBILE_LAYOUT_GUARD='home-task-first-fixed-nav-clearance-v2'",
     "window.MM_UI_POLISH='compact-shell-no-gamification-v1'"
 ]
-for marker in mobile_markers:
-    need(marker in shell,f'mobile layout regression guard missing: {marker}')
+for marker in mobile_shell_markers:
+    need(marker in shell,f'mobile shell behavior guard missing: {marker}')
+need('document.createElement(\'style\')' not in shell,'PWA shell must not inject presentation styles at runtime')
+need('mm-mobile-layout-guard-style' not in shell,'legacy runtime mobile style element must remain retired')
+premium=text('premium-ui.css')
+mobile_style_markers=[
+    'html.mm-mobile-layout-guard{--mm-mobile-nav-clearance:120px}',
+    'scroll-padding-bottom:calc(var(--mm-mobile-nav-clearance) + env(safe-area-inset-bottom))',
+    'html.mm-mobile-layout-guard body{padding-bottom:0!important}',
+    'html.mm-mobile-layout-guard .main{padding:14px 14px calc(var(--mm-mobile-nav-clearance) + env(safe-area-inset-bottom))!important}',
+    'html.mm-mobile-layout-guard .topbar{position:relative!important;top:auto!important',
+    'html.mm-mobile-layout-guard .mobile-nav{position:fixed!important;left:0!important;right:0!important;bottom:0!important',
+    'html.mm-mobile-layout-guard .mobile-nav button{min-height:48px!important',
+    'html.mm-mobile-layout-guard .top-actions button{min-height:44px!important',
+    'html.mm-mobile-layout-guard body.mm-home-visible #continueBtn{display:none!important}',
+    'html.mm-mobile-layout-guard body.mm-home-visible #searchBtn{flex:0 0 auto!important'
+]
+for marker in mobile_style_markers:
+    need(marker in premium,f'governed mobile presentation marker missing: {marker}')
 need(shell.index('installMobileLayoutGuard()') < shell.index('dockReferenceLauncher()'),'mobile layout guard must install before shell docking work')
 need(shell.index('syncVisibleViewChrome()') < shell.index('dockReferenceLauncher()'),'visible-view chrome sync must run before shell docking work')
 need("shell?.events?.onViewChange?.(scheduleSync)" in shell,'mobile Home chrome must react through canonical app-shell view lifecycle events')
