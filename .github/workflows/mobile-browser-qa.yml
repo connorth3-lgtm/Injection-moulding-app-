@@ -126,7 +126,7 @@ jobs:
       - name: Chromium mobile, material, evidence, engineering-store and PWA regression tests
         id: chromium_regression
         continue-on-error: true
-        run: npx playwright test --config=playwright.config.cjs --grep-invert "matches approved 2026.09.18.3 baseline across learner surfaces"
+        run: npx playwright test --config=playwright.config.cjs --grep-invert "matches approved .* baseline across learner surfaces"
       - name: WebKit substantive learner regression tests
         id: webkit_regression
         continue-on-error: true
