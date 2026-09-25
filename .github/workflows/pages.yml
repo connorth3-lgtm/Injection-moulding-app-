@@ -66,6 +66,9 @@ jobs:
       - name: PRs validate release readiness but never publish
         if: github.event_name == 'pull_request'
         run: echo "PR validation checks production provenance, the physical-device contract and exact build behavior without claiming device evidence, mutating Pages settings or publishing."
+      - name: Confirm protected-main preview publication path
+        if: github.event_name == 'push'
+        run: echo "Protected main pushes publish either the authorized production artifact or the release-hold artifact containing the governed /preview/ candidate."
 
   build:
     permissions:
