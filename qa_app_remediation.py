@@ -214,6 +214,18 @@ for marker in ("MouldMaster Release QA", "MouldMaster Domain Foundation QA", "De
 release_workflow = text(".github/workflows/qa.yml")
 need("python qa_app_remediation.py" in release_workflow, "release QA must execute the full-app remediation contract")
 
+process_data_runtime = text("data-integration-runtime.js")
+need("function esc(v)" in process_data_runtime, "connected process-data runtime lost its explicit HTML escaping boundary")
+for marker in (
+    "esc(d.datasetMeta?.source_label||d.id)",
+    "esc(d.entities?.machine||'machine not linked')",
+    "esc(d.entities?.mould||'mould not linked')",
+    "esc(link?.materialGrade||'')",
+    "esc(link?.intervention||'')",
+    "esc(x.title)",
+):
+    need(marker in process_data_runtime, f"connected process-data HTML sink lost escaping: {marker}")
+
 sink_register = text("docs/DYNAMIC_HTML_SINK_REGISTER.md")
 for marker in ("learner strings", "imported/device/site data", "Frozen/generated core runtime", "eval", "new Function", "textContent"):
     need(marker in sink_register, f"dynamic HTML sink register missing security boundary: {marker}")
