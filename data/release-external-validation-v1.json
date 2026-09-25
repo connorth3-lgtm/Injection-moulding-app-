@@ -26,8 +26,8 @@
     "reviewPacket": "qa/ACCESSIBILITY_REAL_AT_2026.09.24.15.md",
     "candidate": {
       "release": "2026.09.24.15",
-      "sourceSha": "b405edea1406e77b8173732fb2a6c81dcb45667f",
-      "runtimeFingerprint": "sha256:6fcce09b789464245853efd96fb09aa0003e05b4bc6eb83be215e0b0aaf27ab7"
+      "sourceSha": "f6a6ced8c910038a59580e6da497ee6a8749b93f",
+      "runtimeFingerprint": "sha256:3aa49bbff9785f4bb4c8bef365cc69019c309ce14f8c69d9e27568adf8c6f352"
     },
     "required": "Release-specific human NVDA and VoiceOver validation across the governed matrix."
   },
@@ -37,14 +37,14 @@
     "reviewPacket": "qa/PWA_PHYSICAL_DEVICE_2026.09.24.15.md",
     "currentCandidate": {
       "release": "2026.09.24.15",
-      "sourceSha": "b405edea1406e77b8173732fb2a6c81dcb45667f",
-      "runtimeFingerprint": "sha256:6fcce09b789464245853efd96fb09aa0003e05b4bc6eb83be215e0b0aaf27ab7",
-      "candidateRunId": 36075456927,
+      "sourceSha": "f6a6ced8c910038a59580e6da497ee6a8749b93f",
+      "runtimeFingerprint": "sha256:3aa49bbff9785f4bb4c8bef365cc69019c309ce14f8c69d9e27568adf8c6f352",
+      "candidateRunId": 36195693756,
       "candidateWorkflow": "Pre-merge Public Candidate",
-      "artifactId": 10840316262,
-      "artifactName": "physical-pwa-candidate-b405edea1406e77b8173732fb2a6c81dcb45667f",
-      "artifactDigest": "sha256:61f84a550d3997f63b4b2b45a95f44584d6aa4feddcf0a84ca311b7d6b7f93d4",
-      "artifactExpiresAt": "2026-10-25T00:00:37Z"
+      "artifactId": 10890326367,
+      "artifactName": "physical-pwa-candidate-f6a6ced8c910038a59580e6da497ee6a8749b93f",
+      "artifactDigest": "sha256:5bb1349f25d10bfce7d661dd8c6015f060e259c75feabd2c3d9c4282c74d8214",
+      "artifactExpiresAt": "2026-10-25T22:14:38Z"
     },
     "required": "Current-release physical iOS/iPadOS and Android install/update/offline validation. Prior release waivers do not authorize this release."
   },
@@ -53,7 +53,7 @@
     "workflow": ".github/workflows/microsoft-store-msix.yml",
     "handoff": "certification/STORE_SUBMISSION_STATUS.md",
     "readinessPacket": "certification/WINDOWS_SIGNING_READINESS_2026.09.24.15.md",
-    "sourceSha": "5c4e5f303cc1835157fb53869e93ca94b66810c4",
+    "sourceSha": "f6a6ced8c910038a59580e6da497ee6a8749b93f",
     "desktopRelease": "2026.08.26.9",
     "evidence": null,
     "required": [
@@ -104,8 +104,8 @@
     "reviewPacket": "qa/NZQA_EXTERNAL_VALIDATION_2026.09.24.15.md",
     "required": "Genuine provider ownership, stakeholder need, provider-approved design, authorised assessment/internal moderation, consent-to-assess/CMR confirmation, applicable national moderation, workplace evidence and provider-controlled review/change evidence for the exact governed release.",
     "candidate": {
-      "sourceSha": "b405edea1406e77b8173732fb2a6c81dcb45667f",
-      "runtimeFingerprint": "sha256:6fcce09b789464245853efd96fb09aa0003e05b4bc6eb83be215e0b0aaf27ab7"
+      "sourceSha": "f6a6ced8c910038a59580e6da497ee6a8749b93f",
+      "runtimeFingerprint": "sha256:3aa49bbff9785f4bb4c8bef365cc69019c309ce14f8c69d9e27568adf8c6f352"
     }
   }
 }
