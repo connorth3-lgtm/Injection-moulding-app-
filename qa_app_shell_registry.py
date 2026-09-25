@@ -44,7 +44,6 @@ for marker in [
     '--mm-mobile-nav-height',
     '--mm-mobile-content-clearance',
     'data-mm-onclick*=\"openMobileMenu\"',
-    "button.getAttribute('data-mm-onclick')",
     'aria-current',
     'visibleCoreView',
     "navigationItems.get(activeCustomId)",
@@ -70,6 +69,7 @@ need("before.innerHTML=''" not in shell and "after.innerHTML=''" not in shell,'d
 need("if(!nav||mobileNavNormalizing)return" in shell,'mobile navigation normalization lacks a re-entry guard')
 need("b.setAttribute('aria-label',item.label||item.id)" in shell,'registry-generated navigation controls must be labelled at source')
 need('aria-hidden="true"' in shell,'decorative registry navigation icons must be hidden from assistive technology')
+need("button.getAttribute('data-mm-onclick')" in shell,'canonical More-button detection must retain retired inline-handler compatibility')
 need("document.createElement('style')" not in shell,'canonical app-shell registry must not inject presentation styles at runtime')
 need('mm-app-shell-registry-style' not in shell,'retired app-shell runtime style element must not return')
 ui_shell=text('ui-shell.css')
