@@ -69,8 +69,11 @@ need('aria-hidden="true"' in shell,'decorative registry navigation icons must be
 need("button.getAttribute('data-mm-onclick')" in shell,'canonical More-button detection must retain retired inline-handler compatibility')
 need("document.createElement('style')" not in shell,'canonical app-shell registry must not inject presentation styles at runtime')
 need('mm-app-shell-registry-style' not in shell,'retired app-shell runtime style element must not return')
+product_areas=text('src/domains/shell/product-areas.js')
+need("document.createElement('style')" not in product_areas,'product-area shell module must not inject presentation styles at runtime')
+need('mm-product-areas-style' not in product_areas,'retired product-area runtime style element must not return')
 ui_shell=text('ui-shell.css')
-for marker in ['--mm-mobile-nav-height:calc(70px + env(safe-area-inset-bottom))','--mm-mobile-content-clearance:calc(var(--mm-mobile-nav-height) + 26px)','.mm-dashboard-registry{display:grid;gap:14px}','body[data-mm-view="dashboard"] #continueBtn{display:none!important}','.mm-mobile-actions{bottom:var(--mm-mobile-nav-height)!important']:
+for marker in ['.mm-product-area-grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr))','--mm-mobile-nav-height:calc(70px + env(safe-area-inset-bottom))','--mm-mobile-content-clearance:calc(var(--mm-mobile-nav-height) + 26px)','.mm-dashboard-registry{display:grid;gap:14px}','body[data-mm-view="dashboard"] #continueBtn{display:none!important}','.mm-mobile-actions{bottom:var(--mm-mobile-nav-height)!important']:
     need(marker in ui_shell,f'canonical app-shell presentation missing from ui-shell.css: {marker}')
 
 # Registry/finalizer must consolidate presentation composition only.
