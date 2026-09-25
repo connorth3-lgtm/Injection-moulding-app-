@@ -28,6 +28,8 @@ for marker in [
     'existingDashboardSlot',
     'releaseDashboardSlot',
     'dashboardComposeQueued',
+    'mobileNavNormalizing',
+    'data.mmNavGroup',
     'requestCompose:queueDashboardCompose',
     'syncDesktopNavigation',
     'populateMobileMore',
@@ -68,6 +70,9 @@ need('if(!finalized||dashboardComposeQueued)return' in shell,'late dashboard reg
 need("if(slot.dataset.mmDashboardAdopt==='1')" in shell,'adopted dashboard nodes are not preserved when a slot is released')
 need("for(const slot of [...root.querySelectorAll('.mm-dashboard-slot')])" in shell,'dashboard composition is not reconciling existing slots')
 need("before.innerHTML=''" not in shell and "after.innerHTML=''" not in shell,'dashboard composition still clears registry hosts destructively')
+need("if(!nav||mobileNavNormalizing)return" in shell,'mobile navigation normalization lacks a re-entry guard')
+need("b.setAttribute('aria-label',item.label||item.id)" in shell,'registry-generated navigation controls must be labelled at source')
+need('aria-hidden="true"' in shell,'decorative registry navigation icons must be hidden from assistive technology')
 
 # Registry/finalizer must consolidate presentation composition only.
 for forbidden in ['correctIndex=', 'question_bank_version=', 'MM_DATA.exams=', 'regionalQuestions=', 'certificates.push(', 'fetch(', 'XMLHttpRequest', 'WebSocket', 'sendBeacon']:
