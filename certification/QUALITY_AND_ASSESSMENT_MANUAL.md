@@ -14,7 +14,7 @@ MouldMaster Academy provides structured injection-moulding theory, troubleshooti
 6. Changes to assessment keys or safety-critical content require documented review before release.
 
 ## 3. Current assessment architecture
-Current audited question-bank version: `2026.08.21.1`.
+Current audited question-bank version: `2026.08.30.1`.
 
 Knowledge assessment rules:
 - UK/US/NZ mode: 10 questions (7 technical + 3 regional safety questions).
