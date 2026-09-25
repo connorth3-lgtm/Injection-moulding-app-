@@ -208,6 +208,10 @@ need("new MutationObserver" not in pwa, "PWA shell still uses document-wide muta
 need("new MutationObserver" not in materials, "Materials domain still uses document-wide mutation polling")
 need("mutationScope:'changed-subtrees'" in a11y, "accessibility safety net is not constrained to changed subtrees")
 
+sink_register = text("docs/DYNAMIC_HTML_SINK_REGISTER.md")
+for marker in ("learner strings", "imported/device/site data", "Frozen/generated core runtime", "eval", "new Function", "textContent"):
+    need(marker in sink_register, f"dynamic HTML sink register missing security boundary: {marker}")
+
 storage_matrix = text("docs/STORAGE_OWNERSHIP_MATRIX.md")
 for marker in ("Learner assessment/progress state", "Engineering cases", "Process/connected machine observations", "PWA runtime cache", "Desktop application bytes", "owner scope", "migration"):
     need(marker in storage_matrix, f"storage ownership matrix missing contract: {marker}")
