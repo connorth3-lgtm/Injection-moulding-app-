@@ -202,4 +202,13 @@ need("new MutationObserver" not in pwa, "PWA shell still uses document-wide muta
 need("new MutationObserver" not in materials, "Materials domain still uses document-wide mutation polling")
 need("mutationScope:'changed-subtrees'" in a11y, "accessibility safety net is not constrained to changed subtrees")
 
+storage_matrix = text("docs/STORAGE_OWNERSHIP_MATRIX.md")
+for marker in ("Learner assessment/progress state", "Engineering cases", "Process/connected machine observations", "PWA runtime cache", "Desktop application bytes", "owner scope", "migration"):
+    need(marker in storage_matrix, f"storage ownership matrix missing contract: {marker}")
+compatibility_matrix = text("docs/CLIENT_COMPATIBILITY_MATRIX.md")
+version_meta = json.loads(text("version.json"))
+for key in ("web_release", "desktop_release", "android_release", "windows_recovery_release", "content_version", "question_bank_version"):
+    need(str(version_meta[key]) in compatibility_matrix, f"client compatibility matrix stale for {key}")
+need("external HOLD" in compatibility_matrix, "client compatibility matrix must preserve external validation boundary")
+
 print("MouldMaster app-wide remediation QA passed: pre-merge live Pages provenance plus earliest-start legacy publisher guard, aligned gh api negotiation, cross-index fail-closed provenance, single authoritative owner-scoped engineering case store, variant-safe materials, PWA lifecycle, legacy distribution separation, deterministic browser matrix and targeted observers")
