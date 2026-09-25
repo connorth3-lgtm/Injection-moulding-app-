@@ -29,7 +29,6 @@ for marker in [
     'releaseDashboardSlot',
     'dashboardComposeQueued',
     'mobileNavNormalizing',
-    'data.mmNavGroup',
     'requestCompose:queueDashboardCompose',
     'syncDesktopNavigation',
     'populateMobileMore',
