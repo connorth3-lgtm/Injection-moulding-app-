@@ -42,11 +42,9 @@ for marker in [
     "id:'material-labs'",
     "id:'learning-insights'", "id:'repair-app-files'", "./repair.html", "location.reload()", "Electron",
     '--mm-mobile-nav-height',
-    '--mm-mobile-nav-clearance',
     '--mm-mobile-content-clearance',
     'data-mm-onclick*=\"openMobileMenu\"',
     "button.getAttribute('data-mm-onclick')",
-    '.mm-mobile-actions{bottom:var(--mm-mobile-nav-clearance)!important',
     'aria-current',
     'visibleCoreView',
     "navigationItems.get(activeCustomId)",
@@ -72,6 +70,11 @@ need("before.innerHTML=''" not in shell and "after.innerHTML=''" not in shell,'d
 need("if(!nav||mobileNavNormalizing)return" in shell,'mobile navigation normalization lacks a re-entry guard')
 need("b.setAttribute('aria-label',item.label||item.id)" in shell,'registry-generated navigation controls must be labelled at source')
 need('aria-hidden="true"' in shell,'decorative registry navigation icons must be hidden from assistive technology')
+need("document.createElement('style')" not in shell,'canonical app-shell registry must not inject presentation styles at runtime')
+need('mm-app-shell-registry-style' not in shell,'retired app-shell runtime style element must not return')
+ui_shell=text('ui-shell.css')
+for marker in ['--mm-mobile-nav-height:calc(70px + env(safe-area-inset-bottom))','--mm-mobile-content-clearance:calc(var(--mm-mobile-nav-height) + 26px)','.mm-dashboard-registry{display:grid;gap:14px}','body[data-mm-view="dashboard"] #continueBtn{display:none!important}','.mm-mobile-actions{bottom:var(--mm-mobile-nav-height)!important']:
+    need(marker in ui_shell,f'canonical app-shell presentation missing from ui-shell.css: {marker}')
 
 # Registry/finalizer must consolidate presentation composition only.
 for forbidden in ['correctIndex=', 'question_bank_version=', 'MM_DATA.exams=', 'regionalQuestions=', 'certificates.push(', 'fetch(', 'XMLHttpRequest', 'WebSocket', 'sendBeacon']:
