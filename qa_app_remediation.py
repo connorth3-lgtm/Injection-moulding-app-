@@ -232,8 +232,10 @@ learner_model = text("src/domains/learning/learner-model.js")
 need("emitBookRender('chapter',id)" in book_runtime, "Book runtime must emit chapter engagement events")
 for marker in ("mm:book-render", "book_chapter_open", "activityType:'book'", "book_listening_start"):
     need(marker in activity_events, f"Book-to-app learner activity bridge missing: {marker}")
-need("e.activityType==='book'?0.15" in learner_model, "learner model lost conservative Book evidence weighting")
-need("if(e.type==='book_chapter_open')" in learner_model and "success:0" in learner_model, "Book reading must not self-award mastery")
+need("if(e.type==='book_chapter_open')" in learner_model and "engagement.get(id)" in learner_model, "learner model lost separate Book engagement reporting")
+need("bookEngagement:" in learner_model, "learner model must expose Book engagement separately from mastery topics")
+need("e.activityType==='book'?" not in learner_model, "Book engagement must not carry a mastery evidence weight")
+need("Book reading/listening engagement is reported separately and never contributes to mastery" in learner_model, "Book engagement/mastery authority boundary missing")
 
 sink_register = text("docs/DYNAMIC_HTML_SINK_REGISTER.md")
 for marker in ("learner strings", "imported/device/site data", "Frozen/generated core runtime", "eval", "new Function", "textContent"):
