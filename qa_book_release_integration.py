@@ -12,6 +12,7 @@ SME_SOURCE = ROOT / 'data/book-sme-review-v1.json'
 QUAL_SOURCE = ROOT / 'data/book-qualification-resolution-all-v1.json'
 HIGH_RISK_SOURCE = ROOT / 'data/book-claim-resolution-high-risk-v1.json'
 HIGH_RISK_V2_SOURCE = ROOT / 'data/book-claim-resolution-high-risk-v2.json'
+ENRICHMENT_SOURCE = ROOT / 'data/book-evidence-enrichment-v2.json'
 MANIFEST_PATH = ROOT / 'runtime-domain-manifest.json'
 SW_PATH = ROOT / 'service-worker.js'
 INDEX_PATH = ROOT / 'index.html'
@@ -41,6 +42,7 @@ book_sme = json.loads(SME_SOURCE.read_text(encoding='utf-8'))
 qualification = json.loads(QUAL_SOURCE.read_text(encoding='utf-8'))
 high_risk = json.loads(HIGH_RISK_SOURCE.read_text(encoding='utf-8'))
 high_risk_v2 = json.loads(HIGH_RISK_V2_SOURCE.read_text(encoding='utf-8'))
+enrichment = json.loads(ENRICHMENT_SOURCE.read_text(encoding='utf-8'))
 desktop = json.loads(DESKTOP_PACKAGE.read_text(encoding='utf-8'))
 integrity_script = INTEGRITY_SCRIPT.read_text(encoding='utf-8')
 
