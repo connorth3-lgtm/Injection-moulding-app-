@@ -1,9 +1,9 @@
-/* MouldMaster canonical app-shell registry — 2026.09.26.1 */
+/* MouldMaster canonical app-shell registry — 2026.08.26.4 */
 (function(){
 'use strict';
 if(window.MM_APP_SHELL)return;
 
-const VERSION='2026.09.26.1';
+const VERSION='2026.08.26.4';
 const captured={
   renderDashboard:typeof renderDashboard==='function'?renderDashboard:null,
   renderLesson:typeof renderLesson==='function'?renderLesson:null,
