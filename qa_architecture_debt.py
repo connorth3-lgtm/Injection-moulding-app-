@@ -6,7 +6,7 @@ import json
 import re
 
 ROOT = Path(__file__).resolve().parent
-BASELINE_PATH = ROOT / "qa/architecture-debt-baseline.json"\nREMEDIATION_PATH = ROOT / "docs/FULL_APP_REMEDIATION_2026-09-25.md"
+BASELINE_PATH = ROOT / "qa/architecture-debt-baseline.json"
 CORE_RUNTIME_DIR = ROOT / "src/core-runtime"
 HANDLER_BRIDGE_PATH = CORE_RUNTIME_DIR / "inline-handler-bridge.js"
 STYLE_BRIDGE_PATH = CORE_RUNTIME_DIR / "inline-style-bridge.js"
