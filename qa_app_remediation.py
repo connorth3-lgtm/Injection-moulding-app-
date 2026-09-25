@@ -208,6 +208,12 @@ need("new MutationObserver" not in pwa, "PWA shell still uses document-wide muta
 need("new MutationObserver" not in materials, "Materials domain still uses document-wide mutation polling")
 need("mutationScope:'changed-subtrees'" in a11y, "accessibility safety net is not constrained to changed subtrees")
 
+ci_contract = text("docs/CI_RISK_COVERAGE.md")
+for marker in ("MouldMaster Release QA", "MouldMaster Domain Foundation QA", "Deep Audit Governance", "Mobile Browser QA", "Premium UI QA", "MouldMaster Physical PWA Contract QA", "Open Desktop Build", "MouldMaster Pages Release Readiness", "Release External Validation Boundary", "Question Quality 50-Pass"):
+    need(marker in ci_contract, f"CI risk coverage contract missing workflow: {marker}")
+release_workflow = text(".github/workflows/qa.yml")
+need("python qa_app_remediation.py" in release_workflow, "release QA must execute the full-app remediation contract")
+
 sink_register = text("docs/DYNAMIC_HTML_SINK_REGISTER.md")
 for marker in ("learner strings", "imported/device/site data", "Frozen/generated core runtime", "eval", "new Function", "textContent"):
     need(marker in sink_register, f"dynamic HTML sink register missing security boundary: {marker}")
