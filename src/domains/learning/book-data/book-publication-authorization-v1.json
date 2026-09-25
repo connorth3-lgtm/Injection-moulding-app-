@@ -22,15 +22,15 @@
     "scope": "Exact served bytes for every payload that can influence Book publication promotion or its independent-SME status. Git object identity is checked in-browser before JSON parsing; any mismatch fails closed.",
     "gitBlobSha1ByFile": {
       "book-manifest-v1.json": "59efb8048451389ebb610566e13607d2d9c47cdd",
-      "book-sme-review-v1.json": "068b37a59727866cd08995eda4308b89b002fa14",
+      "book-sme-review-v1.json": "29f26bf5baf728951e3a51c880cbb7a10c7f5351",
       "book-qualification-resolution-all-v1.json": "c6da26d0c4ed3608b1a19b1551856c1d80c03a8f",
       "book-claim-resolution-high-risk-v1.json": "84d007a72c16b60e01ba392f9ca6e0f6d487cc85",
       "book-authored-foundations-v1.json": "5d03416c4f857d41de9890546a6de5c649f86094",
       "book-evidence-registry-v1.json": "24cbe1b1777fa4e2377226a8789815b7321d66a9",
       "book-chapters-materials-machine-v1.json": "db728583dd832c1998c8b2ac32ce97b281929047",
       "book-authored-remaining-v1.json": "ee0788e10630aaf6d0d8c64e2d69e40c14968f1f",
-      "book-worked-engineering-cases-v1.json": "92e89942266221dceae78a18ed303ebe0c3842e7",
-      "book-evidence-enrichment-v2.json": "3d0be719dab8ac8ab4f325c254854eb92d773c1a"
+      "book-worked-engineering-cases-v1.json": "e6a3efb325080ec36e2fc5d1e5211d30cd7c8ecb",
+      "book-evidence-enrichment-v2.json": "a46ad06036ee1a7d7713f554034c6a9266776222"
     }
   },
   "canonicalAcademicEvidenceUrls": {
