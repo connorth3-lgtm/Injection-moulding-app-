@@ -221,13 +221,7 @@ function dockReferenceLauncher(){
 }
 function configureReferenceDrawer(){
   const modal=document.querySelector('.mmsrc');if(!modal)return;modal.classList.add('mm-reference-drawer');modal.setAttribute('aria-modal','false');modal.setAttribute('aria-label','MouldMaster references — non-blocking reference drawer');
-  if(!document.getElementById('mm-reference-drawer-style')){const style=document.createElement('style');style.id='mm-reference-drawer-style';style.textContent=`
-.mmsrc.mm-reference-drawer{background:transparent!important;align-items:flex-end!important;justify-content:flex-end!important;padding:12px!important;pointer-events:none!important}
-.mmsrc.mm-reference-drawer[data-open="1"]{display:flex!important}
-.mmsrc.mm-reference-drawer .mmsrc-panel{width:min(430px,calc(100vw - 24px))!important;max-height:min(72dvh,760px)!important;height:auto!important;border-radius:16px!important;pointer-events:auto!important;box-shadow:0 18px 52px rgba(0,0,0,.42)!important}
-.mmsrc.mm-reference-drawer .mmsrc-head{flex:0 0 auto!important}.mmsrc.mm-reference-drawer .mmsrc-body{min-height:0!important;overscroll-behavior:contain!important}
-@media(max-width:680px){.mmsrc.mm-reference-drawer{padding:6px 6px calc(82px + env(safe-area-inset-bottom))!important}.mmsrc.mm-reference-drawer .mmsrc-panel{width:calc(100vw - 12px)!important;max-height:48dvh!important;border-radius:15px!important}.mmsrc.mm-reference-drawer .mmsrc-head{padding-top:10px!important}}
-`;document.head.appendChild(style)}modal.dataset.mmNonBlocking='1'
+  modal.dataset.mmNonBlocking='1'
 }
 function openStandaloneReferenceData(){location.assign(REFERENCE_DATA_URL)}
 function dockReferenceDataLauncher(){
@@ -237,11 +231,7 @@ function dockReferenceDataLauncher(){
 }
 function configureReferenceDataDrawer(){
   const modal=document.querySelector('.mmrd');if(!modal)return;modal.classList.add('mm-reference-data-drawer');modal.setAttribute('aria-modal','false');modal.setAttribute('aria-label','MouldMaster references');if(isMobileNav())modal.dataset.open='0';
-  if(!document.getElementById('mm-reference-data-drawer-style')){const style=document.createElement('style');style.id='mm-reference-data-drawer-style';style.textContent=`
-.mmrd.mm-reference-data-drawer{background:transparent!important;align-items:flex-end!important;justify-content:flex-end!important;padding:12px!important;pointer-events:none!important}.mmrd.mm-reference-data-drawer[data-open="1"]{display:flex!important}
-.mmrd.mm-reference-data-drawer .mmrd-panel{width:min(520px,calc(100vw - 24px))!important;max-height:min(74dvh,800px)!important;height:auto!important;border-radius:16px!important;pointer-events:auto!important;box-shadow:0 18px 52px rgba(0,0,0,.42)!important}.mmrd.mm-reference-data-drawer .mmrd-head{flex:0 0 auto!important}.mmrd.mm-reference-data-drawer .mmrd-body{min-height:0!important;overscroll-behavior:contain!important}
-@media(max-width:680px){.mmrd.mm-reference-data-drawer,.mmrd.mm-reference-data-drawer[data-open="1"]{display:none!important;pointer-events:none!important}}
-`;document.head.appendChild(style)}modal.dataset.mmNonBlocking='1'
+  modal.dataset.mmNonBlocking='1'
 }
 function addNZLegacyNote(){
   const host=document.getElementById('standards');if(!host||host.querySelector('[data-mm-nz-legacy-note]')||[...host.querySelectorAll('.legal-note')].some(x=>/NZ source-status (?:note|clarification)/i.test(x.textContent||'')))return;const region=(window.user&&window.user.region)||'ALL';if(region!=='ALL'&&region!=='NZ')return;host.insertAdjacentHTML('beforeend',`<div class="legal-note" data-mm-nz-legacy-note="1"><b>NZ source-status note:</b> the older WorkSafe injection/blow-moulding fact sheet is retained only as <b>legacy supplementary guidance</b>. For current duties and safeguarding practice, use the Health and Safety at Work Act framework, current WorkSafe machinery/lockout guidance, applicable site procedures and current machinery standards. Do not treat the old fact sheet as the controlling current legal source.</div>`)
