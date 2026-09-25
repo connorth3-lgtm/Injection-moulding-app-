@@ -207,3 +207,21 @@ body[data-mm-view="lesson"] .topbar{justify-content:flex-end!important}
   .mm-primary-hub-head h1{font-size:26px!important}
   .mm-primary-hub .mm-hub-continue h2{font-size:22px!important}
 }
+
+/* Reference drawers are shell presentation; PWA runtime only controls behavior/state. */
+.mmsrc.mm-reference-drawer{background:transparent!important;align-items:flex-end!important;justify-content:flex-end!important;padding:12px!important;pointer-events:none!important}
+.mmsrc.mm-reference-drawer[data-open="1"]{display:flex!important}
+.mmsrc.mm-reference-drawer .mmsrc-panel{width:min(430px,calc(100vw - 24px))!important;max-height:min(72dvh,760px)!important;height:auto!important;border-radius:16px!important;pointer-events:auto!important;box-shadow:0 18px 52px rgba(0,0,0,.42)!important}
+.mmsrc.mm-reference-drawer .mmsrc-head{flex:0 0 auto!important}
+.mmsrc.mm-reference-drawer .mmsrc-body{min-height:0!important;overscroll-behavior:contain!important}
+.mmrd.mm-reference-data-drawer{background:transparent!important;align-items:flex-end!important;justify-content:flex-end!important;padding:12px!important;pointer-events:none!important}
+.mmrd.mm-reference-data-drawer[data-open="1"]{display:flex!important}
+.mmrd.mm-reference-data-drawer .mmrd-panel{width:min(520px,calc(100vw - 24px))!important;max-height:min(74dvh,800px)!important;height:auto!important;border-radius:16px!important;pointer-events:auto!important;box-shadow:0 18px 52px rgba(0,0,0,.42)!important}
+.mmrd.mm-reference-data-drawer .mmrd-head{flex:0 0 auto!important}
+.mmrd.mm-reference-data-drawer .mmrd-body{min-height:0!important;overscroll-behavior:contain!important}
+@media(max-width:680px){
+  .mmsrc.mm-reference-drawer{padding:6px 6px calc(82px + env(safe-area-inset-bottom))!important}
+  .mmsrc.mm-reference-drawer .mmsrc-panel{width:calc(100vw - 12px)!important;max-height:48dvh!important;border-radius:15px!important}
+  .mmsrc.mm-reference-drawer .mmsrc-head{padding-top:10px!important}
+  .mmrd.mm-reference-data-drawer,.mmrd.mm-reference-data-drawer[data-open="1"]{display:none!important;pointer-events:none!important}
+}
