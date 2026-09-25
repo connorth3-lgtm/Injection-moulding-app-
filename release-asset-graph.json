@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "generatedBy": "tools/generate_release_asset_graph.py",
+  "domainManifest": "runtime-domain-manifest.json",
+  "serviceWorker": "service-worker.js",
+  "consumers": [
+    "PWA atomic offline cache",
+    "GitHub Pages public artifact",
+    "Electron integrity and serving allowlist"
+  ],
+  "policy": {
+    "domainAssetsMustBeOfflineGoverned": true,
+    "domainDataAssetsMustBeOfflineGoverned": true,
+    "pagesMustDeriveFromServiceWorker": true,
+    "desktopMustCoverServiceWorkerRootAssets": true
+  }
+}

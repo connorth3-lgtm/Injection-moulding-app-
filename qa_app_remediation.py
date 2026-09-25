@@ -35,6 +35,12 @@ mobile = text(".github/workflows/mobile-browser-qa.yml")
 desktop_pkg = json.loads(text("desktop/electron/package.json"))
 integrity_script = text("desktop/electron/scripts/generate-integrity.cjs")
 manifest = json.loads(text("runtime-domain-manifest.json"))
+release_graph = json.loads(text("release-asset-graph.json"))
+need(release_graph.get("schemaVersion") == 1, "release asset graph schema drift")
+need(release_graph.get("domainManifest") == "runtime-domain-manifest.json", "release asset graph lost canonical domain manifest")
+need(release_graph.get("serviceWorker") == "service-worker.js", "release asset graph lost canonical service worker")
+graph_check = subprocess.run(["python", "tools/generate_release_asset_graph.py"], cwd=ROOT, capture_output=True, text=True)
+need(graph_check.returncode == 0, f"release asset graph validation failed: {graph_check.stdout} / {graph_check.stderr}")
 
 # PWA/browser lifecycle: browser use must never remove the installed app's shared origin state.
 for forbidden in ("retireBrowserOfflineRuntime", ".unregister()", "mmFresh"):
@@ -201,5 +207,36 @@ for marker in ("without a compatibility bridge", "canonicalStore:'indexeddb-v2'"
 need("new MutationObserver" not in pwa, "PWA shell still uses document-wide mutation polling")
 need("new MutationObserver" not in materials, "Materials domain still uses document-wide mutation polling")
 need("mutationScope:'changed-subtrees'" in a11y, "accessibility safety net is not constrained to changed subtrees")
+
+ci_contract = text("docs/CI_RISK_COVERAGE.md")
+for marker in ("MouldMaster Release QA", "MouldMaster Domain Foundation QA", "Deep Audit Governance", "Mobile Browser QA", "Premium UI QA", "MouldMaster Physical PWA Contract QA", "Open Desktop Build", "MouldMaster Pages Release Readiness", "Release External Validation Boundary", "Question Quality 50-Pass"):
+    need(marker in ci_contract, f"CI risk coverage contract missing workflow: {marker}")
+release_workflow = text(".github/workflows/qa.yml")
+need("python qa_app_remediation.py" in release_workflow, "release QA must execute the full-app remediation contract")
+
+process_data_runtime = text("data-integration-runtime.js")
+need("function esc(v)" in process_data_runtime, "connected process-data runtime lost its explicit HTML escaping boundary")
+for marker in (
+    "esc(d.datasetMeta?.source_label||d.id)",
+    "esc(d.entities?.machine||'machine not linked')",
+    "esc(d.entities?.mould||'mould not linked')",
+    "esc(link?.materialGrade||'')",
+    "esc(link?.intervention||'')",
+    "esc(x.title)",
+):
+    need(marker in process_data_runtime, f"connected process-data HTML sink lost escaping: {marker}")
+
+sink_register = text("docs/DYNAMIC_HTML_SINK_REGISTER.md")
+for marker in ("learner strings", "imported/device/site data", "Frozen/generated core runtime", "eval", "new Function", "textContent"):
+    need(marker in sink_register, f"dynamic HTML sink register missing security boundary: {marker}")
+
+storage_matrix = text("docs/STORAGE_OWNERSHIP_MATRIX.md")
+for marker in ("Learner assessment/progress state", "Engineering cases", "Process/connected machine observations", "PWA runtime cache", "Desktop application bytes", "owner scope", "migration"):
+    need(marker in storage_matrix, f"storage ownership matrix missing contract: {marker}")
+compatibility_matrix = text("docs/CLIENT_COMPATIBILITY_MATRIX.md")
+version_meta = json.loads(text("version.json"))
+for key in ("web_release", "desktop_release", "android_release", "windows_recovery_release", "content_version", "question_bank_version"):
+    need(str(version_meta[key]) in compatibility_matrix, f"client compatibility matrix stale for {key}")
+need("external HOLD" in compatibility_matrix, "client compatibility matrix must preserve external validation boundary")
 
 print("MouldMaster app-wide remediation QA passed: pre-merge live Pages provenance plus earliest-start legacy publisher guard, aligned gh api negotiation, cross-index fail-closed provenance, single authoritative owner-scoped engineering case store, variant-safe materials, PWA lifecycle, legacy distribution separation, deterministic browser matrix and targeted observers")
