@@ -162,8 +162,19 @@ function installCoreHooks(){
   R.after('renderLesson',()=>{try{if(typeof currentView==='undefined'||currentView==='lesson')startLessonSession()}catch(_){}});
   // Completion is not a Runtime V2 core slot. Derive it from the canonical render lifecycle:
   // completeLesson updates user.completed before renderLesson, so this remains additive and owner-safe.
-  const completionSeen=new Set();
-  R.after('renderLesson',()=>{try{const id=lessonId();if(!id)return;const done=Array.isArray(user?.completed)&&user.completed.map(String).includes(String(id));if(done&&!completionSeen.has(String(id))){completionSeen.add(String(id));record('lesson_complete',{module:'lesson',id})}}catch(_){}});
+  const completionState=new Map();
+  R.after('renderLesson',()=>{try{
+    const id=lessonId();if(!id)return;
+    const scope=learnerToken(),key=`${scope}:${id}`;
+    const done=Array.isArray(user?.completed)&&user.completed.map(String).includes(String(id));
+    if(!completionState.has(key)){
+      // First observation establishes this learner's historical state. It must not
+      // turn an already-completed lesson into a new analytics completion event.
+      completionState.set(key,done);return;
+    }
+    const wasDone=completionState.get(key);completionState.set(key,done);
+    if(!wasDone&&done)record('lesson_complete',{module:'lesson',id});
+  }catch(_){}});
   R.before('switchView',id=>{if(id!=='lesson')closeLessonSession('view-change')});
   R.after('switchView',(_out,id)=>{if(id==='lesson')startLessonSession()});
   R.registerModule('learning-analytics-core-hooks',{version:VERSION,type:'runtime-v2-lifecycle-hooks'});
