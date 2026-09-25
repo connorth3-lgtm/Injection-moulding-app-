@@ -205,9 +205,6 @@ function patchQuestionListRenderers(){
   }
   window.__MM_QUESTION_LIST_RENDER_PATCH__=true;
 }
-function installMobileLayoutGuard(){
-  document.documentElement.classList.add('mm-mobile-layout-guard');
-}
 function syncVisibleViewChrome(){
   const home=document.getElementById('dashboard'),isHome=!!home&&!home.classList.contains('hidden');document.body?.classList.toggle('mm-home-visible',isHome);
   if(window.MM_APP_SHELL?.finalized)return;
@@ -242,7 +239,7 @@ async function register(){
   try{const reg=await navigator.serviceWorker.register('./service-worker.js',{scope:'./'});await reg.update();return reg}catch(e){console.warn('[MouldMaster] Offline/update support unavailable:',e);return null}
 }
 let syncQueued=false;
-function runSync(){syncQueued=false;syncPlatformClasses();syncLabels();syncStandardsReviewDate();syncUpdateCard();hideInternalQaProvenance();patchQuestionListRenderers();retireLegacyGamification();installMobileLayoutGuard();scrubLegacyGamification();installQuestionDisclosures();syncVisibleViewChrome();dockReferenceLauncher();configureReferenceDrawer();dockReferenceDataLauncher();configureReferenceDataDrawer();addNZLegacyNote()}
+function runSync(){syncQueued=false;syncPlatformClasses();syncLabels();syncStandardsReviewDate();syncUpdateCard();hideInternalQaProvenance();patchQuestionListRenderers();retireLegacyGamification();scrubLegacyGamification();installQuestionDisclosures();syncVisibleViewChrome();dockReferenceLauncher();configureReferenceDrawer();dockReferenceDataLauncher();configureReferenceDataDrawer();addNZLegacyNote()}
 function scheduleSync(){if(syncQueued)return;syncQueued=true;(window.requestAnimationFrame||function(fn){return setTimeout(fn,0)})(runSync)}
 function bindLifecycle(){
   const shell=window.MM_APP_SHELL;
@@ -255,5 +252,5 @@ runSync();
 window.addEventListener('resize',scheduleSync,{passive:true});
 window.addEventListener('load',()=>{runSync();register();setTimeout(scheduleSync,250)},{once:true});
 document.addEventListener('visibilitychange',()=>{if(!document.hidden)scheduleSync()});
-window.MM_SHELL_RELEASE=RELEASE;window.MM_CONTENT_RELEASE=CONTENT;window.MM_DISPLAY_CONTEXT=displayContext;window.MM_REFERENCE_LAUNCHER_DOCK='sidebar-first-normal-flow';window.MM_REFERENCE_DRAWER_MODE='non-blocking';window.MM_REFERENCE_DATA_URL=REFERENCE_DATA_URL;window.MM_REFERENCE_DATA_LAUNCHER_DOCK='mobile-more-standalone-page';window.MM_REFERENCE_DATA_DRAWER_MODE='standalone-mobile-page-desktop-drawer';window.MM_BROWSER_UPDATE_MODE='shared-origin-service-worker';window.MM_MOBILE_LAYOUT_GUARD='home-task-first-fixed-nav-clearance-v2';window.MM_IOS_LAYOUT_PATCH='safe-area-viewport-profile-v1';window.MM_UI_POLISH='compact-shell-no-gamification-v1';window.MM_QUESTION_DISCLOSURES='mobile-scenario-and-exam-v1';window.MM_GAMIFICATION_MODE='retired';
+window.MM_SHELL_RELEASE=RELEASE;window.MM_CONTENT_RELEASE=CONTENT;window.MM_DISPLAY_CONTEXT=displayContext;window.MM_REFERENCE_LAUNCHER_DOCK='sidebar-first-normal-flow';window.MM_REFERENCE_DRAWER_MODE='non-blocking';window.MM_REFERENCE_DATA_URL=REFERENCE_DATA_URL;window.MM_REFERENCE_DATA_LAUNCHER_DOCK='mobile-more-standalone-page';window.MM_REFERENCE_DATA_DRAWER_MODE='standalone-mobile-page-desktop-drawer';window.MM_BROWSER_UPDATE_MODE='shared-origin-service-worker';window.MM_IOS_LAYOUT_PATCH='safe-area-viewport-profile-v1';window.MM_UI_POLISH='compact-shell-no-gamification-v1';window.MM_QUESTION_DISCLOSURES='mobile-scenario-and-exam-v1';window.MM_GAMIFICATION_MODE='retired';
 })();
