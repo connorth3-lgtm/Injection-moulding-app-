@@ -21,9 +21,6 @@ This backlog records the remaining findings from the 2026-09-25 full application
 6. **Client compatibility matrix** — explicitly map web, desktop, and Android release lanes to supported runtime/content/storage contracts.
 7. **External validation** — complete physical PWA, real AT, Windows distribution/signing, curriculum/book SME, learner-outcome, and NZQA/provider work only from genuine evidence.
 
-## Closed in this remediation
-
-- Assessment navigator retains the approved 38 px visual control while exposing a 44 px effective pointer hit target through a pseudo-element.
-- Premium UI QA measures the effective assessment navigator hit area across 320, 360, 390, 412, and 1024 px viewports.
+## Implemented in this remediation\n\n- Canonical release-asset agreement is now fail-closed: the runtime-domain manifest must be represented in the service-worker release inventory, duplicate CORE/OPTIONAL ownership is rejected, and missing governed files fail QA. Consumer migration to one generated manifest remains open.\n- Durable storage ownership and client compatibility matrices are now explicit and QA-gated.\n- Dynamic HTML sinks now have an explicit trust-boundary register; incremental sink retirement remains open.\n- Architecture documentation now matches the enforced 15 BODY_SCRIPTS / 5 root runtime / 0 document.write ceilings.\n- Mobile Browser QA excludes the separately enforced visual-lock test from the Chromium substantive suite using the stable test-title contract rather than a stale release number.\n\n## Explicitly still open\n\n- The assessment navigator remains at the approved 38 px visual geometry. A 44 px target requires an intentional visual-release/baseline change; this remediation does not claim otherwise.\n- Root compatibility retirement, generated-manifest consumer migration, CI coverage meta-gating, and incremental dynamic/untrusted HTML sink replacement remain engineering work.\n- All external validation areas remain HOLD until genuine evidence exists.
 
 The items above are intentionally explicit rather than being marked fixed without implementation or evidence.
