@@ -34,7 +34,13 @@ production_source = text("tools/verify_production_source.py")
 mobile = text(".github/workflows/mobile-browser-qa.yml")
 desktop_pkg = json.loads(text("desktop/electron/package.json"))
 integrity_script = text("desktop/electron/scripts/generate-integrity.cjs")
-manifest = json.loads(text("runtime-domain-manifest.json"))\nrelease_graph = json.loads(text("release-asset-graph.json"))\nneed(release_graph.get("schemaVersion") == 1, "release asset graph schema drift")\nneed(release_graph.get("domainManifest") == "runtime-domain-manifest.json", "release asset graph lost canonical domain manifest")\nneed(release_graph.get("serviceWorker") == "service-worker.js", "release asset graph lost canonical service worker")\ngraph_check = subprocess.run(["python", "tools/generate_release_asset_graph.py"], cwd=ROOT, capture_output=True, text=True)\nneed(graph_check.returncode == 0, f"release asset graph validation failed: {graph_check.stdout}\\n{graph_check.stderr}")
+manifest = json.loads(text("runtime-domain-manifest.json"))
+release_graph = json.loads(text("release-asset-graph.json"))
+need(release_graph.get("schemaVersion") == 1, "release asset graph schema drift")
+need(release_graph.get("domainManifest") == "runtime-domain-manifest.json", "release asset graph lost canonical domain manifest")
+need(release_graph.get("serviceWorker") == "service-worker.js", "release asset graph lost canonical service worker")
+graph_check = subprocess.run(["python", "tools/generate_release_asset_graph.py"], cwd=ROOT, capture_output=True, text=True)
+need(graph_check.returncode == 0, f"release asset graph validation failed: {graph_check.stdout} / {graph_check.stderr}")
 
 # PWA/browser lifecycle: browser use must never remove the installed app's shared origin state.
 for forbidden in ("retireBrowserOfflineRuntime", ".unregister()", "mmFresh"):
