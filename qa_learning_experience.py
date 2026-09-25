@@ -85,21 +85,20 @@ for marker in mobile_shell_markers:
     need(marker in shell,f'mobile shell behavior guard missing: {marker}')
 need('document.createElement(\'style\')' not in shell,'PWA shell must not inject presentation styles at runtime')
 need('mm-mobile-layout-guard-style' not in shell,'legacy runtime mobile style element must remain retired')
-premium=text('premium-ui.css')
+ui_shell=text('ui-shell.css')
 mobile_style_markers=[
-    'html.mm-mobile-layout-guard{--mm-mobile-nav-clearance:120px}',
+    ':root{--mm-mobile-nav-clearance:104px}',
     'scroll-padding-bottom:calc(var(--mm-mobile-nav-clearance) + env(safe-area-inset-bottom))',
-    'html.mm-mobile-layout-guard body{padding-bottom:0!important}',
-    'html.mm-mobile-layout-guard .main{padding:14px 14px calc(var(--mm-mobile-nav-clearance) + env(safe-area-inset-bottom))!important}',
-    'html.mm-mobile-layout-guard .topbar{position:relative!important;top:auto!important',
-    'html.mm-mobile-layout-guard .mobile-nav{position:fixed!important;left:0!important;right:0!important;bottom:0!important',
-    'html.mm-mobile-layout-guard .mobile-nav button{min-height:48px!important',
-    'html.mm-mobile-layout-guard .top-actions button{min-height:44px!important',
-    'html.mm-mobile-layout-guard body.mm-home-visible #continueBtn{display:none!important}',
-    'html.mm-mobile-layout-guard body.mm-home-visible #searchBtn{flex:0 0 auto!important'
+    'body{padding-bottom:0!important}',
+    '.main{padding:12px 12px calc(var(--mm-mobile-nav-clearance) + env(safe-area-inset-bottom))!important}',
+    '.topbar{position:relative!important;top:auto!important',
+    '.mobile-nav{display:grid!important;grid-template-columns:repeat(4,1fr)!important;position:fixed!important;left:0!important;right:0!important;bottom:0!important',
+    '.mobile-nav button{min-height:52px!important',
+    '#app .top-actions #continueBtn{display:none!important}'
 ]
 for marker in mobile_style_markers:
-    need(marker in premium,f'governed mobile presentation marker missing: {marker}')
+    need(marker in ui_shell,f'canonical ui-shell mobile presentation marker missing: {marker}')
+need('mm-mobile-layout-guard-style' not in ui_shell,'canonical ui-shell must not depend on a runtime style element id')
 need(shell.index('installMobileLayoutGuard()') < shell.index('dockReferenceLauncher()'),'mobile layout guard must install before shell docking work')
 need(shell.index('syncVisibleViewChrome()') < shell.index('dockReferenceLauncher()'),'visible-view chrome sync must run before shell docking work')
 need("shell?.events?.onViewChange?.(scheduleSync)" in shell,'mobile Home chrome must react through canonical app-shell view lifecycle events')
