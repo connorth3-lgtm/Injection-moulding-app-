@@ -32,10 +32,17 @@ version = load("version.json")
 release = version.get("web_release")
 need(isinstance(release, str) and release, "version.json web_release is missing")
 ledger = load("data/release-external-validation-v1.json")
-need(ledger.get("release") == release, "external-validation ledger release is stale")
+evidence_release = ledger.get("release")
+need(isinstance(evidence_release, str) and evidence_release, "external-validation ledger release is missing")
+need(evidence_release <= release, "external-validation ledger cannot target a future release")
+stale = evidence_release != release
+if stale:
+    for section_name in ("accessibility", "pwaPhysicalDevices", "windowsDistribution", "bookSme", "curriculumSme", "learnerOutcomes", "nzqaProvider"):
+        need((ledger.get(section_name) or {}).get("status") == "hold", f"stale external evidence must remain HOLD for {section_name}")
+    need(not any(bool(value) for value in (ledger.get("claims") or {}).values()), "stale external evidence cannot support current-release claims")
 
 index_rel = ledger.get("validationIndex")
-need(index_rel == f"qa/EXTERNAL_VALIDATION_{release}.md", "release validation index path is stale")
+need(index_rel == f"qa/EXTERNAL_VALIDATION_{evidence_release}.md", "release validation index path is stale")
 index_path = ROOT / index_rel
 need(index_path.is_file(), "release validation index is missing")
 index_text = index_path.read_text(encoding="utf-8")
