@@ -99,6 +99,9 @@ mobile_style_markers=[
 for marker in mobile_style_markers:
     need(marker in ui_shell,f'canonical ui-shell mobile presentation marker missing: {marker}')
 need('mm-mobile-layout-guard-style' not in ui_shell,'canonical ui-shell must not depend on a runtime style element id')
+for marker in ['.mmsrc.mm-reference-drawer{','.mmrd.mm-reference-data-drawer{']:
+    need(marker in ui_shell,f'reference drawer presentation missing from canonical ui-shell: {marker}')
+need('mm-reference-drawer-style' not in shell and 'mm-reference-data-drawer-style' not in shell,'reference drawers must not inject runtime styles')
 need(shell.index('installMobileLayoutGuard()') < shell.index('dockReferenceLauncher()'),'mobile layout guard must install before shell docking work')
 need(shell.index('syncVisibleViewChrome()') < shell.index('dockReferenceLauncher()'),'visible-view chrome sync must run before shell docking work')
 need("shell?.events?.onViewChange?.(scheduleSync)" in shell,'mobile Home chrome must react through canonical app-shell view lifecycle events')
