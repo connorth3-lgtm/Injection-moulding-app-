@@ -10,8 +10,10 @@ async function invariant(page,seed,step){
  expect(s.overflow,'seed '+seed+' step '+step+' horizontal overflow').toBeLessThanOrEqual(1);
  expect(s.views,'seed '+seed+' step '+step+' active views').toBeLessThanOrEqual(1);
 }
-const seedStart=Number(process.env.MM_SEED_START||1),seedEnd=Number(process.env.MM_SEED_END||5000);\nfor(let seed=seedStart;seed<=seedEnd;seed++){
- test('adversarial journey seed '+String(seed).padStart(4,'0'),async({page})=>{\n  test.setTimeout(30000); console.log('[ADV] seed='+seed+' start');
+const seedStart=Number(process.env.MM_SEED_START||1),seedEnd=Number(process.env.MM_SEED_END||5000);
+for(let seed=seedStart;seed<=seedEnd;seed++){
+ test('adversarial journey seed '+String(seed).padStart(4,'0'),async({page})=>{
+  test.setTimeout(30000); console.log('[ADV] seed='+seed+' start');
   const r=rng(seed),errors=[];page.on('pageerror',e=>errors.push(String(e?.message||e)));
   await page.addInitScript(({seed})=>{
    const id='torture-'+seed,user={id,name:'Torture QA',role:'learner',completed:seed%3?[1,2]:[],bookmarks:seed%5?[1]:[],notes:{},examScores:{},certificates:[],currentLesson:1+(seed%10),lastSeen:'2026-09-27T00:00:00.000Z',onboardingDone:true,experience:'Beginner',goal:'Learn the full process',dailyMinutes:15,region:'ALL'};
