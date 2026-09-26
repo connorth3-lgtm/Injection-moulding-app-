@@ -230,8 +230,6 @@ installHomeScreenSimplification();
 installRetiredChromeGuard();
 loadSimpleLessonRuntime();
 window.MM_APP_SHELL.navigation?.sync?.();
-const geometryStyle=document.getElementById('mm-app-shell-registry-style');
-if(geometryStyle&&geometryStyle.parentNode===document.head)document.head.appendChild(geometryStyle);
 window.addEventListener('popstate',()=>window.MM_APP_SHELL.navigation?.sync?.());
 window.addEventListener('mm:domains-ready',resyncGovernedEvidence);
 requestAnimationFrame(()=>{window.MM_APP_SHELL.geometry?.sync?.();patchEvidenceUi();simplifyHomeScreen();stabilizeRetiredChrome();window.MM_APP_SHELL.navigation?.sync?.()});

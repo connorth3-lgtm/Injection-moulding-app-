@@ -43,14 +43,22 @@ def main() -> None:
     curriculum_sme = load(str(bindings["curriculumIndependentSme"]))
     nzqa_external = load(str(bindings["nzqaExternalValidation"]))
 
+    evidence_bindings = {
+        "external-validation": external,
+        "Book SME": book_sme,
+        "curriculum SME": curriculum_sme,
+        "NZQA external-validation": nzqa_external,
+    }
+    for label, binding in evidence_bindings.items():
+        evidence_release = str(binding.get("release") or "").strip()
+        if not evidence_release:
+            raise AssertionError(f"{label} binding has no release identity")
+        if evidence_release > release:
+            raise AssertionError(f"{label} binding targets a future release")
     if external.get("release") != release:
-        raise AssertionError("external-validation binding is stuck on a different release")
-    if book_sme.get("release") != release:
-        raise AssertionError("Book SME binding is stuck on a different release")
-    if curriculum_sme.get("release") != release:
-        raise AssertionError("curriculum SME binding is stuck on a different release")
-    if nzqa_external.get("release") != release:
-        raise AssertionError("NZQA external-validation binding is stuck on a different release")
+        for key in ("accessibility", "pwaPhysicalDevices", "windowsDistribution", "bookSme", "curriculumSme", "learnerOutcomes", "nzqaProvider"):
+            if external[key].get("status") != "hold":
+                raise AssertionError(f"stale external-validation binding must remain HOLD for {key}")
 
     referenced_file("external validation index", external.get("validationIndex"))
     packet_fields = {

@@ -94,10 +94,22 @@ def main() -> None:
 
     validate_model_shape(model)
 
-    assert external.get("release") == version.get("web_release"), "external-validation contract must bind to current web release"
-    assert book_sme.get("release") == version.get("web_release"), "Book SME contract must bind to current web release"
-    assert curriculum_sme.get("release") == version.get("web_release"), "curriculum SME contract must bind to current web release"
-    assert nzqa_external.get("release") == version.get("web_release"), "NZQA external-validation contract must bind to current web release"
+    current_release = version.get("web_release")
+    evidence_releases = {
+        "external-validation": external.get("release"),
+        "Book SME": book_sme.get("release"),
+        "curriculum SME": curriculum_sme.get("release"),
+        "NZQA external-validation": nzqa_external.get("release"),
+    }
+    for label, evidence_release in evidence_releases.items():
+        assert isinstance(evidence_release, str) and evidence_release, f"{label} contract must identify the exact release its evidence belongs to"
+        assert evidence_release <= current_release, f"{label} contract cannot target a future learner release"
+    if external.get("release") != current_release:
+        for key in ("bookSme", "curriculumSme", "pwaPhysicalDevices", "accessibility", "learnerOutcomes", "nzqaProvider"):
+            assert external[key]["status"] == "hold", f"stale external evidence must fail closed for {key}"
+        assert external["windowsDistribution"]["status"] == "hold", "stale external evidence must fail closed for Windows distribution"
+        claims = external.get("claims", {})
+        assert not any(bool(v) for v in claims.values()), "stale external evidence cannot support current-release validation claims"
 
     state_allowed(model, "technicalAutomation", external["technicalAutomation"]["status"])
     state_allowed(model, "publicationAuthorization", book_auth["status"])

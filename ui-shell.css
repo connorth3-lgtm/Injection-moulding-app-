@@ -207,3 +207,44 @@ body[data-mm-view="lesson"] .topbar{justify-content:flex-end!important}
   .mm-primary-hub-head h1{font-size:26px!important}
   .mm-primary-hub .mm-hub-continue h2{font-size:22px!important}
 }
+
+/* Reference drawers are shell presentation; PWA runtime only controls behavior/state. */
+.mmsrc.mm-reference-drawer{background:transparent!important;align-items:flex-end!important;justify-content:flex-end!important;padding:12px!important;pointer-events:none!important}
+.mmsrc.mm-reference-drawer[data-open="1"]{display:flex!important}
+.mmsrc.mm-reference-drawer .mmsrc-panel{width:min(430px,calc(100vw - 24px))!important;max-height:min(72dvh,760px)!important;height:auto!important;border-radius:16px!important;pointer-events:auto!important;box-shadow:0 18px 52px rgba(0,0,0,.42)!important}
+.mmsrc.mm-reference-drawer .mmsrc-head{flex:0 0 auto!important}
+.mmsrc.mm-reference-drawer .mmsrc-body{min-height:0!important;overscroll-behavior:contain!important}
+.mmrd.mm-reference-data-drawer{background:transparent!important;align-items:flex-end!important;justify-content:flex-end!important;padding:12px!important;pointer-events:none!important}
+.mmrd.mm-reference-data-drawer[data-open="1"]{display:flex!important}
+.mmrd.mm-reference-data-drawer .mmrd-panel{width:min(520px,calc(100vw - 24px))!important;max-height:min(74dvh,800px)!important;height:auto!important;border-radius:16px!important;pointer-events:auto!important;box-shadow:0 18px 52px rgba(0,0,0,.42)!important}
+.mmrd.mm-reference-data-drawer .mmrd-head{flex:0 0 auto!important}
+.mmrd.mm-reference-data-drawer .mmrd-body{min-height:0!important;overscroll-behavior:contain!important}
+@media(max-width:680px){
+  .mmsrc.mm-reference-drawer{padding:6px 6px calc(82px + env(safe-area-inset-bottom))!important}
+  .mmsrc.mm-reference-drawer .mmsrc-panel{width:calc(100vw - 12px)!important;max-height:48dvh!important;border-radius:15px!important}
+  .mmsrc.mm-reference-drawer .mmsrc-head{padding-top:10px!important}
+  .mmrd.mm-reference-data-drawer,.mmrd.mm-reference-data-drawer[data-open="1"]{display:none!important;pointer-events:none!important}
+}
+
+
+/* Canonical app-shell registry geometry. Runtime measures the actual nav height;
+   static CSS owns presentation and clearance. */
+:root{--mm-mobile-nav-height:calc(70px + env(safe-area-inset-bottom));--mm-mobile-content-clearance:calc(var(--mm-mobile-nav-height) + 26px)}
+.mm-dashboard-registry{display:grid;gap:14px}.mm-dashboard-registry:empty{display:none}
+.mm-registry-nav-divider{height:1px;background:#20344d;margin:9px 8px}
+@media(max-width:700px){
+  html{scroll-padding-bottom:calc(var(--mm-mobile-content-clearance) + 12px)!important}
+  .main{padding-bottom:var(--mm-mobile-content-clearance)!important}
+  .mobile-nav{min-height:var(--mm-mobile-nav-height)!important;z-index:40!important}
+  .mobile-nav>button:not([data-view]):not([onclick*="openMobileMenu"]):not([data-mm-onclick*="openMobileMenu"]){display:none!important}
+  body[data-mm-view="dashboard"] #continueBtn{display:none!important}
+  .mm-mobile-actions{bottom:var(--mm-mobile-nav-height)!important;z-index:35!important;padding-bottom:9px!important}
+  #lesson .lesson-body{padding-bottom:calc(var(--mm-mobile-content-clearance) + 86px)!important}
+  .toast{bottom:calc(var(--mm-mobile-content-clearance) + 12px)!important}
+}
+
+
+/* Product-area dashboard presentation belongs to the canonical shell stylesheet. */
+.mm-product-areas{padding:18px}.mm-product-areas-head{display:flex;justify-content:space-between;gap:12px;align-items:end;margin-bottom:12px}.mm-product-areas-head h2{margin:3px 0 0}.mm-product-areas-head p{margin:5px 0 0;color:var(--muted);max-width:760px}.mm-product-area-grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:9px}.mm-product-area{min-height:125px;text-align:left;padding:13px;border:1px solid #304b69;border-radius:12px;background:#0e1d31;color:#edf5ff}.mm-product-area:hover,.mm-product-area:focus-visible{background:#142843;border-color:#4c739c}.mm-product-area .icon{display:block;font-size:20px;margin-bottom:9px;color:var(--accent)}.mm-product-area b{display:block;font-size:14px}.mm-product-area small{display:block;color:#aebfd3;line-height:1.4;margin-top:5px}.mm-product-boundary{margin-top:10px;color:var(--muted);font-size:11px;line-height:1.45}
+@media(max-width:1050px){.mm-product-area-grid{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:650px){.mm-product-area-grid{grid-template-columns:1fr 1fr}.mm-product-areas{padding:15px}.mm-product-areas-head{display:block}}

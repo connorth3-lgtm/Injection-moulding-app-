@@ -21,6 +21,7 @@ const renderListeners=new Map();
 let finalized=false;
 let activeCustomId='';
 let mobileNavObserver=null;
+let mobileNavNormalizing=false;
 let geometryQueued=false;
 let dashboardComposeQueued=false;
 
@@ -42,24 +43,7 @@ function esc(v){return String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&l
 function safeCall(fn,...args){try{return typeof fn==='function'?fn(...args):undefined}catch(e){console.warn('[MouldMaster shell]',e);return undefined}}
 
 function installGeometry(){
-  if(document.getElementById('mm-app-shell-registry-style'))return;
-  const s=document.createElement('style');s.id='mm-app-shell-registry-style';s.textContent=`
-:root{--mm-mobile-nav-height:calc(70px + env(safe-area-inset-bottom));--mm-mobile-nav-clearance:var(--mm-mobile-nav-height);--mm-mobile-content-clearance:calc(var(--mm-mobile-nav-clearance) + 26px)}
-.mm-dashboard-registry{display:grid;gap:14px}.mm-dashboard-registry:empty{display:none}
-.mm-registry-nav-divider{height:1px;background:#20344d;margin:9px 8px}
-@media(max-width:700px){
-  html{scroll-padding-bottom:calc(var(--mm-mobile-content-clearance) + 12px)!important}
-  body{padding-bottom:0!important}
-  .main{padding-bottom:var(--mm-mobile-content-clearance)!important}
-  .mobile-nav{position:fixed!important;left:0!important;right:0!important;bottom:0!important;min-height:var(--mm-mobile-nav-height);z-index:40!important;background:#07101c!important;padding-bottom:max(8px,env(safe-area-inset-bottom))!important;box-shadow:0 -12px 28px rgba(0,0,0,.30),0 90px 0 #07101c!important}
-  .mobile-nav>button:not([data-view]):not([onclick*="openMobileMenu"]):not([data-mm-onclick*="openMobileMenu"]){display:none!important}
-  body[data-mm-view="dashboard"] #continueBtn{display:none!important}
-  .mm-mobile-actions{bottom:var(--mm-mobile-nav-clearance)!important;z-index:35!important;padding-bottom:9px!important}
-  #lesson .lesson-body{padding-bottom:calc(var(--mm-mobile-content-clearance) + 86px)!important}
-  .toast{bottom:calc(var(--mm-mobile-content-clearance) + 12px)!important}
-}
-`;
-  document.head.appendChild(s)
+  document.documentElement.classList.add('mm-app-shell-registry');
 }
 function syncMobileGeometry(){
   if(geometryQueued)return;geometryQueued=true;
@@ -72,16 +56,23 @@ function syncMobileGeometry(){
 }
 function canonicalMoreButton(button){const handler=button.getAttribute('data-mm-onclick')||button.getAttribute('onclick')||'';return !button.dataset.view&&(handler.includes('openMobileMenu')||/\bMore\b/i.test(button.textContent||''))}
 function normalizeMobilePrimaryNav(){
-  const nav=document.querySelector('.mobile-nav');if(!nav)return;
-  [...nav.querySelectorAll(':scope > button')].forEach(button=>{
-    const view=button.dataset.view||'';
-    const keep=view==='dashboard'||view==='path'||view==='scenarios'||canonicalMoreButton(button);
-    if(!keep)button.remove()
-  });
-  if(!mobileNavObserver){
-    mobileNavObserver=new MutationObserver(()=>{normalizeMobilePrimaryNav();syncMobileGeometry()});
-    mobileNavObserver.observe(nav,{childList:true})
-  }
+  const nav=document.querySelector('.mobile-nav');if(!nav||mobileNavNormalizing)return;
+  mobileNavNormalizing=true;
+  try{
+    [...nav.querySelectorAll(':scope > button')].forEach(button=>{
+      const view=button.dataset.view||'';
+      const keep=view==='dashboard'||view==='path'||view==='scenarios'||canonicalMoreButton(button);
+      if(!keep)button.remove()
+    });
+    if(!mobileNavObserver){
+      mobileNavObserver=new MutationObserver(records=>{
+        if(mobileNavNormalizing)return;
+        if(records.some(record=>record.type==='childList'))normalizeMobilePrimaryNav();
+        else syncMobileGeometry()
+      });
+      mobileNavObserver.observe(nav,{childList:true})
+    }
+  }finally{mobileNavNormalizing=false}
   syncMobileGeometry()
 }
 
@@ -160,7 +151,7 @@ function desktopAnchor(item){
 function makeDesktopButton(item){
   const b=document.createElement('button');b.type='button';b.dataset.mmRegistryNav=item.id;
   if(item.legacyDataset)b.dataset[item.legacyDataset]='1';
-  b.innerHTML=`${esc(item.icon||'•')} <span>${esc(item.label||item.id)}</span>`;
+  b.innerHTML=`${esc(item.icon||'•')} <span>${esc(item.label||item.id)}</span>`;b.setAttribute('aria-label',item.label||item.id);
   b.addEventListener('click',e=>{e.preventDefault();e.stopImmediatePropagation();activeCustomId=item.id;safeCall(item.action);syncActiveState()});
   return b
 }
@@ -182,7 +173,7 @@ function syncDesktopNavigation(){
 function mobileGrid(){return document.querySelector('#modal .modal-card .grid2')}
 function makeMobileMoreButton(item){
   const b=document.createElement('button');b.type='button';b.className='quick-action';b.dataset.mmRegistryMenu=item.id;
-  b.innerHTML=`<span class="icon">${esc(item.icon||'•')}</span><b>${esc(item.label||item.id)}</b><small>${esc(item.description||'Open this tool.')}</small>`;
+  b.innerHTML=`<span class="icon" aria-hidden="true">${esc(item.icon||'•')}</span><b>${esc(item.label||item.id)}</b><small>${esc(item.description||'Open this tool.')}</small>`;b.setAttribute('aria-label',item.label||item.id);
   b.addEventListener('click',()=>{try{window.closeModal?.()}catch(_){}activeCustomId=item.id;safeCall(item.action);syncActiveState()});return b
 }
 function populateMobileMore(){
@@ -209,6 +200,7 @@ function syncActiveState(){
   const visible=visibleCoreView();
   const view=visible||(typeof currentView==='string'?currentView:'dashboard');
   document.body.dataset.mmView=activeCustomId||view;
+  document.body.dataset.mmNavGroup=canonicalMobileGroup(view);
   document.querySelectorAll('#nav button').forEach(b=>{
     const registryId=b.dataset.mmRegistryNav;
     const active=registryId?registryId===activeCustomId:!activeCustomId&&b.dataset.view===view;

@@ -30,7 +30,10 @@ for marker in ['.mm-today-focus','.mm-learning-progress','.mm-next-card','prefer
 # This is deliberately an overlay on the legacy shell. The initial migration measured 367
 # explicit overrides. Freeze that debt: later work may reduce it, but any increase needs an
 # intentional governance change rather than silently growing the specificity stack.
-need(css.count('!important') <= 372,'premium UI override specificity grew beyond governed refinement ceiling')
+important_count=css.count('!important')
+need(important_count <= 372,'premium UI override specificity grew beyond governed refinement ceiling')
+# Consolidation ratchet: the legacy overlay may shrink but must never regain specificity debt.
+need('body #dashboard' not in css,'canonical dynamic dashboard surfaces must stay out of the legacy premium overlay')
 need(len(css.encode('utf-8')) <= 26000,'premium UI CSS exceeded the 26 KB presentation budget')
 need(len(dynamic.encode('utf-8')) <= 7000,'premium dynamic CSS exceeded the 7 KB presentation budget')
 
@@ -80,4 +83,4 @@ spec=text('qa/premium-ui.spec.js')
 for marker in ['premium UI stylesheet is active','no horizontal overflow','reduced motion','forced-colour-safe']:
     need(marker in spec,f'premium browser contract missing: {marker}')
 
-print(f'PASS: premium industrial UI is first-paint, offline, desktop-integrity, accessibility and cross-browser-regression governed for {release}.')
+print(f'PASS: premium industrial UI is first-paint, offline, desktop-integrity, accessibility and cross-browser-regression governed for {release}; legacy !important debt={important_count}.')
