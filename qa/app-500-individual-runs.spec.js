@@ -21,6 +21,8 @@ async function seed(page,run){
 const FAMILIES=['home','learn','practice','book','materials','responsive','more','lesson','process-data','shell'];
 
 for(let run=1;run<=500;run++){
+  const family=FAMILIES[Math.floor((run-1)/50)];
+  const variant=(run-1)%50;
   const viewport=VIEWPORTS[(run-1)%VIEWPORTS.length];
   test('individual app run '+String(run).padStart(3,'0')+' · '+viewport.name,async({page})=>{
     const pageErrors=[],consoleErrors=[];
@@ -32,7 +34,9 @@ for(let run=1;run<=500;run++){
     expect(response?.ok()).toBeTruthy();
     await page.waitForFunction(()=>
       typeof window.MM_APP_SHELL_FINALIZED==='string'&&window.MM_APP_SHELL_FINALIZED.length>0&&
-      Boolean(window.MM_PRIMARY_HUBS)&&!document.getElementById('mmBootstrap')
+      Boolean(window.MM_PRIMARY_HUBS)&&
+      typeof window.MM_ACCESSIBILITY_HARDENING?.unresolvedSemanticCount==='function'&&
+      !document.getElementById('mmBootstrap')
     );
     await page.evaluate(()=>new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve))));
     await expect(page.locator('#mmStartupFailure')).toHaveCount(0);
