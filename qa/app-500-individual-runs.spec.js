@@ -43,7 +43,8 @@ for(let run=1;run<=500;run++){
     const state=await page.evaluate(()=>({
       view:document.body.dataset.mmView||'',
       navGroup:document.body.dataset.mmNavGroup||'',
-      unresolved:window.MM_ACCESSIBILITY_HARDENING?.unresolvedSemanticCount?.()??-1,\n      semanticIssues:window.MM_ACCESSIBILITY_HARDENING?.semanticIssues?.()??[],
+      unresolved:window.MM_ACCESSIBILITY_HARDENING?.unresolvedSemanticCount?.()??-1,
+      semanticIssues:window.MM_ACCESSIBILITY_HARDENING?.semanticIssues?.()??[],
       horizontalOverflow:document.documentElement.scrollWidth-document.documentElement.clientWidth,
       mobileVisible:[...document.querySelectorAll('.mobile-nav > button')].filter(el=>getComputedStyle(el).display!=='none').length,
       mobileCurrent:[...document.querySelectorAll('.mobile-nav > button[aria-current="page"]')].filter(el=>getComputedStyle(el).display!=='none').length
