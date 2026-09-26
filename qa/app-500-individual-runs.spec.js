@@ -43,14 +43,14 @@ for(let run=1;run<=500;run++){
     const state=await page.evaluate(()=>({
       view:document.body.dataset.mmView||'',
       navGroup:document.body.dataset.mmNavGroup||'',
-      unresolved:window.MM_ACCESSIBILITY_HARDENING?.unresolvedSemanticCount?.()??-1,
+      unresolved:window.MM_ACCESSIBILITY_HARDENING?.unresolvedSemanticCount?.()??-1,\n      semanticIssues:window.MM_ACCESSIBILITY_HARDENING?.semanticIssues?.()??[],
       horizontalOverflow:document.documentElement.scrollWidth-document.documentElement.clientWidth,
       mobileVisible:[...document.querySelectorAll('.mobile-nav > button')].filter(el=>getComputedStyle(el).display!=='none').length,
       mobileCurrent:[...document.querySelectorAll('.mobile-nav > button[aria-current="page"]')].filter(el=>getComputedStyle(el).display!=='none').length
     }));
     expect(state.view).toBe('dashboard');
     expect(state.navGroup).toBe('home');
-    expect(state.unresolved).toBe(0);
+    expect(state.unresolved,'unresolved accessibility semantics: '+JSON.stringify(state.semanticIssues)).toBe(0);
     expect(state.horizontalOverflow).toBeLessThanOrEqual(1);
     if(viewport.width<=700){expect(state.mobileVisible).toBe(4);expect(state.mobileCurrent).toBe(1)}
     if(family==='home'){
