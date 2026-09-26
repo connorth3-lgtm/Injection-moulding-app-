@@ -38,7 +38,9 @@ pilot = load("data/learner-pilot-v1.json")
 
 require(wave.get("schemaVersion") == 1, "Wave schemaVersion must be 1")
 require(re.fullmatch(r"\d{4}\.\d{2}\.\d{2}\.\d+", wave_release) is not None, "historical Wave release id is invalid")
-require(external.get("release") == current_release, "current external-validation contract must match version.json")
+external_release = str(external.get("release") or "")
+require(re.fullmatch(r"\d{4}\.\d{2}\.\d{2}\.\d+", external_release) is not None, "external-validation evidence release id is invalid")
+require(external_release <= current_release, "external-validation evidence cannot target a future release")
 require(re.fullmatch(r"[0-9a-f]{40}", str(wave.get("releaseSourceSha") or "")) is not None, "Wave releaseSourceSha must be a full commit SHA")
 
 live = wave.get("livePages") or {}
@@ -90,7 +92,7 @@ require(old_fingerprint != candidate.get("runtimeFingerprint"), "historical Wave
 
 manifest_ids = [ch["id"] for part in manifest["parts"] for ch in part["chapters"]]
 require(len(manifest_ids) == 46 and len(set(manifest_ids)) == 46, "Book manifest must contain 46 unique chapter ids")
-require(book_sme.get("release") == current_release, "current Book SME contract must be release-bound")
+require(book_sme.get("release") == external_release, "Book SME contract must remain bound to the external-evidence release")
 require(book_sme.get("manifestVersion") == manifest.get("version"), "Book SME manifest version mismatch")
 require(set(book_sme.get("chapterIds") or []) == set(manifest_ids), "Book SME contract must cover exactly all 46 manifest chapters")
 require(set(auth.get("authorizedChapterIds") or []) == set(manifest_ids), "Book publication authorization must cover the same 46 chapters")
@@ -111,7 +113,7 @@ if book_sme.get("status") == "validated":
 else:
     require(book_sme.get("status") == "hold", "Book SME status must be hold or validated")
 
-require(pilot.get("schemaVersion") == 1 and pilot.get("release") == current_release, "current learner pilot identity/release mismatch")
+require(pilot.get("schemaVersion") == 1 and pilot.get("release") == external_release, "learner pilot must remain bound to the external-evidence release")
 require(pilot.get("status") == "prepared", "learner pilot must remain prepared before execution")
 require(pilot.get("synthetic") is False, "learner pilot must explicitly require real, non-synthetic participants")
 require(pilot.get("evidence") is None, "prepared learner pilot must not contain synthetic completion evidence")

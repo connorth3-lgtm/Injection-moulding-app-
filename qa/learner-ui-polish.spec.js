@@ -88,3 +88,42 @@ test('desktop navigation stays focused while specialist capabilities remain reac
   await nav.getByRole('button',{name:/More tools/i}).click();
   await expect(page.locator('#modal .modal-card')).toBeVisible();
 });
+
+
+test('canonical shell stays stable through intermediate responsive widths',async({page})=>{
+  await page.setViewportSize({width:1024,height:768});
+  await openApp(page);
+  for(const width of [600,768,1024,1280]){
+    await page.setViewportSize({width,height:900});
+    await page.evaluate(()=>new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve))));
+    const state=await page.evaluate(()=>({
+      unresolved:window.MM_ACCESSIBILITY_HARDENING?.unresolvedSemanticCount?.()??-1,
+      view:document.body.dataset.mmView,
+      navGroup:document.body.dataset.mmNavGroup,
+      mobileButtons:[...document.querySelectorAll('.mobile-nav > button')].filter(el=>getComputedStyle(el).display!=='none').map(el=>(el.textContent||'').trim()),
+      current:[...document.querySelectorAll('.mobile-nav > button[aria-current="page"]')].filter(el=>getComputedStyle(el).display!=='none').length
+    }));
+    expect(state.unresolved).toBe(0);
+    expect(state.view).toBe('dashboard');
+    expect(state.navGroup).toBe('home');
+    if(width<=700){
+      expect(state.mobileButtons).toHaveLength(4);
+      expect(state.current).toBe(1);
+    }
+  }
+});
+
+test('canonical navigation registry owns generated control semantics',async({page})=>{
+  await page.setViewportSize({width:1440,height:900});
+  await openApp(page);
+  const generated=page.locator('#nav [data-mm-registry-nav]');
+  const count=await generated.count();
+  for(let i=0;i<count;i++)expect((await generated.nth(i).getAttribute('aria-label'))||'').not.toBe('');
+  await page.locator('#nav').getByRole('button',{name:/More tools/i}).click();
+  const menu=page.locator('#modal [data-mm-registry-menu]');
+  const menuCount=await menu.count();
+  for(let i=0;i<menuCount;i++){
+    expect((await menu.nth(i).getAttribute('aria-label'))||'').not.toBe('');
+    await expect(menu.nth(i).locator('.icon')).toHaveAttribute('aria-hidden','true');
+  }
+});

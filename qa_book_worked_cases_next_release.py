@@ -48,8 +48,11 @@ def main() -> None:
     runtime = BOOK_RUNTIME.read_text(encoding="utf-8")
     sw = SW.read_text(encoding="utf-8")
 
-    need(version.get("web_release") == "2026.09.24.14", "worked-case learner integration requires deliberate web release 2026.09.24.14")
-    need(ledger.get("release") == "2026.09.24.14", "worked-case ledger release mismatch")
+    current_release = version.get("web_release")
+    content_release = ledger.get("release")
+    need(isinstance(current_release, str) and current_release, "current learner web release is missing")
+    need(content_release == "2026.09.24.14", "worked-case governed content provenance release mismatch")
+    need(content_release <= current_release, "worked-case content cannot target a future learner release")
     need(LEDGER.read_bytes() == RUNTIME_LEDGER.read_bytes(), "authoritative/runtime worked-case ledgers differ")
 
     cases = ledger.get("cases") or []

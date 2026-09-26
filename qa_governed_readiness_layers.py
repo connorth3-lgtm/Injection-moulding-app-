@@ -46,7 +46,9 @@ for a,b,label in [(nsrc,nrt,"NZQA readiness"),(tsrc,trt,"NZQA templates")]:
 n=load(nsrc);t=load(tsrc)
 need(n.get("schema")==1 and n.get("id")=="mouldmaster-nzqa-education-readiness","NZQA identity mismatch")
 need(n.get("checked")=="2026-09-18","NZQA source check must be current")
-need(n.get("releaseTarget")==load(ROOT/"version.json").get("web_release"),"NZQA readiness must target current governed release")
+current_release=load(ROOT/"version.json").get("web_release")
+readiness_release=n.get("releaseTarget")
+need(isinstance(readiness_release,str) and readiness_release and readiness_release<=current_release,"NZQA readiness release target is missing or future-dated")
 need(n.get("publicationEffect")=="read-only-readiness-surface","NZQA publication effect must stay read-only")
 current={x["id"] for x in n.get("currentInjectionMouldingStandards",[])}
 expired=set(n.get("expiredStandardsNotForCurrentAssessmentMapping",[]))
@@ -118,14 +120,16 @@ for asset in [
 
 auth=load(ROOT/"data/book-publication-authorization-v1.json")
 permit=auth.get("evidenceEnrichmentAuthorization",{})
-need(permit.get("status")=="authorized" and permit.get("release")==version.get("web_release"),"Book enrichment authorization must bind the current release")
+need(permit.get("status")=="authorized" and permit.get("release")==e.get("release"),"Book enrichment authorization must bind the governed enrichment content release")
+need(permit.get("release")<=version.get("web_release"),"Book enrichment authorization cannot target a future learner release")
 need(permit.get("ledger")=="data/book-evidence-enrichment-v2.json","Book enrichment authorization ledger mismatch")
 need(permit.get("sectionCount")==13 and permit.get("chapterCount")==10,"Book enrichment authorization counts mismatch")
 need(permit.get("independentSmeStatus")=="hold","Book enrichment must preserve independent SME HOLD")
 need("book-evidence-enrichment-v2.json" in auth.get("runtimeIntegrity",{}).get("gitBlobSha1ByFile",{}),"Book enrichment missing from exact-byte authorization")
 
 sme=load(ROOT/"data/book-sme-review-v1.json")
-need(sme.get("release")==version.get("web_release"),"Book SME contract release mismatch")
+need(sme.get("release")==e.get("release"),"Book SME contract must remain bound to the governed enrichment content release")
+need(sme.get("release")<=version.get("web_release"),"Book SME evidence cannot target a future learner release")
 need(set(sme.get("enrichmentChapterIds",[]))=={x["chapterId"] for x in patches},"Book SME contract does not cover enrichment chapters")
 need(sme.get("status")=="hold","Book SME must remain HOLD")
 

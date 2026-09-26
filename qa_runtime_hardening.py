@@ -47,6 +47,7 @@ assessment_runtime_v2 = read("assessment-runtime-v2.js")
 lesson_v2 = read("lesson-deep-authoring-v2.js")
 multimodal = read("assessment-multimodal.js")
 a11y = read("accessibility-hardening.js")
+ui_shell = read("ui-shell.css")
 
 shell_release = js_const(index, "SHELL_RELEASE")
 runtime_asset_version = shell_release
@@ -93,13 +94,11 @@ must(shell, [
     "dockReferenceLauncher", "getElementById('mm-src-open')", "document.querySelector('.sidebar-foot')",
     "sourceReviewDisplayDate", "qualitySuite?.sourceFreshnessReviewed", "syncStandardsReviewDate", "window.MM_DATA?.standards", "References reviewed\\s+\\d{1,2}",
     "open.style.position='static'", "open.style.zIndex='auto'", "configureReferenceDrawer",
-    "modal.setAttribute('aria-modal','false')", "pointer-events:none!important",
-    ".mmsrc.mm-reference-drawer .mmsrc-panel{width:min(430px", "pointer-events:auto!important",
-    "calc(82px + env(safe-area-inset-bottom))", "max-height:48dvh",
+    "modal.setAttribute('aria-modal','false')",
     "REFERENCE_DATA_URL='./reference-data.html'", "openStandaloneReferenceData", "location.assign(REFERENCE_DATA_URL)",
     "REFERENCE_DATA_URL='./reference-data.html'", "References",
     "dockReferenceDataLauncher", "getElementById('mmrd-open')", "open.dataset.mmDocked='mobile-more-standalone-page'",
-    "open.style.display='none'", ".mmrd.mm-reference-data-drawer,.mmrd.mm-reference-data-drawer[data-open=\"1\"]{display:none!important",
+    "open.style.display='none'",
     "MM_REFERENCE_DATA_LAUNCHER_DOCK='mobile-more-standalone-page'",
     "MM_REFERENCE_DATA_DRAWER_MODE='standalone-mobile-page-desktop-drawer'",
     "shell?.events?.onViewChange?.(scheduleSync)", "shell?.events?.onRender?.(view,scheduleSync)",
@@ -107,6 +106,12 @@ must(shell, [
     "mode:standalone?'Installed PWA':'Browser'", "MM_REFERENCE_DRAWER_MODE='non-blocking'",
     "desktopRelease", "location.hostname==='127.0.0.1'", "Electron"
 ], "shell hardening")
+must(ui_shell, [
+    "pointer-events:none!important", ".mmsrc.mm-reference-drawer .mmsrc-panel{width:min(430px",
+    "pointer-events:auto!important", "calc(82px + env(safe-area-inset-bottom))", "max-height:48dvh",
+    ".mmrd.mm-reference-data-drawer,.mmrd.mm-reference-data-drawer[data-open=\"1\"]{display:none!important"
+], "shell presentation hardening")
+require("document.createElement('style')" not in shell, "shell hardening: presentation must remain in governed CSS rather than runtime style injection")
 require("new MutationObserver" not in shell, "shell hardening: document-wide mutation polling must remain retired")
 for forbidden in ("retireBrowserOfflineRuntime", ".unregister()", "owned.map(k=>caches.delete(k))", "mmFresh"):
     require(forbidden not in shell, f"shell hardening: destructive browser/PWA lifecycle marker remains: {forbidden}")

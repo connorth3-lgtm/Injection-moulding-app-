@@ -1,7 +1,7 @@
 /* MouldMaster PWA shell controller — 2026.09.06 */
 (function(){
 'use strict';
-const RELEASE='2026.09.24.14';
+const RELEASE='2026.09.26.2';
 const CONTENT='2026.08.26.1';
 const REFERENCE_DATA_URL='./reference-data.html';
 function setText(el,value){if(el&&el.textContent!==value)el.textContent=value}
@@ -205,67 +205,6 @@ function patchQuestionListRenderers(){
   }
   window.__MM_QUESTION_LIST_RENDER_PATCH__=true;
 }
-function installMobileLayoutGuard(){
-  if(document.getElementById('mm-mobile-layout-guard-style'))return;
-  const style=document.createElement('style');style.id='mm-mobile-layout-guard-style';style.textContent=`
-:root{--mm-mobile-nav-clearance:120px;--shadow:0 7px 22px rgba(0,0,0,.18)}
-.card{border-radius:14px!important;border-color:#263b58!important;box-shadow:var(--shadow)!important;background:linear-gradient(180deg,rgba(18,32,52,.96),rgba(13,25,42,.96))!important}
-.main{padding-top:20px}
-.topbar{margin-bottom:16px!important}
-.topbar h1{line-height:1.12}
-.hero{gap:12px!important}
-.hero-main{padding:22px!important;min-height:220px!important}
-.hero-main h2{font-size:clamp(29px,4vw,34px)!important;margin-bottom:9px!important}
-.hero-main p{line-height:1.58!important}
-.kpis{gap:10px!important;margin:13px 0!important}.kpi{padding:14px!important}
-.section-head{margin:22px 0 10px!important}.grid,.grid2{gap:12px!important}.grid4{gap:10px!important}
-.course-card{min-height:220px!important;padding:16px!important}
-.lesson-body{padding:22px!important}
-.lesson-read-block,.mm-reading-guide,.question,.exam-card .question,.mm-teach,.mm-ref-panel,.lesson-source-box,.question-reference{box-shadow:none!important}
-.lesson-read-block,.mm-teach,.mm-ref-panel,.lesson-source-box,.question-reference{border-radius:12px!important}
-.mm-reading-guide{border-width:1px!important;border-radius:12px!important;padding:14px 16px!important}
-.lesson-read-primary{border-width:1px!important;box-shadow:none!important}
-.fun-dashboard.mm-daily-only{grid-template-columns:1fr!important;margin-bottom:14px!important}
-.fun-dashboard.mm-daily-only .mission-card{min-height:0!important;padding:18px!important}
-.mm-question-collapsed{display:none!important}.mm-question-toggle{width:100%;margin:10px 0 5px!important;min-height:42px!important}
-#examQuestions + .mm-question-toggle{margin:8px 0 14px!important}
-@media(max-width:700px){
-  :root{--mm-mobile-nav-clearance:120px}
-  html{scroll-padding-bottom:calc(var(--mm-mobile-nav-clearance) + env(safe-area-inset-bottom))}
-  body{padding-bottom:0!important}
-  .main{padding:14px 14px calc(var(--mm-mobile-nav-clearance) + env(safe-area-inset-bottom))!important}
-  .topbar{position:relative!important;top:auto!important;z-index:1!important;background:transparent!important;backdrop-filter:none!important;gap:10px!important;margin-bottom:14px!important;padding:0 0 6px!important}
-  .topbar h1{font-size:clamp(24px,7vw,28px)!important}.topbar p{font-size:13px!important;line-height:1.45!important}
-  .top-actions{gap:8px!important;flex-wrap:wrap!important}.top-actions button{min-height:44px!important;padding:9px 12px!important}
-  .mobile-nav{position:fixed!important;left:0!important;right:0!important;bottom:0!important;background:rgba(7,16,28,.97)!important;border-top:1px solid #263b58!important;padding:6px 8px calc(6px + env(safe-area-inset-bottom))!important;box-shadow:0 -5px 18px rgba(0,0,0,.22),0 56px 0 #07101c!important}
-  .mobile-nav button{min-height:48px!important;padding:6px 4px!important}
-  body.mm-home-visible #continueBtn{display:none!important}
-  body.mm-home-visible .top-actions{justify-content:flex-start!important}
-  body.mm-home-visible #searchBtn{flex:0 0 auto!important;min-width:108px!important}
-  #dashboard{padding-bottom:12px!important}
-  #dashboard .hero-main{padding:18px!important;min-height:0!important}
-  #dashboard .hero-main h2{font-size:clamp(26px,8vw,31px)!important}
-  #dashboard .hero-main p{font-size:14px!important}
-  #dashboard .kpis{gap:8px!important;margin:10px 0!important}
-  #dashboard .kpi{padding:12px!important}
-  #dashboard .mm-specialist-strip{margin-bottom:12px!important}
-  .course-card{min-height:0!important;padding:14px!important}
-  .lesson-body{padding:14px!important}
-  .section-head{margin:18px 0 9px!important}
-  .scenario .mm-question-toggle{margin:6px 0 10px!important}
-  .toast{bottom:calc(84px + env(safe-area-inset-bottom))!important}
-  html body[data-mm-view="profile"] .topbar{gap:10px!important;margin-bottom:14px!important;padding:0 0 4px!important}
-  html body[data-mm-view="profile"] .top-actions{width:100%!important;display:flex!important;flex-wrap:wrap!important;gap:8px!important;align-items:stretch!important;margin:0!important}
-  html body[data-mm-view="profile"] .top-actions button{flex:1 1 130px!important;width:auto!important;min-width:0!important;min-height:44px!important;padding:9px 11px!important;white-space:normal!important}
-  html body[data-mm-view="profile"] .main{padding-bottom:calc(var(--mm-mobile-nav-clearance) + env(safe-area-inset-bottom))!important}
-  html body[data-mm-view="profile"] #profile{padding-bottom:12px!important}
-  html body[data-mm-view="profile"] #profile>*:last-child{margin-bottom:12px!important}
-  html.mm-ios-webkit body[data-mm-view="profile"] .main{padding-top:calc(14px + env(safe-area-inset-top))!important;padding-left:max(14px,env(safe-area-inset-left))!important;padding-right:max(14px,env(safe-area-inset-right))!important;padding-bottom:calc(var(--mm-mobile-nav-clearance) + env(safe-area-inset-bottom))!important}
-  html.mm-ios-webkit body[data-mm-view="profile"] .topbar{margin-bottom:14px!important}
-  html.mm-ios-webkit .mobile-nav{padding-left:max(8px,env(safe-area-inset-left))!important;padding-right:max(8px,env(safe-area-inset-right))!important;padding-bottom:calc(6px + env(safe-area-inset-bottom))!important}
-}
-@media(max-width:390px){html body[data-mm-view="profile"] .top-actions{display:flex!important;grid-template-columns:none!important}html body[data-mm-view="profile"] .top-actions button{flex:1 1 100%!important;min-height:44px!important}}
-`;document.head.appendChild(style)}
 function syncVisibleViewChrome(){
   const home=document.getElementById('dashboard'),isHome=!!home&&!home.classList.contains('hidden');document.body?.classList.toggle('mm-home-visible',isHome);
   if(window.MM_APP_SHELL?.finalized)return;
@@ -279,13 +218,7 @@ function dockReferenceLauncher(){
 }
 function configureReferenceDrawer(){
   const modal=document.querySelector('.mmsrc');if(!modal)return;modal.classList.add('mm-reference-drawer');modal.setAttribute('aria-modal','false');modal.setAttribute('aria-label','MouldMaster references — non-blocking reference drawer');
-  if(!document.getElementById('mm-reference-drawer-style')){const style=document.createElement('style');style.id='mm-reference-drawer-style';style.textContent=`
-.mmsrc.mm-reference-drawer{background:transparent!important;align-items:flex-end!important;justify-content:flex-end!important;padding:12px!important;pointer-events:none!important}
-.mmsrc.mm-reference-drawer[data-open="1"]{display:flex!important}
-.mmsrc.mm-reference-drawer .mmsrc-panel{width:min(430px,calc(100vw - 24px))!important;max-height:min(72dvh,760px)!important;height:auto!important;border-radius:16px!important;pointer-events:auto!important;box-shadow:0 18px 52px rgba(0,0,0,.42)!important}
-.mmsrc.mm-reference-drawer .mmsrc-head{flex:0 0 auto!important}.mmsrc.mm-reference-drawer .mmsrc-body{min-height:0!important;overscroll-behavior:contain!important}
-@media(max-width:680px){.mmsrc.mm-reference-drawer{padding:6px 6px calc(82px + env(safe-area-inset-bottom))!important}.mmsrc.mm-reference-drawer .mmsrc-panel{width:calc(100vw - 12px)!important;max-height:48dvh!important;border-radius:15px!important}.mmsrc.mm-reference-drawer .mmsrc-head{padding-top:10px!important}}
-`;document.head.appendChild(style)}modal.dataset.mmNonBlocking='1'
+  modal.dataset.mmNonBlocking='1'
 }
 function openStandaloneReferenceData(){location.assign(REFERENCE_DATA_URL)}
 function dockReferenceDataLauncher(){
@@ -295,11 +228,7 @@ function dockReferenceDataLauncher(){
 }
 function configureReferenceDataDrawer(){
   const modal=document.querySelector('.mmrd');if(!modal)return;modal.classList.add('mm-reference-data-drawer');modal.setAttribute('aria-modal','false');modal.setAttribute('aria-label','MouldMaster references');if(isMobileNav())modal.dataset.open='0';
-  if(!document.getElementById('mm-reference-data-drawer-style')){const style=document.createElement('style');style.id='mm-reference-data-drawer-style';style.textContent=`
-.mmrd.mm-reference-data-drawer{background:transparent!important;align-items:flex-end!important;justify-content:flex-end!important;padding:12px!important;pointer-events:none!important}.mmrd.mm-reference-data-drawer[data-open="1"]{display:flex!important}
-.mmrd.mm-reference-data-drawer .mmrd-panel{width:min(520px,calc(100vw - 24px))!important;max-height:min(74dvh,800px)!important;height:auto!important;border-radius:16px!important;pointer-events:auto!important;box-shadow:0 18px 52px rgba(0,0,0,.42)!important}.mmrd.mm-reference-data-drawer .mmrd-head{flex:0 0 auto!important}.mmrd.mm-reference-data-drawer .mmrd-body{min-height:0!important;overscroll-behavior:contain!important}
-@media(max-width:680px){.mmrd.mm-reference-data-drawer,.mmrd.mm-reference-data-drawer[data-open="1"]{display:none!important;pointer-events:none!important}}
-`;document.head.appendChild(style)}modal.dataset.mmNonBlocking='1'
+  modal.dataset.mmNonBlocking='1'
 }
 function addNZLegacyNote(){
   const host=document.getElementById('standards');if(!host||host.querySelector('[data-mm-nz-legacy-note]')||[...host.querySelectorAll('.legal-note')].some(x=>/NZ source-status (?:note|clarification)/i.test(x.textContent||'')))return;const region=(window.user&&window.user.region)||'ALL';if(region!=='ALL'&&region!=='NZ')return;host.insertAdjacentHTML('beforeend',`<div class="legal-note" data-mm-nz-legacy-note="1"><b>NZ source-status note:</b> the older WorkSafe injection/blow-moulding fact sheet is retained only as <b>legacy supplementary guidance</b>. For current duties and safeguarding practice, use the Health and Safety at Work Act framework, current WorkSafe machinery/lockout guidance, applicable site procedures and current machinery standards. Do not treat the old fact sheet as the controlling current legal source.</div>`)
@@ -310,7 +239,7 @@ async function register(){
   try{const reg=await navigator.serviceWorker.register('./service-worker.js',{scope:'./'});await reg.update();return reg}catch(e){console.warn('[MouldMaster] Offline/update support unavailable:',e);return null}
 }
 let syncQueued=false;
-function runSync(){syncQueued=false;syncPlatformClasses();syncLabels();syncStandardsReviewDate();syncUpdateCard();hideInternalQaProvenance();patchQuestionListRenderers();retireLegacyGamification();installMobileLayoutGuard();scrubLegacyGamification();installQuestionDisclosures();syncVisibleViewChrome();dockReferenceLauncher();configureReferenceDrawer();dockReferenceDataLauncher();configureReferenceDataDrawer();addNZLegacyNote()}
+function runSync(){syncQueued=false;syncPlatformClasses();syncLabels();syncStandardsReviewDate();syncUpdateCard();hideInternalQaProvenance();patchQuestionListRenderers();retireLegacyGamification();scrubLegacyGamification();installQuestionDisclosures();syncVisibleViewChrome();dockReferenceLauncher();configureReferenceDrawer();dockReferenceDataLauncher();configureReferenceDataDrawer();addNZLegacyNote()}
 function scheduleSync(){if(syncQueued)return;syncQueued=true;(window.requestAnimationFrame||function(fn){return setTimeout(fn,0)})(runSync)}
 function bindLifecycle(){
   const shell=window.MM_APP_SHELL;
@@ -323,5 +252,5 @@ runSync();
 window.addEventListener('resize',scheduleSync,{passive:true});
 window.addEventListener('load',()=>{runSync();register();setTimeout(scheduleSync,250)},{once:true});
 document.addEventListener('visibilitychange',()=>{if(!document.hidden)scheduleSync()});
-window.MM_SHELL_RELEASE=RELEASE;window.MM_CONTENT_RELEASE=CONTENT;window.MM_DISPLAY_CONTEXT=displayContext;window.MM_REFERENCE_LAUNCHER_DOCK='sidebar-first-normal-flow';window.MM_REFERENCE_DRAWER_MODE='non-blocking';window.MM_REFERENCE_DATA_URL=REFERENCE_DATA_URL;window.MM_REFERENCE_DATA_LAUNCHER_DOCK='mobile-more-standalone-page';window.MM_REFERENCE_DATA_DRAWER_MODE='standalone-mobile-page-desktop-drawer';window.MM_BROWSER_UPDATE_MODE='shared-origin-service-worker';window.MM_MOBILE_LAYOUT_GUARD='home-task-first-fixed-nav-clearance-v2';window.MM_IOS_LAYOUT_PATCH='safe-area-viewport-profile-v1';window.MM_UI_POLISH='compact-shell-no-gamification-v1';window.MM_QUESTION_DISCLOSURES='mobile-scenario-and-exam-v1';window.MM_GAMIFICATION_MODE='retired';
+window.MM_SHELL_RELEASE=RELEASE;window.MM_CONTENT_RELEASE=CONTENT;window.MM_DISPLAY_CONTEXT=displayContext;window.MM_REFERENCE_LAUNCHER_DOCK='sidebar-first-normal-flow';window.MM_REFERENCE_DRAWER_MODE='non-blocking';window.MM_REFERENCE_DATA_URL=REFERENCE_DATA_URL;window.MM_REFERENCE_DATA_LAUNCHER_DOCK='mobile-more-standalone-page';window.MM_REFERENCE_DATA_DRAWER_MODE='standalone-mobile-page-desktop-drawer';window.MM_BROWSER_UPDATE_MODE='shared-origin-service-worker';window.MM_IOS_LAYOUT_PATCH='safe-area-viewport-profile-v1';window.MM_UI_POLISH='compact-shell-no-gamification-v1';window.MM_QUESTION_DISCLOSURES='mobile-scenario-and-exam-v1';window.MM_GAMIFICATION_MODE='retired';
 })();

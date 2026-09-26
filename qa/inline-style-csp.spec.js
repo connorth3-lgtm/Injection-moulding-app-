@@ -17,12 +17,13 @@ test('strict style CSP uses exact hashes and runtime style blocks remain active'
   await openApp(page);
   const state=await page.evaluate(()=>{
     const csp=document.querySelector('meta[http-equiv="Content-Security-Policy"]')?.content||'';
-    const style=document.getElementById('mm-app-shell-registry-style');
+    const registry=document.querySelector('.mm-dashboard-registry');
     return{
       csp,
       hashCount:(csp.match(/'sha256-[A-Za-z0-9+/=]+'/g)||[]).length,
       bridgeVersion:window.MM_INLINE_STYLE_BRIDGE?.version,
-      registryRules:style?.sheet?.cssRules?.length||0,
+      registryDisplay:registry?getComputedStyle(registry).display:'',
+      registryRuntimeStyle:!!document.getElementById('mm-app-shell-registry-style'),
       bodyBoxSizing:getComputedStyle(document.body).boxSizing
     };
   });
@@ -31,7 +32,8 @@ test('strict style CSP uses exact hashes and runtime style blocks remain active'
   expect(state.csp).toContain("style-src-attr 'none'");
   expect(state.csp).not.toContain("'unsafe-inline'");
   expect(state.hashCount).toBeGreaterThan(10);
-  expect(state.registryRules).toBeGreaterThan(0);
+  expect(state.registryDisplay).toBe('grid');
+  expect(state.registryRuntimeStyle).toBe(false);
   expect(state.bodyBoxSizing).toBe('border-box');
 });
 

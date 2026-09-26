@@ -73,6 +73,10 @@ async function clearTransientUi(page){
 async function normalizeCaptureState(page){
   await page.evaluate(()=>{
     document.querySelectorAll('.toast').forEach(node=>node.remove());
+    const sidebar=document.querySelector('.sidebar');
+    if(sidebar)sidebar.scrollTop=0;
+    const nav=document.getElementById('nav');
+    if(nav)nav.scrollTop=0;
     const active=document.activeElement;
     if(active&&active!==document.body&&typeof active.blur==='function')active.blur();
   });

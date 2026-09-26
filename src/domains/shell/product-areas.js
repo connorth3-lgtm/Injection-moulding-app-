@@ -24,11 +24,7 @@ function open(id){
     else coreView('standards');
   }
 }
-function style(){if(document.getElementById('mm-product-areas-style'))return;const s=document.createElement('style');s.id='mm-product-areas-style';s.textContent=`
-.mm-product-areas{padding:18px}.mm-product-areas-head{display:flex;justify-content:space-between;gap:12px;align-items:end;margin-bottom:12px}.mm-product-areas-head h2{margin:3px 0 0}.mm-product-areas-head p{margin:5px 0 0;color:var(--muted);max-width:760px}.mm-product-area-grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:9px}.mm-product-area{min-height:125px;text-align:left;padding:13px;border:1px solid #304b69;border-radius:12px;background:#0e1d31;color:#edf5ff}.mm-product-area:hover,.mm-product-area:focus-visible{background:#142843;border-color:#4c739c}.mm-product-area .icon{display:block;font-size:20px;margin-bottom:9px;color:var(--accent)}.mm-product-area b{display:block;font-size:14px}.mm-product-area small{display:block;color:#aebfd3;line-height:1.4;margin-top:5px}.mm-product-boundary{margin-top:10px;color:var(--muted);font-size:11px;line-height:1.45}@media(max-width:1050px){.mm-product-area-grid{grid-template-columns:repeat(3,1fr)}}@media(max-width:650px){.mm-product-area-grid{grid-template-columns:1fr 1fr}.mm-product-areas{padding:15px}.mm-product-areas-head{display:block}}
-`;document.head.appendChild(s)}
 function render(slot){
-  style();
   slot.innerHTML=`<section class="card mm-product-areas" aria-label="MouldMaster product areas"><div class="mm-product-areas-head"><div><span class="eyebrow">One platform · five jobs</span><h2>What do you need to do?</h2><p>Start from the engineering task rather than the internal module structure.</p></div></div><div class="mm-product-area-grid">${AREAS.map(a=>`<button type="button" class="mm-product-area" data-mm-product-area="${esc(a.id)}"><span class="icon" aria-hidden="true">${esc(a.icon)}</span><b>${esc(a.label)}</b><small>${esc(a.description)}</small></button>`).join('')}</div><div class="mm-product-boundary">Materials distinguishes family-level learning from published exact-grade evidence. Diagnose and Analyse remain evidence-organising tools, not universal production recipes.</div></section>`;
   slot.querySelectorAll('[data-mm-product-area]').forEach(b=>b.addEventListener('click',()=>open(b.dataset.mmProductArea)));
 }

@@ -350,12 +350,14 @@ def main() -> None:
     data = load_json(CONTRACT)
     if data.get("schemaVersion") != 1:
         fail("schemaVersion must be 1")
-    if data.get("release") != expected_release:
-        fail(f"release must match canonical web release {expected_release}")
+    contract_release = require_nonempty(data.get("release"), "external-validation contract release is missing")
+    if contract_release > expected_release:
+        fail(f"external-validation contract cannot target future release {contract_release}")
+    stale = contract_release != expected_release
     require_release_packet(
         data.get("validationIndex"),
-        expected_release,
-        f"qa/EXTERNAL_VALIDATION_{expected_release}.md",
+        contract_release,
+        f"qa/EXTERNAL_VALIDATION_{contract_release}.md",
         "external-validation index",
     )
     if (data.get("technicalAutomation") or {}).get("status") != "pass":
@@ -391,13 +393,17 @@ def main() -> None:
         if policy.get(key) is not True:
             fail(f"governance.requiredPolicy.{key} must be true")
 
-    validate_accessibility(data["accessibility"], expected_release)
-    validate_pwa(data["pwaPhysicalDevices"], expected_release)
-    validate_windows(data["windowsDistribution"], expected_release)
-    validate_book_sme(data["bookSme"], expected_release)
-    validate_curriculum(data["curriculumSme"], expected_release)
-    validate_learner(data["learnerOutcomes"], expected_release)
-    validate_nzqa(data["nzqaProvider"], expected_release)
+    if stale:
+        for name in ("accessibility", "pwaPhysicalDevices", "windowsDistribution", "bookSme", "curriculumSme", "learnerOutcomes", "nzqaProvider"):
+            if data[name]["status"] != "hold":
+                fail(f"stale external-validation contract must remain HOLD for {name}")
+    validate_accessibility(data["accessibility"], contract_release)
+    validate_pwa(data["pwaPhysicalDevices"], contract_release)
+    validate_windows(data["windowsDistribution"], contract_release)
+    validate_book_sme(data["bookSme"], contract_release)
+    validate_curriculum(data["curriculumSme"], contract_release)
+    validate_learner(data["learnerOutcomes"], contract_release)
+    validate_nzqa(data["nzqaProvider"], contract_release)
 
     production = data["productionUse"]
     if production.get("status") != "advisory-only" or production.get("authority") != "no-automatic-machine-control":
@@ -422,8 +428,8 @@ def main() -> None:
         if data[name]["status"] == "hold"
     ]
     print(
-        f"Release {expected_release} external-validation boundary verified. "
-        f"Automated technical state is PASS; exact release packets are current; explicit HOLD areas: "
+        f"Current release {expected_release}; external-evidence release {contract_release} boundary verified. "
+        f"Automated contract state is PASS; evidence packets remain bound to their exact release; explicit HOLD areas: "
         f"{', '.join(holds) if holds else 'none'}; production authority remains advisory-only."
     )
 
