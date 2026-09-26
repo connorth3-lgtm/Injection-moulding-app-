@@ -18,7 +18,9 @@ async function seed(page,run){
   },{run});
 }
 
-const FAMILIES=['home','learn','practice','book','materials','responsive','more','lesson','process-data','shell'];\n\nfor(let run=1;run<=500;run++){
+const FAMILIES=['home','learn','practice','book','materials','responsive','more','lesson','process-data','shell'];
+
+for(let run=1;run<=500;run++){
   const viewport=VIEWPORTS[(run-1)%VIEWPORTS.length];
   test('individual app run '+String(run).padStart(3,'0')+' · '+viewport.name,async({page})=>{
     const pageErrors=[],consoleErrors=[];
