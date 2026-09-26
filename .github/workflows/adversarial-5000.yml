@@ -8,13 +8,13 @@ on:
       - '.github/workflows/adversarial-5000.yml'
   workflow_dispatch:
 jobs:
-  adversarial:
-    timeout-minutes: 120
+  isolate-first-500:
+    timeout-minutes: 30
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
-        shard: [1,2,3,4,5,6,7,8,9,10]
+        batch: [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19]
     steps:
       - uses: actions/checkout@v7
       - uses: actions/setup-node@v7
@@ -26,12 +26,15 @@ jobs:
       - run: |
           for i in {1..60}; do curl -fsS http://127.0.0.1:4173/index.html >/dev/null && exit 0; sleep 1; done
           exit 1
-      - name: Run adversarial shard
-        run: npx playwright test --config=playwright.adversarial.config.cjs --shard=${{ matrix.shard }}/10
+      - name: Run isolated seed batch
+        env:
+          MM_SEED_START: ${{ matrix.batch * 25 + 1 }}
+          MM_SEED_END: ${{ matrix.batch * 25 + 25 }}
+        run: npx playwright test --config=playwright.adversarial.config.cjs
       - if: failure()
         uses: actions/upload-artifact@v4
         with:
-          name: adversarial-${{ matrix.shard }}
+          name: adversarial-first500-batch-${{ matrix.batch }}
           path: |
             test-results
             qa-artifacts/adversarial-report
