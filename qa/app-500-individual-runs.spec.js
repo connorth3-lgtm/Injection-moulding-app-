@@ -18,7 +18,7 @@ async function seed(page,run){
   },{run});
 }
 
-for(let run=1;run<=500;run++){
+const FAMILIES=['home','learn','practice','book','materials','responsive','more','lesson','process-data','shell'];\n\nfor(let run=1;run<=500;run++){
   const viewport=VIEWPORTS[(run-1)%VIEWPORTS.length];
   test('individual app run '+String(run).padStart(3,'0')+' · '+viewport.name,async({page})=>{
     const pageErrors=[],consoleErrors=[];
@@ -47,18 +47,45 @@ for(let run=1;run<=500;run++){
     expect(state.unresolved).toBe(0);
     expect(state.horizontalOverflow).toBeLessThanOrEqual(1);
     if(viewport.width<=700){expect(state.mobileVisible).toBe(4);expect(state.mobileCurrent).toBe(1)}
-    const action=run%4;
-    if(action===0){
-      await page.evaluate(()=>switchView('path'));await expect(page.locator('#path')).toBeVisible();
+    if(family==='home'){
+      await expect(page.locator('#dashboard')).toBeVisible();
+      await expect(page.locator('#dashboard')).not.toContainText(/workshop rank|learning streak/i);
+    }else if(family==='learn'){
+      await page.evaluate(()=>switchView('path'));await expect(page.locator('#path .mm-learn-hub')).toBeVisible();
       expect(await page.evaluate(()=>document.body.dataset.mmNavGroup)).toBe('learn');
-    }else if(action===1){
-      await page.evaluate(()=>switchView('scenarios'));await expect(page.locator('#scenarios')).toBeVisible();
+    }else if(family==='practice'){
+      await page.evaluate(()=>switchView('scenarios'));await expect(page.locator('#scenarios .mm-practice-hub')).toBeVisible();
       expect(await page.evaluate(()=>document.body.dataset.mmNavGroup)).toBe('practice');
-    }else if(action===2){
+    }else if(family==='book'){
       await page.waitForFunction(()=>Boolean(window.MMBook?.open));await page.evaluate(()=>window.MMBook.open());
       await expect(page.locator('#mmBookView')).toBeVisible();
-    }else{
-      await page.evaluate(()=>switchView('dashboard'));await expect(page.locator('#dashboard')).toBeVisible();
+      await page.waitForFunction(()=>window.MMBook?.getManifest?.()?.parts?.length>0);
+      const chapters=page.locator('[data-mm-book-chapter]');
+      expect(await chapters.count()).toBeGreaterThanOrEqual(46);
+      await chapters.nth(variant%Math.min(46,await chapters.count())).click();
+      await expect(page.locator('[data-mm-book-reader] h2')).toBeVisible();
+    }else if(family==='materials'){
+      await page.evaluate(()=>switchView('path'));const b=page.locator('#path [data-mm-hub-action="materials"]');await expect(b).toBeVisible();await b.click();
+      await expect(page.locator('#mmExactMaterialCatalog')).toHaveCount(1);
+    }else if(family==='responsive'){
+      const widths=[360,412,600,650,700,768,810,900,1024,1280,1440];
+      await page.setViewportSize({width:widths[variant%widths.length],height:900});
+      await page.evaluate(()=>new Promise(r=>requestAnimationFrame(()=>requestAnimationFrame(r))));
+      expect(await page.evaluate(()=>document.documentElement.scrollWidth-document.documentElement.clientWidth)).toBeLessThanOrEqual(1);
+    }else if(family==='more'){
+      if(viewport.width<=700){await page.locator('.mobile-nav > button').filter({hasText:'More'}).click()}
+      else{await page.locator('#nav').getByRole('button',{name:/More tools/i}).click()}
+      await expect(page.locator('#modal .modal-card')).toBeVisible();
+    }else if(family==='lesson'){
+      await page.evaluate(()=>switchView('path'));const b=page.getByRole('button',{name:/Continue lesson/i}).first();await expect(b).toBeVisible();await b.click();
+      await expect(page.locator('#lesson')).toBeVisible();await expect(page.locator('#lesson .mm-simple-lesson-hero')).toBeVisible();
+    }else if(family==='process-data'){
+      await page.evaluate(()=>switchView('scenarios'));const b=page.locator('#scenarios [data-mm-hub-action="process-data"]');await expect(b).toBeVisible();await b.click();
+      await expect(page.locator('#processDataLabs')).toBeVisible();await expect(page.getByRole('heading',{name:'Guided Data Diagnosis'})).toBeVisible();
+    }else if(family==='shell'){
+      await page.evaluate(()=>{window.MM_APP_SHELL.dashboard.compose();window.MM_APP_SHELL.dashboard.compose()});
+      await expect(page.locator('#dashboard .mm-today-focus')).toHaveCount(1);
+      expect(await page.evaluate(()=>window.MM_ACCESSIBILITY_HARDENING?.unresolvedSemanticCount?.()??-1)).toBe(0);
     }
     expect(pageErrors,'page errors in run '+run+': '+pageErrors.join(' | ')).toEqual([]);
     const unexpectedConsole=consoleErrors.filter(message=>!/favicon|Failed to load resource.*404/i.test(message));
