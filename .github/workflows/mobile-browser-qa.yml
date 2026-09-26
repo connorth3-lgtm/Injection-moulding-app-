@@ -126,7 +126,7 @@ jobs:
       - name: 500 isolated app reliability runs
         id: app_500
         continue-on-error: true
-        run: npx playwright test qa/app-500-individual-runs.spec.js --config=playwright.config.cjs
+        run: npx playwright test --config=playwright.app-500.config.cjs
       - name: Chromium mobile, material, evidence, engineering-store and PWA regression tests
         id: chromium_regression
         continue-on-error: true
