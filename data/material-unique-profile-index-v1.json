@@ -1,8 +1,8 @@
 {
-  "version": "2026-09-28.1",
+  "version": "2026-09-28.2",
   "source": "data/asian-aus-nz-material-grade-extraction-wave2-v1.json",
   "countingRule": "one manufacturer + exact grade identity equals one unique complete profile; multiple evidence rows enrich but do not increase profile count",
-  "uniqueExactCompleteProfiles": 69,
+  "uniqueExactCompleteProfiles": 71,
   "profiles": [
     {
       "manufacturer": "Qenos",
@@ -20,9 +20,10 @@
       "polymer": "PP homopolymer",
       "supportingRecordIndexes": [
         2,
-        97
+        97,
+        194
       ],
-      "evidenceRowCount": 2
+      "evidenceRowCount": 3
     },
     {
       "manufacturer": "SCGC",
@@ -146,9 +147,10 @@
       "polymer": "PP impact copolymer",
       "supportingRecordIndexes": [
         23,
-        115
+        115,
+        200
       ],
-      "evidenceRowCount": 2
+      "evidenceRowCount": 3
     },
     {
       "manufacturer": "LyondellBasell Australia",
@@ -174,18 +176,20 @@
       "grade": "1015GC6",
       "polymer": "PA6",
       "supportingRecordIndexes": [
-        28
+        28,
+        188
       ],
-      "evidenceRowCount": 1
+      "evidenceRowCount": 2
     },
     {
       "manufacturer": "UBE",
       "grade": "1013B",
       "polymer": "PA6",
       "supportingRecordIndexes": [
-        29
+        29,
+        189
       ],
-      "evidenceRowCount": 1
+      "evidenceRowCount": 2
     },
     {
       "manufacturer": "Supreme Petrochem",
@@ -312,9 +316,10 @@
       "grade": "TENAC-C 4520",
       "polymer": "POM copolymer",
       "supportingRecordIndexes": [
-        52
+        52,
+        187
       ],
-      "evidenceRowCount": 1
+      "evidenceRowCount": 2
     },
     {
       "manufacturer": "UNITIKA",
@@ -331,18 +336,20 @@
       "grade": "UG-100-20",
       "polymer": "polyarylate composite",
       "supportingRecordIndexes": [
-        54
+        54,
+        185
       ],
-      "evidenceRowCount": 1
+      "evidenceRowCount": 2
     },
     {
       "manufacturer": "UNITIKA",
       "grade": "UG-100-30",
       "polymer": "polyarylate composite",
       "supportingRecordIndexes": [
-        55
+        55,
+        186
       ],
-      "evidenceRowCount": 1
+      "evidenceRowCount": 2
     },
     {
       "manufacturer": "ExxonMobil Chemical",
@@ -439,27 +446,30 @@
       "grade": "G1352A",
       "polymer": "PA9T",
       "supportingRecordIndexes": [
-        78
+        78,
+        190
       ],
-      "evidenceRowCount": 1
+      "evidenceRowCount": 2
     },
     {
       "manufacturer": "Kuraray",
       "grade": "GL1350A",
       "polymer": "PA9T",
       "supportingRecordIndexes": [
-        79
+        79,
+        191
       ],
-      "evidenceRowCount": 1
+      "evidenceRowCount": 2
     },
     {
       "manufacturer": "Kuraray",
       "grade": "G1350A-M47WF",
       "polymer": "PA9T",
       "supportingRecordIndexes": [
-        80
+        80,
+        192
       ],
-      "evidenceRowCount": 1
+      "evidenceRowCount": 2
     },
     {
       "manufacturer": "UBE",
@@ -504,27 +514,30 @@
       "grade": "P740J",
       "polymer": "PP impact copolymer",
       "supportingRecordIndexes": [
-        98
+        98,
+        195
       ],
-      "evidenceRowCount": 1
+      "evidenceRowCount": 2
     },
     {
       "manufacturer": "SCGC",
       "grade": "P744J",
       "polymer": "PP impact copolymer",
       "supportingRecordIndexes": [
-        99
+        99,
+        196
       ],
-      "evidenceRowCount": 1
+      "evidenceRowCount": 2
     },
     {
       "manufacturer": "SCGC",
       "grade": "P842J",
       "polymer": "PP impact copolymer",
       "supportingRecordIndexes": [
-        100
+        100,
+        197
       ],
-      "evidenceRowCount": 1
+      "evidenceRowCount": 2
     },
     {
       "manufacturer": "IndianOil",
@@ -650,6 +663,24 @@
       "polymer": "HDPE",
       "supportingRecordIndexes": [
         183
+      ],
+      "evidenceRowCount": 1
+    },
+    {
+      "manufacturer": "PETRONAS Chemicals",
+      "grade": "PROPELINAS H500NG",
+      "polymer": "PP homopolymer",
+      "supportingRecordIndexes": [
+        198
+      ],
+      "evidenceRowCount": 1
+    },
+    {
+      "manufacturer": "PETRONAS Chemicals",
+      "grade": "PROPELINAS H648TT",
+      "polymer": "PP homopolymer",
+      "supportingRecordIndexes": [
+        199
       ],
       "evidenceRowCount": 1
     }
