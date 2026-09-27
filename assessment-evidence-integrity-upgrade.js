@@ -19,6 +19,10 @@ const SOURCE_UPGRADES={
 };
 Object.assign(E.sources,SOURCE_UPGRADES);
 
+const DIAGNOSTIC_SOURCE_UPGRADES={
+ 'cavity-short-shot':['autodesk-fill-pack','zhao-2022'],
+ 'hot-runner-imbalance':['hotrunner-2024','hotrunner-manifold-2023']
+};
 const OPTIONAL_UPGRADES={
  'pet-vs-copolyester':['pet-envalior-arnite'],
  'peek-crystallinity-capability':['peek-solvay-ketaspire'],
@@ -117,7 +121,7 @@ function build(){
  for(const level of ['Beginner','Intermediate','Advanced'])for(let i=0;i<(D.exams?.[level]||[]).length;i++){const q=D.exams[level][i],k=key(q);records.push(record({id:`tech:${level}:${i}`,kind:'technical-exam',scope:'formal',level,stem:text(q),claim:opts(q)[k]||'',rationale:rationale(q),reference:ref(q)},E.direct(ref(q),url(q)),null))}
  for(const region of ['UK','US','NZ'])for(const level of ['Beginner','Intermediate','Advanced'])for(let i=0;i<(D.regionalQuestions?.[region]?.[level]||[]).length;i++){const q=D.regionalQuestions[region][level][i],k=key(q);records.push(record({id:`reg:${region}:${level}:${i}`,kind:'regional-exam',scope:'formal',region,level,stem:text(q),claim:opts(q)[k]||'',rationale:rationale(q),reference:ref(q)},E.direct(ref(q),url(q)),null))}
  (D.scenarios||[]).forEach((s,i)=>{const id=s.mmStableId||`scenario:${String(i+1).padStart(2,'0')}`,k=Number(s.correct);records.push(record({id,kind:'scenario',scope:'formal',level:s.difficulty||'',stem:s.situation||'',claim:(s.choices||[])[k]||'',rationale:s.why||'',reference:s.reference||'',focus:s.category||s.title||''},E.direct(s.reference||'',s.sourceUrl||''),null))});
- for(const lab of DIAG.labs)for(const [i,step] of (lab.steps||[]).entries()){const k=(step.choices||[]).findIndex(c=>c.correct===true);records.push(record({id:`lab:${lab.id}:${i}`,kind:'diagnostic-lab',scope:'formal',level:lab.level||'',stem:step.question||'',claim:step.choices?.[k]?.text||'',rationale:step.choices?.[k]?.feedback||'',focus:lab.focus||lab.title||'',reference:lab.focus||''},null,null))}
+ for(const lab of DIAG.labs)for(const [i,step] of (lab.steps||[]).entries()){const k=(step.choices||[]).findIndex(c=>c.correct===true);records.push(record({id:`lab:${lab.id}:${i}`,kind:'diagnostic-lab',scope:'formal',level:lab.level||'',stem:step.question||'',claim:step.choices?.[k]?.text||'',rationale:step.choices?.[k]?.feedback||'',focus:lab.focus||lab.title||'',reference:lab.focus||''},null,DIAGNOSTIC_SOURCE_UPGRADES[lab.id]||null))}
  for(const lab of MAT.labs)for(const [i,step] of (lab.steps||[]).entries()){const k=(step.choices||[]).findIndex(c=>c.correct===true);records.push(record({id:`material:${lab.id}:${i}`,kind:'material-lab',scope:'formal',level:lab.level||'',stem:step.question||'',claim:step.choices?.[k]?.text||'',rationale:step.choices?.[k]?.feedback||'',focus:lab.focus||'',materials:(lab.materials||[]).join(', '),reference:lab.focus||''},null,lab.sourceIds||[]))}
  for(const lab of OPT.labs)for(const [i,step] of (lab.steps||[]).entries()){const k=(step.choices||[]).findIndex(c=>c.correct===true);const rec=record({id:`optional-material:${lab.id}:${i}`,kind:'optional-material-practice',scope:'optional',level:lab.level||'',stem:step.question||'',claim:step.choices?.[k]?.text||'',rationale:step.choices?.[k]?.feedback||'',focus:lab.focus||'',materials:(lab.materials||[]).join(', '),reference:lab.focus||''},null,lab.sourceIds||[]);step.mmEvidence={id:rec.id,dataEvidence:rec.dataEvidence,relevanceStatus:rec.relevanceStatus,sourceIds:[...rec.sourceIds],limitations:[...rec.limitations]};records.push(rec)}
  const byId=Object.fromEntries(records.map(r=>[r.id,r])),counts={};for(const t of ALLOWED)counts[t]=records.filter(r=>r.dataEvidence===t).length;
