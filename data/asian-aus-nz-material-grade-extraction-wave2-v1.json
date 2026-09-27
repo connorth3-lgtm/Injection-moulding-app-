@@ -1,5 +1,5 @@
 {
-  "version": "2026-09-28.6",
+  "version": "2026-09-28.7",
   "scope": "Asia-Australia-New Zealand primary-source material evidence wave 2",
   "policy": {
     "noUniversalSettings": true,
@@ -1406,6 +1406,194 @@
         }
       ],
       "boundary": "retain process classification; do not misclassify CM-205 extrusion as injection grade",
+      "status": "discovery-only"
+    },
+    {
+      "manufacturer": "Polyplastics",
+      "manufacturerCountry": "Japan",
+      "region": "Asia",
+      "polymer": "PPS",
+      "grade": "DURAFIDE 1140A66",
+      "reinforcement": "GF40",
+      "feature": "low chlorine",
+      "density_g_cm3": 1.66,
+      "waterAbsorption_percent": {
+        "test": "ISO 62",
+        "condition": "23 C / 24 h / 1 mm",
+        "value": 0.04
+      },
+      "meltViscosity_Pa_s": {
+        "test": "ISO 11443",
+        "condition": "310 C / 1000 s^-1",
+        "value": 260
+      },
+      "tensile_MPa": 180,
+      "flexural_MPa": 255,
+      "flexuralModulus_MPa": 14500,
+      "notchedCharpy23C_kJ_m2": 9,
+      "HDT1_8MPa_C": 265,
+      "CLTE_1e5_per_C": {
+        "flow": 1,
+        "transverse": 4
+      },
+      "valueStatus": "typical, not material specification minimum",
+      "status": "candidate-complete"
+    },
+    {
+      "manufacturer": "Asahi Kasei",
+      "manufacturerCountry": "Japan",
+      "region": "Asia",
+      "polymer": "POM copolymer",
+      "grade": "TENAC-C 4520",
+      "density_g_cm3": 1.41,
+      "tensileStress_MPa": 63,
+      "strainAtBreak_percent": 35,
+      "tensileModulus_MPa": 2700,
+      "viscosityClass": "medium",
+      "CAEAvailability": "Autodesk Moldflow grade listed",
+      "boundary": "CAE availability is evidence capability, not a processing recipe",
+      "status": "candidate-complete"
+    },
+    {
+      "manufacturer": "UNITIKA",
+      "manufacturerCountry": "Japan",
+      "region": "Asia",
+      "polymer": "polyarylate alloy",
+      "grade": "FUN-8520S",
+      "tensileYield_MPa": 62,
+      "tensileModulus_MPa": 1900,
+      "flexural_MPa": 88,
+      "flexuralModulus_MPa": 1900,
+      "notchedCharpy_kJ_m2": 25,
+      "HDT1_8MPa_C": 123,
+      "density_g_cm3": 1.21,
+      "waterAbsorption_percent": {
+        "test": "ISO 62",
+        "condition": "23 C water 24 h",
+        "value": 0.2
+      },
+      "shrinkage3mm_percent": {
+        "flow": "0.6-0.8",
+        "transverse": "0.6-0.8"
+      },
+      "lightTransmittance3mm_percent": 87,
+      "MFR": {
+        "test": "ISO 1133",
+        "condition": "300 C / 2.16 kg",
+        "value_g_10min": 27
+      },
+      "status": "candidate-complete"
+    },
+    {
+      "manufacturer": "UNITIKA",
+      "manufacturerCountry": "Japan",
+      "region": "Asia",
+      "polymer": "polyarylate composite",
+      "grade": "UG-100-20",
+      "density_g_cm3": 1.36,
+      "waterAbsorption24h_percent": 0.24,
+      "tensile_MPa": 99,
+      "flexural_MPa": 157,
+      "flexuralModulus_GPa": 5.2,
+      "notchedIzod_J_m": 49,
+      "HDT1_8MPa_C": 180,
+      "CLTE_1e5_K": 2.1,
+      "shrinkage3mm_percent": {
+        "flow": 0.2,
+        "orthogonal": 0.55
+      },
+      "status": "candidate-complete"
+    },
+    {
+      "manufacturer": "UNITIKA",
+      "manufacturerCountry": "Japan",
+      "region": "Asia",
+      "polymer": "polyarylate composite",
+      "grade": "UG-100-30",
+      "density_g_cm3": 1.44,
+      "waterAbsorption24h_percent": 0.24,
+      "tensile_MPa": 132,
+      "flexural_MPa": 133,
+      "flexuralModulus_GPa": 5.7,
+      "notchedIzod_J_m": 100,
+      "HDT1_8MPa_C": 180,
+      "CLTE_1e5_K": 3.5,
+      "shrinkage3mm_percent": {
+        "flow": "0.1-0.2",
+        "orthogonal": "0.3-0.5"
+      },
+      "status": "candidate-complete"
+    },
+    {
+      "manufacturer": "Polyplastics",
+      "manufacturerCountry": "Japan",
+      "region": "Asia",
+      "polymer": "LCP",
+      "brand": "LAPEROS",
+      "recordType": "grade-family-classification",
+      "grades": [
+        {
+          "grade": "E130G",
+          "feature": "GF reinforced/high flow/SMT"
+        },
+        {
+          "grade": "E130i",
+          "feature": "GF reinforced"
+        },
+        {
+          "grade": "E463i",
+          "feature": "low warpage/low anisotropy"
+        },
+        {
+          "grade": "E471i",
+          "feature": "low warpage"
+        },
+        {
+          "grade": "E473i",
+          "feature": "low warpage/high flow"
+        },
+        {
+          "grade": "E480i",
+          "feature": "dimensional stability"
+        },
+        {
+          "grade": "E481i",
+          "feature": "low warpage/low anisotropy"
+        },
+        {
+          "grade": "GA130",
+          "feature": "GF reinforced/high flow/SMT"
+        },
+        {
+          "grade": "GA481",
+          "feature": "low warpage/low anisotropy"
+        },
+        {
+          "grade": "HA475",
+          "feature": "low warpage/ultra-high flow"
+        },
+        {
+          "grade": "S135",
+          "feature": "GF reinforced/high heat/high-temperature stiffness"
+        },
+        {
+          "grade": "S140M",
+          "feature": "GF reinforced/high flow"
+        },
+        {
+          "grade": "S150",
+          "feature": "high stiffness"
+        },
+        {
+          "grade": "S471",
+          "feature": "low warpage"
+        },
+        {
+          "grade": "S475",
+          "feature": "low warpage/ultra-high flow"
+        }
+      ],
+      "boundary": "identity/feature classification only pending individual property extraction",
       "status": "discovery-only"
     }
   ]
