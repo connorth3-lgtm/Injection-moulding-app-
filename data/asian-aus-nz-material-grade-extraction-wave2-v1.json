@@ -1,5 +1,5 @@
 {
-  "version": "2026-09-28.14",
+  "version": "2026-09-28.15",
   "scope": "Asia including Singapore, Australia and New Zealand primary-source material evidence wave 2",
   "policy": {
     "noUniversalSettings": true,
@@ -2862,6 +2862,134 @@
         "HM2604AW"
       ],
       "boundary": "exact grade identities retained from manufacturer portfolio; numeric properties remain pending primary grade TDS",
+      "status": "discovery-only"
+    },
+    {
+      "manufacturer": "Kingfa",
+      "manufacturerCountry": "China",
+      "region": "Asia",
+      "polymer": "PBT-GF30",
+      "grade": "PBT-G30 HR",
+      "feature": "hydrolysis resistant",
+      "application": "automotive ECU module",
+      "evidenceClass": "manufacturer exact-grade composition/application",
+      "missingNumericFields": [
+        "MFR/MVR",
+        "tensile/flexural",
+        "HDT/Vicat",
+        "shrinkage",
+        "drying"
+      ],
+      "promotionBlock": "numeric primary TDS still required",
+      "status": "discovery-only"
+    },
+    {
+      "manufacturer": "Kingfa",
+      "manufacturerCountry": "China",
+      "region": "Asia",
+      "polymer": "PA66-GF35",
+      "grade": "PA66-G35 HP",
+      "feature": "high-temperature mechanical retention",
+      "applicationBoundary": "manufacturer describes use in 180-210 C service environments",
+      "evidenceClass": "manufacturer exact-grade composition/application",
+      "missingNumericFields": [
+        "MFR/MVR",
+        "mechanical values",
+        "HDT",
+        "shrinkage",
+        "drying"
+      ],
+      "promotionBlock": "numeric primary TDS still required",
+      "status": "discovery-only"
+    },
+    {
+      "manufacturer": "Kingfa",
+      "manufacturerCountry": "China",
+      "region": "Asia",
+      "polymer": "PA6T/66-GF35",
+      "grade": "Vicnyl 42G35HS",
+      "features": [
+        "thermal stability",
+        "low water absorption",
+        "hydrolysis/alcoholysis resistance"
+      ],
+      "evidenceClass": "manufacturer exact-grade composition/features",
+      "promotionBlock": "numeric TDS not yet available in captured primary evidence",
+      "status": "discovery-only"
+    },
+    {
+      "manufacturer": "Kingfa",
+      "manufacturerCountry": "China",
+      "region": "Asia",
+      "polymer": "PA10T-GF35",
+      "grade": "Vicnyl 72G35HS",
+      "features": [
+        "thermal stability",
+        "very low water absorption",
+        "hydrolysis/alcoholysis resistance"
+      ],
+      "evidenceClass": "manufacturer exact-grade composition/features",
+      "promotionBlock": "numeric TDS not yet available in captured primary evidence",
+      "status": "discovery-only"
+    },
+    {
+      "manufacturer": "Kingfa",
+      "manufacturerCountry": "China",
+      "region": "Asia",
+      "polymer": "LCP",
+      "grade": "Vicryst R832",
+      "composition": "LCP-(MD+GF)32",
+      "features": [
+        "UL94 V-0 at 0.1 mm",
+        "high flow",
+        "low warpage"
+      ],
+      "application": "connectors",
+      "evidenceClass": "manufacturer exact-grade composition/features",
+      "promotionBlock": "numeric TDS still required",
+      "status": "discovery-only"
+    },
+    {
+      "manufacturer": "Kingfa",
+      "manufacturerCountry": "China",
+      "region": "Asia",
+      "polymer": "POM",
+      "grade": "ULTRON-C090E",
+      "features": [
+        "general purpose",
+        "dimensional stability",
+        "mechanical properties",
+        "impact resistance"
+      ],
+      "evidenceClass": "manufacturer exact-grade identity/features",
+      "promotionBlock": "numeric TDS still required",
+      "status": "discovery-only"
+    },
+    {
+      "manufacturer": "Kingfa",
+      "manufacturerCountry": "China",
+      "region": "Asia",
+      "polymer": "POM",
+      "grade": "ULTRON-IT30",
+      "features": [
+        "very high toughness",
+        "impact strength"
+      ],
+      "evidenceClass": "manufacturer exact-grade identity/features",
+      "promotionBlock": "numeric TDS still required",
+      "status": "discovery-only"
+    },
+    {
+      "manufacturer": "Kingfa",
+      "manufacturerCountry": "China",
+      "region": "Asia",
+      "polymer": "POM-GF",
+      "grade": "ULTRON-GT**",
+      "features": [
+        "high strength",
+        "high modulus"
+      ],
+      "compositionBoundary": "manufacturer ** denotes glass-fibre content; exact loading must be resolved before property use",
       "status": "discovery-only"
     }
   ]
