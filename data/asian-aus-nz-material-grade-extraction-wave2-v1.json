@@ -1,0 +1,269 @@
+{
+  "version": "2026-09-28.1",
+  "scope": "Asia-Australia-New Zealand primary-source material evidence wave 2",
+  "policy": {
+    "noUniversalSettings": true,
+    "noInterpolationAcrossGrades": true,
+    "regionalAvailabilityIsNotManufacturingOrigin": true,
+    "typicalValuesAreNotSpecifications": true
+  },
+  "records": [
+    {
+      "manufacturer": "Qenos",
+      "manufacturerCountry": "Australia",
+      "region": "Australia",
+      "polymer": "LDPE",
+      "grades": [
+        "XDS34",
+        "WJG117",
+        "XJF143",
+        "LDN248",
+        "WRM124",
+        "WSM168"
+      ],
+      "process": "injection moulding",
+      "meltIndex": {
+        "test": "ASTM D1238",
+        "condition": "190 C / 2.16 kg",
+        "values_g_10min": [
+          0.3,
+          1.7,
+          2.5,
+          8.5,
+          22,
+          63
+        ]
+      },
+      "density_g_cm3": [
+        0.922,
+        0.918,
+        0.921,
+        0.922,
+        0.92,
+        0.919
+      ],
+      "status": "candidate-complete",
+      "source": "Qenos Polyethylene at a Glance"
+    },
+    {
+      "manufacturer": "Qenos",
+      "manufacturerCountry": "Australia",
+      "region": "Australia",
+      "polymer": "LLDPE",
+      "grade": "Alkatuff LL820",
+      "process": "injection moulding/compounding",
+      "meltIndex": {
+        "test": "ASTM D1238",
+        "condition": "190 C / 2.16 kg",
+        "value_g_10min": 20
+      },
+      "density_g_cm3": 0.9251,
+      "status": "candidate-complete",
+      "source": "Qenos Polyethylene at a Glance"
+    },
+    {
+      "manufacturer": "SCGC",
+      "manufacturerCountry": "Thailand",
+      "region": "Asia",
+      "polymer": "PP homopolymer",
+      "grade": "P700J",
+      "process": "injection moulding",
+      "mfr": {
+        "test": "ASTM D1238",
+        "condition": "230 C / 2.16 kg",
+        "value_g_10min": 12
+      },
+      "tensileYield_kg_cm2": 320,
+      "flexuralModulus_kg_cm2": 14500,
+      "izod_J_m": {
+        "at23C": 37,
+        "at0C": 20
+      },
+      "status": "candidate-complete"
+    },
+    {
+      "manufacturer": "SCGC",
+      "manufacturerCountry": "Thailand",
+      "region": "Asia",
+      "polymer": "PP impact copolymer",
+      "grade": "P840J",
+      "process": "injection moulding",
+      "mfr": {
+        "test": "ASTM D1238",
+        "condition": "230 C / 2.16 kg",
+        "value_g_10min": 43
+      },
+      "tensileYield_kg_cm2": 290,
+      "flexuralModulus_kg_cm2": 12500,
+      "izod_J_m": {
+        "at23C": 70,
+        "at0C": 39,
+        "atMinus20C": 30
+      },
+      "status": "candidate-complete"
+    },
+    {
+      "manufacturer": "SCGC",
+      "manufacturerCountry": "Thailand",
+      "region": "Asia",
+      "polymer": "PP homopolymer",
+      "grade": "P901J",
+      "process": "thin-wall injection moulding",
+      "mfr": {
+        "test": "ASTM D1238",
+        "condition": "230 C / 2.16 kg",
+        "value_g_10min": 70
+      },
+      "shrinkage_2mm_percent": {
+        "MD": 1,
+        "TD": 1.25
+      },
+      "density_g_cm3": 0.91,
+      "status": "candidate-complete"
+    },
+    {
+      "manufacturer": "Kuraray",
+      "manufacturerCountry": "Japan",
+      "region": "Asia",
+      "polymer": "PA9T",
+      "grade": "N1000A",
+      "reinforcement": "unreinforced",
+      "condition": "absolutely dry",
+      "waterAbsorption_23C_24h_percent": 0.25,
+      "tensile_MPa": 85,
+      "flexuralModulus_GPa": 2.5,
+      "melting_C": 300,
+      "shrinkage_2mm_percent": {
+        "flow": 1.4,
+        "transverse": 1.5
+      },
+      "valueStatus": "manufacturer measured, not guaranteed",
+      "status": "candidate-complete"
+    },
+    {
+      "manufacturer": "Kuraray",
+      "manufacturerCountry": "Japan",
+      "region": "Asia",
+      "polymer": "PA9T",
+      "grade": "G1300A",
+      "reinforcement": "GF30",
+      "condition": "absolutely dry",
+      "waterAbsorption_23C_24h_percent": 0.19,
+      "tensile_MPa": 190,
+      "flexuralModulus_GPa": 8.8,
+      "melting_C": 300,
+      "shrinkage_2mm_percent": {
+        "flow": 0.3,
+        "transverse": 0.9
+      },
+      "valueStatus": "manufacturer measured, not guaranteed",
+      "status": "candidate-complete"
+    },
+    {
+      "manufacturer": "UNITIKA",
+      "manufacturerCountry": "Japan",
+      "region": "Asia",
+      "polymer": "PA66",
+      "grade": "E2000",
+      "process": "general injection moulding",
+      "conditionStates": {
+        "DAM": {
+          "tensileYield_MPa": 85,
+          "tensileModulus_MPa": 3000,
+          "flexural_MPa": 115,
+          "flexuralModulus_MPa": 3000
+        },
+        "conditioned50RH": {
+          "tensileYield_MPa": 60,
+          "tensileModulus_MPa": 1000,
+          "flexural_MPa": 50,
+          "flexuralModulus_MPa": 1100
+        }
+      },
+      "mvr": {
+        "test": "ISO 1133",
+        "condition": "275 C / 5 kg",
+        "value_cm3_10min": 105
+      },
+      "moulding": {
+        "cylinder_C": "270-290",
+        "mould_C": "60-110"
+      },
+      "valueStatus": "typical average lots, not guaranteed",
+      "status": "candidate-complete"
+    },
+    {
+      "manufacturer": "Polyplastics",
+      "manufacturerCountry": "Japan",
+      "region": "Asia",
+      "polymer": "POM",
+      "grade": "DURACON M90-44",
+      "shrinkage": {
+        "test": "ISO 294-4",
+        "specimen": "60x60x2 mm",
+        "cavityPressure_MPa": 60,
+        "flow_percent": 2.3,
+        "transverse_percent": 2.1
+      },
+      "processingContext": {
+        "material_C": 200,
+        "mould_C": 80,
+        "injectionSpeed_mm_s": 25,
+        "gate": "single side gate centered"
+      },
+      "valueStatus": "typical, not specification minimum",
+      "status": "conditional"
+    },
+    {
+      "manufacturer": "LyondellBasell Australia",
+      "manufacturerCountry": "Australia",
+      "region": "Australia/New Zealand availability",
+      "polymer": "PP homopolymer",
+      "grade": "Moplen HP400L / PLASVE HP400L",
+      "process": "injection moulding",
+      "mfr": {
+        "condition": "230 C / 2.16 kg",
+        "value_g_10min": 6
+      },
+      "density_g_cm3": 0.9,
+      "flexuralModulus_MPa": 1500,
+      "tensileYield_MPa": 32,
+      "vicat_C": 154,
+      "status": "candidate-complete"
+    },
+    {
+      "organization": "LEP Engineering Plastics",
+      "country": "New Zealand",
+      "recordType": "regional-processing-capability",
+      "materials": [
+        "nylon",
+        "acetal",
+        "UHMWPE",
+        "polypropylene"
+      ],
+      "process": "custom injection moulding",
+      "originClaim": "none; do not infer NZ resin manufacture",
+      "status": "discovery-only"
+    },
+    {
+      "organization": "Plastech Industries",
+      "country": "New Zealand",
+      "recordType": "regional-processing-capability",
+      "materials": [
+        "Nylon 6",
+        "Nylon 66",
+        "ABS",
+        "PE",
+        "acetal",
+        "PP",
+        "GF nylon",
+        "GF acetal",
+        "PC",
+        "TPE"
+      ],
+      "process": "injection moulding",
+      "originClaim": "none; do not infer NZ resin manufacture",
+      "status": "discovery-only"
+    }
+  ]
+}
