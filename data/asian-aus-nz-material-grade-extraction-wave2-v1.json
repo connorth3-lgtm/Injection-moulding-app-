@@ -1,5 +1,5 @@
 {
-  "version": "2026-09-28.19",
+  "version": "2026-09-28.20",
   "scope": "Asia including Singapore, Australia and New Zealand primary-source material evidence wave 2",
   "policy": {
     "noUniversalSettings": true,
@@ -3682,6 +3682,182 @@
       ],
       "promotionRule": "retain ASTM/ISO routes independently when both are published",
       "status": "discovery-only"
+    },
+    {
+      "manufacturer": "Polyplastics",
+      "manufacturerCountry": "Japan",
+      "region": "Asia",
+      "polymer": "POM",
+      "grade": "DURACON M90-44",
+      "process": "injection moulding",
+      "density_g_cm3": 1.41,
+      "waterAbsorption_percent": {
+        "test": "ISO 62",
+        "condition": "23 C / 24 h / 1 mm",
+        "value": 0.5
+      },
+      "MFR": {
+        "test": "ISO 1133",
+        "condition": "190 C / 2.16 kg",
+        "value_g_10min": 9
+      },
+      "tensile_MPa": 63,
+      "tensileModulus_MPa": 2700,
+      "flexural_MPa": 88,
+      "flexuralModulus_MPa": 2500,
+      "notchedCharpy23C_kJ_m2": 6,
+      "HDT1_8MPa_C": 100,
+      "shrinkage_percent": {
+        "test": "ISO 294-4",
+        "specimen": "60x60x2 mm",
+        "cavityPressure_MPa": 60,
+        "flow": 2.3,
+        "transverse": 2.1
+      },
+      "processingContext": {
+        "material_C": 200,
+        "mould_C": 80,
+        "injectionSpeed_mm_s": 25
+      },
+      "valueStatus": "typical; not specification minimum",
+      "status": "candidate-complete"
+    },
+    {
+      "manufacturer": "Polyplastics",
+      "manufacturerCountry": "Japan",
+      "region": "Asia",
+      "polymer": "PBT+PET",
+      "grade": "DURANEX 3306",
+      "reinforcement": "GF30",
+      "density_g_cm3": 1.54,
+      "waterAbsorption_percent": {
+        "test": "ISO 62",
+        "condition": "23 C / 24 h / 1 mm",
+        "value": 0.2
+      },
+      "tensile_MPa": 140,
+      "flexural_MPa": 210,
+      "flexuralModulus_MPa": 9100,
+      "notchedCharpy23C_kJ_m2": 8.1,
+      "HDT1_8MPa_C": 210,
+      "CLTE_1e5_per_C": {
+        "flow": 2,
+        "transverse": 7
+      },
+      "valueStatus": "typical manufacturer values",
+      "status": "candidate-complete"
+    },
+    {
+      "manufacturer": "Teijin",
+      "manufacturerCountry": "Japan",
+      "region": "Asia",
+      "polymer": "PC",
+      "grade": "PANLITE SH-1126Z",
+      "density_kg_m3": 1170,
+      "waterAbsorption_percent": {
+        "test": "ISO 62",
+        "condition": "23 C / 24 h immersion",
+        "value": 0.1
+      },
+      "tensileYield_MPa": 72,
+      "flexural_MPa": 100,
+      "flexuralModulus_MPa": 2450,
+      "MVR": {
+        "test": "ISO 1133",
+        "condition": "300 C / 1.2 kgf",
+        "value_cm3_10min": 26
+      },
+      "HDT_C": {
+        "at1_8MPa": 113,
+        "at0_45MPa": 126
+      },
+      "valueStatus": "representative values; not guaranteed",
+      "status": "candidate-complete"
+    },
+    {
+      "manufacturer": "UNITIKA",
+      "manufacturerCountry": "Japan",
+      "region": "Asia",
+      "polymer": "PA66",
+      "grade": "E2000",
+      "process": "injection moulding",
+      "conditionedProperties": {
+        "DAM": {
+          "tensileYield_MPa": 85,
+          "tensileModulus_MPa": 3000,
+          "flexural_MPa": 115,
+          "flexuralModulus_MPa": 3000
+        },
+        "RH50": {
+          "tensileYield_MPa": 60,
+          "tensileModulus_MPa": 1000,
+          "flexural_MPa": 50,
+          "flexuralModulus_MPa": 1100
+        }
+      },
+      "MVR": {
+        "test": "ISO 1133",
+        "condition": "275 C / 5 kg",
+        "value_cm3_10min": 105
+      },
+      "processingBoundary": {
+        "cylinder_C": "270-290",
+        "mould_C": "60-110"
+      },
+      "valueStatus": "typical average lots; not guaranteed",
+      "status": "candidate-complete"
+    },
+    {
+      "manufacturer": "LOTTE Chemical",
+      "manufacturerCountry": "South Korea",
+      "region": "Asia",
+      "polymer": "PBT",
+      "grade": "ASF-9860",
+      "MFI": {
+        "test": "ISO 1133",
+        "condition": "250 C / 2.16 kg",
+        "value_g_10min": 74
+      },
+      "specificGravity": 1.31,
+      "waterAbsorption_percent": {
+        "test": "ISO 62",
+        "condition": "23 C",
+        "value": 0.4
+      },
+      "mouldShrinkage_percent": {
+        "test": "ISO 294-4",
+        "thickness_mm": 2,
+        "MD": "1.5-1.8",
+        "TD": "1.7-2.0"
+      },
+      "tensileYield_MPa": 58,
+      "tensileModulus_MPa": 2350,
+      "flexural_MPa": 80,
+      "flexuralModulus_MPa": 2320,
+      "status": "candidate-complete"
+    },
+    {
+      "manufacturer": "LOTTE Chemical",
+      "manufacturerCountry": "South Korea",
+      "region": "Asia",
+      "polymer": "PBT",
+      "grade": "GP-5000",
+      "MFI": {
+        "test": "ISO 1133",
+        "condition": "250 C / 2.16 kg",
+        "value_g_10min": 71
+      },
+      "specificGravity": 1.3,
+      "tensileYield_MPa": 55,
+      "tensileModulus_MPa": 2300,
+      "flexural_MPa": 74,
+      "flexuralModulus_MPa": 2100,
+      "notchedIzod23C_kJ_m2": 4.5,
+      "HDT_C": {
+        "condition": "1.8 MPa / 4 mm unannealed",
+        "value": 59
+      },
+      "status": "candidate-complete"
     }
   ]
 }
