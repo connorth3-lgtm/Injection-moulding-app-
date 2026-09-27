@@ -1,0 +1,263 @@
+{
+  "schema": 1,
+  "version": "2026.09.28.1",
+  "policy": "Candidate grade extraction from primary manufacturer sources. Do not count as accepted material profiles until required drying/moisture, degradation/compatibility and processing provenance fields are complete and QA-reviewed. Values remain grade/test-condition specific.",
+  "records": [
+    {
+      "manufacturer": "Kuraray",
+      "country": "Japan",
+      "polymer": "PA9T",
+      "grade": "N1000A",
+      "reinforcement": "0% GF",
+      "properties": {
+        "waterAbsorption_pct_24h": 0.25,
+        "tensile_MPa": 85,
+        "flexural_MPa": 115,
+        "flexuralModulus_GPa": 2.5,
+        "melting_C": 300,
+        "shrinkageFlow_pct": 1.4,
+        "shrinkageTransverse_pct": 1.5
+      },
+      "conditioning": "absolute dry; shrinkage 2 mm",
+      "methods": [
+        "ISO 62",
+        "ISO 527",
+        "ISO 178",
+        "ISO 11357-3",
+        "ISO 294-4"
+      ],
+      "source": "https://genestar.kuraray.com/en/grades/n1000a/",
+      "status": "candidate-complete"
+    },
+    {
+      "manufacturer": "Kuraray",
+      "country": "Japan",
+      "polymer": "PA9T",
+      "grade": "N1006A",
+      "reinforcement": "0% GF",
+      "properties": {
+        "waterAbsorption_pct_24h": 0.25,
+        "tensile_MPa": 50,
+        "flexural_MPa": 70,
+        "flexuralModulus_GPa": 1.5,
+        "melting_C": 300,
+        "shrinkageFlow_pct": 1.4,
+        "shrinkageTransverse_pct": 1.5
+      },
+      "conditioning": "absolute dry; shrinkage 2 mm",
+      "methods": [
+        "ISO 62",
+        "ISO 527",
+        "ISO 178",
+        "ISO 11357-3",
+        "ISO 294-4"
+      ],
+      "source": "https://genestar.kuraray.com/en/grades/n1006a/",
+      "status": "candidate-complete"
+    },
+    {
+      "manufacturer": "Kuraray",
+      "country": "Japan",
+      "polymer": "PA9T",
+      "grade": "G1300A",
+      "reinforcement": "30% GF",
+      "properties": {
+        "waterAbsorption_pct_24h": 0.19,
+        "tensile_MPa": 190,
+        "flexural_MPa": 270,
+        "flexuralModulus_GPa": 8.8,
+        "melting_C": 300,
+        "shrinkageFlow_pct": 0.3,
+        "shrinkageTransverse_pct": 0.9
+      },
+      "conditioning": "absolute dry; shrinkage 2 mm",
+      "methods": [
+        "ISO 62",
+        "ISO 527",
+        "ISO 178",
+        "ISO 11357-3",
+        "ISO 294-4"
+      ],
+      "source": "https://genestar.kuraray.com/en/grades/g1300a/",
+      "status": "candidate-complete"
+    },
+    {
+      "manufacturer": "Kuraray",
+      "country": "Japan",
+      "polymer": "PA9T",
+      "grade": "G1301A",
+      "reinforcement": "30% GF",
+      "properties": {
+        "waterAbsorption_pct_24h": 0.19,
+        "tensile_MPa": 175,
+        "flexural_MPa": 250,
+        "flexuralModulus_GPa": 8.2,
+        "melting_C": 300,
+        "shrinkageFlow_pct": 0.3,
+        "shrinkageTransverse_pct": 0.9
+      },
+      "conditioning": "absolute dry; shrinkage 2 mm",
+      "methods": [
+        "ISO 62",
+        "ISO 527",
+        "ISO 178",
+        "ISO 11357-3",
+        "ISO 294-4"
+      ],
+      "source": "https://genestar.kuraray.com/en/grades/g1301a/",
+      "status": "candidate-complete"
+    },
+    {
+      "manufacturer": "Kuraray",
+      "country": "Japan",
+      "polymer": "PA9T",
+      "grade": "G1352A",
+      "reinforcement": "35% GF",
+      "properties": {
+        "waterAbsorption_pct_24h": 0.14,
+        "tensile_MPa": 200,
+        "flexural_MPa": 290,
+        "flexuralModulus_GPa": 10.7,
+        "melting_C": 300,
+        "shrinkageFlow_pct": 0.2,
+        "shrinkageTransverse_pct": 0.8
+      },
+      "conditioning": "absolute dry; shrinkage 2 mm",
+      "methods": [
+        "ISO 62",
+        "ISO 527",
+        "ISO 178",
+        "ISO 11357-3",
+        "ISO 294-4"
+      ],
+      "source": "https://genestar.kuraray.com/en/grades/g1352a/",
+      "status": "candidate-complete"
+    },
+    {
+      "manufacturer": "Kuraray",
+      "country": "Japan",
+      "polymer": "PA9T",
+      "grade": "G1500A",
+      "reinforcement": "50% GF",
+      "properties": {
+        "waterAbsorption_pct_24h": 0.13,
+        "tensile_MPa": 250,
+        "flexural_MPa": 370,
+        "flexuralModulus_GPa": 15.3,
+        "melting_C": 300,
+        "shrinkageFlow_pct": 0.2,
+        "shrinkageTransverse_pct": 0.8
+      },
+      "conditioning": "absolute dry; shrinkage 2 mm",
+      "methods": [
+        "ISO 62",
+        "ISO 527",
+        "ISO 178",
+        "ISO 11357-3",
+        "ISO 294-4"
+      ],
+      "source": "https://genestar.kuraray.com/en/grades/g1500a/",
+      "status": "candidate-complete"
+    },
+    {
+      "manufacturer": "UNITIKA",
+      "country": "Japan",
+      "polymer": "PA66",
+      "grade": "E2000",
+      "reinforcement": "none",
+      "properties": {
+        "tensileDry_MPa": 85,
+        "tensileConditioned_MPa": 60,
+        "flexuralDry_MPa": 115,
+        "flexuralConditioned_MPa": 50,
+        "waterAbsorption_pct": 2.3,
+        "shrinkageFlow_pct": 1.8,
+        "shrinkageTransverse_pct": 2,
+        "MVR_cm3_10min": 105
+      },
+      "conditioning": "DAM and 23C/50%RH where stated",
+      "methods": [
+        "ISO 527",
+        "ISO 178",
+        "ISO 62",
+        "ISO 1133"
+      ],
+      "source": "https://www.unitika.co.jp/plastics/e/products/nylon/nylon66/pdf/e2000.pdf",
+      "status": "candidate-complete"
+    },
+    {
+      "manufacturer": "SCGC",
+      "country": "Thailand",
+      "polymer": "PP homopolymer",
+      "grade": "P700J",
+      "reinforcement": "none",
+      "properties": {
+        "MFR_g_10min": 12,
+        "tensileYield_kg_cm2": 320,
+        "flexuralModulus_kg_cm2": 14500,
+        "izod23_J_m": 37
+      },
+      "conditioning": "MFR 230C/2.16kg",
+      "methods": [
+        "ASTM D1238",
+        "ASTM D638",
+        "ASTM D790",
+        "ASTM D256"
+      ],
+      "source": "https://www.scgchemicals.com/en/products-grade/p700j",
+      "status": "candidate-partial"
+    },
+    {
+      "manufacturer": "SCGC",
+      "country": "Thailand",
+      "polymer": "PP impact copolymer",
+      "grade": "P840J",
+      "reinforcement": "none",
+      "properties": {
+        "MFR_g_10min": 43,
+        "tensileYield_kg_cm2": 290,
+        "flexuralModulus_kg_cm2": 12500,
+        "izod23_J_m": 70,
+        "izod0_J_m": 39,
+        "izodMinus20_J_m": 30
+      },
+      "conditioning": "MFR 230C/2.16kg",
+      "methods": [
+        "ASTM D1238",
+        "ASTM D638",
+        "ASTM D790",
+        "ASTM D256"
+      ],
+      "source": "https://www.scgchemicals.com/en/products-grade/p840j",
+      "status": "candidate-partial"
+    },
+    {
+      "manufacturer": "IndianOil",
+      "country": "India",
+      "polymer": "PP homopolymer",
+      "grade": "1110MAS",
+      "reinforcement": "none",
+      "properties": {
+        "MFI_g_10min": 11,
+        "density_g_cm3": 0.9,
+        "tensileYield_MPa": 42,
+        "flexuralModulus_MPa": 1800,
+        "izod23_J_m": 30,
+        "HDT_C": 120,
+        "Vicat_C": 154
+      },
+      "conditioning": "MFI 230C/2.16kg; typical values; ASTM D4101 molded specimens conditioned ASTM D618",
+      "methods": [
+        "ASTM D1238",
+        "ASTM D1505",
+        "ASTM D638",
+        "ASTM D790",
+        "ASTM D256",
+        "ASTM D648",
+        "ASTM D1525"
+      ],
+      "source": "https://iocl.com/uploads/TDS_23012026.pdf",
+      "status": "candidate-partial"
+    }
+  ]
+}
