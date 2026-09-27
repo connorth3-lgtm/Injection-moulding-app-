@@ -1,5 +1,5 @@
 {
-  "version": "2026-09-28.7",
+  "version": "2026-09-28.8",
   "scope": "Asia-Australia-New Zealand primary-source material evidence wave 2",
   "policy": {
     "noUniversalSettings": true,
@@ -1594,6 +1594,222 @@
         }
       ],
       "boundary": "identity/feature classification only pending individual property extraction",
+      "status": "discovery-only"
+    },
+    {
+      "manufacturer": "Kingfa",
+      "manufacturerCountry": "China",
+      "region": "Asia",
+      "polymer": "PBT",
+      "recordType": "exact-composition-family",
+      "grades": [
+        {
+          "grade": "PBT-G30 HR",
+          "composition": "PBT-GF30",
+          "features": [
+            "high mechanical strength",
+            "heat resistance",
+            "dimensional stability",
+            "electrical performance"
+          ],
+          "application": "ABS ECU module"
+        },
+        {
+          "grade": "PBT-G30 AC",
+          "composition": "PBT/PC-GF30"
+        },
+        {
+          "grade": "PBT-G30 AE",
+          "composition": "PBT/PET-GF30"
+        },
+        {
+          "grade": "PBT-G30 LW",
+          "composition": "PBT/ASA-GF30"
+        },
+        {
+          "grade": "PBT-G40 HS",
+          "composition": "PBT-GF40"
+        },
+        {
+          "grade": "PBT-G50 HS",
+          "composition": "PBT-GF50"
+        },
+        {
+          "grade": "PBT-G50 UV",
+          "composition": "PBT",
+          "features": [
+            "high rigidity",
+            "weather ageing resistance"
+          ]
+        },
+        {
+          "grade": "PBT-C800 HS",
+          "composition": "PBT",
+          "features": [
+            "general purpose",
+            "chemical solvent resistance",
+            "high gloss"
+          ]
+        }
+      ],
+      "boundary": "manufacturer composition/feature evidence; numeric property promotion awaits exact TDS",
+      "status": "discovery-only"
+    },
+    {
+      "manufacturer": "Kingfa",
+      "manufacturerCountry": "China",
+      "region": "Asia",
+      "polymer": "PA6/PA66/high-temperature nylon",
+      "recordType": "exact-composition-family",
+      "grades": [
+        {
+          "grade": "PA6-G30 HS",
+          "composition": "PA6-GF30",
+          "features": [
+            "thermal ageing",
+            "hot-oil resistance",
+            "weld strength"
+          ]
+        },
+        {
+          "grade": "PA66-G35 HP",
+          "composition": "PA66-GF35",
+          "features": [
+            "mechanical retention at 180-210 C",
+            "oil resistance",
+            "fatigue/creep resistance"
+          ]
+        },
+        {
+          "grade": "PA66-G30 SR",
+          "composition": "PA66-GF30",
+          "features": [
+            "hydrolysis resistance",
+            "thermal stability",
+            "antifreeze resistance"
+          ]
+        },
+        {
+          "grade": "PA66-G33 SR",
+          "composition": "PA66-GF33",
+          "features": [
+            "hydrolysis resistance",
+            "thermal stability",
+            "antifreeze resistance"
+          ]
+        },
+        {
+          "grade": "Vicnyl 42G35HS",
+          "composition": "PA6T/66-GF35",
+          "features": [
+            "thermal stability",
+            "low water absorption",
+            "hydrolysis/alcoholysis resistance"
+          ]
+        },
+        {
+          "grade": "Vicnyl 72G35HS",
+          "composition": "PA10T-GF35",
+          "features": [
+            "thermal stability",
+            "very low water absorption",
+            "hydrolysis/alcoholysis resistance"
+          ]
+        }
+      ],
+      "boundary": "application/composition evidence only; no numeric property interpolation",
+      "status": "discovery-only"
+    },
+    {
+      "manufacturer": "Kingfa",
+      "manufacturerCountry": "China",
+      "region": "Asia",
+      "polymer": "LCP",
+      "grade": "Vicryst R832",
+      "composition": "LCP-(MD+GF)32",
+      "features": [
+        "UL94 V-0 at 0.1 mm",
+        "high flow",
+        "low warpage"
+      ],
+      "application": "connectors",
+      "boundary": "manufacturer identity/features only pending numeric TDS",
+      "status": "discovery-only"
+    },
+    {
+      "manufacturer": "Kingfa",
+      "manufacturerCountry": "China",
+      "region": "Asia",
+      "polymer": "POM",
+      "recordType": "exact-grade-family",
+      "grades": [
+        {
+          "grade": "ULTRON-C090E",
+          "composition": "general-purpose POM",
+          "features": [
+            "dimensional stability",
+            "mechanical properties",
+            "impact resistance"
+          ]
+        },
+        {
+          "grade": "ULTRON-IT15",
+          "composition": "toughened POM",
+          "features": [
+            "toughness",
+            "low noise"
+          ]
+        },
+        {
+          "grade": "ULTRON-IT20",
+          "composition": "toughened POM",
+          "features": [
+            "high toughness",
+            "wear resistance"
+          ]
+        },
+        {
+          "grade": "ULTRON-IT30",
+          "composition": "toughened POM",
+          "features": [
+            "very high toughness",
+            "impact strength"
+          ]
+        },
+        {
+          "grade": "ULTRON-FS08",
+          "composition": "painting-free POM",
+          "features": [
+            "metallic surface effect"
+          ]
+        },
+        {
+          "grade": "ULTRON-GT**",
+          "composition": "glass-fibre POM",
+          "features": [
+            "high strength",
+            "high modulus"
+          ],
+          "note": "** denotes glass-fibre content"
+        }
+      ],
+      "boundary": "numeric TDS required before property promotion",
+      "status": "discovery-only"
+    },
+    {
+      "manufacturer": "Sinochem group businesses",
+      "manufacturerCountry": "China",
+      "region": "Asia",
+      "recordType": "engineering-polymer-manufacturing-scope",
+      "polymers": [
+        "PPE",
+        "PC",
+        "PA",
+        "PBT",
+        "ABS",
+        "epoxy"
+      ],
+      "boundary": "corporate manufacturing scope only; not a grade-level property record",
       "status": "discovery-only"
     }
   ]
