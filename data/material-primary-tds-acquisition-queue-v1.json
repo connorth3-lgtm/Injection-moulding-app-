@@ -1,5 +1,5 @@
 {
-  "version": "2026-09-28.1",
+  "version": "2026-09-28.2",
   "source": "data/asian-aus-nz-material-grade-extraction-wave2-v1.json",
   "purpose": "Prioritize only work capable of increasing unique property-complete profiles",
   "rules": {
@@ -17,8 +17,10 @@
       "polymer": "PESU-GF20",
       "readiness": 2,
       "primarySourceCaptured": true,
-      "conversionRequirement": "numeric grade property table not yet captured; identity alone insufficient",
-      "priority": "extract-numeric-table"
+      "conversionRequirement": "exact-grade numeric property table remains unavailable in captured manufacturer evidence; do not substitute 3601GL20 or 4101GL20 values",
+      "priority": "extract-numeric-table",
+      "exactGradeSourceLocated": true,
+      "sourceUrl": "https://www.sumitomo-chem.co.jp/sep/english/products/pes/pes_fg_grade.html"
     },
     {
       "manufacturer": "CHIMEI",
@@ -28,7 +30,8 @@
       "readiness": 1,
       "primarySourceCaptured": false,
       "conversionRequirement": "numeric current TDS extraction required before candidate-complete",
-      "priority": "acquire-primary-TDS"
+      "priority": "acquire-primary-TDS",
+      "exactGradeSourceLocated": false
     },
     {
       "manufacturer": "CHIMEI",
@@ -38,7 +41,8 @@
       "readiness": 1,
       "primarySourceCaptured": false,
       "conversionRequirement": "numeric current TDS extraction required",
-      "priority": "acquire-primary-TDS"
+      "priority": "acquire-primary-TDS",
+      "exactGradeSourceLocated": false
     },
     {
       "manufacturer": "CHIMEI",
@@ -48,7 +52,8 @@
       "readiness": 1,
       "primarySourceCaptured": false,
       "conversionRequirement": "numeric current TDS extraction required",
-      "priority": "acquire-primary-TDS"
+      "priority": "acquire-primary-TDS",
+      "exactGradeSourceLocated": false
     },
     {
       "manufacturer": "CHIMEI",
@@ -58,7 +63,8 @@
       "readiness": 1,
       "primarySourceCaptured": false,
       "conversionRequirement": "numeric current TDS extraction required",
-      "priority": "acquire-primary-TDS"
+      "priority": "acquire-primary-TDS",
+      "exactGradeSourceLocated": false
     },
     {
       "manufacturer": "CHIMEI",
@@ -68,7 +74,8 @@
       "readiness": 1,
       "primarySourceCaptured": false,
       "conversionRequirement": "numeric current TDS extraction required",
-      "priority": "acquire-primary-TDS"
+      "priority": "acquire-primary-TDS",
+      "exactGradeSourceLocated": false
     },
     {
       "manufacturer": "CHIMEI",
@@ -78,7 +85,8 @@
       "readiness": 1,
       "primarySourceCaptured": false,
       "conversionRequirement": "current numeric TDS extraction still required",
-      "priority": "acquire-primary-TDS"
+      "priority": "acquire-primary-TDS",
+      "exactGradeSourceLocated": false
     },
     {
       "manufacturer": "CHIMEI",
@@ -88,7 +96,8 @@
       "readiness": 1,
       "primarySourceCaptured": false,
       "conversionRequirement": "current numeric TDS extraction still required",
-      "priority": "acquire-primary-TDS"
+      "priority": "acquire-primary-TDS",
+      "exactGradeSourceLocated": false
     },
     {
       "manufacturer": "CHIMEI",
@@ -98,7 +107,8 @@
       "readiness": 1,
       "primarySourceCaptured": false,
       "conversionRequirement": "current manufacturer numeric TDS required",
-      "priority": "acquire-primary-TDS"
+      "priority": "acquire-primary-TDS",
+      "exactGradeSourceLocated": false
     },
     {
       "manufacturer": "CHIMEI",
@@ -108,7 +118,8 @@
       "readiness": 1,
       "primarySourceCaptured": false,
       "conversionRequirement": "current manufacturer numeric TDS required",
-      "priority": "acquire-primary-TDS"
+      "priority": "acquire-primary-TDS",
+      "exactGradeSourceLocated": false
     },
     {
       "manufacturer": "CHIMEI",
@@ -118,7 +129,8 @@
       "readiness": 1,
       "primarySourceCaptured": false,
       "conversionRequirement": "current manufacturer numeric TDS required",
-      "priority": "acquire-primary-TDS"
+      "priority": "acquire-primary-TDS",
+      "exactGradeSourceLocated": false
     },
     {
       "manufacturer": "CHIMEI",
@@ -128,7 +140,8 @@
       "readiness": 1,
       "primarySourceCaptured": false,
       "conversionRequirement": "numeric manufacturer TDS extraction required before complete",
-      "priority": "acquire-primary-TDS"
+      "priority": "acquire-primary-TDS",
+      "exactGradeSourceLocated": false
     },
     {
       "manufacturer": "CHIMEI",
@@ -138,7 +151,8 @@
       "readiness": 1,
       "primarySourceCaptured": false,
       "conversionRequirement": "numeric manufacturer TDS extraction required before complete",
-      "priority": "acquire-primary-TDS"
+      "priority": "acquire-primary-TDS",
+      "exactGradeSourceLocated": false
     },
     {
       "manufacturer": "CHIMEI",
@@ -148,7 +162,8 @@
       "readiness": 1,
       "primarySourceCaptured": false,
       "conversionRequirement": "numeric manufacturer TDS extraction required before complete",
-      "priority": "acquire-primary-TDS"
+      "priority": "acquire-primary-TDS",
+      "exactGradeSourceLocated": false
     },
     {
       "manufacturer": "CHIMEI",
@@ -158,7 +173,8 @@
       "readiness": 1,
       "primarySourceCaptured": false,
       "conversionRequirement": "numeric manufacturer TDS extraction required",
-      "priority": "acquire-primary-TDS"
+      "priority": "acquire-primary-TDS",
+      "exactGradeSourceLocated": false
     },
     {
       "manufacturer": "CHIMEI",
@@ -168,7 +184,8 @@
       "readiness": 1,
       "primarySourceCaptured": false,
       "conversionRequirement": "numeric manufacturer TDS extraction required",
-      "priority": "acquire-primary-TDS"
+      "priority": "acquire-primary-TDS",
+      "exactGradeSourceLocated": false
     },
     {
       "manufacturer": "CHIMEI",
@@ -178,7 +195,8 @@
       "readiness": 1,
       "primarySourceCaptured": false,
       "conversionRequirement": "numeric manufacturer TDS extraction required",
-      "priority": "acquire-primary-TDS"
+      "priority": "acquire-primary-TDS",
+      "exactGradeSourceLocated": false
     },
     {
       "manufacturer": "IndianOil",
@@ -188,7 +206,8 @@
       "readiness": 1,
       "primarySourceCaptured": false,
       "conversionRequirement": "grade-specific primary manufacturer numeric TDS required",
-      "priority": "acquire-primary-TDS"
+      "priority": "acquire-primary-TDS",
+      "exactGradeSourceLocated": false
     },
     {
       "manufacturer": "IndianOil",
@@ -198,7 +217,8 @@
       "readiness": 1,
       "primarySourceCaptured": false,
       "conversionRequirement": "grade-specific primary manufacturer numeric TDS required",
-      "priority": "acquire-primary-TDS"
+      "priority": "acquire-primary-TDS",
+      "exactGradeSourceLocated": false
     },
     {
       "manufacturer": "IndianOil",
@@ -208,7 +228,8 @@
       "readiness": 1,
       "primarySourceCaptured": false,
       "conversionRequirement": "grade-specific primary manufacturer numeric TDS required",
-      "priority": "acquire-primary-TDS"
+      "priority": "acquire-primary-TDS",
+      "exactGradeSourceLocated": false
     },
     {
       "manufacturer": "Kingfa",
@@ -218,7 +239,8 @@
       "readiness": 1,
       "primarySourceCaptured": false,
       "conversionRequirement": "grade-specific primary manufacturer numeric TDS required",
-      "priority": "acquire-primary-TDS"
+      "priority": "acquire-primary-TDS",
+      "exactGradeSourceLocated": false
     },
     {
       "manufacturer": "Kingfa",
@@ -228,7 +250,8 @@
       "readiness": 1,
       "primarySourceCaptured": false,
       "conversionRequirement": "numeric primary TDS still required",
-      "priority": "acquire-primary-TDS"
+      "priority": "acquire-primary-TDS",
+      "exactGradeSourceLocated": false
     },
     {
       "manufacturer": "Kingfa",
@@ -238,7 +261,8 @@
       "readiness": 1,
       "primarySourceCaptured": false,
       "conversionRequirement": "numeric primary TDS still required",
-      "priority": "acquire-primary-TDS"
+      "priority": "acquire-primary-TDS",
+      "exactGradeSourceLocated": false
     },
     {
       "manufacturer": "Kingfa",
@@ -248,7 +272,8 @@
       "readiness": 1,
       "primarySourceCaptured": false,
       "conversionRequirement": "numeric TDS not yet available in captured primary evidence",
-      "priority": "acquire-primary-TDS"
+      "priority": "acquire-primary-TDS",
+      "exactGradeSourceLocated": false
     },
     {
       "manufacturer": "Kingfa",
@@ -258,7 +283,8 @@
       "readiness": 1,
       "primarySourceCaptured": false,
       "conversionRequirement": "numeric TDS not yet available in captured primary evidence",
-      "priority": "acquire-primary-TDS"
+      "priority": "acquire-primary-TDS",
+      "exactGradeSourceLocated": false
     },
     {
       "manufacturer": "Kingfa",
@@ -268,7 +294,8 @@
       "readiness": 1,
       "primarySourceCaptured": false,
       "conversionRequirement": "numeric TDS still required",
-      "priority": "acquire-primary-TDS"
+      "priority": "acquire-primary-TDS",
+      "exactGradeSourceLocated": false
     },
     {
       "manufacturer": "Kingfa",
@@ -278,7 +305,8 @@
       "readiness": 1,
       "primarySourceCaptured": false,
       "conversionRequirement": "numeric TDS still required",
-      "priority": "acquire-primary-TDS"
+      "priority": "acquire-primary-TDS",
+      "exactGradeSourceLocated": false
     },
     {
       "manufacturer": "Kingfa",
@@ -288,7 +316,8 @@
       "readiness": 1,
       "primarySourceCaptured": false,
       "conversionRequirement": "numeric TDS still required",
-      "priority": "acquire-primary-TDS"
+      "priority": "acquire-primary-TDS",
+      "exactGradeSourceLocated": false
     },
     {
       "manufacturer": "Kingfa",
@@ -298,7 +327,8 @@
       "readiness": 1,
       "primarySourceCaptured": false,
       "conversionRequirement": "grade-specific primary manufacturer numeric TDS required",
-      "priority": "acquire-primary-TDS"
+      "priority": "acquire-primary-TDS",
+      "exactGradeSourceLocated": false
     },
     {
       "manufacturer": "LG Chem",
@@ -308,7 +338,8 @@
       "readiness": 1,
       "primarySourceCaptured": false,
       "conversionRequirement": "exact numeric manufacturer TDS required",
-      "priority": "acquire-primary-TDS"
+      "priority": "acquire-primary-TDS",
+      "exactGradeSourceLocated": false
     },
     {
       "manufacturer": "LG Chem",
@@ -318,7 +349,8 @@
       "readiness": 1,
       "primarySourceCaptured": false,
       "conversionRequirement": "exact numeric manufacturer TDS required; do not infer reinforcement/property values from adjacent grades",
-      "priority": "acquire-primary-TDS"
+      "priority": "acquire-primary-TDS",
+      "exactGradeSourceLocated": false
     },
     {
       "manufacturer": "LG Chem",
@@ -328,7 +360,8 @@
       "readiness": 1,
       "primarySourceCaptured": false,
       "conversionRequirement": "exact numeric manufacturer TDS required",
-      "priority": "acquire-primary-TDS"
+      "priority": "acquire-primary-TDS",
+      "exactGradeSourceLocated": false
     },
     {
       "manufacturer": "Polyplastics",
@@ -338,7 +371,8 @@
       "readiness": 1,
       "primarySourceCaptured": false,
       "conversionRequirement": "numeric current manufacturer property table required",
-      "priority": "acquire-primary-TDS"
+      "priority": "acquire-primary-TDS",
+      "exactGradeSourceLocated": false
     },
     {
       "manufacturer": "Polyplastics",
@@ -348,7 +382,8 @@
       "readiness": 1,
       "primarySourceCaptured": false,
       "conversionRequirement": "numeric current manufacturer property table required",
-      "priority": "acquire-primary-TDS"
+      "priority": "acquire-primary-TDS",
+      "exactGradeSourceLocated": false
     },
     {
       "manufacturer": "Polyplastics",
@@ -358,7 +393,8 @@
       "readiness": 1,
       "primarySourceCaptured": false,
       "conversionRequirement": "numeric current manufacturer property table required",
-      "priority": "acquire-primary-TDS"
+      "priority": "acquire-primary-TDS",
+      "exactGradeSourceLocated": false
     },
     {
       "manufacturer": "Polyplastics",
@@ -368,7 +404,8 @@
       "readiness": 1,
       "primarySourceCaptured": false,
       "conversionRequirement": "numeric current manufacturer property table required",
-      "priority": "acquire-primary-TDS"
+      "priority": "acquire-primary-TDS",
+      "exactGradeSourceLocated": false
     },
     {
       "manufacturer": "Polyplastics",
@@ -378,7 +415,8 @@
       "readiness": 1,
       "primarySourceCaptured": false,
       "conversionRequirement": "numeric current manufacturer property table required",
-      "priority": "acquire-primary-TDS"
+      "priority": "acquire-primary-TDS",
+      "exactGradeSourceLocated": false
     },
     {
       "manufacturer": "Polyplastics",
@@ -388,7 +426,8 @@
       "readiness": 1,
       "primarySourceCaptured": false,
       "conversionRequirement": "numeric current manufacturer property table required",
-      "priority": "acquire-primary-TDS"
+      "priority": "acquire-primary-TDS",
+      "exactGradeSourceLocated": false
     },
     {
       "manufacturer": "Polyplastics",
@@ -398,7 +437,8 @@
       "readiness": 1,
       "primarySourceCaptured": false,
       "conversionRequirement": "numeric current manufacturer property table required",
-      "priority": "acquire-primary-TDS"
+      "priority": "acquire-primary-TDS",
+      "exactGradeSourceLocated": false
     },
     {
       "manufacturer": "Sumitomo Chemical",
@@ -406,9 +446,11 @@
       "grade": "SUMIKAEXCEL 4100G",
       "polymer": "PESU",
       "readiness": 1,
-      "primarySourceCaptured": false,
+      "primarySourceCaptured": true,
       "conversionRequirement": "individual complete numeric property extraction pending",
-      "priority": "acquire-primary-TDS"
+      "priority": "extract-numeric-table",
+      "exactGradeSourceLocated": true,
+      "sourceUrl": "https://www.sumitomo-chem.co.jp/sep/english/products/pes/pes_fg_ippan.html"
     },
     {
       "manufacturer": "Sumitomo Chemical",
@@ -416,9 +458,11 @@
       "grade": "SUMIKAEXCEL 4800G",
       "polymer": "PESU",
       "readiness": 1,
-      "primarySourceCaptured": false,
+      "primarySourceCaptured": true,
       "conversionRequirement": "individual complete numeric property extraction pending",
-      "priority": "acquire-primary-TDS"
+      "priority": "extract-numeric-table",
+      "exactGradeSourceLocated": true,
+      "sourceUrl": "https://www.sumitomo-chem.co.jp/sep/english/products/pes/pes_fg_ippan.html"
     },
     {
       "manufacturer": "Sumitomo Chemical",
@@ -426,9 +470,11 @@
       "grade": "SUMIKAEXCEL 3601GL20",
       "polymer": "PESU-GF20",
       "readiness": 1,
-      "primarySourceCaptured": false,
+      "primarySourceCaptured": true,
       "conversionRequirement": "individual numeric TDS extraction pending; do not infer from 3600G",
-      "priority": "acquire-primary-TDS"
+      "priority": "extract-numeric-table",
+      "exactGradeSourceLocated": true,
+      "sourceUrl": "https://www.sumitomo-chem.co.jp/sep/english/products/pes/pes_fg_ippan.html"
     },
     {
       "manufacturer": "Sumitomo Chemical",
@@ -436,9 +482,11 @@
       "grade": "SUMIKAEXCEL 3601GL30",
       "polymer": "PESU-GF30",
       "readiness": 1,
-      "primarySourceCaptured": false,
+      "primarySourceCaptured": true,
       "conversionRequirement": "individual numeric TDS extraction pending; do not interpolate from GF20",
-      "priority": "acquire-primary-TDS"
+      "priority": "extract-numeric-table",
+      "exactGradeSourceLocated": true,
+      "sourceUrl": "https://www.sumitomo-chem.co.jp/sep/english/products/pes/pes_fg_ippan.html"
     },
     {
       "manufacturer": "Sumitomo Chemical",
@@ -446,9 +494,11 @@
       "grade": "SUMIKAEXCEL 4101GL20",
       "polymer": "PESU-GF20",
       "readiness": 1,
-      "primarySourceCaptured": false,
+      "primarySourceCaptured": true,
       "conversionRequirement": "individual numeric TDS extraction pending",
-      "priority": "acquire-primary-TDS"
+      "priority": "extract-numeric-table",
+      "exactGradeSourceLocated": true,
+      "sourceUrl": "https://www.sumitomo-chem.co.jp/sep/english/products/pes/pes_fg_ippan.html"
     },
     {
       "manufacturer": "Sumitomo Chemical",
@@ -456,9 +506,11 @@
       "grade": "SUMIKAEXCEL 4101GL30",
       "polymer": "PESU-GF30",
       "readiness": 1,
-      "primarySourceCaptured": false,
+      "primarySourceCaptured": true,
       "conversionRequirement": "individual numeric TDS extraction pending",
-      "priority": "acquire-primary-TDS"
+      "priority": "extract-numeric-table",
+      "exactGradeSourceLocated": true,
+      "sourceUrl": "https://www.sumitomo-chem.co.jp/sep/english/products/pes/pes_fg_ippan.html"
     },
     {
       "manufacturer": "Supreme Petrochem",
@@ -468,7 +520,8 @@
       "readiness": 1,
       "primarySourceCaptured": false,
       "conversionRequirement": "numeric primary TDS required",
-      "priority": "acquire-primary-TDS"
+      "priority": "acquire-primary-TDS",
+      "exactGradeSourceLocated": false
     },
     {
       "manufacturer": "Supreme Petrochem",
@@ -478,7 +531,8 @@
       "readiness": 1,
       "primarySourceCaptured": false,
       "conversionRequirement": "numeric primary TDS required",
-      "priority": "acquire-primary-TDS"
+      "priority": "acquire-primary-TDS",
+      "exactGradeSourceLocated": false
     },
     {
       "manufacturer": "Supreme Petrochem",
@@ -488,7 +542,8 @@
       "readiness": 1,
       "primarySourceCaptured": false,
       "conversionRequirement": "numeric primary TDS required",
-      "priority": "acquire-primary-TDS"
+      "priority": "acquire-primary-TDS",
+      "exactGradeSourceLocated": false
     },
     {
       "manufacturer": "Supreme Petrochem",
@@ -498,7 +553,8 @@
       "readiness": 1,
       "primarySourceCaptured": false,
       "conversionRequirement": "numeric primary TDS required",
-      "priority": "acquire-primary-TDS"
+      "priority": "acquire-primary-TDS",
+      "exactGradeSourceLocated": false
     },
     {
       "manufacturer": "Supreme Petrochem",
@@ -508,7 +564,8 @@
       "readiness": 1,
       "primarySourceCaptured": false,
       "conversionRequirement": "numeric primary TDS required",
-      "priority": "acquire-primary-TDS"
+      "priority": "acquire-primary-TDS",
+      "exactGradeSourceLocated": false
     },
     {
       "manufacturer": "Teijin",
@@ -518,7 +575,8 @@
       "readiness": 1,
       "primarySourceCaptured": false,
       "conversionRequirement": "numeric primary property table not yet captured; do not infer from SH-1126Z",
-      "priority": "acquire-primary-TDS"
+      "priority": "acquire-primary-TDS",
+      "exactGradeSourceLocated": false
     },
     {
       "manufacturer": "Teijin",
@@ -528,7 +586,8 @@
       "readiness": 1,
       "primarySourceCaptured": false,
       "conversionRequirement": "numeric primary property table not yet captured; no GF-to-CF substitution",
-      "priority": "acquire-primary-TDS"
+      "priority": "acquire-primary-TDS",
+      "exactGradeSourceLocated": false
     },
     {
       "manufacturer": "Toyobo",
@@ -538,7 +597,8 @@
       "readiness": 1,
       "primarySourceCaptured": false,
       "conversionRequirement": "primary numeric grade TDS pending",
-      "priority": "acquire-primary-TDS"
+      "priority": "acquire-primary-TDS",
+      "exactGradeSourceLocated": false
     },
     {
       "manufacturer": "Toyobo",
@@ -548,7 +608,8 @@
       "readiness": 1,
       "primarySourceCaptured": false,
       "conversionRequirement": "primary numeric grade TDS pending",
-      "priority": "acquire-primary-TDS"
+      "priority": "acquire-primary-TDS",
+      "exactGradeSourceLocated": false
     },
     {
       "manufacturer": "Toyobo",
@@ -558,7 +619,12 @@
       "readiness": 1,
       "primarySourceCaptured": false,
       "conversionRequirement": "primary numeric grade TDS pending",
-      "priority": "acquire-primary-TDS"
+      "priority": "acquire-primary-TDS",
+      "exactGradeSourceLocated": false
     }
-  ]
+  ],
+  "metrics": {
+    "exactGradeSourceLocated": 7,
+    "stillNeedPrimarySource": 48
+  }
 }
