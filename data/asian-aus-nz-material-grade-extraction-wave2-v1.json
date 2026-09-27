@@ -1,5 +1,5 @@
 {
-  "version": "2026-09-28.1",
+  "version": "2026-09-28.2",
   "scope": "Asia-Australia-New Zealand primary-source material evidence wave 2",
   "policy": {
     "noUniversalSettings": true,
@@ -263,6 +263,279 @@
       ],
       "process": "injection moulding",
       "originClaim": "none; do not infer NZ resin manufacture",
+      "status": "discovery-only"
+    },
+    {
+      "manufacturer": "IndianOil",
+      "manufacturerCountry": "India",
+      "region": "Asia",
+      "polymer": "HDPE",
+      "grades": [
+        {
+          "grade": "080M60",
+          "mi": 8,
+          "density_g_cm3": 0.96
+        },
+        {
+          "grade": "080M55",
+          "mi": 8,
+          "density_g_cm3": 0.955
+        },
+        {
+          "grade": "080M60U",
+          "mi": 8,
+          "density_g_cm3": 0.96,
+          "feature": "UV stabilised"
+        },
+        {
+          "grade": "180M50",
+          "mi": 20,
+          "density_g_cm3": 0.95,
+          "feature": "high flow/thin-wall injection"
+        }
+      ],
+      "process": "injection moulding",
+      "sourceStatus": "current 2025 manufacturer grade sheet",
+      "status": "candidate-complete"
+    },
+    {
+      "manufacturer": "IndianOil",
+      "manufacturerCountry": "India",
+      "region": "Asia",
+      "polymer": "PP homopolymer",
+      "grade": "P1110MAS",
+      "process": "injection moulding",
+      "features": [
+        "high flow",
+        "high stiffness",
+        "gloss",
+        "antistatic"
+      ],
+      "applicationBoundary": [
+        "furniture",
+        "house articles",
+        "automotive components requiring stiffness",
+        "low-warpage products"
+      ],
+      "qualification": "manufacturer states cycle-time reduction up to 18% depends on product and equipment; not a universal cycle-time claim",
+      "status": "candidate-complete"
+    },
+    {
+      "manufacturer": "LOTTE Chemical",
+      "manufacturerCountry": "South Korea",
+      "region": "Asia",
+      "polymer": "PBT",
+      "grade": "ASF-9860",
+      "mfi": {
+        "test": "ISO 1133",
+        "condition": "250 C / 2.16 kg",
+        "value_g_10min": 74
+      },
+      "specificGravity": {
+        "test": "ISO 1183",
+        "value": 1.31
+      },
+      "waterAbsorption_percent": {
+        "test": "ISO 62",
+        "condition": "23 C",
+        "value": 0.4
+      },
+      "mouldShrinkage_percent": {
+        "test": "ISO 294-4",
+        "thickness_mm": 2,
+        "MD": "1.5-1.8",
+        "TD": "1.7-2.0"
+      },
+      "tensileYield_MPa": 58,
+      "tensileModulus_MPa": 2350,
+      "flexural_MPa": 80,
+      "flexuralModulus_MPa": 2320,
+      "status": "candidate-complete"
+    },
+    {
+      "manufacturer": "LOTTE Chemical",
+      "manufacturerCountry": "South Korea",
+      "region": "Asia",
+      "polymer": "PBT",
+      "grade": "GP-5000",
+      "mfi": {
+        "test": "ISO 1133",
+        "condition": "250 C / 2.16 kg",
+        "value_g_10min": 71
+      },
+      "specificGravity": 1.3,
+      "tensileYield_MPa": 55,
+      "tensileModulus_MPa": 2300,
+      "flexural_MPa": 74,
+      "flexuralModulus_MPa": 2100,
+      "notchedIzod_kJ_m2": 4.5,
+      "HDT_C": {
+        "test": "ISO 75-2",
+        "condition": "1.8 MPa / 4 mm unannealed",
+        "value": 59
+      },
+      "status": "candidate-complete"
+    },
+    {
+      "manufacturer": "Kingfa",
+      "manufacturerCountry": "China",
+      "region": "Asia",
+      "polymer": "PA6/PA66",
+      "recordType": "exact-grade-family-discovery",
+      "grades": [
+        "PA6-C100 HS",
+        "PA6-G15 HS",
+        "PA6-G25 HS",
+        "PA6-G30 HS",
+        "PA6-G35 HS",
+        "PA6-G40 HS",
+        "PA6-G50 HS",
+        "PA6-G50 UV",
+        "PA66-C200 HS",
+        "PA66-M28G10",
+        "PA66-G30 SR",
+        "PA66-G33 SR",
+        "PA66-G35 HP"
+      ],
+      "reinforcementBoundary": "G-series reinforcement percentage encoded in manufacturer family; do not infer properties across loading levels",
+      "status": "discovery-only"
+    },
+    {
+      "manufacturer": "Polyplastics",
+      "manufacturerCountry": "Japan",
+      "region": "Asia",
+      "polymer": "PBT+PET",
+      "grade": "DURANEX 3306",
+      "reinforcement": "GF30",
+      "density_g_cm3": 1.54,
+      "waterAbsorption_percent": {
+        "test": "ISO 62",
+        "condition": "23 C / 24 h / 1 mm",
+        "value": 0.2
+      },
+      "tensile_MPa": 140,
+      "flexural_MPa": 210,
+      "flexuralModulus_MPa": 9100,
+      "notchedCharpy_kJ_m2": 8.1,
+      "HDT_C": {
+        "condition": "1.8 MPa",
+        "value": 210
+      },
+      "clte_1e5_per_C": {
+        "flow": 2,
+        "transverse": 7
+      },
+      "status": "candidate-complete"
+    },
+    {
+      "manufacturer": "Teijin",
+      "manufacturerCountry": "Japan",
+      "region": "Asia",
+      "polymer": "PC",
+      "grade": "PANLITE SH-1126Z",
+      "density_kg_m3": 1170,
+      "waterAbsorption_percent": {
+        "test": "ISO 62",
+        "condition": "23 C / 24 h immersion",
+        "value": 0.1
+      },
+      "tensileYield_MPa": 72,
+      "flexural_MPa": 100,
+      "flexuralModulus_MPa": 2450,
+      "mvr": {
+        "test": "ISO 1133",
+        "condition": "300 C / 1.2 kgf",
+        "value_cm3_10min": 26
+      },
+      "HDT_C": {
+        "at1_8MPa": 113,
+        "at0_45MPa": 126
+      },
+      "valueStatus": "representative, not guaranteed",
+      "status": "candidate-complete"
+    },
+    {
+      "manufacturer": "Formosa Chemicals & Fibre",
+      "manufacturerCountry": "Taiwan",
+      "region": "Asia",
+      "polymer": "ABS",
+      "grade": "TAIRILAC AG15A1-H",
+      "tensile_MPa": {
+        "test": "ASTM D-638",
+        "condition": "23 C",
+        "value": 45
+      },
+      "flexural_MPa": {
+        "test": "ASTM D-790",
+        "condition": "23 C",
+        "value": 80
+      },
+      "flexuralModulus_MPa": 2548,
+      "notchedIzod_J_m": {
+        "test": "ASTM D-256",
+        "condition": "23 C / 1/4 inch",
+        "value": 246
+      },
+      "vicat_C": {
+        "test": "ASTM D-1525",
+        "condition": "1 kg",
+        "value": 100
+      },
+      "mfi_g_10min": {
+        "test": "ASTM D-1238",
+        "conditions": [
+          {
+            "condition": "200 C / 5 kg",
+            "value": 2.2
+          },
+          {
+            "condition": "220 C / 10 kg",
+            "value": 24
+          }
+        ]
+      },
+      "mouldShrinkage_percent": {
+        "test": "ASTM D-955",
+        "condition": "3.2 mm",
+        "value": "0.4-0.7"
+      },
+      "valueStatus": "general guide; laboratory data, not guaranteed",
+      "status": "candidate-complete"
+    },
+    {
+      "manufacturer": "CHIMEI",
+      "manufacturerCountry": "Taiwan",
+      "region": "Asia",
+      "polymer": "PC alloy",
+      "recordType": "exact-grade-family-discovery",
+      "grades": [
+        {
+          "grade": "PC-345",
+          "feature": "high flow"
+        },
+        {
+          "grade": "PC-365",
+          "feature": "balanced"
+        },
+        {
+          "grade": "PC-385",
+          "feature": "high heat/high impact"
+        },
+        {
+          "grade": "PC-860",
+          "feature": "weather resistant/high flow"
+        },
+        {
+          "grade": "PC-545",
+          "feature": "ultra-high heat, halogen-free FR"
+        },
+        {
+          "grade": "PC-992",
+          "polymer": "PC/ASA",
+          "feature": "weather resistant/high flow, halogen-free FR"
+        }
+      ],
+      "sourceBoundary": "manufacturer exposes ISO/ASTM TDS and processing guides; numeric values remain discovery-only until exact TDS extraction",
       "status": "discovery-only"
     }
   ]
