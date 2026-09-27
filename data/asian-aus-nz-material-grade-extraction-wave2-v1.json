@@ -1,5 +1,5 @@
 {
-  "version": "2026-09-28.32",
+  "version": "2026-09-28.33",
   "scope": "Asia including Singapore, Australia and New Zealand primary-source material evidence wave 2",
   "policy": {
     "noUniversalSettings": true,
@@ -5668,6 +5668,127 @@
       "sourceUrl": "https://www.sumitomo-chem.co.jp/sep/english/products/pes/pes_fg_grade.html",
       "promotionBlock": "numeric grade property table not yet captured; identity alone insufficient",
       "status": "discovery-only"
+    },
+    {
+      "manufacturer": "Sumitomo Chemical",
+      "manufacturerCountry": "Japan",
+      "region": "Asia",
+      "polymer": "PESU-GF20",
+      "grade": "SUMIKAEXCEL 4101GL20",
+      "process": "injection moulding",
+      "reinforcement": "GF20",
+      "density_g_cm3": 1.51,
+      "waterAbsorption_percent": {
+        "condition": "23 C / 24 h water",
+        "value": 0.8
+      },
+      "shrinkage_percent": {
+        "MD": 0.3,
+        "TD": 0.4
+      },
+      "tensile_MPa": {
+        "ISO527": 135,
+        "ASTM_D638": 124
+      },
+      "tensileModulus_MPa": 6500,
+      "flexural_MPa": {
+        "ISO178": 190,
+        "ASTM_D790": 184
+      },
+      "flexuralModulus_MPa": 6200,
+      "HDT_C": {
+        "ISO_1_8MPa": 215,
+        "ISO_0_45MPa": 220,
+        "ASTM_1_82MPa": 211,
+        "ASTM_0_45MPa": 216
+      },
+      "CLTE_1e5_K": {
+        "MD": 2.4,
+        "TD": 4.7
+      },
+      "sourceUrl": "https://www.sumitomo-chem.co.jp/sep/english/products/pes/pes_fg_ippan.html",
+      "valueStatus": "manufacturer typical values",
+      "status": "candidate-complete"
+    },
+    {
+      "manufacturer": "Sumitomo Chemical",
+      "manufacturerCountry": "Japan",
+      "region": "Asia",
+      "polymer": "PESU-GF30",
+      "grade": "SUMIKAEXCEL 4101GL30",
+      "process": "injection moulding",
+      "reinforcement": "GF30",
+      "density_g_cm3": 1.58,
+      "waterAbsorption_percent": {
+        "condition": "23 C / 24 h water",
+        "value": 0.7
+      },
+      "shrinkage_percent": {
+        "MD": 0.2,
+        "TD": 0.4
+      },
+      "tensile_MPa": {
+        "ISO527": 155,
+        "ASTM_D638": 146
+      },
+      "tensileModulus_MPa": 9000,
+      "flexural_MPa": {
+        "ISO178": 220,
+        "ASTM_D790": 216
+      },
+      "flexuralModulus_MPa": 8500,
+      "HDT_C": {
+        "ISO_1_8MPa": 220,
+        "ISO_0_45MPa": 225,
+        "ASTM_1_82MPa": 216,
+        "ASTM_0_45MPa": 221
+      },
+      "CLTE_1e5_K": {
+        "MD": 2.1,
+        "TD": 4.5
+      },
+      "sourceUrl": "https://www.sumitomo-chem.co.jp/sep/english/products/pes/pes_fg_ippan.html",
+      "valueStatus": "manufacturer typical values; GF30 values remain distinct from GF20",
+      "status": "candidate-complete"
+    },
+    {
+      "manufacturer": "Sumitomo Chemical",
+      "manufacturerCountry": "Japan",
+      "region": "Asia",
+      "polymer": "PESU-GF30",
+      "grade": "SUMIKAEXCEL 3601GL30",
+      "process": "injection moulding",
+      "reinforcement": "GF30",
+      "density_g_cm3": 1.58,
+      "waterAbsorption_percent": {
+        "condition": "23 C / 24 h water",
+        "value": 0.7
+      },
+      "shrinkage_percent": {
+        "MD": 0.2,
+        "TD": 0.4
+      },
+      "tensile_MPa": {
+        "ISO527": 155,
+        "ASTM_D638": 146
+      },
+      "tensileModulus_MPa": 9000,
+      "flexural_MPa": {
+        "ISO178": 220,
+        "ASTM_D790": 216
+      },
+      "flexuralModulus_MPa": 8500,
+      "HDT_C": {
+        "ISO_1_8MPa": 220,
+        "ISO_0_45MPa": 225
+      },
+      "CLTE_1e5_K": {
+        "MD": 2.1,
+        "TD": 4.5
+      },
+      "sourceUrl": "https://www.sumitomo-chem.co.jp/sep/english/products/pes/pes_fg_ippan.html",
+      "valueStatus": "manufacturer family property table/CAE grouping; retain grade-specific identity",
+      "status": "candidate-complete"
     }
   ]
 }
