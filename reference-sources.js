@@ -65,14 +65,16 @@ const EXTRA={
 };
 
 function esc(v){return String(v??'').replace(/[&<>\"]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','\"':'&quot;'}[m]));}
+function canonicalUrl(raw){try{const u=new URL(String(raw||''));u.hash='';u.hostname=u.hostname.toLowerCase();if((u.protocol==='https:'&&u.port==='443')||(u.protocol==='http:'&&u.port==='80'))u.port='';if(u.pathname.length>1)u.pathname=u.pathname.replace(/\/+$/,'');return u.href}catch(_){return String(raw||'').trim()}}
 function merge(){
   const base=window.MM_SOURCE_LIBRARY||{};
-  const out={};
-  for(const [cat,rows] of Object.entries({...base,...EXTRA})){
+  const out={},globalSeen=new Map(),duplicates=[];
+  for(const [cat] of Object.entries({...base,...EXTRA})){
     const joined=[...(base[cat]||[]),...(EXTRA[cat]||[])];
-    const seen=new Set();
-    out[cat]=joined.filter(x=>{const k=x[2];if(seen.has(k))return false;seen.add(k);return true});
+    out[cat]=[];
+    for(const row of joined){const k=canonicalUrl(row[2]),prior=globalSeen.get(k);if(prior){duplicates.push({url:k,keptCategory:prior.category,droppedCategory:cat,keptTitle:prior.row[0],droppedTitle:row[0]});continue}globalSeen.set(k,{category:cat,row});out[cat].push(row)}
   }
+  window.MM_REFERENCE_DUPLICATES=Object.freeze(duplicates.map(x=>Object.freeze(x)));
   return out;
 }
 function ensure(){
