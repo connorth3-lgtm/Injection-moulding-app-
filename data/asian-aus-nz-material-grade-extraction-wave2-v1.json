@@ -1,5 +1,5 @@
 {
-  "version": "2026-09-28.31",
+  "version": "2026-09-28.32",
   "scope": "Asia including Singapore, Australia and New Zealand primary-source material evidence wave 2",
   "policy": {
     "noUniversalSettings": true,
@@ -5629,6 +5629,45 @@
       "caeSourceUrl": "https://www.sumitomo-chem.co.jp/sep/english/products/pes/pes_bs_other.html",
       "valueStatus": "manufacturer measured CAE/weld data; do not interpolate from GF20",
       "status": "candidate-complete"
+    },
+    {
+      "manufacturer": "Sumitomo Chemical",
+      "manufacturerCountry": "Japan",
+      "region": "Asia",
+      "polymer": "PESU-GF30",
+      "grade": "SUMIKAEXCEL 3601GL30",
+      "process": "injection moulding",
+      "reinforcement": "GF30",
+      "familyEvidence": "manufacturer lineup identifies GF30 high-flow injection grade",
+      "CAE": {
+        "specificHeat_J_kgK": 788,
+        "thermalConductivity_W_mK": 0.24,
+        "youngsModulus_MPa": {
+          "MD": 8900,
+          "TD": 5000
+        },
+        "CLTE_1e5_K": {
+          "MD": 2.1,
+          "TD": 4.5
+        }
+      },
+      "sourceUrl": "https://www.sumitomo-chem.co.jp/sep/english/products/pes/pes_fg_grade.html",
+      "caeSourceUrl": "https://www.sumitomo-chem.co.jp/sep/english/products/pes/pes_bs_other.html",
+      "valueStatus": "manufacturer CAE measured values; property-family grouping explicitly includes 3601GL30/4101GL30",
+      "status": "candidate-complete"
+    },
+    {
+      "manufacturer": "Sumitomo Chemical",
+      "manufacturerCountry": "Japan",
+      "region": "Asia",
+      "polymer": "PESU-GF20",
+      "grade": "SUMIKAEXCEL ES5340",
+      "process": "ultra-high-flow injection moulding",
+      "reinforcement": "GF20",
+      "evidenceClass": "manufacturer exact-grade lineup",
+      "sourceUrl": "https://www.sumitomo-chem.co.jp/sep/english/products/pes/pes_fg_grade.html",
+      "promotionBlock": "numeric grade property table not yet captured; identity alone insufficient",
+      "status": "discovery-only"
     }
   ]
 }
