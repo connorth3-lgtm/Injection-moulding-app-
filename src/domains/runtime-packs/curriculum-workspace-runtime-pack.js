@@ -186,6 +186,7 @@ function ensureReturnButton(){
   button=document.createElement('button');
   button.id='mmCurriculumReturnButton';
   button.type='button';
+  button.setAttribute('aria-label','Return to lesson');
   button.className='secondary mm-curriculum-return hidden';
   button.addEventListener('click',returnToLesson);
   document.body.appendChild(button);
@@ -198,6 +199,7 @@ function updateReturnButton(){
   if(!origin||lessonVisible){button.classList.add('hidden');return}
   const lesson=D.lessons.find(l=>l.id===Number(origin.lessonId));
   button.textContent=lesson?`← Return to lesson ${lesson.id}`:'← Return to lesson';
+  button.setAttribute('aria-label',lesson?`Return to lesson ${lesson.id}`:'Return to lesson');
   button.classList.remove('hidden');
 }
 
