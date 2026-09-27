@@ -69,6 +69,21 @@ require("http://" not in deep, "deep-dive sources must use HTTPS")
 structured_entries = re.findall(r"\{\s*name\s*:\s*'", reference_data + "\n" + deep)
 require(len(structured_entries) >= 180, "reference database unexpectedly small after deep-dive expansion")
 
+# Cross-file duplicate-content audit: the same normalized title must not silently resolve to
+# different URLs. Same URL/title placements are handled by runtime canonical deduplication.
+def norm_title(v): return re.sub(r'[^a-z0-9]+',' ',v.lower()).strip()
+source_rows=[]
+for name in ["source-library.js","reference-sources.js","reference-deep-dive.js"]:
+    raw=text(name)
+    for title,url in re.findall(r"\['([^']+)'\s*,[^\n]*?'(https://[^']+)'\]",raw): source_rows.append((name,title,url))
+by_title={}
+for name,title,url in source_rows:
+    key=norm_title(title)
+    if not key: continue
+    by_title.setdefault(key,set()).add(url.rstrip('/'))
+conflicting_titles={k:sorted(v) for k,v in by_title.items() if len(v)>1}
+require(not conflicting_titles, f"same reference title resolves to multiple URLs: {conflicting_titles}")
+
 reference_sources = text("reference-sources.js")
 for marker in [
     "Authoritative References",
