@@ -1,5 +1,5 @@
 {
-  "version": "2026-09-28.37",
+  "version": "2026-09-28.38",
   "scope": "Asia including Singapore, Australia and New Zealand primary-source material evidence wave 2",
   "policy": {
     "noUniversalSettings": true,
@@ -6210,6 +6210,96 @@
       "sourceEvidence": "official CHIMEI catalogue exposes ISO/ASTM TDS and process guide",
       "promotionBlock": "numeric attachment extraction required",
       "status": "discovery-only"
+    },
+    {
+      "manufacturer": "LG Chem",
+      "manufacturerCountry": "South Korea",
+      "region": "Asia",
+      "polymer": "PA6-GF",
+      "grade": "LUMID GP2100AW",
+      "reinforcement": "GF reinforced",
+      "recordType": "primary-numeric-conversion",
+      "specificGravity": {
+        "test": "ASTM D792",
+        "value": 1.22
+      },
+      "mouldShrinkage_percent": {
+        "test": "ASTM D955",
+        "value": "0.6-1.1"
+      },
+      "tensileStrength_kg_cm2": {
+        "test": "ASTM D638",
+        "value": 1250
+      },
+      "tensileElongation_percent": {
+        "test": "ASTM D638",
+        "value": 4
+      },
+      "flexuralStrength_kg_cm2": {
+        "test": "ASTM D790",
+        "value": 1900
+      },
+      "flexuralModulus_kg_cm2": {
+        "test": "ASTM D790",
+        "value": 52000
+      },
+      "notchedIzod_kg_cm_cm": {
+        "test": "ASTM D256",
+        "condition": "23 C / 3.2 mm",
+        "value": 9
+      },
+      "HDT_C": {
+        "test": "ASTM D648",
+        "at18_6kg_cm2": 195
+      },
+      "sourceUrl": "https://www.lgchem.com/upload/file/chinaplas2018/Division_Info/EP_vf.pdf",
+      "valueStatus": "LG Chem typical/reference values; no warranty or guarantee",
+      "status": "candidate-complete"
+    },
+    {
+      "manufacturer": "LG Chem",
+      "manufacturerCountry": "South Korea",
+      "region": "Asia",
+      "polymer": "PA6-GF",
+      "grade": "LUMID GP2200AW",
+      "reinforcement": "GF reinforced",
+      "recordType": "primary-numeric-conversion",
+      "specificGravity": {
+        "test": "ASTM D792",
+        "value": 1.28
+      },
+      "mouldShrinkage_percent": {
+        "test": "ASTM D955",
+        "value": "0.5-1.0"
+      },
+      "tensileStrength_kg_cm2": {
+        "test": "ASTM D638",
+        "value": 1500
+      },
+      "tensileElongation_percent": {
+        "test": "ASTM D638",
+        "value": 3
+      },
+      "flexuralStrength_kg_cm2": {
+        "test": "ASTM D790",
+        "value": 2200
+      },
+      "flexuralModulus_kg_cm2": {
+        "test": "ASTM D790",
+        "value": 68000
+      },
+      "notchedIzod_kg_cm_cm": {
+        "test": "ASTM D256",
+        "condition": "23 C / 3.2 mm",
+        "value": 10
+      },
+      "HDT_C": {
+        "test": "ASTM D648",
+        "at18_6kg_cm2": 205
+      },
+      "sourceUrl": "https://www.lgchem.com/upload/file/chinaplas2018/Division_Info/EP_vf.pdf",
+      "valueStatus": "LG Chem typical/reference values; no warranty or guarantee",
+      "status": "candidate-complete"
     }
   ]
 }
