@@ -1,8 +1,8 @@
 # MouldMaster health status
 
 Baseline review: **2026-09-18**  
-Source commit: `3e020626205ebdb3c62a155105b6bfb91b8e70df`  
-Current learner-facing web release: **2026.09.27.3**
+Source commit: `0724824bc8ff3fc406fe2500ce205e0f36e5afb9`  
+Current learner-facing web release: **2026.09.27.4**
 
 This file is generated from `data/health-program-v1.json`. It reports engineering/operations health separately from deliberate external-validation HOLDs.
 
