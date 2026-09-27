@@ -1,5 +1,5 @@
 {
-  "version": "2026-09-28.4",
+  "version": "2026-09-28.5",
   "scope": "Asia-Australia-New Zealand primary-source material evidence wave 2",
   "policy": {
     "noUniversalSettings": true,
@@ -1020,6 +1020,226 @@
       ],
       "boundary": "grade identity/application only until each current TDS is extracted",
       "status": "discovery-only"
+    },
+    {
+      "manufacturer": "LyondellBasell",
+      "regionalEntity": "LyondellBasell Australia",
+      "region": "Australia/New Zealand availability",
+      "polymer": "PP homopolymer",
+      "grade": "PLASVE HP741T",
+      "process": "thin-wall injection moulding",
+      "MFR": {
+        "condition": "230 C / 2.16 kg",
+        "value_g_10min": 60
+      },
+      "density_g_cm3": 0.9,
+      "flexuralModulus_MPa": 1750,
+      "tensileYield_MPa": 36,
+      "notchedIzod23C_kJ_m2": 2.4,
+      "vicat_C": 150,
+      "HDT0_45MPa_C": 100,
+      "valueStatus": "typical",
+      "status": "candidate-complete"
+    },
+    {
+      "manufacturer": "LyondellBasell",
+      "region": "Australia/New Zealand availability",
+      "polymer": "PP homopolymer",
+      "grade": "PLASVE HP548S",
+      "process": "thin-wall injection moulding",
+      "MFR": {
+        "condition": "230 C / 2.16 kg",
+        "value_g_10min": 35
+      },
+      "density_g_cm3": 0.9,
+      "flexuralModulus_MPa": 1450,
+      "tensileYield_MPa": 33,
+      "notchedIzod23C_kJ_m2": 2.3,
+      "vicat_C": 150,
+      "HDT0_45MPa_C": 80,
+      "valueStatus": "typical",
+      "status": "candidate-complete"
+    },
+    {
+      "manufacturer": "LyondellBasell",
+      "region": "Australia/New Zealand availability",
+      "polymer": "PP impact copolymer",
+      "grade": "Moplen EP332K",
+      "process": "injection moulding",
+      "MFR": {
+        "condition": "230 C / 2.16 kg",
+        "value_g_10min": 5
+      },
+      "density_g_cm3": 0.9,
+      "flexuralModulus_MPa": 1150,
+      "tensileModulus_MPa": 1100,
+      "tensileYield_MPa": 25,
+      "notchedCharpy_kJ_m2": {
+        "at23C": 13,
+        "at0C": 6.4,
+        "atMinus20C": 4.7
+      },
+      "HDT0_46MPa_C": 88,
+      "features": [
+        "low warpage",
+        "low-temperature impact",
+        "thermal ageing stability"
+      ],
+      "valueStatus": "typical",
+      "status": "candidate-complete"
+    },
+    {
+      "manufacturer": "LyondellBasell",
+      "region": "Australia/New Zealand availability",
+      "polymer": "PP impact copolymer",
+      "grade": "Moplen EP336J",
+      "process": "injection moulding",
+      "MFR": {
+        "condition": "230 C / 2.16 kg",
+        "value_g_10min": 3
+      },
+      "density_g_cm3": 0.9,
+      "flexuralModulus_MPa": 1200,
+      "tensileYield_MPa": 25,
+      "notchedIzod_J_m": {
+        "at23C": 450,
+        "atMinus20C": 60
+      },
+      "vicat_C": 147,
+      "HDT0_46MPa_C": 96,
+      "valueStatus": "typical",
+      "status": "candidate-complete"
+    },
+    {
+      "manufacturer": "LyondellBasell",
+      "region": "Australia/New Zealand availability",
+      "polymer": "PP random copolymer",
+      "grade": "Moplen RP348NK",
+      "process": "injection moulding",
+      "MFR": {
+        "condition": "230 C / 2.16 kg",
+        "value_g_10min": 11
+      },
+      "density_g_cm3": 0.9,
+      "flexuralModulus_MPa": 1070,
+      "tensileYield_MPa": 29,
+      "notchedIzod23C_J_m": 70,
+      "HDT_C": 86,
+      "features": [
+        "nucleated",
+        "clarity",
+        "low processing temperature"
+      ],
+      "valueStatus": "typical",
+      "status": "candidate-complete"
+    },
+    {
+      "manufacturer": "LyondellBasell",
+      "region": "Australia/New Zealand availability",
+      "polymer": "PP impact copolymer",
+      "grade": "Moplen EP641P",
+      "process": "injection moulding",
+      "MFR": {
+        "condition": "230 C / 2.16 kg",
+        "value_g_10min": 20
+      },
+      "density_g_cm3": 0.9,
+      "features": [
+        "stiffness/toughness balance"
+      ],
+      "status": "candidate-complete"
+    },
+    {
+      "manufacturer": "LyondellBasell Australia",
+      "manufacturerCountry": "Australia",
+      "region": "Australia/New Zealand availability",
+      "polymer": "PP homopolymer",
+      "grade": "Moplen HE649T",
+      "productionSite": "Geelong, Australia",
+      "process": "thin-wall injection moulding",
+      "MFR": {
+        "test": "ISO 1133",
+        "value_g_10min": 50
+      },
+      "flexuralModulus_MPa": 1700,
+      "HDT0_45MPa_C": 90,
+      "tensileYield_MPa": 35,
+      "notchedIzod23C_kJ_m2": 2.4,
+      "valueStatus": "typical, not specification",
+      "status": "candidate-complete"
+    },
+    {
+      "manufacturer": "Martogg",
+      "manufacturerCountry": "Australia",
+      "region": "Australia",
+      "recordType": "local-compounding-capability",
+      "families": [
+        "PROP-EX modified PP",
+        "polyethylene resins and compounds",
+        "SUPRENE modified polystyrene",
+        "ABS/ASA/PET and engineering compounds"
+      ],
+      "capabilities": [
+        "mineral-filled PP",
+        "glass-reinforced PP",
+        "high-impact PP",
+        "UV-stabilised PP",
+        "flame-retardant PP",
+        "PIR/PCR PP injection compounds",
+        "styrene/ABS injection compounds"
+      ],
+      "boundary": "manufacturer/formulator capability; exact compound property records require individual current TDS",
+      "status": "discovery-only"
+    },
+    {
+      "organization": "LEP Engineering Plastics",
+      "country": "New Zealand",
+      "recordType": "regional-processing-capability-depth",
+      "process": "injection moulding",
+      "partMassRange": "few grams to 4 kg",
+      "materials": [
+        "nylon",
+        "acetal",
+        "UHMWPE",
+        "polypropylene"
+      ],
+      "capabilities": [
+        "engineering/high-performance plastics",
+        "insert moulding",
+        "over-moulding"
+      ],
+      "originClaim": "none",
+      "status": "candidate-complete"
+    },
+    {
+      "organization": "Plastech Industries",
+      "country": "New Zealand",
+      "recordType": "regional-processing-capability-depth",
+      "process": "injection moulding",
+      "partMassRange": "1 g to 2 kg",
+      "materials": [
+        "Nylon 6",
+        "Nylon 66",
+        "ABS",
+        "PE",
+        "acetal",
+        "PP",
+        "GF nylon",
+        "GF acetal",
+        "Noryl",
+        "V0-rated materials",
+        "PC",
+        "acrylic",
+        "polyurethane",
+        "Lubricomp",
+        "TPE"
+      ],
+      "capabilities": [
+        "foam injection moulding",
+        "contract moulding"
+      ],
+      "originClaim": "none",
+      "status": "candidate-complete"
     }
   ]
 }
