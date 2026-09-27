@@ -357,6 +357,90 @@
       ],
       "source": "https://www.scgchemicals.com/en/products-grade/p945j",
       "status": "candidate-partial"
+    },
+    {
+      "manufacturer": "Asahi Kasei",
+      "country": "Japan",
+      "polymer": "POM homopolymer",
+      "grade": "TENAC 4010",
+      "reinforcement": "none",
+      "properties": {
+        "meltFlow_g_10min": 10.5,
+        "tensileStrength_MPa": 70,
+        "flexuralModulus_MPa": 2650,
+        "izodNotched_kJ_m2": 6.7,
+        "HDT_C_1_8MPa": 124
+      },
+      "conditioning": "manufacturer typical property table; verify exact method/revision at promotion",
+      "methods": [
+        "ISO 1133",
+        "ISO 527",
+        "ISO 178",
+        "ISO 179",
+        "ISO 75"
+      ],
+      "source": "https://www.asahi-kasei-plastics.com/en/products/tenac/grade/",
+      "status": "candidate-partial"
+    },
+    {
+      "manufacturer": "Asahi Kasei",
+      "country": "Japan",
+      "polymer": "POM homopolymer",
+      "grade": "TENAC 5010",
+      "reinforcement": "none",
+      "properties": {
+        "meltFlow_g_10min": 18,
+        "tensileStrength_MPa": 69,
+        "flexuralModulus_MPa": 2600
+      },
+      "conditioning": "manufacturer grade table; normal-viscosity homopolymer class",
+      "methods": [
+        "ISO 1133",
+        "ISO 527",
+        "ISO 178"
+      ],
+      "source": "https://www.asahi-kasei-plastics.com/en/products/tenac/grade/",
+      "status": "candidate-partial"
+    },
+    {
+      "manufacturer": "Asahi Kasei",
+      "country": "Japan",
+      "polymer": "POM copolymer",
+      "grade": "TENAC-C 4520",
+      "reinforcement": "none",
+      "properties": {
+        "meltFlow_g_10min": 9,
+        "tensileStrength_MPa": 61,
+        "flexuralModulus_MPa": 2450
+      },
+      "conditioning": "manufacturer grade table; standard copolymer class",
+      "methods": [
+        "ISO 1133",
+        "ISO 527",
+        "ISO 178"
+      ],
+      "source": "https://www.asahi-kasei-plastics.com/en/products/tenac/grade/",
+      "status": "candidate-partial"
+    },
+    {
+      "manufacturer": "Asahi Kasei",
+      "country": "Japan",
+      "polymer": "POM copolymer",
+      "grade": "TENAC-C 7520",
+      "reinforcement": "none",
+      "properties": {
+        "meltFlow_g_10min": 30,
+        "tensileStrength_MPa": 60,
+        "flexuralModulus_MPa": 2400
+      },
+      "conditioning": "manufacturer grade table; high-flow copolymer class",
+      "methods": [
+        "ISO 1133",
+        "ISO 527",
+        "ISO 178"
+      ],
+      "source": "https://www.asahi-kasei-plastics.com/en/products/tenac/grade/",
+      "status": "candidate-partial"
     }
   ],
   "discoveryNotes": {
@@ -376,5 +460,21 @@
       "PC/ABS/ASA/AES/PMMA"
     ],
     "countingBoundary": "catalogue grade existence is discovery evidence only; it is not a completed profile"
+  },
+  "promotionRules": {
+    "requiredBeforeAccepted": [
+      "grade identity",
+      "polymer family",
+      "reinforcement/filler",
+      "rheology or flow evidence where applicable",
+      "moisture/drying boundary",
+      "thermal behaviour",
+      "shrinkage/dimensional behaviour",
+      "degradation/compatibility caution",
+      "processing provenance",
+      "primary source"
+    ],
+    "noUniversalSettings": true,
+    "noInterpolationAcrossGrades": true
   }
 }
