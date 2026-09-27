@@ -41,9 +41,9 @@ for(const viewport of [{name:'mobile',width:412},{name:'tablet',width:768},{name
 
   test('Book and assessment surfaces survive zoom and preserve focus recovery',async({page})=>{
    await openApp(page,viewport.width);await page.evaluate(()=>{document.documentElement.style.fontSize='200%'});
-   if(viewport.width<=900){await mobileMore(page);const trigger=page.locator('.mobile-nav > button').filter({hasText:'More'});await closeModal(page);await expect(trigger).toBeFocused().catch(()=>{});await mobileMore(page);const book=page.locator('[data-mm-registry-menu="book"]');await expect(book).toBeVisible();await book.click()}
+   if(viewport.width<=900){await mobileMore(page);const trigger=page.locator('.mobile-nav > button').filter({hasText:'More'});await closeModal(page);await expect(trigger).toBeFocused();await mobileMore(page);const book=page.locator('[data-mm-registry-menu="book"]');await expect(book).toBeVisible();await book.click()}
    else {const book=page.locator('#nav button').filter({hasText:/^\s*Book\s*$/}).first();await expect(book).toBeVisible();await book.click()}
-   await expectVisible(page,'#mmBookView');await expect(page.locator('body')).not.toHaveCSS('overflow-x','scroll');
+   await expectVisible(page,'#mmBookView');const horizontalOverflow=await page.evaluate(()=>document.documentElement.scrollWidth>document.documentElement.clientWidth+1);expect(horizontalOverflow).toBeFalsy();
    if(viewport.width<=900){await mobileHub(page,'Practice');await page.locator('#scenarios [data-mm-hub-action="assessments"]').click()}else{const practice=page.locator('#nav button[data-view="scenarios"]');await practice.click();const assessments=page.locator('#scenarios [data-mm-hub-action="assessments"]');if(await assessments.isVisible().catch(()=>false))await assessments.click()}
    await expectVisible(page,'#exams');
   });
