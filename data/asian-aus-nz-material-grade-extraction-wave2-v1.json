@@ -1,5 +1,5 @@
 {
-  "version": "2026-09-28.5",
+  "version": "2026-09-28.6",
   "scope": "Asia-Australia-New Zealand primary-source material evidence wave 2",
   "policy": {
     "noUniversalSettings": true,
@@ -1240,6 +1240,173 @@
       ],
       "originClaim": "none",
       "status": "candidate-complete"
+    },
+    {
+      "manufacturer": "LOTTE Chemical",
+      "manufacturerCountry": "South Korea",
+      "region": "Asia",
+      "polymer": "PBT/GF",
+      "grade": "GP-5400G",
+      "process": "injection moulding",
+      "specificGravity": 1.61,
+      "MFI": {
+        "test": "ISO 1133",
+        "condition": "250 C / 2.16 kg",
+        "value_g_10min": 10
+      },
+      "tensileYield_MPa": 160,
+      "tensileModulus_MPa": 9000,
+      "flexural_MPa": 220,
+      "flexuralModulus_MPa": 10000,
+      "notchedIzod23C_kJ_m2": 12,
+      "notchedCharpy23C_kJ_m2": 11,
+      "processingBoundary": {
+        "mould_C": "80-120",
+        "hotRunner_C": 250,
+        "nozzle_C": 250,
+        "barrel_C": {
+          "front": "240-250",
+          "mid": "225-230"
+        },
+        "injectionPressure_kgf_cm2": 900,
+        "drying": {
+          "dehumidifier": {
+            "temperature_C": 100,
+            "time_h": "2-4"
+          },
+          "normalHopper": {
+            "temperature_C": 100,
+            "time_h": "4-6"
+          },
+          "targetMoistureAfterDrying_percent": 0.1
+        },
+        "screw_rpm": "40-80",
+        "backPressure_kgf_cm2": "10-30"
+      },
+      "boundary": "representative manufacturer processing guide for this grade; not universal PBT settings",
+      "status": "candidate-complete"
+    },
+    {
+      "manufacturer": "LG Chem",
+      "manufacturerCountry": "South Korea",
+      "region": "Asia",
+      "polymer": "PBT",
+      "brand": "LUPOX/LUMAX",
+      "recordType": "manufacturer-family-capability",
+      "features": [
+        "glass-fibre/inorganic/additive modified",
+        "fast crystallization",
+        "heat resistance",
+        "electrical properties",
+        "moldability"
+      ],
+      "applications": [
+        "connector housing",
+        "automotive door handle",
+        "headlamp bezel",
+        "switch"
+      ],
+      "boundary": "family-level capability only; exact grade numeric values require current grade TDS",
+      "status": "discovery-only"
+    },
+    {
+      "manufacturer": "LG Chem",
+      "manufacturerCountry": "South Korea",
+      "region": "Asia",
+      "polymer": "PC and PC alloys",
+      "brand": "LUPOY",
+      "recordType": "manufacturer-family-capability",
+      "features": [
+        "mechanical properties",
+        "thermal properties",
+        "transparency",
+        "impact resistance",
+        "filler reinforcement",
+        "PC/ABS and related styrenic alloying"
+      ],
+      "applications": [
+        "automotive",
+        "smartphone",
+        "TV housing",
+        "laptop housing"
+      ],
+      "boundary": "family-level evidence only; do not infer grade properties",
+      "status": "discovery-only"
+    },
+    {
+      "manufacturer": "CHIMEI",
+      "manufacturerCountry": "Taiwan",
+      "region": "Asia",
+      "polymer": "ABS",
+      "brand": "POLYLAC",
+      "recordType": "exact-grade-discovery",
+      "grades": [
+        {
+          "grade": "PA-737",
+          "feature": "high flow",
+          "application": "large/thin-wall mouldings"
+        },
+        {
+          "grade": "PA-757H",
+          "feature": "high flow/medium strength",
+          "application": "appliances/motorcycle/large or thin-wall"
+        },
+        {
+          "grade": "PA-746",
+          "feature": "high flow/high impact",
+          "application": "thin-wall high-impact parts"
+        },
+        {
+          "grade": "PA-746H",
+          "feature": "high flow/high impact",
+          "application": "thin-wall high-impact parts"
+        },
+        {
+          "grade": "PA-757 A01",
+          "feature": "high rigidity/medium impact, white/pre-coloured"
+        },
+        {
+          "grade": "PA-757 J01",
+          "feature": "high rigidity/medium impact, black/pre-coloured"
+        },
+        {
+          "grade": "PA-757G J08",
+          "feature": "high-gloss black"
+        },
+        {
+          "grade": "PA-747S A01",
+          "feature": "extrusion/high-impact injection"
+        }
+      ],
+      "sourceBoundary": "manufacturer exposes separate ISO/ASTM TDS and process guide for each; numeric extraction still required",
+      "status": "discovery-only"
+    },
+    {
+      "manufacturer": "CHIMEI",
+      "manufacturerCountry": "Taiwan",
+      "region": "Asia",
+      "polymer": "PMMA",
+      "brand": "ACRYREX",
+      "recordType": "exact-grade-discovery",
+      "grades": [
+        {
+          "grade": "CM-205",
+          "feature": "heat resistant/high strength",
+          "process": "extrusion"
+        },
+        {
+          "grade": "CM-207",
+          "feature": "medium strength/flowability",
+          "application": "daily necessities/appliances"
+        },
+        {
+          "grade": "CM-211",
+          "feature": "high flow/processability",
+          "application": "daily necessities/appliances"
+        }
+      ],
+      "boundary": "retain process classification; do not misclassify CM-205 extrusion as injection grade",
+      "status": "discovery-only"
     }
   ]
 }
