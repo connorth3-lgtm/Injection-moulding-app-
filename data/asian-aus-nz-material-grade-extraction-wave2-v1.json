@@ -1,5 +1,5 @@
 {
-  "version": "2026-09-28.12",
+  "version": "2026-09-28.13",
   "scope": "Asia including Singapore, Australia and New Zealand primary-source material evidence wave 2",
   "policy": {
     "noUniversalSettings": true,
@@ -2502,6 +2502,195 @@
       ],
       "boundary": "non-injection grades intentionally retained as negative classification controls; do not promote them into injection material profiles",
       "status": "candidate-complete"
+    },
+    {
+      "manufacturer": "ExxonMobil Chemical",
+      "productionCountry": "Singapore",
+      "region": "Asia/Singapore",
+      "polymer": "PP",
+      "recordType": "production-to-grade-governance",
+      "gradeFamily": "ExxonMobil/Achieve/Exceed polypropylene",
+      "productionEvidence": "Singapore integrated chemical manufacturing includes polypropylene",
+      "boundary": "site-level PP production does not prove every regional grade is made at Singapore; exact grade origin remains separate unless manufacturer source ties grade to site",
+      "status": "candidate-complete"
+    },
+    {
+      "manufacturer": "ExxonMobil Chemical",
+      "region": "Asia Pacific/Singapore context",
+      "polymer": "PP impact copolymer",
+      "grade": "Exceed PP7123KNE1",
+      "process": "injection moulding",
+      "MFR": {
+        "test": "ASTM D1238",
+        "condition": "230 C / 2.16 kg",
+        "value_g_10min": 11
+      },
+      "density_g_cm3": 0.9,
+      "flexuralModulus_MPa": 1680,
+      "tensileYield_MPa": {
+        "ASTM_D638": 32.7,
+        "ISO527": 30.8
+      },
+      "notchedIzod23C_J_m": 70,
+      "HDT0_45MPa_C": 100,
+      "valueStatus": "typical manufacturer data",
+      "originBoundary": "Asia-Pacific availability; do not assign Singapore grade origin solely from regional manufacturing capability",
+      "status": "candidate-complete"
+    },
+    {
+      "manufacturer": "IndianOil",
+      "manufacturerCountry": "India",
+      "region": "Asia",
+      "polymer": "PP",
+      "recordType": "injection-process-selection-boundary",
+      "grades": [
+        {
+          "grade": "P1110MAS",
+          "process": "injection moulding",
+          "feature": "high flow/stiffness/gloss/antistatic"
+        },
+        {
+          "grade": "P1030RG",
+          "process": "raffia",
+          "feature": "raffia/tape"
+        },
+        {
+          "grade": "P1040FS",
+          "process": "film",
+          "feature": "film"
+        },
+        {
+          "grade": "P1020MG",
+          "process": "general purpose",
+          "feature": "general purpose"
+        }
+      ],
+      "boundary": "process classification control prevents non-injection PP grades being promoted into moulding recommendations",
+      "status": "candidate-complete"
+    },
+    {
+      "manufacturer": "LOTTE Chemical",
+      "manufacturerCountry": "South Korea",
+      "region": "Asia",
+      "polymer": "PBT",
+      "grade": "LW-5300M",
+      "feature": "low warpage",
+      "specificGravity": 1.52,
+      "mouldShrinkage_percent": "0.7-0.9",
+      "tensile_kg_cm2": 590,
+      "flexural_kg_cm2": 990,
+      "flexuralModulus_kg_cm2": 54000,
+      "HDT_C": {
+        "lowLoad": 165,
+        "highLoad": 115
+      },
+      "boundary": "retain original manufacturer units and load condition; do not compare HDT without load/method normalization",
+      "status": "candidate-complete"
+    },
+    {
+      "manufacturer": "LOTTE Chemical",
+      "manufacturerCountry": "South Korea",
+      "region": "Asia",
+      "polymer": "PBT",
+      "grade": "GP-2306FC",
+      "reinforcement": "reinforced/flame retardant",
+      "specificGravity": 1.62,
+      "mouldShrinkage_percent": "0.3-1.0",
+      "tensile_kg_cm2": 1300,
+      "flexural_kg_cm2": 1900,
+      "flexuralModulus_kg_cm2": 85000,
+      "HDT_C": {
+        "highLoad": 205
+      },
+      "flammability": "UL94 V-0 at 0.71 mm",
+      "boundary": "ASTM/typical manufacturer data; preserve test basis",
+      "status": "candidate-complete"
+    },
+    {
+      "manufacturer": "Toyobo",
+      "manufacturerCountry": "Japan",
+      "region": "Asia",
+      "polymer": "PA6/PA66/high-melting nylon",
+      "brand": "GLAMIDE",
+      "recordType": "exact-grade-family",
+      "grades": [
+        {
+          "grade": "T-802",
+          "family": "PA6"
+        },
+        {
+          "grade": "T662",
+          "family": "PA66"
+        },
+        {
+          "grade": "TY-502NZ",
+          "family": "high-melting nylon"
+        }
+      ],
+      "boundary": "exact identities retained; numeric properties require grade-specific primary TDS",
+      "status": "discovery-only"
+    },
+    {
+      "manufacturer": "Kuraray",
+      "manufacturerCountry": "Japan",
+      "region": "Asia",
+      "polymer": "TPE",
+      "brand": "SEPTON",
+      "recordType": "exact-grade-family",
+      "grades": [
+        {
+          "grade": "2002",
+          "family": "SEPS"
+        },
+        {
+          "grade": "2063",
+          "family": "SEPS"
+        },
+        {
+          "grade": "4033",
+          "family": "SEEPS"
+        }
+      ],
+      "boundary": "base block-copolymer grades are not finished injection compounds; compound formulation determines final moulding properties",
+      "status": "discovery-only"
+    },
+    {
+      "manufacturer": "Prime Polymer",
+      "manufacturerCountry": "Japan",
+      "region": "Asia",
+      "polymer": "PP",
+      "recordType": "manufacturer-family-capability",
+      "families": [
+        "Prime Polypro polypropylene grades for injection and other processes"
+      ],
+      "boundary": "family capability only pending exact current grade TDS; no property inference",
+      "status": "discovery-only"
+    },
+    {
+      "manufacturer": "Chandra Asri",
+      "manufacturerCountry": "Indonesia",
+      "region": "Asia",
+      "polymer": "PP",
+      "recordType": "Indonesia-manufacturing-capability",
+      "families": [
+        "polypropylene resins for moulding/consumer/industrial applications"
+      ],
+      "boundary": "Indonesia production evidence; exact grade/property extraction required before accepted profile",
+      "status": "discovery-only"
+    },
+    {
+      "manufacturer": "IRPC",
+      "manufacturerCountry": "Thailand",
+      "region": "Asia",
+      "polymer": "PP",
+      "recordType": "Thailand-manufacturing-capability",
+      "families": [
+        "PP homopolymer",
+        "PP random copolymer",
+        "PP impact copolymer"
+      ],
+      "boundary": "manufacturer/family scope only; exact grade TDS required",
+      "status": "discovery-only"
     }
   ]
 }
