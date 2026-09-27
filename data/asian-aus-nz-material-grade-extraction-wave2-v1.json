@@ -1,5 +1,5 @@
 {
-  "version": "2026-09-28.21",
+  "version": "2026-09-28.22",
   "scope": "Asia including Singapore, Australia and New Zealand primary-source material evidence wave 2",
   "policy": {
     "noUniversalSettings": true,
@@ -4015,6 +4015,154 @@
         "value_g_10min": 27
       },
       "lightTransmittance3mm_percent": 87,
+      "status": "candidate-complete"
+    },
+    {
+      "manufacturer": "LyondellBasell",
+      "region": "Australia/New Zealand availability",
+      "polymer": "PP homopolymer",
+      "grade": "PLASVE HP400L",
+      "process": "injection moulding",
+      "MFR": {
+        "condition": "230 C / 2.16 kg",
+        "value_g_10min": 6
+      },
+      "density_g_cm3": 0.9,
+      "flexuralModulus_MPa": 1500,
+      "tensileYield_MPa": 32,
+      "notchedIzod23C_kJ_m2": 3.5,
+      "vicat_C": 154,
+      "HDT0_45MPa_C": 82,
+      "valueStatus": "typical",
+      "originBoundary": "regional availability is not manufacturing origin",
+      "status": "candidate-complete"
+    },
+    {
+      "manufacturer": "LyondellBasell",
+      "region": "Australia/New Zealand availability",
+      "polymer": "PP homopolymer",
+      "grade": "PLASVE HP741T",
+      "process": "thin-wall injection moulding",
+      "MFR": {
+        "condition": "230 C / 2.16 kg",
+        "value_g_10min": 60
+      },
+      "density_g_cm3": 0.9,
+      "flexuralModulus_MPa": 1750,
+      "tensileYield_MPa": 36,
+      "notchedIzod23C_kJ_m2": 2.4,
+      "vicat_C": 150,
+      "HDT0_45MPa_C": 100,
+      "valueStatus": "typical",
+      "originBoundary": "regional availability is not manufacturing origin",
+      "status": "candidate-complete"
+    },
+    {
+      "manufacturer": "LyondellBasell",
+      "region": "Australia/New Zealand availability",
+      "polymer": "PP impact copolymer",
+      "grade": "Moplen EP332K",
+      "process": "injection moulding",
+      "MFR": {
+        "condition": "230 C / 2.16 kg",
+        "value_g_10min": 5
+      },
+      "density_g_cm3": 0.9,
+      "flexuralModulus_MPa": 1150,
+      "tensileModulus_MPa": 1100,
+      "tensileYield_MPa": 25,
+      "notchedCharpy_kJ_m2": {
+        "at23C": 13,
+        "at0C": 6.4,
+        "atMinus20C": 4.7
+      },
+      "HDT0_46MPa_C": 88,
+      "status": "candidate-complete"
+    },
+    {
+      "manufacturer": "LyondellBasell",
+      "region": "Australia/New Zealand availability",
+      "polymer": "PP random copolymer",
+      "grade": "Moplen RP348NK",
+      "process": "injection moulding",
+      "MFR": {
+        "condition": "230 C / 2.16 kg",
+        "value_g_10min": 11
+      },
+      "density_g_cm3": 0.9,
+      "flexuralModulus_MPa": 1070,
+      "tensileYield_MPa": 29,
+      "notchedIzod23C_J_m": 70,
+      "HDT_C": 86,
+      "features": [
+        "nucleated",
+        "clarity",
+        "low processing temperature"
+      ],
+      "status": "candidate-complete"
+    },
+    {
+      "manufacturer": "LyondellBasell Australia",
+      "manufacturerCountry": "Australia",
+      "region": "Australia/New Zealand availability",
+      "polymer": "PP homopolymer",
+      "grade": "Moplen HE649T",
+      "productionSite": "Geelong, Australia",
+      "process": "thin-wall injection moulding",
+      "MFR": {
+        "test": "ISO 1133",
+        "value_g_10min": 50
+      },
+      "flexuralModulus_MPa": 1700,
+      "HDT0_45MPa_C": 90,
+      "tensileYield_MPa": 35,
+      "notchedIzod23C_kJ_m2": 2.4,
+      "valueStatus": "typical; not specification",
+      "status": "candidate-complete"
+    },
+    {
+      "manufacturer": "Qenos",
+      "manufacturerCountry": "Australia",
+      "region": "Australia",
+      "polymer": "LDPE",
+      "grade": "LDN248",
+      "process": "injection moulding",
+      "MI": {
+        "test": "ASTM D1238",
+        "condition": "190 C / 2.16 kg",
+        "value_g_10min": 8.5
+      },
+      "density_g_cm3": 0.922,
+      "status": "candidate-complete"
+    },
+    {
+      "manufacturer": "Qenos",
+      "manufacturerCountry": "Australia",
+      "region": "Australia",
+      "polymer": "LDPE",
+      "grade": "WRM124",
+      "process": "injection moulding",
+      "MI": {
+        "test": "ASTM D1238",
+        "condition": "190 C / 2.16 kg",
+        "value_g_10min": 22
+      },
+      "density_g_cm3": 0.92,
+      "status": "candidate-complete"
+    },
+    {
+      "manufacturer": "Qenos",
+      "manufacturerCountry": "Australia",
+      "region": "Australia",
+      "polymer": "LDPE",
+      "grade": "WSM168",
+      "process": "injection moulding",
+      "MI": {
+        "test": "ASTM D1238",
+        "condition": "190 C / 2.16 kg",
+        "value_g_10min": 63
+      },
+      "density_g_cm3": 0.919,
       "status": "candidate-complete"
     }
   ]
