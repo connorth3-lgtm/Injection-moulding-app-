@@ -4,9 +4,9 @@ test.use({serviceWorkers:'block'});
 const widths=[320,360,375,390,412,600,650,700,768,810,1024,1280,1440];
 function rng(seed){let x=seed|0;return()=>{x=(x*1664525+1013904223)|0;return(x>>>0)/4294967296}}
 async function invariant(page,seed,step){
- const s=await page.evaluate(()=>({failure:!!document.getElementById('mmStartupFailure'),unresolved:window.MM_ACCESSIBILITY_HARDENING?.unresolvedSemanticCount?.()??-1,overflow:document.documentElement.scrollWidth-document.documentElement.clientWidth,views:[...document.querySelectorAll('main > section.view.active')].length}));
+ const s=await page.evaluate(()=>({failure:!!document.getElementById('mmStartupFailure'),unresolved:window.MM_ACCESSIBILITY_HARDENING?.unresolvedSemanticCount?.()??-1,semanticIssues:window.MM_ACCESSIBILITY_HARDENING?.semanticIssues?.()??[],overflow:document.documentElement.scrollWidth-document.documentElement.clientWidth,views:[...document.querySelectorAll('main > section.view.active')].length}));
  expect(s.failure,'seed '+seed+' step '+step+' startup failure').toBeFalsy();
- expect(s.unresolved,'seed '+seed+' step '+step+' unresolved semantics').toBe(0);
+ expect(s.unresolved,'seed '+seed+' step '+step+' unresolved semantics: '+JSON.stringify(s.semanticIssues)).toBe(0);
  expect(s.overflow,'seed '+seed+' step '+step+' horizontal overflow').toBeLessThanOrEqual(1);
  expect(s.views,'seed '+seed+' step '+step+' active views').toBeLessThanOrEqual(1);
 }
