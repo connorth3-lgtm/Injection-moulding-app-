@@ -1,5 +1,5 @@
 {
-  "version": "2026-09-28.25",
+  "version": "2026-09-28.26",
   "scope": "Asia including Singapore, Australia and New Zealand primary-source material evidence wave 2",
   "policy": {
     "noUniversalSettings": true,
@@ -4695,6 +4695,156 @@
         "flow": 0.3,
         "transverse": 0.9
       },
+      "status": "candidate-complete"
+    },
+    {
+      "manufacturer": "SCGC",
+      "manufacturerCountry": "Thailand",
+      "region": "Asia",
+      "polymer": "PP homopolymer",
+      "grade": "P901J",
+      "process": "injection moulding",
+      "MFR": {
+        "condition": "230 C / 2.16 kg",
+        "currentLiveValue_g_10min": 70,
+        "dated2022PdfValue_g_10min": 60
+      },
+      "density_g_cm3": 0.91,
+      "tensileYield_kg_cm2": 360,
+      "flexuralModulus_kg_cm2": 16500,
+      "notchedIzod23C_J_m": 38,
+      "HDT_C": 125,
+      "shrinkage2mm_percent": {
+        "MD": 1,
+        "TD": 1.25
+      },
+      "sourceConflict": "manufacturer live page vs March-2022 manufacturer PDF",
+      "resolution": "do not average; retain revision conflict",
+      "status": "conditional"
+    },
+    {
+      "manufacturer": "SCGC",
+      "manufacturerCountry": "Thailand",
+      "region": "Asia",
+      "polymer": "PP homopolymer",
+      "grade": "P700J",
+      "process": "injection moulding",
+      "MFR": {
+        "condition": "230 C / 2.16 kg",
+        "value_g_10min": 12
+      },
+      "density_g_cm3": 0.91,
+      "tensileYield_kg_cm2": 320,
+      "flexuralModulus_kg_cm2": 14500,
+      "notchedIzod_J_m": {
+        "at23C": 37,
+        "at0C": 20
+      },
+      "HDT_C": 120,
+      "shrinkage2mm_percent": {
+        "MD": 1.25,
+        "TD": 1.35
+      },
+      "status": "candidate-complete"
+    },
+    {
+      "manufacturer": "SCGC",
+      "manufacturerCountry": "Thailand",
+      "region": "Asia",
+      "polymer": "PP impact copolymer",
+      "grade": "P740J",
+      "process": "injection moulding",
+      "MFR": {
+        "condition": "230 C / 2.16 kg",
+        "value_g_10min": 27
+      },
+      "density_g_cm3": 0.91,
+      "tensileYield_kg_cm2": 290,
+      "flexuralModulus_kg_cm2": 12500,
+      "notchedIzod23C_J_m": 78,
+      "status": "candidate-complete"
+    },
+    {
+      "manufacturer": "SCGC",
+      "manufacturerCountry": "Thailand",
+      "region": "Asia",
+      "polymer": "PP impact copolymer",
+      "grade": "P744J",
+      "process": "injection moulding",
+      "MFR": {
+        "condition": "230 C / 2.16 kg",
+        "value_g_10min": 30
+      },
+      "density_g_cm3": 0.91,
+      "tensileYield_kg_cm2": 290,
+      "flexuralModulus_kg_cm2": 14500,
+      "notchedIzod23C_J_m": 78,
+      "status": "candidate-complete"
+    },
+    {
+      "manufacturer": "SCGC",
+      "manufacturerCountry": "Thailand",
+      "region": "Asia",
+      "polymer": "PP impact copolymer",
+      "grade": "P842J",
+      "process": "injection moulding",
+      "MFR": {
+        "condition": "230 C / 2.16 kg",
+        "value_g_10min": 40
+      },
+      "density_g_cm3": 0.91,
+      "tensileYield_kg_cm2": 295,
+      "flexuralModulus_kg_cm2": 14500,
+      "notchedIzod23C_J_m": 74,
+      "status": "candidate-complete"
+    },
+    {
+      "manufacturer": "PETRONAS Chemicals",
+      "manufacturerCountry": "Malaysia",
+      "region": "Asia",
+      "polymer": "PP homopolymer",
+      "grade": "PROPELINAS H500NG",
+      "process": "injection moulding",
+      "MFR_g_10min": 12,
+      "applications": [
+        "furniture",
+        "housewares",
+        "containers",
+        "toys"
+      ],
+      "status": "candidate-complete"
+    },
+    {
+      "manufacturer": "PETRONAS Chemicals",
+      "manufacturerCountry": "Malaysia",
+      "region": "Asia",
+      "polymer": "PP homopolymer",
+      "grade": "PROPELINAS H648TT",
+      "process": "transparent thin-wall injection moulding",
+      "MFR_g_10min": 53,
+      "status": "candidate-complete"
+    },
+    {
+      "manufacturer": "LOTTE Chemical Titan",
+      "manufacturerCountry": "Malaysia",
+      "region": "Asia",
+      "polymer": "PP impact copolymer",
+      "grade": "SH611",
+      "process": "injection moulding",
+      "MFR": {
+        "test": "ASTM D1238",
+        "condition": "230 C",
+        "value_g_10min": 18
+      },
+      "density_g_cm3": 0.9,
+      "tensileYield_kg_cm2": 190,
+      "flexuralModulus_kg_cm2": 9000,
+      "applications": [
+        "industrial pails",
+        "pallets",
+        "household electrical appliances"
+      ],
+      "restriction": "not designed/intended for food, personal care, medical or pharmaceutical uses",
       "status": "candidate-complete"
     }
   ]
