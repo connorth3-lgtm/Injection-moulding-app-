@@ -441,6 +441,126 @@
       ],
       "source": "https://www.asahi-kasei-plastics.com/en/products/tenac/grade/",
       "status": "candidate-partial"
+    },
+    {
+      "manufacturer": "LG Chem",
+      "country": "South Korea",
+      "polymer": "PA6 compound",
+      "grade": "GP 1100AW",
+      "reinforcement": "unreinforced",
+      "properties": {
+        "specificGravity": 1.13,
+        "moldShrinkage_pct": "1.0-1.4",
+        "tensileStrength_kg_cm2": 810,
+        "flexuralStrength_kg_cm2": 1100,
+        "flexuralModulus_kg_cm2": 27000
+      },
+      "conditioning": "manufacturer engineering-plastics guide; values explicitly described as referential/typical, not guaranteed",
+      "methods": [
+        "ASTM D792",
+        "ASTM D955",
+        "ASTM D638",
+        "ASTM D790"
+      ],
+      "source": "https://www.lgchem.com/upload/file/chinaplas2018/Division_Info/EP_vf.pdf",
+      "status": "candidate-partial"
+    },
+    {
+      "manufacturer": "LG Chem",
+      "country": "South Korea",
+      "polymer": "PA6 compound",
+      "grade": "GP 2300AW",
+      "reinforcement": "GF reinforced",
+      "properties": {
+        "specificGravity": 1.35,
+        "moldShrinkage_pct": "0.4-0.9",
+        "tensileStrength_kg_cm2": 1800,
+        "flexuralStrength_kg_cm2": 2600,
+        "flexuralModulus_kg_cm2": 85000
+      },
+      "conditioning": "manufacturer engineering-plastics guide; general-purpose PA6 GF grade; referential/typical values",
+      "methods": [
+        "ASTM D792",
+        "ASTM D955",
+        "ASTM D638",
+        "ASTM D790"
+      ],
+      "source": "https://www.lgchem.com/upload/file/chinaplas2018/Division_Info/EP_vf.pdf",
+      "status": "candidate-partial"
+    },
+    {
+      "manufacturer": "LG Chem",
+      "country": "South Korea",
+      "polymer": "PA6 compound",
+      "grade": "HM 2604AW",
+      "reinforcement": "GF reinforced",
+      "properties": {
+        "specificGravity": 1.69,
+        "moldShrinkage_pct": "0.2-0.5",
+        "tensileStrength_kg_cm2": 2100,
+        "flexuralStrength_kg_cm2": 3000,
+        "flexuralModulus_kg_cm2": 160000
+      },
+      "conditioning": "manufacturer engineering-plastics guide; high-stiffness PA6 grade; referential/typical values",
+      "methods": [
+        "ASTM D792",
+        "ASTM D955",
+        "ASTM D638",
+        "ASTM D790"
+      ],
+      "source": "https://www.lgchem.com/upload/file/chinaplas2018/Division_Info/EP_vf.pdf",
+      "status": "candidate-partial"
+    },
+    {
+      "manufacturer": "Toyobo",
+      "country": "Japan",
+      "polymer": "PA6",
+      "grade": "GLAMIDE T-802",
+      "reinforcement": "representative unfilled family grade",
+      "properties": {
+        "melting_C": 220,
+        "Tg_C": 60,
+        "waterAbsorption24h_pct": 2.3,
+        "density_g_cm3": 1.14
+      },
+      "conditioning": "manufacturer comparative engineering-plastics table",
+      "methods": [],
+      "source": "https://cn.toyobo-global.com/seihin/xj/enpla/glamide/characteristics.html",
+      "status": "candidate-partial"
+    },
+    {
+      "manufacturer": "Toyobo",
+      "country": "Japan",
+      "polymer": "PA66",
+      "grade": "GLAMIDE T662",
+      "reinforcement": "representative family grade",
+      "properties": {
+        "melting_C": 260,
+        "Tg_C": 60,
+        "waterAbsorption24h_pct": 1.2,
+        "density_g_cm3": 1.14
+      },
+      "conditioning": "manufacturer comparative engineering-plastics table",
+      "methods": [],
+      "source": "https://cn.toyobo-global.com/seihin/xj/enpla/glamide/characteristics.html",
+      "status": "candidate-partial"
+    },
+    {
+      "manufacturer": "Toyobo",
+      "country": "Japan",
+      "polymer": "high-melting PA6T",
+      "grade": "TY-502NZ",
+      "reinforcement": "representative family grade",
+      "properties": {
+        "melting_C": 295,
+        "Tg_C": 120,
+        "waterAbsorption24h_pct": 0.8,
+        "density_g_cm3": 1.18
+      },
+      "conditioning": "manufacturer comparative engineering-plastics table",
+      "methods": [],
+      "source": "https://cn.toyobo-global.com/seihin/xj/enpla/glamide/characteristics.html",
+      "status": "candidate-partial"
     }
   ],
   "discoveryNotes": {
@@ -459,7 +579,10 @@
       "LCP",
       "PC/ABS/ASA/AES/PMMA"
     ],
-    "countingBoundary": "catalogue grade existence is discovery evidence only; it is not a completed profile"
+    "countingBoundary": "catalogue grade existence is discovery evidence only; it is not a completed profile",
+    "lgChemPA6Guide": "12 named PA6 grades in one primary property table, spanning unreinforced and multiple GF/FR/impact/stiffness variants",
+    "polyplasticsPOM": "DURACON technical library includes grade-specific shrinkage response versus injection pressure, mold temperature and part thickness; preserve as condition-dependent dimensional evidence",
+    "toyobo": "manufacturer comparative PA6/PA66/PA6T data adds moisture-absorption and thermal family context"
   },
   "promotionRules": {
     "requiredBeforeAccepted": [
