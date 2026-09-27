@@ -1,5 +1,5 @@
 {
-  "version": "2026-09-28.2",
+  "version": "2026-09-28.3",
   "source": "data/asian-aus-nz-material-grade-extraction-wave2-v1.json",
   "countingRule": "one manufacturer + exact grade identity equals one unique complete profile; multiple evidence rows enrich but do not increase profile count",
   "uniqueExactCompleteProfiles": 71,
@@ -118,9 +118,10 @@
       "polymer": "PBT+PET",
       "supportingRecordIndexes": [
         17,
-        148
+        148,
+        210
       ],
-      "evidenceRowCount": 2
+      "evidenceRowCount": 3
     },
     {
       "manufacturer": "Teijin",
@@ -307,9 +308,10 @@
       "polymer": "PPS",
       "supportingRecordIndexes": [
         51,
-        156
+        156,
+        211
       ],
-      "evidenceRowCount": 2
+      "evidenceRowCount": 3
     },
     {
       "manufacturer": "Asahi Kasei",
@@ -365,81 +367,90 @@
       "grade": "DURACON CP15X",
       "polymer": "POM",
       "supportingRecordIndexes": [
-        69
+        69,
+        201
       ],
-      "evidenceRowCount": 1
+      "evidenceRowCount": 2
     },
     {
       "manufacturer": "Polyplastics",
       "grade": "DURACON M25LV",
       "polymer": "POM",
       "supportingRecordIndexes": [
-        70
+        70,
+        202
       ],
-      "evidenceRowCount": 1
+      "evidenceRowCount": 2
     },
     {
       "manufacturer": "Polyplastics",
       "grade": "DURACON TF-30",
       "polymer": "POM",
       "supportingRecordIndexes": [
-        71
+        71,
+        203
       ],
-      "evidenceRowCount": 1
+      "evidenceRowCount": 2
     },
     {
       "manufacturer": "Polyplastics",
       "grade": "DURACON AW-01",
       "polymer": "POM+PE",
       "supportingRecordIndexes": [
-        72
+        72,
+        204
       ],
-      "evidenceRowCount": 1
+      "evidenceRowCount": 2
     },
     {
       "manufacturer": "Polyplastics",
       "grade": "DURACON WR-01",
       "polymer": "POM",
       "supportingRecordIndexes": [
-        73
+        73,
+        205
       ],
-      "evidenceRowCount": 1
+      "evidenceRowCount": 2
     },
     {
       "manufacturer": "Polyplastics",
       "grade": "DURACON M140-44",
       "polymer": "POM",
       "supportingRecordIndexes": [
-        74
+        74,
+        206
       ],
-      "evidenceRowCount": 1
+      "evidenceRowCount": 2
     },
     {
       "manufacturer": "Polyplastics",
       "grade": "DURACON M450-44",
       "polymer": "POM",
       "supportingRecordIndexes": [
-        75
+        75,
+        207
       ],
-      "evidenceRowCount": 1
+      "evidenceRowCount": 2
     },
     {
       "manufacturer": "Polyplastics",
       "grade": "DURACON GM-20",
       "polymer": "POM-GF20",
       "supportingRecordIndexes": [
-        76
+        76,
+        208
       ],
-      "evidenceRowCount": 1
+      "evidenceRowCount": 2
     },
     {
       "manufacturer": "Polyplastics",
       "grade": "DURACON LU-02",
       "polymer": "POM",
       "supportingRecordIndexes": [
-        77
+        77,
+        209
       ],
-      "evidenceRowCount": 1
+      "evidenceRowCount": 2
     },
     {
       "manufacturer": "Kuraray",
