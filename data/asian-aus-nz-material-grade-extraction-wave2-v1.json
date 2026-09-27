@@ -1,5 +1,5 @@
 {
-  "version": "2026-09-28.10",
+  "version": "2026-09-28.11",
   "scope": "Asia including Singapore, Australia and New Zealand primary-source material evidence wave 2",
   "policy": {
     "noUniversalSettings": true,
@@ -2182,6 +2182,186 @@
       "notchedCharpy23C_kJ_m2": 6.8,
       "HDT1_8MPa_C": 82,
       "status": "candidate-complete"
+    },
+    {
+      "manufacturer": "Kuraray",
+      "manufacturerCountry": "Japan",
+      "region": "Asia",
+      "polymer": "PA9T",
+      "grade": "G1352A",
+      "reinforcement": "GF35",
+      "feature": "high sliding",
+      "process": "injection moulding",
+      "condition": "absolutely dry",
+      "specificGravity": 1.5,
+      "waterAbsorption23C24h_percent": 0.14,
+      "tensile_MPa": 200,
+      "flexural_MPa": 290,
+      "flexuralModulus_GPa": 10.7,
+      "notchedCharpy_kJ_m2": 13,
+      "melting_C": 300,
+      "shrinkage2mm_percent": {
+        "test": "ISO 294-4",
+        "flow": 0.2,
+        "transverse": 0.8
+      },
+      "valueStatus": "manufacturer measured; not guaranteed",
+      "status": "candidate-complete"
+    },
+    {
+      "manufacturer": "Kuraray",
+      "manufacturerCountry": "Japan",
+      "region": "Asia",
+      "polymer": "PA9T",
+      "grade": "GL1350A",
+      "reinforcement": "GF35",
+      "feature": "hydrolysis resistant/laser absorbing",
+      "process": "injection moulding",
+      "condition": "absolutely dry",
+      "specificGravity": 1.4,
+      "waterAbsorption23C24h_percent": 0.19,
+      "tensile_MPa": 200,
+      "flexural_MPa": 290,
+      "flexuralModulus_GPa": 10,
+      "notchedCharpy_kJ_m2": 12,
+      "melting_C": 300,
+      "shrinkage2mm_percent": {
+        "test": "ISO 294-4",
+        "flow": 0.3,
+        "transverse": 0.9
+      },
+      "valueStatus": "manufacturer measured; not guaranteed",
+      "status": "candidate-complete"
+    },
+    {
+      "manufacturer": "Kuraray",
+      "manufacturerCountry": "Japan",
+      "region": "Asia",
+      "polymer": "PA9T",
+      "grade": "G1350A-M47WF",
+      "reinforcement": "GF35",
+      "feature": "faucet/food-contact certified; hot-water resistant",
+      "process": "injection moulding",
+      "condition": "absolutely dry",
+      "specificGravity": 1.4,
+      "waterAbsorption23C24h_percent": 0.19,
+      "tensile_MPa": 200,
+      "flexural_MPa": 285,
+      "flexuralModulus_GPa": 9.5,
+      "notchedCharpy_kJ_m2": 11.5,
+      "melting_C": 300,
+      "shrinkage2mm_percent": {
+        "test": "ISO 294-4",
+        "flow": 0.3,
+        "transverse": 0.9
+      },
+      "valueStatus": "manufacturer measured; not guaranteed",
+      "status": "candidate-complete"
+    },
+    {
+      "manufacturer": "UBE",
+      "manufacturerCountry": "Japan",
+      "productionArea": "Japan",
+      "region": "Asia",
+      "polymer": "PA12",
+      "grade": "3030B",
+      "process": [
+        "injection moulding",
+        "tube moulding"
+      ],
+      "reinforcement": "neat resin",
+      "tensile_MPa": 46,
+      "tensileStrainBreak_percent": ">150",
+      "tensileModulus_MPa": 1500,
+      "flexural_MPa": 59,
+      "flexuralModulus_MPa": 1500,
+      "notchedCharpy_kJ_m2": 17,
+      "rockwellR": 105,
+      "melting_C": "175-181",
+      "HDT_C": {
+        "at0_45MPa": 90,
+        "at1_8MPa": 48
+      },
+      "valueStatus": "typical",
+      "status": "candidate-complete"
+    },
+    {
+      "manufacturer": "Polyplastics",
+      "manufacturerCountry": "Japan",
+      "region": "Asia",
+      "polymer": "PBT",
+      "brand": "DURANEX",
+      "recordType": "catalogue-scale-governance",
+      "catalogueHitCount": 99,
+      "examples": [
+        {
+          "grade": "2000",
+          "feature": "unfilled/high flow/HB"
+        },
+        {
+          "grade": "2002",
+          "feature": "unfilled/toughness"
+        },
+        {
+          "grade": "2002K",
+          "feature": "unfilled/low wear"
+        },
+        {
+          "grade": "2002U",
+          "feature": "unfilled/weather resistance"
+        },
+        {
+          "grade": "201NF",
+          "feature": "unfilled/halogen-free/high CTI/V-0"
+        },
+        {
+          "grade": "209AW",
+          "feature": "unfilled/low wear/flame retardant/V-0"
+        }
+      ],
+      "boundary": "catalogue identities/features only; do not treat 99 hits as 99 accepted property profiles",
+      "status": "discovery-only"
+    },
+    {
+      "manufacturer": "Polyplastics",
+      "manufacturerCountry": "Japan",
+      "region": "Asia",
+      "polymer": "LCP",
+      "brand": "LAPEROS",
+      "recordType": "catalogue-scale-governance",
+      "catalogueHitCount": 21,
+      "examples": [
+        {
+          "grade": "A130",
+          "feature": "GF/high strength/high toughness/V-0"
+        },
+        {
+          "grade": "A150",
+          "feature": "high stiffness/V-0"
+        },
+        {
+          "grade": "A230",
+          "feature": "CF reinforced/V-0"
+        },
+        {
+          "grade": "A410",
+          "feature": "low warpage/high stiffness/V-0"
+        },
+        {
+          "grade": "E471i",
+          "feature": "low warpage/long connectors"
+        },
+        {
+          "grade": "E473i",
+          "feature": "high flow/fine-pitch thin connectors"
+        },
+        {
+          "grade": "S475",
+          "feature": "ultra-high flow/fine-pitch connectors"
+        }
+      ],
+      "boundary": "catalogue/application selection evidence; exact numeric properties remain grade-specific",
+      "status": "discovery-only"
     }
   ]
 }
