@@ -22,10 +22,11 @@ for marker in [
  "revision2Items:Object.keys(REVISION2).length","revision3Items:Object.keys(REVISION3).length",
  "intersectionRatio>=0.55","document.hidden","hiddenAccum","first meaningful question exposure",
  "legacyExamElapsedTotalMs","legacyExamElapsedLastMs","Slowest by question exposure",
- "mm-revision-detail","Research DOI resolver set reviewed","MM_QUESTION_REVISIONS","MM_ASSESSMENT_FINAL_HARDENING",
+ "Revision provenance remains available through MM_QUESTION_REVISIONS","Do not duplicate governance metadata inside learner-facing answer remediation","MM_QUESTION_REVISIONS","MM_ASSESSMENT_FINAL_HARDENING",
  "S.removeItem(TIMING_KEY)","__mmOriginalReset"
 ]: need(marker in js,f'final assessment hardening marker missing: {marker}')
 need('localStorage.removeItem(TIMING_KEY)' not in js,'final hardening must not bypass learner-scoped timing storage')
+need('mm-revision-detail' not in js and 'Research DOI resolver set reviewed' not in js,'learner answer review must not duplicate revision/source-governance metadata')
 p=subprocess.run(['node','--check',str(ROOT/'assessment-final-hardening.js')],capture_output=True,text=True)
 need(p.returncode==0,f'assessment-final-hardening.js syntax error: {p.stderr}')
 
