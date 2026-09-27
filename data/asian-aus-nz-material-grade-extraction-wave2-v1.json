@@ -1,5 +1,5 @@
 {
-  "version": "2026-09-28.34",
+  "version": "2026-09-28.35",
   "scope": "Asia including Singapore, Australia and New Zealand primary-source material evidence wave 2",
   "policy": {
     "noUniversalSettings": true,
@@ -5884,6 +5884,64 @@
       "grade": "LAPEROS S475",
       "recordType": "exact-grade-property-queue",
       "promotionBlock": "numeric current manufacturer property table required",
+      "status": "discovery-only"
+    },
+    {
+      "manufacturer": "Sumitomo Chemical",
+      "manufacturerCountry": "Japan",
+      "region": "Asia",
+      "polymer": "PESU-GF20",
+      "grade": "SUMIKAEXCEL ES5340",
+      "process": "ultra-high-flow injection moulding",
+      "reinforcement": "GF20",
+      "sourceUrl": "https://www.sumitomo-chem.co.jp/sep/english/products/pes/pes_fg_grade.html",
+      "evidenceClass": "manufacturer exact-grade lineup",
+      "gradeIdentityVerified": true,
+      "feature": "ultra-high flow",
+      "promotionBlock": "exact-grade numeric property table remains unavailable in captured manufacturer evidence; do not substitute 3601GL20 or 4101GL20 values",
+      "status": "discovery-only"
+    },
+    {
+      "manufacturer": "Teijin",
+      "manufacturerCountry": "Japan",
+      "region": "Asia",
+      "polymer": "PC-GF30",
+      "grade": "PANLITE GV-3430R",
+      "reinforcement": "GF30",
+      "flammability": "UL94 V-0",
+      "evidenceClass": "manufacturer exact-grade identity",
+      "promotionBlock": "requires exact-grade numeric primary property table; SH-1126Z unreinforced values prohibited as substitute",
+      "status": "discovery-only"
+    },
+    {
+      "manufacturer": "Teijin",
+      "manufacturerCountry": "Japan",
+      "region": "Asia",
+      "polymer": "PC-CF30",
+      "grade": "PANLITE B-8130R",
+      "reinforcement": "CF30",
+      "flammability": "UL94 V-2",
+      "evidenceClass": "manufacturer exact-grade identity",
+      "promotionBlock": "requires exact-grade numeric primary property table; GF30-to-CF30 interpolation prohibited",
+      "status": "discovery-only"
+    },
+    {
+      "manufacturer": "Polyplastics",
+      "manufacturerCountry": "Japan",
+      "region": "Asia",
+      "polymer": "LCP",
+      "brand": "LAPEROS",
+      "recordType": "numeric-acquisition-boundary",
+      "grades": [
+        "A130",
+        "A150",
+        "A230",
+        "A410",
+        "E471i",
+        "E473i",
+        "S475"
+      ],
+      "rule": "catalogue identity is insufficient for property-complete promotion; each grade requires its own manufacturer numeric property evidence",
       "status": "discovery-only"
     }
   ]
