@@ -1,6 +1,8 @@
 name: 5000 Adversarial Journeys
 on:
   workflow_dispatch:
+permissions:
+  contents: read
 jobs:
   adversarial:
     timeout-minutes: 120
