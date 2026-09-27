@@ -1,5 +1,5 @@
 {
-  "version": "2026-09-28.16",
+  "version": "2026-09-28.17",
   "scope": "Asia including Singapore, Australia and New Zealand primary-source material evidence wave 2",
   "policy": {
     "noUniversalSettings": true,
@@ -3110,6 +3110,168 @@
         "impact copolymer"
       ],
       "promotionBlock": "exact grade numeric manufacturer TDS required before promotion",
+      "status": "discovery-only"
+    },
+    {
+      "manufacturer": "Formosa Chemicals & Fibre",
+      "manufacturerCountry": "Taiwan",
+      "region": "Asia",
+      "polymer": "ABS",
+      "grade": "AG15A1-H",
+      "process": "injection moulding",
+      "tensile_MPa": {
+        "test": "ASTM D638",
+        "condition": "23 C",
+        "value": 45
+      },
+      "flexural_MPa": {
+        "test": "ASTM D790",
+        "condition": "23 C",
+        "value": 80
+      },
+      "flexuralModulus_MPa": 2548,
+      "notchedIzod_J_m": {
+        "test": "ASTM D256",
+        "condition": "23 C / 1/4 inch",
+        "value": 246
+      },
+      "vicat_C": {
+        "test": "ASTM D1525",
+        "condition": "1 kg",
+        "value": 100
+      },
+      "MFI": [
+        {
+          "test": "ASTM D1238",
+          "condition": "200 C / 5 kg",
+          "value_g_10min": 2.2
+        },
+        {
+          "test": "ASTM D1238",
+          "condition": "220 C / 10 kg",
+          "value_g_10min": 24
+        }
+      ],
+      "shrinkage_percent": {
+        "test": "ASTM D955",
+        "thickness_mm": 3.2,
+        "value": "0.4-0.7"
+      },
+      "valueStatus": "general guide/laboratory data, not guaranteed",
+      "status": "candidate-complete"
+    },
+    {
+      "manufacturer": "Formosa Chemicals & Fibre",
+      "manufacturerCountry": "Taiwan",
+      "region": "Asia",
+      "polymer": "ABS",
+      "grade": "AF3500",
+      "process": "injection moulding",
+      "feature": "high flow/high impact",
+      "MFI": [
+        {
+          "test": "ASTM D1238",
+          "condition": "200 C / 5 kg",
+          "value_g_10min": 5
+        },
+        {
+          "test": "ASTM D1238",
+          "condition": "220 C / 10 kg",
+          "value_g_10min": 47
+        }
+      ],
+      "specificGravity": 1.04,
+      "tensile_MPa": {
+        "ISO527": 38
+      },
+      "flexural_MPa": {
+        "ISO178": 50
+      },
+      "flexuralModulus_MPa": {
+        "ISO178": 1500
+      },
+      "HDT_C": {
+        "annealed_1_8MPa": 90
+      },
+      "shrinkage_percent": {
+        "thickness_mm": 3.2,
+        "value": "0.4-0.7"
+      },
+      "valueStatus": "manufacturer laboratory/general guide, not guaranteed",
+      "status": "candidate-complete"
+    },
+    {
+      "manufacturer": "CHIMEI",
+      "manufacturerCountry": "Taiwan",
+      "region": "Asia",
+      "polymer": "ABS",
+      "grade": "POLYLAC PA-737",
+      "feature": "high flow",
+      "applications": [
+        "large mouldings",
+        "thin-wall mouldings"
+      ],
+      "evidenceClass": "manufacturer exact-grade page with TDS/process-guide availability",
+      "promotionBlock": "numeric current TDS extraction required before candidate-complete",
+      "status": "discovery-only"
+    },
+    {
+      "manufacturer": "CHIMEI",
+      "manufacturerCountry": "Taiwan",
+      "region": "Asia",
+      "polymer": "ABS",
+      "grade": "POLYLAC PA-746",
+      "features": [
+        "high flow",
+        "high impact"
+      ],
+      "application": "thin-wall/high-impact parts",
+      "evidenceClass": "manufacturer exact-grade page",
+      "promotionBlock": "numeric current TDS extraction required",
+      "status": "discovery-only"
+    },
+    {
+      "manufacturer": "CHIMEI",
+      "manufacturerCountry": "Taiwan",
+      "region": "Asia",
+      "polymer": "PC alloy",
+      "grade": "WONDERLOY PC-385",
+      "feature": "high heat/high impact",
+      "evidenceClass": "manufacturer exact-grade page",
+      "promotionBlock": "numeric current TDS extraction required",
+      "status": "discovery-only"
+    },
+    {
+      "manufacturer": "CHIMEI",
+      "manufacturerCountry": "Taiwan",
+      "region": "Asia",
+      "polymer": "PC/ASA",
+      "grade": "WONDERLOY PC-992",
+      "features": [
+        "weather resistant",
+        "high flow",
+        "halogen-free flame retardant"
+      ],
+      "evidenceClass": "manufacturer exact-grade page",
+      "promotionBlock": "numeric current TDS extraction required",
+      "status": "discovery-only"
+    },
+    {
+      "manufacturer": "CHIMEI",
+      "manufacturerCountry": "Taiwan",
+      "region": "Asia",
+      "polymer": "PMMA",
+      "grade": "ACRYREX CM-211",
+      "features": [
+        "high flow",
+        "processability"
+      ],
+      "applications": [
+        "daily necessities",
+        "appliances"
+      ],
+      "evidenceClass": "manufacturer exact-grade page",
+      "promotionBlock": "numeric current TDS extraction required",
       "status": "discovery-only"
     }
   ]
