@@ -1,5 +1,5 @@
 {
-  "version": "2026-09-28.22",
+  "version": "2026-09-28.23",
   "scope": "Asia including Singapore, Australia and New Zealand primary-source material evidence wave 2",
   "policy": {
     "noUniversalSettings": true,
@@ -4164,6 +4164,236 @@
       },
       "density_g_cm3": 0.919,
       "status": "candidate-complete"
+    },
+    {
+      "manufacturer": "LOTTE Chemical",
+      "manufacturerCountry": "South Korea",
+      "region": "Asia",
+      "polymer": "PBT/GF",
+      "grade": "GP-5400G",
+      "process": "injection moulding",
+      "specificGravity": 1.61,
+      "MFI": {
+        "test": "ISO 1133",
+        "condition": "250 C / 2.16 kg",
+        "value_g_10min": 10
+      },
+      "tensileYield_MPa": 160,
+      "tensileModulus_MPa": 9000,
+      "flexural_MPa": 220,
+      "flexuralModulus_MPa": 10000,
+      "notchedIzod23C_kJ_m2": 12,
+      "notchedCharpy23C_kJ_m2": 11,
+      "processingBoundary": {
+        "mould_C": "80-120",
+        "hotRunner_C": 250,
+        "nozzle_C": 250,
+        "barrelFront_C": "240-250",
+        "barrelMid_C": "225-230",
+        "injectionPressure_kgf_cm2": 900,
+        "drying": {
+          "dehumidifier_C": 100,
+          "dehumidifier_h": "2-4",
+          "normalHopper_C": 100,
+          "normalHopper_h": "4-6",
+          "targetMoisture_percent": 0.1
+        },
+        "screw_rpm": "40-80",
+        "backPressure_kgf_cm2": "10-30"
+      },
+      "status": "candidate-complete"
+    },
+    {
+      "manufacturer": "LOTTE Chemical",
+      "manufacturerCountry": "South Korea",
+      "region": "Asia",
+      "polymer": "PBT",
+      "grade": "LW-5300M",
+      "feature": "low warpage",
+      "specificGravity": 1.52,
+      "mouldShrinkage_percent": "0.7-0.9",
+      "tensile_kg_cm2": 590,
+      "flexural_kg_cm2": 990,
+      "flexuralModulus_kg_cm2": 54000,
+      "HDT_C": {
+        "lowLoad": 165,
+        "highLoad": 115
+      },
+      "valueStatus": "manufacturer typical data",
+      "status": "candidate-complete"
+    },
+    {
+      "manufacturer": "LOTTE Chemical",
+      "manufacturerCountry": "South Korea",
+      "region": "Asia",
+      "polymer": "PBT",
+      "grade": "GP-2306FC",
+      "feature": "reinforced flame-retardant",
+      "specificGravity": 1.62,
+      "mouldShrinkage_percent": "0.3-1.0",
+      "tensile_kg_cm2": 1300,
+      "flexural_kg_cm2": 1900,
+      "flexuralModulus_kg_cm2": 85000,
+      "HDT_C": {
+        "highLoad": 205
+      },
+      "flammability": "UL94 V-0 at 0.71 mm",
+      "valueStatus": "manufacturer typical data",
+      "status": "candidate-complete"
+    },
+    {
+      "manufacturer": "Formosa Chemicals & Fibre",
+      "manufacturerCountry": "Taiwan",
+      "region": "Asia",
+      "polymer": "ABS",
+      "grade": "AG15A1-H",
+      "process": "injection moulding",
+      "tensile_MPa": {
+        "test": "ASTM D638",
+        "condition": "23 C",
+        "value": 45
+      },
+      "flexural_MPa": {
+        "test": "ASTM D790",
+        "value": 80
+      },
+      "flexuralModulus_MPa": 2548,
+      "notchedIzod_J_m": {
+        "test": "ASTM D256",
+        "condition": "23 C / 1/4 inch",
+        "value": 246
+      },
+      "vicat_C": {
+        "test": "ASTM D1525",
+        "condition": "1 kg",
+        "value": 100
+      },
+      "MFI": [
+        {
+          "test": "ASTM D1238",
+          "condition": "200 C / 5 kg",
+          "value_g_10min": 2.2
+        },
+        {
+          "test": "ASTM D1238",
+          "condition": "220 C / 10 kg",
+          "value_g_10min": 24
+        }
+      ],
+      "shrinkage_percent": {
+        "test": "ASTM D955",
+        "thickness_mm": 3.2,
+        "value": "0.4-0.7"
+      },
+      "valueStatus": "manufacturer general guide/laboratory data; not guaranteed",
+      "status": "candidate-complete"
+    },
+    {
+      "manufacturer": "Formosa Chemicals & Fibre",
+      "manufacturerCountry": "Taiwan",
+      "region": "Asia",
+      "polymer": "ABS",
+      "grade": "AF3500",
+      "process": "injection moulding",
+      "feature": "high flow/high impact",
+      "specificGravity": 1.04,
+      "MFI": [
+        {
+          "test": "ASTM D1238",
+          "condition": "200 C / 5 kg",
+          "value_g_10min": 5
+        },
+        {
+          "test": "ASTM D1238",
+          "condition": "220 C / 10 kg",
+          "value_g_10min": 47
+        }
+      ],
+      "tensile_MPa": {
+        "ISO527": 38
+      },
+      "flexural_MPa": {
+        "ISO178": 50
+      },
+      "flexuralModulus_MPa": {
+        "ISO178": 1500
+      },
+      "HDT_C": {
+        "ISO75A_annealed_1_8MPa": 90
+      },
+      "shrinkage_percent": {
+        "thickness_mm": 3.2,
+        "value": "0.4-0.7"
+      },
+      "valueStatus": "manufacturer laboratory/general guide; not guaranteed",
+      "status": "candidate-complete"
+    },
+    {
+      "manufacturer": "CHIMEI",
+      "manufacturerCountry": "Taiwan",
+      "region": "Asia",
+      "polymer": "ABS",
+      "grade": "POLYLAC PA-757H",
+      "features": [
+        "high flow",
+        "medium strength"
+      ],
+      "applications": [
+        "appliances",
+        "motorcycle parts",
+        "large/thin-wall mouldings"
+      ],
+      "evidenceClass": "manufacturer exact-grade identity and application",
+      "promotionBlock": "current numeric TDS extraction still required",
+      "status": "discovery-only"
+    },
+    {
+      "manufacturer": "CHIMEI",
+      "manufacturerCountry": "Taiwan",
+      "region": "Asia",
+      "polymer": "ABS",
+      "grade": "POLYLAC PA-746H",
+      "features": [
+        "high flow",
+        "high impact"
+      ],
+      "application": "thin-wall high-impact mouldings",
+      "evidenceClass": "manufacturer exact-grade identity and application",
+      "promotionBlock": "current numeric TDS extraction still required",
+      "status": "discovery-only"
+    },
+    {
+      "manufacturer": "CHIMEI",
+      "manufacturerCountry": "Taiwan",
+      "region": "Asia",
+      "polymer": "PC",
+      "grade": "WONDERLOY PC-345",
+      "feature": "high flow",
+      "promotionBlock": "current manufacturer numeric TDS required",
+      "status": "discovery-only"
+    },
+    {
+      "manufacturer": "CHIMEI",
+      "manufacturerCountry": "Taiwan",
+      "region": "Asia",
+      "polymer": "PC",
+      "grade": "WONDERLOY PC-365",
+      "feature": "balanced properties",
+      "promotionBlock": "current manufacturer numeric TDS required",
+      "status": "discovery-only"
+    },
+    {
+      "manufacturer": "CHIMEI",
+      "manufacturerCountry": "Taiwan",
+      "region": "Asia",
+      "polymer": "PC",
+      "grade": "WONDERLOY PC-545",
+      "features": [
+        "ultra-high heat",
+        "halogen-free flame retardant"
+      ],
+      "promotionBlock": "current manufacturer numeric TDS required",
+      "status": "discovery-only"
     }
   ]
 }
