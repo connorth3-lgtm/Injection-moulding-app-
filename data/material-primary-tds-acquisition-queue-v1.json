@@ -1,5 +1,5 @@
 {
-  "version": "2026-09-28.2",
+  "version": "2026-09-28.3",
   "source": "data/asian-aus-nz-material-grade-extraction-wave2-v1.json",
   "purpose": "Prioritize only work capable of increasing unique property-complete profiles",
   "rules": {
@@ -8,7 +8,7 @@
     "familyPageCannotPromoteWithoutGradeNumericEvidence": true,
     "sourceRevisionConflictsRemainConditional": true
   },
-  "queueCount": 55,
+  "queueCount": 59,
   "queue": [
     {
       "manufacturer": "Sumitomo Chemical",
@@ -621,10 +621,58 @@
       "conversionRequirement": "primary numeric grade TDS pending",
       "priority": "acquire-primary-TDS",
       "exactGradeSourceLocated": false
+    },
+    {
+      "manufacturer": "CHIMEI",
+      "country": "Taiwan",
+      "grade": "POLYLAC PA-746M",
+      "polymer": "ABS",
+      "readiness": 2,
+      "primarySourceCaptured": true,
+      "exactGradeSourceLocated": true,
+      "priority": "extract-numeric-table",
+      "sourceUrl": "https://www.chimeicorp.com/en-US/?feature=T10102&material=T10100&page=products&series=T10000",
+      "conversionRequirement": "numeric TDS attachment values not yet captured; catalogue identity/link availability alone cannot promote"
+    },
+    {
+      "manufacturer": "CHIMEI",
+      "country": "Taiwan",
+      "grade": "POLYLAC PA-756",
+      "polymer": "ABS",
+      "readiness": 2,
+      "primarySourceCaptured": true,
+      "exactGradeSourceLocated": true,
+      "priority": "extract-numeric-table",
+      "sourceUrl": "https://www.chimeicorp.com/en-US/?feature=T10102&material=T10100&page=products&series=T10000",
+      "conversionRequirement": "numeric TDS attachment values not yet captured; catalogue identity/link availability alone cannot promote"
+    },
+    {
+      "manufacturer": "CHIMEI",
+      "country": "Taiwan",
+      "grade": "POLYLAC PA-756H",
+      "polymer": "ABS",
+      "readiness": 2,
+      "primarySourceCaptured": true,
+      "exactGradeSourceLocated": true,
+      "priority": "extract-numeric-table",
+      "sourceUrl": "https://www.chimeicorp.com/en-US/?feature=T10102&material=T10100&page=products&series=T10000",
+      "conversionRequirement": "numeric TDS attachment values not yet captured; catalogue identity/link availability alone cannot promote"
+    },
+    {
+      "manufacturer": "CHIMEI",
+      "country": "Taiwan",
+      "grade": "POLYLAC PA-756S",
+      "polymer": "ABS",
+      "readiness": 2,
+      "primarySourceCaptured": true,
+      "exactGradeSourceLocated": true,
+      "priority": "extract-numeric-table",
+      "sourceUrl": "https://www.chimeicorp.com/en-US/?feature=T10102&material=T10100&page=products&series=T10000",
+      "conversionRequirement": "numeric TDS attachment values not yet captured; catalogue identity/link availability alone cannot promote"
     }
   ],
   "metrics": {
-    "exactGradeSourceLocated": 7,
+    "exactGradeSourceLocated": 11,
     "stillNeedPrimarySource": 48
   }
 }
