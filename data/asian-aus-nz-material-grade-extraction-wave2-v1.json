@@ -1,5 +1,5 @@
 {
-  "version": "2026-09-28.27",
+  "version": "2026-09-28.28",
   "scope": "Asia including Singapore, Australia and New Zealand primary-source material evidence wave 2",
   "policy": {
     "noUniversalSettings": true,
@@ -5046,6 +5046,150 @@
       "notchedCharpy_kJ_m2": 6.8,
       "HDT_C": 82,
       "status": "candidate-complete"
+    },
+    {
+      "manufacturer": "Polyplastics",
+      "manufacturerCountry": "Japan",
+      "region": "Asia",
+      "polymer": "PBT+PET-GF30",
+      "grade": "DURANEX 3306",
+      "reinforcement": "GF30",
+      "density_g_cm3": 1.54,
+      "waterAbsorption_percent": 0.2,
+      "tensile_MPa": 140,
+      "flexural_MPa": 210,
+      "flexuralModulus_MPa": 9100,
+      "notchedCharpy_kJ_m2": 8.1,
+      "HDT1_8MPa_C": 210,
+      "CLTE_1e5_K": {
+        "flow": 2,
+        "transverse": 7
+      },
+      "status": "candidate-complete"
+    },
+    {
+      "manufacturer": "Polyplastics",
+      "manufacturerCountry": "Japan",
+      "region": "Asia",
+      "polymer": "PPS-GF40",
+      "grade": "DURAFIDE 1140A66",
+      "reinforcement": "GF40",
+      "density_g_cm3": 1.66,
+      "waterAbsorption_percent": 0.04,
+      "meltViscosity": {
+        "test": "ISO 11443",
+        "condition": "310 C / 1000 s^-1",
+        "value_Pa_s": 260
+      },
+      "tensile_MPa": 180,
+      "flexural_MPa": 255,
+      "flexuralModulus_MPa": 14500,
+      "notchedCharpy_kJ_m2": 9,
+      "HDT1_8MPa_C": 265,
+      "CLTE_1e5_K": {
+        "flow": 1,
+        "transverse": 4
+      },
+      "status": "candidate-complete"
+    },
+    {
+      "manufacturer": "Sumitomo Chemical",
+      "manufacturerCountry": "Japan",
+      "region": "Asia",
+      "polymer": "PESU",
+      "grade": "SUMIKAEXCEL 4100G",
+      "recordType": "exact-grade-property-queue",
+      "familyEvidence": "manufacturer CAE/property family includes 4100G",
+      "promotionBlock": "individual complete numeric property extraction pending",
+      "status": "discovery-only"
+    },
+    {
+      "manufacturer": "Sumitomo Chemical",
+      "manufacturerCountry": "Japan",
+      "region": "Asia",
+      "polymer": "PESU",
+      "grade": "SUMIKAEXCEL 4800G",
+      "recordType": "exact-grade-property-queue",
+      "familyEvidence": "manufacturer CAE/property family includes 4800G",
+      "promotionBlock": "individual complete numeric property extraction pending",
+      "status": "discovery-only"
+    },
+    {
+      "manufacturer": "Sumitomo Chemical",
+      "manufacturerCountry": "Japan",
+      "region": "Asia",
+      "polymer": "PESU-GF20",
+      "grade": "SUMIKAEXCEL 3601GL20",
+      "reinforcement": "GF20",
+      "recordType": "exact-grade-property-queue",
+      "promotionBlock": "individual numeric TDS extraction pending; do not infer from 3600G",
+      "status": "discovery-only"
+    },
+    {
+      "manufacturer": "Sumitomo Chemical",
+      "manufacturerCountry": "Japan",
+      "region": "Asia",
+      "polymer": "PESU-GF30",
+      "grade": "SUMIKAEXCEL 3601GL30",
+      "reinforcement": "GF30",
+      "recordType": "exact-grade-property-queue",
+      "promotionBlock": "individual numeric TDS extraction pending; do not interpolate from GF20",
+      "status": "discovery-only"
+    },
+    {
+      "manufacturer": "Sumitomo Chemical",
+      "manufacturerCountry": "Japan",
+      "region": "Asia",
+      "polymer": "PESU-GF20",
+      "grade": "SUMIKAEXCEL 4101GL20",
+      "reinforcement": "GF20",
+      "recordType": "exact-grade-property-queue",
+      "promotionBlock": "individual numeric TDS extraction pending",
+      "status": "discovery-only"
+    },
+    {
+      "manufacturer": "Sumitomo Chemical",
+      "manufacturerCountry": "Japan",
+      "region": "Asia",
+      "polymer": "PESU-GF30",
+      "grade": "SUMIKAEXCEL 4101GL30",
+      "reinforcement": "GF30",
+      "recordType": "exact-grade-property-queue",
+      "promotionBlock": "individual numeric TDS extraction pending",
+      "status": "discovery-only"
+    },
+    {
+      "manufacturer": "Toyobo",
+      "manufacturerCountry": "Japan",
+      "region": "Asia",
+      "polymer": "PA6",
+      "grade": "GLAMIDE T-802",
+      "process": "injection moulding",
+      "recordType": "exact-grade-property-queue",
+      "promotionBlock": "primary numeric grade TDS pending",
+      "status": "discovery-only"
+    },
+    {
+      "manufacturer": "Toyobo",
+      "manufacturerCountry": "Japan",
+      "region": "Asia",
+      "polymer": "PA66",
+      "grade": "GLAMIDE T662",
+      "process": "injection moulding",
+      "recordType": "exact-grade-property-queue",
+      "promotionBlock": "primary numeric grade TDS pending",
+      "status": "discovery-only"
+    },
+    {
+      "manufacturer": "Toyobo",
+      "manufacturerCountry": "Japan",
+      "region": "Asia",
+      "polymer": "high-melting polyamide",
+      "grade": "GLAMIDE TY-502NZ",
+      "process": "injection moulding",
+      "recordType": "exact-grade-property-queue",
+      "promotionBlock": "primary numeric grade TDS pending",
+      "status": "discovery-only"
     }
   ]
 }
