@@ -30,5 +30,36 @@
     "sourceRevision",
     "processingDependencies"
   ],
-  "status": "discovery-seed-complete; grade-level extraction required"
+  "status": "discovery-seed-complete; grade-level extraction required",
+  "discoveryMetrics": {
+    "primarySourceFamilies": 33,
+    "regions": 8,
+    "gradeLevelExtracted": 14,
+    "additionalGradeIdentitiesDiscovered": {
+      "unitikaPA66": 22,
+      "haldiaPPInjection": 16,
+      "asahiTenacMoldflow": "40+",
+      "asahiLeonaMoldflow": "40+",
+      "lottePPInjection": "multi-page catalogue",
+      "kingfa": "multi-family engineering compounds"
+    },
+    "advancedEvidence": [
+      "Moldflow-selectable material datasets",
+      "temperature-dependent structural stress-strain availability",
+      "directional molding shrinkage",
+      "dry-versus-conditioned polyamide properties",
+      "manufacturer-bounded molding windows",
+      "test-method-specific typical values"
+    ]
+  },
+  "priorityNext": [
+    "complete drying/moisture/degradation fields for extracted grades",
+    "extract Asahi TENAC POM property records and CAE flags",
+    "extract Asahi LEONA PA grade properties and bounded molding groups",
+    "expand SCGC PP/HDPE injection grades",
+    "normalize LOTTE PP injection catalogue",
+    "normalize Haldia PP injection ladder",
+    "add Formosa ABS grade records with shrinkage and processing documents",
+    "add Kingfa reinforced/high-temperature engineering compounds without inventing missing numeric properties"
+  ]
 }
