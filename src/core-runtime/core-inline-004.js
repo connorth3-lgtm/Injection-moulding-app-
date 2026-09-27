@@ -642,7 +642,7 @@ function showOnboarding(){
       <label class="choice-card"><input type="radio" name="onExp" value="Advanced"><b>Experienced</b><br><small class="muted">Start around scientific moulding.</small></label>
     </div>
 
-    <h3>What is your main goal?</h3>
+    <label for="onGoal"><h3>What is your main goal?</h3></label>
     <select id="onGoal">
       <option>Learn the full process</option>
       <option>Troubleshoot defects better</option>
@@ -899,7 +899,7 @@ showOnboarding=function(){
   oldShowOnboarding();
   const goal=$("#onGoal");
   if(goal){
-    goal.insertAdjacentHTML("afterend",`<h3>Which standards do you want to study?</h3>
+    goal.insertAdjacentHTML("afterend",`<label for="onRegion"><h3>Which standards do you want to study?</h3></label>
       <select id="onRegion">
         <option value="ALL">Compare UK, US and New Zealand</option>
         <option value="UK">United Kingdom</option>

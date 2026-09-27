@@ -1,0 +1,46 @@
+name: 5000 Adversarial Journeys
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  adversarial:
+    timeout-minutes: 120
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - { shard: 1, seed_start: 1, seed_end: 500 }
+          - { shard: 2, seed_start: 501, seed_end: 1000 }
+          - { shard: 3, seed_start: 1001, seed_end: 1500 }
+          - { shard: 4, seed_start: 1501, seed_end: 2000 }
+          - { shard: 5, seed_start: 2001, seed_end: 2500 }
+          - { shard: 6, seed_start: 2501, seed_end: 3000 }
+          - { shard: 7, seed_start: 3001, seed_end: 3500 }
+          - { shard: 8, seed_start: 3501, seed_end: 4000 }
+          - { shard: 9, seed_start: 4001, seed_end: 4500 }
+          - { shard: 10, seed_start: 4501, seed_end: 5000 }
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 22
+      - run: npm install --no-save @playwright/test@1.55.0
+      - run: npx playwright install --with-deps chromium
+      - run: python3 -m http.server 4173 --bind 127.0.0.1 > /tmp/mm-adversarial.log 2>&1 &
+      - run: |
+          for i in {1..60}; do curl -fsS http://127.0.0.1:4173/index.html >/dev/null && exit 0; sleep 1; done
+          exit 1
+      - name: Run adversarial seed range
+        env:
+          MM_SEED_START: ${{ matrix.seed_start }}
+          MM_SEED_END: ${{ matrix.seed_end }}
+        run: npx playwright test --config=playwright.adversarial.config.cjs
+      - if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: adversarial-shard-${{ matrix.shard }}
+          path: |
+            test-results
+            qa-artifacts/adversarial-report

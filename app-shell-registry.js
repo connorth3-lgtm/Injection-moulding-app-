@@ -265,6 +265,7 @@ function installDefaultDashboardSections(){
   registerDashboard({id:'specialist',zone:'after',order:90,render:slot=>{slot.innerHTML=specialistDashboardHtml();slot.querySelector('[data-mm-specialist-open]')?.addEventListener('click',()=>window.MM_SPECIALIST_CURRICULUM?.open?.())}})
 }
 function installDefaultNavigation(){
+  registerNavigation({id:'book',label:'Book',icon:'▣',description:'Open the governed injection moulding reference.',order:5,group:'progress',desktop:false,mobileGroup:'more',action:()=>window.MMBook?.open?.()});
   registerNavigation({id:'mould-master',label:'Mould Master',icon:'◆',description:'Build an evidence-led troubleshooting case.',order:10,group:'practice',legacyDataset:'mmMouldMaster',mobileGroup:'practice',action:()=>window.MM_MOULD_MASTER_WORKSPACE?.open?.()});
   registerNavigation({id:'diagnostic-labs',label:'Diagnostic labs',icon:'⌁',description:'Practise evidence-first troubleshooting.',order:20,group:'practice',legacyDataset:'mmDiagnosticLabs',mobileGroup:'practice',action:()=>window.MM_DIAGNOSTIC_LABS?.open?.()});
   registerNavigation({id:'process-data',label:'Data diagnosis',icon:'⌁',description:'Read process trends and choose the next evidence check.',order:30,group:'practice',legacyDataset:'mmProcessData',mobileGroup:'practice',action:()=>window.MM_PROCESS_DATA_DIAGNOSTICS?.open?.()});
