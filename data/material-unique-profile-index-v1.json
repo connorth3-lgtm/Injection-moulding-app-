@@ -1,5 +1,5 @@
 {
-  "version": "2026-09-28.5",
+  "version": "2026-09-28.6",
   "source": "data/asian-aus-nz-material-grade-extraction-wave2-v1.json",
   "countingRule": "one manufacturer + exact grade identity equals one unique complete profile; multiple evidence rows enrich but do not increase profile count",
   "uniqueExactCompleteProfiles": 77,
@@ -730,27 +730,30 @@
       "grade": "SUMIKAEXCEL 4101GL20",
       "polymer": "PESU-GF20",
       "supportingRecordIndexes": [
-        246
+        246,
+        250
       ],
-      "evidenceRowCount": 1
+      "evidenceRowCount": 2
     },
     {
       "manufacturer": "Sumitomo Chemical",
       "grade": "SUMIKAEXCEL 4101GL30",
       "polymer": "PESU-GF30",
       "supportingRecordIndexes": [
-        247
+        247,
+        251
       ],
-      "evidenceRowCount": 1
+      "evidenceRowCount": 2
     },
     {
       "manufacturer": "Sumitomo Chemical",
       "grade": "SUMIKAEXCEL 3601GL30",
       "polymer": "PESU-GF30",
       "supportingRecordIndexes": [
-        248
+        248,
+        252
       ],
-      "evidenceRowCount": 1
+      "evidenceRowCount": 2
     }
   ]
 }
