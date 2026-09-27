@@ -1,5 +1,5 @@
 {
-  "version": "2026-09-28.3",
+  "version": "2026-09-28.4",
   "scope": "Asia-Australia-New Zealand primary-source material evidence wave 2",
   "policy": {
     "noUniversalSettings": true,
@@ -667,6 +667,359 @@
       ],
       "valueStatus": "typical properties",
       "status": "candidate-complete"
+    },
+    {
+      "manufacturer": "Kuraray",
+      "manufacturerCountry": "Japan",
+      "region": "Asia",
+      "polymer": "PA9T",
+      "grade": "G1500A",
+      "reinforcement": "GF50",
+      "process": "injection moulding",
+      "condition": "absolutely dry",
+      "specificGravity": 1.58,
+      "waterAbsorption_percent": {
+        "test": "ISO 62",
+        "condition": "23 C water immersion 24 h",
+        "value": 0.13
+      },
+      "tensile_MPa": 250,
+      "flexural_MPa": 370,
+      "flexuralModulus_GPa": 15.3,
+      "notchedCharpy_kJ_m2": 17,
+      "melting_C": 300,
+      "shrinkage2mm_percent": {
+        "test": "ISO 294-4",
+        "flow": 0.2,
+        "transverse": 0.8
+      },
+      "valueStatus": "manufacturer actual measured values; not guaranteed",
+      "status": "candidate-complete"
+    },
+    {
+      "manufacturer": "UBE",
+      "manufacturerCountry": "Japan",
+      "productionArea": "Thailand",
+      "region": "Asia",
+      "polymer": "PA6",
+      "grade": "1015GC6",
+      "reinforcement": "GF30",
+      "process": "injection moulding",
+      "condition": "dry as molded",
+      "tensile_MPa": 185,
+      "tensileModulus_MPa": 9300,
+      "flexural_MPa": 280,
+      "flexuralModulus_MPa": 8500,
+      "notchedCharpy_kJ_m2": 15,
+      "melting_C": "215-225",
+      "HDT_C": {
+        "at0_45MPa": 220,
+        "at1_8MPa": 205
+      },
+      "CLTE_1e5_K": 2.5,
+      "density_g_cm3": 1.36,
+      "equilibriumWaterAbsorption_percent": 1.8,
+      "valueStatus": "typical values",
+      "status": "candidate-complete"
+    },
+    {
+      "manufacturer": "UBE",
+      "manufacturerCountry": "Japan",
+      "region": "Asia",
+      "polymer": "PA6",
+      "grade": "1013B",
+      "reinforcement": "unreinforced",
+      "process": "injection moulding",
+      "condition": "dry as molded",
+      "tensile_MPa": 80,
+      "tensileModulus_MPa": 2900,
+      "flexural_MPa": 110,
+      "flexuralModulus_MPa": 2700,
+      "notchedCharpy_kJ_m2": 6,
+      "melting_C": "215-225",
+      "HDT_C": {
+        "at0_45MPa": 155,
+        "at1_8MPa": 60
+      },
+      "CLTE_1e5_K": 8,
+      "density_g_cm3": 1.14,
+      "equilibriumWaterAbsorption_percent": 3,
+      "moistureEffect": {
+        "rockwellR": {
+          "dry": 120,
+          "afterAbsorption": 85
+        },
+        "volumeResistivity_ohm_cm": {
+          "dry": "1e15",
+          "afterAbsorption": "1e12"
+        }
+      },
+      "status": "candidate-complete"
+    },
+    {
+      "manufacturer": "Supreme Petrochem",
+      "manufacturerCountry": "India",
+      "region": "Asia",
+      "polymer": "HIPS",
+      "grade": "SH400HV",
+      "tensile_kgf_cm2": 355,
+      "elongation_percent": 35,
+      "flexural_kgf_cm2": 595,
+      "flexuralModulus_kgf_cm2": 22350,
+      "notchedIzod_J_m": 95,
+      "specificGravity": 1.03,
+      "gloss60deg_percent": ">80",
+      "processingBoundary": {
+        "processingTemperature_C": "180-240",
+        "predrying": {
+          "temperature_C": "50-80",
+          "time_h": 2
+        },
+        "mouldTemperature_C": "40-60",
+        "note": "manufacturer recommends injection speed/high melt and mould temperature for improved gloss; retain as grade/process guidance only"
+      },
+      "valueStatus": "typical guide only; manufacturer may revise",
+      "sourceRevision": "09/2025",
+      "status": "candidate-complete"
+    },
+    {
+      "manufacturer": "Formosa Chemicals & Fibre",
+      "manufacturerCountry": "Taiwan",
+      "region": "Asia",
+      "polymer": "ABS",
+      "grade": "AF3500",
+      "feature": "high flow/high impact",
+      "mfi": {
+        "ASTM_D1238": [
+          {
+            "condition": "220 C / 10 kg",
+            "value_g_10min": 47
+          },
+          {
+            "condition": "200 C / 5 kg",
+            "value_g_10min": 5
+          }
+        ],
+        "ISO1133": [
+          {
+            "condition": "200 C / 5 kg",
+            "value_g_10min": 5
+          },
+          {
+            "condition": "220 C / 10 kg",
+            "value_g_10min": 47
+          }
+        ]
+      },
+      "specificGravity": 1.04,
+      "tensile": {
+        "ASTM_D638_kg_cm2": 390,
+        "ISO527_MPa": 38
+      },
+      "flexural": {
+        "ASTM_D790_kg_cm2": 670,
+        "ISO178_MPa": 50
+      },
+      "flexuralModulus": {
+        "ASTM_D790_kg_cm2": 20000,
+        "ISO178_MPa": 1500
+      },
+      "HDT_C": {
+        "ASTM_D648_annealed_1_8MPa": 94,
+        "ASTM_D648_unannealed_1_8MPa": 83,
+        "ISO75A_annealed_1_8MPa": 90
+      },
+      "shrinkage_percent": {
+        "ASTM_D955_3_2mm": "0.4-0.7",
+        "ISO2577_3_2mm": "0.4-0.7"
+      },
+      "status": "candidate-complete"
+    },
+    {
+      "manufacturer": "Sumitomo Chemical",
+      "manufacturerCountry": "Japan",
+      "region": "Asia",
+      "polymer": "PESU",
+      "grade": "SUMIKAEXCEL 3600G",
+      "reinforcement": "unreinforced",
+      "process": "injection moulding",
+      "specificGravity": 1.37,
+      "waterAbsorption_percent": {
+        "test": "ISO 62",
+        "condition": "23 C / 24 h water",
+        "value": 1
+      },
+      "shrinkage_percent": {
+        "method": "Sumitomo Chemical",
+        "MD": 0.6,
+        "TD": 0.6
+      },
+      "tensile_MPa": {
+        "ISO527": 85,
+        "ASTM_D638": 84
+      },
+      "tensileModulus_MPa": 2700,
+      "flexural_MPa": {
+        "ISO178": 130,
+        "ASTM_D790": 129
+      },
+      "flexuralModulus_MPa": 2600,
+      "HDT_C": {
+        "ISO75_1_8MPa": 205,
+        "ISO75_0_45MPa": 214,
+        "ASTM_D648_1_82MPa": 203,
+        "ASTM_D648_0_45MPa": 210
+      },
+      "MFR": {
+        "test": "ISO 1133-1",
+        "condition": "360 C / 2.16 kg",
+        "value_g_10min": 55
+      },
+      "CLTE_1e5_K": {
+        "MD": 5.5,
+        "TD": 5.5
+      },
+      "status": "candidate-complete"
+    },
+    {
+      "manufacturer": "Sumitomo Chemical",
+      "manufacturerCountry": "Japan",
+      "region": "Asia",
+      "polymer": "PESU",
+      "gradeFamily": [
+        "3600G",
+        "4100G",
+        "4800G",
+        "3601GL20",
+        "3601GL30",
+        "4101GL20",
+        "4101GL30"
+      ],
+      "recordType": "CAE-property-capability",
+      "CAE": {
+        "specificHeat_J_kgK": {
+          "unreinforced": 963,
+          "GF20": 847,
+          "GF30": 788
+        },
+        "thermalConductivity_W_mK": {
+          "unreinforced": 0.16,
+          "GF20": 0.28,
+          "GF30": 0.24
+        },
+        "youngsModulus_MPa": {
+          "unreinforced": {
+            "MD": 2650,
+            "TD": 2650
+          },
+          "GF20": {
+            "MD": 6600,
+            "TD": 4300
+          },
+          "GF30": {
+            "MD": 8900,
+            "TD": 5000
+          }
+        },
+        "CLTE_1e5_K": {
+          "unreinforced": {
+            "MD": 4.9,
+            "TD": 4.9
+          },
+          "GF20": {
+            "MD": 2.4,
+            "TD": 4.7
+          },
+          "GF30": {
+            "MD": 2.1,
+            "TD": 4.5
+          }
+        }
+      },
+      "boundary": "flow-analysis/CAE measured data; do not substitute for universal processing settings",
+      "status": "candidate-complete"
+    },
+    {
+      "manufacturer": "PETRONAS Chemicals",
+      "manufacturerCountry": "Malaysia",
+      "region": "Asia",
+      "polymer": "PP homopolymer",
+      "recordType": "manufacturer-brochure-grade-ladder",
+      "grades": [
+        {
+          "grade": "H500NG",
+          "MFR_g_10min": 12,
+          "segment": "injection moulding"
+        },
+        {
+          "grade": "H648TT",
+          "MFR_g_10min": 53,
+          "segment": "transparent thin-wall injection moulding"
+        },
+        {
+          "grade": "H525JB",
+          "MFR_g_10min": 3,
+          "segment": "BOPP"
+        },
+        {
+          "grade": "H525NW",
+          "MFR_g_10min": 11,
+          "segment": "film"
+        },
+        {
+          "grade": "H612MC",
+          "MFR_g_10min": 7,
+          "segment": "cast film"
+        },
+        {
+          "grade": "H456HY",
+          "MFR_g_10min": 1.8,
+          "segment": "yarn"
+        },
+        {
+          "grade": "H456JY",
+          "MFR_g_10min": 3.4,
+          "segment": "yarn/thermoforming"
+        },
+        {
+          "grade": "H561SS",
+          "MFR_g_10min": 33,
+          "segment": "spunbond"
+        }
+      ],
+      "boundary": "only H500NG/H648TT promoted as injection candidates; other grades retained to prevent cross-process misclassification",
+      "status": "candidate-partial"
+    },
+    {
+      "manufacturer": "Supreme Petrochem",
+      "manufacturerCountry": "India",
+      "region": "Asia",
+      "polymer": "HIPS",
+      "recordType": "injection-grade-family-discovery",
+      "grades": [
+        {
+          "grade": "SH03",
+          "feature": "high flow, thin-wall/gas-assisted injection"
+        },
+        {
+          "grade": "SH300",
+          "feature": "mechanical/impact/gloss balance"
+        },
+        {
+          "grade": "SH400HF",
+          "feature": "high gloss/high flow, large components"
+        },
+        {
+          "grade": "SH400M",
+          "feature": "high gloss"
+        },
+        {
+          "grade": "SH450",
+          "feature": "high impact/high gloss/high flow"
+        }
+      ],
+      "boundary": "grade identity/application only until each current TDS is extracted",
+      "status": "discovery-only"
     }
   ]
 }
