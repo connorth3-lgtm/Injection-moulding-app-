@@ -189,11 +189,14 @@ def evaluate_item(item):
         if wrong_abs>=2 and not absolute.search(c): warnings.append('absolute-language-distractor-pattern')
         unsafe=re.compile(r'\b(bypass|defeat|disable|remove)\b.{0,45}\b(guard|interlock|safeguard|protection|lockout)\b')
         if unsafe.search(c): hard.append('unsafe-action-keyed-correct')
+        if any(unsafe.search(x) for x in wrong) and item.get('critical'):
+            warnings.append('unsafe-distractor-requires-explicit-rejection')
         noneall=re.compile(r'^(all|none) of (the )?above\.?$')
         if any(noneall.match(x) for x in [norm_lower(o) for o in options]): warnings.append('all-none-of-above')
 
     if item['kind'] in ('technical-exam','regional-exam','scenario'):
         if len(rationale)<28: hard.append('rationale-too-shallow')
+        if item.get('critical') and re.search(r'\b(bypass|defeat|disable|remove)\b.{0,45}\b(guard|interlock|safeguard|protection|lockout)\b', ' '.join(options), re.I) and not re.search(r'\b(unsafe|do not|must not|never|prohibit|reject|isolation|lockout|manufacturer|site procedure)\b', rationale, re.I): hard.append('unsafe-distractor-not-rejected-in-rationale')
         if feedback:
             if len(feedback)!=4: hard.append('feedback-count')
             elif min(map(char_len,feedback))<18: warnings.append('shallow-option-feedback')
@@ -293,7 +296,7 @@ def main():
         'rubric':{
             'hard_gates':['complete/unique four-option structure','valid single keyed answer','correct option is not longest or tied-longest','substantive rationale/feedback','no unsafe safeguard-bypass action keyed correct','two-source minimum for optional material practice'],
             'warning_checks':['option-length spread','absolute-language distractor pattern','repetitive feedback','stem length/wording','all/none-of-above','generated optional feedback'],
-            'semantic_boundary':'Heuristics flag review candidates; evidence correctness remains governed by the reviewed evidence-approval and source-maturity layers.'
+            'semantic_boundary':'Heuristics flag review candidates; evidence correctness remains governed by evidence/source layers plus the separate 197-item semantic review contract. Automation must not claim human semantic approval.'
         }
     }
     REPORT.write_text(json.dumps(report,indent=2)+'\n',encoding='utf-8')
