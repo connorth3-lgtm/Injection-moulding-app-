@@ -1,5 +1,5 @@
 {
-  "version": "2026-09-28.13",
+  "version": "2026-09-28.14",
   "scope": "Asia including Singapore, Australia and New Zealand primary-source material evidence wave 2",
   "policy": {
     "noUniversalSettings": true,
@@ -2690,6 +2690,178 @@
         "PP impact copolymer"
       ],
       "boundary": "manufacturer/family scope only; exact grade TDS required",
+      "status": "discovery-only"
+    },
+    {
+      "manufacturer": "SCGC",
+      "manufacturerCountry": "Thailand",
+      "region": "Asia",
+      "polymer": "PP homopolymer",
+      "grade": "P700J",
+      "process": "injection moulding",
+      "MFR": {
+        "test": "ASTM D1238",
+        "condition": "230 C / 2.16 kg",
+        "value_g_10min": 12
+      },
+      "density_g_cm3": 0.91,
+      "tensileYield_kg_cm2": 320,
+      "flexuralModulus_kg_cm2": 14500,
+      "notchedIzod_J_m": {
+        "at23C": 37,
+        "at0C": 20
+      },
+      "HDT_C": 120,
+      "shrinkage2mm_percent": {
+        "MD": 1.25,
+        "TD": 1.35
+      },
+      "status": "candidate-complete"
+    },
+    {
+      "manufacturer": "SCGC",
+      "manufacturerCountry": "Thailand",
+      "region": "Asia",
+      "polymer": "PP impact copolymer",
+      "grade": "P740J",
+      "process": "injection moulding",
+      "MFR": {
+        "test": "ASTM D1238",
+        "condition": "230 C / 2.16 kg",
+        "value_g_10min": 27
+      },
+      "density_g_cm3": 0.91,
+      "tensileYield_kg_cm2": 290,
+      "flexuralModulus_kg_cm2": 12500,
+      "notchedIzod23C_J_m": 78,
+      "status": "candidate-complete"
+    },
+    {
+      "manufacturer": "SCGC",
+      "manufacturerCountry": "Thailand",
+      "region": "Asia",
+      "polymer": "PP impact copolymer",
+      "grade": "P744J",
+      "process": "injection moulding",
+      "MFR": {
+        "test": "ASTM D1238",
+        "condition": "230 C / 2.16 kg",
+        "value_g_10min": 30
+      },
+      "density_g_cm3": 0.91,
+      "tensileYield_kg_cm2": 290,
+      "flexuralModulus_kg_cm2": 14500,
+      "notchedIzod23C_J_m": 78,
+      "status": "candidate-complete"
+    },
+    {
+      "manufacturer": "SCGC",
+      "manufacturerCountry": "Thailand",
+      "region": "Asia",
+      "polymer": "PP impact copolymer",
+      "grade": "P842J",
+      "process": "injection moulding",
+      "MFR": {
+        "test": "ASTM D1238",
+        "condition": "230 C / 2.16 kg",
+        "value_g_10min": 40
+      },
+      "density_g_cm3": 0.91,
+      "tensileYield_kg_cm2": 295,
+      "flexuralModulus_kg_cm2": 14500,
+      "notchedIzod23C_J_m": 74,
+      "status": "candidate-complete"
+    },
+    {
+      "manufacturer": "IndianOil",
+      "manufacturerCountry": "India",
+      "region": "Asia",
+      "polymer": "HDPE",
+      "grade": "180M50",
+      "process": "thin-wall injection moulding",
+      "meltIndex_g_10min": 20,
+      "density_g_cm3": 0.95,
+      "feature": "high flow",
+      "boundary": "grade-specific manufacturer classification; MI test condition must remain attached when sourced from full TDS",
+      "status": "candidate-complete"
+    },
+    {
+      "manufacturer": "IndianOil",
+      "manufacturerCountry": "India",
+      "region": "Asia",
+      "polymer": "HDPE",
+      "grade": "080M60U",
+      "process": "injection moulding",
+      "meltIndex_g_10min": 8,
+      "density_g_cm3": 0.96,
+      "feature": "UV stabilised",
+      "status": "candidate-complete"
+    },
+    {
+      "manufacturer": "Teijin",
+      "manufacturerCountry": "Japan",
+      "region": "Asia",
+      "polymer": "PC",
+      "grade": "PANLITE GV-3430R",
+      "reinforcement": "GF30",
+      "flammability": "UL94 V-0",
+      "feature": "reinforced flame-retardant PC",
+      "boundary": "exact numeric mechanical/flow values pending current manufacturer TDS extraction",
+      "status": "candidate-partial"
+    },
+    {
+      "manufacturer": "Teijin",
+      "manufacturerCountry": "Japan",
+      "region": "Asia",
+      "polymer": "PC",
+      "grade": "PANLITE B-8130R",
+      "reinforcement": "CF30",
+      "flammability": "UL94 V-2",
+      "feature": "carbon-fibre reinforced PC",
+      "boundary": "do not substitute GF-grade properties for CF grade; numeric TDS extraction pending",
+      "status": "candidate-partial"
+    },
+    {
+      "manufacturer": "Asahi Kasei",
+      "manufacturerCountry": "Japan",
+      "region": "Asia",
+      "polymer": "POM",
+      "brand": "TENAC",
+      "recordType": "flow-grade-ladder",
+      "grades": [
+        {
+          "grade": "4010",
+          "class": "standard flow"
+        },
+        {
+          "grade": "5010",
+          "class": "higher flow"
+        },
+        {
+          "grade": "4520",
+          "class": "copolymer medium viscosity"
+        },
+        {
+          "grade": "7520",
+          "class": "copolymer higher flow"
+        }
+      ],
+      "boundary": "identity/flow-class evidence only unless exact current numeric TDS accompanies grade",
+      "status": "discovery-only"
+    },
+    {
+      "manufacturer": "LG Chem",
+      "manufacturerCountry": "South Korea",
+      "region": "Asia",
+      "polymer": "PA6",
+      "brand": "LUPOY/LG engineering plastics",
+      "recordType": "exact-grade-family",
+      "grades": [
+        "GP1100AW",
+        "GP2300AW",
+        "HM2604AW"
+      ],
+      "boundary": "exact grade identities retained from manufacturer portfolio; numeric properties remain pending primary grade TDS",
       "status": "discovery-only"
     }
   ]
