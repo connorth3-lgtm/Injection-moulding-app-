@@ -32,9 +32,9 @@
   ],
   "status": "discovery-seed-complete; grade-level extraction required",
   "discoveryMetrics": {
-    "primarySourceFamilies": 46,
+    "primarySourceFamilies": 51,
     "regions": 8,
-    "gradeLevelExtracted": 39,
+    "gradeLevelExtracted": 56,
     "additionalGradeIdentitiesDiscovered": {
       "unitikaPA66": 22,
       "haldiaPPInjection": 16,
@@ -66,9 +66,12 @@
       "lgChemPA6": 12,
       "unitikaPA66": 22,
       "haldiaPPInjection": 16,
-      "lotteAdvancedMaterials": "320+ listed rows"
+      "lotteAdvancedMaterials": "320+ listed rows",
+      "teijinPanliteMultilon": "large injection-grade matrix across GF/CF/alloy/FR/wear/EMI/low-anisotropy classes",
+      "lgChemPBT": "10 named grades in one property matrix",
+      "chimeiPCAlloy": "multiple general/FR PC alloy grades with ISO+ASTM TDS and process guides"
     },
-    "estimatedNamedGradePool": "600+ named/directly selectable grades visible across current primary Asian catalogues; discovery count is not accepted-profile count"
+    "estimatedNamedGradePool": "900+ named/directly selectable grades or catalogue rows across current primary Asian sources; discovery is not acceptance"
   },
   "priorityNext": [
     "treat CAE/Moldflow availability as a separate evidence capability, never as proof of universal molding conditions",
@@ -86,6 +89,10 @@
     "separate TPE base-resin records from finished injection compounds",
     "partition LOTTE 320+ rows by polymer/filler/feature before extraction to avoid duplicate variants",
     "capture processing-guide availability as provenance metadata, not universal conditions",
-    "add Taiwan ABS/PC/PMMA processing-condition documents and SDS links"
+    "add Taiwan ABS/PC/PMMA processing-condition documents and SDS links",
+    "extract CHIMEI ISO/ASTM TDS values for PC-345/365/385/545/992",
+    "extract Teijin numeric TDS for representative GF/CF/alloy PC injection grades",
+    "extract LG Chem PBT drying and processing boundaries",
+    "add Polyplastics PPS processing/drying provenance to 1140A66"
   ]
 }
