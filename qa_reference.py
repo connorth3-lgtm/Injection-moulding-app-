@@ -92,6 +92,8 @@ require("#examQuestions" not in reference_sources and "activeExam" not in refere
 source_urls = set(re.findall(r"https://[^'\"\s<]+", reference_sources + "\n" + deep))
 require(len(source_urls) >= 55, "authoritative reference library unexpectedly small after deep-dive expansion")
 require("http://" not in reference_sources, "reference browser must use HTTPS source links")
+for marker in ["function canonicalUrl(","globalSeen=new Map()","window.MM_REFERENCE_DUPLICATES","duplicates.push("]:
+    require(marker in reference_sources, f"global reference deduplication control missing: {marker}")
 
 reference_ui = text("reference-browser-ui.js")
 for marker in [
@@ -203,4 +205,11 @@ for js_name in REFERENCE_ASSETS:
     p = subprocess.run([NODE, "--check", str(ROOT / js_name)], capture_output=True, text=True)
     require(p.returncode == 0, f"{js_name}: {p.stderr}")
 
-print(f"MouldMaster reference data, source and mobile browser UI QA passed ({len(structured_entries)} structured entries, {len(source_urls)} source URLs)")
+node_audit = r"""const fs=require('fs'),vm=require('vm');const sandbox={window:{MM_SOURCE_LIBRARY:{}},document:{readyState:'loading',addEventListener(){},body:null},URL};sandbox.window.window=sandbox.window;vm.createContext(sandbox);vm.runInContext(fs.readFileSync('source-library.js','utf8'),sandbox);vm.runInContext(fs.readFileSync('reference-sources.js','utf8'),sandbox);const rows=Object.values(sandbox.window.MM_REFERENCE_SOURCES||{}).flat(),norm=u=>{const x=new URL(u);x.hash='';x.hostname=x.hostname.toLowerCase();if(x.pathname.length>1)x.pathname=x.pathname.replace(/\\/+$/,'');return x.href},urls=rows.map(x=>norm(x[2])),dupes=urls.filter((u,i)=>urls.indexOf(u)!==i);process.stdout.write(JSON.stringify({rows:rows.length,unique:new Set(urls).size,dupes,removed:(sandbox.window.MM_REFERENCE_DUPLICATES||[]).length}))"""
+p = subprocess.run([NODE, "-e", node_audit], cwd=ROOT, capture_output=True, text=True)
+require(p.returncode == 0, f"reference canonical deduplication runtime audit failed: {p.stderr or p.stdout}")
+runtime = json.loads(p.stdout)
+require(runtime["rows"] == runtime["unique"] and not runtime["dupes"], "reference browser still contains duplicate canonical URLs")
+require(runtime["removed"] >= 1, "reference audit expected known cross-category duplicates to be reconciled")
+
+print(f"MouldMaster reference data, source and mobile browser UI QA passed ({len(structured_entries)} structured entries, {len(source_urls)} source URLs; {runtime['rows']} unique browser references; {runtime['removed']} duplicate placements reconciled)")
