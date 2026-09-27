@@ -1,8 +1,8 @@
 {
-  "version": "2026-09-28.4",
+  "version": "2026-09-28.5",
   "source": "data/asian-aus-nz-material-grade-extraction-wave2-v1.json",
   "countingRule": "one manufacturer + exact grade identity equals one unique complete profile; multiple evidence rows enrich but do not increase profile count",
-  "uniqueExactCompleteProfiles": 71,
+  "uniqueExactCompleteProfiles": 77,
   "profiles": [
     {
       "manufacturer": "Qenos",
@@ -695,6 +695,60 @@
       "polymer": "PP homopolymer",
       "supportingRecordIndexes": [
         199
+      ],
+      "evidenceRowCount": 1
+    },
+    {
+      "manufacturer": "Sumitomo Chemical",
+      "grade": "SUMIKAEXCEL 4100G",
+      "polymer": "PESU",
+      "supportingRecordIndexes": [
+        243
+      ],
+      "evidenceRowCount": 1
+    },
+    {
+      "manufacturer": "Sumitomo Chemical",
+      "grade": "SUMIKAEXCEL 4800G",
+      "polymer": "PESU",
+      "supportingRecordIndexes": [
+        244
+      ],
+      "evidenceRowCount": 1
+    },
+    {
+      "manufacturer": "Sumitomo Chemical",
+      "grade": "SUMIKAEXCEL 3601GL20",
+      "polymer": "PESU-GF20",
+      "supportingRecordIndexes": [
+        245
+      ],
+      "evidenceRowCount": 1
+    },
+    {
+      "manufacturer": "Sumitomo Chemical",
+      "grade": "SUMIKAEXCEL 4101GL20",
+      "polymer": "PESU-GF20",
+      "supportingRecordIndexes": [
+        246
+      ],
+      "evidenceRowCount": 1
+    },
+    {
+      "manufacturer": "Sumitomo Chemical",
+      "grade": "SUMIKAEXCEL 4101GL30",
+      "polymer": "PESU-GF30",
+      "supportingRecordIndexes": [
+        247
+      ],
+      "evidenceRowCount": 1
+    },
+    {
+      "manufacturer": "Sumitomo Chemical",
+      "grade": "SUMIKAEXCEL 3601GL30",
+      "polymer": "PESU-GF30",
+      "supportingRecordIndexes": [
+        248
       ],
       "evidenceRowCount": 1
     }
