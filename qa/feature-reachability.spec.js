@@ -33,8 +33,8 @@ for(const viewport of [{name:'mobile',width:412},{name:'tablet',width:768},{name
     await page.locator('#scenarios [data-mm-hub-action="assessments"]').click();await expectVisible(page,'#exams');
     await mobileHub(page,'Practice');await page.locator('#scenarios [data-mm-hub-action="labs"]').click();await page.locator('#modal [data-mm-hub-action="simulator"]').click();await expectVisible(page,'#simulator');
    }else{
-    for(const [label,selector] of [['My learning path','#path'],['Practice scenarios','#scenarios'],['Material science','#materials']]){
-     const b=page.locator('#nav button').filter({hasText:new RegExp('^\\s*'+label+'\\s*$','i')}).first();await expect(b).toBeVisible();await b.click();await expectVisible(page,selector);
+    for(const [view,selector] of [['path','#path'],['scenarios','#scenarios'],['materials','#materials']]){
+     const b=page.locator('#nav button[data-view="'+view+'"]');await expect(b).toBeVisible();await b.click();await expectVisible(page,selector);
     }
    }
   });
