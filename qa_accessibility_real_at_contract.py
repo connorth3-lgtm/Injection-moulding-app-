@@ -40,7 +40,13 @@ if status=='validated':
 else:
     need(status=='pending-real-at-validation','real AT contract may only be pending-real-at-validation or validated')
     need(any(r.get('status')!='validated' for r in rows),'fully validated matrix must promote top-level status')
-need(len(data.get('requiredTasks') or [])>=5,'real AT task coverage is incomplete')
+need(len(data.get('requiredTasks') or [])>=8,'real AT task coverage is incomplete')
+scope=data.get('auditScope') or {}
+for key in ('uiNavigation','bookLongForm','assessmentQuestionsAndFeedback','keyboardFocusRecovery','textZoom200Percent'):
+    need(scope.get(key) is True,f'real AT audit scope missing: {key}')
+tasks='\n'.join(data.get('requiredTasks') or [])
+for marker in ('Book chapter','long-stem assessment','focus returns','200% text zoom'):
+    need(marker in tasks,f'real AT task matrix missing UI/Book/assessment coverage: {marker}')
 if evidence_release!=release:
     need(data.get('status')!='validated','stale real AT evidence must not validate the current web release')
 print(f'MouldMaster real assistive-technology contract QA passed for evidence release {evidence_release}; current web release {release} remains fail-closed until matching human evidence exists')
