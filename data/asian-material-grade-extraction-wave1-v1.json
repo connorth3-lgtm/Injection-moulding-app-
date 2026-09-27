@@ -258,6 +258,123 @@
       ],
       "source": "https://iocl.com/uploads/TDS_23012026.pdf",
       "status": "candidate-partial"
+    },
+    {
+      "manufacturer": "SCGC",
+      "country": "Thailand",
+      "polymer": "PP impact copolymer",
+      "grade": "P740J",
+      "reinforcement": "none",
+      "properties": {
+        "MFR_g_10min": 27,
+        "tensileYield_kg_cm2": 290,
+        "flexuralModulus_kg_cm2": 12500,
+        "izod23_J_m": 78,
+        "izod0_J_m": 49,
+        "izodMinus20_J_m": 39
+      },
+      "conditioning": "MFR 230C/2.16kg",
+      "methods": [
+        "ASTM D1238",
+        "ASTM D638",
+        "ASTM D790",
+        "ASTM D256"
+      ],
+      "source": "https://www.scgchemicals.com/en/products-grade/p740j",
+      "status": "candidate-partial"
+    },
+    {
+      "manufacturer": "SCGC",
+      "country": "Thailand",
+      "polymer": "PP impact copolymer",
+      "grade": "P744J",
+      "reinforcement": "none",
+      "properties": {
+        "MFR_g_10min": 30,
+        "tensileYield_MPa": 28,
+        "flexuralModulus_kg_cm2": 14500,
+        "izod23_J_m": 78,
+        "izod0_J_m": 55,
+        "izodMinus20_J_m": 41
+      },
+      "conditioning": "MFR 230C/2.16kg",
+      "methods": [
+        "ASTM D1238",
+        "ASTM D638",
+        "ASTM D790",
+        "ASTM D256"
+      ],
+      "source": "https://www.scgchemicals.com/en/products-grade/p744j",
+      "status": "candidate-partial"
+    },
+    {
+      "manufacturer": "SCGC",
+      "country": "Thailand",
+      "polymer": "PP impact copolymer",
+      "grade": "P842J",
+      "reinforcement": "none",
+      "properties": {
+        "MFR_g_10min": 40,
+        "density_g_cm3": 0.91,
+        "melting_C": 163,
+        "HDT_C_at_0_455MPa": 125,
+        "tensileYield_kg_cm2": 295,
+        "flexuralModulus_kg_cm2": 15500,
+        "izod23_J_m": 75,
+        "izod0_J_m": 50
+      },
+      "conditioning": "MFR 230C/2.16kg",
+      "methods": [
+        "ASTM D1238",
+        "ASTM D1505",
+        "ASTM D2117",
+        "ASTM D648",
+        "ASTM D638",
+        "ASTM D790",
+        "ASTM D256"
+      ],
+      "source": "https://www.scgchemicals.com/en/products-grade/p842j",
+      "status": "candidate-partial"
+    },
+    {
+      "manufacturer": "SCGC",
+      "country": "Thailand",
+      "polymer": "PP impact copolymer",
+      "grade": "P945J",
+      "reinforcement": "none",
+      "properties": {
+        "MFR_g_10min": 65,
+        "tensileYield_kg_cm2": 270,
+        "flexuralModulus_kg_cm2": 14000,
+        "izod23_J_m": 65
+      },
+      "conditioning": "MFR 230C/2.16kg",
+      "methods": [
+        "ASTM D1238",
+        "ASTM D638",
+        "ASTM D790",
+        "ASTM D256"
+      ],
+      "source": "https://www.scgchemicals.com/en/products-grade/p945j",
+      "status": "candidate-partial"
     }
-  ]
+  ],
+  "discoveryNotes": {
+    "unitikaPA66InjectionGrades": 22,
+    "haldiaPPInjectionGrades": 16,
+    "lottePPInjectionPages": "multiple; grade-level MI/features/applications exposed",
+    "kingfaFamilies": [
+      "PA6",
+      "PA66",
+      "PBT",
+      "POM",
+      "PP-LGF",
+      "PA66-LGF",
+      "PA10T",
+      "PA6T/66",
+      "LCP",
+      "PC/ABS/ASA/AES/PMMA"
+    ],
+    "countingBoundary": "catalogue grade existence is discovery evidence only; it is not a completed profile"
+  }
 }
