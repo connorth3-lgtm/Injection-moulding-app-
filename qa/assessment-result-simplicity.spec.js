@@ -50,4 +50,7 @@ test('graded assessment shows one clear result and only answers needing review',
   await expect(source).toHaveCount(1);
   await expect(source).not.toHaveAttribute('open','');
   await expect(source.locator('summary')).toHaveText('Source');
+  await expect(visibleRows.locator('.mm-revision-detail')).toHaveCount(0);
+  await expect(visibleRows).not.toContainText('Question revision');
+  await expect(visibleRows).not.toContainText('DOI resolver set reviewed');
 });
