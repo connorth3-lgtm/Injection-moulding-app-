@@ -23,7 +23,7 @@ for(let seed=seedStart;seed<=seedEnd;seed++){
   },{seed});
   await page.setViewportSize({width:widths[seed%widths.length],height:640+(seed%4)*120});
   const res=await page.goto(BASE,{waitUntil:'domcontentloaded'});expect(res?.ok()).toBeTruthy();
-  await page.waitForFunction(()=>typeof window.MM_APP_SHELL_FINALIZED==='string'&&!document.getElementById('mmBootstrap'));
+  await page.waitForFunction(()=>typeof window.MM_APP_SHELL_FINALIZED==='string'&&!document.getElementById('mmBootstrap')&&typeof window.MM_ACCESSIBILITY_HARDENING?.unresolvedSemanticCount==='function');
   await invariant(page,seed,0);
   for(let step=1;step<=20;step++){
    const a=Math.floor(r()*10);
@@ -34,7 +34,7 @@ for(let seed=seedStart;seed<=seedEnd;seed++){
    else if(a===4)await page.setViewportSize({width:widths[Math.floor(r()*widths.length)],height:640+Math.floor(r()*400)});
    else if(a===5)await page.evaluate(()=>window.MM_APP_SHELL?.dashboard?.compose?.());
    else if(a===6){const close=page.locator('#modal button').filter({hasText:/close/i}).first();if(await close.isVisible({timeout:1000}).catch(()=>false))await close.click({timeout:3000})}
-   else if(a===7){await page.reload({waitUntil:'domcontentloaded',timeout:5000});await page.waitForFunction(()=>typeof window.MM_APP_SHELL_FINALIZED==='string'&&!document.getElementById('mmBootstrap'),null,{timeout:5000})}
+   else if(a===7){await page.reload({waitUntil:'domcontentloaded',timeout:5000});await page.waitForFunction(()=>typeof window.MM_APP_SHELL_FINALIZED==='string'&&!document.getElementById('mmBootstrap')&&typeof window.MM_ACCESSIBILITY_HARDENING?.unresolvedSemanticCount==='function',null,{timeout:5000})}
    else if(a===8)await page.evaluate(()=>{history.pushState({},'',location.pathname+'#stress');history.back()});
    else await page.evaluate(()=>new Promise(q=>requestAnimationFrame(()=>requestAnimationFrame(q))));
    await invariant(page,seed,step);
