@@ -60,6 +60,14 @@ for lab,source in upgrades.items():
     need(f"'{source}'" in integrity,f'new source not registered: {source}')
 need("s?.id==='iso-20430'&&!isSafetyText(searchText)" in integrity,'generic machine-safety source can still count as non-safety material corroboration')
 
+diagnostic_upgrades={
+ 'cavity-short-shot':['autodesk-fill-pack','zhao-2022'],
+ 'hot-runner-imbalance':['hotrunner-2024','hotrunner-manifold-2023'],
+}
+for lab,sources in diagnostic_upgrades.items():
+    for source in sources: need(f"'{source}'" in integrity,f'diagnostic evidence source missing for {lab}: {source}')
+need("DIAGNOSTIC_SOURCE_UPGRADES[lab.id]||null" in integrity,'diagnostic proposition builder must apply explicit lab evidence mappings')
+
 optional=[x for x in items if x.get('kind')=='optional-material-practice']
 need(len(optional)==40,f'optional practice count changed: {len(optional)}/40')
 for x in optional: need(len(set(x.get('sourceIds') or []))>=2,f'optional item lacks two baseline sources: {x.get("id")}')
