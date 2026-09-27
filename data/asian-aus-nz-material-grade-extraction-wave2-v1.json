@@ -1,5 +1,5 @@
 {
-  "version": "2026-09-28.15",
+  "version": "2026-09-28.16",
   "scope": "Asia including Singapore, Australia and New Zealand primary-source material evidence wave 2",
   "policy": {
     "noUniversalSettings": true,
@@ -2990,6 +2990,126 @@
         "high modulus"
       ],
       "compositionBoundary": "manufacturer ** denotes glass-fibre content; exact loading must be resolved before property use",
+      "status": "discovery-only"
+    },
+    {
+      "manufacturer": "LOTTE Chemical Titan",
+      "manufacturerCountry": "Malaysia",
+      "region": "Asia",
+      "polymer": "PP impact copolymer",
+      "grade": "SH611",
+      "process": "injection moulding",
+      "MFR": {
+        "test": "ASTM D1238",
+        "condition": "230 C / 2.16 kg",
+        "value_g_10min": 18
+      },
+      "density_g_cm3": 0.9,
+      "tensileYield_kg_cm2": 190,
+      "flexuralModulus_kg_cm2": 9000,
+      "applicationBoundary": [
+        "industrial pails",
+        "pallets",
+        "household electrical appliances"
+      ],
+      "restriction": "manufacturer sheet excludes food, personal-care, medical and pharmaceutical applications",
+      "status": "candidate-complete"
+    },
+    {
+      "manufacturer": "LOTTE Chemical Titan",
+      "manufacturerCountry": "Malaysia",
+      "region": "Asia",
+      "polymer": "PP impact copolymer",
+      "grade": "JM-370K",
+      "process": "injection moulding",
+      "MFR_g_10min": 30,
+      "applicationBoundary": [
+        "injection moulded products"
+      ],
+      "evidenceClass": "manufacturer grade catalogue",
+      "missingFields": [
+        "full mechanical/thermal TDS extraction"
+      ],
+      "status": "candidate-partial"
+    },
+    {
+      "manufacturer": "LOTTE Chemical Titan",
+      "manufacturerCountry": "Malaysia",
+      "region": "Asia",
+      "polymer": "PP impact copolymer",
+      "grade": "EPC40R",
+      "process": "injection moulding",
+      "MFR_g_10min": 7,
+      "evidenceClass": "manufacturer grade catalogue",
+      "missingFields": [
+        "full mechanical/thermal TDS extraction"
+      ],
+      "status": "candidate-partial"
+    },
+    {
+      "manufacturer": "LOTTE Chemical Titan",
+      "manufacturerCountry": "Malaysia",
+      "region": "Asia",
+      "polymer": "PP impact copolymer",
+      "grade": "7523",
+      "process": "injection moulding",
+      "MFR_g_10min": 4,
+      "evidenceClass": "manufacturer grade catalogue",
+      "missingFields": [
+        "full mechanical/thermal TDS extraction"
+      ],
+      "status": "candidate-partial"
+    },
+    {
+      "manufacturer": "PETRONAS Chemicals",
+      "manufacturerCountry": "Malaysia",
+      "region": "Asia",
+      "polymer": "PP homopolymer",
+      "grade": "H500NG",
+      "process": "injection moulding",
+      "MFR_g_10min": 12,
+      "applications": [
+        "furniture",
+        "housewares",
+        "containers",
+        "toys"
+      ],
+      "evidenceClass": "manufacturer product brochure",
+      "status": "candidate-complete"
+    },
+    {
+      "manufacturer": "PETRONAS Chemicals",
+      "manufacturerCountry": "Malaysia",
+      "region": "Asia",
+      "polymer": "PP homopolymer",
+      "grade": "H648TT",
+      "process": "transparent thin-wall injection moulding",
+      "MFR_g_10min": 53,
+      "evidenceClass": "manufacturer product brochure",
+      "status": "candidate-complete"
+    },
+    {
+      "manufacturer": "Chandra Asri",
+      "manufacturerCountry": "Indonesia",
+      "region": "Asia",
+      "polymer": "PP",
+      "recordType": "exact-grade-extraction-queue",
+      "process": "injection moulding",
+      "promotionBlock": "manufacturer production is established but current exact-grade numeric primary TDS is not yet captured; do not use distributor-derived values",
+      "status": "discovery-only"
+    },
+    {
+      "manufacturer": "IRPC",
+      "manufacturerCountry": "Thailand",
+      "region": "Asia",
+      "polymer": "PP",
+      "recordType": "exact-grade-extraction-queue",
+      "families": [
+        "homopolymer",
+        "random copolymer",
+        "impact copolymer"
+      ],
+      "promotionBlock": "exact grade numeric manufacturer TDS required before promotion",
       "status": "discovery-only"
     }
   ]
