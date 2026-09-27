@@ -127,6 +127,10 @@ jobs:
         id: app_500
         continue-on-error: true
         run: npx playwright test --config=playwright.app-500.config.cjs
+      - name: UI-only feature reachability audit
+        id: reachability
+        continue-on-error: true
+        run: npx playwright test --config=playwright.reachability.config.cjs
       - name: Chromium mobile, material, evidence, engineering-store and PWA regression tests
         id: chromium_regression
         continue-on-error: true
@@ -152,6 +156,7 @@ jobs:
         env:
           VISUAL_OUTCOME: ${{ steps.visual_lock.outcome }}
           APP_500_OUTCOME: ${{ steps.app_500.outcome }}
+          REACHABILITY_OUTCOME: ${{ steps.reachability.outcome }}
           CHROMIUM_OUTCOME: ${{ steps.chromium_regression.outcome }}
           WEBKIT_OUTCOME: ${{ steps.webkit_regression.outcome }}
           CROSS_BROWSER_OUTCOME: ${{ steps.cross_browser_smoke.outcome }}
@@ -167,6 +172,7 @@ jobs:
           }
           check_gate "Approved visual baseline" "$VISUAL_OUTCOME"
           check_gate "500 isolated app reliability runs" "$APP_500_OUTCOME"
+          check_gate "UI-only feature reachability audit" "$REACHABILITY_OUTCOME"
           check_gate "Chromium substantive regression suite" "$CHROMIUM_OUTCOME"
           check_gate "WebKit substantive learner suite" "$WEBKIT_OUTCOME"
           check_gate "Cross-browser desktop/tablet smoke suite" "$CROSS_BROWSER_OUTCOME"
