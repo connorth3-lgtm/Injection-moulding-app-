@@ -220,7 +220,7 @@ function installUi(){if(typeof document==='undefined')return;let queued=false;co
 function start(attempt=0){const p=build();if(!p){if(attempt<80&&typeof setTimeout==='function')return setTimeout(()=>start(attempt+1),25);throw new Error('Assessment banks unavailable for proposition evidence integrity')}installUi()}
 if(typeof document==='undefined')start();else if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',()=>start(),{once:true});else start();
 })();
-/* <<< assessment-evidence-integrity-upgrade.js *//* <<< assessment-evidence-integrity-upgrade.js */
+/* <<< assessment-evidence-integrity-upgrade.js */
 
 /* >>> lesson-evidence-depth.js */
 /* MouldMaster targeted lesson evidence depth — 2026.08.26.3 */
