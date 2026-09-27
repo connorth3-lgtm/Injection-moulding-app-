@@ -1,5 +1,5 @@
 {
-  "version": "2026-09-28.18",
+  "version": "2026-09-28.19",
   "scope": "Asia including Singapore, Australia and New Zealand primary-source material evidence wave 2",
   "policy": {
     "noUniversalSettings": true,
@@ -3374,6 +3374,314 @@
       "rule": "locally processed or locally supplied resin must retain overseas manufacturer/grade origin unless a primary source establishes NZ resin manufacture",
       "rationale": "prevents regional availability from being mislabeled as polymer manufacturing origin",
       "status": "candidate-complete"
+    },
+    {
+      "manufacturer": "Polyplastics",
+      "manufacturerCountry": "Japan",
+      "region": "Asia",
+      "polymer": "PBT",
+      "brand": "DURANEX",
+      "recordType": "scale-extraction-queue",
+      "queueSize": 99,
+      "prioritySlices": [
+        "unfilled flow ladder",
+        "GF10/20/30/40/50",
+        "GF/mineral low-warpage",
+        "flame-retardant V-0",
+        "hydrolysis-resistant",
+        "low-wear/sliding",
+        "laser-weldable",
+        "low-VOC"
+      ],
+      "examples": [
+        "2000",
+        "2002",
+        "2002K",
+        "2002U",
+        "201NF",
+        "209AW",
+        "3306"
+      ],
+      "promotionRule": "each grade requires its own current manufacturer property page/TDS before complete status",
+      "status": "discovery-only"
+    },
+    {
+      "manufacturer": "Polyplastics",
+      "manufacturerCountry": "Japan",
+      "region": "Asia",
+      "polymer": "POM",
+      "brand": "DURACON",
+      "recordType": "scale-extraction-queue",
+      "prioritySlices": [
+        "viscosity/MFR ladder",
+        "creep-resistant",
+        "toughened",
+        "sliding",
+        "weather-resistant",
+        "chlorinated-water-resistant",
+        "reinforced/low-warpage",
+        "low-VOC"
+      ],
+      "alreadyCompleteExamples": [
+        "CP15X",
+        "M25LV",
+        "TF-30",
+        "AW-01",
+        "WR-01",
+        "M140-44",
+        "M450-44",
+        "GM-20",
+        "LU-02",
+        "M90-44"
+      ],
+      "promotionRule": "extract exact ISO/ASTM conditions and preserve typical/specification boundary",
+      "status": "discovery-only"
+    },
+    {
+      "manufacturer": "Polyplastics",
+      "manufacturerCountry": "Japan",
+      "region": "Asia",
+      "polymer": "PPS",
+      "brand": "DURAFIDE",
+      "recordType": "scale-extraction-queue",
+      "prioritySlices": [
+        "GF reinforced",
+        "mineral/GF low-warpage",
+        "low-chlorine",
+        "sliding",
+        "high-toughness",
+        "electrical/electronic"
+      ],
+      "alreadyCompleteExamples": [
+        "1140A66"
+      ],
+      "promotionRule": "retain melt-viscosity shear-rate/temperature and directional CLTE conditions",
+      "status": "discovery-only"
+    },
+    {
+      "manufacturer": "Polyplastics",
+      "manufacturerCountry": "Japan",
+      "region": "Asia",
+      "polymer": "LCP",
+      "brand": "LAPEROS",
+      "recordType": "scale-extraction-queue",
+      "queueSize": 21,
+      "prioritySlices": [
+        "GF high-flow",
+        "low-warpage",
+        "low-anisotropy",
+        "ultra-high-flow",
+        "high-temperature stiffness",
+        "CF reinforced"
+      ],
+      "examples": [
+        "A130",
+        "A150",
+        "A230",
+        "A410",
+        "E130G",
+        "E463i",
+        "E471i",
+        "E473i",
+        "E480i",
+        "E481i",
+        "GA130",
+        "GA481",
+        "HA475",
+        "S135",
+        "S140M",
+        "S150",
+        "S471",
+        "S475"
+      ],
+      "status": "discovery-only"
+    },
+    {
+      "manufacturer": "Kuraray",
+      "manufacturerCountry": "Japan",
+      "region": "Asia",
+      "polymer": "PA9T",
+      "brand": "GENESTAR",
+      "recordType": "scale-extraction-queue",
+      "prioritySlices": [
+        "unreinforced",
+        "GF30",
+        "GF35",
+        "GF50",
+        "sliding",
+        "hydrolysis-resistant",
+        "hot-water/food-contact"
+      ],
+      "alreadyCompleteExamples": [
+        "N1000A",
+        "G1300A",
+        "G1500A",
+        "G1352A",
+        "GL1350A",
+        "G1350A-M47WF"
+      ],
+      "promotionRule": "condition must remain absolutely-dry where manufacturer reports it; retain MD/TD shrinkage separately",
+      "status": "discovery-only"
+    },
+    {
+      "manufacturer": "UBE",
+      "manufacturerCountry": "Japan",
+      "region": "Asia",
+      "polymer": "polyamide",
+      "recordType": "scale-extraction-queue",
+      "prioritySlices": [
+        "PA6 unreinforced",
+        "PA6 GF15/30/45",
+        "PA66",
+        "PA12",
+        "impact modified",
+        "flame retardant"
+      ],
+      "alreadyCompleteExamples": [
+        "1013B",
+        "1015GC6",
+        "3030B"
+      ],
+      "promotionRule": "retain dry-as-moulded vs conditioned state and production area separately",
+      "status": "discovery-only"
+    },
+    {
+      "manufacturer": "UNITIKA",
+      "manufacturerCountry": "Japan",
+      "region": "Asia",
+      "polymer": "engineering thermoplastics",
+      "recordType": "scale-extraction-queue",
+      "prioritySlices": [
+        "PA6",
+        "PA66",
+        "polyarylate unreinforced",
+        "polyarylate reinforced",
+        "high-flow alloys"
+      ],
+      "alreadyCompleteExamples": [
+        "E2000",
+        "FUN-8520S",
+        "UG-100-20",
+        "UG-100-30"
+      ],
+      "promotionRule": "preserve DAM versus 50% RH conditioning and flow/transverse shrinkage",
+      "status": "discovery-only"
+    },
+    {
+      "manufacturer": "Teijin",
+      "manufacturerCountry": "Japan",
+      "region": "Asia",
+      "polymer": "PC",
+      "brand": "PANLITE",
+      "recordType": "scale-extraction-queue",
+      "prioritySlices": [
+        "unreinforced flow ladder",
+        "GF reinforced",
+        "CF reinforced",
+        "flame retardant",
+        "optical",
+        "weather resistant"
+      ],
+      "alreadyCompleteExamples": [
+        "SH-1126Z"
+      ],
+      "partialExamples": [
+        "GV-3430R",
+        "B-8130R"
+      ],
+      "status": "discovery-only"
+    },
+    {
+      "manufacturer": "LOTTE Chemical",
+      "manufacturerCountry": "South Korea",
+      "region": "Asia",
+      "polymer": "engineering thermoplastics",
+      "recordType": "scale-extraction-queue",
+      "prioritySlices": [
+        "PBT unfilled",
+        "PBT GF",
+        "PBT low-warpage",
+        "PBT FR",
+        "PC",
+        "PC alloys",
+        "PPA",
+        "PPS",
+        "mPPE",
+        "TPO/TPE"
+      ],
+      "alreadyCompleteExamples": [
+        "ASF-9860",
+        "GP-5000",
+        "GP-5400G",
+        "LW-5300M",
+        "GP-2306FC"
+      ],
+      "promotionRule": "capture representative processing conditions only with explicit grade/source boundary",
+      "status": "discovery-only"
+    },
+    {
+      "manufacturer": "LG Chem",
+      "manufacturerCountry": "South Korea",
+      "region": "Asia",
+      "polymer": "engineering thermoplastics",
+      "recordType": "scale-extraction-queue",
+      "prioritySlices": [
+        "LUPOY PC",
+        "PC/ABS",
+        "LUPOX/LUMAX PBT",
+        "PA6",
+        "reinforced engineering grades"
+      ],
+      "promotionRule": "exact grade numeric manufacturer TDS required; family marketing pages remain discovery-only",
+      "status": "discovery-only"
+    },
+    {
+      "manufacturer": "CHIMEI",
+      "manufacturerCountry": "Taiwan",
+      "region": "Asia",
+      "polymer": "engineering thermoplastics",
+      "recordType": "scale-extraction-queue",
+      "prioritySlices": [
+        "POLYLAC ABS flow/impact ladder",
+        "WONDERLOY PC",
+        "PC/ABS",
+        "PC/ASA",
+        "ACRYREX PMMA"
+      ],
+      "examples": [
+        "PA-737",
+        "PA-746",
+        "PA-757H",
+        "PC-345",
+        "PC-365",
+        "PC-385",
+        "PC-860",
+        "PC-545",
+        "PC-992",
+        "CM-207",
+        "CM-211"
+      ],
+      "promotionRule": "manufacturer TDS/process-guide availability alone is not numeric extraction",
+      "status": "discovery-only"
+    },
+    {
+      "manufacturer": "Formosa Chemicals & Fibre",
+      "manufacturerCountry": "Taiwan",
+      "region": "Asia",
+      "polymer": "ABS/engineering styrenics",
+      "recordType": "scale-extraction-queue",
+      "alreadyCompleteExamples": [
+        "AG15A1-H",
+        "AF3500"
+      ],
+      "prioritySlices": [
+        "general ABS",
+        "high-flow ABS",
+        "high-impact ABS",
+        "PC/ABS"
+      ],
+      "promotionRule": "retain ASTM/ISO routes independently when both are published",
+      "status": "discovery-only"
     }
   ]
 }
