@@ -921,6 +921,79 @@
       ],
       "source": "https://en.fcfc-plastics.com/af3500.html",
       "status": "candidate-partial"
+    },
+    {
+      "manufacturer": "Toray",
+      "country": "Japan",
+      "polymer": "PPS",
+      "grade": "TORELINA A504X90",
+      "reinforcement": "GF40%",
+      "properties": {
+        "density_g_cm3": 1.66,
+        "tensile_MPa": 195,
+        "flexural_MPa": 280,
+        "flexuralModulus_GPa": 14.5,
+        "HDT_C_1_8MPa": 260,
+        "waterAbsorption_pct": 0.02
+      },
+      "conditioning": "manufacturer PPS grade property page; preserve published test conditions at promotion",
+      "methods": [
+        "ISO 1183",
+        "ISO 527",
+        "ISO 178",
+        "ISO 75",
+        "ISO 62"
+      ],
+      "source": "https://www.plastics.toray/products/torelina/",
+      "status": "candidate-partial"
+    },
+    {
+      "manufacturer": "Toray",
+      "country": "Japan",
+      "polymer": "PBT",
+      "grade": "TORAYCON reinforced family",
+      "reinforcement": "GF/mineral variants",
+      "properties": {},
+      "conditioning": "manufacturer family evidence; grade-specific extraction required before promotion",
+      "methods": [],
+      "source": "https://www.plastics.toray/products/toraycon/",
+      "status": "discovery-only"
+    },
+    {
+      "manufacturer": "Toray",
+      "country": "Japan",
+      "polymer": "PA",
+      "grade": "AMILAN engineering nylon family",
+      "reinforcement": "unfilled/GF/mineral/FR variants",
+      "properties": {},
+      "conditioning": "manufacturer family evidence; exact grade/test-conditioned extraction required",
+      "methods": [],
+      "source": "https://www.plastics.toray/products/amilan/",
+      "status": "discovery-only"
+    },
+    {
+      "manufacturer": "Teijin",
+      "country": "Japan",
+      "polymer": "PC",
+      "grade": "PANLITE injection family",
+      "reinforcement": "unfilled/reinforced/alloy variants",
+      "properties": {},
+      "conditioning": "manufacturer primary engineering-plastics family; grade-specific property extraction required",
+      "methods": [],
+      "source": "https://www.teijin-resin.com/products/panlite/",
+      "status": "discovery-only"
+    },
+    {
+      "manufacturer": "Mitsubishi Engineering-Plastics",
+      "country": "Japan",
+      "polymer": "PC",
+      "grade": "Iupilon/NOVAREX family",
+      "reinforcement": "unfilled/reinforced/alloy variants",
+      "properties": {},
+      "conditioning": "manufacturer primary PC technical library includes properties and fabrication guidance; grade-specific extraction required",
+      "methods": [],
+      "source": "https://www.m-ep.co.jp/en/product/iupi_nova/",
+      "status": "discovery-only"
     }
   ],
   "discoveryNotes": {
@@ -948,7 +1021,9 @@
     "polyplasticsLCP": "primary grade pages provide extremely low water absorption plus injection-pressure-conditioned flow/transverse shrinkage, useful for anisotropy/precision-molding teaching",
     "unitikaPolyarylate": "U-Polymer adds amorphous polyarylate grades with ISO methods, water absorption, parallel/perpendicular shrinkage, HDT and chemical/impact/sliding variants",
     "lotteAdvancedMaterials": "primary catalogue extends beyond row 320 and exposes resin type, feature, ASTM/ISO property links, SDS and processing-guide/certification flags; treat each row as discovery until profile fields pass promotion",
-    "formosaABS": "grade pages expose both ASTM and ISO property sets plus recommended processing-condition documents and SDS, enabling traceable ABS profiles"
+    "formosaABS": "grade pages expose both ASTM and ISO property sets plus recommended processing-condition documents and SDS, enabling traceable ABS profiles",
+    "toray": "primary Japanese engineering-plastics portfolio adds PPS/PBT/PA families; keep family records discovery-only until exact grade pages and conditions are captured",
+    "teijinMep": "Japanese PC evidence adds PANLITE and Iupilon/NOVAREX technical families; processing guidance must remain supplier/grade bounded"
   },
   "promotionRules": {
     "requiredBeforeAccepted": [
