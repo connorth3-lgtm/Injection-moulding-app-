@@ -1,5 +1,5 @@
 {
-  "version": "2026-09-28.9",
+  "version": "2026-09-28.10",
   "scope": "Asia including Singapore, Australia and New Zealand primary-source material evidence wave 2",
   "policy": {
     "noUniversalSettings": true,
@@ -1889,6 +1889,299 @@
       ],
       "boundary": "do not infer Singapore manufacture or numeric grade properties from regional entity presence",
       "status": "discovery-only"
+    },
+    {
+      "manufacturer": "ExxonMobil Chemical",
+      "region": "Asia/Singapore supply and manufacturing context",
+      "polymer": "PP",
+      "grade": "Achieve Advanced PP7123KNE1",
+      "process": "injection moulding",
+      "processingBoundary": {
+        "drying": "not required",
+        "melt_C": "200-240",
+        "barrelRear_C": "200-230",
+        "barrelMiddle_C": "200-230",
+        "barrelFront_C": "205-240",
+        "nozzle_C": "205-240",
+        "mould_C": "20-60",
+        "screwSpeed_rpm": "40-100",
+        "cushion_mm": "5-10",
+        "fillTime_s": "1-10",
+        "fillTarget": "95-98% full if conditions allow"
+      },
+      "valueStatus": "typical/reference processing values only; manufacturer says not definite specifications",
+      "boundary": "grade-specific guide; machine/part dependent values must not be universalised",
+      "status": "candidate-complete"
+    },
+    {
+      "manufacturer": "Asahi Kasei",
+      "manufacturerCountry": "Japan",
+      "region": "Asia/Singapore availability evidence",
+      "recordType": "Singapore-SDS-market-coverage",
+      "product": "Asaclean purging compounds",
+      "singaporeSdsFamilies": [
+        "U",
+        "newEX",
+        "CG",
+        "newE",
+        "SA",
+        "IMX",
+        "UP",
+        "CP",
+        "FD",
+        "UF2",
+        "SN",
+        "newUP",
+        "PT",
+        "PF",
+        "PX2",
+        "newM"
+      ],
+      "boundary": "Singapore SDS availability is market/compliance evidence, not Singapore manufacturing-origin evidence and not moulding-resin property data",
+      "status": "candidate-complete"
+    },
+    {
+      "manufacturer": "Polyplastics",
+      "manufacturerCountry": "Japan",
+      "region": "Asia",
+      "polymer": "POM",
+      "grade": "DURACON CP15X",
+      "feature": "creep resistant",
+      "density_g_cm3": 1.41,
+      "waterAbsorption23C24h1mm_percent": 0.7,
+      "MFR": {
+        "test": "ISO 1133",
+        "condition": "190 C / 2.16 kg",
+        "value_g_10min": 1.7
+      },
+      "MVR": {
+        "test": "ISO 1133",
+        "condition": "190 C / 2.16 kg",
+        "value_cm3_10min": 1.4
+      },
+      "tensile_MPa": 66,
+      "tensileModulus_MPa": 2700,
+      "flexural_MPa": 87,
+      "flexuralModulus_MPa": 2450,
+      "notchedCharpy23C_kJ_m2": 12,
+      "HDT1_8MPa_C": 92,
+      "CLTEflow_1e5_C": 12,
+      "status": "candidate-complete"
+    },
+    {
+      "manufacturer": "Polyplastics",
+      "manufacturerCountry": "Japan",
+      "region": "Asia",
+      "polymer": "POM",
+      "grade": "DURACON M25LV",
+      "feature": "low VOC/high viscosity",
+      "density_g_cm3": 1.41,
+      "waterAbsorption23C24h1mm_percent": 0.6,
+      "MFR": {
+        "test": "ISO 1133",
+        "condition": "190 C / 2.16 kg",
+        "value_g_10min": 2.5
+      },
+      "MVR": {
+        "test": "ISO 1133",
+        "condition": "190 C / 2.16 kg",
+        "value_cm3_10min": 2.2
+      },
+      "tensile_MPa": 59,
+      "tensileModulus_MPa": 2400,
+      "flexural_MPa": 79,
+      "flexuralModulus_MPa": 2200,
+      "notchedCharpy23C_kJ_m2": 8.5,
+      "HDT1_8MPa_C": 87,
+      "status": "candidate-complete"
+    },
+    {
+      "manufacturer": "Polyplastics",
+      "manufacturerCountry": "Japan",
+      "region": "Asia",
+      "polymer": "POM",
+      "grade": "DURACON TF-30",
+      "feature": "high impact/flexible",
+      "density_g_cm3": 1.35,
+      "waterAbsorption23C24h1mm_percent": 0.8,
+      "MFR": {
+        "test": "ISO 1133",
+        "condition": "190 C / 2.16 kg",
+        "value_g_10min": 8
+      },
+      "MVR": {
+        "test": "ISO 1133",
+        "condition": "190 C / 2.16 kg",
+        "value_cm3_10min": 7
+      },
+      "tensile_MPa": 37,
+      "tensileModulus_MPa": 1300,
+      "flexural_MPa": 43,
+      "flexuralModulus_MPa": 1200,
+      "notchedCharpy23C_kJ_m2": 20,
+      "status": "candidate-complete"
+    },
+    {
+      "manufacturer": "Polyplastics",
+      "manufacturerCountry": "Japan",
+      "region": "Asia",
+      "polymer": "POM+PE",
+      "grade": "DURACON AW-01",
+      "feature": "high sliding",
+      "density_g_cm3": 1.37,
+      "waterAbsorption23C24h1mm_percent": 0.7,
+      "MFR": {
+        "test": "ISO 1133",
+        "condition": "190 C / 2.16 kg",
+        "value_g_10min": 9
+      },
+      "MVR": {
+        "test": "ISO 1133",
+        "condition": "190 C / 2.16 kg",
+        "value_cm3_10min": 8
+      },
+      "tensile_MPa": 54,
+      "tensileModulus_MPa": 2350,
+      "flexural_MPa": 75,
+      "flexuralModulus_MPa": 2200,
+      "notchedCharpy23C_kJ_m2": 5.7,
+      "HDT1_8MPa_C": 80,
+      "status": "candidate-complete"
+    },
+    {
+      "manufacturer": "Polyplastics",
+      "manufacturerCountry": "Japan",
+      "region": "Asia",
+      "polymer": "POM",
+      "grade": "DURACON WR-01",
+      "feature": "chlorinated-water resistant",
+      "density_g_cm3": 1.41,
+      "waterAbsorption23C24h1mm_percent": 1.2,
+      "MFR": {
+        "test": "ISO 1133",
+        "condition": "190 C / 2.16 kg",
+        "value_g_10min": 10
+      },
+      "MVR": {
+        "test": "ISO 1133",
+        "condition": "190 C / 2.16 kg",
+        "value_cm3_10min": 8
+      },
+      "tensile_MPa": 58,
+      "tensileModulus_MPa": 2400,
+      "flexural_MPa": 76,
+      "flexuralModulus_MPa": 2200,
+      "notchedCharpy23C_kJ_m2": 5.6,
+      "HDT1_8MPa_C": 78,
+      "status": "candidate-complete"
+    },
+    {
+      "manufacturer": "Polyplastics",
+      "manufacturerCountry": "Japan",
+      "region": "Asia",
+      "polymer": "POM",
+      "grade": "DURACON M140-44",
+      "feature": "high flow/fast moulding cycle",
+      "density_g_cm3": 1.41,
+      "waterAbsorption23C24h1mm_percent": 0.5,
+      "MFR": {
+        "test": "ISO 1133",
+        "condition": "190 C / 2.16 kg",
+        "value_g_10min": 14
+      },
+      "MVR": {
+        "test": "ISO 1133",
+        "condition": "190 C / 2.16 kg",
+        "value_cm3_10min": 12
+      },
+      "tensile_MPa": 62,
+      "tensileModulus_MPa": 2700,
+      "flexural_MPa": 87,
+      "flexuralModulus_MPa": 2500,
+      "notchedCharpy23C_kJ_m2": 5.5,
+      "HDT1_8MPa_C": 100,
+      "status": "candidate-complete"
+    },
+    {
+      "manufacturer": "Polyplastics",
+      "manufacturerCountry": "Japan",
+      "region": "Asia",
+      "polymer": "POM",
+      "grade": "DURACON M450-44",
+      "feature": "super high flow/fast moulding cycle",
+      "density_g_cm3": 1.41,
+      "waterAbsorption23C24h1mm_percent": 0.5,
+      "MFR": {
+        "test": "ISO 1133",
+        "condition": "190 C / 2.16 kg",
+        "value_g_10min": 45
+      },
+      "MVR": {
+        "test": "ISO 1133",
+        "condition": "190 C / 2.16 kg",
+        "value_cm3_10min": 38
+      },
+      "tensile_MPa": 63,
+      "tensileModulus_MPa": 2800,
+      "flexural_MPa": 89,
+      "flexuralModulus_MPa": 2550,
+      "notchedCharpy23C_kJ_m2": 5,
+      "HDT1_8MPa_C": 100,
+      "status": "candidate-complete"
+    },
+    {
+      "manufacturer": "Polyplastics",
+      "manufacturerCountry": "Japan",
+      "region": "Asia",
+      "polymer": "POM-GF20",
+      "grade": "DURACON GM-20",
+      "feature": "mineral/GF reinforced low warpage",
+      "density_g_cm3": 1.54,
+      "waterAbsorption23C24h1mm_percent": 0.7,
+      "MFR": {
+        "test": "ISO 1133",
+        "condition": "190 C / 2.16 kg",
+        "value_g_10min": 21
+      },
+      "MVR": {
+        "test": "ISO 1133",
+        "condition": "190 C / 2.16 kg",
+        "value_cm3_10min": 16
+      },
+      "tensile_MPa": 55,
+      "tensileModulus_MPa": 3800,
+      "flexural_MPa": 94,
+      "flexuralModulus_MPa": 3500,
+      "notchedCharpy23C_kJ_m2": 3.6,
+      "HDT1_8MPa_C": 112,
+      "status": "candidate-complete"
+    },
+    {
+      "manufacturer": "Polyplastics",
+      "manufacturerCountry": "Japan",
+      "region": "Asia",
+      "polymer": "POM",
+      "grade": "DURACON LU-02",
+      "feature": "low gloss/weather resistant",
+      "density_g_cm3": 1.39,
+      "waterAbsorption23C24h1mm_percent": 0.5,
+      "MFR": {
+        "test": "ISO 1133",
+        "condition": "190 C / 2.16 kg",
+        "value_g_10min": 22
+      },
+      "MVR": {
+        "test": "ISO 1133",
+        "condition": "190 C / 2.16 kg",
+        "value_cm3_10min": 19
+      },
+      "tensile_MPa": 57,
+      "tensileModulus_MPa": 2450,
+      "flexural_MPa": 75,
+      "flexuralModulus_MPa": 2250,
+      "notchedCharpy23C_kJ_m2": 6.8,
+      "HDT1_8MPa_C": 82,
+      "status": "candidate-complete"
     }
   ]
 }
