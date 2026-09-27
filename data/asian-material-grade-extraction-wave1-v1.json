@@ -1128,6 +1128,108 @@
       ],
       "source": "https://www.polyplastics.com/Gidb/GradeInfoDownloadAction.do?_LOCALE=ENGLISH&fileNo=1&gradeId=1773&langId=1",
       "status": "candidate-conditional"
+    },
+    {
+      "manufacturer": "LG Chem",
+      "country": "South Korea",
+      "polymer": "PBT compound",
+      "grade": "GP 2306FC",
+      "reinforcement": "reinforced flame-retardant",
+      "properties": {
+        "specificGravity": 1.62,
+        "shrinkage_pct": "0.3-1.0",
+        "tensile_kg_cm2": 1300,
+        "flexural_kg_cm2": 1900,
+        "flexuralModulus_kg_cm2": 85000,
+        "HDT_C_highLoad": 205,
+        "flameRating": "UL94 V-0 at 0.71mm"
+      },
+      "conditioning": "primary engineering-plastics guide; referential typical values only, not guaranteed",
+      "methods": [
+        "ASTM D792",
+        "ASTM D955",
+        "ASTM D638",
+        "ASTM D790",
+        "ASTM D256",
+        "ASTM D648",
+        "UL94"
+      ],
+      "source": "https://www.lgchem.com/upload/file/chinaplas2018/Division_Info/EP_vf.pdf",
+      "status": "candidate-partial"
+    },
+    {
+      "manufacturer": "LG Chem",
+      "country": "South Korea",
+      "polymer": "PBT alloy",
+      "grade": "LW 5300M",
+      "reinforcement": "low-warpage compound",
+      "properties": {
+        "specificGravity": 1.52,
+        "shrinkage_pct": "0.7-0.9",
+        "tensile_kg_cm2": 590,
+        "flexural_kg_cm2": 990,
+        "flexuralModulus_kg_cm2": 54000,
+        "HDT_C_highLoad": 115,
+        "HDT_C_lowLoad": 165
+      },
+      "conditioning": "primary engineering-plastics guide; referential typical values only",
+      "methods": [
+        "ASTM D792",
+        "ASTM D955",
+        "ASTM D638",
+        "ASTM D790",
+        "ASTM D648"
+      ],
+      "source": "https://www.lgchem.com/upload/file/chinaplas2018/Division_Info/EP_vf.pdf",
+      "status": "candidate-partial"
+    },
+    {
+      "manufacturer": "CHIMEI",
+      "country": "Taiwan",
+      "polymer": "PC alloy",
+      "grade": "WONDERLOY PC-345",
+      "reinforcement": "PC alloy",
+      "properties": {
+        "flameRating": "UL94 HB at 1.5mm"
+      },
+      "conditioning": "primary product catalogue identifies high-flow injection grade and provides ISO/ASTM TDS, SDS and process-guide links; numeric TDS extraction pending",
+      "methods": [
+        "UL94"
+      ],
+      "source": "https://www.chimeicorp.com/en-US/?feature=T10701&material=T10700&page=products&series=T10000",
+      "status": "candidate-partial"
+    },
+    {
+      "manufacturer": "CHIMEI",
+      "country": "Taiwan",
+      "polymer": "PC alloy",
+      "grade": "WONDERLOY PC-385",
+      "reinforcement": "PC alloy",
+      "properties": {
+        "flameRating": "UL94 HB at 1.5mm"
+      },
+      "conditioning": "primary catalogue: high heat/high impact; TDS/SDS/process guide available; numeric extraction pending",
+      "methods": [
+        "UL94"
+      ],
+      "source": "https://www.chimeicorp.com/en-US/?feature=T10701&material=T10700&page=products&series=T10000",
+      "status": "candidate-partial"
+    },
+    {
+      "manufacturer": "CHIMEI",
+      "country": "Taiwan",
+      "polymer": "PC/ASA alloy",
+      "grade": "WONDERLOY PC-992",
+      "reinforcement": "PC/ASA",
+      "properties": {
+        "flameRating": "UL94 V-0 at 1.5mm"
+      },
+      "conditioning": "weather-resistant high-flow non-brominated/non-chlorinated FR grade; primary catalogue with TDS/SDS/process guide",
+      "methods": [
+        "UL94"
+      ],
+      "source": "https://www.chimeicorp.com/en-US?material=T10700&page=products&series=T10000",
+      "status": "candidate-partial"
     }
   ],
   "discoveryNotes": {
@@ -1159,7 +1261,9 @@
     "toray": "primary Japanese engineering-plastics portfolio adds PPS/PBT/PA families; keep family records discovery-only until exact grade pages and conditions are captured",
     "teijinMep": "Japanese PC evidence adds PANLITE and Iupilon/NOVAREX technical families; processing guidance must remain supplier/grade bounded",
     "teijinInjection": "primary Panlite/Multilon grade list explicitly identifies injection molding and reinforcement classes including GF10/20/30, CF10/20/30, PC/polyester alloys, FR, wear, EMI and low-anisotropy grades",
-    "polyplasticsPPS": "DURAFIDE grade pages add rheology at specified shear rate, very low moisture uptake, GF reinforcement, CLTE anisotropy and explicit typical-not-specification boundary"
+    "polyplasticsPPS": "DURAFIDE grade pages add rheology at specified shear rate, very low moisture uptake, GF reinforcement, CLTE anisotropy and explicit typical-not-specification boundary",
+    "lgChemPBT": "primary table supplies 10 named reinforced/FR/PBT-alloy grades in one ASTM matrix and explicitly says values are referential, not guaranteed",
+    "chimeiPCAlloy": "Taiwan catalogue exposes grade-level feature, application, ISO+ASTM TDS, SDS, UL and process-guide links; useful for later processing/safety enrichment"
   },
   "promotionRules": {
     "requiredBeforeAccepted": [
