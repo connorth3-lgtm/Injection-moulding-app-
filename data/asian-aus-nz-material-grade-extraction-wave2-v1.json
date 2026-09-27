@@ -1,5 +1,5 @@
 {
-  "version": "2026-09-28.36",
+  "version": "2026-09-28.37",
   "scope": "Asia including Singapore, Australia and New Zealand primary-source material evidence wave 2",
   "policy": {
     "noUniversalSettings": true,
@@ -6112,6 +6112,104 @@
       "sourceUrl": "https://www.lgchem.com/upload/file/chinaplas2018/Division_Info/EP_vf.pdf",
       "valueStatus": "LG Chem typical/reference values; no warranty or guarantee",
       "status": "candidate-complete"
+    },
+    {
+      "manufacturer": "CHIMEI",
+      "manufacturerCountry": "Taiwan",
+      "region": "Asia",
+      "polymer": "ABS",
+      "grade": "POLYLAC PA-746M",
+      "process": "injection moulding",
+      "features": [
+        "high flow",
+        "paintability",
+        "large mouldings"
+      ],
+      "sourceUrl": "https://www.chimeicorp.com/en-US/?feature=T10102&material=T10100&page=products&series=T10000",
+      "sourceEvidence": "official CHIMEI catalogue exposes TDS-ISO, TDS-ASTM and process guide links",
+      "promotionBlock": "numeric TDS attachment values not yet captured; catalogue identity/link availability alone cannot promote",
+      "status": "discovery-only"
+    },
+    {
+      "manufacturer": "CHIMEI",
+      "manufacturerCountry": "Taiwan",
+      "region": "Asia",
+      "polymer": "ABS",
+      "grade": "POLYLAC PA-756",
+      "process": "injection moulding",
+      "features": [
+        "high flow",
+        "high rigidity",
+        "high gloss"
+      ],
+      "sourceUrl": "https://www.chimeicorp.com/en-US/?feature=T10102&material=T10100&page=products&series=T10000",
+      "sourceEvidence": "official CHIMEI catalogue exposes TDS-ISO, TDS-ASTM and process guide links",
+      "promotionBlock": "numeric TDS attachment values not yet captured; catalogue identity/link availability alone cannot promote",
+      "status": "discovery-only"
+    },
+    {
+      "manufacturer": "CHIMEI",
+      "manufacturerCountry": "Taiwan",
+      "region": "Asia",
+      "polymer": "ABS",
+      "grade": "POLYLAC PA-756H",
+      "process": "injection moulding",
+      "features": [
+        "ultra-high flow",
+        "ultra-thin-wall"
+      ],
+      "sourceUrl": "https://www.chimeicorp.com/en-US/?feature=T10102&material=T10100&page=products&series=T10000",
+      "sourceEvidence": "official CHIMEI catalogue exposes TDS-ISO, TDS-ASTM and process guide links",
+      "promotionBlock": "numeric TDS attachment values not yet captured; catalogue identity/link availability alone cannot promote",
+      "status": "discovery-only"
+    },
+    {
+      "manufacturer": "CHIMEI",
+      "manufacturerCountry": "Taiwan",
+      "region": "Asia",
+      "polymer": "ABS",
+      "grade": "POLYLAC PA-756S",
+      "process": "injection moulding",
+      "features": [
+        "ultra-high flow",
+        "medium impact"
+      ],
+      "sourceUrl": "https://www.chimeicorp.com/en-US/?feature=T10102&material=T10100&page=products&series=T10000",
+      "sourceEvidence": "official CHIMEI catalogue exposes TDS-ISO, TDS-ASTM and process guide links",
+      "promotionBlock": "numeric TDS attachment values not yet captured; catalogue identity/link availability alone cannot promote",
+      "status": "discovery-only"
+    },
+    {
+      "manufacturer": "CHIMEI",
+      "manufacturerCountry": "Taiwan",
+      "region": "Asia",
+      "polymer": "PC alloy",
+      "grade": "WONDERLOY PC-385",
+      "features": [
+        "high heat",
+        "high impact",
+        "1.5 mm HB"
+      ],
+      "sourceUrl": "https://www.chimeicorp.com/en-US/?feature=T10701&material=T10700&page=products&series=T10000",
+      "sourceEvidence": "official CHIMEI catalogue exposes ISO/ASTM TDS and process guide",
+      "promotionBlock": "numeric attachment extraction required",
+      "status": "discovery-only"
+    },
+    {
+      "manufacturer": "CHIMEI",
+      "manufacturerCountry": "Taiwan",
+      "region": "Asia",
+      "polymer": "PC alloy",
+      "grade": "WONDERLOY PC-860",
+      "features": [
+        "weather resistance",
+        "high flow",
+        "1.5 mm HB"
+      ],
+      "sourceUrl": "https://www.chimeicorp.com/en-US/?feature=T10701&material=T10700&page=products&series=T10000",
+      "sourceEvidence": "official CHIMEI catalogue exposes ISO/ASTM TDS and process guide",
+      "promotionBlock": "numeric attachment extraction required",
+      "status": "discovery-only"
     }
   ]
 }
