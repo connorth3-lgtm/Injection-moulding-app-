@@ -1,5 +1,5 @@
 {
-  "version": "2026-09-28.33",
+  "version": "2026-09-28.34",
   "scope": "Asia including Singapore, Australia and New Zealand primary-source material evidence wave 2",
   "policy": {
     "noUniversalSettings": true,
@@ -5789,6 +5789,102 @@
       "sourceUrl": "https://www.sumitomo-chem.co.jp/sep/english/products/pes/pes_fg_ippan.html",
       "valueStatus": "manufacturer family property table/CAE grouping; retain grade-specific identity",
       "status": "candidate-complete"
+    },
+    {
+      "manufacturer": "Teijin",
+      "manufacturerCountry": "Japan",
+      "region": "Asia",
+      "polymer": "PC-GF30",
+      "grade": "PANLITE GV-3430R",
+      "reinforcement": "GF30",
+      "feature": "flame retardant",
+      "flammability": "UL94 V-0",
+      "recordType": "exact-grade-property-queue",
+      "promotionBlock": "numeric primary property table not yet captured; do not infer from SH-1126Z",
+      "status": "discovery-only"
+    },
+    {
+      "manufacturer": "Teijin",
+      "manufacturerCountry": "Japan",
+      "region": "Asia",
+      "polymer": "PC-CF30",
+      "grade": "PANLITE B-8130R",
+      "reinforcement": "CF30",
+      "feature": "conductive/high stiffness",
+      "flammability": "UL94 V-2",
+      "recordType": "exact-grade-property-queue",
+      "promotionBlock": "numeric primary property table not yet captured; no GF-to-CF substitution",
+      "status": "discovery-only"
+    },
+    {
+      "manufacturer": "Polyplastics",
+      "manufacturerCountry": "Japan",
+      "region": "Asia",
+      "polymer": "LCP",
+      "grade": "LAPEROS A130",
+      "recordType": "exact-grade-property-queue",
+      "promotionBlock": "numeric current manufacturer property table required",
+      "status": "discovery-only"
+    },
+    {
+      "manufacturer": "Polyplastics",
+      "manufacturerCountry": "Japan",
+      "region": "Asia",
+      "polymer": "LCP",
+      "grade": "LAPEROS A150",
+      "recordType": "exact-grade-property-queue",
+      "promotionBlock": "numeric current manufacturer property table required",
+      "status": "discovery-only"
+    },
+    {
+      "manufacturer": "Polyplastics",
+      "manufacturerCountry": "Japan",
+      "region": "Asia",
+      "polymer": "LCP",
+      "grade": "LAPEROS A230",
+      "recordType": "exact-grade-property-queue",
+      "promotionBlock": "numeric current manufacturer property table required",
+      "status": "discovery-only"
+    },
+    {
+      "manufacturer": "Polyplastics",
+      "manufacturerCountry": "Japan",
+      "region": "Asia",
+      "polymer": "LCP",
+      "grade": "LAPEROS A410",
+      "recordType": "exact-grade-property-queue",
+      "promotionBlock": "numeric current manufacturer property table required",
+      "status": "discovery-only"
+    },
+    {
+      "manufacturer": "Polyplastics",
+      "manufacturerCountry": "Japan",
+      "region": "Asia",
+      "polymer": "LCP",
+      "grade": "LAPEROS E471i",
+      "recordType": "exact-grade-property-queue",
+      "promotionBlock": "numeric current manufacturer property table required",
+      "status": "discovery-only"
+    },
+    {
+      "manufacturer": "Polyplastics",
+      "manufacturerCountry": "Japan",
+      "region": "Asia",
+      "polymer": "LCP",
+      "grade": "LAPEROS E473i",
+      "recordType": "exact-grade-property-queue",
+      "promotionBlock": "numeric current manufacturer property table required",
+      "status": "discovery-only"
+    },
+    {
+      "manufacturer": "Polyplastics",
+      "manufacturerCountry": "Japan",
+      "region": "Asia",
+      "polymer": "LCP",
+      "grade": "LAPEROS S475",
+      "recordType": "exact-grade-property-queue",
+      "promotionBlock": "numeric current manufacturer property table required",
+      "status": "discovery-only"
     }
   ]
 }
