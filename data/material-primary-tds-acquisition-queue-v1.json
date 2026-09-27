@@ -1,0 +1,564 @@
+{
+  "version": "2026-09-28.1",
+  "source": "data/asian-aus-nz-material-grade-extraction-wave2-v1.json",
+  "purpose": "Prioritize only work capable of increasing unique property-complete profiles",
+  "rules": {
+    "secondaryAggregatorCannotPromote": true,
+    "adjacentGradeCannotSubstitute": true,
+    "familyPageCannotPromoteWithoutGradeNumericEvidence": true,
+    "sourceRevisionConflictsRemainConditional": true
+  },
+  "queueCount": 55,
+  "queue": [
+    {
+      "manufacturer": "Sumitomo Chemical",
+      "country": "Japan",
+      "grade": "SUMIKAEXCEL ES5340",
+      "polymer": "PESU-GF20",
+      "readiness": 2,
+      "primarySourceCaptured": true,
+      "conversionRequirement": "numeric grade property table not yet captured; identity alone insufficient",
+      "priority": "extract-numeric-table"
+    },
+    {
+      "manufacturer": "CHIMEI",
+      "country": "Taiwan",
+      "grade": "POLYLAC PA-737",
+      "polymer": "ABS",
+      "readiness": 1,
+      "primarySourceCaptured": false,
+      "conversionRequirement": "numeric current TDS extraction required before candidate-complete",
+      "priority": "acquire-primary-TDS"
+    },
+    {
+      "manufacturer": "CHIMEI",
+      "country": "Taiwan",
+      "grade": "POLYLAC PA-746",
+      "polymer": "ABS",
+      "readiness": 1,
+      "primarySourceCaptured": false,
+      "conversionRequirement": "numeric current TDS extraction required",
+      "priority": "acquire-primary-TDS"
+    },
+    {
+      "manufacturer": "CHIMEI",
+      "country": "Taiwan",
+      "grade": "WONDERLOY PC-385",
+      "polymer": "PC alloy",
+      "readiness": 1,
+      "primarySourceCaptured": false,
+      "conversionRequirement": "numeric current TDS extraction required",
+      "priority": "acquire-primary-TDS"
+    },
+    {
+      "manufacturer": "CHIMEI",
+      "country": "Taiwan",
+      "grade": "WONDERLOY PC-992",
+      "polymer": "PC/ASA",
+      "readiness": 1,
+      "primarySourceCaptured": false,
+      "conversionRequirement": "numeric current TDS extraction required",
+      "priority": "acquire-primary-TDS"
+    },
+    {
+      "manufacturer": "CHIMEI",
+      "country": "Taiwan",
+      "grade": "ACRYREX CM-211",
+      "polymer": "PMMA",
+      "readiness": 1,
+      "primarySourceCaptured": false,
+      "conversionRequirement": "numeric current TDS extraction required",
+      "priority": "acquire-primary-TDS"
+    },
+    {
+      "manufacturer": "CHIMEI",
+      "country": "Taiwan",
+      "grade": "POLYLAC PA-757H",
+      "polymer": "ABS",
+      "readiness": 1,
+      "primarySourceCaptured": false,
+      "conversionRequirement": "current numeric TDS extraction still required",
+      "priority": "acquire-primary-TDS"
+    },
+    {
+      "manufacturer": "CHIMEI",
+      "country": "Taiwan",
+      "grade": "POLYLAC PA-746H",
+      "polymer": "ABS",
+      "readiness": 1,
+      "primarySourceCaptured": false,
+      "conversionRequirement": "current numeric TDS extraction still required",
+      "priority": "acquire-primary-TDS"
+    },
+    {
+      "manufacturer": "CHIMEI",
+      "country": "Taiwan",
+      "grade": "WONDERLOY PC-345",
+      "polymer": "PC",
+      "readiness": 1,
+      "primarySourceCaptured": false,
+      "conversionRequirement": "current manufacturer numeric TDS required",
+      "priority": "acquire-primary-TDS"
+    },
+    {
+      "manufacturer": "CHIMEI",
+      "country": "Taiwan",
+      "grade": "WONDERLOY PC-365",
+      "polymer": "PC",
+      "readiness": 1,
+      "primarySourceCaptured": false,
+      "conversionRequirement": "current manufacturer numeric TDS required",
+      "priority": "acquire-primary-TDS"
+    },
+    {
+      "manufacturer": "CHIMEI",
+      "country": "Taiwan",
+      "grade": "WONDERLOY PC-545",
+      "polymer": "PC",
+      "readiness": 1,
+      "primarySourceCaptured": false,
+      "conversionRequirement": "current manufacturer numeric TDS required",
+      "priority": "acquire-primary-TDS"
+    },
+    {
+      "manufacturer": "CHIMEI",
+      "country": "Taiwan",
+      "grade": "POLYLAC PA-757 A01",
+      "polymer": "ABS",
+      "readiness": 1,
+      "primarySourceCaptured": false,
+      "conversionRequirement": "numeric manufacturer TDS extraction required before complete",
+      "priority": "acquire-primary-TDS"
+    },
+    {
+      "manufacturer": "CHIMEI",
+      "country": "Taiwan",
+      "grade": "POLYLAC PA-757 J01",
+      "polymer": "ABS",
+      "readiness": 1,
+      "primarySourceCaptured": false,
+      "conversionRequirement": "numeric manufacturer TDS extraction required before complete",
+      "priority": "acquire-primary-TDS"
+    },
+    {
+      "manufacturer": "CHIMEI",
+      "country": "Taiwan",
+      "grade": "POLYLAC PA-757G J08",
+      "polymer": "ABS",
+      "readiness": 1,
+      "primarySourceCaptured": false,
+      "conversionRequirement": "numeric manufacturer TDS extraction required before complete",
+      "priority": "acquire-primary-TDS"
+    },
+    {
+      "manufacturer": "CHIMEI",
+      "country": "Taiwan",
+      "grade": "POLYLAC PA-747S A01",
+      "polymer": "ABS",
+      "readiness": 1,
+      "primarySourceCaptured": false,
+      "conversionRequirement": "numeric manufacturer TDS extraction required",
+      "priority": "acquire-primary-TDS"
+    },
+    {
+      "manufacturer": "CHIMEI",
+      "country": "Taiwan",
+      "grade": "WONDERLOY PC-860",
+      "polymer": "PC",
+      "readiness": 1,
+      "primarySourceCaptured": false,
+      "conversionRequirement": "numeric manufacturer TDS extraction required",
+      "priority": "acquire-primary-TDS"
+    },
+    {
+      "manufacturer": "CHIMEI",
+      "country": "Taiwan",
+      "grade": "ACRYREX CM-207",
+      "polymer": "PMMA",
+      "readiness": 1,
+      "primarySourceCaptured": false,
+      "conversionRequirement": "numeric manufacturer TDS extraction required",
+      "priority": "acquire-primary-TDS"
+    },
+    {
+      "manufacturer": "IndianOil",
+      "country": "India",
+      "grade": "P1030RG",
+      "polymer": "PP",
+      "readiness": 1,
+      "primarySourceCaptured": false,
+      "conversionRequirement": "grade-specific primary manufacturer numeric TDS required",
+      "priority": "acquire-primary-TDS"
+    },
+    {
+      "manufacturer": "IndianOil",
+      "country": "India",
+      "grade": "P1040FS",
+      "polymer": "PP",
+      "readiness": 1,
+      "primarySourceCaptured": false,
+      "conversionRequirement": "grade-specific primary manufacturer numeric TDS required",
+      "priority": "acquire-primary-TDS"
+    },
+    {
+      "manufacturer": "IndianOil",
+      "country": "India",
+      "grade": "P1020MG",
+      "polymer": "PP",
+      "readiness": 1,
+      "primarySourceCaptured": false,
+      "conversionRequirement": "grade-specific primary manufacturer numeric TDS required",
+      "priority": "acquire-primary-TDS"
+    },
+    {
+      "manufacturer": "Kingfa",
+      "country": "China",
+      "grade": "Vicryst R832",
+      "polymer": "LCP",
+      "readiness": 1,
+      "primarySourceCaptured": false,
+      "conversionRequirement": "grade-specific primary manufacturer numeric TDS required",
+      "priority": "acquire-primary-TDS"
+    },
+    {
+      "manufacturer": "Kingfa",
+      "country": "China",
+      "grade": "PBT-G30 HR",
+      "polymer": "PBT-GF30",
+      "readiness": 1,
+      "primarySourceCaptured": false,
+      "conversionRequirement": "numeric primary TDS still required",
+      "priority": "acquire-primary-TDS"
+    },
+    {
+      "manufacturer": "Kingfa",
+      "country": "China",
+      "grade": "PA66-G35 HP",
+      "polymer": "PA66-GF35",
+      "readiness": 1,
+      "primarySourceCaptured": false,
+      "conversionRequirement": "numeric primary TDS still required",
+      "priority": "acquire-primary-TDS"
+    },
+    {
+      "manufacturer": "Kingfa",
+      "country": "China",
+      "grade": "Vicnyl 42G35HS",
+      "polymer": "PA6T/66-GF35",
+      "readiness": 1,
+      "primarySourceCaptured": false,
+      "conversionRequirement": "numeric TDS not yet available in captured primary evidence",
+      "priority": "acquire-primary-TDS"
+    },
+    {
+      "manufacturer": "Kingfa",
+      "country": "China",
+      "grade": "Vicnyl 72G35HS",
+      "polymer": "PA10T-GF35",
+      "readiness": 1,
+      "primarySourceCaptured": false,
+      "conversionRequirement": "numeric TDS not yet available in captured primary evidence",
+      "priority": "acquire-primary-TDS"
+    },
+    {
+      "manufacturer": "Kingfa",
+      "country": "China",
+      "grade": "Vicryst R832",
+      "polymer": "LCP",
+      "readiness": 1,
+      "primarySourceCaptured": false,
+      "conversionRequirement": "numeric TDS still required",
+      "priority": "acquire-primary-TDS"
+    },
+    {
+      "manufacturer": "Kingfa",
+      "country": "China",
+      "grade": "ULTRON-C090E",
+      "polymer": "POM",
+      "readiness": 1,
+      "primarySourceCaptured": false,
+      "conversionRequirement": "numeric TDS still required",
+      "priority": "acquire-primary-TDS"
+    },
+    {
+      "manufacturer": "Kingfa",
+      "country": "China",
+      "grade": "ULTRON-IT30",
+      "polymer": "POM",
+      "readiness": 1,
+      "primarySourceCaptured": false,
+      "conversionRequirement": "numeric TDS still required",
+      "priority": "acquire-primary-TDS"
+    },
+    {
+      "manufacturer": "Kingfa",
+      "country": "China",
+      "grade": "ULTRON-GT**",
+      "polymer": "POM-GF",
+      "readiness": 1,
+      "primarySourceCaptured": false,
+      "conversionRequirement": "grade-specific primary manufacturer numeric TDS required",
+      "priority": "acquire-primary-TDS"
+    },
+    {
+      "manufacturer": "LG Chem",
+      "country": "South Korea",
+      "grade": "LUMID GP1100AW",
+      "polymer": "PA6",
+      "readiness": 1,
+      "primarySourceCaptured": false,
+      "conversionRequirement": "exact numeric manufacturer TDS required",
+      "priority": "acquire-primary-TDS"
+    },
+    {
+      "manufacturer": "LG Chem",
+      "country": "South Korea",
+      "grade": "LUMID GP2300AW",
+      "polymer": "PA6",
+      "readiness": 1,
+      "primarySourceCaptured": false,
+      "conversionRequirement": "exact numeric manufacturer TDS required; do not infer reinforcement/property values from adjacent grades",
+      "priority": "acquire-primary-TDS"
+    },
+    {
+      "manufacturer": "LG Chem",
+      "country": "South Korea",
+      "grade": "LUMID HM2604AW",
+      "polymer": "PA6",
+      "readiness": 1,
+      "primarySourceCaptured": false,
+      "conversionRequirement": "exact numeric manufacturer TDS required",
+      "priority": "acquire-primary-TDS"
+    },
+    {
+      "manufacturer": "Polyplastics",
+      "country": "Japan",
+      "grade": "LAPEROS A130",
+      "polymer": "LCP",
+      "readiness": 1,
+      "primarySourceCaptured": false,
+      "conversionRequirement": "numeric current manufacturer property table required",
+      "priority": "acquire-primary-TDS"
+    },
+    {
+      "manufacturer": "Polyplastics",
+      "country": "Japan",
+      "grade": "LAPEROS A150",
+      "polymer": "LCP",
+      "readiness": 1,
+      "primarySourceCaptured": false,
+      "conversionRequirement": "numeric current manufacturer property table required",
+      "priority": "acquire-primary-TDS"
+    },
+    {
+      "manufacturer": "Polyplastics",
+      "country": "Japan",
+      "grade": "LAPEROS A230",
+      "polymer": "LCP",
+      "readiness": 1,
+      "primarySourceCaptured": false,
+      "conversionRequirement": "numeric current manufacturer property table required",
+      "priority": "acquire-primary-TDS"
+    },
+    {
+      "manufacturer": "Polyplastics",
+      "country": "Japan",
+      "grade": "LAPEROS A410",
+      "polymer": "LCP",
+      "readiness": 1,
+      "primarySourceCaptured": false,
+      "conversionRequirement": "numeric current manufacturer property table required",
+      "priority": "acquire-primary-TDS"
+    },
+    {
+      "manufacturer": "Polyplastics",
+      "country": "Japan",
+      "grade": "LAPEROS E471i",
+      "polymer": "LCP",
+      "readiness": 1,
+      "primarySourceCaptured": false,
+      "conversionRequirement": "numeric current manufacturer property table required",
+      "priority": "acquire-primary-TDS"
+    },
+    {
+      "manufacturer": "Polyplastics",
+      "country": "Japan",
+      "grade": "LAPEROS E473i",
+      "polymer": "LCP",
+      "readiness": 1,
+      "primarySourceCaptured": false,
+      "conversionRequirement": "numeric current manufacturer property table required",
+      "priority": "acquire-primary-TDS"
+    },
+    {
+      "manufacturer": "Polyplastics",
+      "country": "Japan",
+      "grade": "LAPEROS S475",
+      "polymer": "LCP",
+      "readiness": 1,
+      "primarySourceCaptured": false,
+      "conversionRequirement": "numeric current manufacturer property table required",
+      "priority": "acquire-primary-TDS"
+    },
+    {
+      "manufacturer": "Sumitomo Chemical",
+      "country": "Japan",
+      "grade": "SUMIKAEXCEL 4100G",
+      "polymer": "PESU",
+      "readiness": 1,
+      "primarySourceCaptured": false,
+      "conversionRequirement": "individual complete numeric property extraction pending",
+      "priority": "acquire-primary-TDS"
+    },
+    {
+      "manufacturer": "Sumitomo Chemical",
+      "country": "Japan",
+      "grade": "SUMIKAEXCEL 4800G",
+      "polymer": "PESU",
+      "readiness": 1,
+      "primarySourceCaptured": false,
+      "conversionRequirement": "individual complete numeric property extraction pending",
+      "priority": "acquire-primary-TDS"
+    },
+    {
+      "manufacturer": "Sumitomo Chemical",
+      "country": "Japan",
+      "grade": "SUMIKAEXCEL 3601GL20",
+      "polymer": "PESU-GF20",
+      "readiness": 1,
+      "primarySourceCaptured": false,
+      "conversionRequirement": "individual numeric TDS extraction pending; do not infer from 3600G",
+      "priority": "acquire-primary-TDS"
+    },
+    {
+      "manufacturer": "Sumitomo Chemical",
+      "country": "Japan",
+      "grade": "SUMIKAEXCEL 3601GL30",
+      "polymer": "PESU-GF30",
+      "readiness": 1,
+      "primarySourceCaptured": false,
+      "conversionRequirement": "individual numeric TDS extraction pending; do not interpolate from GF20",
+      "priority": "acquire-primary-TDS"
+    },
+    {
+      "manufacturer": "Sumitomo Chemical",
+      "country": "Japan",
+      "grade": "SUMIKAEXCEL 4101GL20",
+      "polymer": "PESU-GF20",
+      "readiness": 1,
+      "primarySourceCaptured": false,
+      "conversionRequirement": "individual numeric TDS extraction pending",
+      "priority": "acquire-primary-TDS"
+    },
+    {
+      "manufacturer": "Sumitomo Chemical",
+      "country": "Japan",
+      "grade": "SUMIKAEXCEL 4101GL30",
+      "polymer": "PESU-GF30",
+      "readiness": 1,
+      "primarySourceCaptured": false,
+      "conversionRequirement": "individual numeric TDS extraction pending",
+      "priority": "acquire-primary-TDS"
+    },
+    {
+      "manufacturer": "Supreme Petrochem",
+      "country": "India",
+      "grade": "SH03",
+      "polymer": "HIPS",
+      "readiness": 1,
+      "primarySourceCaptured": false,
+      "conversionRequirement": "numeric primary TDS required",
+      "priority": "acquire-primary-TDS"
+    },
+    {
+      "manufacturer": "Supreme Petrochem",
+      "country": "India",
+      "grade": "SH300",
+      "polymer": "HIPS",
+      "readiness": 1,
+      "primarySourceCaptured": false,
+      "conversionRequirement": "numeric primary TDS required",
+      "priority": "acquire-primary-TDS"
+    },
+    {
+      "manufacturer": "Supreme Petrochem",
+      "country": "India",
+      "grade": "SH400HF",
+      "polymer": "HIPS",
+      "readiness": 1,
+      "primarySourceCaptured": false,
+      "conversionRequirement": "numeric primary TDS required",
+      "priority": "acquire-primary-TDS"
+    },
+    {
+      "manufacturer": "Supreme Petrochem",
+      "country": "India",
+      "grade": "SH400M",
+      "polymer": "HIPS",
+      "readiness": 1,
+      "primarySourceCaptured": false,
+      "conversionRequirement": "numeric primary TDS required",
+      "priority": "acquire-primary-TDS"
+    },
+    {
+      "manufacturer": "Supreme Petrochem",
+      "country": "India",
+      "grade": "SH450",
+      "polymer": "HIPS",
+      "readiness": 1,
+      "primarySourceCaptured": false,
+      "conversionRequirement": "numeric primary TDS required",
+      "priority": "acquire-primary-TDS"
+    },
+    {
+      "manufacturer": "Teijin",
+      "country": "Japan",
+      "grade": "PANLITE GV-3430R",
+      "polymer": "PC-GF30",
+      "readiness": 1,
+      "primarySourceCaptured": false,
+      "conversionRequirement": "numeric primary property table not yet captured; do not infer from SH-1126Z",
+      "priority": "acquire-primary-TDS"
+    },
+    {
+      "manufacturer": "Teijin",
+      "country": "Japan",
+      "grade": "PANLITE B-8130R",
+      "polymer": "PC-CF30",
+      "readiness": 1,
+      "primarySourceCaptured": false,
+      "conversionRequirement": "numeric primary property table not yet captured; no GF-to-CF substitution",
+      "priority": "acquire-primary-TDS"
+    },
+    {
+      "manufacturer": "Toyobo",
+      "country": "Japan",
+      "grade": "GLAMIDE T-802",
+      "polymer": "PA6",
+      "readiness": 1,
+      "primarySourceCaptured": false,
+      "conversionRequirement": "primary numeric grade TDS pending",
+      "priority": "acquire-primary-TDS"
+    },
+    {
+      "manufacturer": "Toyobo",
+      "country": "Japan",
+      "grade": "GLAMIDE T662",
+      "polymer": "PA66",
+      "readiness": 1,
+      "primarySourceCaptured": false,
+      "conversionRequirement": "primary numeric grade TDS pending",
+      "priority": "acquire-primary-TDS"
+    },
+    {
+      "manufacturer": "Toyobo",
+      "country": "Japan",
+      "grade": "GLAMIDE TY-502NZ",
+      "polymer": "high-melting polyamide",
+      "readiness": 1,
+      "primarySourceCaptured": false,
+      "conversionRequirement": "primary numeric grade TDS pending",
+      "priority": "acquire-primary-TDS"
+    }
+  ]
+}
