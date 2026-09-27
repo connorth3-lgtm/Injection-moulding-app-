@@ -1,5 +1,5 @@
 {
-  "version": "2026-09-28.17",
+  "version": "2026-09-28.18",
   "scope": "Asia including Singapore, Australia and New Zealand primary-source material evidence wave 2",
   "policy": {
     "noUniversalSettings": true,
@@ -3273,6 +3273,107 @@
       "evidenceClass": "manufacturer exact-grade page",
       "promotionBlock": "numeric current TDS extraction required",
       "status": "discovery-only"
+    },
+    {
+      "manufacturer": "Martogg",
+      "manufacturerCountry": "Australia",
+      "region": "Australia",
+      "polymer": "PP compound",
+      "brand": "PROP-EX",
+      "recordType": "compound-family-extraction-queue",
+      "variants": [
+        "mineral-filled",
+        "glass-reinforced",
+        "high-impact",
+        "UV-stabilised",
+        "flame-retardant",
+        "PIR/PCR injection compounds"
+      ],
+      "promotionBlock": "individual current compound TDS needed for filler %, MFR, mechanical, thermal, shrinkage and processing fields",
+      "status": "discovery-only"
+    },
+    {
+      "manufacturer": "Martogg",
+      "manufacturerCountry": "Australia",
+      "region": "Australia",
+      "polymer": "styrenic compounds",
+      "brand": "SUPRENE",
+      "recordType": "compound-family-extraction-queue",
+      "variants": [
+        "modified polystyrene",
+        "ABS/styrenic injection compounds"
+      ],
+      "promotionBlock": "individual TDS required; local compounding does not make family-level properties interchangeable",
+      "status": "discovery-only"
+    },
+    {
+      "manufacturer": "Qenos",
+      "manufacturerCountry": "Australia",
+      "region": "Australia",
+      "polymer": "LDPE",
+      "recordType": "common-method-flow-ladder",
+      "testContext": "ASTM D1238 at 190 C / 2.16 kg",
+      "grades": [
+        {
+          "grade": "XDS34",
+          "MI": 0.3,
+          "density_g_cm3": 0.922
+        },
+        {
+          "grade": "WJG117",
+          "MI": 1.7,
+          "density_g_cm3": 0.918
+        },
+        {
+          "grade": "XJF143",
+          "MI": 2.5,
+          "density_g_cm3": 0.921
+        },
+        {
+          "grade": "LDN248",
+          "MI": 8.5,
+          "density_g_cm3": 0.922
+        },
+        {
+          "grade": "WRM124",
+          "MI": 22,
+          "density_g_cm3": 0.92
+        },
+        {
+          "grade": "WSM168",
+          "MI": 63,
+          "density_g_cm3": 0.919
+        }
+      ],
+      "boundary": "same-method flow comparison only; do not infer other properties or machine settings from MI",
+      "status": "candidate-complete"
+    },
+    {
+      "manufacturer": "Qenos",
+      "manufacturerCountry": "Australia",
+      "region": "Australia",
+      "polymer": "LLDPE",
+      "grade": "Alkatuff LL820",
+      "process": [
+        "injection moulding",
+        "compounding"
+      ],
+      "MI": {
+        "test": "ASTM D1238",
+        "condition": "190 C / 2.16 kg",
+        "value_g_10min": 20
+      },
+      "density_g_cm3": 0.9251,
+      "status": "candidate-complete"
+    },
+    {
+      "organization": "New Zealand injection moulding sector",
+      "country": "New Zealand",
+      "region": "New Zealand",
+      "recordType": "origin-governance",
+      "rule": "locally processed or locally supplied resin must retain overseas manufacturer/grade origin unless a primary source establishes NZ resin manufacture",
+      "rationale": "prevents regional availability from being mislabeled as polymer manufacturing origin",
+      "status": "candidate-complete"
     }
   ]
 }
