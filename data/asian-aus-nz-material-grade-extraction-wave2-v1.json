@@ -1,6 +1,6 @@
 {
-  "version": "2026-09-28.8",
-  "scope": "Asia-Australia-New Zealand primary-source material evidence wave 2",
+  "version": "2026-09-28.9",
+  "scope": "Asia including Singapore, Australia and New Zealand primary-source material evidence wave 2",
   "policy": {
     "noUniversalSettings": true,
     "noInterpolationAcrossGrades": true,
@@ -1810,6 +1810,84 @@
         "epoxy"
       ],
       "boundary": "corporate manufacturing scope only; not a grade-level property record",
+      "status": "discovery-only"
+    },
+    {
+      "manufacturer": "ExxonMobil Chemical",
+      "productionCountry": "Singapore",
+      "region": "Asia/Singapore",
+      "polymer": "PP",
+      "recordType": "Singapore-manufacturing-capability",
+      "productionSite": "Singapore Chemical Plant / Singapore integrated manufacturing site",
+      "families": [
+        "ExxonMobil PP",
+        "Achieve Advanced PP"
+      ],
+      "processRelevance": [
+        "injection moulding",
+        "packaging",
+        "automotive",
+        "consumer applications"
+      ],
+      "boundary": "Singapore production/site capability; exact numeric properties require grade TDS and must not be inferred from site capability",
+      "status": "discovery-only"
+    },
+    {
+      "manufacturer": "ExxonMobil Chemical",
+      "regionalEntity": "Singapore",
+      "region": "Asia/Singapore",
+      "polymer": "polyolefins",
+      "recordType": "integrated-production-context",
+      "capabilities": [
+        "polyethylene",
+        "polypropylene",
+        "specialty elastomers and related polyolefin production"
+      ],
+      "originBoundary": "regional headquarters/sales presence alone does not establish origin; retain production-site evidence separately",
+      "status": "discovery-only"
+    },
+    {
+      "manufacturer": "SABIC",
+      "regionalEntity": "Singapore",
+      "region": "Asia/Singapore",
+      "recordType": "regional-engineering-material-presence",
+      "polymers": [
+        "PC",
+        "PC blends",
+        "ABS",
+        "PBT",
+        "PPE blends",
+        "high-performance thermoplastics"
+      ],
+      "boundary": "Singapore regional presence/application support is not evidence that a particular resin grade is Singapore-manufactured; exact grade origin/property sheets required",
+      "status": "discovery-only"
+    },
+    {
+      "manufacturer": "BASF",
+      "regionalEntity": "Singapore",
+      "region": "Asia/Singapore",
+      "recordType": "regional-engineering-material-presence",
+      "polymers": [
+        "PA6",
+        "PA66",
+        "PBT",
+        "POM",
+        "PES/PPSU and engineering plastics"
+      ],
+      "boundary": "regional commercial/technical presence only until manufacturing site and exact-grade TDS are tied together",
+      "status": "discovery-only"
+    },
+    {
+      "manufacturer": "Mitsui Chemicals",
+      "regionalEntity": "Singapore",
+      "region": "Asia/Singapore",
+      "recordType": "regional-material-presence",
+      "families": [
+        "polyolefin compounds",
+        "elastomers",
+        "engineering-material businesses"
+      ],
+      "boundary": "do not infer Singapore manufacture or numeric grade properties from regional entity presence",
       "status": "discovery-only"
     }
   ]
