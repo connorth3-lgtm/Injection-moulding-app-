@@ -1,5 +1,5 @@
 {
-  "version": "2026-09-28.29",
+  "version": "2026-09-28.30",
   "scope": "Asia including Singapore, Australia and New Zealand primary-source material evidence wave 2",
   "policy": {
     "noUniversalSettings": true,
@@ -5320,6 +5320,137 @@
       "brand": "LUPOY",
       "recordType": "exact-grade-discovery-programme",
       "promotionBlock": "exact grade identity plus numeric TDS required",
+      "status": "discovery-only"
+    },
+    {
+      "manufacturer": "IndianOil",
+      "manufacturerCountry": "India",
+      "region": "Asia",
+      "polymer": "HDPE",
+      "grade": "080M60U",
+      "process": "injection moulding",
+      "meltIndex_g_10min": 8,
+      "density_g_cm3": 0.96,
+      "feature": "UV stabilised",
+      "status": "candidate-complete"
+    },
+    {
+      "manufacturer": "IndianOil",
+      "manufacturerCountry": "India",
+      "region": "Asia",
+      "polymer": "HDPE",
+      "grade": "180M50",
+      "process": "high-flow injection moulding",
+      "meltIndex_g_10min": 20,
+      "density_g_cm3": 0.95,
+      "application": "thin-wall injection mouldings",
+      "status": "candidate-complete"
+    },
+    {
+      "manufacturer": "Supreme Petrochem",
+      "manufacturerCountry": "India",
+      "region": "Asia",
+      "polymer": "HIPS",
+      "grade": "SH400HV",
+      "process": "injection moulding",
+      "specificGravity": 1.03,
+      "tensile_kgf_cm2": 355,
+      "elongation_percent": 35,
+      "flexural_kgf_cm2": 595,
+      "flexuralModulus_kgf_cm2": 22350,
+      "notchedIzod_J_m": 95,
+      "gloss_percent": ">80",
+      "processingBoundary": {
+        "melt_C": "180-240",
+        "predry_C": "50-80",
+        "predry_h": 2,
+        "mould_C": "40-60"
+      },
+      "sourceRevision": "09/2025",
+      "valueStatus": "manufacturer guide typical values",
+      "status": "candidate-complete"
+    },
+    {
+      "manufacturer": "Supreme Petrochem",
+      "manufacturerCountry": "India",
+      "region": "Asia",
+      "polymer": "HIPS",
+      "grade": "SH03",
+      "recordType": "exact-grade-property-queue",
+      "promotionBlock": "numeric primary TDS required",
+      "status": "discovery-only"
+    },
+    {
+      "manufacturer": "Supreme Petrochem",
+      "manufacturerCountry": "India",
+      "region": "Asia",
+      "polymer": "HIPS",
+      "grade": "SH300",
+      "recordType": "exact-grade-property-queue",
+      "promotionBlock": "numeric primary TDS required",
+      "status": "discovery-only"
+    },
+    {
+      "manufacturer": "Supreme Petrochem",
+      "manufacturerCountry": "India",
+      "region": "Asia",
+      "polymer": "HIPS",
+      "grade": "SH400HF",
+      "recordType": "exact-grade-property-queue",
+      "promotionBlock": "numeric primary TDS required",
+      "status": "discovery-only"
+    },
+    {
+      "manufacturer": "Supreme Petrochem",
+      "manufacturerCountry": "India",
+      "region": "Asia",
+      "polymer": "HIPS",
+      "grade": "SH400M",
+      "recordType": "exact-grade-property-queue",
+      "promotionBlock": "numeric primary TDS required",
+      "status": "discovery-only"
+    },
+    {
+      "manufacturer": "Supreme Petrochem",
+      "manufacturerCountry": "India",
+      "region": "Asia",
+      "polymer": "HIPS",
+      "grade": "SH450",
+      "recordType": "exact-grade-property-queue",
+      "promotionBlock": "numeric primary TDS required",
+      "status": "discovery-only"
+    },
+    {
+      "manufacturer": "IndianOil",
+      "manufacturerCountry": "India",
+      "region": "Asia",
+      "polymer": "PP",
+      "grade": "P1030RG",
+      "process": "raffia",
+      "recordType": "negative-process-control",
+      "rule": "must not be promoted as injection grade merely because manufacturer also produces injection PP",
+      "status": "discovery-only"
+    },
+    {
+      "manufacturer": "IndianOil",
+      "manufacturerCountry": "India",
+      "region": "Asia",
+      "polymer": "PP",
+      "grade": "P1040FS",
+      "process": "film",
+      "recordType": "negative-process-control",
+      "rule": "must not be promoted as injection grade",
+      "status": "discovery-only"
+    },
+    {
+      "manufacturer": "IndianOil",
+      "manufacturerCountry": "India",
+      "region": "Asia",
+      "polymer": "PP",
+      "grade": "P1020MG",
+      "process": "general purpose",
+      "recordType": "process-classification-control",
+      "rule": "requires exact injection-use evidence before injection recommendation",
       "status": "discovery-only"
     }
   ]
