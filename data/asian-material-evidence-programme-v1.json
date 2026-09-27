@@ -32,9 +32,9 @@
   ],
   "status": "discovery-seed-complete; grade-level extraction required",
   "discoveryMetrics": {
-    "primarySourceFamilies": 38,
+    "primarySourceFamilies": 43,
     "regions": 8,
-    "gradeLevelExtracted": 14,
+    "gradeLevelExtracted": 29,
     "additionalGradeIdentitiesDiscovered": {
       "unitikaPA66": 22,
       "haldiaPPInjection": 16,
@@ -53,8 +53,21 @@
       "directional molding shrinkage",
       "dry-versus-conditioned polyamide properties",
       "manufacturer-bounded molding windows",
-      "test-method-specific typical values"
-    ]
+      "test-method-specific typical values",
+      "injection-pressure-conditioned LCP shrinkage anisotropy",
+      "POM specialty/flow-class ladders",
+      "TPE MFR under explicit load/temperature conditions"
+    ],
+    "catalogueScale": {
+      "polyplasticsDURACON_POM": 80,
+      "polyplasticsDURANEX_PBT": 99,
+      "polyplasticsLAPEROS_LCP": 21,
+      "kuraraySEPTON": "15+ standard grades",
+      "lgChemPA6": 12,
+      "unitikaPA66": 22,
+      "haldiaPPInjection": 16
+    },
+    "estimatedNamedGradePool": "300+ named or directly selectable grades from current primary Asian catalogues before further expansion"
   },
   "priorityNext": [
     "treat CAE/Moldflow availability as a separate evidence capability, never as proof of universal molding conditions",
@@ -65,6 +78,10 @@
     "normalize LOTTE PP injection catalogue",
     "normalize Haldia PP injection ladder",
     "add Formosa ABS grade records with shrinkage and processing documents",
-    "add Kingfa reinforced/high-temperature engineering compounds without inventing missing numeric properties"
+    "add Kingfa reinforced/high-temperature engineering compounds without inventing missing numeric properties",
+    "extract representative DURACON POM viscosity/specialty ladder",
+    "extract DURANEX PBT unfilled/GF/FR/low-warpage ladder",
+    "extract all 21 LAPEROS LCP identities then property-complete representatives",
+    "separate TPE base-resin records from finished injection compounds"
   ]
 }
