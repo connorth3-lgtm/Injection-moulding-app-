@@ -2,6 +2,7 @@ from pathlib import Path
 import json
 import re
 import subprocess
+import tempfile
 
 ROOT = Path(__file__).resolve().parent
 NODE = "node"
@@ -221,7 +222,13 @@ for js_name in REFERENCE_ASSETS:
     require(p.returncode == 0, f"{js_name}: {p.stderr}")
 
 node_audit = r"""const fs=require('fs'),vm=require('vm');const sandbox={window:{MM_SOURCE_LIBRARY:{}},document:{readyState:'loading',addEventListener(){},body:null},URL};sandbox.window.window=sandbox.window;vm.createContext(sandbox);vm.runInContext(fs.readFileSync('source-library.js','utf8'),sandbox);vm.runInContext(fs.readFileSync('reference-sources.js','utf8'),sandbox);const rows=Object.values(sandbox.window.MM_REFERENCE_SOURCES||{}).flat(),norm=u=>{const x=new URL(u);x.hash='';x.hostname=x.hostname.toLowerCase();if(x.pathname.length>1)x.pathname=x.pathname.replace(/\\/+$/,'');return x.href},urls=rows.map(x=>norm(x[2])),dupes=urls.filter((u,i)=>urls.indexOf(u)!==i);process.stdout.write(JSON.stringify({rows:rows.length,unique:new Set(urls).size,dupes,removed:(sandbox.window.MM_REFERENCE_DUPLICATES||[]).length}))"""
-p = subprocess.run([NODE, "-e", node_audit], cwd=ROOT, capture_output=True, text=True)
+with tempfile.NamedTemporaryFile("w", suffix=".js", encoding="utf-8", dir=ROOT, delete=False) as audit_file:
+    audit_file.write(node_audit)
+    audit_path = Path(audit_file.name)
+try:
+    p = subprocess.run([NODE, str(audit_path)], cwd=ROOT, capture_output=True, text=True)
+finally:
+    audit_path.unlink(missing_ok=True)
 require(p.returncode == 0, f"reference canonical deduplication runtime audit failed: {p.stderr or p.stdout}")
 runtime = json.loads(p.stdout)
 require(runtime["rows"] == runtime["unique"] and not runtime["dupes"], "reference browser still contains duplicate canonical URLs")
