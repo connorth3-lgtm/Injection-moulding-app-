@@ -190,6 +190,7 @@ for(const viewport of [{name:'android-412x915',width:412,height:915},{name:'smal
       await expect(page.locator('[data-mm-registry-menu="process-data"]')).toHaveCount(0);
       await expect(page.locator('[data-mm-registry-menu="diagnostic-labs"]')).toHaveCount(0);
       await expect(page.locator('[data-mm-registry-menu="material-labs"]')).toHaveCount(0);
+      await expect(page.locator('[data-mm-registry-menu="book"]')).toHaveCount(1);
       await expect(page.locator('[data-mm-registry-menu="learning-insights"]')).toHaveCount(1);
       await expect(page.locator('[data-mm-registry-menu="repair-app-files"]')).toHaveCount(1);
       const insights=page.locator('[data-mm-registry-menu="learning-insights"]');
