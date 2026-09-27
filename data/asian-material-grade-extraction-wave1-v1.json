@@ -641,6 +641,147 @@
       "methods": [],
       "source": "https://www.kuraray.com/global-en/products/thermoplastic-elastomer/",
       "status": "candidate-partial"
+    },
+    {
+      "manufacturer": "Polyplastics/Daicel",
+      "country": "Japan",
+      "polymer": "LCP",
+      "grade": "LAPEROS A130",
+      "reinforcement": "GF30%",
+      "properties": {
+        "density_g_cm3": 1.61,
+        "waterAbsorption23C24h_pct": 0.02,
+        "tensile_MPa": 210,
+        "flexural_MPa": 270,
+        "flexuralModulus_MPa": 15000,
+        "HDT_C_1_8MPa": 240,
+        "shrinkageFlow_pct_60MPa": 0.01,
+        "shrinkageTransverse_pct_60MPa": 0.45
+      },
+      "conditioning": "shrinkage on 80x80x1 mm specimen at 60 MPa injection pressure",
+      "methods": [
+        "ISO 1183",
+        "ISO 62",
+        "ASTM D638",
+        "ISO 178",
+        "ISO 75-1,2"
+      ],
+      "source": "https://www.polyplastics.com/Gidb/GradeInfoDownloadAction.do?_LOCALE=ENGLISH&fileNo=1&gradeId=2483&langId=1",
+      "status": "candidate-partial"
+    },
+    {
+      "manufacturer": "Polyplastics/Daicel",
+      "country": "Japan",
+      "polymer": "LCP",
+      "grade": "LAPEROS E473i",
+      "reinforcement": "mineral+GF 30%",
+      "properties": {
+        "density_g_cm3": 1.63,
+        "waterAbsorption23C24h_pct": 0.02,
+        "tensile_MPa": 125,
+        "flexural_MPa": 160,
+        "flexuralModulus_MPa": 11000,
+        "HDT_C_1_8MPa": 250,
+        "shrinkageFlow_pct_60MPa": 0.03,
+        "shrinkageTransverse_pct_60MPa": 0.39
+      },
+      "conditioning": "low-warpage high-flow SMT grade; shrinkage on 80x80x1 mm specimen at 60 MPa injection pressure",
+      "methods": [
+        "ISO 1183",
+        "ISO 62",
+        "ASTM D638",
+        "ISO 178",
+        "ISO 75-1,2"
+      ],
+      "source": "https://www.polyplastics.com/Gidb/GradeInfoDownloadAction.do?_LOCALE=ENGLISH&fileNo=1&gradeId=2547&langId=1",
+      "status": "candidate-partial"
+    },
+    {
+      "manufacturer": "Polyplastics/Daicel",
+      "country": "Japan",
+      "polymer": "LCP",
+      "grade": "LAPEROS S471",
+      "reinforcement": "mineral+GF 45%",
+      "properties": {
+        "density_g_cm3": 1.77,
+        "waterAbsorption23C24h_pct": 0.01,
+        "tensile_MPa": 130,
+        "flexural_MPa": 180,
+        "flexuralModulus_MPa": 12700,
+        "HDT_C_1_8MPa": 315,
+        "shrinkageFlow_pct_60MPa": 0.1,
+        "shrinkageTransverse_pct_60MPa": 0.33
+      },
+      "conditioning": "high-heat low-warpage grade; shrinkage on 80x80x1 mm specimen at 60 MPa injection pressure",
+      "methods": [
+        "ISO 1183",
+        "ISO 62",
+        "ASTM D638",
+        "ISO 178",
+        "ISO 75-1,2"
+      ],
+      "source": "https://www.polyplastics.com/Gidb/GradeInfoDownloadAction.do?_LOCALE=ENGLISH&fileNo=1&gradeId=2564&langId=1",
+      "status": "candidate-partial"
+    },
+    {
+      "manufacturer": "UNITIKA",
+      "country": "Japan",
+      "polymer": "polyarylate",
+      "grade": "U-Polymer L-1003PA",
+      "reinforcement": "compound/sliding grade",
+      "properties": {
+        "tensileYield_MPa": 65,
+        "tensileModulus_MPa": 2100,
+        "flexural_MPa": 88,
+        "flexuralModulus_MPa": 2100,
+        "HDT_C_1_8MPa": 172,
+        "density_g_cm3": 1.23,
+        "waterAbsorption23C24h_pct": 0.26,
+        "shrinkageParallel_pct": "0.6-0.8",
+        "shrinkagePerpendicular_pct": "0.6-0.8"
+      },
+      "conditioning": "manufacturer ISO property table; shrinkage company method 3 mm",
+      "methods": [
+        "ISO 527-1,-2",
+        "ISO 178",
+        "ISO 179-1eA",
+        "ISO 75-1,-2",
+        "ISO 1183",
+        "ISO 62"
+      ],
+      "source": "https://www.unitika.co.jp/plastics/products/par/upolymer/p-series/ps-02.html",
+      "status": "candidate-partial"
+    },
+    {
+      "manufacturer": "UNITIKA",
+      "country": "Japan",
+      "polymer": "polyarylate",
+      "grade": "U-Polymer FUN-8520S",
+      "reinforcement": "chemical/impact grade",
+      "properties": {
+        "tensileYield_MPa": 62,
+        "tensileModulus_MPa": 1900,
+        "flexural_MPa": 88,
+        "flexuralModulus_MPa": 1900,
+        "HDT_C_1_8MPa": 123,
+        "density_g_cm3": 1.21,
+        "waterAbsorption23C24h_pct": 0.2,
+        "shrinkageParallel_pct": "0.6-0.8",
+        "shrinkagePerpendicular_pct": "0.6-0.8",
+        "MFR_g_10min": 27
+      },
+      "conditioning": "MFR at 300C/2.16kg; shrinkage company method 3 mm",
+      "methods": [
+        "ISO 527-1,-2",
+        "ISO 178",
+        "ISO 179-1eA",
+        "ISO 75-1,-2",
+        "ISO 1183",
+        "ISO 62",
+        "ISO 1133"
+      ],
+      "source": "https://www.unitika.co.jp/plastics/products/par/upolymer/u-series/us-02.html",
+      "status": "candidate-partial"
     }
   ],
   "discoveryNotes": {
@@ -664,7 +805,9 @@
     "polyplasticsPOM": "DURACON technical library includes grade-specific shrinkage response versus injection pressure, mold temperature and part thickness; preserve as condition-dependent dimensional evidence",
     "toyobo": "manufacturer comparative PA6/PA66/PA6T data adds moisture-absorption and thermal family context",
     "polyplasticsPBT": "DURANEX catalogue exposes 99 popular PBT grades; individual pages include ISO methods, water absorption, mechanical/thermal data and flow/transverse CLTE",
-    "kurarayTPE": "SEPTON primary catalogue exposes SEP/SEPS/SEEPS/SEBS grade tables with MFR under explicit load/temperature conditions, styrene content, viscosity and hardness; treat as compound/base-polymer evidence, not interchangeable with finished TPE compound properties"
+    "kurarayTPE": "SEPTON primary catalogue exposes SEP/SEPS/SEEPS/SEBS grade tables with MFR under explicit load/temperature conditions, styrene content, viscosity and hardness; treat as compound/base-polymer evidence, not interchangeable with finished TPE compound properties",
+    "polyplasticsLCP": "primary grade pages provide extremely low water absorption plus injection-pressure-conditioned flow/transverse shrinkage, useful for anisotropy/precision-molding teaching",
+    "unitikaPolyarylate": "U-Polymer adds amorphous polyarylate grades with ISO methods, water absorption, parallel/perpendicular shrinkage, HDT and chemical/impact/sliding variants"
   },
   "promotionRules": {
     "requiredBeforeAccepted": [
