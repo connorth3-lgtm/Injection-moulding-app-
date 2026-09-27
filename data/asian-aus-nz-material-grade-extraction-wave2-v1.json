@@ -1,5 +1,5 @@
 {
-  "version": "2026-09-28.24",
+  "version": "2026-09-28.25",
   "scope": "Asia including Singapore, Australia and New Zealand primary-source material evidence wave 2",
   "policy": {
     "noUniversalSettings": true,
@@ -4531,6 +4531,170 @@
       ],
       "cycleTimeClaim": "manufacturer states up to 18% depending on product and equipment",
       "boundary": "cycle-time claim is conditional and not universal",
+      "status": "candidate-complete"
+    },
+    {
+      "manufacturer": "UNITIKA",
+      "manufacturerCountry": "Japan",
+      "region": "Asia",
+      "polymer": "polyarylate composite",
+      "grade": "UG-100-20",
+      "density_g_cm3": 1.36,
+      "waterAbsorption24h_percent": 0.24,
+      "tensile_MPa": 99,
+      "flexural_MPa": 157,
+      "flexuralModulus_GPa": 5.2,
+      "notchedIzod_J_m": 49,
+      "HDT1_8MPa_C": 180,
+      "CLTE_1e5_K": 2.1,
+      "shrinkage3mm_percent": {
+        "flow": 0.2,
+        "transverse": 0.55
+      },
+      "status": "candidate-complete"
+    },
+    {
+      "manufacturer": "UNITIKA",
+      "manufacturerCountry": "Japan",
+      "region": "Asia",
+      "polymer": "polyarylate composite",
+      "grade": "UG-100-30",
+      "density_g_cm3": 1.44,
+      "waterAbsorption24h_percent": 0.24,
+      "tensile_MPa": 132,
+      "flexural_MPa": 133,
+      "flexuralModulus_GPa": 5.7,
+      "notchedIzod_J_m": 100,
+      "HDT1_8MPa_C": 180,
+      "CLTE_1e5_K": 3.5,
+      "shrinkage3mm_percent": {
+        "flow": "0.1-0.2",
+        "transverse": "0.3-0.5"
+      },
+      "status": "candidate-complete"
+    },
+    {
+      "manufacturer": "Asahi Kasei",
+      "manufacturerCountry": "Japan",
+      "region": "Asia",
+      "polymer": "POM copolymer",
+      "grade": "TENAC-C 4520",
+      "density_g_cm3": 1.41,
+      "tensileStress_MPa": 63,
+      "tensileModulus_MPa": 2700,
+      "strainAtBreak_percent": 35,
+      "viscosityClass": "medium",
+      "CAEAvailability": "Autodesk Moldflow listed",
+      "boundary": "CAE listing is capability evidence, not processing settings",
+      "status": "candidate-complete"
+    },
+    {
+      "manufacturer": "UBE",
+      "manufacturerCountry": "Japan",
+      "region": "Asia",
+      "polymer": "PA6-GF30",
+      "grade": "1015GC6",
+      "condition": "dry as moulded",
+      "reinforcement": "GF30",
+      "tensile_MPa": 190,
+      "tensileModulus_MPa": 9500,
+      "flexural_MPa": 280,
+      "flexuralModulus_MPa": 8500,
+      "notchedCharpy_kJ_m2": 12,
+      "melting_C": 220,
+      "HDT_C": {
+        "at1_8MPa": 200,
+        "at0_45MPa": 215
+      },
+      "status": "candidate-complete"
+    },
+    {
+      "manufacturer": "UBE",
+      "manufacturerCountry": "Japan",
+      "region": "Asia",
+      "polymer": "PA6",
+      "grade": "1013B",
+      "condition": "dry as moulded",
+      "reinforcement": "unreinforced",
+      "tensile_MPa": 80,
+      "tensileModulus_MPa": 2800,
+      "flexural_MPa": 110,
+      "flexuralModulus_MPa": 2500,
+      "notchedCharpy_kJ_m2": 6,
+      "melting_C": 220,
+      "HDT_C": {
+        "at1_8MPa": 60,
+        "at0_45MPa": 160
+      },
+      "status": "candidate-complete"
+    },
+    {
+      "manufacturer": "Kuraray",
+      "manufacturerCountry": "Japan",
+      "region": "Asia",
+      "polymer": "PA9T",
+      "grade": "G1352A",
+      "reinforcement": "GF35",
+      "feature": "high sliding",
+      "condition": "absolutely dry",
+      "specificGravity": 1.5,
+      "waterAbsorption23C24h_percent": 0.14,
+      "tensile_MPa": 200,
+      "flexural_MPa": 290,
+      "flexuralModulus_GPa": 10.7,
+      "notchedCharpy_kJ_m2": 13,
+      "melting_C": 300,
+      "shrinkage2mm_percent": {
+        "test": "ISO 294-4",
+        "flow": 0.2,
+        "transverse": 0.8
+      },
+      "status": "candidate-complete"
+    },
+    {
+      "manufacturer": "Kuraray",
+      "manufacturerCountry": "Japan",
+      "region": "Asia",
+      "polymer": "PA9T",
+      "grade": "GL1350A",
+      "reinforcement": "GF35",
+      "feature": "hydrolysis resistant/laser absorbing",
+      "condition": "absolutely dry",
+      "specificGravity": 1.4,
+      "waterAbsorption23C24h_percent": 0.19,
+      "tensile_MPa": 200,
+      "flexural_MPa": 290,
+      "flexuralModulus_GPa": 10,
+      "notchedCharpy_kJ_m2": 12,
+      "melting_C": 300,
+      "shrinkage2mm_percent": {
+        "test": "ISO 294-4",
+        "flow": 0.3,
+        "transverse": 0.9
+      },
+      "status": "candidate-complete"
+    },
+    {
+      "manufacturer": "Kuraray",
+      "manufacturerCountry": "Japan",
+      "region": "Asia",
+      "polymer": "PA9T",
+      "grade": "G1350A-M47WF",
+      "reinforcement": "GF35",
+      "feature": "hot-water/food-contact",
+      "condition": "absolutely dry",
+      "specificGravity": 1.4,
+      "waterAbsorption23C24h_percent": 0.19,
+      "tensile_MPa": 200,
+      "flexural_MPa": 285,
+      "flexuralModulus_GPa": 9.5,
+      "notchedCharpy_kJ_m2": 11.5,
+      "melting_C": 300,
+      "shrinkage2mm_percent": {
+        "test": "ISO 294-4",
+        "flow": 0.3,
+        "transverse": 0.9
+      },
       "status": "candidate-complete"
     }
   ]
