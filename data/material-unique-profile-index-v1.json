@@ -1,8 +1,8 @@
 {
-  "version": "2026-09-28.9",
+  "version": "2026-09-28.10",
   "source": "data/asian-aus-nz-material-grade-extraction-wave2-v1.json",
   "countingRule": "one manufacturer + exact grade identity equals one unique complete profile; multiple evidence rows enrich but do not increase profile count",
-  "uniqueExactCompleteProfiles": 84,
+  "uniqueExactCompleteProfiles": 89,
   "profiles": [
     {
       "manufacturer": "Qenos",
@@ -815,6 +815,51 @@
       "polymer": "PA6-GF",
       "supportingRecordIndexes": [
         278
+      ],
+      "evidenceRowCount": 1
+    },
+    {
+      "manufacturer": "LG Chem",
+      "grade": "LUMID GP3100AW",
+      "polymer": "PA6-GF",
+      "supportingRecordIndexes": [
+        279
+      ],
+      "evidenceRowCount": 1
+    },
+    {
+      "manufacturer": "LG Chem",
+      "grade": "LUMID GP3200AW",
+      "polymer": "PA6-GF",
+      "supportingRecordIndexes": [
+        280
+      ],
+      "evidenceRowCount": 1
+    },
+    {
+      "manufacturer": "LG Chem",
+      "grade": "LUMID GP3300AW",
+      "polymer": "PA6-GF",
+      "supportingRecordIndexes": [
+        281
+      ],
+      "evidenceRowCount": 1
+    },
+    {
+      "manufacturer": "LG Chem",
+      "grade": "LUMID GP3400AW",
+      "polymer": "PA6-GF",
+      "supportingRecordIndexes": [
+        282
+      ],
+      "evidenceRowCount": 1
+    },
+    {
+      "manufacturer": "LG Chem",
+      "grade": "LUMID GP3500AW",
+      "polymer": "PA6-GF",
+      "supportingRecordIndexes": [
+        283
       ],
       "evidenceRowCount": 1
     }
