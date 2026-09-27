@@ -1,0 +1,34 @@
+{
+  "schema": 1,
+  "version": "2026.09.28.1",
+  "policy": "Primary Asian manufacturer evidence. Grade/family values are source-bounded and are not universal machine settings.",
+  "regions": [
+    "Japan",
+    "South Korea",
+    "Taiwan",
+    "China",
+    "Thailand",
+    "Malaysia",
+    "Indonesia",
+    "India"
+  ],
+  "sourceFamilies": 33,
+  "requiredExtraction": [
+    "manufacturer",
+    "country",
+    "polymer",
+    "grade",
+    "reinforcement",
+    "property",
+    "value",
+    "unit",
+    "testMethod",
+    "conditioning",
+    "direction",
+    "typicalOrSpecification",
+    "sourceUrl",
+    "sourceRevision",
+    "processingDependencies"
+  ],
+  "status": "discovery-seed-complete; grade-level extraction required"
+}
