@@ -1,5 +1,5 @@
 {
-  "version": "2026-09-28.28",
+  "version": "2026-09-28.29",
   "scope": "Asia including Singapore, Australia and New Zealand primary-source material evidence wave 2",
   "policy": {
     "noUniversalSettings": true,
@@ -5189,6 +5189,137 @@
       "process": "injection moulding",
       "recordType": "exact-grade-property-queue",
       "promotionBlock": "primary numeric grade TDS pending",
+      "status": "discovery-only"
+    },
+    {
+      "manufacturer": "CHIMEI",
+      "manufacturerCountry": "Taiwan",
+      "region": "Asia",
+      "polymer": "ABS",
+      "grade": "POLYLAC PA-757 A01",
+      "features": [
+        "general purpose",
+        "high gloss"
+      ],
+      "process": "injection moulding",
+      "promotionBlock": "numeric manufacturer TDS extraction required before complete",
+      "status": "discovery-only"
+    },
+    {
+      "manufacturer": "CHIMEI",
+      "manufacturerCountry": "Taiwan",
+      "region": "Asia",
+      "polymer": "ABS",
+      "grade": "POLYLAC PA-757 J01",
+      "features": [
+        "general purpose",
+        "injection moulding"
+      ],
+      "promotionBlock": "numeric manufacturer TDS extraction required before complete",
+      "status": "discovery-only"
+    },
+    {
+      "manufacturer": "CHIMEI",
+      "manufacturerCountry": "Taiwan",
+      "region": "Asia",
+      "polymer": "ABS",
+      "grade": "POLYLAC PA-757G J08",
+      "features": [
+        "high-gloss black",
+        "appearance"
+      ],
+      "process": "injection moulding",
+      "promotionBlock": "numeric manufacturer TDS extraction required before complete",
+      "status": "discovery-only"
+    },
+    {
+      "manufacturer": "CHIMEI",
+      "manufacturerCountry": "Taiwan",
+      "region": "Asia",
+      "polymer": "ABS",
+      "grade": "POLYLAC PA-747S A01",
+      "features": [
+        "high impact",
+        "extrusion/injection capable"
+      ],
+      "processBoundary": "not injection-only; preserve process classification",
+      "promotionBlock": "numeric manufacturer TDS extraction required",
+      "status": "discovery-only"
+    },
+    {
+      "manufacturer": "CHIMEI",
+      "manufacturerCountry": "Taiwan",
+      "region": "Asia",
+      "polymer": "PC",
+      "grade": "WONDERLOY PC-860",
+      "features": [
+        "weather resistance",
+        "high flow"
+      ],
+      "promotionBlock": "numeric manufacturer TDS extraction required",
+      "status": "discovery-only"
+    },
+    {
+      "manufacturer": "CHIMEI",
+      "manufacturerCountry": "Taiwan",
+      "region": "Asia",
+      "polymer": "PMMA",
+      "grade": "ACRYREX CM-207",
+      "process": "injection moulding",
+      "promotionBlock": "numeric manufacturer TDS extraction required",
+      "status": "discovery-only"
+    },
+    {
+      "manufacturer": "LG Chem",
+      "manufacturerCountry": "South Korea",
+      "region": "Asia",
+      "polymer": "PA6",
+      "grade": "LUMID GP1100AW",
+      "process": "injection moulding",
+      "recordType": "exact-grade-property-queue",
+      "promotionBlock": "exact numeric manufacturer TDS required",
+      "status": "discovery-only"
+    },
+    {
+      "manufacturer": "LG Chem",
+      "manufacturerCountry": "South Korea",
+      "region": "Asia",
+      "polymer": "PA6",
+      "grade": "LUMID GP2300AW",
+      "process": "injection moulding",
+      "recordType": "exact-grade-property-queue",
+      "promotionBlock": "exact numeric manufacturer TDS required; do not infer reinforcement/property values from adjacent grades",
+      "status": "discovery-only"
+    },
+    {
+      "manufacturer": "LG Chem",
+      "manufacturerCountry": "South Korea",
+      "region": "Asia",
+      "polymer": "PA6",
+      "grade": "LUMID HM2604AW",
+      "process": "injection moulding",
+      "recordType": "exact-grade-property-queue",
+      "promotionBlock": "exact numeric manufacturer TDS required",
+      "status": "discovery-only"
+    },
+    {
+      "manufacturer": "LG Chem",
+      "manufacturerCountry": "South Korea",
+      "region": "Asia",
+      "polymer": "PBT",
+      "brand": "LUPOX",
+      "recordType": "exact-grade-discovery-programme",
+      "promotionBlock": "family capability alone does not create a complete profile",
+      "status": "discovery-only"
+    },
+    {
+      "manufacturer": "LG Chem",
+      "manufacturerCountry": "South Korea",
+      "region": "Asia",
+      "polymer": "PC/alloys",
+      "brand": "LUPOY",
+      "recordType": "exact-grade-discovery-programme",
+      "promotionBlock": "exact grade identity plus numeric TDS required",
       "status": "discovery-only"
     }
   ]
