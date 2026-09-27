@@ -1,5 +1,5 @@
 {
-  "version": "2026-09-28.23",
+  "version": "2026-09-28.24",
   "scope": "Asia including Singapore, Australia and New Zealand primary-source material evidence wave 2",
   "policy": {
     "noUniversalSettings": true,
@@ -4394,6 +4394,144 @@
       ],
       "promotionBlock": "current manufacturer numeric TDS required",
       "status": "discovery-only"
+    },
+    {
+      "manufacturer": "SCGC",
+      "manufacturerCountry": "Thailand",
+      "region": "Asia",
+      "polymer": "PP impact copolymer",
+      "grade": "P722JO",
+      "process": "injection moulding",
+      "MFR": {
+        "condition": "230 C / 2.16 kg",
+        "value_g_10min": 10
+      },
+      "tensileYield_kg_cm2": 300,
+      "flexuralModulus_kg_cm2": 13000,
+      "notchedIzod23C_J_m": 98,
+      "features": [
+        "UV resistance",
+        "battery case/automotive"
+      ],
+      "status": "candidate-complete"
+    },
+    {
+      "manufacturer": "SCGC",
+      "manufacturerCountry": "Thailand",
+      "region": "Asia",
+      "polymer": "PP impact copolymer",
+      "grade": "P841J",
+      "process": "injection moulding",
+      "MFR": {
+        "condition": "230 C / 2.16 kg",
+        "value_g_10min": 40
+      },
+      "tensileYield_kg_cm2": 260,
+      "flexuralModulus_kg_cm2": 12000,
+      "notchedIzod23C_J_m": 70,
+      "feature": "UV resistance",
+      "status": "candidate-complete"
+    },
+    {
+      "manufacturer": "LyondellBasell",
+      "region": "Australia/New Zealand availability",
+      "polymer": "PP impact copolymer",
+      "grade": "Moplen EP336J",
+      "process": "injection moulding",
+      "MFR": {
+        "condition": "230 C / 2.16 kg",
+        "value_g_10min": 3
+      },
+      "density_g_cm3": 0.9,
+      "flexuralModulus_MPa": 1200,
+      "tensileYield_MPa": 25,
+      "notchedIzod_J_m": {
+        "at23C": 450,
+        "atMinus20C": 60
+      },
+      "vicat_C": 147,
+      "HDT0_46MPa_C": 96,
+      "originBoundary": "regional availability is not manufacturing origin",
+      "status": "candidate-complete"
+    },
+    {
+      "manufacturer": "LyondellBasell",
+      "region": "Australia/New Zealand availability",
+      "polymer": "PP impact copolymer",
+      "grade": "Moplen EP641P",
+      "process": "injection moulding",
+      "MFR": {
+        "condition": "230 C / 2.16 kg",
+        "value_g_10min": 20
+      },
+      "density_g_cm3": 0.9,
+      "feature": "stiffness/toughness balance",
+      "originBoundary": "regional availability is not manufacturing origin",
+      "status": "candidate-complete"
+    },
+    {
+      "manufacturer": "LyondellBasell",
+      "region": "Australia/New Zealand availability",
+      "polymer": "PP homopolymer",
+      "grade": "PLASVE HP548S",
+      "process": "thin-wall injection moulding",
+      "MFR": {
+        "condition": "230 C / 2.16 kg",
+        "value_g_10min": 35
+      },
+      "density_g_cm3": 0.9,
+      "flexuralModulus_MPa": 1450,
+      "tensileYield_MPa": 33,
+      "notchedIzod23C_kJ_m2": 2.3,
+      "vicat_C": 150,
+      "HDT0_45MPa_C": 80,
+      "originBoundary": "regional availability is not manufacturing origin",
+      "status": "candidate-complete"
+    },
+    {
+      "manufacturer": "IndianOil",
+      "manufacturerCountry": "India",
+      "region": "Asia",
+      "polymer": "HDPE",
+      "grade": "080M60",
+      "process": "injection moulding",
+      "meltIndex_g_10min": 8,
+      "density_g_cm3": 0.96,
+      "status": "candidate-complete"
+    },
+    {
+      "manufacturer": "IndianOil",
+      "manufacturerCountry": "India",
+      "region": "Asia",
+      "polymer": "HDPE",
+      "grade": "080M55",
+      "process": "injection moulding",
+      "meltIndex_g_10min": 8,
+      "density_g_cm3": 0.955,
+      "status": "candidate-complete"
+    },
+    {
+      "manufacturer": "IndianOil",
+      "manufacturerCountry": "India",
+      "region": "Asia",
+      "polymer": "PP homopolymer",
+      "grade": "P1110MAS",
+      "process": "injection moulding",
+      "features": [
+        "high flow",
+        "high stiffness",
+        "gloss",
+        "antistatic"
+      ],
+      "applications": [
+        "furniture",
+        "household articles",
+        "automotive stiffness applications",
+        "low-warpage products"
+      ],
+      "cycleTimeClaim": "manufacturer states up to 18% depending on product and equipment",
+      "boundary": "cycle-time claim is conditional and not universal",
+      "status": "candidate-complete"
     }
   ]
 }
