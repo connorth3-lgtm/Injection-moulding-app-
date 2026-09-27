@@ -45,7 +45,7 @@ for marker in [
     "records.length===197", "relevanceStatus:relevant.length?'supported':'blocked'",
     "supportLocator", "limitations", "dataEvidence:type", "scope:'optional'",
     "policy:'Every learner-visible keyed decision has an explicit proposition",
-    "context-only", "weakOptional.length===0"
+    "context-only", "weakOptional.length===0", "coverageReconciliation", "legacyFormalApprovalTotal", "optionalPropositionTotal", "Assessment evidence coverage reconciliation failed"
 ]: need(marker in integrity,f'proposition evidence contract missing: {marker}')
 
 allowed=['real-measured','published-experimental','synthetic','supplier','standard/regulatory','engineering-principle']
@@ -97,6 +97,7 @@ report={
  'psychometric_inverse_longest_cue_removed':True,
  'source_registration_hard_failures':len(hard),'source_registration_warnings':len(warnings),'independent_material_source_upgrades':upgrades,
  'real_measured_contracts':{'avaps_values':13631488,'openmms_values':298080,'cross_process_lower_values':7426743,'cross_process_upper_values':43814748,'cross_process_combined_values':7426743+43814748,'upper_pressure_values_excluded_pending_unit':21907374,'upper_state_values_excluded_pending_semantics':21907374},
+ 'coverage_reconciliation':{'legacy_formal_approval_total':157,'proposition_formal_total':157,'optional_proposition_total':40,'learner_visible_total':197},
  'status':'passed'
 }
 REPORT.write_text(json.dumps(report,indent=2)+'\n',encoding='utf-8')
