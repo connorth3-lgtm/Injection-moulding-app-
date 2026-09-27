@@ -32,9 +32,9 @@
   ],
   "status": "discovery-seed-complete; grade-level extraction required",
   "discoveryMetrics": {
-    "primarySourceFamilies": 43,
+    "primarySourceFamilies": 46,
     "regions": 8,
-    "gradeLevelExtracted": 29,
+    "gradeLevelExtracted": 39,
     "additionalGradeIdentitiesDiscovered": {
       "unitikaPA66": 22,
       "haldiaPPInjection": 16,
@@ -65,9 +65,10 @@
       "kuraraySEPTON": "15+ standard grades",
       "lgChemPA6": 12,
       "unitikaPA66": 22,
-      "haldiaPPInjection": 16
+      "haldiaPPInjection": 16,
+      "lotteAdvancedMaterials": "320+ listed rows"
     },
-    "estimatedNamedGradePool": "300+ named or directly selectable grades from current primary Asian catalogues before further expansion"
+    "estimatedNamedGradePool": "600+ named/directly selectable grades visible across current primary Asian catalogues; discovery count is not accepted-profile count"
   },
   "priorityNext": [
     "treat CAE/Moldflow availability as a separate evidence capability, never as proof of universal molding conditions",
@@ -82,6 +83,9 @@
     "extract representative DURACON POM viscosity/specialty ladder",
     "extract DURANEX PBT unfilled/GF/FR/low-warpage ladder",
     "extract all 21 LAPEROS LCP identities then property-complete representatives",
-    "separate TPE base-resin records from finished injection compounds"
+    "separate TPE base-resin records from finished injection compounds",
+    "partition LOTTE 320+ rows by polymer/filler/feature before extraction to avoid duplicate variants",
+    "capture processing-guide availability as provenance metadata, not universal conditions",
+    "add Taiwan ABS/PC/PMMA processing-condition documents and SDS links"
   ]
 }
