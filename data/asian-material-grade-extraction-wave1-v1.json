@@ -1097,6 +1097,37 @@
       "methods": [],
       "source": "https://www.teijin-resin.com/-/media/pdf/en/products/pc/pc_related_05.pdf",
       "status": "candidate-partial"
+    },
+    {
+      "manufacturer": "Polyplastics/Daicel",
+      "country": "Japan",
+      "polymer": "POM",
+      "grade": "DURACON M90-44",
+      "reinforcement": "none",
+      "properties": {},
+      "conditioning": "primary technical guide provides shrinkage as a function of 1/2/3 mm thickness under explicit 200C material, 80C mold, 25 mm/s injection speed and defined cavity/gate; preserve the condition matrix, do not collapse to a universal shrinkage value",
+      "methods": [],
+      "source": "https://www.polyplastics.com/Gidb/GradeInfoDownloadAction.do?_LOCALE=ENGLISH&fileNo=1&gradeId=1771&langId=1",
+      "status": "candidate-conditional"
+    },
+    {
+      "manufacturer": "Polyplastics/Daicel",
+      "country": "Japan",
+      "polymer": "POM",
+      "grade": "DURACON M270-44",
+      "reinforcement": "none",
+      "properties": {
+        "dynamicFriction_vsSteel": 0.4,
+        "dynamicFriction_vsM90_44": 0.37,
+        "flameRating": "UL94 HB"
+      },
+      "conditioning": "high-flow fast-cycle grade; flow/shrinkage/process comparisons are fixture and condition dependent; typical values are not specification minima",
+      "methods": [
+        "JIS K7218",
+        "UL94"
+      ],
+      "source": "https://www.polyplastics.com/Gidb/GradeInfoDownloadAction.do?_LOCALE=ENGLISH&fileNo=1&gradeId=1773&langId=1",
+      "status": "candidate-conditional"
     }
   ],
   "discoveryNotes": {
@@ -1145,5 +1176,13 @@
     ],
     "noUniversalSettings": true,
     "noInterpolationAcrossGrades": true
-  }
+  },
+  "conditionDependentEvidence": [
+    {
+      "family": "POM",
+      "manufacturer": "Polyplastics/Daicel",
+      "lesson": "Mold shrinkage changes with thickness and processing conditions; M90-44/M270-44 technical guides retain material temperature, mold temperature, injection speed, cavity and gate geometry.",
+      "rule": "Never expose a single family-level shrinkage number when source evidence is conditional."
+    }
+  ]
 }
