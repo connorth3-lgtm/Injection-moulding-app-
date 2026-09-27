@@ -561,6 +561,86 @@
       "methods": [],
       "source": "https://cn.toyobo-global.com/seihin/xj/enpla/glamide/characteristics.html",
       "status": "candidate-partial"
+    },
+    {
+      "manufacturer": "Polyplastics/Daicel",
+      "country": "Japan",
+      "polymer": "PBT+PET",
+      "grade": "DURANEX 3306",
+      "reinforcement": "GF30%",
+      "properties": {
+        "density_g_cm3": 1.54,
+        "waterAbsorption23C24h_pct": 0.2,
+        "tensile_MPa": 140,
+        "flexural_MPa": 210,
+        "flexuralModulus_MPa": 9100,
+        "charpyNotched23_kJ_m2": 8.1,
+        "HDT_C_1_8MPa": 210,
+        "CLTE_flow_x1e5_perC": 2,
+        "CLTE_transverse_x1e5_perC": 7
+      },
+      "conditioning": "manufacturer grade catalogue; 1 mm water-absorption specimen where stated",
+      "methods": [
+        "ISO 1183",
+        "ISO 62",
+        "ISO 527-1,2",
+        "ISO 178",
+        "ISO 179/1eA",
+        "ISO 75-1,2"
+      ],
+      "source": "https://www.polyplastics.com/Gidb/GradeListSelectGradeAction.do?id=1520",
+      "status": "candidate-partial"
+    },
+    {
+      "manufacturer": "Kuraray",
+      "country": "Japan",
+      "polymer": "SEPS TPE",
+      "grade": "SEPTON 2002",
+      "reinforcement": "none",
+      "properties": {
+        "styreneContent_wt_pct": 30,
+        "MFR230C_2_16kg_g_10min": 70,
+        "MFR200C_10kg_g_10min": 100,
+        "hardnessShoreA": 80
+      },
+      "conditioning": "manufacturer standard-grade table; TPE base polymer typically used in compounds",
+      "methods": [],
+      "source": "https://www.kuraray.com/global-en/products/thermoplastic-elastomer/",
+      "status": "candidate-partial"
+    },
+    {
+      "manufacturer": "Kuraray",
+      "country": "Japan",
+      "polymer": "SEPS TPE",
+      "grade": "SEPTON 2063",
+      "reinforcement": "none",
+      "properties": {
+        "styreneContent_wt_pct": 13,
+        "MFR230C_2_16kg_g_10min": 7,
+        "MFR200C_10kg_g_10min": 22,
+        "hardnessShoreA": 36
+      },
+      "conditioning": "manufacturer standard-grade table; TPE base polymer typically used in compounds",
+      "methods": [],
+      "source": "https://www.kuraray.com/global-en/products/thermoplastic-elastomer/",
+      "status": "candidate-partial"
+    },
+    {
+      "manufacturer": "Kuraray",
+      "country": "Japan",
+      "polymer": "SEEPS TPE",
+      "grade": "SEPTON 4033",
+      "reinforcement": "none",
+      "properties": {
+        "styreneContent_wt_pct": 30,
+        "MFR230C_2_16kg_g_10min": "<0.1",
+        "MFR200C_10kg_g_10min": "<0.1",
+        "hardnessShoreA": 76
+      },
+      "conditioning": "manufacturer standard-grade table; high-molecular-weight TPE base polymer",
+      "methods": [],
+      "source": "https://www.kuraray.com/global-en/products/thermoplastic-elastomer/",
+      "status": "candidate-partial"
     }
   ],
   "discoveryNotes": {
@@ -582,7 +662,9 @@
     "countingBoundary": "catalogue grade existence is discovery evidence only; it is not a completed profile",
     "lgChemPA6Guide": "12 named PA6 grades in one primary property table, spanning unreinforced and multiple GF/FR/impact/stiffness variants",
     "polyplasticsPOM": "DURACON technical library includes grade-specific shrinkage response versus injection pressure, mold temperature and part thickness; preserve as condition-dependent dimensional evidence",
-    "toyobo": "manufacturer comparative PA6/PA66/PA6T data adds moisture-absorption and thermal family context"
+    "toyobo": "manufacturer comparative PA6/PA66/PA6T data adds moisture-absorption and thermal family context",
+    "polyplasticsPBT": "DURANEX catalogue exposes 99 popular PBT grades; individual pages include ISO methods, water absorption, mechanical/thermal data and flow/transverse CLTE",
+    "kurarayTPE": "SEPTON primary catalogue exposes SEP/SEPS/SEEPS/SEBS grade tables with MFR under explicit load/temperature conditions, styrene content, viscosity and hardness; treat as compound/base-polymer evidence, not interchangeable with finished TPE compound properties"
   },
   "promotionRules": {
     "requiredBeforeAccepted": [
