@@ -46,7 +46,8 @@ for(const viewport of [{name:'mobile',width:412},{name:'tablet',width:768},{name
     await closeModal(page);await mobileHub(page,'Practice');
     for(const action of ['troubleshooting','process-data','labs'])await expect(page.locator('#scenarios [data-mm-hub-action="'+action+'"]')).toBeVisible();
    }else{
-    const more=page.locator('#nav [data-mm-desktop-more-tools]');await expect(more).toBeVisible();await more.click();await expect(page.locator('#modal .modal-card')).toBeVisible();for(const id of ['mould-master','diagnostic-labs','process-data','material-labs','learning-insights'])await expect(page.locator('[data-mm-registry-menu="'+id+'"]')).toBeVisible();
+    const more=page.locator('#nav [data-mm-desktop-more-tools]');await expect(more).toBeVisible();await more.click();await expect(page.locator('#modal .modal-card')).toBeVisible();
+    for(const name of ['Process simulator','Defect finder','Troubleshooting coach','Knowledge checks','Standards & safety','Profile & data'])await expect(page.locator('#modal .quick-action').filter({hasText:name})).toBeVisible();
    }
   });
  });
