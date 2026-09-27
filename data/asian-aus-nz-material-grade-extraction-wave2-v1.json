@@ -1,5 +1,5 @@
 {
-  "version": "2026-09-28.11",
+  "version": "2026-09-28.12",
   "scope": "Asia including Singapore, Australia and New Zealand primary-source material evidence wave 2",
   "policy": {
     "noUniversalSettings": true,
@@ -2362,6 +2362,146 @@
       ],
       "boundary": "catalogue/application selection evidence; exact numeric properties remain grade-specific",
       "status": "discovery-only"
+    },
+    {
+      "manufacturer": "ExxonMobil Chemical",
+      "region": "Asia Pacific/Singapore context",
+      "polymer": "PP impact copolymer",
+      "grade": "7123KNE1",
+      "recordType": "source-name-revision-boundary",
+      "datasheetBrand": "Exceed PP7123KNE1",
+      "processingGuideBrand": "Achieve Advanced PP7123KNE1",
+      "MFR": {
+        "test": "ASTM D1238",
+        "condition": "230 C / 2.16 kg",
+        "value_g_10min": 11
+      },
+      "density_g_cm3": 0.9,
+      "flexuralModulus_MPa": 1680,
+      "tensileYield_MPa": {
+        "ASTM_D638": 32.7,
+        "ISO527": 30.8
+      },
+      "processingMethod": "injection moulding",
+      "availability": "Asia Pacific",
+      "resolution": "preserve brand/title discrepancy until manufacturer product-history relationship is explicit; do not duplicate as two grades",
+      "status": "conditional"
+    },
+    {
+      "manufacturer": "SCGC",
+      "manufacturerCountry": "Thailand",
+      "region": "Asia",
+      "polymer": "PP impact copolymer",
+      "recordType": "common-method-injection-ladder",
+      "testContext": {
+        "MFR": "230 C / 2.16 kg",
+        "tensile": "yield",
+        "impact": "23 C"
+      },
+      "grades": [
+        {
+          "grade": "P722JO",
+          "MFR": 10,
+          "tensileYield_kg_cm2": 300,
+          "flexuralModulus_kg_cm2": 13000,
+          "izod_J_m": 98,
+          "features": [
+            "UV resistance",
+            "battery case/automotive"
+          ]
+        },
+        {
+          "grade": "P740J",
+          "MFR": 27,
+          "tensileYield_kg_cm2": 290,
+          "flexuralModulus_kg_cm2": 12500,
+          "izod_J_m": 78
+        },
+        {
+          "grade": "P744J",
+          "MFR": 30,
+          "tensileYield_kg_cm2": 290,
+          "flexuralModulus_kg_cm2": 14500,
+          "izod_J_m": 78
+        },
+        {
+          "grade": "P840J",
+          "MFR": 43,
+          "tensileYield_kg_cm2": 290,
+          "flexuralModulus_kg_cm2": 12500,
+          "izod_J_m": 70
+        },
+        {
+          "grade": "P841J",
+          "MFR": 40,
+          "tensileYield_kg_cm2": 260,
+          "flexuralModulus_kg_cm2": 12000,
+          "izod_J_m": 70,
+          "features": [
+            "UV resistance"
+          ]
+        },
+        {
+          "grade": "P842J",
+          "MFR": 40,
+          "tensileYield_kg_cm2": 295,
+          "flexuralModulus_kg_cm2": 14500,
+          "izod_J_m": 74
+        }
+      ],
+      "boundary": "common manufacturer brochure comparison; retain exact grade identities and methods",
+      "status": "candidate-complete"
+    },
+    {
+      "manufacturer": "PETRONAS Chemicals",
+      "manufacturerCountry": "Malaysia",
+      "region": "Asia",
+      "polymer": "PP",
+      "recordType": "process-classification-guard",
+      "grades": [
+        {
+          "grade": "H500NG",
+          "MFR": 12,
+          "process": "injection moulding"
+        },
+        {
+          "grade": "H648TT",
+          "MFR": 53,
+          "process": "thin-wall injection moulding"
+        },
+        {
+          "grade": "H525JB",
+          "MFR": 3,
+          "process": "BOPP film"
+        },
+        {
+          "grade": "H525NW",
+          "MFR": 11,
+          "process": "film"
+        },
+        {
+          "grade": "H612MC",
+          "MFR": 7,
+          "process": "cast film"
+        },
+        {
+          "grade": "H456HY",
+          "MFR": 1.8,
+          "process": "yarn"
+        },
+        {
+          "grade": "H456JY",
+          "MFR": 3.4,
+          "process": "yarn/thermoforming"
+        },
+        {
+          "grade": "H561SS",
+          "MFR": 33,
+          "process": "spunbond"
+        }
+      ],
+      "boundary": "non-injection grades intentionally retained as negative classification controls; do not promote them into injection material profiles",
+      "status": "candidate-complete"
     }
   ]
 }
