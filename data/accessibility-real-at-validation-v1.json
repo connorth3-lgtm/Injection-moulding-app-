@@ -53,6 +53,16 @@
     "Search and paginate exact commercial material grades",
     "Open sourced exact-grade details and understand property/process evidence boundaries",
     "Complete core learner assessment interactions with announced state and errors",
-    "Create or edit a Mould Master evidence case without losing semantic context"
-  ]
+    "Create or edit a Mould Master evidence case without losing semantic context",
+    "Read a long governed Book chapter at 200% text zoom and use Read/Listen without losing context",
+    "Complete a long-stem assessment item, review all four choices, submit it and understand keyed feedback without relying on colour or option position",
+    "Open and close More Tools/Book modal surfaces and confirm focus returns to the invoking control"
+  ],
+  "auditScope": {
+    "uiNavigation": true,
+    "bookLongForm": true,
+    "assessmentQuestionsAndFeedback": true,
+    "keyboardFocusRecovery": true,
+    "textZoom200Percent": true
+  }
 }
