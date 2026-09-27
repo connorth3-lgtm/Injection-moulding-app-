@@ -1,5 +1,5 @@
 {
-  "version": "2026-09-28.2",
+  "version": "2026-09-28.3",
   "scope": "Asia-Australia-New Zealand primary-source material evidence wave 2",
   "policy": {
     "noUniversalSettings": true,
@@ -537,6 +537,136 @@
       ],
       "sourceBoundary": "manufacturer exposes ISO/ASTM TDS and processing guides; numeric values remain discovery-only until exact TDS extraction",
       "status": "discovery-only"
+    },
+    {
+      "manufacturer": "SCGC",
+      "manufacturerCountry": "Thailand",
+      "region": "Asia",
+      "polymer": "PP homopolymer",
+      "grade": "P901J",
+      "recordType": "source-revision-conflict",
+      "test": "ASTM D1238 at 230 C / 2.16 kg",
+      "livePageMFR_g_10min": 70,
+      "march2022PdfMFR_g_10min": 60,
+      "otherMatchedProperties": {
+        "density_g_cm3": 0.91,
+        "HDT_C": 125,
+        "tensileYield_kg_cm2": 360,
+        "flexuralModulus_kg_cm2": 16500,
+        "notchedIzod_J_m": 38,
+        "shrinkage2mm": {
+          "MD": 1,
+          "TD": 1.25
+        }
+      },
+      "resolution": "Do not average. Treat current live value and dated PDF as conflicting revisions until manufacturer revision history/current TDS is resolved.",
+      "status": "conditional"
+    },
+    {
+      "manufacturer": "PETRONAS Chemicals",
+      "manufacturerCountry": "Malaysia",
+      "region": "Asia",
+      "polymer": "PP homopolymer",
+      "grades": [
+        {
+          "grade": "H500NG",
+          "MFR_g_10min": 12,
+          "application": "injection moulding; furniture, housewares, containers, toys"
+        },
+        {
+          "grade": "H648TT",
+          "MFR_g_10min": 53,
+          "application": "transparent thin-wall injection moulding"
+        }
+      ],
+      "sourceBoundary": "manufacturer product brochure; retain application and MFR as grade-specific",
+      "status": "candidate-complete"
+    },
+    {
+      "manufacturer": "LOTTE Chemical Titan",
+      "manufacturerCountry": "Malaysia",
+      "region": "Asia",
+      "polymer": "PP impact copolymer",
+      "grade": "SH611",
+      "process": "injection moulding",
+      "MFR": {
+        "test": "ASTM D1238",
+        "condition": "230 C",
+        "value_g_10min": 18
+      },
+      "density_g_cm3": 0.9,
+      "tensileYield_kg_cm2": 190,
+      "flexuralModulus_kg_cm2": 9000,
+      "applicationBoundary": [
+        "industrial pails",
+        "pallets",
+        "household electric appliances"
+      ],
+      "restriction": "not designed/intended for food, personal care, medical or pharmaceutical applications per manufacturer sheet",
+      "status": "candidate-complete"
+    },
+    {
+      "manufacturer": "LOTTE Chemical Titan",
+      "manufacturerCountry": "Malaysia",
+      "region": "Asia",
+      "polymer": "PP impact copolymer",
+      "recordType": "grade-ladder",
+      "grades": [
+        {
+          "grade": "7523",
+          "MFR": 4
+        },
+        {
+          "grade": "EPC40R",
+          "MFR": 7
+        },
+        {
+          "grade": "JM-370K",
+          "MFR": 30
+        }
+      ],
+      "applications": "automotive/appliances/housewares/industrial depending on exact grade",
+      "status": "candidate-partial"
+    },
+    {
+      "manufacturer": "Qenos",
+      "manufacturerCountry": "Australia",
+      "region": "Australia",
+      "polymer": "polyethylene",
+      "recordType": "mechanism-guidance",
+      "process": "injection moulding",
+      "evidence": [
+        "HDPE generally crystallises/shrinks at least as strongly as LLDPE, which is at least as strong as LDPE",
+        "exact moulding shrinkage is strongly affected by moulding conditions and part shape",
+        "controlled moulding trials are recommended before final mould dimensions",
+        "dimensions should account for after-shrinkage and guide recommends waiting at least 24 h before checking dimensions"
+      ],
+      "boundary": "mechanism/design guidance only; never convert the rules-of-thumb into universal shrinkage or processing settings",
+      "status": "candidate-complete"
+    },
+    {
+      "manufacturer": "LyondellBasell Australia",
+      "manufacturerCountry": "Australia",
+      "region": "Australia/New Zealand availability",
+      "polymer": "PP homopolymer",
+      "grade": "PLASVE/Moplen HP400L",
+      "MFR": {
+        "condition": "230 C / 2.16 kg",
+        "value_g_10min": 6
+      },
+      "density_g_cm3": 0.9,
+      "flexuralModulus_MPa": 1500,
+      "tensileYield_MPa": 32,
+      "notchedIzod23C_kJ_m2": 3.5,
+      "vicat_C": 154,
+      "HDT0_45MPa_C": 82,
+      "availability": [
+        "Australia",
+        "New Zealand",
+        "Asia-Pacific"
+      ],
+      "valueStatus": "typical properties",
+      "status": "candidate-complete"
     }
   ]
 }
