@@ -1,5 +1,5 @@
 {
-  "version": "2026-09-28.30",
+  "version": "2026-09-28.31",
   "scope": "Asia including Singapore, Australia and New Zealand primary-source material evidence wave 2",
   "policy": {
     "noUniversalSettings": true,
@@ -5452,6 +5452,183 @@
       "recordType": "process-classification-control",
       "rule": "requires exact injection-use evidence before injection recommendation",
       "status": "discovery-only"
+    },
+    {
+      "manufacturer": "Sumitomo Chemical",
+      "manufacturerCountry": "Japan",
+      "region": "Asia",
+      "polymer": "PESU",
+      "grade": "SUMIKAEXCEL 4100G",
+      "process": "injection moulding",
+      "reinforcement": "unreinforced",
+      "density_g_cm3": 1.37,
+      "waterAbsorption_percent": {
+        "condition": "23 C / 24 h water",
+        "value": 1
+      },
+      "shrinkage_percent": {
+        "MD": 0.6,
+        "TD": 0.6
+      },
+      "tensile_MPa": {
+        "ISO527": 85,
+        "ASTM_D638": 84
+      },
+      "tensileModulus_MPa": 2700,
+      "flexural_MPa": {
+        "ISO178": 130,
+        "ASTM_D790": 129
+      },
+      "flexuralModulus_MPa": 2600,
+      "HDT_C": {
+        "ISO_1_8MPa": 205,
+        "ISO_0_45MPa": 214,
+        "ASTM_1_82MPa": 203,
+        "ASTM_0_45MPa": 210
+      },
+      "CLTE_1e5_K": {
+        "MD": 5.5,
+        "TD": 5.5
+      },
+      "sourceUrl": "https://www.sumitomo-chem.co.jp/sep/english/products/pes/pes_fg_ippan.html",
+      "valueStatus": "manufacturer typical values",
+      "status": "candidate-complete"
+    },
+    {
+      "manufacturer": "Sumitomo Chemical",
+      "manufacturerCountry": "Japan",
+      "region": "Asia",
+      "polymer": "PESU",
+      "grade": "SUMIKAEXCEL 4800G",
+      "process": "injection moulding",
+      "reinforcement": "unreinforced",
+      "density_g_cm3": 1.37,
+      "waterAbsorption_percent": {
+        "condition": "23 C / 24 h water",
+        "value": 1
+      },
+      "shrinkage_percent": {
+        "MD": 0.6,
+        "TD": 0.6
+      },
+      "tensile_MPa": {
+        "ISO527": 85,
+        "ASTM_D638": 84
+      },
+      "flexural_MPa": {
+        "ISO178": 130,
+        "ASTM_D790": 129
+      },
+      "flexuralModulus_MPa": 2600,
+      "sourceUrl": "https://www.sumitomo-chem.co.jp/sep/english/products/pes/pes_fg_ippan.html",
+      "valueStatus": "manufacturer typical values",
+      "status": "candidate-complete"
+    },
+    {
+      "manufacturer": "Sumitomo Chemical",
+      "manufacturerCountry": "Japan",
+      "region": "Asia",
+      "polymer": "PESU-GF20",
+      "grade": "SUMIKAEXCEL 3601GL20",
+      "process": "injection moulding",
+      "reinforcement": "GF20",
+      "density_g_cm3": 1.51,
+      "waterAbsorption_percent": {
+        "condition": "23 C / 24 h water",
+        "value": 0.8
+      },
+      "shrinkage_percent": {
+        "MD": 0.3,
+        "TD": 0.4
+      },
+      "tensile_MPa": {
+        "ISO527": 135,
+        "ASTM_D638": 124
+      },
+      "CAE": {
+        "specificHeat_J_kgK": 847,
+        "thermalConductivity_W_mK": 0.28,
+        "youngsModulus_MPa": {
+          "MD": 6600,
+          "TD": 4300
+        },
+        "CLTE_1e5_K": {
+          "MD": 2.4,
+          "TD": 4.7
+        }
+      },
+      "sourceUrl": "https://www.sumitomo-chem.co.jp/sep/english/products/pes/pes_fg_ippan.html",
+      "caeSourceUrl": "https://www.sumitomo-chem.co.jp/sep/english/products/pes/pes_bs_other.html",
+      "valueStatus": "manufacturer typical/CAE measured values",
+      "status": "candidate-complete"
+    },
+    {
+      "manufacturer": "Sumitomo Chemical",
+      "manufacturerCountry": "Japan",
+      "region": "Asia",
+      "polymer": "PESU-GF20",
+      "grade": "SUMIKAEXCEL 4101GL20",
+      "process": "injection moulding",
+      "reinforcement": "GF20",
+      "CAE": {
+        "specificHeat_J_kgK": 847,
+        "thermalConductivity_W_mK": 0.28,
+        "youngsModulus_MPa": {
+          "MD": 6600,
+          "TD": 4300
+        },
+        "CLTE_1e5_K": {
+          "MD": 2.4,
+          "TD": 4.7
+        }
+      },
+      "weldEvidence": {
+        "flexuralStrength_MPa": {
+          "nonWeld": 190,
+          "weld": 110
+        },
+        "notchedIzod_J_m": {
+          "nonWeld": 68,
+          "weld": 29
+        }
+      },
+      "caeSourceUrl": "https://www.sumitomo-chem.co.jp/sep/english/products/pes/pes_bs_other.html",
+      "valueStatus": "manufacturer measured CAE/weld data; not universal processing recipe",
+      "status": "candidate-complete"
+    },
+    {
+      "manufacturer": "Sumitomo Chemical",
+      "manufacturerCountry": "Japan",
+      "region": "Asia",
+      "polymer": "PESU-GF30",
+      "grade": "SUMIKAEXCEL 4101GL30",
+      "process": "injection moulding",
+      "reinforcement": "GF30",
+      "CAE": {
+        "specificHeat_J_kgK": 788,
+        "thermalConductivity_W_mK": 0.24,
+        "youngsModulus_MPa": {
+          "MD": 8900,
+          "TD": 5000
+        },
+        "CLTE_1e5_K": {
+          "MD": 2.1,
+          "TD": 4.5
+        }
+      },
+      "weldEvidence": {
+        "flexuralStrength_MPa": {
+          "nonWeld": 180,
+          "weld": 110
+        },
+        "notchedIzod_J_m": {
+          "nonWeld": 68,
+          "weld": 29
+        }
+      },
+      "caeSourceUrl": "https://www.sumitomo-chem.co.jp/sep/english/products/pes/pes_bs_other.html",
+      "valueStatus": "manufacturer measured CAE/weld data; do not interpolate from GF20",
+      "status": "candidate-complete"
     }
   ]
 }
