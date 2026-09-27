@@ -32,7 +32,7 @@
   ],
   "status": "discovery-seed-complete; grade-level extraction required",
   "discoveryMetrics": {
-    "primarySourceFamilies": 33,
+    "primarySourceFamilies": 38,
     "regions": 8,
     "gradeLevelExtracted": 14,
     "additionalGradeIdentitiesDiscovered": {
@@ -41,7 +41,11 @@
       "asahiTenacMoldflow": "40+",
       "asahiLeonaMoldflow": "40+",
       "lottePPInjection": "multi-page catalogue",
-      "kingfa": "multi-family engineering compounds"
+      "kingfa": "multi-family engineering compounds",
+      "kingfaNamedHighPerformance": "30+ HTPA/LCP/POM/LFT/PA/PBT identities",
+      "asahiTenacCatalogue": "50+ homo/copolymer variants across viscosity, low-friction, reinforced, weather-resistant and conductive classes",
+      "asahiLeonaCatalogue": "PA66, PA66/6I, PA66+6I, PA66/6, PA610, PA66+612 and PPA families",
+      "unitikaNylon6": "broad injection catalogue including 15-60% GF, mineral, flame-retardant and low-warpage grades"
     },
     "advancedEvidence": [
       "Moldflow-selectable material datasets",
@@ -53,6 +57,7 @@
     ]
   },
   "priorityNext": [
+    "treat CAE/Moldflow availability as a separate evidence capability, never as proof of universal molding conditions",
     "complete drying/moisture/degradation fields for extracted grades",
     "extract Asahi TENAC POM property records and CAE flags",
     "extract Asahi LEONA PA grade properties and bounded molding groups",
