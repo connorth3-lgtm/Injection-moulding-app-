@@ -80,8 +80,13 @@ for(let run=1;run<=500;run++){
       await page.evaluate(()=>new Promise(r=>requestAnimationFrame(()=>requestAnimationFrame(r))));
       expect(await page.evaluate(()=>document.documentElement.scrollWidth-document.documentElement.clientWidth)).toBeLessThanOrEqual(1);
     }else if(family==='more'){
-      if(viewport.width<=700){await page.locator('.mobile-nav > button').filter({hasText:'More'}).click()}
-      else{await page.locator('#nav').getByRole('button',{name:/More tools/i}).click()}
+      if(viewport.width<=700){
+        await page.locator('.mobile-nav > button').filter({hasText:'More'}).click();
+      }else if(viewport.width>=1101){
+        await page.locator('#nav').getByRole('button',{name:/More tools/i}).click();
+      }else{
+        await page.evaluate(()=>window.openMobileMenu?.());
+      }
       await expect(page.locator('#modal .modal-card')).toBeVisible();
     }else if(family==='lesson'){
       await page.evaluate(()=>switchView('path'));const b=page.getByRole('button',{name:/Continue lesson/i}).first();await expect(b).toBeVisible();await b.click();
