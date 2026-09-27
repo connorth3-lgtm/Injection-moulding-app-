@@ -994,6 +994,109 @@
       "methods": [],
       "source": "https://www.m-ep.co.jp/en/product/iupi_nova/",
       "status": "discovery-only"
+    },
+    {
+      "manufacturer": "Polyplastics/Daicel",
+      "country": "Japan",
+      "polymer": "PPS",
+      "grade": "DURAFIDE 1140A66",
+      "reinforcement": "GF40%",
+      "properties": {
+        "density_g_cm3": 1.66,
+        "waterAbsorption23C24h_pct": 0.04,
+        "meltViscosity310C_1000s_Pa_s": 260,
+        "tensile_MPa": 180,
+        "flexural_MPa": 255,
+        "flexuralModulus_MPa": 14500,
+        "charpyNotched23_kJ_m2": 9,
+        "HDT_C_1_8MPa": 265,
+        "CLTE_flow_x1e5_perC": 1,
+        "CLTE_transverse_x1e5_perC": 4
+      },
+      "conditioning": "primary ISO table; typical values, not specification minima",
+      "methods": [
+        "ISO 1183",
+        "ISO 62",
+        "ISO 11443",
+        "ISO 527-1,2",
+        "ISO 178",
+        "ISO 179/1eA",
+        "ISO 75-1,2"
+      ],
+      "source": "https://www.polyplastics.com/Gidb/GradeInfoDownloadAction.do?_LOCALE=ENGLISH&fileNo=1&gradeId=2372&langId=1",
+      "status": "candidate-partial"
+    },
+    {
+      "manufacturer": "Teijin",
+      "country": "Japan",
+      "polymer": "PC",
+      "grade": "PANLITE SH-1126Z",
+      "reinforcement": "unfilled surface-hardness grade",
+      "properties": {
+        "density_kg_m3": 1170,
+        "waterAbsorption23C24h_pct": 0.1,
+        "tensileYield_MPa": 72,
+        "flexural_MPa": 100,
+        "flexuralModulus_MPa": 2450,
+        "MVR300C_1_2kg_cm3_10min": 26,
+        "HDT_C_1_8MPa": 113,
+        "HDT_C_0_45MPa": 126
+      },
+      "conditioning": "representative measured values, not guaranteed; water immersion 23C/24h",
+      "methods": [
+        "ISO 1183",
+        "ISO 62",
+        "ISO 527-1,2",
+        "ISO 178",
+        "ISO 1133",
+        "ISO 75-1,2"
+      ],
+      "source": "https://www.teijin-resin.com/-/media/pdf/en/products/pc/pc_related_02.pdf",
+      "status": "candidate-partial"
+    },
+    {
+      "manufacturer": "Teijin",
+      "country": "Japan",
+      "polymer": "PC",
+      "grade": "PANLITE GV-3430R",
+      "reinforcement": "GF30%",
+      "properties": {
+        "flameRating": "UL94 V-0"
+      },
+      "conditioning": "primary grade list confirms injection-molding route and reinforcement; numeric TDS extraction pending",
+      "methods": [
+        "UL94"
+      ],
+      "source": "https://www.teijin-resin.com/-/media/pdf/en/products/pc/pc_related_05.pdf",
+      "status": "candidate-partial"
+    },
+    {
+      "manufacturer": "Teijin",
+      "country": "Japan",
+      "polymer": "PC",
+      "grade": "PANLITE B-8130R",
+      "reinforcement": "CF30%",
+      "properties": {
+        "flameRating": "UL94 V-2"
+      },
+      "conditioning": "primary grade list confirms injection molding, CF30 and mold-release class; numeric TDS extraction pending",
+      "methods": [
+        "UL94"
+      ],
+      "source": "https://www.teijin-resin.com/-/media/pdf/en/products/pc/pc_related_05.pdf",
+      "status": "candidate-partial"
+    },
+    {
+      "manufacturer": "Teijin",
+      "country": "Japan",
+      "polymer": "PC/polyester alloy",
+      "grade": "MULTILON AM-9730FZ",
+      "reinforcement": "special fine filament",
+      "properties": {},
+      "conditioning": "primary grade list: high rigidity, appearance and chemical resistance; injection molding; numeric TDS extraction pending",
+      "methods": [],
+      "source": "https://www.teijin-resin.com/-/media/pdf/en/products/pc/pc_related_05.pdf",
+      "status": "candidate-partial"
     }
   ],
   "discoveryNotes": {
@@ -1023,7 +1126,9 @@
     "lotteAdvancedMaterials": "primary catalogue extends beyond row 320 and exposes resin type, feature, ASTM/ISO property links, SDS and processing-guide/certification flags; treat each row as discovery until profile fields pass promotion",
     "formosaABS": "grade pages expose both ASTM and ISO property sets plus recommended processing-condition documents and SDS, enabling traceable ABS profiles",
     "toray": "primary Japanese engineering-plastics portfolio adds PPS/PBT/PA families; keep family records discovery-only until exact grade pages and conditions are captured",
-    "teijinMep": "Japanese PC evidence adds PANLITE and Iupilon/NOVAREX technical families; processing guidance must remain supplier/grade bounded"
+    "teijinMep": "Japanese PC evidence adds PANLITE and Iupilon/NOVAREX technical families; processing guidance must remain supplier/grade bounded",
+    "teijinInjection": "primary Panlite/Multilon grade list explicitly identifies injection molding and reinforcement classes including GF10/20/30, CF10/20/30, PC/polyester alloys, FR, wear, EMI and low-anisotropy grades",
+    "polyplasticsPPS": "DURAFIDE grade pages add rheology at specified shear rate, very low moisture uptake, GF reinforcement, CLTE anisotropy and explicit typical-not-specification boundary"
   },
   "promotionRules": {
     "requiredBeforeAccepted": [
