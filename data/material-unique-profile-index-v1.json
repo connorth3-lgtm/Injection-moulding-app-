@@ -1,5 +1,5 @@
 {
-  "version": "2026-09-28.3",
+  "version": "2026-09-28.4",
   "source": "data/asian-aus-nz-material-grade-extraction-wave2-v1.json",
   "countingRule": "one manufacturer + exact grade identity equals one unique complete profile; multiple evidence rows enrich but do not increase profile count",
   "uniqueExactCompleteProfiles": 71,
@@ -197,9 +197,10 @@
       "grade": "SH400HV",
       "polymer": "HIPS",
       "supportingRecordIndexes": [
-        30
+        30,
+        234
       ],
-      "evidenceRowCount": 1
+      "evidenceRowCount": 2
     },
     {
       "manufacturer": "Formosa Chemicals & Fibre",
@@ -555,18 +556,20 @@
       "grade": "180M50",
       "polymer": "HDPE",
       "supportingRecordIndexes": [
-        101
+        101,
+        233
       ],
-      "evidenceRowCount": 1
+      "evidenceRowCount": 2
     },
     {
       "manufacturer": "IndianOil",
       "grade": "080M60U",
       "polymer": "HDPE",
       "supportingRecordIndexes": [
-        102
+        102,
+        232
       ],
-      "evidenceRowCount": 1
+      "evidenceRowCount": 2
     },
     {
       "manufacturer": "PETRONAS Chemicals",
