@@ -1,5 +1,5 @@
 {
-  "version": "2026-09-28.20",
+  "version": "2026-09-28.21",
   "scope": "Asia including Singapore, Australia and New Zealand primary-source material evidence wave 2",
   "policy": {
     "noUniversalSettings": true,
@@ -3857,6 +3857,164 @@
         "condition": "1.8 MPa / 4 mm unannealed",
         "value": 59
       },
+      "status": "candidate-complete"
+    },
+    {
+      "manufacturer": "Kuraray",
+      "manufacturerCountry": "Japan",
+      "region": "Asia",
+      "polymer": "PA9T",
+      "grade": "N1000A",
+      "reinforcement": "unreinforced",
+      "condition": "absolutely dry",
+      "specificGravity": 1.14,
+      "waterAbsorption23C24h_percent": 0.25,
+      "tensile_MPa": 85,
+      "flexuralModulus_GPa": 2.5,
+      "melting_C": 300,
+      "shrinkage2mm_percent": {
+        "test": "ISO 294-4",
+        "flow": 1.4,
+        "transverse": 1.5
+      },
+      "valueStatus": "manufacturer measured; not guaranteed",
+      "status": "candidate-complete"
+    },
+    {
+      "manufacturer": "Kuraray",
+      "manufacturerCountry": "Japan",
+      "region": "Asia",
+      "polymer": "PA9T",
+      "grade": "G1300A",
+      "reinforcement": "GF30",
+      "condition": "absolutely dry",
+      "specificGravity": 1.42,
+      "waterAbsorption23C24h_percent": 0.19,
+      "tensile_MPa": 190,
+      "flexuralModulus_GPa": 8.8,
+      "melting_C": 300,
+      "shrinkage2mm_percent": {
+        "test": "ISO 294-4",
+        "flow": 0.3,
+        "transverse": 0.9
+      },
+      "valueStatus": "manufacturer measured; not guaranteed",
+      "status": "candidate-complete"
+    },
+    {
+      "manufacturer": "Kuraray",
+      "manufacturerCountry": "Japan",
+      "region": "Asia",
+      "polymer": "PA9T",
+      "grade": "G1500A",
+      "reinforcement": "GF50",
+      "condition": "absolutely dry",
+      "specificGravity": 1.58,
+      "waterAbsorption23C24h_percent": 0.13,
+      "tensile_MPa": 250,
+      "flexural_MPa": 370,
+      "flexuralModulus_GPa": 15.3,
+      "notchedCharpy_kJ_m2": 17,
+      "melting_C": 300,
+      "shrinkage2mm_percent": {
+        "test": "ISO 294-4",
+        "flow": 0.2,
+        "transverse": 0.8
+      },
+      "valueStatus": "manufacturer measured; not guaranteed",
+      "status": "candidate-complete"
+    },
+    {
+      "manufacturer": "Polyplastics",
+      "manufacturerCountry": "Japan",
+      "region": "Asia",
+      "polymer": "PPS",
+      "grade": "DURAFIDE 1140A66",
+      "reinforcement": "GF40",
+      "feature": "low chlorine",
+      "density_g_cm3": 1.66,
+      "waterAbsorption23C24h1mm_percent": 0.04,
+      "meltViscosity_Pa_s": {
+        "test": "ISO 11443",
+        "condition": "310 C / 1000 s^-1",
+        "value": 260
+      },
+      "tensile_MPa": 180,
+      "flexural_MPa": 255,
+      "flexuralModulus_MPa": 14500,
+      "notchedCharpy23C_kJ_m2": 9,
+      "HDT1_8MPa_C": 265,
+      "CLTE_1e5_per_C": {
+        "flow": 1,
+        "transverse": 4
+      },
+      "valueStatus": "typical; not specification minimum",
+      "status": "candidate-complete"
+    },
+    {
+      "manufacturer": "Sumitomo Chemical",
+      "manufacturerCountry": "Japan",
+      "region": "Asia",
+      "polymer": "PESU",
+      "grade": "SUMIKAEXCEL 3600G",
+      "process": "injection moulding",
+      "specificGravity": 1.37,
+      "waterAbsorption23C24h_percent": 1,
+      "shrinkage_percent": {
+        "MD": 0.6,
+        "TD": 0.6
+      },
+      "tensile_MPa": {
+        "ISO527": 85,
+        "ASTM_D638": 84
+      },
+      "tensileModulus_MPa": 2700,
+      "flexural_MPa": {
+        "ISO178": 130,
+        "ASTM_D790": 129
+      },
+      "flexuralModulus_MPa": 2600,
+      "HDT_C": {
+        "ISO75_1_8MPa": 205,
+        "ISO75_0_45MPa": 214,
+        "ASTM_D648_1_82MPa": 203,
+        "ASTM_D648_0_45MPa": 210
+      },
+      "MFR": {
+        "test": "ISO 1133-1",
+        "condition": "360 C / 2.16 kg",
+        "value_g_10min": 55
+      },
+      "CLTE_1e5_K": {
+        "MD": 5.5,
+        "TD": 5.5
+      },
+      "status": "candidate-complete"
+    },
+    {
+      "manufacturer": "UNITIKA",
+      "manufacturerCountry": "Japan",
+      "region": "Asia",
+      "polymer": "polyarylate alloy",
+      "grade": "FUN-8520S",
+      "density_g_cm3": 1.21,
+      "waterAbsorption23C24h_percent": 0.2,
+      "tensileYield_MPa": 62,
+      "tensileModulus_MPa": 1900,
+      "flexural_MPa": 88,
+      "flexuralModulus_MPa": 1900,
+      "notchedCharpy_kJ_m2": 25,
+      "HDT1_8MPa_C": 123,
+      "shrinkage3mm_percent": {
+        "flow": "0.6-0.8",
+        "transverse": "0.6-0.8"
+      },
+      "MFR": {
+        "test": "ISO 1133",
+        "condition": "300 C / 2.16 kg",
+        "value_g_10min": 27
+      },
+      "lightTransmittance3mm_percent": 87,
       "status": "candidate-complete"
     }
   ]
