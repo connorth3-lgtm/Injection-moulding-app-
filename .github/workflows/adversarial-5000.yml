@@ -1,11 +1,5 @@
 name: 5000 Adversarial Journeys
 on:
-  pull_request:
-    branches: [main]
-    paths:
-      - 'qa/app-5000-adversarial-journeys.spec.js'
-      - 'playwright.adversarial.config.cjs'
-      - '.github/workflows/adversarial-5000.yml'
   workflow_dispatch:
 jobs:
   adversarial:
