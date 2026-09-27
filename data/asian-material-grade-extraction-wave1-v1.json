@@ -782,6 +782,145 @@
       ],
       "source": "https://www.unitika.co.jp/plastics/products/par/upolymer/u-series/us-02.html",
       "status": "candidate-partial"
+    },
+    {
+      "manufacturer": "LOTTE Chemical",
+      "country": "South Korea",
+      "polymer": "PBT",
+      "grade": "GP-5000",
+      "reinforcement": "unfilled",
+      "properties": {
+        "specificGravity": 1.3,
+        "MFI250C_2_16kg_g_10min": 71,
+        "tensileYield_MPa": 55,
+        "tensileModulus_MPa": 2300,
+        "flexural_MPa": 74,
+        "flexuralModulus_MPa": 2100,
+        "izodNotched23_kJ_m2": 4.5,
+        "HDT_C_1_8MPa": 59
+      },
+      "conditioning": "ISO property page; natural or representative color; method conditions retained",
+      "methods": [
+        "ISO 1183",
+        "ISO 1133",
+        "ISO 527",
+        "ISO 178",
+        "ISO 180 1A",
+        "ISO 75-2"
+      ],
+      "source": "https://product.lottechem.com/en/advanced_materials/iso.do?grade=GP-5000",
+      "status": "candidate-partial"
+    },
+    {
+      "manufacturer": "LOTTE Chemical",
+      "country": "South Korea",
+      "polymer": "PBT",
+      "grade": "ASF-9860",
+      "reinforcement": "unfilled",
+      "properties": {
+        "specificGravity": 1.31,
+        "waterAbsorption23C_pct": 0.4,
+        "MFI250C_2_16kg_g_10min": 74,
+        "shrinkageMD_pct": "1.5-1.8",
+        "shrinkageTD_pct": "1.7-2.0",
+        "tensileYield_MPa": 58,
+        "tensileModulus_MPa": 2350,
+        "flexural_MPa": 80,
+        "flexuralModulus_MPa": 2320
+      },
+      "conditioning": "automotive high-flow grade; shrinkage ISO 294-4 at 2 mm",
+      "methods": [
+        "ISO 1183",
+        "ISO 62",
+        "ISO 1133",
+        "ISO 294-4",
+        "ISO 527",
+        "ISO 178"
+      ],
+      "source": "https://product.lottechem.com/en/advanced_materials/iso.do?grade=ASF-9860",
+      "status": "candidate-partial"
+    },
+    {
+      "manufacturer": "LOTTE Chemical",
+      "country": "South Korea",
+      "polymer": "PBT/GF",
+      "grade": "GP-5400G",
+      "reinforcement": "GF reinforced",
+      "properties": {
+        "specificGravity": 1.61,
+        "MFI250C_2_16kg_g_10min": 10,
+        "tensileYield_MPa": 160,
+        "tensileModulus_MPa": 9000,
+        "flexural_MPa": 220,
+        "flexuralModulus_MPa": 10000,
+        "izodNotched23_kJ_m2": 12
+      },
+      "conditioning": "E&E reinforced grade; ISO property page",
+      "methods": [
+        "ISO 1183",
+        "ISO 1133",
+        "ISO 527",
+        "ISO 178",
+        "ISO 180 1A"
+      ],
+      "source": "https://product.lottechem.com/en/advanced_materials/iso.do?grade=GP-5400G",
+      "status": "candidate-partial"
+    },
+    {
+      "manufacturer": "LOTTE Chemical",
+      "country": "South Korea",
+      "polymer": "PC/PBT",
+      "grade": "AE-3063H",
+      "reinforcement": "alloy",
+      "properties": {
+        "specificGravity": 1.2,
+        "MFI250C_5kg_g_10min": 16,
+        "shrinkageMD_pct": "0.55-0.85",
+        "shrinkageTD_pct": "0.55-0.85"
+      },
+      "conditioning": "automotive painting grade; ASTM shrinkage at 3.2 mm",
+      "methods": [
+        "ASTM D792",
+        "ASTM D1238",
+        "ASTM D955",
+        "ASTM D638",
+        "ASTM D790",
+        "ASTM D256"
+      ],
+      "source": "https://product.lottechem.com/en/advanced_materials/astm.do?grade=AE-3063H",
+      "status": "candidate-partial"
+    },
+    {
+      "manufacturer": "Formosa Chemicals & Fibre",
+      "country": "Taiwan",
+      "polymer": "ABS",
+      "grade": "AF3500",
+      "reinforcement": "none",
+      "properties": {
+        "MFI220C_10kg_g_10min": 47,
+        "MFI200C_5kg_g_10min": 5,
+        "specificGravity": 1.04,
+        "tensileISO_MPa": 38,
+        "flexuralISO_MPa": 50,
+        "flexuralModulusISO_MPa": 1500,
+        "Vicat_C": 92,
+        "HDTannealed_C_1_8MPa": 90,
+        "shrinkage_pct": "0.4-0.7"
+      },
+      "conditioning": "high-flow/high-impact ABS; shrinkage at 3.2 mm; ASTM and ISO property sets published",
+      "methods": [
+        "ASTM D1238",
+        "ASTM D955",
+        "ISO 1133",
+        "ISO 1183",
+        "ISO 527",
+        "ISO 178",
+        "ISO 306",
+        "ISO 75/A",
+        "ISO 2577"
+      ],
+      "source": "https://en.fcfc-plastics.com/af3500.html",
+      "status": "candidate-partial"
     }
   ],
   "discoveryNotes": {
@@ -807,7 +946,9 @@
     "polyplasticsPBT": "DURANEX catalogue exposes 99 popular PBT grades; individual pages include ISO methods, water absorption, mechanical/thermal data and flow/transverse CLTE",
     "kurarayTPE": "SEPTON primary catalogue exposes SEP/SEPS/SEEPS/SEBS grade tables with MFR under explicit load/temperature conditions, styrene content, viscosity and hardness; treat as compound/base-polymer evidence, not interchangeable with finished TPE compound properties",
     "polyplasticsLCP": "primary grade pages provide extremely low water absorption plus injection-pressure-conditioned flow/transverse shrinkage, useful for anisotropy/precision-molding teaching",
-    "unitikaPolyarylate": "U-Polymer adds amorphous polyarylate grades with ISO methods, water absorption, parallel/perpendicular shrinkage, HDT and chemical/impact/sliding variants"
+    "unitikaPolyarylate": "U-Polymer adds amorphous polyarylate grades with ISO methods, water absorption, parallel/perpendicular shrinkage, HDT and chemical/impact/sliding variants",
+    "lotteAdvancedMaterials": "primary catalogue extends beyond row 320 and exposes resin type, feature, ASTM/ISO property links, SDS and processing-guide/certification flags; treat each row as discovery until profile fields pass promotion",
+    "formosaABS": "grade pages expose both ASTM and ISO property sets plus recommended processing-condition documents and SDS, enabling traceable ABS profiles"
   },
   "promotionRules": {
     "requiredBeforeAccepted": [
