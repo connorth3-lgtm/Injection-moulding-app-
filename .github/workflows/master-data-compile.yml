@@ -54,6 +54,7 @@ on:
 
 permissions:
   contents: read
+  actions: read
 
 concurrency:
   group: mouldmaster-master-data-${{ github.ref }}
@@ -76,13 +77,34 @@ jobs:
         run: python qa_content_scale_targets.py
       - name: Validate effective Wave-2 master compilation
         run: python qa_master_data_compile.py
-      - name: Harvest 2,000 deduplicated research candidates
+      - name: Restore approved 2,000-candidate discovery snapshot
+        env:
+          GH_TOKEN: ${{ github.token }}
+          SNAPSHOT_ARTIFACT_ID: '10944828709'
+          SNAPSHOT_SHA256: '5fa3490c3e124290c6d760d7c584366cef62dafa80264984ad25406f02af548b'
         run: |
           mkdir -p compiled-input
-          python tools/harvest_openalex_injection_moulding.py \
-            --output compiled-input/research-master-candidates.json \
-            --target 2000 \
-            --per-query-pages 5
+          curl -fL --retry 3 --retry-all-errors \
+            -H "Authorization: Bearer $GH_TOKEN" \
+            -H "Accept: application/vnd.github+json" \
+            "$GITHUB_API_URL/repos/$GITHUB_REPOSITORY/actions/artifacts/$SNAPSHOT_ARTIFACT_ID/zip" \
+            -o /tmp/research-master-candidates.zip
+          echo "$SNAPSHOT_SHA256  /tmp/research-master-candidates.zip" | sha256sum -c -
+          unzip -q /tmp/research-master-candidates.zip -d compiled-input
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          p=Path('compiled-input/research-master-candidates.json')
+          x=json.loads(p.read_text(encoding='utf-8'))
+          assert x['status']=='candidate-registry-not-counted-as-verified'
+          assert x['candidateCount']==2000==len(x['records'])
+          assert x['primaryMeasuredCandidateCount']==1329
+          assert all(not r['verification']['primaryMeasuredReviewed'] for r in x['records'])
+          assert all(not r['verification']['peerReviewedConfirmed'] for r in x['records'])
+          ids=[(r.get('doi') or r.get('id') or r.get('title')) for r in x['records']]
+          assert len(ids)==len(set(ids))
+          print({'approvedCandidates':x['candidateCount'],'heuristicMeasuredCandidates':x['primaryMeasuredCandidateCount']})
+          PY
       - name: Compile complete master data package
         run: |
           python tools/compile_master_data.py \
