@@ -599,6 +599,52 @@
             "reviewer": "primary-source-web-review",
             "notes": "Current BASF exact-grade datasheet reviewed. MVR, directional shrinkage and exact-grade thermal guidance are promoted; moisture guidance retains supplier boundary and productionRecipe=false."
           }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-basf-ultramid-a3wg6-hrx-bk23591",
+          "manufacturer": {
+            "id": "mfr-basf",
+            "name": "BASF",
+            "country": "Germany",
+            "website": "https://download.basf.com/"
+          },
+          "brand": "Ultramid®",
+          "grade": "A3WG6 HRX BK23591",
+          "aliases": [],
+          "polymer": {
+            "family": "PA66",
+            "morphology": "unknown"
+          },
+          "composition": {
+            "notes": "Current BASF processing sheet confirms exact PA66-GF30 grade and rich processing data; kept staging pending full identity/revision normalization."
+          },
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-basf-ultramid-a3wg6-hrx-bk23591-identity-2026",
+              "publisher": "BASF",
+              "title": "Ultramid® A3WG6 HRX BK23591 manufacturer product/source page",
+              "url": "https://download.basf.com/p1/8a8082587fd4b608017fd66323e324c6/en/ULTRAMID%3Csup%3E%C2%AE%3Csup%3E_A3WG6_HRX_BLACK_23591",
+              "kind": "manufacturer-datasheet",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Current BASF processing sheet confirms exact PA66-GF30 grade and rich processing data; kept staging pending full identity/revision normalization."
+          }
         }
       ]
     },
@@ -974,6 +1020,98 @@
             "reviewer": "primary-source-web-review",
             "notes": "Current Covestro Solution Center exact-grade page reviewed. Only fully conditioned rheology and ISO 294-4 directional shrinkage observations are promoted."
           }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-covestro-makrolon-2405-mas056",
+          "manufacturer": {
+            "id": "mfr-covestro",
+            "name": "Covestro",
+            "country": "Germany",
+            "website": "https://solutions.covestro.com/"
+          },
+          "brand": "Makrolon®",
+          "grade": "2405 MAS056",
+          "aliases": [],
+          "polymer": {
+            "family": "PC",
+            "morphology": "unknown"
+          },
+          "composition": {
+            "notes": "Current exact-grade Covestro identity confirmed; kept staging to avoid duplicate/variant confusion until regional/formulation identity is fully pinned."
+          },
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-covestro-makrolon-2405-mas056-identity-2026",
+              "publisher": "Covestro",
+              "title": "Makrolon® 2405 MAS056 manufacturer product/source page",
+              "url": "https://solutions.covestro.com/en/products/makrolon/makrolon-2405-mas056_000000000057535621",
+              "kind": "manufacturer-datasheet",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Current exact-grade Covestro identity confirmed; kept staging to avoid duplicate/variant confusion until regional/formulation identity is fully pinned."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-covestro-makrolon-2405-re",
+          "manufacturer": {
+            "id": "mfr-covestro",
+            "name": "Covestro",
+            "country": "Germany",
+            "website": "https://solutions.covestro.com/"
+          },
+          "brand": "Makrolon®",
+          "grade": "2405 RE",
+          "aliases": [],
+          "polymer": {
+            "family": "PC",
+            "morphology": "unknown"
+          },
+          "composition": {
+            "notes": "Current exact-grade Covestro recycled/mass-balance variant identity confirmed; detailed sustainability/formulation identity remains to be pinned before publication."
+          },
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-covestro-makrolon-2405-re-identity-2026",
+              "publisher": "Covestro",
+              "title": "Makrolon® 2405 RE manufacturer product/source page",
+              "url": "https://solutions.covestro.com/en/products/makrolon/makrolon-2405-re_000000000086700867",
+              "kind": "manufacturer-datasheet",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Current exact-grade Covestro recycled/mass-balance variant identity confirmed; detailed sustainability/formulation identity remains to be pinned before publication."
+          }
         }
       ]
     },
@@ -1217,158 +1355,6 @@
             "reviewedAt": "2026-09-29T00:00:00Z",
             "reviewer": "primary-source-web-review",
             "notes": "Current manufacturer family/source path identified; exact prior TDS endpoint now redirects, so numeric claims are withheld until a current retrievable TDS is re-established."
-          }
-        }
-      ]
-    },
-    {
-      "id": "mfr-basf",
-      "name": "BASF",
-      "country": "Germany",
-      "gradeRecords": [
-        {
-          "schemaVersion": 1,
-          "id": "mat-basf-ultramid-a3wg6-hrx-bk23591",
-          "manufacturer": {
-            "id": "mfr-basf",
-            "name": "BASF",
-            "country": "Germany",
-            "website": "https://download.basf.com/"
-          },
-          "brand": "Ultramid®",
-          "grade": "A3WG6 HRX BK23591",
-          "aliases": [],
-          "polymer": {
-            "family": "PA66",
-            "morphology": "unknown"
-          },
-          "composition": {
-            "notes": "Current BASF processing sheet confirms exact PA66-GF30 grade and rich processing data; kept staging pending full identity/revision normalization."
-          },
-          "properties": [],
-          "processing": [],
-          "approvals": [],
-          "lifecycle": {
-            "status": "unknown",
-            "checkedAt": "2026-09-29"
-          },
-          "sources": [
-            {
-              "id": "src-basf-ultramid-a3wg6-hrx-bk23591-identity-2026",
-              "publisher": "BASF",
-              "title": "Ultramid® A3WG6 HRX BK23591 manufacturer product/source page",
-              "url": "https://download.basf.com/p1/8a8082587fd4b608017fd66323e324c6/en/ULTRAMID%3Csup%3E%C2%AE%3Csup%3E_A3WG6_HRX_BLACK_23591",
-              "kind": "manufacturer-datasheet",
-              "revision": null,
-              "documentDate": null,
-              "retrievedAt": "2026-09-29"
-            }
-          ],
-          "provenance": {
-            "stage": "staging",
-            "ingestedAt": "2026-09-29T00:00:00Z",
-            "reviewedAt": "2026-09-29T00:00:00Z",
-            "reviewer": "primary-source-web-review",
-            "notes": "Current BASF processing sheet confirms exact PA66-GF30 grade and rich processing data; kept staging pending full identity/revision normalization."
-          }
-        }
-      ]
-    },
-    {
-      "id": "mfr-covestro",
-      "name": "Covestro",
-      "country": "Germany",
-      "gradeRecords": [
-        {
-          "schemaVersion": 1,
-          "id": "mat-covestro-makrolon-2405-mas056",
-          "manufacturer": {
-            "id": "mfr-covestro",
-            "name": "Covestro",
-            "country": "Germany",
-            "website": "https://solutions.covestro.com/"
-          },
-          "brand": "Makrolon®",
-          "grade": "2405 MAS056",
-          "aliases": [],
-          "polymer": {
-            "family": "PC",
-            "morphology": "unknown"
-          },
-          "composition": {
-            "notes": "Current exact-grade Covestro identity confirmed; kept staging to avoid duplicate/variant confusion until regional/formulation identity is fully pinned."
-          },
-          "properties": [],
-          "processing": [],
-          "approvals": [],
-          "lifecycle": {
-            "status": "unknown",
-            "checkedAt": "2026-09-29"
-          },
-          "sources": [
-            {
-              "id": "src-covestro-makrolon-2405-mas056-identity-2026",
-              "publisher": "Covestro",
-              "title": "Makrolon® 2405 MAS056 manufacturer product/source page",
-              "url": "https://solutions.covestro.com/en/products/makrolon/makrolon-2405-mas056_000000000057535621",
-              "kind": "manufacturer-datasheet",
-              "revision": null,
-              "documentDate": null,
-              "retrievedAt": "2026-09-29"
-            }
-          ],
-          "provenance": {
-            "stage": "staging",
-            "ingestedAt": "2026-09-29T00:00:00Z",
-            "reviewedAt": "2026-09-29T00:00:00Z",
-            "reviewer": "primary-source-web-review",
-            "notes": "Current exact-grade Covestro identity confirmed; kept staging to avoid duplicate/variant confusion until regional/formulation identity is fully pinned."
-          }
-        },
-        {
-          "schemaVersion": 1,
-          "id": "mat-covestro-makrolon-2405-re",
-          "manufacturer": {
-            "id": "mfr-covestro",
-            "name": "Covestro",
-            "country": "Germany",
-            "website": "https://solutions.covestro.com/"
-          },
-          "brand": "Makrolon®",
-          "grade": "2405 RE",
-          "aliases": [],
-          "polymer": {
-            "family": "PC",
-            "morphology": "unknown"
-          },
-          "composition": {
-            "notes": "Current exact-grade Covestro recycled/mass-balance variant identity confirmed; detailed sustainability/formulation identity remains to be pinned before publication."
-          },
-          "properties": [],
-          "processing": [],
-          "approvals": [],
-          "lifecycle": {
-            "status": "unknown",
-            "checkedAt": "2026-09-29"
-          },
-          "sources": [
-            {
-              "id": "src-covestro-makrolon-2405-re-identity-2026",
-              "publisher": "Covestro",
-              "title": "Makrolon® 2405 RE manufacturer product/source page",
-              "url": "https://solutions.covestro.com/en/products/makrolon/makrolon-2405-re_000000000086700867",
-              "kind": "manufacturer-datasheet",
-              "revision": null,
-              "documentDate": null,
-              "retrievedAt": "2026-09-29"
-            }
-          ],
-          "provenance": {
-            "stage": "staging",
-            "ingestedAt": "2026-09-29T00:00:00Z",
-            "reviewedAt": "2026-09-29T00:00:00Z",
-            "reviewer": "primary-source-web-review",
-            "notes": "Current exact-grade Covestro recycled/mass-balance variant identity confirmed; detailed sustainability/formulation identity remains to be pinned before publication."
           }
         }
       ]
