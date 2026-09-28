@@ -48,6 +48,15 @@ for(const viewport of [{name:'mobile',width:412},{name:'tablet',width:768},{name
    if(viewport.width<=900){await mobileHub(page,'Practice');await page.locator('#scenarios [data-mm-hub-action="assessments"]').click()}else{const practice=page.locator('#nav button[data-view="scenarios"]');await practice.click();const assessments=page.locator('#scenarios [data-mm-hub-action="assessments"]');if(await assessments.isVisible().catch(()=>false))await assessments.click()}
    await expectVisible(page,'#exams');await expectNoHorizontalOverflow(page,'Assessments at 200% text scaling');
   });
+  test('reference UI exposes one canonical launcher without duplicate desktop controls',async({page})=>{
+   await openApp(page,viewport.width);
+   if(viewport.width<=900){
+    await expect(page.locator('#mm-src-open')).toBeHidden();await expect(page.locator('#mmrd-open')).toBeHidden();
+   }else{
+    await expect(page.locator('#mmrd-open')).toBeVisible();await expect(page.locator('#mm-src-open')).toBeHidden();
+    const visibleReferenceLaunchers=await page.locator('#mm-src-open:visible,#mmrd-open:visible').count();expect(visibleReferenceLaunchers).toBe(1);
+   }
+  });
   test('shell-registered tools are discoverable through their intended visible surface',async({page})=>{
    await openApp(page,viewport.width);
    if(viewport.width<=900){
