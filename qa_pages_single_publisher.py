@@ -29,32 +29,33 @@ for marker in (
     "needs: [production-source, publisher-guard]",
     "Build release-hold Pages artifact",
     "python3 tools/build_pages_hold.py",
-    "Upload production Pages artifact",
+    "Upload PR validation Pages artifact",
     "path: .pages-dist",
-    "Upload release-hold Pages artifact",
+    "Upload preview-only release-hold Pages artifact",
     "path: .pages-hold",
     "Deploy selected Pages artifact",
-    "Verify production deployment remains stable after race window",
-    "Verify release-hold deployment removed legacy publication",
+    "Verify preview-only release-hold deployment",
+    "Verify preview-only release-hold deployment",
     "python3 tools/verify_pages_hold.py",
-    "Verify release-hold remains stable after race window",
+    "Verify preview-only release-hold remains stable after race window",
     "--convergence-attempts 6",
 ):
     need(marker in workflow, f"Pages single-publisher workflow safeguard missing: {marker}")
 
 need("path: .\n" not in workflow, "hardened Pages workflow must never upload the repository root")
 need(
-    "if: github.event_name != 'pull_request' && steps.physical-readiness.outputs.production_ready != 'true'" in workflow,
-    "pending main releases must select only the release-hold artifact",
+    "Upload preview-only release-hold Pages artifact" in workflow,
+    "main Pages publication must select the preview-only release-hold artifact",
 )
 need(
-    "if: github.event_name == 'pull_request' || steps.physical-readiness.outputs.production_ready == 'true'" in workflow,
-    "production app artifact must remain gated by PR validation or validated production readiness",
+    "if: github.event_name == 'pull_request'" in workflow,
+    "direct learner artifact upload must be limited to PR validation and never selected for main publication",
 )
 need(
     "if: github.event_name != 'pull_request'\n    needs: build" in workflow,
-    "main Pages deploy must publish the already-selected production or release-hold artifact",
+    "main Pages deploy must publish the preview-only release-hold artifact",
 )
+need("production_ready == 'true'" not in workflow.split("      - name: Build release-hold Pages artifact",1)[1], "production readiness must not switch main publication away from preview-only mode")
 
 for marker in (
     '"build_type": "workflow"',
@@ -213,6 +214,6 @@ for marker in ("--convergence-attempts", "--convergence-delay", "FORBIDDEN_PROBE
 
 print(
     "MouldMaster Pages single-publisher QA passed (workflow-only source, successful legacy-deploy detection, "
-    "earliest-start guard, production-runtime gate, minimal base hold plus stale-root-PWA migration when /preview/ is staged, "
+    "earliest-start guard, preview-only main publication, minimal base hold plus stale-root-PWA migration with /preview/ staged, "
     "local-only metadata helper, and live 404 verification)"
 )
