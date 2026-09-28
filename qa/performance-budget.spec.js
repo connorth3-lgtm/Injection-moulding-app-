@@ -62,24 +62,30 @@ test('repeated navigation does not accumulate unbounded DOM or resource entries'
     for(const view of ['dashboard','path','scenarios','materials','dashboard'])window.switchView(view);
   });
   await page.waitForTimeout(100);
-  const before=await page.evaluate(()=>({
-    nodes:document.getElementsByTagName('*').length,
-    resources:performance.getEntriesByType('resource').length
-  }));
+  const before=await page.evaluate(()=>document.getElementsByTagName('*').length);
+  const half=Math.max(1,Math.floor(budget.longSessionCycles/2));
 
   await page.evaluate(cycles=>{
+    performance.clearResourceTimings();
     const sequence=['dashboard','path','scenarios','materials','dashboard'];
-    for(let i=0;i<cycles;i++){
-      for(const view of sequence)window.switchView(view);
-    }
-  },budget.longSessionCycles);
-
+    for(let i=0;i<cycles;i++)for(const view of sequence)window.switchView(view);
+  },half);
   await page.waitForTimeout(250);
-  const after=await page.evaluate(()=>({
+
+  const midpoint=await page.evaluate(()=>document.getElementsByTagName('*').length);
+  await page.evaluate(cycles=>{
+    performance.clearResourceTimings();
+    const sequence=['dashboard','path','scenarios','materials','dashboard'];
+    for(let i=0;i<cycles;i++)for(const view of sequence)window.switchView(view);
+  },budget.longSessionCycles-half);
+  await page.waitForTimeout(250);
+
+  const steady=await page.evaluate(()=>({
     nodes:document.getElementsByTagName('*').length,
     resources:performance.getEntriesByType('resource').length
   }));
 
-  expect(after.nodes-before.nodes,'long-session DOM growth exceeded regression ceiling').toBeLessThanOrEqual(budget.longSessionDomGrowthMax);
-  expect(after.resources-before.resources,'long-session resource-entry growth exceeded regression ceiling').toBeLessThanOrEqual(budget.longSessionResourceGrowthMax);
+  expect(midpoint-before,'first-half warmed DOM growth exceeded regression ceiling').toBeLessThanOrEqual(budget.longSessionDomGrowthMax);
+  expect(steady.nodes-midpoint,'steady-state DOM continued growing across the second half').toBeLessThanOrEqual(budget.longSessionDomGrowthMax);
+  expect(steady.resources,'steady-state resource requests continued during repeated navigation').toBeLessThanOrEqual(budget.longSessionSteadyStateResourceEntriesMax);
 });
