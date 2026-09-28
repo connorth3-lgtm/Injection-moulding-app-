@@ -1,0 +1,2241 @@
+{
+  "schemaVersion": 1,
+  "datasetId": "global-material-expansion-20260929-v4",
+  "status": "validated-expansion-with-large-source-reviewed-queue",
+  "reviewedAt": "2026-09-29",
+  "purpose": "Fourth extended wave closing PMMA/TPU/PPS validated-family gaps while seeding a large exact-grade LCP/PPS acquisition queue.",
+  "summary": {
+    "validatedGrades": 4,
+    "sourceReviewedStagingGrades": 40,
+    "manufacturers": 4,
+    "validatedFamilies": [
+      "PMMA",
+      "TPU",
+      "PPS"
+    ],
+    "stagingFamilies": [
+      "LCP",
+      "PPS"
+    ]
+  },
+  "manufacturers": [
+    {
+      "id": "mfr-roehm",
+      "name": "Röhm",
+      "country": "Germany",
+      "gradeRecords": [
+        {
+          "schemaVersion": 1,
+          "id": "mat-roehm-plexiglas-higloss-8n-9v022",
+          "manufacturer": {
+            "id": "mfr-roehm",
+            "name": "Röhm",
+            "country": "Germany",
+            "website": "https://www.plexiglas-polymers.com/"
+          },
+          "brand": "PLEXIGLAS® Hi-Gloss",
+          "grade": "8N black 9V022",
+          "aliases": [
+            "Hi-Gloss 8N black 9V022"
+          ],
+          "polymer": {
+            "family": "PMMA",
+            "morphology": "amorphous"
+          },
+          "composition": {
+            "notes": "Opaque black PMMA injection-moulding grade for high-gloss Class A surfaces."
+          },
+          "properties": [
+            {
+              "id": "obs-roehm-higloss8n-mvr",
+              "property": "Melt Volume-Flow Rate",
+              "value": 3,
+              "unit": "cm³/10min",
+              "testMethod": "ISO 1133",
+              "temperatureC": 230,
+              "loadKg": 3.8,
+              "direction": "not-applicable",
+              "sourceId": "src-roehm-plexiglas-higloss-8n-9v022-2026",
+              "sourcePage": "rheological properties",
+              "comparisonReady": true,
+              "limitations": "Röhm typical exact-grade value; compare only at 230°C/3.8 kg."
+            },
+            {
+              "id": "obs-roehm-higloss8n-vicat",
+              "property": "Vicat Softening Temperature",
+              "value": 108,
+              "unit": "°C",
+              "testMethod": "ISO 306",
+              "specimen": "B / 50",
+              "direction": "not-applicable",
+              "sourceId": "src-roehm-plexiglas-higloss-8n-9v022-2026",
+              "sourcePage": "thermal properties",
+              "comparisonReady": false,
+              "limitations": "Typical material property, not a process setting."
+            }
+          ],
+          "processing": [
+            {
+              "id": "proc-roehm-higloss8n-predry-temp",
+              "parameter": "Predrying temperature",
+              "max": 98,
+              "min": null,
+              "value": null,
+              "unit": "°C",
+              "condition": "Röhm recommended exact-grade condition; verify current supplier/site handling before production use.",
+              "claimType": "supplier-guidance",
+              "sourceId": "src-roehm-plexiglas-higloss-8n-9v022-2026",
+              "sourcePage": "recommended processing conditions",
+              "productionRecipe": false
+            },
+            {
+              "id": "proc-roehm-higloss8n-predry-time",
+              "parameter": "Predrying time in desiccant-type drier",
+              "min": 2,
+              "max": 3,
+              "value": null,
+              "unit": "h",
+              "condition": "Röhm exact-grade guidance; moisture state and site method still require verification.",
+              "claimType": "supplier-guidance",
+              "sourceId": "src-roehm-plexiglas-higloss-8n-9v022-2026",
+              "sourcePage": "recommended processing conditions",
+              "productionRecipe": false
+            },
+            {
+              "id": "proc-roehm-higloss8n-melt-temp",
+              "parameter": "Melt temperature",
+              "min": 220,
+              "max": 260,
+              "value": null,
+              "unit": "°C",
+              "condition": "Röhm exact-grade recommended processing range; not a universal production setpoint.",
+              "claimType": "supplier-guidance",
+              "sourceId": "src-roehm-plexiglas-higloss-8n-9v022-2026",
+              "sourcePage": "recommended processing conditions",
+              "productionRecipe": false
+            },
+            {
+              "id": "proc-roehm-higloss8n-mould-temp",
+              "parameter": "Mould temperature",
+              "min": 60,
+              "max": 90,
+              "value": null,
+              "unit": "°C",
+              "condition": "Röhm exact-grade injection-moulding guidance; validate for the actual tool/part/site.",
+              "claimType": "supplier-guidance",
+              "sourceId": "src-roehm-plexiglas-higloss-8n-9v022-2026",
+              "sourcePage": "recommended processing conditions",
+              "productionRecipe": false
+            }
+          ],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-roehm-plexiglas-higloss-8n-9v022-2026",
+              "publisher": "Röhm",
+              "title": "PLEXIGLAS® Hi-Gloss 8N black 9V022 Product Information",
+              "url": "https://www.plexiglas-polymers.com/en/application-areas/automotive/car-body-parts?file=files%2Fassets%2F04-molding_compounds%2Fplexiglas-polymers%2Fdownloads%2Fen%2Fproduct-information%2FPLEXIGLAS+Hi-Gloss%2FPLEXIGLAS+Hi-Gloss+8N+black+9V022_EN.pdf",
+              "kind": "manufacturer-datasheet",
+              "revision": null,
+              "documentDate": "2020-02-01",
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "validated",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Current Röhm product page links the exact product information. Conditioned MVR and explicit recommended processing conditions are retained as typical supplier guidance, not specifications or recipes."
+          }
+        }
+      ]
+    },
+    {
+      "id": "mfr-basf",
+      "name": "BASF",
+      "country": "Germany",
+      "gradeRecords": [
+        {
+          "schemaVersion": 1,
+          "id": "mat-basf-elastollan-wy1140",
+          "manufacturer": {
+            "id": "mfr-basf",
+            "name": "BASF",
+            "country": "Germany",
+            "website": "https://www.basf.com/"
+          },
+          "brand": "Elastollan®",
+          "grade": "WY1140",
+          "aliases": [],
+          "polymer": {
+            "family": "TPU",
+            "morphology": "elastomeric"
+          },
+          "composition": {
+            "uvStabilised": true,
+            "notes": "Polyether-based TPU with UV stabilizer; manufacturer states injection molding or extrusion capability."
+          },
+          "properties": [
+            {
+              "id": "obs-basf-wy1140-specific-gravity",
+              "property": "Specific Gravity",
+              "value": 1.12,
+              "unit": "g/cm³",
+              "testMethod": "ASTM D 792",
+              "direction": "not-applicable",
+              "sourceId": "src-basf-elastollan-wy1140-2026",
+              "sourcePage": "typical properties",
+              "comparisonReady": false,
+              "limitations": "Typical value measured on injection-moulded samples; not a specification."
+            },
+            {
+              "id": "obs-basf-wy1140-hardness",
+              "property": "Shore Hardness",
+              "value": "84A",
+              "unit": "Shore A",
+              "testMethod": "ASTM D 2240",
+              "direction": "not-applicable",
+              "sourceId": "src-basf-elastollan-wy1140-2026",
+              "sourcePage": "typical properties",
+              "comparisonReady": false,
+              "limitations": "Typical value measured on injection-moulded samples; not a specification."
+            },
+            {
+              "id": "obs-basf-wy1140-vicat",
+              "property": "Vicat Softening Temperature",
+              "value": 110,
+              "unit": "°C",
+              "testMethod": "ASTM D 1525 / 1B",
+              "direction": "not-applicable",
+              "sourceId": "src-basf-elastollan-wy1140-2026",
+              "sourcePage": "typical properties",
+              "comparisonReady": false,
+              "limitations": "Typical exact-grade property; not a process setting."
+            }
+          ],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-basf-elastollan-wy1140-2026",
+              "publisher": "BASF",
+              "title": "Elastollan® WY1140 Technical Data Sheet",
+              "url": "https://download.basf.com/p1/8a80821f94ef088e0194f651b46d012c/en/TDS_-_ELASTOLLAN_WY1140_Technical_Data_Sheet_North_America_English.pdf",
+              "kind": "manufacturer-datasheet",
+              "revision": null,
+              "documentDate": "2018-10-01",
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "validated",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Current BASF-hosted exact-grade TDS reviewed. Typical injection-moulded physical properties are published; generic hardness-band processing tables are not promoted as exact-grade settings."
+          }
+        }
+      ]
+    },
+    {
+      "id": "mfr-celanese",
+      "name": "Celanese",
+      "country": "United States",
+      "gradeRecords": [
+        {
+          "schemaVersion": 1,
+          "id": "mat-celanese-fortron-fx32t4",
+          "manufacturer": {
+            "id": "mfr-celanese",
+            "name": "Celanese",
+            "country": "United States",
+            "website": "https://www.celanese.com/"
+          },
+          "brand": "Fortron®",
+          "grade": "FX32T4",
+          "aliases": [],
+          "polymer": {
+            "family": "PPS",
+            "morphology": "semi-crystalline"
+          },
+          "composition": {
+            "notes": "Flexible unfilled PPS grade identified by Celanese for injection molding."
+          },
+          "properties": [],
+          "processing": [
+            {
+              "id": "proc-celanese-fx32t4-mould-temp",
+              "parameter": "Typical mould temperature",
+              "min": 60,
+              "max": 80,
+              "value": null,
+              "unit": "°C",
+              "condition": "Celanese flexible-PPS solution showcase states relatively low typical mould temperature for injection-moulding grades FX32T4 and FX72T6; verify exact application/site requirements.",
+              "claimType": "supplier-guidance",
+              "sourceId": "src-celanese-fortron-fx32t4-2026",
+              "sourcePage": "injection molding",
+              "productionRecipe": false
+            }
+          ],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-celanese-fortron-fx32t4-2026",
+              "publisher": "Celanese",
+              "title": "Fortron® Flexible PPS Solution Showcase",
+              "url": "https://www.celanese.com/-/media/cewebjssapp/project/productdocuments/fortron-pps/pps---fortron-flexible-pps---solution-showcase.pdf?isDownload=true",
+              "kind": "manufacturer-processing-guide",
+              "revision": null,
+              "documentDate": "2026-05-01",
+              "retrievedAt": "2026-09-29"
+            },
+            {
+              "id": "src-celanese-fortron-fx32t4-product-2026",
+              "publisher": "Celanese",
+              "title": "Fortron® PPS product portfolio",
+              "url": "https://www.celanese.com/products/fortron-polyphenylene-sulfide",
+              "kind": "manufacturer-datasheet",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "validated",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Current Celanese product portfolio and flexible-PPS solution showcase identify this exact injection-moulding grade. Only explicitly stated typical mould-temperature guidance is promoted; missing rheology/shrinkage remains an evidence gap."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-celanese-fortron-fx72t6",
+          "manufacturer": {
+            "id": "mfr-celanese",
+            "name": "Celanese",
+            "country": "United States",
+            "website": "https://www.celanese.com/"
+          },
+          "brand": "Fortron®",
+          "grade": "FX72T6",
+          "aliases": [],
+          "polymer": {
+            "family": "PPS",
+            "morphology": "semi-crystalline"
+          },
+          "composition": {
+            "notes": "Flexible unfilled PPS grade identified by Celanese for injection molding."
+          },
+          "properties": [],
+          "processing": [
+            {
+              "id": "proc-celanese-fx72t6-mould-temp",
+              "parameter": "Typical mould temperature",
+              "min": 60,
+              "max": 80,
+              "value": null,
+              "unit": "°C",
+              "condition": "Celanese flexible-PPS solution showcase states relatively low typical mould temperature for injection-moulding grades FX32T4 and FX72T6; verify exact application/site requirements.",
+              "claimType": "supplier-guidance",
+              "sourceId": "src-celanese-fortron-fx72t6-2026",
+              "sourcePage": "injection molding",
+              "productionRecipe": false
+            }
+          ],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-celanese-fortron-fx72t6-2026",
+              "publisher": "Celanese",
+              "title": "Fortron® Flexible PPS Solution Showcase",
+              "url": "https://www.celanese.com/-/media/cewebjssapp/project/productdocuments/fortron-pps/pps---fortron-flexible-pps---solution-showcase.pdf?isDownload=true",
+              "kind": "manufacturer-processing-guide",
+              "revision": null,
+              "documentDate": "2026-05-01",
+              "retrievedAt": "2026-09-29"
+            },
+            {
+              "id": "src-celanese-fortron-fx72t6-product-2026",
+              "publisher": "Celanese",
+              "title": "Fortron® PPS product portfolio",
+              "url": "https://www.celanese.com/products/fortron-polyphenylene-sulfide",
+              "kind": "manufacturer-datasheet",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "validated",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Current Celanese product portfolio and flexible-PPS solution showcase identify this exact injection-moulding grade. Only explicitly stated typical mould-temperature guidance is promoted; missing rheology/shrinkage remains an evidence gap."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-celanese-zenite-350lds",
+          "manufacturer": {
+            "id": "mfr-celanese",
+            "name": "Celanese",
+            "country": "United States",
+            "website": "https://www.celanese.com/"
+          },
+          "brand": "Zenite®",
+          "grade": "350LDS",
+          "aliases": [],
+          "polymer": {
+            "family": "LCP",
+            "morphology": "semi-crystalline"
+          },
+          "composition": {
+            "notes": "Current Celanese LCP portfolio explicitly identifies Zenite 350LDS as an injection-mouldable LCP grade; numeric property normalization remains pending."
+          },
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-celanese-zenite-350lds-identity-2026",
+              "publisher": "Celanese",
+              "title": "Zenite® 350LDS current manufacturer portfolio/source",
+              "url": "https://www.celanese.com/products/lcp-vectra-zenite",
+              "kind": "manufacturer-datasheet",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Current Celanese LCP portfolio explicitly identifies Zenite 350LDS as an injection-mouldable LCP grade; numeric property normalization remains pending."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-celanese-zenite-450lds",
+          "manufacturer": {
+            "id": "mfr-celanese",
+            "name": "Celanese",
+            "country": "United States",
+            "website": "https://www.celanese.com/"
+          },
+          "brand": "Zenite®",
+          "grade": "450LDS",
+          "aliases": [],
+          "polymer": {
+            "family": "LCP",
+            "morphology": "semi-crystalline"
+          },
+          "composition": {
+            "notes": "Current Celanese LCP portfolio explicitly identifies Zenite 450LDS as an injection-mouldable LCP grade; numeric property normalization remains pending."
+          },
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-celanese-zenite-450lds-identity-2026",
+              "publisher": "Celanese",
+              "title": "Zenite® 450LDS current manufacturer portfolio/source",
+              "url": "https://www.celanese.com/products/lcp-vectra-zenite",
+              "kind": "manufacturer-datasheet",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Current Celanese LCP portfolio explicitly identifies Zenite 450LDS as an injection-mouldable LCP grade; numeric property normalization remains pending."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-celanese-zenite-451p",
+          "manufacturer": {
+            "id": "mfr-celanese",
+            "name": "Celanese",
+            "country": "United States",
+            "website": "https://www.celanese.com/"
+          },
+          "brand": "Zenite®",
+          "grade": "451P",
+          "aliases": [],
+          "polymer": {
+            "family": "LCP",
+            "morphology": "semi-crystalline"
+          },
+          "composition": {
+            "notes": "Current Celanese LCP portfolio explicitly identifies Zenite 451P as an injection-mouldable LCP grade; numeric property normalization remains pending."
+          },
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-celanese-zenite-451p-identity-2026",
+              "publisher": "Celanese",
+              "title": "Zenite® 451P current manufacturer portfolio/source",
+              "url": "https://www.celanese.com/products/lcp-vectra-zenite",
+              "kind": "manufacturer-datasheet",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Current Celanese LCP portfolio explicitly identifies Zenite 451P as an injection-mouldable LCP grade; numeric property normalization remains pending."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-celanese-vectra-a115",
+          "manufacturer": {
+            "id": "mfr-celanese",
+            "name": "Celanese",
+            "country": "United States",
+            "website": "https://www.celanese.com/"
+          },
+          "brand": "Vectra®",
+          "grade": "A115",
+          "aliases": [],
+          "polymer": {
+            "family": "LCP",
+            "morphology": "semi-crystalline"
+          },
+          "composition": {
+            "notes": "Current Celanese Vectra design guide identifies exact grade A115; retained source-reviewed staging until exact numeric grade table/revision semantics are normalized."
+          },
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-celanese-vectra-a115-identity-2026",
+              "publisher": "Celanese",
+              "title": "Vectra® A115 current manufacturer portfolio/source",
+              "url": "https://www.celanese.com/-/media/cewebjssapp/project/marketodocuments/lcp-027--vectralcpdesignguidetg-am.pdf",
+              "kind": "manufacturer-datasheet",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Current Celanese Vectra design guide identifies exact grade A115; retained source-reviewed staging until exact numeric grade table/revision semantics are normalized."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-celanese-vectra-a130",
+          "manufacturer": {
+            "id": "mfr-celanese",
+            "name": "Celanese",
+            "country": "United States",
+            "website": "https://www.celanese.com/"
+          },
+          "brand": "Vectra®",
+          "grade": "A130",
+          "aliases": [],
+          "polymer": {
+            "family": "LCP",
+            "morphology": "semi-crystalline"
+          },
+          "composition": {
+            "notes": "Current Celanese Vectra design guide identifies exact grade A130; retained source-reviewed staging until exact numeric grade table/revision semantics are normalized."
+          },
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-celanese-vectra-a130-identity-2026",
+              "publisher": "Celanese",
+              "title": "Vectra® A130 current manufacturer portfolio/source",
+              "url": "https://www.celanese.com/-/media/cewebjssapp/project/marketodocuments/lcp-027--vectralcpdesignguidetg-am.pdf",
+              "kind": "manufacturer-datasheet",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Current Celanese Vectra design guide identifies exact grade A130; retained source-reviewed staging until exact numeric grade table/revision semantics are normalized."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-celanese-vectra-e130i",
+          "manufacturer": {
+            "id": "mfr-celanese",
+            "name": "Celanese",
+            "country": "United States",
+            "website": "https://www.celanese.com/"
+          },
+          "brand": "Vectra®",
+          "grade": "E130i",
+          "aliases": [],
+          "polymer": {
+            "family": "LCP",
+            "morphology": "semi-crystalline"
+          },
+          "composition": {
+            "notes": "Current Celanese Vectra design guide identifies exact grade E130i; retained source-reviewed staging until exact numeric grade table/revision semantics are normalized."
+          },
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-celanese-vectra-e130i-identity-2026",
+              "publisher": "Celanese",
+              "title": "Vectra® E130i current manufacturer portfolio/source",
+              "url": "https://www.celanese.com/-/media/cewebjssapp/project/marketodocuments/lcp-027--vectralcpdesignguidetg-am.pdf",
+              "kind": "manufacturer-datasheet",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Current Celanese Vectra design guide identifies exact grade E130i; retained source-reviewed staging until exact numeric grade table/revision semantics are normalized."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-celanese-vectra-s135",
+          "manufacturer": {
+            "id": "mfr-celanese",
+            "name": "Celanese",
+            "country": "United States",
+            "website": "https://www.celanese.com/"
+          },
+          "brand": "Vectra®",
+          "grade": "S135",
+          "aliases": [],
+          "polymer": {
+            "family": "LCP",
+            "morphology": "semi-crystalline"
+          },
+          "composition": {
+            "notes": "Current Celanese Vectra design guide identifies exact grade S135; retained source-reviewed staging until exact numeric grade table/revision semantics are normalized."
+          },
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-celanese-vectra-s135-identity-2026",
+              "publisher": "Celanese",
+              "title": "Vectra® S135 current manufacturer portfolio/source",
+              "url": "https://www.celanese.com/-/media/cewebjssapp/project/marketodocuments/lcp-027--vectralcpdesignguidetg-am.pdf",
+              "kind": "manufacturer-datasheet",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Current Celanese Vectra design guide identifies exact grade S135; retained source-reviewed staging until exact numeric grade table/revision semantics are normalized."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-celanese-vectra-e480i",
+          "manufacturer": {
+            "id": "mfr-celanese",
+            "name": "Celanese",
+            "country": "United States",
+            "website": "https://www.celanese.com/"
+          },
+          "brand": "Vectra®",
+          "grade": "E480i",
+          "aliases": [],
+          "polymer": {
+            "family": "LCP",
+            "morphology": "semi-crystalline"
+          },
+          "composition": {
+            "notes": "Current Celanese Vectra design guide identifies exact grade E480i; retained source-reviewed staging until exact numeric grade table/revision semantics are normalized."
+          },
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-celanese-vectra-e480i-identity-2026",
+              "publisher": "Celanese",
+              "title": "Vectra® E480i current manufacturer portfolio/source",
+              "url": "https://www.celanese.com/-/media/cewebjssapp/project/marketodocuments/lcp-027--vectralcpdesignguidetg-am.pdf",
+              "kind": "manufacturer-datasheet",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Current Celanese Vectra design guide identifies exact grade E480i; retained source-reviewed staging until exact numeric grade table/revision semantics are normalized."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-celanese-vectra-e150i",
+          "manufacturer": {
+            "id": "mfr-celanese",
+            "name": "Celanese",
+            "country": "United States",
+            "website": "https://www.celanese.com/"
+          },
+          "brand": "Vectra®",
+          "grade": "E150i",
+          "aliases": [],
+          "polymer": {
+            "family": "LCP",
+            "morphology": "semi-crystalline"
+          },
+          "composition": {
+            "notes": "Current Celanese Vectra design guide identifies exact grade E150i; retained source-reviewed staging until exact numeric grade table/revision semantics are normalized."
+          },
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-celanese-vectra-e150i-identity-2026",
+              "publisher": "Celanese",
+              "title": "Vectra® E150i current manufacturer portfolio/source",
+              "url": "https://www.celanese.com/-/media/cewebjssapp/project/marketodocuments/lcp-027--vectralcpdesignguidetg-am.pdf",
+              "kind": "manufacturer-datasheet",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Current Celanese Vectra design guide identifies exact grade E150i; retained source-reviewed staging until exact numeric grade table/revision semantics are normalized."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-celanese-vectra-s150",
+          "manufacturer": {
+            "id": "mfr-celanese",
+            "name": "Celanese",
+            "country": "United States",
+            "website": "https://www.celanese.com/"
+          },
+          "brand": "Vectra®",
+          "grade": "S150",
+          "aliases": [],
+          "polymer": {
+            "family": "LCP",
+            "morphology": "semi-crystalline"
+          },
+          "composition": {
+            "notes": "Current Celanese Vectra design guide identifies exact grade S150; retained source-reviewed staging until exact numeric grade table/revision semantics are normalized."
+          },
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-celanese-vectra-s150-identity-2026",
+              "publisher": "Celanese",
+              "title": "Vectra® S150 current manufacturer portfolio/source",
+              "url": "https://www.celanese.com/-/media/cewebjssapp/project/marketodocuments/lcp-027--vectralcpdesignguidetg-am.pdf",
+              "kind": "manufacturer-datasheet",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Current Celanese Vectra design guide identifies exact grade S150; retained source-reviewed staging until exact numeric grade table/revision semantics are normalized."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-celanese-vectra-a430",
+          "manufacturer": {
+            "id": "mfr-celanese",
+            "name": "Celanese",
+            "country": "United States",
+            "website": "https://www.celanese.com/"
+          },
+          "brand": "Vectra®",
+          "grade": "A430",
+          "aliases": [],
+          "polymer": {
+            "family": "LCP",
+            "morphology": "semi-crystalline"
+          },
+          "composition": {
+            "notes": "Current Celanese Vectra design guide identifies exact grade A430; retained source-reviewed staging until exact numeric grade table/revision semantics are normalized."
+          },
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-celanese-vectra-a430-identity-2026",
+              "publisher": "Celanese",
+              "title": "Vectra® A430 current manufacturer portfolio/source",
+              "url": "https://www.celanese.com/-/media/cewebjssapp/project/marketodocuments/lcp-027--vectralcpdesignguidetg-am.pdf",
+              "kind": "manufacturer-datasheet",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Current Celanese Vectra design guide identifies exact grade A430; retained source-reviewed staging until exact numeric grade table/revision semantics are normalized."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-celanese-vectra-a435-fda",
+          "manufacturer": {
+            "id": "mfr-celanese",
+            "name": "Celanese",
+            "country": "United States",
+            "website": "https://www.celanese.com/"
+          },
+          "brand": "Vectra®",
+          "grade": "A435 FDA",
+          "aliases": [],
+          "polymer": {
+            "family": "LCP",
+            "morphology": "semi-crystalline"
+          },
+          "composition": {
+            "notes": "Current Celanese Vectra design guide identifies exact grade A435 FDA; retained source-reviewed staging until exact numeric grade table/revision semantics are normalized."
+          },
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-celanese-vectra-a435-fda-identity-2026",
+              "publisher": "Celanese",
+              "title": "Vectra® A435 FDA current manufacturer portfolio/source",
+              "url": "https://www.celanese.com/-/media/cewebjssapp/project/marketodocuments/lcp-027--vectralcpdesignguidetg-am.pdf",
+              "kind": "manufacturer-datasheet",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Current Celanese Vectra design guide identifies exact grade A435 FDA; retained source-reviewed staging until exact numeric grade table/revision semantics are normalized."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-celanese-vectra-e440i",
+          "manufacturer": {
+            "id": "mfr-celanese",
+            "name": "Celanese",
+            "country": "United States",
+            "website": "https://www.celanese.com/"
+          },
+          "brand": "Vectra®",
+          "grade": "E440i",
+          "aliases": [],
+          "polymer": {
+            "family": "LCP",
+            "morphology": "semi-crystalline"
+          },
+          "composition": {
+            "notes": "Current Celanese Vectra design guide identifies exact grade E440i; retained source-reviewed staging until exact numeric grade table/revision semantics are normalized."
+          },
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-celanese-vectra-e440i-identity-2026",
+              "publisher": "Celanese",
+              "title": "Vectra® E440i current manufacturer portfolio/source",
+              "url": "https://www.celanese.com/-/media/cewebjssapp/project/marketodocuments/lcp-027--vectralcpdesignguidetg-am.pdf",
+              "kind": "manufacturer-datasheet",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Current Celanese Vectra design guide identifies exact grade E440i; retained source-reviewed staging until exact numeric grade table/revision semantics are normalized."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-celanese-vectra-e471i",
+          "manufacturer": {
+            "id": "mfr-celanese",
+            "name": "Celanese",
+            "country": "United States",
+            "website": "https://www.celanese.com/"
+          },
+          "brand": "Vectra®",
+          "grade": "E471i",
+          "aliases": [],
+          "polymer": {
+            "family": "LCP",
+            "morphology": "semi-crystalline"
+          },
+          "composition": {
+            "notes": "Current Celanese Vectra design guide identifies exact grade E471i; retained source-reviewed staging until exact numeric grade table/revision semantics are normalized."
+          },
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-celanese-vectra-e471i-identity-2026",
+              "publisher": "Celanese",
+              "title": "Vectra® E471i current manufacturer portfolio/source",
+              "url": "https://www.celanese.com/-/media/cewebjssapp/project/marketodocuments/lcp-027--vectralcpdesignguidetg-am.pdf",
+              "kind": "manufacturer-datasheet",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Current Celanese Vectra design guide identifies exact grade E471i; retained source-reviewed staging until exact numeric grade table/revision semantics are normalized."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-celanese-vectra-s471",
+          "manufacturer": {
+            "id": "mfr-celanese",
+            "name": "Celanese",
+            "country": "United States",
+            "website": "https://www.celanese.com/"
+          },
+          "brand": "Vectra®",
+          "grade": "S471",
+          "aliases": [],
+          "polymer": {
+            "family": "LCP",
+            "morphology": "semi-crystalline"
+          },
+          "composition": {
+            "notes": "Current Celanese Vectra design guide identifies exact grade S471; retained source-reviewed staging until exact numeric grade table/revision semantics are normalized."
+          },
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-celanese-vectra-s471-identity-2026",
+              "publisher": "Celanese",
+              "title": "Vectra® S471 current manufacturer portfolio/source",
+              "url": "https://www.celanese.com/-/media/cewebjssapp/project/marketodocuments/lcp-027--vectralcpdesignguidetg-am.pdf",
+              "kind": "manufacturer-datasheet",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Current Celanese Vectra design guide identifies exact grade S471; retained source-reviewed staging until exact numeric grade table/revision semantics are normalized."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-celanese-vectra-e473i",
+          "manufacturer": {
+            "id": "mfr-celanese",
+            "name": "Celanese",
+            "country": "United States",
+            "website": "https://www.celanese.com/"
+          },
+          "brand": "Vectra®",
+          "grade": "E473i",
+          "aliases": [],
+          "polymer": {
+            "family": "LCP",
+            "morphology": "semi-crystalline"
+          },
+          "composition": {
+            "notes": "Current Celanese Vectra design guide identifies exact grade E473i; retained source-reviewed staging until exact numeric grade table/revision semantics are normalized."
+          },
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-celanese-vectra-e473i-identity-2026",
+              "publisher": "Celanese",
+              "title": "Vectra® E473i current manufacturer portfolio/source",
+              "url": "https://www.celanese.com/-/media/cewebjssapp/project/marketodocuments/lcp-027--vectralcpdesignguidetg-am.pdf",
+              "kind": "manufacturer-datasheet",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Current Celanese Vectra design guide identifies exact grade E473i; retained source-reviewed staging until exact numeric grade table/revision semantics are normalized."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-celanese-vectra-s475",
+          "manufacturer": {
+            "id": "mfr-celanese",
+            "name": "Celanese",
+            "country": "United States",
+            "website": "https://www.celanese.com/"
+          },
+          "brand": "Vectra®",
+          "grade": "S475",
+          "aliases": [],
+          "polymer": {
+            "family": "LCP",
+            "morphology": "semi-crystalline"
+          },
+          "composition": {
+            "notes": "Current Celanese Vectra design guide identifies exact grade S475; retained source-reviewed staging until exact numeric grade table/revision semantics are normalized."
+          },
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-celanese-vectra-s475-identity-2026",
+              "publisher": "Celanese",
+              "title": "Vectra® S475 current manufacturer portfolio/source",
+              "url": "https://www.celanese.com/-/media/cewebjssapp/project/marketodocuments/lcp-027--vectralcpdesignguidetg-am.pdf",
+              "kind": "manufacturer-datasheet",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Current Celanese Vectra design guide identifies exact grade S475; retained source-reviewed staging until exact numeric grade table/revision semantics are normalized."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-celanese-vectra-e540i",
+          "manufacturer": {
+            "id": "mfr-celanese",
+            "name": "Celanese",
+            "country": "United States",
+            "website": "https://www.celanese.com/"
+          },
+          "brand": "Vectra®",
+          "grade": "E540i",
+          "aliases": [],
+          "polymer": {
+            "family": "LCP",
+            "morphology": "semi-crystalline"
+          },
+          "composition": {
+            "notes": "Current Celanese Vectra design guide identifies exact grade E540i; retained source-reviewed staging until exact numeric grade table/revision semantics are normalized."
+          },
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-celanese-vectra-e540i-identity-2026",
+              "publisher": "Celanese",
+              "title": "Vectra® E540i current manufacturer portfolio/source",
+              "url": "https://www.celanese.com/-/media/cewebjssapp/project/marketodocuments/lcp-027--vectralcpdesignguidetg-am.pdf",
+              "kind": "manufacturer-datasheet",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Current Celanese Vectra design guide identifies exact grade E540i; retained source-reviewed staging until exact numeric grade table/revision semantics are normalized."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-celanese-vectra-s540",
+          "manufacturer": {
+            "id": "mfr-celanese",
+            "name": "Celanese",
+            "country": "United States",
+            "website": "https://www.celanese.com/"
+          },
+          "brand": "Vectra®",
+          "grade": "S540",
+          "aliases": [],
+          "polymer": {
+            "family": "LCP",
+            "morphology": "semi-crystalline"
+          },
+          "composition": {
+            "notes": "Current Celanese Vectra design guide identifies exact grade S540; retained source-reviewed staging until exact numeric grade table/revision semantics are normalized."
+          },
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-celanese-vectra-s540-identity-2026",
+              "publisher": "Celanese",
+              "title": "Vectra® S540 current manufacturer portfolio/source",
+              "url": "https://www.celanese.com/-/media/cewebjssapp/project/marketodocuments/lcp-027--vectralcpdesignguidetg-am.pdf",
+              "kind": "manufacturer-datasheet",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Current Celanese Vectra design guide identifies exact grade S540; retained source-reviewed staging until exact numeric grade table/revision semantics are normalized."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-celanese-vectra-s625",
+          "manufacturer": {
+            "id": "mfr-celanese",
+            "name": "Celanese",
+            "country": "United States",
+            "website": "https://www.celanese.com/"
+          },
+          "brand": "Vectra®",
+          "grade": "S625",
+          "aliases": [],
+          "polymer": {
+            "family": "LCP",
+            "morphology": "semi-crystalline"
+          },
+          "composition": {
+            "notes": "Current Celanese Vectra design guide identifies exact grade S625; retained source-reviewed staging until exact numeric grade table/revision semantics are normalized."
+          },
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-celanese-vectra-s625-identity-2026",
+              "publisher": "Celanese",
+              "title": "Vectra® S625 current manufacturer portfolio/source",
+              "url": "https://www.celanese.com/-/media/cewebjssapp/project/marketodocuments/lcp-027--vectralcpdesignguidetg-am.pdf",
+              "kind": "manufacturer-datasheet",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Current Celanese Vectra design guide identifies exact grade S625; retained source-reviewed staging until exact numeric grade table/revision semantics are normalized."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-celanese-fortron-1115e7",
+          "manufacturer": {
+            "id": "mfr-celanese",
+            "name": "Celanese",
+            "country": "United States",
+            "website": "https://www.celanese.com/"
+          },
+          "brand": "Fortron®",
+          "grade": "1115E7",
+          "aliases": [],
+          "polymer": {
+            "family": "PPS",
+            "morphology": "semi-crystalline"
+          },
+          "composition": {
+            "notes": "Celanese Fortron technical guide identifies exact injection-moulding PPS grade 1115E7 and filler/process class; numeric grade-level promotion remains pending field-level extraction."
+          },
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-celanese-fortron-1115e7-identity-2026",
+              "publisher": "Celanese",
+              "title": "Fortron® 1115E7 current manufacturer portfolio/source",
+              "url": "https://www.celanese.com/-/media/Engineered%20Materials/Files/Product%20Technical%20Guides/PPS-012-FortronShortTermProperties-TG-EN-0916.pdf",
+              "kind": "manufacturer-datasheet",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Celanese Fortron technical guide identifies exact injection-moulding PPS grade 1115E7 and filler/process class; numeric grade-level promotion remains pending field-level extraction."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-celanese-fortron-1120l4",
+          "manufacturer": {
+            "id": "mfr-celanese",
+            "name": "Celanese",
+            "country": "United States",
+            "website": "https://www.celanese.com/"
+          },
+          "brand": "Fortron®",
+          "grade": "1120L4",
+          "aliases": [],
+          "polymer": {
+            "family": "PPS",
+            "morphology": "semi-crystalline"
+          },
+          "composition": {
+            "notes": "Celanese Fortron technical guide identifies exact injection-moulding PPS grade 1120L4 and filler/process class; numeric grade-level promotion remains pending field-level extraction."
+          },
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-celanese-fortron-1120l4-identity-2026",
+              "publisher": "Celanese",
+              "title": "Fortron® 1120L4 current manufacturer portfolio/source",
+              "url": "https://www.celanese.com/-/media/Engineered%20Materials/Files/Product%20Technical%20Guides/PPS-012-FortronShortTermProperties-TG-EN-0916.pdf",
+              "kind": "manufacturer-datasheet",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Celanese Fortron technical guide identifies exact injection-moulding PPS grade 1120L4 and filler/process class; numeric grade-level promotion remains pending field-level extraction."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-celanese-fortron-1130l4",
+          "manufacturer": {
+            "id": "mfr-celanese",
+            "name": "Celanese",
+            "country": "United States",
+            "website": "https://www.celanese.com/"
+          },
+          "brand": "Fortron®",
+          "grade": "1130L4",
+          "aliases": [],
+          "polymer": {
+            "family": "PPS",
+            "morphology": "semi-crystalline"
+          },
+          "composition": {
+            "notes": "Celanese Fortron technical guide identifies exact injection-moulding PPS grade 1130L4 and filler/process class; numeric grade-level promotion remains pending field-level extraction."
+          },
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-celanese-fortron-1130l4-identity-2026",
+              "publisher": "Celanese",
+              "title": "Fortron® 1130L4 current manufacturer portfolio/source",
+              "url": "https://www.celanese.com/-/media/Engineered%20Materials/Files/Product%20Technical%20Guides/PPS-012-FortronShortTermProperties-TG-EN-0916.pdf",
+              "kind": "manufacturer-datasheet",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Celanese Fortron technical guide identifies exact injection-moulding PPS grade 1130L4 and filler/process class; numeric grade-level promotion remains pending field-level extraction."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-celanese-fortron-1140l4",
+          "manufacturer": {
+            "id": "mfr-celanese",
+            "name": "Celanese",
+            "country": "United States",
+            "website": "https://www.celanese.com/"
+          },
+          "brand": "Fortron®",
+          "grade": "1140L4",
+          "aliases": [],
+          "polymer": {
+            "family": "PPS",
+            "morphology": "semi-crystalline"
+          },
+          "composition": {
+            "notes": "Celanese Fortron technical guide identifies exact injection-moulding PPS grade 1140L4 and filler/process class; numeric grade-level promotion remains pending field-level extraction."
+          },
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-celanese-fortron-1140l4-identity-2026",
+              "publisher": "Celanese",
+              "title": "Fortron® 1140L4 current manufacturer portfolio/source",
+              "url": "https://www.celanese.com/-/media/Engineered%20Materials/Files/Product%20Technical%20Guides/PPS-012-FortronShortTermProperties-TG-EN-0916.pdf",
+              "kind": "manufacturer-datasheet",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Celanese Fortron technical guide identifies exact injection-moulding PPS grade 1140L4 and filler/process class; numeric grade-level promotion remains pending field-level extraction."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-celanese-fortron-1140l6",
+          "manufacturer": {
+            "id": "mfr-celanese",
+            "name": "Celanese",
+            "country": "United States",
+            "website": "https://www.celanese.com/"
+          },
+          "brand": "Fortron®",
+          "grade": "1140L6",
+          "aliases": [],
+          "polymer": {
+            "family": "PPS",
+            "morphology": "semi-crystalline"
+          },
+          "composition": {
+            "notes": "Celanese Fortron technical guide identifies exact injection-moulding PPS grade 1140L6 and filler/process class; numeric grade-level promotion remains pending field-level extraction."
+          },
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-celanese-fortron-1140l6-identity-2026",
+              "publisher": "Celanese",
+              "title": "Fortron® 1140L6 current manufacturer portfolio/source",
+              "url": "https://www.celanese.com/-/media/Engineered%20Materials/Files/Product%20Technical%20Guides/PPS-012-FortronShortTermProperties-TG-EN-0916.pdf",
+              "kind": "manufacturer-datasheet",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Celanese Fortron technical guide identifies exact injection-moulding PPS grade 1140L6 and filler/process class; numeric grade-level promotion remains pending field-level extraction."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-celanese-fortron-4184l4",
+          "manufacturer": {
+            "id": "mfr-celanese",
+            "name": "Celanese",
+            "country": "United States",
+            "website": "https://www.celanese.com/"
+          },
+          "brand": "Fortron®",
+          "grade": "4184L4",
+          "aliases": [],
+          "polymer": {
+            "family": "PPS",
+            "morphology": "semi-crystalline"
+          },
+          "composition": {
+            "notes": "Celanese Fortron technical guide identifies exact injection-moulding PPS grade 4184L4 and filler/process class; numeric grade-level promotion remains pending field-level extraction."
+          },
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-celanese-fortron-4184l4-identity-2026",
+              "publisher": "Celanese",
+              "title": "Fortron® 4184L4 current manufacturer portfolio/source",
+              "url": "https://www.celanese.com/-/media/Engineered%20Materials/Files/Product%20Technical%20Guides/PPS-012-FortronShortTermProperties-TG-EN-0916.pdf",
+              "kind": "manufacturer-datasheet",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Celanese Fortron technical guide identifies exact injection-moulding PPS grade 4184L4 and filler/process class; numeric grade-level promotion remains pending field-level extraction."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-celanese-fortron-4184l6",
+          "manufacturer": {
+            "id": "mfr-celanese",
+            "name": "Celanese",
+            "country": "United States",
+            "website": "https://www.celanese.com/"
+          },
+          "brand": "Fortron®",
+          "grade": "4184L6",
+          "aliases": [],
+          "polymer": {
+            "family": "PPS",
+            "morphology": "semi-crystalline"
+          },
+          "composition": {
+            "notes": "Celanese Fortron technical guide identifies exact injection-moulding PPS grade 4184L6 and filler/process class; numeric grade-level promotion remains pending field-level extraction."
+          },
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-celanese-fortron-4184l6-identity-2026",
+              "publisher": "Celanese",
+              "title": "Fortron® 4184L6 current manufacturer portfolio/source",
+              "url": "https://www.celanese.com/-/media/Engineered%20Materials/Files/Product%20Technical%20Guides/PPS-012-FortronShortTermProperties-TG-EN-0916.pdf",
+              "kind": "manufacturer-datasheet",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Celanese Fortron technical guide identifies exact injection-moulding PPS grade 4184L6 and filler/process class; numeric grade-level promotion remains pending field-level extraction."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-celanese-fortron-4332l6",
+          "manufacturer": {
+            "id": "mfr-celanese",
+            "name": "Celanese",
+            "country": "United States",
+            "website": "https://www.celanese.com/"
+          },
+          "brand": "Fortron®",
+          "grade": "4332L6",
+          "aliases": [],
+          "polymer": {
+            "family": "PPS",
+            "morphology": "semi-crystalline"
+          },
+          "composition": {
+            "notes": "Celanese Fortron technical guide identifies exact injection-moulding PPS grade 4332L6 and filler/process class; numeric grade-level promotion remains pending field-level extraction."
+          },
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-celanese-fortron-4332l6-identity-2026",
+              "publisher": "Celanese",
+              "title": "Fortron® 4332L6 current manufacturer portfolio/source",
+              "url": "https://www.celanese.com/-/media/Engineered%20Materials/Files/Product%20Technical%20Guides/PPS-012-FortronShortTermProperties-TG-EN-0916.pdf",
+              "kind": "manufacturer-datasheet",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Celanese Fortron technical guide identifies exact injection-moulding PPS grade 4332L6 and filler/process class; numeric grade-level promotion remains pending field-level extraction."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-celanese-fortron-6160b4",
+          "manufacturer": {
+            "id": "mfr-celanese",
+            "name": "Celanese",
+            "country": "United States",
+            "website": "https://www.celanese.com/"
+          },
+          "brand": "Fortron®",
+          "grade": "6160B4",
+          "aliases": [],
+          "polymer": {
+            "family": "PPS",
+            "morphology": "semi-crystalline"
+          },
+          "composition": {
+            "notes": "Celanese Fortron technical guide identifies exact injection-moulding PPS grade 6160B4 and filler/process class; numeric grade-level promotion remains pending field-level extraction."
+          },
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-celanese-fortron-6160b4-identity-2026",
+              "publisher": "Celanese",
+              "title": "Fortron® 6160B4 current manufacturer portfolio/source",
+              "url": "https://www.celanese.com/-/media/Engineered%20Materials/Files/Product%20Technical%20Guides/PPS-012-FortronShortTermProperties-TG-EN-0916.pdf",
+              "kind": "manufacturer-datasheet",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Celanese Fortron technical guide identifies exact injection-moulding PPS grade 6160B4 and filler/process class; numeric grade-level promotion remains pending field-level extraction."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-celanese-fortron-6165a4",
+          "manufacturer": {
+            "id": "mfr-celanese",
+            "name": "Celanese",
+            "country": "United States",
+            "website": "https://www.celanese.com/"
+          },
+          "brand": "Fortron®",
+          "grade": "6165A4",
+          "aliases": [],
+          "polymer": {
+            "family": "PPS",
+            "morphology": "semi-crystalline"
+          },
+          "composition": {
+            "notes": "Celanese Fortron technical guide identifies exact injection-moulding PPS grade 6165A4 and filler/process class; numeric grade-level promotion remains pending field-level extraction."
+          },
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-celanese-fortron-6165a4-identity-2026",
+              "publisher": "Celanese",
+              "title": "Fortron® 6165A4 current manufacturer portfolio/source",
+              "url": "https://www.celanese.com/-/media/Engineered%20Materials/Files/Product%20Technical%20Guides/PPS-012-FortronShortTermProperties-TG-EN-0916.pdf",
+              "kind": "manufacturer-datasheet",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Celanese Fortron technical guide identifies exact injection-moulding PPS grade 6165A4 and filler/process class; numeric grade-level promotion remains pending field-level extraction."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-celanese-fortron-6165a6",
+          "manufacturer": {
+            "id": "mfr-celanese",
+            "name": "Celanese",
+            "country": "United States",
+            "website": "https://www.celanese.com/"
+          },
+          "brand": "Fortron®",
+          "grade": "6165A6",
+          "aliases": [],
+          "polymer": {
+            "family": "PPS",
+            "morphology": "semi-crystalline"
+          },
+          "composition": {
+            "notes": "Celanese Fortron technical guide identifies exact injection-moulding PPS grade 6165A6 and filler/process class; numeric grade-level promotion remains pending field-level extraction."
+          },
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-celanese-fortron-6165a6-identity-2026",
+              "publisher": "Celanese",
+              "title": "Fortron® 6165A6 current manufacturer portfolio/source",
+              "url": "https://www.celanese.com/-/media/Engineered%20Materials/Files/Product%20Technical%20Guides/PPS-012-FortronShortTermProperties-TG-EN-0916.pdf",
+              "kind": "manufacturer-datasheet",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Celanese Fortron technical guide identifies exact injection-moulding PPS grade 6165A6 and filler/process class; numeric grade-level promotion remains pending field-level extraction."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-celanese-fortron-6850l6",
+          "manufacturer": {
+            "id": "mfr-celanese",
+            "name": "Celanese",
+            "country": "United States",
+            "website": "https://www.celanese.com/"
+          },
+          "brand": "Fortron®",
+          "grade": "6850L6",
+          "aliases": [],
+          "polymer": {
+            "family": "PPS",
+            "morphology": "semi-crystalline"
+          },
+          "composition": {
+            "notes": "Celanese Fortron technical guide identifies exact injection-moulding PPS grade 6850L6 and filler/process class; numeric grade-level promotion remains pending field-level extraction."
+          },
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-celanese-fortron-6850l6-identity-2026",
+              "publisher": "Celanese",
+              "title": "Fortron® 6850L6 current manufacturer portfolio/source",
+              "url": "https://www.celanese.com/-/media/Engineered%20Materials/Files/Product%20Technical%20Guides/PPS-012-FortronShortTermProperties-TG-EN-0916.pdf",
+              "kind": "manufacturer-datasheet",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Celanese Fortron technical guide identifies exact injection-moulding PPS grade 6850L6 and filler/process class; numeric grade-level promotion remains pending field-level extraction."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-celanese-fortron-1131l4-itt",
+          "manufacturer": {
+            "id": "mfr-celanese",
+            "name": "Celanese",
+            "country": "United States",
+            "website": "https://www.celanese.com/"
+          },
+          "brand": "Fortron®",
+          "grade": "1131L4 ITT",
+          "aliases": [],
+          "polymer": {
+            "family": "PPS",
+            "morphology": "semi-crystalline"
+          },
+          "composition": {
+            "notes": "Celanese Fortron technical guide identifies exact injection-moulding PPS grade 1131L4 ITT and filler/process class; numeric grade-level promotion remains pending field-level extraction."
+          },
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-celanese-fortron-1131l4-itt-identity-2026",
+              "publisher": "Celanese",
+              "title": "Fortron® 1131L4 ITT current manufacturer portfolio/source",
+              "url": "https://www.celanese.com/-/media/Engineered%20Materials/Files/Product%20Technical%20Guides/PPS-012-FortronShortTermProperties-TG-EN-0916.pdf",
+              "kind": "manufacturer-datasheet",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Celanese Fortron technical guide identifies exact injection-moulding PPS grade 1131L4 ITT and filler/process class; numeric grade-level promotion remains pending field-level extraction."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-celanese-fortron-1141l4",
+          "manufacturer": {
+            "id": "mfr-celanese",
+            "name": "Celanese",
+            "country": "United States",
+            "website": "https://www.celanese.com/"
+          },
+          "brand": "Fortron®",
+          "grade": "1141L4",
+          "aliases": [],
+          "polymer": {
+            "family": "PPS",
+            "morphology": "semi-crystalline"
+          },
+          "composition": {
+            "notes": "Celanese Fortron technical guide identifies exact injection-moulding PPS grade 1141L4 and filler/process class; numeric grade-level promotion remains pending field-level extraction."
+          },
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-celanese-fortron-1141l4-identity-2026",
+              "publisher": "Celanese",
+              "title": "Fortron® 1141L4 current manufacturer portfolio/source",
+              "url": "https://www.celanese.com/-/media/Engineered%20Materials/Files/Product%20Technical%20Guides/PPS-012-FortronShortTermProperties-TG-EN-0916.pdf",
+              "kind": "manufacturer-datasheet",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Celanese Fortron technical guide identifies exact injection-moulding PPS grade 1141L4 and filler/process class; numeric grade-level promotion remains pending field-level extraction."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-celanese-fortron-1342l4",
+          "manufacturer": {
+            "id": "mfr-celanese",
+            "name": "Celanese",
+            "country": "United States",
+            "website": "https://www.celanese.com/"
+          },
+          "brand": "Fortron®",
+          "grade": "1342L4",
+          "aliases": [],
+          "polymer": {
+            "family": "PPS",
+            "morphology": "semi-crystalline"
+          },
+          "composition": {
+            "notes": "Celanese Fortron technical guide identifies exact injection-moulding PPS grade 1342L4 and filler/process class; numeric grade-level promotion remains pending field-level extraction."
+          },
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-celanese-fortron-1342l4-identity-2026",
+              "publisher": "Celanese",
+              "title": "Fortron® 1342L4 current manufacturer portfolio/source",
+              "url": "https://www.celanese.com/-/media/Engineered%20Materials/Files/Product%20Technical%20Guides/PPS-012-FortronShortTermProperties-TG-EN-0916.pdf",
+              "kind": "manufacturer-datasheet",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Celanese Fortron technical guide identifies exact injection-moulding PPS grade 1342L4 and filler/process class; numeric grade-level promotion remains pending field-level extraction."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-celanese-fortron-6341l4",
+          "manufacturer": {
+            "id": "mfr-celanese",
+            "name": "Celanese",
+            "country": "United States",
+            "website": "https://www.celanese.com/"
+          },
+          "brand": "Fortron®",
+          "grade": "6341L4",
+          "aliases": [],
+          "polymer": {
+            "family": "PPS",
+            "morphology": "semi-crystalline"
+          },
+          "composition": {
+            "notes": "Celanese Fortron technical guide identifies exact injection-moulding PPS grade 6341L4 and filler/process class; numeric grade-level promotion remains pending field-level extraction."
+          },
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-celanese-fortron-6341l4-identity-2026",
+              "publisher": "Celanese",
+              "title": "Fortron® 6341L4 current manufacturer portfolio/source",
+              "url": "https://www.celanese.com/-/media/Engineered%20Materials/Files/Product%20Technical%20Guides/PPS-012-FortronShortTermProperties-TG-EN-0916.pdf",
+              "kind": "manufacturer-datasheet",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Celanese Fortron technical guide identifies exact injection-moulding PPS grade 6341L4 and filler/process class; numeric grade-level promotion remains pending field-level extraction."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-celanese-fortron-6345l4",
+          "manufacturer": {
+            "id": "mfr-celanese",
+            "name": "Celanese",
+            "country": "United States",
+            "website": "https://www.celanese.com/"
+          },
+          "brand": "Fortron®",
+          "grade": "6345L4",
+          "aliases": [],
+          "polymer": {
+            "family": "PPS",
+            "morphology": "semi-crystalline"
+          },
+          "composition": {
+            "notes": "Celanese Fortron technical guide identifies exact injection-moulding PPS grade 6345L4 and filler/process class; numeric grade-level promotion remains pending field-level extraction."
+          },
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-celanese-fortron-6345l4-identity-2026",
+              "publisher": "Celanese",
+              "title": "Fortron® 6345L4 current manufacturer portfolio/source",
+              "url": "https://www.celanese.com/-/media/Engineered%20Materials/Files/Product%20Technical%20Guides/PPS-012-FortronShortTermProperties-TG-EN-0916.pdf",
+              "kind": "manufacturer-datasheet",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Celanese Fortron technical guide identifies exact injection-moulding PPS grade 6345L4 and filler/process class; numeric grade-level promotion remains pending field-level extraction."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-celanese-fortron-6450a6",
+          "manufacturer": {
+            "id": "mfr-celanese",
+            "name": "Celanese",
+            "country": "United States",
+            "website": "https://www.celanese.com/"
+          },
+          "brand": "Fortron®",
+          "grade": "6450A6",
+          "aliases": [],
+          "polymer": {
+            "family": "PPS",
+            "morphology": "semi-crystalline"
+          },
+          "composition": {
+            "notes": "Celanese Fortron technical guide identifies exact injection-moulding PPS grade 6450A6 and filler/process class; numeric grade-level promotion remains pending field-level extraction."
+          },
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-celanese-fortron-6450a6-identity-2026",
+              "publisher": "Celanese",
+              "title": "Fortron® 6450A6 current manufacturer portfolio/source",
+              "url": "https://www.celanese.com/-/media/Engineered%20Materials/Files/Product%20Technical%20Guides/PPS-012-FortronShortTermProperties-TG-EN-0916.pdf",
+              "kind": "manufacturer-datasheet",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Celanese Fortron technical guide identifies exact injection-moulding PPS grade 6450A6 and filler/process class; numeric grade-level promotion remains pending field-level extraction."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-celanese-fortron-6162a7",
+          "manufacturer": {
+            "id": "mfr-celanese",
+            "name": "Celanese",
+            "country": "United States",
+            "website": "https://www.celanese.com/"
+          },
+          "brand": "Fortron®",
+          "grade": "6162A7",
+          "aliases": [],
+          "polymer": {
+            "family": "PPS",
+            "morphology": "semi-crystalline"
+          },
+          "composition": {
+            "notes": "Celanese Fortron technical guide identifies exact injection-moulding PPS grade 6162A7 and filler/process class; numeric grade-level promotion remains pending field-level extraction."
+          },
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-celanese-fortron-6162a7-identity-2026",
+              "publisher": "Celanese",
+              "title": "Fortron® 6162A7 current manufacturer portfolio/source",
+              "url": "https://www.celanese.com/-/media/Engineered%20Materials/Files/Product%20Technical%20Guides/PPS-012-FortronShortTermProperties-TG-EN-0916.pdf",
+              "kind": "manufacturer-datasheet",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Celanese Fortron technical guide identifies exact injection-moulding PPS grade 6162A7 and filler/process class; numeric grade-level promotion remains pending field-level extraction."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-celanese-fortron-ces51",
+          "manufacturer": {
+            "id": "mfr-celanese",
+            "name": "Celanese",
+            "country": "United States",
+            "website": "https://www.celanese.com/"
+          },
+          "brand": "Fortron®",
+          "grade": "CES51",
+          "aliases": [],
+          "polymer": {
+            "family": "PPS",
+            "morphology": "semi-crystalline"
+          },
+          "composition": {
+            "notes": "Celanese Fortron technical guide identifies exact injection-moulding PPS grade CES51 and filler/process class; numeric grade-level promotion remains pending field-level extraction."
+          },
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-celanese-fortron-ces51-identity-2026",
+              "publisher": "Celanese",
+              "title": "Fortron® CES51 current manufacturer portfolio/source",
+              "url": "https://www.celanese.com/-/media/Engineered%20Materials/Files/Product%20Technical%20Guides/PPS-012-FortronShortTermProperties-TG-EN-0916.pdf",
+              "kind": "manufacturer-datasheet",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Celanese Fortron technical guide identifies exact injection-moulding PPS grade CES51 and filler/process class; numeric grade-level promotion remains pending field-level extraction."
+          }
+        }
+      ]
+    }
+  ],
+  "notes": [
+    "Exact-grade supplier guidance remains non-recipe.",
+    "LCP and additional PPS grade identities are queued from current Celanese product/design guides but withheld from numeric publication pending field-level normalization."
+  ]
+}
