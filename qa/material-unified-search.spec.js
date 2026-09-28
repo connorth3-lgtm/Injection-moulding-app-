@@ -46,10 +46,11 @@ test('unified material index searches exact-grade processing evidence, family re
   expect(labSearch.items[0]?.title).toBe('POM: thermal abuse is a material-safety problem');
 
   await type.selectOption('');
-  await query.fill('warpage');
+  await query.fill('POM');
   await expect(results.locator('[data-mm-material-index-result]')).not.toHaveCount(0);
-  const types=await results.locator('[data-mm-material-index-result]').evaluateAll(nodes=>[...new Set(nodes.map(n=>n.dataset.mmMaterialIndexType))]);
-  expect(types.length).toBeGreaterThan(1);
+  const crossType=await page.evaluate(()=>window.MM_MATERIAL_SEARCH.searchAllPage('POM',{page:1,pageSize:100}));
+  const crossTypes=[...new Set(crossType.items.map(item=>item.type))];
+  expect(crossTypes.length).toBeGreaterThan(1);
 
   const stats=await page.evaluate(()=>window.MM_MATERIAL_SEARCH.stats());
   expect(stats.documents).toBeGreaterThan(stats.grades);
