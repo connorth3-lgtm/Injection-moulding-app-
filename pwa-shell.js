@@ -1,7 +1,7 @@
 /* MouldMaster PWA shell controller — 2026.09.06 */
 (function(){
 'use strict';
-const RELEASE='2026.09.27.4';
+const RELEASE='2026.09.28.1';
 const CONTENT='2026.08.26.1';
 const REFERENCE_DATA_URL='./reference-data.html';
 function setText(el,value){if(el&&el.textContent!==value)el.textContent=value}
@@ -212,6 +212,7 @@ function syncVisibleViewChrome(){
 }
 function dockReferenceLauncher(){
   const open=document.getElementById('mm-src-open');if(!open)return;
+  if(document.getElementById('mmrd-open')){open.style.display='none';open.setAttribute('aria-hidden','true');open.tabIndex=-1;open.dataset.mmDocked='retired-duplicate-reference-launcher';return}
   if(isMobileNav()){open.style.display='none';open.setAttribute('aria-hidden','true');open.tabIndex=-1;open.dataset.mmDocked='mobile-hidden-unified-reference-page';return}
   open.removeAttribute('aria-hidden');open.tabIndex=0;const sidebar=document.querySelector('.sidebar-foot'),dock=sidebar||document.querySelector('.top-actions')||document.querySelector('.main');if(!dock)return;
   if(open.parentElement!==dock)dock.appendChild(open);open.style.position='static';open.style.left='auto';open.style.right='auto';open.style.top='auto';open.style.bottom='auto';open.style.zIndex='auto';open.style.pointerEvents='auto';open.style.width=sidebar?'100%':'auto';open.style.margin=sidebar?'12px 0 0':'0';open.style.display=sidebar?'flex':'inline-flex';open.style.justifyContent='center';open.dataset.mmDocked=sidebar?'sidebar':dock.classList.contains('top-actions')?'topbar':'content'
