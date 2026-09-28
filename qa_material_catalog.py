@@ -88,7 +88,7 @@ need("Close important evidence gaps" in registry_runtime, "material change assis
 need(catalog.get("schemaVersion") == 1, "material catalog schema version drift")
 need(catalog.get("catalogVersion") == "generated", "material catalog must use the compiler-owned generated version marker")
 need("variant/revision/production identity differs" in str(catalog.get("boundary") or ""), "material catalog boundary does not describe variant-safe identity")
-need({m.get("id") for m in catalog.get("manufacturers") or []} == {"mfr-kep", "mfr-lg-chem", "mfr-lotte-chemical", "mfr-sabic", "mfr-envalior", "mfr-victrex", "mfr-basf", "mfr-covestro", "mfr-arkema", "mfr-roehm", "mfr-celanese", "mfr-ineos-styrolution", "mfr-supreme-petrochem", "mfr-scgc", "mfr-kuraray", "mfr-ube", "mfr-indianoil", "mfr-petronas-chemicals", "mfr-lotte-titan", "mfr-lyondellbasell", "mfr-momentive", "mfr-mitsui-elastomers-singapore", "mfr-exxonmobil"}, "runtime manufacturer set drift")
+need({m.get("id") for m in catalog.get("manufacturers") or []} == {'mfr-arkema','mfr-basf','mfr-celanese','mfr-covestro','mfr-envalior','mfr-exxonmobil','mfr-hyosung-chemical','mfr-hyosung-vina','mfr-indianoil','mfr-ineos-styrolution','mfr-kep','mfr-kuraray','mfr-lg-chem','mfr-lotte-chemical','mfr-lotte-titan','mfr-lyondellbasell','mfr-mitsui-elastomers-singapore','mfr-momentive','mfr-petronas-chemicals','mfr-roehm','mfr-sabic','mfr-samyang','mfr-scgc','mfr-sh-energy-chemical','mfr-supreme-petrochem','mfr-ube','mfr-victrex'}, "runtime manufacturer set drift")
 need(isinstance(catalog.get("grades"), list), "material catalog grades must be a list")
 for idx, grade in enumerate(catalog["grades"]):
     grade_errors = validate_grade(grade, f"catalog grade[{idx}]")
@@ -109,7 +109,7 @@ for staging_path in sorted(STAGING.glob("*.json")):
                 staged_grade_ids.add(gid)
 runtime_grade_ids = {grade.get("id") for grade in catalog.get("grades") or []}
 need(staged_grade_ids == runtime_grade_ids, f"runtime/staging material drift: staged={sorted(staged_grade_ids)} runtime={sorted(runtime_grade_ids)}")
-need(len(runtime_grade_ids) == 188, "runtime exact-grade count must include the original Korean pilot and validated Korea/global expansion waves through wave22")
+need(len(runtime_grade_ids) == 258, "runtime exact-grade count must include the original Korean pilot, waves through wave22, and the 70-grade Vietnam PP / Korea EPS mega wave")
 need(kolon_grade_ids.isdisjoint(runtime_grade_ids), "source-reviewed KOLON staging identities must not leak into the validated runtime catalog")
 
 global_wave = load_json(STAGING / "global-material-expansion-20260929-v1.json")
@@ -395,6 +395,29 @@ need(all((g.get("provenance") or {}).get("stage") == "validated" for g in global
 need(all(any(obs.get("property") == "Melt Flow Rate" and obs.get("temperatureC") is not None and obs.get("loadKg") is not None and obs.get("comparisonReady") is True for obs in g.get("properties") or []) for g in global22), "Korea Samyang wave22 conditioned MFR contract drift")
 need(all(obs.get("comparisonReady") is False for g in global22 for obs in g.get("properties") or [] if obs.get("property") == "Mould Shrinkage"), "Korea Samyang wave22 unresolved-direction shrinkage must remain context-only")
 need(all(obs.get("productionRecipe") is False for g in global22 for obs in g.get("processing") or []), "Korea Samyang wave22 supplier guidance became a production recipe")
+
+# Mega wave23: full current Hyosung Vina Vietnam-Plant PP catalogue plus
+# governed SH Energy ANYPOL SE-HF EPS identities. Hyosung melt index remains
+# context-only because the catalogue table omits test temperature/load; EPS is
+# explicitly expandable-bead/steam-moulding material, not conventional injection feedstock.
+global_wave23 = load_json(STAGING / "global-material-mega-expansion-20260929-v23.json")
+need((global_wave23.get("summary") or {}).get("validatedGrades") == 70, "mega wave23 validated-grade count drift")
+need((global_wave23.get("summary") or {}).get("hyosungVinaGrades") == 66, "Hyosung Vina mega-wave grade count drift")
+need((global_wave23.get("summary") or {}).get("shEnergyValidatedGrades") == 4, "SH Energy mega-wave grade count drift")
+global23 = [g for m in global_wave23.get("manufacturers") or [] for g in m.get("gradeRecords") or []]
+need(len(global23) == 70 and all(g.get("id") in runtime_grade_ids for g in global23), "mega wave23 grades are not fully published")
+hyosung_vina = [g for g in global23 if (g.get("manufacturer") or {}).get("id") == "mfr-hyosung-vina"]
+sh_energy = [g for g in global23 if (g.get("manufacturer") or {}).get("id") == "mfr-sh-energy-chemical"]
+need(len(hyosung_vina) == 66, "Hyosung Vina validated exact-grade set drift")
+need(all((g.get("production") or {}).get("country") == "Vietnam" for g in hyosung_vina), "Hyosung Vina country provenance drift")
+need(all((g.get("production") or {}).get("plant") == "Hyosung Vina Chemicals Vietnam Plant" for g in hyosung_vina), "Hyosung Vina catalogue-level plant provenance drift")
+need(all(obs.get("comparisonReady") is False for g in hyosung_vina for obs in g.get("properties") or [] if obs.get("property") == "Melt Index"), "Hyosung Vina under-conditioned melt index became comparison-ready")
+need(all(any(s.get("publisher") == "Hyosung Vina Chemicals" and s.get("kind") == "manufacturer-datasheet" for s in g.get("sources") or []) for g in hyosung_vina), "Hyosung Vina primary catalogue source drift")
+need({g.get("grade") for g in sh_energy} == {"SE-1600HF", "SE-2000HF", "SE-2500HF", "SE-3000HF"}, "SH Energy ANYPOL SE-HF exact-grade set drift")
+need(all((g.get("polymer") or {}).get("family") == "EPS" for g in sh_energy), "SH Energy SE-HF family must remain EPS")
+need(all("not conventional injection" in str((g.get("identity") or {}).get("notes") or "").lower() for g in sh_energy), "SH Energy EPS non-injection boundary missing")
+need(all(not (g.get("processing") or []) for g in sh_energy), "SH Energy EPS processing recipe leaked into runtime")
+need(all(any(s.get("kind") == "regulatory" and "ESR-1095" in str(s.get("title") or "") for s in g.get("sources") or []) for g in sh_energy), "SH Energy ICC-ES source trail drift")
 
 # Pilot proof: current primary-source LOTTE records remain unchanged while the
 # umbrella manifest records progress without copying exact-grade claims.
