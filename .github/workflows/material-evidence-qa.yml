@@ -1,0 +1,76 @@
+name: MouldMaster Material Evidence QA
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'data/asian-aus-nz-material-grade-extraction-wave2-v1.json'
+      - 'data/material-evidence-scale-programme-v2.json'
+      - 'data/material-primary-tds-acquisition-queue-v1.json'
+      - 'data/material-unique-profile-index-v1.json'
+      - 'qa_asia_aus_nz_material_wave2.py'
+      - 'qa_material_evidence_scale_programme.py'
+      - 'qa_material_primary_tds_acquisition.py'
+      - 'qa_material_unique_grade_profiles.py'
+      - '.github/workflows/material-evidence-qa.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'data/asian-aus-nz-material-grade-extraction-wave2-v1.json'
+      - 'data/material-evidence-scale-programme-v2.json'
+      - 'data/material-primary-tds-acquisition-queue-v1.json'
+      - 'data/material-unique-profile-index-v1.json'
+      - 'qa_asia_aus_nz_material_wave2.py'
+      - 'qa_material_evidence_scale_programme.py'
+      - 'qa_material_primary_tds_acquisition.py'
+      - 'qa_material_unique_grade_profiles.py'
+      - '.github/workflows/material-evidence-qa.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: mouldmaster-material-evidence-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  material-evidence:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: '3.12'
+      - name: Validate Asia Australia NZ material wave
+        run: python qa_asia_aus_nz_material_wave2.py
+      - name: Validate material scale governance
+        run: python qa_material_evidence_scale_programme.py
+      - name: Validate primary TDS acquisition lifecycle
+        run: python qa_material_primary_tds_acquisition.py
+      - name: Validate canonical unique-grade profile count
+        run: |
+          python qa_material_unique_grade_profiles.py
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          wave=json.loads(Path('data/asian-aus-nz-material-grade-extraction-wave2-v1.json').read_text(encoding='utf-8'))
+          index=json.loads(Path('data/material-unique-profile-index-v1.json').read_text(encoding='utf-8'))
+          queue=json.loads(Path('data/material-primary-tds-acquisition-queue-v1.json').read_text(encoding='utf-8'))
+          assert len(wave['records']) == 284
+          assert sum(r.get('status') == 'candidate-complete' for r in wave['records']) == 161
+          assert index['uniqueExactCompleteProfiles'] == 89
+          assert index['countingRule'].startswith('one manufacturer + exact grade identity')
+          assert queue['metrics'] == {
+              'convertedComplete': 9,
+              'exactGradeSourceLocatedPending': 5,
+              'stillNeedPrimarySource': 44,
+          }
+          print({
+              'governedRecords': len(wave['records']),
+              'candidateCompleteRows': sum(r.get('status') == 'candidate-complete' for r in wave['records']),
+              'uniqueExactCompleteProfiles': index['uniqueExactCompleteProfiles'],
+              'tdsQueue': queue['metrics'],
+          })
+          PY
