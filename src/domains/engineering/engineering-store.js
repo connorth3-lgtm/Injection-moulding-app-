@@ -54,7 +54,7 @@ async function getAllByIndex(storeName,indexName,value){const db=await openDb();
 
 function normalizeCase(input={}){
   return {
-    schemaVersion:3,
+    schemaVersion:4,
     id:String(input.id||uid('case')),
     learnerToken:String(input.learnerToken||learnerToken()),
     createdAt:String(input.createdAt||now()),
@@ -68,6 +68,10 @@ function normalizeCase(input={}){
     machine:String(input.machine||''),
     mouldId:input.mouldId?String(input.mouldId):null,
     mould:String(input.mould||''),
+    productId:input.productId?String(input.productId):null,
+    product:String(input.product||''),
+    partId:input.partId?String(input.partId):null,
+    part:String(input.part||''),
     cavityId:input.cavityId?String(input.cavityId):null,
     onset:String(input.onset||'Unknown / not yet defined'),
     location:String(input.location||''),
@@ -116,6 +120,44 @@ async function linkCaseMaterial(caseId,materialGradeId,displayName='',token=lear
   c.materialGradeId=String(materialGradeId);if(displayName)c.material=String(displayName);
   await saveCase(c,{token:owner});return linkCase(caseId,'material-grade',materialGradeId,{displayName:String(displayName||'')},owner)
 }
+async function linkCaseMachine(caseId,machineId,displayName='',token=learnerToken()){
+  const owner=tokenValue(token),c=await getCase(caseId,owner);if(!c)throw new Error(`Unknown engineering case ${caseId}`);
+  c.machineId=String(machineId);if(displayName)c.machine=String(displayName);
+  await saveCase(c,{token:owner});return linkCase(caseId,'machine',machineId,{displayName:String(displayName||'')},owner)
+}
+async function linkCaseMould(caseId,mouldId,displayName='',token=learnerToken()){
+  const owner=tokenValue(token),c=await getCase(caseId,owner);if(!c)throw new Error(`Unknown engineering case ${caseId}`);
+  c.mouldId=String(mouldId);if(displayName)c.mould=String(displayName);
+  await saveCase(c,{token:owner});return linkCase(caseId,'mould',mouldId,{displayName:String(displayName||'')},owner)
+}
+async function linkCaseProduct(caseId,productId,displayName='',token=learnerToken()){
+  const owner=tokenValue(token),c=await getCase(caseId,owner);if(!c)throw new Error(`Unknown engineering case ${caseId}`);
+  c.productId=String(productId);if(displayName)c.product=String(displayName);
+  await saveCase(c,{token:owner});return linkCase(caseId,'product',productId,{displayName:String(displayName||'')},owner)
+}
+async function linkCasePart(caseId,partId,displayName='',token=learnerToken()){
+  const owner=tokenValue(token),c=await getCase(caseId,owner);if(!c)throw new Error(`Unknown engineering case ${caseId}`);
+  c.partId=String(partId);if(displayName)c.part=String(displayName);
+  await saveCase(c,{token:owner});return linkCase(caseId,'part',partId,{displayName:String(displayName||'')},owner)
+}
+async function linkCaseContext(caseId,context={},token=learnerToken()){
+  const owner=tokenValue(token),c=await getCase(caseId,owner);if(!c)throw new Error(`Unknown engineering case ${caseId}`);
+  const specs=[
+    ['material-grade','materialGradeId','material'],
+    ['machine','machineId','machine'],
+    ['mould','mouldId','mould'],
+    ['product','productId','product'],
+    ['part','partId','part']
+  ],links=[];
+  for(const [kind,idKey,nameKey] of specs){
+    const targetId=context[idKey]??c[idKey],displayName=context[nameKey]??c[nameKey];
+    if(!targetId)continue;
+    c[idKey]=String(targetId);if(displayName)c[nameKey]=String(displayName);
+    links.push(await linkCase(caseId,kind,targetId,{displayName:String(displayName||'')},owner));
+  }
+  await saveCase(c,{token:owner});
+  return {caseId:String(caseId),links}
+}
 async function linkCaseDataset(caseId,datasetId,label='',token=learnerToken()){return linkCase(caseId,'process-dataset',datasetId,{label:String(label||'')},token)}
 
 function legacyKey(token=learnerToken()){return learnerScope.storageKey(LEGACY_CASE_BASE,tokenValue(token))}
@@ -147,6 +189,6 @@ async function repairLegacyLinkOwnership(token=learnerToken()){
 }
 async function bootstrap(){try{const migration=await migrateLegacyMouldMasterCases();await repairLegacyLinkOwnership();return migration}catch(err){console.warn('[MouldMaster engineering store] legacy migration skipped',err);return null}}
 
-window.MM_ENGINEERING_STORE=Object.freeze({version:VERSION,dbName:DB_NAME,normalizeCase,saveCase,listCases,getCase,deleteCase,linkCase,linksForCase,linkCaseMaterial,linkCaseDataset,importLegacyCases,migrateLegacyMouldMasterCases,repairLegacyLinkOwnership,bootstrap,learnerToken,legacyKey});
+window.MM_ENGINEERING_STORE=Object.freeze({version:VERSION,dbName:DB_NAME,normalizeCase,saveCase,listCases,getCase,deleteCase,linkCase,linksForCase,linkCaseMaterial,linkCaseMachine,linkCaseMould,linkCaseProduct,linkCasePart,linkCaseContext,linkCaseDataset,importLegacyCases,migrateLegacyMouldMasterCases,repairLegacyLinkOwnership,bootstrap,learnerToken,legacyKey});
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',bootstrap,{once:true});else bootstrap();
 })();
