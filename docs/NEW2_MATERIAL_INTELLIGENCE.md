@@ -31,6 +31,24 @@ The Material Change Assistant now exposes:
 
 The report remains informational. Site approval and production authorization remain external controlled decisions.
 
+## Engineering knowledge graph
+
+MouldMaster cases now preserve a linked local engineering context:
+
+- exact material grade;
+- machine / cell;
+- mould / tool;
+- product / assembly;
+- part / component.
+
+Stable local IDs are stored beside human-readable names and are persisted through the canonical learner-scoped IndexedDB engineering store. The store creates durable case links for each identified object.
+
+The workspace exposes this context beside the evidence chain. When an exact catalogue grade is linked, it also reports the number of governed property, processing and source records attached to that grade.
+
+Historical case retrieval uses these identities as evidence for relevance. Same exact grade, machine, mould, product and part increase similar-case relevance, while defect/evidence text and locally linked measured datasets remain additional signals. This is retrieval support only; similarity does not prove the same cause or authorize copying a previous process setting.
+
+Case exports include the stable engineering-context IDs so a reviewed/exported evidence record remains traceable to the objects that were actually involved.
+
 ## Promotion-readiness queue
 
 Run:
