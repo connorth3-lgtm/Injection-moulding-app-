@@ -102,7 +102,7 @@ for staging_path in sorted(STAGING.glob("*.json")):
                 staged_grade_ids.add(gid)
 runtime_grade_ids = {grade.get("id") for grade in catalog.get("grades") or []}
 need(staged_grade_ids == runtime_grade_ids, f"runtime/staging material drift: staged={sorted(staged_grade_ids)} runtime={sorted(runtime_grade_ids)}")
-need(len(runtime_grade_ids) == 101, "runtime exact-grade count must include the Korean pilot plus seven global expansion waves")
+need(len(runtime_grade_ids) == 105, "runtime exact-grade count must include the Korean pilot plus eight global expansion waves")
 need(kolon_grade_ids.isdisjoint(runtime_grade_ids), "source-reviewed KOLON staging identities must not leak into the validated runtime catalog")
 
 global_wave = load_json(STAGING / "global-material-expansion-20260929-v1.json")
@@ -175,6 +175,13 @@ global7 = [g for m in global_wave7.get("manufacturers") or [] for g in m.get("gr
 need(len(global7) == 9 and all(g.get("id") in runtime_grade_ids for g in global7), "wave7 Asia-Pacific grades are not fully published")
 need({(g.get("polymer") or {}).get("family") for g in global7} == {"PP", "PA9T", "PA6", "PBT"}, "wave7 validated family coverage drift")
 need(all((obs.get("productionRecipe") is False) for g in global7 for obs in g.get("processing") or []), "wave7 supplier guidance became a production recipe")
+
+global_wave8 = load_json(STAGING / "global-material-expansion-20260929-v8.json")
+need((global_wave8.get("summary") or {}).get("validatedGrades") == 4, "global material expansion wave8 validated-grade count drift")
+global8 = [g for m in global_wave8.get("manufacturers") or [] for g in m.get("gradeRecords") or []]
+need(len(global8) == 4 and all(g.get("id") in runtime_grade_ids for g in global8), "wave8 LCP grades are not fully published")
+need({(g.get("polymer") or {}).get("family") for g in global8} == {"LCP"}, "wave8 validated family coverage drift")
+need(all(obs.get("comparisonReady") is False for g in global8 for obs in g.get("properties") or [] if obs.get("property") == "Mould Shrinkage"), "LCP shrinkage must remain context-only until specimen/conditioning semantics are fully resolved")
 
 # Pilot proof: current primary-source LOTTE records remain unchanged while the
 # umbrella manifest records progress without copying exact-grade claims.
