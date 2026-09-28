@@ -15,7 +15,8 @@ module.exports=defineConfig({
     /inline-handler-bridge\.spec\.js/,
     /inline-style-csp\.spec\.js/,
     /book-assurance\.spec\.js/,
-    /performance-budget\.spec\.js/
+    /performance-budget\.spec\.js/,
+    /internal-adversarial-validation\.spec\.js/
   ],
   timeout:60000,
   expect:{timeout:15000},
