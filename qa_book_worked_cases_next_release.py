@@ -13,6 +13,7 @@ SME = ROOT / "data" / "book-sme-review-v1.json"
 VERSION = ROOT / "version.json"
 BOOK_RUNTIME = ROOT / "src" / "domains" / "learning" / "book-runtime.js"
 SW = ROOT / "service-worker.js"
+LIVE_VERIFIER = ROOT / "tools" / "verify_book_pages_candidate.py"
 
 EXPECTED = {
     "worked-clamp-force-v1": "clamp",
@@ -47,6 +48,7 @@ def main() -> None:
     sme = json.loads(SME.read_text(encoding="utf-8"))
     runtime = BOOK_RUNTIME.read_text(encoding="utf-8")
     sw = SW.read_text(encoding="utf-8")
+    live_verifier = LIVE_VERIFIER.read_text(encoding="utf-8")
 
     current_release = version.get("web_release")
     content_release = ledger.get("release")
@@ -103,6 +105,8 @@ def main() -> None:
     for marker in ("WORKED_CASES_PATH", "validateWorkedCases", "workedCaseHtml", "getWorkedCases"):
         need(marker in runtime, f"Book runtime worked-case integration marker missing: {marker}")
     need("./src/domains/learning/book-data/book-worked-engineering-cases-v1.json" in sw, "worked-case ledger missing from atomic offline cache")
+    need("worked_release > web_release" in live_verifier and 'worked_auth.get("release") != worked_release' in live_verifier, "live Book verifier must bind worked-case authorization to governed content release, not every shell release")
+    need("enrichment_release > web_release" in live_verifier and 'enrichment_auth.get("release") != enrichment_release' in live_verifier, "live Book verifier must bind enrichment authorization to governed content release, not every shell release")
 
     need("integrated into governed" in lower and "2026.09.24.14" in lower and "learner runtime" in lower, "source pack integration status is stale")
     headings = re.findall(r"^## (\d+)\. ", text, flags=re.M)
