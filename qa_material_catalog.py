@@ -102,7 +102,7 @@ for staging_path in sorted(STAGING.glob("*.json")):
                 staged_grade_ids.add(gid)
 runtime_grade_ids = {grade.get("id") for grade in catalog.get("grades") or []}
 need(staged_grade_ids == runtime_grade_ids, f"runtime/staging material drift: staged={sorted(staged_grade_ids)} runtime={sorted(runtime_grade_ids)}")
-need(len(runtime_grade_ids) == 181, "runtime exact-grade count must include the original Korean pilot, validated Samyang Korea pilot, and eighteen global expansion waves")
+need(len(runtime_grade_ids) == 184, "runtime exact-grade count must include the original Korean pilot and validated Korea/global expansion waves through wave21")
 need(kolon_grade_ids.isdisjoint(runtime_grade_ids), "source-reviewed KOLON staging identities must not leak into the validated runtime catalog")
 
 global_wave = load_json(STAGING / "global-material-expansion-20260929-v1.json")
@@ -351,6 +351,19 @@ need(all((g.get("provenance") or {}).get("stage") == "staging" for g in global20
 need(all(g.get("id") not in runtime_grade_ids for g in global20), "Korea Hanwha staging identity leaked into runtime")
 need(all(obs.get("comparisonReady") is False for g in global20 for obs in g.get("properties") or []), "Under-conditioned Hanwha values must remain context-only")
 need((global_wave20.get("governance") or {}).get("runtimePromotionBlocked") is True, "Korea Hanwha promotion boundary drift")
+
+
+# Korea Hyosung wave21: three PP exact grades have exact-grade TDS evidence with
+# fully conditioned ASTM D1238 230C/2.16 kg MI and supplier drying guidance.
+global_wave21 = load_json(STAGING / "global-material-expansion-20260929-v21.json")
+need((global_wave21.get("summary") or {}).get("validatedGrades") == 3, "Korea Hyosung wave21 validated-grade count drift")
+need((global_wave21.get("summary") or {}).get("countryFocus") == "South Korea", "Korea Hyosung wave21 country focus drift")
+global21 = [g for m in global_wave21.get("manufacturers") or [] for g in m.get("gradeRecords") or []]
+need({g.get("grade") for g in global21} == {"HJ801RL", "HJ801R", "PB840-BA"}, "Korea Hyosung wave21 exact-grade set drift")
+need(len(global21) == 3 and all(g.get("id") in runtime_grade_ids for g in global21), "Korea Hyosung wave21 grades are not fully published")
+need(all((g.get("provenance") or {}).get("stage") == "validated" for g in global21), "Korea Hyosung wave21 contains non-validated grade")
+need(all(any(obs.get("property") == "Melt Index" and obs.get("temperatureC") == 230 and obs.get("loadKg") == 2.16 and obs.get("comparisonReady") is True for obs in g.get("properties") or []) for g in global21), "Korea Hyosung wave21 conditioned MI contract drift")
+need(all(obs.get("productionRecipe") is False for g in global21 for obs in g.get("processing") or []), "Korea Hyosung wave21 supplier guidance became a production recipe")
 
 # Pilot proof: current primary-source LOTTE records remain unchanged while the
 # umbrella manifest records progress without copying exact-grade claims.
