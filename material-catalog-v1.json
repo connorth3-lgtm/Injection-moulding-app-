@@ -101,6 +101,11 @@
       "country": "Malaysia"
     },
     {
+      "id": "mfr-polyplastics",
+      "name": "Polyplastics Co., Ltd.",
+      "country": "Japan"
+    },
+    {
       "id": "mfr-roehm",
       "name": "Röhm",
       "country": "Germany"
@@ -18393,6 +18398,156 @@
         "reviewedAt": "2026-09-29T00:00:00Z",
         "reviewer": "primary-source-web-review",
         "notes": "Current PETRONAS product sheet and polymer portfolio confirm exact grade/application and MFR. MFR remains comparisonReady=false because the reviewed source surface does not state temperature/load."
+      }
+    },
+    {
+      "schemaVersion": 1,
+      "id": "mat-polyplastics-duracon-gb-25r",
+      "manufacturer": {
+        "id": "mfr-polyplastics",
+        "name": "Polyplastics Co., Ltd.",
+        "country": "Japan",
+        "website": "https://www.polyplastics.com/"
+      },
+      "brand": "DURACON",
+      "grade": "GB-25R",
+      "aliases": [],
+      "polymer": {
+        "family": "POM",
+        "morphology": "semi-crystalline"
+      },
+      "composition": {
+        "notes": "Low-warpage DURACON POM exact grade; manufacturer ISO marking identifies POM-GB25. Glass-bead reinforcement is retained as source text rather than mapped to glass-fibre percentage."
+      },
+      "properties": [
+        {
+          "id": "obs-polyplastics-gb-25r-mfr",
+          "property": "Melt Flow Rate",
+          "value": 7,
+          "unit": "g/10min",
+          "testMethod": "ISO 1133",
+          "temperatureC": 190,
+          "loadKg": 2.16,
+          "direction": "not-applicable",
+          "sourceId": "src-polyplastics-duracon-gb-25r-20260929",
+          "sourcePage": "manufacturer exact-grade catalogue",
+          "comparisonReady": true,
+          "limitations": "Manufacturer exact-grade typical value; compare only at identical ISO 1133 190°C / 2.16 kg conditions."
+        },
+        {
+          "id": "obs-polyplastics-gb-25r-mvr",
+          "property": "Melt Volume-Flow Rate",
+          "value": 5,
+          "unit": "cm³/10min",
+          "testMethod": "ISO 1133",
+          "temperatureC": 190,
+          "loadKg": 2.16,
+          "direction": "not-applicable",
+          "sourceId": "src-polyplastics-duracon-gb-25r-20260929",
+          "sourcePage": "manufacturer exact-grade catalogue",
+          "comparisonReady": true,
+          "limitations": "Manufacturer exact-grade typical value; compare only at identical ISO 1133 190°C / 2.16 kg conditions."
+        }
+      ],
+      "processing": [],
+      "approvals": [],
+      "lifecycle": {
+        "status": "unknown",
+        "checkedAt": "2026-09-29"
+      },
+      "sources": [
+        {
+          "id": "src-polyplastics-duracon-gb-25r-20260929",
+          "publisher": "Polyplastics Co., Ltd.",
+          "title": "DURACON® POM GB-25R CF3500/CD3501 exact-grade catalogue",
+          "url": "https://www.polyplastics.com/Gidb/GradeListSelectGradeAction.do?id=2272",
+          "kind": "manufacturer-datasheet",
+          "revision": null,
+          "documentDate": null,
+          "retrievedAt": "2026-09-29"
+        }
+      ],
+      "provenance": {
+        "stage": "validated",
+        "ingestedAt": "2026-09-29T00:00:00Z",
+        "reviewedAt": "2026-09-29T00:00:00Z",
+        "reviewer": "primary-source-web-review",
+        "notes": "Current manufacturer exact-grade catalogue page reviewed. ISO 1133 MFR and MVR retain explicit 190°C / 2.16 kg conditioning; no production recipe is inferred."
+      }
+    },
+    {
+      "schemaVersion": 1,
+      "id": "mat-polyplastics-duracon-m25lv",
+      "manufacturer": {
+        "id": "mfr-polyplastics",
+        "name": "Polyplastics Co., Ltd.",
+        "country": "Japan",
+        "website": "https://www.polyplastics.com/"
+      },
+      "brand": "DURACON",
+      "grade": "M25LV",
+      "aliases": [],
+      "polymer": {
+        "family": "POM",
+        "morphology": "semi-crystalline"
+      },
+      "composition": {
+        "notes": "Low VOC, high-viscosity DURACON POM exact grade."
+      },
+      "properties": [
+        {
+          "id": "obs-polyplastics-m25lv-mfr",
+          "property": "Melt Flow Rate",
+          "value": 2.5,
+          "unit": "g/10min",
+          "testMethod": "ISO 1133",
+          "temperatureC": 190,
+          "loadKg": 2.16,
+          "direction": "not-applicable",
+          "sourceId": "src-polyplastics-duracon-m25lv-20260929",
+          "sourcePage": "manufacturer exact-grade catalogue",
+          "comparisonReady": true,
+          "limitations": "Manufacturer exact-grade typical value; compare only at identical ISO 1133 190°C / 2.16 kg conditions."
+        },
+        {
+          "id": "obs-polyplastics-m25lv-mvr",
+          "property": "Melt Volume-Flow Rate",
+          "value": 2.2,
+          "unit": "cm³/10min",
+          "testMethod": "ISO 1133",
+          "temperatureC": 190,
+          "loadKg": 2.16,
+          "direction": "not-applicable",
+          "sourceId": "src-polyplastics-duracon-m25lv-20260929",
+          "sourcePage": "manufacturer exact-grade catalogue",
+          "comparisonReady": true,
+          "limitations": "Manufacturer exact-grade typical value; compare only at identical ISO 1133 190°C / 2.16 kg conditions."
+        }
+      ],
+      "processing": [],
+      "approvals": [],
+      "lifecycle": {
+        "status": "unknown",
+        "checkedAt": "2026-09-29"
+      },
+      "sources": [
+        {
+          "id": "src-polyplastics-duracon-m25lv-20260929",
+          "publisher": "Polyplastics Co., Ltd.",
+          "title": "DURACON® POM M25LV CF2001 exact-grade catalogue",
+          "url": "https://www.polyplastics.com/Gidb/GradeListSelectGradeAction.do?_LOCALE=ENGLISH&id=1632",
+          "kind": "manufacturer-datasheet",
+          "revision": null,
+          "documentDate": null,
+          "retrievedAt": "2026-09-29"
+        }
+      ],
+      "provenance": {
+        "stage": "validated",
+        "ingestedAt": "2026-09-29T00:00:00Z",
+        "reviewedAt": "2026-09-29T00:00:00Z",
+        "reviewer": "primary-source-web-review",
+        "notes": "Current manufacturer exact-grade catalogue page reviewed. ISO 1133 MFR and MVR retain explicit 190°C / 2.16 kg conditioning; no production recipe is inferred."
       }
     },
     {
