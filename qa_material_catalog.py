@@ -468,6 +468,21 @@ need(all((g.get("manufacturer") or {}).get("id") == "mfr-sumitomo-chemical" for 
 # actual validated grades rather than a manually frozen vendor whitelist.
 need(len(runtime_manufacturer_ids) == len(catalog.get("manufacturers") or []), "runtime manufacturer index contains duplicate/missing vendors")
 
+# Mega wave27: UBE current injection/tube-coating catalogue expansion remains
+# source-reviewed staging; only explicit manufacturer generic-marking percentages
+# may be retained as composition metadata.
+global_wave27 = load_json(STAGING / "global-material-mega-expansion-20260929-v27.json")
+need((global_wave27.get("summary") or {}).get("sourceReviewedStagingGrades") == 98, "mega wave27 UBE staging count drift")
+need((global_wave27.get("governance") or {}).get("runtimePromotionBlocked") is True, "mega wave27 runtime promotion boundary drift")
+global27 = [g for m in global_wave27.get("manufacturers") or [] for g in m.get("gradeRecords") or []]
+need(len(global27) == 98, "mega wave27 UBE exact identity count drift")
+need(all((g.get("provenance") or {}).get("stage") == "staging" for g in global27), "mega wave27 contains non-staging records")
+need(all(g.get("id") not in runtime_grade_ids for g in global27), "mega wave27 UBE staging identity leaked into runtime")
+need(all(not (g.get("properties") or []) and not (g.get("processing") or []) for g in global27), "mega wave27 invented numeric property/process observations")
+need(all((g.get("manufacturer") or {}).get("id") == "mfr-ube" for g in global27), "mega wave27 manufacturer drift")
+need((global_wave27.get("summary") or {}).get("familyCounts") == {"PA12": 29, "PA6": 40, "PA6+PP": 1, "PA510": 3, "PA56": 14, "PA66+PP": 1, "PA66+PE": 2, "PA66": 5, "PA6/66": 3}, "mega wave27 family-count drift")
+need(all(g.get("grade") not in {"1013B", "1015GC6"} for g in global27), "mega wave27 duplicated already-validated UBE grade")
+
 # Pilot proof: current primary-source LOTTE records remain unchanged while the
 # umbrella manifest records progress without copying exact-grade claims.
 lotte_pilot = load_json(STAGING / "lotte-exact-grade-pilot-v1.json")
