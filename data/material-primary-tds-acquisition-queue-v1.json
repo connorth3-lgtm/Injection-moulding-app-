@@ -1,5 +1,5 @@
 {
-  "version": "2026-09-28.5",
+  "version": "2026-09-28.6",
   "source": "data/asian-aus-nz-material-grade-extraction-wave2-v1.json",
   "purpose": "Prioritize only work capable of increasing unique property-complete profiles",
   "rules": {
@@ -29,11 +29,12 @@
       "grade": "POLYLAC PA-737",
       "polymer": "ABS",
       "readiness": 1,
-      "primarySourceCaptured": false,
-      "conversionRequirement": "numeric current TDS extraction required before candidate-complete",
-      "priority": "acquire-primary-TDS",
-      "exactGradeSourceLocated": false,
-      "convertedToComplete": false
+      "primarySourceCaptured": true,
+      "conversionRequirement": "extract exact-grade numeric values from the manufacturer TDS-ISO/TDS-ASTM attachment before candidate-complete; catalogue identity alone is not numeric evidence",
+      "priority": "extract-numeric-table",
+      "exactGradeSourceLocated": true,
+      "convertedToComplete": false,
+      "sourceUrl": "https://www.chimeicorp.com/en-US/?feature=T10102&material=T10100&page=products&series=T10000"
     },
     {
       "manufacturer": "CHIMEI",
@@ -41,11 +42,12 @@
       "grade": "POLYLAC PA-746",
       "polymer": "ABS",
       "readiness": 1,
-      "primarySourceCaptured": false,
-      "conversionRequirement": "numeric current TDS extraction required",
-      "priority": "acquire-primary-TDS",
-      "exactGradeSourceLocated": false,
-      "convertedToComplete": false
+      "primarySourceCaptured": true,
+      "conversionRequirement": "extract exact-grade numeric values from the manufacturer TDS-ISO/TDS-ASTM attachment before candidate-complete; catalogue identity alone is not numeric evidence",
+      "priority": "extract-numeric-table",
+      "exactGradeSourceLocated": true,
+      "convertedToComplete": false,
+      "sourceUrl": "https://www.chimeicorp.com/en-US/?feature=T10102&material=T10100&page=products&series=T10000"
     },
     {
       "manufacturer": "CHIMEI",
@@ -89,11 +91,12 @@
       "grade": "POLYLAC PA-757H",
       "polymer": "ABS",
       "readiness": 1,
-      "primarySourceCaptured": false,
-      "conversionRequirement": "current numeric TDS extraction still required",
-      "priority": "acquire-primary-TDS",
-      "exactGradeSourceLocated": false,
-      "convertedToComplete": false
+      "primarySourceCaptured": true,
+      "conversionRequirement": "extract exact-grade numeric values from the manufacturer TDS-ISO/TDS-ASTM attachment before candidate-complete; catalogue identity alone is not numeric evidence",
+      "priority": "extract-numeric-table",
+      "exactGradeSourceLocated": true,
+      "convertedToComplete": false,
+      "sourceUrl": "https://www.chimeicorp.com/en-US/?feature=T10102&material=T10100&page=products&series=T10000"
     },
     {
       "manufacturer": "CHIMEI",
@@ -101,11 +104,12 @@
       "grade": "POLYLAC PA-746H",
       "polymer": "ABS",
       "readiness": 1,
-      "primarySourceCaptured": false,
-      "conversionRequirement": "current numeric TDS extraction still required",
-      "priority": "acquire-primary-TDS",
-      "exactGradeSourceLocated": false,
-      "convertedToComplete": false
+      "primarySourceCaptured": true,
+      "conversionRequirement": "extract exact-grade numeric values from the manufacturer TDS-ISO/TDS-ASTM attachment before candidate-complete; catalogue identity alone is not numeric evidence",
+      "priority": "extract-numeric-table",
+      "exactGradeSourceLocated": true,
+      "convertedToComplete": false,
+      "sourceUrl": "https://www.chimeicorp.com/en-US/?feature=T10102&material=T10100&page=products&series=T10000"
     },
     {
       "manufacturer": "CHIMEI",
@@ -675,7 +679,7 @@
       "exactGradeSourceLocated": true,
       "priority": "extract-numeric-table",
       "sourceUrl": "https://www.chimeicorp.com/en-US/?feature=T10102&material=T10100&page=products&series=T10000",
-      "conversionRequirement": "numeric TDS attachment values not yet captured; catalogue identity/link availability alone cannot promote",
+      "conversionRequirement": "extract exact-grade numeric values from the manufacturer TDS-ISO/TDS-ASTM attachment before candidate-complete; catalogue identity alone is not numeric evidence",
       "convertedToComplete": false
     },
     {
@@ -688,7 +692,7 @@
       "exactGradeSourceLocated": true,
       "priority": "extract-numeric-table",
       "sourceUrl": "https://www.chimeicorp.com/en-US/?feature=T10102&material=T10100&page=products&series=T10000",
-      "conversionRequirement": "numeric TDS attachment values not yet captured; catalogue identity/link availability alone cannot promote",
+      "conversionRequirement": "extract exact-grade numeric values from the manufacturer TDS-ISO/TDS-ASTM attachment before candidate-complete; catalogue identity alone is not numeric evidence",
       "convertedToComplete": false
     },
     {
@@ -701,7 +705,7 @@
       "exactGradeSourceLocated": true,
       "priority": "extract-numeric-table",
       "sourceUrl": "https://www.chimeicorp.com/en-US/?feature=T10102&material=T10100&page=products&series=T10000",
-      "conversionRequirement": "numeric TDS attachment values not yet captured; catalogue identity/link availability alone cannot promote",
+      "conversionRequirement": "extract exact-grade numeric values from the manufacturer TDS-ISO/TDS-ASTM attachment before candidate-complete; catalogue identity alone is not numeric evidence",
       "convertedToComplete": false
     },
     {
@@ -714,13 +718,13 @@
       "exactGradeSourceLocated": true,
       "priority": "extract-numeric-table",
       "sourceUrl": "https://www.chimeicorp.com/en-US/?feature=T10102&material=T10100&page=products&series=T10000",
-      "conversionRequirement": "numeric TDS attachment values not yet captured; catalogue identity/link availability alone cannot promote",
+      "conversionRequirement": "extract exact-grade numeric values from the manufacturer TDS-ISO/TDS-ASTM attachment before candidate-complete; catalogue identity alone is not numeric evidence",
       "convertedToComplete": false
     }
   ],
   "metrics": {
     "convertedComplete": 9,
-    "exactGradeSourceLocatedPending": 5,
-    "stillNeedPrimarySource": 44
+    "exactGradeSourceLocatedPending": 9,
+    "stillNeedPrimarySource": 40
   }
 }
