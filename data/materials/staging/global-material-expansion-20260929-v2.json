@@ -1,0 +1,1381 @@
+{
+  "schemaVersion": 1,
+  "datasetId": "global-material-expansion-20260929-v2",
+  "status": "validated-expansion-with-source-reviewed-queue",
+  "reviewedAt": "2026-09-29",
+  "purpose": "Second oversupply material wave adding validated PA66/GF, PA11, PC and PBT/GF exact-grade evidence plus a conservative queue for current variants and TPU.",
+  "summary": {
+    "validatedGrades": 9,
+    "sourceReviewedStagingGrades": 6,
+    "manufacturers": 4,
+    "validatedFamilies": [
+      "PA66",
+      "PBT",
+      "PC",
+      "PA11"
+    ],
+    "stagingFamilies": [
+      "PA11",
+      "PC",
+      "PA66",
+      "TPU"
+    ]
+  },
+  "manufacturers": [
+    {
+      "id": "mfr-basf",
+      "name": "BASF",
+      "country": "Germany",
+      "gradeRecords": [
+        {
+          "schemaVersion": 1,
+          "id": "mat-basf-ultramid-a3wg6-lt-bk",
+          "manufacturer": {
+            "id": "mfr-basf",
+            "name": "BASF",
+            "country": "Germany",
+            "website": "https://www.basf.com/"
+          },
+          "brand": "Ultramid®",
+          "grade": "A3WG6 LT BK",
+          "aliases": [],
+          "polymer": {
+            "family": "PA66",
+            "morphology": "semi-crystalline"
+          },
+          "composition": {
+            "glassFibrePct": 30,
+            "notes": "30% glass-fibre reinforced PA66 injection-moulding grade as identified by BASF."
+          },
+          "properties": [
+            {
+              "id": "obs-basf-ultramid-a3wg6-lt-bk-mvr",
+              "property": "Melt Volume-Flow Rate",
+              "value": 15,
+              "unit": "cm³/10min",
+              "testMethod": "ISO 1133",
+              "temperatureC": 275,
+              "loadKg": 5,
+              "specimen": null,
+              "direction": "not-applicable",
+              "sourceId": "src-basf-ultramid-a3wg6-lt-bk-2026",
+              "sourcePage": "manufacturer exact-grade data",
+              "comparisonReady": true,
+              "limitations": "BASF typical exact-grade value; preserve 275°C/5 kg when comparing."
+            },
+            {
+              "id": "obs-basf-ultramid-a3wg6-lt-bk-shrink-flow",
+              "property": "Mould Shrinkage",
+              "value": 0.45,
+              "unit": "%",
+              "testMethod": "ISO 294-4",
+              "temperatureC": null,
+              "loadKg": null,
+              "specimen": null,
+              "direction": "flow",
+              "sourceId": "src-basf-ultramid-a3wg6-lt-bk-2026",
+              "sourcePage": "manufacturer exact-grade data",
+              "comparisonReady": true,
+              "limitations": "BASF exact-grade parallel shrinkage; actual part dimensions remain geometry/process/orientation dependent."
+            },
+            {
+              "id": "obs-basf-ultramid-a3wg6-lt-bk-shrink-transverse",
+              "property": "Mould Shrinkage",
+              "value": 1.09,
+              "unit": "%",
+              "testMethod": "ISO 294-4",
+              "temperatureC": null,
+              "loadKg": null,
+              "specimen": null,
+              "direction": "transverse",
+              "sourceId": "src-basf-ultramid-a3wg6-lt-bk-2026",
+              "sourcePage": "manufacturer exact-grade data",
+              "comparisonReady": true,
+              "limitations": "BASF exact-grade normal shrinkage; actual part dimensions remain geometry/process/orientation dependent."
+            }
+          ],
+          "processing": [
+            {
+              "id": "proc-basf-ultramid-a3wg6-lt-bk-dry-temp",
+              "parameter": "Pre-drying temperature",
+              "min": null,
+              "max": null,
+              "value": 80,
+              "unit": "°C",
+              "condition": "BASF exact-grade pre-drying guidance; verify current supplier/site moisture controls.",
+              "claimType": "supplier-guidance",
+              "sourceId": "src-basf-ultramid-a3wg6-lt-bk-2026",
+              "sourcePage": "manufacturer exact-grade data",
+              "productionRecipe": false
+            },
+            {
+              "id": "proc-basf-ultramid-a3wg6-lt-bk-dry-time",
+              "parameter": "Pre-drying time",
+              "min": null,
+              "max": null,
+              "value": 4,
+              "unit": "h",
+              "condition": "BASF exact-grade pre-drying guidance; actual need depends on storage/moisture state.",
+              "claimType": "supplier-guidance",
+              "sourceId": "src-basf-ultramid-a3wg6-lt-bk-2026",
+              "sourcePage": "manufacturer exact-grade data",
+              "productionRecipe": false
+            },
+            {
+              "id": "proc-basf-ultramid-a3wg6-lt-bk-melt-temp",
+              "parameter": "Melt temperature",
+              "min": 280,
+              "max": 300,
+              "value": null,
+              "unit": "°C",
+              "condition": "BASF exact-grade injection-moulding/extrusion range; not a universal production setpoint.",
+              "claimType": "supplier-guidance",
+              "sourceId": "src-basf-ultramid-a3wg6-lt-bk-2026",
+              "sourcePage": "manufacturer exact-grade data",
+              "productionRecipe": false
+            },
+            {
+              "id": "proc-basf-ultramid-a3wg6-lt-bk-mould-temp",
+              "parameter": "Mould temperature",
+              "min": 80,
+              "max": 90,
+              "value": null,
+              "unit": "°C",
+              "condition": "BASF exact-grade injection-moulding range; validate against tool/part/site requirements.",
+              "claimType": "supplier-guidance",
+              "sourceId": "src-basf-ultramid-a3wg6-lt-bk-2026",
+              "sourcePage": "manufacturer exact-grade data",
+              "productionRecipe": false
+            }
+          ],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-basf-ultramid-a3wg6-lt-bk-2026",
+              "publisher": "BASF",
+              "title": "Ultramid® A3WG6 LT BK Product Datasheet",
+              "url": "https://download.basf.com/p1/8a8082587fd4b608017fd65c882559b5/en/ULTRAMID%253Csup%253E%25C2%25AE%253Csup%253E_A3WG6_LT_BLACK",
+              "kind": "manufacturer-datasheet",
+              "revision": null,
+              "documentDate": "2026-02-01",
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "validated",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Current BASF exact-grade datasheet reviewed. MVR retains ISO 1133 temperature/load; directional shrinkage and supplier processing guidance are published without converting them into a production recipe."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-basf-ultramid-a3wg7",
+          "manufacturer": {
+            "id": "mfr-basf",
+            "name": "BASF",
+            "country": "Germany",
+            "website": "https://www.basf.com/"
+          },
+          "brand": "Ultramid®",
+          "grade": "A3WG7",
+          "aliases": [],
+          "polymer": {
+            "family": "PA66",
+            "morphology": "semi-crystalline"
+          },
+          "composition": {
+            "glassFibrePct": 35,
+            "notes": "35% glass-fibre reinforced PA66 injection-moulding grade as identified by BASF."
+          },
+          "properties": [
+            {
+              "id": "obs-basf-ultramid-a3wg7-mvr",
+              "property": "Melt Volume-Flow Rate",
+              "value": 20,
+              "unit": "cm³/10min",
+              "testMethod": "ISO 1133",
+              "temperatureC": 275,
+              "loadKg": 5,
+              "specimen": null,
+              "direction": "not-applicable",
+              "sourceId": "src-basf-ultramid-a3wg7-2026",
+              "sourcePage": "manufacturer exact-grade data",
+              "comparisonReady": true,
+              "limitations": "BASF typical exact-grade value; preserve 275°C/5 kg when comparing."
+            },
+            {
+              "id": "obs-basf-ultramid-a3wg7-shrink-flow",
+              "property": "Mould Shrinkage",
+              "value": 0.37,
+              "unit": "%",
+              "testMethod": "ISO 294-4",
+              "temperatureC": null,
+              "loadKg": null,
+              "specimen": null,
+              "direction": "flow",
+              "sourceId": "src-basf-ultramid-a3wg7-2026",
+              "sourcePage": "manufacturer exact-grade data",
+              "comparisonReady": true,
+              "limitations": "BASF exact-grade parallel shrinkage; actual part dimensions remain geometry/process/orientation dependent."
+            },
+            {
+              "id": "obs-basf-ultramid-a3wg7-shrink-transverse",
+              "property": "Mould Shrinkage",
+              "value": 1.04,
+              "unit": "%",
+              "testMethod": "ISO 294-4",
+              "temperatureC": null,
+              "loadKg": null,
+              "specimen": null,
+              "direction": "transverse",
+              "sourceId": "src-basf-ultramid-a3wg7-2026",
+              "sourcePage": "manufacturer exact-grade data",
+              "comparisonReady": true,
+              "limitations": "BASF exact-grade normal shrinkage; actual part dimensions remain geometry/process/orientation dependent."
+            }
+          ],
+          "processing": [
+            {
+              "id": "proc-basf-ultramid-a3wg7-dry-temp",
+              "parameter": "Pre-drying temperature",
+              "min": null,
+              "max": null,
+              "value": 80,
+              "unit": "°C",
+              "condition": "BASF exact-grade pre-drying guidance; verify current supplier/site moisture controls.",
+              "claimType": "supplier-guidance",
+              "sourceId": "src-basf-ultramid-a3wg7-2026",
+              "sourcePage": "manufacturer exact-grade data",
+              "productionRecipe": false
+            },
+            {
+              "id": "proc-basf-ultramid-a3wg7-dry-time",
+              "parameter": "Pre-drying time",
+              "min": null,
+              "max": null,
+              "value": 4,
+              "unit": "h",
+              "condition": "BASF exact-grade pre-drying guidance; actual need depends on storage/moisture state.",
+              "claimType": "supplier-guidance",
+              "sourceId": "src-basf-ultramid-a3wg7-2026",
+              "sourcePage": "manufacturer exact-grade data",
+              "productionRecipe": false
+            },
+            {
+              "id": "proc-basf-ultramid-a3wg7-melt-temp",
+              "parameter": "Melt temperature",
+              "min": 280,
+              "max": 300,
+              "value": null,
+              "unit": "°C",
+              "condition": "BASF exact-grade injection-moulding/extrusion range; not a universal production setpoint.",
+              "claimType": "supplier-guidance",
+              "sourceId": "src-basf-ultramid-a3wg7-2026",
+              "sourcePage": "manufacturer exact-grade data",
+              "productionRecipe": false
+            },
+            {
+              "id": "proc-basf-ultramid-a3wg7-mould-temp",
+              "parameter": "Mould temperature",
+              "min": 80,
+              "max": 90,
+              "value": null,
+              "unit": "°C",
+              "condition": "BASF exact-grade injection-moulding range; validate against tool/part/site requirements.",
+              "claimType": "supplier-guidance",
+              "sourceId": "src-basf-ultramid-a3wg7-2026",
+              "sourcePage": "manufacturer exact-grade data",
+              "productionRecipe": false
+            }
+          ],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-basf-ultramid-a3wg7-2026",
+              "publisher": "BASF",
+              "title": "Ultramid® A3WG7 Product Datasheet",
+              "url": "https://download.basf.com/p1/8a8081c57fd4b609017fd660e5a93956/en/ULTRAMID%25C2%25AE_A3WG7",
+              "kind": "manufacturer-datasheet",
+              "revision": null,
+              "documentDate": "2026-02-01",
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "validated",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Current BASF exact-grade datasheet reviewed. MVR retains ISO 1133 temperature/load; directional shrinkage and supplier processing guidance are published without converting them into a production recipe."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-basf-ultramid-a3wg10",
+          "manufacturer": {
+            "id": "mfr-basf",
+            "name": "BASF",
+            "country": "Germany",
+            "website": "https://www.basf.com/"
+          },
+          "brand": "Ultramid®",
+          "grade": "A3WG10",
+          "aliases": [],
+          "polymer": {
+            "family": "PA66",
+            "morphology": "semi-crystalline"
+          },
+          "composition": {
+            "glassFibrePct": 50,
+            "notes": "50% glass-fibre reinforced PA66 injection-moulding grade as identified by BASF."
+          },
+          "properties": [
+            {
+              "id": "obs-basf-ultramid-a3wg10-mvr",
+              "property": "Melt Volume-Flow Rate",
+              "value": 10,
+              "unit": "cm³/10min",
+              "testMethod": "ISO 1133",
+              "temperatureC": 275,
+              "loadKg": 5,
+              "specimen": null,
+              "direction": "not-applicable",
+              "sourceId": "src-basf-ultramid-a3wg10-2026",
+              "sourcePage": "manufacturer exact-grade data",
+              "comparisonReady": true,
+              "limitations": "BASF typical exact-grade value; preserve 275°C/5 kg when comparing."
+            },
+            {
+              "id": "obs-basf-ultramid-a3wg10-shrink-flow",
+              "property": "Mould Shrinkage",
+              "value": 0.35,
+              "unit": "%",
+              "testMethod": "ISO 294-4",
+              "temperatureC": null,
+              "loadKg": null,
+              "specimen": null,
+              "direction": "flow",
+              "sourceId": "src-basf-ultramid-a3wg10-2026",
+              "sourcePage": "manufacturer exact-grade data",
+              "comparisonReady": true,
+              "limitations": "BASF exact-grade parallel shrinkage; actual part dimensions remain geometry/process/orientation dependent."
+            },
+            {
+              "id": "obs-basf-ultramid-a3wg10-shrink-transverse",
+              "property": "Mould Shrinkage",
+              "value": 0.95,
+              "unit": "%",
+              "testMethod": "ISO 294-4",
+              "temperatureC": null,
+              "loadKg": null,
+              "specimen": null,
+              "direction": "transverse",
+              "sourceId": "src-basf-ultramid-a3wg10-2026",
+              "sourcePage": "manufacturer exact-grade data",
+              "comparisonReady": true,
+              "limitations": "BASF exact-grade normal shrinkage; actual part dimensions remain geometry/process/orientation dependent."
+            }
+          ],
+          "processing": [
+            {
+              "id": "proc-basf-ultramid-a3wg10-dry-temp",
+              "parameter": "Pre-drying temperature",
+              "min": null,
+              "max": null,
+              "value": 80,
+              "unit": "°C",
+              "condition": "BASF exact-grade pre-drying guidance; verify current supplier/site moisture controls.",
+              "claimType": "supplier-guidance",
+              "sourceId": "src-basf-ultramid-a3wg10-2026",
+              "sourcePage": "manufacturer exact-grade data",
+              "productionRecipe": false
+            },
+            {
+              "id": "proc-basf-ultramid-a3wg10-dry-time",
+              "parameter": "Pre-drying time",
+              "min": null,
+              "max": null,
+              "value": 4,
+              "unit": "h",
+              "condition": "BASF exact-grade pre-drying guidance; actual need depends on storage/moisture state.",
+              "claimType": "supplier-guidance",
+              "sourceId": "src-basf-ultramid-a3wg10-2026",
+              "sourcePage": "manufacturer exact-grade data",
+              "productionRecipe": false
+            },
+            {
+              "id": "proc-basf-ultramid-a3wg10-melt-temp",
+              "parameter": "Melt temperature",
+              "min": 290,
+              "max": 310,
+              "value": null,
+              "unit": "°C",
+              "condition": "BASF exact-grade injection-moulding/extrusion range; not a universal production setpoint.",
+              "claimType": "supplier-guidance",
+              "sourceId": "src-basf-ultramid-a3wg10-2026",
+              "sourcePage": "manufacturer exact-grade data",
+              "productionRecipe": false
+            },
+            {
+              "id": "proc-basf-ultramid-a3wg10-mould-temp",
+              "parameter": "Mould temperature",
+              "min": 80,
+              "max": 100,
+              "value": null,
+              "unit": "°C",
+              "condition": "BASF exact-grade injection-moulding range; validate against tool/part/site requirements.",
+              "claimType": "supplier-guidance",
+              "sourceId": "src-basf-ultramid-a3wg10-2026",
+              "sourcePage": "manufacturer exact-grade data",
+              "productionRecipe": false
+            }
+          ],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-basf-ultramid-a3wg10-2026",
+              "publisher": "BASF",
+              "title": "Ultramid® A3WG10 Product Datasheet",
+              "url": "https://download.basf.com/p1/8a8081c57fd4b609017fd6420c0808bd/en/ULTRAMID%3Csup%3E%C2%AE%3Csup%3E_A3WG10",
+              "kind": "manufacturer-datasheet",
+              "revision": null,
+              "documentDate": "2026-02-01",
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "validated",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Current BASF exact-grade datasheet reviewed. MVR retains ISO 1133 temperature/load; directional shrinkage and supplier processing guidance are published without converting them into a production recipe."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-basf-ultradur-b4300-g6",
+          "manufacturer": {
+            "id": "mfr-basf",
+            "name": "BASF",
+            "country": "Germany",
+            "website": "https://www.basf.com/"
+          },
+          "brand": "Ultradur®",
+          "grade": "B 4300 G6",
+          "aliases": [
+            "B4300 G6"
+          ],
+          "polymer": {
+            "family": "PBT",
+            "morphology": "semi-crystalline"
+          },
+          "composition": {
+            "glassFibrePct": 30,
+            "notes": "30% glass-fibre reinforced PBT injection-moulding grade."
+          },
+          "properties": [
+            {
+              "id": "obs-basf-ultradur-b4300-g6-mvr",
+              "property": "Melt Volume-Flow Rate",
+              "value": 11,
+              "unit": "cm³/10min",
+              "testMethod": "ISO 1133",
+              "temperatureC": 250,
+              "loadKg": 2.16,
+              "specimen": null,
+              "direction": "not-applicable",
+              "sourceId": "src-basf-ultradur-b4300-g6-2026",
+              "sourcePage": "manufacturer exact-grade data",
+              "comparisonReady": true,
+              "limitations": "BASF exact-grade typical value; preserve 250°C/2.16 kg when comparing."
+            },
+            {
+              "id": "obs-basf-ultradur-b4300-g6-shrink-flow",
+              "property": "Mould Shrinkage",
+              "value": 0.3,
+              "unit": "%",
+              "testMethod": "ISO 294-4",
+              "temperatureC": null,
+              "loadKg": null,
+              "specimen": null,
+              "direction": "flow",
+              "sourceId": "src-basf-ultradur-b4300-g6-2026",
+              "sourcePage": "manufacturer exact-grade data",
+              "comparisonReady": true,
+              "limitations": "Parallel moulding shrinkage; actual part response remains process/geometry dependent."
+            },
+            {
+              "id": "obs-basf-ultradur-b4300-g6-shrink-transverse",
+              "property": "Mould Shrinkage",
+              "value": 1.1,
+              "unit": "%",
+              "testMethod": "ISO 294-4",
+              "temperatureC": null,
+              "loadKg": null,
+              "specimen": null,
+              "direction": "transverse",
+              "sourceId": "src-basf-ultradur-b4300-g6-2026",
+              "sourcePage": "manufacturer exact-grade data",
+              "comparisonReady": true,
+              "limitations": "Normal moulding shrinkage; actual part response remains process/geometry dependent."
+            }
+          ],
+          "processing": [
+            {
+              "id": "proc-basf-ultradur-b4300-g6-melt-temp",
+              "parameter": "Melt temperature",
+              "min": 250,
+              "max": 275,
+              "value": null,
+              "unit": "°C",
+              "condition": "BASF exact-grade injection-moulding/extrusion range; not a production recipe.",
+              "claimType": "supplier-guidance",
+              "sourceId": "src-basf-ultradur-b4300-g6-2026",
+              "sourcePage": "manufacturer exact-grade data",
+              "productionRecipe": false
+            },
+            {
+              "id": "proc-basf-ultradur-b4300-g6-mould-temp",
+              "parameter": "Mould temperature",
+              "min": 60,
+              "max": 100,
+              "value": null,
+              "unit": "°C",
+              "condition": "BASF exact-grade injection-moulding range; validate for the actual tool/part/site.",
+              "claimType": "supplier-guidance",
+              "sourceId": "src-basf-ultradur-b4300-g6-2026",
+              "sourcePage": "manufacturer exact-grade data",
+              "productionRecipe": false
+            },
+            {
+              "id": "proc-basf-ultradur-b4300-g6-max-moisture",
+              "parameter": "Moisture content before processing",
+              "max": 0.04,
+              "min": null,
+              "value": null,
+              "unit": "%",
+              "condition": "BASF datasheet states Ultradur should generally be below 0.04% moisture when processed; site method/acceptance remains controlled.",
+              "claimType": "supplier-limit",
+              "sourceId": "src-basf-ultradur-b4300-g6-2026",
+              "sourcePage": "handling / pre-drying guidance",
+              "productionRecipe": false
+            }
+          ],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-basf-ultradur-b4300-g6-2026",
+              "publisher": "BASF",
+              "title": "Ultradur® B 4300 G6 Product Datasheet",
+              "url": "https://download.basf.com/p1/8a8082587fd4b608017fd63bf4f35b9c/en/ULTRADUR%3Csup%3E%C2%AE%3Csup%3E_B4300_G6",
+              "kind": "manufacturer-datasheet",
+              "revision": null,
+              "documentDate": "2026-02-01",
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "validated",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Current BASF exact-grade datasheet reviewed. MVR, directional shrinkage and exact-grade thermal guidance are promoted; moisture guidance retains supplier boundary and productionRecipe=false."
+          }
+        }
+      ]
+    },
+    {
+      "id": "mfr-covestro",
+      "name": "Covestro",
+      "country": "Germany",
+      "gradeRecords": [
+        {
+          "schemaVersion": 1,
+          "id": "mat-covestro-makrolon-2405",
+          "manufacturer": {
+            "id": "mfr-covestro",
+            "name": "Covestro",
+            "country": "Germany",
+            "website": "https://www.covestro.com/"
+          },
+          "brand": "Makrolon®",
+          "grade": "2405",
+          "aliases": [],
+          "polymer": {
+            "family": "PC",
+            "morphology": "amorphous"
+          },
+          "composition": {
+            "notes": "Covestro exact Makrolon polycarbonate grade; no modifier content is inferred unless explicitly identified by the source."
+          },
+          "properties": [
+            {
+              "id": "obs-covestro-makrolon-2405-flow",
+              "property": "Melt Flow Rate",
+              "value": 20,
+              "unit": "g/10 min",
+              "testMethod": "ISO 1133-1",
+              "temperatureC": 300,
+              "loadKg": 1.2,
+              "specimen": null,
+              "direction": "not-applicable",
+              "sourceId": "src-covestro-makrolon-2405-2026",
+              "sourcePage": "manufacturer exact-grade data",
+              "comparisonReady": true,
+              "limitations": "Covestro typical exact-grade rheological value; compare only at the same 300°C/1.2 kg condition."
+            },
+            {
+              "id": "obs-covestro-makrolon-2405-shrink-flow",
+              "property": "Mould Shrinkage",
+              "value": 0.65,
+              "unit": "%",
+              "testMethod": "ISO 294-4",
+              "temperatureC": null,
+              "loadKg": null,
+              "specimen": "60x60x2 mm / 500 bar",
+              "direction": "flow",
+              "sourceId": "src-covestro-makrolon-2405-2026",
+              "sourcePage": "manufacturer exact-grade data",
+              "comparisonReady": true,
+              "limitations": "60x60x2 mm / 500 bar exact-grade typical value; not a part-warpage prediction."
+            },
+            {
+              "id": "obs-covestro-makrolon-2405-shrink-transverse",
+              "property": "Mould Shrinkage",
+              "value": 0.7,
+              "unit": "%",
+              "testMethod": "ISO 294-4",
+              "temperatureC": null,
+              "loadKg": null,
+              "specimen": "60x60x2 mm / 500 bar",
+              "direction": "transverse",
+              "sourceId": "src-covestro-makrolon-2405-2026",
+              "sourcePage": "manufacturer exact-grade data",
+              "comparisonReady": true,
+              "limitations": "60x60x2 mm / 500 bar exact-grade typical value; not a part-warpage prediction."
+            }
+          ],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-covestro-makrolon-2405-2026",
+              "publisher": "Covestro",
+              "title": "Makrolon® 2405 technical properties",
+              "url": "https://solutions.covestro.com/en/products/makrolon/makrolon-2405_000000000000945088",
+              "kind": "manufacturer-datasheet",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "validated",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Current Covestro Solution Center exact-grade page reviewed. Only fully conditioned rheology and ISO 294-4 directional shrinkage observations are promoted."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-covestro-makrolon-2605",
+          "manufacturer": {
+            "id": "mfr-covestro",
+            "name": "Covestro",
+            "country": "Germany",
+            "website": "https://www.covestro.com/"
+          },
+          "brand": "Makrolon®",
+          "grade": "2605",
+          "aliases": [],
+          "polymer": {
+            "family": "PC",
+            "morphology": "amorphous"
+          },
+          "composition": {
+            "notes": "Covestro exact Makrolon polycarbonate grade; no modifier content is inferred unless explicitly identified by the source."
+          },
+          "properties": [
+            {
+              "id": "obs-covestro-makrolon-2605-flow",
+              "property": "Melt Volume-Flow Rate",
+              "value": 12,
+              "unit": "cm³/10 min",
+              "testMethod": "ISO 1133-1",
+              "temperatureC": 300,
+              "loadKg": 1.2,
+              "specimen": null,
+              "direction": "not-applicable",
+              "sourceId": "src-covestro-makrolon-2605-2026",
+              "sourcePage": "manufacturer exact-grade data",
+              "comparisonReady": true,
+              "limitations": "Covestro typical exact-grade rheological value; compare only at the same 300°C/1.2 kg condition."
+            },
+            {
+              "id": "obs-covestro-makrolon-2605-shrink-flow",
+              "property": "Mould Shrinkage",
+              "value": 0.7,
+              "unit": "%",
+              "testMethod": "ISO 294-4",
+              "temperatureC": null,
+              "loadKg": null,
+              "specimen": "60x60x2 mm / 500 bar",
+              "direction": "flow",
+              "sourceId": "src-covestro-makrolon-2605-2026",
+              "sourcePage": "manufacturer exact-grade data",
+              "comparisonReady": true,
+              "limitations": "60x60x2 mm / 500 bar exact-grade typical value; not a part-warpage prediction."
+            },
+            {
+              "id": "obs-covestro-makrolon-2605-shrink-transverse",
+              "property": "Mould Shrinkage",
+              "value": 0.75,
+              "unit": "%",
+              "testMethod": "ISO 294-4",
+              "temperatureC": null,
+              "loadKg": null,
+              "specimen": "60x60x2 mm / 500 bar",
+              "direction": "transverse",
+              "sourceId": "src-covestro-makrolon-2605-2026",
+              "sourcePage": "manufacturer exact-grade data",
+              "comparisonReady": true,
+              "limitations": "60x60x2 mm / 500 bar exact-grade typical value; not a part-warpage prediction."
+            }
+          ],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-covestro-makrolon-2605-2026",
+              "publisher": "Covestro",
+              "title": "Makrolon® 2605 technical properties",
+              "url": "https://solutions.covestro.com/en/products/makrolon/makrolon-2605_000000000000894068",
+              "kind": "manufacturer-datasheet",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "validated",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Current Covestro Solution Center exact-grade page reviewed. Only fully conditioned rheology and ISO 294-4 directional shrinkage observations are promoted."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-covestro-makrolon-2805",
+          "manufacturer": {
+            "id": "mfr-covestro",
+            "name": "Covestro",
+            "country": "Germany",
+            "website": "https://www.covestro.com/"
+          },
+          "brand": "Makrolon®",
+          "grade": "2805",
+          "aliases": [],
+          "polymer": {
+            "family": "PC",
+            "morphology": "amorphous"
+          },
+          "composition": {
+            "notes": "Covestro exact Makrolon polycarbonate grade; no modifier content is inferred unless explicitly identified by the source."
+          },
+          "properties": [
+            {
+              "id": "obs-covestro-makrolon-2805-flow",
+              "property": "Melt Volume-Flow Rate",
+              "value": 9,
+              "unit": "cm³/10 min",
+              "testMethod": "ISO 1133-1",
+              "temperatureC": 300,
+              "loadKg": 1.2,
+              "specimen": null,
+              "direction": "not-applicable",
+              "sourceId": "src-covestro-makrolon-2805-2026",
+              "sourcePage": "manufacturer exact-grade data",
+              "comparisonReady": true,
+              "limitations": "Covestro typical exact-grade rheological value; compare only at the same 300°C/1.2 kg condition."
+            },
+            {
+              "id": "obs-covestro-makrolon-2805-shrink-flow",
+              "property": "Mould Shrinkage",
+              "value": 0.65,
+              "unit": "%",
+              "testMethod": "ISO 294-4",
+              "temperatureC": null,
+              "loadKg": null,
+              "specimen": "60x60x2 mm / 500 bar",
+              "direction": "flow",
+              "sourceId": "src-covestro-makrolon-2805-2026",
+              "sourcePage": "manufacturer exact-grade data",
+              "comparisonReady": true,
+              "limitations": "60x60x2 mm / 500 bar exact-grade typical value; not a part-warpage prediction."
+            },
+            {
+              "id": "obs-covestro-makrolon-2805-shrink-transverse",
+              "property": "Mould Shrinkage",
+              "value": 0.7,
+              "unit": "%",
+              "testMethod": "ISO 294-4",
+              "temperatureC": null,
+              "loadKg": null,
+              "specimen": "60x60x2 mm / 500 bar",
+              "direction": "transverse",
+              "sourceId": "src-covestro-makrolon-2805-2026",
+              "sourcePage": "manufacturer exact-grade data",
+              "comparisonReady": true,
+              "limitations": "60x60x2 mm / 500 bar exact-grade typical value; not a part-warpage prediction."
+            }
+          ],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-covestro-makrolon-2805-2026",
+              "publisher": "Covestro",
+              "title": "Makrolon® 2805 technical properties",
+              "url": "https://solutions.covestro.com/en/products/makrolon/makrolon-2805_000000000057534382",
+              "kind": "manufacturer-datasheet",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "validated",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Current Covestro Solution Center exact-grade page reviewed. Only fully conditioned rheology and ISO 294-4 directional shrinkage observations are promoted."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-covestro-makrolon-3105",
+          "manufacturer": {
+            "id": "mfr-covestro",
+            "name": "Covestro",
+            "country": "Germany",
+            "website": "https://www.covestro.com/"
+          },
+          "brand": "Makrolon®",
+          "grade": "3105",
+          "aliases": [],
+          "polymer": {
+            "family": "PC",
+            "morphology": "amorphous"
+          },
+          "composition": {
+            "notes": "Covestro exact Makrolon polycarbonate grade; no modifier content is inferred unless explicitly identified by the source."
+          },
+          "properties": [
+            {
+              "id": "obs-covestro-makrolon-3105-flow",
+              "property": "Melt Flow Rate",
+              "value": 6.5,
+              "unit": "g/10 min",
+              "testMethod": "ISO 1133-1",
+              "temperatureC": 300,
+              "loadKg": 1.2,
+              "specimen": null,
+              "direction": "not-applicable",
+              "sourceId": "src-covestro-makrolon-3105-2026",
+              "sourcePage": "manufacturer exact-grade data",
+              "comparisonReady": true,
+              "limitations": "Covestro typical exact-grade rheological value; compare only at the same 300°C/1.2 kg condition."
+            },
+            {
+              "id": "obs-covestro-makrolon-3105-shrink-flow",
+              "property": "Mould Shrinkage",
+              "value": 0.7,
+              "unit": "%",
+              "testMethod": "ISO 294-4",
+              "temperatureC": null,
+              "loadKg": null,
+              "specimen": "60x60x2 mm / 500 bar",
+              "direction": "flow",
+              "sourceId": "src-covestro-makrolon-3105-2026",
+              "sourcePage": "manufacturer exact-grade data",
+              "comparisonReady": true,
+              "limitations": "60x60x2 mm / 500 bar exact-grade typical value; not a part-warpage prediction."
+            },
+            {
+              "id": "obs-covestro-makrolon-3105-shrink-transverse",
+              "property": "Mould Shrinkage",
+              "value": 0.75,
+              "unit": "%",
+              "testMethod": "ISO 294-4",
+              "temperatureC": null,
+              "loadKg": null,
+              "specimen": "60x60x2 mm / 500 bar",
+              "direction": "transverse",
+              "sourceId": "src-covestro-makrolon-3105-2026",
+              "sourcePage": "manufacturer exact-grade data",
+              "comparisonReady": true,
+              "limitations": "60x60x2 mm / 500 bar exact-grade typical value; not a part-warpage prediction."
+            }
+          ],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-covestro-makrolon-3105-2026",
+              "publisher": "Covestro",
+              "title": "Makrolon® 3105 technical properties",
+              "url": "https://solutions.covestro.com/en/products/makrolon/makrolon-3105_000000000057534560",
+              "kind": "manufacturer-datasheet",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "validated",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Current Covestro Solution Center exact-grade page reviewed. Only fully conditioned rheology and ISO 294-4 directional shrinkage observations are promoted."
+          }
+        }
+      ]
+    },
+    {
+      "id": "mfr-arkema",
+      "name": "Arkema",
+      "country": "France",
+      "gradeRecords": [
+        {
+          "schemaVersion": 1,
+          "id": "mat-arkema-rilsan-bmno",
+          "manufacturer": {
+            "id": "mfr-arkema",
+            "name": "Arkema",
+            "country": "France",
+            "website": "https://www.arkema.com/"
+          },
+          "brand": "RILSAN®",
+          "grade": "BMNO",
+          "aliases": [],
+          "polymer": {
+            "family": "PA11",
+            "morphology": "semi-crystalline"
+          },
+          "composition": {
+            "notes": "Unreinforced bio-based PA11 injection-moulding grade produced from castor-oil feedstock as identified by Arkema."
+          },
+          "properties": [
+            {
+              "id": "obs-arkema-rilsan-bmno-mvr",
+              "property": "Melt Volume-Flow Rate",
+              "value": 30,
+              "unit": "cm³/10min",
+              "testMethod": "ISO 1133",
+              "temperatureC": 235,
+              "loadKg": 2.16,
+              "specimen": null,
+              "direction": "not-applicable",
+              "sourceId": "src-arkema-rilsan-bmno-2026",
+              "sourcePage": "manufacturer exact-grade data",
+              "comparisonReady": true,
+              "limitations": "Arkema exact-grade typical value; preserve 235°C/2.16 kg when comparing."
+            },
+            {
+              "id": "obs-arkema-rilsan-bmno-shrink-flow",
+              "property": "Mould Shrinkage",
+              "value": 1.1,
+              "unit": "%",
+              "testMethod": "ISO 294-4",
+              "temperatureC": null,
+              "loadKg": null,
+              "specimen": null,
+              "direction": "flow",
+              "sourceId": "src-arkema-rilsan-bmno-2026",
+              "sourcePage": "manufacturer exact-grade data",
+              "comparisonReady": true,
+              "limitations": "Arkema parallel shrinkage measured t+24 h; actual part response remains application dependent."
+            },
+            {
+              "id": "obs-arkema-rilsan-bmno-shrink-transverse",
+              "property": "Mould Shrinkage",
+              "value": 0.9,
+              "unit": "%",
+              "testMethod": "ISO 294-4",
+              "temperatureC": null,
+              "loadKg": null,
+              "specimen": null,
+              "direction": "transverse",
+              "sourceId": "src-arkema-rilsan-bmno-2026",
+              "sourcePage": "manufacturer exact-grade data",
+              "comparisonReady": true,
+              "limitations": "Arkema normal shrinkage measured t+24 h; actual part response remains application dependent."
+            }
+          ],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-arkema-rilsan-bmno-2026",
+              "publisher": "Arkema",
+              "title": "RILSAN® BMNO Technical Data Sheet",
+              "url": "https://hpp.arkema.com/assets/arkema/TDS_RILSAN%C2%AE%20BMNO_en_WW.pdf",
+              "kind": "manufacturer-datasheet",
+              "revision": null,
+              "documentDate": "2026-05-01",
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "validated",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Current Arkema BMNO technical data sheet reviewed. MVR and directional t+24 h shrinkage are published with test methods; no generic PA11 processing settings are inferred."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-arkema-rilsan-fmno",
+          "manufacturer": {
+            "id": "mfr-arkema",
+            "name": "Arkema",
+            "country": "France",
+            "website": "https://hpp.arkema.com/"
+          },
+          "brand": "RILSAN®",
+          "grade": "FMNO",
+          "aliases": [],
+          "polymer": {
+            "family": "PA11",
+            "morphology": "unknown"
+          },
+          "composition": {
+            "notes": "Injection-moulding PA11 identity and current manufacturer product page confirmed; detailed numeric promotion waits for exact TDS extraction."
+          },
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-arkema-rilsan-fmno-identity-2026",
+              "publisher": "Arkema",
+              "title": "RILSAN® FMNO manufacturer product/source page",
+              "url": "https://hpp.arkema.com/en/products/product/f/spa_hpp_RilsanPellets/p/rilsan-fmno/",
+              "kind": "manufacturer-datasheet",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Injection-moulding PA11 identity and current manufacturer product page confirmed; detailed numeric promotion waits for exact TDS extraction."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-arkema-rilsan-bmvo-tld",
+          "manufacturer": {
+            "id": "mfr-arkema",
+            "name": "Arkema",
+            "country": "France",
+            "website": "https://hpp.arkema.com/"
+          },
+          "brand": "RILSAN®",
+          "grade": "BMVO TLD",
+          "aliases": [],
+          "polymer": {
+            "family": "PA11",
+            "morphology": "unknown"
+          },
+          "composition": {
+            "notes": "Injection-moulding PA11 identity confirmed; exact numeric field promotion deferred."
+          },
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-arkema-rilsan-bmvo-tld-identity-2026",
+              "publisher": "Arkema",
+              "title": "RILSAN® BMVO TLD manufacturer product/source page",
+              "url": "https://hpp.arkema.com/en/products/product/f/spa_hpp_RilsanPellets/p/rilsan-bmvo-tld/",
+              "kind": "manufacturer-datasheet",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Injection-moulding PA11 identity confirmed; exact numeric field promotion deferred."
+          }
+        }
+      ]
+    },
+    {
+      "id": "mfr-lubrizol",
+      "name": "Lubrizol",
+      "country": "United States",
+      "gradeRecords": [
+        {
+          "schemaVersion": 1,
+          "id": "mat-lubrizol-estane-t460a",
+          "manufacturer": {
+            "id": "mfr-lubrizol",
+            "name": "Lubrizol",
+            "country": "United States",
+            "website": "https://www.lubrizol.com/"
+          },
+          "brand": "Estane®",
+          "grade": "T460A",
+          "aliases": [],
+          "polymer": {
+            "family": "TPU",
+            "morphology": "elastomeric"
+          },
+          "composition": {
+            "notes": "Current manufacturer family/source path identified; exact prior TDS endpoint now redirects, so numeric claims are withheld until a current retrievable TDS is re-established."
+          },
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-lubrizol-estane-t460a-identity-2026",
+              "publisher": "Lubrizol",
+              "title": "Estane® T460A manufacturer product/source page",
+              "url": "https://www.lubrizol.com/Engineered-Polymers",
+              "kind": "manufacturer-datasheet",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Current manufacturer family/source path identified; exact prior TDS endpoint now redirects, so numeric claims are withheld until a current retrievable TDS is re-established."
+          }
+        }
+      ]
+    },
+    {
+      "id": "mfr-basf",
+      "name": "BASF",
+      "country": "Germany",
+      "gradeRecords": [
+        {
+          "schemaVersion": 1,
+          "id": "mat-basf-ultramid-a3wg6-hrx-bk23591",
+          "manufacturer": {
+            "id": "mfr-basf",
+            "name": "BASF",
+            "country": "Germany",
+            "website": "https://download.basf.com/"
+          },
+          "brand": "Ultramid®",
+          "grade": "A3WG6 HRX BK23591",
+          "aliases": [],
+          "polymer": {
+            "family": "PA66",
+            "morphology": "unknown"
+          },
+          "composition": {
+            "notes": "Current BASF processing sheet confirms exact PA66-GF30 grade and rich processing data; kept staging pending full identity/revision normalization."
+          },
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-basf-ultramid-a3wg6-hrx-bk23591-identity-2026",
+              "publisher": "BASF",
+              "title": "Ultramid® A3WG6 HRX BK23591 manufacturer product/source page",
+              "url": "https://download.basf.com/p1/8a8082587fd4b608017fd66323e324c6/en/ULTRAMID%3Csup%3E%C2%AE%3Csup%3E_A3WG6_HRX_BLACK_23591",
+              "kind": "manufacturer-datasheet",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Current BASF processing sheet confirms exact PA66-GF30 grade and rich processing data; kept staging pending full identity/revision normalization."
+          }
+        }
+      ]
+    },
+    {
+      "id": "mfr-covestro",
+      "name": "Covestro",
+      "country": "Germany",
+      "gradeRecords": [
+        {
+          "schemaVersion": 1,
+          "id": "mat-covestro-makrolon-2405-mas056",
+          "manufacturer": {
+            "id": "mfr-covestro",
+            "name": "Covestro",
+            "country": "Germany",
+            "website": "https://solutions.covestro.com/"
+          },
+          "brand": "Makrolon®",
+          "grade": "2405 MAS056",
+          "aliases": [],
+          "polymer": {
+            "family": "PC",
+            "morphology": "unknown"
+          },
+          "composition": {
+            "notes": "Current exact-grade Covestro identity confirmed; kept staging to avoid duplicate/variant confusion until regional/formulation identity is fully pinned."
+          },
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-covestro-makrolon-2405-mas056-identity-2026",
+              "publisher": "Covestro",
+              "title": "Makrolon® 2405 MAS056 manufacturer product/source page",
+              "url": "https://solutions.covestro.com/en/products/makrolon/makrolon-2405-mas056_000000000057535621",
+              "kind": "manufacturer-datasheet",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Current exact-grade Covestro identity confirmed; kept staging to avoid duplicate/variant confusion until regional/formulation identity is fully pinned."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-covestro-makrolon-2405-re",
+          "manufacturer": {
+            "id": "mfr-covestro",
+            "name": "Covestro",
+            "country": "Germany",
+            "website": "https://solutions.covestro.com/"
+          },
+          "brand": "Makrolon®",
+          "grade": "2405 RE",
+          "aliases": [],
+          "polymer": {
+            "family": "PC",
+            "morphology": "unknown"
+          },
+          "composition": {
+            "notes": "Current exact-grade Covestro recycled/mass-balance variant identity confirmed; detailed sustainability/formulation identity remains to be pinned before publication."
+          },
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-covestro-makrolon-2405-re-identity-2026",
+              "publisher": "Covestro",
+              "title": "Makrolon® 2405 RE manufacturer product/source page",
+              "url": "https://solutions.covestro.com/en/products/makrolon/makrolon-2405-re_000000000086700867",
+              "kind": "manufacturer-datasheet",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Current exact-grade Covestro recycled/mass-balance variant identity confirmed; detailed sustainability/formulation identity remains to be pinned before publication."
+          }
+        }
+      ]
+    }
+  ],
+  "notes": [
+    "Validated records use current manufacturer-controlled technical pages/documents and retain comparison-critical test conditions.",
+    "Source-reviewed staging records deliberately withhold numeric promotion where current document retrieval, revision identity, variant identity or source continuity remains incomplete."
+  ]
+}
