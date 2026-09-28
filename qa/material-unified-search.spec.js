@@ -111,3 +111,43 @@ test('material catalogue can browse exact grades by region, country, manufacture
   expect(facets.countries).toContain('South Korea');
   expect(facets.boundary).toMatch(/does not prove exact-grade manufacturing origin|neither field proves exact-grade manufacturing origin/i);
 });
+
+
+test('multidimensional catalogue exposes application process and evidence browse paths',async({page})=>{
+  await openMaterials(page,768);
+  const root=page.locator('#mmExactMaterialCatalog');
+  const type=root.locator('[data-mm-all-material-type]');
+  const application=root.locator('[data-mm-all-material-application]');
+  const process=root.locator('[data-mm-all-material-process]');
+  const evidence=root.locator('[data-mm-all-material-evidence]');
+  const results=root.locator('[data-mm-all-material-results]');
+  const boundary=root.locator('[data-mm-catalogue-boundary]');
+
+  await expect(root).toContainText('Multidimensional material catalogue');
+  await expect(boundary).toContainText(/not suitability recommendations/i);
+  await type.selectOption('exact-grade');
+
+  const facets=await page.evaluate(()=>window.MM_MATERIAL_SEARCH.facets());
+  expect(facets.applications.length).toBeGreaterThan(0);
+  expect(facets.processes.length).toBeGreaterThan(0);
+  expect(facets.evidence).toContain('Validated');
+  expect(facets.evidence).toContain('Primary source');
+  expect(Object.values(facets.counts.applications).some(n=>n>0)).toBeTruthy();
+  expect(Object.values(facets.counts.processes).some(n=>n>0)).toBeTruthy();
+
+  const firstApplication=facets.applications[0];
+  await application.selectOption(firstApplication);
+  await expect(results.locator('[data-mm-material-index-result]')).not.toHaveCount(0);
+  await expect(results).toContainText(firstApplication);
+
+  await application.selectOption('');
+  const injection=facets.processes.find(v=>/Injection moulding/i.test(v))||facets.processes[0];
+  await process.selectOption(injection);
+  await expect(results.locator('[data-mm-material-index-result]')).not.toHaveCount(0);
+  await expect(results).toContainText(injection);
+
+  await process.selectOption('');
+  await evidence.selectOption('Primary source');
+  await expect(results.locator('[data-mm-material-index-result]')).not.toHaveCount(0);
+  await expect(results).toContainText('Primary source');
+});
