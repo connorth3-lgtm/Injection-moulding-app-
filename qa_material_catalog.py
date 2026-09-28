@@ -145,7 +145,15 @@ global4 = [g for m in global_wave4.get("manufacturers") or [] for g in m.get("gr
 global4_validated = [g for g in global4 if (g.get("provenance") or {}).get("stage") in {"validated", "published"}]
 global4_staging = [g for g in global4 if (g.get("provenance") or {}).get("stage") == "staging"]
 need(len(global4_validated) == 4 and all(g.get("id") in runtime_grade_ids for g in global4_validated), "wave4 validated grades are not fully published")
-need(len(global4_staging) == 40 and all(g.get("id") not in runtime_grade_ids for g in global4_staging), "wave4 staging identities leaked into runtime")
+need(len(global4_staging) == 40, "wave4 staging identity count drift")
+global_wave8 = load_json(STAGING / "global-material-expansion-20260929-v8.json")
+global8 = [g for m in global_wave8.get("manufacturers") or [] for g in m.get("gradeRecords") or []]
+wave8_promoted_ids = {g.get("id") for g in global8 if (g.get("provenance") or {}).get("stage") in {"validated", "published"}}
+wave4_staging_ids = {g.get("id") for g in global4_staging}
+promoted_from_wave4 = wave4_staging_ids & wave8_promoted_ids
+need(promoted_from_wave4 == {"mat-celanese-vectra-a115", "mat-celanese-vectra-a130", "mat-celanese-vectra-e130i", "mat-celanese-vectra-e150i"}, "wave4-to-wave8 explicit promotion set drift")
+need(all(gid in runtime_grade_ids for gid in promoted_from_wave4), "wave8 promoted Vectra grades missing from runtime")
+need(all(gid not in runtime_grade_ids for gid in wave4_staging_ids - promoted_from_wave4), "unpromoted wave4 staging identities leaked into runtime")
 need({(g.get("polymer") or {}).get("family") for g in global4_validated} == {"PMMA", "TPU", "PPS"}, "wave4 validated family coverage drift")
 
 global_wave5 = load_json(STAGING / "global-material-expansion-20260929-v5.json")
