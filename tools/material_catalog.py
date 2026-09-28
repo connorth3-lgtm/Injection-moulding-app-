@@ -167,6 +167,57 @@ def validate_staging() -> list[str]:
     return errors
 
 
+
+def acquisition_status() -> dict[str, Any]:
+    """Summarize the complete staging pipeline without promoting staged-only records."""
+    grade_stages: dict[str, set[str]] = {}
+    manufacturers: set[str] = set()
+    countries: set[str] = set()
+    families: set[str] = set()
+    records = 0
+    for path in sorted(STAGING.glob("*.json")):
+        payload = load_json(path)
+        for manufacturer in payload.get("manufacturers") or []:
+            mid = clean_text(manufacturer.get("id"))
+            if mid:
+                manufacturers.add(mid)
+            country = clean_text(manufacturer.get("country"))
+            if country:
+                countries.add(country)
+            for grade in manufacturer.get("gradeRecords") or []:
+                records += 1
+                gid = clean_text(grade.get("id"))
+                if not gid:
+                    continue
+                stage = clean_text((grade.get("provenance") or {}).get("stage")) or "staging"
+                grade_stages.setdefault(gid, set()).add(stage)
+                family = clean_text((grade.get("polymer") or {}).get("family"))
+                if family:
+                    families.add(family)
+    validated_ids = {
+        gid for gid, stages in grade_stages.items()
+        if stages & {"validated", "published"}
+    }
+    staging_only_ids = {
+        gid for gid, stages in grade_stages.items()
+        if not (stages & {"validated", "published"})
+    }
+    promoted_ids = {
+        gid for gid, stages in grade_stages.items()
+        if "staging" in stages and stages & {"validated", "published"}
+    }
+    return {
+        "stagingRecords": records,
+        "uniqueExactGradeIds": len(grade_stages),
+        "validatedOrPublishedIds": len(validated_ids),
+        "stagingOnlyIds": len(staging_only_ids),
+        "promotionLineageIds": len(promoted_ids),
+        "manufacturersAcrossPipeline": len(manufacturers),
+        "countriesAcrossPipeline": len(countries),
+        "polymerFamiliesAcrossPipeline": len(families),
+    }
+
+
 def compile_catalog(output: Path = CATALOG) -> dict[str, Any]:
     errors = validate_staging()
     if errors:
@@ -246,7 +297,7 @@ def compile_catalog(output: Path = CATALOG) -> dict[str, Any]:
 
 def main() -> None:
     parser = argparse.ArgumentParser(description="Validate/compile MouldMaster exact-grade material staging data")
-    parser.add_argument("command", choices=["validate", "compile"])
+    parser.add_argument("command", choices=["validate", "compile", "status"])
     parser.add_argument("--output", type=Path, default=CATALOG)
     args = parser.parse_args()
 
@@ -255,6 +306,11 @@ def main() -> None:
         if errors:
             raise SystemExit("\n".join(errors))
         print("Material staging semantic QA passed")
+    elif args.command == "status":
+        errors = validate_staging()
+        if errors:
+            raise SystemExit("\n".join(errors))
+        print(json.dumps(acquisition_status(), indent=2, ensure_ascii=False))
     else:
         catalog = compile_catalog(args.output)
         print(f"Compiled {len(catalog['grades'])} validated exact grades from {len(catalog['manufacturers'])} manufacturers")
