@@ -52,8 +52,10 @@ allowed=['real-measured','published-experimental','synthetic','supplier','standa
 for value in allowed: need(repr(value) in integrity or f"'{value}'" in integrity,f'evidence type missing: {value}')
 
 upgrades={
- 'pet-vs-copolyester':'pet-envalior-arnite','peek-crystallinity-capability':'peek-solvay-ketaspire','pps-contamination-wear':'pps-solvay-ryton',
+ 'pbt-hydrolysis':'pbt-celanese','pet-vs-copolyester':'pet-envalior-arnite','tpu-moisture-reabsorption':'pet-envalior-arnite',
+ 'pmma-optical-stress':'zhao-2022','peek-crystallinity-capability':'peek-solvay-ketaspire','pps-contamination-wear':'pps-solvay-ryton',
  'lcp-orientation':'lcp-polyplastics-laperos','pcabs-grade-identity':'pcabs-sabic-cycoloy','hdpe-lot-shrink':'hdpe-sabic-injection',
+ 'tpe-overmould-compatibility':'zhao-2022',
 }
 for lab,source in upgrades.items():
     need(f"'{lab}':['{source}']" in integrity,f'independent source upgrade missing for {lab}: {source}')
