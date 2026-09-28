@@ -103,6 +103,12 @@ test('Material Change Assistant builds a sourced delta report without prescribin
   await expect(result).toContainText('Verification actions before an approved process change');
   await expect(result).toContainText('do not copy the old grade recipe');
   await expect(result).toContainText('coupon shrinkage alone is not a warpage prediction');
+  await expect(result).toContainText('Evidence coverage');
+  await expect(result).toContainText('Unresolved change flags');
+  await expect(result).toContainText('Verification gates before site approval');
+  await expect(result).toContainText('Material handling evidence');
+  await expect(result).toContainText('Machine / mould compatibility');
+  await expect(result).toContainText('Controlled trial and acceptance evidence');
   await expect(result).toContainText('Primary-source trail');
   await expect(result.getByRole('link',{name:'Open primary source'})).toHaveCount(2);
   await expect(result).toContainText('does not rank materials');
@@ -115,6 +121,11 @@ test('Material Change Assistant builds a sourced delta report without prescribin
   expect(api.drying.some(x=>x.label==='Maximum moisture content'&&x.status==='unchanged')).toBe(true);
   expect(api.flow.some(x=>x.status==='not-directly-comparable')).toBe(true);
   expect(api.shrinkage.some(x=>x.status==='changed')).toBe(true);
+  expect(api.coverage.before.totalCategories).toBe(5);
+  expect(api.coverage.after.totalCategories).toBe(5);
+  expect(api.flags.length).toBeGreaterThan(0);
+  expect(api.validationGates).toHaveLength(5);
+  expect(api.validationGates.some(x=>x.id==='controlled-trial'&&x.open===true)).toBe(true);
   expect(api.actions.length).toBeGreaterThanOrEqual(5);
   expect(api.boundary).toMatch(/does not rank materials/);
 });
