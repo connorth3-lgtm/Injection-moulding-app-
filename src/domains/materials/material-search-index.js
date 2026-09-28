@@ -15,7 +15,7 @@ function flat(v){
   return clean(v);
 }
 const COUNTRY_REGION={
-  'South Korea':'Asia-Pacific','Singapore':'Asia-Pacific','Japan':'Asia-Pacific','China':'Asia-Pacific','Taiwan':'Asia-Pacific','Thailand':'Asia-Pacific','Malaysia':'Asia-Pacific','India':'Asia-Pacific','Australia':'Asia-Pacific','New Zealand':'Asia-Pacific',
+  'South Korea':'Asia-Pacific','Singapore':'Asia-Pacific','Japan':'Asia-Pacific','China':'Asia-Pacific','Taiwan':'Asia-Pacific','Thailand':'Asia-Pacific','Vietnam':'Asia-Pacific','Malaysia':'Asia-Pacific','India':'Asia-Pacific','Australia':'Asia-Pacific','New Zealand':'Asia-Pacific',
   'Germany':'Europe','Belgium':'Europe','Netherlands':'Europe','France':'Europe','United Kingdom':'Europe','United States':'North America','Canada':'North America'
 };
 function manufacturerCountry(g){return clean(g?.manufacturer?.country)}
@@ -29,7 +29,8 @@ const APPLICATION_RULES=[
   ['Consumer goods',/consumer|household|home appliance|cosmetic|baby care/],
   ['Industrial',/industrial|engineering part|machine part|gear|bearing/],
   ['Packaging',/packaging|thin wall|container|closure|cap\b/],
-  ['Optical / transparent',/transparent|transparency|optical|clear|high gloss/]
+  ['Optical / transparent',/transparent|transparency|optical|clear|high gloss/],
+  ['Building / construction',/building|construction|insulation|thermal insulation|drainage pipe|sewage pipe/]
 ];
 const PROCESS_RULES=[
   ['Injection moulding',/injection|injection mould|injection mold/],
@@ -37,7 +38,14 @@ const PROCESS_RULES=[
   ['Extrusion',/extrusion|extrud/],
   ['Blow moulding',/blow mould|blow mold/],
   ['Compression moulding',/compression mould|compression mold|\bccm\b/],
-  ['Two-component / LSR',/two component|2 component|lsr|liquid silicone/]
+  ['Two-component / LSR',/two component|2 component|lsr|liquid silicone/],
+  ['EPS pre-expansion / steam moulding',/expandable polystyrene|\beps\b|pre-expansion|steam mould|steam mold|foaming/],
+  ['Thermoforming',/thermoform|vacuum forming|pressure forming/],
+  ['Film extrusion',/\bbopp\b|\bcpp\b|packaging film|film extrusion|metallizing/],
+  ['Spunbond / fibre',/spunbond|non-woven|nonwoven|filament|\bfiber\b|\bfibre\b/],
+  ['Coating / lamination',/coating|lamination|laminating|neck-in/],
+  ['Compounding',/compounding|compounder/],
+  ['Pipe extrusion',/sewage pipe|drainage pipe|pipe extrusion|ppr pipe/]
 ];
 function taxonomyTags(g,rules){const text=sourceTextForTagging(g);return rules.filter(([,rx])=>rx.test(text)).map(([label])=>label)}
 function propertyKinds(g){
