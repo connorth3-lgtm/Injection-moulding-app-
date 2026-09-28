@@ -41,7 +41,9 @@ test('unified material index searches exact-grade processing evidence, family re
   await query.fill('formaldehyde');
   await expect(results.locator('[data-mm-material-index-type="material-lab"]')).toHaveCount(1);
   await expect(results).toContainText('POM: thermal abuse is a material-safety problem');
-  await expect(results).toContainText(/formaldehyde/i);
+  const labSearch=await page.evaluate(()=>window.MM_MATERIAL_SEARCH.searchAllPage('formaldehyde',{types:['material-lab'],page:1,pageSize:20}));
+  expect(labSearch.total).toBe(1);
+  expect(labSearch.items[0]?.title).toBe('POM: thermal abuse is a material-safety problem');
 
   await type.selectOption('');
   await query.fill('warpage');
