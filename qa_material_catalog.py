@@ -102,7 +102,7 @@ for staging_path in sorted(STAGING.glob("*.json")):
                 staged_grade_ids.add(gid)
 runtime_grade_ids = {grade.get("id") for grade in catalog.get("grades") or []}
 need(staged_grade_ids == runtime_grade_ids, f"runtime/staging material drift: staged={sorted(staged_grade_ids)} runtime={sorted(runtime_grade_ids)}")
-need(len(runtime_grade_ids) == 173, "runtime exact-grade count must include the Korean pilot plus fourteen global expansion waves")
+need(len(runtime_grade_ids) == 177, "runtime exact-grade count must include the original Korean pilot, validated Samyang Korea pilot, and fourteen global expansion waves")
 need(kolon_grade_ids.isdisjoint(runtime_grade_ids), "source-reviewed KOLON staging identities must not leak into the validated runtime catalog")
 
 global_wave = load_json(STAGING / "global-material-expansion-20260929-v1.json")
@@ -290,6 +290,21 @@ need({(g.get("polymer") or {}).get("family") for g in global17} == {"copolyester
 need(all((g.get("manufacturer") or {}).get("country") == "South Korea" for g in global17), "Korea SKYGREEN staging lost country identity")
 need(all(len(g.get("properties") or []) == 0 and len(g.get("processing") or []) == 0 for g in global17), "Korea SKYGREEN staging must not invent numeric engineering data")
 need((global_wave17.get("governance") or {}).get("runtimePromotionBlocked") is True, "Korea SKYGREEN promotion boundary drift")
+
+
+# Samyang Korea promotion: these four exact grades retain fully conditioned
+# ASTM D1238 MFR plus manufacturer exact-grade processing guidance. Direction-
+# unresolved ASTM D955 shrinkage remains context-only.
+samyang_pilot = load_json(STAGING / "samyang-exact-grade-pilot-v1.json")
+need(samyang_pilot.get("status") == "validated-pilot", "Samyang exact-grade dataset status drift")
+samyang_grades = [g for m in samyang_pilot.get("manufacturers") or [] for g in m.get("gradeRecords") or []]
+need({g.get("grade") for g in samyang_grades} == {"VB3025G10", "3025U", "210", "410"}, "Samyang exact-grade pilot set drift")
+need(len(samyang_grades) == 4 and all(g.get("id") in runtime_grade_ids for g in samyang_grades), "Samyang validated grades are not fully published")
+need(all((g.get("provenance") or {}).get("stage") == "validated" for g in samyang_grades), "Samyang pilot contains non-validated grade")
+need(all((g.get("manufacturer") or {}).get("country") == "South Korea" for g in samyang_grades), "Samyang Korea provenance drift")
+need(all(any(obs.get("property") == "Melt Flow Rate" and obs.get("temperatureC") is not None and obs.get("loadKg") is not None and obs.get("comparisonReady") is True for obs in g.get("properties") or []) for g in samyang_grades), "Samyang conditioned MFR contract drift")
+need(all(obs.get("comparisonReady") is False for g in samyang_grades for obs in g.get("properties") or [] if obs.get("property") == "Mould Shrinkage"), "Samyang unresolved-direction shrinkage must remain context-only")
+need(all(obs.get("productionRecipe") is False for g in samyang_grades for obs in g.get("processing") or []), "Samyang supplier guidance became a production recipe")
 
 # Pilot proof: current primary-source LOTTE records remain unchanged while the
 # umbrella manifest records progress without copying exact-grade claims.
