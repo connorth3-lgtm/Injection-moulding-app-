@@ -1,5 +1,5 @@
 {
-  "version": "2026-09-28.4",
+  "version": "2026-09-28.5",
   "source": "data/asian-aus-nz-material-grade-extraction-wave2-v1.json",
   "purpose": "Prioritize only work capable of increasing unique property-complete profiles",
   "rules": {
@@ -8,7 +8,7 @@
     "familyPageCannotPromoteWithoutGradeNumericEvidence": true,
     "sourceRevisionConflictsRemainConditional": true
   },
-  "queueCount": 59,
+  "queueCount": 58,
   "queue": [
     {
       "manufacturer": "Sumitomo Chemical",
@@ -307,18 +307,6 @@
       "readiness": 1,
       "primarySourceCaptured": false,
       "conversionRequirement": "numeric TDS not yet available in captured primary evidence",
-      "priority": "acquire-primary-TDS",
-      "exactGradeSourceLocated": false,
-      "convertedToComplete": false
-    },
-    {
-      "manufacturer": "Kingfa",
-      "country": "China",
-      "grade": "Vicryst R832",
-      "polymer": "LCP",
-      "readiness": 1,
-      "primarySourceCaptured": false,
-      "conversionRequirement": "numeric TDS still required",
       "priority": "acquire-primary-TDS",
       "exactGradeSourceLocated": false,
       "convertedToComplete": false
@@ -733,6 +721,6 @@
   "metrics": {
     "convertedComplete": 9,
     "exactGradeSourceLocatedPending": 5,
-    "stillNeedPrimarySource": 45
+    "stillNeedPrimarySource": 44
   }
 }
