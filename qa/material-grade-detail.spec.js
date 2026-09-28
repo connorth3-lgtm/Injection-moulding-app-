@@ -148,6 +148,7 @@ for(const viewport of [{name:'android-412x915',width:412,height:915},{name:'smal
 
 test('Singapore exact-grade material search exposes Mitsui Elastomers Singapore coverage',async({page})=>{
   await page.setViewportSize({width:412,height:915});
+  await openApp(page);
   await openMaterialsFromLearn(page);
   const root=page.locator('#mmExactMaterialCatalog');
   const search=root.locator('[data-mm-exact-query]');
