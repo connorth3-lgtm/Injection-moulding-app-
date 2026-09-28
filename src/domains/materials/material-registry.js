@@ -207,7 +207,7 @@ async function materialChangeReport(beforeId,afterId){
     thermal:evidenceDelta(before,after,'processing',/(melt|barrel|mould|mold).?temperature/i),
     missingBefore:missingEvidence(beforeSnapshot),missingAfter:missingEvidence(afterSnapshot),
     sources:{before:(before.sources||[]).map(s=>({id:s.id,title:clean(s.title),publisher:clean(s.publisher),documentDate:clean(s.documentDate),retrievedAt:clean(s.retrievedAt),url:safeUrl(s.url)})),after:(after.sources||[]).map(s=>({id:s.id,title:clean(s.title),publisher:clean(s.publisher),documentDate:clean(s.documentDate),retrievedAt:clean(s.retrievedAt),url:safeUrl(s.url)}))},
-    boundary:'This report identifies governed evidence differences and verification needs. It does not rank materials, prescribe purge/changeover settings, authorize production changes, or prove that a changed value will cause a specific part response.'
+    boundary:'This report identifies governed evidence differences and verification needs. It does not rank materials and does not prescribe purge/changeover settings, authorize production changes, or prove that a changed value will cause a specific part response.'
   };
   report.actions=verificationActions(report);
   return report;
