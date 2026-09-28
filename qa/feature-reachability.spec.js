@@ -82,3 +82,21 @@ for(const viewport of [{name:'mobile',width:412},{name:'tablet',width:768},{name
   });
  });
 }
+
+
+test('desktop References drawer remains explicitly non-blocking and keeps canonical launcher semantics',async({page})=>{
+ await openApp(page,1440);
+ await expect(page.locator('#mmrd-open')).toBeVisible();
+ await page.locator('#mmrd-open').click();
+ const drawer=page.locator('.mmrd');
+ await expect(drawer).toBeVisible();
+ await expect(drawer).toHaveAttribute('data-mm-non-blocking','1');
+ await expect(drawer).toHaveAttribute('aria-modal','false');
+ expect(await page.evaluate(()=>window.MM_ACCESSIBILITY_HARDENING?.nonBlockingDrawersExcluded===true)).toBeTruthy();
+ await page.setViewportSize({width:768,height:900});
+ await expect(page.locator('#mmrd-open')).toBeHidden();
+ await expect(drawer).toHaveAttribute('aria-modal','false');
+ await page.setViewportSize({width:1440,height:900});
+ await expect(page.locator('#mmrd-open')).toBeVisible();
+ await expect(drawer).toHaveAttribute('aria-modal','false');
+});
