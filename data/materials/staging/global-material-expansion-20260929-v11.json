@@ -1,0 +1,514 @@
+{
+  "schemaVersion": 1,
+  "datasetId": "global-material-expansion-20260929-v11",
+  "status": "validated-singapore-exact-grade-expansion",
+  "reviewedAt": "2026-09-29",
+  "purpose": "Eleventh expansion wave making Singapore a first-class material-data region through exact Mitsui Elastomers Singapore TAFMER grades plus separate facility provenance.",
+  "summary": {
+    "validatedGrades": 5,
+    "sourceReviewedStagingGrades": 0,
+    "manufacturers": 1,
+    "validatedFamilies": [
+      "AOC elastomer"
+    ],
+    "countryFocus": "Singapore"
+  },
+  "manufacturers": [
+    {
+      "id": "mfr-mitsui-elastomers-singapore",
+      "name": "Mitsui Elastomers Singapore",
+      "country": "Singapore",
+      "gradeRecords": [
+        {
+          "schemaVersion": 1,
+          "id": "mat-mels-tafmer-ma8510",
+          "manufacturer": {
+            "id": "mfr-mitsui-elastomers-singapore",
+            "name": "Mitsui Elastomers Singapore",
+            "country": "Singapore",
+            "website": "https://jp.mitsuichemicals.com/en/special/tafmer/"
+          },
+          "brand": "TAFMER™",
+          "grade": "MA8510",
+          "aliases": [],
+          "polymer": {
+            "family": "AOC elastomer",
+            "morphology": "elastomeric"
+          },
+          "composition": {
+            "notes": "Mitsui TAFMER alpha-olefin copolymer exact grade. Manufacturer describes TAFMER as a flexible/light modifier for thermoplastic molding materials such as polyethylene and polypropylene."
+          },
+          "properties": [
+            {
+              "id": "obs-mels-ma8510-mfr190",
+              "property": "Melt Flow Rate",
+              "value": 2.4,
+              "unit": "g/10min",
+              "testMethod": "ASTM D1238",
+              "temperatureC": 190,
+              "loadKg": null,
+              "direction": "not-applicable",
+              "sourceId": "src-mels-tafmer-ma8510-2026",
+              "sourcePage": "M Series properties table",
+              "comparisonReady": false,
+              "limitations": "Current Mitsui Elastomers Singapore-maintained table publishes ASTM D1238 MFR at 190°C but does not expose the test load on this surface; keep context-only."
+            },
+            {
+              "id": "obs-mels-ma8510-mfr230",
+              "property": "Melt Flow Rate",
+              "value": 5,
+              "unit": "g/10min",
+              "testMethod": "ASTM D1238",
+              "temperatureC": 230,
+              "loadKg": null,
+              "direction": "not-applicable",
+              "sourceId": "src-mels-tafmer-ma8510-2026",
+              "sourcePage": "M Series properties table",
+              "comparisonReady": false,
+              "limitations": "Current Mitsui Elastomers Singapore-maintained table publishes ASTM D1238 MFR at 230°C but does not expose the test load on this surface; keep context-only."
+            },
+            {
+              "id": "obs-mels-ma8510-density",
+              "property": "Density",
+              "value": 885,
+              "unit": "kg/m³",
+              "testMethod": "ASTM D1505",
+              "direction": "not-applicable",
+              "sourceId": "src-mels-tafmer-ma8510-2026",
+              "sourcePage": "M Series properties table",
+              "comparisonReady": false,
+              "limitations": "Manufacturer exact-grade density value."
+            }
+          ],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-mels-tafmer-ma8510-2026",
+              "publisher": "Mitsui Elastomers Singapore Pte. Ltd.",
+              "title": "TAFMER™ M Series MA8510 properties",
+              "url": "https://jp.mitsuichemicals.com/en/special/tafmer/grades/m.htm",
+              "kind": "manufacturer-datasheet",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            },
+            {
+              "id": "src-mels-singapore-tafmer-plant-2026",
+              "publisher": "Mitsui Chemicals",
+              "title": "Mitsui Elastomers Singapore TAFMER plant on Jurong Island",
+              "url": "https://jp.mitsuichemicals.com/en/release/2008/080723e.htm",
+              "kind": "manufacturer-site",
+              "revision": null,
+              "documentDate": "2008-07-23",
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "validated",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Exact-grade properties come from the current M Series page maintained by Mitsui Elastomers Singapore. The Jurong Island plant source establishes Singapore TAFMER manufacturing capability at family level; it is not used to claim plant-of-origin for this exact grade."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-mels-tafmer-mh7010",
+          "manufacturer": {
+            "id": "mfr-mitsui-elastomers-singapore",
+            "name": "Mitsui Elastomers Singapore",
+            "country": "Singapore",
+            "website": "https://jp.mitsuichemicals.com/en/special/tafmer/"
+          },
+          "brand": "TAFMER™",
+          "grade": "MH7010",
+          "aliases": [],
+          "polymer": {
+            "family": "AOC elastomer",
+            "morphology": "elastomeric"
+          },
+          "composition": {
+            "notes": "Mitsui TAFMER alpha-olefin copolymer exact grade. Manufacturer describes TAFMER as a flexible/light modifier for thermoplastic molding materials such as polyethylene and polypropylene."
+          },
+          "properties": [
+            {
+              "id": "obs-mels-mh7010-mfr190",
+              "property": "Melt Flow Rate",
+              "value": 0.9,
+              "unit": "g/10min",
+              "testMethod": "ASTM D1238",
+              "temperatureC": 190,
+              "loadKg": null,
+              "direction": "not-applicable",
+              "sourceId": "src-mels-tafmer-mh7010-2026",
+              "sourcePage": "M Series properties table",
+              "comparisonReady": false,
+              "limitations": "Current Mitsui Elastomers Singapore-maintained table publishes ASTM D1238 MFR at 190°C but does not expose the test load on this surface; keep context-only."
+            },
+            {
+              "id": "obs-mels-mh7010-mfr230",
+              "property": "Melt Flow Rate",
+              "value": 1.8,
+              "unit": "g/10min",
+              "testMethod": "ASTM D1238",
+              "temperatureC": 230,
+              "loadKg": null,
+              "direction": "not-applicable",
+              "sourceId": "src-mels-tafmer-mh7010-2026",
+              "sourcePage": "M Series properties table",
+              "comparisonReady": false,
+              "limitations": "Current Mitsui Elastomers Singapore-maintained table publishes ASTM D1238 MFR at 230°C but does not expose the test load on this surface; keep context-only."
+            },
+            {
+              "id": "obs-mels-mh7010-density",
+              "property": "Density",
+              "value": 870,
+              "unit": "kg/m³",
+              "testMethod": "ASTM D1505",
+              "direction": "not-applicable",
+              "sourceId": "src-mels-tafmer-mh7010-2026",
+              "sourcePage": "M Series properties table",
+              "comparisonReady": false,
+              "limitations": "Manufacturer exact-grade density value."
+            }
+          ],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-mels-tafmer-mh7010-2026",
+              "publisher": "Mitsui Elastomers Singapore Pte. Ltd.",
+              "title": "TAFMER™ M Series MH7010 properties",
+              "url": "https://jp.mitsuichemicals.com/en/special/tafmer/grades/m.htm",
+              "kind": "manufacturer-datasheet",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            },
+            {
+              "id": "src-mels-singapore-tafmer-plant-2026",
+              "publisher": "Mitsui Chemicals",
+              "title": "Mitsui Elastomers Singapore TAFMER plant on Jurong Island",
+              "url": "https://jp.mitsuichemicals.com/en/release/2008/080723e.htm",
+              "kind": "manufacturer-site",
+              "revision": null,
+              "documentDate": "2008-07-23",
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "validated",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Exact-grade properties come from the current M Series page maintained by Mitsui Elastomers Singapore. The Jurong Island plant source establishes Singapore TAFMER manufacturing capability at family level; it is not used to claim plant-of-origin for this exact grade."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-mels-tafmer-mh7020",
+          "manufacturer": {
+            "id": "mfr-mitsui-elastomers-singapore",
+            "name": "Mitsui Elastomers Singapore",
+            "country": "Singapore",
+            "website": "https://jp.mitsuichemicals.com/en/special/tafmer/"
+          },
+          "brand": "TAFMER™",
+          "grade": "MH7020",
+          "aliases": [],
+          "polymer": {
+            "family": "AOC elastomer",
+            "morphology": "elastomeric"
+          },
+          "composition": {
+            "notes": "Mitsui TAFMER alpha-olefin copolymer exact grade. Manufacturer describes TAFMER as a flexible/light modifier for thermoplastic molding materials such as polyethylene and polypropylene."
+          },
+          "properties": [
+            {
+              "id": "obs-mels-mh7020-mfr190",
+              "property": "Melt Flow Rate",
+              "value": 0.7,
+              "unit": "g/10min",
+              "testMethod": "ASTM D1238",
+              "temperatureC": 190,
+              "loadKg": null,
+              "direction": "not-applicable",
+              "sourceId": "src-mels-tafmer-mh7020-2026",
+              "sourcePage": "M Series properties table",
+              "comparisonReady": false,
+              "limitations": "Current Mitsui Elastomers Singapore-maintained table publishes ASTM D1238 MFR at 190°C but does not expose the test load on this surface; keep context-only."
+            },
+            {
+              "id": "obs-mels-mh7020-mfr230",
+              "property": "Melt Flow Rate",
+              "value": 1.5,
+              "unit": "g/10min",
+              "testMethod": "ASTM D1238",
+              "temperatureC": 230,
+              "loadKg": null,
+              "direction": "not-applicable",
+              "sourceId": "src-mels-tafmer-mh7020-2026",
+              "sourcePage": "M Series properties table",
+              "comparisonReady": false,
+              "limitations": "Current Mitsui Elastomers Singapore-maintained table publishes ASTM D1238 MFR at 230°C but does not expose the test load on this surface; keep context-only."
+            },
+            {
+              "id": "obs-mels-mh7020-density",
+              "property": "Density",
+              "value": 870,
+              "unit": "kg/m³",
+              "testMethod": "ASTM D1505",
+              "direction": "not-applicable",
+              "sourceId": "src-mels-tafmer-mh7020-2026",
+              "sourcePage": "M Series properties table",
+              "comparisonReady": false,
+              "limitations": "Manufacturer exact-grade density value."
+            }
+          ],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-mels-tafmer-mh7020-2026",
+              "publisher": "Mitsui Elastomers Singapore Pte. Ltd.",
+              "title": "TAFMER™ M Series MH7020 properties",
+              "url": "https://jp.mitsuichemicals.com/en/special/tafmer/grades/m.htm",
+              "kind": "manufacturer-datasheet",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            },
+            {
+              "id": "src-mels-singapore-tafmer-plant-2026",
+              "publisher": "Mitsui Chemicals",
+              "title": "Mitsui Elastomers Singapore TAFMER plant on Jurong Island",
+              "url": "https://jp.mitsuichemicals.com/en/release/2008/080723e.htm",
+              "kind": "manufacturer-site",
+              "revision": null,
+              "documentDate": "2008-07-23",
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "validated",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Exact-grade properties come from the current M Series page maintained by Mitsui Elastomers Singapore. The Jurong Island plant source establishes Singapore TAFMER manufacturing capability at family level; it is not used to claim plant-of-origin for this exact grade."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-mels-tafmer-ma9015",
+          "manufacturer": {
+            "id": "mfr-mitsui-elastomers-singapore",
+            "name": "Mitsui Elastomers Singapore",
+            "country": "Singapore",
+            "website": "https://jp.mitsuichemicals.com/en/special/tafmer/"
+          },
+          "brand": "TAFMER™",
+          "grade": "MA9015",
+          "aliases": [],
+          "polymer": {
+            "family": "AOC elastomer",
+            "morphology": "elastomeric"
+          },
+          "composition": {
+            "notes": "Mitsui TAFMER alpha-olefin copolymer exact grade. Manufacturer describes TAFMER as a flexible/light modifier for thermoplastic molding materials such as polyethylene and polypropylene."
+          },
+          "properties": [
+            {
+              "id": "obs-mels-ma9015-mfr190",
+              "property": "Melt Flow Rate",
+              "value": 11,
+              "unit": "g/10min",
+              "testMethod": "ASTM D1238",
+              "temperatureC": 190,
+              "loadKg": null,
+              "direction": "not-applicable",
+              "sourceId": "src-mels-tafmer-ma9015-2026",
+              "sourcePage": "M Series properties table",
+              "comparisonReady": false,
+              "limitations": "Current Mitsui Elastomers Singapore-maintained table publishes ASTM D1238 MFR at 190°C but does not expose the test load on this surface; keep context-only."
+            },
+            {
+              "id": "obs-mels-ma9015-mfr230",
+              "property": "Melt Flow Rate",
+              "value": 23,
+              "unit": "g/10min",
+              "testMethod": "ASTM D1238",
+              "temperatureC": 230,
+              "loadKg": null,
+              "direction": "not-applicable",
+              "sourceId": "src-mels-tafmer-ma9015-2026",
+              "sourcePage": "M Series properties table",
+              "comparisonReady": false,
+              "limitations": "Current Mitsui Elastomers Singapore-maintained table publishes ASTM D1238 MFR at 230°C but does not expose the test load on this surface; keep context-only."
+            },
+            {
+              "id": "obs-mels-ma9015-density",
+              "property": "Density",
+              "value": 896,
+              "unit": "kg/m³",
+              "testMethod": "ASTM D1505",
+              "direction": "not-applicable",
+              "sourceId": "src-mels-tafmer-ma9015-2026",
+              "sourcePage": "M Series properties table",
+              "comparisonReady": false,
+              "limitations": "Manufacturer exact-grade density value."
+            }
+          ],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-mels-tafmer-ma9015-2026",
+              "publisher": "Mitsui Elastomers Singapore Pte. Ltd.",
+              "title": "TAFMER™ M Series MA9015 properties",
+              "url": "https://jp.mitsuichemicals.com/en/special/tafmer/grades/m.htm",
+              "kind": "manufacturer-datasheet",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            },
+            {
+              "id": "src-mels-singapore-tafmer-plant-2026",
+              "publisher": "Mitsui Chemicals",
+              "title": "Mitsui Elastomers Singapore TAFMER plant on Jurong Island",
+              "url": "https://jp.mitsuichemicals.com/en/release/2008/080723e.htm",
+              "kind": "manufacturer-site",
+              "revision": null,
+              "documentDate": "2008-07-23",
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "validated",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Exact-grade properties come from the current M Series page maintained by Mitsui Elastomers Singapore. The Jurong Island plant source establishes Singapore TAFMER manufacturing capability at family level; it is not used to claim plant-of-origin for this exact grade."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-mels-tafmer-mh5020c",
+          "manufacturer": {
+            "id": "mfr-mitsui-elastomers-singapore",
+            "name": "Mitsui Elastomers Singapore",
+            "country": "Singapore",
+            "website": "https://jp.mitsuichemicals.com/en/special/tafmer/"
+          },
+          "brand": "TAFMER™",
+          "grade": "MH5020C",
+          "aliases": [],
+          "polymer": {
+            "family": "AOC elastomer",
+            "morphology": "elastomeric"
+          },
+          "composition": {
+            "notes": "Mitsui TAFMER alpha-olefin copolymer exact grade. Manufacturer describes TAFMER as a flexible/light modifier for thermoplastic molding materials such as polyethylene and polypropylene."
+          },
+          "properties": [
+            {
+              "id": "obs-mels-mh5020c-mfr190",
+              "property": "Melt Flow Rate",
+              "value": 0.6,
+              "unit": "g/10min",
+              "testMethod": "ASTM D1238",
+              "temperatureC": 190,
+              "loadKg": null,
+              "direction": "not-applicable",
+              "sourceId": "src-mels-tafmer-mh5020c-2026",
+              "sourcePage": "M Series properties table",
+              "comparisonReady": false,
+              "limitations": "Current Mitsui Elastomers Singapore-maintained table publishes ASTM D1238 MFR at 190°C but does not expose the test load on this surface; keep context-only."
+            },
+            {
+              "id": "obs-mels-mh5020c-mfr230",
+              "property": "Melt Flow Rate",
+              "value": 1.2,
+              "unit": "g/10min",
+              "testMethod": "ASTM D1238",
+              "temperatureC": 230,
+              "loadKg": null,
+              "direction": "not-applicable",
+              "sourceId": "src-mels-tafmer-mh5020c-2026",
+              "sourcePage": "M Series properties table",
+              "comparisonReady": false,
+              "limitations": "Current Mitsui Elastomers Singapore-maintained table publishes ASTM D1238 MFR at 230°C but does not expose the test load on this surface; keep context-only."
+            },
+            {
+              "id": "obs-mels-mh5020c-density",
+              "property": "Density",
+              "value": 866,
+              "unit": "kg/m³",
+              "testMethod": "ASTM D1505",
+              "direction": "not-applicable",
+              "sourceId": "src-mels-tafmer-mh5020c-2026",
+              "sourcePage": "M Series properties table",
+              "comparisonReady": false,
+              "limitations": "Manufacturer exact-grade density value."
+            }
+          ],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-mels-tafmer-mh5020c-2026",
+              "publisher": "Mitsui Elastomers Singapore Pte. Ltd.",
+              "title": "TAFMER™ M Series MH5020C properties",
+              "url": "https://jp.mitsuichemicals.com/en/special/tafmer/grades/m.htm",
+              "kind": "manufacturer-datasheet",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            },
+            {
+              "id": "src-mels-singapore-tafmer-plant-2026",
+              "publisher": "Mitsui Chemicals",
+              "title": "Mitsui Elastomers Singapore TAFMER plant on Jurong Island",
+              "url": "https://jp.mitsuichemicals.com/en/release/2008/080723e.htm",
+              "kind": "manufacturer-site",
+              "revision": null,
+              "documentDate": "2008-07-23",
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "validated",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Exact-grade properties come from the current M Series page maintained by Mitsui Elastomers Singapore. The Jurong Island plant source establishes Singapore TAFMER manufacturing capability at family level; it is not used to claim plant-of-origin for this exact grade."
+          }
+        }
+      ]
+    }
+  ],
+  "notes": [
+    "Exact TAFMER MFR values remain comparisonReady=false because the current grade table omits test load.",
+    "Singapore plant evidence is kept separate from exact-grade origin claims."
+  ]
+}
