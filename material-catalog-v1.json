@@ -9264,8 +9264,8 @@
           "direction": "not-applicable",
           "sourceId": "src-lyb-moplen-hp400k-2026",
           "sourcePage": "current manufacturer exact-grade data",
-          "comparisonReady": true,
-          "limitations": "LyondellBasell current product page publishes MFR at 230°C/2.16 kg; method name is not surfaced here but temperature/load/unit are exact."
+          "comparisonReady": false,
+          "limitations": "LyondellBasell current exact-grade page publishes MFR at 230°C/2.16 kg, but the test method name is not surfaced in the reviewed source. Retained as conditioned context only until the method is explicitly sourced."
         },
         {
           "id": "obs-lyb-hp400k-density",
@@ -9339,8 +9339,8 @@
           "direction": "not-applicable",
           "sourceId": "src-lyb-moplen-hp400l-2026",
           "sourcePage": "current manufacturer exact-grade data",
-          "comparisonReady": true,
-          "limitations": "LyondellBasell current product page publishes MFR at 230°C/2.16 kg; method name is not surfaced here but temperature/load/unit are exact."
+          "comparisonReady": false,
+          "limitations": "LyondellBasell current exact-grade page publishes MFR at 230°C/2.16 kg, but the test method name is not surfaced in the reviewed source. Retained as conditioned context only until the method is explicitly sourced."
         },
         {
           "id": "obs-lyb-hp400l-density",
