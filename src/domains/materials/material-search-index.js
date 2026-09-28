@@ -48,6 +48,14 @@ const PROCESS_RULES=[
   ['Pipe extrusion',/sewage pipe|drainage pipe|pipe extrusion|ppr pipe/]
 ];
 function taxonomyTags(g,rules){const text=sourceTextForTagging(g);return rules.filter(([,rx])=>rx.test(text)).map(([label])=>label)}
+const GOVERNED_PROCESS_EXCLUSIONS={
+  EPS:new Set(['Injection moulding','Thin-wall injection'])
+};
+function processTags(g){
+  const tags=taxonomyTags(g,PROCESS_RULES);
+  const blocked=GOVERNED_PROCESS_EXCLUSIONS[clean(g?.polymer?.family).toUpperCase()];
+  return blocked?tags.filter(label=>!blocked.has(label)):tags;
+}
 function propertyKinds(g){
   const names=(g?.properties||[]).map(o=>norm(o?.property));
   return {
@@ -71,7 +79,7 @@ function evidenceBadges(g){
   if(e.primarySource)out.push('Primary source');
   return out;
 }
-function gradeSearchable(g){return [g?.id,g?.manufacturer?.name,g?.brand,g?.grade,...(g?.aliases||[]),g?.polymer?.family,g?.polymer?.blend,g?.identity?.variantId,g?.identity?.regionalVariant,manufacturerCountry(g),catalogRegion(g),...taxonomyTags(g,APPLICATION_RULES),...taxonomyTags(g,PROCESS_RULES),...evidenceBadges(g),g?.production?.country,g?.production?.plant].filter(Boolean).join(' ')}
+function gradeSearchable(g){return [g?.id,g?.manufacturer?.name,g?.brand,g?.grade,...(g?.aliases||[]),g?.polymer?.family,g?.polymer?.blend,g?.identity?.variantId,g?.identity?.regionalVariant,manufacturerCountry(g),catalogRegion(g),...taxonomyTags(g,APPLICATION_RULES),...processTags(g),...evidenceBadges(g),g?.production?.country,g?.production?.plant].filter(Boolean).join(' ')}
 function add(map,key,id){if(!key)return;let bucket=map.get(key);if(!bucket){bucket=new Set();map.set(key,bucket)}bucket.add(id)}
 function intersect(left,right){if(!left)return new Set(right||[]);if(!right)return new Set();const out=new Set();const [small,large]=left.size<=right.size?[left,right]:[right,left];for(const value of small)if(large.has(value))out.add(value);return out}
 function titleForGrade(g){return [g?.manufacturer?.name,g?.brand,g?.grade].map(clean).filter(Boolean).join(' · ')}
@@ -87,7 +95,7 @@ function exactGradeDocument(g){
     subtitle:[g?.polymer?.family,g?.polymer?.morphology].map(clean).filter(Boolean).join(' · '),
     searchText:[gradeSearchable(g),flat(g?.composition),...propertyText,...processingText,...sourceText,flat(g?.provenance),flat(g?.lifecycle)].join(' '),
     sourceIds:(g?.sources||[]).map(s=>s.id),materialGradeId:g.id,payload:g,
-    catalog:{region:catalogRegion(g),country:manufacturerCountry(g),manufacturerId:clean(g?.manufacturer?.id),manufacturer:clean(g?.manufacturer?.name),family:clean(g?.polymer?.family),applications:taxonomyTags(g,APPLICATION_RULES),processes:taxonomyTags(g,PROCESS_RULES),evidenceStage:clean(g?.provenance?.stage),evidence:evidenceBadges(g)}
+    catalog:{region:catalogRegion(g),country:manufacturerCountry(g),manufacturerId:clean(g?.manufacturer?.id),manufacturer:clean(g?.manufacturer?.name),family:clean(g?.polymer?.family),applications:taxonomyTags(g,APPLICATION_RULES),processes:processTags(g),evidenceStage:clean(g?.provenance?.stage),evidence:evidenceBadges(g)}
   });
 }
 function referenceDocuments(){
@@ -191,7 +199,7 @@ async function facets(){
   const manufacturers=[...new Map(grades.map(g=>[clean(g?.manufacturer?.id),{id:clean(g?.manufacturer?.id),name:clean(g?.manufacturer?.name),country:manufacturerCountry(g),region:catalogRegion(g)}])).values()].filter(x=>x.id).sort((a,b)=>a.name.localeCompare(b.name));
   const families=[...new Set(grades.map(g=>clean(g?.polymer?.family)).filter(Boolean))].sort();
   const applications=[...new Set(grades.flatMap(g=>taxonomyTags(g,APPLICATION_RULES)))].sort();
-  const processes=[...new Set(grades.flatMap(g=>taxonomyTags(g,PROCESS_RULES)))].sort();
+  const processes=[...new Set(grades.flatMap(processTags))].sort();
   const evidence=[...new Set(grades.flatMap(evidenceBadges))].sort();
   const countBy=values=>values.reduce((acc,v)=>(acc[v]=(acc[v]||0)+1,acc),{});
   const counts={
@@ -199,7 +207,7 @@ async function facets(){
     countries:countBy(grades.map(manufacturerCountry)),
     families:countBy(grades.map(g=>clean(g?.polymer?.family))),
     applications:countBy(grades.flatMap(g=>taxonomyTags(g,APPLICATION_RULES))),
-    processes:countBy(grades.flatMap(g=>taxonomyTags(g,PROCESS_RULES))),
+    processes:countBy(grades.flatMap(processTags)),
     evidence:countBy(grades.flatMap(evidenceBadges))
   };
   return {regions,countries,manufacturers,families,applications,processes,evidence,counts,boundary:'Country is the manufacturer country. Region is a browsing facet derived from manufacturer country; neither field proves exact-grade manufacturing origin, plant origin, or local availability. Application and process tags are derived from explicit published grade text for browsing only; they are not suitability recommendations.'};
