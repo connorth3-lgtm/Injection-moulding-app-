@@ -3,7 +3,7 @@ from __future__ import annotations
 from pathlib import Path
 import re
 
-from tools.material_catalog import ROOT, CATALOG, STAGING, load_json, validate_staging, validate_grade
+from tools.material_catalog import ROOT, CATALOG, STAGING, load_json, validate_staging, validate_grade, acquisition_status
 
 
 def need(ok, message):
@@ -126,6 +126,11 @@ for staging_path in sorted(STAGING.glob("*.json")):
 runtime_grade_ids = {grade.get("id") for grade in catalog.get("grades") or []}
 need(staged_grade_ids == runtime_grade_ids, f"runtime/staging material drift: staged={sorted(staged_grade_ids)} runtime={sorted(runtime_grade_ids)}")
 need(len(runtime_grade_ids) == 260, "runtime exact-grade count must include the original Korean pilot, waves through wave22, the 70-grade Vietnam PP / Korea EPS mega wave, and two conditioned Polyplastics POM grades")
+pipeline_status = acquisition_status()
+need(pipeline_status.get("validatedOrPublishedIds") == len(runtime_grade_ids), "acquisition pipeline validated/runtime reconciliation drift")
+need(pipeline_status.get("stagingOnlyIds", 0) >= 370, "mega expansion staged-only acquisition unexpectedly shrank")
+need(pipeline_status.get("uniqueExactGradeIds", 0) >= len(runtime_grade_ids) + 370, "mega expansion unique exact-grade acquisition unexpectedly shrank")
+need(pipeline_status.get("promotionLineageIds", 0) >= 4, "material promotion-lineage accounting unexpectedly disappeared")
 need(kolon_grade_ids.isdisjoint(runtime_grade_ids), "source-reviewed KOLON staging identities must not leak into the validated runtime catalog")
 
 global_wave = load_json(STAGING / "global-material-expansion-20260929-v1.json")
