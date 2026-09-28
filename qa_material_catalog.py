@@ -102,7 +102,7 @@ for staging_path in sorted(STAGING.glob("*.json")):
                 staged_grade_ids.add(gid)
 runtime_grade_ids = {grade.get("id") for grade in catalog.get("grades") or []}
 need(staged_grade_ids == runtime_grade_ids, f"runtime/staging material drift: staged={sorted(staged_grade_ids)} runtime={sorted(runtime_grade_ids)}")
-need(len(runtime_grade_ids) == 105, "runtime exact-grade count must include the Korean pilot plus eight global expansion waves")
+need(len(runtime_grade_ids) == 117, "runtime exact-grade count must include the Korean pilot plus ten global expansion waves")
 need(kolon_grade_ids.isdisjoint(runtime_grade_ids), "source-reviewed KOLON staging identities must not leak into the validated runtime catalog")
 
 global_wave = load_json(STAGING / "global-material-expansion-20260929-v1.json")
@@ -182,6 +182,27 @@ global8 = [g for m in global_wave8.get("manufacturers") or [] for g in m.get("gr
 need(len(global8) == 4 and all(g.get("id") in runtime_grade_ids for g in global8), "wave8 LCP grades are not fully published")
 need({(g.get("polymer") or {}).get("family") for g in global8} == {"LCP"}, "wave8 validated family coverage drift")
 need(all(obs.get("comparisonReady") is False for g in global8 for obs in g.get("properties") or [] if obs.get("property") == "Mould Shrinkage"), "LCP shrinkage must remain context-only until specimen/conditioning semantics are fully resolved")
+
+global_wave9 = load_json(STAGING / "global-material-expansion-20260929-v9.json")
+need((global_wave9.get("summary") or {}).get("validatedGrades") == 7, "global material expansion wave9 validated-grade count drift")
+need((global_wave9.get("summary") or {}).get("sourceReviewedStagingGrades") == 3, "global material expansion wave9 staging count drift")
+global9 = [g for m in global_wave9.get("manufacturers") or [] for g in m.get("gradeRecords") or []]
+global9_validated = [g for g in global9 if (g.get("provenance") or {}).get("stage") in {"validated", "published"}]
+global9_staging = [g for g in global9 if (g.get("provenance") or {}).get("stage") == "staging"]
+need(len(global9_validated) == 7 and all(g.get("id") in runtime_grade_ids for g in global9_validated), "wave9 validated grades are not fully published")
+need(len(global9_staging) == 3 and all(g.get("id") not in runtime_grade_ids for g in global9_staging), "wave9 staging identities leaked into runtime")
+need({(g.get("polymer") or {}).get("family") for g in global9_validated} == {"PP", "HDPE"}, "wave9 validated family coverage drift")
+
+global_wave10 = load_json(STAGING / "global-material-expansion-20260929-v10.json")
+need((global_wave10.get("summary") or {}).get("validatedGrades") == 5, "global material expansion wave10 validated-grade count drift")
+need((global_wave10.get("summary") or {}).get("sourceReviewedStagingGrades") == 6, "global material expansion wave10 staging count drift")
+global10 = [g for m in global_wave10.get("manufacturers") or [] for g in m.get("gradeRecords") or []]
+global10_validated = [g for g in global10 if (g.get("provenance") or {}).get("stage") in {"validated", "published"}]
+global10_staging = [g for g in global10 if (g.get("provenance") or {}).get("stage") == "staging"]
+need(len(global10_validated) == 5 and all(g.get("id") in runtime_grade_ids for g in global10_validated), "wave10 LSR grades are not fully published")
+need(len(global10_staging) == 6 and all(g.get("id") not in runtime_grade_ids for g in global10_staging), "wave10 TPV staging identities leaked into runtime")
+need({(g.get("polymer") or {}).get("family") for g in global10_validated} == {"LSR"}, "wave10 validated family coverage drift")
+need(all((obs.get("productionRecipe") is False) for g in global10_validated for obs in g.get("processing") or []), "LSR supplier guidance became a production recipe")
 
 # Pilot proof: current primary-source LOTTE records remain unchanged while the
 # umbrella manifest records progress without copying exact-grade claims.
