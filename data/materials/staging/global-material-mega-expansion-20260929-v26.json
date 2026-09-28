@@ -1,0 +1,2585 @@
+{
+  "schemaVersion": 1,
+  "datasetId": "global-material-mega-expansion-20260929-v26",
+  "status": "source-reviewed-staging-sumitomo-high-performance-resins",
+  "reviewedAt": "2026-09-29",
+  "purpose": "Large source-reviewed exact-identity and composition acquisition for Sumitomo Chemical SUMIKASUPER LCP plus SUMIKAEXCEL/SUMIPLOY injection-grade engineering resins.",
+  "summary": {
+    "validatedGrades": 0,
+    "sourceReviewedStagingGrades": 55,
+    "manufacturers": 1,
+    "countryFocus": "Japan",
+    "brandCounts": {
+      "SUMIKASUPER": 38,
+      "SUMIKAEXCEL": 8,
+      "SUMIPLOY": 9
+    }
+  },
+  "governance": {
+    "runtimePromotionBlocked": true,
+    "noNumericPropertyInference": true,
+    "compositionOnlyWhereExplicit": true
+  },
+  "manufacturers": [
+    {
+      "id": "mfr-sumitomo-chemical",
+      "name": "Sumitomo Chemical Co., Ltd.",
+      "country": "Japan",
+      "gradeRecords": [
+        {
+          "schemaVersion": 1,
+          "id": "mat-sumitomo-sumikasuper-e5006l",
+          "manufacturer": {
+            "id": "mfr-sumitomo-chemical",
+            "name": "Sumitomo Chemical Co., Ltd.",
+            "country": "Japan",
+            "website": "https://www.sumitomo-chem.co.jp/"
+          },
+          "brand": "SUMIKASUPER",
+          "grade": "E5006L",
+          "aliases": [],
+          "polymer": {
+            "family": "LCP",
+            "morphology": "unknown"
+          },
+          "composition": {
+            "notes": "Manufacturer lineup states total filling volume 30% with glass fibre; features: Ultra-high heat resistance; high strength; low linear expansion.",
+            "glassFibrePct": 30
+          },
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-sumitomo-sumikasuper-lcp-lineup-20260929",
+              "publisher": "Sumitomo Chemical Co., Ltd.",
+              "title": "SUMIKASUPER LCP Grade Lineup",
+              "url": "https://www.sumitomo-chem.co.jp/sep/english/products/lcp/lcp_fg_grade.html",
+              "kind": "other",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Current manufacturer grade-lineup identity and filler/feature text retained. DTUL and moulding-temperature values are not promoted here because this wave is identity/composition acquisition only; runtime promotion remains blocked pending normalized exact-grade observations."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-sumitomo-sumikasuper-e5008",
+          "manufacturer": {
+            "id": "mfr-sumitomo-chemical",
+            "name": "Sumitomo Chemical Co., Ltd.",
+            "country": "Japan",
+            "website": "https://www.sumitomo-chem.co.jp/"
+          },
+          "brand": "SUMIKASUPER",
+          "grade": "E5008",
+          "aliases": [],
+          "polymer": {
+            "family": "LCP",
+            "morphology": "unknown"
+          },
+          "composition": {
+            "notes": "Manufacturer lineup states total filling volume 40% with glass fibre; features: Ultra-high heat resistance; low linear expansion.",
+            "glassFibrePct": 40
+          },
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-sumitomo-sumikasuper-lcp-lineup-20260929",
+              "publisher": "Sumitomo Chemical Co., Ltd.",
+              "title": "SUMIKASUPER LCP Grade Lineup",
+              "url": "https://www.sumitomo-chem.co.jp/sep/english/products/lcp/lcp_fg_grade.html",
+              "kind": "other",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Current manufacturer grade-lineup identity and filler/feature text retained. DTUL and moulding-temperature values are not promoted here because this wave is identity/composition acquisition only; runtime promotion remains blocked pending normalized exact-grade observations."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-sumitomo-sumikasuper-e5008l",
+          "manufacturer": {
+            "id": "mfr-sumitomo-chemical",
+            "name": "Sumitomo Chemical Co., Ltd.",
+            "country": "Japan",
+            "website": "https://www.sumitomo-chem.co.jp/"
+          },
+          "brand": "SUMIKASUPER",
+          "grade": "E5008L",
+          "aliases": [],
+          "polymer": {
+            "family": "LCP",
+            "morphology": "unknown"
+          },
+          "composition": {
+            "notes": "Manufacturer lineup states total filling volume 40% with glass fibre; features: Ultra-high heat resistance; low shrinkage.",
+            "glassFibrePct": 40
+          },
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-sumitomo-sumikasuper-lcp-lineup-20260929",
+              "publisher": "Sumitomo Chemical Co., Ltd.",
+              "title": "SUMIKASUPER LCP Grade Lineup",
+              "url": "https://www.sumitomo-chem.co.jp/sep/english/products/lcp/lcp_fg_grade.html",
+              "kind": "other",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Current manufacturer grade-lineup identity and filler/feature text retained. DTUL and moulding-temperature values are not promoted here because this wave is identity/composition acquisition only; runtime promotion remains blocked pending normalized exact-grade observations."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-sumitomo-sumikasuper-e52008",
+          "manufacturer": {
+            "id": "mfr-sumitomo-chemical",
+            "name": "Sumitomo Chemical Co., Ltd.",
+            "country": "Japan",
+            "website": "https://www.sumitomo-chem.co.jp/"
+          },
+          "brand": "SUMIKASUPER",
+          "grade": "E52008",
+          "aliases": [],
+          "polymer": {
+            "family": "LCP",
+            "morphology": "unknown"
+          },
+          "composition": {
+            "notes": "Manufacturer lineup states total filling volume 40% with glass fibre; features: Ultra-high heat resistance; good flow.",
+            "glassFibrePct": 40
+          },
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-sumitomo-sumikasuper-lcp-lineup-20260929",
+              "publisher": "Sumitomo Chemical Co., Ltd.",
+              "title": "SUMIKASUPER LCP Grade Lineup",
+              "url": "https://www.sumitomo-chem.co.jp/sep/english/products/lcp/lcp_fg_grade.html",
+              "kind": "other",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Current manufacturer grade-lineup identity and filler/feature text retained. DTUL and moulding-temperature values are not promoted here because this wave is identity/composition acquisition only; runtime promotion remains blocked pending normalized exact-grade observations."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-sumitomo-sumikasuper-e5204l",
+          "manufacturer": {
+            "id": "mfr-sumitomo-chemical",
+            "name": "Sumitomo Chemical Co., Ltd.",
+            "country": "Japan",
+            "website": "https://www.sumitomo-chem.co.jp/"
+          },
+          "brand": "SUMIKASUPER",
+          "grade": "E5204L",
+          "aliases": [],
+          "polymer": {
+            "family": "LCP",
+            "morphology": "unknown"
+          },
+          "composition": {
+            "notes": "Manufacturer lineup states total filling volume 20% with glass fibre/inorganic; features: Ultra-high heat resistance; low thermal conductivity; low dielectric constant."
+          },
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-sumitomo-sumikasuper-lcp-lineup-20260929",
+              "publisher": "Sumitomo Chemical Co., Ltd.",
+              "title": "SUMIKASUPER LCP Grade Lineup",
+              "url": "https://www.sumitomo-chem.co.jp/sep/english/products/lcp/lcp_fg_grade.html",
+              "kind": "other",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Current manufacturer grade-lineup identity and filler/feature text retained. DTUL and moulding-temperature values are not promoted here because this wave is identity/composition acquisition only; runtime promotion remains blocked pending normalized exact-grade observations."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-sumitomo-sumikasuper-e4006l",
+          "manufacturer": {
+            "id": "mfr-sumitomo-chemical",
+            "name": "Sumitomo Chemical Co., Ltd.",
+            "country": "Japan",
+            "website": "https://www.sumitomo-chem.co.jp/"
+          },
+          "brand": "SUMIKASUPER",
+          "grade": "E4006L",
+          "aliases": [],
+          "polymer": {
+            "family": "LCP",
+            "morphology": "unknown"
+          },
+          "composition": {
+            "notes": "Manufacturer lineup states total filling volume 30% with glass fibre; features: High heat resistance; low shrinkage.",
+            "glassFibrePct": 30
+          },
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-sumitomo-sumikasuper-lcp-lineup-20260929",
+              "publisher": "Sumitomo Chemical Co., Ltd.",
+              "title": "SUMIKASUPER LCP Grade Lineup",
+              "url": "https://www.sumitomo-chem.co.jp/sep/english/products/lcp/lcp_fg_grade.html",
+              "kind": "other",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Current manufacturer grade-lineup identity and filler/feature text retained. DTUL and moulding-temperature values are not promoted here because this wave is identity/composition acquisition only; runtime promotion remains blocked pending normalized exact-grade observations."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-sumitomo-sumikasuper-e4008",
+          "manufacturer": {
+            "id": "mfr-sumitomo-chemical",
+            "name": "Sumitomo Chemical Co., Ltd.",
+            "country": "Japan",
+            "website": "https://www.sumitomo-chem.co.jp/"
+          },
+          "brand": "SUMIKASUPER",
+          "grade": "E4008",
+          "aliases": [],
+          "polymer": {
+            "family": "LCP",
+            "morphology": "unknown"
+          },
+          "composition": {
+            "notes": "Manufacturer lineup states total filling volume 40% with glass fibre; features: High heat resistance; high strength.",
+            "glassFibrePct": 40
+          },
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-sumitomo-sumikasuper-lcp-lineup-20260929",
+              "publisher": "Sumitomo Chemical Co., Ltd.",
+              "title": "SUMIKASUPER LCP Grade Lineup",
+              "url": "https://www.sumitomo-chem.co.jp/sep/english/products/lcp/lcp_fg_grade.html",
+              "kind": "other",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Current manufacturer grade-lineup identity and filler/feature text retained. DTUL and moulding-temperature values are not promoted here because this wave is identity/composition acquisition only; runtime promotion remains blocked pending normalized exact-grade observations."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-sumitomo-sumikasuper-e4009",
+          "manufacturer": {
+            "id": "mfr-sumitomo-chemical",
+            "name": "Sumitomo Chemical Co., Ltd.",
+            "country": "Japan",
+            "website": "https://www.sumitomo-chem.co.jp/"
+          },
+          "brand": "SUMIKASUPER",
+          "grade": "E4009",
+          "aliases": [],
+          "polymer": {
+            "family": "LCP",
+            "morphology": "unknown"
+          },
+          "composition": {
+            "notes": "Manufacturer lineup states total filling volume 45% with glass fibre; features: High heat resistance; high strength.",
+            "glassFibrePct": 45
+          },
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-sumitomo-sumikasuper-lcp-lineup-20260929",
+              "publisher": "Sumitomo Chemical Co., Ltd.",
+              "title": "SUMIKASUPER LCP Grade Lineup",
+              "url": "https://www.sumitomo-chem.co.jp/sep/english/products/lcp/lcp_fg_grade.html",
+              "kind": "other",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Current manufacturer grade-lineup identity and filler/feature text retained. DTUL and moulding-temperature values are not promoted here because this wave is identity/composition acquisition only; runtime promotion remains blocked pending normalized exact-grade observations."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-sumitomo-sumikasuper-e4205r",
+          "manufacturer": {
+            "id": "mfr-sumitomo-chemical",
+            "name": "Sumitomo Chemical Co., Ltd.",
+            "country": "Japan",
+            "website": "https://www.sumitomo-chem.co.jp/"
+          },
+          "brand": "SUMIKASUPER",
+          "grade": "E4205R",
+          "aliases": [],
+          "polymer": {
+            "family": "LCP",
+            "morphology": "unknown"
+          },
+          "composition": {
+            "notes": "Manufacturer lineup states total filling volume 25% with glass fibre/inorganic; features: High heat resistance; low thermal conductivity; low dielectric constant."
+          },
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-sumitomo-sumikasuper-lcp-lineup-20260929",
+              "publisher": "Sumitomo Chemical Co., Ltd.",
+              "title": "SUMIKASUPER LCP Grade Lineup",
+              "url": "https://www.sumitomo-chem.co.jp/sep/english/products/lcp/lcp_fg_grade.html",
+              "kind": "other",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Current manufacturer grade-lineup identity and filler/feature text retained. DTUL and moulding-temperature values are not promoted here because this wave is identity/composition acquisition only; runtime promotion remains blocked pending normalized exact-grade observations."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-sumitomo-sumikasuper-e6006",
+          "manufacturer": {
+            "id": "mfr-sumitomo-chemical",
+            "name": "Sumitomo Chemical Co., Ltd.",
+            "country": "Japan",
+            "website": "https://www.sumitomo-chem.co.jp/"
+          },
+          "brand": "SUMIKASUPER",
+          "grade": "E6006",
+          "aliases": [],
+          "polymer": {
+            "family": "LCP",
+            "morphology": "unknown"
+          },
+          "composition": {
+            "notes": "Manufacturer lineup states total filling volume 30% with glass fibre; features: High strength; good flow; improved release.",
+            "glassFibrePct": 30
+          },
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-sumitomo-sumikasuper-lcp-lineup-20260929",
+              "publisher": "Sumitomo Chemical Co., Ltd.",
+              "title": "SUMIKASUPER LCP Grade Lineup",
+              "url": "https://www.sumitomo-chem.co.jp/sep/english/products/lcp/lcp_fg_grade.html",
+              "kind": "other",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Current manufacturer grade-lineup identity and filler/feature text retained. DTUL and moulding-temperature values are not promoted here because this wave is identity/composition acquisition only; runtime promotion remains blocked pending normalized exact-grade observations."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-sumitomo-sumikasuper-e6006l",
+          "manufacturer": {
+            "id": "mfr-sumitomo-chemical",
+            "name": "Sumitomo Chemical Co., Ltd.",
+            "country": "Japan",
+            "website": "https://www.sumitomo-chem.co.jp/"
+          },
+          "brand": "SUMIKASUPER",
+          "grade": "E6006L",
+          "aliases": [],
+          "polymer": {
+            "family": "LCP",
+            "morphology": "unknown"
+          },
+          "composition": {
+            "notes": "Manufacturer lineup states total filling volume 30% with glass fibre; features: High strength; low shrinkage; improved release.",
+            "glassFibrePct": 30
+          },
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-sumitomo-sumikasuper-lcp-lineup-20260929",
+              "publisher": "Sumitomo Chemical Co., Ltd.",
+              "title": "SUMIKASUPER LCP Grade Lineup",
+              "url": "https://www.sumitomo-chem.co.jp/sep/english/products/lcp/lcp_fg_grade.html",
+              "kind": "other",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Current manufacturer grade-lineup identity and filler/feature text retained. DTUL and moulding-temperature values are not promoted here because this wave is identity/composition acquisition only; runtime promotion remains blocked pending normalized exact-grade observations."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-sumitomo-sumikasuper-e6007as",
+          "manufacturer": {
+            "id": "mfr-sumitomo-chemical",
+            "name": "Sumitomo Chemical Co., Ltd.",
+            "country": "Japan",
+            "website": "https://www.sumitomo-chem.co.jp/"
+          },
+          "brand": "SUMIKASUPER",
+          "grade": "E6007AS",
+          "aliases": [],
+          "polymer": {
+            "family": "LCP",
+            "morphology": "unknown"
+          },
+          "composition": {
+            "notes": "Manufacturer lineup states total filling volume 35% with glass fibre/inorganic; features: Antistatic."
+          },
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-sumitomo-sumikasuper-lcp-lineup-20260929",
+              "publisher": "Sumitomo Chemical Co., Ltd.",
+              "title": "SUMIKASUPER LCP Grade Lineup",
+              "url": "https://www.sumitomo-chem.co.jp/sep/english/products/lcp/lcp_fg_grade.html",
+              "kind": "other",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Current manufacturer grade-lineup identity and filler/feature text retained. DTUL and moulding-temperature values are not promoted here because this wave is identity/composition acquisition only; runtime promotion remains blocked pending normalized exact-grade observations."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-sumitomo-sumikasuper-e6008",
+          "manufacturer": {
+            "id": "mfr-sumitomo-chemical",
+            "name": "Sumitomo Chemical Co., Ltd.",
+            "country": "Japan",
+            "website": "https://www.sumitomo-chem.co.jp/"
+          },
+          "brand": "SUMIKASUPER",
+          "grade": "E6008",
+          "aliases": [],
+          "polymer": {
+            "family": "LCP",
+            "morphology": "unknown"
+          },
+          "composition": {
+            "notes": "Manufacturer lineup states total filling volume 40% with glass fibre; features: High strength; high flow.",
+            "glassFibrePct": 40
+          },
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-sumitomo-sumikasuper-lcp-lineup-20260929",
+              "publisher": "Sumitomo Chemical Co., Ltd.",
+              "title": "SUMIKASUPER LCP Grade Lineup",
+              "url": "https://www.sumitomo-chem.co.jp/sep/english/products/lcp/lcp_fg_grade.html",
+              "kind": "other",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Current manufacturer grade-lineup identity and filler/feature text retained. DTUL and moulding-temperature values are not promoted here because this wave is identity/composition acquisition only; runtime promotion remains blocked pending normalized exact-grade observations."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-sumitomo-sumikasuper-e6008ke",
+          "manufacturer": {
+            "id": "mfr-sumitomo-chemical",
+            "name": "Sumitomo Chemical Co., Ltd.",
+            "country": "Japan",
+            "website": "https://www.sumitomo-chem.co.jp/"
+          },
+          "brand": "SUMIKASUPER",
+          "grade": "E6008KE",
+          "aliases": [],
+          "polymer": {
+            "family": "LCP",
+            "morphology": "unknown"
+          },
+          "composition": {
+            "notes": "Manufacturer lineup states total filling volume 40% with glass fibre; features: High strength; high flow.",
+            "glassFibrePct": 40
+          },
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-sumitomo-sumikasuper-lcp-lineup-20260929",
+              "publisher": "Sumitomo Chemical Co., Ltd.",
+              "title": "SUMIKASUPER LCP Grade Lineup",
+              "url": "https://www.sumitomo-chem.co.jp/sep/english/products/lcp/lcp_fg_grade.html",
+              "kind": "other",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Current manufacturer grade-lineup identity and filler/feature text retained. DTUL and moulding-temperature values are not promoted here because this wave is identity/composition acquisition only; runtime promotion remains blocked pending normalized exact-grade observations."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-sumitomo-sumikasuper-e6205l",
+          "manufacturer": {
+            "id": "mfr-sumitomo-chemical",
+            "name": "Sumitomo Chemical Co., Ltd.",
+            "country": "Japan",
+            "website": "https://www.sumitomo-chem.co.jp/"
+          },
+          "brand": "SUMIKASUPER",
+          "grade": "E6205L",
+          "aliases": [],
+          "polymer": {
+            "family": "LCP",
+            "morphology": "unknown"
+          },
+          "composition": {
+            "notes": "Manufacturer lineup states total filling volume 25% with glass fibre/inorganic; features: Low thermal conductivity; low dielectric constant."
+          },
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-sumitomo-sumikasuper-lcp-lineup-20260929",
+              "publisher": "Sumitomo Chemical Co., Ltd.",
+              "title": "SUMIKASUPER LCP Grade Lineup",
+              "url": "https://www.sumitomo-chem.co.jp/sep/english/products/lcp/lcp_fg_grade.html",
+              "kind": "other",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Current manufacturer grade-lineup identity and filler/feature text retained. DTUL and moulding-temperature values are not promoted here because this wave is identity/composition acquisition only; runtime promotion remains blocked pending normalized exact-grade observations."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-sumitomo-sumikasuper-e6807t",
+          "manufacturer": {
+            "id": "mfr-sumitomo-chemical",
+            "name": "Sumitomo Chemical Co., Ltd.",
+            "country": "Japan",
+            "website": "https://www.sumitomo-chem.co.jp/"
+          },
+          "brand": "SUMIKASUPER",
+          "grade": "E6807T",
+          "aliases": [],
+          "polymer": {
+            "family": "LCP",
+            "morphology": "unknown"
+          },
+          "composition": {
+            "notes": "Manufacturer lineup states total filling volume 35% with inorganic; features: Surface smoothness."
+          },
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-sumitomo-sumikasuper-lcp-lineup-20260929",
+              "publisher": "Sumitomo Chemical Co., Ltd.",
+              "title": "SUMIKASUPER LCP Grade Lineup",
+              "url": "https://www.sumitomo-chem.co.jp/sep/english/products/lcp/lcp_fg_grade.html",
+              "kind": "other",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Current manufacturer grade-lineup identity and filler/feature text retained. DTUL and moulding-temperature values are not promoted here because this wave is identity/composition acquisition only; runtime promotion remains blocked pending normalized exact-grade observations."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-sumitomo-sumikasuper-e6809u",
+          "manufacturer": {
+            "id": "mfr-sumitomo-chemical",
+            "name": "Sumitomo Chemical Co., Ltd.",
+            "country": "Japan",
+            "website": "https://www.sumitomo-chem.co.jp/"
+          },
+          "brand": "SUMIKASUPER",
+          "grade": "E6809U",
+          "aliases": [],
+          "polymer": {
+            "family": "LCP",
+            "morphology": "unknown"
+          },
+          "composition": {
+            "notes": "Manufacturer lineup states total filling volume 45% with glass fibre/inorganic; features: Low warpage; high heat resistance; good flow."
+          },
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-sumitomo-sumikasuper-lcp-lineup-20260929",
+              "publisher": "Sumitomo Chemical Co., Ltd.",
+              "title": "SUMIKASUPER LCP Grade Lineup",
+              "url": "https://www.sumitomo-chem.co.jp/sep/english/products/lcp/lcp_fg_grade.html",
+              "kind": "other",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Current manufacturer grade-lineup identity and filler/feature text retained. DTUL and moulding-temperature values are not promoted here because this wave is identity/composition acquisition only; runtime promotion remains blocked pending normalized exact-grade observations."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-sumitomo-sumikasuper-e6809t",
+          "manufacturer": {
+            "id": "mfr-sumitomo-chemical",
+            "name": "Sumitomo Chemical Co., Ltd.",
+            "country": "Japan",
+            "website": "https://www.sumitomo-chem.co.jp/"
+          },
+          "brand": "SUMIKASUPER",
+          "grade": "E6809T",
+          "aliases": [],
+          "polymer": {
+            "family": "LCP",
+            "morphology": "unknown"
+          },
+          "composition": {
+            "notes": "Manufacturer lineup states total filling volume 45% with inorganic; features: Surface smoothness."
+          },
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-sumitomo-sumikasuper-lcp-lineup-20260929",
+              "publisher": "Sumitomo Chemical Co., Ltd.",
+              "title": "SUMIKASUPER LCP Grade Lineup",
+              "url": "https://www.sumitomo-chem.co.jp/sep/english/products/lcp/lcp_fg_grade.html",
+              "kind": "other",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Current manufacturer grade-lineup identity and filler/feature text retained. DTUL and moulding-temperature values are not promoted here because this wave is identity/composition acquisition only; runtime promotion remains blocked pending normalized exact-grade observations."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-sumitomo-sumikasuper-e6007lhf",
+          "manufacturer": {
+            "id": "mfr-sumitomo-chemical",
+            "name": "Sumitomo Chemical Co., Ltd.",
+            "country": "Japan",
+            "website": "https://www.sumitomo-chem.co.jp/"
+          },
+          "brand": "SUMIKASUPER",
+          "grade": "E6007LHF",
+          "aliases": [],
+          "polymer": {
+            "family": "LCP",
+            "morphology": "unknown"
+          },
+          "composition": {
+            "notes": "Manufacturer lineup states total filling volume 35% with glass fibre; features: Low warpage; high strength.",
+            "glassFibrePct": 35
+          },
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-sumitomo-sumikasuper-lcp-lineup-20260929",
+              "publisher": "Sumitomo Chemical Co., Ltd.",
+              "title": "SUMIKASUPER LCP Grade Lineup",
+              "url": "https://www.sumitomo-chem.co.jp/sep/english/products/lcp/lcp_fg_grade.html",
+              "kind": "other",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Current manufacturer grade-lineup identity and filler/feature text retained. DTUL and moulding-temperature values are not promoted here because this wave is identity/composition acquisition only; runtime promotion remains blocked pending normalized exact-grade observations."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-sumitomo-sumikasuper-e6007lhf-mr",
+          "manufacturer": {
+            "id": "mfr-sumitomo-chemical",
+            "name": "Sumitomo Chemical Co., Ltd.",
+            "country": "Japan",
+            "website": "https://www.sumitomo-chem.co.jp/"
+          },
+          "brand": "SUMIKASUPER",
+          "grade": "E6007LHF-MR",
+          "aliases": [],
+          "polymer": {
+            "family": "LCP",
+            "morphology": "unknown"
+          },
+          "composition": {
+            "notes": "Manufacturer lineup states total filling volume 35% with glass fibre; features: Low warpage; high strength; improved release.",
+            "glassFibrePct": 35
+          },
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-sumitomo-sumikasuper-lcp-lineup-20260929",
+              "publisher": "Sumitomo Chemical Co., Ltd.",
+              "title": "SUMIKASUPER LCP Grade Lineup",
+              "url": "https://www.sumitomo-chem.co.jp/sep/english/products/lcp/lcp_fg_grade.html",
+              "kind": "other",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Current manufacturer grade-lineup identity and filler/feature text retained. DTUL and moulding-temperature values are not promoted here because this wave is identity/composition acquisition only; runtime promotion remains blocked pending normalized exact-grade observations."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-sumitomo-sumikasuper-e6807lhf",
+          "manufacturer": {
+            "id": "mfr-sumitomo-chemical",
+            "name": "Sumitomo Chemical Co., Ltd.",
+            "country": "Japan",
+            "website": "https://www.sumitomo-chem.co.jp/"
+          },
+          "brand": "SUMIKASUPER",
+          "grade": "E6807LHF",
+          "aliases": [],
+          "polymer": {
+            "family": "LCP",
+            "morphology": "unknown"
+          },
+          "composition": {
+            "notes": "Manufacturer lineup states total filling volume 35% with glass fibre/inorganic; features: Low warpage; high strength."
+          },
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-sumitomo-sumikasuper-lcp-lineup-20260929",
+              "publisher": "Sumitomo Chemical Co., Ltd.",
+              "title": "SUMIKASUPER LCP Grade Lineup",
+              "url": "https://www.sumitomo-chem.co.jp/sep/english/products/lcp/lcp_fg_grade.html",
+              "kind": "other",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Current manufacturer grade-lineup identity and filler/feature text retained. DTUL and moulding-temperature values are not promoted here because this wave is identity/composition acquisition only; runtime promotion remains blocked pending normalized exact-grade observations."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-sumitomo-sumikasuper-e6808lhf",
+          "manufacturer": {
+            "id": "mfr-sumitomo-chemical",
+            "name": "Sumitomo Chemical Co., Ltd.",
+            "country": "Japan",
+            "website": "https://www.sumitomo-chem.co.jp/"
+          },
+          "brand": "SUMIKASUPER",
+          "grade": "E6808LHF",
+          "aliases": [],
+          "polymer": {
+            "family": "LCP",
+            "morphology": "unknown"
+          },
+          "composition": {
+            "notes": "Manufacturer lineup states total filling volume 40% with glass fibre/inorganic; features: Low warpage; high strength."
+          },
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-sumitomo-sumikasuper-lcp-lineup-20260929",
+              "publisher": "Sumitomo Chemical Co., Ltd.",
+              "title": "SUMIKASUPER LCP Grade Lineup",
+              "url": "https://www.sumitomo-chem.co.jp/sep/english/products/lcp/lcp_fg_grade.html",
+              "kind": "other",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Current manufacturer grade-lineup identity and filler/feature text retained. DTUL and moulding-temperature values are not promoted here because this wave is identity/composition acquisition only; runtime promotion remains blocked pending normalized exact-grade observations."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-sumitomo-sumikasuper-e6808ghf",
+          "manufacturer": {
+            "id": "mfr-sumitomo-chemical",
+            "name": "Sumitomo Chemical Co., Ltd.",
+            "country": "Japan",
+            "website": "https://www.sumitomo-chem.co.jp/"
+          },
+          "brand": "SUMIKASUPER",
+          "grade": "E6808GHF",
+          "aliases": [],
+          "polymer": {
+            "family": "LCP",
+            "morphology": "unknown"
+          },
+          "composition": {
+            "notes": "Manufacturer lineup states total filling volume 40% with glass fibre/inorganic; features: Low warpage; high flow; high strength."
+          },
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-sumitomo-sumikasuper-lcp-lineup-20260929",
+              "publisher": "Sumitomo Chemical Co., Ltd.",
+              "title": "SUMIKASUPER LCP Grade Lineup",
+              "url": "https://www.sumitomo-chem.co.jp/sep/english/products/lcp/lcp_fg_grade.html",
+              "kind": "other",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Current manufacturer grade-lineup identity and filler/feature text retained. DTUL and moulding-temperature values are not promoted here because this wave is identity/composition acquisition only; runtime promotion remains blocked pending normalized exact-grade observations."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-sumitomo-sumikasuper-e6808uhf",
+          "manufacturer": {
+            "id": "mfr-sumitomo-chemical",
+            "name": "Sumitomo Chemical Co., Ltd.",
+            "country": "Japan",
+            "website": "https://www.sumitomo-chem.co.jp/"
+          },
+          "brand": "SUMIKASUPER",
+          "grade": "E6808UHF",
+          "aliases": [],
+          "polymer": {
+            "family": "LCP",
+            "morphology": "unknown"
+          },
+          "composition": {
+            "notes": "Manufacturer lineup states total filling volume 40% with glass fibre/inorganic; features: Low warpage; high flow."
+          },
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-sumitomo-sumikasuper-lcp-lineup-20260929",
+              "publisher": "Sumitomo Chemical Co., Ltd.",
+              "title": "SUMIKASUPER LCP Grade Lineup",
+              "url": "https://www.sumitomo-chem.co.jp/sep/english/products/lcp/lcp_fg_grade.html",
+              "kind": "other",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Current manufacturer grade-lineup identity and filler/feature text retained. DTUL and moulding-temperature values are not promoted here because this wave is identity/composition acquisition only; runtime promotion remains blocked pending normalized exact-grade observations."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-sumitomo-sumikasuper-e6810lhf",
+          "manufacturer": {
+            "id": "mfr-sumitomo-chemical",
+            "name": "Sumitomo Chemical Co., Ltd.",
+            "country": "Japan",
+            "website": "https://www.sumitomo-chem.co.jp/"
+          },
+          "brand": "SUMIKASUPER",
+          "grade": "E6810LHF",
+          "aliases": [],
+          "polymer": {
+            "family": "LCP",
+            "morphology": "unknown"
+          },
+          "composition": {
+            "notes": "Manufacturer lineup states total filling volume 50% with glass fibre/inorganic; features: Low warpage; low shrinkage; low anisotropy."
+          },
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-sumitomo-sumikasuper-lcp-lineup-20260929",
+              "publisher": "Sumitomo Chemical Co., Ltd.",
+              "title": "SUMIKASUPER LCP Grade Lineup",
+              "url": "https://www.sumitomo-chem.co.jp/sep/english/products/lcp/lcp_fg_grade.html",
+              "kind": "other",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Current manufacturer grade-lineup identity and filler/feature text retained. DTUL and moulding-temperature values are not promoted here because this wave is identity/composition acquisition only; runtime promotion remains blocked pending normalized exact-grade observations."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-sumitomo-sumikasuper-e6810khf",
+          "manufacturer": {
+            "id": "mfr-sumitomo-chemical",
+            "name": "Sumitomo Chemical Co., Ltd.",
+            "country": "Japan",
+            "website": "https://www.sumitomo-chem.co.jp/"
+          },
+          "brand": "SUMIKASUPER",
+          "grade": "E6810KHF",
+          "aliases": [],
+          "polymer": {
+            "family": "LCP",
+            "morphology": "unknown"
+          },
+          "composition": {
+            "notes": "Manufacturer lineup states total filling volume 50% with glass fibre/inorganic; features: Low warpage; low shrinkage; low anisotropy."
+          },
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-sumitomo-sumikasuper-lcp-lineup-20260929",
+              "publisher": "Sumitomo Chemical Co., Ltd.",
+              "title": "SUMIKASUPER LCP Grade Lineup",
+              "url": "https://www.sumitomo-chem.co.jp/sep/english/products/lcp/lcp_fg_grade.html",
+              "kind": "other",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Current manufacturer grade-lineup identity and filler/feature text retained. DTUL and moulding-temperature values are not promoted here because this wave is identity/composition acquisition only; runtime promotion remains blocked pending normalized exact-grade observations."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-sumitomo-sumikasuper-sv6808thf",
+          "manufacturer": {
+            "id": "mfr-sumitomo-chemical",
+            "name": "Sumitomo Chemical Co., Ltd.",
+            "country": "Japan",
+            "website": "https://www.sumitomo-chem.co.jp/"
+          },
+          "brand": "SUMIKASUPER",
+          "grade": "SV6808THF",
+          "aliases": [],
+          "polymer": {
+            "family": "LCP",
+            "morphology": "unknown"
+          },
+          "composition": {
+            "notes": "Manufacturer lineup states total filling volume 40% with glass fibre/inorganic; features: Ultra-low warpage; high flow."
+          },
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-sumitomo-sumikasuper-lcp-lineup-20260929",
+              "publisher": "Sumitomo Chemical Co., Ltd.",
+              "title": "SUMIKASUPER LCP Grade Lineup",
+              "url": "https://www.sumitomo-chem.co.jp/sep/english/products/lcp/lcp_fg_grade.html",
+              "kind": "other",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Current manufacturer grade-lineup identity and filler/feature text retained. DTUL and moulding-temperature values are not promoted here because this wave is identity/composition acquisition only; runtime promotion remains blocked pending normalized exact-grade observations."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-sumitomo-sumikasuper-sv6808ghf",
+          "manufacturer": {
+            "id": "mfr-sumitomo-chemical",
+            "name": "Sumitomo Chemical Co., Ltd.",
+            "country": "Japan",
+            "website": "https://www.sumitomo-chem.co.jp/"
+          },
+          "brand": "SUMIKASUPER",
+          "grade": "SV6808GHF",
+          "aliases": [],
+          "polymer": {
+            "family": "LCP",
+            "morphology": "unknown"
+          },
+          "composition": {
+            "notes": "Manufacturer lineup states total filling volume 40% with glass fibre/inorganic; features: Low warpage; high flow; high strength."
+          },
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-sumitomo-sumikasuper-lcp-lineup-20260929",
+              "publisher": "Sumitomo Chemical Co., Ltd.",
+              "title": "SUMIKASUPER LCP Grade Lineup",
+              "url": "https://www.sumitomo-chem.co.jp/sep/english/products/lcp/lcp_fg_grade.html",
+              "kind": "other",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Current manufacturer grade-lineup identity and filler/feature text retained. DTUL and moulding-temperature values are not promoted here because this wave is identity/composition acquisition only; runtime promotion remains blocked pending normalized exact-grade observations."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-sumitomo-sumikasuper-sv6808l",
+          "manufacturer": {
+            "id": "mfr-sumitomo-chemical",
+            "name": "Sumitomo Chemical Co., Ltd.",
+            "country": "Japan",
+            "website": "https://www.sumitomo-chem.co.jp/"
+          },
+          "brand": "SUMIKASUPER",
+          "grade": "SV6808L",
+          "aliases": [],
+          "polymer": {
+            "family": "LCP",
+            "morphology": "unknown"
+          },
+          "composition": {
+            "notes": "Manufacturer lineup states total filling volume 40% with glass fibre/inorganic; features: Low warpage; high heat resistance; high strength."
+          },
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-sumitomo-sumikasuper-lcp-lineup-20260929",
+              "publisher": "Sumitomo Chemical Co., Ltd.",
+              "title": "SUMIKASUPER LCP Grade Lineup",
+              "url": "https://www.sumitomo-chem.co.jp/sep/english/products/lcp/lcp_fg_grade.html",
+              "kind": "other",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Current manufacturer grade-lineup identity and filler/feature text retained. DTUL and moulding-temperature values are not promoted here because this wave is identity/composition acquisition only; runtime promotion remains blocked pending normalized exact-grade observations."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-sumitomo-sumikasuper-sr1009",
+          "manufacturer": {
+            "id": "mfr-sumitomo-chemical",
+            "name": "Sumitomo Chemical Co., Ltd.",
+            "country": "Japan",
+            "website": "https://www.sumitomo-chem.co.jp/"
+          },
+          "brand": "SUMIKASUPER",
+          "grade": "SR1009",
+          "aliases": [],
+          "polymer": {
+            "family": "LCP",
+            "morphology": "unknown"
+          },
+          "composition": {
+            "notes": "Manufacturer lineup states total filling volume 45% with glass fibre; features: Ultra-high strength; good flow.",
+            "glassFibrePct": 45
+          },
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-sumitomo-sumikasuper-lcp-lineup-20260929",
+              "publisher": "Sumitomo Chemical Co., Ltd.",
+              "title": "SUMIKASUPER LCP Grade Lineup",
+              "url": "https://www.sumitomo-chem.co.jp/sep/english/products/lcp/lcp_fg_grade.html",
+              "kind": "other",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Current manufacturer grade-lineup identity and filler/feature text retained. DTUL and moulding-temperature values are not promoted here because this wave is identity/composition acquisition only; runtime promotion remains blocked pending normalized exact-grade observations."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-sumitomo-sumikasuper-sr1009l",
+          "manufacturer": {
+            "id": "mfr-sumitomo-chemical",
+            "name": "Sumitomo Chemical Co., Ltd.",
+            "country": "Japan",
+            "website": "https://www.sumitomo-chem.co.jp/"
+          },
+          "brand": "SUMIKASUPER",
+          "grade": "SR1009L",
+          "aliases": [],
+          "polymer": {
+            "family": "LCP",
+            "morphology": "unknown"
+          },
+          "composition": {
+            "notes": "Manufacturer lineup states total filling volume 45% with glass fibre; features: Ultra-high strength; high hardness.",
+            "glassFibrePct": 45
+          },
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-sumitomo-sumikasuper-lcp-lineup-20260929",
+              "publisher": "Sumitomo Chemical Co., Ltd.",
+              "title": "SUMIKASUPER LCP Grade Lineup",
+              "url": "https://www.sumitomo-chem.co.jp/sep/english/products/lcp/lcp_fg_grade.html",
+              "kind": "other",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Current manufacturer grade-lineup identity and filler/feature text retained. DTUL and moulding-temperature values are not promoted here because this wave is identity/composition acquisition only; runtime promotion remains blocked pending normalized exact-grade observations."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-sumitomo-sumikasuper-sr1205l",
+          "manufacturer": {
+            "id": "mfr-sumitomo-chemical",
+            "name": "Sumitomo Chemical Co., Ltd.",
+            "country": "Japan",
+            "website": "https://www.sumitomo-chem.co.jp/"
+          },
+          "brand": "SUMIKASUPER",
+          "grade": "SR1205L",
+          "aliases": [],
+          "polymer": {
+            "family": "LCP",
+            "morphology": "unknown"
+          },
+          "composition": {
+            "notes": "Manufacturer lineup states total filling volume 25% with glass fibre/inorganic; features: Low dielectric constant; low dielectric loss."
+          },
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-sumitomo-sumikasuper-lcp-lineup-20260929",
+              "publisher": "Sumitomo Chemical Co., Ltd.",
+              "title": "SUMIKASUPER LCP Grade Lineup",
+              "url": "https://www.sumitomo-chem.co.jp/sep/english/products/lcp/lcp_fg_grade.html",
+              "kind": "other",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Current manufacturer grade-lineup identity and filler/feature text retained. DTUL and moulding-temperature values are not promoted here because this wave is identity/composition acquisition only; runtime promotion remains blocked pending normalized exact-grade observations."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-sumitomo-sumikasuper-sr2506",
+          "manufacturer": {
+            "id": "mfr-sumitomo-chemical",
+            "name": "Sumitomo Chemical Co., Ltd.",
+            "country": "Japan",
+            "website": "https://www.sumitomo-chem.co.jp/"
+          },
+          "brand": "SUMIKASUPER",
+          "grade": "SR2506",
+          "aliases": [],
+          "polymer": {
+            "family": "LCP",
+            "morphology": "unknown"
+          },
+          "composition": {
+            "notes": "Manufacturer lineup states total filling volume 30% with glass fibre/inorganic; features: Low warpage; thin-wall ultra-high flow."
+          },
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-sumitomo-sumikasuper-lcp-lineup-20260929",
+              "publisher": "Sumitomo Chemical Co., Ltd.",
+              "title": "SUMIKASUPER LCP Grade Lineup",
+              "url": "https://www.sumitomo-chem.co.jp/sep/english/products/lcp/lcp_fg_grade.html",
+              "kind": "other",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Current manufacturer grade-lineup identity and filler/feature text retained. DTUL and moulding-temperature values are not promoted here because this wave is identity/composition acquisition only; runtime promotion remains blocked pending normalized exact-grade observations."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-sumitomo-sumikasuper-sr2507",
+          "manufacturer": {
+            "id": "mfr-sumitomo-chemical",
+            "name": "Sumitomo Chemical Co., Ltd.",
+            "country": "Japan",
+            "website": "https://www.sumitomo-chem.co.jp/"
+          },
+          "brand": "SUMIKASUPER",
+          "grade": "SR2507",
+          "aliases": [],
+          "polymer": {
+            "family": "LCP",
+            "morphology": "unknown"
+          },
+          "composition": {
+            "notes": "Manufacturer lineup states total filling volume 35% with inorganic; features: Ultra-low warpage; thin-wall ultra-high flow."
+          },
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-sumitomo-sumikasuper-lcp-lineup-20260929",
+              "publisher": "Sumitomo Chemical Co., Ltd.",
+              "title": "SUMIKASUPER LCP Grade Lineup",
+              "url": "https://www.sumitomo-chem.co.jp/sep/english/products/lcp/lcp_fg_grade.html",
+              "kind": "other",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Current manufacturer grade-lineup identity and filler/feature text retained. DTUL and moulding-temperature values are not promoted here because this wave is identity/composition acquisition only; runtime promotion remains blocked pending normalized exact-grade observations."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-sumitomo-sumikasuper-sz6505hf",
+          "manufacturer": {
+            "id": "mfr-sumitomo-chemical",
+            "name": "Sumitomo Chemical Co., Ltd.",
+            "country": "Japan",
+            "website": "https://www.sumitomo-chem.co.jp/"
+          },
+          "brand": "SUMIKASUPER",
+          "grade": "SZ6505HF",
+          "aliases": [],
+          "polymer": {
+            "family": "LCP",
+            "morphology": "unknown"
+          },
+          "composition": {
+            "notes": "Manufacturer lineup states total filling volume 25% with inorganic; features: Low warpage; ultra-high flow."
+          },
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-sumitomo-sumikasuper-lcp-lineup-20260929",
+              "publisher": "Sumitomo Chemical Co., Ltd.",
+              "title": "SUMIKASUPER LCP Grade Lineup",
+              "url": "https://www.sumitomo-chem.co.jp/sep/english/products/lcp/lcp_fg_grade.html",
+              "kind": "other",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Current manufacturer grade-lineup identity and filler/feature text retained. DTUL and moulding-temperature values are not promoted here because this wave is identity/composition acquisition only; runtime promotion remains blocked pending normalized exact-grade observations."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-sumitomo-sumikasuper-sz6506hf",
+          "manufacturer": {
+            "id": "mfr-sumitomo-chemical",
+            "name": "Sumitomo Chemical Co., Ltd.",
+            "country": "Japan",
+            "website": "https://www.sumitomo-chem.co.jp/"
+          },
+          "brand": "SUMIKASUPER",
+          "grade": "SZ6506HF",
+          "aliases": [],
+          "polymer": {
+            "family": "LCP",
+            "morphology": "unknown"
+          },
+          "composition": {
+            "notes": "Manufacturer lineup states total filling volume 30% with inorganic; features: Low warpage; ultra-high flow."
+          },
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-sumitomo-sumikasuper-lcp-lineup-20260929",
+              "publisher": "Sumitomo Chemical Co., Ltd.",
+              "title": "SUMIKASUPER LCP Grade Lineup",
+              "url": "https://www.sumitomo-chem.co.jp/sep/english/products/lcp/lcp_fg_grade.html",
+              "kind": "other",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Current manufacturer grade-lineup identity and filler/feature text retained. DTUL and moulding-temperature values are not promoted here because this wave is identity/composition acquisition only; runtime promotion remains blocked pending normalized exact-grade observations."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-sumitomo-sumikasuper-sz4506",
+          "manufacturer": {
+            "id": "mfr-sumitomo-chemical",
+            "name": "Sumitomo Chemical Co., Ltd.",
+            "country": "Japan",
+            "website": "https://www.sumitomo-chem.co.jp/"
+          },
+          "brand": "SUMIKASUPER",
+          "grade": "SZ4506",
+          "aliases": [],
+          "polymer": {
+            "family": "LCP",
+            "morphology": "unknown"
+          },
+          "composition": {
+            "notes": "Manufacturer lineup states total filling volume 30% with inorganic; features: Low warpage; high heat resistance; smooth surface."
+          },
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-sumitomo-sumikasuper-lcp-lineup-20260929",
+              "publisher": "Sumitomo Chemical Co., Ltd.",
+              "title": "SUMIKASUPER LCP Grade Lineup",
+              "url": "https://www.sumitomo-chem.co.jp/sep/english/products/lcp/lcp_fg_grade.html",
+              "kind": "other",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Current manufacturer grade-lineup identity and filler/feature text retained. DTUL and moulding-temperature values are not promoted here because this wave is identity/composition acquisition only; runtime promotion remains blocked pending normalized exact-grade observations."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-sumitomo-sumikasuper-sz6709l",
+          "manufacturer": {
+            "id": "mfr-sumitomo-chemical",
+            "name": "Sumitomo Chemical Co., Ltd.",
+            "country": "Japan",
+            "website": "https://www.sumitomo-chem.co.jp/"
+          },
+          "brand": "SUMIKASUPER",
+          "grade": "SZ6709L",
+          "aliases": [],
+          "polymer": {
+            "family": "LCP",
+            "morphology": "unknown"
+          },
+          "composition": {
+            "notes": "Manufacturer lineup states total filling volume 45% with glass fibre/inorganic; features: High whiteness."
+          },
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-sumitomo-sumikasuper-lcp-lineup-20260929",
+              "publisher": "Sumitomo Chemical Co., Ltd.",
+              "title": "SUMIKASUPER LCP Grade Lineup",
+              "url": "https://www.sumitomo-chem.co.jp/sep/english/products/lcp/lcp_fg_grade.html",
+              "kind": "other",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Current manufacturer grade-lineup identity and filler/feature text retained. DTUL and moulding-temperature values are not promoted here because this wave is identity/composition acquisition only; runtime promotion remains blocked pending normalized exact-grade observations."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-sumitomo-sumikaexcel-3600g",
+          "manufacturer": {
+            "id": "mfr-sumitomo-chemical",
+            "name": "Sumitomo Chemical Co., Ltd.",
+            "country": "Japan",
+            "website": "https://www.sumitomo-chem.co.jp/"
+          },
+          "brand": "SUMIKAEXCEL",
+          "grade": "3600G",
+          "aliases": [],
+          "polymer": {
+            "family": "PES",
+            "morphology": "unknown"
+          },
+          "composition": {
+            "notes": "Manufacturer lineup: Non-reinforced; High flow injection moulding."
+          },
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-sumitomo-sumikaexcel-pes-lineup-20260929",
+              "publisher": "Sumitomo Chemical Co., Ltd.",
+              "title": "SUMIKAEXCEL PES Grade Lineup",
+              "url": "https://www.sumitomo-chem.co.jp/sep/english/products/pes/pes_fg_grade.html",
+              "kind": "other",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Current manufacturer injection-grade lineup confirms exact commercial identity and listed filler/feature text. No numeric engineering property or processing recipe is inferred; runtime promotion remains blocked."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-sumitomo-sumikaexcel-4100g",
+          "manufacturer": {
+            "id": "mfr-sumitomo-chemical",
+            "name": "Sumitomo Chemical Co., Ltd.",
+            "country": "Japan",
+            "website": "https://www.sumitomo-chem.co.jp/"
+          },
+          "brand": "SUMIKAEXCEL",
+          "grade": "4100G",
+          "aliases": [],
+          "polymer": {
+            "family": "PES",
+            "morphology": "unknown"
+          },
+          "composition": {
+            "notes": "Manufacturer lineup: Non-reinforced; Standard injection moulding / extrusion."
+          },
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-sumitomo-sumikaexcel-pes-lineup-20260929",
+              "publisher": "Sumitomo Chemical Co., Ltd.",
+              "title": "SUMIKAEXCEL PES Grade Lineup",
+              "url": "https://www.sumitomo-chem.co.jp/sep/english/products/pes/pes_fg_grade.html",
+              "kind": "other",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Current manufacturer injection-grade lineup confirms exact commercial identity and listed filler/feature text. No numeric engineering property or processing recipe is inferred; runtime promotion remains blocked."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-sumitomo-sumikaexcel-4800g",
+          "manufacturer": {
+            "id": "mfr-sumitomo-chemical",
+            "name": "Sumitomo Chemical Co., Ltd.",
+            "country": "Japan",
+            "website": "https://www.sumitomo-chem.co.jp/"
+          },
+          "brand": "SUMIKAEXCEL",
+          "grade": "4800G",
+          "aliases": [],
+          "polymer": {
+            "family": "PES",
+            "morphology": "unknown"
+          },
+          "composition": {
+            "notes": "Manufacturer lineup: Non-reinforced; High molecular weight; injection / extrusion."
+          },
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-sumitomo-sumikaexcel-pes-lineup-20260929",
+              "publisher": "Sumitomo Chemical Co., Ltd.",
+              "title": "SUMIKAEXCEL PES Grade Lineup",
+              "url": "https://www.sumitomo-chem.co.jp/sep/english/products/pes/pes_fg_grade.html",
+              "kind": "other",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Current manufacturer injection-grade lineup confirms exact commercial identity and listed filler/feature text. No numeric engineering property or processing recipe is inferred; runtime promotion remains blocked."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-sumitomo-sumikaexcel-3601gl20",
+          "manufacturer": {
+            "id": "mfr-sumitomo-chemical",
+            "name": "Sumitomo Chemical Co., Ltd.",
+            "country": "Japan",
+            "website": "https://www.sumitomo-chem.co.jp/"
+          },
+          "brand": "SUMIKAEXCEL",
+          "grade": "3601GL20",
+          "aliases": [],
+          "polymer": {
+            "family": "PES",
+            "morphology": "unknown"
+          },
+          "composition": {
+            "notes": "Manufacturer lineup: glass fibre; High flow injection moulding.",
+            "glassFibrePct": 20
+          },
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-sumitomo-sumikaexcel-pes-lineup-20260929",
+              "publisher": "Sumitomo Chemical Co., Ltd.",
+              "title": "SUMIKAEXCEL PES Grade Lineup",
+              "url": "https://www.sumitomo-chem.co.jp/sep/english/products/pes/pes_fg_grade.html",
+              "kind": "other",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Current manufacturer injection-grade lineup confirms exact commercial identity and listed filler/feature text. No numeric engineering property or processing recipe is inferred; runtime promotion remains blocked."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-sumitomo-sumikaexcel-3601gl30",
+          "manufacturer": {
+            "id": "mfr-sumitomo-chemical",
+            "name": "Sumitomo Chemical Co., Ltd.",
+            "country": "Japan",
+            "website": "https://www.sumitomo-chem.co.jp/"
+          },
+          "brand": "SUMIKAEXCEL",
+          "grade": "3601GL30",
+          "aliases": [],
+          "polymer": {
+            "family": "PES",
+            "morphology": "unknown"
+          },
+          "composition": {
+            "notes": "Manufacturer lineup: glass fibre; High flow injection moulding.",
+            "glassFibrePct": 30
+          },
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-sumitomo-sumikaexcel-pes-lineup-20260929",
+              "publisher": "Sumitomo Chemical Co., Ltd.",
+              "title": "SUMIKAEXCEL PES Grade Lineup",
+              "url": "https://www.sumitomo-chem.co.jp/sep/english/products/pes/pes_fg_grade.html",
+              "kind": "other",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Current manufacturer injection-grade lineup confirms exact commercial identity and listed filler/feature text. No numeric engineering property or processing recipe is inferred; runtime promotion remains blocked."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-sumitomo-sumikaexcel-4101gl20",
+          "manufacturer": {
+            "id": "mfr-sumitomo-chemical",
+            "name": "Sumitomo Chemical Co., Ltd.",
+            "country": "Japan",
+            "website": "https://www.sumitomo-chem.co.jp/"
+          },
+          "brand": "SUMIKAEXCEL",
+          "grade": "4101GL20",
+          "aliases": [],
+          "polymer": {
+            "family": "PES",
+            "morphology": "unknown"
+          },
+          "composition": {
+            "notes": "Manufacturer lineup: glass fibre; Standard injection moulding.",
+            "glassFibrePct": 20
+          },
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-sumitomo-sumikaexcel-pes-lineup-20260929",
+              "publisher": "Sumitomo Chemical Co., Ltd.",
+              "title": "SUMIKAEXCEL PES Grade Lineup",
+              "url": "https://www.sumitomo-chem.co.jp/sep/english/products/pes/pes_fg_grade.html",
+              "kind": "other",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Current manufacturer injection-grade lineup confirms exact commercial identity and listed filler/feature text. No numeric engineering property or processing recipe is inferred; runtime promotion remains blocked."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-sumitomo-sumikaexcel-4101gl30",
+          "manufacturer": {
+            "id": "mfr-sumitomo-chemical",
+            "name": "Sumitomo Chemical Co., Ltd.",
+            "country": "Japan",
+            "website": "https://www.sumitomo-chem.co.jp/"
+          },
+          "brand": "SUMIKAEXCEL",
+          "grade": "4101GL30",
+          "aliases": [],
+          "polymer": {
+            "family": "PES",
+            "morphology": "unknown"
+          },
+          "composition": {
+            "notes": "Manufacturer lineup: glass fibre; Standard injection moulding.",
+            "glassFibrePct": 30
+          },
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-sumitomo-sumikaexcel-pes-lineup-20260929",
+              "publisher": "Sumitomo Chemical Co., Ltd.",
+              "title": "SUMIKAEXCEL PES Grade Lineup",
+              "url": "https://www.sumitomo-chem.co.jp/sep/english/products/pes/pes_fg_grade.html",
+              "kind": "other",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Current manufacturer injection-grade lineup confirms exact commercial identity and listed filler/feature text. No numeric engineering property or processing recipe is inferred; runtime promotion remains blocked."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-sumitomo-sumikaexcel-es5340",
+          "manufacturer": {
+            "id": "mfr-sumitomo-chemical",
+            "name": "Sumitomo Chemical Co., Ltd.",
+            "country": "Japan",
+            "website": "https://www.sumitomo-chem.co.jp/"
+          },
+          "brand": "SUMIKAEXCEL",
+          "grade": "ES5340",
+          "aliases": [],
+          "polymer": {
+            "family": "PES",
+            "morphology": "unknown"
+          },
+          "composition": {
+            "notes": "Manufacturer lineup: glass fibre; Ultra-high flow injection moulding.",
+            "glassFibrePct": 20
+          },
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-sumitomo-sumikaexcel-pes-lineup-20260929",
+              "publisher": "Sumitomo Chemical Co., Ltd.",
+              "title": "SUMIKAEXCEL PES Grade Lineup",
+              "url": "https://www.sumitomo-chem.co.jp/sep/english/products/pes/pes_fg_grade.html",
+              "kind": "other",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Current manufacturer injection-grade lineup confirms exact commercial identity and listed filler/feature text. No numeric engineering property or processing recipe is inferred; runtime promotion remains blocked."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-sumitomo-sumiploy-e3010",
+          "manufacturer": {
+            "id": "mfr-sumitomo-chemical",
+            "name": "Sumitomo Chemical Co., Ltd.",
+            "country": "Japan",
+            "website": "https://www.sumitomo-chem.co.jp/"
+          },
+          "brand": "SUMIPLOY",
+          "grade": "E3010",
+          "aliases": [],
+          "polymer": {
+            "family": "High-performance compound",
+            "morphology": "unknown"
+          },
+          "composition": {
+            "notes": "Manufacturer lineup: E101 / fluororesin system; Sliding grade."
+          },
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-sumitomo-sumikaexcel-pes-lineup-20260929",
+              "publisher": "Sumitomo Chemical Co., Ltd.",
+              "title": "SUMIKAEXCEL PES Grade Lineup",
+              "url": "https://www.sumitomo-chem.co.jp/sep/english/products/pes/pes_fg_grade.html",
+              "kind": "other",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Current manufacturer injection-grade lineup confirms exact commercial identity and listed filler/feature text. No numeric engineering property or processing recipe is inferred; runtime promotion remains blocked."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-sumitomo-sumiploy-fs2200",
+          "manufacturer": {
+            "id": "mfr-sumitomo-chemical",
+            "name": "Sumitomo Chemical Co., Ltd.",
+            "country": "Japan",
+            "website": "https://www.sumitomo-chem.co.jp/"
+          },
+          "brand": "SUMIPLOY",
+          "grade": "FS2200",
+          "aliases": [],
+          "polymer": {
+            "family": "High-performance compound",
+            "morphology": "unknown"
+          },
+          "composition": {
+            "notes": "Manufacturer lineup: fluororesin; Sliding grade."
+          },
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-sumitomo-sumikaexcel-pes-lineup-20260929",
+              "publisher": "Sumitomo Chemical Co., Ltd.",
+              "title": "SUMIKAEXCEL PES Grade Lineup",
+              "url": "https://www.sumitomo-chem.co.jp/sep/english/products/pes/pes_fg_grade.html",
+              "kind": "other",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Current manufacturer injection-grade lineup confirms exact commercial identity and listed filler/feature text. No numeric engineering property or processing recipe is inferred; runtime promotion remains blocked."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-sumitomo-sumiploy-gs5620",
+          "manufacturer": {
+            "id": "mfr-sumitomo-chemical",
+            "name": "Sumitomo Chemical Co., Ltd.",
+            "country": "Japan",
+            "website": "https://www.sumitomo-chem.co.jp/"
+          },
+          "brand": "SUMIPLOY",
+          "grade": "GS5620",
+          "aliases": [],
+          "polymer": {
+            "family": "High-performance compound",
+            "morphology": "unknown"
+          },
+          "composition": {
+            "notes": "Manufacturer lineup: glass fibre / fluororesin; Sliding; high dimensional accuracy."
+          },
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-sumitomo-sumikaexcel-pes-lineup-20260929",
+              "publisher": "Sumitomo Chemical Co., Ltd.",
+              "title": "SUMIKAEXCEL PES Grade Lineup",
+              "url": "https://www.sumitomo-chem.co.jp/sep/english/products/pes/pes_fg_grade.html",
+              "kind": "other",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Current manufacturer injection-grade lineup confirms exact commercial identity and listed filler/feature text. No numeric engineering property or processing recipe is inferred; runtime promotion remains blocked."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-sumitomo-sumiploy-cs5220",
+          "manufacturer": {
+            "id": "mfr-sumitomo-chemical",
+            "name": "Sumitomo Chemical Co., Ltd.",
+            "country": "Japan",
+            "website": "https://www.sumitomo-chem.co.jp/"
+          },
+          "brand": "SUMIPLOY",
+          "grade": "CS5220",
+          "aliases": [],
+          "polymer": {
+            "family": "High-performance compound",
+            "morphology": "unknown"
+          },
+          "composition": {
+            "notes": "Manufacturer lineup: carbon fibre / fluoroplastic; Sliding; high dimensional accuracy."
+          },
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-sumitomo-sumikaexcel-pes-lineup-20260929",
+              "publisher": "Sumitomo Chemical Co., Ltd.",
+              "title": "SUMIKAEXCEL PES Grade Lineup",
+              "url": "https://www.sumitomo-chem.co.jp/sep/english/products/pes/pes_fg_grade.html",
+              "kind": "other",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Current manufacturer injection-grade lineup confirms exact commercial identity and listed filler/feature text. No numeric engineering property or processing recipe is inferred; runtime promotion remains blocked."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-sumitomo-sumiploy-cs5530",
+          "manufacturer": {
+            "id": "mfr-sumitomo-chemical",
+            "name": "Sumitomo Chemical Co., Ltd.",
+            "country": "Japan",
+            "website": "https://www.sumitomo-chem.co.jp/"
+          },
+          "brand": "SUMIPLOY",
+          "grade": "CS5530",
+          "aliases": [],
+          "polymer": {
+            "family": "High-performance compound",
+            "morphology": "unknown"
+          },
+          "composition": {
+            "notes": "Manufacturer lineup: carbon fibre / inorganic; Ultra-high dimensional accuracy."
+          },
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-sumitomo-sumikaexcel-pes-lineup-20260929",
+              "publisher": "Sumitomo Chemical Co., Ltd.",
+              "title": "SUMIKAEXCEL PES Grade Lineup",
+              "url": "https://www.sumitomo-chem.co.jp/sep/english/products/pes/pes_fg_grade.html",
+              "kind": "other",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Current manufacturer injection-grade lineup confirms exact commercial identity and listed filler/feature text. No numeric engineering property or processing recipe is inferred; runtime promotion remains blocked."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-sumitomo-sumiploy-cs5600",
+          "manufacturer": {
+            "id": "mfr-sumitomo-chemical",
+            "name": "Sumitomo Chemical Co., Ltd.",
+            "country": "Japan",
+            "website": "https://www.sumitomo-chem.co.jp/"
+          },
+          "brand": "SUMIPLOY",
+          "grade": "CS5600",
+          "aliases": [],
+          "polymer": {
+            "family": "High-performance compound",
+            "morphology": "unknown"
+          },
+          "composition": {
+            "notes": "Manufacturer lineup: carbon fibre; High strength.",
+            "carbonFibrePct": 30
+          },
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-sumitomo-sumikaexcel-pes-lineup-20260929",
+              "publisher": "Sumitomo Chemical Co., Ltd.",
+              "title": "SUMIKAEXCEL PES Grade Lineup",
+              "url": "https://www.sumitomo-chem.co.jp/sep/english/products/pes/pes_fg_grade.html",
+              "kind": "other",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Current manufacturer injection-grade lineup confirms exact commercial identity and listed filler/feature text. No numeric engineering property or processing recipe is inferred; runtime promotion remains blocked."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-sumitomo-sumiploy-ck3400",
+          "manufacturer": {
+            "id": "mfr-sumitomo-chemical",
+            "name": "Sumitomo Chemical Co., Ltd.",
+            "country": "Japan",
+            "website": "https://www.sumitomo-chem.co.jp/"
+          },
+          "brand": "SUMIPLOY",
+          "grade": "CK3400",
+          "aliases": [],
+          "polymer": {
+            "family": "High-performance compound",
+            "morphology": "unknown"
+          },
+          "composition": {
+            "notes": "Manufacturer lineup: carbon fibre; PEEK-based high-speed/high-load sliding.",
+            "carbonFibrePct": 18
+          },
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-sumitomo-sumikaexcel-pes-lineup-20260929",
+              "publisher": "Sumitomo Chemical Co., Ltd.",
+              "title": "SUMIKAEXCEL PES Grade Lineup",
+              "url": "https://www.sumitomo-chem.co.jp/sep/english/products/pes/pes_fg_grade.html",
+              "kind": "other",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Current manufacturer injection-grade lineup confirms exact commercial identity and listed filler/feature text. No numeric engineering property or processing recipe is inferred; runtime promotion remains blocked."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-sumitomo-sumiploy-ck3420",
+          "manufacturer": {
+            "id": "mfr-sumitomo-chemical",
+            "name": "Sumitomo Chemical Co., Ltd.",
+            "country": "Japan",
+            "website": "https://www.sumitomo-chem.co.jp/"
+          },
+          "brand": "SUMIPLOY",
+          "grade": "CK3420",
+          "aliases": [],
+          "polymer": {
+            "family": "High-performance compound",
+            "morphology": "unknown"
+          },
+          "composition": {
+            "notes": "Manufacturer lineup: carbon fibre / fluoroplastic; PEEK-based high-speed/high-load sliding."
+          },
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-sumitomo-sumikaexcel-pes-lineup-20260929",
+              "publisher": "Sumitomo Chemical Co., Ltd.",
+              "title": "SUMIKAEXCEL PES Grade Lineup",
+              "url": "https://www.sumitomo-chem.co.jp/sep/english/products/pes/pes_fg_grade.html",
+              "kind": "other",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Current manufacturer injection-grade lineup confirms exact commercial identity and listed filler/feature text. No numeric engineering property or processing recipe is inferred; runtime promotion remains blocked."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-sumitomo-sumiploy-ck4600",
+          "manufacturer": {
+            "id": "mfr-sumitomo-chemical",
+            "name": "Sumitomo Chemical Co., Ltd.",
+            "country": "Japan",
+            "website": "https://www.sumitomo-chem.co.jp/"
+          },
+          "brand": "SUMIPLOY",
+          "grade": "CK4600",
+          "aliases": [],
+          "polymer": {
+            "family": "High-performance compound",
+            "morphology": "unknown"
+          },
+          "composition": {
+            "notes": "Manufacturer lineup: carbon fibre; PEEK-based high strength.",
+            "carbonFibrePct": 30
+          },
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-sumitomo-sumikaexcel-pes-lineup-20260929",
+              "publisher": "Sumitomo Chemical Co., Ltd.",
+              "title": "SUMIKAEXCEL PES Grade Lineup",
+              "url": "https://www.sumitomo-chem.co.jp/sep/english/products/pes/pes_fg_grade.html",
+              "kind": "other",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Current manufacturer injection-grade lineup confirms exact commercial identity and listed filler/feature text. No numeric engineering property or processing recipe is inferred; runtime promotion remains blocked."
+          }
+        }
+      ]
+    }
+  ]
+}
