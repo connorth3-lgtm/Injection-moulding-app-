@@ -88,7 +88,7 @@ need("Close important evidence gaps" in registry_runtime, "material change assis
 need(catalog.get("schemaVersion") == 1, "material catalog schema version drift")
 need(catalog.get("catalogVersion") == "generated", "material catalog must use the compiler-owned generated version marker")
 need("variant/revision/production identity differs" in str(catalog.get("boundary") or ""), "material catalog boundary does not describe variant-safe identity")
-need({m.get("id") for m in catalog.get("manufacturers") or []} == {'mfr-arkema','mfr-basf','mfr-celanese','mfr-covestro','mfr-envalior','mfr-exxonmobil','mfr-hyosung-chemical','mfr-hyosung-vina','mfr-indianoil','mfr-ineos-styrolution','mfr-kep','mfr-kuraray','mfr-lg-chem','mfr-lotte-chemical','mfr-lotte-titan','mfr-lyondellbasell','mfr-mitsui-elastomers-singapore','mfr-momentive','mfr-petronas-chemicals','mfr-roehm','mfr-sabic','mfr-samyang','mfr-scgc','mfr-sh-energy-chemical','mfr-supreme-petrochem','mfr-ube','mfr-victrex'}, "runtime manufacturer set drift")
+need({m.get("id") for m in catalog.get("manufacturers") or []} == {'mfr-arkema','mfr-basf','mfr-celanese','mfr-covestro','mfr-envalior','mfr-exxonmobil','mfr-hyosung-chemical','mfr-hyosung-vina','mfr-indianoil','mfr-ineos-styrolution','mfr-kep','mfr-kuraray','mfr-lg-chem','mfr-lotte-chemical','mfr-lotte-titan','mfr-lyondellbasell','mfr-mitsui-elastomers-singapore','mfr-momentive','mfr-petronas-chemicals','mfr-polyplastics','mfr-roehm','mfr-sabic','mfr-samyang','mfr-scgc','mfr-sh-energy-chemical','mfr-supreme-petrochem','mfr-ube','mfr-victrex'}, "runtime manufacturer set drift")
 need(isinstance(catalog.get("grades"), list), "material catalog grades must be a list")
 for idx, grade in enumerate(catalog["grades"]):
     grade_errors = validate_grade(grade, f"catalog grade[{idx}]")
@@ -109,7 +109,7 @@ for staging_path in sorted(STAGING.glob("*.json")):
                 staged_grade_ids.add(gid)
 runtime_grade_ids = {grade.get("id") for grade in catalog.get("grades") or []}
 need(staged_grade_ids == runtime_grade_ids, f"runtime/staging material drift: staged={sorted(staged_grade_ids)} runtime={sorted(runtime_grade_ids)}")
-need(len(runtime_grade_ids) == 258, "runtime exact-grade count must include the original Korean pilot, waves through wave22, and the 70-grade Vietnam PP / Korea EPS mega wave")
+need(len(runtime_grade_ids) == 260, "runtime exact-grade count must include the original Korean pilot, waves through wave22, the 70-grade Vietnam PP / Korea EPS mega wave, and two conditioned Polyplastics POM grades")
 need(kolon_grade_ids.isdisjoint(runtime_grade_ids), "source-reviewed KOLON staging identities must not leak into the validated runtime catalog")
 
 global_wave = load_json(STAGING / "global-material-expansion-20260929-v1.json")
@@ -432,6 +432,20 @@ need(all(not (g.get("properties") or []) and not (g.get("processing") or []) for
 need({(g.get("manufacturer") or {}).get("id") for g in global24} == {"mfr-asahi-kasei"}, "mega wave24 manufacturer drift")
 need({g.get("brand") for g in global24} == {"LEONA", "TENAC", "XYRON"}, "mega wave24 brand set drift")
 need({(g.get("polymer") or {}).get("family") for g in global24} == {"PA", "POM", "mPPE alloy"}, "mega wave24 family staging set drift")
+
+# Mega wave25: Polyplastics current LAPEROS identities remain staging-only while
+# two DURACON POM grades are validated from exact pages with ISO 1133 190C/2.16kg.
+global_wave25 = load_json(STAGING / "global-material-mega-expansion-20260929-v25.json")
+need((global_wave25.get("summary") or {}).get("validatedGrades") == 2, "mega wave25 validated POM count drift")
+need((global_wave25.get("summary") or {}).get("sourceReviewedStagingGrades") == 21, "mega wave25 LAPEROS staging count drift")
+global25 = [g for m in global_wave25.get("manufacturers") or [] for g in m.get("gradeRecords") or []]
+global25_validated = [g for g in global25 if (g.get("provenance") or {}).get("stage") in {"validated", "published"}]
+global25_staging = [g for g in global25 if (g.get("provenance") or {}).get("stage") == "staging"]
+need({g.get("grade") for g in global25_validated} == {"M25LV", "GB-25R"}, "mega wave25 DURACON exact-grade set drift")
+need(all(g.get("id") in runtime_grade_ids for g in global25_validated), "mega wave25 validated DURACON grades missing from runtime")
+need(len(global25_staging) == 21 and all(g.get("id") not in runtime_grade_ids for g in global25_staging), "mega wave25 LAPEROS staging leak")
+need(all(not (g.get("properties") or []) and not (g.get("processing") or []) for g in global25_staging), "mega wave25 LAPEROS numeric inference detected")
+need(all(any(obs.get("testMethod") == "ISO 1133" and obs.get("temperatureC") == 190 and obs.get("loadKg") == 2.16 and obs.get("comparisonReady") is True for obs in g.get("properties") or []) for g in global25_validated), "mega wave25 DURACON rheology conditioning drift")
 
 # Pilot proof: current primary-source LOTTE records remain unchanged while the
 # umbrella manifest records progress without copying exact-grade claims.
