@@ -54,3 +54,24 @@ test('graded assessment shows one clear result and only answers needing review',
   await expect(visibleRows).not.toContainText('Question revision');
   await expect(visibleRows).not.toContainText('DOI resolver set reviewed');
 });
+
+test('assessment question and review remain usable at 200% text scaling with keyboard focus',async({page})=>{
+  await page.setViewportSize({width:412,height:915});
+  await openAssessment(page);
+  await page.evaluate(()=>{document.documentElement.style.fontSize='200%'});
+  const noOverflow=async label=>{const overflow=await page.evaluate(()=>document.documentElement.scrollWidth>document.documentElement.clientWidth+1);expect(overflow,label+' must not overflow horizontally').toBeFalsy()};
+  await noOverflow('live assessment');
+  const first=page.locator('#examQuestions .question.mm-current-question input[type=radio]').first();
+  await first.focus();await page.keyboard.press('Space');await expect(first).toBeChecked();
+  await page.getByRole('button',{name:'Next question'}).focus();await page.keyboard.press('Enter');
+  await expect(page.locator('#examQuestions .question').nth(1).locator('.mm-question-stem')).toBeFocused();
+  await page.evaluate(()=>{
+    const form=window.activeExam.questions;
+    form.forEach((q,i)=>{const input=document.querySelector(`input[name=ex${i}][value="${q.correct}"]`);if(input&&!input.checked){input.checked=true;input.dispatchEvent(new Event('change',{bubbles:true}))}});
+    const firstInput=document.querySelector('input[name=ex0]');if(firstInput){firstInput.checked=false;const wrong=(window.activeExam.questions[0].correct+1)%window.activeExam.questions[0].options.length;const bad=document.querySelector(`input[name=ex0][value="${wrong}"]`);if(bad){bad.checked=true;bad.dispatchEvent(new Event('change',{bubbles:true}))}}
+    gradeExam('Beginner');
+  });
+  await expect(page.locator('#examResult')).toBeFocused();
+  await noOverflow('assessment review');
+  await expect(page.locator('#answerReview .answer-row:visible')).toHaveCount(1);
+});
