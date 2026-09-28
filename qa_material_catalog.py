@@ -78,6 +78,11 @@ need(not errors, "material staging semantic QA failed:\n" + "\n".join(errors))
 # source schemas and staging remain under data/ and outside the Pages allowlist.
 need(CATALOG == ROOT / "material-catalog-v1.json", "runtime catalog must remain outside private data/ staging tree")
 catalog = load_json(CATALOG)
+registry_runtime = (ROOT / "src/domains/materials/material-registry.js").read_text(encoding="utf-8")
+for marker in ("decisionComparison", "matchedComparisonRows", "data-mm-run-material-compare", "Material-change evidence checklist", "not a material ranking or production recipe", "Do not copy a drying recipe from another grade"):
+    need(marker in registry_runtime, f"material decision-support marker missing: {marker}")
+need("comparableSignature(ob)!==sig" in registry_runtime, "material decision support must fail closed when test-condition signatures differ")
+need("coupon shrinkage and morphology as evidence inputs, not a part-warpage prediction" in registry_runtime, "material warpage reasoning boundary missing")
 need(catalog.get("schemaVersion") == 1, "material catalog schema version drift")
 need(catalog.get("catalogVersion") == "generated", "material catalog must use the compiler-owned generated version marker")
 need("variant/revision/production identity differs" in str(catalog.get("boundary") or ""), "material catalog boundary does not describe variant-safe identity")
