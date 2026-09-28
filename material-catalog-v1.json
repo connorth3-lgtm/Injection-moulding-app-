@@ -5770,6 +5770,1412 @@
     },
     {
       "schemaVersion": 1,
+      "id": "mat-sabic-hdpe-cc027c",
+      "manufacturer": {
+        "id": "mfr-sabic",
+        "name": "SABIC",
+        "country": "Saudi Arabia",
+        "website": "https://www.sabic.com/"
+      },
+      "brand": "SABIC® HDPE",
+      "grade": "CC027C",
+      "aliases": [],
+      "polymer": {
+        "family": "HDPE",
+        "morphology": "semi-crystalline"
+      },
+      "composition": {
+        "uvStabilised": null,
+        "notes": "Multimodal HDPE intended for injection/compression moulding closures."
+      },
+      "properties": [
+        {
+          "id": "obs-sabic-hdpe-cc027c-mfr",
+          "property": "Melt Flow Rate",
+          "value": 0.8,
+          "unit": "g/10min",
+          "testMethod": null,
+          "temperatureC": null,
+          "loadKg": 2.16,
+          "direction": "not-applicable",
+          "sourceId": "src-sabic-hdpe-cc027c-2026",
+          "sourcePage": "current grade listing",
+          "comparisonReady": false,
+          "limitations": "SABIC current listing publishes MFR and load but not the test temperature in this surface; do not compare this MFR directly until the exact technical-data document supplies full ISO/ASTM condition semantics."
+        },
+        {
+          "id": "obs-sabic-hdpe-cc027c-density",
+          "property": "Density",
+          "value": 953,
+          "unit": "kg/m³",
+          "testMethod": null,
+          "direction": "not-applicable",
+          "sourceId": "src-sabic-hdpe-cc027c-2026",
+          "sourcePage": "current grade listing",
+          "comparisonReady": false,
+          "limitations": "Manufacturer typical listing value; exact test method is not exposed on this product-list surface."
+        }
+      ],
+      "processing": [],
+      "approvals": [],
+      "lifecycle": {
+        "status": "unknown",
+        "checkedAt": "2026-09-29"
+      },
+      "sources": [
+        {
+          "id": "src-sabic-hdpe-cc027c-2026",
+          "publisher": "SABIC",
+          "title": "SABIC® HDPE CC027C current product listing",
+          "url": "https://www.sabic.com/en/products/polymers/polyethylene-pe/sabic-hdpe",
+          "kind": "manufacturer-datasheet",
+          "revision": null,
+          "documentDate": null,
+          "retrievedAt": "2026-09-29"
+        }
+      ],
+      "provenance": {
+        "stage": "validated",
+        "ingestedAt": "2026-09-29T00:00:00Z",
+        "reviewedAt": "2026-09-29T00:00:00Z",
+        "reviewer": "primary-source-web-review",
+        "notes": "Current SABIC HDPE product portfolio confirms exact grade identity, injection/compression moulding use and grade-specific MFR/load/density. MFR remains comparisonReady=false because test temperature is not exposed on the reviewed surface."
+      }
+    },
+    {
+      "schemaVersion": 1,
+      "id": "mat-sabic-hdpe-cc027sl",
+      "manufacturer": {
+        "id": "mfr-sabic",
+        "name": "SABIC",
+        "country": "Saudi Arabia",
+        "website": "https://www.sabic.com/"
+      },
+      "brand": "SABIC® HDPE",
+      "grade": "CC027SL",
+      "aliases": [],
+      "polymer": {
+        "family": "HDPE",
+        "morphology": "semi-crystalline"
+      },
+      "composition": {
+        "uvStabilised": null,
+        "notes": "Multimodal HDPE for injection/compression moulded caps; current SABIC listing states slip agent."
+      },
+      "properties": [
+        {
+          "id": "obs-sabic-hdpe-cc027sl-mfr",
+          "property": "Melt Flow Rate",
+          "value": 0.8,
+          "unit": "g/10min",
+          "testMethod": null,
+          "temperatureC": null,
+          "loadKg": 2.16,
+          "direction": "not-applicable",
+          "sourceId": "src-sabic-hdpe-cc027sl-2026",
+          "sourcePage": "current grade listing",
+          "comparisonReady": false,
+          "limitations": "SABIC current listing publishes MFR and load but not the test temperature in this surface; do not compare this MFR directly until the exact technical-data document supplies full ISO/ASTM condition semantics."
+        },
+        {
+          "id": "obs-sabic-hdpe-cc027sl-density",
+          "property": "Density",
+          "value": 953,
+          "unit": "kg/m³",
+          "testMethod": null,
+          "direction": "not-applicable",
+          "sourceId": "src-sabic-hdpe-cc027sl-2026",
+          "sourcePage": "current grade listing",
+          "comparisonReady": false,
+          "limitations": "Manufacturer typical listing value; exact test method is not exposed on this product-list surface."
+        }
+      ],
+      "processing": [],
+      "approvals": [],
+      "lifecycle": {
+        "status": "unknown",
+        "checkedAt": "2026-09-29"
+      },
+      "sources": [
+        {
+          "id": "src-sabic-hdpe-cc027sl-2026",
+          "publisher": "SABIC",
+          "title": "SABIC® HDPE CC027SL current product listing",
+          "url": "https://www.sabic.com/en/products/polymers/polyethylene-pe/sabic-hdpe",
+          "kind": "manufacturer-datasheet",
+          "revision": null,
+          "documentDate": null,
+          "retrievedAt": "2026-09-29"
+        }
+      ],
+      "provenance": {
+        "stage": "validated",
+        "ingestedAt": "2026-09-29T00:00:00Z",
+        "reviewedAt": "2026-09-29T00:00:00Z",
+        "reviewer": "primary-source-web-review",
+        "notes": "Current SABIC HDPE product portfolio confirms exact grade identity, injection/compression moulding use and grade-specific MFR/load/density. MFR remains comparisonReady=false because test temperature is not exposed on the reviewed surface."
+      }
+    },
+    {
+      "schemaVersion": 1,
+      "id": "mat-sabic-hdpe-cc2056",
+      "manufacturer": {
+        "id": "mfr-sabic",
+        "name": "SABIC",
+        "country": "Saudi Arabia",
+        "website": "https://www.sabic.com/"
+      },
+      "brand": "SABIC® HDPE",
+      "grade": "CC2056",
+      "aliases": [],
+      "polymer": {
+        "family": "HDPE",
+        "morphology": "semi-crystalline"
+      },
+      "composition": {
+        "uvStabilised": null,
+        "notes": "High-flow HDPE copolymer injection-moulding grade for caps/closures and thin-wall articles."
+      },
+      "properties": [
+        {
+          "id": "obs-sabic-hdpe-cc2056-mfr",
+          "property": "Melt Flow Rate",
+          "value": 20,
+          "unit": "g/10min",
+          "testMethod": null,
+          "temperatureC": null,
+          "loadKg": 2.16,
+          "direction": "not-applicable",
+          "sourceId": "src-sabic-hdpe-cc2056-2026",
+          "sourcePage": "current grade listing",
+          "comparisonReady": false,
+          "limitations": "SABIC current listing publishes MFR and load but not the test temperature in this surface; do not compare this MFR directly until the exact technical-data document supplies full ISO/ASTM condition semantics."
+        },
+        {
+          "id": "obs-sabic-hdpe-cc2056-density",
+          "property": "Density",
+          "value": 956,
+          "unit": "kg/m³",
+          "testMethod": null,
+          "direction": "not-applicable",
+          "sourceId": "src-sabic-hdpe-cc2056-2026",
+          "sourcePage": "current grade listing",
+          "comparisonReady": false,
+          "limitations": "Manufacturer typical listing value; exact test method is not exposed on this product-list surface."
+        }
+      ],
+      "processing": [],
+      "approvals": [],
+      "lifecycle": {
+        "status": "unknown",
+        "checkedAt": "2026-09-29"
+      },
+      "sources": [
+        {
+          "id": "src-sabic-hdpe-cc2056-2026",
+          "publisher": "SABIC",
+          "title": "SABIC® HDPE CC2056 current product listing",
+          "url": "https://www.sabic.com/en/products/polymers/polyethylene-pe/sabic-hdpe",
+          "kind": "manufacturer-datasheet",
+          "revision": null,
+          "documentDate": null,
+          "retrievedAt": "2026-09-29"
+        }
+      ],
+      "provenance": {
+        "stage": "validated",
+        "ingestedAt": "2026-09-29T00:00:00Z",
+        "reviewedAt": "2026-09-29T00:00:00Z",
+        "reviewer": "primary-source-web-review",
+        "notes": "Current SABIC HDPE product portfolio confirms exact grade identity, injection/compression moulding use and grade-specific MFR/load/density. MFR remains comparisonReady=false because test temperature is not exposed on the reviewed surface."
+      }
+    },
+    {
+      "schemaVersion": 1,
+      "id": "mat-sabic-hdpe-cc3054",
+      "manufacturer": {
+        "id": "mfr-sabic",
+        "name": "SABIC",
+        "country": "Saudi Arabia",
+        "website": "https://www.sabic.com/"
+      },
+      "brand": "SABIC® HDPE",
+      "grade": "CC3054",
+      "aliases": [],
+      "polymer": {
+        "family": "HDPE",
+        "morphology": "semi-crystalline"
+      },
+      "composition": {
+        "uvStabilised": null,
+        "notes": "High-flow HDPE copolymer injection-moulding grade for caps/closures and thin-wall articles."
+      },
+      "properties": [
+        {
+          "id": "obs-sabic-hdpe-cc3054-mfr",
+          "property": "Melt Flow Rate",
+          "value": 30,
+          "unit": "g/10min",
+          "testMethod": null,
+          "temperatureC": null,
+          "loadKg": 2.16,
+          "direction": "not-applicable",
+          "sourceId": "src-sabic-hdpe-cc3054-2026",
+          "sourcePage": "current grade listing",
+          "comparisonReady": false,
+          "limitations": "SABIC current listing publishes MFR and load but not the test temperature in this surface; do not compare this MFR directly until the exact technical-data document supplies full ISO/ASTM condition semantics."
+        },
+        {
+          "id": "obs-sabic-hdpe-cc3054-density",
+          "property": "Density",
+          "value": 954,
+          "unit": "kg/m³",
+          "testMethod": null,
+          "direction": "not-applicable",
+          "sourceId": "src-sabic-hdpe-cc3054-2026",
+          "sourcePage": "current grade listing",
+          "comparisonReady": false,
+          "limitations": "Manufacturer typical listing value; exact test method is not exposed on this product-list surface."
+        }
+      ],
+      "processing": [],
+      "approvals": [],
+      "lifecycle": {
+        "status": "unknown",
+        "checkedAt": "2026-09-29"
+      },
+      "sources": [
+        {
+          "id": "src-sabic-hdpe-cc3054-2026",
+          "publisher": "SABIC",
+          "title": "SABIC® HDPE CC3054 current product listing",
+          "url": "https://www.sabic.com/en/products/polymers/polyethylene-pe/sabic-hdpe",
+          "kind": "manufacturer-datasheet",
+          "revision": null,
+          "documentDate": null,
+          "retrievedAt": "2026-09-29"
+        }
+      ],
+      "provenance": {
+        "stage": "validated",
+        "ingestedAt": "2026-09-29T00:00:00Z",
+        "reviewedAt": "2026-09-29T00:00:00Z",
+        "reviewer": "primary-source-web-review",
+        "notes": "Current SABIC HDPE product portfolio confirms exact grade identity, injection/compression moulding use and grade-specific MFR/load/density. MFR remains comparisonReady=false because test temperature is not exposed on the reviewed surface."
+      }
+    },
+    {
+      "schemaVersion": 1,
+      "id": "mat-sabic-hdpe-cc453",
+      "manufacturer": {
+        "id": "mfr-sabic",
+        "name": "SABIC",
+        "country": "Saudi Arabia",
+        "website": "https://www.sabic.com/"
+      },
+      "brand": "SABIC® HDPE",
+      "grade": "CC453",
+      "aliases": [],
+      "polymer": {
+        "family": "HDPE",
+        "morphology": "semi-crystalline"
+      },
+      "composition": {
+        "uvStabilised": null,
+        "notes": "HDPE developed for injection/compression moulding beverage caps and closures."
+      },
+      "properties": [
+        {
+          "id": "obs-sabic-hdpe-cc453-mfr",
+          "property": "Melt Flow Rate",
+          "value": 4,
+          "unit": "g/10min",
+          "testMethod": null,
+          "temperatureC": null,
+          "loadKg": 2.16,
+          "direction": "not-applicable",
+          "sourceId": "src-sabic-hdpe-cc453-2026",
+          "sourcePage": "current grade listing",
+          "comparisonReady": false,
+          "limitations": "SABIC current listing publishes MFR and load but not the test temperature in this surface; do not compare this MFR directly until the exact technical-data document supplies full ISO/ASTM condition semantics."
+        },
+        {
+          "id": "obs-sabic-hdpe-cc453-density",
+          "property": "Density",
+          "value": 953,
+          "unit": "kg/m³",
+          "testMethod": null,
+          "direction": "not-applicable",
+          "sourceId": "src-sabic-hdpe-cc453-2026",
+          "sourcePage": "current grade listing",
+          "comparisonReady": false,
+          "limitations": "Manufacturer typical listing value; exact test method is not exposed on this product-list surface."
+        }
+      ],
+      "processing": [],
+      "approvals": [],
+      "lifecycle": {
+        "status": "unknown",
+        "checkedAt": "2026-09-29"
+      },
+      "sources": [
+        {
+          "id": "src-sabic-hdpe-cc453-2026",
+          "publisher": "SABIC",
+          "title": "SABIC® HDPE CC453 current product listing",
+          "url": "https://www.sabic.com/en/products/polymers/polyethylene-pe/sabic-hdpe",
+          "kind": "manufacturer-datasheet",
+          "revision": null,
+          "documentDate": null,
+          "retrievedAt": "2026-09-29"
+        }
+      ],
+      "provenance": {
+        "stage": "validated",
+        "ingestedAt": "2026-09-29T00:00:00Z",
+        "reviewedAt": "2026-09-29T00:00:00Z",
+        "reviewer": "primary-source-web-review",
+        "notes": "Current SABIC HDPE product portfolio confirms exact grade identity, injection/compression moulding use and grade-specific MFR/load/density. MFR remains comparisonReady=false because test temperature is not exposed on the reviewed surface."
+      }
+    },
+    {
+      "schemaVersion": 1,
+      "id": "mat-sabic-hdpe-cc453g",
+      "manufacturer": {
+        "id": "mfr-sabic",
+        "name": "SABIC",
+        "country": "Saudi Arabia",
+        "website": "https://www.sabic.com/"
+      },
+      "brand": "SABIC® HDPE",
+      "grade": "CC453G",
+      "aliases": [],
+      "polymer": {
+        "family": "HDPE",
+        "morphology": "semi-crystalline"
+      },
+      "composition": {
+        "uvStabilised": null,
+        "notes": "HDPE for injection/compression moulded caps; stiffness/impact/ESCR balance."
+      },
+      "properties": [
+        {
+          "id": "obs-sabic-hdpe-cc453g-mfr",
+          "property": "Melt Flow Rate",
+          "value": 4,
+          "unit": "g/10min",
+          "testMethod": null,
+          "temperatureC": null,
+          "loadKg": 2.16,
+          "direction": "not-applicable",
+          "sourceId": "src-sabic-hdpe-cc453g-2026",
+          "sourcePage": "current grade listing",
+          "comparisonReady": false,
+          "limitations": "SABIC current listing publishes MFR and load but not the test temperature in this surface; do not compare this MFR directly until the exact technical-data document supplies full ISO/ASTM condition semantics."
+        },
+        {
+          "id": "obs-sabic-hdpe-cc453g-density",
+          "property": "Density",
+          "value": 953,
+          "unit": "kg/m³",
+          "testMethod": null,
+          "direction": "not-applicable",
+          "sourceId": "src-sabic-hdpe-cc453g-2026",
+          "sourcePage": "current grade listing",
+          "comparisonReady": false,
+          "limitations": "Manufacturer typical listing value; exact test method is not exposed on this product-list surface."
+        }
+      ],
+      "processing": [],
+      "approvals": [],
+      "lifecycle": {
+        "status": "unknown",
+        "checkedAt": "2026-09-29"
+      },
+      "sources": [
+        {
+          "id": "src-sabic-hdpe-cc453g-2026",
+          "publisher": "SABIC",
+          "title": "SABIC® HDPE CC453G current product listing",
+          "url": "https://www.sabic.com/en/products/polymers/polyethylene-pe/sabic-hdpe",
+          "kind": "manufacturer-datasheet",
+          "revision": null,
+          "documentDate": null,
+          "retrievedAt": "2026-09-29"
+        }
+      ],
+      "provenance": {
+        "stage": "validated",
+        "ingestedAt": "2026-09-29T00:00:00Z",
+        "reviewedAt": "2026-09-29T00:00:00Z",
+        "reviewer": "primary-source-web-review",
+        "notes": "Current SABIC HDPE product portfolio confirms exact grade identity, injection/compression moulding use and grade-specific MFR/load/density. MFR remains comparisonReady=false because test temperature is not exposed on the reviewed surface."
+      }
+    },
+    {
+      "schemaVersion": 1,
+      "id": "mat-sabic-hdpe-cc860v",
+      "manufacturer": {
+        "id": "mfr-sabic",
+        "name": "SABIC",
+        "country": "Saudi Arabia",
+        "website": "https://www.sabic.com/"
+      },
+      "brand": "SABIC® HDPE",
+      "grade": "CC860V",
+      "aliases": [],
+      "polymer": {
+        "family": "HDPE",
+        "morphology": "semi-crystalline"
+      },
+      "composition": {
+        "uvStabilised": null,
+        "notes": "HDPE injection-moulding grade for demanding caps/closures applications."
+      },
+      "properties": [
+        {
+          "id": "obs-sabic-hdpe-cc860v-mfr",
+          "property": "Melt Flow Rate",
+          "value": 7.6,
+          "unit": "g/10min",
+          "testMethod": null,
+          "temperatureC": null,
+          "loadKg": 2.16,
+          "direction": "not-applicable",
+          "sourceId": "src-sabic-hdpe-cc860v-2026",
+          "sourcePage": "current grade listing",
+          "comparisonReady": false,
+          "limitations": "SABIC current listing publishes MFR and load but not the test temperature in this surface; do not compare this MFR directly until the exact technical-data document supplies full ISO/ASTM condition semantics."
+        },
+        {
+          "id": "obs-sabic-hdpe-cc860v-density",
+          "property": "Density",
+          "value": 960,
+          "unit": "kg/m³",
+          "testMethod": null,
+          "direction": "not-applicable",
+          "sourceId": "src-sabic-hdpe-cc860v-2026",
+          "sourcePage": "current grade listing",
+          "comparisonReady": false,
+          "limitations": "Manufacturer typical listing value; exact test method is not exposed on this product-list surface."
+        }
+      ],
+      "processing": [],
+      "approvals": [],
+      "lifecycle": {
+        "status": "unknown",
+        "checkedAt": "2026-09-29"
+      },
+      "sources": [
+        {
+          "id": "src-sabic-hdpe-cc860v-2026",
+          "publisher": "SABIC",
+          "title": "SABIC® HDPE CC860V current product listing",
+          "url": "https://www.sabic.com/en/products/polymers/polyethylene-pe/sabic-hdpe",
+          "kind": "manufacturer-datasheet",
+          "revision": null,
+          "documentDate": null,
+          "retrievedAt": "2026-09-29"
+        }
+      ],
+      "provenance": {
+        "stage": "validated",
+        "ingestedAt": "2026-09-29T00:00:00Z",
+        "reviewedAt": "2026-09-29T00:00:00Z",
+        "reviewer": "primary-source-web-review",
+        "notes": "Current SABIC HDPE product portfolio confirms exact grade identity, injection/compression moulding use and grade-specific MFR/load/density. MFR remains comparisonReady=false because test temperature is not exposed on the reviewed surface."
+      }
+    },
+    {
+      "schemaVersion": 1,
+      "id": "mat-sabic-hdpe-m1053",
+      "manufacturer": {
+        "id": "mfr-sabic",
+        "name": "SABIC",
+        "country": "Saudi Arabia",
+        "website": "https://www.sabic.com/"
+      },
+      "brand": "SABIC® HDPE",
+      "grade": "M1053",
+      "aliases": [],
+      "polymer": {
+        "family": "HDPE",
+        "morphology": "semi-crystalline"
+      },
+      "composition": {
+        "uvStabilised": null,
+        "notes": "Injection-moulding HDPE grade used for caps, closures and pails."
+      },
+      "properties": [
+        {
+          "id": "obs-sabic-hdpe-m1053-mfr",
+          "property": "Melt Flow Rate",
+          "value": 10,
+          "unit": "g/10min",
+          "testMethod": null,
+          "temperatureC": null,
+          "loadKg": 2.16,
+          "direction": "not-applicable",
+          "sourceId": "src-sabic-hdpe-m1053-2026",
+          "sourcePage": "current grade listing",
+          "comparisonReady": false,
+          "limitations": "SABIC current listing publishes MFR and load but not the test temperature in this surface; do not compare this MFR directly until the exact technical-data document supplies full ISO/ASTM condition semantics."
+        },
+        {
+          "id": "obs-sabic-hdpe-m1053-density",
+          "property": "Density",
+          "value": 953,
+          "unit": "kg/m³",
+          "testMethod": null,
+          "direction": "not-applicable",
+          "sourceId": "src-sabic-hdpe-m1053-2026",
+          "sourcePage": "current grade listing",
+          "comparisonReady": false,
+          "limitations": "Manufacturer typical listing value; exact test method is not exposed on this product-list surface."
+        }
+      ],
+      "processing": [],
+      "approvals": [],
+      "lifecycle": {
+        "status": "unknown",
+        "checkedAt": "2026-09-29"
+      },
+      "sources": [
+        {
+          "id": "src-sabic-hdpe-m1053-2026",
+          "publisher": "SABIC",
+          "title": "SABIC® HDPE M1053 current product listing",
+          "url": "https://www.sabic.com/en/products/polymers/polyethylene-pe/sabic-hdpe",
+          "kind": "manufacturer-datasheet",
+          "revision": null,
+          "documentDate": null,
+          "retrievedAt": "2026-09-29"
+        }
+      ],
+      "provenance": {
+        "stage": "validated",
+        "ingestedAt": "2026-09-29T00:00:00Z",
+        "reviewedAt": "2026-09-29T00:00:00Z",
+        "reviewer": "primary-source-web-review",
+        "notes": "Current SABIC HDPE product portfolio confirms exact grade identity, injection/compression moulding use and grade-specific MFR/load/density. MFR remains comparisonReady=false because test temperature is not exposed on the reviewed surface."
+      }
+    },
+    {
+      "schemaVersion": 1,
+      "id": "mat-sabic-hdpe-m200050",
+      "manufacturer": {
+        "id": "mfr-sabic",
+        "name": "SABIC",
+        "country": "Saudi Arabia",
+        "website": "https://www.sabic.com/"
+      },
+      "brand": "SABIC® HDPE",
+      "grade": "M200050",
+      "aliases": [],
+      "polymer": {
+        "family": "HDPE",
+        "morphology": "semi-crystalline"
+      },
+      "composition": {
+        "uvStabilised": null,
+        "notes": "HDPE injection-moulding grade with narrow molecular-weight distribution, flow and dimensional-stability emphasis."
+      },
+      "properties": [
+        {
+          "id": "obs-sabic-hdpe-m200050-mfr",
+          "property": "Melt Flow Rate",
+          "value": 18,
+          "unit": "g/10min",
+          "testMethod": null,
+          "temperatureC": null,
+          "loadKg": 2.16,
+          "direction": "not-applicable",
+          "sourceId": "src-sabic-hdpe-m200050-2026",
+          "sourcePage": "current grade listing",
+          "comparisonReady": false,
+          "limitations": "SABIC current listing publishes MFR and load but not the test temperature in this surface; do not compare this MFR directly until the exact technical-data document supplies full ISO/ASTM condition semantics."
+        },
+        {
+          "id": "obs-sabic-hdpe-m200050-density",
+          "property": "Density",
+          "value": 953,
+          "unit": "kg/m³",
+          "testMethod": null,
+          "direction": "not-applicable",
+          "sourceId": "src-sabic-hdpe-m200050-2026",
+          "sourcePage": "current grade listing",
+          "comparisonReady": false,
+          "limitations": "Manufacturer typical listing value; exact test method is not exposed on this product-list surface."
+        }
+      ],
+      "processing": [],
+      "approvals": [],
+      "lifecycle": {
+        "status": "unknown",
+        "checkedAt": "2026-09-29"
+      },
+      "sources": [
+        {
+          "id": "src-sabic-hdpe-m200050-2026",
+          "publisher": "SABIC",
+          "title": "SABIC® HDPE M200050 current product listing",
+          "url": "https://www.sabic.com/en/products/polymers/polyethylene-pe/sabic-hdpe",
+          "kind": "manufacturer-datasheet",
+          "revision": null,
+          "documentDate": null,
+          "retrievedAt": "2026-09-29"
+        }
+      ],
+      "provenance": {
+        "stage": "validated",
+        "ingestedAt": "2026-09-29T00:00:00Z",
+        "reviewedAt": "2026-09-29T00:00:00Z",
+        "reviewer": "primary-source-web-review",
+        "notes": "Current SABIC HDPE product portfolio confirms exact grade identity, injection/compression moulding use and grade-specific MFR/load/density. MFR remains comparisonReady=false because test temperature is not exposed on the reviewed surface."
+      }
+    },
+    {
+      "schemaVersion": 1,
+      "id": "mat-sabic-hdpe-m200054f",
+      "manufacturer": {
+        "id": "mfr-sabic",
+        "name": "SABIC",
+        "country": "Saudi Arabia",
+        "website": "https://www.sabic.com/"
+      },
+      "brand": "SABIC® HDPE",
+      "grade": "M200054F",
+      "aliases": [],
+      "polymer": {
+        "family": "HDPE",
+        "morphology": "semi-crystalline"
+      },
+      "composition": {
+        "uvStabilised": null,
+        "notes": "Butene-1 copolymerized high-flow HDPE intended for general injection-moulded articles."
+      },
+      "properties": [
+        {
+          "id": "obs-sabic-hdpe-m200054f-mfr",
+          "property": "Melt Flow Rate",
+          "value": 20,
+          "unit": "g/10min",
+          "testMethod": null,
+          "temperatureC": null,
+          "loadKg": 2.16,
+          "direction": "not-applicable",
+          "sourceId": "src-sabic-hdpe-m200054f-2026",
+          "sourcePage": "current grade listing",
+          "comparisonReady": false,
+          "limitations": "SABIC current listing publishes MFR and load but not the test temperature in this surface; do not compare this MFR directly until the exact technical-data document supplies full ISO/ASTM condition semantics."
+        },
+        {
+          "id": "obs-sabic-hdpe-m200054f-density",
+          "property": "Density",
+          "value": 954,
+          "unit": "kg/m³",
+          "testMethod": null,
+          "direction": "not-applicable",
+          "sourceId": "src-sabic-hdpe-m200054f-2026",
+          "sourcePage": "current grade listing",
+          "comparisonReady": false,
+          "limitations": "Manufacturer typical listing value; exact test method is not exposed on this product-list surface."
+        }
+      ],
+      "processing": [],
+      "approvals": [],
+      "lifecycle": {
+        "status": "unknown",
+        "checkedAt": "2026-09-29"
+      },
+      "sources": [
+        {
+          "id": "src-sabic-hdpe-m200054f-2026",
+          "publisher": "SABIC",
+          "title": "SABIC® HDPE M200054F current product listing",
+          "url": "https://www.sabic.com/en/products/polymers/polyethylene-pe/sabic-hdpe",
+          "kind": "manufacturer-datasheet",
+          "revision": null,
+          "documentDate": null,
+          "retrievedAt": "2026-09-29"
+        }
+      ],
+      "provenance": {
+        "stage": "validated",
+        "ingestedAt": "2026-09-29T00:00:00Z",
+        "reviewedAt": "2026-09-29T00:00:00Z",
+        "reviewer": "primary-source-web-review",
+        "notes": "Current SABIC HDPE product portfolio confirms exact grade identity, injection/compression moulding use and grade-specific MFR/load/density. MFR remains comparisonReady=false because test temperature is not exposed on the reviewed surface."
+      }
+    },
+    {
+      "schemaVersion": 1,
+      "id": "mat-sabic-hdpe-m200056",
+      "manufacturer": {
+        "id": "mfr-sabic",
+        "name": "SABIC",
+        "country": "Saudi Arabia",
+        "website": "https://www.sabic.com/"
+      },
+      "brand": "SABIC® HDPE",
+      "grade": "M200056",
+      "aliases": [],
+      "polymer": {
+        "family": "HDPE",
+        "morphology": "semi-crystalline"
+      },
+      "composition": {
+        "uvStabilised": null,
+        "notes": "HDPE injection-moulding grade with narrow molecular-weight distribution."
+      },
+      "properties": [
+        {
+          "id": "obs-sabic-hdpe-m200056-mfr",
+          "property": "Melt Flow Rate",
+          "value": 20,
+          "unit": "g/10min",
+          "testMethod": null,
+          "temperatureC": null,
+          "loadKg": 2.16,
+          "direction": "not-applicable",
+          "sourceId": "src-sabic-hdpe-m200056-2026",
+          "sourcePage": "current grade listing",
+          "comparisonReady": false,
+          "limitations": "SABIC current listing publishes MFR and load but not the test temperature in this surface; do not compare this MFR directly until the exact technical-data document supplies full ISO/ASTM condition semantics."
+        },
+        {
+          "id": "obs-sabic-hdpe-m200056-density",
+          "property": "Density",
+          "value": 956,
+          "unit": "kg/m³",
+          "testMethod": null,
+          "direction": "not-applicable",
+          "sourceId": "src-sabic-hdpe-m200056-2026",
+          "sourcePage": "current grade listing",
+          "comparisonReady": false,
+          "limitations": "Manufacturer typical listing value; exact test method is not exposed on this product-list surface."
+        }
+      ],
+      "processing": [],
+      "approvals": [],
+      "lifecycle": {
+        "status": "unknown",
+        "checkedAt": "2026-09-29"
+      },
+      "sources": [
+        {
+          "id": "src-sabic-hdpe-m200056-2026",
+          "publisher": "SABIC",
+          "title": "SABIC® HDPE M200056 current product listing",
+          "url": "https://www.sabic.com/en/products/polymers/polyethylene-pe/sabic-hdpe",
+          "kind": "manufacturer-datasheet",
+          "revision": null,
+          "documentDate": null,
+          "retrievedAt": "2026-09-29"
+        }
+      ],
+      "provenance": {
+        "stage": "validated",
+        "ingestedAt": "2026-09-29T00:00:00Z",
+        "reviewedAt": "2026-09-29T00:00:00Z",
+        "reviewer": "primary-source-web-review",
+        "notes": "Current SABIC HDPE product portfolio confirms exact grade identity, injection/compression moulding use and grade-specific MFR/load/density. MFR remains comparisonReady=false because test temperature is not exposed on the reviewed surface."
+      }
+    },
+    {
+      "schemaVersion": 1,
+      "id": "mat-sabic-hdpe-m300054",
+      "manufacturer": {
+        "id": "mfr-sabic",
+        "name": "SABIC",
+        "country": "Saudi Arabia",
+        "website": "https://www.sabic.com/"
+      },
+      "brand": "SABIC® HDPE",
+      "grade": "M300054",
+      "aliases": [],
+      "polymer": {
+        "family": "HDPE",
+        "morphology": "semi-crystalline"
+      },
+      "composition": {
+        "uvStabilised": null,
+        "notes": "High-flow HDPE injection-moulding grade with dimensional-stability emphasis."
+      },
+      "properties": [
+        {
+          "id": "obs-sabic-hdpe-m300054-mfr",
+          "property": "Melt Flow Rate",
+          "value": 30,
+          "unit": "g/10min",
+          "testMethod": null,
+          "temperatureC": null,
+          "loadKg": 2.16,
+          "direction": "not-applicable",
+          "sourceId": "src-sabic-hdpe-m300054-2026",
+          "sourcePage": "current grade listing",
+          "comparisonReady": false,
+          "limitations": "SABIC current listing publishes MFR and load but not the test temperature in this surface; do not compare this MFR directly until the exact technical-data document supplies full ISO/ASTM condition semantics."
+        },
+        {
+          "id": "obs-sabic-hdpe-m300054-density",
+          "property": "Density",
+          "value": 954,
+          "unit": "kg/m³",
+          "testMethod": null,
+          "direction": "not-applicable",
+          "sourceId": "src-sabic-hdpe-m300054-2026",
+          "sourcePage": "current grade listing",
+          "comparisonReady": false,
+          "limitations": "Manufacturer typical listing value; exact test method is not exposed on this product-list surface."
+        }
+      ],
+      "processing": [],
+      "approvals": [],
+      "lifecycle": {
+        "status": "unknown",
+        "checkedAt": "2026-09-29"
+      },
+      "sources": [
+        {
+          "id": "src-sabic-hdpe-m300054-2026",
+          "publisher": "SABIC",
+          "title": "SABIC® HDPE M300054 current product listing",
+          "url": "https://www.sabic.com/en/products/polymers/polyethylene-pe/sabic-hdpe",
+          "kind": "manufacturer-datasheet",
+          "revision": null,
+          "documentDate": null,
+          "retrievedAt": "2026-09-29"
+        }
+      ],
+      "provenance": {
+        "stage": "validated",
+        "ingestedAt": "2026-09-29T00:00:00Z",
+        "reviewedAt": "2026-09-29T00:00:00Z",
+        "reviewer": "primary-source-web-review",
+        "notes": "Current SABIC HDPE product portfolio confirms exact grade identity, injection/compression moulding use and grade-specific MFR/load/density. MFR remains comparisonReady=false because test temperature is not exposed on the reviewed surface."
+      }
+    },
+    {
+      "schemaVersion": 1,
+      "id": "mat-sabic-hdpe-m40053s",
+      "manufacturer": {
+        "id": "mfr-sabic",
+        "name": "SABIC",
+        "country": "Saudi Arabia",
+        "website": "https://www.sabic.com/"
+      },
+      "brand": "SABIC® HDPE",
+      "grade": "M40053S",
+      "aliases": [],
+      "polymer": {
+        "family": "HDPE",
+        "morphology": "semi-crystalline"
+      },
+      "composition": {
+        "uvStabilised": true,
+        "notes": "UV-stabilized HDPE injection-moulding grade."
+      },
+      "properties": [
+        {
+          "id": "obs-sabic-hdpe-m40053s-mfr",
+          "property": "Melt Flow Rate",
+          "value": 4,
+          "unit": "g/10min",
+          "testMethod": null,
+          "temperatureC": null,
+          "loadKg": 2.16,
+          "direction": "not-applicable",
+          "sourceId": "src-sabic-hdpe-m40053s-2026",
+          "sourcePage": "current grade listing",
+          "comparisonReady": false,
+          "limitations": "SABIC current listing publishes MFR and load but not the test temperature in this surface; do not compare this MFR directly until the exact technical-data document supplies full ISO/ASTM condition semantics."
+        },
+        {
+          "id": "obs-sabic-hdpe-m40053s-density",
+          "property": "Density",
+          "value": 953,
+          "unit": "kg/m³",
+          "testMethod": null,
+          "direction": "not-applicable",
+          "sourceId": "src-sabic-hdpe-m40053s-2026",
+          "sourcePage": "current grade listing",
+          "comparisonReady": false,
+          "limitations": "Manufacturer typical listing value; exact test method is not exposed on this product-list surface."
+        }
+      ],
+      "processing": [],
+      "approvals": [],
+      "lifecycle": {
+        "status": "unknown",
+        "checkedAt": "2026-09-29"
+      },
+      "sources": [
+        {
+          "id": "src-sabic-hdpe-m40053s-2026",
+          "publisher": "SABIC",
+          "title": "SABIC® HDPE M40053S current product listing",
+          "url": "https://www.sabic.com/en/products/polymers/polyethylene-pe/sabic-hdpe",
+          "kind": "manufacturer-datasheet",
+          "revision": null,
+          "documentDate": null,
+          "retrievedAt": "2026-09-29"
+        }
+      ],
+      "provenance": {
+        "stage": "validated",
+        "ingestedAt": "2026-09-29T00:00:00Z",
+        "reviewedAt": "2026-09-29T00:00:00Z",
+        "reviewer": "primary-source-web-review",
+        "notes": "Current SABIC HDPE product portfolio confirms exact grade identity, injection/compression moulding use and grade-specific MFR/load/density. MFR remains comparisonReady=false because test temperature is not exposed on the reviewed surface."
+      }
+    },
+    {
+      "schemaVersion": 1,
+      "id": "mat-sabic-hdpe-m40055s",
+      "manufacturer": {
+        "id": "mfr-sabic",
+        "name": "SABIC",
+        "country": "Saudi Arabia",
+        "website": "https://www.sabic.com/"
+      },
+      "brand": "SABIC® HDPE",
+      "grade": "M40055S",
+      "aliases": [],
+      "polymer": {
+        "family": "HDPE",
+        "morphology": "semi-crystalline"
+      },
+      "composition": {
+        "uvStabilised": true,
+        "notes": "UV-stabilized HDPE injection-moulding grade for outdoor applications."
+      },
+      "properties": [
+        {
+          "id": "obs-sabic-hdpe-m40055s-mfr",
+          "property": "Melt Flow Rate",
+          "value": 4,
+          "unit": "g/10min",
+          "testMethod": null,
+          "temperatureC": null,
+          "loadKg": 2.16,
+          "direction": "not-applicable",
+          "sourceId": "src-sabic-hdpe-m40055s-2026",
+          "sourcePage": "current grade listing",
+          "comparisonReady": false,
+          "limitations": "SABIC current listing publishes MFR and load but not the test temperature in this surface; do not compare this MFR directly until the exact technical-data document supplies full ISO/ASTM condition semantics."
+        },
+        {
+          "id": "obs-sabic-hdpe-m40055s-density",
+          "property": "Density",
+          "value": 955,
+          "unit": "kg/m³",
+          "testMethod": null,
+          "direction": "not-applicable",
+          "sourceId": "src-sabic-hdpe-m40055s-2026",
+          "sourcePage": "current grade listing",
+          "comparisonReady": false,
+          "limitations": "Manufacturer typical listing value; exact test method is not exposed on this product-list surface."
+        }
+      ],
+      "processing": [],
+      "approvals": [],
+      "lifecycle": {
+        "status": "unknown",
+        "checkedAt": "2026-09-29"
+      },
+      "sources": [
+        {
+          "id": "src-sabic-hdpe-m40055s-2026",
+          "publisher": "SABIC",
+          "title": "SABIC® HDPE M40055S current product listing",
+          "url": "https://www.sabic.com/en/products/polymers/polyethylene-pe/sabic-hdpe",
+          "kind": "manufacturer-datasheet",
+          "revision": null,
+          "documentDate": null,
+          "retrievedAt": "2026-09-29"
+        }
+      ],
+      "provenance": {
+        "stage": "validated",
+        "ingestedAt": "2026-09-29T00:00:00Z",
+        "reviewedAt": "2026-09-29T00:00:00Z",
+        "reviewer": "primary-source-web-review",
+        "notes": "Current SABIC HDPE product portfolio confirms exact grade identity, injection/compression moulding use and grade-specific MFR/load/density. MFR remains comparisonReady=false because test temperature is not exposed on the reviewed surface."
+      }
+    },
+    {
+      "schemaVersion": 1,
+      "id": "mat-sabic-hdpe-m40060",
+      "manufacturer": {
+        "id": "mfr-sabic",
+        "name": "SABIC",
+        "country": "Saudi Arabia",
+        "website": "https://www.sabic.com/"
+      },
+      "brand": "SABIC® HDPE",
+      "grade": "M40060",
+      "aliases": [],
+      "polymer": {
+        "family": "HDPE",
+        "morphology": "semi-crystalline"
+      },
+      "composition": {
+        "uvStabilised": null,
+        "notes": "HDPE injection-moulding grade designed for rigidity, toughness and low warpage."
+      },
+      "properties": [
+        {
+          "id": "obs-sabic-hdpe-m40060-mfr",
+          "property": "Melt Flow Rate",
+          "value": 4,
+          "unit": "g/10min",
+          "testMethod": null,
+          "temperatureC": null,
+          "loadKg": 2.16,
+          "direction": "not-applicable",
+          "sourceId": "src-sabic-hdpe-m40060-2026",
+          "sourcePage": "current grade listing",
+          "comparisonReady": false,
+          "limitations": "SABIC current listing publishes MFR and load but not the test temperature in this surface; do not compare this MFR directly until the exact technical-data document supplies full ISO/ASTM condition semantics."
+        },
+        {
+          "id": "obs-sabic-hdpe-m40060-density",
+          "property": "Density",
+          "value": 960,
+          "unit": "kg/m³",
+          "testMethod": null,
+          "direction": "not-applicable",
+          "sourceId": "src-sabic-hdpe-m40060-2026",
+          "sourcePage": "current grade listing",
+          "comparisonReady": false,
+          "limitations": "Manufacturer typical listing value; exact test method is not exposed on this product-list surface."
+        }
+      ],
+      "processing": [],
+      "approvals": [],
+      "lifecycle": {
+        "status": "unknown",
+        "checkedAt": "2026-09-29"
+      },
+      "sources": [
+        {
+          "id": "src-sabic-hdpe-m40060-2026",
+          "publisher": "SABIC",
+          "title": "SABIC® HDPE M40060 current product listing",
+          "url": "https://www.sabic.com/en/products/polymers/polyethylene-pe/sabic-hdpe",
+          "kind": "manufacturer-datasheet",
+          "revision": null,
+          "documentDate": null,
+          "retrievedAt": "2026-09-29"
+        }
+      ],
+      "provenance": {
+        "stage": "validated",
+        "ingestedAt": "2026-09-29T00:00:00Z",
+        "reviewedAt": "2026-09-29T00:00:00Z",
+        "reviewer": "primary-source-web-review",
+        "notes": "Current SABIC HDPE product portfolio confirms exact grade identity, injection/compression moulding use and grade-specific MFR/load/density. MFR remains comparisonReady=false because test temperature is not exposed on the reviewed surface."
+      }
+    },
+    {
+      "schemaVersion": 1,
+      "id": "mat-sabic-hdpe-m80064",
+      "manufacturer": {
+        "id": "mfr-sabic",
+        "name": "SABIC",
+        "country": "Saudi Arabia",
+        "website": "https://www.sabic.com/"
+      },
+      "brand": "SABIC® HDPE",
+      "grade": "M80064",
+      "aliases": [],
+      "polymer": {
+        "family": "HDPE",
+        "morphology": "semi-crystalline"
+      },
+      "composition": {
+        "uvStabilised": null,
+        "notes": "HDPE injection-moulding grade with rigidity, toughness and low-warpage emphasis."
+      },
+      "properties": [
+        {
+          "id": "obs-sabic-hdpe-m80064-mfr",
+          "property": "Melt Flow Rate",
+          "value": 8,
+          "unit": "g/10min",
+          "testMethod": null,
+          "temperatureC": null,
+          "loadKg": 2.16,
+          "direction": "not-applicable",
+          "sourceId": "src-sabic-hdpe-m80064-2026",
+          "sourcePage": "current grade listing",
+          "comparisonReady": false,
+          "limitations": "SABIC current listing publishes MFR and load but not the test temperature in this surface; do not compare this MFR directly until the exact technical-data document supplies full ISO/ASTM condition semantics."
+        },
+        {
+          "id": "obs-sabic-hdpe-m80064-density",
+          "property": "Density",
+          "value": 964,
+          "unit": "kg/m³",
+          "testMethod": null,
+          "direction": "not-applicable",
+          "sourceId": "src-sabic-hdpe-m80064-2026",
+          "sourcePage": "current grade listing",
+          "comparisonReady": false,
+          "limitations": "Manufacturer typical listing value; exact test method is not exposed on this product-list surface."
+        }
+      ],
+      "processing": [],
+      "approvals": [],
+      "lifecycle": {
+        "status": "unknown",
+        "checkedAt": "2026-09-29"
+      },
+      "sources": [
+        {
+          "id": "src-sabic-hdpe-m80064-2026",
+          "publisher": "SABIC",
+          "title": "SABIC® HDPE M80064 current product listing",
+          "url": "https://www.sabic.com/en/products/polymers/polyethylene-pe/sabic-hdpe",
+          "kind": "manufacturer-datasheet",
+          "revision": null,
+          "documentDate": null,
+          "retrievedAt": "2026-09-29"
+        }
+      ],
+      "provenance": {
+        "stage": "validated",
+        "ingestedAt": "2026-09-29T00:00:00Z",
+        "reviewedAt": "2026-09-29T00:00:00Z",
+        "reviewer": "primary-source-web-review",
+        "notes": "Current SABIC HDPE product portfolio confirms exact grade identity, injection/compression moulding use and grade-specific MFR/load/density. MFR remains comparisonReady=false because test temperature is not exposed on the reviewed surface."
+      }
+    },
+    {
+      "schemaVersion": 1,
+      "id": "mat-sabic-hdpe-m80064s",
+      "manufacturer": {
+        "id": "mfr-sabic",
+        "name": "SABIC",
+        "country": "Saudi Arabia",
+        "website": "https://www.sabic.com/"
+      },
+      "brand": "SABIC® HDPE",
+      "grade": "M80064S",
+      "aliases": [],
+      "polymer": {
+        "family": "HDPE",
+        "morphology": "semi-crystalline"
+      },
+      "composition": {
+        "uvStabilised": true,
+        "notes": "UV-stabilized HDPE injection-moulding grade with narrow molecular-weight distribution."
+      },
+      "properties": [
+        {
+          "id": "obs-sabic-hdpe-m80064s-mfr",
+          "property": "Melt Flow Rate",
+          "value": 8,
+          "unit": "g/10min",
+          "testMethod": null,
+          "temperatureC": null,
+          "loadKg": 2.16,
+          "direction": "not-applicable",
+          "sourceId": "src-sabic-hdpe-m80064s-2026",
+          "sourcePage": "current grade listing",
+          "comparisonReady": false,
+          "limitations": "SABIC current listing publishes MFR and load but not the test temperature in this surface; do not compare this MFR directly until the exact technical-data document supplies full ISO/ASTM condition semantics."
+        },
+        {
+          "id": "obs-sabic-hdpe-m80064s-density",
+          "property": "Density",
+          "value": 964,
+          "unit": "kg/m³",
+          "testMethod": null,
+          "direction": "not-applicable",
+          "sourceId": "src-sabic-hdpe-m80064s-2026",
+          "sourcePage": "current grade listing",
+          "comparisonReady": false,
+          "limitations": "Manufacturer typical listing value; exact test method is not exposed on this product-list surface."
+        }
+      ],
+      "processing": [],
+      "approvals": [],
+      "lifecycle": {
+        "status": "unknown",
+        "checkedAt": "2026-09-29"
+      },
+      "sources": [
+        {
+          "id": "src-sabic-hdpe-m80064s-2026",
+          "publisher": "SABIC",
+          "title": "SABIC® HDPE M80064S current product listing",
+          "url": "https://www.sabic.com/en/products/polymers/polyethylene-pe/sabic-hdpe",
+          "kind": "manufacturer-datasheet",
+          "revision": null,
+          "documentDate": null,
+          "retrievedAt": "2026-09-29"
+        }
+      ],
+      "provenance": {
+        "stage": "validated",
+        "ingestedAt": "2026-09-29T00:00:00Z",
+        "reviewedAt": "2026-09-29T00:00:00Z",
+        "reviewer": "primary-source-web-review",
+        "notes": "Current SABIC HDPE product portfolio confirms exact grade identity, injection/compression moulding use and grade-specific MFR/load/density. MFR remains comparisonReady=false because test temperature is not exposed on the reviewed surface."
+      }
+    },
+    {
+      "schemaVersion": 1,
+      "id": "mat-sabic-hdpe-m864eg",
+      "manufacturer": {
+        "id": "mfr-sabic",
+        "name": "SABIC",
+        "country": "Saudi Arabia",
+        "website": "https://www.sabic.com/"
+      },
+      "brand": "SABIC® HDPE",
+      "grade": "M864EG",
+      "aliases": [],
+      "polymer": {
+        "family": "HDPE",
+        "morphology": "semi-crystalline"
+      },
+      "composition": {
+        "uvStabilised": null,
+        "notes": "HDPE injection-moulding grade for crates, trays, pails and caps/closures."
+      },
+      "properties": [
+        {
+          "id": "obs-sabic-hdpe-m864eg-mfr",
+          "property": "Melt Flow Rate",
+          "value": 8,
+          "unit": "g/10min",
+          "testMethod": null,
+          "temperatureC": null,
+          "loadKg": 2.16,
+          "direction": "not-applicable",
+          "sourceId": "src-sabic-hdpe-m864eg-2026",
+          "sourcePage": "current grade listing",
+          "comparisonReady": false,
+          "limitations": "SABIC current listing publishes MFR and load but not the test temperature in this surface; do not compare this MFR directly until the exact technical-data document supplies full ISO/ASTM condition semantics."
+        },
+        {
+          "id": "obs-sabic-hdpe-m864eg-density",
+          "property": "Density",
+          "value": 964,
+          "unit": "kg/m³",
+          "testMethod": null,
+          "direction": "not-applicable",
+          "sourceId": "src-sabic-hdpe-m864eg-2026",
+          "sourcePage": "current grade listing",
+          "comparisonReady": false,
+          "limitations": "Manufacturer typical listing value; exact test method is not exposed on this product-list surface."
+        }
+      ],
+      "processing": [],
+      "approvals": [],
+      "lifecycle": {
+        "status": "unknown",
+        "checkedAt": "2026-09-29"
+      },
+      "sources": [
+        {
+          "id": "src-sabic-hdpe-m864eg-2026",
+          "publisher": "SABIC",
+          "title": "SABIC® HDPE M864EG current product listing",
+          "url": "https://www.sabic.com/en/products/polymers/polyethylene-pe/sabic-hdpe",
+          "kind": "manufacturer-datasheet",
+          "revision": null,
+          "documentDate": null,
+          "retrievedAt": "2026-09-29"
+        }
+      ],
+      "provenance": {
+        "stage": "validated",
+        "ingestedAt": "2026-09-29T00:00:00Z",
+        "reviewedAt": "2026-09-29T00:00:00Z",
+        "reviewer": "primary-source-web-review",
+        "notes": "Current SABIC HDPE product portfolio confirms exact grade identity, injection/compression moulding use and grade-specific MFR/load/density. MFR remains comparisonReady=false because test temperature is not exposed on the reviewed surface."
+      }
+    },
+    {
+      "schemaVersion": 1,
+      "id": "mat-sabic-hdpe-m864se",
+      "manufacturer": {
+        "id": "mfr-sabic",
+        "name": "SABIC",
+        "country": "Saudi Arabia",
+        "website": "https://www.sabic.com/"
+      },
+      "brand": "SABIC® HDPE",
+      "grade": "M864SE",
+      "aliases": [],
+      "polymer": {
+        "family": "HDPE",
+        "morphology": "semi-crystalline"
+      },
+      "composition": {
+        "uvStabilised": true,
+        "notes": "UV-stabilized HDPE injection-moulding grade; SABIC publishes typical moulding conditions on the current listing but they are not copied here until exact technical-data semantics are normalized."
+      },
+      "properties": [
+        {
+          "id": "obs-sabic-hdpe-m864se-mfr",
+          "property": "Melt Flow Rate",
+          "value": 8,
+          "unit": "g/10min",
+          "testMethod": null,
+          "temperatureC": null,
+          "loadKg": 2.16,
+          "direction": "not-applicable",
+          "sourceId": "src-sabic-hdpe-m864se-2026",
+          "sourcePage": "current grade listing",
+          "comparisonReady": false,
+          "limitations": "SABIC current listing publishes MFR and load but not the test temperature in this surface; do not compare this MFR directly until the exact technical-data document supplies full ISO/ASTM condition semantics."
+        },
+        {
+          "id": "obs-sabic-hdpe-m864se-density",
+          "property": "Density",
+          "value": 964,
+          "unit": "kg/m³",
+          "testMethod": null,
+          "direction": "not-applicable",
+          "sourceId": "src-sabic-hdpe-m864se-2026",
+          "sourcePage": "current grade listing",
+          "comparisonReady": false,
+          "limitations": "Manufacturer typical listing value; exact test method is not exposed on this product-list surface."
+        }
+      ],
+      "processing": [],
+      "approvals": [],
+      "lifecycle": {
+        "status": "unknown",
+        "checkedAt": "2026-09-29"
+      },
+      "sources": [
+        {
+          "id": "src-sabic-hdpe-m864se-2026",
+          "publisher": "SABIC",
+          "title": "SABIC® HDPE M864SE current product listing",
+          "url": "https://www.sabic.com/en/products/polymers/polyethylene-pe/sabic-hdpe",
+          "kind": "manufacturer-datasheet",
+          "revision": null,
+          "documentDate": null,
+          "retrievedAt": "2026-09-29"
+        }
+      ],
+      "provenance": {
+        "stage": "validated",
+        "ingestedAt": "2026-09-29T00:00:00Z",
+        "reviewedAt": "2026-09-29T00:00:00Z",
+        "reviewer": "primary-source-web-review",
+        "notes": "Current SABIC HDPE product portfolio confirms exact grade identity, injection/compression moulding use and grade-specific MFR/load/density. MFR remains comparisonReady=false because test temperature is not exposed on the reviewed surface."
+      }
+    },
+    {
+      "schemaVersion": 1,
       "id": "mat-sabic-pp-5702p",
       "manufacturer": {
         "id": "mfr-sabic",
