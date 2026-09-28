@@ -9216,6 +9216,196 @@
     },
     {
       "schemaVersion": 1,
+      "id": "mat-mels-tafmer-bl2481m",
+      "manufacturer": {
+        "id": "mfr-mitsui-elastomers-singapore",
+        "name": "Mitsui Elastomers Singapore",
+        "country": "Singapore",
+        "website": "https://jp.mitsuichemicals.com/en/special/tafmer/"
+      },
+      "brand": "TAFMER™",
+      "grade": "BL2481M",
+      "aliases": [],
+      "polymer": {
+        "family": "AOC elastomer",
+        "morphology": "elastomeric"
+      },
+      "composition": {
+        "notes": "TAFMER BL Series exact grade. Mitsui identifies injection moulding among TAFMER processing methods; exact application suitability still requires grade/application verification."
+      },
+      "properties": [
+        {
+          "id": "obs-mels-bl2481m-mfr190",
+          "property": "Melt Flow Rate",
+          "value": 4,
+          "unit": "g/10min",
+          "testMethod": "ASTM D1238",
+          "temperatureC": 190,
+          "loadKg": null,
+          "direction": "not-applicable",
+          "sourceId": "src-mels-tafmer-bl2481m-2026",
+          "sourcePage": "BL Series properties table",
+          "comparisonReady": false,
+          "limitations": "Current Singapore-maintained grade table publishes ASTM D1238 at 190°C but not the load on this surface; context-only."
+        },
+        {
+          "id": "obs-mels-bl2481m-mfr230",
+          "property": "Melt Flow Rate",
+          "value": 9,
+          "unit": "g/10min",
+          "testMethod": "ASTM D1238",
+          "temperatureC": 230,
+          "loadKg": null,
+          "direction": "not-applicable",
+          "sourceId": "src-mels-tafmer-bl2481m-2026",
+          "sourcePage": "BL Series properties table",
+          "comparisonReady": false,
+          "limitations": "Current Singapore-maintained grade table publishes ASTM D1238 at 230°C but not the load on this surface; context-only."
+        }
+      ],
+      "processing": [],
+      "approvals": [],
+      "lifecycle": {
+        "status": "unknown",
+        "checkedAt": "2026-09-29"
+      },
+      "sources": [
+        {
+          "id": "src-mels-tafmer-bl2481m-2026",
+          "publisher": "Mitsui Elastomers Singapore Pte. Ltd.",
+          "title": "TAFMER™ BL Series BL2481M current properties",
+          "url": "https://jp.mitsuichemicals.com/en/special/tafmer/grades/bl.htm",
+          "kind": "manufacturer-datasheet",
+          "revision": null,
+          "documentDate": null,
+          "retrievedAt": "2026-09-29"
+        },
+        {
+          "id": "src-mels-singapore-tafmer-plant-2026",
+          "publisher": "Mitsui Chemicals",
+          "title": "Mitsui Elastomers Singapore TAFMER plant on Jurong Island",
+          "url": "https://ap.mitsuichemicals.com/mci/mci-news/2023/2023_0801/index.htm",
+          "kind": "manufacturer-site",
+          "revision": null,
+          "documentDate": "2023-08-01",
+          "retrievedAt": "2026-09-29"
+        },
+        {
+          "id": "src-mels-tafmer-processing-overview-2026",
+          "publisher": "Mitsui Elastomers Singapore Pte. Ltd.",
+          "title": "TAFMER™ processing and application overview including injection molding",
+          "url": "https://jp.mitsuichemicals.com/en/special/tafmer/products/index.htm",
+          "kind": "manufacturer-processing-guide",
+          "revision": null,
+          "documentDate": null,
+          "retrievedAt": "2026-09-29"
+        }
+      ],
+      "provenance": {
+        "stage": "validated",
+        "ingestedAt": "2026-09-29T00:00:00Z",
+        "reviewedAt": "2026-09-29T00:00:00Z",
+        "reviewer": "primary-source-web-review",
+        "notes": "Current exact-grade data come from the TAFMER site maintained by Mitsui Elastomers Singapore. Singapore manufacturing provenance is family-level; no exact grade-to-line claim is made. MFR remains context-only where load is absent."
+      }
+    },
+    {
+      "schemaVersion": 1,
+      "id": "mat-mels-tafmer-bl2491m",
+      "manufacturer": {
+        "id": "mfr-mitsui-elastomers-singapore",
+        "name": "Mitsui Elastomers Singapore",
+        "country": "Singapore",
+        "website": "https://jp.mitsuichemicals.com/en/special/tafmer/"
+      },
+      "brand": "TAFMER™",
+      "grade": "BL2491M",
+      "aliases": [],
+      "polymer": {
+        "family": "AOC elastomer",
+        "morphology": "elastomeric"
+      },
+      "composition": {
+        "notes": "TAFMER BL Series exact grade. Mitsui identifies injection moulding among TAFMER processing methods; exact application suitability still requires grade/application verification."
+      },
+      "properties": [
+        {
+          "id": "obs-mels-bl2491m-mfr190",
+          "property": "Melt Flow Rate",
+          "value": 4,
+          "unit": "g/10min",
+          "testMethod": "ASTM D1238",
+          "temperatureC": 190,
+          "loadKg": null,
+          "direction": "not-applicable",
+          "sourceId": "src-mels-tafmer-bl2491m-2026",
+          "sourcePage": "BL Series properties table",
+          "comparisonReady": false,
+          "limitations": "Current Singapore-maintained grade table publishes ASTM D1238 at 190°C but not the load on this surface; context-only."
+        },
+        {
+          "id": "obs-mels-bl2491m-mfr230",
+          "property": "Melt Flow Rate",
+          "value": 9,
+          "unit": "g/10min",
+          "testMethod": "ASTM D1238",
+          "temperatureC": 230,
+          "loadKg": null,
+          "direction": "not-applicable",
+          "sourceId": "src-mels-tafmer-bl2491m-2026",
+          "sourcePage": "BL Series properties table",
+          "comparisonReady": false,
+          "limitations": "Current Singapore-maintained grade table publishes ASTM D1238 at 230°C but not the load on this surface; context-only."
+        }
+      ],
+      "processing": [],
+      "approvals": [],
+      "lifecycle": {
+        "status": "unknown",
+        "checkedAt": "2026-09-29"
+      },
+      "sources": [
+        {
+          "id": "src-mels-tafmer-bl2491m-2026",
+          "publisher": "Mitsui Elastomers Singapore Pte. Ltd.",
+          "title": "TAFMER™ BL Series BL2491M current properties",
+          "url": "https://jp.mitsuichemicals.com/en/special/tafmer/grades/bl.htm",
+          "kind": "manufacturer-datasheet",
+          "revision": null,
+          "documentDate": null,
+          "retrievedAt": "2026-09-29"
+        },
+        {
+          "id": "src-mels-singapore-tafmer-plant-2026",
+          "publisher": "Mitsui Chemicals",
+          "title": "Mitsui Elastomers Singapore TAFMER plant on Jurong Island",
+          "url": "https://ap.mitsuichemicals.com/mci/mci-news/2023/2023_0801/index.htm",
+          "kind": "manufacturer-site",
+          "revision": null,
+          "documentDate": "2023-08-01",
+          "retrievedAt": "2026-09-29"
+        },
+        {
+          "id": "src-mels-tafmer-processing-overview-2026",
+          "publisher": "Mitsui Elastomers Singapore Pte. Ltd.",
+          "title": "TAFMER™ processing and application overview including injection molding",
+          "url": "https://jp.mitsuichemicals.com/en/special/tafmer/products/index.htm",
+          "kind": "manufacturer-processing-guide",
+          "revision": null,
+          "documentDate": null,
+          "retrievedAt": "2026-09-29"
+        }
+      ],
+      "provenance": {
+        "stage": "validated",
+        "ingestedAt": "2026-09-29T00:00:00Z",
+        "reviewedAt": "2026-09-29T00:00:00Z",
+        "reviewer": "primary-source-web-review",
+        "notes": "Current exact-grade data come from the TAFMER site maintained by Mitsui Elastomers Singapore. Singapore manufacturing provenance is family-level; no exact grade-to-line claim is made. MFR remains context-only where load is absent."
+      }
+    },
+    {
+      "schemaVersion": 1,
       "id": "mat-mels-tafmer-df110",
       "manufacturer": {
         "id": "mfr-mitsui-elastomers-singapore",
@@ -10774,6 +10964,719 @@
         "reviewedAt": "2026-09-29T00:00:00Z",
         "reviewer": "primary-source-web-review",
         "notes": "Exact-grade properties come from the current M Series page maintained by Mitsui Elastomers Singapore. The Jurong Island plant source establishes Singapore TAFMER manufacturing capability at family level; it is not used to claim plant-of-origin for this exact grade."
+      }
+    },
+    {
+      "schemaVersion": 1,
+      "id": "mat-mels-tafmer-pn-20300",
+      "manufacturer": {
+        "id": "mfr-mitsui-elastomers-singapore",
+        "name": "Mitsui Elastomers Singapore",
+        "country": "Singapore",
+        "website": "https://jp.mitsuichemicals.com/en/special/tafmer/"
+      },
+      "brand": "TAFMER™",
+      "grade": "PN-20300",
+      "aliases": [],
+      "polymer": {
+        "family": "AOC elastomer",
+        "morphology": "elastomeric"
+      },
+      "composition": {
+        "notes": "TAFMER PN Series exact grade. Mitsui identifies injection moulding among TAFMER processing methods; exact application suitability still requires grade/application verification."
+      },
+      "properties": [
+        {
+          "id": "obs-mels-pn-20300-mfr190",
+          "property": "Melt Flow Rate",
+          "value": 14,
+          "unit": "g/10min",
+          "testMethod": "ASTM D1238",
+          "temperatureC": 190,
+          "loadKg": null,
+          "direction": "not-applicable",
+          "sourceId": "src-mels-tafmer-pn-20300-2026",
+          "sourcePage": "PN Series properties table",
+          "comparisonReady": false,
+          "limitations": "Current Singapore-maintained grade table publishes ASTM D1238 at 190°C but not the load on this surface; context-only."
+        },
+        {
+          "id": "obs-mels-pn-20300-mfr230",
+          "property": "Melt Flow Rate",
+          "value": 30,
+          "unit": "g/10min",
+          "testMethod": "ASTM D1238",
+          "temperatureC": 230,
+          "loadKg": null,
+          "direction": "not-applicable",
+          "sourceId": "src-mels-tafmer-pn-20300-2026",
+          "sourcePage": "PN Series properties table",
+          "comparisonReady": false,
+          "limitations": "Current Singapore-maintained grade table publishes ASTM D1238 at 230°C but not the load on this surface; context-only."
+        },
+        {
+          "id": "obs-mels-pn-20300-density",
+          "property": "Density",
+          "value": 868,
+          "unit": "kg/m³",
+          "testMethod": "ASTM D1505",
+          "direction": "not-applicable",
+          "sourceId": "src-mels-tafmer-pn-20300-2026",
+          "sourcePage": "PN Series basic properties",
+          "comparisonReady": false,
+          "limitations": "Manufacturer representative exact-grade density; not a guaranteed specification."
+        }
+      ],
+      "processing": [],
+      "approvals": [],
+      "lifecycle": {
+        "status": "unknown",
+        "checkedAt": "2026-09-29"
+      },
+      "sources": [
+        {
+          "id": "src-mels-tafmer-pn-20300-2026",
+          "publisher": "Mitsui Elastomers Singapore Pte. Ltd.",
+          "title": "TAFMER™ PN Series PN-20300 current properties",
+          "url": "https://jp.mitsuichemicals.com/en/special/tafmer/grades/pn.htm",
+          "kind": "manufacturer-datasheet",
+          "revision": null,
+          "documentDate": null,
+          "retrievedAt": "2026-09-29"
+        },
+        {
+          "id": "src-mels-singapore-tafmer-plant-2026",
+          "publisher": "Mitsui Chemicals",
+          "title": "Mitsui Elastomers Singapore TAFMER plant on Jurong Island",
+          "url": "https://ap.mitsuichemicals.com/mci/mci-news/2023/2023_0801/index.htm",
+          "kind": "manufacturer-site",
+          "revision": null,
+          "documentDate": "2023-08-01",
+          "retrievedAt": "2026-09-29"
+        },
+        {
+          "id": "src-mels-tafmer-processing-overview-2026",
+          "publisher": "Mitsui Elastomers Singapore Pte. Ltd.",
+          "title": "TAFMER™ processing and application overview including injection molding",
+          "url": "https://jp.mitsuichemicals.com/en/special/tafmer/products/index.htm",
+          "kind": "manufacturer-processing-guide",
+          "revision": null,
+          "documentDate": null,
+          "retrievedAt": "2026-09-29"
+        }
+      ],
+      "provenance": {
+        "stage": "validated",
+        "ingestedAt": "2026-09-29T00:00:00Z",
+        "reviewedAt": "2026-09-29T00:00:00Z",
+        "reviewer": "primary-source-web-review",
+        "notes": "Current exact-grade data come from the TAFMER site maintained by Mitsui Elastomers Singapore. Singapore manufacturing provenance is family-level; no exact grade-to-line claim is made. MFR remains context-only where load is absent."
+      }
+    },
+    {
+      "schemaVersion": 1,
+      "id": "mat-mels-tafmer-pn-2060",
+      "manufacturer": {
+        "id": "mfr-mitsui-elastomers-singapore",
+        "name": "Mitsui Elastomers Singapore",
+        "country": "Singapore",
+        "website": "https://jp.mitsuichemicals.com/en/special/tafmer/"
+      },
+      "brand": "TAFMER™",
+      "grade": "PN-2060",
+      "aliases": [],
+      "polymer": {
+        "family": "AOC elastomer",
+        "morphology": "elastomeric"
+      },
+      "composition": {
+        "notes": "TAFMER PN Series exact grade. Mitsui identifies injection moulding among TAFMER processing methods; exact application suitability still requires grade/application verification."
+      },
+      "properties": [
+        {
+          "id": "obs-mels-pn-2060-mfr190",
+          "property": "Melt Flow Rate",
+          "value": 2.7,
+          "unit": "g/10min",
+          "testMethod": "ASTM D1238",
+          "temperatureC": 190,
+          "loadKg": null,
+          "direction": "not-applicable",
+          "sourceId": "src-mels-tafmer-pn-2060-2026",
+          "sourcePage": "PN Series properties table",
+          "comparisonReady": false,
+          "limitations": "Current Singapore-maintained grade table publishes ASTM D1238 at 190°C but not the load on this surface; context-only."
+        },
+        {
+          "id": "obs-mels-pn-2060-mfr230",
+          "property": "Melt Flow Rate",
+          "value": 6,
+          "unit": "g/10min",
+          "testMethod": "ASTM D1238",
+          "temperatureC": 230,
+          "loadKg": null,
+          "direction": "not-applicable",
+          "sourceId": "src-mels-tafmer-pn-2060-2026",
+          "sourcePage": "PN Series properties table",
+          "comparisonReady": false,
+          "limitations": "Current Singapore-maintained grade table publishes ASTM D1238 at 230°C but not the load on this surface; context-only."
+        },
+        {
+          "id": "obs-mels-pn-2060-density",
+          "property": "Density",
+          "value": 868,
+          "unit": "kg/m³",
+          "testMethod": "ASTM D1505",
+          "direction": "not-applicable",
+          "sourceId": "src-mels-tafmer-pn-2060-2026",
+          "sourcePage": "PN Series basic properties",
+          "comparisonReady": false,
+          "limitations": "Manufacturer representative exact-grade density; not a guaranteed specification."
+        }
+      ],
+      "processing": [],
+      "approvals": [],
+      "lifecycle": {
+        "status": "unknown",
+        "checkedAt": "2026-09-29"
+      },
+      "sources": [
+        {
+          "id": "src-mels-tafmer-pn-2060-2026",
+          "publisher": "Mitsui Elastomers Singapore Pte. Ltd.",
+          "title": "TAFMER™ PN Series PN-2060 current properties",
+          "url": "https://jp.mitsuichemicals.com/en/special/tafmer/grades/pn.htm",
+          "kind": "manufacturer-datasheet",
+          "revision": null,
+          "documentDate": null,
+          "retrievedAt": "2026-09-29"
+        },
+        {
+          "id": "src-mels-singapore-tafmer-plant-2026",
+          "publisher": "Mitsui Chemicals",
+          "title": "Mitsui Elastomers Singapore TAFMER plant on Jurong Island",
+          "url": "https://ap.mitsuichemicals.com/mci/mci-news/2023/2023_0801/index.htm",
+          "kind": "manufacturer-site",
+          "revision": null,
+          "documentDate": "2023-08-01",
+          "retrievedAt": "2026-09-29"
+        },
+        {
+          "id": "src-mels-tafmer-processing-overview-2026",
+          "publisher": "Mitsui Elastomers Singapore Pte. Ltd.",
+          "title": "TAFMER™ processing and application overview including injection molding",
+          "url": "https://jp.mitsuichemicals.com/en/special/tafmer/products/index.htm",
+          "kind": "manufacturer-processing-guide",
+          "revision": null,
+          "documentDate": null,
+          "retrievedAt": "2026-09-29"
+        }
+      ],
+      "provenance": {
+        "stage": "validated",
+        "ingestedAt": "2026-09-29T00:00:00Z",
+        "reviewedAt": "2026-09-29T00:00:00Z",
+        "reviewer": "primary-source-web-review",
+        "notes": "Current exact-grade data come from the TAFMER site maintained by Mitsui Elastomers Singapore. Singapore manufacturing provenance is family-level; no exact grade-to-line claim is made. MFR remains context-only where load is absent."
+      }
+    },
+    {
+      "schemaVersion": 1,
+      "id": "mat-mels-tafmer-pn-2070",
+      "manufacturer": {
+        "id": "mfr-mitsui-elastomers-singapore",
+        "name": "Mitsui Elastomers Singapore",
+        "country": "Singapore",
+        "website": "https://jp.mitsuichemicals.com/en/special/tafmer/"
+      },
+      "brand": "TAFMER™",
+      "grade": "PN-2070",
+      "aliases": [],
+      "polymer": {
+        "family": "AOC elastomer",
+        "morphology": "elastomeric"
+      },
+      "composition": {
+        "notes": "TAFMER PN Series exact grade. Mitsui identifies injection moulding among TAFMER processing methods; exact application suitability still requires grade/application verification."
+      },
+      "properties": [
+        {
+          "id": "obs-mels-pn-2070-mfr190",
+          "property": "Melt Flow Rate",
+          "value": 3.2,
+          "unit": "g/10min",
+          "testMethod": "ASTM D1238",
+          "temperatureC": 190,
+          "loadKg": null,
+          "direction": "not-applicable",
+          "sourceId": "src-mels-tafmer-pn-2070-2026",
+          "sourcePage": "PN Series properties table",
+          "comparisonReady": false,
+          "limitations": "Current Singapore-maintained grade table publishes ASTM D1238 at 190°C but not the load on this surface; context-only."
+        },
+        {
+          "id": "obs-mels-pn-2070-mfr230",
+          "property": "Melt Flow Rate",
+          "value": 7,
+          "unit": "g/10min",
+          "testMethod": "ASTM D1238",
+          "temperatureC": 230,
+          "loadKg": null,
+          "direction": "not-applicable",
+          "sourceId": "src-mels-tafmer-pn-2070-2026",
+          "sourcePage": "PN Series properties table",
+          "comparisonReady": false,
+          "limitations": "Current Singapore-maintained grade table publishes ASTM D1238 at 230°C but not the load on this surface; context-only."
+        },
+        {
+          "id": "obs-mels-pn-2070-density",
+          "property": "Density",
+          "value": 867,
+          "unit": "kg/m³",
+          "testMethod": "ASTM D1505",
+          "direction": "not-applicable",
+          "sourceId": "src-mels-tafmer-pn-2070-2026",
+          "sourcePage": "PN Series basic properties",
+          "comparisonReady": false,
+          "limitations": "Manufacturer representative exact-grade density; not a guaranteed specification."
+        }
+      ],
+      "processing": [],
+      "approvals": [],
+      "lifecycle": {
+        "status": "unknown",
+        "checkedAt": "2026-09-29"
+      },
+      "sources": [
+        {
+          "id": "src-mels-tafmer-pn-2070-2026",
+          "publisher": "Mitsui Elastomers Singapore Pte. Ltd.",
+          "title": "TAFMER™ PN Series PN-2070 current properties",
+          "url": "https://jp.mitsuichemicals.com/en/special/tafmer/grades/pn.htm",
+          "kind": "manufacturer-datasheet",
+          "revision": null,
+          "documentDate": null,
+          "retrievedAt": "2026-09-29"
+        },
+        {
+          "id": "src-mels-singapore-tafmer-plant-2026",
+          "publisher": "Mitsui Chemicals",
+          "title": "Mitsui Elastomers Singapore TAFMER plant on Jurong Island",
+          "url": "https://ap.mitsuichemicals.com/mci/mci-news/2023/2023_0801/index.htm",
+          "kind": "manufacturer-site",
+          "revision": null,
+          "documentDate": "2023-08-01",
+          "retrievedAt": "2026-09-29"
+        },
+        {
+          "id": "src-mels-tafmer-processing-overview-2026",
+          "publisher": "Mitsui Elastomers Singapore Pte. Ltd.",
+          "title": "TAFMER™ processing and application overview including injection molding",
+          "url": "https://jp.mitsuichemicals.com/en/special/tafmer/products/index.htm",
+          "kind": "manufacturer-processing-guide",
+          "revision": null,
+          "documentDate": null,
+          "retrievedAt": "2026-09-29"
+        }
+      ],
+      "provenance": {
+        "stage": "validated",
+        "ingestedAt": "2026-09-29T00:00:00Z",
+        "reviewedAt": "2026-09-29T00:00:00Z",
+        "reviewer": "primary-source-web-review",
+        "notes": "Current exact-grade data come from the TAFMER site maintained by Mitsui Elastomers Singapore. Singapore manufacturing provenance is family-level; no exact grade-to-line claim is made. MFR remains context-only where load is absent."
+      }
+    },
+    {
+      "schemaVersion": 1,
+      "id": "mat-mels-tafmer-pn-3560",
+      "manufacturer": {
+        "id": "mfr-mitsui-elastomers-singapore",
+        "name": "Mitsui Elastomers Singapore",
+        "country": "Singapore",
+        "website": "https://jp.mitsuichemicals.com/en/special/tafmer/"
+      },
+      "brand": "TAFMER™",
+      "grade": "PN-3560",
+      "aliases": [],
+      "polymer": {
+        "family": "AOC elastomer",
+        "morphology": "elastomeric"
+      },
+      "composition": {
+        "notes": "TAFMER PN Series exact grade. Mitsui identifies injection moulding among TAFMER processing methods; exact application suitability still requires grade/application verification."
+      },
+      "properties": [
+        {
+          "id": "obs-mels-pn-3560-mfr190",
+          "property": "Melt Flow Rate",
+          "value": 2.7,
+          "unit": "g/10min",
+          "testMethod": "ASTM D1238",
+          "temperatureC": 190,
+          "loadKg": null,
+          "direction": "not-applicable",
+          "sourceId": "src-mels-tafmer-pn-3560-2026",
+          "sourcePage": "PN Series properties table",
+          "comparisonReady": false,
+          "limitations": "Current Singapore-maintained grade table publishes ASTM D1238 at 190°C but not the load on this surface; context-only."
+        },
+        {
+          "id": "obs-mels-pn-3560-mfr230",
+          "property": "Melt Flow Rate",
+          "value": 6,
+          "unit": "g/10min",
+          "testMethod": "ASTM D1238",
+          "temperatureC": 230,
+          "loadKg": null,
+          "direction": "not-applicable",
+          "sourceId": "src-mels-tafmer-pn-3560-2026",
+          "sourcePage": "PN Series properties table",
+          "comparisonReady": false,
+          "limitations": "Current Singapore-maintained grade table publishes ASTM D1238 at 230°C but not the load on this surface; context-only."
+        },
+        {
+          "id": "obs-mels-pn-3560-density",
+          "property": "Density",
+          "value": 866,
+          "unit": "kg/m³",
+          "testMethod": "ASTM D1505",
+          "direction": "not-applicable",
+          "sourceId": "src-mels-tafmer-pn-3560-2026",
+          "sourcePage": "PN Series basic properties",
+          "comparisonReady": false,
+          "limitations": "Manufacturer representative exact-grade density; not a guaranteed specification."
+        }
+      ],
+      "processing": [],
+      "approvals": [],
+      "lifecycle": {
+        "status": "unknown",
+        "checkedAt": "2026-09-29"
+      },
+      "sources": [
+        {
+          "id": "src-mels-tafmer-pn-3560-2026",
+          "publisher": "Mitsui Elastomers Singapore Pte. Ltd.",
+          "title": "TAFMER™ PN Series PN-3560 current properties",
+          "url": "https://jp.mitsuichemicals.com/en/special/tafmer/grades/pn.htm",
+          "kind": "manufacturer-datasheet",
+          "revision": null,
+          "documentDate": null,
+          "retrievedAt": "2026-09-29"
+        },
+        {
+          "id": "src-mels-singapore-tafmer-plant-2026",
+          "publisher": "Mitsui Chemicals",
+          "title": "Mitsui Elastomers Singapore TAFMER plant on Jurong Island",
+          "url": "https://ap.mitsuichemicals.com/mci/mci-news/2023/2023_0801/index.htm",
+          "kind": "manufacturer-site",
+          "revision": null,
+          "documentDate": "2023-08-01",
+          "retrievedAt": "2026-09-29"
+        },
+        {
+          "id": "src-mels-tafmer-processing-overview-2026",
+          "publisher": "Mitsui Elastomers Singapore Pte. Ltd.",
+          "title": "TAFMER™ processing and application overview including injection molding",
+          "url": "https://jp.mitsuichemicals.com/en/special/tafmer/products/index.htm",
+          "kind": "manufacturer-processing-guide",
+          "revision": null,
+          "documentDate": null,
+          "retrievedAt": "2026-09-29"
+        }
+      ],
+      "provenance": {
+        "stage": "validated",
+        "ingestedAt": "2026-09-29T00:00:00Z",
+        "reviewedAt": "2026-09-29T00:00:00Z",
+        "reviewer": "primary-source-web-review",
+        "notes": "Current exact-grade data come from the TAFMER site maintained by Mitsui Elastomers Singapore. Singapore manufacturing provenance is family-level; no exact grade-to-line claim is made. MFR remains context-only where load is absent."
+      }
+    },
+    {
+      "schemaVersion": 1,
+      "id": "mat-mels-tafmer-xm-7070s",
+      "manufacturer": {
+        "id": "mfr-mitsui-elastomers-singapore",
+        "name": "Mitsui Elastomers Singapore",
+        "country": "Singapore",
+        "website": "https://jp.mitsuichemicals.com/en/special/tafmer/"
+      },
+      "brand": "TAFMER™",
+      "grade": "XM-7070S",
+      "aliases": [],
+      "polymer": {
+        "family": "AOC elastomer",
+        "morphology": "elastomeric"
+      },
+      "composition": {
+        "notes": "TAFMER XM Series exact grade. Mitsui identifies injection moulding among TAFMER processing methods; exact application suitability still requires grade/application verification."
+      },
+      "properties": [
+        {
+          "id": "obs-mels-xm-7070s-mfr190",
+          "property": "Melt Flow Rate",
+          "value": 3,
+          "unit": "g/10min",
+          "testMethod": "ASTM D1238",
+          "temperatureC": 190,
+          "loadKg": null,
+          "direction": "not-applicable",
+          "sourceId": "src-mels-tafmer-xm-7070s-2026",
+          "sourcePage": "XM Series properties table",
+          "comparisonReady": false,
+          "limitations": "Current Singapore-maintained grade table publishes ASTM D1238 at 190°C but not the load on this surface; context-only."
+        },
+        {
+          "id": "obs-mels-xm-7070s-mfr230",
+          "property": "Melt Flow Rate",
+          "value": 7,
+          "unit": "g/10min",
+          "testMethod": "ASTM D1238",
+          "temperatureC": 230,
+          "loadKg": null,
+          "direction": "not-applicable",
+          "sourceId": "src-mels-tafmer-xm-7070s-2026",
+          "sourcePage": "XM Series properties table",
+          "comparisonReady": false,
+          "limitations": "Current Singapore-maintained grade table publishes ASTM D1238 at 230°C but not the load on this surface; context-only."
+        }
+      ],
+      "processing": [],
+      "approvals": [],
+      "lifecycle": {
+        "status": "unknown",
+        "checkedAt": "2026-09-29"
+      },
+      "sources": [
+        {
+          "id": "src-mels-tafmer-xm-7070s-2026",
+          "publisher": "Mitsui Elastomers Singapore Pte. Ltd.",
+          "title": "TAFMER™ XM Series XM-7070S current properties",
+          "url": "https://jp.mitsuichemicals.com/en/special/tafmer/grades/xm.htm",
+          "kind": "manufacturer-datasheet",
+          "revision": null,
+          "documentDate": null,
+          "retrievedAt": "2026-09-29"
+        },
+        {
+          "id": "src-mels-singapore-tafmer-plant-2026",
+          "publisher": "Mitsui Chemicals",
+          "title": "Mitsui Elastomers Singapore TAFMER plant on Jurong Island",
+          "url": "https://ap.mitsuichemicals.com/mci/mci-news/2023/2023_0801/index.htm",
+          "kind": "manufacturer-site",
+          "revision": null,
+          "documentDate": "2023-08-01",
+          "retrievedAt": "2026-09-29"
+        },
+        {
+          "id": "src-mels-tafmer-processing-overview-2026",
+          "publisher": "Mitsui Elastomers Singapore Pte. Ltd.",
+          "title": "TAFMER™ processing and application overview including injection molding",
+          "url": "https://jp.mitsuichemicals.com/en/special/tafmer/products/index.htm",
+          "kind": "manufacturer-processing-guide",
+          "revision": null,
+          "documentDate": null,
+          "retrievedAt": "2026-09-29"
+        }
+      ],
+      "provenance": {
+        "stage": "validated",
+        "ingestedAt": "2026-09-29T00:00:00Z",
+        "reviewedAt": "2026-09-29T00:00:00Z",
+        "reviewer": "primary-source-web-review",
+        "notes": "Current exact-grade data come from the TAFMER site maintained by Mitsui Elastomers Singapore. Singapore manufacturing provenance is family-level; no exact grade-to-line claim is made. MFR remains context-only where load is absent."
+      }
+    },
+    {
+      "schemaVersion": 1,
+      "id": "mat-mels-tafmer-xm-7080s",
+      "manufacturer": {
+        "id": "mfr-mitsui-elastomers-singapore",
+        "name": "Mitsui Elastomers Singapore",
+        "country": "Singapore",
+        "website": "https://jp.mitsuichemicals.com/en/special/tafmer/"
+      },
+      "brand": "TAFMER™",
+      "grade": "XM-7080S",
+      "aliases": [],
+      "polymer": {
+        "family": "AOC elastomer",
+        "morphology": "elastomeric"
+      },
+      "composition": {
+        "notes": "TAFMER XM Series exact grade. Mitsui identifies injection moulding among TAFMER processing methods; exact application suitability still requires grade/application verification."
+      },
+      "properties": [
+        {
+          "id": "obs-mels-xm-7080s-mfr190",
+          "property": "Melt Flow Rate",
+          "value": 3,
+          "unit": "g/10min",
+          "testMethod": "ASTM D1238",
+          "temperatureC": 190,
+          "loadKg": null,
+          "direction": "not-applicable",
+          "sourceId": "src-mels-tafmer-xm-7080s-2026",
+          "sourcePage": "XM Series properties table",
+          "comparisonReady": false,
+          "limitations": "Current Singapore-maintained grade table publishes ASTM D1238 at 190°C but not the load on this surface; context-only."
+        },
+        {
+          "id": "obs-mels-xm-7080s-mfr230",
+          "property": "Melt Flow Rate",
+          "value": 7,
+          "unit": "g/10min",
+          "testMethod": "ASTM D1238",
+          "temperatureC": 230,
+          "loadKg": null,
+          "direction": "not-applicable",
+          "sourceId": "src-mels-tafmer-xm-7080s-2026",
+          "sourcePage": "XM Series properties table",
+          "comparisonReady": false,
+          "limitations": "Current Singapore-maintained grade table publishes ASTM D1238 at 230°C but not the load on this surface; context-only."
+        }
+      ],
+      "processing": [],
+      "approvals": [],
+      "lifecycle": {
+        "status": "unknown",
+        "checkedAt": "2026-09-29"
+      },
+      "sources": [
+        {
+          "id": "src-mels-tafmer-xm-7080s-2026",
+          "publisher": "Mitsui Elastomers Singapore Pte. Ltd.",
+          "title": "TAFMER™ XM Series XM-7080S current properties",
+          "url": "https://jp.mitsuichemicals.com/en/special/tafmer/grades/xm.htm",
+          "kind": "manufacturer-datasheet",
+          "revision": null,
+          "documentDate": null,
+          "retrievedAt": "2026-09-29"
+        },
+        {
+          "id": "src-mels-singapore-tafmer-plant-2026",
+          "publisher": "Mitsui Chemicals",
+          "title": "Mitsui Elastomers Singapore TAFMER plant on Jurong Island",
+          "url": "https://ap.mitsuichemicals.com/mci/mci-news/2023/2023_0801/index.htm",
+          "kind": "manufacturer-site",
+          "revision": null,
+          "documentDate": "2023-08-01",
+          "retrievedAt": "2026-09-29"
+        },
+        {
+          "id": "src-mels-tafmer-processing-overview-2026",
+          "publisher": "Mitsui Elastomers Singapore Pte. Ltd.",
+          "title": "TAFMER™ processing and application overview including injection molding",
+          "url": "https://jp.mitsuichemicals.com/en/special/tafmer/products/index.htm",
+          "kind": "manufacturer-processing-guide",
+          "revision": null,
+          "documentDate": null,
+          "retrievedAt": "2026-09-29"
+        }
+      ],
+      "provenance": {
+        "stage": "validated",
+        "ingestedAt": "2026-09-29T00:00:00Z",
+        "reviewedAt": "2026-09-29T00:00:00Z",
+        "reviewer": "primary-source-web-review",
+        "notes": "Current exact-grade data come from the TAFMER site maintained by Mitsui Elastomers Singapore. Singapore manufacturing provenance is family-level; no exact grade-to-line claim is made. MFR remains context-only where load is absent."
+      }
+    },
+    {
+      "schemaVersion": 1,
+      "id": "mat-mels-tafmer-xm-7090",
+      "manufacturer": {
+        "id": "mfr-mitsui-elastomers-singapore",
+        "name": "Mitsui Elastomers Singapore",
+        "country": "Singapore",
+        "website": "https://jp.mitsuichemicals.com/en/special/tafmer/"
+      },
+      "brand": "TAFMER™",
+      "grade": "XM-7090",
+      "aliases": [],
+      "polymer": {
+        "family": "AOC elastomer",
+        "morphology": "elastomeric"
+      },
+      "composition": {
+        "notes": "TAFMER XM Series exact grade. Mitsui identifies injection moulding among TAFMER processing methods; exact application suitability still requires grade/application verification."
+      },
+      "properties": [
+        {
+          "id": "obs-mels-xm-7090-mfr190",
+          "property": "Melt Flow Rate",
+          "value": 3,
+          "unit": "g/10min",
+          "testMethod": "ASTM D1238",
+          "temperatureC": 190,
+          "loadKg": null,
+          "direction": "not-applicable",
+          "sourceId": "src-mels-tafmer-xm-7090-2026",
+          "sourcePage": "XM Series properties table",
+          "comparisonReady": false,
+          "limitations": "Current Singapore-maintained grade table publishes ASTM D1238 at 190°C but not the load on this surface; context-only."
+        },
+        {
+          "id": "obs-mels-xm-7090-mfr230",
+          "property": "Melt Flow Rate",
+          "value": 7,
+          "unit": "g/10min",
+          "testMethod": "ASTM D1238",
+          "temperatureC": 230,
+          "loadKg": null,
+          "direction": "not-applicable",
+          "sourceId": "src-mels-tafmer-xm-7090-2026",
+          "sourcePage": "XM Series properties table",
+          "comparisonReady": false,
+          "limitations": "Current Singapore-maintained grade table publishes ASTM D1238 at 230°C but not the load on this surface; context-only."
+        }
+      ],
+      "processing": [],
+      "approvals": [],
+      "lifecycle": {
+        "status": "unknown",
+        "checkedAt": "2026-09-29"
+      },
+      "sources": [
+        {
+          "id": "src-mels-tafmer-xm-7090-2026",
+          "publisher": "Mitsui Elastomers Singapore Pte. Ltd.",
+          "title": "TAFMER™ XM Series XM-7090 current properties",
+          "url": "https://jp.mitsuichemicals.com/en/special/tafmer/grades/xm.htm",
+          "kind": "manufacturer-datasheet",
+          "revision": null,
+          "documentDate": null,
+          "retrievedAt": "2026-09-29"
+        },
+        {
+          "id": "src-mels-singapore-tafmer-plant-2026",
+          "publisher": "Mitsui Chemicals",
+          "title": "Mitsui Elastomers Singapore TAFMER plant on Jurong Island",
+          "url": "https://ap.mitsuichemicals.com/mci/mci-news/2023/2023_0801/index.htm",
+          "kind": "manufacturer-site",
+          "revision": null,
+          "documentDate": "2023-08-01",
+          "retrievedAt": "2026-09-29"
+        },
+        {
+          "id": "src-mels-tafmer-processing-overview-2026",
+          "publisher": "Mitsui Elastomers Singapore Pte. Ltd.",
+          "title": "TAFMER™ processing and application overview including injection molding",
+          "url": "https://jp.mitsuichemicals.com/en/special/tafmer/products/index.htm",
+          "kind": "manufacturer-processing-guide",
+          "revision": null,
+          "documentDate": null,
+          "retrievedAt": "2026-09-29"
+        }
+      ],
+      "provenance": {
+        "stage": "validated",
+        "ingestedAt": "2026-09-29T00:00:00Z",
+        "reviewedAt": "2026-09-29T00:00:00Z",
+        "reviewer": "primary-source-web-review",
+        "notes": "Current exact-grade data come from the TAFMER site maintained by Mitsui Elastomers Singapore. Singapore manufacturing provenance is family-level; no exact grade-to-line claim is made. MFR remains context-only where load is absent."
       }
     },
     {
