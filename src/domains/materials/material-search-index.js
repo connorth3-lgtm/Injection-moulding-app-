@@ -2,7 +2,7 @@
 (function(){
 'use strict';
 if(window.MM_MATERIAL_SEARCH)return;
-const VERSION='2026.09.29.1';
+const VERSION='2026.09.29.2';
 let state=null;
 let readyPromise=null;
 
@@ -14,12 +14,18 @@ function flat(v){
   if(v&&typeof v==='object')return Object.values(v).map(flat).join(' ');
   return clean(v);
 }
-function gradeSearchable(g){return [g?.id,g?.manufacturer?.name,g?.brand,g?.grade,...(g?.aliases||[]),g?.polymer?.family,g?.polymer?.blend,g?.identity?.variantId,g?.identity?.regionalVariant,g?.production?.country,g?.production?.plant].filter(Boolean).join(' ')}
+const COUNTRY_REGION={
+  'South Korea':'Asia-Pacific','Singapore':'Asia-Pacific','Japan':'Asia-Pacific','China':'Asia-Pacific','Taiwan':'Asia-Pacific','Thailand':'Asia-Pacific','Malaysia':'Asia-Pacific','India':'Asia-Pacific','Australia':'Asia-Pacific','New Zealand':'Asia-Pacific',
+  'Germany':'Europe','Belgium':'Europe','Netherlands':'Europe','France':'Europe','United Kingdom':'Europe','United States':'North America','Canada':'North America'
+};
+function manufacturerCountry(g){return clean(g?.manufacturer?.country)}
+function catalogRegion(g){const country=manufacturerCountry(g);return COUNTRY_REGION[country]||'Other / unclassified'}
+function gradeSearchable(g){return [g?.id,g?.manufacturer?.name,g?.brand,g?.grade,...(g?.aliases||[]),g?.polymer?.family,g?.polymer?.blend,g?.identity?.variantId,g?.identity?.regionalVariant,manufacturerCountry(g),catalogRegion(g),g?.production?.country,g?.production?.plant].filter(Boolean).join(' ')}
 function add(map,key,id){if(!key)return;let bucket=map.get(key);if(!bucket){bucket=new Set();map.set(key,bucket)}bucket.add(id)}
 function intersect(left,right){if(!left)return new Set(right||[]);if(!right)return new Set();const out=new Set();const [small,large]=left.size<=right.size?[left,right]:[right,left];for(const value of small)if(large.has(value))out.add(value);return out}
 function titleForGrade(g){return [g?.manufacturer?.name,g?.brand,g?.grade].map(clean).filter(Boolean).join(' · ')}
-function documentRecord({id,type,title,subtitle='',searchText='',sourceIds=[],materialGradeId=null,payload=null}){
-  return {id,type,title,subtitle,searchText,sourceIds:[...new Set((sourceIds||[]).map(clean).filter(Boolean))],materialGradeId,payload};
+function documentRecord({id,type,title,subtitle='',searchText='',sourceIds=[],materialGradeId=null,payload=null,catalog=null}){
+  return {id,type,title,subtitle,searchText,sourceIds:[...new Set((sourceIds||[]).map(clean).filter(Boolean))],materialGradeId,payload,catalog};
 }
 function exactGradeDocument(g){
   const propertyText=(g?.properties||[]).map(o=>[o.property,o.value,o.unit,o.testMethod,o.temperatureC,o.loadKg,o.specimen,o.conditioning,o.direction,o.limitations].filter(x=>x!==null&&x!==undefined).join(' '));
@@ -29,7 +35,8 @@ function exactGradeDocument(g){
     id:'grade:'+g.id,type:'exact-grade',title:titleForGrade(g),
     subtitle:[g?.polymer?.family,g?.polymer?.morphology].map(clean).filter(Boolean).join(' · '),
     searchText:[gradeSearchable(g),flat(g?.composition),...propertyText,...processingText,...sourceText,flat(g?.provenance),flat(g?.lifecycle)].join(' '),
-    sourceIds:(g?.sources||[]).map(s=>s.id),materialGradeId:g.id,payload:g
+    sourceIds:(g?.sources||[]).map(s=>s.id),materialGradeId:g.id,payload:g,
+    catalog:{region:catalogRegion(g),country:manufacturerCountry(g),manufacturerId:clean(g?.manufacturer?.id),manufacturer:clean(g?.manufacturer?.name),family:clean(g?.polymer?.family),evidenceStage:clean(g?.provenance?.stage)}
   });
 }
 function referenceDocuments(){
@@ -55,13 +62,15 @@ function labDocuments(){
   return out;
 }
 function build(grades){
-  const byId=new Map(),tokenIndex=new Map(),manufacturerIndex=new Map(),familyIndex=new Map(),ordered=[];
+  const byId=new Map(),tokenIndex=new Map(),manufacturerIndex=new Map(),familyIndex=new Map(),countryIndex=new Map(),regionIndex=new Map(),ordered=[];
   for(const grade of grades||[]){
     if(!grade?.id||byId.has(grade.id))continue;
     byId.set(grade.id,grade);ordered.push(grade.id);
     for(const token of tokens(gradeSearchable(grade)))add(tokenIndex,token,grade.id);
     add(manufacturerIndex,clean(grade?.manufacturer?.id),grade.id);
     add(familyIndex,norm(grade?.polymer?.family),grade.id);
+    add(countryIndex,manufacturerCountry(grade),grade.id);
+    add(regionIndex,catalogRegion(grade),grade.id);
   }
   const documents=[...(grades||[]).map(exactGradeDocument),...referenceDocuments(),...labDocuments()];
   const documentById=new Map(),documentTokenIndex=new Map(),typeIndex=new Map(),documentOrder=[];
@@ -71,7 +80,7 @@ function build(grades){
     for(const token of tokens([doc.title,doc.subtitle,doc.searchText,doc.sourceIds.join(' ')].join(' ')))add(documentTokenIndex,token,doc.id);
     add(typeIndex,doc.type,doc.id);
   }
-  state={byId,ordered,tokenIndex,manufacturerIndex,familyIndex,documentById,documentTokenIndex,typeIndex,documentOrder};
+  state={byId,ordered,tokenIndex,manufacturerIndex,familyIndex,countryIndex,regionIndex,documentById,documentTokenIndex,typeIndex,documentOrder};
   return state;
 }
 async function ensure(){
@@ -83,16 +92,18 @@ async function ensure(){
   })();
   return readyPromise;
 }
-async function searchPage(query,{manufacturerId=null,polymerFamily=null,page=1,pageSize=25}={}){
+async function searchPage(query,{manufacturerId=null,polymerFamily=null,country=null,region=null,page=1,pageSize=25}={}){
   const index=await ensure();const queryTokens=tokens(query);let ids=null;
   for(const token of queryTokens)ids=intersect(ids,index.tokenIndex.get(token));
   if(ids===null)ids=new Set(index.ordered);
   if(manufacturerId)ids=intersect(ids,index.manufacturerIndex.get(clean(manufacturerId)));
   if(polymerFamily)ids=intersect(ids,index.familyIndex.get(norm(polymerFamily)));
+  if(country)ids=intersect(ids,index.countryIndex.get(clean(country)));
+  if(region)ids=intersect(ids,index.regionIndex.get(clean(region)));
   const ordered=index.ordered.filter(id=>ids.has(id));const safePageSize=Math.max(1,Math.min(Number(pageSize)||25,100));const total=ordered.length;const pageCount=Math.max(1,Math.ceil(total/safePageSize));const safePage=Math.max(1,Math.min(Number(page)||1,pageCount));const start=(safePage-1)*safePageSize;
   return {items:ordered.slice(start,start+safePageSize).map(id=>index.byId.get(id)),total,page:safePage,pageSize:safePageSize,pageCount,hasPrevious:safePage>1,hasNext:safePage<pageCount};
 }
-async function searchAllPage(query,{types=null,page=1,pageSize=20}={}){
+async function searchAllPage(query,{types=null,region=null,country=null,manufacturerId=null,polymerFamily=null,page=1,pageSize=20}={}){
   const index=await ensure();const queryTokens=tokens(query);let ids=null;
   for(const token of queryTokens)ids=intersect(ids,index.documentTokenIndex.get(token));
   if(ids===null)ids=new Set(index.documentOrder);
@@ -102,10 +113,32 @@ async function searchAllPage(query,{types=null,page=1,pageSize=20}={}){
     for(const type of selected)for(const id of index.typeIndex.get(type)||[])allowed.add(id);
     ids=intersect(ids,allowed);
   }
+  if(region||country||manufacturerId||polymerFamily){
+    const allowed=new Set();
+    for(const id of index.documentOrder){
+      const doc=index.documentById.get(id),cat=doc?.catalog;
+      if(!cat)continue;
+      if(region&&cat.region!==clean(region))continue;
+      if(country&&cat.country!==clean(country))continue;
+      if(manufacturerId&&cat.manufacturerId!==clean(manufacturerId))continue;
+      if(polymerFamily&&norm(cat.family)!==norm(polymerFamily))continue;
+      allowed.add(id);
+    }
+    ids=intersect(ids,allowed);
+  }
   const ordered=index.documentOrder.filter(id=>ids.has(id));const safePageSize=Math.max(1,Math.min(Number(pageSize)||20,100));const total=ordered.length;const pageCount=Math.max(1,Math.ceil(total/safePageSize));const safePage=Math.max(1,Math.min(Number(page)||1,pageCount));const start=(safePage-1)*safePageSize;
   return {items:ordered.slice(start,start+safePageSize).map(id=>index.documentById.get(id)),total,page:safePage,pageSize:safePageSize,pageCount,hasPrevious:safePage>1,hasNext:safePage<pageCount,types:[...index.typeIndex.keys()]};
 }
+async function facets(){
+  const index=await ensure();
+  const grades=index.ordered.map(id=>index.byId.get(id));
+  const regions=[...new Set(grades.map(catalogRegion).filter(Boolean))].sort();
+  const countries=[...new Set(grades.map(manufacturerCountry).filter(Boolean))].sort();
+  const manufacturers=[...new Map(grades.map(g=>[clean(g?.manufacturer?.id),{id:clean(g?.manufacturer?.id),name:clean(g?.manufacturer?.name),country:manufacturerCountry(g),region:catalogRegion(g)}])).values()].filter(x=>x.id).sort((a,b)=>a.name.localeCompare(b.name));
+  const families=[...new Set(grades.map(g=>clean(g?.polymer?.family)).filter(Boolean))].sort();
+  return {regions,countries,manufacturers,families,boundary:'Country is the manufacturer country. Region is a browsing facet derived from manufacturer country; neither field proves exact-grade manufacturing origin, plant origin, or local availability.'};
+}
 function invalidate(){state=null;readyPromise=null}
-function stats(){return state?{grades:state.ordered.length,tokens:state.tokenIndex.size,manufacturers:state.manufacturerIndex.size,families:state.familyIndex.size,documents:state.documentOrder.length,documentTokens:state.documentTokenIndex.size,types:[...state.typeIndex.keys()]}:null}
-window.MM_MATERIAL_SEARCH=Object.freeze({version:VERSION,searchPage,searchAllPage,invalidate,stats,_buildForTest:build});
+function stats(){return state?{grades:state.ordered.length,tokens:state.tokenIndex.size,manufacturers:state.manufacturerIndex.size,families:state.familyIndex.size,countries:state.countryIndex.size,regions:state.regionIndex.size,documents:state.documentOrder.length,documentTokens:state.documentTokenIndex.size,types:[...state.typeIndex.keys()]}:null}
+window.MM_MATERIAL_SEARCH=Object.freeze({version:VERSION,searchPage,searchAllPage,facets,invalidate,stats,_buildForTest:build});
 })();
