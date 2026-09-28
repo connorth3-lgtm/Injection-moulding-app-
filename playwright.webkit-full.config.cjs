@@ -8,7 +8,7 @@ module.exports=defineConfig({
     /learner-ux-repair\.spec\.js/,
     /learn-practice-mobile-style\.spec\.js/,
     /material-grade-detail\.spec\.js/,/material-decision-support\.spec\.js/,
-    /material-search-scale\.spec\.js/,
+    /material-search-scale\.spec\.js/,/material-unified-search\.spec\.js/,
     /measured-evidence-decision\.spec\.js/,
     /read-aloud\.spec\.js/,
     /engineering-case-store\.spec\.js/,
