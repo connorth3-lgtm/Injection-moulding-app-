@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
-  "release": "2026.09.27.3",
-  "commit": "1a30cc02226c1d1dd205f8124e1cef94eb964524",
+  "release": "2026.09.27.4",
+  "commit": "f7c37d4ba55f72fb889b05b8d2125df879cad0bf",
   "browser": "chromium via @playwright/test 1.55.0",
   "maxDiffPixels": 12,
   "viewports": [
@@ -39,5 +39,5 @@
     "book-late",
     "book-trace"
   ],
-  "policy": "2026.09.27.3 is the exact pre-test-fix application UI state containing the intentional Book discoverability change. Subsequent candidates remain locked to this state at maxDiffPixels 12. Physical-device, real-AT and other human/external evidence remain separate historical/freshness gates and are not relabelled by this visual lock."
+  "policy": "2026.09.27.4 is the reviewed learner UI state containing the intentional compact assessment progress navigation and prior Book discoverability change. Subsequent candidates remain locked to this state at maxDiffPixels 12. Physical-device, real-AT and other human/external evidence remain separate historical/freshness gates and are not relabelled by this visual lock."
 }
