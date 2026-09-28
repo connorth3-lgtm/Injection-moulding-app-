@@ -978,6 +978,386 @@
     },
     {
       "schemaVersion": 1,
+      "id": "mat-celanese-vectra-a115",
+      "manufacturer": {
+        "id": "mfr-celanese",
+        "name": "Celanese",
+        "country": "United States",
+        "website": "https://www.celanese.com/"
+      },
+      "brand": "Vectra®",
+      "grade": "A115",
+      "aliases": [],
+      "polymer": {
+        "family": "LCP",
+        "morphology": "semi-crystalline"
+      },
+      "composition": {
+        "notes": "Celanese exact Vectra LCP grade; current property guide lists 15% total filler/reinforcement. Filler chemistry is not inferred beyond the guide."
+      },
+      "properties": [
+        {
+          "id": "obs-celanese-a115-density",
+          "property": "Density",
+          "value": 1.5,
+          "unit": "g/cm³",
+          "testMethod": "ISO 1183",
+          "direction": "not-applicable",
+          "sourceId": "src-celanese-vectra-a115-2026",
+          "sourcePage": "physical properties",
+          "comparisonReady": false,
+          "limitations": "Manufacturer exact-grade typical value."
+        },
+        {
+          "id": "obs-celanese-a115-shrink-flow",
+          "property": "Mould Shrinkage",
+          "value": 0.1,
+          "unit": "%",
+          "testMethod": "ISO 294-4",
+          "direction": "flow",
+          "sourceId": "src-celanese-vectra-a115-2026",
+          "sourcePage": "physical properties",
+          "comparisonReady": false,
+          "limitations": "Directional exact-grade value from Celanese product-information guide; specimen/conditioning semantics are not fully resolved in the current surfaced table, so use as context only."
+        },
+        {
+          "id": "obs-celanese-a115-shrink-transverse",
+          "property": "Mould Shrinkage",
+          "value": 0.4,
+          "unit": "%",
+          "testMethod": "ISO 294-4",
+          "direction": "transverse",
+          "sourceId": "src-celanese-vectra-a115-2026",
+          "sourcePage": "physical properties",
+          "comparisonReady": false,
+          "limitations": "Directional exact-grade value from Celanese product-information guide; specimen/conditioning semantics are not fully resolved in the current surfaced table, so use as context only."
+        },
+        {
+          "id": "obs-celanese-a115-melting",
+          "property": "Melting Temperature",
+          "value": 280,
+          "unit": "°C",
+          "testMethod": "ISO 11357-1,-2,-3",
+          "direction": "not-applicable",
+          "sourceId": "src-celanese-vectra-a115-2026",
+          "sourcePage": "thermal properties",
+          "comparisonReady": false,
+          "limitations": "Material thermal property, not a process setpoint."
+        }
+      ],
+      "processing": [],
+      "approvals": [],
+      "lifecycle": {
+        "status": "unknown",
+        "checkedAt": "2026-09-29"
+      },
+      "sources": [
+        {
+          "id": "src-celanese-vectra-a115-2026",
+          "publisher": "Celanese",
+          "title": "Vectra® A115 current product information",
+          "url": "https://www.celanese.com/-/media/cewebjssapp/project/productdocuments/lcp/lcp-026_vectralcpshorttermpropguidetg_am_0613.pdf",
+          "kind": "manufacturer-datasheet",
+          "revision": null,
+          "documentDate": null,
+          "retrievedAt": "2026-09-29"
+        }
+      ],
+      "provenance": {
+        "stage": "validated",
+        "ingestedAt": "2026-09-29T00:00:00Z",
+        "reviewedAt": "2026-09-29T00:00:00Z",
+        "reviewer": "primary-source-web-review",
+        "notes": "Current Celanese LCP portfolio and manufacturer-hosted short-term property guide reviewed. Directional shrinkage is published but remains context-only because comparison-critical specimen/conditioning detail is not fully resolved in the surfaced table."
+      }
+    },
+    {
+      "schemaVersion": 1,
+      "id": "mat-celanese-vectra-a130",
+      "manufacturer": {
+        "id": "mfr-celanese",
+        "name": "Celanese",
+        "country": "United States",
+        "website": "https://www.celanese.com/"
+      },
+      "brand": "Vectra®",
+      "grade": "A130",
+      "aliases": [],
+      "polymer": {
+        "family": "LCP",
+        "morphology": "semi-crystalline"
+      },
+      "composition": {
+        "notes": "Celanese exact Vectra LCP grade; current property guide lists 30% total filler/reinforcement. Filler chemistry is not inferred beyond the guide."
+      },
+      "properties": [
+        {
+          "id": "obs-celanese-a130-density",
+          "property": "Density",
+          "value": 1.62,
+          "unit": "g/cm³",
+          "testMethod": "ISO 1183",
+          "direction": "not-applicable",
+          "sourceId": "src-celanese-vectra-a130-2026",
+          "sourcePage": "physical properties",
+          "comparisonReady": false,
+          "limitations": "Manufacturer exact-grade typical value."
+        },
+        {
+          "id": "obs-celanese-a130-shrink-flow",
+          "property": "Mould Shrinkage",
+          "value": 0.2,
+          "unit": "%",
+          "testMethod": "ISO 294-4",
+          "direction": "flow",
+          "sourceId": "src-celanese-vectra-a130-2026",
+          "sourcePage": "physical properties",
+          "comparisonReady": false,
+          "limitations": "Directional exact-grade value from Celanese product-information guide; specimen/conditioning semantics are not fully resolved in the current surfaced table, so use as context only."
+        },
+        {
+          "id": "obs-celanese-a130-shrink-transverse",
+          "property": "Mould Shrinkage",
+          "value": 0.4,
+          "unit": "%",
+          "testMethod": "ISO 294-4",
+          "direction": "transverse",
+          "sourceId": "src-celanese-vectra-a130-2026",
+          "sourcePage": "physical properties",
+          "comparisonReady": false,
+          "limitations": "Directional exact-grade value from Celanese product-information guide; specimen/conditioning semantics are not fully resolved in the current surfaced table, so use as context only."
+        },
+        {
+          "id": "obs-celanese-a130-melting",
+          "property": "Melting Temperature",
+          "value": 280,
+          "unit": "°C",
+          "testMethod": "ISO 11357-1,-2,-3",
+          "direction": "not-applicable",
+          "sourceId": "src-celanese-vectra-a130-2026",
+          "sourcePage": "thermal properties",
+          "comparisonReady": false,
+          "limitations": "Material thermal property, not a process setpoint."
+        }
+      ],
+      "processing": [],
+      "approvals": [],
+      "lifecycle": {
+        "status": "unknown",
+        "checkedAt": "2026-09-29"
+      },
+      "sources": [
+        {
+          "id": "src-celanese-vectra-a130-2026",
+          "publisher": "Celanese",
+          "title": "Vectra® A130 current product information",
+          "url": "https://www.celanese.com/-/media/cewebjssapp/project/productdocuments/lcp/lcp-026_vectralcpshorttermpropguidetg_am_0613.pdf",
+          "kind": "manufacturer-datasheet",
+          "revision": null,
+          "documentDate": null,
+          "retrievedAt": "2026-09-29"
+        }
+      ],
+      "provenance": {
+        "stage": "validated",
+        "ingestedAt": "2026-09-29T00:00:00Z",
+        "reviewedAt": "2026-09-29T00:00:00Z",
+        "reviewer": "primary-source-web-review",
+        "notes": "Current Celanese LCP portfolio and manufacturer-hosted short-term property guide reviewed. Directional shrinkage is published but remains context-only because comparison-critical specimen/conditioning detail is not fully resolved in the surfaced table."
+      }
+    },
+    {
+      "schemaVersion": 1,
+      "id": "mat-celanese-vectra-e130i",
+      "manufacturer": {
+        "id": "mfr-celanese",
+        "name": "Celanese",
+        "country": "United States",
+        "website": "https://www.celanese.com/"
+      },
+      "brand": "Vectra®",
+      "grade": "E130i",
+      "aliases": [],
+      "polymer": {
+        "family": "LCP",
+        "morphology": "semi-crystalline"
+      },
+      "composition": {
+        "notes": "Celanese exact Vectra LCP grade; current property guide lists 30% total filler/reinforcement. Filler chemistry is not inferred beyond the guide."
+      },
+      "properties": [
+        {
+          "id": "obs-celanese-e130i-density",
+          "property": "Density",
+          "value": 1.61,
+          "unit": "g/cm³",
+          "testMethod": "ISO 1183",
+          "direction": "not-applicable",
+          "sourceId": "src-celanese-vectra-e130i-2026",
+          "sourcePage": "physical properties",
+          "comparisonReady": false,
+          "limitations": "Manufacturer exact-grade typical value."
+        },
+        {
+          "id": "obs-celanese-e130i-shrink-flow",
+          "property": "Mould Shrinkage",
+          "value": 0.1,
+          "unit": "%",
+          "testMethod": "ISO 294-4",
+          "direction": "flow",
+          "sourceId": "src-celanese-vectra-e130i-2026",
+          "sourcePage": "physical properties",
+          "comparisonReady": false,
+          "limitations": "Directional exact-grade value from Celanese product-information guide; specimen/conditioning semantics are not fully resolved in the current surfaced table, so use as context only."
+        },
+        {
+          "id": "obs-celanese-e130i-shrink-transverse",
+          "property": "Mould Shrinkage",
+          "value": 0.1,
+          "unit": "%",
+          "testMethod": "ISO 294-4",
+          "direction": "transverse",
+          "sourceId": "src-celanese-vectra-e130i-2026",
+          "sourcePage": "physical properties",
+          "comparisonReady": false,
+          "limitations": "Directional exact-grade value from Celanese product-information guide; specimen/conditioning semantics are not fully resolved in the current surfaced table, so use as context only."
+        },
+        {
+          "id": "obs-celanese-e130i-melting",
+          "property": "Melting Temperature",
+          "value": 335,
+          "unit": "°C",
+          "testMethod": "ISO 11357-1,-2,-3",
+          "direction": "not-applicable",
+          "sourceId": "src-celanese-vectra-e130i-2026",
+          "sourcePage": "thermal properties",
+          "comparisonReady": false,
+          "limitations": "Material thermal property, not a process setpoint."
+        }
+      ],
+      "processing": [],
+      "approvals": [],
+      "lifecycle": {
+        "status": "unknown",
+        "checkedAt": "2026-09-29"
+      },
+      "sources": [
+        {
+          "id": "src-celanese-vectra-e130i-2026",
+          "publisher": "Celanese",
+          "title": "Vectra® E130i current product information",
+          "url": "https://www.celanese.com/-/media/cewebjssapp/project/productdocuments/lcp/lcp-026_vectralcpshorttermpropguidetg_am_0613.pdf",
+          "kind": "manufacturer-datasheet",
+          "revision": null,
+          "documentDate": null,
+          "retrievedAt": "2026-09-29"
+        }
+      ],
+      "provenance": {
+        "stage": "validated",
+        "ingestedAt": "2026-09-29T00:00:00Z",
+        "reviewedAt": "2026-09-29T00:00:00Z",
+        "reviewer": "primary-source-web-review",
+        "notes": "Current Celanese LCP portfolio and manufacturer-hosted short-term property guide reviewed. Directional shrinkage is published but remains context-only because comparison-critical specimen/conditioning detail is not fully resolved in the surfaced table."
+      }
+    },
+    {
+      "schemaVersion": 1,
+      "id": "mat-celanese-vectra-e150i",
+      "manufacturer": {
+        "id": "mfr-celanese",
+        "name": "Celanese",
+        "country": "United States",
+        "website": "https://www.celanese.com/"
+      },
+      "brand": "Vectra®",
+      "grade": "E150i",
+      "aliases": [],
+      "polymer": {
+        "family": "LCP",
+        "morphology": "semi-crystalline"
+      },
+      "composition": {
+        "notes": "Celanese exact Vectra LCP grade; current property guide lists 50% total filler/reinforcement. Filler chemistry is not inferred beyond the guide."
+      },
+      "properties": [
+        {
+          "id": "obs-celanese-e150i-density",
+          "property": "Density",
+          "value": 1.81,
+          "unit": "g/cm³",
+          "testMethod": "ISO 1183",
+          "direction": "not-applicable",
+          "sourceId": "src-celanese-vectra-e150i-2026",
+          "sourcePage": "physical properties",
+          "comparisonReady": false,
+          "limitations": "Manufacturer exact-grade typical value."
+        },
+        {
+          "id": "obs-celanese-e150i-shrink-flow",
+          "property": "Mould Shrinkage",
+          "value": 0.2,
+          "unit": "%",
+          "testMethod": "ISO 294-4",
+          "direction": "flow",
+          "sourceId": "src-celanese-vectra-e150i-2026",
+          "sourcePage": "physical properties",
+          "comparisonReady": false,
+          "limitations": "Directional exact-grade value from Celanese product-information guide; specimen/conditioning semantics are not fully resolved in the current surfaced table, so use as context only."
+        },
+        {
+          "id": "obs-celanese-e150i-shrink-transverse",
+          "property": "Mould Shrinkage",
+          "value": 0.5,
+          "unit": "%",
+          "testMethod": "ISO 294-4",
+          "direction": "transverse",
+          "sourceId": "src-celanese-vectra-e150i-2026",
+          "sourcePage": "physical properties",
+          "comparisonReady": false,
+          "limitations": "Directional exact-grade value from Celanese product-information guide; specimen/conditioning semantics are not fully resolved in the current surfaced table, so use as context only."
+        },
+        {
+          "id": "obs-celanese-e150i-melting",
+          "property": "Melting Temperature",
+          "value": 335,
+          "unit": "°C",
+          "testMethod": "ISO 11357-1,-2,-3",
+          "direction": "not-applicable",
+          "sourceId": "src-celanese-vectra-e150i-2026",
+          "sourcePage": "thermal properties",
+          "comparisonReady": false,
+          "limitations": "Material thermal property, not a process setpoint."
+        }
+      ],
+      "processing": [],
+      "approvals": [],
+      "lifecycle": {
+        "status": "unknown",
+        "checkedAt": "2026-09-29"
+      },
+      "sources": [
+        {
+          "id": "src-celanese-vectra-e150i-2026",
+          "publisher": "Celanese",
+          "title": "Vectra® E150i current product information",
+          "url": "https://www.celanese.com/-/media/cewebjssapp/project/productdocuments/lcp/lcp-026_vectralcpshorttermpropguidetg_am_0613.pdf",
+          "kind": "manufacturer-datasheet",
+          "revision": null,
+          "documentDate": null,
+          "retrievedAt": "2026-09-29"
+        }
+      ],
+      "provenance": {
+        "stage": "validated",
+        "ingestedAt": "2026-09-29T00:00:00Z",
+        "reviewedAt": "2026-09-29T00:00:00Z",
+        "reviewer": "primary-source-web-review",
+        "notes": "Current Celanese LCP portfolio and manufacturer-hosted short-term property guide reviewed. Directional shrinkage is published but remains context-only because comparison-critical specimen/conditioning detail is not fully resolved in the surfaced table."
+      }
+    },
+    {
+      "schemaVersion": 1,
       "id": "mat-covestro-bayblend-fr3000",
       "manufacturer": {
         "id": "mfr-covestro",
