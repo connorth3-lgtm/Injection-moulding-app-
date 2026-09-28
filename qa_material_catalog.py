@@ -102,7 +102,7 @@ for staging_path in sorted(STAGING.glob("*.json")):
                 staged_grade_ids.add(gid)
 runtime_grade_ids = {grade.get("id") for grade in catalog.get("grades") or []}
 need(staged_grade_ids == runtime_grade_ids, f"runtime/staging material drift: staged={sorted(staged_grade_ids)} runtime={sorted(runtime_grade_ids)}")
-need(len(runtime_grade_ids) == 166, "runtime exact-grade count must include the Korean pilot plus thirteen global expansion waves")
+need(len(runtime_grade_ids) == 173, "runtime exact-grade count must include the Korean pilot plus fourteen global expansion waves")
 need(kolon_grade_ids.isdisjoint(runtime_grade_ids), "source-reviewed KOLON staging identities must not leak into the validated runtime catalog")
 
 global_wave = load_json(STAGING / "global-material-expansion-20260929-v1.json")
@@ -230,6 +230,14 @@ global13 = [g for m in global_wave13.get("manufacturers") or [] for g in m.get("
 need(len(global13) == 5 and all(g.get("id") in runtime_grade_ids for g in global13), "Singapore-linked PEI/TPI grades are not fully published")
 need({(g.get("polymer") or {}).get("family") for g in global13} == {"PEI", "TPI"}, "Singapore high-heat family coverage drift")
 need(all(obs.get("comparisonReady") is False for g in global13 for obs in g.get("properties") or [] if obs.get("property") == "Glass Transition Temperature"), "PEI/TPI Tg must remain context-only without formal test methods")
+
+global_wave14 = load_json(STAGING / "global-material-expansion-20260929-v14.json")
+need((global_wave14.get("summary") or {}).get("validatedGrades") == 7, "Singapore-linked Vistamaxx wave validated-grade count drift")
+global14 = [g for m in global_wave14.get("manufacturers") or [] for g in m.get("gradeRecords") or []]
+need(len(global14) == 7 and all(g.get("id") in runtime_grade_ids for g in global14), "Singapore-linked Vistamaxx grades are not fully published")
+need({(g.get("polymer") or {}).get("family") for g in global14} == {"performance polyolefin elastomer"}, "Vistamaxx family coverage drift")
+need(all(any("Singapore" in str(s.get("title", "")) for s in g.get("sources") or []) for g in global14), "Vistamaxx records lost Singapore family-level supply provenance")
+need(all(any(obs.get("property") == "Melt Flow Rate" and obs.get("temperatureC") == 230 and obs.get("loadKg") == 2.16 and obs.get("comparisonReady") is True for obs in g.get("properties") or []) for g in global14), "Vistamaxx conditioned MFR comparison contract drift")
 
 # Pilot proof: current primary-source LOTTE records remain unchanged while the
 # umbrella manifest records progress without copying exact-grade claims.
