@@ -204,6 +204,16 @@
           "revision": null,
           "documentDate": "2026-05-01",
           "retrievedAt": "2026-09-29"
+        },
+        {
+          "id": "src-arkema-singapore-pa11-plant-2026",
+          "publisher": "Arkema",
+          "title": "Arkema Jurong Island Singapore PA11 resin manufacturing site",
+          "url": "https://www.arkema.com/global/en/arkema-group/strategy/worldwide-expansion/singapore-bio-factory/",
+          "kind": "manufacturer-site",
+          "revision": null,
+          "documentDate": null,
+          "retrievedAt": "2026-09-29"
         }
       ],
       "provenance": {
@@ -211,7 +221,7 @@
         "ingestedAt": "2026-09-29T00:00:00Z",
         "reviewedAt": "2026-09-29T00:00:00Z",
         "reviewer": "primary-source-web-review",
-        "notes": "Current Arkema BMNO technical data sheet reviewed. MVR and directional t+24 h shrinkage are published with test methods; no generic PA11 processing settings are inferred."
+        "notes": "Current Arkema BMNO technical data sheet reviewed. MVR and directional t+24 h shrinkage are published with test methods; no generic PA11 processing settings are inferred. Arkema separately confirms Rilsan PA11 resin manufacturing at its Jurong Island Singapore site. This is family-level regional supply provenance only and does not assign BMNO to a specific Singapore production line or batch."
       }
     },
     {
