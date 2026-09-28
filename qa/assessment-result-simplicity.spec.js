@@ -54,3 +54,45 @@ test('graded assessment shows one clear result and only answers needing review',
   await expect(visibleRows).not.toContainText('Question revision');
   await expect(visibleRows).not.toContainText('DOI resolver set reviewed');
 });
+
+test('assessment question and review remain usable at 200% text scaling with keyboard focus',async({page})=>{
+  await page.setViewportSize({width:412,height:915});
+  await openAssessment(page);
+  await page.evaluate(()=>{document.documentElement.style.fontSize='200%'});
+  const noOverflow=async label=>{const overflow=await page.evaluate(()=>document.documentElement.scrollWidth>document.documentElement.clientWidth+1);expect(overflow,label+' must not overflow horizontally').toBeFalsy()};
+  await noOverflow('live assessment');
+  const first=page.locator('#examQuestions .question.mm-current-question input[type=radio]').first();
+  await first.focus();await page.keyboard.press('Space');await expect(first).toBeChecked();
+  await page.getByRole('button',{name:'Next question'}).focus();await page.keyboard.press('Enter');
+  await expect(page.locator('#examQuestions .question').nth(1).locator('.mm-question-stem')).toBeFocused();
+  await page.evaluate(()=>{
+    const form=window.activeExam.questions;
+    form.forEach((q,i)=>{const input=document.querySelector(`input[name=ex${i}][value="${q.correct}"]`);if(input&&!input.checked){input.checked=true;input.dispatchEvent(new Event('change',{bubbles:true}))}});
+    const firstInput=document.querySelector('input[name=ex0]');if(firstInput){firstInput.checked=false;const wrong=(window.activeExam.questions[0].correct+1)%window.activeExam.questions[0].options.length;const bad=document.querySelector(`input[name=ex0][value="${wrong}"]`);if(bad){bad.checked=true;bad.dispatchEvent(new Event('change',{bubbles:true}))}}
+    gradeExam('Beginner');
+  });
+  await expect(page.locator('#examResult')).toBeFocused();
+  await noOverflow('assessment review');
+  await expect(page.locator('#answerReview .answer-row:visible')).toHaveCount(1);
+});
+
+
+test('fixed assessment footer does not cover the active question at 200% text scaling',async({page})=>{
+  await page.setViewportSize({width:412,height:915});
+  await openAssessment(page);
+  await page.evaluate(()=>{document.documentElement.style.fontSize='200%'});
+  const last=page.locator('#examQuestions .question.mm-current-question label').last();
+  await last.scrollIntoViewIfNeeded();
+  const geometry=await page.evaluate(()=>{
+    const option=[...document.querySelectorAll('#examQuestions .question.mm-current-question label')].at(-1);
+    const nav=document.querySelector('.mm-exam-nav');
+    const card=document.querySelector('.modal-card.mm-assessment-modal');
+    if(!option||!nav||!card)return null;
+    const o=option.getBoundingClientRect(),n=nav.getBoundingClientRect(),cs=getComputedStyle(card);
+    return {optionBottom:o.bottom,navTop:n.top,scrollPaddingBottom:parseFloat(cs.scrollPaddingBottom)||0,paddingBottom:parseFloat(cs.paddingBottom)||0};
+  });
+  expect(geometry).not.toBeNull();
+  expect(geometry.optionBottom).toBeLessThanOrEqual(geometry.navTop+1);
+  expect(geometry.scrollPaddingBottom).toBeGreaterThanOrEqual(180);
+  expect(geometry.paddingBottom).toBeGreaterThanOrEqual(180);
+});
