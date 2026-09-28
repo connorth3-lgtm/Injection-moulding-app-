@@ -64,8 +64,8 @@ jobs:
           assert index['countingRule'].startswith('one manufacturer + exact grade identity')
           assert queue['metrics'] == {
               'convertedComplete': 9,
-              'exactGradeSourceLocatedPending': 5,
-              'stillNeedPrimarySource': 44,
+              'exactGradeSourceLocatedPending': 15,
+              'stillNeedPrimarySource': 34,
           }
           print({
               'governedRecords': len(wave['records']),
