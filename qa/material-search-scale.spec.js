@@ -48,8 +48,8 @@ test('indexed exact-grade catalog paginates beyond the old 40-card ceiling and r
   const root=page.locator('#mmExactMaterialCatalog');
   const search=root.locator('[data-mm-exact-query]');
   const status=root.locator('[data-mm-material-page-status]');
-  const previous=root.getByRole('button',{name:'Previous'});
-  const next=root.getByRole('button',{name:'Next'});
+  const previous=root.locator('[data-mm-material-page="previous"]');
+  const next=root.locator('[data-mm-material-page="next"]');
 
   const started=Date.now();
   await search.fill('ScaleLab');

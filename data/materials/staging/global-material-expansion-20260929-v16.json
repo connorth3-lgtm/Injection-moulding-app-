@@ -1,0 +1,933 @@
+{
+  "schemaVersion": 1,
+  "datasetId": "global-material-expansion-20260929-v16",
+  "status": "korea-source-reviewed-kolon-pom-expansion",
+  "reviewedAt": "2026-09-29",
+  "purpose": "Sixteenth expansion wave deepening South Korean engineering-plastics coverage with additional current KOLON ENP KOCETAL exact-grade identities while preserving grade-level conditioning requirements.",
+  "summary": {
+    "validatedGrades": 0,
+    "sourceReviewedStagingGrades": 16,
+    "manufacturers": 1,
+    "countryFocus": "South Korea",
+    "stagingFamilies": [
+      "POM"
+    ]
+  },
+  "manufacturers": [
+    {
+      "id": "mfr-kolon-enp",
+      "name": "KOLON ENP",
+      "country": "South Korea",
+      "gradeRecords": [
+        {
+          "schemaVersion": 1,
+          "id": "mat-kolon-kocetal-k100hslo",
+          "manufacturer": {
+            "id": "mfr-kolon-enp",
+            "name": "KOLON ENP",
+            "country": "South Korea",
+            "website": "https://www.kolonplastics.com/en/"
+          },
+          "brand": "KOCETAL",
+          "grade": "K100HSLO",
+          "aliases": [],
+          "polymer": {
+            "family": "POM",
+            "morphology": "semi-crystalline"
+          },
+          "composition": {
+            "notes": "Current KOLON ENP live ISO property-table index lists exact KOCETAL grade K100HSLO; index feature class: low-emission."
+          },
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-kolon-k100hslo-iso-index-20260929",
+              "publisher": "KOLON ENP",
+              "title": "KOCETAL K100HSLO live ISO property-table listing",
+              "url": "https://www.kolonplastics.com/cn/sub/product-table.php?page=6",
+              "kind": "manufacturer-datasheet",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            },
+            {
+              "id": "src-kolon-kocetal-catalog-2026",
+              "publisher": "KOLON ENP",
+              "title": "KOCETAL Polyoxymethylene (POM) catalogue 2026",
+              "url": "https://www.kolonplastics.com/en/theme/basic/img/02_KOCETAL%28EN%29_2026.pdf",
+              "kind": "other",
+              "revision": "2026",
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Exact grade identity is confirmed on KOLON ENP's current live ISO property-table index. Current family catalogue is attached for product-family context. No numeric property is promoted here because comparison-critical test conditioning is not resolved grade-by-grade on the reviewed index surface."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-kolon-kocetal-k900",
+          "manufacturer": {
+            "id": "mfr-kolon-enp",
+            "name": "KOLON ENP",
+            "country": "South Korea",
+            "website": "https://www.kolonplastics.com/en/"
+          },
+          "brand": "KOCETAL",
+          "grade": "K900",
+          "aliases": [],
+          "polymer": {
+            "family": "POM",
+            "morphology": "semi-crystalline"
+          },
+          "composition": {
+            "notes": "Current KOLON ENP live ISO property-table index lists exact KOCETAL grade K900; index feature class: general."
+          },
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-kolon-k900-iso-index-20260929",
+              "publisher": "KOLON ENP",
+              "title": "KOCETAL K900 live ISO property-table listing",
+              "url": "https://www.kolonplastics.com/cn/sub/product-table.php?page=6",
+              "kind": "manufacturer-datasheet",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            },
+            {
+              "id": "src-kolon-kocetal-catalog-2026",
+              "publisher": "KOLON ENP",
+              "title": "KOCETAL Polyoxymethylene (POM) catalogue 2026",
+              "url": "https://www.kolonplastics.com/en/theme/basic/img/02_KOCETAL%28EN%29_2026.pdf",
+              "kind": "other",
+              "revision": "2026",
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Exact grade identity is confirmed on KOLON ENP's current live ISO property-table index. Current family catalogue is attached for product-family context. No numeric property is promoted here because comparison-critical test conditioning is not resolved grade-by-grade on the reviewed index surface."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-kolon-kocetal-k700lo2",
+          "manufacturer": {
+            "id": "mfr-kolon-enp",
+            "name": "KOLON ENP",
+            "country": "South Korea",
+            "website": "https://www.kolonplastics.com/en/"
+          },
+          "brand": "KOCETAL",
+          "grade": "K700LO2",
+          "aliases": [],
+          "polymer": {
+            "family": "POM",
+            "morphology": "semi-crystalline"
+          },
+          "composition": {
+            "notes": "Current KOLON ENP live ISO property-table index lists exact KOCETAL grade K700LO2; index feature class: low-emission."
+          },
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-kolon-k700lo2-iso-index-20260929",
+              "publisher": "KOLON ENP",
+              "title": "KOCETAL K700LO2 live ISO property-table listing",
+              "url": "https://www.kolonplastics.com/cn/sub/product-table.php?page=6",
+              "kind": "manufacturer-datasheet",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            },
+            {
+              "id": "src-kolon-kocetal-catalog-2026",
+              "publisher": "KOLON ENP",
+              "title": "KOCETAL Polyoxymethylene (POM) catalogue 2026",
+              "url": "https://www.kolonplastics.com/en/theme/basic/img/02_KOCETAL%28EN%29_2026.pdf",
+              "kind": "other",
+              "revision": "2026",
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Exact grade identity is confirmed on KOLON ENP's current live ISO property-table index. Current family catalogue is attached for product-family context. No numeric property is promoted here because comparison-critical test conditioning is not resolved grade-by-grade on the reviewed index surface."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-kolon-kocetal-k500lo",
+          "manufacturer": {
+            "id": "mfr-kolon-enp",
+            "name": "KOLON ENP",
+            "country": "South Korea",
+            "website": "https://www.kolonplastics.com/en/"
+          },
+          "brand": "KOCETAL",
+          "grade": "K500LO",
+          "aliases": [],
+          "polymer": {
+            "family": "POM",
+            "morphology": "semi-crystalline"
+          },
+          "composition": {
+            "notes": "Current KOLON ENP live ISO property-table index lists exact KOCETAL grade K500LO; index feature class: low-emission."
+          },
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-kolon-k500lo-iso-index-20260929",
+              "publisher": "KOLON ENP",
+              "title": "KOCETAL K500LO live ISO property-table listing",
+              "url": "https://www.kolonplastics.com/cn/sub/product-table.php?page=6",
+              "kind": "manufacturer-datasheet",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            },
+            {
+              "id": "src-kolon-kocetal-catalog-2026",
+              "publisher": "KOLON ENP",
+              "title": "KOCETAL Polyoxymethylene (POM) catalogue 2026",
+              "url": "https://www.kolonplastics.com/en/theme/basic/img/02_KOCETAL%28EN%29_2026.pdf",
+              "kind": "other",
+              "revision": "2026",
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Exact grade identity is confirmed on KOLON ENP's current live ISO property-table index. Current family catalogue is attached for product-family context. No numeric property is promoted here because comparison-critical test conditioning is not resolved grade-by-grade on the reviewed index surface."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-kolon-kocetal-k500hslo",
+          "manufacturer": {
+            "id": "mfr-kolon-enp",
+            "name": "KOLON ENP",
+            "country": "South Korea",
+            "website": "https://www.kolonplastics.com/en/"
+          },
+          "brand": "KOCETAL",
+          "grade": "K500HSLO",
+          "aliases": [],
+          "polymer": {
+            "family": "POM",
+            "morphology": "semi-crystalline"
+          },
+          "composition": {
+            "notes": "Current KOLON ENP live ISO property-table index lists exact KOCETAL grade K500HSLO; index feature class: low-emission."
+          },
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-kolon-k500hslo-iso-index-20260929",
+              "publisher": "KOLON ENP",
+              "title": "KOCETAL K500HSLO live ISO property-table listing",
+              "url": "https://www.kolonplastics.com/cn/sub/product-table.php?page=6",
+              "kind": "manufacturer-datasheet",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            },
+            {
+              "id": "src-kolon-kocetal-catalog-2026",
+              "publisher": "KOLON ENP",
+              "title": "KOCETAL Polyoxymethylene (POM) catalogue 2026",
+              "url": "https://www.kolonplastics.com/en/theme/basic/img/02_KOCETAL%28EN%29_2026.pdf",
+              "kind": "other",
+              "revision": "2026",
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Exact grade identity is confirmed on KOLON ENP's current live ISO property-table index. Current family catalogue is attached for product-family context. No numeric property is promoted here because comparison-critical test conditioning is not resolved grade-by-grade on the reviewed index surface."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-kolon-kocetal-k500hs",
+          "manufacturer": {
+            "id": "mfr-kolon-enp",
+            "name": "KOLON ENP",
+            "country": "South Korea",
+            "website": "https://www.kolonplastics.com/en/"
+          },
+          "brand": "KOCETAL",
+          "grade": "K500HS",
+          "aliases": [],
+          "polymer": {
+            "family": "POM",
+            "morphology": "semi-crystalline"
+          },
+          "composition": {
+            "notes": "Current KOLON ENP live ISO property-table index lists exact KOCETAL grade K500HS; index feature class: general/high-strength."
+          },
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-kolon-k500hs-iso-index-20260929",
+              "publisher": "KOLON ENP",
+              "title": "KOCETAL K500HS live ISO property-table listing",
+              "url": "https://www.kolonplastics.com/cn/sub/product-table.php?page=6",
+              "kind": "manufacturer-datasheet",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            },
+            {
+              "id": "src-kolon-kocetal-catalog-2026",
+              "publisher": "KOLON ENP",
+              "title": "KOCETAL Polyoxymethylene (POM) catalogue 2026",
+              "url": "https://www.kolonplastics.com/en/theme/basic/img/02_KOCETAL%28EN%29_2026.pdf",
+              "kind": "other",
+              "revision": "2026",
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Exact grade identity is confirmed on KOLON ENP's current live ISO property-table index. Current family catalogue is attached for product-family context. No numeric property is promoted here because comparison-critical test conditioning is not resolved grade-by-grade on the reviewed index surface."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-kolon-kocetal-k100lo",
+          "manufacturer": {
+            "id": "mfr-kolon-enp",
+            "name": "KOLON ENP",
+            "country": "South Korea",
+            "website": "https://www.kolonplastics.com/en/"
+          },
+          "brand": "KOCETAL",
+          "grade": "K100LO",
+          "aliases": [],
+          "polymer": {
+            "family": "POM",
+            "morphology": "semi-crystalline"
+          },
+          "composition": {
+            "notes": "Current KOLON ENP live ISO property-table index lists exact KOCETAL grade K100LO; index feature class: low-emission."
+          },
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-kolon-k100lo-iso-index-20260929",
+              "publisher": "KOLON ENP",
+              "title": "KOCETAL K100LO live ISO property-table listing",
+              "url": "https://www.kolonplastics.com/cn/sub/product-table.php?page=6",
+              "kind": "manufacturer-datasheet",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            },
+            {
+              "id": "src-kolon-kocetal-catalog-2026",
+              "publisher": "KOLON ENP",
+              "title": "KOCETAL Polyoxymethylene (POM) catalogue 2026",
+              "url": "https://www.kolonplastics.com/en/theme/basic/img/02_KOCETAL%28EN%29_2026.pdf",
+              "kind": "other",
+              "revision": "2026",
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Exact grade identity is confirmed on KOLON ENP's current live ISO property-table index. Current family catalogue is attached for product-family context. No numeric property is promoted here because comparison-critical test conditioning is not resolved grade-by-grade on the reviewed index surface."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-kolon-kocetal-k100",
+          "manufacturer": {
+            "id": "mfr-kolon-enp",
+            "name": "KOLON ENP",
+            "country": "South Korea",
+            "website": "https://www.kolonplastics.com/en/"
+          },
+          "brand": "KOCETAL",
+          "grade": "K100",
+          "aliases": [],
+          "polymer": {
+            "family": "POM",
+            "morphology": "semi-crystalline"
+          },
+          "composition": {
+            "notes": "Current KOLON ENP live ISO property-table index lists exact KOCETAL grade K100; index feature class: general."
+          },
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-kolon-k100-iso-index-20260929",
+              "publisher": "KOLON ENP",
+              "title": "KOCETAL K100 live ISO property-table listing",
+              "url": "https://www.kolonplastics.com/cn/sub/product-table.php?page=6",
+              "kind": "manufacturer-datasheet",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            },
+            {
+              "id": "src-kolon-kocetal-catalog-2026",
+              "publisher": "KOLON ENP",
+              "title": "KOCETAL Polyoxymethylene (POM) catalogue 2026",
+              "url": "https://www.kolonplastics.com/en/theme/basic/img/02_KOCETAL%28EN%29_2026.pdf",
+              "kind": "other",
+              "revision": "2026",
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Exact grade identity is confirmed on KOLON ENP's current live ISO property-table index. Current family catalogue is attached for product-family context. No numeric property is promoted here because comparison-critical test conditioning is not resolved grade-by-grade on the reviewed index surface."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-kolon-kocetal-k300ew",
+          "manufacturer": {
+            "id": "mfr-kolon-enp",
+            "name": "KOLON ENP",
+            "country": "South Korea",
+            "website": "https://www.kolonplastics.com/en/"
+          },
+          "brand": "KOCETAL",
+          "grade": "K300EW",
+          "aliases": [],
+          "polymer": {
+            "family": "POM",
+            "morphology": "semi-crystalline"
+          },
+          "composition": {
+            "notes": "Current KOLON ENP live ISO property-table index lists exact KOCETAL grade K300EW; index feature class: general/ductility-improved."
+          },
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-kolon-k300ew-iso-index-20260929",
+              "publisher": "KOLON ENP",
+              "title": "KOCETAL K300EW live ISO property-table listing",
+              "url": "https://www.kolonplastics.com/cn/sub/product-table.php?page=6",
+              "kind": "manufacturer-datasheet",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            },
+            {
+              "id": "src-kolon-kocetal-catalog-2026",
+              "publisher": "KOLON ENP",
+              "title": "KOCETAL Polyoxymethylene (POM) catalogue 2026",
+              "url": "https://www.kolonplastics.com/en/theme/basic/img/02_KOCETAL%28EN%29_2026.pdf",
+              "kind": "other",
+              "revision": "2026",
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Exact grade identity is confirmed on KOLON ENP's current live ISO property-table index. Current family catalogue is attached for product-family context. No numeric property is promoted here because comparison-critical test conditioning is not resolved grade-by-grade on the reviewed index surface."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-kolon-kocetal-k500",
+          "manufacturer": {
+            "id": "mfr-kolon-enp",
+            "name": "KOLON ENP",
+            "country": "South Korea",
+            "website": "https://www.kolonplastics.com/en/"
+          },
+          "brand": "KOCETAL",
+          "grade": "K500",
+          "aliases": [],
+          "polymer": {
+            "family": "POM",
+            "morphology": "semi-crystalline"
+          },
+          "composition": {
+            "notes": "Current KOLON ENP live ISO property-table index lists exact KOCETAL grade K500; index feature class: general."
+          },
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-kolon-k500-iso-index-20260929",
+              "publisher": "KOLON ENP",
+              "title": "KOCETAL K500 live ISO property-table listing",
+              "url": "https://www.kolonplastics.com/cn/sub/product-table.php?page=6",
+              "kind": "manufacturer-datasheet",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            },
+            {
+              "id": "src-kolon-kocetal-catalog-2026",
+              "publisher": "KOLON ENP",
+              "title": "KOCETAL Polyoxymethylene (POM) catalogue 2026",
+              "url": "https://www.kolonplastics.com/en/theme/basic/img/02_KOCETAL%28EN%29_2026.pdf",
+              "kind": "other",
+              "revision": "2026",
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Exact grade identity is confirmed on KOLON ENP's current live ISO property-table index. Current family catalogue is attached for product-family context. No numeric property is promoted here because comparison-critical test conditioning is not resolved grade-by-grade on the reviewed index surface."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-kolon-kocetal-k300lo",
+          "manufacturer": {
+            "id": "mfr-kolon-enp",
+            "name": "KOLON ENP",
+            "country": "South Korea",
+            "website": "https://www.kolonplastics.com/en/"
+          },
+          "brand": "KOCETAL",
+          "grade": "K300LO",
+          "aliases": [],
+          "polymer": {
+            "family": "POM",
+            "morphology": "semi-crystalline"
+          },
+          "composition": {
+            "notes": "Current KOLON ENP live ISO property-table index lists exact KOCETAL grade K300LO; index feature class: low-emission."
+          },
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-kolon-k300lo-iso-index-20260929",
+              "publisher": "KOLON ENP",
+              "title": "KOCETAL K300LO live ISO property-table listing",
+              "url": "https://www.kolonplastics.com/cn/sub/product-table.php?page=6",
+              "kind": "manufacturer-datasheet",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            },
+            {
+              "id": "src-kolon-kocetal-catalog-2026",
+              "publisher": "KOLON ENP",
+              "title": "KOCETAL Polyoxymethylene (POM) catalogue 2026",
+              "url": "https://www.kolonplastics.com/en/theme/basic/img/02_KOCETAL%28EN%29_2026.pdf",
+              "kind": "other",
+              "revision": "2026",
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Exact grade identity is confirmed on KOLON ENP's current live ISO property-table index. Current family catalogue is attached for product-family context. No numeric property is promoted here because comparison-critical test conditioning is not resolved grade-by-grade on the reviewed index surface."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-kolon-kocetal-tf304",
+          "manufacturer": {
+            "id": "mfr-kolon-enp",
+            "name": "KOLON ENP",
+            "country": "South Korea",
+            "website": "https://www.kolonplastics.com/en/"
+          },
+          "brand": "KOCETAL",
+          "grade": "TF304",
+          "aliases": [],
+          "polymer": {
+            "family": "POM",
+            "morphology": "semi-crystalline"
+          },
+          "composition": {
+            "notes": "Current KOLON ENP live ISO property-table index lists exact KOCETAL grade TF304; index feature class: wear-resistant."
+          },
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-kolon-tf304-iso-index-20260929",
+              "publisher": "KOLON ENP",
+              "title": "KOCETAL TF304 live ISO property-table listing",
+              "url": "https://www.kolonplastics.com/cn/sub/product-table.php?page=6",
+              "kind": "manufacturer-datasheet",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            },
+            {
+              "id": "src-kolon-kocetal-catalog-2026",
+              "publisher": "KOLON ENP",
+              "title": "KOCETAL Polyoxymethylene (POM) catalogue 2026",
+              "url": "https://www.kolonplastics.com/en/theme/basic/img/02_KOCETAL%28EN%29_2026.pdf",
+              "kind": "other",
+              "revision": "2026",
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Exact grade identity is confirmed on KOLON ENP's current live ISO property-table index. Current family catalogue is attached for product-family context. No numeric property is promoted here because comparison-critical test conditioning is not resolved grade-by-grade on the reviewed index surface."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-kolon-kocetal-wr303",
+          "manufacturer": {
+            "id": "mfr-kolon-enp",
+            "name": "KOLON ENP",
+            "country": "South Korea",
+            "website": "https://www.kolonplastics.com/en/"
+          },
+          "brand": "KOCETAL",
+          "grade": "WR303",
+          "aliases": [],
+          "polymer": {
+            "family": "POM",
+            "morphology": "semi-crystalline"
+          },
+          "composition": {
+            "notes": "Current KOLON ENP live ISO property-table index lists exact KOCETAL grade WR303; index feature class: weather-resistant."
+          },
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-kolon-wr303-iso-index-20260929",
+              "publisher": "KOLON ENP",
+              "title": "KOCETAL WR303 live ISO property-table listing",
+              "url": "https://www.kolonplastics.com/cn/sub/product-table.php?page=6",
+              "kind": "manufacturer-datasheet",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            },
+            {
+              "id": "src-kolon-kocetal-catalog-2026",
+              "publisher": "KOLON ENP",
+              "title": "KOCETAL Polyoxymethylene (POM) catalogue 2026",
+              "url": "https://www.kolonplastics.com/en/theme/basic/img/02_KOCETAL%28EN%29_2026.pdf",
+              "kind": "other",
+              "revision": "2026",
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Exact grade identity is confirmed on KOLON ENP's current live ISO property-table index. Current family catalogue is attached for product-family context. No numeric property is promoted here because comparison-critical test conditioning is not resolved grade-by-grade on the reviewed index surface."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-kolon-kocetal-wr701lo",
+          "manufacturer": {
+            "id": "mfr-kolon-enp",
+            "name": "KOLON ENP",
+            "country": "South Korea",
+            "website": "https://www.kolonplastics.com/en/"
+          },
+          "brand": "KOCETAL",
+          "grade": "WR701LO",
+          "aliases": [],
+          "polymer": {
+            "family": "POM",
+            "morphology": "semi-crystalline"
+          },
+          "composition": {
+            "notes": "Current KOLON ENP live ISO property-table index lists exact KOCETAL grade WR701LO; index feature class: weather-resistant/low-emission."
+          },
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-kolon-wr701lo-iso-index-20260929",
+              "publisher": "KOLON ENP",
+              "title": "KOCETAL WR701LO live ISO property-table listing",
+              "url": "https://www.kolonplastics.com/cn/sub/product-table.php?page=6",
+              "kind": "manufacturer-datasheet",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            },
+            {
+              "id": "src-kolon-kocetal-catalog-2026",
+              "publisher": "KOLON ENP",
+              "title": "KOCETAL Polyoxymethylene (POM) catalogue 2026",
+              "url": "https://www.kolonplastics.com/en/theme/basic/img/02_KOCETAL%28EN%29_2026.pdf",
+              "kind": "other",
+              "revision": "2026",
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Exact grade identity is confirmed on KOLON ENP's current live ISO property-table index. Current family catalogue is attached for product-family context. No numeric property is promoted here because comparison-critical test conditioning is not resolved grade-by-grade on the reviewed index surface."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-kolon-kocetal-ur305",
+          "manufacturer": {
+            "id": "mfr-kolon-enp",
+            "name": "KOLON ENP",
+            "country": "South Korea",
+            "website": "https://www.kolonplastics.com/en/"
+          },
+          "brand": "KOCETAL",
+          "grade": "UR305",
+          "aliases": [],
+          "polymer": {
+            "family": "POM",
+            "morphology": "semi-crystalline"
+          },
+          "composition": {
+            "notes": "Current KOLON ENP live ISO property-table index lists exact KOCETAL grade UR305; index feature class: impact-modified."
+          },
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-kolon-ur305-iso-index-20260929",
+              "publisher": "KOLON ENP",
+              "title": "KOCETAL UR305 live ISO property-table listing",
+              "url": "https://www.kolonplastics.com/cn/sub/product-table.php?page=6",
+              "kind": "manufacturer-datasheet",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            },
+            {
+              "id": "src-kolon-kocetal-catalog-2026",
+              "publisher": "KOLON ENP",
+              "title": "KOCETAL Polyoxymethylene (POM) catalogue 2026",
+              "url": "https://www.kolonplastics.com/en/theme/basic/img/02_KOCETAL%28EN%29_2026.pdf",
+              "kind": "other",
+              "revision": "2026",
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Exact grade identity is confirmed on KOLON ENP's current live ISO property-table index. Current family catalogue is attached for product-family context. No numeric property is promoted here because comparison-critical test conditioning is not resolved grade-by-grade on the reviewed index surface."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-kolon-kocetal-k700lo",
+          "manufacturer": {
+            "id": "mfr-kolon-enp",
+            "name": "KOLON ENP",
+            "country": "South Korea",
+            "website": "https://www.kolonplastics.com/en/"
+          },
+          "brand": "KOCETAL",
+          "grade": "K700LO",
+          "aliases": [],
+          "polymer": {
+            "family": "POM",
+            "morphology": "semi-crystalline"
+          },
+          "composition": {
+            "notes": "Current KOLON ENP live ISO property-table index lists exact KOCETAL grade K700LO; index feature class: low-emission."
+          },
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-kolon-k700lo-iso-index-20260929",
+              "publisher": "KOLON ENP",
+              "title": "KOCETAL K700LO live ISO property-table listing",
+              "url": "https://www.kolonplastics.com/cn/sub/product-table.php?page=6",
+              "kind": "manufacturer-datasheet",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            },
+            {
+              "id": "src-kolon-kocetal-catalog-2026",
+              "publisher": "KOLON ENP",
+              "title": "KOCETAL Polyoxymethylene (POM) catalogue 2026",
+              "url": "https://www.kolonplastics.com/en/theme/basic/img/02_KOCETAL%28EN%29_2026.pdf",
+              "kind": "other",
+              "revision": "2026",
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Exact grade identity is confirmed on KOLON ENP's current live ISO property-table index. Current family catalogue is attached for product-family context. No numeric property is promoted here because comparison-critical test conditioning is not resolved grade-by-grade on the reviewed index surface."
+          }
+        }
+      ]
+    }
+  ],
+  "governance": {
+    "runtimePromotionBlocked": true,
+    "reason": "Exact identities are current and primary-source reviewed, but comparison-critical grade-level property conditioning remains unresolved on the reviewed live index.",
+    "comparisonReadyNumericClaims": 0,
+    "productionRecipes": 0,
+    "duplicatePilotGradesExcluded": [
+      "K300",
+      "K700",
+      "K100HS",
+      "GF702"
+    ]
+  }
+}

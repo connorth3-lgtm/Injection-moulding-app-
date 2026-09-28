@@ -178,7 +178,7 @@ test('Material chapters are content-driven and enter at the top on 412px phones'
   await openApp(page);
   await openMaterials(page);
   await expectMaterialDensity(page);
-  await page.screenshot({path:'qa-artifacts/mobile-materials-412x915.png',fullPage:true});
+  await page.screenshot({path:'qa-artifacts/mobile-materials-412x915.png'});
 });
 
 test.describe('360px narrow-phone hubs',()=>{
@@ -210,6 +210,6 @@ test.describe('360px narrow-phone hubs',()=>{
     await expect.poll(()=>page.evaluate(()=>window.scrollY||document.scrollingElement?.scrollTop||0)).toBeGreaterThan(20);
     await openMaterials(page);
     await expectMaterialDensity(page);
-    await page.screenshot({path:'qa-artifacts/mobile-materials-360x800.png',fullPage:true});
+    await page.screenshot({path:'qa-artifacts/mobile-materials-360x800.png'});
   });
 });

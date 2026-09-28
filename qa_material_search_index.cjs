@@ -3,7 +3,7 @@ const fs=require('fs');
 const vm=require('vm');
 const assert=require('assert');
 
-const context={window:{},console};
+const context={window:{MM_REFERENCE_DATA:{materials:[{name:'PBT',family:'Semi-crystalline polyester',traits:['dimensional stability'],watch:['hydrolysis risk with excessive moisture'],verify:'Verify exact grade drying.'}]},MM_MATERIAL_BEHAVIOUR_LABS:{labs:[{id:'pom-thermal-safety',title:'POM thermal safety',level:'Advanced',focus:'Thermal degradation',materials:['POM'],sourceIds:['pom-source'],summary:'Thermal abuse can release formaldehyde.',evidence:['Verify material identity.'],related:['POM']}]}},console};
 vm.createContext(context);
 vm.runInContext(fs.readFileSync('src/domains/materials/material-search-index.js','utf8'),context,{filename:'material-search-index.js'});
 const api=context.window.MM_MATERIAL_SEARCH;
@@ -38,6 +38,16 @@ api._buildForTest(grades);
 
   const alias=await api.searchPage('hero grade');
   assert.strictEqual(JSON.stringify(alias.items.map(x=>x.id)),JSON.stringify(['mat-example-006']));
+
+  const unifiedReference=await api.searchAllPage('hydrolysis',{types:['reference-material']});
+  assert.strictEqual(unifiedReference.total,1);
+  assert.strictEqual(unifiedReference.items[0].title,'PBT');
+  const unifiedLab=await api.searchAllPage('formaldehyde',{types:['material-lab']});
+  assert.strictEqual(unifiedLab.total,1);
+  assert.strictEqual(unifiedLab.items[0].id,'material-lab:pom-thermal-safety');
+  const unifiedGrade=await api.searchAllPage('hero grade',{types:['exact-grade']});
+  assert.strictEqual(JSON.stringify(unifiedGrade.items.map(x=>x.materialGradeId)),JSON.stringify(['mat-example-006']));
+  assert(api.stats().documents>api.stats().grades,'unified index must include non-grade material records');
 
   console.log(`MouldMaster material search QA passed (${first.total} indexed fixtures, ${first.pageCount} pages).`);
 })().catch(err=>{console.error(err);process.exitCode=1});

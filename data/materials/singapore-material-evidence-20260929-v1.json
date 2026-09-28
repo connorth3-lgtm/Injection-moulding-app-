@@ -1,0 +1,40 @@
+{
+  "schemaVersion": 1,
+  "datasetId": "singapore-material-evidence-20260929-v1",
+  "reviewedAt": "2026-09-29",
+  "purpose": "First-class Singapore material manufacturing and regional-supply evidence without inferring exact-grade plant origin.",
+  "country": "Singapore",
+  "facilities": [
+    {
+      "organization": "Arkema",
+      "site": "Jurong Island",
+      "materialFamily": "Rilsan® PA11",
+      "evidence": "Arkema/EDB state the Singapore plant manufactures Rilsan PA11 and increased global PA11 capacity by 50%; Singapore serves as a strategic advanced-materials base for Asia.",
+      "exactGradeBoundary": "Do not assign a Singapore plant origin to BMNO or another exact Rilsan grade unless an exact-grade source states that origin.",
+      "source": "https://www.edb.gov.sg/en/about-edb/media-releases-publications/arkema-opens-rilsan-plant-in-singapore-for-asia.html",
+      "status": "regional-production-evidence"
+    },
+    {
+      "organization": "Mitsui Elastomers Singapore",
+      "site": "Merbau, Jurong Island",
+      "materialFamily": "TAFMER™ alpha-olefin copolymer",
+      "evidence": "Mitsui states its Singapore subsidiary operates TAFMER production on Jurong Island; current exact-grade M Series data are maintained by Mitsui Elastomers Singapore.",
+      "exactGradeBoundary": "Singapore manufacturing capability is established at TAFMER family/entity level; do not infer a specific plant batch/origin for an exact grade.",
+      "source": "https://jp.mitsuichemicals.com/en/release/2008/080723e.htm",
+      "status": "regional-production-evidence"
+    },
+    {
+      "organization": "ExxonMobil",
+      "site": "Jurong Island integrated manufacturing complex",
+      "materialFamily": "Polypropylene and Vistamaxx™ performance polymers",
+      "evidence": "ExxonMobil's current Singapore manufacturing-complex brochure states 930 KTA polypropylene capacity and identifies the Singapore Elastomers Plant as the primary global supply point for Vistamaxx performance polymers.",
+      "exactGradeBoundary": "Do not assign a Singapore origin to a specific ExxonMobil PP or Vistamaxx grade without exact-grade production evidence.",
+      "source": "https://www.exxonmobil.com.sg/-/media/Singapore/Files/Who-we-are/ExxonMobil-Singapore-Integrated-Manufacturing-Complex-brochure.pdf",
+      "status": "regional-production-evidence"
+    }
+  ],
+  "governance": {
+    "regionalEvidenceDoesNotImplyExactGradeOrigin": true,
+    "productionCountryMustBeGradeSpecificToEnterRuntime": true
+  }
+}

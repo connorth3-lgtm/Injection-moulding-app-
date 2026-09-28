@@ -1,0 +1,445 @@
+{
+  "schemaVersion": 1,
+  "datasetId": "global-material-expansion-20260929-v17",
+  "status": "korea-source-reviewed-skchem-skygreen-injection-expansion",
+  "reviewedAt": "2026-09-29",
+  "purpose": "Seventeenth expansion wave adding current South Korean SK chemicals SKYGREEN exact injection-grade identities without inventing unsourced engineering values.",
+  "summary": {
+    "validatedGrades": 0,
+    "sourceReviewedStagingGrades": 9,
+    "manufacturers": 1,
+    "countryFocus": "South Korea",
+    "stagingFamilies": [
+      "copolyester"
+    ]
+  },
+  "manufacturers": [
+    {
+      "id": "mfr-sk-chemicals",
+      "name": "SK chemicals",
+      "country": "South Korea",
+      "gradeRecords": [
+        {
+          "schemaVersion": 1,
+          "id": "mat-skchem-skgreen-kn200",
+          "manufacturer": {
+            "id": "mfr-sk-chemicals",
+            "name": "SK chemicals",
+            "country": "South Korea",
+            "website": "https://www.skchemicals.com/"
+          },
+          "brand": "SKYGREEN",
+          "grade": "KN200",
+          "aliases": [],
+          "polymer": {
+            "family": "copolyester",
+            "morphology": "amorphous"
+          },
+          "composition": {
+            "notes": "Current SK chemicals SKYGREEN K series exact grade. Manufacturer page identifies Injection grade; transparency and chemical resistance. Applications: food containers, beverages, decorative/consumer applications."
+          },
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-skchem-skygreen-kn200-20260929",
+              "publisher": "SK chemicals",
+              "title": "SKYGREEN KN200 current manufacturer product page",
+              "url": "https://www.skchemicals.com/en/products/SKYGREEN.aspx",
+              "kind": "manufacturer-site",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Exact identity and injection-grade/application positioning are confirmed on SK chemicals' current manufacturer-controlled SKYGREEN page. No numeric property or processing condition is promoted without an exact-grade TDS."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-skchem-skgreen-pn100",
+          "manufacturer": {
+            "id": "mfr-sk-chemicals",
+            "name": "SK chemicals",
+            "country": "South Korea",
+            "website": "https://www.skchemicals.com/"
+          },
+          "brand": "SKYGREEN",
+          "grade": "PN100",
+          "aliases": [],
+          "polymer": {
+            "family": "copolyester",
+            "morphology": "amorphous"
+          },
+          "composition": {
+            "notes": "Current SK chemicals SKYGREEN PN series exact grade. Manufacturer page identifies Injection grade; highest-flow SKYGREEN series; transparency and chemical resistance. Applications: baby care, home appliances, cosmetics, consumer goods."
+          },
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-skchem-skygreen-pn100-20260929",
+              "publisher": "SK chemicals",
+              "title": "SKYGREEN PN100 current manufacturer product page",
+              "url": "https://www.skchemicals.com/en/products/SKYGREEN.aspx",
+              "kind": "manufacturer-site",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Exact identity and injection-grade/application positioning are confirmed on SK chemicals' current manufacturer-controlled SKYGREEN page. No numeric property or processing condition is promoted without an exact-grade TDS."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-skchem-skgreen-pn200",
+          "manufacturer": {
+            "id": "mfr-sk-chemicals",
+            "name": "SK chemicals",
+            "country": "South Korea",
+            "website": "https://www.skchemicals.com/"
+          },
+          "brand": "SKYGREEN",
+          "grade": "PN200",
+          "aliases": [],
+          "polymer": {
+            "family": "copolyester",
+            "morphology": "amorphous"
+          },
+          "composition": {
+            "notes": "Current SK chemicals SKYGREEN PN series exact grade. Manufacturer page identifies Injection grade; highest-flow SKYGREEN series; transparency and chemical resistance. Applications: baby care, home appliances, cosmetics, consumer goods."
+          },
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-skchem-skygreen-pn200-20260929",
+              "publisher": "SK chemicals",
+              "title": "SKYGREEN PN200 current manufacturer product page",
+              "url": "https://www.skchemicals.com/en/products/SKYGREEN.aspx",
+              "kind": "manufacturer-site",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Exact identity and injection-grade/application positioning are confirmed on SK chemicals' current manufacturer-controlled SKYGREEN page. No numeric property or processing condition is promoted without an exact-grade TDS."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-skchem-skgreen-pn300",
+          "manufacturer": {
+            "id": "mfr-sk-chemicals",
+            "name": "SK chemicals",
+            "country": "South Korea",
+            "website": "https://www.skchemicals.com/"
+          },
+          "brand": "SKYGREEN",
+          "grade": "PN300",
+          "aliases": [],
+          "polymer": {
+            "family": "copolyester",
+            "morphology": "amorphous"
+          },
+          "composition": {
+            "notes": "Current SK chemicals SKYGREEN PN series exact grade. Manufacturer page identifies Injection grade; highest-flow SKYGREEN series; transparency and chemical resistance. Applications: baby care, home appliances, cosmetics, consumer goods."
+          },
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-skchem-skygreen-pn300-20260929",
+              "publisher": "SK chemicals",
+              "title": "SKYGREEN PN300 current manufacturer product page",
+              "url": "https://www.skchemicals.com/en/products/SKYGREEN.aspx",
+              "kind": "manufacturer-site",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Exact identity and injection-grade/application positioning are confirmed on SK chemicals' current manufacturer-controlled SKYGREEN page. No numeric property or processing condition is promoted without an exact-grade TDS."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-skchem-skgreen-pn400",
+          "manufacturer": {
+            "id": "mfr-sk-chemicals",
+            "name": "SK chemicals",
+            "country": "South Korea",
+            "website": "https://www.skchemicals.com/"
+          },
+          "brand": "SKYGREEN",
+          "grade": "PN400",
+          "aliases": [],
+          "polymer": {
+            "family": "copolyester",
+            "morphology": "amorphous"
+          },
+          "composition": {
+            "notes": "Current SK chemicals SKYGREEN PN series exact grade. Manufacturer page identifies Injection grade; highest-flow SKYGREEN series; transparency and chemical resistance. Applications: baby care, home appliances, cosmetics, consumer goods."
+          },
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-skchem-skygreen-pn400-20260929",
+              "publisher": "SK chemicals",
+              "title": "SKYGREEN PN400 current manufacturer product page",
+              "url": "https://www.skchemicals.com/en/products/SKYGREEN.aspx",
+              "kind": "manufacturer-site",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Exact identity and injection-grade/application positioning are confirmed on SK chemicals' current manufacturer-controlled SKYGREEN page. No numeric property or processing condition is promoted without an exact-grade TDS."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-skchem-skgreen-j2003",
+          "manufacturer": {
+            "id": "mfr-sk-chemicals",
+            "name": "SK chemicals",
+            "country": "South Korea",
+            "website": "https://www.skchemicals.com/"
+          },
+          "brand": "SKYGREEN",
+          "grade": "J2003",
+          "aliases": [],
+          "polymer": {
+            "family": "copolyester",
+            "morphology": "amorphous"
+          },
+          "composition": {
+            "notes": "Current SK chemicals SKYGREEN J series exact grade. Manufacturer page identifies Injection-grade solution; transparency, chemical resistance and impact strength. Applications: household goods, home appliances, cosmetics, consumer goods."
+          },
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-skchem-skygreen-j2003-20260929",
+              "publisher": "SK chemicals",
+              "title": "SKYGREEN J2003 current manufacturer product page",
+              "url": "https://www.skchemicals.com/en/products/SKYGREEN.aspx",
+              "kind": "manufacturer-site",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Exact identity and injection-grade/application positioning are confirmed on SK chemicals' current manufacturer-controlled SKYGREEN page. No numeric property or processing condition is promoted without an exact-grade TDS."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-skchem-skgreen-jn100",
+          "manufacturer": {
+            "id": "mfr-sk-chemicals",
+            "name": "SK chemicals",
+            "country": "South Korea",
+            "website": "https://www.skchemicals.com/"
+          },
+          "brand": "SKYGREEN",
+          "grade": "JN100",
+          "aliases": [],
+          "polymer": {
+            "family": "copolyester",
+            "morphology": "amorphous"
+          },
+          "composition": {
+            "notes": "Current SK chemicals SKYGREEN J series exact grade. Manufacturer page identifies Injection-grade solution; transparency, chemical resistance and impact strength. Applications: household goods, home appliances, cosmetics, consumer goods."
+          },
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-skchem-skygreen-jn100-20260929",
+              "publisher": "SK chemicals",
+              "title": "SKYGREEN JN100 current manufacturer product page",
+              "url": "https://www.skchemicals.com/en/products/SKYGREEN.aspx",
+              "kind": "manufacturer-site",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Exact identity and injection-grade/application positioning are confirmed on SK chemicals' current manufacturer-controlled SKYGREEN page. No numeric property or processing condition is promoted without an exact-grade TDS."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-skchem-skgreen-jn200",
+          "manufacturer": {
+            "id": "mfr-sk-chemicals",
+            "name": "SK chemicals",
+            "country": "South Korea",
+            "website": "https://www.skchemicals.com/"
+          },
+          "brand": "SKYGREEN",
+          "grade": "JN200",
+          "aliases": [],
+          "polymer": {
+            "family": "copolyester",
+            "morphology": "amorphous"
+          },
+          "composition": {
+            "notes": "Current SK chemicals SKYGREEN J series exact grade. Manufacturer page identifies Injection-grade solution; transparency, chemical resistance and impact strength. Applications: household goods, home appliances, cosmetics, consumer goods."
+          },
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-skchem-skygreen-jn200-20260929",
+              "publisher": "SK chemicals",
+              "title": "SKYGREEN JN200 current manufacturer product page",
+              "url": "https://www.skchemicals.com/en/products/SKYGREEN.aspx",
+              "kind": "manufacturer-site",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Exact identity and injection-grade/application positioning are confirmed on SK chemicals' current manufacturer-controlled SKYGREEN page. No numeric property or processing condition is promoted without an exact-grade TDS."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-skchem-skgreen-jn200k",
+          "manufacturer": {
+            "id": "mfr-sk-chemicals",
+            "name": "SK chemicals",
+            "country": "South Korea",
+            "website": "https://www.skchemicals.com/"
+          },
+          "brand": "SKYGREEN",
+          "grade": "JN200K",
+          "aliases": [],
+          "polymer": {
+            "family": "copolyester",
+            "morphology": "amorphous"
+          },
+          "composition": {
+            "notes": "Current SK chemicals SKYGREEN J series exact grade. Manufacturer page identifies Injection-grade solution; transparency, chemical resistance and impact strength. Applications: household goods, home appliances, cosmetics, consumer goods."
+          },
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-skchem-skygreen-jn200k-20260929",
+              "publisher": "SK chemicals",
+              "title": "SKYGREEN JN200K current manufacturer product page",
+              "url": "https://www.skchemicals.com/en/products/SKYGREEN.aspx",
+              "kind": "manufacturer-site",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Exact identity and injection-grade/application positioning are confirmed on SK chemicals' current manufacturer-controlled SKYGREEN page. No numeric property or processing condition is promoted without an exact-grade TDS."
+          }
+        }
+      ]
+    }
+  ],
+  "governance": {
+    "runtimePromotionBlocked": true,
+    "reason": "Current product page confirms exact injection-grade identities and applications but not complete exact-grade numeric TDS conditions.",
+    "comparisonReadyNumericClaims": 0,
+    "productionRecipes": 0
+  }
+}

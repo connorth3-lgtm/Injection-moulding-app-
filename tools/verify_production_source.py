@@ -26,6 +26,7 @@ from verify_main_ruleset import verify as verify_main_ruleset
 
 API = "https://api.github.com"
 PROVENANCE_ATTEMPTS = 20
+REQUEST_ATTEMPTS = 5
 RECENT_MAIN_PULL_LIMIT = 100
 REQUIRED_WORKFLOWS = (
     "MouldMaster Release QA",
@@ -64,14 +65,26 @@ def request_json(token: str, url: str) -> object:
         "Accept: application/vnd.github+json",
         api_endpoint(url),
     ]
-    result = subprocess.run(command, capture_output=True, text=True, env=env)
-    if result.returncode != 0:
-        detail = (result.stderr or result.stdout).strip()
-        raise SystemExit(f"GitHub production-source query failed via gh api: {detail}")
-    try:
-        return json.loads(result.stdout)
-    except json.JSONDecodeError as exc:
-        raise SystemExit("GitHub production-source query returned invalid JSON") from exc
+    last_detail = ""
+    for attempt in range(1, REQUEST_ATTEMPTS + 1):
+        result = subprocess.run(command, capture_output=True, text=True, env=env)
+        if result.returncode == 0:
+            try:
+                return json.loads(result.stdout)
+            except json.JSONDecodeError as exc:
+                last_detail = f"invalid/truncated JSON: {exc}"
+        else:
+            last_detail = (result.stderr or result.stdout).strip() or f"gh api exited {result.returncode}"
+        if attempt < REQUEST_ATTEMPTS:
+            print(
+                f"GitHub production-source API transport was not usable; retrying "
+                f"({attempt}/{REQUEST_ATTEMPTS}): {last_detail}",
+                flush=True,
+            )
+            time.sleep(min(2 * attempt, 6))
+    raise SystemExit(
+        f"GitHub production-source query failed after {REQUEST_ATTEMPTS} transport attempts: {last_detail}"
+    )
 
 
 def matching_merged_prs(payload: object, source_sha: str) -> list[dict]:
@@ -216,6 +229,7 @@ def self_test() -> None:
     assert unique_matching_merged_prs(([], [exact]), source) == [exact]
     assert unique_matching_merged_prs(([exact], [same_exact]), source) == [same_exact]
     assert len(unique_matching_merged_prs(([exact], [second_exact]), source)) == 2
+    assert REQUEST_ATTEMPTS >= 3
     print("Production source verifier self-test passed")
 
 
