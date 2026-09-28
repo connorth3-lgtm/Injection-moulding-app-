@@ -419,6 +419,20 @@ need(all("not conventional injection" in str((g.get("identity") or {}).get("note
 need(all(not (g.get("processing") or []) for g in sh_energy), "SH Energy EPS processing recipe leaked into runtime")
 need(all(any(s.get("kind") == "regulatory" and "ESR-1095" in str(s.get("title") or "") for s in g.get("sources") or []) for g in sh_energy), "SH Energy ICC-ES source trail drift")
 
+# Mega wave24: large Asahi Kasei exact-identity acquisition remains staging-only.
+global_wave24 = load_json(STAGING / "global-material-mega-expansion-20260929-v24.json")
+need((global_wave24.get("summary") or {}).get("sourceReviewedStagingGrades") == 196, "mega wave24 Asahi Kasei staging count drift")
+need((global_wave24.get("summary") or {}).get("brandCounts") == {"LEONA": 60, "TENAC": 74, "XYRON": 62}, "mega wave24 brand counts drift")
+need((global_wave24.get("governance") or {}).get("runtimePromotionBlocked") is True, "mega wave24 runtime promotion boundary drift")
+global24 = [g for m in global_wave24.get("manufacturers") or [] for g in m.get("gradeRecords") or []]
+need(len(global24) == 196, "mega wave24 exact identity count drift")
+need(all((g.get("provenance") or {}).get("stage") == "staging" for g in global24), "mega wave24 contains non-staging records")
+need(all(g.get("id") not in runtime_grade_ids for g in global24), "mega wave24 staging identity leaked into validated runtime")
+need(all(not (g.get("properties") or []) and not (g.get("processing") or []) for g in global24), "mega wave24 must not invent numeric property/process observations")
+need({(g.get("manufacturer") or {}).get("id") for g in global24} == {"mfr-asahi-kasei"}, "mega wave24 manufacturer drift")
+need({g.get("brand") for g in global24} == {"LEONA", "TENAC", "XYRON"}, "mega wave24 brand set drift")
+need({(g.get("polymer") or {}).get("family") for g in global24} == {"PA", "POM", "mPPE alloy"}, "mega wave24 family staging set drift")
+
 # Pilot proof: current primary-source LOTTE records remain unchanged while the
 # umbrella manifest records progress without copying exact-grade claims.
 lotte_pilot = load_json(STAGING / "lotte-exact-grade-pilot-v1.json")
