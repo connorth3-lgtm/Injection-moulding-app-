@@ -156,6 +156,8 @@ def validate_grade(grade: dict[str, Any], context: str = "grade") -> list[str]:
 
 def validate_staging() -> list[str]:
     errors: list[str] = []
+    grade_lineage: dict[str, tuple[str, str, str]] = {}
+    runtime_occurrences: dict[str, int] = {}
     for path in sorted(STAGING.glob("*.json")):
         payload = load_json(path)
         for mi, manufacturer in enumerate(payload.get("manufacturers") or []):
@@ -163,7 +165,33 @@ def validate_staging() -> list[str]:
             need(mid.startswith("mfr-"), f"{path.name}: manufacturer[{mi}] id must start mfr-", errors)
             need(bool(str(manufacturer.get("name", "")).strip()), f"{path.name}: manufacturer[{mi}] name required", errors)
             for gi, grade in enumerate(manufacturer.get("gradeRecords") or []):
-                errors.extend(validate_grade(grade, f"{path.name}:{mid}:grade[{gi}]"))
+                context = f"{path.name}:{mid}:grade[{gi}]"
+                errors.extend(validate_grade(grade, context))
+                gid = clean_text(grade.get("id"))
+                if not gid:
+                    continue
+                lineage = (
+                    clean_text((grade.get("manufacturer") or {}).get("id")),
+                    clean_text(grade.get("brand")),
+                    clean_text(grade.get("grade")),
+                )
+                prior = grade_lineage.get(gid)
+                if prior is None:
+                    grade_lineage[gid] = lineage
+                else:
+                    need(
+                        prior == lineage,
+                        f"{context}: grade id {gid} was reused for a different commercial identity; prior={prior}, current={lineage}",
+                        errors,
+                    )
+                stage = clean_text((grade.get("provenance") or {}).get("stage")) or "staging"
+                if stage in {"validated", "published"}:
+                    runtime_occurrences[gid] = runtime_occurrences.get(gid, 0) + 1
+                    need(
+                        runtime_occurrences[gid] <= 1,
+                        f"{context}: grade id {gid} has more than one validated/published staging occurrence",
+                        errors,
+                    )
     return errors
 
 
