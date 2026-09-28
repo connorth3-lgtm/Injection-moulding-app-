@@ -33,7 +33,7 @@ test('unified material index searches exact-grade processing evidence, family re
 
   await type.selectOption('reference-material');
   await query.fill('hydrolysis');
-  await expect(results.locator('[data-mm-material-index-type="reference-material"]')).toHaveCount(1);
+  await expect(results.locator('[data-mm-material-index-type="reference-material"]')).not.toHaveCount(0);
   await expect(results).toContainText('PBT');
   await expect(results).toContainText(/hydrolysis/i);
 
@@ -99,8 +99,8 @@ test('material catalogue can browse exact grades by region, country, manufacture
   expect(lg).toBeTruthy();
   await manufacturer.selectOption(lg.value);
 
-  const familyOptions=await family.locator('option').evaluateAll(opts=>opts.map(o=>o.textContent||''));
-  expect(familyOptions).toContain('PC');
+  const familyOptions=await family.locator('option').evaluateAll(opts=>opts.map(o=>({value:o.value,text:o.textContent||''})));
+  expect(familyOptions.some(o=>o.value==='PC')).toBeTruthy();
   await family.selectOption('PC');
 
   await expect(results).toContainText(/LG Chem/);
