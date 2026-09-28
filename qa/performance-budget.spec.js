@@ -57,6 +57,11 @@ test('repeated navigation does not accumulate unbounded DOM or resource entries'
   await page.waitForFunction(()=>(typeof window.MM_APP_SHELL_FINALIZED==='string'&&window.MM_APP_SHELL_FINALIZED.length>0)&&window.MM_PRIMARY_HUBS,{timeout:budget.startupReadyMsMax});
   await page.waitForFunction(()=>!document.getElementById('mmBootstrap'),{timeout:budget.startupReadyMsMax});
 
+  // Warm every view once so lazy first-render construction is not mislabeled as a leak.
+  await page.evaluate(()=>{
+    for(const view of ['dashboard','path','scenarios','materials','dashboard'])window.switchView(view);
+  });
+  await page.waitForTimeout(100);
   const before=await page.evaluate(()=>({
     nodes:document.getElementsByTagName('*').length,
     resources:performance.getEntriesByType('resource').length
