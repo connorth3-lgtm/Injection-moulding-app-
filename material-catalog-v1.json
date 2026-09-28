@@ -16,6 +16,11 @@
       "country": "Germany"
     },
     {
+      "id": "mfr-celanese",
+      "name": "Celanese",
+      "country": "United States"
+    },
+    {
       "id": "mfr-covestro",
       "name": "Covestro",
       "country": "Germany"
@@ -39,6 +44,11 @@
       "id": "mfr-lotte-chemical",
       "name": "LOTTE Chemical",
       "country": "South Korea"
+    },
+    {
+      "id": "mfr-roehm",
+      "name": "Röhm",
+      "country": "Germany"
     },
     {
       "id": "mfr-sabic",
@@ -142,6 +152,90 @@
         "reviewedAt": "2026-09-29T00:00:00Z",
         "reviewer": "primary-source-web-review",
         "notes": "Current Arkema BMNO technical data sheet reviewed. MVR and directional t+24 h shrinkage are published with test methods; no generic PA11 processing settings are inferred."
+      }
+    },
+    {
+      "schemaVersion": 1,
+      "id": "mat-basf-elastollan-wy1140",
+      "manufacturer": {
+        "id": "mfr-basf",
+        "name": "BASF",
+        "country": "Germany",
+        "website": "https://www.basf.com/"
+      },
+      "brand": "Elastollan®",
+      "grade": "WY1140",
+      "aliases": [],
+      "polymer": {
+        "family": "TPU",
+        "morphology": "elastomeric"
+      },
+      "composition": {
+        "uvStabilised": true,
+        "notes": "Polyether-based TPU with UV stabilizer; manufacturer states injection molding or extrusion capability."
+      },
+      "properties": [
+        {
+          "id": "obs-basf-wy1140-specific-gravity",
+          "property": "Specific Gravity",
+          "value": 1.12,
+          "unit": "g/cm³",
+          "testMethod": "ASTM D 792",
+          "direction": "not-applicable",
+          "sourceId": "src-basf-elastollan-wy1140-2026",
+          "sourcePage": "typical properties",
+          "comparisonReady": false,
+          "limitations": "Typical value measured on injection-moulded samples; not a specification."
+        },
+        {
+          "id": "obs-basf-wy1140-hardness",
+          "property": "Shore Hardness",
+          "value": "84A",
+          "unit": "Shore A",
+          "testMethod": "ASTM D 2240",
+          "direction": "not-applicable",
+          "sourceId": "src-basf-elastollan-wy1140-2026",
+          "sourcePage": "typical properties",
+          "comparisonReady": false,
+          "limitations": "Typical value measured on injection-moulded samples; not a specification."
+        },
+        {
+          "id": "obs-basf-wy1140-vicat",
+          "property": "Vicat Softening Temperature",
+          "value": 110,
+          "unit": "°C",
+          "testMethod": "ASTM D 1525 / 1B",
+          "direction": "not-applicable",
+          "sourceId": "src-basf-elastollan-wy1140-2026",
+          "sourcePage": "typical properties",
+          "comparisonReady": false,
+          "limitations": "Typical exact-grade property; not a process setting."
+        }
+      ],
+      "processing": [],
+      "approvals": [],
+      "lifecycle": {
+        "status": "unknown",
+        "checkedAt": "2026-09-29"
+      },
+      "sources": [
+        {
+          "id": "src-basf-elastollan-wy1140-2026",
+          "publisher": "BASF",
+          "title": "Elastollan® WY1140 Technical Data Sheet",
+          "url": "https://download.basf.com/p1/8a80821f94ef088e0194f651b46d012c/en/TDS_-_ELASTOLLAN_WY1140_Technical_Data_Sheet_North_America_English.pdf",
+          "kind": "manufacturer-datasheet",
+          "revision": null,
+          "documentDate": "2018-10-01",
+          "retrievedAt": "2026-09-29"
+        }
+      ],
+      "provenance": {
+        "stage": "validated",
+        "ingestedAt": "2026-09-29T00:00:00Z",
+        "reviewedAt": "2026-09-29T00:00:00Z",
+        "reviewer": "primary-source-web-review",
+        "notes": "Current BASF-hosted exact-grade TDS reviewed. Typical injection-moulded physical properties are published; generic hardness-band processing tables are not promoted as exact-grade settings."
       }
     },
     {
@@ -715,6 +809,146 @@
         "reviewedAt": "2026-09-29T00:00:00Z",
         "reviewer": "primary-source-web-review",
         "notes": "Current BASF exact-grade datasheet reviewed. MVR retains ISO 1133 temperature/load; directional shrinkage and supplier processing guidance are published without converting them into a production recipe."
+      }
+    },
+    {
+      "schemaVersion": 1,
+      "id": "mat-celanese-fortron-fx32t4",
+      "manufacturer": {
+        "id": "mfr-celanese",
+        "name": "Celanese",
+        "country": "United States",
+        "website": "https://www.celanese.com/"
+      },
+      "brand": "Fortron®",
+      "grade": "FX32T4",
+      "aliases": [],
+      "polymer": {
+        "family": "PPS",
+        "morphology": "semi-crystalline"
+      },
+      "composition": {
+        "notes": "Flexible unfilled PPS grade identified by Celanese for injection molding."
+      },
+      "properties": [],
+      "processing": [
+        {
+          "id": "proc-celanese-fx32t4-mould-temp",
+          "parameter": "Typical mould temperature",
+          "min": 60,
+          "max": 80,
+          "value": null,
+          "unit": "°C",
+          "condition": "Celanese flexible-PPS solution showcase states relatively low typical mould temperature for injection-moulding grades FX32T4 and FX72T6; verify exact application/site requirements.",
+          "claimType": "supplier-guidance",
+          "sourceId": "src-celanese-fortron-fx32t4-2026",
+          "sourcePage": "injection molding",
+          "productionRecipe": false
+        }
+      ],
+      "approvals": [],
+      "lifecycle": {
+        "status": "unknown",
+        "checkedAt": "2026-09-29"
+      },
+      "sources": [
+        {
+          "id": "src-celanese-fortron-fx32t4-2026",
+          "publisher": "Celanese",
+          "title": "Fortron® Flexible PPS Solution Showcase",
+          "url": "https://www.celanese.com/-/media/cewebjssapp/project/productdocuments/fortron-pps/pps---fortron-flexible-pps---solution-showcase.pdf?isDownload=true",
+          "kind": "manufacturer-processing-guide",
+          "revision": null,
+          "documentDate": "2026-05-01",
+          "retrievedAt": "2026-09-29"
+        },
+        {
+          "id": "src-celanese-fortron-fx32t4-product-2026",
+          "publisher": "Celanese",
+          "title": "Fortron® PPS product portfolio",
+          "url": "https://www.celanese.com/products/fortron-polyphenylene-sulfide",
+          "kind": "manufacturer-datasheet",
+          "revision": null,
+          "documentDate": null,
+          "retrievedAt": "2026-09-29"
+        }
+      ],
+      "provenance": {
+        "stage": "validated",
+        "ingestedAt": "2026-09-29T00:00:00Z",
+        "reviewedAt": "2026-09-29T00:00:00Z",
+        "reviewer": "primary-source-web-review",
+        "notes": "Current Celanese product portfolio and flexible-PPS solution showcase identify this exact injection-moulding grade. Only explicitly stated typical mould-temperature guidance is promoted; missing rheology/shrinkage remains an evidence gap."
+      }
+    },
+    {
+      "schemaVersion": 1,
+      "id": "mat-celanese-fortron-fx72t6",
+      "manufacturer": {
+        "id": "mfr-celanese",
+        "name": "Celanese",
+        "country": "United States",
+        "website": "https://www.celanese.com/"
+      },
+      "brand": "Fortron®",
+      "grade": "FX72T6",
+      "aliases": [],
+      "polymer": {
+        "family": "PPS",
+        "morphology": "semi-crystalline"
+      },
+      "composition": {
+        "notes": "Flexible unfilled PPS grade identified by Celanese for injection molding."
+      },
+      "properties": [],
+      "processing": [
+        {
+          "id": "proc-celanese-fx72t6-mould-temp",
+          "parameter": "Typical mould temperature",
+          "min": 60,
+          "max": 80,
+          "value": null,
+          "unit": "°C",
+          "condition": "Celanese flexible-PPS solution showcase states relatively low typical mould temperature for injection-moulding grades FX32T4 and FX72T6; verify exact application/site requirements.",
+          "claimType": "supplier-guidance",
+          "sourceId": "src-celanese-fortron-fx72t6-2026",
+          "sourcePage": "injection molding",
+          "productionRecipe": false
+        }
+      ],
+      "approvals": [],
+      "lifecycle": {
+        "status": "unknown",
+        "checkedAt": "2026-09-29"
+      },
+      "sources": [
+        {
+          "id": "src-celanese-fortron-fx72t6-2026",
+          "publisher": "Celanese",
+          "title": "Fortron® Flexible PPS Solution Showcase",
+          "url": "https://www.celanese.com/-/media/cewebjssapp/project/productdocuments/fortron-pps/pps---fortron-flexible-pps---solution-showcase.pdf?isDownload=true",
+          "kind": "manufacturer-processing-guide",
+          "revision": null,
+          "documentDate": "2026-05-01",
+          "retrievedAt": "2026-09-29"
+        },
+        {
+          "id": "src-celanese-fortron-fx72t6-product-2026",
+          "publisher": "Celanese",
+          "title": "Fortron® PPS product portfolio",
+          "url": "https://www.celanese.com/products/fortron-polyphenylene-sulfide",
+          "kind": "manufacturer-datasheet",
+          "revision": null,
+          "documentDate": null,
+          "retrievedAt": "2026-09-29"
+        }
+      ],
+      "provenance": {
+        "stage": "validated",
+        "ingestedAt": "2026-09-29T00:00:00Z",
+        "reviewedAt": "2026-09-29T00:00:00Z",
+        "reviewer": "primary-source-web-review",
+        "notes": "Current Celanese product portfolio and flexible-PPS solution showcase identify this exact injection-moulding grade. Only explicitly stated typical mould-temperature guidance is promoted; missing rheology/shrinkage remains an evidence gap."
       }
     },
     {
@@ -5403,6 +5637,135 @@
         "reviewedAt": "2026-09-03T00:00:00Z",
         "reviewer": "primary-source-web-review",
         "notes": "Official LOTTE English product-page pilot; unresolved values are omitted rather than inferred."
+      }
+    },
+    {
+      "schemaVersion": 1,
+      "id": "mat-roehm-plexiglas-higloss-8n-9v022",
+      "manufacturer": {
+        "id": "mfr-roehm",
+        "name": "Röhm",
+        "country": "Germany",
+        "website": "https://www.plexiglas-polymers.com/"
+      },
+      "brand": "PLEXIGLAS® Hi-Gloss",
+      "grade": "8N black 9V022",
+      "aliases": [
+        "Hi-Gloss 8N black 9V022"
+      ],
+      "polymer": {
+        "family": "PMMA",
+        "morphology": "amorphous"
+      },
+      "composition": {
+        "notes": "Opaque black PMMA injection-moulding grade for high-gloss Class A surfaces."
+      },
+      "properties": [
+        {
+          "id": "obs-roehm-higloss8n-mvr",
+          "property": "Melt Volume-Flow Rate",
+          "value": 3,
+          "unit": "cm³/10min",
+          "testMethod": "ISO 1133",
+          "temperatureC": 230,
+          "loadKg": 3.8,
+          "direction": "not-applicable",
+          "sourceId": "src-roehm-plexiglas-higloss-8n-9v022-2026",
+          "sourcePage": "rheological properties",
+          "comparisonReady": true,
+          "limitations": "Röhm typical exact-grade value; compare only at 230°C/3.8 kg."
+        },
+        {
+          "id": "obs-roehm-higloss8n-vicat",
+          "property": "Vicat Softening Temperature",
+          "value": 108,
+          "unit": "°C",
+          "testMethod": "ISO 306",
+          "specimen": "B / 50",
+          "direction": "not-applicable",
+          "sourceId": "src-roehm-plexiglas-higloss-8n-9v022-2026",
+          "sourcePage": "thermal properties",
+          "comparisonReady": false,
+          "limitations": "Typical material property, not a process setting."
+        }
+      ],
+      "processing": [
+        {
+          "id": "proc-roehm-higloss8n-predry-temp",
+          "parameter": "Predrying temperature",
+          "max": 98,
+          "min": null,
+          "value": null,
+          "unit": "°C",
+          "condition": "Röhm recommended exact-grade condition; verify current supplier/site handling before production use.",
+          "claimType": "supplier-guidance",
+          "sourceId": "src-roehm-plexiglas-higloss-8n-9v022-2026",
+          "sourcePage": "recommended processing conditions",
+          "productionRecipe": false
+        },
+        {
+          "id": "proc-roehm-higloss8n-predry-time",
+          "parameter": "Predrying time in desiccant-type drier",
+          "min": 2,
+          "max": 3,
+          "value": null,
+          "unit": "h",
+          "condition": "Röhm exact-grade guidance; moisture state and site method still require verification.",
+          "claimType": "supplier-guidance",
+          "sourceId": "src-roehm-plexiglas-higloss-8n-9v022-2026",
+          "sourcePage": "recommended processing conditions",
+          "productionRecipe": false
+        },
+        {
+          "id": "proc-roehm-higloss8n-melt-temp",
+          "parameter": "Melt temperature",
+          "min": 220,
+          "max": 260,
+          "value": null,
+          "unit": "°C",
+          "condition": "Röhm exact-grade recommended processing range; not a universal production setpoint.",
+          "claimType": "supplier-guidance",
+          "sourceId": "src-roehm-plexiglas-higloss-8n-9v022-2026",
+          "sourcePage": "recommended processing conditions",
+          "productionRecipe": false
+        },
+        {
+          "id": "proc-roehm-higloss8n-mould-temp",
+          "parameter": "Mould temperature",
+          "min": 60,
+          "max": 90,
+          "value": null,
+          "unit": "°C",
+          "condition": "Röhm exact-grade injection-moulding guidance; validate for the actual tool/part/site.",
+          "claimType": "supplier-guidance",
+          "sourceId": "src-roehm-plexiglas-higloss-8n-9v022-2026",
+          "sourcePage": "recommended processing conditions",
+          "productionRecipe": false
+        }
+      ],
+      "approvals": [],
+      "lifecycle": {
+        "status": "unknown",
+        "checkedAt": "2026-09-29"
+      },
+      "sources": [
+        {
+          "id": "src-roehm-plexiglas-higloss-8n-9v022-2026",
+          "publisher": "Röhm",
+          "title": "PLEXIGLAS® Hi-Gloss 8N black 9V022 Product Information",
+          "url": "https://www.plexiglas-polymers.com/en/application-areas/automotive/car-body-parts?file=files%2Fassets%2F04-molding_compounds%2Fplexiglas-polymers%2Fdownloads%2Fen%2Fproduct-information%2FPLEXIGLAS+Hi-Gloss%2FPLEXIGLAS+Hi-Gloss+8N+black+9V022_EN.pdf",
+          "kind": "manufacturer-datasheet",
+          "revision": null,
+          "documentDate": "2020-02-01",
+          "retrievedAt": "2026-09-29"
+        }
+      ],
+      "provenance": {
+        "stage": "validated",
+        "ingestedAt": "2026-09-29T00:00:00Z",
+        "reviewedAt": "2026-09-29T00:00:00Z",
+        "reviewer": "primary-source-web-review",
+        "notes": "Current Röhm product page links the exact product information. Conditioned MVR and explicit recommended processing conditions are retained as typical supplier guidance, not specifications or recipes."
       }
     },
     {
