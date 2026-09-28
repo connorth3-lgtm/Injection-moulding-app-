@@ -81,7 +81,7 @@ catalog = load_json(CATALOG)
 need(catalog.get("schemaVersion") == 1, "material catalog schema version drift")
 need(catalog.get("catalogVersion") == "generated", "material catalog must use the compiler-owned generated version marker")
 need("variant/revision/production identity differs" in str(catalog.get("boundary") or ""), "material catalog boundary does not describe variant-safe identity")
-need({m.get("id") for m in catalog.get("manufacturers") or []} == {"mfr-kep", "mfr-lg-chem", "mfr-lotte-chemical", "mfr-sabic", "mfr-envalior", "mfr-victrex", "mfr-basf", "mfr-covestro", "mfr-arkema"}, "runtime manufacturer set drift")
+need({m.get("id") for m in catalog.get("manufacturers") or []} == {"mfr-kep", "mfr-lg-chem", "mfr-lotte-chemical", "mfr-sabic", "mfr-envalior", "mfr-victrex", "mfr-basf", "mfr-covestro", "mfr-arkema", "mfr-roehm", "mfr-celanese"}, "runtime manufacturer set drift")
 need(isinstance(catalog.get("grades"), list), "material catalog grades must be a list")
 for idx, grade in enumerate(catalog["grades"]):
     grade_errors = validate_grade(grade, f"catalog grade[{idx}]")
@@ -102,7 +102,7 @@ for staging_path in sorted(STAGING.glob("*.json")):
                 staged_grade_ids.add(gid)
 runtime_grade_ids = {grade.get("id") for grade in catalog.get("grades") or []}
 need(staged_grade_ids == runtime_grade_ids, f"runtime/staging material drift: staged={sorted(staged_grade_ids)} runtime={sorted(runtime_grade_ids)}")
-need(len(runtime_grade_ids) == 62, "runtime exact-grade count must include the Korean pilot plus three global expansion waves")
+need(len(runtime_grade_ids) == 85, "runtime exact-grade count must include the Korean pilot plus five global expansion waves")
 need(kolon_grade_ids.isdisjoint(runtime_grade_ids), "source-reviewed KOLON staging identities must not leak into the validated runtime catalog")
 
 global_wave = load_json(STAGING / "global-material-expansion-20260929-v1.json")
@@ -137,6 +137,27 @@ global3_staging = [g for g in global3 if (g.get("provenance") or {}).get("stage"
 need(len(global3_validated) == 17 and all(g.get("id") in runtime_grade_ids for g in global3_validated), "wave3 validated grades are not fully published")
 need(len(global3_staging) == 6 and all(g.get("id") not in runtime_grade_ids for g in global3_staging), "wave3 staging identities leaked into runtime")
 need({(g.get("polymer") or {}).get("family") for g in global3_validated} == {"PC/ABS", "PBT", "PET"}, "wave3 validated family coverage drift")
+
+global_wave4 = load_json(STAGING / "global-material-expansion-20260929-v4.json")
+need((global_wave4.get("summary") or {}).get("validatedGrades") == 4, "global material expansion wave4 validated-grade count drift")
+need((global_wave4.get("summary") or {}).get("sourceReviewedStagingGrades") == 40, "global material expansion wave4 staging count drift")
+global4 = [g for m in global_wave4.get("manufacturers") or [] for g in m.get("gradeRecords") or []]
+global4_validated = [g for g in global4 if (g.get("provenance") or {}).get("stage") in {"validated", "published"}]
+global4_staging = [g for g in global4 if (g.get("provenance") or {}).get("stage") == "staging"]
+need(len(global4_validated) == 4 and all(g.get("id") in runtime_grade_ids for g in global4_validated), "wave4 validated grades are not fully published")
+need(len(global4_staging) == 40 and all(g.get("id") not in runtime_grade_ids for g in global4_staging), "wave4 staging identities leaked into runtime")
+need({(g.get("polymer") or {}).get("family") for g in global4_validated} == {"PMMA", "TPU", "PPS"}, "wave4 validated family coverage drift")
+
+global_wave5 = load_json(STAGING / "global-material-expansion-20260929-v5.json")
+need((global_wave5.get("summary") or {}).get("validatedGrades") == 19, "global material expansion wave5 validated-grade count drift")
+need((global_wave5.get("summary") or {}).get("sourceReviewedStagingGrades") == 4, "global material expansion wave5 staging count drift")
+global5 = [g for m in global_wave5.get("manufacturers") or [] for g in m.get("gradeRecords") or []]
+global5_validated = [g for g in global5 if (g.get("provenance") or {}).get("stage") in {"validated", "published"}]
+global5_staging = [g for g in global5 if (g.get("provenance") or {}).get("stage") == "staging"]
+need(len(global5_validated) == 19 and all(g.get("id") in runtime_grade_ids for g in global5_validated), "wave5 validated grades are not fully published")
+need(len(global5_staging) == 4 and all(g.get("id") not in runtime_grade_ids for g in global5_staging), "wave5 staging identities leaked into runtime")
+need({(g.get("polymer") or {}).get("family") for g in global5_validated} == {"HDPE"}, "wave5 validated family coverage drift")
+need(all(obs.get("comparisonReady") is False for g in global5_validated for obs in g.get("properties") or [] if obs.get("property") == "Melt Flow Rate"), "HDPE MFR must remain context-only until test temperature is explicitly sourced")
 
 # Pilot proof: current primary-source LOTTE records remain unchanged while the
 # umbrella manifest records progress without copying exact-grade claims.
