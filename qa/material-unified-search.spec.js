@@ -71,3 +71,43 @@ test('unified index can jump an exact-grade result into the exact-grade catalog 
   await expect(root.locator('[data-mm-material-grade="mat-lgchem-lupoy-gp5206f"]')).toBeVisible();
   await expect(root.locator('[data-mm-material-grade]')).toHaveCount(1);
 });
+
+
+test('material catalogue can browse exact grades by region, country, manufacturer and family without implying origin',async({page})=>{
+  await openMaterials(page,768);
+  const root=page.locator('#mmExactMaterialCatalog');
+  const region=root.locator('[data-mm-all-material-region]');
+  const country=root.locator('[data-mm-all-material-country]');
+  const manufacturer=root.locator('[data-mm-all-material-manufacturer]');
+  const family=root.locator('[data-mm-all-material-family]');
+  const type=root.locator('[data-mm-all-material-type]');
+  const results=root.locator('[data-mm-all-material-results]');
+  const boundary=root.locator('[data-mm-catalogue-boundary]');
+
+  await expect(boundary).toContainText("manufacturer's country");
+  await expect(boundary).toContainText(/does not prove exact-grade manufacturing origin|neither proves exact-grade manufacturing origin/i);
+
+  await type.selectOption('exact-grade');
+  await region.selectOption({label:'Asia-Pacific'});
+  await country.selectOption({label:'South Korea'});
+  await expect(results.locator('[data-mm-material-index-type="exact-grade"]')).not.toHaveCount(0);
+  await expect(results).toContainText('Asia-Pacific');
+  await expect(results).toContainText('South Korea');
+
+  const manufacturerOptions=await manufacturer.locator('option').evaluateAll(opts=>opts.map(o=>({value:o.value,text:o.textContent||''})));
+  const lg=manufacturerOptions.find(o=>/LG Chem/.test(o.text));
+  expect(lg).toBeTruthy();
+  await manufacturer.selectOption(lg.value);
+
+  const familyOptions=await family.locator('option').evaluateAll(opts=>opts.map(o=>o.textContent||''));
+  expect(familyOptions).toContain('PC');
+  await family.selectOption('PC');
+
+  await expect(results).toContainText(/LG Chem/);
+  await expect(results).toContainText(/PC/);
+
+  const facets=await page.evaluate(()=>window.MM_MATERIAL_SEARCH.facets());
+  expect(facets.regions).toContain('Asia-Pacific');
+  expect(facets.countries).toContain('South Korea');
+  expect(facets.boundary).toMatch(/does not prove exact-grade manufacturing origin|neither field proves exact-grade manufacturing origin/i);
+});
