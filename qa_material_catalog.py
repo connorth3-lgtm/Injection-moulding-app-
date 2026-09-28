@@ -81,7 +81,7 @@ catalog = load_json(CATALOG)
 need(catalog.get("schemaVersion") == 1, "material catalog schema version drift")
 need(catalog.get("catalogVersion") == "generated", "material catalog must use the compiler-owned generated version marker")
 need("variant/revision/production identity differs" in str(catalog.get("boundary") or ""), "material catalog boundary does not describe variant-safe identity")
-need({m.get("id") for m in catalog.get("manufacturers") or []} == {"mfr-kep", "mfr-lg-chem", "mfr-lotte-chemical", "mfr-sabic", "mfr-envalior", "mfr-victrex", "mfr-basf", "mfr-covestro", "mfr-arkema", "mfr-roehm", "mfr-celanese", "mfr-ineos-styrolution", "mfr-supreme-petrochem", "mfr-scgc", "mfr-kuraray", "mfr-ube"}, "runtime manufacturer set drift")
+need({m.get("id") for m in catalog.get("manufacturers") or []} == {"mfr-kep", "mfr-lg-chem", "mfr-lotte-chemical", "mfr-sabic", "mfr-envalior", "mfr-victrex", "mfr-basf", "mfr-covestro", "mfr-arkema", "mfr-roehm", "mfr-celanese", "mfr-ineos-styrolution", "mfr-supreme-petrochem", "mfr-scgc", "mfr-kuraray", "mfr-ube", "mfr-indianoil", "mfr-petronas-chemicals", "mfr-lotte-titan", "mfr-lyondellbasell", "mfr-momentive", "mfr-mitsui-elastomers-singapore", "mfr-exxonmobil"}, "runtime manufacturer set drift")
 need(isinstance(catalog.get("grades"), list), "material catalog grades must be a list")
 for idx, grade in enumerate(catalog["grades"]):
     grade_errors = validate_grade(grade, f"catalog grade[{idx}]")
@@ -102,7 +102,7 @@ for staging_path in sorted(STAGING.glob("*.json")):
                 staged_grade_ids.add(gid)
 runtime_grade_ids = {grade.get("id") for grade in catalog.get("grades") or []}
 need(staged_grade_ids == runtime_grade_ids, f"runtime/staging material drift: staged={sorted(staged_grade_ids)} runtime={sorted(runtime_grade_ids)}")
-need(len(runtime_grade_ids) == 122, "runtime exact-grade count must include the Korean pilot plus ten global expansion waves")
+need(len(runtime_grade_ids) == 140, "runtime exact-grade count must include the Korean pilot plus thirteen global expansion waves")
 need(kolon_grade_ids.isdisjoint(runtime_grade_ids), "source-reviewed KOLON staging identities must not leak into the validated runtime catalog")
 
 global_wave = load_json(STAGING / "global-material-expansion-20260929-v1.json")
@@ -203,6 +203,33 @@ need(len(global10_validated) == 10 and all(g.get("id") in runtime_grade_ids for 
 need(len(global10_staging) == 1 and all(g.get("id") not in runtime_grade_ids for g in global10_staging), "wave10 TPV staging identity leaked into runtime")
 need({(g.get("polymer") or {}).get("family") for g in global10_validated} == {"LSR", "TPV"}, "wave10 validated family coverage drift")
 need(all((obs.get("productionRecipe") is False) for g in global10_validated for obs in g.get("processing") or []), "LSR supplier guidance became a production recipe")
+
+global_wave11 = load_json(STAGING / "global-material-expansion-20260929-v11.json")
+need((global_wave11.get("summary") or {}).get("validatedGrades") == 5, "Singapore TAFMER wave validated-grade count drift")
+need((global_wave11.get("summary") or {}).get("countryFocus") == "Singapore", "Singapore TAFMER wave country focus drift")
+global11 = [g for m in global_wave11.get("manufacturers") or [] for g in m.get("gradeRecords") or []]
+need(len(global11) == 5 and all(g.get("id") in runtime_grade_ids for g in global11), "Singapore TAFMER grades are not fully published")
+need({(g.get("polymer") or {}).get("family") for g in global11} == {"AOC elastomer"}, "Singapore TAFMER family coverage drift")
+need(all(obs.get("comparisonReady") is False for g in global11 for obs in g.get("properties") or [] if obs.get("property") == "Melt Flow Rate"), "Singapore TAFMER MFR must remain context-only while test load is absent")
+
+singapore_evidence = load_json(ROOT / "data/materials/singapore-material-evidence-20260929-v1.json")
+need(singapore_evidence.get("country") == "Singapore", "Singapore regional material evidence country drift")
+need({x.get("organization") for x in singapore_evidence.get("facilities") or []} == {"Arkema", "Mitsui Elastomers Singapore", "ExxonMobil"}, "Singapore facility evidence set drift")
+need((singapore_evidence.get("governance") or {}).get("regionalEvidenceDoesNotImplyExactGradeOrigin") is True, "Singapore evidence must not imply exact-grade plant origin")
+
+global_wave12 = load_json(STAGING / "global-material-expansion-20260929-v12.json")
+need((global_wave12.get("summary") or {}).get("validatedGrades") == 8, "Singapore-linked ExxonMobil PP wave validated-grade count drift")
+global12 = [g for m in global_wave12.get("manufacturers") or [] for g in m.get("gradeRecords") or []]
+need(len(global12) == 8 and all(g.get("id") in runtime_grade_ids for g in global12), "Singapore-linked ExxonMobil PP grades are not fully published")
+need(all(any("Singapore" in str(s.get("title", "")) for s in g.get("sources") or []) for g in global12), "ExxonMobil PP records lost Singapore family-level provenance")
+need(all("does not claim Singapore plant-of-origin" in str((g.get("provenance") or {}).get("notes", "")) for g in global12), "ExxonMobil exact-grade Singapore origin boundary missing")
+
+global_wave13 = load_json(STAGING / "global-material-expansion-20260929-v13.json")
+need((global_wave13.get("summary") or {}).get("validatedGrades") == 5, "Singapore high-heat wave validated-grade count drift")
+global13 = [g for m in global_wave13.get("manufacturers") or [] for g in m.get("gradeRecords") or []]
+need(len(global13) == 5 and all(g.get("id") in runtime_grade_ids for g in global13), "Singapore-linked PEI/TPI grades are not fully published")
+need({(g.get("polymer") or {}).get("family") for g in global13} == {"PEI", "TPI"}, "Singapore high-heat family coverage drift")
+need(all(obs.get("comparisonReady") is False for g in global13 for obs in g.get("properties") or [] if obs.get("property") == "Glass Transition Temperature"), "PEI/TPI Tg must remain context-only without formal test methods")
 
 # Pilot proof: current primary-source LOTTE records remain unchanged while the
 # umbrella manifest records progress without copying exact-grade claims.
