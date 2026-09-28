@@ -36,7 +36,7 @@
 .scenario .choice.mm-choice-correct{border-color:#397466;background:#0d2925;box-shadow:inset 3px 0 0 #7ce6a3}
 .scenario .choice.mm-choice-review{border-color:#74424d;background:#2a171d;box-shadow:inset 3px 0 0 #ff7b7b}
 @media(max-width:680px){
-  .modal{padding:0}.modal-card.mm-assessment-modal{width:100vw;max-width:none;max-height:100dvh;min-height:100dvh;border-radius:0;padding:18px 15px 120px}
+  .modal{padding:0}.modal-card.mm-assessment-modal{width:100vw;max-width:none;max-height:100dvh;min-height:100dvh;border-radius:0;padding:18px 15px max(180px,calc(120px + env(safe-area-inset-bottom)));scroll-padding-bottom:max(190px,calc(130px + env(safe-area-inset-bottom)))}
   #examQuestions.mm-focus-mode .question{padding:18px 14px;border-radius:13px}
   .mm-question-stem{font-size:19px;line-height:1.5}
   .mm-option-card{grid-template-columns:20px 30px minmax(0,1fr);padding:12px 11px!important;font-size:14px}
