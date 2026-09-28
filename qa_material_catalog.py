@@ -88,7 +88,7 @@ need("Close important evidence gaps" in registry_runtime, "material change assis
 need(catalog.get("schemaVersion") == 1, "material catalog schema version drift")
 need(catalog.get("catalogVersion") == "generated", "material catalog must use the compiler-owned generated version marker")
 need("variant/revision/production identity differs" in str(catalog.get("boundary") or ""), "material catalog boundary does not describe variant-safe identity")
-need({m.get("id") for m in catalog.get("manufacturers") or []} == {"mfr-kep", "mfr-lg-chem", "mfr-lotte-chemical"}, "runtime manufacturer set drift")
+need({m.get("id") for m in catalog.get("manufacturers") or []} == {"mfr-kep", "mfr-lg-chem", "mfr-lotte-chemical", "mfr-sabic", "mfr-envalior", "mfr-victrex", "mfr-basf", "mfr-covestro", "mfr-arkema", "mfr-roehm", "mfr-celanese", "mfr-ineos-styrolution", "mfr-supreme-petrochem", "mfr-scgc", "mfr-kuraray", "mfr-ube", "mfr-indianoil", "mfr-petronas-chemicals", "mfr-lotte-titan", "mfr-lyondellbasell", "mfr-momentive", "mfr-mitsui-elastomers-singapore", "mfr-exxonmobil"}, "runtime manufacturer set drift")
 need(isinstance(catalog.get("grades"), list), "material catalog grades must be a list")
 for idx, grade in enumerate(catalog["grades"]):
     grade_errors = validate_grade(grade, f"catalog grade[{idx}]")
@@ -109,8 +109,290 @@ for staging_path in sorted(STAGING.glob("*.json")):
                 staged_grade_ids.add(gid)
 runtime_grade_ids = {grade.get("id") for grade in catalog.get("grades") or []}
 need(staged_grade_ids == runtime_grade_ids, f"runtime/staging material drift: staged={sorted(staged_grade_ids)} runtime={sorted(runtime_grade_ids)}")
-need(len(runtime_grade_ids) == 11, "runtime exact-grade count must remain eleven for the three-manufacturer Korean pilot")
+need(len(runtime_grade_ids) == 188, "runtime exact-grade count must include the original Korean pilot and validated Korea/global expansion waves through wave22")
 need(kolon_grade_ids.isdisjoint(runtime_grade_ids), "source-reviewed KOLON staging identities must not leak into the validated runtime catalog")
+
+global_wave = load_json(STAGING / "global-material-expansion-20260929-v1.json")
+need(global_wave.get("status") == "validated-expansion-with-source-reviewed-queue", "global material expansion status drift")
+need((global_wave.get("summary") or {}).get("validatedGrades") == 25, "global material expansion validated-grade count drift")
+need((global_wave.get("summary") or {}).get("sourceReviewedStagingGrades") == 8, "global material expansion ABS staging count drift")
+global_grades = [g for m in global_wave.get("manufacturers") or [] for g in m.get("gradeRecords") or []]
+global_validated = [g for g in global_grades if (g.get("provenance") or {}).get("stage") in {"validated", "published"}]
+global_staging = [g for g in global_grades if (g.get("provenance") or {}).get("stage") == "staging"]
+need(len(global_validated) == 25 and all(g.get("id") in runtime_grade_ids for g in global_validated), "global validated material records are not fully published")
+need(len(global_staging) == 8 and all(g.get("id") not in runtime_grade_ids for g in global_staging), "source-reviewed ABS staging identities leaked into runtime")
+need({(g.get("polymer") or {}).get("family") for g in global_validated} == {"PP", "PA6", "PBT", "PEEK"}, "global validated family coverage drift")
+need(all((obs.get("productionRecipe") is False) for g in global_validated for obs in g.get("processing") or []), "global expansion supplier guidance became a production recipe")
+
+global_wave2 = load_json(STAGING / "global-material-expansion-20260929-v2.json")
+need((global_wave2.get("summary") or {}).get("validatedGrades") == 9, "global material expansion wave2 validated-grade count drift")
+need((global_wave2.get("summary") or {}).get("sourceReviewedStagingGrades") == 6, "global material expansion wave2 staging count drift")
+global2 = [g for m in global_wave2.get("manufacturers") or [] for g in m.get("gradeRecords") or []]
+global2_validated = [g for g in global2 if (g.get("provenance") or {}).get("stage") in {"validated", "published"}]
+global2_staging = [g for g in global2 if (g.get("provenance") or {}).get("stage") == "staging"]
+need(len(global2_validated) == 9 and all(g.get("id") in runtime_grade_ids for g in global2_validated), "wave2 validated grades are not fully published")
+need(len(global2_staging) == 6 and all(g.get("id") not in runtime_grade_ids for g in global2_staging), "wave2 staging identities leaked into runtime")
+need({(g.get("polymer") or {}).get("family") for g in global2_validated} == {"PA66", "PBT", "PC", "PA11"}, "wave2 validated family coverage drift")
+need(all((obs.get("productionRecipe") is False) for g in global2_validated for obs in g.get("processing") or []), "wave2 supplier guidance became a production recipe")
+
+global_wave3 = load_json(STAGING / "global-material-expansion-20260929-v3.json")
+need((global_wave3.get("summary") or {}).get("validatedGrades") == 17, "global material expansion wave3 validated-grade count drift")
+need((global_wave3.get("summary") or {}).get("sourceReviewedStagingGrades") == 6, "global material expansion wave3 staging count drift")
+global3 = [g for m in global_wave3.get("manufacturers") or [] for g in m.get("gradeRecords") or []]
+global3_validated = [g for g in global3 if (g.get("provenance") or {}).get("stage") in {"validated", "published"}]
+global3_staging = [g for g in global3 if (g.get("provenance") or {}).get("stage") == "staging"]
+need(len(global3_validated) == 17 and all(g.get("id") in runtime_grade_ids for g in global3_validated), "wave3 validated grades are not fully published")
+need(len(global3_staging) == 6 and all(g.get("id") not in runtime_grade_ids for g in global3_staging), "wave3 staging identities leaked into runtime")
+need({(g.get("polymer") or {}).get("family") for g in global3_validated} == {"PC/ABS", "PBT", "PET"}, "wave3 validated family coverage drift")
+
+global_wave4 = load_json(STAGING / "global-material-expansion-20260929-v4.json")
+need((global_wave4.get("summary") or {}).get("validatedGrades") == 4, "global material expansion wave4 validated-grade count drift")
+need((global_wave4.get("summary") or {}).get("sourceReviewedStagingGrades") == 40, "global material expansion wave4 staging count drift")
+global4 = [g for m in global_wave4.get("manufacturers") or [] for g in m.get("gradeRecords") or []]
+global4_validated = [g for g in global4 if (g.get("provenance") or {}).get("stage") in {"validated", "published"}]
+global4_staging = [g for g in global4 if (g.get("provenance") or {}).get("stage") == "staging"]
+need(len(global4_validated) == 4 and all(g.get("id") in runtime_grade_ids for g in global4_validated), "wave4 validated grades are not fully published")
+need(len(global4_staging) == 40, "wave4 staging identity count drift")
+global_wave8 = load_json(STAGING / "global-material-expansion-20260929-v8.json")
+global8 = [g for m in global_wave8.get("manufacturers") or [] for g in m.get("gradeRecords") or []]
+wave8_promoted_ids = {g.get("id") for g in global8 if (g.get("provenance") or {}).get("stage") in {"validated", "published"}}
+wave4_staging_ids = {g.get("id") for g in global4_staging}
+promoted_from_wave4 = wave4_staging_ids & wave8_promoted_ids
+need(promoted_from_wave4 == {"mat-celanese-vectra-a115", "mat-celanese-vectra-a130", "mat-celanese-vectra-e130i", "mat-celanese-vectra-e150i"}, "wave4-to-wave8 explicit promotion set drift")
+need(all(gid in runtime_grade_ids for gid in promoted_from_wave4), "wave8 promoted Vectra grades missing from runtime")
+need(all(gid not in runtime_grade_ids for gid in wave4_staging_ids - promoted_from_wave4), "unpromoted wave4 staging identities leaked into runtime")
+need({(g.get("polymer") or {}).get("family") for g in global4_validated} == {"PMMA", "TPU", "PPS"}, "wave4 validated family coverage drift")
+
+global_wave5 = load_json(STAGING / "global-material-expansion-20260929-v5.json")
+need((global_wave5.get("summary") or {}).get("validatedGrades") == 19, "global material expansion wave5 validated-grade count drift")
+need((global_wave5.get("summary") or {}).get("sourceReviewedStagingGrades") == 4, "global material expansion wave5 staging count drift")
+global5 = [g for m in global_wave5.get("manufacturers") or [] for g in m.get("gradeRecords") or []]
+global5_validated = [g for g in global5 if (g.get("provenance") or {}).get("stage") in {"validated", "published"}]
+global5_staging = [g for g in global5 if (g.get("provenance") or {}).get("stage") == "staging"]
+need(len(global5_validated) == 19 and all(g.get("id") in runtime_grade_ids for g in global5_validated), "wave5 validated grades are not fully published")
+need(len(global5_staging) == 4 and all(g.get("id") not in runtime_grade_ids for g in global5_staging), "wave5 staging identities leaked into runtime")
+need({(g.get("polymer") or {}).get("family") for g in global5_validated} == {"HDPE"}, "wave5 validated family coverage drift")
+need(all(obs.get("comparisonReady") is False for g in global5_validated for obs in g.get("properties") or [] if obs.get("property") == "Melt Flow Rate"), "HDPE MFR must remain context-only until test temperature is explicitly sourced")
+
+global_wave6 = load_json(STAGING / "global-material-expansion-20260929-v6.json")
+need((global_wave6.get("summary") or {}).get("validatedGrades") == 7, "global material expansion wave6 validated-grade count drift")
+need((global_wave6.get("summary") or {}).get("sourceReviewedStagingGrades") == 23, "global material expansion wave6 staging count drift")
+global6 = [g for m in global_wave6.get("manufacturers") or [] for g in m.get("gradeRecords") or []]
+global6_validated = [g for g in global6 if (g.get("provenance") or {}).get("stage") in {"validated", "published"}]
+global6_staging = [g for g in global6 if (g.get("provenance") or {}).get("stage") == "staging"]
+need(len(global6_validated) == 7 and all(g.get("id") in runtime_grade_ids for g in global6_validated), "wave6 validated grades are not fully published")
+need(len(global6_staging) == 23 and all(g.get("id") not in runtime_grade_ids for g in global6_staging), "wave6 staging identities leaked into runtime")
+need({(g.get("polymer") or {}).get("family") for g in global6_validated} == {"ABS", "ASA", "SAN", "GPPS", "HIPS"}, "wave6 validated family coverage drift")
+
+global_wave7 = load_json(STAGING / "global-material-expansion-20260929-v7.json")
+need((global_wave7.get("summary") or {}).get("validatedGrades") == 9, "global material expansion wave7 validated-grade count drift")
+global7 = [g for m in global_wave7.get("manufacturers") or [] for g in m.get("gradeRecords") or []]
+need(len(global7) == 9 and all(g.get("id") in runtime_grade_ids for g in global7), "wave7 Asia-Pacific grades are not fully published")
+need({(g.get("polymer") or {}).get("family") for g in global7} == {"PP", "PA9T", "PA6", "PBT"}, "wave7 validated family coverage drift")
+need(all((obs.get("productionRecipe") is False) for g in global7 for obs in g.get("processing") or []), "wave7 supplier guidance became a production recipe")
+
+global_wave8 = load_json(STAGING / "global-material-expansion-20260929-v8.json")
+need((global_wave8.get("summary") or {}).get("validatedGrades") == 4, "global material expansion wave8 validated-grade count drift")
+global8 = [g for m in global_wave8.get("manufacturers") or [] for g in m.get("gradeRecords") or []]
+need(len(global8) == 4 and all(g.get("id") in runtime_grade_ids for g in global8), "wave8 LCP grades are not fully published")
+need({(g.get("polymer") or {}).get("family") for g in global8} == {"LCP"}, "wave8 validated family coverage drift")
+need(all(obs.get("comparisonReady") is False for g in global8 for obs in g.get("properties") or [] if obs.get("property") == "Mould Shrinkage"), "LCP shrinkage must remain context-only until specimen/conditioning semantics are fully resolved")
+
+global_wave9 = load_json(STAGING / "global-material-expansion-20260929-v9.json")
+need((global_wave9.get("summary") or {}).get("validatedGrades") == 7, "global material expansion wave9 validated-grade count drift")
+need((global_wave9.get("summary") or {}).get("sourceReviewedStagingGrades") == 3, "global material expansion wave9 staging count drift")
+global9 = [g for m in global_wave9.get("manufacturers") or [] for g in m.get("gradeRecords") or []]
+global9_validated = [g for g in global9 if (g.get("provenance") or {}).get("stage") in {"validated", "published"}]
+global9_staging = [g for g in global9 if (g.get("provenance") or {}).get("stage") == "staging"]
+need(len(global9_validated) == 7 and all(g.get("id") in runtime_grade_ids for g in global9_validated), "wave9 validated grades are not fully published")
+need(len(global9_staging) == 3 and all(g.get("id") not in runtime_grade_ids for g in global9_staging), "wave9 staging identities leaked into runtime")
+need({(g.get("polymer") or {}).get("family") for g in global9_validated} == {"PP", "HDPE"}, "wave9 validated family coverage drift")
+
+global_wave10 = load_json(STAGING / "global-material-expansion-20260929-v10.json")
+need((global_wave10.get("summary") or {}).get("validatedGrades") == 10, "global material expansion wave10 validated-grade count drift")
+need((global_wave10.get("summary") or {}).get("sourceReviewedStagingGrades") == 1, "global material expansion wave10 staging count drift")
+global10 = [g for m in global_wave10.get("manufacturers") or [] for g in m.get("gradeRecords") or []]
+global10_validated = [g for g in global10 if (g.get("provenance") or {}).get("stage") in {"validated", "published"}]
+global10_staging = [g for g in global10 if (g.get("provenance") or {}).get("stage") == "staging"]
+need(len(global10_validated) == 10 and all(g.get("id") in runtime_grade_ids for g in global10_validated), "wave10 LSR/TPV grades are not fully published")
+need(len(global10_staging) == 1 and all(g.get("id") not in runtime_grade_ids for g in global10_staging), "wave10 TPV staging identity leaked into runtime")
+need({(g.get("polymer") or {}).get("family") for g in global10_validated} == {"LSR", "TPV"}, "wave10 validated family coverage drift")
+need(all((obs.get("productionRecipe") is False) for g in global10_validated for obs in g.get("processing") or []), "LSR supplier guidance became a production recipe")
+
+global_wave11 = load_json(STAGING / "global-material-expansion-20260929-v11.json")
+need((global_wave11.get("summary") or {}).get("validatedGrades") == 31, "Singapore TAFMER wave validated-grade count drift")
+need((global_wave11.get("summary") or {}).get("countryFocus") == "Singapore", "Singapore TAFMER wave country focus drift")
+global11 = [g for m in global_wave11.get("manufacturers") or [] for g in m.get("gradeRecords") or []]
+need(len(global11) == 31 and all(g.get("id") in runtime_grade_ids for g in global11), "Singapore TAFMER grades are not fully published")
+need({(g.get("polymer") or {}).get("family") for g in global11} == {"AOC elastomer"}, "Singapore TAFMER family coverage drift")
+need(all(obs.get("comparisonReady") is False for g in global11 for obs in g.get("properties") or [] if obs.get("property") == "Melt Flow Rate"), "Singapore TAFMER MFR must remain context-only while test load is absent")
+
+singapore_evidence = load_json(ROOT / "data/materials/singapore-material-evidence-20260929-v1.json")
+need(singapore_evidence.get("country") == "Singapore", "Singapore regional material evidence country drift")
+need({x.get("organization") for x in singapore_evidence.get("facilities") or []} == {"Arkema", "Mitsui Elastomers Singapore", "ExxonMobil"}, "Singapore facility evidence set drift")
+need((singapore_evidence.get("governance") or {}).get("regionalEvidenceDoesNotImplyExactGradeOrigin") is True, "Singapore evidence must not imply exact-grade plant origin")
+
+global_wave12 = load_json(STAGING / "global-material-expansion-20260929-v12.json")
+need((global_wave12.get("summary") or {}).get("validatedGrades") == 8, "Singapore-linked ExxonMobil PP wave validated-grade count drift")
+global12 = [g for m in global_wave12.get("manufacturers") or [] for g in m.get("gradeRecords") or []]
+need(len(global12) == 8 and all(g.get("id") in runtime_grade_ids for g in global12), "Singapore-linked ExxonMobil PP grades are not fully published")
+need(all(any("Singapore" in str(s.get("title", "")) for s in g.get("sources") or []) for g in global12), "ExxonMobil PP records lost Singapore family-level provenance")
+need(all("does not claim Singapore plant-of-origin" in str((g.get("provenance") or {}).get("notes", "")) for g in global12), "ExxonMobil exact-grade Singapore origin boundary missing")
+
+global_wave13 = load_json(STAGING / "global-material-expansion-20260929-v13.json")
+need((global_wave13.get("summary") or {}).get("validatedGrades") == 5, "Singapore high-heat wave validated-grade count drift")
+global13 = [g for m in global_wave13.get("manufacturers") or [] for g in m.get("gradeRecords") or []]
+need(len(global13) == 5 and all(g.get("id") in runtime_grade_ids for g in global13), "Singapore-linked PEI/TPI grades are not fully published")
+need({(g.get("polymer") or {}).get("family") for g in global13} == {"PEI", "TPI"}, "Singapore high-heat family coverage drift")
+need(all(obs.get("comparisonReady") is False for g in global13 for obs in g.get("properties") or [] if obs.get("property") == "Glass Transition Temperature"), "PEI/TPI Tg must remain context-only without formal test methods")
+
+global_wave14 = load_json(STAGING / "global-material-expansion-20260929-v14.json")
+need((global_wave14.get("summary") or {}).get("validatedGrades") == 7, "Singapore-linked Vistamaxx wave validated-grade count drift")
+global14 = [g for m in global_wave14.get("manufacturers") or [] for g in m.get("gradeRecords") or []]
+need(len(global14) == 7 and all(g.get("id") in runtime_grade_ids for g in global14), "Singapore-linked Vistamaxx grades are not fully published")
+need({(g.get("polymer") or {}).get("family") for g in global14} == {"performance polyolefin elastomer"}, "Vistamaxx family coverage drift")
+need(all(any("Singapore" in str(s.get("title", "")) for s in g.get("sources") or []) for g in global14), "Vistamaxx records lost Singapore family-level supply provenance")
+need(all(any(obs.get("property") == "Melt Flow Rate" and obs.get("temperatureC") == 230 and obs.get("loadKg") == 2.16 and obs.get("comparisonReady") is True for obs in g.get("properties") or []) for g in global14), "Vistamaxx conditioned MFR comparison contract drift")
+
+
+# Korea expansion wave: current LOTTE Chemical PP injection identities are
+# source-reviewed staging only. The manufacturer index exposes exact grades,
+# injection category and listed MI, but not the full MI temperature/load
+# conditions needed for comparison-ready promotion.
+global_wave15 = load_json(STAGING / "global-material-expansion-20260929-v15.json")
+need((global_wave15.get("summary") or {}).get("validatedGrades") == 0, "Korea wave must not promote under-conditioned LOTTE PP data")
+need((global_wave15.get("summary") or {}).get("sourceReviewedStagingGrades") == 24, "Korea LOTTE PP staging count drift")
+need((global_wave15.get("summary") or {}).get("countryFocus") == "South Korea", "Korea wave country focus drift")
+global15 = [g for m in global_wave15.get("manufacturers") or [] for g in m.get("gradeRecords") or []]
+need(len(global15) == 24, "Korea LOTTE PP exact-grade staging set drift")
+need(all((g.get("provenance") or {}).get("stage") == "staging" for g in global15), "Korea LOTTE PP identities must remain staging")
+need(all(g.get("id") not in runtime_grade_ids for g in global15), "Korea LOTTE PP staging identities leaked into runtime")
+need({(g.get("polymer") or {}).get("family") for g in global15} == {"PP"}, "Korea LOTTE staging family drift")
+need(all((g.get("manufacturer") or {}).get("country") == "South Korea" for g in global15), "Korea LOTTE staging lost country identity")
+need(all(obs.get("comparisonReady") is False for g in global15 for obs in g.get("properties") or []), "Under-conditioned LOTTE PP MI must remain context-only")
+need((global_wave15.get("governance") or {}).get("runtimePromotionBlocked") is True, "Korea LOTTE PP promotion boundary drift")
+
+
+# Korea KOLON continuation: expand current exact-grade POM identities while
+# retaining the original four-grade pilot boundary and blocking numeric
+# promotion until grade-level conditioning is resolved.
+global_wave16 = load_json(STAGING / "global-material-expansion-20260929-v16.json")
+need((global_wave16.get("summary") or {}).get("validatedGrades") == 0, "Korea KOLON wave must remain staging")
+need((global_wave16.get("summary") or {}).get("sourceReviewedStagingGrades") == 16, "Korea KOLON staging count drift")
+need((global_wave16.get("summary") or {}).get("countryFocus") == "South Korea", "Korea KOLON wave country focus drift")
+global16 = [g for m in global_wave16.get("manufacturers") or [] for g in m.get("gradeRecords") or []]
+need(len(global16) == 16, "Korea KOLON exact-grade expansion set drift")
+need(all((g.get("provenance") or {}).get("stage") == "staging" for g in global16), "Korea KOLON expansion must remain staging")
+need(all(g.get("id") not in runtime_grade_ids for g in global16), "Korea KOLON staging identities leaked into runtime")
+need({(g.get("polymer") or {}).get("family") for g in global16} == {"POM"}, "Korea KOLON staging family drift")
+need(all((g.get("manufacturer") or {}).get("country") == "South Korea" for g in global16), "Korea KOLON staging lost country identity")
+need(all(len(g.get("properties") or []) == 0 for g in global16), "Korea KOLON wave must not invent unresolved numeric properties")
+need((global_wave16.get("governance") or {}).get("runtimePromotionBlocked") is True, "Korea KOLON promotion boundary drift")
+need(set((global_wave16.get("governance") or {}).get("duplicatePilotGradesExcluded") or []) == {"K300", "K700", "K100HS", "GF702"}, "Korea KOLON duplicate-pilot exclusion drift")
+
+
+# Korea SK chemicals continuation: current SKYGREEN injection-grade identities
+# are source-reviewed only until exact-grade numeric TDS conditions are captured.
+global_wave17 = load_json(STAGING / "global-material-expansion-20260929-v17.json")
+need((global_wave17.get("summary") or {}).get("validatedGrades") == 0, "Korea SKYGREEN wave must remain staging")
+need((global_wave17.get("summary") or {}).get("sourceReviewedStagingGrades") == 9, "Korea SKYGREEN staging count drift")
+need((global_wave17.get("summary") or {}).get("countryFocus") == "South Korea", "Korea SKYGREEN country focus drift")
+global17 = [g for m in global_wave17.get("manufacturers") or [] for g in m.get("gradeRecords") or []]
+need(len(global17) == 9, "Korea SKYGREEN exact-grade staging set drift")
+need(all((g.get("provenance") or {}).get("stage") == "staging" for g in global17), "Korea SKYGREEN identities must remain staging")
+need(all(g.get("id") not in runtime_grade_ids for g in global17), "Korea SKYGREEN staging identities leaked into runtime")
+need({(g.get("polymer") or {}).get("family") for g in global17} == {"copolyester"}, "Korea SKYGREEN family drift")
+need(all((g.get("manufacturer") or {}).get("country") == "South Korea" for g in global17), "Korea SKYGREEN staging lost country identity")
+need(all(len(g.get("properties") or []) == 0 and len(g.get("processing") or []) == 0 for g in global17), "Korea SKYGREEN staging must not invent numeric engineering data")
+need((global_wave17.get("governance") or {}).get("runtimePromotionBlocked") is True, "Korea SKYGREEN promotion boundary drift")
+
+
+# Samyang Korea promotion: these four exact grades retain fully conditioned
+# ASTM D1238 MFR plus manufacturer exact-grade processing guidance. Direction-
+# unresolved ASTM D955 shrinkage remains context-only.
+samyang_pilot = load_json(STAGING / "samyang-exact-grade-pilot-v1.json")
+need(samyang_pilot.get("status") == "validated-pilot", "Samyang exact-grade dataset status drift")
+samyang_grades = [g for m in samyang_pilot.get("manufacturers") or [] for g in m.get("gradeRecords") or []]
+need({g.get("grade") for g in samyang_grades} == {"VB3025G10", "3025U", "210", "410"}, "Samyang exact-grade pilot set drift")
+need(len(samyang_grades) == 4 and all(g.get("id") in runtime_grade_ids for g in samyang_grades), "Samyang validated grades are not fully published")
+need(all((g.get("provenance") or {}).get("stage") == "validated" for g in samyang_grades), "Samyang pilot contains non-validated grade")
+need(all((g.get("manufacturer") or {}).get("country") == "South Korea" for g in samyang_grades), "Samyang Korea provenance drift")
+need(all(any(obs.get("property") == "Melt Flow Rate" and obs.get("temperatureC") is not None and obs.get("loadKg") is not None and obs.get("comparisonReady") is True for obs in g.get("properties") or []) for g in samyang_grades), "Samyang conditioned MFR contract drift")
+need(all(obs.get("comparisonReady") is False for g in samyang_grades for obs in g.get("properties") or [] if obs.get("property") == "Mould Shrinkage"), "Samyang unresolved-direction shrinkage must remain context-only")
+need(all(obs.get("productionRecipe") is False for g in samyang_grades for obs in g.get("processing") or []), "Samyang supplier guidance became a production recipe")
+
+
+# Korea Samyang wave 18: four further TRIREX PC grades carry explicit
+# ASTM D1238 300C/1.2 kg MFR conditioning and exact-grade processing guidance.
+global_wave18 = load_json(STAGING / "global-material-expansion-20260929-v18.json")
+need((global_wave18.get("summary") or {}).get("validatedGrades") == 4, "Korea Samyang wave18 validated-grade count drift")
+need((global_wave18.get("summary") or {}).get("countryFocus") == "South Korea", "Korea Samyang wave18 country focus drift")
+global18 = [g for m in global_wave18.get("manufacturers") or [] for g in m.get("gradeRecords") or []]
+need({g.get("grade") for g in global18} == {"FB3025G10", "SO1-3025LD", "HV3022G30", "M3020PN"}, "Korea Samyang wave18 exact-grade set drift")
+need(len(global18) == 4 and all(g.get("id") in runtime_grade_ids for g in global18), "Korea Samyang wave18 grades are not fully published")
+need(all((g.get("provenance") or {}).get("stage") == "validated" for g in global18), "Korea Samyang wave18 contains non-validated grade")
+need(all(any(obs.get("property") == "Melt Flow Rate" and obs.get("temperatureC") == 300 and obs.get("loadKg") == 1.2 and obs.get("comparisonReady") is True for obs in g.get("properties") or []) for g in global18), "Korea Samyang wave18 conditioned MFR contract drift")
+need(all(obs.get("comparisonReady") is False for g in global18 for obs in g.get("properties") or [] if obs.get("property") == "Mould Shrinkage"), "Korea Samyang wave18 unresolved-direction shrinkage must remain context-only")
+need(all(obs.get("productionRecipe") is False for g in global18 for obs in g.get("processing") or []), "Korea Samyang wave18 supplier guidance became a production recipe")
+
+
+# Korea Hyosung continuation: current POKETONE and PP identities are staged
+# conservatively. POKETONE portfolio MI remains context-only until full test
+# temperature/load conditions are captured; HJ541CP has no promoted numeric data.
+global_wave19 = load_json(STAGING / "global-material-expansion-20260929-v19.json")
+need((global_wave19.get("summary") or {}).get("validatedGrades") == 0, "Korea Hyosung wave must remain staging")
+need((global_wave19.get("summary") or {}).get("sourceReviewedStagingGrades") == 9, "Korea Hyosung staging count drift")
+need((global_wave19.get("summary") or {}).get("countryFocus") == "South Korea", "Korea Hyosung country focus drift")
+global19 = [g for m in global_wave19.get("manufacturers") or [] for g in m.get("gradeRecords") or []]
+need(len(global19) == 9, "Korea Hyosung exact-grade staging set drift")
+need(all((g.get("provenance") or {}).get("stage") == "staging" for g in global19), "Korea Hyosung identities must remain staging")
+need(all(g.get("id") not in runtime_grade_ids for g in global19), "Korea Hyosung staging identities leaked into runtime")
+need({(g.get("polymer") or {}).get("family") for g in global19} == {"polyketone", "PP"}, "Korea Hyosung family drift")
+need(all((g.get("manufacturer") or {}).get("country") == "South Korea" for g in global19), "Korea Hyosung staging lost country identity")
+need(all(obs.get("comparisonReady") is False for g in global19 for obs in g.get("properties") or []), "Under-conditioned Hyosung numeric data must remain context-only")
+need((global_wave19.get("governance") or {}).get("runtimePromotionBlocked") is True, "Korea Hyosung promotion boundary drift")
+
+
+# Korea Hanwha continuation: BI800 is current manufacturer-controlled exact
+# PP injection-moulding evidence, but its surfaced ASTM D1238 value lacks the
+# temperature/load pair required for conditioned rheology comparison.
+global_wave20 = load_json(STAGING / "global-material-expansion-20260929-v20.json")
+need((global_wave20.get("summary") or {}).get("validatedGrades") == 0, "Korea Hanwha wave must remain staging")
+need((global_wave20.get("summary") or {}).get("sourceReviewedStagingGrades") == 1, "Korea Hanwha staging count drift")
+need((global_wave20.get("summary") or {}).get("countryFocus") == "South Korea", "Korea Hanwha country focus drift")
+global20 = [g for m in global_wave20.get("manufacturers") or [] for g in m.get("gradeRecords") or []]
+need(len(global20) == 1 and global20[0].get("grade") == "BI800", "Korea Hanwha exact-grade set drift")
+need(all((g.get("provenance") or {}).get("stage") == "staging" for g in global20), "Korea Hanwha identity must remain staging")
+need(all(g.get("id") not in runtime_grade_ids for g in global20), "Korea Hanwha staging identity leaked into runtime")
+need(all(obs.get("comparisonReady") is False for g in global20 for obs in g.get("properties") or []), "Under-conditioned Hanwha values must remain context-only")
+need((global_wave20.get("governance") or {}).get("runtimePromotionBlocked") is True, "Korea Hanwha promotion boundary drift")
+
+
+# Korea Hyosung wave21: three PP exact grades have exact-grade TDS evidence with
+# fully conditioned ASTM D1238 230C/2.16 kg MI and supplier drying guidance.
+global_wave21 = load_json(STAGING / "global-material-expansion-20260929-v21.json")
+need((global_wave21.get("summary") or {}).get("validatedGrades") == 3, "Korea Hyosung wave21 validated-grade count drift")
+need((global_wave21.get("summary") or {}).get("countryFocus") == "South Korea", "Korea Hyosung wave21 country focus drift")
+global21 = [g for m in global_wave21.get("manufacturers") or [] for g in m.get("gradeRecords") or []]
+need({g.get("grade") for g in global21} == {"HJ801RL", "HJ801R", "PB840-BA"}, "Korea Hyosung wave21 exact-grade set drift")
+need(len(global21) == 3 and all(g.get("id") in runtime_grade_ids for g in global21), "Korea Hyosung wave21 grades are not fully published")
+need(all((g.get("provenance") or {}).get("stage") == "validated" for g in global21), "Korea Hyosung wave21 contains non-validated grade")
+need(all(any(obs.get("property") == "Melt Index" and obs.get("temperatureC") == 230 and obs.get("loadKg") == 2.16 and obs.get("comparisonReady") is True for obs in g.get("properties") or []) for g in global21), "Korea Hyosung wave21 conditioned MI contract drift")
+need(all(obs.get("productionRecipe") is False for g in global21 for obs in g.get("processing") or []), "Korea Hyosung wave21 supplier guidance became a production recipe")
+
+
+# Korea Samyang wave22: four more exact TRIREX grades retain fully conditioned
+# ASTM D1238 rheology; unresolved D955 shrinkage direction remains context-only.
+global_wave22 = load_json(STAGING / "global-material-expansion-20260929-v22.json")
+need((global_wave22.get("summary") or {}).get("validatedGrades") == 4, "Korea Samyang wave22 validated-grade count drift")
+need((global_wave22.get("summary") or {}).get("countryFocus") == "South Korea", "Korea Samyang wave22 country focus drift")
+global22 = [g for m in global_wave22.get("manufacturers") or [] for g in m.get("gradeRecords") or []]
+need({g.get("grade") for g in global22} == {"3020U", "3025G10", "SC4-3022PN1", "3025G20"}, "Korea Samyang wave22 exact-grade set drift")
+need(len(global22) == 4 and all(g.get("id") in runtime_grade_ids for g in global22), "Korea Samyang wave22 grades are not fully published")
+need(all((g.get("provenance") or {}).get("stage") == "validated" for g in global22), "Korea Samyang wave22 contains non-validated grade")
+need(all(any(obs.get("property") == "Melt Flow Rate" and obs.get("temperatureC") is not None and obs.get("loadKg") is not None and obs.get("comparisonReady") is True for obs in g.get("properties") or []) for g in global22), "Korea Samyang wave22 conditioned MFR contract drift")
+need(all(obs.get("comparisonReady") is False for g in global22 for obs in g.get("properties") or [] if obs.get("property") == "Mould Shrinkage"), "Korea Samyang wave22 unresolved-direction shrinkage must remain context-only")
+need(all(obs.get("productionRecipe") is False for g in global22 for obs in g.get("processing") or []), "Korea Samyang wave22 supplier guidance became a production recipe")
 
 # Pilot proof: current primary-source LOTTE records remain unchanged while the
 # umbrella manifest records progress without copying exact-grade claims.
