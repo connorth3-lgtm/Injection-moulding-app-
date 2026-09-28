@@ -57,6 +57,14 @@ for(const viewport of [{name:'mobile',width:412},{name:'tablet',width:768},{name
     const visibleReferenceLaunchers=await page.locator('#mm-src-open:visible,#mmrd-open:visible').count();expect(visibleReferenceLaunchers).toBe(1);
    }
   });
+  test('reference launcher state follows tablet-to-desktop resize without duplicates',async({page})=>{
+   await openApp(page,768);
+   await expect(page.locator('#mm-src-open')).toBeHidden();await expect(page.locator('#mmrd-open')).toBeHidden();
+   await page.setViewportSize({width:1024,height:900});
+   await expect(page.locator('#mmrd-open')).toBeVisible();await expect(page.locator('#mm-src-open')).toBeHidden();
+   await page.setViewportSize({width:768,height:900});
+   await expect(page.locator('#mm-src-open')).toBeHidden();await expect(page.locator('#mmrd-open')).toBeHidden();
+  });
   test('shell-registered tools are discoverable through their intended visible surface',async({page})=>{
    await openApp(page,viewport.width);
    if(viewport.width<=900){
