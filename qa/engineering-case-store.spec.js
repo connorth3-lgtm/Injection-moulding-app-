@@ -138,5 +138,29 @@ test('Mould Master uses one owner-scoped IndexedDB store with one-time legacy im
   await expect(page.locator('[data-mw-engineering-context]')).toContainText('Pump housing');
   await expect(page.locator('[data-mw-engineering-context]')).toContainText('Exact-grade evidence');
 
+  await page.waitForFunction(()=>window.MM_CONNECTED_PROCESS_DATA?.cases?.similarCases);
+  const relatedCase=await page.evaluate(()=>window.MM_MOULD_MASTER_WORKSPACE.newCase({
+    title:'Repeat pump housing investigation',
+    defect:'Short shot',
+    materialGradeId:'mat-lotte-infino-nh-1033',
+    material:'LOTTE Chemical · INFINO · NH-1033',
+    machineId:'IMM-07',
+    machine:'Press 07',
+    mouldId:'MOULD-184',
+    mould:'Tool 184 · cavity 3',
+    productId:'PROD-PUMP-01',
+    product:'Pump housing assembly',
+    partId:'PART-184-03',
+    part:'Pump housing'
+  }));
+  const similar=await page.evaluate(id=>window.MM_CONNECTED_PROCESS_DATA.cases.similarCases(id),relatedCase);
+  const prior=similar.find(x=>x.caseId===materialCase);
+  expect(prior).toBeTruthy();
+  expect(prior.score).toBeGreaterThanOrEqual(20);
+  expect(prior.context.machineId).toBe('IMM-07');
+  expect(prior.context.mouldId).toBe('MOULD-184');
+  expect(prior.context.productId).toBe('PROD-PUMP-01');
+  expect(prior.context.partId).toBe('PART-184-03');
+
   expect(await page.evaluate(key=>localStorage.getItem(key),migratedLegacyKey)).toBe(legacyRaw);
 });
