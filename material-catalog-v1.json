@@ -1003,6 +1003,485 @@
     },
     {
       "schemaVersion": 1,
+      "id": "mat-celanese-santoprene-121-60m200",
+      "manufacturer": {
+        "id": "mfr-celanese",
+        "name": "Celanese",
+        "country": "United States",
+        "website": "https://www.celanese.com/"
+      },
+      "brand": "Santoprene®",
+      "grade": "121-60M200",
+      "aliases": [],
+      "polymer": {
+        "family": "TPV",
+        "morphology": "elastomeric"
+      },
+      "composition": {
+        "notes": "Santoprene exact TPV grade; current Celanese gradeslate identifies bonding/use compatibility with PP."
+      },
+      "properties": [
+        {
+          "id": "obs-celanese-santoprene-121-60m200-density",
+          "property": "Density",
+          "value": 0.95,
+          "unit": "g/cc",
+          "testMethod": "ISO 1183-A",
+          "direction": "not-applicable",
+          "sourceId": "src-celanese-santoprene-121-60m200-identity-2026",
+          "sourcePage": "5G solution showcase gradeslate",
+          "comparisonReady": false,
+          "limitations": "Celanese typical exact-grade value."
+        },
+        {
+          "id": "obs-celanese-santoprene-121-60m200-hardness",
+          "property": "Shore Hardness",
+          "value": 61,
+          "unit": "Shore A",
+          "testMethod": null,
+          "temperatureC": 23,
+          "conditioning": "15 sec",
+          "direction": "not-applicable",
+          "sourceId": "src-celanese-santoprene-121-60m200-identity-2026",
+          "sourcePage": "5G solution showcase gradeslate",
+          "comparisonReady": false,
+          "limitations": "Celanese typical exact-grade hardness; reviewed table labels Shore A at 15 sec and 23°C but does not fully resolve the formal test-method identifier."
+        },
+        {
+          "id": "obs-celanese-santoprene-121-60m200-tensile",
+          "property": "Tensile Strength at Break",
+          "value": 4.1,
+          "unit": "MPa",
+          "testMethod": "ISO 37-1",
+          "temperatureC": 23,
+          "direction": "not-applicable",
+          "sourceId": "src-celanese-santoprene-121-60m200-identity-2026",
+          "sourcePage": "5G solution showcase gradeslate",
+          "comparisonReady": false,
+          "limitations": "Celanese typical exact-grade value; specimen details are not fully normalized for direct cross-grade comparison."
+        },
+        {
+          "id": "obs-celanese-santoprene-121-60m200-elongation",
+          "property": "Elongation at Break",
+          "value": 380,
+          "unit": "%",
+          "testMethod": "ISO 37-1",
+          "temperatureC": 23,
+          "direction": "not-applicable",
+          "sourceId": "src-celanese-santoprene-121-60m200-identity-2026",
+          "sourcePage": "5G solution showcase gradeslate",
+          "comparisonReady": false,
+          "limitations": "Celanese typical exact-grade value; specimen details are not fully normalized for direct cross-grade comparison."
+        },
+        {
+          "id": "obs-celanese-santoprene-121-60m200-compression",
+          "property": "Compression Set",
+          "value": 28,
+          "unit": "%",
+          "testMethod": "ASTM D395B",
+          "direction": "not-applicable",
+          "sourceId": "src-celanese-santoprene-121-60m200-identity-2026",
+          "sourcePage": "5G solution showcase gradeslate",
+          "comparisonReady": false,
+          "limitations": "Celanese typical exact-grade value; the reviewed surface does not fully normalize all compression-set condition variants."
+        }
+      ],
+      "processing": [],
+      "approvals": [],
+      "lifecycle": {
+        "status": "unknown",
+        "checkedAt": "2026-09-29"
+      },
+      "sources": [
+        {
+          "id": "src-celanese-santoprene-121-60m200-identity-2026",
+          "publisher": "Celanese",
+          "title": "Santoprene® 121-60M200 current manufacturer grade reference",
+          "url": "https://explore.celanese.com/rs/139-DBZ-834/images/TPV%20-%205G%20Connectivity%20Santoprene%20Applications%20-%20Solution%20Showcase.pdf",
+          "kind": "manufacturer-datasheet",
+          "revision": null,
+          "documentDate": null,
+          "retrievedAt": "2026-09-29"
+        }
+      ],
+      "provenance": {
+        "stage": "validated",
+        "ingestedAt": "2026-09-29T00:00:00Z",
+        "reviewedAt": "2026-09-29T00:00:00Z",
+        "reviewer": "primary-source-web-review",
+        "notes": "Current Celanese manufacturer solution showcase provides exact-grade physical/mechanical data and bonding context. Values remain context-only unless complete comparison semantics are explicitly resolved."
+      }
+    },
+    {
+      "schemaVersion": 1,
+      "id": "mat-celanese-santoprene-121-70m350",
+      "manufacturer": {
+        "id": "mfr-celanese",
+        "name": "Celanese",
+        "country": "United States",
+        "website": "https://www.celanese.com/"
+      },
+      "brand": "Santoprene®",
+      "grade": "121-70M350",
+      "aliases": [],
+      "polymer": {
+        "family": "TPV",
+        "morphology": "elastomeric"
+      },
+      "composition": {
+        "notes": "Santoprene TPV 121-70M350 exact interior-molding grade; current Celanese automotive grade slate describes improved scratch/mar resistance."
+      },
+      "properties": [
+        {
+          "id": "obs-celanese-santoprene-121-70m350-hardness",
+          "property": "Shore Hardness",
+          "value": 70,
+          "unit": "Shore A",
+          "testMethod": null,
+          "temperatureC": 23,
+          "direction": "not-applicable",
+          "sourceId": "src-celanese-santoprene-121-70m350-identity-2026",
+          "sourcePage": "automotive grade slate",
+          "comparisonReady": false,
+          "limitations": "Current Celanese grade slate identifies this exact 70A grade but does not expose the full hardness test method in the reviewed surface."
+        }
+      ],
+      "processing": [],
+      "approvals": [],
+      "lifecycle": {
+        "status": "unknown",
+        "checkedAt": "2026-09-29"
+      },
+      "sources": [
+        {
+          "id": "src-celanese-santoprene-121-70m350-identity-2026",
+          "publisher": "Celanese",
+          "title": "Santoprene® 121-70M350 current manufacturer grade reference",
+          "url": "https://www.celanese.com/-/media/Engineered-Materials/Files/Santoprene/21_CELA_7047-Santoprene-automotive-grade-slate_v1.pdf",
+          "kind": "manufacturer-datasheet",
+          "revision": null,
+          "documentDate": null,
+          "retrievedAt": "2026-09-29"
+        }
+      ],
+      "provenance": {
+        "stage": "validated",
+        "ingestedAt": "2026-09-29T00:00:00Z",
+        "reviewedAt": "2026-09-29T00:00:00Z",
+        "reviewer": "primary-source-web-review",
+        "notes": "Current Celanese automotive grade slate confirms exact grade identity, 70A hardness and molding use. Hardness remains context-only because the full test-method semantics are not exposed on this surface."
+      }
+    },
+    {
+      "schemaVersion": 1,
+      "id": "mat-celanese-santoprene-291-75b150",
+      "manufacturer": {
+        "id": "mfr-celanese",
+        "name": "Celanese",
+        "country": "United States",
+        "website": "https://www.celanese.com/"
+      },
+      "brand": "Santoprene®",
+      "grade": "291-75B150",
+      "aliases": [],
+      "polymer": {
+        "family": "TPV",
+        "morphology": "elastomeric"
+      },
+      "composition": {
+        "notes": "Santoprene exact TPV grade; current Celanese gradeslate identifies bonding/use compatibility with PC, ABS, PC/ABS, ASA, PMMA and other engineering thermoplastics."
+      },
+      "properties": [
+        {
+          "id": "obs-celanese-santoprene-291-75b150-density",
+          "property": "Density",
+          "value": 1.09,
+          "unit": "g/cc",
+          "testMethod": "ISO 1183-A",
+          "direction": "not-applicable",
+          "sourceId": "src-celanese-santoprene-291-75b150-identity-2026",
+          "sourcePage": "5G solution showcase gradeslate",
+          "comparisonReady": false,
+          "limitations": "Celanese typical exact-grade value."
+        },
+        {
+          "id": "obs-celanese-santoprene-291-75b150-hardness",
+          "property": "Shore Hardness",
+          "value": 78,
+          "unit": "Shore A",
+          "testMethod": null,
+          "temperatureC": 23,
+          "conditioning": "15 sec",
+          "direction": "not-applicable",
+          "sourceId": "src-celanese-santoprene-291-75b150-identity-2026",
+          "sourcePage": "5G solution showcase gradeslate",
+          "comparisonReady": false,
+          "limitations": "Celanese typical exact-grade hardness; reviewed table labels Shore A at 15 sec and 23°C but does not fully resolve the formal test-method identifier."
+        },
+        {
+          "id": "obs-celanese-santoprene-291-75b150-tensile",
+          "property": "Tensile Strength at Break",
+          "value": 12.1,
+          "unit": "MPa",
+          "testMethod": "ISO 37-1",
+          "temperatureC": 23,
+          "direction": "not-applicable",
+          "sourceId": "src-celanese-santoprene-291-75b150-identity-2026",
+          "sourcePage": "5G solution showcase gradeslate",
+          "comparisonReady": false,
+          "limitations": "Celanese typical exact-grade value; specimen details are not fully normalized for direct cross-grade comparison."
+        },
+        {
+          "id": "obs-celanese-santoprene-291-75b150-elongation",
+          "property": "Elongation at Break",
+          "value": 634,
+          "unit": "%",
+          "testMethod": "ISO 37-1",
+          "temperatureC": 23,
+          "direction": "not-applicable",
+          "sourceId": "src-celanese-santoprene-291-75b150-identity-2026",
+          "sourcePage": "5G solution showcase gradeslate",
+          "comparisonReady": false,
+          "limitations": "Celanese typical exact-grade value; specimen details are not fully normalized for direct cross-grade comparison."
+        },
+        {
+          "id": "obs-celanese-santoprene-291-75b150-compression",
+          "property": "Compression Set",
+          "value": 68,
+          "unit": "%",
+          "testMethod": "ASTM D395B",
+          "direction": "not-applicable",
+          "sourceId": "src-celanese-santoprene-291-75b150-identity-2026",
+          "sourcePage": "5G solution showcase gradeslate",
+          "comparisonReady": false,
+          "limitations": "Celanese typical exact-grade value; the reviewed surface does not fully normalize all compression-set condition variants."
+        }
+      ],
+      "processing": [],
+      "approvals": [],
+      "lifecycle": {
+        "status": "unknown",
+        "checkedAt": "2026-09-29"
+      },
+      "sources": [
+        {
+          "id": "src-celanese-santoprene-291-75b150-identity-2026",
+          "publisher": "Celanese",
+          "title": "Santoprene® 291-75B150 current manufacturer grade reference",
+          "url": "https://explore.celanese.com/rs/139-DBZ-834/images/TPV%20-%205G%20Connectivity%20Santoprene%20Applications%20-%20Solution%20Showcase.pdf",
+          "kind": "manufacturer-datasheet",
+          "revision": null,
+          "documentDate": null,
+          "retrievedAt": "2026-09-29"
+        }
+      ],
+      "provenance": {
+        "stage": "validated",
+        "ingestedAt": "2026-09-29T00:00:00Z",
+        "reviewedAt": "2026-09-29T00:00:00Z",
+        "reviewer": "primary-source-web-review",
+        "notes": "Current Celanese manufacturer solution showcase provides exact-grade physical/mechanical data and bonding context. Values remain context-only unless complete comparison semantics are explicitly resolved."
+      }
+    },
+    {
+      "schemaVersion": 1,
+      "id": "mat-celanese-santoprene-8211-55b100",
+      "manufacturer": {
+        "id": "mfr-celanese",
+        "name": "Celanese",
+        "country": "United States",
+        "website": "https://www.celanese.com/"
+      },
+      "brand": "Santoprene®",
+      "grade": "8211-55B100",
+      "aliases": [],
+      "polymer": {
+        "family": "TPV",
+        "morphology": "elastomeric"
+      },
+      "composition": {
+        "notes": "Santoprene exact TPV grade; current Celanese gradeslate identifies bonding/use compatibility with PP, PC, ABS, PS and other engineering thermoplastics."
+      },
+      "properties": [
+        {
+          "id": "obs-celanese-santoprene-8211-55b100-density",
+          "property": "Density",
+          "value": 1.04,
+          "unit": "g/cc",
+          "testMethod": "ISO 1183-A",
+          "direction": "not-applicable",
+          "sourceId": "src-celanese-santoprene-8211-55b100-identity-2026",
+          "sourcePage": "5G solution showcase gradeslate",
+          "comparisonReady": false,
+          "limitations": "Celanese typical exact-grade value."
+        },
+        {
+          "id": "obs-celanese-santoprene-8211-55b100-hardness",
+          "property": "Shore Hardness",
+          "value": 53,
+          "unit": "Shore A",
+          "testMethod": null,
+          "temperatureC": 23,
+          "conditioning": "15 sec",
+          "direction": "not-applicable",
+          "sourceId": "src-celanese-santoprene-8211-55b100-identity-2026",
+          "sourcePage": "5G solution showcase gradeslate",
+          "comparisonReady": false,
+          "limitations": "Celanese typical exact-grade hardness; reviewed table labels Shore A at 15 sec and 23°C but does not fully resolve the formal test-method identifier."
+        },
+        {
+          "id": "obs-celanese-santoprene-8211-55b100-elongation",
+          "property": "Elongation at Break",
+          "value": 600,
+          "unit": "%",
+          "testMethod": "ISO 37-1",
+          "temperatureC": 23,
+          "direction": "not-applicable",
+          "sourceId": "src-celanese-santoprene-8211-55b100-identity-2026",
+          "sourcePage": "5G solution showcase gradeslate",
+          "comparisonReady": false,
+          "limitations": "Celanese typical exact-grade value; specimen details are not fully normalized for direct cross-grade comparison."
+        }
+      ],
+      "processing": [],
+      "approvals": [],
+      "lifecycle": {
+        "status": "unknown",
+        "checkedAt": "2026-09-29"
+      },
+      "sources": [
+        {
+          "id": "src-celanese-santoprene-8211-55b100-identity-2026",
+          "publisher": "Celanese",
+          "title": "Santoprene® 8211-55B100 current manufacturer grade reference",
+          "url": "https://explore.celanese.com/rs/139-DBZ-834/images/TPV%20-%205G%20Connectivity%20Santoprene%20Applications%20-%20Solution%20Showcase.pdf",
+          "kind": "manufacturer-datasheet",
+          "revision": null,
+          "documentDate": null,
+          "retrievedAt": "2026-09-29"
+        }
+      ],
+      "provenance": {
+        "stage": "validated",
+        "ingestedAt": "2026-09-29T00:00:00Z",
+        "reviewedAt": "2026-09-29T00:00:00Z",
+        "reviewer": "primary-source-web-review",
+        "notes": "Current Celanese manufacturer solution showcase provides exact-grade physical/mechanical data and bonding context. Values remain context-only unless complete comparison semantics are explicitly resolved."
+      }
+    },
+    {
+      "schemaVersion": 1,
+      "id": "mat-celanese-santoprene-8211-75",
+      "manufacturer": {
+        "id": "mfr-celanese",
+        "name": "Celanese",
+        "country": "United States",
+        "website": "https://www.celanese.com/"
+      },
+      "brand": "Santoprene®",
+      "grade": "8211-75",
+      "aliases": [],
+      "polymer": {
+        "family": "TPV",
+        "morphology": "elastomeric"
+      },
+      "composition": {
+        "notes": "Santoprene exact TPV grade; current Celanese gradeslate identifies bonding/use compatibility with PP."
+      },
+      "properties": [
+        {
+          "id": "obs-celanese-santoprene-8211-75-density",
+          "property": "Density",
+          "value": 0.93,
+          "unit": "g/cc",
+          "testMethod": "ISO 1183-A",
+          "direction": "not-applicable",
+          "sourceId": "src-celanese-santoprene-8211-75-identity-2026",
+          "sourcePage": "5G solution showcase gradeslate",
+          "comparisonReady": false,
+          "limitations": "Celanese typical exact-grade value."
+        },
+        {
+          "id": "obs-celanese-santoprene-8211-75-hardness",
+          "property": "Shore Hardness",
+          "value": 80,
+          "unit": "Shore A",
+          "testMethod": null,
+          "temperatureC": 23,
+          "conditioning": "15 sec",
+          "direction": "not-applicable",
+          "sourceId": "src-celanese-santoprene-8211-75-identity-2026",
+          "sourcePage": "5G solution showcase gradeslate",
+          "comparisonReady": false,
+          "limitations": "Celanese typical exact-grade hardness; reviewed table labels Shore A at 15 sec and 23°C but does not fully resolve the formal test-method identifier."
+        },
+        {
+          "id": "obs-celanese-santoprene-8211-75-tensile",
+          "property": "Tensile Strength at Break",
+          "value": 7,
+          "unit": "MPa",
+          "testMethod": "ISO 37-1",
+          "temperatureC": 23,
+          "direction": "not-applicable",
+          "sourceId": "src-celanese-santoprene-8211-75-identity-2026",
+          "sourcePage": "5G solution showcase gradeslate",
+          "comparisonReady": false,
+          "limitations": "Celanese typical exact-grade value; specimen details are not fully normalized for direct cross-grade comparison."
+        },
+        {
+          "id": "obs-celanese-santoprene-8211-75-elongation",
+          "property": "Elongation at Break",
+          "value": 520,
+          "unit": "%",
+          "testMethod": "ISO 37-1",
+          "temperatureC": 23,
+          "direction": "not-applicable",
+          "sourceId": "src-celanese-santoprene-8211-75-identity-2026",
+          "sourcePage": "5G solution showcase gradeslate",
+          "comparisonReady": false,
+          "limitations": "Celanese typical exact-grade value; specimen details are not fully normalized for direct cross-grade comparison."
+        },
+        {
+          "id": "obs-celanese-santoprene-8211-75-compression",
+          "property": "Compression Set",
+          "value": 36,
+          "unit": "%",
+          "testMethod": "ASTM D395B",
+          "direction": "not-applicable",
+          "sourceId": "src-celanese-santoprene-8211-75-identity-2026",
+          "sourcePage": "5G solution showcase gradeslate",
+          "comparisonReady": false,
+          "limitations": "Celanese typical exact-grade value; the reviewed surface does not fully normalize all compression-set condition variants."
+        }
+      ],
+      "processing": [],
+      "approvals": [],
+      "lifecycle": {
+        "status": "unknown",
+        "checkedAt": "2026-09-29"
+      },
+      "sources": [
+        {
+          "id": "src-celanese-santoprene-8211-75-identity-2026",
+          "publisher": "Celanese",
+          "title": "Santoprene® 8211-75 current manufacturer grade reference",
+          "url": "https://explore.celanese.com/rs/139-DBZ-834/images/TPV%20-%205G%20Connectivity%20Santoprene%20Applications%20-%20Solution%20Showcase.pdf",
+          "kind": "manufacturer-datasheet",
+          "revision": null,
+          "documentDate": null,
+          "retrievedAt": "2026-09-29"
+        }
+      ],
+      "provenance": {
+        "stage": "validated",
+        "ingestedAt": "2026-09-29T00:00:00Z",
+        "reviewedAt": "2026-09-29T00:00:00Z",
+        "reviewer": "primary-source-web-review",
+        "notes": "Current Celanese manufacturer solution showcase provides exact-grade physical/mechanical data and bonding context. Values remain context-only unless complete comparison semantics are explicitly resolved."
+      }
+    },
+    {
+      "schemaVersion": 1,
       "id": "mat-celanese-vectra-a115",
       "manufacturer": {
         "id": "mfr-celanese",
