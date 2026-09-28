@@ -201,14 +201,44 @@ def compile_catalog(output: Path = CATALOG) -> dict[str, Any]:
             if manufacturer_grades:
                 manufacturers[mid] = {"id": mid, "name": manufacturer["name"], "country": manufacturer.get("country")}
 
+    sorted_grades = sorted(
+        grades,
+        key=lambda x: (
+            x["manufacturer"]["name"].lower(),
+            str(x.get("brand") or "").lower(),
+            x["grade"].lower(),
+            str((x.get("identity") or {}).get("variantId") or "").lower(),
+        ),
+    )
+    sorted_manufacturers = sorted(manufacturers.values(), key=lambda x: x["name"].lower())
+    countries = sorted({str(m.get("country") or "").strip() for m in sorted_manufacturers if str(m.get("country") or "").strip()})
+    families = sorted({str((g.get("polymer") or {}).get("family") or "").strip() for g in sorted_grades if str((g.get("polymer") or {}).get("family") or "").strip()})
+    property_observations = [obs for g in sorted_grades for obs in g.get("properties") or []]
+    processing_observations = [obs for g in sorted_grades for obs in g.get("processing") or []]
+    comparison_ready = [obs for obs in property_observations if obs.get("comparisonReady") is True]
+    primary_source_grades = [
+        g for g in sorted_grades
+        if any(str(s.get("kind") or "").startswith("manufacturer-") for s in g.get("sources") or [])
+    ]
+
     catalog = {
         "schemaVersion": 1,
         "catalogVersion": "generated",
         "generated": True,
         "status": "validated",
         "boundary": "Compiled only from staged exact-grade records whose provenance stage is validated/published and which pass semantic QA. Internal staging/schema files are not part of the public runtime artifact. Commercial grade names may legitimately coexist when variant/revision/production identity differs.",
-        "manufacturers": sorted(manufacturers.values(), key=lambda x: x["name"].lower()),
-        "grades": sorted(grades, key=lambda x: (x["manufacturer"]["name"].lower(), str(x.get("brand") or "").lower(), x["grade"].lower(), str((x.get("identity") or {}).get("variantId") or "").lower())),
+        "statistics": {
+            "exactGrades": len(sorted_grades),
+            "manufacturers": len(sorted_manufacturers),
+            "countries": len(countries),
+            "polymerFamilies": len(families),
+            "propertyObservations": len(property_observations),
+            "comparisonReadyObservations": len(comparison_ready),
+            "processingObservations": len(processing_observations),
+            "primarySourceGrades": len(primary_source_grades),
+        },
+        "manufacturers": sorted_manufacturers,
+        "grades": sorted_grades,
     }
     output.write_text(json.dumps(catalog, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
     return catalog
