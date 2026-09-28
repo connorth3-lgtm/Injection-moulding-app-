@@ -6,7 +6,7 @@ const CONTENT='2026.08.26.1';
 const REFERENCE_DATA_URL='./reference-data.html';
 function setText(el,value){if(el&&el.textContent!==value)el.textContent=value}
 function setAttr(el,name,value){if(el&&el.getAttribute(name)!==value)el.setAttribute(name,value)}
-function isMobileNav(){return !!window.matchMedia?.('(max-width:680px)').matches}
+function isMobileNav(){return !!window.matchMedia?.('(max-width:900px)').matches}
 function isIOSFamily(){const ua=navigator.userAgent||'';return /iPad|iPhone|iPod/.test(ua)||(/Macintosh/.test(ua)&&Number(navigator.maxTouchPoints||0)>1)}
 function syncPlatformClasses(){const ios=isIOSFamily(),standalone=ios&&!!window.matchMedia?.('(display-mode: standalone)').matches;document.documentElement.classList.toggle('mm-ios-webkit',ios);document.documentElement.classList.toggle('mm-ios-standalone',standalone)}
 function displayContext(){
