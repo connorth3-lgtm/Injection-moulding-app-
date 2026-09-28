@@ -7,7 +7,7 @@ module.exports=defineConfig({
     /lesson-detail-simplicity\.spec\.js/,
     /learner-ux-repair\.spec\.js/,
     /learn-practice-mobile-style\.spec\.js/,
-    /material-grade-detail\.spec\.js/,
+    /material-grade-detail\.spec\.js/,/material-decision-support\.spec\.js/,
     /material-search-scale\.spec\.js/,
     /measured-evidence-decision\.spec\.js/,
     /read-aloud\.spec\.js/,
