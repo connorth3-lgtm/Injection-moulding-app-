@@ -102,7 +102,7 @@ for staging_path in sorted(STAGING.glob("*.json")):
                 staged_grade_ids.add(gid)
 runtime_grade_ids = {grade.get("id") for grade in catalog.get("grades") or []}
 need(staged_grade_ids == runtime_grade_ids, f"runtime/staging material drift: staged={sorted(staged_grade_ids)} runtime={sorted(runtime_grade_ids)}")
-need(len(runtime_grade_ids) == 45, "runtime exact-grade count must include the Korean pilot plus both global expansion waves")
+need(len(runtime_grade_ids) == 62, "runtime exact-grade count must include the Korean pilot plus three global expansion waves")
 need(kolon_grade_ids.isdisjoint(runtime_grade_ids), "source-reviewed KOLON staging identities must not leak into the validated runtime catalog")
 
 global_wave = load_json(STAGING / "global-material-expansion-20260929-v1.json")
@@ -127,6 +127,16 @@ need(len(global2_validated) == 9 and all(g.get("id") in runtime_grade_ids for g 
 need(len(global2_staging) == 6 and all(g.get("id") not in runtime_grade_ids for g in global2_staging), "wave2 staging identities leaked into runtime")
 need({(g.get("polymer") or {}).get("family") for g in global2_validated} == {"PA66", "PBT", "PC", "PA11"}, "wave2 validated family coverage drift")
 need(all((obs.get("productionRecipe") is False) for g in global2_validated for obs in g.get("processing") or []), "wave2 supplier guidance became a production recipe")
+
+global_wave3 = load_json(STAGING / "global-material-expansion-20260929-v3.json")
+need((global_wave3.get("summary") or {}).get("validatedGrades") == 17, "global material expansion wave3 validated-grade count drift")
+need((global_wave3.get("summary") or {}).get("sourceReviewedStagingGrades") == 6, "global material expansion wave3 staging count drift")
+global3 = [g for m in global_wave3.get("manufacturers") or [] for g in m.get("gradeRecords") or []]
+global3_validated = [g for g in global3 if (g.get("provenance") or {}).get("stage") in {"validated", "published"}]
+global3_staging = [g for g in global3 if (g.get("provenance") or {}).get("stage") == "staging"]
+need(len(global3_validated) == 17 and all(g.get("id") in runtime_grade_ids for g in global3_validated), "wave3 validated grades are not fully published")
+need(len(global3_staging) == 6 and all(g.get("id") not in runtime_grade_ids for g in global3_staging), "wave3 staging identities leaked into runtime")
+need({(g.get("polymer") or {}).get("family") for g in global3_validated} == {"PC/ABS", "PBT", "PET"}, "wave3 validated family coverage drift")
 
 # Pilot proof: current primary-source LOTTE records remain unchanged while the
 # umbrella manifest records progress without copying exact-grade claims.
