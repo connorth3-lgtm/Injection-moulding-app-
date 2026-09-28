@@ -5715,6 +5715,755 @@
     },
     {
       "schemaVersion": 1,
+      "id": "mat-exxonmobil-vistamaxx-3000",
+      "manufacturer": {
+        "id": "mfr-exxonmobil",
+        "name": "ExxonMobil",
+        "country": "United States",
+        "website": "https://www.exxonmobilchemical.com/"
+      },
+      "brand": "Vistamaxx™",
+      "grade": "3000",
+      "aliases": [],
+      "polymer": {
+        "family": "performance polyolefin elastomer",
+        "morphology": "semi-crystalline"
+      },
+      "composition": {
+        "notes": "ExxonMobil Vistamaxx exact performance-polymer grade. Singapore Elastomers Plant is documented as the primary global Vistamaxx supply point; exact batch/site origin is not inferred."
+      },
+      "properties": [
+        {
+          "id": "obs-exxonmobil-3000-mfr",
+          "property": "Melt Flow Rate",
+          "value": 8,
+          "unit": "g/10 min",
+          "testMethod": "ExxonMobil method",
+          "temperatureC": 230,
+          "loadKg": 2.16,
+          "direction": "not-applicable",
+          "sourceId": "src-exxonmobil-vistamaxx-3000-2026",
+          "sourcePage": "Vistamaxx grade slate",
+          "comparisonReady": true,
+          "limitations": "ExxonMobil typical exact-grade value; compare only at 230°C/2.16 kg using the same method."
+        },
+        {
+          "id": "obs-exxonmobil-3000-density",
+          "property": "Density",
+          "value": 0.873,
+          "unit": "g/cm³",
+          "testMethod": "ASTM D1505",
+          "temperatureC": 23,
+          "direction": "not-applicable",
+          "sourceId": "src-exxonmobil-vistamaxx-3000-2026",
+          "sourcePage": "Vistamaxx grade slate",
+          "comparisonReady": false,
+          "limitations": "Typical exact-grade density; not a specification."
+        },
+        {
+          "id": "obs-exxonmobil-3000-hardness",
+          "property": "Hardness",
+          "value": "27D",
+          "unit": "Shore",
+          "testMethod": "ASTM D2240",
+          "conditioning": "15 sec",
+          "direction": "not-applicable",
+          "sourceId": "src-exxonmobil-vistamaxx-3000-2026",
+          "sourcePage": "Vistamaxx grade slate",
+          "comparisonReady": false,
+          "limitations": "Typical exact-grade hardness; Shore scale is retained in value text."
+        }
+      ],
+      "processing": [],
+      "approvals": [],
+      "lifecycle": {
+        "status": "unknown",
+        "checkedAt": "2026-09-29"
+      },
+      "sources": [
+        {
+          "id": "src-exxonmobil-vistamaxx-3000-2026",
+          "publisher": "ExxonMobil",
+          "title": "Vistamaxx™ 3000 grade slate",
+          "url": "https://www.exxonmobilchemical.com/-/media/project/wep/exxonmobil-chemicals/chemicals/products/polymer-modifiers/vistamaxx_gradeslate_enpdf.pdf",
+          "kind": "manufacturer-datasheet",
+          "revision": null,
+          "documentDate": null,
+          "retrievedAt": "2026-09-29"
+        },
+        {
+          "id": "src-exxonmobil-singapore-vistamaxx-supply-2026",
+          "publisher": "ExxonMobil",
+          "title": "Singapore Elastomers Plant primary global Vistamaxx supply point",
+          "url": "https://www.exxonmobilchemical.com/-/media/media-assets/media-library-assets/27/reasons_to_believe_ww_capacity_en.pdf",
+          "kind": "manufacturer-site",
+          "revision": null,
+          "documentDate": null,
+          "retrievedAt": "2026-09-29"
+        },
+        {
+          "id": "src-exxonmobil-vistamaxx-injection-molding-2026",
+          "publisher": "ExxonMobil",
+          "title": "Current Vistamaxx injection molding applications and grades",
+          "url": "https://www.exxonmobilchemical.com/en/industries/hygiene-and-personal-care/nonwovens/loft",
+          "kind": "manufacturer-datasheet",
+          "revision": null,
+          "documentDate": null,
+          "retrievedAt": "2026-09-29"
+        }
+      ],
+      "provenance": {
+        "stage": "validated",
+        "ingestedAt": "2026-09-29T00:00:00Z",
+        "reviewedAt": "2026-09-29T00:00:00Z",
+        "reviewer": "primary-source-web-review",
+        "notes": "Exact-grade physical data come from ExxonMobil's manufacturer grade slate. ExxonMobil separately identifies its Singapore Elastomers Plant as the primary global Vistamaxx supply point. This is regional/family supply provenance, not proof of a specific grade batch's plant origin."
+      }
+    },
+    {
+      "schemaVersion": 1,
+      "id": "mat-exxonmobil-vistamaxx-3020fl",
+      "manufacturer": {
+        "id": "mfr-exxonmobil",
+        "name": "ExxonMobil",
+        "country": "United States",
+        "website": "https://www.exxonmobilchemical.com/"
+      },
+      "brand": "Vistamaxx™",
+      "grade": "3020FL",
+      "aliases": [],
+      "polymer": {
+        "family": "performance polyolefin elastomer",
+        "morphology": "semi-crystalline"
+      },
+      "composition": {
+        "notes": "ExxonMobil Vistamaxx exact performance-polymer grade. Singapore Elastomers Plant is documented as the primary global Vistamaxx supply point; exact batch/site origin is not inferred."
+      },
+      "properties": [
+        {
+          "id": "obs-exxonmobil-3020fl-mfr",
+          "property": "Melt Flow Rate",
+          "value": 3,
+          "unit": "g/10 min",
+          "testMethod": "ExxonMobil method",
+          "temperatureC": 230,
+          "loadKg": 2.16,
+          "direction": "not-applicable",
+          "sourceId": "src-exxonmobil-vistamaxx-3020fl-2026",
+          "sourcePage": "Vistamaxx grade slate",
+          "comparisonReady": true,
+          "limitations": "ExxonMobil typical exact-grade value; compare only at 230°C/2.16 kg using the same method."
+        },
+        {
+          "id": "obs-exxonmobil-3020fl-density",
+          "property": "Density",
+          "value": 0.874,
+          "unit": "g/cm³",
+          "testMethod": "ASTM D1505",
+          "temperatureC": 23,
+          "direction": "not-applicable",
+          "sourceId": "src-exxonmobil-vistamaxx-3020fl-2026",
+          "sourcePage": "Vistamaxx grade slate",
+          "comparisonReady": false,
+          "limitations": "Typical exact-grade density; not a specification."
+        },
+        {
+          "id": "obs-exxonmobil-3020fl-hardness",
+          "property": "Hardness",
+          "value": "29D",
+          "unit": "Shore",
+          "testMethod": "ASTM D2240",
+          "conditioning": "15 sec",
+          "direction": "not-applicable",
+          "sourceId": "src-exxonmobil-vistamaxx-3020fl-2026",
+          "sourcePage": "Vistamaxx grade slate",
+          "comparisonReady": false,
+          "limitations": "Typical exact-grade hardness; Shore scale is retained in value text."
+        }
+      ],
+      "processing": [],
+      "approvals": [],
+      "lifecycle": {
+        "status": "unknown",
+        "checkedAt": "2026-09-29"
+      },
+      "sources": [
+        {
+          "id": "src-exxonmobil-vistamaxx-3020fl-2026",
+          "publisher": "ExxonMobil",
+          "title": "Vistamaxx™ 3020FL grade slate",
+          "url": "https://www.exxonmobilchemical.com/-/media/project/wep/exxonmobil-chemicals/chemicals/products/polymer-modifiers/vistamaxx_gradeslate_enpdf.pdf",
+          "kind": "manufacturer-datasheet",
+          "revision": null,
+          "documentDate": null,
+          "retrievedAt": "2026-09-29"
+        },
+        {
+          "id": "src-exxonmobil-singapore-vistamaxx-supply-2026",
+          "publisher": "ExxonMobil",
+          "title": "Singapore Elastomers Plant primary global Vistamaxx supply point",
+          "url": "https://www.exxonmobilchemical.com/-/media/media-assets/media-library-assets/27/reasons_to_believe_ww_capacity_en.pdf",
+          "kind": "manufacturer-site",
+          "revision": null,
+          "documentDate": null,
+          "retrievedAt": "2026-09-29"
+        },
+        {
+          "id": "src-exxonmobil-vistamaxx-injection-molding-2026",
+          "publisher": "ExxonMobil",
+          "title": "Current Vistamaxx injection molding applications and grades",
+          "url": "https://www.exxonmobilchemical.com/en/industries/hygiene-and-personal-care/nonwovens/loft",
+          "kind": "manufacturer-datasheet",
+          "revision": null,
+          "documentDate": null,
+          "retrievedAt": "2026-09-29"
+        }
+      ],
+      "provenance": {
+        "stage": "validated",
+        "ingestedAt": "2026-09-29T00:00:00Z",
+        "reviewedAt": "2026-09-29T00:00:00Z",
+        "reviewer": "primary-source-web-review",
+        "notes": "Exact-grade physical data come from ExxonMobil's manufacturer grade slate. ExxonMobil separately identifies its Singapore Elastomers Plant as the primary global Vistamaxx supply point. This is regional/family supply provenance, not proof of a specific grade batch's plant origin."
+      }
+    },
+    {
+      "schemaVersion": 1,
+      "id": "mat-exxonmobil-vistamaxx-3588fl",
+      "manufacturer": {
+        "id": "mfr-exxonmobil",
+        "name": "ExxonMobil",
+        "country": "United States",
+        "website": "https://www.exxonmobilchemical.com/"
+      },
+      "brand": "Vistamaxx™",
+      "grade": "3588FL",
+      "aliases": [],
+      "polymer": {
+        "family": "performance polyolefin elastomer",
+        "morphology": "semi-crystalline"
+      },
+      "composition": {
+        "notes": "ExxonMobil Vistamaxx exact performance-polymer grade. Singapore Elastomers Plant is documented as the primary global Vistamaxx supply point; exact batch/site origin is not inferred."
+      },
+      "properties": [
+        {
+          "id": "obs-exxonmobil-3588fl-mfr",
+          "property": "Melt Flow Rate",
+          "value": 8,
+          "unit": "g/10 min",
+          "testMethod": "ExxonMobil method",
+          "temperatureC": 230,
+          "loadKg": 2.16,
+          "direction": "not-applicable",
+          "sourceId": "src-exxonmobil-vistamaxx-3588fl-2026",
+          "sourcePage": "Vistamaxx grade slate",
+          "comparisonReady": true,
+          "limitations": "ExxonMobil typical exact-grade value; compare only at 230°C/2.16 kg using the same method."
+        },
+        {
+          "id": "obs-exxonmobil-3588fl-density",
+          "property": "Density",
+          "value": 0.889,
+          "unit": "g/cm³",
+          "testMethod": "ASTM D1505",
+          "temperatureC": 23,
+          "direction": "not-applicable",
+          "sourceId": "src-exxonmobil-vistamaxx-3588fl-2026",
+          "sourcePage": "Vistamaxx grade slate",
+          "comparisonReady": false,
+          "limitations": "Typical exact-grade density; not a specification."
+        },
+        {
+          "id": "obs-exxonmobil-3588fl-hardness",
+          "property": "Hardness",
+          "value": "50D",
+          "unit": "Shore",
+          "testMethod": "ASTM D2240",
+          "conditioning": "15 sec",
+          "direction": "not-applicable",
+          "sourceId": "src-exxonmobil-vistamaxx-3588fl-2026",
+          "sourcePage": "Vistamaxx grade slate",
+          "comparisonReady": false,
+          "limitations": "Typical exact-grade hardness; Shore scale is retained in value text."
+        }
+      ],
+      "processing": [],
+      "approvals": [],
+      "lifecycle": {
+        "status": "unknown",
+        "checkedAt": "2026-09-29"
+      },
+      "sources": [
+        {
+          "id": "src-exxonmobil-vistamaxx-3588fl-2026",
+          "publisher": "ExxonMobil",
+          "title": "Vistamaxx™ 3588FL grade slate",
+          "url": "https://www.exxonmobilchemical.com/-/media/project/wep/exxonmobil-chemicals/chemicals/products/polymer-modifiers/vistamaxx_gradeslate_enpdf.pdf",
+          "kind": "manufacturer-datasheet",
+          "revision": null,
+          "documentDate": null,
+          "retrievedAt": "2026-09-29"
+        },
+        {
+          "id": "src-exxonmobil-singapore-vistamaxx-supply-2026",
+          "publisher": "ExxonMobil",
+          "title": "Singapore Elastomers Plant primary global Vistamaxx supply point",
+          "url": "https://www.exxonmobilchemical.com/-/media/media-assets/media-library-assets/27/reasons_to_believe_ww_capacity_en.pdf",
+          "kind": "manufacturer-site",
+          "revision": null,
+          "documentDate": null,
+          "retrievedAt": "2026-09-29"
+        },
+        {
+          "id": "src-exxonmobil-vistamaxx-injection-molding-2026",
+          "publisher": "ExxonMobil",
+          "title": "Current Vistamaxx injection molding applications and grades",
+          "url": "https://www.exxonmobilchemical.com/en/industries/hygiene-and-personal-care/nonwovens/loft",
+          "kind": "manufacturer-datasheet",
+          "revision": null,
+          "documentDate": null,
+          "retrievedAt": "2026-09-29"
+        }
+      ],
+      "provenance": {
+        "stage": "validated",
+        "ingestedAt": "2026-09-29T00:00:00Z",
+        "reviewedAt": "2026-09-29T00:00:00Z",
+        "reviewer": "primary-source-web-review",
+        "notes": "Exact-grade physical data come from ExxonMobil's manufacturer grade slate. ExxonMobil separately identifies its Singapore Elastomers Plant as the primary global Vistamaxx supply point. This is regional/family supply provenance, not proof of a specific grade batch's plant origin."
+      }
+    },
+    {
+      "schemaVersion": 1,
+      "id": "mat-exxonmobil-vistamaxx-3980fl",
+      "manufacturer": {
+        "id": "mfr-exxonmobil",
+        "name": "ExxonMobil",
+        "country": "United States",
+        "website": "https://www.exxonmobilchemical.com/"
+      },
+      "brand": "Vistamaxx™",
+      "grade": "3980FL",
+      "aliases": [],
+      "polymer": {
+        "family": "performance polyolefin elastomer",
+        "morphology": "semi-crystalline"
+      },
+      "composition": {
+        "notes": "ExxonMobil Vistamaxx exact performance-polymer grade. Singapore Elastomers Plant is documented as the primary global Vistamaxx supply point; exact batch/site origin is not inferred."
+      },
+      "properties": [
+        {
+          "id": "obs-exxonmobil-3980fl-mfr",
+          "property": "Melt Flow Rate",
+          "value": 8,
+          "unit": "g/10 min",
+          "testMethod": "ExxonMobil method",
+          "temperatureC": 230,
+          "loadKg": 2.16,
+          "direction": "not-applicable",
+          "sourceId": "src-exxonmobil-vistamaxx-3980fl-2026",
+          "sourcePage": "Vistamaxx grade slate",
+          "comparisonReady": true,
+          "limitations": "ExxonMobil typical exact-grade value; compare only at 230°C/2.16 kg using the same method."
+        },
+        {
+          "id": "obs-exxonmobil-3980fl-density",
+          "property": "Density",
+          "value": 0.879,
+          "unit": "g/cm³",
+          "testMethod": "ASTM D1505",
+          "temperatureC": 23,
+          "direction": "not-applicable",
+          "sourceId": "src-exxonmobil-vistamaxx-3980fl-2026",
+          "sourcePage": "Vistamaxx grade slate",
+          "comparisonReady": false,
+          "limitations": "Typical exact-grade density; not a specification."
+        },
+        {
+          "id": "obs-exxonmobil-3980fl-hardness",
+          "property": "Hardness",
+          "value": "34D",
+          "unit": "Shore",
+          "testMethod": "ASTM D2240",
+          "conditioning": "15 sec",
+          "direction": "not-applicable",
+          "sourceId": "src-exxonmobil-vistamaxx-3980fl-2026",
+          "sourcePage": "Vistamaxx grade slate",
+          "comparisonReady": false,
+          "limitations": "Typical exact-grade hardness; Shore scale is retained in value text."
+        }
+      ],
+      "processing": [],
+      "approvals": [],
+      "lifecycle": {
+        "status": "unknown",
+        "checkedAt": "2026-09-29"
+      },
+      "sources": [
+        {
+          "id": "src-exxonmobil-vistamaxx-3980fl-2026",
+          "publisher": "ExxonMobil",
+          "title": "Vistamaxx™ 3980FL grade slate",
+          "url": "https://www.exxonmobilchemical.com/-/media/project/wep/exxonmobil-chemicals/chemicals/products/polymer-modifiers/vistamaxx_gradeslate_enpdf.pdf",
+          "kind": "manufacturer-datasheet",
+          "revision": null,
+          "documentDate": null,
+          "retrievedAt": "2026-09-29"
+        },
+        {
+          "id": "src-exxonmobil-singapore-vistamaxx-supply-2026",
+          "publisher": "ExxonMobil",
+          "title": "Singapore Elastomers Plant primary global Vistamaxx supply point",
+          "url": "https://www.exxonmobilchemical.com/-/media/media-assets/media-library-assets/27/reasons_to_believe_ww_capacity_en.pdf",
+          "kind": "manufacturer-site",
+          "revision": null,
+          "documentDate": null,
+          "retrievedAt": "2026-09-29"
+        },
+        {
+          "id": "src-exxonmobil-vistamaxx-injection-molding-2026",
+          "publisher": "ExxonMobil",
+          "title": "Current Vistamaxx injection molding applications and grades",
+          "url": "https://www.exxonmobilchemical.com/en/industries/hygiene-and-personal-care/nonwovens/loft",
+          "kind": "manufacturer-datasheet",
+          "revision": null,
+          "documentDate": null,
+          "retrievedAt": "2026-09-29"
+        }
+      ],
+      "provenance": {
+        "stage": "validated",
+        "ingestedAt": "2026-09-29T00:00:00Z",
+        "reviewedAt": "2026-09-29T00:00:00Z",
+        "reviewer": "primary-source-web-review",
+        "notes": "Exact-grade physical data come from ExxonMobil's manufacturer grade slate. ExxonMobil separately identifies its Singapore Elastomers Plant as the primary global Vistamaxx supply point. This is regional/family supply provenance, not proof of a specific grade batch's plant origin."
+      }
+    },
+    {
+      "schemaVersion": 1,
+      "id": "mat-exxonmobil-vistamaxx-6102",
+      "manufacturer": {
+        "id": "mfr-exxonmobil",
+        "name": "ExxonMobil",
+        "country": "United States",
+        "website": "https://www.exxonmobilchemical.com/"
+      },
+      "brand": "Vistamaxx™",
+      "grade": "6102",
+      "aliases": [],
+      "polymer": {
+        "family": "performance polyolefin elastomer",
+        "morphology": "semi-crystalline"
+      },
+      "composition": {
+        "notes": "ExxonMobil Vistamaxx exact performance-polymer grade. Singapore Elastomers Plant is documented as the primary global Vistamaxx supply point; exact batch/site origin is not inferred."
+      },
+      "properties": [
+        {
+          "id": "obs-exxonmobil-6102-mfr",
+          "property": "Melt Flow Rate",
+          "value": 3,
+          "unit": "g/10 min",
+          "testMethod": "ExxonMobil method",
+          "temperatureC": 230,
+          "loadKg": 2.16,
+          "direction": "not-applicable",
+          "sourceId": "src-exxonmobil-vistamaxx-6102-2026",
+          "sourcePage": "Vistamaxx grade slate",
+          "comparisonReady": true,
+          "limitations": "ExxonMobil typical exact-grade value; compare only at 230°C/2.16 kg using the same method."
+        },
+        {
+          "id": "obs-exxonmobil-6102-density",
+          "property": "Density",
+          "value": 0.862,
+          "unit": "g/cm³",
+          "testMethod": "ASTM D1505",
+          "temperatureC": 23,
+          "direction": "not-applicable",
+          "sourceId": "src-exxonmobil-vistamaxx-6102-2026",
+          "sourcePage": "Vistamaxx grade slate",
+          "comparisonReady": false,
+          "limitations": "Typical exact-grade density; not a specification."
+        },
+        {
+          "id": "obs-exxonmobil-6102-hardness",
+          "property": "Hardness",
+          "value": "67A",
+          "unit": "Shore",
+          "testMethod": "ASTM D2240",
+          "conditioning": "15 sec",
+          "direction": "not-applicable",
+          "sourceId": "src-exxonmobil-vistamaxx-6102-2026",
+          "sourcePage": "Vistamaxx grade slate",
+          "comparisonReady": false,
+          "limitations": "Typical exact-grade hardness; Shore scale is retained in value text."
+        }
+      ],
+      "processing": [],
+      "approvals": [],
+      "lifecycle": {
+        "status": "unknown",
+        "checkedAt": "2026-09-29"
+      },
+      "sources": [
+        {
+          "id": "src-exxonmobil-vistamaxx-6102-2026",
+          "publisher": "ExxonMobil",
+          "title": "Vistamaxx™ 6102 grade slate",
+          "url": "https://www.exxonmobilchemical.com/-/media/project/wep/exxonmobil-chemicals/chemicals/products/polymer-modifiers/vistamaxx_gradeslate_enpdf.pdf",
+          "kind": "manufacturer-datasheet",
+          "revision": null,
+          "documentDate": null,
+          "retrievedAt": "2026-09-29"
+        },
+        {
+          "id": "src-exxonmobil-singapore-vistamaxx-supply-2026",
+          "publisher": "ExxonMobil",
+          "title": "Singapore Elastomers Plant primary global Vistamaxx supply point",
+          "url": "https://www.exxonmobilchemical.com/-/media/media-assets/media-library-assets/27/reasons_to_believe_ww_capacity_en.pdf",
+          "kind": "manufacturer-site",
+          "revision": null,
+          "documentDate": null,
+          "retrievedAt": "2026-09-29"
+        },
+        {
+          "id": "src-exxonmobil-vistamaxx-injection-molding-2026",
+          "publisher": "ExxonMobil",
+          "title": "Current Vistamaxx injection molding applications and grades",
+          "url": "https://www.exxonmobilchemical.com/en/industries/hygiene-and-personal-care/nonwovens/loft",
+          "kind": "manufacturer-datasheet",
+          "revision": null,
+          "documentDate": null,
+          "retrievedAt": "2026-09-29"
+        }
+      ],
+      "provenance": {
+        "stage": "validated",
+        "ingestedAt": "2026-09-29T00:00:00Z",
+        "reviewedAt": "2026-09-29T00:00:00Z",
+        "reviewer": "primary-source-web-review",
+        "notes": "Exact-grade physical data come from ExxonMobil's manufacturer grade slate. ExxonMobil separately identifies its Singapore Elastomers Plant as the primary global Vistamaxx supply point. This is regional/family supply provenance, not proof of a specific grade batch's plant origin."
+      }
+    },
+    {
+      "schemaVersion": 1,
+      "id": "mat-exxonmobil-vistamaxx-6202",
+      "manufacturer": {
+        "id": "mfr-exxonmobil",
+        "name": "ExxonMobil",
+        "country": "United States",
+        "website": "https://www.exxonmobilchemical.com/"
+      },
+      "brand": "Vistamaxx™",
+      "grade": "6202",
+      "aliases": [],
+      "polymer": {
+        "family": "performance polyolefin elastomer",
+        "morphology": "semi-crystalline"
+      },
+      "composition": {
+        "notes": "ExxonMobil Vistamaxx exact performance-polymer grade. Singapore Elastomers Plant is documented as the primary global Vistamaxx supply point; exact batch/site origin is not inferred."
+      },
+      "properties": [
+        {
+          "id": "obs-exxonmobil-6202-mfr",
+          "property": "Melt Flow Rate",
+          "value": 20,
+          "unit": "g/10 min",
+          "testMethod": "ExxonMobil method",
+          "temperatureC": 230,
+          "loadKg": 2.16,
+          "direction": "not-applicable",
+          "sourceId": "src-exxonmobil-vistamaxx-6202-2026",
+          "sourcePage": "Vistamaxx grade slate",
+          "comparisonReady": true,
+          "limitations": "ExxonMobil typical exact-grade value; compare only at 230°C/2.16 kg using the same method."
+        },
+        {
+          "id": "obs-exxonmobil-6202-density",
+          "property": "Density",
+          "value": 0.862,
+          "unit": "g/cm³",
+          "testMethod": "ASTM D1505",
+          "temperatureC": 23,
+          "direction": "not-applicable",
+          "sourceId": "src-exxonmobil-vistamaxx-6202-2026",
+          "sourcePage": "Vistamaxx grade slate",
+          "comparisonReady": false,
+          "limitations": "Typical exact-grade density; not a specification."
+        },
+        {
+          "id": "obs-exxonmobil-6202-hardness",
+          "property": "Hardness",
+          "value": "64A",
+          "unit": "Shore",
+          "testMethod": "ASTM D2240",
+          "conditioning": "15 sec",
+          "direction": "not-applicable",
+          "sourceId": "src-exxonmobil-vistamaxx-6202-2026",
+          "sourcePage": "Vistamaxx grade slate",
+          "comparisonReady": false,
+          "limitations": "Typical exact-grade hardness; Shore scale is retained in value text."
+        }
+      ],
+      "processing": [],
+      "approvals": [],
+      "lifecycle": {
+        "status": "unknown",
+        "checkedAt": "2026-09-29"
+      },
+      "sources": [
+        {
+          "id": "src-exxonmobil-vistamaxx-6202-2026",
+          "publisher": "ExxonMobil",
+          "title": "Vistamaxx™ 6202 grade slate",
+          "url": "https://www.exxonmobilchemical.com/-/media/project/wep/exxonmobil-chemicals/chemicals/products/polymer-modifiers/vistamaxx_gradeslate_enpdf.pdf",
+          "kind": "manufacturer-datasheet",
+          "revision": null,
+          "documentDate": null,
+          "retrievedAt": "2026-09-29"
+        },
+        {
+          "id": "src-exxonmobil-singapore-vistamaxx-supply-2026",
+          "publisher": "ExxonMobil",
+          "title": "Singapore Elastomers Plant primary global Vistamaxx supply point",
+          "url": "https://www.exxonmobilchemical.com/-/media/media-assets/media-library-assets/27/reasons_to_believe_ww_capacity_en.pdf",
+          "kind": "manufacturer-site",
+          "revision": null,
+          "documentDate": null,
+          "retrievedAt": "2026-09-29"
+        },
+        {
+          "id": "src-exxonmobil-vistamaxx-injection-molding-2026",
+          "publisher": "ExxonMobil",
+          "title": "Current Vistamaxx injection molding applications and grades",
+          "url": "https://www.exxonmobilchemical.com/en/industries/hygiene-and-personal-care/nonwovens/loft",
+          "kind": "manufacturer-datasheet",
+          "revision": null,
+          "documentDate": null,
+          "retrievedAt": "2026-09-29"
+        }
+      ],
+      "provenance": {
+        "stage": "validated",
+        "ingestedAt": "2026-09-29T00:00:00Z",
+        "reviewedAt": "2026-09-29T00:00:00Z",
+        "reviewer": "primary-source-web-review",
+        "notes": "Exact-grade physical data come from ExxonMobil's manufacturer grade slate. ExxonMobil separately identifies its Singapore Elastomers Plant as the primary global Vistamaxx supply point. This is regional/family supply provenance, not proof of a specific grade batch's plant origin."
+      }
+    },
+    {
+      "schemaVersion": 1,
+      "id": "mat-exxonmobil-vistamaxx-6502",
+      "manufacturer": {
+        "id": "mfr-exxonmobil",
+        "name": "ExxonMobil",
+        "country": "United States",
+        "website": "https://www.exxonmobilchemical.com/"
+      },
+      "brand": "Vistamaxx™",
+      "grade": "6502",
+      "aliases": [],
+      "polymer": {
+        "family": "performance polyolefin elastomer",
+        "morphology": "semi-crystalline"
+      },
+      "composition": {
+        "notes": "ExxonMobil Vistamaxx exact performance-polymer grade. Singapore Elastomers Plant is documented as the primary global Vistamaxx supply point; exact batch/site origin is not inferred."
+      },
+      "properties": [
+        {
+          "id": "obs-exxonmobil-6502-mfr",
+          "property": "Melt Flow Rate",
+          "value": 45,
+          "unit": "g/10 min",
+          "testMethod": "ExxonMobil method",
+          "temperatureC": 230,
+          "loadKg": 2.16,
+          "direction": "not-applicable",
+          "sourceId": "src-exxonmobil-vistamaxx-6502-2026",
+          "sourcePage": "Vistamaxx grade slate",
+          "comparisonReady": true,
+          "limitations": "ExxonMobil typical exact-grade value; compare only at 230°C/2.16 kg using the same method."
+        },
+        {
+          "id": "obs-exxonmobil-6502-density",
+          "property": "Density",
+          "value": 0.865,
+          "unit": "g/cm³",
+          "testMethod": "ASTM D1505",
+          "temperatureC": 23,
+          "direction": "not-applicable",
+          "sourceId": "src-exxonmobil-vistamaxx-6502-2026",
+          "sourcePage": "Vistamaxx grade slate",
+          "comparisonReady": false,
+          "limitations": "Typical exact-grade density; not a specification."
+        },
+        {
+          "id": "obs-exxonmobil-6502-hardness",
+          "property": "Hardness",
+          "value": "71A",
+          "unit": "Shore",
+          "testMethod": "ASTM D2240",
+          "conditioning": "15 sec",
+          "direction": "not-applicable",
+          "sourceId": "src-exxonmobil-vistamaxx-6502-2026",
+          "sourcePage": "Vistamaxx grade slate",
+          "comparisonReady": false,
+          "limitations": "Typical exact-grade hardness; Shore scale is retained in value text."
+        }
+      ],
+      "processing": [],
+      "approvals": [],
+      "lifecycle": {
+        "status": "unknown",
+        "checkedAt": "2026-09-29"
+      },
+      "sources": [
+        {
+          "id": "src-exxonmobil-vistamaxx-6502-2026",
+          "publisher": "ExxonMobil",
+          "title": "Vistamaxx™ 6502 grade slate",
+          "url": "https://www.exxonmobilchemical.com/-/media/project/wep/exxonmobil-chemicals/chemicals/products/polymer-modifiers/vistamaxx_gradeslate_enpdf.pdf",
+          "kind": "manufacturer-datasheet",
+          "revision": null,
+          "documentDate": null,
+          "retrievedAt": "2026-09-29"
+        },
+        {
+          "id": "src-exxonmobil-singapore-vistamaxx-supply-2026",
+          "publisher": "ExxonMobil",
+          "title": "Singapore Elastomers Plant primary global Vistamaxx supply point",
+          "url": "https://www.exxonmobilchemical.com/-/media/media-assets/media-library-assets/27/reasons_to_believe_ww_capacity_en.pdf",
+          "kind": "manufacturer-site",
+          "revision": null,
+          "documentDate": null,
+          "retrievedAt": "2026-09-29"
+        },
+        {
+          "id": "src-exxonmobil-vistamaxx-injection-molding-2026",
+          "publisher": "ExxonMobil",
+          "title": "Current Vistamaxx injection molding applications and grades",
+          "url": "https://www.exxonmobilchemical.com/en/industries/hygiene-and-personal-care/nonwovens/loft",
+          "kind": "manufacturer-datasheet",
+          "revision": null,
+          "documentDate": null,
+          "retrievedAt": "2026-09-29"
+        }
+      ],
+      "provenance": {
+        "stage": "validated",
+        "ingestedAt": "2026-09-29T00:00:00Z",
+        "reviewedAt": "2026-09-29T00:00:00Z",
+        "reviewer": "primary-source-web-review",
+        "notes": "Exact-grade physical data come from ExxonMobil's manufacturer grade slate. ExxonMobil separately identifies its Singapore Elastomers Plant as the primary global Vistamaxx supply point. This is regional/family supply provenance, not proof of a specific grade batch's plant origin."
+      }
+    },
+    {
+      "schemaVersion": 1,
       "id": "mat-indianoil-propel-080m55",
       "manufacturer": {
         "id": "mfr-indianoil",
