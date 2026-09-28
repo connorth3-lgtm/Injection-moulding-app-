@@ -320,6 +320,23 @@ need(all(any(obs.get("property") == "Melt Flow Rate" and obs.get("temperatureC")
 need(all(obs.get("comparisonReady") is False for g in global18 for obs in g.get("properties") or [] if obs.get("property") == "Mould Shrinkage"), "Korea Samyang wave18 unresolved-direction shrinkage must remain context-only")
 need(all(obs.get("productionRecipe") is False for g in global18 for obs in g.get("processing") or []), "Korea Samyang wave18 supplier guidance became a production recipe")
 
+
+# Korea Hyosung continuation: current POKETONE and PP identities are staged
+# conservatively. POKETONE portfolio MI remains context-only until full test
+# temperature/load conditions are captured; HJ541CP has no promoted numeric data.
+global_wave19 = load_json(STAGING / "global-material-expansion-20260929-v19.json")
+need((global_wave19.get("summary") or {}).get("validatedGrades") == 0, "Korea Hyosung wave must remain staging")
+need((global_wave19.get("summary") or {}).get("sourceReviewedStagingGrades") == 9, "Korea Hyosung staging count drift")
+need((global_wave19.get("summary") or {}).get("countryFocus") == "South Korea", "Korea Hyosung country focus drift")
+global19 = [g for m in global_wave19.get("manufacturers") or [] for g in m.get("gradeRecords") or []]
+need(len(global19) == 9, "Korea Hyosung exact-grade staging set drift")
+need(all((g.get("provenance") or {}).get("stage") == "staging" for g in global19), "Korea Hyosung identities must remain staging")
+need(all(g.get("id") not in runtime_grade_ids for g in global19), "Korea Hyosung staging identities leaked into runtime")
+need({(g.get("polymer") or {}).get("family") for g in global19} == {"polyketone", "PP"}, "Korea Hyosung family drift")
+need(all((g.get("manufacturer") or {}).get("country") == "South Korea" for g in global19), "Korea Hyosung staging lost country identity")
+need(all(obs.get("comparisonReady") is False for g in global19 for obs in g.get("properties") or []), "Under-conditioned Hyosung numeric data must remain context-only")
+need((global_wave19.get("governance") or {}).get("runtimePromotionBlocked") is True, "Korea Hyosung promotion boundary drift")
+
 # Pilot proof: current primary-source LOTTE records remain unchanged while the
 # umbrella manifest records progress without copying exact-grade claims.
 lotte_pilot = load_json(STAGING / "lotte-exact-grade-pilot-v1.json")
