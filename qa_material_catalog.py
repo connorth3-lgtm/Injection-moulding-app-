@@ -225,7 +225,9 @@ need((global_wave11.get("summary") or {}).get("countryFocus") == "Singapore", "S
 global11 = [g for m in global_wave11.get("manufacturers") or [] for g in m.get("gradeRecords") or []]
 need(len(global11) == 31 and all(g.get("id") in runtime_grade_ids for g in global11), "Singapore TAFMER grades are not fully published")
 need({(g.get("polymer") or {}).get("family") for g in global11} == {"AOC elastomer"}, "Singapore TAFMER family coverage drift")
-need(all(obs.get("comparisonReady") is False for g in global11 for obs in g.get("properties") or [] if obs.get("property") == "Melt Flow Rate"), "Singapore TAFMER MFR must remain context-only while test load is absent")
+tafmer_mfr = [obs for g in global11 for obs in g.get("properties") or [] if obs.get("property") == "Melt Flow Rate"]
+need(all((obs.get("testMethod") and obs.get("temperatureC") is not None and obs.get("loadKg") is not None) for obs in tafmer_mfr if obs.get("comparisonReady") is True), "comparison-ready Singapore TAFMER MFR is missing method/temperature/load")
+need(all(obs.get("comparisonReady") is False for obs in tafmer_mfr if not (obs.get("testMethod") and obs.get("temperatureC") is not None and obs.get("loadKg") is not None)), "under-conditioned Singapore TAFMER MFR became comparison-ready")
 
 singapore_evidence = load_json(ROOT / "data/materials/singapore-material-evidence-20260929-v1.json")
 need(singapore_evidence.get("country") == "Singapore", "Singapore regional material evidence country drift")
