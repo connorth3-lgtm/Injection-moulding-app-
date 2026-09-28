@@ -41,6 +41,11 @@
       "country": "South Korea"
     },
     {
+      "id": "mfr-kuraray",
+      "name": "Kuraray",
+      "country": "Japan"
+    },
+    {
       "id": "mfr-lg-chem",
       "name": "LG Chem",
       "country": "South Korea"
@@ -61,9 +66,19 @@
       "country": "Saudi Arabia"
     },
     {
+      "id": "mfr-scgc",
+      "name": "SCGC",
+      "country": "Thailand"
+    },
+    {
       "id": "mfr-supreme-petrochem",
       "name": "Supreme Petrochem",
       "country": "India"
+    },
+    {
+      "id": "mfr-ube",
+      "name": "UBE",
+      "country": "Japan"
     },
     {
       "id": "mfr-victrex",
@@ -5253,6 +5268,342 @@
     },
     {
       "schemaVersion": 1,
+      "id": "mat-kuraray-genestar-g1300a",
+      "manufacturer": {
+        "id": "mfr-kuraray",
+        "name": "Kuraray",
+        "country": "Japan",
+        "website": "https://www.kuraray.com/"
+      },
+      "brand": "GENESTAR™",
+      "grade": "G1300A",
+      "aliases": [],
+      "polymer": {
+        "family": "PA9T",
+        "morphology": "semi-crystalline"
+      },
+      "composition": {
+        "glassFibrePct": 30,
+        "notes": "30% glass-fibre reinforced PA9T injection-moulding grade."
+      },
+      "properties": [
+        {
+          "id": "obs-kuraray-g1300a-water",
+          "property": "Water Absorption",
+          "value": 0.19,
+          "unit": "%",
+          "testMethod": "ISO 62",
+          "temperatureC": null,
+          "loadKg": null,
+          "specimen": null,
+          "conditioning": "23°C water immersion, 24 h; absolutely dry material basis",
+          "direction": "not-applicable",
+          "sourceId": "src-kuraray-genestar-g1300a-2026",
+          "sourcePage": "current manufacturer exact-grade data",
+          "comparisonReady": false,
+          "limitations": "Kuraray measured value, not guaranteed."
+        },
+        {
+          "id": "obs-kuraray-g1300a-shrink-flow",
+          "property": "Mould Shrinkage",
+          "value": 0.3,
+          "unit": "%",
+          "testMethod": "ISO 294-4",
+          "temperatureC": null,
+          "loadKg": null,
+          "specimen": "2 mm",
+          "conditioning": "absolutely dry",
+          "direction": "flow",
+          "sourceId": "src-kuraray-genestar-g1300a-2026",
+          "sourcePage": "current manufacturer exact-grade data",
+          "comparisonReady": true,
+          "limitations": "Kuraray measured value, not guaranteed; actual part response remains application dependent."
+        },
+        {
+          "id": "obs-kuraray-g1300a-shrink-transverse",
+          "property": "Mould Shrinkage",
+          "value": 0.9,
+          "unit": "%",
+          "testMethod": "ISO 294-4",
+          "temperatureC": null,
+          "loadKg": null,
+          "specimen": "2 mm",
+          "conditioning": "absolutely dry",
+          "direction": "transverse",
+          "sourceId": "src-kuraray-genestar-g1300a-2026",
+          "sourcePage": "current manufacturer exact-grade data",
+          "comparisonReady": true,
+          "limitations": "Kuraray measured value, not guaranteed; actual part response remains application dependent."
+        },
+        {
+          "id": "obs-kuraray-g1300a-melting",
+          "property": "Melting Point",
+          "value": 300,
+          "unit": "°C",
+          "testMethod": "ISO 11357-3",
+          "temperatureC": null,
+          "loadKg": null,
+          "specimen": null,
+          "conditioning": "absolutely dry",
+          "direction": "not-applicable",
+          "sourceId": "src-kuraray-genestar-g1300a-2026",
+          "sourcePage": "current manufacturer exact-grade data",
+          "comparisonReady": false,
+          "limitations": "Measured material property, not a process setpoint."
+        }
+      ],
+      "processing": [],
+      "approvals": [],
+      "lifecycle": {
+        "status": "unknown",
+        "checkedAt": "2026-09-29"
+      },
+      "sources": [
+        {
+          "id": "src-kuraray-genestar-g1300a-2026",
+          "publisher": "Kuraray",
+          "title": "GENESTAR™ G1300A grade details",
+          "url": "https://genestar.kuraray.com/en/grades/g1300a/",
+          "kind": "manufacturer-datasheet",
+          "revision": null,
+          "documentDate": null,
+          "retrievedAt": "2026-09-29"
+        }
+      ],
+      "provenance": {
+        "stage": "validated",
+        "ingestedAt": "2026-09-29T00:00:00Z",
+        "reviewedAt": "2026-09-29T00:00:00Z",
+        "reviewer": "primary-source-web-review",
+        "notes": "Current Kuraray GENESTAR exact-grade page reviewed. Values are explicitly measured in the absolutely dry state and described by Kuraray as measured, not guaranteed."
+      }
+    },
+    {
+      "schemaVersion": 1,
+      "id": "mat-kuraray-genestar-g1500a",
+      "manufacturer": {
+        "id": "mfr-kuraray",
+        "name": "Kuraray",
+        "country": "Japan",
+        "website": "https://www.kuraray.com/"
+      },
+      "brand": "GENESTAR™",
+      "grade": "G1500A",
+      "aliases": [],
+      "polymer": {
+        "family": "PA9T",
+        "morphology": "semi-crystalline"
+      },
+      "composition": {
+        "glassFibrePct": 50,
+        "notes": "50% glass-fibre reinforced PA9T injection-moulding grade."
+      },
+      "properties": [
+        {
+          "id": "obs-kuraray-g1500a-water",
+          "property": "Water Absorption",
+          "value": 0.13,
+          "unit": "%",
+          "testMethod": "ISO 62",
+          "temperatureC": null,
+          "loadKg": null,
+          "specimen": null,
+          "conditioning": "23°C water immersion, 24 h; absolutely dry material basis",
+          "direction": "not-applicable",
+          "sourceId": "src-kuraray-genestar-g1500a-2026",
+          "sourcePage": "current manufacturer exact-grade data",
+          "comparisonReady": false,
+          "limitations": "Kuraray measured value, not guaranteed."
+        },
+        {
+          "id": "obs-kuraray-g1500a-shrink-flow",
+          "property": "Mould Shrinkage",
+          "value": 0.2,
+          "unit": "%",
+          "testMethod": "ISO 294-4",
+          "temperatureC": null,
+          "loadKg": null,
+          "specimen": "2 mm",
+          "conditioning": "absolutely dry",
+          "direction": "flow",
+          "sourceId": "src-kuraray-genestar-g1500a-2026",
+          "sourcePage": "current manufacturer exact-grade data",
+          "comparisonReady": true,
+          "limitations": "Kuraray measured value, not guaranteed; actual part response remains application dependent."
+        },
+        {
+          "id": "obs-kuraray-g1500a-shrink-transverse",
+          "property": "Mould Shrinkage",
+          "value": 0.8,
+          "unit": "%",
+          "testMethod": "ISO 294-4",
+          "temperatureC": null,
+          "loadKg": null,
+          "specimen": "2 mm",
+          "conditioning": "absolutely dry",
+          "direction": "transverse",
+          "sourceId": "src-kuraray-genestar-g1500a-2026",
+          "sourcePage": "current manufacturer exact-grade data",
+          "comparisonReady": true,
+          "limitations": "Kuraray measured value, not guaranteed; actual part response remains application dependent."
+        },
+        {
+          "id": "obs-kuraray-g1500a-melting",
+          "property": "Melting Point",
+          "value": 300,
+          "unit": "°C",
+          "testMethod": "ISO 11357-3",
+          "temperatureC": null,
+          "loadKg": null,
+          "specimen": null,
+          "conditioning": "absolutely dry",
+          "direction": "not-applicable",
+          "sourceId": "src-kuraray-genestar-g1500a-2026",
+          "sourcePage": "current manufacturer exact-grade data",
+          "comparisonReady": false,
+          "limitations": "Measured material property, not a process setpoint."
+        }
+      ],
+      "processing": [],
+      "approvals": [],
+      "lifecycle": {
+        "status": "unknown",
+        "checkedAt": "2026-09-29"
+      },
+      "sources": [
+        {
+          "id": "src-kuraray-genestar-g1500a-2026",
+          "publisher": "Kuraray",
+          "title": "GENESTAR™ G1500A grade details",
+          "url": "https://genestar.kuraray.com/en/grades/g1500a/",
+          "kind": "manufacturer-datasheet",
+          "revision": null,
+          "documentDate": null,
+          "retrievedAt": "2026-09-29"
+        }
+      ],
+      "provenance": {
+        "stage": "validated",
+        "ingestedAt": "2026-09-29T00:00:00Z",
+        "reviewedAt": "2026-09-29T00:00:00Z",
+        "reviewer": "primary-source-web-review",
+        "notes": "Current Kuraray GENESTAR exact-grade page reviewed. Values are explicitly measured in the absolutely dry state and described by Kuraray as measured, not guaranteed."
+      }
+    },
+    {
+      "schemaVersion": 1,
+      "id": "mat-kuraray-genestar-n1000a",
+      "manufacturer": {
+        "id": "mfr-kuraray",
+        "name": "Kuraray",
+        "country": "Japan",
+        "website": "https://www.kuraray.com/"
+      },
+      "brand": "GENESTAR™",
+      "grade": "N1000A",
+      "aliases": [],
+      "polymer": {
+        "family": "PA9T",
+        "morphology": "semi-crystalline"
+      },
+      "composition": {
+        "glassFibrePct": 0,
+        "notes": "Unreinforced PA9T injection-moulding grade."
+      },
+      "properties": [
+        {
+          "id": "obs-kuraray-n1000a-water",
+          "property": "Water Absorption",
+          "value": 0.25,
+          "unit": "%",
+          "testMethod": "ISO 62",
+          "temperatureC": null,
+          "loadKg": null,
+          "specimen": null,
+          "conditioning": "23°C water immersion, 24 h; absolutely dry material basis",
+          "direction": "not-applicable",
+          "sourceId": "src-kuraray-genestar-n1000a-2026",
+          "sourcePage": "current manufacturer exact-grade data",
+          "comparisonReady": false,
+          "limitations": "Kuraray measured value, not guaranteed."
+        },
+        {
+          "id": "obs-kuraray-n1000a-shrink-flow",
+          "property": "Mould Shrinkage",
+          "value": 1.4,
+          "unit": "%",
+          "testMethod": "ISO 294-4",
+          "temperatureC": null,
+          "loadKg": null,
+          "specimen": "2 mm",
+          "conditioning": "absolutely dry",
+          "direction": "flow",
+          "sourceId": "src-kuraray-genestar-n1000a-2026",
+          "sourcePage": "current manufacturer exact-grade data",
+          "comparisonReady": true,
+          "limitations": "Kuraray measured value, not guaranteed; actual part response remains application dependent."
+        },
+        {
+          "id": "obs-kuraray-n1000a-shrink-transverse",
+          "property": "Mould Shrinkage",
+          "value": 1.5,
+          "unit": "%",
+          "testMethod": "ISO 294-4",
+          "temperatureC": null,
+          "loadKg": null,
+          "specimen": "2 mm",
+          "conditioning": "absolutely dry",
+          "direction": "transverse",
+          "sourceId": "src-kuraray-genestar-n1000a-2026",
+          "sourcePage": "current manufacturer exact-grade data",
+          "comparisonReady": true,
+          "limitations": "Kuraray measured value, not guaranteed; actual part response remains application dependent."
+        },
+        {
+          "id": "obs-kuraray-n1000a-melting",
+          "property": "Melting Point",
+          "value": 300,
+          "unit": "°C",
+          "testMethod": "ISO 11357-3",
+          "temperatureC": null,
+          "loadKg": null,
+          "specimen": null,
+          "conditioning": "absolutely dry",
+          "direction": "not-applicable",
+          "sourceId": "src-kuraray-genestar-n1000a-2026",
+          "sourcePage": "current manufacturer exact-grade data",
+          "comparisonReady": false,
+          "limitations": "Measured material property, not a process setpoint."
+        }
+      ],
+      "processing": [],
+      "approvals": [],
+      "lifecycle": {
+        "status": "unknown",
+        "checkedAt": "2026-09-29"
+      },
+      "sources": [
+        {
+          "id": "src-kuraray-genestar-n1000a-2026",
+          "publisher": "Kuraray",
+          "title": "GENESTAR™ N1000A grade details",
+          "url": "https://genestar.kuraray.com/en/grades/n1000a/",
+          "kind": "manufacturer-datasheet",
+          "revision": null,
+          "documentDate": null,
+          "retrievedAt": "2026-09-29"
+        }
+      ],
+      "provenance": {
+        "stage": "validated",
+        "ingestedAt": "2026-09-29T00:00:00Z",
+        "reviewedAt": "2026-09-29T00:00:00Z",
+        "reviewer": "primary-source-web-review",
+        "notes": "Current Kuraray GENESTAR exact-grade page reviewed. Values are explicitly measured in the absolutely dry state and described by Kuraray as measured, not guaranteed."
+      }
+    },
+    {
+      "schemaVersion": 1,
       "id": "mat-lgchem-lupoy-gp1000l",
       "manufacturer": {
         "id": "mfr-lg-chem",
@@ -6151,6 +6502,290 @@
         "reviewedAt": "2026-09-03T00:00:00Z",
         "reviewer": "primary-source-web-review",
         "notes": "Official LOTTE English product-page pilot; unresolved values are omitted rather than inferred."
+      }
+    },
+    {
+      "schemaVersion": 1,
+      "id": "mat-lotte-infino-asf-9860",
+      "manufacturer": {
+        "id": "mfr-lotte-chemical",
+        "name": "LOTTE Chemical",
+        "country": "South Korea",
+        "website": "https://product.lottechem.com/"
+      },
+      "brand": "INFINO™",
+      "grade": "ASF-9860",
+      "aliases": [],
+      "polymer": {
+        "family": "PBT",
+        "morphology": "semi-crystalline"
+      },
+      "composition": {
+        "notes": "LOTTE Chemical exact PBT grade; modifiers are not inferred beyond the current exact-grade source."
+      },
+      "properties": [
+        {
+          "id": "obs-lotte-asf-9860-mfi",
+          "property": "Melt Flow Index",
+          "value": 74,
+          "unit": "g/10min",
+          "testMethod": "ISO 1133",
+          "temperatureC": 250,
+          "loadKg": 2.16,
+          "specimen": null,
+          "conditioning": null,
+          "direction": "not-applicable",
+          "sourceId": "src-lotte-asf-9860-iso-2026",
+          "sourcePage": "current manufacturer exact-grade data",
+          "comparisonReady": true,
+          "limitations": "LOTTE representative exact-grade value; not an official material specification or mould-design value."
+        },
+        {
+          "id": "obs-lotte-asf-9860-shrink-flow",
+          "property": "Mould Shrinkage",
+          "value": "1.5-1.8",
+          "unit": "%",
+          "testMethod": "ISO 294-4",
+          "temperatureC": null,
+          "loadKg": null,
+          "specimen": "2 mm",
+          "conditioning": null,
+          "direction": "flow",
+          "sourceId": "src-lotte-asf-9860-iso-2026",
+          "sourcePage": "current manufacturer exact-grade data",
+          "comparisonReady": true,
+          "limitations": "LOTTE representative exact-grade MD shrinkage; actual part response remains process/geometry dependent."
+        },
+        {
+          "id": "obs-lotte-asf-9860-shrink-transverse",
+          "property": "Mould Shrinkage",
+          "value": "1.7-2.0",
+          "unit": "%",
+          "testMethod": "ISO 294-4",
+          "temperatureC": null,
+          "loadKg": null,
+          "specimen": "2 mm",
+          "conditioning": null,
+          "direction": "transverse",
+          "sourceId": "src-lotte-asf-9860-iso-2026",
+          "sourcePage": "current manufacturer exact-grade data",
+          "comparisonReady": true,
+          "limitations": "LOTTE representative exact-grade TD shrinkage; actual part response remains process/geometry dependent."
+        }
+      ],
+      "processing": [
+        {
+          "id": "proc-lotte-asf-9860-mould",
+          "parameter": "Mould temperature",
+          "min": 40,
+          "max": 80,
+          "value": null,
+          "unit": "°C",
+          "condition": "LOTTE representative supplier guidance; validate against actual mould/product/site.",
+          "claimType": "supplier-guidance",
+          "sourceId": "src-lotte-asf-9860-process-2026",
+          "sourcePage": "current manufacturer exact-grade processing data",
+          "productionRecipe": false
+        },
+        {
+          "id": "proc-lotte-asf-9860-dry-temp",
+          "parameter": "Dehumidifier drying temperature",
+          "min": null,
+          "max": null,
+          "value": 110,
+          "unit": "°C",
+          "condition": "LOTTE representative exact-grade drying guidance; verify actual moisture state/site method.",
+          "claimType": "supplier-guidance",
+          "sourceId": "src-lotte-asf-9860-process-2026",
+          "sourcePage": "current manufacturer exact-grade processing data",
+          "productionRecipe": false
+        },
+        {
+          "id": "proc-lotte-asf-9860-dry-time",
+          "parameter": "Dehumidifier drying time",
+          "min": 4,
+          "max": 4,
+          "value": null,
+          "unit": "hr",
+          "condition": "LOTTE representative exact-grade drying guidance; not a universal recipe.",
+          "claimType": "supplier-guidance",
+          "sourceId": "src-lotte-asf-9860-process-2026",
+          "sourcePage": "current manufacturer exact-grade processing data",
+          "productionRecipe": false
+        },
+        {
+          "id": "proc-lotte-asf-9860-moisture",
+          "parameter": "Moisture after drying",
+          "min": null,
+          "max": 0.04,
+          "value": null,
+          "unit": "%",
+          "condition": "LOTTE representative exact-grade moisture guidance; measurement/acceptance remains supplier/site controlled.",
+          "claimType": "supplier-limit",
+          "sourceId": "src-lotte-asf-9860-process-2026",
+          "sourcePage": "processing guide",
+          "productionRecipe": false
+        }
+      ],
+      "approvals": [],
+      "lifecycle": {
+        "status": "unknown",
+        "checkedAt": "2026-09-29"
+      },
+      "sources": [
+        {
+          "id": "src-lotte-asf-9860-iso-2026",
+          "publisher": "LOTTE Chemical",
+          "title": "ASF-9860 ISO property table",
+          "url": "https://product.lottechem.com/en/advanced_materials/iso.do?grade=ASF-9860",
+          "kind": "manufacturer-datasheet",
+          "revision": null,
+          "documentDate": null,
+          "retrievedAt": "2026-09-29"
+        },
+        {
+          "id": "src-lotte-asf-9860-process-2026",
+          "publisher": "LOTTE Chemical",
+          "title": "ASF-9860 processing guide",
+          "url": "https://product.lottechem.com/cn/advanced_materials/terms.do?grade=ASF-9860",
+          "kind": "manufacturer-processing-guide",
+          "revision": null,
+          "documentDate": null,
+          "retrievedAt": "2026-09-29"
+        }
+      ],
+      "provenance": {
+        "stage": "validated",
+        "ingestedAt": "2026-09-29T00:00:00Z",
+        "reviewedAt": "2026-09-29T00:00:00Z",
+        "reviewer": "primary-source-web-review",
+        "notes": "Current LOTTE exact-grade property/processing pages reviewed. ISO 1133 conditions and directional shrinkage are retained where published; process values remain representative guidance."
+      }
+    },
+    {
+      "schemaVersion": 1,
+      "id": "mat-lotte-infino-gp-5000",
+      "manufacturer": {
+        "id": "mfr-lotte-chemical",
+        "name": "LOTTE Chemical",
+        "country": "South Korea",
+        "website": "https://product.lottechem.com/"
+      },
+      "brand": "INFINO™",
+      "grade": "GP-5000",
+      "aliases": [],
+      "polymer": {
+        "family": "PBT",
+        "morphology": "semi-crystalline"
+      },
+      "composition": {
+        "notes": "LOTTE Chemical exact PBT grade; modifiers are not inferred beyond the current exact-grade source."
+      },
+      "properties": [
+        {
+          "id": "obs-lotte-gp-5000-mfi",
+          "property": "Melt Flow Index",
+          "value": 71,
+          "unit": "g/10min",
+          "testMethod": "ISO 1133",
+          "temperatureC": 250,
+          "loadKg": 2.16,
+          "specimen": null,
+          "conditioning": null,
+          "direction": "not-applicable",
+          "sourceId": "src-lotte-gp-5000-iso-2026",
+          "sourcePage": "current manufacturer exact-grade data",
+          "comparisonReady": true,
+          "limitations": "LOTTE representative exact-grade value; not an official material specification or mould-design value."
+        }
+      ],
+      "processing": [
+        {
+          "id": "proc-lotte-gp-5000-mould",
+          "parameter": "Mould temperature",
+          "min": 60,
+          "max": 120,
+          "value": null,
+          "unit": "°C",
+          "condition": "LOTTE representative supplier guidance; validate against actual mould/product/site.",
+          "claimType": "supplier-guidance",
+          "sourceId": "src-lotte-gp-5000-process-2026",
+          "sourcePage": "current manufacturer exact-grade processing data",
+          "productionRecipe": false
+        },
+        {
+          "id": "proc-lotte-gp-5000-dry-temp",
+          "parameter": "Dehumidifier drying temperature",
+          "min": null,
+          "max": null,
+          "value": 100,
+          "unit": "°C",
+          "condition": "LOTTE representative exact-grade drying guidance; verify actual moisture state/site method.",
+          "claimType": "supplier-guidance",
+          "sourceId": "src-lotte-gp-5000-process-2026",
+          "sourcePage": "current manufacturer exact-grade processing data",
+          "productionRecipe": false
+        },
+        {
+          "id": "proc-lotte-gp-5000-dry-time",
+          "parameter": "Dehumidifier drying time",
+          "min": 2,
+          "max": 4,
+          "value": null,
+          "unit": "hr",
+          "condition": "LOTTE representative exact-grade drying guidance; not a universal recipe.",
+          "claimType": "supplier-guidance",
+          "sourceId": "src-lotte-gp-5000-process-2026",
+          "sourcePage": "current manufacturer exact-grade processing data",
+          "productionRecipe": false
+        },
+        {
+          "id": "proc-lotte-gp-5000-moisture",
+          "parameter": "Moisture after drying",
+          "min": null,
+          "max": 0.05,
+          "value": null,
+          "unit": "%",
+          "condition": "LOTTE representative exact-grade moisture guidance; measurement/acceptance remains supplier/site controlled.",
+          "claimType": "supplier-limit",
+          "sourceId": "src-lotte-gp-5000-process-2026",
+          "sourcePage": "processing guide",
+          "productionRecipe": false
+        }
+      ],
+      "approvals": [],
+      "lifecycle": {
+        "status": "unknown",
+        "checkedAt": "2026-09-29"
+      },
+      "sources": [
+        {
+          "id": "src-lotte-gp-5000-iso-2026",
+          "publisher": "LOTTE Chemical",
+          "title": "GP-5000 ISO property table",
+          "url": "https://product.lottechem.com/en/advanced_materials/iso.do?grade=GP-5000",
+          "kind": "manufacturer-datasheet",
+          "revision": null,
+          "documentDate": null,
+          "retrievedAt": "2026-09-29"
+        },
+        {
+          "id": "src-lotte-gp-5000-process-2026",
+          "publisher": "LOTTE Chemical",
+          "title": "GP-5000 processing guide",
+          "url": "https://product.lottechem.com/en/advanced_materials/terms.do?grade=GP-5000",
+          "kind": "manufacturer-processing-guide",
+          "revision": null,
+          "documentDate": null,
+          "retrievedAt": "2026-09-29"
+        }
+      ],
+      "provenance": {
+        "stage": "validated",
+        "ingestedAt": "2026-09-29T00:00:00Z",
+        "reviewedAt": "2026-09-29T00:00:00Z",
+        "reviewer": "primary-source-web-review",
+        "notes": "Current LOTTE exact-grade property/processing pages reviewed. ISO 1133 conditions and directional shrinkage are retained where published; process values remain representative guidance."
       }
     },
     {
@@ -8300,6 +8935,181 @@
     },
     {
       "schemaVersion": 1,
+      "id": "mat-scgc-p840j",
+      "manufacturer": {
+        "id": "mfr-scgc",
+        "name": "SCGC",
+        "country": "Thailand",
+        "website": "https://www.scgchemicals.com/"
+      },
+      "brand": "SCGC™ PP",
+      "grade": "P840J",
+      "aliases": [],
+      "polymer": {
+        "family": "PP",
+        "morphology": "semi-crystalline"
+      },
+      "composition": {
+        "impactModified": true,
+        "notes": "High-flow impact-copolymer polypropylene exact grade for injection moulding."
+      },
+      "properties": [
+        {
+          "id": "obs-scgc-p840j-mfr",
+          "property": "Melt Flow Rate",
+          "value": 43,
+          "unit": "g/10 min",
+          "testMethod": "ASTM D 1238",
+          "temperatureC": 230,
+          "loadKg": 2.16,
+          "specimen": null,
+          "conditioning": null,
+          "direction": "not-applicable",
+          "sourceId": "src-scgc-p840j-2026",
+          "sourcePage": "current manufacturer exact-grade data",
+          "comparisonReady": true,
+          "limitations": "Current SCGC exact-grade value; compare only at 230°C/2.16 kg."
+        }
+      ],
+      "processing": [],
+      "approvals": [],
+      "lifecycle": {
+        "status": "unknown",
+        "checkedAt": "2026-09-29"
+      },
+      "sources": [
+        {
+          "id": "src-scgc-p840j-2026",
+          "publisher": "SCGC",
+          "title": "SCGC™ PP P840J current grade data",
+          "url": "https://www.scgchemicals.com/en/products-grade/p840j",
+          "kind": "manufacturer-datasheet",
+          "revision": null,
+          "documentDate": null,
+          "retrievedAt": "2026-09-29"
+        }
+      ],
+      "provenance": {
+        "stage": "validated",
+        "ingestedAt": "2026-09-29T00:00:00Z",
+        "reviewedAt": "2026-09-29T00:00:00Z",
+        "reviewer": "primary-source-web-review",
+        "notes": "Current SCGC exact-grade page reviewed. Fully conditioned ASTM D1238 MFR is promoted; mechanical values remain available at source without being over-expanded into the runtime record."
+      }
+    },
+    {
+      "schemaVersion": 1,
+      "id": "mat-scgc-p901j",
+      "manufacturer": {
+        "id": "mfr-scgc",
+        "name": "SCGC",
+        "country": "Thailand",
+        "website": "https://www.scgchemicals.com/"
+      },
+      "brand": "SCGC™ PP",
+      "grade": "P901J",
+      "aliases": [],
+      "polymer": {
+        "family": "PP",
+        "morphology": "semi-crystalline"
+      },
+      "composition": {
+        "notes": "PP homopolymer exact grade for thin-wall injection moulding."
+      },
+      "properties": [
+        {
+          "id": "obs-scgc-p901j-mfr",
+          "property": "Melt Flow Rate",
+          "value": 70,
+          "unit": "g/10 min",
+          "testMethod": "ASTM D 1238",
+          "temperatureC": 230,
+          "loadKg": 2.16,
+          "specimen": null,
+          "conditioning": null,
+          "direction": "not-applicable",
+          "sourceId": "src-scgc-p901j-2026",
+          "sourcePage": "current manufacturer exact-grade data",
+          "comparisonReady": true,
+          "limitations": "Current SCGC exact-grade value; compare only at 230°C/2.16 kg."
+        },
+        {
+          "id": "obs-scgc-p901j-shrink-md",
+          "property": "Mould Shrinkage",
+          "value": 1,
+          "unit": "%",
+          "testMethod": "TPE Method",
+          "temperatureC": null,
+          "loadKg": null,
+          "specimen": "2 mm",
+          "conditioning": null,
+          "direction": "flow",
+          "sourceId": "src-scgc-p901j-2026",
+          "sourcePage": "current manufacturer exact-grade data",
+          "comparisonReady": true,
+          "limitations": "Manufacturer exact-grade MD shrinkage; actual part response remains process/geometry dependent."
+        },
+        {
+          "id": "obs-scgc-p901j-shrink-td",
+          "property": "Mould Shrinkage",
+          "value": 1.25,
+          "unit": "%",
+          "testMethod": "TPE Method",
+          "temperatureC": null,
+          "loadKg": null,
+          "specimen": "2 mm",
+          "conditioning": null,
+          "direction": "transverse",
+          "sourceId": "src-scgc-p901j-2026",
+          "sourcePage": "current manufacturer exact-grade data",
+          "comparisonReady": true,
+          "limitations": "Manufacturer exact-grade TD shrinkage; actual part response remains process/geometry dependent."
+        },
+        {
+          "id": "obs-scgc-p901j-density",
+          "property": "Density",
+          "value": 0.91,
+          "unit": "g/cm³",
+          "testMethod": "ASTM D 1505",
+          "temperatureC": null,
+          "loadKg": null,
+          "specimen": null,
+          "conditioning": null,
+          "direction": "not-applicable",
+          "sourceId": "src-scgc-p901j-2026",
+          "sourcePage": "current manufacturer exact-grade data",
+          "comparisonReady": false,
+          "limitations": "Typical exact-grade density."
+        }
+      ],
+      "processing": [],
+      "approvals": [],
+      "lifecycle": {
+        "status": "unknown",
+        "checkedAt": "2026-09-29"
+      },
+      "sources": [
+        {
+          "id": "src-scgc-p901j-2026",
+          "publisher": "SCGC",
+          "title": "SCGC™ PP P901J current grade data",
+          "url": "https://www.scgchemicals.com/en/products-grade/p901j",
+          "kind": "manufacturer-datasheet",
+          "revision": null,
+          "documentDate": null,
+          "retrievedAt": "2026-09-29"
+        }
+      ],
+      "provenance": {
+        "stage": "validated",
+        "ingestedAt": "2026-09-29T00:00:00Z",
+        "reviewedAt": "2026-09-29T00:00:00Z",
+        "reviewer": "primary-source-web-review",
+        "notes": "Current SCGC exact-grade page reviewed. MFR retains full ASTM D1238 temperature/load context and 2 mm directional shrinkage is preserved."
+      }
+    },
+    {
+      "schemaVersion": 1,
       "id": "mat-supreme-sc206",
       "manufacturer": {
         "id": "mfr-supreme-petrochem",
@@ -8599,6 +9409,197 @@
         "reviewedAt": "2026-09-29T00:00:00Z",
         "reviewer": "primary-source-web-review",
         "notes": "Current manufacturer-hosted technical datasheet reviewed. Fully conditioned MFI is comparison-ready; processing conditions are supplier guide values only."
+      }
+    },
+    {
+      "schemaVersion": 1,
+      "id": "mat-ube-1013b",
+      "manufacturer": {
+        "id": "mfr-ube",
+        "name": "UBE",
+        "country": "Japan",
+        "website": "https://www.ube.com/"
+      },
+      "brand": "UBE Nylon",
+      "grade": "1013B",
+      "aliases": [],
+      "polymer": {
+        "family": "PA6",
+        "morphology": "semi-crystalline"
+      },
+      "composition": {
+        "notes": "Neat PA6 injection-moulding grade; current UBE page identifies production in Japan, Thailand and Spain."
+      },
+      "properties": [
+        {
+          "id": "obs-ube-1013b-water",
+          "property": "Water Absorption at Equilibrium",
+          "value": 3,
+          "unit": "%",
+          "testMethod": "UBE Method",
+          "temperatureC": null,
+          "loadKg": null,
+          "specimen": null,
+          "conditioning": "dry-as-molded baseline",
+          "direction": "not-applicable",
+          "sourceId": "src-ube-1013b-2026",
+          "sourcePage": "current manufacturer exact-grade data",
+          "comparisonReady": false,
+          "limitations": "Typical measured value; UBE states published values are averages under specified conditions, not guaranteed values."
+        },
+        {
+          "id": "obs-ube-1013b-density",
+          "property": "Density",
+          "value": 1.14,
+          "unit": "g/cm³",
+          "testMethod": "ISO 1183",
+          "temperatureC": null,
+          "loadKg": null,
+          "specimen": null,
+          "conditioning": null,
+          "direction": "not-applicable",
+          "sourceId": "src-ube-1013b-2026",
+          "sourcePage": "current manufacturer exact-grade data",
+          "comparisonReady": false,
+          "limitations": "Typical exact-grade value."
+        },
+        {
+          "id": "obs-ube-1013b-melting",
+          "property": "Melting Temperature",
+          "value": "215-225",
+          "unit": "°C",
+          "testMethod": "ISO 11357",
+          "temperatureC": null,
+          "loadKg": null,
+          "specimen": null,
+          "conditioning": null,
+          "direction": "not-applicable",
+          "sourceId": "src-ube-1013b-2026",
+          "sourcePage": "current manufacturer exact-grade data",
+          "comparisonReady": false,
+          "limitations": "Material thermal property, not a process setpoint."
+        }
+      ],
+      "processing": [],
+      "approvals": [],
+      "lifecycle": {
+        "status": "unknown",
+        "checkedAt": "2026-09-29"
+      },
+      "sources": [
+        {
+          "id": "src-ube-1013b-2026",
+          "publisher": "UBE",
+          "title": "UBE Nylon 1013B current exact-grade data",
+          "url": "https://www.ube.com/ube/en/contents/chemical/nylon/1013b.html",
+          "kind": "manufacturer-datasheet",
+          "revision": null,
+          "documentDate": "2026-02-10",
+          "retrievedAt": "2026-09-29"
+        }
+      ],
+      "provenance": {
+        "stage": "validated",
+        "ingestedAt": "2026-09-29T00:00:00Z",
+        "reviewedAt": "2026-09-29T00:00:00Z",
+        "reviewer": "primary-source-web-review",
+        "notes": "Current UBE exact-grade page and revised 2026 datasheet reviewed. Typical values are retained as context and not represented as guaranteed specifications."
+      }
+    },
+    {
+      "schemaVersion": 1,
+      "id": "mat-ube-1015gc6",
+      "manufacturer": {
+        "id": "mfr-ube",
+        "name": "UBE",
+        "country": "Japan",
+        "website": "https://www.ube.com/"
+      },
+      "brand": "UBE Nylon",
+      "grade": "1015GC6",
+      "aliases": [],
+      "polymer": {
+        "family": "PA6",
+        "morphology": "semi-crystalline"
+      },
+      "composition": {
+        "glassFibrePct": 30,
+        "notes": "PA6-GF30 injection-moulding grade; current UBE datasheet identifies Thailand production."
+      },
+      "properties": [
+        {
+          "id": "obs-ube-1015gc6-water",
+          "property": "Water Absorption at Equilibrium",
+          "value": 1.8,
+          "unit": "%",
+          "testMethod": "UBE Method",
+          "temperatureC": null,
+          "loadKg": null,
+          "specimen": null,
+          "conditioning": "dry-as-molded baseline",
+          "direction": "not-applicable",
+          "sourceId": "src-ube-1015gc6-2026",
+          "sourcePage": "current manufacturer exact-grade data",
+          "comparisonReady": false,
+          "limitations": "Typical exact-grade value."
+        },
+        {
+          "id": "obs-ube-1015gc6-density",
+          "property": "Density",
+          "value": 1.36,
+          "unit": "g/cm³",
+          "testMethod": "ISO 1183",
+          "temperatureC": null,
+          "loadKg": null,
+          "specimen": null,
+          "conditioning": null,
+          "direction": "not-applicable",
+          "sourceId": "src-ube-1015gc6-2026",
+          "sourcePage": "current manufacturer exact-grade data",
+          "comparisonReady": false,
+          "limitations": "Typical exact-grade value."
+        },
+        {
+          "id": "obs-ube-1015gc6-melting",
+          "property": "Melting Temperature",
+          "value": "215-225",
+          "unit": "°C",
+          "testMethod": "ISO 11357",
+          "temperatureC": null,
+          "loadKg": null,
+          "specimen": null,
+          "conditioning": null,
+          "direction": "not-applicable",
+          "sourceId": "src-ube-1015gc6-2026",
+          "sourcePage": "current manufacturer exact-grade data",
+          "comparisonReady": false,
+          "limitations": "Material thermal property, not a process setpoint."
+        }
+      ],
+      "processing": [],
+      "approvals": [],
+      "lifecycle": {
+        "status": "unknown",
+        "checkedAt": "2026-09-29"
+      },
+      "sources": [
+        {
+          "id": "src-ube-1015gc6-2026",
+          "publisher": "UBE",
+          "title": "UBE Nylon 1015GC6 Technical Data Sheet",
+          "url": "https://www.ube.com/ube/en/assets/images-en/pdf/nylon/1015GC6.pdf",
+          "kind": "manufacturer-datasheet",
+          "revision": null,
+          "documentDate": "2026-04-01",
+          "retrievedAt": "2026-09-29"
+        }
+      ],
+      "provenance": {
+        "stage": "validated",
+        "ingestedAt": "2026-09-29T00:00:00Z",
+        "reviewedAt": "2026-09-29T00:00:00Z",
+        "reviewer": "primary-source-web-review",
+        "notes": "Current UBE exact-grade datasheet reviewed. Published properties are typical values; no unprovided shrinkage or processing settings are inferred."
       }
     },
     {
