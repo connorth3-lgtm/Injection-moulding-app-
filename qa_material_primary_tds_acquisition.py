@@ -9,6 +9,12 @@ assert q["rules"]["familyPageCannotPromoteWithoutGradeNumericEvidence"] is True
 assert q["rules"]["sourceRevisionConflictsRemainConditional"] is True
 assert q["queueCount"] == len(q["queue"])
 assert q["queueCount"] >= 50
+keys=[(str(x.get("manufacturer","")).strip().lower(),str(x.get("grade","")).strip().lower()) for x in q["queue"]]
+assert len(keys) == len(set(keys)), "duplicate manufacturer+grade lifecycle rows in primary TDS queue"
+metrics=q.get("metrics", {})
+assert metrics.get("convertedComplete") == sum(bool(x.get("convertedToComplete")) for x in q["queue"])
+assert metrics.get("exactGradeSourceLocatedPending") == sum(bool(x.get("exactGradeSourceLocated")) and not bool(x.get("convertedToComplete")) for x in q["queue"])
+assert metrics.get("stillNeedPrimarySource") == sum(not bool(x.get("exactGradeSourceLocated")) and not bool(x.get("convertedToComplete")) for x in q["queue"])
 for x in q["queue"]:
     assert x["priority"] in {"validate-and-convert","extract-numeric-table","acquire-primary-TDS","converted-complete"}
     assert x["conversionRequirement"]
