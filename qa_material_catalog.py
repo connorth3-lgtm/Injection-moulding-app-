@@ -81,7 +81,7 @@ catalog = load_json(CATALOG)
 need(catalog.get("schemaVersion") == 1, "material catalog schema version drift")
 need(catalog.get("catalogVersion") == "generated", "material catalog must use the compiler-owned generated version marker")
 need("variant/revision/production identity differs" in str(catalog.get("boundary") or ""), "material catalog boundary does not describe variant-safe identity")
-need({m.get("id") for m in catalog.get("manufacturers") or []} == {"mfr-kep", "mfr-lg-chem", "mfr-lotte-chemical"}, "runtime manufacturer set drift")
+need({m.get("id") for m in catalog.get("manufacturers") or []} == {"mfr-kep", "mfr-lg-chem", "mfr-lotte-chemical", "mfr-sabic", "mfr-envalior", "mfr-victrex"}, "runtime manufacturer set drift")
 need(isinstance(catalog.get("grades"), list), "material catalog grades must be a list")
 for idx, grade in enumerate(catalog["grades"]):
     grade_errors = validate_grade(grade, f"catalog grade[{idx}]")
@@ -102,8 +102,20 @@ for staging_path in sorted(STAGING.glob("*.json")):
                 staged_grade_ids.add(gid)
 runtime_grade_ids = {grade.get("id") for grade in catalog.get("grades") or []}
 need(staged_grade_ids == runtime_grade_ids, f"runtime/staging material drift: staged={sorted(staged_grade_ids)} runtime={sorted(runtime_grade_ids)}")
-need(len(runtime_grade_ids) == 11, "runtime exact-grade count must remain eleven for the three-manufacturer Korean pilot")
+need(len(runtime_grade_ids) == 36, "runtime exact-grade count must include the 11-grade Korean pilot plus 25-grade global expansion")
 need(kolon_grade_ids.isdisjoint(runtime_grade_ids), "source-reviewed KOLON staging identities must not leak into the validated runtime catalog")
+
+global_wave = load_json(STAGING / "global-material-expansion-20260929-v1.json")
+need(global_wave.get("status") == "validated-expansion-with-source-reviewed-queue", "global material expansion status drift")
+need((global_wave.get("summary") or {}).get("validatedGrades") == 25, "global material expansion validated-grade count drift")
+need((global_wave.get("summary") or {}).get("sourceReviewedStagingGrades") == 8, "global material expansion ABS staging count drift")
+global_grades = [g for m in global_wave.get("manufacturers") or [] for g in m.get("gradeRecords") or []]
+global_validated = [g for g in global_grades if (g.get("provenance") or {}).get("stage") in {"validated", "published"}]
+global_staging = [g for g in global_grades if (g.get("provenance") or {}).get("stage") == "staging"]
+need(len(global_validated) == 25 and all(g.get("id") in runtime_grade_ids for g in global_validated), "global validated material records are not fully published")
+need(len(global_staging) == 8 and all(g.get("id") not in runtime_grade_ids for g in global_staging), "source-reviewed ABS staging identities leaked into runtime")
+need({(g.get("polymer") or {}).get("family") for g in global_validated} == {"PP", "PA6", "PBT", "PEEK"}, "global validated family coverage drift")
+need(all((obs.get("productionRecipe") is False) for g in global_validated for obs in g.get("processing") or []), "global expansion supplier guidance became a production recipe")
 
 # Pilot proof: current primary-source LOTTE records remain unchanged while the
 # umbrella manifest records progress without copying exact-grade claims.
