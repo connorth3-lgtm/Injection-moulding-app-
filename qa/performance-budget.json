@@ -10,5 +10,9 @@
     "Budgets are intentionally generous ceilings for regression detection and should trend downward as legacy runtime layers are retired.",
     "A passing automated budget does not substitute for physical iOS/iPadOS/Android startup, offline, update, storage-pressure or assistive-technology evidence.",
     "Tighten a ceiling only after measuring representative CI and physical-device distributions; do not loosen a ceiling merely to make a regression pass."
-  ]
+  ],
+  "cpuThrottledStartupReadyMsMax": 30000,
+  "longSessionCycles": 40,
+  "longSessionDomGrowthMax": 500,
+  "longSessionResourceGrowthMax": 10
 }
