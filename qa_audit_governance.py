@@ -76,13 +76,13 @@ for marker in (
     "needs: [production-source, publisher-guard]",
     "Build release-hold Pages artifact",
     "python3 tools/build_pages_hold.py --preview-source .pages-dist",
-    "Upload production Pages artifact",
-    "github.event_name == 'pull_request' || steps.physical-readiness.outputs.production_ready == 'true'",
-    "Upload release-hold Pages artifact",
-    "github.event_name != 'pull_request' && steps.physical-readiness.outputs.production_ready != 'true'",
+    "Upload PR validation Pages artifact",
+    "github.event_name == 'pull_request'",
+    "Upload preview-only release-hold Pages artifact",
+    "github.event_name != 'pull_request'",
     "path: .pages-hold",
     "if: github.event_name != 'pull_request'\n    needs: build",
-    "Reconfirm validated physical PWA evidence against rebuilt runtime",
+    "Verify preview-only release-hold deployment",
     "Verify release-hold deployment removed legacy publication",
     "python3 tools/verify_pages_hold.py",
 ):
@@ -103,12 +103,16 @@ false_index = pages.index('echo "production_ready=false" >> "$GITHUB_OUTPUT"')
 hold_index = pages.index("- name: Build release-hold Pages artifact")
 need(false_index < hold_index, "pending readiness decision must occur before release-hold construction")
 need(
-    "if: github.event_name == 'pull_request' || steps.physical-readiness.outputs.production_ready == 'true'" in pages,
-    "production app artifact must require PR validation or validated production readiness",
+    "if: github.event_name == 'pull_request'" in pages,
+    "direct learner artifact upload must be limited to PR validation",
 )
 need(
-    "if: github.event_name != 'pull_request' && steps.physical-readiness.outputs.production_ready != 'true'" in pages,
-    "pending main release must select the quarantine artifact",
+    "Upload preview-only release-hold Pages artifact" in pages and "if: github.event_name != 'pull_request'" in pages,
+    "every main release must select the preview-only release-hold artifact",
+)
+need(
+    "production_ready == 'true'" not in pages.split("- name: Build release-hold Pages artifact",1)[1],
+    "physical readiness must remain informational and must not switch main publication to the production root",
 )
 for marker in (
     'ALLOWED_FILES = {"index.html", "404.html", "device-validation.html"}',
@@ -180,6 +184,6 @@ need(self_test.returncode == 0, f"ruleset verifier self-test failed: {self_test.
 
 print(
     "Audit governance QA passed: assessment-evidence workflows retain full Git history, least-privilege Pages permissions, "
-    "physical-test runtime fingerprint reporting, production-root fail-closed gating with a separated non-production learner preview "
+    "physical-test runtime fingerprint reporting, preview-only protected-main publication with a separated non-production learner runtime "
     "and local-only device metadata helper, live branch-prune SHA recheck and fail-closed ruleset bypass verification are enforced."
 )
