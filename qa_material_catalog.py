@@ -337,6 +337,21 @@ need(all((g.get("manufacturer") or {}).get("country") == "South Korea" for g in 
 need(all(obs.get("comparisonReady") is False for g in global19 for obs in g.get("properties") or []), "Under-conditioned Hyosung numeric data must remain context-only")
 need((global_wave19.get("governance") or {}).get("runtimePromotionBlocked") is True, "Korea Hyosung promotion boundary drift")
 
+
+# Korea Hanwha continuation: BI800 is current manufacturer-controlled exact
+# PP injection-moulding evidence, but its surfaced ASTM D1238 value lacks the
+# temperature/load pair required for conditioned rheology comparison.
+global_wave20 = load_json(STAGING / "global-material-expansion-20260929-v20.json")
+need((global_wave20.get("summary") or {}).get("validatedGrades") == 0, "Korea Hanwha wave must remain staging")
+need((global_wave20.get("summary") or {}).get("sourceReviewedStagingGrades") == 1, "Korea Hanwha staging count drift")
+need((global_wave20.get("summary") or {}).get("countryFocus") == "South Korea", "Korea Hanwha country focus drift")
+global20 = [g for m in global_wave20.get("manufacturers") or [] for g in m.get("gradeRecords") or []]
+need(len(global20) == 1 and global20[0].get("grade") == "BI800", "Korea Hanwha exact-grade set drift")
+need(all((g.get("provenance") or {}).get("stage") == "staging" for g in global20), "Korea Hanwha identity must remain staging")
+need(all(g.get("id") not in runtime_grade_ids for g in global20), "Korea Hanwha staging identity leaked into runtime")
+need(all(obs.get("comparisonReady") is False for g in global20 for obs in g.get("properties") or []), "Under-conditioned Hanwha values must remain context-only")
+need((global_wave20.get("governance") or {}).get("runtimePromotionBlocked") is True, "Korea Hanwha promotion boundary drift")
+
 # Pilot proof: current primary-source LOTTE records remain unchanged while the
 # umbrella manifest records progress without copying exact-grade claims.
 lotte_pilot = load_json(STAGING / "lotte-exact-grade-pilot-v1.json")
