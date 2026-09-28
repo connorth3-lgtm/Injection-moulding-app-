@@ -83,7 +83,7 @@ for marker in (
     "path: .pages-hold",
     "if: github.event_name != 'pull_request'\n    needs: build",
     "Verify preview-only release-hold deployment",
-    "Verify release-hold deployment removed legacy publication",
+    "Verify preview-only release-hold deployment",
     "python3 tools/verify_pages_hold.py",
 ):
     need(marker in pages, f"physical-device release policy missing from Pages workflow: {marker}")
