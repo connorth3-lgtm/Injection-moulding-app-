@@ -31,13 +31,13 @@ for marker in (
     "python3 tools/build_pages_hold.py",
     "Upload PR validation Pages artifact",
     "path: .pages-dist",
-    "Upload release-hold Pages artifact",
+    "Upload preview-only release-hold Pages artifact",
     "path: .pages-hold",
     "Deploy selected Pages artifact",
     "Verify preview-only release-hold deployment",
-    "Verify release-hold deployment removed legacy publication",
+    "Verify preview-only release-hold deployment",
     "python3 tools/verify_pages_hold.py",
-    "Verify release-hold remains stable after race window",
+    "Verify preview-only release-hold remains stable after race window",
     "--convergence-attempts 6",
 ):
     need(marker in workflow, f"Pages single-publisher workflow safeguard missing: {marker}")
